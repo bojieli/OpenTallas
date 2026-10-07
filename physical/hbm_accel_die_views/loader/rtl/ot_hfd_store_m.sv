@@ -25,10 +25,20 @@ module ot_hfd_store_m #(
  function automatic[31:0] crc_fold(input[31:0] s,input[255:0] w);
  reg fb;integer i;begin crc_fold=s;for(i=0;i<256;i=i+1)begin fb=crc_fold[31]^w[i];crc_fold={crc_fold[30:0],1'b0}^(fb?32'h04c11db7:0);end end
  endfunction
-    // margin-first CRC pipeline helpers: crc_fold(s, w) = crc_fold(s, 0) ^ crc_fold(0, w_lo) ^ crc_fold(0, w_hi)
-    function automatic [31:0] crc_s(input [31:0] s); crc_s = crc_fold(s, 256'd0); endfunction
-    function automatic [31:0] crc_lo(input [255:0] w); crc_lo = crc_fold(32'd0, {128'd0, w[127:0]}); endfunction
-    function automatic [31:0] crc_hi(input [255:0] w); crc_hi = crc_fold(32'd0, {w[255:128], 128'd0}); endfunction
+    // margin-first CRC pipeline helpers: crc_fold(s, w) = crc_fold(s, 0) ^ crc_fold(0, w_lo) ^ crc_fold(0, w_hi),
+    // each written as a constant GF(2) matrix (bit j = XOR-reduce of input & M[j]: balanced trees, not the serial loop)
+    localparam [4095:0] CRC_M_LO = 4096'h17830a34c6f00657cee3d501744821122f0614698de00caf9dc7aa02e89042255e0c28d31bc0195f3b8f5405d120844abc1851a6378032be771ea80ba24108957830a34c6f00657cee3d50174482112af0614698de00caf9dc7aa02e89042255f74187057af193a47616955c664065b8ee830e0af5e32748ec2d2ab8cc80cb71dd061c15ebc64e91d85a5571990196e3ad8f321f117c9b747e577fe2464b0cd44c9d6e0ae40930bf324d2ac5f8de38bb993adc15c812617e649a558bf1bc71763275b82b9024c2fcc934ab17e378e2ec64eb7057204985f99269562fc6f1c5d8c9d6e0ae40930bf324d2ac5f8de38bb093adc15c812617e649a558bf1bc7176030d8888dc4bc299b5da9647f43c60fd261b1111b89785336bb52c8fe878c1fa5c362223712f0a66d76a591fd0f183f4a86c4446e25e14cdaed4b23fa1e307e951a0b82e88d329fe2147592f54828dc3923940fe5dc953993e608f0ebe419996050ab15ff7fda757002f234d6bc7b13d3a1562bfeffb4eae005e469ad78f627a7552f5dc93999d397c52b065b85a46e5dbdddb1a6b5c3a17844b5d9b67f00fda87bbb634d6b8742f0896bb36cfe01fb50e0f5ccae11fe83b6dc34b3d8884bd7b2d6689368e50d013a768ab2b064df8e77acd126d1ca1a0274ed156560c9bf1cef4e21479752c402be14c91fc0e73618cd8bc1851a6378032be771ea80ba241089;
+    localparam [4095:0] CRC_M_HI = 4096'h04d101df481b4e5af182fa07eb46de2f09a203be90369cb5e305f40fd68dbc5e1344077d206d396bc60be81fad1b78bc26880efa40da72d78c17d03f5a36f1784d101df481b4e5af182fa07eb46de2f19a203be90369cb5e305f40fd68dbc5e23091760d4ec8d8e6913c7bfd3af155ea6122ec1a9d91b1cd2278f7fa75e2abd5c245d8353b23639a44f1eff4ebc557ab805ab1b53e5d896e786125ee3ccc7178046462b534a05c860140b1db92de3cde08c8c56a6940b90c028163b725bc79bc11918ad4d28172180502c76e4b78f379232315a9a502e4300a058edc96f1e6f246462b534a05c860140b1db92de3cde48c8c56a6940b90c028163b725bc79bc91dc9ac92600c6fdaa1ae8ce35cc9e9bc3b935924c018dfb5435d19c6b993d3787726b2498031bf6a86ba338d7327a6f0ee4d649300637ed50d74671ae64f4de1d84bc8f948ddb3f0eb6a343227d845ecb446902dd9a029bb27569263a4f655f76c5c2184fb5b1d2cbf2fdec0a2aa75c1d8b84309f6b63a597e5fbd814554eb82b5a187cca5773ae80d3d810561ef092a6f920e4602f53b8aebf9f80d2898cc7bdf241c8c05ea7715d7f3f01a513198f7ba9938c743cfa0715e651a334925efc171e37051cf840eb84d48ce61790d01ace3c6e0a39f081d709a919cc2f21a0359c35cc098760b74bbc4a1c3820f72d89c826880efa40da72d78c17d03f5a36f17;
+    localparam [1023:0] CRC_M_S = 1024'h4884122ea44209175221048ba910824554884122aa4420911da602668ed30133c76980992b30d262dd1c7b1f6e8e3d8f37471ec71ba38f630dd1c7b106e8e3d84bf063c2a5f831e152fc18f0a97e0c789c3b141206999827cbc8de3de5e46f1eba7625a115bf00fe0adf807f4debd211ee71fb26f738fd93b3186ce79108245d;
+    function automatic [31:0] crc_s(input [31:0] s);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_s[j] = ^(s & CRC_M_S[j*32 +: 32]); end
+    endfunction
+    function automatic [31:0] crc_lo(input [255:0] w);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_lo[j] = ^(w[127:0] & CRC_M_LO[j*128 +: 128]); end
+    endfunction
+    function automatic [31:0] crc_hi(input [255:0] w);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_hi[j] = ^(w[255:128] & CRC_M_HI[j*128 +: 128]); end
+    endfunction
  generate if(!ENABLE)begin:g_off
  assign s_awready=0;assign s_wready=0;assign s_arready=0;
  always @*begin s_bvalid=0;s_rvalid=0;s_rdata=0;m_awvalid=0;m_awaddr=0;m_awlen=0;end
@@ -47,9 +57,21 @@ module ot_hfd_store_m #(
  wire cmd_rdy,cv,crdy,dv,drdy,kv,krdy,cplv;
  wire[63:0] cd;wire[255:0] dd,kd;wire[67:0] cpld;
  wire overflow0,overflow1,overflow2;
- wire[31:0] remaining=nsec-aw_sec,to4k=128-{25'b0,aw_next[11:5]};
- wire[31:0] len0=remaining<BURST?remaining:BURST;
- wire[31:0] len=len0<to4k?len0:to4k;
+ // ARITH (see make_loader_m.py): rem_q == nsec - aw_sec, Kogge-Stone adds, 8-bit burst length, range checks on KS sums
+ reg[31:0] rem_q;
+ wire[7:0] rem8=rem_q[7:0];wire rem_small=~|rem_q[31:8]&&(rem8<8'(BURST));
+ wire[7:0] to4k8=8'd128-{1'b0,aw_next[11:5]};wire[7:0] len0_8=rem_small?rem8:8'(BURST);
+ wire[7:0] len8=len0_8<to4k8?len0_8:to4k8;wire[31:0] len={24'd0,len8};
+ wire[31:0] aw_sec_nx,rem_nx,cycles_nx,w_sec_nx,rng_ds,issued_nx,retired_nx,ra_nx;wire[63:0] rng_hs;wire[51:0] aw_hi_nx;wire rng_dc,rng_hc;
+ wire[7:0] aw_lo_nx={1'b0,aw_next[11:5]}+m_awlen+8'd1;
+ ot_hdc_ksadd_k #(.W(32)) u_k_awsec(.a(aw_sec),.b({24'b0,m_awlen}),.cin(1'b1),.s(aw_sec_nx),.cout());
+ ot_hdc_ksadd_k #(.W(32)) u_k_rem(.a(rem_q),.b(~{24'b0,m_awlen}),.cin(1'b0),.s(rem_nx),.cout());
+ ot_hdc_inc_k #(.W(52)) u_k_awhi(.a(aw_next[63:12]),.inc(aw_lo_nx[7]),.y(aw_hi_nx),.co());
+ ot_hdc_inc_k #(.W(32)) u_k_cyc(.a(cycles),.inc(1'b1),.y(cycles_nx),.co());
+ ot_hdc_inc_k #(.W(32)) u_k_ws(.a(w_sec),.inc(1'b1),.y(w_sec_nx),.co());
+ ot_hdc_ksadd_k #(.W(32)) u_k_rngd(.a(daddr),.b(nbytes),.cin(1'b0),.s(rng_ds),.cout(rng_dc));
+ ot_hdc_ksadd_k #(.W(64)) u_k_rngh(.a(haddr),.b({32'b0,nbytes}),.cin(1'b0),.s(rng_hs),.cout(rng_hc));
+ wire rng_bad=(rng_dc&&|rng_ds)||(rng_hc&&|rng_hs);   // {0,daddr}+{0,nbytes} > 2^32 || {0,haddr}+nbytes > 2^64
  assign m_awsize=5;assign m_awburst=1;
  assign m_wvalid=busy&&w_left!=0&&dv;
  assign m_wdata=dd;assign m_wstrb='1;assign m_wlast=w_left==1;
@@ -63,7 +85,7 @@ module ot_hfd_store_m #(
  wire hp_busy=hp1_v||hp2_v;
  always @(posedge clk_host or negedge rst_host_n)if(!rst_host_n)begin
  haddr<=0;daddr<=0;nbytes<=0;crc_exp<=0;crc_got<='1;vcrc_got<=0;sectors<=0;cycles<=0;status<=0;busy<=0;done<=0;
- cmd_pending<=0;mem_complete<=0;axi_err<=0;nsec<=0;aw_sec<=0;w_sec<=0;aw_next<=0;w_left<=0;outstanding<=0;
+ cmd_pending<=0;mem_complete<=0;axi_err<=0;nsec<=0;aw_sec<=0;rem_q<=0;w_sec<=0;aw_next<=0;w_left<=0;outstanding<=0;
  s_bvalid<=0;s_rvalid<=0;s_rdata<=0;m_awvalid<=0;m_awaddr<=0;m_awlen<=0;
  end else begin
  if(s_bvalid&&s_bready)s_bvalid<=0;
@@ -83,14 +105,14 @@ module ot_hfd_store_m #(
  default:s_rdata<=0;endcase end
  if(start)begin
  done<=0;status<=0;crc_got<='1;vcrc_got<=0;sectors<=0;cycles<=0;mem_complete<=0;axi_err<=0;
- if(nbytes==0||nbytes[4:0]!=0||haddr[4:0]!=0||daddr[4:0]!=0||{1'b0,daddr}+{1'b0,nbytes}>33'h100000000||{1'b0,haddr}+{33'b0,nbytes}>65'h10000000000000000)begin done<=1;status<=3;end
- else begin busy<=1;cmd_pending<=1;nsec<=nbytes>>5;aw_sec<=0;w_sec<=0;aw_next<=haddr;outstanding<=0;end
+ if(nbytes==0||nbytes[4:0]!=0||haddr[4:0]!=0||daddr[4:0]!=0||rng_bad)begin done<=1;status<=3;end
+ else begin busy<=1;cmd_pending<=1;nsec<=nbytes>>5;aw_sec<=0;rem_q<=nbytes>>5;w_sec<=0;aw_next<=haddr;outstanding<=0;end
  end
  if(cmd_pending&&cmd_rdy)cmd_pending<=0;
- if(busy)cycles<=cycles+1;
- if(busy&&!m_awvalid&&w_left==0&&aw_sec!=nsec&&outstanding<MAXOUT)begin m_awvalid<=1;m_awaddr<=aw_next;m_awlen<=len[7:0]-1'b1;end
- if(aw)begin m_awvalid<=0;w_left<={1'b0,m_awlen}+1'b1;aw_sec<=aw_sec+{24'b0,m_awlen}+1;aw_next<=aw_next+(({56'b0,m_awlen}+1)<<5);end
- if(w)begin w_left<=w_left-1'b1;w_sec<=w_sec+1'b1;end
+ if(busy)cycles<=cycles_nx;
+ if(busy&&!m_awvalid&&w_left==0&&rem_q!=0&&outstanding<MAXOUT)begin m_awvalid<=1;m_awaddr<=aw_next;m_awlen<=len[7:0]-1'b1;end
+ if(aw)begin m_awvalid<=0;w_left<={1'b0,m_awlen}+1'b1;aw_sec<=aw_sec_nx;rem_q<=rem_nx;aw_next<={aw_hi_nx,aw_lo_nx[6:0],aw_next[4:0]};end
+ if(w)begin w_left<=w_left-1'b1;w_sec<=w_sec_nx;end
  if(hp2_v)crc_got<=crc_s(crc_got)^hp2_lo^hp2_hi;
  if(aw||b)outstanding<=outstanding+aw-b;
  if(b&&m_bresp!=0)axi_err<=1;
@@ -109,9 +131,13 @@ module ot_hfd_store_m #(
  ot_gpu_cdc_fifo #(.ENABLE(1),.W(68),.AW(2)) u_cpl(.wclk(clk_mem),.wrst_n(rst_mem_n),.in_v(completion_v),.in_rdy(completion_rdy),.in_d(completion_d),.rclk(clk_host),.rrst_n(rst_host_n),.out_v(cplv),.out_rdy(1'b1),.out_d(cpld),.ovf_fault(overflow2));
  reg active,fault;reg[31:0] base,total,issued,retired,mcrc;
  reg[VOUT-1:0] live,valid;reg[TW-1:0] tags[VOUT];reg[255:0] rob[VOUT];
+ reg[31:0] ra_q;   // ARITH: base + issued << 5
+ ot_hdc_inc_k #(.W(32)) u_k_iss(.a(issued),.inc(1'b1),.y(issued_nx),.co());
+ ot_hdc_inc_k #(.W(32)) u_k_ret(.a(retired),.inc(1'b1),.y(retired_nx),.co());
+ ot_hdc_ksadd_k #(.W(32)) u_k_ra(.a(ra_q),.b(32'd32),.cin(1'b0),.s(ra_nx),.cout());
  wire[VB-1:0] slot=issued[VB-1:0],head=retired[VB-1:0],rs=rsp_tag[VB-1:0];
  wire send=req_v&&req_rdy;
- assign req_v=active&&issued!=total&&!live[slot];assign req_we=0;assign req_addr=base+(issued<<5);
+ assign req_v=active&&issued!=total&&!live[slot];assign req_we=0;assign req_addr=ra_q;
  assign req_wdata=0;assign req_wstrb=0;assign req_tag=TW'(issued);
  assign rsp_rdy=1;
  assign kv=active&&valid[head];
@@ -126,16 +152,16 @@ module ot_hfd_store_m #(
  wire mp_busy=mp1_v||mp2_v;
  assign crdy=!active&&!completion_v&&!fault;
  always @(posedge clk_mem or negedge rst_mem_n)if(!rst_mem_n)begin
- active<=0;fault<=0;base<=0;total<=0;issued<=0;retired<=0;mcrc<='1;live<=0;valid<=0;completion_v<=0;completion_d<=0;
+ active<=0;fault<=0;base<=0;ra_q<=0;total<=0;issued<=0;retired<=0;mcrc<='1;live<=0;valid<=0;completion_v<=0;completion_d<=0;
  end else begin
  if(completion_v&&completion_rdy)completion_v<=0;
- if(cv&&crdy)begin active<=1;base<=cd[31:0];total<=cd[63:32];issued<=0;retired<=0;mcrc<='1;live<=0;valid<=0;end
- if(send)begin issued<=issued+1'b1;tags[slot]<=req_tag;live[slot]<=1;end
+ if(cv&&crdy)begin active<=1;base<=cd[31:0];ra_q<=cd[31:0];total<=cd[63:32];issued<=0;retired<=0;mcrc<='1;live<=0;valid<=0;end
+ if(send)begin issued<=issued_nx;ra_q<=ra_nx;tags[slot]<=req_tag;live[slot]<=1;end
  if(rsp_v&&rsp_rdy)begin
  if(!active||rsp_we||!live[rs]||valid[rs]||tags[rs]!=rsp_tag)fault<=1;
  else begin rob[rs]<=rsp_data;valid[rs]<=1;end
  end
- if(fold)begin retired<=retired+1'b1;valid[head]<=0;live[head]<=0;end
+ if(fold)begin retired<=retired_nx;valid[head]<=0;live[head]<=0;end
  if(mp2_v)mcrc<=crc_s(mcrc)^mp2_lo^mp2_hi;
  if(active&&retired==total&&!mp_busy)begin active<=0;completion_v<=1;completion_d<={(fault||overflow1||overflow2)?4'd5:4'd0,retired,mcrc};end
  end

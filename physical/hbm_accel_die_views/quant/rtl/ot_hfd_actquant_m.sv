@@ -91,7 +91,13 @@ module ot_hfd_actquant_m #(
     assign pfault = p_fp4 ? pfault4 : pfault8;
     // the elements, S0 -> E (5 tree + F + MLAT multiply registers, then E itself: aligned at E's input)
     wire [1023:0] xe;
-    ot_hdc_delay #(.W(1024), .D(7 + MLAT)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(xe));
+    wire [31:0] s0_nz, s0_fz, xnz, xfz;      // Z: per element |x[30:0] and |x[30:23], formed at the line's input
+    genvar zi;
+    generate for (zi = 0; zi < 32; zi = zi + 1) begin : g_nz
+        assign s0_nz[zi] = |s0_x[32*zi +: 31];
+        assign s0_fz[zi] = |s0_x[32*zi + 23 +: 8];
+    end endgenerate
+    ot_hdc_delay #(.W(1024 + 64), .D(7 + MLAT)) u_x (.clk(clk), .rst_n(rst_n), .d({s0_fz, s0_nz, s0_x}), .q({xfz, xnz, xe}));
 
     // ---- E: e = ceil_log2(prod)
     reg              e_v, e_fp4, e_nf;
@@ -126,8 +132,8 @@ module ot_hfd_actquant_m #(
         for (i = 0; i < 32; i = i + 1) begin
             fld0 = xe[32*i + 23 +: 8];
             g0_fe[i] <= (fld0 == 8'd0) ? -11'sd126 : ($signed({3'b000, fld0}) - 11'sd127);
-            g0_sig[i] <= {(fld0 != 8'd0), xe[32*i +: 23]};
-            g0_sgn[i] <= xe[32*i + 31] && (xe[32*i +: 31] != 31'd0);
+            g0_sig[i] <= {xfz[i], xe[32*i +: 23]};
+            g0_sgn[i] <= xe[32*i + 31] && xnz[i];
         end
     end
 
