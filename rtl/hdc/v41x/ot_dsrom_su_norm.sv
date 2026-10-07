@@ -178,18 +178,14 @@ module ot_dsrom_su_norm #(
                 assign f[6:0] = 7'd0;
             end
             // the x of the row waits here until the rstd comes back
-            reg [31:0] xb [0:NV-1];
-            reg [31:0] xo;
-            always @(posedge clk) if (x_v) xb[xi] <= xl;
-            always @(posedge clk) xo <= xb[sc_nx];
+            wire [31:0] xo;
+            ot_dsrom_su_norm_mem #(.NV(NV)) u_xb (.clk(clk), .we(x_v), .wa(xi), .wd(xl), .ra(sc_nx), .q(xo));
             wire live = (l < LB) || !x_last;          // lanes past D (last vector only) carry +0
             wire [31:0] xs = live ? xl : 32'd0;
             ot_hdc_qmul_lat #(LM) u_sq (clk, rst_n, x_v, xs, xs, sq[l * 32 +: 32], f[7]);
             // gain ROM and the scale y = bf16(w * (x * r))
-            reg [31:0] wr [0:NV-1];
-            reg [31:0] wo;
-            always @(posedge clk) if (wl_v) wr[wl_i] <= wl_d[l * 32 +: 32];
-            always @(posedge clk) wo <= wr[yi_m];
+            wire [31:0] wo;
+            ot_dsrom_su_norm_mem #(.NV(NV)) u_wr (.clk(clk), .we(wl_v), .wa(wl_i), .wd(wl_d[l * 32 +: 32]), .ra(yi_m), .q(wo));
             wire [31:0] p, q;
             ot_hdc_qmul_lat #(LMS) u_xr (clk, rst_n, sc_go, xo, rh, p, f[8]);
             ot_hdc_qmul_lat #(LMS) u_w  (clk, rst_n, vy[LMS], wo, p, q, f[9]);
@@ -529,4 +525,19 @@ module ot_dsrom_qadd #(parameter integer LAT = 4) (
     end else begin : gq
         ot_hdc_qadd_lat #(.KEEP(1), .LAT(LAT)) u (clk, rst_n, v, a, b, y, fault);
     end endgenerate
+endmodule
+
+// One lane's NV-word store with a registered read (the x wait line and the gain ROM). Kept as its own hierarchy so a
+// 64-lane engine synthesises this array once instead of as 128 flat NV x 32 dynamically indexed register files
+// (the flat form never leaves the host synthesis flow). Behaviour is the original array's.
+(* keep_hierarchy = "yes" *)
+module ot_dsrom_su_norm_mem #(parameter integer NV = 8) (
+    input  wire clk, we,
+    input  wire [7:0] wa, ra,
+    input  wire [31:0] wd,
+    output reg  [31:0] q
+);
+    reg [31:0] m [0:NV-1];
+    always @(posedge clk) if (we) m[wa] <= wd;
+    always @(posedge clk) q <= m[ra];
 endmodule
