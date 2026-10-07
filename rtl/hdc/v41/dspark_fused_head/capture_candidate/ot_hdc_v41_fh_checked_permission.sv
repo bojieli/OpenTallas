@@ -25,6 +25,7 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0, FPIPE=0) (
  input wire [2047:0] head_data,
  input wire [ot_dsrom_vm_pkg::REP_BITS-1:0] checked_reply,
  input wire bounds_in,   // FPIPE>=2: the bounds check registered at the endpoint pin stage (else unused)
+ input wire [ot_dsrom_vm_pkg::REQ_BITS-1:0] accepted_in, // FPIPE>=3: the normalized request, registered upstream
  output wire bounds_fault,endpoint_fault,
  output wire [ot_dsrom_vm_pkg::REQ_BITS-1:0] captured_request,captured_request_check,
  output wire [ot_dsrom_vm_pkg::REP_BITS-1:0] captured_reply,captured_reply_check,
@@ -72,7 +73,7 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0, FPIPE=0) (
    for(integer l=0;l<16;l=l+1) if(head_mask[g*16+l])
     wd[(g+1)*512+l*32+:32]=head_data[g*512+l*32+:32];
   end
-  accepted_input={native_ordinal,request_owner,2'b0,30'b0,{head_we,1'b0},wa,wd,wm};
+  accepted_input=FPIPE>=3?accepted_in:{native_ordinal,request_owner,2'b0,30'b0,{head_we,1'b0},wa,wd,wm};
  end
  (* keep=1,dont_touch=1 *) reg active,active_check,reply_active,reply_active_check;
  (* keep=1,dont_touch=1 *) reg [2:0] req_age,req_age_check,rep_age,rep_age_check;

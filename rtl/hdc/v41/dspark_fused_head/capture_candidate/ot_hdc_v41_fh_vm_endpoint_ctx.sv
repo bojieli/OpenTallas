@@ -26,7 +26,64 @@ module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0, CHECK_PIPE=0
  output wire [15:0] head_ack_mask
 );
  import ot_dsrom_vm_pkg::*;
- generate if(ENABLE && CHECK_PIPE && FPIPE>=2) begin : g_distributed_check
+ generate if(ENABLE && CHECK_PIPE && FPIPE>=3) begin : g_distributed_check
+  // FPIPE=3 (SAFE r5): two input stages. Stage 1 registers every input plus the per-lane write enable
+  // (head_we[g] && head_mask[l], one AND behind each pin); stage 2 forms the normalized request (each lane enable
+  // gates its own 32 data bits), the bounds check and the payload copies from stage-1 registers. Every output leaves
+  // one more register placed at its pin (+1). guard_busy covers both input stages. Uniform delays: +1 request /
+  // reply / publication, +1 on every output.
+  reg ra1,rw1,rc1,pv1,ra2,rw2,rc2,pv2;
+  reg [31:0] ord1,ord2; reg [46:0] own1,own2; reg [7:0] id1,id2; reg [3:0] we1,we2; reg [95:0] addr1,addr2;
+  reg [63:0] le1,le2; reg [2047:0] data1; reg [REP_BITS-1:0] rep1,rep2; reg bounds2;
+  request_t acc2;
+  reg [74:0] wa1; reg [2559:0] wd1;
+  always @* begin
+   wa1=0; wd1=0;
+   for(integer g=0;g<4;g=g+1) if(we1[g]) wa1[(g+1)*15+:15]=addr1[g*24+:15];
+   for(integer l=0;l<64;l=l+1) if(le1[l]) wd1[512+l*32+:32]=data1[l*32+:32];
+  end
+  always @(posedge fast_clk) begin
+   if(!cold_n) begin ra1<=0;rw1<=0;rc1<=0;pv1<=0;we1<=0;le1<=0;ra2<=0;rw2<=0;rc2<=0;pv2<=0;we2<=0;le2<=0;bounds2<=0; end
+   else begin
+    ra1<=request_accept;rw1<=request_warm;rc1<=checked_reply_capture;pv1<=published_reply_v;we1<=head_we;
+    for(integer l=0;l<64;l=l+1) le1[l]<=head_we[l/16]&&head_mask[l];
+    ra2<=ra1;rw2<=rw1;rc2<=rc1;pv2<=pv1;we2<=we1;le2<=le1;
+    bounds2<=(we1[0]&&(|addr1[15+:9]))||(we1[1]&&(|addr1[39+:9]))||(we1[2]&&(|addr1[63+:9]))||(we1[3]&&(|addr1[87+:9]));
+   end
+   ord1<=native_ordinal;own1<=request_owner;id1<=request_id;addr1<=head_addr;data1<=head_data;rep1<=checked_reply;
+   ord2<=ord1;own2<=own1;id2<=id1;addr2<=addr1;rep2<=rep1;
+   acc2<={ord1,own1,2'b0,30'b0,{we1,1'b0},wa1,wd1,{le1,16'b0}};
+  end
+  wire guard_core_busy,ep_c,rqv_c,rpv_c,ack_c;
+  wire [7:0] id_c; wire [23:0] word_c; wire [15:0] mask_c;
+  request_t creq_c,creqk_c; reply_t crep_c,crepk_c;
+  ot_hdc_v41_fh_checked_permission #(.MARGIN(MARGIN),.FPIPE(FPIPE)) u_guard(.fast_clk(fast_clk),.cold_n_in(cold_n),
+   .request_accept(ra2),.request_warm(rw2),.checked_reply_capture(rc2),.published_reply_v(pv2),
+   .native_ordinal(ord2),.request_owner(own2),.request_id(id2),.head_we(we2),.head_addr(addr2),.head_mask(le2),
+   .head_data(2048'b0),.checked_reply(rep2),.bounds_in(bounds2),.accepted_in(acc2),.bounds_fault(bounds_fault),.endpoint_fault(ep_c),
+   .captured_request(creq_c),.captured_request_check(creqk_c),
+   .captured_reply(crep_c),.captured_reply_check(crepk_c),
+   .request_checked_v(rqv_c),.reply_checked_v(rpv_c),.guard_busy(guard_core_busy),
+   .head_ack_v(ack_c),.head_ack_id(id_c),.head_ack_word(word_c),.head_ack_mask(mask_c));
+  reg ep_o,rqv_o,rpv_o,ack_o; reg [7:0] id_o; reg [23:0] word_o; reg [15:0] mask_o;
+  request_t creq_o,creqk_o; reply_t crep_o,crepk_o;
+  // The guard's two reset-copy levels clear later than the pin registers.
+  // Keep output valids clear until that reset has reached the guard; otherwise
+  // the first released edge can capture a pre-reset grant from the held slot.
+  reg [1:0] output_release;
+  always @(posedge fast_clk)
+   if(!cold_n) output_release<=0; else output_release<={output_release[0],1'b1};
+  always @(posedge fast_clk) begin
+   if(!cold_n||!output_release[1]) begin ep_o<=0;rqv_o<=0;rpv_o<=0;ack_o<=0; end
+   else begin ep_o<=ep_c;rqv_o<=rqv_c;rpv_o<=rpv_c;ack_o<=ack_c; end
+   id_o<=id_c;word_o<=word_c;mask_o<=mask_c;creq_o<=creq_c;creqk_o<=creqk_c;crep_o<=crep_c;crepk_o<=crepk_c;
+  end
+  assign endpoint_fault=ep_o; assign request_checked_v=rqv_o; assign reply_checked_v=rpv_o;
+  assign head_ack_v=ack_o; assign head_ack_id=id_o; assign head_ack_word=word_o; assign head_ack_mask=mask_o;
+  assign captured_request=creq_o; assign captured_request_check=creqk_o;
+  assign captured_reply=crep_o; assign captured_reply_check=crepk_o;
+  assign guard_busy=guard_core_busy||ra1||ra2;
+ end else if(ENABLE && CHECK_PIPE && FPIPE>=2) begin : g_distributed_check
   // FPIPE=2 (SAFE): every endpoint input lands on a pin register first (+1 on request accept / reply capture /
   // publication and their payloads, uniformly); the checked permission then sees only registered inputs.
   // guard_busy also covers an accepted request still in the pin register, so a parent gating its next request on
@@ -45,7 +102,7 @@ module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0, CHECK_PIPE=0
   ot_hdc_v41_fh_checked_permission #(.MARGIN(MARGIN),.FPIPE(FPIPE)) u_guard(.fast_clk(fast_clk),.cold_n_in(cold_n),
    .request_accept(ra_q),.request_warm(rw_q),.checked_reply_capture(rc_q),.published_reply_v(pv_q),
    .native_ordinal(ord_q),.request_owner(own_q),.request_id(id_q),.head_we(we_q),.head_addr(addr_q),.head_mask(mask_q),
-   .head_data(data_q),.checked_reply(rep_q),.bounds_in(bounds_q),.bounds_fault(bounds_fault),.endpoint_fault(endpoint_fault),
+   .head_data(data_q),.checked_reply(rep_q),.bounds_in(bounds_q),.accepted_in('0),.bounds_fault(bounds_fault),.endpoint_fault(endpoint_fault),
    .captured_request(captured_request),.captured_request_check(captured_request_check),
    .captured_reply(captured_reply),.captured_reply_check(captured_reply_check),
    .request_checked_v(request_checked_v),.reply_checked_v(reply_checked_v),.guard_busy(guard_core_busy),
@@ -53,6 +110,7 @@ module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0, CHECK_PIPE=0
   assign guard_busy=guard_core_busy||ra_q;
  end else if(ENABLE && CHECK_PIPE) begin : g_distributed_check
   wire bounds_in=1'b0;
+  wire [REQ_BITS-1:0] accepted_in=0;
   ot_hdc_v41_fh_checked_permission #(.MARGIN(MARGIN),.FPIPE(FPIPE)) u_guard(.cold_n_in(cold_n),.*);
  end else if(ENABLE) begin : g_native_endpoints
   assign request_checked_v=request_accept&&!endpoint_fault;

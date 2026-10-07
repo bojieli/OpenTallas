@@ -88,6 +88,22 @@ BENCH = {
       'lret_depth': (f'{D}/quad/ot_hdc_v41_fh_head_q.sv', '.LRET(LRET?7:0)) u_hq', '.LRET(LRET?6:0)) u_hq'),
       'veto_skip': (f'{D}/quad/ot_hdc_v41_fh_hquad.sv', 'veto_q <= lane_veto_in;', 'veto_q <= 0;'),
       'ep_addr': (f'{D}/quad/ot_hdc_v41_fh_head_q.sv', '.head_we(o_we),.head_addr(r_oa)', '.head_we(o_we),.head_addr(t_oa)')}),
+  'endpoint_fpipe3': dict(top='tb_fh_checked_permission', params=['-GMARGIN=1', '-GFPIPE=3'],
+      srcs=['rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv',
+            f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', f'{D}/margin/tb_fh_margin_checked_permission.sv'], mut={
+      'pin_data_skip': (f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', 'data1<=head_data;', 'data1<=0;'),
+      'no_wide_veto': (f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv', 'wide_bad=FPIPE?checked_error:', 'wide_bad=FPIPE?1\'b0:'),
+      'drop_bank0': (f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv', '.bad({metadata_bad,identity_bad,request_bad,reply_bad})', '.bad({metadata_bad,identity_bad,request_bad[RB-1:1],1\'b0,reply_bad})')}),
+  'head_q_lret3': dict(top='tb_fh_head_q', params=['-GFPIPE=3', '-GQPIN=1', '-GSAFE=1', '-GHQ=1', '-GLRET=1'], srcs=['rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv'] + CTX + [SRAM,
+      'rtl/dft/ot_rom_secded_dec.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_sram_return.sv',
+      f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv',
+      f'{D}/capture_candidate/ot_hdc_v41_fh_retire_parent.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv',
+      f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_macro_ctx.sv',
+      f'{D}/quad/ot_hdc_v41_fh_quad.sv', f'{D}/quad/ot_hdc_v41_fh_hquad.sv', f'{D}/quad/ot_hdc_v41_fh_ctl.sv', f'{D}/quad/ot_hdc_v41_fh_head_top.sv', f'{D}/quad/ot_hdc_v41_fh_head_q.sv',
+      f'{D}/quad/tb_fh_head_q.sv'], mut={
+      'lret_depth': (f'{D}/quad/ot_hdc_v41_fh_head_q.sv', '.LRET(LRET?7:0)) u_hq', '.LRET(LRET?6:0)) u_hq'),
+      'veto_skip': (f'{D}/quad/ot_hdc_v41_fh_hquad.sv', 'veto_q <= lane_veto_in;', 'veto_q <= 0;'),
+      'ep_addr': (f'{D}/quad/ot_hdc_v41_fh_head_q.sv', '.head_we(o_we),.head_addr(r_oa)', '.head_we(o_we),.head_addr(t_oa)')}),
   'retire': dict(top='tb_fh_margin_retire', srcs=[f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv', f'{D}/margin/tb_fh_margin_retire.sv'], mut={
       'drop_group_fault': ('PARAM', 'MUT', '1'), 'no_offset': ('PARAM', 'MUT', '2')}),
 }
@@ -102,10 +118,10 @@ def run(name, b, mut, tmp):
     obj = Path(tmp) / 'obj'
     c = subprocess.run(['verilator', '--binary', '-O1', '-Wno-fatal', '-Wno-WIDTH', '-Wno-UNUSED', '-Wno-TIMESCALEMOD', '-Wno-UNOPTFLAT',
                         '-Wno-MULTIDRIVEN', '-Wno-IMPORTSTAR', '--top-module', b['top'], '-Mdir', str(obj), *params, *map(str, srcs)], capture_output=True, text=True)
-    if c.returncode: return dict(returncode=c.returncode, output=c.stderr[-800:])
+    if c.returncode: return dict(phase='compile', returncode=c.returncode, output=c.stderr[-800:])
     p = subprocess.run([str(obj / f"V{b['top']}")], capture_output=True, text=True)
     lines = [l for l in (p.stdout + p.stderr).splitlines() if 'PASS' in l or 'Fatal' in l or 'FATAL' in l or 'Error' in l]
-    return dict(returncode=p.returncode, output=(lines[0] if lines else (p.stdout + p.stderr).strip()[-160:])[:200])
+    return dict(phase='simulate', returncode=p.returncode, output=(lines[0] if lines else (p.stdout + p.stderr).strip()[-160:])[:200])
 def main():
     ap = argparse.ArgumentParser(description=__doc__); ap.add_argument('--only', nargs='*'); a = ap.parse_args()
     out = {'pass': True, 'cases': {}}
@@ -114,7 +130,7 @@ def main():
         for m, mut in [('baseline', None), *b['mut'].items()]:
             with tempfile.TemporaryDirectory(prefix='fh-margin-') as tmp:
                 r = run(name, b, mut, tmp)
-            ok = (r['returncode'] == 0 and 'PASS' in r['output']) if m == 'baseline' else r['returncode'] != 0
+            ok = (r['returncode'] == 0 and 'PASS' in r['output']) if m == 'baseline' else (r.get('phase') == 'simulate' and r['returncode'] != 0 and ('Assertion failed' in r['output'] or 'FATAL' in r['output']))
             out['cases'][f'{name}/{m}'] = dict(r, expected='PASS' if m == 'baseline' else 'FAIL', ok=ok)
             out['pass'] &= ok
             print(name, m, 'ok' if ok else 'UNEXPECTED', r['output'][:120], flush=True)

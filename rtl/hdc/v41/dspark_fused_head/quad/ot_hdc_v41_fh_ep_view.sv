@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
-// Hardened view wrapper of the checked endpoint (ot_hdc_v41_fh_vm_endpoint_ctx ENABLE CHECK_PIPE MARGIN FPIPE=2): the
+// Hardened view wrapper of the checked endpoint (ot_hdc_v41_fh_vm_endpoint_ctx ENABLE CHECK_PIPE MARGIN FPIPE=2 default; FPIPE=3 opt-in): the
 // clock port is named clk for the physical flow. No logic.
-module ot_hdc_v41_fh_ep_view (
+module ot_hdc_v41_fh_ep_view #(parameter integer FPIPE = 2) (
  input wire clk,cold_n,
  input wire request_accept,request_warm,checked_reply_capture,published_reply_v,
  input wire [31:0] native_ordinal,
@@ -24,7 +24,7 @@ module ot_hdc_v41_fh_ep_view (
  wire bf;
  wire [ot_dsrom_vm_pkg::REQ_BITS-1:0] c1;
  wire [ot_dsrom_vm_pkg::REP_BITS-1:0] c2;
- ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(1),.MARGIN(1),.FPIPE(2)) u_ep (
+ ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(1),.MARGIN(1),.FPIPE(FPIPE)) u_ep (
   .fast_clk(clk),.cold_n(cold_n),.request_accept(request_accept),.request_warm(request_warm),
   .checked_reply_capture(checked_reply_capture),.published_reply_v(published_reply_v),
   .native_ordinal(native_ordinal),.request_owner(request_owner),.request_id(request_id),

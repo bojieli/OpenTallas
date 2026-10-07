@@ -30,6 +30,7 @@ module tb_fh_checked_permission #(parameter integer MARGIN=1, FPIPE=0);
   repeat(5)tick;
   if(FPIPE)begin if(request_checked_v)$fatal(1,"grant before age 6");tick;end
   if(FPIPE>=2)begin if(request_checked_v)$fatal(1,"grant before the pin stage");tick;end
+  if(FPIPE>=3)begin repeat(2)begin if(request_checked_v)$fatal(1,"grant before stage 2 / output");tick;end end
   if(!request_checked_v||!guard_busy||captured_request!=~captured_request_check)$fatal(1,"missing checked capture");
  end endtask
  task reply(input reg wrong_owner,input reg wrong_ordinal);reg [46:0] owner;reg [31:0] ordinal;begin
@@ -40,7 +41,7 @@ module tb_fh_checked_permission #(parameter integer MARGIN=1, FPIPE=0);
   checked_reply_capture=1;published_reply_v=1;tick;
   @(negedge fast_clk);checked_reply_capture=0;
   if(head_ack_v)$fatal(1,"early visibility");
-  repeat(4+(FPIPE?2:0)+(FPIPE>=2?1:0))begin tick;if(head_ack_v)$fatal(1,"grant before all checks");end
+  repeat(4+(FPIPE?2:0)+(FPIPE>=2?1:0)+(FPIPE>=3?2:0))begin tick;if(head_ack_v)$fatal(1,"grant before all checks");end
   tick;
  end endtask
  integer cases=0;
@@ -50,18 +51,18 @@ module tb_fh_checked_permission #(parameter integer MARGIN=1, FPIPE=0);
   reply(0,0);
   if(!head_ack_v||head_ack_id!=request_id||head_ack_word!=24'h123||head_ack_mask!=1)$fatal(1,"matching ACK missing");
   tick;if(head_ack_v)$fatal(1,"duplicate held ACK");repeat(6)tick;if(head_ack_v)$fatal(1,"repeated ACK");
-  @(negedge fast_clk);published_reply_v=0;tick;if(FPIPE>=2)tick;if(guard_busy)$fatal(1,"slot not released");cases=cases+1;
+  @(negedge fast_clk);published_reply_v=0;tick;if(FPIPE>=2)tick;if(FPIPE>=3)tick;if(guard_busy)$fatal(1,"slot not released");cases=cases+1;
   reset;request_warm=0;take;reply(0,0);if(head_ack_v||!reply_checked_v)$fatal(1,"ordinary write warm ACK");cases=cases+1;
   reset;take;reply(1,0);if(head_ack_v||!endpoint_fault||!guard_busy)$fatal(1,"full owner quarantine");cases=cases+1;
   reset;take;reply(0,1);if(head_ack_v||!endpoint_fault||!guard_busy)$fatal(1,"full ordinal quarantine");cases=cases+1;
-  reset;take;@(negedge fast_clk);request_accept=1;tick;request_accept=0;if(FPIPE>=2)begin tick;tick;end
+  reset;take;@(negedge fast_clk);request_accept=1;tick;request_accept=0;if(FPIPE>=2)begin tick;tick;end if(FPIPE>=3)begin tick;tick;end
   if(!endpoint_fault||!guard_busy)$fatal(1,"held request overwrite not quarantined");cases=cases+1;
-  reset;head_addr=96'h8000;tick;if(FPIPE>=2)begin tick;tick;end if(!bounds_fault||head_ack_v)$fatal(1,"address truncation");cases=cases+1;
+  reset;head_addr=96'h8000;tick;if(FPIPE>=2)begin tick;tick;end if(FPIPE>=3)begin tick;tick;end if(!bounds_fault||head_ack_v)$fatal(1,"address truncation");cases=cases+1;
   if(FPIPE)begin
    // registered aggregation: a bank corrupted while held is quarantined before the reply grant
    reset;take;
    force dut.g_distributed_check.u_guard.g_request_bank[0].u_bank.check=32'h0;
-   repeat(FPIPE>=2?5:4)tick;if(!endpoint_fault)$fatal(1,"held payload mirror not caught in 4 (FPIPE=2: 5) cycles");
+   repeat(FPIPE>=3?6:FPIPE>=2?5:4)tick;if(!endpoint_fault)$fatal(1,"held payload mirror not caught in 4 (FPIPE=2: 5) cycles");
    reply(0,0);if(head_ack_v||!endpoint_fault)$fatal(1,"late payload mirror ACK");
    repeat(4)begin tick;if(head_ack_v)$fatal(1,"late payload mirror ACK");end
   end else begin
