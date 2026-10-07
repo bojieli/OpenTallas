@@ -201,8 +201,14 @@ def cmd_prep(a):
     if a.die_skew:
         lines += ["export SKIP_CTS_REPAIR_TIMING = 1", "export POST_CTS_TCL = /work/wfc_post_cts.tcl"]
         io0 = round(0.2 * PERIOD_PS, 1)
-        (case / "wfc_io_apply.tcl").write_text(HOOK_APPLY.format(skew=a.die_skew, spread=SPREAD_PS,
-                                               imax=round(io0 + a.die_skew + SPREAD_PS, 1), imin=round(io0 - a.die_skew - SPREAD_PS, 1)))
+        apply = HOOK_APPLY.format(skew=a.die_skew, spread=SPREAD_PS,
+                                  imax=round(io0 + a.die_skew + SPREAD_PS, 1), imin=round(io0 - a.die_skew - SPREAD_PS, 1))
+        if a.link_hold_pad:
+            # hold by repair: the stage-link inputs (in_*, the inter-region crossing) repaired against an extra
+            # hold pad (r11 src routed FF hold -5.2 / -4.7 ps die150 / region on in_data -> u_rx.pd)
+            apply += ("set_input_delay -min {:.1f} -clock core_clk -reference_pin $wfc_refp [get_ports {{in_*}}]\n"
+                      .format(io0 - a.die_skew - SPREAD_PS - a.link_hold_pad))
+        (case / "wfc_io_apply.tcl").write_text(apply)
         (case / "wfc_io_restore.tcl").write_text(HOOK_RESTORE.format(io=io0, olax=round(io0 + 400, 1)))
         (case / "wfc_post_cts.tcl").write_text(HOOK_POST_CTS.format())
     (case / "config.mk").write_text("\n".join(lines) + "\n")
@@ -236,7 +242,7 @@ echo "end $(date -Is)" >> $W/status
     (case / "run.sh").write_text(run)
     (case / "run.sh").chmod(0o755)
     (case / "case.json").write_text(json.dumps(dict(inst=a.inst, params=params, util=a.util, macros=macros,
-                                                     route_period_ps=rp, die_skew_ps=a.die_skew,
+                                                     route_period_ps=rp, die_skew_ps=a.die_skew, link_hold_pad_ps=a.link_hold_pad,
                                                      orfs_var=a.orfs_var, src=str(src),
                                                      ctrl_sha256=sha(src / CTRL)), indent=1) + "\n")
     print(case / "run.sh")
@@ -486,6 +492,7 @@ def main():
     p.add_argument("--ideal-io", action="store_true", help="r1 SDC: IO against the ideal core_clk")
     p.add_argument("--route-period", type=int, default=None, help="over-constrained route period ps (signoff stays 833)")
     p.add_argument("--die-skew", type=int, default=0, help="ps: io_clk min/max source latency widened by this (die150 budget)")
+    p.add_argument("--link-hold-pad", type=int, default=0, help="ps: extra hold pad on the stage-link inputs in_* in the POST_CTS repair")
     s = sub.add_parser("sta")
     s.add_argument("--case", type=Path, required=True)
     s.add_argument("--macros", action="store_true")
