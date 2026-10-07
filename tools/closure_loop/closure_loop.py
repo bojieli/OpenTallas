@@ -180,7 +180,7 @@ def stage_list(spec):
     for b in st.get("bench", []):
         t, r = STAGE_DEFAULTS["bench"]
         out.append(dict(key="bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", b["name"]), kind="bench", cmd=b["cmd"],
-                        expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"),
+                        expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"), pass_regex=b.get("pass_regex"),
                         threads=b.get("threads", t), ram=b.get("peak_ram_gb", r)))
     cal = st.get("calibrate") or {}
     if cal.get("enabled", True) and cal.get("cmd"):
@@ -485,6 +485,15 @@ def remote_ok(j, cmd):
         return True, ""
     r = ssh(j["host"], f"cd {j['run']}/src && {subst(cmd, j)}", timeout=300)
     return r.returncode == 0, (r.stdout + r.stderr)[-400:]
+
+
+def bench_outcome(j, st, rc, ok_extra=True):
+    """pass: rc 0 (+ ok, + pass_regex); fail: rc != 0 (+ fail_regex).  Regexes are MULTILINE over the whole stage log
+    (last 20000 lines), so ^FAIL matches any line."""
+    full = ssh(j["host"], f"tail -n 20000 {j['run']}/cl/{j['stage_tag']}.log 2>/dev/null; true", timeout=120).stdout
+    if st["expect"] == "pass":
+        return rc == 0 and ok_extra and (not st.get("pass_regex") or re.search(st["pass_regex"], full, re.M) is not None)
+    return rc != 0 and (not st.get("fail_regex") or re.search(st["fail_regex"], full, re.M) is not None)
 
 
 def stage_tail(j, st, n=40):
@@ -830,14 +839,10 @@ def step(j, fleet):
             return crash(j, st, fleet, "LOST: stage wrapper gone without an rc file")
         ok_extra, okout = remote_ok(j, st.get("ok"))
         if st["kind"] == "bench":
-            tail = stage_tail(j, st, 20)
-            if st["expect"] == "pass":
-                passed = rc == 0 and ok_extra
-            else:
-                looks_crash = rc in (124, 137, 139, 143) or bool(RESOURCE_RE.search(tail))
-                if looks_crash:
-                    return crash(j, st, fleet, f"negative control rc={rc} looks like a crash, not a FAIL")
-                passed = rc != 0 and (not st.get("fail_regex") or re.search(st["fail_regex"], tail) is not None)
+            tail = stage_tail(j, st, 40)
+            if st["expect"] == "fail" and (rc in (124, 137, 139, 143) or RESOURCE_RE.search(tail)):
+                return crash(j, st, fleet, f"negative control rc={rc} looks like a crash, not a FAIL")
+            passed = bench_outcome(j, st, rc, ok_extra)
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:])
             if not passed:
                 finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}",
@@ -922,6 +927,35 @@ FIXED_SIGNATURES = [
 ]
 
 
+BENCH_RE = re.compile(r"^(bench_\S+) expected (FAIL|PASS) but rc=(-?\d+)")
+
+
+def reevaluate_benches(jobs):
+    """Fix bench-regex-multiline (2026-10-06): bench verdicts were taken on 20 log lines without re.M.  Re-judge every
+    job that stopped on a bench verdict with the fixed rule; a bench that now passes resumes the job at the next stage."""
+    fid = "bench-regex-multiline-20261006"
+    for j in jobs:
+        m = BENCH_RE.match(j.get("reason") or "")
+        if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN") or not m or fid in j.get("fix_requeued", []):
+            continue
+        j.setdefault("fix_requeued", []).append(fid)
+        stl = stage_list(j["spec"])
+        idx = next((i for i, x in enumerate(stl) if x["key"] == m.group(1)), None)
+        if idx is None or not j.get("stage_tag", "").startswith(m.group(1) + "."):
+            save_job(j)
+            continue
+        st = stl[idx]
+        if bench_outcome(j, st, int(m.group(3))):
+            j["benches"][st["key"]] = dict(expect=st["expect"], rc=int(m.group(3)), ok=True, rejudged=fid)
+            j["status"], j["stage_idx"], j["reason"] = "READY", idx + 1, None
+            event(j, f"{st['key']} re-judged {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} under {fid}; resumed")
+            ledger(j, f"REQUEUED automatically: {st['key']} re-judged correct under loop fix {fid} (MULTILINE regex over the whole log)")
+            experiment(j, f"running: resumed after {fid}")
+        else:
+            event(j, f"{st['key']} re-judged under {fid}: verdict stands")
+        save_job(j)
+
+
 def auto_requeue(jobs):
     live_blocks = {(x["spec"].get("block"), str(x["spec"].get("source", {}).get("commit", ""))[:9])
                    for x in jobs if x["status"] not in TERMINAL}
@@ -934,7 +968,7 @@ def auto_requeue(jobs):
         for fid, k, rx in FIXED_SIGNATURES:
             if kind != k or not rx.search(c.get("tail", "") + c.get("why", "")) or fid in j.get("fix_requeued", []):
                 continue
-            if j["status"] == "CANCELLED" and (j["spec"]["block"], str(j["spec"]["source"]["commit"])[:9]) in live_blocks:
+            if (j["spec"]["block"], str(j["spec"]["source"]["commit"])[:9]) in live_blocks:
                 continue   # its owner already re-dropped it under another name
             j.setdefault("fix_requeued", []).append(fid)
             j["status"], j["retries_used"], j["attempt"], j["errors"], j["reason"] = "READY", 0, j["attempt"] + 1, [], None
@@ -953,6 +987,7 @@ def tick(fleet):
     except Exception:  # noqa: BLE001
         log("ingest error:\n" + traceback.format_exc())
     try:
+        reevaluate_benches(all_jobs())
         auto_requeue(all_jobs())
     except Exception:  # noqa: BLE001
         log("auto_requeue error:\n" + traceback.format_exc())
