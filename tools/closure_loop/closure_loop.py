@@ -1368,7 +1368,8 @@ def crash(j, st, fleet, why):
             j["hosts_tried"].append(h)
             j["host"], j["run"] = h, f"{host_cfg(h)['base']}/{j['name']}"
             j["status"] = "SYNC"
-            # benches are host independent: resume at the first non-bench stage
+            # Keep existing bench receipts; the bench chain retains its producer host/run.
+            # Resume the migrated physical track at its first non-bench stage.
             stl = stage_list(j["spec"])
             j["stage_idx"] = next(i for i, s in enumerate(stl) if s["kind"] != "bench")
             return
@@ -1466,7 +1467,8 @@ def launch_now(j, fleet, st):
 
 
 # ---- parallel bench track (OWNER 2026-10-07 05:00 "LAUNCH IMMEDIATELY"): exactness benches run beside
-# calibrate -> route on the job's host, one bench at a time; they gate ADOPTION, not launch.  A bench with the wrong
+# calibrate -> route independently; one bench at a time stays beside its first producer artifacts.
+# Benches gate ADOPTION, not launch.  A bench with the wrong
 # verdict stops the route and ends the job NEEDS_RTL; the verdict waits until every bench has its expected verdict.
 # Opt out per job with spec "bench_first": true (benches before the route, as before).
 
@@ -1500,6 +1502,25 @@ def benches_done(j, stl):
     return all(k["key"] in j.get("benches", {}) for k in bench_stages(stl))
 
 
+def bench_location(j, stl):
+    """A serial bench chain shares artifacts even if the physical track moves hosts.
+
+    Recover older state from the first launched bench; completed receipts stay
+    untouched. Never copy or rerun a producer merely because its route migrated.
+    """
+    if j.get("bench_location"):
+        return j["bench_location"]
+    for st in bench_stages(stl):
+        entry = (j.get("btrack") or {}).get(st["key"])
+        if entry and entry.get("host") and entry.get("run"):
+            match = re.search(r"\.a([0-9]+)b[0-9]+$", entry.get("tag", ""))
+            location = dict(host=entry["host"], run=entry["run"],
+                            attempt=int(match.group(1)) if match else j["attempt"])
+            j["bench_location"] = location
+            return location
+    return dict(host=j["host"], run=j["run"], attempt=j["attempt"])
+
+
 def bench_track(j, fleet, stl):
     """advance the bench track; returns False if the job ended (bench failure)"""
     if not j.get("bench_par") or j["status"] in TERMINAL or j["status"] in ("QUEUED", "SYNC", "MIGRATING"):
@@ -1513,19 +1534,22 @@ def bench_track(j, fleet, stl):
         if e is None or e.get("state") == "retry":
             if any(x.get("state") == "running" for x in tr.values()):
                 return True                  # one bench at a time
-            fleet.probe(j["host"])
+            location = bench_location(j, stl)
+            host = location["host"]
+            fleet.probe(host)
             with FLEET_LOCK:
-                ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
+                ok, why = fleet.fits(host, st["threads"], st["ram"])
                 if not ok:
                     if j.get("bwait") != why:
                         j["bwait"] = why
-                        event(j, f"bench track: {k} waiting for capacity: {why}")
+                        event(j, f"bench track: {k} waiting for capacity on artifact host {host}: {why}")
                     return True
-                fleet._launched(j["host"], st["threads"], st["ram"])
+                fleet._launched(host, st["threads"], st["ram"])
             n = (e or {}).get("n", 0) + 1
-            v = dict(j, attempt=f"{j['attempt']}b{n}")
+            v = dict(j, host=host, run=location["run"], attempt=f"{location['attempt']}b{n}")
             launch_stage(v, st, st["cmd"])
-            tr[k] = dict(state="running", tag=v["stage_tag"], host=j["host"], run=j["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
+            j["bench_location"] = location
+            tr[k] = dict(state="running", tag=v["stage_tag"], host=host, run=location["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
             j["bwait"] = None
             event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
             return True
