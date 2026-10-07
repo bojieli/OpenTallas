@@ -355,10 +355,14 @@ R24F = dict(R24, spine_slots=dict(R24['spine_slots'], su_full=(400.008, 401.736)
 # This is an unbound floorplan slot until a measured wrapper supplies pins/RTL.
 R24W = dict(R24F, spine_slots=dict(R24F['spine_slots'], w2_sender=(400.008, 401.736)),
             spine_slot_domains={'w2_sender': 'stream_1p2'})
+# Geometry-only successor sized by hbm_w2_slot_model.py (ac7d9ee59).
+# Logical SM identity/ports stay 4x2; physical locations become eight of nine
+# 3x3 sites. Network generation is intentionally unavailable pending remapping.
+R24SM3 = dict(R24W, sm_wh=(3075.84, 1131.84), sm_physical_grid=(3, 3), side_padding_um=207.36)
 ADOPTED = R23
 
 
-def build(variant=None):
+def build(variant=None, *, geometry_only=False):
     variant = dict(variant if variant is not None else ADOPTED)
     Q.CORNER_RULE.clear()
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
@@ -366,8 +370,16 @@ def build(variant=None):
     Q.PIN_CENTRE.update(variant.get('pin_centre', {}))
     smw, smh = sm_dims() if 'sm_wh' not in variant else (up(variant['sm_wh'][0], GX) - SHAVE, up(variant['sm_wh'][1], GY) - SHAVE)
     strip_d = variant.get('strip_d', STRIP_D)
-    grp_w = 4 * (smw + SHAVE) + 5 * CH
-    grp_h = 2 * (smh + SHAVE) + 2 * CH
+    if variant.get('sm_physical_grid'):
+        # Measured hard macro dimensions must never be shaved or rescaled.
+        smw, smh = variant['sm_wh']
+    physical_cols, physical_rows = variant.get('sm_physical_grid', (4, 2))
+    if (physical_cols, physical_rows) not in ((4, 2), (3, 3)):
+        raise ValueError('SM physical grid must preserve eight logical SMs per stack')
+    if variant.get('sm_physical_grid') and not geometry_only:
+        raise ValueError('Retiled SM network paths and latency are not yet qualified; use geometry_only=True')
+    grp_w = physical_cols * (smw + SHAVE) + (physical_cols + 1) * CH
+    grp_h = physical_rows * (smh + SHAVE) + physical_rows * CH
     mid_ch = up(variant.get('mid_ch', 2592.0), GX)
     if variant.get('hub_scale'):        # r23: the SU / SFU / HC quarters grow by hub_scale; the centre channel widens by
         #   the added quarter widths on both sides (each quarter is BLOCKS mm2 / 4 over the quarter height qhc)
@@ -386,7 +398,7 @@ def build(variant=None):
         mid_ch = up(mid_ch + 2 * 4 * (up(variant['attn_tile_w_um'], GX) - tw0), GX)
     core_w = 2 * grp_w + mid_ch
     W = up(EDGE + SCH + core_w + SCH + strip_d + EDGE, GX)
-    side_h = EDGE + PHY_H + 8.64 + SVC_D + SVC_GAP + grp_h
+    side_h = EDGE + PHY_H + 8.64 + SVC_D + SVC_GAP + grp_h + variant.get('side_padding_um', 0.0)
     hub_h = up(variant.get('hub_h', 7200.0), GY)
     H = up(2 * side_h + hub_h, GY)
     assert W <= 33000 and H <= 26000, (W, H)
@@ -420,14 +432,15 @@ def build(variant=None):
             sms = []
             for row in range(2):
                 for col in range(4):
-                    sx = up(gx + CH + col * (smw + SHAVE + CH), GX)
+                    physical_row, physical_col = divmod(4 * row + col, physical_cols)
+                    sx = up(gx + CH + physical_col * (smw + SHAVE + CH), GX)
                     if side == 'S':
-                        sy = up(yg + CH + row * (smh + SHAVE + CH), GY) if row else up(yg + 0.0, GY)
+                        sy = up(yg + CH + physical_row * (smh + SHAVE + CH), GY) if physical_row else up(yg + 0.0, GY)
                     else:
                         if variant.get('n_mirror_fix'):     # r10: r1-r8 abutted N row 1 on the hub band (no CH)
-                            sy = dn(yg + grp_h - (smh + SHAVE) - row * (smh + SHAVE + CH), GY)
+                            sy = dn(yg + grp_h - (smh + SHAVE) - physical_row * (smh + SHAVE + CH), GY)
                         else:
-                            sy = dn(yg + grp_h - (smh + SHAVE) - (CH + row * (smh + SHAVE + CH) if row else 0.0), GY)
+                            sy = dn(yg + grp_h - (smh + SHAVE) - (CH + physical_row * (smh + SHAVE + CH) if physical_row else 0.0), GY)
                     i = 8 * 'SW SE NW NE'.split().index(st) + 4 * row + col
                     my = variant.get('w_my') and half == 'W'      # r10: W groups mirrored, x face toward the centre
                     if variant.get('orient_fix'):     # r15: bool() -- r1-r14b compared with None (True on S too)
@@ -437,6 +450,8 @@ def build(variant=None):
                     ori = ('R180' if my else 'MX') if flip else ('MY' if my else 'R0')
                     it = Inst(f'sm{i}', 'hfd_sm', sx, sy, smw, smh, ori, kind='sm', region=f'grp_{st}')
                     it.sm = dict(stack=st, row=row, col=col)
+                    if variant.get('sm_physical_grid'):
+                        it.sm.update(physical_row=physical_row, physical_col=physical_col)
                     insts.append(it)
                     sms.append(it)
             groups[st] = dict(x=gx, y=yg, sms=sms, phy=phy, svc=svc, side=side, half=half)
@@ -494,6 +509,9 @@ def build(variant=None):
         yy = it.y + h_
     if 'router_env' in variant:      # r16h: scoped router envelope (loader / cmdproc fixed, taken from their gaps)
         ry, rh = variant['router_env']
+        if variant.get('sm_physical_grid'):
+            # Historical envelope is absolute; preserve its hub-relative location.
+            ry += grp_h - (2 * (sm_dims()[1] + SHAVE) + 2 * CH) + variant.get('side_padding_um', 0.0)
         it = hub['router']
         assert ry >= hub['loader'].y + hub['loader'].h and ry + rh <= hub['cmdproc'].y, ('router_env overlaps', ry, rh)
         it.y, it.h = ry, rh
@@ -631,6 +649,11 @@ def build(variant=None):
     if variant.get('r5a_sidebands'):
         from hbm_r5a_parent_allocation import allocate
         allocate(m)
+    if geometry_only:
+        m['buses'], m['paths'] = [], {}
+        m['geometry_only'] = True
+        m['notes'].append('Placement candidate only: network paths, fixed-pin transforms, clock delivery and latency unqualified.')
+        return m
     m['buses'], m['paths'] = buses(m)
     if variant.get('stn_share'):
         share_stations(m)
@@ -2766,8 +2789,10 @@ def pdn_plan(m, cov=None):
 def clock_regions(m):
     out = [dict(r) for r in m.get('region_extra', [])]     # r17: station rects of a named region, matched first
     for st, G in m['groups'].items():
-        for h, cols in (('w', (0, 1)), ('e', (2, 3))):
-            ss = [s for s in G['sms'] if s.sm['col'] in cols]
+        retiled = bool(m['variant'].get('sm_physical_grid'))
+        cuts = [(f'c{c}', (c,)) for c in range(3)] if retiled else [('w', (0, 1)), ('e', (2, 3))]
+        for h, cols in cuts:
+            ss = [s for s in G['sms'] if s.sm['physical_col' if retiled else 'col'] in cols]
             x0 = min(s.x for s in ss)
             y0 = min(s.y for s in ss)
             x1 = max(s.x + s.w for s in ss)
