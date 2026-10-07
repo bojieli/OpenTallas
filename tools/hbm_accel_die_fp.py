@@ -361,6 +361,8 @@ R24W = dict(R24F, spine_slots=dict(R24F['spine_slots'], w2_sender=(400.008, 401.
 # W2/HA2 partial interfaces stay inside hb_coll; the earlier R24W
 # external sender reservation is historical diagnostic geometry only.
 R24SM3 = dict(R24F, sm_wh=(3075.84, 1131.84), sm_physical_grid=(3, 3), side_padding_um=207.36)
+# Geometry candidate only: full VM8 port/latency contract and routed closure remain gates.
+R24SM3V = dict(R24SM3, vm_split8=True, vm8_nonoverlap=True)
 ADOPTED = R23
 
 
@@ -1106,7 +1108,7 @@ def split_vm8(m):
     halves, own = {}, {}
     for nm, it in tiles.items():
         q = it.master[len('hfd_vm_'):]
-        dy = 1000.056 - 500.04
+        dy = 500.04 if m['variant'].get('vm8_nonoverlap') else 1000.056 - 500.04
         hs = Inst(nm + '_s', it.master + '_s', it.x, it.y, 699.816, 500.04, it.orient, kind=it.kind, region=it.region, domain=it.domain)
         hn = Inst(nm + '_n', it.master + '_n', it.x, round(it.y + dy, 4), 699.816, 500.04, it.orient, kind=it.kind,
                   region=it.region, domain=it.domain)
