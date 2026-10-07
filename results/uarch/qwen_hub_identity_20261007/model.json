@@ -1,0 +1,30 @@
+{
+  "model_before_RTL": true,
+  "default_off": true,
+  "predecessor_sha256": "06d01e706d7b7790e4e6f0869e15dfa6f278a7e504f4a313b87daa6efe6d4a93",
+  "new_output_FFs": 13,
+  "new_tag_FFs": 11,
+  "new_source_FFs": 2,
+  "extra_cycles": 0,
+  "replicas": 1,
+  "new_output_bits_per_accepted_word": 13,
+  "new_output_port_bits_per_cycle": 13,
+  "MACs_per_cycle": 0,
+  "memory_bytes_per_cycle_change": 0,
+  "new_data_mux": "Existing held523-bit tag selection adds11-bit NL4 output mux; existing2-bit pick directly feeds source outputFF.",
+  "area_scope": "13 DFF plus11-bit4:1 mux, exact mapped cost and parent slot fit pending; no claimed closure.",
+  "protection_scope": "Metadata visibility only; mutable storage/integrity, protocol ownership and physical timing remain unqualified.",
+  "behavior": "Tag and source captured on same take edge as existing ar_d, qualified only by existing ar_v; disabled outputs zero.",
+  "postbuild_generic_register_bits_disabled": 35290,
+  "postbuild_generic_register_bits_enabled": 35963,
+  "total_additional_register_bits": 673,
+  "retained_previously_unused_tag_path_bits": 660,
+  "retained_tag_path_derivation": "4 links *11 tagbits *(input pin1+IBUF4+asyncFIFO8+output1+held1)=660; new ar tag11/source2=13.",
+  "generic_additional_cells": {
+    "MUX": 1798,
+    "AND": 311,
+    "OR": 264,
+    "XOR": 3
+  },
+  "actual_area_and_slot_fit": "Technology-mapped area, parent pin corridor and SS/FF remain pending. Generic gate counts not technology area."
+}
