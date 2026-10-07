@@ -1,6 +1,6 @@
 // hfd_router: thin registered die wrapper (tools/hbm_die_wrap.py, CLAUDE HBM-ABSTRACTS spine).
 // Die ports exactly as the r16g generator master (tools/hbm_die_views.py ports); default-off: nothing
-// instantiates it except the die view route.  INTERIM: the current best routed router RTL ot_gpu_router_topk_f N384 P16 K6 IW9 (topk_f3, ctl_takeover_20261005, SS -369.79 / FF +6.23 ps, NOT closed; source physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned, sha = routed). The VM -> router bus f_vm[511:0] is in_vals (16 FP32 logits a beat); in_valid / in_last ride bits 0..1 of the SU(SW) -> router bus (the RTL has no other use for the 4 x 256 SU buses); the selected ids + valid (55 b) go to the cmdproc (t_cmdproc[54:0]) and, as the expert-fetch descriptor, to every stack's stream service (e*[54:0]; the expert workgroup steering is not built).
+// instantiates it except the die view route.  Router core: ot_gpu_router_topk_ps PIPESEL=1 (CLAUDE hbm-router, branch claude/hbm-router-close-20261006): pipelined selection at 16 scores/cycle, exact vs ot_gpu_router_topk (results/rtl/hbm_router_ps_20261006/exact_campaign.json: 12,000 vectors 0 mismatches, 4 negatives fail), r4 (S5b per-bank kept copies of the beat list), latency 20 vs reference 23 / topk_f 24 cycles. Face stages sized per port from the measured core spread (dv7: core flops x 500..994 um of 1399.656; one stage per <= ~340 um at 770 ps effective): W faces (eNW, eSW, f_su_NW, f_su_SW) 4, E faces (eNE, eSE, f_su_NE, f_su_SE) 3, t_cmdproc 2, f_vm 2 (top face, x 650 / 749 um). The VM -> router bus f_vm[511:0] is in_vals (16 FP32 logits a beat); in_valid / in_last ride bits 0..1 of the SU(SW) -> router bus (the RTL has no other use for the 4 x 256 SU buses); the selected ids + valid (55 b) go to the cmdproc (t_cmdproc[54:0]) and, as the expert-fetch descriptor, to every stack's stream service (e*[54:0]; the expert workgroup steering is not built).
 module hfd_router (
     input wire [0:0] ck,
     output wire [128:0] eNE,
@@ -20,29 +20,20 @@ module hfd_router (
     wire rst_n = ~rst_s[1];
     reg [255:0] i0_f_su_NE; always @(posedge clk) i0_f_su_NE <= f_su_NE;
     reg [255:0] i1_f_su_NE; always @(posedge clk) i1_f_su_NE <= i0_f_su_NE;
-    reg [255:0] i2_f_su_NE; always @(posedge clk) i2_f_su_NE <= i1_f_su_NE;
-    reg [255:0] i3_f_su_NE; always @(posedge clk) i3_f_su_NE <= i2_f_su_NE;
-    reg [255:0] i_f_su_NE; always @(posedge clk) i_f_su_NE <= i3_f_su_NE;
+    reg [255:0] i_f_su_NE; always @(posedge clk) i_f_su_NE <= i1_f_su_NE;
     reg [255:0] i0_f_su_NW; always @(posedge clk) i0_f_su_NW <= f_su_NW;
     reg [255:0] i1_f_su_NW; always @(posedge clk) i1_f_su_NW <= i0_f_su_NW;
     reg [255:0] i2_f_su_NW; always @(posedge clk) i2_f_su_NW <= i1_f_su_NW;
-    reg [255:0] i3_f_su_NW; always @(posedge clk) i3_f_su_NW <= i2_f_su_NW;
-    reg [255:0] i_f_su_NW; always @(posedge clk) i_f_su_NW <= i3_f_su_NW;
+    reg [255:0] i_f_su_NW; always @(posedge clk) i_f_su_NW <= i2_f_su_NW;
     reg [255:0] i0_f_su_SE; always @(posedge clk) i0_f_su_SE <= f_su_SE;
     reg [255:0] i1_f_su_SE; always @(posedge clk) i1_f_su_SE <= i0_f_su_SE;
-    reg [255:0] i2_f_su_SE; always @(posedge clk) i2_f_su_SE <= i1_f_su_SE;
-    reg [255:0] i3_f_su_SE; always @(posedge clk) i3_f_su_SE <= i2_f_su_SE;
-    reg [255:0] i_f_su_SE; always @(posedge clk) i_f_su_SE <= i3_f_su_SE;
+    reg [255:0] i_f_su_SE; always @(posedge clk) i_f_su_SE <= i1_f_su_SE;
     reg [255:0] i0_f_su_SW; always @(posedge clk) i0_f_su_SW <= f_su_SW;
     reg [255:0] i1_f_su_SW; always @(posedge clk) i1_f_su_SW <= i0_f_su_SW;
     reg [255:0] i2_f_su_SW; always @(posedge clk) i2_f_su_SW <= i1_f_su_SW;
-    reg [255:0] i3_f_su_SW; always @(posedge clk) i3_f_su_SW <= i2_f_su_SW;
-    reg [255:0] i_f_su_SW; always @(posedge clk) i_f_su_SW <= i3_f_su_SW;
+    reg [255:0] i_f_su_SW; always @(posedge clk) i_f_su_SW <= i2_f_su_SW;
     reg [511:0] i0_f_vm; always @(posedge clk) i0_f_vm <= f_vm;
-    reg [511:0] i1_f_vm; always @(posedge clk) i1_f_vm <= i0_f_vm;
-    reg [511:0] i2_f_vm; always @(posedge clk) i2_f_vm <= i1_f_vm;
-    reg [511:0] i3_f_vm; always @(posedge clk) i3_f_vm <= i2_f_vm;
-    reg [511:0] i_f_vm; always @(posedge clk) i_f_vm <= i3_f_vm;
+    reg [511:0] i_f_vm; always @(posedge clk) i_f_vm <= i0_f_vm;
     wire [0:0] w_rt_clk;
     wire [0:0] w_rt_rst_n;
     wire [0:0] w_rt_in_valid;
@@ -55,7 +46,7 @@ module hfd_router (
     assign w_rt_in_valid = {i_f_su_SW[0:0]};
     assign w_rt_in_vals = {i_f_vm[511:0]};
     assign w_rt_in_last = {i_f_su_SW[1:1]};
-    ot_gpu_router_topk_f #(.N(384), .P(16), .K(6), .IW(9)) u_rt (.clk(w_rt_clk), .rst_n(w_rt_rst_n), .in_valid(w_rt_in_valid), .in_vals(w_rt_in_vals), .in_last(w_rt_in_last), .out_valid(w_rt_out_valid), .out_ids(w_rt_out_ids));
+    ot_gpu_router_topk_ps #(.N(384), .P(16), .K(6), .IW(9), .PIPESEL(1)) u_rt (.clk(w_rt_clk), .rst_n(w_rt_rst_n), .in_valid(w_rt_in_valid), .in_vals(w_rt_in_vals), .in_last(w_rt_in_last), .out_valid(w_rt_out_valid), .out_ids(w_rt_out_ids));
     wire fclk_0; ot_fwd_clk_inv u_fclk_0 (.a(clk), .y(fclk_0));
     wire fclk_1; ot_fwd_clk_inv u_fclk_1 (.a(clk), .y(fclk_1));
     wire fclk_2; ot_fwd_clk_inv u_fclk_2 (.a(clk), .y(fclk_2));
@@ -63,7 +54,7 @@ module hfd_router (
     wire [128:0] od_eNE = {74'd0, w_rt_out_valid[0:0], w_rt_out_ids[53:0]};
     wire [128:0] o_eNE;
     for (genvar k = 0; k < 129; k = k + 1) begin : g_o_eNE
-        ot_hfd_oreg5 u (.clk(clk), .d(od_eNE[k]), .q(o_eNE[k]));
+        ot_hfd_oreg3 u (.clk(clk), .d(od_eNE[k]), .q(o_eNE[k]));
     end
     assign eNE[0] = o_eNE[0];
     assign eNE[1] = o_eNE[1];
@@ -197,7 +188,7 @@ module hfd_router (
     wire [128:0] od_eNW = {74'd0, w_rt_out_valid[0:0], w_rt_out_ids[53:0]};
     wire [128:0] o_eNW;
     for (genvar k = 0; k < 129; k = k + 1) begin : g_o_eNW
-        ot_hfd_oreg5 u (.clk(clk), .d(od_eNW[k]), .q(o_eNW[k]));
+        ot_hfd_oreg4 u (.clk(clk), .d(od_eNW[k]), .q(o_eNW[k]));
     end
     assign eNW[0] = o_eNW[0];
     assign eNW[1] = o_eNW[1];
@@ -331,7 +322,7 @@ module hfd_router (
     wire [128:0] od_eSE = {74'd0, w_rt_out_valid[0:0], w_rt_out_ids[53:0]};
     wire [128:0] o_eSE;
     for (genvar k = 0; k < 129; k = k + 1) begin : g_o_eSE
-        ot_hfd_oreg5 u (.clk(clk), .d(od_eSE[k]), .q(o_eSE[k]));
+        ot_hfd_oreg3 u (.clk(clk), .d(od_eSE[k]), .q(o_eSE[k]));
     end
     assign eSE[0] = o_eSE[0];
     assign eSE[1] = o_eSE[1];
@@ -465,7 +456,7 @@ module hfd_router (
     wire [128:0] od_eSW = {74'd0, w_rt_out_valid[0:0], w_rt_out_ids[53:0]};
     wire [128:0] o_eSW;
     for (genvar k = 0; k < 129; k = k + 1) begin : g_o_eSW
-        ot_hfd_oreg5 u (.clk(clk), .d(od_eSW[k]), .q(o_eSW[k]));
+        ot_hfd_oreg4 u (.clk(clk), .d(od_eSW[k]), .q(o_eSW[k]));
     end
     assign eSW[0] = o_eSW[0];
     assign eSW[1] = o_eSW[1];
@@ -599,7 +590,7 @@ module hfd_router (
     wire [63:0] od_t_cmdproc = {9'd0, w_rt_out_valid[0:0], w_rt_out_ids[53:0]};
     wire [63:0] o_t_cmdproc;
     for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_cmdproc
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_cmdproc[k]), .q(o_t_cmdproc[k]));
+        ot_hfd_oreg2 u (.clk(clk), .d(od_t_cmdproc[k]), .q(o_t_cmdproc[k]));
     end
     assign t_cmdproc[63:0] = o_t_cmdproc[63:0];
 endmodule
