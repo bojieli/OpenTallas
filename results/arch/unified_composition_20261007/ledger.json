@@ -804,7 +804,26 @@
        "commit": "4534a8e5f (origin/codex/bf-evidence-only-20261007, BF agent records of claude/dsrom-bf-double-20261007; not on main)"
       }
      ],
-     "note": "measured exact (19,056/19,056 regions, both runs bit-exact), UNADOPTED, FULL-RATE BF: AR 1645.8 vs base_f198 1608.4 (+2.33 %), MTP 4841.9 vs 4764.3 (+1.63 %). Supersedes the +7.82 % figure (BF16-phase-only, ledger.md on origin/claude/dsrom-bf-double-20261007). Option B (2,304 pairs, 18 per region) pending per the coordinator. Under the half-rate 1792 geometry its gain is unmeasured, so it is listed, never summed"
+     "note": "measured exact (19,056/19,056 regions, both runs bit-exact), UNADOPTED, FULL-RATE BF: AR 1645.8 vs base_f198 1608.4 (+2.33 %), MTP 4841.9 vs 4764.3 (+1.63 %). Supersedes the +7.82 % figure (BF16-phase-only, ledger.md on origin/claude/dsrom-bf-double-20261007). Option B is measured: see bf_merge_ksplit_option_B. Under the half-rate 1792 geometry its gain is unmeasured, so it is listed, never summed"
+    },
+    {
+     "id": "bf_merge_ksplit_option_B",
+     "item": "BF16 phase merges + router K split, option B: mixed slots, 2304 pairs (18 a region, 512 BF), 85 reprice stages, 340 layer dies",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": -53.686,
+      "MTP_step": -65.812
+     },
+     "role": "info",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json",
+       "pointer": "options.B_mixed_2304",
+       "commit": "52f5f1963 (origin/codex/restore-bf-pairs-20261007; adoption commit 505a9b484; not on main)"
+      }
+     ],
+     "note": "measured candidate, bit-exact 18,288/18,288 regions, full-rate BF; Codex label quoted: 'DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field'. Status here: ADOPT PENDING CENTRAL INTEGRATION (not on main). Its base 1603.3 is the ledger total before su_meso_d8g1. Physical: PENDING: mixed 2304-pair geometry not routed; uniform 2048-pair S81 v9d is different. Final PQ/BF footprints and die station cycles must be priced before physical adoption. Wire: ESTIMATED f183.60 round trips for mixed slot option. CONFLICTS with the actual 1792 mapping on main (half-rate BF, 98/120 stages): see compositions option_B_2304_codex_adopt and geometry_conflict"
     },
     {
      "id": "field_phases_1792",
@@ -967,6 +986,69 @@
       "bf_half_rate_upper"
      ],
      "note": "published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured"
+    },
+    "option_B_2304_codex_adopt": {
+     "AR_tok_s": 1754.3,
+     "MTP_tok_s": 5098.3,
+     "AR_us": 570.028,
+     "MTP_step_us": 815.762,
+     "tau": 4.159,
+     "stages": 85,
+     "pairs": 2304,
+     "layer_dies": 340,
+     "dies_total": 440,
+     "bf_rate": "full",
+     "status": "measured candidate; adopt pending central integration (not on main)",
+     "codex_label": "DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field",
+     "record": {
+      "file": "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json",
+      "pointer": "options.B_mixed_2304",
+      "commit": "52f5f1963 (origin/codex/restore-bf-pairs-20261007; adoption commit 505a9b484; not on main)"
+     },
+     "note": "its own composition on the pre-su_meso ledger base (1,603.3); wire estimated; geometry not routed"
+    },
+    "geometry_conflict": {
+     "status": "UNRESOLVED: question to Codex root in the mailbox",
+     "question": "Which pair count / geometry is the production baseline?",
+     "candidates": [
+      {
+       "name": "actual1792_half_dedicated (main 2d811aafb)",
+       "pairs_per_layer_die": 1792,
+       "stages": 120,
+       "bf_rate": "half",
+       "AR_tok_s": 1305.0,
+       "MTP_tok_s": 3993.3,
+       "basis": "priced-candidate envelope; field phases unmeasured"
+      },
+      {
+       "name": "actual1792_full_shared (main 2d811aafb)",
+       "pairs_per_layer_die": 1792,
+       "stages": 98,
+       "bf_rate": "half",
+       "AR_tok_s": 1337.3,
+       "MTP_tok_s": 4065.7,
+       "basis": "priced-candidate rate upper bound"
+      },
+      {
+       "name": "option_B_2304 (codex/restore-bf-pairs 505a9b484, 'DS ADOPT')",
+       "pairs_per_layer_die": 2304,
+       "stages": 85,
+       "bf_rate": "full",
+       "AR_tok_s": 1754.3,
+       "MTP_tok_s": 5098.3,
+       "basis": "measured exact field; wire estimated; not routed"
+      },
+      {
+       "name": "option_A_2048 (f198.72)",
+       "pairs_per_layer_die": 2048,
+       "stages": 96,
+       "bf_rate": "full",
+       "AR_tok_s": 1645.8,
+       "MTP_tok_s": 4841.9,
+       "basis": "measured exact field; unadopted"
+      }
+     ],
+     "why": "main records the owner decision 'BF half-rate + more BF pairs' with a 1792-pair mapping at 98/120 stages; option B keeps full-rate BF at 2,304 pairs and 85 stages. They cannot both be the S81 baseline; their AR differs by 417-449 tok/s"
     }
    },
    "gates": [
@@ -2017,6 +2099,6 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "51f8562361b5ac43929615e2600825eaf9eb2efc4e951560b3d18925d611dce9"
+  "sha256": "224d80c234176283162ff49b8b619c63b69b95312d867c850da8008b4542c975"
  }
 }
