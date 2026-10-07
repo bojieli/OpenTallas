@@ -483,6 +483,13 @@ def apply_pinreg(text: str) -> str:
     k = text.index("    wire kv_gate = ")
     k = text.rfind("\n", 0, text.rfind("\n", 0, k)) + 1      # before the two comment lines above kv_gate
     text = text[:k] + kvblk + text[k:]
+    # Registered start reaches S_IDLE one edge after the sequencer enters CWAIT.
+    # A sticky prior completion would be consumed again on that edge. Pulse the
+    # existing output flop; completion assignments later in this always block
+    # retain priority. Default-off preserves the legacy sticky contract exactly.
+    text = _rep(text, "            if (st != S_IDLE) cycles <=",
+                "            if (DEC_LA_PINREG != 0) done <= 1'b0; // registered completion pulse\n"
+                "            if (st != S_IDLE) cycles <=")
     # program-read latency +1 (pend0 -> pend1)
     text = _rep(text, "prog_re <= 1'b0; pend1 <= 1'b0;\n", "prog_re <= 1'b0; pend1 <= 1'b0; pend0 <= 1'b0;\n")
     text = _rep(text, "            pend1 <= prog_re && (st != S_IDLE);\n",
