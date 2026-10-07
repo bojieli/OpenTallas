@@ -65,6 +65,10 @@ QWEN_WIRE_PENDING = dict(record="claude/qwen-die-rebuild-20261005@279518cd0 resu
                          penalty_cycles=dict(skew0=13305, skew65=16268), grt_overflow=11534,
                          status="PENDING: die-top route not done (r20c GRT i50 overflow 7,972; flat and region pilots did not "
                                 "complete, results/rtl/qwen_rom_closed_20261006/closure.json); r18g bound kept as the last priced wire bound")
+# r21 die relays (owner fast rule 2026-10-06: relay registers on every die wire > ~350 um at ~300 um pitch): registered
+# die-hop stage counts of the r21 floorplan against the stages the measured token RTL carries; priced on the token,
+# composed into the headline when the r21 die-top route closes
+QWEN_RELAYS = ROOT / "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json"
 HBM_MATCHED = ROOT / "results/rtl/dshbm_matched_reference_20261005/composition.json"
 HBM_OPT = ROOT / "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json"
 WIRE = ROOT / "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json"
@@ -232,6 +236,20 @@ def _with_flipped(recovery: Path, td: Path, names):
 
 
 # ------------------------------------------------------------------------------------------------------ Qwen ROM
+def _qwen_relays(clk, cyc):
+    if not QWEN_RELAYS.exists():
+        return None
+    r = load(QWEN_RELAYS)
+    add = int(r["cycles_per_ar_token"])
+    return dict(record=rel(QWEN_RELAYS), sha256=sha(QWEN_RELAYS), relays=r["relays"]["relays"],
+                stages_r21=r["stages_r21"], stages_rtl=r["stages_rtl"], delta_per_me_op=r["delta_per_me_op"],
+                delta_link_per_traversal=r["delta_link_per_traversal"], cycles=add, token_cycles=cyc + add,
+                AR_tok_s=round(clk / (cyc + add), 1), delta_AR_tok_s=round(clk / (cyc + add) - clk / cyc, 1),
+                delta_pct=round(100 * (cyc / (cyc + add) - 1), 2),
+                alternatives=r.get("alternatives_priced_not_built"),
+                status="PRICED: composed into the headline when the r21 die-top route closes (GRT/DRT/STA pending)")
+
+
 def qwen_rom():
     t, core, dsp = load(QWEN_TERMINAL), load(QWEN_CORE), load(QWEN_DSPARK)
     if not (t["status"] == "PASS" and t["process_exit"] == 0 and t["total_cycles"] == t["total_edges"]):
@@ -345,13 +363,14 @@ def qwen_rom():
                               die_top_route=load(QWEN_CLOSURE)["physical"]["die_r20c"]["die_top_route"]["status"]),
         kv_traffic=kv,
         pending_not_composed=dict(r18g_die_wire_bound=dict(
-            **QWEN_WIRE_PENDING, bound_tok_s=dict(skew0=round(clk / (cyc + 13305), 1), skew65=round(clk / (cyc + 16268), 1)))),
+            **QWEN_WIRE_PENDING, bound_tok_s=dict(skew0=round(clk / (cyc + 13305), 1), skew65=round(clk / (cyc + 16268), 1))),
+            r21_die_relays=_qwen_relays(clk, cyc)),
         token_cycles=cyc, AR_us=round(cyc / clk * 1e6, 3), AR_tok_s=round(ar, 1),
         MTP_mode="AR (DSpark OFF)" if mtp_mode else "DSpark", MTP_tok_s=round(ar, 1) if mtp_mode else sp["tok_s_upper"],
         dspark_reference=dict(tok_s=sp["tok_s_upper"], speedup_vs_ar=sp["speedup_vs_ar_upper"], tau=sp["tau"],
                               verdict=dsp["verdict"], record=rel(QWEN_DSPARK)),
         physical_qualified_full_system=False,
-        inputs={rel(p): sha(p) for p in (QWEN_TERMINAL, QWEN_CORE, QWEN_DSPARK, QWEN_SLAB, QWEN_CONFIG,
+        inputs={rel(p): sha(p) for p in (QWEN_TERMINAL, QWEN_CORE, QWEN_DSPARK, QWEN_SLAB, QWEN_CONFIG, *([QWEN_RELAYS] if QWEN_RELAYS.exists() else []),
                                           QWEN_TERMINAL.parent / "runtime.log", QWEN_P0_CAPACITY, QWEN_CLOSURE, *QWEN_LEVERS)})
 
 
