@@ -7,8 +7,8 @@ global_connect
 set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}
 
 define_pdn_grid -name {top} -voltage_domains {CORE} -pins {M8}
-# (m3 top) the ring fits the 1.08 um core margin: 2 x 0.4 + 0.096 + 0.1 = 0.996 (0.544 widths + 0.5 offset needed 1.684: PDN-0351)
-add_pdn_ring -grid {top} -layers {M7 M8} -widths {0.4 0.4} -spacings {0.096} -core_offset {0.1}
+# (m3 top) the ring fits the 1.08 um core margin: 2 x 0.416 + 0.096 + 0.1 = 1.028 (legal M7/M8 width 0.416) (0.544 widths + 0.5 offset needed 1.684: PDN-0351)
+add_pdn_ring -grid {top} -layers {M7 M8} -widths {0.416 0.416} -spacings {0.096} -core_offset {0.1}
 add_pdn_stripe -grid {top} -layer {M1} -width {0.018} -pitch {0.54} -offset {0} -followpins
 add_pdn_stripe -grid {top} -layer {M2} -width {0.018} -pitch {0.54} -offset {0} -followpins
 add_pdn_stripe -grid {top} -layer {M7} -width {0.544} -spacing {0.096} -pitch {21.6} -offset {3.0} \
