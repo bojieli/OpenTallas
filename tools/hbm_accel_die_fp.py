@@ -1591,7 +1591,7 @@ def buses(m):
             drop.add(f'iv_{st}')
             n0 = len(insts)
             chain(f'iv_{st}', 'hub', 512, (ix.name, 't_vm'), (vm.name, f'i{st}'), pts, path=f'index_vm_{st}', fc=(512,),
-                  meso_end=True, local_src=True, first_um=60.0 if V.get('pin_stage_roots') else HCH / 2 + 60.0)
+                  meso_end=True, local_src=True, first_um=HCH / 2 + 60.0)   # (r19b tried 60 um: it renumbers the r33-r37 station roles already in the closure loop)
             w0 = insts[n0]          # the clocked first station: a sink of the index quarter's region
             m.setdefault('region_extra', []).append(dict(name=f'HUB-Q{st}', clock='clk_stream',
                                                          rect=[round(w0.x, 1), round(w0.y, 1), round(w0.x + w0.w, 1), round(w0.y + w0.h, 1)]))
