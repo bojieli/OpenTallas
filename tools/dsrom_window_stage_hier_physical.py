@@ -13,10 +13,13 @@ def main():
     p.add_argument('--clock-period-ns',default='0.8333333333333333',
                    help='route SDC period; margin-first routes use 0.770 and sign off separately at 0.833333')
     p.add_argument('--margin',type=int,default=0,choices=(0,1),help='stage MARGIN parameter (default off)')
+    p.add_argument('--split-columns',type=int,default=1,choices=(1,2))
+    p.add_argument('--column-views',default='physical/dsrom_window_columns',
+                   help='directory of adopted M2-M6 macro views; no view substitution is implicit')
     a=p.parse_args(); out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
     (out/'work/orfs/tmp').mkdir(parents=True)
     cmd=['python3','tools/run_abi3_physical.py','--view','asap7',
-         '--top','ot_dsrom_window_stage_pipeline','--param','SPLIT_COLUMNS=1',
+         '--top','ot_dsrom_window_stage_pipeline','--param',f'SPLIT_COLUMNS={a.split_columns}',
          *(['--param','MARGIN=1'] if a.margin else []),
          '--source','rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv',
          '--clock-period-ns',a.clock_period_ns,'--clock-uncertainty-ns','0.060',
@@ -34,9 +37,9 @@ def main():
          '--synth-timeout-seconds','unlimited','--flow-timeout-seconds','unlimited',
          '--purpose','characterization','--nickname-tag','window_stage_hier'+('_margin' if a.margin else ''),
          '--keep-workdir',str(out/'work'),'--output',str(out/'physical.json')]
-    for width in (128,256):
+    for width in ((128,) if a.split_columns==2 else (128,256)):
         name=f'ot_dsrom_window_column_{width}'
-        cmd+=['--macro-view',f'{name}=physical/dsrom_window_columns/{name}']
+        cmd+=['--macro-view',f'{name}={a.column_views}/{name}']
     (out/'command.json').write_text(json.dumps(cmd,indent=2)+'\n')
     rc=subprocess.run(cmd,cwd=ROOT,env=dict(os.environ,OT_ORFS_NUM_CORES='16')).returncode
     (out/'terminal.exit').write_text(str(rc)+'\n')

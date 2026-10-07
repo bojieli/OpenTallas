@@ -10772,6 +10772,47 @@ def dsrom_window_full_block_pipeline_model():
 
 
 
+def dsrom_window_column_split128_model(column_side_um=77.222, channel_um=32.0,
+                                       routing_pitch_um=0.048):
+    """Pre-build size of SPLIT_COLUMNS=2: 132 full-depth 128-bit columns.
+
+    Uses the existing 128-bit macro dimension as a preliminary floorplan basis;
+    the M2-M6 successor's actual abstract must replace it before parent route.
+    Bytes and read/write collision ordering are unchanged. Physical adoption
+    awaits the M2-M6 leaf and parent SS/FF/DRC verdicts.
+    """
+    banks, payload_columns, depth, width = 4, 32, 32, 128
+    replicas = banks * (payload_columns + 1)
+    control_bits = 32 + 1 + 5
+    # 6 by 6 slots per bank, keeping 32 um channels and a 100 um bank edge.
+    bank_side = 2*100 + 6*column_side_um + 5*channel_um
+    tracks = int(channel_um / routing_pitch_um)
+    return dict(status='PREBUILD_DEFAULT_OFF_NOT_ADOPTED',
+        lever='WINDOW SPLIT_COLUMNS=2', MACs_per_cycle=0,
+        compute_intensity_MAC_per_byte=0, communication_intensity='byte-preserving staging',
+        replicas=replicas, rows_per_replica=depth, bits_per_replica=width,
+        storage_bits=replicas*depth*width,
+        per_replica_port_bytes_per_cycle=dict(write=16, read=16),
+        aggregate_port_bytes_per_cycle=dict(write=replicas*16, read=replicas*16),
+        per_replica_boundary_bits_per_cycle=dict(write_data=128, read_data=128,
+                                                row_write_enable=32, read_control=6),
+        payload_control_fanout=2, scale_control_fanout=1,
+        extra_control_pin_loads=(replicas-68)*control_bits,
+        extra_mux_bits=0, extra_demux_bits=0,
+        read_mux_per_replica='four 8:1 128-bit groups then one registered 4:1 128-bit mux',
+        column_area_um2=replicas*column_side_um**2,
+        preliminary_bank_side_um=bank_side,
+        preliminary_parent_side_um=2*bank_side+100,
+        channel_width_um=channel_um, routing_pitch_um=routing_pitch_um,
+        track_capacity_basis='preliminary pitch assumption, not a routed hub-layer PASS',
+        hub_routing_layer_check='PENDING_COMPOSED_PARENT',
+        tracks_per_layer=tracks, per_replica_signal_track_demand=2*width+control_bits,
+        fits_one_layer_channel=(2*width+control_bits)<=tracks,
+        added_cycles=0, added_single_user_token_ns=0,
+        exactness='two disjoint 128-bit slices retain the original 256-bit storage semantics',
+        physical_gate='replace preliminary dimensions with closed M2-M6 128-bit abstract; parent SS/FF/DRC')
+
+
 def dsrom_window_stage_margin_model(layers=61, requests_per_job=32, ar_tok_s=1687.9):
     """WINDOW hier-parent stage MARGIN=1 (default off; claude/takeover-window-stage-20261006).
 
