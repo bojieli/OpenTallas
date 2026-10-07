@@ -5,7 +5,7 @@
 #     below; a pass that routes to SS >= ACC_SS and FF >= HM ends the ECO), ALLOW (3), SM (setup margin ps kept by repair_timing, 40), FILT (endpoint filter: repair only
 #     endpoints with SS setup > deficit + FILT, 40), PASSES (ECO -> re-route -> sign-off iterations, 2), RESAWARE
 #     (1: resistance-aware GRT like the ORFS route), HOLDCELLS (1: HB*xp67 delay cells allowed), KEEPCLK (full re-route only, 0),
-#     ACC_SS / ACC_FF (acceptance line, 15 / 15), ECO_SESSION (ff by default; auto for legacy two-corner detection),
+#     ACC_SS / ACC_FF (acceptance line, 15 / 15), ECO_SESSION (mm by default = rev 3 multi-mode; ff = FF-only; auto = legacy two-corner detection),
 #     ALLOW_FRESH_GRT (0 by default; 1 permits fresh routing with explicit result provenance, unchanged acceptance),
 #     WINDOW_ONLY (1: endpoint window report only, no ECO), MACROS (src-rel macro view dirs), THREADS (8), BUF (max buffer %, 30)
 # per pass k (<out>/pass<k>/):
@@ -19,8 +19,8 @@
 # -> <out>/eco.log (all passes), <out>/orfs -> the chosen pass, <out>/corner_sta.json, <out>/result.json
 #    {ss_ps, ff_ps, drc, cells_added, pass, session, window}
 set -eo pipefail
-ECO_SESSION=${ECO_SESSION:-ff}
-case "$ECO_SESSION" in ff|auto) ;; *) echo "ECO_SESSION must be ff or auto"; exit 2 ;; esac
+ECO_SESSION=${ECO_SESSION:-mm}
+case "$ECO_SESSION" in mm|ff|auto) ;; *) echo "ECO_SESSION must be mm, ff or auto"; exit 2 ;; esac
 RB=$1; OB=$2; OUT=$3; BLK=$4; shift 4
 D=$(basename $(dirname $RB))
 CLD=$(cd $(dirname $0) && pwd)
@@ -72,6 +72,19 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
   # every SS hold endpoint is irrelevant to a two-corner repair. Keep the
   # legacy automatic selection available only by explicit request.
   SESSION=ff
+  if [ "$ECO_SESSION" = mm ]; then
+    # rev 3 default: multi-mode session (scene ss: SS effective SDC with hold false-pathed; scene ff: FF effective SDC
+    # with setup false-pathed), used only if it reproduces sign-off; otherwise the FF-only session
+    SESSION=mm
+    { cat $P/eff_ss.sdc; echo 'set_false_path -hold -to [all_clocks]'; } > $P/mode_ss.sdc
+    { cat $P/eff_ff.sdc; echo 'set_false_path -setup -to [all_clocks]'; } > $P/mode_ff.sdc
+    orun $P/eco_mm.log hold_eco.tcl "${ECO_ENV[@]}" -e OT_SESSION=mm -e OT_SDC_SS=/p/mode_ss.sdc -e OT_SDC_FF=/p/mode_ff.sdc \
+      -e OT_PRE_SPEF=/inspef/$(basename $CUR_SPEF) \
+      -e OT_EXPECT_SS=$EXP_SS -e OT_EXPECT_FF=$EXP_FF || true
+    if grep -q "OT_ECO session_mismatch" $P/eco_mm.log; then
+      SESSION=ff; grep "OT_ECO session_mismatch" $P/eco_mm.log | tee -a $OUT/eco.log
+    fi
+  fi
   if [ "$ECO_SESSION" = auto ]; then
     SESSION=two
     orun $P/eco_two.log hold_eco.tcl "${ECO_ENV[@]}" -e OT_SESSION=two -e OT_SDC=/p/merged.sdc -e OT_EXPECT_SS=$EXP_SS -e OT_EXPECT_FF=$EXP_FF || true

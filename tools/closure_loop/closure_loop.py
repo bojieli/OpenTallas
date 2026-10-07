@@ -925,6 +925,11 @@ def launch_stage(j, st, cmd):
         env += f"export HM={j['spec'].get('route_hold_margin_ns', hm_default)}\n"
     if is_local(j["host"]):
         env += f"export OPENTALLAS_ORFS_IMAGE={LOCAL_ORFS_REF}\n"
+    if st["kind"] in ("calibrate", "route") and j["attempt"] > 1 and not j.get("resume"):
+        # a re-run of a killed / crashed stage: the previous attempt's route dir is kept as evidence under a new name, so
+        # recipes that refuse existing evidence (s81 route_view.sh) start clean (capt_x / selt_c rc=73 after a restart)
+        d = f"{j['run']}/routes/{label(j['name'])}{'_cal' if st['kind'] == 'calibrate' else ''}"
+        env += f"[ -e {d} ] && mv {d} {d}.prev_$(date +%s) || true\n"
     if st["kind"] in ("calibrate", "route"):
         # (calibrate too, 2026-10-07: its CTS-only run repairs hold at CTS and died on RSZ-0060, hbm_stn_r38 / _ck80)
         # ROUTE HOLD CORNERS (2026-10-07, hold_corners_patch.py): place-and-route repairs hold at the primary corner only
@@ -1731,7 +1736,7 @@ def start_hold_eco(j, fleet, m):
     v, he = j["spec"].get("verdict", {}), j["spec"].get("hold_eco") or {}
     # rev 2 (2026-10-07): post-route hold goal +18 (coordinator: die-context margin over the +15 line), endpoint filter, sign-off-exact constraints per corner,
     # resistance-aware re-route, up to 2 ECO -> re-route -> sign-off passes (hold_eco.sh header)
-    env = f"ECO_SESSION={shlex.quote(he.get('session', 'ff'))} " \
+    env = f"ECO_SESSION={shlex.quote(he.get('session', 'mm'))} " \
           f"ALLOW_FRESH_GRT={int(he.get('allow_fresh_grt', False))} " \
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \

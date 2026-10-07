@@ -36,7 +36,36 @@ set_thread_count [envd OT_THREADS 8]
 read_lef $P/lef/asap7_tech_1x_201209.lef
 read_lef $P/lef/asap7sc7p5t_28_R_1x_220121a.lef
 foreach m [envd OT_MACROS ""] { read_lef $m/[file tail $m].lef }
-set corners [expr {$session eq "two" ? {ss ff} : {ff}}]
+set corners [expr {$session in {two mm} ? {ss ff} : {ff}}]
+if {$session eq "mm"} {
+  # REV 3 MULTI-MODE session (default): scene ss = mode ss (the SS effective sign-off SDC, hold false-pathed) on SS libs,
+  # scene ff = mode ff (the FF effective SDC, setup false-pathed) on FF libs.  Every check is timed exactly as sign-off
+  # times it, so repair_timing's own -setup_margin guard sees real SS setup when it places each hold cell.  (FF-only
+  # session: dshead-ctl-r6 gained 27 ps FF hold on commit_warm with 6 HB4 cells and lost 423 ps SS setup, +87.9 ->
+  # -335.7; the same repair in this session ends SS +41.9 / FF +21.0.)
+  foreach c $corners {
+    set C [string toupper $c]; set L($c) {}
+    foreach l [list asap7sc7p5t_AO_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_INVBUF_RVT_${C}_nldm_220122.lib.gz \
+                 asap7sc7p5t_OA_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_SEQ_RVT_${C}_nldm_220123.lib \
+                 asap7sc7p5t_SIMPLE_RVT_${C}_nldm_211120.lib.gz] { read_liberty $P/lib/NLDM/$l; lappend L($c) $P/lib/NLDM/$l }
+    foreach m [envd OT_MACROS ""] { read_liberty $m/[file tail $m]_$c.lib; lappend L($c) $m/[file tail $m]_$c.lib }
+  }
+  read_db $::env(OT_DB)
+  read_sdc -mode ss $::env(OT_SDC_SS)
+  read_sdc -mode ff $::env(OT_SDC_FF)
+  define_scene ss -mode ss -liberty $L(ss)
+  define_scene ff -mode ff -liberty $L(ff)
+  # port loads / drivers / input slews read before the scenes exist do not reach them (ctl r6 o_we[3]: output buffer
+  # 13.4 ps unloaded vs 18.4 ps at sign-off, FF hold -65.95 vs -60.14): re-apply them per mode after define_scene
+  foreach m {ss ff} f [list $::env(OT_SDC_SS) $::env(OT_SDC_FF)] {
+    set envf $::env(OT_OUT)/env_$m.sdc
+    set fi [open $f]; set fo [open $envf w]
+    foreach l [split [read $fi] "\n"] { if {[regexp {^(set_load|set_driving_cell|set_input_transition)\M} $l]} { puts $fo $l } }
+    close $fi; close $fo
+    set_mode $m
+    source $envf
+  }
+} else {
 define_corners {*}$corners
 foreach c $corners {
   set C [string toupper $c]
@@ -47,10 +76,12 @@ foreach c $corners {
 }
 read_db $::env(OT_DB)
 read_sdc $::env(OT_SDC)
+}
 # no set_propagated_clock here: the effective SDC carries each clock's sign-off propagation state (write_sdc)
 source $P/setRC.tcl
 set_dont_use {*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*}
-if {[envd OT_HOLD_CELLS 1]} { unset_dont_use [get_lib_cells */HB*xp67_ASAP7_75t_R] }
+# rev 3: only the SMALL hold cells HB1/HB2 (HB3/HB4 add ~70-110 ps at SS each; ctl r6 stacked six HB4 for 27 ps of FF)
+if {[envd OT_HOLD_CELLS 1]} { unset_dont_use [get_lib_cells {*/HB1xp67_ASAP7_75t_R */HB2xp67_ASAP7_75t_R}] }
 catch {remove_fillers}
 source [envd OT_CL /cl]/hold_eco_window.tcl
 proc rep {tag} {
@@ -58,7 +89,7 @@ proc rep {tag} {
   report_worst_slack -max -digits 2
   report_worst_slack -min -digits 2
   catch {report_checks -path_delay min -scenes ff -format slack_only -digits 2}
-  if {$::session eq "two"} { catch {report_checks -path_delay max -scenes ss -format slack_only -digits 2} }
+  if {$::session in {two mm}} { catch {report_checks -path_delay max -scenes ss -format slack_only -digits 2} }
 }
 proc ws {check scene} {
   # worst over every path group (find_timing_paths returns one path per group)
@@ -70,14 +101,20 @@ set lo [envd OT_MINL M2]; set hi [envd OT_MAXL M7]
 set_global_routing_layer_adjustment $lo-$hi 0.25
 set_routing_layers -clock [envd OT_MINCLKL M4]-$hi
 set_routing_layers -signal $lo-$hi
-# RCX of the detailed route, annotated on every corner
-extract_parasitics -ext_model_file $P/rcx_patterns.rules
-write_spef $::env(OT_OUT)/pre_eco.spef
-foreach c $corners { read_spef -corner $c $::env(OT_OUT)/pre_eco.spef }
+# parasitics of the route: the SAME SPEF the sign-off / corner sessions read (OT_PRE_SPEF, rev 3), so the session's
+# worst slacks reproduce sign-off exactly (a fresh RCX of 5_2_route.odb read FF -65.95 against sign-off -60.14 on
+# dshead-ctl-r6); fresh RCX only when no SPEF is given
+if {[file exists [envd OT_PRE_SPEF ""]]} {
+  foreach c $corners { read_spef -corner $c $::env(OT_PRE_SPEF) }
+} else {
+  extract_parasitics -ext_model_file $P/rcx_patterns.rules
+  write_spef $::env(OT_OUT)/pre_eco.spef
+  foreach c $corners { read_spef -corner $c $::env(OT_OUT)/pre_eco.spef }
+}
 rep pre
-set ff0 [ws min ff]; set ss0 [expr {$session eq "two" ? [ws max ss] : "n/a"}]
+set ff0 [ws min ff]; set ss0 [expr {$session in {two mm} ? [ws max ss] : "n/a"}]
 puts "OT_ECO pre_ws ss $ss0 ff $ff0"
-if {$session eq "two" && [envd OT_EXPECT_SS ""] ne ""} {
+if {$session in {two mm} && [envd OT_EXPECT_SS ""] ne ""} {
   # the two-corner session is exact only if its worst setup over BOTH corners is the SS sign-off and its worst hold over
   # both corners the FF sign-off (otherwise repair_timing also chases SS hold / guards FF setup)
   set amax [expr {[sta::worst_slack_cmd max] * 1e12}]; set amin [expr {[sta::worst_slack_cmd min] * 1e12}]
@@ -146,6 +183,28 @@ if {[llength [dict get $win fixable]]} {
     error "OT_ECO repair_timing failed: $err"
   }
 }
+# rev 3 SETUP GUARD (a): every SS path that now sits under the setup margin loses the ECO cells on it (they are removed
+# with remove_buffers); its hold endpoint stays as it was and the verdict reports it.  Needs SS timing: mm/two only.
+if {$session in {two mm} && [envd OT_SETUP_GUARD 1]} {
+  set newc [dict create]
+  foreach i [$block getInsts] { if {![dict exists $snap [$i getName]]} { dict set newc [$i getName] 1 } }
+  set undo [dict create]
+  set guard_paths [find_timing_paths -path_delay max -scenes ss -slack_max $sm -group_path_count 100000 -endpoint_path_count 1]
+  set rows {}
+  foreach pe $guard_paths { if {![catch {set pts [get_property $pe points]}]} { lappend rows $pts } }
+  foreach pts $rows {
+    foreach pt $pts {
+      if {[catch {set pin [get_property $pt pin]}] || $pin eq "NULL"} continue
+      if {[catch {set inst [get_full_name [get_cells -of_objects $pin]]}]} continue
+      if {[dict exists $newc $inst]} { dict set undo $inst 1 }
+    }
+  }
+  if {[dict size $undo]} {
+    remove_buffers [get_cells [dict keys $undo]]
+    puts "OT_ECO setup_guard removed [dict size $undo] ECO cells on [llength $rows] SS paths under $sm ps"
+  } else { puts "OT_ECO setup_guard: no ECO cell on an SS path under $sm ps" }
+  puts "OT_ECO after_guard ss [ws max ss] ff [ws min ff]"
+}
 puts "OT_ECO cells_added [expr {[llength [get_cells *]] - $n0}]"
 detailed_placement
 check_placement -verbose
@@ -155,24 +214,52 @@ check_placement -verbose
 # guides gave 1,300-2,800 'pin not visited' and checkConnectivity breaks on UNTOUCHED nets (ctrl_pc, 2026-10-07).
 # The re-route is RESISTANCE-AWARE like the ORFS route's GRT (global_route -resistance_aware): rev 1 re-routed without
 # it, and ctrl_pc's worst SS path (k_rdy -> k_wdata[107]/D, no ECO cell on it) lost 77 ps on new, slower wires.
-set ninst 0
+set ninst 0; set dirty [dict create]
 foreach i [$block getInsts] {
   set n [$i getName]
-  if {![dict exists $snap $n] || [dict get $snap $n] ne [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]]} { incr ninst }
+  if {![dict exists $snap $n] || [dict get $snap $n] ne [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]]} {
+    incr ninst
+    foreach it [$i getITerms] { set nt [$it getNet]; if {$nt ne "NULL"} { dict set dirty [$nt getName] 1 } }
+  }
 }
+# rev 3 MACRO-NET FREEZE (OT_FREEZE_MACRO_NETS=1, OFF by default: on hbm_cmdproc_n with 64 frozen nets DRT finished but
+# the session then failed with a corrupted Tcl command name ('filler_plf') -- not safe to enable yet): nets driven by a macro output keep their detailed wires unless the ECO
+# touched them (a new / moved / resized cell on the net).  Qwen slab s14 (guide-preserving ECO): the re-route
+# re-detoured ROM -> capture-register nets, worst register-D setup +44.55 -> +4.66 while reg2reg stayed +122.  If DRT
+# rejects the kept wires, they are stripped and DRT runs again (logged).
+set frozen {}
+if {[envd OT_FREEZE_MACRO_NETS 0]} {
+  foreach i [$block getInsts] {
+    if {![[$i getMaster] isBlock]} continue
+    foreach it [$i getITerms] {
+      if {![$it isOutputSignal]} continue
+      set nt [$it getNet]
+      if {$nt eq "NULL" || [dict exists $dirty [$nt getName]] || [$nt getSigType] in {POWER GROUND CLOCK}} continue
+      lappend frozen $nt
+    }
+  }
+}
+set fz [dict create]; foreach nt $frozen { dict set fz [$nt getName] 1 }
 set nstrip 0
 foreach net [$block getNets] {
   if {[$net getSigType] in {POWER GROUND}} continue
   if {[envd OT_KEEP_CLOCK 0] && [$net getSigType] eq "CLOCK"} continue
+  if {[dict exists $fz [$net getName]]} continue
   set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w; incr nstrip }
 }
-puts "OT_ECO reroute: $ninst new/moved/resized instances, $nstrip wires stripped"
+puts "OT_ECO reroute: $ninst new/moved/resized instances, $nstrip wires stripped, [dict size $fz] macro-output nets frozen"
 set ra [expr {[envd OT_RES_AWARE 1] ? "-resistance_aware" : ""}]
 if {$guides} { global_route -end_incremental -allow_congestion {*}$ra } else { global_route -allow_congestion -congestion_iterations 30 {*}$ra }
 # Preserve guides by default because fresh GRT has measured setup-regression
 # risk. An explicitly requested fallback is valid if the unchanged final
 # timing, DRC, IO and context checks pass; route strategy is not acceptance.
-if {[catch {detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1} err]} {
+set drt_err [catch {detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1} err]
+if {$drt_err && [info exists fz] && [dict size $fz]} {
+  puts "OT_ECO macro-net freeze rejected by DRT ($err): frozen wires stripped, DRT again"
+  foreach nt $frozen { set w [$nt getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w } }
+  set drt_err [catch {detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1} err]
+}
+if {$drt_err} {
   if {!$guides || !$allow_fresh} { error "OT_ECO detailed_route failed: $err" }
   puts "OT_ECO guide re-route failed ($err): explicitly requested fresh global route"
   puts "OT_ECO route_strategy fresh_global reason rejected_guides explicit_opt_in 1"
@@ -189,7 +276,7 @@ extract_parasitics -ext_model_file $P/rcx_patterns.rules
 write_spef $::env(OT_OUT)/6_final.spef
 foreach c $corners { read_spef -corner $c $::env(OT_OUT)/6_final.spef }
 rep post
-puts "OT_ECO post_ws ss [expr {$session eq "two" ? [ws max ss] : "n/a"}] ff [ws min ff]"
+puts "OT_ECO post_ws ss [expr {$session in {two mm} ? [ws max ss] : "n/a"}] ff [ws min ff]"
 write_db $::env(OT_OUT)/6_final.odb
 write_verilog $::env(OT_OUT)/6_final.v
 puts "OT_ECO done"

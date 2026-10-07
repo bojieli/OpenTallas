@@ -217,3 +217,12 @@ is disabled for these three rebinds pending parent review.
   OpenROAD binaries are byte-identical to the fleet's), and a job whose recipe hard-codes a bare ID is not placed there.
   hosts.json `smoke_only` admits only spec `"smoke": true` jobs (terminal status SMOKE_OK, nothing published);
   spec `host_require` pins a job to hosts.
+
+### Hold ECO rev 3 (2026-10-07)
+- Default session `mm` (multi-mode): scene ss = the SS effective sign-off SDC with hold false-pathed (SS libs), scene ff =
+  the FF effective SDC with setup false-pathed (FF libs), the route's own SPEF, port loads re-applied per mode. It must
+  reproduce sign-off (worst SS setup / FF hold within 1 ps) or the pass falls back to the FF-only session. repair_timing's
+  `-setup_margin` then guards against REAL SS setup: dshead-ctl-r6 FF-only stacked six HB4 cells (SS +87.9 -> -335.7);
+  mm: SS +16.0 / FF +17.1 after 2 passes; router dv12: SS +24.56 kept (+22.5 routed) while FF -8.6 -> +7.3 in pass 1.
+- Only HB1/HB2 delay cells; post-repair setup guard: ECO cells on any SS path under the setup margin are removed.
+- Macro-output net freeze exists (`OT_FREEZE_MACRO_NETS=1`) but is OFF: it corrupted the session on hbm_cmdproc_n.
