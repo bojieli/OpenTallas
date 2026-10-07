@@ -63,7 +63,8 @@ EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
 RAM_HEADROOM_GB = 32
-PENDING_WINDOW_S = 600                # load1 lags a launch: count own launches of the last 5 min as load
+PENDING_WINDOW_S = 600
+PENDING_RAM_WINDOW_S = 300    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
 TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
@@ -501,7 +502,10 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
     def own_pending(self, host):
         t0 = time.time() - PENDING_WINDOW_S
         self.pending[host] = [p for p in self.pending.get(host, []) if p[0] >= t0]
-        return sum(p[1] for p in self.pending[host]), sum(p[2] for p in self.pending[host])
+        # RAM of a launch is held back 5 min (was 10: a route reaches its
+        # memory over hours, so 10 min of declared peaks hid 356 GB of EPYC3's 485 GB free at 07:48 while 38 jobs waited)
+        tr = time.time() - PENDING_RAM_WINDOW_S
+        return sum(p[1] for p in self.pending[host]), sum(p[2] for p in self.pending[host] if p[0] >= tr)
 
     def fits(self, host, threads, ram):
         with FLEET_LOCK:
@@ -899,8 +903,22 @@ CAL_OWNER_ACTION = {
 
 def ship_helpers(host, run):
     """(re)write the loop's helper scripts into {CL}: jobs synced before a helper existed get it too"""
-    for helper in HELPERS:
-        ssh(host, f"mkdir -p {run}/cl && cat > {run}/cl/{helper}", input=(HERE / helper).read_text(), timeout=60, check=True)
+    # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
+    import io, tarfile
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w") as tf:
+        for helper in HELPERS:
+            tf.add(str(HERE / helper), arcname=helper)
+    if is_local(host):
+        os.makedirs(f"{run}/cl", exist_ok=True)
+        with tarfile.open(fileobj=io.BytesIO(buf.getvalue())) as tf:
+            tf.extractall(f"{run}/cl")
+        return
+    r = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", host,
+                        f"mkdir -p {run}/cl && tar -xf - -C {run}/cl"], input=buf.getvalue(), capture_output=True,
+                       timeout=120)
+    if r.returncode:
+        raise RuntimeError(f"command failed rc={r.returncode}: ship_helpers {host}:{run}/cl {r.stderr[-300:]!r}")
 
 
 def tag(st, j):
@@ -1317,7 +1335,8 @@ def failure_text(j):
 
 
 def launch_ready(j, fleet, spec, stl, st):
-    """READY at a remote stage: capacity check, optional host move, launch (caller holds FLEET_LOCK)."""
+    """READY at a remote stage: capacity check + reservation (caller holds FLEET_LOCK); returns the stage to launch
+    OUTSIDE the lock (launch_now) or None."""
     if True:
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
         if not ok:
@@ -1350,12 +1369,16 @@ def launch_ready(j, fleet, spec, stl, st):
             if j["name"] not in keys.setdefault(key, []):
                 keys[key].append(j["name"])
             keys_path().write_text(json.dumps(keys, indent=1) + "\n")
-        launch_stage(j, st, st["cmd"])
-        fleet.launched(j["host"], st["threads"], st["ram"])
-        j["status"] = "RUNNING"
-        event(j, f"launched {st['key']} (attempt {j['attempt']}) on {j['host']}")
-        experiment(j, f"running: {st['key']} on {host_cfg(j['host'])['label']}")
-        return
+        fleet._launched(j["host"], st["threads"], st["ram"])        # reservation, taken under FLEET_LOCK
+        return st
+
+
+def launch_now(j, fleet, st):
+    """launch a reserved stage (no FLEET_LOCK held: the ssh calls of one launch no longer stall every other job)"""
+    launch_stage(j, st, st["cmd"])
+    j["status"] = "RUNNING"
+    event(j, f"launched {st['key']} (attempt {j['attempt']}) on {j['host']}")
+    experiment(j, f"running: {st['key']} on {host_cfg(j['host'])['label']}")
 
 
 # ---- parallel bench track (OWNER 2026-10-07 05:00 "LAUNCH IMMEDIATELY"): exactness benches run beside
@@ -1404,6 +1427,7 @@ def bench_track(j, fleet, stl):
         if e is None or e.get("state") == "retry":
             if any(x.get("state") == "running" for x in tr.values()):
                 return True                  # one bench at a time
+            fleet.probe(j["host"])
             with FLEET_LOCK:
                 ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
                 if not ok:
@@ -1411,10 +1435,10 @@ def bench_track(j, fleet, stl):
                         j["bwait"] = why
                         event(j, f"bench track: {k} waiting for capacity: {why}")
                     return True
-                n = (e or {}).get("n", 0) + 1
-                v = dict(j, attempt=f"{j['attempt']}b{n}")
-                launch_stage(v, st, st["cmd"])
-                fleet.launched(j["host"], st["threads"], st["ram"])
+                fleet._launched(j["host"], st["threads"], st["ram"])
+            n = (e or {}).get("n", 0) + 1
+            v = dict(j, attempt=f"{j['attempt']}b{n}")
+            launch_stage(v, st, st["cmd"])
             tr[k] = dict(state="running", tag=v["stage_tag"], host=j["host"], run=j["run"], n=n, started=now_iso())
             j["bwait"] = None
             event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
@@ -1547,8 +1571,12 @@ def step(j, fleet):
                        f"SMOKE_OK on {j['host']}: SS {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')} (not published)")
                 return
             return do_commit(j)
+        fleet.probe(j["host"])                 # (cached 45 s) probe outside the lock
         with FLEET_LOCK:
-            return launch_ready(j, fleet, spec, stl, st)
+            go = launch_ready(j, fleet, spec, stl, st)
+        if go:
+            launch_now(j, fleet, go)
+        return
     if s == "RUNNING":
         st = stl[j["stage_idx"]]
         state, rc = poll_stage(j)
