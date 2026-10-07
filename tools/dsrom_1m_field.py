@@ -75,6 +75,10 @@ from rtl_v41_rom_array import Ckpt, Mat  # noqa: E402
 
 VERILATOR = os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator")
 S81 = ROOT / "results/uarch/dsrom_s81_released_binding_20261004/canonical"
+# OT_DSROM_FIELD_BINDING (default unset = the released S81 binding): an alternative allocation directory with the same
+# files (matrix_map.jsonl.gz, stage_map.json, inventory.json), e.g. tools/dsrom_bf_double_alloc.py's (bf-double 2026-10-07)
+if os.environ.get("OT_DSROM_FIELD_BINDING"):
+    S81 = Path(os.environ["OT_DSROM_FIELD_BINDING"]).resolve()
 REC = ROOT / "results/rtl/dsrom_1m_allmeasured_20261004/field.json"
 GOLD_VM = Path("/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r0")
 RANK = 0
@@ -110,7 +114,7 @@ QRTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_rom_elem_q_qx_w10", "ot_v4
 # the two missing files the --qelem build failed on main)
 QRTL = [p for p in QRTL if p.exists()]
 SOURCES = sorted(set(RTL + DIE + ROMS + [TB] + TOOLS))
-S81_FILES = [S81 / "matrix_map.jsonl.gz", S81 / "stage_map.json", S81 / "inventory.json", S81 / "binding.json"]
+S81_FILES = [S81 / f for f in ("matrix_map.jsonl.gz", "stage_map.json", "inventory.json", "binding.json") if (S81 / f).exists()]
 
 # phase groups: (node, group, x source).  x source: "attn_norm" / "ffn_norm" (the golden layer's vector), or
 # "internal" (an operator-internal vector: the golden VM for L20, a seeded vector elsewhere)
