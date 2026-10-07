@@ -21,3 +21,26 @@ def test_vm8_candidate_repairs_only_north_offsets_and_keeps_full_seams():
     assert old['buses']==new['buses']
     seams=[b for b in new['buses'] if '_seam_' in b[0]]
     assert len(seams)==8 and all(b[2]>0 and len(b[3])==2 for b in seams)
+
+
+def test_ordered_seam_join_rejects_bit_permutation():
+    import copy
+    import pytest
+    import hbm_sm_retile_vm8 as V
+    masters={}
+    for q in ('sw','se','nw','ne'):
+        for half in ('s','n'):
+            ports={};pins={}
+            for index,bus in enumerate(('s2n','n2s')):
+                ports[bus]=dict(bits=2,direction='output' if (half=='s')==(bus=='s2n') else 'input')
+                for bit in range(2):
+                    pins[f'{bus}[{bit}]']=['M5',100+index+bit*.048,499.944 if half=='s' else .096,.024,.192]
+            masters[f'hfd_vm_{q}_{half}']=dict(height_um=500.04,ports=ports,pins=pins)
+    contract=dict(masters=masters)
+    rows=V.seam_pin_join(contract)
+    assert len(rows)==8 and all(r['requested_pin_center_gap_um']==[.192,.192] for r in rows)
+    bad=copy.deepcopy(contract)
+    pins=bad['masters']['hfd_vm_sw_n']['pins']
+    pins['s2n[0]'],pins['s2n[1]']=pins['s2n[1]'],pins['s2n[0]']
+    with pytest.raises(ValueError,match='do not align'):
+        V.seam_pin_join(bad)
