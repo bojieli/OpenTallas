@@ -1805,6 +1805,33 @@ QWEN_WIRE = dict(
 # spine centre, 0.76 ps/um): per matrix-engine op the instruction/x broadcast, the tree levels above the tile and
 # the tree words' return to the spine are register stages of the RTL array (ot_qwen_me_array: BD, NWS, TWS, ORD).
 # They replace W5's x + conflict + write per-op terms and its per-token tree term; the UCIe crossing stays.
+def qwen_slab_m3_closure_model():
+    """Unadopted LAT10/KCP4/OREG1 successor of LAT7/noOREG; no array timing assumption."""
+    # Historical Qwen AR count used by QWEN_WIRE.result_write_extra:
+    # six dense weight matvecs/layer (q,k,v,o,gate/up,down), 36 layers, lm_head.
+    me_ops = 6 * 36 + 1
+    added = (10 - 7) + 1
+    return dict(schema="opentallas.qwen.slab_m3_closure.v1", adopted=False,
+        baseline="MUL_LAT7 OREG0", candidate="MUL_LAT10 MUL_KCP4 OREG1",
+        extra_cycles_per_me_op=added, historical_AR_me_ops=me_ops,
+        historical_AR_extra_cycles=me_ops * added,
+        historical_AR_extra_ns=me_ops * added / 1.2,
+        context_scope="Historical 217 weight-ME operations; successor replay must price actual invocation count; no MTP extrapolation",
+        composition="add 4 / 1.2 ns per slab completion on the serial ME dependency path",
+        dimensions_um=[777.576, 455.76], frame_area_mm2=777.576 * 455.76 / 1e6,
+        measured_cell_area_mm2=None, frame_fit_qualified=False,
+        arithmetic_lanes=16, operations_per_cycle=16, operation="postscale FP32 multiply, golden unchanged",
+        extra_memory_ports=0, extra_memory_bytes_per_cycle=0, extra_external_bits_per_cycle=0,
+        scale_ROM_banks=16, scale_ROM_word_bits=266, existing_res_in_bits=512,
+        operand_copies_per_lane=4, partial_products_per_copy=6,
+        extra_C1_register_bits=16 * (4 - 1) * 48,
+        mux_demux="no new selector; kept operand copies reduce 24 partial-product loads to six",
+        routing_layers=["M2", "M8"], M8_pin_strip_um=36,
+        routing_capacity_qualified=False, macro_corner_timing="unchanged SS/FF real clk-to-q",
+        streaming_GHz=1.2, die_setup_skew_ps=90, die_hold_skew_ps=50,
+        unchanged_designs=["DeepSeek-V4.1 ROM", "Qwen HBM", "DeepSeek-V4.1 HBM"])
+
+
 QWEN_WIRE_W12 = dict(
     bd=31,                    # instruction broadcast + x network, incl. the tile input register and XVM
     xvm=1,                    # registered VM conflict stage (inside bd)

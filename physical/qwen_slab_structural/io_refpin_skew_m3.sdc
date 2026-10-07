@@ -19,4 +19,4 @@ set_input_delay  [expr {0.2 * 833.333 + $ot_sk}] -max -clock clk -reference_pin 
 set_input_delay  [expr {-$ot_hk}]                -min -clock clk -reference_pin $qss_ref $qss_in
 set_output_delay [expr {0.2 * 833.333 + $ot_sk}] -max -clock clk -reference_pin $qss_ref $qss_out
 set_output_delay [expr {-$ot_hk}]                -min -clock clk -reference_pin $qss_ref $qss_out
-puts "QSS S1 boundary: -reference_pin res_q[0]/CLK, skew $ot_sk hold $ot_hk"
+puts "QSS S1 boundary: -reference_pin res_q\[0\]/CLK, skew $ot_sk hold $ot_hk"
