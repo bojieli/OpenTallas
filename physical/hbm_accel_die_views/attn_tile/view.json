@@ -93,5 +93,15 @@
   "ir_quad_pg_round": "ira2 (tools/hbm_die_views.py ir-attn --quad-pg), AGIdock /srv/opentallas-scratch/claude/hbm-abstracts/ir/ira2",
   "option_a_ir": "FAIL: results/rtl/hbm_accel_die_views_20261006/ir_attn_option_a_quadpg.json (quad cells median ~250 mV, worst ~2.2 V per rail vs 35 mV)",
   "decision_next": "option B: quads re-hardened with PG <= M7 (die owns M8/M9), coordinated with wt-hbm-attn (2026-10-06 10:25 PT, CLAUDE HBM-ABSTRACTS)"
+ },
+ "r23_outline": {
+  "size_um": [
+   1778.52,
+   1349.976
+  ],
+  "util_target": 0.54,
+  "decision": "OWNER no-squeeze, attn owner request (ac24d9ef87844fb2d) 2026-10-07",
+  "pdn": "option B contract: tile and quads keep PG <= M7 (M7 stripes 0.288 um @ 10.8 um); the die drops dedicated M8 / M9 straps over the whole tile footprint at the die grid pitch, landing on the tile M7 grid (no quad M8/M9 exception any more)",
+  "faces": "row chain hops on the E / W faces (attn_packet tp_* / attn_chain ta_*), column chain cf / ci on N / S, query q and KV ld on the inner corner tile; registered faces"
  }
 }

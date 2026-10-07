@@ -685,7 +685,7 @@ def _jsonable(o):
 # local x = 0 mod 0.016 and an x-mirrored copy at 0.008 mod 0.016: no single master has a legal origin in both.  Their
 # edge ck stays; the budget re-plans their die entry target from the measured insertion (the die tree arrives early).
 VM_CENTRE = tuple(f'hfd_vm_{q}' for q in ('sw', 'se', 'nw', 'ne'))
-CK_CENTRE = ('hfd_svc_SE_s0', 'hfd_svc_SE_s3', 'hfd_svc_SW_s0', 'hfd_svc_SW_s1', 'hfd_svc_SW_s7',
+CK_CENTRE = ('hfd_svc_SE_s0', 'hfd_svc_SE_s1', 'hfd_svc_SE_s3', 'hfd_svc_SW_s0', 'hfd_svc_SW_s1', 'hfd_svc_SW_s7',   # SE_s1: 956 ps edge-ck
              'hfd_vm_sw', 'hfd_vm_se', 'hfd_vm_nw', 'hfd_vm_ne')   # r20: VM tiles (all placed R0)   # SW_s1 / SW_s7: edge-ck insertion 1,304 / 1,123 ps
 
 
@@ -899,7 +899,12 @@ def split_station(m, role, h_data=1024):
                 fcl[nid] = (dbits, ncl, 0)
         ren[bid] = f'{bid}a'
     m['buses'] = nb
-    m['paths'] = {p: [ren.get(b_, b_) for b_ in ids] for p, ids in m['paths'].items()}
+    np_ = {}
+    for p, ids in m['paths'].items():
+        np_[p] = [ren.get(b_, b_) for b_ in ids]
+        if any(b_ in ren for b_ in ids):          # the B half is a parallel path (its own stage count, priced)
+            np_[p + '_b'] = [f'{b_}b' if b_ in ren else b_ for b_ in ids]
+    m['paths'] = np_
     for d_ in ('clocked', 'fwd_dom'):
         dd = m.get(d_, {})
         for n_, (a, b) in pair.items():
