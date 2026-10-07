@@ -225,6 +225,46 @@ class ReliabilityTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             cl.cmd_retry(SimpleNamespace(name="race"))
 
+    def test_source_failure_retry_synchronizes_before_launch(self):
+        for fields in ({}, {"commit_full": "a" * 40, "source_synced": False}):
+            j = dict(self.j, status="NEEDS_HUMAN", host="host", attempt=1,
+                     stage_idx=0, errors=["source unavailable"], **fields)
+            cl.save_job(j)
+            with patch.object(cl, "ledger"), patch.object(cl, "log"):
+                cl.cmd_retry(SimpleNamespace(name="race"))
+            restored = cl.load_job("race")
+            self.assertEqual(restored["status"], "SYNC")
+            self.assertEqual(restored["stage_idx"], 0)
+
+    def test_legacy_broken_ready_state_cannot_launch_benches(self):
+        j = dict(self.j, status="READY", host="host", stage_idx=0)
+        with patch.object(cl, "bench_track") as benches, patch.object(cl, "log"):
+            cl.step(j, None)
+        benches.assert_not_called()
+        self.assertEqual(j["status"], "SYNC")
+
+    def test_stage_retry_preserves_synchronized_source(self):
+        j = dict(self.j, status="NEEDS_HUMAN", host="host", attempt=1,
+                 stage_idx=0, commit_full="a" * 40, source_synced=True)
+        cl.save_job(j)
+        with patch.object(cl, "ledger"), patch.object(cl, "log"):
+            cl.cmd_retry(SimpleNamespace(name="race"))
+        self.assertEqual(cl.load_job("race")["status"], "READY")
+
+    def test_calibration_transport_failure_preserves_completed_stage(self):
+        j = dict(self.j, status="RUNNING", host="host", run="/run", stage_idx=0)
+        stages = [dict(key="calibrate", kind="calibrate")]
+        with patch.object(cl, "stage_list", return_value=stages), \
+             patch.object(cl, "bench_track", return_value=True), \
+             patch.object(cl, "poll_stage", return_value=("DONE", 0)), \
+             patch.object(cl, "remote_ok", return_value=(True, "")), \
+             patch.object(cl, "ssh", return_value=SimpleNamespace(returncode=255, stdout="")), \
+             patch.object(cl, "crash") as crash, patch.object(cl, "log"):
+            cl.step(j, None)
+        crash.assert_not_called()
+        self.assertEqual((j["status"], j["stage_idx"]), ("RUNNING", 0))
+        self.assertIn("artifact transport", j["wait"])
+
     def test_restore_requires_ledger_and_preserves_live_work_and_old_state(self):
         ledger = Path(self.tmp.name) / "ledger.md"
         ledger.write_text("other job cancelled\n")

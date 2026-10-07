@@ -849,6 +849,7 @@ def publish_measured():
 
 
 def sync_source(j):
+    j["source_synced"] = False
     spec, host = j["spec"], j["host"]
     src = spec["source"]
     gfetch(src["branch"], timeout=600)
@@ -884,6 +885,8 @@ def sync_source(j):
         j["budget"] = dict(master=spec["budget"]["master"], sheets_ref=files["_ref"],
                            insertion=sheet["clock"]["internal_insertion"],
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
+
+    j["source_synced"] = True
 
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
@@ -1523,14 +1526,12 @@ def stop_main_for_bench(j):
             event(j, f"bench failed: could not stop {j.get('stage_key')}: {ex}")
 
 
-STUCK_S = 3 * 3600          # watchdog: no file under the job's run dir written for 3 h while a stage runs
+STUCK_S = 3 * 3600          # quiet-output observation threshold, never a kill deadline
 STUCK_CHECK_S = 1800
 
 
 def stuck_watchdog(j, st):
-    """STUCK-STAGE WATCHDOG (2026-10-07; hbm-norm-engine x2 sat 9.5 h in Yosys with no log growth): a running stage
-    whose run dir has had no file written for 3 h is stopped and re-run once (same host, next attempt); a second stuck
-    run ends NEEDS_HUMAN.  Checked every 30 min per job."""
+    """Report quiet output without imposing a runtime deadline or restarting work."""
     now = time.time()
     if now - j.get("wd_checked", 0) < STUCK_CHECK_S:
         return
@@ -1548,22 +1549,22 @@ def stuck_watchdog(j, st):
         return                          # unreachable / slow: no verdict this time
     if r.stdout.replace("END", "").strip():
         return
-    kill_own_stage(j)
-    if j.get("wd_requeued"):
-        finish(j, "NEEDS_HUMAN", f"{st['key']} stuck twice: no file written under the run dir for {mins // 60} h",
-               f"NEEDS_HUMAN: {st['key']} stuck twice (no log growth for {mins // 60} h); stage stopped")
-        return
-    j["wd_requeued"] = now_iso()
-    j["attempt"] += 1
-    j["status"] = "READY"
-    event(j, f"watchdog: {st['key']} wrote no file for {mins // 60} h; stopped and re-run once")
-    ledger(j, f"WATCHDOG: {st['key']} stuck {mins // 60} h without log growth; re-run once (attempt {j['attempt']})")
+    # Quiet tool output is not proof that synthesis or routing stopped making progress.
+    # Keep the process and all completed objects; the owner can inspect actual CPU/
+    # process state. Capacity guards, not elapsed time, protect the host.
+    if not j.get("quiet_output_reported"):
+        j["quiet_output_reported"] = now_iso()
+        event(j, f"observation: {st['key']} wrote no file for {mins // 60} h; process preserved")
 
 
 def step(j, fleet):
     spec = j["spec"]
     stl = stage_list(spec)
     s = j["status"]
+    if s == "READY" and (not j.get("commit_full") or j.get("source_synced") is False):
+        j["status"] = "SYNC" if j.get("host") else "QUEUED"
+        event(j, "source synchronization incomplete; preserve stage position and synchronize before launch")
+        return
     if s in ("QUEUED", "READY", "SYNC") and "bench_par" not in j:
         bench_par_decide(j, stl)
     if not bench_track(j, fleet, stl):
@@ -1658,13 +1659,23 @@ def step(j, fleet):
             event(j, f"{st['key']} done (rc={rc})")
             if st["kind"] == "calibrate":
                 r = ssh(j["host"], f"cat {j['run']}/cl/calib.json", timeout=60)
+                if r.returncode == 255:
+                    j["wait"] = "completed calibration: artifact transport unavailable"
+                    return  # Retry the read, never the completed physical stage.
                 try:
+                    if r.returncode:
+                        raise ValueError(f"artifact read exited {r.returncode}")
                     c = json.loads(r.stdout)
                     j["calibration"] = {k: c[k] for k in ("ss", "ff", "env", "db", "clock", "parasitics")}
-                    event(j, "calibrated insertion " + " ".join(f"{k}={v}" for k, v in c["env"].items() if "ALL" not in k))
-                    record_measured(j)
-                except Exception:  # noqa: BLE001
-                    return crash(j, st, fleet, "calibrate produced no calib.json")
+                    if not isinstance(c["env"], dict):
+                        raise ValueError("calibration env must be an object")
+                except (ValueError, KeyError, TypeError) as ex:
+                    finish(j, "NEEDS_HUMAN", f"completed calibration artifact invalid: {ex}",
+                           "NEEDS_HUMAN: inspect/recover calib.json; completed physical stage preserved")
+                    return
+                j["wait"] = None
+                event(j, "calibrated insertion " + " ".join(f"{k}={v}" for k, v in c["env"].items() if "ALL" not in k))
+                record_measured(j)
                 dev = budget_check(j)
                 if dev:
                     if j["spec"]["budget"].get("on_deviation", "flag") == "flag":
@@ -2386,7 +2397,9 @@ def cmd_retry(a):
         if not idx:
             sys.exit(f"{a.name}: no stage {a.at} (stages: {' '.join(s['key'] for s in stl)})")
         j["stage_idx"], j["stage_key"] = idx[0], a.at
-    j["status"], j["retries_used"], j["attempt"] = "READY" if j.get("host") else "QUEUED", 0, j["attempt"] + 1
+    synchronized = bool(j.get("commit_full")) and j.get("source_synced") is not False
+    retry_status = ("READY" if synchronized else "SYNC") if j.get("host") else "QUEUED"
+    j["status"], j["retries_used"], j["attempt"] = retry_status, 0, j["attempt"] + 1
     j["errors"] = []
     event(j, "human retry: re-queued from stage " + str(j.get("stage_key")))
     save_job(j)
