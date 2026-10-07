@@ -336,7 +336,7 @@ def cmd_bundle(a):
     global SK
     setup_gate()
     if a.cut:                                      # ot_v41_fadd CUT (SAFE: 511): the ROM skew follows the adder latency
-        SK = 1 + bin(int(a.cut, 0)).count("1")
+        SK = 1 + bin(int(a.cut, 0)).count("1") + a.split9
     work = a.work / "lmhead_bundle"
     work.mkdir(parents=True, exist_ok=True)
     xf, logits = golden_x()
@@ -366,7 +366,7 @@ def cmd_bundle(a):
     if not exe.exists():
         subprocess.run([str(gate.VERILATOR), "--binary", "--timing", "-j", "8", "-Wno-fatal", "-Wno-lint",
                         "-Wno-style", "-O2", "--top-module", "tb_dsrom_1m_head_bundle", "-Mdir", str(out),
-                        f"-GIOREG={a.ioreg}", f"-GSAFE={a.safe}"] + ([f"-GCUT={int(a.cut, 0)}"] if a.cut else [])
+                        f"-GIOREG={a.ioreg}", f"-GSAFE={a.safe}", f"-GSPLIT9={a.split9}"] + ([f"-GCUT={int(a.cut, 0)}"] if a.cut else [])
                        + [str(ROOT / TB_BUNDLE)] + [str(p) for p in rtl],
                        check=True, cwd=work, stdout=subprocess.DEVNULL)
     r = subprocess.run([str(exe), f"+DIR={work}", f"+OT_ROM_DIR={work}", f"+ROW0={BUNDLE0}"],
@@ -776,6 +776,7 @@ def main(argv=None):
             p.add_argument("--ioreg", type=int, default=0, help="ot_dsrom_head_elem IOREG (pin-registered inputs)")
             p.add_argument("--mutate", default="", help="negative control: OLD=>NEW in ot_dsrom_head_elem.sv")
             p.add_argument("--safe", type=int, default=0, help="ot_dsrom_head_elem SAFE (registered argmax compare)")
+            p.add_argument("--split9", type=int, default=0, help="ot_v41_fadd SPLIT9 (+1 adder stage; needs --cut with bit 8)")
             p.add_argument("--cut", default="", help="ot_v41_fadd CUT for the bundle (e.g. 0x1ff); sets the ROM skew SK")
         if c == 'stream-build':
             p.add_argument('--jobs', type=int, default=4)

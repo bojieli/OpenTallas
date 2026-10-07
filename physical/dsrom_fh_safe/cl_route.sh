@@ -2,6 +2,8 @@
 # Closure-loop route of the DS head SAFE views (owner SAFE directive 2026-10-06): routed at 730 ps, signed off at
 # 833.333 ps (60/25), hold margin $HM (loop default 35 ps). IO from the loop's calibrated insertion (owner model:
 # in max = CK_SS_MEAN + 250, in min = CK_FF_MEAN - 50, out max = 250 - CK_SS_MEAN, out min = -(CK_FF_MEAN + 50)).
+# r2 (23:45 PT): --hold-corners WC,BC. With CORNERS=BC alone ORFS reads only the FF libraries (read_liberty.tcl), so
+# placement/CTS/route setup repair ran at FF and the SS sign-off saw -200 ps (elemB r1); elements add fadd SPLIT9.
 # Usage (from the source root): cl_route.sh <quad|top|elemA|elemB|glue> <label> <out dir> [extra run_abi3_physical args,
 # e.g. $CL_STOP_AFTER]. Writes <out>/exit (rc=, corner_rc=), <out>/corner_sta.json and <out>/view/ (LEF + SS/FF ETM).
 set -o pipefail
@@ -35,7 +37,7 @@ set_false_path -from [get_ports gid*]";;
   if [ $V = elemA ]; then P=(--param LV=8 --param PAD=0 --param JOIN=1 --param ROWS=32); else P=(--param LV=6 --param PAD=2 --param JOIN=0 --param ROWS=128); fi
   args=(--source rtl/v41rom/ot_dsrom_head_elem.sv --source rtl/v41rom/ot_v41_fadd.sv --source rtl/common/ot_prefix.sv
    --source rtl/v41rom/ot_v41_bmul2.sv --source rtl/v41rom/ot_dsrom_bmul3.sv --source physical/asap7_memory_macros/$M/${M}_bb.v
-   "${P[@]}" --param IOREG=1 --param SAFE=1 --param CUT=511 --core-utilization 40 --macro-place-halo 3 3 --max-fanout 32
+   "${P[@]}" --param IOREG=1 --param SAFE=1 --param CUT=511 --param SPLIT9=1 --core-utilization 40 --macro-place-halo 3 3 --max-fanout 32
    --slew-margin-percent 30 --sdc-append physical/abi3/v41_w10_elem_pp_multicycle.sdc --macro-view $M=physical/asap7_memory_macros/$M)
   MAC=(--macro physical/asap7_memory_macros/$M)
   MC="set_multicycle_path -setup 2 -from [get_cells -hierarchical *u_rom?]
@@ -66,7 +68,7 @@ S2
 echo "$(date -Is) START $(hostname) $V $LBL ins $ISS/$IFF HM $HMS $*" >> $O/MANIFEST
 python3 tools/run_abi3_physical.py --source-root "$S" --view asap7 --top $TOP "${args[@]}" \
  --clock-period-ns 0.730 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 \
- --orfs-corner WC --hold-corners BC --stages pnr --false-path-from rst_n \
+ --orfs-corner WC --hold-corners WC,BC --stages pnr --false-path-from rst_n \
  --core-input-delay-min-ns $IMIN --core-input-delay-max-ns $IMAX --output-delay-min-ns $OMIN --output-delay-max-ns $OMAX \
  --orfs-var ADDER_MAP_FILE= --place-density 0.55 --orfs-var PLACE_DENSITY_LB_ADDON= --max-transition-ns 0.25 \
  --hold-margin-ns $HMS --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl \

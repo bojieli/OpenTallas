@@ -39,7 +39,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_dsrom_head_elem --sourc
  --source rtl/v41rom/ot_v41_fadd.sv --source rtl/common/ot_prefix.sv --source rtl/v41rom/ot_v41_bmul2.sv \
  --source rtl/v41rom/ot_dsrom_bmul3.sv --source physical/asap7_memory_macros/$M/${M}_bb.v "${P[@]}" --param IOREG=1 \
  --clock-period-ns 0.770 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 \
- --orfs-corner WC --hold-corners BC --orfs-var ADDER_MAP_FILE= --max-fanout 32 --stages pnr "${STOP[@]}" \
+ --orfs-corner WC --hold-corners WC,BC --orfs-var ADDER_MAP_FILE= --max-fanout 32 --stages pnr "${STOP[@]}" \
  --false-path-from rst_n --core-input-delay-min-ns $IMIN --core-input-delay-max-ns $IMAX \
  --output-delay-min-ns $OMIN --output-delay-max-ns $OMAX \
  --core-utilization 40 --macro-place-halo 3 3 --hold-margin-ns 0.020 --slew-margin-percent 30 \

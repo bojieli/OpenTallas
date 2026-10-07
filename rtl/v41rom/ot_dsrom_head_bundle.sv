@@ -15,7 +15,8 @@
 module ot_dsrom_head_bundle #(
     parameter integer BST = 2,
     parameter [8:0] CUT = 9'b1_0111_1011,
-    parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8],
+    parameter integer SPLIT9 = 0,          // ot_v41_fadd SPLIT9 (+1 adder latency, the skew follows)
+    parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
     parameter INSTANCE = "h",
     parameter integer IOREG = 0,           // ot_dsrom_head_elem IOREG (pin-registered elements)
     parameter integer SAFE = 0             // ot_dsrom_head_elem SAFE (registered argmax compare)
@@ -50,7 +51,7 @@ module ot_dsrom_head_bundle #(
     wire        nc_lv, nc_done;
     wire [31:0] nc_ld, nc_bits, nc_key;
     wire [16:0] nc_row;
-    ot_dsrom_head_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(CUT), .INSTANCE($sformatf("%sb", INSTANCE)), .IOREG(IOREG), .SAFE(SAFE)) u_b (
+    ot_dsrom_head_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(CUT), .INSTANCE($sformatf("%sb", INSTANCE)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_b (
         .clk(clk), .rst_n(rst_n), .go(go_d), .row0(17'd0), .x(xsb), .b_v(1'b0), .b_d(32'd0), .o_v(bo_v), .o_d(bo_d),
         .l_v(nc_lv), .l_d(nc_ld), .done(nc_done), .best_row(nc_row), .best_bits(nc_bits), .best_key(nc_key),
         .fault(b_fault));
@@ -72,7 +73,7 @@ module ot_dsrom_head_bundle #(
     generate for (q = 0; q < 4; q = q + 1) begin : g_a
         wire ov, lv;
         wire [31:0] od, ld;
-        ot_dsrom_head_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .INSTANCE($sformatf("%sa%0d", INSTANCE, q)), .IOREG(IOREG), .SAFE(SAFE)) u_e (
+        ot_dsrom_head_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .INSTANCE($sformatf("%sa%0d", INSTANCE, q)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_e (
             .clk(clk), .rst_n(rst_n), .go(go_d), .row0(row0 + 17'd32 * q), .x(xsa), .b_v(bv_r[q]), .b_d(bd_r),
             .o_v(ov), .o_d(od), .l_v(lv), .l_d(ld), .done(a_done[q]), .best_row(a_row[q]), .best_bits(a_bits[q]),
             .best_key(a_key[q]), .fault(a_fault[q]));

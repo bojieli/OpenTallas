@@ -51,7 +51,7 @@ S2
 echo "$(date -Is) START $(hostname) $V $MODE ins $ISS/$IFF" >> $O/MANIFEST
 python3 tools/run_abi3_physical.py --source-root "$S" --view asap7 --top $TOP "${args[@]}" \
  --clock-period-ns 0.770 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 \
- --orfs-corner WC --hold-corners BC --stages pnr "${STOP[@]}" \
+ --orfs-corner WC --hold-corners WC,BC --stages pnr "${STOP[@]}" \
  --false-path-from rst_n --core-input-delay-min-ns $IMIN --core-input-delay-max-ns $IMAX \
  --output-delay-min-ns $OMIN --output-delay-max-ns $OMAX \
  --orfs-var ADDER_MAP_FILE= --place-density 0.55 --orfs-var PLACE_DENSITY_LB_ADDON= \
