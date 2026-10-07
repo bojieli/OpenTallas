@@ -366,6 +366,7 @@ R24SM3V = dict(R24SM3, vm_split8=True, vm8_nonoverlap=True, vm8_exact_pins=True)
 R24SM3VO = dict(R24SM3V, native_owner_bays=True)
 R24SM3VOC = dict(R24SM3VO, native_descriptor_bays=True)
 R24SM3VOCE = dict(R24SM3VOC, native_control_escape_bays=True)
+R24SM3VOCEU = dict(R24SM3VOCE, native_control_u_corridors=True)
 ADOPTED = R23
 
 
@@ -683,6 +684,8 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
             m['result_pin_bays'] = bays
             m.setdefault('reserved_regions', []).extend(q['box_um'] for q in bays)
             if variant.get('native_owner_bays'):
+                if any(abs(i.w-3075.84)>1e-6 or abs(i.h-1131.84)>1e-6 for i in insts if i.kind=='sm'):
+                    raise ValueError('native owner/descriptor pin reservations require original3075.84x1131.84 SM contract')
                 # Opt-in reservation for the protected native owner. Area/grid
                 # is priced before a physical master exists; this is not a cell.
                 owner_bays=[]
@@ -726,6 +729,13 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
                                 escape_bays.append(dict(sm=bay['sm'],role=role,box_um=[round(v,6) for v in box]))
                         m['native_control_escape_bays']=escape_bays
                         m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in escape_bays)
+                        if variant.get('native_control_u_corridors'):
+                            if abs(geo['W']-30904.848)>1e-6 or abs(geo['H']-24051.6)>1e-6:
+                                raise ValueError('control U corridor proposal belongs to original retile outline')
+                            proposal=json.loads((ROOT/'results/uarch/hbm_sm_owner_reservation_20261007/control_u_successor/proposal.json').read_text())
+                            corridors=[dict(sm=row['sm'],box_um=box) for row in proposal['rows'] for box in row['corridor_rectangles_um']]
+                            m['native_control_u_corridors']=corridors
+                            m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in corridors)
     m['buses'], m['paths'] = buses(m)
     if variant.get('stn_share'):
         share_stations(m)
