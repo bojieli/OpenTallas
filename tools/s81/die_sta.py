@@ -50,7 +50,7 @@ def interim_lib(cells, corner):
             body = [head, f'   direction : {"input" if d == "input" else "output" if d == "output" else "inout"};']
             if d == 'input':
                 body.append('   capacitance : 1.0;')
-            if p == ck:
+            if p == ck or (d == 'input' and p in CLK_NAMES):     # every clock pin of a multi-clock glue master
                 body.append('   clock : true;')
             elif ck and d == 'input':
                 for tt, v in (('setup_rising', k['su']), ('hold_rising', k['ho'])):
