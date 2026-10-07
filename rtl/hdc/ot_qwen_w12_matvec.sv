@@ -207,7 +207,8 @@ module ot_qwen_w12_matvec_part #(
     parameter integer FAST_ISSUE = 0,
     // KV_PREP: cycles a KV-sourced op waits after its go for the pipelined per-group KV offsets (3), 0: none
     parameter integer KV_PREP = 0,
-    // MUL_LAT: the lane's BF16 product latency (5: ot_qwen_w12_bmul; 6: its product cut after the carry-save rows)
+    // MUL_LAT: the lane's BF16 product latency (5: ot_qwen_w12_bmul; 6: its product cut after the carry-save rows;
+    // 7: + a kept per-lane input register; 8: + the decoded operands registered)
     parameter integer MUL_LAT = 5
 ) (
     input  wire              clk,
@@ -602,7 +603,15 @@ end endgenerate
             reg  [8*AW-1:0] r_part;
             wire [AW-1:0] cs_s, cs_c;
             ot_qwen_w12_csa_tree #(.W(AW), .N(8)) u_cs (.rows(r_part), .s(cs_s), .c(cs_c));
-            ot_qwen_w12_kadd #(.W(AW)) u_sum (.a(cs_s), .b(cs_c), .s(osum));
+            if (KV_PREP >= 4) begin : g_cs_reg
+                //: KV_PREP >= 4 (margin rule 2026-10-06; tile_tp4_t4 SS -18.9 ps on r_part -> 8-row CSA -> prefix sum
+                //: -> off): the two carry-save rows are registered before the kept prefix sum (offset ready after 4)
+                reg [AW-1:0] cs_s_q, cs_c_q;
+                always @(posedge clk) begin cs_s_q <= cs_s; cs_c_q <= cs_c; end
+                ot_qwen_w12_kadd #(.W(AW)) u_sum (.a(cs_s_q), .b(cs_c_q), .s(osum));
+            end else begin : g_cs_comb
+                ot_qwen_w12_kadd #(.W(AW)) u_sum (.a(cs_s), .b(cs_c), .s(osum));
+            end
             always @(posedge clk) begin
                 q_p[gq] <= qv[QW-1:0];
                 c_p[gq] <= cv[CW-1:0];

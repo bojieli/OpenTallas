@@ -31,7 +31,11 @@ module ot_qwen_hbm_stream4_cdc #(
     parameter integer RSEL      = 0,       // ot_qwen_stream4_cdc_pc landing read select: 1 = r9 (closed route r9a)
     parameter integer RNG       = 10,
     parameter integer KV_MAP    = 0,       // 1: option-M quadrant-local stripe (ot_qwen_kv_map_m.svh)
-    parameter integer KV_MAP_PC = -1       // protected PC identity map (-1: = KV_MAP); a differing value is a negative control only
+    parameter integer KV_MAP_PC = -1,      // protected PC identity map (-1: = KV_MAP); a differing value is a negative control only
+    parameter integer CDC_MARGIN = 0,      // 1: ot_qwen_stream4_cdc_pc MARGIN (pin registers, credit landing) + the
+                                           //    receiver's per-PC landing queue (LCRED words, registered credit return)
+    parameter integer LCRED     = 6,
+    parameter integer CDC_NEG   = 0        // negative control only: MARGIN element without the receiver queue
 ) (
     input  wire                 clk,
     input  wire                 rst_n, // cold POR only
@@ -149,9 +153,35 @@ module ot_qwen_hbm_stream4_cdc #(
             .h_cv(h_cv[q]), .h_csec(h_csec[q*24 +: 24]), .h_cdata(h_cdata[q*256 +: 256]), .h_ctag(h_ctag[q*TAGW +: TAGW]),
             .h_av(ap_v[q]), .h_atag(ap_tag[q]), .h_fault(h_fault_p[q]));
         end else begin:raw_path
-        ot_qwen_stream4_cdc_pc #(.TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC), .RSEL(RSEL), .RNG(RNG)) u_cdc (
+        // landing as the element presents it (MARGIN: one-cycle pushes) and the credit it gets back
+        wire e_lv, e_cr; wire [16:0] e_sec; wire [7:0] e_row; wire [255:0] e_dat;
+        if (CDC_MARGIN != 0 && CDC_NEG == 0) begin : g_rx
+            // the receiver's landing queue (physically the landing crossbar's per-PC port, die qfd_kvc): LCRED words,
+            // the service's l_v / l_pop interface on its head, one registered credit per consumed word
+            reg [280:0] rq [0:LCRED-1];
+            reg [$clog2(LCRED):0] rn; reg [$clog2(LCRED)-1:0] rh, rt; reg cr;
+            wire take = rn != 0 && l_pop[q];
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin rn <= 0; rh <= 0; rt <= 0; cr <= 1'b0; end
+                else begin
+                    if (e_lv) begin rq[rt] <= {e_sec, e_row, e_dat}; rt <= (rt == LCRED-1) ? 0 : rt + 1'b1; end
+                    if (take) rh <= (rh == LCRED-1) ? 0 : rh + 1'b1;
+                    rn <= rn + e_lv - take;
+                    cr <= take;
+                    if (e_lv && rn == LCRED && !take) $error("CDC_MARGIN landing queue overflow PC %0d", q);
+                end
+            assign l_v[q] = rn != 0;
+            assign {l_sec[q*17 +: 17], l_row[q*8 +: 8], l_data[q*256 +: 256]} = rq[rh];
+            assign e_cr = cr;
+        end else begin : g_direct
+            assign l_v[q] = e_lv;
+            assign {l_sec[q*17 +: 17], l_row[q*8 +: 8], l_data[q*256 +: 256]} = {e_sec, e_row, e_dat};
+            assign e_cr = l_pop[q];
+        end
+        ot_qwen_stream4_cdc_pc #(.TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC), .RSEL(RSEL), .RNG(RNG),
+                                 .MARGIN(CDC_MARGIN), .LCRED(LCRED)) u_cdc (
             .clk(clk), .c_arst_n(rst_n),
-            .l_v(l_v[q]), .l_sec(l_sec[q*17 +: 17]), .l_row(l_row[q*8 +: 8]), .l_data(l_data[q*256 +: 256]), .l_pop(l_pop[q]),
+            .l_v(e_lv), .l_sec(e_sec), .l_row(e_row), .l_data(e_dat), .l_pop(e_cr),
             .w_v(w_v[q]), .w_sec(w_sec[q*24 +: 24]), .w_data(w_data[q*256 +: 256]), .w_tag(w_tag[q*TAGW +: TAGW]),
             .w_room(w_room[q]), .wd_v(wd_v[q]), .wd_tag(wd_tag[q*TAGW +: TAGW]), .c_fault(c_fault_p[q]),
             .hclk(hclk), .h_arst_n(rst_n),

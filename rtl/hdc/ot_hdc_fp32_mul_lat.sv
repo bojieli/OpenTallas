@@ -1,14 +1,16 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // ot_hdc_fp32_mul_lat #(LAT): the binary32 multiplier of ot_hdc_fp32_mul_fast (rtl/hdc/ot_hdc_fastfp.sv), bit for
-// bit, with LAT = 3..7 register stages (W11 measurement vehicle for 1.2 GHz @ SS; see ot_hdc_fp32_add_lat).
-//   S1  decode, subnormal LZC and normalise shift        | C1 (LAT >= 6)
+// bit, with LAT = 3..9 register stages (W11 measurement vehicle for 1.2 GHz @ SS; see ot_hdc_fp32_add_lat).
+//   S1  decode, subnormal LZC                             | C5 (LAT >= 8; margin rule 2026-10-06)
+//       normalise shift                                   | C1 (LAT >= 6)
 //       partial products + three carry-save levels, the exponent sum
 //   S2  four carry-save levels                            | C2 (LAT >= 5)
 //       the 48-bit prefix add; the subnormal masks
 //   S3  select, subnormal shift, sticky/round bits        | C3 (LAT >= 4)
 //       round increment (prefix add)                      | C4 (LAT >= 7)
-//       encode, refusals -> y
+//       encode                                            | C6 (LAT >= 9; margin rule 2026-10-06)
+//       refusals -> y
 // Every prefix adder is ot_hdc_ksadd_k (rtl/hdc/ot_hdc_prefix.sv, (* keep *) levels).
 // Uses ot_hdc_w11_cut (rtl/hdc/ot_hdc_fp32_add_lat.sv).
 // ---------------------------------------------------------------------------
@@ -32,7 +34,9 @@ module ot_hdc_fp32_mul_lat #(
     localparam integer CUT2 = (CUTS >= 0) ? (CUTS / 2) % 2 : (LAT >= 5) ? 1 : 0;
     localparam integer CUT3 = (CUTS >= 0) ? (CUTS / 4) % 2 : (LAT >= 4) ? 1 : 0;
     localparam integer CUT4 = (CUTS >= 0) ? (CUTS / 8) % 2 : (LAT >= 7) ? 1 : 0;
-    generate if (CUTS >= 0 && CUT1 + CUT2 + CUT3 + CUT4 + 3 != LAT) begin : g_bad_cuts
+    localparam integer CUT5 = (CUTS >= 0) ? (CUTS / 16) % 2 : (LAT >= 8) ? 1 : 0;
+    localparam integer CUT6 = (CUTS >= 0) ? (CUTS / 32) % 2 : (LAT >= 9) ? 1 : 0;
+    generate if (CUTS >= 0 && CUT1 + CUT2 + CUT3 + CUT4 + CUT5 + CUT6 + 3 != LAT) begin : g_bad_cuts
         ot_hdc_fp32_mul_lat_CUTS_must_match_LAT u_trap ();
     end endgenerate
     localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
@@ -58,12 +62,24 @@ module ot_hdc_fp32_mul_lat #(
                                                    : ($signed({4'd0, a_field}) - 12'sd150);
     wire signed [11:0] b_power = (b_field == 8'd0) ? (-12'sd149 - {7'd0, b_lz[4:0]})
                                                    : ($signed({4'd0, b_field}) - 12'sd150);
-    wire [23:0] a_n = a_raw << a_lz[4:0];
-    wire [23:0] b_n = b_raw << b_lz[4:0];
+    // C5: decode / LZC | normalise shift
+    localparam integer W5 = 1 + 1 + 2 + 1 + 24 + 24 + 5 + 5 + 12 + 12;
+    wire [W5-1:0] c5;
+    ot_hdc_w11_cut #(.W(W5), .CUT(CUT5)) u_c5 (.clk(clk), .rst_n(rst_n),
+        .d({valid_in, nonfinite || zero, (nonfinite ? E_NONFINITE : E_NONE), a[31] ^ b[31], a_raw, b_raw, a_lz[4:0],
+            b_lz[4:0], a_power, b_power}), .q(c5));
+    wire        n_v, n_bz, n_sign;
+    wire [1:0]  n_err;
+    wire [23:0] n_ar, n_br;
+    wire [4:0]  n_al, n_bl;
+    wire [11:0] n_ap, n_bp;
+    assign {n_v, n_bz, n_err, n_sign, n_ar, n_br, n_al, n_bl, n_ap, n_bp} = c5;
+    wire [23:0] a_n = n_ar << n_al;
+    wire [23:0] b_n = n_br << n_bl;
     localparam integer W1 = 1 + 1 + 2 + 1 + 24 + 24 + 12 + 12;
     wire [W1-1:0] c1;
     ot_hdc_w11_cut #(.W(W1), .CUT(CUT1)) u_c1 (.clk(clk), .rst_n(rst_n),
-        .d({valid_in, nonfinite || zero, (nonfinite ? E_NONFINITE : E_NONE), a[31] ^ b[31], a_n, b_n, a_power, b_power}),
+        .d({n_v, n_bz, n_err, n_sign, a_n, b_n, n_ap, n_bp}),
         .q(c1));
     wire        p_v, p_byp, p_sign;
     wire [1:0]  p_err;
@@ -198,13 +214,21 @@ module ot_hdc_fp32_mul_lat #(
     wire sub_carry = o_sub && rnd[23];
     wire [31:0] code = o_sub ? (sub_carry ? {o_sign, 8'h01, 23'd0} : {o_sign, 8'h00, rnd[22:0]})
                              : {o_sign, field, man[22:0]};
+    // C6: encode | refusals -> y
+    localparam integer W6 = 1 + 1 + 2 + 1 + 32;
+    wire [W6-1:0] c6;
+    ot_hdc_w11_cut #(.W(W6), .CUT(CUT6)) u_c6 (.clk(clk), .rst_n(rst_n), .d({o_v, o_byp, o_err, over, code}), .q(c6));
+    wire        e_v, e_byp, e_over;
+    wire [1:0]  e_err;
+    wire [31:0] e_code;
+    assign {e_v, e_byp, e_err, e_over, e_code} = c6;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
-            valid_out <= o_v;
-            if (o_byp) begin y <= 32'd0; err <= o_err; end
-            else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
-            else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
+            valid_out <= e_v;
+            if (e_byp) begin y <= 32'd0; err <= e_err; end
+            else if (e_over) begin y <= 32'd0; err <= E_OVERFLOW; end
+            else begin y <= (e_code[30:0] == 31'd0) ? 32'd0 : e_code; err <= E_NONE; end
         end
     end
 endmodule
@@ -224,6 +248,10 @@ endmodule
 module ot_hdc_fp32_mul_lat7 (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
                              output wire [1:0] err, output wire valid_out);
     ot_hdc_fp32_mul_lat #(.LAT(7)) u (.*);
+endmodule
+module ot_hdc_fp32_mul_lat9 (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
+                             output wire [1:0] err, output wire valid_out);
+    ot_hdc_fp32_mul_lat #(.LAT(9)) u (.*);
 endmodule
 
 // the W11 serial-domain LAT-5 multiplier: the LAT-4 cuts plus C1 (after the decode / normalise), bit-identical
