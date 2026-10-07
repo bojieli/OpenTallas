@@ -13090,7 +13090,7 @@ def qwen_ctrl_pc_closure_model():
     return model()
 
 
-def qwen_final_pc_closure_composition(decode=False, controller=False):
+def qwen_final_pc_closure_composition(decode=False, controller=False, mapped_decode=False):
     """Compose each new pipeline once against the common pinned r21 baseline.
 
     Gross added edges are conservative until connected-token measurement exists;
@@ -13100,6 +13100,10 @@ def qwen_final_pc_closure_composition(decode=False, controller=False):
     import math
     base = 216713
     terms = {}
+    if decode and mapped_decode:
+        raise ValueError('mapped decoder replaces decoder; select one')
+    if mapped_decode:
+        terms['mapped_landing_decoder'] = qwen_kvc_mapped_pc_model()['added_token_cycles']
     if decode:
         terms['landing_decoder'] = 36 * qwen_kvc_decode_pc_model()['latency']['pipeline_edges']
     if controller:
@@ -13116,3 +13120,9 @@ def qwen_final_pc_closure_composition(decode=False, controller=False):
         exact_connected_latency_measured=False,
         adoption_gate='connected service must measure actual delta vs pinned baseline, pass exactness and all real master SS/FF/die-context timing',
         excluded_unpriced='row arbitration, global descriptor fence, payload/tag/landing storage, die relay stages')
+
+
+def qwen_kvc_mapped_pc_model():
+    """Full-width exact option-M mapper followed by landing decoder."""
+    from uarch_model_qwen_kvc_mapped import model
+    return model()
