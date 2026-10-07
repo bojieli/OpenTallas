@@ -36,7 +36,7 @@ class FFOnlySelection(unittest.TestCase):
             self.assertEqual(data["route_strategy"], ["incremental_original_guides",
                 "fresh_global reason rejected_guides explicit_opt_in 1"])
 
-    def test_default_session_never_invokes_two_corner_repair(self):
+    def run_selection(self, mismatch):
         source = (HERE / "hold_eco.sh").read_text()
         defaults = source[source.index("ECO_SESSION=${"):source.index("RB=$1;")]
         selection = source[source.index("  SESSION=ff"):source.index("  L=$P/eco_$SESSION.log")]
@@ -50,18 +50,28 @@ OUT=$1
 mkdir -p "$P/orfs"
 EB=$P/orfs
 ECO_ENV=()
-orun() { printf '%s\n' "$*" >> "$P/calls"; }
+echo ss > $P/eff_ss.sdc; echo ff > $P/eff_ff.sdc
+orun() { printf '%s\n' "$*" >> "$P/calls"; if [ "$MISMATCH" = 1 ]; then echo "OT_ECO session_mismatch: x" > $1; else : > $1; fi; }
 ''' + selection + r'''
-test "$SESSION" = ff
-test "$(wc -l < "$P/calls")" = 1
-grep -q 'OT_SESSION=ff' "$P/calls"
-grep -q 'OT_SS_SLACK=/p/eff_ss.sdc.slack' "$P/calls"
-grep -q 'OT_SS_CRIT=/p/eff_ss.sdc.crit' "$P/calls"
+echo "SESSION=$SESSION"
+grep -q 'OT_SESSION=mm' "$P/calls"
+grep -q 'OT_SDC_SS=/p/mode_ss.sdc' "$P/calls"
+grep -q 'false_path -hold' "$P/mode_ss.sdc"
+grep -q 'false_path -setup' "$P/mode_ff.sdc"
 ! grep -q 'OT_SESSION=two' "$P/calls"
+if [ "$MISMATCH" = 1 ]; then test "$SESSION" = ff; grep -q 'OT_SESSION=ff' "$P/calls"; grep -q 'OT_SS_SLACK=/p/eff_ss.sdc.slack' "$P/calls"
+else test "$SESSION" = mm; test "$(wc -l < "$P/calls")" = 1; fi
 '''
-            result = subprocess.run(["bash", "-c", script, "test", tmp],
-                                    capture_output=True, text=True)
-            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            return subprocess.run(["bash", "-c", script, "test", tmp], capture_output=True, text=True,
+                                  env=dict(__import__("os").environ, MISMATCH=str(int(mismatch))))
+
+    def test_default_session_is_multimode_never_two_corner(self):
+        result = self.run_selection(False)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_multimode_mismatch_falls_back_to_ff_only(self):
+        result = self.run_selection(True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 @unittest.skipUnless(shutil.which("tclsh"), "tclsh required")

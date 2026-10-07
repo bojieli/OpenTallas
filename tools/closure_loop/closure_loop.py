@@ -1731,7 +1731,7 @@ def start_hold_eco(j, fleet, m):
     v, he = j["spec"].get("verdict", {}), j["spec"].get("hold_eco") or {}
     # rev 2 (2026-10-07): post-route hold goal +18 (coordinator: die-context margin over the +15 line), endpoint filter, sign-off-exact constraints per corner,
     # resistance-aware re-route, up to 2 ECO -> re-route -> sign-off passes (hold_eco.sh header)
-    env = f"ECO_SESSION={shlex.quote(he.get('session', 'ff'))} " \
+    env = f"ECO_SESSION={shlex.quote(he.get('session', 'mm'))} " \
           f"ALLOW_FRESH_GRT={int(he.get('allow_fresh_grt', False))} " \
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
