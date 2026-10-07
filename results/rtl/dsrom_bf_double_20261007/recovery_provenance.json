@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.dsrom.bf-double.recovery.v1",
+ "source_commit": "505a9b484ce530002426e389cccee089eaa8f24d",
+ "options": {
+  "A_f198_2048": {
+   "geom": "f198.72",
+   "exact": true,
+   "sum_rep_delta": -6440,
+   "AR": 1645.8,
+   "MTP": 4841.9,
+   "stages": 96
+  },
+  "B_mixed_2304": {
+   "geom": "f183.60",
+   "exact": true,
+   "sum_rep_delta": -10900,
+   "AR": 1754.3,
+   "MTP": 5098.3,
+   "stages": 85
+  },
+  "base_f198_2050": {
+   "geom": "f198.72",
+   "exact": true,
+   "sum_rep_delta": 111,
+   "AR": 1608.4,
+   "MTP": 4764.3,
+   "stages": 96
+  }
+ },
+ "regions": {
+  "A_f198_2048": {
+   "file": "results/rtl/dsrom_bf_double_20261007/A_f198_2048_regions.json.gz",
+   "sha256": "57cbbf2273d0c5c5cf32b2078971cf082520748afb87db5c704081dfe8006b06",
+   "region_runs": 19056,
+   "all_exact": true
+  },
+  "B_mixed_2304": {
+   "file": "results/rtl/dsrom_bf_double_20261007/B_mixed_2304_regions.json.gz",
+   "sha256": "47804432eb76253a4112fdc760dafab48843e0fb83da45f216308bbdc2058dee",
+   "region_runs": 18288,
+   "all_exact": true
+  },
+  "base_f198_2050": {
+   "file": "results/rtl/dsrom_bf_double_20261007/base_f198_2050_regions.json.gz",
+   "sha256": "7a05678d3b21bc45e4424ea1847c9ac5237c546664f27018aecebe12d03163e0",
+   "region_runs": 20928,
+   "all_exact": true
+  }
+ },
+ "physical_status": "PENDING: mixed 2304-pair geometry not routed; uniform 2048-pair S81 v9d is different. Final PQ/BF footprints and die station cycles must be priced before physical adoption.",
+ "scope": "Seven representative layers [0,1,2,3,20,21,24], sampled experts from each, all planned region runs. This is not exhaustive all-model weight numerical coverage.",
+ "wire_status": "ESTIMATED f183.60 round trips for mixed slot option; historical f198.72 for comparison options."
+}

@@ -26,11 +26,14 @@ GEOM = "f183.60"
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--work", type=Path, required=True)
+    ap = argparse.ArgumentParser()
+    source = ap.add_mutually_exclusive_group(required=True)
+    source.add_argument("--work", type=Path)
+    source.add_argument("--regions", type=Path, help="Committed compact field regions, for replay without scratch runs")
     ap.add_argument("--out", type=Path, default=OUT); a = ap.parse_args()
     geo = RP.load_geo(GEOM); W = RP.wire_fn(geo, RP.hub_terms(geo))
     old = RP.summarise(RP.node_table(RP.load_regions(RP.OUT / "regions/asbuilt_qelem10.json.gz"), lambda r: W[r]))
-    ph = BP.regions(a.work.resolve())
+    ph = RP.load_regions(a.regions)["phases"] if a.regions else BP.regions(a.work.resolve())
     new = RP.summarise(RP.node_table(dict(config="asbuilt", phases=ph), lambda r: W[r]))
     rep = {L: t["rep"] for t in M.TYPES.values() for L in t["layers"]}
     nodes, adds = {}, []
