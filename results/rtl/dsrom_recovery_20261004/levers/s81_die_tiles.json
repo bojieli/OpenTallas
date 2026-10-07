@@ -155,16 +155,149 @@
   {
    "item": "collective_lane",
    "nodes": "*.attn.out_allreduce",
-   "cycles": 288,
+   "cycles": 131,
    "frac": 0,
-   "source": "Collective slab v3 tiles: all-reduce 320 records +288 cycles over the C8 reference (measured, S81-PH src_v3, no bit errors, lane channel 1 cycle; coll_price 2026-10-07).  Replaces x0.9003 = 2,329 / 2,587 (absolute TB times incl. the 1,111-cycle preamble, bit-error injection on, against a node priced from tb_w15b_v41_tp4).  All-gathers: PENDING-DEFECT (below)"
+   "source": "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, lane channel 1 cycle) over the C8 reference: all-reduce 320 rec +131 (CHB 251: 709 vs w15b 690); all-gather 24 rec +38, 57 +50, 256 +113, 1024 +348, 1056 +361"
   },
   {
    "item": "collective_lane",
    "nodes": "*.ffn.combine_allreduce",
-   "cycles": 288,
+   "cycles": 131,
    "frac": 0,
-   "source": "Collective slab v3 tiles: all-reduce 320 records +288 cycles over the C8 reference (measured, S81-PH src_v3, no bit errors, lane channel 1 cycle; coll_price 2026-10-07).  Replaces x0.9003 = 2,329 / 2,587 (absolute TB times incl. the 1,111-cycle preamble, bit-error injection on, against a node priced from tb_w15b_v41_tp4).  All-gathers: PENDING-DEFECT (below)"
+   "source": "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, lane channel 1 cycle) over the C8 reference: all-reduce 320 rec +131 (CHB 251: 709 vs w15b 690); all-gather 24 rec +38, 57 +50, 256 +113, 1024 +348, 1056 +361"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.attn.a_allgather",
+   "cycles": 50,
+   "frac": 0,
+   "source": "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, lane channel 1 cycle) over the C8 reference: all-reduce 320 rec +131 (CHB 251: 709 vs w15b 690); all-gather 24 rec +38, 57 +50, 256 +113, 1024 +348, 1056 +361"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.attn.idx.topk_merge",
+   "cycles": 113,
+   "frac": 0,
+   "source": "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, lane channel 1 cycle) over the C8 reference: all-reduce 320 rec +131 (CHB 251: 709 vs w15b 690); all-gather 24 rec +38, 57 +50, 256 +113, 1024 +348, 1056 +361"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.attn.cand.merge",
+   "cycles": 348,
+   "frac": 0,
+   "source": "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, lane channel 1 cycle) over the C8 reference: all-reduce 320 rec +131 (CHB 251: 709 vs w15b 690); all-gather 24 rec +38, 57 +50, 256 +113, 1024 +348, 1056 +361"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.attn.rows_allgather",
+   "cycles": 361,
+   "frac": 0,
+   "source": "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, lane channel 1 cycle) over the C8 reference: all-reduce 320 rec +131 (CHB 251: 709 vs w15b 690); all-gather 24 rec +38, 57 +50, 256 +113, 1024 +348, 1056 +361"
+  },
+  {
+   "item": "collective_lane",
+   "nodes": "*.ffn.router_allgather",
+   "cycles": 38,
+   "frac": 0,
+   "source": "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, lane channel 1 cycle) over the C8 reference: all-reduce 320 rec +131 (CHB 251: 709 vs w15b 690); all-gather 24 rec +38, 57 +50, 256 +113, 1024 +348, 1056 +361"
+  },
+  {
+   "item": "link_split",
+   "nodes": "*.substage_hop0",
+   "cycles": 2,
+   "frac": 0,
+   "source": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2"
+  },
+  {
+   "item": "link_split",
+   "nodes": "*.substage_hop1",
+   "cycles": 2,
+   "frac": 0,
+   "source": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2"
+  },
+  {
+   "item": "link_split",
+   "nodes": "head.hop",
+   "cycles": 2,
+   "frac": 0,
+   "source": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2"
+  },
+  {
+   "item": "link_split",
+   "nodes": "token.return",
+   "cycles": 16,
+   "frac": 0,
+   "source": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2"
+  },
+  {
+   "item": "link_split",
+   "nodes": "*.attn.out_allreduce",
+   "cycles": 4,
+   "frac": 0,
+   "source": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2"
+  },
+  {
+   "item": "link_split",
+   "nodes": "*.ffn.combine_allreduce",
+   "cycles": 4,
+   "frac": 0,
+   "source": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2"
+  },
+  {
+   "item": "link_split",
+   "nodes": "*.attn.a_allgather",
+   "cycles": 2,
+   "frac": 0,
+   "source": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2"
+  },
+  {
+   "item": "link_split",
+   "nodes": "*.attn.idx.topk_merge",
+   "cycles": 2,
+   "frac": 0,
+   "source": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2"
+  },
+  {
+   "item": "link_split",
+   "nodes": "*.attn.cand.merge",
+   "cycles": 2,
+   "frac": 0,
+   "source": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2"
+  },
+  {
+   "item": "link_split",
+   "nodes": "*.attn.rows_allgather",
+   "cycles": 2,
+   "frac": 0,
+   "source": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2"
+  },
+  {
+   "item": "link_split",
+   "nodes": "*.ffn.router_allgather",
+   "cycles": 2,
+   "frac": 0,
+   "source": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2"
+  },
+  {
+   "item": "sel_xstg",
+   "nodes": "*.attn.idx.topk_local",
+   "cycles": 1,
+   "frac": 0,
+   "source": "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job"
+  },
+  {
+   "item": "sel_xstg",
+   "nodes": "*.attn.cand.topk_local",
+   "cycles": 1,
+   "frac": 0,
+   "source": "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job"
+  },
+  {
+   "item": "sel_xstg",
+   "nodes": "*.attn.gather",
+   "cycles": 1,
+   "frac": 0,
+   "source": "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job"
   },
   {
    "item": "vm_bank_group",

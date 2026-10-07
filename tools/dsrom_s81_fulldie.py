@@ -245,6 +245,17 @@ def _bus(base, n):
     return [f'{base}[{i}]' for i in range(n)]
 
 
+_PSL = re.compile(r'^(.+)\[(\d+):(\d+)\]$')
+
+
+def pslice(port):
+    """bus endpoint port spec: 'p' (the whole port) or 'p[lo:hi]' (bits lo..hi of port p, ascending; S81-RERUN
+    2026-10-07 port slicing: one port served by several nets, e.g. a 512-b link tx by two 256-b final stations).
+    Returns (base, lo, hi) with lo = hi = None for a whole port."""
+    mm = _PSL.match(port)
+    return (mm.group(1), int(mm.group(2)), int(mm.group(3))) if mm else (port, None, None)
+
+
 def real_ports():
     """master -> port -> ordered real pin names (the netlist binds port bit i to the i-th name)."""
     if GEN == 'r8':
@@ -963,8 +974,10 @@ def port_widths(m, k):
         for inst, port in eps:
             if inst == 'TOP':
                 continue
+            port, lo, hi = pslice(port)
+            nn = n if lo is None else ((hi + 1) if k == 1 else max(1, math.ceil((hi + 1) / k)))
             key = (by[inst].master, port)
-            w[key] = max(w.get(key, 0), n)
+            w[key] = max(w.get(key, 0), nn)
     return w
 
 
@@ -978,7 +991,28 @@ def pin_rects(mst, k, wmap):
     rest = Q.Master(mst.name, mst.w, mst.h, mst.obs_top, mst.note)
     rest.ports = {p: s for p, s in mst.ports.items() if s[0] != 'xy'}
     rest.order = [p for p in mst.order if p in rest.ports]
-    return out + Q.pin_rects(rest, k, wmap)
+    rects = Q.pin_rects(rest, k, wmap)
+    if k > 1 and GEOMETRY_FIX:
+        # Bundling expands pin width/pitch, not the real macro outline. Keep
+        # opposite-face access rectangles separated on thin glue banks too.
+        # The k=1 physical pins and every routing-layer assignment are unchanged.
+        bounded = []
+        for nm, ly, (x0, y0, x1, y1) in rects:
+            spec = rest.ports[nm.rsplit('[', 1)[0]]
+            if spec[0] == 'face':
+                face = spec[2]
+                depth = min(0.192 * k, (mst.w if face in 'EW' else mst.h) / 3)
+                if face == 'W':
+                    x1 = depth
+                elif face == 'E':
+                    x0 = mst.w - depth
+                elif face == 'S':
+                    y1 = depth
+                else:
+                    y0 = mst.h - depth
+            bounded.append((nm, ly, (x0, y0, x1, y1)))
+        rects = bounded
+    return out + rects
 
 
 def lef_text(mst, k, wmap):
@@ -1057,15 +1091,22 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
             if inst == 'TOP':
                 continue
             mst = by[inst].master
-            if mst in rp and port in rp[mst]:
-                names = rp[mst][port][:n]
+            base, lo, hi = pslice(port)
+            if mst in rp and base in rp[mst]:
+                names = rp[mst][base][:n] if lo is None else rp[mst][base][lo:hi + 1]
                 conns[inst].append((names, net))
+            elif lo is not None:
+                conns[inst].append((base, net, n, lo if k == 1 else lo // k))
             else:
                 conns[inst].append((port, net, n))
     for it in m['insts']:
         parts = []
         bus_bits = defaultdict(dict)
+        sliced = defaultdict(list)
         for c in conns.get(it.name, []):
+            if len(c) == 4:                      # a slice of a generated / bundled port
+                sliced[c[0]].append((c[3], c[1], c[2]))
+                continue
             if isinstance(c[0], list):
                 names, net = c
                 for i, pn in enumerate(names):
@@ -1077,6 +1118,11 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
             else:
                 port, net, n = c
                 parts.append(f'.{port}({net})')
+        for base, pcs in sliced.items():
+            pcs.sort()
+            assert all(pcs[i][0] + pcs[i][2] == pcs[i + 1][0] for i in range(len(pcs) - 1)) and pcs[0][0] == 0, \
+                (it.name, base, pcs)
+            parts.append(f'.{base}({{' + ', '.join(net for _, net, _ in reversed(pcs)) + '})')
         for base, bits_ in bus_bits.items():
             hi = max(bits_)
             cat = ', '.join(bits_.get(j, "1'bz") for j in range(hi, -1, -1))
@@ -1111,7 +1157,7 @@ DENS_SRC = ('hub/selector/collector logic 1.05 and service 0.385 W/mm2: Qwen ful
 
 
 def inst_power(it):
-    if GEN == 'r8' and it.kind in ('stn', 'hstn', 'rly', 'qbank', 'hend', 'hb_elem', 'hbglue'):
+    if GEN == 'r8' and it.kind in ('stn', 'hstn', 'rly', 'qbank', 'hend', 'hb_elem', 'hbglue', 'xstg'):
         return it.power_w
     if GEN == 'r8' and it.kind in POWER8:
         return POWER8[it.kind][0]
@@ -2465,7 +2511,7 @@ HOP_SKIP = ('clock_trunk', 'reset', 'reset_tree', 'clock', 'col_clock', 'col_res
 
 def _anchor(Mx, it, port):
     """die coordinates of a port's anchor (generated face centre) on a placed instance; None for real macros"""
-    p = Mx.ports.get(port) if Mx is not None else None
+    p = Mx.ports.get(pslice(port)[0]) if Mx is not None else None
     if not p or p[0] != 'face':
         return None
     _, _, face, _, c, _ = p
@@ -2739,7 +2785,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3120,6 +3166,8 @@ def buses_r8(m):
             dom['hbm'].append((it.name, 'ckh'))
             dom['stream'].append((it.name, 'cks'))
             rst['hbm'].append((it.name, 'rst'))
+        elif it.kind == 'xstg':
+            dom['serial' if it.domain == 'serial_0p9' else 'stream'].append((it.name, 'ck'))
         elif it.kind == 'hend':
             spec = G[it.master]
             if spec['kind'] == 'l2r':
@@ -3158,12 +3206,17 @@ CORR_LANE_STRIDE = 5            # coprime with LANES_CORR (16)
 HOP_FIX = False                 # --hop-fix (S81-RERUN v6, default off): stations on every die hop over its reach,
                                 #   measured pin anchor to pin anchor on a first build (budget sheets 2026-10-06)
 HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (L um, (dx, dy), (lx, ly))}
+GEOMETRY_FIX = False            # --geometry-fix: canonical station outlines and bounded bundled pin depth
 HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491 um at 833.333 ps SS)
 HOP_R_FWD = 430.56              # forwarded hop = the station pitch (routed stations: SS +78..+84 at the 440 um hop budget)
 MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 8 / OFFSET 3 / guards 0,6 / CREDITS 16
                                 #   (campaign d8 config): stream-trunk drift 386 ps > 300 ps; +1 cycle per crossing
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
+SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): registered crossing stage (falling-edge capture
+                                #   1.5 T after launch + guard flop) on the 8 end block -> selector / collector buses; +1 cycle
+LINK_SPLIT = False              # --link-split (S81-RERUN v8, default off; needs --link-fix): SerDes tx / rx through two
+                                #   256-b half-span stations (port slices), last hop <= 281 um; +1 cycle each way
 LINK_FIX = False                # --link-fix (S81-RERUN, default off): link ck relay on the ck face, final tx / rx
                                 #   station at the centre of its pin span
 VCH_LANE_STRIDE = 11            # coprime with LANES_VCH (26)
@@ -3187,7 +3240,7 @@ def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
     r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
     return (r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
-            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else ''))
+            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else '') + ('j' if GEOMETRY_FIX else ''))
 
 
 def set_cc_reach(um):
@@ -3318,7 +3371,7 @@ def _hop_fix(m, P):
                 (cx, cy), dch = _poly_at(path, Lp * (k + 1) / (n + 1))
                 horiz = dch in 'EW'
                 w_, h_ = stn_dims([bits], horiz)
-                if not fwd:              # relays / hub stations: faces chosen after placement -> square box
+                if not fwd and (reg is not None or not GEOMETRY_FIX):  # frame relay faces chosen later -> square
                     w_ = h_ = max(w_, h_)
                 pl = None
                 # v6b: stations only in the die's channels (v6 placed them anywhere on the die: 41-54 PA overlaps,
@@ -3330,12 +3383,18 @@ def _hop_fix(m, P):
                     allowed = list(cor.values())
                 # v6c: searched with a 2.16 um keep-out each side (the PA track snap moved v6b's tightly packed
                 # stations into each other: 41 / 49 / 49 overlaps, all hop-fix stations)
-                PAD = 2.16
-                for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
-                    pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
-                                reach=R - 10.0, span=span, rows=rows)
+                # v7: a station with no padded spot inside its frame (v6c: rt_63_26b in frame 63) falls back to a
+                # 1.08 um, then no keep-out (counted in rec['pad_fallback'])
+                for PAD in (2.16, 1.08, 0.0):
+                    for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
+                        pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
+                                    reach=R - 10.0, span=span, rows=rows)
+                        if pl:
+                            pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
+                            break
                     if pl:
-                        pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
+                        if PAD < 2.16:
+                            rec['pad_fallback'][f'{PAD:g}'] = rec['pad_fallback'].get(f'{PAD:g}', 0) + 1
                         break
                 assert pl, (bid, e, k)
                 nm = f'g_{bid}_{e[0]}_{k}'
@@ -3710,6 +3769,11 @@ def _run_multi(CH8, name, path, allowed, forced, ncol):
         n = max(1, joined)
         horiz = it.master.startswith('dsfd_stnh')
         it.master = stn_master([CRET + 2] * n, horiz)
+        # The placer reserved the widest trunk. The emitted master is narrower
+        # until all columns join; its model footprint must match that signature.
+        # Shrink inside the reservation, retaining the conservative occupancy.
+        if GEOMETRY_FIX:
+            it.w, it.h = stn_dims([CRET + 2] * n, horiz)
         it.power_w = n * (CRET + 2) * FLOP_CLK_W * 1.5
         out.append((it, s_, n))
     return out
@@ -3837,7 +3901,18 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                 vx_ = vch_x(m, f'{tag}{st}')
                 path = [(px, py), (px, strip_y(sv, tag + st)), (vx_, strip_y(sv, tag + st)), (vx_, yo), (ex_, yo), (ex_, he.y + he.h / 2)]
             single(f'{tag}{st}', 512, 'vr', (sv.name, f'{pfx}f', f'{pfx}d'), (px, py), path, he)
-            CH8.bus(f'h{tag}_{st}_o', 'local', 515, [(he.name, 'o'), (blk.name, f'{port}{st}')])
+            if SEL_XSTG:
+                # v8 (budget README: bk_selector <-> hix_* / bk_collector <-> hco_* 382-385 ps, regions not merged):
+                # a registered crossing stage at the band block: capture on the falling edge 1.5 T after the end
+                # block's launch (multicycle on that arc), guard flop on the next rising edge; +1 cycle
+                xw, xh = stn_dims([515], True)     # W / E data faces (a horizontal station's outline)
+                xs = beside_blk(f'xs{tag}_{st}', 'dsfd_xstg_515', xw, xh, blk, face, 0.3 + 0.4 * (st[0] == 'N'))
+                xs.kind, xs.domain = 'xstg', blk.domain
+                xs.power_w = 2 * 515 * FLOP_CLK_W * 1.5
+                CH8.bus(f'h{tag}_{st}_x', 'local', 515, [(he.name, 'o'), (xs.name, 'i')])
+                CH8.bus(f'h{tag}_{st}_o', 'local', 515, [(xs.name, 'o'), (blk.name, f'{port}{st}')])
+            else:
+                CH8.bus(f'h{tag}_{st}_o', 'local', 515, [(he.name, 'o'), (blk.name, f'{port}{st}')])
     # selector / collector -> VM (ratio CDC beside the VM, VCH side)
     for name, blk, yo in (('sel', sel, yS), ('col', colr, yN)):
         nm, w, h = end_spec('r2l', [512], 'vr')
@@ -3879,6 +3954,33 @@ def link_span_y(lk, port):
     r = real_lef(SERDES_LEF if lk.master == real_lef(SERDES_LEF)['name'] else UCIE_LEF)
     ys = [_lk_pin_xy(lk, p_)[1] for p_ in r['pins'] if re.fullmatch(rf'{port}\[\d+\]', p_)]
     return (min(ys) + max(ys)) / 2
+
+
+def link_half_y(lk, port, h, nh=2):
+    """centre (die y) of slice h of nh of a link macro's tx / rx bits (pins ascend with the bit index)"""
+    r = real_lef(SERDES_LEF if lk.master == real_lef(SERDES_LEF)['name'] else UCIE_LEF)
+    n = sum(1 for p_ in r['pins'] if re.fullmatch(rf'{port}\[\d+\]', p_))
+    lo, hi = h * n // nh, (h + 1) * n // nh - 1
+    ys = [_lk_pin_xy(lk, f'{port}[{i}]')[1] for i in (lo, hi)]
+    return (ys[0] + ys[1]) / 2, lo, hi
+
+
+def _split_stations(P, CH8, lk, nm, port, allc, lx, side):
+    """LINK_SPLIT: one 256-b station per half of the macro's tx / rx pin span, at the half's centre beside the macro face
+    (a 1,122 um SerDes span from one centre station is a 561 um last hop > the 430.56 um reach; halves give <= 281 um)"""
+    out = []
+    for h in range(2):
+        yc, lo, hi = link_half_y(lk, port, h)
+        w, h_ = stn_dims([hi - lo + 1], False)
+        x0 = lx + (8.0 if side == 'W' else -8.0 - w)
+        pl = P.near(x0 + w / 2, yc, w, h_, allc, prev=None, horiz=False, span=200.0, rows=16)
+        assert pl, (nm, port, h)
+        P.n[f'{nm}{port}s'] += 1
+        it = Inst(f'f_{nm}{port}s_{h}', stn_master([hi - lo + 1], False), pl[0], pl[1], w, h_, 'R0', kind='stn',
+                  region='link', domain='fwd')
+        it.power_w = (hi - lo + 1) * FLOP_CLK_W * 1.5
+        out.append((P.add(it), lo, hi))
+    return out
 
 
 def _face_to(it, x, y):
@@ -3953,15 +4055,35 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
             rs = CH8.run(f'{nm}r', [512], rpath, allc, (lx, ly))
         rst = [it for it, _, _ in rs]
         ckd = (tail[0], tail[1])
+        split = LINK_SPLIT and lk.master == real_lef(SERDES_LEF)['name']
+        if split:         # tail -> two 256-b half-span stations -> macro tx halves; the macro ck follows the upper half
+            txs = _split_stations(P, CH8, lk, nm, 'tx', allc, lx, side)
+            CH8.bus(f'{nm}ts_f', 'fclk', 1, [ckd] + [(it.name, 'fi0') for it, _, _ in txs])
+            for it, lo, hi in txs:
+                CH8.bus(f'{nm}ts_d{lo}', 'lane', hi - lo + 1, [(tail[0], f'{tail[2]}[{lo}:{hi}]'), (it.name, 'di0')])
+                CH8.bus(f'{nm}ts_o{lo}', 'lane', hi - lo + 1, [(it.name, 'do0'), (lk.name, f'tx[{lo}:{hi}]')])
+            ckd = (txs[-1][0].name, 'fo0')
+            rxs = _split_stations(P, CH8, lk, nm, 'rx', allc, lx, side)
         if LINK_FIX:      # the macro's clock source stands on its ck face: a forwarded-clock relay at the ck pin
-            ck = P.add(link_ck_relay(m, P, lk, cor, nm, next(it for it in m['insts'] if it.name == tail[0])))
+            ck = P.add(link_ck_relay(m, P, lk, cor, nm, next(it for it in m['insts'] if it.name == ckd[0])))
             CH8.bus(f'{nm}_ckf', 'fclk', 1, [ckd, (ck.name, 'fi')])
             ckd = (ck.name, 'fo')
-        CH8.bus(f'{nm}_clk', 'fclk', 1, [ckd, (lk.name, 'ck')] + ([(rst[0].name, 'fi0')] if rst else
-                                                                 [(he.name, 'fi0')]))
-        CH8.bus(f'{nm}_tx', 'lane', 512, [(tail[0], tail[2]), (lk.name, 'tx')])
+        if split:
+            assert rst, nm
+            CH8.bus(f'{nm}_clk', 'fclk', 1, [ckd, (lk.name, 'ck')] + [(it.name, 'fi0') for it, _, _ in rxs])
+            for it, lo, hi in rxs:
+                CH8.bus(f'{nm}rs_d{lo}', 'lane', hi - lo + 1, [(lk.name, f'rx[{lo}:{hi}]'), (it.name, 'di0')])
+                CH8.bus(f'{nm}rs_o{lo}', 'lane', hi - lo + 1, [(it.name, 'do0'), (rst[0].name, f'di0[{lo}:{hi}]')])
+            CH8.bus(f'{nm}rs_f', 'fclk', 1, [(rxs[-1][0].name, 'fo0'), (rst[0].name, 'fi0')])
+        else:
+            CH8.bus(f'{nm}_clk', 'fclk', 1, [ckd, (lk.name, 'ck')] + ([(rst[0].name, 'fi0')] if rst else
+                                                                     [(he.name, 'fi0')]))
+            CH8.bus(f'{nm}_tx', 'lane', 512, [(tail[0], tail[2]), (lk.name, 'tx')])
         if rst:
-            CH8.bus(f'{nm}r_d0', 'lane', 512, [(lk.name, 'rx'), (rst[0].name, 'di0')])
+            # Split RX already drives the first station in two slices. Both
+            # forms still need the rest of the chain and its hub termination.
+            if not split:
+                CH8.bus(f'{nm}r_d0', 'lane', 512, [(lk.name, 'rx'), (rst[0].name, 'di0')])
             prev = (rst[0].name, 'fo0', 'do0')
             for k, it in enumerate(rst[1:], 1):
                 CH8.bus(f'{nm}r_f{k}', 'fclk', 1, [(prev[0], prev[1]), (it.name, 'fi0')])
@@ -3975,7 +4097,7 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
 
 
 # ---------------------------------------------------------------------------------------- r8 ports / masters
-GLUE_PREFIX = ('dsfd_lkck', 'dsfd_stn', 'dsfd_hstn', 'dsfd_qbank', 'dsfd_rly', 'dsfd_m2l', 'dsfd_r2l', 'dsfd_l2r', 'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg')
+GLUE_PREFIX = ('dsfd_xstg', 'dsfd_lkck', 'dsfd_stn', 'dsfd_hstn', 'dsfd_qbank', 'dsfd_rly', 'dsfd_m2l', 'dsfd_r2l', 'dsfd_l2r', 'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg')
 
 
 def is_glue(master):
@@ -3992,10 +4114,13 @@ def port_usage(m):
             d = 'output' if j == 0 and cls != 'top_in' else 'input'
             if cls == 'phy_dfi':
                 d = 'inout'
+            port, lo, hi = pslice(port)
+            if lo is not None:
+                assert hi - lo + 1 == bits, (bid, inst, port, lo, hi, bits)
             old = use[inst].get(port)
             if old and old[0] != d:
                 raise ValueError(f'{inst}.{port}: direction {old[0]} and {d}')
-            use[inst][port] = (d, max(bits, old[1] if old else 0))
+            use[inst][port] = (d, max(bits if lo is None else hi + 1, old[1] if old else 0))
     return use
 
 
@@ -4084,7 +4209,7 @@ def masters_r8(m, k=1):
         nets = defaultdict(list)
         for b in m['buses']:
             for inst, p_ in b[3]:
-                nets[(inst, p_)].append(b)
+                nets[(inst, pslice(p_)[0])].append(b)
         m['_nets_of'] = nets
     first = {}
     for it in m['insts']:
@@ -4180,6 +4305,10 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'S', P_(sface), 'M5')
         _lay(Mx, 'N', P_(nface), 'M5')
         _lay(Mx, 'E', P_(['clk', 'rst_n']), 'M4')
+    elif kind == 'xstg':           # placed beside the band block: R0 east of it, MY west of it -> o faces the block
+        _lay(Mx, 'W', P_(['o']), 'M4', gap=0.0)
+        _lay(Mx, 'E', P_(['i']), 'M4', gap=0.0)
+        _lay(Mx, 'S', P_(['ck']), 'M5')
     elif kind == 'rstg':
         _lay(Mx, 'N', P_(['i']), 'M5')
         _lay(Mx, 'S', P_(['o']), 'M5')
@@ -4341,6 +4470,15 @@ def glue_rtl(m):
             w = ports['i'][1]
             body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
             body.append('    assign o = r;')
+        elif mst.startswith('dsfd_xstg'):
+            w = ports['i'][1]
+            body += ['    // SEL_XSTG crossing stage (S81-RERUN v8): i is launched by the end block\'s rising edge in another clock',
+                     '    // region (bound 382-385 ps); xa captures it on the falling edge 1.5 T later (die STA: multicycle',
+                     '    // -setup 2 / -hold 1 on i -> xa against the falling edge), xg is the guard flop on the rising edge.',
+                     f'    reg [{w - 1}:0] xa, xg;',
+                     '    always @(negedge ck[0]) xa <= i;',
+                     '    always @(posedge ck[0]) xg <= xa;',
+                     '    assign o = xg;']
         elif mst.startswith('dsfd_hstn'):
             w = ports['di'][1]
             body.append('    wire fck;   // common clock: the stage captures on negedge fclk_i = posedge ck')
@@ -4574,17 +4712,27 @@ def die_options(ap):
     ap.add_argument('--meso-d8', action='store_true', help='r9: meso FIFOs at DEPTH 8 (drift > 300 ps; default off)')
     ap.add_argument('--link-fix', action='store_true', help='r9: link-macro clock relay on the ck face and the final '
                     'tx / rx station at the centre of its pin span (default off)')
+    ap.add_argument('--sel-xstg', action='store_true', help='r9: registered crossing stage on the end block -> '
+                    'selector / collector buses (+1 cycle; default off)')
+    ap.add_argument('--link-split', action='store_true', help='r9: SerDes tx / rx through two 256-b half-span '
+                    'stations (port slices; needs --link-fix; default off)')
     ap.add_argument('--hc-xface', action='store_true', help='r9: hc_s <-> hc_n exchange straight across the corridor '
                     'inside the HC column, face to face (default off: a VCH-edge lane)')
+    ap.add_argument('--geometry-fix', action='store_true', help='r9: canonical station footprints and bounded '
+                    'k16 pin depth; default off pending geometry and physical gates')
     return ap
 
 
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
     set_cc_reach(a.cc_reach_um)
-    global VCH_INTERLEAVE, LINK_FIX, HC_XFACE
+    global VCH_INTERLEAVE, LINK_FIX, HC_XFACE, GEOMETRY_FIX
+    GEOMETRY_FIX = bool(getattr(a, 'geometry_fix', False))
     VCH_INTERLEAVE = bool(a.vch_interleave)
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
+    global LINK_SPLIT, SEL_XSTG
+    SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
+    LINK_SPLIT = bool(getattr(a, 'link_split', False)) and bool(a.link_fix)
     LINK_FIX = bool(a.link_fix)
     global CORR_INTERLEAVE, HOP_FIX, HOP_PLAN, MESO_D8
     CORR_INTERLEAVE = bool(a.corr_interleave)
@@ -4667,7 +4815,7 @@ def main(argv=None):
                          indent=1, default=str))
         return 0
     if a.mode == 'plan':
-        out = ROOT / OUT / ('' if a.die == 'layer' else 'head_die')
+        out = ROOT / OUT / {'layer': '', 'layer1': 'layer1_die'}.get(a.die, 'head_die')   # layer1 no longer overwrites head
         out.mkdir(parents=True, exist_ok=True)
         rec = plan_record(m)
         rec['legality_python'] = legality(m)

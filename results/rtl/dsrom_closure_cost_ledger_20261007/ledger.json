@@ -89,25 +89,84 @@
   },
   {
    "item": "collective_lane",
-   "description": "Collective slab v3 tiles: all-reduce 320 records +288 cycles over the C8 reference (measured, S81-PH src_v3, no bit errors, lane channel 1 cycle; coll_price 2026-10-07).  Replaces x0.9003 = 2,329 / 2,587 (absolute TB times incl. the 1,111-cycle preamble, bit-error injection on, against a node priced from tb_w15b_v41_tp4).  All-gathers: PENDING-DEFECT (below)",
+   "description": "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, lane channel 1 cycle) over the C8 reference: all-reduce 320 rec +131 (CHB 251: 709 vs w15b 690); all-gather 24 rec +38, 57 +50, 256 +113, 1024 +348, 1056 +361",
    "cycles": [
     [
-     "*.attn.out_allreduce",
-     288,
+     "*.attn.a_allgather",
+     50,
      0
     ],
     [
-     "*.ffn.combine_allreduce",
-     288,
+     "*.attn.cand.merge",
+     348,
+     0
+    ],
+    [
+     "*.attn.idx.topk_merge",
+     113,
      0
     ]
    ],
-   "ar_tok_s": 1607.6,
-   "mtp_tok_s": 4737.4,
-   "ar_pct": -3.087,
-   "mtp_pct": -2.462,
-   "cum_ar_pct": -4.024,
-   "cum_mtp_pct": -3.22
+   "ar_tok_s": 1619.0,
+   "mtp_tok_s": 4755.5,
+   "ar_pct": -2.399,
+   "mtp_pct": -2.09,
+   "cum_ar_pct": -3.343,
+   "cum_mtp_pct": -2.85
+  },
+  {
+   "item": "link_split",
+   "description": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2",
+   "cycles": [
+    [
+     "*.attn.a_allgather",
+     2,
+     0
+    ],
+    [
+     "*.attn.cand.merge",
+     2,
+     0
+    ],
+    [
+     "*.attn.idx.topk_merge",
+     2,
+     0
+    ]
+   ],
+   "ar_tok_s": 1617.6,
+   "mtp_tok_s": 4752.2,
+   "ar_pct": -0.086,
+   "mtp_pct": -0.069,
+   "cum_ar_pct": -3.427,
+   "cum_mtp_pct": -2.917
+  },
+  {
+   "item": "sel_xstg",
+   "description": "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job",
+   "cycles": [
+    [
+     "*.attn.cand.topk_local",
+     1,
+     0
+    ],
+    [
+     "*.attn.gather",
+     1,
+     0
+    ],
+    [
+     "*.attn.idx.topk_local",
+     1,
+     0
+    ]
+   ],
+   "ar_tok_s": 1617.6,
+   "mtp_tok_s": 4752.1,
+   "ar_pct": 0.0,
+   "mtp_pct": -0.002,
+   "cum_ar_pct": -3.427,
+   "cum_mtp_pct": -2.919
   },
   {
    "item": "vm_bank_group",
@@ -129,12 +188,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1603.4,
-   "mtp_tok_s": 4727.2,
-   "ar_pct": -0.261,
-   "mtp_pct": -0.215,
-   "cum_ar_pct": -4.275,
-   "cum_mtp_pct": -3.428
+   "ar_tok_s": 1613.3,
+   "mtp_tok_s": 4741.8,
+   "ar_pct": -0.266,
+   "mtp_pct": -0.217,
+   "cum_ar_pct": -3.684,
+   "cum_mtp_pct": -3.13
   },
   {
    "item": "gather_root_v4",
@@ -156,12 +215,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1600.2,
-   "mtp_tok_s": 4719.6,
-   "ar_pct": -0.2,
-   "mtp_pct": -0.161,
-   "cum_ar_pct": -4.466,
-   "cum_mtp_pct": -3.583
+   "ar_tok_s": 1610.0,
+   "mtp_tok_s": 4734.2,
+   "ar_pct": -0.205,
+   "mtp_pct": -0.16,
+   "cum_ar_pct": -3.881,
+   "cum_mtp_pct": -3.285
   },
   {
    "item": "capture",
@@ -183,12 +242,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1598.6,
-   "mtp_tok_s": 4715.9,
-   "ar_pct": -0.1,
-   "mtp_pct": -0.078,
-   "cum_ar_pct": -4.561,
-   "cum_mtp_pct": -3.659
+   "ar_tok_s": 1608.4,
+   "mtp_tok_s": 4730.4,
+   "ar_pct": -0.099,
+   "mtp_pct": -0.08,
+   "cum_ar_pct": -3.976,
+   "cum_mtp_pct": -3.363
   },
   {
    "item": "selector",
@@ -205,12 +264,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1598.3,
-   "mtp_tok_s": 4714.7,
+   "ar_tok_s": 1608.1,
+   "mtp_tok_s": 4729.2,
    "ar_pct": -0.019,
    "mtp_pct": -0.025,
-   "cum_ar_pct": -4.579,
-   "cum_mtp_pct": -3.683
+   "cum_ar_pct": -3.994,
+   "cum_mtp_pct": -3.387
   },
   {
    "item": "collector",
@@ -222,12 +281,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1598.2,
-   "mtp_tok_s": 4714.6,
-   "ar_pct": -0.006,
+   "ar_tok_s": 1608.1,
+   "mtp_tok_s": 4729.1,
+   "ar_pct": 0.0,
    "mtp_pct": -0.002,
-   "cum_ar_pct": -4.585,
-   "cum_mtp_pct": -3.685
+   "cum_ar_pct": -3.994,
+   "cum_mtp_pct": -3.389
   },
   {
    "item": "svc_io",
@@ -249,12 +308,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1598.0,
-   "mtp_tok_s": 4714.1,
-   "ar_pct": -0.013,
+   "ar_tok_s": 1607.8,
+   "mtp_tok_s": 4728.6,
+   "ar_pct": -0.019,
    "mtp_pct": -0.011,
-   "cum_ar_pct": -4.597,
-   "cum_mtp_pct": -3.696
+   "cum_ar_pct": -4.012,
+   "cum_mtp_pct": -3.399
   },
   {
    "item": "softmax_safe_div",
@@ -266,12 +325,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1595.6,
-   "mtp_tok_s": 4708.3,
-   "ar_pct": -0.15,
+   "ar_tok_s": 1605.4,
+   "mtp_tok_s": 4722.8,
+   "ar_pct": -0.149,
    "mtp_pct": -0.123,
-   "cum_ar_pct": -4.74,
-   "cum_mtp_pct": -3.814
+   "cum_ar_pct": -4.155,
+   "cum_mtp_pct": -3.518
   },
   {
    "item": "bf_rowfix",
@@ -293,12 +352,12 @@
      0
     ]
    ],
-   "ar_tok_s": 1595.0,
-   "mtp_tok_s": 4707.0,
-   "ar_pct": -0.038,
+   "ar_tok_s": 1604.8,
+   "mtp_tok_s": 4721.5,
+   "ar_pct": -0.037,
    "mtp_pct": -0.028,
-   "cum_ar_pct": -4.776,
-   "cum_mtp_pct": -3.841
+   "cum_ar_pct": -4.191,
+   "cum_mtp_pct": -3.544
   },
   {
    "item": "pq_qelem",
@@ -320,58 +379,26 @@
      0.0017
     ]
    ],
-   "ar_tok_s": 1593.7,
-   "mtp_tok_s": 4703.8,
-   "ar_pct": -0.082,
+   "ar_tok_s": 1603.5,
+   "mtp_tok_s": 4718.3,
+   "ar_pct": -0.081,
    "mtp_pct": -0.068,
-   "cum_ar_pct": -4.854,
-   "cum_mtp_pct": -3.906
+   "cum_ar_pct": -4.269,
+   "cum_mtp_pct": -3.61
   }
  ],
  "total": {
-  "ar_tok_s": 1593.7,
-  "mtp_tok_s": 4703.8,
-  "ar_pct": -4.854,
-  "mtp_pct": -3.906
+  "ar_tok_s": 1603.5,
+  "mtp_tok_s": 4718.3,
+  "ar_pct": -4.269,
+  "mtp_pct": -3.61
  },
- "pending_defect": [
-  {
-   "item": "collective_ag",
-   "description": "S81 collective tile defects (credits 256 < RTT, ~900-cycle small-AG latency, AG256/1024 exactness errors) under repair; measured as-is all-gathers over the C8 reference: 24 rec +914, 57 +922, 256 +273 (FAIL), 1024 +509 (FAIL), 1056 +516",
-   "adds": [
-    [
-     "*.attn.a_allgather",
-     922,
-     0
-    ],
-    [
-     "*.attn.idx.topk_merge",
-     273,
-     0
-    ],
-    [
-     "*.attn.cand.merge",
-     509,
-     0
-    ],
-    [
-     "*.attn.rows_allgather",
-     516,
-     0
-    ],
-    [
-     "*.ffn.router_allgather",
-     914,
-     0
-    ]
-   ]
-  }
- ],
+ "pending_defect": [],
  "as_is": {
-  "ar_tok_s": 1441.1,
-  "mtp_tok_s": 4325.0,
-  "ar_pct": -13.964,
-  "mtp_pct": -11.645,
+  "ar_tok_s": 1603.5,
+  "mtp_tok_s": 4718.3,
+  "ar_pct": -4.269,
+  "mtp_pct": -3.61,
   "basis": "every item + the PENDING-DEFECT all-gathers"
  }
 }

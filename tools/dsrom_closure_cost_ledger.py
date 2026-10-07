@@ -23,10 +23,20 @@ ITEMS = [
     ("meso_d8g1", "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field "
                   "round trip (+4)", [(k, 4, 0) for k in MAT]),
     ("ctrl_status", "CTRL status chain: +1 cycle per column (HBM stream reads)", [(k, 1, 0) for k in HBM]),
-    ("collective_lane", "Collective slab v3 tiles: all-reduce 320 records +288 cycles over the C8 reference (measured, S81-PH "
-                        "src_v3, no bit errors, lane channel 1 cycle; coll_price 2026-10-07).  Replaces x0.9003 = 2,329 / 2,587 "
-                        "(absolute TB times incl. the 1,111-cycle preamble, bit-error injection on, against a node priced from "
-                        "tb_w15b_v41_tp4).  All-gathers: PENDING-DEFECT (below)", [(k, 288, 0) for k in AR_]),
+    ("collective_lane", "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained "
+                        "links, no bit errors, lane channel 1 cycle) over the C8 reference: all-reduce 320 rec +131 (CHB 251: "
+                        "709 vs w15b 690); all-gather 24 rec +38, 57 +50, 256 +113, 1024 +348, 1056 +361",
+     [(k, 131, 0) for k in AR_] + [("*.attn.a_allgather", 50, 0), ("*.attn.idx.topk_merge", 113, 0),
+                                   ("*.attn.cand.merge", 348, 0), ("*.attn.rows_allgather", 361, 0),
+                                   ("*.ffn.router_allgather", 38, 0)]),
+    ("link_split", "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 "
+                   "um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 "
+                   "all-reduce 2 traversals +4, all-gather +2",
+     [("*.substage_hop0", 2, 0), ("*.substage_hop1", 2, 0), ("head.hop", 2, 0), ("token.return", 16, 0)]
+     + [(k, 4, 0) for k in AR_] + [(k, 2, 0) for k in AG_]),
+    ("sel_xstg", "Selector / collector crossing stages (--sel-xstg: falling-edge capture 1.5 T + guard flop on the end "
+                 "block -> band block buses, 382-385 ps crossings): +1 cycle per selector segment / collector job",
+     [(k, 1, 0) for k in ("*.attn.idx.topk_local", "*.attn.cand.topk_local", "*.attn.gather")]),
     ("vm_bank_group", "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)", [(k, 8, 0) for k in MAT]),
     ("gather_root_v4", "Gather root v4: +6 cycles per phase", [(k, 6, 0) for k in MAT]),
     ("capture", "Capture tiles: VM write +3 a phase", [(k, 3, 0) for k in MAT]),
@@ -41,13 +51,7 @@ ITEMS = [
 ]
 
 # PENDING-DEFECT (OWNER decision (b), 2026-10-07): measured but not in the headline until the slab is repaired
-PENDING = [
-    ("collective_ag", "S81 collective tile defects (credits 256 < RTT, ~900-cycle small-AG latency, AG256/1024 exactness "
-                      "errors) under repair; measured as-is all-gathers over the C8 reference: 24 rec +914, 57 +922, "
-                      "256 +273 (FAIL), 1024 +509 (FAIL), 1056 +516",
-     [("*.attn.a_allgather", 922, 0), ("*.attn.idx.topk_merge", 273, 0), ("*.attn.cand.merge", 509, 0),
-      ("*.attn.rows_allgather", 516, 0), ("*.ffn.router_allgather", 914, 0)]),
-]
+PENDING = []   # collective all-gathers lifted 2026-10-07 (slab v4 fixes the three coll_price defects)
 
 
 def lever(items, pending=False):
