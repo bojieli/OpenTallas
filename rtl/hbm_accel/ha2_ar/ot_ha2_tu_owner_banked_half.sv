@@ -98,11 +98,11 @@ module ot_ha2_tu_owner_banked_half #(
  always @(posedge clk)begin r_m<=c_rm;r_d<=c_rd;end
 endmodule
 
-// Clock gate: latch (transparent while clk is low) + AND. Kept hierarchy.
+// Clock gate: negedge flop + AND (a latch is not mapped by the host flow). Kept hierarchy.
 (* keep_hierarchy="yes" *)
 module ot_ha2_hr_icg(input wire clk,en,output wire gclk);
  reg en_l;
- always @* if(!clk)en_l=en;
+ always @(negedge clk)en_l<=en;
  assign gclk=clk&en_l;
 endmodule
 
