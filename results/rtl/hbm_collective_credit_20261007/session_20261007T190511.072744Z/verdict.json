@@ -1,0 +1,7 @@
+{
+  "status": "FAIL",
+  "reason": "Initial command accepted while management CDC reset still asserted, before reset-entry release; command lost and agents remained phase0. Stopped after diagnostic established deadlock.",
+  "exit": 130,
+  "diagnostic": "DIAG phase=1 cf=0 af=00 cv=00 cr=11 av=00 ar=11 agentphase=0,0 pq=11 pr=00 phyq=11 phyr=00 cdcfault=0000",
+  "fix_required": "new wrapper gates tx handshake and rx valid with local reset release; original CDC preserved"
+}
