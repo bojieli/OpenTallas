@@ -395,6 +395,41 @@
  },
  "candidates": [
   {
+   "item": "head_elem",
+   "description": "lm_head element A/B (ot_dsrom_head_elem IOREG + SAFE argmax + CUT 511 + fadd SPLIT9): bundle EXACT 8,357 -> 8,414 (+57 a sweep); on head.lm_head and on every draft head sweep (elemB CLOSED 9adbc6104; elemA routing)",
+   "adds": [
+    [
+     "head.lm_head",
+     57,
+     0
+    ],
+    [
+     "draft.head_occ",
+     57,
+     0
+    ]
+   ],
+   "ar_tok_s": 1603.2,
+   "mtp_tok_s": 4716.2,
+   "ar_pct_vs_total": -0.006,
+   "mtp_pct_vs_total": -0.032
+  },
+  {
+   "item": "fused_head",
+   "description": "DSpark fused head r4 structure (8 hquad LRET + ctl SAFE2 + endpoint FPIPE3, QPIN): gold4 EXACT 63,028 -> 63,153 (+125 per gamma-5 draft = +25 a draft position; ctl/ep/hquad views routing)",
+   "adds": [
+    [
+     "draft.head_occ",
+     25,
+     0
+    ]
+   ],
+   "ar_tok_s": 1603.3,
+   "mtp_tok_s": 4717.1,
+   "ar_pct_vs_total": 0.0,
+   "mtp_pct_vs_total": -0.013
+  },
+  {
    "item": "bf_half",
    "description": "BF SAFE B: element at half rate (ot_s81_bf_native HALF=1, claude/dsrom-bf-rowfix-20261007 61c1cf230, exact PASS; closure-loop bf_half_61c1cf230): BF16 field phases doubled (upper bound; fracs = BF16 phase share (go->idle+1)/node, field_qelem_qx10.json, a_proj max over layer types); adopt only if B closes first (variant A re-cut is the target)",
    "adds": [

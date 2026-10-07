@@ -54,6 +54,11 @@ ITEMS = [
 PENDING = []   # collective all-gathers lifted 2026-10-07 (slab v4 fixes the three coll_price defects)
 # CANDIDATES: closure fixes priced but not adopted (each composed alone on top of every adopted item)
 CANDIDATES = [
+    ("head_elem", "lm_head element A/B (ot_dsrom_head_elem IOREG + SAFE argmax + CUT 511 + fadd SPLIT9): bundle EXACT "
+                  "8,357 -> 8,414 (+57 a sweep); on head.lm_head and on every draft head sweep (elemB CLOSED 9adbc6104; elemA routing)",
+     [("head.lm_head", 57, 0), ("draft.head_occ", 57, 0)]),
+    ("fused_head", "DSpark fused head r4 structure (8 hquad LRET + ctl SAFE2 + endpoint FPIPE3, QPIN): gold4 EXACT "
+                   "63,028 -> 63,153 (+125 per gamma-5 draft = +25 a draft position; ctl/ep/hquad views routing)", [("draft.head_occ", 25, 0)]),
     ("bf_half", "BF SAFE B: element at half rate (ot_s81_bf_native HALF=1, claude/dsrom-bf-rowfix-20261007 61c1cf230, "
                 "exact PASS; closure-loop bf_half_61c1cf230): BF16 field phases doubled (upper bound; fracs = BF16 phase "
                 "share (go->idle+1)/node, field_qelem_qx10.json, a_proj max over layer types); adopt only if B closes "
