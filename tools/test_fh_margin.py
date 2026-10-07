@@ -26,7 +26,7 @@ BENCH = {
             f'{D}/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv', f'{D}/margin/tb_fh_margin_checked_permission.sv'], mut={
       'age5': (f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv', "AGE=FPIPE?3'd6:3'd5", "AGE=3'd5"),
       'no_wide_veto': (f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv', 'wide_bad=FPIPE?checked_error:', 'wide_bad=FPIPE?1\'b0:'),
-      'bank_not_sticky': (f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv', 'else bad_q<=bad_n;', 'else bad_q<=mismatch;')}),
+      'drop_bank0': (f'{D}/capture_candidate/ot_hdc_v41_fh_checked_permission.sv', '.bad({metadata_bad,identity_bad,request_bad,reply_bad})', '.bad({metadata_bad,identity_bad,request_bad[RB-1:1],1\'b0,reply_bad})')}),
   'retire': dict(top='tb_fh_margin_retire', srcs=[f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv', f'{D}/margin/tb_fh_margin_retire.sv'], mut={
       'drop_group_fault': ('PARAM', 'MUT', '1'), 'no_offset': ('PARAM', 'MUT', '2')}),
 }

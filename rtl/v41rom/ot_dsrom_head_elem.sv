@@ -31,7 +31,10 @@ module ot_dsrom_head_elem #(
     parameter integer ROWS = 32,           // rows the element holds (8192 >> LV)
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8],
-    parameter INSTANCE = ""
+    parameter INSTANCE = "",
+    // IOREG (default 0; redesign pass 2026-10-06): every input captured in a flop at its pin (+1 cycle, uniform);
+    // outputs already leave flops (adder output stages, argmax/fault registers): register-to-register boundary
+    parameter integer IOREG = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -50,6 +53,24 @@ module ot_dsrom_head_elem #(
     output reg  [31:0]  best_key,
     output reg          fault
 );
+    // IOREG: inputs captured at the pins (+1, uniform: go and x move together, the x contract is unchanged)
+    wire go_e, b_v_e;
+    wire [16:0] row0_e;
+    wire [255:0] x_e;
+    wire [31:0] b_d_e;
+    generate if (IOREG) begin : g_pin
+        reg go_q, b_v_q;
+        reg [16:0] row0_q;
+        reg [255:0] x_q;
+        reg [31:0] b_d_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin go_q <= 1'b0; b_v_q <= 1'b0; end
+            else begin go_q <= go; b_v_q <= b_v; end
+        always @(posedge clk) begin row0_q <= row0; x_q <= x; b_d_q <= b_d; end
+        assign go_e = go_q; assign b_v_e = b_v_q; assign row0_e = row0_q; assign x_e = x_q; assign b_d_e = b_d_q;
+    end else begin : g_direct
+        assign go_e = go; assign b_v_e = b_v; assign row0_e = row0; assign x_e = x; assign b_d_e = b_d;
+    end endgenerate
     localparam integer XLEAD = 5;
     localparam integer NW = 8192;
     localparam integer NPHYS = NW + 7 * SK;
@@ -59,7 +80,7 @@ module ot_dsrom_head_elem #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin go_r <= 1'b0; run <= 1'b0; a <= 14'd0; end
         else begin
-            go_r <= go;
+            go_r <= go_e;
             if (go_r) begin run <= 1'b1; a <= 14'd0; end
             else if (run) begin a <= a + 14'd1; if (a == NPHYS - 1) run <= 1'b0; end
         end
@@ -119,7 +140,7 @@ module ot_dsrom_head_elem #(
     always @(posedge clk) begin
         for (wi = 0; wi < 256; wi = wi + 1) t_r[wi] <= sel_q[wi * RP / 256] ? cap1[wi] : cap0[wi];
         w_r <= t_r;
-        x_t <= x; x_r <= x_t;
+        x_t <= x_e; x_r <= x_t;
     end
 
     // ---------------- 16 multipliers, two systolic chunk chains --------------------------------------------------
@@ -198,15 +219,15 @@ module ot_dsrom_head_elem #(
             if (!rst_n) begin fa_w <= 1'b0; fa_r <= 1'b0; fb_w <= 2'd0; fb_r <= 2'd0; fa_n <= 2'd0; fb_n <= 3'd0; jerr <= 1'b0; end
             else begin
                 if (o_v) fa_w <= !fa_w;
-                if (b_v) fb_w <= fb_w + 2'd1;
+                if (b_v_e) fb_w <= fb_w + 2'd1;
                 if (pop) begin fa_r <= !fa_r; fb_r <= fb_r + 2'd1; end
                 fa_n <= fa_n + {1'b0, o_v} - {1'b0, pop};
-                fb_n <= fb_n + {2'd0, b_v} - {2'd0, pop};
-                jerr <= (o_v && !pop && fa_n == 2'd2) || (b_v && !pop && fb_n == 3'd4);   // overflow: fail closed
+                fb_n <= fb_n + {2'd0, b_v_e} - {2'd0, pop};
+                jerr <= (o_v && !pop && fa_n == 2'd2) || (b_v_e && !pop && fb_n == 3'd4);   // overflow: fail closed
             end
         always @(posedge clk) begin
             if (o_v) fa[fa_w] <= o_d;
-            if (b_v) fb[fb_w] <= b_d;
+            if (b_v_e) fb[fb_w] <= b_d_e;
         end
         reg        j_v;
         reg [31:0] j_a, j_b;
@@ -225,7 +246,7 @@ module ot_dsrom_head_elem #(
             if (!rst_n) begin k_v <= 1'b0; nrow <= 17'd0; end
             else begin
                 k_v <= l_v;
-                if (go) nrow <= row0; else if (l_v) nrow <= nrow + 17'd1;
+                if (go_e) nrow <= row0_e; else if (l_v) nrow <= nrow + 17'd1;
             end
         always @(posedge clk) if (l_v) begin
             k_key <= canon[31] ? ~canon : {1'b1, canon[30:0]};
@@ -236,7 +257,7 @@ module ot_dsrom_head_elem #(
         wire take = !have || k_key > best_key || (k_key == best_key && k_row < best_row);
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; best_key <= 32'd0; best_row <= 17'd0; best_bits <= 32'd0; end
-            else if (go) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; end
+            else if (go_e) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; end
             else if (k_v) begin
                 cnt <= cnt + 7'd1;
                 if (cnt == ROWS - 1) done <= 1'b1;
@@ -246,14 +267,14 @@ module ot_dsrom_head_elem #(
         always @(posedge clk or negedge rst_n) if (!rst_n) kerr <= 1'b0; else kerr <= k_v && k_bad;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) fault <= 1'b0;
-            else if (go) fault <= 1'b0;
+            else if (go_e) fault <= 1'b0;
             else if ((|cerr) || (|terr) || jerr || kerr) fault <= 1'b1;
     end else begin : g_nojoin
         assign l_v = 1'b0;
         assign l_d = 32'd0;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin fault <= 1'b0; done <= 1'b0; best_row <= 17'd0; best_bits <= 32'd0; best_key <= 32'd0; jerr <= 1'b0; end
-            else if (go) fault <= 1'b0;
+            else if (go_e) fault <= 1'b0;
             else if ((|cerr) || (|terr)) fault <= 1'b1;
     end
 endmodule
