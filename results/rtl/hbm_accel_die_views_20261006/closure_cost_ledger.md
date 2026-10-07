@@ -44,5 +44,5 @@ TOTAL at r23: +33.77 us = +6.28% vs pre-closure (die-level +25.50 us, SM +8.261 
 
 Conditional (priced, NOT in the total until the variant is the one that closes):
 - HA2 half-rate own-partial credit (a916e3f475e4d7ff2): +46 cycles per owner-reduction transaction (DS TP-96 NC8 PF384); x the exposed owner reductions per token (collective terms, 265) = 12,190 cyc = 10.16 us = +1.89 % AR if adopted.
-- SU reducer half-rate RHALF (hbm-su): +146 cycles per reduction chain (perf64 301 -> 447) -- only if the SAFE reducer (+4 per reduction) misses.
+- SU reducer half-rate RHALF (hbm-su, phase-locked cae10b8fb, EXACT at full shape both parities): +145 cycles per DS1M CP+c12 stage (+137 Qwen8K) vs the margin config; perf64 +146 per reduction chain -- only if the SAFE reducer (+4 per reduction) misses and the N16/N64 campaigns + redh routes close.
 - su_full DDIV 31: +10 cycles per divide op (DIVB / DIVIMM / SIGM / SILU / softplus / EGATE) -- only if hbm_su_full31 is the route that closes.
