@@ -301,5 +301,29 @@
   "launch": 0,
   "outputs_mapped": 512,
   "wchk": true
+ },
+ "hfd_mcast_r6a": {
+  "role": "mcast",
+  "fwd": 2,
+  "meso": 2,
+  "launch": 0,
+  "outputs_mapped": 3072,
+  "wchk": true,
+  "pin_stages": 2,
+  "fwd_rc": true,
+  "plreg": true,
+  "rsplit": true
+ },
+ "hfd_mcast_r6b": {
+  "role": "mcast",
+  "fwd": 3,
+  "meso": 3,
+  "launch": 0,
+  "outputs_mapped": 3117,
+  "wchk": true,
+  "pin_stages": 2,
+  "fwd_rc": true,
+  "plreg": true,
+  "rsplit": true
  }
 }
