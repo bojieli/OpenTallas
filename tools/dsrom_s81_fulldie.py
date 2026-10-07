@@ -112,10 +112,18 @@ def configure(die, gen='r7'):
                 BF_PAIRS = round(PAIRS * 519 / 2417)
 
 
+# --bf-per-region N (bf-double 2026-10-07; default None = the decision's 519/2417 share, spread die-wide): exactly N
+# BF pairs in every return region of a layer die, at the in-region positions tools/dsrom_bf_double_alloc.py binds
+# (pair (2j+1)n/(2N) of the region's n, j < N); 0 = the q-only die flavour.
+BF_PER_REGION = None
+
+
 def set_pairs(n):
     """r8: pairs (elements) per die; BF / NV shares scaled as the decision's"""
     global PAIRS, BF_PAIRS, NV_PAIRS
-    if DIE_KIND == 'layer':
+    if DIE_KIND == 'layer' and BF_PER_REGION is not None:
+        PAIRS, BF_PAIRS = n, BF_PER_REGION * ROOTS
+    elif DIE_KIND == 'layer':
         PAIRS, BF_PAIRS = n, round(n * 519 / 2417)
     else:
         NV_PAIRS = round(NV_PAIRS * n / PAIRS)
@@ -299,6 +307,14 @@ def region_bounds():
 
 
 def bf_sites():
+    if BF_PER_REGION is not None and DIE_KIND == 'layer':
+        # the RTL's flat is_bf map (bf-double): floor(i * PAIRS / NBF), NBF = N x ROOTS; N per region asserted
+        nb = BF_PER_REGION * ROOTS
+        s = {i * PAIRS // nb for i in range(nb)}
+        bd = region_bounds()
+        assert len(s) == BF_PAIRS == nb and all(sum(1 for x in s if bd[r] <= x < bd[r + 1]) == BF_PER_REGION
+                                                for r in range(ROOTS))
+        return s
     nv = nv_sites()
     rest = [p for p in range(PAIRS) if p not in nv]
     s = sorted({rest[round(i * len(rest) / BF_PAIRS)] for i in range(BF_PAIRS)})
@@ -2230,6 +2246,7 @@ def capacity_report():
         if _frames_fit(sl, sh):
             best = p
     set_globals_pairs(*keep)
+    flav = bf_flavour_capacity(sl, sh)
     inv = json.loads((ROOT / 'results/uarch/dsrom_c_w4_20261003/s82_inputs/inventory.json').read_text())
     total = 81 * 4 * 2417
     return dict(elem_frame_h_um=ELEM_FRAME_H, slot_h_um=sh, slots_per_column=sl, columns=ROOTS,
@@ -2243,7 +2260,26 @@ def capacity_report():
                           source='results/arch/dsrom_s81_rack_20261006/rack.json (DS-RACK scenario C: 12 head + 36 '
                                  'table, 1-stack layer dies)'),
                 meso_slot=dict(record=MESO_V7, um2_per_W512_slot=MESO_V7_UM2, cfifo_W564_slots=2,
-                               cfifo_reservation_um2=round(CF_WH[0] * CF_WH[1], 1)))
+                               cfifo_reservation_um2=round(CF_WH[0] * CF_WH[1], 1)),
+                bf_per_region_flavours=flav)
+
+
+def bf_flavour_capacity(sl, sh):
+    """bf-double (2026-10-07): max pairs a layer die for the --bf-per-region flavours (4 = BF die, 0 = q-only die)"""
+    global BF_PER_REGION
+    keep, kb = (PAIRS, BF_PAIRS, NV_PAIRS), BF_PER_REGION
+    out = {}
+    for n in (4, 0):
+        BF_PER_REGION, best = n, 0
+        for p in range(ROOTS * max(n, 1), 4000):
+            set_pairs(p)
+            if not _frames_fit(sl, sh):
+                break
+            best = p
+        out[str(n)] = dict(max_pairs=best, bf=n * ROOTS, slots_per_column=sl, slot_h_um=sh)
+    BF_PER_REGION = kb
+    set_globals_pairs(*keep)
+    return out
 CFG7_RTL = 'rtl/v41die/ot_s81_cfg7_seq.sv'
 POWER8 = dict(
     seq=(80 * FLOP_CLK_W * 1.5, 'DERIVED ~80 loader flops x W18 per-flop clock x 1.5 (one cfg ROM read: in cfg)'),
@@ -3377,7 +3413,7 @@ def _hop_fix(m, P):
             # OWNER rule 1 (2026-10-07, --pin-relay): a relay abutting every hardened-block pin (<= PIN_SEG um last
             # segment) at each non-glue end, the span between them at the reach as before
             pos = [Lp * (k + 1) / (n + 1) for k in range(n)]
-            if PIN_RELAY:
+            if PIN_RELAY and reg is None:      # die-level interfaces (field frames: q banks already abut the pins)
                 h0, h1 = not is_glue(d0.master), not is_glue(l0.master)
                 if (h0 or h1) and Lp > PIN_SEG:
                     s0 = min(PIN_SEG - 10.0, Lp / 2) if h0 else 0.0
@@ -3417,6 +3453,14 @@ def _hop_fix(m, P):
                         if PAD < 2.16:
                             rec['pad_fallback'][f'{PAD:g}'] = rec['pad_fallback'].get(f'{PAD:g}', 0) + 1
                         break
+                if pl is None and PIN_RELAY and reg is None:   # a pin relay beside a slab: anywhere legal on the die
+                    for span, rows in ((300.0, 30), (1200.0, 120)):
+                        pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
+                                    reach=R - 10.0, span=span, rows=rows)
+                        if pl:
+                            pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
+                            rec['pad_fallback']['die'] = rec['pad_fallback'].get('die', 0) + 1
+                            break
                 assert pl, (bid, e, k)
                 nm = f'g_{bid}_{e[0]}_{k}'
                 if fwd:
@@ -4724,6 +4768,8 @@ def die_options(ap):
     ap.add_argument('--rev', default='r8', choices=['r8', 'r9'], help='r8 sub-revision (r9: S81-RERUN hub-bus stations)')
     ap.add_argument('--elem-h', type=float, help='r8: element frame height in its slot (default 157.68)')
     ap.add_argument('--pairs', type=int, help='r8: pairs (elements) per die (default: the decision value)')
+    ap.add_argument('--bf-per-region', type=int, default=None,
+                    help='r8 layer die: exactly N BF pairs in every region (0 = q-only flavour; bf-double 2026-10-07)')
     ap.add_argument('--field-margin', type=float, help='r8: min gap field <-> band (default 216 um)')
     ap.add_argument('--cc-reach-um', type=float, help='r9: common-clock hop cap (hub / end-block stations, column '
                     'relays); default the forwarded 430.56 um (MARGIN-FIRST variant: 215)')
@@ -4790,7 +4836,11 @@ def apply_options(a):
     if a.gen == 'r8':
         if a.elem_h or a.field_margin is not None:
             slot_geometry(a.elem_h, a.field_margin)
-        if a.pairs:
+        if getattr(a, 'bf_per_region', None) is not None:
+            global BF_PER_REGION
+            BF_PER_REGION = a.bf_per_region
+            set_pairs(a.pairs or PAIRS)
+        elif a.pairs:
             set_pairs(a.pairs)
 
 
