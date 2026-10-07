@@ -220,7 +220,7 @@
   "relay_area_mm2": 14.607
  },
  "recipe": "r21 = r20c + --slab-bw-m8 + --relay-pitch 430.56 (tools/die_top_lint.py QWEN_R21)",
- "decision": "coordinator 2026-10-06 23:10 PT: relay pitch = the measured 430.56 um corridor-gate reach (under the measured 504 um SS reach: every hop closes by measurement) instead of the owner fast rule ~300 um; PENDING OWNER REVIEW",
+ "decision": "OWNER APPROVED 2026-10-07: relay pitch = the measured 430.56 um reach (-10.4%, +22,487 cycles / AR token); pricing commit 2de2dfc1b",
  "alternatives_priced": {
   "pitch_300_owner_fast_rule": {
    "cycles_per_ar_token": 38178,

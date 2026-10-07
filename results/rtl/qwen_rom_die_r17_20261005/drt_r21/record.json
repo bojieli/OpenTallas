@@ -46,6 +46,26 @@
    "track_assignment": "7:32 wall, 83 GB",
    "routing_data_prep": "0:42, 130 GB",
    "iter0": "no 10% progress after 2:40 h; peak RSS 325.7 GB; stopped (memory fits the 600 GB guard; runtime on unconverged guides is not usable)"
+  },
+  "grt_i30_nopdn": {
+   "tile_um": 9.6,
+   "layers": "M4-M9",
+   "iterations_used": 12,
+   "wall": "1:58:25",
+   "grt_s": 7034.8,
+   "peak_rss_gb": 76.0,
+   "overflow": 0,
+   "overflow_by_layer": {
+    "M4": 0,
+    "M5": 0,
+    "M6": 0,
+    "M7": 0,
+    "M8": 0,
+    "M9": 0
+   },
+   "wirelength_um": 2227173225,
+   "vias": 26636687,
+   "note": "pre-PDN floorplan (the r21 PDN with 12,299 macro grids is still running); CONVERGED: 0 overflow on every layer"
   }
  },
  "relay_cost": "relays_r21/relay_token_cost.json: +22,487 cycles / AR token, -10.4%, PRICED, PENDING OWNER REVIEW (not in the published headline)",
