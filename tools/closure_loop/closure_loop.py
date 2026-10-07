@@ -735,7 +735,8 @@ def sync_source(j):
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
 
-HELPERS = ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "cal_classify.sh")
+HELPERS = ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "cal_classify.sh", "resume_patch.py",
+           "resume_check.sh")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -777,6 +778,8 @@ def launch_stage(j, st, cmd):
         # default route hold margin (coordinator 2026-10-06: hold-only misses dominate; ctrl_ctr closed at HM 35 ps);
         # route_view.sh reads HM in ns; an inline HM=... in the command, or spec route_hold_margin_ns, overrides it
         env += f"export HM={j['spec'].get('route_hold_margin_ns', 0.035)}\n"
+    if j.get("resume") and st["kind"] == "route":
+        env += "export OT_CL_RESUME=1\n"    # patched run_abi3_physical in the moved snapshot: resume from the checkpoint
     if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)
         env += "".join(f"export {k}={j['run']}/cl/{v}\n" for k, v in (
             ("BUDGET_SDC", "budget_route.sdc"), ("BUDGET_SDC_SIGNOFF", "budget_signoff.sdc"), ("BUDGET_SDC_FF", "budget_ff.sdc"),
@@ -1546,6 +1549,46 @@ for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.
         timeout=300)
 
 
+def migrate_checkpoint(j, dest):
+    """move a RUNNING route WITH its ORFS checkpoint (coordinator 2026-10-06): stop this job's own stage, stream the
+    whole run dir (src snapshot + work/orfs results/logs/objects) to the same path on dest (tar keeps mtimes), patch
+    the snapshot's run_abi3_physical.py for resume (resume_patch.py), dry-run make to see which stages re-run, and
+    relaunch the route stage there with OT_CL_RESUME=1: ORFS reuses every completed stage, only the in-flight one is lost."""
+    src = j["host"]
+    if host_cfg(src)["base"] != host_cfg(dest)["base"]:
+        raise ValueError(f"checkpoint move needs the same run root ({host_cfg(src)['base']} vs {host_cfg(dest)['base']})")
+    run = j["run"]
+    j["status"] = "MIGRATING"
+    save_job(j)
+    event(j, f"checkpoint move {host_cfg(src)['label']} -> {host_cfg(dest)['label']}: stopping own stage")
+    kill_own_stage(j)
+    for _ in range(30):
+        r = ssh(src, f"for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}} {{{{end}}}}' $c "
+                     f"| grep -q '{run}/' && echo BUSY; done; pgrep -f '{run}/cl/run.sh' >/dev/null && echo BUSY; true", timeout=120)
+        if "BUSY" not in r.stdout:
+            break
+        time.sleep(10)
+    t0 = time.time()
+    ssh(dest, f"mkdir -p {run}", timeout=60, check=True)
+    p = subprocess.run(f"ssh -o BatchMode=yes {src} 'tar -C {run} -cf - .' | ssh -o BatchMode=yes {dest} 'tar -C {run} -xf -'",
+                       shell=True, capture_output=True, text=True, timeout=7200)
+    if p.returncode:
+        raise RuntimeError(f"checkpoint transfer failed: {p.stderr[-500:]}")
+    ship_helpers(dest, run)
+    r = ssh(dest, f"cd {run}/src && python3 {run}/cl/resume_patch.py .", timeout=120)
+    if r.returncode:
+        raise RuntimeError(f"resume patch failed: {(r.stdout + r.stderr)[-400:]}")
+    dm = subst(j["spec"].get("verdict", {}).get("drc_metrics", ""), j)
+    orfs = dm.split("/logs/")[0] if "/logs/" in dm else None
+    chk = ssh(dest, f"bash {run}/cl/resume_check.sh {orfs} {run}/src", timeout=600).stdout if orfs else ""
+    j["resume"] = dict(from_host=src, at=now_iso(), transfer_s=round(time.time() - t0), check=chk.strip()[-400:])
+    j["hosts_tried"].append(dest)
+    j.update(host=dest, status="READY", attempt=j["attempt"] + 1, wait=None)
+    event(j, f"checkpoint moved in {j['resume']['transfer_s']} s; make dry-run: {' '.join(chk.split())[-200:]}")
+    experiment(j, f"running: route resumed on {host_cfg(dest)['label']} from checkpoint")
+    save_job(j)
+
+
 def migrate_overloaded(jobs, fleet):
     """LOAD REBALANCE 2: a host above its cap (or a spillover-only host short of its RAM reserve) sheds this loop's
     jobs that have not passed CTS (bench / calibrate running or waiting, route not yet launched) to a host that fits."""
@@ -1610,6 +1653,24 @@ def tick(fleet):
             st = stl[min(x.get("stage_idx", 0), len(stl) - 1)]
             own[x["host"]] = own.get(x["host"], 0) + (8 if x["status"] == "ECO" else st.get("threads", 4) or 4)
     fleet.own_running = own
+    for req in sorted((STATE / "migrate_requests").glob("*.json")) if (STATE / "migrate_requests").exists() else []:
+        try:
+            rq = json.loads(req.read_text())
+            j = load_job(rq["name"])
+            if j["status"] == "RUNNING" and j.get("stage_key") == "route":
+                migrate_checkpoint(j, rq["host"])
+            else:
+                log(f"migrate request {rq['name']} ignored: status {j['status']} stage {j.get('stage_key')}")
+        except Exception:  # noqa: BLE001
+            log("migrate request error:\n" + traceback.format_exc())
+            try:
+                j = load_job(rq["name"])
+                if j["status"] == "MIGRATING":
+                    finish(j, "NEEDS_HUMAN", "checkpoint move failed (see daemon.log)", "NEEDS_HUMAN: checkpoint move failed")
+                    save_job(j)
+            except Exception:  # noqa: BLE001
+                pass
+        req.unlink(missing_ok=True)
     try:
         reevaluate_benches(all_jobs())
         requeue_toolchain(all_jobs())
@@ -1721,6 +1782,7 @@ def main():
     v = sub.add_parser("validate"); v.add_argument("file")
     r = sub.add_parser("retry"); r.add_argument("name")
     c = sub.add_parser("cancel"); c.add_argument("name")
+    mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
     a = ap.parse_args()
     if a.cmd == "daemon":
         cmd_daemon(a)
@@ -1735,6 +1797,10 @@ def main():
         cmd_retry(a)
     elif a.cmd == "cancel":
         cmd_cancel(a)
+    elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)
+        (STATE / "migrate_requests").mkdir(parents=True, exist_ok=True)
+        (STATE / "migrate_requests" / f"{a.name}.json").write_text(json.dumps(dict(name=a.name, host=a.host)))
+        print(f"migrate request queued: {a.name} -> {a.host}")
 
 
 if __name__ == "__main__":
