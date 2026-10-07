@@ -29,3 +29,4 @@ export SKIP_LAST_GASP = 0
 export SYNTH_MEMORY_MAX_BITS = 32768
 export DESIGN_NICKNAME = ha2_owner_banked_h2_fixedpins
 export PRE_IO_PLACEMENT_TCL = /src/physical/hbm_ha2_fixedpins_20261007/pins.tcl
+export POST_IO_PLACEMENT_TCL = /src/physical/hbm_ha2_fixedpins_20261007/check_pins.tcl
