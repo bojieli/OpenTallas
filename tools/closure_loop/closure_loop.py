@@ -64,7 +64,7 @@ OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
 RAM_HEADROOM_GB = 32
 PENDING_WINDOW_S = 600
-PENDING_RAM_WINDOW_S = 300    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
+PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
 TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
@@ -525,7 +525,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         if eff + pt + threads > cfg["cap"]:
             return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
         res = cfg.get("reserve_ram_gb", 0)
-        head = max(0.10 * cfg.get("ram_gb", 1133), RAM_HEADROOM_GB, cfg.get("min_free_ram_gb", 0))  # OWNER 21:35
+        head = max(0.05 * cfg.get("ram_gb", 1133), RAM_HEADROOM_GB, cfg.get("min_free_ram_gb", 0))  # OWNER 21:35 10%; OWNER 10-07 08:05 "fill the hosts": 5%
         if cfg.get("max_loop_threads") is not None:      # localhost: loop jobs in total, so ssh stays responsive
             used = self.own_running.get(host, 0) + pt
             if used + threads > cfg["max_loop_threads"]:
