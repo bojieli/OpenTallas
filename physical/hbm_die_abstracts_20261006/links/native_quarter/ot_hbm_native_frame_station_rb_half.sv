@@ -100,6 +100,6 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_hbm_st_icg(input wire clk,en,output wire gclk);
  reg en_l;
- always @* if(!clk)en_l=en;
+ always @(negedge clk)en_l<=en;
  assign gclk=clk&en_l;
 endmodule
