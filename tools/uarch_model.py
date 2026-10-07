@@ -35,6 +35,11 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 import arch_budget_v41 as A  # noqa: E402
 
+def hbm_ha2_relay_tx_physical_model():
+    """Real circular-delay split and common-clock local launch/TX sizing."""
+    from ha2_relay_tx_physical_model import model
+    return model()
+
 def hbm_ha2_fixedpin_model():
     """Physical-only full-shape HA2 half-rate boundary relocation; no latency credit."""
     from hbm_ha2_fixedpin_model import model
