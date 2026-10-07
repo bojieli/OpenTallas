@@ -217,7 +217,7 @@ module ot_qwen_hbm_code_pair_margin #(
   // per-bank distribution stage, W6 correction in two stages: +3 read edges over MARGIN2=0 (LAT_DELTA 9 vs the original
   // context).  Interface change: rd_r is a registered credit (!fault); wr_r is a registered single-slot credit; a
   // request is accepted only when its own span/published/format qualifiers hold (checked after the pin flops).
-  localparam integer P=MARGIN2, D=MARGIN2;
+  localparam integer P=(MARGIN2>=1)?1:0, Q=(MARGIN2>=2)?1:0, D=P;   // Q (MARGIN2=2): stage-2 request regs, 2-stage encode, staged detect, syndrome flags, 2-stage receipts, output pin stage
   function automatic [71:0] w6_flip(input [7:0] syn);
     begin
       w6_flip='0;
@@ -290,8 +290,9 @@ module ot_qwen_hbm_code_pair_margin #(
     metadata_t m;
     wire [$bits(metadata_t)-1:0] fa_dout, fb_dout, fa_dn, fb_dn; wire fa_v, fb_v, fa_vn, fb_vn, fa_ovf, fb_ovf;
     wire rc_push, rc_pop;
-    assign m=P ? fa_dout : meta_a;
-    wire metadata_same=P ? (fa_v==fb_v && fa_dout==fb_dout) : (meta_a==meta_b);
+    reg [$bits(metadata_t)-1:0] vq_meta; reg vq_v; reg [15:0] cmp_sl_q; wire cmp_ok_q = &cmp_sl_q;
+    assign m=Q ? vq_meta : (P ? fa_dout : meta_a);
+    wire metadata_same=Q ? cmp_ok_q : (P ? (fa_v==fb_v && fa_dout==fb_dout) : (meta_a==meta_b));
     wire metadata_bad=!metadata_same;
     // Duplicated sticky fault: every use sees the OR of both copies.
     reg fq_a; wire fq_b;
@@ -305,7 +306,7 @@ module ot_qwen_hbm_code_pair_margin #(
                     : (wr_span_bound_i && format_ok && !fault_int && (!c.visible || visible_r));
     assign wr_r=P ? wr_r_q : wr_acc_i;
     wire write_fire=wr_v_i && wr_acc_i;
-    wire vis_now=P ? visible_v_q : (c.visible && !fault_int && metadata_same);
+    wire vis_now=Q ? vq_v : (P ? visible_v_q : (c.visible && !fault_int && metadata_same));
     assign visible_v=vis_now;
     assign visible_id=m.id; assign visible_tag=m.tag; assign visible_beat=m.beat;
     assign visible_row=m.row; assign visible_column=m.column;
@@ -318,13 +319,43 @@ module ot_qwen_hbm_code_pair_margin #(
     end
     wire format_bad=wr_v_i && wr_span_bound_i && !format_ok;
     // ---------------- E(t): central request registers at the pins ----------------
+    // MARGIN2=2: a second request stage (fire / row / data), the encode split into slice parities (stage A) and their XOR
+    // (stage B); reads and writes shift together so same-edge order is unchanged
+    reg [1:0] rfire2, wcol2; reg [25:0] rd_row2; reg [5:0] vb2; reg [12:0] wr_row2; reg [255:0] wr_data2;
+    reg [7:0] chkp [0:3][0:3];
+    wire [1:0] wq_v_pre;
+    function automatic [7:0] chk_slice(input [63:0] d, input integer sl);
+      logic [63:0] z;
+      begin z='0; z[sl*16+:16]=d[sl*16+:16]; chk_slice=checks_of(encode64(z)); end
+    endfunction
+    function automatic [7:0] checks_of(input [71:0] code);
+      checks_of={code[71],code[63],code[31],code[15],code[7],code[3],code[1],code[0]};
+    endfunction
+    if(Q) begin : st2
+      always @(posedge clk or negedge por_n)
+        if(!por_n) begin rfire2<=0; wcol2<=0; end
+        else begin rfire2<=read_fire; wcol2<=wq_v_pre; end
+      always @(posedge clk) begin
+        rd_row2<=rd_row_i; vb2<=virtual_bank_i; wr_row2<=wr_row_i; wr_data2<=wr_owned_i.data;
+        for(integer k=0;k<4;k=k+1) for(integer sl=0;sl<4;sl=sl+1) chkp[k][sl]<=chk_slice(wr_owned_i.data[k*64+:64], sl);
+      end
+    end
+    wire [1:0] rfire_x = Q ? rfire2 : read_fire;
+    wire [25:0] rd_row_x = Q ? rd_row2 : rd_row_i;
+    wire [5:0] vb_x = Q ? vb2 : virtual_bank_i;
+    wire [12:0] wr_row_x = Q ? wr_row2 : wr_row_i;
+    wire [255:0] wr_data_x = Q ? wr_data2 : wr_owned_i.data;
+    wire [31:0] chk_x;
+    for(genvar k=0;k<4;k=k+1) begin : chkx
+      assign chk_x[k*8+:8]=chkp[k][0]^chkp[k][1]^chkp[k][2]^chkp[k][3];
+    end
     reg [1:0] rq_v_a, wq_v_a;
     wire [1:0] rq_v_b, wq_v_b;
     reg [12:0] rq_row_a [0:1];
     wire [12:0] rq_row_b [0:1];
     reg [12:0] wq_row_a;
     wire [12:0] wq_row_b;
-    wire [1:0] wq_v_next;
+    wire [1:0] wq_v_next = Q ? wcol2 : wq_v_pre;
     reg [255:0] wq_data;
     reg [31:0] wq_checks;
     wire [31:0] write_checks;
@@ -338,22 +369,22 @@ module ot_qwen_hbm_code_pair_margin #(
     always @(posedge clk or negedge por_n)
       if(!por_n) begin rq_v_a<=0; wq_v_a<=0; end
       else begin
-        rq_v_a<=read_fire; wq_v_a<=wq_v_next;
+        rq_v_a<=rfire_x; wq_v_a<=wq_v_next;
       end
     always @(posedge clk) begin
       for(integer p=0;p<2;p=p+1) begin
-        rq_row_a[p]<=rd_row_i[p*13+:13];
+        rq_row_a[p]<=rd_row_x[p*13+:13];
       end
-      wq_row_a<=wr_row_i;
-      wq_data<=wr_owned_i.data; wq_checks<=write_checks;
+      wq_row_a<=wr_row_x;
+      wq_data<=wr_data_x; wq_checks<=Q ? chk_x : write_checks;
     end
     for(genvar p=0;p<2;p=p+1) begin : wcol
-      assign wq_v_next[p]=write_fire && wr_column_i==12'(COLUMN_BASE+p);
+      assign wq_v_pre[p]=write_fire && wr_column_i==12'(COLUMN_BASE+p);
     end
     ot_qwen_hbm_code_shadow_r #(.W(4)) u_req_b(.clk(clk),.por_n(por_n),
-      .d({wq_v_next, read_fire}), .q({wq_v_b, rq_v_b}));
+      .d({wq_v_next, rfire_x}), .q({wq_v_b, rq_v_b}));
     ot_qwen_hbm_code_shadow_n #(.W(39)) u_row_b(.clk(clk),
-      .d({wr_row_i, rd_row_i}), .q({wq_row_b, rq_row_b[1], rq_row_b[0]}));
+      .d({wr_row_x, rd_row_x}), .q({wq_row_b, rq_row_b[1], rq_row_b[0]}));
     // ---------------- E(t+1..t+3): kept per-bank storage ----------------
     wire [287:0] cap [0:1][0:BANKS-1];
     wire [9:0] bank_err;
@@ -391,7 +422,10 @@ module ot_qwen_hbm_code_pair_margin #(
                       ({288{msel_a[p][4]}} & cap[p][4]);
       for(genvar k=0;k<4;k=k+1) begin : flags
         wire [65:0] d=decode64(sel_code[p][k*72+:72]);
-        assign ue_w[k]=d[65]; assign co_w[k]=d[64];
+        wire [7:0] sy=syn5[p][k*8+:8];
+        wire nz=|sy[6:0]; wire okc=sy[7] && (sy[6:0]<=7'd71);
+        assign ue_w[k]=Q ? (nz && !okc) : d[65];            // Q: from the registered syndrome (same function as decode64)
+        assign co_w[k]=Q ? (nz ? okc : sy[7]) : d[64];
       end
       wire [31:0] syn_now;
       for(genvar k=0;k<4;k=k+1) begin : dec
@@ -414,8 +448,8 @@ module ot_qwen_hbm_code_pair_margin #(
       end
       ot_qwen_hbm_code_shadow_r #(.W(11)) u_sel_b(.clk(clk),.por_n(por_n),
         .d({msel_next[p], osel_next[p], c.v[4+D][p]}), .q({msel_b[p], osel_b[p], vld5_b[p]}));
-      assign unc_now[p]=c.v[4+D][p] && (|ue_w);
-      assign corr_now[p]=c.v[4+D][p] && (|co_w);
+      assign unc_now[p]=Q ? (vld5_a[p] && (|ue_w)) : (c.v[4+D][p] && (|ue_w));
+      assign corr_now[p]=Q ? (vld5_a[p] && (|co_w)) : (c.v[4+D][p] && (|co_w));
       assign sel_err[p]=(msel_a[p]!=msel_b[p]) || (osel_a[p]!=osel_b[p]) || (vld5_a[p]!=vld5_b[p]);
       always @(posedge clk) begin
         sel_code[p]<=mux_tree;        // E(t+4)
@@ -429,7 +463,7 @@ module ot_qwen_hbm_code_pair_margin #(
         end else begin
           msel_a[p]<=msel_next[p]; osel_a[p]<=osel_next[p];
           vld5_a[p]<=c.v[4+D][p];
-          unc5[p]<=unc_now[p]; corr5[p]<=corr_now[p];
+          unc5[p]<=Q ? 1'b0 : unc_now[p]; corr5[p]<=Q ? 1'b0 : corr_now[p];
         end
     end
     // Output gate: duplicated sticky fault, this edge's UE of either port
@@ -449,18 +483,27 @@ module ot_qwen_hbm_code_pair_margin #(
     ot_qwen_hbm_code_shadow_r #(.W(12)) u_en_b(.clk(clk),.por_n(por_n),.d({en6_next,v6_next}),.q({en6_b,v6_b}));
     wire out_err=(en6_a!=en6_b) || (v6_a!=v6_b);
     // MARGIN2 extra output stage (E t+7): control delayed in step with the corrected data
+`ifdef CODE_PAIR_MARGIN_MUTANT_NO_UE_GATE
+    wire ue_kill=1'b0;                            // bench-only negative control
+`else
+    wire ue_kill=|unc6;
+`endif
     reg [9:0] en7_a; reg [1:0] v7_a, corr7, unc7; wire [9:0] en7_b; wire [1:0] v7_b;
-    ot_qwen_hbm_code_shadow_r #(.W(12)) u_en7_b(.clk(clk),.por_n(por_n),.d({en6_b,v6_b}),.q({en7_b,v7_b}));
+    ot_qwen_hbm_code_shadow_r #(.W(12)) u_en7_b(.clk(clk),.por_n(por_n),.d(Q ? {en6_b & {10{!ue_kill && !fault_int}}, v6_b & {2{!ue_kill && !fault_int}}} : {en6_b,v6_b}),.q({en7_b,v7_b}));
     always @(posedge clk or negedge por_n)
       if(!por_n) begin en7_a<=0; v7_a<=0; corr7<=0; unc7<=0; end
-      else begin en7_a<=en6_a; v7_a<=v6_a; corr7<=corr6; unc7<=unc6; end
+      else begin
+        // Q: the uncorrectable flag (registered at E(t+6)) vetoes the enables here, one stage before the output
+        en7_a<=Q ? (en6_a & {10{!ue_kill && !fault_int}}) : en6_a;
+        v7_a<=Q ? (v6_a & {2{!ue_kill && !fault_int}}) : v6_a; corr7<=corr6; unc7<=unc6;
+      end
     wire out_err7=P && ((en7_a!=en7_b) || (v7_a!=v7_b));
     wire [9:0] en_a=P ? en7_a : en6_a, en_b=P ? en7_b : en6_b;
     wire [1:0] v_a=P ? v7_a : v6_a, v_b=P ? v7_b : v6_b, corr_s=P ? corr7 : corr6, unc_s=P ? unc7 : unc6;
     always @(posedge clk or negedge por_n)
       if(!por_n) begin en6_a<=0; v6_a<=0; corr6<=0; unc6<=0; rom_rd_q<=0; rsp_v_q<=0; corr_q<=0; unc_q<=0; end
       else begin
-        en6_a<=en6_next; v6_a<=v6_next; corr6<=corr5; unc6<=unc5;   // E(t+6)
+        en6_a<=en6_next; v6_a<=v6_next; corr6<=Q ? corr_now : corr5; unc6<=Q ? unc_now : unc5;   // E(t+6)
         for(integer p=0;p<2;p=p+1) begin                             // E(t+7)
           for(integer b=0;b<BANKS;b=b+1)
             rom_rd_q[(p*5+b)*266+:266]<=(en_a[p*5+b] && en_b[p*5+b]) ? {10'b0,cd6[p]} : 266'b0;
@@ -468,16 +511,20 @@ module ot_qwen_hbm_code_pair_margin #(
         end
         corr_q<=corr_s; unc_q<=unc_s;
       end
-    assign rom_rd=rom_rd_q; assign rsp_v=rsp_v_q;
-    assign rd_corrected=corr_q; assign rd_uncorrectable=unc_q;
+    reg [2659:0] rom_rd_o; reg [1:0] rsp_v_o, corr_o, unc_o;
+    always @(posedge clk or negedge por_n)
+      if(!por_n) begin rom_rd_o<=0; rsp_v_o<=0; corr_o<=0; unc_o<=0; end
+      else begin rom_rd_o<=rom_rd_q; rsp_v_o<=rsp_v_q; corr_o<=corr_q; unc_o<=unc_q; end
+    assign rom_rd=Q ? rom_rd_o : rom_rd_q; assign rsp_v=Q ? rsp_v_o : rsp_v_q;
+    assign rd_corrected=Q ? corr_o : corr_q; assign rd_uncorrectable=Q ? unc_o : unc_q;
     // ---------------- control word and sticky fault ----------------
     always @* begin
       n=c;
-      n.v[0]=read_fire;
+      n.v[0]=rfire_x;
       for(integer k=1;k<5+D;k=k+1) n.v[k]=c.v[k-1];
-      n.pb[0]={rd_row_i[25:23],rd_row_i[12:10]};
+      n.pb[0]={rd_row_x[25:23],rd_row_x[12:10]};
       for(integer k=1;k<3+D;k=k+1) n.pb[k]=c.pb[k-1];
-      n.vb[0]=virtual_bank_i;
+      n.vb[0]=vb_x;
       for(integer k=1;k<5+D;k=k+1) n.vb[k]=c.vb[k-1];
       if(vis_now && visible_r) n.visible=0;
       if(write_fire) n.visible=1;
@@ -485,36 +532,63 @@ module ot_qwen_hbm_code_pair_margin #(
     assign meta_next=write_fire ? {wr_owned_i.id,wr_owned_i.physical_tag,wr_owned_i.beat,wr_row_i,wr_column_i} : meta_a;
     ot_qwen_hbm_code_shadow_r #(.W($bits(control_t))) u_ctl_b(.clk(clk),.por_n(por_n),.d(n),.q(ctl_b));
     wire [$bits(metadata_t)-1:0] rc_din={wr_owned_i.id,wr_owned_i.physical_tag,wr_owned_i.beat,wr_row_i,wr_column_i};
-    assign rc_push=P && write_fire; assign rc_pop=P && visible_v_q && visible_r;
-    ot_qwen_hbm_code_rcpt_fifo #(.W($bits(metadata_t)),.DEPTH(4)) u_rc_a(.clk(clk),.por_n(por_n),.push(rc_push),.pop(rc_pop),.din(rc_din),
+    reg rc_push2; reg [$bits(metadata_t)-1:0] rc_din2;
+    always @(posedge clk or negedge por_n) if(!por_n) rc_push2<=0; else rc_push2<=write_fire;
+    always @(posedge clk) rc_din2<=rc_din;
+    wire take_out = vq_v && visible_r;
+    wire head_ok = fa_v && fb_v && cmp_ok_q;
+    wire xfer = Q && head_ok && !fault_int && (!vq_v || take_out);
+    assign rc_push=Q ? rc_push2 : (P && write_fire);
+    assign rc_pop=Q ? xfer : (P && visible_v_q && visible_r);
+    ot_qwen_hbm_code_rcpt_fifo #(.W($bits(metadata_t)),.DEPTH(4)) u_rc_a(.clk(clk),.por_n(por_n),.push(rc_push),.pop(rc_pop),.din(Q ? rc_din2 : rc_din),
       .vld(fa_v),.dout(fa_dout),.vld_n(fa_vn),.dout_n(fa_dn),.ovf(fa_ovf));
-    ot_qwen_hbm_code_rcpt_fifo #(.W($bits(metadata_t)),.DEPTH(4)) u_rc_b(.clk(clk),.por_n(por_n),.push(rc_push),.pop(rc_pop),.din(rc_din),
+    ot_qwen_hbm_code_rcpt_fifo #(.W($bits(metadata_t)),.DEPTH(4)) u_rc_b(.clk(clk),.por_n(por_n),.push(rc_push),.pop(rc_pop),.din(Q ? rc_din2 : rc_din),
       .vld(fb_v),.dout(fb_dout),.vld_n(fb_vn),.dout_n(fb_dn),.ovf(fb_ovf));
     ot_qwen_hbm_code_shadow_r #(.W($bits(metadata_t))) u_meta_b(.clk(clk),.por_n(por_n),
       .d(write_fire ? {wr_owned_i.id,wr_owned_i.physical_tag,wr_owned_i.beat,wr_row_i,wr_column_i} : meta_b),.q(meta_b));
-    wire detect=control_bad || (P ? (!metadata_same || fa_ovf || fb_ovf) : (c.visible && metadata_bad)) || (|request_bad) || format_bad ||
-                (|bank_err) || (|sel_err) || out_err || out_err7 || (|unc5) || (fq_a!=fq_b);
-    ot_qwen_hbm_code_shadow_r #(.W(1)) u_fault_b(.clk(clk),.por_n(por_n),.d(fq_b || detect),.q(fq_b));
+    wire detect_raw=control_bad || (Q ? ((fa_v||fb_v) && !cmp_ok_q || fa_ovf || fb_ovf) : P ? (!metadata_same || fa_ovf || fb_ovf) : (c.visible && metadata_bad)) || (|request_bad) || format_bad ||
+                (|bank_err) || (|sel_err) || out_err || out_err7 || (Q ? (|unc6) : (|unc5)) || (fq_a!=fq_b);
+    // MARGIN2=2: the detect OR is registered (two kept copies); the sticky fault follows one edge later
+    reg detect_a; wire detect_b;
+    ot_qwen_hbm_code_shadow_r #(.W(1)) u_det_b(.clk(clk),.por_n(por_n),.d(detect_raw),.q(detect_b));
+    always @(posedge clk or negedge por_n) if(!por_n) detect_a<=0; else detect_a<=detect_raw;
+    wire detect = Q ? (detect_a || detect_b) : detect_raw;
+    ot_qwen_hbm_code_shadow_r #(.W(1)) u_fault_b(.clk(clk),.por_n(por_n),.d(fq_b || (Q ? detect_b : detect)),.q(fq_b));
     always @(posedge clk or negedge por_n) begin
       if(!por_n) begin ctl_a<=0; meta_a<=0; fq_a<=0; end
       else begin
-        fq_a<=fq_a || detect;
+        fq_a<=fq_a || (Q ? detect_a : detect);
         ctl_a<=n;
         meta_a<=meta_next;
       end
     end
     // MARGIN2 registered interface: credits and valid at flops (pin side), fault flop at the pin
     wire fault_nx=fault_int || detect;
-    wire [3:0] occ_n=occ + {3'b0,wr_r_q} - {3'b0,(wrr_p && !write_fire)} - {3'b0,rc_pop};
+    // MARGIN2=2: head compare registered per 16-bit slice from the FIFO next-state wires (aligned with the head regs);
+    // the head moves to the visible regs only when its copies agree and both are valid
+    wire [239:0] xr_pad = {240'b0 | (fa_dn ^ fb_dn)};
+    wire [15:0] cmp_sl_nx;
+    for(genvar g=0;g<15;g=g+1) begin : cmpsl
+      assign cmp_sl_nx[g] = ~|xr_pad[g*16 +: 16];
+    end
+    assign cmp_sl_nx[15] = (fa_vn==fb_vn);
+    always @(posedge clk or negedge por_n)
+      if(!por_n) begin cmp_sl_q<=0; vq_v<=0; end
+      else if(Q) begin
+        cmp_sl_q<=cmp_sl_nx;
+        vq_v<=(xfer || (vq_v && !take_out)) && !fault_nx;
+      end
+    always @(posedge clk) if(Q && xfer) vq_meta<=fa_dout;
+    wire [3:0] occ_n=occ + {3'b0,wr_r_q} - {3'b0,(wrr_p && !write_fire)} - {3'b0,Q ? take_out : rc_pop};
     wire meta_same_nx=P ? (fa_vn==fb_vn && fa_dn==fb_dn) : (write_fire ? 1'b1 : metadata_same);
     always @(posedge clk or negedge por_n)
       if(!por_n) begin rd_r_q<=0; rrr_p<=0; wr_r_q<=0; wrr_p<=0; visible_v_q<=0; fault_q<=0; occ<=0; end
       else if(P) begin
         rd_r_q<={2{!fault_nx}}; rrr_p<=rd_r_q;
         occ<=occ_n;
-        wr_r_q<=!fault_nx && (occ_n<4'd4);
+        wr_r_q<=!fault_nx && (occ_n<(Q ? 4'd6 : 4'd4));
         wrr_p<=wr_r_q;
-        visible_v_q<=fa_vn && fb_vn && !fault_nx && meta_same_nx;
+        visible_v_q<=Q ? 1'b0 : (fa_vn && fb_vn && !fault_nx && meta_same_nx);
         fault_q<=fault_nx;
       end
   end endgenerate
