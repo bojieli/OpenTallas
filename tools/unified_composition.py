@@ -58,10 +58,11 @@ Q_STATION = "results/uarch/qwen_station_fullwidth_r22_20261007/model_dual_fault_
 DS_LEDGER = "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json"
 DS_LINKS = "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json"
 DS_RACK = "results/arch/dsrom_s81_rack_20261006/rack.json"
-DS_MAP = "results/uarch/dsrom_s81_mixed1792_mapping_20261007"
+DS_MAP = "results/uarch/dsrom_s81_mixed1792_mapping_20261007"   # hash-bound complete mappings, 2d811aafb
+DS_GEOM = "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json"   # legal mixed geometry sizing, 77ffa0428
 DS_RET = "results/uarch/dsrom_spine_return_station_20261007/sensitivity.json"
 DS_BFROOT = "physical/s81_bf_root_phase/model.json"
-DS_BFFAIL = "results/physical/s81_bf_root_phase_hierarchy_fix_20261007"
+DS_BFFAIL = "results/rtl/s81_bf_root_phase_hierarchy_fix_20261007"
 DS_HBMB = "results/physical/hbm_die_abstracts_20261006/integration/consumer_binding_20261006.json"
 H_MATCHED = "results/rtl/dshbm_matched_reference_20261005/composition.json"
 H_LEDGER = "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md"
@@ -79,6 +80,7 @@ BFA_COMMIT = "4534a8e5f (origin/codex/bf-evidence-only-20261007, BF agent record
 BFA = dict(AR=1645.8, MTP=4841.9, base_AR=1608.4, base_MTP=4764.3, stages=96)
 # option B (mixed 2,304 pairs, 85 stages), Codex "DS ADOPT" 505a9b484 on origin/codex/restore-bf-pairs-20261007; not on main
 BFB_COMMIT = "52f5f1963 (origin/codex/restore-bf-pairs-20261007; adoption commit 505a9b484; not on main)"
+GEO_B = None
 BFB = dict(AR=1754.3, MTP=5098.3, base_AR=1603.3, base_MTP=4717.7, stages=85, pairs=2304, layer_dies=340, regions=18288,
            label="DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field",
            physical="PENDING: mixed 2304-pair geometry not routed; uniform 2048-pair S81 v9d is different. Final PQ/BF footprints and die station cycles must be priced before physical adoption.",
@@ -278,10 +280,12 @@ def ds_rom():
                          layer_dies=inv["layer_dies"], BF_dedicated=inv["BF_dedicated"], ROM_ECC=inv["ROM_ECC"],
                          extra_hops_vs_composed=inv["stages"] - geo["stages"])
     ret = load(DS_RET)
+    global GEO_B
+    GEO_B = next(v for v in load(DS_GEOM)["variants"] if v["name"] == "mixed183")
     lines += [
         L("geometry_note", "Published composition geometry: f183.60 (%d stages, %d layer dies, %d dies total)"
           % (geo["stages"], geo["layer"] if "layer" in geo else rack["counts"]["layer"], rack["counts"]["dies"]),
-          "measured", None, src(DS_RACK, "geometry"), "the historical S81 geometry with full-rate BF; NOT the actual 1792 mapping", "info"),
+          "measured", None, src(DS_RACK, "geometry"), "the historical S81 geometry with full-rate BF; NOT the actual 1792 mapping (the current physical integration basis); no token headline is adopted", "info"),
         L("actual1792_half_dedicated_hops", "Actual 1792 mapping, BF-dedicated half-rate (%d stages: %d BF + %d q): +%d stage hops"
           % (var["half_dedicated"]["stages"], var["half_dedicated"]["bf_stages"], var["half_dedicated"]["q_stages"],
              var["half_dedicated"]["extra_hops_vs_composed"]),
@@ -310,25 +314,27 @@ def ds_rom():
           src(BFA_FILE, "options.A_f198_2048 vs options.base_f198_2050", commit=BFA_COMMIT),
           "measured exact (19,056/19,056 regions, both runs bit-exact), UNADOPTED, FULL-RATE BF: AR %.1f vs base_f198 %.1f "
           "(+%.2f %%), MTP %.1f vs %.1f (+%.2f %%). Supersedes the +7.82 %% figure (BF16-phase-only, ledger.md on %s). "
-          "Option B is measured: see bf_merge_ksplit_option_B. Under the half-rate 1792 geometry its gain "
+          "Option B (2,304 pairs) failed legal fit: see bf_merge_ksplit_option_B. Under the half-rate 1792 geometry its gain "
           "is unmeasured, so it is listed, never summed"
           % (BFA["AR"], BFA["base_AR"], 100 * (BFA["AR"] / BFA["base_AR"] - 1), BFA["MTP"], BFA["base_MTP"],
              100 * (BFA["MTP"] / BFA["base_MTP"] - 1), BF_BRANCH), "info"),
-        L("bf_merge_ksplit_option_B", "BF16 phase merges + router K split, option B: mixed slots, %d pairs (18 a region, 512 BF), "
-          "%d reprice stages, %d layer dies" % (BFB["pairs"], BFB["stages"], BFB["layer_dies"]), "measured",
-          dict(unit="us", AR=round(1e6 / BFB["AR"] - 1e6 / BFB["base_AR"], 3),
-               MTP_step=round(tau * 1e6 / BFB["MTP"] - tau * 1e6 / BFB["base_MTP"], 3)),
-          src(BFA_FILE, "options.B_mixed_2304", commit=BFB_COMMIT),
-          "measured candidate, bit-exact %s/%s regions, full-rate BF; Codex label quoted: '%s'. Status here: ADOPT PENDING "
-          "CENTRAL INTEGRATION (not on main). Its base %.1f is the ledger total before su_meso_d8g1. Physical: %s Wire: %s. "
-          "CONFLICTS with the actual 1792 mapping on main (half-rate BF, 98/120 stages): see compositions "
-          "option_B_2304_codex_adopt and geometry_conflict" % (format(BFB["regions"], ","), format(BFB["regions"], ","),
-          BFB["label"], BFB["base_AR"], BFB["physical"], BFB["wire"]), "info"),
+        L("bf_merge_ksplit_option_B", "Option B (historical/numerical): BF16 phase merges + router K split on mixed slots, %d pairs "
+          "(18 a region, 512 BF), %d reprice stages, %d layer dies, full-rate BF" % (BFB["pairs"], BFB["stages"], BFB["layer_dies"]),
+          "gated-unknown", None,
+          [src(BFA_FILE, "options.B_mixed_2304", commit=BFB_COMMIT), src(DS_GEOM, "variants[name=mixed183].requested_fits")],
+          "NUMERICAL, LEGAL-FIT FAILED, NOT PHYSICALLY QUALIFIED. Field vehicle bit-exact %s/%s regions (a numerical result, "
+          "not measured silicon); its 1,754.3 AR is a field-vehicle composition on the pre-su_meso base %.1f, never a "
+          "qualified rate. The mixed183 geometry requests 2,304 pairs but the legal maximum at that geometry is %d "
+          "(requested_fits=false, %s). Codex's branch label is quoted for history only, not promoted: '%s'"
+          % (format(BFB["regions"], ","), format(BFB["regions"], ","), BFB["base_AR"], GEO_B["maximum_pairs_at_this_geometry"],
+             DS_GEOM, BFB["label"]), "info"),
         L("field_phases_1792", "Field phase timings of the 1792 geometry (remapped regions, BF/q stage split)", "gated-unknown", None,
           src(f"{DS_MAP}/provenance.json", "variants.*.full_token_latency"), "'unpriced until matching field phase measurements and new geometry timing are composed'", "gate"),
-        L("bf_half_physical", "BF half-rate clock root qualification", "gated-unknown", None,
-          [src(DS_BFROOT, "physical_obligations"), src(DS_BFFAIL + "/record.json")],
-          "phase-clock root branch: physical_closed=false; calibration hierarchy failure preserved at 449ebc571", "gate"),
+        L("bf_half_physical", "BF half-rate clock root qualification (current exact BF closure path)", "gated-unknown", None,
+          [src(DS_BFROOT, "physical_obligations"), src(DS_BFFAIL + "/record.json"), src(DS_BFFAIL + "/actual_calibration_failure.json")],
+          "half-rate BF is the current exact BF closure path, not an immutable requirement: full rate may return if it meets "
+          "the correctness and physical gates. The 449ebc571 root-phase failure was a script hierarchy failure (not an "
+          "arithmetic rejection), fixed in 7990dfdbf and now calibrating; SS/FF >= +15 ps, DRC 0 still to be shown", "gate"),
         L("s81_die_closure", "S81 die DRT / SS / FF / IR at the final mixed-BF/PQ geometry", "gated-unknown", None,
           src(DS_LEDGER, "items[s81_die].description"), "global-route feasibility only", "gate"),
         L("native_token", "Native end-to-end S81 token (connected RTL)", "gated-unknown", None,
@@ -339,7 +345,7 @@ def ds_rom():
           "whole-domain clock/CDC contract and full-shape composition missing", "gate"),
     ]
     pub_ar, pub_mtp = c["AR_us"], c["MTP_step_us"]
-    gates = [x["id"] for x in lines if x["status"] == "gated-unknown"]
+    gates = [x["id"] for x in lines if x["status"] == "gated-unknown" and x["role"] != "info"]
     comps = dict(published=dict(AR_us=pub_ar, MTP_step_us=pub_mtp, AR_tok_s=c["AR_tok_s"], MTP_tok_s=c["MTP_tok_s"], tau=tau,
                                 geometry="f183.60, %d stages, %d dies" % (geo["stages"], rack["counts"]["dies"]),
                                 status="priced-candidate", record=src(CMP, "ds_rom"),
@@ -350,36 +356,41 @@ def ds_rom():
         v = var[name]
         comps["actual1792_" + name] = dict(
             AR_us=round(ar, 3), MTP_step_us=round(mtp, 3), AR_tok_s=tok_s_us(ar), MTP_tok_s=tok_s_us(mtp, tau), tau=tau,
-            stages=v["stages"], layer_dies=v["layer_dies"],
-            dies_total=v["layer_dies"] + rack["counts"]["head"] + rack["counts"]["table"] + rack["counts"]["draft"],
-            status="priced-candidate", bound=("upper bound on latency (lower bound on rate) for the BF16 doubling"
+            stages=v["stages"], dies=v["layer_dies"], pairs_per_layer_die=1792, bf_rate="half",
+            dies_note=("%d = layer dies, the Codex basis (2d811aafb inventory layer_dies). An earlier revision of this ledger "
+                       "printed %d by also counting the %d head + %d table + %d draft dies of the 85-stage rack record; those "
+                       "are outside the 1792 mapping and not re-sized for it" % (v["layer_dies"], v["layer_dies"] + rack["counts"]["head"]
+                       + rack["counts"]["table"] + rack["counts"]["draft"], rack["counts"]["head"], rack["counts"]["table"], rack["counts"]["draft"])),
+            basis=[src(DS_GEOM, "variants[name=mixed221]", commit="77ffa0428"), src(f"{DS_MAP}/{name}/inventory.json", "stages, layer_dies", commit="2d811aafb")],
+            adopted=False, closure=False,
+            status="priced-candidate (current physical integration basis; not an adopted rate)", bound=("upper bound on latency (lower bound on rate) for the BF16 doubling"
                                               if name == "half_dedicated" else "rate is an UPPER bound: shared-pair q phases also halve"),
             gated_by=gates, lines=[hops, "bf_half_rate_upper"],
             note="published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured")
-    comps["option_B_2304_codex_adopt"] = dict(
-        AR_tok_s=BFB["AR"], MTP_tok_s=BFB["MTP"], AR_us=round(1e6 / BFB["AR"], 3), MTP_step_us=round(tau * 1e6 / BFB["MTP"], 3),
-        tau=tau, stages=BFB["stages"], pairs=BFB["pairs"], layer_dies=BFB["layer_dies"],
-        dies_total=BFB["layer_dies"] + rack["counts"]["head"] + rack["counts"]["table"] + rack["counts"]["draft"],
-        bf_rate="full", status="measured candidate; adopt pending central integration (not on main)",
-        codex_label=BFB["label"], record=src(BFA_FILE, "options.B_mixed_2304", commit=BFB_COMMIT),
-        note="its own composition on the pre-su_meso ledger base (1,603.3); wire estimated; geometry not routed")
+    comps["option_B_2304_historical"] = dict(
+        AR_tok_s=BFB["AR"], MTP_tok_s=BFB["MTP"], tau=tau, stages=BFB["stages"], pairs_per_layer_die=BFB["pairs"],
+        dies=BFB["layer_dies"], bf_rate="full",
+        status="numerical, legal-fit failed, not physically qualified (historical/competing numerical candidate)",
+        codex_branch_label_quoted=BFB["label"], record=src(BFA_FILE, "options.B_mixed_2304", commit=BFB_COMMIT),
+        legal_fit=src(DS_GEOM, "variants[name=mixed183].requested_fits", commit="77ffa0428"),
+        note="field-vehicle numbers only: never measured silicon, never a qualified or adopted rate")
     comps["geometry_conflict"] = dict(
-        status="UNRESOLVED: question to Codex root in the mailbox",
-        question="Which pair count / geometry is the production baseline?",
-        candidates=[
-            dict(name="actual1792_half_dedicated (main 2d811aafb)", pairs_per_layer_die=1792, stages=var["half_dedicated"]["stages"],
-                 bf_rate="half", AR_tok_s=comps["actual1792_half_dedicated"]["AR_tok_s"], MTP_tok_s=comps["actual1792_half_dedicated"]["MTP_tok_s"],
-                 basis="priced-candidate envelope; field phases unmeasured"),
-            dict(name="actual1792_full_shared (main 2d811aafb)", pairs_per_layer_die=1792, stages=var["full_shared"]["stages"],
-                 bf_rate="half", AR_tok_s=comps["actual1792_full_shared"]["AR_tok_s"], MTP_tok_s=comps["actual1792_full_shared"]["MTP_tok_s"],
-                 basis="priced-candidate rate upper bound"),
-            dict(name="option_B_2304 (codex/restore-bf-pairs 505a9b484, 'DS ADOPT')", pairs_per_layer_die=BFB["pairs"], stages=BFB["stages"],
-                 bf_rate="full", AR_tok_s=BFB["AR"], MTP_tok_s=BFB["MTP"], basis="measured exact field; wire estimated; not routed"),
-            dict(name="option_A_2048 (f198.72)", pairs_per_layer_die=2048, stages=BFA["stages"], bf_rate="full",
-                 AR_tok_s=BFA["AR"], MTP_tok_s=BFA["MTP"], basis="measured exact field; unadopted")],
-        why=("main records the owner decision 'BF half-rate + more BF pairs' with a 1792-pair mapping at 98/120 stages; option B "
-             "keeps full-rate BF at 2,304 pairs and 85 stages. They cannot both be the S81 baseline; their AR differs by "
-             "%.0f-%.0f tok/s" % (BFB["AR"] - comps["actual1792_full_shared"]["AR_tok_s"], BFB["AR"] - comps["actual1792_half_dedicated"]["AR_tok_s"])))
+        status="ANSWERED by Codex root 2026-10-07",
+        answer=("The current physical integration basis is the actual legal 1,792-pair mixed geometry (77ffa0428) with the "
+                "hash-bound complete mappings (2d811aafb): HALF dedicated 120 stages / 480 dies and FULL shared 98 / 392. "
+                "Neither is a final adopted rate or closure. The 2,304-pair option B failed legal fit and stays a "
+                "historical numerical candidate. Half-rate BF is the current exact closure path, not an immutable "
+                "requirement. No token headline is adopted"),
+        basis=[dict(name="actual1792_half_dedicated", commits=["77ffa0428", "2d811aafb"], stages=var["half_dedicated"]["stages"],
+                    dies=var["half_dedicated"]["layer_dies"], pairs_per_layer_die=1792, bf_rate="half",
+                    AR_tok_s=comps["actual1792_half_dedicated"]["AR_tok_s"], MTP_tok_s=comps["actual1792_half_dedicated"]["MTP_tok_s"],
+                    status="priced-candidate envelope; field phases unmeasured"),
+               dict(name="actual1792_full_shared", commits=["77ffa0428", "2d811aafb"], stages=var["full_shared"]["stages"],
+                    dies=var["full_shared"]["layer_dies"], pairs_per_layer_die=1792, bf_rate="half",
+                    AR_tok_s=comps["actual1792_full_shared"]["AR_tok_s"], MTP_tok_s=comps["actual1792_full_shared"]["MTP_tok_s"],
+                    status="priced-candidate; rate upper bound")],
+        not_basis=[dict(name="option_B_2304 (505a9b484)", status="numerical, legal-fit failed, not physically qualified"),
+                   dict(name="option_A_2048 (f198.72)", status="numerical field measurement, unadopted, full-rate BF")])
     return dict(context="DeepSeek-V4.1 1M, S81 array, TP4", tau=tau, lines=lines, compositions=comps, gates=gates,
                 mapping_1792=var, physical_status="not closed; numerical component PASS is not physical adoption")
 
