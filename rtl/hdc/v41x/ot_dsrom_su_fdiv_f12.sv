@@ -208,3 +208,20 @@ module ot_dsrom_su_fdiv_f12 #(
         else begin y <= {f3_sign, f3_code}; fault <= 1'b0; end
     end
 endmodule
+
+// SAFE tile (owner 2026-10-06): the divider as a hardened leaf with both operands registered at the boundary (+1 cycle).
+module ot_dsrom_su_fdiv_tile #(parameter integer NR = 0) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire [31:0] y,
+    output wire        vo,
+    output wire        fault
+);
+    reg [31:0] ar, br; reg vr;
+    always @(posedge clk) begin ar <= a; br <= b; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) vr <= 1'b0; else vr <= v;
+    ot_dsrom_su_fdiv_f12 #(.NR(NR)) u (.clk(clk), .rst_n(rst_n), .v(vr), .a(ar), .b(br), .y(y), .vo(vo), .fault(fault));
+endmodule

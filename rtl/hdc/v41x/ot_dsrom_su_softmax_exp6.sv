@@ -421,3 +421,26 @@ module ot_dsrom_su_softmax_exp6 #(
 
     assign fault = |{f, hf};
 endmodule
+
+// SAFE tile (owner 2026-10-06): the exp unit as a hardened leaf with its input registered at the boundary (+1 cycle).
+// The output y is already a flop.  Default-off use: ot_dsrom_su_softmax SAFE = 1.
+module ot_dsrom_su_softmax_exp_tile #(
+    parameter integer LM = 3, parameter integer LA = 6, parameter integer NSPLIT = 0
+) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] x,
+    output wire [31:0] y,
+    output wire        vo,
+    output wire        fault
+);
+    reg [31:0] xr; reg vr;
+`ifdef SOFTMAX_SAFE_MUTANT
+    always @(posedge clk) xr <= {x[31:1], x[0] ^ v};   // bench-only negative control
+`else
+    always @(posedge clk) xr <= x;
+`endif
+    always @(posedge clk or negedge rst_n) if (!rst_n) vr <= 1'b0; else vr <= v;
+    ot_dsrom_su_softmax_exp6 #(.LM(LM), .LA(LA), .NSPLIT(NSPLIT)) u (.clk(clk), .rst_n(rst_n), .v(vr), .x(xr), .y(y), .vo(vo), .fault(fault));
+endmodule

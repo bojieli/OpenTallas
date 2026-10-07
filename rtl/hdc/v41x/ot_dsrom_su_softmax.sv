@@ -68,7 +68,8 @@ module ot_dsrom_su_softmax #(
                                          //    does not share, so synthesis cannot merge them into it (x6u30: den_d fanned
                                          //    out to every lane's divider, -55 ps at CTS)
     parameter integer DIVF12 = 1,        // 1: ot_dsrom_su_fdiv_f12 (DEPTH 33, 1.2 GHz); 0: ot_hdc_v41x_fdiv (19)
-    parameter integer MARGIN = 0         // 1: the margin build (header)
+    parameter integer MARGIN = 0,        // 1: the margin build (header)
+    parameter integer SAFE   = 0         // 1: exp units and dividers as tiles with registered inputs (+1 cycle each; needs EXP6 and DIVF12)
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -101,8 +102,8 @@ module ot_dsrom_su_softmax #(
     localparam integer NPV = 512 / LPH;
     localparam integer LH = $clog2(LPH);
     localparam integer ELA_T = EXP6 ? ((ADD6 == 2) ? 9 : 6) : ELA;    // the exp's add latency
-    localparam integer D_EXP = 7 * ELM + 8 * ELA_T + 4 + (EXP6 ? EXPNS + ((EXPNS == 2) ? 1 : 0) : 0);
-    localparam integer D_DIV = DIVF12 ? 33 + MARGIN : 19;
+    localparam integer D_EXP = 7 * ELM + 8 * ELA_T + 4 + (EXP6 ? EXPNS + ((EXPNS == 2) ? 1 : 0) : 0) + SAFE;
+    localparam integer D_DIV = (DIVF12 ? 33 + MARGIN : 19) + SAFE;
     // configuration inputs: registered at the pin in the margin build
     wire [6:0]         nv_i;
     wire [2:0]         lt_i;
@@ -289,7 +290,10 @@ module ot_dsrom_su_softmax #(
         wire fa, fe;
         ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
             (clk, rst_n, mx_v, sink_i[32*h +: 32], {~mx_d[32*h + 31], mx_d[32*h +: 31]}, sk_d[32*h +: 32], fa);
-        if (EXP6) begin : g_x6
+        if (EXP6 && SAFE) begin : g_xt
+            ot_dsrom_su_softmax_exp_tile #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
+                                                 .y(sk_e[32*h +: 32]), .vo(), .fault(fe));
+        end else if (EXP6) begin : g_x6
             ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
                                                  .y(sk_e[32*h +: 32]), .vo(), .fault(fe));
         end else begin : g_x
@@ -337,7 +341,10 @@ module ot_dsrom_su_softmax #(
         always @(posedge clk) if (mxdv[RWD]) mbn[32*l +: 32] <= {~mx_dn[32*HH + 31], mx_dn[32*HH +: 31]};
         ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
             (clk, rst_n, rv, s_rd[32*l +: 32], mbn[32*l +: 32], bd[32*l +: 32], fa);
-        if (EXP6) begin : g_x6
+        if (EXP6 && SAFE) begin : g_xt
+            ot_dsrom_su_softmax_exp_tile #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
+                                                 .y(be[32*l +: 32]), .vo(), .fault(fe));
+        end else if (EXP6) begin : g_x6
             ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
                                                  .y(be[32*l +: 32]), .vo(), .fault(fe));
         end else begin : g_x
@@ -522,7 +529,10 @@ module ot_dsrom_su_softmax #(
     generate for (l = 0; l < NL; l = l + 1) begin : g_dv
         localparam integer HH = l / LPH;
         wire fd;
-        if (DIVF12) begin : g_f12
+        if (DIVF12 && SAFE) begin : g_ft
+            ot_dsrom_su_fdiv_tile #(.NR(MARGIN)) u_d (.clk(clk), .rst_n(rst_n), .v(piv[DIN]), .a(pv_in[32*l +: 32]),
+                                      .b(denl[32*l +: 32]), .y(qd[32*l +: 32]), .vo(), .fault(fd));
+        end else if (DIVF12) begin : g_f12
             ot_dsrom_su_fdiv_f12 #(.NR(MARGIN)) u_d (.clk(clk), .rst_n(rst_n), .v(piv[DIN]), .a(pv_in[32*l +: 32]),
                                       .b(denl[32*l +: 32]), .y(qd[32*l +: 32]), .vo(), .fault(fd));
         end else begin : g_f19

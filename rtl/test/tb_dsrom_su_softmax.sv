@@ -18,6 +18,7 @@ module tb_dsrom_su_softmax;
     parameter integer EXPNS = 0;
     parameter integer DENK = 0;
     parameter integer MARGIN = 0;
+    parameter integer SAFE = 0;
     localparam integer NL = H * LPH;
     localparam integer NPV = 512 / LPH;
     localparam integer TAIL = 64;
@@ -42,7 +43,7 @@ module tb_dsrom_su_softmax;
     wire [6:0] nv = par[0][6:0];
     wire [2:0] lt = par[1][2:0];
 
-    ot_dsrom_su_softmax #(.H(H), .LPH(LPH), .NVMAX(NVMAX), .LTMAX(LTMAX), .LM(LM), .LA(LA), .ELM(ELM), .ELA(ELA), .ADD6(ADD6), .EXP6(EXP6), .EXPNS(EXPNS), .DENK(DENK), .MARGIN(MARGIN)) dut (
+    ot_dsrom_su_softmax #(.H(H), .LPH(LPH), .NVMAX(NVMAX), .LTMAX(LTMAX), .LM(LM), .LA(LA), .ELM(ELM), .ELA(ELA), .ADD6(ADD6), .EXP6(EXP6), .EXPNS(EXPNS), .DENK(DENK), .MARGIN(MARGIN), .SAFE(SAFE)) dut (
         .clk(clk), .rst_n(rst_n), .nv(nv), .lt(lt), .scale(par[2]), .sink(vec[0]), .cosv(rope[0]), .sinv(rope[1]),
         .s_v(s_v), .s_d(s_d), .e_v(e_v), .e_d(e_d), .mx_v(mx_v), .mx_d(mx_d), .es_v(es_v), .es_d(es_d),
         .den_v(den_v), .den_d(den_d), .pv_v(pv_v), .pv_d(pv_d), .o_v(o_v), .o_d(o_d), .fault(fault));

@@ -193,8 +193,8 @@ def cmd_build(a):
     obj = Path(a.work) / f"obj_lph{a.lph}{a.tag}"
     nvm = nvmax(a.lph)
     ltm = max(1, int(np.ceil(np.log2(nvm))))
-    cmd = [verilator(), "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_dsrom_su_softmax",
-           f"-GLPH={a.lph}", f"-GNVMAX={nvm}", f"-GLTMAX={ltm}", f"-GLM={a.lm}", f"-GLA={a.la}", f"-GELM={a.elm}", f"-GELA={a.ela}", f"-GADD6={a.add6}", f"-GEXP6={a.exp6}", f"-GEXPNS={a.expns}", f"-GDENK={a.denk}", f"-GMARGIN={a.margin}", "-Mdir", str(obj), "-j", str(a.jobs),
+    cmd = [verilator(), "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_dsrom_su_softmax", *os.environ.get("VL_DEFS", "").split(),
+           f"-GLPH={a.lph}", f"-GNVMAX={nvm}", f"-GLTMAX={ltm}", f"-GLM={a.lm}", f"-GLA={a.la}", f"-GELM={a.elm}", f"-GELA={a.ela}", f"-GADD6={a.add6}", f"-GEXP6={a.exp6}", f"-GEXPNS={a.expns}", f"-GDENK={a.denk}", f"-GMARGIN={a.margin}", f"-GSAFE={a.safe}", "-Mdir", str(obj), "-j", str(a.jobs),
            "--unroll-count", "4", "-fno-dfg", *[str(ROOT / p) for p in SIM_RTL], str(ROOT / TB), "-CFLAGS", "-O1"]
     subprocess.run(cmd, check=True)
     return 0
@@ -222,7 +222,7 @@ def cmd_run(a):
             "attn.sink": kv["t_den"] - kv["t_es"], "attn.normalize": kv["t_olast"] - kv["t_pv0"]}
         rows.append(row)
         print(m["name"], row["exact"], row["nodes_cycles"], flush=True)
-    res = dict(lph=a.lph, lm=a.lm, la=a.la, elm=a.elm, ela=a.ela, add6=a.add6, exp6=a.exp6, expns=a.expns, denk=a.denk, margin=a.margin, tag=a.tag, rows=rows, all_exact=all(r["exact"] for r in rows), generated_utc=now(),
+    res = dict(lph=a.lph, lm=a.lm, la=a.la, elm=a.elm, ela=a.ela, add6=a.add6, exp6=a.exp6, expns=a.expns, denk=a.denk, margin=a.margin, safe=a.safe, tag=a.tag, rows=rows, all_exact=all(r["exact"] for r in rows), generated_utc=now(),
                source_commit=git_head(), rtl_sha256={p: sha(ROOT / p) for p in RTL + SIM_RTL + [TB]})
     (work / f"run_lph{a.lph}{a.tag}.json").write_text(json.dumps(res, indent=1) + "\n")
     print("RUN", "pass" if res["all_exact"] else "FAIL")
@@ -301,6 +301,7 @@ def main():
     ap.add_argument("--expns", type=int, default=0)
     ap.add_argument("--denk", type=int, default=0)
     ap.add_argument("--margin", type=int, default=0)
+    ap.add_argument("--safe", type=int, default=0)
     ap.add_argument("--elm", type=int, default=5)
     ap.add_argument("--ela", type=int, default=4)
     ap.add_argument("--tag", default="")
