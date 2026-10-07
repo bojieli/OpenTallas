@@ -41,6 +41,14 @@ class ReliabilityTests(unittest.TestCase):
         self.j = dict(name="race", status="READY", spec={"block": "block", "stages": {}, "verdict": {}}, events=[])
         cl.save_job(self.j)
 
+    def test_failed_tool_probe_is_retried_without_hour_long_fleet_outage(self):
+        fleet = cl.Fleet()
+        fleet.tool_cache["host"] = (cl.time.time() - 16, None)
+        with patch.object(cl, "ssh", return_value=SimpleNamespace(returncode=0, stdout="img_latest=pinned\n")) as ssh:
+            self.assertEqual(fleet.toolchain("host"), {"img_latest": "pinned"})
+            self.assertEqual(fleet.toolchain("host"), {"img_latest": "pinned"})
+        ssh.assert_called_once()
+
     def test_adoption_hold_blocks_verdict_and_publish_without_stopping_route(self):
         hold = Path(self.tmp.name) / "adoption_holds" / "race.json"
         hold.parent.mkdir()
