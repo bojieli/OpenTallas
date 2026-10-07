@@ -779,11 +779,11 @@
   "dsfd_colt_mrg": {
    "job": "s81ph-dsfd_colt_mrg-cd3337221-b",
    "source_commit": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
-   "host": "ot-agidock128",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-cd3337221-b",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-cd3337221-b",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T21:37:40-07:00",
+   "measured_at": "2026-10-06T22:05:47-07:00",
    "ss": {
     "mean": 369,
     "min": 364,
@@ -987,13 +987,13 @@
    "budget": null
   },
   "dsfd_coll_core": {
-   "job": "s81ph-dsfd_coll_core-1df7cf9a9",
-   "source_commit": "1df7cf9a972492d6804fe614a385e3ad738ef747",
+   "job": "s81ph-dsfd_coll_core-34b3e75dd",
+   "source_commit": "34b3e75dd75e44918a63da02783149aa82ee6878",
    "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_core-1df7cf9a9",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_core-34b3e75dd",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T21:22:07-07:00",
+   "measured_at": "2026-10-06T22:01:43-07:00",
    "ss": {
     "mean": 1434,
     "min": 1393,
@@ -1216,7 +1216,49 @@
    },
    "boundary_n": 897,
    "budget": null
+  },
+  "ot_dsrom_head_bundle_glue": {
+   "job": "hbglue_cl_8ddc70024",
+   "source_commit": "8ddc7002479798a1e3d5ce5875a163d672973e75",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-06T21:55:38-07:00",
+   "ss": {
+    "mean": 341,
+    "min": 326,
+    "max": 346
+   },
+   "ff": {
+    "mean": 205,
+    "min": 193,
+    "max": 210
+   },
+   "boundary_n": 1516,
+   "budget": null
+  },
+  "dsfd_svcio_ad": {
+   "job": "s81ph-dsfd_svcio_ad-41c34fce0",
+   "source_commit": "41c34fce04355bcaeceb37b0e9566d7db1b268a3",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-41c34fce0",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-06T21:59:25-07:00",
+   "ss": {
+    "mean": 349,
+    "min": 324,
+    "max": 366
+   },
+   "ff": {
+    "mean": 225,
+    "min": 207,
+    "max": 238
+   },
+   "boundary_n": 5650,
+   "budget": null
   }
  },
- "updated": "2026-10-06T21:54:16-07:00"
+ "updated": "2026-10-06T22:05:47-07:00"
 }
