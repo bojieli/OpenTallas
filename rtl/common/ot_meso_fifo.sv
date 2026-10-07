@@ -93,12 +93,15 @@ module ot_meso_fifo #(
     end else begin : g_nopinreg
         assign wrst_i = wrst_n; assign rrst_i = rrst_n; assign w_v_i = w_v; assign w_d_i = w_d;
     end endgenerate
+`ifndef SYNTHESIS   // yosys derives the module once per chparam: an intermediate parameter set (GUARD_LO 1 with the
+                    // default OFFSET 2) would trip the check; simulation still checks the final set
     initial begin
         if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $error("ot_meso_fifo: DEPTH must be a power of two >= 4");
         if (GUARD_LO < 0 || GUARD_LO + 2 > OFFSET || GUARD_HI < OFFSET + 2 || GUARD_HI > DEPTH)
             $error("ot_meso_fifo: need GUARD_LO+2 <= OFFSET, OFFSET+2 <= GUARD_HI <= DEPTH");
         if (SETTLE < DEPTH || HOLD < 6 || CREDITS < 1) $error("ot_meso_fifo: SETTLE >= DEPTH, HOLD >= 6, CREDITS >= 1");
     end
+`endif
 
     generate if (!ENABLE) begin : disabled
         assign w_rdy = 1'b0; assign r_v = 1'b0; assign r_d = '0;
