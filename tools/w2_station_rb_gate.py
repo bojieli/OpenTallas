@@ -13,7 +13,7 @@
    adds redundant recheck edges, since normal itself is sampled in EVAL and an
    EVAL excursion lasts >= 4 edges; it is therefore not a negative control.)
 """
-import argparse, hashlib, json, subprocess
+import argparse, hashlib, json, re, subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,6 +33,34 @@ CAL = ('module tb_native_quarter_publication;',
  ' always @(posedge clk_sm) if(q_ack_v && ack_gate) $display("CALENDAR_QUARTER_ACK edge=%0d",edge_count);\n'
  ' always @(posedge clk_sm) if(activation_release && activation_release_r) $display("CALENDAR_PARENT_RELEASE edge=%0d",edge_count);\n'
  ' always @(posedge clk_sm) if(warm_ack) $display("CALENDAR_WARM_ACK edge=%0d",edge_count);')
+# Fixture bound, not a wall-clock deadline or a system throughput claim:
+# four serial stations; at each, payload and permissions each receive the bank
+# bench's existing 40-edge protected-update allowance, plus eight link edges.
+# No corruption is injected before all SM accepts and every consumer is ready.
+SM_ACCEPT_BOUND = 4 * (2 * 40 + 8)
+PROGRESS = r"""
+ localparam integer SM_ACCEPT_BOUND=352;
+ integer publication_start=-1;
+ always @(posedge clk_sm) begin
+  if(!por_n) publication_start<=-1;
+  else if(tap_v[0]&&q_r&&publication_start<0) begin
+   publication_start<=edge_count;
+   $display("W2_PROGRESS_ARM event=tap_accept edge=%0d bound=%0d",edge_count,SM_ACCEPT_BOUND);
+  end
+ end
+ always @(negedge clk_sm) if(por_n && publication_start>=0) begin
+  if(accepted===8'hff) begin
+   $display("W2_PROGRESS_DONE event=all_sm_accept elapsed=%0d accepted=%02h",edge_count-publication_start,accepted);
+   publication_start=-1;
+  end else begin
+   if(sm_r!==8'hff || other_r!==3'b111)
+    $fatal(1,"W2_PROGRESS_ENVIRONMENT consumer readiness changed before all SM accepts");
+   if(edge_count-publication_start>=SM_ACCEPT_BOUND)
+    $fatal(1,"W2_PROGRESS_MISSING_SM_ACCEPT bound=%0d elapsed=%0d accepted=%02h",SM_ACCEPT_BOUND,edge_count-publication_start,accepted);
+  end
+ end
+"""
+
 BENCH_EDITS = [
  ("  repeat(12)@(negedge clk_sm);\n  if(!q_ack_v)",
   "  for(integer k=0;k<200&&!q_ack_v;k++)@(negedge clk_sm);\n  if(!q_ack_v)",
@@ -72,11 +100,60 @@ def sha(p):
 
 
 def run(cmd, log):
+    # Protocol progress is asserted in simulation. No external timeout can
+    # qualify a negative; tool launch failures have an explicit infrastructure rc.
     with open(log, 'w') as f:
-        try:  # a negative control that hangs is detected by the watchdog (rc 124)
-            return subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT, timeout=3600 if cmd[0] == 'vvp' else None).returncode
+        try:
+            return subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT).returncode
+        except OSError as exc:
+            f.write(f"INFRASTRUCTURE_ERROR {exc}\n")
+            return 127
         except subprocess.TimeoutExpired:
+            # Defensive for a caller-provided runner; not a rejection verdict.
             return 124
+
+
+EXPECTED_ASSERTIONS = {
+ 'B1_live_q_no_alignment': r'VETO: normal asserted with unverified data',
+ 'B2_copy_check_removed': r'(?:enable|commit-select) copy corruption permitted',
+ 'B3_controller_check_removed': r'controller corruption permitted',
+ 'B4_red_data_not_delayed': r'VETO: normal asserted with unverified data',
+ 'S1_sm_duplicate_mask_removed': r'duplicate or mismatched actual SM tap i=\d+',
+ 'S2_parent_ack_mask_removed': r'parent release identity/conservation',
+ 'S3_frame_check_removed': r'wrong full73 receipt fabricated retirement',
+ 'S4_held_release_ignored': r'held full73 receipt lost across repair/warm/backpressure',
+ 'S5_learned_send_not_recorded': r'unexpected parent/chain fault',
+ 'S6_cross_bank_veto_removed': r'VETO: station acted after a station rail fault \(edge \d+\)',
+ 'S7_ack_frame_stage_skipped': r'unexpected parent/chain fault',
+ 'S8_rel_q_decision_removed': r'W2_PROGRESS_MISSING_SM_ACCEPT bound=352 elapsed=352 accepted=[0-9a-fA-F]{2}',
+}
+
+
+def negative_verdict(name, result):
+    """Only the intended test assertion is negative-control evidence."""
+    evidence = result.get('assertions', [])
+    matched = [line for line in evidence if re.fullmatch(EXPECTED_ASSERTIONS[name], line)]
+    compiled = result.get('compile_exit') == 0
+    runtime = result.get('runtime_exit')
+    rejected = (compiled and runtime == 1 and not result.get('passed', False)
+                and bool(matched) and not result.get('pass_marker', False))
+    if name == 'S8_rel_q_decision_removed':
+        rejected = rejected and bool(result.get('progress_armed', False))
+    outcome = ('REJECTED' if rejected else 'SURVIVED' if result.get('passed') else
+               'INFRASTRUCTURE_FAILURE' if not compiled or runtime != 1 else 'UNEXPECTED_ASSERTION')
+    return dict(expected='FAIL', failed=bool(rejected), outcome=outcome,
+                expected_assertion=EXPECTED_ASSERTIONS[name], matched_assertions=matched, **result)
+
+
+def runtime_result(rc, text, pass_token):
+    # Icarus fatal records include a source location. A diagnostic merely
+    # containing the word FATAL or a nonzero exit is not an assertion record.
+    assertions = re.findall(r'^FATAL: [^\n]+:\d+: (.+)$', text, re.M)
+    pass_marker = any(line.startswith(pass_token) for line in text.splitlines())
+    return dict(compile_exit=0, runtime_exit=rc,
+                passed=rc == 0 and pass_marker and not assertions,
+                pass_marker=pass_marker, assertions=assertions,
+                progress_armed=bool(re.search(r'^W2_PROGRESS_ARM event=tap_accept edge=\d+ bound=352$', text, re.M)))
 
 
 RELREG = False
@@ -119,7 +196,7 @@ def bank_bench(out, tag, stage, dist, mutant=None, red=1):
         return dict(compile_exit=rc, passed=False)
     rc = run(['vvp', str(vvp)], out/f'{tag}.run.log')
     text = (out/f'{tag}.run.log').read_text()
-    return dict(compile_exit=0, runtime_exit=rc, passed=rc == 0 and 'PASS_W2_VETO' in text,
+    return dict(**runtime_result(rc, text, 'PASS_W2_VETO'),
                 summary=[l for l in text.splitlines() if l.startswith(('PASS', 'CE_REPAIR', 'FATAL', 'VETO'))][-3:])
 
 
@@ -133,7 +210,7 @@ def veto_bench(out, tag, mutant=None):
         return dict(compile_exit=rc, passed=False)
     rc = run(['vvp', str(vvp)], out/f'{tag}.run.log')
     text = (out/f'{tag}.run.log').read_text()
-    return dict(compile_exit=0, runtime_exit=rc, passed=rc == 0 and 'PASS_W2_RB_CROSS_BANK_VETO' in text,
+    return dict(**runtime_result(rc, text, 'PASS_W2_RB_CROSS_BANK_VETO'),
                 summary=[l for l in text.splitlines() if l.startswith(('PASS', 'FATAL'))][-2:])
 
 
@@ -155,6 +232,7 @@ def quarter_bench(out, tag, rb=True, mutant=None):
         old = 'ot_hbm_native_quarter_chain #(.ENABLE(1)) chain('
         assert tb.count(old) == 1
         tb = tb.replace(old, 'ot_hbm_native_quarter_chain_rb #(.ENABLE(1)) chain(')
+    tb = tb.replace(CAL[1], CAL[1] + PROGRESS)
     tbp = out/f'{tag}_tb.sv'; tbp.write_text(tb)
     vvp = out/f'{tag}.vvp'
     rc = run(['iverilog', '-g2012', '-s', 'tb_native_quarter_publication', '-o', str(vvp), *files, str(tbp)], out/f'{tag}.compile.log')
@@ -167,23 +245,36 @@ def quarter_bench(out, tag, rb=True, mutant=None):
         if l.startswith('CALENDAR_') and ' edge=' in l:
             k, v = l.split(' edge=')
             cal.setdefault(k[9:], int(v))
-    return dict(compile_exit=0, runtime_exit=rc, passed=rc == 0 and 'PASS_NATIVE_QUARTER_PUBLICATION' in text,
+    return dict(**runtime_result(rc, text, 'PASS_NATIVE_QUARTER_PUBLICATION'),
                 calendar=cal, summary=[l for l in text.splitlines() if l.startswith(('PASS', 'FATAL'))][-2:],
                 tb_sha256=sha(tbp))
 
 
+def source_pins():
+    paths = set((ROOT/Q/'sources.f').read_text().split())
+    paths.update([BANK, STATION, CHAIN, BANK_TB, VETO_TB, Q+'/sources.f',
+                  Q+'/tb_native_quarter_publication.sv', 'tools/w2_station_rb_gate.py', *PKG])
+    return {p: sha(ROOT/p) for p in sorted(paths)}
+
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True)
-    ap.add_argument('--neg-only', default=None, help='run one chain mutant only (exit 1 = rejected)')
+    ap.add_argument('--neg-only', choices=sorted(CHAIN_MUTANTS), default=None, help='one mutant: 1=intended rejection, 0=survived, 2=gate failure')
     ap.add_argument('--safe', action='store_true', help='SAFE=1 (registered permission decision), implies --rel-reg')
     ap.add_argument('--rel-reg', action='store_true', help='REL_REG=1 station (registered release)')
     ap.add_argument('--skip-legacy', action='store_true', help='calendar baseline already recorded (r1)'); a = ap.parse_args()
     global RELREG, SAFEV; RELREG = a.rel_reg or a.safe; SAFEV = a.safe
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=False)
-    if a.neg_only:  # single negative control: exit 1 when the mutant is (correctly) rejected, 0 if it slips through
-        r = quarter_bench(out, 'neg_only', True, a.neg_only)
-        print('NEG_ONLY', a.neg_only, 'REJECTED' if not r['passed'] else 'ACCEPTED'); print('FAIL' if not r['passed'] else 'PASS')
-        raise SystemExit(1 if not r['passed'] else 0)
+    if a.neg_only:
+        runner = veto_bench if a.neg_only in VETO_MUTANTS else quarter_bench
+        r = (runner(out, 'neg_only', a.neg_only) if runner is veto_bench
+             else runner(out, 'neg_only', True, a.neg_only))
+        verdict = negative_verdict(a.neg_only, r)
+        verdict['source_pins'] = source_pins()
+        verdict['progress_contract'] = dict(event='tap acceptance to all eight SM accepts', max_edges=SM_ACCEPT_BOUND, rtl_cycles_added=0)
+        (out/'terminal.json').write_text(json.dumps(verdict, indent=2)+'\n')
+        print('NEGATIVE_'+verdict['outcome'], a.neg_only)
+        raise SystemExit(1 if verdict['failed'] else 0 if r['passed'] else 2)
     res = dict(bank={}, quarter={}, negative_controls={})
     res['bank']['payload_STAGE0_DIST1'] = bank_bench(out, 'bank_s0d1', 0, 1)
     res['bank']['small_STAGE1_DIST0'] = bank_bench(out, 'bank_s1d0', 1, 0)
@@ -195,16 +286,18 @@ def main():
         res['quarter']['legacy_same_bench'] = quarter_bench(out, 'quarter_legacy', False)
     for name in BANK_MUTANTS:
         r = bank_bench(out, 'neg_'+name, 0, 1, name)
-        res['negative_controls'][name] = dict(expected='FAIL', failed=not r['passed'], **r)
+        res['negative_controls'][name] = negative_verdict(name, r)
     for name in CHAIN_MUTANTS:
         if name == 'S8_rel_q_decision_removed' and not RELREG:
             continue
         r = veto_bench(out, 'neg_'+name, name) if name in VETO_MUTANTS else quarter_bench(out, 'neg_'+name, True, name)
-        res['negative_controls'][name] = dict(expected='FAIL', failed=not r['passed'], **r)
+        res['negative_controls'][name] = negative_verdict(name, r)
     rb, leg = res['quarter']['rb'].get('calendar', {}), res['quarter'].get('legacy_same_bench', {}).get('calendar', {})
     res['calendar_delta_edges_vs_legacy'] = {k: rb[k]-leg[k] for k in rb if k in leg}
     res['bench_edits'] = [e[2] for e in BENCH_EDITS]
-    res['source_pins'] = {p: sha(ROOT/p) for p in [BANK, STATION, CHAIN, BANK_TB, VETO_TB, Q+'/tb_native_quarter_publication.sv', *PKG]}
+    res['progress_contract'] = dict(event='tap acceptance to all eight SM accepts', max_edges=SM_ACCEPT_BOUND, rtl_cycles_added=0)
+    res['gate_sha256'] = sha(__file__)
+    res['source_pins'] = source_pins()
     res['passed'] = (all(v['passed'] for v in res['bank'].values()) and all(v['passed'] for v in res['quarter'].values())
                      and res['veto']['rb']['passed']
                      and all(v['failed'] for v in res['negative_controls'].values()))
