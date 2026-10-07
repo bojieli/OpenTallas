@@ -1,0 +1,13 @@
+{
+  "status": "retired_after_equivalent_replacement_completed",
+  "original_positive": "PASS6920checks",
+  "reason": "Original continuous-alias packed-address elaboration completed its positive with identical PASS. Procedural packing replacement completed positive and both negatives; remaining redundant historical negative runs retired after preserving evidence.",
+  "exec_session": 7926,
+  "termination_exit": 130,
+  "not_a_physical_job": true,
+  "source_sha256": {
+    "/tmp/qwen-core-vm-ingress-contract-20261007/gate.py": "2ee3f43612f43805d5ef7f5ea7fcd166e6e1cb8cb376260b12132cdb876b1ffc",
+    "/tmp/qwen-core-vm-ingress-contract-20261007/tb.sv": "aa26e14285e5572525a4d70cb07a4191edcd896388933796f4719932615f9251",
+    "/tmp/qwen-core-vm-ingress-contract-20261007/run0.log": "01ddf9a96ecf22942c9f36bc92480d9965120925b1f8be7dc28a0c6cd05c0a0b"
+  }
+}

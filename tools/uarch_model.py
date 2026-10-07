@@ -13896,3 +13896,25 @@ def ha2_truecredit_parent_clock_model():
     """Price the actual ring-delay/launch-register closure candidate; not adopted."""
     from tools.ha2_truecredit_parent_clock_model import model
     return model()
+
+
+def qwen_core_vm_raw_boundary_model(*, groups=48, lanes=16, aw=24):
+    """Move existing ME strobes' enable qualification into owned VM capture.
+
+    Raw mode cannot be adopted standalone: source_me_wanted must be the
+    original enable before any VM lease/native_tick feedback, and the actual
+    capture collar must qualify all ME/MX lanes at the existing CAP epoch.
+    """
+    packet=1+aw+lanes+lanes*32
+    return dict(default_enabled=False,adopted=False,raw_mode_requires_capture_collar=True,
+        MACs_per_cycle=0,new_memory_ports=0,new_boundary_payload_bits=0,required_new_control_ports=2,
+        lease_binding_cost="Original-intent output and direct ME-lease input; one effective-enable AND plus fanout to existing execution/acceptance loads. This binding is not implemented by raw-write transform.",
+        source_register_delta=0,owned_capture_register_delta=0,
+        source_native_cycle_delta=0,replicas=4,me_groups=groups,lanes_per_group=lanes,
+        moved_enable_terms=groups+1,me_write_seats=groups*lanes+lanes,
+        source_enable='Original pre-lease supply/idle/wake enable; never post-admission lease',
+        immutable_epoch='Captured enable/address/mask/data are held through checked ACK; current me enable cannot requalify them',
+        fallback=dict(packet_bits_per_group=packet,me_only_register_bits=groups*packet,register_bits_including_mx=(groups+1)*packet,
+                      register_cell_area_floor_um2_including_mx=(groups+1)*packet*0.2916,write_visibility_delta_cycles=1),
+        physical_status='Core and actual ingress collar must both close SS/FF with real interface budgets',
+        final_clock_enrollment='Parent wrapper and collective peers must share checked native epoch; not supplied by this boundary transform')
