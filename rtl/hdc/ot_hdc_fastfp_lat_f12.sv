@@ -66,6 +66,10 @@ module ot_hdc_qadd_lat #(
     wire vo;
     generate if (KEEP == 0) begin : g_fast
         ot_hdc_fp32_add_fast u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+    end else if (KEEP == 2 && LAT == 5) begin : g_keep5s
+        // S81-RERUN margin build: the LAT-4 cut set plus a cut between the sum and the renormalise / leading-zero
+        // count (CUTS bit 2): the exp polynomial's add + LZC stage was the swiglu lane's only SS miss (-10 ps at 0.833)
+        ot_hdc_fp32_add_f12_l5s u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 4) begin : g_keep4
         // 1.2 GHz: decode..swap | add + LZC | shift + round | encode
         ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));

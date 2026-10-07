@@ -13,7 +13,9 @@
 // ---------------------------------------------------------------------------
 module ot_dsrom_exp_f12 #(
     parameter integer LM = 3,                   // multiplier latency (ot_hdc_qmul_lat)
-    parameter integer LA = 3                    // add latency (ot_hdc_qadd_lat: 3, or 4 input cut)
+    parameter integer LA = 3,                   // add latency (ot_hdc_qadd_lat: 3, or 4 input cut)
+    parameter integer ASUM = 0                  // S81-RERUN (default off): the six polynomial adds get the sum | LZC
+                                                //   cut (ot_hdc_fp32_add_f12_l5s, LA 4 -> 5): +6 cycles
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -29,7 +31,8 @@ module ot_dsrom_exp_f12 #(
                                                 //   adders' compare -> align stage was the lane's only 1.2 GHz miss)
     localparam integer T_R1 = T_K + LR;
     localparam integer T_R = T_R1 + LR;
-    localparam integer T_P = T_R + 6 * (LM + LA);
+    localparam integer LP = LA + ASUM;           // the polynomial adds' latency
+    localparam integer T_P = T_R + 6 * (LM + LP);
     localparam integer DEPTH = T_P + 1;         // 7 LM + 6 LA + 2 LR + 5: 76 at LM 5 / LA 4
     localparam [31:0] K_MAX   = 32'h42B00000;   //  88.0
     localparam [31:0] K_MINM  = 32'h42AE0000;   //  87.0 (magnitude of the lower clamp)
@@ -358,10 +361,10 @@ module ot_dsrom_exp_f12 #(
     generate
         for (k = 1; k <= 6; k = k + 1) begin : g_h
             if (k < 6) begin : g_rd
-                ot_hdc_delay #(.W(32), .D(LM + LA)) d_r (clk, rst_n, rd[k-1], rd[k]);
+                ot_hdc_delay #(.W(32), .D(LM + LP)) d_r (clk, rst_n, rd[k-1], rd[k]);
             end
-            ot_hdc_qmul_lat #(LM) u_m (clk, rst_n, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
-            ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
+            ot_hdc_qmul_lat #(LM) u_m (clk, rst_n, vd[T_R + (LM + LP)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
+            ot_hdc_qadd_lat #(.KEEP(ASUM != 0 ? 2 : ((LM != 3 || LA != 3) ? 1 : 0)), .LAT(LP)) u_a (clk, rst_n, vd[T_R + (LM + LP)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
         end
     endgenerate
 

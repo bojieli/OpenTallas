@@ -81,6 +81,33 @@
   "area_um2": 430965.399,
   "basis": "UCIe-A shoreline (die assembly 1.043 x 6.61 mm) at 1/4, one 512-bit flit port each way",
   "clk_to_q_ns": 0.218,
+  "corner_libs": {
+    "method": "HBM3E PHY abstract corner method (tools/mem_compiler/hbm_phy_gen.py: flop clock-to-Q / setup + 3 FO4, hold + FO4, slew 1.5 FO4 per calibrated corner) applied as corner / TT ratios to this TT view",
+    "ratios": {
+      "ff": {
+        "clk2q": 0.771295,
+        "hold": 0.880522,
+        "setup": 0.837361,
+        "slew": 0.80905,
+        "temperature": 0.0,
+        "voltage": 0.77
+      },
+      "ss": {
+        "clk2q": 1.367688,
+        "hold": 1.362413,
+        "setup": 1.342682,
+        "slew": 1.291724,
+        "temperature": 100.0,
+        "voltage": 0.63
+      }
+    },
+    "source": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.json",
+    "tool": "tools/s81_pdie_corner_libs.py",
+    "views": {
+      "ot_pdie_ucie_ff.lib": "8006ba5c407df1268470408b0064a9c50d0e79bdbae6c1b2bb789b1b2e45596a",
+      "ot_pdie_ucie_ss.lib": "e693c119622b585eb65a619518c10a5bb3fb42c4df579eb2502472e16beea4d2"
+    }
+  },
   "height_um": 1652.424,
   "kind": "link",
   "name": "ot_pdie_ucie",

@@ -23,8 +23,10 @@ ITEMS = [
     ("meso_d8g1", "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field "
                   "round trip (+4)", [(k, 4, 0) for k in MAT]),
     ("ctrl_status", "CTRL status chain: +1 cycle per column (HBM stream reads)", [(k, 1, 0) for k in HBM]),
-    ("collective_lane", "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the "
-                        "all-reduces; +2 on the gathers)", [(k, 0, 2329 / 2587 - 1) for k in AR_] + [(k, 2, 0) for k in AG_]),
+    ("collective_lane", "Collective slab v3 tiles: all-reduce 320 records +288 cycles over the C8 reference (measured, S81-PH "
+                        "src_v3, no bit errors, lane channel 1 cycle; coll_price 2026-10-07).  Replaces x0.9003 = 2,329 / 2,587 "
+                        "(absolute TB times incl. the 1,111-cycle preamble, bit-error injection on, against a node priced from "
+                        "tb_w15b_v41_tp4).  All-gathers: PENDING-DEFECT (below)", [(k, 288, 0) for k in AR_]),
     ("vm_bank_group", "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)", [(k, 8, 0) for k in MAT]),
     ("gather_root_v4", "Gather root v4: +6 cycles per phase", [(k, 6, 0) for k in MAT]),
     ("capture", "Capture tiles: VM write +3 a phase", [(k, 3, 0) for k in MAT]),
@@ -32,21 +34,34 @@ ITEMS = [
     ("collector", "Collector tiles: +2 a job", [("*.attn.gather", 2, 0)]),
     ("svc_io", "Scan service IO hub / per-PC tiles: one register each way (+2 a request)", [(k, 2, 0) for k in HBM]),
     ("softmax_safe_div", "Softmax SAFE divider: +29 on normalize", [("*.attn.normalize", 29, 0)]),
-    ("code_pair", "Code pair: LAT_DELTA 11 a field phase", [(k, 11, 0) for k in MAT]),
+    # code_pair (LAT_DELTA 11 a field phase) removed 2026-10-07: ot_qwen_hbm_code_pair_margin is a Qwen HBM-accelerator
+    # code-tile block, not on the DS ROM path (no DS ROM / S81 instance)
     ("bf_rowfix", "BF rowfix: +1 per push (a field phase)", [(k, 1, 0) for k in MAT]),
     ("pq_qelem", "PQ q-element: decode stage +0.17 % node time (field phases)", [(k, 0, 0.0017) for k in MAT]),
 ]
 
+# PENDING-DEFECT (OWNER decision (b), 2026-10-07): measured but not in the headline until the slab is repaired
+PENDING = [
+    ("collective_ag", "S81 collective tile defects (credits 256 < RTT, ~900-cycle small-AG latency, AG256/1024 exactness "
+                      "errors) under repair; measured as-is all-gathers over the C8 reference: 24 rec +914, 57 +922, "
+                      "256 +273 (FAIL), 1024 +509 (FAIL), 1056 +516",
+     [("*.attn.a_allgather", 922, 0), ("*.attn.idx.topk_merge", 273, 0), ("*.attn.cand.merge", 509, 0),
+      ("*.attn.rows_allgather", 516, 0), ("*.ffn.router_allgather", 914, 0)]),
+]
 
-def lever(items):
-    adds = [dict(item=it, nodes=n, cycles=c, frac=f, source=desc) for it, desc, rows in ITEMS for n, c, f in rows]
+
+def lever(items, pending=False):
+    src = ITEMS + (PENDING if pending else [])
+    if pending and items is not None:
+        items = list(items) + [it for it, _, _ in PENDING]
+    adds = [dict(item=it, nodes=n, cycles=c, frac=f, source=desc) for it, desc, rows in src for n, c, f in rows]
     return dict(schema="opentallas.dsrom-recovery.addcycles.v1", lever="s81_die_tiles", verdict="ADOPT", items=items,
                 note="S81 die integration + S81 tile closure costs (CLAUDE S81-RERUN), priced per operation on the measured "
                      "composition; the ledger is tools/dsrom_closure_cost_ledger.py", adds=adds)
 
 
-def compose(items):
-    LEV.write_text(json.dumps(lever(items), indent=1) + "\n")
+def compose(items, pending=False):
+    LEV.write_text(json.dumps(lever(items, pending), indent=1) + "\n")
     tmp = OUT / "tmp.json"
     subprocess.run([sys.executable, str(ROOT / "tools/dsrom_1m_allmeasured.py"), "--out", str(tmp)], check=True,
                    capture_output=True)
@@ -66,10 +81,14 @@ def main():
                          mtp_pct=round(100 * (mtp / prev[1] - 1), 3), cum_ar_pct=round(100 * (ar / ar0 - 1), 3),
                          cum_mtp_pct=round(100 * (mtp / mtp0 - 1), 3)))
         prev = (ar, mtp)
+    asis = compose([it for it, _, _ in ITEMS], pending=True)
     LEV.write_text(json.dumps(lever(None), indent=1) + "\n")      # all items (items = None)
     rec = dict(schema="opentallas.dsrom.closure_cost_ledger.v1", baseline=dict(ar_tok_s=ar0, mtp_tok_s=mtp0,
                basis="recovery composition without the S81 closure costs"), items=rows,
-               total=dict(ar_tok_s=prev[0], mtp_tok_s=prev[1], ar_pct=rows[-1]["cum_ar_pct"], mtp_pct=rows[-1]["cum_mtp_pct"]))
+               total=dict(ar_tok_s=prev[0], mtp_tok_s=prev[1], ar_pct=rows[-1]["cum_ar_pct"], mtp_pct=rows[-1]["cum_mtp_pct"]),
+               pending_defect=[dict(item=it, description=d_, adds=a_) for it, d_, a_ in PENDING],
+               as_is=dict(ar_tok_s=asis[0], mtp_tok_s=asis[1], ar_pct=round(100 * (asis[0] / ar0 - 1), 3),
+                          mtp_pct=round(100 * (asis[1] / mtp0 - 1), 3), basis="every item + the PENDING-DEFECT all-gathers"))
     (OUT / "ledger.json").write_text(json.dumps(rec, indent=1) + "\n")
     L = ["# DS closure-cost ledger (S81 die + tiles)", "", f"Pre-closure DS AR {ar0:,.1f} tok/s, MTP {mtp0:,.1f} tok/s.", "",
          "| item | cost | AR tok/s | AR % | MTP % | cum AR % | cum MTP % |", "|---|---|---:|---:|---:|---:|---:|"]
@@ -78,6 +97,10 @@ def main():
                  f"{r['cum_ar_pct']:+.2f} | {r['cum_mtp_pct']:+.2f} |")
     L.append(f"| **TOTAL** | | **{prev[0]:,.1f}** (MTP {prev[1]:,.1f}) | | | **{rows[-1]['cum_ar_pct']:+.2f}** | "
              f"**{rows[-1]['cum_mtp_pct']:+.2f}** |")
+    for it, d_, a_ in PENDING:
+        L.append(f"| {it} (PENDING-DEFECT, not in the headline) | {d_} | | | | | |")
+    L += ["", f"Measured as-is (PENDING-DEFECT included): AR {asis[0]:,.1f} ({100 * (asis[0] / ar0 - 1):+.2f} %), "
+              f"MTP {asis[1]:,.1f} ({100 * (asis[1] / mtp0 - 1):+.2f} %).  The headline uses the table total."]
     (OUT / "ledger.md").write_text("\n".join(L) + "\n")
     print("\n".join(L))
 

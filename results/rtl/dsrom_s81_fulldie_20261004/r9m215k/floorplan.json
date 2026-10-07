@@ -1,0 +1,1707 @@
+{
+ "schema": "opentallas.dsrom-s81-fulldie.floorplan.r8.v1",
+ "tool": "tools/dsrom_s81_fulldie.py --gen r8",
+ "tool_sha256": "e61ff1f84779c98b6be8e25a980c49bbb07f4a241439399fcd1154308e6e022d",
+ "sources_sha256": {
+  "results/uarch/dsrom_c_recheck_20261004/model.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
+  "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz": "ac62ee768fa0354c90fd66c329c2ed7bd1652ebdf161ff3703a9725586d0c4c0",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef": "894c15540462d7b5e015f7e9df654f6436b483e7744eaa84dcfcfdac01bb9f05",
+  "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef": "b119fdcec16ea432709ffa7fc97c9fbb801c7a703410512008f4b74133254878",
+  "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
+  "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie.lef": "da1804482bff5072298b1cae5499f629f5f8bc88df2077f1715e282260873eb4",
+  "rtl/v41die/ot_s81_cfg7_seq.sv": "be8ed2bedd04427f94a32aff88f11f0427885c94e36fe76c605c1d4b56eec682",
+  "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json": "635ae98aea31f228f7ba2d848c455ea06587e22759b62951cdb4725b3f1e569a",
+  "results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_A.lef.gz": "0bd29f9155f06f3297b85830dfce439a8fc06352363b3ba81bf86064ac159b80",
+  "results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_B.lef.gz": "f12004448d0d630436249918482a8c3747ad2886cd849f06cb99902507c3adea",
+  "rtl/v41rom/ot_dsrom_head_bundle.sv": "bdceec7d6c41747e741de0b14baef74af18d34b5c2c38f47e50c0da2fc0399e2",
+  "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+  "rtl/common/ot_meso_fifo.sv": "7e05230e70d6113af2da3326e678d86dd0c1e78e6cbf985d06b18c955f4b0ecb",
+  "rtl/common/ot_ratio_cdc_fifo.sv": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6",
+  "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f"
+ },
+ "die": {
+  "w_um": 33000.0,
+  "h_um": 26000.0,
+  "mm2": 858.0
+ },
+ "variant": {
+  "gen": "r8",
+  "link_fix": true,
+  "rev": "r9",
+  "cc_reach_um": 215.0,
+  "vch_interleave": true,
+  "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+  "head_dies": 12,
+  "die": "layer",
+  "role": "scan die (4 HBM3E stacks; 32 of the rack)",
+  "pairs": 2050,
+  "bf": 440,
+  "nv": 0,
+  "head_bundles": 0,
+  "stacks": [
+   "SW",
+   "SE",
+   "NW",
+   "NE"
+  ],
+  "elem_frame_h": 198.72,
+  "slot_h": 280.8,
+  "slots": 10
+ },
+ "slot": {
+  "elem_frame_h_um": 198.72,
+  "slot_h_um": 280.8,
+  "slots_per_column": 10,
+  "capacity": {
+   "elem_frame_h_um": 198.72,
+   "slot_h_um": 280.8,
+   "slots_per_column": 10,
+   "columns": 128,
+   "max_pairs_per_layer_die": 2050,
+   "pairs_per_layer_die_now": 2417,
+   "layer_field_pairs_total": 783108,
+   "layer_field_pairs_basis": "81 stages x 4 ranks x 2,417 (S81 decision)",
+   "layer_dies_now": 324,
+   "layer_dies_at_max": 383,
+   "extra_layer_dies": 59,
+   "inventory_compiled_pairs_TP4": 783264,
+   "rack": {
+    "scan_dies_4stack": 32,
+    "layer_dies_1stack": 292,
+    "head_dies": 12,
+    "table_dies": 36,
+    "draft_dies": 52,
+    "total": 424,
+    "layer_dies_total": 324,
+    "head_bundles_per_head_die": 85,
+    "source": "results/arch/dsrom_s81_rack_20261006/rack.json (DS-RACK scenario C: 12 head + 36 table, 1-stack layer dies)"
+   },
+   "meso_slot": {
+    "record": "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json",
+    "um2_per_W512_slot": 4842.0,
+    "cfifo_W564_slots": 2,
+    "cfifo_reservation_um2": 40400.4
+   }
+  }
+ },
+ "instances": {
+  "bf": 440,
+  "cfg": 14350,
+  "seq": 2050,
+  "q": 1610,
+  "sstn": 1280,
+  "qbank": 3220,
+  "node": 3972,
+  "cfifo": 128,
+  "hub": 8,
+  "phy": 4,
+  "ctrl": 4,
+  "svc": 4,
+  "band_blk": 2,
+  "link": 8,
+  "rstg": 384,
+  "rly": 27714,
+  "hend": 44,
+  "stn": 2608,
+  "hstn": 122,
+  "lkck": 8
+ },
+ "area_mm2_by_kind": {
+  "bf": 87.691,
+  "cfg": 34.399,
+  "seq": 4.285,
+  "q": 145.699,
+  "sstn": 6.689,
+  "qbank": 1.262,
+  "node": 26.686,
+  "cfifo": 5.171,
+  "hub": 36.675,
+  "phy": 40.026,
+  "ctrl": 8.446,
+  "svc": 53.612,
+  "band_blk": 6.341,
+  "link": 4.238,
+  "rstg": 0.516,
+  "rly": 8.408,
+  "hend": 0.327,
+  "stn": 1.82,
+  "hstn": 0.09,
+  "lkck": 0.001
+ },
+ "placed_footprint_mm2": 472.38,
+ "utilisation": {
+  "placed_over_die": 0.5506,
+  "field_frames_mm2": 425.13
+ },
+ "geometry": {
+  "slot_h": 280.8,
+  "slots": 10,
+  "x_lw": 20.304,
+  "x_fw": 1255.824,
+  "x_sp": 14871.6,
+  "x_fe": 18111.6,
+  "x_le": 32718.384,
+  "y_f": 3669.84,
+  "y_top": 22332.24,
+  "ch_y": [
+   3669.84,
+   6737.04,
+   9804.24,
+   12871.439999999999,
+   15938.64,
+   19005.84,
+   22073.039999999997
+  ],
+  "tier_y": [
+   3929.04,
+   6996.24,
+   10063.44,
+   13130.64,
+   16197.84,
+   19265.04
+  ],
+  "band_depth": 3041.28,
+  "field_h": 18662.4,
+  "spine_cx": 16491.6,
+  "col_pitch": 1191.456,
+  "col_w": 1182.816,
+  "spf": 518.4,
+  "tier_cols": [
+   10,
+   11,
+   11,
+   11,
+   11,
+   10
+  ]
+ },
+ "forwarded": {
+  "stations": 2608,
+  "ot_fwd_link_stage_instances": 7345,
+  "chains": 86,
+  "max_hop_um": 430.3,
+  "hops_over_430p56": 0,
+  "over_examples": [],
+  "meso_fifos": 276,
+  "ratio_cdc_fifos": 12
+ },
+ "field_round_trip_cycles": {
+  "farthest_frame": 127,
+  "cycles": 152,
+  "x_trunk_stages": 61,
+  "column_slot_stages": 10,
+  "root_stages": 3,
+  "return_trunk_stages": 55,
+  "meso_crossings": 2,
+  "crossing_cycles_each": 2,
+  "q_bank_stages": 2,
+  "column_relays_x": 2,
+  "column_relays_return": 14,
+  "basis": "per frame: x trunk stations to its tap + entry meso 2 + slot stations + return-tree root stages + return trunk stations + hub meso 2 (the tree levels and the element pipeline excluded)"
+ },
+ "bus_classes": {
+  "x_lane": {
+   "buses": 10349,
+   "wires": 2827141
+  },
+  "x_ctl": {
+   "buses": 2688,
+   "wires": 40320
+  },
+  "cfg": {
+   "buses": 4870,
+   "wires": 262980
+  },
+  "go": {
+   "buses": 4870,
+   "wires": 4870
+  },
+  "rom_a": {
+   "buses": 2050,
+   "wires": 24600
+  },
+  "rom_ce": {
+   "buses": 14350,
+   "wires": 14350
+  },
+  "rom_q": {
+   "buses": 14350,
+   "wires": 688800
+  },
+  "stat": {
+   "buses": 15846,
+   "wires": 27336
+  },
+  "ret_leaf": {
+   "buses": 21112,
+   "wires": 1330056
+  },
+  "ret_tree": {
+   "buses": 4868,
+   "wires": 321288
+  },
+  "col_ret": {
+   "buses": 1280,
+   "wires": 84480
+  },
+  "col_clock": {
+   "buses": 128,
+   "wires": 128
+  },
+  "col_reset": {
+   "buses": 128,
+   "wires": 128
+  },
+  "local": {
+   "buses": 75,
+   "wires": 45967
+  },
+  "fclk": {
+   "buses": 6110,
+   "wires": 6110
+  },
+  "lane": {
+   "buses": 6110,
+   "wires": 1475386
+  },
+  "hub": {
+   "buses": 109,
+   "wires": 85760
+  },
+  "phy_dfi": {
+   "buses": 4,
+   "wires": 88952
+  },
+  "hbm_read": {
+   "buses": 4,
+   "wires": 35456
+  },
+  "top_in": {
+   "buses": 2,
+   "wires": 2
+  },
+  "clock": {
+   "buses": 3,
+   "wires": 3
+  },
+  "reset": {
+   "buses": 3,
+   "wires": 3
+  }
+ },
+ "chains": [
+  {
+   "chain": "xWdn",
+   "lanes": [
+    566
+   ],
+   "stations": 24,
+   "length_um": 9202.0,
+   "max_hop_um": 426.2,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xW2",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12724.5,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW1",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12724.5,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW0",
+   "lanes": [
+    566
+   ],
+   "stations": 29,
+   "length_um": 11533.0,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xWup",
+   "lanes": [
+    566
+   ],
+   "stations": 18,
+   "length_um": 6888.0,
+   "max_hop_um": 425.5,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xW3",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12776.8,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW4",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12776.8,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW5",
+   "lanes": [
+    566
+   ],
+   "stations": 29,
+   "length_um": 11585.4,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xEdn",
+   "lanes": [
+    566
+   ],
+   "stations": 28,
+   "length_um": 11060.7,
+   "max_hop_um": 426.6,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xE2",
+   "lanes": [
+    566
+   ],
+   "stations": 33,
+   "length_um": 12810.6,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE1",
+   "lanes": [
+    566
+   ],
+   "stations": 33,
+   "length_um": 12810.6,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE0",
+   "lanes": [
+    566
+   ],
+   "stations": 30,
+   "length_um": 11619.2,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xEup",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12529.5,
+   "max_hop_um": 429.4,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xE3",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12758.4,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE4",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12758.4,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE5",
+   "lanes": [
+    566
+   ],
+   "stations": 29,
+   "length_um": 11566.9,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "rW0",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 42,
+   "length_um": 17141.3,
+   "max_hop_um": 429.4,
+   "last_hop_um": 43.8
+  },
+  {
+   "chain": "hr_W0_o",
+   "lanes": [
+    692
+   ],
+   "stations": 1,
+   "length_um": 339.3,
+   "max_hop_um": 210.8,
+   "last_hop_um": 130.7
+  },
+  {
+   "chain": "rW1",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 38,
+   "length_um": 15509.6,
+   "max_hop_um": 429.4,
+   "last_hop_um": 257.0
+  },
+  {
+   "chain": "hr_W1_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 344.1,
+   "max_hop_um": 210.8,
+   "last_hop_um": 135.4
+  },
+  {
+   "chain": "rW2",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 31,
+   "length_um": 12686.4,
+   "max_hop_um": 429.4,
+   "last_hop_um": 347.2
+  },
+  {
+   "chain": "hr_W2_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 344.1,
+   "max_hop_um": 210.8,
+   "last_hop_um": 135.4
+  },
+  {
+   "chain": "rW3",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 36,
+   "length_um": 14709.8,
+   "max_hop_um": 429.4,
+   "last_hop_um": 319.1
+  },
+  {
+   "chain": "hr_W3_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 344.1,
+   "max_hop_um": 210.8,
+   "last_hop_um": 135.4
+  },
+  {
+   "chain": "rW4",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 43,
+   "length_um": 17637.6,
+   "max_hop_um": 429.4,
+   "last_hop_um": 272.2
+  },
+  {
+   "chain": "hr_W4_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 344.1,
+   "max_hop_um": 210.8,
+   "last_hop_um": 135.4
+  },
+  {
+   "chain": "rW5",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 47,
+   "length_um": 19373.9,
+   "max_hop_um": 429.8,
+   "last_hop_um": 149.4
+  },
+  {
+   "chain": "hr_W5_o",
+   "lanes": [
+    692
+   ],
+   "stations": 1,
+   "length_um": 339.3,
+   "max_hop_um": 210.8,
+   "last_hop_um": 130.7
+  },
+  {
+   "chain": "rE0",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 54,
+   "length_um": 22488.8,
+   "max_hop_um": 429.4,
+   "last_hop_um": 289.6
+  },
+  {
+   "chain": "hr_E0_o",
+   "lanes": [
+    692
+   ],
+   "stations": 3,
+   "length_um": 719.1,
+   "max_hop_um": 211.2,
+   "last_hop_um": 90.1
+  },
+  {
+   "chain": "rE1",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 49,
+   "length_um": 20096.5,
+   "max_hop_um": 429.4,
+   "last_hop_um": 106.4
+  },
+  {
+   "chain": "hr_E1_o",
+   "lanes": [
+    761
+   ],
+   "stations": 3,
+   "length_um": 723.8,
+   "max_hop_um": 211.2,
+   "last_hop_um": 94.8
+  },
+  {
+   "chain": "rE2",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 40,
+   "length_um": 16512.8,
+   "max_hop_um": 429.4,
+   "last_hop_um": 346.7
+  },
+  {
+   "chain": "hr_E2_o",
+   "lanes": [
+    761
+   ],
+   "stations": 3,
+   "length_um": 723.8,
+   "max_hop_um": 211.2,
+   "last_hop_um": 94.8
+  },
+  {
+   "chain": "rE3",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 44,
+   "length_um": 17855.2,
+   "max_hop_um": 429.8,
+   "last_hop_um": 76.2
+  },
+  {
+   "chain": "hr_E3_o",
+   "lanes": [
+    761
+   ],
+   "stations": 3,
+   "length_um": 723.8,
+   "max_hop_um": 211.2,
+   "last_hop_um": 94.8
+  },
+  {
+   "chain": "rE4",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 49,
+   "length_um": 20269.7,
+   "max_hop_um": 429.8,
+   "last_hop_um": 304.5
+  },
+  {
+   "chain": "hr_E4_o",
+   "lanes": [
+    761
+   ],
+   "stations": 4,
+   "length_um": 843.9,
+   "max_hop_um": 211.2,
+   "last_hop_um": 17.9
+  },
+  {
+   "chain": "rE5",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 55,
+   "length_um": 22582.4,
+   "max_hop_um": 429.8,
+   "last_hop_um": 2.3
+  },
+  {
+   "chain": "hr_E5_o",
+   "lanes": [
+    692
+   ],
+   "stations": 3,
+   "length_um": 608.9,
+   "max_hop_um": 211.2,
+   "last_hop_um": 65.5
+  },
+  {
+   "chain": "qSW",
+   "lanes": [
+    514
+   ],
+   "stations": 28,
+   "length_um": 11990.6,
+   "max_hop_um": 425.5,
+   "last_hop_um": 88.6
+  },
+  {
+   "chain": "aSW",
+   "lanes": [
+    1026
+   ],
+   "stations": 27,
+   "length_um": 11802.6,
+   "max_hop_um": 426.2,
+   "last_hop_um": 327.9
+  },
+  {
+   "chain": "ixSW",
+   "lanes": [
+    514
+   ],
+   "stations": 11,
+   "length_um": 5008.4,
+   "max_hop_um": 425.5,
+   "last_hop_um": 332.6
+  },
+  {
+   "chain": "coSW",
+   "lanes": [
+    514
+   ],
+   "stations": 69,
+   "length_um": 29104.8,
+   "max_hop_um": 430.3,
+   "last_hop_um": 231.1
+  },
+  {
+   "chain": "qSE",
+   "lanes": [
+    514
+   ],
+   "stations": 53,
+   "length_um": 22461.7,
+   "max_hop_um": 429.4,
+   "last_hop_um": 45.4
+  },
+  {
+   "chain": "aSE",
+   "lanes": [
+    1026
+   ],
+   "stations": 53,
+   "length_um": 21972.5,
+   "max_hop_um": 429.8,
+   "last_hop_um": 69.1
+  },
+  {
+   "chain": "ixSE",
+   "lanes": [
+    514
+   ],
+   "stations": 25,
+   "length_um": 10888.5,
+   "max_hop_um": 425.5,
+   "last_hop_um": 261.4
+  },
+  {
+   "chain": "coSE",
+   "lanes": [
+    514
+   ],
+   "stations": 84,
+   "length_um": 35679.7,
+   "max_hop_um": 426.0,
+   "last_hop_um": 43.2
+  },
+  {
+   "chain": "qNW",
+   "lanes": [
+    514
+   ],
+   "stations": 30,
+   "length_um": 12892.1,
+   "max_hop_um": 426.0,
+   "last_hop_um": 142.6
+  },
+  {
+   "chain": "aNW",
+   "lanes": [
+    1026
+   ],
+   "stations": 29,
+   "length_um": 12707.7,
+   "max_hop_um": 426.8,
+   "last_hop_um": 382.1
+  },
+  {
+   "chain": "ixNW",
+   "lanes": [
+    514
+   ],
+   "stations": 71,
+   "length_um": 29784.7,
+   "max_hop_um": 429.8,
+   "last_hop_um": 222.5
+  },
+  {
+   "chain": "coNW",
+   "lanes": [
+    514
+   ],
+   "stations": 12,
+   "length_um": 5135.5,
+   "max_hop_um": 426.5,
+   "last_hop_um": 45.4
+  },
+  {
+   "chain": "qNE",
+   "lanes": [
+    514
+   ],
+   "stations": 55,
+   "length_um": 23362.6,
+   "max_hop_um": 425.5,
+   "last_hop_um": 64.8
+  },
+  {
+   "chain": "aNE",
+   "lanes": [
+    1026
+   ],
+   "stations": 53,
+   "length_um": 22877.5,
+   "max_hop_um": 426.9,
+   "last_hop_um": 350.1
+  },
+  {
+   "chain": "ixNE",
+   "lanes": [
+    514
+   ],
+   "stations": 84,
+   "length_um": 35786.1,
+   "max_hop_um": 429.8,
+   "last_hop_um": 159.8
+  },
+  {
+   "chain": "coNE",
+   "lanes": [
+    514
+   ],
+   "stations": 25,
+   "length_um": 10855.5,
+   "max_hop_um": 427.2,
+   "last_hop_um": 231.1
+  },
+  {
+   "chain": "sel",
+   "lanes": [
+    514
+   ],
+   "stations": 25,
+   "length_um": 10926.3,
+   "max_hop_um": 425.5,
+   "last_hop_um": 302.4
+  },
+  {
+   "chain": "col",
+   "lanes": [
+    514
+   ],
+   "stations": 26,
+   "length_um": 11271.9,
+   "max_hop_um": 429.8,
+   "last_hop_um": 221.6
+  },
+  {
+   "chain": "KW0t",
+   "lanes": [
+    512
+   ],
+   "stations": 50,
+   "length_um": 20925.6,
+   "max_hop_um": 429.4,
+   "last_hop_um": 18.2
+  },
+  {
+   "chain": "KW0r",
+   "lanes": [
+    512
+   ],
+   "stations": 48,
+   "length_um": 20135.5,
+   "max_hop_um": 429.8,
+   "last_hop_um": 256.2
+  },
+  {
+   "chain": "KW1t",
+   "lanes": [
+    512
+   ],
+   "stations": 51,
+   "length_um": 21182.4,
+   "max_hop_um": 429.8,
+   "last_hop_um": 17.1
+  },
+  {
+   "chain": "KW1r",
+   "lanes": [
+    512
+   ],
+   "stations": 53,
+   "length_um": 22269.8,
+   "max_hop_um": 429.8,
+   "last_hop_um": 168.9
+  },
+  {
+   "chain": "KW2t",
+   "lanes": [
+    512
+   ],
+   "stations": 42,
+   "length_um": 17531.9,
+   "max_hop_um": 429.4,
+   "last_hop_um": 17.1
+  },
+  {
+   "chain": "KW2r",
+   "lanes": [
+    512
+   ],
+   "stations": 44,
+   "length_um": 18620.7,
+   "max_hop_um": 429.4,
+   "last_hop_um": 342.6
+  },
+  {
+   "chain": "KW3t",
+   "lanes": [
+    512
+   ],
+   "stations": 47,
+   "length_um": 19815.8,
+   "max_hop_um": 426.2,
+   "last_hop_um": 17.1
+  },
+  {
+   "chain": "KW3r",
+   "lanes": [
+    512
+   ],
+   "stations": 50,
+   "length_um": 20914.7,
+   "max_hop_um": 426.4,
+   "last_hop_um": 123.1
+  },
+  {
+   "chain": "KE0t",
+   "lanes": [
+    512
+   ],
+   "stations": 55,
+   "length_um": 23167.6,
+   "max_hop_um": 426.0,
+   "last_hop_um": 18.5
+  },
+  {
+   "chain": "KE0r",
+   "lanes": [
+    512
+   ],
+   "stations": 53,
+   "length_um": 22377.9,
+   "max_hop_um": 429.8,
+   "last_hop_um": 308.9
+  },
+  {
+   "chain": "KE1t",
+   "lanes": [
+    512
+   ],
+   "stations": 56,
+   "length_um": 23424.0,
+   "max_hop_um": 429.8,
+   "last_hop_um": 13.1
+  },
+  {
+   "chain": "KE1r",
+   "lanes": [
+    512
+   ],
+   "stations": 58,
+   "length_um": 24511.8,
+   "max_hop_um": 429.4,
+   "last_hop_um": 317.5
+  },
+  {
+   "chain": "KE2t",
+   "lanes": [
+    512
+   ],
+   "stations": 55,
+   "length_um": 23139.3,
+   "max_hop_um": 426.8,
+   "last_hop_um": 13.1
+  },
+  {
+   "chain": "KE2r",
+   "lanes": [
+    512
+   ],
+   "stations": 58,
+   "length_um": 24228.6,
+   "max_hop_um": 425.5,
+   "last_hop_um": 41.0
+  },
+  {
+   "chain": "KE3t",
+   "lanes": [
+    512
+   ],
+   "stations": 60,
+   "length_um": 25387.1,
+   "max_hop_um": 426.4,
+   "last_hop_um": 13.1
+  },
+  {
+   "chain": "KE3r",
+   "lanes": [
+    512
+   ],
+   "stations": 63,
+   "length_um": 26475.6,
+   "max_hop_um": 429.4,
+   "last_hop_um": 156.4
+  },
+  {
+   "chain": "hb_vm_su_s",
+   "lanes": [
+    1024
+   ],
+   "stations": 9,
+   "length_um": 1787.1,
+   "max_hop_um": 214.9,
+   "last_hop_um": 71.5
+  },
+  {
+   "chain": "hb_vm_su_n",
+   "lanes": [
+    1024
+   ],
+   "stations": 13,
+   "length_um": 2834.0,
+   "max_hop_um": 213.8,
+   "last_hop_um": 105.6
+  },
+  {
+   "chain": "hb_vm_hc_s",
+   "lanes": [
+    1024
+   ],
+   "stations": 9,
+   "length_um": 1912.8,
+   "max_hop_um": 214.7,
+   "last_hop_um": 72.0
+  },
+  {
+   "chain": "hb_hc_n_vm",
+   "lanes": [
+    1024
+   ],
+   "stations": 5,
+   "length_um": 1209.6,
+   "max_hop_um": 211.2,
+   "last_hop_um": 160.2
+  },
+  {
+   "chain": "hb_vm_gather",
+   "lanes": [
+    512
+   ],
+   "stations": 2,
+   "length_um": 532.9,
+   "max_hop_um": 210.0,
+   "last_hop_um": 113.2
+  },
+  {
+   "chain": "hb_gather_capture",
+   "lanes": [
+    576
+   ],
+   "stations": 19,
+   "length_um": 4091.8,
+   "max_hop_um": 211.7,
+   "last_hop_um": 102.1
+  },
+  {
+   "chain": "hb_capture_vm",
+   "lanes": [
+    512
+   ],
+   "stations": 7,
+   "length_um": 1443.0,
+   "max_hop_um": 213.8,
+   "last_hop_um": 17.3
+  },
+  {
+   "chain": "hb_collective_vm",
+   "lanes": [
+    512
+   ],
+   "stations": 9,
+   "length_um": 1867.8,
+   "max_hop_um": 211.7,
+   "last_hop_um": 38.9
+  },
+  {
+   "chain": "hb_su_s_hc_s",
+   "lanes": [
+    512
+   ],
+   "stations": 5,
+   "length_um": 1209.6,
+   "max_hop_um": 210.3,
+   "last_hop_um": 160.2
+  },
+  {
+   "chain": "hb_su_n_hc_n",
+   "lanes": [
+    512
+   ],
+   "stations": 5,
+   "length_um": 1209.6,
+   "max_hop_um": 211.3,
+   "last_hop_um": 161.2
+  },
+  {
+   "chain": "hb_hc_s_hc_n",
+   "lanes": [
+    1024
+   ],
+   "stations": 7,
+   "length_um": 1281.6,
+   "max_hop_um": 213.8,
+   "last_hop_um": 13.6
+  },
+  {
+   "chain": "hb_hc_n_hc_s",
+   "lanes": [
+    1024
+   ],
+   "stations": 7,
+   "length_um": 1425.6,
+   "max_hop_um": 213.8,
+   "last_hop_um": 40.4
+  }
+ ],
+ "scan_die_power": {
+  "stages": 81,
+  "pairs": 2417,
+  "static_icg_w": 50.196,
+  "dynamic_saturated_w": 33.9,
+  "total_saturated_w": 84.1,
+  "cooling_limit_w": 474.56,
+  "fits_cooling": true,
+  "all_pairs_busy_in_phase_w": 744.2,
+  "basis": "static: tools/ds_energy_silicon_authoritative.LAYER_DIE_W (ICG ledger, 30.6 W of it SerDes); dynamic: uarch_model._v41_graph(proposal) L20 per-die energy (field 0.497, idx MAC 0.049, HBM IF 0.115, attention 0.007 mJ/token) x head-bound saturated 80,833.5 tok/s; IR windows use the local peak in-phase densities below, not this average"
+ },
+ "rev": "r9",
+ "column_relays": {
+  "nets": 15571,
+  "relays": 27714,
+  "by_class": {
+   "rt_": 14816,
+   "xa_": 1353,
+   "xb_": 1426,
+   "cc_": 1280,
+   "qt_": 767,
+   "es_": 3220,
+   "ss_": 0,
+   "so_": 1280,
+   "nf_": 384,
+   "cfg_": 1210,
+   "go_": 1210,
+   "rr_": 768
+  }
+ },
+ "hub_stations": {
+  "hr_W0_o": {
+   "path_um": 339.3,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W1_o": {
+   "path_um": 344.1,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W2_o": {
+   "path_um": 344.1,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W3_o": {
+   "path_um": 344.1,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W4_o": {
+   "path_um": 344.1,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W5_o": {
+   "path_um": 339.3,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_E0_o": {
+   "path_um": 719.1,
+   "stations": 3,
+   "floor_added": 1
+  },
+  "hr_E1_o": {
+   "path_um": 723.8,
+   "stations": 3,
+   "floor_added": 1
+  },
+  "hr_E2_o": {
+   "path_um": 723.8,
+   "stations": 3,
+   "floor_added": 1
+  },
+  "hr_E3_o": {
+   "path_um": 723.8,
+   "stations": 3,
+   "floor_added": 1
+  },
+  "hr_E4_o": {
+   "path_um": 843.9,
+   "stations": 4,
+   "floor_added": 1
+  },
+  "hr_E5_o": {
+   "path_um": 608.9,
+   "stations": 3,
+   "floor_added": 1
+  },
+  "hb_vm_su_s": {
+   "path_um": 1787.1,
+   "stations": 9,
+   "floor_added": 4
+  },
+  "hb_vm_su_n": {
+   "path_um": 2834.0,
+   "stations": 13,
+   "floor_added": 6
+  },
+  "hb_vm_hc_s": {
+   "path_um": 1912.8,
+   "stations": 9,
+   "floor_added": 4
+  },
+  "hb_hc_n_vm": {
+   "path_um": 1209.6,
+   "stations": 5,
+   "floor_added": 2
+  },
+  "hb_vm_gather": {
+   "path_um": 532.9,
+   "stations": 2,
+   "floor_added": 1
+  },
+  "hb_gather_capture": {
+   "path_um": 4091.8,
+   "stations": 19,
+   "floor_added": 9
+  },
+  "hb_capture_vm": {
+   "path_um": 1443.0,
+   "stations": 7,
+   "floor_added": 3
+  },
+  "hb_collective_vm": {
+   "path_um": 1867.8,
+   "stations": 9,
+   "floor_added": 4
+  },
+  "hb_su_s_hc_s": {
+   "path_um": 1209.6,
+   "stations": 5,
+   "floor_added": 2
+  },
+  "hb_su_n_hc_n": {
+   "path_um": 1209.6,
+   "stations": 5,
+   "floor_added": 2
+  },
+  "hb_hc_s_hc_n": {
+   "path_um": 1281.6,
+   "stations": 7,
+   "floor_added": 2
+  },
+  "hb_hc_n_hc_s": {
+   "path_um": 1425.6,
+   "stations": 7,
+   "floor_added": 3
+  }
+ },
+ "power_model": {
+  "seq": {
+   "w": 0.000217,
+   "basis": "DERIVED ~80 loader flops x W18 per-flop clock x 1.5 (one cfg ROM read: in cfg)"
+  },
+  "sstn": {
+   "w": 0.001527,
+   "basis": "DERIVED 564 stage flops x W18 per-flop clock x 1.5"
+  },
+  "cfifo": {
+   "w": 0.007821,
+   "basis": "DERIVED meso W564 D4 (4 ring + 1 output word) + return register x W18 per-flop clock x 1.5"
+  },
+  "rstg": {
+   "w": 0.000179,
+   "basis": "DERIVED 66 stage flops"
+  },
+  "stn": {
+   "w": 0.0,
+   "basis": "per station: lane bits x W18 per-flop clock x 1.5 (inst_power_r8)"
+  },
+  "hend": {
+   "w": 0.0,
+   "basis": "per end/start block: 5 x lane bits x W18 per-flop clock x 1.5 (inst_power_r8)"
+  }
+ },
+ "legality_python": {
+  "instances": 57960,
+  "overlaps": 0,
+  "overlap_examples": [],
+  "outside": 0,
+  "outside_examples": []
+ },
+ "generated_pin_clashes": 0,
+ "windows_um": {
+  "field": [
+   6913.104,
+   9704.24,
+   11087.472,
+   12763.44
+  ],
+  "field_bf": [
+   12170.384,
+   3629.04,
+   15353.2,
+   6529.04
+  ],
+  "spine": [
+   14471.6,
+   11601.04,
+   18511.6,
+   14401.04
+  ],
+  "band_s": [
+   6313.696,
+   0.0,
+   9313.696,
+   3941.28
+  ]
+ },
+ "child_reservations": {
+  "wfc": {
+   "schema": "dsrom.s81.WFC.selected-parent-allocation.v1",
+   "selected_die_um": [
+    33000,
+    26000
+   ],
+   "reticle_mm2": 858,
+   "replicas_per_stage": 1,
+   "stages": 81,
+   "source_parent": "rtl/dsrom_sys/wavefront_parent/native/ot_chip_v41x_die_owner_safe_c8.sv:u_ctrl",
+   "source_VM": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv:u_tile.vm",
+   "selected_WFC_gross_um": [
+    14871.6,
+    14031.36,
+    15886.800000000001,
+    14480.640000000001
+   ],
+   "selected_WFC_core_um": [
+    14888.880000000001,
+    14048.640000000001,
+    15869.52,
+    14463.36
+   ],
+   "halo_um": 17.28,
+   "selected_parent_region": "same S81 west spine between resizedVM and capture, keeps actual172.8um channels",
+   "source_shape_cell_budget_um2": 30385.50492,
+   "cell_cap_at50pct_um2": 203345.51039999956,
+   "additional_positive_CTS_PG_IO_repair_cell_reserve_um2": 40000,
+   "slot_area_mm2": 0.45610905600000096,
+   "prior_ctrl_cut_price_mm2": 0.08264,
+   "old_price_credit": 0,
+   "additional_price_mm2": 2.223674272000001,
+   "decision_prior_mm2": 839.239,
+   "decision_successor_mm2": 841.4626742720001,
+   "remaining_reticle_margin_mm2": 16.537325727999928,
+   "track_demand_model": 12929,
+   "track_capacity": {
+    "scope": "source grid perorientation analytical capacity; source port-family cut classification and actualGRT stillrequired",
+    "M6_M7_pitch_um": 0.064,
+    "M8_M9_pitch_um": 0.08,
+    "via_reserved_fraction": 0.05,
+    "M8_M9_hub_PG_reserved_fraction": 0.05,
+    "per_orientation_before_other_signal_claims": 16908,
+    "spine604p8_channel_unchanged": true,
+    "gaps172p8_unchanged": true,
+    "other_parent_route_claims_not_released": true,
+    "prior_far648_square_per_orientation": 16908
+   },
+   "clock": {
+    "WFC": "native u_ctrl.clk streaming1.2GHz833.333ps phase0",
+    "VM_parent": "sp_vm serial0.9GHz1111.111ps in actual selectedfloorplan",
+    "source_behavior": "native behavioral VM sameclk oneedge; not evidence of realcrossdomainmemory",
+    "source_phase_policy_ps": 0,
+    "SS_setup_ps": 60,
+    "FF_hold_ps": 25,
+    "crossing": "actual3:4 transport required; existing source-owned related boundary must be bound; no assumed sameedgephase/no waivedpath"
+   },
+   "ports": {
+    "write_enable": "xa_we",
+    "write_address": "xa_waddr[14:0]",
+    "write_data": "xa_wdata[511:0]",
+    "read_enable": "xa_re",
+    "read_address": "xa_raddr[14:0]",
+    "read_return": "xa_rq[511:0]",
+    "read_bytes_per_cycle": 64,
+    "write_bytes_per_cycle": 64,
+    "address_bounds_bits": 19,
+    "write_precedence": "xa then later xb0..3, later NBA wins; preedge read"
+   },
+   "native_macro_evidence": {
+    "primitive": "ot_sram_1r1w_512x128_m4_r2c2",
+    "library_ss": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib",
+    "library_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+    "SS_clock_pin_fF": 8.6838,
+    "FF_clock_pin_fF": 10.3732,
+    "SS_data_address_pin_fF": 0.5788,
+    "FF_data_address_pin_fF": 0.6837,
+    "SS_clkQ_ps_table_range": [
+     524.0725,
+     619.2032
+    ],
+    "SS_slew_axis_ps": [
+     5,
+     20,
+     80,
+     160,
+     320
+    ],
+    "SS_load_axis_fF": [
+     0.72,
+     2.88,
+     11.52,
+     23.04,
+     46.08
+    ],
+    "SS_clkQ_at20ps_slew_2p88fF_ps": 528.6025,
+    "scope": "actual committed macro library model, not measured new WFC loaded context",
+    "full_AW15_backend_source": "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv",
+    "DEPTH_GROUPS": 16,
+    "macro_count": 256,
+    "macro_area_each_um2": 5177.6323,
+    "macro_area_total_mm2": 1.3254738688,
+    "existing_VM_slot_mm2": 0.89234,
+    "minimum_macro_only_deficit_mm2": 0.43313386880000004,
+    "read_valid_registered_edges": 5,
+    "write_ACK_registered_edges": 4,
+    "read_owner_bits": 227,
+    "mutable_protection": "rawmacrobackend explicitly unprotected; not selected protectedmemoryqualification; real backend mustretain owner/protection/olddata/writeprecedence",
+    "FF_clkQ_at20ps_slew_2p88fF_ps": 349.7289
+   },
+   "allocation_qualified_geometry": true,
+   "actual_instance_overlap_count": 0,
+   "geometry_instance_count": 24355,
+   "physical_macro_binding_qualified": false,
+   "SS_FF_qualified": false,
+   "needed_VM_revision": "native256macros require >=1.3254738688mm2 plus realcodec/mux/transport/protection/CTS/PG, exceeds existing .89234mm2 VMbody by>=.4331338688mm2; extend existingVMslab/adjacentSUreposition with area priced, no copied32bankW11 substitution",
+   "sources_sha256": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib": "f5f58120a3076a8bd999ab6ccfca8f57de49b985f74473f25fe69a3797f5f8cd",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063",
+    "tools/dsrom_s81_fulldie.py": "e04e88954c667f2598a57d4c580a04d480ef123b711f1d0257c9ac993ae07cc5",
+    "results/uarch/dsrom_wfc_enclosing_stage_20261005/model.json": "0a3f4000123583dd75f91d4f6d5a2e8dd5a88a7b88c62f6eaaff00a58658cbb9"
+   },
+   "wires": {
+    "WFC_VM_bbox_gap_um": 172.8,
+    "WFC_VM_Manhattan_upper_um": 4257.360000000002,
+    "actual3p4_transport_source_binding_required": true,
+    "installed_pipeline_edges": 0,
+    "previous25cut_far_slot_superseded": true,
+    "no_wire_latency_credit_without_native_source_admission": true
+   },
+   "canonical_producer_allocation": {
+    "source_owner": "Copernicus",
+    "source": "rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv",
+    "envelope_um": [
+     15199.92,
+     14048.640000000001,
+     15679.92,
+     14448.640000000001
+    ],
+    "shape_um": [
+     480,
+     400
+    ],
+    "macro_body_um2": 87126.11424,
+    "macro_halo_reserved_um2": 102430.68192,
+    "positive_logic_budget_um2": 30000,
+    "macro_plus_logic50pct_footprint_um2": 162430.68192,
+    "envelope_um2": 192000,
+    "spare_um2": 29569.31808,
+    "WFC_control_remaining_outline_um2": 214691.02079999913,
+    "control_cell_cap_at50pct_um2": 107345.51039999956,
+    "additional_slot_area_credit": 0,
+    "actual_producer_clock_loads_from_own_mapped_context": true,
+    "qualification": "geometry/model only; ownsourcegate/macroclkQ/CTS/SSFF/receivermapping mandatory; L19STAGE_HANDOFFnotHEADtoken_result"
+   },
+   "VM_finite_resize_decision": {
+    "existing_slot_area_mm2": 0.89234,
+    "successor_reserved_outline_um": [
+     1015.2,
+     2620.0800000000004
+    ],
+    "successor_reserved_area_mm2": 2.6599052160000003,
+    "delta_area_mm2": 1.7675652160000004,
+    "existing_real_macro_count": 256,
+    "primitive_LEF_width_um": 174.12,
+    "primitive_LEF_height_um": 29.736,
+    "native_source_count_preserved": true,
+    "macro_columns": 5,
+    "slot_rows": 64,
+    "slot_count": 320,
+    "positive_empty_protection_slots": 64,
+    "empty_slots_are_not_macro_instances": true,
+    "macro_gap_um": 10.8,
+    "macro_halo_um": 17.28,
+    "macro_occupied_envelope_width_um": 948.3600000000001,
+    "actual_256_macro_body_mm2": 1.3254738739200003,
+    "reserved_protection_slot_count_is_not_RTL_protection_evidence": true,
+    "source_non_drop_in_gaps": [
+     "olddataread/writecollision semantics",
+     "allnativewriterport/grant/visiblecompletion",
+     "mutableECC and codecarea",
+     "real3:4callerVMtransport"
+    ],
+    "admission": "ExistingVMphysicalslot insufficient. Resize SAMEspineVMslab with explicitpositive64slotprotection+channelreserve; protectedsourcebinding ownedZeno/Copernicus and nativeVMowner, no rawpayloadadoption",
+    "new_engine_build_before_source_model": false,
+    "actual_selected_parent_rect_um": [
+     15182.64,
+     11238.48,
+     16197.815999999999,
+     13858.536
+    ],
+    "source_macro_instance_inventory": "256 realv2 source macros +64 EMPTY positiveprotection reservations; no 320instance claim"
+   },
+   "prior_far_WFC_reservation_um": [
+    15182.64,
+    3510.0,
+    15865.2,
+    4192.56
+   ],
+   "core_shape_um": [
+    980.6399999999994,
+    414.71999999999935
+   ],
+   "composed_producer_plus_controller_plus_macro_cell_charge_um2": 187511.61916,
+   "2pct_area_margin_shortfall_mm2": 0.6226742720000722,
+   "owner_taller_slot_direction": {
+    "frame_owner": "Claude QELEM",
+    "generator_owner": "Claude S81-DIE",
+    "target_utilization": [
+     0.55,
+     0.6
+    ],
+    "old_dense76_to78pct_slot_fit_credit": false,
+    "prior_geometry_scope": "historicalS81 only; successorparent rebinds shape/ports/clocks/CTS-PG-route reserves",
+    "current_successor_binding_qualified": false,
+    "owned_WFC_cell_cap_kept_at50pct": true,
+    "positive_CTS_PG_IO_repair_cell_reserve_um2": 40000,
+    "if_packing_requires78pct": "Reject oldpacking; priceactualadditionaldies andtokenlatency withS81-DIE/COMPOSE",
+    "new_element_count_assumed": false,
+    "new_qelement_timing_runs": false,
+    "support_facts_record": "results/uarch/dsrom_s81_wfc_parent_allocation_20261006/taller_slot_support_facts_20261006.json"
+   }
+  }
+ }
+}

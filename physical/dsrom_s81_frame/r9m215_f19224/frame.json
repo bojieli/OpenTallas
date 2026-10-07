@@ -1,0 +1,68 @@
+{
+ "schema": "opentallas.dsrom-s81-frame-block.v1",
+ "tool": "tools/dsrom_s81_frame_block.py",
+ "die": "layer",
+ "rev": "r9",
+ "cc_reach_um": 215.0,
+ "elem_h": 198.72,
+ "pairs": 2050,
+ "frame": 63,
+ "half": "W",
+ "tier": 5,
+ "col": 9,
+ "origin_um": [
+  2447.28,
+  19208.88
+ ],
+ "size_um": [
+  1182.816,
+  2866.32
+ ],
+ "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+ "q_etm_dir": "/tmp/s81rr/etm",
+ "instances": {
+  "q": 14,
+  "cfg": 119,
+  "seq": 17,
+  "bf": 3,
+  "sstn": 10,
+  "qbank": 28,
+  "node": 33,
+  "cfifo": 1,
+  "rstg": 3,
+  "rly": 224
+ },
+ "ports": {
+  "xf": [
+   "input",
+   1
+  ],
+  "xd": [
+   "input",
+   566
+  ],
+  "rf": [
+   "output",
+   1
+  ],
+  "rd": [
+   "output",
+   70
+  ],
+  "ck": [
+   "input",
+   1
+  ],
+  "rst": [
+   "input",
+   1
+  ]
+ },
+ "pin_x_um": {
+  "x": 451.44,
+  "ret": 1159.06
+ },
+ "relays_x": 2,
+ "relays_ret": 14,
+ "bank_stages": 2
+}

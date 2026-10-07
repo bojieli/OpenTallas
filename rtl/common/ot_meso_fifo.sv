@@ -55,7 +55,12 @@ module ot_meso_fifo #(
     parameter int CREDITS  = 8,      // receive buffer entries = writer credits
     parameter int HOLD     = 8,      // DOWN lasts >= HOLD + 1 own cycles (peer must see it)
     parameter int SETTLE   = 8,      // cycles the peer ring is seen running before placement (>= DEPTH)
-    parameter bit ENABLE   = 0
+    parameter bit ENABLE   = 0,
+    // PINREG (S81-RERUN fail-fast fix, default 0): wrst_n / rrst_n captured in a flop at the pin before any use.
+    // The resets are sampled synchronously; with them registered no input pin reaches the 512-bit ring write
+    // enables, w_rdy or r_v through logic (meso_d4 2e2d7aa3f: wrst_n -> s_d SS -40.1, -> w_rdy -11.8, rrst_n -> r_v
+    // -0.1).  Cost: reset assertion / release seen one cycle later on each side; no steady-state cycle.
+    parameter bit PINREG   = `ifdef OT_MESO_PINREG 1 `else 0 `endif
 ) (
     input  logic         wclk,
     input  logic         wrst_n,     // synchronous to wclk
@@ -77,12 +82,26 @@ module ot_meso_fifo #(
 `endif
 );
     localparam int AW = $clog2(DEPTH);
+    logic wrst_i, rrst_i, w_v_i; logic [W-1:0] w_d_i;
+    generate if (PINREG) begin : g_pinreg
+        // every input captured at its pin (fail-fast fix 2: 21e5409bf w_v -> ring write enables SS +4.7); the
+        // write is taken one cycle later and w_rdy looks ahead over the word in flight (exact credit accounting)
+        logic wq, rq, vq; logic [W-1:0] dq;
+        always_ff @(posedge wclk) begin wq <= wrst_n; vq <= w_v && w_rdy; dq <= w_d; end
+        always_ff @(posedge rclk) rq <= rrst_n;
+        assign wrst_i = wq; assign rrst_i = rq; assign w_v_i = vq; assign w_d_i = dq;
+    end else begin : g_nopinreg
+        assign wrst_i = wrst_n; assign rrst_i = rrst_n; assign w_v_i = w_v; assign w_d_i = w_d;
+    end endgenerate
+`ifndef SYNTHESIS   // yosys derives the module once per chparam: an intermediate parameter set (GUARD_LO 1 with the
+                    // default OFFSET 2) would trip the check; simulation still checks the final set
     initial begin
         if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $error("ot_meso_fifo: DEPTH must be a power of two >= 4");
         if (GUARD_LO < 0 || GUARD_LO + 2 > OFFSET || GUARD_HI < OFFSET + 2 || GUARD_HI > DEPTH)
             $error("ot_meso_fifo: need GUARD_LO+2 <= OFFSET, OFFSET+2 <= GUARD_HI <= DEPTH");
         if (SETTLE < DEPTH || HOLD < 6 || CREDITS < 1) $error("ot_meso_fifo: SETTLE >= DEPTH, HOLD >= 6, CREDITS >= 1");
     end
+`endif
 
     generate if (!ENABLE) begin : disabled
         assign w_rdy = 1'b0; assign r_v = 1'b0; assign r_d = '0;
@@ -111,7 +130,7 @@ module ot_meso_fifo #(
         logic [0:0]   c_rd; logic c_rv, c_lap_ok, c_glo, c_ghi;
 
         ot_meso_ring #(.W(W), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI)) u_data (
-            .tclk(wclk), .t_v(w_send), .t_d(w_d),
+            .tclk(wclk), .t_v(w_send), .t_d(w_d_i),
             .rclk(rclk), .r_align(r_align), .r_on(r_on),
             .r_d(d_rd), .r_v(d_rv), .r_lap_ok(d_lap_ok), .r_glo_ok(d_glo), .r_ghi_ok(d_ghi)
 `ifdef OT_MESO_DEBUG
@@ -146,8 +165,9 @@ module ot_meso_fifo #(
         logic w_flt; logic [2:0] w_arm;
         assign w_on     = (ws == S_READY) || (ws == S_RUN);
         assign w_live   = (ws == S_RUN);
-        assign w_rdy    = wrst_n && (ws == S_RUN) && !w_flt && (w_cred != '0);
-        assign w_send   = w_v && w_rdy;
+        wire   w_ok_i   = wrst_i && (ws == S_RUN) && !w_flt && (w_cred != '0);
+        assign w_rdy    = PINREG ? (w_ok_i && (w_cred != BW'(w_v_i))) : w_ok_i;   // PINREG: one word may be in flight
+        assign w_send   = w_v_i && w_ok_i;
         assign w_fault  = w_flt;
         assign w_align  = (ws == S_ALIGN) && (w_set == SW'(SETTLE));
         logic c_hit;                                   // credit-ring crossing term (valid in the expected lap)
@@ -157,7 +177,7 @@ module ot_meso_fifo #(
         logic [BW-1:0] wcr_n1, wcr_n0, wcr_d;
         always_comb begin
             wcr_n0 = w_cred; wcr_n1 = w_cred;
-            if (!wrst_n) begin
+            if (!wrst_i) begin
                 wcr_n0 = '0; wcr_n1 = '0;
             end else if (ws == S_READY || ws == S_RUN) begin
                 if (rs_w == S_DOWN) begin
@@ -173,7 +193,7 @@ module ot_meso_fifo #(
         ot_meso_sel #(.N(BW)) u_wsel (.s(c_hit), .a(wcr_n1), .b(wcr_n0), .y(wcr_d));
         always_ff @(posedge wclk) w_cred <= wcr_d;
         always_ff @(posedge wclk) begin
-            if (!wrst_n) begin
+            if (!wrst_i) begin
                 ws <= S_DOWN; w_cnt <= HW'(HOLD); w_ok <= 1'b0; w_set <= '0; w_flt <= 1'b0; w_arm <= '0;
             end else begin
                 case (ws)
@@ -220,7 +240,7 @@ module ot_meso_fifo #(
         // registered output: o_d is the capture register of the crossing (the arriving word is muxed straight into
         // it when the buffer is empty); its enable 'load' and the select are read-domain signals only.
         logic [W-1:0] o_d; logic o_v;
-        assign r_v      = rrst_n && !r_flt && o_v;
+        assign r_v      = rrst_i && !r_flt && o_v;
         assign r_d      = o_d;
         assign r_take   = r_v && r_rdy;
         wire   load     = !o_v || r_rdy;
@@ -245,7 +265,7 @@ module ot_meso_fifo #(
         localparam int RN = BW + IW + 1;
         logic [RN-1:0] rn1, rn0, rnd;
         always_comb begin
-            if (!rrst_n || !r_on) begin
+            if (!rrst_i || !r_on) begin
                 rn0 = '0; rn1 = '0;
             end else begin
                 rn0 = {cnt_0, tl, o_v_0};
@@ -255,7 +275,7 @@ module ot_meso_fifo #(
         ot_meso_sel #(.N(RN)) u_rsel (.s(d_hit), .a(rn1), .b(rn0), .y(rnd));
         always_ff @(posedge rclk) {cnt, tl, o_v} <= rnd;
         always_ff @(posedge rclk) begin
-            if (!rrst_n) begin
+            if (!rrst_i) begin
                 rs <= S_DOWN; r_cnt <= HW'(HOLD); r_ok <= 1'b0; r_set <= '0; r_flt <= 1'b0; r_arm <= '0;
                 hd <= '0;
             end else begin
