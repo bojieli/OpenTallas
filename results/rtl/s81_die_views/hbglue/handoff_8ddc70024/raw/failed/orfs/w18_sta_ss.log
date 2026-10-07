@@ -1,0 +1,65 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+OT_CORNER ss
+OT_WS -3.405005770673597e-7
+OT_TNS -0.0003731657634489238
+Startpoint: bo_v (input port clocked by core_clk)
+Endpoint: bq[0]$_DFFE_PN0P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+341250.00 341250.00 v input external delay
+   0.00 341250.00 v bo_v (in)
+  23.28 341273.28 v input407/Y (BUFx12f_ASAP7_75t_R)
+  63.61 341336.88 v place1248/Y (BUFx12f_ASAP7_75t_R)
+  67.27 341404.16 ^ _33321_/Y (XNOR2x2_ASAP7_75t_R)
+  29.08 341433.25 ^ _33322_/Y (AND2x2_ASAP7_75t_R)
+   0.09 341433.31 ^ bq[0]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R)
+        341433.31   data arrival time
+
+ 730.00  730.00   clock core_clk (rise edge)
+   0.00  730.00   clock source latency
+   0.00  730.00 ^ clk (in)
+  30.62  760.62 ^ wire1249/Y (BUFx6f_ASAP7_75t_R)
+  44.52  805.14 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.69  842.83 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  40.12  882.95 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.95  922.90 ^ clkbuf_4_11_0_clk/Y (BUFx24_ASAP7_75t_R)
+  46.67  969.57 ^ clkbuf_6_47__f_clk/Y (BUFx24_ASAP7_75t_R)
+  48.94 1018.51 ^ clkbuf_leaf_242_clk/Y (BUFx24_ASAP7_75t_R)
+   0.55 1019.06 ^ bq[0]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00  959.06   clock uncertainty
+   0.00  959.06   clock reconvergence pessimism
+ -26.31  932.74   library setup time
+         932.74   data required time
+---------------------------------------------------------
+         932.74   data required time
+        -341433.31   data arrival time
+---------------------------------------------------------
+        -340500.59   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 901
+OT_WS_REG_D -340500.593750
+OT_WS_OUT -99700.687500
+OT_WS_R2R 87.726494
+OT_WS_I2R -340500.593750

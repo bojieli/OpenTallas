@@ -1,0 +1,52 @@
+{
+ "name": "hbglue_cl_8ddc70024",
+ "block": "ot_dsrom_head_bundle_glue",
+ "owner": "Claude:tk-ds-misc",
+ "purpose": "head-bundle glue MARGIN=1: closure-loop route with IO from measured insertion (glue_m3: SS +53.3, FF reg2reg +4.2 at assumed IO)",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 60,
+ "source": {
+  "branch": "claude/takeover-ds-head-20261006",
+  "commit": "8ddc7002479798a1e3d5ce5875a163d672973e75"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "OUT={RUN}/routes SRC={SRC} bash physical/s81_die_views/hbglue/margin/route_cl.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 60
+  },
+  "route": {
+   "cmd": "OUT={RUN}/routes SRC={SRC} bash physical/s81_die_views/hbglue/margin/route_cl.sh {LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/exit {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [],
+  "post_sdc": []
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/s81_die_views/hbglue/closure"
+  }
+ ],
+ "cycles_added": 3,
+ "merge_target": null,
+ "no_bench_reason": "glue MARGIN=1 exact gate PASS + 8 negatives (4570eccd4, result group +3 cycles); RTL unchanged since"
+}

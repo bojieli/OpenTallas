@@ -1,0 +1,65 @@
+{
+  "bench_commit": "4570eccd4",
+  "route_commit": "8ddc7002479798a1e3d5ce5875a163d672973e75",
+  "record_sha256": "2dcaa07434e49e0fd7b9daa7017df0d1ee6be134810d40832c7b0947559eca8a",
+  "files": {
+    "rtl/hdc/ot_hdc_delay.sv": {
+      "record_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "bench_commit_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "route_commit_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "match": true
+    },
+    "rtl/v41rom/ot_dsrom_head_bundle.sv": {
+      "record_sha256": "bdceec7d6c41747e741de0b14baef74af18d34b5c2c38f47e50c0da2fc0399e2",
+      "bench_commit_sha256": "bdceec7d6c41747e741de0b14baef74af18d34b5c2c38f47e50c0da2fc0399e2",
+      "route_commit_sha256": "c05b89f9ff64f82279a548e36c578b958f0b33a10c54bd3368be7c2d6019a90b",
+      "match": false
+    },
+    "rtl/s81/ot_dsrom_head_bundle_glue.sv": {
+      "record_sha256": "795e23cf58bca00e8a314b5393fdaca4045cd3c66e46c4fc0d88522aacc4ca34",
+      "bench_commit_sha256": "795e23cf58bca00e8a314b5393fdaca4045cd3c66e46c4fc0d88522aacc4ca34",
+      "route_commit_sha256": "795e23cf58bca00e8a314b5393fdaca4045cd3c66e46c4fc0d88522aacc4ca34",
+      "match": true
+    },
+    "rtl/test/s81/tb_head_bundle_glue.sv": {
+      "record_sha256": "3de30ca7f543ad6c89ef53c31631f8ddd175119e649bba025704ba4d68939418",
+      "bench_commit_sha256": "3de30ca7f543ad6c89ef53c31631f8ddd175119e649bba025704ba4d68939418",
+      "route_commit_sha256": "3de30ca7f543ad6c89ef53c31631f8ddd175119e649bba025704ba4d68939418",
+      "match": true
+    },
+    "rtl/s81/ot_s81_head_delay8x32.sv": {
+      "record_sha256": "da1551fd135b4d476f2bf1c069362fa6bbdf92c366c5c8aa70f0334b0cf2ce83",
+      "bench_commit_sha256": "da1551fd135b4d476f2bf1c069362fa6bbdf92c366c5c8aa70f0334b0cf2ce83",
+      "route_commit_sha256": "da1551fd135b4d476f2bf1c069362fa6bbdf92c366c5c8aa70f0334b0cf2ce83",
+      "match": true
+    },
+    "rtl/s81/ot_s81_head_min_delay.sv": {
+      "record_sha256": "2e406f66181d54cc050c297aa486cdc0f383af48767aedb67a3cdedd61e14ce7",
+      "bench_commit_sha256": "2e406f66181d54cc050c297aa486cdc0f383af48767aedb67a3cdedd61e14ce7",
+      "route_commit_sha256": "2e406f66181d54cc050c297aa486cdc0f383af48767aedb67a3cdedd61e14ce7",
+      "match": true
+    },
+    "rtl/test/s81/min_delay_cells_model.sv": {
+      "record_sha256": "da0966c61cb82c94f1abbe1c0164c4bae74d104077f88a36788b073b3237b59a",
+      "bench_commit_sha256": "da0966c61cb82c94f1abbe1c0164c4bae74d104077f88a36788b073b3237b59a",
+      "route_commit_sha256": "da0966c61cb82c94f1abbe1c0164c4bae74d104077f88a36788b073b3237b59a",
+      "match": true
+    }
+  },
+  "record_self_consistent": true,
+  "all_source_hash_match": false,
+  "route_rtl_hash_match": true,
+  "qualification": "BLOCKED_ALL_SOURCE_HASH_MISMATCH",
+  "new_bench_run": false,
+  "scope": "margin native glue cycle equivalence; element numerical datapaths replaced by traffic stubs in reference only (MARGIN: result group +3, row0_a +2 with row0 held from go; element samples row0 at go_d checked)",
+  "cycles": 1200,
+  "baseline_results": 594,
+  "negative_cases": 9,
+  "route_parameters": {
+    "MARGIN": 1,
+    "MIN_DEPTH": 2,
+    "USE_MIN_DELAY_CELLS": 1
+  },
+  "branch_tip_not_qualified": true,
+  "blocker": "Reference bundle source changed by IOREG/SAFE parameter forwarding. Do not promote the historical PASS to an all-source-qualified 8dd bench; no new bench authorized."
+}

@@ -1,0 +1,30 @@
+{
+  "source_commit": "5ecec96b89a765dcde18f23da11e13a1a6deb3f4",
+  "path": "tools/dsrom_s81_fulldie.py",
+  "sha256": "a949387b7607dbc31748c9d335433b6c418ae623177a52522d9e4752ab5bcb20",
+  "relevant_lines": {
+    "70": "SHAVE = 0.024",
+    "2081": "HB_GLUE = (302.4, 151.2)                    # bundle glue: BST stages, lane skew, B demux, compare (RTL inside the bundle)",
+    "2082": "HB_GLUE_W = 14000 * FLOP_CLK_W * 1.5        # ~14k flops (2 x 512 BST + 16 lanes x up to 56-deep skew + compare)",
+    "2474": "                insts.append(Inst(g, 'dsfd_hbglue', x0 + 4.32 + HB_PITCH[0], yb + 64.8, HB_GLUE[0] - SHAVE,",
+    "2475": "                                  HB_GLUE[1] - SHAVE, kind='hbglue', region=f'frame_{r}', power_w=HB_GLUE_W))"
+  },
+  "placeholder_master": "dsfd_hbglue",
+  "nominal_slot_um": [
+    302.4,
+    151.2
+  ],
+  "shaved_slot_um": [
+    302.376,
+    151.176
+  ],
+  "candidate_um": [
+    165.801,
+    165.801
+  ],
+  "outline_match": false,
+  "candidate_fits_slot_without_change": false,
+  "actual_die_pin_contract_available": false,
+  "verdict": "BLOCKED_OUTLINE_AND_ACTUAL_PIN_CONTRACT",
+  "placement_adopted": false
+}

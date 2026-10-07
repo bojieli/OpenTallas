@@ -1,0 +1,138 @@
+{
+  "schema": "opentallas.hbglue.physical_handoff.v1",
+  "status": "CANDIDATE_EXPORTED_WITH_EXPLICIT_BLOCKERS",
+  "source_commit": "8ddc7002479798a1e3d5ce5875a163d672973e75",
+  "closure_record_commit": "340fdb6c846d222550ef2f927c5c3c1eb6f07bb4",
+  "bench_record_commit": "4570eccd4",
+  "worktree_base": "5ecec96b8",
+  "job": "hbglue_cl_8ddc70024",
+  "remote_snapshot": "ot-epyc1tb:/srv/opentallas-scratch/codex/hbglue_handoff_8ddc70024",
+  "view_directory": "physical/s81_die_views/hbglue/handoff_8ddc70024/ot_dsrom_head_bundle_glue",
+  "corner_metrics": {
+    "ss_ps": 74.53,
+    "ff_ps": 18.7,
+    "drc": 0,
+    "cells_added": 10988,
+    "errors": []
+  },
+  "timing_validation": {
+    "ss": {
+      "slack_ps": 74.53293537906802,
+      "odb_ports_match": true,
+      "liberty_ports_match": true,
+      "clock_pin": "clk",
+      "clock_name": "core_clk",
+      "period_ps": 833.333,
+      "setup_uncertainty_ps": 60,
+      "hold_uncertainty_ps": 25,
+      "missing_dynamic_timing_arcs": [],
+      "expected_untimed": [
+        "rst_n (explicit false path)",
+        "row0_b[0] (RTL constant zero)",
+        "row0_b[1] (RTL constant zero)",
+        "row0_b[2] (RTL constant zero)",
+        "row0_b[3] (RTL constant zero)",
+        "row0_b[4] (RTL constant zero)",
+        "row0_b[5] (RTL constant zero)",
+        "row0_b[6] (RTL constant zero)",
+        "row0_b[7] (RTL constant zero)",
+        "row0_b[8] (RTL constant zero)",
+        "row0_b[9] (RTL constant zero)",
+        "row0_b[10] (RTL constant zero)",
+        "row0_b[11] (RTL constant zero)",
+        "row0_b[12] (RTL constant zero)",
+        "row0_b[13] (RTL constant zero)",
+        "row0_b[14] (RTL constant zero)",
+        "row0_b[15] (RTL constant zero)",
+        "row0_b[16] (RTL constant zero)"
+      ]
+    },
+    "ff": {
+      "slack_ps": 18.702206450171843,
+      "odb_ports_match": true,
+      "liberty_ports_match": true,
+      "clock_pin": "clk",
+      "clock_name": "core_clk",
+      "period_ps": 833.333,
+      "setup_uncertainty_ps": 60,
+      "hold_uncertainty_ps": 25,
+      "missing_dynamic_timing_arcs": [],
+      "expected_untimed": [
+        "rst_n (explicit false path)",
+        "row0_b[0] (RTL constant zero)",
+        "row0_b[1] (RTL constant zero)",
+        "row0_b[2] (RTL constant zero)",
+        "row0_b[3] (RTL constant zero)",
+        "row0_b[4] (RTL constant zero)",
+        "row0_b[5] (RTL constant zero)",
+        "row0_b[6] (RTL constant zero)",
+        "row0_b[7] (RTL constant zero)",
+        "row0_b[8] (RTL constant zero)",
+        "row0_b[9] (RTL constant zero)",
+        "row0_b[10] (RTL constant zero)",
+        "row0_b[11] (RTL constant zero)",
+        "row0_b[12] (RTL constant zero)",
+        "row0_b[13] (RTL constant zero)",
+        "row0_b[14] (RTL constant zero)",
+        "row0_b[15] (RTL constant zero)",
+        "row0_b[16] (RTL constant zero)"
+      ]
+    }
+  },
+  "parasitic_coverage": {
+    "unannotated_drivers": 743,
+    "kind": "clkload*/Y",
+    "live_sinks": 0,
+    "partially_unannotated_drivers": 0,
+    "raw_evidence": [
+      "annotation_check.log",
+      "coverage_check.log"
+    ]
+  },
+  "bench_qualification": {
+    "all_record_hashes_match_bench_commit": true,
+    "recorded_files": 7,
+    "match_route_commit": 6,
+    "route_rtl_files_match": 3,
+    "all_source_qualified": false,
+    "historical_pass_preserved": true,
+    "new_bench_run": false
+  },
+  "compatibility": {
+    "source_commit": "5ecec96b89a765dcde18f23da11e13a1a6deb3f4",
+    "path": "tools/dsrom_s81_fulldie.py",
+    "sha256": "a949387b7607dbc31748c9d335433b6c418ae623177a52522d9e4752ab5bcb20",
+    "relevant_lines": {
+      "70": "SHAVE = 0.024",
+      "2081": "HB_GLUE = (302.4, 151.2)                    # bundle glue: BST stages, lane skew, B demux, compare (RTL inside the bundle)",
+      "2082": "HB_GLUE_W = 14000 * FLOP_CLK_W * 1.5        # ~14k flops (2 x 512 BST + 16 lanes x up to 56-deep skew + compare)",
+      "2474": "                insts.append(Inst(g, 'dsfd_hbglue', x0 + 4.32 + HB_PITCH[0], yb + 64.8, HB_GLUE[0] - SHAVE,",
+      "2475": "                                  HB_GLUE[1] - SHAVE, kind='hbglue', region=f'frame_{r}', power_w=HB_GLUE_W))"
+    },
+    "placeholder_master": "dsfd_hbglue",
+    "nominal_slot_um": [
+      302.4,
+      151.2
+    ],
+    "shaved_slot_um": [
+      302.376,
+      151.176
+    ],
+    "candidate_um": [
+      165.801,
+      165.801
+    ],
+    "outline_match": false,
+    "candidate_fits_slot_without_change": false,
+    "actual_die_pin_contract_available": false,
+    "verdict": "BLOCKED_OUTLINE_AND_ACTUAL_PIN_CONTRACT",
+    "placement_adopted": false
+  },
+  "hub_routing_layer_gate": "PENDING_COMPOSED_PARENT; component signal pins M4/M5, actual LEF metal obstructions M1-M7. No parent routing or adoption claim.",
+  "claim_scope": "full-shape glue component route only; no die-context proof, model adoption, RTL change, reroute or new simulation",
+  "source_artifacts_preserved": true,
+  "failed_eco_preserved": true,
+  "successful_eco_preserved": true,
+  "snapshot_originals_rehashed_after_export": true,
+  "distribution_note": "Remote export.py generated view/. Files copied byte-identically into cell-named directory for --macro-view consumers. Remote ODB/SPEF/netlist and historical artifacts remain on EPYC1 with committed SHA256 manifests."
+}

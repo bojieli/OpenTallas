@@ -1,0 +1,173 @@
+{
+ "name": "hbglue_cl_8ddc70024",
+ "spec": {
+  "name": "hbglue_cl_8ddc70024",
+  "block": "ot_dsrom_head_bundle_glue",
+  "owner": "Claude:tk-ds-misc",
+  "purpose": "head-bundle glue MARGIN=1: closure-loop route with IO from measured insertion (glue_m3: SS +53.3, FF reg2reg +4.2 at assumed IO)",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 60,
+  "source": {
+   "branch": "claude/takeover-ds-head-20261006",
+   "commit": "8ddc7002479798a1e3d5ce5875a163d672973e75"
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "OUT={RUN}/routes SRC={SRC} bash physical/s81_die_views/hbglue/margin/route_cl.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 16,
+    "peak_ram_gb": 60
+   },
+   "route": {
+    "cmd": "OUT={RUN}/routes SRC={SRC} bash physical/s81_die_views/hbglue/margin/route_cl.sh {LABEL}",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/exit {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": []
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/s81_die_views/hbglue/closure"
+   }
+  ],
+  "cycles_added": 3,
+  "merge_target": null,
+  "no_bench_reason": "glue MARGIN=1 exact gate PASS + 8 negatives (4570eccd4, result group +3 cycles); RTL unchanged since"
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/hbglue_cl_8ddc70024.json",
+ "created": "2026-10-06T21:48:59-07:00",
+ "status": "NEEDS_RTL",
+ "stage_idx": 2,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {},
+ "hosts_tried": [
+  "ot-epyc1tb"
+ ],
+ "events": [
+  "2026-10-06T21:48:59-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbglue_cl_8ddc70024.json",
+  "2026-10-06T21:49:54-07:00 source 8ddc70024797 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/src",
+  "2026-10-06T21:50:18-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+  "2026-10-06T21:55:35-07:00 calibrate done (rc=0)",
+  "2026-10-06T21:55:38-07:00 calibrated insertion CK_SS_MEAN=341 CK_SS_MIN=326 CK_SS_MAX=346 CK_FF_MEAN=205 CK_FF_MIN=193 CK_FF_MAX=210",
+  "2026-10-06T21:56:58-07:00 launched route (attempt 1) on ot-epyc1tb",
+  "2026-10-06T22:09:07-07:00 route done (rc=0)",
+  "2026-10-06T22:10:31-07:00 verdict SS +190.49 / FF -70.99 / DRC 0 / checks failed [] -> NOT CLOSED",
+  "2026-10-06T22:11:25-07:00 hold-only miss (SS +190.49 / FF -70.99, DRC 0): post-route hold ECO launched on /srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/5_2_route.odb",
+  "2026-10-06T22:18:04-07:00 hold ECO MISS: {'ss_ps': -340500.58, 'ff_ps': -59.43, 'drc': 0, 'cells_added': 0, 'errors': []}",
+  "2026-10-06T22:20:12-07:00 NEEDS_RTL: SS 190.49 / FF -70.99 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+ ],
+ "updated": "2026-10-06T22:20:12-07:00",
+ "wait": null,
+ "host": "ot-epyc1tb",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024",
+ "commit_full": "8ddc7002479798a1e3d5ce5875a163d672973e75",
+ "stage_key": "summary",
+ "stage_tag": "summary.a1",
+ "stage_started": "2026-10-06T22:18:09-07:00",
+ "unreachable": 0,
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1516,
+    "mean": 341.3,
+    "min": 325.8,
+    "max": 346.4
+   },
+   "all": {
+    "n": 16444,
+    "mean": 336.3,
+    "min": 321.7,
+    "max": 346.4
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1516,
+    "mean": 205.0,
+    "min": 193.3,
+    "max": 209.9
+   },
+   "all": {
+    "n": 16444,
+    "mean": 200.7,
+    "min": 189.6,
+    "max": 209.9
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 341,
+   "CK_SS_ALL_MEAN": 336,
+   "CK_SS_MIN": 326,
+   "CK_SS_ALL_MIN": 322,
+   "CK_SS_MAX": 346,
+   "CK_SS_ALL_MAX": 346,
+   "CK_FF_MEAN": 205,
+   "CK_FF_ALL_MEAN": 201,
+   "CK_FF_MIN": 193,
+   "CK_FF_ALL_MIN": 190,
+   "CK_FF_MAX": 210,
+   "CK_FF_ALL_MAX": 210
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "metrics": {
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/logs/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/5_2_route.json"
+  ],
+  "ss_ps": 190.49,
+  "ff_ps": -70.99,
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs",
+  "errors": [],
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_die_views/hbglue/margin/signoff_cl_hbglue_cl_8ddc70024.sdc"
+  ],
+  "drc": 0
+ },
+ "checks": {},
+ "failed_checks": [],
+ "eco": {
+  "tried": true,
+  "rb": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base",
+  "ob": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base",
+  "pre": {
+   "ss_ps": 190.49,
+   "ff_ps": -70.99
+  },
+  "started": "2026-10-06T22:11:19-07:00",
+  "result": {
+   "ss_ps": -340500.58,
+   "ff_ps": -59.43,
+   "drc": 0,
+   "cells_added": 0,
+   "errors": []
+  }
+ },
+ "reason": "SS 190.49 / FF -70.99 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+}

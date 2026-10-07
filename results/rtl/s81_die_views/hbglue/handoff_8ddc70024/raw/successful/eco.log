@@ -1,0 +1,1073 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules ...
+[INFO RCX-0434] Defined process_corner MinMax0 with ext_model_index 0 (using extRulesFile defaults)
+[INFO RCX-0436] RC segment generation ot_dsrom_head_bundle_glue (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 249060 rc segments
+[INFO RCX-0439] Coupling Cap extraction ot_dsrom_head_bundle_glue ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0442] 11% of 244414 wires extracted
+[INFO RCX-0442] 23% of 244414 wires extracted
+[INFO RCX-0442] 38% of 244414 wires extracted
+[INFO RCX-0442] 57% of 244414 wires extracted
+[INFO RCX-0442] 67% of 244414 wires extracted
+[INFO RCX-0442] 76% of 244414 wires extracted
+[INFO RCX-0442] 88% of 244414 wires extracted
+[INFO RCX-0442] 100% of 244414 wires extracted
+[INFO RCX-0045] Extract 86305 nets, 335365 rsegs, 335365 caps, 132807 ccs
+[INFO RCX-0443] 86305 nets finished
+OT_ECO pre
+worst slack max 190.49
+worst slack min -195.53
+Group                                  Slack
+--------------------------------------------
+core_clk                              -70.99
+
+Group                                  Slack
+--------------------------------------------
+core_clk                              190.49
+
+[INFO RSZ-0046] Found 1569 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -195.529 | -148887.172 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+       10 |       0 |      18 |            0 |    +0.0% | -194.558 | -148378.172 | g_tree_margin.a_r[2][59]$_DFF_P_/D
+       20 |       0 |      38 |            0 |    +0.0% | -194.271 | -147807.625 | g_tree_margin.row0_r[16]$_DFF_P_/D
+       30 |       0 |      58 |            0 |    +0.0% | -193.933 | -147234.984 | g_tree_margin.a_r[3][52]$_DFF_P_/D
+       40 |       0 |      78 |            0 |    +0.1% | -193.668 | -146665.375 | g_tree_margin.a_r[2][52]$_DFF_P_/D
+       50 |       0 |      98 |            0 |    +0.1% | -193.284 | -146096.672 | g_tree_margin.a_r[1][53]$_DFF_P_/D
+       60 |       0 |     118 |            0 |    +0.1% | -192.757 | -145528.703 | g_tree_margin.a_r[0][12]$_DFF_P_/D
+       70 |       0 |     138 |            0 |    +0.1% | -192.040 | -144958.391 | g_tree_margin.a_r[3][19]$_DFF_P_/D
+       80 |       0 |     158 |            0 |    +0.1% | -191.205 | -144383.500 | g_tree_margin.a_r[2][6]$_DFF_P_/D
+       90 |       0 |     178 |            0 |    +0.1% | -190.582 | -143819.438 | g_tree_margin.a_r[2][8]$_DFF_P_/D
+      100 |       0 |     198 |            0 |    +0.1% | -190.063 | -143255.828 | g_tree_margin.a_r[2][61]$_DFF_P_/D
+      110 |       0 |     218 |            0 |    +0.2% | -189.670 | -142683.172 | g_tree_margin.a_r[1][58]$_DFF_P_/D
+      120 |       0 |     238 |            0 |    +0.2% | -189.569 | -142118.391 | g_tree_margin.a_r[3][30]$_DFF_P_/D
+      130 |       0 |     258 |            0 |    +0.2% | -189.212 | -141552.516 | g_tree_margin.a_r[0][21]$_DFF_P_/D
+      140 |       0 |     278 |            0 |    +0.2% | -189.015 | -140998.891 | g_tree_margin.a_r[0][22]$_DFF_P_/D
+      150 |       0 |     298 |            0 |    +0.2% | -188.725 | -140428.875 | g_tree_margin.a_r[0][63]$_DFF_P_/D
+      160 |       0 |     318 |            0 |    +0.2% | -188.490 | -139865.297 | g_tree_margin.a_r[2][68]$_DFF_P_/D
+      170 |       0 |     338 |            0 |    +0.2% | -187.954 | -139305.625 | g_tree_margin.a_r[0][27]$_DFF_P_/D
+      180 |       0 |     358 |            0 |    +0.3% | -187.697 | -138745.484 | g_tree_margin.a_r[3][3]$_DFF_P_/D
+      190 |       0 |     378 |            0 |    +0.3% | -187.122 | -138184.469 | g_tree_margin.a_r[2][70]$_DFF_P_/D
+      200 |       0 |     398 |            0 |    +0.3% | -186.808 | -137631.469 | g_tree_margin.a_r[3][78]$_DFF_P_/D
+      210 |       0 |     418 |            0 |    +0.3% | -186.615 | -137078.391 | g_tree_margin.row0_r[12]$_DFF_P_/D
+      220 |       0 |     438 |            0 |    +0.3% | -186.402 | -136510.312 | g_tree_margin.a_r[3][7]$_DFF_P_/D
+      230 |       0 |     458 |            0 |    +0.3% | -186.163 | -135956.891 | g_tree_margin.a_r[3][28]$_DFF_P_/D
+      240 |       0 |     478 |            0 |    +0.3% | -185.928 | -135400.750 | g_tree_margin.a_r[3][24]$_DFF_P_/D
+      250 |       0 |     498 |            0 |    +0.4% | -185.689 | -134843.406 | g_tree_margin.a_r[3][44]$_DFF_P_/D
+      260 |       0 |     518 |            0 |    +0.4% | -185.494 | -134290.359 | g_tree_margin.a_r[1][75]$_DFF_P_/D
+      270 |       0 |     538 |            0 |    +0.4% | -185.252 | -133726.609 | g_tree_margin.row0_r[11]$_DFF_P_/D
+      280 |       0 |     558 |            0 |    +0.4% | -185.011 | -133167.625 | g_tree_margin.a_r[1][72]$_DFF_P_/D
+      290 |       0 |     578 |            0 |    +0.4% | -184.845 | -132613.938 | g_tree_margin.a_r[3][25]$_DFF_P_/D
+      300 |       0 |     598 |            0 |    +0.4% | -184.662 | -132053.344 | g_tree_margin.a_r[0][36]$_DFF_P_/D
+      310 |       0 |     618 |            0 |    +0.5% | -184.287 | -131504.766 | g_tree_margin.a_r[3][26]$_DFF_P_/D
+      320 |       0 |     638 |            0 |    +0.5% | -183.703 | -130958.781 | g_tree_margin.a_r[2][46]$_DFF_P_/D
+      330 |       0 |     658 |            0 |    +0.5% | -182.320 | -130406.055 | g_tree_margin.a_r[0][48]$_DFF_P_/D
+      340 |       0 |     678 |            0 |    +0.5% | -180.561 | -129852.938 | g_tree_margin.a_r[0][39]$_DFF_P_/D
+      350 |       0 |     698 |            0 |    +0.5% | -166.852 | -129288.492 | g_tree_margin.row0_r[4]$_DFF_P_/D
+      360 |       0 |     710 |            0 |    +0.5% | -162.806 | -128961.805 | u_x.genblk1.g_delay.g_stage[0].stage_q[94]$_DFF_P_/D
+      370 |       0 |     720 |            0 |    +0.5% | -161.597 | -128691.969 | u_x.genblk1.g_delay.g_stage[0].stage_q[197]$_DFF_P_/D
+      380 |       0 |     730 |            0 |    +0.5% | -161.109 | -128422.016 | u_x.genblk1.g_delay.g_stage[0].stage_q[247]$_DFF_P_/D
+      390 |       0 |     740 |            0 |    +0.5% | -160.498 | -128155.281 | u_x.genblk1.g_delay.g_stage[0].stage_q[413]$_DFF_P_/D
+      400 |       0 |     750 |            0 |    +0.5% | -159.966 | -127889.438 | u_x.genblk1.g_delay.g_stage[0].stage_q[275]$_DFF_P_/D
+      410 |       0 |     760 |            0 |    +0.6% | -159.131 | -127620.625 | u_x.genblk1.g_delay.g_stage[0].stage_q[408]$_DFF_P_/D
+      420 |       0 |     770 |            0 |    +0.6% | -158.775 | -127349.508 | u_x.genblk1.g_delay.g_stage[0].stage_q[401]$_DFF_P_/D
+      430 |       0 |     780 |            0 |    +0.6% | -158.048 | -127080.398 | u_x.genblk1.g_delay.g_stage[0].stage_q[126]$_DFF_P_/D
+      440 |       0 |     790 |            0 |    +0.6% | -157.702 | -126809.953 | u_x.genblk1.g_delay.g_stage[0].stage_q[272]$_DFF_P_/D
+      450 |       0 |     800 |            0 |    +0.6% | -157.376 | -126543.812 | u_x.genblk1.g_delay.g_stage[0].stage_q[256]$_DFF_P_/D
+      460 |       0 |     810 |            0 |    +0.6% | -157.134 | -126275.422 | u_x.genblk1.g_delay.g_stage[0].stage_q[158]$_DFF_P_/D
+      470 |       0 |     820 |            0 |    +0.6% | -156.776 | -126005.930 | u_x.genblk1.g_delay.g_stage[0].stage_q[412]$_DFF_P_/D
+      480 |       0 |     830 |            0 |    +0.6% | -156.607 | -125734.047 | u_x.genblk1.g_delay.g_stage[0].stage_q[431]$_DFF_P_/D
+      490 |       0 |     840 |            0 |    +0.6% | -156.349 | -125462.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[144]$_DFF_P_/D
+      500 |       0 |     850 |            0 |    +0.6% | -156.017 | -125191.523 | bd_r[27]$_DFFE_PP_/D
+      510 |       0 |     861 |            0 |    +0.6% | -155.720 | -124892.539 | u_x.genblk1.g_delay.g_stage[0].stage_q[289]$_DFF_P_/D
+      520 |       0 |     871 |            0 |    +0.6% | -155.492 | -124624.320 | u_x.genblk1.g_delay.g_stage[0].stage_q[142]$_DFF_P_/D
+      530 |       0 |     881 |            0 |    +0.6% | -155.091 | -124352.281 | u_x.genblk1.g_delay.g_stage[0].stage_q[267]$_DFF_P_/D
+      540 |       0 |     891 |            0 |    +0.7% | -154.848 | -124079.391 | u_x.genblk1.g_delay.g_stage[0].stage_q[235]$_DFF_P_/D
+      550 |       0 |     905 |            0 |    +0.7% | -154.513 | -123703.289 | u_x.genblk1.g_delay.g_stage[0].stage_q[212]$_DFF_P_/D
+      560 |       0 |     915 |            0 |    +0.7% | -154.130 | -123438.195 | u_x.genblk1.g_delay.g_stage[0].stage_q[462]$_DFF_P_/D
+      570 |       0 |     925 |            0 |    +0.7% | -153.867 | -123171.078 | u_x.genblk1.g_delay.g_stage[0].stage_q[410]$_DFF_P_/D
+      580 |       0 |     935 |            0 |    +0.7% | -153.713 | -122902.141 | u_x.genblk1.g_delay.g_stage[0].stage_q[238]$_DFF_P_/D
+      590 |       0 |     945 |            0 |    +0.7% | -153.584 | -122636.008 | u_x.genblk1.g_delay.g_stage[0].stage_q[15]$_DFF_P_/D
+      600 |       0 |     959 |            0 |    +0.7% | -153.255 | -122258.203 | u_x.genblk1.g_delay.g_stage[0].stage_q[106]$_DFF_P_/D
+      610 |       0 |     969 |            0 |    +0.7% | -152.988 | -121983.164 | u_x.genblk1.g_delay.g_stage[0].stage_q[40]$_DFF_P_/D
+      620 |       0 |     983 |            0 |    +0.7% | -152.826 | -121603.609 | u_x.genblk1.g_delay.g_stage[0].stage_q[388]$_DFF_P_/D
+      630 |       0 |     997 |            0 |    +0.7% | -152.325 | -121228.352 | u_x.genblk1.g_delay.g_stage[0].stage_q[99]$_DFF_P_/D
+      640 |       0 |    1009 |            0 |    +0.7% | -152.048 | -120906.836 | bd_r[4]$_DFFE_PP_/D
+      650 |       0 |    1025 |            0 |    +0.8% | -151.820 | -120476.203 | u_x.genblk1.g_delay.g_stage[0].stage_q[379]$_DFF_P_/D
+      660 |       0 |    1035 |            0 |    +0.8% | -151.463 | -120209.422 | u_x.genblk1.g_delay.g_stage[0].stage_q[282]$_DFF_P_/D
+      670 |       0 |    1045 |            0 |    +0.8% | -151.275 | -119941.758 | u_x.genblk1.g_delay.g_stage[0].stage_q[465]$_DFF_P_/D
+      680 |       0 |    1055 |            0 |    +0.8% | -151.068 | -119671.117 | u_x.genblk1.g_delay.g_stage[0].stage_q[426]$_DFF_P_/D
+      690 |       0 |    1065 |            0 |    +0.8% | -150.721 | -119404.062 | u_x.genblk1.g_delay.g_stage[0].stage_q[433]$_DFF_P_/D
+      700 |       0 |    1083 |            0 |    +0.8% | -150.446 | -118919.352 | u_x.genblk1.g_delay.g_stage[0].stage_q[258]$_DFF_P_/D
+      710 |       0 |    1093 |            0 |    +0.8% | -150.154 | -118651.141 | u_x.genblk1.g_delay.g_stage[0].stage_q[160]$_DFF_P_/D
+      720 |       0 |    1109 |            0 |    +0.8% | -149.909 | -118219.609 | u_x.genblk1.g_delay.g_stage[0].stage_q[168]$_DFF_P_/D
+      730 |       0 |    1119 |            0 |    +0.8% | -149.722 | -117952.336 | u_x.genblk1.g_delay.g_stage[0].stage_q[450]$_DFF_P_/D
+      740 |       0 |    1135 |            0 |    +0.8% | -149.556 | -117522.977 | u_x.genblk1.g_delay.g_stage[0].stage_q[464]$_DFF_P_/D
+      750 |       0 |    1147 |            0 |    +0.8% | -149.402 | -117202.758 | u_x.genblk1.g_delay.g_stage[0].stage_q[476]$_DFF_P_/D
+      760 |       0 |    1157 |            0 |    +0.8% | -149.116 | -116930.984 | u_x.genblk1.g_delay.g_stage[0].stage_q[166]$_DFF_P_/D
+      770 |       0 |    1167 |            0 |    +0.9% | -148.758 | -116662.883 | u_x.genblk1.g_delay.g_stage[0].stage_q[368]$_DFF_P_/D
+      780 |       0 |    1181 |            0 |    +0.9% | -148.402 | -116286.594 | u_x.genblk1.g_delay.g_stage[0].stage_q[350]$_DFF_P_/D
+      790 |       0 |    1199 |            0 |    +0.9% | -147.123 | -115847.750 | bd_r[10]$_DFFE_PP_/D
+      800 |       0 |    1213 |            0 |    +0.9% | -144.710 | -115477.234 | u_x.genblk1.g_delay.g_stage[0].stage_q[1]$_DFF_P_/D
+      810 |       0 |    1223 |            0 |    +0.9% | -142.169 | -115206.250 | u_x.genblk1.g_delay.g_stage[0].stage_q[490]$_DFF_P_/D
+      820 |       0 |    1233 |            0 |    +0.9% | -141.899 | -114937.414 | u_x.genblk1.g_delay.g_stage[0].stage_q[102]$_DFF_P_/D
+      830 |       0 |    1243 |            0 |    +0.9% | -140.808 | -114667.625 | u_x.genblk1.g_delay.g_stage[0].stage_q[382]$_DFF_P_/D
+      840 |       0 |    1253 |            0 |    +0.9% | -140.253 | -114395.797 | u_x.genblk1.g_delay.g_stage[0].stage_q[100]$_DFF_P_/D
+      850 |       0 |    1263 |            0 |    +0.9% | -139.866 | -114125.477 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      860 |       0 |    1273 |            0 |    +0.9% | -139.866 | -113862.055 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      870 |       0 |    1283 |            0 |    +0.9% | -139.866 | -113594.047 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      880 |       0 |    1293 |            0 |    +0.9% | -139.866 | -113328.031 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      890 |       0 |    1303 |            0 |    +1.0% | -139.866 | -113061.891 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      900 |       0 |    1311 |            0 |    +1.0% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      910 |       0 |    1336 |            0 |    +1.0% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      920 |       0 |    1364 |            0 |    +1.0% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      930 |       0 |    1391 |            0 |    +1.0% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      940 |       0 |    1417 |            0 |    +1.0% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      950 |       0 |    1445 |            0 |    +1.1% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      960 |       0 |    1471 |            0 |    +1.1% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      970 |       0 |    1500 |            0 |    +1.1% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      980 |       0 |    1529 |            0 |    +1.1% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+      990 |       0 |    1556 |            0 |    +1.1% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1000 |       0 |    1582 |            0 |    +1.2% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1010 |       0 |    1609 |            0 |    +1.2% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1020 |       0 |    1639 |            0 |    +1.2% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1030 |       0 |    1663 |            0 |    +1.2% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1040 |       0 |    1690 |            0 |    +1.2% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1050 |       0 |    1718 |            0 |    +1.3% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1060 |       0 |    1744 |            0 |    +1.3% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1070 |       0 |    1769 |            0 |    +1.3% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1080 |       0 |    1798 |            0 |    +1.3% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1090 |       0 |    1827 |            0 |    +1.3% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1100 |       0 |    1850 |            0 |    +1.4% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1110 |       0 |    1875 |            0 |    +1.4% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1120 |       0 |    1902 |            0 |    +1.4% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1130 |       0 |    1930 |            0 |    +1.4% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1140 |       0 |    1958 |            0 |    +1.4% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1150 |       0 |    1985 |            0 |    +1.5% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1160 |       0 |    2013 |            0 |    +1.5% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1170 |       0 |    2041 |            0 |    +1.5% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1180 |       0 |    2070 |            0 |    +1.5% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1190 |       0 |    2099 |            0 |    +1.5% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1200 |       0 |    2127 |            0 |    +1.6% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1210 |       0 |    2157 |            0 |    +1.6% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1220 |       0 |    2186 |            0 |    +1.6% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1230 |       0 |    2211 |            0 |    +1.6% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1240 |       0 |    2240 |            0 |    +1.6% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1250 |       0 |    2269 |            0 |    +1.7% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1260 |       0 |    2299 |            0 |    +1.7% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1270 |       0 |    2328 |            0 |    +1.7% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1280 |       0 |    2358 |            0 |    +1.7% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1290 |       0 |    2388 |            0 |    +1.7% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1300 |       0 |    2417 |            0 |    +1.8% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1310 |       0 |    2447 |            0 |    +1.8% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1320 |       0 |    2476 |            0 |    +1.8% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1330 |       0 |    2505 |            0 |    +1.8% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1340 |       0 |    2533 |            0 |    +1.9% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1350 |       0 |    2563 |            0 |    +1.9% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1360 |       0 |    2592 |            0 |    +1.9% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1370 |       0 |    2624 |            0 |    +1.9% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1380 |       0 |    2655 |            0 |    +1.9% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1390 |       0 |    2679 |            0 |    +2.0% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1400 |       0 |    2700 |            0 |    +2.0% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1410 |       0 |    2726 |            0 |    +2.0% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1420 |       0 |    2756 |            0 |    +2.0% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1430 |       0 |    2786 |            0 |    +2.0% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1440 |       0 |    2816 |            0 |    +2.1% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1450 |       0 |    2845 |            0 |    +2.1% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1460 |       0 |    2875 |            0 |    +2.1% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1470 |       0 |    2904 |            0 |    +2.1% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1480 |       0 |    2934 |            0 |    +2.1% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1490 |       0 |    2964 |            0 |    +2.2% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1500 |       0 |    2994 |            0 |    +2.2% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1510 |       0 |    3024 |            0 |    +2.2% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1520 |       0 |    3054 |            0 |    +2.2% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1530 |       0 |    3083 |            0 |    +2.3% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1540 |       0 |    3113 |            0 |    +2.3% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1550 |       0 |    3143 |            0 |    +2.3% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1560 |       0 |    3174 |            0 |    +2.3% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1570 |       0 |    3201 |            0 |    +2.3% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1570 |       0 |    3201 |            0 |    +2.3% | -139.866 | -112360.859 | g_tree_margin.a_r[1][57]$_DFF_P_/D
+     1580 |       0 |    3241 |            0 |    +2.4% | -138.039 | -111300.422 | g_tree_margin.a_r[0][42]$_DFF_P_/D
+     1590 |       0 |    3281 |            0 |    +2.4% | -137.419 | -110242.203 | g_tree_margin.a_r[1][44]$_DFF_P_/D
+     1600 |       0 |    3317 |            0 |    +2.4% | -137.100 | -109285.203 | g_tree_margin.row0_r[16]$_DFF_P_/D
+     1610 |       0 |    3357 |            0 |    +2.5% | -136.887 | -108221.805 | g_tree_margin.a_r[1][42]$_DFF_P_/D
+     1620 |       0 |    3393 |            0 |    +2.5% | -136.390 | -107261.266 | u_x.genblk1.g_delay.g_stage[0].stage_q[325]$_DFF_P_/D
+     1630 |       0 |    3429 |            0 |    +2.5% | -136.232 | -106306.727 | g_tree_margin.a_r[1][0]$_DFF_P_/D
+     1640 |       0 |    3465 |            0 |    +2.5% | -136.055 | -105355.273 | g_tree_margin.a_r[0][12]$_DFF_P_/D
+     1650 |       0 |    3501 |            0 |    +2.6% | -135.663 | -104397.164 | g_tree_margin.a_r[2][55]$_DFF_P_/D
+     1660 |       0 |    3529 |            0 |    +2.6% | -135.334 | -103650.930 | g_tree_margin.a_r[0][11]$_DFF_P_/D
+     1670 |       0 |    3567 |            0 |    +2.6% | -134.945 | -102641.250 | u_x.genblk1.g_delay.g_stage[0].stage_q[478]$_DFF_P_/D
+     1680 |       0 |    3599 |            0 |    +2.6% | -134.672 | -101794.898 | u_x.genblk1.g_delay.g_stage[0].stage_q[498]$_DFF_P_/D
+     1690 |       0 |    3629 |            0 |    +2.7% | -134.380 | -100996.344 | u_x.genblk1.g_delay.g_stage[0].stage_q[413]$_DFF_P_/D
+     1700 |       0 |    3657 |            0 |    +2.7% | -134.063 | -100257.844 | g_tree_margin.a_r[1][54]$_DFF_P_/D
+     1710 |       0 |    3689 |            0 |    +2.7% | -133.818 | -99412.109 | u_x.genblk1.g_delay.g_stage[0].stage_q[332]$_DFF_P_/D
+     1720 |       0 |    3725 |            0 |    +2.7% | -133.645 | -98456.805 | u_x.genblk1.g_delay.g_stage[0].stage_q[275]$_DFF_P_/D
+     1730 |       0 |    3757 |            0 |    +2.8% | -133.465 | -97608.195 | g_tree_margin.a_r[2][5]$_DFF_P_/D
+     1740 |       0 |    3789 |            0 |    +2.8% | -133.253 | -96759.609 | u_x.genblk1.g_delay.g_stage[0].stage_q[401]$_DFF_P_/D
+     1750 |       0 |    3823 |            0 |    +2.8% | -133.063 | -95854.250 | u_x.genblk1.g_delay.g_stage[0].stage_q[65]$_DFF_P_/D
+     1760 |       0 |    3857 |            0 |    +2.8% | -132.866 | -94949.148 | g_tree_margin.a_r[2][4]$_DFF_P_/D
+     1770 |       0 |    3891 |            0 |    +2.8% | -132.554 | -94047.719 | g_tree_margin.a_r[3][22]$_DFF_P_/D
+     1780 |       0 |    3925 |            0 |    +2.9% | -132.395 | -93149.883 | g_tree_margin.a_r[1][3]$_DFF_P_/D
+     1790 |       0 |    3961 |            0 |    +2.9% | -132.216 | -92196.586 | u_x.genblk1.g_delay.g_stage[0].stage_q[281]$_DFF_P_/D
+     1800 |       0 |    3993 |            0 |    +2.9% | -132.063 | -91345.586 | u_x.genblk1.g_delay.g_stage[0].stage_q[269]$_DFF_P_/D
+     1810 |       0 |    4025 |            0 |    +2.9% | -131.795 | -90500.398 | g_tree_margin.a_r[0][61]$_DFF_P_/D
+     1820 |       0 |    4061 |            0 |    +3.0% | -131.625 | -89549.656 | u_x.genblk1.g_delay.g_stage[0].stage_q[19]$_DFF_P_/D
+     1830 |       0 |    4093 |            0 |    +3.0% | -131.475 | -88702.172 | u_x.genblk1.g_delay.g_stage[0].stage_q[249]$_DFF_P_/D
+     1840 |       0 |    4125 |            0 |    +3.0% | -131.305 | -87857.023 | g_tree_margin.a_r[0][25]$_DFF_P_/D
+     1850 |       0 |    4157 |            0 |    +3.0% | -131.131 | -87013.344 | u_x.genblk1.g_delay.g_stage[0].stage_q[431]$_DFF_P_/D
+     1860 |       0 |    4193 |            0 |    +3.1% | -130.966 | -86065.414 | g_tree_margin.a_r[3][40]$_DFF_P_/D
+     1870 |       0 |    4223 |            0 |    +3.1% | -130.846 | -85274.219 | g_tree_margin.a_r[0][47]$_DFF_P_/D
+     1880 |       0 |    4255 |            0 |    +3.1% | -130.734 | -84430.031 | u_x.genblk1.g_delay.g_stage[0].stage_q[23]$_DFF_P_/D
+     1890 |       0 |    4285 |            0 |    +3.1% | -130.593 | -83632.859 | u_x.genblk1.g_delay.g_stage[0].stage_q[105]$_DFF_P_/D
+     1900 |       0 |    4317 |            0 |    +3.2% | -130.405 | -82786.234 | g_tree_margin.a_r[1][24]$_DFF_P_/D
+     1910 |       0 |    4345 |            0 |    +3.2% | -130.283 | -82043.797 | g_tree_margin.a_r[1][39]$_DFF_P_/D
+     1920 |       0 |    4381 |            0 |    +3.2% | -130.148 | -81092.078 | g_tree_margin.a_r[3][71]$_DFF_P_/D
+     1930 |       0 |    4415 |            0 |    +3.2% | -130.002 | -80190.648 | g_tree_margin.a_r[0][0]$_DFF_P_/D
+     1940 |       0 |    4447 |            0 |    +3.3% | -129.929 | -79345.344 | g_tree_margin.a_r[0][8]$_DFF_P_/D
+     1950 |       0 |    4479 |            0 |    +3.3% | -129.817 | -78497.641 | g_tree_margin.a_r[3][69]$_DFF_P_/D
+     1960 |       0 |    4511 |            0 |    +3.3% | -129.595 | -77651.133 | g_tree_margin.a_r[2][78]$_DFF_P_/D
+     1970 |       0 |    4545 |            0 |    +3.3% | -129.379 | -76751.461 | u_x.genblk1.g_delay.g_stage[0].stage_q[30]$_DFF_P_/D
+     1980 |       0 |    4571 |            0 |    +3.3% | -129.251 | -76062.445 | u_x.genblk1.g_delay.g_stage[0].stage_q[12]$_DFF_P_/D
+     1990 |       0 |    4597 |            0 |    +3.4% | -129.075 | -75376.156 | u_x.genblk1.g_delay.g_stage[0].stage_q[421]$_DFF_P_/D
+     2000 |       0 |    4623 |            0 |    +3.4% | -128.947 | -74690.094 | u_x.genblk1.g_delay.g_stage[0].stage_q[459]$_DFF_P_/D
+     2010 |       0 |    4651 |            0 |    +3.4% | -128.879 | -73950.898 | u_x.genblk1.g_delay.g_stage[0].stage_q[453]$_DFF_P_/D
+     2020 |       0 |    4679 |            0 |    +3.4% | -128.642 | -73208.133 | g_tree_margin.a_r[1][40]$_DFF_P_/D
+     2030 |       0 |    4707 |            0 |    +3.4% | -128.518 | -72467.008 | g_tree_margin.a_r[2][66]$_DFF_P_/D
+     2040 |       0 |    4739 |            0 |    +3.5% | -128.382 | -71619.398 | g_tree_margin.a_r[0][78]$_DFF_P_/D
+     2050 |       0 |    4768 |            0 |    +3.5% | -128.186 | -70847.734 | u_x.genblk1.g_delay.g_stage[0].stage_q[267]$_DFF_P_/D
+     2060 |       0 |    4796 |            0 |    +3.5% | -128.035 | -70104.734 | u_x.genblk1.g_delay.g_stage[0].stage_q[127]$_DFF_P_/D
+     2070 |       0 |    4820 |            0 |    +3.5% | -127.946 | -69469.148 | u_x.genblk1.g_delay.g_stage[0].stage_q[280]$_DFF_P_/D
+     2080 |       0 |    4850 |            0 |    +3.6% | -127.774 | -68672.484 | u_x.genblk1.g_delay.g_stage[0].stage_q[508]$_DFF_P_/D
+     2090 |       0 |    4874 |            0 |    +3.6% | -127.519 | -68033.148 | u_x.genblk1.g_delay.g_stage[0].stage_q[297]$_DFF_P_/D
+     2100 |       0 |    4898 |            0 |    +3.6% | -127.310 | -67395.297 | u_x.genblk1.g_delay.g_stage[0].stage_q[339]$_DFF_P_/D
+     2110 |       0 |    4924 |            0 |    +3.6% | -127.069 | -66705.219 | u_x.genblk1.g_delay.g_stage[0].stage_q[218]$_DFF_P_/D
+     2120 |       0 |    4948 |            0 |    +3.6% | -126.774 | -66069.211 | u_x.genblk1.g_delay.g_stage[0].stage_q[238]$_DFF_P_/D
+     2130 |       0 |    4972 |            0 |    +3.6% | -126.517 | -65436.660 | u_x.genblk1.g_delay.g_stage[0].stage_q[301]$_DFF_P_/D
+     2140 |       0 |    5000 |            0 |    +3.7% | -126.249 | -64697.496 | g_tree_margin.a_r[1][72]$_DFF_P_/D
+     2150 |       0 |    5024 |            0 |    +3.7% | -125.913 | -64061.949 | u_x.genblk1.g_delay.g_stage[0].stage_q[485]$_DFF_P_/D
+     2160 |       0 |    5046 |            0 |    +3.7% | -125.666 | -63480.473 | u_x.genblk1.g_delay.g_stage[0].stage_q[388]$_DFF_P_/D
+     2170 |       0 |    5070 |            0 |    +3.7% | -125.425 | -62844.207 | u_x.genblk1.g_delay.g_stage[0].stage_q[203]$_DFF_P_/D
+     2180 |       0 |    5092 |            0 |    +3.7% | -125.242 | -62260.219 | u_x.genblk1.g_delay.g_stage[0].stage_q[506]$_DFF_P_/D
+     2190 |       0 |    5116 |            0 |    +3.7% | -124.971 | -61627.504 | u_x.genblk1.g_delay.g_stage[0].stage_q[502]$_DFF_P_/D
+     2200 |       0 |    5136 |            0 |    +3.8% | -124.772 | -61096.039 | u_x.genblk1.g_delay.g_stage[0].stage_q[128]$_DFF_P_/D
+     2210 |       0 |    5158 |            0 |    +3.8% | -124.622 | -60512.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[258]$_DFF_P_/D
+     2220 |       0 |    5180 |            0 |    +3.8% | -124.382 | -59924.340 | u_x.genblk1.g_delay.g_stage[0].stage_q[46]$_DFF_P_/D
+     2230 |       0 |    5200 |            0 |    +3.8% | -124.029 | -59396.914 | u_x.genblk1.g_delay.g_stage[0].stage_q[7]$_DFF_P_/D
+     2240 |       0 |    5222 |            0 |    +3.8% | -123.741 | -58811.223 | u_x.genblk1.g_delay.g_stage[0].stage_q[454]$_DFF_P_/D
+     2250 |       0 |    5242 |            0 |    +3.8% | -123.561 | -58277.949 | u_x.genblk1.g_delay.g_stage[0].stage_q[55]$_DFF_P_/D
+     2260 |       0 |    5264 |            0 |    +3.9% | -123.260 | -57692.199 | u_x.genblk1.g_delay.g_stage[0].stage_q[426]$_DFF_P_/D
+     2270 |       0 |    5288 |            0 |    +3.9% | -122.926 | -57057.934 | u_x.genblk1.g_delay.g_stage[0].stage_q[118]$_DFF_P_/D
+     2280 |       0 |    5310 |            0 |    +3.9% | -122.522 | -56474.848 | u_x.genblk1.g_delay.g_stage[0].stage_q[75]$_DFF_P_/D
+     2290 |       0 |    5330 |            0 |    +3.9% | -122.215 | -55943.453 | u_x.genblk1.g_delay.g_stage[0].stage_q[450]$_DFF_P_/D
+     2300 |       0 |    5350 |            0 |    +3.9% | -121.940 | -55415.039 | u_x.genblk1.g_delay.g_stage[0].stage_q[403]$_DFF_P_/D
+     2310 |       0 |    5370 |            0 |    +3.9% | -121.505 | -54884.875 | u_x.genblk1.g_delay.g_stage[0].stage_q[321]$_DFF_P_/D
+     2320 |       0 |    5390 |            0 |    +3.9% | -120.544 | -54357.598 | u_x.genblk1.g_delay.g_stage[0].stage_q[299]$_DFF_P_/D
+     2330 |       0 |    5410 |            0 |    +4.0% | -118.296 | -53825.902 | u_x.genblk1.g_delay.g_stage[0].stage_q[20]$_DFF_P_/D
+     2340 |       0 |    5430 |            0 |    +4.0% | -115.926 | -53288.332 | u_x.genblk1.g_delay.g_stage[0].stage_q[237]$_DFF_P_/D
+     2350 |       0 |    5450 |            0 |    +4.0% | -114.968 | -52764.641 | u_x.genblk1.g_delay.g_stage[0].stage_q[123]$_DFF_P_/D
+     2360 |       0 |    5474 |            0 |    +4.0% | -113.979 | -52129.785 | u_x.genblk1.g_delay.g_stage[0].stage_q[226]$_DFF_P_/D
+     2370 |       0 |    5496 |            0 |    +4.0% | -113.562 | -51549.906 | u_x.genblk1.g_delay.g_stage[0].stage_q[76]$_DFF_P_/D
+     2380 |       0 |    5516 |            0 |    +4.0% | -112.698 | -51019.395 | u_x.genblk1.g_delay.g_stage[0].stage_q[457]$_DFF_P_/D
+     2390 |       0 |    5538 |            0 |    +4.1% | -112.401 | -50437.191 | u_x.genblk1.g_delay.g_stage[0].stage_q[461]$_DFF_P_/D
+     2400 |       0 |    5558 |            0 |    +4.1% | -111.161 | -49909.156 | u_x.genblk1.g_delay.g_stage[0].stage_q[481]$_DFF_P_/D
+     2410 |       0 |    5580 |            0 |    +4.1% | -110.284 | -49326.820 | u_x.genblk1.g_delay.g_stage[0].stage_q[356]$_DFF_P_/D
+     2420 |       0 |    5602 |            0 |    +4.1% | -109.460 | -48737.922 | u_x.genblk1.g_delay.g_stage[0].stage_q[244]$_DFF_P_/D
+     2430 |       0 |    5622 |            0 |    +4.1% | -108.158 | -48209.898 | u_x.genblk1.g_delay.g_stage[0].stage_q[487]$_DFF_P_/D
+     2440 |       0 |    5658 |            0 |    +4.1% | -99.470 | -47509.578 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2450 |       0 |    5698 |            0 |    +4.2% | -99.470 | -46802.785 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2460 |       0 |    5738 |            0 |    +4.2% | -99.470 | -46115.223 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2470 |       0 |    5784 |            0 |    +4.2% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2480 |       0 |    5834 |            0 |    +4.3% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2490 |       0 |    5884 |            0 |    +4.3% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2500 |       0 |    5934 |            0 |    +4.3% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2510 |       0 |    5983 |            0 |    +4.4% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2520 |       0 |    6031 |            0 |    +4.4% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2530 |       0 |    6072 |            0 |    +4.4% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2540 |       0 |    6112 |            0 |    +4.5% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2550 |       0 |    6152 |            0 |    +4.5% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2560 |       0 |    6192 |            0 |    +4.5% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2570 |       0 |    6232 |            0 |    +4.6% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2580 |       0 |    6272 |            0 |    +4.6% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2590 |       0 |    6312 |            0 |    +4.6% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2600 |       0 |    6352 |            0 |    +4.7% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2610 |       0 |    6392 |            0 |    +4.7% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2620 |       0 |    6432 |            0 |    +4.7% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2630 |       0 |    6472 |            0 |    +4.7% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2640 |       0 |    6512 |            0 |    +4.8% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2650 |       0 |    6552 |            0 |    +4.8% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2660 |       0 |    6592 |            0 |    +4.8% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2670 |       0 |    6632 |            0 |    +4.9% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2680 |       0 |    6672 |            0 |    +4.9% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2690 |       0 |    6712 |            0 |    +4.9% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2700 |       0 |    6752 |            0 |    +4.9% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2710 |       0 |    6791 |            0 |    +5.0% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2720 |       0 |    6827 |            0 |    +5.0% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2730 |       0 |    6863 |            0 |    +5.0% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2740 |       0 |    6896 |            0 |    +5.0% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2750 |       0 |    6926 |            0 |    +5.1% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2760 |       0 |    6957 |            0 |    +5.1% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2770 |       0 |    6987 |            0 |    +5.1% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2780 |       0 |    7017 |            0 |    +5.1% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2790 |       0 |    7047 |            0 |    +5.2% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2800 |       0 |    7077 |            0 |    +5.2% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2810 |       0 |    7107 |            0 |    +5.2% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2820 |       0 |    7137 |            0 |    +5.2% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2830 |       0 |    7167 |            0 |    +5.2% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2840 |       0 |    7197 |            0 |    +5.3% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2850 |       0 |    7227 |            0 |    +5.3% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2860 |       0 |    7257 |            0 |    +5.3% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2870 |       0 |    7287 |            0 |    +5.3% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2880 |       0 |    7317 |            0 |    +5.4% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2890 |       0 |    7347 |            0 |    +5.4% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2900 |       0 |    7377 |            0 |    +5.4% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2910 |       0 |    7407 |            0 |    +5.4% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2920 |       0 |    7437 |            0 |    +5.4% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2930 |       0 |    7467 |            0 |    +5.5% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2940 |       0 |    7497 |            0 |    +5.5% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2950 |       0 |    7527 |            0 |    +5.5% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2960 |       0 |    7557 |            0 |    +5.5% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2970 |       0 |    7587 |            0 |    +5.6% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2980 |       0 |    7617 |            0 |    +5.6% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     2990 |       0 |    7647 |            0 |    +5.6% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3000 |       0 |    7677 |            0 |    +5.6% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3010 |       0 |    7707 |            0 |    +5.6% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3020 |       0 |    7737 |            0 |    +5.7% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3030 |       0 |    7767 |            0 |    +5.7% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3040 |       0 |    7797 |            0 |    +5.7% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3050 |       0 |    7826 |            0 |    +5.7% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3060 |       0 |    7848 |            0 |    +5.7% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3070 |       0 |    7868 |            0 |    +5.8% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3080 |       0 |    7888 |            0 |    +5.8% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3090 |       0 |    7908 |            0 |    +5.8% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3100 |       0 |    7928 |            0 |    +5.8% | -99.470 | -45777.688 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3110 |       0 |    7955 |            0 |    +5.8% | -83.002 | -45280.023 | u_x.genblk1.g_delay.g_stage[0].stage_q[27]$_DFF_P_/D
+     3120 |       0 |    7995 |            0 |    +5.9% | -82.134 | -44454.977 | u_x.genblk1.g_delay.g_stage[0].stage_q[247]$_DFF_P_/D
+     3130 |       0 |    8035 |            0 |    +5.9% | -81.777 | -43634.891 | u_x.genblk1.g_delay.g_stage[0].stage_q[498]$_DFF_P_/D
+     3140 |       0 |    8075 |            0 |    +5.9% | -81.192 | -42820.465 | u_x.genblk1.g_delay.g_stage[0].stage_q[385]$_DFF_P_/D
+     3150 |       0 |    8115 |            0 |    +5.9% | -80.279 | -42012.594 | u_x.genblk1.g_delay.g_stage[0].stage_q[437]$_DFF_P_/D
+     3160 |       0 |    8155 |            0 |    +6.0% | -79.437 | -41213.465 | u_x.genblk1.g_delay.g_stage[0].stage_q[286]$_DFF_P_/D
+     3170 |       0 |    8195 |            0 |    +6.0% | -78.896 | -40422.508 | u_x.genblk1.g_delay.g_stage[0].stage_q[285]$_DFF_P_/D
+     3180 |       0 |    8235 |            0 |    +6.0% | -78.560 | -39635.465 | u_x.genblk1.g_delay.g_stage[0].stage_q[17]$_DFF_P_/D
+     3190 |       0 |    8275 |            0 |    +6.1% | -78.189 | -38851.238 | u_x.genblk1.g_delay.g_stage[0].stage_q[357]$_DFF_P_/D
+     3200 |       0 |    8315 |            0 |    +6.1% | -77.744 | -38071.504 | u_x.genblk1.g_delay.g_stage[0].stage_q[146]$_DFF_P_/D
+     3210 |       0 |    8355 |            0 |    +6.1% | -77.311 | -37295.383 | u_x.genblk1.g_delay.g_stage[0].stage_q[157]$_DFF_P_/D
+     3220 |       0 |    8395 |            0 |    +6.1% | -77.092 | -36523.605 | u_x.genblk1.g_delay.g_stage[0].stage_q[164]$_DFF_P_/D
+     3230 |       0 |    8435 |            0 |    +6.2% | -76.760 | -35754.246 | u_x.genblk1.g_delay.g_stage[0].stage_q[486]$_DFF_P_/D
+     3240 |       0 |    8475 |            0 |    +6.2% | -76.436 | -34988.145 | u_x.genblk1.g_delay.g_stage[0].stage_q[44]$_DFF_P_/D
+     3250 |       0 |    8515 |            0 |    +6.2% | -76.186 | -34224.969 | u_x.genblk1.g_delay.g_stage[0].stage_q[133]$_DFF_P_/D
+     3260 |       0 |    8555 |            0 |    +6.3% | -75.795 | -33464.883 | u_x.genblk1.g_delay.g_stage[0].stage_q[292]$_DFF_P_/D
+     3270 |       0 |    8595 |            0 |    +6.3% | -75.566 | -32708.158 | u_x.genblk1.g_delay.g_stage[0].stage_q[140]$_DFF_P_/D
+     3280 |       0 |    8635 |            0 |    +6.3% | -75.225 | -31954.375 | u_x.genblk1.g_delay.g_stage[0].stage_q[130]$_DFF_P_/D
+     3290 |       0 |    8675 |            0 |    +6.4% | -74.818 | -31204.383 | u_x.genblk1.g_delay.g_stage[0].stage_q[145]$_DFF_P_/D
+     3300 |       0 |    8715 |            0 |    +6.4% | -74.533 | -30457.457 | u_x.genblk1.g_delay.g_stage[0].stage_q[280]$_DFF_P_/D
+     3310 |       0 |    8755 |            0 |    +6.4% | -74.310 | -29713.031 | u_x.genblk1.g_delay.g_stage[0].stage_q[273]$_DFF_P_/D
+     3320 |       0 |    8795 |            0 |    +6.4% | -73.992 | -28971.090 | u_x.genblk1.g_delay.g_stage[0].stage_q[127]$_DFF_P_/D
+     3330 |       0 |    8835 |            0 |    +6.5% | -73.783 | -28232.195 | u_x.genblk1.g_delay.g_stage[0].stage_q[239]$_DFF_P_/D
+     3340 |       0 |    8875 |            0 |    +6.5% | -73.463 | -27495.260 | u_x.genblk1.g_delay.g_stage[0].stage_q[205]$_DFF_P_/D
+     3350 |       0 |    8915 |            0 |    +6.5% | -73.186 | -26762.197 | u_x.genblk1.g_delay.g_stage[0].stage_q[317]$_DFF_P_/D
+     3360 |       0 |    8955 |            0 |    +6.6% | -72.853 | -26031.850 | u_x.genblk1.g_delay.g_stage[0].stage_q[422]$_DFF_P_/D
+     3370 |       0 |    8995 |            0 |    +6.6% | -72.505 | -25304.398 | u_x.genblk1.g_delay.g_stage[0].stage_q[436]$_DFF_P_/D
+     3380 |       0 |    9035 |            0 |    +6.6% | -72.122 | -24580.436 | u_x.genblk1.g_delay.g_stage[0].stage_q[489]$_DFF_P_/D
+     3390 |       0 |    9075 |            0 |    +6.6% | -71.926 | -23860.111 | u_x.genblk1.g_delay.g_stage[0].stage_q[311]$_DFF_P_/D
+     3400 |       0 |    9115 |            0 |    +6.7% | -71.684 | -23142.189 | u_x.genblk1.g_delay.g_stage[0].stage_q[257]$_DFF_P_/D
+     3410 |       0 |    9155 |            0 |    +6.7% | -71.400 | -22426.391 | u_x.genblk1.g_delay.g_stage[0].stage_q[241]$_DFF_P_/D
+     3420 |       0 |    9195 |            0 |    +6.7% | -71.032 | -21713.996 | u_x.genblk1.g_delay.g_stage[0].stage_q[417]$_DFF_P_/D
+     3430 |       0 |    9235 |            0 |    +6.8% | -70.556 | -21005.143 | u_x.genblk1.g_delay.g_stage[0].stage_q[8]$_DFF_P_/D
+     3440 |       0 |    9275 |            0 |    +6.8% | -70.339 | -20300.504 | u_x.genblk1.g_delay.g_stage[0].stage_q[368]$_DFF_P_/D
+     3450 |       0 |    9315 |            0 |    +6.8% | -70.099 | -19598.164 | u_x.genblk1.g_delay.g_stage[0].stage_q[161]$_DFF_P_/D
+     3460 |       0 |    9355 |            0 |    +6.8% | -69.778 | -18899.027 | u_x.genblk1.g_delay.g_stage[0].stage_q[56]$_DFF_P_/D
+     3470 |       0 |    9395 |            0 |    +6.9% | -69.577 | -18202.205 | u_x.genblk1.g_delay.g_stage[0].stage_q[41]$_DFF_P_/D
+     3480 |       0 |    9435 |            0 |    +6.9% | -69.199 | -17507.920 | u_x.genblk1.g_delay.g_stage[0].stage_q[343]$_DFF_P_/D
+     3490 |       0 |    9475 |            0 |    +6.9% | -68.806 | -16817.955 | u_x.genblk1.g_delay.g_stage[0].stage_q[175]$_DFF_P_/D
+     3500 |       0 |    9515 |            0 |    +7.0% | -68.365 | -16131.850 | u_x.genblk1.g_delay.g_stage[0].stage_q[321]$_DFF_P_/D
+     3510 |       0 |    9555 |            0 |    +7.0% | -67.539 | -15450.906 | u_x.genblk1.g_delay.g_stage[0].stage_q[287]$_DFF_P_/D
+     3520 |       0 |    9595 |            0 |    +7.0% | -64.387 | -14788.292 | u_x.genblk1.g_delay.g_stage[0].stage_q[377]$_DFF_P_/D
+     3530 |       0 |    9635 |            0 |    +7.1% | -62.804 | -14152.335 | u_x.genblk1.g_delay.g_stage[0].stage_q[240]$_DFF_P_/D
+     3540 |       0 |    9675 |            0 |    +7.1% | -62.037 | -13528.790 | u_x.genblk1.g_delay.g_stage[0].stage_q[382]$_DFF_P_/D
+     3550 |       0 |    9715 |            0 |    +7.1% | -61.233 | -12914.015 | u_x.genblk1.g_delay.g_stage[0].stage_q[500]$_DFF_P_/D
+     3560 |       0 |    9755 |            0 |    +7.1% | -60.252 | -12306.709 | u_x.genblk1.g_delay.g_stage[0].stage_q[92]$_DFF_P_/D
+     3570 |       0 |    9795 |            0 |    +7.2% | -59.674 | -11706.698 | u_x.genblk1.g_delay.g_stage[0].stage_q[255]$_DFF_P_/D
+     3580 |       0 |    9835 |            0 |    +7.2% | -58.821 | -11114.188 | u_x.genblk1.g_delay.g_stage[0].stage_q[351]$_DFF_P_/D
+     3590 |       0 |    9875 |            0 |    +7.2% | -57.755 | -10529.719 | u_x.genblk1.g_delay.g_stage[0].stage_q[448]$_DFF_P_/D
+     3600 |       0 |    9915 |            0 |    +7.3% | -56.407 | -9960.128 | u_x.genblk1.g_delay.g_stage[0].stage_q[109]$_DFF_P_/D
+     3610 |       0 |    9955 |            0 |    +7.3% | -55.616 | -9400.416 | u_x.genblk1.g_delay.g_stage[0].stage_q[473]$_DFF_P_/D
+     3620 |       0 |    9989 |            0 |    +7.3% | -32.904 | -8934.192 | g_tree_margin.a_r[2][52]$_DFF_P_/D
+     3630 |       0 |   10019 |            0 |    +7.3% | -31.965 | -8609.911 | g_tree_margin.a_r[1][44]$_DFF_P_/D
+     3640 |       0 |   10049 |            0 |    +7.4% | -31.552 | -8293.140 | g_tree_margin.a_r[2][51]$_DFF_P_/D
+     3650 |       0 |   10079 |            0 |    +7.4% | -30.704 | -7980.731 | g_tree_margin.a_r[3][17]$_DFF_P_/D
+     3660 |       0 |   10109 |            0 |    +7.4% | -30.325 | -7675.574 | g_tree_margin.a_r[2][57]$_DFF_P_/D
+     3670 |       0 |   10139 |            0 |    +7.4% | -30.037 | -7373.210 | g_tree_margin.a_r[1][60]$_DFF_P_/D
+     3680 |       0 |   10169 |            0 |    +7.4% | -29.582 | -7074.519 | g_tree_margin.a_r[2][42]$_DFF_P_/D
+     3690 |       0 |   10199 |            0 |    +7.5% | -29.125 | -6781.510 | g_tree_margin.a_r[0][53]$_DFF_P_/D
+     3700 |       0 |   10229 |            0 |    +7.5% | -28.740 | -6492.613 | g_tree_margin.a_r[2][19]$_DFF_P_/D
+     3710 |       0 |   10258 |            0 |    +7.5% | -28.119 | -6208.310 | g_tree_margin.a_r[0][35]$_DFF_P_/D
+     3720 |       0 |   10288 |            0 |    +7.5% | -27.786 | -5928.536 | g_tree_margin.a_r[0][26]$_DFF_P_/D
+     3730 |       0 |   10318 |            0 |    +7.6% | -27.404 | -5652.606 | g_tree_margin.a_r[2][62]$_DFF_P_/D
+     3740 |       0 |   10348 |            0 |    +7.6% | -27.187 | -5379.310 | g_tree_margin.a_r[0][3]$_DFF_P_/D
+     3750 |       0 |   10377 |            0 |    +7.6% | -26.947 | -5108.700 | g_tree_margin.a_r[3][28]$_DFF_P_/D
+     3760 |       0 |   10406 |            0 |    +7.6% | -26.777 | -4839.663 | g_tree_margin.a_r[1][19]$_DFF_P_/D
+     3770 |       0 |   10434 |            0 |    +7.6% | -26.548 | -4572.897 | g_tree_margin.f_in[4]$_DFF_PN0_/D
+     3780 |       0 |   10463 |            0 |    +7.7% | -26.301 | -4308.796 | g_tree_margin.a_r[0][19]$_DFF_P_/D
+     3790 |       0 |   10493 |            0 |    +7.7% | -26.037 | -4047.439 | g_tree_margin.a_r[0][7]$_DFF_P_/D
+     3800 |       0 |   10523 |            0 |    +7.7% | -25.807 | -3787.645 | g_tree_margin.a_r[1][67]$_DFF_P_/D
+     3810 |       0 |   10549 |            0 |    +7.7% | -25.609 | -3530.412 | g_tree_margin.a_r[0][47]$_DFF_P_/D
+     3820 |       0 |   10575 |            0 |    +7.7% | -25.337 | -3275.570 | g_tree_margin.a_r[3][36]$_DFF_P_/D
+     3830 |       0 |   10598 |            0 |    +7.8% | -24.994 | -3023.969 | g_tree_margin.a_r[3][40]$_DFF_P_/D
+     3840 |       0 |   10620 |            0 |    +7.8% | -24.775 | -2775.210 | g_tree_margin.a_r[3][3]$_DFF_P_/D
+     3850 |       0 |   10640 |            0 |    +7.8% | -24.433 | -2529.452 | g_tree_margin.a_r[1][23]$_DFF_P_/D
+     3860 |       0 |   10661 |            0 |    +7.8% | -24.098 | -2286.096 | g_tree_margin.a_r[3][45]$_DFF_P_/D
+     3870 |       0 |   10681 |            0 |    +7.8% | -23.840 | -2045.990 | g_tree_margin.a_r[2][70]$_DFF_P_/D
+     3880 |       0 |   10702 |            0 |    +7.8% | -23.615 | -1808.741 | g_tree_margin.a_r[1][69]$_DFF_P_/D
+     3890 |       0 |   10722 |            0 |    +7.8% | -23.371 | -1573.921 | g_tree_margin.a_r[1][80]$_DFF_P_/D
+     3900 |       0 |   10742 |            0 |    +7.9% | -23.012 | -1341.478 | g_tree_margin.a_r[3][59]$_DFF_P_/D
+     3910 |       0 |   10762 |            0 |    +7.9% | -22.519 | -1113.210 | g_tree_margin.a_r[0][69]$_DFF_P_/D
+     3920 |       0 |   10782 |            0 |    +7.9% | -22.207 | -889.194 | g_tree_margin.a_r[1][38]$_DFF_P_/D
+     3930 |       0 |   10802 |            0 |    +7.9% | -21.516 | -670.407 | g_tree_margin.row0_r[3]$_DFF_P_/D
+     3940 |       0 |   10822 |            0 |    +7.9% | -20.789 | -457.932 | g_tree_margin.a_r[0][71]$_DFF_P_/D
+     3950 |       0 |   10842 |            0 |    +7.9% | -19.932 | -255.219 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3960 |       0 |   10862 |            0 |    +8.0% | -19.932 | -73.375 | u_x.genblk1.g_delay.g_stage[0].stage_q[143]$_DFF_P_/D
+     3970 |       0 |   10880 |            0 |    +8.0% |  14.991 |   0.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[178]$_DFF_P_/D
+     3980 |       0 |   10890 |            0 |    +8.0% |  16.282 |   0.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[437]$_DFF_P_/D
+     3990 |       0 |   10900 |            0 |    +8.0% |  17.129 |   0.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[32]$_DFF_P_/D
+     4000 |       0 |   10910 |            0 |    +8.0% |  17.652 |   0.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[395]$_DFF_P_/D
+     4010 |       0 |   10920 |            0 |    +8.0% |  18.750 |   0.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[504]$_DFF_P_/D
+     4020 |       0 |   10930 |            0 |    +8.0% |  19.156 |   0.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[156]$_DFF_P_/D
+     4030 |       0 |   10940 |            0 |    +8.0% |  19.745 |   0.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[147]$_DFF_P_/D
+     4040 |       0 |   10950 |            0 |    +8.0% |  20.110 |   0.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[214]$_DFF_P_/D
+     4050 |       0 |   10960 |            0 |    +8.0% |  20.581 |   0.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[263]$_DFF_P_/D
+     4060 |       0 |   10970 |            0 |    +8.0% |  21.096 |   0.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[483]$_DFF_P_/D
+     4070 |       0 |   10980 |            0 |    +8.0% |  21.618 |   0.000 | u_x.genblk1.g_delay.g_stage[0].stage_q[197]$_DFF_P_/D
+    final |       0 |   10988 |            0 |    +8.0% |  22.016 |   0.000 | g_tree_margin.a_r[1][40]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 10988 hold buffers.
+[INFO RSZ-0506] Runtime: 172.14s
+OT_ECO cells_added 10988
+[INFO DPL-0006] Core area: 26112.93 um^2
+[INFO DPL-0007] Movable instances area: 10671.10 um^2
+[INFO DPL-0008] Fixed instances area within core: 87.36 um^2
+[INFO DPL-0009] Utilization: 41.2%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 100134 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |     107148 |     12251 |     60472
+        1 |      92076 |     10209 |     52850
+        2 |      67665 |      9637 |     49345
+        3 |      58077 |      9109 |     44362
+        4 |      52438 |      8874 |     40331
+        5 |      48842 |      8615 |     37871
+        6 |      45649 |      8294 |     35304
+        7 |      42363 |      7909 |     32938
+        8 |      39530 |      7613 |     30747
+        9 |      36844 |      7230 |     28766
+       10 |      34130 |      6994 |     26767
+       20 |      19576 |      4637 |     14879
+       30 |      13432 |      3526 |      9876
+       40 |       9465 |      2743 |      6722
+       50 |       7102 |      2223 |      4879
+       60 |       5046 |      1732 |      3314
+       70 |       3788 |      1294 |      2491
+       80 |       2830 |      1027 |      1803
+       90 |       2215 |       791 |      1424
+      100 |       1613 |       646 |       967
+      110 |       1244 |       484 |       760
+      120 |        963 |       383 |       580
+      130 |        736 |       311 |       425
+      140 |        501 |       219 |       282
+      150 |        484 |       186 |       298
+      160 |        408 |       153 |       255
+      170 |        302 |       116 |       186
+      180 |        172 |        66 |       106
+      190 |         93 |        43 |        50
+      200 |        118 |        40 |        78
+      210 |         84 |        30 |        54
+      220 |         72 |        28 |        44
+      230 |         62 |        22 |        40
+      240 |         50 |        18 |        32
+      246 |         28 |        12 |        16
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 28 for 3 consecutive iterations.
+Using old diamond search for 12 remaining illegal cells.
+diamond recovery: recovered 9/12 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          0 |         0 |         0
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 62.78s
+Placement Analysis
+---------------------------------
+total displacement      56698.3 u
+average displacement        0.6 u
+max displacement           27.4 u
+original HPWL           88835.7 u
+legalized HPWL         137254.6 u
+delta HPWL                   55 %
+
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       14
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_dsrom_head_bundle_glue
+Die area:                 ( 0 0 ) ( 165801 165801 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     100134
+Number of terminals:      1585
+Number of snets:          2
+Number of nets:           97293
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+[INFO DRT-0164] Number of unique instances = 198.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 1750176.
+[INFO DRT-0033] V1 shape region query size = 2839092.
+[INFO DRT-0033] M2 shape region query size = 68670.
+[INFO DRT-0033] V2 shape region query size = 53910.
+[INFO DRT-0033] M3 shape region query size = 53910.
+[INFO DRT-0033] V3 shape region query size = 35940.
+[INFO DRT-0033] M4 shape region query size = 36876.
+[INFO DRT-0033] V4 shape region query size = 35940.
+[INFO DRT-0033] M5 shape region query size = 20477.
+[INFO DRT-0033] V5 shape region query size = 3600.
+[INFO DRT-0033] M6 shape region query size = 1920.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1031 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0081]   Complete 198 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0082]   Complete 50000 groups.
+[INFO DRT-0084]   Complete 57274 groups.
+#scanned instances     = 100134
+#unique  instances     = 198
+#stdCellGenAp          = 5133
+#stdCellValidPlanarAp  = 42
+#stdCellValidViaAp     = 4118
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 211543
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:13:26, elapsed time = 00:01:41, memory = 2049.22 (MB), peak = 2120.39 (MB)
+[INFO DRT-0156] guideIn read 100000 guides.
+[INFO DRT-0156] guideIn read 200000 guides.
+[INFO DRT-0156] guideIn read 300000 guides.
+[INFO DRT-0156] guideIn read 400000 guides.
+
+[INFO DRT-0157] Number of guides:     484723
+
+[INFO DRT-0169] Post process guides.
+[INFO DRT-0176] GCELLGRID X 0 DO 290 STEP 570 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 290 STEP 570 ;
+[INFO DRT-0026]   Complete 100000 origin guides.
+[INFO DRT-0026]   Complete 200000 origin guides.
+[INFO DRT-0026]   Complete 300000 origin guides.
+[INFO DRT-0026]   Complete 400000 origin guides.
+[INFO DRT-0028]   Complete Active.
+[INFO DRT-0028]   Complete V0.
+[INFO DRT-0028]   Complete M1.
+[INFO DRT-0028]   Complete V1.
+[INFO DRT-0028]   Complete M2.
+[INFO DRT-0028]   Complete V2.
+[INFO DRT-0028]   Complete M3.
+[INFO DRT-0028]   Complete V3.
+[INFO DRT-0028]   Complete M4.
+[INFO DRT-0028]   Complete V4.
+[INFO DRT-0028]   Complete M5.
+[INFO DRT-0028]   Complete V5.
+[INFO DRT-0028]   Complete M6.
+[INFO DRT-0028]   Complete V6.
+[INFO DRT-0028]   Complete M7.
+[INFO DRT-0028]   Complete V7.
+[INFO DRT-0028]   Complete M8.
+[INFO DRT-0028]   Complete V8.
+[INFO DRT-0028]   Complete M9.
+[INFO DRT-0028]   Complete V9.
+[INFO DRT-0028]   Complete Pad.
+[INFO DRT-0178] Init guide query.
+[INFO DRT-0035]   Complete Active (guide).
+[INFO DRT-0035]   Complete V0 (guide).
+[INFO DRT-0035]   Complete M1 (guide).
+[INFO DRT-0035]   Complete V1 (guide).
+[INFO DRT-0035]   Complete M2 (guide).
+[INFO DRT-0035]   Complete V2 (guide).
+[INFO DRT-0035]   Complete M3 (guide).
+[INFO DRT-0035]   Complete V3 (guide).
+[INFO DRT-0035]   Complete M4 (guide).
+[INFO DRT-0035]   Complete V4 (guide).
+[INFO DRT-0035]   Complete M5 (guide).
+[INFO DRT-0035]   Complete V5 (guide).
+[INFO DRT-0035]   Complete M6 (guide).
+[INFO DRT-0035]   Complete V6 (guide).
+[INFO DRT-0035]   Complete M7 (guide).
+[INFO DRT-0035]   Complete V7 (guide).
+[INFO DRT-0035]   Complete M8 (guide).
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 178729.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 128933.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 59908.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 7680.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 3922.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 611.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 308.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 0.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 0.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:01, elapsed time = 00:00:00, memory = 2228.00 (MB), peak = 2205.06 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 242867 vertical wires in 6 frboxes and 137224 horizontal wires in 6 frboxes.
+[INFO DRT-0186] Done with 20796 vertical wires in 6 frboxes and 33446 horizontal wires in 6 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:00:20, elapsed time = 00:00:05, memory = 3394.41 (MB), peak = 3462.06 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 3394.41 (MB), peak = 3462.06 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+    Completing 10% with 0 violations.
+    elapsed time = 00:00:08, memory = 5376.21 (MB).
+    Completing 20% with 0 violations.
+    elapsed time = 00:00:17, memory = 8525.77 (MB).
+    Completing 30% with 1421 violations.
+    elapsed time = 00:00:28, memory = 9420.99 (MB).
+    Completing 40% with 1421 violations.
+    elapsed time = 00:00:36, memory = 9479.61 (MB).
+    Completing 50% with 1421 violations.
+    elapsed time = 00:00:45, memory = 9939.23 (MB).
+    Completing 60% with 2538 violations.
+    elapsed time = 00:00:58, memory = 10132.69 (MB).
+    Completing 70% with 2538 violations.
+    elapsed time = 00:01:07, memory = 10335.93 (MB).
+    Completing 80% with 3362 violations.
+    elapsed time = 00:01:21, memory = 10678.84 (MB).
+    Completing 90% with 3362 violations.
+    elapsed time = 00:01:32, memory = 10897.50 (MB).
+    Completing 100% with 4392 violations.
+    elapsed time = 00:01:43, memory = 11292.34 (MB).
+[INFO DRT-0199]   Number of violations = 6285.
+Viol/Layer          M1     M2     V2     M3     V3     M4     V4     M5     V5     M6
+CutSpcTbl            0      0      0      0     57      0     44      0      1      0
+EOL                  0    144      0     83      0     36      0      1      0      0
+Metal Spacing      881    198      0    510      0     19      0      3      0      2
+Recheck              0   1325      0    505      0     48      0     15      0      0
+Short                0    596     14    215     19     48      7     33      0      2
+eolKeepOut           0    981      0    268      0    215      0     12      0      3
+[INFO DRT-0267] cpu time = 00:12:23, elapsed time = 00:01:44, memory = 11292.86 (MB), peak = 11307.47 (MB)
+Total wire length = 145079 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 51546 um.
+Total wire length on LAYER M3 = 61207 um.
+Total wire length on LAYER M4 = 14349 um.
+Total wire length on LAYER M5 = 14089 um.
+Total wire length on LAYER M6 = 704 um.
+Total wire length on LAYER M7 = 3182 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 473257.
+Up-via summary (total 473257):
+
+-----------------
+ Active         0
+     M1    211505
+     M2    227006
+     M3     23928
+     M4      9126
+     M5       972
+     M6       720
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       473257
+
+
+[INFO DRT-0195] Start 1st optimization iteration.
+    Completing 10% with 6285 violations.
+    elapsed time = 00:00:09, memory = 11293.17 (MB).
+    Completing 20% with 6285 violations.
+    elapsed time = 00:00:18, memory = 11374.12 (MB).
+    Completing 30% with 4565 violations.
+    elapsed time = 00:00:29, memory = 11416.70 (MB).
+    Completing 40% with 4565 violations.
+    elapsed time = 00:00:38, memory = 11550.45 (MB).
+    Completing 50% with 4565 violations.
+    elapsed time = 00:00:45, memory = 11439.73 (MB).
+    Completing 60% with 3290 violations.
+    elapsed time = 00:00:58, memory = 11570.07 (MB).
+    Completing 70% with 3290 violations.
+    elapsed time = 00:01:07, memory = 11601.35 (MB).
+    Completing 80% with 1851 violations.
+    elapsed time = 00:01:18, memory = 11509.36 (MB).
+    Completing 90% with 1851 violations.
+    elapsed time = 00:01:27, memory = 11635.44 (MB).
+    Completing 100% with 472 violations.
+    elapsed time = 00:01:36, memory = 11493.93 (MB).
+[INFO DRT-0199]   Number of violations = 472.
+Viol/Layer          M1     M2     M3     V3     M4     V4     M5
+CutSpcTbl            0      0      0      7      0      9      0
+EOL                  0      9     10      0      6      0      1
+Metal Spacing       95      8    155      0      4      0      1
+Short                0     15     45      0      5      0      0
+eolKeepOut           0     42     30      0     27      0      3
+[INFO DRT-0267] cpu time = 00:11:14, elapsed time = 00:01:37, memory = 11493.93 (MB), peak = 11903.27 (MB)
+Total wire length = 143483 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 50930 um.
+Total wire length on LAYER M3 = 60249 um.
+Total wire length on LAYER M4 = 14312 um.
+Total wire length on LAYER M5 = 14014 um.
+Total wire length on LAYER M6 = 789 um.
+Total wire length on LAYER M7 = 3186 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 455695.
+Up-via summary (total 455695):
+
+-----------------
+ Active         0
+     M1    211498
+     M2    212054
+     M3     21456
+     M4      8912
+     M5      1024
+     M6       751
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       455695
+
+
+[INFO DRT-0195] Start 2nd optimization iteration.
+    Completing 10% with 472 violations.
+    elapsed time = 00:00:02, memory = 11723.54 (MB).
+    Completing 20% with 472 violations.
+    elapsed time = 00:00:04, memory = 11506.70 (MB).
+    Completing 30% with 455 violations.
+    elapsed time = 00:00:07, memory = 11509.20 (MB).
+    Completing 40% with 455 violations.
+    elapsed time = 00:00:08, memory = 11511.93 (MB).
+    Completing 50% with 455 violations.
+    elapsed time = 00:00:09, memory = 11453.86 (MB).
+    Completing 60% with 431 violations.
+    elapsed time = 00:00:13, memory = 11460.23 (MB).
+    Completing 70% with 431 violations.
+    elapsed time = 00:00:14, memory = 11453.86 (MB).
+    Completing 80% with 399 violations.
+    elapsed time = 00:00:18, memory = 11517.73 (MB).
+    Completing 90% with 399 violations.
+    elapsed time = 00:00:20, memory = 11460.99 (MB).
+    Completing 100% with 346 violations.
+    elapsed time = 00:00:21, memory = 11401.36 (MB).
+[INFO DRT-0199]   Number of violations = 346.
+Viol/Layer          M1     M2     M3     V3     M4     V4
+CutSpcTbl            0      0      0      2      0      6
+EOL                  0      3      7      0      5      0
+Metal Spacing       72      1    137      0      3      0
+Short                0     13     57      0      3      0
+eolKeepOut           0      9     13      0     15      0
+[INFO DRT-0267] cpu time = 00:02:28, elapsed time = 00:00:22, memory = 11401.36 (MB), peak = 11903.27 (MB)
+Total wire length = 143252 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 50981 um.
+Total wire length on LAYER M3 = 60211 um.
+Total wire length on LAYER M4 = 14171 um.
+Total wire length on LAYER M5 = 13965 um.
+Total wire length on LAYER M6 = 750 um.
+Total wire length on LAYER M7 = 3172 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 453671.
+Up-via summary (total 453671):
+
+-----------------
+ Active         0
+     M1    211495
+     M2    211218
+     M3     20705
+     M4      8594
+     M5       956
+     M6       703
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       453671
+
+
+[INFO DRT-0195] Start 3rd optimization iteration.
+    Completing 10% with 346 violations.
+    elapsed time = 00:00:01, memory = 11462.53 (MB).
+    Completing 20% with 346 violations.
+    elapsed time = 00:00:01, memory = 11401.36 (MB).
+    Completing 30% with 261 violations.
+    elapsed time = 00:00:04, memory = 11395.51 (MB).
+    Completing 40% with 261 violations.
+    elapsed time = 00:00:04, memory = 11395.51 (MB).
+    Completing 50% with 261 violations.
+    elapsed time = 00:00:05, memory = 11337.36 (MB).
+    Completing 60% with 161 violations.
+    elapsed time = 00:00:06, memory = 11390.87 (MB).
+    Completing 70% with 161 violations.
+    elapsed time = 00:00:07, memory = 11390.87 (MB).
+    Completing 80% with 106 violations.
+    elapsed time = 00:00:09, memory = 11425.86 (MB).
+    Completing 90% with 106 violations.
+    elapsed time = 00:00:09, memory = 11371.93 (MB).
+    Completing 100% with 13 violations.
+    elapsed time = 00:00:10, memory = 11328.72 (MB).
+[INFO DRT-0199]   Number of violations = 13.
+Viol/Layer          M3
+Metal Spacing        9
+Short                4
+[INFO DRT-0267] cpu time = 00:01:04, elapsed time = 00:00:11, memory = 11328.72 (MB), peak = 11903.27 (MB)
+Total wire length = 143283 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 50883 um.
+Total wire length on LAYER M3 = 60149 um.
+Total wire length on LAYER M4 = 14267 um.
+Total wire length on LAYER M5 = 14015 um.
+Total wire length on LAYER M6 = 781 um.
+Total wire length on LAYER M7 = 3185 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 453906.
+Up-via summary (total 453906):
+
+-----------------
+ Active         0
+     M1    211495
+     M2    210980
+     M3     20987
+     M4      8733
+     M5       996
+     M6       715
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       453906
+
+
+[INFO DRT-0195] Start 4th guides tiles iteration.
+    Completing 10% with 13 violations.
+    elapsed time = 00:00:00, memory = 11328.72 (MB).
+    Completing 20% with 13 violations.
+    elapsed time = 00:00:00, memory = 11328.72 (MB).
+    Completing 30% with 13 violations.
+    elapsed time = 00:00:00, memory = 11328.72 (MB).
+    Completing 40% with 13 violations.
+    elapsed time = 00:00:00, memory = 11328.72 (MB).
+    Completing 50% with 13 violations.
+    elapsed time = 00:00:00, memory = 11328.72 (MB).
+    Completing 60% with 5 violations.
+    elapsed time = 00:00:00, memory = 11328.72 (MB).
+    Completing 70% with 5 violations.
+    elapsed time = 00:00:00, memory = 11328.72 (MB).
+    Completing 80% with 5 violations.
+    elapsed time = 00:00:00, memory = 11328.72 (MB).
+    Completing 90% with 5 violations.
+    elapsed time = 00:00:00, memory = 11328.72 (MB).
+    Completing 100% with 0 violations.
+    elapsed time = 00:00:00, memory = 11328.72 (MB).
+[INFO DRT-0199]   Number of violations = 0.
+[INFO DRT-0267] cpu time = 00:00:04, elapsed time = 00:00:01, memory = 11328.72 (MB), peak = 11903.27 (MB)
+Total wire length = 143286 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 50880 um.
+Total wire length on LAYER M3 = 60147 um.
+Total wire length on LAYER M4 = 14269 um.
+Total wire length on LAYER M5 = 14017 um.
+Total wire length on LAYER M6 = 785 um.
+Total wire length on LAYER M7 = 3185 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 453935.
+Up-via summary (total 453935):
+
+-----------------
+ Active         0
+     M1    211495
+     M2    210982
+     M3     21006
+     M4      8738
+     M5       999
+     M6       715
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       453935
+
+
+[INFO DRT-0198] Complete detail routing.
+Total wire length = 143286 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 50880 um.
+Total wire length on LAYER M3 = 60147 um.
+Total wire length on LAYER M4 = 14269 um.
+Total wire length on LAYER M5 = 14017 um.
+Total wire length on LAYER M6 = 785 um.
+Total wire length on LAYER M7 = 3185 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 453935.
+Up-via summary (total 453935):
+
+-----------------
+ Active         0
+     M1    211495
+     M2    210982
+     M3     21006
+     M4      8738
+     M5       999
+     M6       715
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       453935
+
+
+[INFO DRT-0267] cpu time = 00:27:15, elapsed time = 00:03:57, memory = 11328.72 (MB), peak = 11903.27 (MB)
+
+[INFO DRT-0180] Post processing.
+[INFO DRT-0501] Runtime: 347.04s
+[INFO DPL-0001] Placed 542412 filler instances.
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules ...
+[INFO RCX-0436] RC segment generation ot_dsrom_head_bundle_glue (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 312389 rc segments
+[INFO RCX-0439] Coupling Cap extraction ot_dsrom_head_bundle_glue ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0045] Extract 97293 nets, 409682 rsegs, 409682 caps, 277411 ccs
+[INFO RCX-0443] 97293 nets finished
+OT_ECO post
+worst slack max 74.53
+worst slack min 18.70
+Group                                  Slack
+--------------------------------------------
+core_clk                               18.70
+
+Group                                  Slack
+--------------------------------------------
+core_clk                               74.53
+
+OT_ECO done

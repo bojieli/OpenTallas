@@ -1,0 +1,11 @@
+{
+  "peak_gib": 60,
+  "basis": "existing full-shape closure job declared peak 60 GiB; sequential read-only extraction reuses its inventory",
+  "guard": "/srv/opentallas-scratch/admit.sh 60",
+  "reserve_gib": 100,
+  "guard_sha256": "fe66b2beae4853d35334e8acb9f756c1041b281426354774a8849e09193bce54",
+  "meminfo": "MemTotal:       1188103376 kB\nMemFree:        305387952 kB\nMemAvailable:   601231624 kB\nBuffers:        10564656 kB\nCached:         288465064 kB\nSwapCached:        16428 kB\nActive:         402508316 kB\nInactive:       441627380 kB\nActive(anon):   399259616 kB\nInactive(anon): 163933776 kB\nActive(file):    3248700 kB\nInactive(file): 277693604 kB\nUnevictable:       12624 kB\nMlocked:            9552 kB\nSwapTotal:       8388604 kB\nSwapFree:            640 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:            376820 kB\nWriteback:             0 kB\nAnonPages:      545103464 kB\nMapped:           401536 kB\nShmem:          18080236 kB\nKReclaimable:   23746564 kB\nSlab:           27486588 kB\nSReclaimable:   23746564 kB\nSUnreclaim:      3740024 kB\nKernelStack:       99872 kB\nPageTables:      1676580 kB\nSecPageTables:     50024 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    602440292 kB\nCommitted_AS:   890655020 kB\nVmallocTotal:   13743895347199 kB\nVmallocUsed:      154936 kB\nVmallocChunk:          0 kB\nPercpu:           744960 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:  17010688 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:        61371336 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:      461916 kB\nDirectMap2M:    32669696 kB\nDirectMap1G:    1174405120 kB\n",
+  "loadavg": "33.75 37.96 44.56 37/6115 3768167\n",
+  "disk_free_bytes": 583464734720,
+  "timestamp": 1791353069.7767785
+}

@@ -1,0 +1,172 @@
+{
+  "source_commit": "8ddc7002479798a1e3d5ce5875a163d672973e75",
+  "job": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024",
+  "files": {
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/6_final.odb": {
+      "sha256": "f7065d4d4896693f72cbef83dc70d25cc6da4fdabdc6c31484e45432f5277676",
+      "bytes": 244541745,
+      "copy": "inputs/6_final.odb"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/6_final.spef": {
+      "sha256": "cdf0c409e5a0382b6977532e7e6c7809b4370d544bcab42d2ce42ab97a5ecb17",
+      "bytes": 72860108,
+      "copy": "inputs/6_final.spef"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/6_final.sdc": {
+      "sha256": "445890aac8e5abb1b7862d1fa1945dabc28db082af72cab6c172c686d3eab904",
+      "bytes": 346919,
+      "copy": "inputs/6_final.sdc"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/6_final.v": {
+      "sha256": "31e870d8b15d98912241f8dcfcc025f198b396c433fa044a095b8cb9d5531c4d",
+      "bytes": 41991100,
+      "copy": "inputs/6_final.v"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/eco_drc.rpt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "copy": "inputs/eco_drc.rpt"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/src/physical/s81_die_views/hbglue/margin/signoff_cl_hbglue_cl_8ddc70024.sdc": {
+      "sha256": "836a1414ba60d7918d4c1922fc4a71795311d29fabf3a4aa681b19a2f322ccd6",
+      "bytes": 1361,
+      "copy": "inputs/post.sdc"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/eco.log": {
+      "sha256": "87ce9a18c857f756753bdd8431394b2dcb295eb1a6ef2c938659aa8b0c2438e5",
+      "bytes": 81334,
+      "copy": "raw/successful/eco.log"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/corner.log": {
+      "sha256": "5738e1ab29b10af68b7c63c01c2c755ddb862b16785b9eafeda411ebdf12c567",
+      "bytes": 1140,
+      "copy": "raw/successful/corner.log"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/corner_sta.json": {
+      "sha256": "b15a22fc3533b24b2ae9174fe602ef4822ce76b8e10cfee91dbafeb955e9eb74",
+      "bytes": 2792,
+      "copy": "raw/successful/corner_sta.json"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/result.json": {
+      "sha256": "eb6837a8ee750aae961e500ce4a089b3584017c8107142d73ff02b8f57d2b321",
+      "bytes": 84,
+      "copy": "raw/successful/result.json"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/orfs/w18_sta_ss.log": {
+      "sha256": "6de012b493455768dca80efbaa29681a87524aeb1d1f09e9af3f9392992652a7",
+      "bytes": 4323,
+      "copy": "raw/successful/orfs/w18_sta_ss.log"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/orfs/w18_sta_ff.log": {
+      "sha256": "821990d163a0106efd13377ee5093d1466ab16c31096695709244b38e1b85d8c",
+      "bytes": 4272,
+      "copy": "raw/successful/orfs/w18_sta_ff.log"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/orfs/w18_sta_ss.tcl": {
+      "sha256": "ed9f6a94bf8a81aab0b81382720c416768c1629bd9019a5974c84d7bc098f636",
+      "bytes": 2166,
+      "copy": "raw/successful/orfs/w18_sta_ss.tcl"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/orfs/w18_sta_ff.tcl": {
+      "sha256": "9cf647f0e3bae3dc151078adf58338e0917eae408be2ebb8997c284bedb8d998",
+      "bytes": 2166,
+      "copy": "raw/successful/orfs/w18_sta_ff.tcl"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco/eco.log": {
+      "sha256": "bf1631d2e0696f3f78d37c995dd0d1f7e45ef5ee6c9aa76fcfb664bafb759fa8",
+      "bytes": 30705,
+      "copy": "raw/failed/eco.log"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco/corner.log": {
+      "sha256": "47f1c7ec21366c7cbccd59c6adf2145120a95bec762cdb5a4d06de4216e5dcb2",
+      "bytes": 1179,
+      "copy": "raw/failed/corner.log"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco/corner_sta.json": {
+      "sha256": "41794d9e9a6f1043215d72b25d69754301a31ced7f7cde4fb1ff35f47592eca0",
+      "bytes": 2655,
+      "copy": "raw/failed/corner_sta.json"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco/result.json": {
+      "sha256": "9832638d7ace0d948401f0a99c909a76467d3adbf5c8125c7404936ada5fa6ed",
+      "bytes": 87,
+      "copy": "raw/failed/result.json"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco/orfs/w18_sta_ss.log": {
+      "sha256": "03967530209f313c547c87f19d08746084b34c264f8abbc0ab8b6bcd3be0ccfc",
+      "bytes": 4029,
+      "copy": "raw/failed/orfs/w18_sta_ss.log"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco/orfs/w18_sta_ff.log": {
+      "sha256": "b20bdd7ed6d635a17c1766ce8ca26ec8b6a4b7a146e8ea9173067c0c4b51efde",
+      "bytes": 4004,
+      "copy": "raw/failed/orfs/w18_sta_ff.log"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco/orfs/w18_sta_ss.tcl": {
+      "sha256": "a052475475b20ba8f77d027cf86bdc66110403d2e063fdbf4bca14225457fa9d",
+      "bytes": 2081,
+      "copy": "raw/failed/orfs/w18_sta_ss.tcl"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco/orfs/w18_sta_ff.tcl": {
+      "sha256": "df17647c4822092fdf52904d634cc6e203f70ca104b5a2c70c3fe10d3a826936",
+      "bytes": 2081,
+      "copy": "raw/failed/orfs/w18_sta_ff.tcl"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/inputs.json": {
+      "sha256": "ffe41784ef0855c9b0a238aa05d5997f16835fdf664a5aafeb284d99b0a39811",
+      "bytes": 4893,
+      "copy": "raw/recovery/inputs.json"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/original_hold_eco.tcl": {
+      "sha256": "0c96f7365a52be6f7f589e796879e0e8b2884f6080fa46db7315d6cf8b001232",
+      "bytes": 5350,
+      "copy": "raw/recovery/original_hold_eco.tcl"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/original_hold_eco.sh": {
+      "sha256": "889958df338e18365f3e276bf7ccb47639a0b88e095bdd3bede75fd2ce892526",
+      "bytes": 2467,
+      "copy": "raw/recovery/original_hold_eco.sh"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/original_state.json": {
+      "sha256": "9378f9bf6cf8ea2c46bcf07d7d9566527b5aff187eaff0bb5668d71fd7536a0f",
+      "bytes": 5935,
+      "copy": "raw/recovery/original_state.json"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/calib.json": {
+      "sha256": "4f4c76bf37a06594fb45bfd3086c757f433e1678a97f53c20a00ad5758bbf95b",
+      "bytes": 1036,
+      "copy": "raw/calib.json"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/calib.env": {
+      "sha256": "bad85f9e73a5f2cfef0a836fcb38777c3f9f470176c3119c2685661d6555f17e",
+      "bytes": 196,
+      "copy": "raw/calib.env"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/hold_eco.a1.log": {
+      "sha256": "1e2c8d8347b8d250962ac01226dbda009a40eeff1c0bcf737a48e41ae0df16c2",
+      "bytes": 288,
+      "copy": "raw/hold_eco.a1.log"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/hold_eco.a2.log": {
+      "sha256": "14160eb3368e0ffe1b8d2ad828d2a881fbbec945af1244c9596ed246a55aaee6",
+      "bytes": 285,
+      "copy": "raw/hold_eco.a2.log"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco_install.a2.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "copy": "raw/eco_install.a2.log"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco_install.a2.sh": {
+      "sha256": "e103d0a30cb20128f9d9d649b61f1019b9cf8c1f185930797e4cf1e18186ac6b",
+      "bytes": 5620,
+      "copy": "raw/eco_install.a2.sh"
+    },
+    "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/job.json": {
+      "sha256": "1ef2c2f97eb149adca8561e2019f79df0e12665fc7c2f5ae722a32ff42cea34f",
+      "bytes": 1700,
+      "copy": "raw/job.json"
+    }
+  },
+  "installed_final_matches_candidate": true
+}
