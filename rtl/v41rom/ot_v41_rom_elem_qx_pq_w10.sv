@@ -220,6 +220,11 @@ module ot_v41_rom_elem_qx_pq_w10 #(
                                         //     groups) with kept enable copies, kept xs_p copies for r_dp, parallel next-
                                         //     class flags for w_sf_r (0 cycles), capture / FP4-select stage before the
                                         //     word mux (+1 lane cycle), walking from a pin register (+1 status cycle)
+                                        // 7 = + the ROM macros on the free clock, read enable ANDed with a kept copy of
+                                        //     the registered gate enable (cycle-exact: a gated edge happens iff that
+                                        //     register is 1), so no clock gate drives a macro (Z27a post-CTS at 770: the
+                                        //     macro-gating clones sat at the clock root, ENA -208.8 / -119.3, ce_in -96.7,
+                                        //     launch latency 742 ps under the outputs; flop-only clones closed > +80)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -1856,16 +1861,39 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         // macro to it), and the bank select sits after the capture registers.
         wire [273:0] rd0, rd1;
         reg  [273:0] cap0, cap1;
+        // QM >= 7: the macros on the free clock; each read enable ANDed with its own kept copy of the registered gate
+        // enable (u_z's next state, same reset).  The clock gate's latch passes that register's value to the next
+        // edge, so the gated macro saw an edge exactly when the copy is 1: the free-clock macro with the ANDed enable
+        // reads in the same cycles (and holds rd_out otherwise, as a gated one does).
+        wire rom_clk, rz0, rz1;
+        if (QM >= 7 && QZ != 0 && CG != 0) begin : g_rz
+`ifdef QM7_MUTANT_RZ
+            wire rz_d = cg_en_g;            // negative control: the enable copies one cycle late
+`else
+            wire rz_d = qz_zd;
+`endif
+            ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_rz0 (.clk(clk), .arst_n(rst_n_pin), .d(rz_d), .q(rz0));
+            ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_rz1 (.clk(clk), .arst_n(rst_n_pin), .d(rz_d), .q(rz1));
+            assign rom_clk = clk;
+`ifdef QP_CHECK
+            always @(negedge clk) if (rst_n_pin && (rz0 !== cg_en_g || rz1 !== cg_en_g)) begin
+                $display("QM7_CHECK FAIL: macro enable copy %b/%b != %b at %t", rz0, rz1, cg_en_g, $time); $fatal(1);
+            end
+`endif
+        end else begin : g_rz_n
+            assign rom_clk = gclk_ma; assign rz0 = 1'b1; assign rz1 = 1'b1;
+        end
+        wire rze0 = rz0, rze1 = rz1;
         ot_rom_4096x274_m8
 `ifndef SYNTHESIS
             #(.INSTANCE(mb == 0 ? $sformatf("%s_0", INSTANCE) : $sformatf("%sb_0", INSTANCE)))
 `endif
-            u_rom0 (.clk(gclk_ma), .ce_in(issue && !a_ctr[0]), .addr_in(a_ctr[12:1]), .rd_out(rd0));
+            u_rom0 (.clk(rom_clk), .ce_in(issue && !a_ctr[0] && rze0), .addr_in(a_ctr[12:1]), .rd_out(rd0));
         ot_rom_4096x274_m8
 `ifndef SYNTHESIS
             #(.INSTANCE(mb == 0 ? $sformatf("%s_1", INSTANCE) : $sformatf("%sb_1", INSTANCE)))
 `endif
-            u_rom1 (.clk(gclk_ma), .ce_in(issue && a_ctr[0]), .addr_in(a_ctr[12:1]), .rd_out(rd1));
+            u_rom1 (.clk(rom_clk), .ce_in(issue && a_ctr[0] && rze1), .addr_in(a_ctr[12:1]), .rd_out(rd1));
         if (QZ != 0) begin : g_cz
             genvar ck;
             for (ck = 0; ck < QZ_NE; ck = ck + 1) begin : g_e
