@@ -2,7 +2,8 @@
 // Full-width protected context; physical parallel homes/SSFF remain owner-qualified.
 module ot_qwen_p0_parallel_transport_context #(
     parameter integer ENABLE=0,MEM_WORDS=36*131072,PHASE=0,
-    parameter integer CDC_CONSUMER_JOIN=0,LANDING_RSEL=0,LOCAL_WIRE_SPANS=0 // owner r9 protected landing read
+    parameter integer CDC_CONSUMER_JOIN=0,LANDING_RSEL=0,LOCAL_WIRE_SPANS=0,SAME_CYCLE_GO=0, // owner r9 protected landing read
+    parameter integer KV_MAP=0 // 1: option-M quadrant-local KV stripe (ot_qwen_kv_map_m.svh); default off
 )(
     input wire clk, hclk, rst_n, warm_rst_n,
     input wire d_v, go,
@@ -42,6 +43,14 @@ module ot_qwen_p0_parallel_transport_context #(
 );
     initial if(ENABLE && (CDC_CONSUMER_JOIN!=1 || LANDING_RSEL!=1 || MEM_WORDS!=36*131072))
         $fatal(1,"parallel protected P0 requires owner RSEL1 adapter/full36 backing");
+`include "ot_qwen_kv_map_m.svh"
+    // Per-PC stream index j of a logical sector and per-stack descriptor n (as ot_qwen_hbm_stream4_cdc).
+    function automatic [9:0] l2j(input [16:0] l);
+        l2j = (KV_MAP != 0) ? m_l2j(l) : {l[14:6], l[16]};
+    endfunction
+    function automatic [10:0] nstk(input integer sk, input [10:0] n);
+        nstk = (KV_MAP != 0) ? m_n(sk, n) : n;
+    endfunction
     generate if(ENABLE)begin:active
         wire h_rst_n;
         ot_reset_sync u_hrst(.clk(hclk),.async_rst_n(rst_n),.sync_rst_n(h_rst_n));
@@ -58,7 +67,7 @@ module ot_qwen_p0_parallel_transport_context #(
             wire [3:0] cb;
             // Every stack accepts the same descriptor on one common grant.
             // Warm blocks new root admission; accepted GO/landing/ACK owners drain.
-            ot_qwen_s4_protected_control #(.MEM_ROWS(MEM_WORDS/131072)) u_control(
+            ot_qwen_s4_protected_control #(.MEM_ROWS(MEM_WORDS/131072),.SAME_CYCLE_GO(SAME_CYCLE_GO)) u_control(
                 .clk(clk),.hclk(hclk),.por_n(rst_n),.warm_rst_n(warm_rst_n),
                 .d_v(d_v&&d_rdy),.d_rdy(ready[sk]),.d_row(d_row),.d_n(d_n),.go(go),
                 .desc_v(dv),.desc_r(dr),.desc_row(row),.desc_n(n),
@@ -92,7 +101,7 @@ module ot_qwen_p0_parallel_transport_context #(
                 !state[3]&&!state[4]&&!cbv&&!d_v&&!go;
             ot_hbm_r14_stream_stack #(.ENABLE(1),.REF_MODE(1),.CRED(32),.PHASE(PHASE),
                 .WR_EN(1),.WQ(4),.PULLIN(0),.AQ_RD(0),.NCH(16)) u_ctl(
-                .clk(hclk),.rst_n(h_rst_n),.desc_v(dv&&dr),.desc_r(dr),.desc_row(row),.desc_n(n),
+                .clk(hclk),.rst_n(h_rst_n),.desc_v(dv&&dr),.desc_r(dr),.desc_row(row),.desc_n(nstk(sk,n)),
                 .go(go_v),.next_posted(1'b0),.row_v(row_v[sk*32+:32]),.row_op(row_op[sk*96+:96]),
                 .row_bank(row_bank[sk*160+:160]),.row_row(row_row[sk*608+:608]),
                 .col_v(col_v[sk*32+:32]),.col_bank(col_bank[sk*160+:160]),.col_col(col_col[sk*160+:160]),
@@ -100,7 +109,7 @@ module ot_qwen_p0_parallel_transport_context #(
                 .wr_v(wr_v),.wr_bank(wr_bank),.wr_col(wr_col),.wr_r(wr_r),
                 .col_we(col_we[sk*32+:32]),.wr_rd(32'b0),.col_aq());
             ot_qwen_p0_parallel_bank #(.ENABLE(1),.PC_BASE(32*sk),.MEM_WORDS(MEM_WORDS),
-                .LANDING_RSEL(LANDING_RSEL),.LOCAL_WIRE_SPANS(LOCAL_WIRE_SPANS)) u_bank(
+                .LANDING_RSEL(LANDING_RSEL),.LOCAL_WIRE_SPANS(LOCAL_WIRE_SPANS),.KV_MAP(KV_MAP)) u_bank(
                 .clk(clk),.hclk(hclk),.por_n(rst_n),.warm_rst_n(warm_rst_n),
                 .l_v(l_v[sk*32+:32]),
                 .l_sec(l_sec[sk*544+:544]),
@@ -133,7 +142,7 @@ module ot_qwen_p0_parallel_transport_context #(
                 .c_quiet(cq),.h_quiet(hq));
             for(genvar pc=0;pc<32;pc=pc+1)begin:map
                 wire [23:0] sec=head_sec[pc*24+:24];
-                wire [9:0] j={sec[14:6],sec[16]};
+                wire [9:0] j=l2j(sec[16:0]);
                 assign wr_bank[pc*5+:5]={j[9:7],j[1:0]};assign wr_col[pc*5+:5]=j[6:2];
             end
         end

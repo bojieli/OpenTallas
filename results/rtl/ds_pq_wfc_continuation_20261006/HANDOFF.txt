@@ -1,0 +1,63 @@
+Bounded DS PQ/WFC continuation — 2026-10-06 UTC observation
+Owner request: take over aed6a51822cb75962; read-only peer worktrees;
+no git there, no merge, no subagents. No new jobs or reruns launched.
+
+Decision: preserve existing continuations. There is no uncovered terminal
+failure requiring a new structural/flow submission in this bounded pass.
+Latest owner line: SS >=15 ps / FF >=15 ps, calibrated region IO, DRC0;
+route target is not sign-off. No headline/adoption/model change made.
+
+Current evidence:
+* Spine v13b R16 and R128: both active GRT hold repair on EPYC1.
+  Historical *_terminal.json report FAIL_FLOW / FileNotFoundError; these
+  are retained, not treated as terminal verdicts of the active continuation.
+  Existing regrt_h20 flow is already running (MANIFEST preserved). No changes
+  made to its margins. Final extracted SS/FF remains absent in the harvest.
+  Source spine SHA matches committed 806589cc7. Existing full-shape exact
+  campaigns: PQ0 20,160 phase + 5,504 node +600 multiposition; PQ1 5,504 node
+  +3,792 single-phase +600 multiposition. All zero failed; 249,920 rows per
+  config, zero mismatches; qb mutation 8/8 fail. No new proof rerun.
+* WFC r11 stage: region SS +73.1 / FF hold +15.7 ps, no failing endpoints;
+  both corners slew/cap/fanout 0. This is the region result; the +22.5 ps
+  informal hold report must not replace it. Timing-qualified component,
+  not full-array/context adoption. Retained final metrics in wfc.json;
+  explicit final DRC/antenna extraction still required before adoption.
+* WFC r11 source: region SS +52.0 / FF -4.7 ps, 72 failing hold endpoints.
+* WFC r13 source: region SS +56.7 / FF -2.9 ps, 30 failing hold endpoints.
+  Both FAIL acceptance; do not use the JSON's incontext=true as region PASS.
+* WFC r14: active EPYC1 GRT. Existing flow successor uses absolute link
+  hold min 188 ps (r13 248 ps), not a new RTL change. Controller SHA matches
+  fd8df673d and r11/r13 case pins. Preserve current run and failed history.
+* q-element Z29a: terminal rc1, CTS RSZ-0060 maximum buffer count, 43,292
+  inserted hold buffers. Z29b reached CTS, superseded structural source
+  described in d44b98796. Preserve both as failure/intermediate evidence.
+* q-element Z29c: ACTIVE SAFE QS=2/QM=5 on EPYC2, source d44b98796,
+  route 730 ps. Product/shift sum in S1b near decode; S2 register-only wire
+  stage. Both checked remote bterm and wrapper hashes match source commit.
+  This is already the concrete structural successor; do not duplicate it.
+  QS=1 exact evidence at 548cb03b9: positive QX tests, negative controls,
+  2,752 phase +896 node L20 runs exact; +0..1 idle cycle/run, sum
+  1,625,633 ->1,628,414 (+0.17% node time vs QM5). This is NOT an AR/MTP
+  percentage. QS2 is described as same latency, but QS1 evidence alone does
+  not certify changed QS2 arithmetic. No QS2 exact terminal harvested.
+* q-element Z26a EPYC2 / Z26b EPYC3: existing active processes preserved;
+  Z26b still in GRT hold repair. No final accepted sign-off harvested.
+
+Parent integration:
+Evidence-only harvest commit on codex/ds-pq-wfc-harvest-20261006.
+Existing source tips (do not blindly replay their entire branch histories):
+  spine 806589cc7f6940730f77e997b1b49d4e8a629e17
+  q-element d44b98796bc261e7b8a594741beb246dd7e5085d
+  WFC fd8df673dff017478ac5caf3bacf7723acd9dd01
+qelem_pq remains PENDING_SSFF. PQ spine and q-element must qualify together;
+field_spine_pq overlaps qelem_pq and must not be double-counted.
+Next bounded pass: collect final spine R16/R128, WFC r14, Z29c plus its
+source-matched exact/negative gate. Use original paths in the snapshots.
+No full-array closure, die-context closure or numerical QS2 PASS claimed.
+
+Provenance: snapshots contain remote path, byte count and SHA256; log text
+is a tail and SHA256 describes the full log at capture time. Live files may
+subsequently grow. source_checks.json checks four selected RTL pins, not the
+entire transitive dependency tree. qs1_* and spine_exact are committed
+source evidence copied via git show from central checkout. Peer WFC bench
+summaries are explicitly harvested read-only and require their own pin audit.

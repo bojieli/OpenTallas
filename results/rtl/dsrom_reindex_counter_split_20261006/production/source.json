@@ -1,0 +1,22 @@
+{
+  "source_commit": "74aae71e68ce31d43f2d3a1b72d7633236a92f98",
+  "sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_gather_parent.sv": "1fccb46db57da1e8195ad01512651f15cf9366e3e8cd90cdec5473ae522a30c4",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_control.sv": "a7db8cffe264511ae0c495b5e978d142c4f957ea7e16d3cfc23563c62a5787dd",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_kgctl_parent.sv": "374d8dcf913293e93ad0269b63ee75a7aca2c06ff06bd19f7227a22200b5f356",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_kgdata_parent.sv": "81ea8a2ef4fc8814ad30313c0429bf8111b92d853006a52c4da5f46b6ba63f77",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_drain_queue.sv": "bff165be724d2e40dfd24f19eb3cc1b9f7e73b4c6dad6cde44b165ce8e6b439d",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_list_macro.sv": "efe426432312318e2f09cec91ba8119a7d5c346a60c65eba7f5cc5d25f0f3016",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_request_cut.sv": "fc541e1b3e98d135659b33eb9339eb557f2f57e25768b911306247186dabf351",
+    "rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_gather_parent.sv": "b7e6d8f497d568f51429edaaa6c355366a030afa81f0672c75a8c6f0e5556ec9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "rtl/test/hdc_v41x_idx_kgather.cpp": "4e8a0b77b91f63416780aae02bc16a1989917f659321bac503bbf903ef169203",
+    "tools/dsrom_reindex_production_gate.py": "7d36057ee6f3a4c79f6938132776ad2c518a922a9cce058c9437af4ff5c41ceb",
+    "tools/dsrom_reindex_candidates.py": "7372d82c52788470cf044ac5265404653496ebec9760378c0ec487abd6df7415",
+    "tools/dsrom_reindex_parent_model.py": "9596d5e656f33454529b815fdb5e8b999e92a97aa9169727975ad21b6260def4",
+    "tools/uarch_model.py": "54b45b32408af03e399fe5d22a6c9c204b57a85036f0d26c0b616a179fcd0bff",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  }
+}

@@ -56,6 +56,12 @@ WINDOW = ROOT / "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load
 WAVE = ROOT / "results/rtl/dsrom_wavefront_verify_20261004/record.json"
 DRAFT_REC = ROOT / "results/rtl/dsrom_fused_draft_head_20261004/l1_compose.json"
 RECOVERY = ROOT / "results/rtl/dsrom_recovery_20261004"     # microarchitecture-recovery levers (baseline "recovery")
+# Default QELEM (owner go 2026-10-06): the S81 die's FP8/FP4 pairs are the closed DS q-element QX 10 (Z20c, FH 177.12,
+# SS +3.54 / FF +0.61 ps, results/rtl/dsrom_qz_20261004/Z20/Z20c/verdict.json), so the headline ROM field is the
+# as-built field measured with that element (tools/dsrom_1m_field.py --qelem 10) at its element frame f183.60 (r8 re-price,
+# 11 slots, +16 layer dies / +4 stage hops).  Applies when the composition reads the default REC directory.
+QELEM_DEFAULT = True
+QELEM_FIELD = ROOT / "results/rtl/dsrom_field_qelem_20261005/field_qelem_qx10.json"
 WAVE_PHYSICAL = ROOT / "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json"
 FULL_FEC_LINKS = REC / "links_full_fec.json"                  # OWNER 2026-10-06 full-FEC baseline (RTL)
 FULL_FEC_RACK = ROOT / "results/arch/dsrom_s81_rack_20261006/rack.json"   # hop classes (cable flight beyond 0.3 m)
@@ -336,6 +342,35 @@ def apply_levers(P, info, lever_dir, excluded=()):
     return dict(applied=applied, not_applied=skipped)
 
 
+def apply_add_cycles(P, lever_dir):
+    """Recovery baseline: cycle ADDITIONS (opentallas.dsrom-recovery.addcycles.v1, levers/*.json) on top of the measured
+    node times, for structural costs whose blocks are priced per operation rather than re-measured end to end (S81
+    die tiles, die-wide stations).  Record: {"verdict": "ADOPT", "adds": [{"nodes": "*.<suffix>" | name,
+    "cycles": n, "clk_hz": 1.2e9, "source": str}]}.  Applied after the r8 field re-price, so it stacks on it."""
+    out = []
+    for f in sorted((lever_dir / "levers").glob("*.json")):
+        r = json.loads(f.read_text())
+        if r.get("schema") != "opentallas.dsrom-recovery.addcycles.v1" or r.get("verdict") != "ADOPT":
+            continue
+        for ad in r["adds"]:
+            key = ad["nodes"]
+            names = suffix_nodes(P.g, key[2:]) if key.startswith("*.") else [key]
+            assert names and all(n in P.g.nodes for n in names), (f, key)
+            if r.get("items") is not None and ad.get("item") not in r["items"]:
+                continue                 # closure-cost ledger: only the enabled items
+            for n in names:
+                nd = P.g.nodes[n]
+                cur = nd["issue"] + nd["depth"] + nd["ctrl"]
+                row = P.rows.get(n, {})
+                add = ad.get("cycles", 0) / ad.get("clk_hz", CLK) + ad.get("frac", 0.0) * cur
+                P.put(n, cur + add, f"{row.get('source', 'model')} + {r['lever']}: "
+                      f"{ad.get('cycles', 0)} cyc / x{1 + ad.get('frac', 0.0):.4f} ({ad['source']})", cls=row.get("cls", "measured"),
+                      stream=nd.get("stream", False))
+            out.append(dict(lever=r["lever"], item=ad.get("item"), nodes=key, count=len(names),
+                            cycles=ad.get("cycles", 0), frac=ad.get("frac", 0.0)))
+    return out
+
+
 def apply_candidate(P, record):
     """Conditional decision study only; never changes a lever's adoption record.
 
@@ -584,6 +619,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         a.out = (a.rec if a.baseline == "asbuilt" else a.recovery) / "composition.json"
     ins = {k: a.rec / f"{k}.json" for k in ("field", "su", "head", "links", "cand_select", "engram", "embed",
                                              "su_cdc", "su_qdq_wired", "draft_blocks")}
+    if QELEM_DEFAULT and Path(a.rec).resolve() == REC.resolve():
+        ins["field"] = QELEM_FIELD
     recs = {k: json.loads(p.read_text()) for k, p in ins.items() if p.exists()}
     g0, g, base_patches = base_graph()
     P = Patcher(g)
@@ -622,6 +659,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         r8 = apply_r8_reprice(P, info, AD.FIELD_GEOM)
         if r8:
             info["r8_reprice"] = r8
+    if a.baseline == "recovery":
+        info["add_cycles"] = apply_add_cycles(P, a.recovery)
     if candidates:
         info["conditional_candidates"] = [dict(lever=r["lever"], nodes=apply_candidate(P, r)) for r in candidates]
     cdc_nodes = {}
@@ -644,8 +683,14 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
     if tall:        # taller q-element frame: more layer dies -> more pipeline stages, each a full stage hop
         _, rk = full_fec_inputs()
         mean_cable = rk["hop_summary"]["stage_hop_extra_cycles"] / len(rk["stage_hops"]) / CLK * 1e6
-        info["r8_reprice"]["extra_stage_hops_us"] = round(tall * (hop_extra + mean_cable), 4)
-        cable_us += tall * mean_cable
+        if rk["counts"]["stages"] == info["r8_reprice"]["stages"]:
+            # the rack record packs this frame's stage count (DS-RACK85): every stage hop's cable flight, the extra
+            # hops' included, is already in cable_us -- charge only the measured hop itself for the extra hops
+            info["r8_reprice"]["extra_stage_hops_us"] = round(tall * hop_extra, 4)
+            info["r8_reprice"]["extra_stage_hops_cable"] = "in the rack record's per-hop classes (full_fec.cable_flight_us)"
+        else:   # rack packed at another stage count: the extra hops at the mean cable flight
+            info["r8_reprice"]["extra_stage_hops_us"] = round(tall * (hop_extra + mean_cable), 4)
+            cable_us += tall * mean_cable
     ar = t + (EXTRA_HOPS + tall) * hop_extra + cable_us
     # ---- MTP: wavefront verify with this composition's stage busy times (measured handoff rule) + DSpark draft
     wave = json.loads(WAVE.read_text())["composition"]

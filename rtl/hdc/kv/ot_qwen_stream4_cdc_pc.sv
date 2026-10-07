@@ -34,7 +34,14 @@ module ot_qwen_stream4_cdc_pc #(
     // r7 routes showed yosys merging the r3 (* keep *) index copies back into lr_bin (one driver, a
     // 9/14/30/31 buffer tree into the 64:1 mux, SS -1.1..-49.9 ps).  RNG = column groups when RSEL = 1.
     parameter integer RSEL = 0,
-    parameter integer RNG  = 10
+    parameter integer RNG  = 10,
+    // MARGIN 1 (owner margin rule 2026-10-06; default 0 = the structure above, unchanged): every data input is
+    // registered at its pin (w_* in CLK, h_l* / h_a* in HCLK: one cycle of latency, flow control unchanged: w_room
+    // keeps one more slot in flight), and the landing is CREDIT-based: l_pop is a registered credit return (one per
+    // word the receiver consumed), l_v is a one-cycle push of the word on l_* (the receiver queues it), at most LCRED
+    // words outstanding.  No input reaches a register enable or a mux select inside the element.
+    parameter integer MARGIN = 0,
+    parameter integer LCRED = 6
 ) (
     // ---- CLK (core) domain ----
     input  wire             clk,
@@ -73,6 +80,25 @@ module ot_qwen_stream4_cdc_pc #(
     output reg              h_fault         // landing / write-done push into a full FIFO, or WR with empty queue
 );
     localparam integer LA = $clog2(LD), WA = $clog2(WB), AA = $clog2(AD);
+    // ---- MARGIN: pin registers ----
+    wire             w_v_i, h_lv_i, h_av_i, l_pop_i;
+    wire [23:0]      w_sec_i; wire [255:0] w_data_i; wire [TAGW-1:0] w_tag_i;
+    wire [16:0]      h_lsec_i; wire [7:0] h_lrow_i; wire [255:0] h_ldata_i; wire [TAGW-1:0] h_atag_i;
+    generate if (MARGIN != 0) begin : g_pin
+        reg wv_q, lp_q, hlv_q, hav_q; reg [23:0] ws_q; reg [255:0] wd_q; reg [TAGW-1:0] wt_q;
+        reg [16:0] hls_q; reg [7:0] hlr_q; reg [255:0] hld_q; reg [TAGW-1:0] hat_q;
+        always @(posedge clk or negedge c_arst_n) if (!c_arst_n) begin wv_q <= 1'b0; lp_q <= 1'b0; end
+                                                  else begin wv_q <= w_v; lp_q <= l_pop; end
+        always @(posedge clk) begin ws_q <= w_sec; wd_q <= w_data; wt_q <= w_tag; end
+        always @(posedge hclk or negedge h_arst_n) if (!h_arst_n) begin hlv_q <= 1'b0; hav_q <= 1'b0; end
+                                                   else begin hlv_q <= h_lv; hav_q <= h_av; end
+        always @(posedge hclk) begin hls_q <= h_lsec; hlr_q <= h_lrow; hld_q <= h_ldata; hat_q <= h_atag; end
+        assign {w_v_i, w_sec_i, w_data_i, w_tag_i, l_pop_i} = {wv_q, ws_q, wd_q, wt_q, lp_q};
+        assign {h_lv_i, h_lsec_i, h_lrow_i, h_ldata_i, h_av_i, h_atag_i} = {hlv_q, hls_q, hlr_q, hld_q, hav_q, hat_q};
+    end else begin : g_nopin
+        assign {w_v_i, w_sec_i, w_data_i, w_tag_i, l_pop_i} = {w_v, w_sec, w_data, w_tag, l_pop};
+        assign {h_lv_i, h_lsec_i, h_lrow_i, h_ldata_i, h_av_i, h_atag_i} = {h_lv, h_lsec, h_lrow, h_ldata, h_av, h_atag};
+    end endgenerate
 
     // local reset release, one synchronizer per domain
     // The release stage is three KEPT copies per domain, one per crossing (landing / write queue /
@@ -104,7 +130,7 @@ module ot_qwen_stream4_cdc_pc #(
     reg [LA:0] lr_seen;                                           // HCLK: synchronized read pointer, previous edge
     wire [LA:0] lr_sb = g2b_l(lr_s[SYNC-1]);
     wire        l_full = (lw_bin - lr_sb) == LD[LA:0];
-    wire [LA:0] lw_bin_n = lw_bin + {{LA{1'b0}}, h_lv && !l_full};
+    wire [LA:0] lw_bin_n = lw_bin + {{LA{1'b0}}, h_lv_i && !l_full};
     integer s;
     always @(posedge hclk or negedge h_rl) begin
         if (!h_rl) begin
@@ -122,15 +148,22 @@ module ot_qwen_stream4_cdc_pc #(
     // h_fault rises and the pointer does not advance (the overwritten slot is never presented as valid
     // data before the sticky fault).
     localparam integer LNG = 5, LGW = (281 + LNG - 1) / LNG;
-    wire [LNG*LGW-1:0] l_in = {{(LNG*LGW-281){1'b0}}, h_lsec, h_lrow, h_ldata};
+    wire [LNG*LGW-1:0] l_in = {{(LNG*LGW-281){1'b0}}, h_lsec_i, h_lrow_i, h_ldata_i};
     for (genvar gw = 0; gw < LNG; gw = gw + 1) begin : lwg
         localparam integer LO = gw * LGW, HI = (LO + LGW > 281) ? 281 : LO + LGW;
         (* keep *) reg [LA-1:0] wi;
         always @(posedge hclk or negedge h_rl) if (!h_rl) wi <= 0; else wi <= lw_bin_n[LA-1:0];
-        always @(posedge hclk) if (h_lv) lmem[wi][HI-1:LO] <= l_in[HI-1:LO];
+        always @(posedge hclk) if (h_lv_i) lmem[wi][HI-1:LO] <= l_in[HI-1:LO];
     end
     wire        l_empty = lr_gray == lw_s[SYNC-1];
-    wire        l_ren   = !l_empty && (!l_v || l_pop);
+    // MARGIN: credit counter (LCRED receiver slots); a push needs a credit, l_pop_i returns one
+    localparam integer CW = $clog2(LCRED + 1);
+    reg  [CW-1:0] l_cred;
+    wire        l_push  = !l_empty && (l_cred != 0);
+    wire        l_ren   = (MARGIN != 0) ? l_push : (!l_empty && (!l_v || l_pop));
+    always @(posedge clk or negedge c_rl)
+        if (!c_rl) l_cred <= CW'(LCRED);
+        else if (MARGIN != 0) l_cred <= l_cred - CW'(l_push) + CW'(l_pop_i);
     wire [LA:0] lr_bin_n = lr_bin + {{LA{1'b0}}, l_ren};
     always @(posedge clk or negedge c_rl) begin
         if (!c_rl) begin
@@ -139,7 +172,8 @@ module ot_qwen_stream4_cdc_pc #(
         end else begin
             lw_s[0] <= lw_gray; for (s = 1; s < SYNC; s = s + 1) lw_s[s] <= lw_s[s-1];
             lr_bin <= lr_bin_n; lr_gray <= (lr_bin_n >> 1) ^ lr_bin_n;
-            if (l_ren) l_v <= 1'b1; else if (l_pop) l_v <= 1'b0;
+            if (MARGIN != 0) l_v <= l_push;
+            else if (l_ren) l_v <= 1'b1; else if (l_pop) l_v <= 1'b0;
         end
     end
     // The 281-bit read mux is split into NG column groups, each with its own KEPT copy of the read index
@@ -171,8 +205,9 @@ module ot_qwen_stream4_cdc_pc #(
             // of l_v, so each enable cone drives one group (~29 flops), not the whole 281-bit word.
             wire vg;
             ot_hdc_v41x_kreg #(.W(1), .R(1)) u_vg (.clk(clk), .rst_n(c_rl),
-                .d(l_ren ? 1'b1 : (l_pop ? 1'b0 : vg)), .q(vg));
-            always @(posedge clk) if (!vg || l_pop) l_q[HI-1:LO] <= acc[LD];
+                .d((MARGIN != 0) ? 1'b0 : (l_ren ? 1'b1 : (l_pop ? 1'b0 : vg))), .q(vg));
+            // MARGIN: the group loads exactly on a push (an internal enable)
+            always @(posedge clk) if ((MARGIN != 0) ? l_push : (!vg || l_pop)) l_q[HI-1:LO] <= acc[LD];
         end else begin : g_ix
             // RSEL = 0: the r5 structure (main), unchanged (r6's unconditional load is withdrawn: it presented the
             // slot after the held word)
@@ -182,7 +217,7 @@ module ot_qwen_stream4_cdc_pc #(
                 if (!c_rl) begin ix <= 0; vg <= 1'b0; end
                 else begin ix <= lr_bin_n[LA-1:0]; if (l_ren) vg <= 1'b1; else if (l_pop) vg <= 1'b0; end
             wire [280:0] row = lmem[ix];
-            always @(posedge clk) if (!vg || l_pop) l_q[HI-1:LO] <= row[HI-1:LO];
+            always @(posedge clk) if ((MARGIN != 0) ? l_push : (!vg || l_pop)) l_q[HI-1:LO] <= row[HI-1:LO];
         end
     end
     always @(*) {l_sec, l_row, l_data} = l_q[280:0];
@@ -194,28 +229,28 @@ module ot_qwen_stream4_cdc_pc #(
     (* async_reg = "true" *) reg [WA:0] wc_s [0:SYNC-1];          // wc_gray in CLK
     wire [WA:0] wc_sb = g2b_w(wc_s[SYNC-1]);
     wire        w_full = (ww_bin - wc_sb) == WB[WA:0];
-    wire [WA:0] ww_bin_n = ww_bin + {{WA{1'b0}}, w_v && !w_full};
+    wire [WA:0] ww_bin_n = ww_bin + {{WA{1'b0}}, w_v_i && !w_full};
     always @(posedge clk or negedge c_rw) begin
         if (!c_rw) begin
             ww_bin <= 0; ww_gray <= 0; w_room <= 1'b0; c_fault <= 1'b0;
             for (s = 0; s < SYNC; s = s + 1) wc_s[s] <= 0;
         end else begin
             wc_s[0] <= wc_gray; for (s = 1; s < SYNC; s = s + 1) wc_s[s] <= wc_s[s-1];
-            if (w_v && w_full) c_fault <= 1'b1;
+            if (w_v_i && w_full) c_fault <= 1'b1;
             ww_bin <= ww_bin_n; ww_gray <= (ww_bin_n >> 1) ^ ww_bin_n;
-            w_room <= (WB[WA:0] - (ww_bin_n - wc_sb)) >= 3;
+            w_room <= (WB[WA:0] - (ww_bin_n - wc_sb)) >= ((MARGIN != 0) ? 4 : 3);
         end
     end
     // storage write: kept index copies per column group, not gated by the synchronized full flag (a push
     // into a full queue raises the sticky c_fault; the service checks w_room first)
     localparam integer WNG = 5, WW = 24 + 256 + TAGW, WGW = (WW + WNG - 1) / WNG;
     reg  [WW-1:0] wmem [0:WB-1];
-    wire [WNG*WGW-1:0] w_in = {{(WNG*WGW-WW){1'b0}}, w_sec, w_data, w_tag};
+    wire [WNG*WGW-1:0] w_in = {{(WNG*WGW-WW){1'b0}}, w_sec_i, w_data_i, w_tag_i};
     for (genvar gw = 0; gw < WNG; gw = gw + 1) begin : wwg
         localparam integer LO = gw * WGW, HI = (LO + WGW > WW) ? WW : LO + WGW;
         (* keep *) reg [WA-1:0] wi;
         always @(posedge clk or negedge c_rw) if (!c_rw) wi <= 0; else wi <= ww_bin_n[WA-1:0];
-        always @(posedge clk) if (w_v) wmem[wi][HI-1:LO] <= w_in[HI-1:LO];
+        always @(posedge clk) if (w_v_i) wmem[wi][HI-1:LO] <= w_in[HI-1:LO];
     end
     wire [WA:0] ww_sb = g2b_w(ww_s[SYNC-1]);
     wire [WA:0] wh_bin_n = wh_bin + {{WA{1'b0}}, h_hand};
@@ -245,18 +280,18 @@ module ot_qwen_stream4_cdc_pc #(
     (* async_reg = "true" *) reg [AA:0] aw_s [0:SYNC-1];
     (* async_reg = "true" *) reg [AA:0] ar_s [0:SYNC-1];
     wire        a_full = (aw_bin - g2b_a(ar_s[SYNC-1])) == AD[AA:0];
-    wire [AA:0] aw_bin_n = aw_bin + {{AA{1'b0}}, h_av && !a_full};
+    wire [AA:0] aw_bin_n = aw_bin + {{AA{1'b0}}, h_av_i && !a_full};
     always @(posedge hclk or negedge h_ra) begin
         if (!h_ra) begin
             aw_bin <= 0; aw_gray <= 0; h_fault <= 1'b0;
             for (s = 0; s < SYNC; s = s + 1) ar_s[s] <= 0;
         end else begin
             ar_s[0] <= ar_gray; for (s = 1; s < SYNC; s = s + 1) ar_s[s] <= ar_s[s-1];
-            if ((h_lv && l_full) || (h_av && a_full) || (h_wcon && wc_bin == ww_sb)) h_fault <= 1'b1;
+            if ((h_lv_i && l_full) || (h_av_i && a_full) || (h_wcon && wc_bin == ww_sb)) h_fault <= 1'b1;
             aw_bin <= aw_bin_n; aw_gray <= (aw_bin_n >> 1) ^ aw_bin_n;
         end
     end
-    always @(posedge hclk) if (h_av && !a_full) amem[aw_bin[AA-1:0]] <= h_atag;
+    always @(posedge hclk) if (h_av_i && !a_full) amem[aw_bin[AA-1:0]] <= h_atag_i;
     wire        a_ren = ar_gray != aw_s[SYNC-1];                  // wd_v is always taken
     wire [AA:0] ar_bin_n = ar_bin + {{AA{1'b0}}, a_ren};
     always @(posedge clk or negedge c_ra) begin

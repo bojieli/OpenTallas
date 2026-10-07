@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.ds_pq_wfc.qs2_exact_qualification.v1",
+  "verdict": "PASS_SOURCE_MATCHED_QS2_EXACT_AND_NEGATIVES",
+  "route_source_commit": "d44b98796bc261e7b8a594741beb246dd7e5085d",
+  "bench_reported_commit": "e7bd16a866d9c85fb74748ed3b30ba80acbd9b95",
+  "committed_terminal_evidence": "1dd2bf2f4",
+  "committed_terminal_match": "Harvested exact-gate JSON is byte-identical to qx10qs2.json at 1dd2bf2f4.",
+  "cycle_cost_record": "1dd2bf2f4 reports all 3648 PQ1 L20 runs cycle-identical to QS1; this harvest does not re-run QS1.",
+  "source_identity_basis": "All 37 recorded RTL/bench/driver hashes match central d44b98796 and remote EPYC2 Z29c source; remote bench commit ID is not locally available.",
+  "exact_gate": {
+    "positive_runs": 5,
+    "negative_runs": 2,
+    "total_compared_cycles": 12775002,
+    "QM": 5,
+    "QS": 2,
+    "PQ": 0,
+    "scope": "Full q-element mechanism vs pinned reference; sequence comparison, four seeds plus sparse NaN."
+  },
+  "pq1_l20": {
+    "phase_runs": 2752,
+    "node_runs": 896,
+    "failed": 0,
+    "rows_mismatched": 0,
+    "rows_extra": 0,
+    "common_exact_source_pins": 33,
+    "spine_sha256": "1b1ca9190db389c4e93addbb5f73e2179cb914d51c649de19225683fd822baa7",
+    "scope": "Existing full-shape L20 PQ=1 field fixture; spine pin differs from active v13b, so this is not qualification of the combined current v13b+QS2 build."
+  },
+  "physical_adoption": false,
+  "physical_status": "Existing Z29c run preserved; this record qualifies exactness only.",
+  "new_benches": 0,
+  "qs1_evidence_used": false
+}

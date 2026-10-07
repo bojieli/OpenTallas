@@ -33,7 +33,7 @@ const DESIGNS = {
     lede: 'Weights are hard-wired in ROM beside the multipliers, so a decode step never fetches a weight. The per-user KV cache streams from four attached HBM3E stacks (STREAM4). The design runs plain decoding: speculation measured below plain decoding on this compute-balanced datapath.',
     dies: ['qwen_rom'] },
   ds: { short: 'DeepSeek ROM array', title: ['DeepSeek-V4.1', 'ROM array'], ctx: '1M context, position 1,048,575',
-    lede: 'An 81-stage pipeline of ROM dies. Each layer is spread over a TP4 group of rank dies whose fields of ROM element pairs hold the weights; the token walks the pipeline over die-to-die links and its KV comes from HBM beside every die. MTP speculation fills idle stages with a wavefront of draft positions.',
+    lede: `An ${val(DATA.ds_system.stages)}-stage pipeline of ROM dies. Each layer is spread over a TP4 group of rank dies whose fields of ROM element pairs hold the weights; the token walks the pipeline over die-to-die links and its KV comes from HBM beside every die. MTP speculation fills idle stages with a wavefront of draft positions.`,
     dies: ['ds_s81_layer'] },
   hbm: { short: 'HBM accelerator', title: ['HBM', 'accelerator'], ctx: 'matched comparator, same contexts',
     lede: 'The comparator is a GPU-like die: 32 SM compute elements fed by four HBM3E stacks on the long edges, a hub band of serial vector, special-function, hyper-connection and index units, 64 attention tiles and a centre spine. Weights stream from HBM every token; speculation shares that weight stream across the verified positions.',
@@ -183,12 +183,12 @@ function renderArray(){
   const d = state.design;
   const linkLeg = (label, x) => `<span><i class="sw lk-sw" style="height:${Math.round(lw(x))}px"></i>${label}${x ? ' · ' + vs(x, 0) + ' ' + esc(x.unit || '') + ' ' + pill(st(x)) : ''}</span>`;
   if (d === 'ds'){
-    $('arrayLede').textContent = 'The token walks the S81 pipeline as a serpentine: left to right, then back. Each cell is one stretch of the critical path between two measured stage hops; its four squares are the TP4 rank dies that hold the layer slice, each with HBM beside it. Shade shows how long the stretch keeps the token. Click a cell for its breakdown; double-click (or Stage) to zoom in.';
+    $('arrayLede').textContent = 'The token walks the ' + val(DATA.ds_system.stages) + '-stage pipeline (q-element frame) as a serpentine: left to right, then back. Each cell is one stretch of the critical path between two measured stage hops; its four squares are the TP4 rank dies that hold the layer slice, each with HBM beside it. Shade shows how long the stretch keeps the token. Click a cell for its breakdown; double-click (or Stage) to zoom in.';
     tools.innerHTML = `<div class="seg" role="group" aria-label="Zoom level"><button type="button" data-az="system" aria-pressed="${state.arrayZoom === 'system'}">System</button><button type="button" data-az="stage" aria-pressed="${state.arrayZoom === 'stage'}">Stage</button></div><span class="muted" style="font-size:12px">${state.arrayZoom === 'stage' ? 'Stage ' + (state.arraySel == null ? 0 : state.arraySel) + ': four rank dies and their links' : 'packages → dies → stages → links'}</span>`;
     tools.querySelectorAll('[data-az]').forEach(b => b.onclick = () => { state.arrayZoom = b.dataset.az; if (state.arraySel == null) state.arraySel = 20; renderArray(); });
     if (state.arrayZoom === 'stage') drawDsStage(svg); else drawDsRibbon(svg);
     const L = DATA.links || {};
-    leg.innerHTML = `<span><i class="sw" style="background:var(--k-field)"></i>ROM rank die (shade: busy time)</span><span><i class="sw" style="background:var(--k-hbm)"></i>HBM stack</span>${linkLeg('stage hop ' + vs(DATA.ds_hop, 4) + ' µs', L.ds_stage)}${linkLeg('draft replica link', L.ds_draft)}<span><i class="sw" style="background:repeating-linear-gradient(45deg,var(--k-res) 0 2px,transparent 2px 5px)"></i>S81 hop-only stage, position not in the record</span><span><i class="sw" style="background:var(--k-attn)"></i>draft dies (DP1-EP5)</span><span class="muted">Line width scales with link bandwidth; hover a link to light it and its ends.</span>`;
+    leg.innerHTML = `<span><i class="sw" style="background:var(--k-field)"></i>ROM rank die (shade: busy time)</span><span><i class="sw" style="background:var(--k-hbm)"></i>HBM stack</span>${linkLeg('stage hop ' + vs(DATA.ds_hop, 4) + ' µs', L.ds_stage)}${linkLeg('draft replica link', L.ds_draft)}<span><i class="sw" style="background:repeating-linear-gradient(45deg,var(--k-res) 0 2px,transparent 2px 5px)"></i>hop-only stage, position not in the record</span><span><i class="sw" style="background:var(--k-attn)"></i>draft dies (DP1-EP5)</span><span class="muted">Line width scales with link bandwidth; hover a link to light it and its ends.</span>`;
   } else if (d === 'qwen'){
     $('arrayLede').textContent = 'One user’s token runs on a TP4 group: four identical ROM dies, each holding a quarter of every weight matrix and streaming its share of the KV cache from four HBM3E stacks on its east and west edges. The dies meet only at the all-reduce after each attention and MLP block.';
     tools.innerHTML = '<span class="muted" style="font-size:12px">system: 4 dies · 16 HBM3E stacks · TP4 all-reduce</span>';
@@ -228,7 +228,7 @@ function drawDsRibbon(svg){
   const gridW = perRow * (cw + gx) - gx, xs = Math.round((W - gridW) / 2);
   linkDefs(svg);
   const lay = svgEl('g', {}, svg);
-  const head = narrow ? [`token → ${segs.length} stretches + ${extra.count} hop-only stages`, `= ${segs.length + extra.count - 1} stage hops, serpentine`] : [`token → ${segs.length} critical-path stretches + ${extra.count} S81 hop-only stages = ${segs.length + extra.count - 1} stage hops · serpentine: left to right, then right to left`];
+  const head = narrow ? [`token → ${segs.length} stretches + ${extra.count} hop-only stages`, `= ${segs.length + extra.count - 1} stage hops, serpentine`] : [`token → ${segs.length} critical-path stretches + ${extra.count} hop-only stages (${extra.s81} S81 + ${extra.qelem} q-element frame) = ${segs.length + extra.count - 1} stage hops · serpentine: left to right, then right to left`];
   head.forEach((l, i) => txt(lay, xs, 16 + i * 15, l));
   const y0 = 16 + head.length * 15 + 12;
   const pos = k => { const r = Math.floor(k / perRow), c = k % perRow, cc = r % 2 ? perRow - 1 - c : c; return {r, c, x: xs + cc * (cw + gx), y: y0 + r * (ch + gy)}; };
@@ -258,7 +258,7 @@ function drawDsRibbon(svg){
       g.addEventListener('dblclick', () => { state.arraySel = k; state.arrayZoom = 'stage'; renderArray(); });
     } else {
       svgEl('rect', {x: x + 1, y: y + 2, width: cw - 2, height: ch - 4, fill: 'url(#hatchArr)', stroke: css('--die-edge'), 'stroke-width': 0.6, 'stroke-dasharray': '3 2'}, g);
-      g.addEventListener('mousemove', ev => showTip(`<b>S81 hop-only stage</b><br>one of ${extra.count} extra stage hops (${fmt(extra.us_each, 4)} µs each, ${fmt(extra.total, 3)} µs total).<br>Its position in the pipeline is not in the composition record.`, ev));
+      g.addEventListener('mousemove', ev => showTip(`<b>Hop-only stage</b><br>one of ${extra.count} extra stage hops (${extra.s81} S81 + ${extra.qelem} q-element frame) (${fmt(extra.us_each, 4)} µs each, ${fmt(extra.total, 3)} µs total).<br>Its position in the pipeline is not in the composition record.`, ev));
       g.addEventListener('mouseleave', hideTip);
     }
     if (k < total - 1){
@@ -279,7 +279,7 @@ function drawDsRibbon(svg){
   const hPer = Math.max(4, Math.floor((textW + 7) / hp));
   for (let i = 0; i < hd; i++) dieGlyph(svg, xs + (i % hPer) * hp, yb + Math.floor(i / hPer) * hp, hs, hs, mix(bg, css('--k-tree'), .6), null, {id: 'h' + i});
   yb += Math.ceil(hd / hPer) * hp + 14;
-  yb += txtWrap(lay, xs, yb + 10, `draft placement DP1-EP5: ${val(S.draft_primary)} primary dies + ${val(S.draft_replicas)} expert-replica dies (+${val(S.draft_added)} vs baseline). Rows are the 3 DSpark blocks; each holds 5 expert TP4 groups. ${fmt0(val(S.layer_dies))} layer dies = 81 × TP4.`, textW, {fs: 11.5}) + 10;
+  yb += txtWrap(lay, xs, yb + 10, `draft placement DP1-EP5: ${val(S.draft_primary)} primary dies + ${val(S.draft_replicas)} expert-replica dies (+${val(S.draft_added)} vs baseline). Rows are the 3 DSpark blocks; each holds 5 expert TP4 groups. ${fmt0(val(S.layer_dies))} layer dies = ${val(S.stages)} × TP4.`, textW, {fs: 11.5}) + 10;
   // primary TP4 group (left), replica groups in a 5-wide grid (right), joined by a trunk and one link per group
   const ps = narrow ? 13 : 17, pg = 3;
   const primX = xs, primY = yb + 6;
@@ -365,7 +365,7 @@ function drawDsStage(svg){
     if (A.y === B.y) d = `M${A.x + A.w + 2} ${A.y + A.h / 2} L${B.x - 2} ${B.y + B.h / 2}`; else d = `M${A.x + A.w / 2} ${A.y + A.h + 13} L${B.x + B.w / 2} ${B.y - 13}`;
     link(lk, d, {w: lwT, dash: '6 4', ends: ['r' + a, 'r' + b], tip: linkTip(`TP4 collective link, rank ${a} ↔ rank ${b}`, L.ds_tp, 'all-gather and all-reduce inside the stage')});
   }
-  H += 8 + txtWrap(lay, 14, H, 'Dashed: TP4 collectives inside the stage (all-gather, all-reduce). Solid with arrows: stage hops over the board or cable link (full RS(544,514) FEC) + UCIe fan-out. The die floorplan below is the scan die (four stacks; 32 of the 324 layer dies); the other layer dies carry one stack.', W - 28, {fs: 11.5, fill: css('--ink')});
+  H += 8 + txtWrap(lay, 14, H, `Dashed: TP4 collectives inside the stage (all-gather, all-reduce). Solid with arrows: stage hops over the board or cable link (full RS(544,514) FEC) + UCIe fan-out. The die floorplan below is the scan die (four stacks; ${val(DATA.ds_system.scan_dies)} of the ${fmt0(val(DATA.ds_system.layer_dies))} layer dies); the other layer dies carry one stack.`, W - 28, {fs: 11.5, fill: css('--ink')});
   sizeSvg(svg, W, H + 4);
   renderDsArrayRead(k);
 }
@@ -496,7 +496,7 @@ function renderRack(){
   const d = state.design, RD = rkData(), F = DATA.racks.frame, R = DATA.rates;
   const racks = val(RD.racks), C = val(RD.counts);
   const sum = k => racks.reduce((a, r) => a + r[k], 0);
-  const lede = { ds: `The S81 pipeline packed into Open Rack v3 racks with liquid-cooled 1 OU trays of four two-die packages, two pipeline stages a tray. ${racks.length} racks hold ${fmt0(C.dies)} dies. Two stages share a tray; the chain runs down R1 and up R2 with one rack crossing, the head trays sit beside stage 0 and the draft trays beside the head. Every off-package link runs full RS(544,514) FEC. Packing from the committed S81 rack record on the legacy rack study's tray, power and cable template.`,
+  const lede = { ds: `The ${C.stages}-stage pipeline (q-element frame) packed into Open Rack v3 racks with liquid-cooled 1 OU trays of four two-die packages, two pipeline stages a tray. ${racks.length} racks hold ${fmt0(C.dies)} dies. Two stages share a tray; the chain runs down R1 and up R2 with one rack crossing, the head trays sit beside stage 0 and the draft trays beside the head. Every off-package link runs full RS(544,514) FEC. Packing from the committed rack record on the legacy rack study's tray, power and cable template.`,
     hbm: `The HBM accelerator's ${fmt0(C.dies)} dies in ${C.packages} two-die packages, four packages a liquid-cooled 1 OU tray, around one Tomahawk-Ultra tier of ${C.switch_chips} switch chips. Every package stripes ${C.ports_per_package} ports of 800G over the switch chips, so each collective is one or two switch crossings.`,
     qwen: 'The Qwen ROM TP4 group is two two-die packages on one tray: a rack holds many independent groups, and one is drawn. Shown for scale beside the two array machines.' }[d];
   $('rackLede').textContent = lede;
@@ -667,7 +667,7 @@ function rackTables(){
   $('rackSrc').innerHTML = `${linkBW}. ${ctx}<br>${esc(RD.racks.note || '')} ${pill(st(RD.racks))} ${esc(RD.racks.src)}`;
   const lc = val(RD.links);
   $('linkTable').innerHTML = `<thead><tr><th>Class</th><th>Carries</th><th>Medium</th><th class="n">ns / hop</th><th class="n">GB/s</th><th>Status</th></tr></thead><tbody>${lc.map(l => `<tr title="${esc(l.src)}"><td class="mono" style="white-space:nowrap">${esc(l.cls)}</td><td>${esc(l.what)}</td><td>${esc(l.medium)}</td><td class="n">${l.ns == null ? '—' : fmt(l.ns, 1) + (l.ns_hi ? '–' + fmt(l.ns_hi, 0) : '')}</td><td class="n">${l.GBps == null ? '—' : fmt0(l.GBps)}</td><td>${pill(l.st)}</td></tr>`).join('')}</tbody>`;
-  if (d === 'ds'){ const h = val(RD.hops); const f = val(RD.fec); $('linkNote').innerHTML = `Stage hops in this packing: <b>${h.tray}</b> inside a tray, <b>${h.rack}</b> tray to tray, <b>${h.cross}</b> rack to rack (the minimum for 81 stages at two a tray), plus the head hop and the token return ${pill(st(RD.hops))}. Owner baseline (2026-10-06): every off-package link runs full RS(544,514) FEC, board and cable alike; no light FEC anywhere. Each hop is the measured ${fmt(f.hop_us, 4)} µs full-FEC hop (was ${fmt(f.hop_light_us_was, 4)} µs on light FEC), every TP4 collective +${f.coll_delta_cycles} cycles, and the cable flight beyond 0.3 m adds ${fmt(f.cable_flight_us, 3)} µs a token. Against the superseded light-FEC row: DS ROM ${fmt(f.d_AR_tok_s, 1)} tok/s AR (+${fmt(f.d_AR_us, 2)} µs), ${fmt(f.d_MTP_tok_s, 1)} tok/s MTP; the HBM accelerator pays +${fmt(f.hbm_d_us, 2)} µs over ${f.hbm_crossings} switch crossings ${pill(st(RD.fec))}.`; }
+  if (d === 'ds'){ const h = val(RD.hops); const f = val(RD.fec); $('linkNote').innerHTML = `Stage hops in this packing: <b>${h.tray}</b> inside a tray, <b>${h.rack}</b> tray to tray, <b>${h.cross}</b> rack to rack (the minimum for ${val(RD.counts).stages} stages at two a tray), plus the head hop and the token return ${pill(st(RD.hops))}. Owner baseline (2026-10-06): every off-package link runs full RS(544,514) FEC, board and cable alike; no light FEC anywhere. Each hop is the measured ${fmt(f.hop_us, 4)} µs full-FEC hop (was ${fmt(f.hop_light_us_was, 4)} µs on light FEC), every TP4 collective +${f.coll_delta_cycles} cycles, and the cable flight beyond 0.3 m adds ${fmt(f.cable_flight_us, 3)} µs a token. Against the superseded light-FEC row: DS ROM ${fmt(f.d_AR_tok_s, 1)} tok/s AR (+${fmt(f.d_AR_us, 2)} µs), ${fmt(f.d_MTP_tok_s, 1)} tok/s MTP; the HBM accelerator pays +${fmt(f.hbm_d_us, 2)} µs over ${f.hbm_crossings} switch crossings ${pill(st(RD.fec))}.`; }
   else $('linkNote').innerHTML = esc(RD.links.src);
 }
 function jumpToDie(label){
@@ -1003,7 +1003,7 @@ function bindToken(){
 /* ================================================================ 4. TIMING */
 const WFCAT = { field: ['ROM field matvec', '--k-field'], su: ['SU / vector chains', '--k-su'], hop: ['Hops and collectives', '--k-link'], attn: ['Attention and index', '--k-attn'], head: ['Embed and LM head', '--k-tree'],
   sm: ['SM matrix ops (weights from HBM)', '--k-field'], coll: ['TU collectives', '--k-link'], tail: ['Switch striping tail (modelled)', '--k-res'], hbm: ['HBM rows', '--k-hbm'], du: ['Index / select', '--k-index'], du_fast: ['Index / select', '--k-index'],
-  attention: ['Attention block', '--k-attn'], mlp: ['MLP block', '--k-field'], residual: ['Residual', '--k-su'], layer: ['Layer (measured)', '--k-field'], headq: ['RTL head', '--k-tree'], lever: ['Exact levers (removed)', '--s-closed'], wire: ['Die wire stages (added)', '--k-wire'], ctx: ['Adopted core-context cycles', '--k-ctrl'] };
+  attention: ['Attention block', '--k-attn'], mlp: ['MLP block', '--k-field'], residual: ['Residual', '--k-su'], layer: ['Layer (measured)', '--k-field'], headq: ['RTL head', '--k-tree'], lever: ['Exact levers (removed)', '--s-closed'], wire: ['Die wire stages (added)', '--k-wire'], ctx: ['Adopted lever cycles', '--k-ctrl'] };
 function hatchDefs(svg){
   const defs = svgEl('defs', {}, svg);
   const mk = (id, col) => { const p = svgEl('pattern', {id, width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)'}, defs); svgEl('rect', {width: 6, height: 6, fill: col, opacity: .25}, p); svgEl('rect', {width: 2.4, height: 6, fill: col}, p); };
@@ -1016,12 +1016,12 @@ function renderWaterfall(){
   if (d === 'ds'){
     const segs = val(DATA.ds_stages); let t = 0;
     segs.forEach((s, k) => { const parts = []; for (const n of s.nodes){ parts.push({ t0: t, d: n[1], c: catDs(n[0]), name: n[0] }); t += n[1]; } parts.push({ t0: t, d: s.hop, c: 'hop', name: s.hop_node || 'token return' }); t += s.hop; rows.push({ label: (s.layers.join(' ') || 'pass').replace(/L(\d+)/g, 'L$1'), parts }); });
-    const ex = val(DATA.ds_extra_hops); rows.push({ label: '+23 hops', parts: [{ t0: t, d: ex.total, c: 'hop', name: '23 extra S81 stage hops' }] }); t += ex.total; total = t; legendKeys = ['field', 'su', 'attn', 'hop', 'head'];
+    const ex = val(DATA.ds_extra_hops); rows.push({ label: `+${ex.count} hops`, parts: [{ t0: t, d: ex.total, c: 'hop', name: `${ex.count} extra stage hops (${ex.s81} S81 + ${ex.qelem} q-element frame)` }] }); t += ex.total; total = t; legendKeys = ['field', 'su', 'attn', 'hop', 'head'];
     $('wfLede').innerHTML = `Every node on the DeepSeek ROM token's critical path at 1M, one row per stretch between stage hops. Total ${fmt(total, 3)} µs = ${fmt(val(DATA.rates.ds.AR), 1)} tok/s. ${pill(st(DATA.ds_stages))}`;
   } else if (d === 'qwen'){
     const L = val(DATA.qwen_layers); const ps = val(DATA.qwen_phase_split); unit = 'cycles';
     L.forEach(s => { if (s.name === 'HEAD' || /head/i.test(s.name)){ rows.push({ label: 'head', parts: [{ t0: s.start, d: s.cycles, c: 'headq', name: 'RTL head' }] }); return; } const f = s.cycles / ps.total; rows.push({ label: s.name, parts: [{ t0: s.start, d: ps.attention * f, c: 'attention', name: 'attention (split analytical)' }, { t0: s.start + ps.attention * f, d: ps.mlp * f, c: 'mlp', name: 'MLP (split analytical)' }, { t0: s.start + (ps.attention + ps.mlp) * f, d: ps.residual * f, c: 'residual', name: 'residual (split analytical)' }], tot: s.cycles }); });
-    const last = L[L.length - 1]; let t = last.start + last.cycles; rows.push({ label: '+core ctx', parts: [{ t0: t, d: 112, c: 'ctx', name: 'adopted core-context cycles' }] }); total = val(DATA.rates.qwen.cycles); legendKeys = ['attention', 'mlp', 'residual', 'headq', 'ctx'];
+    const last = L[L.length - 1]; let t = last.start + last.cycles; for (const lv of val(DATA.rates.qwen.levers)){ if (!lv.cycles) continue; rows.push({ label: '+' + lv.name, parts: [{ t0: t, d: lv.cycles, c: 'ctx', name: `adopted lever ${lv.name} (${lv.variant || lv.verdict}): +${lv.cycles} cycles` }] }); t += lv.cycles; } total = val(DATA.rates.qwen.cycles); legendKeys = ['attention', 'mlp', 'residual', 'headq', 'ctx'];
     $('wfLede').innerHTML = `Each decoder layer of the measured P8191 token (L0 includes the first KV fill; L1-L35 are 5,282 cycles each, at their compute-only bound). The attention/MLP/residual split inside a layer applies the measured isolated-L0 proportions and is analytical. Total ${fmt0(total)} cycles. ${pill('measured')}`;
   } else {
     const L = val(DATA.hbm_layers); let t = 0;
@@ -1121,11 +1121,15 @@ function renderLevers(){
     $('lvLede').innerHTML = `HBM accelerator levers credited in the comparator: both are exact on minimum components; their SS/FF closure is not admitted. ${pill('analytical')}`;
     $('lvLegend').innerHTML = '<span>bar length: µs removed from the token (AR) or the speculative step (MTP)</span>';
   } else {
-    H = 110; svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
-    const t = svgEl('text', {x: 20, y: 30, 'font-size': 13, fill: css('--ink')}, svg); t.textContent = `core_context (adopted): the in-context core decode closure adds ${val(DATA.rates.qwen.core_ctx)} cycles to the 193,955-cycle measured token: 6,187.0 → ${fmt(val(DATA.rates.qwen.AR))} tok/s.`;
-    const t2 = svgEl('text', {x: 20, y: 56, 'font-size': 13, fill: css('--muted')}, svg); t2.textContent = `DSpark speculation: built and exact, switched off; it measures ${fmt(val(DATA.rates.qwen.dspark_ratio), 3)}× of plain decoding (${fmt(val(DATA.rates.qwen.dspark))} tok/s).`;
-    const t3 = svgEl('text', {x: 20, y: 82, 'font-size': 13, fill: css('--muted')}, svg); t3.textContent = 'Reason: a 4-position verify layer costs 3.26× an AR layer, because the ROM reads exactly as fast as the lanes multiply.';
-    $('lvLede').innerHTML = `The Qwen ROM has one adopted lever since the measured token, and one decision. ${pill('measured')}`;
+    const QL = val(DATA.rates.qwen.levers), Q = DATA.rates.qwen, m = val(Q.cycles_measured), sn = val(Q.sens);
+    H = 136 + QL.length * 26; svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
+    const t = svgEl('text', {x: 20, y: 30, 'font-size': 13, fill: css('--ink')}, svg); t.textContent = `Measured token ${fmt0(m)} cycles (${fmt(1.2e9 / m, 1)} tok/s) + adopted levers = ${fmt0(val(Q.cycles))} cycles: ${fmt(val(Q.AR), 1)} tok/s.`;
+    QL.forEach((lv, k) => { const tl = svgEl('text', {x: 36, y: 56 + k * 26, 'font-size': 12.5, fill: css('--ink')}, svg); tl.textContent = `${lv.name} (${lv.variant || 'adopted'}): +${lv.cycles} cycles, ${fmt(lv.dAR_tok_s, 1)} tok/s, ${lv.verdict.split(',')[0].split(' (')[0]}`; });
+    const y0 = 56 + QL.length * 26;
+    const t1 = svgEl('text', {x: 20, y: y0, 'font-size': 13, fill: css('--muted')}, svg); t1.textContent = `Modelled sensitivity (not RTL, not a headline): +${sn.cycles} cycles of die crossbar on the cold first layer, ${fmt(sn.AR, 1)} tok/s.`;
+    const t2 = svgEl('text', {x: 20, y: y0 + 26, 'font-size': 13, fill: css('--muted')}, svg); t2.textContent = `DSpark speculation: built and exact, switched off; it measures ${fmt(val(Q.dspark_ratio), 3)}× of plain decoding (${fmt(val(Q.dspark))} tok/s).`;
+    const t3 = svgEl('text', {x: 20, y: y0 + 52, 'font-size': 13, fill: css('--muted')}, svg); t3.textContent = 'Reason: a 4-position verify layer costs 3.26× an AR layer, because the ROM reads exactly as fast as the lanes multiply.';
+    $('lvLede').innerHTML = `The Qwen ROM's adopted levers since the measured token, and one decision. ${pill('measured')}`;
     $('lvLegend').innerHTML = '';
   }
 }

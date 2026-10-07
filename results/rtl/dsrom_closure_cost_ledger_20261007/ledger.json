@@ -1,0 +1,369 @@
+{
+ "schema": "opentallas.dsrom.closure_cost_ledger.v1",
+ "baseline": {
+  "ar_tok_s": 1675.0,
+  "mtp_tok_s": 4895.0,
+  "basis": "recovery composition without the S81 closure costs"
+ },
+ "items": [
+  {
+   "item": "s81_die",
+   "description": "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     24,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     24,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     24,
+     0
+    ]
+   ],
+   "ar_tok_s": 1661.2,
+   "mtp_tok_s": 4862.6,
+   "ar_pct": -0.824,
+   "mtp_pct": -0.662,
+   "cum_ar_pct": -0.824,
+   "cum_mtp_pct": -0.662
+  },
+  {
+   "item": "meso_d8g1",
+   "description": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     4,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     4,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     4,
+     0
+    ]
+   ],
+   "ar_tok_s": 1658.9,
+   "mtp_tok_s": 4857.2,
+   "ar_pct": -0.138,
+   "mtp_pct": -0.111,
+   "cum_ar_pct": -0.961,
+   "cum_mtp_pct": -0.772
+  },
+  {
+   "item": "ctrl_status",
+   "description": "CTRL status chain: +1 cycle per column (HBM stream reads)",
+   "cycles": [
+    [
+     "*.attn.idx.score",
+     1,
+     0
+    ],
+    [
+     "*.attn.pv",
+     1,
+     0
+    ],
+    [
+     "*.attn.scores",
+     1,
+     0
+    ]
+   ],
+   "ar_tok_s": 1658.8,
+   "mtp_tok_s": 4857.0,
+   "ar_pct": -0.006,
+   "mtp_pct": -0.004,
+   "cum_ar_pct": -0.967,
+   "cum_mtp_pct": -0.776
+  },
+  {
+   "item": "collective_lane",
+   "description": "Collective lane tiles: +2 TX cycles; 448-record all-reduce 2,329 vs v1 2,587 cycles (x0.9003 on the all-reduces; +2 on the gathers)",
+   "cycles": [
+    [
+     "*.attn.a_allgather",
+     2,
+     0
+    ],
+    [
+     "*.attn.cand.merge",
+     2,
+     0
+    ],
+    [
+     "*.attn.idx.topk_merge",
+     2,
+     0
+    ]
+   ],
+   "ar_tok_s": 1671.1,
+   "mtp_tok_s": 4885.4,
+   "ar_pct": 0.741,
+   "mtp_pct": 0.585,
+   "cum_ar_pct": -0.233,
+   "cum_mtp_pct": -0.196
+  },
+  {
+   "item": "vm_bank_group",
+   "description": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     8,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     8,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     8,
+     0
+    ]
+   ],
+   "ar_tok_s": 1666.5,
+   "mtp_tok_s": 4874.6,
+   "ar_pct": -0.275,
+   "mtp_pct": -0.221,
+   "cum_ar_pct": -0.507,
+   "cum_mtp_pct": -0.417
+  },
+  {
+   "item": "gather_root_v4",
+   "description": "Gather root v4: +6 cycles per phase",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     6,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     6,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     6,
+     0
+    ]
+   ],
+   "ar_tok_s": 1663.1,
+   "mtp_tok_s": 4866.5,
+   "ar_pct": -0.204,
+   "mtp_pct": -0.166,
+   "cum_ar_pct": -0.71,
+   "cum_mtp_pct": -0.582
+  },
+  {
+   "item": "capture",
+   "description": "Capture tiles: VM write +3 a phase",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     3,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     3,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     3,
+     0
+    ]
+   ],
+   "ar_tok_s": 1661.4,
+   "mtp_tok_s": 4862.5,
+   "ar_pct": -0.102,
+   "mtp_pct": -0.082,
+   "cum_ar_pct": -0.812,
+   "cum_mtp_pct": -0.664
+  },
+  {
+   "item": "selector",
+   "description": "Selector tiles: +20 a segment (mean; +15 max)",
+   "cycles": [
+    [
+     "*.attn.cand.topk_local",
+     20,
+     0
+    ],
+    [
+     "*.attn.idx.topk_local",
+     20,
+     0
+    ]
+   ],
+   "ar_tok_s": 1661.0,
+   "mtp_tok_s": 4861.3,
+   "ar_pct": -0.024,
+   "mtp_pct": -0.025,
+   "cum_ar_pct": -0.836,
+   "cum_mtp_pct": -0.688
+  },
+  {
+   "item": "collector",
+   "description": "Collector tiles: +2 a job",
+   "cycles": [
+    [
+     "*.attn.gather",
+     2,
+     0
+    ]
+   ],
+   "ar_tok_s": 1661.0,
+   "mtp_tok_s": 4861.1,
+   "ar_pct": 0.0,
+   "mtp_pct": -0.004,
+   "cum_ar_pct": -0.836,
+   "cum_mtp_pct": -0.693
+  },
+  {
+   "item": "svc_io",
+   "description": "Scan service IO hub / per-PC tiles: one register each way (+2 a request)",
+   "cycles": [
+    [
+     "*.attn.idx.score",
+     2,
+     0
+    ],
+    [
+     "*.attn.pv",
+     2,
+     0
+    ],
+    [
+     "*.attn.scores",
+     2,
+     0
+    ]
+   ],
+   "ar_tok_s": 1660.8,
+   "mtp_tok_s": 4860.6,
+   "ar_pct": -0.012,
+   "mtp_pct": -0.01,
+   "cum_ar_pct": -0.848,
+   "cum_mtp_pct": -0.703
+  },
+  {
+   "item": "softmax_safe_div",
+   "description": "Softmax SAFE divider: +29 on normalize",
+   "cycles": [
+    [
+     "*.attn.normalize",
+     29,
+     0
+    ]
+   ],
+   "ar_tok_s": 1658.1,
+   "mtp_tok_s": 4854.4,
+   "ar_pct": -0.163,
+   "mtp_pct": -0.128,
+   "cum_ar_pct": -1.009,
+   "cum_mtp_pct": -0.829
+  },
+  {
+   "item": "code_pair",
+   "description": "Code pair: LAT_DELTA 11 a field phase",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     11,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     11,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     11,
+     0
+    ]
+   ],
+   "ar_tok_s": 1651.9,
+   "mtp_tok_s": 4839.7,
+   "ar_pct": -0.374,
+   "mtp_pct": -0.303,
+   "cum_ar_pct": -1.379,
+   "cum_mtp_pct": -1.13
+  },
+  {
+   "item": "bf_rowfix",
+   "description": "BF rowfix: +1 per push (a field phase)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     1,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     1,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     1,
+     0
+    ]
+   ],
+   "ar_tok_s": 1651.3,
+   "mtp_tok_s": 4838.4,
+   "ar_pct": -0.036,
+   "mtp_pct": -0.027,
+   "cum_ar_pct": -1.415,
+   "cum_mtp_pct": -1.156
+  },
+  {
+   "item": "pq_qelem",
+   "description": "PQ q-element: decode stage +0.17 % node time (field phases)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     0,
+     0.0017
+    ],
+    [
+     "*.attn.cmp.wk",
+     0,
+     0.0017
+    ],
+    [
+     "*.attn.wo_a",
+     0,
+     0.0017
+    ]
+   ],
+   "ar_tok_s": 1649.9,
+   "mtp_tok_s": 4834.9,
+   "ar_pct": -0.085,
+   "mtp_pct": -0.072,
+   "cum_ar_pct": -1.499,
+   "cum_mtp_pct": -1.228
+  }
+ ],
+ "total": {
+  "ar_tok_s": 1649.9,
+  "mtp_tok_s": 4834.9,
+  "ar_pct": -1.499,
+  "mtp_pct": -1.228
+ }
+}

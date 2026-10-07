@@ -1,0 +1,379 @@
+{
+  "observed_utc": "2026-10-07T05:44:13.685921+00:00",
+  "jobs": {
+    "2": {
+      "run": "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e",
+      "protected_files": {
+        "gate/terminal.json": {
+          "exists": true,
+          "unchanged": true
+        },
+        "gate/neg_S8_rel_q_decision_removed.run.log": {
+          "exists": true,
+          "unchanged": true
+        },
+        "neg_s3/neg_only.run.log": {
+          "exists": true,
+          "unchanged": true
+        },
+        "cl/calibrate.a1.sh": {
+          "exists": true,
+          "unchanged": true
+        },
+        "cl/calibrate.a1.pid": {
+          "exists": true,
+          "unchanged": true
+        },
+        "src/tools/w2_station_rb_gate.py": {
+          "exists": true,
+          "unchanged": true
+        },
+        "src/physical/hbm_w2_rb_station_20261006/run_owned.py": {
+          "exists": true,
+          "unchanged": true
+        },
+        "routes/w2_rb_safe_no2_206a3037e/argv.json": {
+          "exists": true,
+          "unchanged": true
+        },
+        "routes/w2_rb_safe_no2_206a3037e/launch.json": {
+          "exists": true,
+          "unchanged": true
+        }
+      },
+      "missing_preexisting_route_files": [
+        "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_2_floorplan_macro.tmp.log"
+      ],
+      "processes": [],
+      "containers": [],
+      "current_route_files": [
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/argv.json",
+          "size": 2166
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/launch.json",
+          "size": 2568
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/mapped_inventory.json",
+          "size": 599
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/station.sdc",
+          "size": 1378
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/stat.txt",
+          "size": 11815
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/mapped.raw.v",
+          "size": 29689212
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/yosys.log",
+          "size": 7238433
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/synth.ys",
+          "size": 4615
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/mapped.v",
+          "size": 29689212
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/1_2_yosys.raw.v",
+          "size": 29689212
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/config.mk",
+          "size": 1559
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/orfs_synth.log",
+          "size": 2030
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/io_constraints.tcl",
+          "size": 182
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/constraint.sdc",
+          "size": 431
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/station.sdc",
+          "size": 1378
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/w11_endpoint_mapped.v",
+          "size": 29689212
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/hooks/pre_cts_forwarded_subtree.tcl",
+          "size": 1095
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/hooks/pre_io_placement_pin_faces.tcl",
+          "size": 244
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/objects/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/copyright.txt",
+          "size": 0
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/1_2_yosys.sdc",
+          "size": 1378
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/1_synth.odb",
+          "size": 77415754
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/1_2_yosys.v",
+          "size": 29689212
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_2_floorplan_macro.odb",
+          "size": 77724425
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_1_floorplan.sdc",
+          "size": 2232817
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/1_synth.sdc",
+          "size": 2232817
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_1_floorplan.odb",
+          "size": 77724425
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_3_floorplan_tapcell.odb",
+          "size": 79365521
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_2_floorplan_macro.tcl",
+          "size": 1
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/clock_period.txt",
+          "size": 8
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/1_1_yosys_canonicalize.log",
+          "size": 617
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/1_synth.log",
+          "size": 2849
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/1_synth.json",
+          "size": 807
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/1_2_yosys.log",
+          "size": 617
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_1_floorplan.log",
+          "size": 118711
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_3_floorplan_tapcell.log",
+          "size": 2528
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_2_floorplan_macro.log",
+          "size": 2317
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_3_floorplan_tapcell.json",
+          "size": 134
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_2_floorplan_macro.json",
+          "size": 134
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_4_floorplan_pdn.tmp.log",
+          "size": 1807
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_1_floorplan.json",
+          "size": 2255
+        },
+        {
+          "path": "routes/w2_rb_safe_no2_206a3037e/work/orfs/reports/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_floorplan_final.rpt",
+          "size": 15936
+        }
+      ]
+    },
+    "3": {
+      "run": "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e",
+      "protected_files": {
+        "gate/terminal.json": {
+          "exists": true,
+          "unchanged": true
+        },
+        "gate/neg_S8_rel_q_decision_removed.run.log": {
+          "exists": true,
+          "unchanged": true
+        },
+        "neg_s3/neg_only.run.log": {
+          "exists": true,
+          "unchanged": true
+        },
+        "cl/calibrate.a1.sh": {
+          "exists": true,
+          "unchanged": true
+        },
+        "cl/calibrate.a1.pid": {
+          "exists": true,
+          "unchanged": true
+        },
+        "src/tools/w2_station_rb_gate.py": {
+          "exists": true,
+          "unchanged": true
+        },
+        "src/physical/hbm_w2_rb_station_20261006/run_owned.py": {
+          "exists": true,
+          "unchanged": true
+        },
+        "routes/w2_rb_safe_no3_206a3037e/argv.json": {
+          "exists": true,
+          "unchanged": true
+        },
+        "routes/w2_rb_safe_no3_206a3037e/launch.json": {
+          "exists": true,
+          "unchanged": true
+        }
+      },
+      "missing_preexisting_route_files": [],
+      "processes": [],
+      "containers": [],
+      "current_route_files": [
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/argv.json",
+          "size": 2166
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/launch.json",
+          "size": 2568
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/mapped_inventory.json",
+          "size": 598
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/station.sdc",
+          "size": 1378
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/stat.txt",
+          "size": 13881
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/mapped.raw.v",
+          "size": 32301093
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/yosys.log",
+          "size": 7977514
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/synth.ys",
+          "size": 4615
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/mapped.v",
+          "size": 32301093
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/1_2_yosys.raw.v",
+          "size": 32301093
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/config.mk",
+          "size": 1559
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/orfs_synth.log",
+          "size": 2030
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/io_constraints.tcl",
+          "size": 182
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/constraint.sdc",
+          "size": 431
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/station.sdc",
+          "size": 1378
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/w11_endpoint_mapped.v",
+          "size": 32301093
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/hooks/pre_cts_forwarded_subtree.tcl",
+          "size": 1095
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/hooks/pre_io_placement_pin_faces.tcl",
+          "size": 244
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/objects/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/copyright.txt",
+          "size": 0
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/1_2_yosys.sdc",
+          "size": 1378
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/1_synth.odb",
+          "size": 85523698
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/1_2_yosys.v",
+          "size": 32301093
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/1_synth.sdc",
+          "size": 2922363
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/clock_period.txt",
+          "size": 8
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/2_1_floorplan.tmp.log",
+          "size": 57799
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/1_1_yosys_canonicalize.log",
+          "size": 617
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/1_synth.log",
+          "size": 2851
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/1_synth.json",
+          "size": 808
+        },
+        {
+          "path": "routes/w2_rb_safe_no3_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/1_2_yosys.log",
+          "size": 617
+        }
+      ]
+    }
+  }
+}

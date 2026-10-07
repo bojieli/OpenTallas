@@ -1,0 +1,1196 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 20 thread(s).
+[INFO ODB-0227] LEF file: /work/tech.lef, created 17 layers, 8 vias
+[INFO ODB-0227] LEF file: /work/elements.lef, created 43 library cells
+[WARNING ORD-2011] LEF master qfd_cdc has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_ctrl has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_chead_w has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_chead_e has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_hub has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_collective has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_embedding_rom has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_serdes has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_ucie has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_xfifo has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_c has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_c_split has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_kvc_n has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_kvc has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_h_e has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_h_w has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_v has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_v_split has no liberty cell.
+[WARNING ORD-2011] LEF master ot_hbm3e_phy has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_cst_s has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_cst_n has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_constants_sequencer has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_0 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_0_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_1_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_2 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_2_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_2_f2 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_2_f3 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_3 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_3_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_3_f2 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_3_f3 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_4 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_4_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_5 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_port_tiles_5_f1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_su64_sfu has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_tree_top has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_vector_memory has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_tile has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_tile_e has no liberty cell.
+[INFO IFP-0001] Added 7593 rows of 28979 site bsite.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 25037.856 32801.760 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 25037.856 32801.760 ) um
+[INFO IFP-0102] Core area:                    821285743.427 um^2
+[INFO IFP-0103] Total instances area:         671397593.108 um^2
+[INFO IFP-0104] Effective utilization:                0.817
+[INFO IFP-0105] Number of instances:                   3334
+OTMEM placed 288 MB 1791289867
+[WARNING GRT-0300] Timing is not available, setting critical nets percentage to 0.
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.5760  line-2-Via Pitch: 0.5760
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.6170  line-2-Via Pitch: 0.5760
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.5760  line-2-Via Pitch: 0.5760
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.7680  line-2-Via Pitch: 0.7680
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.7680  line-2-Via Pitch: 0.7680
+[INFO GRT-0088] Layer M6      Track-Pitch = 1.0240  line-2-Via Pitch: 1.0240
+[INFO GRT-0088] Layer M7      Track-Pitch = 1.0240  line-2-Via Pitch: 1.0240
+[INFO GRT-0088] Layer M8      Track-Pitch = 1.2800  line-2-Via Pitch: 1.2800
+[INFO GRT-0088] Layer M9      Track-Pitch = 1.2800  line-2-Via Pitch: 1.2800
+[INFO GRT-0003] Macros: 3334
+[INFO GRT-0004] Blockages: 13460
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 37
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal   26447563             0          100.00%
+M3         Vertical     27671364             0          100.00%
+M4         Horizontal   22558709        175530          99.22%
+M5         Vertical     27539813         71662          99.74%
+M6         Horizontal   21374591      16637308          22.16%
+M7         Vertical     20685508      16039046          22.46%
+M8         Horizontal   69263298      47514915          31.40%
+M9         Vertical     69398880      47398773          31.70%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/50
+[INFO GRT-0102] Start extra iteration 2/50
+[INFO GRT-0102] Start extra iteration 3/50
+[INFO GRT-0102] Start extra iteration 4/50
+[INFO GRT-0102] Start extra iteration 5/50
+[INFO GRT-0102] Start extra iteration 6/50
+[INFO GRT-0102] Start extra iteration 7/50
+[INFO GRT-0102] Start extra iteration 8/50
+[INFO GRT-0102] Start extra iteration 9/50
+[INFO GRT-0102] Start extra iteration 10/50
+[INFO GRT-0102] Start extra iteration 11/50
+[INFO GRT-0102] Start extra iteration 12/50
+[INFO GRT-0102] Start extra iteration 13/50
+[INFO GRT-0102] Start extra iteration 14/50
+[INFO GRT-0102] Start extra iteration 15/50
+[INFO GRT-0102] Start extra iteration 16/50
+[INFO GRT-0102] Start extra iteration 17/50
+[INFO GRT-0102] Start extra iteration 18/50
+[INFO GRT-0102] Start extra iteration 19/50
+[INFO GRT-0102] Start extra iteration 20/50
+[INFO GRT-0102] Start extra iteration 21/50
+[INFO GRT-0102] Start extra iteration 22/50
+[INFO GRT-0102] Start extra iteration 23/50
+[INFO GRT-0102] Start extra iteration 24/50
+[INFO GRT-0102] Start extra iteration 25/50
+[INFO GRT-0102] Start extra iteration 26/50
+[INFO GRT-0102] Start extra iteration 27/50
+[INFO GRT-0102] Start extra iteration 28/50
+[INFO GRT-0102] Start extra iteration 29/50
+[INFO GRT-0102] Start extra iteration 30/50
+[INFO GRT-0102] Start extra iteration 31/50
+[INFO GRT-0102] Start extra iteration 32/50
+[INFO GRT-0102] Start extra iteration 33/50
+[INFO GRT-0102] Start extra iteration 34/50
+[INFO GRT-0102] Start extra iteration 35/50
+[INFO GRT-0102] Start extra iteration 36/50
+[INFO GRT-0102] Start extra iteration 37/50
+[INFO GRT-0102] Start extra iteration 38/50
+[INFO GRT-0102] Start extra iteration 39/50
+[INFO GRT-0102] Start extra iteration 40/50
+[INFO GRT-0102] Start extra iteration 41/50
+[INFO GRT-0102] Start extra iteration 42/50
+[INFO GRT-0102] Start extra iteration 43/50
+[INFO GRT-0102] Start extra iteration 44/50
+[INFO GRT-0102] Start extra iteration 45/50
+[INFO GRT-0102] Start extra iteration 46/50
+[INFO GRT-0102] Start extra iteration 47/50
+[INFO GRT-0102] Start extra iteration 48/50
+[INFO GRT-0102] Start extra iteration 49/50
+[INFO GRT-0102] Start extra iteration 50/50
+[INFO GRT-0197] Via related to pin nodes: 731382
+[INFO GRT-0198] Via related Steiner nodes: 1957
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1390798
+[INFO GRT-0112] Final usage 3D: 20123096
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4              175530         17782           10.13%             0 /  0 /  0
+M5               71662          7890           11.01%             0 /  2 /  3
+M6            16637308        737700            4.43%             1 /  0 /  7
+M7            16039046       4623889           28.83%             0 /  1 /  4
+M8            47514915       4873728           10.26%            19 /  2 / 3391
+M9            47398773       5689713           12.00%             1 / 15 / 4567
+---------------------------------------------------------------------------------------
+Total        127837234       15950702           12.48%            21 / 20 / 7972
+
+[INFO GRT-0018] Total wirelength: 153905570 um
+[INFO GRT-0014] Routed nets: 219041
+[WARNING GRT-0115] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+[INFO GRT-0303] Global routing runtime = 05:05:17
+OT_TIME grt_s=18317
+OTMEM grt 12689 MB 1791308184
+[INFO GRT-0237] Net n_attn_ret[0] global route wire length: 1053.36um
+[INFO GRT-0237] Net n_attn_ret[10] global route wire length: 1071.84um
+[INFO GRT-0237] Net n_attn_ret[11] global route wire length: 960.96um
+[INFO GRT-0237] Net n_attn_ret[12] global route wire length: 905.52um
+[INFO GRT-0237] Net n_attn_ret[13] global route wire length: 1025.64um
+[INFO GRT-0237] Net n_attn_ret[14] global route wire length: 951.72um
+[INFO GRT-0237] Net n_attn_ret[15] global route wire length: 868.56um
+[INFO GRT-0237] Net n_attn_ret[16] global route wire length: 988.68um
+[INFO GRT-0237] Net n_attn_ret[17] global route wire length: 850.08um
+[INFO GRT-0237] Net n_attn_ret[18] global route wire length: 905.52um
+[INFO GRT-0237] Net n_attn_ret[19] global route wire length: 924.00um
+[INFO GRT-0237] Net n_attn_ret[1] global route wire length: 794.64um
+[INFO GRT-0237] Net n_attn_ret[20] global route wire length: 813.12um
+[INFO GRT-0237] Net n_attn_ret[21] global route wire length: 942.48um
+[INFO GRT-0237] Net n_attn_ret[22] global route wire length: 997.92um
+[INFO GRT-0237] Net n_attn_ret[23] global route wire length: 776.16um
+[INFO GRT-0237] Net n_attn_ret[24] global route wire length: 757.68um
+[INFO GRT-0237] Net n_attn_ret[25] global route wire length: 896.28um
+[INFO GRT-0237] Net n_attn_ret[26] global route wire length: 831.60um
+[INFO GRT-0237] Net n_attn_ret[27] global route wire length: 813.12um
+[INFO GRT-0237] Net n_attn_ret[28] global route wire length: 813.12um
+[INFO GRT-0237] Net n_attn_ret[29] global route wire length: 803.88um
+[INFO GRT-0237] Net n_attn_ret[2] global route wire length: 776.16um
+[INFO GRT-0237] Net n_attn_ret[30] global route wire length: 794.64um
+[INFO GRT-0237] Net n_attn_ret[31] global route wire length: 868.56um
+[INFO GRT-0237] Net n_attn_ret[3] global route wire length: 757.68um
+[INFO GRT-0237] Net n_attn_ret[4] global route wire length: 887.04um
+[INFO GRT-0237] Net n_attn_ret[5] global route wire length: 813.12um
+[INFO GRT-0237] Net n_attn_ret[6] global route wire length: 813.12um
+[INFO GRT-0237] Net n_attn_ret[7] global route wire length: 813.12um
+[INFO GRT-0237] Net n_attn_ret[8] global route wire length: 776.16um
+[INFO GRT-0237] Net n_attn_ret[9] global route wire length: 776.16um
+[INFO GRT-0237] Net n_bword_0[0] global route wire length: 10062.36um
+[INFO GRT-0237] Net n_bword_0[10] global route wire length: 10127.04um
+[INFO GRT-0237] Net n_bword_0[11] global route wire length: 10127.04um
+[INFO GRT-0237] Net n_bword_0[12] global route wire length: 10071.60um
+[INFO GRT-0237] Net n_bword_0[13] global route wire length: 10108.56um
+[INFO GRT-0237] Net n_bword_0[14] global route wire length: 10043.88um
+[INFO GRT-0237] Net n_bword_0[15] global route wire length: 10006.92um
+[INFO GRT-0237] Net n_bword_0[16] global route wire length: 9988.44um
+[INFO GRT-0237] Net n_bword_0[17] global route wire length: 9942.24um
+[INFO GRT-0237] Net n_bword_0[18] global route wire length: 10145.52um
+[INFO GRT-0237] Net n_bword_0[19] global route wire length: 10210.20um
+[INFO GRT-0237] Net n_bword_0[1] global route wire length: 10164.00um
+[INFO GRT-0237] Net n_bword_0[20] global route wire length: 9877.56um
+[INFO GRT-0237] Net n_bword_0[21] global route wire length: 9868.32um
+[INFO GRT-0237] Net n_bword_0[22] global route wire length: 9905.28um
+[INFO GRT-0237] Net n_bword_0[23] global route wire length: 9859.08um
+[INFO GRT-0237] Net n_bword_0[24] global route wire length: 9859.08um
+[INFO GRT-0237] Net n_bword_0[25] global route wire length: 9812.88um
+[INFO GRT-0237] Net n_bword_0[26] global route wire length: 9803.64um
+[INFO GRT-0237] Net n_bword_0[27] global route wire length: 9831.36um
+[INFO GRT-0237] Net n_bword_0[28] global route wire length: 9803.64um
+[INFO GRT-0237] Net n_bword_0[29] global route wire length: 9803.64um
+[INFO GRT-0237] Net n_bword_0[2] global route wire length: 10043.88um
+[INFO GRT-0237] Net n_bword_0[30] global route wire length: 9757.44um
+[INFO GRT-0237] Net n_bword_0[31] global route wire length: 9748.20um
+[INFO GRT-0237] Net n_bword_0[3] global route wire length: 10053.12um
+[INFO GRT-0237] Net n_bword_0[4] global route wire length: 10293.36um
+[INFO GRT-0237] Net n_bword_0[5] global route wire length: 10025.40um
+[INFO GRT-0237] Net n_bword_0[6] global route wire length: 9988.44um
+[INFO GRT-0237] Net n_bword_0[7] global route wire length: 10247.16um
+[INFO GRT-0237] Net n_bword_0[8] global route wire length: 9969.96um
+[INFO GRT-0237] Net n_bword_0[9] global route wire length: 9979.20um
+[INFO GRT-0237] Net n_bword_10[0] global route wire length: 8620.92um
+[INFO GRT-0237] Net n_bword_10[10] global route wire length: 8833.44um
+[INFO GRT-0237] Net n_bword_10[11] global route wire length: 8824.20um
+[INFO GRT-0237] Net n_bword_10[12] global route wire length: 8371.44um
+[INFO GRT-0237] Net n_bword_10[13] global route wire length: 8408.40um
+[INFO GRT-0237] Net n_bword_10[14] global route wire length: 8426.88um
+[INFO GRT-0237] Net n_bword_10[15] global route wire length: 8251.32um
+[INFO GRT-0237] Net n_bword_10[16] global route wire length: 8288.28um
+[INFO GRT-0237] Net n_bword_10[17] global route wire length: 8519.28um
+[INFO GRT-0237] Net n_bword_10[18] global route wire length: 8195.88um
+[INFO GRT-0237] Net n_bword_10[19] global route wire length: 8232.84um
+[INFO GRT-0237] Net n_bword_10[1] global route wire length: 8953.56um
+[INFO GRT-0237] Net n_bword_10[20] global route wire length: 8205.12um
+[INFO GRT-0237] Net n_bword_10[21] global route wire length: 8214.36um
+[INFO GRT-0237] Net n_bword_10[22] global route wire length: 8205.12um
+[INFO GRT-0237] Net n_bword_10[23] global route wire length: 8445.36um
+[INFO GRT-0237] Net n_bword_10[24] global route wire length: 8140.44um
+[INFO GRT-0237] Net n_bword_10[25] global route wire length: 8537.76um
+[INFO GRT-0237] Net n_bword_10[26] global route wire length: 8149.68um
+[INFO GRT-0237] Net n_bword_10[27] global route wire length: 8140.44um
+[INFO GRT-0237] Net n_bword_10[28] global route wire length: 8242.08um
+[INFO GRT-0237] Net n_bword_10[29] global route wire length: 8149.68um
+[INFO GRT-0237] Net n_bword_10[2] global route wire length: 8389.92um
+[INFO GRT-0237] Net n_bword_10[30] global route wire length: 8085.00um
+[INFO GRT-0237] Net n_bword_10[31] global route wire length: 8103.48um
+[INFO GRT-0237] Net n_bword_10[3] global route wire length: 8990.52um
+[INFO GRT-0237] Net n_bword_10[4] global route wire length: 8436.12um
+[INFO GRT-0237] Net n_bword_10[5] global route wire length: 8371.44um
+[INFO GRT-0237] Net n_bword_10[6] global route wire length: 8316.00um
+[INFO GRT-0237] Net n_bword_10[7] global route wire length: 8334.48um
+[INFO GRT-0237] Net n_bword_10[8] global route wire length: 8325.24um
+[INFO GRT-0237] Net n_bword_10[9] global route wire length: 8454.60um
+[INFO GRT-0237] Net n_bword_11[0] global route wire length: 8583.96um
+[INFO GRT-0237] Net n_bword_11[10] global route wire length: 8778.00um
+[INFO GRT-0237] Net n_bword_11[11] global route wire length: 8556.24um
+[INFO GRT-0237] Net n_bword_11[12] global route wire length: 8463.84um
+[INFO GRT-0237] Net n_bword_11[13] global route wire length: 8436.12um
+[INFO GRT-0237] Net n_bword_11[14] global route wire length: 8426.88um
+[INFO GRT-0237] Net n_bword_11[15] global route wire length: 8482.32um
+[INFO GRT-0237] Net n_bword_11[16] global route wire length: 8473.08um
+[INFO GRT-0237] Net n_bword_11[17] global route wire length: 8454.60um
+[INFO GRT-0237] Net n_bword_11[18] global route wire length: 8380.68um
+[INFO GRT-0237] Net n_bword_11[19] global route wire length: 8389.92um
+[INFO GRT-0237] Net n_bword_11[1] global route wire length: 8547.00um
+[INFO GRT-0237] Net n_bword_11[20] global route wire length: 8371.44um
+[INFO GRT-0237] Net n_bword_11[21] global route wire length: 8399.16um
+[INFO GRT-0237] Net n_bword_11[22] global route wire length: 8639.40um
+[INFO GRT-0237] Net n_bword_11[23] global route wire length: 8371.44um
+[INFO GRT-0237] Net n_bword_11[24] global route wire length: 8325.24um
+[INFO GRT-0237] Net n_bword_11[25] global route wire length: 8334.48um
+[INFO GRT-0237] Net n_bword_11[26] global route wire length: 8824.20um
+[INFO GRT-0237] Net n_bword_11[27] global route wire length: 8325.24um
+[INFO GRT-0237] Net n_bword_11[28] global route wire length: 8565.48um
+[INFO GRT-0237] Net n_bword_11[29] global route wire length: 8325.24um
+[INFO GRT-0237] Net n_bword_11[2] global route wire length: 8565.48um
+[INFO GRT-0237] Net n_bword_11[30] global route wire length: 8269.80um
+[INFO GRT-0237] Net n_bword_11[31] global route wire length: 8279.04um
+[INFO GRT-0237] Net n_bword_11[3] global route wire length: 8574.72um
+[INFO GRT-0237] Net n_bword_11[4] global route wire length: 9424.80um
+[INFO GRT-0237] Net n_bword_11[5] global route wire length: 8537.76um
+[INFO GRT-0237] Net n_bword_11[6] global route wire length: 8491.56um
+[INFO GRT-0237] Net n_bword_11[7] global route wire length: 8805.72um
+[INFO GRT-0237] Net n_bword_11[8] global route wire length: 8482.32um
+[INFO GRT-0237] Net n_bword_11[9] global route wire length: 8482.32um
+[INFO GRT-0237] Net n_bword_12[0] global route wire length: 7706.16um
+[INFO GRT-0237] Net n_bword_12[10] global route wire length: 7512.12um
+[INFO GRT-0237] Net n_bword_12[11] global route wire length: 7022.40um
+[INFO GRT-0237] Net n_bword_12[12] global route wire length: 6957.72um
+[INFO GRT-0237] Net n_bword_12[13] global route wire length: 7364.28um
+[INFO GRT-0237] Net n_bword_12[14] global route wire length: 6957.72um
+[INFO GRT-0237] Net n_bword_12[15] global route wire length: 7447.44um
+[INFO GRT-0237] Net n_bword_12[16] global route wire length: 7197.96um
+[INFO GRT-0237] Net n_bword_12[17] global route wire length: 6985.44um
+[INFO GRT-0237] Net n_bword_12[18] global route wire length: 7105.56um
+[INFO GRT-0237] Net n_bword_12[19] global route wire length: 7225.68um
+[INFO GRT-0237] Net n_bword_12[1] global route wire length: 7632.24um
+[INFO GRT-0237] Net n_bword_12[20] global route wire length: 7179.48um
+[INFO GRT-0237] Net n_bword_12[21] global route wire length: 6902.28um
+[INFO GRT-0237] Net n_bword_12[22] global route wire length: 6902.28um
+[INFO GRT-0237] Net n_bword_12[23] global route wire length: 6902.28um
+[INFO GRT-0237] Net n_bword_12[24] global route wire length: 6865.32um
+[INFO GRT-0237] Net n_bword_12[25] global route wire length: 6846.84um
+[INFO GRT-0237] Net n_bword_12[26] global route wire length: 6856.08um
+[INFO GRT-0237] Net n_bword_12[27] global route wire length: 6846.84um
+[INFO GRT-0237] Net n_bword_12[28] global route wire length: 7050.12um
+[INFO GRT-0237] Net n_bword_12[29] global route wire length: 6856.08um
+[INFO GRT-0237] Net n_bword_12[2] global route wire length: 7068.60um
+[INFO GRT-0237] Net n_bword_12[30] global route wire length: 6791.40um
+[INFO GRT-0237] Net n_bword_12[31] global route wire length: 6800.64um
+[INFO GRT-0237] Net n_bword_12[3] global route wire length: 7659.96um
+[INFO GRT-0237] Net n_bword_12[4] global route wire length: 8352.96um
+[INFO GRT-0237] Net n_bword_12[5] global route wire length: 7077.84um
+[INFO GRT-0237] Net n_bword_12[6] global route wire length: 7059.36um
+[INFO GRT-0237] Net n_bword_12[7] global route wire length: 7197.96um
+[INFO GRT-0237] Net n_bword_12[8] global route wire length: 7022.40um
+[INFO GRT-0237] Net n_bword_12[9] global route wire length: 7013.16um
+[INFO GRT-0237] Net n_bword_13[0] global route wire length: 7327.32um
+[INFO GRT-0237] Net n_bword_13[10] global route wire length: 7161.00um
+[INFO GRT-0237] Net n_bword_13[11] global route wire length: 7669.20um
+[INFO GRT-0237] Net n_bword_13[12] global route wire length: 7576.80um
+[INFO GRT-0237] Net n_bword_13[13] global route wire length: 6976.20um
+[INFO GRT-0237] Net n_bword_13[14] global route wire length: 6976.20um
+[INFO GRT-0237] Net n_bword_13[15] global route wire length: 6985.44um
+[INFO GRT-0237] Net n_bword_13[16] global route wire length: 6985.44um
+[INFO GRT-0237] Net n_bword_13[17] global route wire length: 6948.48um
+[INFO GRT-0237] Net n_bword_13[18] global route wire length: 6911.52um
+[INFO GRT-0237] Net n_bword_13[19] global route wire length: 6902.28um
+[INFO GRT-0237] Net n_bword_13[1] global route wire length: 7068.60um
+[INFO GRT-0237] Net n_bword_13[20] global route wire length: 6893.04um
+[INFO GRT-0237] Net n_bword_13[21] global route wire length: 7133.28um
+[INFO GRT-0237] Net n_bword_13[22] global route wire length: 6902.28um
+[INFO GRT-0237] Net n_bword_13[23] global route wire length: 7161.00um
+[INFO GRT-0237] Net n_bword_13[24] global route wire length: 7133.28um
+[INFO GRT-0237] Net n_bword_13[25] global route wire length: 6846.84um
+[INFO GRT-0237] Net n_bword_13[26] global route wire length: 6837.60um
+[INFO GRT-0237] Net n_bword_13[27] global route wire length: 6846.84um
+[INFO GRT-0237] Net n_bword_13[28] global route wire length: 6874.56um
+[INFO GRT-0237] Net n_bword_13[29] global route wire length: 6837.60um
+[INFO GRT-0237] Net n_bword_13[2] global route wire length: 7493.64um
+[INFO GRT-0237] Net n_bword_13[30] global route wire length: 6791.40um
+[INFO GRT-0237] Net n_bword_13[31] global route wire length: 6800.64um
+[INFO GRT-0237] Net n_bword_13[3] global route wire length: 7096.32um
+[INFO GRT-0237] Net n_bword_13[4] global route wire length: 7669.20um
+[INFO GRT-0237] Net n_bword_13[5] global route wire length: 7271.88um
+[INFO GRT-0237] Net n_bword_13[6] global route wire length: 7530.60um
+[INFO GRT-0237] Net n_bword_13[7] global route wire length: 7013.16um
+[INFO GRT-0237] Net n_bword_13[8] global route wire length: 6994.68um
+[INFO GRT-0237] Net n_bword_13[9] global route wire length: 7013.16um
+[INFO GRT-0237] Net n_bword_14[0] global route wire length: 8454.60um
+[INFO GRT-0237] Net n_bword_14[10] global route wire length: 7308.84um
+[INFO GRT-0237] Net n_bword_14[11] global route wire length: 7780.08um
+[INFO GRT-0237] Net n_bword_14[12] global route wire length: 9045.96um
+[INFO GRT-0237] Net n_bword_14[13] global route wire length: 8417.64um
+[INFO GRT-0237] Net n_bword_14[14] global route wire length: 8288.28um
+[INFO GRT-0237] Net n_bword_14[15] global route wire length: 7641.48um
+[INFO GRT-0237] Net n_bword_14[16] global route wire length: 8186.64um
+[INFO GRT-0237] Net n_bword_14[17] global route wire length: 8038.80um
+[INFO GRT-0237] Net n_bword_14[18] global route wire length: 7502.88um
+[INFO GRT-0237] Net n_bword_14[19] global route wire length: 7179.48um
+[INFO GRT-0237] Net n_bword_14[1] global route wire length: 7382.76um
+[INFO GRT-0237] Net n_bword_14[20] global route wire length: 7207.20um
+[INFO GRT-0237] Net n_bword_14[21] global route wire length: 6837.60um
+[INFO GRT-0237] Net n_bword_14[22] global route wire length: 7050.12um
+[INFO GRT-0237] Net n_bword_14[23] global route wire length: 7003.92um
+[INFO GRT-0237] Net n_bword_14[24] global route wire length: 6791.40um
+[INFO GRT-0237] Net n_bword_14[25] global route wire length: 6874.56um
+[INFO GRT-0237] Net n_bword_14[26] global route wire length: 7188.72um
+[INFO GRT-0237] Net n_bword_14[27] global route wire length: 7003.92um
+[INFO GRT-0237] Net n_bword_14[28] global route wire length: 6893.04um
+[INFO GRT-0237] Net n_bword_14[29] global route wire length: 6856.08um
+[INFO GRT-0237] Net n_bword_14[2] global route wire length: 7253.40um
+[INFO GRT-0237] Net n_bword_14[30] global route wire length: 6726.72um
+[INFO GRT-0237] Net n_bword_14[31] global route wire length: 6976.20um
+[INFO GRT-0237] Net n_bword_14[3] global route wire length: 7946.40um
+[INFO GRT-0237] Net n_bword_14[4] global route wire length: 8648.64um
+[INFO GRT-0237] Net n_bword_14[5] global route wire length: 7373.52um
+[INFO GRT-0237] Net n_bword_14[6] global route wire length: 7188.72um
+[INFO GRT-0237] Net n_bword_14[7] global route wire length: 7502.88um
+[INFO GRT-0237] Net n_bword_14[8] global route wire length: 7281.12um
+[INFO GRT-0237] Net n_bword_14[9] global route wire length: 7253.40um
+[INFO GRT-0237] Net n_bword_15[0] global route wire length: 8851.92um
+[INFO GRT-0237] Net n_bword_15[10] global route wire length: 8547.00um
+[INFO GRT-0237] Net n_bword_15[11] global route wire length: 8297.52um
+[INFO GRT-0237] Net n_bword_15[12] global route wire length: 8583.96um
+[INFO GRT-0237] Net n_bword_15[13] global route wire length: 8279.04um
+[INFO GRT-0237] Net n_bword_15[14] global route wire length: 8279.04um
+[INFO GRT-0237] Net n_bword_15[15] global route wire length: 8260.56um
+[INFO GRT-0237] Net n_bword_15[16] global route wire length: 8269.80um
+[INFO GRT-0237] Net n_bword_15[17] global route wire length: 8279.04um
+[INFO GRT-0237] Net n_bword_15[18] global route wire length: 8445.36um
+[INFO GRT-0237] Net n_bword_15[19] global route wire length: 8343.72um
+[INFO GRT-0237] Net n_bword_15[1] global route wire length: 8768.76um
+[INFO GRT-0237] Net n_bword_15[20] global route wire length: 8297.52um
+[INFO GRT-0237] Net n_bword_15[21] global route wire length: 8297.52um
+[INFO GRT-0237] Net n_bword_15[22] global route wire length: 8251.32um
+[INFO GRT-0237] Net n_bword_15[23] global route wire length: 8297.52um
+[INFO GRT-0237] Net n_bword_15[24] global route wire length: 8251.32um
+[INFO GRT-0237] Net n_bword_15[25] global route wire length: 8269.80um
+[INFO GRT-0237] Net n_bword_15[26] global route wire length: 8297.52um
+[INFO GRT-0237] Net n_bword_15[27] global route wire length: 8389.92um
+[INFO GRT-0237] Net n_bword_15[28] global route wire length: 8362.20um
+[INFO GRT-0237] Net n_bword_15[29] global route wire length: 8380.68um
+[INFO GRT-0237] Net n_bword_15[2] global route wire length: 8713.32um
+[INFO GRT-0237] Net n_bword_15[30] global route wire length: 8288.28um
+[INFO GRT-0237] Net n_bword_15[31] global route wire length: 8436.12um
+[INFO GRT-0237] Net n_bword_15[3] global route wire length: 8316.00um
+[INFO GRT-0237] Net n_bword_15[4] global route wire length: 8325.24um
+[INFO GRT-0237] Net n_bword_15[5] global route wire length: 8417.64um
+[INFO GRT-0237] Net n_bword_15[6] global route wire length: 8279.04um
+[INFO GRT-0237] Net n_bword_15[7] global route wire length: 8288.28um
+[INFO GRT-0237] Net n_bword_15[8] global route wire length: 8297.52um
+[INFO GRT-0237] Net n_bword_15[9] global route wire length: 8288.28um
+[INFO GRT-0237] Net n_bword_16[0] global route wire length: 8075.76um
+[INFO GRT-0237] Net n_bword_16[10] global route wire length: 7022.40um
+[INFO GRT-0237] Net n_bword_16[11] global route wire length: 7197.96um
+[INFO GRT-0237] Net n_bword_16[12] global route wire length: 6782.16um
+[INFO GRT-0237] Net n_bword_16[13] global route wire length: 7937.16um
+[INFO GRT-0237] Net n_bword_16[14] global route wire length: 6911.52um
+[INFO GRT-0237] Net n_bword_16[15] global route wire length: 6782.16um
+[INFO GRT-0237] Net n_bword_16[16] global route wire length: 6911.52um
+[INFO GRT-0237] Net n_bword_16[17] global route wire length: 6809.88um
+[INFO GRT-0237] Net n_bword_16[18] global route wire length: 6726.72um
+[INFO GRT-0237] Net n_bword_16[19] global route wire length: 6911.52um
+[INFO GRT-0237] Net n_bword_16[1] global route wire length: 8112.72um
+[INFO GRT-0237] Net n_bword_16[20] global route wire length: 6994.68um
+[INFO GRT-0237] Net n_bword_16[21] global route wire length: 6726.72um
+[INFO GRT-0237] Net n_bword_16[22] global route wire length: 6754.44um
+[INFO GRT-0237] Net n_bword_16[23] global route wire length: 6846.84um
+[INFO GRT-0237] Net n_bword_16[24] global route wire length: 6662.04um
+[INFO GRT-0237] Net n_bword_16[25] global route wire length: 6837.60um
+[INFO GRT-0237] Net n_bword_16[26] global route wire length: 7696.92um
+[INFO GRT-0237] Net n_bword_16[27] global route wire length: 7558.32um
+[INFO GRT-0237] Net n_bword_16[28] global route wire length: 6828.36um
+[INFO GRT-0237] Net n_bword_16[29] global route wire length: 6671.28um
+[INFO GRT-0237] Net n_bword_16[2] global route wire length: 6893.04um
+[INFO GRT-0237] Net n_bword_16[30] global route wire length: 6615.84um
+[INFO GRT-0237] Net n_bword_16[31] global route wire length: 7502.88um
+[INFO GRT-0237] Net n_bword_16[3] global route wire length: 6902.28um
+[INFO GRT-0237] Net n_bword_16[4] global route wire length: 7299.60um
+[INFO GRT-0237] Net n_bword_16[5] global route wire length: 6902.28um
+[INFO GRT-0237] Net n_bword_16[6] global route wire length: 6837.60um
+[INFO GRT-0237] Net n_bword_16[7] global route wire length: 7345.80um
+[INFO GRT-0237] Net n_bword_16[8] global route wire length: 6837.60um
+[INFO GRT-0237] Net n_bword_16[9] global route wire length: 6846.84um
+[INFO GRT-0237] Net n_bword_17[0] global route wire length: 7595.28um
+[INFO GRT-0237] Net n_bword_17[10] global route wire length: 7456.68um
+[INFO GRT-0237] Net n_bword_17[11] global route wire length: 7022.40um
+[INFO GRT-0237] Net n_bword_17[12] global route wire length: 7161.00um
+[INFO GRT-0237] Net n_bword_17[13] global route wire length: 7142.52um
+[INFO GRT-0237] Net n_bword_17[14] global route wire length: 7068.60um
+[INFO GRT-0237] Net n_bword_17[15] global route wire length: 7161.00um
+[INFO GRT-0237] Net n_bword_17[16] global route wire length: 6957.72um
+[INFO GRT-0237] Net n_bword_17[17] global route wire length: 6966.96um
+[INFO GRT-0237] Net n_bword_17[18] global route wire length: 6902.28um
+[INFO GRT-0237] Net n_bword_17[19] global route wire length: 6957.72um
+[INFO GRT-0237] Net n_bword_17[1] global route wire length: 7068.60um
+[INFO GRT-0237] Net n_bword_17[20] global route wire length: 7068.60um
+[INFO GRT-0237] Net n_bword_17[21] global route wire length: 6893.04um
+[INFO GRT-0237] Net n_bword_17[22] global route wire length: 7068.60um
+[INFO GRT-0237] Net n_bword_17[23] global route wire length: 6911.52um
+[INFO GRT-0237] Net n_bword_17[24] global route wire length: 6856.08um
+[INFO GRT-0237] Net n_bword_17[25] global route wire length: 6846.84um
+[INFO GRT-0237] Net n_bword_17[26] global route wire length: 6856.08um
+[INFO GRT-0237] Net n_bword_17[27] global route wire length: 6846.84um
+[INFO GRT-0237] Net n_bword_17[28] global route wire length: 7031.64um
+[INFO GRT-0237] Net n_bword_17[29] global route wire length: 6874.56um
+[INFO GRT-0237] Net n_bword_17[2] global route wire length: 7659.96um
+[INFO GRT-0237] Net n_bword_17[30] global route wire length: 6791.40um
+[INFO GRT-0237] Net n_bword_17[31] global route wire length: 6800.64um
+[INFO GRT-0237] Net n_bword_17[3] global route wire length: 7087.08um
+[INFO GRT-0237] Net n_bword_17[4] global route wire length: 7068.60um
+[INFO GRT-0237] Net n_bword_17[5] global route wire length: 7669.20um
+[INFO GRT-0237] Net n_bword_17[6] global route wire length: 7013.16um
+[INFO GRT-0237] Net n_bword_17[7] global route wire length: 7151.76um
+[INFO GRT-0237] Net n_bword_17[8] global route wire length: 7022.40um
+[INFO GRT-0237] Net n_bword_17[9] global route wire length: 7003.92um
+[INFO GRT-0237] Net n_bword_18[0] global route wire length: 5608.68um
+[INFO GRT-0237] Net n_bword_18[10] global route wire length: 5682.60um
+[INFO GRT-0237] Net n_bword_18[11] global route wire length: 5664.12um
+[INFO GRT-0237] Net n_bword_18[12] global route wire length: 5497.80um
+[INFO GRT-0237] Net n_bword_18[13] global route wire length: 5701.08um
+[INFO GRT-0237] Net n_bword_18[14] global route wire length: 5682.60um
+[INFO GRT-0237] Net n_bword_18[15] global route wire length: 5950.56um
+[INFO GRT-0237] Net n_bword_18[16] global route wire length: 5645.64um
+[INFO GRT-0237] Net n_bword_18[17] global route wire length: 5544.00um
+[INFO GRT-0237] Net n_bword_18[18] global route wire length: 5433.12um
+[INFO GRT-0237] Net n_bword_18[19] global route wire length: 5784.24um
+[INFO GRT-0237] Net n_bword_18[1] global route wire length: 6606.60um
+[INFO GRT-0237] Net n_bword_18[20] global route wire length: 5617.92um
+[INFO GRT-0237] Net n_bword_18[21] global route wire length: 6588.12um
+[INFO GRT-0237] Net n_bword_18[22] global route wire length: 5580.96um
+[INFO GRT-0237] Net n_bword_18[23] global route wire length: 6172.32um
+[INFO GRT-0237] Net n_bword_18[24] global route wire length: 5386.92um
+[INFO GRT-0237] Net n_bword_18[25] global route wire length: 6116.88um
+[INFO GRT-0237] Net n_bword_18[26] global route wire length: 6052.20um
+[INFO GRT-0237] Net n_bword_18[27] global route wire length: 6107.64um
+[INFO GRT-0237] Net n_bword_18[28] global route wire length: 5932.08um
+[INFO GRT-0237] Net n_bword_18[29] global route wire length: 5701.08um
+[INFO GRT-0237] Net n_bword_18[2] global route wire length: 5802.72um
+[INFO GRT-0237] Net n_bword_18[30] global route wire length: 6782.16um
+[INFO GRT-0237] Net n_bword_18[31] global route wire length: 6273.96um
+[INFO GRT-0237] Net n_bword_18[3] global route wire length: 5821.20um
+[INFO GRT-0237] Net n_bword_18[4] global route wire length: 5599.44um
+[INFO GRT-0237] Net n_bword_18[5] global route wire length: 6172.32um
+[INFO GRT-0237] Net n_bword_18[6] global route wire length: 5654.88um
+[INFO GRT-0237] Net n_bword_18[7] global route wire length: 5580.96um
+[INFO GRT-0237] Net n_bword_18[8] global route wire length: 5534.76um
+[INFO GRT-0237] Net n_bword_18[9] global route wire length: 5553.24um
+[INFO GRT-0237] Net n_bword_19[0] global route wire length: 5645.64um
+[INFO GRT-0237] Net n_bword_19[10] global route wire length: 5636.40um
+[INFO GRT-0237] Net n_bword_19[11] global route wire length: 6283.20um
+[INFO GRT-0237] Net n_bword_19[12] global route wire length: 5488.56um
+[INFO GRT-0237] Net n_bword_19[13] global route wire length: 5645.64um
+[INFO GRT-0237] Net n_bword_19[14] global route wire length: 5571.72um
+[INFO GRT-0237] Net n_bword_19[15] global route wire length: 6126.12um
+[INFO GRT-0237] Net n_bword_19[16] global route wire length: 6763.68um
+[INFO GRT-0237] Net n_bword_19[17] global route wire length: 6042.96um
+[INFO GRT-0237] Net n_bword_19[18] global route wire length: 5525.52um
+[INFO GRT-0237] Net n_bword_19[19] global route wire length: 5516.28um
+[INFO GRT-0237] Net n_bword_19[1] global route wire length: 6347.88um
+[INFO GRT-0237] Net n_bword_19[20] global route wire length: 6163.08um
+[INFO GRT-0237] Net n_bword_19[21] global route wire length: 6144.60um
+[INFO GRT-0237] Net n_bword_19[22] global route wire length: 6135.36um
+[INFO GRT-0237] Net n_bword_19[23] global route wire length: 7068.60um
+[INFO GRT-0237] Net n_bword_19[24] global route wire length: 5488.56um
+[INFO GRT-0237] Net n_bword_19[25] global route wire length: 5571.72um
+[INFO GRT-0237] Net n_bword_19[26] global route wire length: 5756.52um
+[INFO GRT-0237] Net n_bword_19[27] global route wire length: 6403.32um
+[INFO GRT-0237] Net n_bword_19[28] global route wire length: 5645.64um
+[INFO GRT-0237] Net n_bword_19[29] global route wire length: 6699.00um
+[INFO GRT-0237] Net n_bword_19[2] global route wire length: 7188.72um
+[INFO GRT-0237] Net n_bword_19[30] global route wire length: 6569.64um
+[INFO GRT-0237] Net n_bword_19[31] global route wire length: 6532.68um
+[INFO GRT-0237] Net n_bword_19[3] global route wire length: 5599.44um
+[INFO GRT-0237] Net n_bword_19[4] global route wire length: 6597.36um
+[INFO GRT-0237] Net n_bword_19[5] global route wire length: 5599.44um
+[INFO GRT-0237] Net n_bword_19[6] global route wire length: 5544.00um
+[INFO GRT-0237] Net n_bword_19[7] global route wire length: 5544.00um
+[INFO GRT-0237] Net n_bword_19[8] global route wire length: 5534.76um
+[INFO GRT-0237] Net n_bword_19[9] global route wire length: 5701.08um
+[INFO GRT-0237] Net n_bword_1[0] global route wire length: 10154.76um
+[INFO GRT-0237] Net n_bword_1[10] global route wire length: 10154.76um
+[INFO GRT-0237] Net n_bword_1[11] global route wire length: 10200.96um
+[INFO GRT-0237] Net n_bword_1[12] global route wire length: 10090.08um
+[INFO GRT-0237] Net n_bword_1[13] global route wire length: 10090.08um
+[INFO GRT-0237] Net n_bword_1[14] global route wire length: 10210.20um
+[INFO GRT-0237] Net n_bword_1[15] global route wire length: 9933.00um
+[INFO GRT-0237] Net n_bword_1[16] global route wire length: 9933.00um
+[INFO GRT-0237] Net n_bword_1[17] global route wire length: 9914.52um
+[INFO GRT-0237] Net n_bword_1[18] global route wire length: 10006.92um
+[INFO GRT-0237] Net n_bword_1[19] global route wire length: 10016.16um
+[INFO GRT-0237] Net n_bword_1[1] global route wire length: 10182.48um
+[INFO GRT-0237] Net n_bword_1[20] global route wire length: 9859.08um
+[INFO GRT-0237] Net n_bword_1[21] global route wire length: 9877.56um
+[INFO GRT-0237] Net n_bword_1[22] global route wire length: 9877.56um
+[INFO GRT-0237] Net n_bword_1[23] global route wire length: 9859.08um
+[INFO GRT-0237] Net n_bword_1[24] global route wire length: 9812.88um
+[INFO GRT-0237] Net n_bword_1[25] global route wire length: 9803.64um
+[INFO GRT-0237] Net n_bword_1[26] global route wire length: 9803.64um
+[INFO GRT-0237] Net n_bword_1[27] global route wire length: 9803.64um
+[INFO GRT-0237] Net n_bword_1[28] global route wire length: 9803.64um
+[INFO GRT-0237] Net n_bword_1[29] global route wire length: 9822.12um
+[INFO GRT-0237] Net n_bword_1[2] global route wire length: 10136.28um
+[INFO GRT-0237] Net n_bword_1[30] global route wire length: 9748.20um
+[INFO GRT-0237] Net n_bword_1[31] global route wire length: 9748.20um
+[INFO GRT-0237] Net n_bword_1[3] global route wire length: 10025.40um
+[INFO GRT-0237] Net n_bword_1[4] global route wire length: 10145.52um
+[INFO GRT-0237] Net n_bword_1[5] global route wire length: 10025.40um
+[INFO GRT-0237] Net n_bword_1[6] global route wire length: 9969.96um
+[INFO GRT-0237] Net n_bword_1[7] global route wire length: 9969.96um
+[INFO GRT-0237] Net n_bword_1[8] global route wire length: 9969.96um
+[INFO GRT-0237] Net n_bword_1[9] global route wire length: 9969.96um
+[INFO GRT-0237] Net n_bword_20[0] global route wire length: 7262.64um
+[INFO GRT-0237] Net n_bword_20[10] global route wire length: 6597.36um
+[INFO GRT-0237] Net n_bword_20[11] global route wire length: 6144.60um
+[INFO GRT-0237] Net n_bword_20[12] global route wire length: 6079.92um
+[INFO GRT-0237] Net n_bword_20[13] global route wire length: 6079.92um
+[INFO GRT-0237] Net n_bword_20[14] global route wire length: 6440.28um
+[INFO GRT-0237] Net n_bword_20[15] global route wire length: 5701.08um
+[INFO GRT-0237] Net n_bword_20[16] global route wire length: 6181.56um
+[INFO GRT-0237] Net n_bword_20[17] global route wire length: 5728.80um
+[INFO GRT-0237] Net n_bword_20[18] global route wire length: 5885.88um
+[INFO GRT-0237] Net n_bword_20[19] global route wire length: 5664.12um
+[INFO GRT-0237] Net n_bword_20[1] global route wire length: 5821.20um
+[INFO GRT-0237] Net n_bword_20[20] global route wire length: 5664.12um
+[INFO GRT-0237] Net n_bword_20[21] global route wire length: 6246.24um
+[INFO GRT-0237] Net n_bword_20[22] global route wire length: 6144.60um
+[INFO GRT-0237] Net n_bword_20[23] global route wire length: 5654.88um
+[INFO GRT-0237] Net n_bword_20[24] global route wire length: 5599.44um
+[INFO GRT-0237] Net n_bword_20[25] global route wire length: 5608.68um
+[INFO GRT-0237] Net n_bword_20[26] global route wire length: 5608.68um
+[INFO GRT-0237] Net n_bword_20[27] global route wire length: 5590.20um
+[INFO GRT-0237] Net n_bword_20[28] global route wire length: 5922.84um
+[INFO GRT-0237] Net n_bword_20[29] global route wire length: 5599.44um
+[INFO GRT-0237] Net n_bword_20[2] global route wire length: 6856.08um
+[INFO GRT-0237] Net n_bword_20[30] global route wire length: 5544.00um
+[INFO GRT-0237] Net n_bword_20[31] global route wire length: 5553.24um
+[INFO GRT-0237] Net n_bword_20[3] global route wire length: 6292.44um
+[INFO GRT-0237] Net n_bword_20[4] global route wire length: 5830.44um
+[INFO GRT-0237] Net n_bword_20[5] global route wire length: 6468.00um
+[INFO GRT-0237] Net n_bword_20[6] global route wire length: 6421.80um
+[INFO GRT-0237] Net n_bword_20[7] global route wire length: 6218.52um
+[INFO GRT-0237] Net n_bword_20[8] global route wire length: 5811.96um
+[INFO GRT-0237] Net n_bword_20[9] global route wire length: 5765.76um
+[INFO GRT-0237] Net n_bword_21[0] global route wire length: 7539.84um
+[INFO GRT-0237] Net n_bword_21[10] global route wire length: 7207.20um
+[INFO GRT-0237] Net n_bword_21[11] global route wire length: 7114.80um
+[INFO GRT-0237] Net n_bword_21[12] global route wire length: 7142.52um
+[INFO GRT-0237] Net n_bword_21[13] global route wire length: 7197.96um
+[INFO GRT-0237] Net n_bword_21[14] global route wire length: 7207.20um
+[INFO GRT-0237] Net n_bword_21[15] global route wire length: 7087.08um
+[INFO GRT-0237] Net n_bword_21[16] global route wire length: 7096.32um
+[INFO GRT-0237] Net n_bword_21[17] global route wire length: 7096.32um
+[INFO GRT-0237] Net n_bword_21[18] global route wire length: 7299.60um
+[INFO GRT-0237] Net n_bword_21[19] global route wire length: 7124.04um
+[INFO GRT-0237] Net n_bword_21[1] global route wire length: 7262.64um
+[INFO GRT-0237] Net n_bword_21[20] global route wire length: 7077.84um
+[INFO GRT-0237] Net n_bword_21[21] global route wire length: 7068.60um
+[INFO GRT-0237] Net n_bword_21[22] global route wire length: 7077.84um
+[INFO GRT-0237] Net n_bword_21[23] global route wire length: 7077.84um
+[INFO GRT-0237] Net n_bword_21[24] global route wire length: 7355.04um
+[INFO GRT-0237] Net n_bword_21[25] global route wire length: 7050.12um
+[INFO GRT-0237] Net n_bword_21[26] global route wire length: 7077.84um
+[INFO GRT-0237] Net n_bword_21[27] global route wire length: 8759.52um
+[INFO GRT-0237] Net n_bword_21[28] global route wire length: 7050.12um
+[INFO GRT-0237] Net n_bword_21[29] global route wire length: 7059.36um
+[INFO GRT-0237] Net n_bword_21[2] global route wire length: 7318.08um
+[INFO GRT-0237] Net n_bword_21[30] global route wire length: 7031.64um
+[INFO GRT-0237] Net n_bword_21[31] global route wire length: 7040.88um
+[INFO GRT-0237] Net n_bword_21[3] global route wire length: 7253.40um
+[INFO GRT-0237] Net n_bword_21[4] global route wire length: 7937.16um
+[INFO GRT-0237] Net n_bword_21[5] global route wire length: 7151.76um
+[INFO GRT-0237] Net n_bword_21[6] global route wire length: 7105.56um
+[INFO GRT-0237] Net n_bword_21[7] global route wire length: 7197.96um
+[INFO GRT-0237] Net n_bword_21[8] global route wire length: 7133.28um
+[INFO GRT-0237] Net n_bword_21[9] global route wire length: 7114.80um
+[INFO GRT-0237] Net n_bword_22[0] global route wire length: 6477.24um
+[INFO GRT-0237] Net n_bword_22[10] global route wire length: 5941.32um
+[INFO GRT-0237] Net n_bword_22[11] global route wire length: 5673.36um
+[INFO GRT-0237] Net n_bword_22[12] global route wire length: 5673.36um
+[INFO GRT-0237] Net n_bword_22[13] global route wire length: 5719.56um
+[INFO GRT-0237] Net n_bword_22[14] global route wire length: 6440.28um
+[INFO GRT-0237] Net n_bword_22[15] global route wire length: 6541.92um
+[INFO GRT-0237] Net n_bword_22[16] global route wire length: 6310.92um
+[INFO GRT-0237] Net n_bword_22[17] global route wire length: 6662.04um
+[INFO GRT-0237] Net n_bword_22[18] global route wire length: 5793.48um
+[INFO GRT-0237] Net n_bword_22[19] global route wire length: 5691.84um
+[INFO GRT-0237] Net n_bword_22[1] global route wire length: 5830.44um
+[INFO GRT-0237] Net n_bword_22[20] global route wire length: 5811.96um
+[INFO GRT-0237] Net n_bword_22[21] global route wire length: 6283.20um
+[INFO GRT-0237] Net n_bword_22[22] global route wire length: 5617.92um
+[INFO GRT-0237] Net n_bword_22[23] global route wire length: 5627.16um
+[INFO GRT-0237] Net n_bword_22[24] global route wire length: 5460.84um
+[INFO GRT-0237] Net n_bword_22[25] global route wire length: 5405.40um
+[INFO GRT-0237] Net n_bword_22[26] global route wire length: 5885.88um
+[INFO GRT-0237] Net n_bword_22[27] global route wire length: 5664.12um
+[INFO GRT-0237] Net n_bword_22[28] global route wire length: 6357.12um
+[INFO GRT-0237] Net n_bword_22[29] global route wire length: 6237.00um
+[INFO GRT-0237] Net n_bword_22[2] global route wire length: 5839.68um
+[INFO GRT-0237] Net n_bword_22[30] global route wire length: 5405.40um
+[INFO GRT-0237] Net n_bword_22[31] global route wire length: 5386.92um
+[INFO GRT-0237] Net n_bword_22[3] global route wire length: 5728.80um
+[INFO GRT-0237] Net n_bword_22[4] global route wire length: 5867.40um
+[INFO GRT-0237] Net n_bword_22[5] global route wire length: 5839.68um
+[INFO GRT-0237] Net n_bword_22[6] global route wire length: 6144.60um
+[INFO GRT-0237] Net n_bword_22[7] global route wire length: 6597.36um
+[INFO GRT-0237] Net n_bword_22[8] global route wire length: 5950.56um
+[INFO GRT-0237] Net n_bword_22[9] global route wire length: 6144.60um
+[INFO GRT-0237] Net n_bword_23[0] global route wire length: 5691.84um
+[INFO GRT-0237] Net n_bword_23[10] global route wire length: 5738.04um
+[INFO GRT-0237] Net n_bword_23[11] global route wire length: 5756.52um
+[INFO GRT-0237] Net n_bword_23[12] global route wire length: 7124.04um
+[INFO GRT-0237] Net n_bword_23[13] global route wire length: 6994.68um
+[INFO GRT-0237] Net n_bword_23[14] global route wire length: 5580.96um
+[INFO GRT-0237] Net n_bword_23[15] global route wire length: 6662.04um
+[INFO GRT-0237] Net n_bword_23[16] global route wire length: 5682.60um
+[INFO GRT-0237] Net n_bword_23[17] global route wire length: 6042.96um
+[INFO GRT-0237] Net n_bword_23[18] global route wire length: 6181.56um
+[INFO GRT-0237] Net n_bword_23[19] global route wire length: 5645.64um
+[INFO GRT-0237] Net n_bword_23[1] global route wire length: 5941.32um
+[INFO GRT-0237] Net n_bword_23[20] global route wire length: 6042.96um
+[INFO GRT-0237] Net n_bword_23[21] global route wire length: 6495.72um
+[INFO GRT-0237] Net n_bword_23[22] global route wire length: 6172.32um
+[INFO GRT-0237] Net n_bword_23[23] global route wire length: 6449.52um
+[INFO GRT-0237] Net n_bword_23[24] global route wire length: 5728.80um
+[INFO GRT-0237] Net n_bword_23[25] global route wire length: 5534.76um
+[INFO GRT-0237] Net n_bword_23[26] global route wire length: 5821.20um
+[INFO GRT-0237] Net n_bword_23[27] global route wire length: 5719.56um
+[INFO GRT-0237] Net n_bword_23[28] global route wire length: 5932.08um
+[INFO GRT-0237] Net n_bword_23[29] global route wire length: 6394.08um
+[INFO GRT-0237] Net n_bword_23[2] global route wire length: 5599.44um
+[INFO GRT-0237] Net n_bword_23[30] global route wire length: 7244.16um
+[INFO GRT-0237] Net n_bword_23[31] global route wire length: 6421.80um
+[INFO GRT-0237] Net n_bword_23[3] global route wire length: 5599.44um
+[INFO GRT-0237] Net n_bword_23[4] global route wire length: 5599.44um
+[INFO GRT-0237] Net n_bword_23[5] global route wire length: 5691.84um
+[INFO GRT-0237] Net n_bword_23[6] global route wire length: 5553.24um
+[INFO GRT-0237] Net n_bword_23[7] global route wire length: 5553.24um
+[INFO GRT-0237] Net n_bword_23[8] global route wire length: 5534.76um
+[INFO GRT-0237] Net n_bword_23[9] global route wire length: 5544.00um
+[INFO GRT-0237] Net n_bword_24[0] global route wire length: 4518.36um
+[INFO GRT-0237] Net n_bword_24[10] global route wire length: 4407.48um
+[INFO GRT-0237] Net n_bword_24[11] global route wire length: 4823.28um
+[INFO GRT-0237] Net n_bword_24[12] global route wire length: 4703.16um
+[INFO GRT-0237] Net n_bword_24[13] global route wire length: 4389.00um
+[INFO GRT-0237] Net n_bword_24[14] global route wire length: 4379.76um
+[INFO GRT-0237] Net n_bword_24[15] global route wire length: 4989.60um
+[INFO GRT-0237] Net n_bword_24[16] global route wire length: 4407.48um
+[INFO GRT-0237] Net n_bword_24[17] global route wire length: 5091.24um
+[INFO GRT-0237] Net n_bword_24[18] global route wire length: 4250.40um
+[INFO GRT-0237] Net n_bword_24[19] global route wire length: 4878.72um
+[INFO GRT-0237] Net n_bword_24[1] global route wire length: 5257.56um
+[INFO GRT-0237] Net n_bword_24[20] global route wire length: 4583.04um
+[INFO GRT-0237] Net n_bword_24[21] global route wire length: 4564.56um
+[INFO GRT-0237] Net n_bword_24[22] global route wire length: 4971.12um
+[INFO GRT-0237] Net n_bword_24[23] global route wire length: 4185.72um
+[INFO GRT-0237] Net n_bword_24[24] global route wire length: 4749.36um
+[INFO GRT-0237] Net n_bword_24[25] global route wire length: 4185.72um
+[INFO GRT-0237] Net n_bword_24[26] global route wire length: 4389.00um
+[INFO GRT-0237] Net n_bword_24[27] global route wire length: 4148.76um
+[INFO GRT-0237] Net n_bword_24[28] global route wire length: 4416.72um
+[INFO GRT-0237] Net n_bword_24[29] global route wire length: 4342.80um
+[INFO GRT-0237] Net n_bword_24[2] global route wire length: 4712.40um
+[INFO GRT-0237] Net n_bword_24[30] global route wire length: 4352.04um
+[INFO GRT-0237] Net n_bword_24[31] global route wire length: 4158.00um
+[INFO GRT-0237] Net n_bword_24[3] global route wire length: 5202.12um
+[INFO GRT-0237] Net n_bword_24[4] global route wire length: 5248.32um
+[INFO GRT-0237] Net n_bword_24[5] global route wire length: 4472.16um
+[INFO GRT-0237] Net n_bword_24[6] global route wire length: 4897.20um
+[INFO GRT-0237] Net n_bword_24[7] global route wire length: 4472.16um
+[INFO GRT-0237] Net n_bword_24[8] global route wire length: 5257.56um
+[INFO GRT-0237] Net n_bword_24[9] global route wire length: 4481.40um
+[INFO GRT-0237] Net n_bword_25[0] global route wire length: 5534.76um
+[INFO GRT-0237] Net n_bword_25[10] global route wire length: 4398.24um
+[INFO GRT-0237] Net n_bword_25[11] global route wire length: 4481.40um
+[INFO GRT-0237] Net n_bword_25[12] global route wire length: 4361.28um
+[INFO GRT-0237] Net n_bword_25[13] global route wire length: 4693.92um
+[INFO GRT-0237] Net n_bword_25[14] global route wire length: 4684.68um
+[INFO GRT-0237] Net n_bword_25[15] global route wire length: 4555.32um
+[INFO GRT-0237] Net n_bword_25[16] global route wire length: 4878.72um
+[INFO GRT-0237] Net n_bword_25[17] global route wire length: 4518.36um
+[INFO GRT-0237] Net n_bword_25[18] global route wire length: 4462.92um
+[INFO GRT-0237] Net n_bword_25[19] global route wire length: 4795.56um
+[INFO GRT-0237] Net n_bword_25[1] global route wire length: 4490.64um
+[INFO GRT-0237] Net n_bword_25[20] global route wire length: 4185.72um
+[INFO GRT-0237] Net n_bword_25[21] global route wire length: 4167.24um
+[INFO GRT-0237] Net n_bword_25[22] global route wire length: 4176.48um
+[INFO GRT-0237] Net n_bword_25[23] global route wire length: 4194.96um
+[INFO GRT-0237] Net n_bword_25[24] global route wire length: 4435.20um
+[INFO GRT-0237] Net n_bword_25[25] global route wire length: 4287.36um
+[INFO GRT-0237] Net n_bword_25[26] global route wire length: 4185.72um
+[INFO GRT-0237] Net n_bword_25[27] global route wire length: 4148.76um
+[INFO GRT-0237] Net n_bword_25[28] global route wire length: 4407.48um
+[INFO GRT-0237] Net n_bword_25[29] global route wire length: 4194.96um
+[INFO GRT-0237] Net n_bword_25[2] global route wire length: 5091.24um
+[INFO GRT-0237] Net n_bword_25[30] global route wire length: 4130.28um
+[INFO GRT-0237] Net n_bword_25[31] global route wire length: 4158.00um
+[INFO GRT-0237] Net n_bword_25[3] global route wire length: 4998.84um
+[INFO GRT-0237] Net n_bword_25[4] global route wire length: 5294.52um
+[INFO GRT-0237] Net n_bword_25[5] global route wire length: 4915.68um
+[INFO GRT-0237] Net n_bword_25[6] global route wire length: 5008.08um
+[INFO GRT-0237] Net n_bword_25[7] global route wire length: 4629.24um
+[INFO GRT-0237] Net n_bword_25[8] global route wire length: 4610.76um
+[INFO GRT-0237] Net n_bword_25[9] global route wire length: 4435.20um
+[INFO GRT-0237] Net n_bword_26[0] global route wire length: 4924.92um
+[INFO GRT-0237] Net n_bword_26[10] global route wire length: 4601.52um
+[INFO GRT-0237] Net n_bword_26[11] global route wire length: 5386.92um
+[INFO GRT-0237] Net n_bword_26[12] global route wire length: 4786.32um
+[INFO GRT-0237] Net n_bword_26[13] global route wire length: 4897.20um
+[INFO GRT-0237] Net n_bword_26[14] global route wire length: 4536.84um
+[INFO GRT-0237] Net n_bword_26[15] global route wire length: 5155.92um
+[INFO GRT-0237] Net n_bword_26[16] global route wire length: 5913.60um
+[INFO GRT-0237] Net n_bword_26[17] global route wire length: 4573.80um
+[INFO GRT-0237] Net n_bword_26[18] global route wire length: 4712.40um
+[INFO GRT-0237] Net n_bword_26[19] global route wire length: 4472.16um
+[INFO GRT-0237] Net n_bword_26[1] global route wire length: 5423.88um
+[INFO GRT-0237] Net n_bword_26[20] global route wire length: 4481.40um
+[INFO GRT-0237] Net n_bword_26[21] global route wire length: 4961.88um
+[INFO GRT-0237] Net n_bword_26[22] global route wire length: 4712.40um
+[INFO GRT-0237] Net n_bword_26[23] global route wire length: 4499.88um
+[INFO GRT-0237] Net n_bword_26[24] global route wire length: 4583.04um
+[INFO GRT-0237] Net n_bword_26[25] global route wire length: 4416.72um
+[INFO GRT-0237] Net n_bword_26[26] global route wire length: 4425.96um
+[INFO GRT-0237] Net n_bword_26[27] global route wire length: 4398.24um
+[INFO GRT-0237] Net n_bword_26[28] global route wire length: 4416.72um
+[INFO GRT-0237] Net n_bword_26[29] global route wire length: 4453.68um
+[INFO GRT-0237] Net n_bword_26[2] global route wire length: 4869.48um
+[INFO GRT-0237] Net n_bword_26[30] global route wire length: 4361.28um
+[INFO GRT-0237] Net n_bword_26[31] global route wire length: 4370.52um
+[INFO GRT-0237] Net n_bword_26[3] global route wire length: 5654.88um
+[INFO GRT-0237] Net n_bword_26[4] global route wire length: 5229.84um
+[INFO GRT-0237] Net n_bword_26[5] global route wire length: 5063.52um
+[INFO GRT-0237] Net n_bword_26[6] global route wire length: 4777.08um
+[INFO GRT-0237] Net n_bword_26[7] global route wire length: 5082.00um
+[INFO GRT-0237] Net n_bword_26[8] global route wire length: 4592.28um
+[INFO GRT-0237] Net n_bword_26[9] global route wire length: 5054.28um
+[INFO GRT-0237] Net n_bword_27[0] global route wire length: 5996.76um
+[INFO GRT-0237] Net n_bword_27[10] global route wire length: 5941.32um
+[INFO GRT-0237] Net n_bword_27[11] global route wire length: 5941.32um
+[INFO GRT-0237] Net n_bword_27[12] global route wire length: 6662.04um
+[INFO GRT-0237] Net n_bword_27[13] global route wire length: 5904.36um
+[INFO GRT-0237] Net n_bword_27[14] global route wire length: 5913.60um
+[INFO GRT-0237] Net n_bword_27[15] global route wire length: 5913.60um
+[INFO GRT-0237] Net n_bword_27[16] global route wire length: 6782.16um
+[INFO GRT-0237] Net n_bword_27[17] global route wire length: 5913.60um
+[INFO GRT-0237] Net n_bword_27[18] global route wire length: 5885.88um
+[INFO GRT-0237] Net n_bword_27[19] global route wire length: 6384.84um
+[INFO GRT-0237] Net n_bword_27[1] global route wire length: 7105.56um
+[INFO GRT-0237] Net n_bword_27[20] global route wire length: 5895.12um
+[INFO GRT-0237] Net n_bword_27[21] global route wire length: 5885.88um
+[INFO GRT-0237] Net n_bword_27[22] global route wire length: 5895.12um
+[INFO GRT-0237] Net n_bword_27[23] global route wire length: 6412.56um
+[INFO GRT-0237] Net n_bword_27[24] global route wire length: 5941.32um
+[INFO GRT-0237] Net n_bword_27[25] global route wire length: 5867.40um
+[INFO GRT-0237] Net n_bword_27[26] global route wire length: 5895.12um
+[INFO GRT-0237] Net n_bword_27[27] global route wire length: 6061.44um
+[INFO GRT-0237] Net n_bword_27[28] global route wire length: 5867.40um
+[INFO GRT-0237] Net n_bword_27[29] global route wire length: 5876.64um
+[INFO GRT-0237] Net n_bword_27[2] global route wire length: 6042.96um
+[INFO GRT-0237] Net n_bword_27[30] global route wire length: 5941.32um
+[INFO GRT-0237] Net n_bword_27[31] global route wire length: 5858.16um
+[INFO GRT-0237] Net n_bword_27[3] global route wire length: 5941.32um
+[INFO GRT-0237] Net n_bword_27[4] global route wire length: 5950.56um
+[INFO GRT-0237] Net n_bword_27[5] global route wire length: 6264.72um
+[INFO GRT-0237] Net n_bword_27[6] global route wire length: 6107.64um
+[INFO GRT-0237] Net n_bword_27[7] global route wire length: 6227.76um
+[INFO GRT-0237] Net n_bword_27[8] global route wire length: 5932.08um
+[INFO GRT-0237] Net n_bword_27[9] global route wire length: 5932.08um
+[INFO GRT-0237] Net n_bword_28[0] global route wire length: 4989.60um
+[INFO GRT-0237] Net n_bword_28[10] global route wire length: 4398.24um
+[INFO GRT-0237] Net n_bword_28[11] global route wire length: 4379.76um
+[INFO GRT-0237] Net n_bword_28[12] global route wire length: 4823.28um
+[INFO GRT-0237] Net n_bword_28[13] global route wire length: 4481.40um
+[INFO GRT-0237] Net n_bword_28[14] global route wire length: 4361.28um
+[INFO GRT-0237] Net n_bword_28[15] global route wire length: 4453.68um
+[INFO GRT-0237] Net n_bword_28[16] global route wire length: 5035.80um
+[INFO GRT-0237] Net n_bword_28[17] global route wire length: 4370.52um
+[INFO GRT-0237] Net n_bword_28[18] global route wire length: 4684.68um
+[INFO GRT-0237] Net n_bword_28[19] global route wire length: 4342.80um
+[INFO GRT-0237] Net n_bword_28[1] global route wire length: 4971.12um
+[INFO GRT-0237] Net n_bword_28[20] global route wire length: 4342.80um
+[INFO GRT-0237] Net n_bword_28[21] global route wire length: 4398.24um
+[INFO GRT-0237] Net n_bword_28[22] global route wire length: 4342.80um
+[INFO GRT-0237] Net n_bword_28[23] global route wire length: 4342.80um
+[INFO GRT-0237] Net n_bword_28[24] global route wire length: 4546.08um
+[INFO GRT-0237] Net n_bword_28[25] global route wire length: 4416.72um
+[INFO GRT-0237] Net n_bword_28[26] global route wire length: 4324.32um
+[INFO GRT-0237] Net n_bword_28[27] global route wire length: 4398.24um
+[INFO GRT-0237] Net n_bword_28[28] global route wire length: 4315.08um
+[INFO GRT-0237] Net n_bword_28[29] global route wire length: 4333.56um
+[INFO GRT-0237] Net n_bword_28[2] global route wire length: 4407.48um
+[INFO GRT-0237] Net n_bword_28[30] global route wire length: 4444.44um
+[INFO GRT-0237] Net n_bword_28[31] global route wire length: 4305.84um
+[INFO GRT-0237] Net n_bword_28[3] global route wire length: 5710.32um
+[INFO GRT-0237] Net n_bword_28[4] global route wire length: 4379.76um
+[INFO GRT-0237] Net n_bword_28[5] global route wire length: 5285.28um
+[INFO GRT-0237] Net n_bword_28[6] global route wire length: 4398.24um
+[INFO GRT-0237] Net n_bword_28[7] global route wire length: 5377.68um
+[INFO GRT-0237] Net n_bword_28[8] global route wire length: 4887.96um
+[INFO GRT-0237] Net n_bword_28[9] global route wire length: 4435.20um
+[INFO GRT-0237] Net n_bword_29[0] global route wire length: 4499.88um
+[INFO GRT-0237] Net n_bword_29[10] global route wire length: 4472.16um
+[INFO GRT-0237] Net n_bword_29[11] global route wire length: 4435.20um
+[INFO GRT-0237] Net n_bword_29[12] global route wire length: 4527.60um
+[INFO GRT-0237] Net n_bword_29[13] global route wire length: 4666.20um
+[INFO GRT-0237] Net n_bword_29[14] global route wire length: 4610.76um
+[INFO GRT-0237] Net n_bword_29[15] global route wire length: 4435.20um
+[INFO GRT-0237] Net n_bword_29[16] global route wire length: 4194.96um
+[INFO GRT-0237] Net n_bword_29[17] global route wire length: 4194.96um
+[INFO GRT-0237] Net n_bword_29[18] global route wire length: 5091.24um
+[INFO GRT-0237] Net n_bword_29[19] global route wire length: 4167.24um
+[INFO GRT-0237] Net n_bword_29[1] global route wire length: 5239.08um
+[INFO GRT-0237] Net n_bword_29[20] global route wire length: 4564.56um
+[INFO GRT-0237] Net n_bword_29[21] global route wire length: 4416.72um
+[INFO GRT-0237] Net n_bword_29[22] global route wire length: 4259.64um
+[INFO GRT-0237] Net n_bword_29[23] global route wire length: 4167.24um
+[INFO GRT-0237] Net n_bword_29[24] global route wire length: 4425.96um
+[INFO GRT-0237] Net n_bword_29[25] global route wire length: 4148.76um
+[INFO GRT-0237] Net n_bword_29[26] global route wire length: 4176.48um
+[INFO GRT-0237] Net n_bword_29[27] global route wire length: 4324.32um
+[INFO GRT-0237] Net n_bword_29[28] global route wire length: 4148.76um
+[INFO GRT-0237] Net n_bword_29[29] global route wire length: 4222.68um
+[INFO GRT-0237] Net n_bword_29[2] global route wire length: 5100.48um
+[INFO GRT-0237] Net n_bword_29[30] global route wire length: 4148.76um
+[INFO GRT-0237] Net n_bword_29[31] global route wire length: 4139.52um
+[INFO GRT-0237] Net n_bword_29[3] global route wire length: 4453.68um
+[INFO GRT-0237] Net n_bword_29[4] global route wire length: 5285.28um
+[INFO GRT-0237] Net n_bword_29[5] global route wire length: 5174.40um
+[INFO GRT-0237] Net n_bword_29[6] global route wire length: 5562.48um
+[INFO GRT-0237] Net n_bword_29[7] global route wire length: 5359.20um
+[INFO GRT-0237] Net n_bword_29[8] global route wire length: 5063.52um
+[INFO GRT-0237] Net n_bword_29[9] global route wire length: 4980.36um
+[INFO GRT-0237] Net n_bword_2[0] global route wire length: 10570.56um
+[INFO GRT-0237] Net n_bword_2[10] global route wire length: 10006.92um
+[INFO GRT-0237] Net n_bword_2[11] global route wire length: 10284.12um
+[INFO GRT-0237] Net n_bword_2[12] global route wire length: 10810.80um
+[INFO GRT-0237] Net n_bword_2[13] global route wire length: 10718.40um
+[INFO GRT-0237] Net n_bword_2[14] global route wire length: 9544.92um
+[INFO GRT-0237] Net n_bword_2[15] global route wire length: 9748.20um
+[INFO GRT-0237] Net n_bword_2[16] global route wire length: 12067.44um
+[INFO GRT-0237] Net n_bword_2[17] global route wire length: 9434.04um
+[INFO GRT-0237] Net n_bword_2[18] global route wire length: 11088.00um
+[INFO GRT-0237] Net n_bword_2[19] global route wire length: 9886.80um
+[INFO GRT-0237] Net n_bword_2[1] global route wire length: 9581.88um
+[INFO GRT-0237] Net n_bword_2[20] global route wire length: 9471.00um
+[INFO GRT-0237] Net n_bword_2[21] global route wire length: 9452.52um
+[INFO GRT-0237] Net n_bword_2[22] global route wire length: 9886.80um
+[INFO GRT-0237] Net n_bword_2[23] global route wire length: 11161.92um
+[INFO GRT-0237] Net n_bword_2[24] global route wire length: 10210.20um
+[INFO GRT-0237] Net n_bword_2[25] global route wire length: 10136.28um
+[INFO GRT-0237] Net n_bword_2[26] global route wire length: 10173.24um
+[INFO GRT-0237] Net n_bword_2[27] global route wire length: 9498.72um
+[INFO GRT-0237] Net n_bword_2[28] global route wire length: 9471.00um
+[INFO GRT-0237] Net n_bword_2[29] global route wire length: 9655.80um
+[INFO GRT-0237] Net n_bword_2[2] global route wire length: 9665.04um
+[INFO GRT-0237] Net n_bword_2[30] global route wire length: 9942.24um
+[INFO GRT-0237] Net n_bword_2[31] global route wire length: 9822.12um
+[INFO GRT-0237] Net n_bword_2[3] global route wire length: 10228.68um
+[INFO GRT-0237] Net n_bword_2[4] global route wire length: 9896.04um
+[INFO GRT-0237] Net n_bword_2[5] global route wire length: 10607.52um
+[INFO GRT-0237] Net n_bword_2[6] global route wire length: 10210.20um
+[INFO GRT-0237] Net n_bword_2[7] global route wire length: 9914.52um
+[INFO GRT-0237] Net n_bword_2[8] global route wire length: 9544.92um
+[INFO GRT-0237] Net n_bword_2[9] global route wire length: 10191.72um
+[INFO GRT-0237] Net n_bword_30[0] global route wire length: 4010.16um
+[INFO GRT-0237] Net n_bword_30[10] global route wire length: 3538.92um
+[INFO GRT-0237] Net n_bword_30[11] global route wire length: 3381.84um
+[INFO GRT-0237] Net n_bword_30[12] global route wire length: 3104.64um
+[INFO GRT-0237] Net n_bword_30[13] global route wire length: 3169.32um
+[INFO GRT-0237] Net n_bword_30[14] global route wire length: 3123.12um
+[INFO GRT-0237] Net n_bword_30[15] global route wire length: 3317.16um
+[INFO GRT-0237] Net n_bword_30[16] global route wire length: 3538.92um
+[INFO GRT-0237] Net n_bword_30[17] global route wire length: 3714.48um
+[INFO GRT-0237] Net n_bword_30[18] global route wire length: 3723.72um
+[INFO GRT-0237] Net n_bword_30[19] global route wire length: 3113.88um
+[INFO GRT-0237] Net n_bword_30[1] global route wire length: 3289.44um
+[INFO GRT-0237] Net n_bword_30[20] global route wire length: 3742.20um
+[INFO GRT-0237] Net n_bword_30[21] global route wire length: 3317.16um
+[INFO GRT-0237] Net n_bword_30[22] global route wire length: 3095.40um
+[INFO GRT-0237] Net n_bword_30[23] global route wire length: 3104.64um
+[INFO GRT-0237] Net n_bword_30[24] global route wire length: 3335.64um
+[INFO GRT-0237] Net n_bword_30[25] global route wire length: 3280.20um
+[INFO GRT-0237] Net n_bword_30[26] global route wire length: 3076.92um
+[INFO GRT-0237] Net n_bword_30[27] global route wire length: 3086.16um
+[INFO GRT-0237] Net n_bword_30[28] global route wire length: 3076.92um
+[INFO GRT-0237] Net n_bword_30[29] global route wire length: 3086.16um
+[INFO GRT-0237] Net n_bword_30[2] global route wire length: 3160.08um
+[INFO GRT-0237] Net n_bword_30[30] global route wire length: 3132.36um
+[INFO GRT-0237] Net n_bword_30[31] global route wire length: 3058.44um
+[INFO GRT-0237] Net n_bword_30[3] global route wire length: 4074.84um
+[INFO GRT-0237] Net n_bword_30[4] global route wire length: 4268.88um
+[INFO GRT-0237] Net n_bword_30[5] global route wire length: 3150.84um
+[INFO GRT-0237] Net n_bword_30[6] global route wire length: 3141.60um
+[INFO GRT-0237] Net n_bword_30[7] global route wire length: 3150.84um
+[INFO GRT-0237] Net n_bword_30[8] global route wire length: 3132.36um
+[INFO GRT-0237] Net n_bword_30[9] global route wire length: 3150.84um
+[INFO GRT-0237] Net n_bword_31[0] global route wire length: 3963.96um
+[INFO GRT-0237] Net n_bword_31[10] global route wire length: 3215.52um
+[INFO GRT-0237] Net n_bword_31[11] global route wire length: 3363.36um
+[INFO GRT-0237] Net n_bword_31[12] global route wire length: 3298.68um
+[INFO GRT-0237] Net n_bword_31[13] global route wire length: 3141.60um
+[INFO GRT-0237] Net n_bword_31[14] global route wire length: 3132.36um
+[INFO GRT-0237] Net n_bword_31[15] global route wire length: 3132.36um
+[INFO GRT-0237] Net n_bword_31[16] global route wire length: 3113.88um
+[INFO GRT-0237] Net n_bword_31[17] global route wire length: 3123.12um
+[INFO GRT-0237] Net n_bword_31[18] global route wire length: 3298.68um
+[INFO GRT-0237] Net n_bword_31[19] global route wire length: 3280.20um
+[INFO GRT-0237] Net n_bword_31[1] global route wire length: 3973.20um
+[INFO GRT-0237] Net n_bword_31[20] global route wire length: 3095.40um
+[INFO GRT-0237] Net n_bword_31[21] global route wire length: 3335.64um
+[INFO GRT-0237] Net n_bword_31[22] global route wire length: 3585.12um
+[INFO GRT-0237] Net n_bword_31[23] global route wire length: 3104.64um
+[INFO GRT-0237] Net n_bword_31[24] global route wire length: 3261.72um
+[INFO GRT-0237] Net n_bword_31[25] global route wire length: 3086.16um
+[INFO GRT-0237] Net n_bword_31[26] global route wire length: 3104.64um
+[INFO GRT-0237] Net n_bword_31[27] global route wire length: 3261.72um
+[INFO GRT-0237] Net n_bword_31[28] global route wire length: 3446.52um
+[INFO GRT-0237] Net n_bword_31[29] global route wire length: 3086.16um
+[INFO GRT-0237] Net n_bword_31[2] global route wire length: 3917.76um
+[INFO GRT-0237] Net n_bword_31[30] global route wire length: 3234.00um
+[INFO GRT-0237] Net n_bword_31[31] global route wire length: 3631.32um
+[INFO GRT-0237] Net n_bword_31[3] global route wire length: 3150.84um
+[INFO GRT-0237] Net n_bword_31[4] global route wire length: 3732.96um
+[INFO GRT-0237] Net n_bword_31[5] global route wire length: 3160.08um
+[INFO GRT-0237] Net n_bword_31[6] global route wire length: 4019.40um
+[INFO GRT-0237] Net n_bword_31[7] global route wire length: 3585.12um
+[INFO GRT-0237] Net n_bword_31[8] global route wire length: 3289.44um
+[INFO GRT-0237] Net n_bword_31[9] global route wire length: 3640.56um
+[INFO GRT-0237] Net n_bword_32[0] global route wire length: 4444.44um
+[INFO GRT-0237] Net n_bword_32[10] global route wire length: 3705.24um
+[INFO GRT-0237] Net n_bword_32[11] global route wire length: 3871.56um
+[INFO GRT-0237] Net n_bword_32[12] global route wire length: 3594.36um
+[INFO GRT-0237] Net n_bword_32[13] global route wire length: 3354.12um
+[INFO GRT-0237] Net n_bword_32[14] global route wire length: 3344.88um
+[INFO GRT-0237] Net n_bword_32[15] global route wire length: 3742.20um
+[INFO GRT-0237] Net n_bword_32[16] global route wire length: 4010.16um
+[INFO GRT-0237] Net n_bword_32[17] global route wire length: 3788.40um
+[INFO GRT-0237] Net n_bword_32[18] global route wire length: 3668.28um
+[INFO GRT-0237] Net n_bword_32[19] global route wire length: 3298.68um
+[INFO GRT-0237] Net n_bword_32[1] global route wire length: 4037.88um
+[INFO GRT-0237] Net n_bword_32[20] global route wire length: 3501.96um
+[INFO GRT-0237] Net n_bword_32[21] global route wire length: 3769.92um
+[INFO GRT-0237] Net n_bword_32[22] global route wire length: 3326.40um
+[INFO GRT-0237] Net n_bword_32[23] global route wire length: 3289.44um
+[INFO GRT-0237] Net n_bword_32[24] global route wire length: 3252.48um
+[INFO GRT-0237] Net n_bword_32[25] global route wire length: 3243.24um
+[INFO GRT-0237] Net n_bword_32[26] global route wire length: 3446.52um
+[INFO GRT-0237] Net n_bword_32[27] global route wire length: 3234.00um
+[INFO GRT-0237] Net n_bword_32[28] global route wire length: 3270.96um
+[INFO GRT-0237] Net n_bword_32[29] global route wire length: 3234.00um
+[INFO GRT-0237] Net n_bword_32[2] global route wire length: 4047.12um
+[INFO GRT-0237] Net n_bword_32[30] global route wire length: 3215.52um
+[INFO GRT-0237] Net n_bword_32[31] global route wire length: 3187.80um
+[INFO GRT-0237] Net n_bword_32[3] global route wire length: 3908.52um
+[INFO GRT-0237] Net n_bword_32[4] global route wire length: 5793.48um
+[INFO GRT-0237] Net n_bword_32[5] global route wire length: 4527.60um
+[INFO GRT-0237] Net n_bword_32[6] global route wire length: 3890.04um
+[INFO GRT-0237] Net n_bword_32[7] global route wire length: 3400.32um
+[INFO GRT-0237] Net n_bword_32[8] global route wire length: 3400.32um
+[INFO GRT-0237] Net n_bword_32[9] global route wire length: 3409.56um
+[INFO GRT-0237] Net n_bword_33[0] global route wire length: 4795.56um
+[INFO GRT-0237] Net n_bword_33[10] global route wire length: 4934.16um
+[INFO GRT-0237] Net n_bword_33[11] global route wire length: 5654.88um
+[INFO GRT-0237] Net n_bword_33[12] global route wire length: 4814.04um
+[INFO GRT-0237] Net n_bword_33[13] global route wire length: 4897.20um
+[INFO GRT-0237] Net n_bword_33[14] global route wire length: 4758.60um
+[INFO GRT-0237] Net n_bword_33[15] global route wire length: 4721.64um
+[INFO GRT-0237] Net n_bword_33[16] global route wire length: 5904.36um
+[INFO GRT-0237] Net n_bword_33[17] global route wire length: 4740.12um
+[INFO GRT-0237] Net n_bword_33[18] global route wire length: 4869.48um
+[INFO GRT-0237] Net n_bword_33[19] global route wire length: 4915.68um
+[INFO GRT-0237] Net n_bword_33[1] global route wire length: 5405.40um
+[INFO GRT-0237] Net n_bword_33[20] global route wire length: 4721.64um
+[INFO GRT-0237] Net n_bword_33[21] global route wire length: 4703.16um
+[INFO GRT-0237] Net n_bword_33[22] global route wire length: 4924.92um
+[INFO GRT-0237] Net n_bword_33[23] global route wire length: 4730.88um
+[INFO GRT-0237] Net n_bword_33[24] global route wire length: 4684.68um
+[INFO GRT-0237] Net n_bword_33[25] global route wire length: 4869.48um
+[INFO GRT-0237] Net n_bword_33[26] global route wire length: 4703.16um
+[INFO GRT-0237] Net n_bword_33[27] global route wire length: 4684.68um
+[INFO GRT-0237] Net n_bword_33[28] global route wire length: 4878.72um
+[INFO GRT-0237] Net n_bword_33[29] global route wire length: 4823.28um
+[INFO GRT-0237] Net n_bword_33[2] global route wire length: 5054.28um
+[INFO GRT-0237] Net n_bword_33[30] global route wire length: 4666.20um
+[INFO GRT-0237] Net n_bword_33[31] global route wire length: 4693.92um
+[INFO GRT-0237] Net n_bword_33[3] global route wire length: 4758.60um
+[INFO GRT-0237] Net n_bword_33[4] global route wire length: 5294.52um
+[INFO GRT-0237] Net n_bword_33[5] global route wire length: 4777.08um
+[INFO GRT-0237] Net n_bword_33[6] global route wire length: 4777.08um
+[INFO GRT-0237] Net n_bword_33[7] global route wire length: 4758.60um
+[INFO GRT-0237] Net n_bword_33[8] global route wire length: 4777.08um
+[INFO GRT-0237] Net n_bword_33[9] global route wire length: 4740.12um
+[INFO GRT-0237] Net n_bword_34[0] global route wire length: 4342.80um
+[INFO GRT-0237] Net n_bword_34[10] global route wire length: 3317.16um
+[INFO GRT-0237] Net n_bword_34[11] global route wire length: 4268.88um
+[INFO GRT-0237] Net n_bword_34[12] global route wire length: 3307.92um
+[INFO GRT-0237] Net n_bword_34[13] global route wire length: 3474.24um
+[INFO GRT-0237] Net n_bword_34[14] global route wire length: 3317.16um
+[INFO GRT-0237] Net n_bword_34[15] global route wire length: 3760.68um
+[INFO GRT-0237] Net n_bword_34[16] global route wire length: 3492.72um
+[INFO GRT-0237] Net n_bword_34[17] global route wire length: 3289.44um
+[INFO GRT-0237] Net n_bword_34[18] global route wire length: 3391.08um
+[INFO GRT-0237] Net n_bword_34[19] global route wire length: 3289.44um
+[INFO GRT-0237] Net n_bword_34[1] global route wire length: 3917.76um
+[INFO GRT-0237] Net n_bword_34[20] global route wire length: 3474.24um
+[INFO GRT-0237] Net n_bword_34[21] global route wire length: 3280.20um
+[INFO GRT-0237] Net n_bword_34[22] global route wire length: 3465.00um
+[INFO GRT-0237] Net n_bword_34[23] global route wire length: 3280.20um
+[INFO GRT-0237] Net n_bword_34[24] global route wire length: 3289.44um
+[INFO GRT-0237] Net n_bword_34[25] global route wire length: 3529.68um
+[INFO GRT-0237] Net n_bword_34[26] global route wire length: 3354.12um
+[INFO GRT-0237] Net n_bword_34[27] global route wire length: 3261.72um
+[INFO GRT-0237] Net n_bword_34[28] global route wire length: 3492.72um
+[INFO GRT-0237] Net n_bword_34[29] global route wire length: 3261.72um
+[INFO GRT-0237] Net n_bword_34[2] global route wire length: 3344.88um
+[INFO GRT-0237] Net n_bword_34[30] global route wire length: 3215.52um
+[INFO GRT-0237] Net n_bword_34[31] global route wire length: 3234.00um
+[INFO GRT-0237] Net n_bword_34[3] global route wire length: 4647.72um
+[INFO GRT-0237] Net n_bword_34[4] global route wire length: 4546.08um
+[INFO GRT-0237] Net n_bword_34[5] global route wire length: 3354.12um
+[INFO GRT-0237] Net n_bword_34[6] global route wire length: 3307.92um
+[INFO GRT-0237] Net n_bword_34[7] global route wire length: 3890.04um
+[INFO GRT-0237] Net n_bword_34[8] global route wire length: 3862.32um
+[INFO GRT-0237] Net n_bword_34[9] global route wire length: 3298.68um
+[INFO GRT-0237] Net n_bword_35[0] global route wire length: 3150.84um
+[INFO GRT-0237] Net n_bword_35[10] global route wire length: 3132.36um
+[INFO GRT-0237] Net n_bword_35[11] global route wire length: 3289.44um
+[INFO GRT-0237] Net n_bword_35[12] global route wire length: 3160.08um
+[INFO GRT-0237] Net n_bword_35[13] global route wire length: 3520.44um
+[INFO GRT-0237] Net n_bword_35[14] global route wire length: 3123.12um
+[INFO GRT-0237] Net n_bword_35[15] global route wire length: 3788.40um
+[INFO GRT-0237] Net n_bword_35[16] global route wire length: 3631.32um
+[INFO GRT-0237] Net n_bword_35[17] global route wire length: 3141.60um
+[INFO GRT-0237] Net n_bword_35[18] global route wire length: 3344.88um
+[INFO GRT-0237] Net n_bword_35[19] global route wire length: 3113.88um
+[INFO GRT-0237] Net n_bword_35[1] global route wire length: 3141.60um
+[INFO GRT-0237] Net n_bword_35[20] global route wire length: 3095.40um
+[INFO GRT-0237] Net n_bword_35[21] global route wire length: 3317.16um
+[INFO GRT-0237] Net n_bword_35[22] global route wire length: 3723.72um
+[INFO GRT-0237] Net n_bword_35[23] global route wire length: 3104.64um
+[INFO GRT-0237] Net n_bword_35[24] global route wire length: 3298.68um
+[INFO GRT-0237] Net n_bword_35[25] global route wire length: 3076.92um
+[INFO GRT-0237] Net n_bword_35[26] global route wire length: 3104.64um
+[INFO GRT-0237] Net n_bword_35[27] global route wire length: 3197.04um
+[INFO GRT-0237] Net n_bword_35[28] global route wire length: 3086.16um
+[INFO GRT-0237] Net n_bword_35[29] global route wire length: 3446.52um
+[INFO GRT-0237] Net n_bword_35[2] global route wire length: 4139.52um
+[INFO GRT-0237] Net n_bword_35[30] global route wire length: 3492.72um
+[INFO GRT-0237] Net n_bword_35[31] global route wire length: 3058.44um
+[INFO GRT-0237] Net n_bword_35[3] global route wire length: 4019.40um
+[INFO GRT-0237] Net n_bword_35[4] global route wire length: 3566.64um
+[INFO GRT-0237] Net n_bword_35[5] global route wire length: 4111.80um
+[INFO GRT-0237] Net n_bword_35[6] global route wire length: 3132.36um
+[INFO GRT-0237] Net n_bword_35[7] global route wire length: 3520.44um
+[INFO GRT-0237] Net n_bword_35[8] global route wire length: 3197.04um
+[INFO GRT-0237] Net n_bword_35[9] global route wire length: 3501.96um
+[INFO GRT-0237] Net n_bword_36[0] global route wire length: 2808.96um
+[INFO GRT-0237] Net n_bword_36[10] global route wire length: 2079.00um
+[INFO GRT-0237] Net n_bword_36[11] global route wire length: 2346.96um
+[INFO GRT-0237] Net n_bword_36[12] global route wire length: 2079.00um
+[INFO GRT-0237] Net n_bword_36[13] global route wire length: 2300.76um
+[INFO GRT-0237] Net n_bword_36[14] global route wire length: 2032.80um
+[INFO GRT-0237] Net n_bword_36[15] global route wire length: 2411.64um
+[INFO GRT-0237] Net n_bword_36[16] global route wire length: 2273.04um
+[INFO GRT-0237] Net n_bword_36[17] global route wire length: 2032.80um
+[INFO GRT-0237] Net n_bword_36[18] global route wire length: 2023.56um
+[INFO GRT-0237] Net n_bword_36[19] global route wire length: 2226.84um
+[INFO GRT-0237] Net n_bword_36[1] global route wire length: 2060.52um
+[INFO GRT-0237] Net n_bword_36[20] global route wire length: 2051.28um
+[INFO GRT-0237] Net n_bword_36[21] global route wire length: 2319.24um
+[INFO GRT-0237] Net n_bword_36[22] global route wire length: 2143.68um
+[INFO GRT-0237] Net n_bword_36[23] global route wire length: 2300.76um
+[INFO GRT-0237] Net n_bword_36[24] global route wire length: 1986.60um
+[INFO GRT-0237] Net n_bword_36[25] global route wire length: 2023.56um
+[INFO GRT-0237] Net n_bword_36[26] global route wire length: 2143.68um
+[INFO GRT-0237] Net n_bword_36[27] global route wire length: 1986.60um
+[INFO GRT-0237] Net n_bword_36[28] global route wire length: 2032.80um
+[INFO GRT-0237] Net n_bword_36[29] global route wire length: 2005.08um
+[INFO GRT-0237] Net n_bword_36[2] global route wire length: 3298.68um
+[INFO GRT-0237] Net n_bword_36[30] global route wire length: 1968.12um
+[INFO GRT-0237] Net n_bword_36[31] global route wire length: 1977.36um
+[INFO GRT-0237] Net n_bword_36[3] global route wire length: 2060.52um
+[INFO GRT-0237] Net n_bword_36[4] global route wire length: 2069.76um
+[INFO GRT-0237] Net n_bword_36[5] global route wire length: 2079.00um
+[INFO GRT-0237] Net n_bword_36[6] global route wire length: 2143.68um
+[INFO GRT-0237] Net n_bword_36[7] global route wire length: 2051.28um
+[INFO GRT-0237] Net n_bword_36[8] global route wire length: 2079.00um
+[INFO GRT-0237] Net n_bword_36[9] global route wire length: 2042.04um
+[INFO GRT-0237] Net n_bword_37[0] global route wire length: 2938.32um
+[INFO GRT-0237] Net n_bword_37[10] global route wire length: 2051.28um
+[INFO GRT-0237] Net n_bword_37[11] global route wire length: 2060.52um
+[INFO GRT-0237] Net n_bword_37[12] global route wire length: 2531.76um
+[INFO GRT-0237] Net n_bword_37[13] global route wire length: 2051.28um
+[INFO GRT-0237] Net n_bword_37[14] global route wire length: 2494.80um
+[INFO GRT-0237] Net n_bword_37[15] global route wire length: 2023.56um
+[INFO GRT-0237] Net n_bword_37[16] global route wire length: 2152.92um
+[INFO GRT-0237] message limit (1000) reached. This message will no longer print.
+OTMEM done 13002 MB 1791308363
+	Command being timed: "openroad -threads 20 -no_init -exit /work/run.tcl"
+	User time (seconds): 18466.87
+	System time (seconds): 6.14
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 5:08:18
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 13317600
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 15199
+	Minor (reclaiming a frame) page faults: 3677929
+	Voluntary context switches: 16477
+	Involuntary context switches: 102513
+	Swaps: 0
+	File system inputs: 348728
+	File system outputs: 268248
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

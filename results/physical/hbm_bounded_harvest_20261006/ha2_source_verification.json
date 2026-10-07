@@ -1,0 +1,30 @@
+[
+  {
+    "path": "physical/hbm_ha2_owner_banked_20261006/signoff.py",
+    "commit": "1c5081405527e0b54b1ac9daeceb85e91b638b03",
+    "expected_sha256": "3a16c5388a7d43175c470bdd64b0f2f92abada695a15a6a9514fc0df29a18ca2",
+    "observed_sha256": "3a16c5388a7d43175c470bdd64b0f2f92abada695a15a6a9514fc0df29a18ca2",
+    "match": true
+  },
+  {
+    "path": "physical/hbm_ha2_owner_banked_20261006/run.sh",
+    "commit": "1c5081405527e0b54b1ac9daeceb85e91b638b03",
+    "expected_sha256": "7aa9baf503173f36afcd7265cffa3c5b725e44684eb69e30871ecb523fe668c4",
+    "observed_sha256": "7aa9baf503173f36afcd7265cffa3c5b725e44684eb69e30871ecb523fe668c4",
+    "match": true
+  },
+  {
+    "path": "physical/hbm_ha2_owner_banked_20261006/make_sdc.py",
+    "commit": "1c5081405527e0b54b1ac9daeceb85e91b638b03",
+    "expected_sha256": "32f585c539caf4713278c98834545cf7b83c599c6fd4922d1452b0cd4e6556ec",
+    "observed_sha256": "32f585c539caf4713278c98834545cf7b83c599c6fd4922d1452b0cd4e6556ec",
+    "match": true
+  },
+  {
+    "path": "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv",
+    "commit": "1c5081405527e0b54b1ac9daeceb85e91b638b03",
+    "expected_sha256": "a047cbf2fa53bc2ffa6fcc93016f9147c50d975fcfbdd3c059a085b74f0393c3",
+    "observed_sha256": "a047cbf2fa53bc2ffa6fcc93016f9147c50d975fcfbdd3c059a085b74f0393c3",
+    "match": true
+  }
+]

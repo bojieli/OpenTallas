@@ -1,0 +1,9 @@
+{
+  "observer_sha256": "c226d84ddf0635f45ddf0be7cdf316c855b6a14adb0b70658fa0bc5ec6cdfb9c",
+  "command": "python3 -m pytest -q tests/test_qwen_dietop_watch.py tests/test_qwen_dietop_launch.py",
+  "passed": 26,
+  "rtl_changed": false,
+  "remote_mutation": false,
+  "new_physical_run_launched": false,
+  "main_mutated": false
+}

@@ -1,0 +1,69 @@
+{
+  "code_commit": "e133ebeacb83b42409131c5b4c71a3264af3dc0c",
+  "job": "hbm-svc-SE_s3-fb5bc706e",
+  "status": "CANCELLED",
+  "state_sha256": "a2fb562c80e5a86a953648ad2c5df7a335a1ea18db7cb8ba362e65c075bf5df2",
+  "state_unchanged": true,
+  "stage_tag": "calibrate.a1",
+  "stage_started": "2026-10-06T18:43:49-07:00",
+  "updated": "2026-10-06T18:45:24-07:00",
+  "tests": "19 focused tests PASS",
+  "deployment": {
+    "commit": "e133ebeacb83b42409131c5b4c71a3264af3dc0c",
+    "old_pid": "2169350",
+    "idle_channel": "do_select",
+    "restart_requested": "2026-10-06T22:44:43.720816-07:00",
+    "restarted": "2026-10-06T22:44:43.744587-07:00",
+    "service": "MainPID=2178351\nExecStart={ path=/usr/bin/python3 ; argv[]=/usr/bin/python3 /home/ubuntu/wt-codex-closure-reliability/tools/closure_loop/closure_loop.py daemon --interval 60 ; ignore_errors=no ; start_time=[Tue 2026-10-06 22:44:43 PDT] ; stop_time=[n/a] ; pid=2178351 ; code=(null) ; status=0/0 }\nActiveState=active"
+  },
+  "verified_again": "2026-10-06T22:50:18.320165-07:00",
+  "heartbeat": "2026-10-06T22:49:41-07:00",
+  "glue": {
+    "status": "ECO",
+    "updated": "2026-10-06T22:50:15-07:00",
+    "stage_tag": "hold_eco.a2",
+    "stage_started": "2026-10-06T22:40:58-07:00",
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024",
+    "eco": {
+      "tried": true,
+      "rb": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base",
+      "ob": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base",
+      "out": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate",
+      "post_sdc": [
+        "physical/s81_die_views/hbglue/margin/signoff_cl_hbglue_cl_8ddc70024.sdc"
+      ],
+      "pre": {
+        "ss_ps": 190.49,
+        "ff_ps": -70.99
+      },
+      "started": "2026-10-06T22:40:52-07:00"
+    },
+    "eco_overlay_recovery": {
+      "directory": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2",
+      "out": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate",
+      "guard": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/inputs.json",
+      "manifest_sha256": "ffe41784ef0855c9b0a238aa05d5997f16835fdf664a5aafeb284d99b0a39811",
+      "requested": "2026-10-06T22:39:22-07:00",
+      "reason": "owner-authorized one-shot correction of omitted measured overlays"
+    },
+    "metrics": {
+      "corner_sta": [
+        "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/corner_sta.json"
+      ],
+      "drc_metrics": [
+        "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/logs/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/5_2_route.json"
+      ],
+      "ss_ps": 190.49,
+      "ff_ps": -70.99,
+      "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs",
+      "errors": [],
+      "ss_tns_ps": 0.0,
+      "post_sdc": [
+        "physical/s81_die_views/hbglue/margin/signoff_cl_hbglue_cl_8ddc70024.sdc"
+      ],
+      "drc": 0
+    }
+  },
+  "scope": "No W2 or index job mutations by this worker; Nash owns W2; Helmholtz owns index budget binding."
+}

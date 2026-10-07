@@ -3,6 +3,17 @@
 module ot_dsrom_head_bundle_glue #(
  parameter integer BST=2,
  parameter integer USE_HARD_DELAY8=0,
+ parameter integer USE_MIN_DELAY_CELLS=0,
+ // MARGIN=1 (owner margin-first rule 2026-10-06; default off): every face registered.
+ //  row0 captured at the pin and row0_a launched from a flop (+2: row0 is now sampled at go, i.e. go_d-BST,
+ //  instead of at go_d; the head controller holds row0 for the pass). Argmax: a_* captured at the pins,
+ //  each tree level split into compare -> select registers; result group {res_v,res_row,res_bits,fault}
+ //  +3 cycles, fault registered at the pin and aligned with the result. B join (bo -> bv_r/bd_r) keeps its
+ //  1-cycle latency (fixed by the A-element join contract): its capture is an enable flop / AND2 only.
+ //  MARGIN=2 (SAFE, redesign 2026-10-06): as 1, plus bo_v / bo_d captured in plain pin registers before the B join
+ //  demux / data register (bv_r/bd_r +1; the A elements' IOREG join FIFO absorbs it): no enable mux behind a pin.
+ parameter integer MARGIN=0,
+ parameter integer MIN_DEPTH=1,
  parameter [8:0] CUT=9'b1_0111_1011,
  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]
 )(
@@ -32,13 +43,15 @@ module ot_dsrom_head_bundle_glue #(
    assign a_row[a]=a_row_flat[17*a+:17];
    assign a_bits[a]=a_bits_flat[32*a+:32];
    assign a_key[a]=a_key_flat[32*a+:32];
-   assign row0_a[17*a+:17]=row0+17'd32*a;
+   if(!MARGIN) begin:g_row_comb
+     assign row0_a[17*a+:17]=row0+17'd32*a;
+   end
  end endgenerate
  assign row0_b=17'd0;
     // registered broadcast
     wire [511:0] x_d;
     ot_hdc_delay #(.W(1), .D(BST), .RESET(1)) u_go (.clk(clk), .rst_n(rst_n), .d(go), .q(go_d));
-    ot_hdc_delay #(.W(512), .D(BST)) u_x (.clk(clk), .rst_n(rst_n), .d({xa, xb}), .q(x_d));
+    ot_s81_head_min_delay #(.W(512), .D(BST), .ENABLE(USE_MIN_DELAY_CELLS),.DEPTH(MIN_DEPTH)) u_x (.clk(clk), .rst_n(rst_n), .d({xa, xb}), .q(x_d));
     // systolic lane skew
     genvar j, q, h;
     generate
@@ -55,23 +68,34 @@ module ot_dsrom_head_bundle_glue #(
           end
           assign {xsa[16*j+:16],xsb[16*j+:16]} = chain[j%8];
         end else begin : g_flat
-          ot_hdc_delay #(.W(16), .D(SK * (j % 8))) u_a (.clk(clk), .rst_n(rst_n), .d(x_d[256 + 16*j +: 16]), .q(xsa[16*j +: 16]));
-          ot_hdc_delay #(.W(16), .D(SK * (j % 8))) u_b (.clk(clk), .rst_n(rst_n), .d(x_d[16*j +: 16]), .q(xsb[16*j +: 16]));
+          ot_s81_head_min_delay #(.W(16), .D(SK * (j % 8)), .ENABLE(USE_MIN_DELAY_CELLS), .DEPTH(MIN_DEPTH)) u_a (.clk(clk), .rst_n(rst_n), .d(x_d[256 + 16*j +: 16]), .q(xsa[16*j +: 16]));
+          ot_s81_head_min_delay #(.W(16), .D(SK * (j % 8)), .ENABLE(USE_MIN_DELAY_CELLS), .DEPTH(MIN_DEPTH)) u_b (.clk(clk), .rst_n(rst_n), .d(x_d[16*j +: 16]), .q(xsb[16*j +: 16]));
         end
       end
     endgenerate
     reg [1:0]  bq;
+    wire bo_v_e, go_b;
+    wire [31:0] bo_d_e;
+    generate if (MARGIN >= 2) begin : g_b_pin
+        reg bo_v_q, go_q; reg [31:0] bo_d_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) begin bo_v_q <= 1'b0; go_q <= 1'b0; end else begin bo_v_q <= bo_v; go_q <= go_d; end
+        always @(posedge clk) bo_d_q <= bo_d;
+        assign bo_v_e = bo_v_q; assign bo_d_e = bo_d_q; assign go_b = go_q;
+    end else begin : g_b_direct
+        assign bo_v_e = bo_v; assign bo_d_e = bo_d; assign go_b = go_d;
+    end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin bq <= 2'd0; bv_r <= 4'd0; end
         else begin
-            if (go_d) bq <= 2'd0; else if (bo_v) bq <= bq + 2'd1;
-            bv_r <= bo_v ? (4'd1 << bq) : 4'd0;
+            if (go_b) bq <= 2'd0; else if (bo_v_e) bq <= bq + 2'd1;
+            bv_r <= bo_v_e ? (4'd1 << bq) : 4'd0;
         end
-    always @(posedge clk) if (bo_v) bd_r <= bo_d;
+    always @(posedge clk) if (bo_v_e) bd_r <= bo_d_e;
     // 2-level compare tree (lowest-id first max): level 1 (0,1) (2,3), level 2
     function automatic [80:0] pick(input [80:0] u, input [80:0] v);   // {key, row, bits}
         pick = (v[80:49] > u[80:49] || (v[80:49] == u[80:49] && v[48:32] < u[48:32])) ? v : u;
     endfunction
+    generate if(!MARGIN) begin:g_tree_orig
     reg [80:0] c1 [0:1];
     reg        c1_v;
     always @(posedge clk or negedge rst_n)
@@ -80,10 +104,62 @@ module ot_dsrom_head_bundle_glue #(
             c1_v <= &a_done && !go_d;
             res_v <= c1_v && !go_d;
         end
+    // Pad only the short payload forwarding branches. Key/row comparison
+    // control paths retain their original setup depth and rounding/order.
+    wire [31:0] c1_bits0,c1_bits1;
+    ot_s81_head_min_buffer #(.W(32),.ENABLE(USE_MIN_DELAY_CELLS)) u_result_payload0(.d(c1[0][31:0]),.q(c1_bits0));
+    ot_s81_head_min_buffer #(.W(32),.ENABLE(USE_MIN_DELAY_CELLS)) u_result_payload1(.d(c1[1][31:0]),.q(c1_bits1));
     always @(posedge clk) begin
         c1[0] <= pick({a_key[0], a_row[0], a_bits[0]}, {a_key[1], a_row[1], a_bits[1]});
         c1[1] <= pick({a_key[2], a_row[2], a_bits[2]}, {a_key[3], a_row[3], a_bits[3]});
-        {res_row, res_bits} <= pick(c1[0], c1[1]);
+        {res_row, res_bits} <= pick({c1[0][80:32],c1_bits0}, {c1[1][80:32],c1_bits1});
     end
     assign fault = b_fault | (|a_fault);
+    end else begin:g_tree_margin
+    // faces: a_*, row0 and the faults captured in flops at the pins
+    reg [16:0] row0_r; reg [67:0] row0_a_r;
+    reg [3:0] a_done_r; reg [80:0] a_r [0:3];
+    reg go_d1; reg c1_vm, res_vm, res_vd;
+    reg [4:0] f_in; reg f_q1, f_q2;
+    integer t;
+    always @(posedge clk) begin
+        row0_r <= row0;
+        for(t=0;t<4;t=t+1) begin
+            row0_a_r[17*t+:17] <= row0_r+17'd32*t;
+            a_r[t] <= {a_key[t], a_row[t], a_bits[t]};
+        end
+    end
+    assign row0_a = row0_a_r;
+    // validity chain at the original cycle + 1 (a_done_r, go_d1 = the original operands one cycle late)
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin a_done_r<=0; go_d1<=0; c1_vm<=0; res_vm<=0; res_vd<=0; res_v<=0; end
+        else begin
+            a_done_r <= a_done; go_d1 <= go_d;
+            c1_vm <= &a_done_r && !go_d1;
+            res_vm <= c1_vm && !go_d1;
+            res_vd <= res_vm;
+            res_v <= res_vd;
+        end
+    // fault: each fault bit captured at its pin, OR registered, aligned with the result group (+3)
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin f_in<=0; f_q1<=0; f_q2<=0; end
+        else begin f_in <= {b_fault, a_fault}; f_q1 <= |f_in; f_q2 <= f_q1; end
+    assign fault = f_q2;
+    // level 1: compare from the face registers -> select + candidates; then select -> c1
+    function automatic sel(input [80:0] u, input [80:0] v);
+        sel = (v[80:49] > u[80:49] || (v[80:49] == u[80:49] && v[48:32] < u[48:32]));
+    endfunction
+    reg [1:0] s1; reg [80:0] p1 [0:3]; reg [80:0] c1m [0:1];
+    reg s2; reg [80:0] p2 [0:1];
+    always @(posedge clk) begin
+        s1[0] <= sel(a_r[0], a_r[1]); s1[1] <= sel(a_r[2], a_r[3]);
+        for(t=0;t<4;t=t+1) p1[t] <= a_r[t];
+        c1m[0] <= s1[0] ? p1[1] : p1[0];
+        c1m[1] <= s1[1] ? p1[3] : p1[2];
+        s2 <= sel(c1m[0], c1m[1]);
+        p2[0] <= c1m[0]; p2[1] <= c1m[1];
+        {res_row, res_bits} <= s2 ? p2[1][48:0] : p2[0][48:0];
+    end
+    end endgenerate
+
 endmodule

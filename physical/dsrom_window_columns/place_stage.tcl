@@ -8,7 +8,9 @@ set cells {}
 foreach inst [$block getInsts] {
     set name [[$inst getMaster] getName]
     if {$name ni {ot_dsrom_window_column_128 ot_dsrom_window_column_256}} {continue}
-    if {![regexp {g_bank\[([0-3])\].*g_col\[([0-9]+)\]} [$inst getName] unused b k]} {
+    # Flattened instance names escape hierarchy brackets (g_bank\[0\].g_col\[0\]...); match without them.
+    set iname [string map {\\ {}} [$inst getName]]
+    if {![regexp {g_bank\[([0-3])\].*g_col\[([0-9]+)\]} $iname unused b k]} {
         error "unexpected WINDOW column instance [$inst getName]"
     }
     set maxw [expr {max($maxw,double([[$inst getMaster] getWidth])/$dbu)}]
@@ -16,6 +18,8 @@ foreach inst [$block getInsts] {
     lappend cells [list $inst $b $k]
 }
 if {[llength $cells]!=68} {error "WINDOW full shape requires 68 columns, found [llength $cells]"}
+# rtl_macro_placer has already placed these columns: release them so the explicit grid does not clash with its result
+foreach cell $cells { [lindex $cell 0] setPlacementStatus UNPLACED }
 foreach cell $cells {
     lassign $cell inst b k
     set x [expr {100.0+($b%2)*900.0+($k%4)*($maxw+32.0)}]

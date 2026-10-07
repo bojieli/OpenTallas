@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.budgets.provenance.v1",
+ "die_models": {
+  "s81_layer/s81_layer1/s81_head": {
+   "branch": "claude/s81-rerun-20261006",
+   "commit": "f21799d1c3269e49206012358c3ef667daaf4222",
+   "generator": "tools/dsrom_s81_fulldie.py",
+   "options": "--gen r8 --rev r9 --cc-reach-um 215 --vch-interleave --elem-h 198.72 [--pairs 2050 layer/layer1]; OT_S81_Q_LEF=results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz (= case r9m215_v4: 57,937 / 57,247 instances match cases/v4 sa/l1a)",
+   "via": "tools/die_top_lint.py build (s81r8_<die>, S81_OPTS)"
+  },
+  "hbm": {
+   "branch": "claude/hbm-abstracts-20261006",
+   "commit": "681626d045cb2f93925fe4f9a8c086b8fe95564e",
+   "generator": "tools/hbm_accel_die_fp.py",
+   "options": "ADOPTED = R18 (r17 budget stage plan + svc centre ck)",
+   "via": "tools/die_top_lint.py build(hbm)",
+   "publication_commit": "884df30c30d13fb0aba401abba6a580b56b652ed",
+   "source_binding": "commit matches source_commit embedded in die model and clock plan; publication_commit identifies the coordinator publication revision"
+  }
+ },
+ "tiles": {
+  "branch": "claude/s81-placeholders-20261006",
+  "commit": "752a48488384dbe9c95a72c084bc24e0ac800a17"
+ },
+ "calibrations": "tools/budgets/collect_calib.py (closure-loop calibrate records, ~/.local/state/closure_loop/jobs) + inputs/calib_extra.json",
+ "cts": {
+  "host": "ot-epyc3",
+  "path": "/srv/opentallas-scratch2/claude/budgets/cases",
+  "image": "openroad/orfs:latest (OpenROAD 26Q3-1510-g6cb3f2b704)"
+ },
+ "cts_hbm_r18": {
+  "host": "ot-epyc2",
+  "path": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/bud18",
+  "image": "openroad/orfs:asap7lock",
+  "result": "34 regions, max intra 56.7, max inter 141.4, 0 violations"
+ },
+ "insertion_override": "inputs/insertion_override.json (HBM index_q b0-b3/b5: edge ck kept, measured insertion accepted, extra OCV on IO skew)"
+}

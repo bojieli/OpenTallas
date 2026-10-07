@@ -23,9 +23,24 @@ SOURCES += [VIEW+'/'+MACRO+'_bb.v',
 def command(a):
  cmd=['--view','asap7','--top','ot_s81_bf_native']
  for s in SOURCES: cmd+=['--source',s]
- cmd+=['--clock-period-ns','.833','--clock-uncertainty-ns','.060',
- '--clock-uncertainty-hold-ns','.025','--orfs-corner','WC','--hold-corners','WC,BC',
- '--stages','pnr','--io-delay-fraction','.2','--synth-timeout-seconds','unlimited',
+ if a.margin:
+  # margin-first (owner rule 2026-10-06): PINREG=1 register-to-register pins, routed at 770 ps with the die IO
+  # budget on setup (insertion +/- 150 ps, 100 ps wire/station on the max side), owner hold model (FF insertion ~175,
+  # 50 ps hold IO: in min 125 / out min -225, hold repaired at the FF corner), slot-width die, signed off at 833.333 ps
+  # --ins-ss/--ins-ff: MEASURED mid core_clk insertion (ps, CTS-only calibration), the IO constraints follow it
+  # (owner 2026-10-06): in max = ss+150+100, in min = ff-50, out max = 100-(ss-150), out min = -(ff+50)
+  ss=a.ins_ss if a.ins_ss else 150.0; ff=a.ins_ff if a.ins_ff else 175.0
+  io=lambda v: str(round(v/1000.0,4))
+  cmd+=['--param','PINREG=1','--clock-period-ns','.770','--core-input-delay-min-ns',io(ff-50),'--core-input-delay-max-ns',io(ss+250),
+   '--output-delay-min-ns',io(-(ff+50)),'--output-delay-max-ns',io(100-(ss-150)),'--false-path-from','rst_n',
+   '--die-area','0','0',str(a.die_w),str(a.die_h),'--core-area','2.16','2.16',str(round(a.die_w-2.16,3)),str(round(a.die_h-2.16,3)),
+   '--hold-corners','BC','--slew-margin-percent','20','--hold-margin-ns','0.020','--orfs-var','PLACE_DENSITY_LB_ADDON=',
+   '--step-tcl','PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl','--step-tcl','PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl']
+ else:
+  cmd+=['--clock-period-ns','.833','--io-delay-fraction','.2','--hold-corners','WC,BC']
+ cmd+=['--clock-uncertainty-ns','.060',
+ '--clock-uncertainty-hold-ns','.025','--orfs-corner','WC',
+ '--stages','pnr','--synth-timeout-seconds','unlimited',
  '--flow-timeout-seconds','unlimited','--core-utilization',str(a.util),
  '--place-density','.60','--max-transition-ns','.25',
  '--orfs-var','NUM_CORES=16','--orfs-var','ADDER_MAP_FILE=',
@@ -39,8 +54,9 @@ def command(a):
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True)
- p.add_argument('--output',type=Path,required=True);p.add_argument('--util',type=float,default=55)
- p.add_argument('--tag',default='s81_bf_native_u55');p.add_argument('--print',action='store_true')
+ p.add_argument('--output',type=Path,required=True);p.add_argument('--util',type=int,default=55)
+ p.add_argument('--tag',default='s81_bf_native_u55')
+ p.add_argument('--margin',action='store_true');p.add_argument('--ins-ss',type=float,default=0.0);p.add_argument('--ins-ff',type=float,default=0.0);p.add_argument('--die-w',type=float,default=1002.888);p.add_argument('--die-h',type=float,default=190.08);p.add_argument('--print',action='store_true')
  a=p.parse_args()
  cmd=command(a)
  if a.print:

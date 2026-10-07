@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.qwen-rom.lever.v1",
+ "lever": "kv_map_m",
+ "title": "STREAM4 KV landing Option M (KV_MAP=1): each KV sector streams from the HBM stack of its destination tiles' die quadrant",
+ "verdict": "ADOPT",
+ "exact": true,
+ "decision": "owner 2026-10-06 (Qwen ROM CLOSED): Option M adopted in the recorded configuration; die r19/r20 per-stack quadrant crossbar kept as built",
+ "source": {
+  "rtl_commit": "45f61a63e",
+  "main_merge": "f78994b31",
+  "result": "results/rtl/qwen_stream4_kvmap_m_20261006/result.json",
+  "rtl": [
+   "rtl/hdc/kv/ot_qwen_kv_map_m.svh",
+   "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv",
+   "rtl/hdc/kv/ot_qwen_hbm_stream4_ack.sv",
+   "rtl/hdc/kv/ot_qwen_hbm_stream4_cdc.sv"
+  ]
+ },
+ "why": "The die's per-stack KV crossbar (r19/r20 qfd_kvc) feeds only the tiles of its own quadrant. On the base map (KV_MAP=0) a stack's sectors land on tiles of every quadrant: 131062 of 196592 slice writes leave the quadrant, so the as-built crossbar would deliver only 65530 of them (1/3). Option M re-stripes the KV so every sector comes from the stack of its destination quadrant: 0 of 196592 slice writes leave the quadrant and each stack carries exactly 25% of the beats.",
+ "exactness": {
+  "KV_MAP_0": "15/15 PASS (logs/all_m0.log)",
+  "KV_MAP_1": "15/15 PASS, slices and token HBM codes exact (logs/all_m1.log)",
+  "negative_control": "KV_MAP=1 service with KV_MAP_HBM=0 backend: ISO_P8191 FAIL (timeout after 1,568 of 131,072 sectors: the service rejects every off-map landed sector) as expected (logs/iso_neg.log)"
+ },
+ "measured": {
+  "slice_writes": 196592,
+  "out_of_quadrant_writes_M": 0,
+  "out_of_quadrant_writes_base": 131062,
+  "in_quadrant_fraction_base": 0.3333,
+  "beats_per_stack": [
+   32768,
+   32768,
+   32768,
+   32768
+  ],
+  "iso_P8191_fill_cycles": {
+   "base": 1355,
+   "M": 1363,
+   "delta": 8
+  },
+  "iso_P8191_kv_ok_after_start": {
+   "base": 1831,
+   "M": 1885,
+   "delta": 54
+  },
+  "steady_fill_exposed_early_go_posted": {
+   "base": 0,
+   "M": 0
+  }
+ },
+ "token_cost": {
+  "cycles_composed": 54,
+  "basis": "measured RTL, charged in full: the token's only exposed KV fill is the cold first layer (L0 fill_exposed 1,363 per die in the measured base-map token; layers 1-35 expose 0). Option M delays that cold layer's KV-ready by at most the isolated ISO_P8191 kv_ok delta (+54; the fill itself +8). Steady layers stay fully hidden in early_go + posted mode (0 exposed, both maps).",
+  "modelled_not_composed": {
+   "cycles": 24,
+   "status": "MODELLED, not RTL: cycle model of the die r19 per-stack crossbar + 768-b row fabric on the measured KV_MAP=1 landing trace (rows_768b_ins8_fifo64, busiest row 85.6%); hidden in steady layers, charged only as a labelled sensitivity on the cold first layer"
+  }
+ },
+ "physical": "qfd_kvc / qfd_kvc_n (the per-stack crossbar) is one of the die masters checked with assumed-constant timing views (results/rtl/qwen_rom_die_r17_20261005/element_views/views_r20c.json); no routed closure of the crossbar exists"
+}

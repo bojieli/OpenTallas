@@ -28,6 +28,15 @@ Resolves three data conflicts the Chip Explorer rack view exposed (CLAUDE DS-RAC
     'per head die (1 of 12)'), + 52 draft dies (levers/draft.json dies_added).  '8 + 36' (C1 ledger, 368 dies) and
     '12 + 32' (explorer, 44 kept) are both stale.
 
+STAGE COUNT (CLAUDE DS-RACK85 2026-10-06).  The adopted DS ROM headline uses the closed QX 10 q-element frame
+(default QELEM, owner go 3661e31c6; tools/dsrom_1m_allmeasured_adapters.FIELD_GEOM).  Its taller element frame holds
+fewer pairs a die, so the array needs more layer dies: the r8 re-price record gives the stage and layer-die count of
+each frame (results/rtl/dsrom_field_reprice_r8_20261006/reprice.json geoms[FIELD_GEOM]: f183.60 = 85 stages, 340
+layer dies, +16 / +4 stage hops over S81).  This record packs THAT count; the head / Engram table counts are the head
+model's (unchanged: table = head model total - its 324 S81 layer dies - 12 head).  The extra stages are matrix stages
+(the S81 binding has 74 matrix stages and 7 tail stages); the scan dies' stage homes are the S81 provisional homes
+scaled to the 78 matrix stages (still provisional: the count, 32 dies, is what the stacks need).
+
     python3 tools/dsrom_s81_rack.py            # writes results/arch/dsrom_s81_rack_20261006/rack.json
 """
 from __future__ import annotations
@@ -49,8 +58,16 @@ DRAFTLEV = "results/rtl/dsrom_recovery_20261004/levers/draft.json"
 SCEN_C = "results/uarch/dsrom_return_storage_hbm_20261003/HANDOFF_SCENARIO_C.md"
 LFF = "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json"
 RECHECK = "tools/dsrom_c_recheck.py"
+REPRICE = "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json"
 CLK = 1.2e9
-STAGES, RANKS = 81, 4
+RANKS = 4
+S81_STAGES = 81                  # the S81 binding (stage_map.json) and the head model's layer-die base
+sys.path.insert(0, str(ROOT / "tools"))
+import dsrom_1m_allmeasured_adapters as _AD  # noqa: E402  (FIELD_GEOM: the adopted element frame)
+GEOM = _AD.FIELD_GEOM
+_G = json.loads((ROOT / REPRICE).read_text())["geoms"][GEOM] if GEOM else {}
+STAGES = _G.get("stages", S81_STAGES)
+assert _G.get("layer_dies", STAGES * RANKS) == STAGES * RANKS, "re-price layer dies are not stages x TP4"
 PKG_PER_TRAY = 4                 # rack study: 1 OU liquid tray of four two-die packages
 RACK_PITCH_M = 0.6               # ORv3 frame width (Open Rack v3, 600 mm)
 REAR_LEG_M = 0.4                 # tray rear edge to the cable channel, each end (rack study adjacent-tray 0.798 m)
@@ -69,19 +86,28 @@ def counts():
     head = hr["verdict"]["recommended_head_dies"]
     total = next(v for v in hr["variants"] if v["NV"] == 5)["head_groups"][str(head)]["total_dies"]
     layer = STAGES * RANKS
-    table = total - layer - head
+    base_layer = len(J(STAGE_MAP)["rank_dies"])               # 324: the head model prices the S81 array
+    assert base_layer == S81_STAGES * RANKS
+    table = total - base_layer - head
     draft = J(DRAFTLEV)["dies_added"]
     assert "1 of 12" in json.dumps(J(HEADLEV)) and head == 12, "head lever no longer prices 12 head dies"
     return dict(stages=STAGES, layer=layer, head=head, table=table, draft=draft, dies=layer + head + table + draft,
                 src=dict(head=f"{HEADREC} verdict.recommended_head_dies (owner-adopted 12, codex_notes 2026-10-04 "
                               f"'12 head dies / 372 total stay'); {HEADLEV} 'per head die (1 of 12)'",
-                         table=f"{HEADREC} head_groups['12'].total_dies {total} - {layer} layer - {head} head",
+                         stages=f"{REPRICE} geoms['{GEOM}'] stages / layer_dies (adopted element frame, "
+                                f"tools/dsrom_1m_allmeasured_adapters.FIELD_GEOM; S81 = {S81_STAGES} stages)",
+                         table=f"{HEADREC} head_groups['12'].total_dies {total} - {base_layer} S81 layer - {head} head",
                          draft=f"{DRAFTLEV} dies_added (DP1-EP5)"))
 
 
 def stacks(c):
     sm = J(STAGE_MAP)
-    scan_stages = sorted(set(sm["scan_service_homes"].values()))
+    s81_homes = sorted(set(sm["scan_service_homes"].values()))
+    tail = sum(1 for x in sm["PHW_required_by_stage"] if x == 1)            # S81: 7 non-matrix tail stages
+    m81 = S81_STAGES - tail
+    m = STAGES - tail
+    scan_stages = [round(h * m / m81) for h in s81_homes]                  # identity at S81
+    assert len(set(scan_stages)) == len(s81_homes) and max(scan_stages) < m
     scan_dies = RANKS * len(scan_stages)
     per = dict(scan=4, layer=1, head=4, table=0, draft=0)
     tot = scan_dies * per["scan"] + (c["layer"] - scan_dies) * per["layer"] + c["head"] * per["head"]
@@ -89,7 +115,8 @@ def stacks(c):
                 rule_4S_plus_128_at_8_head=4 * STAGES + 3 * scan_dies + 4 * 8,
                 src=f"{SCEN_C} line 17 (scenario C: 4 stacks on the 32 index-scanning rank dies, 1 on the other rank "
                     f"dies, 4 on each head die; tables none); scan stages {STAGE_MAP} scan_service_homes "
-                    f"(provisional homes: the count, 32 dies, is what the stacks need)",
+                    f"(provisional homes: the count, 32 dies, is what the stacks need); at {STAGES} stages the S81 "
+                    f"homes {s81_homes} are scaled to the {STAGES - (S81_STAGES - m81)} matrix stages (provisional)",
                 note="the power model's 452 (tools/dsrom_c_recheck.py stacks = 4S + 128) is this rule with 8 head "
                      "dies; draft expert replicas (DP1-EP5) hold no per-user state, the drafter's KV rides on the "
                      "head dies' stacks as in scenario C")
@@ -127,7 +154,6 @@ def build():
     OU_MM, USABLE = pc["orv3_ou_mm"]["value"], pc["orv3_usable_ou"]["value"]
     WALL, MARGIN, SHELF = pw["wall_factor"], pw["provision_margin"], pw["shelves"]["n_plus_1_w"]
     STACK_W, TRAY_KG = pc["hbm3e_stack_static_w"]["value"], pc["tray_mass_kg"]["value"]
-    sys.path.insert(0, str(ROOT / "tools"))
     import dsrom_c_recheck as C
     LAYER_W = J(S81FP)["scan_die_power"]["total_saturated_w"]
     HT_W = (C.HEAD_W + C.TABLE_W) / C.HEAD_TABLE_DIES     # C1 ledger: the same W a head or table die
@@ -193,7 +219,7 @@ def build():
     while k and not fits(stage_trays[:k] + head_trays + draft_trays, infra):
         k -= 1
     r1_stage, r2_stage = stage_trays[:k], stage_trays[k:]
-    assert r2_stage and fits(r2_stage + table_trays, []), "S81 does not fit two racks in this template"
+    assert r2_stage and fits(r2_stage + table_trays, []), f"S{STAGES} does not fit two racks in this template"
 
     def rack(name, trays_bottom_up, inf):
         prov = prov_w(trays_bottom_up, inf)
@@ -254,6 +280,10 @@ def build():
         decision_links="OWNER 2026-10-06: full RS(544,514) FEC on every off-package link (board, in-rack cable, rack "
                        "to rack) for both the DS ROM array and the HBM accelerator; light FEC is not used anywhere. "
                        "In-package UCIe keeps its own spec.",
+        geometry=dict(field_geom=GEOM, stages=STAGES, layer_dies=STAGES * RANKS, s81_stages=S81_STAGES,
+                      extra_stages=STAGES - S81_STAGES, label=_G.get("label"),
+                      pairs_per_layer_die=_G.get("pairs"),
+                      src=f"{REPRICE} geoms['{GEOM}'] (default QELEM, owner go 3661e31c6)"),
         counts=c, stacks=st,
         die_w=dict(layer=LAYER_W, head_table=round(HT_W, 2), stack=STACK_W,
                    src=f"{S81FP} scan_die_power.total_saturated_w (busiest layer die, used for every layer and draft "
@@ -262,9 +292,10 @@ def build():
         packing=dict(rule="2 consecutive stages a 1 OU tray of 4 two-die packages (board link between them); the "
                           "stage chain is a U over two racks (R1 top -> bottom, across at the bottom, R2 bottom -> "
                           "top, above the Engram table trays); head trays beside S0 (8-traversal token return on the shortest cable), draft trays "
-                          "beside the head trays; Engram tables at the bottom of R2 (lifts S80 to the head trays' height)",
-                     minimum="81 stages at 2 a tray = 41 trays: 40 board hops + 40 cable hops is the minimum; one "
-                             "stage hop crosses racks (S81 does not fit one 44 OU rack with its power shelves)",
+                          f"beside the head trays; Engram tables at the bottom of R2 (lifts S{STAGES - 1} to the head trays' height)",
+                     minimum=f"{STAGES} stages at 2 a tray = {-(-STAGES // 2)} trays: {STAGES // 2} board hops + "
+                             f"{STAGES - 1 - STAGES // 2} cable hops is the minimum; one stage hop crosses racks "
+                             f"(S{STAGES} does not fit one 44 OU rack with its power shelves)",
                      r1_stages=[0, 2 * k - 1], r2_stages=[2 * k, STAGES - 1],
                      rack_crossing=dict(src=cross[0]["src"], dst=cross[0]["dst"], length_m=cross[0]["length_m"],
                                         medium=cross[0]["medium"]) if cross else None),
@@ -293,7 +324,7 @@ def build():
                          draft_link_extra_cycles_each=draft["extra_cycles"],
                          note="extra = flight beyond the 0.3 m inside the measured full-KP4 hop (+ AEC past 2 m); "
                               "the composition adds these to the measured hop"),
-        inputs={p: sha(p) for p in (RACK, STAGE_MAP, S81FP, HEADREC, HEADLEV, DRAFTLEV, SCEN_C, LFF, RECHECK)},
+        inputs={p: sha(p) for p in (RACK, STAGE_MAP, S81FP, HEADREC, HEADLEV, DRAFTLEV, SCEN_C, LFF, RECHECK, REPRICE)},
         tool_sha256=sha("tools/dsrom_s81_rack.py"))
 
 

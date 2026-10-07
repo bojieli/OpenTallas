@@ -86,7 +86,7 @@ def field_rep(L):
 # stage + the hub stations on the return path, results/rtl/dsrom_field_reprice_r8_20261006/reprice.json) instead of
 # the r7 floorplan's 80 cycles a phase.  FIELD_GEOM selects the element-frame geometry; None = the old 80-cycle charge.
 REPRICE = Path(__file__).resolve().parents[1] / "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json"
-FIELD_GEOM = "f157.68"
+FIELD_GEOM = "f183.60"          # default QELEM (owner go 2026-10-06): the closed QX 10 element frame (Z20c FH 177.12); was f157.68
 _RP = {}
 
 
@@ -96,7 +96,8 @@ def reprice_table(field, geom):
         return None
     if "rec" not in _RP:
         _RP["rec"] = json.loads(REPRICE.read_text())
-    cfg = field.get("config", "asbuilt")
+    q = (field.get("vehicle") or {}).get("qelem")
+    cfg = field.get("config") or (f"asbuilt_qelem{q['QX']}" if q else "asbuilt")
     return _RP["rec"]["geoms"][geom]["configs"][cfg]
 
 

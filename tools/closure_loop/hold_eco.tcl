@@ -1,0 +1,84 @@
+# CLOSURE-LOOP post-detailed-route FF hold ECO (coordinator 2026-10-06), adapted from the hub recipe
+# physical/hbm_accel_die_views/common/post_route_hold_eco.tcl (which closed the HC lane): reads the routed PRE-FILL
+# database OT_DB (5_2_route.odb, not the filler-padded 6_final), the sign-off SDC OT_SDC + post-SDCs, optional macro
+# views (OT_MACROS: dirs holding <name>.lef / <name>_{ss,ff}.lib), RCX parasitics on both scenes; repair_timing -hold
+# to OT_HOLD_MARGIN keeping setup >= OT_SETUP_MARGIN; legalise; signal wires stripped (clock wires kept unless
+# OT_KEEP_CLOCK=0) and re-routed; fillers; re-extract -> OT_OUT/6_final.{odb,spef,v}.
+# CLAUDE HBM-ABSTRACTS (hub) post-DETAILED-route FF-corner hold ECO (coordinator decision 2026-10-06): hold is closed
+# by repair under FF-corner constraints on the ROUTED design, not by a larger CTS / GRT HOLD_SLACK_MARGIN (which costs
+# 20-40 ps of SS setup on the hub lanes: m6light_b HM .02 +41.0/+5.2 vs m9light HM .03 +19.8/+12.3).
+#   SS + FF libraries as two STA corners, the routed 6_final.odb (fillers removed), its routed SDC plus the sign-off
+#   post-SDC(s), RCX parasitics of the detailed route (ASAP7 ships one RC deck: the FF corner's parasitics are the
+#   extracted ones) -> repair_timing -hold to OT_HOLD_MARGIN ps (FF) while keeping setup >= OT_SETUP_MARGIN ps (SS)
+#   -> legalise -> signal wires stripped, full global + detailed re-route -> fillers
+#   -> re-extract -> 6_final.{odb,spef,v}.  Constraints are unchanged (the routed SDC + post-SDC are re-read by the
+#   sign-off STA, tools/w18/corner_sta.py); the ECO only adds/resizes hold buffers.
+# env: OT_IN (routed base dir), OT_OUT (output base dir), OT_POST_SDC (space-separated), OT_HOLD_MARGIN (ps, default 22),
+#      OT_SETUP_MARGIN (ps, default 45), OT_THREADS (default 8), OT_MAX_BUF_PCT (default 10), OT_MINL/OT_MAXL (M2/M5),
+#      OT_MINCLKL (M4)
+set P /OpenROAD-flow-scripts/flow/platforms/asap7
+proc envd {n d} { expr {[info exists ::env($n)] && $::env($n) ne "" ? $::env($n) : $d} }
+set hm [envd OT_HOLD_MARGIN 22]; set sm [envd OT_SETUP_MARGIN 45]
+set_thread_count [envd OT_THREADS 8]
+read_lef $P/lef/asap7_tech_1x_201209.lef
+read_lef $P/lef/asap7sc7p5t_28_R_1x_220121a.lef
+foreach m [envd OT_MACROS ""] { read_lef $m/[file tail $m].lef }
+define_corners ss ff
+foreach c {ss ff} C {SS FF} {
+  foreach l [list asap7sc7p5t_AO_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_INVBUF_RVT_${C}_nldm_220122.lib.gz \
+               asap7sc7p5t_OA_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_SEQ_RVT_${C}_nldm_220123.lib \
+               asap7sc7p5t_SIMPLE_RVT_${C}_nldm_211120.lib.gz] { read_liberty -corner $c $P/lib/NLDM/$l }
+  foreach m [envd OT_MACROS ""] { read_liberty -corner $c $m/[file tail $m]_$c.lib }
+}
+read_db $::env(OT_DB)
+read_sdc $::env(OT_SDC)
+foreach s [envd OT_POST_SDC ""] { read_sdc $s }
+set_propagated_clock [all_clocks]
+source $P/setRC.tcl
+set_dont_use {*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*}
+catch {remove_fillers}
+proc rep {tag} {
+  puts "OT_ECO $tag"
+  report_worst_slack -max -digits 2
+  report_worst_slack -min -digits 2
+  catch {report_checks -path_delay min -scenes ff -format slack_only -digits 2}
+  catch {report_checks -path_delay max -scenes ss -format slack_only -digits 2}
+}
+# guides for the incremental router (the routed nets' detailed wires stay in the db); the route's layer range
+set lo [envd OT_MINL M2]; set hi [envd OT_MAXL M7]
+set_global_routing_layer_adjustment $lo-$hi 0.25
+set_routing_layers -clock [envd OT_MINCLKL M4]-$hi
+set_routing_layers -signal $lo-$hi
+# RCX of the detailed route, annotated on BOTH scenes (extract_parasitics alone annotates one: the first test read
+# SS setup +86 / hold -2.7 against corner_sta's +41 / +5.2 on the same odb)
+extract_parasitics -ext_model_file $P/rcx_patterns.rules
+write_spef $::env(OT_OUT)/pre_eco.spef
+foreach c {ss ff} { read_spef -corner $c $::env(OT_OUT)/pre_eco.spef }
+rep pre
+set n0 [llength [get_cells *]]
+if {[catch {repair_timing -hold -hold_margin $hm -setup_margin $sm -max_buffer_percent [envd OT_MAX_BUF_PCT 10] -verbose} err]} {
+  error "OT_ECO repair_timing failed: $err"
+}
+puts "OT_ECO cells_added [expr {[llength [get_cells *]] - $n0}]"
+detailed_placement
+check_placement -verbose
+# full re-route of the ECO'd placement: the first runs (incremental GRT over a detailed-routed db, existing wires kept)
+# broke DRT (guides vs kept wires: 'pin not visited', ~1M violations on m6light_b/m6sfu_a).  The lanes are small
+# (<= 0.06 mm2), so strip every signal wire and route from scratch; sign-off re-extracts the new route.
+foreach net [[ord::get_db_block] getNets] {
+  if {[$net getSigType] in {POWER GROUND}} continue
+  # OT_KEEP_CLOCK=1: clock nets keep their detailed wires (m6light_b: re-routing the clock moved skew, FF +22 -> -4.7)
+  if {[envd OT_KEEP_CLOCK 0] && [$net getSigType] eq "CLOCK"} continue
+  set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w }
+}
+global_route -allow_congestion
+detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
+filler_placement {FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R}
+check_placement -verbose
+extract_parasitics -ext_model_file $P/rcx_patterns.rules
+write_spef $::env(OT_OUT)/6_final.spef
+foreach c {ss ff} { read_spef -corner $c $::env(OT_OUT)/6_final.spef }
+rep post
+write_db $::env(OT_OUT)/6_final.odb
+write_verilog $::env(OT_OUT)/6_final.v
+puts "OT_ECO done"

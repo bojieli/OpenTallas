@@ -3360,6 +3360,13 @@ def _main(args: argparse.Namespace, *, argv: list[str] | None = None) -> int:
     adder_map = ADDER_MAP_PLATFORM if args.asap7_adder_map else ADDER_MAP_KOGGE_STONE
     view = with_adder_map(view, adder_map)
 
+    if args.hold_corners and args.orfs_corner:
+        # ORFS CORNERS replaces the primary corner's liberty: a hold list without the primary corner
+        # (e.g. --orfs-corner WC --hold-corners BC) would run every setup repair at FF only
+        hc = [c.strip() for c in args.hold_corners.split(",")]
+        if args.orfs_corner not in hc:
+            args.hold_corners = ",".join([args.orfs_corner] + hc)
+            print(f"--hold-corners: primary corner {args.orfs_corner} added first -> {args.hold_corners}", file=sys.stderr)
     if args.orfs_corner:
         if view.get("pnr") is None:
             print(f"--orfs-corner: view {args.view} has no place-and-route platform", file=sys.stderr)

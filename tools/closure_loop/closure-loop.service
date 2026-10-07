@@ -1,0 +1,18 @@
+[Unit]
+Description=OpenTallas scripted closure loop (tools/closure_loop; dispatches block closure jobs over ssh)
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/wt-closure-loop
+Environment=PYTHONUNBUFFERED=1
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 /home/ubuntu/wt-closure-loop/tools/closure_loop/closure_loop.py daemon --interval 60
+Restart=always
+RestartSec=30
+Nice=5
+StandardOutput=append:/home/ubuntu/.local/state/closure_loop/daemon.log
+StandardError=append:/home/ubuntu/.local/state/closure_loop/daemon.log
+
+[Install]
+WantedBy=default.target
