@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Qwen ROM die TILE master (r21 qfd_tile / qfd_tile_e, 1,536 copies): the W12 ROM tile (ot_qwen_rom_tile_w12, 10 ROM
 // macros + 8 KiB KV slice) plus its per-tile landing-fabric hop (r19 "KV reconciliation": KVL_BITS = 768 a row, one
 // hop a tile) and the per-tile landing merge (ot_qwen_kv_land_merge, the hardened element the stream4 service models).

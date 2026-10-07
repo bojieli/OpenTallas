@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Qwen ROM die LINK station (r21 masters qfd_lst_v / _v_split / _h_e / _h_w / _c / _c_split): one registered stage of
 // NL stack links.  A die link bundle is 1,056 tracks = 528 a direction (512 data + 16 control: valid / credit / tag,
 // LINK_TRACKS "512 each way + 32 control"); the link protocol is credit-based end to end (endpoint FIFOs sized to the
