@@ -393,6 +393,38 @@
   "ar_pct": -4.281,
   "mtp_pct": -3.622
  },
+ "candidates": [
+  {
+   "item": "bf_half",
+   "description": "BF SAFE B: element at half rate (ot_s81_bf_native HALF=1, claude/dsrom-bf-rowfix-20261007 61c1cf230, exact PASS; closure-loop bf_half_61c1cf230): BF16 field phases doubled (upper bound; fracs = BF16 phase share (go->idle+1)/node, field_qelem_qx10.json, a_proj max over layer types); adopt only if B closes first (variant A re-cut is the target)",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     0,
+     0.8789
+    ],
+    [
+     "*.ffn.router",
+     0,
+     0.8976
+    ],
+    [
+     "*.attn.a_proj",
+     0,
+     0.7037
+    ],
+    [
+     "*.attn.cmp.wk",
+     0,
+     0.7748
+    ]
+   ],
+   "ar_tok_s": 1362.9,
+   "mtp_tok_s": 4124.0,
+   "ar_pct_vs_total": -14.994,
+   "mtp_pct_vs_total": -12.585
+  }
+ ],
  "pending_defect": [],
  "as_is": {
   "ar_tok_s": 1603.3,
