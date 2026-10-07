@@ -1,0 +1,55 @@
+{
+ "master": "hfd_svc_SE_s6",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud/routes/hbm_svc_SE_s6_41d574827_bud/view/hfd_svc_SE_s6.lef",
+ "macro": "hfd_svc_SE_s6",
+ "size_view": [
+  763.992,
+  259.176
+ ],
+ "size_gen": [
+  763.992,
+  259.176
+ ],
+ "gen_pins": 3406,
+ "view_pins": 3406,
+ "missing": 0,
+ "extra": 0,
+ "die_top_io_pins": [],
+ "moved": 0,
+ "wrong_layer": 0,
+ "wrong_face": 0,
+ "wrong_face_examples": [],
+ "missing_examples": [],
+ "extra_examples": [],
+ "moved_examples": [],
+ "wrong_layer_examples": [],
+ "pg_pins": {
+  "VDD": [
+   "M1",
+   "M2",
+   "M6",
+   "M7"
+  ],
+  "VSS": [
+   "M1",
+   "M2",
+   "M6",
+   "M7"
+  ]
+ },
+ "obs_layers": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6",
+  "M7",
+  "RVTN",
+  "RVTP"
+ ],
+ "obs_above_generator": [],
+ "positions": "exact",
+ "problems": [],
+ "verdict": "MATCH"
+}

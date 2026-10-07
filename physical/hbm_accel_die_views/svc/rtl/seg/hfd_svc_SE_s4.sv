@@ -55,7 +55,7 @@ module hfd_svc_SE_s4 (
   assign ar5_kcv = 1'b0; assign ar5_kcd = 40'd0;
   assign ar5_icv = 1'b0; assign ar5_icd = 40'd0;
   ot_svs_arb #(.S(5), .KVI(-1), .IKI(-1)) u_ar5 (.ck(c), .rn(rn), .sv(ar5_sv), .sd(ar5_sd), .rq_take(ar5_take), .kvc_v(ar5_kcv), .kvc_d(ar5_kcd), .kv_take(ar5_kt), .ikc_v(ar5_icv), .ikc_d(ar5_icd), .ik_take(ar5_it), .done({dn23_o, dn22_o, dn21_o, dn20_o}), .iss_v(ar5_iv), .iss_d(ar5_id));
-  ot_svs_asm #(.SLOT(1)) u_as5 (.ck(c), .rn(rn), .sv(as5_sv), .sq(as5_sq), .wsv(as5_wsv), .wsq(as5_wsq), .k_take(as5_kt), .w_take(as5_wt), .line(as5_line));
+  ot_svs_asm #(.SLOT(2)) u_as5 (.ck(c), .rn(rn), .sv(as5_sv), .sq(as5_sq), .wsv(as5_wsv), .wsq(as5_wsq), .k_take(as5_kt), .w_take(as5_wt), .line(as5_line));
   assign l5 = as5_line;
   ot_svs_pc u_pc18 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc18_iv), .iss_d(pc18_id), .k_v(pc18_k_v), .k_rdy(pc18_k_rdy), .k_addr(pc18_k_addr), .k_len(pc18_k_len), .k_tag(pc18_k_tag), .kr_v(pc18_kr_v), .kr_tag(pc18_kr_tag), .kr_beat(pc18_kr_beat), .kr_data(pc18_kr_data), .b_v(pc18_bv), .b_t(pc18_bt), .b_b(pc18_bb), .b_d(pc18_bd));
   ot_svs_pc u_pc19 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc19_iv), .iss_d(pc19_id), .k_v(pc19_k_v), .k_rdy(pc19_k_rdy), .k_addr(pc19_k_addr), .k_len(pc19_k_len), .k_tag(pc19_k_tag), .kr_v(pc19_kr_v), .kr_tag(pc19_kr_tag), .kr_beat(pc19_kr_beat), .kr_data(pc19_kr_data), .b_v(pc19_bv), .b_t(pc19_bt), .b_b(pc19_bb), .b_d(pc19_bd));

@@ -9,11 +9,12 @@
   "ff": "hfd_router_ff.lib"
  },
  "files_sha256": {
-  "hfd_router.lef": "ebd86e3888582c0d2bd716c6c849cca1369c09ac4b9edead48387218cbc21283",
-  "hfd_router_ss.lib": "e78ac42a72865e328d1d8a997b546217e9a9b6f850dd78f10a2b4242698b1b46",
-  "hfd_router_ff.lib": "1a8c41980bcd515b947254d85c669e1d4b1a1b432ac7bbbd83ae37d7dd5c85fb"
+  "hfd_router.lef": "86a4364fa8c687412a67ed63c463224927a4d469a69c38e9b1b137ec8203cfd2",
+  "hfd_router_ss.lib": "c09ae75445b2fcc2bb7b87b304e3c84bf8127cf6f8e166716d070df3daf49108",
+  "hfd_router_ff.lib": "e38dd94d863b35bb721e7e9a1adf2a3f0473bbc643eca693123b18ab636cb03c"
  },
  "check": {
+  "verdict": "MATCH",
   "gen_pins": 2118,
   "view_pins": 2118,
   "missing": 0,
@@ -60,22 +61,25 @@
   "topk_f3 internal reg2reg -550 ps at CTS (owner: router agent); this route SS -1197.69 / FF -553.76 at 833/60/25 with ideal-to-L1040 IO and resizer repair skipped",
   "generator outline 133.896 um tall: GRT congestion without -allow_congestion (Turing: needs 326.28 um)"
  ],
- "route": "dv8_r4pp (EPYC3 /srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv8_r4pp; core topk_ps r4, r16i ports, per-port face stages)",
+ "route": "dv10_ih60 (EPYC2 /srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60; core topk_ps r5, r16i ports, per-port face stages W4/E3/t_cmdproc2/f_vm2)",
  "signoff_833": {
-  "ss": 11.23,
-  "ff": -34.3,
-  "ss_reg_d": 11.226797,
-  "ff_out": -34.299259,
-  "ff_reg_d": -9.637708,
-  "note": "SS +11.2 class L5c->cmp8->cc6 (r5 fix routing dv9b_r5); FF -34.3 = forwarded clock e*[128] vs vclk (clock-as-data); reg-D -9.6"
+  "ss": 30.68,
+  "ff": -48.74,
+  "ss_i2r": 325.75,
+  "ff_out": 41.640442,
+  "note": "SS closed; FF -48.7 = die-input hold at the input pin flops only (201 pins); fix r6 (3 kept inverter pairs per input, 0 cycles) routing as dv11_idly. Forwarded-clock ports e*[128] excluded (router/rtl/fclk_ports_signoff.sdc)."
  },
  "pin_access_precheck": {
-  "result": "FAIL 3 x DRT-0073",
-  "rst0": "OK",
-  "failing": [
-   "f_vm[10]",
-   "f_vm[198]"
-  ],
-  "cause": "own M4/M5 OBS under the N-face pin"
+  "result": "DONE, 0 DRT-0073 (4 orientations)",
+  "rst0": "OK"
+ },
+ "latency_cycles": {
+  "core": 20,
+  "face_stages": {
+   "W": 4,
+   "E": 3,
+   "t_cmdproc": 2,
+   "f_vm": 2
+  }
  }
 }

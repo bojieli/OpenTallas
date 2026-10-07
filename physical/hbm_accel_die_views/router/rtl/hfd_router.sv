@@ -18,21 +18,26 @@ module hfd_router (
     wire clk = ck[0];
     reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0], rst[0]};
     wire rst_n = ~rst_s[1];
-    reg [255:0] i0_f_su_NE; always @(posedge clk) i0_f_su_NE <= f_su_NE;
+    wire [255:0] d_f_su_NE; ot_hfd_idly #(.W(256), .NP(3)) u_dly_f_su_NE (.a(f_su_NE), .y(d_f_su_NE));
+    reg [255:0] i0_f_su_NE; always @(posedge clk) i0_f_su_NE <= d_f_su_NE;
     reg [255:0] i1_f_su_NE; always @(posedge clk) i1_f_su_NE <= i0_f_su_NE;
     reg [255:0] i_f_su_NE; always @(posedge clk) i_f_su_NE <= i1_f_su_NE;
-    reg [255:0] i0_f_su_NW; always @(posedge clk) i0_f_su_NW <= f_su_NW;
+    wire [255:0] d_f_su_NW; ot_hfd_idly #(.W(256), .NP(3)) u_dly_f_su_NW (.a(f_su_NW), .y(d_f_su_NW));
+    reg [255:0] i0_f_su_NW; always @(posedge clk) i0_f_su_NW <= d_f_su_NW;
     reg [255:0] i1_f_su_NW; always @(posedge clk) i1_f_su_NW <= i0_f_su_NW;
     reg [255:0] i2_f_su_NW; always @(posedge clk) i2_f_su_NW <= i1_f_su_NW;
     reg [255:0] i_f_su_NW; always @(posedge clk) i_f_su_NW <= i2_f_su_NW;
-    reg [255:0] i0_f_su_SE; always @(posedge clk) i0_f_su_SE <= f_su_SE;
+    wire [255:0] d_f_su_SE; ot_hfd_idly #(.W(256), .NP(3)) u_dly_f_su_SE (.a(f_su_SE), .y(d_f_su_SE));
+    reg [255:0] i0_f_su_SE; always @(posedge clk) i0_f_su_SE <= d_f_su_SE;
     reg [255:0] i1_f_su_SE; always @(posedge clk) i1_f_su_SE <= i0_f_su_SE;
     reg [255:0] i_f_su_SE; always @(posedge clk) i_f_su_SE <= i1_f_su_SE;
-    reg [255:0] i0_f_su_SW; always @(posedge clk) i0_f_su_SW <= f_su_SW;
+    wire [255:0] d_f_su_SW; ot_hfd_idly #(.W(256), .NP(3)) u_dly_f_su_SW (.a(f_su_SW), .y(d_f_su_SW));
+    reg [255:0] i0_f_su_SW; always @(posedge clk) i0_f_su_SW <= d_f_su_SW;
     reg [255:0] i1_f_su_SW; always @(posedge clk) i1_f_su_SW <= i0_f_su_SW;
     reg [255:0] i2_f_su_SW; always @(posedge clk) i2_f_su_SW <= i1_f_su_SW;
     reg [255:0] i_f_su_SW; always @(posedge clk) i_f_su_SW <= i2_f_su_SW;
-    reg [511:0] i0_f_vm; always @(posedge clk) i0_f_vm <= f_vm;
+    wire [511:0] d_f_vm; ot_hfd_idly #(.W(512), .NP(3)) u_dly_f_vm (.a(f_vm), .y(d_f_vm));
+    reg [511:0] i0_f_vm; always @(posedge clk) i0_f_vm <= d_f_vm;
     reg [511:0] i_f_vm; always @(posedge clk) i_f_vm <= i0_f_vm;
     wire [0:0] w_rt_clk;
     wire [0:0] w_rt_rst_n;
@@ -594,3 +599,19 @@ module hfd_router (
     end
     assign t_cmdproc[63:0] = o_t_cmdproc[63:0];
 endmodule
+
+// r6 (Claude:hbm-router): die-input hold delay. Every die input passes NP kept inverter pairs before its pin flop
+// (dv9b / dv10: FF input hold -48.7 ps = inputs launched at the FF max insertion + 50 ps IO hold uncertainty vs
+// the pin flop's leaf; input setup has +325 ps of slack).  0 cycles; same data.
+module ot_hfd_idly #(parameter integer W = 1, parameter integer NP = 3) (input wire [W-1:0] a, output wire [W-1:0] y);
+    wire [W-1:0] c [0:2*NP];
+    assign c[0] = a;
+    genvar i, b;
+    for (i = 0; i < 2 * NP; i = i + 1) begin : g_i
+        for (b = 0; b < W; b = b + 1) begin : g_b
+            ot_fwd_clk_inv u (.a(c[i][b]), .y(c[i+1][b]));
+        end
+    end
+    assign y = c[2*NP];
+endmodule
+

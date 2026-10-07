@@ -72,7 +72,7 @@ module hfd_svc_SW_s3 (
   assign ar3_kcv = 1'b0; assign ar3_kcd = 40'd0;
   assign ar3_icv = 1'b0; assign ar3_icd = 40'd0;
   ot_svs_arb #(.S(3), .KVI(-1), .IKI(-1)) u_ar3 (.ck(c), .rn(rn), .sv(ar3_sv), .sd(ar3_sd), .rq_take(ar3_take), .kvc_v(ar3_kcv), .kvc_d(ar3_kcd), .kv_take(ar3_kt), .ikc_v(ar3_icv), .ikc_d(ar3_icd), .ik_take(ar3_it), .done({dn15_o, dn14_o, dn13_o, dn12_o}), .iss_v(ar3_iv), .iss_d(ar3_id));
-  ot_svs_asm #(.SLOT(1)) u_as4 (.ck(c), .rn(rn), .sv(as4_sv), .sq(as4_sq), .wsv(as4_wsv), .wsq(as4_wsq), .k_take(as4_kt), .w_take(as4_wt), .line(as4_line));
+  ot_svs_asm #(.SLOT(2)) u_as4 (.ck(c), .rn(rn), .sv(as4_sv), .sq(as4_sq), .wsv(as4_wsv), .wsq(as4_wsq), .k_take(as4_kt), .w_take(as4_wt), .line(as4_line));
   wire fck4; ot_svc_fclk_buf u_fc4 (.a(c), .y(fck4));
   assign l4 = {fck4, fck4, fck4, as4_line};
   ot_svs_e u_e (.ck(c), .rst(rst[0]), .rn(rn), .e_d(e[127:0]), .e_fclk(e[128]), .ow_v(e_ow), .ok_v(e_ok), .oi_v(e_oi), .o_d(e_od), .bw(e_bw), .bk(e_bk), .bi(e_bi));

@@ -40,7 +40,7 @@ Q = L.Q
 VIEWS = 'physical/hbm_accel_die_views'
 KIND_OF = {      # master prefix -> view kind directory
     'hfd_attn_tile': 'attn_tile', 'hfd_su': 'su', 'hfd_sfu': 'sfu', 'hfd_hc': 'hc', 'hfd_index_q': 'index_q', 'hfd_index_q_': 'index_q',
-    'hfd_svc_': 'svc', 'hfd_coll': 'coll', 'hfd_cmdproc': 'cmdproc', 'hfd_vm': 'vm', 'hfd_barrier': 'barrier',
+    'hfd_svc_': 'svc', 'hfd_coll': 'coll', 'hfd_cmdproc': 'cmdproc', 'hfd_vm': 'vm', 'hfd_vm_': 'vm', 'hfd_barrier': 'barrier',
     'hfd_loader': 'loader', 'hfd_router': 'router', 'hfd_quant': 'quant', 'hfd_sm': 'sm', 'hfd_stn_': 'stations',
     'hfd_mcast_': 'stations', 'hfd_gath_': 'stations', 'hfd_cdist_': 'stations', 'hfd_meso_': 'stations',
     'hfd_host_slab': 'host_slab', 'hfd_serdes_slab': 'serdes_slab'}
@@ -320,6 +320,46 @@ def _slacks(v):
     return (float(ss[0]) if ss else None, float(ff[0]) if ff else None)
 
 
+def receipt_views():
+    """Bind committed closure-loop exports, which do not carry a view.json.
+
+    CLOSED describes block timing only.  Parent functionality and die-context
+    closure remain separate gates, including when a wrapper bench passes.
+    """
+    rows = {}
+    receipts = []
+    for path in sorted((ROOT / 'results/closure_loop').glob('*/verdict.json')):
+        v = json.loads(path.read_text())
+        if v.get('status') == 'CLOSED' and v.get('block', '').startswith('hfd_'):
+            receipts.append((v.get('closed_at', ''), path, v))
+    for _, path, v in sorted(receipts):
+        n, met = v['block'], v['metrics']
+        if (met.get('ss_ps', -1) < 15 or met.get('ff_ps', -1) < 15 or met.get('drc') != 0
+                or not v.get('checks') or not all(c.get('ok') for c in v['checks'].values())
+                or not all(b.get('ok') for b in v.get('benches', {}).values())):
+            continue
+        for dest in v['job_spec'].get('record', []):
+            base = ROOT / dest['to']
+            files = [f'{n}.lef', f'{n}_ss.lib', f'{n}_ff.lib', 'corner_sta.json', 'check.json']
+            if not all((base / f).is_file() for f in files):
+                continue
+            corner = json.loads((base / 'corner_sta.json').read_text())
+            if (not corner.get('closes_signoff')
+                    or corner['setup_ss']['worst_slack_ps'] != met['ss_ps']
+                    or corner['hold_ff']['worst_slack_ps'] != met['ff_ps']):
+                raise ValueError(f'closure receipt/export disagreement: {path}')
+            rows[n] = dict(master=n, kind=kind_of(n), status='closed', dir=dest['to'],
+                           lef=files[0], lib=dict(ss=files[1], ff=files[2]),
+                           files_sha256={f: sha(base / f) for f in files},
+                           receipt=str(path.relative_to(ROOT)), receipt_sha256=sha(path),
+                           functional_closure=False, die_context_closed=False,
+                           source=dict(SOURCE_COMMIT=v['source_commit'], host=v['host'],
+                                       route=v['run_dir'], ss_setup_ps=met['ss_ps'],
+                                       ff_hold_ps=met['ff_ps'], drc=met['drc'],
+                                       closes_signoff_SS60_FF25=True, closed_at=v['closed_at']))
+    return rows
+
+
 def cmd_index(a):
     base = ROOT / VIEWS
     m, pw, M, real = model()
@@ -330,8 +370,9 @@ def cmd_index(a):
             continue
         v['dir'] = str(vj.parent.relative_to(ROOT))
         rows[v['master']] = v
+    rows.update(receipt_views())
     need = sorted({it.master for it in m['insts'] if it.master.startswith('hfd_')})
-    idx = dict(schema='opentallas.hbm_die_views_index.v1', die='HBM accelerator DS die', round=H.FINAL_ROUND,
+    idx = dict(schema='opentallas.hbm_die_views_index.v1', die='HBM accelerator DS die', round=getattr(a, 'variant', '') or 'r19b',
                generator_sha256=sha(ROOT / 'tools/hbm_accel_die_fp.py'),
                status_values=['closed', 'closed-below-margin', 'interim-not-closed', 'reservation', 'missing'],
                masters={}, counts=defaultdict(int))
@@ -345,16 +386,20 @@ def cmd_index(a):
             if ss_ is None or ff_ is None or ss_ < 15.0 or ff_ < 15.0:
                 st = 'closed-below-margin'
         idx['masters'][n] = dict(kind=kind_of(n), status=st, instances=sum(it.master == n for it in m['insts']),
-                                 **({k: v[k] for k in ('dir', 'lef', 'lib', 'check', 'source') if k in v} if v else {}))
+                                 **({k: v[k] for k in ('dir', 'lef', 'lib', 'check', 'source', 'files_sha256', 'receipt', 'receipt_sha256', 'functional_closure', 'die_context_closed') if k in v} if v else {}))
         if margin:
             idx['masters'][n]['margin'] = margin
         if v and v.get('lef'):     # re-check against the CURRENT generator round (a view routed on an older outline)
             c_ = check_lef(n, ROOT / v['dir'] / v['lef'], allow_extra=v.get('die_top_io', ()))
             idx['masters'][n]['check'] = {k: c_[k] for k in ('verdict', 'problems', 'positions', 'size_view',
                                                                  'size_gen', 'die_top_io_pins')}
+        if idx['masters'][n].get('check', {}).get('verdict') == 'MISMATCH' and st.startswith('closed'):
+            idx['masters'][n]['status'] = st = 'interim-not-closed'
         idx['counts'][st] += 1
     idx['counts'] = dict(idx['counts'])
-    (base / 'index.json').write_text(json.dumps(idx, indent=1) + '\n')
+    output = Path(a.out) if getattr(a, 'out', None) else base / 'index.json'
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(idx, indent=1) + '\n')
     print(json.dumps(idx['counts']))
 
 
@@ -1111,6 +1156,7 @@ def cmd_ir_attn(a):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('--variant', default='', help='HBM generator preset; empty keeps adopted geometry')
     sp = ap.add_subparsers(dest='mode', required=True)
     p = sp.add_parser('ports')
     p.add_argument('--out', required=True)
@@ -1128,6 +1174,7 @@ def main(argv=None):
     p.add_argument('--out', required=True)
     p.set_defaults(fn=cmd_reservation)
     p = sp.add_parser('index')
+    p.add_argument('--out', help='separate candidate index; default updates adopted index')
     p.set_defaults(fn=cmd_index)
     p = sp.add_parser('die')
     p.add_argument('--work', required=True)
@@ -1152,6 +1199,7 @@ def main(argv=None):
     p.add_argument('--out')
     p.set_defaults(fn=cmd_die_record)
     a = ap.parse_args(argv)
+    L.VARIANT = a.variant
     return a.fn(a) or 0
 
 
