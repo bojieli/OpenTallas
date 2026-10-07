@@ -986,6 +986,8 @@ if [ -f $B/6_final.odb ]; then
   echo "abstract_rc=$?" >> $W/status
   # sign-off at 833 ps: the routed SDC with the (over-constrained) route period put back to 833
   sed -E 's/-period [0-9.]+/-period 833.0000/g' $B/6_final.sdc > $B/6_signoff.sdc
+  # later consumers of 6_final.sdc (the closure loop's post-route hold ECO) sign off at 833 too; the route SDC is kept
+  [ -f $B/6_final_route.sdc ] || cp $B/6_final.sdc $B/6_final_route.sdc; cp $B/6_signoff.sdc $B/6_final.sdc
   (cd $S && python3 tools/w18/corner_sta.py --orfs-dir $W {macro_args} --sdc-name 6_signoff.sdc --output $W/corner_sta.json) > $W/corner.log 2>&1
   echo "corner_rc=$?" >> $W/status
 fi
@@ -1156,7 +1158,7 @@ def cmd_block(a):
 
 VIEWS = "physical/hbm_accel_smh_views"
 PIECES = ["ot_hbm_accel_smh_tile_e", "ot_hbm_accel_smh_tile_w", "ot_hbm_accel_smh_be_e", "ot_hbm_accel_smh_be_w",
-          "ot_hbm_accel_smh_front"]
+          "ot_hbm_accel_smh_front_n", "ot_hbm_accel_smh_front_c", "ot_hbm_accel_smh_front_s"]   # (m3) front strips
 
 
 def cmd_top(a):
@@ -1173,17 +1175,19 @@ def cmd_top(a):
         for p in range(P["NP"]):
             xy[f"t:{c}:{p}"] = pos[("tile", c, p)]
         xy[f"b:{c}"] = pos[("be", c)]
-    xy["f"] = pos["front"]
+    for st in STRIPS:                                     # (m3) the front as three strips
+        xy[st] = (pos["front"][0], round(pos["front"][1] + strip_span(g, hcore, st)[0], 3))
     tcl = ["set ot_n 0", "array set ot_xy {"] + [f"  {{{k}}} {{{round(v[0], 3)} {round(v[1], 3)}}}" for k, v in xy.items()] + [
            "}", "foreach ot_inst [[ord::get_db_block] getInsts] {",
            "  if {![[$ot_inst getMaster] isBlock]} { continue }",
            "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
            "  if {[regexp {g_c\\[(\\d+)\\]\\.g_p\\[(\\d+)\\]\\.g_t[ew]\\.u_t} $n -> c p]} { set k t:$c:$p } \\",
            "  elseif {[regexp {g_c\\[(\\d+)\\]\\.g_be_[ew]\\.u_be} $n -> c]} { set k b:$c } \\",
-           "  elseif {[regexp {g_fd\\.u_front} $n]} { set k f } else { error \"no slot for $n\" }",
+           "  elseif {[regexp {g_fd\\.u_fn} $n]} { set k front_n } elseif {[regexp {g_fd\\.u_fc} $n]} { set k front_c } \\",
+           "  elseif {[regexp {g_fd\\.u_fs} $n]} { set k front_s } else { error \"no slot for $n\" }",
            "  place_macro -macro_name [$ot_inst getName] -location $ot_xy($k) -orientation R0",
            "  incr ot_n", "}",
-           f"if {{$ot_n != {P['NC'] * P['NP'] + P['NC'] + 1}}} {{ error \"macro_place: placed $ot_n\" }}",
+           f"if {{$ot_n != {P['NC'] * P['NP'] + P['NC'] + len(STRIPS)}}} {{ error \"macro_place: placed $ot_n\" }}",
            "puts \"ot macro_place: $ot_n pieces\""]
     (work / "macros.tcl").write_text("\n".join(tcl) + "\n")
     # element pins straight above / below the front's own N / S pins
