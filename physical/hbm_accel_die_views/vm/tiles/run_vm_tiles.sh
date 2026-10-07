@@ -11,8 +11,8 @@ ok=1
 for s in 1 2 3; do b m1s$s -DMODE=1 -DSEED=$s && (cd $O && ./m1s$s.obj/sim +verilator+seed+$s > m1s$s.log 2>&1); grep VM_TILES $O/m1s$s.log; grep -q "hash=MATCH" $O/m1s$s.log && ! grep -q "VM_TILES FAIL" $O/m1s$s.log || ok=0; done
 b m2 -DMODE=2 -DSEED=1 && (cd $O && ./m2.obj/sim > m2.log 2>&1); python3 $T/check_vm_tiles.py $O/trace_ref.hex $O/trace_dut.hex > $O/m2.check; rc=$?; cat $O/m2.check | tail -25; [ $rc = 0 ] || ok=0
 b m3 -DMODE=3 -DSEED=1 && (cd $O && ./m3.obj/sim > m3.log 2>&1); grep "VM_PORT_DEPTH" $O/m3.log
-grep -q "VM_PORT_DEPTH trace_dut.hex wr=ONE_DEPTH rd=ONE_DEPTH" $O/m3.log || { echo "tiles port depth not one-depth"; ok=0; }
-grep -q "VM_PORT_DEPTH trace_ref.hex wr=SKEWED" $O/m3.log && echo "VM_PORT_DEPTH_NEG_DETECTED (monolithic wr skew)" || { echo "port-depth negative (monolithic skew) not detected"; ok=0; }
+grep -Eq "VM_PORT_DEPTH trace_dut.hex wr= *ONE_DEPTH rd= *ONE_DEPTH" $O/m3.log || { echo "tiles port depth not one-depth"; ok=0; }
+grep -Eq "VM_PORT_DEPTH trace_ref.hex wr= *SKEWED" $O/m3.log && echo "VM_PORT_DEPTH_NEG_DETECTED (monolithic wr skew)" || { echo "port-depth negative (monolithic skew) not detected"; ok=0; }
 b neg -DMODE=1 -DSEED=1 -DMUT_XBUS && (cd $O && ./neg.obj/sim > neg.log 2>&1); grep VM_TILES $O/neg.log
 grep -q "VM_TILES FAIL" $O/neg.log && echo "VM_TILES_NEG_DETECTED" || { echo "neg not detected"; ok=0; }
 [ $ok = 1 ] && echo "VM_TILES_BENCH PASS" || echo "VM_TILES_BENCH FAIL"
