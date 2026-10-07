@@ -1137,7 +1137,7 @@ DENS_SRC = ('hub/selector/collector logic 1.05 and service 0.385 W/mm2: Qwen ful
 
 
 def inst_power(it):
-    if GEN == 'r8' and it.kind in ('stn', 'hstn', 'rly', 'qbank', 'hend', 'hb_elem', 'hbglue'):
+    if GEN == 'r8' and it.kind in ('stn', 'hstn', 'rly', 'qbank', 'hend', 'hb_elem', 'hbglue', 'xstg'):
         return it.power_w
     if GEN == 'r8' and it.kind in POWER8:
         return POWER8[it.kind][0]
@@ -2765,7 +2765,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3146,6 +3146,8 @@ def buses_r8(m):
             dom['hbm'].append((it.name, 'ckh'))
             dom['stream'].append((it.name, 'cks'))
             rst['hbm'].append((it.name, 'rst'))
+        elif it.kind == 'xstg':
+            dom['serial' if it.domain == 'serial_0p9' else 'stream'].append((it.name, 'ck'))
         elif it.kind == 'hend':
             spec = G[it.master]
             if spec['kind'] == 'l2r':
@@ -3190,6 +3192,8 @@ MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 
                                 #   (campaign d8 config): stream-trunk drift 386 ps > 300 ps; +1 cycle per crossing
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
+SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): registered crossing stage (falling-edge capture
+                                #   1.5 T after launch + guard flop) on the 8 end block -> selector / collector buses; +1 cycle
 LINK_SPLIT = False              # --link-split (S81-RERUN v8, default off; needs --link-fix): SerDes tx / rx through two
                                 #   256-b half-span stations (port slices), last hop <= 281 um; +1 cycle each way
 LINK_FIX = False                # --link-fix (S81-RERUN, default off): link ck relay on the ck face, final tx / rx
@@ -3215,7 +3219,7 @@ def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
     r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
     return (r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
-            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else ''))
+            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else ''))
 
 
 def set_cc_reach(um):
@@ -3871,7 +3875,18 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                 vx_ = vch_x(m, f'{tag}{st}')
                 path = [(px, py), (px, strip_y(sv, tag + st)), (vx_, strip_y(sv, tag + st)), (vx_, yo), (ex_, yo), (ex_, he.y + he.h / 2)]
             single(f'{tag}{st}', 512, 'vr', (sv.name, f'{pfx}f', f'{pfx}d'), (px, py), path, he)
-            CH8.bus(f'h{tag}_{st}_o', 'local', 515, [(he.name, 'o'), (blk.name, f'{port}{st}')])
+            if SEL_XSTG:
+                # v8 (budget README: bk_selector <-> hix_* / bk_collector <-> hco_* 382-385 ps, regions not merged):
+                # a registered crossing stage at the band block: capture on the falling edge 1.5 T after the end
+                # block's launch (multicycle on that arc), guard flop on the next rising edge; +1 cycle
+                xw, xh = stn_dims([515], False)
+                xs = beside_blk(f'xs{tag}_{st}', 'dsfd_xstg_515', xw, xh, blk, face, 0.3 + 0.4 * (st[0] == 'N'))
+                xs.kind, xs.domain = 'xstg', blk.domain
+                xs.power_w = 2 * 515 * FLOP_CLK_W * 1.5
+                CH8.bus(f'h{tag}_{st}_x', 'local', 515, [(he.name, 'o'), (xs.name, 'i')])
+                CH8.bus(f'h{tag}_{st}_o', 'local', 515, [(xs.name, 'o'), (blk.name, f'{port}{st}')])
+            else:
+                CH8.bus(f'h{tag}_{st}_o', 'local', 515, [(he.name, 'o'), (blk.name, f'{port}{st}')])
     # selector / collector -> VM (ratio CDC beside the VM, VCH side)
     for name, blk, yo in (('sel', sel, yS), ('col', colr, yN)):
         nm, w, h = end_spec('r2l', [512], 'vr')
@@ -4055,7 +4070,7 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
 
 
 # ---------------------------------------------------------------------------------------- r8 ports / masters
-GLUE_PREFIX = ('dsfd_lkck', 'dsfd_stn', 'dsfd_hstn', 'dsfd_qbank', 'dsfd_rly', 'dsfd_m2l', 'dsfd_r2l', 'dsfd_l2r', 'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg')
+GLUE_PREFIX = ('dsfd_xstg', 'dsfd_lkck', 'dsfd_stn', 'dsfd_hstn', 'dsfd_qbank', 'dsfd_rly', 'dsfd_m2l', 'dsfd_r2l', 'dsfd_l2r', 'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg')
 
 
 def is_glue(master):
@@ -4263,6 +4278,10 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'S', P_(sface), 'M5')
         _lay(Mx, 'N', P_(nface), 'M5')
         _lay(Mx, 'E', P_(['clk', 'rst_n']), 'M4')
+    elif kind == 'xstg':           # placed beside the band block: R0 east of it, MY west of it -> o faces the block
+        _lay(Mx, 'W', P_(['o']), 'M4', gap=0.0)
+        _lay(Mx, 'E', P_(['i']), 'M4', gap=0.0)
+        _lay(Mx, 'S', P_(['ck']), 'M5')
     elif kind == 'rstg':
         _lay(Mx, 'N', P_(['i']), 'M5')
         _lay(Mx, 'S', P_(['o']), 'M5')
@@ -4424,6 +4443,15 @@ def glue_rtl(m):
             w = ports['i'][1]
             body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
             body.append('    assign o = r;')
+        elif mst.startswith('dsfd_xstg'):
+            w = ports['i'][1]
+            body += ['    // SEL_XSTG crossing stage (S81-RERUN v8): i is launched by the end block\'s rising edge in another clock',
+                     '    // region (bound 382-385 ps); xa captures it on the falling edge 1.5 T later (die STA: multicycle',
+                     '    // -setup 2 / -hold 1 on i -> xa against the falling edge), xg is the guard flop on the rising edge.',
+                     f'    reg [{w - 1}:0] xa, xg;',
+                     '    always @(negedge ck[0]) xa <= i;',
+                     '    always @(posedge ck[0]) xg <= xa;',
+                     '    assign o = xg;']
         elif mst.startswith('dsfd_hstn'):
             w = ports['di'][1]
             body.append('    wire fck;   // common clock: the stage captures on negedge fclk_i = posedge ck')
@@ -4657,6 +4685,8 @@ def die_options(ap):
     ap.add_argument('--meso-d8', action='store_true', help='r9: meso FIFOs at DEPTH 8 (drift > 300 ps; default off)')
     ap.add_argument('--link-fix', action='store_true', help='r9: link-macro clock relay on the ck face and the final '
                     'tx / rx station at the centre of its pin span (default off)')
+    ap.add_argument('--sel-xstg', action='store_true', help='r9: registered crossing stage on the end block -> '
+                    'selector / collector buses (+1 cycle; default off)')
     ap.add_argument('--link-split', action='store_true', help='r9: SerDes tx / rx through two 256-b half-span '
                     'stations (port slices; needs --link-fix; default off)')
     ap.add_argument('--hc-xface', action='store_true', help='r9: hc_s <-> hc_n exchange straight across the corridor '
@@ -4670,7 +4700,8 @@ def apply_options(a):
     global VCH_INTERLEAVE, LINK_FIX, HC_XFACE
     VCH_INTERLEAVE = bool(a.vch_interleave)
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
-    global LINK_SPLIT
+    global LINK_SPLIT, SEL_XSTG
+    SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
     LINK_SPLIT = bool(getattr(a, 'link_split', False)) and LINK_FIX
     LINK_FIX = bool(a.link_fix)
     global CORR_INTERLEAVE, HOP_FIX, HOP_PLAN, MESO_D8
