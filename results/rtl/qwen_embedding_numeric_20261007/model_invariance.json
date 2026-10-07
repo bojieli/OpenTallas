@@ -1,0 +1,21 @@
+{
+  "old_source_sha256": "a9c86a10d2c78da155de5f49cbd1665ef1c0cee9c287c0f38a84d21cc8ed0515",
+  "new_source_sha256": "7471c56bbdfa636376487a86bf50f8844c6c7b8c8c9d7072bbd1d680901972a1",
+  "normalization": "module identifier and keep/dont_touch true strings become numeric1; normalized RTL identical",
+  "model": "qwen_embedding_padded_ingress_model",
+  "fixed_stages_per_input": 10,
+  "FFs": [
+    28,
+    40
+  ],
+  "fixed_cells": [
+    150,
+    210
+  ],
+  "new_cycles": 0,
+  "new_FFs": 0,
+  "budget_changed": false,
+  "physical_closed": false,
+  "link_error_fixed": "Production OpenROAD26Q3 minimal true/numeric A/B; actual full predecessor mapped nets link locally with150/210 DoNotTouch flags",
+  "held_collection_gate_tests": 6
+}

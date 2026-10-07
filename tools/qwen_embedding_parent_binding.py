@@ -17,7 +17,7 @@ def sha(path):
 
 
 # Only explicitly reviewed ingress implementations may furnish a parent view.
-APPROVED_TOPS = ('ot_qwen_embedding_ingress_island', 'ot_qwen_embedding_ingress_padded')
+APPROVED_TOPS = ('ot_qwen_embedding_ingress_island', 'ot_qwen_embedding_ingress_padded', 'ot_qwen_embedding_ingress_numeric')
 
 
 def alias_bytes(data, suffix, source, target):
@@ -111,7 +111,7 @@ def qualify(kind, view, receipt, source_pin):
     if metadata.get('verdict')!='PASS' or metadata.get('counts')!=counts or metadata.get('width')!=width:
         raise ValueError('full independent ingress storage gate missing')
     padding=metadata.get('input_padding')
-    if abstract['identifier_alias']['source_top']=='ot_qwen_embedding_ingress_padded':
+    if abstract['identifier_alias']['source_top'] in ('ot_qwen_embedding_ingress_padded','ot_qwen_embedding_ingress_numeric'):
         if not isinstance(padding,dict):raise ValueError('mapped fixed padding topology required')
         synth_path=receipt/'metadata_storage_synthesis.json'
         if not synth_path.is_file() or sha(synth_path)!=evidence.get('metadata_storage_synthesis_sha256'):

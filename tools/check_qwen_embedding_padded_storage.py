@@ -41,8 +41,10 @@ def check(m,width):
   kind=c['type'].lstrip('\\');co=c['connections']
   if kind in ('$_NOT_','$_BUF_') or re.fullmatch(r'(?:INV|BUF)x(?:[0-9]+(?:p[0-9]+)?|p[0-9]+|[0-9]+f)_ASAP7_75t_R',kind):
    if len(co.get('Y',[]))==len(co.get('A',[]))==1:drivers.setdefault(co['Y'][0],[]).append(co['A'][0])
+  if kind=='TIEHIx1_ASAP7_75t_R' and len(co.get('H',[]))==1:
+   drivers.setdefault(co['H'][0],[]).append('1')
  def origin(bit,seen=None):
-  if bit in finals:return bit
+  if bit in ('0','1') or bit in finals:return bit
   seen=set() if seen is None else seen
   assert bit not in seen, 'cyclic pad cone'
   ds=drivers.get(bit,[]);assert len(ds)==1,('capture bypasses pad',bit,ds)
@@ -57,16 +59,16 @@ def check(m,width):
    ff=cells[next(iter(storage(local,'probe')))];co=ff['connections']
    assert len(co.get('D',[]))==1 and origin(co['D'][0])==finals[offset+i],('wrong capture source',name,i)
    if w==1:
-    reset=[x for p in ('RESETN','SETN') for x in co.get(p,[]) if isinstance(x,int)]
-    assert reset and all(origin(x)==finals[-1] for x in reset),('reset pad bypass',name)
+    reset=[origin(x) for p in ('RESETN','SETN') for x in co.get(p,[])]
+    assert len(reset)==2 and reset.count(finals[-1])==1 and reset.count('1')==1,('reset pad bypass or invalid tie',name)
  return dict(verdict='PASS',counts=counts,width=width,input_padding=dict(stages_per_input=10,input_bits=width+3,fixed_buffer_cells=len(pads),cell_type=CELL,connectivity_verified=True))
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--netlist',type=Path,required=True);p.add_argument('--width',type=int,choices=(12,18),required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--top',choices=(TOP,'ot_qwen_embedding_ingress_numeric'),default=TOP);p.add_argument('--netlist',type=Path,required=True);p.add_argument('--width',type=int,choices=(12,18),required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
  y=Path.home()/'.local/opentallas-tools/yosys-0.68/bin/yosys';y=str(y) if y.exists() else shutil.which('yosys')
  with tempfile.TemporaryDirectory(prefix='embedding-pad-check-') as d:
   q=Path(d)/'mapped.json';subprocess.run([y,'-Q','-T','-p',f'read_verilog "{a.netlist.resolve()}"; write_json "{q}"'],check=True,stdout=subprocess.DEVNULL)
-  result=check(json.loads(q.read_text())['modules'][TOP],a.width)
+  result=check(json.loads(q.read_text())['modules'][a.top],a.width)
  result['netlist_sha256']=hashlib.sha256(a.netlist.read_bytes()).hexdigest();a.out.write_text(json.dumps(result,indent=2)+'\n')
  print('PASS independent capture FFs and every physical input-pad chain')
 if __name__=='__main__':main()
