@@ -6,7 +6,14 @@
 #     150 ps), then sign off on stn_margin_sdc.py signoff (60 ps, 356.667 ps, same IO): corner STA and the SS/FF ETM
 #     export re-run against it (corner_sta.json; the route-SDC STA is kept as corner_sta_route.json).
 S=$1; O=$2; lab=$3; m=$4; pd=${5:-0.55}; shift 5
-cd $S
+cd "$S" || exit 1
+# CTS-only calibration deliberately has no routed database to sign off.
+stn_cts_only=0
+stn_previous=
+for stn_arg in "$@"; do
+  if [ "$stn_previous" = --pnr-stop-after ] && [ "$stn_arg" = cts ]; then stn_cts_only=1; fi
+  stn_previous=$stn_arg
+done
 V=physical/hbm_accel_die_views/stations/$m/$m.sdc
 SDCARG="--orfs-var SDC_FILE=/src/$V"
 if [ -n "${MARGIN:-}" ]; then
@@ -27,14 +34,30 @@ SRCS="rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_ac
   physical/hbm_accel_die_views/common/route_view.sh $lab $m physical/hbm_accel_die_views/stations/$m/$m.sv \
   $SDCARG --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl \
   ${FENCE:+--step-tcl POST_FLOORPLAN=physical/hbm_accel_die_views/stations/bench/stn_meso_fence.tcl --step-tcl POST_GLOBAL_PLACE=physical/hbm_accel_die_views/stations/bench/stn_fence_dissolve.tcl --orfs-var OT_IO_FILE=/src/.views/$lab/io_place.tcl} "$@"
-if [ -n "${MARGIN:-}" ] && grep -q "^rc=0" $O/$lab/exit; then
+stn_wrapper_rc=$?
+[ "$stn_wrapper_rc" -eq 0 ] || exit "$stn_wrapper_rc"
+# route_view.sh appends later check statuses and can return zero after a failed
+# physical run. Require its exact physical rc, never a successful appended check.
+stn_route_rc=$(sed -n 's/^rc=//p' "$O/$lab/exit") || exit 1
+case "$stn_route_rc" in
+  0) ;;
+  ''|*[!0-9]*) exit 1 ;;
+  *) exit "$stn_route_rc" ;;
+esac
+[ "$stn_cts_only" -eq 0 ] || exit 0
+if [ -n "${MARGIN:-}" ]; then
   W=$O/$lab; B=$(ls -d $W/work/orfs/results/asap7/*/base); rel=${B#$W/work/orfs/}
   mkdir -p $W/signoff/$rel
   for f in 6_final.odb 6_final.spef; do ln -f $B/$f $W/signoff/$rel/$f 2>/dev/null || cp $B/$f $W/signoff/$rel/$f; done
   cp $S/.views/$lab/signoff.sdc $W/signoff/$rel/6_final.sdc
   [ -f $W/corner_sta.json ] && mv $W/corner_sta.json $W/corner_sta_route.json
   python3 tools/w18/corner_sta.py --orfs-dir $W/signoff --output $W/corner_sta.json > $W/corner_signoff.log 2>&1
-  echo "signoff_corner_rc=$?" >> $W/exit
+  stn_signoff_rc=$?
+  echo "signoff_corner_rc=$stn_signoff_rc" >> $W/exit
+  [ "$stn_signoff_rc" -eq 0 ] || exit "$stn_signoff_rc"
   python3 tools/hbm_fmax_attn_abstract.py --orfs-dir $W/work/orfs --name $m --out $W/view --interface-sdc $S/.views/$lab/signoff.sdc --tmp-dir $W/abs_tmp2 > $W/export_signoff.log 2>&1
-  echo "signoff_export_rc=$?" >> $W/exit
+  stn_export_rc=$?
+  echo "signoff_export_rc=$stn_export_rc" >> $W/exit
+  [ "$stn_export_rc" -eq 0 ] || exit "$stn_export_rc"
 fi
+exit 0

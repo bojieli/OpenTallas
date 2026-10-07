@@ -7,7 +7,7 @@
 # there already; this hook is the safety net for a forwarding inverter still driving a terminal directly.  The buffer is the
 # port driver ORFS would insert anyway; the forwarded clock's polarity and its SDC generated clock at the port are
 # unchanged.
-source /src/physical/abi3/v41x_karb_repair_buffer_cap.tcl
+source /src/physical/hbm_accel_die_views/stations/bench/stn_repair_capacity.tcl
 set ot_blk [ord::get_db_block]
 set ot_buf [[ord::get_db] findMaster BUFx4_ASAP7_75t_R]
 set ot_n 0
