@@ -29,7 +29,7 @@ Every line of the three targets carries a status, its effect on the single-user 
 | DS ROM 1M | published (85 stages, full-rate BF) | 1,596.7 | 4,702.0 | closure-cost ledger TOTAL |
 | DS ROM 1M | actual 1792, HALF BF-dedicated: 120 stages / 480 dies (77ffa0428 geometry, 2d811aafb mapping) | 1,305.0 | 3,993.3 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. Only the +35 stage hops and the BF16 half-rate doubling are priced. No bound is proven. |
 | DS ROM 1M | actual 1792, FULL shared: 98 stages / 392 dies (77ffa0428, 2d811aafb) | 1,337.3 | 4,065.7 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. The halving of the q phases on BF pairs is not priced (undercount). No bound is proven. |
-| DS ROM 1M | + full-shape PQ partition (root contract v2) | — | — | **Partial-priced candidate**, line `pq_fullshape_partition`: +18 cycles a field phase, about 0.56% AR (MTP not priced). The per-token critical phases on the 1,792 mapping are not composed, and the geometry is provisional pending Codex's 221 / 1,728 layout. Area: roots ≈3.0 mm² a die (tier-channel rows), core 0.32 mm² (449 × 1,728 µm slot), return write-back blocks 0.40 mm². Gated on the root parity / pipelined-CAM RTL (Codex), stage-B timing (stage-C fallback +1 cycle a pass) and HALF serial-lane exactness for a ≤2-cycle beat shift. Source: 9a8c86255 (branch `claude/s81-pq-fullshape-design-v2-20261007` only; main 738ddfbc2 holds the earlier +15 / 0.47%). |
+| DS ROM 1M | + full-shape PQ partition | — | — | **Partial-priced candidate**, line `pq_fullshape_partition`. Cost per field phase: 14 non-CAM cycles (design v2, 9a8c86255, branch only) plus the **measured** native root-CAM delta. The CAM delta, including publication, is +1 isolated, +2 two-leaf or +4 eight-leaf (main 4251eb216), for a total of +15..+18, about 0.47–0.56% AR. MTP is not priced, and the per-token critical phases on the 1,792 mapping are not composed. Geometry is provisional: roots in the new 164.16 µm row, core 0.32 mm² in the 449 × 1,728 µm slot, return write-back blocks 0.40 mm². Protection storage is +387 bits a root (49,536 for 128 roots), sizing only. The protected root face/parity is OPEN (the native interface lacks it): zero credit. Stage-B timing is unmeasured (the stage-C fallback is modelled, default-off), and HALF serial-lane beat-shift exactness is not shown. |
 | DS ROM 1M | option B, 2,304 pairs mixed slots, 85 stages / 340 dies, full-rate BF (505a9b484) | (1,754.3) | (5,098.3) | **Numerical, legal-fit failed, not physically qualified.** These are field-vehicle numbers only: never measured silicon, never a qualified or adopted rate. The mixed183 geometry fits at most 2,048 pairs (77ffa0428). The branch label "DS ADOPT" is quoted in the ledger for history only. |
 | HBM DS 1M | three_machine row (stale) | 1,948.8 | 3,944.2 | no die closure costs |
 | HBM DS 1M | r23 closure headline | 1,750.9 | 3,626.1 | light FEC, no lever credit |
@@ -46,6 +46,19 @@ Every line of the three targets carries a status, its effect on the single-user 
 | RTL store-and-forward floor (applies if no native edge is built) | 132,520 | estimate | +19.7% AR / +10.0% MTP (+19.6% / +10.0% over the published 343) | 1,489.8 / 3,430.0 |
 
 The Qwen 8K HBM rows are unaffected.
+
+**Unestablished contracts (zero performance credit).** These are listed in `unestablished_contracts`:
+
+- the protected PQ root face/parity;
+- the HBM CDC frequency lock (a hardware contract, not an assumption);
+- the native credit producer;
+- the SM→SU native edge;
+- the packet-SRAM II=1 refill;
+- PQ stage-B timing;
+- HALF serial-lane exactness for a beat shift of ≤2 cycles;
+- the 1,792 field phases.
+
+The HBM refill compositions are conditional sensitivities on these contracts. No composition takes credit for any of them. Every cited source file present in the tree is pinned by sha256 under `source_sha256`. Lines cite their main commits.
 
 DS ROM / HBM, per user, both sides candidates:
 

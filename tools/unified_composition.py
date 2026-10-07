@@ -120,7 +120,16 @@ BFB = dict(AR=_bf["options"]["B_mixed_2304"]["AR"], MTP=_bf["options"]["B_mixed_
 PQ_FILE = "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/comparison_current_main.json"
 PQ_ROOT = "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/root_contract/root_contract.json"
 PQ_COMMIT = "9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
-PQ = dict(cycles_per_phase=18, ar_loss_frac=0.00564, roots_mm2_per_die=3.0, core_mm2=0.32, rwb_mm2=0.40)
+PQ = dict(cycles_per_phase=18, ar_loss_frac=0.00564, roots_mm2_per_die=3.0, core_mm2=0.32, rwb_mm2=0.40,
+          design_cam_cycles=4, design_station_cycles=2, root_row_um=164.16)
+# Native PQ root CAM (on main at 4251eb216): MEASURED latency deltas incl. publication; protection storage sizing
+PQ_CAM_REC = "results/rtl/s81_pq_root_cam_20261007/record.json"
+PQ_CAM_MODEL = "results/uarch/s81_pq_root_cam_20261007/model.json"
+_pc = _J(PQ_CAM_REC)
+PQ_CAM = dict(isolated=_pc["measured_delta_cycles"]["complete"], two_leaf=_pc["measured_delta_cycles"]["two_leaf"],
+              eight_leaf=_pc["measured_delta_cycles"]["eight_leaf"], exact_roots=_pc["exact_roots"],
+              bits_per_root=_J(PQ_CAM_MODEL)["incremental_state_bits"]["total_per_root"],
+              bits_total=_J(PQ_CAM_MODEL)["incremental_state_bits"]["total_128_roots"])
 
 def load(rel):
     return json.loads((ROOT / rel).read_text())
@@ -394,20 +403,33 @@ def ds_rom():
           "(requested_fits=false, %s). Codex's branch label is quoted for history only, not promoted: '%s'"
           % (format(BFB["regions"], ","), format(BFB["regions"], ","), BFB["base_AR"], GEO_B["maximum_pairs_at_this_geometry"],
              DS_GEOM, BFB["label"]), "info"),
-        L("pq_fullshape_partition", "Full-shape PQ partition (root contract v2): +%d cycles per field phase" % PQ["cycles_per_phase"],
-          "priced-candidate", dict(unit="us", AR=round(PQ["ar_loss_frac"] * c["AR_us"], 3), MTP_step=None),
-          [src(PQ_FILE, "changes[item=added cycles per phase (vs the native production parent)].current", commit=PQ_COMMIT),
-           src(PQ_ROOT, "cam, parity", commit=PQ_COMMIT)],
-          "PARTIAL-PRICED CANDIDATE: about %.2f %% AR (per-phase delta x the historical +1-return-cycle sensitivity); the "
-          "per-token critical phases on the 1,792 mapping are not composed, and the geometry is provisional pending Codex's "
-          "221 / 1,728 layout. MTP not priced. Area: roots about %.1f mm2 a die in tier-channel rows, core %.2f mm2 in the "
-          "449 x 1,728 um slot, return write-back blocks %.2f mm2. +18 = pipelined CAM +1 per root pass (<= 4 passes on a "
-          "row chain) + 2 return-strip stations; main's earlier record (738ddfbc2) says +15 / 0.47 %%, superseded by %s"
-          % (100 * PQ["ar_loss_frac"], PQ["roots_mm2_per_die"], PQ["core_mm2"], PQ["rwb_mm2"], PQ_COMMIT), "candidate"),
-        L("pq_root_parity_cam_rtl", "PQ root parity + 2-stage pipelined CAM RTL (Codex)", "gated-unknown", None,
-          src(PQ_ROOT, "parity, cam", commit=PQ_COMMIT), "contract only: 141-pin face, odd parity, hazard rules H1-H3; RTL and exact adapter proof owned by Codex", "gate"),
-        L("pq_stage_b_timing", "PQ CAM stage-B timing", "gated-unknown", None, src(PQ_ROOT, "cam.stages", commit=PQ_COMMIT),
-          "unmeasured; stage-C fallback costs +1 cycle a pass", "gate"),
+        L("pq_fullshape_partition", "Full-shape PQ partition: %d non-CAM cycles a field phase (design v2) + the MEASURED native root "
+          "CAM delta (+%d isolated / +%d two-leaf / +%d eight-leaf) = +%d..+%d" % (
+              PQ["cycles_per_phase"] - PQ["design_cam_cycles"], PQ_CAM["isolated"], PQ_CAM["two_leaf"], PQ_CAM["eight_leaf"],
+              PQ["cycles_per_phase"] - PQ["design_cam_cycles"] + PQ_CAM["isolated"], PQ["cycles_per_phase"] - PQ["design_cam_cycles"] + PQ_CAM["eight_leaf"]),
+          "priced-candidate", dict(unit="us", AR=round(PQ["ar_loss_frac"] / PQ["cycles_per_phase"]
+                                                        * (PQ["cycles_per_phase"] - PQ["design_cam_cycles"] + PQ_CAM["eight_leaf"]) * c["AR_us"], 3),
+                                   MTP_step=None),
+          [src(PQ_CAM_REC, "measured_delta_cycles"), src(PQ_CAM_MODEL, "latency, incremental_state_bits"),
+           src(PQ_FILE, "changes[item=added cycles per phase (vs the native production parent)].current", commit=PQ_COMMIT)],
+          "PARTIAL-PRICED CANDIDATE. The root CAM term uses the measured native CAM (main 4251eb216; %d exact roots; "
+          "isolated +%d, two-leaf +%d, eight-leaf +%d incl. publication; one real ROOTD128 component, no parity, full-parent "
+          "or physical qualification), not the design's +1/pass model; the effect shown is the eight-leaf case, about %.2f %% AR "
+          "(%.2f %% isolated), via the historical per-cycle sensitivity. The per-token critical phases on the 1,792 mapping "
+          "are not composed; MTP not priced. Geometry provisional: roots in the new %.2f um row, core %.2f mm2 in the "
+          "449 x 1,728 um slot, return write-back blocks %.2f mm2, roots about %.1f mm2 a die. Protection storage +%d bits a "
+          "root (%s for 128 roots, main model) -- sizing only; the protected root face is an unestablished contract with no "
+          "credit. Non-CAM cycles from the design v2 record %s; main's 738ddfbc2 (+15 / 0.47 %%) is superseded"
+          % (PQ_CAM["exact_roots"], PQ_CAM["isolated"], PQ_CAM["two_leaf"], PQ_CAM["eight_leaf"],
+             100 * PQ["ar_loss_frac"] / PQ["cycles_per_phase"] * (PQ["cycles_per_phase"] - PQ["design_cam_cycles"] + PQ_CAM["eight_leaf"]),
+             100 * PQ["ar_loss_frac"] / PQ["cycles_per_phase"] * (PQ["cycles_per_phase"] - PQ["design_cam_cycles"] + PQ_CAM["isolated"]),
+             PQ["root_row_um"], PQ["core_mm2"], PQ["rwb_mm2"], PQ["roots_mm2_per_die"], PQ_CAM["bits_per_root"],
+             format(PQ_CAM["bits_total"], ","), PQ_COMMIT), "candidate"),
+        L("pq_root_protected_face", "PQ root protected 140/141-pin face (parity)", "gated-unknown", None,
+          [src(PQ_CAM_MODEL, "mutable_state_protection"), src(PQ_ROOT, "parity", commit=PQ_COMMIT)],
+          "OPEN: the native root interface lacks the proposed parity; no implicit parity or protection qualification", "gate"),
+        L("pq_stage_b_timing", "PQ CAM stage-B timing", "gated-unknown", None, src(PQ_CAM_MODEL, "physical_gate"),
+          "not measured (Codex S81 coordinates it); the stage-C fallback is modelled and default-off", "gate"),
         L("pq_half_serial_lane_exactness", "HALF serial-lane exactness for a beat shift of <= 2 cycles", "gated-unknown", None,
           src(PQ_FILE, "changes", commit=PQ_COMMIT), "exactness of the HALF (BF-dedicated) serial lane under the <= 2-cycle beat shift not shown", "gate"),
         L("field_phases_1792", "Field phase timings of the 1792 geometry (remapped regions, BF/q stage split)", "gated-unknown", None,
@@ -541,6 +563,10 @@ def hbm_ds():
           src(H_REFILL, "physical_risk", commit=H_REFILL_COMMIT),
           "unmeasured; estimated risk on the 64:1 x 648-bit encoded read-mux / capture-address path; a function-preserving "
           "fix (registered head-pointer address) has been proposed (v2 design %s)" % H_CDC2, "gate"),
+        L("cdc_frequency_lock", "PHY/core frequency lock for the II=1 CDC drain", "gated-unknown", None,
+          src(H_CDC2, "contracts.frequency"),
+          "hardware contract to be established, not an assumption: drain II=1 >= arrival only if Tw == Tr (same reference) "
+          "or a rate-matcher leaves >= 1 idle per M flits; a faster write clock overflows a gap-free stream", "gate"),
         L("packet_sram_ii3_rate_cap", "Packet-SRAM receive queue still drains at II=3 (1/3 line rate per port)",
           "gated-unknown", None, src(H_CDC, "options.A_credit_bound.cost_serialisation", commit=H_CDC_COMMIT),
           "GATED until the same II=1 refill is applied to the packet SRAM: while it stays at II=3 the port is capped at a third "
@@ -561,7 +587,9 @@ def hbm_ds():
           "gated-unknown", None, src(H_SMSU, "summary", commit=H_SMSU_COMMIT),
           "NOT a native edge today: in the die view the result tree ends in hfd_su's XOR exercise envelope, and in RTL the path "
           "runs through the GPU-comparator memory model. Every HBM DS row is a die-view-only result edge until this gate "
-          "closes. Alternatives: sm_su_native_edge_proposed / sm_su_store_forward_floor", "gate"),
+          "closes. HBM service bf801c49a and the native collective 7a60962c0 are integrated on main, but the actual consumer "
+          "work is ongoing: no row takes native credit for the 343-cycle path. Alternatives: sm_su_native_edge_proposed / "
+          "sm_su_store_forward_floor", "gate"),
         L("sm_su_native_edge_proposed", "Proposed native SM -> SU edge (SU ingress FIFOs + relay slices): %s cycles a token" % format(H_SMSU_V["native"], ","),
           "priced-candidate", dict(unit="us", AR=round((H_SMSU_V["native"] - H_SMSU_V["published"]) / CLK * 1e6, 3),
                                    MTP_step=round((H_SMSU_V["native"] - H_SMSU_V["published"]) / CLK * 1e6, 3)),
@@ -619,7 +647,9 @@ def hbm_ds():
         comps[cname] = dict(AR_us=a_, MTP_step_us=m_, AR_tok_s=tok_s_us(a_), MTP_tok_s=tok_s_us(m_, tau), tau=tau,
                             status="priced-candidate", case=label,
                             gated_by=[g for g in gates if not (g == "packet_sram_ii3_rate_cap" and cname.endswith("both"))],
-                            note="unified_candidate with the +2 x 265 SRAM term replaced by the refill's +2 cycles x 610 passes"
+                            conditional_on_unestablished_contracts=(["cdc_frequency_lock", "credit_producer_native", "packet_sram_refill", "sm_su_native_edge"]
+                                                                    if cname.endswith("both") else ["cdc_frequency_lock", "credit_producer_native", "sm_su_native_edge"]),
+                            note="CONDITIONAL sensitivity, zero credit until its contracts are established. unified_candidate with the +2 x 265 SRAM term replaced by the refill's +2 cycles x 610 passes"
                                  + (" plus the packet-SRAM II=3 serialisation cost" if cname.endswith("cdc_only") else
                                     "; full rate also requires the native credit producer (gated)"),
                             record=[src(H_REFILL, "status", commit=H_REFILL_COMMIT), src(H_CDC2, "comparison", commit=H_CDC2_COMMIT)])
@@ -654,6 +684,7 @@ def no_ecc():
         dict(target="qwen_rom", item="Forwarded-link opaque 16 control bits per stream", protection="integrity binding missing", policy="GAP (adoption gate)", source=s(Q_FWD, "endpoint_adoption_gates")),
         dict(target="qwen_rom", item="Relay stations (1,536) and column heads (64), 508-bit payload", protection="dual-fault replicas, default off", policy="candidate", source=s(Q_STATION, "replicas")),
         dict(target="ds_rom", item="S81 VM raw macro backend", protection="none (64 empty protection slots reserved, not RTL)", policy="GAP: mutable SRAM", source=s(DS_HBMB, "S81_r8_superseding_physical_binding.VM")),
+        dict(target="ds_rom", item="S81 PQ root CAM state (+387 bits a root, 49,536 for 128 roots) and the root face", protection="none: native interface lacks the proposed parity; protected 140/141-pin face OPEN", policy="GAP: mutable state, unestablished contract", source=s(PQ_CAM_MODEL, "mutable_state_protection")),
         dict(target="hbm_ds", item="Collective packet SRAM", protection="protected full-depth candidate (default off, +2 queue cycles)", policy="candidate", source=s(H_SRAM, "queues")),
         dict(target="hbm_ds", item="SM serial command/record path", protection="protected successor (preserved duplicate state + fault gating) committed on origin/main at 65988656b; minimum-parent gate passed, selected=false", policy="GAP until selected and physically integrated", source=src("results/rtl/hbm_sm_command_20261007/protected_component.json", "passed, selected")),
         dict(target="all", item="Off-package links", protection="full RS(544,514) FEC", policy="compliant (owner 2026-10-06)", source=s(DS_LINKS, "decision")),
@@ -682,6 +713,45 @@ STALE = [
 ]
 
 
+UNESTABLISHED = [
+    ("pq_root_protected_face", "ds_rom", "Protected PQ root 140/141-pin face and parity", "pq_root_protected_face",
+     "native root interface lacks the proposed parity (main 4251eb216 model: mutable_state_protection)"),
+    ("cdc_frequency_lock", "hbm_ds", "PHY/core clock frequency lock for the II=1 CDC drain", "cdc_frequency_lock",
+     "a hardware contract to be established, not an assumption"),
+    ("credit_producer_native", "hbm_ds", "Native credit producer (full-rate credit contract)", "credit_producer_native",
+     "today a testbench preload"),
+    ("sm_su_native_edge", "hbm_ds", "SM -> SU native result edge", "sm_su_result_edge_native",
+     "die view ends in an XOR envelope; RTL path through the GPU-comparator memory model"),
+    ("packet_sram_refill", "hbm_ds", "II=1 refill applied to the packet-SRAM receive queue", "packet_sram_ii3_rate_cap",
+     "packet SRAM still drains at II=3"),
+    ("pq_stage_b_timing", "ds_rom", "PQ CAM stage-B timing", "pq_stage_b_timing", "not measured; stage-C fallback modelled, default-off"),
+    ("half_serial_lane_beat_shift", "ds_rom", "HALF serial-lane exactness for a <= 2-cycle beat shift", "pq_half_serial_lane_exactness",
+     "not shown"),
+    ("field_phases_1792", "ds_rom", "Field phase timings of the 1,792 mapping", "field_phases_1792", "not measured"),
+]
+
+
+def _pins(rec):
+    """sha256 of every cited source file present in this tree (immutable evidence pin)."""
+    files = set()
+
+    def walk(x):
+        if isinstance(x, dict):
+            if isinstance(x.get("file"), str):
+                files.add(x["file"])
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+    walk(rec)
+    out = {}
+    for f in sorted(files):
+        path = ROOT / f
+        out[f] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else "not in this tree (pinned by the commit cited at the line)"
+    return out
+
+
 def ledger():
     q, d, h = qwen(), ds_rom(), hbm_ds()
     hu = h["compositions"]["unified_candidate"]
@@ -699,8 +769,12 @@ def ledger():
                      "price of a committed design/candidate (or a measured component not admitted at SS/FF); gated-unknown = a "
                      "cost that is not bound and is never summed. A numerical component PASS is not physical adoption."),
                targets=dict(qwen_rom=q, ds_rom=d, hbm_ds=h), ratios=ratios, no_ecc_inventory=no_ecc(), stale_claims=STALE,
+               unestablished_contracts=[dict(id=i, target=tg, contract=nm, ledger_line=ln, state=st, performance_credit=0,
+                                             source=next(x for x in dict(qwen_rom=q, ds_rom=d, hbm_ds=h)[tg]["lines"] if x["id"] == ln)["source"])
+                                        for i, tg, nm, ln, st in UNESTABLISHED],
                tool=dict(file="tools/unified_composition.py",
                          sha256=hashlib.sha256((ROOT / "tools/unified_composition.py").read_bytes()).hexdigest()))
+    rec["source_sha256"] = _pins(rec)
     return rec
 
 
