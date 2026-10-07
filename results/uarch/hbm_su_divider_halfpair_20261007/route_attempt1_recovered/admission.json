@@ -1,0 +1,29 @@
+{
+  "original_declared_peak_gib": 266,
+  "measured_full_route_peak_kib": 23577676,
+  "measurement_log": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/routes/hbm_su_full64_64cda61ab.prev_1791400184/work/orfs/orfs_flow.log",
+  "stage_peak_kib": [
+    883468,
+    1201464,
+    650084,
+    498296,
+    702160,
+    1155984,
+    712280,
+    3150384,
+    1458296,
+    2139244,
+    2720824,
+    5941212,
+    23577676,
+    2034804,
+    1135864,
+    9720344,
+    1820132
+  ],
+  "standalone_sta_reservation_gib": 24,
+  "host_reserve_gib": 100,
+  "rationale": "Rounded above observed maximum of completed full route; capacity reservation only, no per-process memory cap. Parent fleet approved. Only unstarted oversized guard waiter replaced.",
+  "original_waiter_pid": 2707672,
+  "replacement_pid": 2738210
+}
