@@ -7,10 +7,11 @@ pin reach. Explicit failures remain failures and are emitted as JSON.
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import hbm_die_views as V
 import hbm_die_relays as R
-from hbm_relay_channel_model import channel_path
+from hbm_relay_channel_model import channel_path, spatial_slices
 
 
 def main():
@@ -18,6 +19,7 @@ def main():
     ap.add_argument('--bus',default='rl_sm0')
     ap.add_argument('--slice-bits',type=int,default=64)
     ap.add_argument('--out',required=True)
+    ap.add_argument('--spatial-slices',action='store_true')
     a=ap.parse_args()
     m,*_=V.model()
     by={it.name:it for it in m['insts']}
@@ -35,7 +37,7 @@ def main():
         rp=V.H.real_ports(m)
         names=rp.get(it.master,{}).get(base)
         pts=[]
-        for i in indices[:a.slice_bits]:
+        for i in (indices if a.spatial_slices else indices[:a.slice_bits]):
             pin=names[i] if names and i<len(names) else f'{base}[{i}]'
             if pin not in pp:
                 raise ValueError(f'{it.master}: missing physical pin {pin}')
@@ -48,6 +50,7 @@ def main():
         portal=(centre[0]+unit[0]*25,centre[1]+unit[1]*25)
         points.append(portal)
         evidence.append(dict(instance=name,master=it.master,port=port,
+            physical_box_um=[it.x,it.y,it.x+w,it.y+h],
             lef=str(p.relative_to(V.ROOT)),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),
             physical_pins_um=pts,portal_um=portal,
             max_pin_to_portal_um=max(abs(q[0]-portal[0])+abs(q[1]-portal[1]) for q in pts)))
@@ -64,10 +67,36 @@ def main():
                                      (m['geo']['W'],m['geo']['H']),20)
     except ValueError as e:
         result['geometry_failure']=str(e)
+    if a.spatial_slices:
+        groups=spatial_slices(evidence[0]['physical_pins_um'],evidence[1]['physical_pins_um'],
+            evidence[0]['physical_box_um'],evidence[1]['physical_box_um'],max_bits=a.slice_bits)
+        for group in groups:
+            try:
+                group['path_um']=channel_path(group['source_portal_um'],group['sink_portal_um'],
+                    [it.box() for it in m['insts']],(m['geo']['W'],m['geo']['H']),20)
+            except ValueError as e:
+                group['geometry_failure']=str(e)
+        for group in groups:
+            if 'path_um' in group:
+                path=group['path_um']
+                lengths=[abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(path,path[1:])]
+                group['route_length_um']=sum(lengths)
+                group['candidate_station_count']=1+sum(math.ceil(x/300) for x in lengths)
+        if all('path_um' in group for group in groups):
+            latency=max(group['candidate_station_count'] for group in groups)
+            for group in groups:
+                group['balance_register_cycles']=latency-group['candidate_station_count']
+            result['balanced_transport_cycles']=latency
+            result['balanced_payload_register_bits']=bus[2]*latency
+            result['balancing_scope']='required analytical delay matching; actual registers/valid/credit not implemented'
+        result['spatial_slices']=groups
+        result['spatial_slice_count']=len(groups)
+        result['spatial_slices_routable']=sum('path_um' in g for g in groups)
+        result['spatial_scope']='centre-line probes independently; simultaneous slice packing/reservation unproved'
     result['next_gate']='real matched slice dimensions/pin locations; no route or hardware adoption authorized by this probe'
     Path(a.out).parent.mkdir(parents=True,exist_ok=True)
     Path(a.out).write_text(json.dumps(result,indent=2)+'\n')
-    print(json.dumps({k:v for k,v in result.items() if k!='endpoints'}))
+    print(json.dumps({k:v for k,v in result.items() if k not in ('endpoints','spatial_slices')}))
 
 if __name__=='__main__':
     main()
