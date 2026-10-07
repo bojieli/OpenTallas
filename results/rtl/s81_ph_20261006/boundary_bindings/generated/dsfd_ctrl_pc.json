@@ -1,0 +1,497 @@
+{
+  "budgets": {
+    "input_delay_ss_ps": null,
+    "input_min_delay_ff_ps": null,
+    "output_delay_ss_ps": null,
+    "output_min_delay_ff_ps": null
+  },
+  "clocks": {
+    "core_clk": {
+      "period_ps": 833.3333333333334,
+      "port": "cks"
+    },
+    "hbm_clk": {
+      "bench_period_ps": 1024,
+      "physical_min_period_ps": 900,
+      "port": "ckh",
+      "selected_die_period_ps": null
+    }
+  },
+  "closure_claim": false,
+  "interfaces": [
+    {
+      "adjacent_endpoint": null,
+      "bits": 1,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "input",
+      "port": "cks",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": null,
+      "bits": 1,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "input",
+      "port": "ckh",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": null,
+      "bits": 1,
+      "clock_domain": "async_reset",
+      "clock_port": null,
+      "dir": "input",
+      "port": "rst",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "cks",
+        "edge": "rising",
+        "mapping": "co_w=co_e; PCs 0..15 chain west-to-centre, 31..16 east-to-centre; outer ci inputs tied 01; co_e unused in generated top",
+        "master": "dsfd_ctrl_pc / dsfd_ctrl_ctr / tie"
+      },
+      "bits": 2,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "input",
+      "port": "ci_w",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "cks",
+        "edge": "rising",
+        "mapping": "co_w=co_e; PCs 0..15 chain west-to-centre, 31..16 east-to-centre; outer ci inputs tied 01; co_e unused in generated top",
+        "master": "dsfd_ctrl_pc / dsfd_ctrl_ctr / tie"
+      },
+      "bits": 2,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "input",
+      "port": "ci_e",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "cks",
+        "edge": "rising",
+        "mapping": "co_w=co_e; PCs 0..15 chain west-to-centre, 31..16 east-to-centre; outer ci inputs tied 01; co_e unused in generated top",
+        "master": "dsfd_ctrl_pc / dsfd_ctrl_ctr / tie"
+      },
+      "bits": 2,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "output",
+      "port": "co_w",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "cks",
+        "edge": "rising",
+        "mapping": "co_w=co_e; PCs 0..15 chain west-to-centre, 31..16 east-to-centre; outer ci inputs tied 01; co_e unused in generated top",
+        "master": "dsfd_ctrl_pc / dsfd_ctrl_ctr / tie"
+      },
+      "bits": 2,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "output",
+      "port": "co_e",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "ck",
+        "edge": "rising",
+        "evidence_grade": "RTL plus declared composition; no assembled routed join",
+        "instance": "u_pc[p]",
+        "master": "dsfd_svc_pc",
+        "port": "rq"
+      },
+      "bits": 341,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "input",
+      "port": "rq",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "ck",
+        "edge": "rising",
+        "evidence_grade": "RTL plus declared composition; no assembled routed join",
+        "instance": "u_pc[p]",
+        "master": "dsfd_svc_pc",
+        "port": "rk"
+      },
+      "bits": 1,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "output",
+      "port": "rk",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "ck",
+        "edge": "rising",
+        "evidence_grade": "RTL plus declared composition; no assembled routed join",
+        "instance": "u_pc[p]",
+        "master": "dsfd_svc_pc",
+        "port": "wd"
+      },
+      "bits": 1,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "output",
+      "port": "wd",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "ck",
+        "edge": "rising",
+        "evidence_grade": "RTL plus declared composition; no assembled routed join",
+        "instance": "u_pc[p]",
+        "master": "dsfd_svc_pc",
+        "port": "rv"
+      },
+      "bits": 1,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "output",
+      "port": "rv",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "ck",
+        "edge": "rising",
+        "evidence_grade": "RTL plus declared composition; no assembled routed join",
+        "instance": "u_pc[p]",
+        "master": "dsfd_svc_pc",
+        "port": "r_data"
+      },
+      "bits": 256,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "output",
+      "port": "r_data",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "ck",
+        "edge": "rising",
+        "evidence_grade": "RTL plus declared composition; no assembled routed join",
+        "instance": "u_pc[p]",
+        "master": "dsfd_svc_pc",
+        "port": "r_tag"
+      },
+      "bits": 17,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "output",
+      "port": "r_tag",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "ck",
+        "edge": "rising",
+        "evidence_grade": "RTL plus declared composition; no assembled routed join",
+        "instance": "u_pc[p]",
+        "master": "dsfd_svc_pc",
+        "port": "r_beat"
+      },
+      "bits": 4,
+      "clock_domain": "core_clk",
+      "clock_port": "cks",
+      "dir": "output",
+      "port": "r_beat",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 1,
+        "port": "k_v"
+      },
+      "bits": 1,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "output",
+      "port": "k_v",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 1,
+        "port": "k_rdy"
+      },
+      "bits": 1,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "input",
+      "port": "k_rdy",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 30,
+        "port": "k_addr"
+      },
+      "bits": 30,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "output",
+      "port": "k_addr",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 4,
+        "port": "k_len"
+      },
+      "bits": 4,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "output",
+      "port": "k_len",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 17,
+        "port": "k_tag"
+      },
+      "bits": 17,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "output",
+      "port": "k_tag",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 1,
+        "port": "k_we"
+      },
+      "bits": 1,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "output",
+      "port": "k_we",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 256,
+        "port": "k_wdata"
+      },
+      "bits": 256,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "output",
+      "port": "k_wdata",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 32,
+        "port": "k_wstrb"
+      },
+      "bits": 32,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "output",
+      "port": "k_wstrb",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 1,
+        "port": "k_wr_done"
+      },
+      "bits": 1,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "input",
+      "port": "k_wr_done",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 1,
+        "port": "kr_v"
+      },
+      "bits": 1,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "input",
+      "port": "kr_v",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 1,
+        "port": "kr_rdy"
+      },
+      "bits": 1,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "output",
+      "port": "kr_rdy",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 17,
+        "port": "kr_tag"
+      },
+      "bits": 17,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "input",
+      "port": "kr_tag",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 4,
+        "port": "kr_beat"
+      },
+      "bits": 4,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "input",
+      "port": "kr_beat",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "clk",
+        "clock_binding": "dsfd_ctrl.ckh -> phy[12808] -> PHY.clk",
+        "edge": "rising",
+        "evidence_grade": "assumed IP boundary; exact logical mapping",
+        "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+        "per_pc_slice_bits": 256,
+        "port": "kr_data"
+      },
+      "bits": 256,
+      "clock_domain": "hbm_clk",
+      "clock_port": "ckh",
+      "dir": "input",
+      "port": "kr_data",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    }
+  ],
+  "master": "dsfd_ctrl_pc",
+  "not_drop_in_budget_sdc": true,
+  "policy": {
+    "accept_ff_ps": 15,
+    "accept_ss_ps": 15,
+    "hold_io_ps": 50,
+    "hold_uncertainty_ps": 25,
+    "setup_uncertainty_ps": 60
+  },
+  "reason": "Unknown actual receiver clock/wire/slew, not zero; no SDC may be generated from this sheet",
+  "schema": "opentallas.s81.boundary_sheet.v1",
+  "status": "BLOCKED_RECEIVER_TIMING",
+  "timing_ready": false
+}
