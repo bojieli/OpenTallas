@@ -1709,22 +1709,22 @@
    "budget": null
   },
   "ot_v41_rom_elem_q_qxpq_w10": {
-   "job": "dsrom-qelem-qs5r-1b89b1b6d",
-   "source_commit": "1b89b1b6d741a8f0926ad16a8c2f33e1fd04158f",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsrom-qelem-qs5r-1b89b1b6d",
+   "job": "dsrom-qelem-qs5f-e1fbc25c1",
+   "source_commit": "e1fbc25c1ad3f34eb1686a5b0d60e3aa4a62d803",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dsrom-qelem-qs5f-e1fbc25c1",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T08:41:05-07:00",
+   "measured_at": "2026-10-07T10:33:52-07:00",
    "ss": {
-    "mean": 598,
-    "min": 575,
-    "max": 651
+    "mean": 620,
+    "min": 596,
+    "max": 687
    },
    "ff": {
-    "mean": 358,
-    "min": 335,
-    "max": 408
+    "mean": 373,
+    "min": 352,
+    "max": 436
    },
    "boundary_n": 729,
    "budget": null
@@ -2561,7 +2561,28 @@
    },
    "boundary_n": 21351,
    "budget": null
+  },
+  "ot_su64_full64": {
+   "job": "hbm_su_full64_64cda61ab",
+   "source_commit": "64cda61abe6779567e8601286ea0ee0245da7746",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-07T10:35:57-07:00",
+   "ss": {
+    "mean": 771,
+    "min": 753,
+    "max": 814
+   },
+   "ff": {
+    "mean": 497,
+    "min": 482,
+    "max": 537
+   },
+   "boundary_n": 950,
+   "budget": null
   }
  },
- "updated": "2026-10-07T10:27:07-07:00"
+ "updated": "2026-10-07T10:35:57-07:00"
 }
