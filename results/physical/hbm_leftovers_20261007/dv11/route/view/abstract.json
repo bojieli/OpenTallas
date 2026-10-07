@@ -1,0 +1,57 @@
+{
+  "name": "hfd_router",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv11_idly/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv11_idly/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv11_idly/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv11_idly/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv11_idly/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv11_idly/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv11_idly/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "hfd_router.lef": "183df7010e0c5386d1d6375e8e951ed24ac0b1b248d77b943af0a1a3dff85c39",
+    "hfd_router_ff.lib": "d76b88d85549bbcb3e08132476e902180c3d46b67039d328a393e3f317a4054a",
+    "hfd_router_ss.lib": "5ecd5fe2f0dbdce315e47a153172d409123b62f4ab950e43580cbe072cfe5418"
+  },
+  "ok": true
+}

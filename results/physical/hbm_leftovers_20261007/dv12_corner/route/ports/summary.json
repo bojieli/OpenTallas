@@ -1,0 +1,70 @@
+{
+ "hfd_router": {
+  "kind": "router",
+  "w": 1399.656,
+  "h": 326.28,
+  "instances": 1,
+  "ports": {
+   "eSW": [
+    129,
+    "W",
+    "output"
+   ],
+   "f_su_SW": [
+    256,
+    "W",
+    "input"
+   ],
+   "eNW": [
+    129,
+    "W",
+    "output"
+   ],
+   "f_su_NW": [
+    256,
+    "W",
+    "input"
+   ],
+   "eSE": [
+    129,
+    "E",
+    "output"
+   ],
+   "f_su_SE": [
+    256,
+    "E",
+    "input"
+   ],
+   "eNE": [
+    129,
+    "E",
+    "output"
+   ],
+   "f_su_NE": [
+    256,
+    "E",
+    "input"
+   ],
+   "rst": [
+    1,
+    "N",
+    "input"
+   ],
+   "ck": [
+    1,
+    "N",
+    "input"
+   ],
+   "f_vm": [
+    512,
+    "N",
+    "input"
+   ],
+   "t_cmdproc": [
+    64,
+    "N",
+    "output"
+   ]
+  }
+ }
+}
