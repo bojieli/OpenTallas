@@ -1,0 +1,47 @@
+{
+  "captured_utc": "2026-10-07T10:56:08.686119+00:00",
+  "scope": "Only the four existing stn/hub/spine/svcidx worktrees; no central merge or constraint change.",
+  "completed": {
+    "sfu_export": "physical/hbm_accel_die_views/sfu/lane/ot_su12_sfu/lane.json",
+    "sfu_source": "66e7df57d16e737997406146e83d04bd1b76f115",
+    "input_setup_hold_arcs_per_corner": 930,
+    "dynamic_output_arcs_per_corner": 266,
+    "retained_leaf_ss_ff_ps": [
+      38.94,
+      16.06
+    ],
+    "parent_context_closed": false,
+    "cmdproc_n_harvest_commit": "763861102",
+    "svc_SW_s4_harvest_commit": "eac2fed7e"
+  },
+  "parent_actions": [
+    {
+      "blocks": [
+        "hfd_vm_ne",
+        "hfd_vm_nw",
+        "hfd_vm_se"
+      ],
+      "reason": "Existing NEEDS_BUDGET, no newer successor in current ledger",
+      "measured_ss_insertion_ps": [
+        1215,
+        1234,
+        1344
+      ],
+      "target_ps": 900,
+      "request": "Resolve existing centre-clock-pin generator request at parent; preserve target and constraints unless parent explicitly prices/replans. All four tiles require a coordinated source/port update; SW remains 30be4c713 (corrected write depth)."
+    },
+    {
+      "block": "hfd_index_q_b1",
+      "job": "hbm_idxq_b1_48529891f",
+      "reason": "Fresh hold ECO missed at 03:50 PT: 1042 infeasible endpoints, 0 cells added, SS +139.57 / FF -268.27 / DRC 0",
+      "request": "Parent and hold specialist review arrival/hold budget feasibility before any new RTL or clock/budget generator change."
+    }
+  ],
+  "live_work": "mcast5/6, corrected SW VM, loader half-rate and remaining service/index routes retained; see harvest.json. No live job restarted or cancelled.",
+  "limits": [
+    "SFU leaf internal signoff is not parent-context closure. Interface extraction uses unchanged parent SDC and reports its raw slacks in lane.json.",
+    "Quarter envelope is not a functional SU/SFU implementation. No adoption or model latency change in this export."
+  ],
+  "hold_specialist_update": "03:54 PT cmdproc_s is now under a pinned specialist ECO (6625a113964df4316b6c3ad5c56ed0630f21cb17). No duplicate work required.",
+  "service_update": "03:55 PT SE_s6 verdict passes SS +136.79 / FF +23.52 / DRC 0; collect/publish pending, see latest_delta.json."
+}

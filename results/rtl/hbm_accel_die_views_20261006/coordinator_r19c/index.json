@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
- "round": "r19b",
- "generator_sha256": "bf8aafa63244ba555c89d6b72460c05e5e538a9d851654d5356485033cad58d7",
+ "round": "r19c",
+ "generator_sha256": "9f82d30c7c8a006b1f37931cd39399358a71603679c25d65a77aa2a7fbb356d3",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -235,8 +235,59 @@
     "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    }
   },
-  "hfd_cmdproc": {
-   "kind": "cmdproc",
+  "hfd_cmdproc_n": {
+   "kind": null,
+   "status": "closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/cmdproc/view_n",
+   "lef": "hfd_cmdproc_n.lef",
+   "lib": {
+    "ss": "hfd_cmdproc_n_ss.lib",
+    "ff": "hfd_cmdproc_n_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "ac6ef1af33d9618ba5f61e1cacc8c19be003c568",
+    "host": "ot-epyc1tb",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_cmdproc_n_ac6ef1af3",
+    "ss_setup_ps": 60.84,
+    "ff_hold_ps": 19.69,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T03:45:59-07:00"
+   },
+   "files_sha256": {
+    "hfd_cmdproc_n.lef": "23211cf38906462908a7a480cb7e8cc890e0c71bb2fb0786b0414cfebe4bd739",
+    "hfd_cmdproc_n_ss.lib": "98c4f3540695b6015a0b76b57c8cfa6c8aa4b4802fc43e63c346b2ba5d790952",
+    "hfd_cmdproc_n_ff.lib": "ee263ad66b4a41287ee5762208da085a91d88f1ce8ceaaaeb2ef500734522ebd",
+    "corner_sta.json": "ef7a10b31bf8cf86d54c9dfcbb379f8f22d06e4b1cb09c3dd88b175b73f8d1ae",
+    "check.json": "d4896ff60caefbb25f4bdf872c0493472486ea58cacea6f5ed570959f80bede7"
+   },
+   "receipt": "results/closure_loop/hbm_cmdproc_n_ac6ef1af3/verdict.json",
+   "receipt_sha256": "0d43eaf0efe0b6c681fae514da03bc5fc1f748eabfbbb4d1034f0dd7d647a5f9",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 60.84,
+    "ff_hold_ps": 19.69,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     1399.66,
+     701.976
+    ],
+    "size_gen": [
+     1399.656,
+     701.976
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_cmdproc_s": {
+   "kind": null,
    "status": "missing",
    "instances": 1
   },
@@ -2620,54 +2671,8 @@
   },
   "hfd_svc_SE_s6": {
    "kind": "svc",
-   "status": "closed",
-   "instances": 2,
-   "dir": "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s6",
-   "lef": "hfd_svc_SE_s6.lef",
-   "lib": {
-    "ss": "hfd_svc_SE_s6_ss.lib",
-    "ff": "hfd_svc_SE_s6_ff.lib"
-   },
-   "source": {
-    "SOURCE_COMMIT": "41d57482796e648a579ea0178c770e196f026928",
-    "host": "ot-pve1",
-    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud",
-    "ss_setup_ps": 136.79,
-    "ff_hold_ps": 23.52,
-    "drc": 0,
-    "closes_signoff_SS60_FF25": true,
-    "closed_at": "2026-10-07T04:00:26-07:00"
-   },
-   "files_sha256": {
-    "hfd_svc_SE_s6.lef": "8394e22bd6c3ca2f67bb01fc6d2c25e92566de4f483028a4d76aea297bffba22",
-    "hfd_svc_SE_s6_ss.lib": "cd2a4cffa73b8451b8e71014b11fd550aaf3be20aac8111e077bca15f6fd17da",
-    "hfd_svc_SE_s6_ff.lib": "99629e3424f203efb5c82e97052aaa8facc1074df443f4d3cfe12b367ca445cc",
-    "corner_sta.json": "747ebf16b3ca7f09473ec7b40bca45e241b43a6e759b5cfb2af3756351bb1dae",
-    "check.json": "0a972a43d94b31e0cb0ce8874060fb8a3c80468224f6f788739cb5863eb10ab3"
-   },
-   "receipt": "results/closure_loop/hbm_svc_SE_s6_41d574827_bud/verdict.json",
-   "receipt_sha256": "fff8f359cd9dbc21d77aa0ca4649575837773a33747ab25c5826976940711cf9",
-   "functional_closure": false,
-   "die_context_closed": false,
-   "margin": {
-    "ss_setup_ps": 136.79,
-    "ff_hold_ps": 23.52,
-    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
-   },
-   "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
-    "size_view": [
-     763.992,
-     259.176
-    ],
-    "size_gen": [
-     763.992,
-     259.176
-    ],
-    "die_top_io_pins": []
-   }
+   "status": "missing",
+   "instances": 2
   },
   "hfd_svc_SE_s7": {
    "kind": "svc",
@@ -2784,7 +2789,7 @@
  "counts": {
   "interim-not-closed": 7,
   "closed": 37,
-  "missing": 33,
+  "missing": 34,
   "reservation": 2
  }
 }
