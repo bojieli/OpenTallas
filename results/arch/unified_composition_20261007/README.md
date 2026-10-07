@@ -34,7 +34,7 @@ Every line of the three targets carries a status, its effect on the single-user 
 | HBM DS 1M | r23 closure headline | 1,750.9 | 3,626.1 | light FEC, no lever credit |
 | HBM DS 1M | closure + full FEC, no lever credit | 1,656.7 | 3,526.2 | includes the priced true-credit and protected-SRAM costs |
 | HBM DS 1M | unified candidate | 1,782.3 | 3,772.7 | adds the exact levers (minimum-component exactness, SS/FF not admitted). Excludes the gated II=3 rate cap (next rows). |
-| HBM DS 1M | unified, II=3 cap stands | 1,688.0 | 3,262.1 | packet-SRAM receive queue and candidate protected CDC drain at II=3, a third of line rate per port: +30.78 µs AR / +172 µs MTP on the measured receive streaming of 18,470 / 103,196 cycles. The rotation-latency term below is also included. Source: CDC design b49366616 (`claude/hbm-collective-cdc-design-20261007`, not on main). |
+| HBM DS 1M | unified, II=3 cap stands | 1,688.0 | 3,262.1 | packet-SRAM receive queue and candidate protected CDC drain at II=3, a third of line rate per port: +30.78 µs AR / +172 µs MTP on the measured receive streaming of 18,470 / 103,196 cycles. The rotation-latency term below is also included. Source: historical CDC design b49366616 (`claude/hbm-collective-cdc-design-20261007`); this conditional sensitivity is not physical adoption. |
 | HBM DS 1M | unified, 3-bank rotation (II=1) | 1,780.5 | 3,770.7 | the rotation lands for both the CDC and the packet SRAM: +2 cycles a pass (+1.02 µs), replacing the +2 × 265 SRAM term; +12,093 µm² |
 
 DS ROM / HBM, per user, both sides candidates:
@@ -52,7 +52,7 @@ DS ROM / HBM, per user, both sides candidates:
   - Qwen controller SHIFT state;
   - the Qwen VM banks and the forwarded-link control bits;
   - the S81 VM raw macro backend;
-  - the HBM SM serial path (protection work is not yet committed).
+  - the HBM SM serial path (protection gate committed at 65988656b and passed; selected=false, so adoption remains open).
 - **Stale publication claims and the actions taken:** `stale_claims`.
 
 The DSpark re-evaluation record is `qwen_dspark/dspark_ctrlshift_candidate.json`. It was produced by `tools/qwen_rom_dspark_verdict.py` with the same arguments as `relays_r21/dspark_verdict_relays.sh`, except `--ar-cycles 216857 --extra-per-step 198`. With the original arguments, the tool reproduces the committed record byte-identically, apart from its method text.
