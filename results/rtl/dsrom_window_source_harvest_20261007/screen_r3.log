@@ -1,0 +1,6 @@
+view=asap7 corner=TT block=ot_dsrom_window_source_ctl top=ot_dsrom_window_source_ctl purpose=characterization
+  pnr:   wirelength=None um vias=None DRC=None antenna_nets=None Fmax=1469.18 MHz
+  drv:   max_slew=None max_cap=None max_fanout=None
+  sdc:   set_max_fanout 32 [current_design]
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch/claude/takeover-ds/window-source/screen_r3/physical.json

@@ -1,0 +1,29 @@
+{
+  "status": "RUNNING_NO_TERMINAL_VERDICT",
+  "job": "route_r2",
+  "phase": "global-route hold repair",
+  "last_observed_tool_slack_ps": -445.81,
+  "slack_scope": "Progress row from live repair, not SS/FF final sign-off.",
+  "live_job_preserved": true,
+  "dirty_source_preserved": true,
+  "remaining": [
+    "Harvest route_r2 terminal and extracted SS/FF/DRC, including IO.",
+    "Bind result to remote source hashes; local dirty source must not inherit an unrelated route pass."
+  ],
+  "acceptance": {
+    "SS_setup_min_ps": 15,
+    "FF_hold_min_ps": 15,
+    "DRC": 0,
+    "IO_timed": true,
+    "constraints_relaxed": false
+  },
+  "adopted": false,
+  "evidence_sha256": {
+    "live_snapshot.json": "a6570e29f3df7ad4adae35e3bd7ddd9a5c255eb5731cd7456762d7693d0023a3",
+    "route_r1.rc": "58e3763903f625abede874ffafc72ae4830fcad701df55ecaada0435962dcb86",
+    "manifest.json": "a8f8227a49067cee690405360a3f93bfc3b1339cafe0ba772fcec59a230020e5",
+    "run_route2.sh": "85e9279e8bf7438814a67507d0928c44abfe8e8601d5144a3e50715a9966badd",
+    "screen_r3.log": "bc1272b62fd9568dd8afa53c95bca98edad6341064263e0f5e35ce011a8a0a90",
+    "screen_r3.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  }
+}
