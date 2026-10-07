@@ -71,6 +71,12 @@ CANDIDATES = [
      [("*.attn.wo_a", 60, 0), ("*.attn.a_proj", 45, 0), ("*.ffn.router", 15, 0), ("*.attn.cmp.wk", 15, 0),
       ("*.attn.wq_b", 15, 0), ("*.attn.wo_b", 15, 0), ("*.ffn.shared_gu", 15, 0), ("*.ffn.experts_gu", 15, 0),
       ("*.ffn.down", 15, 0)]),
+    ("bf_unroll", "BF unroll-by-2 (ot_s81_bf_native RECUT=3, claude/dsrom-bf-rowfix-20261007 9cf64047e; exact record c394c0ace; "
+                  "closure-loop bf_unroll_9cf64047e): re-cut A + lane chains unrolled by 2 on a half-rate gated clock, latency "
+                  "only, lag per partial 4 / 8.8 / 18; upper bound +18 per field phase",
+     [("*.attn.wo_a", 72, 0), ("*.attn.a_proj", 54, 0), ("*.ffn.router", 18, 0), ("*.attn.cmp.wk", 18, 0),
+      ("*.attn.wq_b", 18, 0), ("*.attn.wo_b", 18, 0), ("*.ffn.shared_gu", 18, 0), ("*.ffn.experts_gu", 18, 0),
+      ("*.ffn.down", 18, 0)]),
 ]
 
 
