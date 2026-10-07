@@ -90,5 +90,27 @@ class BenchTrack(unittest.TestCase):
         self.assertIsNone(cl.route_key_full(keys, "b@c", "a"))
 
 
+class Transient(unittest.TestCase):
+    def test_classify(self):
+        import subprocess
+        self.assertTrue(cl.is_transient(subprocess.TimeoutExpired(["ssh", "-o", "x", "h", "bash -s"], 300)))
+        self.assertTrue(cl.is_transient(RuntimeError("command failed rc=255: ssh h")))
+        self.assertFalse(cl.is_transient(KeyError("metrics")))
+
+    def test_backoff_then_move(self):
+        import subprocess
+        j = job(status="READY", stage_tag=None, hosts_tried=["h"])
+        stl = cl.stage_list(SPEC)
+        j["stage_idx"] = next(i for i, x in enumerate(stl) if x["kind"] == "bench")
+        fleet = SimpleNamespace(choose=lambda spec, exclude: ("h2", None))
+        ex = subprocess.TimeoutExpired(["ssh", "h"], 300)
+        with patch.object(cl, "log"), patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
+            self.assertTrue(cl.handle_transient(j, fleet, ex))
+            self.assertEqual(j["host"], "h")
+            cl.handle_transient(j, fleet, ex)
+            cl.handle_transient(j, fleet, ex)
+        self.assertEqual((j["host"], j["status"]), ("h2", "SYNC"))
+
+
 if __name__ == "__main__":
     unittest.main()
