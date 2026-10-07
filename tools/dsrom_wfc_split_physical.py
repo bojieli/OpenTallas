@@ -242,6 +242,25 @@ echo "end $(date -Is)" >> $W/status
     print(case / "run.sh")
 
 
+LINK_PORTS = "in_* out_*"
+REGION_INTER_PS, REGION_INTRA_PS, REGION_HOLD_UNC_PS = 150, 90, 50
+REGION_TCL = (
+    f"set lk_in [get_ports {{in_*}}]\nset lk_out [get_ports {{out_*}}]\n"
+    "create_clock -name vlk -period $per\n"
+    f"set_clock_latency -min [expr $lmin - {REGION_INTER_PS}] [get_clocks vlk]\n"
+    f"set_clock_latency -max [expr $lmax + {REGION_INTER_PS}] [get_clocks vlk]\n"
+    f"set_clock_latency -min [expr $lmin - {REGION_INTRA_PS}] [get_clocks vclk]\n"
+    f"set_clock_latency -max [expr $lmax + {REGION_INTRA_PS}] [get_clocks vclk]\n"
+    "set_clock_uncertainty -setup $::env(WF_USETUP) [get_clocks {vclk vlk}]\n"
+    f"set_clock_uncertainty -hold {REGION_HOLD_UNC_PS} [get_clocks {{vclk vlk}}]\n"
+    "unset_input_delay $lk_in\nunset_output_delay $lk_out\n"
+    "set_input_delay $io -clock vlk $lk_in\nset_output_delay $io -clock vlk $lk_out\n"
+    "rep region\n"
+    "unset_input_delay $lk_in\nunset_output_delay $lk_out\n"
+    "set_input_delay $io -clock vclk $lk_in\nset_output_delay $io -clock vclk $lk_out\n"
+    "set_clock_uncertainty -hold $::env(WF_UHOLD) [get_clocks vclk]\n")
+
+
 def cmd_sta(a):
     case = a.case.resolve()
     tcl = WF.STA_TCL.replace("set ck [get_clocks]", "set ck [get_clocks core_clk]")
@@ -257,6 +276,12 @@ def cmd_sta(a):
                       "set_clock_latency -max [expr $lmax + 150] [get_clocks vclk]\nrep die150\n"
                       "set_clock_latency -min $lmin [get_clocks vclk]\nset_clock_latency -max $lmax [get_clocks vclk]\n")
     assert "rep die150" in tcl
+    # region (owner clarification 2026-10-06 + OWNER 18:15 acceptance): the die clock-arrival term is 150 ps only on
+    # ports that cross a die wire to a different clock region -- the WFC stage link (in_* / out_*); every other port
+    # (core, VM, prefill, token, config) meets a neighbour in the same clock region: measured pair skew + margin,
+    # 90 ps (65 measured + 25).  Hold against the IO with 50 ps hold IO uncertainty (FF insertion).
+    tcl = tcl.replace("rep die150\n", "rep die150\n" + REGION_TCL, 1)
+    assert "rep region" in tcl
     if a.macros:
         tcl = tcl.replace("read_db $::env(WF_ODB)",
                           f"read_liberty /src/{MACRO}/{MNAME}_[string tolower $::env(WF_LIB)].lib\n"
@@ -277,8 +302,8 @@ def cmd_sta(a):
     (case / "wf_drv.json").write_text(json.dumps(drv, indent=1) + "\n")
     print(json.dumps(drv))
     print(json.dumps({c: {"insertion_ps": v.get("insertion_ps")} |
-                      {m: (v.get(m) or {}).get("setup_wns_ps") for m in ("block", "incontext", "die150", "reg2reg")} |
-                      {"hold_" + m: (v.get(m) or {}).get("hold_wns_ps") for m in ("block", "incontext", "die150", "reg2reg")}
+                      {m: (v.get(m) or {}).get("setup_wns_ps") for m in ("block", "incontext", "die150", "region", "reg2reg")} |
+                      {"hold_" + m: (v.get(m) or {}).get("hold_wns_ps") for m in ("block", "incontext", "die150", "region", "reg2reg")}
                       for c, v in rec["corners"].items()}, indent=1))
 
 
@@ -328,7 +353,7 @@ def case_record(case: Path):
                          ss_failing=[v(ss, mode, "failing_setup"), v(ss, mode, "failing_hold")],
                          ff_failing=[v(ff, mode, "failing_setup"), v(ff, mode, "failing_hold")],
                          ss_worst_setup_path=v(ss, mode, "worst_max_path"))
-              for mode in ("block", "incontext", "die150", "reg2reg")}
+              for mode in ("block", "incontext", "die150", "region", "reg2reg")}
     closed = (all(nn(timing[mode][f]) for mode in ("incontext", "reg2reg")
                   for f in ("ss_setup_ps", "ss_hold_ps", "ff_hold_ps"))
               and drc == 0 and ant == 0 and drv_ok and bool(ss.get("done")) and bool(ff.get("done")))
@@ -342,8 +367,13 @@ def case_record(case: Path):
         return isinstance(x, (int, float)) and x >= lim
     accepted = (closed and all(ge(timing[m]["ss_setup_ps"], 40) and ge(timing[m]["ff_hold_ps"], 15) and
                                ge(timing[m]["ss_hold_ps"], 0) for m in ("incontext", "reg2reg", "die150")))
+    # OWNER 18:15 (2026-10-06): accept at SS >= +15 / FF >= +15 at 833.333 with the agreed IO budgets (region:
+    # 150 ps inter-region on the stage link, 90 ps intra-region elsewhere, 50 ps hold IO uncertainty)
+    accepted_region = (closed and timing["region"]["ss_setup_ps"] is not None and
+                       all(ge(timing[m]["ss_setup_ps"], 15) and ge(timing[m]["ff_hold_ps"], 15) and
+                           ge(timing[m]["ss_hold_ps"], 0) for m in ("incontext", "reg2reg", "region")))
     return dict(inst=cj["inst"], route_period_ps=cj.get("route_period_ps"), die_skew_ps=cj.get("die_skew_ps", 0),
-                accepted_40_15_die150=accepted, margin_closed=margin_closed, util=cj["util"], params=cj["params"], orfs_var=cj.get("orfs_var"),
+                accepted_40_15_die150=accepted, accepted_15_15_region=accepted_region, margin_closed=margin_closed, util=cj["util"], params=cj["params"], orfs_var=cj.get("orfs_var"),
                 source_dir=cj["src"], ctrl_sha256=cj["ctrl_sha256"],
                 insertion_ps=dict(SS=ss.get("insertion_ps"), FF=ff.get("insertion_ps")), timing=timing,
                 drv=drv, drc_errors=drc, antenna_violating_nets=ant,
@@ -366,7 +396,7 @@ def cmd_record(a):
                       case_record(Path(c).resolve()) for c in a.case},
                notes=a.note)
     a.out.write_text(json.dumps(rec, indent=1) + "\n")
-    print(json.dumps({k: dict(closed=v["closed"], margin_closed=v["margin_closed"], accepted=v["accepted_40_15_die150"],
+    print(json.dumps({k: dict(closed=v["closed"], margin_closed=v["margin_closed"], accepted=v["accepted_15_15_region"], accepted_40_die150=v["accepted_40_15_die150"], region=v["timing"]["region"]["ss_setup_ps"], region_ff_hold=v["timing"]["region"]["ff_hold_ps"],
                               die150=v["timing"]["die150"]["ss_setup_ps"],
                               incontext=v["timing"]["incontext"]["ss_setup_ps"],
                               ff_hold=v["timing"]["incontext"]["ff_hold_ps"], drv=v["drv"])
@@ -395,10 +425,11 @@ def cmd_closure(a):
         k = next(c for c in rec["cases"] if rec["cases"][c]["inst"] == inst)
         c = rec["cases"][k]
         t = c["timing"]
-        els[inst] = dict(route=k, accepted=c["accepted_40_15_die150"],
+        els[inst] = dict(route=k, accepted=c["accepted_15_15_region"], accepted_40_15_die150=c["accepted_40_15_die150"],
                          ss_setup_ps=min(t[m]["ss_setup_ps"] for m in ("incontext", "reg2reg")),
                          ff_hold_ps=min(t[m]["ff_hold_ps"] for m in ("incontext", "reg2reg")),
                          die150_ss_setup_ps=t["die150"]["ss_setup_ps"], die150_ff_hold_ps=t["die150"]["ff_hold_ps"],
+                         region_ss_setup_ps=t["region"]["ss_setup_ps"], region_ff_hold_ps=t["region"]["ff_hold_ps"],
                          drc=c["drc_errors"], antenna=c["antenna_violating_nets"], drv=c["drv"],
                          route_period_ps=c["route_period_ps"], die_skew_ps=c["die_skew_ps"])
     ref = json.loads(REF_STAGE.read_text())["stage_wave1"]["jobs"]
@@ -415,9 +446,10 @@ def cmd_closure(a):
     out = dict(schema="opentallas.rtl.dsrom_wfc_split_closure.v1", source_commit=a.source_commit,
                accepted=accepted, exact=exact,
                verdict=("CLOSED: src and stg WFC elements routed at 770 ps with the +-150 ps die IO model, signed off at "
-                        "833.333 ps: SS >= +40 / FF >= +15 in context, reg2reg and die150; DRC / antenna / DRV 0; exact"
+                        "833.333 ps: SS >= +15 / FF >= +15 in context, reg2reg and region (150 ps stage link, 90 ps intra-region, "
+                        "50 ps hold IO uncertainty); DRC / antenna / DRV 0; exact"
                         if accepted and exact else "NOT CLOSED"),
-               acceptance_rule="owner UPDATE 2 (2026-10-06): SS setup >= +40, FF hold >= +15 (incontext, reg2reg, die150), "
+               acceptance_rule="OWNER 18:15 (2026-10-06): SS setup >= +15, FF hold >= +15 at 833.333 (incontext, reg2reg, region: 150 ps on the stage link, 90 ps intra-region, 50 ps hold IO uncertainty), "
                                "DRC 0, antenna 0, max slew / cap / fanout violators 0 at SS and FF",
                elements=els, physical_record=str(a.record_rel), bench_summary=str(a.bench_rel),
                stage_bench=str(a.stage_rel),
