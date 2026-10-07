@@ -17,15 +17,27 @@ foreach {name box} {s0 {2.16 2.16 127.848 66.912} s1 {432.72 2.16 558.408 66.912
 
 # Retain the actual clock-polarity pair through physical optimization. These
 # are tiny roots; CTS must buffer their loads, not collapse the pair to a wire.
-set clock_cells {}
-foreach i [$block getInsts] {
- set n [string map {/ .} [$i getName]]
- if {[regexp {^s[01]\..*\.(ab|ba)\.inv[01]\.} $n]} {
-  if {![string match INV* [[$i getMaster] getName]]} {error "clock inverter mapped to unexpected cell"}
-  foreach c [get_cells -hierarchical *] {
-   if {[get_full_name $c] eq [$i getName]} {lappend clock_cells $c}
-  }
+proc qwen_fwd_normal_name {n} {return [string map [list "\\" "" "/" "."] $n]}
+set sta_cells {}
+foreach c [get_cells -hierarchical *] {
+ set key [qwen_fwd_normal_name [get_full_name $c]]
+ if {[regexp {^s[01]\..*\.(ab|ba)\.inv[01]\.} $key]} {
+  puts "STA_INV raw=[get_full_name $c] normalized=$key"
+  dict lappend sta_cells $key $c
  }
 }
-if {[llength $clock_cells] != 8} {error "expected eight real clock inverter cells: $clock_cells"}
+set clock_cells {}
+foreach i [$block getInsts] {
+ set key [qwen_fwd_normal_name [$i getName]]
+ if {[regexp {^s[01]\..*\.(ab|ba)\.inv[01]\.} $key]} {
+  if {![dict exists $sta_cells $key]} {error "Missing STA handle for [$i getName] normalized=$key"}
+  set candidates [dict get $sta_cells $key]
+  if {[llength $candidates]!=1} {error "Ambiguous STA handle $key"}
+  if {![string match INV* [[$i getMaster] getName]]} {error "Not an inverter"}
+  lappend clock_cells [lindex $candidates 0]
+  puts "ODB_INV raw=[$i getName] normalized=$key master=[[$i getMaster] getName]"
+ }
+}
+if {[llength $clock_cells]!=8} {error "expected eight mapped clock inverter cells"}
 set_dont_touch $clock_cells
+puts "TMR_ACTUAL_ODB_CLOCK_RESOLVER_PASS count=8"
