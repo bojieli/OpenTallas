@@ -780,35 +780,27 @@ def relay_ends(m):
 def hub_pin_window(mst, window):
     """r23 (hub owner a4649202a85580933, OWNER 2x hub): the SU / SFU / HC quarter ports of each long (E / W) face sit in
     one window <= `window` um centred on the face's port band (the bit-weighted mean of the generator's peer-projected
-    port centres), so the registered transport tiles reach every die port within ~250 um.  Ports are packed in their
-    projected order at 2 tracks per bit: M4 (0.096 um) first, the remainder on M6 (0.128 um) over the same window."""
+    port centres), so the registered transport tiles reach every die port within ~250 um.  All on M4 (the quarters are
+    placed mirrored in y: an M6 pin cannot share a legal origin with the M4 pins in both orientations, r23 a_real),
+    2 tracks per bit (0.096 um) when the face fits the window, else 1 track (0.048 um)."""
     byf = defaultdict(list)
     for p_, sp_ in mst.ports.items():
         if sp_[0] == 'face' and sp_[2] in 'EW':
             byf[sp_[2]].append(p_)
+    t = Q.TRK['M4'][1]
     for f_, pns in byf.items():
         pns.sort(key=lambda p_: mst.ports[p_][4])
         bits = {p_: mst.ports[p_][1] for p_ in pns}
         c = sum(mst.ports[p_][4] * bits[p_] for p_ in pns) / max(1, sum(bits.values()))
-        lay = {'M4': [], 'M6': []}
-        span = {'M4': 0.0, 'M6': 0.0}
+        pitch = 2 if sum(b * 2 * t + 4 * t for b in bits.values()) <= window else 1
+        span = sum(b * pitch * t + 4 * t for b in bits.values())
+        c_ = min(max(c, span / 2 + 2.0), mst.h - span / 2 - 2.0)
+        y = c_ - span / 2
         for p_ in pns:
-            for L_ in ('M4', 'M6'):
-                need = bits[p_] * Q.TRK[L_][1] * 2 + 4 * Q.TRK[L_][1]
-                if span[L_] + need <= window or L_ == 'M6':
-                    lay[L_].append(p_)
-                    span[L_] += need
-                    break
-        for L_, lst in lay.items():
-            if not lst:
-                continue
-            c_ = min(max(c, span[L_] / 2 + 2.0), mst.h - span[L_] / 2 - 2.0)
-            y = c_ - span[L_] / 2
-            for p_ in lst:
-                n_ = bits[p_] * Q.TRK[L_][1] * 2
-                sp_ = mst.ports[p_]
-                mst.ports[p_] = ('face', sp_[1], f_, L_, round(y + 2 * Q.TRK[L_][1] + n_ / 2, 4), 2)
-                y += n_ + 4 * Q.TRK[L_][1]
+            n_ = bits[p_] * pitch * t
+            sp_ = mst.ports[p_]
+            mst.ports[p_] = ('face', sp_[1], f_, 'M4', round(y + 2 * t + n_ / 2, 4), pitch)
+            y += n_ + 4 * t
 
 
 def fix_ports_from_views(m, masters_):
