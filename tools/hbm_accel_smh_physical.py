@@ -211,6 +211,153 @@ def front_pins(g, hcore):
     return pins
 
 
+# ---------------- (margin m3) the front as three strips ----------------
+STRIPS = ("front_s", "front_c", "front_n")      # south to north
+
+
+def strip_cuts(g):
+    """The two strip cuts (front coordinates, on the 8.64 um grid): between the lowest row bundle of a tile row (its
+    leaf 1) and that tile row's x-write bundle, so every bundle's pins stay in one strip.  front_s holds tile row 1's
+    leaf-1 bundle and the result lanes, front_c tile row 1's x write and leaf 0, tile row 0's leaf 1, front_n tile row 0's
+    x write and leaf 0."""
+    th, bh, gap = g["tile_h"], g["be_h"], g["gap"]
+    n = P["RPT"] * P["RBW"] + P["BBW"]
+    y0 = round((th - n * PITCH) / 2 / 0.048) * 0.048 + 0.012
+    cuts = []
+    for p in (P["NP"] - 1, 0):
+        ty = bh + gap + (P["NP"] - 1 - p) * (th + gap)
+        row_top = ty + y0 + (P["RBW"] - 1) * PITCH
+        b_bot = ty + y0 + P["RBW"] * PITCH
+        c = qd(b_bot)
+        assert row_top + 0.02 < c < b_bot - 0.02, (row_top, c, b_bot)
+        cuts.append(round(c, 3))
+    return cuts
+
+
+def strip_span(g, hcore, strip):
+    cs, cn = strip_cuts(g)
+    return {"front_s": (0.0, cs), "front_c": (cs, cn), "front_n": (cn, hcore)}[strip]
+
+
+def face_ports(strip, side):
+    """Face port names in pin order; side 'n' = the strip's north face, 's' = its south face."""
+    opx = (P["RW"] + 1) + 16 + 8 + 1 + 2 + P["XW"]
+    if (strip, side) in (("front_n", "s"), ("front_c", "n")):
+        r0, pz = ("fi_row0", "fi_pbz") if strip == "front_n" else ("fo_row0", "fo_pbz")
+        return (["fs_v"] + bits("fs_d", opx) + ["fs_ret"] + bits("fx_b", P["BBW"]) + ["fr_rl"] + bits(r0, P["RBW"])
+                + bits(pz, 3))
+    if (strip, side) in (("front_c", "s"), ("front_s", "n")):
+        r3 = "fo_row3" if strip == "front_c" else "fi_row3"
+        return (["fd_v"] + bits("fd_d", 56) + ["fd_ret", "fq_v"] + bits("fq_d", 42) + ["fq_ret", "fp_v"]
+                + bits("fp_d", 1098) + ["fsv"] + bits(r3, P["RBW"]))
+    return []
+
+
+def trk(y):
+    return round(round((y - 0.012) / 0.048) * 0.048 + 0.012, 3)
+
+
+def strip_pins(g, hcore, strip):
+    """A strip's pins: its share of the front's W / E tile-facing pins (renamed per bundle), its element pins (N for
+    front_n, S for front_s), the face pins (same x on both sides of a face), clk / rst_n on the W edge in the widest gap."""
+    lo, hi = strip_span(g, hcore, strip)
+    h = round(hi - lo, 3)
+    fw = g["front_w"]
+    pins, wy = [], []
+    for name, layer, _, x, y in front_pins(g, hcore):
+        if name == "clk":
+            continue
+        if layer == "M4":
+            if not (lo < y < hi):
+                continue
+            m = re.match(r"(rout|bout)_(l|r)\[(\d+)\]", name)
+            if m:
+                k, sd, i = m.group(1), m.group(2), int(m.group(3))
+                wdt = P["RBW"] if k == "rout" else P["BBW"]
+                name = f"{k}_{sd}{i // wdt}[{i % wdt}]"
+            pins.append((name, layer, "", x, round(y - lo, 3)))
+            if x == 0.0:
+                wy.append(y - lo)
+        else:
+            if strip == "front_n" and y > 0:
+                pins.append((name, layer, "", x, h))
+            elif strip == "front_s" and y == 0.0:
+                pins.append((name, layer, "", x, 0.0))
+    for side, y in (("n", h), ("s", 0.0)):
+        names = face_ports(strip, side)
+        if not names:
+            continue
+        sp = math.floor(min(0.096, (fw - 4.0) / len(names)) / 0.048) * 0.048
+        x0 = round((fw - len(names) * sp) / 2 / 0.048) * 0.048 + 0.012
+        for k, nm in enumerate(names):
+            pins.append((nm, "M5", "", round(x0 + k * sp, 3), y))
+    # clk (and rst_n, when the strip has no north element row) mid-way in the widest W-edge gap
+    ys = sorted([0.0] + wy + [h])
+    a, b = max(zip(ys, ys[1:]), key=lambda t: t[1] - t[0])
+    pins.append(("clk", "M4", "", 0.0, trk((a + b) / 2)))
+    if strip != "front_n":
+        pins.append(("rst_n", "M4", "", 0.0, trk((a + b) / 2 + 4.8)))
+    return pins, h
+
+
+def sdc_strip(strip, lat, lat_ff=None, period=833, skew=0, die_skew=150, hold_io=50):
+    """Strip constraints: element pins carry the die budget (as the m2 front), face and tile-facing ports the abutting
+    budget (300 ps outside + the intra-element skew), the ring multicycle on front_c."""
+    elem = {"front_n": ("start op_* xw_* release_in", "start_ready busy arrive released"),
+            "front_s": ("d_valid d_base* d_lines* req_ready rsp_*", "d_ready req_v req_addr* req_tag* rv rrow* rdata* fault"),
+            "front_c": ("", "")}[strip]
+    nbr = {"front_n": ("fs_ret fi_*", "rout_* bout_* fs_v fs_d* fx_b* fr_rl"),
+           "front_c": ("fs_v fs_d* fx_b* fr_rl fd_v fd_d* fq_ret fp_* fsv", "rout_* bout_* fs_ret fo_* fd_ret fq_v fq_d*"),
+           "front_s": ("qin_* fd_ret fq_v fq_d* fi_*", "rout_* fd_v fd_d* fq_ret fp_* fsv")}[strip]
+    base = sdc_block(lat, element_io=False, ring=(strip == "front_c"), nbr_in=nbr[0], lat_ff=lat_ff, period=period,
+                     skew=skew, die_skew=die_skew, hold_io=hold_io)
+    base = base.replace("set nbr_out [all_outputs]", f"set nbr_out [get_ports {{{nbr[1]}}}]")
+    if elem[0]:
+        add = ["# element pins: the W13 die budget magnitudes (473 / 323 external, 20 % min) plus the die term, referenced",
+               "# like every port to the block's own clock insertion (nbr_clk)",
+               f"set elem_in [get_ports {{{elem[0]}}}]",
+               f"set elem_out [get_ports {{{elem[1]}}}]",
+               "set_input_delay -max [expr 473 + $die_skew] -clock nbr_clk $elem_in",
+               "set_input_delay -min [expr 833 * 0.2 - $hold_io] -clock nbr_clk $elem_in",
+               "set_output_delay -max [expr 323 + $die_skew] -clock nbr_clk $elem_out",
+               "set_output_delay -min [expr 833 * 0.2 + $dlo - $hold_io] -clock nbr_clk $elem_out"]
+        base = base.replace(f"set nbr_in [get_ports {{{nbr[0]}}}]", "\n".join(add) + f"\nset nbr_in [get_ports {{{nbr[0]}}}]")
+    return base
+
+
+STRIP_HOPS = {
+    "front_c": r"""ot_pin_place_auto {.*} 14
+# central channel between the ring columns, bottom to top: line skid, s1, issue (+ op channel sink), bulk-copy
+# control (+ descriptor channel sink, request channel credits)
+ot_place {^u_sk\.g_c\[\d+\]\.g_d\.e[01]} 152 272 170 200
+ot_place {^s1_(w|cv|ct)} 152 272 202 220
+ot_place {^(u_issue\.|u_sch\.(?!u_)|pop_r|fmt_q|xb_q|g_f1\[)} 152 272 222 241
+ot_place {^(u_bc\.(outstanding|g_lookahead\.((?!g_sram)|g_sram\.(oq_n|oq_wp|oq_rp|res|rd_v|u_rok_c)))|u_dch\.(?!u_)|u_rch\.cred)} 152 272 243 285
+# hop H of the tile-row-0 rows above the ring, of the tile-row-1 rows below it
+ot_place {^g_h\[0\]\.} 60 200 456 486
+ot_place {^g_h\[2\]\.} 232 372 456 486
+ot_place {^g_h\[1\]\.} 60 200 16 40
+ot_place {^g_h\[3\]\.} 232 372 16 40
+# retire landing -> issue; response stage beside the ring's write pins
+ot_place {^u_sv\.g_s\[1\]} 170 210 150 166
+ot_place {^u_prd\.g_s\[1\]} 100 330 42 66
+# tile row 1's x write: landed at the north face, M in the W / E edge strips between the row-bundle pin fields
+ot_place {^g_bs\[0\]\.u_bm[dv]} 4 50 282 438
+ot_place {^g_bs\[1\]\.u_bm[dv]} 382 428 282 438
+""",
+    "front_n": r"""ot_pin_place_auto {.*} 14
+# op channel credits beside the start pin
+ot_place {^u_sch\.(cred|u_fv\.g_s\[0\]|u_cr\.g_s\[1\])} 100 135 322 338
+""",
+    "front_s": r"""ot_pin_place_auto {.*} 14
+# descriptor channel credits beside d_valid / d_ready; request channel sink beside the request skid
+ot_place {^u_dch\.(cred|u_fv\.g_s\[0\]|u_cr\.g_s\[1\])} 128 160 16 30
+ot_place {^u_rsk\.} 120 200 3 12
+ot_place {^u_rch\.(?!u_)} 120 200 32 56
+""",
+}
+
+
 # ---------------- ORFS config ----------------
 def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* bin* gin*", lat_ff=None, period=833,
               skew=0, die_skew=150, hold_io=50, io_ref=False):
@@ -824,13 +971,13 @@ W={work}
 S={src}
 NEED={need}
 CORES={cores}
-IMG=openroad/orfs:latest
+IMG=openroad/orfs:asap7lock
 cd $W
 echo "start $(date -Is)" > $W/status
-/srv/opentallas-scratch/admit.sh $NEED -- docker run --rm --name {cname} -v $S:/src:ro -v $W:/work \
+{admit}docker run --rm --name {cname} -v $S:/src:ro -v $W:/work \
   -w /OpenROAD-flow-scripts/flow $IMG bash -lc "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; \
   source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work \
-  FLOW_VARIANT=base NUM_CORES=$CORES finish" > $W/flow.log 2>&1
+  FLOW_VARIANT=base NUM_CORES=$CORES {make_extra}{target}" > $W/flow.log 2>&1
 echo "flow_rc=$?" >> $W/status
 B=$(ls -d $W/results/asap7/*/base | head -1)
 if [ -f $B/6_final.odb ]; then
@@ -867,10 +1014,11 @@ def write_abstract(work: Path, name, macros, view_name):
     (work / "abstract.tcl").write_text("source /work/abstract_ss.tcl\n")
 
 
-def run_sh(work: Path, label, src, need, cores, macros):
+def run_sh(work: Path, label, src, need, cores, macros, target="finish", admit=True, make_extra=""):
     margs = " ".join(f"--macro {m}" for m in macros)
     txt = RUN.format(label=label, work=work, src=src, need=need, cores=cores, cname=f"claude-smh-{label}",
-                     macro_args=margs)
+                     macro_args=margs, target=target, make_extra=make_extra,
+                     admit="/srv/opentallas-scratch/admit.sh $NEED -- " if admit else "")
     # two abstract sessions (SS and FF)
     txt = txt.replace('"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/abstract.tcl"',
                       '"mkdir -p /work/views; for c in ss ff; do /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/'
@@ -935,6 +1083,32 @@ def cmd_block(a):
         tcl = None
         extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_block.tcl"
         sdc = sdc_block(a.lat, nbr_in="gin* qin*", lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
+    elif a.piece in STRIPS:
+        pos, die, hcore = floorplan(g)
+        pins, h = strip_pins(g, hcore, a.piece)
+        w = g["front_w"]
+        name = "ot_hbm_accel_smh_" + a.piece
+        tcl = None
+        macros = []
+        if a.piece == "front_c":
+            macros = [SRAM_R]
+            mw, mh = 96.552, 69.66
+            ch = 120.0
+            xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
+            y0 = qd(h / 2 - 2.5 * (mh + 4.32))
+            tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
+                   "  if {![[$ot_inst getMaster] isBlock]} { continue }",
+                   "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
+                   "  if {![regexp {g_grp\\[(\\d+)\\]\\.g_mb\\[(\\d+)\\]\\.u_ring} $n -> gg mb]} { error \"no slot for $n\" }",
+                   f"  set y [expr {{{y0} + $mb * {q(mh + 4.32)}}}]",
+                   f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
+                   f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
+                   "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
+        else:
+            extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_block.tcl"
+        sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
+        (work / "hops.tcl").write_text(HOPS[:HOPS.index("ot_pin_place_auto {.*} 14")] + STRIP_HOPS[a.piece])
+        extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     else:
         pos, die, hcore = floorplan(g)
         w, h = g["front_w"], hcore
@@ -960,7 +1134,7 @@ def cmd_block(a):
         # one end: the retire chain sat at y 60-211 with the issue at ~900): see HOPS
         (work / "hops.tcl").write_text(HOPS)
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
-    if a.piece != "front" and a.pin_flops:
+    if a.piece in ("tile", "be") and a.pin_flops:
         # m2: the pass-through landing registers join the input face's strip (tile W 16 um overflowed: --pin-depth)
         (work / "hops.tcl").write_text(PIN_TCL.replace("ot_pin_place_auto {.*} 16\n", f"ot_pin_place_auto {{.*}} {a.pin_depth}\n"))
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
@@ -972,7 +1146,9 @@ def cmd_block(a):
     nick = f"smh_{a.piece}_{a.variant}_{a.label}"
     (work / "config.mk").write_text(config_mk(name, nick, die, macros, extra))
     write_abstract(work, name, macros, name)
-    run_sh(work, a.label, a.src, a.need, a.cores, macros)
+    mx = " ".join(f"{k}={v}" for k, v in (x.split("=", 1) for x in (a.make_var or [])))
+    run_sh(work, a.label, a.src, a.need, a.cores, macros, target=a.stop_after or "finish", admit=not a.no_admit,
+           make_extra=(mx + " ") if mx else "")
     (work / "geometry.json").write_text(json.dumps(dict(piece=a.piece, variant=a.variant, die=die, geom=g,
                                                         pins=len(pins)), indent=1) + "\n")
     print(f"wrote {work}: {name} {a.variant} die {die} pins {len(pins)} macros {len(macros)}")
@@ -1058,7 +1234,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("block")
-    b.add_argument("--piece", choices=("tile", "be", "front"), required=True)
+    b.add_argument("--piece", choices=("tile", "be", "front") + STRIPS, required=True)
     b.add_argument("--variant", default="toE", choices=("toE", "toW", "one"))
     b.add_argument("--label", required=True)
     b.add_argument("--out", required=True)
@@ -1085,6 +1261,11 @@ def main(argv=None):
     b.add_argument("--hold-buffer-pct", default=None, help="raise repair_timing -max_buffer_percent at CTS / GRT")
     b.add_argument("--io-ref", action="store_true", help="abutting port delays referenced to a register clock pin of "
                    "the block (per-corner insertion) instead of nbr_clk with the SS insertion as source latency")
+    b.add_argument("--stop-after", default=None, choices=("cts",), help="ORFS make target to stop at (closure-loop "
+                   "calibrate: a CTS-only run)")
+    b.add_argument("--no-admit", action="store_true", help="run without /srv/opentallas-scratch/admit.sh (the closure "
+                   "loop does its own admission)")
+    b.add_argument("--make-var", action="append", default=None, help="extra NAME=VALUE on the ORFS make line")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
     t.add_argument("--out", required=True)

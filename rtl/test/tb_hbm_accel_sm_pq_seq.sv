@@ -45,8 +45,8 @@ module tb_hbm_accel_sm_pq_seq;
         .req_tag(req_tag), .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr),
         .xw_grp(xw_grp), .xw_data(xw_data), .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .arrive(arrive),
         .release_in(release_in), .released(released));
-`define OT_DP dut.g_fp.u_front   // the bench configuration (RMAX 256) instantiates the parameterised pieces
-`define OT_DCROW dut.g_fp.u_front.al[RW-1:0]
+`define OT_DP dut.g_fp.u_fc      // the bench configuration (RMAX 256) instantiates the parameterised pieces; (m3) issue / line stream in the centre strip
+`define OT_DCROW dut.g_fp.u_fs.al[RW-1:0]
 `else
     ot_hbm_accel_sm_pq #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
                          .MAX_OUT(512), .HAZ(HAZ), .G1ASB(G1ASB)) dut (
