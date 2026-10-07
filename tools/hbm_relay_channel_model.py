@@ -128,3 +128,49 @@ def size_chain(*, path, data_bits, slice_bits, slice_area_um2,
             'real clock-domain and original-sink reference binding',
             'per-path token traversal counts composed in system model',
             'receive FIFO area, routing, and SS/FF qualification'])
+
+
+def spatial_slices(source_pins, sink_pins, source_box, sink_box, *,
+                   max_bits=64, endpoint_reach_um=100, portal_offset_um=25):
+    """Partition identity-aligned bits by both endpoint faces and pin reach.
+
+    Preserves bit indices; never assumes adjacent bus bits are adjacent pins.
+    Output portals are analytical station centres. Equal latency across slices
+    and actual station dimensions/pins remain mandatory implementation gates.
+    """
+    if len(source_pins)!=len(sink_pins) or not source_pins or max_bits<1:
+        raise ValueError('pin maps must be nonempty and identity-aligned')
+    if not 0 < portal_offset_um < endpoint_reach_um:
+        raise ValueError('portal offset must leave positive pin spread budget')
+    def face(p,b):
+        return min(range(4),key=lambda f:abs(p[f//2]-b[(0,2,1,3)[f]]))
+    def portal(indices,pins,box,f):
+        x=sum(pins[i][0] for i in indices)/len(indices)
+        y=sum(pins[i][1] for i in indices)/len(indices)
+        return ((box[0]-portal_offset_um,y),(box[2]+portal_offset_um,y),
+                (x,box[1]-portal_offset_um),(x,box[3]+portal_offset_um))[f]
+    pending={}
+    for i,(s,t) in enumerate(zip(source_pins,sink_pins)):
+        key=(face(s,source_box),face(t,sink_box))
+        pending.setdefault(key,[]).append(i)
+    result=[]
+    def divide(indices,fs,ft):
+        ps=portal(indices,source_pins,source_box,fs)
+        pt=portal(indices,sink_pins,sink_box,ft)
+        ds=max(abs(source_pins[i][0]-ps[0])+abs(source_pins[i][1]-ps[1]) for i in indices)
+        dt=max(abs(sink_pins[i][0]-pt[0])+abs(sink_pins[i][1]-pt[1]) for i in indices)
+        if len(indices)<=max_bits and max(ds,dt)<=endpoint_reach_um:
+            result.append(dict(bit_indices=sorted(indices),source_face='WESN'[fs],sink_face='WESN'[ft],
+                source_portal_um=ps,sink_portal_um=pt,source_max_pin_distance_um=ds,sink_max_pin_distance_um=dt))
+            return
+        if len(indices)==1:
+            raise ValueError('physical pin cannot reach an exterior portal within endpoint budget')
+        pins,f=(source_pins,fs) if ds>=dt else (sink_pins,ft)
+        axis=1 if f<2 else 0
+        indices=sorted(indices,key=lambda i:(pins[i][axis],i))
+        n=len(indices)//2
+        divide(indices[:n],fs,ft)
+        divide(indices[n:],fs,ft)
+    for (fs,ft),indices in sorted(pending.items()):
+        divide(indices,fs,ft)
+    return result

@@ -1,8 +1,18 @@
 #!/usr/bin/env python3
 import unittest
-from hbm_relay_channel_model import channel_path, size_chain
+from hbm_relay_channel_model import channel_path, size_chain, spatial_slices
 
 class ChannelTest(unittest.TestCase):
+    def test_spatial_slices_preserve_identity_across_faces(self):
+        src=[(0,10),(0,900),(100,20),(100,800)]
+        dst=[(200,10),(200,20),(300,900),(300,800)]
+        groups=spatial_slices(src,dst,(0,0,100,1000),(200,0,300,1000),max_bits=64)
+        self.assertEqual(sorted(i for g in groups for i in g['bit_indices']),list(range(4)))
+        self.assertTrue(all(max(g['source_max_pin_distance_um'],g['sink_max_pin_distance_um'])<=100 for g in groups))
+        self.assertGreater(len(groups),1)
+        with self.assertRaisesRegex(ValueError,'cannot reach'):
+            spatial_slices([(500,500)],[(500,500)],(0,0,1000,1000),(0,0,1000,1000))
+
     def test_routes_around_macro_and_prices_detour(self):
         path=channel_path((10,50),(90,50),[(40,20,60,80)],(100,100),2)
         self.assertEqual(path[0],(10,50))
