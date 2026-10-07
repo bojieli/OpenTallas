@@ -13453,6 +13453,12 @@ def qwen_forwarded_link_tmr_model():
     return model()
 
 
+def qwen_ctrl_protected_model():
+    """Two retained PC controllers with zero-cycle fail-closed qualification."""
+    from uarch_model_qwen_ctrl_protected import model
+    return model()
+
+
 def qwen_ctrl_shift_queue_model():
     """Exact oldest-first write queue with stored onehot bank identities."""
     from uarch_model_qwen_ctrl_shift import model
