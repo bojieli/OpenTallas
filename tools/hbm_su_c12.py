@@ -41,7 +41,7 @@ SWAP = {"rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_l
         "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv"]}
-P = dict(mlat=6, alat=6, opr=1, ddiv=21, sidex=4, fsq=1, capr=1, rpad=1, rsl=2, rtap=1, rout=1, rslice=64, ctl12=1, gsh=0, kimm=0, denr=0, dring=0)
+P = dict(mlat=6, alat=6, opr=1, ddiv=21, sidex=4, fsq=1, capr=1, rpad=1, rsl=2, rtap=1, rout=1, rslice=64, ctl12=1, ropi=0, rkc=0, rhalf=0, rhpar=0, gsh=0, kimm=0, denr=0, dring=0)
 
 
 def take_params(argv):
@@ -85,7 +85,7 @@ def set_c12(VC):
 
 def vflags():
     g = dict(OPR=P["opr"], DDIV=P["ddiv"], SIDEX=P["sidex"], FSQ=P["fsq"], CAPR=P["capr"], RPAD=P["rpad"], RSL=P["rsl"], ROUT=P["rout"], CTL12=P["ctl12"],
-             RTAP=P["rtap"], RSLICE=P["rslice"], GSH=P["gsh"], KIMM=P["kimm"], DENR=P["denr"], DRING=P["dring"])
+             RTAP=P["rtap"], RSLICE=P["rslice"], ROPI=P["ropi"], RKC=P["rkc"], RHALF=P["rhalf"], RHPAR=P["rhpar"], GSH=P["gsh"], KIMM=P["kimm"], DENR=P["denr"], DRING=P["dring"])
     return " ".join(f"-G{k}={v}" for k, v in g.items())
 
 

@@ -197,6 +197,10 @@ module ot_hdc_v41x_vec #(
     parameter integer RTAP = 0,         // c12 reducer: tap register
     parameter integer ROUT = 0,         // c12 reducer: OUT input register
     parameter integer RSLICE = 64,      // c12 reducer: lanes a slice
+    parameter integer ROPI = 0,         // reducer operand stage, default off
+    parameter integer RKC = 0,          // reducer kept driver copies, default off
+    parameter integer RHALF = 0,        // phase-locked half-rate reducer, default off
+    parameter integer RHPAR = 0,        // controller issue parity; reducer locks to first beat
     parameter integer CTL12 = 0,        // c12 controller: pipelined set-up, registered emit-loop conditions
     // CLAUDE HBM-ABSTRACTS hub margin (2026-10-06, default off): see rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv
     parameter integer GSH = 0,          // lanes register the gather word's shift: every gather fetch one deeper
@@ -324,8 +328,13 @@ module ot_hdc_v41x_vec #(
                        D_RSQ = 1 + 9 * MLAT + 3 * ALAT + SIDEX, D_SQRT = 31 + SIDEX,
                        D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 31 + DDIV + SIDEX, D_EG = 33 + D_SIG0 + SIDEX;
     localparam [15:0] H_A = ALAT;
-    localparam [15:0] H_R = ALAT;                        // a reducer TREE / TIME level
+    localparam [15:0] H_R = ALAT + ROPI;                        // a reducer TREE / TIME level
+`ifdef OT_NEG_DDIV_DEPTH
+    // Negative control: M1 divide retires one cycle before its result.
+    localparam [15:0] H_F5 = 5 + OPR + CAPR + GSH, H_F3 = 3 + CAPR, H_MD = DDIV + OPR - 1, H_MM = MLAT + OPR;   // gather fetch, M1 divide / multiply
+`else
     localparam [15:0] H_F5 = 5 + OPR + CAPR + GSH, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;   // gather fetch, M1 divide / multiply
+`endif
     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
                       H_EG = D_EG;
     function automatic [9:0] sfu_d(input [2:0] s);

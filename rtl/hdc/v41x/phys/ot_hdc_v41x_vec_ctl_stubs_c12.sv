@@ -32,7 +32,8 @@ endmodule
 module ot_hdc_v41x_vec_lane #(
     parameter integer AW = 24, parameter integer CW = 24, parameter integer LN = 3, parameter integer KIND = 0,
     parameter integer KVT_SH = 9, parameter integer LEAF = 0, parameter integer MLAT = 3, parameter integer ALAT = 3,
-    parameter integer OPR = 0, parameter integer DDIV = 19, parameter integer SIDEX = 0, parameter integer CAPR = 0
+    parameter integer OPR = 0, parameter integer DDIV = 19, parameter integer SIDEX = 0, parameter integer CAPR = 0,
+    parameter integer GSH = 0, parameter integer KIMM = 0, parameter integer DENR = 0, parameter integer DRING = 0
 ) (
     input  wire clk, input wire rst_n, input wire [10:0] lane_id,
     input  wire ld, input wire ld_bank, input wire [5*LN*AW-1:0] ld_c,
