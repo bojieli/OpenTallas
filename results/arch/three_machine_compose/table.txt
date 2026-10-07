@@ -2,8 +2,8 @@ THREE-MACHINE COMPOSITION (per user, target context)
 
 machine                              AR tok/s  MTP tok/s  MTP@3.8879  note
 (links: FULL RS(544,514) FEC on every off-package link, owner 2026-10-06)
-DS ROM 1M (adopted levers)            1,598.5    4,706.1     4,399.4  tau 4.159; MTP physical_qualified=False
-  + all PENDING_SSFF (CONDITIONAL)    2,074.0    5,822.3     5,442.8  not a headline
+DS ROM 1M (adopted levers)            1,596.7    4,702.0     4,395.5  tau 4.159; MTP physical_qualified=False
+  + all PENDING_SSFF (CONDITIONAL)    2,071.0    5,816.0     5,436.9  not a headline
 Qwen ROM 8K (P8191)                   5,537.3    5,537.3           -  216,713 cycles; MTP mode AR (DSpark OFF) (DSpark 0.705x)
   KV (all 36 layers, FP8, in token) 576 MiB/token; landing 3,042 B/cyc/rank = 3.65 TB/s/die (91.3% peak), exposed 1363 cyc
   + modelled costs (not RTL)          5,536.7                         +24 cyc (KV_MAP=1 die crossbar, cold layer); not a headline
@@ -12,23 +12,23 @@ Qwen ROM 8K (P8191)                   5,537.3    5,537.3           -  216,713 cy
 HBM accel DS 1M, wire floor           1,999.7    3,993.7     3,733.4  +37.917 us wire
 HBM accel DS 1M, wire median          1,948.8    3,944.2     3,687.1  +50.983 us wire
 HBM accel DS 1M, wire bound           1,921.5    3,917.2     3,661.8  +58.269 us wire
-full FEC vs light FEC (superseded) DS ROM dAR -59.3 tok/s (+22.373 us), dMTP -159.1 tok/s (+28.885 us step); HBM +29.89 us AR and MTP step (305 crossings x 98.0 ns)
+full FEC vs light FEC (superseded) DS ROM dAR -59.2 tok/s (+22.373 us), dMTP -158.7 tok/s (+28.885 us step); HBM +29.89 us AR and MTP step (305 crossings x 98.0 ns)
 
-DS ROM / HBM (wire median): AR 0.8202x  MTP 1.1932x
+DS ROM / HBM (wire median): AR 0.8193x  MTP 1.1921x
 
 PER-LEVER DELTAS (adopted: headline minus headline-without; conditional: if-adopted minus headline)
 machine   lever                  class           dAR us  dAR tok/s  dMTP step  dMTP tok/s
-DS ROM    draft                  adopted          0.000        0.0    -27.546       142.2
-DS ROM    head                   adopted       -102.043      224.2   -681.916      2049.7
-DS ROM    router                 adopted        -12.100       30.3    -13.619        71.4
-DS ROM    su_hcpost              adopted        -16.133       40.2    -18.159        94.7
-DS ROM    su_norm                adopted        -43.074      103.0    -48.344       244.1
-DS ROM    su_routeract           adopted        -11.555       29.0    -13.006        68.2
-DS ROM    su_swiglu              adopted        -18.013       44.7    -21.175       110.1
-DS ROM    field_spine            conditional    -10.209       26.5    -12.061        65.2
-DS ROM    field_spine_pq         conditional   -130.678      422.1   -155.089      1001.7
-DS ROM    qelem_pq               conditional   -120.981      383.2   -143.690       913.8
-DS ROM    su_softmax             conditional    -12.751       33.2    -14.333        77.6
+DS ROM    draft                  adopted          0.000        0.0    -27.546       142.0
+DS ROM    head                   adopted       -102.043      223.7   -681.819      2046.8
+DS ROM    router                 adopted        -12.099       30.2    -13.619        71.3
+DS ROM    su_hcpost              adopted        -16.133       40.1    -18.159        94.6
+DS ROM    su_norm                adopted        -43.073      102.7    -48.344       243.7
+DS ROM    su_routeract           adopted        -11.555       28.9    -13.006        68.2
+DS ROM    su_swiglu              adopted        -18.013       44.6    -21.175       110.0
+DS ROM    field_spine            conditional    -10.209       26.5    -12.061        65.0
+DS ROM    field_spine_pq         conditional   -130.679      421.1   -155.089       999.7
+DS ROM    qelem_pq               conditional   -120.901      382.0   -143.610       911.3
+DS ROM    su_softmax             conditional    -12.752       33.2    -14.333        77.4
 DS ROM    field                  excluded     REJECT
 DS ROM    hop                    excluded     REJECT
 Qwen ROM  core_context           adopted         +0 cyc        0.0

@@ -405,10 +405,11 @@ def apply_add_cycles(P, lever_dir):
             continue
         for ad in r["adds"]:
             key = ad["nodes"]
-            if key == "draft.head_occ":  # pseudo-node: per-position draft head occupancy (draft = 5 x head_occ ...)
+            if key in ("draft.head_occ", "draft.total"):  # per-position occupancy or fixed whole-draft overhead
                 if r.get("items") is not None and ad.get("item") not in r["items"]:
                     continue
-                P.draft_head_occ_add_us = getattr(P, "draft_head_occ_add_us", 0.0) + ad.get("cycles", 0) / ad.get("clk_hz", CLK) * 1e6
+                attr = "draft_head_occ_add_us" if key == "draft.head_occ" else "draft_total_add_us"
+                setattr(P, attr, getattr(P, attr, 0.0) + ad.get("cycles", 0) / ad.get("clk_hz", CLK) * 1e6)
                 out.append(dict(lever=r["lever"], item=ad.get("item"), nodes=key, count=1, cycles=ad.get("cycles", 0), frac=0.0))
                 continue
             names = suffix_nodes(P.g, key[2:]) if key.startswith("*.") else [key]
@@ -756,7 +757,7 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
     wave = json.loads(WAVE.read_text())["composition"]
     segs = stage_busy(g)
     head_occ = info.get("head", {}).get("stage_occupancy_us", M.WAVEFRONT["head_occ_us"])
-    head_occ += getattr(P, "draft_head_occ_add_us", 0.0)   # closure-cost ledger draft.head_occ adds
+    draft_head_occ = head_occ + getattr(P, "draft_head_occ_add_us", 0.0)
     for s in segs:
         if s["hop"] == "token.return":          # the head stage: lm_head sweep is its occupancy (terminal overlaps)
             s["busy_us"] = max(s["busy_us"] - info.get("head", {}).get("argmax_drain_us", 0.0), head_occ)
@@ -775,7 +776,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
             fd = draft_full_fec_delta(src, recs["links"])
             info["draft_blocks"]["full_fec"] = fd
             blocks_us += fd["us"]
-    draft = blocks_us + 5 * head_occ * (1 + r_markov)
+    draft_total_add = getattr(P, "draft_total_add_us", 0.0)
+    draft = blocks_us + 5 * draft_head_occ * (1 + r_markov) + draft_total_add
     step = verify + draft + M.DRAFT["seed_commit_us"]
     mtp = M.DRAFT["tau"] * 1e6 / step
     modelled = [p for p in path if p["cls"] == "modelled"]
@@ -853,13 +855,13 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         still_modelled_total_us=round(sum(p["us"] for p in modelled) + sub_us, 3),
         MTP=dict(rule=("II = slowest stage busy x (1 + measured handoff " +
                        (f"{wfc['handoff_cycles']} cyc, closed WFC" if wfc else "46/11271") + ") + measured hop; verify = AR + 5 II; ")+
-                      "draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau " + f"{M.DRAFT['tau']:g} ({TP.tau_src('deepseek_v41', 5)})",
+                      "draft = 3 DSpark blocks + 5 x draft head occupancy x (1 + Markov/lm_head MACs) + fixed draft overhead; tau " + f"{M.DRAFT['tau']:g} ({TP.tau_src('deepseek_v41', 5)})",
                  stage_busy_top=sorted(segs, key=lambda s: -s["busy_us"])[:6], worst_stage=worst,
                  II_us=round(ii, 3), verify_us=round(verify, 3), draft_us=round(draft, 3),
                  draft_terms=dict(block5_us=db["block5_us"] if db else dr["block5_us"], blocks_us=round(blocks_us, 3),
                                   block5_basis=(db["basis"] if db else "reduced-vehicle slice x transfer ratio "
                                                 "(results/rtl/dsrom_dspark_step_slices_20261004) -- NOT full shape"),
-                                  head_occ_us=head_occ, r_markov=r_markov),
+                                  head_occ_us=draft_head_occ, verify_head_occ_us=head_occ, fixed_overhead_us=draft_total_add, r_markov=r_markov),
                  seed_commit_us=M.DRAFT["seed_commit_us"], step_us=round(step, 3), MTP_tok_s=round(mtp, 1),
                  tau=M.DRAFT["tau"], tau_source=TP.tau_src("deepseek_v41", 5), mtp_over_ar=round(mtp * ar / 1e6, 3),
                  tau_sensitivity=TP.mtp_sensitivity(step)),
