@@ -1,0 +1,38 @@
+[
+  {
+    "host": "ot-epyc1tb",
+    "path": "/srv/opentallas-scratch/claude/dsrom-field-spine/v13b/src/rtl/v41die/ot_v41_spine_pqc_w17w10.sv",
+    "commit": "806589cc7",
+    "repository_path": "rtl/v41die/ot_v41_spine_pqc_w17w10.sv",
+    "expected_sha256": "ecac11e1d7406b49d5ea6d417ca17eadd3565523394d3e99199d9190399523f3",
+    "actual_sha256": "ecac11e1d7406b49d5ea6d417ca17eadd3565523394d3e99199d9190399523f3",
+    "match": true
+  },
+  {
+    "host": "ot-epyc2",
+    "path": "/srv/opentallas-scratch2/scratch/claude/qelem-qm/wt-d44b98796/rtl/v41rom/ot_v41_bterm5_w10.sv",
+    "commit": "d44b98796",
+    "repository_path": "rtl/v41rom/ot_v41_bterm5_w10.sv",
+    "expected_sha256": "99b93ec5964f96da43c1f162b7464c2593a421ad20cf2288e1fb0f0dca2470f5",
+    "actual_sha256": "99b93ec5964f96da43c1f162b7464c2593a421ad20cf2288e1fb0f0dca2470f5",
+    "match": true
+  },
+  {
+    "host": "ot-epyc2",
+    "path": "/srv/opentallas-scratch2/scratch/claude/qelem-qm/wt-d44b98796/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+    "commit": "d44b98796",
+    "repository_path": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+    "expected_sha256": "046c669ab87bfca7339e38e5f6e233129f2c1d3d0d6c2f6a7be853b11298a54f",
+    "actual_sha256": "046c669ab87bfca7339e38e5f6e233129f2c1d3d0d6c2f6a7be853b11298a54f",
+    "match": true
+  },
+  {
+    "host": "ot-epyc1tb",
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-region/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+    "commit": "fd8df673d",
+    "repository_path": "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+    "expected_sha256": "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8",
+    "actual_sha256": "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8",
+    "match": true
+  }
+]
