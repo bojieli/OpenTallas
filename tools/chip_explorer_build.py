@@ -209,21 +209,28 @@ D['ds_mtp'] = V(dict(II=dsc['MTP']['II_us'], verify=dsc['MTP']['verify_us'], dra
 D['ds_hop'] = V(round(dsc['info']['hop_us'], 4), 'us', 'measured', DSC + " info.hop_us = " + LFF + " hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 RS(544,514) PHY vendor budget 209 ns + UCIe 10 ns + 2x45 routed wire stages (1,004 cyc)",
                 note=FEC_RULE + '; was 0.7575 us on the superseded 130 ns light-FEC budget. Cable flight beyond 0.3 m is charged per hop class (' + DSR + ').')
 sysm = dsm['priced']['S81_ragged_RD64_replicated']['system']
+_r8 = dsc['info'].get('r8_reprice', {})
+assert dsr['counts']['stages'] == _r8.get('stages', 81) and dsr['counts']['layer'] == _r8.get('layer_dies', 324), \
+    'rack record ' + DSR + ' packs %d stages / %d layer dies, the composition %s / %s: re-run tools/dsrom_s81_rack.py' % (
+        dsr['counts']['stages'], dsr['counts']['layer'], _r8.get('stages'), _r8.get('layer_dies'))
 DBRP = 'results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json'
 DBR = J(R / DBRP)
 D['ds_system'] = dict(
-    stages=V(81, 'stages', 'analytical', DSM + ' decision.area.stages (S81)'),
-    layer_dies=V(sysm['layer_dies'], 'dies', 'analytical', DSM + ' priced.S81_ragged_RD64_replicated.system.layer_dies (81 stages x TP4)'),
+    stages=V(dsr['counts']['stages'], 'stages', 'analytical', DSR + ' counts.stages <- ' + dsr['counts']['src']['stages'],
+             note='S81 (' + DSM + ' decision.area.stages 81) is the pre-q-element count'),
+    layer_dies=V(dsr['counts']['layer'], 'dies', 'analytical', DSR + ' counts.layer (' + str(dsr['counts']['stages']) + ' stages x TP4)',
+                 note='S81: ' + str(sysm['layer_dies']) + ' (' + DSM + ' priced.S81_ragged_RD64_replicated.system.layer_dies)'),
     head_dies=V(dsr['counts']['head'], 'dies', 'analytical', DSR + ' counts.head <- ' + dsr['counts']['src']['head']),
     table_dies=V(dsr['counts']['table'], 'dies', 'analytical', DSR + ' counts.table <- ' + dsr['counts']['src']['table']),
-    total_dies_model=V(dsr['counts']['dies'], 'dies', 'analytical', DSR + ' counts.dies (324 layer + 12 head + 36 table + 52 draft)',
+    total_dies_model=V(dsr['counts']['dies'], 'dies', 'analytical', DSR + ' counts.dies (%(layer)d layer + %(head)d head + %(table)d table + %(draft)d draft)' % dsr['counts'],
                        note='supersedes ' + DSM + ' system.total_dies 368 (8 head dies, no draft dies)'),
     packages=V(dsr['counts']['dies'] // 2, 'packages', 'analytical', DSR + ' counts.dies / 2 (two-die packages)'),
     stacks=V(dsr['stacks']['total'], 'HBM stacks', 'analytical', DSR + ' stacks.total: ' + dsr['stacks']['src'],
-             note='4 on the 32 scan dies and the 12 head dies, 1 on the other 292 layer dies, 0 on table and draft dies; the power model\'s 452 = the same rule at 8 head dies'),
+             note='4 on the %d scan dies and the %d head dies, 1 on the other %d layer dies, 0 on table and draft dies; the power model\'s 452 = the same rule at S81 with 8 head dies' % (dsr['stacks']['scan_dies'], dsr['counts']['head'], dsr['counts']['layer'] - dsr['stacks']['scan_dies'])),
     scan_dies=V(dsr['stacks']['scan_dies'], 'dies', 'analytical', DSR + ' stacks.scan_stages ' + str(dsr['stacks']['scan_stages']) + ' x TP4'),
-    die_mm2=V(dsm['decision']['area']['die_mm2'], 'mm2', 'analytical', DSM + ' decision.area.die_mm2 (priced S81 die)'),
-    pairs=V(dsm['decision']['area']['pairs'], 'pairs/die', 'analytical', DSM + ' decision.area.pairs'),
+    die_mm2=V(dsm['decision']['area']['die_mm2'], 'mm2', 'analytical', DSM + ' decision.area.die_mm2 (priced S81 die; the q-element frame keeps the die outline)'),
+    pairs=V(dsr['geometry']['pairs_per_layer_die'], 'pairs/die', 'analytical', DSR + ' geometry.pairs_per_layer_die <- ' + dsr['geometry']['src'],
+            note='S81: ' + str(dsm['decision']['area']['pairs']) + ' (' + DSM + ' decision.area.pairs)'),
     draft_primary=V(draft['placement']['dies']['primary'], 'dies', 'analytical', DRAFT + ' placement.dies.primary'),
     draft_replicas=V(draft['placement']['dies']['expert_replicas'], 'dies', 'analytical', DRAFT + ' placement.dies.expert_replicas (5 expert TP4 groups per DSpark block x 3 blocks)'),
     draft_added=V(draft['dies_added'], 'dies', 'analytical', DRAFT + ' dies_added (vs 12 baseline draft dies)'),
@@ -495,6 +502,8 @@ TECH = 'configs/hardware/technology.json'
 tech = J(R / TECH)['links']
 ES = 'results/arch/energy_silicon_measured/energy_silicon.json'
 es = J(R / ES)
+assert es['deepseek_1m']['rom']['layer_dies'] == dsr['counts']['layer'] and es['deepseek_1m']['rom']['total_dies'] == dsr['counts']['dies'], \
+    'energy record is stale against ' + DSR + ': re-run tools/energy_silicon_measured.py'
 assert es['qwen_8k']['rom']['power']['ar']['tok_s'] == q['AR_tok_s'], 'energy record is stale against ' + CMP + ': re-run tools/energy_silicon_measured.py'
 S81FP = 'results/rtl/dsrom_s81_fulldie_20261004/floorplan.json'
 s81p = J(R / S81FP)['scan_die_power']
@@ -609,7 +618,9 @@ D['racks'] = dict(
                       packages=ds_dies // 2, stacks=dsr['stacks']['total'], scan_dies=dsr['stacks']['scan_dies']), 'dies', 'analytical',
                  DSR + ' counts: head ' + dc['src']['head'] + '; table ' + dc['src']['table'] + '; draft ' + dc['src']['draft'] + '; stacks ' + dsr['stacks']['src'],
                  note='Resolved 2026-10-06: 12 head + 36 Engram table dies (the 8 + 36 of the C1 ledger and the 12 + 32 this page showed earlier are both stale); '
-                      'HBM stacks sized to need (scenario C): 4 on the 32 scan dies and the 12 head dies, 1 on the other 292 layer dies, none on table or draft dies = 468.'),
+                      '%d stages / %d layer dies for the adopted q-element frame (S81: 81 / 324); '
+                      'HBM stacks sized to need (scenario C): 4 on the %d scan dies and the %d head dies, 1 on the other %d layer dies, none on table or draft dies = %d.'
+                      % (dc['stages'], dc['layer'], dsr['stacks']['scan_dies'], dc['head'], dc['layer'] - dsr['stacks']['scan_dies'], dsr['stacks']['total'])),
         die_w=V(dict(layer=LAYER_W, head_table=dsr['die_w']['head_table'], stack=STACK_W), 'W', 'analytical', DSR + ' die_w: ' + dsr['die_w']['src']),
         system_kw=V(dict(ar=round(es['deepseek_1m']['rom']['power']['ar_b1_icg']['system_w'] / 1e3, 2), mtp=round(es['deepseek_1m']['rom']['power']['mtp_b1_icg']['system_w'] / 1e3, 2)), 'kW', 'analytical',
                     ES + ' deepseek_1m.rom.power.{ar_b1_icg,mtp_b1_icg}.system_w (' + es['deepseek_1m']['rom']['design'] + ')'),

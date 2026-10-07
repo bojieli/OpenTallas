@@ -36,11 +36,14 @@ CDC_PATH = "results/rtl/rom_stage_spine_cdc_20261004/verdict.json"            # 
 REG_PATH = "results/external/registry.json"
 INTEG_PATH = "results/uarch/hbm_accelerator_integration_20261004/model.json"
 RECHECK_PATH = "results/uarch/dsrom_c_recheck_20261004/model.json"
-# adopted S81 system (CLAUDE DS-RACK 2026-10-06): 324 layer + 12 head + 36 Engram table + 52 DP1-EP5 draft dies; HBM
-# stacks sized to need (scenario C rule at 12 head dies = 468); the recheck's 368 dies / 452 stacks are 8 head dies
+# adopted system (CLAUDE DS-RACK 2026-10-06; DS-RACK85 2026-10-06): the rack record packs the adopted element frame
+# (default QELEM, QX 10 at f183.60: 85 stages, 340 layer dies, 2,304 pairs a layer die) + 12 head + 36 Engram table
+# + 52 DP1-EP5 draft dies; HBM stacks sized to need (scenario C rule).  The recheck's S81 (324 layer, 368 dies / 452
+# stacks at 8 head dies) is history; only its priced die area is still read (via the scoreboard)
 RACK_PATH = "results/arch/dsrom_s81_rack_20261006/rack.json"
 ECON_PATH = "results/uarch/economics.json"
 COMPOSE_PATH = "results/arch/three_machine_compose/compose.json"
+DS_COMPOSITION = "results/rtl/dsrom_recovery_20261004/composition.json"     # info.r8_reprice: the headline's stage count
 QHBM_P8191 = "results/rtl/qwen_hbmacc_p8191_20261004/measured_composition.json"
 RANK = ["measured", "composed_from_measured", "published", "partial", "off_target_context", "modelled", "assumed",
         "unvalidated", "pending"]
@@ -163,15 +166,16 @@ def energy_row(rate: Term, static_w: float, static_status: str, dyn_j: Term, unv
 # DeepSeek-V4.1 (1M)
 # ---------------------------------------------------------------------------------------------------------------------
 def ds(get, reg, el, dram):
-    rc = load(RECHECK_PATH)["priced"]["S81_ragged_RD64_replicated"]
-    sysr = rc["system"]
-    S = sysr["stages"]
     rk = load(RACK_PATH)
-    cnt = rk["counts"]
-    assert cnt["layer"] == sysr["layer_dies"] and cnt["stages"] == S
+    cnt, geo = rk["counts"], rk["geometry"]
+    S = cnt["stages"]
+    r8 = load(DS_COMPOSITION)["info"]["r8_reprice"]
+    assert cnt["layer"] == 4 * S == geo["layer_dies"], (cnt, geo)
+    assert S == r8["stages"] and cnt["layer"] == r8["layer_dies"] and geo["field_geom"] == r8["geom"], \
+        f"rack record packs {S} stages / {cnt['layer']} layer dies, the headline composition {r8['stages']} / {r8['layer_dies']}"
     layer_dies, draft_dies, stacks = cnt["layer"], cnt["draft"], rk["stacks"]["total"]
     total_dies = cnt["dies"]
-    pairs = rc["area"]["pairs"]
+    pairs = geo["pairs_per_layer_die"]                         # adopted q-element frame (S81: 2,417)
     sys.path.insert(0, str(ROOT / "tools"))
     import dsrom_return_storage_hbm as R                       # the C1 ledger constants (isopower history 8bb540cd1)
     C1 = R.C1
@@ -213,7 +217,9 @@ def ds(get, reg, el, dram):
                   "SerDes 30.6 W per layer die and its 10% lane-gating residual (ASSUMED)",
                   f"head dies {head_w} W and Engram table dies {table_w} W, never gated (modelled)",
                   f"HBM stack idle 2.8 W x {stacks} stacks (ASSUMED band 1.2-6.4 W; scenario C rule: 4 on 32 scan "
-                  f"+ 12 head dies, 1 on the other 292 layer dies, 0 on table and draft dies, {RACK_PATH})",
+                  f"+ 12 head dies, 1 on the other {layer_dies - rk['stacks']['scan_dies']} layer dies, 0 on table and draft dies, {RACK_PATH})",
+                  f"element power of the S81 pair (gate level) charged to each of the {pairs:,} q-element frame pairs a "
+                  f"layer die (QX 10 element idle power not measured; ASSUMED transfer)",
                   f"{draft_dies} DP1-EP5 draft dies charged a layer die's static and gated like one (ASSUMED)",
                   "dynamic energy per token (C1 model)"]
     rows, ledgers = {}, {}
@@ -233,7 +239,7 @@ def ds(get, reg, el, dram):
     for name, ppg, res, wk in variants:
         fa = min(1.0, 1.0 / S + wk.value * 1e-3 / t_ar_us)
         unv = unv_common + [f"element residual {res.value:.4f} applied to the hub logic (ASSUMED transfer)",
-                            "MTP wavefront keeps 7 of 81 stages powered (ASSUMED)"]
+                            f"MTP wavefront keeps 7 of {S} stages powered (ASSUMED)"]
         s_ar, lg = static(True, fa, ppg.value, res.value)
         ledgers[f"{name}_ar_b1"] = dict(lg, active_fraction=round(fa, 5))
         rows[f"ar_b1_{name}"] = energy_row(ar, s_ar, worst("modelled", ppg.status), dyn_ar, unv,
@@ -243,10 +249,12 @@ def ds(get, reg, el, dram):
         ledgers[f"{name}_mtp_b1"] = dict(lg, active_fraction=round(f_mtp, 5))
         rows[f"mtp_b1_{name}"] = energy_row(mtp, s_m, worst("modelled", ppg.status), dyn_mtp, unv, "f = 7/S")
     sil = silicon(total_dies, get("ds_rom.die_mm2"), stacks, dram)
-    rom = dict(design=f"DS ROM S81 ({layer_dies} layer + {cnt['head']} head + {cnt['table']} Engram table + {draft_dies} "
+    rom = dict(design=f"DS ROM S{S}, q-element frame {geo['field_geom']} ({layer_dies} layer + {cnt['head']} head + {cnt['table']} Engram table + {draft_dies} "
                       f"draft dies, 2 dies a package; {stacks} HBM3E stacks)", stages=S, layer_dies=layer_dies,
                head_dies=cnt["head"], table_dies=cnt["table"], draft_dies=draft_dies, stacks=stacks,
-               total_dies=total_dies, pairs_per_layer_die=pairs, rates=dict(ar=ar.d(), mtp=mtp.d(), ar_us=ar_us.d()),
+               total_dies=total_dies, pairs_per_layer_die=pairs,
+               geometry=dict(field_geom=geo["field_geom"], src=f"{RACK_PATH} geometry ({geo['src']}); {DS_COMPOSITION} "
+                                                               f"info.r8_reprice stages / layer_dies agree"), rates=dict(ar=ar.d(), mtp=mtp.d(), ar_us=ar_us.d()),
                silicon=sil, power=rows, static_ledgers=ledgers,
                element=dict(active_w=el["active"].d(), cg_idle_w=el["cg_idle"].d(), pg_idle_w=el["pg_idle"].d(),
                             residual=el["residual"].d(), wake_ns=el["wake_ns"].d(),
@@ -487,7 +495,8 @@ def build():
                 inputs=dict(scoreboard=SB_PATH, scoreboard_commit=load(SB_PATH).get("generated_from_commit"),
                             element_power=PG_PATH, spine=CDC_PATH if (ROOT / CDC_PATH).exists() else
                             (SPINE_PATH if (ROOT / SPINE_PATH).exists() else "pending"),
-                            registry=REG_PATH, integration=INTEG_PATH, recheck=RECHECK_PATH, economics=ECON_PATH),
+                            registry=REG_PATH, integration=INTEG_PATH, recheck=RECHECK_PATH, economics=ECON_PATH,
+                            rack=RACK_PATH, ds_composition=DS_COMPOSITION),
                 status_rank=RANK, ledger_fix=ledger_fix(), deepseek_1m=D, deepseek_compare=ds_cmp, qwen_8k=Q, qwen_compare=q_cmp)
 
 

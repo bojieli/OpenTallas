@@ -7,7 +7,7 @@ This document aligns the owner, Claude and Codex on one picture: where the three
 Close three design targets:
 
 1. **Qwen3-8B ROM**, 8K context (position 8,191).
-2. **DeepSeek-V4.1 ROM** (S81, 81 stages), 1M context (position 1,048,575).
+2. **DeepSeek-V4.1 ROM** (S81 die; 85 stages / 340 layer dies at the default q-element frame, 81 / 324 before it), 1M context (position 1,048,575).
 3. **HBM accelerator**, both models at the same contexts.
 
 A target is closed when all four hold:
@@ -43,7 +43,7 @@ Owner rules in force:
 - **DeepSeek (per user):** against the fully measured HBM accelerator the ROM is 0.77x on AR and **1.05x on MTP**. Against the matched reference it is 0.80x on AR (597.0 vs 474.8 µs) and **1.24x on MTP** (step 849.6 vs 1,050.6 µs). Both ratios use one tau on both sides, so they do not depend on it.
 - **Energy** (`results/arch/energy_silicon_measured/`, regenerated 2026-10-06):
   - Qwen ROM leads (0.109 vs 0.761 J/token, model power).
-  - DS at batch 1, AR: ROM 6.37 J/token (measured PG residual) against HBM 5.77 (switch charged), so the HBM accelerator uses 9% less (HBM/ROM 0.91). The spine-gating row, still unvalidated, is 5.49 J/token.
+  - DS at batch 1, AR: ROM 6.48 J/token (measured PG residual; 85 stages, 340 layer dies; scoreboard `ds_rom.j_per_token_ar_b1_pg`) against HBM 5.77 (switch charged), so the HBM accelerator uses 11% less (HBM/ROM 0.89). The spine-gating row, still unvalidated, is 5.58 J/token.
 
 ## 3. Decisions already taken
 

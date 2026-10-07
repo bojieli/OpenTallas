@@ -652,8 +652,14 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
     if tall:        # taller q-element frame: more layer dies -> more pipeline stages, each a full stage hop
         _, rk = full_fec_inputs()
         mean_cable = rk["hop_summary"]["stage_hop_extra_cycles"] / len(rk["stage_hops"]) / CLK * 1e6
-        info["r8_reprice"]["extra_stage_hops_us"] = round(tall * (hop_extra + mean_cable), 4)
-        cable_us += tall * mean_cable
+        if rk["counts"]["stages"] == info["r8_reprice"]["stages"]:
+            # the rack record packs this frame's stage count (DS-RACK85): every stage hop's cable flight, the extra
+            # hops' included, is already in cable_us -- charge only the measured hop itself for the extra hops
+            info["r8_reprice"]["extra_stage_hops_us"] = round(tall * hop_extra, 4)
+            info["r8_reprice"]["extra_stage_hops_cable"] = "in the rack record's per-hop classes (full_fec.cable_flight_us)"
+        else:   # rack packed at another stage count: the extra hops at the mean cable flight
+            info["r8_reprice"]["extra_stage_hops_us"] = round(tall * (hop_extra + mean_cable), 4)
+            cable_us += tall * mean_cable
     ar = t + (EXTRA_HOPS + tall) * hop_extra + cable_us
     # ---- MTP: wavefront verify with this composition's stage busy times (measured handoff rule) + DSpark draft
     wave = json.loads(WAVE.read_text())["composition"]

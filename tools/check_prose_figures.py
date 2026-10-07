@@ -261,7 +261,7 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "docs/HOST_INTERFACE_AND_RUNTIME.md": 15,
     "docs/MICROARCH_MODEL.md": 2,
     "docs/FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md": 2,
-    "docs/HEADLINE_BUNDLE.md": 199,
+    "docs/HEADLINE_BUNDLE.md": 201,
     "docs/HEADLINE_BUNDLE_SCOPE.md": 12,
     "docs/OVERVIEW.md": 6,
     "docs/ROM_DENSITY_NODE_TRANSFER.md": 24,

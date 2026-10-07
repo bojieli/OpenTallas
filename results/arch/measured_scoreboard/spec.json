@@ -1564,23 +1564,23 @@
    "target": "ds_rom",
    "section": "energy",
    "key": "dies_total",
-   "label": "Total dies (324 layer + 44 head/table)",
-   "path": "results/uarch/dsrom_c_recheck_20261004/model.json",
-   "pointer": "priced.S81_ragged_RD64_replicated.system.total_dies",
+   "label": "Total dies (340 layer + 12 head + 36 Engram table + 52 draft)",
+   "path": "results/arch/energy_silicon_measured/energy_silicon.json",
+   "pointer": "deepseek_1m.rom.total_dies",
    "unit": "dies",
    "status": "modelled",
-   "note": ""
+   "note": "Rack record results/arch/dsrom_s81_rack_20261006/rack.json counts: the adopted q-element frame f183.60 needs 85 stages x TP4 (was the S81 recheck 368 = 324 layer + 44 head/table, 8 head dies)"
   },
   {
    "target": "ds_rom",
    "section": "energy",
    "key": "stacks",
-   "label": "HBM stacks (W3 rule)",
+   "label": "HBM stacks (scenario C rule at 12 head dies)",
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.silicon.stacks",
    "unit": "stacks",
    "status": "modelled",
-   "note": "ASSUMED; scenario C had 420; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
+   "note": "ASSUMED rule: 4 on the 32 scan dies and each head die, 1 on every other layer die (rack record); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
@@ -1602,7 +1602,7 @@
    "pointer": "deepseek_1m.rom.power.ar_b1_pg_measured.J_per_token",
    "unit": "J",
    "status": "modelled",
-   "note": "Uses model AR 2,466.2, not 2,532.2; PG residual 10% ASSUMED; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
+   "note": "At the composed AR (three_machine_compose ds_rom); 85 stages / 340 layer dies + 52 draft dies charged static (rack record); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",
@@ -1624,7 +1624,7 @@
    "pointer": "deepseek_1m.rom.power.mtp_b1_pg_measured.J_per_token",
    "unit": "J",
    "status": "modelled",
-   "note": "At 6,733.7 tok/s (older draft basis); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
+   "note": "At the composed MTP rate (three_machine_compose ds_rom, tau 4.159); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)"
   },
   {
    "target": "ds_rom",

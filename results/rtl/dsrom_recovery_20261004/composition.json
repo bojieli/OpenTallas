@@ -394,7 +394,8 @@
    "extra_stage_hops": 4,
    "stages": 85,
    "layer_dies": 340,
-   "extra_stage_hops_us": 3.3535
+   "extra_stage_hops_us": 3.3467,
+   "extra_stage_hops_cable": "in the rack record's per-hop classes (full_fec.cable_flight_us)"
   },
   "cdc": {
    "edges": 950,
@@ -407,10 +408,10 @@
   "full_fec": {
    "rack": "results/arch/dsrom_s81_rack_20261006/rack.json",
    "links": "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json",
-   "cable_flight_us": 0.1433,
+   "cable_flight_us": 0.15,
    "stage_hops_by_class": {
-    "in-tray": 40,
-    "in-rack": 39,
+    "in-tray": 42,
+    "in-rack": 41,
     "rack-to-rack": 1
    },
    "head_hop": "rack-to-rack",
@@ -31445,7 +31446,7 @@
   "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json": "2adc2c61d464932f97cd3b31d8ce6860c96c079dd7722f33903d0fd0c00fdae9"
  },
  "tool_sha256": {
-  "tools/dsrom_1m_allmeasured.py": "328380f152dc711e2d29714d457affd203a719d02ac9ac04d05395b2a1fc272c",
+  "tools/dsrom_1m_allmeasured.py": "47dbbb754e1efca4352ead09a5dcb83847d10ec4709dd5149b1b0e0ec2317886",
   "tools/dsrom_1m_measure.py": "bf3feec72e3211c22cc9d08616ecac10a50b2a43a2035e15676a91c3ee056a67"
  }
 }
