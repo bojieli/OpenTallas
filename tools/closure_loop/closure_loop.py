@@ -54,6 +54,7 @@ from pathlib import Path
 
 from ssh_transport import command as transport_command
 from source_archive import build_archive, repo_path
+from postroute_recovery import remote_command as postroute_probe_command
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
@@ -1365,7 +1366,41 @@ def finish(j, status, reason, ledger_text):
     experiment(j, f"{term} {reason[:120]}")
 
 
+def preserve_completed_route(j, st, why):
+    """Stop infrastructure repair at the existing route; never turn it into a reroute."""
+    if st["kind"] != "route":
+        return False
+    v = j["spec"].get("verdict", {})
+    if not v.get("corner_sta") or not v.get("drc_metrics"):
+        return False
+    root = str(Path(subst(v["corner_sta"], j)).parent)
+    metrics = subst(v["drc_metrics"], j)
+    if "/logs/" not in metrics:
+        return False
+    base = str(Path(metrics.replace("/logs/", "/results/", 1)).parent)
+    config = dict(route_root=root, odb_patterns=[base + "/6_final.odb", base + "/5_2_route.odb"])
+    r = ssh(j["host"], postroute_probe_command(config), timeout=60)
+    try:
+        if r.returncode:
+            raise ValueError(f"probe exited {r.returncode}")
+        evidence = json.loads(r.stdout)
+    except (ValueError, TypeError):
+        j["wait"] = "completed-route evidence unavailable; retry read before crash recovery"
+        return True
+    if evidence is None:
+        return False
+    j["postroute_repair"] = dict(host=j["host"], run=j["run"], stage=j["stage_tag"],
+                                source_commit=j.get("commit_full"), evidence=evidence, failure=why)
+    j["wait"] = None
+    finish(j, "NEEDS_HUMAN", "post-route helper failed; completed physical artifacts preserved",
+           "NEEDS_HUMAN: repair post-route helper and resume diagnostics against existing route; "
+           "no automatic reroute or migration\n" + ", ".join(x["path"] for x in evidence["helper_errors"]))
+    return True
+
+
 def crash(j, st, fleet, why):
+    if preserve_completed_route(j, st, why):
+        return
     tail = stage_tail(j, st) if j.get("stage_tag") else ""
     m = re.search(r"CALIBRATE_FAIL class=(\S+) detail=(.*)", tail)
     if st["kind"] == "calibrate" and m and m.group(1) in CAL_OWNER_ACTION:
@@ -2136,11 +2171,11 @@ def auto_requeue(jobs):
     live_blocks = {(x["spec"].get("block"), str(x["spec"].get("source", {}).get("commit", ""))[:9])
                    for x in jobs if x["status"] not in TERMINAL}
     for j in jobs:
-        if j["status"] != "NEEDS_HUMAN" or not j.get("crashes"):
+        if j["status"] != "NEEDS_HUMAN" or not j.get("crashes") or j.get("postroute_repair"):
             continue
         with job_lock(j["name"]):
             j = load_job(j["name"])  # cancellation may have won since the tick snapshot
-            if j["status"] != "NEEDS_HUMAN" or not j.get("crashes"):
+            if j["status"] != "NEEDS_HUMAN" or not j.get("crashes") or j.get("postroute_repair"):
                 continue
             c = j["crashes"][-1]
             stl = stage_list(j["spec"])
