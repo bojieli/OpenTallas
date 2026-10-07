@@ -13918,3 +13918,9 @@ def qwen_core_vm_raw_boundary_model(*, groups=48, lanes=16, aw=24):
                       register_cell_area_floor_um2_including_mx=(groups+1)*packet*0.2916,write_visibility_delta_cycles=1),
         physical_status='Core and actual ingress collar must both close SS/FF with real interface budgets',
         final_clock_enrollment='Parent wrapper and collective peers must share checked native epoch; not supplied by this boundary transform')
+
+
+def hbm_su_installed_span_model():
+    """Price checked published-span scalar reads before endpoint construction."""
+    from tools.hbm_su_installed_span_model import model
+    return model()
