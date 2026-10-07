@@ -10902,7 +10902,7 @@ place_pin -pin_name {t_s_wr[2261]} -layer M5 -location {698.6040 0.0960} -pin_si
 place_pin -pin_name {t_s_wr[2262]} -layer M5 -location {698.6520 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_s_wr[2263]} -layer M5 -location {698.7000 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ck[0]} -layer M7 -location {349.6480 250.0200} -pin_size {0.0640 0.2880}
-place_pin -pin_name {rst[0]} -layer M5 -location {698.9400 0.0960} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst[0]} -layer M4 -location {0.0960 480.0000} -pin_size {0.1920 0.0240}
 place_pin -pin_name {s2n[0]} -layer M5 -location {273.9360 499.9440} -pin_size {0.0240 0.1920}
 place_pin -pin_name {s2n[1]} -layer M5 -location {273.9840 499.9440} -pin_size {0.0240 0.1920}
 place_pin -pin_name {s2n[2]} -layer M5 -location {274.0320 499.9440} -pin_size {0.0240 0.1920}

@@ -252,7 +252,9 @@ def pin_lines(q, h, tmp):
     out.append(('ck', 0, 'M7', 349.648, round(HH / 2, 4), '0.0640 0.2880'))
     orig_rst = [l for l in src.read_text().splitlines() if '{rst[0]}' in l][0]
     m = re.search(r'-layer (\w+) -location \{([\d.]+) ([\d.]+)\} -pin_size \{(.*)\}', orig_rst)
-    if h == 's':
+    if h == 's' and q == 'nw':     # r23v k16 bundled view: the quadrant S-face rst (698.94) collides with the t_s_wr run
+        out.append(('rst', 0, 'M4', 0.096, 480.0, '0.1920 0.0240'))   # free W-face spot (iNW / qNW end at y 53.3)
+    elif h == 's':
         out.append(('rst', 0, m.group(1), float(m.group(2)), float(m.group(3)), m.group(4)))
     else:
         out.append(('rst', 0, 'M4', 699.72 if q in ('sw', 'nw') else 0.096, 480.0, '0.1920 0.0240'))
