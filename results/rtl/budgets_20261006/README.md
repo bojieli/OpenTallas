@@ -143,3 +143,4 @@ every one.
   die interface whose pin segment exceeds 100 um (500 relay ends, list relay_ends_hbm.json; last segment <= 100 um,
   +1 hop each). HBM hardened blocks with an interface internal budget < 300 ps: 17 -> 1 (ot_pdie_serdes black box, 465 ps
   after the link relay; hfd_su a at 339.7 ps). Clock plan unchanged (relays are not clock-tree instances).
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS, OWNER 2x hub): HBM on r23: SU / SFU / HC quarters x2 area (1406 / 797 / 551 um x 5530 um), die W 24.40 -> 27.16 mm; hub quarter E/W ports in <= 500 um windows. Clock plan: stream trunk 2.69 -> 2.88 ns SS, 7 SE-group w/e crossings at 150.5-150.9 ps (<= 0.9 ps over the 150 ps term: next plan pads them). HBM infeasible 0.

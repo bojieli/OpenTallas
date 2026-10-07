@@ -5,7 +5,7 @@
   "waypoint"
  ],
  "dies": {
-  "hbm": 12
+  "hbm": 16
  },
  "size_um": [
   64.344,
@@ -71,7 +71,7 @@
     "hfd_stn_r12",
     "hfd_stn_r13"
    ],
-   "connections": 12,
+   "connections": 16,
    "dies": [
     "hbm"
    ],
@@ -79,30 +79,30 @@
    "period_ps": 833.333,
    "clock_domain": null,
    "timing": "sync",
-   "length_um": 1666.3,
+   "length_um": 1665.7,
    "length_basis": "pins",
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w157_ct_NW<->w156_ct_NW",
+   "worst_instance": "hbm:w38_ct_SW<->w37_ct_SW",
    "also_cdc": false,
-   "input_delay_ss_ps": 602.8,
-   "output_delay_ss_ps": 543.8,
+   "input_delay_ss_ps": 602.6,
+   "output_delay_ss_ps": 543.6,
    "input_fraction_of_T": 0.723,
-   "output_fraction_of_T": 0.653,
-   "internal_input_ps": 155.5,
-   "internal_output_ps": 214.5,
-   "as_planned_internal_input_ps": 155.5,
-   "as_planned_internal_output_ps": 214.5,
+   "output_fraction_of_T": 0.652,
+   "internal_input_ps": 155.7,
+   "internal_output_ps": 214.7,
+   "as_planned_internal_input_ps": 155.7,
+   "as_planned_internal_output_ps": 214.7,
    "feasible_input": true,
    "feasible_output": true,
    "reach_um": 491.0,
    "stages_needed": 4,
    "stages_planned": 4,
    "extra_stages_needed": 0,
-   "segment_after_stages_um": 416.6,
-   "input_min_delay_ff_ps": 78.9,
-   "output_min_delay_ff_ps": -31.7,
+   "segment_after_stages_um": 416.4,
+   "input_min_delay_ff_ps": 78.8,
+   "output_min_delay_ff_ps": -31.6,
    "feasible": true
   },
   {
@@ -116,7 +116,7 @@
     "hfd_cdist_r14",
     "hfd_stn_r13"
    ],
-   "connections": 12,
+   "connections": 16,
    "dies": [
     "hbm"
    ],
@@ -129,7 +129,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w100_ct_SE<->w101_ct_SE",
+   "worst_instance": "hbm:w37_ct_SW<->w38_ct_SW",
    "also_cdc": false,
    "input_delay_ss_ps": 602.6,
    "output_delay_ss_ps": 543.6,
@@ -158,7 +158,7 @@
   "cdc": 0,
   "infeasible": 0,
   "fanout_flags": 0,
-  "max_length_um": 1666.3,
+  "max_length_um": 1665.7,
   "max_stages_needed": 4
  },
  "constants": {
