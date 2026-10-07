@@ -367,6 +367,7 @@ R24SM3VO = dict(R24SM3V, native_owner_bays=True)
 R24SM3VOC = dict(R24SM3VO, native_descriptor_bays=True)
 R24SM3VOCE = dict(R24SM3VOC, native_control_escape_bays=True)
 R24SM3VOCEU = dict(R24SM3VOCE, native_control_u_corridors=True)
+R24SM3VOCEUR = dict(R24SM3VOCEU, native_result_store_bays=True)
 ADOPTED = R23
 
 
@@ -736,6 +737,18 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
                             corridors=[dict(sm=row['sm'],box_um=box) for row in proposal['rows'] for box in row['corridor_rectangles_um']]
                             m['native_control_u_corridors']=corridors
                             m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in corridors)
+    if network_probe and variant.get('native_result_store_bays'):
+        proposal=json.loads((ROOT/'results/uarch/hbm_sm_result_store_reservation_20261007/model.json').read_text())
+        sm_by={i.name:i for i in insts if i.kind=='sm'}
+        for site in proposal['sites']:
+            b=site['sm_group_start'];col=sm_by[f'sm{b+2}'];row=sm_by[f'sm{b+6}']
+            actual=[col.x,row.y,col.x+col.w,row.y+row.h]
+            if any(abs(a-v)>1e-6 for a,v in zip(actual,site['box_um'])):
+                raise ValueError('native result-store proposal does not match actual vacant SM site')
+        stores=[dict(sm=s['source_sm'],name=s['name'],box_um=s['box_um']) for s in proposal['stores']]
+        m['native_result_store_bays']=stores
+        m.setdefault('reserved_regions',[]).extend(s['box_um'] for s in stores)
+        m['notes'].append('Full native result-store slot reservations only; no physical master, capture route, or installed-destination service is qualified.')
     m['buses'], m['paths'] = buses(m)
     if variant.get('stn_share'):
         share_stations(m)
