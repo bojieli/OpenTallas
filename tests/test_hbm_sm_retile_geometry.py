@@ -38,3 +38,22 @@ def test_network_fail_closed_and_clock_partition():
             a0, b0, a1, b1 = t['rect']
             assert x1 <= a0 or a1 <= x0 or y1 <= b0 or b1 <= y0
     assert not m['buses'] and not m['paths']
+
+
+def test_network_probe_preserves_all_result_associations():
+    m = H.build(H.R24SM3, network_probe=True)
+    result = H.legality(m)
+    assert result['overlaps'] == result['outside'] == 0
+    leaves = [b for b in m['buses'] if b[1] == 'result_leaf']
+    assert len(leaves) == 32
+    sms = {i.name:i for i in m['insts'] if i.kind=='sm'}
+    for bid, cls, bits, eps in leaves:
+        assert bits == 270
+        source, sink = eps
+        sm = sms[source[0]]
+        assert source[1] == 'r'
+        assert sink[1] == f"t{sm.sm['row']}"
+        assert f"rg{sm.sm['stack']}{sm.sm['col']}" in sink[0]
+        assert m['paths'][f'result_{sm.name}'][0] == bid
+    assert len(m['buses']) == len({b[0] for b in m['buses']})
+    assert m['network_probe'] is True

@@ -362,7 +362,7 @@ R24SM3 = dict(R24W, sm_wh=(3075.84, 1131.84), sm_physical_grid=(3, 3), side_padd
 ADOPTED = R23
 
 
-def build(variant=None, *, geometry_only=False):
+def build(variant=None, *, geometry_only=False, network_probe=False):
     variant = dict(variant if variant is not None else ADOPTED)
     Q.CORNER_RULE.clear()
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
@@ -376,7 +376,7 @@ def build(variant=None, *, geometry_only=False):
     physical_cols, physical_rows = variant.get('sm_physical_grid', (4, 2))
     if (physical_cols, physical_rows) not in ((4, 2), (3, 3)):
         raise ValueError('SM physical grid must preserve eight logical SMs per stack')
-    if variant.get('sm_physical_grid') and not geometry_only:
+    if variant.get('sm_physical_grid') and not (geometry_only or network_probe):
         raise ValueError('Retiled SM network paths and latency are not yet qualified; use geometry_only=True')
     grp_w = physical_cols * (smw + SHAVE) + (physical_cols + 1) * CH
     grp_h = physical_rows * (smh + SHAVE) + physical_rows * CH
@@ -654,6 +654,9 @@ def build(variant=None, *, geometry_only=False):
         m['geometry_only'] = True
         m['notes'].append('Placement candidate only: network paths, fixed-pin transforms, clock delivery and latency unqualified.')
         return m
+    if network_probe:
+        m['network_probe'] = True
+        m['notes'].append('Unqualified network probe: old logical tree association, moved anchors; actual pin routes and timing require validation.')
     m['buses'], m['paths'] = buses(m)
     if variant.get('stn_share'):
         share_stations(m)
@@ -934,8 +937,48 @@ def split_station(m, role, h_data=1024):
                    for j in m['insts'] if j is not it):
                 bx = cand
                 break
+        by_ = it.y
+        if bx is None and m.get('network_probe'):
+            # Retiled geometry may have a free row corridor rather than a
+            # second side-by-side slot. Preserve both real macro dimensions.
+            for cy in (it.y + it.h + SHAVE + 8.64, it.y - it.h - SHAVE - 8.64):
+                if cy < EDGE or cy + it.h > m['geo']['H'] - EDGE:
+                    continue
+                if all(not (it.x < j.x + j.w + 4 and j.x < it.x + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                       for j in m['insts'] if j is not it):
+                    bx, by_ = it.x, cy
+                    break
+        if bx is None and m.get('network_probe'):
+            offsets = sorted(((dx, dy) for dx in range(-24, 25) for dy in range(-24, 25)),
+                             key=lambda xy: abs(xy[0]) + abs(xy[1]))
+            for dx, dy in offsets:
+                cx, cy = up(it.x + dx * 43.2, GX), up(it.y + dy * 43.2, GY)
+                if cx < EDGE or cy < EDGE or cx + it.w > m['geo']['W'] - EDGE or cy + it.h > m['geo']['H'] - EDGE:
+                    continue
+                if all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                       for j in m['insts']):
+                    bx, by_ = cx, cy
+                    break
+        if bx is None and m.get('network_probe'):
+            # The unoccupied ninth physical site is explicitly available for
+            # tree macros. Its longer wires remain an unqualified probe cost.
+            candidates = []
+            for group in m['groups'].values():
+                sm0 = group['sms'][0]
+                ex = group['x'] + CH + 2 * (sm0.w + SHAVE + CH)
+                ey = (group['y'] + 2 * (sm0.h + SHAVE + CH)
+                      if group['side'] == 'S' else group['y'])
+                for dx in range(0, int(sm0.w - it.w), 108):
+                    for dy in range(0, int(sm0.h - it.h), 108):
+                        candidates.append((up(ex + dx, GX), up(ey + dy, GY)))
+            candidates.sort(key=lambda xy: abs(xy[0]-it.x)+abs(xy[1]-it.y))
+            for cx, cy in candidates:
+                if all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                       for j in m['insts']):
+                    bx, by_ = cx, cy
+                    break
         assert bx is not None, ('no room for the B half', it.name)
-        b = Inst(it.name + 'b', role + 'b', round(bx, 4), it.y, it.w, it.h, it.orient, kind=it.kind, region=it.region,
+        b = Inst(it.name + 'b', role + 'b', round(bx, 4), round(by_, 4), it.w, it.h, it.orient, kind=it.kind, region=it.region,
                  domain=it.domain)
         pair[it.name] = (a, b)
     m['insts'] = [i for i in m['insts'] if i.name not in pair] + [x for ab in pair.values() for x in ab]
@@ -1685,7 +1728,11 @@ def buses(m):
             y_mid = r0.y - CH / 2
             y_top = r1.y - CH / 2
             y_svc = svc.y + svc.h / 2
-        cxs = [G['x'] + CH / 2 + c * (smw + CH) for c in range(5)]
+        # Preserve four logical branches while adapting anchor span to three
+        # physical columns. These are tree anchors, never SM pin coordinates.
+        anchor_pitch = ((g['grp_w'] - CH) / 4 if m.get('network_probe')
+                        and V.get('sm_physical_grid') else smw + CH)
+        cxs = [G['x'] + CH / 2 + c * anchor_pitch for c in range(5)]
         jx = G['x'] + g['grp_w'] + g['mid_ch'] / 2 if half == 'W' else G['x'] - g['mid_ch'] / 2
         jside = 4 if half == 'W' else 0                     # the column channel next to the mid channel
         by_rc = {(s.sm['row'], s.sm['col']): s for s in sms}
