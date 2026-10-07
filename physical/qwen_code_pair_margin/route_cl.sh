@@ -6,7 +6,7 @@
 set -o pipefail
 L=${1:?label}; shift; S=${SRC:-.}; O=${OUT:?out}/$L; mkdir -p $O $O/tmp; cd $S
 SS=${CK_SS_MEAN:-726}; FF=${CK_FF_MEAN:-394}; M2=${M2:-2}; HM=${HM:-0.035}
-r(){ python3 -c "print(round($1/1000.0,4))"; }
+r(){ python3 -c "print(round(($1)/1000.0,4))"; }
 IMAX=$(r "$SS+270"); IMIN=$(r "$SS+50"); OMAX=$(r "120-($SS-150)"); OMIN=$(r "($SS-$FF)-60")
 export OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited TMPDIR=$O/tmp
 export OPENTALLAS_ORFS_IMAGE=${OPENTALLAS_ORFS_IMAGE:-sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29}

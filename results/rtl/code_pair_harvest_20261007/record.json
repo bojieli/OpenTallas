@@ -1,0 +1,71 @@
+{
+  "status": "EXACT_PASS_PHYSICAL_RUNNING_CONSTRAINT_DEFECT",
+  "job": "code_pair_m2qd_e4ca6da7ac",
+  "source_commit": "e4ca6da7af7b759a8df7c6ff6b29f5839f48a9c8",
+  "exact_seeds": [
+    1,
+    2
+  ],
+  "receipts": [
+    1892,
+    1924
+  ],
+  "rows": 4496,
+  "lat_delta": 11,
+  "burst_writes_accepted": 64,
+  "burst_write_cycles": 64,
+  "fault_injection_pass": [
+    "UE",
+    "DMR",
+    "META"
+  ],
+  "mutants_rejected": [
+    "TAG_SKEW",
+    "NO_UE_GATE",
+    "NO_META_CMP"
+  ],
+  "live_job_preserved": true,
+  "route_defect": "r() lacked parentheses: Python divided only the final expression term by 1000. Captured live source/SDC in live_snapshot.json; local route_cl.sh corrected for future use only.",
+  "intended_IO_ps": {
+    "input_max": 1612,
+    "input_min": 1392,
+    "output_max": -1072,
+    "output_min": 407
+  },
+  "remaining": [
+    "Current route is still in GRT; preserve its terminal evidence with the unit defect, no closure/adoption claim.",
+    "A source-pinned successor must use the corrected unit conversion with unchanged stated IO formulas, then complete SS/FF sign-off including IO."
+  ],
+  "acceptance": {
+    "SS_setup_min_ps": 15,
+    "FF_hold_min_ps": 15,
+    "DRC": 0,
+    "IO_timed": true,
+    "constraints_relaxed": false
+  },
+  "adopted": false,
+  "evidence_sha256": {
+    "live_snapshot.json": "b2fda6650b0b4ced077143af1b26d958d03e70afdd331314d72b16f41c28fb42",
+    "io_units_check.json": "1fe24cc21468cd7cea7cc18b0457403574d671987186f7742f4980729c53491e",
+    "manifest.json": "6780d112193a4afed5e92311c780d6c2abfc3f0721655118aef8d037c7740d9d",
+    "mut_no_ue_gate/run.log": "75850b93e7e5f77aa7850098ab07f3378390d7504e13a5098f931751e32a8eef",
+    "mut_tag_skew/run.log": "dc65d53cd01af49b6d7a2ce5b98f1aa1f5a83acd734574862d1c6807d9f52ee2",
+    "exact_s2/run.log": "d3c439342b750c0f044f2d96cbdca3708b23835e5ee69d4ff36a45e4e68b1695",
+    "cl/bench_neg_ue.a1.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "cl/job.json": "6f5eae33b2e4c6e8edd127f303f6168b05aa77e7099d711b9ac394937626de92",
+    "cl/bench_mut_tag_skew.a1.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "cl/bench_exact_s1.a1.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "cl/bench_mut_no_meta_cmp.a1.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "cl/calib.json": "c30c7943b2f824fd6463b8941510a4fd5c4bc81ed348473fc4513e86075bdfc8",
+    "cl/bench_exact_s2.a1.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "cl/bench_mut_no_ue_gate.a1.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "cl/bench_neg_dmr.a1.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "cl/calib.env": "d21ed4984f81b012b7a385b2f6dedd823d9c379dcca16a473471405afc4d7235",
+    "cl/bench_neg_meta.a1.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "neg_ue/run.log": "d809eaea98f1233f1ed4d860b144b61190bbeff7d236dac584156c5819734fbd",
+    "exact_s1/run.log": "ec59b5ee19617dc762f9a1c003718ff5cae468a894f824226699ad17069c1263",
+    "mut_no_meta_cmp/run.log": "f2ecd787b49b97b7f78c1216edc74d0b8bdc60a15aa6dbea056716bdfa87761c",
+    "neg_dmr/run.log": "5cfe7ebd20c1a7ac58a34cf5c6fea073c432fcb670dc552cf2acad28e778f4c2",
+    "neg_meta/run.log": "eb941ca65ed7db3b370196138c37d99d95b260af6a33fb2433f9d0bb45f1ca18"
+  }
+}

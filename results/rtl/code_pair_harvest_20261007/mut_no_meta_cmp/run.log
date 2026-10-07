@@ -1,0 +1,5 @@
+WRITE_RATE m2=2 writes=80 cycles=160
+BURST_RATE m2=2 accepted=64 of 64
+[6103338000] %Fatal: tb_code_pair_margin.sv:233: Assertion failed in tb_code_pair_margin.negmeta: NEGATIVE: receipt copy mismatch not detected
+%Error: rtl/test/qwen_hbm_code_payload_leaf/tb_code_pair_margin.sv:233: Verilog $stop
+Aborting...

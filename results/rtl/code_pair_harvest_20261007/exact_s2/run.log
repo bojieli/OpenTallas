@@ -1,0 +1,7 @@
+WRITE_RATE m2=2 writes=80 cycles=160
+BURST_RATE m2=2 accepted=64 of 64
+PASS_CODE_PAIR_MARGIN_EXACT m2=2 receipts=1924 seed=2 lat_delta=11 compared_cycles=7271 valid_responses=5317 corrected=24 handshake_checks=7282 rows=4496
+- rtl/test/qwen_hbm_code_payload_leaf/tb_code_pair_margin.sv:264: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.637 s; speed 9.528 us/s
+- Verilator: cpu 0.637 s on 1 threads; allocated 8 MB

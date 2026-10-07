@@ -1,0 +1,77 @@
+{
+  "observed_utc": "2026-10-07T10:55:10.502025+00:00",
+  "remote_root": "/srv/opentallas-scratch/claude/closure-loop/code_pair_m2qd_e4ca6da7ac",
+  "remote_source_sha256": {
+    "rtl/hdc/v41x/ot_dsrom_su_softmax.sv": "449c02c4fb477a4b0f89c736cce647be197b04c38ebd86192ec013b5d1c71bbe",
+    "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_pair_margin.sv": "4434b3cfbb2def84a5cf8f704e43ee38f68583754516c547ca9a448b60bb4b39",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_row_merge_pipeline.sv": "eae32b0cef843bc810d04ee7bc75a4066cafe4c3fe2e504e71eda8416d71ec38",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_source_pipeline.sv": "a8ae6b799b297d59e99a6a7afd8f0424b67b7d7682bba1d620105ff87798bef5",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_pipeline_context.sv": "e373d698bfc29db2a7e5ef89299d5e72ce9e20ae45b978ceb860d6095e288fa9",
+    "rtl/dsrom_sys/s81_window_la/pipeline/tb_window_column_split.sv": "780f6fa5631f07b94d6cd3b38eaebbdec326217f73f8ab4a011243efae055005",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_attention_capture_context.sv": "fb3b7974c4f8fb512e831745871246040ffa63368eaa7de2e0140e6ff6232074",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv": "5f8d73e58df5cb67774d10e21ec5619c1a0be1784d15d3ce2dc5a38d83157bac",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_parent_context.sv": "7c7e2b66c77f2c1e643812f422b8f6b92d891c39c71153e547c2f12b6f37c4f1",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv": "710342f3e4a624f1c0b3eaf18aa08c91f382299e292200d275fc29a8babcaf85",
+    "rtl/dsrom_sys/s81_window_la/pipeline/tb_window_attention_capture.sv": "a60efc2a2607723f996e44b3843300d23a16b7c2518284e549525990d4f5f4eb",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_list_macro.sv": "efe426432312318e2f09cec91ba8119a7d5c346a60c65eba7f5cc5d25f0f3016",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_physctx.sv": "4d82d674e8e88c452b7ce4ac2e47b9d84ac3b1fb77f652db8eb730849d54b25b",
+    "rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_gather_parent.sv": "9ea839a0135c3f54f9122ac5f500d16e747e577a14fce294c3487909b36c3642",
+    "rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_native_quarter.sv": "69dc768210701e22b1411f3fb48994f564873ee66509d8a3a1b80c08fbbd31b8",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_hierarchical_parent.sv": "5dc4353d9b3e10b02d690b1f7563645967824211b5f96768993c4d419f831899",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_gather.sv": "b8e18cfe06ed32605f0849435f50d6ff6c259af14ba137640b9826df08a7b763",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_gather_parent.sv": "1fccb46db57da1e8195ad01512651f15cf9366e3e8cd90cdec5473ae522a30c4",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_native_quarter.sv": "40d83065ae01b0019ae2abc98ff3b5935a8aa14d5be8add774d6245bffe64b88",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_control.sv": "a7db8cffe264511ae0c495b5e978d142c4f957ea7e16d3cfc23563c62a5787dd",
+    "rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_counter_split.sv": "a12c53095b6f27ab13cd5523915c4f38e9983a4ce863285bd8bdfce3a67e3387",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_kgctl_parent.sv": "374d8dcf913293e93ad0269b63ee75a7aca2c06ff06bd19f7227a22200b5f356",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_io_margin.sv": "2c01e7ac74e14f69b42d3348799035a9e8a625d491f6f5f615d7644cec9641f8",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_kgdata_parent.sv": "81ea8a2ef4fc8814ad30313c0429bf8111b92d853006a52c4da5f46b6ba63f77",
+    "rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_list_macro.sv": "42b6b9a750b1fbdcfbb8f3bbbeb38b1b44279046c574de786779eb6623602b42",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_request_cut.sv": "fc541e1b3e98d135659b33eb9339eb557f2f57e25768b911306247186dabf351",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_drain_queue.sv": "bff165be724d2e40dfd24f19eb3cc1b9f7e73b4c6dad6cde44b165ce8e6b439d",
+    "physical/dsrom_reindex_parent/regions.tcl": "0ec56feab920537ccaf8256d115486c2ee5e801a11f568c7092869f0222502cb",
+    "physical/dsrom_reindex_parent/place.tcl": "54dc67d220a56ea2382ec1d11131a4c96d0e9a963d0921231dc96ad29a71fce0"
+  },
+  "latest_logs": [
+    {
+      "file": "/srv/opentallas-scratch/claude/closure-loop/code_pair_m2qd_e4ca6da7ac/routes/code_pair_m2qd_e4ca6da7ac_cal/work/orfs/logs/asap7/opentallas_ot_qwen_hbm_code_pair_margin_asap7_code_pair_m2qd_e4ca6da7ac_cal/base/4_1_cts.log",
+      "mtime": 1791361592.2511659,
+      "tail": [
+        "Took 6 seconds: estimate_parasitics -placement",
+        "Report metrics stage 4, cts final...",
+        "",
+        "==========================================================================",
+        "cts final report_design_area",
+        "--------------------------------------------------------------------------",
+        "Design area 179197 um^2 32% utilization.",
+        "write_db /work/results/asap7/opentallas_ot_qwen_hbm_code_pair_margin_asap7_code_pair_m2qd_e4ca6da7ac_cal/base/4_1_cts.odb",
+        "write_sdc -no_timestamp /work/results/asap7/opentallas_ot_qwen_hbm_code_pair_margin_asap7_code_pair_m2qd_e4ca6da7ac_cal/base/4_cts.sdc",
+        "Elapsed time: 6:23.73[h:]min:sec. CPU time: user 1257.34 sys 1056.56 (602%). Peak memory: 3201564KB.",
+        "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+        "4_1_cts                   .odb          383           3126 d8778a54fe27a069c613"
+      ]
+    },
+    {
+      "file": "/srv/opentallas-scratch/claude/closure-loop/code_pair_m2qd_e4ca6da7ac/routes/code_pair_m2qd_e4ca6da7ac/work/orfs/logs/asap7/opentallas_ot_qwen_hbm_code_pair_margin_asap7_code_pair_m2qd_e4ca6da7ac/base/5_1_grt.tmp.log",
+      "mtime": 1791370486.8527434,
+      "tail": [
+        "     1140 |       0 |    1886 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D",
+        "     1150 |       0 |    1896 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D",
+        "     1160 |       0 |    1906 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D",
+        "     1170 |       0 |    1918 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D",
+        "     1180 |       0 |    1928 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D",
+        "     1190 |       0 |    1941 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D",
+        "     1200 |       0 |    1952 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D",
+        "     1210 |       0 |    1963 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D",
+        "     1220 |       0 |    1974 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D",
+        "     1230 |       0 |    1985 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D",
+        "     1240 |       0 |    1995 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D",
+        "     1250 |       0 |    2005 |            0 |    +0.1% |  -5.169 |  -9.656 | on.column[0].bank[3].u_bank/wchk[18]$_DFF_P_/D"
+      ]
+    }
+  ],
+  "extras": {
+    "physical/qwen_code_pair_margin/route_cl.sh": "#!/bin/bash\n# CODE-pair margin route for the closure loop (MARGIN2 variant given by M2, default 2). IO from the MEASURED insertion\n# (CK_SS_MEAN / CK_FF_MEAN; defaults = the previous route's 726 / 394 ps): route (corner-neutral): in max = ss+120+150,\n# in min = ss+50, out max = 120-(ss-150), out min = (ss-ff)-60; sign-off (833.333, per corner): in min = ff-50, out min = -(ff+50).\n# usage: OUT=<dir> SRC=<src root> route_cl.sh <label> [extra args]\nset -o pipefail\nL=${1:?label}; shift; S=${SRC:-.}; O=${OUT:?out}/$L; mkdir -p $O $O/tmp; cd $S\nSS=${CK_SS_MEAN:-726}; FF=${CK_FF_MEAN:-394}; M2=${M2:-2}; HM=${HM:-0.035}\nr(){ python3 -c \"print(round($1/1000.0,4))\"; }\nIMAX=$(r \"$SS+270\"); IMIN=$(r \"$SS+50\"); OMAX=$(r \"120-($SS-150)\"); OMIN=$(r \"($SS-$FF)-60\")\nexport OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited TMPDIR=$O/tmp\nexport OPENTALLAS_ORFS_IMAGE=${OPENTALLAS_ORFS_IMAGE:-sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29}\nP=physical/qwen_code_pair_margin\nSIGN=$P/signoff_cl_$L.sdc\ncat > $S/$SIGN <<SDC\n# generated by route_cl.sh: sign-off at 833.333 ps with the IO at the measured insertion (SS $SS / FF $FF ps)\ncreate_clock -name core_clk -period 833.333 [get_ports clk]\nset_clock_uncertainty -setup 60 [get_clocks core_clk]\nset_clock_uncertainty -hold 25 [get_clocks core_clk]\nset_propagated_clock [get_clocks core_clk]\nset code_inputs {}\nforeach p [all_inputs] {if {[get_full_name \\$p] ni {clk por_n}} {lappend code_inputs \\$p}}\nset_input_delay -clock core_clk -max $(python3 -c \"print(round($SS+270))\") \\$code_inputs\nset_input_delay -clock core_clk -min $(python3 -c \"print(round($FF-50))\") \\$code_inputs\nset_output_delay -clock core_clk -max $(python3 -c \"print(round(120-($SS-150)))\") [all_outputs]\nset_output_delay -clock core_clk -min $(python3 -c \"print(round(-($FF+50)))\") [all_outputs]\nset_false_path -from [get_ports por_n]\nSDC\necho \"$(date -Is) START $(hostname) io $IMIN $IMAX $OMIN $OMAX M2=$M2\" >> $O/MANIFEST\npython3 tools/run_abi3_physical.py --view asap7 --top ot_qwen_hbm_code_pair_margin --param ENABLE=1 --param COLUMN_BASE=0 --param ROWS=4496 --param MARGIN2=$M2 \\\n  --source rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv --source rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv --source rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_pair_margin.sv \\\n  --clock-period-ns 0.730 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 \\\n  --core-input-delay-min-ns $IMIN --core-input-delay-max-ns $IMAX --output-delay-min-ns $OMIN --output-delay-max-ns $OMAX \\\n  --false-path-from por_n --sdc-append $P/boundary_append.sdc \\\n  --orfs-corner WC --hold-corners WC,BC --stages pnr --hold-margin-ns $HM --max-fanout 32 \\\n  --die-area 0 0 864 673.92 --core-area 8.64 8.64 855.36 665.28 --place-density 0.55 \\\n  --macro-view ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 \\\n  --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 \\\n  --macro-place-halo 2.16 2.16 --routing-layers M2 M9 \\\n  --orfs-var SYNTH_HDL_FRONTEND=slang --orfs-var SYNTH_HIERARCHICAL=1 --orfs-var SYNTH_MINIMUM_KEEP_SIZE=0 \\\n  --orfs-var MACRO_PLACEMENT_TCL=/src/$P/macros.tcl --orfs-var FOOTPRINT_TCL=/src/$P/pins.tcl \\\n  --orfs-var ADDER_MAP_FILE= --orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var MIN_CLK_ROUTING_LAYER=M4 --orfs-var MAX_CLK_ROUTING_LAYER=M9 \\\n  --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --purpose characterization --nickname-tag $L \\\n  --keep-workdir $O/work --output $O/physical.json --force \"$@\" > $O/run.log 2>&1\nrc=$?; echo \"rc=$rc\" > $O/exit\nif [ $rc -eq 0 ] && [[ \" $* \" != *\"--pnr-stop-after\"* ]]; then\n  python3 tools/w18/corner_sta.py --orfs-dir $O/work/orfs --macro physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 --macro physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --post-sdc $SIGN --output $O/corner_sta.json > $O/sta.log 2>&1\n  echo \"corner_rc=$?\" >> $O/exit\nfi\n",
+    "physical/qwen_code_pair_margin/signoff_cl_code_pair_m2qd_e4ca6da7ac.sdc": "# generated by route_cl.sh: sign-off at 833.333 ps with the IO at the measured insertion (SS 1342 / FF 875 ps)\ncreate_clock -name core_clk -period 833.333 [get_ports clk]\nset_clock_uncertainty -setup 60 [get_clocks core_clk]\nset_clock_uncertainty -hold 25 [get_clocks core_clk]\nset_propagated_clock [get_clocks core_clk]\nset code_inputs {}\nforeach p [all_inputs] {if {[get_full_name $p] ni {clk por_n}} {lappend code_inputs $p}}\nset_input_delay -clock core_clk -max 1612 $code_inputs\nset_input_delay -clock core_clk -min 825 $code_inputs\nset_output_delay -clock core_clk -max -1072 [all_outputs]\nset_output_delay -clock core_clk -min -925 [all_outputs]\nset_false_path -from [get_ports por_n]\n"
+  }
+}

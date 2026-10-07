@@ -1,0 +1,5 @@
+WRITE_RATE m2=2 writes=80 cycles=160
+BURST_RATE m2=2 accepted=64 of 64
+[6112805000] %Fatal: tb_code_pair_margin.sv:256: Assertion failed in tb_code_pair_margin.unnamedblk13: NEGATIVE: corrupted response delivered valid
+%Error: rtl/test/qwen_hbm_code_payload_leaf/tb_code_pair_margin.sv:256: Verilog $stop
+Aborting...
