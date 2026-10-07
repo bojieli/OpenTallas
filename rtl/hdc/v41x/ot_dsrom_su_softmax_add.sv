@@ -19,10 +19,10 @@ module ot_dsrom_su_softmax_add #(
     output wire [31:0] y,
     output wire        fault
 );
-    generate if (ADD6 == 3) begin : g_a11
+    generate if (ADD6 == 3 || ADD6 == 4) begin : g_a11
         wire [1:0] err;
         wire       vo;
-        ot_dsrom_su_softmax_add11 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+        ot_dsrom_su_softmax_add11 #(.X2(ADD6 == 4)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
                                      .valid_out(vo));
         assign fault = vo && (err != 2'd0);
     end else if (ADD6 == 2) begin : g_a9

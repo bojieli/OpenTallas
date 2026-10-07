@@ -14,6 +14,7 @@
 module ot_dsrom_su_softmax_exp6 #(
     parameter integer LM = 3,                   // multiplier latency (ot_hdc_qmul_lat)
     parameter integer LA = 6,                   // add latency: 6 the six-cut f12 adder, 9 the margin adder
+    parameter integer ADDX = 0,                 // 1 (LA 11): the f12r adder with the cancellation shift split across its cut (RECUT 2)
     parameter integer NSPLIT = 0                // 1: n = rint(t) over two stages (shift + round bits | increment +
                                                 //    negate), +1 cycle: the one-stage form missed by 12 ps (x6u25);
                                                 // 2: three stages + the one-hot table stage, +3 cycles (MARGIN)
@@ -33,7 +34,7 @@ module ot_dsrom_su_softmax_exp6 #(
     localparam integer T_R = T_R1 + LA;
     localparam integer T_P = T_R + 6 * (LM + LA);
     localparam integer DEPTH = T_P + 1;         // 7 LM + 8 LA + 4 + NSPLIT + TB
-    localparam integer AM = (LA == 11) ? 3 : (LA == 9) ? 2 : 1;  // ot_dsrom_su_softmax_add mode
+    localparam integer AM = (LA == 11 && ADDX) ? 4 : (LA == 11) ? 3 : (LA == 9) ? 2 : 1;  // ot_dsrom_su_softmax_add mode
     localparam [31:0] K_MAX   = 32'h42B00000;   //  88.0
     localparam [31:0] K_MINM  = 32'h42AE0000;   //  87.0 (magnitude of the lower clamp)
     localparam [31:0] K_LOG2E = 32'h3FB8AA3B;
@@ -425,7 +426,7 @@ endmodule
 // SAFE tile (owner 2026-10-06): the exp unit as a hardened leaf with its input registered at the boundary (+1 cycle).
 // The output y is already a flop.  Default-off use: ot_dsrom_su_softmax SAFE = 1.
 module ot_dsrom_su_softmax_exp_tile #(
-    parameter integer LM = 3, parameter integer LA = 6, parameter integer NSPLIT = 0
+    parameter integer LM = 3, parameter integer LA = 6, parameter integer NSPLIT = 0, parameter integer ADDX = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -442,7 +443,7 @@ module ot_dsrom_su_softmax_exp_tile #(
     always @(posedge clk) xr <= x;
 `endif
     always @(posedge clk or negedge rst_n) if (!rst_n) vr <= 1'b0; else vr <= v;
-    ot_dsrom_su_softmax_exp6 #(.LM(LM), .LA(LA), .NSPLIT(NSPLIT)) u (.clk(clk), .rst_n(rst_n), .v(vr), .x(xr), .y(y), .vo(vo), .fault(fault));
+    ot_dsrom_su_softmax_exp6 #(.LM(LM), .LA(LA), .NSPLIT(NSPLIT), .ADDX(ADDX)) u (.clk(clk), .rst_n(rst_n), .v(vr), .x(xr), .y(y), .vo(vo), .fault(fault));
 endmodule
 
 // SAFE half-rate backstop (owner 2026-10-07): two copies of the unchanged exp unit, each on a clock-gated half-rate domain

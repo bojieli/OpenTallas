@@ -9,6 +9,7 @@
 //          sub / normal candidates, + cut after the encode                                  LAT 8 cuts + 2 + 1 = 11
 // ---------------------------------------------------------------------------
 module ot_hdc_fp32_add_f12r #(
+    parameter integer X2 = 0,                  // 1: a cut inside the cancellation shift (coarse | fine): LAT +1 (RECUT 2)
     parameter integer CUTS = 7'b1111111       // all seven cuts; plus two fixed extra cuts (LAT 10 with the output stage)
 ) (
     input  wire        clk,
@@ -164,26 +165,31 @@ module ot_hdc_fp32_add_f12r #(
     wire [5:0]  lz;
     assign {w_v, w_byp, w_sub, w_sign, w_err, w_code, w_exp, w_add, w_dif, lz, w_carry} = q3;
     // ---- the cancellation shift, the exponent adjust ------------------------------------------------------
-    wire [26:0] sub_val = w_dif[26:0] << lz[4:0];
+    wire [26:0] sub_val_full = w_dif[26:0] << lz[4:0];
+    // RECUT 2: coarse shift (lz[4:3]) in this stage, fine shift (lz[2:0]) after the cut
+    wire [26:0] sub_coarse = w_dif[26:0] << {lz[4:3], 3'b000};
+    wire [26:0] sub_val = X2 ? sub_coarse : sub_val_full;
     wire [7:0]  exp_sub, exp_add;
     wire exp_sub_c, exp_add_c;
     ot_hdc_ksadd_k #(.W(8)) u_esub (.a(w_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));
     ot_hdc_inc_k #(.W(8)) u_eadd (.a(w_exp), .inc(w_carry), .y(exp_add), .co(exp_add_c));
     // extra cut B (recut): the shifted value, both exponents and the zero flag are registered before the sub / add pick
-    localparam integer WXB = 1 + 1 + 1 + 1 + 1 + 2 + 32 + 8 + 8 + 27 + 27 + 1;
+    localparam integer WXB = 1 + 1 + 1 + 1 + 1 + 2 + 32 + 8 + 8 + 27 + 27 + 1 + 3;
     reg [WXB-1:0] xb_q;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) xb_q[WXB-1] <= 1'b0;
         else xb_q[WXB-1] <= w_v;
     end
-    always @(posedge clk) xb_q[WXB-2:0] <= {w_byp, w_sub, w_sign, w_err, w_code, exp_sub, exp_add, sub_val, w_add, (w_dif == 28'd0), 1'b0};
+    always @(posedge clk) xb_q[WXB-2:0] <= {w_byp, w_sub, w_sign, w_err, w_code, exp_sub, exp_add, sub_val, w_add, (w_dif == 28'd0), lz[2:0]};
     wire        z_v = xb_q[WXB-1];
-    wire        z_byp, z_sub, z_sign, z_dz, z_unused;
+    wire        z_byp, z_sub, z_sign, z_dz;
+    wire [2:0]  z_lzl;
     wire [1:0]  z_err;
     wire [31:0] z_code;
     wire [7:0]  z_esub, z_eadd;
-    wire [26:0] z_sval, z_aval;
-    assign {z_byp, z_sub, z_sign, z_err, z_code, z_esub, z_eadd, z_sval, z_aval, z_dz, z_unused} = xb_q[WXB-2:0];
+    wire [26:0] z_sval0, z_aval;
+    wire [26:0] z_sval = X2 ? (z_sval0 << z_lzl) : z_sval0;
+    assign {z_byp, z_sub, z_sign, z_err, z_code, z_esub, z_eadd, z_sval0, z_aval, z_dz, z_lzl} = xb_q[WXB-2:0];
     localparam integer W4 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27;
     wire [W4-1:0] q4;
     ot_hdc_f12_cut #(.W(W4), .CUT(K4)) u_k4 (.clk(clk), .rst_n(rst_n),

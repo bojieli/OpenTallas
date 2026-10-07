@@ -298,10 +298,10 @@ module ot_dsrom_su_softmax #(
             ot_dsrom_su_softmax_exp_hr #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
                                                  .y(sk_e[32*h +: 32]), .vo(), .fault(fe));
         end else if (EXP6 && SAFE) begin : g_xt
-            ot_dsrom_su_softmax_exp_tile #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
+            ot_dsrom_su_softmax_exp_tile #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS), .ADDX(RECUT == 2)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
                                                  .y(sk_e[32*h +: 32]), .vo(), .fault(fe));
         end else if (EXP6) begin : g_x6
-            ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
+            ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS), .ADDX(RECUT == 2)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
                                                  .y(sk_e[32*h +: 32]), .vo(), .fault(fe));
         end else begin : g_x
             ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
@@ -352,10 +352,10 @@ module ot_dsrom_su_softmax #(
             ot_dsrom_su_softmax_exp_hr #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
                                                  .y(be[32*l +: 32]), .vo(), .fault(fe));
         end else if (EXP6 && SAFE) begin : g_xt
-            ot_dsrom_su_softmax_exp_tile #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
+            ot_dsrom_su_softmax_exp_tile #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS), .ADDX(RECUT == 2)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
                                                  .y(be[32*l +: 32]), .vo(), .fault(fe));
         end else if (EXP6) begin : g_x6
-            ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
+            ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS), .ADDX(RECUT == 2)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
                                                  .y(be[32*l +: 32]), .vo(), .fault(fe));
         end else begin : g_x
             ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),

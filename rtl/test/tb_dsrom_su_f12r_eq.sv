@@ -10,8 +10,11 @@ module tb_dsrom_su_f12r_eq;
     ot_hdc_fp32_mul_f12r                       m1 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(ym1), .err(em1), .valid_out(vm1));
     ot_hdc_fp32_add_f12  #(.CUTS(7'b1111111)) a0 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(ya0), .err(ea0), .valid_out(va0));
     ot_hdc_fp32_add_f12r                       a1 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(ya1), .err(ea1), .valid_out(va1));
+    wire [31:0] ya2; wire [1:0] ea2; wire va2;
+    ot_hdc_fp32_add_f12r #(.X2(1))             a2 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(ya2), .err(ea2), .valid_out(va2));
     reg [33:0] qm [0:31], qa [0:31];
-    integer wm, rm, wa, ra, n, N, seed, mism;
+    integer ra2;
+    integer wm, rm, wa, ra, n, N, seed, mism;  // ra2: the X2 adder's read index
     function automatic [31:0] pick(input integer s);
         reg [31:0] r; integer c;
         begin
@@ -33,7 +36,7 @@ module tb_dsrom_su_f12r_eq;
         if (!$value$plusargs("N=%d", N)) N = 1000000;
         if (!$value$plusargs("SEED=%d", seed)) seed = 1;
         void'($urandom(seed));
-        v = 0; a = 0; b = 0; mism = 0; wm = 0; rm = 0; wa = 0; ra = 0;
+        v = 0; a = 0; b = 0; mism = 0; wm = 0; rm = 0; wa = 0; ra = 0; ra2 = 0;
         repeat (4) @(posedge clk);
         rst_n = 1'b1;
         for (n = 0; n < N + 40; n = n + 1) begin
@@ -56,6 +59,10 @@ module tb_dsrom_su_f12r_eq;
         if (vm1) begin
             if (qm[rm % 32] !== {em1, ym1}) begin if (mism < 10) $display("MUL MISMATCH %h %h", qm[rm % 32], {em1, ym1}); mism = mism + 1; end
             rm <= rm + 1;
+        end
+        if (va2) begin
+            if (qa[ra2 % 32] !== {ea2, ya2}) begin if (mism < 10) $display("ADDX2 MISMATCH %h %h", qa[ra2 % 32], {ea2, ya2}); mism = mism + 1; end
+            ra2 <= ra2 + 1;
         end
         if (va0) begin qa[wa % 32] <= {ea0, ya0}; wa <= wa + 1; end
         if (va1) begin
