@@ -343,6 +343,8 @@ R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0, split_st
            fix_station_pins=('hfd_cdist_r14', 'hfd_cdist_r15', 'hfd_gath_r10', 'hfd_gath_r24', 'hfd_gath_r25', 'hfd_gath_r8',
                              'hfd_gath_r9', 'hfd_meso_r28', 'hfd_meso_r32', 'hfd_stn_r2', 'hfd_stn_r34', 'hfd_stn_r18',
                              'hfd_stn_r20', 'hfd_stn_r31'))
+# r23v (OWNER 2026-10-07 VM fallback, flag default OFF): R23 with the VM quadrant tiles cut into south / north sub-tiles
+R23V = dict(R23, vm_split8=True)
 ADOPTED = R23
 
 
@@ -638,6 +640,8 @@ def build(variant=None):
         fix_ports_from_views(m, fixv)
     if variant.get('vm_split'):
         split_vm(m)
+    if variant.get('vm_split8'):        # r23v: VM 8-way fallback (default off)
+        split_vm8(m)
     for role_ in variant.get('split_stations', ()):     # r23: station roles split into half-bus A / B masters
         split_station(m, role_)
     if variant.get('relay_all'):        # r22: relays at every block pin (pin_stage_buses become a subset of them)
@@ -949,6 +953,79 @@ def vm_cross_align(M, k):
             y += nd
 
 
+VM8_DIR = 'physical/hbm_accel_die_views/vm/split8/ports'
+
+
+def split_vm8(m):
+    """r23v (OWNER 2026-10-07 VM fallback, default OFF; VM-split agent a25e9c721716b6662, branch
+    claude/hbm-vm-split8-20261007 654733cc5): every VM quadrant tile hfd_vm_<q> becomes a south / north sub-tile
+    hfd_vm_<q>_s / _n (699.816 x 500.04 um, north at y + 500.016), each with its own centre M7 ck and rst; every die
+    port goes to the half whose record (vm/split8/ports/<master>/ports.json) carries it, and the halves are joined by
+    the zero-length seam s2n / n2s (registered both ends, +2 cycles per crossing).  Pin plans fixed to the records."""
+    recs = {}
+    for q in ('sw', 'se', 'nw', 'ne'):
+        for h in 'sn':
+            recs[(q, h)] = json.loads((ROOT / VM8_DIR / f'hfd_vm_{q}_{h}/ports.json').read_text())
+    tiles = {it.name: it for it in m['insts'] if it.name.startswith('hb_vm_') and it.master.startswith('hfd_vm_')}
+    halves, own = {}, {}
+    for nm, it in tiles.items():
+        q = it.master[len('hfd_vm_'):]
+        dy = 1000.056 - 500.04
+        hs = Inst(nm + '_s', it.master + '_s', it.x, it.y, 699.816, 500.04, it.orient, kind=it.kind, region=it.region, domain=it.domain)
+        hn = Inst(nm + '_n', it.master + '_n', it.x, round(it.y + dy, 4), 699.816, 500.04, it.orient, kind=it.kind,
+                  region=it.region, domain=it.domain)
+        halves[nm] = (hs, hn)
+        for h, x in (('s', hs), ('n', hn)):
+            for p_ in recs[(q, h)]['ports']:
+                own[(nm, p_)] = x.name
+    m['insts'] = [i for i in m['insts'] if i.name not in tiles] + [x for ab in halves.values() for x in ab]
+    nb = []
+    for bid, cls, bits, eps in m['buses']:
+        e2 = []
+        for inst, port in eps:
+            if inst not in tiles:
+                e2.append((inst, port))
+            elif port in ('ck', 'rst'):
+                e2 += [(halves[inst][0].name, port), (halves[inst][1].name, port)]
+            else:
+                e2.append((own[(inst, port)], port))
+        nb.append((bid, cls, bits, e2))
+    for nm, (hs, hn) in halves.items():
+        q = tiles[nm].master[len('hfd_vm_'):]
+        rp = recs[(q, 's')]['ports']
+        nb.append((f'{nm}_seam_s2n', 'hub', rp['s2n']['bits'], [(hs.name, 's2n'), (hn.name, 's2n')]))
+        nb.append((f'{nm}_seam_n2s', 'hub', rp['n2s']['bits'], [(hn.name, 'n2s'), (hs.name, 'n2s')]))
+    m['buses'] = nb
+    fixed = m.setdefault('fixed_ports', {})
+    for (q, h), rec in recs.items():
+        W_, H_ = rec['w_um'], rec['h_um']
+        spec, order = {}, []
+        for p_, v in rec['ports'].items():
+            (x0, x1), (y0, y1) = v['x'], v['y']
+            n_ = v['bits']
+            if v['layer'] == 'M7' and n_ == 1 and 1.0 < x0 < W_ - 1.0 and 1.0 < y0 < H_ - 1.0:
+                spec[p_] = ('area', 'M7', x0, y0, 0.064, 0.288)
+            else:
+                if x0 == x1:
+                    face = 'W' if x0 < W_ / 2 else 'E'
+                    lo, hi = y0, y1
+                else:
+                    face = 'S' if y0 < H_ / 2 else 'N'
+                    lo, hi = x0, x1
+                tr = Q.TRK[v['layer']][1]
+                pitch = max(1, round((hi - lo) / max(1, n_ - 1) / tr)) if n_ > 1 else 1
+                spec[p_] = ('face', n_, face, v['layer'], round((lo + hi) / 2, 4), pitch)
+            order.append(p_)
+
+        def fn(mst, k=1, spec=spec, order=order):
+            sp_ = dict(spec)
+            if k > 1:
+                _bundle_pack(mst, sp_, order, k)
+            mst.ports, mst.order = sp_, list(order)
+        fixed[f'hfd_vm_{q}_{h}'] = fn
+    m['vm8'] = {nm: [x.name for x in ab] for nm, ab in halves.items()}
+
+
 def fix_ports_from_views(m, masters_):
     """r17: masters whose generated pin plan must stay the CLOSED view's although the block moved (barrier_low): the
     pins are fixed to the view LEF (same faces / layers / positions), so the view still checks MATCH."""
@@ -1058,6 +1135,8 @@ def _bundle_pack(mst, sp_, order, k):
     """bundled view (k > 1): runs of one face packed apart (>= two bundled tracks between runs)."""
     byf = defaultdict(list)
     for pn in order:
+        if sp_[pn][0] != 'face':      # area / xy pins are not bundled-packed
+            continue
         byf[sp_[pn][2]].append(pn)
     for f_, pns in byf.items():
         runs = []
