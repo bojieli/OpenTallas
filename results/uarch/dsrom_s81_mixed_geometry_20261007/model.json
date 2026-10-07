@@ -1,0 +1,485 @@
+{
+ "schema": "opentallas.s81.mixed-geometry-sizing.v1",
+ "physical_adoption": false,
+ "objective": "preserve field arithmetic/order and widen capacity through extra dies when needed",
+ "source_sha256": {
+  "tools/s81/mixed_geometry.py": "f47bb8c810b431f9d035fbeb83a91c04753d7a1e67daea17dcf3579fb4e6043e",
+  "tools/dsrom_s81_fulldie.py": "7ff5ed013c22abb16dacf6d2fbd000187f37330da132463c5e19d368e26cdba7",
+  "tools/uarch_model.py": "fafd27871c5c26b56ed50c2c2b5e784366e64341da689125dc7b01c26f758136"
+ },
+ "variants": [
+  {
+   "name": "uniform198",
+   "requested_pairs": 2048,
+   "bf_pairs": 512,
+   "q_frame_um": 198.72,
+   "bf_frame_um": 198.72,
+   "requested_fits": true,
+   "maximum_pairs_at_this_geometry": 2048,
+   "field_frame_available_um": 2887.5733333333333,
+   "field_frame_reserved_um": 2808.0,
+   "maximum_requested_slot_height_sum_um": 2808.0000000000005,
+   "maximum_requested_return_strip_um": 2410.56,
+   "requested_slot_order_first_region": [
+    {
+     "pair": 0,
+     "kind": "BF",
+     "slot": 0,
+     "lane": "B"
+    },
+    {
+     "pair": 1,
+     "kind": "q",
+     "slot": 1,
+     "lane": "L"
+    },
+    {
+     "pair": 2,
+     "kind": "q",
+     "slot": 1,
+     "lane": "R"
+    },
+    {
+     "pair": 3,
+     "kind": "q",
+     "slot": 2,
+     "lane": "L"
+    },
+    {
+     "pair": 4,
+     "kind": "BF",
+     "slot": 3,
+     "lane": "B"
+    },
+    {
+     "pair": 5,
+     "kind": "q",
+     "slot": 2,
+     "lane": "R"
+    },
+    {
+     "pair": 6,
+     "kind": "q",
+     "slot": 4,
+     "lane": "L"
+    },
+    {
+     "pair": 7,
+     "kind": "q",
+     "slot": 4,
+     "lane": "R"
+    },
+    {
+     "pair": 8,
+     "kind": "BF",
+     "slot": 5,
+     "lane": "B"
+    },
+    {
+     "pair": 9,
+     "kind": "q",
+     "slot": 6,
+     "lane": "L"
+    },
+    {
+     "pair": 10,
+     "kind": "q",
+     "slot": 6,
+     "lane": "R"
+    },
+    {
+     "pair": 11,
+     "kind": "q",
+     "slot": 7,
+     "lane": "L"
+    },
+    {
+     "pair": 12,
+     "kind": "BF",
+     "slot": 8,
+     "lane": "B"
+    },
+    {
+     "pair": 13,
+     "kind": "q",
+     "slot": 7,
+     "lane": "R"
+    },
+    {
+     "pair": 14,
+     "kind": "q",
+     "slot": 9,
+     "lane": "L"
+    },
+    {
+     "pair": 15,
+     "kind": "q",
+     "slot": 9,
+     "lane": "R"
+    }
+   ],
+   "requested_slot_offsets_um": [
+    0.0,
+    280.8,
+    561.6,
+    842.4,
+    1123.2,
+    1404.0,
+    1684.8,
+    1965.6,
+    2246.4,
+    2527.2
+   ],
+   "requested_slot_heights_um": [
+    280.8,
+    280.8,
+    280.8,
+    280.8,
+    280.8,
+    280.8,
+    280.8,
+    280.8,
+    280.8,
+    280.8
+   ],
+   "layer_stages_nominal_inventory_scenario": 96,
+   "layer_dies_TP4_nominal_inventory_scenario": 384,
+   "extra_stage_hops_nominal_inventory_scenario": 15,
+   "capacity_basis": "Legacy S81 decision inventory81 x2417 allocated pairs per TP rank. Capacity scenario only; actual released-checkpoint remapping is required",
+   "geometry_options": "--gen r8 --rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --hc-xface --link-split --sel-xstg --pin-relay --ch-heights 259.2,302.4,388.8,388.8,302.4,259.2,259.2 --bf-per-region 4 --geometry-fix --vch-w 1641.6 --hc-corr 1512 --hub-column-width 1728 --su-mm2 25.61188 --pairs 2048",
+   "hub_column_width_um": 1728,
+   "su_reservation_mm2": 25.61188,
+   "softmax_leaf_reservation_mm2_at_55pct": 22.445346,
+   "su_remaining_area_for_other_operators_mm2": 3.1665339999999986,
+   "geometry_plan_required": true,
+   "physical_run_ready": false,
+   "missing": [
+    "actual hop counts and composed latency from this geometry",
+    "source-matched final PQ and BF views",
+    "native clock/enable contracts if BF is half-rate",
+    "released-checkpoint mapping to resized stage count",
+    "clock tree, IO budgets and energy composition"
+   ]
+  },
+  {
+   "name": "mixed183",
+   "requested_pairs": 2304,
+   "bf_pairs": 512,
+   "q_frame_um": 183.6,
+   "bf_frame_um": 198.72,
+   "requested_fits": false,
+   "maximum_pairs_at_this_geometry": 2048,
+   "field_frame_available_um": 2887.5733333333333,
+   "field_frame_reserved_um": 2717.28,
+   "maximum_requested_slot_height_sum_um": 2982.96,
+   "maximum_requested_return_strip_um": 2721.6000000000004,
+   "requested_slot_order_first_region": [
+    {
+     "pair": 0,
+     "kind": "BF",
+     "slot": 0,
+     "lane": "B"
+    },
+    {
+     "pair": 1,
+     "kind": "q",
+     "slot": 1,
+     "lane": "L"
+    },
+    {
+     "pair": 2,
+     "kind": "q",
+     "slot": 1,
+     "lane": "R"
+    },
+    {
+     "pair": 3,
+     "kind": "q",
+     "slot": 2,
+     "lane": "L"
+    },
+    {
+     "pair": 4,
+     "kind": "BF",
+     "slot": 3,
+     "lane": "B"
+    },
+    {
+     "pair": 5,
+     "kind": "q",
+     "slot": 2,
+     "lane": "R"
+    },
+    {
+     "pair": 6,
+     "kind": "q",
+     "slot": 4,
+     "lane": "L"
+    },
+    {
+     "pair": 7,
+     "kind": "q",
+     "slot": 4,
+     "lane": "R"
+    },
+    {
+     "pair": 8,
+     "kind": "q",
+     "slot": 5,
+     "lane": "L"
+    },
+    {
+     "pair": 9,
+     "kind": "BF",
+     "slot": 6,
+     "lane": "B"
+    },
+    {
+     "pair": 10,
+     "kind": "q",
+     "slot": 5,
+     "lane": "R"
+    },
+    {
+     "pair": 11,
+     "kind": "q",
+     "slot": 7,
+     "lane": "L"
+    },
+    {
+     "pair": 12,
+     "kind": "q",
+     "slot": 7,
+     "lane": "R"
+    },
+    {
+     "pair": 13,
+     "kind": "BF",
+     "slot": 8,
+     "lane": "B"
+    },
+    {
+     "pair": 14,
+     "kind": "q",
+     "slot": 9,
+     "lane": "L"
+    },
+    {
+     "pair": 15,
+     "kind": "q",
+     "slot": 9,
+     "lane": "R"
+    },
+    {
+     "pair": 16,
+     "kind": "q",
+     "slot": 10,
+     "lane": "L"
+    },
+    {
+     "pair": 17,
+     "kind": "q",
+     "slot": 10,
+     "lane": "R"
+    }
+   ],
+   "requested_slot_offsets_um": [
+    0.0,
+    280.8,
+    546.48,
+    812.16,
+    1092.96,
+    1358.64,
+    1624.32,
+    1905.12,
+    2170.8,
+    2451.6,
+    2717.28
+   ],
+   "requested_slot_heights_um": [
+    280.8,
+    265.68,
+    265.68,
+    280.8,
+    265.68,
+    265.68,
+    280.8,
+    265.68,
+    280.8,
+    265.68,
+    265.68
+   ],
+   "layer_stages_nominal_inventory_scenario": 96,
+   "layer_dies_TP4_nominal_inventory_scenario": 384,
+   "extra_stage_hops_nominal_inventory_scenario": 15,
+   "capacity_basis": "Legacy S81 decision inventory81 x2417 allocated pairs per TP rank. Capacity scenario only; actual released-checkpoint remapping is required",
+   "geometry_options": "--gen r8 --rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --hc-xface --link-split --sel-xstg --pin-relay --ch-heights 259.2,302.4,388.8,388.8,302.4,259.2,259.2 --bf-per-region 4 --geometry-fix --vch-w 1641.6 --hc-corr 1512 --hub-column-width 1728 --su-mm2 25.61188 --pairs 2048 --q-elem-h 183.6",
+   "hub_column_width_um": 1728,
+   "su_reservation_mm2": 25.61188,
+   "softmax_leaf_reservation_mm2_at_55pct": 22.445346,
+   "su_remaining_area_for_other_operators_mm2": 3.1665339999999986,
+   "geometry_plan_required": true,
+   "physical_run_ready": false,
+   "missing": [
+    "actual hop counts and composed latency from this geometry",
+    "source-matched final PQ and BF views",
+    "native clock/enable contracts if BF is half-rate",
+    "released-checkpoint mapping to resized stage count",
+    "clock tree, IO budgets and energy composition"
+   ]
+  },
+  {
+   "name": "mixed221",
+   "requested_pairs": 2048,
+   "bf_pairs": 512,
+   "q_frame_um": 221.4,
+   "bf_frame_um": 198.72,
+   "requested_fits": false,
+   "maximum_pairs_at_this_geometry": 1792,
+   "field_frame_available_um": 2887.5733333333333,
+   "field_frame_reserved_um": 2646.0,
+   "maximum_requested_slot_height_sum_um": 2950.56,
+   "maximum_requested_return_strip_um": 2410.56,
+   "requested_slot_order_first_region": [
+    {
+     "pair": 0,
+     "kind": "BF",
+     "slot": 0,
+     "lane": "B"
+    },
+    {
+     "pair": 1,
+     "kind": "q",
+     "slot": 1,
+     "lane": "L"
+    },
+    {
+     "pair": 2,
+     "kind": "q",
+     "slot": 1,
+     "lane": "R"
+    },
+    {
+     "pair": 3,
+     "kind": "q",
+     "slot": 2,
+     "lane": "L"
+    },
+    {
+     "pair": 4,
+     "kind": "BF",
+     "slot": 3,
+     "lane": "B"
+    },
+    {
+     "pair": 5,
+     "kind": "q",
+     "slot": 2,
+     "lane": "R"
+    },
+    {
+     "pair": 6,
+     "kind": "q",
+     "slot": 4,
+     "lane": "L"
+    },
+    {
+     "pair": 7,
+     "kind": "q",
+     "slot": 4,
+     "lane": "R"
+    },
+    {
+     "pair": 8,
+     "kind": "BF",
+     "slot": 5,
+     "lane": "B"
+    },
+    {
+     "pair": 9,
+     "kind": "q",
+     "slot": 6,
+     "lane": "L"
+    },
+    {
+     "pair": 10,
+     "kind": "q",
+     "slot": 6,
+     "lane": "R"
+    },
+    {
+     "pair": 11,
+     "kind": "q",
+     "slot": 7,
+     "lane": "L"
+    },
+    {
+     "pair": 12,
+     "kind": "BF",
+     "slot": 8,
+     "lane": "B"
+    },
+    {
+     "pair": 13,
+     "kind": "q",
+     "slot": 7,
+     "lane": "R"
+    },
+    {
+     "pair": 14,
+     "kind": "q",
+     "slot": 9,
+     "lane": "L"
+    },
+    {
+     "pair": 15,
+     "kind": "q",
+     "slot": 9,
+     "lane": "R"
+    }
+   ],
+   "requested_slot_offsets_um": [
+    0.0,
+    280.8,
+    585.36,
+    889.92,
+    1170.72,
+    1475.28,
+    1756.08,
+    2060.64,
+    2365.2,
+    2646.0
+   ],
+   "requested_slot_heights_um": [
+    280.8,
+    304.56,
+    304.56,
+    280.8,
+    304.56,
+    280.8,
+    304.56,
+    304.56,
+    280.8,
+    304.56
+   ],
+   "layer_stages_nominal_inventory_scenario": 110,
+   "layer_dies_TP4_nominal_inventory_scenario": 440,
+   "extra_stage_hops_nominal_inventory_scenario": 29,
+   "capacity_basis": "Legacy S81 decision inventory81 x2417 allocated pairs per TP rank. Capacity scenario only; actual released-checkpoint remapping is required",
+   "geometry_options": "--gen r8 --rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --hc-xface --link-split --sel-xstg --pin-relay --ch-heights 259.2,302.4,388.8,388.8,302.4,259.2,259.2 --bf-per-region 4 --geometry-fix --vch-w 1641.6 --hc-corr 1512 --hub-column-width 1728 --su-mm2 25.61188 --pairs 1792 --q-elem-h 221.4",
+   "hub_column_width_um": 1728,
+   "su_reservation_mm2": 25.61188,
+   "softmax_leaf_reservation_mm2_at_55pct": 22.445346,
+   "su_remaining_area_for_other_operators_mm2": 3.1665339999999986,
+   "geometry_plan_required": true,
+   "physical_run_ready": false,
+   "missing": [
+    "actual hop counts and composed latency from this geometry",
+    "source-matched final PQ and BF views",
+    "native clock/enable contracts if BF is half-rate",
+    "released-checkpoint mapping to resized stage count",
+    "clock tree, IO budgets and energy composition"
+   ]
+  }
+ ]
+}

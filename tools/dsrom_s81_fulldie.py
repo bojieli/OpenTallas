@@ -121,9 +121,9 @@ BF_PER_REGION = None
 def set_pairs(n):
     """r8: pairs (elements) per die; BF / NV shares scaled as the decision's"""
     global PAIRS, BF_PAIRS, NV_PAIRS
-    if DIE_KIND == 'layer' and BF_PER_REGION is not None:
+    if DIE_KIND in ('layer', 'layer1') and BF_PER_REGION is not None:
         PAIRS, BF_PAIRS = n, BF_PER_REGION * ROOTS
-    elif DIE_KIND == 'layer':
+    elif DIE_KIND in ('layer', 'layer1'):
         PAIRS, BF_PAIRS = n, round(n * 519 / 2417)
     else:
         NV_PAIRS = round(NV_PAIRS * n / PAIRS)
@@ -307,7 +307,7 @@ def region_bounds():
 
 
 def bf_sites():
-    if BF_PER_REGION is not None and DIE_KIND == 'layer':
+    if BF_PER_REGION is not None and DIE_KIND in ('layer', 'layer1'):
         # the RTL's flat is_bf map (bf-double): floor(i * PAIRS / NBF), NBF = N x ROOTS; N per region asserted
         nb = BF_PER_REGION * ROOTS
         s = {i * PAIRS // nb for i in range(nb)}
@@ -2183,10 +2183,13 @@ GLUE_RTL = 'results/rtl/dsrom_s81_fulldie_20261004/r8/dsfd_glue.sv'
 ELEM_FRAME_H = 157.68
 FIELD_MARGIN = 216.0
 SLOT_H8, SLOTS8 = SLOT_H, SLOTS
+Q_ELEM_FRAME_H = None             # opt-in independent q frame, BF remains ELEM_FRAME_H
+SU_AREA_MM2 = None                # optional current-leaf SU reservation, not a hard macro
+FRAME_H8 = SLOTS8 * SLOT_H8
 
 
 def slot_geometry(elem_frame_h=None, field_margin=None):
-    global ELEM_FRAME_H, SLOT_H8, SLOTS8, FIELD_MARGIN
+    global ELEM_FRAME_H, SLOT_H8, SLOTS8, FIELD_MARGIN, FRAME_H8
     if elem_frame_h:
         ELEM_FRAME_H = float(elem_frame_h)
     if field_margin is not None:
@@ -2194,8 +2197,50 @@ def slot_geometry(elem_frame_h=None, field_margin=None):
     SLOT_H8 = round(up(ELEM_DY + ELEM_FRAME_H + 4.32, GY), 3)
     band = up(EDGE, GY) + PHY_H + 8.64 + CTRL_D + 8.64 + SVC_D
     avail = DIE[1] - 2 * band - 2 * FIELD_MARGIN - sum(chh(t) for t in range(TIERS + 1))
-    SLOTS8 = int(avail // (TIERS * SLOT_H8))
+    if Q_ELEM_FRAME_H is None:
+        SLOTS8 = int(avail // (TIERS * SLOT_H8))
+        FRAME_H8 = SLOTS8 * SLOT_H8
+    else:
+        assert DIE_KIND in ('layer', 'layer1') and BF_PER_REGION is not None and NV_PAIRS == 0, \
+            'mixed q/BF heights need an r8 layer die with explicit --bf-per-region and no NV'
+        qh = round(up(ELEM_DY + Q_ELEM_FRAME_H + 4.32, GY), 3)
+        SLOTS8 = math.floor((avail / TIERS - BF_PER_REGION * (SLOT_H8 - qh)) / qh + 1e-9)
+        assert SLOTS8 >= BF_PER_REGION, 'BF slots alone exceed field height'
+        FRAME_H8 = round(BF_PER_REGION * SLOT_H8 + (SLOTS8 - BF_PER_REGION) * qh, 3)
     return SLOT_H8, SLOTS8
+
+
+def column_height():
+    return FRAME_H8 if Q_ELEM_FRAME_H is not None else SLOTS8 * SLOT_H8
+
+
+def pack_frame(pairs, bfs, nvs):
+    """Exact existing pair order, with independent heights for q and BF slots."""
+    slot, half_open, elems, kinds = -1, None, [], []
+    for p in pairs:
+        if p in nvs:
+            slot += 2
+            elems.append((p, 'NV', slot - 1, 'B'))
+            kinds.extend(['NV', 'NVX'])
+        elif p in bfs:
+            slot += 1
+            elems.append((p, 'BF', slot, 'B'))
+            kinds.append('BF')
+        elif half_open is not None:
+            elems.append((p, 'q', half_open, 'R'))
+            half_open = None
+        else:
+            slot += 1
+            half_open = slot
+            elems.append((p, 'q', slot, 'L'))
+            kinds.append('q')
+    offsets, heights, y = [], [], 0.0
+    for kind in kinds:
+        fh = Q_ELEM_FRAME_H if kind == 'q' and Q_ELEM_FRAME_H is not None else ELEM_FRAME_H
+        h = round(up(ELEM_DY + fh + 4.32, GY), 3)
+        offsets.append(round(y, 3)); heights.append(h); y += h
+    return elems, offsets, heights
+
 
 
 def set_globals_pairs(p, b, n):
@@ -2209,18 +2254,10 @@ def _frames_fit(slots, slot_h):
     bfs, nvs = bf_sites(), nv_sites()
     for r in range(ROOTS):
         lo, hi = rng[r]
-        slot, half_open, n = -1, None, hi - lo
-        for p in range(lo, hi):
-            if p in nvs:
-                slot += 2
-            elif p in bfs:
-                slot += 1
-            elif half_open is not None:
-                half_open = None
-            else:
-                slot += 1
-                half_open = slot
-        if slot >= slots or 2 * n - 1 > int(slots * slot_h / NODE_FRAME[1] + 1e-6):
+        n = hi - lo
+        elems, offsets, heights = pack_frame(range(lo, hi), bfs, nvs)
+        if len(heights) > slots or sum(heights) > column_height() + 1e-6 or \
+                2 * n - 1 > int(column_height() / NODE_FRAME[1] + 1e-6):
             return False
     return True
 
@@ -2249,7 +2286,7 @@ def capacity_report():
     flav = bf_flavour_capacity(sl, sh)
     inv = json.loads((ROOT / 'results/uarch/dsrom_c_w4_20261003/s82_inputs/inventory.json').read_text())
     total = 81 * 4 * 2417
-    return dict(elem_frame_h_um=ELEM_FRAME_H, slot_h_um=sh, slots_per_column=sl, columns=ROOTS,
+    return dict(elem_frame_h_um=ELEM_FRAME_H, q_elem_frame_h_um=Q_ELEM_FRAME_H, frame_h_um=column_height(), slot_h_um=sh, slots_per_column=sl, columns=ROOTS,
                 max_pairs_per_layer_die=best, pairs_per_layer_die_now=2417,
                 layer_field_pairs_total=total, layer_field_pairs_basis='81 stages x 4 ranks x 2,417 (S81 decision)',
                 layer_dies_now=81 * 4, layer_dies_at_max=math.ceil(total / best) if best else None,
@@ -2271,6 +2308,7 @@ def bf_flavour_capacity(sl, sh):
     out = {}
     for n in (4, 0):
         BF_PER_REGION, best = n, 0
+        sh, sl = slot_geometry()
         for p in range(ROOTS * max(n, 1), 4000):
             set_pairs(p)
             if not _frames_fit(sl, sh):
@@ -2279,6 +2317,7 @@ def bf_flavour_capacity(sl, sh):
         out[str(n)] = dict(max_pairs=best, bf=n * ROOTS, slots_per_column=sl, slot_h_um=sh)
     BF_PER_REGION = kb
     set_globals_pairs(*keep)
+    slot_geometry()
     return out
 CFG7_RTL = 'rtl/v41die/ot_s81_cfg7_seq.sv'
 POWER8 = dict(
@@ -2325,7 +2364,7 @@ UNUSED_BY_DESIGN = {('ot_dsrom_head_elem_A', p_) for p_ in ('o_v', 'o_d', 'l_v',
 
 
 def HB_PER_FRAME():
-    return int(SLOTS8 * SLOT_H8 / HB_H + 1e-6)
+    return int(column_height() / HB_H + 1e-6)
 
 
 def frame_plan_r8():
@@ -2610,15 +2649,16 @@ def build_r8(variant=None):
     assert x_fe + SPF + COLS8 * COL_PITCH8 <= x_le + 1e-6
     band = up(EDGE, GY) + PHY_H + 8.64 + CTRL_D + 8.64 + SVC_D
     SLOT_H, SLOTS = slot_geometry()
-    field_h = TIERS * SLOTS * SLOT_H + sum(chh(t_) for t_ in range(TIERS + 1))
+    FRAME_H = column_height()
+    field_h = TIERS * FRAME_H + sum(chh(t_) for t_ in range(TIERS + 1))
     y_f = up((H - field_h) / 2, GY)
-    ch_y = [y_f + t * SLOTS * SLOT_H + sum(chh(t_) for t_ in range(t)) for t in range(TIERS + 1)]
+    ch_y = [y_f + t * FRAME_H + sum(chh(t_) for t_ in range(t)) for t in range(TIERS + 1)]
     tier_y = [c + chh(t) for t, c in enumerate(ch_y[:TIERS])]
     y_top = ch_y[TIERS] + chh(TIERS)
 
     def col_x(half, c):
         return dn(x_sp - SPF - (c + 1) * COL_PITCH8 + 8.64, GX) if half == 'W' else up(x_fe + SPF + c * COL_PITCH8, GX)
-    geo = dict(slot_h=SLOT_H, slots=SLOTS, x_lw=x_lw, x_fw=x_fw, x_sp=x_sp, x_fe=x_fe, x_le=x_le, y_f=y_f, y_top=y_top, ch_y=ch_y, tier_y=tier_y,
+    geo = dict(slot_h=SLOT_H, slots=SLOTS, frame_h=FRAME_H, q_elem_frame_h=Q_ELEM_FRAME_H, x_lw=x_lw, x_fw=x_fw, x_sp=x_sp, x_fe=x_fe, x_le=x_le, y_f=y_f, y_top=y_top, ch_y=ch_y, tier_y=tier_y,
                band_depth=band, field_h=field_h, spine_cx=x_sp + SPINE_W8 / 2, col_x=col_x, col_pitch=COL_PITCH8,
                col_w=COL_W8, spf=SPF, tier_cols=list(TIER_COLS8))
     rq, rc = real_lef(Q_LEF), real_lef(CFG_LEF)
@@ -2629,7 +2669,7 @@ def build_r8(variant=None):
     for r, (half, t, c) in enumerate(order):
         x0, y0 = col_x(half, c), tier_y[t]
         frames[r] = dict(half=half, tier=t, col=c, x=x0, y=y0)
-        regions.append(dict(name=f'frame_{r}', kind='field', rect=[x0, y0, x0 + COL_W8, y0 + SLOTS * SLOT_H]))
+        regions.append(dict(name=f'frame_{r}', kind='field', rect=[x0, y0, x0 + COL_W8, y0 + FRAME_H]))
         if r in hbf:
             # head-bundle frame: per bundle a row (B element + glue) under a row of the 4 A elements
             ra_, rb_ = real_lef(HEAD_A_LEF), real_lef(HEAD_B_LEF)
@@ -2648,27 +2688,16 @@ def build_r8(variant=None):
                               CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
             continue
         pairs = list(range(*rng[r]))
-        slot, half_open, elems = -1, None, []
-        for p in pairs:
-            if p in nvs:
-                slot += 2
-                elems.append((p, 'NV', slot - 1, 'B'))
-            elif p in bfs:
-                slot += 1
-                elems.append((p, 'BF', slot, 'B'))
-            elif half_open is not None:
-                elems.append((p, 'q', half_open, 'R'))
-                half_open = None
-            else:
-                slot += 1
-                half_open = slot
-                elems.append((p, 'q', slot, 'L'))
+        elems, offsets, heights = pack_frame(pairs, bfs, nvs)
+        slot = len(heights) - 1
+        assert sum(heights) <= FRAME_H + 1e-6, f'frame {r}: mixed slots exceed field height'
+        frames[r].update(slot_offsets=offsets, slot_heights=heights)
         assert slot < SLOTS, f'frame {r}: {len(pairs)} pairs need {slot + 1} slots > {SLOTS} at slot height {SLOT_H}'
-        assert 2 * len(pairs) - 1 <= int(SLOTS * SLOT_H / NODE_FRAME[1] + 1e-6), f'frame {r}: return strip overflow'
+        assert 2 * len(pairs) - 1 <= int(FRAME_H / NODE_FRAME[1] + 1e-6), f'frame {r}: return strip overflow'
         frames[r]['elems'] = elems
         frames[r]['last_slot'] = slot
         for p, kind, s, ln in elems:
-            sy = y0 + s * SLOT_H
+            sy = y0 + offsets[s]
             ex = x0 + (LANE_W if ln == 'R' else 0) + 4.32
             if kind == 'NV':
                 it = Inst(f'e{p}', 'dsfd_bfnv', ex, sy + ELEM_DY, 1002.888, ELEM_FRAME_H - SHAVE, kind='bf_nv',
@@ -2679,7 +2708,7 @@ def build_r8(variant=None):
             elif kind == 'BF':
                 it = Inst(f'e{p}', 'dsfd_bf', ex, sy + ELEM_DY, 1002.888, ELEM_FRAME_H - SHAVE, kind='bf', region=f'frame_{r}')
             else:
-                assert rq['h'] <= ELEM_FRAME_H, (rq['h'], ELEM_FRAME_H)
+                assert rq['h'] <= (Q_ELEM_FRAME_H or ELEM_FRAME_H), (rq['h'], Q_ELEM_FRAME_H or ELEM_FRAME_H)
                 it = Inst(f'e{p}', rq['name'], ex, sy + ELEM_DY, rq['w'], rq['h'], kind='q', region=f'frame_{r}')
             insts.append(it)
             slot_of[p] = (r, s, ln)
@@ -2703,14 +2732,14 @@ def build_r8(variant=None):
             frames[r]['last_slot'] = slot
             frames[r]['nv_top'] = True
         for s in range(slot + 1):
-            sy = y0 + s * SLOT_H
+            sy = y0 + offsets[s]
             yy = sy + CFG_DY if s not in nvslots else sy + CFG_DY + up(NVX_UM2 / 1002.888, GY) + 4.32
             insts.append(Inst(f't{r}_{s}', 'dsfd_sstn', x0 + SSTN_X, yy, SSTN_WH[0] - SHAVE, SSTN_WH[1] - SHAVE,
                               kind='sstn', region=f'frame_{r}'))
         if REV == 'r9':
             for p, kind, s, ln in elems:
                 if kind == 'q':
-                    insts += _q_banks(p, x0 + (LANE_W if ln == 'R' else 0) + 4.32, y0 + s * SLOT_H + ELEM_DY, rq,
+                    insts += _q_banks(p, x0 + (LANE_W if ln == 'R' else 0) + 4.32, y0 + offsets[s] + ELEM_DY, rq,
                                       f'frame_{r}')
         nodes, root = return_tree(2 * len(pairs))
         frames[r]['tree'] = (nodes, root)
@@ -2737,6 +2766,7 @@ def build_r8(variant=None):
         insts.append(it)
         hub[name] = it
         return it
+    su_area = SU_AREA_MM2 if SU_AREA_MM2 is not None else HUB_MM2['su']
     centre = ['gather', 'vm', 'capture', 'collective']
     centre_area = dict(HUB_MM2)
     wfc_rect = None
@@ -2750,7 +2780,7 @@ def build_r8(variant=None):
         centre_area['vm'] = VM_FACE_MM2
     ch_ = sum(up(centre_area[n] * 1e6 / cw, GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch_ / 2, GY)
-    su_lo = HUB_MM2['su'] * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
+    su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
     slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
     yy = yc
     for n in centre:
@@ -2760,7 +2790,7 @@ def build_r8(variant=None):
         else:
             slab(n, centre_area[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2')
         yy += up(centre_area[n] * 1e6 / cw, GY) + SPINE_GAP
-    slab('su_n', HUB_MM2['su'] - su_lo, x_sp, yy, cw, dom='serial_0p9')
+    slab('su_n', su_area - su_lo, x_sp, yy, cw, dom='serial_0p9')
     vm = hub['vm']
     corr_c = vm.y - SPINE_GAP / 2          # corridor at the gather / VM boundary: the E-half returns exit it at gather
     c0, c1 = dn(corr_c - HC_CORR / 2, GY), up(corr_c + HC_CORR / 2, GY)
@@ -2832,11 +2862,11 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
-                   elem_frame_h=ELEM_FRAME_H, slot_h=SLOT_H, slots=SLOTS)
+                   elem_frame_h=ELEM_FRAME_H, q_elem_frame_h=Q_ELEM_FRAME_H, frame_h=FRAME_H, slot_h=SLOT_H, slots=SLOTS)
     m = dict(geo=geo, insts=insts, regions=regions, frames=frames, cregions=[], fifo_of={}, hub=hub, phys=phys,
              ctrls=ctrls, svcs=svcs, links=links, notes=notes, slot_of=slot_of, x_vch=x_vch, x_spe=x_spe, mid=mid,
              corridor=(c0, c1), variant=variant, gap_x=(gap_x0, gap_x1))
@@ -3441,7 +3471,7 @@ def _hop_fix(m, P):
                 # and the corridor / VCH crossing got denser); frame relays inside their frame
                 if reg is not None and not fwd:
                     f_ = m['frames'][int(reg.split('_')[1])]
-                    allowed = [(f_['x'], f_['y'] - 60.0, f_['x'] + COL_W8, f_['y'] + SLOTS8 * SLOT_H8)]
+                    allowed = [(f_['x'], f_['y'] - 60.0, f_['x'] + COL_W8, f_['y'] + column_height())]
                 else:
                     allowed = list(cor.values())
                 # v6c: searched with a 2.16 um keep-out each side (the PA track snap moved v6b's tightly packed
@@ -3562,7 +3592,7 @@ def _col_relays(m, P):
             continue
         r = int(d0.region.split('_')[1])
         f = m['frames'][r]
-        fr = (f['x'], f['y'] - 60.0, f['x'] + COL_W8, f['y'] + SLOTS8 * SLOT_H8)
+        fr = (f['x'], f['y'] - 60.0, f['x'] + COL_W8, f['y'] + column_height())
         far = max((by[e[0]] for e in eps[1:] if e[0] in by), key=lambda it: _mh(cen(d0), cen(it)), default=None)
         if far is None:
             out.append((bid, cls, bits, eps))
@@ -4714,12 +4744,12 @@ def plan_record_r8(m):
                                                'rtl/common/ot_fwd_link_stage.sv', 'rtl/common/ot_meso_fifo.sv',
                                                'rtl/common/ot_ratio_cdc_fifo.sv', 'rtl/v41die/ot_v41_retn_w17w10.sv')},
         die=dict(w_um=DIE[0], h_um=DIE[1], mm2=round(DIE[0] * DIE[1] / 1e6, 3)), variant=m['variant'],
-        slot=dict(elem_frame_h_um=ELEM_FRAME_H, slot_h_um=g['slot_h'], slots_per_column=g['slots'],
+        slot=dict(elem_frame_h_um=ELEM_FRAME_H, q_elem_frame_h_um=Q_ELEM_FRAME_H, frame_h_um=g['frame_h'], slot_h_um=g['slot_h'], slots_per_column=g['slots'],
                   capacity=capacity_report()),
         instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
         placed_footprint_mm2=round(sum(area.values()), 2),
         utilisation=dict(placed_over_die=round(sum(area.values()) / (DIE[0] * DIE[1] / 1e6), 4),
-                         field_frames_mm2=round(ROOTS * COL_W8 * g['slots'] * g['slot_h'] / 1e6, 2)),
+                         field_frames_mm2=round(ROOTS * COL_W8 * g['frame_h'] / 1e6, 2)),
         geometry={k: (round(v, 3) if isinstance(v, float) else v) for k, v in g.items() if k != 'col_x'},
         forwarded=dict(stations=len(stn), ot_fwd_link_stage_instances=slices, chains=len(ch),
                        max_hop_um=max(c['max_hop_um'] for c in ch), hops_over_430p56=len(over),
@@ -4773,6 +4803,7 @@ def die_options(ap):
     ap.add_argument('--head-dies', type=int, default=12, help='head die: dies sharing the head content (default 12)')
     ap.add_argument('--rev', default='r8', choices=['r8', 'r9'], help='r8 sub-revision (r9: S81-RERUN hub-bus stations)')
     ap.add_argument('--elem-h', type=float, help='r8: element frame height in its slot (default 157.68)')
+    ap.add_argument('--q-elem-h', type=float, help='r8 layer/layer1: independent q frame height; --elem-h remains BF height; requires --bf-per-region')
     ap.add_argument('--pairs', type=int, help='r8: pairs (elements) per die (default: the decision value)')
     ap.add_argument('--bf-per-region', type=int, default=None,
                     help='r8 layer die: exactly N BF pairs in every region (0 = q-only flavour; bf-double 2026-10-07)')
@@ -4796,6 +4827,8 @@ def die_options(ap):
                     '(default 259.2 each)')
     ap.add_argument('--vch-w', type=float, help='r9: VCH width in um (default 1209.6)')
     ap.add_argument('--hc-corr', type=float, help='r9: HC crossing corridor height in um (default 1209.6)')
+    ap.add_argument('--hub-column-width', type=float, help='r9: each hub column width in um; spends existing die horizontal slack; default unchanged')
+    ap.add_argument('--su-mm2', type=float, help='r9: SU total reservation area in mm2, split north/south; requires sizing record; default unchanged')
     ap.add_argument('--vm-face-mm2', type=float, help='r9: minimum VM slab area in mm2 on every die (spreads its pin '
                     'face; layer die value 2.6599; default off)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
@@ -4813,6 +4846,10 @@ def die_options(ap):
 
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
+    global Q_ELEM_FRAME_H, BF_PER_REGION, SU_AREA_MM2
+    SU_AREA_MM2 = getattr(a, "su_mm2", None)
+    Q_ELEM_FRAME_H = getattr(a, "q_elem_h", None)
+    BF_PER_REGION = getattr(a, "bf_per_region", None)
     set_cc_reach(a.cc_reach_um)
     global VCH_INTERLEAVE, LINK_FIX, HC_XFACE, GEOMETRY_FIX
     GEOMETRY_FIX = bool(getattr(a, 'geometry_fix', False))
@@ -4827,7 +4864,7 @@ def apply_options(a):
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
     VCH8 = float(a.vch_w) if getattr(a, 'vch_w', None) else 1209.6
     HC_CORR = float(a.hc_corr) if getattr(a, 'hc_corr', None) else 1209.6
-    SPINE_W8 = SPINE_W + VCH8 - VCH
+    SPINE_W8 = (2 * up(a.hub_column_width, GX) + VCH8) if getattr(a, "hub_column_width", None) else SPINE_W + VCH8 - VCH
     LINK_SPLIT = bool(getattr(a, 'link_split', False)) and bool(a.link_fix)
     LINK_FIX = bool(a.link_fix)
     global CORR_INTERLEAVE, HOP_FIX, HOP_PLAN, MESO_D8
@@ -4847,11 +4884,11 @@ def apply_options(a):
         if a.elem_h or a.field_margin is not None:
             slot_geometry(a.elem_h, a.field_margin)
         if getattr(a, 'bf_per_region', None) is not None:
-            global BF_PER_REGION
             BF_PER_REGION = a.bf_per_region
             set_pairs(a.pairs or PAIRS)
         elif a.pairs:
             set_pairs(a.pairs)
+        slot_geometry()
 
 
 def main(argv=None):
