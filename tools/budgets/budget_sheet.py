@@ -191,6 +191,11 @@ def main():
         fb = set(d.get('fclk_buses', []))
         pb = set(d.get('path_buses', []))
         ps_ = set(d.get('pin_stage_buses', []))      # HBM r19b: a station abuts the receiving pin (+1 hop)
+        rl_ = {(r[0], r[1]) for r in d.get('relay_ends', [])}     # HBM r22: relay abutting (bus, block instance) pin
+        relay_out = set()
+        rlc_ = defaultdict(int)
+        for r in d.get('relay_ends', []):
+            rlc_[r[0]] += 1
         plan_intra = {r: v['intra_budget_ps'] for r, v in (plan or {}).get('regions', {}).items()}
         sink_ins = (plan or {}).get('sink_insertion', {})
         clk_port = defaultdict(list)
@@ -267,6 +272,13 @@ def main():
                     plan_st = max(1, math.ceil(L / LINK_STAGE_UM))
                 if bid in ps_:
                     plan_st += 1
+                if d.get('relay_rule'):   # HBM r22 rule: a relay at every hardened-block end of a > 100 um pin segment
+                    for it_, pt_ in ((drv, eps[0][1]), (ld, e[1])):
+                        if L > PIN_LAST_UM and it_[2] not in ('waypoint', 'phy') and cls not in ('phy_dfi',):
+                            rl_.add((bid, it_[0]))
+                            relay_out.add((bid, it_[0], pt_))
+                    rlc_[bid] = sum(1 for r_ in relay_out if r_[0] == bid)
+                plan_st += rlc_.get(bid, 0)
                 for me, port, peer, dirn in ((drv, eps[0][1], ld, 'out'), (ld, e[1], drv, 'in')):
                     pr = M[me[1]]['ports'].setdefault((port, dirn), dict(port=port, dir=dirn, bits=0, classes=set(), neighbours=set(),
                                                                        L=0.0, basis=set(), skew_cls=set(), skew=0.0, cdc=False,
@@ -286,9 +298,11 @@ def main():
                     sev = C.WIRE_SS_PS_PER_UM * L / plan_st + skew
                     if pr['worst'] is None or sev > pr['worst'][0]:
                         pr['worst'] = (sev, L, skew, kls, f'{name}:{me[0]}<->{peer[0]}', basis, plan_st,
-                                       PIN_LAST_UM if (bid in ps_ and dirn == 'in') else None)
+                                       PIN_LAST_UM if ((bid in ps_ and dirn == 'in') or (bid, me[0]) in rl_) else None)
                     pr['L'] = max(pr['L'], L)
                     pr['basis'].add(basis)
+        if d.get('relay_rule'):
+            (out / f'relay_ends_{name}.json').write_text(json.dumps(sorted(list(r) for r in relay_out), indent=0) + '\n')
     # tiles (S81-PH slab compositions)
     tiles = json.loads(Path(a.tiles).read_text()) if a.tiles else {}
     for tm, t in tiles.get('tiles', {}).items():

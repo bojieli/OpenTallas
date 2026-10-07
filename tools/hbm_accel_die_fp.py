@@ -85,11 +85,12 @@ def seg_stages(m, bid, L):
     if L <= 0:
         return 0
     if not (m.get('variant') or {}).get('budget_stages') or bid in m.get('fclk', {}):
-        return math.ceil(L / LINK_STAGE_UM)
+        return math.ceil(L / LINK_STAGE_UM) + m.get('relay_count', {}).get(bid, 0)
     extra = 1 if bid in m.get('pin_stage_buses', ()) else 0     # r19b: a station abutting the receiving pin
+    extra += m.get('relay_count', {}).get(bid, 0)                 # r22: relay stations abutting block pins
     return 1 + math.ceil(max(0.0, L - REACH_INTER_UM) / REACH_INTRA_UM) + extra
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r20'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
+FINAL_ROUND = 'r22'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
 # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
 #                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
@@ -302,7 +303,15 @@ R19C = dict(R19B, vm_centre_ck=True, split_masters=dict(R19B['split_masters'],
 # r20 (2026-10-07, coordinator): the VM tiles' ck at the tile centre (M7 area pin, as the svc bands: SW_s1 1,304 ->
 #   788 ps measured); tiles on x = 0 mod 1.728 (shift +0.432 um)
 R20 = dict(R19B, vm_ck_centre=True)
-ADOPTED = R20
+# r21 (2026-10-07): a station abutting each index b5 t_vm pin (iv_pin_stn; b5 FF hold -177 infeasible on the 313 um
+#   first segment)
+R21 = dict(R20, iv_pin_stn=True)
+# r22 (OWNER 2026-10-07 three rules): relay stations abutting every hardened-block pin of every die interface whose
+#   pin segment exceeds 100 um (relay_ends, +1 cycle per relay end, priced through seg_stages); credit-based handshakes
+#   on ready/valid paths with < ~200 ps internal (inventory, owners implement; 0 steady-state cycles); die area grows
+#   to ~55-60 % utilisation if a round overflows on real views (current overflow = the interim attention tile chain).
+R22 = dict(R21, relay_all=True)
+ADOPTED = R22
 
 
 def build(variant=None):
@@ -574,7 +583,17 @@ def build(variant=None):
         fix_ports_from_views(m, ['hfd_barrier'])
     if variant.get('vm_split'):
         split_vm(m)
-    if variant.get('pin_stage_roots'):  # r19b: attention root buses into the index bands end in a pin-abutting station
+    if variant.get('relay_all'):        # r22: relays at every block pin (pin_stage_buses become a subset of them)
+        rf = ROOT / 'physical/hbm_accel_die_views/relay_ends.json'   # the budget's pin-to-pin list (authoritative)
+        if rf.exists():
+            m['relay_ends'] = [tuple(r) for r in json.loads(rf.read_text())]
+            cnt = defaultdict(int)
+            for r in m['relay_ends']:
+                cnt[r[0]] += 1
+            m['relay_count'] = dict(cnt)
+        else:
+            relay_ends(m)
+    if variant.get('pin_stage_roots') and not variant.get('relay_all'):
         # + the index-key chains' last segment into index b0 k (ik_<q>_e, 396 um, internal 179 ps: same pattern)
         m['pin_stage_buses'] = sorted(b[0] for b in m['buses'] if b[1] == 'attn_root' or re.match(r'ik_[NS][EW]_e$', b[0]))
     return m
@@ -696,6 +715,43 @@ def split_vm(m):
                 nb.append((f'hb_vm_x_{src}_{dst}_{nm}', 'hub', w, [(tiles[src].name, f't_{d_}_{nm}'), (tiles[dst].name, f'f_{r_}_{nm}')]))
     m['buses'] = nb
     m['vm_tiles'] = {q: t.name for q, t in tiles.items()}
+
+
+RELAY_LAST_UM = 100.0
+RELAY_SKIP_CLS = ('clock_trunk', 'reset_tree', 'phy_dfi')
+
+
+def relay_ends(m):
+    """r22 (OWNER 2026-10-07 DIE-WIDE INTERFACE RULE): a relay station abuts every hardened-block pin of every die
+    interface whose die segment at that pin is longer than RELAY_LAST_UM (the last die segment into / out of a block
+    pin is then <= 100 um).  Stations / waypoints are relays already; PHY / link macro pins and the PHY dfi bundle
+    (the svc bands sit on the PHY pins) are excluded; clock / reset trees are CTS.  The relay is a die-level register
+    row in the channel at the pin (like the priced wire stages: no generated master), +1 cycle per relay end on its
+    bus.  Segment length = Manhattan between the two instances' nearest points (manhattan_paths' measure)."""
+    by = {it.name: it for it in m['insts']}
+
+    def c(it):
+        return (it.x + it.w / 2, it.y + it.h / 2)
+
+    def near(it, q):
+        return (min(max(q[0], it.x), it.x + it.w), min(max(q[1], it.y), it.y + it.h))
+    out, cnt = [], defaultdict(int)
+    for bid, cls, bits, eps in m['buses']:
+        if cls in RELAY_SKIP_CLS or len(eps) != 2 or any(e[0] not in by for e in eps):
+            continue
+        A, B_ = by[eps[0][0]], by[eps[1][0]]
+        a, b = near(A, c(B_)), near(B_, c(A))
+        a, b = near(A, b), near(B_, a)
+        L = abs(a[0] - b[0]) + abs(a[1] - b[1])
+        if L <= RELAY_LAST_UM:
+            continue
+        for it, (inst, port) in ((A, eps[0]), (B_, eps[1])):
+            if it.kind in ('waypoint', 'link', 'phy'):
+                continue
+            out.append((bid, inst, port))
+            cnt[bid] += 1
+    m['relay_ends'] = out
+    m['relay_count'] = dict(cnt)
 
 
 def fix_ports_from_views(m, masters_):
@@ -1625,6 +1681,31 @@ def buses(m):
         m.setdefault('region_extra', []).append(dict(name='HUB-SP', clock='clk_stream',
                                                      rect=[round(w1.x, 1), round(w1.y, 1), round(w1.x + w1.w, 1), round(w1.y + w1.h, 1)]))
         B[:] = [b_ for b_ in B if b_[0] not in drop]
+    if V.get('iv_pin_stn') and V.get('fwd_hub'):
+        # r21 (closure loop hbm_idxq_b5_48529891f_r19b: FF hold -177 on t_vm, the hold ECO could not move it): index b5
+        # t_vm had 247.7 ps internal output budget over its 313 um first segment, no room for the hold delay the band's
+        # early output leaf (622 ps vs 856 mean FF) needs.  A station abutting the t_vm pin (last <= ~60 um) gives the
+        # output ~500 ps internal.  Appended after every other station (no station role renumbered); +1 hop per index
+        # scan on the index -> VM path.
+        for st in ('SW', 'SE', 'NW', 'NE'):
+            ix = m['scan'][st]['index']
+            half = st[1]
+            b0 = next(b_ for b_ in B if b_[0] == f'iv_{st}_0')
+            # opposite the t_vm pin run of band b5 (split record: band y0 + the pin run centre; parent R0 / MX)
+            sp_ = json.loads((ROOT / 'physical/hbm_accel_die_views/index_q/split/split.json').read_text())
+            pr_ = json.loads((ROOT / 'physical/hbm_accel_die_views/index_q/split/hfd_index_q_b5/ports.json').read_text())
+            ys_ = [(q[3] + q[5]) / 2 for q in pr_['ports']['t_vm']['pins']]
+            ly = sp_['bands']['hfd_index_q_b5']['y0_um'] + (min(ys_) + max(ys_)) / 2
+            iy = ix.y + (ix.h - ly if ix.orient in ('MX', 'R180') else ly)
+            fa_, fb_ = ('W', 'E') if half == 'W' else ('E', 'W')
+            ps = station((ix.x + ix.w + SHAVE + 30.0) if half == 'W' else (ix.x - 30.0), iy, f'ivp_{st}', 512, fa_, fb_, True)
+            m.setdefault('clocked', {})[ps.name] = 'stream'
+            m.setdefault('region_extra', []).append(dict(name=f'HUB-Q{st}', clock='clk_stream',
+                                                         rect=[round(ps.x, 1), round(ps.y, 1), round(ps.x + ps.w, 1), round(ps.y + ps.h, 1)]))
+            i0 = B.index(b0)
+            B[i0] = (b0[0], b0[1], b0[2], [(ps.name, 'b')] + b0[3][1:])
+            B.append((f'iv_{st}_p', 'hub', 512, [b0[3][0], (ps.name, 'a')]))
+            P[f'index_vm_{st}'] = [f'iv_{st}_p'] + P[f'index_vm_{st}']
     if V.get('clk_dom'):
         clock_nets(m, B, coll)
         return B, dict(P)
