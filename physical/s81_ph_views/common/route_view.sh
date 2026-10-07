@@ -16,7 +16,8 @@ export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SE
 P=physical/s81_ph_views/ports/$die/$master
 read DW DH < <(python3 -c "import json;d=json.load(open('$P/ports.json'));print(d['w_um'],d['h_um'])")
 mkdir -p $SRC/.views/$lab; cp $P/io_place.tcl $SRC/.views/$lab/io_place.tcl
-cat physical/s81_ph_views/common/io_vclk_m_770.sdc ${SDCX:+$SDCX} > $SRC/.views/$lab/margin.sdc
+# SDCM: the IO SDC regenerated at the measured insertion (closure-loop calibrate stage: make_io_vclk_margin.sh $CK_SS_MEAN)
+cat ${SDCM:-physical/s81_ph_views/common/io_vclk_m_770.sdc} ${SDCX:+$SDCX} > $SRC/.views/$lab/margin.sdc
 srcargs="--source $topsrc"; for s in ${SRCS:-}; do srcargs="$srcargs --source $s"; done
 mvargs=""; for mv in ${MACROS:-}; do mvargs="$mvargs --macro-view $mv"; done
 echo "SRC=$SRC die=$die master=$master top=$topsrc DW=$DW DH=$DH PD=${PD:-0.45} MAXL=${MAXL:-M7} SRCS=${SRCS:-} CLK=${CLK:-ck} SDCX=${SDCX:-} CTSA=${CTSA:-} $*" > $W/args
@@ -33,6 +34,8 @@ cat SOURCE_COMMIT > $W/SOURCE_COMMIT
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit
+# CTS-only calibration run (closure loop: --pnr-stop-after cts): no sign-off / export
+case " $* " in *" --pnr-stop-after "*) echo DONE >> $W/exit; exit 0;; esac
 mac1=$(echo ${MACROS:-} | awk '{print $1}' | cut -d= -f2)
 python3 tools/w18/corner_sta.py ${mac1:+--macro $mac1} --post-sdc physical/s81_ph_views/common/signoff_unc60.sdc --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit

@@ -106,8 +106,14 @@ module ot_s81ph_ret_root_p #(
     reg add; reg [31:0] add_a, add_b; reg [32:0] tag_in;
     wire [31:0] dtg_last = dtg[33*(LAT-2) + 1 +: 32];
 
-    // ------------------------------------------------------------ queue: memory + two-entry head (H, prefetch P)
+    // ------------------------------------------------------------ queue: memory + registered two-level read + head
+    // v4 (tile_m3 post-route -83 at the 128-entry head mux into pq_*): the memory read is a two-level REGISTERED read
+    // (R1: 16 groups x 8:1 at the kept read pointer copies, R2: 16:1), landing in a PFD-entry prefetch FIFO; reads are
+    // issued against a credit counter (prefetch entries + reads in flight <= PFD), from registers only.  H / P as v3.
     localparam integer NQ = 5;
+    localparam integer QG = QD / 8;          // read groups of 8 entries
+    localparam integer QGW = (QG > 1) ? $clog2(QG) : 1;
+    localparam integer PFD = 4;              // prefetch entries (covers the 3-cycle issue -> pop loop)
     reg [64:0] qm [0:QD-1];                  // {e, d32, t32}
     reg [QW-1:0] qw;
     (* keep *) reg [QW-1:0] qr_c [0:NQ-1];
@@ -115,29 +121,49 @@ module ot_s81ph_ret_root_p #(
     (* keep *) reg [NC-1:0] hv_c;
     reg hv; reg [31:0] h_d; reg h_e; reg [31:0] h_t;
     reg pv; reg [31:0] pq_t, pq_d; reg pq_e;
+    reg [2:0] cr;                            // prefetch entries + reads in flight (0 .. PFD)
+    reg r1_v, r2_v; reg [QGW-1:0] r1_hi;
+    reg [64:0] r1_g [0:QG-1];
+    reg [64:0] r2_w;
+    reg [64:0] pf [0:PFD-1];
+    reg [1:0] pf_wp, pf_rp; reg [2:0] pf_n; reg pf_nz;
     wire take = !hv || !sv;                  // H is free or popped (W10: use_q = !sv && queue not empty)
     wire p_free = !pv || take;
-    wire from_mem = p_free && mc_nz;
+    wire pf_pop = p_free && pf_nz;
+    wire rd_go = mc_nz && (cr < PFD);        // registers only
     wire q_full = mc == QD;
     wire wr_mem = n_v;                       // a word into a full queue overwrites and faults (fail closed)
-    reg [64:0] mw;
-    always @* for (c = 0; c < NQ; c = c + 1) mw[13*c +: 13] = qm[qr_c[c]][13*c +: 13];
-    wire [QW:0] mc_n = mc + (wr_mem ? 1'b1 : 1'b0) - (from_mem ? 1'b1 : 1'b0);
+    wire [QW:0] mc_n = mc + (wr_mem ? 1'b1 : 1'b0) - (rd_go ? 1'b1 : 1'b0);
+    wire [2:0] pf_n_n = pf_n + (r2_v ? 3'd1 : 3'd0) - (pf_pop ? 3'd1 : 3'd0);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             qw <= 0; mc <= 0; mc_nz <= 1'b0; hv <= 1'b0; hv_c <= {NC{1'b0}}; pv <= 1'b0;
             for (c = 0; c < NQ; c = c + 1) qr_c[c] <= 0;
+            cr <= 3'd0; r1_v <= 1'b0; r2_v <= 1'b0; pf_wp <= 2'd0; pf_rp <= 2'd0; pf_n <= 3'd0; pf_nz <= 1'b0;
         end else begin
             if (wr_mem) qw <= qw + 1'b1;
-            if (from_mem) for (c = 0; c < NQ; c = c + 1) qr_c[c] <= qr_c[c] + 1'b1;
+            if (rd_go) for (c = 0; c < NQ; c = c + 1) qr_c[c] <= qr_c[c] + 1'b1;
             mc <= mc_n; mc_nz <= mc_n != 0;
+            cr <= cr + (rd_go ? 3'd1 : 3'd0) - (pf_pop ? 3'd1 : 3'd0);
+            r1_v <= rd_go; r2_v <= r1_v;
+            if (r2_v) pf_wp <= pf_wp + 2'd1;
+            if (pf_pop) pf_rp <= pf_rp + 2'd1;
+            pf_n <= pf_n_n; pf_nz <= pf_n_n != 0;
             if (take) begin hv <= pv; hv_c <= {NC{pv}}; end
-            if (p_free) pv <= from_mem;
+            if (p_free) pv <= pf_nz;
         end
+    integer gq;
     always @(posedge clk) begin
         if (wr_mem) qm[qw] <= {n_e, n_d, n_t};
+        // R1: per group, entry (group * 8 + low pointer bits); the NQ kept pointer copies split the 65 bits
+        for (gq = 0; gq < QG; gq = gq + 1)
+            for (c = 0; c < NQ; c = c + 1)
+                r1_g[gq][13*c +: 13] <= qm[gq * 8 + qr_c[c][2:0]][13*c +: 13];
+        r1_hi <= qr_c[0][QW-1:3];
+        r2_w <= r1_g[r1_hi];
+        if (r2_v) pf[pf_wp] <= r2_w;
         if (take) begin h_t <= pq_t; h_d <= pq_d; h_e <= pq_e; end
-        if (from_mem) begin pq_t <= mw[31:0]; pq_d <= mw[63:32]; pq_e <= mw[64]; end
+        if (pf_pop) begin pq_t <= pf[pf_rp][31:0]; pq_d <= pf[pf_rp][63:32]; pq_e <= pf[pf_rp][64]; end
     end
 
     // ------------------------------------------------------------ buffer: valid, key, data, error
@@ -181,8 +207,14 @@ module ot_s81ph_ret_root_p #(
 
     // ------------------------------------------------------------ free list (init counter, FIFO, 2-entry prefetch)
     localparam integer AW = $clog2(D);
-    reg [D-1:0] fr_r; reg fr_any;            // A: free slot for this decision (one-hot)
-    reg nb_v; reg [AW-1:0] nb_i;             // B: prefetched next free slot
+    // v4 (tile_m3 -46..-63 on fl_rp / ic / fr_r / nb_i / fl_n: the v3 A <- B <- source take chain rode on dec_ins):
+    // two one-hot free slots FA0 / FA1 (ping-pong: the decision uses FA[fsel]; an insert clears it and flips fsel),
+    // refilled from a registered encoded head H (init counter or free-list FIFO) when a register says one is empty;
+    // nothing between dec_ins and the free-list pointers.  Prefetched free slots: FA0, FA1, H (3).
+    reg [D-1:0] fa0, fa1; reg [1:0] fa_v; reg fsel;
+    wire [D-1:0] fr_r = fsel ? fa1 : fa0;   // free slot for this decision (one-hot)
+    wire fr_any = fa_v[fsel];
+    reg nb_v; reg [AW-1:0] nb_i;             // H: prefetched next free slot (encoded)
     reg [AW:0] ic;                           // init allocation counter 0 .. D
     reg [AW-1:0] flm [0:D-1];
     reg [AW-1:0] fl_wp, fl_rp; reg [AW:0] fl_n; reg fl_nz;
@@ -199,7 +231,9 @@ module ot_s81ph_ret_root_p #(
     wire live = s2_v && !s2_cmp;
     wire dec_add = live && hit_any;
     wire dec_ins = live && !hit_any && fr_any;
-    wire a_take = !fr_any || dec_ins;
+    wire rf_need = !fa_v[0] || !fa_v[1];     // registers only
+    wire rf_x = fa_v[0];                     // refill FA1 only when FA0 is valid
+    wire a_take = nb_v && rf_need;
     wire b_free = !nb_v || a_take;
     wire src_init = !ic[AW];
     wire src_v = src_init || fl_nz;
@@ -221,7 +255,7 @@ module ot_s81ph_ret_root_p #(
     integer g;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            bv <= {D{1'b0}}; ins_r <= {D{1'b0}}; ins_any <= 1'b0; fr_r <= {D{1'b0}}; fr_any <= 1'b0;
+            bv <= {D{1'b0}}; ins_r <= {D{1'b0}}; ins_any <= 1'b0; fa_v <= 2'b00; fsel <= 1'b0;
             nb_v <= 1'b0; ic <= 0; fl_wp <= 0; fl_rp <= 0; fl_n <= 0; fl_nz <= 1'b0; fp_v <= 1'b0; rm_any <= 1'b0;
             a3_v <= 1'b0; r_v <= 1'b0; fault <= 1'b0; rm_r <= {D{1'b0}}; e_m <= {D{1'b0}}; e_dup <= 1'b0;
             g_any <= {NG{1'b0}}; g_two <= {NG{1'b0}}; e_chk <= 1'b0;
@@ -230,9 +264,13 @@ module ot_s81ph_ret_root_p #(
             ins_r <= dec_ins ? fr_r : {D{1'b0}};
             ins_any <= dec_ins;
             bv <= (bv & ~(dec_add ? hit_oh : {D{1'b0}})) | (dec_ins ? fr_r : {D{1'b0}});
-            if (a_take) begin
-                fr_any <= nb_v;
-                for (k = 0; k < D; k = k + 1) fr_r[k] <= nb_v && nb_i == k[AW-1:0];
+            begin : fa_upd
+                reg [1:0] nv;
+                nv = fa_v;
+                if (dec_ins) nv[fsel] = 1'b0;
+                if (a_take) nv[rf_x] = 1'b1;
+                fa_v <= nv;
+                if (!nv[fsel] && nv[!fsel]) fsel <= !fsel;
             end
             if (b_free) begin nb_v <= src_v; nb_i <= src_i; end
             if (src_pop && src_init) ic <= ic + 1'b1;
@@ -256,6 +294,11 @@ module ot_s81ph_ret_root_p #(
             if (live && !hit_any && !fr_any) fault <= 1'b1;
             if (e_dup || (|g_two) || two_or_more({{(D-NG){1'b0}}, g_any})) fault <= 1'b1;
         end
+    always @(posedge clk)
+        if (a_take) begin
+            if (rf_x) for (k = 0; k < D; k = k + 1) fa1[k] <= nb_i == k[AW-1:0];
+            else      for (k = 0; k < D; k = k + 1) fa0[k] <= nb_i == k[AW-1:0];
+        end
     always @(posedge clk) begin
         fp_i <= {AW{1'b0}};
         for (k = 0; k < D; k = k + 1) if (rm_r[k]) fp_i <= k[AW-1:0];
@@ -270,22 +313,38 @@ module ot_s81ph_ret_root_p #(
         r_bf16 <= ({1'b0, s2_d} + 33'h7FFF + {32'd0, s2_d[16]}) >> 16;
     end
 
-    // ------------------------------------------------------------ S3: operands
+    // ------------------------------------------------------------ S3 / S4: operands
+    // v4 (tile_m3 -82 on add_a / add_b: one 128-way AND-OR): two registered OR levels, S3 = 16 groups of D/16, S4 =
+    // the 16 group words (+1 add cycle)
+    localparam integer OG = 16, OS = D / OG;
+    reg [31:0] o1_d [0:OG-1]; reg [OG-1:0] o1_e;
+    reg a4_v, a4_right, a4_e; reg [31:0] a4_d, a4_t;
+    integer og;
+    always @(posedge clk) begin
+        for (og = 0; og < OG; og = og + 1) begin : g_o1
+            reg [31:0] bs; reg es;
+            bs = 32'd0; es = 1'b0;
+            for (k = og * OS; k < (og + 1) * OS; k = k + 1) begin
+                bs = bs | ({32{a3_oh[k]}} & bd[k]);
+                es = es | (a3_oh[k] & be[k]);
+            end
+            o1_d[og] <= bs; o1_e[og] <= es;
+        end
+        a4_d <= a3_d; a4_t <= a3_t; a4_right <= a3_right; a4_e <= a3_e;
+    end
     reg [31:0] b_sel; reg e_sel;
     always @* begin
-        b_sel = 32'd0; e_sel = 1'b0;
-        for (k = 0; k < D; k = k + 1) begin
-            b_sel = b_sel | ({32{a3_oh[k]}} & bd[k]);
-            e_sel = e_sel | (a3_oh[k] & be[k]);
-        end
+        b_sel = 32'd0;
+        for (og = 0; og < OG; og = og + 1) b_sel = b_sel | o1_d[og];
+        e_sel = |o1_e;
     end
-    always @(posedge clk or negedge rst_n) if (!rst_n) add <= 1'b0; else add <= a3_v;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin a4_v <= 1'b0; add <= 1'b0; end else begin a4_v <= a3_v; add <= a4_v; end
     always @(posedge clk) begin
-        if (a3_v) begin
-            if (a3_right) begin add_a <= b_sel; add_b <= a3_d; end
-            else begin add_a <= a3_d; add_b <= b_sel; end
+        if (a4_v) begin
+            if (a4_right) begin add_a <= b_sel; add_b <= a4_d; end
+            else begin add_a <= a4_d; add_b <= b_sel; end
         end
-        tag_in <= {a3_t, e_sel | a3_e};
+        tag_in <= {a4_t, e_sel | a4_e};
     end
     ot_fp32_add_rne_deep #(.SPLIT(3'b111), .KS(1)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(add), .a(add_a), .b(add_b),
         .y(sum), .err(err), .valid_out(sv_add));

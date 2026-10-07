@@ -1,0 +1,13 @@
+== run_t5_err.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=40 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t5_m1.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=71 timeouts=0 mismatching_roots=128 RESULT FAIL 0err
+== run_t5_m2.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=71 timeouts=0 mismatching_roots=2 RESULT FAIL 0err
+== run_t5_m3.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=1 ref_drained=1 dut_drained=0 max_extra_cycles=50000 timeouts=1 mismatching_roots=128 RESULT FAIL 0err
+== run_t5_mix.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=71 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t5_mix11.log: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=73 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t5_mix12.log: SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=75 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t5_mix13.log: SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=74 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t5_over.log: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=45 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t5_range.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=16 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t5_rreq.log: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=59 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t5_trace.log: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=58 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+DONE
