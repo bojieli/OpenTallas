@@ -29,6 +29,7 @@ p.add_argument('--l-ff-max', type=float, default=330.0)
 p.add_argument('--min-ff', type=int, default=20000)
 p.add_argument('--threads', type=int, default=16)
 p.add_argument('--tag', default='tk_W2_rb')
+p.add_argument('--half', action='store_true', help='half-rate shell top')
 p.add_argument('--safe', action='store_true', help='SAFE=1 station (registered permission decision)')
 p.add_argument('--post-route-ff-hold', action='store_true',
                help='SS-only setup optimization at CTS/GRT; strict FF hold repair/signoff remains required after route')
@@ -89,7 +90,7 @@ if cal:
     a.hold_margin_ns = 0.0
 subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', str(a.period_ps),
                 '--l-max', str(a.l_max), '--l-min', str(a.l_min), '--l-ff-min', str(a.l_ff_min), '--l-ff-max', str(a.l_ff_max),
-                '--io-ref-period-ps', '833.333'] + (['--hold-relax'] if cal else []) + [
+                '--io-ref-period-ps', '833.333'] + (['--half'] if a.half else []) + (['--hold-relax'] if cal else []) + [
                 '--out', str(sdc)], check=True)
 native_synth = driver.run_synthesis
 
@@ -119,10 +120,12 @@ driver.run_synthesis = synth
 driver.prepare_w11_orfs_endpoint_netlist = endpoint
 driver.io_constraints_tcl = pins
 rel = str(HERE.relative_to(ROOT))
-argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb',
+HQ = 'physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb_half.sv'
+argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb_half' if a.half else 'ot_hbm_native_frame_station_rb',
         '--source', rel+'/bank_veto_static.sv', '--source', 'rtl/common/ot_fwd_link_stage.sv',
         '--source', rel+'/station_rb_static.sv',
-        '--param', 'ENABLE=1', '--param', f'NO={a.no}', '--param', 'REL_REG=1', '--param', f'SAFE={int(a.safe)}',
+        *(['--source', HQ] if a.half else []),
+        '--param', 'ENABLE=1', '--param', f'NO={a.no}', *([] if a.half else ['--param', 'REL_REG=1', '--param', f'SAFE={int(a.safe)}']),
         '--clock-port', 'clk_sm', '--clock-period-ns', f'{a.period_ps/1000:.6f}',
         '--clock-uncertainty-ns', '0.06', '--clock-uncertainty-hold-ns', '0.025',
         '--orfs-corner', 'WC', '--hold-corners', ('WC' if a.post_route_ff_hold else 'WC,BC'), '--hold-margin-ns', str(a.hold_margin_ns),

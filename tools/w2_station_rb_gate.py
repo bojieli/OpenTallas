@@ -13,7 +13,7 @@
    adds redundant recheck edges, since normal itself is sampled in EVAL and an
    EVAL excursion lasts >= 4 edges; it is therefore not a negative control.)
 """
-import argparse, hashlib, json, subprocess
+import argparse, hashlib, json, os, subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -169,9 +169,15 @@ def quarter_bench(out, tag, rb=True, mutant=None):
         tb = tb.replace(old, 'ot_hbm_native_quarter_chain_rb #(.ENABLE(1)) chain(')
     if HALFV and rb:
         tb = tb.replace('.u_station.held.', '.u_station.hs.u_core.held.')
+        # half rate: the registered drained/warm status settles in <=40 edges (2x the core step)
+        assert tb.count('k<8&&!(chain_warm&&chain_empty)')==1
+        tb = tb.replace('k<8&&!(chain_warm&&chain_empty)', 'k<40&&!(chain_warm&&chain_empty)')
+        o2 = '  repeat(6)@(negedge clk_sm);\n  if(!chain_fault||q_ack_v'
+        assert tb.count(o2)==1
+        tb = tb.replace(o2, '  for(integer k=0;k<80&&!chain_fault;k++)@(negedge clk_sm);\n  repeat(6)@(negedge clk_sm);\n  if(!chain_fault||q_ack_v')
     tbp = out/f'{tag}_tb.sv'; tbp.write_text(tb)
     vvp = out/f'{tag}.vvp'
-    rc = run(['iverilog', '-g2012', '-s', 'tb_native_quarter_publication', '-o', str(vvp), *files, str(tbp)], out/f'{tag}.compile.log')
+    rc = run(['iverilog', '-g2012', *os.environ.get('OT_IVL', '').split(), '-s', 'tb_native_quarter_publication', '-o', str(vvp), *files, str(tbp)], out/f'{tag}.compile.log')
     if rc:
         return dict(compile_exit=rc, passed=False)
     rc = run(['vvp', str(vvp)], out/f'{tag}.run.log')

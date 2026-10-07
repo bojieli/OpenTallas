@@ -35,6 +35,7 @@ p.add_argument('--l-ff-min', type=float, required=True, help='FF clk_sm insertio
 p.add_argument('--l-ff-max', type=float, default=None, help='FF clk_sm insertion, latest flop: approved IO hold model (inputs launched at FF max insertion + clk->Q FF + wire credit, hold uncertainty 50)')
 p.add_argument('--wire-credit-ps', type=float, default=0.0, help='0.112 ps/um x minimum die wire to the neighbour pin (stn_io_min.py)')
 p.add_argument('--hold-relax', action='store_true', help='calibration run: IO hold constraints relaxed (insertion measurement only)')
+p.add_argument('--half', action='store_true', help='half-rate shell: forwarded inverters are w_clk*, core clock is a divide-by-2 generated clock at the ICG AND')
 p.add_argument('--skew-ps', type=float, default=150.0)
 p.add_argument('--hold-skew-ps', type=float, default=50.0)
 p.add_argument('--io-ref-period-ps', type=float, default=None, help='sign-off period the IO windows refer to (default: --period-ps)')
@@ -65,7 +66,7 @@ lines = [
     'for {set i 0} {$i<4} {incr i} {',
     ' set roots {}',
     ' foreach p [get_pins -hierarchical *] {',
-    '  if {[regexp "u_clk${i}.*/Y$" [get_full_name $p]]} {lappend roots $p}',
+    f'  if {{[regexp "{"w_clk" if a.half else "u_clk"}${{i}}.*/Y$" [get_full_name $p]]}} {{lappend roots $p}}',
     ' }',
     ' if {[llength $roots]!=1} {error "missing kept station forwarding inverter $i"}',
     ' create_generated_clock -name forwarded$i -source $prev -master_clock $master -divide_by 1 -invert [lindex $roots 0]',
@@ -88,5 +89,7 @@ lines = [
     '}',
     'set_max_fanout 32 [current_design]',
 ]
+if a.half:
+    lines += ['set ot_g {}', 'foreach p [get_pins -hierarchical *] {', ' set n [get_full_name $p]', ' if {[regexp {u_icg.*/Y$} $n]} {', '  set c [get_cells -of_objects $p]', '  if {[regexp {AND} [get_property $c ref_name]]} {lappend ot_g $p}', ' }', '}', 'if {[llength $ot_g]!=1} {error "expected one ICG AND output, found [llength $ot_g]"}', 'create_generated_clock -name gclk -source [get_ports clk_sm] -divide_by 2 [lindex $ot_g 0]']
 a.out.write_text('\n'.join(lines)+'\n')
 print(a.out, dict(in_max=in_max, in_min=in_min, out_max=out_max, out_min=out_min))

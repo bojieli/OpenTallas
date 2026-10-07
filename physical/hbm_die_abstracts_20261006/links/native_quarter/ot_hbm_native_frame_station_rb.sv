@@ -276,6 +276,10 @@ module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=
     if(|dr_term)dr_bad_q<=1;
    end
   assign fault_now=P_fault||(|A_fault)||C_fault||G_fault||R_fault||illegal_q||dr_bad_q;
+`ifdef OT_DBG
+  always @(posedge clk_sm)if(illegal&&!illegal_q)$display("STN_ILLEGAL %m t=%0t ackv_q=%b A_in_r=%b active=%b sent_eff=%b sent=%b pend=%b learned=%b acked=%b A_out_v=%b seat_match=%b arr_bad=%b Cn=%b cv=%b ack_bad=%b",$time,ackv_q,A_in_r,active,sent_eff,sent,pend,learned,acked,A_out_v,seat_match,arr_bad,C_normal,cv,ack_bad);
+  always @(posedge clk_sm)if(fault_now&&!fault_x)$display("STN_FAULT %m t=%0t P=%b A=%b C=%b G=%b R=%b ill=%b dr=%b",$time,P_fault,A_fault,C_fault,G_fault,R_fault,illegal_q,dr_bad_q);
+`endif
   // Registered cross-bank veto (sticky like every fault source).
   reg fault_x;
   always @(posedge clk_sm or negedge rst_s)if(!rst_s)fault_x<=0;else if(fault_now)fault_x<=1;

@@ -79,7 +79,10 @@ module ot_hbm_native_frame_station_rb_half #(parameter integer ENABLE=0,NO=3)(
     rhit_st<=rhit_n|(rhit_st&!ph);
    end
   assign hit_n=ov_od&or_f;assign rhit_n=rv_od&rr_f;
-  assign hit_s=hit_st;assign hit_core=hit_st;assign rhit_core=rhit_st;
+  assign hit_s=hit_st;assign hit_core=hit_st;
+  // release_held=0 is the readyless inter-station seat (ready is constant by contract): the core learns the pulse one
+  // core cycle later exactly as with a constant-1 ready; a sticky ready would arrive after the pulse window and force a retry.
+  assign rhit_core=release_held?rhit_st:1'b1;
   // ---- readyless ACK pulses: sticky valid + held frame ----
   reg [NO-1:0] ackv_f;reg [NO*192-1:0] acko_f;reg [NO*73-1:0] ackf_f;
   reg [NO*192-1:0] acko_h;reg [NO*73-1:0] ackf_h;
