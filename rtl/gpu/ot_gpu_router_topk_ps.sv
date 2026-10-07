@@ -338,6 +338,23 @@ module ot_gpu_router_topk_ps_core #(
         base3 <= base2; l3 <= l2; bank3 <= bank2; fresh3 <= fresh2; hasf3 <= hasf2;
         v3 <= rst_c ? 1'b0 : v2;
     end
+    // ---- S3n (r7, OT_ROUTER_KNEG, default off): the key3 -> key4 pure copy goes through a NEGATIVE-edge register
+    // (half-cycle hold margin on the dv12 FF hold class key3 -> key4, -8.6 ps on 18 pins; 0 cycles: key4 still
+    // takes key3 of the previous posedge).  OT_NEG_ROUTER_KNEG (negative control) feeds key3n from key2 instead.
+`ifdef OT_ROUTER_KNEG
+    reg [31:0]    key3n [0:P-1];
+    genvar gk3;
+    for (gk3 = 0; gk3 < P; gk3 = gk3 + 1) begin : g_k3n
+`ifdef OT_NEG_ROUTER_KNEG
+        always @(negedge clk) key3n[gk3] <= key2[gk3];
+`else
+        always @(negedge clk) key3n[gk3] <= key3[gk3];
+`endif
+    end
+`define OT_RT_K3 key3n
+`else
+`define OT_RT_K3 key3
+`endif
     // ---- S4: ranks ----
     reg [4:0]     rk4 [0:P-1];
     reg [31:0]    key4 [0:P-1];
@@ -353,11 +370,12 @@ module ot_gpu_router_topk_ps_core #(
                 if (j < m) bv[j] = gt3[j*P+m];
                 else if (j > m) bv[j] = !gt3[m*P+j];
             rk4[m] <= pop16(bv);
-            key4[m] <= key3[m];
+            key4[m] <= `OT_RT_K3[m];
         end
         base4 <= base3; l4 <= l3; bank4 <= bank3; fresh4 <= fresh3; hasf4 <= hasf3;
         v4 <= rst_c ? 1'b0 : v3;
     end
+`undef OT_RT_K3
     // ---- S5: local top-K, descending ----
     reg [EW-1:0]  L5 [0:K-1];
     reg           v5, l5, fresh5;
