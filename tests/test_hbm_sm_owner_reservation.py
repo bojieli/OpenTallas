@@ -27,3 +27,17 @@ def test_descriptor_bays_fit_without_using_result_or_owner_space():
         for b in boxes[k+1:]:
             u0,v0,u1,v1=b['box_um']
             assert not(min(x1,u1)>max(x0,u0)+1e-6 and min(y1,v1)>max(y0,v0)+1e-6)
+
+
+def test_control_escape_apertures_are_clear_macro_keepouts():
+    r,p=O.generate(True,escape=True)
+    assert len(r['control_escape_bays'])==64
+    assert r['control_escape_reserved_area_um2']==122880
+    assert not r['bay_macro_collisions']
+    owners={b['sm']:b['box_um'] for b in p['native_owner_bays']}
+    adapters={b['sm']:b['box_um'] for b in p['native_descriptor_bays']}
+    for b in r['control_escape_bays']:
+        x0,y0,x1,y1=b['box_um']
+        box=(owners if b['role']=='owner' else adapters)[b['sm']]
+        assert abs(x1-x0-40)<1e-6 and abs(y1-y0-48)<1e-6
+        assert abs(x1-box[0])<1e-6 or abs(x0-box[2])<1e-6
