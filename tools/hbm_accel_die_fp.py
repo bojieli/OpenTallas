@@ -67,8 +67,13 @@ LINK_STAGE_UM = 430.56          # corridor-gate closing pitch (S81 / Qwen die)
 SS_REACH_UM = 504.0             # SS wire reach at 0.833 ns (W15)
 WAYPOINT_UM = 4 * LINK_STAGE_UM
 WP_DEFAULT = WAYPOINT_UM
+
+
+def stage_um(m):
+    """die register-hop pitch the round prices and builds (r17: 350 um, below the 359 um inter-region reach)"""
+    return (m.get('variant') or {}).get('stage_um', LINK_STAGE_UM)
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r16j'            # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments)
+FINAL_ROUND = 'r17'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
 # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
 #                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
@@ -251,7 +256,20 @@ R16I = dict(R16H, split_masters={'hfd_index_q': 'physical/hbm_accel_die_views/in
 # (port_map), the PHY dfi bundle split by bit range (bus endpoint 'dfi@lo:hi'), cross buses between abutting bands,
 # one die clock leaf ck / rst per band.  Every other master keeps its pins.
 R16J = dict(R16I, split_x_masters='physical/hbm_accel_die_views/svc/split/split.json', host_bb=True)
-ADOPTED = R16J
+# r17 (2026-10-06 ~20:30, budgets coordinator: results/rtl/budgets_20261006 SUMMARY 'infeasible as planned'):
+#  stage_um 350: every staged die path is priced and built at <= 350 um per register hop (the inter-region reach is
+#    359 um, intra 412: at 430.56 every path came out one stage short: su <-> router / cmdproc / vm / coll / index,
+#    vm <-> router, the last hop into the SM).
+#  hub_stage_all: the attention root buses tr_<q><r> (tile row -> index band, 1.7-4.5 mm) are staged paths (only the
+#    farthest row of a quadrant was).
+#  fwd_hub: index b5 -> VM (iv_<q>, 5.1-5.3 mm) and VM -> router (3.8 mm) cross clock regions by 198-268 / 197 ps:
+#    forwarded-clock station chains (first station clocked from the source region, last station a meso FIFO into the
+#    receiver's clock, endpoint pins unchanged), on new spine-side lanes 'iv' / 'rv'.
+#  spine_region: loader + router + cmdproc are one clock region HUB-SP (2.6 mm) apart from HUB-C (cmdproc <-> router /
+#    loader were split across HUB-C cuts at 197 ps).
+#  The SM 3x3 grid (smh element) joins r17 when the SM view exports.
+R17 = dict(R16J, stage_um=350.0, hub_stage_all=True, fwd_hub=True, spine_region=True)
+ADOPTED = R17
 
 
 def build(variant=None):
@@ -886,7 +904,8 @@ def _router(m, B, P):
             m.setdefault('clocked', {})[name] = dom
         return it
 
-    def chain(cid, cls, bits, src, dst, pts, path=None, fc=None, meso_end=False, dom='stream', local_src=False):
+    def chain(cid, cls, bits, src, dst, pts, path=None, fc=None, meso_end=False, dom='stream', local_src=False,
+              first_um=None):
         """src/dst = (inst, port); pts = polyline through channels; stations every <= WAYPOINT_UM along it.  dst None:
         leave the chain open and return (last endpoint, bus ids).  r15 fwd: fc = (downstream bits, upstream bits) adds
         the forwarded clocks (one per 512 b slice and direction) to every segment; meso_end: the last station is a meso
@@ -896,6 +915,8 @@ def _router(m, B, P):
         seq = []
         acc = 0.0
         WAYPOINT_UM = m['variant'].get('wp_um', WP_DEFAULT)     # r13 option: station spacing (registered segment)
+        if first_um is not None:        # r17: the first station first_um from the source (inside its clock region)
+            acc = WAYPOINT_UM - first_um
         for (ax, ay), (bx, by) in zip(pts, pts[1:]):
             L = abs(bx - ax) + abs(by - ay)
             if L <= 0:
@@ -980,7 +1001,8 @@ def buses(m):
     sp_off, ed_off = {}, {}
     pos = 60.0
     for n_, nb in (('lk0', 64), ('lk1', 64), ('lk2', 64), ('xt', 129), ('ct', 23), ('ef', 8)) + \
-            ((('qa', 38),) if m['variant'].get('attn_rtl') else ()):
+            ((('qa', 38),) if m['variant'].get('attn_rtl') else ()) + \
+            ((('iv', 33), ('rv', 33)) if m['variant'].get('fwd_hub') else ()):
         sp_off[n_] = pos + nb * 1.2 / 2
         pos += nb * 1.2 + 40.0
     pos = 30.0
@@ -1388,6 +1410,46 @@ def buses(m):
                                                  clock='clk_link', where='inside the receiving hub block'))
     else:
         chain('host', 'host', 512, (ld.name, 'h'), (hl.name, 'io'), pts, path='host')
+    if V.get('hub_stage_all'):          # r17: every attention root bus is a staged path
+        for b_ in B:
+            if b_[1] == 'attn_root' and not any(b_[0] in ids for ids in P.values()):
+                P[f'attn_root_{b_[0][3:]}'] = [b_[0]]
+    if V.get('fwd_hub'):                # r17: forwarded-clock chains for the two region crossings > 150 ps
+        vm = hub['vm']
+        hy0_, hy1_ = g['hub_y']
+        drop = set()
+        for st in ('SW', 'SE', 'NW', 'NE'):
+            sc = m['scan'][st]
+            ix = sc['index']
+            side, half = st[0], st[1]
+            ye = (hy0_ + hy1_) / 2 + (-130.0 if side == 'S' else 130.0) + (-20.0 if half == 'W' else 20.0)
+            xi = xlane(half, 'iv', vm.x - g['spch'] / 2 if half == 'W' else vm.x + vm.w + g['spch'] / 2)
+            xc = (ix.x + ix.w + SHAVE + HCH / 2) if half == 'W' else (ix.x - HCH / 2)
+            iy = (ix.y + ix.h - 200.0) if side == 'S' else (ix.y + 200.0)
+            src = (ix.x + ix.w, iy) if half == 'W' else (ix.x, iy)
+            dst = _cxy(vm, 'W' if half == 'W' else 'E', 0.15 if side == 'S' else 0.25)
+            pts = [src, (xc, iy), (xc, ye), (xi, ye), (xi, dst[1]), dst]
+            drop.add(f'iv_{st}')
+            n0 = len(insts)
+            chain(f'iv_{st}', 'hub', 512, (ix.name, 't_vm'), (vm.name, f'i{st}'), pts, path=f'index_vm_{st}', fc=(512,),
+                  meso_end=True, local_src=True, first_um=HCH / 2 + 60.0)
+            w0 = insts[n0]          # the clocked first station: a sink of the index quarter's region
+            m.setdefault('region_extra', []).append(dict(name=f'HUB-Q{st}', clock='clk_stream',
+                                                         rect=[round(w0.x, 1), round(w0.y, 1), round(w0.x + w0.w, 1), round(w0.y + w0.h, 1)]))
+        rt = hub['router']
+        xr = xlane('W', 'rv', vm.x - g['spch'] / 2)
+        a0 = _cxy(vm, 'W', 0.05)
+        b0 = _cxy(rt, 'W', 0.5)
+        drop.add('hb_vm_router')
+        P.pop('hub_vm_router', None)
+        n0 = len(insts)
+        chain('vr', 'hub', 512, (vm.name, 't_router'), (rt.name, 'f_vm'), [a0, (xr, a0[1]), (xr, b0[1]), b0],
+              path='hub_vm_router', fc=(512,), meso_end=True, local_src=True)
+        w1 = insts[-1]              # the meso station into the router: a sink of the router's region
+        assert len(insts) > n0 and w1.master.startswith('hfd_meso')
+        m.setdefault('region_extra', []).append(dict(name='HUB-SP', clock='clk_stream',
+                                                     rect=[round(w1.x, 1), round(w1.y, 1), round(w1.x + w1.w, 1), round(w1.y + w1.h, 1)]))
+        B[:] = [b_ for b_ in B if b_[0] not in drop]
     if V.get('clk_dom'):
         clock_nets(m, B, coll)
         return B, dict(P)
@@ -1840,7 +1902,7 @@ def manhattan_paths(m):
             segs.append(round(ln, 1))
             L += ln
         out[p] = dict(segments=len(ids), um=round(L, 1),
-                      stages_430=sum(math.ceil(s_ / LINK_STAGE_UM) for s_ in segs if s_ > 0),
+                      stages_430=sum(math.ceil(s_ / stage_um(m)) for s_ in segs if s_ > 0),
                       stages_504=sum(math.ceil(s_ / SS_REACH_UM) for s_ in segs if s_ > 0))
     return out
 
@@ -2065,7 +2127,7 @@ def pdn_plan(m, cov=None):
 
 
 def clock_regions(m):
-    out = []
+    out = [dict(r) for r in m.get('region_extra', [])]     # r17: station rects of a named region, matched first
     for st, G in m['groups'].items():
         for h, cols in (('w', (0, 1)), ('e', (2, 3))):
             ss = [s for s in G['sms'] if s.sm['col'] in cols]
@@ -2076,9 +2138,14 @@ def clock_regions(m):
             out.append(dict(name=f'G{st}{h}', clock='clk_stream', rect=[round(x0, 1), round(y0, 1), round(x1, 1), round(y1, 1)],
                             extent_um=round(max(x1 - x0, y1 - y0), 1), sms=[s.name for s in ss]))
     hb = m['hub']
-    cen = [hb[k] for k in hb if not k.startswith('index_')]
+    sp_ = ('loader', 'router', 'cmdproc') if m['variant'].get('spine_region') else ()
+    cen = [hb[k] for k in hb if not k.startswith('index_') and k not in sp_]
     out.append(dict(name='HUB-C', clock='clk_stream + clk_serial', rect=[round(min(i.x for i in cen), 1), round(min(i.y for i in cen), 1),
                     round(max(i.x + i.w for i in cen), 1), round(max(i.y + i.h for i in cen), 1)]))
+    if sp_:     # r17: loader + router + cmdproc in one region (their sync nets stayed inside one tree cut)
+        sp = [hb[k] for k in sp_]
+        out.append(dict(name='HUB-SP', clock='clk_stream', rect=[round(min(i.x for i in sp), 1), round(min(i.y for i in sp), 1),
+                        round(max(i.x + i.w for i in sp), 1), round(max(i.y + i.h for i in sp), 1)]))
     for r in m['regions']:
         if r['name'].startswith('scan_'):
             out.append(dict(name='HUB-Q' + r['name'][5:], clock='clk_stream', rect=[round(v, 1) for v in r['rect']],

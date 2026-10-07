@@ -181,10 +181,10 @@ def routed_paths(m, grt_work):
         Ld = [med[b] for b in ids]
         Lh = [manh(b) for b in ids]
         out[p] = dict(segments=len(ids), routed_um=round(sum(Ls), 1), routed_mean_bundle_um=round(sum(Lm), 1),
-                      stages_430=sum(math.ceil(x / F.LINK_STAGE_UM) for x in Ls if x > 0),
-                      stages_430_mean_bundle=sum(math.ceil(x / F.LINK_STAGE_UM) for x in Lm if x > 0),
-                      stages_430_median_bundle=sum(math.ceil(x / F.LINK_STAGE_UM) for x in Ld if x > 0),
-                      stages_430_manhattan=sum(math.ceil(x / F.LINK_STAGE_UM) for x in Lh if x > 0),
+                      stages_430=sum(math.ceil(x / F.stage_um(m)) for x in Ls if x > 0),
+                      stages_430_mean_bundle=sum(math.ceil(x / F.stage_um(m)) for x in Lm if x > 0),
+                      stages_430_median_bundle=sum(math.ceil(x / F.stage_um(m)) for x in Ld if x > 0),
+                      stages_430_manhattan=sum(math.ceil(x / F.stage_um(m)) for x in Lh if x > 0),
                       routed_median_bundle_um=round(sum(Ld), 1), manhattan_um=round(sum(Lh), 1),
                       stages_504=sum(math.ceil(x / F.SS_REACH_UM) for x in Ls if x > 0),
                       longest_segment_um=round(max(Ls), 1))
@@ -261,7 +261,7 @@ def price(m, grt_work, out=None):
                                  qwen_tp4_ar_tok_s_priced=s_['qwen_8k']['b_TP4_iso_silicon']['ar_tok_s_priced'],
                                  qwen_tp2_ar_tok_s_priced=s_['qwen_8k']['a_TP2_same_silicon']['ar_tok_s_priced'])
     rec.update(schema='opentallas.hbm-accel-die-floorplan.wire-stages.v1', grt_case=str(grt_work.name),
-               stage_pitch_um=F.LINK_STAGE_UM, ss_reach_um=F.SS_REACH_UM, meso_crossing_cycles=MESO_CYC,
+               stage_pitch_um=F.stage_um(m), ss_reach_um=F.SS_REACH_UM, meso_crossing_cycles=MESO_CYC,
                clock_hz=hz, class_bounds=cm, paths=rp,
                tool_sha256=dict(fp=F.sha('tools/hbm_accel_die_fp.py'), price=F.sha('tools/hbm_accel_die_price.py')))
     out = Path(out) if out else ROOT / F.OUT / 'wire_stages.json'
@@ -506,7 +506,7 @@ def price_qwen(m, grt_work, out=None):
     m2 = dict(m, paths=dict(m['paths'], **{f'tree_{t}': ids for t, ids in tp.items()}))
     rp = routed_paths(m2, grt_work)
     rec = dict(schema='opentallas.hbm-accel-qwen-die.wire-stages.v1', grt_case=str(grt_work.name),
-               stage_pitch_um=F.LINK_STAGE_UM, meso_crossing_cycles=MESO_CYC, clock_hz=F.CLK_HZ,
+               stage_pitch_um=F.stage_um(m), meso_crossing_cycles=MESO_CYC, clock_hz=F.CLK_HZ,
                tile_hop_stages=m['tile_element']['hop_stages'], bases={})
     for key, basis in Q_BASES:
         S_ = q_one_way(m2, rp, key)

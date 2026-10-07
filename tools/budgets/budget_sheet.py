@@ -232,7 +232,7 @@ def main():
                 kls, skew = classify(d, drv, ld, reg, trees, plan_intra, fl, bid in fb)
                 # planned die stations: S81 places every station as an instance (1 hop); the HBM die prices the
                 # wire stages of its path segments at ceil(L / 430.56) (hbm_accel_die_fp LINK_STAGE_UM)
-                plan_st = max(1, math.ceil(L / LINK_STAGE_UM)) if bid in pb else 1
+                plan_st = max(1, math.ceil(L / (d.get('stage_um') or LINK_STAGE_UM))) if bid in pb else 1
                 for me, port, peer, dirn in ((drv, eps[0][1], ld, 'out'), (ld, e[1], drv, 'in')):
                     pr = M[me[1]]['ports'].setdefault((port, dirn), dict(port=port, dir=dirn, bits=0, classes=set(), neighbours=set(),
                                                                        L=0.0, basis=set(), skew_cls=set(), skew=0.0, cdc=False,
