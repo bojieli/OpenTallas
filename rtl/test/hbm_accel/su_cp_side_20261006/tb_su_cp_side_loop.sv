@@ -15,7 +15,7 @@
 // done may follow a CP fault before the next reset.
 module tb_su_cp_side_loop;
  parameter integer PIN=0,REPLAY=0,FAULTS=0,SEED=1,NTX=3000,FAULT_BOUND=3;
- parameter integer SIDE=1,OWN_IN=1,OWN_OUT=1,EXEC_IN=0,EXEC_OUT=0,OUT=1,SIDE_REPLAY=-1;
+ parameter integer SIDE=1,OWN_IN=1,OWN_OUT=1,EXEC_IN=0,EXEC_OUT=1,OUT=1,SIDE_REPLAY=-1;
  // DET=1: fixed delays, no competing borrower, cdc always drained -> per-transaction latency is a constant
  parameter integer DET=0;
  reg clk=0;always #5 clk=~clk;

@@ -19,8 +19,10 @@ CP_SRC = ['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv', D+'ot_hbm_integrated_header_deco
 LOOP_SRC = CP_SRC + [D+'ot_hbm_integrated_prior_debt.sv', D+'ot_hbm_integrated_sm0_borrow.sv']
 TB = 'rtl/test/hbm_accel/su_cp_side_20261006/'
 PHYS = 'physical/hbm_su_cp_side_20261006/'
-# adopted block shape: launch 2 (pin capture + core), shared-owner seat 1 in / 1 out (replay 2), executor in-block, status 1
-SHAPE = dict(OWN_IN=1, OWN_OUT=1, EXEC_IN=0, EXEC_OUT=0, OUT=1)
+# adopted block shape: launch 2 (pin capture + core), shared-owner seat 1 in / 1 out (replay 2), executor in-block
+# (inputs direct; exec_owned/new_request_permit leave from a flop: r1 with EXEC_OUT=0 failed SS -262.6 ps on that
+# ~613 ps owner/status->association cone into the executor's 0.5 T budget), status 1
+SHAPE = dict(OWN_IN=1, OWN_OUT=1, EXEC_IN=0, EXEC_OUT=1, OUT=1)
 CANON = ['ENABLE=1', 'SU_ENABLE=1', 'SU_REGISTERED_OUTPUTS=1', 'SU_REGISTERED_STATUS=1', 'SU_REGISTERED_BOUNDARY=1',
          'SU_BALANCED_OWNER_BOUNDARY=1', 'SU_FAST_OWNER_FRONTIER=1', 'SU_PARALLEL_PHASE_VALIDATION=1',
          'SU_CONTROL_TAIL_CUT=1', 'SU_OWNER_VETO_POLARITY=1', 'SU_FOUR_COMBINATIONAL_CUTS=1']
@@ -40,6 +42,7 @@ LOOPS = [  # name, SIDE, PIN, REPLAY, SIDE_REPLAY, FAULTS, FAULT_BOUND, expect
  ('L5_side_faults', 1, 0, 0, -1, 1, 2, 'PASS'), ('L6_side_faults_bound1_NEG', 1, 0, 0, -1, 1, 1, 'FAIL')]
 DETS = [  # name, SIDE, PIN, REPLAY, extra shape override
  ('D_orig', 0, 0, 0, {}), ('D_pin_margin_standalone', 0, 1, 1, {}), ('D_side', 1, 0, 0, {}),
+ ('D_side_r1_exec_out0_info', 1, 0, 0, dict(EXEC_OUT=0)),
  ('D_side_seat_inblock_info', 1, 0, 0, dict(OWN_IN=0, OWN_OUT=0))]
 
 
@@ -212,7 +215,7 @@ if __name__ == '__main__':
     b.add_argument('--work', default='/tmp/sucpin-bench'); b.add_argument('--cycles', type=int, default=400000)
     b.add_argument('--ntx', type=int, default=3000); b.add_argument('--seeds', type=int, nargs='+', default=[1, 7])
     r = sub.add_parser('route'); r.add_argument('--job', required=True); r.add_argument('--threads', type=int, default=16)
-    r.add_argument('--tag', default='claude_su_cp_side_r1')
+    r.add_argument('--tag', default='claude_su_cp_side_r2')
     s = sub.add_parser('signoff'); s.add_argument('--orfs', required=True); s.add_argument('--output', required=True)
     x = ap.parse_args()
     if x.cmd == 'bench': sys.exit(bench(x.out, x.work, x.cycles, x.ntx, x.seeds))

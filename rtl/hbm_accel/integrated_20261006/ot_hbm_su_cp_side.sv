@@ -15,12 +15,14 @@
 //    OWN_IN pin stages; lease_v/release_v/quiet and the held frame leave from
 //    OWN_OUT pin flops. With OWN_IN+OWN_OUT>0 the release acceptance replays the
 //    caller's actual fire (RELEASE_REPLAY=OWN_IN+OWN_OUT).
-//  * executor (in-block): EXEC_IN/EXEC_OUT stages, 0 in the adopted shape.
+//  * executor (in-block): EXEC_IN/EXEC_OUT stages. Adopted: EXEC_IN=0 (executor
+//    flop outputs straight into the CP), EXEC_OUT=1 (exec_owned/new_request_permit
+//    are a ~610 ps owner/status->association cone; they leave from a flop).
 //  * die/cmdproc status (pending/selected/done/fault/owned): OUT pin flops.
 // native_launch is NOT a block output: it is the stateless decode
 // entry?0:launch_v (canonical), done next to the cmdproc by
 // ot_hbm_su_cp_side_native_steer with zero added edges.
-module ot_hbm_su_cp_side #(parameter integer ENABLE=0,OWN_IN=1,OWN_OUT=1,EXEC_IN=0,EXEC_OUT=0,OUT=1,
+module ot_hbm_su_cp_side #(parameter integer ENABLE=0,OWN_IN=1,OWN_OUT=1,EXEC_IN=0,EXEC_OUT=1,OUT=1,
  RELEASE_REPLAY=-1)(
  input wire clk,por_n,
  // cmdproc launch (die crossing)

@@ -11,7 +11,7 @@
 module tb_su_cp_side_exact;
  parameter integer CYCLES=400000;
  parameter integer SEED=1;
- parameter integer OWN_IN=1,OWN_OUT=1,EXEC_IN=0,EXEC_OUT=0,OUT=1;
+ parameter integer OWN_IN=1,OWN_OUT=1,EXEC_IN=0,EXEC_OUT=1,OUT=1;
  reg clk=0;always #5 clk=~clk;
  reg por_n=0;
  // Stimulus s(t)

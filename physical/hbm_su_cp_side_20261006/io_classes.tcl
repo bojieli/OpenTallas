@@ -3,8 +3,8 @@
 #   0.2 T + 150 ps against vclk at the block insertion, -min 0.
 #  in-block executor class (the SU executor FSM sits in the same SU-side block; no pin stage, AGENTS
 #   CLARIFICATION 10:40 "move the cut so the loop stays inside one hardened block"): inputs are executor
-#   flop outputs (state==FINISHED decode / bad / logical_retired) at 0.15 T; outputs feed the executor's
-#   start / FSM-enable / request-gating cone, budgeted 0.5 T; -min 0.
+#   flop outputs (state==FINISHED decode / bad / logical_retired) at 0.15 T; outputs (from pin flops in the
+#   adopted EXEC_OUT=1 shape) feed the executor's start / FSM-enable / request-gating cone, budgeted 0.5 T; -min 0.
 set ot_T [get_property [get_clocks core_clk] period]
 proc ot_apply_io {min_in} {
   global ot_T
