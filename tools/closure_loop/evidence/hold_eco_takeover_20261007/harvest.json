@@ -1,0 +1,158 @@
+{
+  "captured_utc": "2026-10-07T10:49:34.809442+00:00",
+  "source_commit": "fd4706bcdef5f8890afd889d7a3330ce6035d632",
+  "thresholds_ps": {
+    "ss": 15,
+    "ff": 15
+  },
+  "jobs": [
+    {
+      "name": "hbm_cmdproc_n_ac6ef1af3",
+      "state_sha256": "d503e2d657a272044a22ce613dc10e299cca10c6f189e664cb9017dabf826167",
+      "source_commit": "ac6ef1af33d9618ba5f61e1cacc8c19be003c568",
+      "status": "CLOSED",
+      "metrics": {
+        "ss_ps": 60.84,
+        "ff_ps": 19.69,
+        "drc": 0
+      },
+      "eco_result": {
+        "ss_ps": 60.84,
+        "ff_ps": 19.69,
+        "drc": 0,
+        "cells_added": 98,
+        "errors": [],
+        "pass": 1,
+        "session": "ff",
+        "window": "endpoints_below_hm 95 fixable 95 tight 0 infeasible 0 nodata 0 (hm 21.0 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+        "score": 4.690000000000001
+      },
+      "guide_log": [
+        "OT_PASS 1 input /srv/opentallas-scratch/claude/closure-loop/hbm_cmdproc_n_ac6ef1af3/routes/hbm_cmdproc_n_ac6ef1af3/work/orfs/results/asap7/opentallas_hfd_cmdproc_n_asap7_hv_hbm_cmdproc_n_ac6ef1af3/base/5_2_route.odb spef /srv/opentallas-scratch/claude/closure-loop/hbm_cmdproc_n_ac6ef1af3/routes/hbm_cmdproc_n_ac6ef1af3/work/orfs/results/asap7/opentallas_hfd_cmdproc_n_asap7_hv_hbm_cmdproc_n_ac6ef1af3/base/6_final.spef",
+        "OT_PASS 1 hold repair target 21.0 (post-route goal 18, acceptance 15.0)",
+        "OT_WIN pre endpoints_below_hm 95 fixable 95 tight 0 infeasible 0 nodata 0 (hm 21.0 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+        "OT_ECO route guides from the db: 1",
+        "}OT_ECO chosen pass1"
+      ]
+    },
+    {
+      "name": "s81ph-root_tile-34b3e75dd",
+      "state_sha256": "66014b9839f8ec38575692faeb9457ff79df1b7313e08d78e8e17ee1fb544bc6",
+      "source_commit": "34b3e75dd75e44918a63da02783149aa82ee6878",
+      "status": "NEEDS_RTL",
+      "metrics": {
+        "ss_ps": 17.0,
+        "ff_ps": 8.92,
+        "drc": 0
+      },
+      "eco_result": null,
+      "guide_log": [
+        "OT_PASS 1 input /srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/routes/s81ph_root_tile_34b3e75dd/work/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_34b3e75dd/base/5_2_route.odb spef /srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/routes/s81ph_root_tile_34b3e75dd/work/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_34b3e75dd/base/6_final.spef",
+        "OT_PASS 1 hold repair target 21.0 (post-route goal 18, acceptance 15.0)",
+        "OT_WIN pre endpoints_below_hm 620 fixable 620 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)",
+        "OT_ECO route guides from the db: 1",
+        "}OT_PASS 2 input /srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/cl/eco-r2/pass1/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_34b3e75dd/base/6_final.odb spef /srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/cl/eco-r2/pass1/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_34b3e75dd/base/6_final.spef",
+        "OT_PASS 2 hold repair target 30.0 (post-route goal 18, acceptance 15.0)",
+        "OT_WIN pre endpoints_below_hm 872 fixable 872 tight 0 infeasible 0 (hm 30.0 filt 40 accept_ss 15.0)",
+        "OT_ECO route guides from the db: 1",
+        "[ERROR DRT-0218] Guide is not connected to design for net net33226",
+        "Error: hold_eco.tcl, 162 DRT-0218"
+      ]
+    },
+    {
+      "name": "s81ph-dsfd_capt_x-501831f78-safe",
+      "state_sha256": "1c8a15aaece1f9ef9006fd5e1c1c403088fd7d8c36132344878c5d23cadd5a89",
+      "source_commit": "501831f78adb7dcacbd1c881a3bf40fd6073bc93",
+      "status": "NEEDS_RTL",
+      "metrics": {
+        "ss_ps": 42.31,
+        "ff_ps": -11.62,
+        "drc": 0
+      },
+      "eco_result": null,
+      "guide_log": [
+        "OT_PASS 1 input /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base/5_2_route.odb spef /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base/6_final.spef",
+        "OT_PASS 1 hold repair target 21.0 (post-route goal 18, acceptance 15.0)",
+        "OT_WIN pre endpoints_below_hm 8041 fixable 8030 tight 11 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)",
+        "OT_ECO route guides from the db: 1",
+        "}OT_PASS 2 input /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/cl/eco-r2/pass1/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base/6_final.odb spef /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/cl/eco-r2/pass1/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base/6_final.spef",
+        "OT_PASS 2 hold repair target 30.0 (post-route goal 18, acceptance 15.0)",
+        "OT_WIN pre endpoints_below_hm 7220 fixable 6674 tight 546 infeasible 0 (hm 30.0 filt 40 accept_ss 15.0)",
+        "OT_ECO route guides from the db: 1",
+        "[ERROR DRT-0218] Guide is not connected to design for net net49533",
+        "Error: hold_eco.tcl, 162 DRT-0218"
+      ]
+    },
+    {
+      "name": "hbm_svc_SE_s6_41d574827_bud",
+      "state_sha256": "0d3a152385fa9fb5cd459a7a592aa6c18703babbb6fe3202a6195ecf2410805e",
+      "source_commit": "41d57482796e648a579ea0178c770e196f026928",
+      "status": "ECO_INSTALL",
+      "metrics": {
+        "ss_ps": 143.71,
+        "ff_ps": -36.67,
+        "drc": 0
+      },
+      "eco_result": {
+        "ss_ps": 136.79,
+        "ff_ps": 23.52,
+        "drc": 0,
+        "cells_added": 81,
+        "errors": [],
+        "pass": 2,
+        "session": "ff",
+        "window": "endpoints_below_hm 83 fixable 83 tight 0 infeasible 0 (hm 27.56 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+        "score": 8.52
+      },
+      "guide_log": [
+        "OT_PASS 1 input /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud/routes/hbm_svc_SE_s6_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SE_s6_asap7_hv_hbm_svc_SE_s6_41d574827_bud/base/5_2_route.odb spef /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud/routes/hbm_svc_SE_s6_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SE_s6_asap7_hv_hbm_svc_SE_s6_41d574827_bud/base/6_final.spef",
+        "OT_PASS 1 hold repair target 21.0 (post-route goal 18, acceptance 15.0)",
+        "OT_WIN pre endpoints_below_hm 1109 fixable 1109 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+        "OT_ECO route guides from the db: 1",
+        "}OT_PASS 2 input /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud/cl/eco-r3/pass1/orfs/results/asap7/opentallas_hfd_svc_SE_s6_asap7_hv_hbm_svc_SE_s6_41d574827_bud/base/6_final.odb spef /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud/cl/eco-r3/pass1/orfs/results/asap7/opentallas_hfd_svc_SE_s6_asap7_hv_hbm_svc_SE_s6_41d574827_bud/base/6_final.spef",
+        "OT_PASS 2 hold repair target 27.56 (post-route goal 18, acceptance 15.0)",
+        "OT_WIN pre endpoints_below_hm 83 fixable 83 tight 0 infeasible 0 (hm 27.56 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+        "OT_ECO route guides from the db: 1",
+        "[ERROR DRT-0218] Guide is not connected to design for net net22253",
+        "OT_ECO guide re-route failed (DRT-0218): fresh global route",
+        "}OT_ECO chosen pass2"
+      ]
+    },
+    {
+      "name": "hbm_svc_SW_s4_41d574827_bud",
+      "state_sha256": "0cf55668d6e00158ba922dfed047a846b8757725871b2297adbcb810d7a324ce",
+      "source_commit": "41d57482796e648a579ea0178c770e196f026928",
+      "status": "CLOSED",
+      "metrics": {
+        "ss_ps": 95.47,
+        "ff_ps": 22.16,
+        "drc": 0
+      },
+      "eco_result": {
+        "ss_ps": 95.47,
+        "ff_ps": 22.16,
+        "drc": 0,
+        "cells_added": 3394,
+        "errors": [],
+        "pass": 1,
+        "session": "ff",
+        "window": "endpoints_below_hm 1697 fixable 1697 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)",
+        "score": 7.16
+      },
+      "guide_log": [
+        "OT_PASS 1 input /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_41d574827_bud/base/5_2_route.odb spef /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_41d574827_bud/base/6_final.spef",
+        "OT_PASS 1 hold repair target 21.0 (post-route goal 18, acceptance 15.0)",
+        "OT_WIN pre endpoints_below_hm 1697 fixable 1697 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)",
+        "OT_ECO route guides from the db: 1",
+        "}OT_ECO chosen pass1"
+      ]
+    }
+  ],
+  "source_sha256": {
+    "hold_eco_sdc.py": "81d7c403edb7899d96d88deb5b616d9821c066fefd6cbc6bc99328a1124ad9a7",
+    "hold_eco.sh": "2928b6b41bcd7048c4ffd83c04fc490830d79b4a51ecfd91d94e9d0ac7c68d2b",
+    "hold_eco.tcl": "7d30516ff575ebef6d4d3028f5fef87b4d6ae3ffb27064f0a55ce21bd6dfa3f8",
+    "hold_eco_window.tcl": "ad0d172d3b11952a27c22e11e02f6dd2158d200179faed87e58dbb953d99ac35",
+    "hold_eco_corner.tcl": "6f05c6a272a3cc961db9ec36f71eef67018ed94efa459c8da122e5de347517b2"
+  }
+}

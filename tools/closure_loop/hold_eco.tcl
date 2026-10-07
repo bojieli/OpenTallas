@@ -130,7 +130,8 @@ set block [ord::get_db_block]
 # 'pin not visited' + checkConnectivity on untouched nets; keeping clock wires fails checkConnectivity.)
 set guides [expr {[envd OT_GUIDES 1] && [grt::have_routes]}]
 puts "OT_ECO route guides from the db: $guides"
-if {$guides} { global_route -start_incremental }
+if {!$guides} { error "OT_ECO original route guides required; refusing fresh global route" }
+global_route -start_incremental
 set snap [dict create]
 foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
 if {[llength [dict get $win fixable]]} {
@@ -160,19 +161,12 @@ foreach net [$block getNets] {
 }
 puts "OT_ECO reroute: $ninst new/moved/resized instances, $nstrip wires stripped"
 set ra [expr {[envd OT_RES_AWARE 1] ? "-resistance_aware" : ""}]
-if {$guides} { global_route -end_incremental -allow_congestion {*}$ra } else { global_route -allow_congestion -congestion_iterations 30 {*}$ra }
-if {[catch {detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1} err]} {
-  # a db whose guides came from an earlier ECO pass can carry a guide DRT rejects (capt_x pass 2: DRT-0218 'Guide is
-  # not connected to design'): fall back to a fresh resistance-aware global route for this pass
-  if {!$guides} { error "OT_ECO detailed_route failed: $err" }
-  puts "OT_ECO guide re-route failed ($err): fresh global route"
-  foreach net [$block getNets] {
-    if {[$net getSigType] in {POWER GROUND}} continue
-    set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w }
-  }
-  global_route -allow_congestion -congestion_iterations 30 {*}$ra
-  detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
-}
+global_route -end_incremental -allow_congestion {*}$ra
+# A rejected guide is a failed pass. Keep its evidence and let hold_eco.sh
+# retain the best completed pass; never replace the original routing guides.
+# svc_SE_s6 eco-r3 met SS/FF after a fresh-GRT fallback, but that result does
+# not satisfy the owner's original-guides requirement.
+detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 filler_placement {FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R}
 check_placement -verbose
 extract_parasitics -ext_model_file $P/rcx_patterns.rules
