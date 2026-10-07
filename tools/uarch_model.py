@@ -7989,6 +7989,29 @@ def qwen_code_pair_margin_price():
                                 "uncorrectable or post-detection responses never delivered valid")
 
 
+def qwen_embedding_scale_leaf():
+    """Default-unintegrated real scale macro leaf, sized before RTL (2026-10-07)."""
+    return dict(schema="opentallas.qwen.embedding_scale_leaf.v1", adopted=False,
+        rows=151936, scales_per_word=16, replica_count=3,
+        words_per_replica=[4096,4096,1304], valid_rows_per_replica=[65536,65536,20864],
+        mapping="bank=row>>16; address=(row>>4)&4095; lane=row&15",
+        MACs_per_cycle=0, compute_intensity_MAC_per_byte=0,
+        communication_intensity="one 2-byte BF16 scale per accepted request",
+        memory_port_bytes_per_cycle=dict(peak=33.25, scheduled=16.625, useful_response=1),
+        boundary_bits_per_cycle=dict(request=19,response=17,credit=2,fault=1),
+        mux_demux=dict(bank_request_demux=3,response_mux=3,lane_mux_inputs=16,lane_mux_bits=16),
+        ROM_ECC=False, mutable_protection="complement-checked FIFO row, pointers, credits, phase and lane/valid pipeline",
+        macro_area_um2=7663.94784, frame_um=[160,100.44], total_frame_mm2=3*160*100.44/1e6,
+        routing=dict(vertical_channel_um=33.856,pitch_um=.048,available_tracks_per_layer=705,
+                     macro_output_bits=266,capture_payload_bits=256,required_signal_tracks=266,
+                     note="local macro capture only; multi-layer detailed route must validate"),
+        latency=dict(leaf_cycles=7,initiation_interval=2,ROM_capture_edges=2,
+                     ROM_SS_clk_to_q_ps=739.2103,distribution_cycles=1,gather_cycles=1,
+                     root_cycles=9,shared_proposal_bound_cycles=18,
+                     composition="scale requested alongside code row; retain conservative18-cycle shared-die budget until integration"),
+        physical_closed=False, rate_credit=0)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--hbrom-inputs", help="default-off ROM-fed reusable-compute cluster model input JSON")
