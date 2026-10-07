@@ -105,7 +105,7 @@ module ot_hdc_v41x_vec_red #(
         localparam integer TD = 3;
 `endif
         wire gclk, ph;
-        ot_hdc_v41x_vred_hgate u_g (.clk(clk), .rst_n(rst_n), .gclk(gclk), .ph(ph));
+        ot_hdc_v41x_vred_hgate u_g (.clk(clk), .rst_n(rst_n), .v(v_in), .gclk(gclk), .ph(ph));
         reg            p_v;
         reg [N*32-1:0] p_x;
         reg [N-1:0]    p_live;
@@ -794,12 +794,26 @@ module ot_hdc_v41x_vsq #(
 endmodule
 
 // half-rate clock gate (RHALF; the HBM loader half-rate template): en flop toggling, latched while the clock is low,
-// ANDed with it, so a gated edge IS a fast edge; ph = 1 in the fast cycle that ends on a gated edge
+// ANDed with it, so a gated edge IS a fast edge; ph = 1 in the fast cycle that ends on a gated edge.
+// PHASE LOCK (2026-10-07; the full-shape CP + c12 stage showed the controller's emit -> reducer parity is a property
+// of the composition, not of the controller alone): the FIRST beat after reset that arrives in a ph = 0 cycle forces
+// a gated edge at the end of that cycle and re-phases the toggle, so every block of the reducer (each sees v at the
+// same cycle) locks to the controller's beat parity; the controller's issue rule keeps every later beat on that
+// parity, and a later off-phase beat is a contract fault (the blocks' viol).  RHPAR therefore needs no tuning.
+// OT_NEG_RED_NOLOCK (negative control): no lock, the reset phase only.
 (* keep_hierarchy *)
-module ot_hdc_v41x_vred_hgate (input wire clk, input wire rst_n, output wire gclk, output wire ph);
-    reg en_q, en_l;
-    always @(posedge clk or negedge rst_n) if (!rst_n) en_q <= 1'b0; else en_q <= ~en_q;
-    always @(*) if (!clk) en_l = en_q;
+module ot_hdc_v41x_vred_hgate (input wire clk, input wire rst_n, input wire v, output wire gclk, output wire ph);
+    reg en_q, armed, en_l;
+`ifdef OT_NEG_RED_NOLOCK
+    wire force_e = 1'b0;
+`else
+    wire force_e = v & ~en_q & ~armed;
+`endif
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin en_q <= 1'b0; armed <= 1'b0; end
+        else begin en_q <= force_e ? 1'b0 : ~en_q; armed <= armed | v; end
+    wire en = en_q | force_e;
+    always @(*) if (!clk) en_l = en;
     assign gclk = clk & en_l;
-    assign ph = en_q;
+    assign ph = en;
 endmodule

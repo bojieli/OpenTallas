@@ -292,7 +292,7 @@ module ot_hdc_v41x_vred_slice64_c12h (
     output wire          fault_o
 );
     wire gclk, ph;
-    ot_hdc_v41x_vred_hgate u_g (.clk(clk), .rst_n(rst_n), .gclk(gclk), .ph(ph));
+    ot_hdc_v41x_vred_hgate u_g (.clk(clk), .rst_n(rst_n), .v(v_in), .gclk(gclk), .ph(ph));
     wire p_v, p_mx, p_sq; wire [2047:0] p_x; wire [63:0] p_live; wire [479:0] c_lv; wire c_f, p_f;
     ot_hdc_v41x_vred_pinreg #(.W(1), .D(1), .RST(1)) u_pv (.clk(gclk), .rst_n(rst_n), .d(v_in), .q(p_v));
     ot_hdc_v41x_vred_pinreg #(.W(2114), .D(1)) u_pd (.clk(gclk), .rst_n(rst_n), .d({x_in, live_in, mx_in, sq_in}),
@@ -336,7 +336,7 @@ module ot_hdc_v41x_vred_top1024_c12h (
     localparam integer TD = 3;           // slice in + slice out + top lv_in (slow stages)
 `endif
     wire gclk, ph;
-    ot_hdc_v41x_vred_hgate u_g (.clk(clk), .rst_n(rst_n), .gclk(gclk), .ph(ph));
+    ot_hdc_v41x_vred_hgate u_g (.clk(clk), .rst_n(rst_n), .v(v_in), .gclk(gclk), .ph(ph));
     wire [TD:0] tv;
     assign tv[0] = v_in;
     genvar k;
