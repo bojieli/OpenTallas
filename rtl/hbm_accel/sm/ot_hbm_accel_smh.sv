@@ -52,7 +52,8 @@ module ot_hbm_accel_smh #(
     parameter integer HAZ  = 1,
     parameter integer NOUT = 4,
     parameter integer RPT  = 2,         // leaves (rows) per hardened tile
-    parameter integer REQCR = 0         // 1: request port with ready latency 2 (req_ready captured raw; see front_s)
+    parameter integer REQCR = 1         // 1 (production): request port with ready latency 2 (req_ready captured raw;
+                                        // see front_s); 0: the m3b same-cycle port (bench comparison only)
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -124,7 +125,7 @@ module ot_hbm_accel_smh #(
     // so synthesis keeps their module names as the macro masters; any other configuration passes its parameters
     localparam integer DEF   = (SUB == 4 && LBS == 2 && LSB == 16 && NC == 8 && IL == 8 && RMAX == 4096 && LEV == 4
                                 && XD == 128 && MAX_OUT == 512 && TCK == 1 && PIO == 2 && HAZ == 1 && NOUT == 4
-                                && RPT == 2) ? 1 : 0;
+                                && RPT == 2 && REQCR == 1) ? 1 : 0;
     initial if (SUB % RPT != 0) $fatal(1, "ot_hbm_accel_smh: SUB must be a multiple of RPT");
     wire [SUB*RBW-1:0] f_rl, f_rr;
     wire [NP*BBW-1:0]  f_bl, f_br;
@@ -153,7 +154,7 @@ module ot_hbm_accel_smh #(
             .bout_r1(f_br[BBW +: BBW]), .fs_v(n_sv), .fs_d(n_sd), .fs_ret(n_sret), .fx_b(n_xb), .fr_rl(n_rl),
             .fo_row0(n_row0), .fo_pbz(n_pbz), .fd_v(s_dv), .fd_d(s_dd), .fd_ret(s_dret), .fq_v(s_qv), .fq_d(s_qd),
             .fq_ret(s_qret), .fp_v(s_pv), .fp_d(s_pd), .fsv(s_sv), .fo_row3(s_row3));
-        ot_hbm_accel_smh_front_s #(.REQCR(REQCR)) u_fs (
+        ot_hbm_accel_smh_front_s u_fs (
             .clk(clk), .rst_n(rst_n), .d_valid(d_valid), .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines),
             .req_v(req_v), .req_ready(req_ready), .req_addr(req_addr), .req_tag(req_tag), .rsp_v(rsp_v),
             .rsp_tag(rsp_tag), .rsp_data(rsp_data), .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault),
@@ -1222,7 +1223,7 @@ module ot_hbm_accel_smh_front_s #(
     parameter integer NOUT = 4,
     parameter integer RPT  = 2,
     parameter integer NFMT = SUB * LBS * 8 + SUB,
-    parameter integer REQCR = 0
+    parameter integer REQCR = 1
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
