@@ -317,24 +317,24 @@
    "budget": null
   },
   "dsfd_capt_ctl": {
-   "job": "s81ph-dsfd_capt_ctl-ee7d4fc82-e",
-   "source_commit": "ee7d4fc8212320feed81352b44e2d897053bd689",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-ee7d4fc82-e",
+   "job": "s81ph-dsfd_capt_ctl-48203c4d9-f",
+   "source_commit": "48203c4d90064efdcac821b2808ab371a45cf2b2",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-48203c4d9-f",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T20:51:44-07:00",
+   "measured_at": "2026-10-06T21:24:06-07:00",
    "ss": {
-    "mean": 268,
-    "min": 241,
-    "max": 288
+    "mean": 156,
+    "min": 148,
+    "max": 167
    },
    "ff": {
-    "mean": 181,
-    "min": 159,
-    "max": 200
+    "mean": 97,
+    "min": 88,
+    "max": 107
    },
-   "boundary_n": 320,
+   "boundary_n": 385,
    "budget": null
   },
   "dsfd_coll_lane_w": {
@@ -955,7 +955,49 @@
    },
    "boundary_n": 2075,
    "budget": null
+  },
+  "dsfd_coll_core": {
+   "job": "s81ph-dsfd_coll_core-1df7cf9a9",
+   "source_commit": "1df7cf9a972492d6804fe614a385e3ad738ef747",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_core-1df7cf9a9",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-06T21:22:07-07:00",
+   "ss": {
+    "mean": 1434,
+    "min": 1393,
+    "max": 1618
+   },
+   "ff": {
+    "mean": 929,
+    "min": 895,
+    "max": 1075
+   },
+   "boundary_n": 18774,
+   "budget": null
+  },
+  "ot_dsrom_head_elem_A": {
+   "job": "dshead-elemA-safe-b529ca8c9",
+   "source_commit": "b529ca8c93b477cdb42785a7df298bb25ffa0963",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemA-safe-b529ca8c9",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-06T21:31:50-07:00",
+   "ss": {
+    "mean": 555,
+    "min": 535,
+    "max": 563
+   },
+   "ff": {
+    "mean": 343,
+    "min": 330,
+    "max": 349
+   },
+   "boundary_n": 456,
+   "budget": null
   }
  },
- "updated": "2026-10-06T21:15:42-07:00"
+ "updated": "2026-10-06T21:31:50-07:00"
 }
