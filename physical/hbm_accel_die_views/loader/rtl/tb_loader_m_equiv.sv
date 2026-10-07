@@ -4,7 +4,7 @@
 // a 64-bit host DMA memory, a per-die MREQ memory with random ready / response delay; host 1.0 ns, memory 0.833 ns).
 // Programs per seed: LOAD (verify on/off, right / wrong expected CRC), STORE back, a misaligned descriptor.
 // Compared: the ordered memory-write stream (die, address, data), the DMA write stream (address, data, strobes), and
-// every CSR of every engine after each descriptor completes except CYCLES (the busy-cycle count, +2 by design).  `MARGIN selects the module of instance b.
+// every CSR of every engine after each descriptor completes except CYCLES (the busy-cycle count, +2 by design).  `MARGIN selects the module of instance b; `HALF_B=<SHARED> makes it the half-rate adapter ot_hfd_loader_half, `SAME_CLK ties clk_mem to clk_host.
 module ldm_env #(parameter integer MARGIN = 0, parameter integer SEED = 1) (input wire clk_host, input wire clk_mem,
     input wire rst_n, output reg [63:0] mw_hash, output reg [63:0] dw_hash, output integer mw_n, output integer dw_n);
     localparam integer ND = 2;
@@ -18,7 +18,11 @@ module ldm_env #(parameter integer MARGIN = 0, parameter integer SEED = 1) (inpu
     reg [ND*16-1:0] rsp_tag=0; reg [ND*256-1:0] rsp_data=0; wire irq, fault;
     wire h_dma_arready, h_dma_rvalid, h_dma_rlast, h_dma_awready, h_dma_wready, h_dma_bvalid; wire [63:0] h_dma_rdata; wire [1:0] h_dma_rresp, h_dma_bresp;
     generate if (MARGIN) begin : g_m
-        ot_hfd_loader_host_m #(.ENABLE(1), .ND(ND)) dut (.clk_host(clk_host),.rst_host_n(rst_n),.clk_mem(clk_mem),.rst_mem_n(rst_n),
+`ifdef HALF_B
+        ot_hfd_loader_half #(.ENABLE(1), .ND(ND), .SHARED(`HALF_B)) dut (
+`else
+        ot_hfd_loader_host_m #(.ENABLE(1), .ND(ND)) dut (
+`endif.clk_host(clk_host),.rst_host_n(rst_n),.clk_mem(clk_mem),.rst_mem_n(rst_n),
          .s_awvalid(s_awvalid),.s_awready(s_awready),.s_awaddr(s_awaddr),.s_wvalid(s_wvalid),.s_wready(s_wready),.s_wdata(s_wdata),.s_wstrb(s_wstrb),
          .s_bvalid(s_bvalid),.s_bready(s_bready),.s_arvalid(s_arvalid),.s_arready(s_arready),.s_araddr(s_araddr),.s_rvalid(s_rvalid),.s_rready(s_rready),.s_rdata(s_rdata),
          .h_awvalid(h_awvalid),.h_awready(1'b1),.h_awaddr(h_awaddr),.h_wvalid(h_wvalid),.h_wready(1'b1),.h_wdata(h_wdata),.h_wstrb(h_wstrb),.h_bvalid(1'b0),.h_bready(h_bready),
@@ -141,7 +145,11 @@ endmodule
 module tb_loader_m_equiv;
     reg clk_host = 0, clk_mem = 0, rst_n = 0;
     always #0.5 clk_host = ~clk_host;
+`ifdef SAME_CLK
+    always @(clk_host) clk_mem = clk_host;     // views agent: one die clock (ot_hfd_loader_half SHARED=1)
+`else
     always #0.4165 clk_mem = ~clk_mem;
+`endif
     wire [63:0] mwa, dwa, mwb, dwb; wire integer mna, dna, mnb, dnb;
     ldm_env #(.MARGIN(0), .SEED(`SEED)) a (.clk_host(clk_host), .clk_mem(clk_mem), .rst_n(rst_n), .mw_hash(mwa), .dw_hash(dwa), .mw_n(mna), .dw_n(dna));
     ldm_env #(.MARGIN(`MARGIN_B), .SEED(`SEED)) b (.clk_host(clk_host), .clk_mem(clk_mem), .rst_n(rst_n), .mw_hash(mwb), .dw_hash(dwb), .mw_n(mnb), .dw_n(dnb));
