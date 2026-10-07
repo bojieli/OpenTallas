@@ -26,7 +26,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'results/uarch/dsrom_s81_pq_fullshape_design_20261007'
-SNAP = Path('/home/ubuntu/.claude/jobs/724d7460/tmp/pq_snapshot_1117')
+# Portable pinned copies of Codex's read-only snapshot pq_snapshot_1117 (uncommitted upstream until the owner's gate);
+# inputs/SHA256SUMS covers them, inputs/REPO_INPUTS.SHA256SUMS every repo file this tool reads. Both fail closed.
+SNAP = OUT / 'inputs'
 SNAP_SHA = {'pq_parent_binding.py': 'b2d619a4008cd00cea21a85cbf89749fc3c952f4d5b503fcc6359f6062a2f7a4',
             'dsrom_s81_pq_parent_20261007/full_inventory.json':
                 '614fcd263803be179b263d17cb77f061b711db60140c5407b0827a8ce7d87874',
@@ -63,7 +65,18 @@ def sha(p):
 
 
 # ------------------------------------------------------------------------------------------------ sources
+def verify_repo_inputs():
+    for line in (OUT / 'inputs/REPO_INPUTS.SHA256SUMS').read_text().splitlines():
+        h, rel = line.split(None, 1)
+        if sha(ROOT / rel) != h:
+            raise SystemExit(f'repo input hash mismatch: {rel}')
+
+
 def load_snapshot(snap):
+    for line in (snap / 'SHA256SUMS').read_text().splitlines():
+        h, rel = line.split(None, 1)
+        if SNAP_SHA.get(rel) != h:
+            raise SystemExit(f'SHA256SUMS disagrees with the pinned snapshot hash: {rel}')
     for rel, h in SNAP_SHA.items():
         if sha(snap / rel) != h:
             raise SystemExit(f'snapshot hash mismatch: {rel}')
@@ -303,6 +316,7 @@ def geometry():
 
 # ------------------------------------------------------------------------------------------------ the design
 def design(snap=SNAP):
+    verify_repo_inputs()
     mod, inv = load_snapshot(snap)
     stages = {k: v['stages'] for k, v in inv.items()}
     PHW = max(s['PHW'] for v in stages.values() for s in v)
@@ -529,7 +543,8 @@ def design(snap=SNAP):
              'root / RWB / core areas are ESTIMATES until synthesis screens',
              'die generator legality for roots in frames and the VM-north core slot (die owner)']
     return dict(schema='opentallas.s81.pq-fullshape-design.v1', adopted=False, physical_qualified=False,
-        sources=dict(snapshot=str(snap), snapshot_sha256=SNAP_SHA, spine_rtl_sha256=sha(SPINE), ret_rtl_sha256=sha(RET),
+        sources=dict(snapshot=(str(snap.resolve().relative_to(ROOT)) if snap.resolve().is_relative_to(ROOT) else str(snap)),
+                     snapshot_origin='/home/ubuntu/.claude/jobs/724d7460/tmp/pq_snapshot_1117', snapshot_sha256=SNAP_SHA, spine_rtl_sha256=sha(SPINE), ret_rtl_sha256=sha(RET),
                      macro_index_sha256=sha(MACROS), geometry_extract_sha256=sha(GEOM), sensitivity_sha256=sha(SENS)),
         problem=dict(PHW=PHW, SAW=SAW, KMAX=KMAX, pq_storage=st, screen_storage_bits_R128_6_8_256=screen,
                      storage_ratio=st['bits'] / screen, phase_rom_entries=2 << PHW, stream_rom_words=1 << SAW,
@@ -547,9 +562,10 @@ def design(snap=SNAP):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--snapshot', type=Path, default=SNAP)
-    ap.add_argument('--out', type=Path, default=OUT / 'design.json')
+    ap.add_argument('--out', type=Path, default=OUT / 'reproduce/design.json')   # design.json = historical d95b57661 output
     a = ap.parse_args()
     d = design(a.snapshot)
+    a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(d, indent=1, default=str) + '\n')
     p = d['problem']
     print(json.dumps(dict(storage=p['pq_storage']['bits'], ratio=p['storage_ratio'], native_bus=p['native_bus_bits'],
