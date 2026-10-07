@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.budgets.summary.v1",
- "masters": 262,
+ "masters": 265,
  "rows": [
   {
    "master": "dsfd_bf",
@@ -6009,9 +6009,9 @@
     285.096
    ],
    "entry_ss": {
-    "mean": 3069.6,
-    "min": 3069.6,
-    "max": 3069.6
+    "mean": 3069.2,
+    "min": 3069.2,
+    "max": 3069.2
    },
    "lint_ss": 521.5,
    "lint_grade": "target",
@@ -6496,7 +6496,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1703.0,
+   "max_length_um": 1663.9,
    "max_stages_needed": 4
   },
   {
@@ -6687,8 +6687,8 @@
     77.736
    ],
    "entry_ss": {
-    "mean": 3452.6,
-    "min": 3113.3,
+    "mean": 3452.5,
+    "min": 3112.9,
     "max": 3539.0
    },
    "lint_ss": 477.8,
@@ -6700,7 +6700,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2119.2,
+   "max_length_um": 1800.2,
    "max_stages_needed": 5
   },
   {
@@ -6775,8 +6775,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2141.3,
-   "max_stages_needed": 5
+   "max_length_um": 1682.1,
+   "max_stages_needed": 4
   },
   {
    "master": "hfd_su",
@@ -6965,13 +6965,13 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2340.5,
-    "min": 2340.5,
-    "max": 2340.5
+    "mean": 2371.5,
+    "min": 2371.5,
+    "max": 2371.5
    },
-   "lint_ss": 950,
+   "lint_ss": 919,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
+   "lint_target_ss": 919,
    "lint_over_target": false,
    "ports": 10,
    "sync": 10,
@@ -7330,7 +7330,7 @@
    "max_stages_needed": 1
   },
   {
-   "master": "hfd_vm",
+   "master": "hfd_vm_ne",
    "kinds": [
     "spine"
    ],
@@ -7338,25 +7338,112 @@
     "hbm": 1
    },
    "size_um": [
-    1399.656,
-    2000.136
+    699.816,
+    1000.056
    ],
    "entry_ss": {
-    "mean": 2691.1,
-    "min": 2691.1,
-    "max": 2691.1
+    "mean": 2690.7,
+    "min": 2690.7,
+    "max": 2690.7
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
    "lint_target_ss": 900.0,
    "lint_over_target": false,
-   "ports": 22,
-   "sync": 22,
+   "ports": 17,
+   "sync": 17,
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 3303.1,
+   "max_length_um": 3437.6,
    "max_stages_needed": 6
+  },
+  {
+   "master": "hfd_vm_nw",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    699.816,
+    1000.056
+   ],
+   "entry_ss": {
+    "mean": 2690.7,
+    "min": 2690.7,
+    "max": 2690.7
+   },
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 18,
+   "sync": 18,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3437.6,
+   "max_stages_needed": 6
+  },
+  {
+   "master": "hfd_vm_se",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    699.816,
+    1000.056
+   ],
+   "entry_ss": {
+    "mean": 2690.7,
+    "min": 2690.7,
+    "max": 2690.7
+   },
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 17,
+   "sync": 17,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3066.5,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_vm_sw",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    699.816,
+    1000.056
+   ],
+   "entry_ss": {
+    "mean": 2690.7,
+    "min": 2690.7,
+    "max": 2690.7
+   },
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 18,
+   "sync": 18,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3066.5,
+   "max_stages_needed": 5
   },
   {
    "master": "ot_dsrom_head_elem_A",

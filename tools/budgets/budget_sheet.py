@@ -162,6 +162,9 @@ def main():
                         over_target=c['ss_mean'] > tgt + C.LINT_TOL_PS)
             if master in ovr:       # re-planned target: the measured tree is accepted, its OCV priced on the IO skew
                 o_ = ovr[master]
+                for k_ in ('ss', 'ff', 'ss_min', 'ss_max', 'ff_min', 'ff_max', 'source'):   # newer measurement
+                    if k_ in o_:
+                        base[k_] = o_[k_]
                 t_ = o_.get('target_ss', c.get('ss_max', c['ss_mean']))
                 base.update(target_ss=t_, target_ff=o_.get('target_ff', c.get('ff_max', c['ff_mean'])), over_target=False,
                             target_basis=f"RE-PLANNED: {o_.get('reason', '')} (measured SS {c['ss_min']}..{c['ss_max']}); "

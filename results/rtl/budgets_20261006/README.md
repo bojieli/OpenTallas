@@ -133,3 +133,6 @@ every one.
   re-planned to the measured SS max (1,154-1,402 ps), the die entry target follows (the tree delivers earlier by the
   excess), and the extra OCV of the deeper tree, 0.05 x (target - 900), is added to the skew term of each of their
   synchronous interfaces (+12.7..+25.1 ps).  The die skew budget (<= 56.7 ps) is unchanged.
+- 2026-10-07 ~00:10 PT: HBM on generator r19 (VM split into 4 quadrant tiles hfd_vm_{sw,se,nw,ne}, ~700 x 1,000 um,
+  registered cross buses; sheets for the four tiles), svc SE_s3 re-planned to 919 ps (centre ck measured; die pad 138 ps).
+  HBM infeasible as planned: 0; clock plan 0 crossings > 150 ps.

@@ -24,19 +24,19 @@
   ],
   "n_regions": 1,
   "entry_target_ss_ps": {
-   "mean": 3069.6,
-   "min": 3069.6,
-   "max": 3069.6
+   "mean": 3069.2,
+   "min": 3069.2,
+   "max": 3069.2
   },
   "entry_target_ff_ps": {
-   "mean": 1676.8,
-   "min": 1676.8,
-   "max": 1676.8
+   "mean": 1676.7,
+   "min": 1676.7,
+   "max": 1676.7
   },
   "die_pad_ss_ps": {
-   "mean": 379.0,
-   "min": 378.5,
-   "max": 380.4
+   "mean": 378.4,
+   "min": 378.2,
+   "max": 378.5
   },
   "internal_insertion": {
    "target_ss": 521.5,
@@ -126,7 +126,10 @@
     "hub"
    ],
    "neighbours": [
-    "hfd_vm"
+    "hfd_vm_ne",
+    "hfd_vm_nw",
+    "hfd_vm_se",
+    "hfd_vm_sw"
    ],
    "connections": 4,
    "dies": [
@@ -136,30 +139,30 @@
    "period_ps": 833.333,
    "clock_domain": null,
    "timing": "sync",
-   "length_um": 1584.5,
+   "length_um": 1516.6,
    "length_basis": "pins",
    "skew_class": "intra",
-   "skew_ps": 52,
+   "skew_ps": 50,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w311_iv_NE<->hb_vm",
+   "worst_instance": "hbm:w308_iv_NW<->hb_vm_nw",
    "also_cdc": false,
-   "input_delay_ss_ps": 631.6,
-   "output_delay_ss_ps": 572.6,
-   "input_fraction_of_T": 0.758,
-   "output_fraction_of_T": 0.687,
-   "internal_input_ps": 126.7,
-   "internal_output_ps": 185.7,
-   "as_planned_internal_input_ps": 126.7,
-   "as_planned_internal_output_ps": 185.7,
+   "input_delay_ss_ps": 610.3,
+   "output_delay_ss_ps": 551.3,
+   "input_fraction_of_T": 0.732,
+   "output_fraction_of_T": 0.662,
+   "internal_input_ps": 148.0,
+   "internal_output_ps": 207.0,
+   "as_planned_internal_input_ps": 148.0,
+   "as_planned_internal_output_ps": 207.0,
    "feasible_input": true,
    "feasible_output": true,
-   "reach_um": 445.2,
+   "reach_um": 447.0,
    "stages_needed": 4,
    "stages_planned": 4,
    "extra_stages_needed": 0,
-   "segment_after_stages_um": 396.1,
-   "input_min_delay_ff_ps": 76.6,
-   "output_min_delay_ff_ps": -29.4,
+   "segment_after_stages_um": 379.2,
+   "input_min_delay_ff_ps": 74.7,
+   "output_min_delay_ff_ps": -27.5,
    "die_fanout": 1,
    "feasible": true
   }
