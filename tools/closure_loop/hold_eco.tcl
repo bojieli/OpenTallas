@@ -200,7 +200,20 @@ if {$session in {two mm} && [envd OT_SETUP_GUARD 1]} {
     }
   }
   if {[dict size $undo]} {
-    remove_buffers [get_cells [dict keys $undo]]
+    # close the incremental GRT round that saw the repair (its new nets get guides), then remove the guarded cells in a
+    # second round: remove_buffers inside the first round dropped nets GRT had not registered (router dv12 pass 2:
+    # GRT-0127 'net_id for db_net not found')
+    if {$guides} {
+      global_route -end_incremental -allow_congestion {*}[expr {[envd OT_RES_AWARE 1] ? "-resistance_aware" : ""}]
+      global_route -start_incremental
+    }
+    # names as SEPARATE arguments: one list argument is taken as a single unknown name, and remove_buffers with no valid
+    # instance removes EVERY buffer of the design (measured: 49,885 -> 32,195 cells; router dv12 pass 2)
+    set n_before [llength [get_cells *]]
+    remove_buffers {*}[dict keys $undo]
+    if {$n_before - [llength [get_cells *]] > [dict size $undo]} {
+      error "OT_ECO setup_guard removed [expr {$n_before - [llength [get_cells *]]}] cells for [dict size $undo] requested"
+    }
     puts "OT_ECO setup_guard removed [dict size $undo] ECO cells on [llength $rows] SS paths under $sm ps"
   } else { puts "OT_ECO setup_guard: no ECO cell on an SS path under $sm ps" }
   puts "OT_ECO after_guard ss [ws max ss] ff [ws min ff]"
