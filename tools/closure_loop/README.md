@@ -141,3 +141,13 @@ untouched. The request resumes at verdict, retaining the original source and
 bench evidence. Admission, sign-off, conditional re-export, re-verdict and
 collection remain normal loop stages. Inputs are checked again before ECO and
 installation. Legacy automatic ECO requeues cannot repeat this explicit attempt.
+
+`python3 tools/closure_loop/rebind_index_budget.py --out receipt.json` replays the
+immutable `ea6759434` index binding audit and validates the live b1/b3/b5 jobs.
+Add `--apply` to archive their historical state, calibration and copied SDCs under
+`cl/budget-rebind-ea6759434`, bind each complete hash-pinned `d05ac0e8` sheet, and
+resume at route through normal admission. b0/b2 are excluded. Source and bench
+proofs must match the audit snapshots. Rebound jobs retain their complete sheet
+on later calibration, check both SS/FF boundary maxima, and refuse a digest
+mismatch. Records remain component evidence; automatic integration-branch merge
+is disabled for these three rebinds pending parent review.

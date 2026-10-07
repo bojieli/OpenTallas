@@ -671,24 +671,36 @@ def budget_check(j):
     why = []
     # coordinator 2026-10-06: only an insertion ABOVE the block's target stops the job; one at or below the target is
     # accepted and the budget SDCs are regenerated from the MEASURED insertion (+ the sheet's per-edge budgets)
+    preserve_sheet = bud.get("preserve_full_sheet", False)
+    if preserve_sheet:
+        for corner in ("SS", "FF"):
+            if env[f"CK_{corner}_MAX"] > ins[f"target_{corner.lower()}"]:
+                why.append(f"audited full-sheet {corner} boundary maximum {env[f'CK_{corner}_MAX']} "
+                           f"exceeds approved {ins[f'target_{corner.lower()}']}; re-plan required")
     if m > ins["target_ss"]:
         why.append(f"measured SS insertion {m:g} exceeds the block insertion TARGET {ins['target_ss']:g} by "
                    f"{m - ins['target_ss']:+.0f} ps (sheet {ins['ss']:g}, {ins['grade']})")
+    if why:
         j["budget"]["check"] = dict(measured_ss=m, ok=False, reasons=why)
         return "; ".join(why)
     ov = dict(ss=round(m), ff=round(float(env["CK_FF_MEAN"])), ss_min=round(float(env["CK_SS_MIN"])),
               ss_max=round(float(env["CK_SS_MAX"])), ff_min=round(float(env["CK_FF_MIN"])), ff_max=round(float(env["CK_FF_MAX"])),
               grade="measured", source=f"closure-loop calibrate {j['name']} ({j['host']}:{j['run']})", over_target=False)
-    files = budget_files(active_budget(j["spec"]), insertion_override=ov)
+    files = budget_files(active_budget(j["spec"]), insertion_override=None if preserve_sheet else ov)
+    if preserve_sheet:
+        import hashlib
+        if hashlib.sha256(files["budget_sheet.json"].encode()).hexdigest() != bud["sheet_sha256"]:
+            raise ValueError("audited full budget sheet digest changed")
     for fn, text in files.items():
         if not fn.startswith("_"):
             ssh(j["host"], f"cat > {j['run']}/cl/{fn}", input=text, timeout=60, check=True)
-    acc = dict(accepted="measured insertion <= sheet target: budget SDCs regenerated from it", sheet_ss=ins["ss"],
+    acc = dict(accepted=("audited complete sheet retained; boundary maxima within approved SS/FF targets"
+                         if preserve_sheet else "measured insertion <= sheet target: budget SDCs regenerated from it"), sheet_ss=ins["ss"],
                sheet_grade=ins["grade"], target_ss=ins["target_ss"], measured=ov, sheets_ref=files["_ref"])
     py = ("import json,sys; p=sys.argv[1]; d=json.load(open(p)); d['budget_accepted']=json.loads(sys.argv[2]); "
           "json.dump(d,open(p,'w'),indent=1)")
     ssh(j["host"], f"python3 -c {shlex.quote(py)} {j['run']}/cl/calib.json {shlex.quote(json.dumps(acc))}", timeout=60)
-    j["budget"]["insertion_used"] = ov
+    j["budget"]["insertion_used"] = ins if preserve_sheet else ov
     j["budget"]["check"] = dict(measured_ss=m, ok=True, reasons=[], accepted=acc["accepted"])
     return None
 
