@@ -1,10 +1,21 @@
 # Implement the two modeled local clock/logic islands; source/capture count checked.
 set b [ord::get_db_block]
 set dbu [$b getDbUnitsPerMicron]
-foreach lane {0 1} start {150.012 570.012} {
+set row [lindex [$b getRows] 0]
+lassign [$row getOrigin] row_x row_y
+set site [$row getSite]
+set site_w [$site getWidth]
+set row_h [$site getHeight]
+foreach lane {0 1} start {150.012 570.024} {
+ foreach edge [list $start [expr {$start+100.008}]] {
+  if {([expr {round($edge*$dbu)}]-$row_x)%$site_w!=0} {error "off-site region X $edge"}
+ }
+ foreach edge {1.080 38.880} {
+  if {([expr {round($edge*$dbu)}]-$row_y)%$row_h!=0} {error "off-row region Y $edge"}
+ }
  set r [odb::dbRegion_create $b local_lane_$lane]
  $r setRegionType INCLUSIVE
- odb::dbBox_create $r [expr {round($start*$dbu)}] [expr {round(1.080*$dbu)}] [expr {round(($start+100.008)*$dbu)}] [expr {round(39.096*$dbu)}]
+ odb::dbBox_create $r [expr {round($start*$dbu)}] [expr {round(1.080*$dbu)}] [expr {round(($start+100.008)*$dbu)}] [expr {round(38.880*$dbu)}]
  set groups($lane) [odb::dbGroup_create $r local_lane_$lane]
  set counts($lane) 0
  set ffs($lane) 0

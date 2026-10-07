@@ -10,8 +10,8 @@ def model():
     tx_per=7+7+16+16+1+1+w+16
     local_bits=inj*(w+1)
     width,height=840.024,40.176
-    islands=[dict(x0=150.012,x1=250.020,y0=1.080,y1=39.096),
-             dict(x0=570.012,x1=670.020,y0=1.080,y1=39.096)]
+    islands=[dict(x0=150.012,x1=250.020,y0=1.080,y1=38.880),
+             dict(x0=570.024,x1=670.032,y0=1.080,y1=38.880)]
     return dict(schema='opentallas.ha2.circular_split_local_tx.v1',adopted=False,default_off=True,
       source_truth=dict(module='ot_ha2_delay_quiet',path='rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv',
         implementation='mem[D] plus rotating integer pointer, selected-slot combinational output; not a spatial shift chain',
@@ -31,7 +31,7 @@ def model():
         combined_local_storage_um2=(local_bits+inj*tx_per)*ff_area,
         combined_local_mux_proxy_um2=(inj*16)*mux_area,
         slot_um=[width,height],slot_area_um2=width*height,target_utilisation=.55,
-        reserved_lane_islands=islands,per_lane_island_area_um2=(100.008*38.016),
+        reserved_lane_islands=islands,per_lane_island_area_um2=(100.008*37.800),
         per_lane_storage_and_mux_proxy_um2=((w+1+tx_per)*ff_area+16*mux_area),
         mapping_control_CTS_repair_unmeasured=True,die_area_delta_unqualified=True,
         accounting='D1 storage transferred out of D35 inventory, not newly added parent storage. Actual hard partition footprint/clock cost must be measured.'),
