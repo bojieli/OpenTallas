@@ -26,6 +26,7 @@ NVMe run roots (hosts.json), one route per (block, source commit), it never kill
     closure_loop.py status                     # table of jobs
     closure_loop.py validate <job.json>        # check a spec before dropping it
     closure_loop.py retry <name>               # human: re-queue a NEEDS_HUMAN job from its failed stage
+    closure_loop.py retry-eco <name> [--why]   # human: re-run the hold ECO (current rev) on a hold-only NEEDS_RTL job
     closure_loop.py cancel <name>              # stop this loop's own stage for <name>; status CANCELLED
 """
 from __future__ import annotations
@@ -797,8 +798,8 @@ def sync_source(j):
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
 
-HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "cal_classify.sh", "resume_patch.py",
-           "resume_check.sh")
+HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
+           "hold_eco_sdc.py", "hold_eco_window.tcl", "cal_classify.sh", "resume_patch.py", "resume_check.sh")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1430,12 +1431,17 @@ def start_hold_eco(j, fleet, m):
         event(j, f"hold ECO waiting for capacity: {why}")
         return True            # stays at the verdict stage; the next tick retries
     v, he = j["spec"].get("verdict", {}), j["spec"].get("hold_eco") or {}
-    env = f"HM={he.get('hold_margin_ps', 22)} SM={he.get('setup_margin_ps', 25)} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
+    # rev 2 (2026-10-07): post-route hold goal +18 (coordinator: die-context margin over the +15 line), endpoint filter, sign-off-exact constraints per corner,
+    # resistance-aware re-route, up to 2 ECO -> re-route -> sign-off passes (hold_eco.sh header)
+    env = f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
+          f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
+          f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
     post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
     post = " ".join(shlex.quote(p) for p in post_sdcs)
     recovery = j.get("eco_overlay_recovery") or {}
-    out = recovery.get("out", f"{j['run']}/cl/eco")
+    hist = len(j.get("eco_history") or [])
+    out = recovery.get("out", f"{j['run']}/cl/eco" + (f"-r{hist + 1}" if hist else ""))   # earlier ECOs stay as evidence
     if recovery:
         env += f" ECO_GUARD={shlex.quote(recovery['guard'])}"
     cmd = f"{env} bash {{CL}}/hold_eco.sh {rb} {ob} {out} {j['spec']['block']} {post}"
@@ -1871,6 +1877,29 @@ def cmd_retry(a):
 
 
 @locked_job_command
+def cmd_retry_eco(a):
+    """human: re-run the post-route hold ECO (current hold_eco rev) on a NEEDS_RTL job whose only miss was hold and whose
+    earlier ECO missed; the earlier ECO is kept in eco_history and its output dir is preserved (new out: cl/eco-r<n>)."""
+    j = load_job(a.name)
+    e, m = j.get("eco") or {}, j.get("metrics") or {}
+    if j["status"] != "NEEDS_RTL" or not e.get("tried") or e.get("installed"):
+        sys.exit(f"{a.name}: {j['status']}, eco tried={e.get('tried')} installed={e.get('installed')}: "
+                 f"only a NEEDS_RTL job with an uninstalled, missed hold ECO can re-run it")
+    if stage_list(j["spec"])[j["stage_idx"]]["kind"] != "verdict":
+        sys.exit(f"{a.name}: not at its verdict stage")
+    if not (m.get("ss_ps") is not None and m["ss_ps"] >= SS_MIN and m.get("drc") == 0 and m.get("ff_ps") is not None
+            and m["ff_ps"] < FF_MIN):
+        sys.exit(f"{a.name}: route verdict SS {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')} is not hold-only")
+    j.setdefault("eco_history", []).append(e)
+    j["eco"] = {}
+    j.update(status="READY", stage_key="verdict", attempt=j["attempt"] + 1, retries_used=0, errors=[],
+             reason=f"human retry-eco: {a.why}")
+    event(j, f"human retry-eco ({a.why}): re-judged at the verdict; earlier ECO kept in eco_history")
+    save_job(j)
+    ledger(j, f"RETRY-ECO (human, hold_eco rev 2): {a.why}; earlier ECO {e.get('out')} -> {e.get('result')} kept")
+
+
+@locked_job_command
 def cmd_cancel(a):
     j = load_job(a.name)
     if j["status"] in TERMINAL:
@@ -1960,6 +1989,7 @@ def main():
     sub.add_parser("tick"); sub.add_parser("status")
     v = sub.add_parser("validate"); v.add_argument("file")
     r = sub.add_parser("retry"); r.add_argument("name")
+    r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     c = sub.add_parser("cancel"); c.add_argument("name")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
@@ -1976,6 +2006,8 @@ def main():
         cmd_validate(a)
     elif a.cmd == "retry":
         cmd_retry(a)
+    elif a.cmd == "retry-eco":
+        cmd_retry_eco(a)
     elif a.cmd == "cancel":
         cmd_cancel(a)
     elif a.cmd == "recover-eco-overlays":
