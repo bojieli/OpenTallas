@@ -45,6 +45,10 @@ class ChannelTest(unittest.TestCase):
         self.assertFalse(rec['channel_capacity_fit'])
         self.assertEqual(rec['token_latency_ps'],7*5*833.333)
         self.assertEqual(rec['required_tracks'],523)
+        stream=size_chain(**dict(args,flow_control='fixed_stream',reverse_hops=0,consumer_cycles=0))
+        self.assertEqual(stream['required_receive_beats'],0)
+        self.assertEqual(stream['boundary_bits_per_cycle'],513)
+        self.assertEqual(stream['fanout_per_credit_counter'],0)
         args['path']=[(0,0),(1,1)]
         with self.assertRaisesRegex(ValueError,'rectilinear'):
             size_chain(**args)
