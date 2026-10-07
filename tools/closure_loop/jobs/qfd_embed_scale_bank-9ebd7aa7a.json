@@ -1,0 +1,122 @@
+{
+  "name": "qfd_embed_scale_bank-9ebd7aa7a",
+  "block": "qfd_embed_scale_bank",
+  "owner": "Codex:embedding-scale",
+  "purpose": "Full4096x266 scale macro leaf BANK_ID2 rejects final-bank bounds; replicated3 times covers151936 scales; actual SS739ps two-edge capture then16:1 lane mux; protected mutable metadata;160x100.44um;80fF150ps signoff SS/FF15 DRC0; default unintegrated",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/embed-scale-20261007",
+    "commit": "9ebd7aa7a370a71ba39a7331719818c007c62c0a"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "exact0",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank -Ptb_qwen_embed_scale_bank.BANK_ID=0 -o {RUN}/bench/exact0 rtl/test/tb_qwen_embed_scale_bank.sv rtl/physical/ot_qwen_embed_scale_bank.sv && vvp {RUN}/bench/exact0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS scale bank=0 rows="
+      },
+      {
+        "name": "exact1",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank -Ptb_qwen_embed_scale_bank.BANK_ID=1 -o {RUN}/bench/exact1 rtl/test/tb_qwen_embed_scale_bank.sv rtl/physical/ot_qwen_embed_scale_bank.sv && vvp {RUN}/bench/exact1",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS scale bank=1 rows="
+      },
+      {
+        "name": "exact2",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank -Ptb_qwen_embed_scale_bank.BANK_ID=2 -o {RUN}/bench/exact2 rtl/test/tb_qwen_embed_scale_bank.sv rtl/physical/ot_qwen_embed_scale_bank.sv && vvp {RUN}/bench/exact2",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS scale bank=2 rows="
+      },
+      {
+        "name": "bad_address",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank -DSCALE_NEG_ADDRESS -o {RUN}/bench/bad_ADDRESS rtl/test/tb_qwen_embed_scale_bank.sv rtl/physical/ot_qwen_embed_scale_bank.sv && vvp {RUN}/bench/bad_ADDRESS",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL scale payload/order"
+      },
+      {
+        "name": "bad_lane",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank -DSCALE_NEG_LANE -o {RUN}/bench/bad_LANE rtl/test/tb_qwen_embed_scale_bank.sv rtl/physical/ot_qwen_embed_scale_bank.sv && vvp {RUN}/bench/bad_LANE",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL scale payload/order"
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_embed_scale_bank {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 16
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_embed_scale_bank --out {RUN}/record/views/qfd_embed_scale_bank --image openroad/orfs:asap7lock --macro-view physical/asap7_memory_macros/ot_rom_4096x266_m8 > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_embed_scale_bank.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8"
+    ]
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_embedding_scale_20261007/qfd_embed_scale_bank-9ebd7aa7a"
+    }
+  ],
+  "cycles_added": "Leaf7cycles measured including actual739.211ps macro model; II2; request/gather1cycle each =>9rootcycles; existing shared proposal18cycles conservatively retained; no rate adoption",
+  "merge_target": "main"
+}
