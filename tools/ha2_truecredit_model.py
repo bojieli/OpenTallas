@@ -42,6 +42,17 @@ def model(forward_hops=7, return_hops=7, width=544, injectors=2, depth=64):
         floorplan_slot_fit=None, routing_tracks_needed=pins+credits,
         channel_capacity=None, physical_closed=False,
         composed_token_latency_cycles=None,
+        endpoint_measurement=(dict(
+            evidence='results/rtl/ha2_truecredit_endpoint_20261007/63a67fb4c_pass/terminal.json',
+            source_commit='63a67fb4c', forward_hops=7, return_hops=7,
+            own_rows=384, peer_rows=336, exact_results=24,
+            baseline_endpoint_cycles=521, candidate_endpoint_cycles=529,
+            measured_increment_cycles=8,
+            measured_increment_ns=8/1.2,
+            baseline_hub_stalls=92, candidate_hub_stalls=108,
+            negative_controls_passed=True,
+            scope='Matched one-endpoint calendar only; candidate7+7, not measured placement or whole-token cost')
+            if forward_hops==7 and return_hops==7 and width==544 and injectors==2 and depth==64 else None),
         latency_qualification='Protocol sweep measures mechanism; actual pin assignment, hop counts and endpoint composition remain required')
 
 
