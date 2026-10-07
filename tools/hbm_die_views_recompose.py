@@ -54,7 +54,10 @@ import hbm_accel_die_price as PR  # noqa: E402
 # attention step.  --cp-in-su: the HBM CP binder placed inside the SU-side block, internal handshakes PIN_MARGIN 0
 # (coordinator decision 15:30, wt-hbm-su-cpin): cp_su / cp_native 0.
 LEDGER = dict(meso_extra=2, gather=1, cdist=2, cp_su=15, cp_native=3, barrier=4, coll=6, serdes=4, vm=6, router=5, cmdproc=2, quant=17,
-              quant_points_bound=161, quant_points_gate=0, svc_fetch=15, idx_keys=10, idx_rows=4)
+              quant_points_bound=161, quant_points_gate=0, svc_fetch=15, idx_keys=10, idx_rows=4, meso_hub=4)
+# r17 (budget stage plan): the index b5 -> VM and VM -> router hub nets became forwarded-clock station chains ending in
+# a meso FIFO (+meso_hub cycles each) with their wire stages (manhattan stage count of the path, the r16j round never
+# priced these hub nets): per index scan and per expert fetch
 
 
 # SM faces: the interim SM view's own pin plan priced on the die (results/rtl/hbm_accel_die_views_20261006/
@@ -123,6 +126,11 @@ def main(argv=None):
             svc_fetch=n.get('expert_fetch', 0) * LEDGER['svc_fetch'],
             idx_keys=n.get('index_scores', 0) * LEDGER['idx_keys'],
             idx_rows=n.get('attn', 0) * LEDGER['idx_rows'])
+        if (m.get('variant') or {}).get('fwd_hub'):
+            mp = F.manhattan_paths(m)
+            ivs = max(mp[k]['stages_430'] for k in mp if k.startswith('index_vm_'))
+            extra['idx_vm'] = n.get('index_scores', 0) * (ivs + LEDGER['meso_hub'])
+            extra['vm_router'] = n.get('expert_fetch', 0) * (mp['hub_vm_router']['stages_430'] + LEDGER['meso_hub'])
         su_tx, nat = cp_mix(json.loads((ROOT / F.MATCHED).read_text())['path'])
         extra['cp_su_tx'] = su_tx * LEDGER['cp_su']
         extra['cp_native'] = nat * LEDGER['cp_native']
@@ -151,7 +159,7 @@ def main(argv=None):
         cpmix = dict(su_transactions=su_tx, native_launches=nat)
         groups = dict(cp_us=cus(extra['cp_su_tx'] + extra['cp_native']), stations_us=round(extra['meso_paths_us'] + cus(extra['gather'] + extra['cdist']), 3),
                       barrier_us=cus(extra['barrier']),
-                      svc_index_us=cus(extra['svc_fetch'] + extra['idx_keys'] + extra['idx_rows']),
+                      svc_index_us=cus(extra['svc_fetch'] + extra['idx_keys'] + extra['idx_rows'] + extra.get('idx_vm', 0) + extra.get('vm_router', 0)),
                       spine_faces_us=cus(extra['coll'] + extra['serdes'] + extra['vm'] + extra['router'] + extra['cmdproc']),
                       quant_us_gate=0.0,
                       quant_us_bound=round(LEDGER['quant'] * LEDGER['quant_points_bound'] / hz * 1e6, 3))
