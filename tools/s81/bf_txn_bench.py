@@ -13,7 +13,7 @@ busy must be low and fault never set on both at the end.  Latency may differ (tr
                      shadow reset is released half a cycle later so its gated edges are the ones before clk rises.
   --variant recut  : shadow = HITFIX 1, PINREG 1, RECUT 1 on clk.
 
-Negatives (must FAIL): +define+W10_MUTANT_FRONT_PAIR (shadow's registered class offset off by one) and a
+Negatives (must FAIL): half: +define+W10_MUTANT_FRONT_PAIR (shadow HITFIX class offset off by one); recut: QP_MUTANT_DP (x-need pair offset); and a
 variant-specific mutant (half: BF_HALF_MUTANT_PV, pv not qualified to the slow cycle; recut: W10_MUTANT_RECUT).
 The candidate sources are refreshed from this worktree (module names prefixed cand_ like the prepared package)."""
 import argparse, json, re, subprocess, sys
@@ -28,6 +28,9 @@ SRC = {'cand_ot_v41_rom_elem_w10.sv': 'rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_p
        'cand_ot_v41_segtree2.sv': 'rtl/v41rom/ot_v41_segtree2.sv', 'cand_ot_v41_chain2.sv': 'rtl/v41rom/ot_v41_chain2.sv',
        'cand_ot_v41_fadd.sv': 'rtl/v41rom/ot_v41_fadd.sv', 'cand_ot_v41_bterm2_w10.sv': 'rtl/v41rom/ot_v41_bterm2_w10.sv',
        'cand_ot_prefix.sv': 'rtl/common/ot_prefix.sv'}
+# recut: the q-element and its re-cut modules (not in the prepared package), compiled as extra cand-namespace files
+EXTRA = ['ot_v41_rom_elem_qx_w10', 'ot_v41_kreg', 'ot_v41_chain3', 'ot_v41_chain4', 'ot_v41_fadd2', 'ot_v41_bterm3_w10',
+         'ot_v41_bterm4_w10', 'ot_v41_bterm5_w10', 'ot_v41_segtree3', 'ot_v41_segtree4', 'ot_v41_segtree5', 'ot_v41_segtree6']
 
 SHADOW = '''
     // ---- transaction shadow (tools/s81/bf_txn_bench.py, variant @VAR@) ----
@@ -111,6 +114,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--variant', choices=('half', 'recut'), required=True)
     p.add_argument('--work', type=Path, required=True)
+    p.add_argument('--level', type=int, default=2, help='recut: RECUT level (1 q-element as is, 2 + BF lanes re-cut)')
     p.add_argument('--prep', type=Path, help='prepared package dir (default <work>/prep, built if missing)')
     p.add_argument('--jobs', type=int, default=8)
     p.add_argument('--only', nargs='*')
@@ -132,6 +136,15 @@ def main():
     wrapper = re.sub(r'(?<![\w$])ot_v41_rom_elem_w10(?![\w$])', 'cand_ot_v41_rom_elem_w10', wrapper)
     wrapper = re.sub(r'(?<![\w$])ot_hdc_cg(?![\w$])', 'cand_ot_hdc_cg', wrapper)
     files['ot_s81_bf_native.sv'] = wrapper
+    # the wrapper holds the original element in generate block g_orig (RECUT = 0)
+    tb = 'tb_dsrom_actual_element_rne_wake.sv'
+    if 'cand_dut.u_e.g_orig.u_elem.' not in files[tb]:
+        files[tb] = files[tb].replace('cand_dut.u_e.u_elem.', 'cand_dut.u_e.g_orig.u_elem.')
+    extra = []
+    for n in EXTRA:
+        f = 'x_' + n + '.sv'
+        files[f] = candify((ROOT / 'rtl/v41rom' / (n + '.sv')).read_text(), names)
+        extra.append(f)
     pair = 'cand_ot_v41_pair_w17w10.sv'
     src = files[pair]
     assert src.rstrip().endswith('endmodule') and src.count('ot_s81_bf_native #(') == 1
@@ -139,8 +152,8 @@ def main():
         sh = SHADOW.replace('@CLOCK@', CLOCK_HALF).replace('@PARAMS@', ', .HALF(1)')
         muts = [('mutant_front_pair', ['+define+W10_MUTANT_FRONT_PAIR']), ('mutant_half_pv', ['+define+BF_HALF_MUTANT_PV'])]
     else:
-        sh = SHADOW.replace('@CLOCK@', CLOCK_SAME).replace('@PARAMS@', ', .RECUT(1)')
-        muts = [('mutant_front_pair', ['+define+W10_MUTANT_FRONT_PAIR']), ('mutant_recut', ['+define+W10_MUTANT_RECUT'])]
+        sh = SHADOW.replace('@CLOCK@', CLOCK_SAME).replace('@PARAMS@', f', .RECUT({a.level})')
+        muts = [('mutant_dp', ['+define+QP_MUTANT_DP']), ('mutant_recut', ['+define+W10_MUTANT_RECUT'])]
     files[pair] = src.rstrip()[:-len('endmodule')] + sh.replace('@VAR@', a.variant) + '\n'
     try:
         commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip()
@@ -148,7 +161,8 @@ def main():
     except (subprocess.CalledProcessError, FileNotFoundError):
         commit, dirty = (ROOT / 'SOURCE_COMMIT').read_text().strip() if (ROOT / 'SOURCE_COMMIT').exists() else 'unknown', None
     out = {'variant': a.variant, 'cases': {}, 'pass': True, 'refreshed': refreshed, 'source_commit': commit, 'dirty': dirty}
-    for name, defs in [('positive', [])] + muts:
+    pos = ['+define+QP_CHECK', '+define+QT_CHECK'] if a.variant == 'recut' else []
+    for name, defs in [('positive', pos)] + muts:
         if a.only and name not in a.only:
             continue
         w = a.work / name
@@ -160,6 +174,7 @@ def main():
         cmd[cmd.index('-j') + 1] = str(a.jobs)
         cmd = [str(prep / 'dsrom_actual_element_numerical_rom.cpp') if x.startswith('/ABS/FRESH/') else x for x in cmd]
         cmd[1:1] = defs
+        cmd += extra
         with (w / 'build.log').open('w') as f:
             b = subprocess.run(cmd, cwd=w, stdout=f, stderr=subprocess.STDOUT)
         if b.returncode:

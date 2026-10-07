@@ -52,6 +52,14 @@ module ot_s81_bf_native #(
     // (pin regs -> element, element -> output regs) are register to register.  Throughput: one element cycle per two
     // clk cycles (BF column time x2); exact at transaction level (tools/s81/run_bf_half_exact.py).
     parameter integer HALF = 0,
+    // RECUT (BF re-cut A, 2026-10-07, default 0): the element is the DS q-element ot_v41_rom_elem_qx_w10 (its closed
+    // walker / x-need / issue / segment-tree / chain / per-macro re-cuts: QTIMING_FIX QPIPE QZ QY QX 10, as routed for
+    // the S81 q pairs) with BF16 = 1 under QBF (RECUT: 1 = as is, 2 = + BF lanes re-cut: 8-stage multiplier, chain4
+    // kept forward copies, fully cut tree adders), GRADUAL_RNE and the second-row decoder fix (built in).  Latency
+    // changes (QPIPE boundary, split lanes, tree), values and per-lane order do not: exact at transaction level
+    // (tools/s81/bf_txn_bench.py --variant recut).  Requires FAST = 1, PP = 1, BP = 0, HALF = 0.
+    parameter integer RECUT = 0,
+    parameter integer RDRAIN = 200,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -232,59 +240,75 @@ module ot_s81_bf_native #(
         assign xb_d_i = xb_d;
         assign busy = busy_e; assign fault = fault_e;
     end
-    ot_v41_rom_elem_w10 #(
-        .NSEG(NSEG),
-        .NCH(NCH),
-        .XF(XF),
-        .LV(LV),
-        .BF16(BF16),
-        .NCHB(NCHB),
-        .NB(NB),
-        .MTP(MTP),
-        .EARLY(EARLY),
-        .CG(CG),
-        .DRAIN(DRAIN),
-        .FAST(FAST),
-        .CUT(CUT),
-        .PP(PP),
-        .FRONT_PAR(FRONT_PAR),
-        .WAKE_REG(WAKE_REG),
-        .HITFIX(HITFIX),
-        .BP(BP),
-        .FIX_SECOND_ROW_INDEX(FIX_SECOND_ROW_INDEX),
-        .GRADUAL_RNE(GRADUAL_RNE),
-        .INSTANCE(INSTANCE)
-    ) u_elem (
-        .clk(eclk),
-        .rst_n(rst_n),
-        .cfg_v(cfg_v_i),
-        .cfg_a(cfg_a_i),
-        .cfg_d(cfg_d_i),
-        .go(go_i),
-        .go_bf(go_bf_i),
-        .xs_v(xs_v_i),
-        .xs_p(xs_p_i),
-        .xs_b(xs_b_i),
-        .xs_sv(xs_sv_i),
-        .xs_q0(xs_q0_i),
-        .xs_e0(xs_e0_i),
-        .xs_q1(xs_q1_i),
-        .xs_e1(xs_e1_i),
-        .xs_pos(xs_pos_i),
-        .xb_pos(xb_pos_i),
-        .xb_v(xb_v_i),
-        .xb_b(xb_b_i),
-        .xb_sv(xb_sv_i),
-        .xb_u(xb_u_i),
-        .xb_d(xb_d_i),
-        .pv(pv_e),
-        .pval(pval_e),
-        .prow(prow_e),
-        .pseg(pseg_e),
-        .pnseg(pnseg_e),
-        .perr(perr_e),
-        .ppos(ppos_e),
-        .busy(busy_e),
-        .fault(fault_e)
-    );
+    if (RECUT != 0) begin : g_rc
+        ot_v41_rom_elem_qx_w10 #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NCHB(NCHB), .NB(NB), .MTP(MTP),
+            .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
+            .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
+            .QY(1), .QX(10), .QBF(RECUT), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_elem (
+            .clk(eclk), .rst_n_pin(rst_n), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_i),
+            .go_bf_pin(go_bf_i), .xs_v_pin(xs_v_i), .xs_p_pin(xs_p_i), .xs_b_pin(xs_b_i), .xs_sv_pin(xs_sv_i),
+            .xs_q0_pin(xs_q0_i), .xs_e0_pin(xs_e0_i), .xs_q1_pin(xs_q1_i), .xs_e1_pin(xs_e1_i), .xs_pos_pin(xs_pos_i),
+            .xb_pos_pin(xb_pos_i), .xb_v_pin(xb_v_i), .xb_b_pin(xb_b_i), .xb_sv_pin(xb_sv_i), .xb_u_pin(xb_u_i),
+            .xb_d_pin(xb_d_i), .pv(pv_e), .pval(pval_e), .prow(prow_e), .pseg(pseg_e), .pnseg(pnseg_e), .perr(perr_e),
+            .ppos(ppos_e), .busy(busy_e), .fault(fault_e));
+`ifndef SYNTHESIS
+        initial if (FAST == 0 || PP == 0 || BP != 0 || HALF != 0) $fatal(1, "RECUT requires FAST = 1, PP = 1, BP = 0, HALF = 0");
+`endif
+    end else begin : g_orig
+        ot_v41_rom_elem_w10 #(
+            .NSEG(NSEG),
+            .NCH(NCH),
+            .XF(XF),
+            .LV(LV),
+            .BF16(BF16),
+            .NCHB(NCHB),
+            .NB(NB),
+            .MTP(MTP),
+            .EARLY(EARLY),
+            .CG(CG),
+            .DRAIN(DRAIN),
+            .FAST(FAST),
+            .CUT(CUT),
+            .PP(PP),
+            .FRONT_PAR(FRONT_PAR),
+            .WAKE_REG(WAKE_REG),
+            .HITFIX(HITFIX),
+            .BP(BP),
+            .FIX_SECOND_ROW_INDEX(FIX_SECOND_ROW_INDEX),
+            .GRADUAL_RNE(GRADUAL_RNE),
+            .INSTANCE(INSTANCE)
+        ) u_elem (
+            .clk(eclk),
+            .rst_n(rst_n),
+            .cfg_v(cfg_v_i),
+            .cfg_a(cfg_a_i),
+            .cfg_d(cfg_d_i),
+            .go(go_i),
+            .go_bf(go_bf_i),
+            .xs_v(xs_v_i),
+            .xs_p(xs_p_i),
+            .xs_b(xs_b_i),
+            .xs_sv(xs_sv_i),
+            .xs_q0(xs_q0_i),
+            .xs_e0(xs_e0_i),
+            .xs_q1(xs_q1_i),
+            .xs_e1(xs_e1_i),
+            .xs_pos(xs_pos_i),
+            .xb_pos(xb_pos_i),
+            .xb_v(xb_v_i),
+            .xb_b(xb_b_i),
+            .xb_sv(xb_sv_i),
+            .xb_u(xb_u_i),
+            .xb_d(xb_d_i),
+            .pv(pv_e),
+            .pval(pval_e),
+            .prow(prow_e),
+            .pseg(pseg_e),
+            .pnseg(pnseg_e),
+            .perr(perr_e),
+            .ppos(ppos_e),
+            .busy(busy_e),
+            .fault(fault_e)
+        );
+    end
 endmodule

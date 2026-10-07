@@ -15,6 +15,10 @@ SOURCES += ['rtl/v41rom/'+n+'.sv' for n in (
  'ot_v41_bterm','ot_v41_bterm2_w10','ot_v41_chain','ot_v41_chain2','ot_v41_fadd',
  'ot_v41_rom_elem_w10_rne_wake_prepare','ot_v41_segtree','ot_v41_segtree2',
  'ot_v41_bmul2_rne_prepare','ot_v41_bmul_subnormal_rne_prepare')]
+# RECUT (BF re-cut A): the q-element and its re-cut modules (harmless to the original build: not elaborated)
+SOURCES += ['rtl/v41rom/'+n+'.sv' for n in (
+ 'ot_v41_rom_elem_qx_w10','ot_v41_kreg','ot_v41_chain3','ot_v41_chain4','ot_v41_fadd2','ot_v41_bterm3_w10',
+ 'ot_v41_bterm4_w10','ot_v41_bterm5_w10','ot_v41_segtree3','ot_v41_segtree4','ot_v41_segtree5','ot_v41_segtree6')]
 MACRO='ot_rom_4096x274_m8'
 VIEW='physical/asap7_memory_macros_v2/'+MACRO
 SOURCES += [VIEW+'/'+MACRO+'_bb.v',
@@ -36,7 +40,7 @@ def command(a):
   hc='WC' if a.wc_only else 'BC'
   if a.hitfix: cmd+=['--param','HITFIX=1']
   if a.half: cmd+=['--param','HALF=1']
-  if a.recut: cmd+=['--param','RECUT=1']
+  if a.recut: cmd+=['--param','RECUT='+str(a.recut_level)]
   cmd+=['--param','PINREG=1','--clock-period-ns',a.period,'--core-input-delay-min-ns',io(ff-50),'--core-input-delay-max-ns',io(ss+250),
    '--output-delay-min-ns',io(-(ff+50)),'--output-delay-max-ns',io(100-(ss-150)),'--false-path-from','rst_n',
    '--die-area','0','0',str(a.die_w),str(a.die_h),'--core-area','2.16','2.16',str(round(a.die_w-2.16,3)),str(round(a.die_h-2.16,3)),
@@ -64,7 +68,7 @@ def main():
  p.add_argument('--output',type=Path,required=True);p.add_argument('--util',type=int,default=55)
  p.add_argument('--tag',default='s81_bf_native_u55')
  p.add_argument('--margin',action='store_true');p.add_argument('--ins-ss',type=float,default=0.0);p.add_argument('--ins-ff',type=float,default=0.0);p.add_argument('--die-w',type=float,default=1002.888);p.add_argument('--die-h',type=float,default=190.08);p.add_argument('--print',action='store_true')
- p.add_argument('--wc-only',action='store_true');p.add_argument('--hitfix',action='store_true');p.add_argument('--half',action='store_true');p.add_argument('--period',default='.770');p.add_argument('--recut',action='store_true');p.add_argument('--extra',default='')
+ p.add_argument('--wc-only',action='store_true');p.add_argument('--hitfix',action='store_true');p.add_argument('--half',action='store_true');p.add_argument('--period',default='.770');p.add_argument('--recut',action='store_true');p.add_argument('--recut-level',type=int,default=2);p.add_argument('--extra',default='')
  a=p.parse_args()
  cmd=command(a)
  if a.print:
