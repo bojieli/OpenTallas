@@ -24,26 +24,28 @@
    "hbm:clk_stream:HUB-QNE.1.0",
    "hbm:clk_stream:HUB-QNE.1.1",
    "hbm:clk_stream:HUB-QNW.0.0",
+   "hbm:clk_stream:HUB-QNW.0.1",
    "hbm:clk_stream:HUB-QNW.1.0",
    "hbm:clk_stream:HUB-QSE.0.0",
    "hbm:clk_stream:HUB-QSE.1.0",
    "hbm:clk_stream:HUB-QSE.1.1",
    "hbm:clk_stream:HUB-QSW.0.0",
+   "hbm:clk_stream:HUB-QSW.0.1",
    "hbm:clk_stream:HUB-QSW.1.0"
   ],
-  "n_regions": 10,
+  "n_regions": 12,
   "entry_target_ss_ps": {
-   "mean": 2811.4,
+   "mean": 2798.3,
    "min": 2691.4,
-   "max": 3116.8
+   "max": 3117.3
   },
   "entry_target_ff_ps": {
-   "mean": 1503.9,
+   "mean": 1495.5,
    "min": 1427.2,
-   "max": 1699.7
+   "max": 1699.9
   },
   "die_pad_ss_ps": {
-   "mean": 119.7,
+   "mean": 106.4,
    "min": 0.0,
    "max": 425.9
   },
