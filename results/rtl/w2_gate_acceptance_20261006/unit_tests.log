@@ -1,0 +1,16 @@
+test_build_and_runtime_infrastructure_cannot_reject (__main__.AcceptanceTests) ... ok
+test_cli_distinguishes_intended_rejection_survival_build_failure (__main__.AcceptanceTests) ... ok
+test_intended_assertion_rejects_mutant (__main__.AcceptanceTests) ... ok
+test_missing_tool_is_infrastructure (__main__.AcceptanceTests) ... ok
+test_no_external_timeout_is_installed (__main__.AcceptanceTests) ... ok
+test_positive_is_not_negative_credit (__main__.AcceptanceTests) ... ok
+test_wrong_assertion_generic_timeout_unarmed_or_pass_marker (__main__.AcceptanceTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.004s
+
+OK
+NEGATIVE_REJECTED S8_rel_q_decision_removed
+NEGATIVE_SURVIVED S8_rel_q_decision_removed
+NEGATIVE_INFRASTRUCTURE_FAILURE S8_rel_q_decision_removed
+NEGATIVE_INFRASTRUCTURE_FAILURE S8_rel_q_decision_removed

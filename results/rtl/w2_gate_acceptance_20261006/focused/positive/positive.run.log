@@ -1,0 +1,11 @@
+W2_PROGRESS_ARM event=tap_accept edge=16 bound=352
+CALENDAR_TAP_ACCEPT edge=16
+W2_PROGRESS_DONE event=all_sm_accept elapsed=80 accepted=ff
+CALENDAR_ALL_SM edge=96
+CALENDAR_LAST_SM_ACK edge=124
+CALENDAR_QUARTER_ACK edge=213
+CALENDAR_PARENT_RELEASE edge=218
+CALENDAR_WARM_ACK edge=220
+W2_PROGRESS_ARM event=tap_accept edge=237 bound=352
+W2_PROGRESS_DONE event=all_sm_accept elapsed=80 accepted=ff
+PASS_NATIVE_QUARTER_PUBLICATION seed=1062026 fanouts=3/3/3/2 sm=8 full73=1 owner192=1 checks=19 heldACK_CE=1 emptyACK_CE=1 warm_debt=1 token16_negative=1 provider_macros=32 extra_macros=0
