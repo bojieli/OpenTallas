@@ -83,6 +83,9 @@ class ReliabilityTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual((run / "src" / "rtl.txt").read_text(), "golden")
         self.assertEqual((run / "bench_src_a1" / "rtl.txt").read_text(), "mutant\n")
+        with patch.object(cl, "ssh", return_value=SimpleNamespace(stdout="", stderr="", returncode=0)) as ssh:
+            self.assertTrue(cl.remote_ok(j, "test -f rtl.txt")[0])
+        self.assertIn(f"cd {run}/bench_src_a1 &&", ssh.call_args.args[1])
 
     def test_unreadable_historical_bench_does_not_starve_recovery(self):
         first = dict(name="unreachable", status="NEEDS_RTL", spec={},

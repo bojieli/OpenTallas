@@ -1021,7 +1021,8 @@ elif [ -f {run}/cl/{t}.pid ]; then echo LOST; else echo STARTING; fi""", timeout
 def remote_ok(j, cmd, timeout=300):
     if not cmd:
         return True, ""
-    r = ssh(j["host"], f"cd {j['run']}/src && {subst(cmd, j)}", timeout=timeout)
+    source = j.get("stage_source", f"{j['run']}/src")
+    r = ssh(j["host"], f"cd {shlex.quote(source)} && {subst(cmd, j)}", timeout=timeout)
     return r.returncode == 0, (r.stdout + r.stderr)[-400:]
 
 
