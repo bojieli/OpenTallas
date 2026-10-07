@@ -1,0 +1,449 @@
+{
+  "schema": "opentallas.qwen_station_fullwidth_r22.v2",
+  "default_off": true,
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/physical/ot_qwen_die_station.sv": "aa5d461652ab4dc751ce77f7955dfb51d099e02821f5d76a0cce3e413b7d1843",
+    "tools/qwen_rom_fulldie_b3r2.py": "681f2765134b374d047ba7b2b311b1ef1fabe201f1ffc16f5f2b4abedeff55cd",
+    "tools/die_top_lint.py": "3eb62ad6130eca3e144e642326c033f1c322004b6d7c769b86d949faa6345896",
+    "results/rtl/qwen_rom_fulldie_20261003/k16_demand_r1/inputs/SS_cell_prices.json": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d"
+  },
+  "selected_tile": {
+    "commit": "e721e27b561104aac303e4cdd1187b59cd163e20",
+    "path": "rtl/physical/ot_qwen_rom_tile_die.sv",
+    "command_ports": {
+      "ib": 379,
+      "ib_go": 1,
+      "xl": 128
+    },
+    "reverse_port": "fault",
+    "ready_port": null,
+    "tile_id": "16-bit static strap, not transported"
+  },
+  "protocol": {
+    "kind": "fixed_schedule",
+    "input_cut": "post-VM x alignment; spine tgo/tb/xl_d",
+    "instruction_assembly": false,
+    "fifo": false,
+    "credits": false,
+    "tile_backpressure": false,
+    "reason": "The actual tile has no ready port; independent stalling destroys BD/XD alignment",
+    "retirement": "Existing spine result/tag owner. Fault OR output is not a retirement acknowledgement",
+    "reset": "Cold POR only; source launch remains zero through pipeline fill; warm reset requires prior global drain"
+  },
+  "payload_map": [
+    {
+      "field": "ib",
+      "lo": 0,
+      "width": 379
+    },
+    {
+      "field": "ib_go",
+      "lo": 379,
+      "width": 1
+    },
+    {
+      "field": "xl",
+      "lo": 380,
+      "width": 128
+    }
+  ],
+  "exact_proposed_pin_slices": {
+    "qfd_cst_s": {
+      "parameters": {
+        "ENABLE_FULLWIDTH": 1,
+        "TAP": 1,
+        "SPLIT": 0
+      },
+      "ports": {
+        "a": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "a_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "a_fault",
+            "rtl_lo": 0
+          }
+        ],
+        "b": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "b_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "b_fault",
+            "rtl_lo": 0
+          }
+        ],
+        "tap": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "t_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "t_fault",
+            "rtl_lo": 0
+          }
+        ]
+      },
+      "scalars": {
+        "ck": "clk",
+        "rst_n": "rst_n"
+      },
+      "unconnected_output_branch_fault_tie": 0
+    },
+    "qfd_cst_n": {
+      "parameters": {
+        "ENABLE_FULLWIDTH": 1,
+        "TAP": 1,
+        "SPLIT": 0
+      },
+      "ports": {
+        "b": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "a_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "a_fault",
+            "rtl_lo": 0
+          }
+        ],
+        "a": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "b_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "b_fault",
+            "rtl_lo": 0
+          }
+        ],
+        "tap": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "t_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "t_fault",
+            "rtl_lo": 0
+          }
+        ]
+      },
+      "scalars": {
+        "ck": "clk",
+        "rst_n": "rst_n"
+      },
+      "unconnected_output_branch_fault_tie": 0
+    },
+    "qfd_chead_e": {
+      "parameters": {
+        "ENABLE_FULLWIDTH": 1,
+        "TAP": 1,
+        "SPLIT": 1
+      },
+      "ports": {
+        "w": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "a_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "a_fault",
+            "rtl_lo": 0
+          }
+        ],
+        "e": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "b_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "b_fault",
+            "rtl_lo": 0
+          }
+        ],
+        "n": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "t_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "t_fault",
+            "rtl_lo": 0
+          }
+        ],
+        "s": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "c_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "c_fault",
+            "rtl_lo": 0
+          }
+        ]
+      },
+      "scalars": {
+        "ck": "clk",
+        "rst_n": "rst_n"
+      },
+      "unconnected_output_branch_fault_tie": 0
+    },
+    "qfd_chead_w": {
+      "parameters": {
+        "ENABLE_FULLWIDTH": 1,
+        "TAP": 1,
+        "SPLIT": 1
+      },
+      "ports": {
+        "e": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "a_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "a_fault",
+            "rtl_lo": 0
+          }
+        ],
+        "w": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "b_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "b_fault",
+            "rtl_lo": 0
+          }
+        ],
+        "n": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "t_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "t_fault",
+            "rtl_lo": 0
+          }
+        ],
+        "s": [
+          {
+            "die_lo": 0,
+            "width": 508,
+            "rtl_port": "c_d",
+            "rtl_lo": 0
+          },
+          {
+            "die_lo": 508,
+            "width": 1,
+            "rtl_port": "c_fault",
+            "rtl_lo": 0
+          }
+        ]
+      },
+      "scalars": {
+        "ck": "clk",
+        "rst_n": "rst_n"
+      },
+      "unconnected_output_branch_fault_tie": 0
+    }
+  },
+  "proposed_bundle_map": {
+    "corridor": [
+      {
+        "field": "payload",
+        "lo": 0,
+        "width": 508,
+        "direction": "forward"
+      },
+      {
+        "field": "fault",
+        "lo": 508,
+        "width": 1,
+        "direction": "reverse"
+      }
+    ],
+    "tap": [
+      {
+        "field": "payload",
+        "lo": 0,
+        "width": 508,
+        "direction": "forward"
+      },
+      {
+        "field": "fault",
+        "lo": 508,
+        "width": 1,
+        "direction": "reverse"
+      }
+    ]
+  },
+  "external_clock_reset": {
+    "clk_pins_per_instance": 1,
+    "rst_n_pins_per_instance": 1,
+    "clk_implemented": "r18 explicit per-region clock nets; do not retain legacy64clock payloadbits",
+    "rst_n_implemented": false,
+    "rst_n_gap": "r18 removed bundledreset but only builds HBM/CDC resettrees; add explicit tile/station/head reset"
+  },
+  "boundaries": {
+    "corridor_bits": 509,
+    "tap_bits": 509,
+    "r21_corridor_bits": 323,
+    "r21_tap_bits": 323,
+    "pre_r18_recipe": {
+      "fullwidth_corridor": 574,
+      "fullwidth_tap": 511,
+      "r21_corridor": 388,
+      "r21_tap": 325
+    },
+    "extra_bits_per_boundary": 186,
+    "instruction_bits_per_cycle": 379,
+    "activation_bits_per_cycle": 128,
+    "register_payload_bits_per_cycle": 508,
+    "MACs_per_cycle": 0,
+    "compute_intensity_MAC_per_byte": 0,
+    "communication": "One508-bit input,2 independent kept output copies at a station;3 at a head",
+    "memory_ports_bytes_per_cycle": {},
+    "clock_reset_payload_FF": 0
+  },
+  "state": {
+    "corridor_FF": 1019,
+    "head_FF": 1528,
+    "relay_FF": 510,
+    "fault_input_capture_then_OR": true,
+    "two_forward_copies_per_station": true,
+    "three_forward_copies_per_head": true,
+    "FIFO_storage_bits": 0,
+    "assembly_storage_bits": 0,
+    "instruction_muxes": 0,
+    "demuxes": 0,
+    "control_fanout_target_max": 32,
+    "fault_fanin_max": 3,
+    "data_pin_fanout": 1,
+    "mutable_protection": "Preserve existing policy; new fault registers/control protection requires its own qualification; no ROM ECC introduced"
+  },
+  "replicas": {
+    "stations": 1536,
+    "heads": 64,
+    "total_FF": 1662976
+  },
+  "geometry": {
+    "old_station_frame_um": [
+      52.704,
+      103.68
+    ],
+    "proposed_station_frame_um": [
+      52.704,
+      103.68
+    ],
+    "extra_width_um": 0.0,
+    "pin_pitch_um": 0.096,
+    "corridor_pin_span_um": 48.864000000000004,
+    "tap_pin_span_um": 48.864000000000004,
+    "available_corridor_pin_span_um": 50.704,
+    "available_tap_pin_span_um": 101.68,
+    "geometric_pin_fit": true,
+    "candidate_frame_is_routed": false,
+    "routing_tracks_needed_per_corridor": 509,
+    "signal_routing_capacity_after_PDN": null,
+    "full_die_routing_fit": false,
+    "additional_station_frames_mm2": 0.0,
+    "additional_die_width_um": 0.0,
+    "additional_die_area_mm2": null,
+    "die_area_formula": "64 * extra_width_um * actual_r22_die_height_um / 1e6; full floorplan must be regenerated"
+  },
+  "area": {
+    "FF_cell_um2": 0.37908,
+    "FF_total_mm2": 0.63040094208,
+    "total_clock_pin_fF": 721701.6504319999,
+    "FF_and_logic_slot_proxy_mm2": 1.8912028262399998,
+    "slot_proxy_basis": "FF cell area x1.5 logic allowance /0.5 utilization; not a measured route",
+    "new_payload_FF_over_same_shape508bit_copy_station": 0,
+    "new_fault_FF_over_same_shape_ready_AND_station": 0
+  },
+  "latency": {
+    "forward_cycles_per_station": 1,
+    "fault_cycles_per_station": 2,
+    "delta_forward_cycles_over_original508copy": 0,
+    "two_beat_serialization_cycles": 0,
+    "path_hops": null,
+    "forward_path_cycles": null,
+    "fault_path_cycles": null,
+    "publication_guard_cycles_min": null,
+    "publication_guard": "Root must retain token results until all tile faults can arrive; use actual max fault-hop count and tile fault-production latency.2*H alone excludes tile fault latency",
+    "tag_rule": "BD, VM x path, tile IREG and spine XD must be composed from the same concrete path; unequal-depth branches require equalization",
+    "token_delta": null,
+    "headline_adoption": false
+  },
+  "gates": {
+    "component_RTL_authoring": true,
+    "physical_route": false,
+    "exact_transaction": false,
+    "final_master_interface": false,
+    "SSFF": false,
+    "full_token_adoption": false
+  },
+  "blockers": [
+    "Install concrete509-bit bundle maps and missing explicit field reset tree in r22 generator",
+    "Bind producer BD/XVM/IREG/XD to actual station and relay path lengths",
+    "Implement and price global fault publication guard from real tile fault latency and result commit owner",
+    "Confirm mutable fault/control protection and selected link fault contract",
+    "Measure exact transaction/fault negatives and actual508bit station at SS/FF; then full die context"
+  ]
+}
