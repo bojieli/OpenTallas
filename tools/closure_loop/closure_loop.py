@@ -1066,6 +1066,12 @@ def get_metrics(j):
     if v.get("metrics_cmd"):
         r = ssh(j["host"], f"cd {j['run']}/src && {subst(v['metrics_cmd'], j)}", timeout=600)
         last = [x for x in r.stdout.splitlines() if x.strip().startswith("{")]
+        if not last and r.returncode:
+            # no JSON and a failed command: an ssh drop (w2-rb-safe-no3 went NEEDS_HUMAN "verdict inputs missing" with
+            # raw {} while the same command printed the metrics a minute later) or a real error. Raise: transient ssh
+            # errors back off, anything else counts toward the 10-consecutive-errors NEEDS_HUMAN.
+            raise RuntimeError(f"verdict metrics_cmd produced no JSON (command failed rc={r.returncode}): "
+                               f"{(r.stderr or r.stdout).strip()[-300:]}")
         m = json.loads(last[-1]) if last else {}
         return dict(ss_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"), orfs_dir=m.get("orfs_dir"),
                     raw=m)
