@@ -389,6 +389,7 @@ echo $rc > $d/$st.rc.tmp && mv $d/$st.rc.tmp $d/$st.rc
 
 def subst(text, j):
     m = dict(RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=j["name"],
+             LABEL=re.sub(r"[^A-Za-z0-9_]", "_", j["name"]),
              BLOCK=j["spec"]["block"], COMMIT=j["spec"]["source"]["commit"], THREADS=str(j["spec"].get("threads", 16)))
     for k, v in m.items():
         text = text.replace("{" + k + "}", v)
@@ -432,6 +433,7 @@ def launch_stage(j, st, cmd):
     t = tag(st, j)
     env = "".join(f"export {k}={shlex.quote(v)}\n" for k, v in dict(
         RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=j["name"],
+        LABEL=re.sub(r"[^A-Za-z0-9_]", "_", j["name"]),
         BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
