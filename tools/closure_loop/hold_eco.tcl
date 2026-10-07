@@ -11,8 +11,9 @@
 #    SS paths under the guard, dont_touch here).  Before rev 2 corner-conditional post-SDCs (vclk_corner_true.sdc)
 #    were read once into a two-corner session: idxq_b1 saw SS vclk setup -414.69 where sign-off read +107.23, the
 #    setup guard was void and 14,557 buffers took SS to -275.
-#  * ENDPOINT FILTER (hold_eco_window.tcl): only endpoints with SS setup slack > deficit + OT_SETUP_FILTER (40) are
-#    repaired; windows narrower than hm + accept_ss are reported INFEASIBLE (IO budget / RTL, never an ECO).
+#  * ENDPOINT FILTER (hold_eco_window.tcl): only endpoints with SS setup slack > r x deficit + OT_SETUP_FILTER (40) are
+#    repaired, r = OT_SS_FF_RATIO (2.4: a ps of FF hold delay costs ~2.4 ps at SS; with r = 1 the FF-only session on
+#    idxq_b1 took SS +107 -> -142).  Endpoints that cannot reach accept_ff with SS >= accept_ss are INFEASIBLE.
 #  * HOLD TARGET 15 (OT_HOLD_MARGIN; was 22): the acceptance line, not 7 ps over it (hold_eco.sh re-passes residue).
 #  * DELAY CELLS: HB1-4xp67 (ASAP7 hold buffers) are allowed for the repair (OT_HOLD_CELLS=1): one delay cell at the
 #    capture pin replaces a chain of BUFx2 on the net.
@@ -112,7 +113,8 @@ if {$session eq "two" && [envd OT_SETUP_FIX 0] && $ss0 < $acc_ss + 10} {
 
 # ---- endpoint filter: repair only endpoints whose setup can absorb the deficit + filt
 # window: endpoints under the repair target (post-route goal + allowance, from hold_eco.sh)
-set win [ot_window $hm $filt $acc_ss pre]
+set ::ot_ss_ff_ratio [envd OT_SS_FF_RATIO 2.4]
+set win [ot_window $hm $filt $acc_ss pre $acc_ff]
 if {[envd OT_WINDOW_ONLY 0]} { puts "OT_ECO window_only"; exit }
 set nx 0
 foreach k {tight infeasible} { foreach ep [dict get $win $k] { set_false_path -hold -to $ep; incr nx } }
