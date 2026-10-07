@@ -337,7 +337,12 @@ module ot_qwen_hbm_code_pair_margin #(
         else begin rfire2<=read_fire; wcol2<=wq_v_pre; end
       always @(posedge clk) begin
         rd_row2<=rd_row_i; vb2<=virtual_bank_i; wr_row2<=wr_row_i; wr_data2<=wr_owned_i.data;
-        for(integer k=0;k<4;k=k+1) for(integer sl=0;sl<4;sl=sl+1) chkp[k][sl]<=chk_slice(wr_owned_i.data[k*64+:64], sl);
+      end
+    end
+    for(genvar gk=0;gk<4;gk=gk+1) begin : chkw
+      for(genvar gs=0;gs<4;gs=gs+1) begin : sl
+        wire [7:0] cs = chk_slice(wr_owned_i.data[gk*64+:64], gs);   // one function call per slice (slang unroll limit)
+        always @(posedge clk) if(Q) chkp[gk][gs] <= cs;
       end
     end
     wire [1:0] rfire_x = Q ? rfire2 : read_fire;
@@ -427,6 +432,7 @@ module ot_qwen_hbm_code_pair_margin #(
         assign ue_w[k]=Q ? (nz && !okc) : d[65];            // Q: from the registered syndrome (same function as decode64)
         assign co_w[k]=Q ? (nz ? okc : sy[7]) : d[64];
       end
+      reg [287:0] flip6, code6;
       wire [31:0] syn_now;
       for(genvar k=0;k<4;k=k+1) begin : dec
         assign syn_now[k*8+:8]=w6_syndrome(sel_code[p][k*72+:72]);
@@ -434,7 +440,6 @@ module ot_qwen_hbm_code_pair_margin #(
                                        : w6_correct(sel_code2[p][k*72+:72],syn5[p][k*8+:8]);
       end
       // MARGIN2: W6 correction in two stages: flip mask + code held (E t+6), then XOR + gather (E t+7)
-      reg [287:0] flip6, code6;
       always @(posedge clk) for(integer k=0;k<4;k=k+1) begin
         flip6[k*72+:72]<=w6_flip(syn5[p][k*8+:8]); code6[k*72+:72]<=sel_code2[p][k*72+:72];
       end
