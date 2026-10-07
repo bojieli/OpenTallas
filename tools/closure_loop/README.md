@@ -204,7 +204,7 @@ is disabled for these three rebinds pending parent review.
 - New jobs route at hold margin 10 ps (see "Hold margin" above).
 
 ## Route-time hold corners (2026-10-07)
-- Route stages export `OT_ROUTE_HOLD_CORNERS=primary` and run `hold_corners_patch.py` on the job's snapshot (older
+- Calibrate and route stages export `OT_ROUTE_HOLD_CORNERS=primary` and run `hold_corners_patch.py` on the job's snapshot (older
   snapshots get the same code main's tools/run_abi3_physical.py now has): place-and-route repairs setup and hold at the
   primary corner (WC) only. The recipes' one route SDC puts the virtual IO clock at the SS insertion, so at BC every
   IO path showed a fake hold violation of about the SS-FF insertion difference (hfd_svc_SE_s6 route SDC: output hold
