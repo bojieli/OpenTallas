@@ -67,7 +67,7 @@ def acceptance(ss, ff):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--run', type=Path, required=True); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument('--run', type=Path, required=True); ap.add_argument('--half', action='store_true'); a = ap.parse_args()
     run = a.run.resolve()
     # Preserve every previous verdict, including failures. Use a fresh copied
     # run for a new evaluation; never overwrite a prior signoff.
@@ -86,7 +86,7 @@ def main():
     result = dict(route_sdc=str(sdc0), measured_insertion_SS=ss_lat, measured_insertion_FF=ff_lat)
     sdc = case/'signoff.sdc'
     subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', '833.333', '--l-max', f'{ss_lat[1]:.2f}',
-                    '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--l-ff-max', f'{ff_lat[1]:.2f}', '--out', str(sdc)],
+                    '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--l-ff-max', f'{ff_lat[1]:.2f}', '--out', str(sdc)] + (['--half'] if a.half else []),
                    check=True, capture_output=True)
     for corner, delay in (('SS', 'max'), ('FF', 'min')):
         log = sta(case, odb, sdc, spef, corner, delay)

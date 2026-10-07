@@ -44,7 +44,7 @@
 //    valid, no fault). R_in_r and acked==ALL are stale-safe: acked only rises
 //    until the release, and a release clears active and rel_q on the same edge.
 //    Cost: +1 edge per release.
-module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0)(
+module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0,FCLK=1)(
  input wire clk_sm,por_n,release_held,
  input wire in_v,output wire in_r,input wire [2062:0] in_data,
  input wire [191:0] in_owner,input wire [72:0] in_frame,
@@ -70,10 +70,14 @@ function automatic [71:0] encode64(input [63:0] data);
   localparam [3:0] ALL=(4'b1111>>(4-NO));
   // Forwarded clock: four real kept inversions, as the original station.
   wire c1,c2,c3;
-  ot_fwd_clk_inv u_clk0(.a(clk_sm),.y(c1));
-  ot_fwd_clk_inv u_clk1(.a(c1),.y(c2));
-  ot_fwd_clk_inv u_clk2(.a(c2),.y(c3));
-  ot_fwd_clk_inv u_clk3(.a(c3),.y(fclk_o));
+  if(FCLK)begin:fwdclk
+   ot_fwd_clk_inv u_clk0(.a(clk_sm),.y(c1));
+   ot_fwd_clk_inv u_clk1(.a(c1),.y(c2));
+   ot_fwd_clk_inv u_clk2(.a(c2),.y(c3));
+   ot_fwd_clk_inv u_clk3(.a(c3),.y(fclk_o));
+  end else begin:nofwdclk
+   assign fclk_o=1'b0;
+  end
   // Cold POR: asynchronous assert, synchronous release (two kept stages).
   wire [1:0] rs;
   ot_hbm_w2_keep_reg #(.W(1)) u_rs0(.clk(clk_sm),.rst_n(por_n),.d(1'b1),.q(rs[0]));
@@ -274,6 +278,10 @@ function automatic [71:0] encode64(input [63:0] data);
     if(|dr_term)dr_bad_q<=1;
    end
   assign fault_now=P_fault||(|A_fault)||C_fault||G_fault||R_fault||illegal_q||dr_bad_q;
+`ifdef OT_DBG
+  always @(posedge clk_sm)if(illegal&&!illegal_q)$display("STN_ILLEGAL %m t=%0t ackv_q=%b A_in_r=%b active=%b sent_eff=%b sent=%b pend=%b learned=%b acked=%b A_out_v=%b seat_match=%b arr_bad=%b Cn=%b cv=%b ack_bad=%b",$time,ackv_q,A_in_r,active,sent_eff,sent,pend,learned,acked,A_out_v,seat_match,arr_bad,C_normal,cv,ack_bad);
+  always @(posedge clk_sm)if(fault_now&&!fault_x)$display("STN_FAULT %m t=%0t P=%b A=%b C=%b G=%b R=%b ill=%b dr=%b",$time,P_fault,A_fault,C_fault,G_fault,R_fault,illegal_q,dr_bad_q);
+`endif
   // Registered cross-bank veto (sticky like every fault source).
   reg fault_x;
   always @(posedge clk_sm or negedge rst_s)if(!rst_s)fault_x<=0;else if(fault_now)fault_x<=1;
