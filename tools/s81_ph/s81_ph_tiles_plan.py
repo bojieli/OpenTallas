@@ -100,6 +100,10 @@ def main():
                         ['f_c', CB, 'input', 'E', 'M4', 2, 0.90], ['f_cr', 1, 'input', 'E', 'M4', 1, 0.95]]}
     qp = plan(q_spec)
     write('dsfd_selt_q', QW, QH, 'stream_1p2', qp, q_spec)
+    q2_spec = dict(q_spec, master='dsfd_selt_q2',
+                   note='SAFE selector quarter (same pins as dsfd_selt_q): six 128x256 line-memory macros with registered '
+                        'outputs (tiles/place_macros_q2.tcl), slice MREG 1')
+    write('dsfd_selt_q2', QW, QH, 'stream_1p2', plan(q2_spec), q2_spec)
     CW_, CH = 129.6, 2 * QH
     # control tile: W face = tiles 0 (SW, lower) / 2 (NW, upper); E face = tiles 1 (SE, lower) / 3 (NE, upper)
     cports = {}
@@ -138,6 +142,9 @@ def main():
            'abutment': 'u_q* E (R0) / W (MY) pins at the y of dsfd_selt_c W / E pins (identical by construction)',
            'mirror_rule': MIRROR,
            'clock': 'one ck net, each tile its own CTS tree; tile IO budgets 0.2 T + 150 ps against the measured insertion'}
+    sel['safe_variant'] = {'master': 'dsfd_selt_q2 (drop-in for dsfd_selt_q: same outline, pins, orientation rules)',
+                           'composition': 'ot_s81ph_sel_t SAFE 1 (dsfd_bk_selector OT_S81PH_SEL_SAFE)',
+                           'cycles': '+3 mean / +0 max ck cycles per segment vs the main tiled selector (one more read edge)'}
     out['selector'] = sel
     # ------------------------------------------------------------------ collector
     LW, LH = 432.0, 129.6

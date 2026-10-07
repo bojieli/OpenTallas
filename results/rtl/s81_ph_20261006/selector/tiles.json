@@ -69,5 +69,10 @@
  "mirror_rule": "tiles placed R0 and MY (dsfd_selt_q, dsfd_colt_lane) carry pins only on their W / E faces (M4: y unchanged by MY) and the symmetric M7 PG grid of physical/s81_ph_views/tiles/pdn_tile_sym.tcl (VDD 5.256 / VSS 10.656 mod 10.8 on a width multiple of 10.8): place every instance, R0 or MY, at x0 = 6.544 (mod 10.8) so its stripes land on the die VDD 1.0 / VSS 6.4 (mod 10.8) grid; y0 on the 2.16 grid",
  "clock": "one ck net, each tile its own CTS tree; tile IO budgets 0.2 T + 150 ps against the measured insertion",
  "schema": "opentallas.s81_ph.tiles.v1",
- "generator": "tools/s81_ph/s81_ph_tiles_plan.py"
+ "generator": "tools/s81_ph/s81_ph_tiles_plan.py",
+ "safe_variant": {
+  "master": "dsfd_selt_q2 (drop-in for dsfd_selt_q: same outline, pins, orientation rules)",
+  "composition": "ot_s81ph_sel_t SAFE 1 (dsfd_bk_selector OT_S81PH_SEL_SAFE)",
+  "cycles": "+3 mean / +0 max ck cycles per segment vs the main tiled selector (one more read edge)"
+ }
 }

@@ -35,8 +35,39 @@
 // beat quarter -> control: {last, ninf16, lv16, idx320, valid}
 `define SELT_OB 354
 
+// SAFE quarter tile line memory (sel_q SAFE, 2026-10-06): 256 lines x 592 b on SIX ot_sram_1r1w_128x256_m1_r2c2
+// (455 ps SS clk->q vs 511; 2 depth banks x 3 width slices), every macro output registered AT the macro, the bank
+// mux after the registers.  rdata is valid one edge later than ot_s81ph_sel_mem's (slice MREG 1 consumes it there).
+module ot_s81ph_sel_mem2 (
+    input  wire         clk,
+    input  wire         we,
+    input  wire [7:0]   waddr,
+    input  wire [591:0] wdata,
+    input  wire         re,
+    input  wire [7:0]   raddr,
+    output wire [591:0] rdata
+);
+    wire [767:0] wd = {176'd0, wdata};
+    wire [767:0] rd [0:1];
+    reg  [767:0] q [0:1];
+    reg          b1, b2;
+    genvar b, w;
+    generate for (b = 0; b < 2; b = b + 1) begin : g_b
+        for (w = 0; w < 3; w = w + 1) begin : g_w
+            ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(re && raddr[7] == b), .r_addr_in(raddr[6:0]),
+                .rd_out(rd[b][256*w +: 256]), .w_ce_in(we && waddr[7] == b), .w_addr_in(waddr[6:0]),
+                .wd_in(wd[256*w +: 256]), .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00),
+                .cr_sel(16'd0));
+        end
+        always @(posedge clk) q[b] <= rd[b];
+    end endgenerate
+    always @(posedge clk) begin if (re) b1 <= raddr[7]; b2 <= b1; end
+    assign rdata = b2 ? q[1][591:0] : q[0][591:0];
+endmodule
+
 module dsfd_selt_q #(
-    parameter integer DM = 4                 // landing FIFO depth at the control = initial credits
+    parameter integer DM = 4,                // landing FIFO depth at the control = initial credits
+    parameter integer SAFE = 0               // 1: 128x256 macros, registered macro outputs, slice MREG 1 (dsfd_selt_q2)
 ) (
     input  wire [0:0]            ck,
     input  wire [0:0]            rst,        // die reset net (active low)
@@ -71,7 +102,7 @@ module dsfd_selt_q #(
     wire [16*GW-1:0] s_gc, s_gf; wire [16*CB-1:0] s_bc, s_bf;
     wire s_last, s_hfin, s_stopped, s_done2, s_emitted, s_ovf;
     wire m_we, m_re; wire [AW-1:0] m_wa, m_ra; wire [W*EW-1:0] m_wd, m_rd;
-    ot_hdc_v41x_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB)) u_s (
+    ot_hdc_v41x_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .MREG(SAFE)) u_s (
         .clk(ck[0]), .rst_n(rst_n), .in_valid(x_v), .in_ready(s_rdy), .in_last(x_last), .in_lv(x_lv), .in_val(x_val),
         .in_idx(x_idx), .c_T(cq[15:0]), .c_Bt(cq[23:16]), .c_fclr(cq[24]), .c_cg(cq[28:25]), .c_fg(cq[32:29]),
         .c_ing(cq[33]), .c_stop(cq[34]), .c_p2(cq[35]), .c_p3(cq[36]), .c_rep(cq[37]), .c_st(cq[53:38]),
@@ -80,7 +111,13 @@ module dsfd_selt_q #(
         .s_nhead(), .s_n2(), .s_n3(), .mem_we(m_we), .mem_waddr(m_wa), .mem_wdata(m_wd), .mem_re(m_re),
         .mem_raddr(m_ra), .mem_rdata(m_rd), .out_valid(o_valid), .out_ready(o_ready), .out_last(o_last),
         .out_lv(o_lv), .out_val(o_val), .out_idx(o_idx), .out_ninf(o_ninf));
-    ot_s81ph_sel_mem u_mem (.clk(ck[0]), .we(m_we), .waddr(m_wa), .wdata(m_wd), .re(m_re), .raddr(m_ra), .rdata(m_rd));
+    generate if (SAFE != 0) begin : g_m2
+        ot_s81ph_sel_mem2 u_mem (.clk(ck[0]), .we(m_we), .waddr(m_wa), .wdata(m_wd), .re(m_re), .raddr(m_ra),
+            .rdata(m_rd));
+    end else begin : g_m1
+        ot_s81ph_sel_mem u_mem (.clk(ck[0]), .we(m_we), .waddr(m_wa), .wdata(m_wd), .re(m_re), .raddr(m_ra),
+            .rdata(m_rd));
+    end endgenerate
     // faults (sticky, fail closed): overrun = a beat while the slice is not ready, or a beat / rebase with no header
     reg [2:0] flt;
     always @(posedge ck[0] or negedge rst_n)
@@ -104,6 +141,19 @@ module dsfd_selt_q #(
             oq <= {o_last, o_ninf, o_lv, o_idx, o_valid && o_ready};
         end
     assign t_o = oq;
+endmodule
+
+// SAFE quarter tile master (same ports as dsfd_selt_q)
+module dsfd_selt_q2 #(parameter integer DM = 4) (
+    input  wire [0:0]            ck,
+    input  wire [0:0]            rst,
+    input  wire [514:0]          lane,
+    input  wire [`SELT_CB-1:0]   f_c,
+    input  wire [0:0]            f_cr,
+    output wire [`SELT_SB-1:0]   t_s,
+    output wire [`SELT_OB-1:0]   t_o
+);
+    dsfd_selt_q #(.DM(DM), .SAFE(1)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
 endmodule
 
 module dsfd_selt_c #(
@@ -300,6 +350,7 @@ endmodule
 
 // composition reference (bench and die generator): lanes {NE, NW, SE, SW} as dsfd_bk_selector
 module ot_s81ph_sel_t #(
+    parameter integer SAFE = 0,              // 1: dsfd_selt_q2 quarter tiles
     parameter integer LSTG = 5,              // die stations on each lane from the slab face to its quarter tile
     parameter integer DM   = 4,
     parameter integer PACE = 2
@@ -317,7 +368,7 @@ module ot_s81ph_sel_t #(
         integer h;
         always @(*) st[0] = lanes[515 * g +: 515];
         always @(posedge ck) for (h = 1; h <= LSTG; h = h + 1) st[h] <= st[h-1];
-        dsfd_selt_q #(.DM(DM)) u_q (.ck(ck), .rst(rst), .lane(st[LSTG]), .f_c(tc[CB * g +: CB]), .f_cr(tcr[g]),
+        dsfd_selt_q #(.DM(DM), .SAFE(SAFE)) u_q (.ck(ck), .rst(rst), .lane(st[LSTG]), .f_c(tc[CB * g +: CB]), .f_cr(tcr[g]),
             .t_s(ts[SB * g +: SB]), .t_o(to[OB * g +: OB]));
     end endgenerate
     dsfd_selt_c #(.DM(DM), .PACE(PACE)) u_c (.ck(ck), .rst(rst), .f_s(ts), .t_c(tc), .f_o(to), .t_cr(tcr), .vd(vd),

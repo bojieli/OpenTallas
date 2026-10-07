@@ -41,7 +41,9 @@ module ot_hdc_v41x_sel_slice #(
     parameter integer DG = 8,         // GC write-back queue (lines)
     parameter integer OD = 4,         // output FIFO (beats)
     parameter integer KW = $clog2(K + 1),
-    parameter integer CB = KW + 1     // saturating histogram bin width
+    parameter integer CB = KW + 1,    // saturating histogram bin width
+    parameter integer MREG = 0        // CLAUDE S81-PH SAFE tile: 1 = mem_rdata arrives one edge later (a register
+                                      // behind the line-memory macro); the read tokens wait one more edge (default 0)
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -187,6 +189,18 @@ module ot_hdc_v41x_sel_slice #(
 
     // -- sweep read path: R1 (line), C1 (compare), C2 (tie prefix), C3 (select) -----------
     reg          t1_v, t1_fl, t1_em, t1_last, t2_v, t2_fl, t2_em, t2_last;
+    // read tokens at the edge mem_rdata is consumed: t2 (native) or t3 (MREG 1)
+    wire         tq_v, tq_fl, tq_em, tq_last;
+    generate if (MREG == 0) begin : g_tq0
+        assign tq_v = t2_v; assign tq_fl = t2_fl; assign tq_em = t2_em; assign tq_last = t2_last;
+    end else begin : g_tq1
+        reg t3_v, t3_fl, t3_em, t3_last;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin t3_v <= 1'b0; t3_fl <= 1'b0; t3_em <= 1'b0; end
+            else begin t3_v <= t2_v; t3_fl <= t2_fl; t3_em <= t2_em; end
+        always @(posedge clk) t3_last <= t2_last;
+        assign tq_v = t3_v; assign tq_fl = t3_fl; assign tq_em = t3_em; assign tq_last = t3_last;
+    end endgenerate
     reg          r1_v, r1_fl;
     reg [W*EW-1:0] r1_d;
     wire rp_beat = i0_v && i0_rp;
@@ -194,13 +208,13 @@ module ot_hdc_v41x_sel_slice #(
         if (!rst_n) begin r1_v <= 1'b0; r1_fl <= 1'b0; t2_v <= 1'b0; t2_fl <= 1'b0; t2_em <= 1'b0; end
         else begin
             t2_v <= t1_v; t2_fl <= t1_fl; t2_em <= t1_em;
-            r1_v  <= (t2_v && !t2_em) || t2_fl || rp_beat;
-            r1_fl <= t2_fl || (rp_beat && i0_last);
+            r1_v  <= (tq_v && !tq_em) || tq_fl || rp_beat;
+            r1_fl <= tq_fl || (rp_beat && i0_last);
         end
     end
     always @(posedge clk) begin
         t2_last <= t1_last;
-        r1_d <= rp_beat ? i0_lane : t2_fl ? {W*EW{1'b0}} : mem_rdata;
+        r1_d <= rp_beat ? i0_lane : tq_fl ? {W*EW{1'b0}} : mem_rdata;
     end
     wire [15:0] tsw = (sw_k == K_GC) ? r_T : sw_T;
     wire [W-1:0]    c1_gt_d, c1_eq_d, p2_en;
@@ -442,7 +456,7 @@ module ot_hdc_v41x_sel_slice #(
             if (d_fin_push) begin pend_v <= 1'b0; end
             if (sw_fin && sw_k == K_P3 && dmode && pend_v && !d_room) dmode <= 1'b0;
             // emit
-            e_infl <= e_infl + {2'd0, em_issue} - {2'd0, t2_v && t2_em};
+            e_infl <= e_infl + {2'd0, em_issue} - {2'd0, tq_v && tq_em};
             if (em_issue) e_rd <= e_rd + 1'b1;
             if (ph == P_EM && e_go && (e_rd == a_end) && !e_empty) e_go <= 1'b0;
             if (ph == P_EM && e_empty && ocnt < OD) begin e_empty <= 1'b0; e_go <= 1'b0; end
@@ -479,8 +493,8 @@ module ot_hdc_v41x_sel_slice #(
     wire           d_fin_push = sw_fin && (sw_k == K_P3) && dmode && pend_v && d_room;
     wire           d_fin      = sw_fin && (sw_k == K_P3) && dmode && (pend_v ? d_room : 1'b1) && (w != 0);
     wire           d_push     = d_mid || d_fin_push;
-    wire           o_push = (t2_v && t2_em) || (ph == P_EM && e_empty && ocnt < OD) || d_push;
-    wire [EW*W:0]  o_in   = (t2_v && t2_em) ? {t2_last, mem_rdata} : d_push ? {d_fin_push, pend} :
+    wire           o_push = (tq_v && tq_em) || (ph == P_EM && e_empty && ocnt < OD) || d_push;
+    wire [EW*W:0]  o_in   = (tq_v && tq_em) ? {tq_last, mem_rdata} : d_push ? {d_fin_push, pend} :
                             {1'b1, {W*EW{1'b0}}};
     wire           o_pop  = (ocnt != 0) && out_ready;
     integer oi;

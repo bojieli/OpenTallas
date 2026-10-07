@@ -12,7 +12,12 @@ module dsfd_bk_selector #(
 `else
     parameter integer TILED = 1,             // 1 (redesign pass): ot_s81ph_sel_t composition (ot_s81ph_sel_tile.sv)
 `endif
-    parameter integer LSTG = 5
+    parameter integer LSTG = 5,
+`ifdef OT_S81PH_SEL_SAFE
+    parameter integer SAFE = 1
+`else
+    parameter integer SAFE = 0
+`endif
 ) (
     input wire [0:0] ck,
     input wire [514:0] iNE,
@@ -24,7 +29,7 @@ module dsfd_bk_selector #(
     output wire [0:0] vf
 );
     generate if (TILED != 0) begin : g_t
-        ot_s81ph_sel_t #(.LSTG(LSTG), .PACE(PACE)) u_t (.ck(ck[0]), .rst(rst[0]), .lanes({iNE, iNW, iSE, iSW}),
+        ot_s81ph_sel_t #(.SAFE(SAFE), .LSTG(LSTG), .PACE(PACE)) u_t (.ck(ck[0]), .rst(rst[0]), .lanes({iNE, iNW, iSE, iSW}),
             .vd(vd), .vf(vf[0]));
     end else begin : g_v
         reg [1:0] rst_s;
