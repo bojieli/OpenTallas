@@ -1,0 +1,52 @@
+{
+  "default_off": true,
+  "adopted": false,
+  "hierarchy": "Internal ot_hbm_accel_tu_endpoint_owner hub issue through HA2 receiver, no new die partial bus",
+  "clock_GHz": 1.2,
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "communication_intensity_bits_per_row": 560,
+  "injectors": 2,
+  "remote_slots_per_injector": 64,
+  "forward_registered_hops": 7,
+  "return_registered_hops": 7,
+  "hop_basis": "Parametric conservative candidate, not measured pins: no inference of SS closure; 7+7 from1399.656x1403.976um collective Manhattan upper extent /430.56um pitch",
+  "upstream_hub_cycles": 35,
+  "reservation": "Reserve remote slot at hub ISSUE; send consumes actual credit; validated retirement restores both reservation and send credit",
+  "safety": "Arbitrary finite forward/return delay cannot overbook receiver; delayed credit throttles issue",
+  "identity": "Independent16-bit sequential forward and retire IDs per injector; synchronized reset with no old traffic retained; no wrap collision with64 outstanding slots",
+  "storage_bits": 71680,
+  "queue_count": 2,
+  "removed_sender_queue_bits": 69632,
+  "wide_storage_delta_bits": 2048,
+  "mux2_inventory": {
+    "read": 70560,
+    "write_enable": 71680
+  },
+  "queue_only_area_proxy_um2": 64452.931200000006,
+  "forward_boundary_bits_per_cycle": 1122,
+  "return_boundary_bits_per_cycle": 34,
+  "port_bytes_per_cycle": {
+    "write": 140.0,
+    "read": 140.0
+  },
+  "local_receiver_to_half_output_register_cycles": 1,
+  "receiver_front_capture_cycles": 0,
+  "forward_sender_capture_cycles": 1,
+  "returned_credit_register_cycles": 1,
+  "unloaded_issue_to_credit_roundtrip_cycles": 52,
+  "headroom_for_continuous_half_rate": true,
+  "replica_control": "Independent reserved and sent counters, forward/return sequence counters and sticky faults",
+  "area_not_yet_measured": [
+    "control",
+    "relay flops",
+    "clock/reset tree",
+    "repair"
+  ],
+  "floorplan_slot_fit": null,
+  "routing_tracks_needed": 1156,
+  "channel_capacity": null,
+  "physical_closed": false,
+  "composed_token_latency_cycles": null,
+  "latency_qualification": "Protocol sweep measures mechanism; actual pin assignment, hop counts and endpoint composition remain required"
+}
