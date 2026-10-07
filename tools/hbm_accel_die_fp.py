@@ -86,7 +86,8 @@ def seg_stages(m, bid, L):
         return 0
     if not (m.get('variant') or {}).get('budget_stages') or bid in m.get('fclk', {}):
         return math.ceil(L / LINK_STAGE_UM)
-    return 1 + math.ceil(max(0.0, L - REACH_INTER_UM) / REACH_INTRA_UM)
+    extra = 1 if bid in m.get('pin_stage_buses', ()) else 0     # r19b: a station abutting the receiving pin
+    return 1 + math.ceil(max(0.0, L - REACH_INTER_UM) / REACH_INTRA_UM) + extra
 CLK_HZ = 1.2e9
 FINAL_ROUND = 'r19'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
 # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
@@ -291,7 +292,11 @@ R18 = dict(R17, ck_centre=True)
 # r19 (2026-10-06 ~23:55, coordinator decision on the views agent's hfd_vm NEEDS_BUDGET): the VM as four quadrant
 #   tiles joined by registered cross buses (split_vm); +1 cycle per cross hop.
 R19 = dict(R18, vm_split=True)
-ADOPTED = R19
+# r19b (2026-10-07, views agent: hfd_index_q_b5 a3 SS -222 is a budget artefact, the 4,525 um attn root path's last
+#   segment into the band pin was 377 um = 644.7 ps input delay): every attention root bus tr_<q><r> (tile row -> index
+#   band a0..a3) ends in a die station abutting the band pin (last segment <= 100 um), +1 register hop.
+R19B = dict(R19, pin_stage_roots=True)
+ADOPTED = R19B
 
 
 def build(variant=None):
@@ -563,6 +568,8 @@ def build(variant=None):
         fix_ports_from_views(m, ['hfd_barrier'])
     if variant.get('vm_split'):
         split_vm(m)
+    if variant.get('pin_stage_roots'):  # r19b: attention root buses into the index bands end in a pin-abutting station
+        m['pin_stage_buses'] = sorted(b[0] for b in m['buses'] if b[1] == 'attn_root')
     return m
 
 
