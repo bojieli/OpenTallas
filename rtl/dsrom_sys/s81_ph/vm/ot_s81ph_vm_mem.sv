@@ -29,10 +29,13 @@ module ot_s81ph_vm_mem #(
     parameter integer NB = 32,           // banks (power of 2)
     parameter integer QD = 4,            // bank queue depth (power of 2)
     parameter integer RQ = 8,            // bank return FIFO depth (power of 2, >= QD + 2)
-    parameter integer MACRO = 1          // 1: ot_sram_1r1w_512x128_m4_r2c2 macros; 0: flop array (debug only)
+    parameter integer MACRO = 1,         // 1: ot_sram_1r1w_512x128_m4_r2c2 macros; 0: flop array (debug only)
+    parameter integer NBL = NB,          // CLAUDE S81-PH vm v2: banks held here (a bank-group tile: NBL < NB)
+    parameter integer GW = (NBL < NB) ? $clog2(NB / NBL) : 1
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input  wire [GW-1:0]     grp,         // static: bank group held here (banks grp * NBL .. + NBL - 1); 0 when NBL = NB
     input  wire [NP-1:0]     i_v,
     input  wire [NP-1:0]     i_we,
     input  wire [NP*($clog2(NB)+9)-1:0] i_row,
@@ -51,6 +54,7 @@ module ot_s81ph_vm_mem #(
     localparam integer RW = $clog2(RQ);
     localparam integer KQ = (NP < QD) ? NP : QD;   // reads of one issue cycle that one bank can hold
     localparam integer KW = (KQ > 1) ? $clog2(KQ) : 1;
+    localparam integer LB = $clog2(NBL);         // local bank index bits
     localparam integer L  = QD + 6;                // fixed read latency (cycles from request to o_v)
     localparam integer HL = L - 2;                 // read history depth (request -> due-slot stage)
 
@@ -62,7 +66,7 @@ module ot_s81ph_vm_mem #(
     wire rst_i = rst_s[1];
     // ------------------------------------------------------------------ stage A: pin registers
     // (the request word is captured NG times at the pin, kept, so each copy drives NB/NG banks: <= 32 loads a bit)
-    localparam integer NG = (NB >= 4) ? 4 : 1;
+    localparam integer NG = (NBL >= 4) ? 4 : 1;
     (* keep = 1 *) reg [511:0] a_dg [0:NG-1][0:NP-1];
     (* keep = 1 *) reg [15:0]  a_mg [0:NG-1][0:NP-1];
     (* keep = 1 *) reg [RA-1:0] a_rg [0:NG-1][0:NP-1];
@@ -98,10 +102,15 @@ module ot_s81ph_vm_mem #(
     end
 
     // ------------------------------------------------------------------ banks
-    wire [NB-1:0] b_ovf, b_mis, b_und;
-    wire [QW:0]   b_occ [0:NB-1];
-    wire [512*KQ-1:0] b_ds [0:NB-1];     // registered due slots: return FIFO head .. head+KQ-1
-    wire [PW*KQ-1:0]  b_dp [0:NB-1];
+    wire [NBL-1:0] b_ovf, b_mis, b_und;
+    wire [QW:0]   b_occ [0:NBL-1];
+    wire [512*KQ-1:0] b_ds [0:NBL-1];    // registered due slots: return FIFO head .. head+KQ-1
+    wire [PW*KQ-1:0]  b_dp [0:NBL-1];
+    reg [GW-1:0] grp_q;                     // static pin, registered
+    always @(posedge clk) grp_q <= grp;
+    function automatic is_local(input [BB-1:0] bk);
+        is_local = (NBL == NB) ? 1'b1 : (bk >> LB) == grp_q;
+    endfunction
 
     // per port: due-slot stage selection (bank, index among same-bank reads of its issue cycle)
     reg [NP-1:0] d_v;
@@ -131,8 +140,10 @@ module ot_s81ph_vm_mem #(
         end
 
     genvar gb;
-    generate for (gb = 0; gb < NB; gb = gb + 1) begin : g_bank
-        localparam integer GI = gb / (NB / NG);
+    generate for (gb = 0; gb < NBL; gb = gb + 1) begin : g_bank
+        localparam integer GI = gb / (NBL / NG);
+        wire [BB+GW:0] gidw = grp_q * NBL + gb;
+        wire [BB-1:0] gid = (NBL == NB) ? gb : gidw[BB-1:0];          // global bank id
         // ---- pushes of this cycle (stage A regs, this bank group's copy), in port order
         reg [NP-1:0] hit;
         reg [QW:0]   pref [0:NP-1];
@@ -140,7 +151,7 @@ module ot_s81ph_vm_mem #(
         integer pp;
         always @* begin
             cnt = 0;
-            for (pp = 0; pp < NP; pp = pp + 1) hit[pp] = a_vg[GI][pp] && a_rg[GI][pp][BB-1:0] == gb;
+            for (pp = 0; pp < NP; pp = pp + 1) hit[pp] = a_vg[GI][pp] && a_rg[GI][pp][BB-1:0] == gid;
 `ifdef OT_S81PH_VM_MUT_ORDER
             for (pp = NP - 1; pp >= 0; pp = pp - 1) begin   // MUTANT: same-cycle ops queued in reverse port order
 `else
@@ -245,7 +256,7 @@ module ot_s81ph_vm_mem #(
         integer pd;
         always @* begin
             dcnt = 0;
-            for (pd = 0; pd < NP; pd = pd + 1) if (h_v[HL-1][pd] && h_b[HL-1][pd] == gb) dcnt = dcnt + 1'b1;
+            for (pd = 0; pd < NP; pd = pd + 1) if (h_v[HL-1][pd] && h_b[HL-1][pd] == gid) dcnt = dcnt + 1'b1;
         end
         reg [511:0]  ds [0:KQ-1];
         reg [PW-1:0] dsp [0:KQ-1];
@@ -279,11 +290,11 @@ module ot_s81ph_vm_mem #(
         else begin
             o_v <= d_v;
             for (p = 0; p < NP; p = p + 1)
-                if (d_v[p] && b_dp[d_b[0][p]][PW*d_j[0][p] +: PW] != p) mis_r <= 1'b1;
+                if (d_v[p] && is_local(d_b[0][p]) && b_dp[d_b[0][p][LB-1:0]][PW*d_j[0][p] +: PW] != p) mis_r <= 1'b1;
         end
     always @(posedge clk)
         for (p = 0; p < NP; p = p + 1) for (k = 0; k < 4; k = k + 1)
-            o_d[p*512 + 128*k +: 128] <= b_ds[d_b[k][p]][512*d_j[k][p] + 128*k +: 128];
+            o_d[p*512 + 128*k +: 128] <= is_local(d_b[k][p]) ? b_ds[d_b[k][p][LB-1:0]][512*d_j[k][p] + 128*k +: 128] : 128'd0;
 
     // ------------------------------------------------------------------ status
     integer bo;
@@ -292,6 +303,6 @@ module ot_s81ph_vm_mem #(
         else begin
             fault_code <= fault_code | {|b_und, mis_r, |b_ovf};
             fault <= fault | |b_und | mis_r | |b_ovf;
-            for (bo = 0; bo < NB; bo = bo + 1) if (b_occ[bo] > max_occ) max_occ <= b_occ[bo];
+            for (bo = 0; bo < NBL; bo = bo + 1) if (b_occ[bo] > max_occ) max_occ <= b_occ[bo];
         end
 endmodule

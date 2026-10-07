@@ -8,7 +8,7 @@
 #   route_view.sh <label> <die> <master> <top-source> [extra run_abi3_physical args]
 # env: SRC (pinned source snapshot with SOURCE_COMMIT), OUT (route base), PD (0.45), CORES (16), NEED (GB, 24),
 #      SRCS (extra sources), CLK (clock port, ck), MAXL (M7), HM (hold margin ns 0.010), SDCX (extra sdc appended after
-#      the margin sdc), CTSA, STEPS
+#      the margin sdc), CTSA, STEPS, PER (clock period ns, 0.833333; the VM serial domain 1.1111)
 set -u
 lab=$1; die=$2; master=$3; topsrc=$4; shift 4
 W=$OUT/$lab; mkdir -p $W; cd $SRC
@@ -23,7 +23,7 @@ mvargs=""; for mv in ${MACROS:-}; do mvargs="$mvargs --macro-view $mv"; done
 echo "SRC=$SRC die=$die master=$master top=$topsrc DW=$DW DH=$DH PD=${PD:-0.45} MAXL=${MAXL:-M7} SRCS=${SRCS:-} CLK=${CLK:-ck} SDCX=${SDCX:-} CTSA=${CTSA:-} $*" > $W/args
 cat SOURCE_COMMIT > $W/SOURCE_COMMIT
 /srv/opentallas-scratch/admit.sh ${NEED:-24} -- python3 tools/run_abi3_physical.py --view asap7 --top $master $srcargs $mvargs ${MACROS:+--macro-place-halo 5 5} \
-  --clock-port ${CLK:-ck} --clock-period-ns 0.833333 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
+  --clock-port ${CLK:-ck} --clock-period-ns ${PER:-0.833333} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append .views/$lab/margin.sdc --stages pnr \
   --die-area 0 0 $DW $DH --core-area 0 0.54 $DW $(python3 -c "print(round($DH-0.54,4))") --place-density ${PD:-0.45} --routing-layers M2 ${MAXL:-M7} \
   --orfs-var PDN_TCL=/src/${PDN:-physical/s81_ph_views/common/pdn_view.tcl} --orfs-var IO_CONSTRAINTS=/src/.views/$lab/io_place.tcl \

@@ -17,7 +17,13 @@
 `endif
 module tb_ot_s81ph_vm_mem;
     localparam integer NP = `NP, NB = `NB, QD = `QD, RQ = (QD + 2 <= 8) ? 8 : 16;
+`ifdef TILED
+    // CLAUDE S81-PH vm v2: the 4-tile bank-group chain dsfd_vm_mem (rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bg.sv), fixed
+    // read latency L + 8 (2-cycle request and read-data hops between tiles, pin registers)
+    localparam integer BB = $clog2(NB), RA = BB + 9, L = QD + 14, NR = NB * 512;
+`else
     localparam integer BB = $clog2(NB), RA = BB + 9, L = QD + 6, NR = NB * 512;
+`endif
     reg clk = 0, rst_n = 0;
     reg [NP-1:0] i_v = 0, i_we = 0;
     reg [NP*RA-1:0] i_row = 0;
@@ -28,7 +34,11 @@ module tb_ot_s81ph_vm_mem;
     wire fault;
     wire [2:0] fault_code;
     wire [$clog2(QD):0] max_occ;
-    ot_s81ph_vm_mem #(.NP(NP), .NB(NB), .QD(QD), .RQ(RQ)) dut (.clk(clk), .rst_n(rst_n), .i_v(i_v), .i_we(i_we),
+`ifdef TILED
+    dsfd_vm_mem #(.NP(NP), .NB(NB), .QD(QD), .RQ(RQ)) dut (.clk(clk), .rst_n(rst_n), .i_v(i_v), .i_we(i_we),
+`else
+    ot_s81ph_vm_mem #(.NP(NP), .NB(NB), .QD(QD), .RQ(RQ)) dut (.clk(clk), .rst_n(rst_n), .grp(1'b0), .i_v(i_v), .i_we(i_we),
+`endif
         .i_row(i_row), .i_mask(i_mask), .i_d(i_d), .o_v(o_v), .o_d(o_d), .fault(fault), .fault_code(fault_code),
         .max_occ(max_occ));
     always #0.5555 clk = ~clk;
