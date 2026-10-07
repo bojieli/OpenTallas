@@ -137,3 +137,4 @@ every one.
   registered cross buses; sheets for the four tiles), svc SE_s3 re-planned to 919 ps (centre ck measured; die pad 138 ps).
   HBM infeasible as planned: 0; clock plan 0 crossings > 150 ps.
 - 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r19b: every attention root bus (tile row -> index band a0..a3) and index-key chain end (-> b0 k) ends in a die station abutting the receiving pin (budget PIN_LAST_UM 100 um, +1 hop): index b5 a3 internal input budget 113.6 -> 428.1 ps; all index-band interfaces >= 387.8 ps.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS): HBM on r20 (VM quadrant tiles with the centre M7 ck). Clock plan unchanged in outcome (34 regions, max inter 141.4, 0 > 150).
