@@ -10,15 +10,26 @@ Every line of the three targets carries a status, its effect on the single-user 
 
 **None of the compositions is a physically closed rate. A numerical component PASS is not physical adoption.**
 
+**No token headline is adopted.** The DS ROM rows follow main's 1,792-pair physical cost basis.
+
+**S81 geometry (Codex root answer, 2026-10-07).**
+
+- The current physical integration basis is the actual legal 1,792-pair mixed geometry (77ffa0428), with hash-bound complete mappings (2d811aafb):
+  - HALF dedicated: 120 stages / 480 dies;
+  - FULL shared: 98 stages / 392 dies.
+- Die counts are layer dies. An earlier revision printed 580 / 492, because it also counted the 100 head, table and draft dies of the 85-stage rack record. Those dies are outside the 1,792 mapping and have not been re-sized for it.
+- Half-rate BF is the current exact BF closure path. It is not an immutable requirement: full rate may return if it passes the correctness and physical gates.
+- The 449ebc571 root-phase failure was a script hierarchy failure, not an arithmetic rejection. It was fixed in 7990dfdbf, and the root is now calibrating.
+
 | Target | Composition | AR tok/s | MTP tok/s | Notes |
 |---|---|---:|---:|---|
 | Qwen ROM 8K | published (`three_machine_compose`) | 5,537.3 | AR mode | measured token and levers, plus the r21 relays (priced, owner-adopted). Closure reopened 2026-10-07. |
 | Qwen ROM 8K | unified candidate | 5,533.0 | AR mode | adds the controller SHIFT worst case (+144) and the crossbar model (+24); forwarded clocks add 0 |
 | Qwen ROM 8K | DSpark, re-evaluated | 3,901.4 (0.705×) | — | AR_MODE holds. The VM service and link-credit inputs are gated. |
 | DS ROM 1M | published (85 stages, full-rate BF) | 1,596.7 | 4,702.0 | closure-cost ledger TOTAL |
-| DS ROM 1M | actual 1792, BF-dedicated (120 stages, 580 dies) | ≤ 1,305.0 | ≤ 3,993.3 | +35 stage hops and the BF16 half-rate doubling. Field phases are unmeasured. |
-| DS ROM 1M | actual 1792, shared (98 stages, 492 dies) | ≤ 1,337.3 | ≤ 4,065.7 | Upper bound: the q phases on BF pairs also halve. |
-| DS ROM 1M | option B, 2,304 pairs mixed slots (85 stages, 440 dies), full-rate BF | 1,754.3 | 5,098.3 | **measured** bit-exact field (18,288 regions); Codex label "DS ADOPT" (505a9b484, `codex/restore-bf-pairs-20261007`). Adoption is pending central integration and it is not on main. Wire is estimated and the geometry is not routed. It **conflicts** with the 1792 mapping: see `geometry_conflict`. |
+| DS ROM 1M | actual 1792, HALF BF-dedicated: 120 stages / 480 dies (77ffa0428 geometry, 2d811aafb mapping) | ≤ 1,305.0 | ≤ 3,993.3 | **Current physical integration basis.** Not an adopted rate or closure. Priced with +35 stage hops and the BF16 half-rate doubling; field phases unmeasured. |
+| DS ROM 1M | actual 1792, FULL shared: 98 stages / 392 dies (77ffa0428, 2d811aafb) | ≤ 1,337.3 | ≤ 4,065.7 | **Current physical integration basis.** Not an adopted rate or closure. Upper bound: the q phases on BF pairs also halve. |
+| DS ROM 1M | option B, 2,304 pairs mixed slots, 85 stages / 340 dies, full-rate BF (505a9b484) | (1,754.3) | (5,098.3) | **Numerical, legal-fit failed, not physically qualified.** These are field-vehicle numbers only: never measured silicon, never a qualified or adopted rate. The mixed183 geometry fits at most 2,048 pairs (77ffa0428). The branch label "DS ADOPT" is quoted in the ledger for history only. |
 | HBM DS 1M | three_machine row (stale) | 1,948.8 | 3,944.2 | no die closure costs |
 | HBM DS 1M | r23 closure headline | 1,750.9 | 3,626.1 | light FEC, no lever credit |
 | HBM DS 1M | closure + full FEC, no lever credit | 1,656.7 | 3,526.2 | includes the priced true-credit and protected-SRAM costs |

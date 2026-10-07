@@ -699,7 +699,7 @@
        "commit": "06e988e07"
       }
      ],
-     "note": "the historical S81 geometry with full-rate BF; NOT the actual 1792 mapping"
+     "note": "the historical S81 geometry with full-rate BF; NOT the actual 1792 mapping (the current physical integration basis); no token headline is adopted"
     },
     {
      "id": "actual1792_half_dedicated_hops",
@@ -804,26 +804,27 @@
        "commit": "4534a8e5f (origin/codex/bf-evidence-only-20261007, BF agent records of claude/dsrom-bf-double-20261007; not on main)"
       }
      ],
-     "note": "measured exact (19,056/19,056 regions, both runs bit-exact), UNADOPTED, FULL-RATE BF: AR 1645.8 vs base_f198 1608.4 (+2.33 %), MTP 4841.9 vs 4764.3 (+1.63 %). Supersedes the +7.82 % figure (BF16-phase-only, ledger.md on origin/claude/dsrom-bf-double-20261007). Option B is measured: see bf_merge_ksplit_option_B. Under the half-rate 1792 geometry its gain is unmeasured, so it is listed, never summed"
+     "note": "measured exact (19,056/19,056 regions, both runs bit-exact), UNADOPTED, FULL-RATE BF: AR 1645.8 vs base_f198 1608.4 (+2.33 %), MTP 4841.9 vs 4764.3 (+1.63 %). Supersedes the +7.82 % figure (BF16-phase-only, ledger.md on origin/claude/dsrom-bf-double-20261007). Option B (2,304 pairs) failed legal fit: see bf_merge_ksplit_option_B. Under the half-rate 1792 geometry its gain is unmeasured, so it is listed, never summed"
     },
     {
      "id": "bf_merge_ksplit_option_B",
-     "item": "BF16 phase merges + router K split, option B: mixed slots, 2304 pairs (18 a region, 512 BF), 85 reprice stages, 340 layer dies",
-     "status": "measured",
-     "effect": {
-      "unit": "us",
-      "AR": -53.686,
-      "MTP_step": -65.812
-     },
+     "item": "Option B (historical/numerical): BF16 phase merges + router K split on mixed slots, 2304 pairs (18 a region, 512 BF), 85 reprice stages, 340 layer dies, full-rate BF",
+     "status": "gated-unknown",
+     "effect": null,
      "role": "info",
      "source": [
       {
        "file": "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json",
        "pointer": "options.B_mixed_2304",
        "commit": "52f5f1963 (origin/codex/restore-bf-pairs-20261007; adoption commit 505a9b484; not on main)"
+      },
+      {
+       "file": "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json",
+       "pointer": "variants[name=mixed183].requested_fits",
+       "commit": "77ffa0428"
       }
      ],
-     "note": "measured candidate, bit-exact 18,288/18,288 regions, full-rate BF; Codex label quoted: 'DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field'. Status here: ADOPT PENDING CENTRAL INTEGRATION (not on main). Its base 1603.3 is the ledger total before su_meso_d8g1. Physical: PENDING: mixed 2304-pair geometry not routed; uniform 2048-pair S81 v9d is different. Final PQ/BF footprints and die station cycles must be priced before physical adoption. Wire: ESTIMATED f183.60 round trips for mixed slot option. CONFLICTS with the actual 1792 mapping on main (half-rate BF, 98/120 stages): see compositions option_B_2304_codex_adopt and geometry_conflict"
+     "note": "NUMERICAL, LEGAL-FIT FAILED, NOT PHYSICALLY QUALIFIED. Field vehicle bit-exact 18,288/18,288 regions (a numerical result, not measured silicon); its 1,754.3 AR is a field-vehicle composition on the pre-su_meso base 1603.3, never a qualified rate. The mixed183 geometry requests 2,304 pairs but the legal maximum at that geometry is 2048 (requested_fits=false, results/uarch/dsrom_s81_mixed_geometry_20261007/model.json). Codex's branch label is quoted for history only, not promoted: 'DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field'"
     },
     {
      "id": "field_phases_1792",
@@ -842,7 +843,7 @@
     },
     {
      "id": "bf_half_physical",
-     "item": "BF half-rate clock root qualification",
+     "item": "BF half-rate clock root qualification (current exact BF closure path)",
      "status": "gated-unknown",
      "effect": null,
      "role": "gate",
@@ -853,12 +854,17 @@
        "commit": "8be556c2e"
       },
       {
-       "file": "results/physical/s81_bf_root_phase_hierarchy_fix_20261007/record.json",
+       "file": "results/rtl/s81_bf_root_phase_hierarchy_fix_20261007/record.json",
        "pointer": null,
-       "commit": "uncommitted (this delivery)"
+       "commit": "7990dfdbf"
+      },
+      {
+       "file": "results/rtl/s81_bf_root_phase_hierarchy_fix_20261007/actual_calibration_failure.json",
+       "pointer": null,
+       "commit": "449ebc571"
       }
      ],
-     "note": "phase-clock root branch: physical_closed=false; calibration hierarchy failure preserved at 449ebc571"
+     "note": "half-rate BF is the current exact BF closure path, not an immutable requirement: full rate may return if it meets the correctness and physical gates. The 449ebc571 root-phase failure was a script hierarchy failure (not an arithmetic rejection), fixed in 7990dfdbf and now calibrating; SS/FF >= +15 ps, DRC 0 still to be shown"
     },
     {
      "id": "s81_die_closure",
@@ -944,9 +950,25 @@
      "MTP_tok_s": 3993.3,
      "tau": 4.159,
      "stages": 120,
-     "layer_dies": 480,
-     "dies_total": 580,
-     "status": "priced-candidate",
+     "dies": 480,
+     "pairs_per_layer_die": 1792,
+     "bf_rate": "half",
+     "dies_note": "480 = layer dies, the Codex basis (2d811aafb inventory layer_dies). An earlier revision of this ledger printed 580 by also counting the 12 head + 36 table + 52 draft dies of the 85-stage rack record; those are outside the 1792 mapping and not re-sized for it",
+     "basis": [
+      {
+       "file": "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json",
+       "pointer": "variants[name=mixed221]",
+       "commit": "77ffa0428"
+      },
+      {
+       "file": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/half_dedicated/inventory.json",
+       "pointer": "stages, layer_dies",
+       "commit": "2d811aafb"
+      }
+     ],
+     "adopted": false,
+     "closure": false,
+     "status": "priced-candidate (current physical integration basis; not an adopted rate)",
      "bound": "upper bound on latency (lower bound on rate) for the BF16 doubling",
      "gated_by": [
       "field_phases_1792",
@@ -969,9 +991,25 @@
      "MTP_tok_s": 4065.7,
      "tau": 4.159,
      "stages": 98,
-     "layer_dies": 392,
-     "dies_total": 492,
-     "status": "priced-candidate",
+     "dies": 392,
+     "pairs_per_layer_die": 1792,
+     "bf_rate": "half",
+     "dies_note": "392 = layer dies, the Codex basis (2d811aafb inventory layer_dies). An earlier revision of this ledger printed 492 by also counting the 12 head + 36 table + 52 draft dies of the 85-stage rack record; those are outside the 1792 mapping and not re-sized for it",
+     "basis": [
+      {
+       "file": "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json",
+       "pointer": "variants[name=mixed221]",
+       "commit": "77ffa0428"
+      },
+      {
+       "file": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/full_shared/inventory.json",
+       "pointer": "stages, layer_dies",
+       "commit": "2d811aafb"
+      }
+     ],
+     "adopted": false,
+     "closure": false,
+     "status": "priced-candidate (current physical integration basis; not an adopted rate)",
      "bound": "rate is an UPPER bound: shared-pair q phases also halve",
      "gated_by": [
       "field_phases_1792",
@@ -987,68 +1025,71 @@
      ],
      "note": "published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured"
     },
-    "option_B_2304_codex_adopt": {
+    "option_B_2304_historical": {
      "AR_tok_s": 1754.3,
      "MTP_tok_s": 5098.3,
-     "AR_us": 570.028,
-     "MTP_step_us": 815.762,
      "tau": 4.159,
      "stages": 85,
-     "pairs": 2304,
-     "layer_dies": 340,
-     "dies_total": 440,
+     "pairs_per_layer_die": 2304,
+     "dies": 340,
      "bf_rate": "full",
-     "status": "measured candidate; adopt pending central integration (not on main)",
-     "codex_label": "DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field",
+     "status": "numerical, legal-fit failed, not physically qualified (historical/competing numerical candidate)",
+     "codex_branch_label_quoted": "DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field",
      "record": {
       "file": "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json",
       "pointer": "options.B_mixed_2304",
       "commit": "52f5f1963 (origin/codex/restore-bf-pairs-20261007; adoption commit 505a9b484; not on main)"
      },
-     "note": "its own composition on the pre-su_meso ledger base (1,603.3); wire estimated; geometry not routed"
+     "legal_fit": {
+      "file": "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json",
+      "pointer": "variants[name=mixed183].requested_fits",
+      "commit": "77ffa0428"
+     },
+     "note": "field-vehicle numbers only: never measured silicon, never a qualified or adopted rate"
     },
     "geometry_conflict": {
-     "status": "UNRESOLVED: question to Codex root in the mailbox",
-     "question": "Which pair count / geometry is the production baseline?",
-     "candidates": [
+     "status": "ANSWERED by Codex root 2026-10-07",
+     "answer": "The current physical integration basis is the actual legal 1,792-pair mixed geometry (77ffa0428) with the hash-bound complete mappings (2d811aafb): HALF dedicated 120 stages / 480 dies and FULL shared 98 / 392. Neither is a final adopted rate or closure. The 2,304-pair option B failed legal fit and stays a historical numerical candidate. Half-rate BF is the current exact closure path, not an immutable requirement. No token headline is adopted",
+     "basis": [
       {
-       "name": "actual1792_half_dedicated (main 2d811aafb)",
-       "pairs_per_layer_die": 1792,
+       "name": "actual1792_half_dedicated",
+       "commits": [
+        "77ffa0428",
+        "2d811aafb"
+       ],
        "stages": 120,
+       "dies": 480,
+       "pairs_per_layer_die": 1792,
        "bf_rate": "half",
        "AR_tok_s": 1305.0,
        "MTP_tok_s": 3993.3,
-       "basis": "priced-candidate envelope; field phases unmeasured"
+       "status": "priced-candidate envelope; field phases unmeasured"
       },
       {
-       "name": "actual1792_full_shared (main 2d811aafb)",
-       "pairs_per_layer_die": 1792,
+       "name": "actual1792_full_shared",
+       "commits": [
+        "77ffa0428",
+        "2d811aafb"
+       ],
        "stages": 98,
+       "dies": 392,
+       "pairs_per_layer_die": 1792,
        "bf_rate": "half",
        "AR_tok_s": 1337.3,
        "MTP_tok_s": 4065.7,
-       "basis": "priced-candidate rate upper bound"
-      },
+       "status": "priced-candidate; rate upper bound"
+      }
+     ],
+     "not_basis": [
       {
-       "name": "option_B_2304 (codex/restore-bf-pairs 505a9b484, 'DS ADOPT')",
-       "pairs_per_layer_die": 2304,
-       "stages": 85,
-       "bf_rate": "full",
-       "AR_tok_s": 1754.3,
-       "MTP_tok_s": 5098.3,
-       "basis": "measured exact field; wire estimated; not routed"
+       "name": "option_B_2304 (505a9b484)",
+       "status": "numerical, legal-fit failed, not physically qualified"
       },
       {
        "name": "option_A_2048 (f198.72)",
-       "pairs_per_layer_die": 2048,
-       "stages": 96,
-       "bf_rate": "full",
-       "AR_tok_s": 1645.8,
-       "MTP_tok_s": 4841.9,
-       "basis": "measured exact field; unadopted"
+       "status": "numerical field measurement, unadopted, full-rate BF"
       }
-     ],
-     "why": "main records the owner decision 'BF half-rate + more BF pairs' with a 1792-pair mapping at 98/120 stages; option B keeps full-rate BF at 2,304 pairs and 85 stages. They cannot both be the S81 baseline; their AR differs by 417-449 tok/s"
+     ]
     }
    },
    "gates": [
@@ -2099,6 +2140,6 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "224d80c234176283162ff49b8b619c63b69b95312d867c850da8008b4542c975"
+  "sha256": "bd42dc511bf19434e9169b6a90cf46ab375226069f1859788e5c7239446ece7f"
  }
 }
