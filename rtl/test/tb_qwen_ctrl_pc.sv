@@ -63,12 +63,12 @@ module tb_qwen_ctrl_pc;
  integer x;
  initial begin
   repeat(4) @(negedge clk);rst_n=1;
-  send({2'b00,11'd128,19'd7});send({2'b01,30'd0});
-  wait(reads==128);
+  send({2'b00,11'd1024,19'd7});send({2'b01,30'd0});
+  wait(reads==1024);
   for(x=0;x<16;x=x+1) send({2'b10,20'd0,5'(x),5'(x%4)});
   wait(writes==16);
-  send({2'b00,11'd128,19'd8});send({2'b01,30'd0});
-  wait(reads==256);
+  send({2'b00,11'd1024,19'd8});send({2'b01,30'd0});
+  wait(reads==2048);
   repeat(500) @(negedge clk);
   if(fault || fb) fail("legal traffic fault");
   // A reserved opcode must retire its credit, issue no command, and latch fault.
