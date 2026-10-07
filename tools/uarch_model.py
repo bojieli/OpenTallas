@@ -13824,3 +13824,30 @@ def hbm_smh_front_s_hold_model():
     """Full front_s zero-cycle boundary-delay budget; fresh corner closure pending."""
     from hbm_smh_front_s_hold_model import model
     return model()
+
+
+def qwen_embedding_padded_ingress_model(address_bits=18):
+    """Price ten physical BUFx2 stages on each ingress pin before building.
+
+    Endpoint delta estimates are retained in embedding_pad10_20261007 evidence.
+    They replace only measured predecessor buffer delays; no signoff credit.
+    """
+    m=qwen_embedding_ingress_island_model(address_bits)
+    count=10*(address_bits+3)
+    m['schema']='opentallas.qwen.embedding_padded_ingress.v1'
+    m['input_padding']=dict(stages_per_input=10,input_bits=address_bits+3,
+        fixed_buffer_cells=count,cell_type='BUFx2_ASAP7_75t_R',
+        fixed_buffer_area_um2=count*.0729,reset_included=True,
+        new_cycle_latency=0,physical_retention_required=True)
+    # Fixed cells consume part of the existing six-per-rail hold-cell reserve.
+    assert count<=m['area']['reserved_hold_buffers']
+    m['area']['remaining_hold_buffer_reserve']=m['area']['reserved_hold_buffers']-count
+    m['mux_demux_fanout']['input_fanout']=1
+    m['replicated_fixed_buffer_area_um2']=count*.0729*m['replica_count']
+    m['timing_estimate']=dict(min_guarded_SS_ps=59.8785642953 if address_bits==12 else 56.7648613579,
+        min_guarded_FF_ps=19.5207286031 if address_bits==12 else 21.5235240262,
+        analytical_guard_SS_ps=30,analytical_guard_FF_ps=15,
+        constraints_changed=False,setup_hold_closed=False,
+        limitations='Per-endpoint NLDM delta, below-table load extrapolation; placement/clock and routed delays remain unqualified')
+    m['remaining'].insert(0,'Verify all ten fixed buffer stages per input in synthesis and final routed netlists')
+    return m
