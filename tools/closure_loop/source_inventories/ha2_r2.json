@@ -1,0 +1,35 @@
+{
+  "paths": [
+    "tools",
+    "rtl",
+    "physical"
+  ],
+  "required_files": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender.sv",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_half_endpoint_credit_r2.sv",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/link/ot_link_afifo.sv",
+    "tools/ha2_half_endpoint_credit_gate_r2.py",
+    "tools/ha2_hub_credit_gate.py"
+  ],
+  "runtime_files": [],
+  "prepare_argv": [
+    "python3",
+    "tools/ha2_half_endpoint_credit_gate_r2.py",
+    "--out",
+    "FRESH_OUTPUT",
+    "--prepare-only"
+  ]
+}
