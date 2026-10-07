@@ -214,6 +214,8 @@ module ot_v41_rom_elem_qx_pq_w10 #(
                                         // product, registered terms before the 32-input CSA: +2 lane cycles), the segment tree
                                         // at initiation interval 2 (segtree6 II2), and the need walker's state written one
                                         // cycle after its match (WRT, zero cycles; see the walker)
+                                        // 4 (2026-10-07): QS = 3 + WRD, the x-need walker reads nA / nB from registered end / advance decisions
+                                        // (kept copies) instead of 96-bit registered candidates (zero cycles)
     parameter integer QM = 0,           // margin-first (owner rule 2026-10-06): 1 = ot_v41_bterm5_w10 lanes (+5 cycles);
                                         // 2 = + ot_v41_segtree6 (adder-operand stage +1 a tree level, queue-head flags)
                                         // 3 = + go / restart candidates registered a cycle early, q + 2 sub-block table (0 cycles)
@@ -824,8 +826,30 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     reg [6*NSEG-1:0] nA_s, nB_s, nA_r, nB_r;          // WRT: storage / registered value on a match
     wire [6*NSEG-1:0] wsel_a = {{(3*NSEG){hp_a[1]}}, {(3*NSEG){hp_a[0]}}};
     wire [6*NSEG-1:0] wsel_b = {{(3*NSEG){hp_b[1]}}, {(3*NSEG){hp_b[0]}}};
-    wire [6*NSEG-1:0] nA = (WRT != 0) ? ((wsel_a & nA_r) | (~wsel_a & nA_s)) : nA_s;
-    wire [6*NSEG-1:0] nB = (WRT != 0) ? ((wsel_b & nB_r) | (~wsel_b & nB_s)) : nB_s;
+    // WRD (QS >= 4, 2026-10-07; QS3 route CTS at 730: u_hpk.u_c -> nA_r[25] -62.9, calibrate nA_r -59 / nB_r -48): the
+    // match value of nA / nB is no longer a registered 96-bit candidate nA_r / nB_r (3:1 select of 96 bits behind the
+    // end / advance decision, fanned out to 192 flops) but the registered DECISION (end, advance: 1 bit each, kept copies
+    // per half and per register) applied next cycle to registered operands: nA_s / nB_s already hold the decision
+    // cycle's nA / nB (X_s <= X), nQ2_d <= nQ2 and nL0_d / nL1_d <= the restart values.  So the read value is the
+    // original nA_r / nB_r bit for bit (QP_CHECK asserts it), the loop ends at 4 decision flops.  Zero added cycles.
+    localparam integer WRD = (WRT != 0 && QS >= 4) ? 1 : 0;
+    wire [1:0] wd_ea, wd_va, wd_eb, wd_vb;               // WRD: registered end / advance decisions (nA halves | nB halves)
+    reg  [6*NSEG-1:0] nL0_d, nL1_d, nQ2_d;
+    wire [6*NSEG-1:0] wd_sea = {{(3*NSEG){wd_ea[1]}}, {(3*NSEG){wd_ea[0]}}};
+    wire [6*NSEG-1:0] wd_sva = {{(3*NSEG){wd_va[1]}}, {(3*NSEG){wd_va[0]}}};
+    wire [6*NSEG-1:0] wd_seb = {{(3*NSEG){wd_eb[1]}}, {(3*NSEG){wd_eb[0]}}};
+    wire [6*NSEG-1:0] wd_svb = {{(3*NSEG){wd_vb[1]}}, {(3*NSEG){wd_vb[0]}}};
+`ifdef WRD_MUTANT_NQ
+    wire [6*NSEG-1:0] wd_q2 = nQ2;                       // negative control: the advance takes the CURRENT f(q + 2)
+`else
+    wire [6*NSEG-1:0] wd_q2 = nQ2_d;
+`endif
+    wire [6*NSEG-1:0] nA_m = (wd_sea & nL0_d) | (~wd_sea & ((wd_sva & nB_s) | (~wd_sva & nA_s)));
+    wire [6*NSEG-1:0] nB_m = (wd_seb & nL1_d) | (~wd_seb & ((wd_svb & wd_q2) | (~wd_svb & nB_s)));
+    wire [6*NSEG-1:0] nA_v = (WRD != 0) ? nA_m : nA_r;
+    wire [6*NSEG-1:0] nB_v = (WRD != 0) ? nB_m : nB_r;
+    wire [6*NSEG-1:0] nA = (WRT != 0) ? ((wsel_a & nA_v) | (~wsel_a & nA_s)) : nA_s;
+    wire [6*NSEG-1:0] nB = (WRT != 0) ? ((wsel_b & nB_v) | (~wsel_b & nB_s)) : nB_s;
     // QM >= 3 (BP = 0): f(q + 2) for every q in a configuration-only table registered on the free clock, so xQ2 is
     // an 8:1 select of registers instead of the per-class subtract / compare on the walker's q (Z20c: w_q -> wQ2 +42.7 ps)
     reg [6*NSEG-1:0] q2_tab [0:7];
@@ -1680,6 +1704,29 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [6*NSEG-1:0] nA_c = (qx_n_end && n_more) ? sbf(4'd0, 2'd3, nu_p, base_live) : qx_n_adv ? nB : nA;
     wire [6*NSEG-1:0] nB_c = (qx_n_end && n_more) ? sbf(4'd1, 2'd3, nu_p, base_live) : qx_n_adv ? nQ2 : nB;
     always @(posedge gclk) begin nA_r <= nA_c; nB_r <= nB_c; end
+    // WRD: decisions (kept copies) and the operands they select next cycle
+    wire wd_e_c = qx_n_end && n_more;
+    wire wd_v_c = qx_n_adv;
+    if (WRD != 0) begin : g_wrd
+        for (genvar k = 0; k < 2; k = k + 1) begin : g_k
+            ot_v41_kreg #(.W(2), .AR(1)) u_a (.clk(gclk), .arst_n(rst_n), .d({wd_e_c, wd_v_c}), .q({wd_ea[k], wd_va[k]}));
+            ot_v41_kreg #(.W(2), .AR(1)) u_b (.clk(gclk), .arst_n(rst_n), .d({wd_e_c, wd_v_c}), .q({wd_eb[k], wd_vb[k]}));
+        end
+        always @(posedge gclk) begin
+            nL0_d <= sbf(4'd0, 2'd3, nu_p, base_live); nL1_d <= sbf(4'd1, 2'd3, nu_p, base_live); nQ2_d <= nQ2;
+        end
+`ifdef QP_CHECK
+        // the decision form reads exactly the registered candidate it replaces
+        always @(negedge clk) if (rst_n && (nA_m !== nA_r || nB_m !== nB_r) && (|hp_a || |hp_b)) begin
+`ifndef WRD_MUTANT_NQ
+            $display("QX_CHECK FAIL: WRD decision form %h/%h != candidates %h/%h at %t", nA_m, nB_m, nA_r, nB_r, $time);
+            $fatal(1);
+`endif
+        end
+`endif
+    end else begin : g_nwrd
+        assign wd_ea = '0; assign wd_va = '0; assign wd_eb = '0; assign wd_vb = '0;
+    end
     always @(posedge gclk) begin
         if (go_en) begin
             nA_s <= sbf(4'd0, 2'd3, nu_p, base_go); nB_s <= sbf(4'd1, 2'd3, nu_p, base_go);
@@ -2117,9 +2164,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             assign p_xe0 = l_xe0; assign p_xe1 = l_xe1; assign p_w0q = w0q; assign p_w1q = w1q;
             assign p_we0 = we0; assign p_we1 = we1;
         end
-        ot_v41_bterm5_w10 #(.TW(TW), .FPC(QM >= 5 ? 32 : 4), .P0B(QS)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
+        ot_v41_bterm5_w10 #(.TW(TW), .FPC(QM >= 5 ? 32 : 4), .P0B(QS >= 3 ? 3 : QS)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
             .xq(p_xq0), .xe(p_xe0), .wq(p_w0q), .we(p_we0), .tag(p_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm5_w10 #(.TW(TW), .P0B(QS)) u_l1 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
+        ot_v41_bterm5_w10 #(.TW(TW), .P0B(QS >= 3 ? 3 : QS)) u_l1 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
             .xq(p_xq1), .xe(p_xe1), .wq(p_w1q), .we(p_we1), .tag(p_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0 && QPIPE != 0) begin : g_l3
         ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),

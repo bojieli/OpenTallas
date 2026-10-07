@@ -58,6 +58,8 @@ BUILDS = {"pos": CHK, "pos_pq0": CHK + ["+define+QX_DUT_PQ0"], "pos_qw": CHK + [
           "pos_qs5": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=1"], "neg_qs5ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=1", "+define+BT5_MUTANT_NS"], "neg_qs5sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=1", "+define+BT5_MUTANT_SH"],
           "pos_qs2": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=2"], "neg_qs2ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=2", "+define+BT5_MUTANT_NS"], "neg_qs2sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=2", "+define+BT5_MUTANT_SH"],
           "pos_qs3": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3"], "neg_qs3ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3", "+define+BT5_MUTANT_NS"], "neg_qs3sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3", "+define+BT5_MUTANT_SH"], "neg_qs3yf": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3", "+define+ST7_MUTANT_YF"], "neg_qs3nr": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3", "+define+WRT_MUTANT_NR"], "neg_qs3sb": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3", "+define+WRT_MUTANT_SB"],
+          # QS = 4 (2026-10-07): QS = 3 + WRD (walker nA / nB from registered end / advance decisions)
+          "pos_qs4": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=4"], "neg_qs4nq": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=4", "+define+WRD_MUTANT_NQ"], "neg_qs4sb": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=4", "+define+WRT_MUTANT_SB"],
           "neg_qm5ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+BT5_MUTANT_NS"], "neg_qm5sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+BT5_MUTANT_SH"],
           "neg_qmns": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_NS"], "neg_qmsh": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_SH"], "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
           "qz0": CHK + ["-GQX=0", "-GQY=0", "-GQZ=0"], "neg_qxlu": ["+define+QX_MUTANT_LU", "-GQX=8"],
@@ -163,6 +165,7 @@ def main() -> None:
         jobs += [("pos_qs5", s) for s in range(1, n + 1)] + [("pos_qs5", 1, ("+nan_sparse",)), ("neg_qs5ns", 1, ("+nan_sparse",)), ("neg_qs5sh", 1)]
         jobs += [("pos_qs2", s) for s in range(1, n + 1)] + [("pos_qs2", 1, ("+nan_sparse",)), ("neg_qs2ns", 1, ("+nan_sparse",)), ("neg_qs2sh", 1)]
         jobs += [("pos_qs3", s) for s in range(1, n + 1)] + [("pos_qs3", 1, ("+nan_sparse",)), ("neg_qs3ns", 1, ("+nan_sparse",)), ("neg_qs3sh", 1), ("neg_qs3yf", 1), ("neg_qs3nr", 1), ("neg_qs3sb", 1)]
+        jobs += [("pos_qs4", s) for s in range(1, n + 1)] + [("pos_qs4", 1, ("+nan_sparse",)), ("neg_qs4nq", 1), ("neg_qs4sb", 1)]
         if a.only:
             jobs = [j for j in jobs if re.fullmatch(a.only, j[0])]
         with cf.ThreadPoolExecutor(a.jobs) as ex:
