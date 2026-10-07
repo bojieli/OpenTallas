@@ -27,14 +27,14 @@
   ],
   "n_regions": 4,
   "entry_target_ss_ps": {
-   "mean": 3441.4,
-   "min": 3439.5,
-   "max": 3443.3
+   "mean": 3525.8,
+   "min": 3523.9,
+   "max": 3527.7
   },
   "entry_target_ff_ps": {
-   "mean": 1927.0,
-   "min": 1926.3,
-   "max": 1927.8
+   "mean": 1971.8,
+   "min": 1971.0,
+   "max": 1972.5
   },
   "die_pad_ss_ps": {
    "mean": 845.7,
@@ -100,7 +100,7 @@
    "skew_class": "intra",
    "skew_ps": 86.7,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w369_ivp_SW<->hb_index_SW_b5",
+   "worst_instance": "hbm:w355_ivp_SW<->hb_index_SW_b5",
    "also_cdc": false,
    "input_delay_ss_ps": 316.3,
    "output_delay_ss_ps": 257.3,
@@ -144,7 +144,7 @@
    "skew_class": "intra",
    "skew_ps": 61,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w372_ivp_NE<->w362_iv_NE",
+   "worst_instance": "hbm:w358_ivp_NE<->w348_iv_NE",
    "also_cdc": false,
    "input_delay_ss_ps": 381.4,
    "output_delay_ss_ps": 322.4,

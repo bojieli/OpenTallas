@@ -24,19 +24,19 @@
   ],
   "n_regions": 1,
   "entry_target_ss_ps": {
-   "mean": 2972.1,
-   "min": 2972.1,
-   "max": 2972.1
+   "mean": 3056.6,
+   "min": 3056.6,
+   "max": 3056.6
   },
   "entry_target_ff_ps": {
-   "mean": 1625.4,
-   "min": 1625.4,
-   "max": 1625.4
+   "mean": 1811.2,
+   "min": 1811.2,
+   "max": 1811.2
   },
   "die_pad_ss_ps": {
-   "mean": 378.0,
-   "min": 376.6,
-   "max": 378.5
+   "mean": 678.0,
+   "min": 676.6,
+   "max": 678.5
   },
   "internal_insertion": {
    "target_ss": 521.5,
@@ -97,7 +97,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w357_iv_SE<->w356_iv_SE",
+   "worst_instance": "hbm:w343_iv_SE<->w342_iv_SE",
    "also_cdc": false,
    "input_delay_ss_ps": 567.6,
    "output_delay_ss_ps": 508.6,
@@ -144,7 +144,7 @@
    "skew_class": "intra",
    "skew_ps": 57,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w365_iv_NE<->hb_vm_ne",
+   "worst_instance": "hbm:w351_iv_NE<->hb_vm_ne",
    "also_cdc": false,
    "input_delay_ss_ps": 504.1,
    "output_delay_ss_ps": 445.1,

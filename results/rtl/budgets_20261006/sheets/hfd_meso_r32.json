@@ -24,14 +24,14 @@
   ],
   "n_regions": 1,
   "entry_target_ss_ps": {
-   "mean": 629.2,
-   "min": 629.2,
-   "max": 629.2
+   "mean": 628.9,
+   "min": 628.9,
+   "max": 628.9
   },
   "entry_target_ff_ps": {
-   "mean": 382.3,
-   "min": 382.3,
-   "max": 382.3
+   "mean": 382.1,
+   "min": 382.1,
+   "max": 382.1
   },
   "die_pad_ss_ps": {
    "mean": 378.5,
@@ -97,7 +97,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w349_host<->w348_host",
+   "worst_instance": "hbm:w335_host<->w334_host",
    "also_cdc": false,
    "input_delay_ss_ps": 569.5,
    "output_delay_ss_ps": 510.5,
@@ -141,7 +141,7 @@
    "skew_class": "intra",
    "skew_ps": 30,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w349_host<->lk_host",
+   "worst_instance": "hbm:w335_host<->lk_host",
    "also_cdc": false,
    "input_delay_ss_ps": 510.9,
    "output_delay_ss_ps": 451.9,

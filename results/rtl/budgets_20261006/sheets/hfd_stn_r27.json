@@ -5,7 +5,7 @@
   "waypoint"
  ],
  "dies": {
-  "hbm": 41
+  "hbm": 27
  },
  "size_um": [
   63.48,
@@ -69,10 +69,9 @@
    ],
    "neighbours": [
     "hfd_coll",
-    "hfd_stn_r27",
-    "hfd_stn_r29"
+    "hfd_stn_r27"
    ],
-   "connections": 41,
+   "connections": 27,
    "dies": [
     "hbm"
    ],
@@ -80,30 +79,30 @@
    "period_ps": 833.333,
    "clock_domain": null,
    "timing": "sync",
-   "length_um": 1676.9,
+   "length_um": 1668.8,
    "length_basis": "pins",
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w325_lk_lk_N1<->w324_lk_lk_N1",
+   "worst_instance": "hbm:w291_lk_lk_S1<->w290_lk_lk_S1",
    "also_cdc": false,
-   "input_delay_ss_ps": 605.8,
-   "output_delay_ss_ps": 546.8,
-   "input_fraction_of_T": 0.727,
-   "output_fraction_of_T": 0.656,
-   "internal_input_ps": 152.5,
-   "internal_output_ps": 211.5,
-   "as_planned_internal_input_ps": 152.5,
-   "as_planned_internal_output_ps": 211.5,
+   "input_delay_ss_ps": 603.5,
+   "output_delay_ss_ps": 544.5,
+   "input_fraction_of_T": 0.724,
+   "output_fraction_of_T": 0.653,
+   "internal_input_ps": 154.8,
+   "internal_output_ps": 213.8,
+   "as_planned_internal_input_ps": 154.8,
+   "as_planned_internal_output_ps": 213.8,
    "feasible_input": true,
    "feasible_output": true,
    "reach_um": 491.0,
    "stages_needed": 4,
    "stages_planned": 4,
    "extra_stages_needed": 0,
-   "segment_after_stages_um": 419.2,
-   "input_min_delay_ff_ps": 79.2,
-   "output_min_delay_ff_ps": -32.0,
+   "segment_after_stages_um": 417.2,
+   "input_min_delay_ff_ps": 78.9,
+   "output_min_delay_ff_ps": -31.7,
    "feasible": true
   },
   {
@@ -118,7 +117,7 @@
     "hfd_stn_r27",
     "hfd_stn_r29"
    ],
-   "connections": 41,
+   "connections": 27,
    "dies": [
     "hbm"
    ],
@@ -131,7 +130,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w323_lk_lk_N1<->w324_lk_lk_N1",
+   "worst_instance": "hbm:w313_lk_lk_N1<->w314_lk_lk_N1",
    "also_cdc": false,
    "input_delay_ss_ps": 603.6,
    "output_delay_ss_ps": 544.6,
@@ -160,7 +159,7 @@
   "cdc": 0,
   "infeasible": 0,
   "fanout_flags": 0,
-  "max_length_um": 1676.9,
+  "max_length_um": 1669.2,
   "max_stages_needed": 4
  },
  "constants": {

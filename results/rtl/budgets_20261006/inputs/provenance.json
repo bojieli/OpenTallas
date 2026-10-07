@@ -10,7 +10,7 @@
   },
   "hbm": {
    "branch": "claude/hbm-abstracts-20261006",
-   "commit": "6ec4d17de005f39027971d8aca826c3ba153eace",
+   "commit": "e2a769fc69be772b8233833d75e820bb10ea523f",
    "generator": "tools/hbm_accel_die_fp.py",
    "options": "ADOPTED = R23 (r22 + 2x hub, clustered hub pins, mcast_r6 a/b split, svc SE_s7/s8 split, attention tile 1778.5 x 1350 um, SE_s1 centre ck, stable station roles)",
    "via": "tools/die_top_lint.py build(hbm)",
@@ -30,9 +30,9 @@
  },
  "cts_hbm_r18": {
   "host": "ot-epyc2",
-  "path": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/bud23f",
+  "path": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/bud23g",
   "image": "openroad/orfs:asap7lock",
-  "result": "r23: 37 regions (family roots), stream trunk 2.59 ns SS, max intra 56.7, max inter 58.5, 0 > 150"
+  "result": "r23 + VM early branch 300 ps"
  },
  "insertion_override": "inputs/insertion_override.json (HBM index_q b0-b3/b5: edge ck kept, measured insertion accepted, extra OCV on IO skew)"
 }

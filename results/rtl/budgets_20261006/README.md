@@ -151,3 +151,4 @@ every one.
   segments are not tree pairs: 37 regions, max intra 56.7 ps, max inter 58.5 ps (the wider die had 54 crossings at
   150-160 ps with per-region trunk sinks). Stale sheet hfd_vm removed (split into hfd_vm_{sw,se,nw,ne} since r19).
   HBM infeasible as planned: 0.
+- 2026-10-07 (CLAUDE HBM-ABSTRACTS): VM early clock branch: HUB-V taps the stream trunk 300 ps early (the rest of the tree lifts 84.4 ps), the region flop instant is kept, so the four VM tiles have 300 ps die pad for deeper tile trees; svc SE_s5 centre ck.
