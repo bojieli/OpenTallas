@@ -652,7 +652,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_we (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(we[k]));
         end
 `ifdef QS5_MUTANT_WEN
-        assign wclk = clk; assign wen = 1'b1; assign wen_t = we[1];   // negative control: the walker ignores the gate
+        assign wclk = clk; assign wen = we[0] && !go_e; assign wen_t = we[1];   // negative control: the walker's enable drops the go edge
 `else
         assign wclk = clk; assign wen = we[0]; assign wen_t = we[1];
 `endif
