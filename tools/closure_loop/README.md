@@ -121,9 +121,11 @@ Nine hold-only misses went NEEDS_RTL because the ECO took setup below +15. Cause
   GRT around the repair re-guides only the touched nets, every wire is stripped, DRT routes on the original guides.
   The same no-ECO control then reproduces SS +70.18 / FF -4.20 exactly; with the ECO (293 cells) SS +73.02 / FF -4.20 ->
   +6.51 in one pass (the 2nd pass closes the residue). Keeping untouched WIRES does not work with this DRT ('pin not
-  visited' on untouched nets), nor does keeping clock wires (checkConnectivity). Original guides are required:
-  missing or rejected guides fail the pass. A fresh global route is not an accepted fallback (owner takeover,
-  2026-10-07; `svc_SE_s6` eco-r3 passed timing only after that fallback).
+  visited' on untouched nets), nor does keeping clock wires (checkConnectivity). Guide preservation is the preferred
+  tested strategy, not an acceptance requirement. Missing/rejected guides fail the pass by default; an explicit
+  `ALLOW_FRESH_GRT=1` (job `hold_eco.allow_fresh_grt: true`) permits fresh resistance-aware GRT. The result records
+  the strategy and fallback reason in `route_strategy`. All unchanged strict timing, DRC, IO and context checks
+  still apply. Historical `svc_SE_s6` eco-r3 is not rejected merely because it used fresh GRT.
 - post-route hold GOAL +18 (coordinator 2026-10-07: margin over the +15 line for die context; was a +22 pre-route
   target that routed to anything); the repair aims +18 + an allowance (3 ps, then adds 1.5 times the previous pass's shortfall, capped at 20 ps)
   because the new buffers' nets are unrouted during the repair; acceptance stays +15. Only endpoints with SS setup > 2.4 x deficit + 40 ps are repaired (a ps of FF hold delay costs ~2.4 ps at

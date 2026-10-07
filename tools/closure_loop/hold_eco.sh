@@ -6,6 +6,7 @@
 #     endpoints with SS setup > deficit + FILT, 40), PASSES (ECO -> re-route -> sign-off iterations, 2), RESAWARE
 #     (1: resistance-aware GRT like the ORFS route), HOLDCELLS (1: HB*xp67 delay cells allowed), KEEPCLK (full re-route only, 0),
 #     ACC_SS / ACC_FF (acceptance line, 15 / 15), ECO_SESSION (ff by default; auto for legacy two-corner detection),
+#     ALLOW_FRESH_GRT (0 by default; 1 permits fresh routing with explicit result provenance, unchanged acceptance),
 #     WINDOW_ONLY (1: endpoint window report only, no ECO), MACROS (src-rel macro view dirs), THREADS (8), BUF (max buffer %, 30)
 # per pass k (<out>/pass<k>/):
 #   1. both corners' EFFECTIVE sign-off SDC from the current db (hold_eco_corner.tcl, one single-corner session each,
@@ -65,7 +66,8 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
   ECO_ENV=(-e OT_DB=/in/$CUR_DB -e OT_OUT=/p/orfs/results/asap7/$D/base -e OT_HOLD_MARGIN=$TGT -e OT_SETUP_MARGIN=${SM:-40}
            -e OT_SETUP_FILTER=${FILT:-40} -e OT_ACCEPT_SS=$ACC_SS -e OT_ACCEPT_FF=$ACC_FF -e OT_HOLD_CELLS=${HOLDCELLS:-1}
            -e OT_RES_AWARE=${RESAWARE:-1} -e OT_KEEP_CLOCK=${KEEPCLK:-0} -e OT_THREADS=${THREADS:-8}
-           -e OT_MAXL=${MAXL:-M7} -e OT_MAX_BUF_PCT=${BUF:-30} -e OT_WINDOW_ONLY=${WINDOW_ONLY:-0})
+           -e OT_MAXL=${MAXL:-M7} -e OT_MAX_BUF_PCT=${BUF:-30} -e OT_WINDOW_ONLY=${WINDOW_ONLY:-0}
+           -e OT_ALLOW_FRESH_GRT=${ALLOW_FRESH_GRT:-0})
   # Default FF-only: matching the worst SS/FF margins does not prove that
   # every SS hold endpoint is irrelevant to a two-corner repair. Keep the
   # legacy automatic selection available only by explicit request.
@@ -95,9 +97,10 @@ nv = re.findall(r'Number of violations = (\d+)', log)
 cs = json.load(open(f'{p}/corner_sta.json'))
 add = re.findall(r'OT_ECO cells_added (-?\d+)', log)
 win = re.findall(r'^OT_WIN pre (.*)$', log, re.M)
+route_strategy = re.findall(r'^OT_ECO route_strategy (.*)$', log, re.M)
 r = dict(ss_ps=cs['setup_ss']['worst_slack_ps'], ff_ps=cs['hold_ff']['worst_slack_ps'], drc=int(nv[-1]) if nv else None,
          cells_added=int(add[0]) if add else None, errors=cs['setup_ss'].get('errors', []) + cs['hold_ff'].get('errors', []),
-         **{'pass': k}, session=session, window=win[0] if win else None)
+         **{'pass': k}, session=session, window=win[0] if win else None, route_strategy=route_strategy)
 ok = r['ss_ps'] is not None and r['ff_ps'] is not None
 r['score'] = min(r['ss_ps'] - acc_ss, r['ff_ps'] - acc_ff) if ok and r['drc'] == 0 and not r['errors'] else -1e9
 json.dump(r, open(f'{p}/result.json', 'w'), indent=1); print('OT_PASS_RESULT', json.dumps(r))
