@@ -1252,7 +1252,11 @@ def write_status(fleet_note=""):
          fleet_note, "", "## Active"]
     for r in act:
         h = host_cfg(r["host"])["label"] if r.get("host") else "-"
-        L.append(f"- {r['name']} [{r['spec']['block']}] {r['status']} stage={r.get('stage_key', '-')} host={h} "
+        stage = r.get("stage_key", "-")
+        if r["status"] == "READY":
+            stages = stage_list(r["spec"])
+            stage = stages[min(r.get("stage_idx", 0), len(stages) - 1)]["key"]
+        L.append(f"- {r['name']} [{r['spec']['block']}] {r['status']} stage={stage} host={h} "
                  f"run={r.get('run', '-')} since={r.get('stage_started', r['created'])} "
                  f"{('| ' + r['wait']) if r.get('wait') else ''}")
     L += ["", "## Recent terminal"]
@@ -1265,8 +1269,12 @@ def write_status(fleet_note=""):
         v = r.stdout.split()
         if len(v) == 2:
             ld = float(v[0])
+            running = sum(1 for x in act if x.get("host") == h["name"] and
+                          x["status"] in ("RUNNING", "ECO", "SUMMARY", "ECO_INSTALL"))
+            benches = sum(1 for x in act for b in (x.get("btrack") or {}).values()
+                          if b.get("host") == h["name"] and b.get("state") == "running")
             fl.append(f"- {h['label']}: load1 {ld:.0f}/{h['cores']} threads (idle {max(0, 100 * (1 - ld / h['cores'])):.0f}%), "
-                      f"{v[1]} GB free of {h.get('ram_gb', '?')}, own running {sum(1 for x in act if x.get('host') == h['name'] and x['status'] == 'RUNNING')}")
+                      f"{v[1]} GB free of {h.get('ram_gb', '?')}, own active stages {running}, parallel benches {benches}")
         else:
             fl.append(f"- {h['label']}: unreachable")
     L[3:3] = fl
