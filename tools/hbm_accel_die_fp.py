@@ -339,10 +339,12 @@ R22 = dict(R21, relay_all=True)
 #   ~55 % utilisation for the SU / attn / router agent), SFU between its consumers SU and HC as before; the centre
 #   channel (mid_ch) widens by the added quarter widths, so the die grows in x
 R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0, split_stations=('hfd_mcast_r6',),
-           attn_tile_w_um=1778.544, attn_tile_w0_um=1349.136, attn_grow_mid=True,
+           attn_tile_w_um=1778.544, attn_tile_w0_um=1349.136, attn_grow_mid=True, serdes_w_um=2462.4, vm_cross_aligned=True,
            fix_station_pins=('hfd_cdist_r14', 'hfd_cdist_r15', 'hfd_gath_r10', 'hfd_gath_r24', 'hfd_gath_r25', 'hfd_gath_r8',
                              'hfd_gath_r9', 'hfd_meso_r28', 'hfd_meso_r32', 'hfd_stn_r2', 'hfd_stn_r34', 'hfd_stn_r18',
-                             'hfd_stn_r20'))
+                             'hfd_stn_r20', 'hfd_stn_r31'))
+# r23v (OWNER 2026-10-07 VM fallback, flag default OFF): R23 with the VM quadrant tiles cut into south / north sub-tiles
+R23V = dict(R23, vm_split8=True)
 ADOPTED = R23
 
 
@@ -578,6 +580,8 @@ def build(variant=None):
     links = []
     cxm = geo['cx']
     sd_w = dn(mid_ch - 2 * 64.8, GX)
+    if variant.get('serdes_w_um'):     # r23: the widened centre channel must not stretch the SerDes slab (r23b a_real:
+        sd_w = min(sd_w, up(variant['serdes_w_um'], GX))   # sd_N 8.65 mm wide snapped outside the die)
     sl = up(BLOCKS['serdes'][0] / 2 * 1e6 / sd_w, GY)
     MG = variant.get('serdes_mg', 103.68)          # channel E of each macro (its io pins); r14 option: wider
     for side, n in (('S', 5), ('N', 4)):
@@ -636,6 +640,8 @@ def build(variant=None):
         fix_ports_from_views(m, fixv)
     if variant.get('vm_split'):
         split_vm(m)
+    if variant.get('vm_split8'):        # r23v: VM 8-way fallback (default off)
+        split_vm8(m)
     for role_ in variant.get('split_stations', ()):     # r23: station roles split into half-bus A / B masters
         split_station(m, role_)
     if variant.get('relay_all'):        # r22: relays at every block pin (pin_stage_buses become a subset of them)
@@ -685,7 +691,7 @@ def _jsonable(o):
 # local x = 0 mod 0.016 and an x-mirrored copy at 0.008 mod 0.016: no single master has a legal origin in both.  Their
 # edge ck stays; the budget re-plans their die entry target from the measured insertion (the die tree arrives early).
 VM_CENTRE = tuple(f'hfd_vm_{q}' for q in ('sw', 'se', 'nw', 'ne'))
-CK_CENTRE = ('hfd_svc_SE_s0', 'hfd_svc_SE_s1', 'hfd_svc_SE_s3', 'hfd_svc_SW_s0', 'hfd_svc_SW_s1', 'hfd_svc_SW_s7',   # SE_s1: 956 ps edge-ck
+CK_CENTRE = ('hfd_svc_SE_s0', 'hfd_svc_SE_s1', 'hfd_svc_SE_s3', 'hfd_svc_SE_s5', 'hfd_svc_SW_s0', 'hfd_svc_SW_s1', 'hfd_svc_SW_s7',   # SE_s1: 956 ps edge-ck
              'hfd_vm_sw', 'hfd_vm_se', 'hfd_vm_nw', 'hfd_vm_ne')   # r20: VM tiles (all placed R0)   # SW_s1 / SW_s7: edge-ck insertion 1,304 / 1,123 ps
 
 
@@ -923,6 +929,103 @@ def split_station(m, role, h_data=1024):
             m['station_roles'][role + t_] = dict(r_, split_of=role)
 
 
+def vm_cross_align(M, k):
+    """r23 (r23b GRT: 55k overflow at the abutting VM tile edges): every cross bus between two abutting VM tiles has its
+    pins at the SAME along-edge positions on both faces (zero-length die nets, as the index_q band cross buses), packed
+    from the edge middle at one track per bit (M4 on E / W, M5 on N / S)."""
+    pairs = (('sw', 'se', 'E', 'W', 'e', 'w'), ('nw', 'ne', 'E', 'W', 'e', 'w'),
+             ('sw', 'nw', 'N', 'S', 'n', 's'), ('se', 'ne', 'N', 'S', 'n', 's'))
+    for a, b, fa, fb, da, db in pairs:
+        A, B = M[f'hfd_vm_{a}'], M[f'hfd_vm_{b}']
+        L_ = 'M4' if fa in 'EW' else 'M5'
+        t = Q.TRK[L_][1] * k
+        along = A.h if fa in 'EW' else A.w
+        runs = [(A, f't_{da}_{nm}', B, f'f_{db}_{nm}') for nm in ('row', 'wr', 'ctl')] + \
+               [(A, f'f_{da}_{nm}', B, f't_{db}_{nm}') for nm in ('row', 'wr', 'ctl')]
+        bits = [A.ports[pa][1] for _, pa, _, _ in runs]
+        need = [max(1, b_) * t + 4 * t for b_ in bits]      # bits: the master's port width at this k (bundled)
+        y = along / 2 - sum(need) / 2
+        assert y > 2 * t, ('VM cross buses do not fit the edge', a, b)
+        for (X, pa, Y, pb), b_, nd in zip(runs, bits, need):
+            c = round(y + 2 * t + (nd - 4 * t) / 2, 4)
+            X.ports[pa] = ('face', b_, fa, L_, c, 1)
+            Y.ports[pb] = ('face', b_, fb, L_, c, 1)
+            y += nd
+
+
+VM8_DIR = 'physical/hbm_accel_die_views/vm/split8/ports'
+
+
+def split_vm8(m):
+    """r23v (OWNER 2026-10-07 VM fallback, default OFF; VM-split agent a25e9c721716b6662, branch
+    claude/hbm-vm-split8-20261007 654733cc5): every VM quadrant tile hfd_vm_<q> becomes a south / north sub-tile
+    hfd_vm_<q>_s / _n (699.816 x 500.04 um, north at y + 500.016), each with its own centre M7 ck and rst; every die
+    port goes to the half whose record (vm/split8/ports/<master>/ports.json) carries it, and the halves are joined by
+    the zero-length seam s2n / n2s (registered both ends, +2 cycles per crossing).  Pin plans fixed to the records."""
+    recs = {}
+    for q in ('sw', 'se', 'nw', 'ne'):
+        for h in 'sn':
+            recs[(q, h)] = json.loads((ROOT / VM8_DIR / f'hfd_vm_{q}_{h}/ports.json').read_text())
+    tiles = {it.name: it for it in m['insts'] if it.name.startswith('hb_vm_') and it.master.startswith('hfd_vm_')}
+    halves, own = {}, {}
+    for nm, it in tiles.items():
+        q = it.master[len('hfd_vm_'):]
+        dy = 1000.056 - 500.04
+        hs = Inst(nm + '_s', it.master + '_s', it.x, it.y, 699.816, 500.04, it.orient, kind=it.kind, region=it.region, domain=it.domain)
+        hn = Inst(nm + '_n', it.master + '_n', it.x, round(it.y + dy, 4), 699.816, 500.04, it.orient, kind=it.kind,
+                  region=it.region, domain=it.domain)
+        halves[nm] = (hs, hn)
+        for h, x in (('s', hs), ('n', hn)):
+            for p_ in recs[(q, h)]['ports']:
+                own[(nm, p_)] = x.name
+    m['insts'] = [i for i in m['insts'] if i.name not in tiles] + [x for ab in halves.values() for x in ab]
+    nb = []
+    for bid, cls, bits, eps in m['buses']:
+        e2 = []
+        for inst, port in eps:
+            if inst not in tiles:
+                e2.append((inst, port))
+            elif port in ('ck', 'rst'):
+                e2 += [(halves[inst][0].name, port), (halves[inst][1].name, port)]
+            else:
+                e2.append((own[(inst, port)], port))
+        nb.append((bid, cls, bits, e2))
+    for nm, (hs, hn) in halves.items():
+        q = tiles[nm].master[len('hfd_vm_'):]
+        rp = recs[(q, 's')]['ports']
+        nb.append((f'{nm}_seam_s2n', 'hub', rp['s2n']['bits'], [(hs.name, 's2n'), (hn.name, 's2n')]))
+        nb.append((f'{nm}_seam_n2s', 'hub', rp['n2s']['bits'], [(hn.name, 'n2s'), (hs.name, 'n2s')]))
+    m['buses'] = nb
+    fixed = m.setdefault('fixed_ports', {})
+    for (q, h), rec in recs.items():
+        W_, H_ = rec['w_um'], rec['h_um']
+        spec, order = {}, []
+        for p_, v in rec['ports'].items():
+            (x0, x1), (y0, y1) = v['x'], v['y']
+            n_ = v['bits']
+            if v['layer'] == 'M7' and n_ == 1 and 1.0 < x0 < W_ - 1.0 and 1.0 < y0 < H_ - 1.0:
+                spec[p_] = ('area', 'M7', x0, y0, 0.064, 0.288)
+            else:
+                if x0 == x1:
+                    face = 'W' if x0 < W_ / 2 else 'E'
+                    lo, hi = y0, y1
+                else:
+                    face = 'S' if y0 < H_ / 2 else 'N'
+                    lo, hi = x0, x1
+                tr = Q.TRK[v['layer']][1]
+                pitch = max(1, round((hi - lo) / max(1, n_ - 1) / tr)) if n_ > 1 else 1
+                spec[p_] = ('face', n_, face, v['layer'], round((lo + hi) / 2, 4), pitch)
+            order.append(p_)
+
+        def fn(mst, k=1, spec=spec, order=order):
+            sp_ = dict(spec)
+            if k > 1:
+                _bundle_pack(mst, sp_, order, k)
+            mst.ports, mst.order = sp_, list(order)
+        fixed[f'hfd_vm_{q}_{h}'] = fn
+    m['vm8'] = {nm: [x.name for x in ab] for nm, ab in halves.items()}
+
+
 def fix_ports_from_views(m, masters_):
     """r17: masters whose generated pin plan must stay the CLOSED view's although the block moved (barrier_low): the
     pins are fixed to the view LEF (same faces / layers / positions), so the view still checks MATCH."""
@@ -1032,6 +1135,8 @@ def _bundle_pack(mst, sp_, order, k):
     """bundled view (k > 1): runs of one face packed apart (>= two bundled tracks between runs)."""
     byf = defaultdict(list)
     for pn in order:
+        if sp_[pn][0] != 'face':      # area / xy pins are not bundled-packed
+            continue
         byf[sp_[pn][2]].append(pn)
     for f_, pns in byf.items():
         runs = []
@@ -2146,6 +2251,8 @@ def masters(m, k=1):
         for nm_ in ('hfd_su', 'hfd_sfu', 'hfd_hc'):
             if nm_ in M:
                 hub_pin_window(M[nm_], m['variant']['hub_pin_window'])
+    if m['variant'].get('vm_cross_aligned') and 'hfd_vm_sw' in M:   # r23: abutting VM tiles' cross buses face to face
+        vm_cross_align(M, k)
     if m['variant'].get('vm_ck_centre'):      # r20: the VM tiles' ck as the centre M7 area pin
         for q in ('sw', 'se', 'nw', 'ne'):
             if f'hfd_vm_{q}' in M:
@@ -2830,7 +2937,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
