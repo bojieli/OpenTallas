@@ -6,15 +6,11 @@ close $f
 write_db /diagnostic/failed_cts.odb
 write_sdc /diagnostic/failed_cts.sdc
 foreach mode {min max} {
-  redirect -file /diagnostic/worst_${mode}.rpt {
-    report_checks -path_delay $mode -group_path_count 20 -format full_clock_expanded -fields {slew cap fanout input_pin net} -digits 6
-  }
+  report_checks -path_delay $mode -group_path_count 20 -format full_clock_expanded -fields {slew cap fanout input_pin net} -digits 6 > /diagnostic/worst_${mode}.rpt
   foreach port {arrival_data arrival_v} {
     set ports [get_ports ${port}*]
-    redirect -file /diagnostic/${port}_${mode}.rpt {
-      report_checks -from $ports -path_delay $mode -group_path_count 20 -format full_clock_expanded -fields {slew cap fanout input_pin net} -digits 6
-    }
+    report_checks -from $ports -path_delay $mode -group_path_count 20 -format full_clock_expanded -fields {slew cap fanout input_pin net} -digits 6 > /diagnostic/${port}_${mode}.rpt
   }
 }
-redirect -file /diagnostic/clock_skew.rpt {report_clock_skew}
+report_clock_skew > /diagnostic/clock_skew.rpt
 if {$diagnostic_rc != 0} {return -options $diagnostic_options $diagnostic_message}
