@@ -341,8 +341,8 @@ def cmd_index(a):
         margin = None
         if st == 'closed':      # owner UPDATE 2 (2026-10-06): closed only at SS >= +40 ps and FF >= +15 ps
             ss_, ff_ = _slacks(v)
-            margin = dict(ss_setup_ps=ss_, ff_hold_ps=ff_, rule='SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)')
-            if ss_ is None or ff_ is None or ss_ < 40.0 or ff_ < 15.0:
+            margin = dict(ss_setup_ps=ss_, ff_hold_ps=ff_, rule='SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)')
+            if ss_ is None or ff_ is None or ss_ < 15.0 or ff_ < 15.0:
                 st = 'closed-below-margin'
         idx['masters'][n] = dict(kind=kind_of(n), status=st, instances=sum(it.master == n for it in m['insts']),
                                  **({k: v[k] for k in ('dir', 'lef', 'lib', 'check', 'source') if k in v} if v else {}))
