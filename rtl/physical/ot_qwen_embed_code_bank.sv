@@ -19,24 +19,24 @@ module ot_qwen_embed_code_bank #(
     input wire o_cr,
     output reg fault
 );
-    reg iv_q, cr_q, iv_n, cr_n;
-    reg [11:0] ia_q, ia_n;
+    (* keep="true", dont_touch="true" *) reg iv_q, cr_q, iv_n, cr_n;
+    (* keep="true", dont_touch="true" *) reg [11:0] ia_q, ia_n;
     always @(posedge clk) begin ia_q <= i_addr; ia_n <= ~i_addr; end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin iv_q <= 0; cr_q <= 0; iv_n <= 1; cr_n <= 1; end
         else begin iv_q <= i_v; cr_q <= o_cr; iv_n <= ~i_v; cr_n <= ~o_cr; end
 
-    reg [11:0] fifo [0:1], fifo_n [0:1];
-    reg [1:0] wp, rp, wp_n, rp_n;
+    (* keep="true", dont_touch="true" *) reg [11:0] fifo [0:1], fifo_n [0:1];
+    (* keep="true", dont_touch="true" *) reg [1:0] wp, rp, wp_n, rp_n;
     wire empty = wp == rp;
     wire full = wp[0] == rp[0] && wp[1] != rp[1];
     localparam integer CW = $clog2(OCRED + 1) + 1;
-    reg [CW-1:0] credits, credits_n;
-    reg phase, phase_n;
+    (* keep="true", dont_touch="true" *) reg [CW-1:0] credits, credits_n;
+    (* keep="true", dont_touch="true" *) reg phase, phase_n;
     wire launch = !phase && !empty && credits != 0 && !fault && !bad;
-    reg [11:0] addr_q, addr_n;
-    reg ce_q, ce_n;
-    reg [3:0] valid_pipe, valid_n;
+    (* keep="true", dont_touch="true" *) reg [11:0] addr_q, addr_n;
+    (* keep="true", dont_touch="true" *) reg ce_q, ce_n;
+    (* keep="true", dont_touch="true" *) reg [3:0] valid_pipe, valid_n;
     reg [511:0] capture_data;
     always @(posedge clk) o_data <= capture_data;
     // Keep one enable per 32-bit capture lane, avoiding a 512-load enable.
@@ -78,7 +78,7 @@ module ot_qwen_embed_code_bank #(
     end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            wp <= 0; wp_n <= 3; rp <= 0; rp_n <= 3; phase <= 0; phase_n <= 1; credits <= OCRED; credits_n <= ~CW'(OCRED);
+            wp <= 0; wp_n <= 3; rp <= 0; rp_n <= 3; phase <= 0; phase_n <= 1; credits <= OCRED; credits_n <= ~OCRED;
             ce_q <= 0; ce_n <= 1; valid_pipe <= 0; valid_n <= 15; o_v <= 0; i_cr <= 0; fault <= 0;
         end else begin
             phase <= ~phase; phase_n <= phase;
