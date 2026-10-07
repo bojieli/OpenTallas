@@ -40,15 +40,18 @@ module ot_s81ph_colt_fifo #(
     output wire [W-1:0]  head,
     output reg           ovf
 );
+    // r4 (colt_lane c25065335-d: macro rd_out -> rq_r -25.7 ps at 511 ps SS clk->q): reads at II 2.  A read is issued
+    // only every other cycle and its rd_out is captured TWO edges later (rq_r enabled by f2), so the macro output has
+    // two periods (tiles/colt_lane_mcp.sdc: multicycle -setup 2 / -hold 1 through the macro rd_out pins; no read is
+    // issued in between, so rd_out is stable over both).  0.5 word / cycle = the merger's PACE-2 drain rate.
     localparam integer AW = $clog2(DEPTH);
     localparam integer NT = (W + 255) / 256;
     localparam integer OW = $clog2(OBD + 1);
-    reg  [AW:0]   wp, rp, cnt;               // cnt = records in the array
-    reg           ne;                        // cnt != 0 (registered)
-    reg           f1, f2;                    // read issued 1 / 2 edges ago (rd_out lands at f1, rq_r at f2)
-    reg  [OW-1:0] oc;                        // head buffer occupancy
+    reg  [AW:0]   wp, rp, cnt;
+    reg           ne, f1, f2, f3, rph;
+    reg  [OW-1:0] oc;
     wire          wr  = push && cnt != DEPTH;
-    wire          rd  = ne && ({1'b0, oc} + f1 + f2) < OBD;
+    wire          rd  = ne && !rph && !f1 && ({1'b0, oc} + f2 + f3) < OBD - 1;
     wire [NT*256-1:0] rq;
     reg  [W-1:0]  rq_r;
     genvar t;
@@ -58,27 +61,29 @@ module ot_s81ph_colt_fifo #(
             .w_ce_in(wr), .w_addr_in(wp[AW-1:0]), .wd_in(wd), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
-    always @(posedge clk) rq_r <= rq[W-1:0];
+    always @(posedge clk) if (f2) rq_r <= rq[W-1:0];
     reg  [W-1:0]  ob [0:OBD-1];
     wire          dpop = pop && oc != 0;
     wire [AW:0]   cnt_n = cnt + (wr ? 1'b1 : 1'b0) - (rd ? 1'b1 : 1'b0);
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wp <= 0; rp <= 0; cnt <= 0; ne <= 1'b0; f1 <= 1'b0; f2 <= 1'b0; oc <= 0; ovf <= 1'b0; end
-        else begin
+        if (!rst_n) begin
+            wp <= 0; rp <= 0; cnt <= 0; ne <= 1'b0; f1 <= 1'b0; f2 <= 1'b0; f3 <= 1'b0; rph <= 1'b0; oc <= 0; ovf <= 1'b0;
+        end else begin
             if (wr) wp <= wp + 1'b1;
             if (rd) rp <= rp + 1'b1;
             cnt <= cnt_n; ne <= cnt_n != 0;
-            f1 <= rd; f2 <= f1;
-            oc <= oc + (f2 ? 1'b1 : 1'b0) - (dpop ? 1'b1 : 1'b0);
+            f1 <= rd; f2 <= f1; f3 <= f2;
+            rph <= rd;
+            oc <= oc + (f3 ? 1'b1 : 1'b0) - (dpop ? 1'b1 : 1'b0);
             if (push && cnt == DEPTH) ovf <= 1'b1;
         end
     integer e;
     always @(posedge clk)
         for (e = 0; e < OBD; e = e + 1) begin
             if (dpop) begin
-                if (f2 && e == oc - 1) ob[e] <= rq_r;
+                if (f3 && e == oc - 1) ob[e] <= rq_r;
                 else if (e + 1 < OBD) ob[e] <= ob[(e + 1) % OBD];
-            end else if (f2 && e == oc) ob[e] <= rq_r;
+            end else if (f3 && e == oc) ob[e] <= rq_r;
         end
     assign hv = oc != 0;
     assign head = ob[0];
