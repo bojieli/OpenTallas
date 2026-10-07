@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "60c6e1172",
+ "generated_from_commit": "ef6291703",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -2093,7 +2093,7 @@
    "value": 440,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "ds_rom.stacks": {
    "target": "ds_rom",
@@ -2108,7 +2108,7 @@
    "value": 484,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "ds_rom.total_silicon_mm2": {
    "target": "ds_rom",
@@ -2123,7 +2123,7 @@
    "value": 896341.2,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "ds_rom.j_per_token_ar_b1_pg": {
    "target": "ds_rom",
@@ -2138,7 +2138,7 @@
    "value": 6.7642,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "ds_rom.j_per_token_ar_b1_icg": {
    "target": "ds_rom",
@@ -2153,7 +2153,7 @@
    "value": 17.3119,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "ds_rom.j_per_token_mtp_b1_pg": {
    "target": "ds_rom",
@@ -2168,7 +2168,7 @@
    "value": 2.6636,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "ds_rom.tok_s_per_kw_ar_b1_pg": {
    "target": "ds_rom",
@@ -2183,7 +2183,7 @@
    "value": 147.84,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "ds_rom.static_w_icg": {
    "target": "ds_rom",
@@ -2198,7 +2198,7 @@
    "value": 27566.1,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "ds_rom.sat_ar_tok_s": {
    "target": "ds_rom",
@@ -2884,7 +2884,7 @@
    "value": 5.771,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "hbm_ds.accel_ar_system_w": {
    "target": "hbm_ds",
@@ -2899,7 +2899,7 @@
    "value": 12544.3,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "hbm_ds.accel_mtp_J_per_token": {
    "target": "hbm_ds",
@@ -2914,7 +2914,7 @@
    "value": 2.8904,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "hbm_ds.ablation_ar_J_per_token": {
    "target": "hbm_ds",
@@ -2944,7 +2944,7 @@
    "value": 457264.0,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "hbm_ds.accel_logic_mm2": {
    "target": "hbm_ds",
@@ -2959,7 +2959,7 @@
    "value": 32688.0,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "hbm_ds.bulk_copy_ss_slack_ps": {
    "target": "hbm_ds",
@@ -4380,7 +4380,7 @@
    "value": 84096.0,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "gpu_ds.b200x8_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4395,7 +4395,7 @@
    "value": 6.1596,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "gpu_ds.rom_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4410,7 +4410,7 @@
    "value": 5.2633,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "gpu_ds.hbm_accel_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4425,7 +4425,7 @@
    "value": 10.2418,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "gpu_ds.b200x8_iso_rom_replicas": {
    "target": "gpu_ds",
@@ -4440,7 +4440,7 @@
    "value": 10.659,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "gpu_ds.b200x8_iso_rom_agg_b1_ar": {
    "target": "gpu_ds",
@@ -4455,7 +4455,7 @@
    "value": 2669.0,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "gpu_ds.b200x8_iso_power_sat_ar": {
    "target": "gpu_ds",
@@ -4500,7 +4500,7 @@
    "value": 24.3987,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "gpu_ds.b200x8_mtp_b1_J_per_token_1m": {
    "target": "gpu_ds",
@@ -4515,7 +4515,7 @@
    "value": 12.5714,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "gpu_ds.b200x8_system_w": {
    "target": "gpu_ds",
@@ -4530,7 +4530,7 @@
    "value": 6512.0,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "gpu_ds.b200x8_ar_b1_tdp_J_per_token_1m": {
    "target": "gpu_ds",
@@ -4750,7 +4750,7 @@
    "value": 0.1127,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "hbm_qwen.j_per_token_ar_p8191_tp4": {
    "target": "hbm_qwen",
@@ -4765,7 +4765,7 @@
    "value": 0.7611,
    "resolved": true,
    "blob": "687934595d0d37f948f0d2beed79b093d4ebb02c",
-   "last_commit": "60c6e1172 2026-10-07"
+   "last_commit": "d83b8921c 2026-10-07"
   },
   "hbm_ds.ar_tok_s": {
    "target": "hbm_ds",
