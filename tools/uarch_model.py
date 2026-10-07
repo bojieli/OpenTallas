@@ -254,6 +254,35 @@ def dsrom_fh_native_vm_endpoint_model(distributed_check=False):
     return result
 
 
+
+def dsrom_fh_endpoint_fpipe3_model():
+    """Size the opt-in FPIPE3 endpoint before its first hardened-view route.
+
+    Counts are declared register bits before constant/dead-output pruning, not
+    mapped cell area. Golden campaign supplies composed latency before adoption.
+    """
+    req, rep = 2831, 1267
+    input_extra = 4 + 32 + 47 + 8 + 4 + 96 + 64 + rep + req
+    output_extra = 4 + 8 + 24 + 16 + 2 * req + 2 * rep + 2
+    return dict(schema='opentallas.dsrom.fh.endpoint-fpipe3.v1',
+        parameter='FPIPE=3', default=2, MACs_per_cycle=0,
+        memory_bytes_per_cycle=0, replicas=1,
+        input_bits_per_cycle=4+32+47+8+4+96+64+2048+rep,
+        output_bits_per_cycle=req+rep+5+8+24+16,
+        extra_declared_register_bits=input_extra+output_extra,
+        extra_register_area_proxy_um2=(input_extra+output_extra)*DFF_UM2,
+        slot_um=[480,480], slot_area_um2=480*480,
+        slots_added=0, boundary_bits_added=0,
+        added_input_cycles=1, added_output_cycles=1,
+        normalization_lanes=64, data_bits_per_enable=32,
+        normalization='Registered per-lane enables; each gates 32 local data bits',
+        routing='Existing boundary widths unchanged; one new local register boundary before normalization and at outputs',
+        routing_capacity_qualified=False, physical_closed=False,
+        composed_latency='Gold4 FPIPE3 pending; do not multiply two edges by every streamed beat: one-outstanding checked transactions',
+        exactness_record='results/rtl/dsrom_fh_redesign_20261006/fpipe3_takeover/record.json',
+        adoption=False)
+
+
 def dsrom_field_spine_route_price(r=16, pq=0):
     """Immutable a721 spine, physical-only hold/slew repair budget.
 
