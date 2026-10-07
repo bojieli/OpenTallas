@@ -12996,7 +12996,8 @@ def qwen_embedding_bank_closure_model(rows=151936, utilisation=0.60):
 
 
 def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9,
-                                     shared_die_station_hops=76, compute_die_station_hops=200):
+                                     shared_die_station_hops=76, compute_die_station_hops=200,
+                                     compute_die_area_mm2=859.37593):
     """Exact shared-ROM alternative; no full-ROM replication or silent slot squeeze.
 
     Conservatively store a complete row, then multicast bit-identical codes and
@@ -13028,7 +13029,7 @@ def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9,
     scale_reservation = bank["replica_count"]["scale_macros"] * bank["macro"]["area_um2"] / .60 / 1e6
     phy_each = 10.0
     shared_reservation = math.ceil((leaf_reservation + scale_reservation + compute_dies*phy_each + 20)/8)*8
-    base_compute_die = 821.3  # r21 area supplied by current die coordinator
+    base_compute_die = compute_die_area_mm2  # full-width station correction included; owner geometry handoff
     compute_die = base_compute_die - 11.046 + phy_each
     return dict(schema="opentallas.qwen.shared_embedding_die.proposal.v1", adopted=False,
         exactness="identical released INT8 code bytes and BF16 row scale; no arithmetic, decode-order or tensor changes",
@@ -13045,7 +13046,9 @@ def qwen_embedding_shared_die_model(compute_dies=4, clock_hz=1.2e9,
                       proposed_embedding_die=shared_reservation,
                       reticle_limit=858,
                       compute_receiver_logic_headroom=858-compute_die,
-                      fit="planned area envelope only; slot geometry/PDN/IR and protected buffers not yet implemented"),
+                      compute_reticle_fit_before_receiver_logic=compute_die <= 858,
+                      fit=("FAIL_RETICLE: shared embedding alone is insufficient after full-width station correction"
+                           if compute_die > 858 else "planned envelope only; slot geometry/PDN/IR and protected buffers not yet implemented")),
         service=dict(request_bytes=4, response_bytes=4098, response_beats=response_beats,
                      simultaneous_receiver_count=compute_dies, link_hop_cycles=hop_cycles,
                      link_hop_source="configs/hardware/technology.json: assumed rom_package_ucie, not routed PHY",
