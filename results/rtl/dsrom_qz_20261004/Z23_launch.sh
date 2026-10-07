@@ -98,7 +98,7 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --die-area 0 0 510.84 ${FH:?frame height} --core-area 0 0.27 510.84 $(python3 -c "print(round(${FH}-0.27,3))") --place-density ${PD:-0.6} --macro-place-halo 2 2 \
  --pin-region "^(p|busy|fault|walking|bank_free|sh_free).*=top:136.08-374.76" --pin-region "^(clk|rst|cfg|go|xs_v|xs_p|xs_b|xs_sv|xs_q0|xs_e0|xs_q1|xs_e1).*=bottom:${XLO:-136.08}-${XHI:-374.76}" \
  --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns ${HM:-0.02} \
- --step-tcl POST_MACRO_PLACE=physical/abi3/dsrom_qtiming_D_place.tcl --step-tcl POST_DETAIL_PLACE=physical/abi3/dsrom_q_pin_keepout2.tcl \
+ --step-tcl POST_MACRO_PLACE=physical/abi3/dsrom_qtiming_D_place.tcl --step-tcl POST_DETAIL_PLACE=${PDH:-physical/abi3/dsrom_q_pin_keepout2.tcl} \
  --orfs-var PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl --nickname-tag dsrom_qx10qm_${RUN}_20261006 \
  --output $J/out --sdc-append physical/abi3/dsrom_qy_elem_io.sdc \
  --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 \
