@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def model():
-    gt, tcut, smin, lanes, ta = 6144, 7, 7, 16, 3
+    gt, tcut, smin, lanes, ta = 6144, 7, 7, 16, 7
     lg = (gt - 1).bit_length()
     words = gt >> tcut
     positions = gt >> smin
@@ -75,19 +75,23 @@ def model():
                 reserved_signal_fraction=0.6,fits_channel=words*32 <= tracks*0.6,
                 die_routing_layer_check='PENDING; local capacity arithmetic is not a hub routing-layer pass'),
             latency=dict(existing_tree_cycles=1+len(levels)*(ta+1),
-                proposed_extra_capture_cycles_per_level=1,
-                conservative_extra_cycles_per_tree_transaction=len(levels),
-                extra_ns_per_tree_transaction_at_1p2GHz=len(levels)/1.2,
-                token_added_cycles_formula='5 * number_of_exposed_tree_transactions_per_token',
-                token_transaction_count=None,
-                composed_single_user_token_status='BLOCKED: calendar needs exact transaction count and transport mapping',
-                clock_status='LAT3 arithmetic at streaming clock unproven; serial-domain or deeper pipeline must be separately priced')),
+                proposed_extra_capture_cycles_per_level=0,
+                conservative_extra_cycles_per_tree_transaction=len(levels)*(ta-3),
+                extra_ns_per_tree_transaction_at_1p2GHz=len(levels)*(ta-3)/1.2,
+                token_added_cycles_formula='20 * number_of_exposed_matvec_operations_per_token; bound253*20=5060',
+                token_transaction_count=253,
+                conservative_token_added_cycles=5060,
+                bound_basis='36 layers * 7 separate dense projections (Q,K,V,O,gate,up,down) + head; each pipelined operation pays5*(7-3)=20 tail cycles once, no throughput loss. Fused projections only reduce this bound.',
+                baseline_cycles=216713,
+                conservative_AR_cycle_increase_percent=100*5060/216713,
+                composed_single_user_token_status='Conservative serialized operation bound; no overlap credit; adoption waits token-calendar confirmation',
+                clock_status='LAT7 exact arithmetic; 1.2GHz remains conditional on measured SS/FF closure')),
         deferred_composites=dict(
             vector_memory='Need actual protected SRAM port/shape inventory and registered slice crossings; no generic register-memory substitution',
             su64_sfu='Preserve lane-local fusion and serial feedback within each hardened lane group; price split transport',
             constants_sequencer='Keep closed core as reused view; price ROM bank/descriptor and VP sequencer cuts independently'),
         next_build_gate=['Exact geometry maps every group/lane word',
-            'Unified calendar composes added latency before RTL construction',
+            'Conservative253-operation bound prices20 added tail cycles; no adopted calendar update until exact measurement',
             'RTL lint launches calibrated closure immediately; exact and negative benches gate adoption',
             'True SS/FF +15/+15 ps with input150ps, output80fF, DRC0 and die-context validation'])
 

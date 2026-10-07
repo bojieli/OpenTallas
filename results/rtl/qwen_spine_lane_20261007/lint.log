@@ -1,0 +1,50 @@
+%Warning-WIDTH: rtl/hdc/ot_qwen_me_spine_h_w12.sv:977:24: Operator VAR 'PRUNE' expects 32 bits on the Initial value, but Initial value's GTS generates 1 bits.
+                                                        : ... In instance ot_qwen_spine_lane.u_lane
+  977 |     localparam integer PRUNE = (SMIN > 0);
+      |                        ^~~~~
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: rtl/hdc/ot_qwen_me_spine_h_w12.sv:996:47: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PRUNE' generates 32 bits.
+                                                        : ... In instance ot_qwen_spine_lane.u_lane
+  996 |             localparam integer ALWAYS = PRUNE && (SMIN >= lv);
+      |                                               ^~
+%Warning-WIDTH: rtl/hdc/ot_qwen_me_spine_h_w12.sv:996:32: Operator VAR 'ALWAYS' expects 32 bits on the Initial value, but Initial value's LOGAND generates 1 bits.
+                                                        : ... In instance ot_qwen_spine_lane.u_lane
+  996 |             localparam integer ALWAYS = PRUNE && (SMIN >= lv);
+      |                                ^~~~~~
+%Warning-WIDTH: rtl/hdc/ot_qwen_me_spine_h_w12.sv:999:44: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ALWAYS' generates 32 bits.
+                                                        : ... In instance ot_qwen_spine_lane.u_lane
+  999 |             localparam integer R1 = ALWAYS ? R0 : ((HOLD_TO > R0) ? HOLD_TO : R0);
+      |                                            ^
+%Warning-WIDTH: rtl/hdc/ot_qwen_me_spine_h_w12.sv:1008:17: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ALWAYS' generates 32 bits.
+                                                         : ... In instance ot_qwen_spine_lane.u_lane
+ 1008 |             if (!ALWAYS && HOLD_TO > 0) begin : g_hold
+      |                 ^
+%Warning-WIDTH: rtl/hdc/ot_qwen_me_spine_h_w12.sv:1021:17: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'ALWAYS' generates 32 bits.
+                                                         : ... In instance ot_qwen_spine_lane.u_lane
+ 1021 |                 if (ALWAYS) begin : g_a
+      |                 ^~
+%Warning-WIDTH: rtl/hdc/ot_hdc_fp32_add_lat.sv:207:14: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... In instance ot_qwen_spine_lane.u_lane.g_lvl[8].g_add[0].u_add.g_l.u.u.u_ca
+  207 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-UNOPTFLAT: rtl/hdc/ot_qwen_me_spine_h_w12.sv:1273:33: Signal unoptimizable: Feedback to clock or circular logic: 'ot_qwen_spine_lane.u_lane.g_lvl[8].g_hold.u_hold.g_ring.g_s[0].sel'
+                                                             : ... In instance ot_qwen_spine_lane.u_lane.g_lvl[8].g_hold.u_hold
+ 1273 |             wire [(D+1)*SW-1:0] sel;
+      |                                 ^~~
+                    rtl/hdc/ot_qwen_me_spine_h_w12.sv:1273:33:      Example path: ot_qwen_spine_lane.u_lane.g_lvl[8].g_hold.u_hold.g_ring.g_s[0].sel
+                    rtl/hdc/ot_qwen_me_spine_h_w12.sv:1277:44:      Example path: ASSIGNW
+                    rtl/hdc/ot_qwen_me_spine_h_w12.sv:1273:33:      Example path: ot_qwen_spine_lane.u_lane.g_lvl[8].g_hold.u_hold.g_ring.g_s[0].sel
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_qwen_spine_lane.u_lane.g_lvl[8].g_add[0].u_add.g_l.u.u.u_cmp.p'
+                                                  : ... In instance ot_qwen_spine_lane.u_lane.g_lvl[8].g_add[0].u_add
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_qwen_spine_lane.u_lane.g_lvl[8].g_add[0].u_add.g_l.u.u.u_cmp.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_qwen_spine_lane.u_lane.g_lvl[8].g_add[0].u_add.g_l.u.u.u_cmp.p
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_qwen_spine_lane.u_lane.g_lvl[8].g_add[0].u_add.g_l.u.u.u_dab.g'
+                                                  : ... In instance ot_qwen_spine_lane.u_lane.g_lvl[8].g_add[0].u_add
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_qwen_spine_lane.u_lane.g_lvl[8].g_add[0].u_add.g_l.u.u.u_dab.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_qwen_spine_lane.u_lane.g_lvl[8].g_add[0].u_add.g_l.u.u.u_dab.g

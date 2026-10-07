@@ -1,0 +1,666 @@
+{
+  "schema": "opentallas.qwen-spine-cut-contract.v1",
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_me_spine_h_w12.sv": "af266fe6c1dbf1f4b287caae55ec32045ee185a0fa933e42f04217c2ada5b7da",
+    "tools/qwen_rom_fulldie.py": "bc892b806a6ff1652a5a2830028ea445edf6334161e36109aea0df187fbc30ff",
+    "tools/qwen_rom_fulldie_b3r2.py": "26a327ab3e770df6a3bdd92bb2b351dfef0a8b94209fd2d0e45686f90b6309bc",
+    "results/floorplan/qwen_o4_unit_areas.json": "3805d42b5eaf79491eb8d72879d4e5deae717bd4c815284a807af2439b3bdf41"
+  },
+  "adoption": false,
+  "physical_closed": false,
+  "contract": {
+    "GT": 6144,
+    "TCUT": 7,
+    "SMIN": 7,
+    "W": 16,
+    "TREE_LAT": 7,
+    "input_words_per_lane": 48,
+    "output_words_per_lane": 48,
+    "data_bits_per_side": 24576,
+    "levels": [
+      {
+        "level": 8,
+        "pairs": 24,
+        "preserved_positions": 48,
+        "sum_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            8,
+            9
+          ],
+          [
+            10,
+            11
+          ],
+          [
+            12,
+            13
+          ],
+          [
+            14,
+            15
+          ],
+          [
+            16,
+            17
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            20,
+            21
+          ],
+          [
+            22,
+            23
+          ],
+          [
+            24,
+            25
+          ],
+          [
+            26,
+            27
+          ],
+          [
+            28,
+            29
+          ],
+          [
+            30,
+            31
+          ],
+          [
+            32,
+            33
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            36,
+            37
+          ],
+          [
+            38,
+            39
+          ],
+          [
+            40,
+            41
+          ],
+          [
+            42,
+            43
+          ],
+          [
+            44,
+            45
+          ],
+          [
+            46,
+            47
+          ]
+        ],
+        "sum_destination": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23
+        ],
+        "held_destination": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ],
+        "select_rule": "sel[level] ? pair_sum : held[position]; positions >= pairs always hold",
+        "cycles": 8
+      },
+      {
+        "level": 9,
+        "pairs": 12,
+        "preserved_positions": 48,
+        "sum_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            8,
+            9
+          ],
+          [
+            10,
+            11
+          ],
+          [
+            12,
+            13
+          ],
+          [
+            14,
+            15
+          ],
+          [
+            16,
+            17
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            20,
+            21
+          ],
+          [
+            22,
+            23
+          ]
+        ],
+        "sum_destination": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "held_destination": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ],
+        "select_rule": "sel[level] ? pair_sum : held[position]; positions >= pairs always hold",
+        "cycles": 8
+      },
+      {
+        "level": 10,
+        "pairs": 6,
+        "preserved_positions": 48,
+        "sum_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            8,
+            9
+          ],
+          [
+            10,
+            11
+          ]
+        ],
+        "sum_destination": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "held_destination": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ],
+        "select_rule": "sel[level] ? pair_sum : held[position]; positions >= pairs always hold",
+        "cycles": 8
+      },
+      {
+        "level": 11,
+        "pairs": 3,
+        "preserved_positions": 48,
+        "sum_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "sum_destination": [
+          0,
+          1,
+          2
+        ],
+        "held_destination": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ],
+        "select_rule": "sel[level] ? pair_sum : held[position]; positions >= pairs always hold",
+        "cycles": 8
+      },
+      {
+        "level": 12,
+        "pairs": 1,
+        "preserved_positions": 48,
+        "sum_pairs": [
+          [
+            0,
+            1
+          ]
+        ],
+        "sum_destination": [
+          0
+        ],
+        "held_destination": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47
+        ],
+        "select_rule": "sel[level] ? pair_sum : held[position]; positions >= pairs always hold",
+        "cycles": 8
+      }
+    ],
+    "output_active_positions_by_split": {
+      "7": 48,
+      "8": 24,
+      "9": 12,
+      "10": 6,
+      "11": 3,
+      "12": 1,
+      "13": 0
+    },
+    "golden": "Adjacent pairs in original position order, original RNE primitive; never mix lanes"
+  },
+  "existing_die_cut": {
+    "band_inputs": 6,
+    "bits_per_band": 512,
+    "output_bits": 512,
+    "input_bits_per_cycle": 3072,
+    "output_bits_per_cycle": 512,
+    "input_width_matches": false,
+    "output_width_matches": false,
+    "serialization_min_input_beats": 8,
+    "serialization_output_beats_by_split": {
+      "7": 48,
+      "8": 24,
+      "9": 12,
+      "10": 6,
+      "11": 3,
+      "12": 1,
+      "13": 0
+    },
+    "preserves_all_output_positions_beats": 48,
+    "rejection": "No packing, transaction identity, finite buffering or schedule proves these narrower ports equivalent"
+  },
+  "spatial_candidate": {
+    "master": "ot_qwen_me_sptree_w12",
+    "replicas": 16,
+    "MACs_per_cycle": 0,
+    "FP32_adds_per_cycle_per_replica": 46,
+    "communication_bytes_per_cycle_per_replica": {
+      "input": 192,
+      "output": 192
+    },
+    "boundary_bits_per_cycle_per_replica": {
+      "input": 1536,
+      "output": 1536,
+      "select": 14,
+      "valid": 14,
+      "fault": 1
+    },
+    "intensity": {
+      "FP32_adds_per_input_byte": 0.23958333333333334,
+      "MACs_per_input_byte": 0
+    },
+    "memory_ports": {},
+    "mux_demux": {
+      "select_mux_bits_per_replica": 1472,
+      "hold_mux_inputs": 2,
+      "output_demux": "Static lane-to-group transpose; no arithmetic"
+    },
+    "fanout": {
+      "max_select_loads": 768,
+      "requirement": "Kept local copies per <=4 positions; original single select register is not closure ready"
+    },
+    "area": {
+      "proxy_cell_um2_per_replica": 30358.243,
+      "hold_and_output_FF_bits_per_replica": 62976,
+      "proxy_method": "Historical TT fadd area plus exact hold/output flops; excludes adder pipeline and CTS/repair",
+      "width_um": 600,
+      "height_um": 600,
+      "utilization_proxy": 0.0843,
+      "total_reserved_mm2": 5.76,
+      "fits_1mm_rule": true,
+      "parent_slot_fit": false,
+      "parent_slot_reason": "16 independently placed lane masters and full-width group/lane transpose need regenerated die geometry"
+    },
+    "routing": {
+      "tracks_per_lane_boundary": 1536,
+      "channel_width_um": 160,
+      "assumed_two_layer_pitch_um": 0.064,
+      "track_capacity": 5000,
+      "reserved_signal_fraction": 0.6,
+      "fits_channel": true,
+      "die_routing_layer_check": "PENDING; local capacity arithmetic is not a hub routing-layer pass"
+    },
+    "latency": {
+      "existing_tree_cycles": 41,
+      "proposed_extra_capture_cycles_per_level": 0,
+      "conservative_extra_cycles_per_tree_transaction": 20,
+      "extra_ns_per_tree_transaction_at_1p2GHz": 16.666666666666668,
+      "token_added_cycles_formula": "20 * number_of_exposed_matvec_operations_per_token; bound253*20=5060",
+      "token_transaction_count": 253,
+      "conservative_token_added_cycles": 5060,
+      "bound_basis": "36 layers * 7 separate dense projections (Q,K,V,O,gate,up,down) + head; each pipelined operation pays5*(7-3)=20 tail cycles once, no throughput loss. Fused projections only reduce this bound.",
+      "baseline_cycles": 216713,
+      "conservative_AR_cycle_increase_percent": 2.3348853091415838,
+      "composed_single_user_token_status": "Conservative serialized operation bound; no overlap credit; adoption waits token-calendar confirmation",
+      "clock_status": "LAT7 exact arithmetic; 1.2GHz remains conditional on measured SS/FF closure"
+    }
+  },
+  "deferred_composites": {
+    "vector_memory": "Need actual protected SRAM port/shape inventory and registered slice crossings; no generic register-memory substitution",
+    "su64_sfu": "Preserve lane-local fusion and serial feedback within each hardened lane group; price split transport",
+    "constants_sequencer": "Keep closed core as reused view; price ROM bank/descriptor and VP sequencer cuts independently"
+  },
+  "next_build_gate": [
+    "Exact geometry maps every group/lane word",
+    "Conservative253-operation bound prices20 added tail cycles; no adopted calendar update until exact measurement",
+    "RTL lint launches calibrated closure immediately; exact and negative benches gate adoption",
+    "True SS/FF +15/+15 ps with input150ps, output80fF, DRC0 and die-context validation"
+  ]
+}
