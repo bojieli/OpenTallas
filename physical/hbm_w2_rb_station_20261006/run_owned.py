@@ -30,6 +30,8 @@ p.add_argument('--min-ff', type=int, default=20000)
 p.add_argument('--threads', type=int, default=16)
 p.add_argument('--tag', default='tk_W2_rb')
 p.add_argument('--safe', action='store_true', help='SAFE=1 station (registered permission decision)')
+p.add_argument('--post-route-ff-hold', action='store_true',
+               help='SS-only setup optimization at CTS/GRT; strict FF hold repair/signoff remains required after route')
 p.add_argument('--hold-margin-ns', type=float, default=0.01)
 a, passthrough = p.parse_known_args()
 for k, e in (('l_max', 'CK_SS_MAX'), ('l_min', 'CK_SS_MIN'), ('l_ff_min', 'CK_FF_MIN'), ('l_ff_max', 'CK_FF_MAX')):
@@ -123,7 +125,7 @@ argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb',
         '--param', 'ENABLE=1', '--param', f'NO={a.no}', '--param', 'REL_REG=1', '--param', f'SAFE={int(a.safe)}',
         '--clock-port', 'clk_sm', '--clock-period-ns', f'{a.period_ps/1000:.6f}',
         '--clock-uncertainty-ns', '0.06', '--clock-uncertainty-hold-ns', '0.025',
-        '--orfs-corner', 'WC', '--hold-corners', 'WC,BC', '--hold-margin-ns', str(a.hold_margin_ns),
+        '--orfs-corner', 'WC', '--hold-corners', ('WC' if a.post_route_ff_hold else 'WC,BC'), '--hold-margin-ns', str(a.hold_margin_ns),
         '--die-area', '0', '0', str(a.core_width+4.104), str(a.core_height+4.32),
         '--core-area', '2.052', '2.16', str(a.core_width+2.052), str(a.core_height+2.16),
         '--place-density', str(a.place_density),
@@ -135,12 +137,17 @@ argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb',
         '--orfs-var', 'IO_PLACER_H=M4 M6', '--orfs-var', 'IO_PLACER_V=M5 M7',
         '--orfs-var', 'SDC_FILE=/work/station.sdc',
         '--step-tcl', 'PRE_IO_PLACEMENT='+rel+'/pin_faces.tcl',
-        '--step-tcl', 'PRE_CTS='+rel+'/forwarded_subtree.tcl',
+        '--step-tcl', 'PRE_CTS='+rel+('/cts_setup_only.tcl' if a.post_route_ff_hold else '/forwarded_subtree.tcl'),
         '--pin-region', '^(clk_sm|por_n|release_held|in_.*|release_.*)$=bottom',
         '--pin-region', '^(fclk_o|out_.*|ACK_.*|fault|drained|paused)$=top',
         '--purpose', 'signoff_target', '--nickname-tag', f'{a.tag}_NO{a.no}',
-        '--output', str(run/'physical.json')] + passthrough
+        '--output', str(run/'physical.json')]
+if a.post_route_ff_hold:
+    argv += ['--step-tcl', 'PRE_GLOBAL_ROUTE='+rel+'/setup_only.tcl']
+argv += passthrough
 (run/'argv.json').write_text(json.dumps(dict(argv=argv, period_ps=a.period_ps, insertion=[a.l_min, a.l_max, a.l_ff_min],
+    optimization_schedule='SS_setup_then_postroute_FF_hold' if a.post_route_ff_hold else 'legacy_multicorner',
+    acceptance='strict measured-insertion SS setup >=15 ps and FF hold >=15 ps after route/ECO; DRC0',
     density=a.place_density, core=[a.core_width, a.core_height], tie_map=tie_map,
     effective_driver_sha256=hashlib.sha256(code.encode()).hexdigest()), indent=2)+'\n')
 try:
