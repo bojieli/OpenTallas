@@ -1638,7 +1638,12 @@ def buses(m):
             ix = m['scan'][st]['index']
             half = st[1]
             b0 = next(b_ for b_ in B if b_[0] == f'iv_{st}_0')
-            iy = (ix.y + ix.h - 200.0) if st[0] == 'S' else (ix.y + 200.0)
+            # opposite the t_vm pin run of band b5 (split record: band y0 + the pin run centre; parent R0 / MX)
+            sp_ = json.loads((ROOT / 'physical/hbm_accel_die_views/index_q/split/split.json').read_text())
+            pr_ = json.loads((ROOT / 'physical/hbm_accel_die_views/index_q/split/hfd_index_q_b5/ports.json').read_text())
+            ys_ = [(q[3] + q[5]) / 2 for q in pr_['ports']['t_vm']['pins']]
+            ly = sp_['bands']['hfd_index_q_b5']['y0_um'] + (min(ys_) + max(ys_)) / 2
+            iy = ix.y + (ix.h - ly if ix.orient in ('MX', 'R180') else ly)
             fa_, fb_ = ('W', 'E') if half == 'W' else ('E', 'W')
             ps = station((ix.x + ix.w + SHAVE + 30.0) if half == 'W' else (ix.x - 30.0), iy, f'ivp_{st}', 512, fa_, fb_, True)
             m.setdefault('clocked', {})[ps.name] = 'stream'
