@@ -32,6 +32,7 @@ import argparse
 import json
 import math
 import random
+import re
 import sys
 from pathlib import Path
 
@@ -40,16 +41,20 @@ sys.path.insert(0, str(ROOT / 'tools'))
 
 SU_PHYS = 'rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv'
 HC_RTL = 'rtl/hdc/v41x/ot_dsrom_su_hcpost.sv'
+EDGE_BAND = 160.0              # um: the end port bands sit at the far-end lane group (south / north)
 HOP = 480.0                    # um a face-chain stage (owner rule 2026-10-07: stages <= 480 um apart)
 QUARTERS = {
     # master, lane module, lane source, params, per-lane fields, C2 pairs, G groups / half, L lanes / column / group,
     # lane macro (w, h), channel width, spine (east) width
     'su': dict(master='hfd_su', lane='ot_su12_light', src=SU_PHYS, params={}, per_lane=['vi_q', 'rd_q', 'side_y'],
-               C2=3, G=8, L=2, PIPE=5),
+               C2=3, G=8, L=2, PIPE=5,
+               # r23 coordinator decision 2026-10-07: end port bands for the S-face / N-face buses (2.8 mm from the
+               # centre band): their face chains end at the far-end group of the south / north chains
+               end={'r': 'S', 'f_su_ns': 'N', 't_su_ns': 'N'}, lane_wh=(79.92, 162.0)),
     'sfu': dict(master='hfd_sfu', lane='ot_su12_sfu', src=SU_PHYS, params={}, per_lane=['vi_q', 'rd_q', 'side_y'],
-                C2=1, G=8, L=1, PIPE=1),
+                C2=1, G=8, L=1, PIPE=1, lane_wh=(159.84, 330.48)),
     'hc': dict(master='hfd_hc', lane='ot_dsrom_su_hcpost_lane', src=HC_RTL, params={'ML': 7, 'AL': 6},
-               per_lane=['r0', 'r1', 'r2', 'r3', 'y'], C2=1, G=11, L=2, PIPE=1),
+               per_lane=['r0', 'r1', 'r2', 'r3', 'y'], C2=1, G=11, L=2, PIPE=1, lane_wh=(85.32, 115.02)),
 }
 
 
@@ -67,11 +72,16 @@ class Plan:
     def __init__(self, q, ports):
         self.q = q
         self.din = [(p, v['bits']) for p, v in sorted(ports['ports'].items())
-                    if v['direction'] == 'input' and p not in ('ck', 'rst')]
+                    if v['direction'] == 'input' and p not in ('ck', 'rst') and not re.fullmatch(r'ck\d+', p)]
         self.dout = [(p, v['bits']) for p, v in sorted(ports['ports'].items()) if v['direction'] == 'output']
         assert all(v['direction'] in ('input', 'output') for v in ports['ports'].values())
-        self.WI = sum(w for _, w in self.din)
+        self.WI = sum(w for _, w in self.din)                 # every die input bit (the bench vector)
         self.WO = sum(w for _, w in self.dout)
+        self.end = q.get('end', {}) if q.get('end') and all(p in ports['ports'] for p in q.get('end', {})) else {}
+        self.din_m = [(p, w) for p, w in self.din if p not in self.end]
+        self.dout_m = [(p, w) for p, w in self.dout if p not in self.end]
+        self.WIm = sum(w for _, w in self.din_m)              # the centre band's inputs (folded into the broadcast)
+        self.WOm = sum(w for _, w in self.dout_m)
         self.ins, self.outs = lane_ports(q)
         self.bc = [(n, w) for n, w in self.ins if n not in q['per_lane']]
         self.pl = [(n, w) for n, w in self.ins if n in q['per_lane']]
@@ -81,22 +91,28 @@ class Plan:
         self.C2, self.G, self.L = q['C2'], q['G'], q['L']
         self.K = self.C2 * 2                 # chains: (pair, half)
         self.N = self.K * self.G * 2 * self.L
-        self.WC = -(-self.WO // self.K)      # accumulator width of one chain
+        self.WC = -(-self.WOm // self.K)     # accumulator width of one chain
         self.PIPE = q.get('PIPE', 0)         # extra (* keep *) wire stages on every die input and output (port band
         #                                      -> chain heads up to ~2.7 mm: a stage per <= 504 um)
         # r23 (2x hub, ports clustered per face): PER-PORT face chains sized from the geometry: the first input stage /
         # the last output stage AT the pin, a stage every <= HOP um from the pin-window centroid to the quarter centre
         # (the port band / chain heads), placed by common/face_chain_place.tcl (OT_FC_FILE = face_stages.tcl)
-        self.dp = {}
+        self.dp, self.pin_y, self.tgt_y = {}, {}, {}
+        self.H = ports.get('h_um', 0.0)
+        self.cks = sorted([p for p in ports['ports'] if re.fullmatch(r'ck\d+', p)], key=lambda x: int(x[2:]))
+        self.lane_y = {}                     # set from the placement (multi-ck segment choice)
         if ports.get('w_um') and HOP:
             cx, cy = ports['w_um'] / 2, ports['h_um'] / 2
             for p, v in ports['ports'].items():
-                if p in ('ck', 'rst') or not v.get('pins'):
+                if p in ('ck', 'rst') or re.fullmatch(r'ck\d+', p) or not v.get('pins'):
                     continue
                 xs = [(pp[2] + pp[4]) / 2 for pp in v['pins']]
                 ys = [(pp[3] + pp[5]) / 2 for pp in v['pins']]
-                d = abs(sum(xs) / len(xs) - cx) + abs(sum(ys) / len(ys) - cy)
+                ty = cy if p not in self.end else (EDGE_BAND if self.end[p] == 'S' else ports['h_um'] - EDGE_BAND)
+                d = abs(sum(xs) / len(xs) - cx) + abs(sum(ys) / len(ys) - ty)
                 self.dp[p] = max(1, math.ceil(d / HOP))
+                self.pin_y[p] = sum(ys) / len(ys)
+                self.tgt_y[p] = ty
         for p, _ in self.din + self.dout:
             self.dp.setdefault(p, self.PIPE + 1)
         self.DMAX = max(self.dp.values())
@@ -112,10 +128,32 @@ class Plan:
                         j += 1
 
     # ---- reference model (steady state, constant die inputs)
-    def lane_inputs(self, din_bits, j):
+    def split(self, bits, lst):
+        out, o = {}, 0
+        for p, w in lst:
+            out[p] = bits[o:o + w]
+            o += w
+        return out
+
+    def main_bits(self, din_bits):
+        d = self.split(din_bits, self.din)
+        return [b for p, _ in self.din_m for b in d[p]]
+
+    def bcw(self, din_bits):
+        m = self.main_bits(din_bits)
         bcw = [0] * self.LB
-        for u in range(self.WI):                 # bsrc[t] = XOR of din_q[t + m * LB]: every die input bit is used
-            bcw[u % self.LB] ^= din_bits[u]
+        for u in range(self.WIm):                # bsrc[t] = XOR of din_q[t + m * LB]: every centre input bit is used
+            bcw[u % self.LB] ^= m[u]
+        return bcw
+
+    def end_chains(self, side):
+        return [k for k in range(self.K) if (k % 2 == 0) == (side == 'S')]
+
+    def end_bits(self, side, ports_list):
+        return [(p, w) for p, w in ports_list if self.end.get(p) == side]
+
+    def lane_inputs(self, din_bits, j):
+        bcw = self.bcw(din_bits)
         plw = [bcw[(j * self.LP + t) % self.LB] for t in range(self.LP)]
         vec, bi, pi = {}, 0, 0
         for n, w in self.ins:
@@ -139,6 +177,12 @@ class Plan:
 
     def model(self, din_bits):
         acc = [[0] * self.WC for _ in range(self.K)]
+        d = self.split(din_bits, self.din)
+        for side in ('S', 'N'):                  # end-band inputs enter the far-end accumulator of their side's chains
+            ks = self.end_chains(side)
+            eb = [b for p, _ in self.end_bits(side, self.din) for b in d[p]]
+            for u, b in enumerate(eb):
+                acc[ks[u % len(ks)]][(u // len(ks)) % self.WC] ^= b
         for j, k, g, s, i in self.lanes():
             lo = self.stub_out(self.lane_inputs(din_bits, j))
             for t, b in enumerate(lo):
@@ -146,7 +190,19 @@ class Plan:
         flat = []
         for k in range(self.K):
             flat += acc[k]
-        return flat[:self.WO]
+        main = flat[:self.WOm]
+        bcw = self.bcw(din_bits)
+        outd, mo = {}, 0
+        for p, w in self.dout_m:
+            outd[p] = main[mo:mo + w]
+            mo += w
+        for side in ('S', 'N'):                  # end-band outputs read the far-end broadcast bank of their side
+            ks = self.end_chains(side)
+            t = 0
+            for p, w in self.end_bits(side, self.dout):
+                outd[p] = [bcw[(tt // len(ks)) % self.LB] for tt in range(t, t + w)]
+                t += w
+        return [b for p, _ in self.dout for b in outd[p]]
 
 
 def vec(bits):
@@ -156,32 +212,51 @@ def vec(bits):
 def emit_rtl(P, neg=False):
     q = P.q
     m = q['master']
+    nck = len(P.cks)
+    seg_h = (P.H / nck) if nck else 0.0
+
+    def ck(y):
+        """the clock net of a register at height y: one die clock pin per segment (r24 multi-ck) or the single ck"""
+        if not nck:
+            return 'clk'
+        return f'clk{min(nck - 1, max(0, int(y // seg_h)))}'
+
+    band_y = P.H / 2
+    gy = {}
+    for j, k, g, s_, i in P.lanes():
+        gy.setdefault((k, g), []).append(P.lane_y.get(j, band_y))
+    gy = {kg: sum(v) / len(v) for kg, v in gy.items()}
     L_ = [f'// tools/hbm_hub_quarter_gen.py --quarter {[k for k, v in QUARTERS.items() if v is q][0]}: PHYSICAL ENVELOPE die '
-          f'wrapper of {m} (r16g ports) around {P.N} closed {q["lane"]} lanes; see the generator docstring.',
-          f'// WI {P.WI} die input bits, WO {P.WO} die output bits, lane: broadcast {P.LB} + per-lane {P.LP} in, '
-          f'{P.LO} out; {P.K} chains x {P.G} groups x 2 columns x {P.L} lanes.',
+          f'wrapper of {m} around {P.N} closed {q["lane"]} lanes; see the generator docstring.',
+          f'// WI {P.WI} die input bits (centre band {P.WIm}), WO {P.WO} die output bits (centre band {P.WOm}), lane: broadcast '
+          f'{P.LB} + per-lane {P.LP} in, {P.LO} out; {P.K} chains x {P.G} groups x 2 columns x {P.L} lanes.'
+          + (f' {nck} die clock pins (one sub-tree per {seg_h:.1f} um segment).' if nck else ''),
           '`timescale 1ns/1ps', f'module {m} (']
     decl = []
-    for p, w in sorted([(p, w) for p, w in P.din] + [('ck', 1), ('rst', 1)]):
-        decl.append(f'    input  wire [{w - 1}:0] {p}')
-    for p, w in P.dout:
-        decl.append(f'    output wire [{w - 1}:0] {p}')
-    L_.append(',\n'.join(sorted(decl, key=lambda s: s.split()[-1])) + '\n);')
-    L_ += ['    wire clk = ck[0];',
-           '    // reset request: two-flop synchroniser at the boundary, carried down every broadcast chain',
+    cports = [(c, 1) for c in P.cks] if nck else [('ck', 1)]
+    for p_, w in sorted([(p_, w) for p_, w in P.din] + cports + [('rst', 1)]):
+        decl.append(f'    input  wire [{w - 1}:0] {p_}')
+    for p_, w in P.dout:
+        decl.append(f'    output wire [{w - 1}:0] {p_}')
+    L_.append(',\n'.join(sorted(decl, key=lambda x: x.split()[-1])) + '\n);')
+    if nck:
+        L_ += [f'    wire clk{c} = ck{c}[0];' for c in range(nck)]
+    else:
+        L_.append('    wire clk = ck[0];')
+    L_ += ['    // reset request: two-flop synchroniser at the boundary, carried down every broadcast chain',
            '    (* keep *) reg [1:0] rst_q;',
-           '    always @(posedge clk) rst_q <= {rst_q[0], rst[0]};',
-           '    // face chains: input stage 0 at the pin, a stage per <= 480 um to the port band (per-port depth dp)']
-    for p, w in P.din:
-        D = P.dp[p]
-        L_.append(f'    (* keep *) reg [{w - 1}:0] {p}_i0;  always @(posedge clk) {p}_i0 <= {p};')
-        for s_ in range(1, D):
-            L_.append(f'    (* keep *) reg [{w - 1}:0] {p}_i{s_};  always @(posedge clk) {p}_i{s_} <= {p}_i{s_ - 1};')
-    L_.append(f'    wire [{P.WI - 1}:0] din_q = {{' + ', '.join(f'{p}_i{P.dp[p] - 1}' for p, _ in reversed(P.din)) + '};')
+           f'    always @(posedge {ck(band_y)}) rst_q <= {{rst_q[0], rst[0]}};',
+           '    // face chains: input stage 0 at the pin, a stage per <= 480 um to its band (per-port depth dp)']
+    for p_, w in P.din:
+        D = P.dp[p_]
+        py, ty = P.pin_y.get(p_, band_y), P.tgt_y.get(p_, band_y)
+        for s_ in range(D):
+            src = p_ if s_ == 0 else f'{p_}_i{s_ - 1}'
+            L_.append(f'    (* keep *) reg [{w - 1}:0] {p_}_i{s_};  always @(posedge {ck(py + s_ / D * (ty - py))}) {p_}_i{s_} <= {src};')
+    L_.append(f'    wire [{P.WIm - 1}:0] din_q = {{' + ', '.join(f'{p_}_i{P.dp[p_] - 1}' for p_, _ in reversed(P.din_m)) + '};')
     L_ += [f'    wire [{P.LB}:0] bsrc;']
-    # bsrc[t] = XOR of din_q[t + m LB]; bsrc[LB] = reset
     fold = {}
-    for u in range(P.WI):
+    for u in range(P.WIm):
         fold.setdefault(u % P.LB, []).append(f'din_q[{u}]')
     L_.append(f'    assign bsrc[{P.LB}] = rst_q[1];')
     for t in range(P.LB):
@@ -189,11 +264,11 @@ def emit_rtl(P, neg=False):
     for k in range(P.K):
         for g in range(P.G):
             src = 'bsrc' if g == 0 else f'bc_{k}_{g - 1}'
-            L_.append(f'    (* keep *) reg [{P.LB}:0] bc_{k}_{g};  always @(posedge clk) bc_{k}_{g} <= {src};')
-    outs_by_lane = {}
-    for j, k, g, s, i in P.lanes():
+            L_.append(f'    (* keep *) reg [{P.LB}:0] bc_{k}_{g};  always @(posedge {ck(gy[(k, g)])}) bc_{k}_{g} <= {src};')
+    for j, k, g, s_, i in P.lanes():
         b = f'bc_{k}_{g}'
-        conns = ['.clk(clk)', f'.rst_n(~{b}[{P.LB}])']
+        lc = ck(P.lane_y.get(j, band_y))
+        conns = [f'.clk({lc})', f'.rst_n(~{b}[{P.LB}])']
         bi = 0
         pi = 0
         for n, w in P.ins:
@@ -210,17 +285,25 @@ def emit_rtl(P, neg=False):
         for n, w in P.outs:
             conns.append(f'.{n}({lo}[{ob + w - 1}:{ob}])')
             ob += w
-        prm = ''.join(f'#(.{a}({v})) ' for a, v in [])
+        prm = ''
         if q['params']:
             prm = '#(' + ', '.join(f'.{a}({v})' for a, v in q['params'].items()) + ') '
         L_.append(f'    {q["lane"]} {prm}u_lane_{j} (' + ', '.join(conns) + ');')
-        L_.append(f'    (* keep *) reg [{P.LO - 1}:0] lq_{j};  always @(posedge clk) lq_{j} <= {lo};')
-        outs_by_lane[j] = (k, g)
+        L_.append(f'    (* keep *) reg [{P.LO - 1}:0] lq_{j};  always @(posedge {lc}) lq_{j} <= {lo};')
+    # end-band inputs: XORed into the far-end accumulator of their side's chains
+    einj = {}
+    for side in ('S', 'N'):
+        ks = P.end_chains(side)
+        u = 0
+        for p_, w in P.end_bits(side, P.din):
+            for b in range(w):
+                einj.setdefault((ks[u % len(ks)], (u // len(ks)) % P.WC), []).append(f'{p_}_i{P.dp[p_] - 1}[{b}]')
+                u += 1
     # accumulators: group G-1 is the far end; head g = 0 at the boundary
     for k in range(P.K):
         for g in reversed(range(P.G)):
             terms = {}
-            for j, kk, gg, s, i in P.lanes():
+            for j, kk, gg, s_, i in P.lanes():
                 if kk != k or gg != g:
                     continue
                 for t in range(P.LO):
@@ -228,22 +311,36 @@ def emit_rtl(P, neg=False):
                     if neg and j == 1 and t < 8:
                         x = (x + 1) % P.WC          # negative control: lane 1's first 8 result bits one slot off
                     terms.setdefault(x, []).append(f'lq_{j}[{t}]')
+            if g == P.G - 1:
+                for x in range(P.WC):
+                    terms.setdefault(x, []).extend(einj.get((k, x), []))
             prev = f'acc_{k}_{g + 1}' if g + 1 < P.G else None
             L_.append(f'    wire [{P.WC - 1}:0] nx_{k}_{g};')
             for x in range(P.WC):
                 parts = ([f'{prev}[{x}]'] if prev else []) + terms.get(x, [])
                 L_.append(f'    assign nx_{k}_{g}[{x}] = ' + (' ^ '.join(parts) if parts else "1'b0") + ';')
-            L_.append(f'    (* keep *) reg [{P.WC - 1}:0] acc_{k}_{g};  always @(posedge clk) acc_{k}_{g} <= nx_{k}_{g};')
+            L_.append(f'    (* keep *) reg [{P.WC - 1}:0] acc_{k}_{g};  always @(posedge {ck(gy[(k, g)])}) acc_{k}_{g} <= nx_{k}_{g};')
     L_.append(f'    wire [{P.K * P.WC - 1}:0] heads = {{' + ', '.join(f'acc_{k}_0' for k in reversed(range(P.K))) + '};')
     # face chains: the last output stage at the pin (per-port depth dp)
     ob = 0
-    for p, w in P.dout:
-        D = P.dp[p]
-        L_.append(f'    (* keep *) reg [{w - 1}:0] {p}_o0;  always @(posedge clk) {p}_o0 <= heads[{ob + w - 1}:{ob}];')
-        for s_ in range(1, D):
-            L_.append(f'    (* keep *) reg [{w - 1}:0] {p}_o{s_};  always @(posedge clk) {p}_o{s_} <= {p}_o{s_ - 1};')
-        L_.append(f'    assign {p} = {p}_o{D - 1};')
+    srcs = {}
+    for p_, w in P.dout_m:
+        srcs[p_] = f'heads[{ob + w - 1}:{ob}]'
         ob += w
+    for side in ('S', 'N'):                      # end-band outputs: the far-end broadcast bank of their side
+        ks = P.end_chains(side)
+        t = 0
+        for p_, w in P.end_bits(side, P.dout):
+            srcs[p_] = '{' + ', '.join(f'bc_{ks[tt % len(ks)]}_{P.G - 1}[{(tt // len(ks)) % P.LB}]'
+                                       for tt in reversed(range(t, t + w))) + '}'
+            t += w
+    for p_, w in P.dout:
+        D = P.dp[p_]
+        py, ty = P.pin_y.get(p_, band_y), P.tgt_y.get(p_, band_y)
+        for s_ in range(D):
+            src = srcs[p_] if s_ == 0 else f'{p_}_o{s_ - 1}'
+            L_.append(f'    (* keep *) reg [{w - 1}:0] {p_}_o{s_};  always @(posedge {ck(ty + (s_ + 1) / D * (py - ty))}) {p_}_o{s_} <= {src};')
+        L_.append(f'    assign {p_} = {p_}_o{D - 1};')
     L_.append('endmodule\n')
     return '\n'.join(L_)
 
@@ -284,6 +381,7 @@ def emit_tb(P, nvec, seed, out):
     q = P.q
     m = q['master']
     hold = 2 * P.G + 2 * P.DMAX + 14
+    cks = ', '.join(f'.{c}(clk)' for c in P.cks) if P.cks else '.ck(clk)'
     ports = ', '.join(f'.{p}(din[{o + w - 1}:{o}])' for (p, w), o in zip(P.din, _offs(P.din))) + ', ' + \
         ', '.join(f'.{p}(dout[{o + w - 1}:{o}])' for (p, w), o in zip(P.dout, _offs(P.dout)))
     return f"""`timescale 1ns/1ps
@@ -297,7 +395,7 @@ module tb;
     reg [{P.WI - 1}:0] vin [0:{nvec - 1}];
     reg [{P.WO - 1}:0] vout [0:{nvec - 1}];
     integer v, c, bad, lat, first;
-    {m} dut(.ck(clk), .rst(rst), {ports});
+    {m} dut({cks}, .rst(rst), {ports});
     initial begin
         $readmemh("tb_in.mem", vin); $readmemh("tb_out.mem", vout);
         bad = 0; lat = 0;
@@ -398,6 +496,12 @@ def main():
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     m = q['master']
+    pj = json.loads(Path(a.ports).read_text())
+    if not a.lane_size and q.get('lane_wh'):
+        a.lane_size = list(q['lane_wh'])   # the closed lane footprint (registers' clock segments need the placement)
+    if a.lane_size:                      # placement first: the multi-ck wrapper clocks each register by its segment
+        tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], two_sided=a.two_sided)
+        P.lane_y = {r[0]: r[2] + a.lane_size[1] / 2 for r in fp['lanes']}
     (out / f'{m}.sv').write_text(emit_rtl(P))
     (out / f'{m}_neg.sv').write_text(emit_rtl(P, neg=True))
     (out / f'{q["lane"]}_simstub.sv').write_text(emit_stub(P))
@@ -411,8 +515,6 @@ def main():
     (out / 'face_stages.tcl').write_text('# tools/hbm_hub_quarter_gen.py: die port -> face chain depth (common/face_chain_place.tcl)\n' +
         ''.join(f'set fc_ps({p}) {P.dp[p]}\n' for p, _ in P.dout) + ''.join(f'set fc_psi({p}) {P.dp[p]}\n' for p, _ in P.din))
     if a.lane_size:
-        pj = json.loads(Path(a.ports).read_text())
-        tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], two_sided=a.two_sided)
         (out / 'macro_place.tcl').write_text(tcl)
         (out / 'floorplan.json').write_text(json.dumps({k: v for k, v in fp.items() if k != 'lanes'}, indent=1) + '\n')
     print(json.dumps(info))

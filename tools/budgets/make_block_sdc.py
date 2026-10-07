@@ -16,6 +16,8 @@ sdc (read after the block's base SDC that creates the clock on its clock port):
   * ports of another frequency domain (block-internal CDC; the sheet's period_ps / clock_domain) are timed against
     vclk unless --domain-clock PERIOD=CLOCK names the block's real clock of that domain.
   * route mode: setup uncertainty 60 + 63 (route over-constrained to ~770 ps, MARGIN-FIRST); signoff: 60.  Hold 25.
+  * route mode puts the sheet latency on the real clock too (ideal until CTS); signoff mode puts it on vclk only and
+    re-asserts set_propagated_clock on the real clock (a post-SDC latency on it made sign-off ideal-clock: fixed 2026-10-07).
   * CDC ports (another frequency domain): max delay = faster period - 123 ps, datapath only; hold false.
   * async reset pins: false path (synchronised in the block); the reset-release multicycle of make_io_vclk.sh.
 ff:  the corner-true FF hold post-SDC (make_io_vclk_ff.sh convention): outputs held against vclk at the sheet FF
@@ -58,7 +60,13 @@ def sdc(sh, clock, mode, domain_clocks=None):
            f'create_clock -name vclk -period [get_property [get_clocks {clock}] period]',
            f'set_clock_uncertainty -setup {unc:g} [get_clocks {{{clock} vclk}}]',
            f'set_clock_uncertainty -hold {sh["skew"]["hold_uncertainty_ps"]:g} [get_clocks {{{clock} vclk}}]',
-           f'set_clock_latency {L:g} [get_clocks {{{clock} vclk}}]',
+           # route: the real clock carries the same ideal latency until CTS propagates it (pre-CTS IO parity).
+           # signoff: vclk ONLY.  This file is a post-SDC read after set_propagated_clock (corner_sta.py): a
+           # set_clock_latency on the real clock turns it back to IDEAL, so sign-off timed every flop at the sheet SS
+           # insertion in both corners (hfd_svc_SE_s6 41d574827: FF -135.15 = core_clk ideal 558 vs the FF IO model
+           # launched at the FF max insertion 408; the clock tree's own skew was not timed at all).
+           (f'set_clock_latency {L:g} [get_clocks {{{clock} vclk}}]' if mode == 'route'
+            else f'set_clock_latency {L:g} [get_clocks vclk]'),
            'set ot_in [all_inputs -no_clocks]',
            f'unset_input_delay -clock {clock} $ot_in',
            f'unset_output_delay -clock {clock} [all_outputs]']
@@ -110,6 +118,9 @@ def sdc(sh, clock, mode, domain_clocks=None):
     out += ['# reset release (rst_mcp2, as make_io_vclk.sh)', 'set ot_rst {}',
             'foreach ot_c [get_cells *] { if {[string match {rst_s\\[1\\]*} [get_full_name $ot_c]]} { lappend ot_rst $ot_c } }',
             'if {[llength $ot_rst]} { set_multicycle_path -setup 2 -from $ot_rst; set_multicycle_path -hold 1 -from $ot_rst }']
+    if mode == 'signoff':
+        out += ['# sign-off times the routed clock tree: keep the real clock propagated after this post-SDC',
+                f'set_propagated_clock [get_clocks {{{clock}}}]']
     return '\n'.join(out) + '\n'
 
 
