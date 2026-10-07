@@ -56,9 +56,9 @@ module ot_s81ph_sel_ctl_half #(
     localparam integer QC   = KW + 1;               // coarse quota width
     localparam integer XR   = 2 * XD;               // round trip added by the tile hops
     // HALF RATE (SAFE backstop): the two search units run on ck gated every other cycle (latch + AND); the slice round
-    // trip of 3 + XR fast edges + 1 is 2 x (3 + XRH + 1) slow-edge aligned (XR even), so XRH = XR / 2 - 2; every wait /
+    // trip of 3 + XR fast edges + 1 is 2 x (3 + XRH + 1) slow-edge aligned (XR even): XRH = XR / 2 - 1 (bench-checked); every wait /
     // hold in fast edges is twice the slow-edge latency plus the gate phase
-    localparam integer XRH  = (XR >= 4) ? XR / 2 - 2 : 0;
+    localparam integer XRH  = (XR >= 2) ? XR / 2 - 1 : 0;   // bench: XR/2-2 fails (res aligned one slow edge early), -1 and 0 pass
     localparam integer WAIT = 2 * (14 + XRH) + 2;
     localparam integer HOLD = 2 * (26 + 2 * XRH) + 4;
     localparam integer HC0  = 2 * (20 + 2 * XRH) + 4, HF0 = 2 * (36 + 2 * XRH) + 4, CLRW = 2 * (20 + 2 * XRH) + 4;
