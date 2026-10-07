@@ -326,7 +326,12 @@ module ot_hdc_v41x_vec #(
                        D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 31 + DDIV + SIDEX, D_EG = 33 + D_SIG + SIDEX;
     localparam [15:0] H_A = ALAT;
     localparam [15:0] H_R = ALAT + ROPI;                        // a reducer TREE / TIME level
-    localparam [15:0] H_F5 = 5 + OPR + CAPR, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;   // gather fetch, M1 divide / multiply
+`ifdef OT_NEG_DDIV_DEPTH
+    // NEGATIVE CONTROL (compile-time only): the M1 divide line one cycle short of the divider (any DDIV)
+    localparam [15:0] H_F5 = 5 + OPR + CAPR, H_F3 = 3 + CAPR, H_MD = DDIV + OPR - 1, H_MM = MLAT + OPR;
+`else
+    localparam [15:0] H_F5 = 5 + OPR + CAPR, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;
+`endif   // gather fetch, M1 divide / multiply
     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
                       H_EG = D_EG;
     function automatic [9:0] sfu_d(input [2:0] s);

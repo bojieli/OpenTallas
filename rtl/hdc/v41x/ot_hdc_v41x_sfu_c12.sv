@@ -680,7 +680,9 @@ module ot_hdc_v41x_softplus #(
     ot_hdc_v41x_exp #(.LM(LM), .LA(LA)) u_exp (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b1, x[30:0]}), .y(t), .vo(), .fault(f_exp));
     ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_den (clk, rst_n, vd[T_EXP], t, 32'h40000000, den, f_den);
     ot_hdc_delay #(.W(32), .D(LA)) d_t (clk, rst_n, t, t_d);
-    generate if (DDIV == 21) begin : g_d21
+    generate if (DDIV == 31) begin : g_d31
+        ot_hdc_fdiv    u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_DEN]), .a(t_d), .b(den), .y(u), .vo(), .fault(f_div));
+    end else if (DDIV == 21) begin : g_d21
         ot_dsrom_fdiv_f12 u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_DEN]), .a(t_d), .b(den), .y(u), .vo(), .fault(f_div));
     end else begin : g_d19
         ot_hdc_v41x_fdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_DEN]), .a(t_d), .b(den), .y(u), .vo(), .fault(f_div));
