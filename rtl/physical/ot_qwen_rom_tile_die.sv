@@ -1,13 +1,14 @@
 `timescale 1ns/1ps
 // Qwen ROM die TILE master (r21 qfd_tile / qfd_tile_e, 1,536 copies): the W12 ROM tile (ot_qwen_rom_tile_w12, 10 ROM
-// macros + 8 KiB KV slice) plus its per-tile landing-fabric hop (r19 "KV reconciliation": KVL_BITS = 768 a row, one
-// hop a tile) and the per-tile landing merge (ot_qwen_kv_land_merge, the hardened element the stream4 service models).
-// Row landing word (768 b, emitted by the stack's qfd_kvc landing crossbar; the row bus is slot-scheduled there):
-//   slot k (k < LSLOTS = 2) at [k*SLW +: SLW], SLW = 281:
+// macros + 8 KiB KV slice) plus its per-tile landing-fabric hop (r19 "KV reconciliation"; KVL = 984 a row: 3 slots,
+// so a stack's 12 rows take 36 landing words a core cycle >= its 32 PCs x 976.6 / 1200 = 26; 2 slots in 768 b were 24)
+// and the per-tile landing merge (ot_qwen_kv_land_merge, the hardened element the stream4 service models).
+// Row landing word (KVL = 984 b, emitted by the stack's qfd_kvc landing crossbar; the row bus is slot-scheduled there):
+//   slot k (k < LSLOTS = 3) at [k*SLW +: SLW], SLW = 281:
 //     {col[5:0], v, port[6:0], loc[6:0], isk, ktail, sel[1:0], beat[255:0]}   (MSB .. LSB)
 //   rr_n[6:0]     at [LSLOTS*SLW +: 7]       rotating merge origin of the next cycle (row-global)
 //   tail_lm[127:0] at [LSLOTS*SLW + 7 +: 128]  lanes < P mod 16 of the open K tile (row-global)
-//   the remaining 71 bits pass the hop unused.
+//   the remaining bits (984 - 978 = 6) pass the hop unused.
 // A slot is this tile's when v and col == tile_id[5:0] (static strap).  Margin rule: register-to-register boundary.
 //   li -> li_q (W pin register) -> lo_q (E pin register, kept copy) -> lo: TWO cycles a tile hop (the 267 um tile
 //   width does not fit one SS cycle with a 150 ps inter-region pin budget); priced in the Qwen record.
@@ -27,8 +28,8 @@ module ot_qwen_rom_tile_die #(
     parameter integer KV_PREP = 0,
     parameter integer MUL_LAT = 5,
     parameter integer TREE_LAT = 3,
-    parameter integer KVL = 768,
-    parameter integer LSLOTS = 2
+    parameter integer KVL = 984,
+    parameter integer LSLOTS = 3
 ) (
     input  wire              clk,
     input  wire              rst_n,
