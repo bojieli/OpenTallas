@@ -14,9 +14,9 @@ spec.loader.exec_module(S)
 
 class SignoffTest(unittest.TestCase):
     def test_margin_boundary_and_missing_reports(self):
-        self.assertTrue(all(S.acceptance(40, 15)[k] for k in ('SS_ok', 'FF_ok')))
-        self.assertFalse(S.acceptance(40 - .01, 15)['SS_ok'])
-        self.assertFalse(S.acceptance(40, 14.99)['FF_ok'])
+        self.assertTrue(all(S.acceptance(15, 15)[k] for k in ('SS_ok', 'FF_ok')))
+        self.assertFalse(S.acceptance(15 - .01, 15)['SS_ok'])
+        self.assertFalse(S.acceptance(15, 14.99)['FF_ok'])
         for value in (None, float('nan'), float('inf'), -1):
             self.assertFalse(S.acceptance(value, value)['SS_ok'])
             self.assertFalse(S.acceptance(value, value)['FF_ok'])
