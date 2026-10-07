@@ -129,6 +129,7 @@ argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb',
         '--place-density', str(a.place_density),
         '--stages', 'synth,pnr', '--keep-heavy-artifacts',
         '--orfs-var', f'NUM_CORES={a.threads}', '--orfs-var', 'ADDER_MAP_FILE=',
+        '--orfs-var', 'CTS_SNAPSHOTS=1',  # retain pre-repair ODB/SDC if RSZ-0060 aborts
         '--orfs-var', 'PLACE_DENSITY_LB_ADDON=',
         '--orfs-var', 'PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks',
         '--orfs-var', 'IO_PLACER_H=M4 M6', '--orfs-var', 'IO_PLACER_V=M5 M7',

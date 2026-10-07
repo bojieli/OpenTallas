@@ -7,7 +7,7 @@ contract SDC (make_sdc.py) at 833.333 ps with L = measured max (setup) and
 measured min (hold side of the budget), then reports SS setup and FF hold,
 split reg2reg / in2reg / reg2out. Accept: SS >= +15 ps, FF >= +15 ps.
 """
-import argparse, json, re, subprocess, sys
+import argparse, json, math, re, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -41,7 +41,10 @@ def sta(case, odb, sdc, spef, libc, delay):
            '-e', f'SDC={rel(sdc)}', '-e', f'SPEF={rel(spef)}', '-e', f'DELAY={delay}', 'openroad/orfs:asap7lock',
            'bash', '-lc', 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -no_splash /work/tk_signoff.tcl']
     p = subprocess.run(cmd, capture_output=True, text=True)
-    return p.stdout+p.stderr
+    log = p.stdout+p.stderr
+    if p.returncode or re.search(r"(?m)^\[ERROR|^Error:", log):
+        raise RuntimeError(f"STA failed (exit {p.returncode}):\n{log}")
+    return log
 
 
 def parse(log):
@@ -56,9 +59,20 @@ def parse(log):
     return out
 
 
+def acceptance(ss, ff):
+    # A missing/non-finite report is never evidence of closure.
+    ok = lambda value, margin: value is not None and math.isfinite(value) and value >= margin
+    return dict(SS_setup_ps=ss, FF_hold_ps=ff,
+                SS_ok=ok(ss, 15), FF_ok=ok(ff, 15))
+
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--run', type=Path, required=True); a = ap.parse_args()
     run = a.run.resolve()
+    # Preserve every previous verdict, including failures. Use a fresh copied
+    # run for a new evaluation; never overwrite a prior signoff.
+    if (run/'signoff.json').exists() or any(run.glob('signoff_*.log')):
+        raise SystemExit('existing signoff evidence; refusing overwrite')
     odb = next(run.rglob('results/asap7/*/base/6_final.odb'))
     res = odb.parent; spef = res/'6_final.spef'; case = next(p for p in odb.parents if (p/'config.mk').is_file())
     sdc0 = case/'station.sdc'
@@ -79,12 +93,13 @@ def main():
         (run/f'signoff_{corner}.log').write_text(log)
         result[corner] = parse(log)
     ss = result['SS']['worst'].get('max'); ff = result['FF']['worst'].get('min')
-    result['accept'] = dict(SS_setup_ps=ss, FF_hold_ps=ff, SS_ok=ss is not None and ss >= 15, FF_ok=ff is not None and ff >= 15)
+    result['accept'] = acceptance(ss, ff)
     (run/'signoff.json').write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps(result['accept']))
+    return 0 if all(result['accept'][k] for k in ('SS_ok', 'FF_ok')) else 1
 
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main())
 # closure-loop source paths: whole rtl + native_quarter deps
 # bump 1791361553
