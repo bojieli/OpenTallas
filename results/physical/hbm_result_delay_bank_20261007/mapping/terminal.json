@@ -1,0 +1,74 @@
+{
+  "status": "MAPPED_FUNCTIONAL_PASS_PHYSICAL_TIMING_OPEN",
+  "selected": false,
+  "yosys": "0.68+post",
+  "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+  "mapped_cell_counts": {
+    "INVx1_ASAP7_75t_R": 512,
+    "DFFASRHQNx1_ASAP7_75t_R": 512
+  },
+  "mapped_cell_area_um2": 216.48384,
+  "async_ff_area_um2": 194.08896,
+  "proposed_outline_um": [
+    32.4,
+    32.4
+  ],
+  "mapped_cell_utilization_percent": 20.62222222222222,
+  "liberty_corner": "TT used for cell mapping/function/area only; no timing qualification",
+  "gate_sim": {
+    "returncode": 0,
+    "stdout": "PASS full64x8 checks=2048 captures=1024 async_resets=4\n",
+    "enabled_data_captures": 1024,
+    "async_reset_checks": 4,
+    "scope": "Mapped ENABLE1 bank. Default-off checked only in original RTL gate; mapped TB disabled output is a constant."
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/result_delay_bank_20261007/ot_hbm_result_delay_bank.sv": "83aa03bce72ba3301aa9cdedca520122bee386c2868c560ab99f4085182cb69a",
+    "physical/hbm_result_delay_bank_20261007/map.ys": "722e04c25e765b82516947123749258aa1c5659b52bf4dd1e3e4ad9bb3b213bb",
+    "physical/hbm_result_delay_bank_20261007/inv_map.v": "6eff4643500b81bfe97dc6396be4a8b05ca63b4b1af87a48aa779e1d962a5c10"
+  },
+  "liberty_sha256": {
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+  },
+  "artifacts_uncompressed_sha256": {
+    "mapped.json.gz": "72094c153f726af755266c03857e9c2c02a2148f79d01b362fc91c9aa6ea170b",
+    "mapped.v.gz": "cefc171f24238f368dfc72cff3c8ba70cddf76f6e1e9b9e830e157f81abebc2c",
+    "mapping.log.gz": "ee78ace9af4436388d1d8849a37156ecf33de06dc59b8b74c3dbbf448bf2c447",
+    "functional_netlist.v.gz": "75da592aad61a273eab2166573d33d4d5b2d0cfd014020e8330a0e9b9ee0efa6",
+    "functional_models.log.gz": "ab4f239e45bb8d98e3058769c2985d2e43ef8c5411477cd0a66a478130a8b048",
+    "functional_models.ys": "467975bfdc38477bcb7aa904da68fc8bf442d1959fc97c18af6df0c748aa8a13",
+    "mapped_tb.sv": "a0315a0f73e66faa7ad3e03b4514cbabcafb221562d88107385d61a9699d761f"
+  },
+  "retained_failures": [
+    {
+      "name": "abc_inv_only",
+      "returncode": 1,
+      "reason": "ABC cannot map an inverter-only library",
+      "log": "abc_inv_only_failure.log.gz",
+      "log_sha256": "a37d93a4729fe64f16b2a10002971f128a962614aa4f86cbe8fb35ad96a25a5a"
+    },
+    {
+      "name": "abc_multiple_libs",
+      "returncode": 1,
+      "reason": "ABC failed with status B while loading separate libraries",
+      "log": "abc_multiple_libs_failure.log.gz",
+      "log_sha256": "a452339ad0487deec1281ec040ebb4f2559109b3045ad4e3f76289ef4176d681"
+    },
+    {
+      "name": "unused_icg_model",
+      "returncode": 1,
+      "reason": "Mapping succeeded; functional library import rejected unused ICG without function",
+      "log": "unused_icg_model_failure.log.gz",
+      "log_sha256": "f1c8f70c2a6c7dbd00afe7023e6668855f4518bd0408191a8ef69e548efbad3a"
+    }
+  ],
+  "remaining_gates": [
+    "fixed actual BPin readback",
+    "SS/FF60/25ps setup/hold/recovery/removal",
+    "actual parent launch/capture and loads",
+    "joint transport/control/bank placement",
+    "fullpacket protection"
+  ],
+  "rtl_source_commit": "7e4e0689c"
+}
