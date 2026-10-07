@@ -4,7 +4,7 @@
 # in max = CK_SS_MEAN + 250, in min = CK_FF_MEAN - 50, out max = 250 - CK_SS_MEAN, out min = -(CK_FF_MEAN + 50)).
 # r2 (23:45 PT): --hold-corners WC,BC. With CORNERS=BC alone ORFS reads only the FF libraries (read_liberty.tcl), so
 # placement/CTS/route setup repair ran at FF and the SS sign-off saw -200 ps (elemB r1); elements add fadd SPLIT9.
-# Usage (from the source root): cl_route.sh <quad|hquad|top|elemA|elemB|glue> <label> <out dir> [extra run_abi3_physical args,
+# Usage (from the source root): cl_route.sh <quad|hquad|ctl|ep|top|elemA|elemB|glue> <label> <out dir> [extra run_abi3_physical args,
 # e.g. $CL_STOP_AFTER]. Writes <out>/exit (rc=, corner_rc=), <out>/corner_sta.json and <out>/view/ (LEF + SS/FF ETM).
 set -o pipefail
 V=${1:?view}; LBL=${2:?label}; O=${3:?out}; shift 3
@@ -23,6 +23,7 @@ case $V in
   args=("${base[@]}" --source $D/quad/ot_hdc_v41_fh_quad.sv --param QPIN=1 --param RETURN_EXTRA=6
    --macro-view $L=$H/$L --macro-place-halo 2 2 --orfs-var MACRO_PLACEMENT_TCL=/src/$H/macro_place_quad.tcl
    --orfs-var PDN_TCL=/src/$H/pdn_quad.tcl --die-area 0 0 610 560 --core-area 2 2 608 558 --false-path-from gid
+   --orfs-var PWR_NETS_VOLTAGES= --orfs-var GND_NETS_VOLTAGES=
    --core-utilization 30 --max-fanout 16)
   MAC=(--macro $H/$L); FP="$FP
 set_false_path -from [get_ports gid*]";;
@@ -30,9 +31,24 @@ set_false_path -from [get_ports gid*]";;
   args=("${base[@]}" --source $D/quad/ot_hdc_v41_fh_hquad.sv --param QPIN=1 --param RETURN_EXTRA=6
    --macro-view $L=$H/$L --macro-place-halo 2 2 --orfs-var MACRO_PLACEMENT_TCL=/src/$H/macro_place_hquad.tcl
    --orfs-var PDN_TCL=/src/$H/pdn_quad.tcl --die-area 0 0 470 300 --core-area 2 2 468 298 --false-path-from gid
-   --false-path-from hid --core-utilization 30 --max-fanout 16)
+   --false-path-from hid --core-utilization ${HUTIL:-30} --max-fanout 16 --param LRET=${LRET:-0}
+   --orfs-var PWR_NETS_VOLTAGES= --orfs-var GND_NETS_VOLTAGES=)
   MAC=(--macro $H/$L); FP="$FP
 set_false_path -from [get_ports {gid* hid}]";;
+ ctl) TOP=ot_hdc_v41_fh_head_top
+  args=("${base[@]}")
+  for f in $D/capture_candidate/ot_hdc_v41_fh_fault_retire.sv $D/capture_candidate/ot_hdc_v41_fh_retire_parent.sv \
+    $D/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv $D/capture_candidate/ot_hdc_v41_fh_checked_permission.sv \
+    $D/quad/ot_hdc_v41_fh_head_top.sv; do args+=(--source $f); done
+  args+=(--param FPIPE=2 --param SAFE=1 --param HQ=1 --param LRET=1 --param RETURN_EXTRA=6 --die-area 0 0 300 300
+   --core-area 2 2 298 298 --core-utilization 30 --max-fanout 16);;
+ ep) TOP=ot_hdc_v41_fh_ep_view
+  args=(--source rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv --orfs-var SYNTH_HDL_FRONTEND=slang
+   --source $D/capture_candidate/ot_hdc_v41_fh_checked_permission.sv --source $D/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv
+   --source $D/quad/ot_hdc_v41_fh_ep_view.sv --die-area 0 0 480 480 --core-area 2 2 478 478
+   --core-utilization 30 --max-fanout 16 --false-path-from cold_n)
+  FP="$FP
+set_false_path -from [get_ports cold_n]";;
  top) TOP=ot_hdc_v41_fh_head_top
   args=("${base[@]}")
   for f in $D/capture_candidate/ot_hdc_v41_fh_fault_retire.sv $D/capture_candidate/ot_hdc_v41_fh_retire_parent.sv \

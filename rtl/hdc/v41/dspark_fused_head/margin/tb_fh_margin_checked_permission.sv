@@ -61,7 +61,7 @@ module tb_fh_checked_permission #(parameter integer MARGIN=1, FPIPE=0);
    // registered aggregation: a bank corrupted while held is quarantined before the reply grant
    reset;take;
    force dut.g_distributed_check.u_guard.g_request_bank[0].u_bank.check=32'h0;
-   repeat(4)tick;if(!endpoint_fault)$fatal(1,"held payload mirror not caught in 4 cycles");
+   repeat(FPIPE>=2?5:4)tick;if(!endpoint_fault)$fatal(1,"held payload mirror not caught in 4 (FPIPE=2: 5) cycles");
    reply(0,0);if(head_ack_v||!endpoint_fault)$fatal(1,"late payload mirror ACK");
    repeat(4)begin tick;if(head_ack_v)$fatal(1,"late payload mirror ACK");end
   end else begin
