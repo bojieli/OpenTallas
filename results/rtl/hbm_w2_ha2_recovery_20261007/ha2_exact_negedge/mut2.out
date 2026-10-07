@@ -1,0 +1,3 @@
+physical/hbm_ha2_owner_banked_20261006/run_bench.sh: line 6: 39085 Aborted                    (core dumped) ./obj/Vtb_ha2_tu_owner_banked ${NEG:+$([ "$NEG" != 0 ] && echo +NEG=$NEG)} > run.log 2>&1
+[25364959416000] %Fatal: tb_ha2_tu_owner_banked.sv:111: Assertion failed in tb_ha2_tu_owner_banked: NEGATIVE 1: banked DUT accepted the illegal flit (dupe low)
+rc=134
