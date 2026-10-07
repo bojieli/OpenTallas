@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.hbm_leftovers_harvest.v1",
+  "required_ss_setup_margin_ps": 15,
+  "required_ff_hold_margin_ps": 15,
+  "required_setup_uncertainty_ps": 60,
+  "required_internal_hold_uncertainty_ps": 25,
+  "required_budget_and_all_pin_coverage": true,
+  "new_runs_launched": 0,
+  "remote_mutations": 0,
+  "main_merged": false,
+  "runs": {
+    "dt2": {
+      "verdict": "LIVE_NOT_QUALIFIED",
+      "reason": "EPYC3 dt2_bd150 still in GRT extra iterations at snapshot; no terminal or corner record.",
+      "next": "Reuse PID/run; preserve earlier leaf/quad closures only in their own scope. Do not promote H16 die tile from leaf/quad success.",
+      "host": "ot-epyc3",
+      "remote_route": "/srv/opentallas-scratch2/scratch/claude/hbm-attn/routes_dt/dt2_bd150",
+      "observed_utc": "2026-10-07T10:51:41.925750+00:00",
+      "manifest": "dt2/manifest.json",
+      "manifest_sha256": "1e66044e70a366c715688169eac6925775aefc3f6207df07d99420f8e266548f",
+      "accepted": false
+    }
+  },
+  "limitations": [
+    "No all-pin closure claim. Missing or live evidence is never a pass.",
+    "Source snapshots and hashes retained; descriptive SOURCE_COMMIT labels are not git pins.",
+    "Per-run logs may be tails, explicitly marked tail_only; not terminal records."
+  ]
+}

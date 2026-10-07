@@ -1,0 +1,9 @@
+HBM leftover handoff — 2026-10-07
+
+No main merge. No new jobs or remote writes. +15/+15 plus budgets and all relevant pins required.
+
+dt2: LIVE_NOT_QUALIFIED. EPYC3 dt2_bd150 still in GRT extra iterations at snapshot; no terminal or corner record.
+Reuse PID/run; preserve earlier leaf/quad closures only in their own scope. Do not promote H16 die tile from leaf/quad success.
+
+Parent coordination: q8hc wrapper fixes stay with Zeno; SM stays with Boyle. SU/full reducer peer-to-port bus map remains a parent/generator dependency; no speculative peer mapping added.
+Preserved snapshots, source digests, configuration, constraint hooks, remote status and log tails are indexed by review.json and each manifest.json. Do not restart the live pinned successors.
