@@ -126,12 +126,21 @@ if {
   # Perform standard coarse-level synthesis script, flatten right away
   yosys proc
   flatten
-# W10 modeled wake cells: select drivers from eight named wires, not $procdff names.
-select -assert-count 8 {w:u_elem.g_wake.g_leaf*.wake}
-select -set ot_wake_proc {w:u_elem.g_wake.g_leaf*.wake} %ci {t:$adff} %i
+# W10 modeled wake cells: select drivers from eight named wires, not $procdff names.  The original element sits at
+# u_elem or g_orig.u_elem (RECUT = 0).  A RECUT build (OT_BF_RECUT, set by run_bf_native_physical.py --recut; g_rc.u_elem
+# = ot_v41_rom_elem_qx_w10) has no wake leaves (its gate enable is the keep_hierarchy register u_z): retention skipped,
+# the q-element asserted instead.  (Yosys aborts on a failed select assertion, so the branch is chosen by the variable.)
+if {![env_var_exists_and_non_empty OT_BF_RECUT]} {
+select -assert-count 8 {w:*u_elem.g_wake.g_leaf*.wake}
+select -set ot_wake_proc {w:*u_elem.g_wake.g_leaf*.wake} %ci {t:$adff} %i
 select -assert-count 8 @ot_wake_proc
 setattr -set keep 1 @ot_wake_proc
 select -clear
+} else {
+select -assert-min 1 {w:g_rc.u_elem.*}
+select -assert-none {w:*u_elem.g_wake.g_leaf*.wake}
+puts "OT_BF_RECUT synth: q-element build, no W10 wake leaves to retain"
+}
   synth -flatten -run :fine {*}$synth_full_args
 } else {
   # Perform standard coarse-level synthesis script,
@@ -210,12 +219,21 @@ if {
   memory_map
   opt -full
   techmap -map +/techmap.v -map $::env(FLOW_HOME)/platforms/common/lcu_kogge_stone.v
-# W10 modeled wake cells: select drivers from eight named wires, not $procdff names.
-select -assert-count 8 {w:u_elem.g_wake.g_leaf*.wake}
-select -set ot_wake_techmap {w:u_elem.g_wake.g_leaf*.wake} %ci {t:$_DFF_*} %i
+# W10 modeled wake cells: select drivers from eight named wires, not $procdff names.  The original element sits at
+# u_elem or g_orig.u_elem (RECUT = 0).  A RECUT build (OT_BF_RECUT, set by run_bf_native_physical.py --recut; g_rc.u_elem
+# = ot_v41_rom_elem_qx_w10) has no wake leaves (its gate enable is the keep_hierarchy register u_z): retention skipped,
+# the q-element asserted instead.  (Yosys aborts on a failed select assertion, so the branch is chosen by the variable.)
+if {![env_var_exists_and_non_empty OT_BF_RECUT]} {
+select -assert-count 8 {w:*u_elem.g_wake.g_leaf*.wake}
+select -set ot_wake_techmap {w:*u_elem.g_wake.g_leaf*.wake} %ci {t:$_DFF_*} %i
 select -assert-count 8 @ot_wake_techmap
 setattr -set keep 1 @ot_wake_techmap
 select -clear
+} else {
+select -assert-min 1 {w:g_rc.u_elem.*}
+select -assert-none {w:*u_elem.g_wake.g_leaf*.wake}
+puts "OT_BF_RECUT synth: q-element build, no W10 wake leaves to retain"
+}
   opt -fast
   hierarchy -check
   stat
