@@ -1,0 +1,189 @@
+{
+ "schema": "opentallas.s81.pq-fullshape.comparison-current-main.v1",
+ "historical_design_sha256": "8760993137ee2a5a9371d784a3c61ecc9f857cc8c0f084796932d546f52d633b",
+ "current_design_sha256": "a79ec4dcb5530aafda8d98aceb02edc6c2aa3de97f782c82bcbe0144c3952344",
+ "base_design_leaf_changes": [
+  {
+   "key": ".sources.geometry_extract_sha256",
+   "historical": "349ba240983d7d44bd64bb217055ce5d8ff50f15b0fae8cdffb9ac17e0efefb1",
+   "current": "2cd283453760c8263ce94abd34feadbc443d4f86482583dcd46b27f4121849eb"
+  },
+  {
+   "key": ".sources.snapshot",
+   "historical": "results/uarch/dsrom_s81_pq_fullshape_design_20261007/inputs",
+   "current": {
+    "pq_parent_binding.py": "tools/s81/pq_parent_binding.py",
+    "dsrom_s81_pq_parent_20261007/full_inventory.json": "results/uarch/dsrom_s81_pq_parent_20261007/full_inventory.json",
+    "dsrom_s81_pq_parent_20261007/half_inventory.json": "results/uarch/dsrom_s81_pq_parent_20261007/half_inventory.json"
+   }
+  },
+  {
+   "key": ".sources.snapshot_origin",
+   "historical": "/home/ubuntu/.claude/jobs/724d7460/tmp/pq_snapshot_1117",
+   "current": "committed on main (identical hashes to pq_snapshot_1117)"
+  },
+  {
+   "key": ".sources.spine_rtl_sha256",
+   "historical": "1b1ca9190db389c4e93addbb5f73e2179cb914d51c649de19225683fd822baa7",
+   "current": "ecac11e1d7406b49d5ea6d417ca17eadd3565523394d3e99199d9190399523f3"
+  },
+  {
+   "key": ".sources.stream_stats_sha256",
+   "historical": null,
+   "current": "a9b0c294aead09394401e18fd6d2b98e2c05fca12c414356e666d7b42f14b596"
+  }
+ ],
+ "unexplained": [],
+ "changes": [
+  {
+   "item": "spine source for the native PQ parent",
+   "historical": "rtl/v41die/ot_v41_spine_pqc_w17w10.sv (main, 1b1ca919)",
+   "current": "d0178820d v13b (ecac11e1), pinned under current_main/inputs/rtl",
+   "reason": "Codex native_elaboration.json (committed on main) elaborates the production partition from the v13b sources; main's rtl file is the older pqc. Broadcast width (1,633), field order and buffer storage (298,752 b) are identical, so lanes, pins and SRAM maps do not change"
+  },
+  {
+   "item": "spine parameters",
+   "historical": {
+    "RG": 16,
+    "BST": 2,
+    "GAP": 12,
+    "GUARD": 180
+   },
+   "current": {
+    "RG": 8,
+    "RPT": 2,
+    "BST": 2,
+    "GAP": 12,
+    "GUARD": 180
+   },
+   "reason": "v13b: RG 16 -> 8 replica groups, RPT 2 repeater stages on broadcast / root inputs / row writes"
+  },
+  {
+   "item": "added cycles per phase (vs the native production parent)",
+   "historical": 17,
+   "current": 15,
+   "reason": "the v13b parent already pays RPT=2 on its root inputs; in the split the hr end block abuts the RWB, so those repeaters are replaced, not added (the row-count path to the core stays 13 stations)"
+  },
+  {
+   "item": "AR loss estimate",
+   "historical": 0.00532,
+   "current": 0.0047,
+   "reason": "same historical per-cycle sensitivity x the new per-phase delta; PARTIAL: per-phase delta x historical +1-return-cycle sensitivity; the 1,792 per-token critical-phase list is not composed (mapping has 46681 compiled phases, of which only the token-active subset is on the path)"
+  },
+  {
+   "item": "VM write FIFO depth per region",
+   "historical": 12,
+   "current": {
+    "half": 12,
+    "full": 14
+   },
+   "reason": "max rows per region per phase from native mappings (half 10, full 14): FIFO >= burst, so the historical 0.75/cycle sustain-rate requirement is retired"
+  },
+  {
+   "item": "serial lane W3 (option D) cost",
+   "historical": "unknown (input requested)",
+   "current": {
+    "half": {
+     "bf_max_back_to_back": 2,
+     "adjacent_valid_pairs": 440,
+     "extra_cycles_at_phase_end_sum": 0,
+     "max_beat_delay": 2,
+     "rule": "two lane cycles per valid BF beat, in order; idle native slots absorb the delay"
+    },
+    "full": {
+     "bf_max_back_to_back": 6,
+     "adjacent_valid_pairs": 2040,
+     "extra_cycles_at_phase_end_sum": 1280,
+     "max_beat_delay": 34,
+     "rule": "two lane cycles per valid BF beat, in order; idle native slots absorb the delay"
+    }
+   },
+   "reason": "measured from native_stream on both mappings: HALF has <= 2 back-to-back BF beats and every delay is absorbed inside the phase (0 extra end cycles, beats shift <= 2 cycles); FULL has runs of 6 and costs 1,280 cycles over 139 BF phases (<= 32 a phase)"
+  },
+  {
+   "item": "RWB outline / area",
+   "historical": {
+    "area_mm2_total": 0.102,
+    "shape": "square (area-limited estimate)"
+   },
+   "current": {
+    "area_mm2_total": 0.397,
+    "outlines": [
+     [
+      221.2,
+      140.3
+     ],
+     [
+      243.3,
+      140.3
+     ]
+    ]
+   },
+   "reason": "budget sheet: 722 / 794 return pins on one face at the r8 station pin density make the RWB pin-limited (cell utilisation ~15 %)"
+  },
+  {
+   "item": "RWB replica copies",
+   "historical": "1 per RWB (RG 16 >= 11 regions)",
+   "current": [
+    2
+   ],
+   "reason": "RG 8 < 10/11 regions per RWB: two kept internal replica copies; pins unchanged (one cfg input word)"
+  },
+  {
+   "item": "clock insertion targets",
+   "historical": null,
+   "current": {
+    "ret_root_r128": {
+     "analogue": "ot_s81ph_root_tile",
+     "ss_ps": 373,
+     "ff_ps": 238,
+     "source_commit": "77bcb3f3c953773a13abd3ea2a9db44144bf6d30"
+    },
+    "pq_xbuf": {
+     "analogue": "ot_v41_rom_elem_q_qxpq_w10",
+     "ss_ps": 620,
+     "ff_ps": 373,
+     "source_commit": "e1fbc25c1ad3f34eb1686a5b0d60e3aa4a62d803"
+    },
+    "rwb (N=10)": {
+     "analogue": "dsfd_cfifo",
+     "ss_ps": 427,
+     "ff_ps": 267,
+     "source_commit": "2904463107e8082eed8912c2cc1eaddd9bfc2f23"
+    },
+    "rwb (N=11)": {
+     "analogue": "dsfd_cfifo",
+     "ss_ps": 427,
+     "ff_ps": 267,
+     "source_commit": "2904463107e8082eed8912c2cc1eaddd9bfc2f23"
+    },
+    "pq_ctl": {
+     "analogue": "ot_v41_rom_elem_q_qxpq_w10",
+     "ss_ps": 620,
+     "ff_ps": 373,
+     "source_commit": "e1fbc25c1ad3f34eb1686a5b0d60e3aa4a62d803"
+    },
+    "lane station / cfifo W1085": {
+     "analogue": "dsfd_stnh_566x1",
+     "ss_ps": 140,
+     "ff_ps": 74,
+     "source_commit": "2e2d7aa3f1fe34b1ba709a331721868d69e58fdb"
+    }
+   },
+   "reason": "new: per-block targets from the measured insertion of the nearest measured analogue block"
+  },
+  {
+   "item": "die geometry (frames, slots, corridors, hub, end blocks, stations)",
+   "historical": "geometry_extract.json",
+   "current": "current_main/geometry_extract.json",
+   "reason": "generator drift is 5aba116fc only (an exact-rectangle pin kind for the HBM VM8 retile); the S81 layer die has no such ports and every geometric field is identical (only generator hash / base commit differ)"
+  },
+  {
+   "item": "stages / layer dies / pins / lane widths / SRAM / roots",
+   "historical": "unchanged",
+   "current": "unchanged",
+   "reason": "mappings reproduced byte-identically from 9a31097cd (half 8dfa6dae, full bf7863a4); inventories and pq_parent_binding committed on main with the snapshot hashes"
+  }
+ ],
+ "verdict_note": "historical verdict (README sections 1-4, design.json) unchanged; current-basis refinement: option D (serial 568-b lane) costs 0 phase cycles on HALF and becomes the preferred lane for HALF BF dies (+0.4 vs +9.8 mm2) subject to its exactness gate; FULL keeps C"
+}

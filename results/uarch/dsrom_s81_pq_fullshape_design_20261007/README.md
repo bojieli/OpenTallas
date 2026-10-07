@@ -128,3 +128,48 @@ Fallback: a tier-channel row of root blocks (+143 µm per tier). If that costs a
 The default output is `reproduce/design.json`. `design.json` is kept as the historical d95b57661 output; it differs from the reproduced file only in the provenance keys `sources.snapshot` and `sources.snapshot_origin`.
 
 A clean `git archive` rerun outside the home directory reproduced `reproduce/design.json` byte-identically. Two tamper tests (one snapshot input, one RTL file) each exit 1. Details are in `reproducibility.json`.
+
+## Historical pin of the geometry generator (b0829f869 / 8a12d98ec)
+
+`tools/dsrom_s81_fulldie.py` on main has changed since the pin (commit 5aba116fc). The exact generator that built `geometry_extract.json` is therefore pinned at `inputs/pinned/tools/dsrom_s81_fulldie.py` (553d47cc), and `REPO_INPUTS.SHA256SUMS` now points to that copy. A rerun from a `git archive` of origin/main 48890ca59, overlaid with this tool and the `inputs/` directory, reproduces `reproduce/design.json` byte-identically.
+
+## Current-main basis (branch claude/s81-pq-fullshape-design-v2-20261007; historical verdict above unchanged)
+
+Regenerate with these commands:
+1. `python3 tools/s81_pq_geometry_extract.py --base-commit <main> --out current_main/geometry_extract.json`
+2. `python3 tools/s81_pq_stream_stats.py --half <half matrix_map> --full <full matrix_map> --out current_main/stream_stats.json`. The matrix maps come from `tools/dsrom_bf_geometry_alloc.py` at 9a31097cd; the local rerun reproduced the remote hashes byte-for-byte (half 8dfa6dae, full bf7863a4; about 10 min and 1.6 GB each).
+3. `python3 tools/s81_pq_fullshape_design.py --basis current`
+4. `python3 tools/s81_pq_fullshape_compare.py`
+
+The pins are listed in `current_main/inputs/REPO_INPUTS.SHA256SUMS`. Codex's inputs are now committed on main with the snapshot hashes, so the tool reads `tools/s81/pq_parent_binding.py` and `results/uarch/dsrom_s81_pq_parent_20261007/*_inventory.json` and checks their hashes. All changed numbers and their reasons are in `current_main/comparison_current_main.json`.
+
+### What did not change
+
+- **Generator.** The 5aba116fc drift only adds an exact-rectangle pin kind for the HBM VM8 retile. Rebuilding the S81 layer die with the pinned generator and with the current generator gives identical frames, slots, corridors, hub, end blocks and stations.
+- **Inventories and mappings.** Stages, dies, pins, lane widths (1,633 / 1,085 / 568), SRAM (36 macros) and roots are all unchanged.
+
+### What changed
+
+- **Spine source.**
+  - The production native partition (Codex's `native_elaboration.json`) is built from the v13b spine at d0178820d (ecac11e1), not main's older `rtl` file; v13b is pinned under `current_main/inputs/rtl`.
+  - Width, field order and storage are unchanged.
+  - v13b has RG 8 and RPT 2, a two-stage BF16 read, the aq12m quantiser, +1 row-write cycle and +1 configuration cycle. These latencies belong to the reference spine; the partition does not add them.
+- **Cycles: 17 → 15 per phase (estimated AR loss 0.53 % → 0.47 %).**
+  - The v13b parent already pays RPT 2 on its root inputs. In the split design, the end block abuts the RWB, so those repeaters are replaced rather than added.
+  - This is still a **partial price**. The 1,792 per-token critical-phase list (46,681 compiled phases, of which only the token-active subset is on the path) is not composed.
+- **VM write FIFO: 12 (HALF) and 14 (FULL).**
+  - Measured: at most 10 rows per region per phase (HALF) and at most 14 (FULL).
+  - Because the FIFO holds the whole burst, the earlier requirement that the VM side sustain 0.75 rows per cycle is retired.
+- **Serial lane (option D).**
+  - HALF has at most 2 back-to-back BF beats and adds 0 phase-end cycles; beats shift by at most 2 cycles.
+  - FULL has runs of up to 6 and costs 1,280 cycles over 139 BF phases, at most 32 per phase.
+  - Refinement: **D becomes the preferred lane for HALF BF dies** (+0.4 mm² versus +9.8 mm²), subject to its exactness gate on beats delayed by up to 2 cycles. FULL keeps C.
+- **RWB is pin-limited.** The 722 / 794 return pins on one face give outlines of 221 × 140 and 243 × 140 µm at about 15 % cell utilisation. Total RWB area becomes 0.397 mm² (was 0.102 mm²). They still fit in the end-block columns beside `sp_gather`.
+- **Budget sheets.** Each hardening-stage block now has pins per face, the face length those pins need (3.26 pins/µm), area, and a clock-insertion target taken from the measured mean of the nearest measured analogue block in `results/rtl/budgets_20261006/measured_insertion.json`. These are targets, not measurements.
+
+| Block | Insertion target, SS / FF (ps) | Analogue |
+|---|---|---|
+| Root | 373 / 238 | `ot_s81ph_root_tile` |
+| RWB | 427 / 267 | `dsfd_cfifo` |
+| PQ core | 620 / 373 | q-element |
+| Lane station | 140 / 74 | `dsfd_stnh_566x1` |
