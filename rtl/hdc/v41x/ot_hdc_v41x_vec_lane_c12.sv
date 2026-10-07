@@ -734,7 +734,7 @@ module ot_hdc_v41x_vec_lane #(
             ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_den (clk, rst_n, vs[D_EXP + DENR], y_den_in, 32'h3F800000, den, f_den);
             wire silu_in = (ci_sfu == SFU_SILU);
             wire [31:0] num_in = silu_in ? R : 32'h3F800000;
-            ot_hdc_delay #(.W(32), .D(D_EXP + DENR + ALAT), .RING(DRING)) u_num (.clk(clk), .rst_n(rst_n), .d(num_in), .q(num_d));
+            ot_hdc_delay_ring #(.W(32), .D(D_EXP + DENR + ALAT), .RING(DRING)) u_num (.clk(clk), .rst_n(rst_n), .d(num_in), .q(num_d));
             wire [ALAT:0] vdn;
             ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk), .rst_n(rst_n), .v(vs[D_EXP + DENR]), .vd(vdn));
             if (DDIV == 31) begin : g_s31

@@ -32,9 +32,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-C12_UNITS = ["rtl/hdc/ot_hdc_fastfp_lat_c12.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+C12_UNITS = ["rtl/hdc/ot_hdc_delay_ring.sv", "rtl/hdc/ot_hdc_fastfp_lat_c12.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
              "rtl/hdc/v41x/ot_dsrom_su_f12.sv", "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv"]
-C12_UNITS_DPI = ["rtl/hdc/ot_hdc_fastfp_lat_c12.sv", "rtl/test/sim_hdc_fp32_f12_dpi_tops.sv",
+C12_UNITS_DPI = ["rtl/hdc/ot_hdc_delay_ring.sv", "rtl/hdc/ot_hdc_fastfp_lat_c12.sv", "rtl/test/sim_hdc_fp32_f12_dpi_tops.sv",
                  "rtl/test/sim_dsrom_su_add6_dpi.sv", "rtl/hdc/v41x/ot_dsrom_su_f12.sv", "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv"]
 SWAP = {"rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": ["rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv"],
