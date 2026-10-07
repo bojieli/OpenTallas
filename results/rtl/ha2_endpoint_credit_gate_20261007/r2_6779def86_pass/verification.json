@@ -1,0 +1,12 @@
+{
+  "source_commit": "6779def86f4d0629c3df39c75983062fea0e27da",
+  "all_source_pins_match_commit": true,
+  "private_dispatch_mutation_hash_matches": true,
+  "verdict": "PASS exact endpoint and both negative controls",
+  "prior_failed_gate": "results/rtl/ha2_endpoint_credit_gate_20261007/f57c3d36f_failed_negative/terminal.json",
+  "scope": "One real16lanePF384 endpoint; no physical adoption",
+  "artifact_sha256": {
+    "terminal.json": "aee73a5d0a5891073e26f58ff7f35a3dd2af850b234816c5e5d3382872e7bf42",
+    "source_pins.json": "26a9d3fea3ccbd79fe92b1decb3751485e8052c913d0c21407b257b22381f82f"
+  }
+}
