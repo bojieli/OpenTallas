@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.budgets.summary.v1",
- "masters": 257,
+ "masters": 262,
  "rows": [
   {
    "master": "dsfd_bf",
@@ -5263,9 +5263,9 @@
     1349.976
    ],
    "entry_ss": {
-    "mean": 2824.4,
+    "mean": 2811.4,
     "min": 2691.4,
-    "max": 3116.6
+    "max": 3116.8
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5274,7 +5274,7 @@
    "ports": 8,
    "sync": 8,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 4525.2,
    "max_stages_needed": 11
@@ -5292,9 +5292,9 @@
     36.696
    ],
    "entry_ss": {
-    "mean": 2965.4,
-    "min": 2965.4,
-    "max": 2965.4
+    "mean": 2965.5,
+    "min": 2965.5,
+    "max": 2965.5
    },
    "lint_ss": 626.0,
    "lint_grade": "target",
@@ -5305,8 +5305,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 3961.0,
-   "max_stages_needed": 9
+   "max_length_um": 107.6,
+   "max_stages_needed": 1
   },
   {
    "master": "hfd_cdist_r14",
@@ -5332,7 +5332,7 @@
    "ports": 6,
    "sync": 6,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 3724.5,
    "max_stages_needed": 9
@@ -5361,7 +5361,7 @@
    "ports": 5,
    "sync": 5,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 3964.2,
    "max_stages_needed": 10
@@ -5379,9 +5379,9 @@
     1403.976
    ],
    "entry_ss": {
-    "mean": 2691.4,
-    "min": 2691.4,
-    "max": 2691.4
+    "mean": 2691.5,
+    "min": 2691.5,
+    "max": 2691.5
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5392,8 +5392,8 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 3961.0,
-   "max_stages_needed": 9
+   "max_length_um": 3782.5,
+   "max_stages_needed": 6
   },
   {
    "master": "hfd_coll",
@@ -5473,7 +5473,7 @@
    "ports": 4,
    "sync": 4,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 2462.2,
    "max_stages_needed": 6
@@ -5533,7 +5533,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2462.2,
+   "max_length_um": 2405.6,
    "max_stages_needed": 6
   },
   {
@@ -5560,7 +5560,7 @@
    "ports": 4,
    "sync": 4,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 2436.2,
    "max_stages_needed": 6
@@ -5632,14 +5632,14 @@
     970.056
    ],
    "entry_ss": {
-    "mean": 2828.9,
+    "mean": 2829.2,
     "min": 2827.7,
-    "max": 2830.6
+    "max": 2830.8
    },
    "lint_ss": 1186,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
-   "lint_over_target": true,
+   "lint_target_ss": 1254,
+   "lint_over_target": false,
    "ports": 4,
    "sync": 4,
    "cdc": 0,
@@ -5661,14 +5661,14 @@
     970.056
    ],
    "entry_ss": {
-    "mean": 2882.9,
+    "mean": 2883.2,
     "min": 2881.7,
-    "max": 2884.6
+    "max": 2884.8
    },
    "lint_ss": 1132,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
-   "lint_over_target": true,
+   "lint_target_ss": 1154,
+   "lint_over_target": false,
    "ports": 4,
    "sync": 4,
    "cdc": 0,
@@ -5690,18 +5690,18 @@
     959.976
    ],
    "entry_ss": {
-    "mean": 2705.9,
+    "mean": 2706.2,
     "min": 2704.7,
-    "max": 2707.6
+    "max": 2707.8
    },
    "lint_ss": 1309,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
-   "lint_over_target": true,
+   "lint_target_ss": 1402,
+   "lint_over_target": false,
    "ports": 7,
    "sync": 7,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 2055.8,
    "max_stages_needed": 5
@@ -5719,21 +5719,21 @@
     970.056
    ],
    "entry_ss": {
-    "mean": 2829.9,
+    "mean": 2830.2,
     "min": 2828.7,
-    "max": 2831.6
+    "max": 2831.8
    },
    "lint_ss": 1185,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
-   "lint_over_target": true,
+   "lint_target_ss": 1298,
+   "lint_over_target": false,
    "ports": 6,
    "sync": 6,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1737.1,
-   "max_stages_needed": 5
+   "max_length_um": 348.5,
+   "max_stages_needed": 1
   },
   {
    "master": "hfd_index_q_b4",
@@ -5748,9 +5748,9 @@
     829.896
    ],
    "entry_ss": {
-    "mean": 3114.9,
+    "mean": 3115.2,
     "min": 3113.7,
-    "max": 3116.6
+    "max": 3116.8
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5777,21 +5777,21 @@
     829.416
    ],
    "entry_ss": {
-    "mean": 2690.9,
+    "mean": 2691.2,
     "min": 2689.7,
-    "max": 2692.6
+    "max": 2692.8
    },
    "lint_ss": 1324,
    "lint_grade": "measured",
-   "lint_target_ss": 900.0,
-   "lint_over_target": true,
+   "lint_target_ss": 1354,
+   "lint_over_target": false,
    "ports": 4,
    "sync": 4,
    "cdc": 0,
-   "infeasible": 2,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 5253.7,
-   "max_stages_needed": 13
+   "max_length_um": 4525.2,
+   "max_stages_needed": 11
   },
   {
    "master": "hfd_loader",
@@ -5806,9 +5806,9 @@
     237.576
    ],
    "entry_ss": {
-    "mean": 2690.8,
-    "min": 2690.8,
-    "max": 2690.8
+    "mean": 2691.5,
+    "min": 2691.5,
+    "max": 2691.5
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -5846,7 +5846,7 @@
    "ports": 4,
    "sync": 4,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 2107.8,
    "max_stages_needed": 5
@@ -5997,6 +5997,64 @@
    "max_stages_needed": 4
   },
   {
+   "master": "hfd_meso_r35",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    39.288,
+    285.096
+   ],
+   "entry_ss": {
+    "mean": 3069.6,
+    "min": 3069.6,
+    "max": 3069.6
+   },
+   "lint_ss": 521.5,
+   "lint_grade": "target",
+   "lint_target_ss": 521.5,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1624.8,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_meso_r37",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    269.976,
+    41.016
+   ],
+   "entry_ss": {
+    "mean": 3070.5,
+    "min": 3070.5,
+    "max": 3070.5
+   },
+   "lint_ss": 521.0,
+   "lint_grade": "target",
+   "lint_target_ss": 521.0,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1533.5,
+   "max_stages_needed": 4
+  },
+  {
    "master": "hfd_quant",
    "kinds": [
     "spine"
@@ -6038,9 +6096,9 @@
     326.28
    ],
    "entry_ss": {
-    "mean": 2690.8,
-    "min": 2690.8,
-    "max": 2690.8
+    "mean": 2691.5,
+    "min": 2691.5,
+    "max": 2691.5
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -6049,7 +6107,7 @@
    "ports": 10,
    "sync": 10,
    "cdc": 0,
-   "infeasible": 1,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 6724.4,
    "max_stages_needed": 11
@@ -6132,10 +6190,10 @@
    "ports": 5,
    "sync": 5,
    "cdc": 0,
-   "infeasible": 2,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 3854.6,
-   "max_stages_needed": 10
+   "max_length_um": 3614.9,
+   "max_stages_needed": 9
   },
   {
    "master": "hfd_stn_r0",
@@ -6159,7 +6217,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1701.3,
+   "max_length_um": 1700.8,
    "max_stages_needed": 4
   },
   {
@@ -6259,7 +6317,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2049.0,
+   "max_length_um": 2050.3,
    "max_stages_needed": 5
   },
   {
@@ -6363,7 +6421,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2100.2,
+   "max_length_um": 1893.5,
    "max_stages_needed": 5
   },
   {
@@ -6388,7 +6446,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1952.0,
+   "max_length_um": 1953.3,
    "max_stages_needed": 4
   },
   {
@@ -6617,6 +6675,85 @@
    "max_stages_needed": 4
   },
   {
+   "master": "hfd_stn_r33",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 5
+   },
+   "size_um": [
+    39.288,
+    77.736
+   ],
+   "entry_ss": {
+    "mean": 3452.6,
+    "min": 3113.3,
+    "max": 3539.0
+   },
+   "lint_ss": 477.8,
+   "lint_grade": "target",
+   "lint_target_ss": 477.8,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2119.2,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_stn_r34",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    72.984,
+    41.016
+   ],
+   "entry_ss": null,
+   "lint_ss": 477.3,
+   "lint_grade": "target",
+   "lint_target_ss": 477.3,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1648.1,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r36",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    39.288,
+    77.736
+   ],
+   "entry_ss": null,
+   "lint_ss": 477.8,
+   "lint_grade": "target",
+   "lint_target_ss": 477.8,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1652.7,
+   "max_stages_needed": 4
+  },
+  {
    "master": "hfd_stn_r4",
    "kinds": [
     "waypoint"
@@ -6665,7 +6802,7 @@
    "ports": 15,
    "sync": 15,
    "cdc": 0,
-   "infeasible": 5,
+   "infeasible": 0,
    "fanout_flags": 0,
    "max_length_um": 6724.4,
    "max_stages_needed": 17
@@ -6741,9 +6878,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2192.3,
-    "min": 2192.3,
-    "max": 2192.3
+    "mean": 2233.5,
+    "min": 2233.5,
+    "max": 2233.5
    },
    "lint_ss": 1057,
    "lint_grade": "measured",
@@ -6754,7 +6891,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2466.7,
+   "max_length_um": 2467.1,
    "max_stages_needed": 4
   },
   {
@@ -6770,9 +6907,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2370.3,
-    "min": 2370.3,
-    "max": 2370.3
+    "mean": 2411.5,
+    "min": 2411.5,
+    "max": 2411.5
    },
    "lint_ss": 879,
    "lint_grade": "measured",
@@ -6783,7 +6920,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1701.3,
+   "max_length_um": 1700.8,
    "max_stages_needed": 3
   },
   {
@@ -6799,9 +6936,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2491.3,
-    "min": 2491.3,
-    "max": 2491.3
+    "mean": 2532.5,
+    "min": 2532.5,
+    "max": 2532.5
    },
    "lint_ss": 758,
    "lint_grade": "measured",
@@ -6812,7 +6949,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 177.6,
+   "max_length_um": 176.8,
    "max_stages_needed": 1
   },
   {
@@ -6828,9 +6965,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2299.3,
-    "min": 2299.3,
-    "max": 2299.3
+    "mean": 2340.5,
+    "min": 2340.5,
+    "max": 2340.5
    },
    "lint_ss": 950,
    "lint_grade": "measured",
@@ -6841,7 +6978,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2049.0,
+   "max_length_um": 2050.3,
    "max_stages_needed": 4
   },
   {
@@ -6857,9 +6994,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2213.3,
-    "min": 2213.3,
-    "max": 2213.3
+    "mean": 2254.5,
+    "min": 2254.5,
+    "max": 2254.5
    },
    "lint_ss": 808,
    "lint_grade": "measured",
@@ -6870,7 +7007,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 176.9,
+   "max_length_um": 175.2,
    "max_stages_needed": 1
   },
   {
@@ -6886,9 +7023,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2192.3,
-    "min": 2192.3,
-    "max": 2192.3
+    "mean": 2233.5,
+    "min": 2233.5,
+    "max": 2233.5
    },
    "lint_ss": 829,
    "lint_grade": "measured",
@@ -6899,7 +7036,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1700.2,
+   "max_length_um": 1698.9,
    "max_stages_needed": 3
   },
   {
@@ -6915,9 +7052,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2459.3,
-    "min": 2459.3,
-    "max": 2459.3
+    "mean": 2500.5,
+    "min": 2500.5,
+    "max": 2500.5
    },
    "lint_ss": 562,
    "lint_grade": "measured",
@@ -6944,9 +7081,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2390.3,
-    "min": 2390.3,
-    "max": 2390.3
+    "mean": 2431.5,
+    "min": 2431.5,
+    "max": 2431.5
    },
    "lint_ss": 631,
    "lint_grade": "measured",
@@ -6957,7 +7094,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 176.4,
+   "max_length_um": 174.7,
    "max_stages_needed": 1
   },
   {
@@ -6973,9 +7110,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2218.2,
-    "min": 2218.2,
-    "max": 2218.2
+    "mean": 2259.4,
+    "min": 2259.4,
+    "max": 2259.4
    },
    "lint_ss": 874.1,
    "lint_grade": "target",
@@ -6986,7 +7123,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 2465.9,
+   "max_length_um": 2466.3,
    "max_stages_needed": 4
   },
   {
@@ -7002,9 +7139,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2192.3,
-    "min": 2192.3,
-    "max": 2192.3
+    "mean": 2233.5,
+    "min": 2233.5,
+    "max": 2233.5
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7015,7 +7152,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1951.5,
+   "max_length_um": 1952.4,
    "max_stages_needed": 3
   },
   {
@@ -7031,9 +7168,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2209.6,
-    "min": 2209.6,
-    "max": 2209.6
+    "mean": 2250.8,
+    "min": 2250.8,
+    "max": 2250.8
    },
    "lint_ss": 882.7,
    "lint_grade": "target",
@@ -7044,7 +7181,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 343.5,
+   "max_length_um": 343.9,
    "max_stages_needed": 1
   },
   {
@@ -7060,9 +7197,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2206.2,
-    "min": 2206.2,
-    "max": 2206.2
+    "mean": 2247.4,
+    "min": 2247.4,
+    "max": 2247.4
    },
    "lint_ss": 886.1,
    "lint_grade": "target",
@@ -7073,7 +7210,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1701.2,
+   "max_length_um": 1700.3,
    "max_stages_needed": 3
   },
   {
@@ -7089,9 +7226,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2271.3,
-    "min": 2271.3,
-    "max": 2271.3
+    "mean": 2312.5,
+    "min": 2312.5,
+    "max": 2312.5
    },
    "lint_ss": 820.4,
    "lint_grade": "target",
@@ -7118,9 +7255,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2207.7,
-    "min": 2207.7,
-    "max": 2207.7
+    "mean": 2248.9,
+    "min": 2248.9,
+    "max": 2248.9
    },
    "lint_ss": 884.0,
    "lint_grade": "target",
@@ -7131,7 +7268,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 343.9,
+   "max_length_um": 344.4,
    "max_stages_needed": 1
   },
   {
@@ -7147,9 +7284,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2207.9,
-    "min": 2207.9,
-    "max": 2207.9
+    "mean": 2249.1,
+    "min": 2249.1,
+    "max": 2249.1
    },
    "lint_ss": 883.8,
    "lint_grade": "target",
@@ -7160,7 +7297,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 1700.7,
+   "max_length_um": 1699.8,
    "max_stages_needed": 3
   },
   {
@@ -7176,9 +7313,9 @@
     259.176
    ],
    "entry_ss": {
-    "mean": 2192.3,
-    "min": 2192.3,
-    "max": 2192.3
+    "mean": 2233.5,
+    "min": 2233.5,
+    "max": 2233.5
    },
    "lint_ss": 899.4,
    "lint_grade": "target",
@@ -7189,7 +7326,7 @@
    "cdc": 0,
    "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 344.4,
+   "max_length_um": 345.6,
    "max_stages_needed": 1
   },
   {
@@ -7205,9 +7342,9 @@
     2000.136
    ],
    "entry_ss": {
-    "mean": 2691.4,
-    "min": 2691.4,
-    "max": 2691.4
+    "mean": 2691.1,
+    "min": 2691.1,
+    "max": 2691.1
    },
    "lint_ss": 900.0,
    "lint_grade": "target",
@@ -7216,10 +7353,10 @@
    "ports": 22,
    "sync": 22,
    "cdc": 0,
-   "infeasible": 5,
+   "infeasible": 0,
    "fanout_flags": 0,
-   "max_length_um": 5253.7,
-   "max_stages_needed": 13
+   "max_length_um": 3303.1,
+   "max_stages_needed": 6
   },
   {
    "master": "ot_dsrom_head_elem_A",
@@ -7285,10 +7422,10 @@
     "phy"
    ],
    "dies": {
-    "hbm": 4,
     "s81_layer": 4,
     "s81_layer1": 1,
-    "s81_head": 4
+    "s81_head": 4,
+    "hbm": 4
    },
    "size_um": [
     8500.056,
@@ -7342,10 +7479,10 @@
     "link"
    ],
    "dies": {
-    "hbm": 9,
     "s81_layer": 6,
     "s81_layer1": 6,
-    "s81_head": 6
+    "s81_head": 6,
+    "hbm": 9
    },
    "size_um": [
     250.056,
@@ -7365,7 +7502,7 @@
    "cdc": 0,
    "infeasible": 2,
    "fanout_flags": 0,
-   "max_length_um": 1235.6,
+   "max_length_um": 1083.7,
    "max_stages_needed": 3
   },
   {
@@ -9403,375 +9540,6 @@
    "where": "IO hub <-> die (slab N-E pin group) [inherits dsfd_svc: s81_layer:svc_NE<->f_aNE_1] [inherits dsfd_svc: s81_layer:svc_NE<->f_aNE_1] [inherits dsfd_svc: s81_layer:svc_NE<->f_aNE_1] [inherits dsfd_svc: s81_layer:svc_NE<->f_aNE_1]",
    "classes": [
     "IO hub <-> die (slab N-E pin group) [inherits dsfd_svc: s81_"
-   ]
-  },
-  {
-   "master": "hfd_attn_tile",
-   "port": "o",
-   "dir": "output",
-   "bits": 529,
-   "length_um": 4525.2,
-   "skew_class": "intra",
-   "skew_ps": 71,
-   "stages_needed": 11,
-   "stages_planned": 1,
-   "internal_ps": -4519.8,
-   "where": "hbm:at_NW_33<->hb_index_NW_b5",
-   "classes": [
-    "attn_chain",
-    "attn_root"
-   ]
-  },
-  {
-   "master": "hfd_cdist_r14",
-   "port": "t1",
-   "dir": "output",
-   "bits": 103,
-   "length_um": 1272.6,
-   "skew_class": "intra",
-   "skew_ps": 82,
-   "stages_needed": 4,
-   "stages_planned": 3,
-   "internal_ps": 123.9,
-   "where": "hbm:w160_cdNW1<->sm21",
-   "classes": [
-    "control_leaf"
-   ]
-  },
-  {
-   "master": "hfd_cdist_r15",
-   "port": "t3",
-   "dir": "output",
-   "bits": 103,
-   "length_um": 3854.6,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 10,
-   "stages_planned": 9,
-   "internal_ps": 51.2,
-   "where": "hbm:w40_cdSW0<->sm3",
-   "classes": [
-    "control_leaf"
-   ]
-  },
-  {
-   "master": "hfd_gath_r24",
-   "port": "t0",
-   "dir": "input",
-   "bits": 270,
-   "length_um": 1704.6,
-   "skew_class": "intra",
-   "skew_ps": 80,
-   "stages_needed": 5,
-   "stages_planned": 4,
-   "internal_ps": 64.7,
-   "where": "hbm:w91_rgSE1<->sm9",
-   "classes": [
-    "result_leaf"
-   ]
-  },
-  {
-   "master": "hfd_gath_r9",
-   "port": "t0",
-   "dir": "input",
-   "bits": 270,
-   "length_um": 1704.6,
-   "skew_class": "intra",
-   "skew_ps": 82,
-   "stages_needed": 5,
-   "stages_planned": 4,
-   "internal_ps": 62.7,
-   "where": "hbm:w29_rgSW1<->sm1",
-   "classes": [
-    "result_leaf"
-   ]
-  },
-  {
-   "master": "hfd_index_q_b2",
-   "port": "a1",
-   "dir": "input",
-   "bits": 529,
-   "length_um": 1742.4,
-   "skew_class": "intra",
-   "skew_ps": 71,
-   "stages_needed": 5,
-   "stages_planned": 1,
-   "internal_ps": -1420.3,
-   "where": "hbm:hb_index_NW_b2<->at_NW_13",
-   "classes": [
-    "attn_root"
-   ]
-  },
-  {
-   "master": "hfd_index_q_b3",
-   "port": "a2",
-   "dir": "input",
-   "bits": 529,
-   "length_um": 1737.1,
-   "skew_class": "intra",
-   "skew_ps": 71,
-   "stages_needed": 5,
-   "stages_planned": 1,
-   "internal_ps": -1414.3,
-   "where": "hbm:hb_index_NW_b3<->at_NW_23",
-   "classes": [
-    "attn_root"
-   ]
-  },
-  {
-   "master": "hfd_index_q_b5",
-   "port": "a3",
-   "dir": "input",
-   "bits": 529,
-   "length_um": 4525.2,
-   "skew_class": "intra",
-   "skew_ps": 71,
-   "stages_needed": 11,
-   "stages_planned": 1,
-   "internal_ps": -4578.8,
-   "where": "hbm:hb_index_NW_b5<->at_NW_33",
-   "classes": [
-    "attn_root"
-   ]
-  },
-  {
-   "master": "hfd_index_q_b5",
-   "port": "t_vm",
-   "dir": "output",
-   "bits": 512,
-   "length_um": 5253.7,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 13,
-   "stages_planned": 1,
-   "internal_ps": -5425.6,
-   "where": "hbm:hb_index_SW_b5<->hb_vm",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_mcast_r5",
-   "port": "t1",
-   "dir": "output",
-   "bits": 2063,
-   "length_um": 1278.8,
-   "skew_class": "intra",
-   "skew_ps": 80,
-   "stages_needed": 4,
-   "stages_planned": 3,
-   "internal_ps": 123.5,
-   "where": "hbm:w85_xmSE0<->sm12",
-   "classes": [
-    "x_leaf"
-   ]
-  },
-  {
-   "master": "hfd_router",
-   "port": "f_vm",
-   "dir": "input",
-   "bits": 512,
-   "length_um": 3782.2,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 10,
-   "stages_planned": 9,
-   "internal_ps": 1.4,
-   "where": "hbm:hb_router<->hb_vm",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_sm",
-   "port": "c",
-   "dir": "input",
-   "bits": 103,
-   "length_um": 3854.6,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 10,
-   "stages_planned": 9,
-   "internal_ps": -7.8,
-   "where": "hbm:sm3<->w40_cdSW0",
-   "classes": [
-    "control_leaf"
-   ]
-  },
-  {
-   "master": "hfd_sm",
-   "port": "r",
-   "dir": "output",
-   "bits": 270,
-   "length_um": 1704.6,
-   "skew_class": "intra",
-   "skew_ps": 82,
-   "stages_needed": 5,
-   "stages_planned": 4,
-   "internal_ps": 121.7,
-   "where": "hbm:sm1<->w29_rgSW1",
-   "classes": [
-    "result_leaf"
-   ]
-  },
-  {
-   "master": "hfd_su",
-   "port": "a",
-   "dir": "input",
-   "bits": 1058,
-   "length_um": 2055.8,
-   "skew_class": "xdomain",
-   "skew_ps": 150.0,
-   "stages_needed": 6,
-   "stages_planned": 5,
-   "internal_ps": 11.7,
-   "where": "hbm:hb_su_SW<->hb_index_SW_b2",
-   "classes": [
-    "attn_out"
-   ]
-  },
-  {
-   "master": "hfd_su",
-   "port": "f_cmdproc",
-   "dir": "input",
-   "bits": 64,
-   "length_um": 3782.5,
-   "skew_class": "xdomain",
-   "skew_ps": 150.0,
-   "stages_needed": 10,
-   "stages_planned": 9,
-   "internal_ps": 1.3,
-   "where": "hbm:hb_su_NW<->hb_cmdproc",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_su",
-   "port": "f_coll",
-   "dir": "input",
-   "bits": 580,
-   "length_um": 2091.6,
-   "skew_class": "xdomain",
-   "skew_ps": 150.0,
-   "stages_needed": 6,
-   "stages_planned": 5,
-   "internal_ps": 3.5,
-   "where": "hbm:hb_su_SE<->hb_coll",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_su",
-   "port": "f_vm",
-   "dir": "input",
-   "bits": 2048,
-   "length_um": 3303.1,
-   "skew_class": "xdomain",
-   "skew_ps": 150.0,
-   "stages_needed": 9,
-   "stages_planned": 8,
-   "internal_ps": 9.7,
-   "where": "hbm:hb_su_SW<->hb_vm",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_su",
-   "port": "t_router",
-   "dir": "output",
-   "bits": 256,
-   "length_um": 6724.4,
-   "skew_class": "xdomain",
-   "skew_ps": 150.0,
-   "stages_needed": 17,
-   "stages_planned": 16,
-   "internal_ps": 60.3,
-   "where": "hbm:hb_su_NW<->hb_router",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_vm",
-   "port": "iNE",
-   "dir": "input",
-   "bits": 512,
-   "length_um": 5100.0,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 13,
-   "stages_planned": 1,
-   "internal_ps": -5310.2,
-   "where": "hbm:hb_vm<->hb_index_NE_b5",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_vm",
-   "port": "iNW",
-   "dir": "input",
-   "bits": 512,
-   "length_um": 5100.0,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 13,
-   "stages_planned": 1,
-   "internal_ps": -5310.2,
-   "where": "hbm:hb_vm<->hb_index_NW_b5",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_vm",
-   "port": "iSE",
-   "dir": "input",
-   "bits": 512,
-   "length_um": 5253.7,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 13,
-   "stages_planned": 1,
-   "internal_ps": -5484.6,
-   "where": "hbm:hb_vm<->hb_index_SE_b5",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_vm",
-   "port": "iSW",
-   "dir": "input",
-   "bits": 512,
-   "length_um": 5253.7,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 13,
-   "stages_planned": 1,
-   "internal_ps": -5484.6,
-   "where": "hbm:hb_vm<->hb_index_SW_b5",
-   "classes": [
-    "hub"
-   ]
-  },
-  {
-   "master": "hfd_vm",
-   "port": "t_router",
-   "dir": "output",
-   "bits": 512,
-   "length_um": 3782.2,
-   "skew_class": "inter",
-   "skew_ps": 150.0,
-   "stages_needed": 10,
-   "stages_planned": 9,
-   "internal_ps": 60.4,
-   "where": "hbm:hb_vm<->hb_router",
-   "classes": [
-    "hub"
    ]
   },
   {

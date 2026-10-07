@@ -10,9 +10,9 @@
   },
   "hbm": {
    "branch": "claude/hbm-abstracts-20261006",
-   "commit": "f8f73a2b009eb5e92defbc52b93a577edeecb89d",
+   "commit": "884df30c30d13fb0aba401abba6a580b56b652ed",
    "generator": "tools/hbm_accel_die_fp.py",
-   "options": "ADOPTED = R16J (r16j)",
+   "options": "ADOPTED = R18 (r17 budget stage plan + svc centre ck)",
    "via": "tools/die_top_lint.py build(hbm)"
   }
  },
@@ -25,5 +25,12 @@
   "host": "ot-epyc3",
   "path": "/srv/opentallas-scratch2/claude/budgets/cases",
   "image": "openroad/orfs:latest (OpenROAD 26Q3-1510-g6cb3f2b704)"
- }
+ },
+ "cts_hbm_r18": {
+  "host": "ot-epyc2",
+  "path": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/bud18",
+  "image": "openroad/orfs:asap7lock",
+  "result": "34 regions, max intra 56.7, max inter 141.4, 0 violations"
+ },
+ "insertion_override": "inputs/insertion_override.json (HBM index_q b0-b3/b5: edge ck kept, measured insertion accepted, extra OCV on IO skew)"
 }
