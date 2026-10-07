@@ -4,6 +4,7 @@
 # PER (default 0.730), IO = 0.2T+150 vs vclk at the CALIBRATED mean SS insertion ($CK_SS_MEAN from the loop's
 # CTS-only run; the template's planning latency only for the calibrate run itself).  Sign-off: corner_sta at
 # 833.333 with signoff_833_io150.sdc (vclk at each corner's measured insertion, -min 0).
+# XSDC (optional): a design-intent SDC appended to the route and re-read at sign-off (half rate: red_half_mcp.sdc).
 lab=$1; top=$2; mode=$3; shift 3
 W=${OUT:?}/$lab; mkdir -p $W
 C=${CORES:-16}
@@ -20,10 +21,10 @@ if [ "$mode" = slot ]; then
 else
   G="--core-utilization ${U:-30}"
 fi
-echo "$top mode=$mode PD=${PD:-0.5} PER=${PER:-0.730} HM=${HM:-0.010} IOSDC=$IOSDC CK_SS_MEAN=${CK_SS_MEAN:-} C=$C $*" > $W/args
+echo "$top mode=$mode PD=${PD:-0.5} PER=${PER:-0.730} HM=${HM:-0.010} IOSDC=$IOSDC XSDC=${XSDC:-} CK_SS_MEAN=${CK_SS_MEAN:-} C=$C $*" > $W/args
 python3 tools/run_abi3_physical.py --view asap7 --top $top $S \
   --clock-period-ns ${PER:-0.730} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
-  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append $IOSDC --stages synth,pnr \
+  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append $IOSDC ${XSDC:+--sdc-append $XSDC} --stages synth,pnr \
   $G --place-density ${PD:-0.5} --hold-margin-ns ${HM:-0.010} --orfs-var ADDER_MAP_FILE= \
   --orfs-var "SYNTH_KEEP_MODULES=ot_hdc_fp32_mul_f12_l6 ot_hdc_fp32_add_f12_l6x" \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
@@ -32,6 +33,6 @@ python3 tools/run_abi3_physical.py --view asap7 --top $top $S \
   --keep-workdir $W/work --force --output $W/physical.json "$@" > $W/run.log 2>&1
 rc=$?; echo "rc=$rc" > $W/exit
 case " $* " in *" cts "*|*"stop-after"*) exit $rc ;; esac
-python3 tools/w18/corner_sta.py --orfs-dir $W/work/orfs --post-sdc physical/hbm_su_c12/signoff_833_io150.sdc --output $W/corner_sta.json > $W/corner.log 2>&1
+python3 tools/w18/corner_sta.py --orfs-dir $W/work/orfs --post-sdc physical/hbm_su_c12/signoff_833_io150.sdc ${XSDC:+--post-sdc $XSDC} --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit
 exit $rc

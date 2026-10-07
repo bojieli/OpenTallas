@@ -263,3 +263,114 @@ module ot_hdc_v41x_vred_top1024_c12s (
     ot_hdc_v41x_vred_pinreg #(.W(131), .D(1), .RST(1)) u_pv (.clk(clk), .rst_n(rst_n),
         .d({c_we, c_ev, c_fault, c_busy | (|tv[TD:1])}), .q({o_we, o_ev, fault, busy}));
 endmodule
+
+// ---------------------------------------------------------------------------
+// HALF-RATE versions (Claude:hbm-su 2026-10-07, owner SAFE backstop "half-rate"; default off: only the physical
+// vehicles and tb_red_half instantiate them).  The SAFE structure (a kept flop at every pin) with the pin flops AND the
+// unchanged c12m core on the fast clock gated every other cycle (en flop toggling, latched while the clock is low,
+// ANDed with it: the HBM loader half-rate template).  Every gclk -> gclk path (pin -> core, core -> core, core -> out
+// pin, AND the die hop slice lv_o -> top lv_in, both sides gated in the same phase) gets two fast periods (SDC
+// physical/hbm_su_c12/red_half_mcp.sdc: multicycle setup 2 / hold 1).  Single-cycle paths left: die -> input pin flop
+// (the sender launches in the cycle that ends on a gated edge) and the event/status pin flops (fast, at the pins).
+// INTERFACE CONTRACT (credit with a fixed 2-cycle return): the SU controller asserts v_in only in a fast cycle with
+// ph = 1 (ph = the en flop; both blocks and the controller leave reset together), i.e. at most one reduction beat every
+// two cycles, at a fixed phase.  A beat offered in a ph = 0 cycle is a contract violation and raises fault.
+// Results: same values, order and faults (transaction level); o_we / o_ev pulse for one fast cycle with the data
+// held stable around it.  Latency 2 x (core + 4) + 1 fast cycles (tb_red_half measures it).
+// ---------------------------------------------------------------------------
+(* keep_hierarchy *)
+module ot_hdc_v41x_vred_hgate (input wire clk, input wire rst_n, output wire gclk, output wire ph);
+    reg en_q, en_l;
+    always @(posedge clk or negedge rst_n) if (!rst_n) en_q <= 1'b0; else en_q <= ~en_q;
+    always @(*) if (!clk) en_l = en_q;     // clock-gate latch: transparent while the clock is low
+    assign gclk = clk & en_l;              // gated edge = the fast edge that ends a ph = 1 cycle
+    assign ph = en_q;
+endmodule
+
+module ot_hdc_v41x_vred_slice64_c12h (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          v_in,
+    input  wire [2047:0] x_in,
+    input  wire [63:0]   live_in,
+    input  wire          mx_in,
+    input  wire          sq_in,
+    output wire [479:0]  lv_o,
+    output wire          fault_o
+);
+    wire gclk, ph;
+    ot_hdc_v41x_vred_hgate u_g (.clk(clk), .rst_n(rst_n), .gclk(gclk), .ph(ph));
+    wire p_v, p_mx, p_sq; wire [2047:0] p_x; wire [63:0] p_live; wire [479:0] c_lv; wire c_f, p_f;
+    ot_hdc_v41x_vred_pinreg #(.W(1), .D(1), .RST(1)) u_pv (.clk(gclk), .rst_n(rst_n), .d(v_in), .q(p_v));
+    ot_hdc_v41x_vred_pinreg #(.W(2114), .D(1)) u_pd (.clk(gclk), .rst_n(rst_n), .d({x_in, live_in, mx_in, sq_in}),
+        .q({p_x, p_live, p_mx, p_sq}));
+    ot_hdc_v41x_vred_slice64_c12m u (.clk(gclk), .rst_n(rst_n), .v_in(p_v), .x_in(p_x), .live_in(p_live), .mx_in(p_mx),
+        .sq_in(p_sq), .lv_o(c_lv), .fault_o(c_f));
+    ot_hdc_v41x_vred_pinreg #(.W(480), .D(1)) u_po (.clk(gclk), .rst_n(rst_n), .d(c_lv), .q(lv_o));
+    // contract check (fast): a beat offered in a ph = 0 cycle would be dropped -> fault (sticky to the next gated edge)
+    reg viol;
+    always @(posedge clk or negedge rst_n) if (!rst_n) viol <= 1'b0; else viol <= (v_in & ~ph) | (viol & ~ph);
+    ot_hdc_v41x_vred_pinreg #(.W(1), .D(1), .RST(1)) u_pf (.clk(gclk), .rst_n(rst_n), .d(c_f | viol), .q(fault_o));
+endmodule
+
+module ot_hdc_v41x_vred_top1024_c12h (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          v_in,
+    input  wire          mx_in,
+    input  wire [3:0]    lt_in,
+    input  wire          span_in,
+    input  wire [2:0]    l_in,
+    input  wire          last_in,
+    input  wire [7:0]    nres_in,
+    input  wire          rnd_in,
+    input  wire [23:0]   rbase_in,
+    input  wire [4:0]    rsh_in,
+    input  wire [8:0]    meta_in,
+    input  wire [7679:0] lv_in,
+    input  wire [15:0]   sfault_in,
+    output wire [127:0]  o_we,
+    output wire [3071:0] o_addr,
+    output wire [4095:0] o_data,
+    output wire [8:0]    o_meta,
+    output wire          o_ev,
+    output wire          busy,
+    output wire          fault
+);
+`ifdef OT_NEG_RED_HALF
+    localparam integer TD = 2;           // negative control: tags one slow stage short of the slice words
+`else
+    localparam integer TD = 3;           // slice in + slice out + top lv_in (slow stages)
+`endif
+    wire gclk, ph;
+    ot_hdc_v41x_vred_hgate u_g (.clk(clk), .rst_n(rst_n), .gclk(gclk), .ph(ph));
+    wire [TD:0] tv;
+    assign tv[0] = v_in;
+    genvar k;
+    for (k = 0; k < TD; k = k + 1) begin : g_tv
+        ot_hdc_v41x_vred_pinreg #(.W(1), .D(1), .RST(1)) u (.clk(gclk), .rst_n(rst_n), .d(tv[k]), .q(tv[k+1]));
+    end
+    wire p_mx, p_span, p_last, p_rnd; wire [3:0] p_lt; wire [2:0] p_l; wire [7:0] p_nres; wire [23:0] p_rbase;
+    wire [4:0] p_rsh; wire [8:0] p_meta; wire [7679:0] p_lv; wire [15:0] p_sf;
+    ot_hdc_v41x_vred_pinreg #(.W(57), .D(TD)) u_pt (.clk(gclk), .rst_n(rst_n),
+        .d({mx_in, lt_in, span_in, l_in, last_in, nres_in, rnd_in, rbase_in, rsh_in, meta_in}),
+        .q({p_mx, p_lt, p_span, p_l, p_last, p_nres, p_rnd, p_rbase, p_rsh, p_meta}));
+    ot_hdc_v41x_vred_pinreg #(.W(7680), .D(1)) u_pl (.clk(gclk), .rst_n(rst_n), .d(lv_in), .q(p_lv));
+    ot_hdc_v41x_vred_pinreg #(.W(16), .D(1), .RST(1)) u_ps (.clk(gclk), .rst_n(rst_n), .d(sfault_in), .q(p_sf));
+    wire [127:0] c_we; wire [3071:0] c_addr; wire [4095:0] c_data; wire [8:0] c_meta; wire c_ev, c_busy, c_fault;
+    ot_hdc_v41x_vred_top1024_c12m u (.clk(gclk), .rst_n(rst_n), .v_in(tv[TD]), .mx_in(p_mx), .lt_in(p_lt),
+        .span_in(p_span), .l_in(p_l), .last_in(p_last), .nres_in(p_nres), .rnd_in(p_rnd), .rbase_in(p_rbase),
+        .rsh_in(p_rsh), .meta_in(p_meta), .lv_in(p_lv), .sfault_in(p_sf), .o_we(c_we), .o_addr(c_addr),
+        .o_data(c_data), .o_meta(c_meta), .o_ev(c_ev), .busy(c_busy), .fault(c_fault));
+    // data pins: slow flops (held over both fast cycles of the slow cycle the event pulses in)
+    ot_hdc_v41x_vred_pinreg #(.W(7177), .D(1)) u_po (.clk(gclk), .rst_n(rst_n), .d({c_addr, c_data, c_meta}),
+        .q({o_addr, o_data, o_meta}));
+    wire [127:0] g_we; wire g_ev, g_fault, g_busy;
+    ot_hdc_v41x_vred_pinreg #(.W(131), .D(1), .RST(1)) u_pg (.clk(gclk), .rst_n(rst_n),
+        .d({c_we, c_ev, c_fault, c_busy | (|tv[TD:1])}), .q({g_we, g_ev, g_fault, g_busy}));
+    // event / status pins: fast flops; an event pulses once, in the second fast cycle of its slow cycle (ph = 1)
+    reg viol;
+    always @(posedge clk or negedge rst_n) if (!rst_n) viol <= 1'b0; else viol <= v_in & ~ph;
+    ot_hdc_v41x_vred_pinreg #(.W(131), .D(1), .RST(1)) u_pv (.clk(clk), .rst_n(rst_n),
+        .d({g_we & {128{~ph}}, g_ev & ~ph, (g_fault & ~ph) | viol, g_busy | (|tv[TD:0])}), .q({o_we, o_ev, fault, busy}));
+endmodule
