@@ -39,6 +39,8 @@ import os
 import re
 import shlex
 import shutil
+import threading
+from concurrent.futures import ThreadPoolExecutor
 import subprocess
 import sys
 import time
@@ -63,6 +65,10 @@ RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-k
                          r"admission (?:timed out|refused)", re.M)
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
 DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
+FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
+GIT_LOCK = threading.Lock()        # fetches into the shared object store
+PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
+WORKERS = 16
 STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (2, 8), "export": (2, 8),
                   "summary": (2, 16)}
 
@@ -92,6 +98,11 @@ def ssh(host, script, timeout=120, check=False, input=None):
     if input is None:
         return sh(base + ["bash -s"], timeout=timeout, check=check, input=script)
     return sh(base + [script], timeout=timeout, check=check, input=input)
+
+
+def gfetch(*refs, timeout=600):
+    with GIT_LOCK:
+        return sh(["git", "-C", str(REPO), "fetch", "-q", "origin", *refs], timeout=timeout)
 
 
 def git(*args, timeout=900, check=True, cwd=None):
@@ -282,7 +293,7 @@ def experiment(j, status, register=False):
 
 def ingest():
     try:
-        git("fetch", "-q", "origin", "main", timeout=300, check=False)
+        gfetch("main", timeout=300)
     except subprocess.TimeoutExpired:
         pass
     keys = route_keys()
@@ -354,6 +365,10 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         return sum(p[1] for p in self.pending[host]), sum(p[2] for p in self.pending[host])
 
     def fits(self, host, threads, ram):
+        with FLEET_LOCK:
+            return self._fits(host, threads, ram)
+
+    def _fits(self, host, threads, ram):
         cfg = host_cfg(host)
         if threads > cfg["max_job_threads"] or ram > cfg["max_job_ram_gb"]:
             return False, f"job {threads} thr / {ram} GB exceeds {cfg['label']} per-job limit"
@@ -370,10 +385,18 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         return True, "ok"
 
     def launched(self, host, threads, ram):
+        with FLEET_LOCK:
+            self._launched(host, threads, ram)
+
+    def _launched(self, host, threads, ram):
         self.pending.setdefault(host, []).append((time.time(), threads, ram))
         self.probe_cache.pop(host, None)
 
     def choose(self, spec, exclude=()):
+        with FLEET_LOCK:
+            return self._choose(spec, exclude)
+
+    def _choose(self, spec, exclude=()):
         threads, ram = spec.get("threads", 16), spec.get("peak_ram_gb", 32)
         order = spec.get("hosts") or [h["name"] for h in hosts_table()]
         why = []
@@ -417,7 +440,7 @@ def subst(text, j):
 def sync_source(j):
     spec, host = j["spec"], j["host"]
     src = spec["source"]
-    git("fetch", "-q", "origin", src["branch"], timeout=600, check=False)
+    gfetch(src["branch"], timeout=600)
     full = git("rev-parse", "--verify", f"{src['commit']}^{{commit}}").stdout.strip()
     anc = sh(["git", "-C", str(REPO), "merge-base", "--is-ancestor", full, f"origin/{src['branch']}"], timeout=120)
     if anc.returncode:
@@ -564,7 +587,7 @@ def publish(j, metrics):
     dry = spec.get("dry_run_git", False)
     out = {}
     for attempt in range(4):
-        git("fetch", "-q", "origin", branch, timeout=600)
+        gfetch(branch, timeout=600)
         wt_add(cwt, f"origin/{branch}", sparse)
         for r in spec.get("record", []):
             src = subst(r["from"], j)
@@ -610,11 +633,11 @@ def publish(j, metrics):
     wt_rm(cwt)
     if target:
         for attempt in range(4):
-            git("fetch", "-q", "origin", target, timeout=600)
+            gfetch(target, timeout=600)
             wt_add(mwt, f"origin/{target}", sparse)
             mref = out["branch_commit"] if dry else f"origin/{branch}"
             if not dry:
-                git("fetch", "-q", "origin", branch, timeout=600)
+                gfetch(branch, timeout=600)
             m = sh(["git", "-C", str(mwt), "-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me",
                     "merge", "--no-ff", "--no-edit", "-m",
                     f"Merge {branch} into {target} (closure-loop {j['name']}: {spec['block']} CLOSED)\n\n"
@@ -755,39 +778,9 @@ def failure_text(j):
     return "\n".join(lines)
 
 
-def step(j, fleet):
-    spec = j["spec"]
-    stl = stage_list(spec)
-    s = j["status"]
-    if s == "QUEUED":
-        h, why = fleet.choose(spec, exclude=[])
-        if not h:
-            if j.get("wait") != why:
-                j["wait"] = why
-                event(j, f"waiting for capacity: {why}")
-            return
-        j["wait"] = None
-        j["host"], j["run"] = h, f"{host_cfg(h)['base']}/{j['name']}"
-        j["hosts_tried"].append(h)
-        j["status"] = "SYNC"
-        experiment(j, "running: sync source", register=True)
-        s = "SYNC"
-    if s == "SYNC":
-        try:
-            sync_source(j)
-        except ValueError as ex:
-            finish(j, "NEEDS_HUMAN", str(ex), f"NEEDS_HUMAN: {ex}")
-            return
-        event(j, f"source {j['commit_full'][:12]} synced to {j['host']}:{j['run']}/src")
-        j["status"] = "READY"
-        return
-    if s == "READY":
-        st = stl[j["stage_idx"]]
-        j["stage_key"] = st["key"]
-        if st["kind"] == "verdict":
-            return do_verdict(j, fleet, stl)
-        if st["kind"] == "commit":
-            return do_commit(j)
+def launch_ready(j, fleet, spec, stl, st):
+    """READY at a remote stage: capacity check, optional host move, launch (caller holds FLEET_LOCK)."""
+    if True:
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
         if not ok:
             j.setdefault("wait_since", time.time())
@@ -824,6 +817,46 @@ def step(j, fleet):
         event(j, f"launched {st['key']} (attempt {j['attempt']}) on {j['host']}")
         experiment(j, f"running: {st['key']} on {host_cfg(j['host'])['label']}")
         return
+
+
+def step(j, fleet):
+    spec = j["spec"]
+    stl = stage_list(spec)
+    s = j["status"]
+    if s == "QUEUED":
+        with FLEET_LOCK:
+            h, why = fleet.choose(spec, exclude=[])
+            if h:   # claim capacity now so parallel job threads do not pick the same headroom
+                fleet.launched(h, 0, 0)
+        if not h:
+            if j.get("wait") != why:
+                j["wait"] = why
+                event(j, f"waiting for capacity: {why}")
+            return
+        j["wait"] = None
+        j["host"], j["run"] = h, f"{host_cfg(h)['base']}/{j['name']}"
+        j["hosts_tried"].append(h)
+        j["status"] = "SYNC"
+        experiment(j, "running: sync source", register=True)
+        s = "SYNC"
+    if s == "SYNC":
+        try:
+            sync_source(j)
+        except ValueError as ex:
+            finish(j, "NEEDS_HUMAN", str(ex), f"NEEDS_HUMAN: {ex}")
+            return
+        event(j, f"source {j['commit_full'][:12]} synced to {j['host']}:{j['run']}/src")
+        j["status"] = "READY"
+        return
+    if s == "READY":
+        st = stl[j["stage_idx"]]
+        j["stage_key"] = st["key"]
+        if st["kind"] == "verdict":
+            return do_verdict(j, fleet, stl)
+        if st["kind"] == "commit":
+            return do_commit(j)
+        with FLEET_LOCK:
+            return launch_ready(j, fleet, spec, stl, st)
     if s == "RUNNING":
         st = stl[j["stage_idx"]]
         state, rc = poll_stage(j)
@@ -906,7 +939,8 @@ def do_verdict(j, fleet, stl):
 def do_commit(j):
     m = j["metrics"]
     try:
-        out = publish(j, m)
+        with PUBLISH_LOCK:
+            out = publish(j, m)
     except Exception as ex:  # noqa: BLE001
         finish(j, "NEEDS_HUMAN", f"publish failed: {str(ex)[:300]}", f"NEEDS_HUMAN: CLOSED but publish failed: {str(ex)[:400]}")
         return
@@ -991,9 +1025,7 @@ def tick(fleet):
         auto_requeue(all_jobs())
     except Exception:  # noqa: BLE001
         log("auto_requeue error:\n" + traceback.format_exc())
-    for j in all_jobs():
-        if j["status"] in TERMINAL:
-            continue
+    def one(j):
         try:
             step(j, fleet)
         except Exception as ex:  # noqa: BLE001
@@ -1004,6 +1036,8 @@ def tick(fleet):
                 finish(j, "NEEDS_HUMAN", f"10 consecutive loop errors: {str(ex)[:200]}",
                        f"NEEDS_HUMAN: loop errors at {j['status']}: {str(ex)[:300]}")
         save_job(j)
+    with ThreadPoolExecutor(max_workers=WORKERS) as ex:
+        list(ex.map(one, [j for j in all_jobs() if j["status"] not in TERMINAL]))
     write_status()
 
 
