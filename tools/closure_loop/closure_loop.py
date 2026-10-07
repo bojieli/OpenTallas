@@ -64,7 +64,7 @@ OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
 RAM_HEADROOM_GB = 32
 PENDING_WINDOW_S = 600                # load1 lags a launch: count own launches of the last 5 min as load
-TERMINAL = {"CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
+TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)", re.M)
@@ -552,13 +552,21 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         ref, mine = self.toolchain(TOOL_REF_HOST), self.toolchain(host)
         if not ref or not mine:
             return False
-        return all(mine.get(k) == ref.get(k) for k in job_tools(spec) if k.startswith("img_"))
+        if not all(mine.get(k) == ref.get(k) for k in job_tools(spec) if k.startswith("img_")):
+            return False
+        if is_local(host) and bare_image_ids(spec):
+            return False     # a docker reference by bare image ID does not exist in the localhost store (see LOCAL_ORFS_REF)
+        return True
 
     def _choose(self, spec, exclude=()):
         threads, ram = spec.get("threads", 16), spec.get("peak_ram_gb", 32)
         allh = [h["name"] for h in hosts_table()]
         pref = set(spec.get("hosts") or [])
         # the job's hosts list is a PREFERENCE (coordinator 2026-10-06 21:15); caps/toolchain/per-job limits still apply
+        if spec.get("host_require"):          # smoke tests / pinned runs: only these hosts
+            allh = [h for h in allh if h in spec["host_require"]]
+        # a host marked smoke_only (hosts.json) admits only smoke-test jobs (spec "smoke": true) until it is re-enabled
+        allh = [h for h in allh if not host_cfg(h).get("smoke_only") or spec.get("smoke")]
         order = [h for h in allh if h not in exclude and self.compatible(h, spec)]
 
         def score(h):
@@ -582,6 +590,33 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
 
 
 TOOL_REF_HOST = "ot-epyc3"
+# LOCALHOST IMAGE (2026-10-07): the fleet image loaded into localhost's overlay2 docker store has another image ID
+# (af971398) than in the fleet's containerd stores (16470cea), so a recipe pinning the BARE ID sha256:16470cea... fails
+# there with exit 125 (dsrom_softmax_safe_exprc2_09d4d345e).  The registry-digest reference resolves on every host:
+# localhost stages export it as OPENTALLAS_ORFS_IMAGE, and jobs whose recipes hard-code a bare ID stay on the fleet.
+LOCAL_ORFS_REF = "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+_BARE_ID_CACHE = {}
+
+
+def bare_image_ids(spec):
+    """bare docker image IDs (sha256:<64 hex> not preceded by name@) in the job's stage commands or the scripts they
+    name at the job's commit, except an overridable ${OPENTALLAS_ORFS_IMAGE:-...} default"""
+    commit = (spec.get("source") or {}).get("commit", "")
+    text = json.dumps(spec.get("stages", {}))
+    key = (commit, text)
+    if key in _BARE_ID_CACHE:
+        return _BARE_ID_CACHE[key]
+    blobs = [text]
+    for path in sorted(set(re.findall(r"((?:physical|tools)/[\w./-]+\.(?:sh|py|tcl))", text))):
+        r = sh(["git", "-C", str(REPO), "show", f"{commit}:{path}"], timeout=60)
+        if r.returncode == 0:
+            blobs.append(r.stdout)
+    found = set()
+    for b in blobs:
+        b = re.sub(r"OPENTALLAS_ORFS_IMAGE:-sha256:[0-9a-f]{64}", "", b)
+        found |= set(re.findall(r"(?<![@\w])sha256:[0-9a-f]{64}", b))
+    _BARE_ID_CACHE[key] = sorted(found)
+    return _BARE_ID_CACHE[key]
 SMALL_JOB_GB = 40
 # image identity = its registry digest when it has one: the same image loaded into a different docker store reports a
 # different .Id (localhost overlay2 af971398 vs fleet containerd 16470cea, both openroad/orfs@sha256:16470cea)
@@ -877,6 +912,8 @@ def launch_stage(j, st, cmd):
         # hold ECO (rev 2: setup-preserving) carries hold to +18.  Earlier jobs keep 35 ps (same flow on a retry).
         hm_default = 0.010 if j.get("created", "") >= HM_LOW_SINCE else 0.035
         env += f"export HM={j['spec'].get('route_hold_margin_ns', hm_default)}\n"
+    if is_local(j["host"]):
+        env += f"export OPENTALLAS_ORFS_IMAGE={LOCAL_ORFS_REF}\n"
     if st["kind"] == "route":
         # ROUTE HOLD CORNERS (2026-10-07, hold_corners_patch.py): place-and-route repairs hold at the primary corner only
         # -- the route SDC's virtual IO clock sits at the SS insertion, so BC showed fake IO hold violations of about the
@@ -1412,6 +1449,11 @@ def step(j, fleet):
                 return
             return do_verdict(j, fleet, stl)
         if st["kind"] == "commit":
+            if j["spec"].get("smoke"):      # host smoke test: timing verdict passed; nothing is recorded or merged
+                m = j.get("metrics", {})
+                finish(j, "SMOKE_OK", f"smoke test on {j['host']}: SS {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')}",
+                       f"SMOKE_OK on {j['host']}: SS {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')} (not published)")
+                return
             return do_commit(j)
         with FLEET_LOCK:
             return launch_ready(j, fleet, spec, stl, st)
