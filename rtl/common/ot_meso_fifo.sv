@@ -443,8 +443,21 @@ module ot_meso_ring #(
             for (int i = PW - 2; i >= 0; i--) gb2[i] = gb2[i+1] ^ g2[i];
         end
         logic [PW-1:0] pl_q;
+`ifdef OT_MESO_MUTANT_PLREG
+        always_ff @(posedge rclk) pl_q <= rp_place_c;        // MUTANT: one edge late (the un-retimed value registered)
+`else
         always_ff @(posedge rclk) pl_q <= gb2 + PW'(PLACE) - PW'(g2 != n2);
+`endif
         assign rp_place = pl_q;
+`ifndef SYNTHESIS
+        // retiming proof in every bench: the flop equals the combinational placement at every edge once g/n are
+        // defined (x-initial: both sides hold the same arbitrary power-up words after 4 edges)
+        int pl_n = 0;
+        always @(posedge rclk) begin
+            if (pl_n < 4) pl_n <= pl_n + 1;
+            else if (pl_q !== rp_place_c) $display("PLREG_MISMATCH %m t=%0t q=%0d c=%0d", $time, pl_q, rp_place_c);
+        end
+`endif
     end else begin : g_plcomb
         assign rp_place = rp_place_c;
     end
@@ -571,7 +584,11 @@ module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter b
             for (int i = DEPTH / 2; i < DEPTH; i++) yb_c = yb_c | (sd[i*W +: W] & {W{di[i]}});
         end
         always_ff @(posedge clk) begin ya_q <= ya_c; yb_q <= yb_c; end
+`ifdef OT_MESO_MUTANT_RSPLIT
+        assign y = ya_q;                                    // MUTANT: upper half-select dropped
+`else
         assign y = ya_q | yb_q;
+`endif
     end else if (REG) begin : g_reg
         // the crossing's capture flop sits next to the select (RDREG): the arc is slot -> AND-OR -> this flop
         logic [W-1:0] y_q;
