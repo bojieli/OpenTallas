@@ -991,7 +991,28 @@ def pin_rects(mst, k, wmap):
     rest = Q.Master(mst.name, mst.w, mst.h, mst.obs_top, mst.note)
     rest.ports = {p: s for p, s in mst.ports.items() if s[0] != 'xy'}
     rest.order = [p for p in mst.order if p in rest.ports]
-    return out + Q.pin_rects(rest, k, wmap)
+    rects = Q.pin_rects(rest, k, wmap)
+    if k > 1 and GEOMETRY_FIX:
+        # Bundling expands pin width/pitch, not the real macro outline. Keep
+        # opposite-face access rectangles separated on thin glue banks too.
+        # The k=1 physical pins and every routing-layer assignment are unchanged.
+        bounded = []
+        for nm, ly, (x0, y0, x1, y1) in rects:
+            spec = rest.ports[nm.rsplit('[', 1)[0]]
+            if spec[0] == 'face':
+                face = spec[2]
+                depth = min(0.192 * k, (mst.w if face in 'EW' else mst.h) / 3)
+                if face == 'W':
+                    x1 = depth
+                elif face == 'E':
+                    x0 = mst.w - depth
+                elif face == 'S':
+                    y1 = depth
+                else:
+                    y0 = mst.h - depth
+            bounded.append((nm, ly, (x0, y0, x1, y1)))
+        rects = bounded
+    return out + rects
 
 
 def lef_text(mst, k, wmap):
@@ -2764,7 +2785,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3185,6 +3206,7 @@ CORR_LANE_STRIDE = 5            # coprime with LANES_CORR (16)
 HOP_FIX = False                 # --hop-fix (S81-RERUN v6, default off): stations on every die hop over its reach,
                                 #   measured pin anchor to pin anchor on a first build (budget sheets 2026-10-06)
 HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (L um, (dx, dy), (lx, ly))}
+GEOMETRY_FIX = False            # --geometry-fix: canonical station outlines and bounded bundled pin depth
 HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491 um at 833.333 ps SS)
 HOP_R_FWD = 430.56              # forwarded hop = the station pitch (routed stations: SS +78..+84 at the 440 um hop budget)
 MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 8 / OFFSET 3 / guards 0,6 / CREDITS 16
@@ -3218,7 +3240,7 @@ def out_rev():
     """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
     r = REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
     return (r + ('k' if LINK_FIX else '') + ('h' if HOP_FIX else '') + ('d' if MESO_D8 else '')
-            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else ''))
+            + (f'p{int(round(FWD_REACH))}' if FWD_REACH < LINK_STAGE_UM else '') + ('c' if CFIFO_V2 else '') + ('x' if HC_XFACE else '') + ('s' if LINK_SPLIT else '') + ('g' if SEL_XSTG else '') + ('j' if GEOMETRY_FIX else ''))
 
 
 def set_cc_reach(um):
@@ -3349,7 +3371,7 @@ def _hop_fix(m, P):
                 (cx, cy), dch = _poly_at(path, Lp * (k + 1) / (n + 1))
                 horiz = dch in 'EW'
                 w_, h_ = stn_dims([bits], horiz)
-                if not fwd:              # relays / hub stations: faces chosen after placement -> square box
+                if not fwd and (reg is not None or not GEOMETRY_FIX):  # frame relay faces chosen later -> square
                     w_ = h_ = max(w_, h_)
                 pl = None
                 # v6b: stations only in the die's channels (v6 placed them anywhere on the die: 41-54 PA overlaps,
@@ -3747,6 +3769,11 @@ def _run_multi(CH8, name, path, allowed, forced, ncol):
         n = max(1, joined)
         horiz = it.master.startswith('dsfd_stnh')
         it.master = stn_master([CRET + 2] * n, horiz)
+        # The placer reserved the widest trunk. The emitted master is narrower
+        # until all columns join; its model footprint must match that signature.
+        # Shrink inside the reservation, retaining the conservative occupancy.
+        if GEOMETRY_FIX:
+            it.w, it.h = stn_dims([CRET + 2] * n, horiz)
         it.power_w = n * (CRET + 2) * FLOP_CLK_W * 1.5
         out.append((it, s_, n))
     return out
@@ -4691,13 +4718,16 @@ def die_options(ap):
                     'stations (port slices; needs --link-fix; default off)')
     ap.add_argument('--hc-xface', action='store_true', help='r9: hc_s <-> hc_n exchange straight across the corridor '
                     'inside the HC column, face to face (default off: a VCH-edge lane)')
+    ap.add_argument('--geometry-fix', action='store_true', help='r9: canonical station footprints and bounded '
+                    'k16 pin depth; default off pending geometry and physical gates')
     return ap
 
 
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
     set_cc_reach(a.cc_reach_um)
-    global VCH_INTERLEAVE, LINK_FIX, HC_XFACE
+    global VCH_INTERLEAVE, LINK_FIX, HC_XFACE, GEOMETRY_FIX
+    GEOMETRY_FIX = bool(getattr(a, 'geometry_fix', False))
     VCH_INTERLEAVE = bool(a.vch_interleave)
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
     global LINK_SPLIT, SEL_XSTG
