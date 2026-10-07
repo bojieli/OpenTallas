@@ -19,9 +19,9 @@ for f in rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hd
 if [ $V = quad ]; then
  TOP=ot_hdc_v41_fh_quad
  args+=(--source $D/quad/ot_hdc_v41_fh_quad.sv)   # the lane leaf comes from its liberty/LEF (--macro-view)
- args+=(--macro-view $L=$H/leaf --macro-place-halo 2 2 --orfs-var MACRO_PLACEMENT_TCL=/src/$H/macro_place_quad.tcl --orfs-var PDN_TCL=/src/$H/pdn_quad.tcl
+ args+=(--macro-view $L=$H/$L --macro-place-halo 2 2 --orfs-var MACRO_PLACEMENT_TCL=/src/$H/macro_place_quad.tcl --orfs-var PDN_TCL=/src/$H/pdn_quad.tcl
    --die-area 0 0 610 560 --core-area 2 2 608 558 --false-path-from gid --core-utilization 30)
- MAC=(--macro $H/leaf)
+ MAC=(--macro $H/$L)
 else
  TOP=ot_hdc_v41_fh_head_top
  for f in $D/capture_candidate/ot_hdc_v41_fh_fault_retire.sv $D/capture_candidate/ot_hdc_v41_fh_retire_parent.sv \
