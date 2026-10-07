@@ -8,9 +8,11 @@ from pathlib import Path
 import hbm_accel_die_fp as H
 
 
-def generate(descriptor=False, sm_readback=None):
+def generate(descriptor=False, sm_readback=None, escape=False):
     old=H.build(H.R24SM3V,network_probe=True)
-    m=H.build(H.R24SM3VOC if descriptor else H.R24SM3VO,network_probe=True)
+    if escape and not descriptor:
+        raise ValueError('control escape reservations require descriptors')
+    m=H.build(H.R24SM3VOCE if escape else H.R24SM3VOC if descriptor else H.R24SM3VO,network_probe=True)
     bays=m['native_owner_bays']
     descriptor_actual=None
     readback_sources=[]
@@ -34,7 +36,7 @@ def generate(descriptor=False, sm_readback=None):
             raise ValueError('actual descriptor BPin exceeds 100um candidate face bound')
         readback_sources.append(rb_path)
     collisions=[]
-    for r in bays+m.get('native_descriptor_bays',[]):
+    for r in bays+m.get('native_descriptor_bays',[])+m.get('native_control_escape_bays',[]):
         x0,y0,x1,y1=r['box_um']
         for i in m['insts']:
             if min(x1,i.x+i.w)>max(x0,i.x)+1e-6 and min(y1,i.y+i.h)>max(y0,i.y)+1e-6:
@@ -44,6 +46,9 @@ def generate(descriptor=False, sm_readback=None):
         raise ValueError(dict(bay_collisions=collisions,legality=check))
     record=dict(status='RESERVATION_ONLY_PHYSICAL_MASTER_AND_CONTROL_PATHS_OPEN',selected=False,
         legality=check,bay_macro_collisions=collisions,bays=bays,
+        control_escape_bays=m.get('native_control_escape_bays',[]),
+        control_escape_scope='macro keepout for planned flight portals; route corridor, not solid obstacle',
+        control_escape_reserved_area_um2=64*40*48 if escape else 0,
         descriptor_actual_bpin=descriptor_actual,
         descriptor_bays=m.get('native_descriptor_bays',[]),
         descriptor_reserved_um=[128.304,64.8] if descriptor else None,
@@ -66,13 +71,13 @@ def generate(descriptor=False, sm_readback=None):
         source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),Path(H.__file__)]+readback_sources})
     placement=dict(insts=[dict(name=i.name,master=i.master,x=i.x,y=i.y,w=i.w,h=i.h,orient=i.orient,
         kind=i.kind,box_um=i.box()) for i in m['insts']],buses=m['buses'],paths=m['paths'],geo=m['geo'],
-        result_pin_bays=m['result_pin_bays'],native_owner_bays=bays,native_descriptor_bays=m.get('native_descriptor_bays',[]),legality=check)
+        result_pin_bays=m['result_pin_bays'],native_owner_bays=bays,native_descriptor_bays=m.get('native_descriptor_bays',[]),native_control_escape_bays=m.get('native_control_escape_bays',[]),legality=check)
     return record,placement
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',required=True);ap.add_argument('--descriptor',action='store_true');ap.add_argument('--sm-readback')
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',required=True);ap.add_argument('--descriptor',action='store_true');ap.add_argument('--sm-readback');ap.add_argument('--escape',action='store_true')
     a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
-    record,placement=generate(a.descriptor,a.sm_readback)
+    record,placement=generate(a.descriptor,a.sm_readback,a.escape)
     (out/'model.json').write_text(json.dumps(record,indent=2)+'\n')
     with gzip.open(out/'placement.json.gz','wt') as f:json.dump(placement,f,separators=(',',':'))
     print(json.dumps(record['legality']))

@@ -365,6 +365,7 @@ R24SM3 = dict(R24F, sm_wh=(3075.84, 1131.84), sm_physical_grid=(3, 3), side_padd
 R24SM3V = dict(R24SM3, vm_split8=True, vm8_nonoverlap=True, vm8_exact_pins=True)
 R24SM3VO = dict(R24SM3V, native_owner_bays=True)
 R24SM3VOC = dict(R24SM3VO, native_descriptor_bays=True)
+R24SM3VOCE = dict(R24SM3VOC, native_control_escape_bays=True)
 ADOPTED = R23
 
 
@@ -712,6 +713,19 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
                         descriptor_bays.append(dict(sm=sm.name,box_um=[round(sm.x+x0,6),round(y0,6),round(sm.x+x1,6),round(y1,6)]))
                     m['native_descriptor_bays']=descriptor_bays
                     m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in descriptor_bays)
+                    if variant.get('native_control_escape_bays'):
+                        escape_bays=[]
+                        sm_by={i.name:i for i in insts if i.kind=='sm'}
+                        for role,group in (('owner',owner_bays),('descriptor',descriptor_bays)):
+                            for bay in group:
+                                x0,y0,x1,y1=bay['box_um'];cy=(y0+y1)/2
+                                if sm_by[bay['sm']].orient in ('MY','R180'):
+                                    box=[x1,cy-24,x1+40,cy+24]
+                                else:
+                                    box=[x0-40,cy-24,x0,cy+24]
+                                escape_bays.append(dict(sm=bay['sm'],role=role,box_um=[round(v,6) for v in box]))
+                        m['native_control_escape_bays']=escape_bays
+                        m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in escape_bays)
     m['buses'], m['paths'] = buses(m)
     if variant.get('stn_share'):
         share_stations(m)
