@@ -13853,6 +13853,12 @@ def hbm_smh_front_s_hold_model():
     return model()
 
 
+def qwen_rom_vm_request_normalization_candidate():
+    """Full-shape default-off request normalizer inventory; physical join unqualified."""
+    from qwen_rom_vm_request_normalizer_model import model
+    return model()
+
+
 def qwen_embedding_padded_ingress_model(address_bits=18):
     """Price ten physical BUFx2 stages on each ingress pin before building.
 
