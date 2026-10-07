@@ -38,8 +38,10 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_qwen_die_station --sour
   --orfs-var "OT_IO_INTER=$INTER" --orfs-var OT_IO_SKEW_INTER=150 \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag qdm_$NAME \
   --keep-workdir $W/work --force --output $W/physical.json > $W/flow.log 2>&1
-echo $? > $W/flow.exit
-{ echo 'set ::env(OT_IO_SKEW) 90'; echo 'set ::env(OT_IO_HOLD_SKEW) 50'; echo 'set ::env(OT_REF_GLOB) {*br_q*}'
+flow_rc=$?
+echo $flow_rc > $W/flow.exit
+if [ "$flow_rc" -ne 0 ]; then exit "$flow_rc"; fi
+{ cat physical/qwen_die_masters/station_signoff.sdc; echo 'set ::env(OT_IO_SKEW) 90'; echo 'set ::env(OT_IO_HOLD_SKEW) 50'; echo 'set ::env(OT_REF_GLOB) {*br_q*}'
   echo "set ::env(OT_IO_INTER) {$INTER}"; echo 'set ::env(OT_IO_SKEW_INTER) 150'
   cat physical/qwen_die_masters/io_ref_skew.sdc; } > $W/io_ref_skew_signoff.sdc
 python3 tools/w18/corner_sta_ref.py --orfs-dir $W/work/orfs --extra-sdc $W/io_ref_skew_signoff.sdc \
