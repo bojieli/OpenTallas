@@ -15,9 +15,15 @@ if [ -n "${CK_SS_MEAN:-}" ]; then
   IOSDC=physical/hbm_su_c12/cal_${lab}.sdc
   sed "s/^set ot_L .*/set ot_L $CK_SS_MEAN/" physical/hbm_su_c12/$T > $IOSDC
 fi
-S="--source rtl/hdc/v41x/phys/ot_hdc_v41x_vec_red_c12_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv --source rtl/hdc/ot_hdc_fastfp_lat_c12.sv --source rtl/hdc/ot_hdc_fp32_f12.sv --source rtl/hdc/v41x/ot_dsrom_su_add6.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc/ot_hdc_sfu.sv ${EXTRA_SOURCES:-}"
+S0="--source rtl/hdc/v41x/phys/ot_hdc_v41x_vec_red_c12_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv --source rtl/hdc/ot_hdc_fastfp_lat_c12.sv --source rtl/hdc/ot_hdc_fp32_f12.sv --source rtl/hdc/v41x/ot_dsrom_su_add6.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc/ot_hdc_sfu.sv"
+# SRCF: a file listing other sources (e.g. su_full_sources.txt for ot_su12_full)
+if [ -n "${SRCF:-}" ]; then S=""; for f in $(cat $SRCF); do S="$S --source $f"; done; else S="$S0"; fi
+S="$S ${EXTRA_SOURCES:-}"
 if [ "$mode" = slot ]; then
   G="--die-area 0 0 1399.656 218.136 --core-area 1.08 1.08 1398.576 217.08 --orfs-var IO_CONSTRAINTS=/src/physical/hbm_su_c12/red_top_slot_io.tcl --step-tcl POST_IO_PLACEMENT=physical/hbm_su_c12/red_pinflop_place.tcl"
+elif [ "$mode" = box ]; then   # DIE="W H": a die-slot outline (pins by the flow), e.g. hfd_su_full 346.008 x 347.736
+  read DW DH <<< "${DIE:?}"
+  G="--die-area 0 0 $DW $DH --core-area 1.08 1.08 $(python3 -c "print(round($DW-1.08,3), round($DH-1.08,3))")"
 else
   G="--core-utilization ${U:-30}"
 fi
