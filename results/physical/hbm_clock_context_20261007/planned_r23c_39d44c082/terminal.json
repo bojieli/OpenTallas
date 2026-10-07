@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.hbm.clock_context.terminal.v1",
+  "source_commit": "39d44c082f712b8c305598897eaa30f09d73d5a7",
+  "execution_rc": {
+    "ss": 0,
+    "ff": 0
+  },
+  "verdict": "FAIL_INCOMPLETE_DIAGNOSTIC_CLOCK_CONTEXT",
+  "final_signoff_eligible": false,
+  "physical_clock_routed": false,
+  "data_parasitics": "placement estimated",
+  "slack_ns": {
+    "ss": -29.175344,
+    "ff": -0.785319
+  },
+  "clock_bound": 281,
+  "clock_missing": 10,
+  "unmapped_pins": 14,
+  "unclocked_register_pins": 1348,
+  "unconstrained_endpoints": 576807,
+  "script_hashes_verified": true,
+  "missing_binding": "10 link plan ck[0] entries disagree with actual clk pins; four collective PLL outputs also unmapped",
+  "next_gate": "Correct explicit pin identities, model source clocks and bind all endpoint clock contracts; preserve this failed diagnostic. Final physical CTS and extracted data routes still required."
+}

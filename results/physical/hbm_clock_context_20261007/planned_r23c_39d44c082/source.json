@@ -1,0 +1,17 @@
+{
+ "source_commit": "39d44c082",
+ "source_branch": "codex/hbm-die-recovery-20261007",
+ "admission": "EPYC2 /srv/opentallas-scratch/admit.sh 32",
+ "threads": 1,
+ "reservation_gib": 32,
+ "host_headroom_observed_gib": 338,
+ "inputs_case": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/die/r23c/s_sta",
+ "script_sha256": {
+  "clock_context_ss.tcl": "afbc51a843717f9a18d48fb31f8c91430c6e79569d6ab2285f383f0a0103c244",
+  "run_clock_ss.tcl": "396b72ab89aaf7133b7bec88462ea08e8df01dfb923f7d5921bc101c763a3540",
+  "run_clock_ff.tcl": "3509581f35af5767381fad279cf4c0bcc164040ae2a7ef85a0dfd73cfa304cd4",
+  "clock_context_ff.tcl": "c369261ad8330d24b7f1db974b2986787d733ab73b20239f1ae8900165f197b2"
+ },
+ "clock_model": "measured clock-only tree with planned per-pin pads; no physical CTS credit",
+ "data_parasitics": "placement estimated; source detailed route still progressing"
+}

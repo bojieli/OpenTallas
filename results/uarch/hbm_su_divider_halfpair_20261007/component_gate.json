@@ -43,8 +43,8 @@
   "negative_compile_command": "iverilog -DNEG_PHASE -g2012 -s tb -o /tmp/hbm-su-restore-20261007/review.out rtl/hdc/v41/ot_hdc_fdiv64.sv rtl/test/tb_hbm_su_fdiv64.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_sfu.sv",
   "remaining": [
     "restore unified model function from prebuild commit if absent",
-    "production DDIV64 join + full lane exact composition",
-    "generated-clock physical constraints + full-lane SS/FF route",
+    "commit source pin then run DDIV64 full-lane exact composition campaign with measured admission",
+    "validate generated clock discovery on actual mapped full-lane netlist; SS/FF route",
     "r24f slot physical implementation and die composition"
   ],
   "clock_domain": {
