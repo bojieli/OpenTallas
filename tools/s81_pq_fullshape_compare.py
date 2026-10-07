@@ -31,7 +31,7 @@ def leaves(x, y, p=''):
 def main():
     h = json.loads((D / 'reproduce/design.json').read_text())
     c = json.loads((D / 'current_main/design.json').read_text())
-    base = [r for r in leaves(h, {k: v for k, v in c.items() if k != 'current_basis'})]
+    base = [r for r in leaves(h, {k: v for k, v in c.items() if k not in ('current_basis', 'model_basis')})]
     unexplained = [r['key'] for r in base if r['key'] not in PROVENANCE]
     assert not unexplained, unexplained
     cb = c['current_basis']
@@ -81,7 +81,7 @@ def main():
              reason='mappings reproduced byte-identically from 9a31097cd (half 8dfa6dae, full bf7863a4); inventories '
                     'and pq_parent_binding committed on main with the snapshot hashes'),
     ]
-    out = dict(schema='opentallas.s81.pq-fullshape.comparison-current-main.v1',
+    out = dict(schema='opentallas.s81.pq-fullshape.comparison-current-main.v1', model_basis=c['model_basis'],
                historical_design_sha256=hashlib.sha256((D / 'reproduce/design.json').read_bytes()).hexdigest(),
                current_design_sha256=hashlib.sha256((D / 'current_main/design.json').read_bytes()).hexdigest(),
                base_design_leaf_changes=base, unexplained=unexplained, changes=ch,

@@ -571,7 +571,8 @@ def design(snap=SNAP):
 CUR = OUT / 'current_main'
 CURRENT = dict(
     SPINE=CUR / 'inputs/rtl/ot_v41_spine_pqc_w17w10.d0178820d.sv',   # production native source (Codex native_elaboration)
-    GEOM=CUR / 'geometry_extract.json', GEN=ROOT / 'tools/dsrom_s81_fulldie.py',
+    GEOM=CUR / 'geometry_extract.json', GEN=CUR / 'inputs/pinned/dsrom_s81_fulldie.cfc076112.py',
+    INSERTION=CUR / 'inputs/calibration/measured_insertion.bb7c46846.json',
     REPO_SUMS=CUR / 'inputs/REPO_INPUTS.SHA256SUMS',
     SNAP_PATHS={'pq_parent_binding.py': ROOT / 'tools/s81/pq_parent_binding.py',
                 'dsrom_s81_pq_parent_20261007/full_inventory.json':
@@ -635,7 +636,22 @@ def current_extras(d):
     return out
 
 
-INSERTION = ROOT / 'results/rtl/budgets_20261006/measured_insertion.json'
+INSERTION = ROOT / 'results/rtl/budgets_20261006/measured_insertion.json'   # daemon-mutated on main: current basis pins a snapshot
+MODEL_BASIS = dict(
+    label='MODELED VERSION: main@e2a4ad579 with calibration snapshot observed 2026-10-07T12:10:55-07:00',
+    main_commit='e2a4ad579',
+    calibration_snapshot=dict(path='current_main/inputs/calibration/measured_insertion.bb7c46846.json',
+                              source_path='results/rtl/budgets_20261006/measured_insertion.json',
+                              source_commit='bb7c46846 (2026-10-07 12:07:44 -0700, closure-loop daemon)',
+                              observed_at='2026-10-07T12:10:55-07:00 (worktree file mtime when read)',
+                              sha256='4a72c6e5137d1f983c9d1ee67da23f03c5016edb0d7726b1b8f4473aa1cd4e11',
+                              note='the live file on main is rewritten by the closure-loop daemon; this basis never '
+                                   'reads it'),
+    generator=dict(path='current_main/inputs/pinned/dsrom_s81_fulldie.cfc076112.py',
+                   source='tools/dsrom_s81_fulldie.py @ e2a4ad579'),
+    geometry_status='PROVISIONAL: generator rebuild of the frame model (empty-q-slot root assumption superseded by '
+                    'the pq_parent placement: 164.16 um root rows in the first 6 tier channels, 449.28 x 1,728 um core '
+                    'slot after the VM); the geometry owner is rebuilding the actual layout')
 ANALOGUE = {'ret_root_r128': 'ot_s81ph_root_tile', 'rwb': 'dsfd_cfifo', 'pq_xbuf': 'ot_v41_rom_elem_q_qxpq_w10',
             'pq_ctl': 'ot_v41_rom_elem_q_qxpq_w10', 'lane_station': 'dsfd_stnh_566x1'}
 
@@ -697,8 +713,10 @@ def main():
     ap.add_argument('--snapshot', type=Path, default=SNAP)
     ap.add_argument('--out', type=Path)
     a = ap.parse_args()
+    global INSERTION
     if a.basis == 'current':
-        SPINE, GEOM, GEN, REPO_SUMS, SNAP_PATHS = (CURRENT[k] for k in ('SPINE', 'GEOM', 'GEN', 'REPO_SUMS', 'SNAP_PATHS'))
+        SPINE, GEOM, GEN, REPO_SUMS, SNAP_PATHS, INSERTION = (CURRENT[k] for k in (
+            'SPINE', 'GEOM', 'GEN', 'REPO_SUMS', 'SNAP_PATHS', 'INSERTION'))
     out = a.out or (OUT / 'reproduce/design.json' if a.basis == 'historical' else CUR / 'design.json')
     d = design(a.snapshot)
     if a.basis == 'current':
@@ -706,6 +724,7 @@ def main():
         d['sources']['snapshot_origin'] = 'committed on main (identical hashes to pq_snapshot_1117)'
         d['sources']['stream_stats_sha256'] = sha(STREAM) if STREAM.exists() else None
         d['current_basis'] = current_extras(d)
+        d['model_basis'] = MODEL_BASIS
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(d, indent=1, default=str) + '\n')
     p = d['problem']

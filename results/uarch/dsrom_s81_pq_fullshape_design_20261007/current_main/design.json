@@ -928,7 +928,7 @@
   },
   "budget_sheets": {
    "pin_density_per_um": 3.264,
-   "insertion_source": "results/rtl/budgets_20261006/measured_insertion.json",
+   "insertion_source": "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/inputs/calibration/measured_insertion.bb7c46846.json",
    "insertion_sha256": "4a72c6e5137d1f983c9d1ee67da23f03c5016edb0d7726b1b8f4473aa1cd4e11",
    "rows": [
     {
@@ -1184,5 +1184,22 @@
     }
    ]
   }
+ },
+ "model_basis": {
+  "label": "MODELED VERSION: main@e2a4ad579 with calibration snapshot observed 2026-10-07T12:10:55-07:00",
+  "main_commit": "e2a4ad579",
+  "calibration_snapshot": {
+   "path": "current_main/inputs/calibration/measured_insertion.bb7c46846.json",
+   "source_path": "results/rtl/budgets_20261006/measured_insertion.json",
+   "source_commit": "bb7c46846 (2026-10-07 12:07:44 -0700, closure-loop daemon)",
+   "observed_at": "2026-10-07T12:10:55-07:00 (worktree file mtime when read)",
+   "sha256": "4a72c6e5137d1f983c9d1ee67da23f03c5016edb0d7726b1b8f4473aa1cd4e11",
+   "note": "the live file on main is rewritten by the closure-loop daemon; this basis never reads it"
+  },
+  "generator": {
+   "path": "current_main/inputs/pinned/dsrom_s81_fulldie.cfc076112.py",
+   "source": "tools/dsrom_s81_fulldie.py @ e2a4ad579"
+  },
+  "geometry_status": "PROVISIONAL: generator rebuild of the frame model (empty-q-slot root assumption superseded by the pq_parent placement: 164.16 um root rows in the first 6 tier channels, 449.28 x 1,728 um core slot after the VM); the geometry owner is rebuilding the actual layout"
  }
 }
