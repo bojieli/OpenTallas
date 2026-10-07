@@ -706,8 +706,7 @@ def sync_source(j):
     gz.wait(); arch.wait()
     if put.returncode or arch.returncode:
         raise RuntimeError(f"source sync failed: {put.stderr[-800:]}")
-    for helper in ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl"):
-        ssh(host, f"cat > {run}/cl/{helper}", input=(HERE / helper).read_text(), timeout=60, check=True)
+    ship_helpers(host, run)
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/job.json", input=json.dumps(spec, indent=1), timeout=60, check=True)
@@ -720,6 +719,15 @@ def sync_source(j):
         j["budget"] = dict(master=spec["budget"]["master"], sheets_ref=files["_ref"],
                            insertion=sheet["clock"]["internal_insertion"],
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
+
+
+HELPERS = ("path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl")
+
+
+def ship_helpers(host, run):
+    """(re)write the loop's helper scripts into {CL}: jobs synced before a helper existed get it too"""
+    for helper in HELPERS:
+        ssh(host, f"mkdir -p {run}/cl && cat > {run}/cl/{helper}", input=(HERE / helper).read_text(), timeout=60, check=True)
 
 
 def tag(st, j):
@@ -1296,6 +1304,7 @@ def start_hold_eco(j, fleet, m):
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
     post = " ".join(shlex.quote(p) for p in v.get("post_sdc", []))
     cmd = f"{env} bash {{CL}}/hold_eco.sh {rb} {ob} {{CL}}/eco {j['spec']['block']} {post}"
+    ship_helpers(j["host"], j["run"])
     j["eco"] = dict(tried=True, rb=rb, ob=ob, pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso())
     st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
     launch_stage(j, st, cmd)
@@ -1417,6 +1426,15 @@ def requeue_ssh_verdict(jobs):
 
 def requeue_hold_only(jobs):
     fid = "hold-eco-20261006"
+    for j in jobs:   # first ECO attempts that died because the helper was not shipped to older run dirs (rc 127)
+        e = j.get("eco") or {}
+        if j["status"] == "NEEDS_RTL" and e.get("tried") and e.get("result") is None and "hold-eco-helpers" not in j.get("fix_requeued", []):
+            j.setdefault("fix_requeued", []).append("hold-eco-helpers")
+            j["eco"] = {}
+            stl = stage_list(j["spec"])
+            j.update(status="READY", reason=None, errors=[], stage_idx=next(i for i, x in enumerate(stl) if x["kind"] == "verdict"))
+            event(j, "hold ECO re-run: helper scripts now shipped to existing run dirs")
+            save_job(j)
     busy = {x["spec"].get("block") for x in jobs if x["status"] not in TERMINAL or x["status"] == "CLOSED"}
     for j in jobs:
         m = j.get("metrics") or {}
