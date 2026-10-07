@@ -914,7 +914,8 @@ def launch_stage(j, st, cmd):
         env += f"export HM={j['spec'].get('route_hold_margin_ns', hm_default)}\n"
     if is_local(j["host"]):
         env += f"export OPENTALLAS_ORFS_IMAGE={LOCAL_ORFS_REF}\n"
-    if st["kind"] == "route":
+    if st["kind"] in ("calibrate", "route"):
+        # (calibrate too, 2026-10-07: its CTS-only run repairs hold at CTS and died on RSZ-0060, hbm_stn_r38 / _ck80)
         # ROUTE HOLD CORNERS (2026-10-07, hold_corners_patch.py): place-and-route repairs hold at the primary corner only
         # -- the route SDC's virtual IO clock sits at the SS insertion, so BC showed fake IO hold violations of about the
         # SS-FF insertion difference (thousands of flow hold buffers); FF hold goes to the post-route hold ECO.  Spec
@@ -959,10 +960,10 @@ elif [ -f {run}/cl/{t}.pid ]; then echo LOST; else echo STARTING; fi""", timeout
     return (w[0], int(w[1])) if w[0] == "RC" else (w[0], None)
 
 
-def remote_ok(j, cmd):
+def remote_ok(j, cmd, timeout=300):
     if not cmd:
         return True, ""
-    r = ssh(j["host"], f"cd {j['run']}/src && {subst(cmd, j)}", timeout=300)
+    r = ssh(j["host"], f"cd {j['run']}/src && {subst(cmd, j)}", timeout=timeout)
     return r.returncode == 0, (r.stdout + r.stderr)[-400:]
 
 
@@ -1568,7 +1569,9 @@ def do_verdict(j, fleet, stl):
     j["metrics"] = m
     checks, failed = {}, []
     for c in v.get("checks", []):
-        ok, out = remote_ok(j, c["cmd"])
+        # verdict checks may run real tools (stn_pa_check.sh routes a pin-access probe: > 300 s on AGIdock, which put
+        # hbm_stn_mcast_r5/r6 into NEEDS_HUMAN as "loop errors"); spec checks[].timeout_s, default 1800
+        ok, out = remote_ok(j, c["cmd"], timeout=c.get("timeout_s", 1800))
         checks[c["name"]] = dict(ok=ok, out=out[-300:])
         if not ok:
             failed.append(c["name"])
@@ -1962,14 +1965,64 @@ def migrate_overloaded(jobs, fleet):
         save_job(j)
 
 
+TRANSIENT_RE = re.compile(r"kex_exchange|Connection (reset|refused|closed|timed out)|ssh: |Broken pipe|"
+                          r"No route to host|command failed rc=255|Could not resolve hostname")
+TRANSIENT_BACKOFF_S = (120, 240, 480, 900, 1800)
+
+
+def is_transient(ex):
+    """an ssh / network failure (timeout of an ssh call, rc 255, connection errors), not a loop or job error"""
+    if isinstance(ex, subprocess.TimeoutExpired):
+        return isinstance(ex.cmd, list) and bool(ex.cmd) and ex.cmd[0] in ("ssh", "rsync")
+    return bool(TRANSIENT_RE.search(str(ex)))
+
+
+def handle_transient(j, fleet, ex):
+    """robustness (2026-10-07): transient ssh errors back off (2, 4, 8, 15, 30 min); after 3 at a stage that has
+    nothing in flight on the host (QUEUED / SYNC / READY before the first launch, or READY at calibrate/bench) the job
+    moves to another host; a job whose results live on the host (verdict, ECO) keeps backing off and goes NEEDS_HUMAN
+    only after 12 consecutive failures (~5 h).  Returns True when handled."""
+    n = j.get("transient", 0) + 1
+    j["transient"] = n
+    j["transient_next"] = time.time() + TRANSIENT_BACKOFF_S[min(n - 1, len(TRANSIENT_BACKOFF_S) - 1)]
+    event(j, f"transient ssh/network error #{n} on {j.get('host')} ({type(ex).__name__}: {str(ex)[:160]}); backing off")
+    stl = stage_list(j["spec"])
+    st = stl[min(j.get("stage_idx", 0), len(stl) - 1)]
+    movable = j["status"] in ("QUEUED", "SYNC") or (j["status"] == "READY" and st["kind"] in ("calibrate", "bench")
+                                                     and not j.get("stage_tag"))
+    if n >= 3 and movable and j.get("host"):
+        h, _ = fleet.choose(j["spec"], exclude=[j["host"]])
+        if h:
+            event(j, f"{n} transient errors on {host_cfg(j['host'])['label']}: moving to {host_cfg(h)['label']}")
+            j["hosts_tried"].append(h)
+            j.update(host=h, run=f"{host_cfg(h)['base']}/{j['name']}", status="SYNC", transient=0)
+            j.pop("transient_next", None)
+            cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
+            if cal is not None and j.get("stage_idx", 0) > cal:
+                j["stage_idx"] = cal
+            return True
+    if n >= 12:
+        return False                     # falls through to the ordinary error accounting
+    return True
+
+
 def advance_job(name, fleet):
     with job_lock(name):
         j = load_job(name)
         if j["status"] in TERMINAL:
             return
+        nt = j.get("transient_next")
+        if nt and time.time() < nt:
+            return                       # backing off after a transient ssh / network error
         try:
             step(j, fleet)
+            if j.get("transient"):
+                j["transient"] = 0
+                j.pop("transient_next", None)
         except Exception as ex:  # noqa: BLE001
+            if is_transient(ex) and handle_transient(j, fleet, ex):
+                save_job(j)
+                return
             j.setdefault("errors", []).append(f"{now_iso()} {type(ex).__name__}: {str(ex)[:500]}")
             j["errors"] = j["errors"][-10:]
             log(f"[{j['name']}] step error:\n{traceback.format_exc()}")
