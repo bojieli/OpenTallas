@@ -17,6 +17,8 @@ module tb;
  integer i,j,seed=12345,valids=0,gos=0;
  // MARGIN: result group {res_v,res_row,res_bits,fault} +3 cycles, row0_a +2 (row0 sampled at go); all else same cycle
  localparam integer RL=MARGIN?3:0;
+ reg [35:0] bq1; always @(posedge clk) bq1<={refdut.bv_r,refdut.bd_r};
+ wire [35:0] bref = MARGIN>=2 ? bq1 : {refdut.bv_r,refdut.bd_r};   // MARGIN=2: B join +1
  reg [50:0] rq1,rq2,rq3; reg [16:0] r0q1,r0q2;
  wire [50:0] rq0={rv,rr,rb,flt};
  wire [50:0] rref = RL==3 ? rq3 : rq0; wire [16:0] r0ref = MARGIN ? r0q2 : row0;
@@ -25,7 +27,7 @@ module tb;
  repeat(3) @(negedge clk);rst_n=1;
  for(i=0;i<1200;i=i+1)begin
  @(negedge clk);
- if(i>64 && {gd,sa,sb,bv,bd,rv2,rr2,rb2,f2} !== {refdut.go_d,refdut.xsa,refdut.xsb,refdut.bv_r,refdut.bd_r,rref}) $fatal(1,"lockstep cycle %0d",i);
+ if(i>64 && {gd,sa,sb,bv,bd,rv2,rr2,rb2,f2} !== {refdut.go_d,refdut.xsa,refdut.xsb,bref,rref}) $fatal(1,"lockstep cycle %0d",i);
  // the value each element samples (at its go = go_d) is the original row0 + 32j
  if(i>64 && gd) begin gos=gos+1; for(j=0;j<4;j=j+1) if(r0a[17*j+:17]!==((row0+17'd32*j)&17'h1ffff)) $fatal(1,"row0 at go_d"); end
  for(j=0;j<4;j=j+1)if(r0a[17*j+:17]!==((r0ref+17'd32*j)&17'h1ffff))$fatal(1,"row offset");
@@ -38,7 +40,7 @@ module tb;
  end
 endmodule
 // Element ports only: deterministic traffic stub isolates original glue without running numerical head.
-module ot_dsrom_head_elem #(parameter LV=8,PAD=0,JOIN=0,ROWS=32,CUT=0,INSTANCE="h")
+module ot_dsrom_head_elem #(parameter LV=8,PAD=0,JOIN=0,ROWS=32,CUT=0,INSTANCE="h",IOREG=0,SAFE=0)
 (input clk,rst_n,go,input[16:0]row0,input[255:0]x,input b_v,input[31:0]b_d,output o_v,output[31:0]o_d,output l_v,output[31:0]l_d,output done,output[16:0]best_row,output[31:0]best_bits,best_key,output fault);
  assign o_v=x[0];assign o_d=x[63:32];assign l_v=0;assign l_d=0;
  assign done=x[1] | (row0[6:5]==2'd0);assign best_row=row0+x[20:4];assign best_bits=x[95:64];

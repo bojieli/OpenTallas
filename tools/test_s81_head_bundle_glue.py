@@ -5,10 +5,10 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 def run():
     ap=argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--mode',choices=['hard','min-delay','margin'],default='hard')
+    ap.add_argument('--mode',choices=['hard','min-delay','margin','safe'],default='hard')
     a=ap.parse_args()
     hard=a.mode=='hard'
-    margin=a.mode=='margin'
+    margin=a.mode in ('margin','safe'); safe=a.mode=='safe'
     paths=['rtl/hdc/ot_hdc_delay.sv','rtl/v41rom/ot_dsrom_head_bundle.sv','rtl/s81/ot_dsrom_head_bundle_glue.sv','rtl/test/s81/tb_head_bundle_glue.sv','rtl/s81/ot_s81_head_delay8x32.sv','rtl/s81/ot_s81_head_min_delay.sv','rtl/test/s81/min_delay_cells_model.sv']
     original=(ROOT/paths[1]).read_text()
     # Icarus cannot elaborate $sformatf parameters. INSTANCE is unused by the
@@ -24,12 +24,17 @@ def run():
                         'valid_gate':('c1_vm <= &a_done_r && !go_d1;','c1_vm <= &a_done_r;')}.items():
             assert rtl.count(x)==1,x
             mutants[k]=rtl.replace(x,y)
+    if safe:
+        for k,(x,y) in {'b_pin_skip':('assign bo_v_e = bo_v_q; assign bo_d_e = bo_d_q;','assign bo_v_e = bo_v_q; assign bo_d_e = bo_d;'),
+                        'b_go_align':('assign go_b = go_q;','assign go_b = go_d;')}.items():
+            assert rtl.count(x)==1,x
+            mutants[k]=rtl.replace(x,y)
     results={}
     with tempfile.TemporaryDirectory(prefix='s81-hbglue-') as tmp:
         d=Path(tmp);(d/'reference.sv').write_text(reference)
         for name,source in mutants.items():
             (d/'dut.sv').write_text(source)
-            c=subprocess.run(['iverilog','-g2012','-s','tb',f'-Ptb.USE_HARD_DELAY8={int(hard)}',f'-Ptb.USE_MIN_DELAY_CELLS={int(not hard)}',f'-Ptb.MARGIN={int(margin)}',f'-Ptb.MIN_DEPTH={2 if margin else 1}','-o',str(d/'sim'),str(ROOT/paths[0]),str(d/'reference.sv'),str(d/'dut.sv'),str(ROOT/paths[3]),str(ROOT/paths[4]),str(ROOT/paths[5]),str(ROOT/paths[6])],capture_output=True,text=True)
+            c=subprocess.run(['iverilog','-g2012','-s','tb',f'-Ptb.USE_HARD_DELAY8={int(hard)}',f'-Ptb.USE_MIN_DELAY_CELLS={int(not hard)}',f'-Ptb.MARGIN={2 if safe else int(margin)}',f'-Ptb.MIN_DEPTH={2 if margin else 1}','-o',str(d/'sim'),str(ROOT/paths[0]),str(d/'reference.sv'),str(d/'dut.sv'),str(ROOT/paths[3]),str(ROOT/paths[4]),str(ROOT/paths[5]),str(ROOT/paths[6])],capture_output=True,text=True)
             if c.returncode:raise RuntimeError(c.stderr)
             p=subprocess.run(['vvp',str(d/'sim')],capture_output=True,text=True)
             results[name]={'returncode':p.returncode,'output':p.stdout.strip()}
@@ -37,6 +42,6 @@ def run():
     invalid=subprocess.run(['iverilog','-g2012','-s','ot_dsrom_head_bundle_glue','-Pot_dsrom_head_bundle_glue.USE_HARD_DELAY8=1','-Pot_dsrom_head_bundle_glue.SK=9','-o','/dev/null',str(ROOT/paths[0]),str(ROOT/paths[2]),str(ROOT/paths[4]),str(ROOT/paths[5])],capture_output=True,text=True)
     assert invalid.returncode != 0 and 'ERROR_hardened_head_delay_requires_SK8' in invalid.stderr
     results['unsupported_sk9']={'returncode':invalid.returncode,'output':invalid.stderr.strip()}
-    out={'pass':True,'scope':a.mode+' native glue cycle equivalence; element numerical datapaths replaced by traffic stubs in reference only'+(' (MARGIN: result group +3, row0_a +2 with row0 held from go; element samples row0 at go_d checked)' if margin else ''),'cycles':1200,'seed':12345,'added_cycles':3 if margin else 0,'source_sha256':{p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in paths},'cases':results}
+    out={'pass':True,'scope':a.mode+' native glue cycle equivalence; element numerical datapaths replaced by traffic stubs in reference only'+(' (MARGIN: result group +3, row0_a +2 with row0 held from go; element samples row0 at go_d checked)' if margin else ''),'cycles':1200,'seed':12345,'added_cycles':(3 if margin else 0),'b_join_added_cycles':(1 if safe else 0),'source_sha256':{p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in paths},'cases':results}
     print(json.dumps(out,indent=2))
 if __name__=='__main__':run()

@@ -2,7 +2,7 @@
 # Closure-loop route of the DS head SAFE views (owner SAFE directive 2026-10-06): routed at 730 ps, signed off at
 # 833.333 ps (60/25), hold margin $HM (loop default 35 ps). IO from the loop's calibrated insertion (owner model:
 # in max = CK_SS_MEAN + 250, in min = CK_FF_MEAN - 50, out max = 250 - CK_SS_MEAN, out min = -(CK_FF_MEAN + 50)).
-# Usage (from the source root): cl_route.sh <quad|top|elemA|elemB> <label> <out dir> [extra run_abi3_physical args,
+# Usage (from the source root): cl_route.sh <quad|top|elemA|elemB|glue> <label> <out dir> [extra run_abi3_physical args,
 # e.g. $CL_STOP_AFTER]. Writes <out>/exit (rc=, corner_rc=), <out>/corner_sta.json and <out>/view/ (LEF + SS/FF ETM).
 set -o pipefail
 V=${1:?view}; LBL=${2:?label}; O=${3:?out}; shift 3
@@ -40,6 +40,10 @@ set_false_path -from [get_ports gid*]";;
   MAC=(--macro physical/asap7_memory_macros/$M)
   MC="set_multicycle_path -setup 2 -from [get_cells -hierarchical *u_rom?]
 set_multicycle_path -hold 1 -from [get_cells -hierarchical *u_rom?]";;
+ glue) TOP=ot_dsrom_head_bundle_glue; HG=physical/s81_die_views/hbglue/margin
+  args=(--source rtl/s81/ot_dsrom_head_bundle_glue.sv --source rtl/s81/ot_s81_head_min_delay.sv --source rtl/hdc/ot_hdc_delay.sv
+   --param USE_MIN_DELAY_CELLS=1 --param MARGIN=2 --param MIN_DEPTH=2 --core-utilization 30 --routing-layers M2 M6
+   --step-tcl POST_PDN=$HG/keep.tcl --step-tcl POST_CTS=$HG/keep.tcl --step-tcl POST_GLOBAL_ROUTE=$HG/keep.tcl);;
  *) echo "unknown view $V"; exit 2;;
 esac
 IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-50)/1000" | bc -l)

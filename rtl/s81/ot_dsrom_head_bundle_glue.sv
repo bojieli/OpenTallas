@@ -10,6 +10,8 @@ module ot_dsrom_head_bundle_glue #(
  //  each tree level split into compare -> select registers; result group {res_v,res_row,res_bits,fault}
  //  +3 cycles, fault registered at the pin and aligned with the result. B join (bo -> bv_r/bd_r) keeps its
  //  1-cycle latency (fixed by the A-element join contract): its capture is an enable flop / AND2 only.
+ //  MARGIN=2 (SAFE, redesign 2026-10-06): as 1, plus bo_v / bo_d captured in plain pin registers before the B join
+ //  demux / data register (bv_r/bd_r +1; the A elements' IOREG join FIFO absorbs it): no enable mux behind a pin.
  parameter integer MARGIN=0,
  parameter integer MIN_DEPTH=1,
  parameter [8:0] CUT=9'b1_0111_1011,
@@ -72,13 +74,23 @@ module ot_dsrom_head_bundle_glue #(
       end
     endgenerate
     reg [1:0]  bq;
+    wire bo_v_e, go_b;
+    wire [31:0] bo_d_e;
+    generate if (MARGIN >= 2) begin : g_b_pin
+        reg bo_v_q, go_q; reg [31:0] bo_d_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) begin bo_v_q <= 1'b0; go_q <= 1'b0; end else begin bo_v_q <= bo_v; go_q <= go_d; end
+        always @(posedge clk) bo_d_q <= bo_d;
+        assign bo_v_e = bo_v_q; assign bo_d_e = bo_d_q; assign go_b = go_q;
+    end else begin : g_b_direct
+        assign bo_v_e = bo_v; assign bo_d_e = bo_d; assign go_b = go_d;
+    end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin bq <= 2'd0; bv_r <= 4'd0; end
         else begin
-            if (go_d) bq <= 2'd0; else if (bo_v) bq <= bq + 2'd1;
-            bv_r <= bo_v ? (4'd1 << bq) : 4'd0;
+            if (go_b) bq <= 2'd0; else if (bo_v_e) bq <= bq + 2'd1;
+            bv_r <= bo_v_e ? (4'd1 << bq) : 4'd0;
         end
-    always @(posedge clk) if (bo_v) bd_r <= bo_d;
+    always @(posedge clk) if (bo_v_e) bd_r <= bo_d_e;
     // 2-level compare tree (lowest-id first max): level 1 (0,1) (2,3), level 2
     function automatic [80:0] pick(input [80:0] u, input [80:0] v);   // {key, row, bits}
         pick = (v[80:49] > u[80:49] || (v[80:49] == u[80:49] && v[48:32] < u[48:32])) ? v : u;
