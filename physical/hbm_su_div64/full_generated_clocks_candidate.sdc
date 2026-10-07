@@ -17,8 +17,8 @@ foreach cell [get_cells -hierarchical *u_icg*] {
     lappend div64_clocks $name
 }
 if {$div64_n != 4} { error "DDIV64 expected four physical ICGs, found $div64_n" }
-set_clock_uncertainty -setup [expr {$div64_period * 60.0 / 833.333}] [get_clocks $div64_clocks]
-set_clock_uncertainty -hold [expr {$div64_period * 25.0 / 833.333}] [get_clocks $div64_clocks]
+set_clock_uncertainty -setup [expr {$div64_period > 10 ? 60.0 : 0.060}] [get_clocks $div64_clocks]
+set_clock_uncertainty -hold [expr {$div64_period > 10 ? 25.0 : 0.025}] [get_clocks $div64_clocks]
 # No blanket MCP or false paths. Fast input/output and clock-gate checks remain.
 # CTS and signoff must propagate all five clocks; do not force propagation in
 # this fragment, which is also used before CTS.
