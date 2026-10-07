@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "025bbe6ad",
+ "generated_from_commit": "3514e431f",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -1268,8 +1268,8 @@
    "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (tools/three_machine_compose.py, ADOPT+exact levers only). That record carries the default-QELEM headline (owner go 2026-10-06, 3661e31c6: the as-built field with the closed QX 10 q-element at frame f183.60, +16 layer dies / +4 stage hops) on full FEC, so it supersedes the pre-QELEM recovery-composition 1,687.9 / 4,922.6; results/rtl/dsrom_recovery_20261004/composition.json is regenerated on the same default and agrees. Open: that frame needs 85 stages / 340 layer dies (info.r8_reprice), while the rack record results/arch/dsrom_s81_rack_20261006/rack.json and the energy/silicon rows still count S81 (324 layer dies); still-modelled terms listed in results/rtl/dsrom_recovery_20261004/composition.json (still_modelled)",
    "value": 1603.5,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1313,8 +1313,8 @@
    "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); still-modelled terms listed in results/rtl/dsrom_recovery_20261004/composition.json (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4718.3,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.mtp_tok_s_1m_tau_published": {
    "target": "ds_rom",
@@ -1328,8 +1328,8 @@
    "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4410.7,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_low": {
    "target": "ds_rom",
@@ -1343,8 +1343,8 @@
    "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 3891.3,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_high": {
    "target": "ds_rom",
@@ -1358,8 +1358,8 @@
    "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4898.1,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1433,8 +1433,8 @@
    "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); still-modelled terms listed in results/rtl/dsrom_recovery_20261004/composition.json (still_modelled)",
    "value": 623.632,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1463,8 +1463,8 @@
    "note": "verify = AR + 5 II of the composition behind results/arch/three_machine_compose/compose.json ds_rom (regenerated on the default q-element; the three-machine record does not carry verify_us); tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 755.458,
    "resolved": true,
-   "blob": "845d546c91eecfea7d2c9e55fcc51c8e09a69718",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "6a20e3fc831caadc132400434ee418343819e3cb",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1492,8 +1492,8 @@
    "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); still-modelled terms listed in results/rtl/dsrom_recovery_20261004/composition.json (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 26.365,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
    "target": "ds_rom",
@@ -1712,8 +1712,8 @@
    "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4.159,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.tau_published_sensitivity": {
    "target": "ds_rom",
@@ -4602,8 +4602,8 @@
    "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); rest listed in still_modelled",
    "value": 0.9999,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.window_s81_asbuilt_c8_us": {
    "target": "ds_rom",
@@ -5893,8 +5893,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only); 193,955 measured cycles (terminal.json; KV guard: 576 MiB/token landed at 3.65 TB/s/die, 91.3% of 4-stack peak) + 0 core r5_f2ba (SS +6.27 / FF +6.92) + 217 slab MUL_LAT 7 (r11c SS +11.47 / FF +4.20) + 54 KV_MAP=1 Option M cold-layer KV-ready (measured, isolated ISO_P8191) = 194,226 at 1.2 GHz; the die per-stack crossbar +24 cycles is MODELLED (not RTL) and only in the labelled sensitivity. Qwen ROM CLOSED (owner 2026-10-06): blocks accepted under the prior Qwen bar (SS60 setup / FF25 hold >= 0 at 0.833 ns; not the DS/HBM +15/+15 margin rule); die masters on assumed-constant views; die-top route not done (results/rtl/qwen_rom_closed_20261006/closure.json). MTP off (AR mode).",
    "value": 6178.4,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "qwen_rom.token_cycles_8k_composed": {
    "target": "qwen_rom",
@@ -5908,8 +5908,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
    "value": 194226,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "qwen_rom.ar_tok_s_8k_modelled_sensitivity": {
    "target": "qwen_rom",
@@ -5923,8 +5923,8 @@
    "note": "headline + 24 cycles of the KV_MAP=1 die per-stack crossbar + 768-b row fabric (cycle model on the measured landing trace, not RTL), charged on the cold first layer",
    "value": 6177.6,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "qwen_rom.kvmap_m_out_of_quadrant_writes": {
    "target": "qwen_rom",
@@ -6102,8 +6102,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); alternatives not stacked",
    "value": 2082.9,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.mtp_tok_s_1m_conditional_all": {
    "target": "ds_rom",
@@ -6117,8 +6117,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
    "value": 5841.9,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "hbm_ds.matched_levers_wire_floor_ar_tok_s": {
    "target": "hbm_ds",
@@ -6132,8 +6132,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis Manhattan",
    "value": 1999.7,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "hbm_ds.matched_levers_wire_floor_mtp_tok_s": {
    "target": "hbm_ds",
@@ -6147,8 +6147,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
    "value": 3993.7,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "hbm_ds.matched_levers_wire_median_ar_tok_s": {
    "target": "hbm_ds",
@@ -6162,8 +6162,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis median routed bundle",
    "value": 1948.8,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "hbm_ds.matched_levers_wire_median_mtp_tok_s": {
    "target": "hbm_ds",
@@ -6177,8 +6177,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
    "value": 3944.2,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "hbm_ds.matched_levers_wire_bound_ar_tok_s": {
    "target": "hbm_ds",
@@ -6192,8 +6192,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis longest routed bundle",
    "value": 1921.5,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "hbm_ds.matched_levers_wire_bound_mtp_tok_s": {
    "target": "hbm_ds",
@@ -6207,8 +6207,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
    "value": 3917.2,
    "resolved": true,
-   "blob": "b6a695d27eea9796ea5bc3e2f32eb74ec4db7fcb",
-   "last_commit": "6b5b4dcf3 2026-10-07"
+   "blob": "3aab94af457a0eabfbb3ed503c11483e1a4d4888",
+   "last_commit": "5254bfc2e 2026-10-07"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",
