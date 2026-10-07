@@ -36,7 +36,15 @@ module ot_s81ph_coll_core #(
     parameter integer QD = 8,                  // pass-through input queues (VM credits)
     parameter integer QD0 = 16,                // engine input queue (covers the VM credit round trip)
     parameter integer TRACE = 0,
-    parameter integer EXT = 0                  // CLAUDE S81-PH coll v2: 1 = the 8 links live in lane tiles (x_* ports)
+    parameter integer EXT = 0,                 // CLAUDE S81-PH coll v2: 1 = the 8 links live in lane tiles (x_* ports)
+    // CLAUDE S81-PH coll v4 (2026-10-07): engine receive depth (records per source, both parities) and its FIFO
+    // macro.  v1..v3: DEPTH 256 (128 credits a parity) stalled on the board lanes' credit round trip (CHB 251:
+    // AR 320 records 922 cycles first send -> last result with trained links).  512 = 256 credits a parity fills
+    // the 256-word ot_sram_1r1w_256x256 macros the v3 FIFOs already used at half depth (same 24 macros); measured
+    // cycle-identical to DEPTH 1024 (the w15b depth) at every S81 payload at CHB 1 and CHB 251 (AR 320 705 cycles):
+    // the credit window no longer binds; the link rate (0.764 records / cycle) does.
+    parameter integer EDEPTH = 512,
+    parameter integer EMACRO = 1
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -69,6 +77,9 @@ module ot_s81ph_coll_core #(
     localparam integer PNUM = FB * G * (IDLE_P - 1);
     localparam integer PDEN = S * IDLE_P;
     localparam integer FW = 512, TAGW = 32, PW = FW + 3 + TAGW;   // 547
+    localparam integer CRW = $clog2(EDEPTH / 2 + 1) + 1;   // credit counters (<= PD a parity, + headroom)
+    localparam integer MQD = EDEPTH;                       // mode FIFO entries (power of two)
+    localparam integer MQB = $clog2(MQD);
     genvar l, j;
 
 
@@ -131,7 +142,8 @@ module ot_s81ph_coll_core #(
     end endgenerate
 
     // ------------------------------------------------------------------ engine (RANK 0, runtime relabel)
-    wire          e_iv = q_hv[0] && erst_n;
+    reg           mq_ok;                                   // mode FIFO has room (registered; see below)
+    wire          e_iv = q_hv[0] && erst_n && mq_ok;
     wire          e_ir;
     wire [3:0]    tx_valid, tx_ready;
     wire [PW-1:0] tx_rec;
@@ -145,8 +157,8 @@ module ot_s81ph_coll_core #(
     wire          e_flt; wire [2:0] e_code;
     assign q_pop[0] = e_iv && e_ir;
     ot_w15_rom_oneshot_die_px_acceptedpop #(.FIX_ACCEPTED_POP(1), .N(4), .RANK(0), .LANES(16), .TAGW(TAGW),
-        .DEPTH(256), .PKG_DIES(2), .RELAY(0), .ADD_LAT(3), .PAIRWISE(1), .GW(4), .OUT_BP(1),
-        .FIFO_SRAM(SRAM), .SRAM_MACRO(1)) u_eng (
+        .DEPTH(EDEPTH), .PKG_DIES(2), .RELAY(0), .ADD_LAT(3), .PAIRWISE(1), .GW(4), .OUT_BP(1),
+        .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO)) u_eng (
         .clk(clk), .rst_n(erst_n),
         .in_valid(e_iv), .in_ready(e_ir), .in_data(q_hd[0][FW-1:0]), .in_last(q_hd[0][W+33]),
         .in_mode(q_hd[0][W+32]), .in_tag(q_hd[0][W +: TAGW]),
@@ -163,7 +175,7 @@ module ot_s81ph_coll_core #(
         localparam integer L = j - 1;
         wire sk_hv, sk_room2; wire [PW-1:0] sk_hd;
         wire flit_go = ep_iv[L] && ep_ir[L];
-        reg  [7:0] crx0, crx1, crs0, crs1;                 // credits received (to replay) / returned (to send), <= PD
+        reg  [CRW-1:0] crx0, crx1, crs0, crs1;             // credits received (to replay) / returned (to send), <= PD
         wire [1:0] cs0 = (crs0 > 3) ? 2'd3 : crs0[1:0], cs1 = (crs1 > 3) ? 2'd3 : crs1[1:0];
         reg        rxv; reg [PW-1:0] rxr;
         ot_s81ph_rfifo #(.W(PW), .D(4)) u_sk (.clk(clk), .rst_n(erst_n), .push(tx_valid[j]), .wd(tx_rec),
@@ -191,11 +203,11 @@ module ot_s81ph_coll_core #(
                 rxv <= ep_ov[L] && ep_od[L][PW];
                 if (ep_ov[L]) rxr <= ep_od[L][PW-1:0];
                 // received counts: one credit a cycle into cr_in (the peer engine returns <= 1 a cycle a parity)
-                crx0 <= crx0 - ((crx0 != 0) ? 8'd1 : 8'd0) + {6'd0, in0};
-                crx1 <= crx1 - ((crx1 != 0) ? 8'd1 : 8'd0) + {6'd0, in1};
+                crx0 <= crx0 - ((crx0 != 0) ? 1'b1 : 1'b0) + in0;
+                crx1 <= crx1 - ((crx1 != 0) ? 1'b1 : 1'b0) + in1;
                 // engine credits counted; the count carried by the flit is subtracted when it goes
-                crs0 <= crs0 + (cr_out[2*j] ? 8'd1 : 8'd0) - (flit_go ? {6'd0, cs0} : 8'd0);
-                crs1 <= crs1 + (cr_out[2*j+1] ? 8'd1 : 8'd0) - (flit_go ? {6'd0, cs1} : 8'd0);
+                crs0 <= crs0 + (cr_out[2*j] ? 1'b1 : 1'b0) - (flit_go ? cs0 : 2'd0);
+                crs1 <= crs1 + (cr_out[2*j+1] ? 1'b1 : 1'b0) - (flit_go ? cs1 : 2'd0);
             end
         end
     end endgenerate
@@ -213,10 +225,17 @@ module ot_s81ph_coll_core #(
     // Engine outputs leave in pop order = the fire order of this die's own records (every index pops all four
     // sources at once), so a 1-bit FIFO of the own records' modes tells which output is a reduce word (no
     // handshake) and which an all-gather beat (held by out_ready, OUT_BP).
-    reg  [511:0] mq;                                       // mode FIFO (<= 256 in the self FIFO + pipeline)
-    reg  [8:0]   mq_w, mq_r;
+    // v4: MQD entries (EDEPTH: the self FIFO's 2 x PD own records + pipeline exceed it only if the own records run
+    // MQD - 2 ahead of the outputs; the engine input is then held by mq_ok, never dropped).  The head mode is a
+    // REGISTER (hm): next cycle's head is mq[mq_r] or, when an output is taken, mq[mq_r + 1] (both array reads from
+    // registered addresses).  An entry is written >= 3 cycles before its output (fire -> self FIFO -> pop -> head
+    // -> output), so hm never needs a same-cycle write forward.
+    reg  [MQD-1:0] mq;
+    reg  [MQB:0] mq_w, mq_r, mq_r1;
     reg          mq_flt;
-    wire         hmode = mq[mq_r];
+    reg          hm;
+    wire         hmode = hm;
+    wire [MQB:0] mq_occ = mq_w - mq_r;
     wire         e_fire = e_iv && e_ir;
     reg  [4*FW-1:0] pk_d;
     reg  [3:0]   pk_l;
@@ -277,14 +296,16 @@ module ot_s81ph_coll_core #(
     reg [7:0] lane_flt;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            mq_w <= 0; mq_r <= 0; mq_flt <= 1'b0; pk_n <= 0; pk_l <= 0; pk_err <= 1'b0; rr <= 0;
+            mq_w <= 0; mq_r <= 0; mq_r1 <= 1; mq_flt <= 1'b0; hm <= 1'b0; mq_ok <= 1'b0; pk_n <= 0; pk_l <= 0; pk_err <= 1'b0; rr <= 0;
             for (integer i = 0; i < 6; i = i + 1) qc[i] <= 0;
             fv_flt <= 0; fault <= 1'b0; fault_sent <= 1'b0; lane_flt <= 0;
         end else begin
-            if (e_fire) begin mq[mq_w] <= q_hd[0][W+32]; mq_w <= mq_w + 1'b1; end
-            if (o_take) mq_r <= mq_r + 1'b1;
+            if (e_fire) begin mq[mq_w[MQB-1:0]] <= q_hd[0][W+32]; mq_w <= mq_w + 1'b1; end
+            if (o_take) begin mq_r <= mq_r + 1'b1; mq_r1 <= mq_r1 + 1'b1; end
+            hm <= o_take ? mq[mq_r1[MQB-1:0]] : mq[mq_r[MQB-1:0]];
+            mq_ok <= (mq_occ + (e_fire ? 1'b1 : 1'b0) - (o_take ? 1'b1 : 1'b0)) <= MQD - 2;
             if (o_v && mq_w == mq_r) mq_flt <= 1'b1;
-            if (e_fire && (mq_w + 9'd1) == mq_r) mq_flt <= 1'b1;
+            if (e_fire && mq_occ == MQD) mq_flt <= 1'b1;
             // packer
             if (pk_emit) begin pk_n <= 0; pk_l <= 0; pk_err <= 1'b0; end
             if (in_red) begin

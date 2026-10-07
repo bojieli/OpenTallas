@@ -9,7 +9,8 @@
 // engine of that rank, in order; every pass-through flit arrives in order at the partner die; no fault.
 // PASS line "TB_S81PH_COLL_SYS PASS".  Cycle report: the last result cycle of DUT and reference.
 module tb_s81ph_coll_sys;
-    parameter integer SPEC = 1, FIXW = 0, FIXM = -1, PERF = 0, NM = 40, MAXW = 12, NPT = 30, CHB = 60, CHU = 12, EPER = 97, SEED = 7, TSR = 7;
+    parameter integer SPEC = 1, FIXW = 0, FIXM = -1, PERF = 0, NM = 40, MAXW = 12, NPT = 30, CHB = 60, CHU = 12, EPER = 97, SEED = 7, TSR = 7,
+                      WARM = 20;   // VM sends nothing before this cycle (pricing: links trained before the first collective)
     localparam integer FW = 512, PW = 547, W = 552;
     reg [63:0] rs = 64'h243F6A8885A308D3 ^ SEED;
     function [31:0] rnd(input integer d);
@@ -111,7 +112,7 @@ module tb_s81ph_coll_sys;
     reg            rqe [0:3][0:NM*MAXW];
     integer rn [0:3], r_last_cyc;
     integer ridx [0:3];                  // plan index of the next reference output (one output per record)
-    integer cyc;
+    integer cyc, rp_n;
     always @(posedge clk) begin
         cyc <= cyc + 1;
         for (d = 0; d < 4; d = d + 1) begin
@@ -119,8 +120,18 @@ module tb_s81ph_coll_sys;
                 rq[d][rn[d]] = {ownm[ridx[d]], r_ol[d], r_od[d]}; rqe[d][rn[d]] = r_oe[d]; rn[d] = rn[d] + 1; ridx[d] = ridx[d] + 1;
                 r_last_cyc = cyc;
             end
+`ifdef TB_S81PH_MUT_REFRACE
+            // negative control: the v1..v3 reference driver (a blocking pointer update read by the engine's
+            // continuous inputs in the same edge -- a race; dropped a record at 256 / 1024 records)
             if (r_iv[d] && r_ir[d]) rptr[d] = rptr[d] + 1;
             r_iv[d] <= rsts[0] && (first_send_cyc >= 0) && (rptr[d] + ((r_iv[d] && r_ir[d]) ? 1 : 0) < TOT);
+`else
+            // CLAUDE S81-PH coll v4 (2026-10-07): the reference input pointer is a register (nonblocking), so the
+            // engine samples in_data / in_last / in_mode of the record it accepts on this edge
+            rp_n = rptr[d] + ((r_iv[d] && r_ir[d]) ? 1 : 0);
+            rptr[d] <= rp_n;
+            r_iv[d] <= rsts[0] && (first_send_cyc >= 0) && (rp_n < TOT);
+`endif
         end
     end
     // the reference engine's output kind: gather beats are the outputs of mode-1 indices, in index order
@@ -182,7 +193,7 @@ module tb_s81ph_coll_sys;
             tsr[d] <= {2'b01, (rnd(0) % 8) < TSR};
             // ---- send (one word a cycle): config, then engine records / pass-through flits by credits
             fvm[d] <= 0;
-            if (rsts[d] && cyc > 20) begin
+            if (rsts[d] && cyc > WARM) begin
                 if (cfgd[d] < 2) begin
                     cfgd[d] = cfgd[d] + 1;
                     if (cfgd[d] == 2) fvm[d] <= {{(W-3){1'b0}}, 1'b1, d[1:0], 32'd0, 1'b0, 1'b0, 3'd0, 2'd3, 1'b1};
