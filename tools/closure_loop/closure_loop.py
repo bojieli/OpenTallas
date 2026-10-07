@@ -173,6 +173,17 @@ def validate(spec: dict) -> list[str]:
     if not v.get("drc_metrics") and not v.get("metrics_cmd") and v.get("drc") != "skip":
         e.append("verdict.drc_metrics (glob of ORFS 5_2_route.json) is required")
     bud = spec.get("budget")
+    if bud is None and has_sheet(spec.get("block", "")):
+        e.append(f"block {spec['block']} has a budget sheet ({BUDGET_SHEETS}/{spec['block']}.json on origin/main): budget is "
+                 f"the default -- add \"budget\": {{\"master\": \"{spec['block']}\"}} and take the IO SDCs from "
+                 f"$BUDGET_SDC (route) / $BUDGET_SDC_SIGNOFF / $BUDGET_SDC_FF, or opt out with "
+                 f"\"budget\": {{\"enabled\": false, \"reason\": \"...\"}}")
+    if isinstance(bud, dict) and bud.get("enabled") is False:
+        if not bud.get("reason"):
+            e.append("budget.enabled false needs a reason")
+        bud = None
+    elif isinstance(bud, dict) and isinstance(st, dict) and "BUDGET_SDC" not in json.dumps(st):
+        e.append("budget is set but no stage command uses $BUDGET_SDC / $BUDGET_SDC_SIGNOFF / $BUDGET_SDC_FF")
     if bud is not None:
         if not isinstance(bud, dict) or not bud.get("master"):
             e.append("budget needs {master[, clock, domain_clock[], on_deviation flag|continue, sheets_ref]}")
@@ -482,9 +493,20 @@ def budget_files(bud, check_only=False):
         return out
 
 
+def active_budget(spec):
+    b = spec.get("budget")
+    return b if isinstance(b, dict) and b.get("enabled", True) is not False and b.get("master") else None
+
+
+def has_sheet(block):
+    if not block:
+        return False
+    return sh(["git", "-C", str(REPO), "cat-file", "-e", f"origin/main:{BUDGET_SHEETS}/{block}.json"], timeout=60).returncode == 0
+
+
 def budget_check(j):
     """calibrate CHECK against the sheet (never a re-calibration): None if within tolerance, else the reason"""
-    bud = j["spec"].get("budget")
+    bud = active_budget(j["spec"])
     if not bud or not j.get("budget") or not j.get("calibration"):
         return None
     ins = j["budget"]["insertion"]
@@ -526,7 +548,7 @@ def sync_source(j):
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/job.json", input=json.dumps(spec, indent=1), timeout=60, check=True)
-    if spec.get("budget"):
+    if active_budget(spec):
         files = budget_files(spec["budget"])
         for fn, text in files.items():
             if not fn.startswith("_"):
