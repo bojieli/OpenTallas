@@ -7,6 +7,9 @@ A job is ONE JSON file (tools/closure_loop/jobs/<name>.json on origin/main, or t
 
     sync source (git archive of the pinned commit -> <host base>/<name>/src)
     -> bench stages (each: expect pass | fail; an exact bench must PASS, a negative control must FAIL)
+    -> calibrate (default ON): synth -> floorplan -> place -> CTS only, measure the real SS/FF clock insertion at
+       the boundary registers (ck_insertion.py), regenerate the IO SDC from it (job's sdc_cmd, env CK_*), so the
+       route's IO budgets match the block's own tree (no 10^5 hold buffers from a guessed insertion)
     -> route -> signoff -> VERDICT (SS >= +15 ps, FF >= +15 ps at 833.333, DRC 0, extra checks)
     -> collect -> export -> commit the record + view on the job's branch (explicit-path staging),
        trial-merge the branch into its merge target in a scratch worktree, push, ledger line
@@ -134,6 +137,12 @@ def validate(spec: dict) -> list[str]:
                                                 and any(b.get("expect") == "fail" for b in benches)):
         e.append("need >= 1 bench expect=pass and >= 1 expect=fail (or no_bench_reason: e.g. pure re-route of a "
                  "benched commit, naming the bench record)")
+    cal = st.get("calibrate") if isinstance(st, dict) else None
+    if cal is None or (cal.get("enabled", True) and not (cal.get("cmd") and cal.get("base"))):
+        if not (cal and cal.get("enabled") is False and cal.get("reason")):
+            e.append("stages.calibrate is on by default: give cmd (the CTS-only run; route_view.sh jobs: the route "
+                     "command with ${CL_LABEL_SUFFIX} on the label and $CL_STOP_AFTER appended) + base (glob of its "
+                     "ORFS results/.../base) [+ clock, sdc_cmd], or {\"enabled\": false, \"reason\": \"...\"}")
     v = spec.get("verdict", {})
     if not v.get("corner_sta") and not v.get("metrics_cmd"):
         e.append("verdict.corner_sta (glob of a tools/w18/corner_sta.py JSON) or verdict.metrics_cmd is required")
@@ -161,6 +170,17 @@ def stage_list(spec):
         out.append(dict(key="bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", b["name"]), kind="bench", cmd=b["cmd"],
                         expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"),
                         threads=b.get("threads", t), ram=b.get("peak_ram_gb", r)))
+    cal = st.get("calibrate") or {}
+    if cal.get("enabled", True) and cal.get("cmd"):
+        base = cal["base"]
+        tail = (f"\nB=$(ls -d {base} 2>/dev/null | tail -1); [ -n \"$B\" ] || {{ echo 'calibrate: no ORFS base {base}'; exit 3; }}"
+                f"\npython3 {{CL}}/ck_insertion.py --base \"$B\" --clock {cal.get('clock', 'ck')} --output {{CL}}/calib.json"
+                f" > {{CL}}/calib.env || exit 4\ncat {{CL}}/calib.env\nset -a; . {{CL}}/calib.env; set +a")
+        if cal.get("sdc_cmd"):
+            tail += "\n" + cal["sdc_cmd"]
+        out.append(dict(key="calibrate", kind="calibrate", cmd=cal["cmd"] + tail, ok=cal.get("ok"),
+                        threads=cal.get("threads", spec.get("threads", 16)), ram=cal.get("peak_ram_gb", spec.get("peak_ram_gb", 32)),
+                        logs=cal.get("logs", [])))
     for k in ("route", "signoff"):
         if st.get(k, {}).get("cmd"):
             t, r = STAGE_DEFAULTS[k] or (spec.get("threads", 16), spec.get("peak_ram_gb", 32))
@@ -236,7 +256,7 @@ def event(j, msg):
 
 
 def experiment(j, status, register=False):
-    if not EXPERIMENT.exists():
+    if not EXPERIMENT.exists() or os.environ.get("CL_NO_EXPERIMENT"):
         return
     rid = f"closure-loop:{j['name']}"
     host = host_cfg(j["host"])["label"] if j.get("host") else "pending"
@@ -399,9 +419,9 @@ def sync_source(j):
     gz.wait(); arch.wait()
     if put.returncode or arch.returncode:
         raise RuntimeError(f"source sync failed: {put.stderr[-800:]}")
-    helper = (HERE / "path_summary.py").read_text()
-    ssh(host, f"cat > {run}/cl/path_summary.py && echo {full} > {run}/src/SOURCE_COMMIT && "
-              f"echo {run}/src > {run}/cl/SRC_DIR", input=helper, timeout=60, check=True)
+    for helper in ("path_summary.py", "ck_insertion.py"):
+        ssh(host, f"cat > {run}/cl/{helper}", input=(HERE / helper).read_text(), timeout=60, check=True)
+    ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/job.json", input=json.dumps(spec, indent=1), timeout=60, check=True)
 
@@ -414,7 +434,12 @@ def launch_stage(j, st, cmd):
     t = tag(st, j)
     env = "".join(f"export {k}={shlex.quote(v)}\n" for k, v in dict(
         RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=j["name"],
-        BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4))).items())
+        BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
+        CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
+        CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
+    # every stage after calibrate sees the measured insertion (CK_SS_MEAN/MIN/MAX, CK_FF_*; *_ALL_* = all registers)
+    env += f"[ -f {j['run']}/cl/calib.env ] && {{ set -a; . {j['run']}/cl/calib.env; set +a; }}\n" \
+        if st["kind"] != "calibrate" else ""
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
     ssh(j["host"], f"cat > {run}/cl/{t}.sh && rm -f {run}/cl/{t}.rc", input=body, timeout=60, check=True)
@@ -534,7 +559,7 @@ def publish(j, metrics):
                        metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "post_sdc", "corner_sta",
                                                             "drc_metrics", "drc_skipped")},
                        benches=j.get("benches", {}), no_bench_reason=spec.get("no_bench_reason"),
-                       checks=j.get("checks", {}), cycles_added=spec.get("cycles_added"), status="CLOSED",
+                       checks=j.get("checks", {}), calibration=j.get("calibration"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec)
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
         git("add", "--sparse", "--", *tos, cwd=cwt)
@@ -783,6 +808,14 @@ def step(j, fleet):
             if rc != 0 or not ok_extra:
                 return crash(j, st, fleet, f"rc={rc}{'' if ok_extra else ' ok-check failed: ' + okout.strip()[-200:]}")
             event(j, f"{st['key']} done (rc=0)")
+            if st["kind"] == "calibrate":
+                r = ssh(j["host"], f"cat {j['run']}/cl/calib.json", timeout=60)
+                try:
+                    c = json.loads(r.stdout)
+                    j["calibration"] = {k: c[k] for k in ("ss", "ff", "env", "db", "clock", "parasitics")}
+                    event(j, "calibrated insertion " + " ".join(f"{k}={v}" for k, v in c["env"].items() if "ALL" not in k))
+                except Exception:  # noqa: BLE001
+                    return crash(j, st, fleet, "calibrate produced no calib.json")
         j["stage_idx"] += 1
         j["status"] = "READY"
         return
