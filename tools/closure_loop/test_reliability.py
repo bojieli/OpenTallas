@@ -41,6 +41,22 @@ class ReliabilityTests(unittest.TestCase):
         self.j = dict(name="race", status="READY", spec={"block": "block", "stages": {}, "verdict": {}}, events=[])
         cl.save_job(self.j)
 
+    def test_unreadable_historical_bench_does_not_starve_recovery(self):
+        first = dict(name="unreachable", status="NEEDS_RTL", spec={},
+                     reason="bench_exact expected PASS but rc=0", stage_tag="bench_exact.a1")
+        second = dict(first, name="available", benches={})
+        stage = dict(key="bench_exact", expect="pass")
+        with patch.object(cl, "stage_list", return_value=[stage]), \
+             patch.object(cl, "bench_outcome", side_effect=[RuntimeError("unreadable"), True]), \
+             patch.object(cl, "save_job") as save, patch.object(cl, "log"), \
+             patch.object(cl, "event"), patch.object(cl, "ledger"), patch.object(cl, "experiment"):
+            cl.reevaluate_benches([first, second])
+        self.assertEqual(first["status"], "NEEDS_RTL")
+        self.assertNotIn("fix_requeued", first)
+        self.assertEqual(second["status"], "READY")
+        self.assertEqual(second["stage_idx"], 1)
+        save.assert_called_once_with(second)
+
     def test_cancel_survives_stale_save_and_new_worker(self):
         stale = copy.deepcopy(self.j)
         with patch.object(cl, "ledger"), patch.object(cl, "experiment"):

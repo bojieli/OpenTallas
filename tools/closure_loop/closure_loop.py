@@ -1236,7 +1236,7 @@ def write_status(fleet_note=""):
     for r in done:
         L.append(f"- {r['name']} [{r['spec'].get('block', '?')}] {r['status']} {r.get('reason', '')[:200]}")
     fl = ["", "## Fleet (measured load1, MemAvailable; admission: load1 + own launches of last 10 min <= 3 x cores, "
-          "free RAM >= peak + max(10% RAM, 32 GB))"]
+          "free RAM >= peak + max(5% RAM, 32 GB))"]
     for h in hosts_table():
         r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
         v = r.stdout.split()
@@ -1869,14 +1869,21 @@ def reevaluate_benches(jobs):
         m = BENCH_RE.match(j.get("reason") or "")
         if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN") or not m or fid in j.get("fix_requeued", []):
             continue
-        j.setdefault("fix_requeued", []).append(fid)
         stl = stage_list(j["spec"])
         idx = next((i for i, x in enumerate(stl) if x["key"] == m.group(1)), None)
         if idx is None or not j.get("stage_tag", "").startswith(m.group(1) + "."):
             save_job(j)
             continue
         st = stl[idx]
-        if bench_outcome(j, st, int(m.group(3))):
+        try:
+            correct = bench_outcome(j, st, int(m.group(3)))
+        except RuntimeError as exc:
+            # An unavailable historical log must not starve later jobs or the
+            # independent recovery passes. Do not consume this retry until read.
+            log(f"[{j['name']}] bench re-judgment deferred: {exc}")
+            continue
+        j.setdefault("fix_requeued", []).append(fid)
+        if correct:
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=int(m.group(3)), ok=True, rejudged=fid)
             j["status"], j["stage_idx"], j["reason"] = "READY", idx + 1, None
             event(j, f"{st['key']} re-judged {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} under {fid}; resumed")
