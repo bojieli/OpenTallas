@@ -674,10 +674,21 @@ def apply_splits_x(m, rel):
             continue
         names = {}
         mirror_x = it.orient in ('MY', 'R180')
+        assert not mirror_x, (it.name, it.orient)     # x packing below assumes R0 / MX parents (all four are)
+        end = None
         for j, bn in enumerate(par['bands']):
             b = sp['bands'][bn]
             x0, w = b['x0_um'], b['w_um']
-            xx = it.x + (it.w - x0 - w if mirror_x else x0)
+            # r12 a_real (measured): split cuts are off the site grid, ot_mts snapped bands into 14 overlaps.  Pack
+            # left to right on x = 0 mod 0.054 (site) and x = nominal mod 0.048 (M5 tracks: band pins keep their
+            # track), at or right of the nominal origin and the previous band's end (period lcm 0.432 um).
+            nom = round((it.x + x0) * 1000)
+            lo = nom if end is None else max(nom, end)
+            xd = lo
+            while xd % 54 or (xd - nom) % 48:
+                xd += 6
+            end = xd + round(w * 1000)
+            xx = xd / 1000.0
             nm = f'{it.name}_s{j}'
             new_insts.append(Inst(nm, bn, round(xx, 4), it.y, w, b['h_um'], it.orient, kind=it.kind, region=it.region,
                                   domain=it.domain))
