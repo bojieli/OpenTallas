@@ -21,8 +21,11 @@ unset_output_delay -clock vclk $ot_phy
 # PHY ports: the PHY abstract abuts the tile in the SAME clock region (budget sheet dsfd_ctrl_pc: skew class intra,
 # 90 ps, L 0.2 um), so the die clock-arrival term is the intra-region 90 ps, not the 150 ps inter-region term (OWNER
 # clarification 2026-10-06 ~10:40).  da50ce55a with 150: SS +57 / FF -9.2, after hold ECO SS +10.2 / FF +23.1.
-set_input_delay [expr {900 * 0.2 + 90}] -clock vclk_h $ot_phy
-set_output_delay [expr {900 * 0.2 + 90}] -clock vclk_h $ot_phy
+# budget sheet dsfd_ctrl_pc (tools/budgets, the agreed model): PHY abutted (L 0.2 um), intra-region 90 ps:
+# input delay = clk->Q + driver + wire + skew = 220.2 ps, output delay = wire + receiver + setup + skew = 161.2 ps.
+# (0.2 T + 90 = 270 on outputs left SS +70 before / +4.7 after the output hold ECO, ctrl_pc 3f0455126.)
+set_input_delay 220.2 -clock vclk_h $ot_phy
+set_output_delay 161.2 -clock vclk_h $ot_phy
 set_input_delay -min 0 -clock vclk_h $ot_phy
 set_output_delay -min 0 -clock vclk_h $ot_phy
 # rst is the asynchronous die reset: every column synchronises it locally (2-flop async-assert / sync-release
