@@ -1868,7 +1868,8 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         wire rom_clk, rz0, rz1;
         if (QM >= 7 && QZ != 0 && CG != 0) begin : g_rz
 `ifdef QM7_MUTANT_RZ
-            wire rz_d = cg_en_g;            // negative control: the enable copies one cycle late
+            wire rz_d = !qz_zd;             // negative control: the macro enable copies inverted (a one-cycle-late
+                                            // copy is NOT caught: issue never meets a closing / opening gate edge)
 `else
             wire rz_d = qz_zd;
 `endif
@@ -1878,6 +1879,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
 `ifdef QP_CHECK
             always @(negedge clk) if (rst_n_pin && (rz0 !== cg_en_g || rz1 !== cg_en_g)) begin
                 $display("QM7_CHECK FAIL: macro enable copy %b/%b != %b at %t", rz0, rz1, cg_en_g, $time); $fatal(1);
+            end
+            always @(negedge clk) if (rst_n_pin && issue && !rz0) begin
+                $display("QM7_CHECK FAIL: issue with the gate closed at %t", $time); $fatal(1);
             end
 `endif
         end else begin : g_rz_n
