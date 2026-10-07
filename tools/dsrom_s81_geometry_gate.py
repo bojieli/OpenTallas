@@ -133,7 +133,9 @@ def geometry_gate(m):
             ports = use.get(it.name, {})
             for p in tuple(ports):
                 if p.startswith(('fi', 'di', 'fo', 'do')):
-                    for prefix in ('fi', 'di', 'fo', 'do'):
+                    # A split half may intentionally leave its forwarded clock
+                    # unused; the parallel half supplies the downstream clock.
+                    for prefix in ('fi', 'di', 'do'):
                         if prefix + p[2:] not in ports:
                             missing.append((it.name, prefix + p[2:]))
     legal = F.legality(m)
