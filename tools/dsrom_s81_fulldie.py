@@ -3311,10 +3311,9 @@ def _hop_fix(m, P):
             for k in range(n):
                 (cx, cy), dch = _poly_at(path, Lp * (k + 1) / (n + 1))
                 horiz = dch in 'EW'
-                if fwd:
-                    w_, h_ = stn_dims([bits], horiz)
-                else:
-                    w_, h_ = stn_dims([bits], True)
+                w_, h_ = stn_dims([bits], horiz)
+                if not fwd:              # relays / hub stations: faces chosen after placement -> square box
+                    w_ = h_ = max(w_, h_)
                 pl = None
                 for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60)):
                     pl = P.near(cx, cy, w_, h_, [(EDGE, EDGE, W - EDGE, H - EDGE)], prev=cur, horiz=horiz,
