@@ -4052,10 +4052,11 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
             CH8.bus(f'{nm}_clk', 'fclk', 1, [ckd, (lk.name, 'ck')] + ([(rst[0].name, 'fi0')] if rst else
                                                                      [(he.name, 'fi0')]))
             CH8.bus(f'{nm}_tx', 'lane', 512, [(tail[0], tail[2]), (lk.name, 'tx')])
-        if rst and split:
-            pass
-        elif rst:
-            CH8.bus(f'{nm}r_d0', 'lane', 512, [(lk.name, 'rx'), (rst[0].name, 'di0')])
+        if rst:
+            # Split RX already drives the first station in two slices. Both
+            # forms still need the rest of the chain and its hub termination.
+            if not split:
+                CH8.bus(f'{nm}r_d0', 'lane', 512, [(lk.name, 'rx'), (rst[0].name, 'di0')])
             prev = (rst[0].name, 'fo0', 'do0')
             for k, it in enumerate(rst[1:], 1):
                 CH8.bus(f'{nm}r_f{k}', 'fclk', 1, [(prev[0], prev[1]), (it.name, 'fi0')])
