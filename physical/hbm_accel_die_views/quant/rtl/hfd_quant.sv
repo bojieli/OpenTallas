@@ -47,7 +47,7 @@ module hfd_quant (
     wire [511:0] od_t_su_NE = {w_aq_y[511:0]};
     wire [511:0] o_t_su_NE;
     for (genvar k = 0; k < 512; k = k + 1) begin : g_o_t_su_NE
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
+        ot_hfd_oreg4 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
     end
     assign t_su_NE[511:0] = o_t_su_NE[511:0];
     wire [511:0] od_t_su_NW = {w_aq_y[511:0]};
@@ -59,7 +59,7 @@ module hfd_quant (
     wire [511:0] od_t_su_SE = {w_aq_y[511:0]};
     wire [511:0] o_t_su_SE;
     for (genvar k = 0; k < 512; k = k + 1) begin : g_o_t_su_SE
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
+        ot_hfd_oreg4 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
     assign t_su_SE[511:0] = o_t_su_SE[511:0];
     wire [511:0] od_t_su_SW = {w_aq_y[511:0]};

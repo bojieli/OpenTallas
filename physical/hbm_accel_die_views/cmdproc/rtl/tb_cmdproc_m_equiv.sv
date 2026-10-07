@@ -19,7 +19,7 @@ module tb_cmdproc_m_equiv;
         wire [NSM-1:0] p``_launch_v; wire [TW-1:0] p``_launch_token, p``_cpl_token;
     `DECL(a) `DECL(b)
     ot_ds_hbm_cmdproc20 #(.ENABLE(1), .NSM(NSM), .NCMD(NCMD)) ua (`PORTS(a));
-    `DUT #(.ENABLE(1), .NSM(NSM), .NCMD(NCMD)) ub (`PORTS(b));
+    `DUT #(.ENABLE(1), .NSM(NSM), .NCMD(NCMD), .RDREG(0)) ub (`PORTS(b));
     wire [1023:0] oa = {a_db_rdy, a_cpl_v, a_cpl_position, a_launch_pos, a_cpl_job, a_launch_pc, a_cpl_cycles, a_st_kernels,
                         a_st_busy, a_cpl_generation, a_cpl_status, a_launch_v, a_launch_token, a_cpl_token};
     wire [1023:0] ob = {b_db_rdy, b_cpl_v, b_cpl_position, b_launch_pos, b_cpl_job, b_launch_pc, b_cpl_cycles, b_st_kernels,

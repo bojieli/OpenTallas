@@ -34,7 +34,12 @@ module ot_hdc_v41x_vec_lane #(
     parameter integer DDIV = 19,        // divider depth: 19 ot_hdc_v41x_fdiv, 21 ot_dsrom_fdiv_f12 (1.2 GHz kit)
     parameter integer SIDEX = 0,        // side pipe port registers: 0, 3 (side_v / side_x here, two in the side pipe),
                                         // or 4 (also side_y registered here)
-    parameter integer CAPR = 0          // c12: the memory words rd_q registered at the port before the capture logic
+    parameter integer CAPR = 0,         // c12: the memory words rd_q registered at the port before the capture logic
+    // CLAUDE HBM-ABSTRACTS hub margin (2026-10-06, default off; the hub quarter lane views ot_su12_light / _sfu):
+    parameter integer GSH = 0,          // 1 (with OPR 1): the gather word's shift (vi_q << sh) registered in its own
+                                        // stage GS before G2's add: +1 cycle on gathers (controller fetch 6+OPR+CAPR+GSH)
+    parameter integer KIMM = 0          // 1: cx_imm3 arrives in order-key form okey(imm3) (the controller encodes it
+                                        // before its control delay line): no key XOR in front of the X compares
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -418,8 +423,7 @@ module ot_hdc_v41x_vec_lane #(
     wire          h_v, h_par, h_cpair;
     wire [AW-1:0] h_a, h_b, h_c, h_d, h_o;
     wire [7:0]    h_src;
-    wire [4:0]    h_sh;
-    wire [31:0]   h_q;
+    wire [AW-1:0] h_qs;                  // the gather word shifted by the op's scale (h_q << h_sh)
     generate if (OPR != 0) begin : g_gq
         reg          q_v, q_par, q_cpair;
         reg [AW-1:0] q_a, q_b, q_c, q_d, q_o;
@@ -433,15 +437,32 @@ module ot_hdc_v41x_vec_lane #(
             q_a <= g1_a; q_b <= g1_b; q_c <= g1_c; q_d <= g1_d; q_o <= g1_o; q_par <= g1_par; q_src <= g1_src;
             q_cpair <= g1_cpair; q_sh <= g1_sh; q_q <= vi_q;
         end
-        assign {h_v, h_par, h_cpair, h_a, h_b, h_c, h_d, h_o, h_src, h_sh, h_q} =
-               {q_v, q_par, q_cpair, q_a, q_b, q_c, q_d, q_o, q_src, q_sh, q_q};
+        if (GSH != 0) begin : g_gs
+            // GS: the shifted gather word registered (q_q << q_sh), every other field one stage later
+            reg          s_v, s_par, s_cpair;
+            reg [AW-1:0] s_a, s_b, s_c, s_d, s_o, s_qs;
+            reg [7:0]    s_src;
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) s_v <= 1'b0; else s_v <= q_v;
+            end
+            always @(posedge clk) begin
+                s_a <= q_a; s_b <= q_b; s_c <= q_c; s_d <= q_d; s_o <= q_o; s_par <= q_par; s_src <= q_src;
+                s_cpair <= q_cpair; s_qs <= q_q[AW-1:0] << q_sh;
+            end
+            assign {h_v, h_par, h_cpair, h_a, h_b, h_c, h_d, h_o, h_src} = {s_v, s_par, s_cpair, s_a, s_b, s_c, s_d, s_o, s_src};
+            assign h_qs = s_qs;
+        end else begin : g_gs0
+            assign {h_v, h_par, h_cpair, h_a, h_b, h_c, h_d, h_o, h_src} = {q_v, q_par, q_cpair, q_a, q_b, q_c, q_d, q_o, q_src};
+            assign h_qs = q_q[AW-1:0] << q_sh;
+        end
     end else begin : g_gq0
-        assign {h_v, h_par, h_cpair, h_a, h_b, h_c, h_d, h_o, h_src, h_sh, h_q} =
-               {g1_v, g1_par, g1_cpair, g1_a, g1_b, g1_c, g1_d, g1_o, g1_src, g1_sh, vi_q};
+        assign {h_v, h_par, h_cpair, h_a, h_b, h_c, h_d, h_o, h_src} =
+               {g1_v, g1_par, g1_cpair, g1_a, g1_b, g1_c, g1_d, g1_o, g1_src};
+        assign h_qs = vi_q[AW-1:0] << g1_sh;
     end endgenerate
     wire [AW-1:0] g2_sum;
     wire          unused_c2;
-    ot_hdc_kadd #(.W(AW), .K(K)) u_g2a (.a(h_a), .b(h_q[AW-1:0] << h_sh), .cin(1'b0), .s(g2_sum), .cout(unused_c2));
+    ot_hdc_kadd #(.W(AW), .K(K)) u_g2a (.a(h_a), .b(h_qs), .cin(1'b0), .s(g2_sum), .cout(unused_c2));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) g2_v <= 1'b0;
         else g2_v <= h_v;
@@ -525,24 +546,26 @@ module ot_hdc_v41x_vec_lane #(
     end
     wire [31:0] a_u  = {a_hi1, 16'd0};
     // pre_a's compares, as prefix compares: okey(v) <= okey(imm3) for the three candidates, and +0 <= imm3
-    wire [31:0] k_imm3 = okey(cx_imm3);
+    // KIMM: cx_imm3 is already the order key; imm3's value is its inverse (off the compare path)
+    wire [31:0] k_imm3 = (KIMM != 0) ? cx_imm3 : okey(cx_imm3);
+    wire [31:0] v_imm3 = (KIMM != 0) ? (cx_imm3[31] ? {1'b0, cx_imm3[30:0]} : ~cx_imm3) : cx_imm3;
     wire        le_x, le_t, le_u, le_0;
     ot_hdc_kge #(.W(32), .K(K)) u_lex (.a(k_imm3), .b(okey(x_a)), .ge(le_x));
     ot_hdc_kge #(.W(32), .K(K)) u_let (.a(k_imm3), .b(okey(a_t)), .ge(le_t));
     ot_hdc_kge #(.W(32), .K(K)) u_leu (.a(k_imm3), .b(okey(a_u)), .ge(le_u));
     ot_hdc_kge #(.W(32), .K(K)) u_le0 (.a(k_imm3), .b(32'h80000000), .ge(le_0));
-    wire [31:0] a_mx = pre_a2(x_a, cx_arelu, cx_amin, cx_imm3, le_x, le_0);
-    wire [31:0] a_mt = pre_a2(a_t, cx_arelu, cx_amin, cx_imm3, le_t, le_0);
-    wire [31:0] a_mu = pre_a2(a_u, cx_arelu, cx_amin, cx_imm3, le_u, le_0);
+    wire [31:0] a_mx = pre_a2(x_a, cx_arelu, cx_amin, v_imm3, le_x, le_0);
+    wire [31:0] a_mt = pre_a2(a_t, cx_arelu, cx_amin, v_imm3, le_t, le_0);
+    wire [31:0] a_mu = pre_a2(a_u, cx_arelu, cx_amin, v_imm3, le_u, le_0);
     wire [31:0] a_m  = !cx_arnd ? a_mx : a_up ? a_mu : a_mt;
     // clip(C, -imm3, imm3) = fmin(fmax(C, lo), hi) with its three comparisons side by side (bit-identical,
     // ties included: proven by tools/w11_equiv_clip.ys; the chained form was the lane's critical path, W11)
-    wire [31:0] c_lo = {1'b1, cx_imm3[30:0]};
+    wire [31:0] c_lo = {1'b1, v_imm3[30:0]};
     wire        c_ge_lo, c_le_hi, c_lohi;
     ot_hdc_kge #(.W(32), .K(K)) u_cgl (.a(okey(x_c)), .b(okey(c_lo)), .ge(c_ge_lo));
     ot_hdc_kge #(.W(32), .K(K)) u_clh (.a(k_imm3), .b(okey(x_c)), .ge(c_le_hi));
     ot_hdc_kge #(.W(32), .K(K)) u_clo (.a(k_imm3), .b(okey(c_lo)), .ge(c_lohi));
-    wire [31:0] c_m = !cx_cclip ? x_c : c_ge_lo ? (c_le_hi ? x_c : cx_imm3) : (c_lohi ? c_lo : cx_imm3);
+    wire [31:0] c_m = !cx_cclip ? x_c : c_ge_lo ? (c_le_hi ? x_c : v_imm3) : (c_lohi ? c_lo : v_imm3);
     reg  [31:0] p_a, p_b, p_c, p_d;
     reg  [AW-1:0] p_o;
     reg         p_v, p_par;

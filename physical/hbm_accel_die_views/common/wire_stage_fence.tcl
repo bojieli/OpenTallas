@@ -56,8 +56,12 @@ proc ws_bfs {all dir depth} {
   for {set d 0} {$d < $depth && [llength $front]} {incr d} {
     set pins {}; set next {}
     foreach i $front {
+      set sq [[$i getMaster] isSequential]
       foreach it [$i getITerms] {
         if {$dir eq "back"} { if {[$it isOutputSignal]} continue } else { if {![$it isOutputSignal]} continue }
+        # backwards through a flop only along its data input (an async reset / set pin leads to the reset port:
+        # hfd_index_q_b0 u_kp found rst before the k pins through the FIFO's write-domain reset)
+        if {$dir eq "back" && $sq && [[$it getMTerm] getName] ne "D"} continue
         set n [$it getNet]; if {[ws_skip $n]} continue
         foreach bt [$n getBTerms] { if {[info exists ws_pin([$bt getName])]} { lappend pins $ws_pin([$bt getName]) } }
         foreach o [$n getITerms] {
@@ -70,9 +74,10 @@ proc ws_bfs {all dir depth} {
         }
       }
     }
-    if {[llength $pins]} { return $pins }
+    if {[llength $pins]} { set ::ws_lastd $d; return $pins }
     set front $next
   }
+  set ::ws_lastd -1
   return {}
 }
 proc ws_cent {l} {
@@ -94,12 +99,26 @@ proc ws_partner {c} {
   return "-"
 }
 array set ws_tgt {}; array set ws_cells {}
+# OT_WS_FILE (optional): explicit chain endpoints, `set ws_ab(<chain>) {ax ay bx by anA anB}` in um of this block (a
+# generated view whose chains run between internal units rather than terminals); a listed chain skips the search
+global ws_ab
+array set ws_ab {}
+if {[info exists ::env(OT_WS_FILE)] && $::env(OT_WS_FILE) ne ""} { source $::env(OT_WS_FILE) }
 foreach c [lsort -dictionary [array names ws_n]] {
   set N $ws_n($c)
   if {[ws_partner $c] ne ""} continue
   if {![info exists ws_st($c,0)] || ![info exists ws_st($c,[expr {$N-1}])]} continue
-  set A [ws_bfs $ws_st($c,0) back $ws_depth]
-  set B [ws_bfs $ws_st($c,[expr {$N-1}]) fwd $ws_depth]
+  if {[info exists ws_ab($c)]} {
+    lassign $ws_ab($c) ax ay bx by anA anB
+    set A [list [list [expr {round($ax*$ws_dbu)}] [expr {round($ay*$ws_dbu)}]]]
+    set B [list [list [expr {round($bx*$ws_dbu)}] [expr {round($by*$ws_dbu)}]]]
+  } else {
+  set A [ws_bfs $ws_st($c,0) back $ws_depth]; set dA $::ws_lastd
+  set B [ws_bfs $ws_st($c,[expr {$N-1}]) fwd $ws_depth]; set dB $::ws_lastd
+  # a chain end whose terminal is reached within one cell (pin -> flop, flop QN -> inverter -> pin) is a FACE register:
+  # it is anchored at that pin; otherwise the end sits one hop in from its terminal
+  set anA [expr {$dA >= 0 && $dA <= 1}]; set anB [expr {$dB >= 0 && $dB <= 1}]
+  }
   if {![llength $A] || ![llength $B]} {
     puts "OT_WS: chain $c N=$N: no terminal on one side ([llength $A] in / [llength $B] out), left unfenced"
     continue
@@ -108,7 +127,7 @@ foreach c [lsort -dictionary [array names ws_n]] {
   set dx [expr {[lindex $b 0]-[lindex $a 0]}]; set dy [expr {[lindex $b 1]-[lindex $a 1]}]
   set len [expr {hypot($dx,$dy)}]
   set ux [expr {$len > 0 ? $dx/$len : 1.0}]; set uy [expr {$len > 0 ? $dy/$len : 0.0}]
-  puts [format "OT_WS: chain %s N=%d from (%.1f %.1f) to (%.1f %.1f) um, %.1f um Manhattan, %.1f um a hop" $c $N \
+  puts [format "OT_WS: chain %s N=%d anchored %d/%d from (%.1f %.1f) to (%.1f %.1f) um, %.1f um Manhattan, %.1f um a hop" $c $N $anA $anB \
         [expr {[lindex $a 0]/$ws_dbu}] [expr {[lindex $a 1]/$ws_dbu}] [expr {[lindex $b 0]/$ws_dbu}] \
         [expr {[lindex $b 1]/$ws_dbu}] [expr {(abs($dx)+abs($dy))/$ws_dbu}] [expr {(abs($dx)+abs($dy))/$ws_dbu/($N+1)}]]
   if {[info exists ::env(OT_WS_REPORT)]} {
@@ -128,7 +147,9 @@ foreach c [lsort -dictionary [array names ws_n]] {
   }
   for {set k 0} {$k < $N} {incr k} {
     if {![info exists ws_st($c,$k)]} continue
-    set f [expr {double($k+1)/($N+1)}]
+    if {$anA && $anB} { set f [expr {$N > 1 ? double($k)/($N-1) : 0.5}] } \
+    elseif {$anA} { set f [expr {double($k)/$N}] } elseif {$anB} { set f [expr {double($k+1)/$N}] } \
+    else { set f [expr {double($k+1)/($N+1)}] }
     set ws_tgt($c,$k) [list [expr {[lindex $a 0]+$f*$dx}] [expr {[lindex $a 1]+$f*$dy}]]
     set ws_cells($c,$k) $ws_st($c,$k)
   }
@@ -198,12 +219,15 @@ foreach key [lsort -dictionary [array names ws_tgt]] {
     while {$placed_row < $K && $q < $m && $guard < 4*$K} {
       incr guard
       set i [lindex $cells $q]; set w [[$i getMaster] getWidth]
-      if {$x + $w > $rx1} break
-      if {[ws_free $ri $x [expr {$x+$w}]]} {
+      # footprint reserved for the resizer: FIRM flops are still resized in place (repair_design upsized
+      # DFFHQNx1 -> x2 into a tapcell, s1_b2 DPL-0033), so keep 3 sites free right of every placed cell
+      set wr [expr {$w + 3*$sitew}]
+      if {$x + $wr > $rx1} break
+      if {[ws_free $ri $x [expr {$x+$wr}]]} {
         $i setOrient [lindex $row 5]
         $i setLocation $x $ry
         $i setPlacementStatus FIRM
-        lappend occ($ri) [list $x [expr {$x+$w}]]
+        lappend occ($ri) [list $x [expr {$x+$wr}]]
         incr q; incr placed_row
       }
       set x [expr {$x + $pitch}]

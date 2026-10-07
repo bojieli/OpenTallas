@@ -75,10 +75,20 @@ module ot_hfd_loader_m #(
             end
         end
     endfunction
-    // margin-first CRC pipeline helpers: crc_fold(s, w) = crc_fold(s, 0) ^ crc_fold(0, w_lo) ^ crc_fold(0, w_hi)
-    function automatic [31:0] crc_s(input [31:0] s); crc_s = crc_fold(s, 256'd0); endfunction
-    function automatic [31:0] crc_lo(input [255:0] w); crc_lo = crc_fold(32'd0, {128'd0, w[127:0]}); endfunction
-    function automatic [31:0] crc_hi(input [255:0] w); crc_hi = crc_fold(32'd0, {w[255:128], 128'd0}); endfunction
+    // margin-first CRC pipeline helpers: crc_fold(s, w) = crc_fold(s, 0) ^ crc_fold(0, w_lo) ^ crc_fold(0, w_hi),
+    // each written as a constant GF(2) matrix (bit j = XOR-reduce of input & M[j]: balanced trees, not the serial loop)
+    localparam [4095:0] CRC_M_LO = 4096'h17830a34c6f00657cee3d501744821122f0614698de00caf9dc7aa02e89042255e0c28d31bc0195f3b8f5405d120844abc1851a6378032be771ea80ba24108957830a34c6f00657cee3d50174482112af0614698de00caf9dc7aa02e89042255f74187057af193a47616955c664065b8ee830e0af5e32748ec2d2ab8cc80cb71dd061c15ebc64e91d85a5571990196e3ad8f321f117c9b747e577fe2464b0cd44c9d6e0ae40930bf324d2ac5f8de38bb993adc15c812617e649a558bf1bc71763275b82b9024c2fcc934ab17e378e2ec64eb7057204985f99269562fc6f1c5d8c9d6e0ae40930bf324d2ac5f8de38bb093adc15c812617e649a558bf1bc7176030d8888dc4bc299b5da9647f43c60fd261b1111b89785336bb52c8fe878c1fa5c362223712f0a66d76a591fd0f183f4a86c4446e25e14cdaed4b23fa1e307e951a0b82e88d329fe2147592f54828dc3923940fe5dc953993e608f0ebe419996050ab15ff7fda757002f234d6bc7b13d3a1562bfeffb4eae005e469ad78f627a7552f5dc93999d397c52b065b85a46e5dbdddb1a6b5c3a17844b5d9b67f00fda87bbb634d6b8742f0896bb36cfe01fb50e0f5ccae11fe83b6dc34b3d8884bd7b2d6689368e50d013a768ab2b064df8e77acd126d1ca1a0274ed156560c9bf1cef4e21479752c402be14c91fc0e73618cd8bc1851a6378032be771ea80ba241089;
+    localparam [4095:0] CRC_M_HI = 4096'h04d101df481b4e5af182fa07eb46de2f09a203be90369cb5e305f40fd68dbc5e1344077d206d396bc60be81fad1b78bc26880efa40da72d78c17d03f5a36f1784d101df481b4e5af182fa07eb46de2f19a203be90369cb5e305f40fd68dbc5e23091760d4ec8d8e6913c7bfd3af155ea6122ec1a9d91b1cd2278f7fa75e2abd5c245d8353b23639a44f1eff4ebc557ab805ab1b53e5d896e786125ee3ccc7178046462b534a05c860140b1db92de3cde08c8c56a6940b90c028163b725bc79bc11918ad4d28172180502c76e4b78f379232315a9a502e4300a058edc96f1e6f246462b534a05c860140b1db92de3cde48c8c56a6940b90c028163b725bc79bc91dc9ac92600c6fdaa1ae8ce35cc9e9bc3b935924c018dfb5435d19c6b993d3787726b2498031bf6a86ba338d7327a6f0ee4d649300637ed50d74671ae64f4de1d84bc8f948ddb3f0eb6a343227d845ecb446902dd9a029bb27569263a4f655f76c5c2184fb5b1d2cbf2fdec0a2aa75c1d8b84309f6b63a597e5fbd814554eb82b5a187cca5773ae80d3d810561ef092a6f920e4602f53b8aebf9f80d2898cc7bdf241c8c05ea7715d7f3f01a513198f7ba9938c743cfa0715e651a334925efc171e37051cf840eb84d48ce61790d01ace3c6e0a39f081d709a919cc2f21a0359c35cc098760b74bbc4a1c3820f72d89c826880efa40da72d78c17d03f5a36f17;
+    localparam [1023:0] CRC_M_S = 1024'h4884122ea44209175221048ba910824554884122aa4420911da602668ed30133c76980992b30d262dd1c7b1f6e8e3d8f37471ec71ba38f630dd1c7b106e8e3d84bf063c2a5f831e152fc18f0a97e0c789c3b141206999827cbc8de3de5e46f1eba7625a115bf00fe0adf807f4debd211ee71fb26f738fd93b3186ce79108245d;
+    function automatic [31:0] crc_s(input [31:0] s);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_s[j] = ^(s & CRC_M_S[j*32 +: 32]); end
+    endfunction
+    function automatic [31:0] crc_lo(input [255:0] w);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_lo[j] = ^(w[127:0] & CRC_M_LO[j*128 +: 128]); end
+    endfunction
+    function automatic [31:0] crc_hi(input [255:0] w);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_hi[j] = ^(w[255:128] & CRC_M_HI[j*128 +: 128]); end
+    endfunction
 
     generate if (ENABLE == 0) begin : g_off
         assign s_awready = 1'b0; assign s_wready = 1'b0; assign s_arready = 1'b0;
@@ -135,16 +145,27 @@ module ot_hfd_loader_m #(
         assign m_arburst = 2'd1;                 // INCR
         assign m_rready = busy && dq_rdy;
         wire beat = m_rvalid && m_rready;
-        wire [31:0] rem = n_sec - ar_sec;
-        wire [31:0] to4k = 32'd128 - {25'd0, ar_next[11:5]};
-        wire [31:0] blen0 = (rem < BURST) ? rem : BURST;
-        wire [31:0] blen = (blen0 < to4k) ? blen0 : to4k;
+        reg  [31:0] rem_q;                       // ARITH: n_sec - ar_sec
+        wire [7:0]  rem8 = rem_q[7:0];
+        wire        rem_small = ~|rem_q[31:8] && (rem8 < 8'(BURST));
+        wire [7:0]  to4k8 = 8'd128 - {1'b0, ar_next[11:5]};
+        wire [7:0]  blen0_8 = rem_small ? rem8 : 8'(BURST);
+        wire [7:0]  blen8 = (blen0_8 < to4k8) ? blen0_8 : to4k8;
+        wire [31:0] blen = {24'd0, blen8};
+        wire [31:0] ar_sec_nx, rem_nx, cycles_nx, rx_sec_nx;
+        wire [51:0] ar_hi_nx;
+        wire [7:0]  ar_lo_nx = {1'b0, ar_next[11:5]} + blen8;
+        ot_hdc_ksadd_k #(.W(32)) u_k_arsec (.a(ar_sec), .b(blen), .cin(1'b0), .s(ar_sec_nx), .cout());
+        ot_hdc_ksadd_k #(.W(32)) u_k_rem (.a(rem_q), .b(~blen), .cin(1'b1), .s(rem_nx), .cout());
+        ot_hdc_inc_k #(.W(52)) u_k_arhi (.a(ar_next[63:12]), .inc(ar_lo_nx[7]), .y(ar_hi_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_cyc (.a(cycles), .inc(1'b1), .y(cycles_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_rx (.a(rx_sec), .inc(1'b1), .y(rx_sec_nx), .co());
         always @(posedge clk_host or negedge rst_host_n) begin
             if (!rst_host_n) begin
                 haddr_lo <= 0; haddr_hi <= 0; daddr <= 0; nbytes <= 0; crc_exp <= 0; crc_got <= 32'hFFFFFFFF;
                 vcrc_got <= 0; sectors <= 0; cycles <= 0; status <= 0; done <= 0; busy <= 0; verify <= 0;
                 s_bvalid <= 0; s_rvalid <= 0; s_rdata <= 0;
-                n_sec <= 0; ar_sec <= 0; rx_sec <= 0; out_bursts <= 0; axi_err <= 0; cmd_pend <= 0; crc_bad <= 0;
+                n_sec <= 0; ar_sec <= 0; rem_q <= 0; rx_sec <= 0; out_bursts <= 0; axi_err <= 0; cmd_pend <= 0; crc_bad <= 0;
                 ar_next <= 0; m_arvalid <= 0; m_araddr <= 0; m_arlen <= 0;
             end else begin
                 // ---- registers ----
@@ -183,25 +204,25 @@ module ot_hfd_loader_m #(
                     if (nbytes == 0 || nbytes[4:0] != 0 || haddr_lo[4:0] != 0 || daddr[4:0] != 0) begin
                         status <= 4'd3; done <= 1;
                     end else begin
-                        busy <= 1; n_sec <= nbytes >> 5; ar_sec <= 0; rx_sec <= 0; out_bursts <= 0;
+                        busy <= 1; n_sec <= nbytes >> 5; ar_sec <= 0; rem_q <= nbytes >> 5; rx_sec <= 0; out_bursts <= 0;
                         ar_next <= haddr; cmd_pend <= 1;
                     end
                 end
-                if (busy) cycles <= cycles + 1;
+                if (busy) cycles <= cycles_nx;
                 if (hp2_v) crc_got <= crc_s(crc_got) ^ hp2_lo ^ hp2_hi;
                 if (cmd_pend && cmd_rdy) cmd_pend <= 0;
                 // ---- AR: bursts that never cross a 4 KB boundary ----
                 if (m_arvalid && m_arready) m_arvalid <= 0;
-                if (busy && !m_arvalid && ar_sec != n_sec && out_bursts < MAXOUT[7:0]) begin
+                if (busy && !m_arvalid && rem_q != 32'd0 && out_bursts < MAXOUT[7:0]) begin
                     m_arvalid <= 1; m_araddr <= ar_next; m_arlen <= blen[7:0] - 8'd1;
-                    ar_sec <= ar_sec + blen; ar_next <= ar_next + {27'd0, blen, 5'd0};
+                    ar_sec <= ar_sec_nx; rem_q <= rem_nx; ar_next <= {ar_hi_nx, ar_lo_nx[6:0], ar_next[4:0]};
                 end
                 // outstanding bursts: +1 at AR issue (registered above), -1 at the last beat
-                out_bursts <= out_bursts + ((busy && !m_arvalid && ar_sec != n_sec && out_bursts < MAXOUT[7:0]) ? 8'd1 : 8'd0)
+                out_bursts <= out_bursts + ((busy && !m_arvalid && rem_q != 32'd0 && out_bursts < MAXOUT[7:0]) ? 8'd1 : 8'd0)
                                          - ((beat && m_rlast) ? 8'd1 : 8'd0);
                 // ---- R: fold and forward ----
                 if (beat) begin
-                    rx_sec <= rx_sec + 1;
+                    rx_sec <= rx_sec_nx;
                     if (m_rresp != 2'b00) axi_err <= 1;
                 end
                 // ---- completion ----
@@ -247,10 +268,19 @@ module ot_hfd_loader_m #(
         reg [255:0] rob [0:VOUT-1];
         reg [VOUT-1:0] rob_v;
         wire w_can = ms == M_WRITE && w_idx != m_n && d_v && w_out < OUTW[7:0];
-        wire r_can = ms == M_VERIFY && r_idx != m_n && (r_idx - f_idx) < VOUT;
+        reg  [VB:0] vin;                         // ARITH: r_idx - f_idx (read-backs in flight)
+        reg  [31:0] wa_q, ra_q;                  // ARITH: m_base + w_idx << 5, m_base + r_idx << 5
+        wire [31:0] wa_nx, ra_nx, w_idx_nx, w_ack_nx, r_idx_nx, f_idx_nx;
+        ot_hdc_ksadd_k #(.W(32)) u_k_wa (.a(wa_q), .b(32'd32), .cin(1'b0), .s(wa_nx), .cout());
+        ot_hdc_ksadd_k #(.W(32)) u_k_ra (.a(ra_q), .b(32'd32), .cin(1'b0), .s(ra_nx), .cout());
+        ot_hdc_inc_k #(.W(32)) u_k_wi (.a(w_idx), .inc(1'b1), .y(w_idx_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_wk (.a(w_ack), .inc(1'b1), .y(w_ack_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_ri (.a(r_idx), .inc(1'b1), .y(r_idx_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_fi (.a(f_idx), .inc(1'b1), .y(f_idx_nx), .co());
+        wire r_can = ms == M_VERIFY && r_idx != m_n && vin < VOUT;
         assign req_v     = w_can || r_can;
         assign req_we    = ms == M_WRITE;
-        assign req_addr  = m_base + ((ms == M_WRITE ? w_idx : r_idx) << 5);
+        assign req_addr  = (ms == M_WRITE) ? wa_q : ra_q;
         assign req_wdata = d_d;
         assign req_wstrb = 32'hFFFFFFFF;
         assign req_tag   = ms == M_WRITE ? w_idx[TW-1:0] : {{(TW-VB){1'b0}}, r_idx[VB-1:0]};
@@ -274,14 +304,14 @@ module ot_hfd_loader_m #(
         wire mp_busy = mp1_v || mp2_v;
         always @(posedge clk_mem or negedge rst_mem_n) begin
             if (!rst_mem_n) begin
-                ms <= M_IDLE; m_base <= 0; m_n <= 0; w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0;
+                ms <= M_IDLE; m_base <= 0; m_n <= 0; w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vin <= 0; wa_q <= 0; ra_q <= 0;
                 m_ver <= 0; m_fault <= 0; vcrc <= 32'hFFFFFFFF; w_out <= 0; rob_v <= 0; k_v <= 0; k_d <= 0;
             end else begin
                 if (k_v && k_rdy) k_v <= 0;
                 if (mp2_v) vcrc <= crc_s(vcrc) ^ mp2_lo ^ mp2_hi;
                 // write acknowledgements / read-back data
                 if (rsp_v) begin
-                    if (rsp_we) w_ack <= w_ack + 1;
+                    if (rsp_we) w_ack <= w_ack_nx;
                     else if (ms == M_VERIFY) begin
                         rob[rsp_tag[VB-1:0]] <= rsp_data;
                     end else m_fault <= 1;
@@ -293,16 +323,18 @@ module ot_hfd_loader_m #(
                     M_IDLE: if (c_v) begin
                         m_base <= c_d[31:0]; m_n <= c_d[63:32]; m_ver <= c_d[64];
                         w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vcrc <= 32'hFFFFFFFF; m_fault <= 0;
+                        vin <= 0; wa_q <= c_d[31:0]; ra_q <= c_d[31:0];
                         ms <= M_WRITE;
                     end
                     M_WRITE: begin
-                        if (req_v && req_rdy) w_idx <= w_idx + 1;
+                        if (req_v && req_rdy) begin w_idx <= w_idx_nx; wa_q <= wa_nx; end
                         if (w_idx == m_n) ms <= M_DRAIN;
                     end
                     M_DRAIN: if (w_ack == m_n) ms <= m_ver ? M_VERIFY : M_CPL;
                     M_VERIFY: begin
-                        if (req_v && req_rdy) r_idx <= r_idx + 1;
-                        if (fold_now) f_idx <= f_idx + 1;
+                        if (req_v && req_rdy) begin r_idx <= r_idx_nx; ra_q <= ra_nx; end
+                        if (fold_now) f_idx <= f_idx_nx;
+                        vin <= vin + (req_v && req_rdy) - fold_now;
                         if (f_idx == m_n) ms <= M_CPL;
                     end
                     M_CPL: if (!k_v && !mp_busy) begin
