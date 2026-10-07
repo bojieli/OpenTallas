@@ -351,6 +351,10 @@ R24 = dict(R23, hub_ck_seg=8)
 # commit 6dc3c9707.  Reserve >=400 x 400 um on the existing macro/site lattice;
 # keep the other slots and adopted floorplan unchanged.
 R24F = dict(R24, spine_slots=dict(R24['spine_slots'], su_full=(400.008, 401.736)))
+# Separate candidate reservation: full-width W2 credit senders own their area.
+# This is an unbound floorplan slot until a measured wrapper supplies pins/RTL.
+R24W = dict(R24F, spine_slots=dict(R24F['spine_slots'], w2_sender=(400.008, 401.736)),
+            spine_slot_domains={'w2_sender': 'stream_1p2'})
 ADOPTED = R23
 
 
@@ -483,7 +487,7 @@ def build(variant=None):
     yy = yy - ghi
     for n_, (w_, h_) in variant.get('spine_slots', {}).items():
         it = Inst(f'hb_{n_}', f'hfd_{n_}', up(sx0 + (spine_w - SHAVE - w_) / 2, GX), up(yy + ghi, GY), w_, h_,
-                  kind='spine', region='hub', domain='serial_0p9')
+                  kind='spine', region='hub', domain=variant.get('spine_slot_domains', {}).get(n_, 'serial_0p9'))
         assert it.y + it.h <= hy1, ('spine slot above the hub band', n_, it.y + it.h, hy1)
         insts.append(it)
         hub[n_] = it
@@ -2987,7 +2991,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24f=R24F, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
