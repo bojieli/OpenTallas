@@ -77,6 +77,12 @@ BF_BRANCH_COMMIT = "332983233"
 BFA_FILE = "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json"
 BFA_COMMIT = "4534a8e5f (origin/codex/bf-evidence-only-20261007, BF agent records of claude/dsrom-bf-double-20261007; not on main)"
 BFA = dict(AR=1645.8, MTP=4841.9, base_AR=1608.4, base_MTP=4764.3, stages=96)
+# option B (mixed 2,304 pairs, 85 stages), Codex "DS ADOPT" 505a9b484 on origin/codex/restore-bf-pairs-20261007; not on main
+BFB_COMMIT = "52f5f1963 (origin/codex/restore-bf-pairs-20261007; adoption commit 505a9b484; not on main)"
+BFB = dict(AR=1754.3, MTP=5098.3, base_AR=1603.3, base_MTP=4717.7, stages=85, pairs=2304, layer_dies=340, regions=18288,
+           label="DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field",
+           physical="PENDING: mixed 2304-pair geometry not routed; uniform 2048-pair S81 v9d is different. Final PQ/BF footprints and die station cycles must be priced before physical adoption.",
+           wire="ESTIMATED f183.60 round trips for mixed slot option")
 
 
 def load(rel):
@@ -304,10 +310,20 @@ def ds_rom():
           src(BFA_FILE, "options.A_f198_2048 vs options.base_f198_2050", commit=BFA_COMMIT),
           "measured exact (19,056/19,056 regions, both runs bit-exact), UNADOPTED, FULL-RATE BF: AR %.1f vs base_f198 %.1f "
           "(+%.2f %%), MTP %.1f vs %.1f (+%.2f %%). Supersedes the +7.82 %% figure (BF16-phase-only, ledger.md on %s). "
-          "Option B (2,304 pairs, 18 per region) pending per the coordinator. Under the half-rate 1792 geometry its gain "
+          "Option B is measured: see bf_merge_ksplit_option_B. Under the half-rate 1792 geometry its gain "
           "is unmeasured, so it is listed, never summed"
           % (BFA["AR"], BFA["base_AR"], 100 * (BFA["AR"] / BFA["base_AR"] - 1), BFA["MTP"], BFA["base_MTP"],
              100 * (BFA["MTP"] / BFA["base_MTP"] - 1), BF_BRANCH), "info"),
+        L("bf_merge_ksplit_option_B", "BF16 phase merges + router K split, option B: mixed slots, %d pairs (18 a region, 512 BF), "
+          "%d reprice stages, %d layer dies" % (BFB["pairs"], BFB["stages"], BFB["layer_dies"]), "measured",
+          dict(unit="us", AR=round(1e6 / BFB["AR"] - 1e6 / BFB["base_AR"], 3),
+               MTP_step=round(tau * 1e6 / BFB["MTP"] - tau * 1e6 / BFB["base_MTP"], 3)),
+          src(BFA_FILE, "options.B_mixed_2304", commit=BFB_COMMIT),
+          "measured candidate, bit-exact %s/%s regions, full-rate BF; Codex label quoted: '%s'. Status here: ADOPT PENDING "
+          "CENTRAL INTEGRATION (not on main). Its base %.1f is the ledger total before su_meso_d8g1. Physical: %s Wire: %s. "
+          "CONFLICTS with the actual 1792 mapping on main (half-rate BF, 98/120 stages): see compositions "
+          "option_B_2304_codex_adopt and geometry_conflict" % (format(BFB["regions"], ","), format(BFB["regions"], ","),
+          BFB["label"], BFB["base_AR"], BFB["physical"], BFB["wire"]), "info"),
         L("field_phases_1792", "Field phase timings of the 1792 geometry (remapped regions, BF/q stage split)", "gated-unknown", None,
           src(f"{DS_MAP}/provenance.json", "variants.*.full_token_latency"), "'unpriced until matching field phase measurements and new geometry timing are composed'", "gate"),
         L("bf_half_physical", "BF half-rate clock root qualification", "gated-unknown", None,
@@ -340,6 +356,30 @@ def ds_rom():
                                               if name == "half_dedicated" else "rate is an UPPER bound: shared-pair q phases also halve"),
             gated_by=gates, lines=[hops, "bf_half_rate_upper"],
             note="published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured")
+    comps["option_B_2304_codex_adopt"] = dict(
+        AR_tok_s=BFB["AR"], MTP_tok_s=BFB["MTP"], AR_us=round(1e6 / BFB["AR"], 3), MTP_step_us=round(tau * 1e6 / BFB["MTP"], 3),
+        tau=tau, stages=BFB["stages"], pairs=BFB["pairs"], layer_dies=BFB["layer_dies"],
+        dies_total=BFB["layer_dies"] + rack["counts"]["head"] + rack["counts"]["table"] + rack["counts"]["draft"],
+        bf_rate="full", status="measured candidate; adopt pending central integration (not on main)",
+        codex_label=BFB["label"], record=src(BFA_FILE, "options.B_mixed_2304", commit=BFB_COMMIT),
+        note="its own composition on the pre-su_meso ledger base (1,603.3); wire estimated; geometry not routed")
+    comps["geometry_conflict"] = dict(
+        status="UNRESOLVED: question to Codex root in the mailbox",
+        question="Which pair count / geometry is the production baseline?",
+        candidates=[
+            dict(name="actual1792_half_dedicated (main 2d811aafb)", pairs_per_layer_die=1792, stages=var["half_dedicated"]["stages"],
+                 bf_rate="half", AR_tok_s=comps["actual1792_half_dedicated"]["AR_tok_s"], MTP_tok_s=comps["actual1792_half_dedicated"]["MTP_tok_s"],
+                 basis="priced-candidate envelope; field phases unmeasured"),
+            dict(name="actual1792_full_shared (main 2d811aafb)", pairs_per_layer_die=1792, stages=var["full_shared"]["stages"],
+                 bf_rate="half", AR_tok_s=comps["actual1792_full_shared"]["AR_tok_s"], MTP_tok_s=comps["actual1792_full_shared"]["MTP_tok_s"],
+                 basis="priced-candidate rate upper bound"),
+            dict(name="option_B_2304 (codex/restore-bf-pairs 505a9b484, 'DS ADOPT')", pairs_per_layer_die=BFB["pairs"], stages=BFB["stages"],
+                 bf_rate="full", AR_tok_s=BFB["AR"], MTP_tok_s=BFB["MTP"], basis="measured exact field; wire estimated; not routed"),
+            dict(name="option_A_2048 (f198.72)", pairs_per_layer_die=2048, stages=BFA["stages"], bf_rate="full",
+                 AR_tok_s=BFA["AR"], MTP_tok_s=BFA["MTP"], basis="measured exact field; unadopted")],
+        why=("main records the owner decision 'BF half-rate + more BF pairs' with a 1792-pair mapping at 98/120 stages; option B "
+             "keeps full-rate BF at 2,304 pairs and 85 stages. They cannot both be the S81 baseline; their AR differs by "
+             "%.0f-%.0f tok/s" % (BFB["AR"] - comps["actual1792_full_shared"]["AR_tok_s"], BFB["AR"] - comps["actual1792_half_dedicated"]["AR_tok_s"])))
     return dict(context="DeepSeek-V4.1 1M, S81 array, TP4", tau=tau, lines=lines, compositions=comps, gates=gates,
                 mapping_1792=var, physical_status="not closed; numerical component PASS is not physical adoption")
 

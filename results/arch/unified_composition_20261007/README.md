@@ -18,6 +18,7 @@ Every line of the three targets carries a status, its effect on the single-user 
 | DS ROM 1M | published (85 stages, full-rate BF) | 1,596.7 | 4,702.0 | closure-cost ledger TOTAL |
 | DS ROM 1M | actual 1792, BF-dedicated (120 stages, 580 dies) | ≤ 1,305.0 | ≤ 3,993.3 | +35 stage hops and the BF16 half-rate doubling. Field phases are unmeasured. |
 | DS ROM 1M | actual 1792, shared (98 stages, 492 dies) | ≤ 1,337.3 | ≤ 4,065.7 | Upper bound: the q phases on BF pairs also halve. |
+| DS ROM 1M | option B, 2,304 pairs mixed slots (85 stages, 440 dies), full-rate BF | 1,754.3 | 5,098.3 | **measured** bit-exact field (18,288 regions); Codex label "DS ADOPT" (505a9b484, `codex/restore-bf-pairs-20261007`). Adoption is pending central integration and it is not on main. Wire is estimated and the geometry is not routed. It **conflicts** with the 1792 mapping: see `geometry_conflict`. |
 | HBM DS 1M | three_machine row (stale) | 1,948.8 | 3,944.2 | no die closure costs |
 | HBM DS 1M | r23 closure headline | 1,750.9 | 3,626.1 | light FEC, no lever credit |
 | HBM DS 1M | closure + full FEC, no lever credit | 1,656.7 | 3,526.2 | includes the priced true-credit and protected-SRAM costs |
