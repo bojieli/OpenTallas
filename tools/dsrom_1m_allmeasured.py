@@ -356,14 +356,18 @@ def apply_add_cycles(P, lever_dir):
             key = ad["nodes"]
             names = suffix_nodes(P.g, key[2:]) if key.startswith("*.") else [key]
             assert names and all(n in P.g.nodes for n in names), (f, key)
+            if r.get("items") is not None and ad.get("item") not in r["items"]:
+                continue                 # closure-cost ledger: only the enabled items
             for n in names:
                 nd = P.g.nodes[n]
                 cur = nd["issue"] + nd["depth"] + nd["ctrl"]
                 row = P.rows.get(n, {})
-                P.put(n, cur + ad["cycles"] / ad.get("clk_hz", CLK), f"{row.get('source', 'model')} + {r['lever']}: "
-                      f"{ad['cycles']} cyc ({ad['source']})", cls=row.get("cls", "measured"),
+                add = ad.get("cycles", 0) / ad.get("clk_hz", CLK) + ad.get("frac", 0.0) * cur
+                P.put(n, cur + add, f"{row.get('source', 'model')} + {r['lever']}: "
+                      f"{ad.get('cycles', 0)} cyc / x{1 + ad.get('frac', 0.0):.4f} ({ad['source']})", cls=row.get("cls", "measured"),
                       stream=nd.get("stream", False))
-            out.append(dict(lever=r["lever"], nodes=key, count=len(names), cycles=ad["cycles"]))
+            out.append(dict(lever=r["lever"], item=ad.get("item"), nodes=key, count=len(names),
+                            cycles=ad.get("cycles", 0), frac=ad.get("frac", 0.0)))
     return out
 
 
