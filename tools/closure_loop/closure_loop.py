@@ -40,7 +40,7 @@ import os
 import re
 import shlex
 import math
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 from functools import wraps
 import shutil
 import threading
@@ -51,6 +51,8 @@ import sys
 import time
 import traceback
 from pathlib import Path
+
+from ssh_transport import command as transport_command
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
@@ -121,10 +123,10 @@ def ssh(host, script, timeout=120, check=False, input=None):
         if input is None:
             return sh(["bash", "-s"], timeout=timeout, check=check, input=script)
         return sh(["bash", "-c", script], timeout=timeout, check=check, input=input)
-    base = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ServerAliveInterval=30", host]
-    if input is None:
-        return sh(base + ["bash -s"], timeout=timeout, check=check, input=script)
-    return sh(base + [script], timeout=timeout, check=check, input=input)
+    with transport_command(host) as base:
+        if input is None:
+            return sh(base + ["bash -s"], timeout=timeout, check=check, input=script)
+        return sh(base + [script], timeout=timeout, check=check, input=input)
 
 
 def is_local(host):
@@ -862,15 +864,20 @@ def sync_source(j):
     run = j["run"]
     ssh(host, f"set -e; mkdir -p {run}/src {run}/cl; test ! -e {run}/src/SOURCE_COMMIT || "
               f"grep -q {full} {run}/src/SOURCE_COMMIT", timeout=60, check=True)
-    arch = subprocess.Popen(["git", "-C", str(REPO), "archive", "--format=tar", full, "--", *paths],
-                            stdout=subprocess.PIPE)
-    gz = subprocess.Popen(["gzip", "-1"], stdin=arch.stdout, stdout=subprocess.PIPE)
-    arch.stdout.close()
-    put = subprocess.run((["bash", "-c"] if is_local(host) else ["ssh", "-o", "BatchMode=yes", host])
-                         + [f"tar -xzf - -C {run}/src"], stdin=gz.stdout,
-                         capture_output=True, text=True, timeout=1800)
-    gz.wait(); arch.wait()
-    if put.returncode or arch.returncode:
+    with transport_command(host) as base:
+        arch = subprocess.Popen(["git", "-C", str(REPO), "archive", "--format=tar", full, "--", *paths],
+                                stdout=subprocess.PIPE)
+        gz = subprocess.Popen(["gzip", "-1"], stdin=arch.stdout, stdout=subprocess.PIPE)
+        arch.stdout.close()
+        try:
+            put = subprocess.run(base + [f"tar -xzf - -C {run}/src"], stdin=gz.stdout,
+                                 capture_output=True, text=True, timeout=1800)
+        finally:
+            # Release our producer pipes even if transport fails; never touches a remote job.
+            gz.stdout.close()
+            gz.wait()
+            arch.wait()
+    if put.returncode or arch.returncode or gz.returncode:
         raise RuntimeError(f"source sync failed: {put.stderr[-800:]}")
     ship_helpers(host, run)
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
@@ -923,9 +930,9 @@ def ship_helpers(host, run):
         with tarfile.open(fileobj=io.BytesIO(buf.getvalue())) as tf:
             tf.extractall(f"{run}/cl")
         return
-    r = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", host,
-                        f"mkdir -p {run}/cl && tar -xf - -C {run}/cl"], input=buf.getvalue(), capture_output=True,
-                       timeout=120)
+    with transport_command(host) as base:
+        r = subprocess.run(base + [f"mkdir -p {run}/cl && tar -xf - -C {run}/cl"],
+                           input=buf.getvalue(), capture_output=True, timeout=120)
     if r.returncode:
         raise RuntimeError(f"command failed rc={r.returncode}: ship_helpers {host}:{run}/cl {r.stderr[-300:]!r}")
 
@@ -1162,11 +1169,13 @@ def publish(j, metrics):
             isdir = ssh(j["host"], f"test -d {shlex.quote(src)}", timeout=30).returncode == 0
             dst.parent.mkdir(parents=True, exist_ok=True)
             excl = sum((["--exclude", x] for x in r.get("exclude", [])), [])
-            if isdir:
-                dst.mkdir(parents=True, exist_ok=True)
-                sh(["rsync", "-a", *excl, rpath(j['host'], src.rstrip('/') + '/'), f"{dst}/"], timeout=1800, check=True)
-            else:
-                sh(["rsync", "-a", rpath(j['host'], src), str(dst)], timeout=1800, check=True)
+            with transport_command(j['host']) as base:
+                remote_shell = [] if is_local(j['host']) else ["-e", shlex.join(base[:-1])]
+                if isdir:
+                    dst.mkdir(parents=True, exist_ok=True)
+                    sh(["rsync", "-a", *remote_shell, *excl, rpath(j['host'], src.rstrip('/') + '/'), f"{dst}/"], timeout=1800, check=True)
+                else:
+                    sh(["rsync", "-a", *remote_shell, rpath(j['host'], src), str(dst)], timeout=1800, check=True)
         (cwt / rec_dir).mkdir(parents=True, exist_ok=True)
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
                        owner=spec["owner"], source_branch=branch, source_commit=j["commit_full"],
@@ -2086,6 +2095,8 @@ def migrate_checkpoint(j, dest):
     the snapshot's run_abi3_physical.py for resume (resume_patch.py), dry-run make to see which stages re-run, and
     relaunch the route stage there with OT_CL_RESUME=1: ORFS reuses every completed stage, only the in-flight one is lost."""
     src = j["host"]
+    if src == dest or (is_local(src) and is_local(dest)):
+        raise ValueError("checkpoint migration requires a different host")
     if host_cfg(src)["base"] != host_cfg(dest)["base"]:
         raise ValueError(f"checkpoint move needs the same run root ({host_cfg(src)['base']} vs {host_cfg(dest)['base']})")
     run = j["run"]
@@ -2101,8 +2112,13 @@ def migrate_checkpoint(j, dest):
         time.sleep(10)
     t0 = time.time()
     ssh(dest, f"mkdir -p {run}", timeout=60, check=True)
-    p = subprocess.run(f"ssh -o BatchMode=yes {src} 'tar -C {run} -cf - .' | ssh -o BatchMode=yes {dest} 'tar -C {run} -xf -'",
-                       shell=True, capture_output=True, text=True, timeout=7200)
+    with ExitStack() as stack:
+        # Stable order avoids opposite-direction migrations deadlocking channel leases.
+        commands = {h: stack.enter_context(transport_command(h)) for h in sorted({src, dest})}
+        read = shlex.join(commands[src] + [f"tar -C {shlex.quote(run)} -cf - ."])
+        write = shlex.join(commands[dest] + [f"tar -C {shlex.quote(run)} -xf -"])
+        p = subprocess.run(["bash", "-o", "pipefail", "-c", f"{read} | {write}"],
+                           capture_output=True, text=True, timeout=7200)
     if p.returncode:
         raise RuntimeError(f"checkpoint transfer failed: {p.stderr[-500:]}")
     ship_helpers(dest, run)
