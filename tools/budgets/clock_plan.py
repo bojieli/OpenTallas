@@ -126,7 +126,15 @@ def merge_regions(d, regs, max_merge):
     return {(r if '+' not in r else r): l for r, l in regs.items()}
 
 
-FAMILY_ROOTS = [True]     # HBM: sibling regions share their family root point (see clock_nets)
+FAMILY_ROOTS = [True]
+# HBM VM early branch (OWNER 2026-10-07, VM-split fallback): the VM region's trunk tap arrives EARLY_PS earlier than the
+# tree's padded root instant; every HUB-V sink gets that much die pad (the VM tiles' deeper trees use it, the face
+# stations take it as die-side delay).  Applied when the region root pad covers it.
+EARLY_PS = {'clk_stream:HUB-V': 300.0}
+
+
+def early_ps(r):
+    return EARLY_PS.get(r, 0.0)     # HBM: sibling regions share their family root point (see clock_nets)
 
 
 def clock_nets(d, trees, groups, group):
@@ -340,6 +348,19 @@ class Forest:
             for t, (a1, a2) in rm.items():
                 tt = t[len('REGION:'):].split(':')[0]
                 pad[t[len('REGION:'):]] = (tree_max[tt][0] - a1, tree_max[tt][1] - a2)
+        self.tree_lift = defaultdict(float)
+        for r_ in list(pad):         # early branches: the trunk taps these regions EARLY_PS[r] earlier (their sinks
+            e_ = early_ps(r_)          # get that much die pad for deeper block trees; flop alignment unchanged)
+            if e_:
+                p1_, p2_ = pad[r_]
+                lift = max(0.0, e_ - p1_)       # the root pad does not cover it: every OTHER region of the tree is
+                tt_ = r_.split(':')[0]          # padded `lift` later (the tree's flop instant moves by `lift`)
+                if lift:
+                    for o_ in list(pad):
+                        if o_ != r_ and o_.split(':')[0] == tt_:
+                            pad[o_] = (pad[o_][0] + lift, pad[o_][1] + lift * 0.53)
+                    self.tree_lift[tt_] += lift
+                pad[r_] = (max(0.0, p1_ - e_), max(0.0, p2_ - e_ * 0.53))
         self.pad = pad
         if 'htop' in self.cases:
             sj, par, ass, aff = self.cases['htop']
@@ -420,6 +441,7 @@ def record(a):
         ib = max(intra.get(r, [0.0]))
         pin = stats([x['pin_ss'] for x in l if 'pin_ss' in x])
         out_regions[r] = dict(tree=l[0]['tree'], sinks=len(l), insertion_ss=ss, insertion_ff=ff, region_tree_ss=pin,
+                              early_branch_ps=early_ps(r),
                               planned_root_pad_ss_ps=round(F.pad.get(r, (0.0, 0.0))[0], 1),
                               target_entry_insertion_ss_ps=round(ss['mean'], -1), target_entry_insertion_ff_ps=round(ff['mean'], -1),
                               target_tolerance_ps=round((ss['max'] - ss['min']) / 2, 1),

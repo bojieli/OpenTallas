@@ -380,7 +380,7 @@ def cmd_index(a):
         rows[v['master']] = v
     rows.update(receipt_views())
     need = sorted({it.master for it in m['insts'] if it.master.startswith('hfd_')})
-    idx = dict(schema='opentallas.hbm_die_views_index.v1', die='HBM accelerator DS die', round=getattr(a, 'variant', '') or 'r19b',
+    idx = dict(schema='opentallas.hbm_die_views_index.v1', die='HBM accelerator DS die', round=getattr(a, 'variant', '') or H.FINAL_ROUND,
                generator_sha256=sha(ROOT / 'tools/hbm_accel_die_fp.py'),
                status_values=['closed', 'closed-below-margin', 'interim-not-closed', 'reservation', 'missing'],
                masters={}, counts=defaultdict(int))
