@@ -12,5 +12,13 @@
     "wrong-top rejection",
     "duplicate synth rejection",
     "30-file pinned source manifest verified"
-  ]
+  ],
+  "ORFS_production_recipe": {
+    "preparation": "PASS on harvested production config/Tcl and immutable pinned source",
+    "source_files_validated": 30,
+    "ORFS_RTL_LEF_lib_inputs_validated": 23,
+    "constraint_copy": "byte-identical",
+    "negative_changed_constraint": "rejected before output directory creation",
+    "fullshape_mapping": "not yet executed"
+  }
 }

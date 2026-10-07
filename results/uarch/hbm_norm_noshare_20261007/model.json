@@ -171,6 +171,25 @@
     "mapped_clock_sinks": null
   },
   "composed_engine_cycles": 323,
+  "production_flow": {
+    "kind": "ORFS container synth.tcl",
+    "change": "Append -noshare to SYNTH_ARGS in a new private config.mk",
+    "input": "Same immutable cc383b8fc source, constraints, image digest and synthesis Tcl",
+    "correction": "The initial recipe inferred a host synth.ys; live inspection found ORFS Tcl instead",
+    "observation": {
+      "observer": "fleet_live",
+      "process": 4108792,
+      "SHARE_elapsed_minutes": 103,
+      "RSS_GB": 18.6,
+      "observation_is_peak": false
+    },
+    "reservation": {
+      "GB": 80,
+      "threads": 16,
+      "basis": "Retain original MEM1 admission reservation; 18.6 GB current RSS is not a peak",
+      "measured_headroom_required": true
+    }
+  },
   "area_policy": "No assumed area benefit; measure complete mapped area and refit slot before physical admission",
   "synthesis_policy": "Preserve all existing progressing jobs; independent no-SHARE output directory",
   "qualification": {
