@@ -159,7 +159,18 @@ foreach net [$block getNets] {
 puts "OT_ECO reroute: $ninst new/moved/resized instances, $nstrip wires stripped"
 set ra [expr {[envd OT_RES_AWARE 1] ? "-resistance_aware" : ""}]
 if {$guides} { global_route -end_incremental -allow_congestion {*}$ra } else { global_route -allow_congestion -congestion_iterations 30 {*}$ra }
-detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
+if {[catch {detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1} err]} {
+  # a db whose guides came from an earlier ECO pass can carry a guide DRT rejects (capt_x pass 2: DRT-0218 'Guide is
+  # not connected to design'): fall back to a fresh resistance-aware global route for this pass
+  if {!$guides} { error "OT_ECO detailed_route failed: $err" }
+  puts "OT_ECO guide re-route failed ($err): fresh global route"
+  foreach net [$block getNets] {
+    if {[$net getSigType] in {POWER GROUND}} continue
+    set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w }
+  }
+  global_route -allow_congestion -congestion_iterations 30 {*}$ra
+  detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
+}
 filler_placement {FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R}
 check_placement -verbose
 extract_parasitics -ext_model_file $P/rcx_patterns.rules
