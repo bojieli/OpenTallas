@@ -1,0 +1,14 @@
+hold_corners_patch: upgraded /srv/opentallas-scratch/claude/closure-loop/qwen_slab_m3_m8_cc0db65b2/src/tools/run_abi3_physical.py
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/closure-loop/qwen_slab_m3_m8_cc0db65b2/src/tools/qwen_slab_m3_takeover.py", line 11, in <module>
+    from uarch_model import qwen_slab_m3_closure_model
+  File "/srv/opentallas-scratch/claude/closure-loop/qwen_slab_m3_m8_cc0db65b2/src/tools/uarch_model.py", line 36, in <module>
+    import arch_budget_v41 as A  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/closure-loop/qwen_slab_m3_m8_cc0db65b2/src/tools/arch_budget_v41.py", line 64, in <module>
+    import decode_critical_path as D  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/closure-loop/qwen_slab_m3_m8_cc0db65b2/src/tools/decode_critical_path.py", line 64, in <module>
+    from opentallas.critical_path import PackageLevel  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'opentallas'
