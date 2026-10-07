@@ -5,6 +5,7 @@
 // pins; vf is its forwarded clock (ck through the kept forwarding inverter: the first station captures on negedge vf =
 // posedge ck, one full cycle).  Function and word formats: ot_s81ph_sel.sv.
 module dsfd_bk_selector #(
+    parameter integer SEARCH_PIPE = 0,
     parameter integer STG  = 6,
     parameter integer PACE = 2,
 `ifdef OT_S81PH_SEL_FLAT
@@ -29,7 +30,7 @@ module dsfd_bk_selector #(
     output wire [0:0] vf
 );
     generate if (TILED != 0) begin : g_t
-        ot_s81ph_sel_t #(.SAFE(SAFE), .LSTG(LSTG), .PACE(PACE)) u_t (.ck(ck[0]), .rst(rst[0]), .lanes({iNE, iNW, iSE, iSW}),
+        ot_s81ph_sel_t #(.SEARCH_PIPE(SEARCH_PIPE), .SAFE(SAFE), .LSTG(LSTG), .PACE(PACE)) u_t (.ck(ck[0]), .rst(rst[0]), .lanes({iNE, iNW, iSE, iSW}),
             .vd(vd), .vf(vf[0]));
     end else begin : g_v
         reg [1:0] rst_s;
