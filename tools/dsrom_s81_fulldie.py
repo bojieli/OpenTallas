@@ -4673,7 +4673,7 @@ def main(argv=None):
                          indent=1, default=str))
         return 0
     if a.mode == 'plan':
-        out = ROOT / OUT / ('' if a.die == 'layer' else 'head_die')
+        out = ROOT / OUT / {'layer': '', 'layer1': 'layer1_die'}.get(a.die, 'head_die')   # layer1 no longer overwrites head
         out.mkdir(parents=True, exist_ok=True)
         rec = plan_record(m)
         rec['legality_python'] = legality(m)
