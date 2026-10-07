@@ -1,0 +1,31 @@
+{
+  "source": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef",
+  "sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+  "image": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+  "layers": {
+    "M4": {
+      "direction": "HORIZONTAL",
+      "pitch_um": [
+        0.048
+      ]
+    },
+    "M5": {
+      "direction": "VERTICAL",
+      "pitch_um": [
+        0.048
+      ]
+    },
+    "M6": {
+      "direction": "HORIZONTAL",
+      "pitch_um": [
+        0.064
+      ]
+    },
+    "M7": {
+      "direction": "VERTICAL",
+      "pitch_um": [
+        0.064
+      ]
+    }
+  }
+}
