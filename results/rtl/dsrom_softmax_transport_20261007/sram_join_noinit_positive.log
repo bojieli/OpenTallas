@@ -1,0 +1,5 @@
+BANK_BURST pv=0 vectors=40 first=5 last=44 corrected=0 SS_clkq_ps=455.320549
+BANK_BURST pv=1 vectors=32 first=5 last=36 corrected=1 SS_clkq_ps=455.320549
+BANK_BURST pv=0 vectors=8 first=5 last=12 corrected=0 SS_clkq_ps=455.320549
+BANK_BURST pv=1 vectors=32 first=5 last=36 corrected=0 SS_clkq_ps=455.320549
+PASS actual36macros vectors=112 payload_bytes=114688 score40/PV32/score8/PV32 II1; realbank single/UE faults and reset identity
