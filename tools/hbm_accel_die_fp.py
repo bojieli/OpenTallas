@@ -598,8 +598,22 @@ def ck_centre(mst_, sp_):
     M8 (the die owns M8 / M9).  rst stays on its edge."""
     if mst_.name not in CK_CENTRE or 'ck' not in sp_:
         return
-    k = round((mst_.w / 2 - 5.4 - 0.032) / 10.8)
-    cx = round(5.4 + 10.8 * k + 0.032, 4)
+    # r16 a_real (measured): the pin must sit on the M7 track lattice (x = 0.016 mod 0.064, block and die alike) or no
+    # origin is legal with the M5 pins (ot_mts); the instance origins of these masters are packed on x = 0 mod 1.728
+    # (lcm of site 0.054, M5 0.048, M7 0.064).  Among those tracks: the one nearest the centre that lies mid-way between
+    # the block's 10.8 um M7 PG stripes (VDD x = 1.0, VSS x = 6.4 mod 10.8): x mod 10.8 within 3.7 +- 0.4 or 9.1 +- 0.4.
+    best = None
+    k0 = round((mst_.w / 2 - 0.016) / 0.064)
+    for d in range(0, 400):
+        for kk in (k0 + d, k0 - d):
+            x = 0.016 + 0.064 * kk
+            r = x % 10.8
+            if abs(r - 3.7) <= 0.4 or abs(r - 9.1) <= 0.4:
+                best = x
+                break
+        if best is not None:
+            break
+    cx = round(best, 4)
     cy = round(round(mst_.h / 2 / 0.048) * 0.048, 4)
     sp_['ck'] = ('area', 'M7', cx, cy, 0.064, 0.288)
 
@@ -663,6 +677,8 @@ def apply_splits(m, specs, lattice=None):
             assert abs(it.h - Hp) < 0.01, (parent, it.h, Hp)
             names = {}
             mx = it.orient in ('MX', 'R180')
+            if V_ck and any(bn in CK_CENTRE for bn, _ in bands):    # r18: band origins on x = 0 mod 1.728 (M7 ck pin)
+                it.x = math.ceil(round(it.x * 1000) / 1728) * 1.728
             lat = lattice.get(parent, {})
             top = None
             for bn, b in (bands[::-1] if mx else bands):     # bottom-up in die y
@@ -791,7 +807,8 @@ def apply_splits_x(m, rel):
             nom = round((it.x + x0) * 1000)
             lo = nom if end is None else max(nom, end)
             xd = lo
-            while xd % 54 or (xd - nom) % 48:
+            m64 = 64 if ((m.get('variant') or {}).get('ck_centre') and bn in CK_CENTRE) else 1
+            while xd % 54 or (xd - nom) % 48 or xd % m64:
                 xd += 6
             end = xd + round(w * 1000)
             xx = xd / 1000.0
