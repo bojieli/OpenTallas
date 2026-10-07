@@ -637,6 +637,9 @@ def launch_stage(j, st, cmd):
             ("BUDGET_SDC", "budget_route.sdc"), ("BUDGET_SDC_SIGNOFF", "budget_signoff.sdc"), ("BUDGET_SDC_FF", "budget_ff.sdc"),
             ("BUDGET_SHEET", "budget_sheet.json")))
         env += f"export BUDGET_LINT_SS={j['budget']['insertion']['ss']}\nexport BUDGET_LINT_FF={j['budget']['insertion']['ff']}\n"
+    # a job without calibrate still gets a {CL}/calib.json (records copy it)
+    if st["kind"] != "calibrate":
+        env += f"[ -f {j['run']}/cl/calib.json ] || echo '{{\"calibrate\": \"disabled\"}}' > {j['run']}/cl/calib.json\n"
     # every stage after calibrate sees the measured insertion (CK_SS_MEAN/MIN/MAX, CK_FF_*; *_ALL_* = all registers)
     env += f"[ -f {j['run']}/cl/calib.env ] && {{ set -a; . {j['run']}/cl/calib.env; set +a; }}\n" \
         if st["kind"] != "calibrate" else ""
@@ -1130,6 +1133,8 @@ def do_commit(j):
 FIXED_SIGNATURES = [
     # (fix id, stage kind, regex over the crash log tail) -- a job that died on one of these is re-queued ONCE
     ("label-sanitise-20261006", "calibrate", re.compile(r"nickname-tag|no ORFS base")),
+    ("calib-json-placeholder-20261006", "collect", re.compile(r"cl/calib\.json'?: No such file")),
+    ("calib-json-placeholder-20261006", "export", re.compile(r"cl/calib\.json'?: No such file")),
 ]
 
 
