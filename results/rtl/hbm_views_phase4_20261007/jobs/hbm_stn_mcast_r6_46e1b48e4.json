@@ -1,0 +1,185 @@
+{
+  "name": "hbm_stn_mcast_r6_46e1b48e4",
+  "spec": {
+    "name": "hbm_stn_mcast_r6_46e1b48e4",
+    "block": "hfd_mcast_r6",
+    "owner": "Claude:hbm-views",
+    "purpose": "hfd_mcast_r6 fail-fast structural fix #2 (views agent 2026-10-07): tap outputs re-captured at the face (pin-stages 2, +1 cycle on r6 taps) on top of RC=1 forwarded slices, PLREG/RSPLIT; 337a5afcb was SS -112.8 (tap pin flop -> t0/t1, 11 levels), DRC 4 (E-corner fclk pins); the r7 recipe closed +75/+29 with the same pins and keepout",
+    "hosts": [
+      "ot-epyc3",
+      "ot-epyc1tb",
+      "ot-epyc2"
+    ],
+    "threads": 6,
+    "peak_ram_gb": 20,
+    "source": {
+      "branch": "claude/hbm-abstracts-stn-20261006",
+      "commit": "46e1b48e4e4e87dee868243465e2433a1e21929f",
+      "extra_paths": [
+        "results/uarch/hbm_current_target_portmap_20261005",
+        "results/rtl/hbm_accel_die_floorplan_20261005",
+        "results/rtl/die_top_lint_20261006",
+        "results/rtl/dshbm_matched_reference_20261005",
+        "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+      ]
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "bench_mcast_exact_and_negatives",
+          "cmd": "bash physical/hbm_accel_die_views/stations/bench/run_mcast_bench.sh $PWD/physical/hbm_accel_die_views/stations hfd_mcast_r6 $PWD {RUN}/bench",
+          "expect": "pass",
+          "pass_regex": "MCAST_BENCH PASS",
+          "threads": 4,
+          "peak_ram_gb": 12
+        },
+        {
+          "name": "bench_neg_generator_mutant",
+          "cmd": "grep -q '^neg rc=1' {RUN}/bench/hfd_mcast_r6/result.txt && echo NEG_DETECTED && exit 1",
+          "expect": "fail",
+          "fail_regex": "NEG_DETECTED",
+          "threads": 1,
+          "peak_ram_gb": 1
+        }
+      ],
+      "calibrate": {
+        "cmd": "MARGIN=1 CKINS=334 CKFF=\"167 183\" HM=0.035 CORES=6 NEED=16 bash physical/hbm_accel_die_views/stations/bench/stn_route.sh {SRC} {RUN}/routes {LABEL}${CL_LABEL_SUFFIX} hfd_mcast_r6 0.40 --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.25 --orfs-var OT_PK_HALO=0 --orfs-var OT_PK_FACES=E $CL_STOP_AFTER",
+        "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+        "clock": "ck",
+        "threads": 6,
+        "peak_ram_gb": 20
+      },
+      "route": {
+        "cmd": "MARGIN=1 CKINS=$CK_SS_MAX CKFF=\"$CK_FF_MIN $CK_FF_MAX\" HM=0.035 CORES=6 NEED=16 bash physical/hbm_accel_die_views/stations/bench/stn_route.sh {SRC} {RUN}/routes {LABEL}${CL_LABEL_SUFFIX} hfd_mcast_r6 0.40 --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.25 --orfs-var OT_PK_HALO=0 --orfs-var OT_PK_FACES=E",
+        "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^signoff_corner_rc=0' {RUN}/routes/{NAME}/exit",
+        "logs": [
+          "{RUN}/routes/{NAME}/run.log"
+        ]
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_mcast_r6.lef {RUN}/routes/{NAME}/view/hfd_mcast_r6_ss.lib {RUN}/routes/{NAME}/view/hfd_mcast_r6_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [
+        {
+          "name": "lef_check_MATCH",
+          "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+        },
+        {
+          "name": "die_pin_access",
+          "cmd": "bash physical/hbm_accel_die_views/stations/bench/stn_pa_check.sh {RUN}/routes/{NAME}/view/hfd_mcast_r6.lef hfd_mcast_r6 {RUN}/pa"
+        }
+      ],
+      "post_sdc": []
+    },
+    "record": [
+      {
+        "from": "{RUN}/record",
+        "to": "physical/hbm_accel_die_views/stations/hfd_mcast_r6/route_cl"
+      }
+    ],
+    "cycles_added": 1,
+    "merge_target": "claude/hbm-abstracts-20261006",
+    "budget": {
+      "enabled": false,
+      "reason": "station margin SDC recipe (stn_margin_sdc.py: forwarded-clock arcs + meso crossing bounds); ck IO from this job's calibrate (CKINS = CK_SS_MAX, CKFF = CK_FF_MIN/MAX)"
+    },
+    "cycles_note": "+1 forwarded cycle on every b slice per crossing (RC=1, from 337a5afcb) AND +1 cycle on every r6 tap output (pin-stages 2); bound <= 571 x-load phases = 571 cycles = 0.48 us = 0.09% AR for the tap stage"
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/hbm_stn_mcast_r6_46e1b48e4.json",
+  "created": "2026-10-07T01:27:02-07:00",
+  "status": "RUNNING",
+  "stage_idx": 3,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {
+    "bench_bench_mcast_exact_and_negatives": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "pos rc=0 plreg_mismatch=0\nneg rc=1 plreg_mismatch=0\nneg_pl rc=0 plreg_mismatch=1980\nneg_rs rc=1 plreg_mismatch=0\nb[2063]<-a[2063] 2 0\nb[2064]<-a[2064] 2 0\nb[2065]<-a[2065] 2 0\nb[2066]<-a[2066] 2 0\nb[2067]<-a[2067] 2 0\nck<-a[2063] 5 0\nck<-a[2064] 5 0\nck<-a[2065] 6 0\nck<-a[2066] 6 0\nck<-a[2067] 6 0\nMCAST_BENCH PASS\n"
+    },
+    "bench_bench_neg_generator_mutant": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "NEG_DETECTED\n"
+    }
+  },
+  "hosts_tried": [
+    "ot-agidock128"
+  ],
+  "events": [
+    "2026-10-07T01:27:02-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_stn_mcast_r6_46e1b48e4.json",
+    "2026-10-07T01:28:55-07:00 source 46e1b48e4e4e synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r6_46e1b48e4/src",
+    "2026-10-07T01:32:05-07:00 launched bench_bench_mcast_exact_and_negatives (attempt 1) on ot-agidock128",
+    "2026-10-07T01:33:22-07:00 bench_bench_mcast_exact_and_negatives PASS (rc=0)",
+    "2026-10-07T01:36:21-07:00 launched bench_bench_neg_generator_mutant (attempt 1) on ot-agidock128",
+    "2026-10-07T01:37:51-07:00 bench_bench_neg_generator_mutant FAIL as expected (rc=1)",
+    "2026-10-07T01:40:27-07:00 launched calibrate (attempt 1) on ot-agidock128",
+    "2026-10-07T01:51:02-07:00 calibrate done (rc=0)",
+    "2026-10-07T01:51:02-07:00 calibrated insertion CK_SS_MEAN=544 CK_SS_MIN=531 CK_SS_MAX=563 CK_FF_MEAN=362 CK_FF_MIN=351 CK_FF_MAX=378",
+    "2026-10-07T01:52:45-07:00 launched route (attempt 1) on ot-agidock128"
+  ],
+  "updated": "2026-10-07T03:50:43-07:00",
+  "wait": null,
+  "host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r6_46e1b48e4",
+  "commit_full": "46e1b48e4e4e87dee868243465e2433a1e21929f",
+  "stage_key": "route",
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-07T01:52:45-07:00",
+  "unreachable": 0,
+  "calibration": {
+    "ss": {
+      "boundary": {
+        "n": 2063,
+        "mean": 543.5,
+        "min": 531.3,
+        "max": 563.3
+      },
+      "all": {
+        "n": 8576,
+        "mean": 542.9,
+        "min": 530.8,
+        "max": 563.3
+      },
+      "errors": []
+    },
+    "ff": {
+      "boundary": {
+        "n": 2063,
+        "mean": 361.8,
+        "min": 351.1,
+        "max": 378.3
+      },
+      "all": {
+        "n": 8576,
+        "mean": 361.4,
+        "min": 350.8,
+        "max": 378.3
+      },
+      "errors": []
+    },
+    "env": {
+      "CK_SS_MEAN": 544,
+      "CK_SS_ALL_MEAN": 543,
+      "CK_SS_MIN": 531,
+      "CK_SS_ALL_MIN": 531,
+      "CK_SS_MAX": 563,
+      "CK_SS_ALL_MAX": 563,
+      "CK_FF_MEAN": 362,
+      "CK_FF_ALL_MEAN": 361,
+      "CK_FF_MIN": 351,
+      "CK_FF_ALL_MIN": 351,
+      "CK_FF_MAX": 378,
+      "CK_FF_ALL_MAX": 378
+    },
+    "db": "4_1_cts.odb",
+    "clock": "ck",
+    "parasitics": "placement-estimated"
+  }
+}

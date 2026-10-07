@@ -1,0 +1,220 @@
+{
+  "name": "hbm_vm_nw_683550387",
+  "spec": {
+    "name": "hbm_vm_nw_683550387",
+    "block": "hfd_vm_nw",
+    "owner": "Claude:hbm-views",
+    "purpose": "hfd_vm_nw: r19 VM quadrant tile (coordinator split ports f70cc76e9), RTL tiles/make_vm_tiles.py; budget sheet hfd_vm_nw",
+    "hosts": [
+      "ot-epyc3",
+      "ot-epyc1tb",
+      "ot-epyc2"
+    ],
+    "threads": 12,
+    "peak_ram_gb": 40,
+    "source": {
+      "branch": "claude/hbm-abstracts-spine-20261006",
+      "commit": "683550387d9e35dc7b7d774823d7fd38752a162b",
+      "extra_paths": [
+        "results/uarch/hbm_current_target_portmap_20261005",
+        "results/rtl/hbm_accel_die_floorplan_20261005",
+        "results/rtl/die_top_lint_20261006",
+        "results/rtl/dshbm_matched_reference_20261005",
+        "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+      ]
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "vm_tiles_exact",
+          "cmd": "bash physical/hbm_accel_die_views/vm/tiles/run_vm_tiles.sh {RUN}/bench > {RUN}/vm_bench.log 2>&1; tail -30 {RUN}/vm_bench.log; grep -q 'VM_TILES_BENCH PASS' {RUN}/vm_bench.log",
+          "expect": "pass",
+          "pass_regex": "VM_TILES_BENCH PASS",
+          "threads": 16,
+          "peak_ram_gb": 24
+        },
+        {
+          "name": "vm_tiles_neg_xbus",
+          "cmd": "grep -q VM_TILES_NEG_DETECTED {RUN}/vm_bench.log && echo VM_XBUS_MUTANT_FAILS && exit 1; exit 0",
+          "expect": "fail",
+          "fail_regex": "VM_XBUS_MUTANT_FAILS",
+          "threads": 1,
+          "peak_ram_gb": 1
+        }
+      ],
+      "calibrate": {
+        "cmd": "cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"12\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" FCP=\"3\" FCF=\"physical/hbm_accel_die_views/vm/tiles/hfd_vm_nw_face_stages.tcl\" PDN=\"physical/hbm_accel_die_views/vm/pdn_vm.tcl\" HALO=\"2 5\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/common/ot_fwd_link_stage.sv physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_slice.sv\" MACROS=\"ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_vm_nw physical/hbm_accel_die_views/vm/tiles/hfd_vm_nw.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+        "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+        "clock": "core_clk",
+        "threads": 12,
+        "peak_ram_gb": 60
+      },
+      "route": {
+        "cmd": "cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"12\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" FCP=\"3\" FCF=\"physical/hbm_accel_die_views/vm/tiles/hfd_vm_nw_face_stages.tcl\" PDN=\"physical/hbm_accel_die_views/vm/pdn_vm.tcl\" HALO=\"2 5\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/common/ot_fwd_link_stage.sv physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_slice.sv\" MACROS=\"ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_vm_nw physical/hbm_accel_die_views/vm/tiles/hfd_vm_nw.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+        "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+        "logs": [
+          "{RUN}/routes/{NAME}/run.log"
+        ]
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_vm_nw.lef {RUN}/routes/{NAME}/view/hfd_vm_nw_ss.lib {RUN}/routes/{NAME}/view/hfd_vm_nw_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [
+        {
+          "name": "lef_check_MATCH",
+          "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+        }
+      ],
+      "post_sdc": [
+        "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+        "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc"
+      ],
+      "macros": [
+        "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+      ]
+    },
+    "record": [
+      {
+        "from": "{RUN}/record",
+        "to": "physical/hbm_accel_die_views/vm/tiles/route_nw"
+      }
+    ],
+    "cycles_added": 2,
+    "merge_target": "claude/hbm-abstracts-20261006",
+    "budget": {
+      "master": "hfd_vm_nw",
+      "clock": "core_clk"
+    },
+    "cycles_note": "coordinator r19 pricing: +2 per serial x load, +2 per barrier (VM quadrant split); placeholders -2..+3 (bench mode 2)"
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/hbm_vm_nw_683550387.json",
+  "created": "2026-10-07T00:38:20-07:00",
+  "status": "NEEDS_BUDGET",
+  "stage_idx": 2,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {
+    "bench_vm_tiles_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "9:578]=0 [581:580]=clk\nqNE: [577:0]=-1 [579:578]=0 [581:580]=clk\nxSW: [2062:0]=0 [2067:2063]=clk\nxNW: [2062:0]=0 [2067:2063]=clk\nxSE: [2062:0]=0 [2067:2063]=clk\nxNE: [2062:0]=0 [2067:2063]=clk\nt_quant: [1023:0]=1\nt_router: [511:0]=2\nVM_TILES_STRUCT cycles=439 unmatched_bits=0\nphysical/hbm_accel_die_views/vm/tiles/run_vm_tiles.sh: line 12: 661289 Aborted                    (core dumped) ./neg.obj/sim > neg.log 2>&1\nVM_TILES mode=1 seed=1 events=40/0 fault=1/1 hash= DIFF\n[2968000] %Fatal: tb_vm_tiles.sv:80: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_TILES_NEG_DETECTED\nVM_TILES_BENCH PASS\n"
+    },
+    "bench_vm_tiles_neg_xbus": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "VM_XBUS_MUTANT_FAILS\n"
+    }
+  },
+  "hosts_tried": [
+    "ot-epyc1tb"
+  ],
+  "events": [
+    "2026-10-07T00:38:20-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_vm_nw_683550387.json",
+    "2026-10-07T00:40:52-07:00 source 683550387d9e synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbm_vm_nw_683550387/src",
+    "2026-10-07T00:42:50-07:00 launched bench_vm_tiles_exact (attempt 1) on ot-epyc1tb",
+    "2026-10-07T00:48:33-07:00 bench_vm_tiles_exact PASS (rc=0)",
+    "2026-10-07T00:51:51-07:00 launched bench_vm_tiles_neg_xbus (attempt 1) on ot-epyc1tb",
+    "2026-10-07T00:53:59-07:00 bench_vm_tiles_neg_xbus FAIL as expected (rc=1)",
+    "2026-10-07T00:56:06-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+    "2026-10-07T01:01:36-07:00 ot-epyc1tb unreachable while polling calibrate (will keep polling)",
+    "2026-10-07T01:47:22-07:00 calibrate done (rc=0)",
+    "2026-10-07T01:47:25-07:00 calibrated insertion CK_SS_MEAN=1234 CK_SS_MIN=1152 CK_SS_MAX=1382 CK_FF_MEAN=868 CK_FF_MIN=795 CK_FF_MAX=998",
+    "2026-10-07T01:47:25-07:00 NEEDS_BUDGET: measured SS insertion 1234 exceeds the block insertion TARGET 900 by +334 ps (sheet 900, target)"
+  ],
+  "updated": "2026-10-07T01:47:25-07:00",
+  "wait": null,
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm_nw_683550387",
+  "commit_full": "683550387d9e35dc7b7d774823d7fd38752a162b",
+  "budget": {
+    "master": "hfd_vm_nw",
+    "sheets_ref": "f2a1ade92f4cbda8e8f3f305eebc2f4b6531d41a",
+    "insertion": {
+      "target_ss": 900.0,
+      "target_ff": 594.0,
+      "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 1153.6, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+      "tolerance_ps": 100.0,
+      "ss": 900.0,
+      "ff": 594.0,
+      "ss_min": 855.0,
+      "ss_max": 990.0,
+      "ff_min": 564.3,
+      "ff_max": 653.4,
+      "grade": "target",
+      "source": "no calibration yet: the target",
+      "over_target": false
+    },
+    "entry_target_ss": {
+      "mean": 2690.7,
+      "min": 2690.7,
+      "max": 2690.7
+    },
+    "check": {
+      "measured_ss": 1234.0,
+      "ok": false,
+      "reasons": [
+        "measured SS insertion 1234 exceeds the block insertion TARGET 900 by +334 ps (sheet 900, target)"
+      ]
+    }
+  },
+  "stage_key": "calibrate",
+  "stage_tag": "calibrate.a1",
+  "stage_started": "2026-10-07T00:56:06-07:00",
+  "unreachable": 0,
+  "calibration": {
+    "ss": {
+      "boundary": {
+        "n": 23022,
+        "mean": 1234.1,
+        "min": 1151.7,
+        "max": 1381.9
+      },
+      "all": {
+        "n": 41123,
+        "mean": 1218.9,
+        "min": 1144.6,
+        "max": 1381.9
+      },
+      "errors": []
+    },
+    "ff": {
+      "boundary": {
+        "n": 23022,
+        "mean": 868.0,
+        "min": 794.8,
+        "max": 998.1
+      },
+      "all": {
+        "n": 41123,
+        "mean": 854.7,
+        "min": 789.0,
+        "max": 998.1
+      },
+      "errors": []
+    },
+    "env": {
+      "CK_SS_MEAN": 1234,
+      "CK_SS_ALL_MEAN": 1219,
+      "CK_SS_MIN": 1152,
+      "CK_SS_ALL_MIN": 1145,
+      "CK_SS_MAX": 1382,
+      "CK_SS_ALL_MAX": 1382,
+      "CK_FF_MEAN": 868,
+      "CK_FF_ALL_MEAN": 855,
+      "CK_FF_MIN": 795,
+      "CK_FF_ALL_MIN": 789,
+      "CK_FF_MAX": 998,
+      "CK_FF_ALL_MAX": 998
+    },
+    "db": "4_1_cts.odb",
+    "clock": "core_clk",
+    "parasitics": "placement-estimated"
+  },
+  "reason": "measured SS insertion 1234 exceeds the block insertion TARGET 900 by +334 ps (sheet 900, target)"
+}

@@ -1,0 +1,996 @@
+{
+  "captured_utc": "2026-10-07T10:52:18.246774+00:00",
+  "selection": "Newest-created non-cancelled job per block; monolithic VM superseded by tiles. Live jobs are not verdicts.",
+  "jobs": [
+    {
+      "block": "hfd_cmdproc_n",
+      "job": "hbm_cmdproc_n_ac6ef1af3",
+      "status": "CLOSED",
+      "stage": "commit",
+      "source_commit": "ac6ef1af33d9618ba5f61e1cacc8c19be003c568",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_cmdproc_n_ac6ef1af3",
+      "metrics": {
+        "ss_ps": 60.84,
+        "ff_ps": 19.69,
+        "drc": 0
+      },
+      "benches": {
+        "bench_rd2_transaction_exact": true,
+        "bench_rd2_neg_mutant": true
+      },
+      "reason": "CLOSED SS +60.84 / FF +19.69 ps DRC 0 | record claude/hbm-abstracts-spine-20261006 763861102 (8 files) | merged into claude/hbm-abstracts-20261006 87677e3a8",
+      "calibration": {
+        "CK_SS_MEAN": 1062,
+        "CK_SS_ALL_MEAN": 1054,
+        "CK_SS_MIN": 1005,
+        "CK_SS_ALL_MIN": 988,
+        "CK_SS_MAX": 1279,
+        "CK_SS_ALL_MAX": 1279,
+        "CK_FF_MEAN": 731,
+        "CK_FF_ALL_MEAN": 724,
+        "CK_FF_MIN": 682,
+        "CK_FF_ALL_MIN": 671,
+        "CK_FF_MAX": 903,
+        "CK_FF_ALL_MAX": 903
+      },
+      "cycles_added": 3,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_cmdproc_s",
+      "job": "hbm_cmdproc_s_ac6ef1af3",
+      "status": "NEEDS_RTL",
+      "stage": "summary",
+      "source_commit": "ac6ef1af33d9618ba5f61e1cacc8c19be003c568",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_cmdproc_s_ac6ef1af3",
+      "metrics": {
+        "ss_ps": 92.53,
+        "ff_ps": -30.47,
+        "drc": 0
+      },
+      "benches": {
+        "bench_rd2_transaction_exact": true,
+        "bench_rd2_neg_mutant": true
+      },
+      "reason": "SS 92.53 / FF -30.47 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)",
+      "calibration": {
+        "CK_SS_MEAN": 1102,
+        "CK_SS_ALL_MEAN": 1096,
+        "CK_SS_MIN": 1066,
+        "CK_SS_ALL_MIN": 1014,
+        "CK_SS_MAX": 1318,
+        "CK_SS_ALL_MAX": 1318,
+        "CK_FF_MEAN": 765,
+        "CK_FF_ALL_MEAN": 758,
+        "CK_FF_MIN": 736,
+        "CK_FF_ALL_MIN": 689,
+        "CK_FF_MAX": 917,
+        "CK_FF_ALL_MAX": 917
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_index_q_b0",
+      "job": "hbm_idxq_b0_48529891f_r19b",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b0_48529891f_r19b",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {
+        "bench_exact_split": true,
+        "bench_neg_lane_swap": true
+      },
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 1190,
+        "CK_SS_ALL_MEAN": 1179,
+        "CK_SS_MIN": 1160,
+        "CK_SS_ALL_MIN": 1150,
+        "CK_SS_MAX": 1268,
+        "CK_SS_ALL_MAX": 1477,
+        "CK_FF_MEAN": 786,
+        "CK_FF_ALL_MEAN": 775,
+        "CK_FF_MIN": 761,
+        "CK_FF_ALL_MIN": 752,
+        "CK_FF_MAX": 852,
+        "CK_FF_ALL_MAX": 997
+      },
+      "cycles_added": 0,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_index_q_b1",
+      "job": "hbm_idxq_b1_48529891f",
+      "status": "SUMMARY",
+      "stage": "summary",
+      "source_commit": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_48529891f",
+      "metrics": {
+        "ss_ps": 139.57,
+        "ff_ps": -268.27,
+        "drc": 0
+      },
+      "benches": {
+        "bench_exact_split": true,
+        "bench_neg_lane_swap": true
+      },
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 1139,
+        "CK_SS_ALL_MEAN": 1108,
+        "CK_SS_MIN": 1106,
+        "CK_SS_ALL_MIN": 1077,
+        "CK_SS_MAX": 1214,
+        "CK_SS_ALL_MAX": 1214,
+        "CK_FF_MEAN": 752,
+        "CK_FF_ALL_MEAN": 726,
+        "CK_FF_MIN": 724,
+        "CK_FF_ALL_MIN": 700,
+        "CK_FF_MAX": 804,
+        "CK_FF_ALL_MAX": 804
+      },
+      "cycles_added": 2,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_index_q_b2",
+      "job": "hbm_idxq_b2_48529891f_r19b",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b2_48529891f_r19b",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {
+        "bench_exact_split": true,
+        "bench_neg_lane_swap": true
+      },
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 1306,
+        "CK_SS_ALL_MEAN": 1300,
+        "CK_SS_MIN": 1272,
+        "CK_SS_ALL_MIN": 1272,
+        "CK_SS_MAX": 1524,
+        "CK_SS_ALL_MAX": 1524,
+        "CK_FF_MEAN": 843,
+        "CK_FF_ALL_MEAN": 838,
+        "CK_FF_MIN": 813,
+        "CK_FF_ALL_MIN": 813,
+        "CK_FF_MAX": 1005,
+        "CK_FF_ALL_MAX": 1005
+      },
+      "cycles_added": 0,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_index_q_b3",
+      "job": "hbm_idxq_b3_48529891f_r19b",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b3_48529891f_r19b",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {
+        "bench_exact_split": true,
+        "bench_neg_lane_swap": true
+      },
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 1185,
+        "CK_SS_ALL_MEAN": 1160,
+        "CK_SS_MIN": 1122,
+        "CK_SS_ALL_MIN": 1113,
+        "CK_SS_MAX": 1298,
+        "CK_SS_ALL_MAX": 1298,
+        "CK_FF_MEAN": 792,
+        "CK_FF_ALL_MEAN": 770,
+        "CK_FF_MIN": 738,
+        "CK_FF_ALL_MIN": 730,
+        "CK_FF_MAX": 892,
+        "CK_FF_ALL_MAX": 892
+      },
+      "cycles_added": 0,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_index_q_b5",
+      "job": "hbm_idxq_b5_48529891f_r19b",
+      "status": "ECO",
+      "stage": "hold_eco",
+      "source_commit": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b5_48529891f_r19b",
+      "metrics": {
+        "ss_ps": 47.79,
+        "ff_ps": -177.63,
+        "drc": 0
+      },
+      "benches": {
+        "bench_exact_split": true,
+        "bench_neg_lane_swap": true
+      },
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 1302,
+        "CK_SS_ALL_MEAN": 1296,
+        "CK_SS_MIN": 1273,
+        "CK_SS_ALL_MIN": 1273,
+        "CK_SS_MAX": 1379,
+        "CK_SS_ALL_MAX": 1379,
+        "CK_FF_MEAN": 856,
+        "CK_FF_ALL_MEAN": 851,
+        "CK_FF_MIN": 833,
+        "CK_FF_ALL_MIN": 833,
+        "CK_FF_MAX": 922,
+        "CK_FF_ALL_MAX": 922
+      },
+      "cycles_added": 0,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_loader",
+      "job": "hbm_loader_half_4d30522ee",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "4d30522ee362e5cdf40ff49453a9b7e186b742da",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_loader_half_4d30522ee",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {
+        "bench_exact_ldm_half": true,
+        "bench_neg_nogate_and_foh": true
+      },
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 774,
+        "CK_SS_ALL_MEAN": 803,
+        "CK_SS_MIN": 726,
+        "CK_SS_ALL_MIN": 726,
+        "CK_SS_MAX": 846,
+        "CK_SS_ALL_MAX": 904,
+        "CK_FF_MEAN": 517,
+        "CK_FF_ALL_MEAN": 528,
+        "CK_FF_MIN": 475,
+        "CK_FF_ALL_MIN": 475,
+        "CK_FF_MAX": 573,
+        "CK_FF_ALL_MAX": 624
+      },
+      "cycles_added": 0,
+      "cycles_note": "off the per-token path (boot / weight load); loader engines at ck/2 = 19.2 GB/s per die, 2x the 9.6 GB/s host link"
+    },
+    {
+      "block": "hfd_mcast_r5",
+      "job": "hbm_stn_mcast_r5_56a4bdb6c",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "56a4bdb6c3ae67ff6d8fa63a5e27f6639e8cb94b",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r5_56a4bdb6c",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {
+        "bench_bench_mcast_exact_and_negatives": true,
+        "bench_bench_neg_generator_mutant": true
+      },
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 581,
+        "CK_SS_ALL_MEAN": 584,
+        "CK_SS_MIN": 572,
+        "CK_SS_ALL_MIN": 569,
+        "CK_SS_MAX": 593,
+        "CK_SS_ALL_MAX": 626,
+        "CK_FF_MEAN": 392,
+        "CK_FF_ALL_MEAN": 395,
+        "CK_FF_MIN": 383,
+        "CK_FF_ALL_MIN": 380,
+        "CK_FF_MAX": 404,
+        "CK_FF_ALL_MAX": 438
+      },
+      "cycles_added": 1,
+      "cycles_note": "0 added by this fix (placement + keepout); r5 carries +1 forwarded (RC=1) and the pre-existing pin-stages 2 tap cycle"
+    },
+    {
+      "block": "hfd_mcast_r6",
+      "job": "hbm_stn_mcast_r6_46e1b48e4",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "46e1b48e4e4e87dee868243465e2433a1e21929f",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r6_46e1b48e4",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {
+        "bench_bench_mcast_exact_and_negatives": true,
+        "bench_bench_neg_generator_mutant": true
+      },
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 544,
+        "CK_SS_ALL_MEAN": 543,
+        "CK_SS_MIN": 531,
+        "CK_SS_ALL_MIN": 531,
+        "CK_SS_MAX": 563,
+        "CK_SS_ALL_MAX": 563,
+        "CK_FF_MEAN": 362,
+        "CK_FF_ALL_MEAN": 361,
+        "CK_FF_MIN": 351,
+        "CK_FF_ALL_MIN": 351,
+        "CK_FF_MAX": 378,
+        "CK_FF_ALL_MAX": 378
+      },
+      "cycles_added": 1,
+      "cycles_note": "+1 forwarded cycle on every b slice per crossing (RC=1, from 337a5afcb) AND +1 cycle on every r6 tap output (pin-stages 2); bound <= 571 x-load phases = 571 cycles = 0.48 us = 0.09% AR for the tap stage"
+    },
+    {
+      "block": "hfd_svc_SE_s0",
+      "job": "hbm_svc_SE_s0_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s0_e8b5132fb_r18b",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 696,
+        "CK_SS_ALL_MEAN": 681,
+        "CK_SS_MIN": 640,
+        "CK_SS_ALL_MIN": 635,
+        "CK_SS_MAX": 766,
+        "CK_SS_ALL_MAX": 766,
+        "CK_FF_MEAN": 423,
+        "CK_FF_ALL_MEAN": 411,
+        "CK_FF_MIN": 384,
+        "CK_FF_ALL_MIN": 380,
+        "CK_FF_MAX": 485,
+        "CK_FF_ALL_MAX": 486
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SE_s1",
+      "job": "hbm_svc_SE_s1_e26c4446e_r18",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 886,
+        "CK_SS_ALL_MEAN": 866,
+        "CK_SS_MIN": 733,
+        "CK_SS_ALL_MIN": 732,
+        "CK_SS_MAX": 975,
+        "CK_SS_ALL_MAX": 1047,
+        "CK_FF_MEAN": 560,
+        "CK_FF_ALL_MEAN": 540,
+        "CK_FF_MIN": 465,
+        "CK_FF_ALL_MIN": 464,
+        "CK_FF_MAX": 620,
+        "CK_FF_ALL_MAX": 677
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SE_s2",
+      "job": "hbm_svc_SE_s2_d6f9d25a1_bud",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s2_d6f9d25a1_bud",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 764,
+        "CK_SS_ALL_MEAN": 756,
+        "CK_SS_MIN": 733,
+        "CK_SS_ALL_MIN": 726,
+        "CK_SS_MAX": 1111,
+        "CK_SS_ALL_MAX": 1111,
+        "CK_FF_MEAN": 481,
+        "CK_FF_ALL_MEAN": 472,
+        "CK_FF_MIN": 454,
+        "CK_FF_ALL_MIN": 450,
+        "CK_FF_MAX": 740,
+        "CK_FF_ALL_MAX": 740
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SE_s3",
+      "job": "hbm_svc_SE_s3_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s3_e8b5132fb_r18b",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": "measured SS insertion 919 exceeds the block insertion TARGET 900 by +19 ps (sheet 950, measured)",
+      "calibration": {
+        "CK_SS_MEAN": 919,
+        "CK_SS_ALL_MEAN": 876,
+        "CK_SS_MIN": 710,
+        "CK_SS_ALL_MIN": 710,
+        "CK_SS_MAX": 1377,
+        "CK_SS_ALL_MAX": 1377,
+        "CK_FF_MEAN": 563,
+        "CK_FF_ALL_MEAN": 534,
+        "CK_FF_MIN": 438,
+        "CK_FF_ALL_MIN": 438,
+        "CK_FF_MAX": 900,
+        "CK_FF_ALL_MAX": 900
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SE_s4",
+      "job": "hbm_svc_SE_s4_d6f9d25a1_bud",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s4_d6f9d25a1_bud",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 809,
+        "CK_SS_ALL_MEAN": 759,
+        "CK_SS_MIN": 729,
+        "CK_SS_ALL_MIN": 728,
+        "CK_SS_MAX": 1010,
+        "CK_SS_ALL_MAX": 1010,
+        "CK_FF_MEAN": 515,
+        "CK_FF_ALL_MEAN": 475,
+        "CK_FF_MIN": 450,
+        "CK_FF_ALL_MIN": 448,
+        "CK_FF_MAX": 666,
+        "CK_FF_ALL_MAX": 666
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SE_s5",
+      "job": "hbm_svc_SE_s5_e26c4446e_r18",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_e26c4446e_r18",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 848,
+        "CK_SS_ALL_MEAN": 782,
+        "CK_SS_MIN": 650,
+        "CK_SS_ALL_MIN": 650,
+        "CK_SS_MAX": 1056,
+        "CK_SS_ALL_MAX": 1057,
+        "CK_FF_MEAN": 531,
+        "CK_FF_ALL_MEAN": 489,
+        "CK_FF_MIN": 416,
+        "CK_FF_ALL_MIN": 416,
+        "CK_FF_MAX": 682,
+        "CK_FF_ALL_MAX": 683
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SE_s6",
+      "job": "hbm_svc_SE_s6_41d574827_bud",
+      "status": "ECO_INSTALL",
+      "stage": "eco_install",
+      "source_commit": "41d57482796e648a579ea0178c770e196f026928",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud",
+      "metrics": {
+        "ss_ps": 143.71,
+        "ff_ps": -36.67,
+        "drc": 0
+      },
+      "benches": {},
+      "reason": "human retry-eco: hold_eco rev 2.2 (pass-2 DRT guide fallback; rev 2.0 pass 1 reached SS +146.97 / FF +13.22)",
+      "calibration": {
+        "CK_SS_MEAN": 558,
+        "CK_SS_ALL_MEAN": 549,
+        "CK_SS_MIN": 519,
+        "CK_SS_ALL_MIN": 504,
+        "CK_SS_MAX": 611,
+        "CK_SS_ALL_MAX": 635,
+        "CK_FF_MEAN": 364,
+        "CK_FF_ALL_MEAN": 355,
+        "CK_FF_MIN": 330,
+        "CK_FF_ALL_MIN": 315,
+        "CK_FF_MAX": 408,
+        "CK_FF_ALL_MAX": 416
+      },
+      "cycles_added": 0,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SE_s7",
+      "job": "hbm_svc_SE_s7_d6f9d25a1_bud",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s7_d6f9d25a1_bud",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 634,
+        "CK_SS_ALL_MEAN": 617,
+        "CK_SS_MIN": 593,
+        "CK_SS_ALL_MIN": 591,
+        "CK_SS_MAX": 705,
+        "CK_SS_ALL_MAX": 705,
+        "CK_FF_MEAN": 405,
+        "CK_FF_ALL_MEAN": 389,
+        "CK_FF_MIN": 367,
+        "CK_FF_ALL_MIN": 366,
+        "CK_FF_MAX": 469,
+        "CK_FF_ALL_MAX": 469
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SW_s0",
+      "job": "hbm_svc_SW_s0_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s0_e8b5132fb_r18b",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 702,
+        "CK_SS_ALL_MEAN": 684,
+        "CK_SS_MIN": 641,
+        "CK_SS_ALL_MIN": 634,
+        "CK_SS_MAX": 765,
+        "CK_SS_ALL_MAX": 767,
+        "CK_FF_MEAN": 434,
+        "CK_FF_ALL_MEAN": 429,
+        "CK_FF_MIN": 408,
+        "CK_FF_ALL_MIN": 407,
+        "CK_FF_MAX": 481,
+        "CK_FF_ALL_MAX": 484
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SW_s1",
+      "job": "hbm_svc_SW_s1_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s1_e8b5132fb_r18b",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 788,
+        "CK_SS_ALL_MEAN": 774,
+        "CK_SS_MIN": 648,
+        "CK_SS_ALL_MIN": 648,
+        "CK_SS_MAX": 1225,
+        "CK_SS_ALL_MAX": 1225,
+        "CK_FF_MEAN": 487,
+        "CK_FF_ALL_MEAN": 476,
+        "CK_FF_MIN": 400,
+        "CK_FF_ALL_MIN": 400,
+        "CK_FF_MAX": 808,
+        "CK_FF_ALL_MAX": 808
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SW_s2",
+      "job": "hbm_svc_SW_s2_d6f9d25a1_bud",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s2_d6f9d25a1_bud",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 792,
+        "CK_SS_ALL_MEAN": 786,
+        "CK_SS_MIN": 769,
+        "CK_SS_ALL_MIN": 754,
+        "CK_SS_MAX": 814,
+        "CK_SS_ALL_MAX": 1043,
+        "CK_FF_MEAN": 496,
+        "CK_FF_ALL_MEAN": 488,
+        "CK_FF_MIN": 472,
+        "CK_FF_ALL_MIN": 462,
+        "CK_FF_MAX": 517,
+        "CK_FF_ALL_MAX": 680
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SW_s3",
+      "job": "hbm_svc_SW_s3_e26c4446e_r18",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_e26c4446e_r18",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 773,
+        "CK_SS_ALL_MEAN": 752,
+        "CK_SS_MIN": 655,
+        "CK_SS_ALL_MIN": 655,
+        "CK_SS_MAX": 1108,
+        "CK_SS_ALL_MAX": 1108,
+        "CK_FF_MEAN": 483,
+        "CK_FF_ALL_MEAN": 470,
+        "CK_FF_MIN": 421,
+        "CK_FF_ALL_MIN": 421,
+        "CK_FF_MAX": 721,
+        "CK_FF_ALL_MAX": 721
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SW_s4",
+      "job": "hbm_svc_SW_s4_41d574827_bud",
+      "status": "CLOSED",
+      "stage": "commit",
+      "source_commit": "41d57482796e648a579ea0178c770e196f026928",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud",
+      "metrics": {
+        "ss_ps": 95.47,
+        "ff_ps": 22.16,
+        "drc": 0
+      },
+      "benches": {},
+      "reason": "CLOSED SS +95.47 / FF +22.16 ps DRC 0 | record claude/hbm-abstracts-svcidx-20261006 eac2fed7e (8 files) | merged into claude/hbm-abstracts-20261006 ca1d6a585",
+      "calibration": {
+        "CK_SS_MEAN": 586,
+        "CK_SS_ALL_MEAN": 574,
+        "CK_SS_MIN": 566,
+        "CK_SS_ALL_MIN": 551,
+        "CK_SS_MAX": 793,
+        "CK_SS_ALL_MAX": 793,
+        "CK_FF_MEAN": 379,
+        "CK_FF_ALL_MEAN": 368,
+        "CK_FF_MIN": 363,
+        "CK_FF_ALL_MIN": 348,
+        "CK_FF_MAX": 526,
+        "CK_FF_ALL_MAX": 526
+      },
+      "cycles_added": 0,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SW_s5",
+      "job": "hbm_svc_SW_s5_d6f9d25a1_bud",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s5_d6f9d25a1_bud",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 756,
+        "CK_SS_ALL_MEAN": 750,
+        "CK_SS_MIN": 737,
+        "CK_SS_ALL_MIN": 721,
+        "CK_SS_MAX": 944,
+        "CK_SS_ALL_MAX": 944,
+        "CK_FF_MEAN": 474,
+        "CK_FF_ALL_MEAN": 468,
+        "CK_FF_MIN": 455,
+        "CK_FF_ALL_MIN": 447,
+        "CK_FF_MAX": 619,
+        "CK_FF_ALL_MAX": 619
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SW_s6",
+      "job": "hbm_svc_SW_s6_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s6_e8b5132fb_r18b",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 734,
+        "CK_SS_ALL_MEAN": 731,
+        "CK_SS_MIN": 658,
+        "CK_SS_ALL_MIN": 658,
+        "CK_SS_MAX": 1012,
+        "CK_SS_ALL_MAX": 1012,
+        "CK_FF_MEAN": 476,
+        "CK_FF_ALL_MEAN": 468,
+        "CK_FF_MIN": 434,
+        "CK_FF_ALL_MIN": 434,
+        "CK_FF_MAX": 653,
+        "CK_FF_ALL_MAX": 653
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_svc_SW_s7",
+      "job": "hbm_svc_SW_s7_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "stage": "route",
+      "source_commit": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s7_e8b5132fb_r18b",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {},
+      "reason": null,
+      "calibration": {
+        "CK_SS_MEAN": 686,
+        "CK_SS_ALL_MEAN": 679,
+        "CK_SS_MIN": 660,
+        "CK_SS_ALL_MIN": 660,
+        "CK_SS_MAX": 725,
+        "CK_SS_ALL_MAX": 734,
+        "CK_FF_MEAN": 425,
+        "CK_FF_ALL_MEAN": 419,
+        "CK_FF_MIN": 404,
+        "CK_FF_ALL_MIN": 403,
+        "CK_FF_MAX": 461,
+        "CK_FF_ALL_MAX": 468
+      },
+      "cycles_added": 1,
+      "cycles_note": null
+    },
+    {
+      "block": "hfd_vm_ne",
+      "job": "hbm_vm_ne_683550387",
+      "status": "NEEDS_BUDGET",
+      "stage": "calibrate",
+      "source_commit": "683550387d9e35dc7b7d774823d7fd38752a162b",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm_ne_683550387",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {
+        "bench_vm_tiles_exact": true,
+        "bench_vm_tiles_neg_xbus": true
+      },
+      "reason": "measured SS insertion 1215 exceeds the block insertion TARGET 900 by +315 ps (sheet 900, target)",
+      "calibration": {
+        "CK_SS_MEAN": 1215,
+        "CK_SS_ALL_MEAN": 1203,
+        "CK_SS_MIN": 1140,
+        "CK_SS_ALL_MIN": 1117,
+        "CK_SS_MAX": 1298,
+        "CK_SS_ALL_MAX": 1378,
+        "CK_FF_MEAN": 846,
+        "CK_FF_ALL_MEAN": 835,
+        "CK_FF_MIN": 781,
+        "CK_FF_ALL_MIN": 760,
+        "CK_FF_MAX": 917,
+        "CK_FF_ALL_MAX": 966
+      },
+      "cycles_added": 2,
+      "cycles_note": "coordinator r19 pricing: +2 per serial x load, +2 per barrier (VM quadrant split); placeholders -2..+3 (bench mode 2)"
+    },
+    {
+      "block": "hfd_vm_nw",
+      "job": "hbm_vm_nw_683550387",
+      "status": "NEEDS_BUDGET",
+      "stage": "calibrate",
+      "source_commit": "683550387d9e35dc7b7d774823d7fd38752a162b",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm_nw_683550387",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {
+        "bench_vm_tiles_exact": true,
+        "bench_vm_tiles_neg_xbus": true
+      },
+      "reason": "measured SS insertion 1234 exceeds the block insertion TARGET 900 by +334 ps (sheet 900, target)",
+      "calibration": {
+        "CK_SS_MEAN": 1234,
+        "CK_SS_ALL_MEAN": 1219,
+        "CK_SS_MIN": 1152,
+        "CK_SS_ALL_MIN": 1145,
+        "CK_SS_MAX": 1382,
+        "CK_SS_ALL_MAX": 1382,
+        "CK_FF_MEAN": 868,
+        "CK_FF_ALL_MEAN": 855,
+        "CK_FF_MIN": 795,
+        "CK_FF_ALL_MIN": 789,
+        "CK_FF_MAX": 998,
+        "CK_FF_ALL_MAX": 998
+      },
+      "cycles_added": 2,
+      "cycles_note": "coordinator r19 pricing: +2 per serial x load, +2 per barrier (VM quadrant split); placeholders -2..+3 (bench mode 2)"
+    },
+    {
+      "block": "hfd_vm_se",
+      "job": "hbm_vm_se_683550387",
+      "status": "NEEDS_BUDGET",
+      "stage": "calibrate",
+      "source_commit": "683550387d9e35dc7b7d774823d7fd38752a162b",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm_se_683550387",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {
+        "bench_vm_tiles_exact": true,
+        "bench_vm_tiles_neg_xbus": true
+      },
+      "reason": "measured SS insertion 1344 exceeds the block insertion TARGET 900 by +444 ps (sheet 900, target)",
+      "calibration": {
+        "CK_SS_MEAN": 1344,
+        "CK_SS_ALL_MEAN": 1335,
+        "CK_SS_MIN": 1250,
+        "CK_SS_ALL_MIN": 1250,
+        "CK_SS_MAX": 1490,
+        "CK_SS_ALL_MAX": 1594,
+        "CK_FF_MEAN": 947,
+        "CK_FF_ALL_MEAN": 938,
+        "CK_FF_MIN": 866,
+        "CK_FF_ALL_MIN": 866,
+        "CK_FF_MAX": 1069,
+        "CK_FF_ALL_MAX": 1134
+      },
+      "cycles_added": 2,
+      "cycles_note": "coordinator r19 pricing: +2 per serial x load, +2 per barrier (VM quadrant split); placeholders -2..+3 (bench mode 2)"
+    },
+    {
+      "block": "hfd_vm_sw",
+      "job": "hbm_vm_sw_30be4c713",
+      "status": "RUNNING",
+      "stage": "calibrate",
+      "source_commit": "30be4c7139c0f82b94b56f5426896064b8de2096",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm_sw_30be4c713",
+      "metrics": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null
+      },
+      "benches": {
+        "bench_vm_tiles_exact": true,
+        "bench_vm_tiles_neg_xbus": true,
+        "bench_neg_port_depth_monolithic_skew": true
+      },
+      "reason": null,
+      "calibration": null,
+      "cycles_added": 2,
+      "cycles_note": "coordinator r19 pricing: +2 per serial x load, +2 per barrier (VM quadrant split); placeholders -2..+3 (bench mode 2)"
+    }
+  ]
+}
