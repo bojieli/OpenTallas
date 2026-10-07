@@ -1,4 +1,7 @@
 `timescale 1ns/1ps
+`ifndef RDREG_B
+`define RDREG_B 1
+`endif
 // Transaction-level exactness of ot_hfd_cmdproc20_m RDREG 1 (registered SRAM read word: +1 cycle per executed
 // command) against the unchanged ot_ds_hbm_cmdproc20.  Each DUT sits in its own copy of one REACTIVE environment
 // whose every decision is indexed by transaction count, not by cycle, so both see the same transaction stream:
@@ -27,7 +30,7 @@ module cpr_env #(parameter integer MARGIN = 0, parameter integer SEED = 1, param
         .sm_fault(sm_fault), .res_v(res_v), .res_data(res_data), .cpl_v(cpl_v), .cpl_rdy(cpl_rdy), .cpl_token(cpl_token), \
         .cpl_status(cpl_status), .cpl_cycles(cpl_cycles), .st_kernels(st_kernels), .st_busy(st_busy)
     generate if (MARGIN) begin : g_m
-        `DUT_B #(.ENABLE(1), .NSM(NSM), .NCMD(NCMD), .RDREG(1)) dut (`CPR_PORTS);
+        `DUT_B #(.ENABLE(1), .NSM(NSM), .NCMD(NCMD), .RDREG(`RDREG_B)) dut (`CPR_PORTS);
     end else begin : g_o
         ot_ds_hbm_cmdproc20 #(.ENABLE(1), .NSM(NSM), .NCMD(NCMD)) dut (`CPR_PORTS);
     end endgenerate
