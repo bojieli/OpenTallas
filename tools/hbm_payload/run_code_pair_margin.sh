@@ -9,7 +9,7 @@ while [ $# -gt 0 ]; do if [ "$1" = "--" ]; then shift; args=("$@"); break; fi; d
 mkdir -p "$out"
 [ -f ~/.opentallas-env ] && source ~/.opentallas-env
 verilator --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style ${defs[@]+"${defs[@]}"} \
- --top-module tb_code_pair_margin --Mdir "$out/obj" \
+ ${M2:+-GM2=$M2} --top-module tb_code_pair_margin --Mdir "$out/obj" \
  rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv \
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v \
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \
