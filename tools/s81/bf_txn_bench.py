@@ -54,12 +54,13 @@ SHADOW = '''
     reg [61:0] t_ref [0:1][0:8191];
     reg [61:0] t_sh  [0:1][0:8191];
     integer t_nr [0:1]; integer t_ns [0:1]; integer t_cmp = 0, t_im;
+    realtime t_tr [0:1][0:8191]; realtime t_ts [0:1][0:8191];
     reg t_rf = 1'b0, t_sf = 1'b0;
     initial begin t_nr[0] = 0; t_nr[1] = 0; t_ns[0] = 0; t_ns[1] = 0; end
     always @(posedge clk) begin
         if (fault) t_rf <= 1'b1;
         for (t_im = 0; t_im < 2; t_im = t_im + 1) if (rst_n && pv[t_im]) begin
-            t_ref[t_im][t_nr[t_im]] = t_slice(t_im, pval, prow, pseg, pnseg, perr, ppos);
+            t_ref[t_im][t_nr[t_im]] = t_slice(t_im, pval, prow, pseg, pnseg, perr, ppos); t_tr[t_im][t_nr[t_im]] = $realtime;
             if (t_ns[t_im] > t_nr[t_im]) begin
                 if (t_sh[t_im][t_nr[t_im]] !== t_ref[t_im][t_nr[t_im]]) $fatal(1, "DIFF TXN lane=%0d n=%0d ref=%h shadow=%h",
                     t_im, t_nr[t_im], t_ref[t_im][t_nr[t_im]], t_sh[t_im][t_nr[t_im]]);
@@ -71,7 +72,7 @@ SHADOW = '''
     always @(posedge s_clk) begin
         if (s_fault) t_sf <= 1'b1;
         for (t_im = 0; t_im < 2; t_im = t_im + 1) if (s_rst_n && s_pv[t_im]) begin
-            t_sh[t_im][t_ns[t_im]] = t_slice(t_im, s_pval, s_prow, s_pseg, s_pnseg, s_perr, s_ppos);
+            t_sh[t_im][t_ns[t_im]] = t_slice(t_im, s_pval, s_prow, s_pseg, s_pnseg, s_perr, s_ppos); t_ts[t_im][t_ns[t_im]] = $realtime;
             if (t_nr[t_im] > t_ns[t_im]) begin
                 if (t_sh[t_im][t_ns[t_im]] !== t_ref[t_im][t_ns[t_im]]) $fatal(1, "DIFF TXN lane=%0d n=%0d ref=%h shadow=%h",
                     t_im, t_ns[t_im], t_ref[t_im][t_ns[t_im]], t_sh[t_im][t_ns[t_im]]);
@@ -80,7 +81,15 @@ SHADOW = '''
             t_ns[t_im] = t_ns[t_im] + 1;
         end
     end
-    final begin
+    final begin : t_fin
+        realtime lag, lmin, lmax, lsum; integer n, m;
+        lmin = 1e18; lmax = -1e18; lsum = 0; n = 0;
+        for (m = 0; m < 2; m = m + 1) for (t_im = 0; t_im < t_nr[m] && t_im < t_ns[m]; t_im = t_im + 1) begin
+            lag = t_ts[m][t_im] - t_tr[m][t_im]; n = n + 1; lsum = lsum + lag;
+            if (lag < lmin) lmin = lag; if (lag > lmax) lmax = lag;
+        end
+        // lag in ns (pair-file timescale); one cycle = 0.833 ns
+        if (n > 0) $display("TXN LAG ns min=%0.3f max=%0.3f mean=%0.3f n=%0d", lmin, lmax, lsum / n, n);
         $display("TXN ref=%0d/%0d shadow=%0d/%0d compared=%0d fault=%b/%b busy=%b/%b", t_nr[0], t_nr[1], t_ns[0], t_ns[1], t_cmp,
                  t_rf, t_sf, busy, s_busy);
         if (t_nr[0] != t_ns[0] || t_nr[1] != t_ns[1] || t_nr[0] == 0 || t_cmp != t_nr[0] + t_nr[1] || t_rf || t_sf || s_busy)
