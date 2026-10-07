@@ -1694,6 +1694,10 @@ def do_verdict(j, fleet, stl):
         # verdict checks may run real tools (stn_pa_check.sh routes a pin-access probe: > 300 s on AGIdock, which put
         # hbm_stn_mcast_r5/r6 into NEEDS_HUMAN as "loop errors"); spec checks[].timeout_s, default 1800
         ok, out = remote_ok(j, c["cmd"], timeout=c.get("timeout_s", 1800))
+        if not ok and TRANSIENT_RE.search(out):
+            # an ssh failure is not a failed check (hbm_stn_mcast_r6b: 'Connection reset by peer' failed lef_check_MATCH
+            # while check.json said MATCH): raise, so the verdict backs off and is re-taken
+            raise RuntimeError(f"verdict check {c['name']}: ssh/network failure: {out.strip()[-200:]}")
         checks[c["name"]] = dict(ok=ok, out=out[-300:])
         if not ok:
             failed.append(c["name"])
