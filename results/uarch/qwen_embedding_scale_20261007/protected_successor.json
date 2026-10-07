@@ -1,0 +1,25 @@
+{
+  "default_unintegrated": true,
+  "code": {
+    "leaf_cycles": 7,
+    "II": 2,
+    "frame_um": [
+      270,
+      120.42
+    ],
+    "extra_cycles": 1,
+    "additional_frame_area_mm2": 12.806780400000003,
+    "reason": "mutablemetadata failstop and isolated output register boundary"
+  },
+  "scale": {
+    "leaf_cycles": 7,
+    "II": 2,
+    "frame_um": [
+      160,
+      100.44
+    ]
+  },
+  "capture_exception": "-through macro data output pins; -from output pins rejected by OpenSTA invalid startpoint; previous run retained as failure",
+  "SS_ROM_clk_to_q_ps": 739.2103,
+  "adopted": false
+}
