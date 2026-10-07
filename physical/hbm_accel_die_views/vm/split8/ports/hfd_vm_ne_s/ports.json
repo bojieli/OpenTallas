@@ -1,0 +1,181 @@
+{
+ "master": "hfd_vm_ne_s",
+ "kind": "vm8",
+ "w_um": 699.816,
+ "h_um": 500.04,
+ "obs_top": 7,
+ "parent": "hfd_vm_ne",
+ "half": "s",
+ "generator": "physical/hbm_accel_die_views/vm/split8/make_vm_split8.py",
+ "ports": {
+  "ck": {
+   "bits": 1,
+   "direction": "input",
+   "layer": "M7",
+   "x": [
+    349.648,
+    349.648
+   ],
+   "y": [
+    250.02,
+    250.02
+   ]
+  },
+  "rst": {
+   "bits": 1,
+   "direction": "input",
+   "layer": "M4",
+   "x": [
+    0.096,
+    0.096
+   ],
+   "y": [
+    0.876,
+    0.876
+   ]
+  },
+  "f_s_ctl": {
+   "bits": 256,
+   "direction": "input",
+   "layer": "M5",
+   "x": [
+    239.772,
+    252.012
+   ],
+   "y": [
+    0.096,
+    0.096
+   ]
+  },
+  "f_s_row": {
+   "bits": 2256,
+   "direction": "input",
+   "layer": "M5",
+   "x": [
+    252.252,
+    360.492
+   ],
+   "y": [
+    0.096,
+    0.096
+   ]
+  },
+  "f_s_wr": {
+   "bits": 2264,
+   "direction": "input",
+   "layer": "M5",
+   "x": [
+    360.732,
+    469.356
+   ],
+   "y": [
+    0.096,
+    0.096
+   ]
+  },
+  "f_w_ctl": {
+   "bits": 256,
+   "direction": "input",
+   "layer": "M4",
+   "x": [
+    0.096,
+    0.096
+   ],
+   "y": [
+    487.644,
+    499.884
+   ]
+  },
+  "iNE": {
+   "bits": 512,
+   "direction": "input",
+   "layer": "M4",
+   "x": [
+    699.72,
+    699.72
+   ],
+   "y": [
+    0.636,
+    25.164
+   ]
+  },
+  "qNE": {
+   "bits": 582,
+   "direction": "output",
+   "layer": "M4",
+   "x": [
+    699.72,
+    699.72
+   ],
+   "y": [
+    25.404,
+    53.292
+   ]
+  },
+  "t_s_ctl": {
+   "bits": 256,
+   "direction": "output",
+   "layer": "M5",
+   "x": [
+    469.596,
+    481.836
+   ],
+   "y": [
+    0.096,
+    0.096
+   ]
+  },
+  "t_s_row": {
+   "bits": 2256,
+   "direction": "output",
+   "layer": "M5",
+   "x": [
+    482.076,
+    590.316
+   ],
+   "y": [
+    0.096,
+    0.096
+   ]
+  },
+  "t_s_wr": {
+   "bits": 2264,
+   "direction": "output",
+   "layer": "M5",
+   "x": [
+    590.556,
+    699.18
+   ],
+   "y": [
+    0.096,
+    0.096
+   ]
+  },
+  "s2n": {
+   "bits": 2063,
+   "direction": "output",
+   "layer": "M5",
+   "x": [
+    266.832,
+    365.808
+   ],
+   "y": [
+    499.944,
+    499.944
+   ]
+  },
+  "n2s": {
+   "bits": 1399,
+   "direction": "input",
+   "layer": "M5",
+   "x": [
+    365.856,
+    432.96
+   ],
+   "y": [
+    499.944,
+    499.944
+   ]
+  }
+ }
+}

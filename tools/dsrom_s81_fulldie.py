@@ -1009,8 +1009,12 @@ def pin_rects(mst, k, wmap):
         n = wmap.get(port, len(spec[1]))
         for i, x in enumerate(spec[1][:n]):
             out.append((f'{port}[{i}]', 'M5', (x - 0.012, 0.0, x + 0.012, 0.192)))
+    for port, spec in mst.ports.items():      # HBM r18: interior area pin (one bit), e.g. a block-centre ck on M7
+        if spec[0] == 'area':
+            _, layer, cx, cy, w_, h_ = spec
+            out.append((f'{port}[0]', layer, (cx - w_ / 2, cy - h_ / 2, cx + w_ / 2, cy + h_ / 2)))
     rest = Q.Master(mst.name, mst.w, mst.h, mst.obs_top, mst.note)
-    rest.ports = {p: s for p, s in mst.ports.items() if s[0] != 'xy'}
+    rest.ports = {p: s for p, s in mst.ports.items() if s[0] not in ('xy', 'area')}
     rest.order = [p for p in mst.order if p in rest.ports]
     rects = Q.pin_rects(rest, k, wmap)
     if k > 1 and GEOMETRY_FIX:

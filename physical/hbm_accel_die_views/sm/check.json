@@ -1,0 +1,81 @@
+{
+ "master": "hfd_sm",
+ "lef": "physical/hbm_accel_die_views/sm/hfd_sm.lef (full: ot-epyc1tb sm_rtlpins.lef renamed)",
+ "macro": "hfd_sm",
+ "size_view": [
+  2202.77,
+  2072.79
+ ],
+ "size_gen": [
+  2202.744,
+  2073.576
+ ],
+ "gen_pins": 3581,
+ "view_pins": 3581,
+ "missing": 0,
+ "extra": 0,
+ "moved": 3419,
+ "wrong_layer": 162,
+ "wrong_face": 69,
+ "wrong_face_examples": [
+  "c[100]",
+  "c[101]",
+  "c[102]",
+  "c[45]",
+  "c[46]",
+  "c[47]",
+  "c[48]",
+  "c[49]"
+ ],
+ "missing_examples": [],
+ "extra_examples": [],
+ "moved_examples": [
+  "c[0]",
+  "c[100]",
+  "c[101]",
+  "c[102]",
+  "c[10]",
+  "c[11]",
+  "c[12]",
+  "c[13]"
+ ],
+ "wrong_layer_examples": [
+  "r[109]",
+  "r[110]",
+  "r[111]",
+  "r[112]",
+  "r[113]",
+  "r[114]",
+  "r[115]",
+  "r[116]"
+ ],
+ "pg_pins": {
+  "VSS": [
+   "M8"
+  ],
+  "VDD": [
+   "M8"
+  ]
+ },
+ "obs_layers": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6",
+  "M7",
+  "M8",
+  "RVTN",
+  "RVTP"
+ ],
+ "obs_above_generator": [
+  "M8"
+ ],
+ "positions": "3419 pins off the generator position (same face)",
+ "problems": [
+  "size 2202.77 x 2072.79 != 2202.744 x 2073.576",
+  "pins: 0 missing, 0 extra, 69 wrong face, 162 wrong layer"
+ ],
+ "verdict": "MISMATCH"
+}

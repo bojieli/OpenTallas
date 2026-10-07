@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hfd_router",
+ "kind": "router",
+ "status": "interim-not-closed",
+ "lef": "hfd_router.lef",
+ "lib": {
+  "ss": "hfd_router_ss.lib",
+  "ff": "hfd_router_ff.lib"
+ },
+ "files_sha256": {
+  "hfd_router.lef": "86a4364fa8c687412a67ed63c463224927a4d469a69c38e9b1b137ec8203cfd2",
+  "hfd_router_ss.lib": "c09ae75445b2fcc2bb7b87b304e3c84bf8127cf6f8e166716d070df3daf49108",
+  "hfd_router_ff.lib": "e38dd94d863b35bb721e7e9a1adf2a3f0473bbc643eca693123b18ab636cb03c"
+ },
+ "check": {
+  "verdict": "MATCH",
+  "gen_pins": 2118,
+  "view_pins": 2118,
+  "missing": 0,
+  "moved": 0,
+  "wrong_layer": 0,
+  "wrong_face": 0
+ },
+ "size_um": [
+  1399.66,
+  326.28
+ ],
+ "source": {
+  "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/rt5_pd40",
+  "host": "ot-epyc1tb",
+  "SOURCE_COMMIT": "88844648046df6a5a9c5b459a583127bfaabdd58",
+  "ss_setup_ps": -1197.69,
+  "ff_hold_ps": -553.76,
+  "closes_signoff_SS60_FF25": false,
+  "clock_period_ns": 0.833,
+  "status": "not_met",
+  "drc": 0,
+  "antenna": 0,
+  "cell_um2": 30554.8,
+  "seq_um2": 10021.4,
+  "core_um2": 185548,
+  "macro_um2": 0
+ },
+ "wrapper": {
+  "master": "hfd_router",
+  "cfg_bits": 0,
+  "cfg_inputs": [],
+  "folded_output_bits": 0,
+  "folded_outputs": [],
+  "forwarded_clock_outputs": 4,
+  "forwarded_clock_inputs": 0,
+  "die_input_bits": 1538,
+  "die_input_bits_used": 514,
+  "die_output_bits": 580,
+  "die_output_bits_driven": 279
+ },
+ "bench": "tb_hfd_router.sv 4000 checks 0 mismatches (kept output regs, face_stages 1 wrapper of 888446480)",
+ "note": "INTERIM abstract for die placement only: exact pins/outline (check MATCH exact), timing not closed; replace with the router agent's margin view",
+ "defects": [
+  "topk_f3 internal reg2reg -550 ps at CTS (owner: router agent); this route SS -1197.69 / FF -553.76 at 833/60/25 with ideal-to-L1040 IO and resizer repair skipped",
+  "generator outline 133.896 um tall: GRT congestion without -allow_congestion (Turing: needs 326.28 um)"
+ ],
+ "route": "dv10_ih60 (EPYC2 /srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60; core topk_ps r5, r16i ports, per-port face stages W4/E3/t_cmdproc2/f_vm2)",
+ "signoff_833": {
+  "ss": 30.68,
+  "ff": -48.74,
+  "ss_i2r": 325.75,
+  "ff_out": 41.640442,
+  "note": "SS closed; FF -48.7 = die-input hold at the input pin flops only (201 pins); fix r6 (3 kept inverter pairs per input, 0 cycles) routing as dv11_idly. Forwarded-clock ports e*[128] excluded (router/rtl/fclk_ports_signoff.sdc)."
+ },
+ "pin_access_precheck": {
+  "result": "DONE, 0 DRT-0073 (4 orientations)",
+  "rst0": "OK"
+ },
+ "latency_cycles": {
+  "core": 20,
+  "face_stages": {
+   "W": 4,
+   "E": 3,
+   "t_cmdproc": 2,
+   "f_vm": 2
+  }
+ }
+}

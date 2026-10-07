@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_meso_r37_30f87bcc4/routes/hbm_stn_meso_r37_30f87bcc4/signoff",
+ "sdc": "# hfd_meso_r37: forwarded clocks (one per 512 b slice and direction), the local clock ck, the meso\n# crossings (max 356.667 / min 0 ps ignoring latency, the closed ot_meso_fifo W512 D4 contract), io budget 0.2 T.\nset_max_fanout 32 [current_design]\ncreate_clock -name ck -period 833.333 [get_ports {ck[0]}]\ncreate_clock -name vclk -period 833.333\nset_clock_latency 283 [get_clocks vclk]\ncreate_clock -name f_a512 -period 833.333 [get_ports {a[512]}]\nset_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\nset_input_delay 166.666 -clock f_a512 [get_ports {a[0] a[100] ",
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": 53.95,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 53.948292,
+  "worst_reg_to_reg_slack_ps": 53.95,
+  "worst_input_to_reg_slack_ps": 356.82,
+  "worst_output_port_slack_ps": 148.288376,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "b6635e14456b38d2259e9d86f2615bc535ad36a5248a808a4ddb0e407655c431",
+  "spef_sha256": "0f141e2d938eb94bfb506c0303adb1730f4797477fddffb891d185185108a44c",
+  "sdc_sha256": "e2d0f97bbe91c0c7eb7d604c231d49b98c85c526a8aa08d79597e21f20f5a707"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 21.42,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 28.436768,
+  "worst_reg_to_reg_slack_ps": 57.35,
+  "worst_input_to_reg_slack_ps": 373.52,
+  "worst_output_port_slack_ps": 21.420809,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "b6635e14456b38d2259e9d86f2615bc535ad36a5248a808a4ddb0e407655c431",
+  "spef_sha256": "0f141e2d938eb94bfb506c0303adb1730f4797477fddffb891d185185108a44c",
+  "sdc_sha256": "e2d0f97bbe91c0c7eb7d604c231d49b98c85c526a8aa08d79597e21f20f5a707"
+ },
+ "post_sdc": {},
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "2a0dd06fb6c0ccb8abf0e9cab2e17111d6e1aaed83ea0cbe57c3f78b9e893350",
+ "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "closes_signoff": true
+}

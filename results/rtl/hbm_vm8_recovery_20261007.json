@@ -1,0 +1,415 @@
+{
+  "schema": "opentallas.hbm.vm8.recovery.v1",
+  "captured_utc": "2026-10-07T15:29:47.790573+00:00",
+  "verdict": "PENDING_PHYSICAL_CLOSURE",
+  "adopted": false,
+  "source_commit": "4bae20a03c25ce4fda33c8d5b0a0fc8d9d69700e",
+  "preserved_jobs": true,
+  "reset_pin": {
+    "master": "hfd_vm_nw_s",
+    "layer": "M4",
+    "location_um": [
+      0.096,
+      480.0
+    ],
+    "generator_integration": "c399cb999"
+  },
+  "latency": {
+    "cycles_per_seam_crossing": 2,
+    "maximum_observed_added_path_cycles": 8,
+    "measured_path_table": "physical/hbm_accel_die_views/vm/split8/bench_654733cc5/m2_8vs4.check",
+    "note": "The +2 job field is per seam crossing; composing a transaction requires its complete path. The measured table includes +0,+2,+4,+8 output paths."
+  },
+  "adoption_gates": [
+    "SS setup >=15ps and FF hold >=15ps, DRC0",
+    "All exactness and negative controls pass",
+    "r23v budget IO and die-context STA: live jobs predate sheets and use calibrated generic IO constraints",
+    "Price composed per-path latency in model before adoption"
+  ],
+  "jobs": [
+    {
+      "name": "hbm_vm8_nen_654733cc5",
+      "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "source_branch": "claude/hbm-vm-split8-20261007",
+      "state": "RUNNING",
+      "stage": "calibrate",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nen_654733cc5",
+      "exact_bench": {
+        "expect": "pass",
+        "rc": 0,
+        "ok": true,
+        "tail": "e 31: 3406563 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/0 fault=1/1 hash= DIFF\n[2968000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_XBUS_DETECTED\nphysical/hbm_accel_die_views/vm/split8/run_vm_split8.sh: line 31: 3417077 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/40 fault=1/1 hash= DIFF\n[3654000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_SEAM_DETECTED\nVM_SPLIT8_BENCH PASS\n",
+        "track": "parallel"
+      },
+      "negative_benches": {},
+      "cts_calibration": null,
+      "budget_enabled": false
+    },
+    {
+      "name": "hbm_vm8_nes_654733cc5",
+      "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "source_branch": "claude/hbm-vm-split8-20261007",
+      "state": "RUNNING",
+      "stage": "calibrate",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_nes_654733cc5",
+      "exact_bench": {
+        "expect": "pass",
+        "rc": 0,
+        "ok": true,
+        "tail": "e 31: 3406181 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/0 fault=1/1 hash= DIFF\n[2968000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_XBUS_DETECTED\nphysical/hbm_accel_die_views/vm/split8/run_vm_split8.sh: line 31: 3416239 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/40 fault=1/1 hash= DIFF\n[3654000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_SEAM_DETECTED\nVM_SPLIT8_BENCH PASS\n",
+        "track": "parallel"
+      },
+      "negative_benches": {},
+      "cts_calibration": null,
+      "budget_enabled": false
+    },
+    {
+      "name": "hbm_vm8_nwn_654733cc5",
+      "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "source_branch": "claude/hbm-vm-split8-20261007",
+      "state": "RUNNING",
+      "stage": "route",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nwn_654733cc5",
+      "exact_bench": {
+        "expect": "pass",
+        "rc": 0,
+        "ok": true,
+        "tail": "ine 31: 701542 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/0 fault=1/1 hash= DIFF\n[2968000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_XBUS_DETECTED\nphysical/hbm_accel_die_views/vm/split8/run_vm_split8.sh: line 31: 962160 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/40 fault=1/1 hash= DIFF\n[3654000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_SEAM_DETECTED\nVM_SPLIT8_BENCH PASS\n",
+        "track": "parallel"
+      },
+      "negative_benches": {
+        "bench_vm8_neg_xbus": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "VM8_XBUS_MUTANT_FAILS\n",
+          "track": "parallel"
+        },
+        "bench_vm8_neg_seam": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "VM8_SEAM_MUTANT_FAILS\n",
+          "track": "parallel"
+        },
+        "bench_vm8_neg_port_depth": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "",
+          "track": "parallel"
+        }
+      },
+      "cts_calibration": {
+        "ss": {
+          "boundary": {
+            "n": 16917,
+            "mean": 527.0,
+            "min": 460.9,
+            "max": 689.9
+          },
+          "all": {
+            "n": 31283,
+            "mean": 500.9,
+            "min": 409.9,
+            "max": 689.9
+          },
+          "errors": []
+        },
+        "ff": {
+          "boundary": {
+            "n": 16917,
+            "mean": 349.6,
+            "min": 298.7,
+            "max": 419.9
+          },
+          "all": {
+            "n": 31283,
+            "mean": 331.0,
+            "min": 259.5,
+            "max": 419.9
+          },
+          "errors": []
+        },
+        "env": {
+          "CK_SS_MEAN": 527,
+          "CK_SS_ALL_MEAN": 501,
+          "CK_SS_MIN": 461,
+          "CK_SS_ALL_MIN": 410,
+          "CK_SS_MAX": 690,
+          "CK_SS_ALL_MAX": 690,
+          "CK_FF_MEAN": 350,
+          "CK_FF_ALL_MEAN": 331,
+          "CK_FF_MIN": 299,
+          "CK_FF_ALL_MIN": 260,
+          "CK_FF_MAX": 420,
+          "CK_FF_ALL_MAX": 420
+        },
+        "db": "4_1_cts.odb",
+        "clock": "core_clk",
+        "parasitics": "placement-estimated"
+      },
+      "budget_enabled": false
+    },
+    {
+      "name": "hbm_vm8_nws_4bae20a03",
+      "source_commit": "4bae20a03c25ce4fda33c8d5b0a0fc8d9d69700e",
+      "source_branch": "claude/hbm-vm-split8-20261007",
+      "state": "RUNNING",
+      "stage": "route",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nws_4bae20a03",
+      "exact_bench": {
+        "expect": "pass",
+        "rc": 0,
+        "ok": true,
+        "tail": "e 31: 1746394 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/0 fault=1/1 hash= DIFF\n[2968000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_XBUS_DETECTED\nphysical/hbm_accel_die_views/vm/split8/run_vm_split8.sh: line 31: 1773480 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/40 fault=1/1 hash= DIFF\n[3654000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_SEAM_DETECTED\nVM_SPLIT8_BENCH PASS\n",
+        "track": "parallel"
+      },
+      "negative_benches": {
+        "bench_vm8_neg_xbus": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "VM8_XBUS_MUTANT_FAILS\n",
+          "track": "parallel"
+        },
+        "bench_vm8_neg_seam": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "VM8_SEAM_MUTANT_FAILS\n",
+          "track": "parallel"
+        },
+        "bench_vm8_neg_port_depth": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "VM8_PORT_SKEW_DETECTED\n",
+          "track": "parallel"
+        }
+      },
+      "cts_calibration": {
+        "ss": {
+          "boundary": {
+            "n": 12438,
+            "mean": 543.1,
+            "min": 501.8,
+            "max": 684.8
+          },
+          "all": {
+            "n": 16172,
+            "mean": 551.7,
+            "min": 501.8,
+            "max": 693.2
+          },
+          "errors": []
+        },
+        "ff": {
+          "boundary": {
+            "n": 12438,
+            "mean": 361.8,
+            "min": 325.9,
+            "max": 466.8
+          },
+          "all": {
+            "n": 16172,
+            "mean": 368.0,
+            "min": 325.9,
+            "max": 476.7
+          },
+          "errors": []
+        },
+        "env": {
+          "CK_SS_MEAN": 543,
+          "CK_SS_ALL_MEAN": 552,
+          "CK_SS_MIN": 502,
+          "CK_SS_ALL_MIN": 502,
+          "CK_SS_MAX": 685,
+          "CK_SS_ALL_MAX": 693,
+          "CK_FF_MEAN": 362,
+          "CK_FF_ALL_MEAN": 368,
+          "CK_FF_MIN": 326,
+          "CK_FF_ALL_MIN": 326,
+          "CK_FF_MAX": 467,
+          "CK_FF_ALL_MAX": 477
+        },
+        "db": "4_1_cts.odb",
+        "clock": "core_clk",
+        "parasitics": "placement-estimated"
+      },
+      "budget_enabled": false
+    },
+    {
+      "name": "hbm_vm8_sen_654733cc5",
+      "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "source_branch": "claude/hbm-vm-split8-20261007",
+      "state": "RUNNING",
+      "stage": "route",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_sen_654733cc5",
+      "exact_bench": {
+        "expect": "pass",
+        "rc": 0,
+        "ok": true,
+        "tail": "ne 31: 806253 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/0 fault=1/1 hash= DIFF\n[2968000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_XBUS_DETECTED\nphysical/hbm_accel_die_views/vm/split8/run_vm_split8.sh: line 31: 1076938 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/40 fault=1/1 hash= DIFF\n[3654000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_SEAM_DETECTED\nVM_SPLIT8_BENCH PASS\n",
+        "track": "parallel"
+      },
+      "negative_benches": {
+        "bench_vm8_neg_xbus": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "VM8_XBUS_MUTANT_FAILS\n",
+          "track": "parallel"
+        },
+        "bench_vm8_neg_seam": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "VM8_SEAM_MUTANT_FAILS\n",
+          "track": "parallel"
+        },
+        "bench_vm8_neg_port_depth": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "VM8_PORT_SKEW_DETECTED\n",
+          "track": "parallel"
+        }
+      },
+      "cts_calibration": {
+        "ss": {
+          "boundary": {
+            "n": 20145,
+            "mean": 559.8,
+            "min": 490.3,
+            "max": 828.9
+          },
+          "all": {
+            "n": 21695,
+            "mean": 560.0,
+            "min": 490.3,
+            "max": 885.4
+          },
+          "errors": []
+        },
+        "ff": {
+          "boundary": {
+            "n": 20145,
+            "mean": 377.7,
+            "min": 319.2,
+            "max": 575.8
+          },
+          "all": {
+            "n": 21695,
+            "mean": 377.6,
+            "min": 319.2,
+            "max": 613.0
+          },
+          "errors": []
+        },
+        "env": {
+          "CK_SS_MEAN": 560,
+          "CK_SS_ALL_MEAN": 560,
+          "CK_SS_MIN": 490,
+          "CK_SS_ALL_MIN": 490,
+          "CK_SS_MAX": 829,
+          "CK_SS_ALL_MAX": 885,
+          "CK_FF_MEAN": 378,
+          "CK_FF_ALL_MEAN": 378,
+          "CK_FF_MIN": 319,
+          "CK_FF_ALL_MIN": 319,
+          "CK_FF_MAX": 576,
+          "CK_FF_ALL_MAX": 613
+        },
+        "db": "4_1_cts.odb",
+        "clock": "core_clk",
+        "parasitics": "placement-estimated"
+      },
+      "budget_enabled": false
+    },
+    {
+      "name": "hbm_vm8_ses_654733cc5",
+      "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "source_branch": "claude/hbm-vm-split8-20261007",
+      "state": "RUNNING",
+      "stage": "calibrate",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_ses_654733cc5",
+      "exact_bench": {
+        "expect": "pass",
+        "rc": 0,
+        "ok": true,
+        "tail": "e 31: 2602319 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/0 fault=1/1 hash= DIFF\n[2968000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_XBUS_DETECTED\nphysical/hbm_accel_die_views/vm/split8/run_vm_split8.sh: line 31: 2626159 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/40 fault=1/1 hash= DIFF\n[3654000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_SEAM_DETECTED\nVM_SPLIT8_BENCH PASS\n",
+        "track": "parallel"
+      },
+      "negative_benches": {
+        "bench_vm8_neg_xbus": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "VM8_XBUS_MUTANT_FAILS\n",
+          "track": "parallel"
+        },
+        "bench_vm8_neg_seam": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "VM8_SEAM_MUTANT_FAILS\n",
+          "track": "parallel"
+        },
+        "bench_vm8_neg_port_depth": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "VM8_PORT_SKEW_DETECTED\n",
+          "track": "parallel"
+        }
+      },
+      "cts_calibration": null,
+      "budget_enabled": false
+    },
+    {
+      "name": "hbm_vm8_swn_654733cc5",
+      "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "source_branch": "claude/hbm-vm-split8-20261007",
+      "state": "RUNNING",
+      "stage": "calibrate",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_swn_654733cc5",
+      "exact_bench": {
+        "expect": "pass",
+        "rc": 0,
+        "ok": true,
+        "tail": "ne 31: 862112 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/0 fault=1/1 hash= DIFF\n[2968000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_XBUS_DETECTED\nphysical/hbm_accel_die_views/vm/split8/run_vm_split8.sh: line 31: 1096606 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/40 fault=1/1 hash= DIFF\n[3654000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_SEAM_DETECTED\nVM_SPLIT8_BENCH PASS\n",
+        "track": "parallel"
+      },
+      "negative_benches": {},
+      "cts_calibration": null,
+      "budget_enabled": false
+    },
+    {
+      "name": "hbm_vm8_sws_654733cc5",
+      "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "source_branch": "claude/hbm-vm-split8-20261007",
+      "state": "RUNNING",
+      "stage": "calibrate",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_sws_654733cc5",
+      "exact_bench": {
+        "expect": "pass",
+        "rc": 0,
+        "ok": true,
+        "tail": "ne 31: 894403 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/0 fault=1/1 hash= DIFF\n[2968000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_XBUS_DETECTED\nphysical/hbm_accel_die_views/vm/split8/run_vm_split8.sh: line 31: 1129183 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/40 fault=1/1 hash= DIFF\n[3654000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_SEAM_DETECTED\nVM_SPLIT8_BENCH PASS\n",
+        "track": "parallel"
+      },
+      "negative_benches": {},
+      "cts_calibration": null,
+      "budget_enabled": false
+    }
+  ]
+}

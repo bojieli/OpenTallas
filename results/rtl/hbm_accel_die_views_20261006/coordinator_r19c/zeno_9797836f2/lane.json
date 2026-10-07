@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.hbm_hub_lane_view.v1",
+  "lane": "ot_su12_sfu",
+  "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/m12sfu/eco/eco4",
+  "source_commit": "66e7df57d16e737997406146e83d04bd1b76f115",
+  "parameters": {
+    "GSH": 1,
+    "KIMM": 1,
+    "DENR": 0,
+    "DRING": 0
+  },
+  "closed": true,
+  "closure_scope": "Retained routed leaf signoff with IO false paths; not parent interface closure.",
+  "margin_ok": false,
+  "margin_policy": "Legacy collect.py +40/+15: SS misses by 1.06 ps. Current closure-loop +15/+15 passes. Neither threshold changed.",
+  "closure_loop_margin_ok": true,
+  "ss_worst_slack_ps": 38.94,
+  "ff_worst_hold_slack_ps": 16.06,
+  "drc_violations": 0,
+  "signoff": "833 ps / SS setup 60 ps / FF hold 25 ps; unchanged su/signoff833_clk.sdc post-SDC in retained corner_sta.json",
+  "layers": {
+    "pg": {
+      "VDD": [
+        "M1",
+        "M2",
+        "M6"
+      ],
+      "VSS": [
+        "M1",
+        "M2",
+        "M6"
+      ]
+    },
+    "obs": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7",
+      "RVTN",
+      "RVTP"
+    ],
+    "size": [
+      159.84,
+      330.48
+    ]
+  },
+  "cycles_added_by_export": 0,
+  "rtl_cycle_cost": "GSH +1 per gather fetch; KIMM 0; already recorded in cc4324d2e. ECO/export adds no cycles.",
+  "exactness_evidence": {
+    "commit": "cc4324d2e026fa30245fe8d83e0dcc5ba3a0d72c",
+    "path": "physical/hbm_accel_die_views/su/lane_attempts.json",
+    "scope": "Existing random c12 campaign: 5/5 exact, GSH mutant 0/5, KIMM mutant 1/5. Vehicle batch was not run (missing tokenizers); no new RTL or exactness claim."
+  },
+  "outcheck": {
+    "scope": "Pre-ECO m12sfu output check, not rerun here",
+    "result": "outputs 266 input_paths 929 not_register_direct 0"
+  },
+  "interface_sdc": {
+    "path": "/home/ubuntu/wt-claude-hbmabs-hub/physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc",
+    "sha256": "6160b1d47e326c9e6c0f081a7dc34f67fb156e3fb6dd4ec1c2ff41620e2c7c86",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "parent_context_closed": false,
+  "interface_export_worst_slack_seconds": {
+    "ss": -4.952658283485789e-10,
+    "ff": -1.417689299287872e-10
+  },
+  "export_validation": "evidence_eco4/export_validation.json",
+  "original_export": "evidence_eco4/original_export (incomplete input arcs; not for parent use)",
+  "sha256": {
+    "ot_su12_sfu.lef": "314bd4a74d28d162bf25f1cf116be273bf88d63e4c9e7eb279f0d60729bd4e45",
+    "ot_su12_sfu_ff.lib": "8892b9e45615a0c327cfc76ac2ba2d29267122ac3d09b685207c4e9660faf229",
+    "ot_su12_sfu_ss.lib": "e2dc0c24d78d12debdb8811288995b0be00d88e444340c9745d00c5d890bd3e6"
+  }
+}

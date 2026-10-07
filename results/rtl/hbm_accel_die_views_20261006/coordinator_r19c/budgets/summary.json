@@ -1,0 +1,2082 @@
+{
+ "schema": "opentallas.budgets.summary.v1",
+ "masters": 83,
+ "rows": [
+  {
+   "master": "hfd_attn_tile",
+   "kinds": [
+    "attn_tile"
+   ],
+   "dies": {
+    "hbm": 64
+   },
+   "size_um": [
+    1349.112,
+    1349.976
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 8,
+   "sync": 8,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 4525.2,
+   "max_stages_needed": 12
+  },
+  {
+   "master": "hfd_barrier",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    1399.656,
+    36.696
+   ],
+   "entry_ss": null,
+   "lint_ss": 626.0,
+   "lint_grade": "target",
+   "lint_target_ss": 626.0,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 107.6,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_cdist_r14",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    111.0,
+    215.976
+   ],
+   "entry_ss": null,
+   "lint_ss": 563.9,
+   "lint_grade": "target",
+   "lint_target_ss": 563.9,
+   "lint_over_target": false,
+   "ports": 6,
+   "sync": 6,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3724.5,
+   "max_stages_needed": 10
+  },
+  {
+   "master": "hfd_cdist_r15",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    67.8,
+    203.016
+   ],
+   "entry_ss": null,
+   "lint_ss": 531.5,
+   "lint_grade": "target",
+   "lint_target_ss": 531.5,
+   "lint_over_target": false,
+   "ports": 5,
+   "sync": 5,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3964.2,
+   "max_stages_needed": 10
+  },
+  {
+   "master": "hfd_cmdproc_n",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    1399.656,
+    701.976
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 11,
+   "sync": 11,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 4133.4,
+   "max_stages_needed": 7
+  },
+  {
+   "master": "hfd_cmdproc_s",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    1399.656,
+    701.976
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 9,
+   "sync": 9,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1588.4,
+   "max_stages_needed": 3
+  },
+  {
+   "master": "hfd_coll",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    1399.656,
+    1403.976
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 19,
+   "sync": 19,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2091.6,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_gath_r10",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    166.728,
+    315.336
+   ],
+   "entry_ss": null,
+   "lint_ss": 628.3,
+   "lint_grade": "target",
+   "lint_target_ss": 628.3,
+   "lint_over_target": false,
+   "ports": 5,
+   "sync": 5,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2433.7,
+   "max_stages_needed": 7
+  },
+  {
+   "master": "hfd_gath_r24",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    109.704,
+    110.136
+   ],
+   "entry_ss": null,
+   "lint_ss": 525.1,
+   "lint_grade": "target",
+   "lint_target_ss": 525.1,
+   "lint_over_target": false,
+   "ports": 4,
+   "sync": 4,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2464.4,
+   "max_stages_needed": 7
+  },
+  {
+   "master": "hfd_gath_r25",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    166.728,
+    315.336
+   ],
+   "entry_ss": null,
+   "lint_ss": 628.3,
+   "lint_grade": "target",
+   "lint_target_ss": 628.3,
+   "lint_over_target": false,
+   "ports": 5,
+   "sync": 5,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2653.8,
+   "max_stages_needed": 6
+  },
+  {
+   "master": "hfd_gath_r8",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 8
+   },
+   "size_um": [
+    81.192,
+    82.056
+   ],
+   "entry_ss": null,
+   "lint_ss": 500.6,
+   "lint_grade": "target",
+   "lint_target_ss": 500.6,
+   "lint_over_target": false,
+   "ports": 3,
+   "sync": 3,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2405.6,
+   "max_stages_needed": 6
+  },
+  {
+   "master": "hfd_gath_r9",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    109.704,
+    110.136
+   ],
+   "entry_ss": null,
+   "lint_ss": 525.1,
+   "lint_grade": "target",
+   "lint_target_ss": 525.1,
+   "lint_over_target": false,
+   "ports": 4,
+   "sync": 4,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2436.2,
+   "max_stages_needed": 7
+  },
+  {
+   "master": "hfd_hc",
+   "kinds": [
+    "hub"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    275.592,
+    5529.576
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 542.4,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_host_slab",
+   "kinds": [
+    "host_slab"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    594.408,
+    16824.216
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 0,
+   "sync": 0,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 0,
+   "max_stages_needed": 0
+  },
+  {
+   "master": "hfd_index_q_b0",
+   "kinds": [
+    "hub"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    930.072,
+    970.056
+   ],
+   "entry_ss": null,
+   "lint_ss": 1186,
+   "lint_grade": "measured",
+   "lint_target_ss": 1254,
+   "lint_over_target": false,
+   "ports": 4,
+   "sync": 4,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 4529.8,
+   "max_stages_needed": 12
+  },
+  {
+   "master": "hfd_index_q_b1",
+   "kinds": [
+    "hub"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    930.072,
+    970.056
+   ],
+   "entry_ss": null,
+   "lint_ss": 1132,
+   "lint_grade": "measured",
+   "lint_target_ss": 1154,
+   "lint_over_target": false,
+   "ports": 4,
+   "sync": 4,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1.7,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_index_q_b2",
+   "kinds": [
+    "hub"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    930.072,
+    959.976
+   ],
+   "entry_ss": null,
+   "lint_ss": 1309,
+   "lint_grade": "measured",
+   "lint_target_ss": 1402,
+   "lint_over_target": false,
+   "ports": 7,
+   "sync": 7,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2055.8,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_index_q_b3",
+   "kinds": [
+    "hub"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    930.072,
+    970.056
+   ],
+   "entry_ss": null,
+   "lint_ss": 1185,
+   "lint_grade": "measured",
+   "lint_target_ss": 1298,
+   "lint_over_target": false,
+   "ports": 6,
+   "sync": 6,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1737.1,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_index_q_b4",
+   "kinds": [
+    "hub"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    930.072,
+    829.896
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 4,
+   "sync": 4,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1.7,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_index_q_b5",
+   "kinds": [
+    "hub"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    930.072,
+    829.416
+   ],
+   "entry_ss": null,
+   "lint_ss": 1324,
+   "lint_grade": "measured",
+   "lint_target_ss": 1354,
+   "lint_over_target": false,
+   "ports": 4,
+   "sync": 4,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 4525.2,
+   "max_stages_needed": 12
+  },
+  {
+   "master": "hfd_loader",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    1399.656,
+    237.576
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1608.2,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_mcast_r5",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    241.896,
+    410.376
+   ],
+   "entry_ss": null,
+   "lint_ss": 702.5,
+   "lint_grade": "target",
+   "lint_target_ss": 702.5,
+   "lint_over_target": false,
+   "ports": 4,
+   "sync": 4,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2107.8,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_mcast_r6",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 8
+   },
+   "size_um": [
+    466.968,
+    120.936
+   ],
+   "entry_ss": null,
+   "lint_ss": 635.6,
+   "lint_grade": "target",
+   "lint_target_ss": 635.6,
+   "lint_over_target": false,
+   "ports": 4,
+   "sync": 4,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2107.8,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_mcast_r7",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    466.968,
+    120.936
+   ],
+   "entry_ss": null,
+   "lint_ss": 635.6,
+   "lint_grade": "target",
+   "lint_target_ss": 635.6,
+   "lint_over_target": false,
+   "ports": 3,
+   "sync": 3,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1995.0,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_meso_r1",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 16
+   },
+   "size_um": [
+    398.28,
+    71.256
+   ],
+   "entry_ss": null,
+   "lint_ss": 575.7,
+   "lint_grade": "target",
+   "lint_target_ss": 575.7,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1493.0,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_meso_r28",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 9
+   },
+   "size_um": [
+    63.48,
+    190.056
+   ],
+   "entry_ss": null,
+   "lint_ss": 525.0,
+   "lint_grade": "target",
+   "lint_target_ss": 525.0,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1614.1,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_meso_r32",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    39.288,
+    285.096
+   ],
+   "entry_ss": null,
+   "lint_ss": 521.5,
+   "lint_grade": "target",
+   "lint_target_ss": 521.5,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1546.8,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_meso_r35",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    39.288,
+    285.096
+   ],
+   "entry_ss": null,
+   "lint_ss": 521.5,
+   "lint_grade": "target",
+   "lint_target_ss": 521.5,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1624.8,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_meso_r37",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    269.976,
+    41.016
+   ],
+   "entry_ss": null,
+   "lint_ss": 521.0,
+   "lint_grade": "target",
+   "lint_target_ss": 521.0,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1533.5,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_quant",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    1399.656,
+    358.536
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 5,
+   "sync": 5,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 4775.1,
+   "max_stages_needed": 8
+  },
+  {
+   "master": "hfd_router",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    1399.656,
+    326.28
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 10,
+   "sync": 10,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 6724.4,
+   "max_stages_needed": 11
+  },
+  {
+   "master": "hfd_serdes_slab",
+   "kinds": [
+    "serdes_slab"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    2462.376,
+    3656.856
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 0,
+   "sync": 0,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 0,
+   "max_stages_needed": 0
+  },
+  {
+   "master": "hfd_sfu",
+   "kinds": [
+    "hub"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    398.712,
+    5529.576
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 4,
+   "sync": 4,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 542.4,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_sm",
+   "kinds": [
+    "sm"
+   ],
+   "dies": {
+    "hbm": 32
+   },
+   "size_um": [
+    2202.744,
+    2073.576
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 5,
+   "sync": 5,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3614.9,
+   "max_stages_needed": 9
+  },
+  {
+   "master": "hfd_stn_r0",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 16
+   },
+   "size_um": [
+    70.392,
+    60.456
+   ],
+   "entry_ss": null,
+   "lint_ss": 486.4,
+   "lint_grade": "target",
+   "lint_target_ss": 486.4,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1700.8,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r11",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 12
+   },
+   "size_um": [
+    48.792,
+    127.416
+   ],
+   "entry_ss": null,
+   "lint_ss": 498.2,
+   "lint_grade": "target",
+   "lint_target_ss": 498.2,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1684.7,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r12",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 12
+   },
+   "size_um": [
+    55.704,
+    64.776
+   ],
+   "entry_ss": null,
+   "lint_ss": 482.0,
+   "lint_grade": "target",
+   "lint_target_ss": 482.0,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1666.3,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r13",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 12
+   },
+   "size_um": [
+    64.344,
+    56.136
+   ],
+   "entry_ss": null,
+   "lint_ss": 482.0,
+   "lint_grade": "target",
+   "lint_target_ss": 482.0,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1666.3,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r16",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 24
+   },
+   "size_um": [
+    18.984,
+    118.776
+   ],
+   "entry_ss": null,
+   "lint_ss": 471.1,
+   "lint_grade": "target",
+   "lint_target_ss": 471.1,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2050.3,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_stn_r17",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 12
+   },
+   "size_um": [
+    115.752,
+    19.416
+   ],
+   "entry_ss": null,
+   "lint_ss": 471.0,
+   "lint_grade": "target",
+   "lint_target_ss": 471.0,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1609.6,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r18",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 8
+   },
+   "size_um": [
+    66.936,
+    60.456
+   ],
+   "entry_ss": null,
+   "lint_ss": 485.0,
+   "lint_grade": "target",
+   "lint_target_ss": 485.0,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1671.5,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r19",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    60.024,
+    66.936
+   ],
+   "entry_ss": null,
+   "lint_ss": 484.8,
+   "lint_grade": "target",
+   "lint_target_ss": 484.8,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1671.5,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r2",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 16
+   },
+   "size_um": [
+    14.664,
+    142.536
+   ],
+   "entry_ss": null,
+   "lint_ss": 469.5,
+   "lint_grade": "target",
+   "lint_target_ss": 469.5,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1893.5,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_stn_r20",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 8
+   },
+   "size_um": [
+    66.072,
+    60.456
+   ],
+   "entry_ss": null,
+   "lint_ss": 484.7,
+   "lint_grade": "target",
+   "lint_target_ss": 484.7,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1953.3,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r21",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 8
+   },
+   "size_um": [
+    59.592,
+    66.936
+   ],
+   "entry_ss": null,
+   "lint_ss": 484.6,
+   "lint_grade": "target",
+   "lint_target_ss": 484.6,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1671.0,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r22",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 16
+   },
+   "size_um": [
+    42.744,
+    73.416
+   ],
+   "entry_ss": null,
+   "lint_ss": 478.5,
+   "lint_grade": "target",
+   "lint_target_ss": 478.5,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1663.9,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r23",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 8
+   },
+   "size_um": [
+    72.552,
+    43.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 478.4,
+   "lint_grade": "target",
+   "lint_target_ss": 478.4,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1656.9,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r26",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    126.12,
+    49.656
+   ],
+   "entry_ss": null,
+   "lint_ss": 498.5,
+   "lint_grade": "target",
+   "lint_target_ss": 498.5,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2478.1,
+   "max_stages_needed": 6
+  },
+  {
+   "master": "hfd_stn_r27",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 27
+   },
+   "size_um": [
+    63.48,
+    62.616
+   ],
+   "entry_ss": null,
+   "lint_ss": 484.5,
+   "lint_grade": "target",
+   "lint_target_ss": 484.5,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1698.1,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r29",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    60.456,
+    64.776
+   ],
+   "entry_ss": null,
+   "lint_ss": 484.1,
+   "lint_grade": "target",
+   "lint_target_ss": 484.1,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1669.2,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r3",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 16
+   },
+   "size_um": [
+    14.664,
+    142.536
+   ],
+   "entry_ss": null,
+   "lint_ss": 469.5,
+   "lint_grade": "target",
+   "lint_target_ss": 469.5,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1579.0,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r30",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    39.288,
+    77.736
+   ],
+   "entry_ss": null,
+   "lint_ss": 477.8,
+   "lint_grade": "target",
+   "lint_target_ss": 477.8,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1659.4,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r31",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 6
+   },
+   "size_um": [
+    72.984,
+    41.016
+   ],
+   "entry_ss": null,
+   "lint_ss": 477.3,
+   "lint_grade": "target",
+   "lint_target_ss": 477.3,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1657.0,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r33",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 5
+   },
+   "size_um": [
+    39.288,
+    77.736
+   ],
+   "entry_ss": null,
+   "lint_ss": 477.8,
+   "lint_grade": "target",
+   "lint_target_ss": 477.8,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1800.6,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_stn_r34",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    72.984,
+    41.016
+   ],
+   "entry_ss": null,
+   "lint_ss": 477.3,
+   "lint_grade": "target",
+   "lint_target_ss": 477.3,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1648.1,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r36",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    39.288,
+    77.736
+   ],
+   "entry_ss": null,
+   "lint_ss": 477.8,
+   "lint_grade": "target",
+   "lint_target_ss": 477.8,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1652.7,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_stn_r4",
+   "kinds": [
+    "waypoint"
+   ],
+   "dies": {
+    "hbm": 20
+   },
+   "size_um": [
+    120.936,
+    51.816
+   ],
+   "entry_ss": null,
+   "lint_ss": 498.5,
+   "lint_grade": "target",
+   "lint_target_ss": 498.5,
+   "lint_over_target": false,
+   "ports": 2,
+   "sync": 2,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1682.1,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_su",
+   "kinds": [
+    "hub"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    703.272,
+    5529.576
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 15,
+   "sync": 15,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 6724.4,
+   "max_stages_needed": 17
+  },
+  {
+   "master": "hfd_su_full",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    346.008,
+    347.736
+   ],
+   "entry_ss": null,
+   "lint_ss": 730.0,
+   "lint_grade": "target",
+   "lint_target_ss": 730.0,
+   "lint_over_target": false,
+   "ports": 0,
+   "sync": 0,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 0,
+   "max_stages_needed": 0
+  },
+  {
+   "master": "hfd_su_red",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    1399.656,
+    218.136
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 0,
+   "sync": 0,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 0,
+   "max_stages_needed": 0
+  },
+  {
+   "master": "hfd_svc_SE_s0",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1017.0,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 1057,
+   "lint_grade": "measured",
+   "lint_target_ss": 874.1,
+   "lint_over_target": true,
+   "ports": 7,
+   "sync": 7,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2467.1,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_svc_SE_s1",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1300.968,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 879,
+   "lint_grade": "measured",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 7,
+   "sync": 7,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1700.8,
+   "max_stages_needed": 3
+  },
+  {
+   "master": "hfd_svc_SE_s2",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1061.928,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 758,
+   "lint_grade": "measured",
+   "lint_target_ss": 883.8,
+   "lint_over_target": false,
+   "ports": 7,
+   "sync": 7,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 176.8,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_svc_SE_s3",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1381.992,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 919,
+   "lint_grade": "measured",
+   "lint_target_ss": 919,
+   "lint_over_target": false,
+   "ports": 10,
+   "sync": 10,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2050.3,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_svc_SE_s4",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1008.984,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 808,
+   "lint_grade": "measured",
+   "lint_target_ss": 872.3,
+   "lint_over_target": false,
+   "ports": 7,
+   "sync": 7,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 175.2,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_svc_SE_s5",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1094.952,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 829,
+   "lint_grade": "measured",
+   "lint_target_ss": 890.8,
+   "lint_over_target": false,
+   "ports": 7,
+   "sync": 7,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1698.9,
+   "max_stages_needed": 3
+  },
+  {
+   "master": "hfd_svc_SE_s6",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    763.992,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 562,
+   "lint_grade": "measured",
+   "lint_target_ss": 814.9,
+   "lint_over_target": false,
+   "ports": 5,
+   "sync": 5,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 8.7,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_svc_SE_s7",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    870.048,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 631,
+   "lint_grade": "measured",
+   "lint_target_ss": 840.8,
+   "lint_over_target": false,
+   "ports": 5,
+   "sync": 5,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 174.7,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_svc_SW_s0",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1017.0,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 874.1,
+   "lint_grade": "target",
+   "lint_target_ss": 874.1,
+   "lint_over_target": false,
+   "ports": 7,
+   "sync": 7,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 2466.3,
+   "max_stages_needed": 4
+  },
+  {
+   "master": "hfd_svc_SW_s1",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1305.912,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 9,
+   "sync": 9,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1952.4,
+   "max_stages_needed": 3
+  },
+  {
+   "master": "hfd_svc_SW_s2",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1056.984,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 882.7,
+   "lint_grade": "target",
+   "lint_target_ss": 882.7,
+   "lint_over_target": false,
+   "ports": 7,
+   "sync": 7,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 343.9,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_svc_SW_s3",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1072.968,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 886.1,
+   "lint_grade": "target",
+   "lint_target_ss": 886.1,
+   "lint_over_target": false,
+   "ports": 8,
+   "sync": 8,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1700.3,
+   "max_stages_needed": 3
+  },
+  {
+   "master": "hfd_svc_SW_s4",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    785.976,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 820.4,
+   "lint_grade": "target",
+   "lint_target_ss": 820.4,
+   "lint_over_target": false,
+   "ports": 5,
+   "sync": 5,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 8.7,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_svc_SW_s5",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1062.984,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 884.0,
+   "lint_grade": "target",
+   "lint_target_ss": 884.0,
+   "lint_over_target": false,
+   "ports": 7,
+   "sync": 7,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 344.4,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_svc_SW_s6",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1061.976,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 883.8,
+   "lint_grade": "target",
+   "lint_target_ss": 883.8,
+   "lint_over_target": false,
+   "ports": 7,
+   "sync": 7,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1699.8,
+   "max_stages_needed": 3
+  },
+  {
+   "master": "hfd_svc_SW_s7",
+   "kinds": [
+    "svc"
+   ],
+   "dies": {
+    "hbm": 2
+   },
+   "size_um": [
+    1136.064,
+    259.176
+   ],
+   "entry_ss": null,
+   "lint_ss": 899.4,
+   "lint_grade": "target",
+   "lint_target_ss": 899.4,
+   "lint_over_target": false,
+   "ports": 5,
+   "sync": 5,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 345.6,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "hfd_vm_ne",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    699.816,
+    1000.056
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 17,
+   "sync": 17,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3437.1,
+   "max_stages_needed": 6
+  },
+  {
+   "master": "hfd_vm_nw",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    699.816,
+    1000.056
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 18,
+   "sync": 18,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3438.0,
+   "max_stages_needed": 6
+  },
+  {
+   "master": "hfd_vm_se",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    699.816,
+    1000.056
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 17,
+   "sync": 17,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3066.1,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "hfd_vm_sw",
+   "kinds": [
+    "spine"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    699.816,
+    1000.056
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 18,
+   "sync": 18,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 3067.0,
+   "max_stages_needed": 5
+  },
+  {
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "kinds": [
+    "phy"
+   ],
+   "dies": {
+    "hbm": 4
+   },
+   "size_um": [
+    8500.056,
+    1177.2
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 13,
+   "sync": 13,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 8.7,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "ot_hbm_host_phy",
+   "kinds": [
+    "link"
+   ],
+   "dies": {
+    "hbm": 1
+   },
+   "size_um": [
+    260.808,
+    1652.424
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 1,
+   "sync": 1,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 174.0,
+   "max_stages_needed": 1
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "kinds": [
+    "link"
+   ],
+   "dies": {
+    "hbm": 9
+   },
+   "size_um": [
+    250.056,
+    2250.216
+   ],
+   "entry_ss": null,
+   "lint_ss": 900.0,
+   "lint_grade": "target",
+   "lint_target_ss": 900.0,
+   "lint_over_target": false,
+   "ports": 1,
+   "sync": 1,
+   "cdc": 0,
+   "infeasible": 0,
+   "fanout_flags": 0,
+   "max_length_um": 1090.9,
+   "max_stages_needed": 3
+  }
+ ],
+ "infeasible": []
+}

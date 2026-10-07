@@ -1,0 +1,25 @@
+{
+ "master": "hfd_hc",
+ "lane": "ot_dsrom_su_hcpost_lane",
+ "lane_source": "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+ "lane_params": {
+  "ML": 7,
+  "AL": 6
+ },
+ "lanes": 88,
+ "chains": 2,
+ "groups_per_chain": 11,
+ "lanes_per_column_group": 2,
+ "WI": 1024,
+ "WO": 1024,
+ "lane_broadcast_bits": 161,
+ "lane_per_lane_bits": 160,
+ "lane_out_bits": 34,
+ "acc_bits_per_chain": 512,
+ "flops": {
+  "boundary": 4098,
+  "broadcast": 3564,
+  "accumulate": 11264,
+  "lane_output_stage": 2992
+ }
+}
