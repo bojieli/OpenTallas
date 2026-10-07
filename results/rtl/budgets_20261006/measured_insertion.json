@@ -187,24 +187,24 @@
   "hfd_svc_SE_s2": {
    "job": "hbm_svc_SE_s2_d6f9d25a1_bud",
    "source_commit": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
-   "host": "ot-pve1",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s2_d6f9d25a1_bud",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s2_d6f9d25a1_bud",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T22:20:16-07:00",
+   "measured_at": "2026-10-06T22:39:10-07:00",
    "ss": {
-    "mean": 762,
+    "mean": 764,
     "min": 733,
-    "max": 1080
+    "max": 1111
    },
    "ff": {
-    "mean": 479,
-    "min": 455,
-    "max": 713
+    "mean": 481,
+    "min": 454,
+    "max": 740
    },
    "boundary_n": 5527,
    "budget": {
-    "measured_ss": 762.0,
+    "measured_ss": 764.0,
     "ok": true,
     "reasons": [],
     "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
@@ -1448,5 +1448,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-06T22:37:58-07:00"
+ "updated": "2026-10-06T22:39:10-07:00"
 }
