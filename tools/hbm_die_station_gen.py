@@ -243,6 +243,19 @@ def build(rec, fcm, mutant=False, margin=False, **kw):
         if lay['a'][0][2]:
             plain_dir('b', 'a', False)            # upstream
         rl = 'forward'
+    elif role == 'stn' and not lay['a'][0] and not lay['b'][0]:
+        # r21/r22 common-clock relay (views agent 2026-10-07, hfd_stn_r38 opposite each index b5 t_vm pin run): a and b
+        # both on the core ck (no forwarded clock): one register per bit, b = a one ck later (+1 cycle per hop, the
+        # coordinator's relay pricing).  The block is ~73 um wide: the register sits within ~40 um of either pin.
+        da, db_ = dirs(rec, 'a'), dirs(rec, 'b')
+        ain = [i for i, d in enumerate(da) if d == 'in']
+        assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))
+        for i in ain:
+            E.ins[('a', i)] = ('ck', 0)
+        regs = E.reg([f'a[{i}]' for i in ain], 'relay')
+        E.body.append(f'  assign b = {{{", ".join(reversed(regs))}}};')
+        E.local([f'a[{i}]' for i in ain], 'b', list(range(len(ain))))
+        rl = 'relay'
     elif role == 'stn':                           # launch: a local (SM request), b forwarded
         da = dirs(rec, 'a')
         assert not lay['a'][0] and lay['b'][0]
