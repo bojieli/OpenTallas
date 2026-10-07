@@ -1,0 +1,286 @@
+{
+ "case": "b",
+ "tag": "views",
+ "bundle_k": 16,
+ "congestion_iterations": 5,
+ "empty_baseline": false,
+ "instances": 504,
+ "bundle_pins": 19110,
+ "bundle_nets": 47843,
+ "wires": 758755,
+ "coverage": {
+  "field": 0.0878,
+  "hub": 0.0878,
+  "spine": 0.0878,
+  "svc": 0.1639,
+  "channel": 0.0878
+ },
+ "variant": {
+  "n_mirror_fix": true,
+  "x_chain": true,
+  "w_my": true,
+  "strip_d": 864.0,
+  "port_fix": true,
+  "ew_corridor": true,
+  "sm_xmid": true,
+  "lanes": true,
+  "spch": 1244.16,
+  "root_pins": true,
+  "serdes_mg": 250.56,
+  "orient_fix": true,
+  "clk_dom": true,
+  "sm_rtl_w": true,
+  "sm_desc": true,
+  "link_rtl": true,
+  "coll_rtl": true,
+  "attn_rtl": true,
+  "hub_io": true,
+  "fwd": true,
+  "rq_chain": true,
+  "stn_share": true,
+  "hub_h": 12100.0,
+  "spine_h": 7500.0,
+  "spine_w": 1399.68,
+  "face_vm": 2000.0,
+  "attn_tile_w_um": 1349.136,
+  "attn_tile_h_um": 1350.0,
+  "face_fix": true,
+  "router_env": [
+   9338.688,
+   326.28
+  ],
+  "corner_rule": {
+   "hfd_stn_r26": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r11": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r19": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r21": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_stn_r23": {
+    "keep": 1.0,
+    "tail": 8
+   },
+   "hfd_meso_r1": {
+    "keep": 1.0,
+    "tail": 8
+   }
+  },
+  "pin_centre": {
+   "hfd_stn_r23|rst": 10.0
+  },
+  "split_masters": {
+   "hfd_index_q": "physical/hbm_accel_die_views/index_q/split/split.json"
+  },
+  "split_lattice": {
+   "hfd_index_q": {
+    "hfd_index_q_b1:R0": 0.27,
+    "hfd_index_q_b4:R0": 1.62,
+    "hfd_index_q_b1:MX": 1.62,
+    "hfd_index_q_b0:R0": 0.0,
+    "hfd_index_q_b2:R0": 0.0,
+    "hfd_index_q_b3:R0": 0.0,
+    "hfd_index_q_b5:R0": 0.0,
+    "hfd_index_q_b0:MX": 0.0,
+    "hfd_index_q_b2:MX": 0.0,
+    "hfd_index_q_b3:MX": 0.0,
+    "hfd_index_q_b4:MX": 0.0,
+    "hfd_index_q_b5:MX": 0.0
+   }
+  },
+  "spine_slots": {
+   "su_red": [
+    1399.656,
+    218.136
+   ],
+   "su_full": [
+    346.008,
+    347.736
+   ]
+  },
+  "split_x_masters": "physical/hbm_accel_die_views/svc/split/split.json",
+  "host_bb": true,
+  "budget_stages": true,
+  "hub_stage_all": true,
+  "fwd_hub": true,
+  "spine_region": true,
+  "barrier_low": true,
+  "ck_centre": true,
+  "W": 24401.52,
+  "H": 24621.84
+ },
+ "real_views": {
+  "hfd_attn_tile": {
+   "lef": "physical/hbm_accel_die_views/attn_tile/hfd_attn_tile.lef",
+   "sha256": "a35a72f61fb7c7e330b3b9dbab977e060afb41f99f5c955609317c8327e1de83"
+  },
+  "hfd_barrier": {
+   "lef": "physical/hbm_accel_die_views/barrier/hfd_barrier.lef",
+   "sha256": "74bdd04c099997d76f0d2d4dfc0b7c9ae307f250ded52033ee3c88d3e8449031"
+  },
+  "hfd_cdist_r14": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_cdist_r14/hfd_cdist_r14.lef",
+   "sha256": "6eea624c70f67b1ed4b32705d6402d000d331e105f53a65eebf43bcf3e270f94"
+  },
+  "hfd_cdist_r15": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_cdist_r15/hfd_cdist_r15.lef",
+   "sha256": "87924cfa8eda7adf134899977536f50a64cca61b31dc878e22f7a8c9d31427cc"
+  },
+  "hfd_gath_r10": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.lef",
+   "sha256": "feba009ae3077f1bf609c9ed197edbb434b7eb273a5c2bb7512407b2f4018d9a"
+  },
+  "hfd_gath_r24": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_gath_r24/hfd_gath_r24.lef",
+   "sha256": "7b15d5bb852ed0346d4525d330482af9a5c5fbdda9ccf5f11f1ade30ac5f9fca"
+  },
+  "hfd_gath_r25": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_gath_r25/hfd_gath_r25.lef",
+   "sha256": "bf2bc937a8cb02aba987b08a8c9bd4fdd1e3279741355645aa7ee9d1c8e98c6b"
+  },
+  "hfd_gath_r8": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_gath_r8/hfd_gath_r8.lef",
+   "sha256": "33f8f595935de0fec212f87649314fb1037db827d9958cf51f0bfdd90e08e5d6"
+  },
+  "hfd_gath_r9": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.lef",
+   "sha256": "957814c398c81d3cc736771d263ad57c537b7110c61d2583295055ccfda27fa2"
+  },
+  "hfd_host_slab": {
+   "lef": "physical/hbm_accel_die_views/host_slab/hfd_host_slab.lef",
+   "sha256": "22e0a35d034d287bf21b7b535db46169f8da82c4fde0208bb0a6c8b451c1fd06"
+  },
+  "hfd_index_q_b4": {
+   "lef": "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b4/hfd_index_q_b4.lef",
+   "sha256": "4d1391d59ae0ad4a3e03341d73a7963b9d032a7e369f5f6163fa17db6d414d20"
+  },
+  "hfd_mcast_r5": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_mcast_r5/hfd_mcast_r5.lef",
+   "sha256": "ff8c90df278f321c812a14b6ed97e9df1c34cf86af54030600c2f20d02a231fa"
+  },
+  "hfd_mcast_r6": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_mcast_r6/hfd_mcast_r6.lef",
+   "sha256": "5c69d686f817aecf95f07cbecbcc50be107bea2ec4cab8602ba613bdc3e1c792"
+  },
+  "hfd_mcast_r7": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_mcast_r7/hfd_mcast_r7.lef",
+   "sha256": "862ecc4c57749464e12fc00c88c119829f7f09f588903aa6b72a58dd218ca2b1"
+  },
+  "hfd_meso_r1": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_meso_r1/hfd_meso_r1.lef",
+   "sha256": "8ec0921f31c742ebc1ccc12d32e55e94e5b80f08c78d228dd7a3c0ba172193ec"
+  },
+  "hfd_meso_r28": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_meso_r28/hfd_meso_r28.lef",
+   "sha256": "05e382715b5b2b9bf325a3828110f2cc1963c36f39ee125484b0998015c8bfa4"
+  },
+  "hfd_meso_r32": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_meso_r32/hfd_meso_r32.lef",
+   "sha256": "9f9734592d1ddd398b252a322b3f6e813664a154076738228333a30dacb1d651"
+  },
+  "hfd_router": {
+   "lef": "physical/hbm_accel_die_views/router/hfd_router.lef",
+   "sha256": "ebd86e3888582c0d2bd716c6c849cca1369c09ac4b9edead48387218cbc21283"
+  },
+  "hfd_serdes_slab": {
+   "lef": "physical/hbm_accel_die_views/serdes_slab/hfd_serdes_slab.lef",
+   "sha256": "2a14ee10339e2fc46f7d16fc2022100ded43a21b6e345a56e96ddf153ba4d0ca"
+  },
+  "hfd_sm": {
+   "lef": "physical/hbm_accel_die_views/sm/hfd_sm.lef",
+   "sha256": "7651f1336d6cf7cd59bb202d6b3d054c5ce5f173ee69bec25fcae3f68686716e"
+  },
+  "hfd_stn_r0": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r0/hfd_stn_r0.lef",
+   "sha256": "8ce1741b8a8d6df8caee9812ea906c57253da6635630c2ee68e45c1bd4fb8d4e"
+  },
+  "hfd_stn_r11": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.lef",
+   "sha256": "8b3bff8fc00f94edde32254d68831e9160b60a8a208ab7c97e32b7cc9938151d"
+  },
+  "hfd_stn_r12": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r12/hfd_stn_r12.lef",
+   "sha256": "f7c0b3dfba88769a50dc7821739cf52daa91b3ff03e9c0641f98fdab0074bb37"
+  },
+  "hfd_stn_r13": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r13/hfd_stn_r13.lef",
+   "sha256": "36bc5ba3041d56fe2629312b8dd3a40c49a5b8481486b295a96e6266f70adf33"
+  },
+  "hfd_stn_r16": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r16/hfd_stn_r16.lef",
+   "sha256": "71ca48eee14af7168e067a5d1a851e42350477e6aacbd12b58b3505d1833694e"
+  },
+  "hfd_stn_r17": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r17/hfd_stn_r17.lef",
+   "sha256": "72559cc0a99daff51ad8e6970c9d07d2d1b225755637f0721c21f92c29f750b2"
+  },
+  "hfd_stn_r18": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r18/hfd_stn_r18.lef",
+   "sha256": "281b37f48b629da89dbd6cf307551f2f7a557ca0cb64a661ec7b50e96d37e8bd"
+  },
+  "hfd_stn_r19": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.lef",
+   "sha256": "7fd74334daf40ceda6de755d5e46d6647d468d7d8af187433becb3f7f17a555e"
+  },
+  "hfd_stn_r2": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r2/hfd_stn_r2.lef",
+   "sha256": "312b16153a1d6d36de83c277ab0cd283b6f3029fc6f774790e13f6126aad2fe6"
+  },
+  "hfd_stn_r20": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r20/hfd_stn_r20.lef",
+   "sha256": "f8359663ea4fc28ecb285b5cc410fdf2b031243e665d50fd9085850a2d845262"
+  },
+  "hfd_stn_r21": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r21/hfd_stn_r21.lef",
+   "sha256": "76b3c8d793a1a43db7edac60952437d43e45399064406373a4deeefee9629e59"
+  },
+  "hfd_stn_r22": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r22/hfd_stn_r22.lef",
+   "sha256": "1d6da56dc6bf43b013926932276df422e1cbd34587c166b44a74c682f29438cd"
+  },
+  "hfd_stn_r23": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r23/hfd_stn_r23.lef",
+   "sha256": "eb9186b6bca7dde804fa5b1395c61a97e62bf8e31c53d6d28d851e3697117c7b"
+  },
+  "hfd_stn_r26": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.lef",
+   "sha256": "873e159196dd48e612621b5fc38d9dd95e7d09c2539422f846d8695cd62c1469"
+  },
+  "hfd_stn_r27": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r27/hfd_stn_r27.lef",
+   "sha256": "5d1005b56e0ff8a1b40c8d4472bd9b7b2926f65aa6485192ea163a040caaffc6"
+  },
+  "hfd_stn_r29": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.lef",
+   "sha256": "10fd7b679a999907f2dded5a5250e3fee995685c7db116135b2095c719d24d5c"
+  },
+  "hfd_stn_r3": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r3/hfd_stn_r3.lef",
+   "sha256": "281a0cdda2bd50b667f41d509a478b1db93e901c12fc1f70abbaaedeb71088a4"
+  },
+  "hfd_stn_r30": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r30/hfd_stn_r30.lef",
+   "sha256": "b6b4f1a9fe5f42ab0f8551a213d7cf54131e872059c32958a256736e5ced24d7"
+  },
+  "hfd_stn_r31": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r31/hfd_stn_r31.lef",
+   "sha256": "19688728a8da87e9b8a4fd8281ce5fe64ab71e99d52a5810ea644af772dd1c76"
+  },
+  "hfd_stn_r4": {
+   "lef": "physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.lef",
+   "sha256": "59b7728733f688463f81fac483f44252439cdb713d01359c31c99a851ad1ba70"
+  }
+ },
+ "m8_m9_view_blockages": 160,
+ "m8_m9_contract_assumed": [],
+ "real_pin_plan": "generator pins (views MATCH or --real-pins off)"
+}
