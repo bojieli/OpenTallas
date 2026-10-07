@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import dsrom_full_owner_compiler as C
 import dsrom_full_owner_closure as V
 import dsrom_s73_pair1 as S73
+import v41_rom_ksplit_bankmap as S
 
 ROOT = Path(__file__).resolve().parents[1]
 R = 128
@@ -54,7 +55,19 @@ class FlavourPool(S73.RaggedPool):
     def clone(self):
         x = super().clone(); x.__class__ = FlavourPool; x.flavour = self.flavour; return x
 
+    KSPLIT = frozenset()        # BF16 aliases whose K split doubles (golden-aligned v41_rom_ksplit_bankmap.segments)
+
     def matrix(self, m, avoid=frozenset()):
+        if m['format'] == 'bf16' and m['alias'].split('.rows')[0] in self.KSPLIT:
+            orig = C.ordered_segments
+            C.ordered_segments = lambda fmt, K: S.segments(K, 2 * len(orig(fmt, K)))
+            try:
+                return self._matrix(m, avoid)
+            finally:
+                C.ordered_segments = orig
+        return self._matrix(m, avoid)
+
+    def _matrix(self, m, avoid=frozenset()):
         """BF16: first try pairs outside `avoid` (the pairs of earlier matrices sharing this one's x), so the field
         emitter can run them as ONE phase (<= 8 BF16 words a round a pair); fall back to every BF pair."""
         if m['format'] != 'bf16' or not avoid:
@@ -251,7 +264,8 @@ def mapping(out, pbf=2304, pq=2432, nbf_reg=4, dedicated=True):
     res = dict(schema='opentallas.dsrom.bf-double.allocation.v1', tool='tools/dsrom_bf_double_alloc.py', source_pin=git,
                decision='OWNER 2026-10-07: BF half-rate + more BF pairs; BF16-dedicated BF pairs (q plans on BF pairs '
                         'would run at half rate); 4 BF a region on BF stages; q-only stages',
-               counts=dict(counts), failures=failures, decoder_matrix_capacity_PASS=not failures,
+               ksplit_bf16_aliases=sorted(FlavourPool.KSPLIT), counts=dict(counts), failures=failures,
+               decoder_matrix_capacity_PASS=not failures,
                stages=stages, bf_stages=nbf, q_stages=stages - nbf, layer_dies=4 * stages,
                all_numbers='MODEL_UNVALIDATED until the field phases are measured', adopted=False)
     S73.save(out / 'mapping_verdict.json', res)
@@ -262,8 +276,10 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--pbf', type=int, default=2304); ap.add_argument('--pq', type=int, default=2432)
     ap.add_argument('--nbf-reg', type=int, default=4)
+    ap.add_argument('--ksplit', default='', help='BF16 aliases (comma list) whose K split doubles, e.g. gate')
     ap.add_argument('--shared', action='store_true', help='full-rate BF (re-cut A): q plans may use BF pairs; one die flavour')
     a = ap.parse_args()
+    FlavourPool.KSPLIT = frozenset(x for x in a.ksplit.split(',') if x)
     a.out.mkdir(parents=True, exist_ok=False)
     print(json.dumps(mapping(a.out, a.pbf, a.pq, a.nbf_reg, not a.shared), indent=1))
 

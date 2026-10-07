@@ -1,0 +1,347 @@
+{
+ "schema": "opentallas.dsrom.bf-double.merge-price.v1",
+ "tool": "tools/dsrom_bf_double_price.py",
+ "geometry": "f183.60",
+ "wire": "tools/dsrom_field_reprice_r8 wire_fn (per region, composition frame)",
+ "base": "/tmp/claude-1000/bfx/sub_base_f198",
+ "merged": "/tmp/claude-1000/bfx/sub_shared4_f198",
+ "bindings": {
+  "base": "results/uarch/dsrom_bf_double_binding_20261007/base_f198",
+  "merged": "results/uarch/dsrom_bf_double_binding_20261007/shared4_f198"
+ },
+ "all_exact": true,
+ "nodes": {
+  "L0.attn.wo_a": {
+   "base": {
+    "total": 2338,
+    "meas": 1754,
+    "phases": 4,
+    "exact": true
+   },
+   "merged": {
+    "total": 1176,
+    "meas": 884,
+    "phases": 2,
+    "exact": true
+   },
+   "delta_cycles": -1162
+  },
+  "L0.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": 0
+  },
+  "L1.attn.wo_a": {
+   "base": {
+    "total": 2338,
+    "meas": 1754,
+    "phases": 4,
+    "exact": true
+   },
+   "merged": {
+    "total": 1176,
+    "meas": 884,
+    "phases": 2,
+    "exact": true
+   },
+   "delta_cycles": -1162
+  },
+  "L1.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": 0
+  },
+  "L2.attn.a_proj": {
+   "base": {
+    "total": 2470,
+    "meas": 1960,
+    "phases": 4,
+    "exact": true
+   },
+   "merged": {
+    "total": 1834,
+    "meas": 1448,
+    "phases": 3,
+    "exact": true
+   },
+   "delta_cycles": -636
+  },
+  "L2.attn.cmp.wk": {
+   "base": {
+    "total": 324,
+    "meas": 201,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 324,
+    "meas": 201,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": 0
+  },
+  "L2.attn.wo_a": {
+   "base": {
+    "total": 2338,
+    "meas": 1754,
+    "phases": 4,
+    "exact": true
+   },
+   "merged": {
+    "total": 1176,
+    "meas": 884,
+    "phases": 2,
+    "exact": true
+   },
+   "delta_cycles": -1162
+  },
+  "L2.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": 0
+  },
+  "L3.attn.wo_a": {
+   "base": {
+    "total": 2338,
+    "meas": 1754,
+    "phases": 4,
+    "exact": true
+   },
+   "merged": {
+    "total": 1176,
+    "meas": 884,
+    "phases": 2,
+    "exact": true
+   },
+   "delta_cycles": -1162
+  },
+  "L3.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": 0
+  },
+  "L20.attn.a_proj": {
+   "base": {
+    "total": 1830,
+    "meas": 1443,
+    "phases": 3,
+    "exact": true
+   },
+   "merged": {
+    "total": 1195,
+    "meas": 931,
+    "phases": 2,
+    "exact": true
+   },
+   "delta_cycles": -635
+  },
+  "L20.attn.cmp.wk": {
+   "base": {
+    "total": 324,
+    "meas": 201,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 324,
+    "meas": 201,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": 0
+  },
+  "L20.attn.wo_a": {
+   "base": {
+    "total": 2338,
+    "meas": 1754,
+    "phases": 4,
+    "exact": true
+   },
+   "merged": {
+    "total": 1176,
+    "meas": 884,
+    "phases": 2,
+    "exact": true
+   },
+   "delta_cycles": -1162
+  },
+  "L20.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": 0
+  },
+  "L21.attn.wo_a": {
+   "base": {
+    "total": 2338,
+    "meas": 1754,
+    "phases": 4,
+    "exact": true
+   },
+   "merged": {
+    "total": 1176,
+    "meas": 884,
+    "phases": 2,
+    "exact": true
+   },
+   "delta_cycles": -1162
+  },
+  "L21.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": 0
+  },
+  "L24.attn.a_proj": {
+   "base": {
+    "total": 1190,
+    "meas": 926,
+    "phases": 2,
+    "exact": true
+   },
+   "merged": {
+    "total": 1190,
+    "meas": 926,
+    "phases": 2,
+    "exact": true
+   },
+   "delta_cycles": 0
+  },
+  "L24.attn.wo_a": {
+   "base": {
+    "total": 2338,
+    "meas": 1754,
+    "phases": 4,
+    "exact": true
+   },
+   "merged": {
+    "total": 1176,
+    "meas": 884,
+    "phases": 2,
+    "exact": true
+   },
+   "delta_cycles": -1162
+  },
+  "L24.ffn.router": {
+   "base": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "merged": {
+    "total": 637,
+    "meas": 515,
+    "phases": 1,
+    "exact": true
+   },
+   "delta_cycles": 0
+  }
+ },
+ "per_layer_delta_cycles": {
+  "L0.attn.wo_a": -1162,
+  "L1.attn.wo_a": -1162,
+  "L2.attn.wo_a": -1162,
+  "L2.attn.a_proj": -636,
+  "L8.attn.wo_a": -1162,
+  "L8.attn.a_proj": -636,
+  "L14.attn.wo_a": -1162,
+  "L14.attn.a_proj": -636,
+  "L3.attn.wo_a": -1162,
+  "L4.attn.wo_a": -1162,
+  "L5.attn.wo_a": -1162,
+  "L6.attn.wo_a": -1162,
+  "L7.attn.wo_a": -1162,
+  "L9.attn.wo_a": -1162,
+  "L10.attn.wo_a": -1162,
+  "L11.attn.wo_a": -1162,
+  "L12.attn.wo_a": -1162,
+  "L13.attn.wo_a": -1162,
+  "L15.attn.wo_a": -1162,
+  "L16.attn.wo_a": -1162,
+  "L17.attn.wo_a": -1162,
+  "L18.attn.wo_a": -1162,
+  "L19.attn.wo_a": -1162,
+  "L20.attn.wo_a": -1162,
+  "L20.attn.a_proj": -635,
+  "L21.attn.wo_a": -1162,
+  "L22.attn.wo_a": -1162,
+  "L23.attn.wo_a": -1162,
+  "L25.attn.wo_a": -1162,
+  "L26.attn.wo_a": -1162,
+  "L27.attn.wo_a": -1162,
+  "L29.attn.wo_a": -1162,
+  "L30.attn.wo_a": -1162,
+  "L31.attn.wo_a": -1162,
+  "L33.attn.wo_a": -1162,
+  "L34.attn.wo_a": -1162,
+  "L35.attn.wo_a": -1162,
+  "L37.attn.wo_a": -1162,
+  "L38.attn.wo_a": -1162,
+  "L39.attn.wo_a": -1162,
+  "L24.attn.wo_a": -1162,
+  "L28.attn.wo_a": -1162,
+  "L32.attn.wo_a": -1162,
+  "L36.attn.wo_a": -1162
+ },
+ "measured": "field vehicle RTL (Verilator, 2-state), bit-exact per region; FP8 a_proj phase from the as-built qelem10 regions (unchanged by the merge)"
+}
