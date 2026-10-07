@@ -170,7 +170,37 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
   always @(posedge ck or negedge rn)
     if (!rn) begin lv <= 1'b0; lr <= 3'd0; end
     else begin lv <= any; if (any) lr <= (sel == 3'd4) ? 3'd0 : sel + 3'd1; end
-  generate if (SLOT == 2) begin : gs2
+  generate if (SLOT == 3) begin : gs3
+    // views agent 2026-10-07 (SE_s7 aggressive variant, owner LAUNCH IMMEDIATELY: stages on every class within 100 ps):
+    // SLOT 2 + the one-hot grant held in 8 KEPT copies (each drives 136 of the 1,088 data bits: no 1,088-load net on the
+    // grant) + the line re-registered once more before the port (ld -> l7 was +83.5 ps over 7 levels).  +2 cycles per
+    // K/W line vs SLOT 1 (+1 vs SLOT 2), same order.
+    reg [4:0] sv_q; (* keep *) reg [4:0] gqr [0:7]; reg [4:0] gq; reg [9:0] st [0:4]; reg [1087:0] sd [0:4];
+    wire [4:0] fill = full & ~sv_q;
+    wire [4:0] drain = any ? (5'd1 << sel) : 5'd0;
+    assign cand = sv_q;
+    assign k_take = fill[3:0];
+    assign w_take = fill[4];
+    integer r;
+    always @(posedge ck or negedge rn)
+      if (!rn) begin sv_q <= 5'd0; gq <= 5'd0; for (r = 0; r < 8; r = r + 1) gqr[r] <= 5'd0; end
+      else begin sv_q <= (sv_q & ~drain) | fill; gq <= drain; for (r = 0; r < 8; r = r + 1) gqr[r] <= drain; end
+    for (p = 0; p < 5; p = p + 1) begin : gsl
+      always @(posedge ck) if (fill[p]) begin st[p] <= tg[p]; sd[p] <= dt[p][1087:0]; end
+    end
+    reg [1087:0] dsel; reg [9:0] tsel; integer q;
+    always @* begin
+      dsel = 1088'd0; tsel = 10'd0;
+      for (q = 0; q < 5; q = q + 1) begin
+        for (r = 0; r < 8; r = r + 1) dsel[r*136 +: 136] = dsel[r*136 +: 136] | ({136{gqr[r][q]}} & sd[q][r*136 +: 136]);
+        tsel = tsel | ({10{gq[q]}} & st[q]);
+      end
+    end
+    reg lv2a; reg [9:0] lta; reg [1087:0] lda;
+    always @(posedge ck or negedge rn) if (!rn) begin lv2a <= 1'b0; lv2 <= 1'b0; end else begin lv2a <= |gq; lv2 <= lv2a; end
+    always @(posedge ck) if (|gq) begin lta <= tsel; lda <= dsel; end
+    always @(posedge ck) begin lt <= lta; ld <= lda; end
+  end else if (SLOT == 2) begin : gs2
     // views agent (SE_s7 70a27c406: lr -> rot -> off -> mod-5 sel -> 5:1 x 1088 mux -> ld, 25 levels, -267.6 ps over
     // 400 endpoints): SLOT 1 plus a REGISTERED one-hot grant: the arbitration (5-bit) lands in gq, the slot data are
     // read one cycle later by an AND-OR over gq (a drained slot is refilled no earlier than the edge that reads it, so
@@ -216,7 +246,7 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
     assign w_take = any && (sel == 3'd4);
     always @(posedge ck) if (any) begin lt <= tg[sel]; ld <= dt[sel][1087:0]; end
   end endgenerate
-  assign line = {ld, lt, (SLOT == 2) ? lv2 : lv};
+  assign line = {ld, lt, (SLOT >= 2) ? lv2 : lv};
 endmodule
 
 // KV (KV = 1) / index-key (KV = 0) assembler at its port
