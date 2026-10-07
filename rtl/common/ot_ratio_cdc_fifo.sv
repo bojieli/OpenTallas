@@ -45,7 +45,12 @@
 module ot_ratio_cdc_fifo #(
     parameter int W     = 64,
     parameter int DEPTH = 4,            // entries, power of two
-    parameter int HOLD  = 2             // extra DOWN cycles of each side; (HOLD + 1) * T_own must exceed T_peer
+    parameter int HOLD  = 2,            // extra DOWN cycles of each side; (HOLD + 1) * T_own must exceed T_peer
+    parameter int LAG   = 0             // CLAUDE S81-PH 2026-10-07: 1 = the write pointer is published one write cycle
+                                        // after the entry is written (wp_pub), so an entry is stable >= T_w + one
+                                        // window before any read edge can use it: the mem -> sh arcs become a
+                                        // max-delay T_w data path with no hold check (capt_x mem -> sh hold -5 at
+                                        // +42 setup); +1 write cycle of latency
 ) (
     input  logic         wclk,
     input  logic         wrst_n,        // synchronous to wclk
@@ -108,6 +113,12 @@ module ot_ratio_cdc_fifo #(
         end
     end
     always_ff @(posedge wclk) if (w_fire) mem[wp[AW-1:0]] <= w_d;
+    logic [AW:0]   wp_pub;              // the pointer that crosses (LAG 1: one write cycle behind wp)
+    generate if (LAG != 0) begin : g_lag
+        always_ff @(posedge wclk) wp_pub <= wp;
+    end else begin : g_nolag
+        assign wp_pub = wp;
+    end endgenerate
 
     // ---------------- read domain ----------------
     logic [W-1:0]  sh [DEPTH];          // read-domain shadow of every entry (flop -> flop, every cycle)
@@ -118,7 +129,7 @@ module ot_ratio_cdc_fifo #(
     logic          r_take;
 
     always_ff @(posedge rclk) begin
-        wp_r   <= wp;
+        wp_r   <= wp_pub;
         w_st_r <= w_st;
         for (int i = 0; i < DEPTH; i++) sh[i] <= mem[i];
     end
