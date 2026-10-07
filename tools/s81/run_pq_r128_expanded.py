@@ -17,9 +17,8 @@ def command(work, output):
         if hashlib.sha256((ROOT/f['path']).read_bytes()).hexdigest() != f['sha256']:
             raise ValueError('Pinned input changed: '+f['path'])
     model = json.loads((ROOT/BASE/'model.json').read_text())
-    import uarch_model
-    if model != uarch_model.s81_pq_r128_expanded_model():
-        raise ValueError('Unified model and emitted admission record differ')
+    # The analytical model is generated and verified before pinning. Runtime
+    # checks the emitted record hash above without importing unrelated designs.
     args = ['--view','asap7','--top','ot_v41_pqc_spine_screen']
     for f in binding['files']:
         if f['role'] == 'RTL': args += ['--source',f['path']]

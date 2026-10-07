@@ -108,6 +108,12 @@
       "original_path": "/tmp/codex-claude-recovery-20261007/remote-harvest/pq-spine/r128/6_report.json",
       "sha256": "ed7f405991ec339c5fd255e12a5c01d573ce9583346c8055c9d96ff4c7a98cb0",
       "role": "measured_area"
+    },
+    {
+      "path": "physical/s81_pq_r128_expanded/model.json",
+      "original_path": "tools/uarch_model.py:s81_pq_r128_expanded_model",
+      "sha256": "6858d55846eeee726261423168e00f340c9999b4b42973ce34ea89f9aec42ddc",
+      "role": "analytical_model"
     }
   ],
   "scope": "Unchanged PHW6 SAW8 KMAX256 R128 PQ1 standalone screen; parent production binding unproven"
