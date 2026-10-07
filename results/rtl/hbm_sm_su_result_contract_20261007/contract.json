@@ -1,0 +1,569 @@
+{
+ "schema": "opentallas.hbm_sm_su_result_contract.v1",
+ "scope": "HBM accelerator DS-V4.1 1M, r23 die generator, matched AR walk; Qwen8K HBM rows price no result gather (the W12 vehicle carries its own tree) and are unaffected",
+ "clock_hz": 1200000000.0,
+ "summary": {
+  "verdict": "The SM -> SU result handoff the composition prices (hidden wire + gather +1 = 343 cycles/token) is not implemented: the die-view tree ends in an XOR envelope, and the committed RTL path is store-and-forward through the GPU-comparator memory system (>= 132520 cycles/token floor estimate). Proposed native edge: 1029 cycles/token (+0.102 % AR on the unified candidate), gated.",
+  "published_cycles": 343,
+  "native_cycles": 1029,
+  "store_forward_floor_cycles": 132520,
+  "rows_per_token": 3313,
+  "barrier_handoffs": 343,
+  "handoff_targets": {
+   "xload": 52,
+   "coll": 168,
+   "su": 121,
+   "du": 2
+  }
+ },
+ "edges": [
+  {
+   "id": "E1",
+   "edge": "SM matrix element (ot_hbm_accel_sm_v) result pins -> native result store (SM control)",
+   "producer": "ot_hbm_accel_sm_v rv / rrow[11:0] / rdata[255:0] / fault",
+   "consumer": "ot_hbm_sm_result_provider result_v / result_row / result_data (or the integrated ot_hbm_integrated_w2_result_sink)",
+   "bits": {
+    "sm_face": 270,
+    "capture_boundary": 269
+   },
+   "protocol": "one-way valid, NO ready; <= 1 row a cycle; rows per op from the descriptor (op_rows <= 4096); the store must accept every row (reservation before start: reserve_v / reserve_r)",
+   "rate": "1 row (32 B) a cycle per SM at 1.2 GHz while a column emits; rows per op 1..43 on the DS AR walk",
+   "latency": {
+    "cls": "rtl-measured (SM side)",
+    "cycles": "PIO=2 pin stages inside the measured SM start->done; store capture +1 (component)"
+   },
+   "die_route": "none: the r23 floorplan has no result-store block; the SM r face is routed to the gather tree",
+   "credit": "reservation (rows granted before start); no round-trip credit needed for a no-ready source",
+   "area": {
+    "cls": "rtl-component model",
+    "per_store_um2": 182364.3,
+    "macros": 40,
+    "note": "40 x ot_sram_2rw_512x64 per 4096 x 256 store; 32 SMs -> 5.84 mm2 if one store per SM (ownership/count is the SM-control owner's decision); floorplan_fit false"
+   },
+   "status": {
+    "producer": "implemented-in-RTL",
+    "store": "implemented-in-RTL (component, test-memory peer)",
+    "join_to_sm_v": "missing (cluster feeds the sink from top-level pins; the cluster SM is SIMT)",
+    "die": "missing"
+   }
+  },
+  {
+   "id": "E2",
+   "edge": "native result store -> shared service (memory provider) write + readback",
+   "producer": "ot_hbm_sm_result_provider req_v/req_r/req_we/req_addr[36:0]/req_data[255:0]/req_tag[15:0]",
+   "consumer": "shared provider port (integrated: p_req[2] -> ot_gpu_mreq_cdc AW3 -> ot_gpu_memsys_adapter)",
+   "bits": {
+    "request": 312,
+    "request_with_strobes": 344,
+    "response": 276
+   },
+   "protocol": "valid/ready both ways, ONE outstanding, write then readback compare per 32-B row; publication only after every row is written, acknowledged and read back",
+   "rate": "component: (cycles-rows)/rows = 6.684 cycles/row at 1-cycle test memory",
+   "latency": {
+    "cls": "rtl-measured (test memory) / estimate (die service)",
+    "tb_cycles_full4096": 31475,
+    "per_row_formula": "4 + write_request_stall + write_response_latency + read_request_stall + read_response_latency",
+    "die_floor_per_row": 28,
+    "estimate_basis": "one-outstanding round trip through ot_gpu_mreq_cdc (AW3 Gray FIFO, SYNC=3 each way) + xbar + L2 slice, floor only: request crossing >= SYNC+1 clk_mem edges (4.8 SM cycles), response crossing >= SYNC+1 SM edges, xbar + L2 acceptance >= 2 clk_mem edges (2.4 SM cycles) -> >= 12 SM cycles; a write is acknowledged only after the HBM partition acknowledges it (ot_gpu_l2_slice write-through), which this floor does NOT include"
+   },
+   "die_route": "no die block or route: the GPU-organised memsys has no place in the r23 accelerator floorplan",
+   "credit": "single outstanding (no credit pool); CDC FIFO 8 entries each way",
+   "area": {
+    "cls": "rtl",
+    "note": "mreq_cdc 2 x 8-entry FIFOs (337 b / 273 b) per client; memsys is the comparator's xbar / L2 / HBM model"
+   },
+   "status": {
+    "rtl": "implemented-in-RTL (integrated join, GPU-comparator backend)",
+    "die": "missing"
+   }
+  },
+  {
+   "id": "E3",
+   "edge": "shared service -> SU operand read (the SU's only data input in RTL)",
+   "producer": "ot_gpu_memsys_adapter via ot_gpu_mreq_cdc response (tag 16 / we / data 256)",
+   "consumer": "ot_hbm_accel_su_parent_exec rsp_v/rsp_rdy/rsp[272:0] (request req[336:0])",
+   "bits": {
+    "request": 337,
+    "response": 273
+   },
+   "protocol": "valid/ready, one outstanding (selection.json: \"one-outstanding actual latency sums measured ready waits + full request/response CDC/backend round trips\")",
+   "rate": "one 32-B sector per round trip",
+   "latency": {
+    "cls": "estimate",
+    "floor_cycles": 12,
+    "basis": "one-outstanding round trip through ot_gpu_mreq_cdc (AW3 Gray FIFO, SYNC=3 each way) + xbar + L2 slice, floor only: request crossing >= SYNC+1 clk_mem edges (4.8 SM cycles), response crossing >= SYNC+1 SM edges, xbar + L2 acceptance >= 2 clk_mem edges (2.4 SM cycles) -> >= 12 SM cycles; a write is acknowledged only after the HBM partition acknowledges it (ot_gpu_l2_slice write-through), which this floor does NOT include"
+   },
+   "die_route": "hfd_su f_vm / t_vm faces (2048 b each) exist in the die view; their payload is XOR-folded",
+   "credit": "single outstanding",
+   "area": {
+    "cls": "rtl",
+    "note": "inside su_provider adapter / margin; not separately recorded"
+   },
+   "status": {
+    "rtl": "implemented-in-RTL (GPU-comparator memsys)",
+    "die": "exists-only-in-die-view (envelope)"
+   }
+  },
+  {
+   "id": "E4",
+   "edge": "die-view result tree: SM r face -> gather stations -> hfd_su.r",
+   "producer": "32 hfd_sm r faces (270 b)",
+   "consumer": "4 hfd_su r inputs (2165 b)",
+   "bits": {
+    "leaf": 270,
+    "trunk": 2165,
+    "total_bus_bits": 69252
+   },
+   "protocol": "none: registered wires, no valid/ready, no merge arbitration (trunk = 8 SM rows side by side); hfd_su XOR-folds r into its result chains",
+   "rate": "would carry 8 rows a cycle per stack half if a consumer existed",
+   "latency": {
+    "cls": "die-model",
+    "one_way_cycles_incl_meso": 51,
+    "worst_path": "result_sm8",
+    "worst_um": 17404.7,
+    "worst_stages_430": 49,
+    "segments": 10,
+    "control_one_way": 55
+   },
+   "die_route": "SM r (E face) -> rg<st>{0,3,1,2} gather stations beside row 1 -> rh arms -> rt trunk waypoints in channel 2 -> hub edge -> hfd_su S/N r face; 36 station instances, 36 r22 relay ends on result buses (17300 relay bits)",
+   "credit": "none (no flow control)",
+   "area": {
+    "cls": "die-model",
+    "station_instances": 36,
+    "station_masters": [
+     "hfd_gath_r10",
+     "hfd_gath_r24",
+     "hfd_gath_r25",
+     "hfd_gath_r8",
+     "hfd_gath_r9",
+     "hfd_stn_r11",
+     "hfd_stn_r26"
+    ],
+    "station_area_um2": 436404.0,
+    "relay_ends": 36,
+    "relay_bits": 17300,
+    "relay_raw_dff_um2_TT": 6558.1,
+    "hfd_su_boundary_flops_for_r": 4330
+   },
+   "status": {
+    "wires_and_stations": "exists-only-in-die-view",
+    "consumer": "missing (envelope)",
+    "relay_primitive": "implemented-in-RTL as component (ot_hbm_result_relay_slice, not adopted)"
+   }
+  },
+  {
+   "id": "E5",
+   "edge": "SU -> TU collective endpoint injection, endpoint -> SU delivery",
+   "producer": "SU (would hold the injection buffer)",
+   "consumer": "ot_hbm_accel_tu_endpoint inj_idx/inj_rd/inj_data; del_valid/del_flit back",
+   "bits": {
+    "inj_data": 1024,
+    "delivery": 2180,
+    "die_view_t_coll": 1024,
+    "die_view_f_coll": 580
+   },
+   "protocol": "pull injection (index + read strobe, fixed HUBW=35 latency), push delivery with no ready (4 flits a cycle)",
+   "rate": "inj 2 x 512 b a cycle; delivery up to 4 x 545 b a cycle vs die-view return 580 b",
+   "latency": {
+    "cls": "rtl-measured inside endpoint (HUBW both ways) + die-model",
+    "die_one_way": {
+     "su_coll": 7,
+     "coll_su": 7
+    },
+    "endpoint_hubw_each_way": 35
+   },
+   "die_route": "hfd_su t_coll / f_coll faces <-> collective endpoint (spine); +6 face stages in the ledger",
+   "credit": "none on delivery (consumer must sink DEL flits a cycle); switch credits inside the endpoint",
+   "area": {
+    "cls": "missing",
+    "note": "no SU-side injection buffer or delivery sink exists"
+   },
+   "status": {
+    "endpoint": "implemented-in-RTL",
+    "su_side": "missing",
+    "die": "exists-only-in-die-view (envelope)",
+    "width_check": "die-view return 580 b < RTL delivery 2180 b: needs DEL=1 pacing measured or a wider face"
+   }
+  }
+ ],
+ "impact": {
+  "published_synthetic": {
+   "cycles_per_token": 343,
+   "us": 0.286,
+   "AR_pct_of_unified": 0.051,
+   "MTP_pct_of_unified_step": 0.026,
+   "AR_pct_of_r23": 0.05,
+   "note": "what the r23 closure ledger / unified ledger charge today for SM -> SU results: 0 exposed wire (hidden under the barrier round trip) + gather a2 +1 per barrier.  This is the cost of a native level-2 edge (SM rows straight into SU lane registers) that does NOT exist in RTL: the die-view path ends in an XOR envelope"
+  },
+  "native_edge_proposed": {
+   "cycles_per_token": 1029,
+   "us": 0.858,
+   "AR_pct_of_unified": 0.153,
+   "MTP_pct_of_unified_step": 0.078,
+   "AR_pct_of_r23": 0.15,
+   "note": "proposed native edge (relay slices + real merge + SU result-ingress FIFO with a row-count release): wire 51 one-way hidden under the barrier round trip 2 x 55 with 57 cycles slack at the r23 floor (r23c routed bound: 72 vs 144, scratch GRT, not pinned); station +1 and ingress +2 charged per barrier although hidden (conservative); estimate until built"
+  },
+  "rtl_store_and_forward_floor": {
+   "cycles_per_token": 132520,
+   "us": 110.433,
+   "AR_pct_of_unified": 19.683,
+   "MTP_pct_of_unified_step": 10.018,
+   "AR_pct_of_r23": 19.336,
+   "note": "the path the committed RTL implements: result store capture, per-row write + readback through the shared provider, then SU sector read, one outstanding: 3313 rows x (4 + 3 x 12) = 132520; FLOOR estimate (CDC/L2 only, no HBM write-through ack, every SM store and memory port assumed parallel; the integrated cluster has ONE sink per die)"
+  },
+  "rtl_store_and_forward_testmemory": {
+   "cycles_per_token": 25457,
+   "us": 21.214,
+   "AR_pct_of_unified": 3.781,
+   "MTP_pct_of_unified_step": 1.924,
+   "AR_pct_of_r23": 3.714,
+   "note": "same path at the component bench's own test memory (1-cycle response, ready 4 of 5 cycles): 6.684 drain cycles/row measured (full4096 31475 cycles) + 1 SU read; not a die service"
+  },
+  "delta_native_vs_published": {
+   "cycles_per_token": 686,
+   "us": 0.572,
+   "AR_pct_of_unified": 0.102,
+   "MTP_pct_of_unified_step": 0.052,
+   "AR_pct_of_r23": 0.1,
+   "note": "correction if the native edge is adopted as proposed"
+  },
+  "delta_store_forward_floor_vs_published": {
+   "cycles_per_token": 132177,
+   "us": 110.147,
+   "AR_pct_of_unified": 19.632,
+   "MTP_pct_of_unified_step": 9.992,
+   "AR_pct_of_r23": 19.286,
+   "note": "correction if publication must use the implemented RTL path"
+  },
+  "collective_hubw_reconciliation_not_credited": {
+   "cycles_per_token": -13250,
+   "us": -11.042,
+   "AR_pct_of_unified": -1.968,
+   "MTP_pct_of_unified_step": -1.002,
+   "AR_pct_of_r23": -1.933,
+   "note": "NOT a correction: the measured TU endpoint cycles carry HUBW=35 hub wire stages each way; the die price adds SU<->endpoint 7+7 and the closure ledger +6 faces on top (265 collectives).  If the endpoint is re-measured with HUBW = the die path, up to 13250 cycles come back; no credit until that measurement"
+  }
+ },
+ "proposal": {
+  "contract": "native level-2 SM -> SU result edge (AGENTS dataflow level 2: producer results staged at the hub edge and delivered straight into lane registers)",
+  "items": [
+   "SM r face 270 b one-way, rows <= descriptor op_rows; SU grants a reservation of op_rows rows per SM at issue (cmdproc), so no ready / credit return crosses the die (max 43 rows per SM per op on the DS walk)",
+   "transport: ot_hbm_result_relay_slice x 5 per station (64-b slices) at every gather station and relay end of the r23 tree (36 stations, 36 relay ends); the 8-SM trunk stays a parallel bundle (no arbitration needed)",
+   "SU result ingress (NEW, SU owner): per SM lane a FIFO of >= 43 rows x 268 b (rrow + rdata) with a row counter; release / start of the consumer is gated on count == op_rows (ordering by protocol, not by the 57-cycle timing slack); estimate 0.14 mm2 raw DFF (TT cell area, 32 lanes) or 2 x 512x64 SRAM per lane",
+   "collective: the SU ingress also feeds the endpoint injection buffer (pull by index); endpoint delivery needs a 4-flit/cycle sink or a measured DEL=1 pacing",
+   "result store (SM control) stays the publication / readback path for results that leave the die or must be retained; it is NOT on the per-token SM -> SU critical path"
+  ],
+  "ledger_lines": {
+   "replace": {
+    "line": "stations gather a2 +1 (343 cycles)",
+    "by": "SM -> SU native result edge: station +1 and SU ingress +2 per barrier (1029 cycles/token, 0.858 us, +0.102 % AR vs today); status gated: sm_su_result_edge_native"
+   },
+   "add_gate": "sm_su_result_edge_native (unified ledger gated_by, HBM DS rows): hfd_su r face has no functional consumer; the RTL path is store-and-forward through the GPU-comparator memsys",
+   "label": "until the gate closes, HBM DS AR / MTP rows that rely on the result_gather term must say: SM -> SU handoff priced as a native edge that is die-view-only (envelope)",
+   "not_credited": "collective HUBW reconciliation (13250 cycles) stays uncredited until re-measured"
+  }
+ },
+ "rows_table": [
+  {
+   "node": "sm:wq_a",
+   "count": 40,
+   "rows_per_sm": 1,
+   "est": false
+  },
+  {
+   "node": "sm:wkv",
+   "count": 40,
+   "rows_per_sm": 1,
+   "est": false
+  },
+  {
+   "node": "sm:wq_b (head-aligned: head h on die h)",
+   "count": 40,
+   "rows_per_sm": 16,
+   "est": false
+  },
+  {
+   "node": "sm:wo_a K-split: the die's head against its o-group's 1,024 rows",
+   "count": 40,
+   "rows_per_sm": 32,
+   "est": false
+  },
+  {
+   "node": "sm:wo_b",
+   "count": 40,
+   "rows_per_sm": 2,
+   "est": false
+  },
+  {
+   "node": "sm:router gate",
+   "count": 40,
+   "rows_per_sm": 1,
+   "est": false
+  },
+  {
+   "node": "sm:routed gate/up workgroup",
+   "count": 40,
+   "rows_per_sm": 14,
+   "est": false
+  },
+  {
+   "node": "sm:expert slot 0 w2",
+   "count": 40,
+   "rows_per_sm": 14,
+   "est": false
+  },
+  {
+   "node": "sm:indexer.weights_proj",
+   "count": 8,
+   "rows_per_sm": 1,
+   "est": false
+  },
+  {
+   "node": "sm:indexer.wq_b",
+   "count": 8,
+   "rows_per_sm": 2,
+   "est": false
+  },
+  {
+   "node": "sm:compressor.wkv|wgate",
+   "count": 3,
+   "rows_per_sm": 1,
+   "est": true
+  },
+  {
+   "node": "sm:engram.wkv",
+   "count": 2,
+   "rows_per_sm": 1,
+   "est": true
+  },
+  {
+   "node": "sm:compressor.wkv",
+   "count": 1,
+   "rows_per_sm": 1,
+   "est": false
+  },
+  {
+   "node": "sm:LM head",
+   "count": 1,
+   "rows_per_sm": 43,
+   "est": false
+  }
+ ],
+ "die_one_way_cycles_r23_floor": {
+  "xbcast": 60,
+  "control": 55,
+  "result": 51,
+  "weight": 16,
+  "expert_req": 57,
+  "kv": 32,
+  "ik": 30,
+  "link": 24,
+  "su_coll": 7,
+  "coll_su": 7,
+  "attn_out": 23,
+  "attn_q": 40
+ },
+ "composition_counts": {
+  "embedding_row": 1,
+  "x_first_load": 291,
+  "x_load_phases": 571,
+  "barrier": 343,
+  "coll_terms": 265,
+  "coll_crossings": 305,
+  "hbm_kv_rows": 48,
+  "attn": 40,
+  "expert_fetch": 40,
+  "index_scores": 8
+ },
+ "unified_ledger_reference": {
+  "commit": "3fbad709d830b4d856625a3db32424ed59094ab5",
+  "file": "results/arch/unified_composition_20261007/ledger.json",
+  "unified_candidate": {
+   "AR_us": 561.067,
+   "MTP_step_us": 1102.39,
+   "AR_tok_s": 1782.3,
+   "MTP_tok_s": 3772.7
+  },
+  "closure_fec_no_lever_credit": {
+   "AR_us": 603.616,
+   "MTP_step_us": 1179.446,
+   "AR_tok_s": 1656.7,
+   "MTP_tok_s": 3526.2
+  },
+  "tau": 4.159
+ },
+ "estimate_parameters": {
+  "sync": 3,
+  "mem_period_ps": 1000,
+  "sm_period_ps": 833,
+  "note": "one-outstanding round trip through ot_gpu_mreq_cdc (AW3 Gray FIFO, SYNC=3 each way) + xbar + L2 slice, floor only: request crossing >= SYNC+1 clk_mem edges (4.8 SM cycles), response crossing >= SYNC+1 SM edges, xbar + L2 acceptance >= 2 clk_mem edges (2.4 SM cycles) -> >= 12 SM cycles; a write is acknowledged only after the HBM partition acknowledges it (ot_gpu_l2_slice write-through), which this floor does NOT include"
+ },
+ "hfd_su_plan": {
+  "WI": 9499,
+  "WO": 6400,
+  "lanes": 192,
+  "face_stages_r": 2
+ },
+ "checks": [
+  {
+   "check": "sm_v_result_port",
+   "ok": true,
+   "detail": "ot_hbm_accel_sm_v results: output rv, rrow[$clog2(RMAX)-1:0], rdata[NC*32-1:0], fault; NO ready input (one-way, one row a cycle at most, PIO=2 boundary stages inside the measured start->done)"
+  },
+  {
+   "check": "die_w_res",
+   "ok": true,
+   "detail": "generator W_RES = 256 + 12 + 1 + 1 = 270 b = the SM r face (rdata / rrow / rv / fault)"
+  },
+  {
+   "check": "su_exec_ports",
+   "ok": true,
+   "detail": "ot_hbm_accel_su_parent_exec: the ONLY data ports are a memory request (req_v/req_rdy, 337 b = we 1 + addr 32 + wdata 256 + wstrb 32 + tag 16) and response (rsp_v/rsp_rdy, 273 b = tag 16 + we 1 + data 256); no SM-result, collective-delivery or attention-output ingress port exists"
+  },
+  {
+   "check": "cluster_sm_is_simt",
+   "ok": true,
+   "detail": "the integrated DS cluster (ot_ds_hbm_cluster20_integrated) instantiates the SIMT SM ot_ds_hbm_simt_sm20, not the matrix SM ot_hbm_accel_sm_v whose cycles the composition uses"
+  },
+  {
+   "check": "cluster_w2_result_from_pins",
+   "ok": true,
+   "detail": "W2 (matrix) results enter the cluster as TOP-LEVEL inputs w2_result_v / w2_result_row / w2_result_data[256] (bench-driven) into ONE ot_hbm_integrated_w2_result_sink per die, which writes them through shared provider port p_req[2]"
+  },
+  {
+   "check": "cluster_su_via_memsys",
+   "ok": true,
+   "detail": "the SU reads its operands as 256-b sectors: su_parent_exec req -> su_provider adapter -> shared provider port p_req[1] -> ot_gpu_mreq_cdc (AW3, clk_sm -> clk_mem) -> ot_gpu_memsys_adapter (xbar -> L2 slice -> HBM partition model of the GPU-organised comparator)"
+  },
+  {
+   "check": "cluster_no_tu_endpoint",
+   "ok": true,
+   "detail": "the integrated cluster wires the SIMT SMs to ot_gpu_coll_system (GPU comparator collective); the HBM accelerator TU endpoint is not instantiated with any SU-side producer"
+  },
+  {
+   "check": "w2_sink_ports",
+   "ok": true,
+   "detail": "w2_result_sink: no-ready capture (result_v, row 12, data 256) and a valid/ready provider req 337 / rsp 273"
+  },
+  {
+   "check": "result_provider_ports",
+   "ok": true,
+   "detail": "ot_hbm_sm_result_provider (SM-control native result store): reserve_v/reserve_r, no-ready capture, valid/ready write+readback request / response, publication_v/publication_r"
+  },
+  {
+   "check": "result_provider_component",
+   "ok": true,
+   "detail": "component PASS (full4096), scope 'full4096 native no-ready capture and acknowledged/readback publication component; provider peer is test memory, not die service', physical_admitted false, floorplan_fit False"
+  },
+  {
+   "check": "gather_bridge_unrelated",
+   "ok": true,
+   "detail": "ot_hbm_integrated_gather_bridge is a 512-b score / ID store-and-read memory (kinds: source read, score store, ID store, formatter read, final ID sink); it has no SM result input"
+  },
+  {
+   "check": "tu_endpoint_ports",
+   "ok": true,
+   "detail": "TU endpoint: injection is a PULL (inj_idx 16 / inj_rd per stream, inj_data FW=512 b per stream, INJ=2, a read returns after the HUBW=35 hub wire stages inside the endpoint); delivery is a PUSH with NO ready (del_valid / del_flit, DEL=4 flits of 545 b a cycle), so the consumer must sink every delivered flit; both HUBW chains are inside the measured endpoint cycles"
+  },
+  {
+   "check": "relay_slice_scope",
+   "ok": true,
+   "detail": "ot_hbm_result_relay_slice: 'opaque64bitprimitive andonefull270bitleaf only; not production link protection or die adoption'; required before adoption: ['end-to-end identity/checksum guarded actual consumer', 'actualdieclock/IO binding', 'global replicated station fit', 'routedSS/FF>=15ps DRC0']"
+  },
+  {
+   "check": "delay_bank_scope",
+   "ok": true,
+   "detail": "ot_hbm_result_delay_bank {'bits': 64, 'stages': 8, 'flop_bits': 512}: COMPONENT_EXACTNESS_PASS_PHYSICAL_OPEN, selected false"
+  },
+  {
+   "check": "hfd_su_envelope",
+   "ok": true,
+   "detail": "hfd_su: header says PHYSICAL ENVELOPE; its r input (2165 b) is registered twice and XOR-folded into the result chains (2165 XOR terms read r_i1); no SU controller / ingress is instantiated"
+  },
+  {
+   "check": "quarter_gen_disclaimer",
+   "ok": true,
+   "detail": "tools/hbm_hub_quarter_gen.py: \"This is a PHYSICAL ENVELOPE ... It is NOT the SU / SFU / HC function: the SU controller (CTL12) and the die-port protocol of these blocks are not built\""
+  },
+  {
+   "check": "generator_round",
+   "ok": true,
+   "detail": "generator FINAL_ROUND r23"
+  },
+  {
+   "check": "die_result_tree",
+   "ok": true,
+   "detail": "32 SM r faces (270 b) -> 36 gather / waypoint stations (hfd_gath_r10, hfd_gath_r24, hfd_gath_r25, hfd_gath_r8, hfd_gath_r9, hfd_stn_r11, hfd_stn_r26) -> 4 hfd_su r faces (2165 b); 68 buses, 69252 bus bits"
+  },
+  {
+   "check": "result_gather_hidden",
+   "ok": true,
+   "detail": "die price: result_gather = barrier x max(0, result 51 - 2 x control 55) = 0 per barrier on the r23 Manhattan floor ('SM -> SU result gather travels with the arrive; exposed only beyond the barrier round trip')"
+  },
+  {
+   "check": "barrier_count",
+   "ok": true,
+   "detail": "matched AR walk: 343 barriers (= SM -> consumer handoffs)"
+  },
+  {
+   "check": "rows_per_token",
+   "ok": true,
+   "detail": "3313 result rows (256 b) per SM per AR token; max rows one op 43"
+  },
+  {
+   "check": "ledger_gather_line",
+   "ok": true,
+   "detail": "closure_cost_ledger.md \"stations gather a2 +1\": 343 cycles/token, 0.053 % AR (+1 per barrier for the die-view gather station a2 register, charged unconditionally)"
+  },
+  {
+   "check": "recompose_gather",
+   "ok": true,
+   "detail": "recompose_r23_r23cwire__cp_in_su.json: ledger gather 1 -> extra_cycles.gather 343 (all three bases)"
+  },
+  {
+   "check": "ledger_coll_faces",
+   "ok": true,
+   "detail": "closure ledger \"collective SU faces +6\": 1590 cycles (6 x 265 collectives)"
+  },
+  {
+   "check": "su_provider_prior_verdict",
+   "ok": true,
+   "detail": "results/uarch/hbm_su_parent_join_20261005/pre_rtl.json already rules the SU sector-provider path a \"functional-integration candidate, NOT an acceleration credit\""
+  }
+ ],
+ "inputs": {
+  "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md": "199990f2265cb4c71b23f49250da8a0ea7a873fda0c3734a53eb4ae6804a1afb",
+  "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "f60aab76ac2ca7631b208fe2d9b899cd9b5ea484b5ba85966f066f66f098e7fe",
+  "rtl/hbm_accel/result_delay_bank_20261007/ot_hbm_result_delay_bank.sv": "83aa03bce72ba3301aa9cdedca520122bee386c2868c560ab99f4085182cb69a",
+  "results/rtl/hbm_result_delay_bank_20261007/component_gate.json": "d6a1ce17c830cd73bca1d0fb8e18bca4f663e1b697010b469b420f9d6a30d32d",
+  "tools/hbm_accel_die_fp.py": "e520898e84591198afb9c8d321b3e6085584154be5369e1d4fcc1c47b36790b6",
+  "tools/hbm_accel_die_price.py": "a417486704076d9d9ea7cdbf90b9e4bad31128af2e9c56377ff1fc45d66204c7",
+  "tools/hbm_die_views.py": "f31e432ee045d62ca8e79509f6ea59fec73cd3e2396e6e6f510f66721fdd9238",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_bridge.sv": "b9a814be8b4455f3f26655224cfe05348bb144958d8ff2ef1230cc16480ed2c9",
+  "results/rtl/hbm_accel_die_views_20261006/headline_with_closure_r23.json": "0e435ad422ac5290efe1262d24f8b630c09b1aa975d31ad5992cd546d605e391",
+  "physical/hbm_accel_die_views/su/rtl/hfd_su.sv": "5a2c8085c4dbda49d70a27e6264aba5319a508cbb61a392db5d6098588208644",
+  "physical/hbm_accel_die_views/su/rtl/plan.json": "a162b77320e8673f4e0567d4f509bade13c85b4e7a88b1906c1b12d0337695c0",
+  "rtl/gpu_sys/ot_gpu_l2_slice.sv": "22f6c39433c9551e2c931853225a41de1a84bc1f44ae2f231a8cec793cc8986a",
+  "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
+  "rtl/gpu_sys/ot_gpu_memsys.sv": "73882cfce6282a027a678edc4eadf92b67875dae3544faf25c5fe1d026aba986",
+  "rtl/gpu_sys/ot_gpu_mreq_cdc.sv": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
+  "tools/hbm_hub_quarter_gen.py": "d98325629eb2d0ad74e7cb05ed4454858d6dc30997c0b6c8b7ce347952e38db7",
+  "results/rtl/hbm_accel_die_views_20261006/recompose_r23_r23cwire__cp_in_su.json": "6220d23b68cacef7693235cda23c0188a2edc358f6f91e107df441e096222efb",
+  "tools/hbm_die_views_recompose.py": "9085f3967749505edf9669526af4c47c6b1ac3c1a8f94c3b7134a1c64658e890",
+  "physical/hbm_accel_die_views/relay_ends.json": "fce4255f8d5d68c2945ffed56d921df93a46a0526e7fcbddd9753d62d266c1d0",
+  "results/rtl/hbm_result_relay_stage_20261007/record.json": "40e807d6384e9d88d1338c0d514c838113b7e1de1ac1f757f46b6db78df66157",
+  "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv": "65d1f1a1de21732b0fdaec439651192c8af6757871bc0f8599993dde55864433",
+  "rtl/hbm_accel/control_20261007/result_provider/ot_hbm_sm_result_provider.sv": "bf16ba804022422a3fdd1c8687178e9a9f0838f10d02245199b0f51881458632",
+  "results/rtl/hbm_sm_result_provider_20261007/component.json": "7aad572557fc9437a6f4af43e1d306fa62c788a8a6c794e2e053dbc83c1fbd1e",
+  "results/rtl/dshbm_matched_reference_20261005/sm_seq/ar_l20_nc8_a1.json": "a46cb9a0387c893edcdc8ad36bfbfff075628f037f94ae347753e5f78bcfcfd4",
+  "results/rtl/dshbm_matched_reference_20261005/sm_seq/other_nc8_a1.json": "0a294a1d1258cca2fbe9b0f7bb245feab90c9f70ba6f267ba5bf51e270462d3a",
+  "results/rtl/dshbm_matched_reference_20261005/sm_seq/wg_nc8_a1.json": "8ba003ddfe5c5888966f000367cdca62268e7aff41e2eb477c0205ce927e9223",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+  "physical/hbm_accel_die_views/station_roles.json": "8baf70cef13f1a0ac825c40d289fc948826ef8b2dacb62e236f5d0437d452aac",
+  "rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv": "cab80ae86b57afc86eb15ece85328cfb4149923e2d17d650f2d817f8ba672aef",
+  "results/uarch/hbm_su_parent_join_20261005/pre_rtl.json": "10b9233516b122b3dcc691554ba752065f680f8b02a9aa9132178a19a0098efb",
+  "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv": "b96be44ecfe9bb2148aa88131169894229f9b1a60432b4bb0477fb28dbddd877",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv": "bfc1a96fa98639b4a27563afdbdf21ebfa0b3d71e0c9c75ef0ffbe387d32bc18"
+ },
+ "tool_sha256": "080afb97bbe1be6509efe10a9fc37370b364dedf4d26f95d1158831215ab9cd1"
+}
