@@ -2645,7 +2645,28 @@
    },
    "boundary_n": 1923,
    "budget": null
+  },
+  "ot_v41_pqc_spine_screen": {
+   "job": "pq_r128_expanded_b1528203c",
+   "source_commit": "b1528203c7361ed316718b826dbd9c592acc63ad",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/pq_r128_expanded_b1528203c",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-07T13:40:31-07:00",
+   "ss": {
+    "mean": 990,
+    "min": 966,
+    "max": 1024
+   },
+   "ff": {
+    "mean": 643,
+    "min": 626,
+    "max": 673
+   },
+   "boundary_n": 19266,
+   "budget": null
   }
  },
- "updated": "2026-10-07T13:05:26-07:00"
+ "updated": "2026-10-07T13:40:31-07:00"
 }
