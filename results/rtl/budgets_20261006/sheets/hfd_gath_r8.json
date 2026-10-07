@@ -31,18 +31,18 @@
   ],
   "n_regions": 8,
   "entry_target_ss_ps": {
-   "mean": 3091.8,
-   "min": 3090.3,
-   "max": 3094.1
+   "mean": 3282.2,
+   "min": 3280.5,
+   "max": 3284.3
   },
   "entry_target_ff_ps": {
-   "mean": 1691.2,
-   "min": 1690.6,
-   "max": 1692.1
+   "mean": 1792.2,
+   "min": 1791.5,
+   "max": 1793.0
   },
   "die_pad_ss_ps": {
-   "mean": 401.1,
-   "min": 399.4,
+   "mean": 401.3,
+   "min": 401.3,
    "max": 401.3
   },
   "internal_insertion": {
@@ -102,15 +102,15 @@
    "period_ps": 833.333,
    "clock_domain": null,
    "timing": "sync",
-   "length_um": 2405.6,
+   "length_um": 2405.5,
    "length_basis": "pins",
    "skew_class": "intra",
    "skew_ps": 73,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w90_rgSE3<->w92_rgSE2",
+   "worst_instance": "hbm:w93_rgSE3<->w95_rgSE2",
    "also_cdc": false,
-   "input_delay_ss_ps": 658.1,
-   "output_delay_ss_ps": 599.1,
+   "input_delay_ss_ps": 658.0,
+   "output_delay_ss_ps": 599.0,
    "input_fraction_of_T": 0.79,
    "output_fraction_of_T": 0.719,
    "internal_input_ps": 100.3,
@@ -147,12 +147,12 @@
    "period_ps": 833.333,
    "clock_domain": null,
    "timing": "sync",
-   "length_um": 1476.9,
+   "length_um": 1477.0,
    "length_basis": "pins",
    "skew_class": "intra",
    "skew_ps": 82,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w146_rgNW0<->sm16",
+   "worst_instance": "hbm:w153_rgNW0<->sm16",
    "also_cdc": false,
    "input_delay_ss_ps": 547.3,
    "output_delay_ss_ps": 488.3,
@@ -191,7 +191,7 @@
    "period_ps": 833.333,
    "clock_domain": null,
    "timing": "sync",
-   "length_um": 983.9,
+   "length_um": 983.8,
    "length_basis": "pins",
    "skew_class": "intra",
    "skew_ps": 82,
@@ -224,7 +224,7 @@
   "cdc": 0,
   "infeasible": 0,
   "fanout_flags": 0,
-  "max_length_um": 2405.6,
+  "max_length_um": 2405.5,
   "max_stages_needed": 6
  },
  "constants": {

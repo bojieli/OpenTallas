@@ -191,3 +191,14 @@ proofs must match the audit snapshots. Rebound jobs retain their complete sheet
 on later calibration, check both SS/FF boundary maxima, and refuse a digest
 mismatch. Records remain component evidence; automatic integration-branch merge
 is disabled for these three rebinds pending parent review.
+
+## Launch immediately, in parallel (OWNER 2026-10-07 05:00)
+- Benches run in a PARALLEL TRACK beside calibrate -> route (same host, one bench at a time, `<bench>.a<n>b<k>` tags).
+  They gate adoption, not launch: the verdict waits until every bench has its expected verdict; a bench with the wrong
+  verdict stops the job's running stage (route / calibrate / ECO) and ends the job NEEDS_RTL; a bench that crashes is
+  retried once. Default for every job that had not started its first stage when this deployed; `"bench_first": true`
+  in the spec keeps the old order (benches, then calibrate/route).
+- Up to 3 routes per (block, source commit) (small + aggressive + half-rate variants together); was 1.
+- localhost is a host (hosts.json): ORFS stages only, at most 24 loop threads in total (`max_loop_threads`) and
+  MemAvailable >= job peak + 40 GB (`min_free_ram_gb`), so ssh stays responsive. Stages run directly, without ssh.
+- New jobs route at hold margin 10 ps (see "Hold margin" above).

@@ -5,7 +5,7 @@
   "waypoint"
  ],
  "dies": {
-  "hbm": 24
+  "hbm": 25
  },
  "size_um": [
   18.984,
@@ -72,7 +72,7 @@
     "hfd_stn_r16",
     "hfd_stn_r17"
    ],
-   "connections": 24,
+   "connections": 25,
    "dies": [
     "hbm"
    ],
@@ -85,7 +85,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w110_ef_SE<->w109_ef_SE",
+   "worst_instance": "hbm:w116_ef_SE<->w115_ef_SE",
    "also_cdc": false,
    "input_delay_ss_ps": 586.2,
    "output_delay_ss_ps": 527.2,
@@ -119,7 +119,7 @@
     "hfd_svc_SE_s3",
     "hfd_svc_SW_s3"
    ],
-   "connections": 24,
+   "connections": 25,
    "dies": [
     "hbm"
    ],
@@ -132,7 +132,7 @@
    "skew_class": "fwd",
    "skew_ps": 0.0,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:w166_ef_NW<->w167_ef_NW",
+   "worst_instance": "hbm:w174_ef_NW<->w175_ef_NW",
    "also_cdc": false,
    "input_delay_ss_ps": 586.3,
    "output_delay_ss_ps": 527.3,
