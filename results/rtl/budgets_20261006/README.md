@@ -159,3 +159,4 @@ every one.
   hfd_su_full 170 -> 670, entry targets 343.5 -> 843.5 ps; hfd_quant (HUB-C) follows. Clock plan max inter 58.5 -> 66.9 ps
   (0 > 150). Same r23 die model and committed calibrations; HBM infeasible 0. Structural follow-up: r24 per-segment ck
   pins on the hub quarters.
+- 2026-10-07 ~08:40 PT: r24 sheets (sheets_r24/, clock_plan/hbm_r24.json.gz; generator d3ebf06d9 preset r24 = r23 + 8 per-segment ck pins per hub quarter, ck0..ck7 on M4 W face): hub quarters' clock ports ck0..ck7, die pad 500 ps, entry 1,014 ps; 44 regions, max inter 66.9 ps. Use these for the multi-ck hub quarter variant; every other master's sheet equals sheets/ (r23).
