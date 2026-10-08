@@ -1430,7 +1430,10 @@ module ot_hbm_accel_smh_tile #(
     parameter integer TCK = 1,
     parameter integer NMG = 32,             // mask bits per one-hot replica
     parameter integer A1B = 9,              // strap bits of the block-dot field offset (its low 11 - A1B bits are 0)
-    parameter integer A2B = 7               // strap bits of the BF16 field offset
+    parameter integer A2B = 7,              // strap bits of the BF16 field offset
+    parameter integer PT4 = 1               // hbm-blocks 2026-10-07 (m3h): a FOURTH pass-through register on the x-write beat
+                                            //   and on every row bundle (m3f tile_w: u_bldm -> u_bld2 -44.13 / u_bld -> u_bldm
+                                            //   -42.11 / u_rpm -> u_rp2 -27.24, 4-5 levels of wire): +1 per tile hop on both
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -1464,25 +1467,37 @@ module ot_hbm_accel_smh_tile #(
     // pins (+1 per tile hop on the x-write beat, matched by the row bundles' +1 per hop: the margin is unchanged)
     // (margin m3e) a third pass-through register mid-tile (tile_e c2: u_bld -> u_bld2 -10.6 ps across the tile): +1 per
     // tile hop on the x-write beat, matched by the row bundles' third register (rpm), so the margin is unchanged
-    wire [BBW-1:0] bm;
+    wire [BBW-1:0] bm, bm4;
     ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blvm (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bl[BBW-1]), .q(bm[BBW-1]));
     ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bldm (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bl[BBW-2:0]), .q(bm[BBW-2:0]));
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm[BBW-1]),
+    generate if (PT4 != 0) begin : g_pt4b
+        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blvn (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm[BBW-1]), .q(bm4[BBW-1]));
+        ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bldn (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm[BBW-2:0]), .q(bm4[BBW-2:0]));
+    end else begin : g_pt3b
+        assign bm4 = bm;
+    end endgenerate
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm4[BBW-1]),
         .q(bout[BBW-1]));
-    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm[BBW-2:0]), .q(bout[BBW-2:0]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bm4[BBW-2:0]), .q(bout[BBW-2:0]));
     genvar j, ln;
     generate for (j = 0; j < RPT; j = j + 1) begin : g_lf
         // the row bundle of row j (landed, driven on)
         // the row bundle lands in a pass-through copy (rout) and the leaf's own copy (kept, bit-identical)
-        wire [RBW-1:0] rl, rl1, rp, rpm;
+        wire [RBW-1:0] rl, rl1, rp, rpm, rpm4;
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp (.clk(clk), .rst_n(rst_n),
             .d(rin[j*RBW +: RBW]), .q(rp));
         // (margin m2) landing at the input pins (u_rp), launch from a register at the output pins; (m3e) a third
         // register mid-tile (u_rpm, rp -> rp2 was +0.8 ps): 3 per hop, in step with the x-write beat
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rpm (.clk(clk), .rst_n(rst_n),
             .d(rp), .q(rpm));
+        if (PT4 != 0) begin : g_pt4r
+            ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rpn (.clk(clk), .rst_n(rst_n),
+                .d(rpm), .q(rpm4));
+        end else begin : g_pt3r
+            assign rpm4 = rpm;
+        end
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp2 (.clk(clk), .rst_n(rst_n),
-            .d(rpm), .q(rout[j*RBW +: RBW]));
+            .d(rpm4), .q(rout[j*RBW +: RBW]));
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl (.clk(clk), .rst_n(rst_n),
             .d(rin[j*RBW +: RBW]), .q(rl1));
         // (m3e) the leaf's row copy one register deeper (+1 on every read), matching the x-write copy's bk2 below
