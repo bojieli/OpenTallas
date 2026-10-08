@@ -1,0 +1,303 @@
+{
+ "schema": "opentallas.qwen-nearhbm-ctx-vectors.v1",
+ "tool_sha256": "e3a2ac90628425c791218014f0f9387f833a639984b68da1259c2070b7936282",
+ "oracle_tool_sha256": "9b47d0ce68955ea1239f736daf8c7a8233a1aec7a2561f38740c54a4f21182ab",
+ "gold": "/home/ubuntu/realmem-ctx8k/gold",
+ "oracle_json_sha256": "ef9c60f2a0b2e5008d3cd1595ac290a553875700ebfc2e5e71ad77206d8a5e69",
+ "prep_json_sha256": "da97404bf655a953339a0bde51030860dbe1c7682e8c4c8f42836af685c69828",
+ "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+ "capture": {
+  "q": "VM[QR=15104:+1024] before PC 11",
+  "gold": "VM[ATTN=88944:+1024] after PC 15"
+ },
+ "vectors": [
+  {
+   "P": 4095,
+   "layer": 0,
+   "die": 0,
+   "dir": "P4095/L0/die0",
+   "files": {
+    "q.hex": "b30150f7e0216159c03ed45f3d86d527db30f8c0dfb641c01bb53f0554c61ce1",
+    "kv.hex": "b7b35d44121fe8e1a8a3ea59184a431fa3df2d671ad66120797bb2eaa34a05f8",
+    "gold.hex": "7a4bda270cf55cfa4d24ddd7a5ed0f9a58aafefd1af463cc5a19c95a5a9978fa",
+    "meta.json": "e3c7572f9cb500a9ef635f6ea8ae2a81d20274024b449e74e9fb62c7c3599421"
+   }
+  },
+  {
+   "P": 4095,
+   "layer": 0,
+   "die": 1,
+   "dir": "P4095/L0/die1",
+   "files": {
+    "q.hex": "fd353c9417a0021a35820fa2055ddcba217302b674a6a101cb405bb625cb144f",
+    "kv.hex": "40aa2b3f2df239a198bfe7ca5714072cc9b33c40db7003eb78ff7b052daddc12",
+    "gold.hex": "cc1f0f171e98c587f3b70518e45bb5ee6ec32b110daf5f816cacd5bfb3cfffe5",
+    "meta.json": "407f1fb542f216ff338af69fdd87adffaf647348b570b630a307334bbc99e985"
+   }
+  },
+  {
+   "P": 4095,
+   "layer": 0,
+   "die": 2,
+   "dir": "P4095/L0/die2",
+   "files": {
+    "q.hex": "1aba2992f9f6a6b22e16049d2acc5cb646c9578ce3a2a89bff9b56b7f92cf8f6",
+    "kv.hex": "1cdf96a143f65f488f78ade94157d321530d07d5ce0753c33444d1b129d2fcb1",
+    "gold.hex": "606a99a7be35cd086c48713cd83e487a6c9ee88536da517d8b748b925dac105e",
+    "meta.json": "b7bb230eab0bfa293454fdf6ee127eaa1c05fa30bc38d2c6f962903fdf9faa14"
+   }
+  },
+  {
+   "P": 4095,
+   "layer": 0,
+   "die": 3,
+   "dir": "P4095/L0/die3",
+   "files": {
+    "q.hex": "8e9ac93933bd307c4a18e4896b4d4d77d0f780b204aa78c016dd29ac83fb08cc",
+    "kv.hex": "b97f3b063a17072f736a9cf34df4947849ef2f0c151bf47f45d18b27501ee6d8",
+    "gold.hex": "a90047fcb83401e614d383b8445e9f23f59ea177db5beac49e33aa50f2607d75",
+    "meta.json": "560e1f0f6603f709a28139183fbcb527e6401e21b73f1328b04799f21996cefb"
+   }
+  },
+  {
+   "P": 4095,
+   "layer": 1,
+   "die": 0,
+   "dir": "P4095/L1/die0",
+   "files": {
+    "q.hex": "1c3ac6c1c194fc0cc68fdd7902531e7f24f3974e44ecbab025c6d441eabe9353",
+    "kv.hex": "ede90ed809972090c110301ebac7eb133b43d8c1b16fd8606de5119eb6bce716",
+    "gold.hex": "9e104d2cd097593cbc25f02026328695dc1a657372c1b85a8535a4b89c684e09",
+    "meta.json": "c08a7f29e1d666d81569785d8d48f70599f18d4a9b480dce7a5a5a268cbd98a6"
+   }
+  },
+  {
+   "P": 4095,
+   "layer": 1,
+   "die": 1,
+   "dir": "P4095/L1/die1",
+   "files": {
+    "q.hex": "cd8ee72789f3df0c654267c2ab8a6c90c9285a130655a1c221f43daa5a49fb95",
+    "kv.hex": "307e68f936fe34db571c1ec6ad285ce9be4c118b1cac02f0d67f438f3e0de6f2",
+    "gold.hex": "1731f76f0cd1dfc953f42dd49985348b76296dc706d4c657551180ec058ff032",
+    "meta.json": "8f864b7ab94e30194f9c685a63d63438d9389e4086fe6fc53e8e10c82a9398dc"
+   }
+  },
+  {
+   "P": 4095,
+   "layer": 1,
+   "die": 2,
+   "dir": "P4095/L1/die2",
+   "files": {
+    "q.hex": "74152eee1c0cb466114231fa8a4601a3fde66b6f5c87676c5135f31c1d0e2833",
+    "kv.hex": "2c5161ce6bf7210c6fe0e5914de113afff32bbaaf38a7998ff3846e825907c25",
+    "gold.hex": "49160648752f130ec61dcb983549b6e94658d4bac0787db19efc7cab5a54d209",
+    "meta.json": "5c8744484d58e40c3d0c68a3f0a57fc462168223c6322e1be8e48493421f3ac1"
+   }
+  },
+  {
+   "P": 4095,
+   "layer": 1,
+   "die": 3,
+   "dir": "P4095/L1/die3",
+   "files": {
+    "q.hex": "0103a7e1639afdd523a4d8583db75c2ad87c65287d405ba2c5d696886ed61ea3",
+    "kv.hex": "019c64590f153e39911811287c9a64354ee1dd1e4350c36d159044e3192fd0e2",
+    "gold.hex": "1f21da316a0a520dea4f55714af13e5bbb7e652e26219698492b4652f1ace52b",
+    "meta.json": "34f481dc392aa2414c4dc7446be7bd925405ab792107507763b1051eb316b936"
+   }
+  },
+  {
+   "P": 4095,
+   "layer": 2,
+   "die": 0,
+   "dir": "P4095/L2/die0",
+   "files": {
+    "q.hex": "0ef211097d5b4cdc62dfde9d96851d1ea6bcfa302208082671c27c89fa333f94",
+    "kv.hex": "22f794a12be8aa63be0764d1e69cefc0c2070f961837e5112fd0a8f818e286d5",
+    "gold.hex": "67de483536d763975b4cda49553038e8a694bf84faa732884957389fc17d3732",
+    "meta.json": "2bdab7cb7f4471d905aca1d54389f083d0e61d7f54d2b3c7f3f8e273c7641cb6"
+   }
+  },
+  {
+   "P": 4095,
+   "layer": 2,
+   "die": 1,
+   "dir": "P4095/L2/die1",
+   "files": {
+    "q.hex": "9a31831a26b09c41c0c7a9e88379e154d07cf4f303b4ab29dca16bca1e668ea8",
+    "kv.hex": "d6d7e598e4af2b5be8fa98d9329656694a9ff98a6004195ff2e29230714762ab",
+    "gold.hex": "9c00f963caa73efa6fbe1493d5c293a1c87e3a73f4bb3679e02676af164e9084",
+    "meta.json": "77962e2fdae7e04785df99ef13536e21e23ab5e1c8147bb854374a8ec207c363"
+   }
+  },
+  {
+   "P": 4095,
+   "layer": 2,
+   "die": 2,
+   "dir": "P4095/L2/die2",
+   "files": {
+    "q.hex": "92e4df42899bdd2827f7e786a2df4f517ce8787cf8399e8d964b65e951c49a22",
+    "kv.hex": "af8e2686aa224efece08adb09b5423bb2272af23ec4a34e3e045e6257f6ae4e5",
+    "gold.hex": "da27a189e84af8025a72a6e350da78f170bb2e9741a5e6993cbf9d3594f53667",
+    "meta.json": "76509ab7a9914c4e6e6f96678929f771dd1ea4b7fb41099e4b25b879321b5335"
+   }
+  },
+  {
+   "P": 4095,
+   "layer": 2,
+   "die": 3,
+   "dir": "P4095/L2/die3",
+   "files": {
+    "q.hex": "ef632fb0776f0b8eda34e463b9aee74db3f366a6972a20e229bc774fdb3318cf",
+    "kv.hex": "f7348417352e862c4b89e8a786d5408c51d8affb69dcfbbfac09241c02c15d05",
+    "gold.hex": "a68daa438f732628014a8ca31b16ceecfbb75b334e9b2ce341e98d5df51613ad",
+    "meta.json": "2d025a0b496ffc6c76a0c6ededd9090bd03ddaa069b27175b38eebdf24e66099"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 0,
+   "die": 0,
+   "dir": "P8191/L0/die0",
+   "files": {
+    "q.hex": "ec207bf5188f476932a117274e23e2e5fc8a4451b77ef6b561c7ec56441e784f",
+    "kv.hex": "1fadba1202f8d89aac2afbe5a6c84029d1fd6fd101562ac1d81b5a29b2d9a516",
+    "gold.hex": "6524a0575431687df18dd00f62b4fd9aeb4c1687d500cf6a4f2c6134ffb5e8f5",
+    "meta.json": "d7f59975668114906a6e41ab8f8ce0b1c96e6f0d07a3012d41180f9fa80472de"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 0,
+   "die": 1,
+   "dir": "P8191/L0/die1",
+   "files": {
+    "q.hex": "e15e89d2820397d5f5a87e82719665e0a48cf88c9c74d24b339774141c6486e6",
+    "kv.hex": "438c90e1953a5ccc00c6c0662203e0fd4fa5ac53b6f17650847daebbe3541346",
+    "gold.hex": "e7bc8b022224d59459dea43a7e3c7be6614e34834b2427c565d68f777ca3d067",
+    "meta.json": "2113494f5561dde4642575e6fe7d6d6a1fbc9185b35b1bd603e26dd2c89fa48f"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 0,
+   "die": 2,
+   "dir": "P8191/L0/die2",
+   "files": {
+    "q.hex": "a3bd2f8cd97cfb5ab42b3cdafd2031fb6244e37bf4030b8cbad79f68ee304bdb",
+    "kv.hex": "fe31487140a90805e7a324706e5793f975ab06085a88d64f4cee2a396be1fc9b",
+    "gold.hex": "095d8924736c73044f9d07f22f558b4b934dd84afb39aabf4791e3a814a6d16a",
+    "meta.json": "47ae81e73df9ad275c896a52b747d63ce498f462cca8ed21128ec867df3a4b92"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 0,
+   "die": 3,
+   "dir": "P8191/L0/die3",
+   "files": {
+    "q.hex": "f16c1dc9b5855d16930138d312babfbf15e5b2ea83d540a721a0bf9f64836917",
+    "kv.hex": "473d2a55ce0e8ae9fd627ca7dffb4599b949366de81bc947ede0dbb46baa0cc4",
+    "gold.hex": "8a5672c728bc07014c2cb2077142e86bb6ff929c524f17087386bf367a4b2646",
+    "meta.json": "98e8c3ac771dfce17de354709523609953915844de201c309f0843fb3731b0ee"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 1,
+   "die": 0,
+   "dir": "P8191/L1/die0",
+   "files": {
+    "q.hex": "976e37f185bdf4a3bb547803b26fe586a894d72f5cb16349e345367597d848c7",
+    "kv.hex": "c34816d4ff099e258e50c183e03a777e7be9ea19e07e86b37aeabf23b6363b25",
+    "gold.hex": "906d5bfce1d1a1f8de38911c427b61fe5c2b718a73e00af4cdafb22228ea7228",
+    "meta.json": "5184c4f68348c392673dc96a655bf1189657df63949eaad49fb4557cbef368d3"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 1,
+   "die": 1,
+   "dir": "P8191/L1/die1",
+   "files": {
+    "q.hex": "695082285ac7f588af9c65a6892eb1d0c56baea1120e1de0a126a8db3ea4be56",
+    "kv.hex": "f802092e4387e65059aa66910cb034e5a53e3595c5f5d6e5cab0aab1cc49ad37",
+    "gold.hex": "2c677243c6b00046c80e4d002701a9c2a1be4a6093444efbab6f994f04850024",
+    "meta.json": "a16d0286bc442a886393179739ae884a464142e382206c9878704d39f52089d9"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 1,
+   "die": 2,
+   "dir": "P8191/L1/die2",
+   "files": {
+    "q.hex": "64422663ef05ca821efd165dc86f175d2daade9db31a5cfd4e16e1ade2d99d9f",
+    "kv.hex": "e7402129f133eaea4effe3a380bf7764ad924e374d6af3690128b7236a5c68bb",
+    "gold.hex": "b7128f3be9ef21cee13a89f8f22acc82dfe5212cd253cf370b6e9a7743478294",
+    "meta.json": "337b0c13785be097affc8c465eb1a46b197c24d49244f899919e03279f39ab97"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 1,
+   "die": 3,
+   "dir": "P8191/L1/die3",
+   "files": {
+    "q.hex": "99cc12b211adc00405d267ca8699dd2bc0edeece3b84e98a519c2714ec531707",
+    "kv.hex": "5adad84b95d892cf514e97994b61565ec566afe0c7df2c4da98c9fa41efc25cb",
+    "gold.hex": "3a0f4c2e52ce108af7bce24dddf17f63acf670aeabbab864846d1d9ddaf20417",
+    "meta.json": "40ee3163ca9e912e04cd09d45196c6d9c99106f48af8c06d66df4401c290af1d"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 2,
+   "die": 0,
+   "dir": "P8191/L2/die0",
+   "files": {
+    "q.hex": "76b2260e3c5c8c07687e3f263444f72eac9dcb42a569f8ac400fde37d96f803d",
+    "kv.hex": "08a743028e607c82195fa42cb0bb1622c3962b180e47089261c98cc8a90c730d",
+    "gold.hex": "79b916106f0a1b3d011453cf841aac450443582d3ae6a229a799ea83b5a5d1c4",
+    "meta.json": "dd260738856f4d92b85e12a85cbc6f8d14aa645d08266fcb8819bc4c2773f02f"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 2,
+   "die": 1,
+   "dir": "P8191/L2/die1",
+   "files": {
+    "q.hex": "aeb226b077ee93bef7dad510e9494c67a78c96522d994f93b9da87932a825b2b",
+    "kv.hex": "95ab8efcc4cfda3462ff66563dd0234a2958f424468d12c7b5a648cb552839c1",
+    "gold.hex": "db2cbe3bd4f5c21a9ef5c4db06553aa6ff41d772f936568d41c30cb8764ec328",
+    "meta.json": "1df77e98058c294b15c3c2b1b576c2cfb6c66c279516e6f7972cf01a65b7c001"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 2,
+   "die": 2,
+   "dir": "P8191/L2/die2",
+   "files": {
+    "q.hex": "b5a855774ea3e32e38532097ef2bd1f720ba3657864c20a7ab525da612fc351f",
+    "kv.hex": "c2f26a6c53c4872d60dfc804b89db5a06e65a9a4f9f7449be89b38b17f1ec892",
+    "gold.hex": "69f20e70f0db57c198e41904dce7a914a3e903879f0831ec6638c063da24acd9",
+    "meta.json": "d5ddde6aa35f17b8a228ccb3201461dc423ca04b4875b5a565ff7cdcebc49874"
+   }
+  },
+  {
+   "P": 8191,
+   "layer": 2,
+   "die": 3,
+   "dir": "P8191/L2/die3",
+   "files": {
+    "q.hex": "29dd2a5b38fb9b593e6488b660640795a6c4f4d88e380570696c27477918738b",
+    "kv.hex": "6c46a475d110bd6a9f7b9f1a9e4f4eb73ca80f3a4bd0b2ba59fb1955f5fb2c5c",
+    "gold.hex": "49988cd3e499644e039d2a3708c20de7122e3322a307253fc6991c4f4d0db9ef",
+    "meta.json": "3aff9c17ba5c792e374a4ae0e3091a992acf18e255b4dc663c426420034cf01e"
+   }
+  }
+ ]
+}

@@ -1,0 +1,104 @@
+{
+ "schema": "opentallas.qwen-nearhbm-ctx-vectors-check.v1",
+ "reference": "tools/qwen_nearhbm_attn_ref.py golden_die",
+ "reference_sha256": "3370a8444dc4eda7303bce11c7d5f603749c1a0f2e99ef88b47bb34220164f16",
+ "rows": [
+  {
+   "dir": "P4095/L0/die0",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P4095/L0/die1",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P4095/L0/die2",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P4095/L0/die3",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P4095/L1/die0",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P4095/L1/die1",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P4095/L1/die2",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P4095/L1/die3",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P4095/L2/die0",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P4095/L2/die1",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P4095/L2/die2",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P4095/L2/die3",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L0/die0",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L0/die1",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L0/die2",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L0/die3",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L1/die0",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L1/die1",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L1/die2",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L1/die3",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L2/die0",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L2/die1",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L2/die2",
+   "golden_die_equals_isa_attn": true
+  },
+  {
+   "dir": "P8191/L2/die3",
+   "golden_die_equals_isa_attn": true
+  }
+ ],
+ "verdict": "PASS"
+}

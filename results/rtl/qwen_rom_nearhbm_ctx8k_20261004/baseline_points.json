@@ -1,0 +1,249 @@
+{
+ "P255": {
+  "token_log_sha256": "68339b1e198211a0974db8ffd425ad5648a7ddf8e15320688608c6b96b0191ed",
+  "stage": {
+   "cycles": 4338,
+   "start": 7,
+   "end": 4345
+  },
+  "me_busy_runs": {
+   "qkv": {
+    "first": 19,
+    "last": 270
+   },
+   "qk": {
+    "first": 839,
+    "last": 1070
+   },
+   "pv": {
+    "first": 1072,
+    "last": 1368
+   },
+   "o": {
+    "first": 1370,
+    "last": 1641
+   },
+   "gu": {
+    "first": 2354,
+    "last": 2881
+   },
+   "down": {
+    "first": 3001,
+    "last": 3480
+   }
+  },
+  "kv_ok_drained_transitions": [
+   [
+    1,
+    0,
+    1
+   ],
+   [
+    291,
+    0,
+    0
+   ],
+   [
+    395,
+    1,
+    0
+   ],
+   [
+    410,
+    1,
+    1
+   ],
+   [
+    671,
+    0,
+    0
+   ],
+   [
+    684,
+    1,
+    0
+   ],
+   [
+    807,
+    1,
+    1
+   ],
+   [
+    858,
+    0,
+    0
+   ],
+   [
+    871,
+    1,
+    0
+   ],
+   [
+    994,
+    1,
+    1
+   ]
+  ],
+  "prefix_to_qk": 832,
+  "attention_core_qk_to_o": 531,
+  "suffix_o_to_end": 2975
+ },
+ "P4095": {
+  "token_log_sha256": "2559ce7d14e84b4a6159faaea03a824cbbdd640868e0dbbe5b9bd8dc26b8bf7e",
+  "stage": {
+   "cycles": 8343,
+   "start": 7,
+   "end": 8350
+  },
+  "me_busy_runs": {
+   "qkv": {
+    "first": 19,
+    "last": 270
+   },
+   "qk": {
+    "first": 2256,
+    "last": 4539
+   },
+   "pv": {
+    "first": 4541,
+    "last": 5373
+   },
+   "o": {
+    "first": 5375,
+    "last": 5646
+   },
+   "gu": {
+    "first": 6359,
+    "last": 6886
+   },
+   "down": {
+    "first": 7006,
+    "last": 7485
+   }
+  },
+  "kv_ok_drained_transitions": [
+   [
+    1,
+    0,
+    1
+   ],
+   [
+    291,
+    0,
+    0
+   ],
+   [
+    387,
+    0,
+    1
+   ],
+   [
+    648,
+    0,
+    0
+   ],
+   [
+    2224,
+    0,
+    1
+   ],
+   [
+    2275,
+    0,
+    0
+   ],
+   [
+    2400,
+    0,
+    1
+   ],
+   [
+    4300,
+    1,
+    1
+   ]
+  ],
+  "prefix_to_qk": 2249,
+  "attention_core_qk_to_o": 3119,
+  "suffix_o_to_end": 2975
+ },
+ "P8191": {
+  "token_log_sha256": "c3fdab7e2be4d8b80e9e85e6b6cb00635afdf893e7504f8ac18150127361abf8",
+  "stage": {
+   "cycles": 14574,
+   "start": 7,
+   "end": 14581
+  },
+  "me_busy_runs": {
+   "qkv": {
+    "first": 19,
+    "last": 270
+   },
+   "qk": {
+    "first": 4304,
+    "last": 10194
+   },
+   "pv": {
+    "first": 10196,
+    "last": 11604
+   },
+   "o": {
+    "first": 11606,
+    "last": 11877
+   },
+   "gu": {
+    "first": 12590,
+    "last": 13117
+   },
+   "down": {
+    "first": 13237,
+    "last": 13716
+   }
+  },
+  "kv_ok_drained_transitions": [
+   [
+    1,
+    0,
+    1
+   ],
+   [
+    291,
+    0,
+    0
+   ],
+   [
+    388,
+    0,
+    1
+   ],
+   [
+    649,
+    0,
+    0
+   ],
+   [
+    4272,
+    0,
+    1
+   ],
+   [
+    4323,
+    0,
+    0
+   ],
+   [
+    4452,
+    0,
+    1
+   ],
+   [
+    9915,
+    1,
+    1
+   ]
+  ],
+  "prefix_to_qk": 4297,
+  "attention_core_qk_to_o": 7302,
+  "suffix_o_to_end": 2975
+ }
+}
