@@ -219,7 +219,7 @@ class Closures:
         out.sort(key=lambda v: -v['t'])
         day = now - 86400
         out = [v for i, v in enumerate(out) if i < 200 or v['t'] >= day][:600]
-        key = (len(out), out[0]['t'] if out else 0, out[0]['name'] if out else '')
+        key = hash(tuple((v['t'], v['name'], v['status']) for v in out))   # any added/removed verdict bumps vver
         with self.lock:
             if key != getattr(self, '_vkey', None): self._vkey = key; self.vver += 1
             self.verdicts = out

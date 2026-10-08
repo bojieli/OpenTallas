@@ -58,11 +58,15 @@ canvas.chart{width:100%;display:block}
 .closepanel.boom{animation:boom 1.6s ease-out}
 @keyframes boom{0%{box-shadow:0 0 0 0 #ffd23fcc,0 0 60px #ff5d73aa}100%{box-shadow:0 0 0 22px #ffd23f00,0 10px 40px #ff5d7314}}
 .flame{display:inline-block;width:10px;height:10px;border-radius:50%;background:radial-gradient(#ffd23f,#ff5d73);box-shadow:0 0 12px #ff5d73;animation:pulse 1.2s infinite;margin-right:6px}
-.vctl{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:-2px 0 8px;font:11.5px var(--mono)}
+.vctl{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:-2px 0 8px;font:11.5px var(--mono);min-width:0}
+#vchips,#fSt{display:flex;flex-wrap:wrap;gap:6px;min-width:0;max-width:100%}
+#closeHot{flex-wrap:wrap;justify-content:flex-end;min-width:0}#closeHot .nw{white-space:nowrap}
+#vban{display:block;margin:0 0 8px;padding:6px 10px;border-radius:8px;font:800 12px var(--mono);color:#05070d;background:linear-gradient(90deg,#5ee7ff,#4ade80);cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;animation:flash 1.8s ease-out 2}
+#vban[hidden]{display:none}
 .vctl select{background:#0b1020;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:3px 6px;font:11.5px var(--mono)}
 #vfeed{list-style:none;margin:0;padding:0 4px 0 0;height:640px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2a3558 transparent}
 #vfeed li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:7px 8px;border-bottom:1px solid #141c33;border-radius:8px;animation:slidein .7s ease-out;border-left:3px solid transparent}
-#vfeed .vs{grid-row:1/span 4;font:800 10px var(--mono);padding:4px 6px;border-radius:6px;color:#05070d;text-align:center;min-width:86px}
+#vfeed .vs{grid-row:1/span 4;font:800 10px var(--mono);padding:4px 6px;border-radius:6px;color:#05070d;text-align:center;min-width:86px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #vfeed .bk{font:800 14px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #vfeed .bk small{color:var(--dim);font-weight:400;font-size:11px}
 #vfeed .jn,#vfeed .why{grid-column:2;color:var(--dim);font:11px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -93,7 +97,7 @@ canvas.chart{width:100%;display:block}
 .ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;font:12px var(--mono)}
 .ctl select,.ctl input{background:#0b1020;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:4px 7px;font:12px var(--mono)}
 .ctl input[type=search]{min-width:200px}
-.chip{border:1px solid var(--line);border-radius:999px;padding:3px 9px;cursor:pointer;user-select:none;color:var(--dim);background:#0b1020}
+.chip{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;line-height:1.35;border:1px solid var(--line);border-radius:999px;padding:3px 9px;cursor:pointer;user-select:none;color:var(--dim);background:#0b1020}
 .chip.on{color:#05070d;font-weight:700}
 .tblwrap{max-height:70vh;overflow:auto;border:1px solid var(--line);border-radius:10px}
 table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-variant-numeric:tabular-nums}
@@ -104,7 +108,7 @@ table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-varian
 .jt tr.grp td{background:#131c35;color:var(--ink);font-weight:700;padding:5px 7px;position:sticky;top:25px}
 .jt tr.grp td small{color:var(--dim);font-weight:400;margin-left:10px}
 .jt tr:hover td{background:#16203b}
-.st{font-weight:700;padding:1px 6px;border-radius:5px;color:#05070d}
+.st{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;font-weight:700;padding:1px 6px;border-radius:5px;color:#05070d}
 .stmd{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:12px;margin-top:12px}
 .stmd pre{margin:0;font:11px/1.45 var(--mono);color:var(--dim);white-space:pre-wrap;word-break:break-word;max-height:300px;overflow:auto;background:#0b1020;border:1px solid var(--line);border-radius:8px;padding:8px}
 .stmd pre b{color:var(--ink)}
@@ -146,7 +150,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
 @media (max-width:1100px){.cols{grid-template-columns:1fr}}
 @media (max-width:820px){.hosts.small{grid-template-columns:1fr}}
 @media (max-width:640px){.hosts.big{grid-template-columns:1fr}}
-@media (max-width:480px){.hosts{grid-template-columns:1fr}.wrap{padding:12px 12px 20px}#ramArea{height:200px}#tanks{height:150px}.rb{grid-template-columns:110px 1fr 40px}}
+@media (max-width:480px){.hosts{grid-template-columns:1fr}.wrap{padding:12px 12px 20px}#ramArea{height:200px}#tanks{height:150px}.rb{grid-template-columns:110px 1fr 40px}#vfeed .vs{min-width:74px;max-width:74px;font-size:9px;padding:3px 4px}#vfeed li{gap:2px 6px}}
 </style>
 </head>
 <body>
@@ -185,7 +189,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
       <div class="coltitle">Timing closure</div>
       <section class="panel closepanel" id="closepanel">
         <div class="ptitle"><span><i class="flame"></i><span id="feedTitle">Live closures</span></span><span id="closeHot"></span></div>
-        <div class="vctl" id="vctl" hidden><span id="vchips"></span><select id="vTgt"><option value="">all targets</option><option value="TT">TT ≥0 / FF ≥0</option><option value="SS">SS ≥0 / FF ≥0</option></select></div>
+        <div id="vban" hidden></div><div class="vctl" id="vctl" hidden><span id="vchips"></span><select id="vTgt"><option value="">all targets</option><option value="TT">TT ≥0 / FF ≥0</option><option value="SS">SS ≥0 / FF ≥0</option></select></div>
         <ul class="ticker" id="ticker"></ul>
         <ul id="vfeed" hidden></ul>
       </section>
@@ -251,7 +255,7 @@ for (let i = 0; i <= 100; i++) {
 const col = v => { const c = LUT[Math.max(0, Math.min(100, Math.round(v)))]; return `rgb(${c[0]},${c[1]},${c[2]})`; };
 const $ = id => document.getElementById(id);
 const fmt = (n, d = 0) => n == null ? '-' : Number(n).toLocaleString('en-US', {maximumFractionDigits: d, minimumFractionDigits: d});
-const ago = t => { const s = Math.max(0, NOW() - t); return s < 60 ? 'now' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? (s / 3600).toFixed(1) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
+const ago = t => { const s = Math.max(0, NOW() - t); return s < 10 ? 'now' : s < 60 ? Math.floor(s) + 's ago' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? (s / 3600).toFixed(1) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
 const gb = g => g >= 1000 ? fmt(g / 1024, 2) + ' TB' : fmt(g) + ' GB';
 const DPR = Math.min(2, window.devicePixelRatio || 1);
 function fit(cv) {   // size a canvas to its CSS box; returns [ctx, w, h]
@@ -488,7 +492,7 @@ function updateLoop(d) {
     const sl = r.setup !== undefined ? `<span class="${r.setup < 0 ? 'neg' : ''}">${r.setup_corner} ${sgn(r.setup)} ps</span><span class="${r.hold < 0 ? 'neg' : ''}">FF ${sgn(r.hold)} ps</span>` : '';
     return `<li class="${cls}"><span class="tag" style="background:${CATCOL[r.cat] || CATCOL.Other}">${r.cat.toUpperCase()}</span>` +
       `<span class="bk" title="${esc(r.block)}">${esc(r.block || 'block')} <small style="color:var(--dim);font-weight:400">on ${esc(r.host)}</small></span>` +
-      `<span class="sl">${sl}<small class="t">${ago(r.t)}</small></span>` +
+      `<span class="sl">${sl}<small class="t" data-t="${r.t}">${ago(r.t)}</small></span>` +
       `<span class="jn" title="${esc(r.name)}">${esc(r.name || '')}${r.target ? ' · target ' + esc(r.target.replace(/>=/g, '≥')) : ''}${r.into ? ' · into ' + esc(r.into) : ''}</span></li>`;
   }).join('') || '<li><span></span><span class="h">waiting for closures</span><span></span></li>';
   if (fresh.length) {
@@ -535,23 +539,24 @@ if (!REPLAY) connect();
 const KINDS = [['', 'All'], ['closed', 'Closed'], ['timing', 'Failed timing'], ['check', 'Check failed'], ['flow', 'Flow failures']];
 const KCOL = {closed: '#4ade80', timing: '#ff8a4d', check: '#f472b6', flow: '#9b8cc9'};
 const VF = Object.assign({kind: '', tgt: ''}, ls('vf') || {});
-let VV = null, VD = [], vseen = null;
+let VV = null, VD = [], vseen = null, vFetchT = 0;
 function loadVerdicts(v) {
   VV = v;
   if (REPLAY) { VD = rpVerdicts(); renderVerdicts(); return; }
+  vFetchT = Date.now();
   fetch('/api/verdicts').then(r => r.ok ? r.json() : null).then(d => { if (d) { VD = d.verdicts; renderVerdicts(); } }).catch(() => { VV = null; });
 }
 function renderVerdicts() {
   lsw('vf', VF);
   $('ticker').hidden = true; $('vfeed').hidden = false; $('vctl').hidden = false; $('feedTitle').textContent = 'Live verdicts';
   const now = NOW(), key = v => v.t + '|' + v.name + '|' + v.status;
-  const fresh = vseen ? VD.filter(v => !vseen.has(key(v))) : [];
+  const fresh = vseen ? VD.filter(v => !vseen.has(key(v)) && now - v.t < 3600) : [];   // vseen is reset on a replay seek: rebuild silently
   vseen = new Set(VD.map(key));
   const cnt = {}; VD.forEach(v => cnt[v.kind] = (cnt[v.kind] || 0) + 1);
-  $('vchips').innerHTML = KINDS.map(([k, t]) => `<span class="chip ${VF.kind === k ? 'on' : ''}" data-k="${k}" style="${VF.kind === k ? 'background:' + (KCOL[k] || '#5ee7ff') : ''}">${t} ${k ? cnt[k] || 0 : VD.length}</span>`).join(' ');
+  $('vchips').innerHTML = KINDS.map(([k, t]) => `<span class="chip ${VF.kind === k ? 'on' : ''}" title="${t} ${k ? cnt[k] || 0 : VD.length}" data-k="${k}" style="${VF.kind === k ? 'background:' + (KCOL[k] || '#5ee7ff') : ''}">${t} ${k ? cnt[k] || 0 : VD.length}</span>`).join(' ');
   $('vTgt').value = VF.tgt;
   const day = VD.filter(v => now - v.t < 86400);
-  $('closeHot').innerHTML = `<b style="color:#4ade80">${day.filter(v => v.kind === 'closed').length}</b> closed · <b style="color:#ff8a4d">${day.filter(v => v.kind === 'timing').length}</b> timing · <b style="color:#f472b6">${day.filter(v => v.kind === 'check').length}</b> check · <b style="color:#9b8cc9">${day.filter(v => v.kind === 'flow').length}</b> flow · 24 h`;
+  $('closeHot').innerHTML = [['closed', '#4ade80'], ['timing', '#ff8a4d'], ['check', '#f472b6'], ['flow', '#9b8cc9']].map(([k, c]) => `<span class="nw"><b style="color:${c}">${day.filter(v => v.kind === k).length}</b> ${k}</span>`).join(' · ') + ' · <span class="nw">24 h</span>';
   const chip = (lab, v, z) => v == null ? '' : `<span class="${v < 0 ? 'n' : z ? 'z' : 'p'}">${lab} ${sgn(v)}${lab === 'DRC' ? '' : ' ps'}</span>`;
   const vis = VD.filter(v => (!VF.kind || v.kind === VF.kind) && (!VF.tgt || v.corner === VF.tgt));
   const fs = new Set(fresh.map(key));
@@ -560,9 +565,9 @@ function renderVerdicts() {
     const age = now - v.t, cls = ['k-' + v.kind, fs.has(key(v)) ? 'new' : '', age < 900 ? 'fresh' : age < 3600 ? 'hot' : ''].join(' ');
     const drc = v.drc == null ? '' : `<span class="${v.drc > 0 ? 'n' : 'z'}">DRC ${v.drc}</span>`;
     const why = v.kind === 'closed' ? (v.why || '') : (v.why + (v.detail ? ' · ' + v.detail : ''));
-    return `<li class="${cls}"><span class="vs">${esc(v.status)}</span>` +
+    return `<li class="${cls}" data-t="${v.t}"><span class="vs" title="${esc(v.status)}">${esc(v.status)}</span>` +
       `<span class="bk" title="${esc(v.block)}">${esc(v.block)} <small>on ${esc(v.host || '?')} · ${esc(v.target.replace(/>=/g, '≥'))}</small></span>` +
-      `<span class="sl">${chip(v.corner, v.setup)}${chip('FF', v.hold)}${drc}<small>${ago(v.t)}</small></span>` +
+      `<span class="sl">${chip(v.corner, v.setup)}${chip('FF', v.hold)}${drc}<small data-t="${v.t}">${ago(v.t)}</small></span>` +
       (v.kind === 'check' ? `<span class="ck" title="${esc(v.check)}">✗ check failed: ${esc(v.check)}</span>` : '') +
       `<span class="jn" title="${esc(v.name)}">${esc(v.name)}</span><span class="why" title="${esc(why)}">${esc(why)}</span></li>`;
   }).join('') || '<li><span></span><span class="jn">no verdicts match</span></li>';
@@ -573,11 +578,24 @@ function renderVerdicts() {
     tt.className = v.kind === 'closed' ? 'ok' : v.kind === 'timing' ? 'bad' : v.kind === 'check' ? 'check' : 'flow';
     tt.textContent = `${v.status}  ${v.block}` + (v.setup != null ? `  ${v.corner} ${sgn(v.setup)} / FF ${sgn(v.hold)} ps` : '') + (v.kind === 'flow' ? '  ' + v.why.slice(0, 60) : v.kind === 'check' ? '  check failed: ' + v.check.slice(0, 60) : '') + `  on ${v.host}` + (fresh.length > 1 ? `  (+${fresh.length - 1} more)` : '');
     void tt.offsetWidth; tt.classList.add('on'); clearTimeout(tt._t); tt._t = setTimeout(() => tt.classList.remove('on'), 6000);
+    const bn = $('vban'); bn.hidden = true; void bn.offsetWidth;
+    bn.textContent = `▲ ${fresh.length} new verdict${fresh.length > 1 ? 's' : ''} · ${v.status} ${v.block}`; bn.title = bn.textContent; bn.hidden = false;
+    clearTimeout(bn._t); bn._t = setTimeout(() => bn.hidden = true, 20000);
   }
 }
+function tickAges() {   // relative ages and fresh/hot highlights against NOW() (the replay clock in replay)
+  const now = NOW();
+  for (const e of document.querySelectorAll('#vfeed [data-t], #ticker [data-t]')) {
+    const t = +e.dataset.t, a = now - t;
+    if (e.tagName === 'LI') { e.classList.toggle('fresh', a < 900); e.classList.toggle('hot', a >= 900 && a < 3600); }
+    else { const s = ago(t); if (e.textContent !== s) e.textContent = s; }
+  }
+}
+function vReset() { vseen = null; VV = null; $('vban').hidden = true; }   // a replay seek rebuilds the feed for the new time, no banner
+$('vban').onclick = () => { $('vfeed').scrollTop = 0; $('vban').hidden = true; };
 $('vchips').onclick = e => { const k = e.target.dataset && e.target.dataset.k; if (k == null) return; VF.kind = k; renderVerdicts(); };
 $('vTgt').onchange = e => { VF.tgt = e.target.value; renderVerdicts(); };
-setInterval(() => { if (VD.length && !SAFE) renderVerdicts(); }, 60000);   // keep ages and fresh/hot highlights current
+setInterval(() => { tickAges(); if (!REPLAY && !SAFE && VV != null && Date.now() - vFetchT > 30000) loadVerdicts(VV); }, 15000);   // ages every 15 s; re-fetch if the change signal went quiet
 
 // ---- live job table (internal view only)
 const STS = ['RUNNING', 'SYNC', 'ECO', 'READY', 'QUEUED'];
@@ -632,7 +650,7 @@ if (!REPLAY) pollJobs();
 window.addEventListener('resize', () => { for (const c of cards.values()) layoutGrid(c); drawCpu(); drawClosures(); areaT0 = 0; });
 
 // ---- replay: the recorded window (window.REPLAY_DATA when exported, else /api/replay) through the same renderers
-let RP = null, rPlaying = true, rSpeed = +(qs.get('speed') || 10) || 10, rLast = 0, rIdx = -1, rDraw = 0, rJobsKey = null;
+let rAges = 0, RP = null, rPlaying = true, rSpeed = +(qs.get('speed') || 10) || 10, rLast = 0, rIdx = -1, rDraw = 0, rJobsKey = null;
 const SPEEDS = [1, 10, 60, 600];
 const tstr = (t, d) => new Date(t * 1000).toLocaleString('en-US', Object.assign({hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}, d ? {month: 'short', day: 'numeric'} : {}));
 const bsearch = (a, t, key) => { let lo = 0, hi = a.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (key(a[m]) <= t) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
@@ -678,9 +696,10 @@ function rpShow(force) {
 }
 function rpTick(t) {
   if (!RP) return;
-  const dt = rLast ? (t - rLast) / 1000 : 0; rLast = t;
+  const dt = rLast ? Math.min(1, (t - rLast) / 1000) : 0; rLast = t;   // capped: a backgrounded tab does not leap
   if (rPlaying) { RT = Math.min(RP.t1, RT + dt * rSpeed); if (RT >= RP.t1) { rPlaying = false; $('rPlay').textContent = 'replay'; } }
   if (t - rDraw > 100) { rDraw = t; rpShow(false); }
+  if (t - rAges > 1000) { rAges = t; tickAges(); }
   $('live').classList.remove('stale');
   $('clock').textContent = 'REPLAY · ' + tstr(RT);
   $('rclock').innerHTML = `<small>RECORDED ${rPlaying ? '▶ ' + rSpeed + '×' : '❚❚ paused'}${SAFE ? ' · share-safe' : ''}</small>${tstr(RT, true)}`;
@@ -700,8 +719,8 @@ if (REPLAY) {
   const sp = () => { $('rSpeed').innerHTML = SPEEDS.map(x => `<span data-x="${x}" class="${x === rSpeed ? 'on' : ''}">${x}×</span>`).join(''); };
   sp();
   $('rSpeed').onclick = e => { const x = +(e.target.dataset && e.target.dataset.x); if (x) { rSpeed = x; sp(); } };
-  $('rPlay').onclick = () => { if (!RP) return; if (RT >= RP.t1) RT = RP.t0, rIdx = -1; rPlaying = !rPlaying; $('rPlay').textContent = rPlaying ? 'pause' : 'play'; };
-  $('rScrub').oninput = e => { if (!RP) return; RT = RP.t0 + +e.target.value; rpShow(false); };
+  $('rPlay').onclick = () => { if (!RP) return; if (RT >= RP.t1) RT = RP.t0, rIdx = -1, vReset(); rPlaying = !rPlaying; $('rPlay').textContent = rPlaying ? 'pause' : 'play'; };
+  $('rScrub').oninput = e => { if (!RP) return; RT = RP.t0 + +e.target.value; vReset(); rpShow(true); };
   document.addEventListener('keydown', e => { if (e.code === 'Space' && e.target.tagName !== 'INPUT') { e.preventDefault(); $('rPlay').click(); } });
   if (RD) rpStart(RD);
   else {
