@@ -19,7 +19,8 @@ module ot_qwen_die_hub #(
     // more register beside their pins (+1 cycle each way; credit protocols unchanged, the credit loops one longer),
     // and each link's returned-credit Gray count is registered in its own forwarded clock at the pin before the
     // two-flop synchroniser into ck (a single-source CDC instead of a port-to-synchroniser path).
-    parameter integer PS = 0
+    parameter integer PS = 0,
+    parameter integer CDCP = 0          // link receive ot_qwen_die_cdc_ch PIPE
 ) (
     input  wire              ck,
     input  wire              rst_n,
@@ -46,7 +47,7 @@ module ot_qwen_die_hub #(
     reg  [3:0]         rcnt [0:NL-1];      // remote credit count seen (Gray, synchronised) for our tx
     generate for (k = 0; k < NL; k = k + 1) begin : g_rx
         wire [LW-1:0] w = l_i[k*LW +: LW];
-        ot_qwen_die_cdc_ch #(.W(523), .IBUF(4), .OCRED(1)) u_rx (
+        ot_qwen_die_cdc_ch #(.W(523), .IBUF(4), .OCRED(1), .PIPE(CDCP)) u_rx (
             .wclk(fck[k]), .wrst_n(rst_n), .i_v(w[0]), .i_d({w[15:5], w[LW-1:16]}), .i_cr(rcr[k]), .w_fault(rwf[k]),
             .rclk(ck), .rrst_n(rst_n), .o_v(rv[k]), .o_d(rd[k*523 +: 523]), .o_cr(rtake[k]), .r_fault(rrf[k]));
         // credit pulses -> 4-bit binary count in fck, Gray-coded, two-flop synchronised into ck
@@ -151,7 +152,7 @@ endmodule
 
 // Routed top of qfd_hub: the same hub with one port pair per link (pin placement by link: ln = links 0 / 1, lsw = 2,
 // lse = 3) and one forwarded clock per link.
-module ot_qwen_die_hub_top #(parameter integer PS = 0) (
+module ot_qwen_die_hub_top #(parameter integer PS = 0, parameter integer CDCP = 0) (
     input  wire         ck,
     input  wire         rst_n,
     input  wire         fck0, input wire fck1, input wire fck2, input wire fck3,
@@ -163,7 +164,7 @@ module ot_qwen_die_hub_top #(parameter integer PS = 0) (
     output wire         ar_v, output wire [511:0] ar_d, input wire ar_cr,
     output wire         fault
 );
-    ot_qwen_die_hub #(.NL(4), .LW(528), .PS(PS)) u (.ck(ck), .rst_n(rst_n), .fck({fck3, fck2, fck1, fck0}),
+    ot_qwen_die_hub #(.NL(4), .LW(528), .PS(PS), .CDCP(CDCP)) u (.ck(ck), .rst_n(rst_n), .fck({fck3, fck2, fck1, fck0}),
         .l_i({l3_i, l2_i, l1_i, l0_i}), .l_o({l3_o, l2_o, l1_o, l0_o}), .x3_v(x3_v), .x3_d(x3_d), .x3_tag(x3_tag),
         .x3_cr(x3_cr), .ar_v(ar_v), .ar_d(ar_d), .ar_cr(ar_cr), .fault(fault));
 endmodule
