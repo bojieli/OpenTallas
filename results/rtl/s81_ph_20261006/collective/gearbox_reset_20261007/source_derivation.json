@@ -1,0 +1,7 @@
+{
+  "predecessor": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv",
+  "predecessor_sha256": "5b43d4908cfacf309bf1a9cefc00770f988c52fe795cd18cd6277821cc463f7e",
+  "variant": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv",
+  "variant_sha256": "e92d2e7b2ed4e1bbcda8b3313001126130cb6a546e33eeea0dbc1c25e1b3fa7b",
+  "change": "Only gearbox type and TRIM_RX_RESET=1; inherited PIPE_TX and CH+2 timer pricing retained."
+}
