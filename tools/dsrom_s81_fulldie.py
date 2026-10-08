@@ -482,6 +482,9 @@ def build(variant=None):
     if DIE_KIND == 'layer':
         centre.insert(2, 'wfc')
         centre_area.update(vm=2.659905216, wfc=0.45610905599999996)
+    if PQ_PLACE:          # S81-DIE: the PQ core slot right after the VM (VM read by its N face -> core S face)
+        centre.insert(centre.index('vm') + 1, 'pq')
+        centre_area['pq'] = PQ_CORE_H * cw / 1e6
     # r4: a SPINE_GAP routing channel between every pair of stacked W-column slabs (b3 GRT: the abutted slab faces
     # carried the 1,024-bit VM <-> SU and the gather/capture buses with no escape room, M8 1.29 / M9 1.15 use/cap)
     ch = sum(up(centre_area[n] * 1e6 / cw, GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
@@ -2757,8 +2760,21 @@ def build_r8(variant=None):
             insts.append(Inst(f'n{r}_{j}', 'dsfd_node', x0 + 2 * LANE_W + 4.32, y0 + rank[nid] * NODE_FRAME[1],
                               NODE_FRAME[0] - SHAVE, NODE_FRAME[1] - SHAVE, kind='node', region=f'frame_{r}'))
         # column FIFO: entry meso + column clock / reset root + return register, top band of the channel below
-        insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + chh(t) - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
+        # (--pq-place: below the root row, which takes the channel's top PQ_ROOT_ROW)
+        pq_dy = PQ_ROOT_ROW if PQ_PLACE else 0.0
+        insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + chh(t) - pq_dy - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
                           CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
+        if PQ_PLACE:
+            # S81-DIE PQ root row: N station (tree word in) / ret_root_r128 / S station (root word out), centred in the
+            # 142.56 um return strip (node strip + rstg sub-column) directly under the frame
+            yr = ch_y[t] + chh(t) - PQ_ROOT_ROW
+            xr = up(x0 + 2 * LANE_W + (NS_W + RSC_W - PQ_ROOT_WH[0]) / 2, GX)
+            insts.append(Inst(f'pqs{r}', 'dsfd_rstg_pq%d' % PQ_RO, xr, yr + 4.32, PQ_ROOT_WH[0] - SHAVE, PQ_STN_H - SHAVE,
+                              kind='pqstn', region=f'frame_{r}'))
+            insts.append(Inst(f'pqr{r}', 'dsfd_pq_root', xr, yr + 4.32 + PQ_STN_H, PQ_ROOT_WH[0] - SHAVE,
+                              PQ_ROOT_WH[1] - SHAVE, kind='pqroot', region=f'frame_{r}', power_w=PQ_ROOT_W))
+            insts.append(Inst(f'pqn{r}', 'dsfd_rstg_pq%d' % PQ_TI, xr, yr + 4.32 + PQ_STN_H + PQ_ROOT_WH[1],
+                              PQ_ROOT_WH[0] - SHAVE, PQ_STN_H - SHAVE, kind='pqstn', region=f'frame_{r}'))
     # ---- spine: W column as r7 (SU split around the centre stack), E column HC split around a crossing corridor
     x_vch = x_sp + dn((SPINE_W8 - VCH8) / 2, GX)
     cw = dn((SPINE_W8 - VCH8) / 2, GX)
@@ -2782,6 +2798,9 @@ def build_r8(variant=None):
     if DIE_KIND == 'layer':
         centre.insert(2, 'wfc')
         centre_area.update(vm=2.659905216, wfc=0.45610905599999996)
+    if PQ_PLACE:          # S81-DIE: the PQ core slot right after the VM (VM read by its N face -> core S face)
+        centre.insert(centre.index('vm') + 1, 'pq')
+        centre_area['pq'] = PQ_CORE_H * cw / 1e6
     if VM_FACE_MM2 and centre_area['vm'] < VM_FACE_MM2:
         # S81-RERUN v9e (OWNER rule 3, coordinator 2026-10-07): the head die's VM slab (0.89 mm2, ~880 um tall) took
         # every end block / pin relay on its E face (v9d head GRT: the last 5 overflowing gcells, ha_* / hsel / hq /
@@ -2796,6 +2815,17 @@ def build_r8(variant=None):
         if n == 'wfc':
             wh = up(centre_area[n] * 1e6 / cw, GY)
             wfc_rect = [x_sp, yy, x_sp + cw, yy + wh]
+        elif n == 'pq':
+            # core slab W of a ROM column at the slot's E end (2 phase + 1 stream ot_rom_4096x72, real LEF, mirrored
+            # so their pins face the core); the slab carries the core budget (results/uarch/
+            # dsrom_s81_pq_fullshape_design_20261007 design.json pq_core: 0.32 mm2 est. incl. 36 SRAM macros)
+            rc_ = real_lef(CFG_LEF)
+            romc = up(rc_['w'] + 2 * 8.64, GX)
+            wc_ = dn(cw - romc, GX)
+            slab('pq', PQ_CORE_H * wc_ / 1e6, x_sp, yy, wc_)
+            for j in range(PQ_ROMS):
+                insts.append(Inst(f'pqrom{j}', rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * up(rc_['h'] + 17.28, GY),
+                                  rc_['w'], rc_['h'], 'R0', kind='pqrom', region='spine', domain='stream_1p2'))
         else:
             slab(n, centre_area[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2')
         yy += up(centre_area[n] * 1e6 / cw, GY) + SPINE_GAP
@@ -3065,6 +3095,9 @@ def buses_r8(m):
         sx = f['x'] + 2 * LANE_W + NS_W + 4.32
         ytop = rootn.y + rootn.h
         ybot = cfi.y + cfi.h
+        if PQ_PLACE:      # the strip chain now ends at the root row's N station, not at the column FIFO
+            pqn_ = next(i_ for i_ in m['insts'] if i_.name == f'pqn{r}')
+            ybot = pqn_.y + pqn_.h
         prev, k_ = (f'n{r}_{ids[root]}', 'o'), 0
         d = ytop - ybot + abs(sx - (rootn.x + rootn.w / 2))
         nst = max(0, math.ceil(d / (FWD_REACH - 40.0)) - 1)
@@ -3076,7 +3109,17 @@ def buses_r8(m):
             col_rs.append((it.name, 'rs'))
             bus(f'rr_{r}_{i_}', 'col_ret', NODEB, [prev, (it.name, 'i')])
             prev = (it.name, 'o')
-        bus(f'rr_{r}_{nst}', 'col_ret', NODEB, [prev, (cf, 'ri')])
+        if PQ_PLACE:
+            # tree word -> N station -> ret_root_r128 -> S station -> column FIFO return (all column clock: no crossing)
+            bus(f'rr_{r}_{nst}', 'col_ret', NODEB, [prev, (f'pqn{r}', 'i')])
+            bus(f'pqt_{r}', 'col_ret', PQ_TI, [(f'pqn{r}', 'o'), (f'pqr{r}', 'ti')])
+            bus(f'pqo_{r}', 'col_ret', PQ_RO, [(f'pqr{r}', 'ro'), (f'pqs{r}', 'i')])
+            bus(f'pqc_{r}', 'col_ret', PQ_RO, [(f'pqs{r}', 'o'), (cf, 'ri')])
+            for n_, ck_, rs_ in ((f'pqn{r}', 'ck', 'rs'), (f'pqr{r}', 'ck', 'rs'), (f'pqs{r}', 'ck', 'rs')):
+                col_ck.append((n_, ck_))
+                col_rs.append((n_, rs_))
+        else:
+            bus(f'rr_{r}_{nst}', 'col_ret', NODEB, [prev, (cf, 'ri')])
         f['ret_stages'] = nst
         bus(f'ck_col_{r}', 'col_clock', 1, col_ck)
         bus(f'rs_col_{r}', 'col_reset', 1, col_rs)
@@ -3117,15 +3160,17 @@ def buses_r8(m):
         w = up(max(30.24, bits * 3.0 / h, face), GX)
         return name, w - SHAVE, h - SHAVE
     # x root: VM -> two serial->stream CDC start blocks (W channel / VCH)
-    vmc = vm.y + vm.h / 2
+    # (--pq-place: the PQ core is the lane source; its W / E faces drive the two start blocks)
+    xsrc = hub['pq'] if PQ_PLACE else vm
+    vmc = xsrc.y + xsrc.h / 2
     starts = {}
     for side in 'WE':
         nm, w, h = end_spec('l2r', [LSW], 'vr')
         it = hub_block(f'hx_{side}', nm, 'hend', w, h, x_sp if side == 'W' else x_vch + 0.0, vmc,
                        side, [cor['s14W'] if side == 'W' else cor['vch']])
         starts[side] = it
-        bus(f'xr_{side}', 'local', LSW + 1, [(vm.name, f'x{side.lower()}'), (it.name, 'i')])
-        bus(f'xrs_{side}', 'local', 3, [(it.name, 'st'), (vm.name, f'x{side.lower()}s')])
+        bus(f'xr_{side}', 'local', LSW + 1, [(xsrc.name, f'x{side.lower()}'), (it.name, 'i')])
+        bus(f'xrs_{side}', 'local', 3, [(it.name, 'st'), (xsrc.name, f'x{side.lower()}s')])
     # ---------------- x trunks: per half, a vertical spine (up / down) with a branch per tier channel
     rowx = 64.8          # x-trunk station row (offset in the channel)
     rowr = 8.64          # return-trunk row
@@ -3216,7 +3261,9 @@ def buses_r8(m):
                                  ('vm', 'gather', 512, 't_gather', 'f_vm'), ('gather', 'capture', 576, 't_capture', 'f_gather'),
                                  ('capture', 'vm', 512, 't_vm', 'f_capture'), ('collective', 'vm', 512, 't_vm', 'f_collective'),
                                  ('su_s', 'hc_s', 512, 't_hc', 'f_su_s'), ('su_n', 'hc_n', 512, 't_hc', 'f_su_n'),
-                                 ('hc_s', 'hc_n', 1024, 't_n', 'f_s'), ('hc_n', 'hc_s', 1024, 't_s', 'f_n')):
+                                 ('hc_s', 'hc_n', 1024, 't_n', 'f_s'), ('hc_n', 'hc_s', 1024, 't_s', 'f_n')) + \
+            ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
+              ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()):
         if REV == 'r9':
             _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb)
         else:
@@ -3226,6 +3273,11 @@ def buses_r8(m):
     for st, ph in m['phys'].items():
         bus(f'dfi_{st}', 'phy_dfi', npins, [(m['ctrls'][st].name, 'phy'), (ph.name, 'dfi')])
         bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (m['svcs'][st].name, 'rd')])
+    if PQ_PLACE:      # PQ core <-> its ROMs (real ot_rom_4096x72 ports), direct: they abut the core's E face
+        for j in range(PQ_ROMS):
+            bus(f'pqra_{j}', 'rom_a', 12, [(hub['pq'].name, f'ra{j}'), (f'pqrom{j}', 'a')])
+            bus(f'pqrc_{j}', 'rom_ce', 1, [(hub['pq'].name, f'rc{j}'), (f'pqrom{j}', 'ce')])
+            bus(f'pqrq_{j}', 'rom_q', 48, [(f'pqrom{j}', 'rd'), (hub['pq'].name, f'rq{j}')])
     if HOP_FIX and HOP_PLAN:
         _hop_fix(m, P)
     # ---------------- clocks, resets, top ports
@@ -3245,6 +3297,8 @@ def buses_r8(m):
             rst[d_].append((it.name, 'rst'))
         elif it.kind == 'hstn':
             dom[HSTN_DOM[it.domain]].append((it.name, 'ck'))
+        elif it.kind == 'pqrom':
+            dom['stream'].append((it.name, 'ck'))
         elif it.kind == 'svc':
             dom['stream'].append((it.name, 'ck'))
             rst['stream'].append((it.name, 'rst'))
@@ -3296,6 +3350,18 @@ HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (
 VM_FACE_MM2 = None              # --vm-face-mm2 (v9e): minimum VM slab area on every die (layer die 2.6599)
 PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a relay station abutting every hardened-block pin
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
+PQ_PLACE = False                # --pq-place (S81-DIE 2026-10-07): production PQ roots / core on the mixed221 layer die
+PQ_ROOT_ROW = 164.16            #   root row added to each tier channel 0..TIERS-1 (4.32 + 8.64 + 133.92 + 8.64 + 8.64)
+PQ_ROOT_WH = (132.192, 133.92)  #   ret_root_r128 reserved outline (results/uarch/s81_pq_root_cam_20261007/model.json)
+PQ_STN_H = 8.64                 #   return station height (S / N face of the root, full root width)
+PQ_CORE_H = 449.28              #   PQ core slot height after the VM (x the hub column width)
+PQ_TI, PQ_RO = NODEB, CRET      #   root in = the raw tree word (66); root out carried at the column return width (68):
+                                #   the 71-b production word needs cfifo / return-trunk widening (+3 b, open, priced 0)
+PQ_VMR = 2069 + 93              #   VM read (S face) + issuer, design.json pq_core faces
+PQ_CFG = 458 + 50               #   cfg replica out + fault / status to the gather-side RWBs
+PQ_RCNT = 192                   #   row counts in (12 RWB x 16)
+PQ_ROMS = 3                     #   2 phase + 1 stream ot_rom_4096x72 (real cfg-ROM LEF) at the core's E end
+PQ_ROOT_W = 17460e-12 * 2.0e6   #   root power: est. area 17,460 um2 at the 2.0 W/mm2 field peak density (budget)
 GEOMETRY_FIX = False            # --geometry-fix: canonical station outlines and bounded bundled pin depth
 HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491 um at 833.333 ps SS)
 HOP_R_FWD = 430.56              # forwarded hop = the station pitch (routed stations: SS +78..+84 at the 440 um hop budget)
@@ -3717,7 +3783,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
         y_ = lo + (hi - lo) * (0.25 + 0.5 * ((lane[0] * 0.37) % 1.0))
         lane[0] += 1
         path = [(fx(A), y_), (fx(Bk), y_)]
-    elif hcA == hcB and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= CC_REACH - 60.0:
+    elif hcA == hcB and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= CC_REACH - (0.0 if {a_, b_} == {'vm', 'pq'} else 60.0):
         # stacked neighbours in one column: face to face across the gap, one hop
         g_ = max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h)
         CH8.bus(f'hb_{a_}_{b_}', 'hub', bits, [(A.name, pa), (Bk.name, pb)])
@@ -4634,6 +4700,10 @@ def glue_rtl(m):
             fi = ' | fi[0]' if fch else ''
             body.append(f'    reg fr; always @(posedge clk[0] or negedge rst_n[0]) if (!rst_n[0]) fr <= 1\'b0; else fr <= flt{fi};')
             body.append('    assign fo = fr;')
+        elif mst.startswith('dsfd_rstg_pq'):     # S81-DIE PQ root-row return station (registered, column clock)
+            w_ = ports['i'][1]
+            body.append(f'    reg [{w_ - 1}:0] r; always @(posedge ck[0]) r <= i;')
+            body.append(f'    assign o = {{r[{w_ - 1}:1], r[0] & rs[0]}};')
         elif mst == 'dsfd_rstg':
             body.append('    reg [65:0] r; always @(posedge ck[0]) r <= i;')
             body.append('    assign o = {r[65:1], r[0] & rs[0]};')
@@ -4850,6 +4920,10 @@ def die_options(ap):
                     'inside the HC column, face to face (default off: a VCH-edge lane)')
     ap.add_argument('--geometry-fix', action='store_true', help='r9: canonical station footprints and bounded '
                     'k16 pin depth; default off pending geometry and physical gates')
+    ap.add_argument('--pq-place', action='store_true', help='S81-DIE (2026-10-07): production PQ placement on the '
+                    'mixed layer die: a 164.16 um root row in the first TIERS tier channels (one ret_root_r128 a '
+                    'region, 132.192 x 133.92, between two 8.64 um return stations in the 142.56 um return strip) and '
+                    'the PQ core in a 449.28 um x hub-column slot after the VM (with its 3 stream / phase ROMs)')
     return ap
 
 
@@ -4871,6 +4945,12 @@ def apply_options(a):
     global VM_FACE_MM2
     VM_FACE_MM2 = getattr(a, 'vm_face_mm2', None)
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
+    global PQ_PLACE
+    PQ_PLACE = bool(getattr(a, 'pq_place', False))
+    if PQ_PLACE:
+        assert a.gen == 'r8' and a.rev == 'r9' and a.die in ('layer', 'layer1') and getattr(a, 'q_elem_h', None), \
+            '--pq-place: the r9 mixed q/BF layer die (--q-elem-h) only'
+        CHS = [c + (PQ_ROOT_ROW if t < TIERS else 0.0) for t, c in enumerate(CHS or [CH] * (TIERS + 1))]
     VCH8 = float(a.vch_w) if getattr(a, 'vch_w', None) else 1209.6
     HC_CORR = float(a.hc_corr) if getattr(a, 'hc_corr', None) else 1209.6
     SPINE_W8 = (2 * up(a.hub_column_width, GX) + VCH8) if getattr(a, "hub_column_width", None) else SPINE_W + VCH8 - VCH
