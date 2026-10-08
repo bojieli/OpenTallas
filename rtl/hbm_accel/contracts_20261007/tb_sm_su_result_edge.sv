@@ -12,7 +12,7 @@ module tb_sm_su_result_edge;
  reg clk=0;always #0.5 clk=~clk;
  reg rst_n=0;
  reg rv=0;reg [11:0] rrow=0;reg [255:0] rdata=0;reg sm_fault=0;
- reg op_v=0;reg [6:0] op_rows=0;wire op_r;
+ reg op_v=0;reg [6:0] op_rows=0;wire op_ack;
  wire out_v;reg out_r=0;wire [11:0] out_row;wire [255:0] out_data;wire op_done;wire [6:0] op_done_rows;wire fault;wire [6:0] free_o;
  ot_hbm_sm_su_result_edge #(.NST(NST)) dut(.*);
  function automatic [255:0] golden(input integer op,input integer row);
@@ -29,10 +29,11 @@ module tb_sm_su_result_edge;
 `ifdef NEG_NO_RESERVATION
    if(n_res==5)skip_now=1; else
 `endif
-   if($urandom%4!=0)begin op_v=1;op_rows=rows[n_res];end
+   // present the next op (held until op_ack; may also be withdrawn and re-presented before it is taken)
+   if(op_ack)begin end else if($urandom%4!=0)begin op_v=1;op_rows=rows[n_res];end
   end
  end
- always @(posedge clk)if(rst_n&&((op_v&&op_r)||skip_now))n_res<=n_res+1;
+ always @(posedge clk)if(rst_n&&(op_ack||skip_now))n_res<=n_res+1;
  // ---------------- SM: executes reserved ops in order, rows in a random permutation, one-way face
  integer perm[0:63];integer emitted=0,cur=-1,tmp,a,b;
  initial begin

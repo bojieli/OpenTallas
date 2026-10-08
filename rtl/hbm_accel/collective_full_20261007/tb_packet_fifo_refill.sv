@@ -51,20 +51,30 @@ module tb_packet_fifo_refill;
   if(wr<DEPTH*8)$fatal(1,"insufficient wrap");
   // Cold reset invalidates stale SRAM content.
   cold();
+`ifdef II3_BASELINE
   push=1;din=payload(991);edge_step();push=0;while(!valid)edge_step();
-  if(cyc<0)$fatal(1,"");
-`ifdef II3_BASELINE
   dut.g_on.captured[3]=~dut.g_on.captured[3];#1;
-`else
-  dut.captured[3]=~dut.captured[3];#1;
-`endif
   if(fault||dout!==payload(991))$fatal(1,"single correction failed");
-`ifdef II3_BASELINE
   dut.g_on.captured[4]=~dut.g_on.captured[4];#1;
-`else
-  dut.captured[4]=~dut.captured[4];#1;
-`endif
   if(!fault||valid||ready)$fatal(1,"double error escaped");
+`else
+  // SRAM residency: a single upset in the stored code (word 0 at address 0: macro 0, row 0, column 2*bit)
+  // is corrected on the way out; a double upset is detected (fault, never valid).
+  push=1;din=payload(991);edge_step();push=0;
+  dut.g_ram[0].storage.arr[0][2*5]=~dut.g_ram[0].storage.arr[0][2*5];
+  while(!valid&&!fault)edge_step();
+  if(fault||dout!==payload(991))$fatal(1,"single correction failed (SRAM upset)");
+  // head register upset while held: detected one edge later, valid drops, never delivered
+  dut.captured[17]=~dut.captured[17];
+  @(posedge clk);#1;
+  if(!fault||valid||ready)$fatal(1,"held-register upset escaped");
+  cold();
+  push=1;din=payload(992);edge_step();push=0;
+  dut.g_ram[0].storage.arr[0][2*5]=~dut.g_ram[0].storage.arr[0][2*5];
+  dut.g_ram[0].storage.arr[0][2*9]=~dut.g_ram[0].storage.arr[0][2*9];
+  repeat(4)begin @(posedge clk);#1;if(valid)$fatal(1,"double error escaped (SRAM upset)");end
+  if(!fault||ready)$fatal(1,"double error not flagged");
+`endif
   cold();#1;
 `ifdef II3_BASELINE
   dut.g_on.seal[0]=1;#1;
