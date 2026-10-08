@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/dsrom-qelem-qs3-cb92bce64/routes/jobs/dsrom_qelem_qs3_cb92bce64_cal/work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qxpq_w10_asap7_dsrom_qx10qm_dsrom_qelem_qs3_cb92bce64_cal_20261006/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "ss": {
+  "boundary": {
+   "n": 727,
+   "mean": 613.6,
+   "min": 572.5,
+   "max": 621.8
+  },
+  "all": {
+   "n": 53037,
+   "mean": 606.2,
+   "min": 565.5,
+   "max": 674.1
+  },
+  "errors": []
+ },
+ "ff": {
+  "boundary": {
+   "n": 727,
+   "mean": 368.9,
+   "min": 340.8,
+   "max": 380.4
+  },
+  "all": {
+   "n": 53037,
+   "mean": 363.3,
+   "min": 335.8,
+   "max": 421.1
+  },
+  "errors": []
+ },
+ "env": {
+  "CK_SS_MEAN": 614,
+  "CK_SS_ALL_MEAN": 606,
+  "CK_SS_MIN": 572,
+  "CK_SS_ALL_MIN": 566,
+  "CK_SS_MAX": 622,
+  "CK_SS_ALL_MAX": 674,
+  "CK_FF_MEAN": 369,
+  "CK_FF_ALL_MEAN": 363,
+  "CK_FF_MIN": 341,
+  "CK_FF_ALL_MIN": 336,
+  "CK_FF_MAX": 380,
+  "CK_FF_ALL_MAX": 421
+ }
+}

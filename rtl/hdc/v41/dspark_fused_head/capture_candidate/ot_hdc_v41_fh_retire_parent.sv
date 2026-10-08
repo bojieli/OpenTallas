@@ -30,7 +30,11 @@ module ot_hdc_v41_fh_retire_parent #(
     output wire [3:0] write_veto,
     output wire busy,warm_ack,
     output wire fault,
-    output wire warm_debt
+    output wire warm_debt,
+    // OREG support: next-edge values of retired_v / retired_packet / retired_warm / write_veto (see fault_retire)
+    output wire retired_v_nx, retired_warm_nx,
+    output wire [PAYLOAD_BITS-1:0] retired_packet_nx,
+    output wire [3:0] write_veto_nx
 );
     generate if(!ENABLE) begin : g_original
         wire f=(|poison)||(|address_fault)||arithmetic_fault||(|group_fault);
@@ -45,13 +49,14 @@ module ot_hdc_v41_fh_retire_parent #(
         assign warm_debt=0;
         assign warm_ack=warm;
         assign fault=f;
+        assign retired_v_nx=packet_v; assign retired_warm_nx=warm; assign retired_packet_nx=packet; assign write_veto_nx={4{f}};
     end else begin : g_commit
         reg [7:0] next_id,expected_id;
         reg [23:0] expected_word;
         reg [15:0] expected_mask;
         reg debt,sent,protocol_fault;
         wire pipe_busy,pipe_fault;
-        wire [PAYLOAD_BITS+8-1:0] retired;
+        wire [PAYLOAD_BITS+8-1:0] retired, retired_nx;
         wire matching_ack, ack_seen;
         if(SAFE>=2) begin : g_ack_split
             // Same receipt edge as SAFE=1; no pin sees the full 48-bit compare.
@@ -103,7 +108,10 @@ module ot_hdc_v41_fh_retire_parent #(
             .arithmetic_fault(arithmetic_fault||protocol_fault),.group_fault(group_fault),
             .retired_v(retired_v),.retired_packet(retired),
             .lane_veto(lane_veto),.lane_veto_pre(lane_veto_pre),.write_veto(write_veto),
-            .fault(pipe_fault),.busy(pipe_busy));
+            .fault(pipe_fault),.busy(pipe_busy),
+            .retired_v_nx(retired_v_nx),.retired_packet_nx(retired_nx),.write_veto_nx(write_veto_nx));
+        assign retired_packet_nx=retired_nx[PAYLOAD_BITS-1:0];
+        assign retired_warm_nx=retired_v_nx&&retired_nx[0];
         assign retired_id=retired[PAYLOAD_BITS+:8];
         assign retired_packet=retired[PAYLOAD_BITS-1:0];
         assign retired_warm=retired_v&&retired[0];

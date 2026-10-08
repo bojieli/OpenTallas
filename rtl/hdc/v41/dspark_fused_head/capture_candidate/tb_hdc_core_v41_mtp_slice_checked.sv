@@ -25,6 +25,25 @@ module tb_hdc_core_v41_mtp_slice #(
     parameter integer LWIN = 10,
     parameter integer CLK_PS = 1000
 ) (input wire clk);
+    // OT_FH_HALF (SAFE half-rate backstop, 2026-10-07): the whole draft-core domain (core + fused head views + its local
+    // memories + VM endpoint fixture) runs on hclk = clk gated every other cycle (ph flips on the falling edge, so the
+    // AND is glitch-free); the harness clk is the die clock. HALF fast_cycles reports die-clock cycles start -> done.
+    // OT_FH_HALF_MUTANT (negative control): the protected return pipe stays on the die clock (a domain-crossing error).
+`ifdef OT_FH_HALF
+    reg hph = 1'b0;
+    always @(negedge clk) hph <= ~hph;
+    wire hclk = clk & hph;
+    integer fcyc = 0, fcyc_start = -1;
+    always @(posedge clk) fcyc <= fcyc + 1;   // die clock
+`define TBCLK hclk
+`else
+`define TBCLK clk
+`endif
+`ifdef OT_FH_HALF_MUTANT
+`define TBRCLK clk
+`else
+`define TBRCLK `TBCLK
+`endif
     localparam integer INSTR_BITS = 1536;
     localparam integer W = 16, G = 4, BL = 16, QLB = 272, AW = 24, NW = 16, PAW = 16, HNL = 3;
     localparam integer SW = `HDC_SW;          // stream-unit lanes
@@ -89,7 +108,7 @@ module tb_hdc_core_v41_mtp_slice #(
     wire [MP*G-1:0] vw_me_we; wire [MP*G*AW-1:0] vw_me_addr; wire [MP*G*W-1:0] vw_me_mask;
     wire [MP*G*W*32-1:0] vw_me_data;
     wire [MP*G-1:0] vra_re; wire [MP*G*AW-1:0] vra_addr; reg [MP*G*W*32-1:0] vra_raw; wire [MP*G*W*32-1:0] vra_q;
-    ot_hdc_delay #(.W(MP*G*W*32),.D(`OT_FH_RETURN_EXTRA)) u_protected_return (.clk(clk),.rst_n(rst_n),.d(vra_raw),.q(vra_q));
+    ot_hdc_delay #(.W(MP*G*W*32),.D(`OT_FH_RETURN_EXTRA)) u_protected_return (.clk(`TBRCLK),.rst_n(rst_n),.d(vra_raw),.q(vra_q));
     wire [MP*SW-1:0] vw_su_we, vw_rd_we; wire [MP*SW*AW-1:0] vw_su_addr, vw_rd_addr;
     wire [MP*SW*32-1:0] vw_su_data, vw_rd_data;
     wire vw_xe_we, ww_x_we;
@@ -155,7 +174,7 @@ module tb_hdc_core_v41_mtp_slice #(
     localparam integer FH_FPIPE=0;
 `endif
     ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(1),.MARGIN(FH_MARGIN),.FPIPE(FH_FPIPE)) u_permission (
-      .fast_clk(clk),.cold_n(rst_n),.request_accept((|vw_me_we)&&fh_write_warm),.request_warm(fh_write_warm),
+      .fast_clk(`TBCLK),.cold_n(rst_n),.request_accept((|vw_me_we)&&fh_write_warm),.request_warm(fh_write_warm),
       .checked_reply_capture(checked_reply_capture),.published_reply_v(published_reply_v),
       .native_ordinal(native_ordinal),.request_owner(47'h123456789ab),.request_id(fh_write_id),
       .head_we(vw_me_we),.head_addr(vw_me_addr),.head_mask(vw_me_mask),.head_data(vw_me_data),
@@ -164,7 +183,7 @@ module tb_hdc_core_v41_mtp_slice #(
       .captured_reply(guarded_reply),.captured_reply_check(guarded_reply_check),
       .request_checked_v(request_checked_v),.reply_checked_v(reply_checked_v),.guard_busy(guard_busy),
       .head_ack_v(fh_ack_v),.head_ack_id(fh_ack_id),.head_ack_word(fh_ack_word),.head_ack_mask(fh_ack_mask));
-    always @(posedge clk) begin
+    always @(posedge `TBCLK) begin
       if(!rst_n)begin
         native_ordinal<=0;request_sent<=0;commit_valid<=0;ordinary_valid<=0;ordinary_we[0]<=0;ordinary_we[1]<=0;
         checked_reply_capture<=0;published_reply_v<=0;vm_reply<=0;
@@ -195,7 +214,7 @@ module tb_hdc_core_v41_mtp_slice #(
         .fh_sink_busy(fh_sink_busy),.fh_ack_v(fh_ack_v),.fh_ack_id(fh_ack_id),
         .fh_ack_word(fh_ack_word),.fh_ack_mask(fh_ack_mask),.fh_mem_poison(64'b0),.fh_mem_address_fault(4'b0),
         .fh_write_warm(fh_write_warm),.fh_write_id(fh_write_id),.fh_warm_debt(fh_warm_debt),
-        .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry), .acc_n(acc_n),
+        .clk(`TBCLK), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry), .acc_n(acc_n),
         .acc_tok(acc_tok),
         .done(done), .next_token(next_token), .next_val(next_val), .cycles(cycles), .fault(fault),
         .prime_v(prime_v), .prime_first(1'b0), .prime_cid(prime_cid),
@@ -243,7 +262,7 @@ module tb_hdc_core_v41_mtp_slice #(
     wire qs_fault; wire [3:0] qs_why; wire [31:0] qs_fetched, qs_consumed;
     ot_hdc_qstream #(.BL(BL), .QLB(QLB), .AW(AW), .HAW(24), .NW(NW), .LWIN(LWIN), .NPC(NPC), .LENW(6),
                      .BEATW(5), .LAW(LAW)) u_qs (
-        .clk(clk), .rst_n(rst_n), .cfg_base(24'd0), .cfg_lbase(lbase), .cfg_lead(qlead), .cfg_rate(qrate),
+        .clk(`TBCLK), .rst_n(rst_n), .cfg_base(24'd0), .cfg_lbase(lbase), .cfg_lead(qlead), .cfg_rate(qrate),
         .tok_start(start), .pos(pos),
         .l_re(l_re), .l_addr(l_addr), .l_q(l_q), .vi_re(xi_re), .vi_addr(xi_addr), .vi_q(xi_q), .wrel_v(wrel_v),
         .qd_v(qd_v), .qd_nb(qd_nb), .qd_tiles(qd_tiles), .q_ok(q_ok),
@@ -255,10 +274,10 @@ module tb_hdc_core_v41_mtp_slice #(
         .fault(qs_fault), .fault_why(qs_why), .st_fetched(qs_fetched), .st_consumed(qs_consumed));
     ot_hdc_hbm_model #(.NPC(NPC), .AW(24), .DW(256), .MEM_WORDS(HMEM), .TAGW(LWIN), .LENW(6), .BEATW(5),
                        .CLK_PS(CLK_PS), .PC_RDY(1), .PC_ROOM(16)) u_hbm (
-        .clk(clk), .rst_n(rst_n), .req_v(hq_v), .req_rdy(hq_rdy), .pc_room(pc_room), .req_we(1'b0),
+        .clk(`TBCLK), .rst_n(rst_n), .req_v(hq_v), .req_rdy(hq_rdy), .pc_room(pc_room), .req_we(1'b0),
         .req_addr(hq_addr), .req_len(hq_len), .req_tag(hq_tag), .req_wdata(256'd0),
         .rsp_v(hr_v), .rsp_rdy(hr_rdy), .rsp_tag(hr_tag), .rsp_beat(hr_beat), .rsp_data(hr_data));
-    always @(posedge clk) begin
+    always @(posedge `TBCLK) begin
         if (l_re) l_q <= qlist[l_addr];
         if (xi_re) xi_q <= vm[xi_addr[VA-1:0]];
         for (qb = 0; qb < SPW; qb = qb + 1) begin
@@ -269,7 +288,7 @@ module tb_hdc_core_v41_mtp_slice #(
     // every delivered word against the ROM image
     reg qchk_v; reg [AW-1:0] qchk_a;
     integer q_bad = 0, q_words = 0, q_stall = 0;
-    always @(posedge clk) begin
+    always @(posedge `TBCLK) begin
         qchk_v <= qrom_re; qchk_a <= qrom_addr;
         if (qchk_v) begin
             q_words <= q_words + 1;
@@ -296,7 +315,7 @@ module tb_hdc_core_v41_mtp_slice #(
 
     // synchronous-read memories
     integer l, q;
-    always @(posedge clk) begin
+    always @(posedge `TBCLK) begin
         if (prog_re) prog_q <= prog[prog_addr];
         if (wrom_re) wrom_q <= wrom[wrom_addr[18:0]];
         for (q = 0; q < MP*SW; q = q + 1) if (ewrom_re[q]) ewrom_q[q*G*W*16 +: G*W*16] <= wrom[ewrom_addr[q*AW +: 19]];
@@ -354,7 +373,7 @@ module tb_hdc_core_v41_mtp_slice #(
     integer n_prime = 0, prime_i = 0, nh = 0, head_bad = 0, n_head = 0, exp_acc = 0, tok0 = 0, pos0 = 0;
     reg [31:0] kv_e;
     integer busy_me = 0, busy_su = 0, busy_qe = 0, busy_xu = 0, busy_he = 0;
-    always @(posedge clk) if (dut.st != 0) begin
+    always @(posedge `TBCLK) if (dut.st != 0) begin
         if (unit_busy[0]) busy_me <= busy_me + 1;
         if (unit_busy[1]) busy_su <= busy_su + 1;
         if (unit_busy[2]) busy_qe <= busy_qe + 1;
@@ -425,14 +444,14 @@ module tb_hdc_core_v41_mtp_slice #(
         end
     endtask
 
-    always @(posedge clk) if (dut.amax_v) check_head();
+    always @(posedge `TBCLK) if (dut.amax_v) check_head();
 
     // FUSED: every TOKX (token and the ME argmax value behind it), and the slot tokens after the slice
     reg [31:0] e_tokx [0:31];
     reg [NW-1:0] e_stok [0:7];
     integer n_tokx = 0, tokx_bad = 0, ntokx_exp = 0, ntokval = 1, stok_bad = 0, last_issue = 0;
-    always @(posedge clk) if (dut.st != 0 && issue_unit != 0) last_issue <= cycles;
-    always @(posedge clk) if (dut.tokx_v) begin
+    always @(posedge `TBCLK) if (dut.st != 0 && issue_unit != 0) last_issue <= cycles;
+    always @(posedge `TBCLK) if (dut.tokx_v) begin
         $display("TOKX %0d tok=%0d val=%h cyc=%0d", n_tokx, dut.tokx_me ? dut.amax_tok : dut.xu_sel_first[NW-1:0],
                  dut.am_val_v[31:0], cycles);
         if ((dut.tokx_me ? dut.amax_tok : dut.xu_sel_first[NW-1:0]) !== e_tokx[2 * n_tokx][NW-1:0] ||
@@ -442,7 +461,7 @@ module tb_hdc_core_v41_mtp_slice #(
     end
 
     reg started = 1'b0;
-    always @(posedge clk) begin
+    always @(posedge `TBCLK) begin
         cyc <= cyc + 1;
         if (cyc == 5) rst_n <= 1'b1;
         // the committed Engram history, one id a cycle
@@ -455,10 +474,16 @@ module tb_hdc_core_v41_mtp_slice #(
             for (k = 1; k < 8; k = k + 1) dut.g_acc.u_acc.s[k] = stok_i[k];
             for (k = 0; k < 8; k = k + 1) dut.g_acc.u_acc.t[k] = ttok_i[k];
             token <= stok_i[0]; pos <= pos0; entry <= 0; start <= 1'b1; started <= 1'b1;
+`ifdef OT_FH_HALF
+            fcyc_start = fcyc;
+`endif
         end
         if (started && cyc > 42 && done && !start) begin
             check_state();
             for (k = 0; k < 8; k = k + 1) if (dut.stok[k * NW +: NW] !== e_stok[k]) stok_bad = stok_bad + 1;
+`ifdef OT_FH_HALF
+            $display("HALF fast_cycles=%0d slow_cycles=%0d", fcyc - fcyc_start, cycles);
+`endif
             $display("FH tokx=%0d exp_tokx=%0d tokx_bad=%0d stok_bad=%0d", n_tokx, ntokx_exp, tokx_bad, stok_bad);
             $display("SLICE cycles=%0d heads=%0d head_mismatches=%0d acc_n=%0d exp_acc_n=%0d vm_mismatch=%0d kv_mismatch=%0d fault=%0d busy_me=%0d busy_su=%0d busy_qe=%0d busy_xu=%0d busy_he=%0d",
                      cycles, nh, head_bad, acc_n, exp_acc, bad_vm, bad_kv, fault, busy_me, busy_su, busy_qe, busy_xu,

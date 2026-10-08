@@ -19,7 +19,7 @@ def main():
   wrapper=(ROOT/'rtl/s81/ot_s81_bf_native.sv').read_text().replace('ot_v41_rom_elem_w10 #(','cand_ot_v41_rom_elem_w10 #(')
   files['ot_s81_bf_native.sv']=wrapper
   pair='cand_ot_v41_pair_w17w10.sv'; files[pair]=files[pair].replace('cand_ot_v41_rom_elem_w10 #(','ot_s81_bf_native #(')
-  bench='tb_dsrom_actual_element_rne_wake.sv'; files[bench]=files[bench].replace('cand_dut.u_e.','cand_dut.u_e.u_elem.')
+  bench='tb_dsrom_actual_element_rne_wake.sv'; files[bench]=files[bench].replace('cand_dut.u_e.','cand_dut.u_e.g_orig.u_elem.')
   for name,data in files.items(): (a.work/name).write_text(data)
   plan=json.loads((ROOT/'results/rtl/dsrom_actual_element_rne_wake_prepare_20261002/sourceplan.json').read_text())['compile_plan_proposed_only']['bfcolumn']
   base=plan.copy()

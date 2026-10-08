@@ -25,6 +25,8 @@ module ot_v41_elem_pq_tags #(
     parameter integer PQ = 0,
     parameter integer DRAIN = 127,
     parameter integer SETTLE = 5,
+    parameter integer WP = 0,          // 1 (q-element QM >= 4): the tag-table writes one cycle later through a write
+                                       // stage (registered enables per entry, word, bank); faults / sh_full unchanged
     // derived
     parameter integer SW = $clog2(NSEG),
     parameter integer TRW = SW + (MTP != 0 ? 1 : 0)
@@ -58,6 +60,7 @@ module ot_v41_elem_pq_tags #(
     reg        wbank;
     reg [1:0]  otag [0:1];
     wire       wb = wbank & (PQ != 0);
+    if (WP == 0) begin : g_w0
     always @(posedge clk) if (cfg_v) begin
         if ({27'd0, cfg_a} < NSEG) begin
             s_row[{wb, RW'(cfg_a[SW-1:0])}] <= cfg_d[15:0];
@@ -66,6 +69,24 @@ module ot_v41_elem_pq_tags #(
         end else if ({27'd0, cfg_a} > 2 * NSEG) begin   // 2NSEG+1+s: the row of segment s on the second macro
             s_row[{wb, RW'(NSEG + cfg_a[SW-1:0] - 1)}] <= cfg_d[15:0];
         end
+    end
+    end else begin : g_w1
+    // write stage: per-entry enables {first-macro segment rows, second-macro rows}, the bank and the word registered
+    reg [NB*NSEG-1:0] e_row;
+    reg [NSEG-1:0]    e_seg;
+    reg               e_wb;
+    reg [25:0]        e_d;
+    always @(posedge clk) begin
+        for (int k = 0; k < NB * NSEG; k++)
+            e_row[k] <= cfg_v && (({27'd0, cfg_a} < NSEG && {27'd0, cfg_a} == k)
+                                  || ({27'd0, cfg_a} > 2 * NSEG && RW'(NSEG + cfg_a[SW-1:0] - 1) == RW'(k)));   // = the WP 0 index
+        for (int k = 0; k < NSEG; k++) e_seg[k] <= cfg_v && {27'd0, cfg_a} == k;
+        e_wb <= wb; e_d <= cfg_d;
+    end
+    always @(posedge clk) begin
+        for (int k = 0; k < NB * NSEG; k++) if (e_row[k]) s_row[{e_wb, RW'(k)}] <= e_d[15:0];
+        for (int k = 0; k < NSEG; k++) if (e_seg[k]) begin s_idx[{e_wb, SW'(k)}] <= e_d[20:16]; s_n[{e_wb, SW'(k)}] <= e_d[25:21]; end
+    end
     end
     genvar mb;
     generate for (mb = 0; mb < NB; mb = mb + 1) begin : g_q

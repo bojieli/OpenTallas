@@ -1,0 +1,148 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "dshead-ctl-half-4123ff389",
+ "block": "ot_hdc_v41_fh_ctl",
+ "owner": "Claude:tk-ds-head (fused-head owner, takeover 2026-10-07)",
+ "source_branch": "claude/takeover-ds-head-20261006",
+ "source_commit": "4123ff389fe8230057797bbc407e1b2dc065faa9",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ctl-half-4123ff389",
+ "acceptance": {
+  "ss_min_ps": 15.0,
+  "ff_min_ps": 15.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 484.18,
+  "ff_ps": 25.81,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/dsrom_fh_safe/gen/signoff_ctl.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ctl-half-4123ff389/routes/dshead_ctl_half_4123ff389/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ctl-half-4123ff389/routes/dshead_ctl_half_4123ff389/work/orfs/logs/asap7/opentallas_ot_hdc_v41_fh_ctl_asap7_dshead_ctl_half_4123ff389/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "Source-pinned component exactness plus detected mutants: results/rtl/dsrom_fh_redesign_20261006/fpipe3_takeover/{record.json,endpoint_gate.log,head_gate.log}; SAFE2 component 49 receipt cases + skip_word_slice mutant and 9000-cycle FPIPE3 parent equivalence in ack_split/{component_gate.log,parent_gate.json}. Full gold4 FPIPE3 requested and running separately; no die adoption before that result.",
+ "checks": {},
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 701,
+    "mean": 422.9,
+    "min": 406.3,
+    "max": 464.4
+   },
+   "all": {
+    "n": 4700,
+    "mean": 422.9,
+    "min": 406.3,
+    "max": 464.4
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 701,
+    "mean": 274.0,
+    "min": 261.9,
+    "max": 306.0
+   },
+   "all": {
+    "n": 4700,
+    "mean": 273.6,
+    "min": 261.8,
+    "max": 306.0
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 423,
+   "CK_SS_ALL_MEAN": 423,
+   "CK_SS_MIN": 406,
+   "CK_SS_ALL_MIN": 406,
+   "CK_SS_MAX": 464,
+   "CK_SS_ALL_MAX": 464,
+   "CK_FF_MEAN": 274,
+   "CK_FF_ALL_MEAN": 274,
+   "CK_FF_MIN": 262,
+   "CK_FF_ALL_MIN": 262,
+   "CK_FF_MAX": 306,
+   "CK_FF_ALL_MAX": 306
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": "half-rate fused-head domain: every head-domain cycle doubles (Codex model estimate +14,844 root cycles a gold4 draft slice); priced by the half-rate gold4 bench before adoption",
+ "status": "CLOSED",
+ "closed_at": "2026-10-07T06:28:56-07:00",
+ "job_spec": {
+  "name": "dshead-ctl-half-4123ff389",
+  "block": "ot_hdc_v41_fh_ctl",
+  "owner": "Claude:tk-ds-head (fused-head owner, takeover 2026-10-07)",
+  "purpose": "SAFE half-rate backstop of ctl (unchanged view RTL, 1,666.666 ps generated clock, route 1,460); parallel to the full-rate structural variant; adoption gated by the half-rate head-domain exact bench",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/takeover-ds-head-20261006",
+   "commit": "4123ff389fe8230057797bbc407e1b2dc065faa9"
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "HALF=1 ROUTE_HOLD_IO=ss HM=0.010 CTL_SAFE=2 bash physical/dsrom_fh_safe/cl_route.sh ctl {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "HALF=1 ROUTE_HOLD_IO=ss HM=0.010 CTL_SAFE=2 bash physical/dsrom_fh_safe/cl_route.sh ctl {LABEL} {RUN}/routes/{LABEL}",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/dsrom_fh_safe/gen/signoff_ctl.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/dsrom_fh_safe/gen/signoff_ctl.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "reexport": "python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_hdc_v41_fh_ctl --post-sdc physical/dsrom_fh_safe/gen/signoff_ctl.sdc  --out {RUN}/routes/{LABEL}/view",
+   "session": "ff"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/dsrom_fh_safe/closed/ctl_half"
+   }
+  ],
+  "cycles_added": "half-rate fused-head domain: every head-domain cycle doubles (Codex model estimate +14,844 root cycles a gold4 draft slice); priced by the half-rate gold4 bench before adoption",
+  "merge_target": "claude/takeover-ds-head-20261006",
+  "no_bench_reason": "Source-pinned component exactness plus detected mutants: results/rtl/dsrom_fh_redesign_20261006/fpipe3_takeover/{record.json,endpoint_gate.log,head_gate.log}; SAFE2 component 49 receipt cases + skip_word_slice mutant and 9000-cycle FPIPE3 parent equivalence in ack_split/{component_gate.log,parent_gate.json}. Full gold4 FPIPE3 requested and running separately; no die adoption before that result."
+ }
+}

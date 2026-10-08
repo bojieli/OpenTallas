@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.s81_ph.composition.v1",
+ "slab": "VM memory sub-macro, bit-sliced (contract_vmh)",
+ "slab_um": [
+  1015.176,
+  2000.16
+ ],
+ "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bg.sv module dsfd_vm_mem_h (bench run_vm_bench.sh +define+TILED +define+TILED_HALF)",
+ "instances": [
+  {
+   "inst": "g_h[0].g_t[0].u_bg",
+   "master": "dsfd_vm_bgh",
+   "xy": [
+    0.0,
+    1500.12
+   ],
+   "orient": "R0",
+   "grp": 0,
+   "slice": 0
+  },
+  {
+   "inst": "g_h[0].g_t[1].u_bg",
+   "master": "dsfd_vm_bgh",
+   "xy": [
+    0.0,
+    1000.08
+   ],
+   "orient": "R0",
+   "grp": 1,
+   "slice": 0
+  },
+  {
+   "inst": "g_h[0].g_t[2].u_bg",
+   "master": "dsfd_vm_bgh",
+   "xy": [
+    0.0,
+    500.04
+   ],
+   "orient": "R0",
+   "grp": 2,
+   "slice": 0
+  },
+  {
+   "inst": "g_h[0].g_t[3].u_bg",
+   "master": "dsfd_vm_bgh",
+   "xy": [
+    0.0,
+    0.0
+   ],
+   "orient": "R0",
+   "grp": 3,
+   "slice": 0
+  },
+  {
+   "inst": "g_h[1].g_t[0].u_bg",
+   "master": "dsfd_vm_bgh",
+   "xy": [
+    507.588,
+    1500.12
+   ],
+   "orient": "R0",
+   "grp": 0,
+   "slice": 1
+  },
+  {
+   "inst": "g_h[1].g_t[1].u_bg",
+   "master": "dsfd_vm_bgh",
+   "xy": [
+    507.588,
+    1000.08
+   ],
+   "orient": "R0",
+   "grp": 1,
+   "slice": 1
+  },
+  {
+   "inst": "g_h[1].g_t[2].u_bg",
+   "master": "dsfd_vm_bgh",
+   "xy": [
+    507.588,
+    500.04
+   ],
+   "orient": "R0",
+   "grp": 2,
+   "slice": 1
+  },
+  {
+   "inst": "g_h[1].g_t[3].u_bg",
+   "master": "dsfd_vm_bgh",
+   "xy": [
+    507.588,
+    0.0
+   ],
+   "orient": "R0",
+   "grp": 3,
+   "slice": 1
+  }
+ ],
+ "nets": {
+  "chain": "per half: g_t[t].f_* -> g_t[t+1].i_*, g_t[t].o_* -> g_t[t+1].r_* by abutment; i_v / i_we / i_row of both halves from the same VM request ports; i_mask / i_d bits [8h, 8h+8) / [256h, 256h+256) of each port; read data = {E, W} halves; o_v / o_f / o_o from either half (identical)"
+ },
+ "latency": "read latency L + 8 = 18 serial cycles, unchanged from vm v2"
+}

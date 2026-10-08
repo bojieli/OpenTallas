@@ -49,7 +49,7 @@ module hfd_svc_SW_s6 (
   assign ar6_kcv = 1'b0; assign ar6_kcd = 40'd0;
   assign ar6_icv = 1'b0; assign ar6_icd = 40'd0;
   ot_svs_arb #(.S(6), .KVI(-1), .IKI(-1)) u_ar6 (.ck(c), .rn(rn), .sv(ar6_sv), .sd(ar6_sd), .rq_take(ar6_take), .kvc_v(ar6_kcv), .kvc_d(ar6_kcd), .kv_take(ar6_kt), .ikc_v(ar6_icv), .ikc_d(ar6_icd), .ik_take(ar6_it), .done({dn27_o, dn26_o, dn25_o, dn24_o}), .iss_v(ar6_iv), .iss_d(ar6_id));
-  ot_svs_asm #(.SLOT(2)) u_as6 (.ck(c), .rn(rn), .sv(as6_sv), .sq(as6_sq), .wsv(as6_wsv), .wsq(as6_wsq), .k_take(as6_kt), .w_take(as6_wt), .line(as6_line));
+  ot_svs_asm #(.SLOT(4)) u_as6 (.ck(c), .rn(rn), .sv(as6_sv), .sq(as6_sq), .wsv(as6_wsv), .wsq(as6_wsq), .k_take(as6_kt), .w_take(as6_wt), .line(as6_line));
   wire fck6; ot_svc_fclk_buf u_fc6 (.a(c), .y(fck6));
   assign l6 = {fck6, fck6, fck6, as6_line};
   ot_svs_pc u_pc24 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc24_iv), .iss_d(pc24_id), .k_v(pc24_k_v), .k_rdy(pc24_k_rdy), .k_addr(pc24_k_addr), .k_len(pc24_k_len), .k_tag(pc24_k_tag), .kr_v(pc24_kr_v), .kr_tag(pc24_kr_tag), .kr_beat(pc24_kr_beat), .kr_data(pc24_kr_data), .b_v(pc24_bv), .b_t(pc24_bt), .b_b(pc24_bb), .b_d(pc24_bd));

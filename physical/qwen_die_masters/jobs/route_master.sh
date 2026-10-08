@@ -16,6 +16,8 @@ M=(); for m in "${MACROS[@]}"; do M+=(--macro $m); done
 SO=()
 [ -n "$STOP" ] && SO=(--pnr-stop-after $STOP)
 export OT_ORFS_NUM_CORES=${NC:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
+# FLOW-HOLD (2026-10-07): with OT_ROUTE_HOLD_CORNERS=mm the FF scene re-derives this die-context boundary at FF
+export OT_MM_FF_SDC=${OT_MM_FF_SDC:-physical/qwen_die_masters/io_ref_skew.sdc}
 echo "$(date -Is) start $NAME cfg=$CFG src=$(cat SOURCE_COMMIT 2>/dev/null) stop=$STOP" >> $W/STATUS
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@]}" \
   --die-area 0 0 $FW $FH --core-area 2.16 2.16 $(python3 -c "print(round($FW-2.16,3), round($FH-2.16,3))") \

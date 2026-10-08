@@ -1,0 +1,10 @@
+TOKX 0 tok=2995 val=3f77f8fb cyc=13416
+TOKX 1 tok=710 val=3f894d52 cyc=25849
+TOKX 2 tok=738 val=3f5b7af2 cyc=38282
+TOKX 3 tok=1219 val=3f830876 cyc=50715
+TOKX 4 tok=1219 val=3f87bea0 cyc=63148
+HALF fast_cycles=126310 slow_cycles=63153
+FH tokx=5 exp_tokx=5 tokx_bad=0 stok_bad=0
+SLICE cycles=63153 heads=0 head_mismatches=0 acc_n=0 exp_acc_n=0 vm_mismatch=0 kv_mismatch=0 fault=0 busy_me=62120 busy_su=1037 busy_qe=0 busy_xu=0 busy_he=0
+PASS
+- /srv/opentallas-scratch/claude/tk-ds-head/gold4-half-725b2fe22/src/rtl/hdc/v41/dspark_fused_head/capture_candidate/tb_hdc_core_v41_mtp_slice_checked.sv:496: Verilog $finish

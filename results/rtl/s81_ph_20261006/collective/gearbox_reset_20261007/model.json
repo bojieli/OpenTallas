@@ -1,0 +1,125 @@
+{
+  "schema": "opentallas.s81.collective_gearbox_reset.v1",
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "evidence": {
+    "source_commit": "a53f40362ba02f64d84edf50a286728f4ab34557",
+    "job": "s81ph-dsfd_coll_lane_e-a53f40362",
+    "host": "ot-epyc3",
+    "log": "routes/s81ph_dsfd_coll_lane_e_a53f40362/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_e_asap7_s81ph_s81ph_dsfd_coll_lane_e_a53f40362/base/4_1_cts.log",
+    "measured_cell_area_um2": 67535.0,
+    "measured_utilization_percent": 78.5,
+    "hold_buffers": 17681,
+    "grt_overflow": 3959
+  },
+  "lane_um": [
+    365.04,
+    340.2
+  ],
+  "area_um2": 124186.60800000001,
+  "estimated_utilization": 0.5911107693775957,
+  "utilization_note": "Prior measured cell area; CTS/hold buffering may change with footprint.",
+  "replicas": 8,
+  "slab_um": [
+    1237.656,
+    1369.416
+  ],
+  "placement_required": "Die must reserve the wider slab before adoption; original slot does not fit.",
+  "macs_per_cycle": 0,
+  "compute_intensity": 0,
+  "memory_ports": {
+    "macros_per_lane": 10,
+    "macro_width_bits": 128,
+    "max_read_bytes_per_cycle": 160,
+    "max_write_bytes_per_cycle": 160,
+    "note": "Physical port capacity; unchanged protocol schedule."
+  },
+  "boundaries_bits_per_cycle": {
+    "rx": 515,
+    "tx": 512,
+    "core_send": 553,
+    "core_receive": 553
+  },
+  "routing": {
+    "pin_pitch_um": 0.096,
+    "lane_core_pins": 1113,
+    "required_pin_span_um": 106.848,
+    "available_span_um": 190.2,
+    "local_layers": "M2-M7; M8/M9 reserved for die",
+    "congestion_closure": "PENDING route; no inferred PASS from extra area"
+  },
+  "replication_cost": "Eight lanes each add head and two insertion pipeline registers; local mux/shift stages replace serial selection-plus-shift.",
+  "latency": {
+    "added_cycles": 2,
+    "one_way_added_ns": 1.6666666666666667,
+    "roundtrip_added_cycles": 4,
+    "reset_cleanup_added_cycles": 0,
+    "reset_cleanup_token_delta_ns": 0,
+    "token_latency_delta_ns_per_traversed_lane": 1.6666666666666667
+  },
+  "exactness": "Cycle equality with original for visible outputs after any reset and re-lock, with priced two-cycle TX; deliberately omit marker accumulator initialization as negative control.",
+  "adoption": "Requires exact/negative gates, actual SS recovery/removal and all setup/hold >=15ps, DRC0, and die-context STA. No reset false paths added.",
+  "predecessor": "s81ph-dsfd_coll_lane_e-ac313d866-wide",
+  "predecessor_ss_ps": -553.14,
+  "predecessor_ff_ps": -2.11,
+  "mechanism": "Keep the priced partitioned TX; omit async reset from RX bg and racc payload, retaining reset on valid, hunt, counts, visible outputs and fault.",
+  "shape": {
+    "frame_bits": 595,
+    "reverse_bits": 53,
+    "slot_bits": 596,
+    "gearbox_bits": 456,
+    "accumulator_bits": 1052,
+    "fifo_slots": 4
+  },
+  "added_flops_per_lane": 2820,
+  "added_flops_eight_lanes": 22560,
+  "area_allowance_um2_per_lane": 5640,
+  "area_allowance_basis": "Conservative 2 um2 per added register bit including mux, shift and local drive allowance; replace with synthesized area.",
+  "estimated_cell_area_um2": 73175,
+  "queue": "Four original slots; head mirrors current slot, is not extra capacity. Simultaneous write/read bypass preserves collision semantics.",
+  "fifo_ports": {
+    "write_bits_per_cycle": 595,
+    "head_prefetch_read_bits_per_cycle": 595
+  },
+  "added_local_wires_bits": 2699,
+  "topology": "595-bit head to low shift, 1052-bit low-to-high shift, 1052-bit high shift to accumulator/output; registered local boundaries.",
+  "timing_risk": "Each shift stage has fewer mux levels; SS/FF setup, reset recovery and output hold still require full-lane route.",
+  "opt_in": "TRIM_RX_RESET=0 default; physical candidate uses PIPE_TX=1 and TRIM_RX_RESET=1.",
+  "added_pipeline_flops": 2225,
+  "pipeline_flops_basis": "Two 1052-bit insertion registers, two 56-bit reverse/idle/marker records, two valid bits and seven upper-shift control bits (CB=11).",
+  "local_routing_screen": {
+    "insertion_bus_bits": 1052,
+    "track_pitch_um": 0.048,
+    "single_bus_track_span_um": 50.496,
+    "outline_width_um": 365.04,
+    "note": "Track lower-bound screen only; competing stage buses and pin access require routed proof. M8/M9 remain reserved."
+  },
+  "slab_area_added_vs_head_um2": 53242.89407999984,
+  "physical_outline_note": "Increase from 345.6 to 365.04 um to keep conservative cell allowance below 60%; new pin contract required before route.",
+  "flow": {
+    "original_fifo_slots": 4,
+    "pipeline_insertion_records": 2,
+    "peak_records_per_cycle": 1,
+    "added_link_roundtrip_credits_ceiling": 4,
+    "timeout_implementation": "Isolated lane passes CH_UCIE+2 and CH_BOARD+2 into endpoint timeout calculation, increasing actual ATO/ATOB by four clocks.",
+    "note": "Fixed-rate pipeline cannot stall; no queue capacity removed. Existing endpoint pacing and 512 credits retained; throughput may become credit-limited four clocks earlier."
+  },
+  "reset": "Pipeline valid bits reset; no mandatory reset fanout to payload registers.",
+  "rtl_payload_reset_bits_removed_per_lane": 1508,
+  "rtl_payload_reset_bits_removed_eight_lanes": 12064,
+  "mapped_reset_sink_count": "PENDING synthesis; optimized-away payload bits do not count as physical sinks.",
+  "reset_replica_flops_added": 0,
+  "reset_dependency": {
+    "bg": "Read only while bv is true; bv resets false and captures with bg.",
+    "racc": "Read in locked hunt state only; entering locked state writes racc from current marker beat before its first read.",
+    "reacquire": "Alignment loss still clears racc, and every new lock initializes from its marker."
+  },
+  "baseline_reset_recovery": {
+    "job": "s81ph-dsfd_coll_lane_e-ac313d866-wide",
+    "slack_ps": -40.04,
+    "source_q_arrival_ps": 603.81,
+    "sink_reset_arrival_ps": 1340.56,
+    "tree_delay_ps": 736.75,
+    "note": "Predecessor measurement; no numerical timing gain inferred from sink reduction."
+  },
+  "area_allowance_note": "Retain pipeline conservative area allowance and outline; no area saving claimed before mapping."
+}

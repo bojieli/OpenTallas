@@ -149,7 +149,13 @@ foreach c [lsort -dictionary [array names ws_n]] {
     if {![info exists ws_st($c,$k)]} continue
     if {$anA && $anB} { set f [expr {$N > 1 ? double($k)/($N-1) : 0.5}] } \
     elseif {$anA} { set f [expr {double($k)/$N}] } elseif {$anB} { set f [expr {double($k+1)/$N}] } \
-    else { set f [expr {double($k+1)/($N+1)}] }
+    else {
+      # OT_WS_END (views agent 2026-10-07, index_q b5 r22 kin -> st[0] -28 ps / b1 a0i -0.6: the pin hop carries only the
+      # relay-budgeted ~517 ps while inner hops get the full period): the two end hops are OT_WS_END of an inner hop
+      # (default 1 = the even spread above).  f = (e + k) / (N - 1 + 2e).
+      set e [expr {[info exists ::env(OT_WS_END)] ? double($::env(OT_WS_END)) : 1.0}]
+      set f [expr {($e + $k) / ($N - 1 + 2.0 * $e)}]
+    }
     set ws_tgt($c,$k) [list [expr {[lindex $a 0]+$f*$dx}] [expr {[lindex $a 1]+$f*$dy}]]
     set ws_cells($c,$k) $ws_st($c,$k)
   }

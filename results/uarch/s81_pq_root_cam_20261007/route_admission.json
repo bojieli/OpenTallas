@@ -1,0 +1,36 @@
+{
+  "status": "HOLD_PENDING_ENLARGED_ROOT_SLOT",
+  "adopted": false,
+  "die_um": [
+    132.192,
+    133.92
+  ],
+  "core_um": [
+    127.872,
+    129.6
+  ],
+  "ROOTD": 128,
+  "QD": 128,
+  "model": "results/uarch/s81_pq_root_cam_20261007/model.json",
+  "budget": "results/uarch/dsrom_s81_pq_parent_geometry_20261007/root_io_budget.json",
+  "period_signoff_ps": 833.333,
+  "place_route_period_ps": 770,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_internal_hold_uncertainty_ps": 25,
+  "FF_IO_effective_hold_uncertainty_ps": 50,
+  "clock_calibration": "Required actual root SSmean/FFmin/FFmax. Zero coordinate only initial CTS calibration; full route refuses missingvalues. No absoluteparentcolumnclock claimed.",
+  "area": "Original reservedoutline core after2.16um inset is16572.2112um2;10426.5um2 estimatedcells including387FF allocation is62.915%, exceeding55-60 target beforeforwardingcomb. Geometryowner evaluating142.56square successor; no area fit/admission claimed.",
+  "reservation": "44GiB/16threads inherited conservative largerR16 PQ measured35.06GiB peak resourceclass; actualhostadmissionrequired, notprocessaddresscap.",
+  "required_physical_adoption": [
+    "Mappedlogicalandarea inventory",
+    "actualparentcolumnCTSskew<=90ps and source/destinationloadbounds",
+    "SS>=15FF>=15DRC0 includingrealIObudgets",
+    "mutable-stateprotection and protectedpincontract",
+    "stationlatencyactualimplementation/composition"
+  ],
+  "source_sha256": {
+    "physical/s81_pq_root_cam/route.sh": "c74445c7b873f5db93f815938097e37cdb742f8edb3bcc509c5da4ce935b868a",
+    "physical/s81_pq_root_cam/closure_job.template.json": "062848876969e3635f36bfd110e792dc4b1b565c93684ab7893f58a18c9062fc",
+    "results/uarch/dsrom_s81_pq_parent_geometry_20261007/root_io_budget.json": "dc6130ed30f263b2c456a9ea37033ff716109e2d4c4a0fd7ffeb544700306c5f"
+  }
+}

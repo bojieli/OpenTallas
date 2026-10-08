@@ -1,0 +1,23 @@
+{
+  "kind": 1,
+  "D": 4096,
+  "position": 8191,
+  "provenance": "Qwen3-8B TP4 head RMSNorm P8191 input/gain from c12 Qwen8K capture (1474f6801): vm[4096:8192], crom[0:4096]",
+  "golden": "tools/hdc_golden_v41 rmsnorm_bf16",
+  "golden_model_selfcheck_ds1m": "5120/5120",
+  "corrupt_word": 1000,
+  "files": {
+    "die0_p0.hex": "8c95c45ab33215cb6e0665f8ee60d1a9faa65fa3cd4ca889d589d3efee02567c",
+    "die0_p1.hex": "db4f5f6cf248b9fba519d4a3f90609417b9e57545b5fe6a020cd8a0ac5c656f0",
+    "die1_p0.hex": "07dc3ef9b017123c4847a7490dad10f15cdef04ab94c233a891ced1ba8e7796e",
+    "die1_p1.hex": "07dc3ef9b017123c4847a7490dad10f15cdef04ab94c233a891ced1ba8e7796e",
+    "gold/cfg.mem": "55a563b852a6e3b34e501172ec6196f82b0b2c50b2917cd71d0c81aedb624009",
+    "gold/ey.mem": "d4261ac912f941bbd455d68dac0a1d23dfdb8e469164e4d32ae2e9168c4c0777",
+    "gold/w.mem": "8bdbbf6401e2a591466c3b9d8cd28e976fb91e5538a756763c1e4ba1fd7965ca",
+    "gold/x.mem": "877b098e62d5c862918bd5062aea50f73e8ae2c85cd8709f73f619e4da825ced",
+    "gold_corrupt/cfg.mem": "55a563b852a6e3b34e501172ec6196f82b0b2c50b2917cd71d0c81aedb624009",
+    "gold_corrupt/ey.mem": "1d4da9fc458995cfe10c42076a5b876119988ee57d93e49775c119b641e0327c",
+    "gold_corrupt/w.mem": "8bdbbf6401e2a591466c3b9d8cd28e976fb91e5538a756763c1e4ba1fd7965ca",
+    "gold_corrupt/x.mem": "877b098e62d5c862918bd5062aea50f73e8ae2c85cd8709f73f619e4da825ced"
+  }
+}

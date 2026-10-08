@@ -37,6 +37,11 @@ class ControlPaths(unittest.TestCase):
         q=probe(data)
         self.assertEqual(q['successful_paths'],0)
         self.assertIn('result_pin_bays:sm0',q['rows'][0]['portal_obstacles']['source'])
+        data['native_result_store_bays']=data.pop('result_pin_bays')
+        data['result_pin_bays']=[]
+        q=probe(data)
+        self.assertEqual(q['successful_paths'],0)
+        self.assertIn('native_result_store_bays:sm0',q['rows'][0]['portal_obstacles']['source'])
         data['native_descriptor_bays'][0]['sm']='sm1'
         with self.assertRaises(ValueError):probe(data)
 

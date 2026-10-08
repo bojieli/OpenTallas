@@ -1,0 +1,103 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ORD-0030] Using 8 thread(s).
+OT_TIME step=load s=11.6
+OTMEM load rss_mb=3510 hwm_mb=3510 t=1791346151
+OT_TILE dbu=9600 gcells=8914953
+OT_TIME step=coarse s=0.0
+OTMEM coarse rss_mb=3511 hwm_mb=3511 t=1791346151
+[INFO GRT-0020] Min routing layer: M4
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.6400  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.6400  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M8      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0088] Layer M9      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0003] Macros: 3334
+[INFO GRT-0004] Blockages: 6792
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 37
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   344720972      245088781          28.90%
+M5         Vertical     362880323      254793330          29.79%
+M6         Horizontal   317145118      270572261          14.69%
+M7         Vertical     307926211      262563155          14.73%
+M8         Horizontal   953308196      781069218          18.07%
+M9         Vertical     955004750      780158791          18.31%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 4115197
+[INFO GRT-0198] Via related Steiner nodes: 30
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 7135029
+[INFO GRT-0112] Final usage 3D: 243258080
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           245088781       9332140            3.81%             1 /  0 /  2
+M5           254793330       61632237           24.19%             0 / 15 / 15
+M6           270572261       3263456            1.21%            79 /  0 / 4947
+M7           262563155       1908090            0.73%             0 / 57 / 6208
+M8           781069218       67099607            8.59%            54 /  0 / 95084
+M9           780158791       78617463           10.08%             0 / 60 / 415
+---------------------------------------------------------------------------------------
+Total        -1700721760       221852993          -13.04%            134 / 132 / 106671
+
+[INFO GRT-0018] Total wirelength: 2186767468 um
+[INFO GRT-0014] Routed nets: 3975054
+[WARNING GRT-0704] Try reduce the layer adjustment from 14.599999% to 10%
+[WARNING GRT-0115] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+[INFO GRT-0303] Global routing runtime = 00:09:57
+OT_TIME step=grt s=597.6
+OTMEM grt rss_mb=40352 hwm_mb=40352 t=1791346749
+OT_TIME step=guides s=4.0
+OTMEM guides rss_mb=40384 hwm_mb=40384 t=1791346753
+OT_TIME step=ckpt s=0.0
+OTMEM ckpt rss_mb=40384 hwm_mb=40384 t=1791346753
+OT_TIME step=wl s=0.0
+OTMEM wl rss_mb=40384 hwm_mb=40384 t=1791346753
+OT_GRT_DONE
+	Command being timed: "openroad -threads 8 -no_init -exit /work/grt.tcl"
+	User time (seconds): 599.60
+	System time (seconds): 16.91
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 10:15.75
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 41389036
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 235
+	Minor (reclaiming a frame) page faults: 10899824
+	Voluntary context switches: 467
+	Involuntary context switches: 1373
+	Swaps: 0
+	File system inputs: 4159768
+	File system outputs: 1119904
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

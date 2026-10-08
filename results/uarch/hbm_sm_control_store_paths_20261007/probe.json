@@ -1,0 +1,3911 @@
+{
+  "schema": "opentallas.hbm_sm_control_path_probe.v1",
+  "status": "candidate geometry only; not adopted",
+  "assumed_station_shape_um": [
+    20,
+    20
+  ],
+  "clearance_um": 12.16,
+  "max_link_design_um": 300,
+  "forward_physical_bits": 114,
+  "reverse_physical_bits": 6,
+  "obstacle_count": 723,
+  "owner_bay_count": 32,
+  "adapter_bay_count": 32,
+  "successful_paths": 32,
+  "rows": [
+    {
+      "sm": "sm0",
+      "orientation": "MY",
+      "source_portal_um": [
+        2303.056,
+        2795.04
+      ],
+      "sink_portal_um": [
+        2400.256,
+        1561.6799999999998
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          2303.056,
+          2795.04
+        ],
+        [
+          2303.056,
+          2776.9359999999997
+        ],
+        [
+          3284.4320000000002,
+          2776.9359999999997
+        ],
+        [
+          3284.4320000000002,
+          2740.24
+        ],
+        [
+          3713.1040000000003,
+          2740.24
+        ],
+        [
+          3713.1040000000003,
+          1584.08
+        ],
+        [
+          3478.4,
+          1584.08
+        ],
+        [
+          3478.4,
+          1561.6799999999998
+        ],
+        [
+          2400.256,
+          1561.6799999999998
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          2400.256,
+          1561.6799999999998
+        ],
+        [
+          3478.4,
+          1561.6799999999998
+        ],
+        [
+          3478.4,
+          1584.08
+        ],
+        [
+          3713.1040000000003,
+          1584.08
+        ],
+        [
+          3713.1040000000003,
+          2740.24
+        ],
+        [
+          3284.4320000000002,
+          2740.24
+        ],
+        [
+          3284.4320000000002,
+          2776.9359999999997
+        ],
+        [
+          2303.056,
+          2776.9359999999997
+        ],
+        [
+          2303.056,
+          2795.04
+        ]
+      ],
+      "path_length_um": 3956.2560000000008,
+      "registered_links": 18,
+      "forward_register_stages": 19,
+      "reverse_register_stages": 19,
+      "descriptor_bridge_HOPS": 19,
+      "earliest_consumed_ack_edges": 40,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2280,
+      "descriptor_bridge_total_register_bits": 2519,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm1",
+      "orientation": "MY",
+      "source_portal_um": [
+        5638.528,
+        2795.04
+      ],
+      "sink_portal_um": [
+        5735.728,
+        1561.6799999999998
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          5638.528,
+          2795.04
+        ],
+        [
+          5638.528,
+          2785.04
+        ],
+        [
+          5715.304,
+          2785.04
+        ],
+        [
+          5715.304,
+          2778.56
+        ],
+        [
+          5804.2880000000005,
+          2778.56
+        ],
+        [
+          5804.2880000000005,
+          2744.0
+        ],
+        [
+          7048.576,
+          2744.0
+        ],
+        [
+          7048.576,
+          1561.6799999999998
+        ],
+        [
+          5735.728,
+          1561.6799999999998
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          5735.728,
+          1561.6799999999998
+        ],
+        [
+          7048.576,
+          1561.6799999999998
+        ],
+        [
+          7048.576,
+          2744.0
+        ],
+        [
+          5804.2880000000005,
+          2744.0
+        ],
+        [
+          5804.2880000000005,
+          2778.56
+        ],
+        [
+          5715.304,
+          2778.56
+        ],
+        [
+          5715.304,
+          2785.04
+        ],
+        [
+          5638.528,
+          2785.04
+        ],
+        [
+          5638.528,
+          2795.04
+        ]
+      ],
+      "path_length_um": 3956.256,
+      "registered_links": 19,
+      "forward_register_stages": 20,
+      "reverse_register_stages": 20,
+      "descriptor_bridge_HOPS": 20,
+      "earliest_consumed_ack_edges": 42,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2400,
+      "descriptor_bridge_total_register_bits": 2639,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm2",
+      "orientation": "MY",
+      "source_portal_um": [
+        8973.568,
+        2795.04
+      ],
+      "sink_portal_um": [
+        9070.768,
+        1561.6799999999998
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          8973.568,
+          2795.04
+        ],
+        [
+          8973.568,
+          2872.0
+        ],
+        [
+          8974.736,
+          2872.0
+        ],
+        [
+          8974.736,
+          2914.6400000000003
+        ],
+        [
+          9070.768,
+          2914.6400000000003
+        ],
+        [
+          9070.768,
+          2929.76
+        ],
+        [
+          9071.608,
+          2929.76
+        ],
+        [
+          9071.608,
+          3044.2400000000002
+        ],
+        [
+          9180.368,
+          3044.2400000000002
+        ],
+        [
+          9180.368,
+          3072.8559999999998
+        ],
+        [
+          9860.872,
+          3072.8559999999998
+        ],
+        [
+          9860.872,
+          3075.0159999999996
+        ],
+        [
+          10633.720000000001,
+          3075.0159999999996
+        ],
+        [
+          10633.720000000001,
+          1584.08
+        ],
+        [
+          9070.768,
+          1584.08
+        ],
+        [
+          9070.768,
+          1561.6799999999998
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          9070.768,
+          1561.6799999999998
+        ],
+        [
+          9070.768,
+          1584.08
+        ],
+        [
+          10633.720000000001,
+          1584.08
+        ],
+        [
+          10633.720000000001,
+          3075.0159999999996
+        ],
+        [
+          9860.872,
+          3075.0159999999996
+        ],
+        [
+          9860.872,
+          3072.8559999999998
+        ],
+        [
+          9180.368,
+          3072.8559999999998
+        ],
+        [
+          9180.368,
+          3044.2400000000002
+        ],
+        [
+          9071.608,
+          3044.2400000000002
+        ],
+        [
+          9071.608,
+          2929.76
+        ],
+        [
+          9070.768,
+          2929.76
+        ],
+        [
+          9070.768,
+          2914.6400000000003
+        ],
+        [
+          8974.736,
+          2914.6400000000003
+        ],
+        [
+          8974.736,
+          2872.0
+        ],
+        [
+          8973.568,
+          2872.0
+        ],
+        [
+          8973.568,
+          2795.04
+        ]
+      ],
+      "path_length_um": 5016.416000000003,
+      "registered_links": 28,
+      "forward_register_stages": 29,
+      "reverse_register_stages": 29,
+      "descriptor_bridge_HOPS": 29,
+      "earliest_consumed_ack_edges": 60,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 3480,
+      "descriptor_bridge_total_register_bits": 3719,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm3",
+      "orientation": "MY",
+      "source_portal_um": [
+        2303.056,
+        4447.4400000000005
+      ],
+      "sink_portal_um": [
+        2400.256,
+        3214.08
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          2303.056,
+          4447.4400000000005
+        ],
+        [
+          2929.76,
+          4447.4400000000005
+        ],
+        [
+          2929.76,
+          4392.639999999999
+        ],
+        [
+          3713.1040000000003,
+          4392.639999999999
+        ],
+        [
+          3713.1040000000003,
+          3236.48
+        ],
+        [
+          3640.9359999999997,
+          3236.48
+        ],
+        [
+          3640.9359999999997,
+          3230.536
+        ],
+        [
+          2505.1040000000003,
+          3230.536
+        ],
+        [
+          2505.1040000000003,
+          3214.08
+        ],
+        [
+          2400.256,
+          3214.08
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          2400.256,
+          3214.08
+        ],
+        [
+          2505.1040000000003,
+          3214.08
+        ],
+        [
+          2505.1040000000003,
+          3230.536
+        ],
+        [
+          3640.9359999999997,
+          3230.536
+        ],
+        [
+          3640.9359999999997,
+          3236.48
+        ],
+        [
+          3713.1040000000003,
+          3236.48
+        ],
+        [
+          3713.1040000000003,
+          4392.639999999999
+        ],
+        [
+          2929.76,
+          4392.639999999999
+        ],
+        [
+          2929.76,
+          4447.4400000000005
+        ],
+        [
+          2303.056,
+          4447.4400000000005
+        ]
+      ],
+      "path_length_um": 3956.256000000001,
+      "registered_links": 19,
+      "forward_register_stages": 20,
+      "reverse_register_stages": 20,
+      "descriptor_bridge_HOPS": 20,
+      "earliest_consumed_ack_edges": 42,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2400,
+      "descriptor_bridge_total_register_bits": 2639,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm4",
+      "orientation": "MY",
+      "source_portal_um": [
+        5638.528,
+        4447.4400000000005
+      ],
+      "sink_portal_um": [
+        5735.728,
+        3214.08
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          5638.528,
+          4447.4400000000005
+        ],
+        [
+          5735.728,
+          4447.4400000000005
+        ],
+        [
+          5735.728,
+          4392.639999999999
+        ],
+        [
+          7048.576,
+          4392.639999999999
+        ],
+        [
+          7048.576,
+          3236.48
+        ],
+        [
+          6813.544,
+          3236.48
+        ],
+        [
+          6813.544,
+          3230.536
+        ],
+        [
+          5735.728,
+          3230.536
+        ],
+        [
+          5735.728,
+          3214.08
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          5735.728,
+          3214.08
+        ],
+        [
+          5735.728,
+          3230.536
+        ],
+        [
+          6813.544,
+          3230.536
+        ],
+        [
+          6813.544,
+          3236.48
+        ],
+        [
+          7048.576,
+          3236.48
+        ],
+        [
+          7048.576,
+          4392.639999999999
+        ],
+        [
+          5735.728,
+          4392.639999999999
+        ],
+        [
+          5735.728,
+          4447.4400000000005
+        ],
+        [
+          5638.528,
+          4447.4400000000005
+        ]
+      ],
+      "path_length_um": 3956.2560000000003,
+      "registered_links": 18,
+      "forward_register_stages": 19,
+      "reverse_register_stages": 19,
+      "descriptor_bridge_HOPS": 19,
+      "earliest_consumed_ack_edges": 40,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2280,
+      "descriptor_bridge_total_register_bits": 2519,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm5",
+      "orientation": "MY",
+      "source_portal_um": [
+        8973.568,
+        4447.4400000000005
+      ],
+      "sink_portal_um": [
+        9070.768,
+        3214.08
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          8973.568,
+          4447.4400000000005
+        ],
+        [
+          8974.736,
+          4447.4400000000005
+        ],
+        [
+          8974.736,
+          4392.639999999999
+        ],
+        [
+          10383.616,
+          4392.639999999999
+        ],
+        [
+          10383.616,
+          3230.536
+        ],
+        [
+          9070.768,
+          3230.536
+        ],
+        [
+          9070.768,
+          3214.08
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          9070.768,
+          3214.08
+        ],
+        [
+          9070.768,
+          3230.536
+        ],
+        [
+          10383.616,
+          3230.536
+        ],
+        [
+          10383.616,
+          4392.639999999999
+        ],
+        [
+          8974.736,
+          4392.639999999999
+        ],
+        [
+          8974.736,
+          4447.4400000000005
+        ],
+        [
+          8973.568,
+          4447.4400000000005
+        ]
+      ],
+      "path_length_um": 3956.256000000001,
+      "registered_links": 17,
+      "forward_register_stages": 18,
+      "reverse_register_stages": 18,
+      "descriptor_bridge_HOPS": 18,
+      "earliest_consumed_ack_edges": 38,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2160,
+      "descriptor_bridge_total_register_bits": 2399,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm6",
+      "orientation": "MY",
+      "source_portal_um": [
+        2303.056,
+        5838.48
+      ],
+      "sink_portal_um": [
+        2400.256,
+        4605.120000000001
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          2303.056,
+          5838.48
+        ],
+        [
+          2929.76,
+          5838.48
+        ],
+        [
+          2929.76,
+          5783.68
+        ],
+        [
+          3713.1040000000003,
+          5783.68
+        ],
+        [
+          3713.1040000000003,
+          4627.52
+        ],
+        [
+          3478.4,
+          4627.52
+        ],
+        [
+          3478.4,
+          4606.456
+        ],
+        [
+          2507.264,
+          4606.456
+        ],
+        [
+          2507.264,
+          4605.120000000001
+        ],
+        [
+          2400.256,
+          4605.120000000001
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          2400.256,
+          4605.120000000001
+        ],
+        [
+          2507.264,
+          4605.120000000001
+        ],
+        [
+          2507.264,
+          4606.456
+        ],
+        [
+          3478.4,
+          4606.456
+        ],
+        [
+          3478.4,
+          4627.52
+        ],
+        [
+          3713.1040000000003,
+          4627.52
+        ],
+        [
+          3713.1040000000003,
+          5783.68
+        ],
+        [
+          2929.76,
+          5783.68
+        ],
+        [
+          2929.76,
+          5838.48
+        ],
+        [
+          2303.056,
+          5838.48
+        ]
+      ],
+      "path_length_um": 3956.2559999999994,
+      "registered_links": 19,
+      "forward_register_stages": 20,
+      "reverse_register_stages": 20,
+      "descriptor_bridge_HOPS": 20,
+      "earliest_consumed_ack_edges": 42,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2400,
+      "descriptor_bridge_total_register_bits": 2639,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm7",
+      "orientation": "MY",
+      "source_portal_um": [
+        5638.528,
+        5838.48
+      ],
+      "sink_portal_um": [
+        5735.728,
+        4605.120000000001
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          5638.528,
+          5838.48
+        ],
+        [
+          5735.728,
+          5838.48
+        ],
+        [
+          5735.728,
+          5783.68
+        ],
+        [
+          7048.576,
+          5783.68
+        ],
+        [
+          7048.576,
+          4627.52
+        ],
+        [
+          6034.215999999999,
+          4627.52
+        ],
+        [
+          6034.215999999999,
+          4606.456
+        ],
+        [
+          5735.728,
+          4606.456
+        ],
+        [
+          5735.728,
+          4605.120000000001
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          5735.728,
+          4605.120000000001
+        ],
+        [
+          5735.728,
+          4606.456
+        ],
+        [
+          6034.215999999999,
+          4606.456
+        ],
+        [
+          6034.215999999999,
+          4627.52
+        ],
+        [
+          7048.576,
+          4627.52
+        ],
+        [
+          7048.576,
+          5783.68
+        ],
+        [
+          5735.728,
+          5783.68
+        ],
+        [
+          5735.728,
+          5838.48
+        ],
+        [
+          5638.528,
+          5838.48
+        ]
+      ],
+      "path_length_um": 3956.2559999999985,
+      "registered_links": 18,
+      "forward_register_stages": 19,
+      "reverse_register_stages": 19,
+      "descriptor_bridge_HOPS": 19,
+      "earliest_consumed_ack_edges": 40,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2280,
+      "descriptor_bridge_total_register_bits": 2519,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm8",
+      "orientation": "R0",
+      "source_portal_um": [
+        21068.576,
+        2795.04
+      ],
+      "sink_portal_um": [
+        20971.376,
+        1561.6799999999998
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          21068.576,
+          2795.04
+        ],
+        [
+          21068.576,
+          2776.9359999999997
+        ],
+        [
+          20971.376,
+          2776.9359999999997
+        ],
+        [
+          20971.376,
+          2740.24
+        ],
+        [
+          19658.528,
+          2740.24
+        ],
+        [
+          19658.528,
+          1584.08
+        ],
+        [
+          20971.376,
+          1584.08
+        ],
+        [
+          20971.376,
+          1561.6799999999998
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          20971.376,
+          1561.6799999999998
+        ],
+        [
+          20971.376,
+          1584.08
+        ],
+        [
+          19658.528,
+          1584.08
+        ],
+        [
+          19658.528,
+          2740.24
+        ],
+        [
+          20971.376,
+          2740.24
+        ],
+        [
+          20971.376,
+          2776.9359999999997
+        ],
+        [
+          21068.576,
+          2776.9359999999997
+        ],
+        [
+          21068.576,
+          2795.04
+        ]
+      ],
+      "path_length_um": 3956.2560000000044,
+      "registered_links": 18,
+      "forward_register_stages": 19,
+      "reverse_register_stages": 19,
+      "descriptor_bridge_HOPS": 19,
+      "earliest_consumed_ack_edges": 40,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2280,
+      "descriptor_bridge_total_register_bits": 2519,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm9",
+      "orientation": "R0",
+      "source_portal_um": [
+        24403.616,
+        2795.04
+      ],
+      "sink_portal_um": [
+        24306.416,
+        1561.6799999999998
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          24403.616,
+          2795.04
+        ],
+        [
+          24403.616,
+          2776.9359999999997
+        ],
+        [
+          24306.416,
+          2776.9359999999997
+        ],
+        [
+          24306.416,
+          2740.24
+        ],
+        [
+          22993.568,
+          2740.24
+        ],
+        [
+          22993.568,
+          1584.08
+        ],
+        [
+          24306.416,
+          1584.08
+        ],
+        [
+          24306.416,
+          1561.6799999999998
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          24306.416,
+          1561.6799999999998
+        ],
+        [
+          24306.416,
+          1584.08
+        ],
+        [
+          22993.568,
+          1584.08
+        ],
+        [
+          22993.568,
+          2740.24
+        ],
+        [
+          24306.416,
+          2740.24
+        ],
+        [
+          24306.416,
+          2776.9359999999997
+        ],
+        [
+          24403.616,
+          2776.9359999999997
+        ],
+        [
+          24403.616,
+          2795.04
+        ]
+      ],
+      "path_length_um": 3956.2560000000044,
+      "registered_links": 18,
+      "forward_register_stages": 19,
+      "reverse_register_stages": 19,
+      "descriptor_bridge_HOPS": 19,
+      "earliest_consumed_ack_edges": 40,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2280,
+      "descriptor_bridge_total_register_bits": 2519,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm10",
+      "orientation": "R0",
+      "source_portal_um": [
+        27738.656,
+        2795.04
+      ],
+      "sink_portal_um": [
+        27641.456000000002,
+        1561.6799999999998
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          27738.656,
+          2795.04
+        ],
+        [
+          27738.656,
+          2808.8
+        ],
+        [
+          27328.256,
+          2808.8
+        ],
+        [
+          27328.256,
+          2876.296
+        ],
+        [
+          27326.096,
+          2876.296
+        ],
+        [
+          27326.096,
+          2897.36
+        ],
+        [
+          27147.784,
+          2897.36
+        ],
+        [
+          27147.784,
+          2904.3759999999997
+        ],
+        [
+          27064.736,
+          2904.3759999999997
+        ],
+        [
+          27064.736,
+          2876.296
+        ],
+        [
+          27050.48,
+          2876.296
+        ],
+        [
+          27050.48,
+          2872.0
+        ],
+        [
+          26948.96,
+          2872.0
+        ],
+        [
+          26948.96,
+          2778.56
+        ],
+        [
+          26819.896,
+          2778.56
+        ],
+        [
+          26819.896,
+          2776.9359999999997
+        ],
+        [
+          26756.823999999997,
+          2776.9359999999997
+        ],
+        [
+          26756.823999999997,
+          2744.0
+        ],
+        [
+          26328.608,
+          2744.0
+        ],
+        [
+          26328.608,
+          1561.6799999999998
+        ],
+        [
+          27641.456000000002,
+          1561.6799999999998
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          27641.456000000002,
+          1561.6799999999998
+        ],
+        [
+          26328.608,
+          1561.6799999999998
+        ],
+        [
+          26328.608,
+          2744.0
+        ],
+        [
+          26756.823999999997,
+          2744.0
+        ],
+        [
+          26756.823999999997,
+          2776.9359999999997
+        ],
+        [
+          26819.896,
+          2776.9359999999997
+        ],
+        [
+          26819.896,
+          2778.56
+        ],
+        [
+          26948.96,
+          2778.56
+        ],
+        [
+          26948.96,
+          2872.0
+        ],
+        [
+          27050.48,
+          2872.0
+        ],
+        [
+          27050.48,
+          2876.296
+        ],
+        [
+          27064.736,
+          2876.296
+        ],
+        [
+          27064.736,
+          2904.3759999999997
+        ],
+        [
+          27147.784,
+          2904.3759999999997
+        ],
+        [
+          27147.784,
+          2897.36
+        ],
+        [
+          27326.096,
+          2897.36
+        ],
+        [
+          27326.096,
+          2876.296
+        ],
+        [
+          27328.256,
+          2876.296
+        ],
+        [
+          27328.256,
+          2808.8
+        ],
+        [
+          27738.656,
+          2808.8
+        ],
+        [
+          27738.656,
+          2795.04
+        ]
+      ],
+      "path_length_um": 4174.928,
+      "registered_links": 29,
+      "forward_register_stages": 30,
+      "reverse_register_stages": 30,
+      "descriptor_bridge_HOPS": 30,
+      "earliest_consumed_ack_edges": 62,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 3600,
+      "descriptor_bridge_total_register_bits": 3839,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm11",
+      "orientation": "R0",
+      "source_portal_um": [
+        21068.576,
+        4447.4400000000005
+      ],
+      "sink_portal_um": [
+        20971.376,
+        3214.08
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          21068.576,
+          4447.4400000000005
+        ],
+        [
+          19658.528,
+          4447.4400000000005
+        ],
+        [
+          19658.528,
+          4370.4800000000005
+        ],
+        [
+          19407.536,
+          4370.4800000000005
+        ],
+        [
+          19407.536,
+          3260.7999999999997
+        ],
+        [
+          19433.56,
+          3260.7999999999997
+        ],
+        [
+          19433.56,
+          3214.08
+        ],
+        [
+          20971.376,
+          3214.08
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          20971.376,
+          3214.08
+        ],
+        [
+          19433.56,
+          3214.08
+        ],
+        [
+          19433.56,
+          3260.7999999999997
+        ],
+        [
+          19407.536,
+          3260.7999999999997
+        ],
+        [
+          19407.536,
+          4370.4800000000005
+        ],
+        [
+          19658.528,
+          4370.4800000000005
+        ],
+        [
+          19658.528,
+          4447.4400000000005
+        ],
+        [
+          21068.576,
+          4447.4400000000005
+        ]
+      ],
+      "path_length_um": 4458.240000000002,
+      "registered_links": 19,
+      "forward_register_stages": 20,
+      "reverse_register_stages": 20,
+      "descriptor_bridge_HOPS": 20,
+      "earliest_consumed_ack_edges": 42,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2400,
+      "descriptor_bridge_total_register_bits": 2639,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm12",
+      "orientation": "R0",
+      "source_portal_um": [
+        24403.616,
+        4447.4400000000005
+      ],
+      "sink_portal_um": [
+        24306.416,
+        3214.08
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          24403.616,
+          4447.4400000000005
+        ],
+        [
+          22993.568,
+          4447.4400000000005
+        ],
+        [
+          22993.568,
+          3236.48
+        ],
+        [
+          22997.56,
+          3236.48
+        ],
+        [
+          22997.56,
+          3214.08
+        ],
+        [
+          24306.416,
+          3214.08
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          24306.416,
+          3214.08
+        ],
+        [
+          22997.56,
+          3214.08
+        ],
+        [
+          22997.56,
+          3236.48
+        ],
+        [
+          22993.568,
+          3236.48
+        ],
+        [
+          22993.568,
+          4447.4400000000005
+        ],
+        [
+          24403.616,
+          4447.4400000000005
+        ]
+      ],
+      "path_length_um": 3956.256000000005,
+      "registered_links": 17,
+      "forward_register_stages": 18,
+      "reverse_register_stages": 18,
+      "descriptor_bridge_HOPS": 18,
+      "earliest_consumed_ack_edges": 38,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2160,
+      "descriptor_bridge_total_register_bits": 2399,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm13",
+      "orientation": "R0",
+      "source_portal_um": [
+        27738.656,
+        4447.4400000000005
+      ],
+      "sink_portal_um": [
+        27641.456000000002,
+        3214.08
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          27738.656,
+          4447.4400000000005
+        ],
+        [
+          27738.656,
+          4392.639999999999
+        ],
+        [
+          26328.608,
+          4392.639999999999
+        ],
+        [
+          26328.608,
+          3230.536
+        ],
+        [
+          26371.376,
+          3230.536
+        ],
+        [
+          26371.376,
+          3214.08
+        ],
+        [
+          27641.456000000002,
+          3214.08
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          27641.456000000002,
+          3214.08
+        ],
+        [
+          26371.376,
+          3214.08
+        ],
+        [
+          26371.376,
+          3230.536
+        ],
+        [
+          26328.608,
+          3230.536
+        ],
+        [
+          26328.608,
+          4392.639999999999
+        ],
+        [
+          27738.656,
+          4392.639999999999
+        ],
+        [
+          27738.656,
+          4447.4400000000005
+        ]
+      ],
+      "path_length_um": 3956.256000000001,
+      "registered_links": 17,
+      "forward_register_stages": 18,
+      "reverse_register_stages": 18,
+      "descriptor_bridge_HOPS": 18,
+      "earliest_consumed_ack_edges": 38,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2160,
+      "descriptor_bridge_total_register_bits": 2399,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm14",
+      "orientation": "R0",
+      "source_portal_um": [
+        21068.576,
+        5838.48
+      ],
+      "sink_portal_um": [
+        20971.376,
+        4605.120000000001
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          21068.576,
+          5838.48
+        ],
+        [
+          19667.704,
+          5838.48
+        ],
+        [
+          19667.704,
+          5880.856
+        ],
+        [
+          19594.592,
+          5880.856
+        ],
+        [
+          19594.592,
+          5685.92
+        ],
+        [
+          19599.88,
+          5685.92
+        ],
+        [
+          19599.88,
+          5396.4800000000005
+        ],
+        [
+          19658.528,
+          5396.4800000000005
+        ],
+        [
+          19658.528,
+          4627.52
+        ],
+        [
+          19667.704,
+          4627.52
+        ],
+        [
+          19667.704,
+          4606.456
+        ],
+        [
+          19673.752,
+          4606.456
+        ],
+        [
+          19673.752,
+          4605.120000000001
+        ],
+        [
+          20971.376,
+          4605.120000000001
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          20971.376,
+          4605.120000000001
+        ],
+        [
+          19673.752,
+          4605.120000000001
+        ],
+        [
+          19673.752,
+          4606.456
+        ],
+        [
+          19667.704,
+          4606.456
+        ],
+        [
+          19667.704,
+          4627.52
+        ],
+        [
+          19658.528,
+          4627.52
+        ],
+        [
+          19658.528,
+          5396.4800000000005
+        ],
+        [
+          19599.88,
+          5396.4800000000005
+        ],
+        [
+          19599.88,
+          5685.92
+        ],
+        [
+          19594.592,
+          5685.92
+        ],
+        [
+          19594.592,
+          5880.856
+        ],
+        [
+          19667.704,
+          5880.856
+        ],
+        [
+          19667.704,
+          5838.48
+        ],
+        [
+          21068.576,
+          5838.48
+        ]
+      ],
+      "path_length_um": 4168.879999999999,
+      "registered_links": 23,
+      "forward_register_stages": 24,
+      "reverse_register_stages": 24,
+      "descriptor_bridge_HOPS": 24,
+      "earliest_consumed_ack_edges": 50,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2880,
+      "descriptor_bridge_total_register_bits": 3119,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm15",
+      "orientation": "R0",
+      "source_portal_um": [
+        24403.616,
+        5838.48
+      ],
+      "sink_portal_um": [
+        24306.416,
+        4605.120000000001
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          24403.616,
+          5838.48
+        ],
+        [
+          23102.864,
+          5838.48
+        ],
+        [
+          23102.864,
+          5880.856
+        ],
+        [
+          22924.448,
+          5880.856
+        ],
+        [
+          22924.448,
+          5685.92
+        ],
+        [
+          22942.264,
+          5685.92
+        ],
+        [
+          22942.264,
+          5610.856
+        ],
+        [
+          22966.456000000002,
+          5610.856
+        ],
+        [
+          22966.456000000002,
+          5487.2
+        ],
+        [
+          22993.568,
+          5487.2
+        ],
+        [
+          22993.568,
+          4606.456
+        ],
+        [
+          23625.152000000002,
+          4606.456
+        ],
+        [
+          23625.152000000002,
+          4605.120000000001
+        ],
+        [
+          24306.416,
+          4605.120000000001
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          24306.416,
+          4605.120000000001
+        ],
+        [
+          23625.152000000002,
+          4605.120000000001
+        ],
+        [
+          23625.152000000002,
+          4606.456
+        ],
+        [
+          22993.568,
+          4606.456
+        ],
+        [
+          22993.568,
+          5487.2
+        ],
+        [
+          22966.456000000002,
+          5487.2
+        ],
+        [
+          22966.456000000002,
+          5610.856
+        ],
+        [
+          22942.264,
+          5610.856
+        ],
+        [
+          22942.264,
+          5685.92
+        ],
+        [
+          22924.448,
+          5685.92
+        ],
+        [
+          22924.448,
+          5880.856
+        ],
+        [
+          23102.864,
+          5880.856
+        ],
+        [
+          23102.864,
+          5838.48
+        ],
+        [
+          24403.616,
+          5838.48
+        ]
+      ],
+      "path_length_um": 4179.248000000001,
+      "registered_links": 23,
+      "forward_register_stages": 24,
+      "reverse_register_stages": 24,
+      "descriptor_bridge_HOPS": 24,
+      "earliest_consumed_ack_edges": 50,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2880,
+      "descriptor_bridge_total_register_bits": 3119,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm16",
+      "orientation": "R180",
+      "source_portal_um": [
+        2303.056,
+        21254.4
+      ],
+      "sink_portal_um": [
+        2400.256,
+        22487.760000000002
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          2303.056,
+          21254.4
+        ],
+        [
+          2505.1040000000003,
+          21254.4
+        ],
+        [
+          2505.1040000000003,
+          21264.376
+        ],
+        [
+          2587.72,
+          21264.376
+        ],
+        [
+          2587.72,
+          21268.696
+        ],
+        [
+          3286.592,
+          21268.696
+        ],
+        [
+          3286.592,
+          21270.32
+        ],
+        [
+          3367.048,
+          21270.32
+        ],
+        [
+          3367.048,
+          21305.416
+        ],
+        [
+          3478.4,
+          21305.416
+        ],
+        [
+          3478.4,
+          21309.2
+        ],
+        [
+          3713.1040000000003,
+          21309.2
+        ],
+        [
+          3713.1040000000003,
+          22465.36
+        ],
+        [
+          3560.9120000000003,
+          22465.36
+        ],
+        [
+          3560.9120000000003,
+          22487.760000000002
+        ],
+        [
+          2400.256,
+          22487.760000000002
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          2400.256,
+          22487.760000000002
+        ],
+        [
+          3560.9120000000003,
+          22487.760000000002
+        ],
+        [
+          3560.9120000000003,
+          22465.36
+        ],
+        [
+          3713.1040000000003,
+          22465.36
+        ],
+        [
+          3713.1040000000003,
+          21309.2
+        ],
+        [
+          3478.4,
+          21309.2
+        ],
+        [
+          3478.4,
+          21305.416
+        ],
+        [
+          3367.048,
+          21305.416
+        ],
+        [
+          3367.048,
+          21270.32
+        ],
+        [
+          3286.592,
+          21270.32
+        ],
+        [
+          3286.592,
+          21268.696
+        ],
+        [
+          2587.72,
+          21268.696
+        ],
+        [
+          2587.72,
+          21264.376
+        ],
+        [
+          2505.1040000000003,
+          21264.376
+        ],
+        [
+          2505.1040000000003,
+          21254.4
+        ],
+        [
+          2303.056,
+          21254.4
+        ]
+      ],
+      "path_length_um": 3956.256000000001,
+      "registered_links": 23,
+      "forward_register_stages": 24,
+      "reverse_register_stages": 24,
+      "descriptor_bridge_HOPS": 24,
+      "earliest_consumed_ack_edges": 50,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2880,
+      "descriptor_bridge_total_register_bits": 3119,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm17",
+      "orientation": "R180",
+      "source_portal_um": [
+        5638.528,
+        21254.4
+      ],
+      "sink_portal_um": [
+        5735.728,
+        22487.760000000002
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          5638.528,
+          21254.4
+        ],
+        [
+          5736.464,
+          21254.4
+        ],
+        [
+          5736.464,
+          21264.376
+        ],
+        [
+          6219.4400000000005,
+          21264.376
+        ],
+        [
+          6219.4400000000005,
+          21268.696
+        ],
+        [
+          6728.768,
+          21268.696
+        ],
+        [
+          6728.768,
+          21270.32
+        ],
+        [
+          7048.576,
+          21270.32
+        ],
+        [
+          7048.576,
+          22465.36
+        ],
+        [
+          6811.384,
+          22465.36
+        ],
+        [
+          6811.384,
+          22487.760000000002
+        ],
+        [
+          5735.728,
+          22487.760000000002
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          5735.728,
+          22487.760000000002
+        ],
+        [
+          6811.384,
+          22487.760000000002
+        ],
+        [
+          6811.384,
+          22465.36
+        ],
+        [
+          7048.576,
+          22465.36
+        ],
+        [
+          7048.576,
+          21270.32
+        ],
+        [
+          6728.768,
+          21270.32
+        ],
+        [
+          6728.768,
+          21268.696
+        ],
+        [
+          6219.4400000000005,
+          21268.696
+        ],
+        [
+          6219.4400000000005,
+          21264.376
+        ],
+        [
+          5736.464,
+          21264.376
+        ],
+        [
+          5736.464,
+          21254.4
+        ],
+        [
+          5638.528,
+          21254.4
+        ]
+      ],
+      "path_length_um": 3956.2560000000003,
+      "registered_links": 20,
+      "forward_register_stages": 21,
+      "reverse_register_stages": 21,
+      "descriptor_bridge_HOPS": 21,
+      "earliest_consumed_ack_edges": 44,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2520,
+      "descriptor_bridge_total_register_bits": 2759,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm18",
+      "orientation": "R180",
+      "source_portal_um": [
+        8973.568,
+        21254.4
+      ],
+      "sink_portal_um": [
+        9070.768,
+        22487.760000000002
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          8973.568,
+          21254.4
+        ],
+        [
+          9180.368,
+          21254.4
+        ],
+        [
+          9180.368,
+          21264.376
+        ],
+        [
+          9249.056,
+          21264.376
+        ],
+        [
+          9249.056,
+          21268.696
+        ],
+        [
+          9348.416,
+          21268.696
+        ],
+        [
+          9348.416,
+          21270.32
+        ],
+        [
+          9389.128,
+          21270.32
+        ],
+        [
+          9389.128,
+          21305.416
+        ],
+        [
+          9529.424,
+          21305.416
+        ],
+        [
+          9529.424,
+          21309.2
+        ],
+        [
+          10383.616,
+          21309.2
+        ],
+        [
+          10383.616,
+          22465.36
+        ],
+        [
+          10376.68,
+          22465.36
+        ],
+        [
+          10376.68,
+          22487.760000000002
+        ],
+        [
+          9070.768,
+          22487.760000000002
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          9070.768,
+          22487.760000000002
+        ],
+        [
+          10376.68,
+          22487.760000000002
+        ],
+        [
+          10376.68,
+          22465.36
+        ],
+        [
+          10383.616,
+          22465.36
+        ],
+        [
+          10383.616,
+          21309.2
+        ],
+        [
+          9529.424,
+          21309.2
+        ],
+        [
+          9529.424,
+          21305.416
+        ],
+        [
+          9389.128,
+          21305.416
+        ],
+        [
+          9389.128,
+          21270.32
+        ],
+        [
+          9348.416,
+          21270.32
+        ],
+        [
+          9348.416,
+          21268.696
+        ],
+        [
+          9249.056,
+          21268.696
+        ],
+        [
+          9249.056,
+          21264.376
+        ],
+        [
+          9180.368,
+          21264.376
+        ],
+        [
+          9180.368,
+          21254.4
+        ],
+        [
+          8973.568,
+          21254.4
+        ]
+      ],
+      "path_length_um": 3956.256000000001,
+      "registered_links": 24,
+      "forward_register_stages": 25,
+      "reverse_register_stages": 25,
+      "descriptor_bridge_HOPS": 25,
+      "earliest_consumed_ack_edges": 52,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 3000,
+      "descriptor_bridge_total_register_bits": 3239,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm19",
+      "orientation": "R180",
+      "source_portal_um": [
+        2303.056,
+        19863.36
+      ],
+      "sink_portal_um": [
+        2400.256,
+        21096.72
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          2303.056,
+          19863.36
+        ],
+        [
+          2557.0480000000002,
+          19863.36
+        ],
+        [
+          2557.0480000000002,
+          19866.856
+        ],
+        [
+          2575.952,
+          19866.856
+        ],
+        [
+          2575.952,
+          19918.16
+        ],
+        [
+          3713.1040000000003,
+          19918.16
+        ],
+        [
+          3713.1040000000003,
+          21074.32
+        ],
+        [
+          3560.9120000000003,
+          21074.32
+        ],
+        [
+          3560.9120000000003,
+          21078.08
+        ],
+        [
+          3478.4,
+          21078.08
+        ],
+        [
+          3478.4,
+          21096.72
+        ],
+        [
+          2400.256,
+          21096.72
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          2400.256,
+          21096.72
+        ],
+        [
+          3478.4,
+          21096.72
+        ],
+        [
+          3478.4,
+          21078.08
+        ],
+        [
+          3560.9120000000003,
+          21078.08
+        ],
+        [
+          3560.9120000000003,
+          21074.32
+        ],
+        [
+          3713.1040000000003,
+          21074.32
+        ],
+        [
+          3713.1040000000003,
+          19918.16
+        ],
+        [
+          2575.952,
+          19918.16
+        ],
+        [
+          2575.952,
+          19866.856
+        ],
+        [
+          2557.0480000000002,
+          19866.856
+        ],
+        [
+          2557.0480000000002,
+          19863.36
+        ],
+        [
+          2303.056,
+          19863.36
+        ]
+      ],
+      "path_length_um": 3956.256000000001,
+      "registered_links": 20,
+      "forward_register_stages": 21,
+      "reverse_register_stages": 21,
+      "descriptor_bridge_HOPS": 21,
+      "earliest_consumed_ack_edges": 44,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2520,
+      "descriptor_bridge_total_register_bits": 2759,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm20",
+      "orientation": "R180",
+      "source_portal_um": [
+        5638.528,
+        19863.36
+      ],
+      "sink_portal_um": [
+        5735.728,
+        21096.72
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          5638.528,
+          19863.36
+        ],
+        [
+          5715.304,
+          19863.36
+        ],
+        [
+          5715.304,
+          19866.856
+        ],
+        [
+          6203.456,
+          19866.856
+        ],
+        [
+          6203.456,
+          19918.16
+        ],
+        [
+          7048.576,
+          19918.16
+        ],
+        [
+          7048.576,
+          21074.32
+        ],
+        [
+          6813.544,
+          21074.32
+        ],
+        [
+          6813.544,
+          21078.08
+        ],
+        [
+          6728.768,
+          21078.08
+        ],
+        [
+          6728.768,
+          21096.72
+        ],
+        [
+          5735.728,
+          21096.72
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          5735.728,
+          21096.72
+        ],
+        [
+          6728.768,
+          21096.72
+        ],
+        [
+          6728.768,
+          21078.08
+        ],
+        [
+          6813.544,
+          21078.08
+        ],
+        [
+          6813.544,
+          21074.32
+        ],
+        [
+          7048.576,
+          21074.32
+        ],
+        [
+          7048.576,
+          19918.16
+        ],
+        [
+          6203.456,
+          19918.16
+        ],
+        [
+          6203.456,
+          19866.856
+        ],
+        [
+          5715.304,
+          19866.856
+        ],
+        [
+          5715.304,
+          19863.36
+        ],
+        [
+          5638.528,
+          19863.36
+        ]
+      ],
+      "path_length_um": 3956.2560000000003,
+      "registered_links": 20,
+      "forward_register_stages": 21,
+      "reverse_register_stages": 21,
+      "descriptor_bridge_HOPS": 21,
+      "earliest_consumed_ack_edges": 44,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2520,
+      "descriptor_bridge_total_register_bits": 2759,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm21",
+      "orientation": "R180",
+      "source_portal_um": [
+        8973.568,
+        19863.36
+      ],
+      "sink_portal_um": [
+        9070.768,
+        21096.72
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          8973.568,
+          19863.36
+        ],
+        [
+          9348.416,
+          19863.36
+        ],
+        [
+          9348.416,
+          19866.856
+        ],
+        [
+          9426.608,
+          19866.856
+        ],
+        [
+          9426.608,
+          19918.16
+        ],
+        [
+          10383.616,
+          19918.16
+        ],
+        [
+          10383.616,
+          21074.32
+        ],
+        [
+          10194.376,
+          21074.32
+        ],
+        [
+          10194.376,
+          21078.08
+        ],
+        [
+          10190.92,
+          21078.08
+        ],
+        [
+          10190.92,
+          21096.72
+        ],
+        [
+          9070.768,
+          21096.72
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          9070.768,
+          21096.72
+        ],
+        [
+          10190.92,
+          21096.72
+        ],
+        [
+          10190.92,
+          21078.08
+        ],
+        [
+          10194.376,
+          21078.08
+        ],
+        [
+          10194.376,
+          21074.32
+        ],
+        [
+          10383.616,
+          21074.32
+        ],
+        [
+          10383.616,
+          19918.16
+        ],
+        [
+          9426.608,
+          19918.16
+        ],
+        [
+          9426.608,
+          19866.856
+        ],
+        [
+          9348.416,
+          19866.856
+        ],
+        [
+          9348.416,
+          19863.36
+        ],
+        [
+          8973.568,
+          19863.36
+        ]
+      ],
+      "path_length_um": 3956.256000000001,
+      "registered_links": 21,
+      "forward_register_stages": 22,
+      "reverse_register_stages": 22,
+      "descriptor_bridge_HOPS": 22,
+      "earliest_consumed_ack_edges": 46,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2640,
+      "descriptor_bridge_total_register_bits": 2879,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm22",
+      "orientation": "R180",
+      "source_portal_um": [
+        2303.056,
+        18472.32
+      ],
+      "sink_portal_um": [
+        2400.256,
+        19705.68
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          2303.056,
+          18472.32
+        ],
+        [
+          2505.1040000000003,
+          18472.32
+        ],
+        [
+          2505.1040000000003,
+          18490.935999999998
+        ],
+        [
+          2587.72,
+          18490.935999999998
+        ],
+        [
+          2587.72,
+          18497.416
+        ],
+        [
+          3063.784,
+          18497.416
+        ],
+        [
+          3063.784,
+          18521.176000000003
+        ],
+        [
+          3367.048,
+          18521.176000000003
+        ],
+        [
+          3367.048,
+          18527.12
+        ],
+        [
+          3713.1040000000003,
+          18527.12
+        ],
+        [
+          3713.1040000000003,
+          19683.28
+        ],
+        [
+          3560.9120000000003,
+          19683.28
+        ],
+        [
+          3560.9120000000003,
+          19704.32
+        ],
+        [
+          2929.76,
+          19704.32
+        ],
+        [
+          2929.76,
+          19705.68
+        ],
+        [
+          2400.256,
+          19705.68
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          2400.256,
+          19705.68
+        ],
+        [
+          2929.76,
+          19705.68
+        ],
+        [
+          2929.76,
+          19704.32
+        ],
+        [
+          3560.9120000000003,
+          19704.32
+        ],
+        [
+          3560.9120000000003,
+          19683.28
+        ],
+        [
+          3713.1040000000003,
+          19683.28
+        ],
+        [
+          3713.1040000000003,
+          18527.12
+        ],
+        [
+          3367.048,
+          18527.12
+        ],
+        [
+          3367.048,
+          18521.176000000003
+        ],
+        [
+          3063.784,
+          18521.176000000003
+        ],
+        [
+          3063.784,
+          18497.416
+        ],
+        [
+          2587.72,
+          18497.416
+        ],
+        [
+          2587.72,
+          18490.935999999998
+        ],
+        [
+          2505.1040000000003,
+          18490.935999999998
+        ],
+        [
+          2505.1040000000003,
+          18472.32
+        ],
+        [
+          2303.056,
+          18472.32
+        ]
+      ],
+      "path_length_um": 3956.256000000001,
+      "registered_links": 24,
+      "forward_register_stages": 25,
+      "reverse_register_stages": 25,
+      "descriptor_bridge_HOPS": 25,
+      "earliest_consumed_ack_edges": 52,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 3000,
+      "descriptor_bridge_total_register_bits": 3239,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm23",
+      "orientation": "R180",
+      "source_portal_um": [
+        5638.528,
+        18472.32
+      ],
+      "sink_portal_um": [
+        5735.728,
+        19705.68
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          5638.528,
+          18472.32
+        ],
+        [
+          5736.464,
+          18472.32
+        ],
+        [
+          5736.464,
+          18490.935999999998
+        ],
+        [
+          6219.4400000000005,
+          18490.935999999998
+        ],
+        [
+          6219.4400000000005,
+          18497.416
+        ],
+        [
+          6730.928,
+          18497.416
+        ],
+        [
+          6730.928,
+          18521.176000000003
+        ],
+        [
+          6811.384,
+          18521.176000000003
+        ],
+        [
+          6811.384,
+          18527.12
+        ],
+        [
+          7048.576,
+          18527.12
+        ],
+        [
+          7048.576,
+          19683.28
+        ],
+        [
+          6811.384,
+          19683.28
+        ],
+        [
+          6811.384,
+          19704.32
+        ],
+        [
+          6730.928,
+          19704.32
+        ],
+        [
+          6730.928,
+          19705.68
+        ],
+        [
+          5735.728,
+          19705.68
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          5735.728,
+          19705.68
+        ],
+        [
+          6730.928,
+          19705.68
+        ],
+        [
+          6730.928,
+          19704.32
+        ],
+        [
+          6811.384,
+          19704.32
+        ],
+        [
+          6811.384,
+          19683.28
+        ],
+        [
+          7048.576,
+          19683.28
+        ],
+        [
+          7048.576,
+          18527.12
+        ],
+        [
+          6811.384,
+          18527.12
+        ],
+        [
+          6811.384,
+          18521.176000000003
+        ],
+        [
+          6730.928,
+          18521.176000000003
+        ],
+        [
+          6730.928,
+          18497.416
+        ],
+        [
+          6219.4400000000005,
+          18497.416
+        ],
+        [
+          6219.4400000000005,
+          18490.935999999998
+        ],
+        [
+          5736.464,
+          18490.935999999998
+        ],
+        [
+          5736.464,
+          18472.32
+        ],
+        [
+          5638.528,
+          18472.32
+        ]
+      ],
+      "path_length_um": 3956.2560000000003,
+      "registered_links": 23,
+      "forward_register_stages": 24,
+      "reverse_register_stages": 24,
+      "descriptor_bridge_HOPS": 24,
+      "earliest_consumed_ack_edges": 50,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2880,
+      "descriptor_bridge_total_register_bits": 3119,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm24",
+      "orientation": "MX",
+      "source_portal_um": [
+        21068.576,
+        21254.4
+      ],
+      "sink_portal_um": [
+        20971.376,
+        22487.760000000002
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          21068.576,
+          21254.4
+        ],
+        [
+          21068.576,
+          21309.2
+        ],
+        [
+          19658.528,
+          21309.2
+        ],
+        [
+          19658.528,
+          21812.48
+        ],
+        [
+          19407.536,
+          21812.48
+        ],
+        [
+          19407.536,
+          22247.176
+        ],
+        [
+          19594.592,
+          22247.176
+        ],
+        [
+          19594.592,
+          22443.2
+        ],
+        [
+          19599.88,
+          22443.2
+        ],
+        [
+          19599.88,
+          22465.36
+        ],
+        [
+          20668.216,
+          22465.36
+        ],
+        [
+          20668.216,
+          22487.760000000002
+        ],
+        [
+          20971.376,
+          22487.760000000002
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          20971.376,
+          22487.760000000002
+        ],
+        [
+          20668.216,
+          22487.760000000002
+        ],
+        [
+          20668.216,
+          22465.36
+        ],
+        [
+          19599.88,
+          22465.36
+        ],
+        [
+          19599.88,
+          22443.2
+        ],
+        [
+          19594.592,
+          22443.2
+        ],
+        [
+          19594.592,
+          22247.176
+        ],
+        [
+          19407.536,
+          22247.176
+        ],
+        [
+          19407.536,
+          21812.48
+        ],
+        [
+          19658.528,
+          21812.48
+        ],
+        [
+          19658.528,
+          21309.2
+        ],
+        [
+          21068.576,
+          21309.2
+        ],
+        [
+          21068.576,
+          21254.4
+        ]
+      ],
+      "path_length_um": 4458.240000000002,
+      "registered_links": 22,
+      "forward_register_stages": 23,
+      "reverse_register_stages": 23,
+      "descriptor_bridge_HOPS": 23,
+      "earliest_consumed_ack_edges": 48,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2760,
+      "descriptor_bridge_total_register_bits": 2999,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm25",
+      "orientation": "MX",
+      "source_portal_um": [
+        24403.616,
+        21254.4
+      ],
+      "sink_portal_um": [
+        24306.416,
+        22487.760000000002
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          24403.616,
+          21254.4
+        ],
+        [
+          24403.616,
+          21309.2
+        ],
+        [
+          22993.568,
+          21309.2
+        ],
+        [
+          22993.568,
+          22465.36
+        ],
+        [
+          24255.543999999998,
+          22465.36
+        ],
+        [
+          24255.543999999998,
+          22487.760000000002
+        ],
+        [
+          24306.416,
+          22487.760000000002
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          24306.416,
+          22487.760000000002
+        ],
+        [
+          24255.543999999998,
+          22487.760000000002
+        ],
+        [
+          24255.543999999998,
+          22465.36
+        ],
+        [
+          22993.568,
+          22465.36
+        ],
+        [
+          22993.568,
+          21309.2
+        ],
+        [
+          24403.616,
+          21309.2
+        ],
+        [
+          24403.616,
+          21254.4
+        ]
+      ],
+      "path_length_um": 3956.256000000005,
+      "registered_links": 17,
+      "forward_register_stages": 18,
+      "reverse_register_stages": 18,
+      "descriptor_bridge_HOPS": 18,
+      "earliest_consumed_ack_edges": 38,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2160,
+      "descriptor_bridge_total_register_bits": 2399,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm26",
+      "orientation": "MX",
+      "source_portal_um": [
+        27738.656,
+        21254.4
+      ],
+      "sink_portal_um": [
+        27641.456000000002,
+        22487.760000000002
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          27738.656,
+          21254.4
+        ],
+        [
+          27147.784,
+          21254.4
+        ],
+        [
+          27147.784,
+          21170.96
+        ],
+        [
+          27140.007999999998,
+          21170.96
+        ],
+        [
+          27140.007999999998,
+          21142.88
+        ],
+        [
+          27064.736,
+          21142.88
+        ],
+        [
+          27064.736,
+          21309.2
+        ],
+        [
+          26328.608,
+          21309.2
+        ],
+        [
+          26328.608,
+          22465.36
+        ],
+        [
+          27485.072,
+          22465.36
+        ],
+        [
+          27485.072,
+          22487.760000000002
+        ],
+        [
+          27641.456000000002,
+          22487.760000000002
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          27641.456000000002,
+          22487.760000000002
+        ],
+        [
+          27485.072,
+          22487.760000000002
+        ],
+        [
+          27485.072,
+          22465.36
+        ],
+        [
+          26328.608,
+          22465.36
+        ],
+        [
+          26328.608,
+          21309.2
+        ],
+        [
+          27064.736,
+          21309.2
+        ],
+        [
+          27064.736,
+          21142.88
+        ],
+        [
+          27140.007999999998,
+          21142.88
+        ],
+        [
+          27140.007999999998,
+          21170.96
+        ],
+        [
+          27147.784,
+          21170.96
+        ],
+        [
+          27147.784,
+          21254.4
+        ],
+        [
+          27738.656,
+          21254.4
+        ]
+      ],
+      "path_length_um": 4179.296000000002,
+      "registered_links": 20,
+      "forward_register_stages": 21,
+      "reverse_register_stages": 21,
+      "descriptor_bridge_HOPS": 21,
+      "earliest_consumed_ack_edges": 44,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2520,
+      "descriptor_bridge_total_register_bits": 2759,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm27",
+      "orientation": "MX",
+      "source_portal_um": [
+        21068.576,
+        19863.36
+      ],
+      "sink_portal_um": [
+        20971.376,
+        21096.72
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          21068.576,
+          19863.36
+        ],
+        [
+          21068.576,
+          19866.856
+        ],
+        [
+          20971.376,
+          19866.856
+        ],
+        [
+          20971.376,
+          19918.16
+        ],
+        [
+          19658.528,
+          19918.16
+        ],
+        [
+          19658.528,
+          21074.32
+        ],
+        [
+          20668.216,
+          21074.32
+        ],
+        [
+          20668.216,
+          21096.72
+        ],
+        [
+          20971.376,
+          21096.72
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          20971.376,
+          21096.72
+        ],
+        [
+          20668.216,
+          21096.72
+        ],
+        [
+          20668.216,
+          21074.32
+        ],
+        [
+          19658.528,
+          21074.32
+        ],
+        [
+          19658.528,
+          19918.16
+        ],
+        [
+          20971.376,
+          19918.16
+        ],
+        [
+          20971.376,
+          19866.856
+        ],
+        [
+          21068.576,
+          19866.856
+        ],
+        [
+          21068.576,
+          19863.36
+        ]
+      ],
+      "path_length_um": 3956.256000000005,
+      "registered_links": 19,
+      "forward_register_stages": 20,
+      "reverse_register_stages": 20,
+      "descriptor_bridge_HOPS": 20,
+      "earliest_consumed_ack_edges": 42,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2400,
+      "descriptor_bridge_total_register_bits": 2639,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm28",
+      "orientation": "MX",
+      "source_portal_um": [
+        24403.616,
+        19863.36
+      ],
+      "sink_portal_um": [
+        24306.416,
+        21096.72
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          24403.616,
+          19863.36
+        ],
+        [
+          24403.616,
+          19918.16
+        ],
+        [
+          22993.568,
+          19918.16
+        ],
+        [
+          22993.568,
+          21074.32
+        ],
+        [
+          24255.543999999998,
+          21074.32
+        ],
+        [
+          24255.543999999998,
+          21096.72
+        ],
+        [
+          24306.416,
+          21096.72
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          24306.416,
+          21096.72
+        ],
+        [
+          24255.543999999998,
+          21096.72
+        ],
+        [
+          24255.543999999998,
+          21074.32
+        ],
+        [
+          22993.568,
+          21074.32
+        ],
+        [
+          22993.568,
+          19918.16
+        ],
+        [
+          24403.616,
+          19918.16
+        ],
+        [
+          24403.616,
+          19863.36
+        ]
+      ],
+      "path_length_um": 3956.256000000005,
+      "registered_links": 17,
+      "forward_register_stages": 18,
+      "reverse_register_stages": 18,
+      "descriptor_bridge_HOPS": 18,
+      "earliest_consumed_ack_edges": 38,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2160,
+      "descriptor_bridge_total_register_bits": 2399,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm29",
+      "orientation": "MX",
+      "source_portal_um": [
+        27738.656,
+        19863.36
+      ],
+      "sink_portal_um": [
+        27641.456000000002,
+        21096.72
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          27738.656,
+          19863.36
+        ],
+        [
+          27147.784,
+          19863.36
+        ],
+        [
+          27147.784,
+          19658.96
+        ],
+        [
+          27140.007999999998,
+          19658.96
+        ],
+        [
+          27140.007999999998,
+          19579.04
+        ],
+        [
+          26948.96,
+          19579.04
+        ],
+        [
+          26948.96,
+          19918.16
+        ],
+        [
+          26328.608,
+          19918.16
+        ],
+        [
+          26328.608,
+          21074.32
+        ],
+        [
+          27328.256,
+          21074.32
+        ],
+        [
+          27328.256,
+          21096.72
+        ],
+        [
+          27641.456000000002,
+          21096.72
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          27641.456000000002,
+          21096.72
+        ],
+        [
+          27328.256,
+          21096.72
+        ],
+        [
+          27328.256,
+          21074.32
+        ],
+        [
+          26328.608,
+          21074.32
+        ],
+        [
+          26328.608,
+          19918.16
+        ],
+        [
+          26948.96,
+          19918.16
+        ],
+        [
+          26948.96,
+          19579.04
+        ],
+        [
+          27140.007999999998,
+          19579.04
+        ],
+        [
+          27140.007999999998,
+          19658.96
+        ],
+        [
+          27147.784,
+          19658.96
+        ],
+        [
+          27147.784,
+          19863.36
+        ],
+        [
+          27738.656,
+          19863.36
+        ]
+      ],
+      "path_length_um": 4524.896000000001,
+      "registered_links": 22,
+      "forward_register_stages": 23,
+      "reverse_register_stages": 23,
+      "descriptor_bridge_HOPS": 23,
+      "earliest_consumed_ack_edges": 48,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2760,
+      "descriptor_bridge_total_register_bits": 2999,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm30",
+      "orientation": "MX",
+      "source_portal_um": [
+        21068.576,
+        18472.32
+      ],
+      "sink_portal_um": [
+        20971.376,
+        19705.68
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          21068.576,
+          18472.32
+        ],
+        [
+          21068.576,
+          18527.12
+        ],
+        [
+          19658.528,
+          18527.12
+        ],
+        [
+          19658.528,
+          19705.68
+        ],
+        [
+          20971.376,
+          19705.68
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          20971.376,
+          19705.68
+        ],
+        [
+          19658.528,
+          19705.68
+        ],
+        [
+          19658.528,
+          18527.12
+        ],
+        [
+          21068.576,
+          18527.12
+        ],
+        [
+          21068.576,
+          18472.32
+        ]
+      ],
+      "path_length_um": 3956.256000000005,
+      "registered_links": 15,
+      "forward_register_stages": 16,
+      "reverse_register_stages": 16,
+      "descriptor_bridge_HOPS": 16,
+      "earliest_consumed_ack_edges": 34,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 1920,
+      "descriptor_bridge_total_register_bits": 2159,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm31",
+      "orientation": "MX",
+      "source_portal_um": [
+        24403.616,
+        18472.32
+      ],
+      "sink_portal_um": [
+        24306.416,
+        19705.68
+      ],
+      "portal_obstacles": {
+        "source": [],
+        "sink": []
+      },
+      "path_um": [
+        [
+          24403.616,
+          18472.32
+        ],
+        [
+          24403.616,
+          18527.12
+        ],
+        [
+          22993.568,
+          18527.12
+        ],
+        [
+          22993.568,
+          19683.28
+        ],
+        [
+          23625.152000000002,
+          19683.28
+        ],
+        [
+          23625.152000000002,
+          19705.68
+        ],
+        [
+          24306.416,
+          19705.68
+        ]
+      ],
+      "reverse_path_um": [
+        [
+          24306.416,
+          19705.68
+        ],
+        [
+          23625.152000000002,
+          19705.68
+        ],
+        [
+          23625.152000000002,
+          19683.28
+        ],
+        [
+          22993.568,
+          19683.28
+        ],
+        [
+          22993.568,
+          18527.12
+        ],
+        [
+          24403.616,
+          18527.12
+        ],
+        [
+          24403.616,
+          18472.32
+        ]
+      ],
+      "path_length_um": 3956.256000000005,
+      "registered_links": 17,
+      "forward_register_stages": 18,
+      "reverse_register_stages": 18,
+      "descriptor_bridge_HOPS": 18,
+      "earliest_consumed_ack_edges": 38,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 2160,
+      "descriptor_bridge_total_register_bits": 2399,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    }
+  ],
+  "gates": [
+    "actual owner/adapter flight BPins and <=100um final reach",
+    "dual protected-copy simultaneous station placement and routing",
+    "shared result/control/clock/PDN track capacity",
+    "full-width exact RTL and negative controls at selected HOPS",
+    "routed SS setup >=15ps / FF hold >=15ps under real interface budgets",
+    "descriptor traversals and consumption stalls composed in token latency model"
+  ],
+  "sources": {
+    "results/uarch/hbm_sm_control_store_paths_20261007/geometry.json": "41e7aaf8c8ea3f8e84ed031ecd0470793a53a5249d34fcc527eed094857b68e6",
+    "/home/ubuntu/OpenTallas/tools/hbm_sm_control_path_probe.py": "370e36b0b671fa68d9e4c2506cc544bb813c3e0057081a8ab456cba67bf6ffa8",
+    "/home/ubuntu/OpenTallas/tools/hbm_relay_channel_model.py": "9446afe1ee66cd64a1e324de2d4d73838cc1d6c376bbe040e367d639446dd00f"
+  }
+}

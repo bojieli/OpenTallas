@@ -1,0 +1,361 @@
+{
+  "status": "proposed route reservations; not solid obstructions; station placement and dual rail width unqualified",
+  "station_assumption_um": [
+    20,
+    20
+  ],
+  "side_clearance_um": 2.16,
+  "rows": [
+    {
+      "sm": "sm4",
+      "path_um": [
+        [
+          5638.528,
+          4447.4400000000005
+        ],
+        [
+          7048.576,
+          4447.4400000000005
+        ],
+        [
+          7048.576,
+          3214.08
+        ],
+        [
+          5735.728,
+          3214.08
+        ]
+      ],
+      "corridor_rectangles_um": [
+        [
+          5626.368,
+          4435.280000000001,
+          7060.736,
+          4459.6
+        ],
+        [
+          7036.416,
+          3201.92,
+          7060.736,
+          4459.6
+        ],
+        [
+          5723.568,
+          3201.92,
+          7060.736,
+          3226.24
+        ]
+      ],
+      "macro_relocations": [
+        "w55_cdSW1"
+      ],
+      "path_length_um": 3956.2560000000003,
+      "registered_links": 15,
+      "forward_register_stages": 16,
+      "reverse_register_stages": 16,
+      "descriptor_bridge_HOPS": 16,
+      "earliest_consumed_ack_edges": 34,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 1920,
+      "descriptor_bridge_total_register_bits": 2159,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm7",
+      "path_um": [
+        [
+          5638.528,
+          5838.48
+        ],
+        [
+          7048.576,
+          5838.48
+        ],
+        [
+          7048.576,
+          4605.120000000001
+        ],
+        [
+          5735.728,
+          4605.120000000001
+        ]
+      ],
+      "corridor_rectangles_um": [
+        [
+          5626.368,
+          5826.32,
+          7060.736,
+          5850.639999999999
+        ],
+        [
+          7036.416,
+          4592.960000000001,
+          7060.736,
+          5850.639999999999
+        ],
+        [
+          5723.568,
+          4592.960000000001,
+          7060.736,
+          4617.280000000001
+        ]
+      ],
+      "macro_relocations": [
+        "w55_cdSW1"
+      ],
+      "path_length_um": 3956.2559999999985,
+      "registered_links": 15,
+      "forward_register_stages": 16,
+      "reverse_register_stages": 16,
+      "descriptor_bridge_HOPS": 16,
+      "earliest_consumed_ack_edges": 34,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 1920,
+      "descriptor_bridge_total_register_bits": 2159,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm18",
+      "path_um": [
+        [
+          8973.568,
+          21254.4
+        ],
+        [
+          10383.616,
+          21254.4
+        ],
+        [
+          10383.616,
+          22487.760000000002
+        ],
+        [
+          9070.768,
+          22487.760000000002
+        ]
+      ],
+      "corridor_rectangles_um": [
+        [
+          8961.408,
+          21242.24,
+          10395.776,
+          21266.56
+        ],
+        [
+          10371.456,
+          21242.24,
+          10395.776,
+          22499.920000000002
+        ],
+        [
+          9058.608,
+          22475.600000000002,
+          10395.776,
+          22499.920000000002
+        ]
+      ],
+      "macro_relocations": [
+        "w184_xmNW3",
+        "w187_xmNW0",
+        "w185_xmNW2a"
+      ],
+      "path_length_um": 3956.256000000001,
+      "registered_links": 15,
+      "forward_register_stages": 16,
+      "reverse_register_stages": 16,
+      "descriptor_bridge_HOPS": 16,
+      "earliest_consumed_ack_edges": 34,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 1920,
+      "descriptor_bridge_total_register_bits": 2159,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm20",
+      "path_um": [
+        [
+          5638.528,
+          19863.36
+        ],
+        [
+          7048.576,
+          19863.36
+        ],
+        [
+          7048.576,
+          21096.72
+        ],
+        [
+          5735.728,
+          21096.72
+        ]
+      ],
+      "corridor_rectangles_um": [
+        [
+          5626.368,
+          19851.2,
+          7060.736,
+          19875.52
+        ],
+        [
+          7036.416,
+          19851.2,
+          7060.736,
+          21108.88
+        ],
+        [
+          5723.568,
+          21084.56,
+          7060.736,
+          21108.88
+        ]
+      ],
+      "macro_relocations": [
+        "w210_cdNW1"
+      ],
+      "path_length_um": 3956.2560000000003,
+      "registered_links": 15,
+      "forward_register_stages": 16,
+      "reverse_register_stages": 16,
+      "descriptor_bridge_HOPS": 16,
+      "earliest_consumed_ack_edges": 34,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 1920,
+      "descriptor_bridge_total_register_bits": 2159,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm21",
+      "path_um": [
+        [
+          8973.568,
+          19863.36
+        ],
+        [
+          10383.616,
+          19863.36
+        ],
+        [
+          10383.616,
+          21096.72
+        ],
+        [
+          9070.768,
+          21096.72
+        ]
+      ],
+      "corridor_rectangles_um": [
+        [
+          8961.408,
+          19851.2,
+          10395.776,
+          19875.52
+        ],
+        [
+          10371.456,
+          19851.2,
+          10395.776,
+          21108.88
+        ],
+        [
+          9058.608,
+          21084.56,
+          10395.776,
+          21108.88
+        ]
+      ],
+      "macro_relocations": [
+        "w184_xmNW3"
+      ],
+      "path_length_um": 3956.256000000001,
+      "registered_links": 15,
+      "forward_register_stages": 16,
+      "reverse_register_stages": 16,
+      "descriptor_bridge_HOPS": 16,
+      "earliest_consumed_ack_edges": 34,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 1920,
+      "descriptor_bridge_total_register_bits": 2159,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    },
+    {
+      "sm": "sm23",
+      "path_um": [
+        [
+          5638.528,
+          18472.32
+        ],
+        [
+          7048.576,
+          18472.32
+        ],
+        [
+          7048.576,
+          19705.68
+        ],
+        [
+          5735.728,
+          19705.68
+        ]
+      ],
+      "corridor_rectangles_um": [
+        [
+          5626.368,
+          18460.16,
+          7060.736,
+          18484.48
+        ],
+        [
+          7036.416,
+          18460.16,
+          7060.736,
+          19717.84
+        ],
+        [
+          5723.568,
+          19693.52,
+          7060.736,
+          19717.84
+        ]
+      ],
+      "macro_relocations": [
+        "w210_cdNW1"
+      ],
+      "path_length_um": 3956.2560000000003,
+      "registered_links": 15,
+      "forward_register_stages": 16,
+      "reverse_register_stages": 16,
+      "descriptor_bridge_HOPS": 16,
+      "earliest_consumed_ack_edges": 34,
+      "dual_copy_forward_bits_per_stage": 114,
+      "dual_copy_reverse_bits_per_stage": 6,
+      "flight_register_bits": 1920,
+      "descriptor_bridge_total_register_bits": 2159,
+      "destination_fifo_register_bits": 232,
+      "destination_fifo_depth_per_copy": 2,
+      "fifo_sizing_contract": "one parent descriptor pending; ACK only after actual consumption",
+      "hop_scope": "constructive path; each bend registered; not minimum-hop optimization"
+    }
+  ],
+  "area_upper_bound_um2": 587943.1987199929
+}

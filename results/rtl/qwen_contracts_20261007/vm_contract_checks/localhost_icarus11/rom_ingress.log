@@ -1,0 +1,8 @@
+positive PASS existing-seat capture checks=8498 held ownership and protected zero metadata
+
+bypass_me FATAL: /tmp/qc/vm/rom_ingress/bench.sv:18: capture writer qualifier slot0
+       Time: 30 Scope: tb
+
+omit_zero FATAL: /tmp/qc/vm/rom_ingress/bench.sv:31: zero flag lost
+       Time: 80 Scope: tb
+
