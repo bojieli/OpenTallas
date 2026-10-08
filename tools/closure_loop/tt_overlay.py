@@ -72,11 +72,16 @@ def apply_cts_fix_hooks(config, case):
     for i, fix in enumerate(fixes):
         source = Path(fix)
         if not source.is_absolute():
-            source = ROOT / source
+            # tt_overlay: recipes that run from a reduced context copy (route_core.sh context_src) lack common_flow:
+            # fall back to the job snapshot this function was patched into
+            source = next((r / fix for r in (ROOT, Path("@TTB_SRC@")) if (r / fix).is_file()), ROOT / fix)
         if not source.is_file():
             raise ValueError(f"OT_CTS_FIX_HOOKS: no such file {source}")
         name = f"ot_cts_fix_{i}_{source.name}"
         shutil.copy2(source, hooks_dir / name)
+        for sib in ("link_budget_consistent.sdc",):   # sourced by link_budget_hook.tcl from its own directory
+            if source.name == "link_budget_hook.tcl" and (source.parent / sib).is_file():
+                shutil.copy2(source.parent / sib, hooks_dir / sib)
         body.append(f"source /work/hooks/{name}")
         record.append({"path": fix, "name": name, "sha256": _h.sha256(source.read_bytes()).hexdigest()})
     (hooks_dir / "pre_cts_ot_cts_fix.tcl").write_text("\n".join(body) + "\n", encoding="utf-8")
@@ -110,13 +115,20 @@ def ensure_corner(s):
     return s, msg, True
 
 
-def ensure_hooks(s):
-    if "def apply_cts_fix_hooks" in s:
+def ensure_hooks(s, src):
+    fn = HOOKS_FN.replace("@TTB_SRC@", str(src.resolve()))
+    if fn in s:
         return s, [], True
+    if "def apply_cts_fix_hooks" in s:
+        # replace main's / an older overlay's version (no context-copy fallback, no sibling SDC copy)
+        a = s.index("\n\ndef apply_cts_fix_hooks")
+        b = s.index("\ndef ", a + 5)
+        s = s[:a] + fn.rstrip("\n") + "\n\n" + s[b:]
+        return s, ["OT_CTS_FIX_HOOKS function replaced (context fallback)"], True
     if s.count(CFG_ANCHOR) != 1 or s.count(FN_ANCHOR) != 1:
         return s, ["NO anchor for OT_CTS_FIX_HOOKS"], False
     s = s.replace(CFG_ANCHOR, "    config = apply_cts_fix_hooks(config, case)\n" + CFG_ANCHOR)
-    s = s.replace(FN_ANCHOR, HOOKS_FN + FN_ANCHOR)
+    s = s.replace(FN_ANCHOR, fn + FN_ANCHOR)
     return s, ["OT_CTS_FIX_HOOKS added"], True
 
 
@@ -170,7 +182,7 @@ def main():
     if f.is_file():
         s0 = s = f.read_text()
         s, m1, ok1 = ensure_corner(s)
-        s, m2, ok2 = ensure_hooks(s)
+        s, m2, ok2 = ensure_hooks(s, src)
         out += m1 + m2
         ok = ok1 and ok2
         if s != s0:
