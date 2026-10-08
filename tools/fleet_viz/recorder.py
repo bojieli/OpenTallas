@@ -12,6 +12,7 @@ Records ('k'):
   jobs    full=1 rows (keyframe, every 10 min and at file start) | up=[rows], rm=[names] (diff, on change)
   md      closure-loop STATUS.md digest, on change
   verd    full=1 rows (file start) | add=[rows] (new verdicts)
+  elem    d = the /api/elements snapshot (file start, on a status change, else every 5 min)
 """
 import base64, datetime, gzip, json, math, os, pathlib, re, time, zlib
 
@@ -126,7 +127,7 @@ def load_window(root, t0, t1, safe=False, max_frames=3000):
     share-safe labels (no job table, status md or verdicts; ticker rows reduced to t/cat/host)."""
     meta = None; frames = []; hist = []; loops = []; recents = []; mds = []
     state = {}; jobs0 = None; jdiffs = []; vfull = {}; vadd = []
-    last_loop = None; last_recent = None; last_md = None
+    last_loop = None; last_recent = None; last_md = None; elems = []; last_elem = None
     for p in files_for(root, t0 - 3600, t1):
         for r in read_records(p):
             k = r.get('k'); t = r.get('t', 0)
@@ -141,6 +142,9 @@ def load_window(root, t0, t1, safe=False, max_frames=3000):
             elif k == 'recent':
                 if t < t0: last_recent = r
                 else: recents.append(r)
+            elif k == 'elem':
+                if t < t0: last_elem = r
+                else: elems.append(r)
             elif k == 'md':
                 if t < t0: last_md = r
                 else: mds.append(r)
@@ -162,6 +166,7 @@ def load_window(root, t0, t1, safe=False, max_frames=3000):
     if last_loop: loops.insert(0, dict(last_loop, t=t0))
     if last_recent: recents.insert(0, dict(last_recent, t=t0))
     if last_md: mds.insert(0, dict(last_md, t=t0))
+    if last_elem: elems.insert(0, dict(last_elem, t=t0))
     step = max(1, math.ceil(len(frames) / max_frames)) if frames else 1
     span = (t1 - t0) / max_frames if len(frames) > max_frames else 0
     frames = frames[::step]
@@ -172,6 +177,10 @@ def load_window(root, t0, t1, safe=False, max_frames=3000):
             for r in rs: out[int((r['t'] - t0) // span)] = r
             return list(out.values())
         loops, recents, mds = bucket(loops), bucket(recents), bucket(mds)
+    if len(elems) > 300:   # element tables are large: at most ~300 per window
+        es = (t1 - t0) / 300; o = {}
+        for r in elems: o[int((r['t'] - t0) // es)] = r
+        elems = list(o.values())
         cj = {}
         for t, up, rm in jdiffs:
             b = int((t - t0) // span); e = cj.setdefault(b, [t, {}, set()])
@@ -199,10 +208,12 @@ def load_window(root, t0, t1, safe=False, max_frames=3000):
                            **({} if safe else dict(alias=h['id']))) for h in hosts],
                frames=[[s['t'], s['h']] for s in frames], hist=hrows, loops=[[r['t'], r['loop']] for r in loops])
     if safe:
+        pkg['elems'] = [[r['t'], dict(t=r['d']['t'], safe=True, cats=r['d']['cats'], targets=r['d']['targets'], summary=r['d']['summary'])] for r in elems]
         pkg['recents'] = [[r['t'], [dict(t=x['t'], cat=x['cat'], host=name2label.get(x['host'], 'fleet')) for x in r['rows']]] for r in recents]
     else:
         pkg['recents'] = [[r['t'], r['rows']] for r in recents]
         pkg['jobs0'] = list(jobs0.values()); pkg['jdiffs'] = jdiffs
         pkg['mds'] = [[r['t'], r['md']] for r in mds]
         pkg['verdicts'] = sorted(vfull.values(), key=lambda v: v['t'])
+        pkg['elems'] = [[r['t'], r['d']] for r in elems]
     return pkg

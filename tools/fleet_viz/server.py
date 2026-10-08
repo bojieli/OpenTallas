@@ -8,6 +8,7 @@ closure-loop job directory is rescanned every 10 s with an mtime cache.
 Endpoints (bind 127.0.0.1:8765 by default):
   /                 the page            /api/fleet   JSON snapshot
   /replay?from=&to=&speed=   the same page playing a recorded window (/api/replay serves the data)
+  /api/elements     per-element (block) closure status table (elements.py; share-safe: summary counts only)
   /api/stream       server-sent events (latest history point only; /api/fleet
                     carries the full 60-minute history)
 Internal view is the default: real host aliases, job and block names, slacks
@@ -18,7 +19,7 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder
+import recorder, elements
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads((HERE / 'fleet_hosts.json').read_text())
@@ -244,6 +245,10 @@ try:   # survive restarts: reload samples still inside the window
 except Exception:
     pass
 _snap = {}; _cond = threading.Condition()
+_SSH = {h['id']: h['ssh'] for h in CFG['hosts']}
+ELEMENTS = elements.Elements(JOBS, os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), HIST_FILE.parent,
+                             lambda host: _SSH.get(host, host), CTL,
+                             os.environ.get('FLEET_VIZ_ELEMENTS_MD', '/home/ubuntu/claude-takeover-20261007/ELEMENTS.md'), log=log)
 
 def build(safe):
     hosts = []; alias_to_label = {h.cfg['id']: h.cfg['label'] if safe else h.cfg.get('name', h.cfg['id']) for h in HOSTS}
@@ -282,7 +287,8 @@ def build(safe):
 
 # ---------------------------------------------------------------- recording (recorder.py; replay + export)
 REC_DIR = pathlib.Path(os.environ.get('FLEET_VIZ_RECORDINGS', os.path.expanduser('~/.local/state/fleet-viz/recordings')))
-_rec = dict(loop=None, recent=None, md=None, jobs={}, jobs_full=0, vkeys=set())
+_rec = dict(loop=None, recent=None, md=None, jobs={}, jobs_full=0, vkeys=set(), elem=None, elem_key=None, elem_t=0)
+ELEM_EVERY = 300   # element table: on a status change, else every 5 min
 
 def _rec_meta():
     return dict(k='meta', t=time.time(), poll=POLL, regions=CFG['regions'],
@@ -293,7 +299,7 @@ def _rec_keyframes(t):
     with CLOSURES.lock: act, vs = list(CLOSURES.active), list(CLOSURES.verdicts)
     _rec.update(jobs={j['name']: j for j in act}, jobs_full=t, vkeys={(v['t'], v['name'], v['status']) for v in vs})
     out = [_rec_meta(), dict(k='jobs', t=t, full=1, rows=act), dict(k='verd', t=t, full=1, rows=vs)]
-    for k in ('loop', 'recent', 'md'):
+    for k in ('loop', 'recent', 'md', 'elem'):
         if _rec[k] is not None: out.append(_rec[k])
     return out
 
@@ -322,6 +328,11 @@ def record(s0):
     new = [v for v in vs if (v['t'], v['name'], v['status']) not in _rec['vkeys']]
     if new:
         recs.append(dict(k='verd', t=t, add=new)); _rec['vkeys'].update((v['t'], v['name'], v['status']) for v in new)
+    ed = ELEMENTS.snapshot()
+    if ed['rows']:
+        ek = elements.change_key(ed)
+        if ek != _rec['elem_key'] or t - _rec['elem_t'] >= ELEM_EVERY:
+            _rec.update(elem=dict(k='elem', t=t, d=ed), elem_key=ek, elem_t=t); recs.append(_rec['elem'])
     RECORDER.write(t, recs)
 
 def ticker():
@@ -403,6 +414,8 @@ class H(BaseHTTPRequestHandler):
             with CLOSURES.lock: vs, ver = list(CLOSURES.verdicts), CLOSURES.vver
             rows = [dict(v, host=lab.get(v['host'], v['host'])) for v in vs]
             return self.send(200, json.dumps(dict(v=ver, verdicts=rows), separators=(',', ':')).encode(), 'application/json')
+        if u.path == '/api/elements':
+            return self.send(200, json.dumps(ELEMENTS.snapshot(safe), separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/stream':
             self.send_response(200); self.send_header('Content-Type', 'text/event-stream')
             self.send_header('Cache-Control', 'no-store'); self.send_header('X-Accel-Buffering', 'no'); self.end_headers()
