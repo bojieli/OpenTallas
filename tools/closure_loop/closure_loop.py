@@ -1162,6 +1162,29 @@ def tag(st, j):
     return f"{st['key']}.a{j['attempt']}"
 
 
+# LEC OFF EVERYWHERE (drive-1043 2026-10-08): ORFS settings.mk defaults LEC_CHECK to 1 whenever the image carries
+# kepler-formal, and kepler-formal is built for AVX-512: on a host without it (PVE1 Xeon E5-2680 v4) CTS dies with SIGILL
+# ("child killed: illegal instruction", ha2_relay_tx_internal, drive-1013).  Most generators write LEC_CHECK = 0 into
+# their config.mk; a flow that does not inherited the default.  Every non-bench stage now runs with {CL}/bin first on
+# PATH, where a docker shim adds -e LEC_CHECK=0 to every `docker run` (settings.mk uses ?=, so the container env wins;
+# no flow sets LEC_CHECK = 1).  LEC is not part of block sign-off (benches + STA + DRC are).
+DOCKER_SHIM = r"""#!/bin/bash
+# closure-loop shim: every container gets LEC_CHECK=0 (kepler-formal needs AVX-512); then the real docker
+for e in ${PATH//:/ }; do
+  if [ -x "$e/docker" ] && ! [ "$e/docker" -ef "$0" ]; then
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 "$@"; fi
+    exec "$e/docker" "$@"
+  fi
+done
+echo "closure-loop docker shim: no docker on PATH" >&2; exit 127
+"""
+
+
+def docker_lec_off(cl):
+    return (f"mkdir -p {cl}/bin && cat > {cl}/bin/docker <<'OT_DOCKER_SHIM'\n{DOCKER_SHIM}OT_DOCKER_SHIM\n"
+            f"chmod +x {cl}/bin/docker\nexport PATH={cl}/bin:$PATH\n")
+
+
 def launch_stage(j, st, cmd):
     t = tag(st, j)
     if st["kind"] == "bench":
@@ -1176,6 +1199,8 @@ def launch_stage(j, st, cmd):
         BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
+    if st["kind"] != "bench":
+        env += docker_lec_off(f"{j['run']}/cl")
     if st["kind"] == "calibrate":
         # UNSTICK (owner 2026-10-08): calibrate measures clock insertion only.  No CTS timing/hold repair
         # (SKIP_CTS_REPAIR_TIMING=1 through hold_corners_patch.py OT_CAL_CTS_ONLY): 40 calibrates sat 4-25 h in CTS hold
