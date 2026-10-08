@@ -1,0 +1,47 @@
+{
+  "physical/hbm_ha2_owner_banked_20261006/run_r2.sh": {
+    "local_sha256": "43867e6d9f8ce29a07bb645275ef4035127a01849d5282e8d484f52a14269ce6",
+    "remote_sha256": "43867e6d9f8ce29a07bb645275ef4035127a01849d5282e8d484f52a14269ce6",
+    "matches": true
+  },
+  "physical/hbm_ha2_owner_banked_20261006/signoff.py": {
+    "local_sha256": "5f7e5e9b68a15e3c8a7cc521ee6d16e5b4f322fdc11add0ca2d3652d12ef4032",
+    "remote_sha256": "3a16c5388a7d43175c470bdd64b0f2f92abada695a15a6a9514fc0df29a18ca2",
+    "matches": false
+  },
+  "physical/hbm_ha2_owner_banked_20261006/route_r2.sdc": {
+    "local_sha256": "e5faee19b0393c549e2391c1a4c489ccab298b03d3e9465656d9ef2b3c2d9cdd",
+    "remote_sha256": "e5faee19b0393c549e2391c1a4c489ccab298b03d3e9465656d9ef2b3c2d9cdd",
+    "matches": true
+  },
+  "physical/hbm_ha2_owner_banked_20261006/config_r2.mk": {
+    "local_sha256": "976b426aa7e3e9fd93d868474a9225baabc224b470d3b052ae7767d77a1852df",
+    "remote_sha256": "976b426aa7e3e9fd93d868474a9225baabc224b470d3b052ae7767d77a1852df",
+    "matches": true
+  },
+  "physical/hbm_die_abstracts_20261006/memory_control/run_minimum_parent_margin.sh": {
+    "local_sha256": "3c9b006b74ad1d0a376f57a45e9c9cc8410a511749cc5512dee6988e25bef08d",
+    "remote_sha256": "3c9b006b74ad1d0a376f57a45e9c9cc8410a511749cc5512dee6988e25bef08d",
+    "matches": true
+  },
+  "physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_minimum_parent_main.cpp": {
+    "local_sha256": "c3917949629d0efafbd2954545bbe5489ef5ab6041304feb8d15fc73cd8bc494",
+    "remote_sha256": "f9ab2a848d8397af84961cf5968e27c5192f28a48380b0d6f34cfb21306d5753",
+    "matches": false
+  },
+  "physical/hbm_die_abstracts_20261006/memory_control/minimum_parent_margin.files.f": {
+    "local_sha256": "d476f38930069e8bf1d7f3b14688f91528d8b75ffb937169f10048e3f7f4ff6b",
+    "remote_sha256": "d476f38930069e8bf1d7f3b14688f91528d8b75ffb937169f10048e3f7f4ff6b",
+    "matches": true
+  },
+  "physical/hbm_die_abstracts_20261006/memory_control/minimum_parent_margin.vlt": {
+    "local_sha256": "d4962256cc40bc1e5bfa628c50d4893bccc669acec86cc184dd7c60f7bef50ca",
+    "remote_sha256": "d4962256cc40bc1e5bfa628c50d4893bccc669acec86cc184dd7c60f7bef50ca",
+    "matches": true
+  },
+  "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv": {
+    "local_sha256": "02bec6fc2cdb69e5f6a9ea6aec09c32caa9e2b2830285855ad4494234195d241",
+    "remote_sha256": "02bec6fc2cdb69e5f6a9ea6aec09c32caa9e2b2830285855ad4494234195d241",
+    "matches": true
+  }
+}

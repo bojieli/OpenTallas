@@ -1,0 +1,53 @@
+{
+  "route_sdc": "/srv/opentallas-scratch/claude/tk-hbm-harvest/ha2bk/src/physical/hbm_ha2_owner_banked_20261006/route.sdc",
+  "measured_insertion_SS": [
+    791.65,
+    968.71
+  ],
+  "measured_insertion_FF": [
+    484.57,
+    611.45
+  ],
+  "SS": {
+    "slack": {
+      "reg2reg_max": -547.31,
+      "reg2reg_min": 32.59,
+      "in2reg_max": 14.9,
+      "in2reg_min": -507.46,
+      "reg2out_max": -46.38,
+      "reg2out_min": 498.14
+    },
+    "worst": {
+      "max": -547.31,
+      "min": -507.46
+    },
+    "latency_rise": [
+      791.65,
+      968.71
+    ]
+  },
+  "FF": {
+    "slack": {
+      "reg2reg_max": 63.08,
+      "reg2reg_min": -5.85,
+      "in2reg_max": -249.66,
+      "in2reg_min": -152.67,
+      "reg2out_max": 445.21,
+      "reg2out_min": 106.49
+    },
+    "worst": {
+      "max": -249.66,
+      "min": -152.67
+    },
+    "latency_rise": [
+      484.57,
+      611.45
+    ]
+  },
+  "accept": {
+    "SS_setup_ps": -547.31,
+    "FF_hold_ps": -152.67,
+    "SS_ok": false,
+    "FF_ok": false
+  }
+}
