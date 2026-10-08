@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_capt_grp",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1c8d4c45f-tt/routes/s81ph_dsfd_capt_grp_1c8d4c45f_tt/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1c8d4c45f-tt/routes/s81ph_dsfd_capt_grp_1c8d4c45f_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1c8d4c45f-tt/routes/s81ph_dsfd_capt_grp_1c8d4c45f_tt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1c8d4c45f-tt/routes/s81ph_dsfd_capt_grp_1c8d4c45f_tt/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1c8d4c45f-tt/routes/s81ph_dsfd_capt_grp_1c8d4c45f_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1c8d4c45f-tt/routes/s81ph_dsfd_capt_grp_1c8d4c45f_tt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1c8d4c45f-tt/routes/s81ph_dsfd_capt_grp_1c8d4c45f_tt/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_capt_grp.lef": "ca1ec697e0a97e21baf14a66b071a1e0dae2acd1b3f4fb90c18a3e1096d9f841",
+    "dsfd_capt_grp_ff.lib": "8ae600d49af0acd09319d8f6c58a320d271f9839f5bab5f684c80480f7454d16",
+    "dsfd_capt_grp_ss.lib": "51ed8b63c120773b8e0664f0d8430419f7e3c0d7e71c0f6088304e14fad7d64e"
+  },
+  "ok": true
+}
