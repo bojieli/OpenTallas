@@ -11,6 +11,7 @@ from tools.gpu_sys.canonical_qwen_simulator import NATIVE_KINDS
 from tools.gpu_sys.canonical_qwen_range_owner_bindings import build_RF_authority
 from tools.gpu_sys.canonical_qwen_matrix_scratch_adapter import MatrixPhysicalServices, FIELDS as SCRATCH_FIELDS
 from tools.gpu_sys.canonical_qwen_matrix_tc_pins import TCPins, ConsumptionAuthority, bind_operator
+from tools.gpu_sys.canonical_qwen_matrix_tc_factory import SharedConsumption
 from tools.gpu_sys.canonical_qwen_scratch_simulator import ScratchEnclosingPins, scratch_component
 
 
@@ -43,6 +44,7 @@ class MatrixContext:
 
     def bind_operator(self, native, source_PC, *, enabled=False):
         # Original all-290 controller and exact source PC; no substituted count.
+        # step() already advances the common root: caller must not add tick().
         return bind_operator(self.root, self.authority, self.services, native,
                              source_PC, self.rank, self.SM, enabled=enabled)
 
@@ -54,6 +56,7 @@ def validate_installed_book(pins):
     # Constructors inspect the genuine emitted TC contract and all source fields.
     # Missing TC rejects before RF callbacks, native construction or pin writes.
     TC = tuple(TCPins(pins, i//32, i%32, enabled=True) for i in range(64))
+    require(pins.get('tc_enabled') == 1, 'actual compiled TC opt-in must be enabled')
     for name, (direction, width) in SCRATCH_FIELDS.items():
         port = pins.book['pins'].get('scratch_'+name, {})
         require(port.get('direction') == direction and port.get('leaf_bits') == width
@@ -91,7 +94,9 @@ def compose(pins, *, physical_provider, placement, w2_ports, native_factory,
     authority = FactoryAuthority(physical_provider, RF)
     contexts = []
     for i, tc in enumerate(TC):
-        consumed = ConsumptionAuthority(authority, tc)
+        # ONE selected context set. Offers settle before the real TC tap is
+        # sampled; the witness is committed only after the common root edge.
+        consumed = SharedConsumption(authority, tc)
         services = MatrixPhysicalServices(consumed, scratch_component(pins, i//32, i%32), enabled=True)
         contexts.append(MatrixContext(pins, i//32, i%32, consumed, services))
     contexts = tuple(contexts)
