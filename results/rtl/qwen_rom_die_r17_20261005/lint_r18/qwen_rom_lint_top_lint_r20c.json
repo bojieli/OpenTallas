@@ -3,17 +3,17 @@
  "die": "qwen_rom",
  "top_fix": false,
  "generator": "tools/qwen_rom_fulldie_b3r2.py",
- "generator_sha256": "2e392b302ccb3237697c4da8f1d7002465f7e505e2593d2a15089f573bc5ae8a",
+ "generator_sha256": "93d7da83266f6be1be24378366c8e51a888b450055eca6ed3fbc6de917baad1b",
  "generator_tag": {
   "file": "tools/qwen_rom_fulldie_b3r2.py",
-  "sha256": "2e392b302ccb3237697c4da8f1d7002465f7e505e2593d2a15089f573bc5ae8a",
-  "tree_head": "584098655fbb41eef7c80ef00f7d1fa653b319e1",
-  "file_commit": "768dee5fb7dcc42e2eb21be2ddb6fa7b440349f9"
+  "sha256": "93d7da83266f6be1be24378366c8e51a888b450055eca6ed3fbc6de917baad1b",
+  "tree_head": "9b3e62f7c01d20aa0b3f306492189b2f3060d6bc",
+  "file_commit": "be75a3e96fd7459e36b1ee8b7ef01f2574e8f068"
  },
  "qwen_source": {
   "root": "/home/ubuntu/wt-qwen-die",
   "ref": "None",
-  "commit": "584098655fbb41eef7c80ef00f7d1fa653b319e1",
+  "commit": "9b3e62f7c01d20aa0b3f306492189b2f3060d6bc",
   "overlay": "[]"
  },
  "qwen_recipe": {
@@ -28,16 +28,17 @@
   "m6_strip": 40,
   "slab_group_h": 455.76,
   "cdc": "183.048,183.048",
-  "r18": true
+  "r19": true,
+  "tree_interleave": true
  },
  "pin_fit_errors": {},
- "lint_tool_sha256": "08e3d8858a78d00142b74d39469fec34a11f2e1591558028cc9cca841d6c5bf7",
+ "lint_tool_sha256": "6db2758724685553cda6562bdd4a1398b37c7cd6a7da7f9204c7825a571dfbc7",
  "variant": null,
  "census": {
   "instances": 3334,
-  "buses": 6871,
-  "net_bits": 2795406,
-  "masters": 41,
+  "buses": 8407,
+  "net_bits": 3975054,
+  "masters": 43,
   "real_instances": 132,
   "placeholder_instances": 3202
  },
@@ -145,7 +146,13 @@
    "master": "qfd_kvc",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 4
+   "instances": 2
+  },
+  {
+   "master": "qfd_kvc_n",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
   },
   {
    "master": "qfd_lst_c",
@@ -307,7 +314,13 @@
    "master": "qfd_tile",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 1536
+   "instances": 768
+  },
+  {
+   "master": "qfd_tile_e",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 768
   }
  ],
  "clock_sources": {
@@ -585,11 +598,11 @@
     "compute": "tile",
     "hub_kind": "io",
     "hub": "io_embedding_rom",
-    "pairs": 24,
+    "pairs": 23,
     "min_gap_um": 0.024,
     "examples": [
-     "t_8_23 / io_embedding_rom gap 0.02 um",
-     "t_9_23 / io_embedding_rom gap 0.02 um"
+     "t_9_23 / io_embedding_rom gap 0.02 um",
+     "t_10_23 / io_embedding_rom gap 0.02 um"
     ]
    },
    {
@@ -847,7 +860,8 @@
   "forwarded_stage_bits": 152064,
   "ot_fwd_link_stage_W512_needed": 416,
   "fifo_placeholders": {
-   "qfd_kvc": 4
+   "qfd_kvc": 2,
+   "qfd_kvc_n": 2
   },
   "decision_C_fifo_slots": {
    "tile_tap": {
@@ -903,6 +917,10 @@
    "link_spine|region": {
     "buses": 5,
     "bits": 6336
+   },
+   "kv_land|region": {
+    "buses": 384,
+    "bits": 294912
    },
    "hbm_cdc|domain": {
     "buses": 256,
@@ -997,7 +1015,7 @@
  "top_fixes": {},
  "verilog": {
   "top": "qwen_rom_lint_top",
-  "stubs": 39,
+  "stubs": 41,
   "nc_wires": 0,
   "filelist": "qwen_rom_lint_top.f",
   "rtl_files": 1,

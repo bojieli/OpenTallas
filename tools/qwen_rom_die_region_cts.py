@@ -195,9 +195,11 @@ def main(argv=None):
     ap.add_argument('--no-macros', action='store_true', help='flat-placement bound: sinks only, no element abstracts')
     ap.add_argument('--slab-group-h', type=float, default=0.0)
     ap.add_argument('--cdc', default='')
+    ap.add_argument('--r18', action='store_true')
     a = ap.parse_args(argv)
     v, m = B.selected(True, b3r3=True, b3r6=True, tree_cols=6, bw_align=True, bw_edge=True, io_faces=True,
-                      bw_edge_inner=True, bw_sp=200, m6_strip=40, slab_group_h=a.slab_group_h, cdc=B._cdc_arg(a.cdc))
+                      bw_edge_inner=True, bw_sp=200, m6_strip=40, slab_group_h=a.slab_group_h, cdc=B._cdc_arg(a.cdc),
+                      r18=a.r18)
     reg = dict(next(r for r in m['clock_regions'] if r['name'] == a.region))
     if a.rows:
         x0, y0, x1, y1 = reg['rect']

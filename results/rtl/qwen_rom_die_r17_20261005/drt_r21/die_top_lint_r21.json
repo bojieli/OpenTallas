@@ -3,17 +3,17 @@
  "die": "qwen_rom",
  "top_fix": false,
  "generator": "tools/qwen_rom_fulldie_b3r2.py",
- "generator_sha256": "2e392b302ccb3237697c4da8f1d7002465f7e505e2593d2a15089f573bc5ae8a",
+ "generator_sha256": "9b317c32413a807ef05f6811cfb5b4c25750e36d8be0e988cbc5737ab6337b2f",
  "generator_tag": {
   "file": "tools/qwen_rom_fulldie_b3r2.py",
-  "sha256": "2e392b302ccb3237697c4da8f1d7002465f7e505e2593d2a15089f573bc5ae8a",
-  "tree_head": "584098655fbb41eef7c80ef00f7d1fa653b319e1",
-  "file_commit": "768dee5fb7dcc42e2eb21be2ddb6fa7b440349f9"
+  "sha256": "9b317c32413a807ef05f6811cfb5b4c25750e36d8be0e988cbc5737ab6337b2f",
+  "tree_head": "b5da11b87b647f69f9806298c41c3d03ec5065d9",
+  "file_commit": "1fea5e223c51c0addb1c60607f2cad33682413de"
  },
  "qwen_source": {
   "root": "/home/ubuntu/wt-qwen-die",
   "ref": "None",
-  "commit": "584098655fbb41eef7c80ef00f7d1fa653b319e1",
+  "commit": "b5da11b87b647f69f9806298c41c3d03ec5065d9",
   "overlay": "[]"
  },
  "qwen_recipe": {
@@ -28,18 +28,21 @@
   "m6_strip": 40,
   "slab_group_h": 455.76,
   "cdc": "183.048,183.048",
-  "r18": true
+  "r19": true,
+  "tree_interleave": true,
+  "slab_bw_m8": true,
+  "relay_pitch": 430.56
  },
  "pin_fit_errors": {},
- "lint_tool_sha256": "08e3d8858a78d00142b74d39469fec34a11f2e1591558028cc9cca841d6c5bf7",
+ "lint_tool_sha256": "3eb62ad6130eca3e144e642326c033f1c322004b6d7c769b86d949faa6345896",
  "variant": null,
  "census": {
-  "instances": 3334,
-  "buses": 6871,
-  "net_bits": 2795406,
-  "masters": 41,
+  "instances": 12201,
+  "buses": 17443,
+  "net_bits": 8008058,
+  "masters": 77,
   "real_instances": 132,
-  "placeholder_instances": 3202
+  "placeholder_instances": 12069
  },
  "real_blocks": {
   "ot_hbm3e_phy": {
@@ -145,7 +148,13 @@
    "master": "qfd_kvc",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 4
+   "instances": 2
+  },
+  {
+   "master": "qfd_kvc_n",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
   },
   {
    "master": "qfd_lst_c",
@@ -280,6 +289,210 @@
    "instances": 1
   },
   {
+   "master": "qfd_rly_1024_EW_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 20
+  },
+  {
+   "master": "qfd_rly_1024_WE_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 20
+  },
+  {
+   "master": "qfd_rly_24_EN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_24_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_24_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 41
+  },
+  {
+   "master": "qfd_rly_24_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_2_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 10
+  },
+  {
+   "master": "qfd_rly_323_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1537
+  },
+  {
+   "master": "qfd_rly_323_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_323_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1540
+  },
+  {
+   "master": "qfd_rly_323_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_323_WS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_512_EN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 97
+  },
+  {
+   "master": "qfd_rly_512_ES_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 12
+  },
+  {
+   "master": "qfd_rly_512_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 879
+  },
+  {
+   "master": "qfd_rly_512_NE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 182
+  },
+  {
+   "master": "qfd_rly_512_NS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1822
+  },
+  {
+   "master": "qfd_rly_512_NW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 17
+  },
+  {
+   "master": "qfd_rly_512_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 40
+  },
+  {
+   "master": "qfd_rly_512_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1183
+  },
+  {
+   "master": "qfd_rly_512_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 286
+  },
+  {
+   "master": "qfd_rly_512_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 857
+  },
+  {
+   "master": "qfd_rly_512_WN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 28
+  },
+  {
+   "master": "qfd_rly_512_WS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 68
+  },
+  {
+   "master": "qfd_rly_66_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_66_SN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 44
+  },
+  {
+   "master": "qfd_rly_66_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_66_WN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rlyf_1056_EW_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 64
+  },
+  {
+   "master": "qfd_rlyf_1056_EW_55x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rlyf_1056_NS_55x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 25
+  },
+  {
+   "master": "qfd_rlyf_1056_WE_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 62
+  },
+  {
+   "master": "qfd_rlyf_1056_WE_55x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "qfd_rlyf_2112_SN_105x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 12
+  },
+  {
    "master": "qfd_sp_constants_sequencer",
    "view": "placeholder",
    "clock": "clock_trunk",
@@ -307,7 +520,13 @@
    "master": "qfd_tile",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 1536
+   "instances": 768
+  },
+  {
+   "master": "qfd_tile_e",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 768
   }
  ],
  "clock_sources": {
@@ -452,6 +671,8 @@
    "pll_hbm"
   ]
  },
+ "reset": [],
+ "interfaces": {},
  "top_ports": 0,
  "physical": {
   "missing_pins": [],
@@ -566,9 +787,108 @@
     "span_um": 786.2,
     "peer_manhattan_um": 260.3,
     "bits": 4096
+   },
+   {
+    "bus": "bword_12__r21",
+    "cls": "tree_spine",
+    "inst": "sp_port_tiles_0",
+    "master": "qfd_port_tiles_0",
+    "port": "bw2",
+    "face": "W",
+    "span_um": 408.8,
+    "peer_manhattan_um": 45.9,
+    "bits": 512
+   },
+   {
+    "bus": "bword_17__r21",
+    "cls": "tree_spine",
+    "inst": "sp_port_tiles_5",
+    "master": "qfd_port_tiles_5",
+    "port": "bw2",
+    "face": "W",
+    "span_um": 408.8,
+    "peer_manhattan_um": 56.7,
+    "bits": 512
+   },
+   {
+    "bus": "bword_21__r20",
+    "cls": "tree_spine",
+    "inst": "sp_port_tiles_3",
+    "master": "qfd_port_tiles_3",
+    "port": "bw3",
+    "face": "W",
+    "span_um": 408.8,
+    "peer_manhattan_um": 1.0,
+    "bits": 512
+   },
+   {
+    "bus": "bword_30__r11",
+    "cls": "tree_spine",
+    "inst": "sp_port_tiles_0",
+    "master": "qfd_port_tiles_0",
+    "port": "bw5",
+    "face": "W",
+    "span_um": 408.8,
+    "peer_manhattan_um": 123.7,
+    "bits": 512
+   },
+   {
+    "bus": "bword_34__r11",
+    "cls": "tree_spine",
+    "inst": "sp_port_tiles_4",
+    "master": "qfd_port_tiles_4",
+    "port": "bw5",
+    "face": "W",
+    "span_um": 408.8,
+    "peer_manhattan_um": 173.3,
+    "bits": 512
+   },
+   {
+    "bus": "bword_35__r11",
+    "cls": "tree_spine",
+    "inst": "sp_port_tiles_5",
+    "master": "qfd_port_tiles_5",
+    "port": "bw5",
+    "face": "W",
+    "span_um": 408.8,
+    "peer_manhattan_um": 166.9,
+    "bits": 512
+   },
+   {
+    "bus": "bword_40__r9",
+    "cls": "tree_spine",
+    "inst": "sp_port_tiles_4",
+    "master": "qfd_port_tiles_4",
+    "port": "bw6",
+    "face": "W",
+    "span_um": 408.8,
+    "peer_manhattan_um": 80.5,
+    "bits": 512
+   },
+   {
+    "bus": "bword_43__r4",
+    "cls": "tree_spine",
+    "inst": "sp_port_tiles_1",
+    "master": "qfd_port_tiles_1",
+    "port": "bw7",
+    "face": "W",
+    "span_um": 408.8,
+    "peer_manhattan_um": 192.8,
+    "bits": 512
+   },
+   {
+    "bus": "bword_46__r7",
+    "cls": "tree_spine",
+    "inst": "sp_port_tiles_4",
+    "master": "qfd_port_tiles_4",
+    "port": "bw7",
+    "face": "W",
+    "span_um": 408.8,
+    "peer_manhattan_um": 2.2,
+    "bits": 512
    }
   ],
-  "pin_spread_count": 10,
+  "pin_spread_count": 19,
   "abut_without_channel": [
    {
     "compute": "tile",
@@ -585,11 +905,11 @@
     "compute": "tile",
     "hub_kind": "io",
     "hub": "io_embedding_rom",
-    "pairs": 24,
+    "pairs": 23,
     "min_gap_um": 0.024,
     "examples": [
-     "t_8_23 / io_embedding_rom gap 0.02 um",
-     "t_9_23 / io_embedding_rom gap 0.02 um"
+     "t_9_23 / io_embedding_rom gap 0.02 um",
+     "t_10_23 / io_embedding_rom gap 0.02 um"
     ]
    },
    {
@@ -847,7 +1167,8 @@
   "forwarded_stage_bits": 152064,
   "ot_fwd_link_stage_W512_needed": 416,
   "fifo_placeholders": {
-   "qfd_kvc": 4
+   "qfd_kvc": 2,
+   "qfd_kvc_n": 2
   },
   "decision_C_fifo_slots": {
    "tile_tap": {
@@ -888,21 +1209,25 @@
     "buses": 320,
     "bits": 103360
    },
-   "head_chain|domain": {
-    "buses": 2,
-    "bits": 646
-   },
    "head_chain|region": {
-    "buses": 14,
-    "bits": 4522
+    "buses": 17,
+    "bits": 5491
+   },
+   "head_chain|domain": {
+    "buses": 1,
+    "bits": 323
    },
    "link_channel|region": {
-    "buses": 24,
-    "bits": 25344
+    "buses": 36,
+    "bits": 38016
    },
    "link_spine|region": {
     "buses": 5,
     "bits": 6336
+   },
+   "kv_land|region": {
+    "buses": 384,
+    "bits": 294912
    },
    "hbm_cdc|domain": {
     "buses": 256,
@@ -917,39 +1242,55 @@
     "bits": 36828
    },
    "spine_local|domain": {
-    "buses": 2,
-    "bits": 1024
+    "buses": 1,
+    "bits": 512
+   },
+   "spine_local|region": {
+    "buses": 1,
+    "bits": 512
    },
    "io|region": {
-    "buses": 3,
-    "bits": 1048
+    "buses": 31,
+    "bits": 19576
    },
    "io|domain": {
-    "buses": 9,
-    "bits": 8704
+    "buses": 8,
+    "bits": 8192
    },
    "tree_spine|region": {
-    "buses": 101,
-    "bits": 51712
+    "buses": 459,
+    "bits": 235008
    },
    "sequencer|region": {
-    "buses": 1,
-    "bits": 2
+    "buses": 5,
+    "bits": 266
    },
    "sequencer|domain": {
     "buses": 2,
     "bits": 132
-   },
-   "tree_spine|domain": {
-    "buses": 1,
-    "bits": 512
    },
    "reset|domain": {
     "buses": 8,
     "bits": 8
    }
   },
-  "clock_domain_crossings": {}
+  "clock_domain_crossings": {
+   "head_chain|serial_0p9->stream_1p2": {
+    "buses": 2,
+    "bits": 646,
+    "examples": [
+     "head_31__r1",
+     "head_32__r8"
+    ]
+   },
+   "spine_local|serial_0p9->stream_1p2": {
+    "buses": 1,
+    "bits": 512,
+    "examples": [
+     "x3__r5"
+    ]
+   }
+  }
  },
  "block_shape": {},
  "counterparts": {
@@ -997,10 +1338,10 @@
  "top_fixes": {},
  "verilog": {
   "top": "qwen_rom_lint_top",
-  "stubs": 39,
+  "stubs": 75,
   "nc_wires": 0,
   "filelist": "qwen_rom_lint_top.f",
-  "rtl_files": 1,
+  "rtl_files": 2,
   "unresolved_modules": []
  }
 }

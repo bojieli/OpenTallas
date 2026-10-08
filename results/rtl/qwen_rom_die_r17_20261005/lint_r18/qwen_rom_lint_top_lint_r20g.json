@@ -3,17 +3,17 @@
  "die": "qwen_rom",
  "top_fix": false,
  "generator": "tools/qwen_rom_fulldie_b3r2.py",
- "generator_sha256": "2e392b302ccb3237697c4da8f1d7002465f7e505e2593d2a15089f573bc5ae8a",
+ "generator_sha256": "0ad60e49f824331b7112393924ed2734df9c9d6a6271fef121f6403a0188e51d",
  "generator_tag": {
   "file": "tools/qwen_rom_fulldie_b3r2.py",
-  "sha256": "2e392b302ccb3237697c4da8f1d7002465f7e505e2593d2a15089f573bc5ae8a",
-  "tree_head": "584098655fbb41eef7c80ef00f7d1fa653b319e1",
-  "file_commit": "768dee5fb7dcc42e2eb21be2ddb6fa7b440349f9"
+  "sha256": "0ad60e49f824331b7112393924ed2734df9c9d6a6271fef121f6403a0188e51d",
+  "tree_head": "4c69bc7ec0fd093136e974460ac63d54537166b4",
+  "file_commit": "be75a3e96fd7459e36b1ee8b7ef01f2574e8f068"
  },
  "qwen_source": {
   "root": "/home/ubuntu/wt-qwen-die",
   "ref": "None",
-  "commit": "584098655fbb41eef7c80ef00f7d1fa653b319e1",
+  "commit": "4c69bc7ec0fd093136e974460ac63d54537166b4",
   "overlay": "[]"
  },
  "qwen_recipe": {
@@ -28,16 +28,18 @@
   "m6_strip": 40,
   "slab_group_h": 455.76,
   "cdc": "183.048,183.048",
-  "r18": true
+  "r19": true,
+  "tree_interleave": true,
+  "su_core_clock": true
  },
  "pin_fit_errors": {},
- "lint_tool_sha256": "08e3d8858a78d00142b74d39469fec34a11f2e1591558028cc9cca841d6c5bf7",
+ "lint_tool_sha256": "af11762dbf5e68041c5e6b7a0d16f0d6bc2b4126f13811ba52cc6957c78ec5bf",
  "variant": null,
  "census": {
   "instances": 3334,
-  "buses": 6871,
-  "net_bits": 2795406,
-  "masters": 41,
+  "buses": 8409,
+  "net_bits": 3976078,
+  "masters": 43,
   "real_instances": 132,
   "placeholder_instances": 3202
  },
@@ -145,7 +147,13 @@
    "master": "qfd_kvc",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 4
+   "instances": 2
+  },
+  {
+   "master": "qfd_kvc_n",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
   },
   {
    "master": "qfd_lst_c",
@@ -307,7 +315,13 @@
    "master": "qfd_tile",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 1536
+   "instances": 768
+  },
+  {
+   "master": "qfd_tile_e",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 768
   }
  ],
  "clock_sources": {
@@ -455,7 +469,28 @@
  "top_ports": 0,
  "physical": {
   "missing_pins": [],
-  "face_away": [],
+  "face_away": [
+   {
+    "master": "qfd_io_collective",
+    "port": "vr",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 512,
+    "examples": [
+     "io_collective.vr face S peer 1523 um behind (coll_rx)"
+    ]
+   },
+   {
+    "master": "qfd_io_collective",
+    "port": "vt",
+    "orient": "R0",
+    "endpoints": 1,
+    "bits": 512,
+    "examples": [
+     "io_collective.vt face S peer 1549 um behind (coll_tx_x)"
+    ]
+   }
+  ],
   "pin_spread": [
    {
     "bus": "dfi_WS",
@@ -585,11 +620,11 @@
     "compute": "tile",
     "hub_kind": "io",
     "hub": "io_embedding_rom",
-    "pairs": 24,
+    "pairs": 23,
     "min_gap_um": 0.024,
     "examples": [
-     "t_8_23 / io_embedding_rom gap 0.02 um",
-     "t_9_23 / io_embedding_rom gap 0.02 um"
+     "t_9_23 / io_embedding_rom gap 0.02 um",
+     "t_10_23 / io_embedding_rom gap 0.02 um"
     ]
    },
    {
@@ -847,7 +882,8 @@
   "forwarded_stage_bits": 152064,
   "ot_fwd_link_stage_W512_needed": 416,
   "fifo_placeholders": {
-   "qfd_kvc": 4
+   "qfd_kvc": 2,
+   "qfd_kvc_n": 2
   },
   "decision_C_fifo_slots": {
    "tile_tap": {
@@ -888,13 +924,9 @@
     "buses": 320,
     "bits": 103360
    },
-   "head_chain|domain": {
-    "buses": 2,
-    "bits": 646
-   },
    "head_chain|region": {
-    "buses": 14,
-    "bits": 4522
+    "buses": 16,
+    "bits": 5168
    },
    "link_channel|region": {
     "buses": 24,
@@ -903,6 +935,10 @@
    "link_spine|region": {
     "buses": 5,
     "bits": 6336
+   },
+   "kv_land|region": {
+    "buses": 384,
+    "bits": 294912
    },
    "hbm_cdc|domain": {
     "buses": 256,
@@ -916,21 +952,21 @@
     "buses": 4,
     "bits": 36828
    },
-   "spine_local|domain": {
+   "spine_local|region": {
     "buses": 2,
     "bits": 1024
    },
-   "io|region": {
-    "buses": 3,
-    "bits": 1048
-   },
    "io|domain": {
-    "buses": 9,
-    "bits": 8704
+    "buses": 12,
+    "bits": 10240
+   },
+   "io|region": {
+    "buses": 2,
+    "bits": 536
    },
    "tree_spine|region": {
-    "buses": 101,
-    "bits": 51712
+    "buses": 102,
+    "bits": 52224
    },
    "sequencer|region": {
     "buses": 1,
@@ -939,10 +975,6 @@
    "sequencer|domain": {
     "buses": 2,
     "bits": 132
-   },
-   "tree_spine|domain": {
-    "buses": 1,
-    "bits": 512
    },
    "reset|domain": {
     "buses": 8,
@@ -997,7 +1029,7 @@
  "top_fixes": {},
  "verilog": {
   "top": "qwen_rom_lint_top",
-  "stubs": 39,
+  "stubs": 41,
   "nc_wires": 0,
   "filelist": "qwen_rom_lint_top.f",
   "rtl_files": 1,
