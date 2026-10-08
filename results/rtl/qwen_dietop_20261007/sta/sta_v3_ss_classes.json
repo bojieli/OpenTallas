@@ -1,0 +1,39 @@
+{
+ "total": {
+  "n": 3088411,
+  "viol": 1124207,
+  "worst": -90.23
+ },
+ "by_class": {
+  "qfd_rly|etm": {
+   "n": 2672926,
+   "viol": 1123060,
+   "worst": -90.23
+  },
+  "qfd_chead|etm": {
+   "n": 128,
+   "viol": 127,
+   "worst": -37.95
+  },
+  "qfd_cst|etm": {
+   "n": 413563,
+   "viol": 1020,
+   "worst": -20.02
+  },
+  "qfd_cdc|etm": {
+   "n": 256,
+   "viol": 0,
+   "worst": 50.84
+  },
+  "qfd_io_serdes|assumed": {
+   "n": 1024,
+   "viol": 0,
+   "worst": 266.18
+  },
+  "qfd_sp_vector|assumed": {
+   "n": 514,
+   "viol": 0,
+   "worst": 478.04
+  }
+ }
+}

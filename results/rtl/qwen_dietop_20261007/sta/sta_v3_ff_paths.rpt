@@ -1,0 +1,426 @@
+[WARNING STA-0168] unknown field nets.
+Startpoint: io_serdes (rising edge-triggered flip-flop clocked by serdes)
+Endpoint: rly_serdes_tx_x_19 (rising edge-triggered flip-flop clocked by serdes)
+Path Group: serdes
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock serdes (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ io_serdes/ck[0] (qfd_io_serdes)
+  20.8   24.1   35.8   35.8 v io_serdes/c[701] (qfd_io_serdes)
+         53.7   15.3   51.1 v rly_serdes_tx_x_19/b[701] (qfd_rly_1024_WE_53x60)
+                       51.1   data arrival time
+
+          0.0    0.0    0.0   clock serdes (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ rly_serdes_tx_x_19/ck[0] (qfd_rly_1024_WE_53x60)
+                79.4  -54.4   macro clock tree delay
+               -32.8  -87.2   library hold time
+                      -87.2   data required time
+-------------------------------------------------------------------
+                      -87.2   data required time
+                      -51.1   data arrival time
+-------------------------------------------------------------------
+                      138.3   slack (MET)
+
+
+Startpoint: io_serdes (rising edge-triggered flip-flop clocked by serdes)
+Endpoint: rly_serdes_tx_x_19 (rising edge-triggered flip-flop clocked by serdes)
+Path Group: serdes
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock serdes (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ io_serdes/ck[0] (qfd_io_serdes)
+  20.9   24.2   35.9   35.9 v io_serdes/c[898] (qfd_io_serdes)
+         53.8   15.3   51.2 v rly_serdes_tx_x_19/b[898] (qfd_rly_1024_WE_53x60)
+                       51.2   data arrival time
+
+          0.0    0.0    0.0   clock serdes (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ rly_serdes_tx_x_19/ck[0] (qfd_rly_1024_WE_53x60)
+                79.4  -54.4   macro clock tree delay
+               -32.8  -87.2   library hold time
+                      -87.2   data required time
+-------------------------------------------------------------------
+                      -87.2   data required time
+                      -51.2   data arrival time
+-------------------------------------------------------------------
+                      138.4   slack (MET)
+
+
+Startpoint: io_serdes (rising edge-triggered flip-flop clocked by serdes)
+Endpoint: rly_serdes_tx_x_19 (rising edge-triggered flip-flop clocked by serdes)
+Path Group: serdes
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock serdes (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ io_serdes/ck[0] (qfd_io_serdes)
+  20.8   24.1   35.8   35.8 v io_serdes/c[626] (qfd_io_serdes)
+         54.2   15.5   51.2 v rly_serdes_tx_x_19/b[626] (qfd_rly_1024_WE_53x60)
+                       51.2   data arrival time
+
+          0.0    0.0    0.0   clock serdes (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ rly_serdes_tx_x_19/ck[0] (qfd_rly_1024_WE_53x60)
+                79.4  -54.4   macro clock tree delay
+               -32.8  -87.2   library hold time
+                      -87.2   data required time
+-------------------------------------------------------------------
+                      -87.2   data required time
+                      -51.2   data arrival time
+-------------------------------------------------------------------
+                      138.4   slack (MET)
+
+
+Startpoint: io_serdes (rising edge-triggered flip-flop clocked by serdes)
+Endpoint: rly_serdes_tx_x_19 (rising edge-triggered flip-flop clocked by serdes)
+Path Group: serdes
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock serdes (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ io_serdes/ck[0] (qfd_io_serdes)
+  20.8   22.3   36.2   36.2 v io_serdes/c[1013] (qfd_io_serdes)
+         53.0   15.0   51.3 v rly_serdes_tx_x_19/b[1013] (qfd_rly_1024_WE_53x60)
+                       51.3   data arrival time
+
+          0.0    0.0    0.0   clock serdes (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ rly_serdes_tx_x_19/ck[0] (qfd_rly_1024_WE_53x60)
+                79.4  -54.4   macro clock tree delay
+               -32.8  -87.2   library hold time
+                      -87.2   data required time
+-------------------------------------------------------------------
+                      -87.2   data required time
+                      -51.3   data arrival time
+-------------------------------------------------------------------
+                      138.4   slack (MET)
+
+
+Startpoint: io_serdes (rising edge-triggered flip-flop clocked by serdes)
+Endpoint: rly_serdes_tx_x_19 (rising edge-triggered flip-flop clocked by serdes)
+Path Group: serdes
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock serdes (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ io_serdes/ck[0] (qfd_io_serdes)
+  20.8   24.1   35.8   35.8 v io_serdes/c[1014] (qfd_io_serdes)
+         54.4   15.5   51.3 v rly_serdes_tx_x_19/b[1014] (qfd_rly_1024_WE_53x60)
+                       51.3   data arrival time
+
+          0.0    0.0    0.0   clock serdes (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ rly_serdes_tx_x_19/ck[0] (qfd_rly_1024_WE_53x60)
+                79.4  -54.4   macro clock tree delay
+               -32.8  -87.2   library hold time
+                      -87.2   data required time
+-------------------------------------------------------------------
+                      -87.2   data required time
+                      -51.3   data arrival time
+-------------------------------------------------------------------
+                      138.5   slack (MET)
+
+
+Startpoint: rly_coll_rx_39 (rising edge-triggered flip-flop clocked by serial)
+Endpoint: sp_vector_memory (rising edge-triggered flip-flop clocked by serial)
+Path Group: serial
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock serial (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ rly_coll_rx_39/ck[0] (qfd_rly_512_NW_53x30)
+  31.6   24.9  181.3  181.3 ^ rly_coll_rx_39/b[480] (qfd_rly_512_NW_53x30)
+         94.6   28.5  209.8 ^ sp_vector_memory/cr[480] (qfd_sp_vector_memory)
+                      209.8   data arrival time
+
+          0.0    0.0    0.0   clock serial (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ sp_vector_memory/ck[0] (qfd_sp_vector_memory)
+                21.5   46.5   library hold time
+                       46.5   data required time
+-------------------------------------------------------------------
+                       46.5   data required time
+                     -209.8   data arrival time
+-------------------------------------------------------------------
+                      163.4   slack (MET)
+
+
+Startpoint: rly_coll_rx_39 (rising edge-triggered flip-flop clocked by serial)
+Endpoint: sp_vector_memory (rising edge-triggered flip-flop clocked by serial)
+Path Group: serial
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock serial (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ rly_coll_rx_39/ck[0] (qfd_rly_512_NW_53x30)
+  31.6   24.9  181.3  181.3 ^ rly_coll_rx_39/b[479] (qfd_rly_512_NW_53x30)
+         94.6   28.5  209.9 ^ sp_vector_memory/cr[479] (qfd_sp_vector_memory)
+                      209.9   data arrival time
+
+          0.0    0.0    0.0   clock serial (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ sp_vector_memory/ck[0] (qfd_sp_vector_memory)
+                21.5   46.5   library hold time
+                       46.5   data required time
+-------------------------------------------------------------------
+                       46.5   data required time
+                     -209.9   data arrival time
+-------------------------------------------------------------------
+                      163.4   slack (MET)
+
+
+Startpoint: rly_coll_rx_39 (rising edge-triggered flip-flop clocked by serial)
+Endpoint: sp_vector_memory (rising edge-triggered flip-flop clocked by serial)
+Path Group: serial
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock serial (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ rly_coll_rx_39/ck[0] (qfd_rly_512_NW_53x30)
+  31.6   24.9  181.3  181.3 ^ rly_coll_rx_39/b[478] (qfd_rly_512_NW_53x30)
+         94.6   28.6  209.9 ^ sp_vector_memory/cr[478] (qfd_sp_vector_memory)
+                      209.9   data arrival time
+
+          0.0    0.0    0.0   clock serial (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ sp_vector_memory/ck[0] (qfd_sp_vector_memory)
+                21.5   46.5   library hold time
+                       46.5   data required time
+-------------------------------------------------------------------
+                       46.5   data required time
+                     -209.9   data arrival time
+-------------------------------------------------------------------
+                      163.4   slack (MET)
+
+
+Startpoint: rly_coll_rx_39 (rising edge-triggered flip-flop clocked by serial)
+Endpoint: sp_vector_memory (rising edge-triggered flip-flop clocked by serial)
+Path Group: serial
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock serial (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ rly_coll_rx_39/ck[0] (qfd_rly_512_NW_53x30)
+  31.6   24.9  181.3  181.3 ^ rly_coll_rx_39/b[477] (qfd_rly_512_NW_53x30)
+         94.7   28.6  209.9 ^ sp_vector_memory/cr[477] (qfd_sp_vector_memory)
+                      209.9   data arrival time
+
+          0.0    0.0    0.0   clock serial (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ sp_vector_memory/ck[0] (qfd_sp_vector_memory)
+                21.5   46.5   library hold time
+                       46.5   data required time
+-------------------------------------------------------------------
+                       46.5   data required time
+                     -209.9   data arrival time
+-------------------------------------------------------------------
+                      163.4   slack (MET)
+
+
+Startpoint: rly_coll_rx_39 (rising edge-triggered flip-flop clocked by serial)
+Endpoint: sp_vector_memory (rising edge-triggered flip-flop clocked by serial)
+Path Group: serial
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock serial (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ rly_coll_rx_39/ck[0] (qfd_rly_512_NW_53x30)
+  31.6   24.9  181.3  181.3 ^ rly_coll_rx_39/b[481] (qfd_rly_512_NW_53x30)
+         94.7   28.6  209.9 ^ sp_vector_memory/cr[481] (qfd_sp_vector_memory)
+                      209.9   data arrival time
+
+          0.0    0.0    0.0   clock serial (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ sp_vector_memory/ck[0] (qfd_sp_vector_memory)
+                21.5   46.5   library hold time
+                       46.5   data required time
+-------------------------------------------------------------------
+                       46.5   data required time
+                     -209.9   data arrival time
+-------------------------------------------------------------------
+                      163.4   slack (MET)
+
+
+Startpoint: lfifo_WS (rising edge-triggered flip-flop clocked by stream)
+Endpoint: t_0_0 (rising edge-triggered flip-flop clocked by stream)
+Path Group: stream
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock stream (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ lfifo_WS/ck[0] (qfd_kvc)
+   1.1   10.7   32.4   32.4 ^ lfifo_WS/r0[194] (qfd_kvc)
+         10.7    0.1   32.4 ^ t_0_0/li[194] (qfd_tile)
+                       32.4   data arrival time
+
+          0.0    0.0    0.0   clock stream (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ t_0_0/ck[0] (qfd_tile)
+                13.1   38.1   library hold time
+                       38.1   data required time
+-------------------------------------------------------------------
+                       38.1   data required time
+                      -32.4   data arrival time
+-------------------------------------------------------------------
+                       -5.6   slack (VIOLATED)
+
+
+Startpoint: lfifo_WS (rising edge-triggered flip-flop clocked by stream)
+Endpoint: t_0_0 (rising edge-triggered flip-flop clocked by stream)
+Path Group: stream
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock stream (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ lfifo_WS/ck[0] (qfd_kvc)
+   1.1   10.7   32.4   32.4 ^ lfifo_WS/r0[294] (qfd_kvc)
+         10.7    0.1   32.4 ^ t_0_0/li[294] (qfd_tile)
+                       32.4   data arrival time
+
+          0.0    0.0    0.0   clock stream (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ t_0_0/ck[0] (qfd_tile)
+                13.1   38.1   library hold time
+                       38.1   data required time
+-------------------------------------------------------------------
+                       38.1   data required time
+                      -32.4   data arrival time
+-------------------------------------------------------------------
+                       -5.6   slack (VIOLATED)
+
+
+Startpoint: lfifo_WS (rising edge-triggered flip-flop clocked by stream)
+Endpoint: t_0_0 (rising edge-triggered flip-flop clocked by stream)
+Path Group: stream
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock stream (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ lfifo_WS/ck[0] (qfd_kvc)
+   1.1   10.7   32.4   32.4 ^ lfifo_WS/r0[394] (qfd_kvc)
+         10.7    0.1   32.4 ^ t_0_0/li[394] (qfd_tile)
+                       32.4   data arrival time
+
+          0.0    0.0    0.0   clock stream (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ t_0_0/ck[0] (qfd_tile)
+                13.1   38.1   library hold time
+                       38.1   data required time
+-------------------------------------------------------------------
+                       38.1   data required time
+                      -32.4   data arrival time
+-------------------------------------------------------------------
+                       -5.6   slack (VIOLATED)
+
+
+Startpoint: lfifo_WS (rising edge-triggered flip-flop clocked by stream)
+Endpoint: t_0_0 (rising edge-triggered flip-flop clocked by stream)
+Path Group: stream
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock stream (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ lfifo_WS/ck[0] (qfd_kvc)
+   1.1   10.7   32.4   32.4 ^ lfifo_WS/r0[494] (qfd_kvc)
+         10.7    0.1   32.4 ^ t_0_0/li[494] (qfd_tile)
+                       32.4   data arrival time
+
+          0.0    0.0    0.0   clock stream (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ t_0_0/ck[0] (qfd_tile)
+                13.1   38.1   library hold time
+                       38.1   data required time
+-------------------------------------------------------------------
+                       38.1   data required time
+                      -32.4   data arrival time
+-------------------------------------------------------------------
+                       -5.6   slack (VIOLATED)
+
+
+Startpoint: lfifo_WS (rising edge-triggered flip-flop clocked by stream)
+Endpoint: t_0_0 (rising edge-triggered flip-flop clocked by stream)
+Path Group: stream
+Path Type: min
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+          0.0    0.0    0.0   clock stream (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+          0.0    0.0    0.0 ^ lfifo_WS/ck[0] (qfd_kvc)
+   1.1   10.7   32.4   32.4 ^ lfifo_WS/r0[594] (qfd_kvc)
+         10.7    0.1   32.4 ^ t_0_0/li[594] (qfd_tile)
+                       32.4   data arrival time
+
+          0.0    0.0    0.0   clock stream (rise edge)
+                 0.0    0.0   clock network delay (ideal)
+                25.0   25.0   clock uncertainty
+                 0.0   25.0   clock reconvergence pessimism
+                       25.0 ^ t_0_0/ck[0] (qfd_tile)
+                13.1   38.1   library hold time
+                       38.1   data required time
+-------------------------------------------------------------------
+                       38.1   data required time
+                      -32.4   data arrival time
+-------------------------------------------------------------------
+                       -5.6   slack (VIOLATED)
+
+

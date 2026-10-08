@@ -1,0 +1,39 @@
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   690047789      489328824          29.09%
+M5         Vertical     739563648      523373025          29.23%
+M6         Horizontal   638797268      604313617          5.40%
+M7         Vertical     628371642      594157123          5.44%
+M8         Horizontal   1910737505      1806953213          5.43%
+M9         Vertical     1908949616      1802035648          5.60%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0197] Via related to pin nodes: 17829127
+[INFO GRT-0198] Via related Steiner nodes: 0
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 30993161
+[INFO GRT-0112] Final usage 3D: 529086994
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           489328824       18071717            3.69%             0 /  0 /  0
+M5           523373025       165253121           31.57%             0 /  0 /  0
+M6           604313617       7020334            1.16%             0 /  0 /  0
+M7           594157123       71006299           11.95%             0 /  0 /  0
+M8           1806953213       128298843            7.10%             0 /  0 /  0
+M9           1802035648       46457197            2.58%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total        1525194154       436107511           28.59%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 2163696417 um
+[INFO GRT-0014] Routed nets: 8057897
+[INFO GRT-0303] Global routing runtime = 00:52:39

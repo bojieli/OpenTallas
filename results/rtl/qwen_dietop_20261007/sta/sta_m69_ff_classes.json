@@ -1,0 +1,59 @@
+{
+ "total": {
+  "n": 3088411,
+  "viol": 794428,
+  "worst": -5.84
+ },
+ "by_class": {
+  "qfd_tile|assumed": {
+   "n": 2845293,
+   "viol": 794428,
+   "worst": -5.84
+  },
+  "qfd_kvc|assumed": {
+   "n": 37506,
+   "viol": 0,
+   "worst": 55.76
+  },
+  "qfd_cdc|etm": {
+   "n": 35688,
+   "viol": 0,
+   "worst": 108.05
+  },
+  "qfd_rly|etm": {
+   "n": 164735,
+   "viol": 0,
+   "worst": 119.58
+  },
+  "qfd_cst|etm": {
+   "n": 1536,
+   "viol": 0,
+   "worst": 119.63
+  },
+  "qfd_io_serdes|assumed": {
+   "n": 1024,
+   "viol": 0,
+   "worst": 136.19
+  },
+  "qfd_sp_vector|assumed": {
+   "n": 514,
+   "viol": 0,
+   "worst": 137.39
+  },
+  "qfd_sp_tree|assumed": {
+   "n": 2048,
+   "viol": 0,
+   "worst": 138.09
+  },
+  "qfd_io_xfifo|assumed": {
+   "n": 65,
+   "viol": 0,
+   "worst": 142.73
+  },
+  "qfd_sp_constants|assumed": {
+   "n": 2,
+   "viol": 0,
+   "worst": 162.96
+  }
+ }
+}
