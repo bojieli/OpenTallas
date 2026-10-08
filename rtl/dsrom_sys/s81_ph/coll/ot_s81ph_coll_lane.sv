@@ -1,4 +1,18 @@
 `timescale 1ns/1ps
+`ifndef OT_S81PH_GFMT_DEF
+`ifdef OT_S81PH_GBX_FMT1
+`define OT_S81PH_GFMT_DEF 1
+`else
+`define OT_S81PH_GFMT_DEF 0
+`endif
+`endif
+`ifndef OT_S81PH_EPPIPE_DEF
+`ifdef OT_S81PH_EP_PIPE2
+`define OT_S81PH_EPPIPE_DEF 2
+`else
+`define OT_S81PH_EPPIPE_DEF -1
+`endif
+`endif
 // ---------------------------------------------------------------------------------------------------------------
 // ot_s81ph_coll_lane -- one link lane TILE of the S81 collective slab (CLAUDE S81-PH coll v2, redesign pass).
 // coll_m1 (the whole slab, 156k flops, 104 macros, ~1M nets) stayed 7 h in timing-driven global placement; the slab
@@ -98,14 +112,14 @@ module ot_s81ph_coll_lane #(
 endmodule
 
 // tile tops (pin plans differ: W lanes face the slab's W edge, E lanes the E edge)
-module dsfd_coll_lane_w #(parameter integer GFMT = 0, parameter integer EPPIPE = -1) (
+module dsfd_coll_lane_w #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
     ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
-module dsfd_coll_lane_e #(parameter integer GFMT = 0, parameter integer EPPIPE = -1) (
+module dsfd_coll_lane_e #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
