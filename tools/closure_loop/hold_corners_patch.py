@@ -21,7 +21,7 @@ CODE = r'''    _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
         # own constraints (tools/orfs_hold_mm.tcl, patched into the flow container by tools/orfs_hold_mm.py)
         _ot_p = args.orfs_corner or (args.hold_corners or "WC").split(",")[0].strip()
         args.hold_corners = ",".join(dict.fromkeys([_ot_p, "BC"]))
-        args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1"]
+        args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1", f"OT_MM_SETUP_CORNER={_ot_p}"]
         _ot_ff = " ".join(("/src/" + f.lstrip("/")) if not f.startswith("/src/") else f
                           for f in os.environ.get("OT_MM_FF_SDC", "").split() if f)
         if _ot_ff:
@@ -63,6 +63,21 @@ DOCKER_ANCHOR = '"python3 /src/tools/orfs_allcorner_spef.py "'
 DOCKER_MM = '"python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && "\n            '
 
 
+TC_MARK = "OT_ORFS_CORNER_OVERRIDE"
+TC_CODE = r'''    # OPTION B (shipped by hold_corners_patch into snapshots pinned before 852d9b461 / c10b5fc9a): OT_ORFS_CORNER_OVERRIDE
+    # (alias OT_ORFS_CORNER) turns --orfs-corner WC / --hold-corners WC,BC into TC / TC,BC (setup repair at TT, FF hold).
+    _ot_cov = (os.environ.get("OT_ORFS_CORNER_OVERRIDE", "") or os.environ.get("OT_ORFS_CORNER", "")).strip().upper()
+    if _ot_cov:
+        _ot_prev = args.orfs_corner or "WC"
+        args.orfs_corner = _ot_cov
+        if args.hold_corners:
+            args.hold_corners = ",".join(dict.fromkeys(_ot_cov if c.strip().upper() in ("WC", _ot_prev) else c.strip()
+                                                       for c in args.hold_corners.split(",")))
+        args.orfs_var = list(args.orfs_var or []) + [f"OT_MM_SETUP_CORNER={_ot_cov}"]
+        print(f"OT_ORFS_CORNER_OVERRIDE={_ot_cov}: orfs corner {args.orfs_corner}, hold corners {args.hold_corners}",
+              file=sys.stderr)
+'''
+
 
 def patch(src):
     f = Path(src) / "tools/run_abi3_physical.py"
@@ -86,6 +101,10 @@ def patch(src):
             shutil.copy2(f, f.with_suffix(".py.pre_holdcorners"))
         s = s.replace(ANCHOR, ANCHOR + CODE)
         msg.append(f"patched {f}")
+    # option B: TC routing for snapshots that predate it (must run before the mm block, which reads args.orfs_corner)
+    if TC_MARK not in s and "OT_ORFS_CORNER\"" not in s and s.count(ANCHOR) == 1:
+        s = s.replace(ANCHOR, ANCHOR + TC_CODE)
+        msg.append("option-B TC corner override added")
     # the flow container patch (inert unless the config exports OT_HOLD_MM=1)
     if "orfs_hold_mm.py /OpenROAD-flow-scripts" not in s:
         if s.count(DOCKER_ANCHOR) == 1:
