@@ -1,0 +1,346 @@
+{
+ "schema": "opentallas.hbm_contracts_gate.v1",
+ "suite": "pktr",
+ "simulator": "verilator",
+ "status": "PASS",
+ "commit": "",
+ "source_sha256": {
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+  "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+  "rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo_ii1r.sv": "482e30364eaab6c588687b8ddaab8ecffe8d86e2e3dd671f6430df979c52d730",
+  "rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv": "065538222192fd7ca209dcb9fad47a5e626828b5f6e114e6bc9f7d7197563c67"
+ },
+ "cases": [
+  {
+   "name": "pktr_depth256",
+   "expect": "pass",
+   "returncode": 0,
+   "marker": true,
+   "verdict": "OK",
+   "params": {},
+   "defines": [],
+   "mutation": null,
+   "build": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "4",
+    "-Wno-fatal",
+    "-Wno-lint",
+    "-Wno-style",
+    "--top-module",
+    "tb_packet_fifo_ii1r",
+    "--Mdir",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/pktr_depth256/obj",
+    "-o",
+    "sim",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo_ii1r.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv"
+   ],
+   "log_tail": "PASS_II1R depth=256 ocr=8 wreg=0 cycles=20276 order/count/credit/II1-drain/stream/wrap/reset/single/double/raw2/control/overflow\n- /srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv:120: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01\n- Verilator: $finish at 203us; walltime 0.870 s; speed 232.705 us/s\n- Verilator: cpu 0.873 s on 1 threads; alloced 508 MB\n"
+  },
+  {
+   "name": "pktr_depth256_wreg",
+   "expect": "pass",
+   "returncode": 0,
+   "marker": true,
+   "verdict": "OK",
+   "params": {
+    "WREG": 1
+   },
+   "defines": [],
+   "mutation": null,
+   "build": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "4",
+    "-Wno-fatal",
+    "-Wno-lint",
+    "-Wno-style",
+    "--top-module",
+    "tb_packet_fifo_ii1r",
+    "--Mdir",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/pktr_depth256_wreg/obj",
+    "-o",
+    "sim",
+    "-GWREG=1",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo_ii1r.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv"
+   ],
+   "log_tail": "PASS_II1R depth=256 ocr=8 wreg=1 cycles=20277 order/count/credit/II1-drain/stream/wrap/reset/single/double/raw2/control/overflow\n- /srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv:120: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01\n- Verilator: $finish at 203us; walltime 0.894 s; speed 226.602 us/s\n- Verilator: cpu 0.896 s on 1 threads; alloced 508 MB\n"
+  },
+  {
+   "name": "pktr_depth64",
+   "expect": "pass",
+   "returncode": 0,
+   "marker": true,
+   "verdict": "OK",
+   "params": {
+    "DEPTH": 64
+   },
+   "defines": [],
+   "mutation": null,
+   "build": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "4",
+    "-Wno-fatal",
+    "-Wno-lint",
+    "-Wno-style",
+    "--top-module",
+    "tb_packet_fifo_ii1r",
+    "--Mdir",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/pktr_depth64/obj",
+    "-o",
+    "sim",
+    "-GDEPTH=64",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo_ii1r.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv"
+   ],
+   "log_tail": "PASS_II1R depth=64 ocr=8 wreg=0 cycles=18740 order/count/credit/II1-drain/stream/wrap/reset/single/double/raw2/control/overflow\n- /srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv:120: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01\n- Verilator: $finish at 188us; walltime 0.776 s; speed 240.956 us/s\n- Verilator: cpu 0.779 s on 1 threads; alloced 508 MB\n"
+  },
+  {
+   "name": "NEG_pktr_no_correction",
+   "expect": "fail",
+   "returncode": -6,
+   "marker": false,
+   "verdict": "OK",
+   "params": {
+    "DEPTH": 64
+   },
+   "defines": [],
+   "mutation": [
+    "rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo_ii1r.sv",
+    "correct64[j]=code[p-1]^(ovr&&syn==p[6:0]);",
+    "correct64[j]=code[p-1];"
+   ],
+   "build": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "4",
+    "-Wno-fatal",
+    "-Wno-lint",
+    "-Wno-style",
+    "--top-module",
+    "tb_packet_fifo_ii1r",
+    "--Mdir",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_no_correction/obj",
+    "-o",
+    "sim",
+    "-GDEPTH=64",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_no_correction/mutant_ot_hbm_collective_packet_fifo_ii1r.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv"
+   ],
+   "log_tail": "[185840000] %Fatal: tb_packet_fifo_ii1r.sv:41: Assertion failed in tb_packet_fifo_ii1r.edge_step: DATA order mismatch 8\n%Error: /srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv:41: Verilog $stop\nAborting...\n"
+  },
+  {
+   "name": "NEG_pktr_ready_reserve_1",
+   "expect": "fail",
+   "returncode": -6,
+   "marker": false,
+   "verdict": "OK",
+   "params": {
+    "DEPTH": 64
+   },
+   "defines": [],
+   "mutation": [
+    "rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo_ii1r.sv",
+    "RSV=DEPTH-2;",
+    "RSV=DEPTH-1;"
+   ],
+   "build": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "4",
+    "-Wno-fatal",
+    "-Wno-lint",
+    "-Wno-style",
+    "--top-module",
+    "tb_packet_fifo_ii1r",
+    "--Mdir",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_ready_reserve_1/obj",
+    "-o",
+    "sim",
+    "-GDEPTH=64",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_ready_reserve_1/mutant_ot_hbm_collective_packet_fifo_ii1r.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv"
+   ],
+   "log_tail": "[786000] %Fatal: tb_packet_fifo_ii1r.sv:36: Assertion failed in tb_packet_fifo_ii1r.edge_step: COUNT mismatch got 64 expected 65\n%Error: /srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv:36: Verilog $stop\nAborting...\n"
+  },
+  {
+   "name": "NEG_pktr_fetch_ignores_credit",
+   "expect": "fail",
+   "returncode": -6,
+   "marker": false,
+   "verdict": "OK",
+   "params": {
+    "DEPTH": 64
+   },
+   "defines": [],
+   "mutation": [
+    "rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo_ii1r.sv",
+    "wire fetch=readable&&ocr_nz&&!fault_q;",
+    "wire fetch=readable&&!fault_q;"
+   ],
+   "build": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "4",
+    "-Wno-fatal",
+    "-Wno-lint",
+    "-Wno-style",
+    "--top-module",
+    "tb_packet_fifo_ii1r",
+    "--Mdir",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_fetch_ignores_credit/obj",
+    "-o",
+    "sim",
+    "-GDEPTH=64",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_fetch_ignores_credit/mutant_ot_hbm_collective_packet_fifo_ii1r.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv"
+   ],
+   "log_tail": "[155000] %Fatal: mutant_ot_hbm_collective_packet_fifo_ii1r.sv:127: Assertion failed in tb_packet_fifo_ii1r.dut: PKT_CREDIT credit count out of range (return beyond OCR=8 or fetch without credit)\n%Error: /srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_fetch_ignores_credit/mutant_ot_hbm_collective_packet_fifo_ii1r.sv:127: Verilog $stop\nAborting...\n"
+  },
+  {
+   "name": "NEG_pktr_wreg_reads_unwritten",
+   "expect": "fail",
+   "returncode": -6,
+   "marker": false,
+   "verdict": "OK",
+   "params": {
+    "DEPTH": 64,
+    "WREG": 1
+   },
+   "defines": [],
+   "mutation": [
+    "rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo_ii1r.sv",
+    "wire readable=WREG?(c_unread>{8'b0,w_ce_q}):(c_unread!=9'd0);",
+    "wire readable=c_unread!=9'd0;"
+   ],
+   "build": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "4",
+    "-Wno-fatal",
+    "-Wno-lint",
+    "-Wno-style",
+    "--top-module",
+    "tb_packet_fifo_ii1r",
+    "--Mdir",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_wreg_reads_unwritten/obj",
+    "-o",
+    "sim",
+    "-GDEPTH=64",
+    "-GWREG=1",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_wreg_reads_unwritten/mutant_ot_hbm_collective_packet_fifo_ii1r.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv"
+   ],
+   "log_tail": "[1170000] %Fatal: tb_packet_fifo_ii1r.sv:41: Assertion failed in tb_packet_fifo_ii1r.edge_step: DATA order mismatch 0\n%Error: /srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv:41: Verilog $stop\nAborting...\n"
+  },
+  {
+   "name": "NEG_pktr_ocr4_rate",
+   "expect": "fail",
+   "returncode": -6,
+   "marker": false,
+   "verdict": "OK",
+   "params": {
+    "DEPTH": 64,
+    "OCR": 4,
+    "CB": 4
+   },
+   "defines": [],
+   "mutation": null,
+   "build": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "4",
+    "-Wno-fatal",
+    "-Wno-lint",
+    "-Wno-style",
+    "--top-module",
+    "tb_packet_fifo_ii1r",
+    "--Mdir",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_ocr4_rate/obj",
+    "-o",
+    "sim",
+    "-GDEPTH=64",
+    "-GOCR=4",
+    "-GCB=4",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo_ii1r.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv"
+   ],
+   "log_tail": "[2120000] %Fatal: tb_packet_fifo_ii1r.sv:64: Assertion failed in tb_packet_fifo_ii1r: II1 drain: longest back-to-back delivery 4 < 64\n%Error: /srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv:64: Verilog $stop\nAborting...\n"
+  },
+  {
+   "name": "NEG_pktr_no_raw2_parity",
+   "expect": "fail",
+   "returncode": -6,
+   "marker": false,
+   "verdict": "OK",
+   "params": {
+    "DEPTH": 64
+   },
+   "defines": [],
+   "mutation": [
+    "rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo_ii1r.sv",
+    "wire f3=v3&&(ue_q||(par2!=ovr_q)||(|corr[575:545]));",
+    "wire f3=v3&&(ue_q||(|corr[575:545]));"
+   ],
+   "build": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "4",
+    "-Wno-fatal",
+    "-Wno-lint",
+    "-Wno-style",
+    "--top-module",
+    "tb_packet_fifo_ii1r",
+    "--Mdir",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_no_raw2_parity/obj",
+    "-o",
+    "sim",
+    "-GDEPTH=64",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/gate_pkt/NEG_pktr_no_raw2_parity/mutant_ot_hbm_collective_packet_fifo_ii1r.sv",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv"
+   ],
+   "log_tail": "[186456000] %Fatal: tb_packet_fifo_ii1r.sv:103: Assertion failed in tb_packet_fifo_ii1r: raw2 upset escaped\n%Error: /srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/bench_src_a1/rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_ii1r.sv:103: Verilog $stop\nAborting...\n"
+  }
+ ],
+ "positives": 3,
+ "negatives": 6
+}
