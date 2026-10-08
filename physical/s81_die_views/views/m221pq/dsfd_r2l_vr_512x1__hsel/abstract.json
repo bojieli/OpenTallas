@@ -1,6 +1,6 @@
 {
   "name": "dsfd_r2l_vr_512x1__hsel",
-  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hsel-c206a1ac1-mm/routes/s81_hend_m221pq_hsel_c206a1ac1_mm/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hsel-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_hsel_pinreg_f1b64667d_tt/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,11 +10,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hsel-c206a1ac1-mm/routes/s81_hend_m221pq_hsel_c206a1ac1_mm/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hsel-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_hsel_pinreg_f1b64667d_tt/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hsel-c206a1ac1-mm/record:/out",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hsel-pinreg-f1b64667d-tt/record:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hsel-c206a1ac1-mm/abs_tmp:/tmp",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hsel-pinreg-f1b64667d-tt/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -32,11 +32,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hsel-c206a1ac1-mm/routes/s81_hend_m221pq_hsel_c206a1ac1_mm/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hsel-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_hsel_pinreg_f1b64667d_tt/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hsel-c206a1ac1-mm/record:/out",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hsel-pinreg-f1b64667d-tt/record:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hsel-c206a1ac1-mm/abs_tmp:/tmp",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hsel-pinreg-f1b64667d-tt/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -49,9 +49,9 @@
   },
   "macro_views": [],
   "files": {
-    "dsfd_r2l_vr_512x1__hsel.lef": "29cbef521f48c9a84e891e6434eb21346169aff5a9c5fb4321574f13448b6b0f",
-    "dsfd_r2l_vr_512x1__hsel_ff.lib": "d8ab613ac8614acddeaab29f89fccd019698f439cd934e85c3c44b7dd7721b40",
-    "dsfd_r2l_vr_512x1__hsel_ss.lib": "ebb30c426c084bc8365dc215ee654bec1bae426417d4ad10157ef8acf6bd488f"
+    "dsfd_r2l_vr_512x1__hsel.lef": "fd9242f2c77f969211273e4736fa54ca26a9c9c28ee5d43e49e8a0b42cd30a83",
+    "dsfd_r2l_vr_512x1__hsel_ff.lib": "6eb6cc2f513239e412a2b45399ccebf8d04bc1619c3dd6472dc832c3d817b9a2",
+    "dsfd_r2l_vr_512x1__hsel_ss.lib": "624099648d537e32a95e77dc2981eb783e75d7a09b33073bce098f6f3ce0bcdc"
   },
   "ok": true
 }

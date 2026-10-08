@@ -1,0 +1,57 @@
+{
+  "name": "ot_dsrom_window_column_256",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-f1b64667d-tt/routes/wcol256_pinreg_f1b64667d_tt/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-f1b64667d-tt/routes/wcol256_pinreg_f1b64667d_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-f1b64667d-tt/routes/wcol256_pinreg_f1b64667d_tt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-f1b64667d-tt/routes/wcol256_pinreg_f1b64667d_tt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-f1b64667d-tt/routes/wcol256_pinreg_f1b64667d_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-f1b64667d-tt/routes/wcol256_pinreg_f1b64667d_tt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-f1b64667d-tt/routes/wcol256_pinreg_f1b64667d_tt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_dsrom_window_column_256.lef": "f2111317daf7cc9d1a771623abde4d4ed41f3e10249b3da4b812271fc0532199",
+    "ot_dsrom_window_column_256_ff.lib": "8ac68404e9d506868e0a6fa42a397c2a3799aca839e046c5785446cd0c6a734e",
+    "ot_dsrom_window_column_256_ss.lib": "1f25851e44d478733f58a33ece10baf770e1320d03a0cc8cfee40ea379fb04cd"
+  },
+  "ok": true
+}

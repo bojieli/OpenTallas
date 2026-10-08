@@ -1,6 +1,6 @@
 {
   "name": "dsfd_r2l_vr_512x1__hcol",
-  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/routes/s81_hend_m221pq_hcol_c206a1ac1_mm/work/orfs",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-hcol-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_hcol_pinreg_f1b64667d_tt/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,11 +10,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/routes/s81_hend_m221pq_hcol_c206a1ac1_mm/work/orfs:/in:ro",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-hcol-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_hcol_pinreg_f1b64667d_tt/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/record:/out",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-hcol-pinreg-f1b64667d-tt/record:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/abs_tmp:/tmp",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-hcol-pinreg-f1b64667d-tt/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -32,11 +32,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/routes/s81_hend_m221pq_hcol_c206a1ac1_mm/work/orfs:/in:ro",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-hcol-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_hcol_pinreg_f1b64667d_tt/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/record:/out",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-hcol-pinreg-f1b64667d-tt/record:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/abs_tmp:/tmp",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-hcol-pinreg-f1b64667d-tt/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -49,9 +49,9 @@
   },
   "macro_views": [],
   "files": {
-    "dsfd_r2l_vr_512x1__hcol.lef": "4c53e2554498b78c371f696bbc82115f9e4da6db8769652b32f32446a4d0c70e",
-    "dsfd_r2l_vr_512x1__hcol_ff.lib": "7be21474a0ef3cbcf63ca7ffa81c02c353ddc79a3b101ded35cc0ee93d8739f3",
-    "dsfd_r2l_vr_512x1__hcol_ss.lib": "2d0c892e889096fd0cf4c3e7889b624b2c9071433efd8a10bd08190a9521bb53"
+    "dsfd_r2l_vr_512x1__hcol.lef": "7a9f3515bef54b3292980434fab5926c3ab054198e76b5812642cdf5f8281132",
+    "dsfd_r2l_vr_512x1__hcol_ff.lib": "52a2c9dcf467b0e69c1acd19f54918b7357bf8deb5f3dd0e85439925115a70df",
+    "dsfd_r2l_vr_512x1__hcol_ss.lib": "28946dc37b2d25fdb77e616b54aae7207965b75a518a01ad0b13d9b80b56c3de"
   },
   "ok": true
 }

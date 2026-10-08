@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_r2l_vr_1024x1__ha_SW",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_ha_SW_pinreg_f1b64667d_tt/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_ha_SW_pinreg_f1b64667d_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt/record:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_ha_SW_pinreg_f1b64667d_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt/record:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_r2l_vr_1024x1__ha_SW.lef": "0d407cfdb369bb9bc07ee2ad7d1908bde597d8ead0d38de2624153d794289e02",
+    "dsfd_r2l_vr_1024x1__ha_SW_ff.lib": "71f30eb527e0b4cc54c5dde3f834bd6d79b258f877e7caa4ebc5c06a000a3add",
+    "dsfd_r2l_vr_1024x1__ha_SW_ss.lib": "fc327cf152ec61b514e4ba398702048da1bb34748034aa16657edb02ce9ac7cb"
+  },
+  "ok": true
+}
