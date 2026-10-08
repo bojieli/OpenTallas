@@ -7,6 +7,7 @@ closure-loop job directory is rescanned every 10 s with an mtime cache.
 
 Endpoints (bind 127.0.0.1:8765 by default):
   /                 the page            /api/fleet   JSON snapshot
+  /replay?from=&to=&speed=   the same page playing a recorded window (/api/replay serves the data)
   /api/stream       server-sent events (latest history point only; /api/fleet
                     carries the full 60-minute history)
 Internal view is the default: real host aliases, job and block names, slacks
@@ -14,9 +15,10 @@ and the live job table (/api/jobs). `?safe=1` gives the share-safe view (labels
 and generic categories only); requests that arrive through a proxy (forwarding
 headers) or from a non-loopback address are always served share-safe.
 """
-import collections, datetime, json, os, pathlib, re, subprocess, sys, threading, time
+import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
+import recorder
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads((HERE / 'fleet_hosts.json').read_text())
@@ -126,8 +128,12 @@ def _num(x):
     try: return float(x)
     except (TypeError, ValueError): return None
 
+CHECKS_RX = re.compile(r'(?<![\w-])checks? failed:\s*([A-Za-z_][\w.]*(?:\s*,\s*[A-Za-z_][\w.]*)*)')
+
 def classify(status, setup, hold, text):
     if status in ('CLOSED', 'SMOKE_OK'): return 'closed'
+    if CHECKS_RX.search(text) and not ((setup is not None and setup < 0) or (hold is not None and hold < 0)):
+        return 'check'   # slacks met, a sign-off check failed: not a timing failure
     if (setup is not None and setup < 0) or (hold is not None and hold < 0) or status == 'NEEDS_BUDGET': return 'timing'
     return 'flow'
 
@@ -141,7 +147,7 @@ def verdict(t, name, block, status, text, host, detail, job):
     if status == 'CLOSED': why = re.sub(r'^SS \S+ / FF \S+ ps DRC \d+ \|?\s*', '', why)
     return dict(t=t, name=name, block=block, status=status, why=why[:400], detail=(detail or '')[:300], host=host,
                 setup=setup, hold=hold, drc=drc, corner='TT' if tt else 'SS', target=('TT' if tt else 'SS') + '>=0 / FF>=0',
-                kind=classify(status, setup, hold, text), cat=job['cat'] if job else 'Other')
+                kind=classify(status, setup, hold, text), check=(lambda m: m.group(1).strip()[:160] if m else '')(CHECKS_RX.search(text)), cat=job['cat'] if job else 'Other')
 
 class Closures:
     def __init__(self):
@@ -274,6 +280,50 @@ def build(safe):
                           closed_hourly=cl.get('closed_hourly', dict(start=0, bins={}))),
                 vver=None if safe else CLOSURES.vver, hist_hosts=HIST_HOSTS if safe else [h.cfg.get('name', h.cfg['id']) for h in HOSTS], history=list(HISTORY), recent=recent)
 
+# ---------------------------------------------------------------- recording (recorder.py; replay + export)
+REC_DIR = pathlib.Path(os.environ.get('FLEET_VIZ_RECORDINGS', os.path.expanduser('~/.local/state/fleet-viz/recordings')))
+_rec = dict(loop=None, recent=None, md=None, jobs={}, jobs_full=0, vkeys=set())
+
+def _rec_meta():
+    return dict(k='meta', t=time.time(), poll=POLL, regions=CFG['regions'],
+                hosts=[dict(id=h.cfg['id'], name=h.cfg.get('name', h.cfg['id']), label=h.cfg['label'], kind=h.cfg['kind'],
+                            region=h.cfg['region']) for h in HOSTS])
+
+def _rec_keyframes(t):
+    with CLOSURES.lock: act, vs = list(CLOSURES.active), list(CLOSURES.verdicts)
+    _rec.update(jobs={j['name']: j for j in act}, jobs_full=t, vkeys={(v['t'], v['name'], v['status']) for v in vs})
+    out = [_rec_meta(), dict(k='jobs', t=t, full=1, rows=act), dict(k='verd', t=t, full=1, rows=vs)]
+    for k in ('loop', 'recent', 'md'):
+        if _rec[k] is not None: out.append(_rec[k])
+    return out
+
+RECORDER = None
+_same_job = lambda x, y: y is not None and all(x[k] == y.get(k) for k in x if k != 'updated')   # 'updated' is a heartbeat
+
+def record(s0):
+    global RECORDER
+    t = round(s0['t'], 1); recs = []
+    if RECORDER is None: RECORDER = recorder.Recorder(REC_DIR, _rec_keyframes); _rec['jobs_full'] = -1
+    recs.append(dict(k='s', t=t, h=[[h['state'], recorder.pack_cores(h['cores']) if h.get('cores') else None,
+                                     h.get('mem_total'), h.get('mem_used'), h.get('load'), h.get('docker'),
+                                     h.get('gpu') or None, h['routes']] for h in s0['hosts']]))
+    for k, val in (('loop', s0['loop']), ('recent', s0['recent']), ('md', status_md())):
+        if _rec[k] is None or _rec[k][k if k != 'recent' else 'rows'] != val:
+            _rec[k] = {'k': k, 't': t, ('rows' if k == 'recent' else k): val}; recs.append(_rec[k])
+    with CLOSURES.lock: act, vs = list(CLOSURES.active), list(CLOSURES.verdicts)
+    cur = {j['name']: j for j in act}
+    if _rec['jobs_full'] < 0: _rec.update(jobs=cur, jobs_full=t)   # first sample: the file-opening keyframe carries the table
+    if t - _rec['jobs_full'] >= recorder.JOB_KEYFRAME:
+        recs.append(dict(k='jobs', t=t, full=1, rows=act)); _rec['jobs_full'] = t
+    else:
+        up = [j for n, j in cur.items() if not _same_job(j, _rec['jobs'].get(n))]; rm = [n for n in _rec['jobs'] if n not in cur]
+        if up or rm: recs.append(dict(k='jobs', t=t, up=up, rm=rm))
+    _rec['jobs'] = cur
+    new = [v for v in vs if (v['t'], v['name'], v['status']) not in _rec['vkeys']]
+    if new:
+        recs.append(dict(k='verd', t=t, add=new)); _rec['vkeys'].update((v['t'], v['name'], v['status']) for v in new)
+    RECORDER.write(t, recs)
+
 def ticker():
     n = 0
     while True:
@@ -286,6 +336,9 @@ def ticker():
               HISTORY.append([round(s1['t']), s1['totals']['busy'], s1['totals']['cores'], s1['loop']['running'],
                               s1['totals']['mem_used'], mem])
             s0 = build(False)
+            if not any(h['state'] == 'connecting' for h in s1['hosts']):
+                try: record(s0)
+                except Exception as e: log('record: %s' % e)
             full = {}; live = {}
             for k, s in ((True, s1), (False, s0)):
                 s['history'] = list(HISTORY); full[k] = json.dumps(s, separators=(',', ':'))
@@ -301,7 +354,8 @@ def ticker():
             log('snapshot: %s' % e)
 
 # ---------------------------------------------------------------- http
-STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8')}
+STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
+          '/replay': ('index.html', 'text/html; charset=utf-8')}
 
 class H(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
@@ -326,6 +380,16 @@ class H(BaseHTTPRequestHandler):
             with _cond: body = _snap.get('full', {}).get(safe)
             if body is None: return self.send(503, b'{"warming":true}', 'application/json')
             return self.send(200, body.encode(), 'application/json')
+        if u.path == '/api/replay':
+            try:
+                now = time.time(); t1 = recorder.parse_time(q.get('to', ['now'])[0], now)
+                t0 = recorder.parse_time(q.get('from', ['-30m'])[0], t1 if q.get('from', [''])[0].startswith('-') else now)
+                if t1 - t0 > 7 * 86400 or t1 <= t0: raise ValueError('window must be 0 < span <= 7 days')
+                pkg = recorder.load_window(REC_DIR, t0, t1, safe=safe, max_frames=int(q.get('max', ['3000'])[0]))
+            except Exception as e:
+                return self.send(400, json.dumps(dict(error=str(e))).encode(), 'application/json')
+            if pkg is None: return self.send(404, b'{"error":"no recording in that window"}', 'application/json')
+            return self.send(200, json.dumps(pkg, separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/jobs':
             if safe: return self.send(403, b'{"safe":true}', 'application/json')
             lab = {h.cfg['id']: h.cfg.get('name', h.cfg['id']) for h in HOSTS}
@@ -363,4 +427,8 @@ if __name__ == '__main__':
     CTL.mkdir(mode=0o700, parents=True, exist_ok=True)
     threading.Thread(target=ticker, daemon=True, name='ticker').start()
     log('fleet-viz serving http://%s:%d (%d hosts, poll %gs)' % (BIND, PORT, len(HOSTS), POLL))
+    def _stop(*_):
+        if RECORDER: RECORDER.close()   # finish the gzip member cleanly
+        os._exit(0)
+    signal.signal(signal.SIGTERM, _stop); signal.signal(signal.SIGINT, _stop)
     Server((BIND, PORT), H).serve_forever()

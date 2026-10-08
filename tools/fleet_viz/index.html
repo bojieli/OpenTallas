@@ -62,12 +62,12 @@ canvas.chart{width:100%;display:block}
 .vctl select{background:#0b1020;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:3px 6px;font:11.5px var(--mono)}
 #vfeed{list-style:none;margin:0;padding:0 4px 0 0;height:640px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2a3558 transparent}
 #vfeed li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:7px 8px;border-bottom:1px solid #141c33;border-radius:8px;animation:slidein .7s ease-out;border-left:3px solid transparent}
-#vfeed .vs{grid-row:1/4;font:800 10px var(--mono);padding:4px 6px;border-radius:6px;color:#05070d;text-align:center;min-width:86px}
+#vfeed .vs{grid-row:1/span 4;font:800 10px var(--mono);padding:4px 6px;border-radius:6px;color:#05070d;text-align:center;min-width:86px}
 #vfeed .bk{font:800 14px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #vfeed .bk small{color:var(--dim);font-weight:400;font-size:11px}
 #vfeed .jn,#vfeed .why{grid-column:2;color:var(--dim);font:11px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #vfeed .why{color:#b9c2dc}
-#vfeed .sl{grid-column:3;grid-row:1/4;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+#vfeed .sl{grid-column:3;grid-row:1/span 4;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
 #vfeed .sl span{font:700 12px var(--mono);font-variant-numeric:tabular-nums;padding:1px 6px;border-radius:5px;white-space:nowrap}
 #vfeed .sl small{color:var(--faint);font:11px var(--mono)}
 .p{background:#4ade801f;color:var(--ok)}.n{background:#ff5d7326;color:var(--hot)}.z{background:#8a97b81a;color:var(--dim)}
@@ -76,11 +76,19 @@ canvas.chart{width:100%;display:block}
 #vfeed li.k-flow{border-left-color:#9b8cc9}#vfeed li.k-flow .vs{background:#9b8cc9}#vfeed li.k-flow .bk{color:#c9c2e6}
 #vfeed li.k-closed.fresh{background:linear-gradient(90deg,#4ade8040,#5ee7ff14 50%,transparent);box-shadow:0 0 18px #4ade8033;animation:slidein .7s ease-out,glowg 2.4s ease-in-out infinite}
 #vfeed li.k-closed.hot{background:linear-gradient(90deg,#4ade801c,transparent 60%)}
+#vfeed li.k-check{border-left-color:#f472b6}#vfeed li.k-check .vs{background:#f472b6}
+#vfeed .ck{grid-column:2;font:800 12px var(--mono);color:#f9a8d4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #vfeed li.new{animation:flash 1.8s ease-out 2}
 @keyframes glowg{50%{box-shadow:0 0 28px #4ade8055}}
-#toast.bad{background:linear-gradient(90deg,#ff5d73,#ff8a4d)}#toast.ok{background:linear-gradient(90deg,#4ade80,#5ee7ff)}#toast.flow{background:linear-gradient(90deg,#9b8cc9,#c4b5fd)}
+#toast.bad{background:linear-gradient(90deg,#ff5d73,#ff8a4d)}#toast.ok{background:linear-gradient(90deg,#4ade80,#5ee7ff)}#toast.flow{background:linear-gradient(90deg,#9b8cc9,#c4b5fd)}#toast.check{background:linear-gradient(90deg,#f472b6,#f9a8d4)}
 #toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-220%);z-index:9;background:linear-gradient(90deg,#ff5d73,#ffb44d);color:#05070d;font:800 15px var(--mono);padding:12px 22px;border-radius:12px;box-shadow:0 12px 50px #ff5d7388;transition:transform .5s cubic-bezier(.2,.9,.3,1.3);max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #toast.on{transform:translate(-50%,0)}
+#rbar{position:sticky;top:0;z-index:8;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-4px 0 12px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:#0b1020ee;font:600 12px var(--mono);color:var(--dim);backdrop-filter:blur(6px)}
+#rbar button{font:700 12px var(--mono);background:var(--accent);color:#05070d;border:0;border-radius:8px;padding:6px 12px;cursor:pointer;min-width:64px}
+#rbar input[type=range]{flex:1 1 220px;min-width:140px;accent-color:var(--accent)}
+#rbar .sp{display:inline-flex;gap:4px}#rbar .sp span{padding:4px 8px;border:1px solid var(--line);border-radius:999px;cursor:pointer}#rbar .sp span.on{background:var(--accent);color:#05070d;border-color:var(--accent)}
+#rclock{position:fixed;right:16px;bottom:16px;z-index:9;font:800 20px var(--mono);color:var(--ink);background:#0b1020e6;border:1px solid var(--accent);border-radius:12px;padding:8px 14px;box-shadow:0 8px 40px #5ee7ff33;pointer-events:none}
+#rclock small{display:block;font:600 11px var(--mono);color:var(--dim);letter-spacing:.08em}
 .jobs{margin-top:14px}
 .ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;font:12px var(--mono)}
 .ctl select,.ctl input{background:#0b1020;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:4px 7px;font:12px var(--mono)}
@@ -151,6 +159,8 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
     </div>
     <div class="live" id="live"><span class="dot"></span><span id="clock">connecting</span></div>
   </header>
+  <div id="rbar" hidden><button id="rPlay">pause</button><span id="rFrom"></span><input type="range" id="rScrub" min="0" max="1" step="1" value="0"><span id="rTo"></span><span class="sp" id="rSpeed"></span><span id="rMsg"></span></div>
+  <div id="rclock" hidden></div>
 
   <div class="cols">
     <div class="col">
@@ -218,7 +228,11 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
 (() => {
 'use strict';
 const qs = new URLSearchParams(location.search);
-const SAFE = qs.get('safe') === '1';
+const RD = window.REPLAY_DATA || null;
+const REPLAY = !!RD || location.pathname.replace(/\/+$/, '') === '/replay';
+let RT = 0;   // replay clock (recorded epoch seconds)
+const NOW = () => REPLAY ? RT : Date.now() / 1000;
+const SAFE = RD ? !!RD.safe : qs.get('safe') === '1';
 const Q = SAFE ? '?safe=1' : '';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
 const ls = k => { try { return JSON.parse(localStorage.getItem('fv3.' + k)); } catch (e) { return null; } };
@@ -237,7 +251,7 @@ for (let i = 0; i <= 100; i++) {
 const col = v => { const c = LUT[Math.max(0, Math.min(100, Math.round(v)))]; return `rgb(${c[0]},${c[1]},${c[2]})`; };
 const $ = id => document.getElementById(id);
 const fmt = (n, d = 0) => n == null ? '-' : Number(n).toLocaleString('en-US', {maximumFractionDigits: d, minimumFractionDigits: d});
-const ago = t => { const s = Math.max(0, Date.now() / 1000 - t); return s < 60 ? 'now' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? (s / 3600).toFixed(1) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
+const ago = t => { const s = Math.max(0, NOW() - t); return s < 60 ? 'now' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? (s / 3600).toFixed(1) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
 const gb = g => g >= 1000 ? fmt(g / 1024, 2) + ' TB' : fmt(g) + ' GB';
 const DPR = Math.min(2, window.devicePixelRatio || 1);
 function fit(cv) {   // size a canvas to its CSS box; returns [ctx, w, h]
@@ -465,7 +479,7 @@ function updateLoop(d) {
   const keyOf = r => r.t + '|' + r.host + '|' + r.cat + '|' + (r.name || r.block || '');
   const fresh = seen ? d.recent.filter(r => !seen.has(keyOf(r))) : [];
   seen = new Set(d.recent.map(keyOf));
-  const now = Date.now() / 1000;
+  const now = NOW();
   const hr = d.recent.filter(r => now - r.t < 3600).length;
   if (SAFE) $('closeHot').innerHTML = `<b style="color:#ffd23f">${hr}</b> in the last hour · ${fmt(L.closed_today)} blocks today`;
   if (!SAFE) return;
@@ -503,7 +517,8 @@ function onData(d) {
   $('cpu-stats').innerHTML = `<span>hosts up <b>${T.hosts_up}/${d.hosts.length}</b></span><span>containers <b>${fmt(T.docker)}</b></span>` +
     (gp.length ? `<span>GPU <b>${gp[0].util}%</b> · ${fmt(gp[0].mem_used)}/${fmt(gp[0].mem_total)} GB</span>` : '');
   updateHosts(d); updateLoop(d); if (!SAFE && d.vver != null && d.vver !== VV) loadVerdicts(d.vver); drawCpu(); drawClosures();
-  areaT0 = performance.now();
+  if (!REPLAY || areaFirst) areaT0 = REPLAY ? 0 : performance.now();   // replay frames arrive faster than the reveal sweep
+  if (REPLAY) { $('foot').textContent = (d.safe ? 'share-safe ' : 'INTERNAL ') + `replay · one frame per ${d.poll} s recorded`; return; }
   $('foot').textContent = (d.safe ? 'share-safe view · ' : 'INTERNAL view (?safe=1 to share) · ') + `updates every ${d.poll} s`;
 }
 let es = null;
@@ -514,27 +529,29 @@ function connect() {
     es.onerror = () => { es.close(); setTimeout(connect, 4000); };
   });
 }
-connect();
+if (!REPLAY) connect();
 
 // ---- verdict feed (internal view): every terminal verdict, newest first
-const KINDS = [['', 'All'], ['closed', 'Closed'], ['timing', 'Failed timing'], ['flow', 'Flow failures']];
+const KINDS = [['', 'All'], ['closed', 'Closed'], ['timing', 'Failed timing'], ['check', 'Check failed'], ['flow', 'Flow failures']];
+const KCOL = {closed: '#4ade80', timing: '#ff8a4d', check: '#f472b6', flow: '#9b8cc9'};
 const VF = Object.assign({kind: '', tgt: ''}, ls('vf') || {});
 let VV = null, VD = [], vseen = null;
 function loadVerdicts(v) {
   VV = v;
+  if (REPLAY) { VD = rpVerdicts(); renderVerdicts(); return; }
   fetch('/api/verdicts').then(r => r.ok ? r.json() : null).then(d => { if (d) { VD = d.verdicts; renderVerdicts(); } }).catch(() => { VV = null; });
 }
 function renderVerdicts() {
   lsw('vf', VF);
   $('ticker').hidden = true; $('vfeed').hidden = false; $('vctl').hidden = false; $('feedTitle').textContent = 'Live verdicts';
-  const now = Date.now() / 1000, key = v => v.t + '|' + v.name + '|' + v.status;
+  const now = NOW(), key = v => v.t + '|' + v.name + '|' + v.status;
   const fresh = vseen ? VD.filter(v => !vseen.has(key(v))) : [];
   vseen = new Set(VD.map(key));
   const cnt = {}; VD.forEach(v => cnt[v.kind] = (cnt[v.kind] || 0) + 1);
-  $('vchips').innerHTML = KINDS.map(([k, t]) => `<span class="chip ${VF.kind === k ? 'on' : ''}" data-k="${k}" style="${VF.kind === k ? 'background:' + ({closed: '#4ade80', timing: '#ff8a4d', flow: '#9b8cc9'}[k] || '#5ee7ff') : ''}">${t} ${k ? cnt[k] || 0 : VD.length}</span>`).join(' ');
+  $('vchips').innerHTML = KINDS.map(([k, t]) => `<span class="chip ${VF.kind === k ? 'on' : ''}" data-k="${k}" style="${VF.kind === k ? 'background:' + (KCOL[k] || '#5ee7ff') : ''}">${t} ${k ? cnt[k] || 0 : VD.length}</span>`).join(' ');
   $('vTgt').value = VF.tgt;
   const day = VD.filter(v => now - v.t < 86400);
-  $('closeHot').innerHTML = `<b style="color:#4ade80">${day.filter(v => v.kind === 'closed').length}</b> closed · <b style="color:#ff8a4d">${day.filter(v => v.kind === 'timing').length}</b> timing · <b style="color:#9b8cc9">${day.filter(v => v.kind === 'flow').length}</b> flow · 24 h`;
+  $('closeHot').innerHTML = `<b style="color:#4ade80">${day.filter(v => v.kind === 'closed').length}</b> closed · <b style="color:#ff8a4d">${day.filter(v => v.kind === 'timing').length}</b> timing · <b style="color:#f472b6">${day.filter(v => v.kind === 'check').length}</b> check · <b style="color:#9b8cc9">${day.filter(v => v.kind === 'flow').length}</b> flow · 24 h`;
   const chip = (lab, v, z) => v == null ? '' : `<span class="${v < 0 ? 'n' : z ? 'z' : 'p'}">${lab} ${sgn(v)}${lab === 'DRC' ? '' : ' ps'}</span>`;
   const vis = VD.filter(v => (!VF.kind || v.kind === VF.kind) && (!VF.tgt || v.corner === VF.tgt));
   const fs = new Set(fresh.map(key));
@@ -546,14 +563,15 @@ function renderVerdicts() {
     return `<li class="${cls}"><span class="vs">${esc(v.status)}</span>` +
       `<span class="bk" title="${esc(v.block)}">${esc(v.block)} <small>on ${esc(v.host || '?')} · ${esc(v.target.replace(/>=/g, '≥'))}</small></span>` +
       `<span class="sl">${chip(v.corner, v.setup)}${chip('FF', v.hold)}${drc}<small>${ago(v.t)}</small></span>` +
+      (v.kind === 'check' ? `<span class="ck" title="${esc(v.check)}">✗ check failed: ${esc(v.check)}</span>` : '') +
       `<span class="jn" title="${esc(v.name)}">${esc(v.name)}</span><span class="why" title="${esc(why)}">${esc(why)}</span></li>`;
   }).join('') || '<li><span></span><span class="jn">no verdicts match</span></li>';
   $('vfeed').scrollTop = fresh.length ? 0 : st0;
   if (fresh.length) {
     const v = fresh[0], p = $('closepanel'), tt = $('toast');
     p.classList.remove('boom'); void p.offsetWidth; p.classList.add('boom');
-    tt.className = v.kind === 'closed' ? 'ok' : v.kind === 'timing' ? 'bad' : 'flow';
-    tt.textContent = `${v.status}  ${v.block}` + (v.setup != null ? `  ${v.corner} ${sgn(v.setup)} / FF ${sgn(v.hold)} ps` : '') + (v.kind === 'flow' ? '  ' + v.why.slice(0, 60) : '') + `  on ${v.host}` + (fresh.length > 1 ? `  (+${fresh.length - 1} more)` : '');
+    tt.className = v.kind === 'closed' ? 'ok' : v.kind === 'timing' ? 'bad' : v.kind === 'check' ? 'check' : 'flow';
+    tt.textContent = `${v.status}  ${v.block}` + (v.setup != null ? `  ${v.corner} ${sgn(v.setup)} / FF ${sgn(v.hold)} ps` : '') + (v.kind === 'flow' ? '  ' + v.why.slice(0, 60) : v.kind === 'check' ? '  check failed: ' + v.check.slice(0, 60) : '') + `  on ${v.host}` + (fresh.length > 1 ? `  (+${fresh.length - 1} more)` : '');
     void tt.offsetWidth; tt.classList.add('on'); clearTimeout(tt._t); tt._t = setTimeout(() => tt.classList.remove('on'), 6000);
   }
 }
@@ -571,7 +589,7 @@ const dur = s => s < 60 ? Math.round(s) + 's' : s < 3600 ? Math.round(s / 60) + 
 function renderJobs() {
   if (!J) return;
   lsw('f', F);
-  const now = Date.now() / 1000, order = J.hosts;
+  const now = NOW(), order = J.hosts;
   const rows = J.jobs.map(j => Object.assign({}, j, {age: j.since ? now - j.since : 0, ev: (j.status === 'RUNNING' || j.status === 'ECO') ? (j.event || j.wait) : (j.wait || j.reason || j.event)}));
   const cnt = {}; rows.forEach(r => cnt[r.status] = (cnt[r.status] || 0) + 1);
   $('fSt').innerHTML = STS.map(s => `<span class="chip ${F.sts.includes(s) ? 'on' : ''}" data-s="${s}" style="${F.sts.includes(s) ? 'background:' + STCOL[s] : ''}">${s} ${cnt[s] || 0}</span>`).join(' ');
@@ -610,8 +628,88 @@ $('fGrp').onchange = e => { F.grp = e.target.checked; renderJobs(); };
 $('fTxt').oninput = e => { F.txt = e.target.value; renderJobs(); };
 $('fSt').onclick = e => { const s = e.target.dataset && e.target.dataset.s; if (!s) return; F.sts = F.sts.includes(s) ? F.sts.filter(x => x !== s) : F.sts.concat(s); renderJobs(); };
 $('jHead').onclick = e => { const c = e.target.dataset && e.target.dataset.c; if (!c) return; if (F.sort === c) F.dir = -F.dir; else { F.sort = c; F.dir = c === 'age' ? -1 : 1; } renderJobs(); };
-pollJobs();
+if (!REPLAY) pollJobs();
 window.addEventListener('resize', () => { for (const c of cards.values()) layoutGrid(c); drawCpu(); drawClosures(); areaT0 = 0; });
+
+// ---- replay: the recorded window (window.REPLAY_DATA when exported, else /api/replay) through the same renderers
+let RP = null, rPlaying = true, rSpeed = +(qs.get('speed') || 10) || 10, rLast = 0, rIdx = -1, rDraw = 0, rJobsKey = null;
+const SPEEDS = [1, 10, 60, 600];
+const tstr = (t, d) => new Date(t * 1000).toLocaleString('en-US', Object.assign({hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}, d ? {month: 'short', day: 'numeric'} : {}));
+const bsearch = (a, t, key) => { let lo = 0, hi = a.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (key(a[m]) <= t) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
+const atT = (a, t) => { const i = bsearch(a || [], t, x => x[0]); return i < 0 ? null : a[i][1]; };
+function rpVerdicts() { if (!RP.verdicts) return []; const i = bsearch(RP.verdicts, RT, v => v.t); return RP.verdicts.slice(Math.max(0, i - 599), i + 1).reverse(); }
+function rpJobs() {   // job table at RT: start state + diffs (re-applied from the start on a backward seek)
+  const i = bsearch(RP.jdiffs, RT, x => x[0]);
+  if (i === rJobsKey) return null; rJobsKey = i;
+  const m = new Map(RP.jobs0.map(j => [j.name, j]));
+  for (let k = 0; k <= i; k++) { for (const j of RP.jdiffs[k][1]) m.set(j.name, j); for (const n of RP.jdiffs[k][2]) m.delete(n); }
+  const lab = Object.fromEntries(RP.hosts.map(h => [h.alias, h.label]));
+  return [...m.values()].map(j => Object.assign({}, j, {label: lab[j.host] || j.host || 'unplaced'}));
+}
+function rpSnap(i) {
+  const f = RP.frames[i], t = f[0], tot = {cores: 0, busy: 0, mem_total: 0, mem_used: 0, docker: 0, hosts_up: 0};
+  const hosts = RP.hosts.map((m, k) => {
+    const r = f[1][k] || ['down'], e = Object.assign({}, m, {state: r[0], routes: r[7] || 0});
+    if (r[1] && (r[0] === 'up' || r[0] === 'stale')) {
+      const b = atob(r[1]), cores = new Array(b.length); for (let j = 0; j < b.length; j++) cores[j] = b.charCodeAt(j);
+      Object.assign(e, {cores, mem_total: r[2], mem_used: r[3], load: r[4], docker: r[5], gpu: r[6] || []});
+      if (r[0] === 'up') { tot.hosts_up++; tot.cores += cores.length; tot.busy += cores.reduce((a, c) => a + c, 0) / 100; tot.mem_total += r[2]; tot.mem_used += r[3]; tot.docker += r[5] || 0; }
+    }
+    return e;
+  });
+  const hi = bsearch(RP.hist, t, r => r[0]), lo = bsearch(RP.hist, t - 3600, r => r[0]);
+  const vi = RP.verdicts ? bsearch(RP.verdicts, t, v => v.t) : 0;
+  return {t, poll: RP.poll, safe: RP.safe, regions: RP.regions, hosts, totals: tot, vver: RP.verdicts ? vi : null,
+          loop: atT(RP.loops, t) || {}, recent: atT(RP.recents, t) || [], hist_hosts: RP.hosts.map(h => h.label),
+          history: RP.hist.slice(Math.max(0, lo), hi + 1)};
+}
+function rpShow(force) {
+  const i = Math.max(0, bsearch(RP.frames, RT, f => f[0]));
+  if (i !== rIdx || force) {
+    rIdx = i; const d = rpSnap(i); d.loop = Object.assign({running: 0, queued: 0, closed_today: 0, closed_today_jobs: 0, closed_total: 0, running_by_cat: {}, closed_24h_by_cat: {}, closed_hourly: {start: 0, bins: {}}}, d.loop);
+    onData(d);
+    if (!SAFE && RP.jobs0) {
+      const rows = rpJobs();
+      if (rows) { J = {t: RT, jobs: rows, status: atT(RP.mds, RT) || {}, hosts: RP.hosts.map(h => h.label)}; $('jobsPanel').hidden = false; renderJobs(); }
+      else if (J) J.status = atT(RP.mds, RT) || J.status;
+    }
+  }
+  $('rScrub').value = Math.round(RT - RP.t0);
+}
+function rpTick(t) {
+  if (!RP) return;
+  const dt = rLast ? (t - rLast) / 1000 : 0; rLast = t;
+  if (rPlaying) { RT = Math.min(RP.t1, RT + dt * rSpeed); if (RT >= RP.t1) { rPlaying = false; $('rPlay').textContent = 'replay'; } }
+  if (t - rDraw > 100) { rDraw = t; rpShow(false); }
+  $('live').classList.remove('stale');
+  $('clock').textContent = 'REPLAY · ' + tstr(RT);
+  $('rclock').innerHTML = `<small>RECORDED ${rPlaying ? '▶ ' + rSpeed + '×' : '❚❚ paused'}${SAFE ? ' · share-safe' : ''}</small>${tstr(RT, true)}`;
+}
+function rpStart(P) {
+  if (!P || !P.frames || !P.frames.length) { $('rMsg').textContent = 'no recorded frames in this window'; return; }
+  RP = P; RP.jdiffs = RP.jdiffs || []; RT = RP.t0 = Math.max(P.t0, P.frames[0][0]); RP.t1 = Math.min(P.t1, P.frames[P.frames.length - 1][0]);
+  $('rScrub').max = Math.max(1, Math.round(RP.t1 - RP.t0));
+  $('rFrom').textContent = tstr(RP.t0, true); $('rTo').textContent = tstr(RP.t1, true);
+  $('rMsg').textContent = `${P.frames.length} frames` + (P.step > 1 ? ` (1 in ${P.step})` : '');
+  document.title = 'OpenTallas Fleet Replay';
+  rpShow(true);
+}
+if (REPLAY) {
+  $('rbar').hidden = false; $('rclock').hidden = false;
+  if (!SPEEDS.includes(rSpeed)) SPEEDS.push(rSpeed), SPEEDS.sort((a, b) => a - b);
+  const sp = () => { $('rSpeed').innerHTML = SPEEDS.map(x => `<span data-x="${x}" class="${x === rSpeed ? 'on' : ''}">${x}×</span>`).join(''); };
+  sp();
+  $('rSpeed').onclick = e => { const x = +(e.target.dataset && e.target.dataset.x); if (x) { rSpeed = x; sp(); } };
+  $('rPlay').onclick = () => { if (!RP) return; if (RT >= RP.t1) RT = RP.t0, rIdx = -1; rPlaying = !rPlaying; $('rPlay').textContent = rPlaying ? 'pause' : 'play'; };
+  $('rScrub').oninput = e => { if (!RP) return; RT = RP.t0 + +e.target.value; rpShow(false); };
+  document.addEventListener('keydown', e => { if (e.code === 'Space' && e.target.tagName !== 'INPUT') { e.preventDefault(); $('rPlay').click(); } });
+  if (RD) rpStart(RD);
+  else {
+    $('rMsg').textContent = 'loading recording';
+    const p = new URLSearchParams(); for (const k of ['from', 'to', 'safe', 'max']) if (qs.get(k)) p.set(k, qs.get(k));
+    fetch('/api/replay?' + p).then(r => r.json()).then(d => d.error ? ($('rMsg').textContent = d.error) : rpStart(d)).catch(e => $('rMsg').textContent = 'load failed: ' + e);
+  }
+}
 
 // ---- frame loop (about 30 fps; rAF pauses when hidden)
 let lastF = 0, lastArea = 0;
@@ -621,8 +719,9 @@ function frame(t) {
   for (const c of cards.values()) drawGrid(c, t);
   drawTanks(t);
   if (t - lastArea > 66) { drawRamArea(t); lastArea = t; }   // area chart at ~15 fps
-  const age = Date.now() / 1000 - lastT;
+  const age = NOW() - lastT;
   $('live').classList.toggle('stale', !lastT || age > 30);
+  if (REPLAY) { rpTick(t); return; }
   $('clock').textContent = lastT ? 'LIVE · ' + new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}) : 'connecting';
 }
 requestAnimationFrame(frame);
