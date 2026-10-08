@@ -17,11 +17,15 @@ AR_ = ["*.attn.out_allreduce", "*.ffn.combine_allreduce"]
 AG_ = ["*.attn.a_allgather", "*.attn.idx.topk_merge", "*.attn.cand.merge", "*.attn.rows_allgather", "*.ffn.router_allgather"]
 # (item, description, [(nodes, cycles, frac)])
 ITEMS = [
-    ("s81_die", "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced "
-                "meso d8g1 term (+4), giving +27: hub stations, "
-                "q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). "
-                "Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending",
-     [(k, 27, 0) for k in MAT]),
+    ("s81_die", "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ "
+                "root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, "
+                "claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each "
+                "ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), "
+                "giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full "
+                "221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root "
+                "stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; "
+                "die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress",
+     [(k, 28, 0) for k in MAT]),
     ("meso_d8g1", "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field "
                   "round trip (+4)", [(k, 4, 0) for k in MAT]),
     ("ctrl_status", "CTRL status chain: +1 cycle per column (HBM stream reads)", [(k, 1, 0) for k in HBM]),
