@@ -56,6 +56,34 @@ module ot_meso_fifo #(
     parameter int HOLD     = 8,      // DOWN lasts >= HOLD + 1 own cycles (peer must see it)
     parameter int SETTLE   = 8,      // cycles the peer ring is seen running before placement (>= DEPTH)
     parameter bit ENABLE   = 0,
+    parameter bit RDREG    = 0,      // register the data-ring readout (slot -> one-hot select -> readout flop) before the
+                                     // read side: +1 period crossing latency, the crossing arc ends at the select
+    parameter bit NOBP     = 0,      // consumer never back-pressures (r_rdy tied 1, die stations): no receive buffer,
+                                     // o_d loads the arriving word directly (same latency).  INVARIANT (the proof):
+                                     // r_rdy == 1 every cycle => load == 1 => an arriving word goes straight into o_d,
+                                     // push_1 == 0 while empty and cnt stays 0 (cnt_1 = cnt + push_1 - pop from 0);
+                                     // the buffer is never written.  ENFORCED where the FIFO is instantiated:
+                                     // ot_hbm_stn_meso ties .r_rdy(1'b1) (the only NOBP instantiation), and a
+                                     // simulation assertion below flags r_rdy == 0.  The r_fault on a would-be push is
+                                     // a fail-closed safety net, not the argument.
+    parameter bit CRDREG   = 0,      // register the credit-ring readout too (credit return +1 period; data latency
+                                     // unchanged; CREDITS + 1 = 9 still covers the round trip)
+    parameter bit WCHK     = 0,      // data-ring write in 64-bit chunks, each with its own registered one-hot write-slot
+                                     // copy (kept hierarchy, fanout 64, not W x DEPTH) and written every cycle: the
+                                     // slot data no longer waits on w_send (the writer state / credit net); validity
+                                     // stays in the slot's v bits, so the reader takes exactly the same words.  Same
+                                     // latency.  Default off.
+    parameter bit OBYP     = 0,      // NOBP && RDREG only: the readout flop is the FIFO's last register -- r_d / r_v come
+                                     // straight from it (o_d bypassed, -1 period), so the consumer's own register (a
+                                     // station's per-face pin-launch flop) is the next stage
+    parameter bit PLREG    = 0,      // data ring: the read-pointer placement value is a flop (see ot_meso_ring PLREG);
+                                     // same words, same cycles.  Default off.
+    parameter bit ONREG    = 0,      // views agent 2026-10-07: the data ring's r_on / r_align arrive as flops (next state of
+                                     // the read FSM registered, one copy per 64-bit chunk): rs -> AND -> 8-chunk broadcast
+                                     // (mcast_r5 56a4bdb6c -2.26 ps, 14 levels) starts at a flop; 0 cycles (exact retiming)
+    parameter bit RSPLIT   = 0,      // RDREG only, data ring: the readout flop is split into two half-select flops
+                                     // (slots 0..DEPTH/2-1 / DEPTH/2..DEPTH-1, one AO level each) ORed after them;
+                                     // same cycle.  Default off.
     // PINREG (S81-RERUN fail-fast fix, default 0): wrst_n / rrst_n captured in a flop at the pin before any use.
     // The resets are sampled synchronously; with them registered no input pin reaches the 512-bit ring write
     // enables, w_rdy or r_v through logic (meso_d4 2e2d7aa3f: wrst_n -> s_d SS -40.1, -> w_rdy -11.8, rrst_n -> r_v
@@ -131,9 +159,9 @@ module ot_meso_fifo #(
         // credit ring rclk -> wclk
         logic [0:0]   c_rd; logic c_rv, c_lap_ok, c_glo, c_ghi;
 
-        ot_meso_ring #(.W(W), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI)) u_data (
+        ot_meso_ring #(.W(W), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI), .RDREG(RDREG), .WCHK(WCHK), .PLREG(PLREG), .RSPLIT(RSPLIT), .ONV(ONREG)) u_data (
             .tclk(wclk), .t_v(w_send), .t_d(w_d_i),
-            .rclk(rclk), .r_align(r_align), .r_on(r_on),
+            .rclk(rclk), .r_align(r_align), .r_on(r_on), .r_align_v(r_al_v), .r_on_v(r_on_v),
             .r_d(d_rd), .r_v(d_rv), .r_lap_ok(d_lap_ok), .r_glo_ok(d_glo), .r_ghi_ok(d_ghi)
 `ifdef OT_MESO_DEBUG
            ,.dbg_tc(dbg_wc), .dbg_rp(dbg_rp)
@@ -141,7 +169,7 @@ module ot_meso_fifo #(
         );
         ot_meso_ring #(.W(1), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI), .RDREG(CRDREG)) u_cred (
             .tclk(rclk), .t_v(c_pulse), .t_d(1'b1),
-            .rclk(wclk), .r_align(w_align), .r_on(w_on),
+            .rclk(wclk), .r_align(w_align), .r_on(w_on), .r_align_v(w_align), .r_on_v(w_on),
             .r_d(c_rd), .r_v(c_rv), .r_lap_ok(c_lap_ok), .r_glo_ok(c_glo), .r_ghi_ok(c_ghi)
 `ifdef OT_MESO_DEBUG
            ,.dbg_tc(dbg_cc), .dbg_rp(dbg_cp)
@@ -232,6 +260,25 @@ module ot_meso_fifo #(
         assign r_live   = (rs == S_RUN);
         assign r_align  = (rs == S_ALIGN) && (r_set == SW'(SETTLE));
         assign r_fault  = r_flt;
+        localparam int NCHF = (W % 64 == 0) ? W / 64 : 1;
+        logic [NCHF-1:0] r_on_v, r_al_v;
+        if (ONREG) begin : g_onreg
+            // next state of r_on / r_align from the read FSM below (same terms): on stays on unless the peer goes DOWN,
+            // ALIGN with r_set == SETTLE turns it on; align is ALIGN with r_set reaching SETTLE next edge
+            wire on_n = rrst_i && (ws_r != S_DOWN) && (r_on || ((rs == S_ALIGN) && (r_set == SW'(SETTLE))));
+            wire al_n = rrst_i && (ws_r != S_DOWN) && (rs == S_ALIGN) && (SETTLE > 0) && (r_set == SW'(SETTLE - 1));
+            (* keep *) logic [NCHF-1:0] onq, alq;
+            always_ff @(posedge rclk) begin onq <= {NCHF{on_n}}; alq <= {NCHF{al_n}}; end
+            assign r_on_v = onq; assign r_al_v = alq;
+`ifndef SYNTHESIS
+            reg seen_rst = 1'b0;             // compare only once both sides come from a reset state (2-state sims start random)
+            always @(posedge rclk) if (!rrst_i) seen_rst <= 1'b1;
+            always @(posedge rclk) if (seen_rst && !$isunknown(rs) && !$isunknown(onq[0]) && (onq[0] !== r_on || alq[0] !== r_align))
+                $display("PLREG_MISMATCH ONREG %m t=%0t onq=%b on=%b alq=%b al=%b", $time, onq[0], r_on, alq[0], r_align);
+`endif
+        end else begin : g_oncomb
+            assign r_on_v = {NCHF{r_on}}; assign r_al_v = {NCHF{r_align}};
+        end
         // The only crossing term in the read control is d_hit (slot valid in the expected lap: a two-level AND-OR of
         // write-domain flops with registered one-hot read-domain selects).  It only selects between next states computed
         // from read-domain flops (u_rsel), so the crossing arcs end one 2:1 select after it (SS budget 356.667 ps).
@@ -242,13 +289,19 @@ module ot_meso_fifo #(
         // registered output: o_d is the capture register of the crossing (the arriving word is muxed straight into
         // it when the buffer is empty); its enable 'load' and the select are read-domain signals only.
         logic [W-1:0] o_d; logic o_v;
-        assign r_v      = rrst_i && !r_flt && o_v;
-        assign r_d      = o_d;
+        if (OBYP) begin : g_obyp
+            // the arriving word is presented in the cycle it arrives (d_rd / d_rv are the RDREG readout flops)
+            assign r_v      = rrst_i && !r_flt && r_on && d_hit;
+            assign r_d      = d_rd;
+        end else begin : g_oreg
+            assign r_v      = rrst_i && !r_flt && o_v;
+            assign r_d      = o_d;
+        end
         assign r_take   = r_v && r_rdy;
         wire   load     = !o_v || r_rdy;
 `ifndef SYNTHESIS
         if (NOBP) begin : g_nobp_check
-            always @(posedge rclk) if (rrst_n && !r_rdy) $error("ot_meso_fifo NOBP: r_rdy low (no-backpressure invariant broken)");
+            always @(posedge rclk) if (rrst_i && !r_rdy) $error("ot_meso_fifo NOBP: r_rdy low (no-backpressure invariant broken)");
         end
 `endif
         if (NOBP) begin : g_nobp
@@ -342,6 +395,7 @@ module ot_meso_ring #(
                                      // DEPTH-slot selects of every 64-bit chunk starts at a register (mcast_r6 Q1:
                                      // g3 -> 4 levels -> 400 um of buffers -> dsel di, SS -95 ps).  The synchroniser
                                      // (async_reg g1 g2 / n0 n1 n2) is unchanged.
+    parameter bit ONV      = 0,      // per-chunk r_on / r_align copies (r_on_v / r_align_v) drive the readout selects
     parameter bit RSPLIT   = 0       // RDREG: two half-select readout flops per bit, ORed after them (ot_meso_dsel SPLIT)
 ) (
     input  logic         tclk,
@@ -350,6 +404,8 @@ module ot_meso_ring #(
     input  logic         rclk,
     input  logic         r_align,    // place the read pointer this cycle
     input  logic         r_on,       // pointer placed: advance every cycle
+    input  logic [((W % 64 == 0) ? W / 64 : 1)-1:0] r_on_v,     // ONV: registered copies of r_on (one per chunk)
+    input  logic [((W % 64 == 0) ? W / 64 : 1)-1:0] r_align_v,  // ONV: registered copies of r_align
     output logic [W-1:0] r_d,
     output logic         r_v,        // slot valid in the expected lap
     output logic         r_lap_ok,
@@ -475,7 +531,7 @@ module ot_meso_ring #(
         for (genvar i = 0; i < DEPTH; i++) begin : sl
             assign sd_c[i*WCH +: WCH] = s_d[i][c*WCH +: WCH];
         end
-        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(RDREG), .SPLIT(RSPLIT)) u_dsel (.clk(rclk), .align(r_align), .on(r_on),
+        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(RDREG), .SPLIT(RSPLIT)) u_dsel (.clk(rclk), .align(ONV ? r_align_v[c] : r_align), .on(ONV ? r_on_v[c] : r_on),
                                                       .place(rp_place[AW-1:0]), .sd(sd_c), .y(r_d[c*WCH +: WCH]));
     end
     logic r_v_c, r_lap_c;

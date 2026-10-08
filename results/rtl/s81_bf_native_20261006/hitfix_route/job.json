@@ -1,0 +1,67 @@
+{
+ "name": "bf_hitfix_3978531b5",
+ "block": "ot_s81_bf_native",
+ "owner": "Claude:pq-adopt (BF rowfix)",
+ "purpose": "BF native pair PINREG=1 HITFIX=1 (x-need match from registered class offsets, no 532-bit match enable, replicated FIFO flag; 0 cycles) routed with setup repaired at WC (bf_m2 ran ORFS CORNERS=BC: every repair at FF, SS sign-off -605.6), IO from the measured insertion",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 60,
+ "source": {
+  "branch": "claude/dsrom-bf-rowfix-20261007",
+  "commit": "3978531b5eab63e4a402fffb5503504fe8578c53"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "OUT={RUN}/routes SRC={SRC} bash physical/s81_native_bf/margin/route_cl.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 60
+  },
+  "route": {
+   "cmd": "OUT={RUN}/routes SRC={SRC} bash physical/s81_native_bf/margin/route_cl.sh {LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/exit {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [],
+  "post_sdc": [
+   "physical/s81_native_bf/margin/signoff_ref.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8"
+  ]
+ },
+ "hold_eco": {
+  "enabled": false,
+  "reason": "signoff_ref.sdc measures the boundary insertion per corner STA run (corner_sta: one corner per run); the loop ECO loads SS+FF in one STA, where the FF-based input min would raise fake SS hold violations on ~2,600 PINREG inputs. FF hold ECO is run by the owner with an FF-only ECO (as WFC r15eco)."
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "no budget sheet for ot_s81_bf_native (dsfd_bf is a different master/pin contract); IO from the measured insertion"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/s81_bf_native_20261006/closure_hitfix"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": "claude/takeover-ds-head-20261006",
+ "no_bench_reason": "exact bench tools/s81/run_bf_hitfix_exact.py (full tb_bfcolumn numerical+wake gates with HITFIX=1, same-cycle HITFIX=0 shadow, W10_MUTANT_FRONT_PAIR negative FAILS): record results/rtl/s81_bf_native_20261006/hitfix_exact/terminal.json"
+}

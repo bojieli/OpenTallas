@@ -1,0 +1,7 @@
+unset_input_delay [all_inputs]
+unset_output_delay [all_outputs]
+set_input_delay 166.667 -clock wclk [get_ports {i_v i_d[*]}]
+set_output_delay 166.667 -clock wclk [get_ports {i_cr w_fault}]
+set_input_delay 166.667 -clock rclk [get_ports {o_cr}]
+set_output_delay 166.667 -clock rclk [get_ports {o_v o_d[*] r_fault}]
+set_false_path -from [get_ports {wrst_n rrst_n}]

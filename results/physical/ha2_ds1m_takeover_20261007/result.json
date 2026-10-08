@@ -1,0 +1,54 @@
+{
+  "status": "HA2_R2_RUNNING_DS1M_COMPILING",
+  "source_commit": "a8b92ba63",
+  "live_jobs_restarted": false,
+  "remote_sources_modified": false,
+  "shared_loop_modified": false,
+  "observed_utc": "2026-10-07T10:52:24Z",
+  "ha2": {
+    "run": "ot-epyc1tb:/srv/opentallas-scratch/claude/tk-hbm-harvest/ha2bk/r2",
+    "progress": "3_4_place_resized completed; 3_5_place_dp active",
+    "terminal_available": false,
+    "parent_launcher_pid": 3836178,
+    "r1_historical_signoff": {
+      "SS_setup_ps": -547.31,
+      "FF_hold_ps": -152.67,
+      "accepted": false
+    },
+    "threshold_preserved": {
+      "SS_setup_ps": 40,
+      "FF_hold_ps": 15
+    },
+    "watcher": "Existing watcher will run pinned old signoff after r2.done; its process exit alone is not acceptance. Require numerical accept fields and no STA errors."
+  },
+  "ds1m": {
+    "run": "ot-epyc1tb:/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin",
+    "launcher_pid": 3413666,
+    "compiler_pids": [
+      716860,
+      2902582
+    ],
+    "cpu_times_at_final_observation": [
+      "02:59:26",
+      "03:57:10"
+    ],
+    "progress": "Both C++ compiler CPU times increased; build.exit absent; no binary/bench verdict harvested",
+    "build_jobs": 2,
+    "existing_r1_OOM_preserved": true,
+    "qwen_hbm": "Existing lorentz_chain.sh schedules Qwen8K HBM after DS1M. No Qwen ROM work performed."
+  },
+  "fixes": [
+    "Signoff reads 6_final.sdc from completed run instead of always route.sdc (r1)",
+    "Reject STA errors, missing/non-finite reports, and failed margins with nonzero exit; refuse previous evidence overwrite"
+  ],
+  "validation": [
+    "4 focused unittest cases PASS; tests.log",
+    "Read-only live processes/logs and remote source/fixture hashes; no new simulation/build"
+  ],
+  "next_state": [
+    "Continue existing HA2 r2 route; harvest terminal.exit, final ODB/SPEF, DRC and numeric SS/FF signoff when available. r2.done alone does not mean success.",
+    "Continue existing DS1M hierarchical C++ build and its already-launched golden/negative/Qwen HBM chain; harvest build.exit and individual run logs only when terminal.",
+    "Use corrected signoff on a fresh copied result tree (including source macro dependencies) when evaluating; do not overwrite old failure evidence or modify a progressing pinned source.",
+    "No completion/closure claim while these jobs remain live."
+  ]
+}

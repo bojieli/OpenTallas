@@ -571,7 +571,8 @@ def design(snap=SNAP):
 CUR = OUT / 'current_main'
 CURRENT = dict(
     SPINE=CUR / 'inputs/rtl/ot_v41_spine_pqc_w17w10.d0178820d.sv',   # production native source (Codex native_elaboration)
-    GEOM=CUR / 'geometry_extract.json', GEN=ROOT / 'tools/dsrom_s81_fulldie.py',
+    GEOM=CUR / 'geometry_extract.json', GEN=CUR / 'inputs/pinned/dsrom_s81_fulldie.cfc076112.py',
+    INSERTION=CUR / 'inputs/calibration/measured_insertion.bb7c46846.json',
     REPO_SUMS=CUR / 'inputs/REPO_INPUTS.SHA256SUMS',
     SNAP_PATHS={'pq_parent_binding.py': ROOT / 'tools/s81/pq_parent_binding.py',
                 'dsrom_s81_pq_parent_20261007/full_inventory.json':
@@ -599,16 +600,17 @@ def current_extras(d):
     # its own stations
     rc = lat['rowcount_to_core']['cycles'] - rpt
     rw = lat['rwb_to_vm']['cycles'] - rpt
-    added = lat['root_pipeline']['cycles'] + max(rc, rw, 0)
+    rootc = ROOT_CONTRACT['cam_max_cycles_per_row'] + ROOT_CONTRACT['stations']
+    added = rootc + max(rc, rw, 0)
     coef = d['cost']['AR_fraction_per_cycle_per_phase']
     out = dict(spine_source=str(SPINE.relative_to(ROOT)), spine_sha256=sha(SPINE), spine_params=sp,
                historical_spine_params=hist_sp,
                cycles=dict(added_cycles_per_phase=added, vs_historical=added - d['cost']['added_cycles_per_phase'],
                            AR_loss_fraction_est=round(added * coef, 5),
-                           rule='root CAM pipeline %d + max(rowcount %d, rwb->VM %d) - RPT %d (v13b already pays RPT on '
-                                'the root inputs and row writes; the split replaces those repeaters by placed stations)'
-                                % (lat['root_pipeline']['cycles'], lat['rowcount_to_core']['cycles'],
-                                   lat['rwb_to_vm']['cycles'], rpt),
+                           rule='root contract (CAM +1 per pass, <= 4 passes on a row\'s chain, + 2 in/out stations) %d '
+                                '+ max(rowcount %d, rwb->VM %d) - RPT %d (v13b already pays RPT on the root inputs and '
+                                'row writes; the split replaces those repeaters by placed stations)'
+                                % (rootc, lat['rowcount_to_core']['cycles'], lat['rwb_to_vm']['cycles'], rpt),
                            price_status='PARTIAL: per-phase delta x historical +1-return-cycle sensitivity; the 1,792 '
                                         'per-token critical-phase list is not composed (mapping has %s compiled phases, '
                                         'of which only the token-active subset is on the path)' % (
@@ -632,10 +634,47 @@ def current_extras(d):
                                 max_beat_delay=s.get('bf_serial_beat_delay_max'),
                                 rule='two lane cycles per valid BF beat, in order; idle native slots absorb the delay'))
     out['budget_sheets'] = budget_sheets(d)
+    pl = PQ_PARENT_PLACEMENT
+    root_res = pl['root_strip_w_um'] * pl['root_row_h_um']
+    out['placement_pq_parent'] = dict(pl, root_reservation_um2=round(root_res, 1),
+        roots_per_die_mm2=round(R * root_res / 1e6, 3), root_cell_outline_um2=round(pl['root_w_um'] * pl['root_h_um'], 1),
+        root_outline_vs_estimate=round(pl['root_w_um'] * pl['root_h_um'] / d['blocks']['ret_root_r128']['area_um2_est'], 3),
+        core_slot_mm2=round(pl['core_slot_h_um'] * pl['core_slot_w_um'] / 1e6, 3),
+        core_estimate_mm2=round(d['blocks']['pq_core']['area_um2_est'] / 1e6, 3),
+        core_fits=d['blocks']['pq_core']['area_um2_est'] <= pl['core_slot_h_um'] * pl['core_slot_w_um'],
+        roots_per_tier=[2 * c for c in json.loads(GEOM.read_text())['tier_cols']],
+        supersedes='design recommendation (1): roots in empty q element positions - wrong: mixed 1,792 frames are 4 '
+                   'BF full-width + 10 q half-width = 9 fully occupied rows, no empty positions')
     return out
 
 
-INSERTION = ROOT / 'results/rtl/budgets_20261006/measured_insertion.json'
+ROOT_CONTRACT = dict(cam_max_cycles_per_row=4, stations=2,
+                     source='tools/s81_root_contract.py cam_contract().latency (+1 per pass, <= 1 + 3 passes)')
+PQ_PARENT_PLACEMENT = dict(
+    status='PROVISIONAL: Codex /root/s81/pq_parent packing update relayed 2026-10-07 ~12:31 PT (mailbox '
+           'claude_pq_design_msgs); not yet committed as a generator layout',
+    root_row_h_um=164.16, root_rows='one root row in each of the first 6 tier channels (one root per column, '
+                                     'below its frame)',
+    frame_spare_um=dict(before=241, after=77), pairs_per_die=1792, bf_pairs_per_die=512,
+    root_w_um=132.192, root_h_um=133.92, station_w_um=8.64, stations=2, root_strip_w_um=142.56,
+    core_slot_h_um=449.28, core_slot_w_um=1728.0, core_slot='explicit slot after the VM',
+    su_restack='capture-up / SU restack keeps the same 25.61188 mm2 SU')
+INSERTION = ROOT / 'results/rtl/budgets_20261006/measured_insertion.json'   # daemon-mutated on main: current basis pins a snapshot
+MODEL_BASIS = dict(
+    label='MODELED VERSION: main@e2a4ad579 with calibration snapshot observed 2026-10-07T12:10:55-07:00',
+    main_commit='e2a4ad579',
+    calibration_snapshot=dict(path='current_main/inputs/calibration/measured_insertion.bb7c46846.json',
+                              source_path='results/rtl/budgets_20261006/measured_insertion.json',
+                              source_commit='bb7c46846 (2026-10-07 12:07:44 -0700, closure-loop daemon)',
+                              observed_at='2026-10-07T12:10:55-07:00 (worktree file mtime when read)',
+                              sha256='4a72c6e5137d1f983c9d1ee67da23f03c5016edb0d7726b1b8f4473aa1cd4e11',
+                              note='the live file on main is rewritten by the closure-loop daemon; this basis never '
+                                   'reads it'),
+    generator=dict(path='current_main/inputs/pinned/dsrom_s81_fulldie.cfc076112.py',
+                   source='tools/dsrom_s81_fulldie.py @ e2a4ad579'),
+    geometry_status='PROVISIONAL: generator rebuild of the frame model (empty-q-slot root assumption superseded by '
+                    'the pq_parent placement: 164.16 um root rows in the first 6 tier channels, 449.28 x 1,728 um core '
+                    'slot after the VM); the geometry owner is rebuilding the actual layout')
 ANALOGUE = {'ret_root_r128': 'ot_s81ph_root_tile', 'rwb': 'dsfd_cfifo', 'pq_xbuf': 'ot_v41_rom_elem_q_qxpq_w10',
             'pq_ctl': 'ot_v41_rom_elem_q_qxpq_w10', 'lane_station': 'dsfd_stnh_566x1'}
 
@@ -697,8 +736,10 @@ def main():
     ap.add_argument('--snapshot', type=Path, default=SNAP)
     ap.add_argument('--out', type=Path)
     a = ap.parse_args()
+    global INSERTION
     if a.basis == 'current':
-        SPINE, GEOM, GEN, REPO_SUMS, SNAP_PATHS = (CURRENT[k] for k in ('SPINE', 'GEOM', 'GEN', 'REPO_SUMS', 'SNAP_PATHS'))
+        SPINE, GEOM, GEN, REPO_SUMS, SNAP_PATHS, INSERTION = (CURRENT[k] for k in (
+            'SPINE', 'GEOM', 'GEN', 'REPO_SUMS', 'SNAP_PATHS', 'INSERTION'))
     out = a.out or (OUT / 'reproduce/design.json' if a.basis == 'historical' else CUR / 'design.json')
     d = design(a.snapshot)
     if a.basis == 'current':
@@ -706,6 +747,7 @@ def main():
         d['sources']['snapshot_origin'] = 'committed on main (identical hashes to pq_snapshot_1117)'
         d['sources']['stream_stats_sha256'] = sha(STREAM) if STREAM.exists() else None
         d['current_basis'] = current_extras(d)
+        d['model_basis'] = MODEL_BASIS
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(d, indent=1, default=str) + '\n')
     p = d['problem']

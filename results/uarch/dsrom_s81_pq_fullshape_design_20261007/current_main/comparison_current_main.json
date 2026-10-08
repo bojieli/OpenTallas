@@ -1,7 +1,24 @@
 {
  "schema": "opentallas.s81.pq-fullshape.comparison-current-main.v1",
+ "model_basis": {
+  "label": "MODELED VERSION: main@e2a4ad579 with calibration snapshot observed 2026-10-07T12:10:55-07:00",
+  "main_commit": "e2a4ad579",
+  "calibration_snapshot": {
+   "path": "current_main/inputs/calibration/measured_insertion.bb7c46846.json",
+   "source_path": "results/rtl/budgets_20261006/measured_insertion.json",
+   "source_commit": "bb7c46846 (2026-10-07 12:07:44 -0700, closure-loop daemon)",
+   "observed_at": "2026-10-07T12:10:55-07:00 (worktree file mtime when read)",
+   "sha256": "4a72c6e5137d1f983c9d1ee67da23f03c5016edb0d7726b1b8f4473aa1cd4e11",
+   "note": "the live file on main is rewritten by the closure-loop daemon; this basis never reads it"
+  },
+  "generator": {
+   "path": "current_main/inputs/pinned/dsrom_s81_fulldie.cfc076112.py",
+   "source": "tools/dsrom_s81_fulldie.py @ e2a4ad579"
+  },
+  "geometry_status": "PROVISIONAL: generator rebuild of the frame model (empty-q-slot root assumption superseded by the pq_parent placement: 164.16 um root rows in the first 6 tier channels, 449.28 x 1,728 um core slot after the VM); the geometry owner is rebuilding the actual layout"
+ },
  "historical_design_sha256": "8760993137ee2a5a9371d784a3c61ecc9f857cc8c0f084796932d546f52d633b",
- "current_design_sha256": "a79ec4dcb5530aafda8d98aceb02edc6c2aa3de97f782c82bcbe0144c3952344",
+ "current_design_sha256": "7db217eb9b32a513615df87db317c624d8fd65c631120bd2e89ecb9c18ab2791",
  "base_design_leaf_changes": [
   {
    "key": ".sources.geometry_extract_sha256",
@@ -61,13 +78,13 @@
   {
    "item": "added cycles per phase (vs the native production parent)",
    "historical": 17,
-   "current": 15,
-   "reason": "the v13b parent already pays RPT=2 on its root inputs; in the split the hr end block abuts the RWB, so those repeaters are replaced, not added (the row-count path to the core stays 13 stations)"
+   "current": 18,
+   "reason": "root contract (tools/s81_root_contract.py): pipelined CAM +1 cycle per root pass, <= 4 passes on a row chain (was 3), + 2 in/out stations of the 142.56 um return strip (new); the v13b parent already pays RPT=2 on its root inputs, which the split replaces (row-count path to the core stays 13 stations)"
   },
   {
    "item": "AR loss estimate",
    "historical": 0.00532,
-   "current": 0.0047,
+   "current": 0.00564,
    "reason": "same historical per-cycle sensitivity x the new per-phase delta; PARTIAL: per-phase delta x historical +1-return-cycle sensitivity; the 1,792 per-token critical-phase list is not composed (mapping has 46681 compiled phases, of which only the token-active subset is on the path)"
   },
   {
@@ -177,6 +194,42 @@
    "historical": "geometry_extract.json",
    "current": "current_main/geometry_extract.json",
    "reason": "generator drift is 5aba116fc only (an exact-rectangle pin kind for the HBM VM8 retile); the S81 layer die has no such ports and every geometric field is identical (only generator hash / base commit differ)"
+  },
+  {
+   "item": "root placement",
+   "historical": "frame empty q position (design recommendation (1))",
+   "current": {
+    "root_rows": "one root row in each of the first 6 tier channels (one root per column, below its frame)",
+    "root_row_h_um": 164.16,
+    "root_strip_w_um": 142.56,
+    "roots_per_die_mm2": 2.996,
+    "root_cell_outline_um2": 17703.2,
+    "frame_spare_um": {
+     "before": 241,
+     "after": 77
+    },
+    "status": "PROVISIONAL: Codex /root/s81/pq_parent packing update relayed 2026-10-07 ~12:31 PT (mailbox claude_pq_design_msgs); not yet committed as a generator layout"
+   },
+   "reason": "pq_parent packing: mixed 1,792 frames are 9 fully occupied rows (4 BF full-width + 10 q half-width): no empty positions; roots move to a 164.16 um row in the first 6 tier channels; 1,792 pairs kept"
+  },
+  {
+   "item": "PQ core slot",
+   "historical": {
+    "slot": "VM north 1015 x 795 (WFC child relocation)",
+    "est_mm2": 0.32
+   },
+   "current": {
+    "slot": "449.28 x 1,728 um after the VM",
+    "slot_mm2": 0.776,
+    "fits": true
+   },
+   "reason": "pq_parent explicit core slot; capture-up / SU restack keeps the 25.61188 mm2 SU"
+  },
+  {
+   "item": "root storage per root",
+   "historical": "16,768 native + 256 parity",
+   "current": "16,768 native + 256 parity + 128 bv shadow + 3 pipe/station parity = 17,155",
+   "reason": "root contract parity definition (bv protected by a kept shadow, not parity)"
   },
   {
    "item": "stages / layer dies / pins / lane widths / SRAM / roots",

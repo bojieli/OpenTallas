@@ -31,7 +31,13 @@ module ot_hdc_v41_fh_fault_retire #(
                                         // locally register it beside their packet slice)
     output wire [3:0] write_veto,
     output wire fault,
-    output wire busy
+    output wire busy,
+    // OREG support (2026-10-07): the D side of the retired_v / retired_packet / write_veto registers (the values they
+    // take at the next edge), so a consumer can register a function of them at its output pin with zero added cycles.
+    // write_veto_nx is exact only with SAFE (write_veto = copy of write_v0).
+    output wire retired_v_nx,
+    output wire [PACKET_BITS-1:0] retired_packet_nx,
+    output wire [3:0] write_veto_nx
 );
     genvar p,l,g;
     generate if(!ENABLE) begin : g_original
@@ -43,6 +49,7 @@ module ot_hdc_v41_fh_fault_retire #(
         assign fault=f;
         assign lane_veto_pre={64{f}};
         assign busy=1'b0;
+        assign retired_v_nx=packet_v; assign retired_packet_nx=packet; assign write_veto_nx={4{f}};
     end else begin : g_cut
         localparam integer DEPTH=(MARGIN?6:4)+(SAFE?1:0);
         reg [PACKET_BITS-1:0] packet_pipe[0:DEPTH-1];
@@ -123,6 +130,9 @@ module ot_hdc_v41_fh_fault_retire #(
         assign lane_veto_pre=lane_v0;
         assign retired_v=valid_pipe[DEPTH-1];
         assign retired_packet=packet_pipe[DEPTH-1];
+        assign retired_v_nx=valid_pipe[DEPTH-2];
+        assign retired_packet_nx=packet_pipe[DEPTH-2];
+        assign write_veto_nx=SAFE?write_v0:write_veto;
         assign busy=|valid_pipe;
     end endgenerate
 endmodule

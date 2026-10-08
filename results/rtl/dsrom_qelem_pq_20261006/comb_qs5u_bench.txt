@@ -1,0 +1,9 @@
+QM=5 + QS=5 PQ1 L20 bench (QS=4 + walker / need walker / FIFO / issue registers and segment tree on the ungated clk with
+kept-copy enables; OT_PQQ_QM=5 OT_PQQ_QS=5 OT_PQQ_DEFINES=QP_CHECK,QT_CHECK, tools/dsrom_combined_l20.py field --cfg pq1_q10
+--field-layers 20, AGIdock qelem-qm/comb_qs5u, RTL 1b89b1b6d):
+2752 runs (phase) failed 0
+896 runs (node) failed 0   (QP_CHECK incl. QS5_CHECK enable == gate enable, WRD == candidates)
+Every one of the 3,648 run results identical to QS=3 (comb_qs3): zero cycles.
+QX gate (qx10qs5u.json, RTL 1b89b1b6d): pos_qs5u x4 seeds + nan_sparse PASS; neg_qs5ul1 / neg_qs5uwe (go edge dropped) /
+neg_qs5ush caught; neg_qs5unq not caught (weak mutant, differs only on back-to-back advances; same as neg_qs4nq).
+Area: one enable mux per walker / tree register (the clock-gating ICG now covers only macros, x boundary, lanes, chains).

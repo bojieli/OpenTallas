@@ -6,7 +6,8 @@
 module ot_hdc_v41_fh_head_q #(
     parameter integer W = 16, G = 4, IL = 8, AW = 24, NW = 16, FPIPE = 1, QPIN = 0, SAFE = 0,
     parameter integer HQ = 0,  // 1: eight half-quadrant views (ot_hdc_v41_fh_hquad) instead of four quadrants
-    parameter integer LRET = 0 // 1 (needs HQ): lane-local retirement + the checked endpoint as its own view
+    parameter integer LRET = 0, // 1 (needs HQ): lane-local retirement + the checked endpoint as its own view
+    parameter integer OREG = 0  // 1 (needs LRET): ctl o_we / commit_warm from pin registers (cycle-identical)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -136,7 +137,7 @@ module ot_hdc_v41_fh_head_q #(
         .ep_ack_v(ep_ack_v),.ep_fault(ep_fault),.ep_guard_busy(ep_busy),.ep_request_checked_v(ep_rqv),.ep_reply_checked_v(ep_rpv),
         .ep_ack_id(ep_id),.ep_ack_word(ep_word),.ep_ack_mask(ep_mask),.q_lane_veto(q_lane_veto));
     end else begin : g_ctl
-        ot_hdc_v41_fh_ctl #(.W(W),.G(G),.AW(AW),.NW(NW),.SAFE(SAFE),.RETURN_EXTRA(5+QPIN)) u_ctl (
+        ot_hdc_v41_fh_ctl #(.W(W),.G(G),.AW(AW),.NW(NW),.SAFE(SAFE),.OREG(OREG),.RETURN_EXTRA(5+QPIN)) u_ctl (
             .clk(clk),.rst_n(rst_n),.commit_busy(commit_busy),.native_cold_n(native_cold_n),
             .native_permission_capture(native_permission_capture),.commit_warm(commit_warm),.commit_debt(commit_debt),
             .commit_id(commit_id),.s3_v_in(s3_v_in),.a_tag_p_in(a_tag_p_in),.wr_en(wr_en),.wr_addr(wr_addr),

@@ -1,17 +1,22 @@
 `timescale 1ns/1ps
 module tb_qwen_spine_lane;
-    parameter integer NEG=0;
+    parameter integer NEG=0, OSTN=0;   // OSTN: the lane's pin stations (y +1, fault +2 against the reference tree)
     reg clk=0, rst_n=0;
     always #5 clk=~clk;
     reg [1535:0] d=0;
     reg [13:0] sel=0,tv=0;
     wire [1535:0] mutated;
     assign mutated=NEG ? {d[1535:96],d[63:32],d[95:64],d[31:0]} : d;
-    wire [1535:0] y,ref_y;
-    wire fault,ref_fault;
-    ot_qwen_spine_lane dut(clk,rst_n,mutated,sel,tv,y,fault);
+    wire [1535:0] y,ref_y0;
+    wire fault,ref_fault0;
+    ot_qwen_spine_lane #(.OSTN(OSTN)) dut(clk,rst_n,mutated,sel,tv,y,fault);
+    reg [1535:0] ry1; reg rf1, rf2;
+    always @(posedge clk) ry1 <= ref_y0;
+    always @(posedge clk or negedge rst_n) if(!rst_n) begin rf1<=0; rf2<=0; end else begin rf1<=ref_fault0; rf2<=rf1; end
+    wire [1535:0] ref_y = OSTN ? ry1 : ref_y0;
+    wire ref_fault = OSTN ? rf2 : ref_fault0;
     ot_qwen_me_sptree_w12 #(.GT(6144),.SMIN(7),.TCUT(7),.TREE_LAT(7),.TINREG(1))
-        ref_lane(clk,rst_n,d,sel,tv,ref_y,ref_fault);
+        ref_lane(clk,rst_n,d,sel,tv,ref_y0,ref_fault0);
     function automatic [31:0] fp;
         input integer value;
         integer k,j;

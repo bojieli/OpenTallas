@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.dsrom-bf.path-classification.v1",
+  "source_commit": "3978531b5eab63e4a402fffb5503504fe8578c53",
+  "status": "INTERMEDIATE_REPORT_CLASSIFICATION_NOT_SIGNOFF",
+  "route_preserved": true,
+  "classes": [
+    {
+      "stage": "GRT",
+      "kind": "BF forwarding control across lanes into adder register",
+      "startpoint": "u_elem.g_mac[0].g_bf.g_f.u_bf.g_l[0].u_c.fwd5",
+      "endpoint": "u_elem.g_mac[1].g_bf.g_f.u_bf.g_l[1].u_c.u_add.u_c0.g_r.r[12]",
+      "slack_ps": -319.78,
+      "route_period_ps": 770,
+      "launch_insertion_ps": 993.51,
+      "capture_insertion_ps": 965.19,
+      "clock_skew_ps": -28.32,
+      "crpr_ps": 16.71,
+      "clock_to_q_ps": 102.42,
+      "post_q_to_d_ps": 898.96,
+      "setup_ps": 16.79,
+      "setup_uncertainty_ps": 60,
+      "buffers": 10,
+      "logic_cells": 9,
+      "classification": "Deep forwarding/control distribution path, not an IO-only budget issue. Cross-macro/lane path label may include synthesis sharing; preserve mapped evidence, do not infer RTL ownership from path name alone.",
+      "structural_followup_if_final_miss": "Owner should localize/replicate forwarding control at each lane and pipeline the failing control/adder boundary where transaction exactness permits; measure full-shape exactness/negative controls and price all added cycles. No implementation or new route launched by harvest."
+    },
+    {
+      "stage": "CTS",
+      "kind": "Counter decode/distribution into ROM enable",
+      "startpoint": "u_elem.f_cnt[1]",
+      "endpoint": "u_elem.g_mac[1].g_pp.u_rom1/ce_in",
+      "slack_ps": -375.44,
+      "route_period_ps": 770,
+      "launch_insertion_ps": 991.67,
+      "capture_insertion_ps": 968.39,
+      "clock_to_q_ps": 99.76,
+      "post_q_to_d_ps": 911.16,
+      "macro_setup_ps": 54.06,
+      "classification": "Real macro ce_in constraint, deep buffered control distribution; counter-to-ROM boundary requires local registered enable/kept fanout control if final report confirms."
+    }
+  ],
+  "limits": [
+    "Existing reports expose one unique worst setup path per stage, repeated under multiple report modes; this is not a complete top-N endpoint histogram.",
+    "GRT hold +18.7427 and setup -319.779 are estimates at route constraints, not extracted SS/FF closure.",
+    "The GRT worst path still projects about -256.45 ps after period-only relaxation to 833.333; projection is not signoff.",
+    "ICG report_clock_skew worst setup skew 775.76 ps involves another path; it must not be substituted for the BF forwarding path clock skew -28.32 ps."
+  ],
+  "inputs": {
+    "results/rtl/dsrom_bf_hitfix_harvest_20261007/path_reports/asap7/opentallas_ot_s81_bf_native_asap7_bf_hitfix_3978531b5/base/5_global_route.rpt": "3511a00564e69af6be8bea043659a669694b60ee9c594ef23572d7432b35b89f",
+    "results/rtl/dsrom_bf_hitfix_harvest_20261007/path_reports/asap7/opentallas_ot_s81_bf_native_asap7_bf_hitfix_3978531b5/base/4_cts_final.rpt": "b7a431afddd246a723c1f39aabad96f05d81c6948cd75c6a4d5384d020fefc29"
+  },
+  "validation": "PASS: extracted compact path matches raw report; counted 10 buffers/9 logic cells and reconstructed slack to 0.02 ps."
+}

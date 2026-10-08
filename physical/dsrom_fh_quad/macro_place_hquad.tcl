@@ -1,5 +1,5 @@
 # Fused-head half quadrant (ot_hdc_v41_fh_hquad), 470 x 300 um: 8 hardened SRAM lane leaves (200 x 55, pins WEST) in
-# 2 columns x 4 rows, R0: column A at x=40, column B at x=270 (30 um channel between A's east edge and B's pins);
+# 2 columns x 4 rows, R0: column A at x=42.7, column B at x=270 (27 um channel between A's east edge and B's pins);
 # 70 um row pitch. Lane l: column l/4, row l%4. The group logic sits in the west channel and the row gaps.
 set block [ord::get_db_block]
 set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -24,7 +24,10 @@ foreach inst [$block getInsts] {
     if {[[$inst getMaster] getName] ne "ot_hdc_v41_fh_sram_lane_hardened"} {continue}
     set clean [string map [list "\\" ""] [$inst getName]]
     if {![regexp {g_bank\[(\d+)\]} $clean -> l]} {error "Unknown macro $clean"}
-    set xx [joint_snap [expr {40.0 + ($l/4)*230.0}] $x0 $xp]
+    # column A at 42.7 (was 40.0, 2026-10-07): at 40.0 the west M4 pins of lanes 0-3 sat under the M5 strap pair at
+    # 2.3 + 7 x 5.4 um (pdn_quad.tcl), so read_row[0..1] had no via access: 16 Lef58EolKeepOut in every hquad route
+    # (c073b6f60, r5 60f5a0a90). +2.7 um (half the strap pitch) puts them between pairs; column B (270) unchanged.
+    set xx [joint_snap [expr {($l/4) ? 270.0 : 42.7}] $x0 $xp]
     set yy [joint_snap [expr {12.0 + ($l%4)*70.0}] $y0 $yp]
     place_inst -name [$inst getName] -location [list $xx $yy] -orientation R0 -status FIRM
     incr n

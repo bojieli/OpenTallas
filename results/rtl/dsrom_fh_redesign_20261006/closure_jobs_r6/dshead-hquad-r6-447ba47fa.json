@@ -1,0 +1,62 @@
+{
+ "name": "dshead-hquad-r6-447ba47fa",
+ "block": "ot_hdc_v41_fh_hquad",
+ "owner": "Claude:tk-ds-head (fused-head owner, takeover 2026-10-07)",
+ "purpose": "DS fused head r4 view hquad: hquad = 8 lanes with lane-local retirement, ctl = control + narrow retirement, ep = checked endpoint (FPIPE=2); gold4 EXACT 63,128 (+55 vs margin v2) | 447ba47fa: column A off the M5 strap (16 EOL DRC fix); r5 was SS +113.98 / FF -61.02 / DRC 16",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 30,
+ "source": {
+  "branch": "claude/takeover-ds-head-20261006",
+  "commit": "447ba47fa0ca50e550c1d54ad1cd6f214403006d"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "ROUTE_HOLD_IO=ss HM=0.010 LRET=7 bash physical/dsrom_fh_safe/cl_route.sh hquad {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "ROUTE_HOLD_IO=ss HM=0.010 LRET=7 bash physical/dsrom_fh_safe/cl_route.sh hquad {LABEL} {RUN}/routes/{LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/dsrom_fh_safe/gen/signoff_hquad.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [],
+  "post_sdc": [
+   "physical/dsrom_fh_safe/gen/signoff_hquad.sdc"
+  ],
+  "macros": [
+   "physical/dsrom_fh_quad/ot_hdc_v41_fh_sram_lane_hardened"
+  ]
+ },
+ "hold_eco": {
+  "reexport": "python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_hdc_v41_fh_hquad --post-sdc physical/dsrom_fh_safe/gen/signoff_hquad.sdc --macro physical/dsrom_fh_quad/ot_hdc_v41_fh_sram_lane_hardened --out {RUN}/routes/{LABEL}/view"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/dsrom_fh_safe/closed/hquad_r6"
+  }
+ ],
+ "cycles_added": "head total +55 vs margin v2 (63,073 -> 63,128, +0.09%); r4 structure 0",
+ "merge_target": "claude/takeover-ds-head-20261006",
+ "no_bench_reason": "benched outside the loop: fused head quad/top = tools/test_fh_margin.py (head_q_safe / head_q_qpin lockstep == macro_ctx + negatives; endpoint_fpipe2) and the gold4 full bench --safe (results/rtl/dsrom_fh_redesign_20261006); head element = tools/dsrom_1m_head.py bundle --ioreg 1 --safe 1 --cut 0x1ff EXACT 128/128 argmax 21946 with neg_take/neg_x inexact (needs the released checkpoint, EPYC1 only)"
+}

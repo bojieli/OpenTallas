@@ -1,0 +1,59 @@
+{
+   "creator": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+   "invocation": "stat -json ",
+   "modules": {
+      "\\inventory_top": {
+         "num_wires":         77095,
+         "num_wire_bits":     3666332,
+         "num_pub_wires":     656,
+         "num_pub_wire_bits": 69840,
+         "num_ports":         13,
+         "num_port_bits":     1101,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         399269,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 14975,
+            "$_DFFE_PN0P_": 1889,
+            "$_DFFE_PN1P_": 17,
+            "$_DFFE_PP_": 41472,
+            "$_DFF_PN0_": 28,
+            "$_DFF_PN1_": 28,
+            "$_MUX_": 308596,
+            "$_NOT_": 1233,
+            "$_OR_": 5787,
+            "$_XOR_": 25240,
+            "$scopeinfo": 4
+         }
+      }
+   },
+      "design": {
+         "num_wires":         77095,
+         "num_wire_bits":     3666332,
+         "num_pub_wires":     656,
+         "num_pub_wire_bits": 69840,
+         "num_ports":         13,
+         "num_port_bits":     1101,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         399269,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 14975,
+            "$_DFFE_PN0P_": 1889,
+            "$_DFFE_PN1P_": 17,
+            "$_DFFE_PP_": 41472,
+            "$_DFF_PN0_": 28,
+            "$_DFF_PN1_": 28,
+            "$_MUX_": 308596,
+            "$_NOT_": 1233,
+            "$_OR_": 5787,
+            "$_XOR_": 25240,
+            "$scopeinfo": 4
+         }
+      }
+}
+

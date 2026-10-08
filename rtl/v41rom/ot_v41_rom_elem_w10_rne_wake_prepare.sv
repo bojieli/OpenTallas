@@ -64,6 +64,15 @@ module ot_v41_rom_elem_w10 #(
     parameter integer FRONT_PAR = 0,
     // Necessary baseline correction, opt-in until exact and SS/FF gates pass.
     parameter integer WAKE_REG = 0,
+    // HITFIX (BF rowfix closure, 2026-10-07; default 0 = the original element; requires FAST): the x-need match
+    // no longer reads c_u0[n_c] through an adder in the walker cycle.  Each class's pair offset xs_p - c_u0[c]
+    // (mod 256) is registered beside the x boundary register (a same-edge configuration write is bypassed), so the
+    // match is a 6-bit compare against {q, j}: c_u0 + {q, j} == xs_p  <=>  xs_p - c_u0 == {q, j} (mod 256).  The match
+    // is built twice (kept): one copy steps the walker, the other the sub-block registers nA/nB and the FIFO write
+    // flag.  The captured beat register fw_* loads every gated edge (no 532-bit enable from the match: it is read
+    // only in the cycle after a match, when it holds exactly the matched beat), and the FIFO write enable is
+    // replicated per 32-bit group from kept copies of fw_v.  Zero added cycles: cycle-exact with HITFIX = 0.
+    parameter integer HITFIX = 0,
     // BF16_PAIR (root decision 2026-09-30, option iii): BF16 rows on the standard pair.  A BF16 word (16 weights,
     // lane l = element b of golden chunk 16u + l) is held 4 cycles; 4 multipliers per macro take lanes 4k..4k+3 in
     // cycle k into 4 chunk chains (NCH >= 24 slots: slot = 4 x word-in-round + k); at the round b = 7 the 4 chunk
@@ -336,7 +345,43 @@ module ot_v41_rom_elem_w10 #(
     end else begin : g_front_serial
         assign pair_match = xs_p_e == n_pair;
     end
-    wire hit_q = n_run && !fam && xs_v_e && pair_match && xs_b_e == n_b && xs_pos_e == n_pos;
+    wire hit_q0 = n_run && !fam && xs_v_e && pair_match && xs_b_e == n_b && xs_pos_e == n_pos;
+    wire hit_q, hit_s;              // hit_s: copy for nA/nB and the FIFO write flag (HITFIX), else hit_q
+    if (HITFIX != 0) begin : g_hitfix
+        // per-class pair offset, registered with the x beat on the input clock (same edge as r_xs_p)
+        reg [7:0] r_dp [0:NSEG-1];
+        integer dc;
+        always @(posedge iclk)
+            for (dc = 0; dc < NSEG; dc = dc + 1)
+`ifdef W10_MUTANT_FRONT_PAIR
+                r_dp[dc] <= xs_p - ((cfg_v_e && cfg_a_e == 5'(NSEG + dc)) ? cfg_d_e[8:1] : c_u0[dc]) - 8'd1;
+`else
+                r_dp[dc] <= xs_p - ((cfg_v_e && cfg_a_e == 5'(NSEG + dc)) ? cfg_d_e[8:1] : c_u0[dc]);
+`endif
+        wire [1:0] hk2;
+        for (genvar hk = 0; hk < 2; hk = hk + 1) begin : g_hk
+            wire [NSEG-1:0] cm;
+            for (genvar fc = 0; fc < NSEG; fc = fc + 1) begin : g_cls
+                assign cm[fc] = (n_c == SW'(fc)) && (r_dp[fc] == {2'd0, n_q, n_j});
+            end
+            (* keep *) wire hk_v;
+            assign hk_v = n_run && !fam && xs_v_e && (|cm) && xs_b_e == n_b && xs_pos_e == n_pos;
+            assign hk2[hk] = hk_v;
+        end
+        assign hit_q = hk2[0];
+        assign hit_s = hk2[1];
+`ifndef SYNTHESIS
+`ifndef W10_MUTANT_FRONT_PAIR
+        // the registered-offset match equals the original adder match whenever the x boundary register is live
+        always @(negedge gclk) if (rst_n && FAST != 0 && (hit_q !== hit_q0 || hit_s !== hit_q0)) begin
+            $display("HITFIX_CHECK FAIL: hit %b/%b != original %b at %t", hit_q, hit_s, hit_q0, $time); $fatal(1);
+        end
+`endif
+`endif
+    end else begin : g_hitorig
+        assign hit_q = hit_q0;
+        assign hit_s = hit_q0;
+    end
     // BF16: capture, in slot order, every slice of this round (b) whose unit lies in a live class's sub-block
     reg        bn_run;
     reg [2:0]  bn_q;
@@ -469,8 +514,19 @@ module ot_v41_rom_elem_w10 #(
     reg          fw_v;
     reg [255:0]  fw_q0, fw_q1;
     reg [9:0]    fw_e0, fw_e1;
-    always @(posedge gclk or negedge rst_n) if (!rst_n) fw_v <= 1'b0; else fw_v <= (FAST != 0) && hit_q && !go_e;
-    always @(posedge gclk) if (hit_q) begin fw_q0 <= xs_q0_e; fw_q1 <= xs_q1_e; fw_e0 <= xs_e0_e; fw_e1 <= xs_e1_e; end
+    always @(posedge gclk or negedge rst_n) if (!rst_n) fw_v <= 1'b0; else fw_v <= (FAST != 0) && hit_s && !go_e;
+    always @(posedge gclk) if (HITFIX != 0 || hit_q) begin fw_q0 <= xs_q0_e; fw_q1 <= xs_q1_e; fw_e0 <= xs_e0_e; fw_e1 <= xs_e1_e; end
+    // HITFIX: kept copies of the FIFO write flag, one per 32-bit group of fw_q0 / fw_q1 (16) and one for fw_e*
+    wire [16:0] fw_vg;
+    if (HITFIX != 0) begin : g_fwv
+        for (genvar fg = 0; fg < 17; fg = fg + 1) begin : g_c
+            (* keep *) reg c;
+            always @(posedge gclk or negedge rst_n) if (!rst_n) c <= 1'b0; else c <= (FAST != 0) && hit_s && !go_e;
+            assign fw_vg[fg] = c;
+        end
+    end else begin : g_fwv1
+        assign fw_vg = {17{fw_v}};
+    end
     wire         qpush = (FAST != 0) ? fw_v : hit_q;
     wire [2:0] npush = qpush ? 3'd1 : bnum;
     reg [XW-1:0] bpre [0:3];
@@ -620,7 +676,7 @@ module ot_v41_rom_elem_w10 #(
         nQ2 <= sbf({1'b0, n_q} + 4'd2, 2'd3, nu_p, base_live);
         wQ2 <= sbf({1'b0, w_q} + 4'd2, sbs, nu_p, base_live);
     end
-    wire n_step = hit;
+    wire n_step = hit_s;
     wire n_rst = n_step && !n_nx[UW-1] && n_more;
     wire w_step = issue && w_seg_last && w_s == c_s1[w_c];
     always @(posedge gclk) begin
@@ -638,13 +694,19 @@ module ot_v41_rom_elem_w10 #(
             end
         end
     end
-    integer si;
+    integer si, fgi;
     always @(posedge gclk) begin
         if (go_e || w_restart) for (si = 0; si < NSEG; si = si + 1) w_ptr[si] <= s_base[si];
         else if (issue) w_ptr[w_s] <= w_ptr[w_s] + 13'd1;
         if (go_e || w_restart) a_ctr <= pbase;
         else if (issue) a_ctr <= a_ctr + 14'd1;
-        if (FAST != 0 ? fw_v : hit) begin
+        if (HITFIX != 0) begin
+            for (fgi = 0; fgi < 8; fgi = fgi + 1) begin
+                if (fw_vg[fgi]) f_q0[f_wr][32*fgi +: 32] <= fw_q0[32*fgi +: 32];
+                if (fw_vg[8 + fgi]) f_q1[f_wr][32*fgi +: 32] <= fw_q1[32*fgi +: 32];
+            end
+            if (fw_vg[16]) begin f_e0[f_wr] <= fw_e0; f_e1[f_wr] <= fw_e1; end
+        end else if (FAST != 0 ? fw_v : hit) begin
             f_q0[f_wr] <= FAST != 0 ? fw_q0 : xs_q0_e; f_e0[f_wr] <= FAST != 0 ? fw_e0 : xs_e0_e;
             f_q1[f_wr] <= FAST != 0 ? fw_q1 : xs_q1_e; f_e1[f_wr] <= FAST != 0 ? fw_e1 : xs_e1_e;
         end

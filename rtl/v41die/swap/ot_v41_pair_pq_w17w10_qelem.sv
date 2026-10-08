@@ -17,6 +17,9 @@
 `ifndef OT_PAIR_PQ_QM
 `define OT_PAIR_PQ_QM 0
 `endif
+`ifndef OT_PAIR_PQ_QS
+`define OT_PAIR_PQ_QS 0
+`endif
 `ifndef OT_PAIR_PQ_QW
 `define OT_PAIR_PQ_QW 0
 `endif
@@ -145,7 +148,7 @@ module ot_v41_pair_pq_w17w10 #(
     assign quiet = !e_busy && !ld_busy && !cfg_go && !(go && go_e);
     if (QELEM != 0 && BF16 == 0) begin : g_q
         if (PQ != 0) begin : g_qpq
-            ot_v41_rom_elem_q_qxpq_w10 #(.PQ(1), .QW(`OT_PAIR_PQ_QW), .QM(`OT_PAIR_PQ_QM), .NB(2), .MTP(MTP), .EARLY(EARLY), .FAST(1), .PP(1), .FRONT_PAR(0),
+            ot_v41_rom_elem_q_qxpq_w10 #(.PQ(1), .QW(`OT_PAIR_PQ_QW), .QM(`OT_PAIR_PQ_QM), .QS(`OT_PAIR_PQ_QS), .NB(2), .MTP(MTP), .EARLY(EARLY), .FAST(1), .PP(1), .FRONT_PAR(0),
                                        .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1),
                                        .QZ_NS(8), .QZ_NE(4), .QY(1), .QX(QXV), .INSTANCE(INSTANCE)) u_e (
                 .clk(clk), .rst_n(rst_n), .cfg_v(c_v), .cfg_a(c_a), .cfg_d(c_d), .go(go_e && !go_bf), .go_tag(go_tag),

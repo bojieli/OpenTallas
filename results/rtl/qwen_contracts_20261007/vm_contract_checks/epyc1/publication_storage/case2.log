@@ -1,0 +1,4 @@
+FRAME kind=0 physical_edges=3155 read_delta=0 checked_ACK_delta=1 native=1
+FRAME kind=2 physical_edges=3136 read_delta=1 checked_ACK_delta=0 native=2
+FATAL: rtl/test/qwen_vm_publication_storage_20261007/tb_qwen_vm_publication_storage.sv:89: RELIABILITY_FAILURE_XVM_HOLD_REACHES_LEASED_PUBLICATION
+       Time: 62956000  Scope: tb_qwen_vm_publication_storage

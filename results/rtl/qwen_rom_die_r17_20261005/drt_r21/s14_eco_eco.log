@@ -1,0 +1,2681 @@
+OT_PASS 1 input /srv/opentallas-scratch2/scratch/claude/qwen-die-r17/slab_m8/s14_slab_bwm8_p770/work/orfs/results/asap7/opentallas_ot_qwen_slab_port_group_asap7_s14_slab_bwm8_p770/base/5_2_route.odb spef /srv/opentallas-scratch2/scratch/claude/qwen-die-r17/slab_eco/s14_ob/6_final.spef
+OT_SDC_MERGE lines 3650 shifted {}
+OT_PASS 1 hold repair target 21.0 (post-route goal 18, acceptance 15)
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules ...
+[INFO RCX-0434] Defined process_corner MinMax0 with ext_model_index 0 (using extRulesFile defaults)
+[INFO RCX-0436] RC segment generation ot_qwen_slab_port_group (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 1016917 rc segments
+[INFO RCX-0439] Coupling Cap extraction ot_qwen_slab_port_group ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0442] 5% of 1102443 wires extracted
+[INFO RCX-0442] 10% of 1102443 wires extracted
+[INFO RCX-0442] 16% of 1102443 wires extracted
+[INFO RCX-0442] 26% of 1102443 wires extracted
+[INFO RCX-0442] 35% of 1102443 wires extracted
+[INFO RCX-0442] 41% of 1102443 wires extracted
+[INFO RCX-0442] 51% of 1102443 wires extracted
+[INFO RCX-0442] 58% of 1102443 wires extracted
+[INFO RCX-0442] 63% of 1102443 wires extracted
+[INFO RCX-0442] 70% of 1102443 wires extracted
+[INFO RCX-0442] 75% of 1102443 wires extracted
+[INFO RCX-0442] 82% of 1102443 wires extracted
+[INFO RCX-0442] 88% of 1102443 wires extracted
+[INFO RCX-0442] 93% of 1102443 wires extracted
+[INFO RCX-0442] 100% of 1102443 wires extracted
+[INFO RCX-0045] Extract 136907 nets, 1153142 rsegs, 1153142 caps, 1048728 ccs
+[INFO RCX-0042] 100000 nets finished
+[INFO RCX-0443] 136907 nets finished
+OT_ECO pre session ff
+worst slack max 285.08
+worst slack min 4.57
+Group                                  Slack
+--------------------------------------------
+asynchronous                           16.99
+clk                                     4.57
+
+OT_ECO pre_ws ss n/a ff 4.57101
+OT_ECO ff session: 31588 SS endpoint slacks, 76 SS-critical nets dont_touch
+OT_WIN pre endpoints_below_hm 1481 fixable 1481 tight 0 infeasible 0 nodata 0 (hm 21.0 filt 40 accept_ss 15 accept_ff 15 r 2.4)
+OT_WIN_CLASS fixable|pin:addr1[*]$_DFF_P_ -> pin:g_col[*].u_r2/addr_q[*]$_DFF_P_/D n=7 worst_hold=16.8 worst_setup=601.3 best_window=650.9
+OT_WIN_CLASS fixable|pin:d_gots[*]$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=2 worst_hold=19.0 worst_setup=358.1 best_window=380.2
+OT_WIN_CLASS fixable|pin:d_last$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=1 worst_hold=19.0 worst_setup=600.3 best_window=619.3
+OT_WIN_CLASS fixable|pin:d_oa[*]$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=1 worst_hold=17.4 worst_setup=359.4 best_window=376.8
+OT_WIN_CLASS fixable|pin:d_rb[*]$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=2 worst_hold=20.5 worst_setup=609.7 best_window=630.3
+OT_WIN_CLASS fixable|pin:d_sb[*]$_DFF_P_ -> pin:addr1[*]$_DFF_P_/D n=1 worst_hold=19.3 worst_setup=222.2 best_window=241.5
+OT_WIN_CLASS fixable|pin:g_alvl[*].g_node[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.w_q[*]$_DFF_P_/D n=1 worst_hold=18.9 worst_setup=221.8 best_window=240.7
+OT_WIN_CLASS fixable|pin:g_alvl[*].g_node[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.x0_q[*]$_DFF_P_/D n=37 worst_hold=12.9 worst_setup=590.2 best_window=650.1
+OT_WIN_CLASS fixable|pin:g_alvl[*].g_node[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_/D n=35 worst_hold=7.0 worst_setup=586.9 best_window=647.3
+OT_WIN_CLASS fixable|pin:g_alvl[*].g_node[*].g_split.x0_q[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].cq[*]$_DFF_P_/D n=39 worst_hold=15.1 worst_setup=216.3 best_window=504.8
+OT_WIN_CLASS fixable|pin:g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].cq[*]$_DFF_P_/D n=45 worst_hold=12.9 worst_setup=202.0 best_window=485.4
+OT_WIN_CLASS fixable|pin:g_col[*].g_bank[*].cap4[*]$_DFF_P_ -> pin:g_col[*].g_pair.m5n[*]$_DFF_P_/D n=261 worst_hold=4.6 worst_setup=258.0 best_window=519.2
+OT_WIN_CLASS fixable|pin:g_col[*].g_bank[*].cap4[*]$_DFF_P_ -> pin:g_col[*].g_pair.m5s[*]$_DFF_P_/D n=125 worst_hold=13.9 worst_setup=179.2 best_window=550.1
+OT_WIN_CLASS fixable|pin:g_col[*].g_pair.m5n[*]$_DFF_P_ -> pin:g_col[*].m5[*]$_DFF_P_/D n=53 worst_hold=10.4 worst_setup=394.9 best_window=629.8
+OT_WIN_CLASS fixable|pin:g_col[*].g_pair.m5s[*]$_DFF_P_ -> pin:g_col[*].m5[*]$_DFF_P_/D n=70 worst_hold=4.6 worst_setup=401.1 best_window=627.6
+OT_WIN_CLASS fixable|pin:g_col[*].m5[*]$_DFF_P_ -> pin:m6[*]$_DFF_P_/D n=8 worst_hold=18.0 worst_setup=275.7 best_window=493.1
+OT_WIN_CLASS fixable|pin:g_col[*].u_r2/addr_q[*]$_DFF_P_ -> pin:g_col[*].g_bank[*].u_r3/a_q[*]$_DFF_P_/D n=3 worst_hold=11.2 worst_setup=598.9 best_window=629.3
+OT_WIN_CLASS fixable|pin:g_leaf[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.w_q[*]$_DFF_P_/D n=1 worst_hold=17.5 worst_setup=174.7 best_window=192.2
+OT_WIN_CLASS fixable|pin:g_leaf[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.x0_q[*]$_DFF_P_/D n=28 worst_hold=16.2 worst_setup=563.6 best_window=648.5
+OT_WIN_CLASS fixable|pin:g_leaf[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_/D n=25 worst_hold=12.2 worst_setup=588.6 best_window=643.6
+OT_WIN_CLASS fixable|pin:g_mul[*].g_in.a_q[*]$_DFF_P_ -> pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D n=1 worst_hold=20.6 worst_setup=396.1 best_window=416.6
+OT_WIN_CLASS fixable|pin:g_mul[*].g_in.b_q[*]$_SDFF_PP0_ -> pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D n=1 worst_hold=19.0 worst_setup=606.6 best_window=625.6
+OT_WIN_CLASS fixable|pin:g_mul[*].g_in.b_q[*]$_SDFF_PP1_ -> pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D n=4 worst_hold=18.1 worst_setup=139.5 best_window=443.1
+OT_WIN_CLASS fixable|pin:g_mul[*].g_in.v_q$_DFF_P_ -> pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D n=1 worst_hold=19.4 worst_setup=593.9 best_window=613.3
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s1_byp$_DFF_P_ -> pin:g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D n=4 worst_hold=17.6 worst_setup=578.4 best_window=629.0
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s1_err[*]$_DFF_P_ -> pin:g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D n=4 worst_hold=13.4 worst_setup=593.2 best_window=637.6
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s1_power[*]$_DFF_P_ -> pin:g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D n=3 worst_hold=15.6 worst_setup=170.2 best_window=352.0
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s1_rows[*]$_DFF_P_ -> pin:g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D n=61 worst_hold=13.4 worst_setup=281.4 best_window=637.8
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s1_sign$_DFF_P_ -> pin:g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D n=2 worst_hold=11.6 worst_setup=460.4 best_window=593.2
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s1_v$_DFF_PN0_ -> pin:g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D n=4 worst_hold=18.4 worst_setup=576.4 best_window=632.0
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s2_byp$_DFF_P_ -> pin:g_mul[*].u_mul.u_c3.g_r.r[*]$_DFF_PN0_/D n=3 worst_hold=15.6 worst_setup=585.2 best_window=611.8
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s2_err[*]$_DFF_P_ -> pin:g_mul[*].u_mul.u_c3.g_r.r[*]$_DFF_PN0_/D n=3 worst_hold=19.3 worst_setup=576.8 best_window=636.6
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s2_fl46[*]$_DFF_P_ -> pin:g_mul[*].u_mul.u_c3.g_r.r[*]$_DFF_PN0_/D n=19 worst_hold=14.5 worst_setup=268.5 best_window=422.4
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s2_fl47[*]$_DFF_P_ -> pin:g_mul[*].u_mul.u_c3.g_r.r[*]$_DFF_PN0_/D n=27 worst_hold=11.6 worst_setup=255.4 best_window=453.0
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s2_sign$_DFF_P_ -> pin:g_mul[*].u_mul.u_c3.g_r.r[*]$_DFF_PN0_/D n=4 worst_hold=16.1 worst_setup=593.1 best_window=633.9
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_ -> pin:g_mul[*].u_mul.s1_byp$_DFF_P_/D n=4 worst_hold=15.7 worst_setup=583.6 best_window=632.1
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_ -> pin:g_mul[*].u_mul.s1_err[*]$_DFF_P_/D n=3 worst_hold=19.9 worst_setup=581.4 best_window=645.5
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_ -> pin:g_mul[*].u_mul.s1_power[*]$_DFF_P_/D n=1 worst_hold=12.6 worst_setup=490.7 best_window=503.3
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_ -> pin:g_mul[*].u_mul.s1_rows[*]$_DFF_P_/D n=2 worst_hold=18.5 worst_setup=441.8 best_window=466.2
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_ -> pin:g_mul[*].u_mul.s1_sign$_DFF_P_/D n=5 worst_hold=11.8 worst_setup=592.2 best_window=641.6
+OT_ECO filter: 1481 endpoints repaired, 0 excluded (tight/infeasible stay as they are)
+OT_ECO route guides from the db: 1
+OT_ECO route_strategy incremental_original_guides
+[INFO RSZ-0046] Found 1481 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |   4.571 |   0.000 | g_col[1].g_pair.m5n[204]$_DFF_P_/D
+       10 |       0 |      10 |            0 |    +0.0% |   9.350 |   0.000 | g_mul[3].u_mul.s2_prod[21]$_DFF_P_/D
+       20 |       0 |      21 |            0 |    +0.0% |  11.559 |   0.000 | g_mul[3].u_mul.u_c3.g_r.r[27]$_DFF_PN0_/D
+       30 |       0 |      31 |            0 |    +0.0% |  12.073 |   0.000 | g_col[0].m5[178]$_DFF_P_/D
+       40 |       0 |      43 |            0 |    +0.0% |  12.492 |   0.000 | g_col[2].g_pair.m5n[212]$_DFF_P_/D
+       50 |       0 |      55 |            0 |    +0.0% |  13.018 |   0.000 | g_col[0].m5[225]$_DFF_P_/D
+       60 |       0 |      64 |            0 |    +0.0% |  13.439 |   0.000 | od2[376]$_DFF_P_/D
+       70 |       0 |      74 |            0 |    +0.0% |  13.961 |   0.000 | g_col[2].g_pair.m5n[52]$_DFF_P_/D
+       80 |       0 |      84 |            0 |    +0.0% |  14.170 |   0.000 | g_col[2].g_pair.m5n[226]$_DFF_P_/D
+       90 |       0 |      96 |            0 |    +0.0% |  14.341 |   0.000 | g_col[2].g_pair.m5n[122]$_DFF_P_/D
+      100 |       0 |     106 |            0 |    +0.0% |  14.529 |   0.000 | g_col[3].g_pair.m5n[60]$_DFF_P_/D
+      110 |       0 |     116 |            0 |    +0.0% |  14.829 |   0.000 | t_lb[7]$_DFF_P_/D
+      120 |       0 |     126 |            0 |    +0.0% |  15.063 |   0.000 | g_alvl[3].g_node[0].cq[35]$_DFF_P_/D
+      130 |       0 |     136 |            0 |    +0.0% |  15.230 |   0.000 | g_mul[10].u_mul.s2_err[0]$_DFF_P_/D
+      140 |       0 |     148 |            0 |    +0.0% |  15.384 |   0.000 | g_col[3].g_pair.m5n[47]$_DFF_P_/D
+      150 |       0 |     158 |            0 |    +0.0% |  15.587 |   0.000 | g_col[1].g_pair.m5n[126]$_DFF_P_/D
+      160 |       0 |     168 |            0 |    +0.0% |  15.694 |   0.000 | g_col[3].g_pair.m5s[137]$_DFF_P_/D
+      170 |       0 |     178 |            0 |    +0.0% |  15.833 |   0.000 | g_mul[5].u_mul.valid_out$_DFF_PN0_/D
+      180 |       0 |     187 |            0 |    +0.0% |  15.955 |   0.000 | u_mt.genblk1.g_line.line[310]$_DFF_P_/D
+      190 |       0 |     198 |            0 |    +0.0% |  16.062 |   0.000 | g_col[2].g_pair.m5n[38]$_DFF_P_/D
+      200 |       0 |     208 |            0 |    +0.0% |  16.254 |   0.000 | g_col[1].g_pair.m5n[145]$_DFF_P_/D
+      210 |       0 |     217 |            0 |    +0.0% |  16.352 |   0.000 | g_mul[3].u_mul.s2_prod[17]$_DFF_P_/D
+      220 |       0 |     227 |            0 |    +0.0% |  16.442 |   0.000 | g_alvl[1].g_node[3].cq[24]$_DFF_P_/D
+      230 |       0 |     237 |            0 |    +0.0% |  16.580 |   0.000 | g_alvl[2].g_node[1].g_split.x0_q[8]$_DFF_P_/D
+      240 |       0 |     249 |            0 |    +0.0% |  16.680 |   0.000 | g_mul[8].u_mul.s2_prod[17]$_DFF_P_/D
+      250 |       0 |     259 |            0 |    +0.0% |  16.775 |   0.000 | g_col[2].g_pair.m5n[82]$_DFF_P_/D
+      260 |       0 |     270 |            0 |    +0.0% |  16.883 |   0.000 | m_tag_q[61]$_DFF_P_/D
+      270 |       0 |     279 |            0 |    +0.0% |  16.986 |   0.000 | g_mul[5].u_mul.s2_mr[27]$_DFF_P_/D
+      280 |       0 |     289 |            0 |    +0.0% |  17.070 |   0.000 | u_mt.genblk1.g_line.line[0]$_DFF_P_/D
+      290 |       0 |     300 |            0 |    +0.0% |  17.162 |   0.000 | g_mul[0].u_mul.u_c3.g_r.r[36]$_DFF_PN0_/D
+      300 |       0 |     310 |            0 |    +0.0% |  17.219 |   0.000 | g_alvl[1].g_node[7].g_split.x0_q[36]$_DFF_P_/D
+      310 |       0 |     320 |            0 |    +0.0% |  17.324 |   0.000 | u_mt.genblk1.g_line.line[15]$_DFF_P_/D
+      320 |       0 |     329 |            0 |    +0.0% |  17.387 |   0.000 | u_rt.genblk1.g_line.line[270]$_DFF_P_/D
+      330 |       0 |     340 |            0 |    +0.0% |  17.448 |   0.000 | u_rt.genblk1.g_line.line[325]$_DFF_P_/D
+      340 |       0 |     350 |            0 |    +0.0% |  17.527 |   0.000 | od2[371]$_DFF_P_/D
+      350 |       0 |     361 |            0 |    +0.0% |  17.595 |   0.000 | g_col[1].m5[109]$_DFF_P_/D
+      360 |       0 |     372 |            0 |    +0.0% |  17.629 |   0.000 | g_mul[13].u_mul.s2_ms[26]$_DFF_P_/D
+      370 |       0 |     382 |            0 |    +0.0% |  17.681 |   0.000 | g_alvl[1].g_node[3].g_split.x0_q[22]$_DFF_P_/D
+      380 |       0 |     394 |            0 |    +0.0% |  17.760 |   0.000 | g_alvl[2].g_node[1].cq[29]$_DFF_P_/D
+      390 |       0 |     404 |            0 |    +0.0% |  17.844 |   0.000 | g_mul[1].u_mul.u_c3.g_r.r[29]$_DFF_PN0_/D
+      400 |       0 |     414 |            0 |    +0.0% |  17.916 |   0.000 | g_col[2].g_pair.m5s[95]$_DFF_P_/D
+      410 |       0 |     425 |            0 |    +0.0% |  17.957 |   0.000 | g_alvl[1].g_node[6].g_split.x0_q[8]$_DFF_P_/D
+      420 |       0 |     435 |            0 |    +0.0% |  18.010 |   0.000 | g_col[2].g_pair.m5n[169]$_DFF_P_/D
+      430 |       0 |     446 |            0 |    +0.0% |  18.069 |   0.000 | u_mt.genblk1.g_line.line[277]$_DFF_P_/D
+      440 |       0 |     456 |            0 |    +0.0% |  18.137 |   0.000 | g_col[2].g_pair.m5s[28]$_DFF_P_/D
+      450 |       0 |     466 |            0 |    +0.0% |  18.166 |   0.000 | g_col[1].g_pair.m5s[165]$_DFF_P_/D
+      460 |       0 |     476 |            0 |    +0.0% |  18.212 |   0.000 | t_lb[15]$_DFF_P_/D
+      470 |       0 |     486 |            0 |    +0.0% |  18.248 |   0.000 | g_mul[7].u_mul.s2_ms[47]$_DFF_P_/D
+      480 |       0 |     496 |            0 |    +0.0% |  18.297 |   0.000 | g_mul[12].u_mul.u_c2.g_r.r[210]$_DFF_PN0_/D
+      490 |       0 |     507 |            0 |    +0.0% |  18.336 |   0.000 | g_mul[7].u_mul.u_c4.g_r.r[33]$_DFF_PN0_/D
+      500 |       0 |     517 |            0 |    +0.0% |  18.382 |   0.000 | g_col[3].u_r2/addr_q[12]$_DFF_P_/D
+      510 |       0 |     527 |            0 |    +0.0% |  18.427 |   0.000 | g_alvl[2].g_node[0].g_split.x0_q[2]$_DFF_P_/D
+      520 |       0 |     538 |            0 |    +0.0% |  18.456 |   0.000 | g_col[1].m5[181]$_DFF_P_/D
+      530 |       0 |     549 |            0 |    +0.0% |  18.515 |   0.000 | g_mul[1].u_mul.s2_ms[30]$_DFF_P_/D
+      540 |       0 |     561 |            0 |    +0.0% |  18.561 |   0.000 | g_col[1].g_pair.m5s[167]$_DFF_P_/D
+      550 |       0 |     573 |            0 |    +0.0% |  18.585 |   0.000 | g_col[0].m5[245]$_DFF_P_/D
+      560 |       0 |     583 |            0 |    +0.0% |  18.639 |   0.000 | g_mul[2].g_in.b_q[14]$_SDFF_PP0_/D
+      570 |       0 |     595 |            0 |    +0.0% |  18.681 |   0.000 | t_split[2]$_DFF_P_/D
+      580 |       0 |     605 |            0 |    +0.0% |  18.704 |   0.000 | g_mul[14].u_mul.s2_prod[18]$_DFF_P_/D
+      590 |       0 |     616 |            0 |    +0.0% |  18.760 |   0.000 | g_col[3].g_pair.m5n[178]$_DFF_P_/D
+      600 |       0 |     626 |            0 |    +0.0% |  18.803 |   0.000 | g_col[0].m5[202]$_DFF_P_/D
+      610 |       0 |     638 |            0 |    +0.0% |  18.844 |   0.000 | g_alvl[1].g_node[1].g_split.w_q[0]$_DFF_P_/D
+      620 |       0 |     648 |            0 |    +0.0% |  18.880 |   0.000 | g_alvl[4].g_node[0].cq[21]$_DFF_P_/D
+      630 |       0 |     661 |            0 |    +0.0% |  18.911 |   0.000 | g_alvl[3].g_node[1].g_split.x1_q[11]$_DFF_P_/D
+      640 |       0 |     671 |            0 |    +0.0% |  18.934 |   0.000 | g_mul[1].u_mul.u_c2.g_r.r[216]$_DFF_PN0_/D
+      650 |       0 |     680 |            0 |    +0.0% |  18.974 |   0.000 | g_alvl[1].g_node[0].g_split.x0_q[25]$_DFF_P_/D
+      660 |       0 |     690 |            0 |    +0.0% |  19.009 |   0.000 | g_col[0].g_pair.m5n[219]$_DFF_P_/D
+      670 |       0 |     700 |            0 |    +0.1% |  19.028 |   0.000 | g_alvl[2].g_node[1].g_split.x0_q[30]$_DFF_P_/D
+      680 |       0 |     710 |            0 |    +0.1% |  19.066 |   0.000 | g_alvl[1].g_node[1].g_split.x0_q[1]$_DFF_P_/D
+      690 |       0 |     720 |            0 |    +0.1% |  19.114 |   0.000 | g_col[2].g_pair.m5n[27]$_DFF_P_/D
+      700 |       0 |     730 |            0 |    +0.1% |  19.160 |   0.000 | g_mul[11].u_mul.u_c2.g_r.r[217]$_DFF_PN0_/D
+      710 |       0 |     741 |            0 |    +0.1% |  19.190 |   0.000 | g_alvl[2].g_node[2].g_split.x1_q[11]$_DFF_P_/D
+      720 |       0 |     751 |            0 |    +0.1% |  19.212 |   0.000 | g_col[2].g_pair.m5n[58]$_DFF_P_/D
+      730 |       0 |     761 |            0 |    +0.1% |  19.232 |   0.000 | g_mul[15].u_mul.s2_fl47[1]$_DFF_P_/D
+      740 |       0 |     771 |            0 |    +0.1% |  19.254 |   0.000 | g_mul[14].u_mul.s2_v$_DFF_PN0_/D
+      750 |       0 |     782 |            0 |    +0.1% |  19.296 |   0.000 | g_mul[1].u_mul.s2_ms[47]$_DFF_P_/D
+      760 |       0 |     793 |            0 |    +0.1% |  19.327 |   0.000 | g_mul[3].u_mul.s2_fl47[10]$_DFF_P_/D
+      770 |       0 |     802 |            0 |    +0.1% |  19.356 |   0.000 | u_rt.genblk1.g_line.line[277]$_DFF_P_/D
+      780 |       0 |     812 |            0 |    +0.1% |  19.372 |   0.000 | g_mul[8].u_mul.s2_sh[2]$_DFF_P_/D
+      790 |       0 |     822 |            0 |    +0.1% |  19.408 |   0.000 | g_col[0].g_pair.m5n[194]$_DFF_P_/D
+      800 |       0 |     833 |            0 |    +0.1% |  19.424 |   0.000 | om2[1]$_DFF_P_/D
+      810 |       0 |     842 |            0 |    +0.1% |  19.452 |   0.000 | u_rt.genblk1.g_line.line[184]$_DFF_P_/D
+      820 |       0 |     852 |            0 |    +0.1% |  19.470 |   0.000 | g_col[0].g_pair.m5n[160]$_DFF_P_/D
+      830 |       0 |     862 |            0 |    +0.1% |  19.506 |   0.000 | u_rt.genblk1.g_line.line[269]$_DFF_P_/D
+      840 |       0 |     872 |            0 |    +0.1% |  19.521 |   0.000 | g_leaf[8].cq[25]$_DFF_P_/D
+      850 |       0 |     883 |            0 |    +0.1% |  19.543 |   0.000 | t_split[0]$_DFF_P_/D
+      860 |       0 |     892 |            0 |    +0.1% |  19.592 |   0.000 | g_col[3].g_pair.m5n[192]$_DFF_P_/D
+      870 |       0 |     902 |            0 |    +0.1% |  19.612 |   0.000 | g_mul[10].u_mul.s2_ms[42]$_DFF_P_/D
+      880 |       0 |     912 |            0 |    +0.1% |  19.640 |   0.000 | g_mul[13].u_mul.s2_ms[38]$_DFF_P_/D
+      890 |       0 |     922 |            0 |    +0.1% |  19.658 |   0.000 | g_mul[5].u_mul.s2_v$_DFF_PN0_/D
+      900 |       0 |     930 |            0 |    +0.1% |  19.689 |   0.000 | d_oa[12]$_DFF_P_/D
+      910 |       0 |     940 |            0 |    +0.1% |  19.696 |   0.000 | t_mmode$_DFF_P_/D
+      920 |       0 |     949 |            0 |    +0.1% |  19.716 |   0.000 | m_tag_q[34]$_DFF_P_/D
+      930 |       0 |     959 |            0 |    +0.1% |  19.731 |   0.000 | g_alvl[1].g_node[7].g_split.x1_q[15]$_DFF_P_/D
+      940 |       0 |     969 |            0 |    +0.1% |  19.764 |   0.000 | g_col[3].g_pair.m5s[173]$_DFF_P_/D
+      950 |       0 |     980 |            0 |    +0.1% |  19.786 |   0.000 | u_rt.genblk1.g_line.line[179]$_DFF_P_/D
+      960 |       0 |     990 |            0 |    +0.1% |  19.809 |   0.000 | g_mul[8].u_mul.u_c4.g_r.r[31]$_DFF_PN0_/D
+      970 |       0 |    1000 |            0 |    +0.1% |  19.840 |   0.000 | g_mul[15].u_mul.s2_fl47[2]$_DFF_P_/D
+      980 |       0 |    1010 |            0 |    +0.1% |  19.867 |   0.000 | g_mul[8].u_mul.u_c2.g_r.r[220]$_DFF_PN0_/D
+      990 |       0 |    1019 |            0 |    +0.1% |  19.892 |   0.000 | g_col[3].g_pair.m5s[175]$_DFF_P_/D
+     1000 |       0 |    1028 |            0 |    +0.1% |  19.916 |   0.000 | m_tag_q[52]$_DFF_P_/D
+     1010 |       0 |    1036 |            0 |    +0.1% |  19.938 |   0.000 | g_mul[13].u_mul.s2_mr[33]$_DFF_P_/D
+     1020 |       0 |    1045 |            0 |    +0.1% |  19.963 |   0.000 | g_mul[0].u_mul.s2_fl47[1]$_DFF_P_/D
+     1030 |       0 |    1055 |            0 |    +0.1% |  19.989 |   0.000 | g_mul[8].u_mul.s1_err[0]$_DFF_P_/D
+     1040 |       0 |    1064 |            0 |    +0.1% |  20.020 |   0.000 | od2[329]$_DFF_P_/D
+     1050 |       0 |    1073 |            0 |    +0.1% |  20.041 |   0.000 | g_col[2].g_pair.m5s[10]$_DFF_P_/D
+     1060 |       0 |    1083 |            0 |    +0.1% |  20.063 |   0.000 | g_alvl[1].g_node[5].cq[21]$_DFF_P_/D
+     1070 |       0 |    1092 |            0 |    +0.1% |  20.075 |   0.000 | g_col[0].m5[204]$_DFF_P_/D
+     1080 |       0 |    1100 |            0 |    +0.1% |  20.109 |   0.000 | g_col[1].m5[161]$_DFF_P_/D
+     1090 |       0 |    1109 |            0 |    +0.1% |  20.137 |   0.000 | g_mul[4].u_mul.valid_out$_DFF_PN0_/D
+     1100 |       0 |    1117 |            0 |    +0.1% |  20.146 |   0.000 | g_mul[0].u_mul.u_c4.g_r.r[37]$_DFF_PN0_/D
+     1110 |       0 |    1124 |            0 |    +0.1% |  20.171 |   0.000 | g_alvl[1].g_node[2].g_split.x0_q[31]$_DFF_P_/D
+     1120 |       0 |    1131 |            0 |    +0.1% |  20.189 |   0.000 | g_alvl[2].g_node[2].g_split.x1_q[13]$_DFF_P_/D
+     1130 |       0 |    1141 |            0 |    +0.1% |  20.220 |   0.000 | m_tag_q[35]$_DFF_P_/D
+     1140 |       0 |    1148 |            0 |    +0.1% |  20.237 |   0.000 | g_mul[3].u_mul.u_c3.g_r.r[41]$_DFF_PN0_/D
+     1150 |       0 |    1157 |            0 |    +0.1% |  20.266 |   0.000 | g_mul[2].u_mul.s2_ms[42]$_DFF_P_/D
+     1160 |       0 |    1165 |            0 |    +0.1% |  20.276 |   0.000 | g_col[0].g_pair.m5n[197]$_DFF_P_/D
+     1170 |       0 |    1174 |            0 |    +0.1% |  20.293 |   0.000 | g_col[1].g_pair.m5n[52]$_DFF_P_/D
+     1180 |       0 |    1185 |            0 |    +0.1% |  20.332 |   0.000 | g_alvl[2].g_node[1].cq[28]$_DFF_P_/D
+     1190 |       0 |    1194 |            0 |    +0.1% |  20.356 |   0.000 | g_col[2].g_pair.m5s[17]$_DFF_P_/D
+     1200 |       0 |    1203 |            0 |    +0.1% |  20.380 |   0.000 | g_col[1].g_pair.m5n[122]$_DFF_P_/D
+     1210 |       0 |    1209 |            0 |    +0.1% |  20.409 |   0.000 | u_rt.genblk1.g_line.line[91]$_DFF_P_/D
+     1220 |       0 |    1218 |            0 |    +0.1% |  20.431 |   0.000 | g_col[2].g_pair.m5n[175]$_DFF_P_/D
+     1230 |       0 |    1226 |            0 |    +0.1% |  20.441 |   0.000 | g_mul[7].u_mul.u_c4.g_r.r[31]$_DFF_PN0_/D
+     1240 |       0 |    1234 |            0 |    +0.1% |  20.466 |   0.000 | g_col[2].g_pair.m5s[22]$_DFF_P_/D
+     1250 |       0 |    1242 |            0 |    +0.1% |  20.491 |   0.000 | g_mul[2].u_mul.u_c2.g_r.r[223]$_DFF_PN0_/D
+     1260 |       0 |    1252 |            0 |    +0.1% |  20.511 |   0.000 | g_mul[4].u_mul.s2_ms[44]$_DFF_P_/D
+     1270 |       0 |    1263 |            0 |    +0.1% |  20.534 |   0.000 | g_alvl[3].g_node[1].g_split.x0_q[7]$_DFF_P_/D
+     1280 |       0 |    1273 |            0 |    +0.1% |  20.551 |   0.000 | g_mul[6].u_mul.s2_ms[37]$_DFF_P_/D
+     1290 |       0 |    1284 |            0 |    +0.1% |  20.558 |   0.000 | g_mul[0].u_mul.u_c4.g_r.r[25]$_DFF_PN0_/D
+     1300 |       0 |    1294 |            0 |    +0.1% |  20.589 |   0.000 | g_mul[6].u_mul.u_c4.g_r.r[33]$_DFF_PN0_/D
+     1310 |       0 |    1302 |            0 |    +0.1% |  20.610 |   0.000 | g_mul[8].u_mul.u_c4.g_r.r[35]$_DFF_PN0_/D
+     1320 |       0 |    1312 |            0 |    +0.1% |  20.628 |   0.000 | g_col[2].m5[77]$_DFF_P_/D
+     1330 |       0 |    1321 |            0 |    +0.1% |  20.643 |   0.000 | g_mul[2].u_mul.s2_sh[4]$_DFF_P_/D
+     1340 |       0 |    1331 |            0 |    +0.1% |  20.656 |   0.000 | u_rt.genblk1.g_line.line[115]$_DFF_P_/D
+     1350 |       0 |    1340 |            0 |    +0.1% |  20.679 |   0.000 | g_col[1].m5[244]$_DFF_P_/D
+     1360 |       0 |    1349 |            0 |    +0.1% |  20.706 |   0.000 | g_alvl[1].g_node[2].cq[48]$_DFF_P_/D
+     1370 |       0 |    1357 |            0 |    +0.1% |  20.726 |   0.000 | g_col[3].m5[127]$_DFF_P_/D
+     1380 |       0 |    1364 |            0 |    +0.1% |  20.746 |   0.000 | g_alvl[2].g_node[2].g_split.x1_q[42]$_DFF_P_/D
+     1390 |       0 |    1374 |            0 |    +0.1% |  20.759 |   0.000 | g_alvl[1].g_node[2].g_split.x0_q[24]$_DFF_P_/D
+     1400 |       0 |    1384 |            0 |    +0.1% |  20.787 |   0.000 | g_mul[15].u_mul.s2_ms[17]$_DFF_P_/D
+     1410 |       0 |    1394 |            0 |    +0.1% |  20.814 |   0.000 | g_mul[3].u_mul.s2_ms[26]$_DFF_P_/D
+     1420 |       0 |    1402 |            0 |    +0.1% |  20.814 |   0.000 | g_mul[13].u_mul.u_c2.g_r.r[148]$_DFF_PN0_/D
+     1430 |       0 |    1411 |            0 |    +0.1% |  20.814 |   0.000 | g_mul[13].u_mul.u_c2.g_r.r[148]$_DFF_PN0_/D
+     1440 |       0 |    1419 |            0 |    +0.1% |  20.814 |   0.000 | g_mul[13].u_mul.u_c2.g_r.r[148]$_DFF_PN0_/D
+     1450 |       0 |    1429 |            0 |    +0.1% |  20.814 |   0.000 | g_mul[13].u_mul.u_c2.g_r.r[148]$_DFF_PN0_/D
+     1460 |       0 |    1438 |            0 |    +0.1% |  20.814 |   0.000 | g_mul[13].u_mul.u_c2.g_r.r[148]$_DFF_PN0_/D
+     1470 |       0 |    1448 |            0 |    +0.1% |  20.814 |   0.000 | g_mul[13].u_mul.u_c2.g_r.r[148]$_DFF_PN0_/D
+     1480 |       0 |    1458 |            0 |    +0.1% |  20.814 |   0.000 | g_mul[13].u_mul.u_c2.g_r.r[148]$_DFF_PN0_/D
+    final |       0 |    1460 |            0 |    +0.1% |  21.002 |   0.000 | g_col[2].g_pair.m5n[137]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 1460 hold buffers.
+[INFO RSZ-0506] Runtime: 51.60s
+OT_ECO cells_added 1460
+[INFO DPL-0006] Core area: 349065.15 um^2
+[INFO DPL-0007] Movable instances area: 18257.16 um^2
+[INFO DPL-0008] Fixed instances area within core: 123369.37 um^2
+[INFO DPL-0009] Utilization: 40.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 159988 cells
+[INFO DPL-0393]   height 233 row(s): 16 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        229 |        47 |       182
+        1 |        215 |        43 |       172
+        2 |        180 |        36 |       144
+        3 |        118 |        24 |        94
+        4 |         79 |        15 |        64
+        5 |         29 |         7 |        22
+        6 |         23 |         5 |        18
+        7 |         22 |         4 |        18
+        8 |         11 |         3 |         8
+        9 |         10 |         2 |         8
+       10 |          4 |         2 |         2
+       11 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 11.
+[INFO DPL-0500] Runtime: 4.55s
+Placement Analysis
+---------------------------------
+total displacement        416.3 u
+average displacement        0.0 u
+max displacement            4.2 u
+original HPWL         1588626.3 u
+legalized HPWL        1588814.8 u
+delta HPWL                    0 %
+
+OT_ECO reroute: 1830 new/moved/resized instances, 134566 wires stripped
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       16
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_qwen_slab_port_group
+Die area:                 ( 0 0 ) ( 777576 455760 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     160004
+Number of terminals:      2290
+Number of snets:          2
+Number of nets:           138367
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+[INFO DRT-0164] Number of unique instances = 349.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 2679324.
+[INFO DRT-0033] V1 shape region query size = 22330361.
+[INFO DRT-0033] M2 shape region query size = 256873.
+[INFO DRT-0033] V2 shape region query size = 442992.
+[INFO DRT-0033] M3 shape region query size = 443008.
+[INFO DRT-0033] V3 shape region query size = 295328.
+[INFO DRT-0033] M4 shape region query size = 362366.
+[INFO DRT-0033] V4 shape region query size = 412364.
+[INFO DRT-0033] M5 shape region query size = 206920.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 1034.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0076]   Complete 2000 pins.
+[INFO DRT-0078]   Complete 2468 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0079]   Complete 200 unique inst patterns.
+[INFO DRT-0079]   Complete 300 unique inst patterns.
+[INFO DRT-0081]   Complete 345 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0082]   Complete 50000 groups.
+[INFO DRT-0082]   Complete 60000 groups.
+[INFO DRT-0082]   Complete 70000 groups.
+[INFO DRT-0082]   Complete 80000 groups.
+[INFO DRT-0082]   Complete 90000 groups.
+[INFO DRT-0082]   Complete 100000 groups.
+[INFO DRT-0084]   Complete 117944 groups.
+#scanned instances     = 160004
+#unique  instances     = 347
+#stdCellGenAp          = 10095
+#stdCellValidPlanarAp  = 56
+#stdCellValidViaAp     = 8230
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 372067
+#instTermValidViaApCnt = 0
+#macroGenAp            = 560
+#macroValidPlanarAp    = 560
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:07:49, elapsed time = 00:01:00, memory = 6443.34 (MB), peak = 7229.20 (MB)
+[INFO DRT-0156] guideIn read 100000 guides.
+[INFO DRT-0156] guideIn read 200000 guides.
+[INFO DRT-0156] guideIn read 300000 guides.
+[INFO DRT-0156] guideIn read 400000 guides.
+[INFO DRT-0156] guideIn read 500000 guides.
+[INFO DRT-0156] guideIn read 600000 guides.
+[INFO DRT-0156] guideIn read 700000 guides.
+[INFO DRT-0156] guideIn read 800000 guides.
+[INFO DRT-0156] guideIn read 900000 guides.
+[INFO DRT-0156] guideIn read 1000000 guides.
+
+[INFO DRT-0157] Number of guides:     1224731
+
+[INFO DRT-0169] Post process guides.
+[INFO DRT-0176] GCELLGRID X 0 DO 1364 STEP 570 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 799 STEP 570 ;
+[INFO DRT-0026]   Complete 100000 origin guides.
+[INFO DRT-0026]   Complete 200000 origin guides.
+[INFO DRT-0026]   Complete 300000 origin guides.
+[INFO DRT-0026]   Complete 400000 origin guides.
+[INFO DRT-0026]   Complete 500000 origin guides.
+[INFO DRT-0026]   Complete 600000 origin guides.
+[INFO DRT-0026]   Complete 700000 origin guides.
+[INFO DRT-0026]   Complete 800000 origin guides.
+[INFO DRT-0026]   Complete 900000 origin guides.
+[INFO DRT-0027]   Complete 1000000 origin guides.
+[INFO DRT-0028]   Complete Active.
+[INFO DRT-0028]   Complete V0.
+[INFO DRT-0028]   Complete M1.
+[INFO DRT-0028]   Complete V1.
+[INFO DRT-0028]   Complete M2.
+[INFO DRT-0028]   Complete V2.
+[INFO DRT-0028]   Complete M3.
+[INFO DRT-0028]   Complete V3.
+[INFO DRT-0028]   Complete M4.
+[INFO DRT-0028]   Complete V4.
+[INFO DRT-0028]   Complete M5.
+[INFO DRT-0028]   Complete V5.
+[INFO DRT-0028]   Complete M6.
+[INFO DRT-0028]   Complete V6.
+[INFO DRT-0028]   Complete M7.
+[INFO DRT-0028]   Complete V7.
+[INFO DRT-0028]   Complete M8.
+[INFO DRT-0028]   Complete V8.
+[INFO DRT-0028]   Complete M9.
+[INFO DRT-0028]   Complete V9.
+[INFO DRT-0028]   Complete Pad.
+  complete 100000 nets.
+[INFO DRT-0178] Init guide query.
+[INFO DRT-0029]   Complete 100000 nets (guide).
+[INFO DRT-0035]   Complete Active (guide).
+[INFO DRT-0035]   Complete V0 (guide).
+[INFO DRT-0035]   Complete M1 (guide).
+[INFO DRT-0035]   Complete V1 (guide).
+[INFO DRT-0035]   Complete M2 (guide).
+[INFO DRT-0035]   Complete V2 (guide).
+[INFO DRT-0035]   Complete M3 (guide).
+[INFO DRT-0035]   Complete V3 (guide).
+[INFO DRT-0035]   Complete M4 (guide).
+[INFO DRT-0035]   Complete V4 (guide).
+[INFO DRT-0035]   Complete M5 (guide).
+[INFO DRT-0035]   Complete V5 (guide).
+[INFO DRT-0035]   Complete M6 (guide).
+[INFO DRT-0035]   Complete V6 (guide).
+[INFO DRT-0035]   Complete M7 (guide).
+[INFO DRT-0035]   Complete V7 (guide).
+[INFO DRT-0035]   Complete M8 (guide).
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 336829.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 311028.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 169726.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 46627.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 39788.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 37471.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 32649.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 15541.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 0.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:03, elapsed time = 00:00:01, memory = 6866.02 (MB), peak = 7229.20 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 578992 vertical wires in 28 frboxes and 410667 horizontal wires in 16 frboxes.
+[INFO DRT-0186] Done with 28273 vertical wires in 28 frboxes and 70567 horizontal wires in 16 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:01:30, elapsed time = 00:00:26, memory = 8317.26 (MB), peak = 8515.73 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:01, elapsed time = 00:00:01, memory = 8822.94 (MB), peak = 8793.09 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+    Completing 10% with 364 violations.
+    elapsed time = 00:00:34, memory = 13348.58 (MB).
+    Completing 20% with 1951 violations.
+    elapsed time = 00:01:46, memory = 14687.42 (MB).
+    Completing 30% with 3555 violations.
+    elapsed time = 00:02:58, memory = 15904.62 (MB).
+    Completing 40% with 4629 violations.
+    elapsed time = 00:04:12, memory = 16026.52 (MB).
+    Completing 50% with 6465 violations.
+    elapsed time = 00:05:47, memory = 16536.59 (MB).
+    Completing 60% with 7314 violations.
+    elapsed time = 00:06:32, memory = 16369.93 (MB).
+    Completing 70% with 8627 violations.
+    elapsed time = 00:08:07, memory = 16595.60 (MB).
+    Completing 80% with 10071 violations.
+    elapsed time = 00:09:25, memory = 17014.71 (MB).
+    Completing 90% with 10977 violations.
+    elapsed time = 00:10:50, memory = 17122.35 (MB).
+    Completing 100% with 13030 violations.
+    elapsed time = 00:13:09, memory = 16864.48 (MB).
+[INFO DRT-0199]   Number of violations = 17290.
+Viol/Layer          M1     V1     M2     V2     M3     V3     M4     V4     M5     V5     M6     V6     M7     V7     M8
+Cut Spacing          0      0      0      0      0      0      0      0      0      0      0      0      0     43      0
+CutSpcTbl            0      0      0      0      0    247      0     15      0     11      0     21      0      0      0
+EOL                  0      0    887      0    115      0     30      0      9      0      0      0      0      0      0
+Metal Spacing     2400      0    551      0    845      0     28      0      8      0      2      0      1      0      0
+Recheck              3      0   1476      0    928      0    563      0    528      0    431      0    241      0     90
+Short                0      1   1642      7    155      1     17      2     10      0      1      1      4      0      0
+eolKeepOut           0      0   5325      0    480      0    132      0     36      0      3      0      0      0      0
+[INFO DRT-0267] cpu time = 01:33:12, elapsed time = 00:13:15, memory = 16479.17 (MB), peak = 17388.54 (MB)
+Total wire length = 1667372 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 645944 um.
+Total wire length on LAYER M3 = 645869 um.
+Total wire length on LAYER M4 = 132152 um.
+Total wire length on LAYER M5 = 63155 um.
+Total wire length on LAYER M6 = 55295 um.
+Total wire length on LAYER M7 = 42681 um.
+Total wire length on LAYER M8 = 82273 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1267321.
+Up-via summary (total 1267321):
+
+------------------
+ Active          0
+     M1     367326
+     M2     700869
+     M3      74552
+     M4      37339
+     M5      34373
+     M6      29829
+     M7      23033
+     M8          0
+     M9          0
+------------------
+       1267321
+
+
+[INFO DRT-0195] Start 1st optimization iteration.
+    Completing 10% with 16670 violations.
+    elapsed time = 00:00:52, memory = 16543.37 (MB).
+    Completing 20% with 14833 violations.
+    elapsed time = 00:02:38, memory = 16974.77 (MB).
+    Completing 30% with 12633 violations.
+    elapsed time = 00:03:52, memory = 17535.68 (MB).
+    Completing 40% with 11571 violations.
+    elapsed time = 00:05:08, memory = 17604.27 (MB).
+    Completing 50% with 9626 violations.
+    elapsed time = 00:07:02, memory = 17372.37 (MB).
+    Completing 60% with 8463 violations.
+    elapsed time = 00:07:53, memory = 17426.88 (MB).
+    Completing 70% with 6487 violations.
+    elapsed time = 00:09:34, memory = 17620.57 (MB).
+    Completing 80% with 4525 violations.
+    elapsed time = 00:10:54, memory = 17423.24 (MB).
+    Completing 90% with 3398 violations.
+    elapsed time = 00:12:08, memory = 17589.83 (MB).
+    Completing 100% with 1069 violations.
+    elapsed time = 00:14:13, memory = 17363.01 (MB).
+[INFO DRT-0199]   Number of violations = 1147.
+Viol/Layer          M1     M2     V2     M3     V3     M4     V4     M5     V5     M6     V6     M7     V7
+Cut Spacing          0      0      0      0      0      0      0      0      0      0      0      0      3
+CutSpcTbl            0      0      0      0    177      0      3      0      4      0      9      0      0
+EOL                  0     72      0      9      0      7      0      0      0      0      0      0      0
+Metal Spacing      165     17      0     88      0      3      0      0      0      2      0      2      0
+Recheck              0     45      0     31      0      2      0      0      0      0      0      0      0
+Short                0     49      1     16      0      6      0      1      1      1      0      0      0
+eolKeepOut           0    339      0     48      0     37      0      6      0      3      0      0      0
+[INFO DRT-0267] cpu time = 01:41:31, elapsed time = 00:14:19, memory = 16620.86 (MB), peak = 17882.38 (MB)
+Total wire length = 1665537 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 648082 um.
+Total wire length on LAYER M3 = 647639 um.
+Total wire length on LAYER M4 = 132325 um.
+Total wire length on LAYER M5 = 62788 um.
+Total wire length on LAYER M6 = 53982 um.
+Total wire length on LAYER M7 = 40334 um.
+Total wire length on LAYER M8 = 80385 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1231808.
+Up-via summary (total 1231808):
+
+------------------
+ Active          0
+     M1     367242
+     M2     685492
+     M3      69836
+     M4      33044
+     M5      30058
+     M6      25691
+     M7      20445
+     M8          0
+     M9          0
+------------------
+       1231808
+
+
+[INFO DRT-0195] Start 2nd optimization iteration.
+    Completing 10% with 1118 violations.
+    elapsed time = 00:00:03, memory = 16578.44 (MB).
+    Completing 20% with 1043 violations.
+    elapsed time = 00:00:10, memory = 16782.55 (MB).
+    Completing 30% with 967 violations.
+    elapsed time = 00:00:17, memory = 16578.44 (MB).
+    Completing 40% with 926 violations.
+    elapsed time = 00:00:22, memory = 16677.65 (MB).
+    Completing 50% with 813 violations.
+    elapsed time = 00:00:33, memory = 16578.44 (MB).
+    Completing 60% with 766 violations.
+    elapsed time = 00:00:35, memory = 16578.44 (MB).
+    Completing 70% with 622 violations.
+    elapsed time = 00:00:46, memory = 16851.58 (MB).
+    Completing 80% with 524 violations.
+    elapsed time = 00:00:51, memory = 16578.44 (MB).
+    Completing 90% with 472 violations.
+    elapsed time = 00:00:56, memory = 16714.62 (MB).
+    Completing 100% with 396 violations.
+    elapsed time = 00:01:03, memory = 16578.44 (MB).
+[INFO DRT-0199]   Number of violations = 396.
+Viol/Layer          M1     M2     M3     V3     M4     V4     V5     V6     V7
+Cut Spacing          0      0      0      0      0      0      0      0      2
+CutSpcTbl            0      0      0    138      0      1      3      5      0
+EOL                  0     29      0      0      0      0      0      0      0
+Metal Spacing       60      2     26      0      0      0      0      0      0
+Short                0     10     10      0      1      0      0      0      0
+eolKeepOut           0    105      1      0      3      0      0      0      0
+[INFO DRT-0267] cpu time = 00:06:03, elapsed time = 00:01:05, memory = 16578.44 (MB), peak = 17882.38 (MB)
+Total wire length = 1665451 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 648124 um.
+Total wire length on LAYER M3 = 647657 um.
+Total wire length on LAYER M4 = 132303 um.
+Total wire length on LAYER M5 = 62779 um.
+Total wire length on LAYER M6 = 53960 um.
+Total wire length on LAYER M7 = 40295 um.
+Total wire length on LAYER M8 = 80330 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1230528.
+Up-via summary (total 1230528):
+
+------------------
+ Active          0
+     M1     367242
+     M2     684747
+     M3      69693
+     M4      32946
+     M5      29935
+     M6      25581
+     M7      20384
+     M8          0
+     M9          0
+------------------
+       1230528
+
+
+[INFO DRT-0195] Start 3rd optimization iteration.
+    Completing 10% with 369 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+    Completing 20% with 310 violations.
+    elapsed time = 00:00:02, memory = 16603.80 (MB).
+    Completing 30% with 271 violations.
+    elapsed time = 00:00:04, memory = 16578.44 (MB).
+    Completing 40% with 217 violations.
+    elapsed time = 00:00:06, memory = 16578.44 (MB).
+    Completing 50% with 166 violations.
+    elapsed time = 00:00:08, memory = 16629.75 (MB).
+    Completing 60% with 152 violations.
+    elapsed time = 00:00:10, memory = 16578.44 (MB).
+    Completing 70% with 131 violations.
+    elapsed time = 00:00:11, memory = 16641.96 (MB).
+    Completing 80% with 82 violations.
+    elapsed time = 00:00:14, memory = 16578.44 (MB).
+    Completing 90% with 70 violations.
+    elapsed time = 00:00:15, memory = 16578.44 (MB).
+    Completing 100% with 5 violations.
+    elapsed time = 00:00:18, memory = 16578.44 (MB).
+[INFO DRT-0199]   Number of violations = 5.
+Viol/Layer          M1     M3
+Metal Spacing        3      1
+Short                0      1
+[INFO DRT-0267] cpu time = 00:01:21, elapsed time = 00:00:18, memory = 16578.44 (MB), peak = 17882.38 (MB)
+Total wire length = 1665453 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 648236 um.
+Total wire length on LAYER M3 = 647668 um.
+Total wire length on LAYER M4 = 132181 um.
+Total wire length on LAYER M5 = 62808 um.
+Total wire length on LAYER M6 = 53997 um.
+Total wire length on LAYER M7 = 40255 um.
+Total wire length on LAYER M8 = 80306 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1230934.
+Up-via summary (total 1230934):
+
+------------------
+ Active          0
+     M1     367242
+     M2     685013
+     M3      69816
+     M4      32968
+     M5      29964
+     M6      25568
+     M7      20363
+     M8          0
+     M9          0
+------------------
+       1230934
+
+
+[INFO DRT-0195] Start 4th guides tiles iteration.
+    Completing 10% with 5 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+    Completing 20% with 5 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+    Completing 40% with 5 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+    Completing 50% with 5 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+    Completing 70% with 5 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+    Completing 80% with 3 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+    Completing 100% with 2 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+[INFO DRT-0199]   Number of violations = 2.
+Viol/Layer          M1
+Metal Spacing        2
+[INFO DRT-0267] cpu time = 00:00:01, elapsed time = 00:00:01, memory = 16578.44 (MB), peak = 17882.38 (MB)
+Total wire length = 1665453 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 648236 um.
+Total wire length on LAYER M3 = 647667 um.
+Total wire length on LAYER M4 = 132181 um.
+Total wire length on LAYER M5 = 62809 um.
+Total wire length on LAYER M6 = 53997 um.
+Total wire length on LAYER M7 = 40255 um.
+Total wire length on LAYER M8 = 80306 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1230936.
+Up-via summary (total 1230936):
+
+------------------
+ Active          0
+     M1     367242
+     M2     685013
+     M3      69816
+     M4      32970
+     M5      29964
+     M6      25568
+     M7      20363
+     M8          0
+     M9          0
+------------------
+       1230936
+
+
+[INFO DRT-0195] Start 5th guides tiles iteration.
+    Completing 30% with 2 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+    Completing 60% with 2 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+    Completing 100% with 2 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+[INFO DRT-0199]   Number of violations = 2.
+Viol/Layer          M1
+Metal Spacing        2
+[INFO DRT-0267] cpu time = 00:00:01, elapsed time = 00:00:01, memory = 16578.44 (MB), peak = 17882.38 (MB)
+Total wire length = 1665453 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 648237 um.
+Total wire length on LAYER M3 = 647667 um.
+Total wire length on LAYER M4 = 132179 um.
+Total wire length on LAYER M5 = 62809 um.
+Total wire length on LAYER M6 = 53997 um.
+Total wire length on LAYER M7 = 40255 um.
+Total wire length on LAYER M8 = 80306 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1230936.
+Up-via summary (total 1230936):
+
+------------------
+ Active          0
+     M1     367242
+     M2     685013
+     M3      69816
+     M4      32970
+     M5      29964
+     M6      25568
+     M7      20363
+     M8          0
+     M9          0
+------------------
+       1230936
+
+
+[INFO DRT-0195] Start 6th stubborn tiles iteration.
+    Completing 10% with 2 violations.
+    elapsed time = 00:00:00, memory = 16578.44 (MB).
+    Completing 20% with 2 violations.
+    elapsed time = 00:00:01, memory = 16578.44 (MB).
+    Completing 30% with 2 violations.
+    elapsed time = 00:00:01, memory = 16578.44 (MB).
+    Completing 40% with 2 violations.
+    elapsed time = 00:00:01, memory = 16578.44 (MB).
+    Completing 50% with 2 violations.
+    elapsed time = 00:00:02, memory = 16901.31 (MB).
+    Completing 60% with 2 violations.
+    elapsed time = 00:00:02, memory = 16578.44 (MB).
+    Completing 70% with 2 violations.
+    elapsed time = 00:00:03, memory = 16962.82 (MB).
+    Completing 80% with 2 violations.
+    elapsed time = 00:00:03, memory = 16963.07 (MB).
+    Completing 90% with 2 violations.
+    elapsed time = 00:00:04, memory = 16954.89 (MB).
+    Completing 100% with 0 violations.
+    elapsed time = 00:00:05, memory = 16578.44 (MB).
+[INFO DRT-0199]   Number of violations = 0.
+[INFO DRT-0267] cpu time = 00:00:37, elapsed time = 00:00:05, memory = 16578.44 (MB), peak = 17882.38 (MB)
+Total wire length = 1665453 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 648237 um.
+Total wire length on LAYER M3 = 647667 um.
+Total wire length on LAYER M4 = 132180 um.
+Total wire length on LAYER M5 = 62809 um.
+Total wire length on LAYER M6 = 53996 um.
+Total wire length on LAYER M7 = 40255 um.
+Total wire length on LAYER M8 = 80306 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1230930.
+Up-via summary (total 1230930):
+
+------------------
+ Active          0
+     M1     367242
+     M2     685011
+     M3      69816
+     M4      32969
+     M5      29961
+     M6      25568
+     M7      20363
+     M8          0
+     M9          0
+------------------
+       1230930
+
+
+[INFO DRT-0198] Complete detail routing.
+Total wire length = 1665453 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 648237 um.
+Total wire length on LAYER M3 = 647667 um.
+Total wire length on LAYER M4 = 132180 um.
+Total wire length on LAYER M5 = 62809 um.
+Total wire length on LAYER M6 = 53996 um.
+Total wire length on LAYER M7 = 40255 um.
+Total wire length on LAYER M8 = 80306 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1230930.
+Up-via summary (total 1230930):
+
+------------------
+ Active          0
+     M1     367242
+     M2     685011
+     M3      69816
+     M4      32969
+     M5      29961
+     M6      25568
+     M7      20363
+     M8          0
+     M9          0
+------------------
+       1230930
+
+
+[INFO DRT-0267] cpu time = 03:22:53, elapsed time = 00:29:08, memory = 16578.44 (MB), peak = 17882.38 (MB)
+
+[INFO DRT-0180] Post processing.
+[INFO DRT-0501] Runtime: 1845.92s
+[INFO DPL-0001] Placed 6706646 filler instances.
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules ...
+[INFO RCX-0436] RC segment generation ot_qwen_slab_port_group (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 1021750 rc segments
+[INFO RCX-0439] Coupling Cap extraction ot_qwen_slab_port_group ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0045] Extract 138367 nets, 1159434 rsegs, 1159434 caps, 1053705 ccs
+[INFO RCX-0042] 100000 nets finished
+[INFO RCX-0443] 138367 nets finished
+OT_ECO post session ff
+worst slack max 284.27
+worst slack min 7.37
+Group                                  Slack
+--------------------------------------------
+asynchronous                           20.84
+clk                                     7.37
+
+OT_ECO post_ws ss n/a ff 7.373491
+OT_ECO done
+{
+ "ss_ps": 4.66,
+ "ff_ps": 7.37,
+ "drc": 0,
+ "cells_added": 1460,
+ "errors": [],
+ "pass": 1,
+ "session": "ff",
+ "window": "endpoints_below_hm 1481 fixable 1481 tight 0 infeasible 0 nodata 0 (hm 21.0 filt 40 accept_ss 15 accept_ff 15 r 2.4)",
+ "route_strategy": [
+  "incremental_original_guides"
+ ],
+ "score": -10.34
+}OT_PASS 2 input /srv/opentallas-scratch2/scratch/claude/qwen-die-r17/slab_m8/s14_slab_bwm8_p770/work/orfs/results/asap7/opentallas_ot_qwen_slab_port_group_asap7_s14_slab_bwm8_p770/base/5_2_route.odb spef /srv/opentallas-scratch2/scratch/claude/qwen-die-r17/slab_eco/s14_ob/6_final.spef
+OT_SDC_MERGE lines 3650 shifted {}
+OT_PASS 2 hold repair target 36.945 (post-route goal 18, acceptance 15)
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules ...
+[INFO RCX-0434] Defined process_corner MinMax0 with ext_model_index 0 (using extRulesFile defaults)
+[INFO RCX-0436] RC segment generation ot_qwen_slab_port_group (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 1016917 rc segments
+[INFO RCX-0439] Coupling Cap extraction ot_qwen_slab_port_group ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0442] 5% of 1102443 wires extracted
+[INFO RCX-0442] 10% of 1102443 wires extracted
+[INFO RCX-0442] 16% of 1102443 wires extracted
+[INFO RCX-0442] 26% of 1102443 wires extracted
+[INFO RCX-0442] 35% of 1102443 wires extracted
+[INFO RCX-0442] 41% of 1102443 wires extracted
+[INFO RCX-0442] 51% of 1102443 wires extracted
+[INFO RCX-0442] 58% of 1102443 wires extracted
+[INFO RCX-0442] 63% of 1102443 wires extracted
+[INFO RCX-0442] 70% of 1102443 wires extracted
+[INFO RCX-0442] 75% of 1102443 wires extracted
+[INFO RCX-0442] 82% of 1102443 wires extracted
+[INFO RCX-0442] 88% of 1102443 wires extracted
+[INFO RCX-0442] 93% of 1102443 wires extracted
+[INFO RCX-0442] 100% of 1102443 wires extracted
+[INFO RCX-0045] Extract 136907 nets, 1153142 rsegs, 1153142 caps, 1048728 ccs
+[INFO RCX-0042] 100000 nets finished
+[INFO RCX-0443] 136907 nets finished
+OT_ECO pre session ff
+worst slack max 285.08
+worst slack min 4.57
+Group                                  Slack
+--------------------------------------------
+asynchronous                           16.99
+clk                                     4.57
+
+OT_ECO pre_ws ss n/a ff 4.57101
+OT_ECO ff session: 31588 SS endpoint slacks, 76 SS-critical nets dont_touch
+OT_WIN pre endpoints_below_hm 10036 fixable 10036 tight 0 infeasible 0 nodata 0 (hm 36.945 filt 40 accept_ss 15 accept_ff 15 r 2.4)
+OT_WIN_CLASS fixable|pin:addr1[*]$_DFF_P_ -> pin:g_col[*].u_r2/addr_q[*]$_DFF_P_/D n=21 worst_hold=16.8 worst_setup=551.5 best_window=650.9
+OT_WIN_CLASS fixable|pin:d_amax$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=1 worst_hold=28.7 worst_setup=613.4 best_window=642.1
+OT_WIN_CLASS fixable|pin:d_d[*]$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=1 worst_hold=26.7 worst_setup=128.6 best_window=155.3
+OT_WIN_CLASS fixable|pin:d_gots[*]$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=8 worst_hold=19.0 worst_setup=322.2 best_window=579.9
+OT_WIN_CLASS fixable|pin:d_last$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=1 worst_hold=19.0 worst_setup=600.3 best_window=619.3
+OT_WIN_CLASS fixable|pin:d_oa[*]$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=4 worst_hold=17.4 worst_setup=326.8 best_window=586.8
+OT_WIN_CLASS fixable|pin:d_oen$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=1 worst_hold=21.3 worst_setup=587.7 best_window=609.0
+OT_WIN_CLASS fixable|pin:d_portok$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=1 worst_hold=22.6 worst_setup=583.5 best_window=606.1
+OT_WIN_CLASS fixable|pin:d_rb[*]$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=11 worst_hold=20.5 worst_setup=549.6 best_window=643.2
+OT_WIN_CLASS fixable|pin:d_rmax$_DFF_P_ -> pin:k_tag[*]$_DFF_P_/D n=1 worst_hold=22.7 worst_setup=582.5 best_window=605.2
+OT_WIN_CLASS fixable|pin:d_sb[*]$_DFF_P_ -> pin:addr1[*]$_DFF_P_/D n=6 worst_hold=19.3 worst_setup=181.8 best_window=241.5
+OT_WIN_CLASS fixable|pin:d_sbase[*]$_DFF_P_ -> pin:addr1[*]$_DFF_P_/D n=7 worst_hold=27.5 worst_setup=207.5 best_window=293.8
+OT_WIN_CLASS fixable|pin:d_v$_DFF_P_ -> pin:k_v$_DFF_P_/D n=1 worst_hold=21.9 worst_setup=528.3 best_window=550.3
+OT_WIN_CLASS fixable|pin:g_alvl[*].g_node[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.w_q[*]$_DFF_P_/D n=7 worst_hold=18.9 worst_setup=89.4 best_window=240.7
+OT_WIN_CLASS fixable|pin:g_alvl[*].g_node[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.x0_q[*]$_DFF_P_/D n=267 worst_hold=12.9 worst_setup=538.4 best_window=650.1
+OT_WIN_CLASS fixable|pin:g_alvl[*].g_node[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_/D n=289 worst_hold=7.0 worst_setup=557.4 best_window=647.3
+OT_WIN_CLASS fixable|pin:g_alvl[*].g_node[*].g_split.x0_q[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].cq[*]$_DFF_P_/D n=289 worst_hold=15.1 worst_setup=162.1 best_window=536.9
+OT_WIN_CLASS fixable|pin:g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].cq[*]$_DFF_P_/D n=349 worst_hold=12.9 worst_setup=164.4 best_window=551.3
+OT_WIN_CLASS fixable|pin:g_col[*].g_bank[*].cap4[*]$_DFF_P_ -> pin:g_col[*].g_pair.m5n[*]$_DFF_P_/D n=892 worst_hold=4.6 worst_setup=209.8 best_window=530.2
+OT_WIN_CLASS fixable|pin:g_col[*].g_bank[*].cap4[*]$_DFF_P_ -> pin:g_col[*].g_pair.m5s[*]$_DFF_P_/D n=662 worst_hold=13.9 worst_setup=156.8 best_window=550.1
+OT_WIN_CLASS fixable|pin:g_col[*].g_bank[*].sel4$_DFF_P_ -> pin:g_col[*].g_bank[*].sel5c[*]$_DFF_P_/D n=16 worst_hold=24.2 worst_setup=611.3 best_window=647.8
+OT_WIN_CLASS fixable|pin:g_col[*].g_bank[*].u_r3/ce_q$_DFF_P_ -> pin:g_col[*].g_bank[*].sel4$_DFF_P_/D n=4 worst_hold=25.0 worst_setup=565.4 best_window=612.6
+OT_WIN_CLASS fixable|pin:g_col[*].g_pair.m5n[*]$_DFF_P_ -> pin:g_col[*].m5[*]$_DFF_P_/D n=213 worst_hold=10.4 worst_setup=350.1 best_window=636.4
+OT_WIN_CLASS fixable|pin:g_col[*].g_pair.m5s[*]$_DFF_P_ -> pin:g_col[*].m5[*]$_DFF_P_/D n=442 worst_hold=4.6 worst_setup=318.3 best_window=637.6
+OT_WIN_CLASS fixable|pin:g_col[*].m5[*]$_DFF_P_ -> pin:m6[*]$_DFF_P_/D n=187 worst_hold=18.0 worst_setup=96.7 best_window=534.0
+OT_WIN_CLASS fixable|pin:g_col[*].u_r2/addr_q[*]$_DFF_P_ -> pin:g_col[*].g_bank[*].u_r3/a_q[*]$_DFF_P_/D n=32 worst_hold=11.2 worst_setup=540.5 best_window=629.3
+OT_WIN_CLASS fixable|pin:g_col[*].u_r2/addr_q[*]$_DFF_P_ -> pin:g_col[*].g_bank[*].u_r3/ce_q$_DFF_P_/D n=6 worst_hold=29.2 worst_setup=434.8 best_window=547.2
+OT_WIN_CLASS fixable|pin:g_leaf[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.w_q[*]$_DFF_P_/D n=1 worst_hold=17.5 worst_setup=174.7 best_window=192.2
+OT_WIN_CLASS fixable|pin:g_leaf[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.x0_q[*]$_DFF_P_/D n=319 worst_hold=16.2 worst_setup=549.1 best_window=648.5
+OT_WIN_CLASS fixable|pin:g_leaf[*].cq[*]$_DFF_P_ -> pin:g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_/D n=343 worst_hold=12.2 worst_setup=521.3 best_window=646.1
+OT_WIN_CLASS fixable|pin:g_leaf[*].cq[*]$_SDFF_PN1_ -> pin:g_alvl[*].g_node[*].g_split.x0_q[*]$_DFF_P_/D n=8 worst_hold=21.1 worst_setup=597.6 best_window=642.1
+OT_WIN_CLASS fixable|pin:g_leaf[*].cq[*]$_SDFF_PN1_ -> pin:g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_/D n=8 worst_hold=22.3 worst_setup=601.8 best_window=637.2
+OT_WIN_CLASS fixable|pin:g_mul[*].g_in.a_q[*]$_DFF_P_ -> pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D n=29 worst_hold=20.6 worst_setup=123.3 best_window=600.9
+OT_WIN_CLASS fixable|pin:g_mul[*].g_in.b_q[*]$_SDFF_PP0_ -> pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D n=63 worst_hold=19.0 worst_setup=105.6 best_window=625.6
+OT_WIN_CLASS fixable|pin:g_mul[*].g_in.b_q[*]$_SDFF_PP1_ -> pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D n=73 worst_hold=18.1 worst_setup=139.5 best_window=509.3
+OT_WIN_CLASS fixable|pin:g_mul[*].g_in.v_q$_DFF_P_ -> pin:g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D n=10 worst_hold=19.4 worst_setup=543.1 best_window=631.6
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s1_byp$_DFF_P_ -> pin:g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D n=16 worst_hold=17.6 worst_setup=537.0 best_window=630.9
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s1_err[*]$_DFF_P_ -> pin:g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D n=15 worst_hold=13.4 worst_setup=530.2 best_window=637.6
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s1_power[*]$_DFF_P_ -> pin:g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D n=71 worst_hold=15.6 worst_setup=138.2 best_window=605.2
+OT_WIN_CLASS fixable|pin:g_mul[*].u_mul.s1_rows[*]$_DFF_P_ -> pin:g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D n=513 worst_hold=13.4 worst_setup=132.3 best_window=637.8
+OT_ECO filter: 10036 endpoints repaired, 0 excluded (tight/infeasible stay as they are)
+OT_ECO route guides from the db: 1
+OT_ECO route_strategy incremental_original_guides
+[INFO RSZ-0046] Found 10036 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |   4.571 |   0.000 | g_col[1].g_pair.m5n[204]$_DFF_P_/D
+       10 |       0 |      13 |            0 |    +0.0% |   9.350 |   0.000 | g_mul[3].u_mul.s2_prod[21]$_DFF_P_/D
+       20 |       0 |      27 |            0 |    +0.0% |  11.559 |   0.000 | g_mul[3].u_mul.u_c3.g_r.r[27]$_DFF_PN0_/D
+       30 |       0 |      41 |            0 |    +0.0% |  12.073 |   0.000 | g_col[0].m5[178]$_DFF_P_/D
+       40 |       0 |      53 |            0 |    +0.0% |  12.492 |   0.000 | g_col[2].g_pair.m5n[212]$_DFF_P_/D
+       50 |       0 |      65 |            0 |    +0.0% |  13.018 |   0.000 | g_col[0].m5[225]$_DFF_P_/D
+       60 |       0 |      76 |            0 |    +0.0% |  13.439 |   0.000 | od2[376]$_DFF_P_/D
+       70 |       0 |      86 |            0 |    +0.0% |  13.961 |   0.000 | g_col[2].g_pair.m5n[52]$_DFF_P_/D
+       80 |       0 |      96 |            0 |    +0.0% |  14.170 |   0.000 | g_col[2].g_pair.m5n[226]$_DFF_P_/D
+       90 |       0 |     109 |            0 |    +0.0% |  14.341 |   0.000 | g_col[2].g_pair.m5n[122]$_DFF_P_/D
+      100 |       0 |     121 |            0 |    +0.0% |  14.529 |   0.000 | g_col[3].g_pair.m5n[60]$_DFF_P_/D
+      110 |       0 |     132 |            0 |    +0.0% |  14.829 |   0.000 | t_lb[7]$_DFF_P_/D
+      120 |       0 |     144 |            0 |    +0.0% |  15.063 |   0.000 | g_alvl[3].g_node[0].cq[35]$_DFF_P_/D
+      130 |       0 |     158 |            0 |    +0.0% |  15.230 |   0.000 | g_mul[10].u_mul.s2_err[0]$_DFF_P_/D
+      140 |       0 |     171 |            0 |    +0.0% |  15.384 |   0.000 | g_col[3].g_pair.m5n[47]$_DFF_P_/D
+      150 |       0 |     182 |            0 |    +0.0% |  15.587 |   0.000 | g_col[1].g_pair.m5n[126]$_DFF_P_/D
+      160 |       0 |     193 |            0 |    +0.0% |  15.694 |   0.000 | g_col[3].g_pair.m5s[137]$_DFF_P_/D
+      170 |       0 |     203 |            0 |    +0.0% |  15.833 |   0.000 | g_mul[5].u_mul.valid_out$_DFF_PN0_/D
+      180 |       0 |     215 |            0 |    +0.0% |  15.955 |   0.000 | u_mt.genblk1.g_line.line[310]$_DFF_P_/D
+      190 |       0 |     227 |            0 |    +0.0% |  16.062 |   0.000 | g_col[2].g_pair.m5n[38]$_DFF_P_/D
+      200 |       0 |     239 |            0 |    +0.0% |  16.254 |   0.000 | g_col[1].g_pair.m5n[145]$_DFF_P_/D
+      210 |       0 |     252 |            0 |    +0.0% |  16.352 |   0.000 | g_mul[3].u_mul.s2_prod[17]$_DFF_P_/D
+      220 |       0 |     263 |            0 |    +0.0% |  16.442 |   0.000 | g_alvl[1].g_node[3].cq[24]$_DFF_P_/D
+      230 |       0 |     275 |            0 |    +0.0% |  16.580 |   0.000 | g_alvl[2].g_node[1].g_split.x0_q[8]$_DFF_P_/D
+      240 |       0 |     289 |            0 |    +0.0% |  16.680 |   0.000 | g_mul[8].u_mul.s2_prod[17]$_DFF_P_/D
+      250 |       0 |     302 |            0 |    +0.0% |  16.775 |   0.000 | g_col[2].g_pair.m5n[82]$_DFF_P_/D
+      260 |       0 |     314 |            0 |    +0.0% |  16.883 |   0.000 | m_tag_q[61]$_DFF_P_/D
+      270 |       0 |     325 |            0 |    +0.0% |  16.986 |   0.000 | g_mul[5].u_mul.s2_mr[27]$_DFF_P_/D
+      280 |       0 |     335 |            0 |    +0.0% |  17.070 |   0.000 | u_mt.genblk1.g_line.line[0]$_DFF_P_/D
+      290 |       0 |     348 |            0 |    +0.0% |  17.162 |   0.000 | g_mul[0].u_mul.u_c3.g_r.r[36]$_DFF_PN0_/D
+      300 |       0 |     361 |            0 |    +0.0% |  17.219 |   0.000 | g_alvl[1].g_node[7].g_split.x0_q[36]$_DFF_P_/D
+      310 |       0 |     372 |            0 |    +0.0% |  17.324 |   0.000 | u_mt.genblk1.g_line.line[15]$_DFF_P_/D
+      320 |       0 |     383 |            0 |    +0.0% |  17.387 |   0.000 | u_rt.genblk1.g_line.line[270]$_DFF_P_/D
+      330 |       0 |     395 |            0 |    +0.0% |  17.448 |   0.000 | u_rt.genblk1.g_line.line[325]$_DFF_P_/D
+      340 |       0 |     410 |            0 |    +0.0% |  17.527 |   0.000 | od2[371]$_DFF_P_/D
+      350 |       0 |     423 |            0 |    +0.0% |  17.595 |   0.000 | g_col[1].m5[109]$_DFF_P_/D
+      360 |       0 |     439 |            0 |    +0.0% |  17.629 |   0.000 | g_mul[13].u_mul.s2_ms[26]$_DFF_P_/D
+      370 |       0 |     451 |            0 |    +0.0% |  17.681 |   0.000 | g_alvl[1].g_node[3].g_split.x0_q[22]$_DFF_P_/D
+      380 |       0 |     466 |            0 |    +0.0% |  17.760 |   0.000 | g_alvl[2].g_node[1].cq[29]$_DFF_P_/D
+      390 |       0 |     479 |            0 |    +0.0% |  17.844 |   0.000 | g_mul[1].u_mul.u_c3.g_r.r[29]$_DFF_PN0_/D
+      400 |       0 |     492 |            0 |    +0.0% |  17.916 |   0.000 | g_col[2].g_pair.m5s[95]$_DFF_P_/D
+      410 |       0 |     503 |            0 |    +0.0% |  17.957 |   0.000 | g_alvl[1].g_node[6].g_split.x0_q[8]$_DFF_P_/D
+      420 |       0 |     513 |            0 |    +0.0% |  18.010 |   0.000 | g_col[2].g_pair.m5n[169]$_DFF_P_/D
+      430 |       0 |     525 |            0 |    +0.0% |  18.069 |   0.000 | u_mt.genblk1.g_line.line[277]$_DFF_P_/D
+      440 |       0 |     540 |            0 |    +0.0% |  18.137 |   0.000 | g_col[2].g_pair.m5s[28]$_DFF_P_/D
+      450 |       0 |     550 |            0 |    +0.0% |  18.166 |   0.000 | g_col[1].g_pair.m5s[165]$_DFF_P_/D
+      460 |       0 |     561 |            0 |    +0.0% |  18.212 |   0.000 | t_lb[15]$_DFF_P_/D
+      470 |       0 |     571 |            0 |    +0.0% |  18.248 |   0.000 | g_mul[7].u_mul.s2_ms[47]$_DFF_P_/D
+      480 |       0 |     583 |            0 |    +0.0% |  18.297 |   0.000 | g_mul[12].u_mul.u_c2.g_r.r[210]$_DFF_PN0_/D
+      490 |       0 |     595 |            0 |    +0.0% |  18.336 |   0.000 | g_mul[7].u_mul.u_c4.g_r.r[33]$_DFF_PN0_/D
+      500 |       0 |     606 |            0 |    +0.0% |  18.382 |   0.000 | g_col[3].u_r2/addr_q[12]$_DFF_P_/D
+      510 |       0 |     616 |            0 |    +0.0% |  18.427 |   0.000 | g_alvl[2].g_node[0].g_split.x0_q[2]$_DFF_P_/D
+      520 |       0 |     627 |            0 |    +0.0% |  18.456 |   0.000 | g_col[1].m5[181]$_DFF_P_/D
+      530 |       0 |     640 |            0 |    +0.0% |  18.515 |   0.000 | g_mul[1].u_mul.s2_ms[30]$_DFF_P_/D
+      540 |       0 |     654 |            0 |    +0.0% |  18.561 |   0.000 | g_col[1].g_pair.m5s[167]$_DFF_P_/D
+      550 |       0 |     668 |            0 |    +0.0% |  18.585 |   0.000 | g_col[0].m5[245]$_DFF_P_/D
+      560 |       0 |     679 |            0 |    +0.0% |  18.639 |   0.000 | g_mul[2].g_in.b_q[14]$_SDFF_PP0_/D
+      570 |       0 |     691 |            0 |    +0.0% |  18.681 |   0.000 | t_split[2]$_DFF_P_/D
+      580 |       0 |     701 |            0 |    +0.1% |  18.704 |   0.000 | g_mul[14].u_mul.s2_prod[18]$_DFF_P_/D
+      590 |       0 |     713 |            0 |    +0.1% |  18.760 |   0.000 | g_col[3].g_pair.m5n[178]$_DFF_P_/D
+      600 |       0 |     723 |            0 |    +0.1% |  18.803 |   0.000 | g_col[0].m5[202]$_DFF_P_/D
+      610 |       0 |     738 |            0 |    +0.1% |  18.844 |   0.000 | g_alvl[1].g_node[1].g_split.w_q[0]$_DFF_P_/D
+      620 |       0 |     750 |            0 |    +0.1% |  18.880 |   0.000 | g_alvl[4].g_node[0].cq[21]$_DFF_P_/D
+      630 |       0 |     763 |            0 |    +0.1% |  18.911 |   0.000 | g_alvl[3].g_node[1].g_split.x1_q[11]$_DFF_P_/D
+      640 |       0 |     775 |            0 |    +0.1% |  18.934 |   0.000 | g_mul[1].u_mul.u_c2.g_r.r[216]$_DFF_PN0_/D
+      650 |       0 |     786 |            0 |    +0.1% |  18.974 |   0.000 | g_alvl[1].g_node[0].g_split.x0_q[25]$_DFF_P_/D
+      660 |       0 |     797 |            0 |    +0.1% |  19.009 |   0.000 | g_col[0].g_pair.m5n[219]$_DFF_P_/D
+      670 |       0 |     809 |            0 |    +0.1% |  19.028 |   0.000 | g_alvl[2].g_node[1].g_split.x0_q[30]$_DFF_P_/D
+      680 |       0 |     820 |            0 |    +0.1% |  19.066 |   0.000 | g_alvl[1].g_node[1].g_split.x0_q[1]$_DFF_P_/D
+      690 |       0 |     831 |            0 |    +0.1% |  19.114 |   0.000 | g_col[2].g_pair.m5n[27]$_DFF_P_/D
+      700 |       0 |     844 |            0 |    +0.1% |  19.160 |   0.000 | g_mul[11].u_mul.u_c2.g_r.r[217]$_DFF_PN0_/D
+      710 |       0 |     861 |            0 |    +0.1% |  19.190 |   0.000 | g_alvl[2].g_node[2].g_split.x1_q[11]$_DFF_P_/D
+      720 |       0 |     872 |            0 |    +0.1% |  19.212 |   0.000 | g_col[2].g_pair.m5n[58]$_DFF_P_/D
+      730 |       0 |     884 |            0 |    +0.1% |  19.232 |   0.000 | g_mul[15].u_mul.s2_fl47[1]$_DFF_P_/D
+      740 |       0 |     897 |            0 |    +0.1% |  19.254 |   0.000 | g_mul[14].u_mul.s2_v$_DFF_PN0_/D
+      750 |       0 |     908 |            0 |    +0.1% |  19.296 |   0.000 | g_mul[1].u_mul.s2_ms[47]$_DFF_P_/D
+      760 |       0 |     919 |            0 |    +0.1% |  19.327 |   0.000 | g_mul[3].u_mul.s2_fl47[10]$_DFF_P_/D
+      770 |       0 |     931 |            0 |    +0.1% |  19.356 |   0.000 | u_rt.genblk1.g_line.line[277]$_DFF_P_/D
+      780 |       0 |     941 |            0 |    +0.1% |  19.372 |   0.000 | g_mul[8].u_mul.s2_sh[2]$_DFF_P_/D
+      790 |       0 |     952 |            0 |    +0.1% |  19.408 |   0.000 | g_col[0].g_pair.m5n[194]$_DFF_P_/D
+      800 |       0 |     964 |            0 |    +0.1% |  19.424 |   0.000 | om2[1]$_DFF_P_/D
+      810 |       0 |     975 |            0 |    +0.1% |  19.452 |   0.000 | u_rt.genblk1.g_line.line[184]$_DFF_P_/D
+      820 |       0 |     985 |            0 |    +0.1% |  19.470 |   0.000 | g_col[0].g_pair.m5n[160]$_DFF_P_/D
+      830 |       0 |     998 |            0 |    +0.1% |  19.506 |   0.000 | u_rt.genblk1.g_line.line[269]$_DFF_P_/D
+      840 |       0 |    1010 |            0 |    +0.1% |  19.521 |   0.000 | g_leaf[8].cq[25]$_DFF_P_/D
+      850 |       0 |    1021 |            0 |    +0.1% |  19.543 |   0.000 | t_split[0]$_DFF_P_/D
+      860 |       0 |    1033 |            0 |    +0.1% |  19.592 |   0.000 | g_col[3].g_pair.m5n[192]$_DFF_P_/D
+      870 |       0 |    1045 |            0 |    +0.1% |  19.612 |   0.000 | g_mul[10].u_mul.s2_ms[42]$_DFF_P_/D
+      880 |       0 |    1056 |            0 |    +0.1% |  19.640 |   0.000 | g_mul[13].u_mul.s2_ms[38]$_DFF_P_/D
+      890 |       0 |    1071 |            0 |    +0.1% |  19.658 |   0.000 | g_mul[5].u_mul.s2_v$_DFF_PN0_/D
+      900 |       0 |    1084 |            0 |    +0.1% |  19.689 |   0.000 | d_oa[12]$_DFF_P_/D
+      910 |       0 |    1095 |            0 |    +0.1% |  19.696 |   0.000 | t_mmode$_DFF_P_/D
+      920 |       0 |    1107 |            0 |    +0.1% |  19.716 |   0.000 | m_tag_q[34]$_DFF_P_/D
+      930 |       0 |    1118 |            0 |    +0.1% |  19.731 |   0.000 | g_alvl[1].g_node[7].g_split.x1_q[15]$_DFF_P_/D
+      940 |       0 |    1130 |            0 |    +0.1% |  19.764 |   0.000 | g_col[3].g_pair.m5s[173]$_DFF_P_/D
+      950 |       0 |    1142 |            0 |    +0.1% |  19.786 |   0.000 | u_rt.genblk1.g_line.line[179]$_DFF_P_/D
+      960 |       0 |    1155 |            0 |    +0.1% |  19.809 |   0.000 | g_mul[8].u_mul.u_c4.g_r.r[31]$_DFF_PN0_/D
+      970 |       0 |    1167 |            0 |    +0.1% |  19.840 |   0.000 | g_mul[15].u_mul.s2_fl47[2]$_DFF_P_/D
+      980 |       0 |    1180 |            0 |    +0.1% |  19.867 |   0.000 | g_mul[8].u_mul.u_c2.g_r.r[220]$_DFF_PN0_/D
+      990 |       0 |    1190 |            0 |    +0.1% |  19.892 |   0.000 | g_col[3].g_pair.m5s[175]$_DFF_P_/D
+     1000 |       0 |    1201 |            0 |    +0.1% |  19.916 |   0.000 | m_tag_q[52]$_DFF_P_/D
+     1010 |       0 |    1212 |            0 |    +0.1% |  19.938 |   0.000 | g_mul[13].u_mul.s2_mr[33]$_DFF_P_/D
+     1020 |       0 |    1223 |            0 |    +0.1% |  19.963 |   0.000 | g_mul[0].u_mul.s2_fl47[1]$_DFF_P_/D
+     1030 |       0 |    1236 |            0 |    +0.1% |  19.989 |   0.000 | g_mul[8].u_mul.s1_err[0]$_DFF_P_/D
+     1040 |       0 |    1250 |            0 |    +0.1% |  20.020 |   0.000 | od2[329]$_DFF_P_/D
+     1050 |       0 |    1260 |            0 |    +0.1% |  20.041 |   0.000 | g_col[2].g_pair.m5s[10]$_DFF_P_/D
+     1060 |       0 |    1274 |            0 |    +0.1% |  20.063 |   0.000 | g_alvl[1].g_node[5].cq[21]$_DFF_P_/D
+     1070 |       0 |    1286 |            0 |    +0.1% |  20.075 |   0.000 | g_col[0].m5[204]$_DFF_P_/D
+     1080 |       0 |    1300 |            0 |    +0.1% |  20.109 |   0.000 | g_col[1].m5[161]$_DFF_P_/D
+     1090 |       0 |    1311 |            0 |    +0.1% |  20.137 |   0.000 | g_mul[4].u_mul.valid_out$_DFF_PN0_/D
+     1100 |       0 |    1322 |            0 |    +0.1% |  20.146 |   0.000 | g_mul[0].u_mul.u_c4.g_r.r[37]$_DFF_PN0_/D
+     1110 |       0 |    1333 |            0 |    +0.1% |  20.171 |   0.000 | g_alvl[1].g_node[2].g_split.x0_q[31]$_DFF_P_/D
+     1120 |       0 |    1347 |            0 |    +0.1% |  20.189 |   0.000 | g_alvl[2].g_node[2].g_split.x1_q[13]$_DFF_P_/D
+     1130 |       0 |    1360 |            0 |    +0.1% |  20.220 |   0.000 | m_tag_q[35]$_DFF_P_/D
+     1140 |       0 |    1371 |            0 |    +0.1% |  20.237 |   0.000 | g_mul[3].u_mul.u_c3.g_r.r[41]$_DFF_PN0_/D
+     1150 |       0 |    1383 |            0 |    +0.1% |  20.266 |   0.000 | g_mul[2].u_mul.s2_ms[42]$_DFF_P_/D
+     1160 |       0 |    1395 |            0 |    +0.1% |  20.276 |   0.000 | g_col[0].g_pair.m5n[197]$_DFF_P_/D
+     1170 |       0 |    1406 |            0 |    +0.1% |  20.293 |   0.000 | g_col[1].g_pair.m5n[52]$_DFF_P_/D
+     1180 |       0 |    1418 |            0 |    +0.1% |  20.332 |   0.000 | g_alvl[2].g_node[1].cq[28]$_DFF_P_/D
+     1190 |       0 |    1429 |            0 |    +0.1% |  20.356 |   0.000 | g_col[2].g_pair.m5s[17]$_DFF_P_/D
+     1200 |       0 |    1441 |            0 |    +0.1% |  20.380 |   0.000 | g_col[1].g_pair.m5n[122]$_DFF_P_/D
+     1210 |       0 |    1452 |            0 |    +0.1% |  20.409 |   0.000 | u_rt.genblk1.g_line.line[91]$_DFF_P_/D
+     1220 |       0 |    1466 |            0 |    +0.1% |  20.431 |   0.000 | g_col[2].g_pair.m5n[175]$_DFF_P_/D
+     1230 |       0 |    1476 |            0 |    +0.1% |  20.441 |   0.000 | g_mul[7].u_mul.u_c4.g_r.r[31]$_DFF_PN0_/D
+     1240 |       0 |    1487 |            0 |    +0.1% |  20.466 |   0.000 | g_col[2].g_pair.m5s[22]$_DFF_P_/D
+     1250 |       0 |    1500 |            0 |    +0.1% |  20.491 |   0.000 | g_mul[2].u_mul.u_c2.g_r.r[223]$_DFF_PN0_/D
+     1260 |       0 |    1511 |            0 |    +0.1% |  20.511 |   0.000 | g_mul[4].u_mul.s2_ms[44]$_DFF_P_/D
+     1270 |       0 |    1523 |            0 |    +0.1% |  20.534 |   0.000 | g_alvl[3].g_node[1].g_split.x0_q[7]$_DFF_P_/D
+     1280 |       0 |    1534 |            0 |    +0.1% |  20.551 |   0.000 | g_mul[6].u_mul.s2_ms[37]$_DFF_P_/D
+     1290 |       0 |    1547 |            0 |    +0.1% |  20.558 |   0.000 | g_mul[0].u_mul.u_c4.g_r.r[25]$_DFF_PN0_/D
+     1300 |       0 |    1558 |            0 |    +0.1% |  20.589 |   0.000 | g_mul[6].u_mul.u_c4.g_r.r[33]$_DFF_PN0_/D
+     1310 |       0 |    1569 |            0 |    +0.1% |  20.610 |   0.000 | g_mul[8].u_mul.u_c4.g_r.r[35]$_DFF_PN0_/D
+     1320 |       0 |    1580 |            0 |    +0.1% |  20.628 |   0.000 | g_col[2].m5[77]$_DFF_P_/D
+     1330 |       0 |    1593 |            0 |    +0.1% |  20.643 |   0.000 | g_mul[2].u_mul.s2_sh[4]$_DFF_P_/D
+     1340 |       0 |    1607 |            0 |    +0.1% |  20.656 |   0.000 | u_rt.genblk1.g_line.line[115]$_DFF_P_/D
+     1350 |       0 |    1617 |            0 |    +0.1% |  20.679 |   0.000 | g_col[1].m5[244]$_DFF_P_/D
+     1360 |       0 |    1631 |            0 |    +0.1% |  20.706 |   0.000 | g_alvl[1].g_node[2].cq[48]$_DFF_P_/D
+     1370 |       0 |    1645 |            0 |    +0.1% |  20.726 |   0.000 | g_col[3].m5[127]$_DFF_P_/D
+     1380 |       0 |    1656 |            0 |    +0.1% |  20.746 |   0.000 | g_alvl[2].g_node[2].g_split.x1_q[42]$_DFF_P_/D
+     1390 |       0 |    1667 |            0 |    +0.1% |  20.759 |   0.000 | g_alvl[1].g_node[2].g_split.x0_q[24]$_DFF_P_/D
+     1400 |       0 |    1677 |            0 |    +0.1% |  20.787 |   0.000 | g_mul[15].u_mul.s2_ms[17]$_DFF_P_/D
+     1410 |       0 |    1688 |            0 |    +0.1% |  20.814 |   0.000 | g_mul[3].u_mul.s2_ms[26]$_DFF_P_/D
+     1420 |       0 |    1698 |            0 |    +0.1% |  20.843 |   0.000 | g_mul[4].u_mul.u_c2.g_r.r[218]$_DFF_PN0_/D
+     1430 |       0 |    1710 |            0 |    +0.1% |  20.861 |   0.000 | g_mul[2].u_mul.s2_sign$_DFF_P_/D
+     1440 |       0 |    1723 |            0 |    +0.1% |  20.876 |   0.000 | g_alvl[1].g_node[4].g_split.x0_q[44]$_DFF_P_/D
+     1450 |       0 |    1734 |            0 |    +0.1% |  20.895 |   0.000 | g_col[3].g_pair.m5s[79]$_DFF_P_/D
+     1460 |       0 |    1745 |            0 |    +0.1% |  20.921 |   0.000 | g_mul[1].u_mul.s2_mr[35]$_DFF_P_/D
+     1470 |       0 |    1756 |            0 |    +0.1% |  20.950 |   0.000 | g_col[0].m5[215]$_DFF_P_/D
+     1480 |       0 |    1768 |            0 |    +0.1% |  20.988 |   0.000 | u_mt.genblk1.g_line.line[148]$_DFF_P_/D
+     1490 |       0 |    1780 |            0 |    +0.1% |  21.027 |   0.000 | g_col[3].g_pair.m5s[88]$_DFF_P_/D
+     1500 |       0 |    1792 |            0 |    +0.1% |  21.053 |   0.000 | g_mul[5].u_tc/gre_q$_DFF_P_/D
+     1510 |       0 |    1804 |            0 |    +0.1% |  21.082 |   0.000 | g_alvl[1].g_node[4].g_split.x0_q[47]$_DFF_P_/D
+     1520 |       0 |    1817 |            0 |    +0.1% |  21.097 |   0.000 | g_alvl[1].g_node[6].g_split.x0_q[5]$_DFF_P_/D
+     1530 |       0 |    1830 |            0 |    +0.1% |  21.117 |   0.000 | u_rt.genblk1.g_line.line[130]$_DFF_P_/D
+     1540 |       0 |    1842 |            0 |    +0.1% |  21.138 |   0.000 | g_alvl[3].g_node[0].g_split.x0_q[6]$_DFF_P_/D
+     1550 |       0 |    1856 |            0 |    +0.1% |  21.160 |   0.000 | g_col[1].g_pair.m5s[45]$_DFF_P_/D
+     1560 |       0 |    1867 |            0 |    +0.1% |  21.189 |   0.000 | g_alvl[3].g_node[1].g_split.x0_q[5]$_DFF_P_/D
+     1570 |       0 |    1878 |            0 |    +0.1% |  21.224 |   0.000 | g_col[2].g_pair.m5n[32]$_DFF_P_/D
+     1580 |       0 |    1888 |            0 |    +0.1% |  21.247 |   0.000 | u_mt.genblk1.g_line.line[270]$_DFF_P_/D
+     1590 |       0 |    1899 |            0 |    +0.1% |  21.267 |   0.000 | g_mul[8].u_mul.s1_byp$_DFF_P_/D
+     1600 |       0 |    1913 |            0 |    +0.1% |  21.290 |   0.000 | g_col[3].g_pair.m5s[37]$_DFF_P_/D
+     1610 |       0 |    1925 |            0 |    +0.1% |  21.317 |   0.000 | oa1[14]$_DFF_P_/D
+     1620 |       0 |    1939 |            0 |    +0.1% |  21.338 |   0.000 | g_mul[10].u_mul.u_c4.g_r.r[30]$_DFF_PN0_/D
+     1630 |       0 |    1950 |            0 |    +0.1% |  21.361 |   0.000 | g_mul[0].u_mul.s2_fl47[4]$_DFF_P_/D
+     1640 |       0 |    1960 |            0 |    +0.1% |  21.381 |   0.000 | g_col[3].g_pair.m5n[244]$_DFF_P_/D
+     1650 |       0 |    1971 |            0 |    +0.1% |  21.398 |   0.000 | g_alvl[1].g_node[0].g_split.x1_q[10]$_DFF_P_/D
+     1660 |       0 |    1981 |            0 |    +0.1% |  21.421 |   0.000 | g_col[3].g_pair.m5n[235]$_DFF_P_/D
+     1670 |       0 |    1992 |            0 |    +0.1% |  21.446 |   0.000 | g_alvl[1].g_node[1].cq[34]$_DFF_P_/D
+     1680 |       0 |    2003 |            0 |    +0.1% |  21.465 |   0.000 | g_col[3].u_r2/addr_q[23]$_DFF_P_/D
+     1690 |       0 |    2015 |            0 |    +0.1% |  21.482 |   0.000 | g_alvl[2].g_node[3].g_split.x1_q[7]$_DFF_P_/D
+     1700 |       0 |    2026 |            0 |    +0.1% |  21.513 |   0.000 | g_alvl[2].g_node[2].cq[21]$_DFF_P_/D
+     1710 |       0 |    2042 |            0 |    +0.1% |  21.529 |   0.000 | od2[295]$_DFF_P_/D
+     1720 |       0 |    2053 |            0 |    +0.1% |  21.552 |   0.000 | g_mul[2].u_mul.u_c3.g_r.r[38]$_DFF_PN0_/D
+     1730 |       0 |    2063 |            0 |    +0.1% |  21.584 |   0.000 | g_alvl[2].g_node[0].g_split.x0_q[14]$_DFF_P_/D
+     1740 |       0 |    2075 |            0 |    +0.1% |  21.609 |   0.000 | g_mul[5].u_mul.s2_sh[5]$_DFF_P_/D
+     1750 |       0 |    2086 |            0 |    +0.2% |  21.626 |   0.000 | g_alvl[2].g_node[1].g_split.x0_q[35]$_DFF_P_/D
+     1760 |       0 |    2097 |            0 |    +0.2% |  21.649 |   0.000 | g_mul[10].u_mul.u_c3.g_r.r[30]$_DFF_PN0_/D
+     1770 |       0 |    2110 |            0 |    +0.2% |  21.670 |   0.000 | g_col[2].g_pair.m5n[42]$_DFF_P_/D
+     1780 |       0 |    2119 |            0 |    +0.2% |  21.699 |   0.000 | g_col[0].m5[242]$_DFF_P_/D
+     1790 |       0 |    2130 |            0 |    +0.2% |  21.722 |   0.000 | g_mul[14].u_mul.u_c4.g_r.r[29]$_DFF_PN0_/D
+     1800 |       0 |    2141 |            0 |    +0.2% |  21.737 |   0.000 | g_col[0].g_pair.m5n[157]$_DFF_P_/D
+     1810 |       0 |    2152 |            0 |    +0.2% |  21.759 |   0.000 | u_mt.genblk1.g_line.line[281]$_DFF_P_/D
+     1820 |       0 |    2164 |            0 |    +0.2% |  21.779 |   0.000 | d_oa[14]$_DFF_P_/D
+     1830 |       0 |    2178 |            0 |    +0.2% |  21.798 |   0.000 | g_mul[14].u_mul.s2_mr[23]$_DFF_P_/D
+     1840 |       0 |    2190 |            0 |    +0.2% |  21.826 |   0.000 | g_mul[4].u_mul.u_c2.g_r.r[215]$_DFF_PN0_/D
+     1850 |       0 |    2204 |            0 |    +0.2% |  21.855 |   0.000 | g_col[1].g_pair.m5s[172]$_DFF_P_/D
+     1860 |       0 |    2216 |            0 |    +0.2% |  21.872 |   0.000 | u_rt.genblk1.g_line.line[21]$_DFF_P_/D
+     1870 |       0 |    2228 |            0 |    +0.2% |  21.888 |   0.000 | g_alvl[2].g_node[0].g_split.x1_q[8]$_DFF_P_/D
+     1880 |       0 |    2240 |            0 |    +0.2% |  21.907 |   0.000 | od2[57]$_DFF_P_/D
+     1890 |       0 |    2252 |            0 |    +0.2% |  21.928 |   0.000 | g_alvl[1].g_node[1].g_split.x1_q[19]$_DFF_P_/D
+     1900 |       0 |    2262 |            0 |    +0.2% |  21.948 |   0.000 | g_col[0].g_pair.m5n[214]$_DFF_P_/D
+     1910 |       0 |    2277 |            0 |    +0.2% |  21.970 |   0.000 | g_col[3].g_pair.m5n[182]$_DFF_P_/D
+     1920 |       0 |    2289 |            0 |    +0.2% |  21.990 |   0.000 | g_mul[0].u_mul.s2_ms[19]$_DFF_P_/D
+     1930 |       0 |    2301 |            0 |    +0.2% |  22.016 |   0.000 | g_col[2].g_pair.m5n[178]$_DFF_P_/D
+     1940 |       0 |    2312 |            0 |    +0.2% |  22.044 |   0.000 | u_rt.genblk1.g_line.line[404]$_DFF_P_/D
+     1950 |       0 |    2326 |            0 |    +0.2% |  22.056 |   0.000 | g_mul[2].u_mul.u_c4.g_r.r[14]$_DFF_PN0_/D
+     1960 |       0 |    2339 |            0 |    +0.2% |  22.074 |   0.000 | m6[154]$_DFF_P_/D
+     1970 |       0 |    2352 |            0 |    +0.2% |  22.088 |   0.000 | g_col[0].m5[231]$_DFF_P_/D
+     1980 |       0 |    2365 |            0 |    +0.2% |  22.116 |   0.000 | g_mul[12].g_in.b_q[11]$_SDFF_PP1_/D
+     1990 |       0 |    2376 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2000 |       0 |    2388 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2010 |       0 |    2401 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2020 |       0 |    2414 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2030 |       0 |    2426 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2040 |       0 |    2438 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2050 |       0 |    2448 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2060 |       0 |    2461 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2070 |       0 |    2472 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2080 |       0 |    2485 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2090 |       0 |    2498 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2100 |       0 |    2509 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2110 |       0 |    2520 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2120 |       0 |    2535 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2130 |       0 |    2546 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2140 |       0 |    2558 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2150 |       0 |    2573 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2160 |       0 |    2589 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2170 |       0 |    2601 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2180 |       0 |    2610 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2190 |       0 |    2623 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2200 |       0 |    2633 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2210 |       0 |    2646 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2220 |       0 |    2657 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2230 |       0 |    2667 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2240 |       0 |    2680 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2250 |       0 |    2694 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2260 |       0 |    2705 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2270 |       0 |    2717 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2280 |       0 |    2729 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2290 |       0 |    2744 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2300 |       0 |    2757 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2310 |       0 |    2772 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2320 |       0 |    2785 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2330 |       0 |    2795 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2340 |       0 |    2806 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2350 |       0 |    2818 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2360 |       0 |    2830 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2370 |       0 |    2843 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2380 |       0 |    2856 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2390 |       0 |    2867 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2400 |       0 |    2877 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2410 |       0 |    2890 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2420 |       0 |    2901 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2430 |       0 |    2913 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2440 |       0 |    2925 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2450 |       0 |    2939 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2460 |       0 |    2953 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2470 |       0 |    2965 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2480 |       0 |    2975 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2490 |       0 |    2987 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2500 |       0 |    3002 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2510 |       0 |    3015 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2520 |       0 |    3029 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2530 |       0 |    3040 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2540 |       0 |    3053 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2550 |       0 |    3067 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2560 |       0 |    3077 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2570 |       0 |    3089 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2580 |       0 |    3100 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2590 |       0 |    3112 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2600 |       0 |    3123 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2610 |       0 |    3136 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2620 |       0 |    3149 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2630 |       0 |    3161 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2640 |       0 |    3173 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2650 |       0 |    3187 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2660 |       0 |    3198 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2670 |       0 |    3212 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2680 |       0 |    3225 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2690 |       0 |    3239 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2700 |       0 |    3252 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2710 |       0 |    3264 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2720 |       0 |    3277 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2730 |       0 |    3287 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2740 |       0 |    3302 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2750 |       0 |    3315 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2760 |       0 |    3328 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2770 |       0 |    3340 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2780 |       0 |    3350 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2790 |       0 |    3361 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2800 |       0 |    3373 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2810 |       0 |    3383 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2820 |       0 |    3395 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2830 |       0 |    3407 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2840 |       0 |    3420 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2850 |       0 |    3431 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2860 |       0 |    3442 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2870 |       0 |    3452 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2880 |       0 |    3462 |            0 |    +0.2% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2890 |       0 |    3472 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2900 |       0 |    3484 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2910 |       0 |    3497 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2920 |       0 |    3510 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2930 |       0 |    3523 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2940 |       0 |    3536 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2950 |       0 |    3547 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2960 |       0 |    3559 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2970 |       0 |    3575 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2980 |       0 |    3587 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     2990 |       0 |    3603 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3000 |       0 |    3619 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3010 |       0 |    3630 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3020 |       0 |    3644 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3030 |       0 |    3655 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3040 |       0 |    3668 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3050 |       0 |    3679 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3060 |       0 |    3690 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3070 |       0 |    3701 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3080 |       0 |    3712 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3090 |       0 |    3725 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3100 |       0 |    3737 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3110 |       0 |    3749 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3120 |       0 |    3759 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3130 |       0 |    3770 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3140 |       0 |    3783 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3150 |       0 |    3796 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3160 |       0 |    3807 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3170 |       0 |    3818 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3180 |       0 |    3828 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3190 |       0 |    3838 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3200 |       0 |    3849 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3210 |       0 |    3861 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3220 |       0 |    3874 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3230 |       0 |    3888 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3240 |       0 |    3901 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3250 |       0 |    3914 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3260 |       0 |    3926 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3270 |       0 |    3939 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3280 |       0 |    3952 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3290 |       0 |    3966 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3300 |       0 |    3978 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3310 |       0 |    3990 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3320 |       0 |    4000 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3330 |       0 |    4011 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3340 |       0 |    4023 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3350 |       0 |    4034 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3360 |       0 |    4046 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3370 |       0 |    4057 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3380 |       0 |    4071 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3390 |       0 |    4083 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3400 |       0 |    4093 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3410 |       0 |    4107 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3420 |       0 |    4121 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3430 |       0 |    4131 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3440 |       0 |    4142 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3450 |       0 |    4154 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3460 |       0 |    4165 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3470 |       0 |    4179 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3480 |       0 |    4191 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3490 |       0 |    4203 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3500 |       0 |    4216 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3510 |       0 |    4230 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3520 |       0 |    4240 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3530 |       0 |    4254 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3540 |       0 |    4265 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3550 |       0 |    4274 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3560 |       0 |    4286 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3570 |       0 |    4297 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3580 |       0 |    4311 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3590 |       0 |    4321 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3600 |       0 |    4332 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3610 |       0 |    4344 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3620 |       0 |    4358 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3630 |       0 |    4368 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3640 |       0 |    4380 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3650 |       0 |    4392 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3660 |       0 |    4404 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3670 |       0 |    4415 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3680 |       0 |    4425 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3690 |       0 |    4435 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3700 |       0 |    4447 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3710 |       0 |    4460 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3720 |       0 |    4474 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3730 |       0 |    4487 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3740 |       0 |    4498 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3750 |       0 |    4508 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3760 |       0 |    4519 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3770 |       0 |    4530 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3780 |       0 |    4542 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3790 |       0 |    4556 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3800 |       0 |    4569 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3810 |       0 |    4582 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3820 |       0 |    4593 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3830 |       0 |    4604 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3840 |       0 |    4617 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3850 |       0 |    4627 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3860 |       0 |    4637 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3870 |       0 |    4648 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3880 |       0 |    4659 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3890 |       0 |    4672 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3900 |       0 |    4684 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3910 |       0 |    4694 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3920 |       0 |    4708 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3930 |       0 |    4717 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3940 |       0 |    4729 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3950 |       0 |    4739 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3960 |       0 |    4751 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3970 |       0 |    4761 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3980 |       0 |    4773 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     3990 |       0 |    4784 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4000 |       0 |    4796 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4010 |       0 |    4807 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4020 |       0 |    4818 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4030 |       0 |    4829 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4040 |       0 |    4842 |            0 |    +0.3% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4050 |       0 |    4853 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4060 |       0 |    4866 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4070 |       0 |    4882 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4080 |       0 |    4892 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4090 |       0 |    4906 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4100 |       0 |    4918 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4110 |       0 |    4927 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4120 |       0 |    4938 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4130 |       0 |    4950 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4140 |       0 |    4960 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4150 |       0 |    4971 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4160 |       0 |    4984 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4170 |       0 |    4996 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4180 |       0 |    5007 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4190 |       0 |    5018 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4200 |       0 |    5029 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4210 |       0 |    5043 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4220 |       0 |    5055 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4230 |       0 |    5067 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4240 |       0 |    5079 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4250 |       0 |    5091 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4260 |       0 |    5101 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4270 |       0 |    5115 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4280 |       0 |    5126 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4290 |       0 |    5139 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4300 |       0 |    5152 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4310 |       0 |    5164 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4320 |       0 |    5175 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4330 |       0 |    5186 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4340 |       0 |    5197 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4350 |       0 |    5210 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4360 |       0 |    5223 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4370 |       0 |    5234 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4380 |       0 |    5246 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4390 |       0 |    5258 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4400 |       0 |    5271 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4410 |       0 |    5282 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4420 |       0 |    5292 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4430 |       0 |    5302 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4440 |       0 |    5315 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4450 |       0 |    5327 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4460 |       0 |    5339 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4470 |       0 |    5350 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4480 |       0 |    5361 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4490 |       0 |    5372 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4500 |       0 |    5383 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4510 |       0 |    5396 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4520 |       0 |    5406 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4530 |       0 |    5417 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4540 |       0 |    5427 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4550 |       0 |    5438 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4560 |       0 |    5448 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4570 |       0 |    5459 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4580 |       0 |    5470 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4590 |       0 |    5481 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4600 |       0 |    5493 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4610 |       0 |    5504 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4620 |       0 |    5517 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4630 |       0 |    5527 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4640 |       0 |    5538 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4650 |       0 |    5549 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4660 |       0 |    5560 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4670 |       0 |    5572 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4680 |       0 |    5583 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4690 |       0 |    5596 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4700 |       0 |    5608 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4710 |       0 |    5621 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4720 |       0 |    5635 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4730 |       0 |    5647 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4740 |       0 |    5659 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4750 |       0 |    5669 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4760 |       0 |    5681 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4770 |       0 |    5692 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4780 |       0 |    5701 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4790 |       0 |    5711 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4800 |       0 |    5722 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4810 |       0 |    5732 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4820 |       0 |    5743 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4830 |       0 |    5753 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4840 |       0 |    5763 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4850 |       0 |    5775 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4860 |       0 |    5788 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4870 |       0 |    5801 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4880 |       0 |    5812 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4890 |       0 |    5821 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4900 |       0 |    5832 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4910 |       0 |    5844 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4920 |       0 |    5855 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4930 |       0 |    5868 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4940 |       0 |    5882 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4950 |       0 |    5893 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4960 |       0 |    5905 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4970 |       0 |    5915 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4980 |       0 |    5925 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     4990 |       0 |    5937 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5000 |       0 |    5948 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5010 |       0 |    5959 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5020 |       0 |    5971 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5030 |       0 |    5982 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5040 |       0 |    5993 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5050 |       0 |    6003 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5060 |       0 |    6013 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5070 |       0 |    6022 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5080 |       0 |    6036 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5090 |       0 |    6047 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5100 |       0 |    6058 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5110 |       0 |    6069 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5120 |       0 |    6079 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5130 |       0 |    6090 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5140 |       0 |    6101 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5150 |       0 |    6113 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5160 |       0 |    6123 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5170 |       0 |    6134 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5180 |       0 |    6144 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5190 |       0 |    6154 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5200 |       0 |    6164 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5210 |       0 |    6176 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5220 |       0 |    6187 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5230 |       0 |    6201 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5240 |       0 |    6214 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5250 |       0 |    6226 |            0 |    +0.4% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5260 |       0 |    6238 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5270 |       0 |    6249 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5280 |       0 |    6260 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5290 |       0 |    6273 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5300 |       0 |    6283 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5310 |       0 |    6295 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5320 |       0 |    6305 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5330 |       0 |    6317 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5340 |       0 |    6327 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5350 |       0 |    6337 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5360 |       0 |    6346 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5370 |       0 |    6358 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5380 |       0 |    6368 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5390 |       0 |    6379 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5400 |       0 |    6389 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5410 |       0 |    6401 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5420 |       0 |    6412 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5430 |       0 |    6423 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5440 |       0 |    6435 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5450 |       0 |    6448 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5460 |       0 |    6461 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5470 |       0 |    6473 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5480 |       0 |    6482 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5490 |       0 |    6492 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5500 |       0 |    6504 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5510 |       0 |    6516 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5520 |       0 |    6530 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5530 |       0 |    6541 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5540 |       0 |    6553 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5550 |       0 |    6562 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5560 |       0 |    6572 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5570 |       0 |    6582 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5580 |       0 |    6592 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5590 |       0 |    6605 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5600 |       0 |    6616 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5610 |       0 |    6625 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5620 |       0 |    6638 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5630 |       0 |    6651 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5640 |       0 |    6661 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5650 |       0 |    6672 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5660 |       0 |    6682 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5670 |       0 |    6692 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5680 |       0 |    6703 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5690 |       0 |    6715 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5700 |       0 |    6727 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5710 |       0 |    6738 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5720 |       0 |    6749 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5730 |       0 |    6761 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5740 |       0 |    6772 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5750 |       0 |    6782 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5760 |       0 |    6795 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5770 |       0 |    6806 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5780 |       0 |    6817 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5790 |       0 |    6829 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5800 |       0 |    6840 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5810 |       0 |    6849 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5820 |       0 |    6859 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5830 |       0 |    6870 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5840 |       0 |    6882 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5850 |       0 |    6894 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5860 |       0 |    6906 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5870 |       0 |    6916 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5880 |       0 |    6928 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5890 |       0 |    6938 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5900 |       0 |    6949 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5910 |       0 |    6959 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5920 |       0 |    6971 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5930 |       0 |    6983 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5940 |       0 |    6996 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5950 |       0 |    7006 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5960 |       0 |    7018 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5970 |       0 |    7029 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5980 |       0 |    7040 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     5990 |       0 |    7051 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6000 |       0 |    7059 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6010 |       0 |    7069 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6020 |       0 |    7080 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6030 |       0 |    7090 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6040 |       0 |    7102 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6050 |       0 |    7111 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6060 |       0 |    7124 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6070 |       0 |    7136 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6080 |       0 |    7145 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6090 |       0 |    7155 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6100 |       0 |    7167 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6110 |       0 |    7180 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6120 |       0 |    7192 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6130 |       0 |    7204 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6140 |       0 |    7215 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6150 |       0 |    7227 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6160 |       0 |    7236 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6170 |       0 |    7245 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6180 |       0 |    7254 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6190 |       0 |    7267 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6200 |       0 |    7278 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6210 |       0 |    7287 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6220 |       0 |    7300 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6230 |       0 |    7312 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6240 |       0 |    7322 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6250 |       0 |    7334 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6260 |       0 |    7346 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6270 |       0 |    7355 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6280 |       0 |    7367 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6290 |       0 |    7382 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6300 |       0 |    7392 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6310 |       0 |    7400 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6320 |       0 |    7413 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6330 |       0 |    7425 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6340 |       0 |    7438 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6350 |       0 |    7450 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6360 |       0 |    7460 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6370 |       0 |    7471 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6380 |       0 |    7481 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6390 |       0 |    7493 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6400 |       0 |    7505 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6410 |       0 |    7519 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6420 |       0 |    7531 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6430 |       0 |    7541 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6440 |       0 |    7555 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6450 |       0 |    7566 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6460 |       0 |    7579 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6470 |       0 |    7593 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6480 |       0 |    7604 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6490 |       0 |    7616 |            0 |    +0.5% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6500 |       0 |    7627 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6510 |       0 |    7637 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6520 |       0 |    7648 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6530 |       0 |    7658 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6540 |       0 |    7670 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6550 |       0 |    7682 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6560 |       0 |    7695 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6570 |       0 |    7706 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6580 |       0 |    7719 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6590 |       0 |    7731 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6600 |       0 |    7741 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6610 |       0 |    7752 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6620 |       0 |    7765 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6630 |       0 |    7776 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6640 |       0 |    7787 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6650 |       0 |    7797 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6660 |       0 |    7813 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6670 |       0 |    7825 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6680 |       0 |    7835 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6690 |       0 |    7850 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6700 |       0 |    7862 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6710 |       0 |    7873 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6720 |       0 |    7885 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6730 |       0 |    7895 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6740 |       0 |    7908 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6750 |       0 |    7921 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6760 |       0 |    7932 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6770 |       0 |    7943 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6780 |       0 |    7953 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6790 |       0 |    7964 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6800 |       0 |    7976 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6810 |       0 |    7989 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6820 |       0 |    8003 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6830 |       0 |    8014 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6840 |       0 |    8027 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6850 |       0 |    8039 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6860 |       0 |    8050 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6870 |       0 |    8062 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6880 |       0 |    8073 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6890 |       0 |    8085 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6900 |       0 |    8097 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6910 |       0 |    8108 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6920 |       0 |    8120 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6930 |       0 |    8130 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6940 |       0 |    8142 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6950 |       0 |    8153 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6960 |       0 |    8164 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6970 |       0 |    8178 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6980 |       0 |    8191 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     6990 |       0 |    8204 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7000 |       0 |    8214 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7010 |       0 |    8224 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7020 |       0 |    8235 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7030 |       0 |    8246 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7040 |       0 |    8258 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7050 |       0 |    8270 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7060 |       0 |    8280 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7070 |       0 |    8290 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7080 |       0 |    8302 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7090 |       0 |    8311 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7100 |       0 |    8321 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7110 |       0 |    8333 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7120 |       0 |    8343 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7130 |       0 |    8353 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7140 |       0 |    8364 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7150 |       0 |    8375 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7160 |       0 |    8385 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7170 |       0 |    8395 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7180 |       0 |    8406 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7190 |       0 |    8418 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7200 |       0 |    8429 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7210 |       0 |    8438 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7220 |       0 |    8448 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7230 |       0 |    8459 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7240 |       0 |    8470 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7250 |       0 |    8482 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7260 |       0 |    8493 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7270 |       0 |    8502 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7280 |       0 |    8512 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7290 |       0 |    8525 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7300 |       0 |    8537 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7310 |       0 |    8547 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7320 |       0 |    8559 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7330 |       0 |    8570 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7340 |       0 |    8582 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7350 |       0 |    8592 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7360 |       0 |    8603 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7370 |       0 |    8613 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7380 |       0 |    8625 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7390 |       0 |    8635 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7400 |       0 |    8645 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7410 |       0 |    8656 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7420 |       0 |    8668 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7430 |       0 |    8679 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7440 |       0 |    8690 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7450 |       0 |    8701 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7460 |       0 |    8712 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7470 |       0 |    8722 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7480 |       0 |    8732 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7490 |       0 |    8742 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7500 |       0 |    8752 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7510 |       0 |    8763 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7520 |       0 |    8773 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7530 |       0 |    8785 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7540 |       0 |    8796 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7550 |       0 |    8806 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7560 |       0 |    8816 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7570 |       0 |    8829 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7580 |       0 |    8840 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7590 |       0 |    8850 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7600 |       0 |    8860 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7610 |       0 |    8869 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7620 |       0 |    8880 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7630 |       0 |    8890 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7640 |       0 |    8901 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7650 |       0 |    8912 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7660 |       0 |    8923 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7670 |       0 |    8934 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7680 |       0 |    8946 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7690 |       0 |    8956 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7700 |       0 |    8968 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7710 |       0 |    8978 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7720 |       0 |    8987 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7730 |       0 |    8997 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7740 |       0 |    9007 |            0 |    +0.6% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7750 |       0 |    9017 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7760 |       0 |    9027 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7770 |       0 |    9037 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7780 |       0 |    9048 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7790 |       0 |    9059 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7800 |       0 |    9069 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7810 |       0 |    9081 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7820 |       0 |    9092 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7830 |       0 |    9103 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7840 |       0 |    9115 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7850 |       0 |    9125 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7860 |       0 |    9136 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7870 |       0 |    9148 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7880 |       0 |    9158 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7890 |       0 |    9170 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7900 |       0 |    9180 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7910 |       0 |    9192 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7920 |       0 |    9202 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7930 |       0 |    9212 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7940 |       0 |    9222 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7950 |       0 |    9232 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7960 |       0 |    9244 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7970 |       0 |    9254 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7980 |       0 |    9264 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     7990 |       0 |    9274 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8000 |       0 |    9284 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8010 |       0 |    9296 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8020 |       0 |    9309 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8030 |       0 |    9319 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8040 |       0 |    9332 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8050 |       0 |    9344 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8060 |       0 |    9353 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8070 |       0 |    9364 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8080 |       0 |    9375 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8090 |       0 |    9386 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8100 |       0 |    9398 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8110 |       0 |    9410 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8120 |       0 |    9421 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8130 |       0 |    9432 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8140 |       0 |    9444 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8150 |       0 |    9454 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8160 |       0 |    9464 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8170 |       0 |    9475 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8180 |       0 |    9485 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8190 |       0 |    9496 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8200 |       0 |    9507 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8210 |       0 |    9519 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8220 |       0 |    9529 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8230 |       0 |    9542 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8240 |       0 |    9552 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8250 |       0 |    9563 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8260 |       0 |    9575 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8270 |       0 |    9585 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8280 |       0 |    9599 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8290 |       0 |    9611 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8300 |       0 |    9621 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8310 |       0 |    9632 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8320 |       0 |    9642 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8330 |       0 |    9652 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8340 |       0 |    9664 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8350 |       0 |    9675 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8360 |       0 |    9686 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8370 |       0 |    9695 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8380 |       0 |    9704 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8390 |       0 |    9714 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8400 |       0 |    9724 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8410 |       0 |    9736 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8420 |       0 |    9747 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8430 |       0 |    9757 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8440 |       0 |    9766 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8450 |       0 |    9776 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8460 |       0 |    9785 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8470 |       0 |    9798 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8480 |       0 |    9808 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8490 |       0 |    9819 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8500 |       0 |    9829 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8510 |       0 |    9839 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8520 |       0 |    9851 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8530 |       0 |    9862 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8540 |       0 |    9873 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8550 |       0 |    9882 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8560 |       0 |    9892 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8570 |       0 |    9905 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8580 |       0 |    9914 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8590 |       0 |    9925 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8600 |       0 |    9936 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8610 |       0 |    9946 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8620 |       0 |    9960 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8630 |       0 |    9969 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8640 |       0 |    9978 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8650 |       0 |    9989 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8660 |       0 |   10000 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8670 |       0 |   10012 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8680 |       0 |   10022 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8690 |       0 |   10033 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8700 |       0 |   10043 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8710 |       0 |   10050 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8720 |       0 |   10061 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8730 |       0 |   10071 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8740 |       0 |   10082 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8750 |       0 |   10091 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8760 |       0 |   10100 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8770 |       0 |   10109 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8780 |       0 |   10120 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8790 |       0 |   10132 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8800 |       0 |   10145 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8810 |       0 |   10154 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8820 |       0 |   10165 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8830 |       0 |   10175 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8840 |       0 |   10184 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8850 |       0 |   10195 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8860 |       0 |   10206 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8870 |       0 |   10217 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8880 |       0 |   10228 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8890 |       0 |   10238 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8900 |       0 |   10247 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8910 |       0 |   10257 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8920 |       0 |   10267 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8930 |       0 |   10278 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8940 |       0 |   10287 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8950 |       0 |   10297 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8960 |       0 |   10308 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8970 |       0 |   10317 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8980 |       0 |   10328 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     8990 |       0 |   10338 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9000 |       0 |   10349 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9010 |       0 |   10358 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9020 |       0 |   10368 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9030 |       0 |   10378 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9040 |       0 |   10387 |            0 |    +0.7% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9050 |       0 |   10397 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9060 |       0 |   10406 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9070 |       0 |   10416 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9080 |       0 |   10430 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9090 |       0 |   10440 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9100 |       0 |   10448 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9110 |       0 |   10457 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9120 |       0 |   10469 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9130 |       0 |   10480 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9140 |       0 |   10489 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9150 |       0 |   10501 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9160 |       0 |   10509 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9170 |       0 |   10519 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9180 |       0 |   10529 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9190 |       0 |   10541 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9200 |       0 |   10551 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9210 |       0 |   10559 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9220 |       0 |   10570 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9230 |       0 |   10579 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9240 |       0 |   10589 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9250 |       0 |   10598 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9260 |       0 |   10609 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9270 |       0 |   10618 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9280 |       0 |   10629 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9290 |       0 |   10638 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9300 |       0 |   10649 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9310 |       0 |   10658 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9320 |       0 |   10670 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9330 |       0 |   10680 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9340 |       0 |   10689 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9350 |       0 |   10698 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9360 |       0 |   10708 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9370 |       0 |   10716 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9380 |       0 |   10726 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9390 |       0 |   10735 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9400 |       0 |   10745 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9410 |       0 |   10754 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9420 |       0 |   10762 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9430 |       0 |   10772 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9440 |       0 |   10782 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9450 |       0 |   10791 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9460 |       0 |   10799 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9470 |       0 |   10805 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9480 |       0 |   10815 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9490 |       0 |   10823 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9500 |       0 |   10833 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9510 |       0 |   10842 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9520 |       0 |   10853 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9530 |       0 |   10862 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9540 |       0 |   10872 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9550 |       0 |   10882 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9560 |       0 |   10892 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9570 |       0 |   10900 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9580 |       0 |   10910 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9590 |       0 |   10919 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9600 |       0 |   10927 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9610 |       0 |   10935 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9620 |       0 |   10943 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9630 |       0 |   10952 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9640 |       0 |   10961 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9650 |       0 |   10971 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9660 |       0 |   10979 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9670 |       0 |   10987 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9680 |       0 |   10995 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9690 |       0 |   11003 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9700 |       0 |   11013 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9710 |       0 |   11020 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9720 |       0 |   11030 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9730 |       0 |   11039 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9740 |       0 |   11047 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9750 |       0 |   11056 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9760 |       0 |   11065 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9770 |       0 |   11072 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9780 |       0 |   11081 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9790 |       0 |   11090 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9800 |       0 |   11097 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9810 |       0 |   11107 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9820 |       0 |   11116 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9830 |       0 |   11124 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9840 |       0 |   11133 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9850 |       0 |   11141 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9860 |       0 |   11152 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9870 |       0 |   11159 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9880 |       0 |   11166 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9890 |       0 |   11172 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9900 |       0 |   11178 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9910 |       0 |   11185 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9920 |       0 |   11191 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9930 |       0 |   11200 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9940 |       0 |   11208 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9950 |       0 |   11217 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9960 |       0 |   11223 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9970 |       0 |   11233 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9980 |       0 |   11243 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+     9990 |       0 |   11251 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+    10000 |       0 |   11258 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+    10010 |       0 |   11267 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+    10020 |       0 |   11275 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+    10030 |       0 |   11284 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+    final |       0 |   11288 |            0 |    +0.8% |  22.132 |   0.000 | m6[92]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 11288 hold buffers.
+[INFO RSZ-0506] Runtime: 1641.22s
+OT_ECO cells_added 11288
+[INFO DPL-0006] Core area: 349065.15 um^2
+[INFO DPL-0007] Movable instances area: 19260.21 um^2
+[INFO DPL-0008] Fixed instances area within core: 123369.37 um^2
+[INFO DPL-0009] Utilization: 40.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 169816 cells
+[INFO DPL-0393]   height 233 row(s): 16 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       4569 |       697 |      3237
+        1 |       3374 |       554 |      2401
+        2 |       1611 |       310 |      1223
+        3 |        681 |       129 |       537
+        4 |        287 |        59 |       228
+        5 |        106 |        26 |        80
+        6 |         87 |        19 |        68
+        7 |         24 |         4 |        20
+        8 |         22 |         4 |        18
+        9 |         31 |         5 |        26
+       10 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 10.
+[INFO DPL-0500] Runtime: 4.86s
+Placement Analysis
+---------------------------------
+total displacement       4174.4 u
+average displacement        0.0 u
+max displacement            5.5 u
+original HPWL         1593822.1 u
+legalized HPWL        1596451.4 u
+delta HPWL                    0 %
+
+OT_ECO reroute: 15178 new/moved/resized instances, 123146 wires stripped
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       16
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_qwen_slab_port_group
+Die area:                 ( 0 0 ) ( 777576 455760 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     169832
+Number of terminals:      2290
+Number of snets:          2
+Number of nets:           148195
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+[INFO DRT-0164] Number of unique instances = 349.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 2807088.
+[INFO DRT-0033] V1 shape region query size = 22330361.
+[INFO DRT-0033] M2 shape region query size = 256873.
+[INFO DRT-0033] V2 shape region query size = 442992.
+[INFO DRT-0033] M3 shape region query size = 443008.
+[INFO DRT-0033] V3 shape region query size = 295328.
+[INFO DRT-0033] M4 shape region query size = 362366.
+[INFO DRT-0033] V4 shape region query size = 412364.
+[INFO DRT-0033] M5 shape region query size = 206920.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 1034.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0076]   Complete 2000 pins.
+[INFO DRT-0078]   Complete 2468 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0079]   Complete 200 unique inst patterns.
+[INFO DRT-0079]   Complete 300 unique inst patterns.
+[INFO DRT-0081]   Complete 345 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0082]   Complete 50000 groups.
+[INFO DRT-0082]   Complete 60000 groups.
+[INFO DRT-0082]   Complete 70000 groups.
+[INFO DRT-0082]   Complete 80000 groups.
+[INFO DRT-0082]   Complete 90000 groups.
+[INFO DRT-0082]   Complete 100000 groups.
+[INFO DRT-0084]   Complete 126074 groups.
+#scanned instances     = 169832
+#unique  instances     = 347
+#stdCellGenAp          = 10095
+#stdCellValidPlanarAp  = 56
+#stdCellValidViaAp     = 8230
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 391723
+#instTermValidViaApCnt = 0
+#macroGenAp            = 560
+#macroValidPlanarAp    = 560
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:06:54, elapsed time = 00:00:52, memory = 6579.58 (MB), peak = 7370.31 (MB)
+[INFO DRT-0156] guideIn read 100000 guides.
+[INFO DRT-0156] guideIn read 200000 guides.
+[INFO DRT-0156] guideIn read 300000 guides.
+[INFO DRT-0156] guideIn read 400000 guides.
+[INFO DRT-0156] guideIn read 500000 guides.
+[INFO DRT-0156] guideIn read 600000 guides.
+[INFO DRT-0156] guideIn read 700000 guides.
+[INFO DRT-0156] guideIn read 800000 guides.
+[INFO DRT-0156] guideIn read 900000 guides.
+[INFO DRT-0156] guideIn read 1000000 guides.
+
+[INFO DRT-0157] Number of guides:     1287393
+
+[INFO DRT-0169] Post process guides.
+[INFO DRT-0176] GCELLGRID X 0 DO 1364 STEP 570 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 799 STEP 570 ;
+[INFO DRT-0026]   Complete 100000 origin guides.
+[INFO DRT-0026]   Complete 200000 origin guides.
+[INFO DRT-0026]   Complete 300000 origin guides.
+[INFO DRT-0026]   Complete 400000 origin guides.
+[INFO DRT-0026]   Complete 500000 origin guides.
+[INFO DRT-0026]   Complete 600000 origin guides.
+[INFO DRT-0026]   Complete 700000 origin guides.
+[INFO DRT-0026]   Complete 800000 origin guides.
+[INFO DRT-0026]   Complete 900000 origin guides.
+[INFO DRT-0027]   Complete 1000000 origin guides.
+[INFO DRT-0028]   Complete Active.
+[INFO DRT-0028]   Complete V0.
+[INFO DRT-0028]   Complete M1.
+[INFO DRT-0028]   Complete V1.
+[INFO DRT-0028]   Complete M2.
+[INFO DRT-0028]   Complete V2.
+[INFO DRT-0028]   Complete M3.
+[INFO DRT-0028]   Complete V3.
+[INFO DRT-0028]   Complete M4.
+[INFO DRT-0028]   Complete V4.
+[INFO DRT-0028]   Complete M5.
+[INFO DRT-0028]   Complete V5.
+[INFO DRT-0028]   Complete M6.
+[INFO DRT-0028]   Complete V6.
+[INFO DRT-0028]   Complete M7.
+[INFO DRT-0028]   Complete V7.
+[INFO DRT-0028]   Complete M8.
+[INFO DRT-0028]   Complete V8.
+[INFO DRT-0028]   Complete M9.
+[INFO DRT-0028]   Complete V9.
+[INFO DRT-0028]   Complete Pad.
+  complete 100000 nets.
+[INFO DRT-0178] Init guide query.
+[INFO DRT-0029]   Complete 100000 nets (guide).
+[INFO DRT-0035]   Complete Active (guide).
+[INFO DRT-0035]   Complete V0 (guide).
+[INFO DRT-0035]   Complete M1 (guide).
+[INFO DRT-0035]   Complete V1 (guide).
+[INFO DRT-0035]   Complete M2 (guide).
+[INFO DRT-0035]   Complete V2 (guide).
+[INFO DRT-0035]   Complete M3 (guide).
+[INFO DRT-0035]   Complete V3 (guide).
+[INFO DRT-0035]   Complete M4 (guide).
+[INFO DRT-0035]   Complete V4 (guide).
+[INFO DRT-0035]   Complete M5 (guide).
+[INFO DRT-0035]   Complete V5 (guide).
+[INFO DRT-0035]   Complete M6 (guide).
+[INFO DRT-0035]   Complete V6 (guide).
+[INFO DRT-0035]   Complete M7 (guide).
+[INFO DRT-0035]   Complete V7 (guide).
+[INFO DRT-0035]   Complete M8 (guide).
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 354473.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 324978.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 177255.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 49701.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 43091.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 40713.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 35536.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 16916.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 0.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:03, elapsed time = 00:00:01, memory = 7024.70 (MB), peak = 7370.31 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 610355 vertical wires in 28 frboxes and 432308 horizontal wires in 16 frboxes.
+[INFO DRT-0186] Done with 30576 vertical wires in 28 frboxes and 72385 horizontal wires in 16 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:01:29, elapsed time = 00:00:25, memory = 8320.28 (MB), peak = 8692.16 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:01, elapsed time = 00:00:01, memory = 8882.20 (MB), peak = 8858.41 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+    Completing 10% with 349 violations.
+    elapsed time = 00:00:26, memory = 13528.31 (MB).
+    Completing 20% with 1932 violations.
+    elapsed time = 00:01:25, memory = 15003.77 (MB).
+    Completing 30% with 3516 violations.
+    elapsed time = 00:02:08, memory = 16235.20 (MB).
+    Completing 40% with 4657 violations.
+    elapsed time = 00:02:52, memory = 16288.86 (MB).
+    Completing 50% with 6512 violations.
+    elapsed time = 00:04:03, memory = 16766.21 (MB).
+    Completing 60% with 7330 violations.
+    elapsed time = 00:04:37, memory = 16611.41 (MB).
+    Completing 70% with 8598 violations.
+    elapsed time = 00:05:48, memory = 16995.96 (MB).
+    Completing 80% with 10083 violations.
+    elapsed time = 00:06:38, memory = 17287.50 (MB).
+    Completing 90% with 11006 violations.
+    elapsed time = 00:07:34, memory = 17434.41 (MB).
+    Completing 100% with 13073 violations.
+    elapsed time = 00:09:04, memory = 17542.59 (MB).
+[INFO DRT-0199]   Number of violations = 17370.
+Viol/Layer          M1     V1     M2     V2     M3     V3     M4     V4     M5     V5     M6     V6     M7     V7     M8
+Cut Spacing          0      0      0      0      0      0      0      0      0      0      0      0      0     47      0
+CutSpcTbl            0      0      0      0      0    257      0     18      0     11      0     22      0      0      0
+EOL                  0      0    905      0    118      0     37      0     13      0      0      0      0      0      0
+Metal Spacing     2387      0    502      0    861      0     26      0     10      0      2      0      1      0      1
+Recheck              3      0   1453      0    919      0    582      0    568      0    442      0    240      0     90
+Short                0      1   1594      9    140      2     24      7     14      4      2      1     17      0      2
+eolKeepOut           0      0   5355      0    489      0    140      0     51      0      3      0      0      0      0
+[INFO DRT-0267] cpu time = 01:05:52, elapsed time = 00:09:08, memory = 17431.39 (MB), peak = 18027.45 (MB)
+Total wire length = 1674544 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 642320 um.
+Total wire length on LAYER M3 = 643427 um.
+Total wire length on LAYER M4 = 131680 um.
+Total wire length on LAYER M5 = 62944 um.
+Total wire length on LAYER M6 = 54867 um.
+Total wire length on LAYER M7 = 48726 um.
+Total wire length on LAYER M8 = 90577 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1321100.
+Up-via summary (total 1321100):
+
+------------------
+ Active          0
+     M1     386980
+     M2     720520
+     M3      77212
+     M4      40365
+     M5      37456
+     M6      33045
+     M7      25522
+     M8          0
+     M9          0
+------------------
+       1321100
+
+
+[INFO DRT-0195] Start 1st optimization iteration.
+    Completing 10% with 16765 violations.
+    elapsed time = 00:00:31, memory = 17573.71 (MB).
+    Completing 20% with 14875 violations.
+    elapsed time = 00:01:51, memory = 17647.43 (MB).
+    Completing 30% with 12699 violations.
+    elapsed time = 00:02:47, memory = 18020.57 (MB).
+    Completing 40% with 11597 violations.
+    elapsed time = 00:03:43, memory = 18214.54 (MB).
+    Completing 50% with 9544 violations.
+    elapsed time = 00:05:05, memory = 17977.58 (MB).
+    Completing 60% with 8401 violations.
+    elapsed time = 00:05:44, memory = 18147.53 (MB).
+    Completing 70% with 6501 violations.
+    elapsed time = 00:06:59, memory = 18266.14 (MB).
+    Completing 80% with 4595 violations.
+    elapsed time = 00:08:01, memory = 18081.70 (MB).
+    Completing 90% with 3478 violations.
+    elapsed time = 00:09:00, memory = 18265.43 (MB).
+    Completing 100% with 1160 violations.
+    elapsed time = 00:10:13, memory = 17977.40 (MB).
+[INFO DRT-0199]   Number of violations = 1229.
+Viol/Layer          M1     M2     M3     V3     M4     V4     M5     V5     M6     V6     M7     V7
+Cut Spacing          0      0      0      0      0      0      0      0      0      0      0      4
+CutSpcTbl            0      0      0    187      0      1      0      4      0      9      0      0
+EOL                  0     92      8      0      5      0      1      0      0      0      0      0
+Metal Spacing      159     19     99      0      3      0      0      0      2      0      2      0
+Recheck              0     47     22      0      0      0      0      0      0      0      0      0
+Short                0     49     17      1      6      0      0      0      0      0      0      0
+eolKeepOut           0    426     35      0     28      0      3      0      0      0      0      0
+[INFO DRT-0267] cpu time = 01:14:11, elapsed time = 00:10:17, memory = 17898.76 (MB), peak = 18486.50 (MB)
+Total wire length = 1672590 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 644592 um.
+Total wire length on LAYER M3 = 645215 um.
+Total wire length on LAYER M4 = 131898 um.
+Total wire length on LAYER M5 = 62591 um.
+Total wire length on LAYER M6 = 53508 um.
+Total wire length on LAYER M7 = 46248 um.
+Total wire length on LAYER M8 = 88536 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1283041.
+Up-via summary (total 1283041):
+
+------------------
+ Active          0
+     M1     386898
+     M2     703837
+     M3      72418
+     M4      35820
+     M5      32778
+     M6      28605
+     M7      22685
+     M8          0
+     M9          0
+------------------
+       1283041
+
+
+[INFO DRT-0195] Start 2nd optimization iteration.
+    Completing 10% with 1197 violations.
+    elapsed time = 00:00:01, memory = 17898.76 (MB).
+    Completing 20% with 1089 violations.
+    elapsed time = 00:00:06, memory = 17922.81 (MB).
+    Completing 30% with 980 violations.
+    elapsed time = 00:00:10, memory = 17643.29 (MB).
+    Completing 40% with 932 violations.
+    elapsed time = 00:00:13, memory = 17643.29 (MB).
+    Completing 50% with 831 violations.
+    elapsed time = 00:00:19, memory = 17643.29 (MB).
+    Completing 60% with 787 violations.
+    elapsed time = 00:00:21, memory = 17643.29 (MB).
+    Completing 70% with 686 violations.
+    elapsed time = 00:00:27, memory = 17745.75 (MB).
+    Completing 80% with 546 violations.
+    elapsed time = 00:00:31, memory = 17537.68 (MB).
+    Completing 90% with 500 violations.
+    elapsed time = 00:00:34, memory = 17741.63 (MB).
+    Completing 100% with 393 violations.
+    elapsed time = 00:00:40, memory = 17537.68 (MB).
+[INFO DRT-0199]   Number of violations = 393.
+Viol/Layer          M1     M2     M3     V3     M4     V4     V5     V6     V7
+Cut Spacing          0      0      0      0      0      0      0      0      1
+CutSpcTbl            0      0      0    142      0      1      3      6      0
+EOL                  0     25      1      0      0      0      0      0      0
+Metal Spacing       60      4     19      0      0      0      0      0      0
+Short                0     10      8      0      2      0      0      0      0
+eolKeepOut           0    105      3      0      3      0      0      0      0
+[INFO DRT-0267] cpu time = 00:04:02, elapsed time = 00:00:41, memory = 17537.68 (MB), peak = 18486.50 (MB)
+Total wire length = 1672517 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 644673 um.
+Total wire length on LAYER M3 = 645270 um.
+Total wire length on LAYER M4 = 131876 um.
+Total wire length on LAYER M5 = 62583 um.
+Total wire length on LAYER M6 = 53466 um.
+Total wire length on LAYER M7 = 46184 um.
+Total wire length on LAYER M8 = 88462 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1281830.
+Up-via summary (total 1281830):
+
+------------------
+ Active          0
+     M1     386898
+     M2     703153
+     M3      72360
+     M4      35705
+     M5      32624
+     M6      28465
+     M7      22625
+     M8          0
+     M9          0
+------------------
+       1281830
+
+
+[INFO DRT-0195] Start 3rd optimization iteration.
+    Completing 10% with 369 violations.
+    elapsed time = 00:00:00, memory = 17537.68 (MB).
+    Completing 20% with 308 violations.
+    elapsed time = 00:00:03, memory = 17571.50 (MB).
+    Completing 30% with 273 violations.
+    elapsed time = 00:00:04, memory = 17537.68 (MB).
+    Completing 40% with 215 violations.
+    elapsed time = 00:00:04, memory = 17537.68 (MB).
+    Completing 50% with 161 violations.
+    elapsed time = 00:00:06, memory = 17602.08 (MB).
+    Completing 60% with 146 violations.
+    elapsed time = 00:00:07, memory = 17537.68 (MB).
+    Completing 70% with 123 violations.
+    elapsed time = 00:00:07, memory = 17537.68 (MB).
+    Completing 80% with 85 violations.
+    elapsed time = 00:00:09, memory = 17537.68 (MB).
+    Completing 90% with 71 violations.
+    elapsed time = 00:00:10, memory = 17537.68 (MB).
+    Completing 100% with 9 violations.
+    elapsed time = 00:00:13, memory = 17537.68 (MB).
+[INFO DRT-0199]   Number of violations = 9.
+Viol/Layer          M1     M2     M3
+EOL                  0      1      0
+Metal Spacing        3      0      0
+Short                0      1      1
+eolKeepOut           0      3      0
+[INFO DRT-0267] cpu time = 00:00:57, elapsed time = 00:00:13, memory = 17537.68 (MB), peak = 18486.50 (MB)
+Total wire length = 1672520 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 644785 um.
+Total wire length on LAYER M3 = 645296 um.
+Total wire length on LAYER M4 = 131729 um.
+Total wire length on LAYER M5 = 62608 um.
+Total wire length on LAYER M6 = 53532 um.
+Total wire length on LAYER M7 = 46135 um.
+Total wire length on LAYER M8 = 88433 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1282229.
+Up-via summary (total 1282229):
+
+------------------
+ Active          0
+     M1     386898
+     M2     703423
+     M3      72430
+     M4      35747
+     M5      32674
+     M6      28454
+     M7      22603
+     M8          0
+     M9          0
+------------------
+       1282229
+
+
+[INFO DRT-0195] Start 4th guides tiles iteration.
+    Completing 10% with 9 violations.
+    elapsed time = 00:00:00, memory = 17537.68 (MB).
+    Completing 20% with 9 violations.
+    elapsed time = 00:00:00, memory = 17537.68 (MB).
+    Completing 40% with 9 violations.
+    elapsed time = 00:00:00, memory = 17537.68 (MB).
+    Completing 50% with 9 violations.
+    elapsed time = 00:00:00, memory = 17537.68 (MB).
+    Completing 70% with 9 violations.
+    elapsed time = 00:00:00, memory = 17537.68 (MB).
+    Completing 80% with 5 violations.
+    elapsed time = 00:00:00, memory = 17537.68 (MB).
+    Completing 100% with 0 violations.
+    elapsed time = 00:00:00, memory = 17537.68 (MB).
+[INFO DRT-0199]   Number of violations = 0.
+[INFO DRT-0267] cpu time = 00:00:01, elapsed time = 00:00:00, memory = 17537.68 (MB), peak = 18486.50 (MB)
+Total wire length = 1672520 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 644781 um.
+Total wire length on LAYER M3 = 645295 um.
+Total wire length on LAYER M4 = 131734 um.
+Total wire length on LAYER M5 = 62608 um.
+Total wire length on LAYER M6 = 53532 um.
+Total wire length on LAYER M7 = 46135 um.
+Total wire length on LAYER M8 = 88433 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1282228.
+Up-via summary (total 1282228):
+
+------------------
+ Active          0
+     M1     386898
+     M2     703417
+     M3      72435
+     M4      35747
+     M5      32674
+     M6      28454
+     M7      22603
+     M8          0
+     M9          0
+------------------
+       1282228
+
+
+[INFO DRT-0198] Complete detail routing.
+Total wire length = 1672520 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 644781 um.
+Total wire length on LAYER M3 = 645295 um.
+Total wire length on LAYER M4 = 131734 um.
+Total wire length on LAYER M5 = 62608 um.
+Total wire length on LAYER M6 = 53532 um.
+Total wire length on LAYER M7 = 46135 um.
+Total wire length on LAYER M8 = 88433 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 1282228.
+Up-via summary (total 1282228):
+
+------------------
+ Active          0
+     M1     386898
+     M2     703417
+     M3      72435
+     M4      35747
+     M5      32674
+     M6      28454
+     M7      22603
+     M8          0
+     M9          0
+------------------
+       1282228
+
+
+[INFO DRT-0267] cpu time = 02:25:07, elapsed time = 00:20:23, memory = 17537.68 (MB), peak = 18486.50 (MB)
+
+[INFO DRT-0180] Post processing.
+[INFO DRT-0501] Runtime: 1312.19s
+[INFO DPL-0001] Placed 6674372 filler instances.
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules ...
+[INFO RCX-0436] RC segment generation ot_qwen_slab_port_group (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 1050072 rc segments
+[INFO RCX-0439] Coupling Cap extraction ot_qwen_slab_port_group ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0045] Extract 148195 nets, 1197584 rsegs, 1197584 caps, 1087376 ccs
+[INFO RCX-0042] 100000 nets finished
+[INFO RCX-0443] 148195 nets finished
+OT_ECO post session ff
+worst slack max 269.99
+worst slack min 21.18
+Group                                  Slack
+--------------------------------------------
+asynchronous                           33.05
+clk                                    21.18
+
+OT_ECO post_ws ss n/a ff 21.182333
+OT_ECO done
+{
+ "ss_ps": -157.76,
+ "ff_ps": 21.18,
+ "drc": 0,
+ "cells_added": 11288,
+ "errors": [],
+ "pass": 2,
+ "session": "ff",
+ "window": "endpoints_below_hm 10036 fixable 10036 tight 0 infeasible 0 nodata 0 (hm 36.945 filt 40 accept_ss 15 accept_ff 15 r 2.4)",
+ "route_strategy": [
+  "incremental_original_guides"
+ ],
+ "score": -172.76
+}OT_ECO chosen pass1
+[INFO DRT-0199]   Number of violations = 0.

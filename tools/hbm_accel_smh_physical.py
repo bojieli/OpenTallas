@@ -24,6 +24,8 @@ in / leaves a flop with its wire inside the block; the element top carries the W
 """
 from __future__ import annotations
 
+import os
+
 import argparse
 import json
 import math
@@ -380,6 +382,9 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
          "# At SS the output hold holds by construction (same insertion both sides); input hold at FF is checked by",
          "# the parent on the real pair.",
          f"set_clock_latency -source {lat} [get_clocks nbr_clk]",
+         "# setup-triage 2026-10-07: the latency above is a PLANNING insertion; sign-off must re-reference nbr_clk to the routed",
+         "# block's measured insertion with physical/common_flow/nbr_clk_measured.sdc as a post-SDC (front_n: planning",
+         "# 688 vs measured 506..600 cost the element inputs 135 ps: SS in2reg -53.6 -> +81.4 on re-STA).",
          f"set dlo {float(lat) - float(lat_ff):g}",
          "# (margin rule, clarified 2026-10-06) setup: abutting ports between pieces of one element (one clock region)",
          "# budget the region pair skew + 25 (skew); the element pins cross a die wire to another region (die_skew).",
@@ -438,6 +443,9 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
 def config_mk(name, nick, die, macros, extra):
     lib_ss = " ".join(f"/src/{m}/{Path(m).name}_ss.lib" for m in macros)
     lib_ff = " ".join(f"/src/{m}/{Path(m).name}_ff.lib" for m in macros)
+    # OPTION B (2026-10-07): OT_SMH_CORNER=TC routes with setup repair at TT (macro _tt.lib), hold corner BC unchanged
+    _SC = os.environ.get("OT_SMH_CORNER", "WC").strip().upper() or "WC"
+    lib_su = lib_ss if _SC == "WC" else " ".join(f"/src/{m}/{Path(m).name}_tt.lib" for m in macros)
     lefs = " ".join(f"/src/{m}/{Path(m).name}.lef" for m in macros)
     lines = [f"export DESIGN_NICKNAME = {nick}", f"export DESIGN_NAME = {name}", "export PLATFORM = asap7",
              "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in RTL),
@@ -446,12 +454,12 @@ def config_mk(name, nick, die, macros, extra):
              "export SYNTH_REPEATABLE_BUILD = 1", "export SYNTH_HIERARCHICAL = 0", "export SYNTH_MEMORY_MAX_BITS = 65536",
              "export LEC_CHECK = 0", "export TNS_END_PERCENT = 100", "export SETUP_SLACK_MARGIN = 0",
              "export SKIP_REPORT_METRICS = 0", "export REPORT_CLOCK_SKEW = 1",
-             "export CORNER = WC", "export ADDER_MAP_FILE = ", "export ASAP7_USE_VT = RVT", "export SLEW_MARGIN = 30",
-             "export CORNERS = WC BC", f"export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) {lib_ss}",
+             f"export CORNER = {_SC}", "export ADDER_MAP_FILE = ", "export ASAP7_USE_VT = RVT", "export SLEW_MARGIN = 30",
+             f"export CORNERS = {_SC} BC", f"export {_SC}_LIB_FILES = $({_SC}_NLDM_LIB_FILES) {lib_su}",
              f"export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) {lib_ff}",
              "export IO_CONSTRAINTS = /work/pins.tcl", "export GDS_ALLOW_EMPTY = (ot_sram.*|ot_hbm_accel_smh_.*)"]
     if macros:
-        lines += [f"export ADDITIONAL_LEFS = {lefs}", f"export ADDITIONAL_LIBS = {lib_ss}",
+        lines += [f"export ADDITIONAL_LEFS = {lefs}", f"export ADDITIONAL_LIBS = {lib_su}",
                   "export SYNTH_BLACKBOXES = " + " ".join(Path(m).name for m in macros),
                   "export MACRO_PLACEMENT_TCL = /work/macros.tcl"]
     lines += [f"export {k} = {v}" for k, v in extra.items()]
