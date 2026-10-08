@@ -164,13 +164,20 @@ def main(argv=None):
     ap.add_argument("--target", type=float, default=15.0, help="ps")
     ap.add_argument("--rounds", type=int, default=8)
     ap.add_argument("--npaths", type=int, default=20000)
+    ap.add_argument("--setup-corner", choices=("ss", "tt"), default="ss",
+                    help="corner of the setup search/verify sessions (owner 2026-10-07 option B: setup signs off at TT); "
+                         "tt = the SS sign-off load with TT std-cell libraries and the macros' _tt.lib views")
     a = ap.parse_args(argv)
     orfs, src, out = a.orfs_dir.resolve(), a.src.resolve(), a.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
     ss = load_part((orfs / "w18_sta_ss.tcl").read_text(), "ss")
+    ss_power = ss
+    if a.setup_corner == "tt":
+        ss = tt_load(ss, src)
     ff = load_part((orfs / "w18_sta_ff.tcl").read_text(), "ff")
     t = a.target
-    rec = dict(schema="opentallas.multivt.vt_swap_sta.v1", orfs_dir=str(orfs), target_ps=t, rounds=a.rounds)
+    rec = dict(schema="opentallas.multivt.vt_swap_sta.v1", orfs_dir=str(orfs), target_ps=t, rounds=a.rounds,
+               setup_corner=a.setup_corner)
     ls = run_tcl(orfs, src, out, "ss", ss + SWAP_PROCS + f"""
 ot_report RVT max
 ot_phase L {t} {a.rounds} {a.npaths} /out/swap_L.txt
@@ -185,7 +192,7 @@ exit
     # incremental swap session above is the search only (report_power after swapMaster in one session mis-propagates)
     applies = {"RVT": "", "LVT": "ot_apply /out/swap_L.txt\n",
                "LVT_SLVT": "ot_apply /out/swap_L.txt\not_apply /out/swap_SL.txt\n"}
-    tt = tt_load(ss, src)
+    tt = tt_load(ss_power, src)
     jobs = []
     for tag, ap_ in applies.items():
         jobs.append(("ff", tag, ff + SWAP_PROCS + ap_ + f"ot_report {tag} min\n"
@@ -206,6 +213,8 @@ exit
             dst.update({k: v for k, v in p_.items() if k not in ("rounds", "errors", "power")})
             dst.setdefault("errors", []).extend(p_["errors"])
     rec["tt_macro_views_missing"] = re.findall(r"# no TT view: (.*)", tt)
+    if a.setup_corner == "tt" and rec["tt_macro_views_missing"]:
+        rec["warning"] = "TT setup timed with a macro lacking a TT view (its liberty dropped): setup result incomplete"
     rec["activity"] = "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC"
     rec["area_change_um2"] = 0.0
     rec["area_basis"] = "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
