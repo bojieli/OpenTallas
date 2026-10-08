@@ -1,0 +1,1181 @@
+
+==========================================================================
+cts final report_tns
+--------------------------------------------------------------------------
+tns max -9.91
+
+==========================================================================
+cts final report_wns
+--------------------------------------------------------------------------
+wns max -2.64
+
+==========================================================================
+cts final report_worst_slack
+--------------------------------------------------------------------------
+worst slack max -2.64
+
+==========================================================================
+cts final report_clock_min_period
+--------------------------------------------------------------------------
+core_clk period_min = 732.64 fmax = 1364.93
+
+==========================================================================
+cts final report_clock_skew
+--------------------------------------------------------------------------
+Clock core_clk
+ 671.93 source latency g_bank[0].u_req/wr_data[2]$_DFF_P_/CLK ^
+-381.46 target latency g_bank[0].u_lane/clk ^
+  60.00 clock uncertainty
+  -2.38 CRPR
+--------------
+ 348.08 setup skew
+
+
+==========================================================================
+cts final report_checks -path_delay min
+--------------------------------------------------------------------------
+Startpoint: wok (input port clocked by core_clk)
+Endpoint: g_pin.wok_p$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (propagated)
+                        331.00  331.00 v input external delay
+     1    0.82    0.00    0.00  331.00 v wok (in)
+                                         wok (net)
+                  0.13    0.04  331.04 v input3912/A (BUFx2_ASAP7_75t_R)
+     1    0.54   10.51   23.16  354.20 v input3912/Y (BUFx2_ASAP7_75t_R)
+                                         net3911 (net)
+                 10.51    0.02  354.22 v g_pin.wok_p$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+                                354.22   data arrival time
+
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+     1   23.94    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                 92.68   29.24   29.24 ^ wire9900/A (BUFx24_ASAP7_75t_R)
+     2   25.39   25.29   59.97   89.21 ^ wire9900/Y (BUFx24_ASAP7_75t_R)
+                                         net9675 (net)
+                102.43   31.26  120.47 ^ clkbuf_regs_0_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    2.54   16.86   58.60  179.07 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clk_regs (net)
+                 16.87    0.19  179.25 ^ clkbuf_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   14.58   21.71   35.86  215.11 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_0_clk_regs (net)
+                 24.42    3.84  218.95 ^ clkbuf_1_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    8.87   17.06   36.61  255.57 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_1_0_0_clk_regs (net)
+                 22.62    5.19  260.76 ^ clkbuf_1_0_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.68   17.51   36.05  296.81 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_1_0_1_clk_regs (net)
+                 23.39    5.23  302.04 ^ clkbuf_2_1_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   10.43   17.92   36.47  338.51 ^ clkbuf_2_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_2_1_0_clk_regs (net)
+                 24.75    5.65  344.16 ^ clkbuf_3_2_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.60   17.50   36.86  381.02 ^ clkbuf_3_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_3_2_0_clk_regs (net)
+                 23.19    5.14  386.16 ^ clkbuf_4_5_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.68   17.59   36.29  422.44 ^ clkbuf_4_5_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_4_5_0_clk_regs (net)
+                 22.68    4.79  427.23 ^ clkbuf_5_11_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   10.06   18.28   36.69  463.92 ^ clkbuf_5_11_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_5_11_0_clk_regs (net)
+                 18.73    1.28  465.20 ^ clkbuf_6_23__f_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1   14.94   19.31   35.46  500.66 ^ clkbuf_6_23__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_6_23__leaf_clk_regs (net)
+                 45.30   12.93  513.59 ^ wire9901/A (BUFx24_ASAP7_75t_R)
+    10   45.37   22.44   45.49  559.08 ^ wire9901/Y (BUFx24_ASAP7_75t_R)
+                                         net9676 (net)
+                211.59   66.35  625.43 ^ clkbuf_leaf_410_clk_regs/A (BUFx24_ASAP7_75t_R)
+     9   15.02   30.38   83.76  709.19 ^ clkbuf_leaf_410_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_leaf_410_clk_regs (net)
+                 31.36    2.70  711.89 ^ g_pin.wok_p$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                         25.00  736.89   clock uncertainty
+                          0.00  736.89   clock reconvergence pessimism
+                         26.19  763.08   library hold time
+                                763.08   data required time
+-----------------------------------------------------------------------------
+                                763.08   data required time
+                               -354.22   data arrival time
+-----------------------------------------------------------------------------
+                               -408.86   slack (VIOLATED)
+
+
+
+==========================================================================
+cts final report_checks -path_delay max
+--------------------------------------------------------------------------
+Startpoint: g_fadd[0].addend_r[22]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_fadd[0].u_add.u_ca.q[87]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+     1   23.94    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                 92.68   29.24   29.24 ^ wire9900/A (BUFx24_ASAP7_75t_R)
+     2   25.39   25.29   59.97   89.21 ^ wire9900/Y (BUFx24_ASAP7_75t_R)
+                                         net9675 (net)
+                102.43   31.26  120.47 ^ clkbuf_regs_0_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    2.54   16.86   58.60  179.07 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clk_regs (net)
+                 16.87    0.19  179.25 ^ clkbuf_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   14.58   21.71   35.86  215.11 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_0_clk_regs (net)
+                 24.42    3.84  218.95 ^ clkbuf_1_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    8.87   17.06   36.61  255.57 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_1_0_0_clk_regs (net)
+                 22.62    5.19  260.76 ^ clkbuf_1_0_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.68   17.51   36.05  296.81 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_1_0_1_clk_regs (net)
+                 23.41    5.24  302.05 ^ clkbuf_2_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   10.46   17.92   36.48  338.53 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_2_0_0_clk_regs (net)
+                 24.97    5.76  344.29 ^ clkbuf_3_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.66   17.53   36.95  381.24 ^ clkbuf_3_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_3_0_0_clk_regs (net)
+                 23.39    5.22  386.46 ^ clkbuf_4_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   10.39   17.89   36.46  422.92 ^ clkbuf_4_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_4_0_0_clk_regs (net)
+                 24.72    5.66  428.57 ^ clkbuf_5_1_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.50   17.62   36.88  465.45 ^ clkbuf_5_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_5_1_0_clk_regs (net)
+                 22.28    4.60  470.06 ^ clkbuf_6_2__f_clk_regs/A (BUFx24_ASAP7_75t_R)
+    16   57.50   21.94   37.22  507.28 ^ clkbuf_6_2__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_6_2__leaf_clk_regs (net)
+                240.80   74.91  582.19 ^ clkbuf_leaf_866_clk_regs/A (BUFx24_ASAP7_75t_R)
+    17   10.33   28.86   86.62  668.80 ^ clkbuf_leaf_866_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_leaf_866_clk_regs (net)
+                 28.91    1.13  669.93 ^ g_fadd[0].addend_r[22]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     2    1.76   43.60   87.81  757.74 ^ g_fadd[0].addend_r[22]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+                                         _08029_ (net)
+                 43.60    0.08  757.82 ^ hold26298/A (BUFx2_ASAP7_75t_R)
+     2    1.99   21.24   39.60  797.42 ^ hold26298/Y (BUFx2_ASAP7_75t_R)
+                                         net26073 (net)
+                 21.24    0.09  797.50 ^ _56687_/A (INVx1_ASAP7_75t_R)
+     3    2.67   31.76   23.68  821.19 v _56687_/Y (INVx1_ASAP7_75t_R)
+                                         g_fadd[0].addend_r[22] (net)
+                 31.76    0.10  821.29 v _56748_/A (OR4x1_ASAP7_75t_R)
+     1    0.85   23.30   56.32  877.61 v _56748_/Y (OR4x1_ASAP7_75t_R)
+                                         _22316_ (net)
+                 23.31    0.06  877.67 v _56749_/E (OR5x1_ASAP7_75t_R)
+     1    0.78   26.23   74.83  952.50 v _56749_/Y (OR5x1_ASAP7_75t_R)
+                                         _22317_ (net)
+                 26.23    0.05  952.55 v _56751_/D (OR5x1_ASAP7_75t_R)
+     1    1.31   32.51   79.43 1031.98 v _56751_/Y (OR5x1_ASAP7_75t_R)
+                                         _22319_ (net)
+                 32.51    0.14 1032.12 v _56754_/B (OR4x1_ASAP7_75t_R)
+     4    3.47   51.46   78.39 1110.50 v _56754_/Y (OR4x1_ASAP7_75t_R)
+                                         _22322_ (net)
+                 51.46    0.40 1110.90 v _56767_/B (OR3x1_ASAP7_75t_R)
+     3    1.94   31.99   60.84 1171.74 v _56767_/Y (OR3x1_ASAP7_75t_R)
+                                         _22334_ (net)
+                 31.99    0.08 1171.82 v place8408/A (BUFx3_ASAP7_75t_R)
+    15   15.92   62.84   59.96 1231.78 v place8408/Y (BUFx3_ASAP7_75t_R)
+                                         net8183 (net)
+                 62.92    1.26 1233.03 v _56799_/B1 (OAI22x1_ASAP7_75t_R)
+     1    0.70   37.71   29.31 1262.35 ^ _56799_/Y (OAI22x1_ASAP7_75t_R)
+                                         g_fadd[0].u_add.a1[87] (net)
+                 37.71    0.03 1262.38 ^ hold14806/A (BUFx2_ASAP7_75t_R)
+     1    1.00   14.17   34.31 1296.69 ^ hold14806/Y (BUFx2_ASAP7_75t_R)
+                                         net14581 (net)
+                 14.17    0.08 1296.77 ^ g_fadd[0].u_add.u_ca.q[87]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+                               1296.77   data arrival time
+
+                        730.00  730.00   clock core_clk (rise edge)
+                          0.00  730.00   clock source latency
+     1   23.35    0.00    0.00  730.00 ^ clk (in)
+                                         clk (net)
+                 88.50   27.92  757.92 ^ wire9900/A (BUFx24_ASAP7_75t_R)
+     2   24.21   24.59   58.91  816.83 ^ wire9900/Y (BUFx24_ASAP7_75t_R)
+                                         net9675 (net)
+                 97.22   29.60  846.43 ^ clkbuf_regs_0_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    1.95   16.16   57.23  903.66 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clk_regs (net)
+                 16.16    0.14  903.80 ^ clkbuf_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   13.40   20.68   35.34  939.14 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_0_clk_regs (net)
+                 22.92    3.39  942.53 ^ clkbuf_1_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    8.28   16.76   35.94  978.47 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_1_0_0_clk_regs (net)
+                 21.31    4.69  983.16 ^ clkbuf_1_0_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    8.50   16.89   35.34 1018.50 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_1_0_1_clk_regs (net)
+                 21.16    4.44 1022.94 ^ clkbuf_2_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.29   17.28   35.42 1058.36 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_2_0_0_clk_regs (net)
+                 22.65    4.98 1063.35 ^ clkbuf_3_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    8.49   16.90   35.85 1099.20 ^ clkbuf_3_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_3_0_0_clk_regs (net)
+                 21.13    4.43 1103.63 ^ clkbuf_4_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.21   17.24   35.40 1139.02 ^ clkbuf_4_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_4_0_0_clk_regs (net)
+                 22.44    4.89 1143.91 ^ clkbuf_5_1_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    8.32   16.90   35.76 1179.67 ^ clkbuf_5_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_5_1_0_clk_regs (net)
+                 20.34    3.93 1183.60 ^ clkbuf_6_2__f_clk_regs/A (BUFx24_ASAP7_75t_R)
+    16   48.09   21.61   36.45 1220.05 ^ clkbuf_6_2__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_6_2__leaf_clk_regs (net)
+                197.80   61.41 1281.46 ^ clkbuf_leaf_864_clk_regs/A (BUFx24_ASAP7_75t_R)
+    17    8.01   25.38   79.18 1360.64 ^ clkbuf_leaf_864_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_leaf_864_clk_regs (net)
+                 25.39    0.56 1361.19 ^ g_fadd[0].u_add.u_ca.q[87]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                        -60.00 1301.19   clock uncertainty
+                         17.23 1318.43   clock reconvergence pessimism
+                        -24.30 1294.13   library setup time
+                               1294.13   data required time
+-----------------------------------------------------------------------------
+                               1294.13   data required time
+                               -1296.77   data arrival time
+-----------------------------------------------------------------------------
+                                 -2.64   slack (VIOLATED)
+
+
+
+==========================================================================
+cts final report_checks -unconstrained
+--------------------------------------------------------------------------
+Startpoint: g_fadd[0].addend_r[22]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_fadd[0].u_add.u_ca.q[87]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+     1   23.94    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                 92.68   29.24   29.24 ^ wire9900/A (BUFx24_ASAP7_75t_R)
+     2   25.39   25.29   59.97   89.21 ^ wire9900/Y (BUFx24_ASAP7_75t_R)
+                                         net9675 (net)
+                102.43   31.26  120.47 ^ clkbuf_regs_0_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    2.54   16.86   58.60  179.07 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clk_regs (net)
+                 16.87    0.19  179.25 ^ clkbuf_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   14.58   21.71   35.86  215.11 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_0_clk_regs (net)
+                 24.42    3.84  218.95 ^ clkbuf_1_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    8.87   17.06   36.61  255.57 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_1_0_0_clk_regs (net)
+                 22.62    5.19  260.76 ^ clkbuf_1_0_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.68   17.51   36.05  296.81 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_1_0_1_clk_regs (net)
+                 23.41    5.24  302.05 ^ clkbuf_2_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   10.46   17.92   36.48  338.53 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_2_0_0_clk_regs (net)
+                 24.97    5.76  344.29 ^ clkbuf_3_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.66   17.53   36.95  381.24 ^ clkbuf_3_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_3_0_0_clk_regs (net)
+                 23.39    5.22  386.46 ^ clkbuf_4_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   10.39   17.89   36.46  422.92 ^ clkbuf_4_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_4_0_0_clk_regs (net)
+                 24.72    5.66  428.57 ^ clkbuf_5_1_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.50   17.62   36.88  465.45 ^ clkbuf_5_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_5_1_0_clk_regs (net)
+                 22.28    4.60  470.06 ^ clkbuf_6_2__f_clk_regs/A (BUFx24_ASAP7_75t_R)
+    16   57.50   21.94   37.22  507.28 ^ clkbuf_6_2__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_6_2__leaf_clk_regs (net)
+                240.80   74.91  582.19 ^ clkbuf_leaf_866_clk_regs/A (BUFx24_ASAP7_75t_R)
+    17   10.33   28.86   86.62  668.80 ^ clkbuf_leaf_866_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_leaf_866_clk_regs (net)
+                 28.91    1.13  669.93 ^ g_fadd[0].addend_r[22]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     2    1.76   43.60   87.81  757.74 ^ g_fadd[0].addend_r[22]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+                                         _08029_ (net)
+                 43.60    0.08  757.82 ^ hold26298/A (BUFx2_ASAP7_75t_R)
+     2    1.99   21.24   39.60  797.42 ^ hold26298/Y (BUFx2_ASAP7_75t_R)
+                                         net26073 (net)
+                 21.24    0.09  797.50 ^ _56687_/A (INVx1_ASAP7_75t_R)
+     3    2.67   31.76   23.68  821.19 v _56687_/Y (INVx1_ASAP7_75t_R)
+                                         g_fadd[0].addend_r[22] (net)
+                 31.76    0.10  821.29 v _56748_/A (OR4x1_ASAP7_75t_R)
+     1    0.85   23.30   56.32  877.61 v _56748_/Y (OR4x1_ASAP7_75t_R)
+                                         _22316_ (net)
+                 23.31    0.06  877.67 v _56749_/E (OR5x1_ASAP7_75t_R)
+     1    0.78   26.23   74.83  952.50 v _56749_/Y (OR5x1_ASAP7_75t_R)
+                                         _22317_ (net)
+                 26.23    0.05  952.55 v _56751_/D (OR5x1_ASAP7_75t_R)
+     1    1.31   32.51   79.43 1031.98 v _56751_/Y (OR5x1_ASAP7_75t_R)
+                                         _22319_ (net)
+                 32.51    0.14 1032.12 v _56754_/B (OR4x1_ASAP7_75t_R)
+     4    3.47   51.46   78.39 1110.50 v _56754_/Y (OR4x1_ASAP7_75t_R)
+                                         _22322_ (net)
+                 51.46    0.40 1110.90 v _56767_/B (OR3x1_ASAP7_75t_R)
+     3    1.94   31.99   60.84 1171.74 v _56767_/Y (OR3x1_ASAP7_75t_R)
+                                         _22334_ (net)
+                 31.99    0.08 1171.82 v place8408/A (BUFx3_ASAP7_75t_R)
+    15   15.92   62.84   59.96 1231.78 v place8408/Y (BUFx3_ASAP7_75t_R)
+                                         net8183 (net)
+                 62.92    1.26 1233.03 v _56799_/B1 (OAI22x1_ASAP7_75t_R)
+     1    0.70   37.71   29.31 1262.35 ^ _56799_/Y (OAI22x1_ASAP7_75t_R)
+                                         g_fadd[0].u_add.a1[87] (net)
+                 37.71    0.03 1262.38 ^ hold14806/A (BUFx2_ASAP7_75t_R)
+     1    1.00   14.17   34.31 1296.69 ^ hold14806/Y (BUFx2_ASAP7_75t_R)
+                                         net14581 (net)
+                 14.17    0.08 1296.77 ^ g_fadd[0].u_add.u_ca.q[87]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+                               1296.77   data arrival time
+
+                        730.00  730.00   clock core_clk (rise edge)
+                          0.00  730.00   clock source latency
+     1   23.35    0.00    0.00  730.00 ^ clk (in)
+                                         clk (net)
+                 88.50   27.92  757.92 ^ wire9900/A (BUFx24_ASAP7_75t_R)
+     2   24.21   24.59   58.91  816.83 ^ wire9900/Y (BUFx24_ASAP7_75t_R)
+                                         net9675 (net)
+                 97.22   29.60  846.43 ^ clkbuf_regs_0_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    1.95   16.16   57.23  903.66 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clk_regs (net)
+                 16.16    0.14  903.80 ^ clkbuf_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   13.40   20.68   35.34  939.14 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_0_clk_regs (net)
+                 22.92    3.39  942.53 ^ clkbuf_1_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    8.28   16.76   35.94  978.47 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_1_0_0_clk_regs (net)
+                 21.31    4.69  983.16 ^ clkbuf_1_0_1_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    8.50   16.89   35.34 1018.50 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_1_0_1_clk_regs (net)
+                 21.16    4.44 1022.94 ^ clkbuf_2_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.29   17.28   35.42 1058.36 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_2_0_0_clk_regs (net)
+                 22.65    4.98 1063.35 ^ clkbuf_3_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    8.49   16.90   35.85 1099.20 ^ clkbuf_3_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_3_0_0_clk_regs (net)
+                 21.13    4.43 1103.63 ^ clkbuf_4_0_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.21   17.24   35.40 1139.02 ^ clkbuf_4_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_4_0_0_clk_regs (net)
+                 22.44    4.89 1143.91 ^ clkbuf_5_1_0_clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    8.32   16.90   35.76 1179.67 ^ clkbuf_5_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_5_1_0_clk_regs (net)
+                 20.34    3.93 1183.60 ^ clkbuf_6_2__f_clk_regs/A (BUFx24_ASAP7_75t_R)
+    16   48.09   21.61   36.45 1220.05 ^ clkbuf_6_2__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_6_2__leaf_clk_regs (net)
+                197.80   61.41 1281.46 ^ clkbuf_leaf_864_clk_regs/A (BUFx24_ASAP7_75t_R)
+    17    8.01   25.38   79.18 1360.64 ^ clkbuf_leaf_864_clk_regs/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_leaf_864_clk_regs (net)
+                 25.39    0.56 1361.19 ^ g_fadd[0].u_add.u_ca.q[87]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                        -60.00 1301.19   clock uncertainty
+                         17.23 1318.43   clock reconvergence pessimism
+                        -24.30 1294.13   library setup time
+                               1294.13   data required time
+-----------------------------------------------------------------------------
+                               1294.13   data required time
+                               -1296.77   data arrival time
+-----------------------------------------------------------------------------
+                                 -2.64   slack (VIOLATED)
+
+
+
+==========================================================================
+cts final report_check_types -max_slew -max_cap -max_fanout -violators
+--------------------------------------------------------------------------
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+g_index_prepare[4].u_index/index_q[14]$_DFF_P_/D  250.00  369.04 -119.04 (VIOLATED)
+g_index_prepare[5].u_index/index_q[14]$_DFF_P_/D  250.00  368.98 -118.98 (VIOLATED)
+g_index_prepare[6].u_index/index_q[14]$_DFF_P_/D  250.00  365.11 -115.11 (VIOLATED)
+_35741_/A                             250.00  331.85  -81.85 (VIOLATED)
+place8753/A                           250.00  294.91  -44.91 (VIOLATED)
+clkbuf_leaf_0_clk_regs/A              250.00  289.08  -39.08 (VIOLATED)
+clkbuf_leaf_879_clk_regs/A            250.00  288.30  -38.30 (VIOLATED)
+clkbuf_leaf_8_clk_regs/A              250.00  287.58  -37.58 (VIOLATED)
+clkbuf_leaf_10_clk_regs/A             250.00  287.35  -37.35 (VIOLATED)
+clkbuf_leaf_9_clk_regs/A              250.00  287.04  -37.04 (VIOLATED)
+clkbuf_leaf_13_clk_regs/A             250.00  284.91  -34.91 (VIOLATED)
+clkbuf_leaf_14_clk_regs/A             250.00  283.52  -33.52 (VIOLATED)
+clkbuf_leaf_5_clk_regs/A              250.00  282.76  -32.76 (VIOLATED)
+clkbuf_leaf_15_clk_regs/A             250.00  281.46  -31.46 (VIOLATED)
+clkbuf_leaf_25_clk_regs/A             250.00  278.89  -28.89 (VIOLATED)
+clkbuf_leaf_47_clk_regs/A             250.00  278.75  -28.75 (VIOLATED)
+clkbuf_leaf_46_clk_regs/A             250.00  275.12  -25.12 (VIOLATED)
+clkbuf_leaf_24_clk_regs/A             250.00  274.34  -24.34 (VIOLATED)
+clkbuf_leaf_19_clk_regs/A             250.00  272.87  -22.87 (VIOLATED)
+clkbuf_leaf_20_clk_regs/A             250.00  272.24  -22.24 (VIOLATED)
+clkbuf_leaf_23_clk_regs/A             250.00  271.49  -21.49 (VIOLATED)
+clkbuf_leaf_21_clk_regs/A             250.00  271.41  -21.41 (VIOLATED)
+clkbuf_leaf_22_clk_regs/A             250.00  270.67  -20.67 (VIOLATED)
+clkbuf_leaf_45_clk_regs/A             250.00  269.76  -19.76 (VIOLATED)
+clkbuf_leaf_872_clk_regs/A            250.00  265.68  -15.68 (VIOLATED)
+clkbuf_leaf_870_clk_regs/A            250.00  265.35  -15.35 (VIOLATED)
+clkbuf_leaf_44_clk_regs/A             250.00  265.34  -15.34 (VIOLATED)
+clkbuf_leaf_871_clk_regs/A            250.00  265.26  -15.26 (VIOLATED)
+clkbuf_leaf_42_clk_regs/A             250.00  264.73  -14.73 (VIOLATED)
+clkbuf_leaf_854_clk_regs/A            250.00  264.71  -14.71 (VIOLATED)
+g_index_prepare[3].u_index/index_q[14]$_DFF_P_/D  250.00  263.85  -13.85 (VIOLATED)
+clkbuf_leaf_869_clk_regs/A            250.00  262.80  -12.80 (VIOLATED)
+clkbuf_leaf_873_clk_regs/A            250.00  261.97  -11.97 (VIOLATED)
+clkbuf_leaf_874_clk_regs/A            250.00  261.77  -11.77 (VIOLATED)
+clkbuf_leaf_43_clk_regs/A             250.00  261.52  -11.52 (VIOLATED)
+clkbuf_leaf_863_clk_regs/A            250.00  261.13  -11.13 (VIOLATED)
+clkbuf_leaf_864_clk_regs/A            250.00  260.62  -10.62 (VIOLATED)
+clkbuf_leaf_865_clk_regs/A            250.00  258.84   -8.84 (VIOLATED)
+clkbuf_leaf_866_clk_regs/A            250.00  258.80   -8.80 (VIOLATED)
+clkbuf_leaf_868_clk_regs/A            250.00  258.56   -8.56 (VIOLATED)
+clkbuf_leaf_862_clk_regs/A            250.00  254.92   -4.92 (VIOLATED)
+clkbuf_leaf_861_clk_regs/A            250.00  254.34   -4.34 (VIOLATED)
+clkbuf_leaf_867_clk_regs/A            250.00  253.36   -3.36 (VIOLATED)
+clkbuf_leaf_41_clk_regs/A             250.00  251.21   -1.21 (VIOLATED)
+poison[6]                             250.00  251.09   -1.09 (VIOLATED)
+
+max fanout
+
+Pin                                   Limit Fanout  Slack
+---------------------------------------------------------
+clkbuf_6_42__f_clk_regs/Y                16     28    -12 (VIOLATED)
+clkbuf_6_44__f_clk_regs/Y                16     26    -10 (VIOLATED)
+clkbuf_6_4__f_clk_regs/Y                 16     23     -7 (VIOLATED)
+clkbuf_6_16__f_clk_regs/Y                16     22     -6 (VIOLATED)
+clkbuf_6_12__f_clk_regs/Y                16     21     -5 (VIOLATED)
+clkbuf_6_40__f_clk_regs/Y                16     21     -5 (VIOLATED)
+clkbuf_6_19__f_clk_regs/Y                16     19     -3 (VIOLATED)
+clkbuf_6_27__f_clk_regs/Y                16     19     -3 (VIOLATED)
+clkbuf_6_45__f_clk_regs/Y                16     19     -3 (VIOLATED)
+clkbuf_6_62__f_clk_regs/Y                16     19     -3 (VIOLATED)
+clkbuf_6_63__f_clk_regs/Y                16     19     -3 (VIOLATED)
+clkbuf_6_9__f_clk_regs/Y                 16     19     -3 (VIOLATED)
+clkbuf_6_43__f_clk_regs/Y                16     18     -2 (VIOLATED)
+clkbuf_6_32__f_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_6_34__f_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_6_35__f_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_6_46__f_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_6_5__f_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_6_6__f_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_leaf_100_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_101_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_102_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_107_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_108_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_109_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_10_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_111_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_114_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_115_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_116_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_117_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_118_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_119_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_11_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_120_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_121_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_122_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_123_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_124_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_125_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_126_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_128_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_12_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_131_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_132_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_139_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_140_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_141_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_142_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_143_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_144_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_145_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_146_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_147_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_148_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_149_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_150_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_151_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_152_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_153_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_154_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_171_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_18_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_192_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_196_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_19_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_202_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_20_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_21_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_22_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_234_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_237_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_238_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_239_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_23_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_240_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_242_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_243_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_244_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_245_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_246_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_24_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_251_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_252_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_253_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_254_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_255_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_256_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_257_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_258_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_259_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_25_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_260_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_264_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_265_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_266_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_267_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_26_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_270_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_272_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_273_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_274_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_275_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_276_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_277_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_278_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_279_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_27_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_280_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_281_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_282_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_283_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_284_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_285_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_286_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_287_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_288_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_28_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_290_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_293_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_294_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_295_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_296_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_297_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_298_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_29_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_2_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_leaf_301_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_30_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_327_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_328_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_329_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_32_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_331_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_332_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_333_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_334_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_335_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_336_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_337_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_338_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_339_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_340_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_348_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_349_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_351_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_352_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_353_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_354_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_355_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_360_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_364_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_366_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_367_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_370_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_371_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_372_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_373_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_374_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_375_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_376_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_377_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_378_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_379_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_380_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_381_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_382_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_383_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_384_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_385_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_386_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_387_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_388_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_389_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_390_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_3_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_leaf_416_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_422_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_424_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_425_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_426_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_427_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_428_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_42_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_433_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_434_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_435_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_436_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_437_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_438_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_439_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_442_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_443_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_444_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_445_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_446_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_447_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_448_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_449_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_451_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_455_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_456_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_457_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_458_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_462_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_463_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_464_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_465_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_466_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_467_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_468_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_469_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_470_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_474_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_475_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_476_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_477_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_478_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_479_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_480_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_481_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_483_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_484_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_485_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_497_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_499_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_4_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_leaf_500_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_501_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_503_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_504_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_505_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_506_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_507_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_508_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_509_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_510_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_511_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_512_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_513_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_514_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_515_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_516_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_517_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_519_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_520_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_521_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_523_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_524_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_525_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_526_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_527_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_528_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_529_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_530_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_531_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_532_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_533_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_534_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_535_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_536_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_537_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_539_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_544_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_545_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_546_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_548_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_550_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_551_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_552_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_553_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_568_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_569_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_570_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_571_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_572_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_577_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_590_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_591_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_592_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_593_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_594_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_595_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_596_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_597_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_598_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_5_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_leaf_601_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_603_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_604_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_605_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_606_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_607_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_608_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_613_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_617_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_618_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_619_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_620_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_622_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_623_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_624_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_625_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_627_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_628_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_629_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_630_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_631_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_632_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_633_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_634_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_635_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_636_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_637_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_638_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_639_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_641_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_642_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_643_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_644_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_645_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_646_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_647_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_648_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_649_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_650_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_680_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_681_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_682_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_683_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_684_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_685_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_686_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_687_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_690_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_691_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_692_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_693_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_694_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_696_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_697_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_698_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_699_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_6_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_leaf_700_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_701_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_703_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_704_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_705_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_706_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_707_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_708_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_709_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_710_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_711_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_712_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_713_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_714_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_715_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_716_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_717_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_718_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_724_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_725_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_727_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_728_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_736_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_737_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_740_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_741_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_742_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_743_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_744_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_745_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_746_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_747_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_748_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_749_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_750_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_751_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_752_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_753_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_754_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_755_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_756_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_757_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_758_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_759_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_760_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_761_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_762_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_763_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_765_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_766_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_769_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_770_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_771_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_772_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_775_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_776_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_777_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_778_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_779_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_780_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_781_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_783_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_784_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_788_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_789_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_790_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_791_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_792_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_793_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_794_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_795_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_796_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_797_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_798_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_799_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_7_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_leaf_800_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_801_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_803_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_804_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_805_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_806_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_807_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_808_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_809_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_810_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_811_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_812_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_813_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_814_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_816_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_817_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_818_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_819_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_820_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_822_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_823_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_824_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_825_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_826_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_827_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_829_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_841_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_845_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_846_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_848_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_849_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_850_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_851_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_855_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_856_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_857_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_858_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_859_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_860_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_861_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_862_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_863_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_864_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_865_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_866_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_867_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_868_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_869_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_86_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_870_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_872_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_873_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_874_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_875_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_877_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_878_clk_regs/Y               16     17        (VIOLATED)
+clkbuf_leaf_87_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_88_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_89_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_8_clk_regs/Y                 16     17        (VIOLATED)
+clkbuf_leaf_90_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_91_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_92_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_93_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_94_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_95_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_96_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_97_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_99_clk_regs/Y                16     17        (VIOLATED)
+clkbuf_leaf_9_clk_regs/Y                 16     17        (VIOLATED)
+
+
+==========================================================================
+cts final max_slew_check_slack
+--------------------------------------------------------------------------
+-119.03866577148438
+
+==========================================================================
+cts final max_slew_check_limit
+--------------------------------------------------------------------------
+250.0
+
+==========================================================================
+cts final max_slew_check_slack_limit
+--------------------------------------------------------------------------
+-0.4762
+
+==========================================================================
+cts final max_fanout_check_slack
+--------------------------------------------------------------------------
+-12.0
+
+==========================================================================
+cts final max_fanout_check_limit
+--------------------------------------------------------------------------
+16.0
+
+==========================================================================
+cts final max_fanout_check_slack_limit
+--------------------------------------------------------------------------
+-0.7500
+
+==========================================================================
+cts final max_capacitance_check_slack
+--------------------------------------------------------------------------
+10.80850601196289
+
+==========================================================================
+cts final max_capacitance_check_limit
+--------------------------------------------------------------------------
+23.040000915527344
+
+==========================================================================
+cts final max_capacitance_check_slack_limit
+--------------------------------------------------------------------------
+0.4691
+
+==========================================================================
+cts final max_slew_violation_count
+--------------------------------------------------------------------------
+max slew violation count 45
+
+==========================================================================
+cts final max_fanout_violation_count
+--------------------------------------------------------------------------
+max fanout violation count 490
+
+==========================================================================
+cts final max_cap_violation_count
+--------------------------------------------------------------------------
+max cap violation count 0
+
+==========================================================================
+cts final setup_violation_count
+--------------------------------------------------------------------------
+setup violation count 10
+
+==========================================================================
+cts final hold_violation_count
+--------------------------------------------------------------------------
+hold violation count 1210
+
+==========================================================================
+cts final report_checks -path_delay max reg to reg
+--------------------------------------------------------------------------
+Startpoint: g_fadd[0].addend_r[22]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_fadd[0].u_add.u_ca.q[87]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  89.21   89.21 ^ wire9900/Y (BUFx24_ASAP7_75t_R)
+  89.86  179.07 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  36.05  215.11 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  40.45  255.57 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  41.24  296.81 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  41.71  338.53 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  42.71  381.24 ^ clkbuf_3_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  41.68  422.92 ^ clkbuf_4_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  42.54  465.45 ^ clkbuf_5_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  41.83  507.28 ^ clkbuf_6_2__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+ 161.52  668.80 ^ clkbuf_leaf_866_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   1.13  669.93 ^ g_fadd[0].addend_r[22]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  87.81  757.74 ^ g_fadd[0].addend_r[22]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  39.68  797.42 ^ hold26298/Y (BUFx2_ASAP7_75t_R)
+  23.77  821.19 v _56687_/Y (INVx1_ASAP7_75t_R)
+  56.42  877.61 v _56748_/Y (OR4x1_ASAP7_75t_R)
+  74.89  952.50 v _56749_/Y (OR5x1_ASAP7_75t_R)
+  79.48 1031.98 v _56751_/Y (OR5x1_ASAP7_75t_R)
+  78.53 1110.50 v _56754_/Y (OR4x1_ASAP7_75t_R)
+  61.24 1171.74 v _56767_/Y (OR3x1_ASAP7_75t_R)
+  60.03 1231.78 v place8408/Y (BUFx3_ASAP7_75t_R)
+  30.57 1262.35 ^ _56799_/Y (OAI22x1_ASAP7_75t_R)
+  34.34 1296.69 ^ hold14806/Y (BUFx2_ASAP7_75t_R)
+   0.08 1296.77 ^ g_fadd[0].u_add.u_ca.q[87]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+        1296.77   data arrival time
+
+ 730.00  730.00   clock core_clk (rise edge)
+   0.00  730.00   clock source latency
+   0.00  730.00 ^ clk (in)
+  86.83  816.83 ^ wire9900/Y (BUFx24_ASAP7_75t_R)
+  86.83  903.66 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  35.48  939.14 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  39.33  978.47 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  40.04 1018.50 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  39.86 1058.36 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  40.84 1099.20 ^ clkbuf_3_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  39.82 1139.02 ^ clkbuf_4_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  40.65 1179.67 ^ clkbuf_5_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  40.38 1220.05 ^ clkbuf_6_2__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+ 140.59 1360.64 ^ clkbuf_leaf_864_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   0.56 1361.19 ^ g_fadd[0].u_add.u_ca.q[87]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1301.19   clock uncertainty
+  17.23 1318.43   clock reconvergence pessimism
+ -24.30 1294.13   library setup time
+        1294.13   data required time
+---------------------------------------------------------
+        1294.13   data required time
+        -1296.77   data arrival time
+---------------------------------------------------------
+          -2.64   slack (VIOLATED)
+
+
+
+==========================================================================
+cts final report_checks -path_delay min reg to reg
+--------------------------------------------------------------------------
+Startpoint: g_bank[0].u_lane
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_fadd[0].addend_r[9]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+Corner: BC
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  63.60   63.60 ^ wire9900/Y (BUFx24_ASAP7_75t_R)
+  36.51  100.11 ^ delaybuf_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  35.72  135.84 ^ delaybuf_1_core_clk/Y (BUFx24_ASAP7_75t_R)
+  21.14  156.97 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.30  180.28 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.10  205.37 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  69.31  274.68 ^ g_bank[0].u_lane/clk (ot_hdc_v41_fh_sram_lane_hardened)
+ 149.41  424.09 v g_bank[0].u_lane/rd_data[9] (ot_hdc_v41_fh_sram_lane_hardened)
+  13.22  437.31 v hold9918/Y (BUFx2_ASAP7_75t_R)
+   0.07  437.38 v g_fadd[0].addend_r[9]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         437.38   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  65.46   65.46 ^ wire9900/Y (BUFx24_ASAP7_75t_R)
+  65.41  130.87 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  19.55  150.42 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  24.09  174.50 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  25.41  199.92 ^ clkbuf_1_0_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  25.99  225.91 ^ clkbuf_2_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  26.85  252.75 ^ clkbuf_3_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  25.96  278.71 ^ clkbuf_4_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  26.70  305.41 ^ clkbuf_5_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  25.35  330.76 ^ clkbuf_6_2__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+ 132.04  462.80 ^ clkbuf_leaf_854_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   0.63  463.43 ^ g_fadd[0].addend_r[9]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  488.43   clock uncertainty
+  -1.86  486.57   clock reconvergence pessimism
+  12.93  499.50   library hold time
+         499.50   data required time
+---------------------------------------------------------
+         499.50   data required time
+        -437.38   data arrival time
+---------------------------------------------------------
+         -62.12   slack (VIOLATED)
+
+
+
+==========================================================================
+cts final critical path target clock latency max path
+--------------------------------------------------------------------------
+340.7900
+
+==========================================================================
+cts final critical path target clock latency min path
+--------------------------------------------------------------------------
+711.8867
+
+==========================================================================
+cts final critical path source clock latency min path
+--------------------------------------------------------------------------
+0.0000
+
+==========================================================================
+cts final critical path delay
+--------------------------------------------------------------------------
+1296.7682
+
+==========================================================================
+cts final critical path slack
+--------------------------------------------------------------------------
+-2.6394
+
+==========================================================================
+cts final slack div critical path delay
+--------------------------------------------------------------------------
+-0.203537
+
+==========================================================================
+cts final report_power
+--------------------------------------------------------------------------
+Corner: WC
+Group                  Internal  Switching    Leakage      Total
+                          Power      Power      Power      Power (Watts)
+----------------------------------------------------------------
+Sequential             1.72e-02   6.87e-04   3.84e-05   1.79e-02  41.4%
+Combinational          3.48e-03   3.01e-03   6.47e-05   6.55e-03  15.1%
+Clock                  1.20e-02   6.85e-03   1.09e-05   1.88e-02  43.5%
+Macro                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Pad                    0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+----------------------------------------------------------------
+Total                  3.26e-02   1.05e-02   1.14e-04   4.33e-02 100.0%
+                          75.4%      24.4%       0.3%
+Corner: BC
+Group                  Internal  Switching    Leakage      Total
+                          Power      Power      Power      Power (Watts)
+----------------------------------------------------------------
+Sequential             2.78e-02   1.14e-03   1.95e-06   2.89e-02  40.0%
+Combinational          5.87e-03   4.96e-03   3.13e-06   1.08e-02  15.0%
+Clock                  2.10e-02   1.15e-02   5.05e-07   3.25e-02  45.0%
+Macro                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Pad                    0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+----------------------------------------------------------------
+Total                  5.46e-02   1.76e-02   5.58e-06   7.22e-02 100.0%
+                          75.6%      24.4%       0.0%
