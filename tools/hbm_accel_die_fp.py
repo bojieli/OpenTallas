@@ -347,6 +347,9 @@ R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0, split_st
 R23V = dict(R23, vm_split8=True)
 # r24 (coordinator 2026-10-07): R23 + 8 per-segment ck pins on every hub quarter (hfd_su / hfd_sfu / hfd_hc)
 R24 = dict(R23, hub_ck_seg=8)
+R24P = dict(R24, hub_pin_p4=True, hub_pin_window=1200.0)   # r24 + hub quarter face buses at 4 tracks a bit (2 when
+#   only that fits) in a 1,200 um window: r24 HC E face 2,048 bits in 196 um = its only GRT overflow; SU E face 9.5k bits
+#   at 1 track a bit in 500 um
 # Candidate only: paired half-rate DDIV64 full lane, sized by unified-model
 # commit 6dc3c9707.  Reserve >=400 x 400 um on the existing macro/site lattice;
 # keep the other slots and adopted floorplan unchanged.
@@ -950,7 +953,7 @@ def relay_ends(m):
     m['relay_count'] = dict(cnt)
 
 
-def hub_pin_window(mst, window):
+def hub_pin_window(mst, window, p4=False):
     """r23 (hub owner a4649202a85580933, OWNER 2x hub): the SU / SFU / HC quarter ports of each long (E / W) face sit in
     one window <= `window` um centred on the face's port band (the bit-weighted mean of the generator's peer-projected
     port centres), so the registered transport tiles reach every die port within ~250 um.  All on M4 (the quarters are
@@ -966,6 +969,9 @@ def hub_pin_window(mst, window):
         bits = {p_: mst.ports[p_][1] for p_ in pns}
         c = sum(mst.ports[p_][4] * bits[p_] for p_ in pns) / max(1, sum(bits.values()))
         pitch = 2 if sum(b * 2 * t + 4 * t for b in bits.values()) <= window else 1
+        if p4 and sum(b * 4 * t + 4 * t for b in bits.values()) <= window:
+            pitch = 4       # r24p (hbm-blocks 2026-10-07): 4 tracks a bit when the face's buses fit the window: the r24 HC
+                            # quarter's E face (2,048 bits at 0.096 um in 196 um) was its only GRT overflow (33,722)
         span = sum(b * pitch * t + 4 * t for b in bits.values())
         c_ = min(max(c, span / 2 + 2.0), mst.h - span / 2 - 2.0)
         y = c_ - span / 2
@@ -2494,7 +2500,7 @@ def masters(m, k=1):
     if m['variant'].get('hub_pin_window') and k == 1:    # r23: hub quarter ports in a <= 500 um window per face
         for nm_ in ('hfd_su', 'hfd_sfu', 'hfd_hc'):
             if nm_ in M:
-                hub_pin_window(M[nm_], m['variant']['hub_pin_window'])
+                hub_pin_window(M[nm_], m['variant']['hub_pin_window'], p4=bool(m['variant'].get('hub_pin_p4')))
     if m['variant'].get('hub_ck_seg'):      # r24: per-segment ck pins on the 5.53 mm hub quarters
         for nm_ in HUB_QUARTERS:
             if nm_ in M:
@@ -3241,7 +3247,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
