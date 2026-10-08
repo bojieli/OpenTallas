@@ -531,11 +531,29 @@ class Fleet:
         self.probe_cache = {}
         self.tool_cache = {}
         self.own_running = {}    # host -> declared threads of this loop's running stages
+        self.last_good = {}      # host -> (t, last successful probe): used for PROBE_LAST_GOOD_S when a probe fails
+        self.tool_good = {}      # host -> (t, last successful toolchain probe)
 
     def probe(self, host):
         c = self.probe_cache.get(host)
         if c and time.time() - c[0] < 45:
             return c[1]
+        info = self._probe_once(host)
+        for delay in (2, 5):            # a busy / just-expired ssh master is not an unreachable host (20:33)
+            if info is not None:
+                break
+            time.sleep(delay)
+            info = self._probe_once(host)
+        if info is None:
+            good = self.last_good.get(host)
+            if good and time.time() - good[0] < PROBE_LAST_GOOD_S:
+                info = dict(good[1], stale_s=round(time.time() - good[0]))
+        else:
+            self.last_good[host] = (time.time(), info)
+        self.probe_cache[host] = (time.time(), info)
+        return info
+
+    def _probe_once(self, host):
         cfg = host_cfg(host)
         roots = disk_roots(cfg)
         dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
@@ -547,7 +565,6 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             v = r.stdout.split()
             info = dict(load1=float(v[0]), mem_gb=int(v[5]), disk_gb=int(v[6]),
                         roots_gb=dict(zip(roots, (int(x) for x in v[7:7 + len(roots)]))))
-        self.probe_cache[host] = (time.time(), info)
         return info
 
     def own_pending(self, host):
@@ -607,8 +624,20 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         c = self.tool_cache.get(host)
         if c and time.time() - c[0] < (3600 if c[1] else 15):
             return c[1]
-        r = ssh(host, TOOLPROBE, timeout=60)
-        info = dict(l.split("=", 1) for l in r.stdout.splitlines() if "=" in l) if r.returncode == 0 else None
+        info = None
+        for delay in (0, 5, 15):
+            if delay:
+                time.sleep(delay)
+            r = ssh(host, TOOLPROBE, timeout=90)
+            if r.returncode == 0:
+                info = dict(l.split("=", 1) for l in r.stdout.splitlines() if "=" in l)
+                break
+        if info is None:   # a failed probe keeps the last good toolchain (6 h) instead of "no compatible host"
+            good = self.tool_good.get(host)
+            if good and time.time() - good[0] < TOOL_LAST_GOOD_S:
+                info = good[1]
+        else:
+            self.tool_good[host] = (time.time(), info)
         self.tool_cache[host] = (time.time(), info)
         return info
 
@@ -661,6 +690,8 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
 
 
 TOOL_REF_HOST = "ot-epyc3"
+PROBE_LAST_GOOD_S = 300     # memory/disk/load: a failed probe reuses a good one at most 5 min old
+TOOL_LAST_GOOD_S = 6 * 3600  # image digests / tool versions change only on a deliberate host update
 # LOCALHOST IMAGE (2026-10-07): the fleet image loaded into localhost's overlay2 docker store has another image ID
 # (af971398) than in the fleet's containerd stores (16470cea), so a recipe pinning the BARE ID sha256:16470cea... fails
 # there with exit 125 (dsrom_softmax_safe_exprc2_09d4d345e).  The registry-digest reference resolves on every host:
@@ -1224,7 +1255,7 @@ def stage_tail(j, st, n=40):
     return r.stdout
 
 
-TT_STA_SLOTS = threading.BoundedSemaphore(8)
+TT_STA_SLOTS = threading.BoundedSemaphore(3)   # each holds one of a host's 8 ssh channels for minutes
 
 
 def get_metrics(j, tt_resta=True):
