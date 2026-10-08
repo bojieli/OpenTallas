@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/home/ubuntu/closure-loop-local/hbm_svc_SE_s1_tc_4aadc92bc/routes/hbm_svc_SE_s1_tc_4aadc92bc_cal/work/orfs/results/asap7/opentallas_hfd_svc_SE_s1_asap7_hv_hbm_svc_SE_s1_tc_4aadc92bc_cal/base",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_tt_c10b5fc9a/routes/hbm_svc_SE_s1_tt_c10b5fc9a_cal/work/orfs/results/asap7/opentallas_hfd_svc_SE_s1_asap7_hv_hbm_svc_SE_s1_tt_c10b5fc9a_cal/base",
  "db": "4_1_cts.odb",
  "sdc": "4_cts.sdc",
  "clock": "core_clk",
@@ -62,9 +62,9 @@
    "ff_min": 488,
    "ff_max": 535,
    "grade": "measured",
-   "source": "closure-loop calibrate hbm_svc_SE_s1_tc_4aadc92bc (localhost:/home/ubuntu/closure-loop-local/hbm_svc_SE_s1_tc_4aadc92bc)",
+   "source": "closure-loop calibrate hbm_svc_SE_s1_tt_c10b5fc9a (ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_tt_c10b5fc9a)",
    "over_target": false
   },
-  "sheets_ref": "761007f907e886fecd8cf1e790d3453c624d2ef5"
+  "sheets_ref": "9cbb3f55d0c040ad38daf7dd72f3a8becb1512ed"
  }
 }

@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.w18.corner_sta.v1",
- "orfs_dir": "/home/ubuntu/closure-loop-local/hbm_svc_SE_s1_tc_4aadc92bc/routes/hbm_svc_SE_s1_tc_4aadc92bc/work/orfs",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_tt_c10b5fc9a/routes/hbm_svc_SE_s1_tt_c10b5fc9a/work/orfs",
  "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design hfd_svc_SE_s1\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {ck[0]}]\nset_clock_uncertainty -setup 123.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\ncreat",
  "sdc_name": "6_final.sdc",
  "setup_ss": {
@@ -15,7 +15,7 @@
   "violating_d_pins": 3750,
   "errors": [],
   "odb_sha256": "483159594516700a0b1278233e625a16a16805a2cd20744df911fb169214f24a",
-  "spef_sha256": "25115ac164113773304ca21f5819e7c2839bbe602056212a54214d0e7b7abf60",
+  "spef_sha256": "7557c557ca966fb0216e9cc11633df5404f4d754572b7dffb727e75de2183525",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "9d4cb41101dddc79dc4084783167c88e79de7ac30fac9e1d9a8c5cffd98568b8"
  },
@@ -31,12 +31,12 @@
   "violating_d_pins": 0,
   "errors": [],
   "odb_sha256": "483159594516700a0b1278233e625a16a16805a2cd20744df911fb169214f24a",
-  "spef_sha256": "25115ac164113773304ca21f5819e7c2839bbe602056212a54214d0e7b7abf60",
+  "spef_sha256": "7557c557ca966fb0216e9cc11633df5404f4d754572b7dffb727e75de2183525",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "9d4cb41101dddc79dc4084783167c88e79de7ac30fac9e1d9a8c5cffd98568b8"
  },
  "post_sdc": {
-  "physical/hbm_accel_die_views/common/budget_signoff.sdc": "38d58c160a94a2b8ce17f49a1fc4cb2bf7e625cd1e1916795417bb344ceeacb0",
+  "physical/hbm_accel_die_views/common/budget_signoff.sdc": "40d45e3c4d2f99aef265a2649cd384421768c41953270c026b46c2b38dde21fa",
   "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc": "b900a01db0deafbfa7bdf26ff34de43811f5ef92d815b5b51feaf83e08e0f6b6"
  },
  "libraries": {
