@@ -237,22 +237,25 @@
    "budget": null
   },
   "hfd_svc_SW_s7": {
-   "job": "hbm_svc_SW_s7_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-data/claude/closure-loop/hbm_svc_SW_s7_tc_4aadc92bc",
+   "job": "hbm_svc_SW_s7_312bf36c8_s4-mmq",
+   "source_commit": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s7_312bf36c8_s4-mmq",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T03:53:32-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T10:54:43-07:00",
    "ss": {
     "mean": 673,
     "min": 630,
     "max": 727
    },
    "ff": {
-    "mean": 425,
-    "min": 395,
-    "max": 478
+    "mean": 400,
+    "min": 389,
+    "max": 434,
+    "n": 1413,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "boundary_n": 1413,
    "budget": {
@@ -260,16 +263,39 @@
     "ok": true,
     "reasons": [],
     "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
+   },
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 673,
+     "min": 630,
+     "max": 727
+    },
+    "ff": {
+     "mean": 425,
+     "min": 395,
+     "max": 478
+    },
+    "parasitics": "placement-estimated",
+    "job": "hbm_svc_SW_s7_tc_4aadc92bc"
+   },
+   "tt": {
+    "mean": 493,
+    "min": 481,
+    "max": 526,
+    "n": 1413,
+    "kind": "boundary",
+    "clock": "core_clk"
    }
   },
   "hfd_svc_SE_s2": {
-   "job": "hbm_svc_SE_s2_tt_c10b5fc9a",
-   "source_commit": "c10b5fc9a40e4bb60cf47a0fd8d9735d98740e65",
-   "host": "ot-agidock128",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s2_tt_c10b5fc9a",
+   "job": "hbm_svc_SE_s2_tc_4aadc92bc",
+   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s2_tc_4aadc92bc",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T08:20:00-07:00",
+   "measured_at": "2026-10-08T10:45:45-07:00",
    "ss": {
     "mean": 766,
     "min": 744,
@@ -4273,5 +4299,5 @@
    }
   }
  },
- "updated": "2026-10-08T10:41:38-07:00"
+ "updated": "2026-10-08T10:54:43-07:00"
 }
