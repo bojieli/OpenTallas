@@ -1,0 +1,46 @@
+{
+ "variant": "half",
+ "cases": {
+  "positive": {
+   "returncode": 0,
+   "ok": true,
+   "markers": [
+    "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+    "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+    "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+    "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+    "TXN MATCH"
+   ]
+  },
+  "mutant_front_pair": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[7004000] %Fatal: cand_ot_v41_pair_w17w10.sv:199: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=32ffffff00400010"
+   ]
+  },
+  "mutant_half_pv": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[2276000] %Fatal: cand_ot_v41_pair_w17w10.sv:187: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=1 ref=34772dd840404010 shadow=344d5b5f00400010"
+   ]
+  }
+ },
+ "pass": true,
+ "refreshed": [
+  "cand_ot_v41_rom_elem_w10.sv",
+  "cand_ot_v41_bf16_lanes2.sv",
+  "cand_ot_v41_bmul2_rne_prepare.sv",
+  "cand_ot_v41_segtree2.sv",
+  "cand_ot_v41_chain2.sv",
+  "cand_ot_v41_fadd.sv",
+  "cand_ot_v41_bterm2_w10.sv",
+  "cand_ot_prefix.sv"
+ ],
+ "source_commit": "9778e745e31542f43cdd7aa52d5819ccc50c8cc8",
+ "dirty": null,
+ "bench": "tools/s81/bf_txn_bench.py --variant half",
+ "note": "run on EPYC3 (Verilator 5.050) from an rsync of commit 9778e745e (wrapper unchanged since 419067ed5); prep package = the HITFIX bench prep (cand sources refreshed from the worktree: none differed). Shadow ot_s81_bf_native PINREG=1 HITFIX=1 HALF=1 on a 2x clock inside tb_bfcolumn, fed the original element's pins: 456 partials (232 lane 0 / 224 lane 1) identical in value and order to the original, which passes the full numerical + wake gates; fault never, busy low at the end. Negatives FAIL: W10_MUTANT_FRONT_PAIR (DIFF TXN lane 0 n 0), BF_HALF_MUTANT_PV (pv not qualified to the slow cycle: DIFF TXN lane 0 n 1).",
+ "cycles": "element at half rate: every element cycle = 2 clk cycles (BF column issue and latency x2); +1 pin cycle (PINREG); +1 output cycle"
+}

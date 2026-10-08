@@ -25,7 +25,9 @@ proc ot_snap_joint {value site_origin site_pitch track_origin track_pitch} {
 }
 proc ot_find {block want} {
     foreach inst [$block getInsts] {
-        if {[string map {\\ {}} [$inst getName]] eq $want} { return $inst }
+        set n [string map {\\ {}} [$inst getName]]
+        # the element sits at u_elem, g_orig.u_elem (RECUT = 0) or g_rc.u_elem (RECUT q-element build)
+        if {$n eq $want || $n eq "g_orig.$want" || $n eq "g_rc.$want"} { return $inst }
     }
     error "placement hook: no instance $want"
 }
