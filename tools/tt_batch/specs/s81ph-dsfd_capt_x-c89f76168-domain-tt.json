@@ -1,0 +1,128 @@
+{
+ "name": "s81ph-dsfd_capt_x-c89f76168-domain-tt",
+ "block": "dsfd_capt_x",
+ "owner": "Codex:s81_tiles",
+ "purpose": "TT-BATCH (owner option B, one large batch): s81ph-dsfd_capt_x-c89f76168-domain re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Correct actualserial output clock ownership in calibrated boundary constraints; zero RTL/cycle change. Startup CDC state hold remains measured repair obligation.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "main",
+  "commit": "c89f7616831a1354fffe2a591e037fd337af6c2c",
+  "paths": [
+   "tools",
+   "physical/abi3",
+   "physical/s81_ph_views/common",
+   "physical/s81_ph_views/tiles",
+   "physical/s81_ph_views/capture",
+   "physical/s81_ph_views/ports/contract/dsfd_capt_x",
+   "results/rtl/s81_ph_20261006/capture/x_clock_domain_diagnosis_20261007",
+   "Makefile",
+   "rtl/common/ot_ratio_cdc_fifo.sv",
+   "rtl/dsrom_sys/rd64_capture/ot_dsrom_rd64_vm_capture.sv",
+   "rtl/dsrom_sys/rd64_capture/ot_dsrom_s81_phase_capture_profile.sv",
+   "rtl/dsrom_sys/s81_ph/dsfd_sp_capture.sv",
+   "rtl/dsrom_sys/s81_ph/dsfd_sp_gather.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_p.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_capture.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_gather.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_p.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_root_blk.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_root_tile.sv",
+   "rtl/dsrom_sys/s81_ph/test/gen_stim.py",
+   "rtl/dsrom_sys/s81_ph/test/tb_s81ph_gather_capture.sv",
+   "rtl/gpu/ot_fp32_add_rne_deep.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/v41rom/ot_v41_ret.sv"
+  ],
+  "required_files": [
+   "rtl/common/ot_ratio_cdc_fifo.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv",
+   "physical/s81_ph_views/capture/post_cts_capt_domains.tcl",
+   "physical/s81_ph_views/common/vclk_latency.tcl",
+   "physical/s81_ph_views/ports/contract/dsfd_capt_x/ports.json",
+   "tools/run_abi3_physical.py",
+   "tools/s81_ph/capt_bench.sh",
+   "rtl/dsrom_sys/s81_ph/test/gen_stim.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_cap_tiled",
+    "cmd": "python3 -c 'from pathlib import Path;import hashlib,json;s=Path('\"'\"'tools/s81_ph/capt_bench.sh'\"'\"').read_text();assert s.count('\"'\"'timeout 5400 verilator'\"'\"')==1;t=s.replace('\"'\"'timeout 5400 verilator'\"'\"','\"'\"'verilator'\"'\"',1);Path('\"'\"'{RUN}/exact_cap_tiled_unlimited.sh'\"'\"').write_text(t);Path('\"'\"'{RUN}/exact_cap_tiled_script_hashes.json'\"'\"').write_text(json.dumps(dict(source_sha256=hashlib.sha256(s.encode()).hexdigest(),runtime_sha256=hashlib.sha256(t.encode()).hexdigest(),change='\"'\"'remove only timeout 5400 before verilator'\"'\"'),indent=2)+'\"'\"'\\n'\"'\"')' && bash {RUN}/exact_cap_tiled_unlimited.sh {RUN}/bench t1 'mix mix11 mix12 mix13 trace err over range rreq' S81PH_CAP_SAFE",
+    "expect": "pass",
+    "threads": 12,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "neg_bf16_trunc",
+    "cmd": "python3 -c 'from pathlib import Path;import hashlib,json;s=Path('\"'\"'tools/s81_ph/capt_bench.sh'\"'\"').read_text();assert s.count('\"'\"'timeout 5400 verilator'\"'\"')==1;t=s.replace('\"'\"'timeout 5400 verilator'\"'\"','\"'\"'verilator'\"'\"',1);Path('\"'\"'{RUN}/neg_bf16_trunc_unlimited.sh'\"'\"').write_text(t);Path('\"'\"'{RUN}/neg_bf16_trunc_script_hashes.json'\"'\"').write_text(json.dumps(dict(source_sha256=hashlib.sha256(s.encode()).hexdigest(),runtime_sha256=hashlib.sha256(t.encode()).hexdigest(),change='\"'\"'remove only timeout 5400 before verilator'\"'\"'),indent=2)+'\"'\"'\\n'\"'\"')' && bash {RUN}/neg_bf16_trunc_unlimited.sh {RUN}/bench m1 'mix' S81PH_CAP_SAFE S81PH_MUTANT_BF16_TRUNC",
+    "expect": "fail",
+    "fail_regex": "CAPT_BENCH FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; HM=0.035 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/common/ot_ratio_cdc_fifo.sv' SDCX='physical/s81_ph_views/tiles/ser_clock_capt.sdc physical/s81_ph_views/capture/capt_x_lag.sdc' PRECTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl POSTCTS=physical/s81_ph_views/capture/post_cts_capt_domains.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_capt_x rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc HM=0.035 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/common/ot_ratio_cdc_fifo.sv' SDCX='physical/s81_ph_views/tiles/ser_clock_capt.sdc physical/s81_ph_views/capture/capt_x_lag.sdc' PRECTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl POSTCTS=physical/s81_ph_views/capture/post_cts_capt_domains.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_capt_x rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/candidates/dsfd_capt_x_domain"
+  }
+ ],
+ "cycles_added": 7,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "S81-PH tile sheet is grade 'target' (no calibration: ~600 ps); dsfd_capt_ctl measured 256 ps SS / 181 ps FF at calibrate (r1/r2), so the sheet SDC would place vclk ~350 ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+ },
+ "latency_accounting": {
+  "incremental_cycles": 0,
+  "inherited_pipeline_cycles_added": 7
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

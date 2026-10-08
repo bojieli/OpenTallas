@@ -1,0 +1,85 @@
+{
+ "name": "w2-rb-half-no2-a4608c553-cgfix-tt",
+ "block": "ot_hbm_native_frame_station_rb_NO2_HALF",
+ "owner": "Claude:setup-triage (block owner claude/takeover-hbm-w2-20261006 / Codex:hbm_w2)",
+ "purpose": "TT-BATCH (owner option B, one large batch): w2-rb-half-no2-a4608c553-cgfix re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: SETUP-TRIAGE requeue of w2-rb-half-no2-a4608c553 (SS -404.81 / FF -488.11): class A/B flow fixes only (clock-gate push-down with latch cloning, CTS-net dont_touch before repair, fixed SDC patterns) + flow-hold mm hold repair; source = origin/main + setup-triage fixes, no RTL change by this stream. ",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "paths": [
+   "tools",
+   "rtl",
+   "physical/hbm_w2_rb_station_20261006",
+   "physical/hbm_die_abstracts_20261006",
+   "physical/asap7_memory_macros",
+   "physical/hbm_w2_check_station_20261006"
+  ],
+  "branch": "claude/setup-triage-20261007",
+  "commit": "df37bfa4eb58832ad1436fe1ba41d377cc84bee0"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_gate_half",
+    "cmd": "python3 tools/w2_station_rb_gate.py --half --skip-legacy --out {RUN}/gate",
+    "expect": "pass",
+    "ok": "python3 -c \"import json,sys;sys.exit(not json.load(open('{RUN}/gate/terminal.json'))['passed'])\"",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_frame_check_removed",
+    "cmd": "python3 tools/w2_station_rb_gate.py --half --skip-legacy --neg-only S3_frame_check_removed --out {RUN}/neg_s3",
+    "expect": "fail",
+    "fail_regex": "(?m)^FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; python3 physical/hbm_w2_rb_station_20261006/run_owned.py --run {RUN}/routes/{NAME}${CL_LABEL_SUFFIX} --no 2 --half --core-width 440 --core-height 160 --place-density 0.40 --period-ps 730 --hold-margin-ns 0.030 --threads 16 --tag tk_W2_half $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "clk_sm",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; python3 physical/hbm_w2_rb_station_20261006/run_owned.py --run {RUN}/routes/{NAME} --no 2 --half --core-width 440 --core-height 160 --place-density 0.40 --period-ps 730 --hold-margin-ns 0.030 --threads 16 --tag tk_W2_half",
+   "ok": "test -s {RUN}/routes/{NAME}/terminal.json && grep -q DRIVER_RETURNED {RUN}/routes/{NAME}/terminal.json && grep -q '\"exit_code\": 0' {RUN}/routes/{NAME}/terminal.json",
+   "logs": [
+    "{RUN}/routes/{NAME}/launch.json"
+   ]
+  },
+  "signoff": {
+   "cmd": "python3 physical/hbm_w2_rb_station_20261006/signoff.py --run {RUN}/routes/{NAME} --half || test -s {RUN}/routes/{NAME}/signoff.json",
+   "ok": "test -s {RUN}/routes/{NAME}/signoff.json"
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/signoff.json {RUN}/routes/{NAME}/argv.json {RUN}/record/ && cp {RUN}/gate/terminal.json {RUN}/record/gate_terminal.json && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "metrics_cmd": "python3 -c \"import json,glob;d=json.load(open('{RUN}/routes/{NAME}/signoff.json'));a=d['accept'];drc=None\nfor f in glob.glob('{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json'):\n drc=json.load(open(f)).get('detailedroute__route__drc_errors',drc)\nprint(json.dumps(dict(ss_ps=a['SS_setup_ps'],ff_ps=a['FF_hold_ps'],drc=drc)))\"",
+  "checks": []
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/w2_rb_half_pinflop_20261007/no2"
+  }
+ ],
+ "cycles_added": 197,
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

@@ -1,0 +1,103 @@
+{
+ "name": "hbm_router_r23_kneg_94fab53cc_b-tt",
+ "block": "hfd_router",
+ "owner": "Claude:hbm-die",
+ "purpose": "TT-BATCH (owner option B, one large batch): hbm_router_r23_kneg_94fab53cc_b re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: hfd_router KNEG recipe re-hardened at the r23 generator pins (closed KNEG view 9191bae41 was routed on r16i pins: r23 moves f_vm 512 bits N/M5 -> W/M4 and 835 pins; index MISMATCH). HM 0.045. 0 cycles.",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/hbm-die-20261007",
+  "commit": "94fab53ccc96a4bdac81f3cd18335962690109ed",
+  "extra_paths": [
+   "results/uarch/hbm_current_target_portmap_20261005",
+   "results/rtl/hbm_accel_die_floorplan_20261005",
+   "results/rtl/die_top_lint_20261006",
+   "results/rtl/dshbm_matched_reference_20261005",
+   "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_kneg_core",
+    "cmd": "bash rtl/test/hbm_router_ps/run_kneg.sh {RUN}/bench pos 1500",
+    "expect": "pass",
+    "pass_regex": "KNEG_BENCH PASS",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "wrapper_lockstep_kneg",
+    "cmd": "bash physical/hbm_accel_die_views/router/rtl/run_bench.sh {RUN}/bench_wrap -DOT_ROUTER_KNEG",
+    "expect": "pass",
+    "pass_regex": "mismatches=0",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_kneg",
+    "cmd": "bash rtl/test/hbm_router_ps/run_kneg.sh {RUN}/bench neg 200",
+    "expect": "fail",
+    "fail_regex": "KNEG_BENCH FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4
+   }
+  ],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; HM=0.045 SRC={SRC} OUT={RUN}/routes PD=0.55 CORES=16 NEED=24 FCP=5 FCF=physical/hbm_accel_die_views/router/rtl/hfd_router_face_stages.tcl SDCA=physical/hbm_accel_die_views/common/io_vclk_m_770.sdc POSTSDC=\"physical/hbm_accel_die_views/router/rtl/fclk_ports_signoff.sdc physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" PRECTS=physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/gpu/ot_gpu_router_topk_ps.sv rtl/gpu/ot_gpu_router_topk.sv rtl/common/ot_fwd_link_stage.sv\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" bash physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_router physical/hbm_accel_die_views/router/rtl/hfd_router.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1 ot_gpu_router_ps_lcopy\" --orfs-var \"GLOBAL_ROUTE_ARGS=-congestion_iterations 100 -allow_congestion\" --orfs-var OT_FC_REBUF=1 --orfs-var \"VERILOG_DEFINES=-DSYNTHESIS -DOT_ROUTER_KNEG\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.045 SRC={SRC} OUT={RUN}/routes PD=0.55 CORES=16 NEED=24 FCP=5 FCF=physical/hbm_accel_die_views/router/rtl/hfd_router_face_stages.tcl SDCA=physical/hbm_accel_die_views/common/io_vclk_m_770.sdc POSTSDC=\"physical/hbm_accel_die_views/router/rtl/fclk_ports_signoff.sdc physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" PRECTS=physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/gpu/ot_gpu_router_topk_ps.sv rtl/gpu/ot_gpu_router_topk.sv rtl/common/ot_fwd_link_stage.sv\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" bash physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_router physical/hbm_accel_die_views/router/rtl/hfd_router.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1 ot_gpu_router_ps_lcopy\" --orfs-var \"GLOBAL_ROUTE_ARGS=-congestion_iterations 100 -allow_congestion\" --orfs-var OT_FC_REBUF=1 --orfs-var \"VERILOG_DEFINES=-DSYNTHESIS -DOT_ROUTER_KNEG\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/hfd_router.lef {RUN}/routes/{LABEL}/view/hfd_router_ss.lib {RUN}/routes/{LABEL}/view/hfd_router_ff.lib {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/record/ && cp {RUN}/routes/{LABEL}/args {RUN}/record/route_args_{LABEL}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/router/rtl/fclk_ports_signoff.sdc",
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/hbm_accel_die_views/router"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "single-variable variant of dv12_idly2 (SS +24.56, input hold +55.5 with the r6b input delay pairs tuned to io_vclk_m_770 + post_cts_vclk at the measured insertion); the sheet SDC re-balances the IO window the delay pairs were sized for. A sheet-based re-route follows once the hold class is closed."
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

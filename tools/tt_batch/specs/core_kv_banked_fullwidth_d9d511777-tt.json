@@ -1,0 +1,92 @@
+{
+ "name": "core_kv_banked_fullwidth_d9d511777-tt",
+ "block": "ot_qwen_rom_core_core_kv_banked",
+ "owner": "Codex:qwen-elements",
+ "purpose": "TT-BATCH (owner option B, one large batch): core_kv_banked_fullwidth_d9d511777 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Full SW64 NW18 controller, exact-epoch8x8 KV history reduction and registered-epoch flush, after measured corrected-fullwidth SS failure. Actual KVbridge/RMW gate; remaining write-boundary hold is independently tracked.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "commit": "d9d511777658bb1377ad5fcb1b7e4009afd2622c",
+  "extra_paths": [
+   "configs"
+  ],
+  "branch": "main"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "full_controller_kv_bridge",
+    "cmd": "python3 tools/qwen_core_kv_boundary_gate.py --out {RUN}/bench/full_controller",
+    "expect": "pass",
+    "pass_regex": "\"status\": \"pass\"",
+    "min_count_regex": "\"positive_engine_events\": (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog",
+     "yosys"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; CORE_DIE_IO=1 SRC={SRC} bash physical/qwen_die_masters/jobs/route_core_kv_boundary.sh {LABEL} 3banmsp 30 0.5 {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 40,
+   "needs": [
+    "orfs",
+    "yosys"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS.md {RUN}/routes/{LABEL}/prep/cut_report.json {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_qwen_rom_core --out {RUN}/record/views/ot_qwen_rom_core_core_p --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_core_ctx/signoff833_skew90.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/qwen_core_kv_boundary_20261007/physical"
+  },
+  {
+   "from": "{RUN}/bench/full_controller/result.json",
+   "to": "results/rtl/qwen_core_kv_boundary_20261007/remote_full_interface_result.json"
+  }
+ ],
+ "cycles_added": "KV-history predicate0addededges; flushlevel+1edge. Actual32partial-RMW vehicle+30cycles no-stall/+28periodicbackpressure. Currentanalyticalprogram108KVwriteinstructions continuous-ready bound+108edges; no deployed/stall-independenttokenbound.",
+ "merge_target": null,
+ "no_bench_reason": "The aggregate full_controller_kv_bridge gate executes both required negative controls and the full positive engine/KV events, failing unless all expected verdicts pass; committed results/rtl/qwen_core_kv_boundary_20261007/full_interface_gate binds source and results.",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

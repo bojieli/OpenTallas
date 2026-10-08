@@ -1,0 +1,86 @@
+{
+ "name": "s81ph-dsfd_capt_x-501831f78-safe-tt",
+ "block": "dsfd_capt_x",
+ "owner": "Claude:s81-ph (tiles)",
+ "purpose": "TT-BATCH (owner option B, one large batch): s81ph-dsfd_capt_x-501831f78-safe re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: SAFE capture crossing tile (16 pair packers + ratio CDCs + status crossing, balanced ck/ckv sinks, ckv-root balance hook)",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/s81-placeholders-20261006",
+  "commit": "501831f78adb7dcacbd1c881a3bf40fd6073bc93"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_cap_tiled",
+    "cmd": "bash tools/s81_ph/capt_bench.sh {RUN}/bench t1 'mix mix11 mix12 mix13 trace err over range rreq' S81PH_CAP_SAFE",
+    "expect": "pass",
+    "threads": 12,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "neg_bf16_trunc",
+    "cmd": "bash tools/s81_ph/capt_bench.sh {RUN}/bench m1 'mix' S81PH_CAP_SAFE S81PH_MUTANT_BF16_TRUNC",
+    "expect": "fail",
+    "fail_regex": "CAPT_BENCH FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; HM=0.035 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/common/ot_ratio_cdc_fifo.sv' SDCX=physical/s81_ph_views/tiles/ser_clock_capt.sdc PRECTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl POSTCTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_capt_x rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc HM=0.035 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/common/ot_ratio_cdc_fifo.sv' SDCX=physical/s81_ph_views/tiles/ser_clock_capt.sdc PRECTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl POSTCTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_capt_x rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/dsfd_capt_x"
+  }
+ ],
+ "cycles_added": 6,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "S81-PH tile sheet is grade 'target' (no calibration: ~600 ps); dsfd_capt_ctl measured 256 ps SS / 181 ps FF at calibrate (r1/r2), so the sheet SDC would place vclk ~350 ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

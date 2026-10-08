@@ -1,0 +1,99 @@
+{
+ "name": "hbm_cmdproc_s_ac6ef1af3-tt",
+ "block": "hfd_cmdproc_s",
+ "owner": "Claude:hbm-views",
+ "purpose": "TT-BATCH (owner option B, one large batch): hbm_cmdproc_s_ac6ef1af3 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: hfd_cmdproc_s fail-fast fix: RDREG 2 (macro-pin capture, +1 cycle per command fetch)",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 12,
+ "peak_ram_gb": 80,
+ "source": {
+  "branch": "claude/hbm-abstracts-spine-20261006",
+  "commit": "ac6ef1af33d9618ba5f61e1cacc8c19be003c568",
+  "extra_paths": [
+   "results/uarch/hbm_current_target_portmap_20261005",
+   "results/rtl/hbm_accel_die_floorplan_20261005",
+   "results/rtl/die_top_lint_20261006",
+   "results/rtl/dshbm_matched_reference_20261005",
+   "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "rd2_transaction_exact",
+    "cmd": "bash physical/hbm_accel_die_views/cmdproc/rtl/run_rd2_bench.sh {RUN}/bench",
+    "expect": "pass",
+    "pass_regex": "CMDPROC_RD2 PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "rd2_neg_mutant",
+    "cmd": "grep -q CMDPROC_RD2_NEG_DETECTED {RUN}/bench/../bench.rd2.log 2>/dev/null; grep -q 'DIFF' {RUN}/bench/neg.log && echo CMDPROC_NEG_FAIL && exit 1; exit 0",
+    "expect": "fail",
+    "fail_regex": "CMDPROC_NEG_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 1
+   }
+  ],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"12\" NEED=\"80\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc physical/hbm_accel_die_views/common/io_min/io_min_hfd_cmdproc_s.sdc\" FCP=\"3\" HM=\"0.030\" PDN=\"physical/hbm_accel_die_views/cmdproc/pdn_cmdproc.tcl\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv rtl/common/ot_fwd_link_stage.sv\" MACROS=\"ot_sram_2rw_512x64_m4_r2c2=physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_cmdproc_s physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc_s.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1\" --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_accel_die_views/cmdproc/macro_place_s.tcl --orfs-var SKIP_CTS_REPAIR_TIMING=1 --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/hbm_accel_die_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 12,
+   "peak_ram_gb": 80
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"12\" NEED=\"80\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc physical/hbm_accel_die_views/common/io_min/io_min_hfd_cmdproc_s.sdc\" FCP=\"3\" HM=\"0.030\" PDN=\"physical/hbm_accel_die_views/cmdproc/pdn_cmdproc.tcl\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv rtl/common/ot_fwd_link_stage.sv\" MACROS=\"ot_sram_2rw_512x64_m4_r2c2=physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_cmdproc_s physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc_s.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1\" --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_accel_die_views/cmdproc/macro_place_s.tcl --orfs-var SKIP_CTS_REPAIR_TIMING=1 --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_cmdproc_s.lef {RUN}/routes/{NAME}/view/hfd_cmdproc_s_ss.lib {RUN}/routes/{NAME}/view/hfd_cmdproc_s_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/hbm_accel_die_views/common/io_min/io_min_hfd_cmdproc_s.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/hbm_accel_die_views/cmdproc/view_s"
+  }
+ ],
+ "cycles_added": 1,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "same IO recipe as the benched cmdproc routes (io_vclk_m at calibrated CK_SS_MEAN + per-bit vclk_corner_true + io_min); cross buses xl/xb/xt are intra-pair"
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}
