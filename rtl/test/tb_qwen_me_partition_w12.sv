@@ -127,7 +127,7 @@ module tb_qwen_me_partition_w12;
     wire [NXC-1:0] a_x_re;
     wire [NXC*AW-1:0] a_x_addr;
     reg  [NXC*32-1:0] a_x_q;
-    localparam integer CB = (BAW == 11) ? 4 : 2;     // the same 8,192 words in 2,048-word banks at BAW 11
+    localparam integer CB = 8192 >> BAW;             // the same 8,192 words in 2^BAW-word banks (2 at BAW 12, 4 at 11)
     wire [NT*CB-1:0] a_t_rom_ce;
     wire [NT*12-1:0] a_t_rom_addr;
     reg  [NT*2*CB*266-1:0] a_t_rom_rd;

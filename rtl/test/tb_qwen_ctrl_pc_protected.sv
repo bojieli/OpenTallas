@@ -1,17 +1,21 @@
 `timescale 1ns/1ps
 module tb_qwen_ctrl_pc_protected;
- parameter integer PC=0, INJECT=-1, NEG=0;
+ parameter integer PC=0, INJECT=-1, NEG=0, OREG=0;   // OREG: registered protected outputs, compared with the golden one edge later
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,cmd_v=0;reg[31:0]cmd=0;reg[2:0]read_credit=0;
  wire cmd_credit,row_v,col_v,col_we,busy,fault;
  wire[2:0]row_op;wire[4:0]row_bank,col_bank,col_col;wire[18:0]row_row;
- ot_qwen_ctrl_pc_protected #(.ENABLE(1),.PC(PC)) dut(.*);
- wire gc,grv,gcv,gwe,gb,gf;wire[2:0]gro;wire[4:0]grb,gcb,gcc;wire[18:0]grr;
+ ot_qwen_ctrl_pc_protected #(.ENABLE(1),.PC(PC),.OREG(OREG)) dut(.*);
+ wire gc0,grv0,gcv0,gwe0,gb0,gf;wire[2:0]gro0;wire[4:0]grb0,gcb0,gcc0;wire[18:0]grr0;
+ reg[41:0] gq;
+ always @(posedge clk or negedge rst_n) if(!rst_n) gq<=0; else gq<={gc0,grv0,gcv0,gwe0,gb0,gro0,grb0,gcb0,gcc0,grr0};
+ wire gc,grv,gcv,gwe,gb;wire[2:0]gro;wire[4:0]grb,gcb,gcc;wire[18:0]grr;
+ assign {gc,grv,gcv,gwe,gb,gro,grb,gcb,gcc,grr}=OREG?gq:{gc0,grv0,gcv0,gwe0,gb0,gro0,grb0,gcb0,gcc0,grr0};
  // Independent unmodified golden controller, driven by the same external input.
  ot_qwen_ctrl_pc #(.ENABLE(1),.PC(PC)) gold(
   .clk(clk),.rst_n(rst_n),.cmd_v(cmd_v),.cmd(cmd),.read_credit(read_credit),
-  .cmd_credit(gc),.row_v(grv),.row_op(gro),.row_bank(grb),.row_row(grr),
-  .col_v(gcv),.col_bank(gcb),.col_col(gcc),.col_we(gwe),.busy(gb),.fault(gf));
+  .cmd_credit(gc0),.row_v(grv0),.row_op(gro0),.row_bank(grb0),.row_row(grr0),
+  .col_v(gcv0),.col_bank(gcb0),.col_col(gcc0),.col_we(gwe0),.busy(gb0),.fault(gf));
  integer cycles=0,sent=0,acked=0,reads=0,writes=0,pending=0,ret=0;
  integer accepted_rows=0,accepted_cols=0,first_ref=-1,golden_first_ref=-1;
  integer injected_at=-1,fault_at=-1;reg injected=0,finished=0;

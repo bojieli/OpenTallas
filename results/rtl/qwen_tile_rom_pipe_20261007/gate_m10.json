@@ -1,0 +1,73 @@
+{
+ "claim_boundary": "Random back-to-back dense and KV-sourced ops on hash-image memories at the listed small group count; exactness of the partition, pruning and wire stages against the original engine. Not a checkpoint, token, timing or physical result.",
+ "negative_control": "FAIL result write event 0 differs",
+ "negative_control_rejected": true,
+ "params": {
+  "ACC_LAT": "7",
+  "BAW": "10",
+  "BD": "2",
+  "FAST_ISSUE": "1",
+  "GT": "16",
+  "KV_PREP": "4",
+  "LRST": "1",
+  "MEM_EXTRA": "1",
+  "MUL_LAT": "8",
+  "NWS": "1",
+  "ORD": "1",
+  "ROM_ARELAY": "2",
+  "ROM_MUT": "1",
+  "ROM_PIPE": "1",
+  "SMAX": "4",
+  "SMIN": "3",
+  "TCUT": "3",
+  "TREE_LAT": "7",
+  "TWS": "2",
+  "W": "4"
+ },
+ "reference": "rtl/hdc/ot_hdc_matvec.sv at 0e8df511 (renamed ot_hdc_matvec_ref)",
+ "reference_sha256": "370f37a65d84488dd1de395b29fdd1bba1df89b81219a818b0e4b89cfd4b7d2c",
+ "schema": "opentallas.qwen-me-partition-gate.v1",
+ "source_sha256": {
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_matvec.sv": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_qwen_me_array_w12.sv": "6fba7633c44390d6bdd3d1c6d0aca25490f3c29b87d2a12b032eecea64642c04",
+  "rtl/hdc/ot_qwen_rom_tile_w12.sv": "de9381e994c444f87df6b51b2fc64cc5351c47aff8d16ec292d1ba96e9a6e070",
+  "rtl/hdc/ot_qwen_w12_arith.sv": "e62270cd204e14875b025c824c0a1d26f1a9e046ec1ef0a57467ac22f43e9726",
+  "rtl/hdc/ot_qwen_w12_matvec.sv": "af014da5f8376cedbb5199991340a836b666ddafe851b92b610b2db9c52e5855",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/test/tb_qwen_me_partition_w12.sv": "93f1207e03e1f6be2e21bd86b71cf6f74ea182b3c062f8d5c3328bbeeeb55eca",
+  "tools/rtl_qwen_me_partition_gate_w12.py": "e07256e16fd70f19226539f6d523de6bd569ad4cba611fbaea017d0fb5806eea"
+ },
+ "source_stable": true,
+ "status": "fail",
+ "steps": [
+  {
+   "rc": 0,
+   "seconds": 75.4,
+   "step": "build_dut"
+  },
+  {
+   "rc": 0,
+   "seconds": 55.9,
+   "step": "sim_dut"
+  },
+  {
+   "rc": 0,
+   "seconds": 76.2,
+   "step": "build_mutant"
+  },
+  {
+   "rc": 0,
+   "seconds": 43.3,
+   "step": "sim_mutant"
+  }
+ ],
+ "verdict": "FAIL result write event 262 differs",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
+}

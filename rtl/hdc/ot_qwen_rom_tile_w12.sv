@@ -430,16 +430,20 @@ module ot_qwen_rom_tile_w12 #(
         .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}));
     genvar p, b;
     generate
-        for (p = 0; p < 2; p = p + 1) begin : g_col
+        //: BAW 12 keeps the original macro path g_col[p].g_bank[b].u_rom (floorplan scripts, die views, runtime
+        //: array binding); BAW 11 half-depth banks live under g_colh (zero-trip loops, no extra scope level)
+        for (p = 0; p < ((BAW == 12) ? 2 : 0); p = p + 1) begin : g_col
+            for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
+                ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in(rom_ce[b]),
+                    .addr_in((ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr),
+                    .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
+            end
+        end
+        for (p = 0; p < ((BAW == 11) ? 2 : 0); p = p + 1) begin : g_colh
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
                 wire [11:0] ra = (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr;
-                if (BAW == 11) begin : g_h
-                    ot_rom_2048x266_m8 u_rom (.clk(clk), .ce_in(rom_ce[b]), .addr_in(ra[10:0]),
-                                              .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
-                end else begin : g_f
-                    ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in(rom_ce[b]), .addr_in(ra),
-                                              .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
-                end
+                ot_rom_2048x266_m8 u_rom (.clk(clk), .ce_in(rom_ce[b]), .addr_in(ra[10:0]),
+                    .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
             end
         end
     endgenerate
