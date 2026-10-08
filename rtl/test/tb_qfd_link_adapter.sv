@@ -8,7 +8,7 @@
 // cycle between the 1st and the last word) and FAILs below MINRATE (per mille).  SRAM = 1 builds the receive buffer
 // from the ot_sram_1r1w_512x128_m4_r2c2 behavioural model (compile it and rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv).
 module tb_qfd_link_adapter;
-    parameter integer W = 1024, RXD = 32, LAT = 4, UP = 20, N = 3000, MUT = 0, SEED = 11, STALL = 0, SRAM = 0, RATE = 0, MINRATE = 0, SW = 200;
+    parameter integer W = 1024, RXD = 32, LAT = 4, UP = 20, N = 3000, MUT = 0, SEED = 11, STALL = 0, SRAM = 0, RATE = 0, MINRATE = 0, SW = 200, PINREG = 0;
     localparam integer CRW = $clog2(RXD + 1), FW = W + CRW + 9;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
@@ -22,9 +22,9 @@ module tb_qfd_link_adapter;
     integer cyc = 0;
     always @(posedge clk) cyc <= cyc + 1;
     wire up = cyc > UP;
-    ot_qfd_link_adapter #(.W(W), .RXD(RXD), .SRAM(SRAM), .MUT(MUT)) A (.clk(clk), .rst_n(rst_n), .c_v(a_cv), .c_d(a_cd), .c_cr(a_ccr),
+    ot_qfd_link_adapter #(.W(W), .RXD(RXD), .SRAM(SRAM), .PINREG(PINREG), .MUT(MUT)) A (.clk(clk), .rst_n(rst_n), .c_v(a_cv), .c_d(a_cd), .c_cr(a_ccr),
         .r_v(a_rv), .r_d(a_rd), .r_cr(a_rcr), .tx_up(up), .tx_v(a_tv), .tx_flit(a_tf), .rx_v(ba_v), .rx_flit(ba_f), .fault(a_f));
-    ot_qfd_link_adapter #(.W(W), .RXD(RXD), .SRAM(SRAM)) B (.clk(clk), .rst_n(rst_n), .c_v(b_cv), .c_d(b_cd), .c_cr(b_ccr),
+    ot_qfd_link_adapter #(.W(W), .RXD(RXD), .SRAM(SRAM), .PINREG(PINREG)) B (.clk(clk), .rst_n(rst_n), .c_v(b_cv), .c_d(b_cd), .c_cr(b_ccr),
         .r_v(b_rv), .r_d(b_rd), .r_cr(b_rcr), .tx_up(up), .tx_v(b_tv), .tx_flit(b_tf), .rx_v(ab_v), .rx_flit(ab_f), .fault(b_f));
     // senders (IBUF = 4 credits each) and receivers (credit back a word some cycles after it arrives)
     integer t_first, t_last, rate_pm;
