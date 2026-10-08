@@ -649,7 +649,7 @@ def cmd_die(a):
         relay_rec = RL.instance_relays(m, real, lt, H, L, wire_stages=not getattr(a, 'no_wire_stages', False))
         RL.relay_libs(m, work / 'hfd_rly_ss.lib', work / 'hfd_rly_ff.lib')
         (work / 'relays.json').write_text(json.dumps(relay_rec, indent=0))
-        print(json.dumps({k: v for k, v in relay_rec.items() if k not in ('chains', 'unplaced')}))
+        print(json.dumps({k: v for k, v in relay_rec.items() if k not in ('chains', 'unplaced', 'unplaced_detail')}))
     if a.case in ('real', 'sta'):
         H.case_real(m, work)
         # replace the generated macros that have a real view by the view's LEF

@@ -134,7 +134,8 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True):
                     dom.setdefault(inst, d_)
     clk_bus = {b[0]: i for i, b in enumerate(m['buses']) if b[0] in ('clk_stream', 'clk_serial', 'clk_hbm', 'clk_link')}
     W, Hh = m['geo']['W'], m['geo']['H']
-    free = Free([it.box() for it in m['insts']], W, Hh)
+    # obstacles: every placed instance AND every reserved region (owner / descriptor / escape bays, corridors, stores)
+    free = Free([it.box() for it in m['insts']] + [tuple(b) for b in m.get('reserved_regions', [])], W, Hh)
     rp = H.real_ports(m)
 
     def pin_xy(inst, port, sel):
@@ -190,6 +191,8 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True):
         xy = free.place(at[0], at[1], w, h, gx, gy)
         if xy is None:
             rec['unplaced'].append(name)
+            rec.setdefault('unplaced_detail', []).append(dict(name=name, bits=bits, at=[round(at[0], 3), round(at[1], 3)],
+                                                              w=round(w, 3), h=round(h, 3), travel_h=travel_h))
             xy = (math.floor((at[0] - w / 2) / gx) * gx, math.floor((at[1] - h / 2) / gy) * gy)
         free.add((xy[0], xy[1], xy[0] + w, xy[1] + h))
         it = H.Inst(name, mst, xy[0], xy[1], w - H.SHAVE, h - H.SHAVE, kind='waypoint', region='channel')
