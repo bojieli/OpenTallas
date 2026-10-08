@@ -13,17 +13,19 @@ import re
 import subprocess
 from pathlib import Path
 
-from corner_sta import LIBS, PLAT, ROOT
+from corner_sta import LIBS, PLAT, ROOT, _VT_TAG, corner_libs, extra_vts
 
 
-def script(corner, base, name, macros, post):
-    libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{l}" for l in LIBS[corner])
+def script(corner, base, name, macros, post, vts=()):
+    # MULTI-VT: vts (detected from the odb by corner_sta.extra_vts) add the LVT/SLVT LEFs and libraries
+    libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{l}" for l in corner_libs(corner, vts))
+    vt_lefs = "".join(f"\nread_lef {PLAT}/lef/asap7sc7p5t_28_{_VT_TAG[v]}_1x_220121a.lef" for v in vts)
     mlibs = "\n".join(f"read_liberty /src/{m}/{Path(m).name}_{corner}.lib" for m in macros)
     mlefs = "\n".join(f"read_lef /src/{m}/{Path(m).name}.lef" for m in macros)
     lef = f"write_abstract_lef /out/{name}.lef" if corner == "ss" else ""
     return f"""
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
-read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
+read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef{vt_lefs}
 {mlefs}
 {libs}
 {mlibs}
@@ -54,7 +56,7 @@ def main():
     rel = f"/work/{base.relative_to(o)}"
     rec = dict(schema="opentallas.w18.export_view.v1", name=a.name, orfs_dir=str(o), post_sdc=a.post_sdc)
     for corner in ("ss", "ff"):
-        (o / f"w18_export_{corner}.tcl").write_text(script(corner, rel, a.name, a.macro, a.post_sdc))
+        (o / f"w18_export_{corner}.tcl").write_text(script(corner, rel, a.name, a.macro, a.post_sdc, extra_vts(base / "6_final.odb")))
         cmd = ["docker", "run", "--rm", "-v", f"{o}:/work", "-v", f"{ROOT}:/src:ro", "-v", f"{out}:/out",
                "openroad/orfs:latest", "bash", "-lc",
                f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/w18_export_{corner}.tcl"]
