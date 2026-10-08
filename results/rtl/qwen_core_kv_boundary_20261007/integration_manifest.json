@@ -1,0 +1,23 @@
+{
+  "schema": "qwen.core.kv_boundary.integration_manifest.v1",
+  "source": {
+    "tools/qwen_core_kv_boundary.py": "08347b140b4d90703e860dea1fa8da1123a17ea37ba9f573352e0b339e697af9",
+    "tools/qwen_core_kv_boundary_prepare.py": "89fd9012ee3177f84b15a299188ba34cd434fafcc7c950d104682c19df077ca4",
+    "tools/qwen_core_kv_boundary_gate.py": "6fee578a10fa69f303d4ec3ee5f7105f60b186a2315269eeda7ba730dcc5900e",
+    "tools/qwen_core_kv_bridge_tb.py": "e01f966e54153f360d5445cb070104d14305566ce7db28d1286cb8059c32e4fa",
+    "physical/qwen_die_masters/jobs/route_core_kv_boundary.sh": "2de13ddf76c5890ce320af84658a4449ab1dd5e843993b93704803b9daf7545c"
+  },
+  "model": {
+    "path": "tools/uarch_model.py",
+    "only_appended_function": "qwen_core_kv_boundary_model"
+  },
+  "candidate_emitted_sha256": "23567de96a4c80a7bcbe8afddd6cb4701be28faa0568b09b64638e0b710a1bb2",
+  "source_predecessor_commit": "fbc523a6f269",
+  "full_interface_gate": "full_interface_gate/result.json",
+  "remaining_physical_obligations": [
+    "ME write-enable boundary hold:stationowner joined",
+    "Arrival-side input holds",
+    "New fullshape SS/FF DRC signoff"
+  ],
+  "adopted": false
+}

@@ -1,0 +1,95 @@
+{
+ "schema": "opentallas.rtl.dsrom_wfc_split_closure.v1",
+ "source_commit": "fd8df673d",
+ "accepted": true,
+ "exact": true,
+ "verdict": "CLOSED: src and stg WFC elements routed at 770 ps with the +-150 ps die IO model, signed off at 833.333 ps: SS >= +15 / FF >= +15 in context, reg2reg and region (150 ps stage link, 90 ps intra-region, 50 ps hold IO uncertainty); DRC / antenna / DRV 0; exact",
+ "acceptance_rule": "OWNER 18:15 (2026-10-06): SS setup >= +15, FF hold >= +15 at 833.333 (incontext, reg2reg, region: 150 ps on the stage link, 90 ps intra-region, 50 ps hold IO uncertainty), DRC 0, antenna 0, max slew / cap / fanout violators 0 at SS and FF",
+ "elements": {
+  "src": {
+   "route": "r22/src_u55",
+   "accepted": true,
+   "accepted_40_15_die150": false,
+   "ss_setup_ps": 54.3,
+   "ff_hold_ps": 23.1,
+   "die150_ss_setup_ps": 54.3,
+   "die150_ff_hold_ps": 3.2,
+   "region_ss_setup_ps": 54.3,
+   "region_ff_hold_ps": 23.1,
+   "drc": 0,
+   "antenna": 0,
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "route_period_ps": 770,
+   "die_skew_ps": 150
+  },
+  "stg": {
+   "route": "r11/stg_u50",
+   "accepted": true,
+   "accepted_40_15_die150": true,
+   "ss_setup_ps": 73.1,
+   "ff_hold_ps": 22.5,
+   "die150_ss_setup_ps": 73.1,
+   "die150_ff_hold_ps": 15.7,
+   "region_ss_setup_ps": 73.1,
+   "region_ff_hold_ps": 15.7,
+   "drc": 0,
+   "antenna": 0,
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "route_period_ps": 770,
+   "die_skew_ps": 150
+  }
+ },
+ "physical_record": "results/rtl/dsrom_wfc_split_20261006/routes_r22_src_r11_stg.json",
+ "bench_summary": "results/rtl/dsrom_wfc_split_20261006/eq/summary_r11.txt",
+ "stage_bench": "results/rtl/dsrom_wfc_split_20261006/stage/stage_w1_r11_tail.txt",
+ "charge": {
+  "handoff_cycles": 49,
+  "reference_handoff_cycles": 46,
+  "measured_interval_overhead": 0.004347,
+  "reference_interval_overhead": 0.004081,
+  "hop_delta_cycles": 13,
+  "hop_delta_parts": {
+   "done_to_out_cycles": 52,
+   "reference_done_to_out_cycles": 47,
+   "entry_start_delta_cycles": 8
+  },
+  "basis": "stage bench w1 (L20 stage, 6 jobs) vs the reference ot_rom_pkg_ctrl_wf wave-1 run (results/rtl/dsrom_wavefront_verify_20261004/record.json): handoff = max done -> next start; hop charge = (done -> outbound flit) delta + first-job entry delta (inbound link), conservatively both on every stage hop"
+ },
+ "integration_qualified": false,
+ "integration_review": "results/rtl/dsrom_wfc_split_20261006/integration_review_20261007/review.json",
+ "note": "block closure only (r22 src + r11 stg, region rule SS>=+15/FF>=+15, DRC/antenna/DRV 0, exact r11 benches; RTL f316f0271 ctrl unchanged); the composition lever stays off until integration_qualified (4a6cfe394)"
+}

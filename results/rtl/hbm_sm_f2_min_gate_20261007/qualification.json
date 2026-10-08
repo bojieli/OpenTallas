@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.hbm.smh.minimum_gate_qualification.v1",
+  "source_commit": "f2bae3479f12169ef514a0abb73d351a610a8e93",
+  "campaign_pass": true,
+  "positive": {
+    "cycles": 3397,
+    "exact_operations": 13,
+    "mismatching_operations": 0
+  },
+  "negative": {
+    "expected_failure": true,
+    "actual_failure": "request-loss protocol stall at cycle20242; missing results for13operations",
+    "arithmetic_mismatches_claimed": false,
+    "mutant_define_verified": true
+  },
+  "reported_source_hashes_verified_against_commit": 39,
+  "wrapper_hash_verified": true,
+  "golden_import_hashes_expected": {
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/rtl_hdc_v41_blockdot_campaign.py": "e7cb86b9eeea0aae2ca46ba19d11bebef814415a7a5da70f73576860e0188955"
+  },
+  "remote_golden_import_readback_pending": false,
+  "scope": {
+    "NC": 8,
+    "active_columns": 1,
+    "RMAX": 256,
+    "production_RMAX4096_exact_claim": false,
+    "request_credit": true,
+    "request_stalls": true,
+    "simulation_clock_ns": 1.0,
+    "physical_clock_qualification": false
+  },
+  "measured_resources": {
+    "maximum_RSS_KiB": 17970220,
+    "admitted_GiB": 24,
+    "build_threads": 4,
+    "wall_seconds": 4590
+  },
+  "adoption": false,
+  "physical_and_parent_gates_remain": true,
+  "all_42_source_hashes_verified": true,
+  "remote_archive_hash_verified": true,
+  "numerical_gate_component": "PASS within stated NC8 active1 RMAX256 scope"
+}

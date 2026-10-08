@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "expected": {
+    "data_capture_bits": 1024,
+    "enable_capture_bits": 256,
+    "posedge_bits": 1923,
+    "negedge_bits": 4096
+  },
+  "observed": {
+    "data_capture_bits": 1024,
+    "enable_capture_bits": 256,
+    "posedge_bits": 1923,
+    "negedge_bits": 4096
+  },
+  "capture_leaf_instances": {
+    "data128": 8,
+    "enable4": 64
+  },
+  "adopted": false,
+  "scope": "generic synthesis only; mapped cells, clocks, SS/FF and placement pending",
+  "netlist_sha256": "e41dc4292abecf32e358c47823198a4e0d1fd69aa8def0a452f29b3bf0b8377c",
+  "tool_sha256": "c6685e6bb634c972c3056dbe26c93ee6cc8fb39263d320790aa6a17c70d43c01"
+}

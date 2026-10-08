@@ -1,0 +1,16 @@
+{
+  "preserved_failures": [
+    {
+      "stage": "initial bench revision",
+      "tool": "Icarus vvp",
+      "verdict": "FAIL healthy k=0 at time8192",
+      "diagnosis": "Bench inspected combinational quarantine in the same delta as native input deassertion. Receiving-edge publication was not wrong. Fixed only bench observation settling before healthy postcondition; final benches still assert at actual posedge before NBA."
+    },
+    {
+      "stage": "lint invocation",
+      "tool": "installed Verilator",
+      "verdict": "Invalid option --timing",
+      "resolution": "RTL has no timed process; ran supported --lint-only successfully."
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "status": "PASS",
+  "scope": "real native word adapter and existing loader_service_join; test-owned shared stack peer, not full causal provider or PHY",
+  "model": {
+    "status": "prebuild_candidate",
+    "native_record_bits": 320,
+    "words_per_record": 10,
+    "MACs_per_cycle": 0,
+    "replicas": 32,
+    "finite_outstanding": 1,
+    "cache": false,
+    "storage": {
+      "word_address": 32,
+      "physical_sector_address": 37,
+      "issuer_tag": 16,
+      "result_word": 32,
+      "payload_parity": 1,
+      "onehot_state": 4,
+      "sticky_fault": 1
+    },
+    "flop_bits": 123,
+    "flop_area_lower_bound_um2": 35.866800000000005,
+    "slot_lower_bound_um2_at_55pct": 65.21236363636363,
+    "service_read_bytes_per_word": 32,
+    "native_bytes_per_word": 4,
+    "service_read_bytes_per_record": 320,
+    "request_boundary_bits": 55,
+    "response_boundary_bits": 275,
+    "native_request_bits": 34,
+    "native_response_bits": 67,
+    "latency": "one input capture + shared request wait + owned response wait + one output capture; subsequent service request also waits existing reverse-credit/grant completion",
+    "minimum_unstalled_adapter_edges_per_word": 4,
+    "protection": "stored address, physical address, tag and output data parity; illegal/zero/multihot FSM fail closed; existing join identity validation; mapped independence and join mutable protection remain qualification obligations",
+    "source_addressing": "actual installed region: physical_base37 + (word_addr32 - virtual_base32); sector aligned region, exclusive virtual limit33",
+    "allocation": "explicit issuer-provided unique owner identity and tag; no invented client/producer/transport/IRS ownership",
+    "existing_service": "ot_hbm_loader_service_join shares existing four-stack provider; no added memory controller",
+    "slot_fit": null,
+    "tracks_capacity": null,
+    "physical_admitted": false,
+    "unresolved": [
+      "installed native program region and real issuer ownership binding",
+      "existing shared join mutable-state physical protection",
+      "SS/FF and registered floorplan route",
+      "system model composition"
+    ]
+  },
+  "cases": [
+    {
+      "returncode": 0,
+      "output": "PASS native_records=13 words=130 real_owned_and_reverse_credit=130\n",
+      "case": 0,
+      "pass": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS negative 1\n",
+      "case": 1,
+      "pass": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS negative 2\n",
+      "case": 2,
+      "pass": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS negative 3\n",
+      "case": 3,
+      "pass": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS negative 4\n",
+      "case": 4,
+      "pass": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS negative 5\n",
+      "case": 5,
+      "pass": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS negative 6\n",
+      "case": 6,
+      "pass": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS negative 7\n",
+      "case": 7,
+      "pass": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS negative 8\n",
+      "case": 8,
+      "pass": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS negative 9\n",
+      "case": 9,
+      "pass": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS negative 10\n",
+      "case": 10,
+      "pass": true
+    }
+  ],
+  "mutants": [
+    {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/program_provider/tb_hbm_sm_program_service.sv:78: native word mismatch 1\n       Time: 241000000 Scope: tb_hbm_sm_program_service\n",
+      "mutant": "wrong_word_lane",
+      "rejected": true
+    },
+    {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/program_provider/tb_hbm_sm_program_service.sv:38: failure not contained\n       Time: 62000000 Scope: tb_hbm_sm_program_service.expect_fault\n",
+      "mutant": "parity_bypass",
+      "rejected": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_addr_to_service.sv": "12e260d14e8e768c14c6092dee791bf626057ffff2a492695aa80f309f3af3dc",
+    "rtl/hbm_accel/integration/ot_hbm_loader_service_join.sv": "580a0490e2fde6ea8923174d441da927d5f5b465f4bd4c7c18a57344fd0e1f7d",
+    "rtl/hbm_accel/control_20261007/program_provider/ot_hbm_sm_program_service_join.sv": "c7b9b126b668b0ab2db374ff3980f4d4a3665eaeb136dead71c8ad034cb93561",
+    "rtl/hbm_accel/control_20261007/program_provider/ot_hbm_sm_program_word.sv": "b1259cbf08975155db759d7699cac9030bacc9e69f17737ced8ff280621f6260",
+    "rtl/hbm_accel/control_20261007/program_provider/tb_hbm_sm_program_service.sv": "ded9ef116212effe094ef2ecb288eb383aff1e309ae9dbe79b65a304d18d7a90",
+    "tools/hbm_sm_program_provider_gate.py": "80357acc18e289962101ed5f8b6bfbfde4681b4adea4e000822b4fffea499bb9",
+    "tools/hbm_sm_program_provider_model.py": "8f91f1117e7fad8d0754674443aae803ede6e36d299dd50b325572563ec9cc5d",
+    "tools/hbm_sm_program_provider_build.py": "4e2dd995b29073f21e5dc349a2adf634f1a3ab99265c3e38a1499ccfc730d1f7",
+    "results/rtl/hbm_sm_command_20261007/stress_seq.hex": "217bae8ead442cc2bce48249b909346c9fd7371f7feb5f4288cd8d7188113a92"
+  },
+  "physical_admitted": false
+}

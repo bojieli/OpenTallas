@@ -1,0 +1,17 @@
+ERR header (stack 0) not the stack's next frame cyc 43
+ERR header (stack 0) not the stack's next frame cyc 47
+ERR header (stack 0) not the stack's next frame cyc 49
+ERR header (stack 0) not the stack's next frame cyc 51
+ERR header (stack 0) not the stack's next frame cyc 53
+ERR header (stack 0) not the stack's next frame cyc 55
+ERR header (stack 0) not the stack's next frame cyc 57
+ERR header (stack 0) not the stack's next frame cyc 59
+ERR header (stack 0) not the stack's next frame cyc 61
+fault case mode 1: FAULT bits 00001 expected bit 11    seen, DONE after FAULT 0
+RESULT PASS fault mode 1
+- rtl/dsrom_sys/s81_ph/test/tb_s81ph_col.sv:247: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 5us; walltime 0.008 s; speed 573.570 us/s
+- Verilator: cpu 0.009 s on 1 threads; alloced 1018 MB
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.01
+	Maximum resident set size (kbytes): 8320

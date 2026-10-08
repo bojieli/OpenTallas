@@ -1,0 +1,196 @@
+{
+  "2": {
+    "source_pins": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+      "physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv": "27ad20cff6f60e5aec62141cb9ad5b36eb262e7fcb8c1901e8bdfe7486b5e65f",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv": "2a15dbd9eda2bf5a96d7bda4e4d74e28b3c5c4f4b5889bc1351cebe7d20aa2dd",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain.sv": "fd3787fc9bfb64499470d946e3f3a2904c36718ddca24c61d9f6cba5e0386577",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain_rb.sv": "92f4009f6657aebf4ccb736f776851ab16fbb5263242a621d8b555ed78cdadb4",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/sources.f": "13c5668f0293f2217f37a63fe349f4a5cf2173427f6e8225ba153b06bf154c3b",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/tb_native_quarter_publication.sv": "7080c52a1a8434fd605df931dbcca2cf3d17ee95975e9785f9bee18c50a18f9f",
+      "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+      "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "57f72d64c87c9ea4c8f1f3bf8d9043ed357f2fa97f48a0df070890a0907ec9f7",
+      "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+      "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+      "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+      "rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv": "0a58f1d89363e94727bb84a4e9e8138f5fecfb003ec4a73851e2f29cd164db7a",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv": "458b71de93685042eed6eb54acdb7a389c491dfee8e86cc9d5a8cfa85333a09e",
+      "rtl/test/hbm_accel/w2_rb_veto_20261006/tb_w2_rb_cross_bank_veto.sv": "6bb879906a829c14ac426de15d9e746469a37c2a053c70b20cf8b22e75b94191",
+      "tools/w2_station_rb_gate.py": "67df7f9c61c229910a6750154b8790089e1774952f739b656b433198f38f206f"
+    },
+    "reusable_candidate_artifacts": {
+      "routes/w2_rb_safe_no2_206a3037e/mapped_inventory.json": {
+        "sha256": "d1a31a770d88b27dd2c7985e88bacc9098f67641613eec6037ad9c3531ad134c",
+        "bytes": 599
+      },
+      "routes/w2_rb_safe_no2_206a3037e/work/mapped.v": {
+        "sha256": "1ce6341c98af40d7a6ad9e6ec6535eb7255e85fdadcdfde0395c5bf805d2c709",
+        "bytes": 29689212
+      },
+      "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/1_synth.odb": {
+        "sha256": "9ce319cd966c5f6d346dc95a64a7f15383bb51be203f048be8e375c22de39731",
+        "bytes": 77415754
+      },
+      "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_2_floorplan_macro.odb": {
+        "sha256": "862f2531340a23f2c5696e44ce3f1c6d7abc8546e2fdb38a8a20b0b42059507f",
+        "bytes": 77724425
+      },
+      "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_1_floorplan.odb": {
+        "sha256": "862f2531340a23f2c5696e44ce3f1c6d7abc8546e2fdb38a8a20b0b42059507f",
+        "bytes": 77724425
+      },
+      "routes/w2_rb_safe_no2_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_3_floorplan_tapcell.odb": {
+        "sha256": "11af0e9089d9dc9d9a2173906e0b79665cd31cb5637f8d8ca0b9b32de08d739d",
+        "bytes": 79365521
+      }
+    },
+    "negative_tails": {
+      "neg_B1_live_q_no_alignment.run.log": {
+        "sha256": "4efa03ab838438e90ee5631e9d7efdcbd62f06b0ffa024473995758f5c99e2e6",
+        "tail": "FATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/src/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:34: VETO: normal asserted with unverified data\n       Time: 13749978  Scope: tb_w2_bank_veto_top.u"
+      },
+      "neg_S5_learned_send_not_recorded.run.log": {
+        "sha256": "dd26ce534fc18795ed02eece0f2e10bc728f315d0a525efbaf7b1e04da3b58d8",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/gate/neg_S5_learned_send_not_recorded_tb.sv:184: unexpected parent/chain fault\n       Time: 94583182  Scope: tb_native_quarter_publication"
+      },
+      "neg_S3_frame_check_removed.run.log": {
+        "sha256": "3dddf3a9484e3933f258cc5f5060189cfe35122efd7b10a300362a347167c70a",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nCALENDAR_LAST_SM_ACK edge=124\nCALENDAR_QUARTER_ACK edge=213\nCALENDAR_PARENT_RELEASE edge=218\nCALENDAR_WARM_ACK edge=220\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/gate/neg_S3_frame_check_removed_tb.sv:253: wrong full73 receipt fabricated retirement\n       Time: 269999568  Scope: tb_native_quarter_publication"
+      },
+      "neg_S7_ack_frame_stage_skipped.run.log": {
+        "sha256": "6403fe148204990723b6fed982952181eba701d13cf854adfcbd827649a2ecfe",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/gate/neg_S7_ack_frame_stage_skipped_tb.sv:184: unexpected parent/chain fault\n       Time: 82916534  Scope: tb_native_quarter_publication"
+      },
+      "neg_S2_parent_ack_mask_removed.run.log": {
+        "sha256": "ac9d22953e5628c76419893dd5eb1f734d444698cece90187b202e6696af68c1",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nCALENDAR_LAST_SM_ACK edge=124\nCALENDAR_QUARTER_ACK edge=213\nCALENDAR_QUARTER_ACK edge=214\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/gate/neg_S2_parent_ack_mask_removed_tb.sv:240: parent release identity/conservation\n       Time: 179999712  Scope: tb_native_quarter_publication"
+      },
+      "neg_B4_red_data_not_delayed.run.log": {
+        "sha256": "3cc158778ddc22c8bea7b948bdf6416af9cfaab57a8b567b54d5b1b801ca7d3b",
+        "tail": "FATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/src/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:34: VETO: normal asserted with unverified data\n       Time: 15416642  Scope: tb_w2_bank_veto_top.u"
+      },
+      "neg_B3_controller_check_removed.run.log": {
+        "sha256": "fbde7a074eb8258b59cfd5fa771c265655bd9c28fd45192a8028939202c0e263",
+        "tail": "CE_REPAIR edges=15\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/src/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:57: controller corruption permitted\n       Time: 139166444  Scope: tb_w2_bank_veto_top.u.wait_fault"
+      },
+      "neg_S6_cross_bank_veto_removed.run.log": {
+        "sha256": "4603ea35ebb2d216cf05dc8196bac5c2eb1dbad44860435c9e2a209994b43565",
+        "tail": "FATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/src/rtl/test/hbm_accel/w2_rb_veto_20261006/tb_w2_rb_cross_bank_veto.sv:60: VETO: station acted after a station rail fault (edge 6)\n       Time: 62550  Scope: tb_w2_rb_cross_bank_veto"
+      },
+      "neg_B2_copy_check_removed.run.log": {
+        "sha256": "6fc8a7b23b4299bec2a6062eb0d16d171efb5506c3bfbf2844b2c5bdcd042586",
+        "tail": "CE_REPAIR edges=15\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/src/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:57: commit-select copy corruption permitted\n       Time: 238332952  Scope: tb_w2_bank_veto_top.u.wait_fault"
+      },
+      "neg_S8_rel_q_decision_removed.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tail": ""
+      },
+      "neg_S1_sm_duplicate_mask_removed.run.log": {
+        "sha256": "6b09faa6fd4417fa49cf9f0e8a9b65d00432dc97a6affaaa77fa62b2acbf16d1",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/gate/neg_S1_sm_duplicate_mask_removed_tb.sv:187: duplicate or mismatched actual SM tap i=0\n       Time: 30416618  Scope: tb_native_quarter_publication.$ivl_for_loop22"
+      },
+      "neg_S4_held_release_ignored.run.log": {
+        "sha256": "dec879ac5dac4b0d68dfda4918f5e85a99ac2a943a6526e488c37f04ca82f5da",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nCALENDAR_LAST_SM_ACK edge=124\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/gate/neg_S4_held_release_ignored_tb.sv:234: held full73 receipt lost across repair/warm/backpressure\n       Time: 165833068  Scope: tb_native_quarter_publication"
+      }
+    },
+    "completed_macro_log": [
+      "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-206a3037e/routes/w2_rb_safe_no2_206a3037e/work/orfs/logs/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/2_2_floorplan_macro.log"
+    ]
+  },
+  "3": {
+    "source_pins": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+      "physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv": "27ad20cff6f60e5aec62141cb9ad5b36eb262e7fcb8c1901e8bdfe7486b5e65f",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv": "2a15dbd9eda2bf5a96d7bda4e4d74e28b3c5c4f4b5889bc1351cebe7d20aa2dd",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain.sv": "fd3787fc9bfb64499470d946e3f3a2904c36718ddca24c61d9f6cba5e0386577",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain_rb.sv": "92f4009f6657aebf4ccb736f776851ab16fbb5263242a621d8b555ed78cdadb4",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/sources.f": "13c5668f0293f2217f37a63fe349f4a5cf2173427f6e8225ba153b06bf154c3b",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/tb_native_quarter_publication.sv": "7080c52a1a8434fd605df931dbcca2cf3d17ee95975e9785f9bee18c50a18f9f",
+      "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+      "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "57f72d64c87c9ea4c8f1f3bf8d9043ed357f2fa97f48a0df070890a0907ec9f7",
+      "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+      "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+      "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+      "rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv": "0a58f1d89363e94727bb84a4e9e8138f5fecfb003ec4a73851e2f29cd164db7a",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv": "458b71de93685042eed6eb54acdb7a389c491dfee8e86cc9d5a8cfa85333a09e",
+      "rtl/test/hbm_accel/w2_rb_veto_20261006/tb_w2_rb_cross_bank_veto.sv": "6bb879906a829c14ac426de15d9e746469a37c2a053c70b20cf8b22e75b94191",
+      "tools/w2_station_rb_gate.py": "67df7f9c61c229910a6750154b8790089e1774952f739b656b433198f38f206f"
+    },
+    "reusable_candidate_artifacts": {
+      "routes/w2_rb_safe_no3_206a3037e/mapped_inventory.json": {
+        "sha256": "63f23c0c20783f9be58acf8a2a4c3a930a9f0e91ef64181e8b91711939de631b",
+        "bytes": 598
+      },
+      "routes/w2_rb_safe_no3_206a3037e/work/mapped.v": {
+        "sha256": "d588321ae71db9a0d88e7287113861c1df95fffdc4763636425acadefa34908f",
+        "bytes": 32301093
+      },
+      "routes/w2_rb_safe_no3_206a3037e/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO3/base/1_synth.odb": {
+        "sha256": "3e4732498ccb101f3f53d93f8e07319ae4206d83c647e0a146f290486cc66619",
+        "bytes": 85523698
+      }
+    },
+    "negative_tails": {
+      "neg_B1_live_q_no_alignment.run.log": {
+        "sha256": "f872c1613f440244b1249718c6f5b35e566189f8b3e0549e8151c403a34c0d7c",
+        "tail": "FATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/src/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:34: VETO: normal asserted with unverified data\n       Time: 13749978  Scope: tb_w2_bank_veto_top.u"
+      },
+      "neg_S5_learned_send_not_recorded.run.log": {
+        "sha256": "b2fb9c977d48d36891eb2f9857611c75c9ad4885cdd69a93050b4141e3751a50",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/gate/neg_S5_learned_send_not_recorded_tb.sv:184: unexpected parent/chain fault\n       Time: 94583182  Scope: tb_native_quarter_publication"
+      },
+      "neg_S3_frame_check_removed.run.log": {
+        "sha256": "5f336be0058ac9aedbaf0da2dc7e0ec7a0011d03935c00ac5dd61adeb02ffdbb",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nCALENDAR_LAST_SM_ACK edge=124\nCALENDAR_QUARTER_ACK edge=213\nCALENDAR_PARENT_RELEASE edge=218\nCALENDAR_WARM_ACK edge=220\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/gate/neg_S3_frame_check_removed_tb.sv:253: wrong full73 receipt fabricated retirement\n       Time: 269999568  Scope: tb_native_quarter_publication"
+      },
+      "neg_S7_ack_frame_stage_skipped.run.log": {
+        "sha256": "e7f1614d098e96ab5d41161a6cc1cc932d8ffdf183065b03c0694713c8c2b0e2",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/gate/neg_S7_ack_frame_stage_skipped_tb.sv:184: unexpected parent/chain fault\n       Time: 82916534  Scope: tb_native_quarter_publication"
+      },
+      "neg_S2_parent_ack_mask_removed.run.log": {
+        "sha256": "139f2fba2a3ad0c3e8f3c356f6fe5f30d30a9e42ed4d28f3713069c4248a2a3f",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nCALENDAR_LAST_SM_ACK edge=124\nCALENDAR_QUARTER_ACK edge=213\nCALENDAR_QUARTER_ACK edge=214\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/gate/neg_S2_parent_ack_mask_removed_tb.sv:240: parent release identity/conservation\n       Time: 179999712  Scope: tb_native_quarter_publication"
+      },
+      "neg_B4_red_data_not_delayed.run.log": {
+        "sha256": "f93562b51ef57e0f3b3121b9b2152d2f32d89565b1f97665ca3d78b89ef84183",
+        "tail": "FATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/src/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:34: VETO: normal asserted with unverified data\n       Time: 15416642  Scope: tb_w2_bank_veto_top.u"
+      },
+      "neg_B3_controller_check_removed.run.log": {
+        "sha256": "7980100cab3298598c3d9773b8c80e9f4a8311b3830800d2f88aabf6837fb7ae",
+        "tail": "CE_REPAIR edges=15\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/src/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:57: controller corruption permitted\n       Time: 139166444  Scope: tb_w2_bank_veto_top.u.wait_fault"
+      },
+      "neg_S6_cross_bank_veto_removed.run.log": {
+        "sha256": "9db65eaa89ac995cb2e9a992a4a40fd5142dc8759ee8e9f7b41ee2a9fcc3f6e4",
+        "tail": "FATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/src/rtl/test/hbm_accel/w2_rb_veto_20261006/tb_w2_rb_cross_bank_veto.sv:60: VETO: station acted after a station rail fault (edge 6)\n       Time: 62550  Scope: tb_w2_rb_cross_bank_veto"
+      },
+      "neg_B2_copy_check_removed.run.log": {
+        "sha256": "66fbfd03ba0cfb468da4362e0abbdb1eef73860a5bf66df6afbb643b048b7732",
+        "tail": "CE_REPAIR edges=15\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/src/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:57: commit-select copy corruption permitted\n       Time: 238332952  Scope: tb_w2_bank_veto_top.u.wait_fault"
+      },
+      "neg_S8_rel_q_decision_removed.run.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tail": ""
+      },
+      "neg_S1_sm_duplicate_mask_removed.run.log": {
+        "sha256": "b45344872084e7dbe1440a3738730123ead338dc9e9e405d0415f1417341d483",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/gate/neg_S1_sm_duplicate_mask_removed_tb.sv:187: duplicate or mismatched actual SM tap i=0\n       Time: 30416618  Scope: tb_native_quarter_publication.$ivl_for_loop22"
+      },
+      "neg_S4_held_release_ignored.run.log": {
+        "sha256": "71f9ad487dd5a862889a0aa7d3f71fdaf81476e66deeb63e56262637564ccfdf",
+        "tail": "CALENDAR_TAP_ACCEPT edge=16\nCALENDAR_ALL_SM edge=96\nCALENDAR_LAST_SM_ACK edge=124\nFATAL: /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-206a3037e/gate/neg_S4_held_release_ignored_tb.sv:234: held full73 receipt lost across repair/warm/backpressure\n       Time: 165833068  Scope: tb_native_quarter_publication"
+      }
+    },
+    "completed_macro_log": []
+  }
+}

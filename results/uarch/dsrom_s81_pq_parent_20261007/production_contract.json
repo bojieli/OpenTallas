@@ -1,0 +1,148 @@
+{
+  "replicas_per_TP_die": 1,
+  "regions": 128,
+  "owner_by_port": {
+    "clk": "clock_reset",
+    "rst_n": "clock_reset",
+    "go": "issuer",
+    "i_ph": "issuer",
+    "i_np": "issuer",
+    "i_xbase": "issuer",
+    "i_xps": "issuer",
+    "i_obase": "issuer",
+    "i_ops": "issuer",
+    "i_fmt": "issuer",
+    "ready": "issuer",
+    "idle": "issuer",
+    "x_re": "VM_read",
+    "x_addr": "VM_read",
+    "x_q": "VM_read",
+    "w_we": "VM_write",
+    "w_addr": "VM_write",
+    "w_data": "VM_write",
+    "r_v": "field_return",
+    "r_row": "field_return",
+    "r_pos": "field_return",
+    "r_fp32": "field_return",
+    "r_bf16": "field_return",
+    "r_e": "field_return",
+    "f_bus": "field_broadcast",
+    "f_fault": "fault_status",
+    "fault": "fault_status",
+    "phase_cycles": "fault_status",
+    "ev_go": "fault_status",
+    "ev_end": "fault_status",
+    "ev_tag": "fault_status",
+    "rom_pa0": "phase_ROM",
+    "rom_pa1": "phase_ROM",
+    "rom_pq0": "phase_ROM",
+    "rom_pq1": "phase_ROM",
+    "rom_sa": "stream_ROM",
+    "rom_sq": "stream_ROM"
+  },
+  "old_parent": {
+    "broadcast_bits": 564,
+    "raw_return_bits_per_region": 68
+  },
+  "production": {
+    "broadcast_bits": 1633,
+    "post_root_return_bits_per_region": 69,
+    "VM_read_bits_per_cycle": 2048,
+    "VM_write_bits_per_cycle": 6656
+  },
+  "required_functions": [
+    "128 source-native ot_v41_ret_root instances: raw66-bit tree -> rounded69-bit return",
+    "PHW9 config phase plus actual PQ tags and full BF1024-bit broadcast",
+    "Actual protected VM read and 128 write-port arbitration/ownership",
+    "Immutable PHROM/stream ROM macro adapters at actual two-cycle capture timing",
+    "Source-matched registered stations and finite producer/consumer flow control"
+  ],
+  "old_broadcast_is_drop_in": false,
+  "old_return_is_drop_in": false,
+  "return_root_added_cycles": "Use actual parent root placement; do not double count existing root stages",
+  "measured_composed_token_latency": null,
+  "physical_adopted": false,
+  "schema": "opentallas.s81.pq-production-parent-contract.v1",
+  "source_commit": "d0178820d24d9be280704401c1f5b7ac9af812ee",
+  "source_manifest": "physical/s81_pq_r128_expanded/source_binding.json",
+  "native_parameters": {
+    "R": 128,
+    "PQ": 1,
+    "PHW": 9,
+    "SAW": 11,
+    "KMAX": 6144,
+    "VAW": 19,
+    "VRD": 64
+  },
+  "screen_actual_parameters": {
+    "R": 128,
+    "PQ": 1,
+    "PHW": 6,
+    "SAW": 8,
+    "KMAX": 256,
+    "VAW": 19,
+    "VRD": 64
+  },
+  "screen_parameters_basis": "Harvested c1r128_ek design.parameters and runner.argv override only R and PQ; other values source defaults",
+  "source_matched_quantizer": "ot_dsrom_aq12m, not stub",
+  "screen_ROM": "Writable register-file fixture, not real production ROM macro",
+  "production_operand_storage": {
+    "bits": 298752,
+    "screen_bits": 12448,
+    "added_bits": 286304,
+    "mutable_protection_required": true
+  },
+  "native_roots": {
+    "module": "ot_v41_ret_root",
+    "source": "rtl/v41rom/ot_v41_ret.sv",
+    "replicas": 128,
+    "D": 128,
+    "QD": 128,
+    "buffer_bits_per_root": 16768,
+    "buffer_bits_all_roots": 2146304,
+    "includes_pointer_adder_and_protection_bits": false,
+    "existing_parent_owner_reuse_requires_binding": true
+  },
+  "actual_screen_pins": {
+    "signal_bits": 19355,
+    "DEF_declared_pins": 19357,
+    "power_ground_pins": 2,
+    "record": "screen_pins.json.gz",
+    "sha256": "042bdc82985991893a9bad91e95e438c54a17cbf0a786a263cf90c55d7168ac7",
+    "native_pin_contract_PASS": false,
+    "native_expected_bits": 19529,
+    "missing_native_bits": 8558,
+    "extra_screen_bits": 8384,
+    "wrong_direction_bits": 0,
+    "retained_unmodified": true
+  },
+  "clock": {
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "required_SS_setup_ps": 15,
+    "required_FF_hold_ps": 15
+  },
+  "latency": {
+    "native_wrapper_added_cycles": 0,
+    "root_packing_added_cycles": 0,
+    "root_queue_and_reduction_cycles": "Existing real root executes golden reduction; actual arrival schedule required",
+    "return_station_candidate_added_cycles": 1,
+    "production_routes_and_token_cycles": null
+  },
+  "reservations": {
+    "screen_candidate_outline_um": [
+      550.368,
+      550.368
+    ],
+    "production_area": null,
+    "macro_fit_qualified": false,
+    "production_route_admission": false
+  },
+  "source_sha256": {
+    "tools/s81/pq_parent_binding.py": "b2d619a4008cd00cea21a85cbf89749fc3c952f4d5b503fcc6359f6062a2f7a4",
+    "tools/s81/check_pq_parent.py": "92c817d7a8497ed8e2ad54fad9129ac16a702b0f9770712d3fb8755728d021ea",
+    "rtl/dsrom_sys/s81_pq_parent/ot_s81_pq_native_partition.sv": "09f55ae4ee1d489dc839f3b531deffd36575373a4c3313af2c13b4b6e92e3e8e",
+    "rtl/dsrom_sys/s81_pq_parent/ot_s81_pq_root_adapter.sv": "a5e85b5d3465c5c85c8b065083150783f777e948303a6b9d05bc93b7b95bb091"
+  }
+}

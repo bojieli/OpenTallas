@@ -1,0 +1,17 @@
+{
+  "baseline_two_NL1_area_um2": 723.1679999999942,
+  "baseline_per_NL1_area_um2": 361.5839999999971,
+  "tmr_two_NL1_area_um2": 724.742639999994,
+  "tmr_per_NL1_area_um2": 362.371319999997,
+  "delta_two_NL1_area_um2": 1.5746399999998175,
+  "delta_per_NL1_area_um2": 0.7873199999999088,
+  "baseline_mapped_verilog_sha256": "4b7263f3fef793c06e5e4b3f312de0d95ecec4b90788e7e97c958a8cf60ec023",
+  "baseline_RTL_sha256": "921a2fbbdf6f76d3b1e64007ec0f6601fbd84fbb66cd4ec3484f0af8367e6518",
+  "basis": "Same Yosys0.68 full ABC mapping and ASAP7 SS SEQ/INVBUF/SIMPLE libraries. Baseline full2hopNL1 wrapper has same4direction instances as oneNL2 master. Fullcellarea includes clockINV,data/controlmapping,releaseFFs,changedDgating/voter.",
+  "graph_NL1_primitives": 217,
+  "graph_added_release_FF": 1736,
+  "graph_release_FF": 2604,
+  "graph_majority_functions": 434,
+  "graph_mapped_cell_area_delta_um2": 170.8484399999802,
+  "graph_new_mapped_cell_area_um2": 78634.57643999935
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "qwen.core_vm_ingress.contract.v1",
+  "default_enabled": false,
+  "adopted": false,
+  "source_shape": {
+    "G": 6144,
+    "SW": 64,
+    "NW": 18,
+    "SMIN": 7,
+    "word_groups": 49,
+    "ME_groups": 48,
+    "lanes": 16,
+    "word_address_bits": 24,
+    "packet_bits_per_group": 553
+  },
+  "original_enable": {
+    "equation": "!rst_n_i || (((ME_STALL == 0) || me_mem_ok_i) && ((ME_IDLE_GATE == 0) || !me_idle || me_wake))",
+    "PINREG1": "me_mem_ok_i=pr_mmo_q sampled from original supply me_mem_ok on the native edge",
+    "forbidden": "VM lease must not enter original supply qualification. If it does, original intent requires an independent exact source path; post-lease core.me_clk_en is invalid."
+  },
+  "accepted_frame": {
+    "event": "ENABLE && !fault && state==CAP && !fast_head && !fast_empty",
+    "meaning": "A single adapter-owned PRE frame, not a source execution edge",
+    "write_order": "ME groups0..47 lanes0..15, then MX16, then existing scalar/SU64+scalar1+sequencer16 slots",
+    "capture": "Normalize full-width word bounds and lane masks, qualify first784 ME/MX seats by original source_me_wanted, capture complete protected enable/address/data seat; capture original participation as existing me_frame.",
+    "held": "No recapture or current-enable requalification until existing transaction completes; source payload and original enable may change at service inputs without altering owned seats."
+  },
+  "epoch_contract": {
+    "owner": "Existing adapter native_epoch; no new epoch state added by raw transform",
+    "advance": "Existing ADMIT or allowed fast-empty/head path only",
+    "ack": "Existing checked ACK/tag/epoch service required before ADMIT; CAP-cone test does not prove this FSM",
+    "native_clocks": "All producers feeding a captured frame and all consumers of published reads must obey the same authorized native edge, including core sequencer, ME, SU, mutable memories and collective peers.",
+    "reset": "Existing adapter fault/reset rules remain; no pending owned transaction may be silently replayed as a fresh epoch.",
+    "ME_subdomain": "Effective ME execution/acceptance must be directly qualified by current native_me_lease at the authorized native edge, independently of original source intent. Captured me_frame0 may ADMIT after original intent rises; ME must remain stopped for that unpaid frame. Do not insert lease in registered mem_ok."
+  },
+  "fallback": {
+    "bits_per_group": 553,
+    "ME48_register_bits": 26544,
+    "MEplusMX49_register_bits": 27097,
+    "added_visibility_native_cycles": 1,
+    "rule": "Stage enable,address,mask,data together; staging enables alone is invalid. Epoch/valid metadata and protection are additional and require pricing."
+  },
+  "atomic_integration_obligations": [
+    "Default-off raw core transform",
+    "Full-width normalizer with me_wanted tied1 for rawME path",
+    "ROM_INGRESS collar at actual existing CAP protected-seat capture",
+    "Independently maintained original source enable before any VM lease",
+    "Separate direct ME lease gate on execution clock AND every ME acceptance/bookkeeping use of effective me_en; preserve original enable for capture",
+    "Native clock enrollment and joint collective admission",
+    "In-context core and collar +15ps SS/+15ps FF DRC0 at unchanged budgets"
+  ],
+  "proof_scope": "Source-extracted actual full-shape core write equations + actual normalizer + source-extracted CAP seat cone; no full ACK FSM or parent native clock enrollment claim",
+  "physical_status": "Unqualified; corrected fullwidth predecessor FF u_me.o_we[35] through me_en AND to vw_me_we[35] was -43.735ps. Moving the gate is not physical closure."
+}

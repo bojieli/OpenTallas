@@ -1,0 +1,73 @@
+{
+  "name": "qfd_embed_ingress_scale",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_embed_ingress_scale_numeric-82c12047d/routes/qfd_embed_ingress_scale_numeric_82c12047d/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_embed_ingress_scale_numeric-82c12047d/routes/qfd_embed_ingress_scale_numeric_82c12047d/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/embedding-qualified82/scale_uidroot/qfd_embed_ingress_scale:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/embedding-qualified82/scale_uidroot/qfd_embed_ingress_scale/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_embed_ingress_scale_numeric-82c12047d/routes/qfd_embed_ingress_scale_numeric_82c12047d/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/embedding-qualified82/scale_uidroot/qfd_embed_ingress_scale:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/embedding-qualified82/scale_uidroot/qfd_embed_ingress_scale/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch/claude/embedding-qualified82/scale_uidroot/qfd_embed_ingress_scale/interface.sdc",
+    "sha256": "24c244561fd03e3be565b5a237fcb09425dd0fb8ee0b346b5298e9c82c119305",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [],
+  "files": {
+    "qfd_embed_ingress_scale.lef": "4ab1050b9edf7c0e982aa30764ba5939561c7020364064a7d08c155498a844e7",
+    "qfd_embed_ingress_scale_ff.lib": "24ece5814620e39ceb88955de2fa23bcffb0881307a9125df8fe73a6027aeaf0",
+    "qfd_embed_ingress_scale_ss.lib": "662cb474cb03cbe5af85ed7a0547d8504904167a636a3482c59010cb02f2acd7"
+  },
+  "ok": true,
+  "source_artifacts": {
+    "odb_sha256": "779bb27dfe8d92c626499ba4d542f2a8e1c0ca097d013e77267ea4c9b2c7daa4",
+    "spef_sha256": "cc7badc078758af1caa09f4eed0dbbf391a0fd16e86e87c0a6752364c6dfd04f",
+    "sdc_sha256": "d934692ff2c65e3263260c17ccd2eaec3a5166a6ca87767efdf438970fee32f4"
+  },
+  "source_commit": "82c12047d09bcce0c2d4b9d68f57aeb5a29674e6",
+  "identifier_alias": {
+    "source_top": "ot_qwen_embedding_ingress_numeric",
+    "target_top": "qfd_embed_ingress_scale",
+    "original_sha256": {
+      "qfd_embed_ingress_scale.lef": "ba4f6cfe355a4f006068d2c52368152c55de33884a74f318b444fe20d7fe8ee8",
+      "qfd_embed_ingress_scale_ss.lib": "ef7b2e4922f6151e68397ef643d132ffa0a6a36eb637dd5f589ede3c13ba0c73",
+      "qfd_embed_ingress_scale_ff.lib": "b2cf762ebb5c21242beb9dcaae32dae2feed13c3ba3624879ce6b221c5b019a0"
+    }
+  }
+}

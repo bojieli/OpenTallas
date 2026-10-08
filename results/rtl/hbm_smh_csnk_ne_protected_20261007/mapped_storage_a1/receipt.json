@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.hbm.smh.mapped_rail_storage.v1",
+  "status": "fail",
+  "rails": {
+    "empty": {
+      "storage_instance": "u_rch.empty$_DFF_PN1_",
+      "storage_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "driver_path": [
+        {
+          "net": "u_rch.empty",
+          "instance": "_2581_",
+          "master": "BUFx2_ASAP7_75t_R",
+          "output": "Y"
+        },
+        {
+          "net": "_1032_",
+          "instance": "_2580_",
+          "master": "INVx2_ASAP7_75t_R",
+          "output": "Y"
+        },
+        {
+          "net": "_0542_",
+          "instance": "u_rch.empty$_DFF_PN1_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "output": "QN"
+        }
+      ]
+    }
+  },
+  "errors": [
+    [
+      "nonempty",
+      "no independent mapped DFF resolved",
+      "u_rch.nonempty"
+    ]
+  ],
+  "scope": "distinct mapped storage for the two cached occupancy rails only",
+  "timing_qualified": false,
+  "fault_injection_scope": "single cached state bit; existing count/pointers unchanged",
+  "odb_sha256": "0679f4c0d1eafb7d9c97c3930b9be26a85b3b6dfa53dcb091422bb627851c1ab",
+  "tool_sha256": "f7dfe9f1315a2e9fcc2f4d04ac25c554b3a562497d6c292129bb46cab5a83a06"
+}

@@ -1,0 +1,19 @@
+{
+  "status": "candidate-not-adopted",
+  "immutable_original_dependencies": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef": "ec986c5e711849ec8e10f7d74549a525819ef73e792779a6a921e0a279facb28",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v": "619a3fc13acb0c172387f5564dee71faa3161ddc1ce000fd53353fbb2c4845b6",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib": "b15626b72d40256d4dec034212ad2a8541af7c839f3ef2c2f2b8fa8e9fbd0c16",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ss.lib": "753202efaa2f22d399a605a496d0860d34951d9adf4487b256ced0e700d0652d",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv": "02bec6fc2cdb69e5f6a9ea6aec09c32caa9e2b2830285855ad4494234195d241",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv": "511bea31ca65dba6118560545e8cba08ca837855b0e52c6aab459bffeb777c9b",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+  },
+  "full_shape_elaboration": "PASS remote Verilator5.032",
+  "pins_tcl_executed_on_actual_placed_odb": "PASS",
+  "qualification": "pathfinding; original numerical gate must be bound and parent clock/budgets qualified",
+  "original_live_route_preserved": true
+}

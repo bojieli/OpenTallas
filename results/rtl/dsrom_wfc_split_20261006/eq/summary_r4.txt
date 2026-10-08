@@ -1,0 +1,34 @@
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_lat_all/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=32 cycles=4806772 fin=4804444/4806721 issues=400/400 rejects=54/54 squashed=48/48 committed_ok=352/352 err=0/0 fault_cyc=0/0 mism=0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_lat_all/run.log:EQUIV PASS
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_lat_all/run.log:rc 0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_lat_off/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=32 cycles=4805972 fin=4804444/4805921 issues=400/400 rejects=54/54 squashed=48/48 committed_ok=352/352 err=0/0 fault_cyc=0/0 mism=0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_lat_off/run.log:EQUIV PASS
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_lat_off/run.log:rc 0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_neg_s0_upos/run.log:EQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/65b6a88fffe9443a starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_neg_s0_upos/run.log:EQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1623928 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/190315 mism=0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_neg_s0_upos/run.log:EQUIV FAIL
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_neg_s0_upos/run.log:rc 1
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_neg_s1_row/run.log:EQUIV FAIL inst 1 cyc 23197: user 3 pos 24 tok 1784072 (exp pos 24 tok 1783901)
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_neg_s1_row/run.log:EQUIV FAIL inst 1 cyc 23327: user 3 pos 25 tok 1647102 (exp pos 25 tok 1646763)
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_neg_s1_row/run.log:EQUIV FAIL inst 1 cyc 23429: user 3 pos 26 tok 806515 (exp pos 26 tok 806694)
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_neg_s1_row/run.log:EQUIV FAIL inst 1 cyc 23512: user 3 pos 27 tok 8034 (exp pos 27 tok 7735)
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_neg_s1_row/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=930854 fin=562948/930803 issues=35010/31451 rejects=2846/2710 squashed=7298/3739 committed_ok=27712/27704 err=0/8 fault_cyc=0/0 mism=0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_neg_s1_row/run.log:EQUIV FAIL
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_neg_s1_row/run.log:rc 1
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s0_all/run.log:EQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/65b6a88fffe9443a starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s0_all/run.log:EQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1623928 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/1620470 mism=0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s0_all/run.log:EQUIV PASS
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s0_all/run.log:rc 0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s0_pre_only/run.log:EQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/65b6a88fffe9443a starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s0_pre_only/run.log:EQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1583387 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/1580035 mism=0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s0_pre_only/run.log:EQUIV PASS
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s0_pre_only/run.log:rc 0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s1_all/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=926458 fin=562948/926407 issues=35010/31301 rejects=2846/2658 squashed=7298/3589 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s1_all/run.log:EQUIV PASS
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s1_all/run.log:rc 0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s1_all_seed7/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=913534 fin=547595/913483 issues=33981/30850 rejects=2523/2405 squashed=6269/3138 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s1_all_seed7/run.log:EQUIV PASS
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s1_all_seed7/run.log:rc 0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s1_pre_only/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=876720 fin=562948/876669 issues=35010/30334 rejects=2846/2223 squashed=7298/2622 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s1_pre_only/run.log:EQUIV PASS
+/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r4_s1_pre_only/run.log:rc 0

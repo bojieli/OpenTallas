@@ -1,0 +1,11 @@
+{
+  "status": "FAILED_ELABORATION_NO_QUALIFICATION",
+  "tool_session": 88221,
+  "previous_ivl_pid": 3542604,
+  "process_now_absent": true,
+  "elaboration_exit": 48,
+  "output_artifact_exists": false,
+  "diagnosis": "Icarus rejects genvar c in ot_ha2_tu_owner_banked.sv line267 output port indexed expressions;48errors. This old job began before final candidate edits and has no source-pinned correctness credit.",
+  "reported_tail": "reference to wire or reg c not allowed in constant expression; bit select must be constant; output port expression must support continuous assignment",
+  "superseding_evidence": "Source-pinned e9cbc1c4e full PF384 matched Verilator0/1 receipts; no rerun needed."
+}

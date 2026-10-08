@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "returncode": 0,
+  "output": "PASS_BOUNDARY simultaneous_distinct_address=84 full_pop_push_rejected pending_held_not_quiet\n",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+    "rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo.sv": "17116e38809870495eec33c6e095893d501111a651900e9bd3e087670ecca15e",
+    "rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_boundary.sv": "47e4ec5dbaee70fbdaa80febbf95110b2472e8dd546793d004a33ad89d3108b1"
+  },
+  "compile_argv": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_packet_fifo_boundary",
+    "-o",
+    "/tmp/hbm-collective-boundary2.vvp",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo.sv",
+    "rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_boundary.sv"
+  ],
+  "run_argv": [
+    "vvp",
+    "/tmp/hbm-collective-boundary2.vvp"
+  ],
+  "scope": "Single545bit depth64 queue; simultaneous1R1W transactions never same-address, full+pop+push preserves legacy rejection/fault, held/pending forbid quiet."
+}

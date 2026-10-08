@@ -1,0 +1,72 @@
+{
+ "master": "dsfd_capt_g2",
+ "w_um": 118.8,
+ "h_um": 162.0,
+ "domain": "stream_1p2",
+ "note": "SAFE capture root-group tile (no crossings); N face abuts dsfd_capt_x",
+ "ports": [
+  [
+   "f_row",
+   848,
+   "input",
+   "S",
+   "M5",
+   2,
+   0.5
+  ],
+  [
+   "f_k",
+   99,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.9
+  ],
+  [
+   "t_sb",
+   2,
+   "output",
+   "S",
+   "M5",
+   1,
+   0.96
+  ],
+  [
+   "ck",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.03
+  ],
+  [
+   "rst",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.04
+  ],
+  [
+   "t_w",
+   832,
+   "output",
+   "N",
+   "M5",
+   1,
+   0.5
+  ],
+  [
+   "f_ho",
+   1,
+   "input",
+   "N",
+   "M5",
+   1,
+   0.9
+  ]
+ ]
+}

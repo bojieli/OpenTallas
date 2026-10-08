@@ -1,0 +1,66 @@
+{
+  "name": "ot_su12_sfu",
+  "orfs_dir": "/home/ubuntu/wt-claude-hbmabs-hub/.qscratch/phase4_sfu_eco4/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/wt-claude-hbmabs-hub/.qscratch/phase4_sfu_eco4/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/wt-claude-hbmabs-hub/physical/hbm_accel_die_views/sfu/lane/ot_su12_sfu:/out",
+        "-v",
+        "/home/ubuntu/wt-claude-hbmabs-hub/.qscratch/phase4_sfu_eco4/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/home/ubuntu/wt-claude-hbmabs-hub/physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/wt-claude-hbmabs-hub/.qscratch/phase4_sfu_eco4/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/wt-claude-hbmabs-hub/physical/hbm_accel_die_views/sfu/lane/ot_su12_sfu:/out",
+        "-v",
+        "/home/ubuntu/wt-claude-hbmabs-hub/.qscratch/phase4_sfu_eco4/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/home/ubuntu/wt-claude-hbmabs-hub/physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/home/ubuntu/wt-claude-hbmabs-hub/physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc",
+    "sha256": "6160b1d47e326c9e6c0f081a7dc34f67fb156e3fb6dd4ec1c2ff41620e2c7c86",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [],
+  "files": {
+    "ot_su12_sfu.lef": "314bd4a74d28d162bf25f1cf116be273bf88d63e4c9e7eb279f0d60729bd4e45",
+    "ot_su12_sfu_ff.lib": "8892b9e45615a0c327cfc76ac2ba2d29267122ac3d09b685207c4e9660faf229",
+    "ot_su12_sfu_ss.lib": "e2dc0c24d78d12debdb8811288995b0be00d88e444340c9745d00c5d890bd3e6"
+  },
+  "ok": true
+}

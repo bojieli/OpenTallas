@@ -1,0 +1,273 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv -DSYNTHESIS /tmp/dsrom_softmax_join_blackboxes.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v /tmp/dsrom_softmax_sram_join_synthesis_census.sv; hierarchy -top ot_dsrom_softmax_sram_join; proc; opt; stat; write_json /tmp/dsrom_softmax_sram_join_yosys.json' --
+
+1. Executing Verilog-2005 frontend: /tmp/dsrom_softmax_join_blackboxes.sv
+Parsing SystemVerilog input from `/tmp/dsrom_softmax_join_blackboxes.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_softmax_serial_row'.
+Generating RTLIL representation for module `\ot_dsrom_softmax_core_replay'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+Parsing SystemVerilog input from `physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /tmp/dsrom_softmax_sram_join_synthesis_census.sv
+Parsing SystemVerilog input from `/tmp/dsrom_softmax_sram_join_synthesis_census.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_softmax_sram_join'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \ot_dsrom_softmax_sram_join
+
+4.2. Analyzing design hierarchy..
+Top module:  \ot_dsrom_softmax_sram_join
+Removed 0 unused modules.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 4 switch rules as full_case in process $proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144 in module ot_dsrom_softmax_sram_join.
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_INIT pass (extract init attributes).
+
+5.4. Executing PROC_ARST pass (detect async resets in processes).
+
+5.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+     1/32: $0\failed_n[0:0]
+     2/32: $0\failed[0:0]
+     3/32: $0\return_v_n[0:0]
+     4/32: $0\return_v[0:0]
+     5/32: $0\return_identity_n[22:0]
+     6/32: $0\return_identity[22:0]
+     7/32: $0\read_addr_n[6:0]
+     8/32: $0\read_addr[6:0]
+     9/32: $0\returned_n[5:0]
+    10/32: $0\returned[5:0]
+    11/32: $0\issued_n[5:0]
+    12/32: $0\issued[5:0]
+    13/32: $0\running_n[0:0]
+    14/32: $0\running[0:0]
+    15/32: $0\bkind_n[0:0]
+    16/32: $0\bkind[0:0]
+    17/32: $0\wkind_n[0:0]
+    18/32: $0\wkind[0:0]
+    19/32: $0\pd_n[0:0]
+    20/32: $0\pd[0:0]
+    21/32: $0\sd_n[0:0]
+    22/32: $0\sd[0:0]
+    23/32: $0\pw_n[5:0]
+    24/32: $0\pw[5:0]
+    25/32: $0\sw_n[5:0]
+    26/32: $0\sw[5:0]
+    27/32: $0\tag_n[15:0]
+    28/32: $0\tag[15:0]
+    29/32: $0\short_row_n[0:0]
+    30/32: $0\short_row[0:0]
+    31/32: $0\active_n[0:0]
+    32/32: $0\active[0:0]
+
+5.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_dsrom_softmax_sram_join.\active' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$583' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\active_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$584' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\short_row' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$585' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\short_row_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$586' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\tag' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$587' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\tag_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$588' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\sw' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$589' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\sw_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$590' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\pw' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$591' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\pw_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$592' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\sd' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$593' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\sd_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$594' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\pd' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$595' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\pd_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$596' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\wkind' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$597' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\wkind_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$598' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\bkind' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$599' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\bkind_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$600' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\running' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$601' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\running_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$602' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\issued' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$603' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\issued_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$604' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\returned' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$605' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\returned_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$606' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\read_addr' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$607' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\read_addr_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$608' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\return_identity' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$609' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\return_identity_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$610' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\return_v' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$611' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\return_v_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$612' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\failed' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$613' with positive edge clock.
+Creating register for signal `\ot_dsrom_softmax_sram_join.\failed_n' using process `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+  created $dff cell `$procdff$614' with positive edge clock.
+
+5.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 12 empty switches in `\ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+Removing empty process `ot_dsrom_softmax_sram_join.$proc$/tmp/dsrom_softmax_sram_join_synthesis_census.sv:112$144'.
+Cleaned up 12 empty switches.
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_softmax_sram_join.
+<suppressed ~33 debug messages>
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_softmax_sram_join'.
+<suppressed ~282 debug messages>
+Removed a total of 94 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_dsrom_softmax_sram_join..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~52 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_dsrom_softmax_sram_join.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_softmax_sram_join'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+6.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_softmax_sram_join..
+Removed 1 unused cells and 280 unused wires.
+<suppressed ~2 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_softmax_sram_join.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_dsrom_softmax_sram_join..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~52 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_dsrom_softmax_sram_join.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_dsrom_softmax_sram_join'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_softmax_sram_join..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_dsrom_softmax_sram_join.
+
+6.16. Finished OPT passes. (There is nothing left to do.)
+
+7. Printing statistics.
+
+=== ot_dsrom_softmax_sram_join ===
+
+   Number of wires:                355
+   Number of wire bits:          39202
+   Number of public wires:          94
+   Number of public wire bits:   38242
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                353
+     $add                            8
+     $dff                           32
+     $eq                            19
+     $ge                             1
+     $le                             4
+     $logic_and                     50
+     $logic_not                     11
+     $logic_or                      13
+     $lt                             3
+     $mux                          140
+     $ne                             5
+     $not                           28
+     $sub                            1
+     ot_dsrom_softmax_core_replay      1
+     ot_dsrom_softmax_serial_row      1
+     ot_sram_1r1w_128x256_m1_r2c2     36
+
+8. Executing JSON backend.
+
+End of script. Logfile hash: 954c2f72a3
+CPU: user 0.21s system 0.01s, MEM: 30.81 MB total, 25.13 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 51% 2x opt_clean (0 sec), 7% 2x write_json (0 sec), ...

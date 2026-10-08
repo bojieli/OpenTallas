@@ -1,0 +1,20 @@
+{
+  "predecessor_commit": "04491da6ced8430c9976dc56cf828dbe4d73633d",
+  "checkpoint_sha256_reported_by_inspection": "3be9d121918fc11675cddf46f3959e957b8e0307ddcfff54a4f596f897c88964",
+  "inspection_log_matches_classification": true,
+  "pin_plan_matches_predecessor_git_blob": true,
+  "exact_functional_port_set_matches_source_pin_plan": true,
+  "signal_count": 2252,
+  "signal_boxes": 2252,
+  "power_ground_boxes": 74,
+  "total_boxes": 2326,
+  "original_failed_verdict_preserved": true,
+  "geometry_verified": false,
+  "geometry_limitation": "Classification contains counts only. The retained 3_2 DB was written before the failed post-IO hook; corrected IO and persisted geometry readback remain required.",
+  "historical_image_digest_verified": false,
+  "receipt_sha256": {
+    "classification.json": "de2246f4d681793fa77de209050fca25a1c9ddc3fbc3af48abc74493f077eeb3",
+    "inspection.log": "d75c2c0214b09efa18d9e1297b55ed240d47a7dd960d59b665b3cba3deac58ae"
+  },
+  "pin_plan_sha256": "fb2d6789b42617b5a9bf0dba8d4fa4a0b4e7529e0b7c9724553df5fe3273907b"
+}

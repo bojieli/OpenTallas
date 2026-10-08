@@ -8,10 +8,10 @@
    "full_fec": {
     "rack": "results/arch/dsrom_s81_rack_20261006/rack.json",
     "links": "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json",
-    "cable_flight_us": 0.1433,
+    "cable_flight_us": 0.15,
     "stage_hops_by_class": {
-     "in-tray": 40,
-     "in-rack": 39,
+     "in-tray": 42,
+     "in-rack": 41,
      "rack-to-rack": 1
     },
     "head_hop": "rack-to-rack",
@@ -28,45 +28,45 @@
     "record": "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json"
    },
    "light_fec_superseded": {
-    "AR_us": 570.417,
-    "AR_tok_s": 1753.1,
-    "MTP_step_us": 816.318,
-    "MTP_tok_s": 5094.8,
-    "MTP_tok_s_tau_published": 4762.7,
-    "II_us": 24.695,
-    "measured_share": 1.0
+    "AR_us": 603.906,
+    "AR_tok_s": 1655.9,
+    "MTP_step_us": 855.639,
+    "MTP_tok_s": 4860.7,
+    "MTP_tok_s_tau_published": 4543.9,
+    "II_us": 25.861,
+    "measured_share": 0.9999
    },
    "delta_vs_light_fec": {
-    "AR_us": 22.049,
-    "AR_tok_s": -65.2,
-    "MTP_step_us": 28.561,
-    "MTP_tok_s": -172.2
+    "AR_us": 22.373,
+    "AR_tok_s": -59.2,
+    "MTP_step_us": 28.885,
+    "MTP_tok_s": -158.7
    },
    "rule": "OWNER 2026-10-06: full RS(544,514) on every off-package link (stage hops, token return, TP4 collectives, embed and draft links, all re-measured in RTL) + cable flight per hop class (results/arch/dsrom_s81_rack_20261006/rack.json); light FEC kept only as the superseded row"
   },
-  "AR_us": 592.466,
-  "AR_tok_s": 1687.9,
-  "MTP_step_us": 844.879,
-  "MTP_tok_s": 4922.6,
-  "MTP_tok_s_tau_published": 4601.7,
-  "II_us": 25.282,
-  "measured_share": 1.0001,
+  "AR_us": 626.279,
+  "AR_tok_s": 1596.7,
+  "MTP_step_us": 884.524,
+  "MTP_tok_s": 4702.0,
+  "MTP_tok_s_tau_published": 4395.5,
+  "II_us": 26.448,
+  "measured_share": 0.9999,
   "tau": 4.159,
   "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
   "tau_sensitivity": {
    "published": {
     "tau": 3.8879,
-    "MTP_tok_s": 4601.7,
+    "MTP_tok_s": 4395.5,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.primary (acc:VLLM_57432; dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024))"
    },
    "published_low": {
     "tau": 3.43,
-    "MTP_tok_s": 4059.8,
+    "MTP_tok_s": 3877.8,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.low"
    },
    "published_high": {
     "tau": 4.31748,
-    "MTP_tok_s": 5110.2,
+    "MTP_tok_s": 4881.1,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
    }
   },
@@ -82,7 +82,7 @@
      "AR_us": 0.0,
      "AR_tok_s": 0.0,
      "MTP_step_us": -27.546,
-     "MTP_tok_s": 155.4
+     "MTP_tok_s": 142.0
     }
    },
    "head": {
@@ -91,9 +91,9 @@
     "record": "results/rtl/dsrom_recovery_20261004/levers/head.json",
     "delta": {
      "AR_us": -102.043,
-     "AR_tok_s": 248.0,
-     "MTP_step_us": -687.601,
-     "MTP_tok_s": 2208.7
+     "AR_tok_s": 223.7,
+     "MTP_step_us": -681.819,
+     "MTP_tok_s": 2046.8
     }
    },
    "router": {
@@ -101,10 +101,10 @@
     "verdict": "ADOPT",
     "record": "results/rtl/dsrom_recovery_20261004/levers/router.json",
     "delta": {
-     "AR_us": -12.1,
-     "AR_tok_s": 33.8,
+     "AR_us": -12.099,
+     "AR_tok_s": 30.2,
      "MTP_step_us": -13.619,
-     "MTP_tok_s": 78.1
+     "MTP_tok_s": 71.3
     }
    },
    "su_hcpost": {
@@ -113,9 +113,9 @@
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json",
     "delta": {
      "AR_us": -16.133,
-     "AR_tok_s": 44.8,
-     "MTP_step_us": -18.158,
-     "MTP_tok_s": 103.6
+     "AR_tok_s": 40.1,
+     "MTP_step_us": -18.159,
+     "MTP_tok_s": 94.6
     }
    },
    "su_norm": {
@@ -123,10 +123,10 @@
     "verdict": "ADOPT",
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_norm.json",
     "delta": {
-     "AR_us": -43.074,
-     "AR_tok_s": 114.4,
+     "AR_us": -43.073,
+     "AR_tok_s": 102.7,
      "MTP_step_us": -48.344,
-     "MTP_tok_s": 266.4
+     "MTP_tok_s": 243.7
     }
    },
    "su_routeract": {
@@ -135,9 +135,9 @@
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_routeract.json",
     "delta": {
      "AR_us": -11.555,
-     "AR_tok_s": 32.3,
+     "AR_tok_s": 28.9,
      "MTP_step_us": -13.006,
-     "MTP_tok_s": 74.6
+     "MTP_tok_s": 68.2
     }
    },
    "su_swiglu": {
@@ -146,9 +146,9 @@
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json",
     "delta": {
      "AR_us": -18.013,
-     "AR_tok_s": 49.8,
+     "AR_tok_s": 44.6,
      "MTP_step_us": -21.175,
-     "MTP_tok_s": 120.4
+     "MTP_tok_s": 110.0
     }
    },
    "field_spine": {
@@ -156,19 +156,19 @@
     "verdict": "PENDING_SSFF",
     "record": "results/rtl/dsrom_recovery_20261004/levers/field_spine.json",
     "delta": {
-     "AR_us": -8.414,
-     "AR_tok_s": 24.3,
-     "MTP_step_us": -9.937,
-     "MTP_tok_s": 58.6
+     "AR_us": -10.209,
+     "AR_tok_s": 26.5,
+     "MTP_step_us": -12.061,
+     "MTP_tok_s": 65.0
     },
     "if_adopted": {
-     "AR_us": 584.052,
-     "AR_tok_s": 1712.2,
-     "MTP_step_us": 834.942,
-     "MTP_tok_s": 4981.2,
-     "MTP_tok_s_tau_published": 4656.5,
-     "II_us": 24.977,
-     "measured_share": 1.0001
+     "AR_us": 616.07,
+     "AR_tok_s": 1623.2,
+     "MTP_step_us": 872.463,
+     "MTP_tok_s": 4767.0,
+     "MTP_tok_s_tau_published": 4456.2,
+     "II_us": 26.078,
+     "measured_share": 0.9999
     }
    },
    "field_spine_pq": {
@@ -176,19 +176,39 @@
     "verdict": "PENDING_SSFF",
     "record": "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json",
     "delta": {
-     "AR_us": -129.023,
-     "AR_tok_s": 469.9,
-     "MTP_step_us": -153.133,
-     "MTP_tok_s": 1089.7
+     "AR_us": -130.679,
+     "AR_tok_s": 421.1,
+     "MTP_step_us": -155.089,
+     "MTP_tok_s": 999.7
     },
     "if_adopted": {
-     "AR_us": 463.443,
-     "AR_tok_s": 2157.8,
-     "MTP_step_us": 691.746,
-     "MTP_tok_s": 6012.3,
-     "MTP_tok_s_tau_published": 5620.4,
-     "II_us": 20.46,
-     "measured_share": 1.0001
+     "AR_us": 495.6,
+     "AR_tok_s": 2017.8,
+     "MTP_step_us": 729.435,
+     "MTP_tok_s": 5701.7,
+     "MTP_tok_s_tau_published": 5330.0,
+     "II_us": 21.566,
+     "measured_share": 0.9998
+    }
+   },
+   "qelem_pq": {
+    "cls": "conditional",
+    "verdict": "PENDING_SSFF",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/qelem_pq.json",
+    "delta": {
+     "AR_us": -120.901,
+     "AR_tok_s": 382.0,
+     "MTP_step_us": -143.61,
+     "MTP_tok_s": 911.3
+    },
+    "if_adopted": {
+     "AR_us": 505.378,
+     "AR_tok_s": 1978.7,
+     "MTP_step_us": 740.914,
+     "MTP_tok_s": 5613.3,
+     "MTP_tok_s_tau_published": 5247.4,
+     "II_us": 21.906,
+     "measured_share": 0.9998
     }
    },
    "su_softmax": {
@@ -196,19 +216,19 @@
     "verdict": "PENDING_SSFF",
     "record": "results/rtl/dsrom_recovery_20261004/levers/su_softmax.json",
     "delta": {
-     "AR_us": -12.951,
-     "AR_tok_s": 37.7,
-     "MTP_step_us": -14.558,
-     "MTP_tok_s": 86.3
+     "AR_us": -12.752,
+     "AR_tok_s": 33.2,
+     "MTP_step_us": -14.333,
+     "MTP_tok_s": 77.4
     },
     "if_adopted": {
-     "AR_us": 579.515,
-     "AR_tok_s": 1725.6,
-     "MTP_step_us": 830.321,
-     "MTP_tok_s": 5008.9,
-     "MTP_tok_s_tau_published": 4682.4,
-     "II_us": 24.96,
-     "measured_share": 1.0001
+     "AR_us": 613.527,
+     "AR_tok_s": 1629.9,
+     "MTP_step_us": 870.191,
+     "MTP_tok_s": 4779.4,
+     "MTP_tok_s_tau_published": 4467.9,
+     "II_us": 26.132,
+     "measured_share": 1.0
     }
    },
    "field": {
@@ -232,16 +252,17 @@
     "su_softmax"
    ],
    "alternatives_not_stacked": {
-    "field_spine": "overlaps field_spine_pq on 325 nodes; field_spine_pq kept in the joint"
+    "field_spine": "overlaps qelem_pq on 325 nodes; qelem_pq kept in the joint",
+    "qelem_pq": "overlaps field_spine_pq on 325 nodes; field_spine_pq kept in the joint"
    },
    "composed": {
-    "AR_us": 450.492,
-    "AR_tok_s": 2219.8,
-    "MTP_step_us": 677.188,
-    "MTP_tok_s": 6141.6,
-    "MTP_tok_s_tau_published": 5741.2,
-    "II_us": 20.138,
-    "measured_share": 1.0001
+    "AR_us": 482.849,
+    "AR_tok_s": 2071.0,
+    "MTP_step_us": 715.101,
+    "MTP_tok_s": 5816.0,
+    "MTP_tok_s_tau_published": 5436.9,
+    "II_us": 21.249,
+    "measured_share": 0.9999
    },
    "note": "all PENDING_SSFF levers (alternatives resolved) flipped to ADOPT together; not a headline"
   }
@@ -262,25 +283,167 @@
      "cycles": 0,
      "AR_tok_s": 0.0
     }
+   },
+   "slab_mul_lat7": {
+    "cls": "adopted",
+    "verdict": "ADOPT (closed SS60 +11.47 / FF25 +4.20 ps, 0 slew/DRC)",
+    "record": "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json",
+    "variant": "r11c_456_lead2_t260_d75",
+    "delta": {
+     "cycles": 217,
+     "AR_tok_s": -6.914
+    }
+   },
+   "kv_map_m": {
+    "cls": "adopted",
+    "verdict": "ADOPT (exact, 15/15 PASS, slices and token HBM codes exact (logs/all_m1.log))",
+    "record": "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json",
+    "sha256": "1e565047c56de073da45b5b74c2c9770aa4f367a9898d1da695785949987c33a",
+    "basis": "measured RTL, charged in full: the token's only exposed KV fill is the cold first layer (L0 fill_exposed 1,363 per die in the measured base-map token; layers 1-35 expose 0). Option M delays that cold layer's KV-ready by at most the isolated ISO_P8191 kv_ok delta (+54; the fill itself +8). Steady layers stay fully hidden in early_go + posted mode (0 exposed, both maps).",
+    "modelled_not_composed": {
+     "cycles": 24,
+     "status": "MODELLED, not RTL: cycle model of the die r19 per-stack crossbar + 768-b row fabric on the measured KV_MAP=1 landing trace (rows_768b_ins8_fifo64, busiest row 85.6%); hidden in steady layers, charged only as a labelled sensitivity on the cold first layer"
+    },
+    "delta": {
+     "cycles": 54,
+     "AR_tok_s": -1.718
+    }
+   },
+   "die_relays_430um": {
+    "cls": "adopted",
+    "verdict": "ADOPT (owner 2026-10-07, die relay stations at the measured 430.56 um reach)",
+    "record": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json",
+    "sha256": "0ee04070ff113b53e93424be07dc53e36a64ff298ca3f61795df8bf2e6eecad3",
+    "relays": 8965,
+    "stages_r21": {
+     "bd": 77,
+     "tree": 21,
+     "tws": 93,
+     "ord": 10,
+     "link": 72
+    },
+    "stages_rtl": {
+     "bd": 41,
+     "tree": 20,
+     "tws": 38,
+     "ord": 7,
+     "link": 46
+    },
+    "delta_per_me_op": 95,
+    "delta_link_per_traversal": 26,
+    "token_cycles_before": 194226,
+    "AR_tok_s_before": 6178.4,
+    "delta_pct": -10.38,
+    "alternatives_priced": {
+     "pitch_300_owner_fast_rule": {
+      "cycles_per_ar_token": 38178,
+      "delta_per_me_op": 162,
+      "delta_link": 42,
+      "relays": 14395
+     },
+     "pitch_350": {
+      "cycles_per_ar_token": 35070,
+      "delta_per_me_op": 150,
+      "delta_link": 35
+     }
+    },
+    "decision": "OWNER APPROVED 2026-10-07: relay pitch = the measured 430.56 um reach (-10.4%, +22,487 cycles / AR token); pricing commit 2de2dfc1b",
+    "delta": {
+     "cycles": 22487,
+     "AR_tok_s": -641.092
+    }
    }
   },
-  "token_cycles": 193955,
-  "AR_us": 161.629,
-  "AR_tok_s": 6187.0,
+  "modelled_sensitivity": {
+   "cycles": 24,
+   "token_cycles": 216737,
+   "AR_tok_s": 5536.7,
+   "note": "adopted levers' MODELLED (not RTL) costs added on top of the measured headline; not a headline"
+  },
+  "physical_closure": {
+   "status": "CLOSED (owner decision 2026-10-06)",
+   "bar": "Prior Qwen sign-off bar (AGENTS.md sign-off corners): setup >= 0 at SS with 0.833 ns (1.2 GHz) and 60 ps setup uncertainty, hold >= 0 at FF with 25 ps hold uncertainty. NOT the DS/HBM margin rule (+15 ps SS / +15 ps FF at sign-off); blocks are reported against that rule only where noted.",
+   "record": "results/rtl/qwen_rom_closed_20261006/closure.json",
+   "die_top_route": "NOT DONE"
+  },
+  "kv_traffic": {
+   "bytes_system_token": 603979776,
+   "MiB_system_token": 576.0,
+   "bytes_per_rank_layer": 4194304,
+   "sectors_per_die_token": {
+    "0": 4718592,
+    "1": 4718592,
+    "2": 4718592,
+    "3": 4718592
+   },
+   "exposed_fill_cycles_per_die": 1363,
+   "steady_window_fill_cycles": {
+    "n": 34,
+    "min": 1305,
+    "mean": 1378.8,
+    "max": 1620
+   },
+   "landing_bytes_per_core_cycle_per_rank": {
+    "mean": 3042.1,
+    "best": 3214.0
+   },
+   "achieved_TBps_per_die": {
+    "mean": 3.65,
+    "best": 3.857
+   },
+   "pct_of_4stack_peak": {
+    "mean": 91.3,
+    "best": 96.4
+   },
+   "token_average_system_TBps": 3.344,
+   "record": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/runtime.log",
+   "not_this_vehicle": {
+    "record": "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json",
+    "P0_return_bytes_per_core_cycle_per_rank": 128,
+    "P0_payload_floor_us": 983.04,
+    "verdict": "the Codex P0 integration vehicle serialises each stack's 32 PC landings through ONE 288-bit sealed frame per core edge (ot_qwen_s4_stack_transport); the measured headline token lands every PC in parallel (ot_qwen_rt_kv_stream4_service l_v[127:0]). P0's floor describes P0's transport, not the measured machine; P0 must adopt the per-PC landing (ot_qwen_stream4_cdc_pc RSEL=1 per PC)"
+   }
+  },
+  "pending_not_composed": {
+   "r18g_die_wire_bound": {
+    "record": "claude/qwen-die-rebuild-20261005@279518cd0 results/rtl/qwen_rom_die_r17_20261005/path_sta/r18g_i50_wire8k_skew{0,65}.json (STREAM4 deltas per CLAUDE QWEN-PHYS 08:29Z)",
+    "penalty_cycles": {
+     "skew0": 13305,
+     "skew65": 16268
+    },
+    "grt_overflow": 11534,
+    "status": "PENDING: die-top route not done (r20c GRT i50 overflow 7,972; flat and region pilots did not complete, results/rtl/qwen_rom_closed_20261006/closure.json); r18g bound kept as the last priced wire bound",
+    "superseded_by": "levers.die_relays_430um (registered relays replace the unregistered-wire bound)",
+    "bound_tok_s": {
+     "skew0": 5782.3,
+     "skew65": 5700.9
+    }
+   }
+  },
+  "token_cycles": 216713,
+  "AR_us": 180.594,
+  "AR_tok_s": 5537.3,
   "MTP_mode": "AR (DSpark OFF)",
-  "MTP_tok_s": 6187.0,
+  "MTP_tok_s": 5537.3,
   "dspark_reference": {
-   "tok_s": 4346.2,
-   "speedup_vs_ar": 0.704,
+   "tok_s": 3902.0,
+   "speedup_vs_ar": 0.705,
    "tau": 3.1445,
    "verdict": "AR_MODE",
-   "record": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json"
+   "record": "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json"
   },
   "physical_qualified_full_system": false,
   "inputs": {
    "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
    "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
-   "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0"
+   "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json": "3a8110ead991aac5eb4f861365686711abf5b30ef9e682b0ed1f37456ee3d9ae",
+   "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json": "8833c88727ad5a288c0d42b5b1ad7dddf792af2456e89db8fa28114c6bd45fa1",
+   "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+   "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": "0ee04070ff113b53e93424be07dc53e36a64ff298ca3f61795df8bf2e6eecad3",
+   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/runtime.log": "1e40fecfaea0cda6333ddd70ffcc848e725466ccad68065f496d019a2bc6011f",
+   "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json": "3035dd96b08d7e7e5205fabc31d32d402f825109bb748adf772163ec36d342e5",
+   "results/rtl/qwen_rom_closed_20261006/closure.json": "fb9a41ab4aac5501433bdc0fa641af64357a4d1ac23e24637edfcb0ee5c2c899",
+   "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json": "1e565047c56de073da45b5b74c2c9770aa4f367a9898d1da695785949987c33a"
   }
  },
  "hbm_ds": {
@@ -385,21 +548,21 @@
   }
  },
  "ratios": {
-  "ds_rom_over_hbm_ar": 0.8661,
-  "ds_rom_over_hbm_mtp": 1.2481,
+  "ds_rom_over_hbm_ar": 0.8193,
+  "ds_rom_over_hbm_mtp": 1.1921,
   "hbm_row": "median",
   "by_wire_basis": {
    "floor": {
-    "ar": 0.8441,
-    "mtp": 1.2326
+    "ar": 0.7985,
+    "mtp": 1.1774
    },
    "median": {
-    "ar": 0.8661,
-    "mtp": 1.2481
+    "ar": 0.8193,
+    "mtp": 1.1921
    },
    "bound": {
-    "ar": 0.8784,
-    "mtp": 1.2567
+    "ar": 0.831,
+    "mtp": 1.2003
    }
   }
  },
@@ -416,6 +579,7 @@
   "ds_rom_conditional": [
    "field_spine",
    "field_spine_pq",
+   "qelem_pq",
    "su_softmax"
   ],
   "ds_rom_excluded": [
@@ -423,7 +587,10 @@
    "hop"
   ],
   "qwen_rom_adopted": [
-   "core_context"
+   "core_context",
+   "die_relays_430um",
+   "kv_map_m",
+   "slab_mul_lat7"
   ],
   "hbm_exact_credited": [
    "joint_PQ_XMAP",
@@ -434,10 +601,11 @@
   "levers": {
    "results/rtl/dsrom_recovery_20261004/levers/draft.json": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
    "results/rtl/dsrom_recovery_20261004/levers/field.json": "472b34fe32089222d2c10819e7c543822316c431d87a6fd3b92bbf5771b23600",
-   "results/rtl/dsrom_recovery_20261004/levers/field_spine.json": "4ae2036774202fdbf5dded2521c3bd20da3d03f9b5d2002365ffe9fb951c0b3d",
-   "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json": "17f21cbb2894c5805e1fb8301477d18cf018d64df003cf23e92e1832241182ad",
+   "results/rtl/dsrom_recovery_20261004/levers/field_spine.json": "ab00c1d6b729dcf5dfdb216f2a67cc1e5101fda20a772f924f6eb4c05fe64b85",
+   "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json": "de26ac9c677d99e227cb812256f38a019ea00f2b760916d54900f4565a7e531d",
    "results/rtl/dsrom_recovery_20261004/levers/head.json": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
    "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
+   "results/rtl/dsrom_recovery_20261004/levers/qelem_pq.json": "fead73cad46dd969bddcd9aa4178a196d27cfb99b5f4320f2ab47975d44e1544",
    "results/rtl/dsrom_recovery_20261004/levers/router.json": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
    "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json": "26082ac33d3c4fac170a19a79efb67da0cc4b6792589c368d2c572cb414a4341",
    "results/rtl/dsrom_recovery_20261004/levers/su_norm.json": "d93d1ea4fc1eb4ad2b4e36f5e8fe8d3962998d9e6d5a60c1c45b97349af6b9ba",
@@ -446,16 +614,23 @@
    "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json": "48b20fb7033275a09559b912d839658fd4ef14f10161160ad492c02fc455c7e2"
   },
   "ds_rom_composition": {
-   "results/rtl/dsrom_recovery_20261004/composition.json": "9a7fb27eadc525f636308692ff6feac16691e378a494a7bb93515b3fce83c660"
+   "results/rtl/dsrom_recovery_20261004/composition.json": "3e6932f505d8cadea1af761019d74183ff933e101aa35cfb334291e48fbd3dea"
   },
   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
-  "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
+  "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json": "3a8110ead991aac5eb4f861365686711abf5b30ef9e682b0ed1f37456ee3d9ae",
+  "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json": "8833c88727ad5a288c0d42b5b1ad7dddf792af2456e89db8fa28114c6bd45fa1",
+  "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+  "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json": "0ee04070ff113b53e93424be07dc53e36a64ff298ca3f61795df8bf2e6eecad3",
+  "results/rtl/qwen_plain_ar_stream4_P8191_20261005/runtime.log": "1e40fecfaea0cda6333ddd70ffcc848e725466ccad68065f496d019a2bc6011f",
+  "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json": "3035dd96b08d7e7e5205fabc31d32d402f825109bb748adf772163ec36d342e5",
+  "results/rtl/qwen_rom_closed_20261006/closure.json": "fb9a41ab4aac5501433bdc0fa641af64357a4d1ac23e24637edfcb0ee5c2c899",
+  "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json": "1e565047c56de073da45b5b74c2c9770aa4f367a9898d1da695785949987c33a",
   "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
   "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json": "b3e0335aea501bc08149ab01bf129e18cd361697207f87ffd39ea767a052b2a6",
   "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "6adee352a7090fc604665e37eaa10e3b1ee783514186d96454697d93867574ba"
  },
  "tool_sha256": {
-  "tools/three_machine_compose.py": "bbdbc64250c8fe52132eda48baae7fd0a396a73733749fff6465edf1f11380b3"
+  "tools/three_machine_compose.py": "6eeab78681fa7caf49ab2138b08eb6c632e10f34d37fa11ad13c27df8644c07a"
  }
 }

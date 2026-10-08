@@ -1,0 +1,32 @@
+Bounded harvest, 2026-10-06 PT. No new jobs, agents, cancellation, merges, or pushes.
+Source branch codex/hbm-harvest-20261006; source worktree
+/home/ubuntu/wt-codex-hbm-harvest-20261006.
+
+review.json is the machine-readable handoff. raw/*.json contains remote small
+records and log tails; full collected files have remote SHA256, source matches
+are recorded separately. Live tails are point-in-time observations, not terminals.
+SHA256SUMS.json covers collected evidence (not this handoff).
+
+HA2: FAILED signoff -547.31 SS / -152.67 FF; exit 2. Four source hashes match
+1c5081405. Existing rtl/ha2 successor stays unadopted. Prior failures untouched.
+W2 r4: both routes completed with rc0 but engineering not_met; DRC0, setup/hold
+negative at 770 ps and 1/82 slew violations. No signoff.json. Source hashes match
+6ad58b444 (records themselves have git.commit=null). Do not confuse driver rc0
+with closure or quote the 770 ps route values as SS/FF signoff.
+W2 SAFE: existing NO2/NO3 206a gates still live at S8 at observation; positive
+quarter PASS19 (ACK213, release218, warm220) only. Negative timeout shortcut in
+pinned gate prevents qualifying a timeout as PASS. Earlier missing-file failures
+preserved. Calibration command packaging fixed in prepared specs, not queued.
+Attention: previously committed bf034dc02 leaf +64.64/+15.39 and quad
++186.54/+21.11 timing records retained, quad mcp4 exception explicit. Old quad
+record without that exception remains raw evidence, not the selected record.
+No new tile adoption; dt2 live. SU controller hold route live; no reducer closure.
+SM front_m2d GRT-0116 terminal; tileW DRT live. No new SM closure.
+
+Next action: parent cherry-pick harvest and packaging commits, then harvest the
+existing SAFE gate terminals when natural completion occurs. Any S8 timeout or
+compile failure needs a gate-source fix, not acceptance. The closure-loop owner
+must handle corrected successor admission / checkpoint reuse after checking the
+existing (block,source) route key. Packaging README gives exact validation commands.
+Do not submit a duplicate or run route/signoff manually; no live source was edited.
+Generator/budget and closure-loop tooling remain with their existing owners.

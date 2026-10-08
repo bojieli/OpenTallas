@@ -1,0 +1,15 @@
+{
+  "original": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+  "original_sha256": "8d9a9b92733f50506c3cb6eda76c863cd7079760276f889c589d2867a5ab3ec9",
+  "variant": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv",
+  "variant_sha256": "5b43d4908cfacf309bf1a9cefc00770f988c52fe795cd18cd6277821cc463f7e",
+  "substitution": {
+    "before": "ot_s81ph_link_gbx #(.FFW(FFW),",
+    "after": "ot_s81ph_link_gbx_pipeline #(.PIPE_TX(1), .FFW(FFW),"
+  },
+  "timeout_substitution": {
+    "before": ".CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD)",
+    "after": ".CHANNEL_CYCLES(CH_UCIE + 2), .CHANNEL_CYCLES_B(CH_BOARD + 2)",
+    "actual_timeout_delta_cycles": 4
+  }
+}

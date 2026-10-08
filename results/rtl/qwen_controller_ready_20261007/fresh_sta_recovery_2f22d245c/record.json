@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.qwen.controller_ready.fresh_sta_recovery.v1",
+  "observed_at": "2026-10-07T17:33:25.991030+00:00",
+  "source_commit": "8be556c2ec2d5ca3460a1f88e473e2832c06d971",
+  "helper_commit": "2f22d245c1683925f81aecfd8e5defc4330adba7",
+  "host": "ot-agidock128",
+  "remote_root": "/srv/opentallas-scratch/claude/controller-sta-recovery-2f22d245c",
+  "attempt": "second completed route; original flow_rc0 corner_rc1 NameError sdc",
+  "method": "Fresh SS/FF processes on private hardlinks of unchanged final ODB/SPEF/SDC and copied original boundary SDC. No reroute or edits to original failure. No macro views required by pinned config.",
+  "admission": {
+    "guard": "/srv/opentallas-scratch/admit.sh",
+    "peak_reservation_gib": 16,
+    "observed_available_gib": 102,
+    "observed_load1": 1.26,
+    "cores": 64,
+    "resource_note": "time.log RSS measures Python/docker client, not container OpenROAD peak."
+  },
+  "acceptance": {
+    "ss_ps": 15,
+    "ff_ps": 15,
+    "drc": 0
+  },
+  "results": {
+    "ss_ps": -110.94,
+    "ff_ps": -34.8,
+    "drc": 0,
+    "qualified": false,
+    "ss_worst": "core.on.wq_rp[1] to core.on.wab_oh[18]",
+    "ff_worst": "cmd[4] to cmd_q[4]",
+    "reset_removal_ps": -32.75
+  },
+  "artifacts": {
+    "admission.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "corner_sta.json": {
+      "sha256": "fcd80db005674bede6e3934f19332798db847264fd8844c86c70fd24dbbd101b",
+      "bytes": 5017
+    },
+    "exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "inputs.json": {
+      "sha256": "e2fcea523e3146026eace1e9f0b5f2e23aedd6e060774a2d0fa50e3ff80a14c6",
+      "bytes": 2473
+    },
+    "orfs/w18_sta_ff.log": {
+      "sha256": "9a0acfd9ab4139a3da6f81baf5b07f1d4bf1f1d74baf9c347bdfd6e7bf027b0f",
+      "bytes": 8413
+    },
+    "orfs/w18_sta_ff.tcl": {
+      "sha256": "2438bf9ad93c08c1b2918876a384cad4273c634f30421641646e9786447b150f",
+      "bytes": 2839
+    },
+    "orfs/w18_sta_ss.log": {
+      "sha256": "02e48978b346ecef70c288167fccf71ad1478c4f69201c025c2a87b7785f3ae8",
+      "bytes": 18782
+    },
+    "orfs/w18_sta_ss.tcl": {
+      "sha256": "c12c0357d12e88f829419689ec385e2df6db6d0fb02ceafe8f2bd10746714c27",
+      "bytes": 2839
+    },
+    "original_drc_metrics.json": {
+      "sha256": "7b3d5b17eb06865f7b3a568bfd9d7a90451ab04813b86b585fb41cb073b8193c",
+      "bytes": 2214
+    },
+    "original_sta.log": {
+      "sha256": "1d599c6179f7aeda82f032b85e49790737c64cc55868641743b11bb9ff3537bc",
+      "bytes": 1144
+    },
+    "original_status": {
+      "sha256": "0260dd62124de0f823d818ebed281f832fdf33a5437db9e14daba35923289ea2",
+      "bytes": 22
+    },
+    "prepare.py": {
+      "sha256": "7590d0f11a259798eeabc6e1b8f683ee7e43eb80123c95fa75eb0efb0af62ce9",
+      "bytes": 1334
+    },
+    "replay.sh": {
+      "sha256": "5ee529f125d6780b6b25fd863ad8614ccc00adf765cae703ad1c5863fae78a06",
+      "bytes": 283
+    },
+    "signoff.sdc": {
+      "sha256": "5ffd7e7f08941a07b5ba3235ffe39e5bea080fbe5050838dd97cbb36c16596e1",
+      "bytes": 2952
+    },
+    "sta.log": {
+      "sha256": "0420ed853081537f18dbc5742a2855d01381e5c0120943c56b41c1d531123b8c",
+      "bytes": 1155
+    },
+    "time.log": {
+      "sha256": "133f872c9b11e079f19d89699a03d947671a610de9e4183812505377cd132b73",
+      "bytes": 1016
+    },
+    "verification.json": {
+      "sha256": "5a714a5c425efe7bfd696577c640c06b750056c407354554dcaa3109e6ed3aa9",
+      "bytes": 365
+    }
+  }
+}

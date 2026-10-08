@@ -1,0 +1,1568 @@
+{
+ "schema": "opentallas.hbm_die_views_ir.v1",
+ "round": "ira1",
+ "case": "owner PDN exception for hfd_attn_tile (2026-10-06)",
+ "method": "c + attn-tile PDN exception (owner 2026-10-06): die M9 -> tile M8 PG pins, M9 blocked over the quads, no die M8 in a tile, quad power on its M8 edge stubs, no bump over a quad",
+ "tool": "tools/hbm_die_views.py ir-attn (on tools/dsrom_s81_fulldie.py case_ir method c, r16g windows overlapping a tile)",
+ "host": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/ir/ira1 (generated on ot-pve1)",
+ "source_commit": "df878579176f09995875c2c9f256610d6f874683",
+ "view": "physical/hbm_accel_die_views/attn_tile/hfd_attn_tile.lef (interim 575a1b6aa)",
+ "summary": {
+  "all_pass": false,
+  "completed": 30,
+  "failing": [
+   "ira1/c_w00_03",
+   "ira1/c_w00_04",
+   "ira1/c_w00_05",
+   "ira1/c_w00_06",
+   "ira1/c_w00_07",
+   "ira1/c_w01_03",
+   "ira1/c_w01_04",
+   "ira1/c_w01_05",
+   "ira1/c_w01_06",
+   "ira1/c_w01_07",
+   "ira1/c_w02_03",
+   "ira1/c_w02_04",
+   "ira1/c_w02_05",
+   "ira1/c_w02_06",
+   "ira1/c_w02_07",
+   "ira1/c_w07_03",
+   "ira1/c_w07_04",
+   "ira1/c_w07_05",
+   "ira1/c_w07_06",
+   "ira1/c_w07_07",
+   "ira1/c_w08_03",
+   "ira1/c_w08_04",
+   "ira1/c_w08_05",
+   "ira1/c_w08_06",
+   "ira1/c_w08_07",
+   "ira1/c_w09_03",
+   "ira1/c_w09_04",
+   "ira1/c_w09_05",
+   "ira1/c_w09_06",
+   "ira1/c_w09_07"
+  ],
+  "incomplete": [
+   "ira1/c_w00_02",
+   "ira1/c_w01_02",
+   "ira1/c_w02_02",
+   "ira1/c_w07_02",
+   "ira1/c_w08_02",
+   "ira1/c_w09_02"
+  ],
+  "no_core_load_windows": [],
+  "windows": 36,
+  "worst_interior_rail_to_rail_mv": 241.64,
+  "worst_window": "ira1/c_w02_05"
+ },
+ "budget_mv": 35.0,
+ "r16g_tile_windows_interior_mv": "10.6-12.4",
+ "verdict": "FAIL: worst interior rail-to-rail 241.64 mV (w02_05; VDD 105.3 / VSS 136.4) against the 35 mV budget, 30/30 completed tile windows fail (r16g same windows 10.6-12.4 mV). The worst cells are the quad M8 edge stubs and the tile edge strips: with no bump over a quad, all quad current (64% of the tile power) leaves through the tile M8 straps (0.474 um, 2.7 um pitch) to the M9 in the 180 um gap and the 65-70 um edge strips. 6 window-edge windows (row 02) solved with floating window-edge islands (incomplete).",
+ "remedy": "No re-hardening needed: expose the quads own M9 PG as PG pins in the tile abstract (bump landing on the quad grid, as every block does at the top metal) so the bumps over the quads feed them; the M8 stubs then carry only the residue. Re-run ira with bumps kept over the quads once the view exposes them.",
+ "windows": {
+  "w00_02": {
+   "rail_to_rail_interior_mv": null,
+   "worst_interior_mv": {
+    "VDD": 98.99
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 568.36,
+     "VDD_interior": 98.99
+    },
+    "attn_quad_stub": {
+     "VDD": 4575.64,
+     "VDD_interior": 86.47
+    },
+    "field": {
+     "VDD": 5.91,
+     "VDD_interior": 5.91
+    },
+    "hub": {
+     "VDD": 106.1,
+     "VDD_interior": 41.42
+    }
+   },
+   "pass_interior": null,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.4,
+   "tiles": 2,
+   "quads": 6,
+   "quad_power_w": 1.094,
+   "power_w": 5.0745,
+   "bumps_removed_over_quads": {
+    "VDD": 240,
+    "VSS": 240
+   },
+   "m9_to_tile_m8_vias": 48402
+  },
+  "w00_03": {
+   "rail_to_rail_interior_mv": 188.11,
+   "worst_interior_mv": {
+    "VDD": 94.72,
+    "VSS": 93.39
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 565.38,
+     "VDD_interior": 94.72,
+     "VSS": 704.38,
+     "VSS_interior": 93.39
+    },
+    "attn_quad_stub": {
+     "VDD": 10207.23,
+     "VDD_interior": 89.07,
+     "VSS": 10413.76,
+     "VSS_interior": 83.66
+    },
+    "field": {
+     "VDD": 0.0,
+     "VDD_interior": 0.0,
+     "VSS": 0.0,
+     "VSS_interior": 0.0
+    },
+    "hub": {
+     "VDD": 134.59,
+     "VDD_interior": 50.24,
+     "VSS": 296.1,
+     "VSS_interior": 29.14
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.85,
+   "tiles": 6,
+   "quads": 12,
+   "quad_power_w": 3.7267,
+   "power_w": 5.1416,
+   "bumps_removed_over_quads": {
+    "VDD": 816,
+    "VSS": 792
+   },
+   "m9_to_tile_m8_vias": 123510
+  },
+  "w00_04": {
+   "rail_to_rail_interior_mv": 214.97,
+   "worst_interior_mv": {
+    "VDD": 86.63,
+    "VSS": 128.34
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 362.57,
+     "VDD_interior": 56.28,
+     "VSS": 631.8,
+     "VSS_interior": 128.34
+    },
+    "attn_quad_stub": {
+     "VDD": 5933.9,
+     "VDD_interior": 86.63,
+     "VSS": 6313.0,
+     "VSS_interior": 83.53
+    },
+    "field": {
+     "VDD": 0.0,
+     "VDD_interior": 0.0,
+     "VSS": 0.01,
+     "VSS_interior": 0.0
+    },
+    "hub": {
+     "VDD": 17.88,
+     "VDD_interior": 9.3,
+     "VSS": 255.98,
+     "VSS_interior": 24.3
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.86,
+   "tiles": 4,
+   "quads": 12,
+   "quad_power_w": 3.5218,
+   "power_w": 4.953,
+   "bumps_removed_over_quads": {
+    "VDD": 720,
+    "VSS": 744
+   },
+   "m9_to_tile_m8_vias": 121352
+  },
+  "w00_05": {
+   "rail_to_rail_interior_mv": 213.73,
+   "worst_interior_mv": {
+    "VDD": 98.32,
+    "VSS": 115.41
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 568.77,
+     "VDD_interior": 98.32,
+     "VSS": 581.13,
+     "VSS_interior": 115.41
+    },
+    "attn_quad_stub": {
+     "VDD": 4675.41,
+     "VDD_interior": 86.71,
+     "VSS": 4922.8,
+     "VSS_interior": 81.18
+    },
+    "field": {
+     "VDD": 0.0,
+     "VDD_interior": 0.0,
+     "VSS": 0.01,
+     "VSS_interior": 0.0
+    },
+    "hub": {
+     "VDD": 118.35,
+     "VDD_interior": 47.45,
+     "VSS": 253.01,
+     "VSS_interior": 23.65
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.6,
+   "tiles": 6,
+   "quads": 15,
+   "quad_power_w": 3.1024,
+   "power_w": 4.5186,
+   "bumps_removed_over_quads": {
+    "VDD": 648,
+    "VSS": 672
+   },
+   "m9_to_tile_m8_vias": 117709
+  },
+  "w00_06": {
+   "rail_to_rail_interior_mv": 188.73,
+   "worst_interior_mv": {
+    "VDD": 91.28,
+    "VSS": 97.45
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 587.76,
+     "VDD_interior": 91.28,
+     "VSS": 626.36,
+     "VSS_interior": 97.45
+    },
+    "attn_quad_stub": {
+     "VDD": 10137.36,
+     "VDD_interior": 88.98,
+     "VSS": 10205.89,
+     "VSS_interior": 83.7
+    },
+    "field": {
+     "VDD": 0.0,
+     "VDD_interior": 0.0,
+     "VSS": 0.01,
+     "VSS_interior": 0.0
+    },
+    "hub": {
+     "VDD": 218.67,
+     "VDD_interior": 48.47,
+     "VSS": 370.09,
+     "VSS_interior": 29.22
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.85,
+   "tiles": 6,
+   "quads": 12,
+   "quad_power_w": 3.7267,
+   "power_w": 5.1416,
+   "bumps_removed_over_quads": {
+    "VDD": 816,
+    "VSS": 792
+   },
+   "m9_to_tile_m8_vias": 123113
+  },
+  "w00_07": {
+   "rail_to_rail_interior_mv": 212.71,
+   "worst_interior_mv": {
+    "VDD": 87.04,
+    "VSS": 125.67
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 274.84,
+     "VDD_interior": 56.33,
+     "VSS": 628.57,
+     "VSS_interior": 125.67
+    },
+    "attn_quad_stub": {
+     "VDD": 5895.31,
+     "VDD_interior": 87.04,
+     "VSS": 6359.99,
+     "VSS_interior": 85.8
+    },
+    "field": {
+     "VDD": 5.89,
+     "VDD_interior": 5.89,
+     "VSS": 15.15,
+     "VSS_interior": 6.22
+    },
+    "hub": {
+     "VDD": 9.09,
+     "VDD_interior": 4.49,
+     "VSS": 151.87,
+     "VSS_interior": 9.5
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.11,
+   "tiles": 2,
+   "quads": 6,
+   "quad_power_w": 1.5515,
+   "power_w": 4.376,
+   "bumps_removed_over_quads": {
+    "VDD": 312,
+    "VSS": 336
+   },
+   "m9_to_tile_m8_vias": 56192
+  },
+  "w01_02": {
+   "rail_to_rail_interior_mv": null,
+   "worst_interior_mv": {
+    "VDD": 106.13
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 90.82,
+     "VDD_interior": 90.82
+    },
+    "attn_quad_stub": {
+     "VDD": 106.13,
+     "VDD_interior": 106.13
+    },
+    "field": {
+     "VDD": 5.91,
+     "VDD_interior": 5.91
+    },
+    "hub": {
+     "VDD": 8.94,
+     "VDD_interior": 8.94
+    }
+   },
+   "pass_interior": null,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.66,
+   "tiles": 3,
+   "quads": 10,
+   "quad_power_w": 1.3,
+   "power_w": 6.2082,
+   "bumps_removed_over_quads": {
+    "VDD": 320,
+    "VSS": 280
+   },
+   "m9_to_tile_m8_vias": 67626
+  },
+  "w01_03": {
+   "rail_to_rail_interior_mv": 177.07,
+   "worst_interior_mv": {
+    "VDD": 109.29,
+    "VSS": 67.78
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 93.4,
+     "VDD_interior": 93.4,
+     "VSS": 65.18,
+     "VSS_interior": 40.68
+    },
+    "attn_quad_stub": {
+     "VDD": 109.29,
+     "VDD_interior": 109.29,
+     "VSS": 90.44,
+     "VSS_interior": 67.78
+    },
+    "hub": {
+     "VDD": 10.46,
+     "VDD_interior": 10.46,
+     "VSS": 5.1,
+     "VSS_interior": 3.81
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.07,
+   "tiles": 9,
+   "quads": 20,
+   "quad_power_w": 4.4319,
+   "power_w": 6.6341,
+   "bumps_removed_over_quads": {
+    "VDD": 1088,
+    "VSS": 924
+   },
+   "m9_to_tile_m8_vias": 176878
+  },
+  "w01_04": {
+   "rail_to_rail_interior_mv": 174.32,
+   "worst_interior_mv": {
+    "VDD": 106.13,
+    "VSS": 68.19
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 90.7,
+     "VDD_interior": 90.7,
+     "VSS": 73.06,
+     "VSS_interior": 41.64
+    },
+    "attn_quad_stub": {
+     "VDD": 106.13,
+     "VDD_interior": 106.13,
+     "VSS": 97.94,
+     "VSS_interior": 68.19
+    },
+    "hub": {
+     "VDD": 6.85,
+     "VDD_interior": 6.85,
+     "VSS": 7.74,
+     "VSS_interior": 4.12
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.08,
+   "tiles": 6,
+   "quads": 20,
+   "quad_power_w": 4.1854,
+   "power_w": 6.3906,
+   "bumps_removed_over_quads": {
+    "VDD": 960,
+    "VSS": 868
+   },
+   "m9_to_tile_m8_vias": 173274
+  },
+  "w01_05": {
+   "rail_to_rail_interior_mv": 172.48,
+   "worst_interior_mv": {
+    "VDD": 106.27,
+    "VSS": 66.21
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 90.87,
+     "VDD_interior": 90.87,
+     "VSS": 55.89,
+     "VSS_interior": 40.51
+    },
+    "attn_quad_stub": {
+     "VDD": 106.27,
+     "VDD_interior": 106.27,
+     "VSS": 78.56,
+     "VSS_interior": 66.21
+    },
+    "hub": {
+     "VDD": 9.23,
+     "VDD_interior": 9.23,
+     "VSS": 7.81,
+     "VSS_interior": 4.48
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.82,
+   "tiles": 9,
+   "quads": 25,
+   "quad_power_w": 3.6863,
+   "power_w": 5.8302,
+   "bumps_removed_over_quads": {
+    "VDD": 864,
+    "VSS": 784
+   },
+   "m9_to_tile_m8_vias": 166564
+  },
+  "w01_06": {
+   "rail_to_rail_interior_mv": 177.64,
+   "worst_interior_mv": {
+    "VDD": 109.28,
+    "VSS": 68.36
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 93.44,
+     "VDD_interior": 93.44,
+     "VSS": 60.71,
+     "VSS_interior": 41.76
+    },
+    "attn_quad_stub": {
+     "VDD": 109.28,
+     "VDD_interior": 109.28,
+     "VSS": 85.95,
+     "VSS_interior": 68.36
+    },
+    "hub": {
+     "VDD": 11.66,
+     "VDD_interior": 11.66,
+     "VSS": 8.35,
+     "VSS_interior": 3.84
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.07,
+   "tiles": 9,
+   "quads": 20,
+   "quad_power_w": 4.4319,
+   "power_w": 6.6341,
+   "bumps_removed_over_quads": {
+    "VDD": 1088,
+    "VSS": 924
+   },
+   "m9_to_tile_m8_vias": 176366
+  },
+  "w01_07": {
+   "rail_to_rail_interior_mv": 176.1,
+   "worst_interior_mv": {
+    "VDD": 106.73,
+    "VSS": 69.37
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 91.07,
+     "VDD_interior": 91.07,
+     "VSS": 72.03,
+     "VSS_interior": 40.63
+    },
+    "attn_quad_stub": {
+     "VDD": 106.73,
+     "VDD_interior": 106.73,
+     "VSS": 95.7,
+     "VSS_interior": 69.37
+    },
+    "field": {
+     "VDD": 5.92,
+     "VDD_interior": 5.92,
+     "VSS": 18.43,
+     "VSS_interior": 6.47
+    },
+    "hub": {
+     "VDD": 6.37,
+     "VDD_interior": 6.37,
+     "VSS": 11.43,
+     "VSS_interior": 3.97
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.37,
+   "tiles": 3,
+   "quads": 10,
+   "quad_power_w": 1.843,
+   "power_w": 5.4297,
+   "bumps_removed_over_quads": {
+    "VDD": 416,
+    "VSS": 392
+   },
+   "m9_to_tile_m8_vias": 79832
+  },
+  "w02_02": {
+   "rail_to_rail_interior_mv": null,
+   "worst_interior_mv": {
+    "VDD": 102.49
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 3585.07,
+     "VDD_interior": 102.49
+    },
+    "attn_quad_stub": {
+     "VDD": 3593.58,
+     "VDD_interior": 76.74
+    },
+    "field": {
+     "VDD": 5.91,
+     "VDD_interior": 5.91
+    },
+    "hub": {
+     "VDD": 133.36,
+     "VDD_interior": 45.84
+    }
+   },
+   "pass_interior": null,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.66,
+   "tiles": 1,
+   "quads": 4,
+   "quad_power_w": 0.7052,
+   "power_w": 5.9847,
+   "bumps_removed_over_quads": {
+    "VDD": 160,
+    "VSS": 160
+   },
+   "m9_to_tile_m8_vias": 31832
+  },
+  "w02_03": {
+   "rail_to_rail_interior_mv": 214.55,
+   "worst_interior_mv": {
+    "VDD": 102.75,
+    "VSS": 111.8
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 7780.63,
+     "VDD_interior": 102.75,
+     "VSS": 10432.75,
+     "VSS_interior": 111.8
+    },
+    "attn_quad_stub": {
+     "VDD": 7794.9,
+     "VDD_interior": 79.09,
+     "VSS": 10452.39,
+     "VSS_interior": 87.41
+    },
+    "hub": {
+     "VDD": 185.03,
+     "VDD_interior": 59.1,
+     "VSS": 358.06,
+     "VSS_interior": 45.97
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.08,
+   "tiles": 3,
+   "quads": 8,
+   "quad_power_w": 2.4061,
+   "power_w": 5.9684,
+   "bumps_removed_over_quads": {
+    "VDD": 544,
+    "VSS": 528
+   },
+   "m9_to_tile_m8_vias": 80938
+  },
+  "w02_04": {
+   "rail_to_rail_interior_mv": 228.74,
+   "worst_interior_mv": {
+    "VDD": 76.88,
+    "VSS": 151.86
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 4546.83,
+     "VDD_interior": 49.21,
+     "VSS": 6278.46,
+     "VSS_interior": 151.86
+    },
+    "attn_quad_stub": {
+     "VDD": 4556.62,
+     "VDD_interior": 76.88,
+     "VSS": 6305.84,
+     "VSS_interior": 87.88
+    },
+    "hub": {
+     "VDD": 87.83,
+     "VDD_interior": 14.75,
+     "VSS": 307.23,
+     "VSS_interior": 37.01
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.08,
+   "tiles": 2,
+   "quads": 8,
+   "quad_power_w": 2.2723,
+   "power_w": 5.7122,
+   "bumps_removed_over_quads": {
+    "VDD": 480,
+    "VSS": 496
+   },
+   "m9_to_tile_m8_vias": 79558
+  },
+  "w02_05": {
+   "rail_to_rail_interior_mv": 241.64,
+   "worst_interior_mv": {
+    "VDD": 105.29,
+    "VSS": 136.35
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 3595.92,
+     "VDD_interior": 105.29,
+     "VSS": 4915.77,
+     "VSS_interior": 136.35
+    },
+    "attn_quad_stub": {
+     "VDD": 3604.43,
+     "VDD_interior": 76.94,
+     "VSS": 4934.15,
+     "VSS_interior": 84.8
+    },
+    "hub": {
+     "VDD": 170.17,
+     "VDD_interior": 55.22,
+     "VSS": 303.94,
+     "VSS_interior": 36.52
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.82,
+   "tiles": 3,
+   "quads": 10,
+   "quad_power_w": 2.0008,
+   "power_w": 5.2154,
+   "bumps_removed_over_quads": {
+    "VDD": 432,
+    "VSS": 448
+   },
+   "m9_to_tile_m8_vias": 77269
+  },
+  "w02_06": {
+   "rail_to_rail_interior_mv": 215.32,
+   "worst_interior_mv": {
+    "VDD": 99.25,
+    "VSS": 116.07
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 7748.85,
+     "VDD_interior": 99.25,
+     "VSS": 10239.66,
+     "VSS_interior": 116.07
+    },
+    "attn_quad_stub": {
+     "VDD": 7758.71,
+     "VDD_interior": 78.99,
+     "VSS": 10267.78,
+     "VSS_interior": 87.19
+    },
+    "hub": {
+     "VDD": 290.83,
+     "VDD_interior": 56.85,
+     "VSS": 443.56,
+     "VSS_interior": 46.08
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.08,
+   "tiles": 3,
+   "quads": 8,
+   "quad_power_w": 2.406,
+   "power_w": 5.9684,
+   "bumps_removed_over_quads": {
+    "VDD": 544,
+    "VSS": 528
+   },
+   "m9_to_tile_m8_vias": 80673
+  },
+  "w02_07": {
+   "rail_to_rail_interior_mv": 226.33,
+   "worst_interior_mv": {
+    "VDD": 77.25,
+    "VSS": 149.08
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 4502.07,
+     "VDD_interior": 41.69,
+     "VSS": 6332.84,
+     "VSS_interior": 149.08
+    },
+    "attn_quad_stub": {
+     "VDD": 4511.9,
+     "VDD_interior": 77.25,
+     "VSS": 6351.75,
+     "VSS_interior": 90.9
+    },
+    "field": {
+     "VDD": 5.92,
+     "VDD_interior": 5.92,
+     "VSS": 18.45,
+     "VSS_interior": 6.47
+    },
+    "hub": {
+     "VDD": 49.86,
+     "VDD_interior": 5.59,
+     "VSS": 178.12,
+     "VSS_interior": 14.25
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.37,
+   "tiles": 1,
+   "quads": 4,
+   "quad_power_w": 1.0005,
+   "power_w": 5.1266,
+   "bumps_removed_over_quads": {
+    "VDD": 208,
+    "VSS": 224
+   },
+   "m9_to_tile_m8_vias": 36865
+  },
+  "w07_02": {
+   "rail_to_rail_interior_mv": null,
+   "worst_interior_mv": {
+    "VDD": 105.78
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 91.38,
+     "VDD_interior": 91.38
+    },
+    "attn_quad_stub": {
+     "VDD": 105.78,
+     "VDD_interior": 105.78
+    },
+    "field": {
+     "VDD": 5.91,
+     "VDD_interior": 5.91
+    },
+    "hub": {
+     "VDD": 10.86,
+     "VDD_interior": 10.86
+    }
+   },
+   "pass_interior": null,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.66,
+   "tiles": 2,
+   "quads": 6,
+   "quad_power_w": 1.0561,
+   "power_w": 5.9643,
+   "bumps_removed_over_quads": {
+    "VDD": 260,
+    "VSS": 240
+   },
+   "m9_to_tile_m8_vias": 56242
+  },
+  "w07_03": {
+   "rail_to_rail_interior_mv": 176.75,
+   "worst_interior_mv": {
+    "VDD": 108.93,
+    "VSS": 67.82
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 93.97,
+     "VDD_interior": 93.97,
+     "VSS": 65.72,
+     "VSS_interior": 41.33
+    },
+    "attn_quad_stub": {
+     "VDD": 108.93,
+     "VDD_interior": 108.93,
+     "VSS": 90.5,
+     "VSS_interior": 67.82
+    },
+    "hub": {
+     "VDD": 11.19,
+     "VDD_interior": 11.19,
+     "VSS": 18.65,
+     "VSS_interior": 5.51
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.85,
+   "tiles": 6,
+   "quads": 12,
+   "quad_power_w": 3.6015,
+   "power_w": 5.8496,
+   "bumps_removed_over_quads": {
+    "VDD": 884,
+    "VSS": 792
+   },
+   "m9_to_tile_m8_vias": 147298
+  },
+  "w07_04": {
+   "rail_to_rail_interior_mv": 174.04,
+   "worst_interior_mv": {
+    "VDD": 105.78,
+    "VSS": 68.26
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 91.26,
+     "VDD_interior": 91.26,
+     "VSS": 73.49,
+     "VSS_interior": 42.23
+    },
+    "attn_quad_stub": {
+     "VDD": 105.78,
+     "VDD_interior": 105.78,
+     "VSS": 97.98,
+     "VSS_interior": 68.26
+    },
+    "hub": {
+     "VDD": 11.23,
+     "VDD_interior": 11.23,
+     "VSS": 18.65,
+     "VSS_interior": 5.51
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.86,
+   "tiles": 4,
+   "quads": 12,
+   "quad_power_w": 3.3999,
+   "power_w": 5.6314,
+   "bumps_removed_over_quads": {
+    "VDD": 780,
+    "VSS": 744
+   },
+   "m9_to_tile_m8_vias": 144274
+  },
+  "w07_05": {
+   "rail_to_rail_interior_mv": 172.19,
+   "worst_interior_mv": {
+    "VDD": 105.92,
+    "VSS": 66.27
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 91.42,
+     "VDD_interior": 91.42,
+     "VSS": 56.36,
+     "VSS_interior": 41.13
+    },
+    "attn_quad_stub": {
+     "VDD": 105.92,
+     "VDD_interior": 105.92,
+     "VSS": 78.62,
+     "VSS_interior": 66.27
+    },
+    "hub": {
+     "VDD": 11.02,
+     "VDD_interior": 11.02,
+     "VSS": 15.72,
+     "VSS_interior": 5.32
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.6,
+   "tiles": 6,
+   "quads": 15,
+   "quad_power_w": 2.9942,
+   "power_w": 5.1385,
+   "bumps_removed_over_quads": {
+    "VDD": 702,
+    "VSS": 672
+   },
+   "m9_to_tile_m8_vias": 138620
+  },
+  "w07_06": {
+   "rail_to_rail_interior_mv": 177.35,
+   "worst_interior_mv": {
+    "VDD": 108.92,
+    "VSS": 68.43
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 94.01,
+     "VDD_interior": 94.01,
+     "VSS": 61.14,
+     "VSS_interior": 42.41
+    },
+    "attn_quad_stub": {
+     "VDD": 108.92,
+     "VDD_interior": 108.92,
+     "VSS": 85.99,
+     "VSS_interior": 68.43
+    },
+    "hub": {
+     "VDD": 11.7,
+     "VDD_interior": 11.7,
+     "VSS": 18.65,
+     "VSS_interior": 5.51
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.85,
+   "tiles": 6,
+   "quads": 12,
+   "quad_power_w": 3.6015,
+   "power_w": 5.8496,
+   "bumps_removed_over_quads": {
+    "VDD": 884,
+    "VSS": 792
+   },
+   "m9_to_tile_m8_vias": 146874
+  },
+  "w07_07": {
+   "rail_to_rail_interior_mv": 175.8,
+   "worst_interior_mv": {
+    "VDD": 106.39,
+    "VSS": 69.41
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 91.63,
+     "VDD_interior": 91.63,
+     "VSS": 72.44,
+     "VSS_interior": 41.16
+    },
+    "attn_quad_stub": {
+     "VDD": 106.39,
+     "VDD_interior": 106.39,
+     "VSS": 95.75,
+     "VSS_interior": 69.41
+    },
+    "field": {
+     "VDD": 5.92,
+     "VDD_interior": 5.92,
+     "VSS": 18.35,
+     "VSS_interior": 6.45
+    },
+    "hub": {
+     "VDD": 10.93,
+     "VDD_interior": 10.93,
+     "VSS": 18.65,
+     "VSS_interior": 5.51
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.37,
+   "tiles": 2,
+   "quads": 6,
+   "quad_power_w": 1.4968,
+   "power_w": 5.1041,
+   "bumps_removed_over_quads": {
+    "VDD": 338,
+    "VSS": 336
+   },
+   "m9_to_tile_m8_vias": 66454
+  },
+  "w08_02": {
+   "rail_to_rail_interior_mv": null,
+   "worst_interior_mv": {
+    "VDD": 91.14
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 64.24,
+     "VDD_interior": 64.24
+    },
+    "attn_quad_stub": {
+     "VDD": 91.14,
+     "VDD_interior": 91.14
+    },
+    "field": {
+     "VDD": 5.91,
+     "VDD_interior": 5.91
+    },
+    "hub": {
+     "VDD": 7.91,
+     "VDD_interior": 7.91
+    }
+   },
+   "pass_interior": null,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.66,
+   "tiles": 3,
+   "quads": 10,
+   "quad_power_w": 1.3194,
+   "power_w": 6.2067,
+   "bumps_removed_over_quads": {
+    "VDD": 300,
+    "VSS": 280
+   },
+   "m9_to_tile_m8_vias": 67241
+  },
+  "w08_03": {
+   "rail_to_rail_interior_mv": 179.69,
+   "worst_interior_mv": {
+    "VDD": 93.85,
+    "VSS": 85.84
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 66.22,
+     "VDD_interior": 66.22,
+     "VSS": 86.44,
+     "VSS_interior": 64.46
+    },
+    "attn_quad_stub": {
+     "VDD": 93.85,
+     "VDD_interior": 93.85,
+     "VSS": 106.89,
+     "VSS_interior": 85.84
+    },
+    "hub": {
+     "VDD": 9.32,
+     "VDD_interior": 9.32,
+     "VSS": 6.18,
+     "VSS_interior": 4.9
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.07,
+   "tiles": 9,
+   "quads": 20,
+   "quad_power_w": 4.4912,
+   "power_w": 6.6341,
+   "bumps_removed_over_quads": {
+    "VDD": 1020,
+    "VSS": 924
+   },
+   "m9_to_tile_m8_vias": 175634
+  },
+  "w08_04": {
+   "rail_to_rail_interior_mv": 177.74,
+   "worst_interior_mv": {
+    "VDD": 91.24,
+    "VSS": 86.5
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 64.25,
+     "VDD_interior": 64.25,
+     "VSS": 88.4,
+     "VSS_interior": 65.92
+    },
+    "attn_quad_stub": {
+     "VDD": 91.24,
+     "VDD_interior": 91.24,
+     "VSS": 111.27,
+     "VSS_interior": 86.5
+    },
+    "hub": {
+     "VDD": 5.88,
+     "VDD_interior": 5.88,
+     "VSS": 7.81,
+     "VSS_interior": 5.14
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.08,
+   "tiles": 6,
+   "quads": 20,
+   "quad_power_w": 4.2432,
+   "power_w": 6.3906,
+   "bumps_removed_over_quads": {
+    "VDD": 900,
+    "VSS": 868
+   },
+   "m9_to_tile_m8_vias": 172083
+  },
+  "w08_05": {
+   "rail_to_rail_interior_mv": 175.44,
+   "worst_interior_mv": {
+    "VDD": 91.4,
+    "VSS": 84.04
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 64.26,
+     "VDD_interior": 64.26,
+     "VSS": 69.52,
+     "VSS_interior": 63.45
+    },
+    "attn_quad_stub": {
+     "VDD": 91.4,
+     "VDD_interior": 91.4,
+     "VSS": 88.45,
+     "VSS_interior": 84.04
+    },
+    "hub": {
+     "VDD": 8.21,
+     "VDD_interior": 8.21,
+     "VSS": 8.31,
+     "VSS_interior": 5.93
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.82,
+   "tiles": 9,
+   "quads": 25,
+   "quad_power_w": 3.7387,
+   "power_w": 5.8302,
+   "bumps_removed_over_quads": {
+    "VDD": 810,
+    "VSS": 784
+   },
+   "m9_to_tile_m8_vias": 165501
+  },
+  "w08_06": {
+   "rail_to_rail_interior_mv": 180.48,
+   "worst_interior_mv": {
+    "VDD": 93.77,
+    "VSS": 86.71
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 66.18,
+     "VDD_interior": 66.18,
+     "VSS": 75.9,
+     "VSS_interior": 65.38
+    },
+    "attn_quad_stub": {
+     "VDD": 93.77,
+     "VDD_interior": 93.77,
+     "VSS": 98.9,
+     "VSS_interior": 86.71
+    },
+    "hub": {
+     "VDD": 10.41,
+     "VDD_interior": 10.41,
+     "VSS": 8.35,
+     "VSS_interior": 4.93
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.07,
+   "tiles": 9,
+   "quads": 20,
+   "quad_power_w": 4.4912,
+   "power_w": 6.6341,
+   "bumps_removed_over_quads": {
+    "VDD": 1020,
+    "VSS": 924
+   },
+   "m9_to_tile_m8_vias": 175123
+  },
+  "w08_07": {
+   "rail_to_rail_interior_mv": 179.52,
+   "worst_interior_mv": {
+    "VDD": 91.79,
+    "VSS": 87.73
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 64.62,
+     "VDD_interior": 64.62,
+     "VSS": 85.72,
+     "VSS_interior": 63.33
+    },
+    "attn_quad_stub": {
+     "VDD": 91.79,
+     "VDD_interior": 91.79,
+     "VSS": 108.35,
+     "VSS_interior": 87.73
+    },
+    "field": {
+     "VDD": 5.9,
+     "VDD_interior": 5.9,
+     "VSS": 18.32,
+     "VSS_interior": 6.45
+    },
+    "hub": {
+     "VDD": 4.49,
+     "VDD_interior": 4.49,
+     "VSS": 8.52,
+     "VSS_interior": 3.21
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.37,
+   "tiles": 3,
+   "quads": 10,
+   "quad_power_w": 1.8691,
+   "power_w": 5.4201,
+   "bumps_removed_over_quads": {
+    "VDD": 390,
+    "VSS": 392
+   },
+   "m9_to_tile_m8_vias": 79305
+  },
+  "w09_02": {
+   "rail_to_rail_interior_mv": null,
+   "worst_interior_mv": {
+    "VDD": 63.12
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 50.59,
+     "VDD_interior": 50.59
+    },
+    "attn_quad_stub": {
+     "VDD": 63.12,
+     "VDD_interior": 63.12
+    },
+    "field": {
+     "VDD": 5.9,
+     "VDD_interior": 5.9
+    },
+    "hub": {
+     "VDD": 5.95,
+     "VDD_interior": 5.95
+    },
+    "phy": {
+     "VDD": 0.0,
+     "VDD_interior": 0.0
+    }
+   },
+   "pass_interior": null,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.65,
+   "tiles": 1,
+   "quads": 4,
+   "quad_power_w": 0.5989,
+   "power_w": 2.9821,
+   "bumps_removed_over_quads": {
+    "VDD": 140,
+    "VSS": 140
+   },
+   "m9_to_tile_m8_vias": 29291
+  },
+  "w09_03": {
+   "rail_to_rail_interior_mv": 195.33,
+   "worst_interior_mv": {
+    "VDD": 65.24,
+    "VSS": 130.09
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 52.25,
+     "VDD_interior": 52.25,
+     "VSS": 121.19,
+     "VSS_interior": 94.1
+    },
+    "attn_quad_stub": {
+     "VDD": 65.24,
+     "VDD_interior": 65.24,
+     "VSS": 154.25,
+     "VSS_interior": 130.09
+    },
+    "field": {
+     "VDD": 1.87,
+     "VDD_interior": 1.87,
+     "VSS": 1.58,
+     "VSS_interior": 1.58
+    },
+    "hub": {
+     "VDD": 6.32,
+     "VDD_interior": 6.32,
+     "VSS": 7.07,
+     "VSS_interior": 7.07
+    },
+    "phy": {
+     "VDD": 0.0,
+     "VDD_interior": 0.0,
+     "VSS": 0.0,
+     "VSS_interior": 0.0
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.07,
+   "tiles": 3,
+   "quads": 8,
+   "quad_power_w": 2.048,
+   "power_w": 3.0757,
+   "bumps_removed_over_quads": {
+    "VDD": 476,
+    "VSS": 462
+   },
+   "m9_to_tile_m8_vias": 75014
+  },
+  "w09_04": {
+   "rail_to_rail_interior_mv": 193.02,
+   "worst_interior_mv": {
+    "VDD": 63.23,
+    "VSS": 129.79
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 50.7,
+     "VDD_interior": 50.7,
+     "VSS": 122.87,
+     "VSS_interior": 96.5
+    },
+    "attn_quad_stub": {
+     "VDD": 63.23,
+     "VDD_interior": 63.23,
+     "VSS": 157.25,
+     "VSS_interior": 129.79
+    },
+    "field": {
+     "VDD": 2.04,
+     "VDD_interior": 2.04,
+     "VSS": 2.57,
+     "VSS_interior": 1.85
+    },
+    "hub": {
+     "VDD": 4.56,
+     "VDD_interior": 4.56,
+     "VSS": 7.74,
+     "VSS_interior": 7.58
+    },
+    "phy": {
+     "VDD": 0.0,
+     "VDD_interior": 0.0,
+     "VSS": 0.01,
+     "VSS_interior": 0.01
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.08,
+   "tiles": 2,
+   "quads": 8,
+   "quad_power_w": 1.9321,
+   "power_w": 2.9689,
+   "bumps_removed_over_quads": {
+    "VDD": 420,
+    "VSS": 434
+   },
+   "m9_to_tile_m8_vias": 73671
+  },
+  "w09_05": {
+   "rail_to_rail_interior_mv": 189.03,
+   "worst_interior_mv": {
+    "VDD": 63.15,
+    "VSS": 125.88
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 50.6,
+     "VDD_interior": 50.6,
+     "VSS": 93.6,
+     "VSS_interior": 92.71
+    },
+    "attn_quad_stub": {
+     "VDD": 63.15,
+     "VDD_interior": 63.15,
+     "VSS": 125.88,
+     "VSS_interior": 125.88
+    },
+    "field": {
+     "VDD": 2.02,
+     "VDD_interior": 2.02,
+     "VSS": 3.1,
+     "VSS_interior": 1.88
+    },
+    "hub": {
+     "VDD": 5.54,
+     "VDD_interior": 5.54,
+     "VSS": 10.78,
+     "VSS_interior": 8.76
+    },
+    "phy": {
+     "VDD": 0.0,
+     "VDD_interior": 0.0,
+     "VSS": 0.02,
+     "VSS_interior": 0.01
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 10.82,
+   "tiles": 3,
+   "quads": 10,
+   "quad_power_w": 1.7002,
+   "power_w": 2.7065,
+   "bumps_removed_over_quads": {
+    "VDD": 378,
+    "VSS": 392
+   },
+   "m9_to_tile_m8_vias": 71364
+  },
+  "w09_06": {
+   "rail_to_rail_interior_mv": 195.39,
+   "worst_interior_mv": {
+    "VDD": 65.3,
+    "VSS": 130.09
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 52.31,
+     "VDD_interior": 52.31,
+     "VSS": 110.88,
+     "VSS_interior": 95.71
+    },
+    "attn_quad_stub": {
+     "VDD": 65.3,
+     "VDD_interior": 65.3,
+     "VSS": 145.78,
+     "VSS_interior": 130.09
+    },
+    "field": {
+     "VDD": 0.0,
+     "VDD_interior": 0.0,
+     "VSS": 0.01,
+     "VSS_interior": 0.0
+    },
+    "hub": {
+     "VDD": 7.25,
+     "VDD_interior": 7.25,
+     "VSS": 11.24,
+     "VSS_interior": 7.14
+    },
+    "phy": {
+     "VDD": 0.0,
+     "VDD_interior": 0.0,
+     "VSS": 0.0,
+     "VSS_interior": 0.0
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 11.07,
+   "tiles": 3,
+   "quads": 8,
+   "quad_power_w": 2.048,
+   "power_w": 3.0739,
+   "bumps_removed_over_quads": {
+    "VDD": 476,
+    "VSS": 462
+   },
+   "m9_to_tile_m8_vias": 74776
+  },
+  "w09_07": {
+   "rail_to_rail_interior_mv": 196.92,
+   "worst_interior_mv": {
+    "VDD": 63.59,
+    "VSS": 133.33
+   },
+   "worst_mv_by_region": {
+    "attn_open": {
+     "VDD": 50.97,
+     "VDD_interior": 50.97,
+     "VSS": 121.16,
+     "VSS_interior": 93.76
+    },
+    "attn_quad_stub": {
+     "VDD": 63.59,
+     "VDD_interior": 63.59,
+     "VSS": 155.61,
+     "VSS_interior": 133.33
+    },
+    "field": {
+     "VDD": 5.92,
+     "VDD_interior": 5.92,
+     "VSS": 18.43,
+     "VSS_interior": 6.47
+    },
+    "hub": {
+     "VDD": 3.83,
+     "VDD_interior": 3.83,
+     "VSS": 14.49,
+     "VSS_interior": 5.3
+    },
+    "phy": {
+     "VDD": 0.0,
+     "VDD_interior": 0.0,
+     "VSS": 0.0,
+     "VSS_interior": 0.0
+    }
+   },
+   "pass_interior": false,
+   "exit": 0,
+   "r16g_ir16e_rail_to_rail_interior_mv": 12.37,
+   "tiles": 1,
+   "quads": 4,
+   "quad_power_w": 0.8501,
+   "power_w": 2.5808,
+   "bumps_removed_over_quads": {
+    "VDD": 182,
+    "VSS": 196
+   },
+   "m9_to_tile_m8_vias": 34089
+  }
+ }
+}

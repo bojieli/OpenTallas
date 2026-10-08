@@ -1,0 +1,375 @@
+{
+ "schema": "opentallas.meso_fifo.campaign.v1",
+ "scope": "DIGITAL_ONLY dual-clock RTL simulation with a physical lag-window checker; edges closer than 20 ps processed in random order; not an MTBF proof",
+ "period_ps": 833.333,
+ "sources": {
+  "rtl/common/ot_meso_fifo.sv": "c4ed1f5b02ea1d09228e1417109add28c0682abfd72e0c41347cba0a78500a80",
+  "rtl/test/meso/tb_meso_fifo.cpp": "1b91d9e73f7743304e4ff6974f667374e57ff046b83a80813d50d20fb5f99736",
+  "rtl/test/meso/build_tb.sh": "c1f4a7da3c982d40b03c5a8bdfd3948336c4047fabddee9705420c932463dc27",
+  "tools/meso_fifo_campaign.py": "7ba4c764a50974f02fc3d13561d7886a5e59bffac3cea9fc64a2c258f44e2ffe"
+ },
+ "configs": {
+  "d4_central": {
+   "config": {
+    "depth": 4,
+    "offset": 2,
+    "glo": 0,
+    "ghi": 4,
+    "credits": 8,
+    "wander": 192.0,
+    "phases": 32,
+    "cycles": 1000000
+   },
+   "guards_ps": {
+    "low_trip_below": 416.7,
+    "high_trip_above": 2916.7,
+    "data_arc_budget_ps": 356.667
+   },
+   "nominal": {
+    "runs": 296,
+    "words_delivered": 185838287,
+    "cycles": 259000000,
+    "errors": 0,
+    "failing_runs": [],
+    "window_checks": 513756920,
+    "window_violations": 0,
+    "faults": 0,
+    "resets": 73861,
+    "lag_ps_range": [
+     891.9,
+     2493.5
+    ],
+    "margin_to_low_guard_ps": 475.2,
+    "margin_to_high_guard_ps": 423.2,
+    "stream_throughput_min": 1.0
+   },
+   "latency_no_wander": {
+    "runs": 37,
+    "delta_periods_mean_over_phases": 3.0135,
+    "delta_periods_min": 2.5193,
+    "delta_periods_max": 3.512,
+    "consumer_edges_histogram": {
+     "4": 800207,
+     "5": 844176
+    },
+    "delta_edges_mean": 3.5134
+   },
+   "latency_wander": {
+    "runs": 37,
+    "delta_periods_mean_over_phases": 3.0136,
+    "delta_periods_min": 2.1021,
+    "delta_periods_max": 3.9291,
+    "consumer_edges_histogram": {
+     "4": 799756,
+     "5": 844759
+    },
+    "delta_edges_mean": 3.5137
+   },
+   "round_trip_delta_periods": {
+    "values": [
+     4.982,
+     4.988,
+     4.99,
+     4.99,
+     4.992,
+     4.992,
+     4.993,
+     4.995,
+     4.995,
+     4.996,
+     4.996,
+     4.997,
+     4.998,
+     4.998,
+     4.999,
+     5.0,
+     5.0,
+     5.0,
+     5.001,
+     5.003,
+     5.004,
+     5.005,
+     5.005,
+     5.006,
+     5.006,
+     5.007,
+     5.007,
+     5.008,
+     5.008,
+     5.009,
+     5.011,
+     5.011,
+     5.012,
+     5.013,
+     5.013,
+     5.014,
+     6.0
+    ],
+    "integer_histogram": {
+     "5": 36,
+     "6": 1
+    },
+    "mean": 5.0282,
+    "max": 6.0,
+    "min": 4.982
+   },
+   "drift": {
+    "runs": 78,
+    "all_faulted": true,
+    "violation_before_fault": 0,
+    "errors": 0,
+    "failing_runs": [],
+    "lag_ps_range_before_fault": [
+     415.4,
+     2918.0
+    ]
+   }
+  },
+  "d8_tt_routed": {
+   "config": {
+    "depth": 8,
+    "offset": 3,
+    "glo": 0,
+    "ghi": 6,
+    "credits": 16,
+    "wander": 774.0,
+    "phases": 16,
+    "cycles": 400000
+   },
+   "guards_ps": {
+    "low_trip_below": 416.7,
+    "high_trip_above": 4583.3,
+    "data_arc_budget_ps": 356.667
+   },
+   "nominal": {
+    "runs": 168,
+    "words_delivered": 42181357,
+    "cycles": 58800000,
+    "errors": 0,
+    "failing_runs": [],
+    "window_checks": 116713717,
+    "window_violations": 0,
+    "faults": 0,
+    "resets": 16691,
+    "lag_ps_range": [
+     518.3,
+     4481.8
+    ],
+    "margin_to_low_guard_ps": 101.6,
+    "margin_to_high_guard_ps": 101.5,
+    "stream_throughput_min": 1.0
+   },
+   "latency_no_wander": {
+    "runs": 21,
+    "delta_periods_mean_over_phases": 3.9762,
+    "delta_periods_min": 3.4882,
+    "delta_periods_max": 4.4493,
+    "consumer_edges_histogram": {
+     "5": 196037,
+     "6": 177332
+    },
+    "delta_edges_mean": 4.475
+   },
+   "latency_wander": {
+    "runs": 21,
+    "delta_periods_mean_over_phases": 3.9282,
+    "delta_periods_min": 1.6235,
+    "delta_periods_max": 6.3144,
+    "consumer_edges_histogram": {
+     "4": 85122,
+     "5": 100682,
+     "6": 88990,
+     "7": 75325,
+     "8": 10173,
+     "3": 12687
+    },
+    "delta_edges_mean": 4.4281
+   },
+   "round_trip_delta_periods": {
+    "values": [
+     6.988,
+     6.99,
+     6.992,
+     6.996,
+     6.996,
+     6.997,
+     6.997,
+     6.998,
+     6.998,
+     6.998,
+     6.998,
+     6.999,
+     6.999,
+     7.0,
+     7.002,
+     7.002,
+     7.004,
+     7.005,
+     7.005,
+     7.008,
+     7.01
+    ],
+    "integer_histogram": {
+     "7": 21
+    },
+    "mean": 6.9991,
+    "max": 7.01,
+    "min": 6.988
+   },
+   "drift": {
+    "runs": 78,
+    "all_faulted": true,
+    "violation_before_fault": 0,
+    "errors": 0,
+    "failing_runs": [],
+    "lag_ps_range_before_fault": [
+     417.4,
+     4581.9
+    ]
+   }
+  },
+  "d16_bound_ss": {
+   "config": {
+    "depth": 16,
+    "offset": 5,
+    "glo": 0,
+    "ghi": 10,
+    "credits": 16,
+    "wander": 1452.5,
+    "phases": 16,
+    "cycles": 400000
+   },
+   "guards_ps": {
+    "low_trip_below": 416.7,
+    "high_trip_above": 7916.7,
+    "data_arc_budget_ps": 356.667
+   },
+   "nominal": {
+    "runs": 168,
+    "words_delivered": 42070000,
+    "cycles": 58800000,
+    "errors": 0,
+    "failing_runs": [],
+    "window_checks": 116455639,
+    "window_violations": 0,
+    "faults": 0,
+    "resets": 16663,
+    "lag_ps_range": [
+     829.4,
+     7503.9
+    ],
+    "margin_to_low_guard_ps": 412.7,
+    "margin_to_high_guard_ps": 412.8,
+    "stream_throughput_min": 1.0
+   },
+   "latency_no_wander": {
+    "runs": 21,
+    "delta_periods_mean_over_phases": 5.9762,
+    "delta_periods_min": 5.4881,
+    "delta_periods_max": 6.4493,
+    "consumer_edges_histogram": {
+     "7": 196098,
+     "8": 177320
+    },
+    "delta_edges_mean": 6.4749
+   },
+   "latency_wander": {
+    "runs": 21,
+    "delta_periods_mean_over_phases": 5.8814,
+    "delta_periods_min": 2.0591,
+    "delta_periods_max": 9.8787,
+    "consumer_edges_histogram": {
+     "4": 49377,
+     "5": 41669,
+     "6": 37505,
+     "7": 68955,
+     "8": 61124,
+     "9": 33869,
+     "10": 39992,
+     "11": 40684
+    },
+    "delta_edges_mean": 6.3821
+   },
+   "round_trip_delta_periods": {
+    "values": [
+     10.003,
+     10.99,
+     10.993,
+     10.994,
+     10.994,
+     10.996,
+     10.997,
+     10.997,
+     10.997,
+     10.998,
+     11.001,
+     11.002,
+     11.002,
+     11.004,
+     11.004,
+     11.005,
+     11.005,
+     11.005,
+     11.006,
+     11.008,
+     11.015
+    ],
+    "integer_histogram": {
+     "11": 20,
+     "10": 1
+    },
+    "mean": 10.9531,
+    "max": 11.015,
+    "min": 10.003
+   },
+   "drift": {
+    "runs": 78,
+    "all_faulted": true,
+    "violation_before_fault": 0,
+    "errors": 0,
+    "failing_runs": [],
+    "lag_ps_range_before_fault": [
+     411.2,
+     7920.0
+    ]
+   }
+  }
+ },
+ "mutants": {
+  "OFFSET": {
+   "mode": "random",
+   "runs": 13,
+   "caught": 13,
+   "all_caught": true,
+   "example": [
+    "ERROR t=25650.0ps: data ring window: slot 3 holds cnt 3 want 7 lag 3152.3",
+    "ERROR t=26478.1ps: data ring window: slot 0 holds cnt 4 want 0 lag 3149.7"
+   ]
+  },
+  "NO_GUARD": {
+   "mode": "drift",
+   "runs": 13,
+   "caught": 13,
+   "all_caught": true,
+   "example": [
+    "ERROR t=166999171.2ps: window violated at 2183329.1 before fault at 2743329.4"
+   ]
+  },
+  "NOBP_BACKPRESSURE": {
+   "mode": "bp",
+   "runs": 13,
+   "caught": 13,
+   "all_caught": true,
+   "example": [
+    "ERROR t=166999164.6ps: fault asserted (r_fault=1 w_fault=0) at 62310.2",
+    "ERROR t=166999164.6ps: final epoch 0: accepted 32 delivered 23"
+   ]
+  }
+ },
+ "git": {
+  "head": "",
+  "sources_dirty": false
+ },
+ "rdreg": true,
+ "nobp": true
+}

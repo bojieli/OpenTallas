@@ -1,0 +1,21 @@
+OpenROAD v2.0-17598-ga008522d8 
+Features included (+) or not (-): +Charts +GPU +GUI +Python : None
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /tmp/bf_phase_sta_fixture/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /tmp/bf_phase_sta_fixture/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO IFP-0001] Added 95 rows of 475 site asap7sc7p5t.
+PQ_DELAY_TOPOLOGY_PASS endpoints=2 cells=6 placement_checked=0
+Placement Analysis
+---------------------------------
+total displacement          0.5 u
+average displacement        0.1 u
+max displacement            0.1 u
+original HPWL              10.3 u
+legalized HPWL             10.3 u
+delta HPWL                    0 %
+
+PQ_DELAY_TOPOLOGY_PASS endpoints=2 cells=6 placement_checked=1
+PQ_DELAY_SWAP_MUTANT_REJECTED PQ_DELAY capture/tag alignment differs
+[ERROR ODB-0362] Attempt to destroy dont_touch instance pq_return_hold_e00000_s1
+Error: check.tcl, 26 ODB-0362

@@ -25,6 +25,13 @@
 `ifndef WF_DUT
 `define WF_DUT ot_rom_pkg_ctrl_wf
 `endif
+// OT_WFC_LINK_REG = 1 (the DUT's registered link boundary): the bench's link ports reach the DUT through
+// the other end of a registered link (ot_rom_pkg_ctrl_wfc_ltx inbound, _lrx outbound), so the bench's
+// valid / ready protocol, flit stream and digests are unchanged; inbound flits are counted where the
+// DUT's controller logic takes them (the fault-flit check stays exact).
+`ifndef OT_WFC_LINK_REG
+`define OT_WFC_LINK_REG 0
+`endif
 module tb_wf_ctrl_equiv;
     parameter integer SOURCE   = 1;
     parameter integer LOCKSTEP = 1;       // SOURCE = 1 with ot_rom_pkg_ctrl_wfc: 0 (its engine retimes events)
@@ -47,7 +54,9 @@ module tb_wf_ctrl_equiv;
     parameter integer MAXCYC   = 2000000;
     parameter integer NJOBS    = 3000;    // SOURCE = 0: HIDDEN messages to send
     parameter integer FDLY     = 4;       // the DUT may latch a header-position fault this many cycles later
-    parameter integer RSTD     = 1;       // the DUT releases reset this many cycles after rst_n (the reference is fed it delayed)
+    parameter integer RSTD     = 1;
+    parameter integer STREAM   = 0;       // 1: a real VM model, and (SOURCE = 0) the outbound flit stream and the
+                                          //    core-start stream must match the reference's in order (not lockstep)       // the DUT releases reset this many cycles after rst_n (the reference is fed it delayed)
 
     reg clk = 1'b0, rst_n = 1'b0;
     always #0.5 clk = ~clk;
@@ -109,14 +118,35 @@ module tb_wf_ctrl_equiv;
         reg [RSTD:0] rsh = 0;
         always @(posedge clk) rsh <= {rsh[RSTD-1:0], rst_n};
         wire rst_n_ref = rsh[RSTD-1];
+        wire link_busy, link_acc;   // OT_WFC_LINK_REG: flits inside the registered link / taken by the DUT logic
         if (gi == 0) begin : r
             ot_rom_pkg_ctrl_wf #(.WAVE(1), .WIN(WIN), .PKG_ID(0), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA),
                 .USER_W(USER_W), .MAXU(MAXU), .KVW(KVW), .XWORDS(XWORDS), .RXWORDS(RXWORDS), .SOURCE(SOURCE),
                 .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1)) c (.rst_n(rst_n_ref), .*);
+        end else if (`OT_WFC_LINK_REG) begin : d
+            wire l_in_valid, l_in_ready, l_in_last, l_out_valid, l_out_ready, l_out_last;
+            wire [FLIT-1:0] l_in_data, l_out_data;
+            ot_rom_pkg_ctrl_wfc_ltx #(.W(FLIT + 1)) atx (.clk(clk), .rst_n(rst_n),
+                .c_valid(in_valid), .c_ready(in_ready), .c_data({in_last, in_data}),
+                .l_valid(l_in_valid), .l_ready(l_in_ready), .l_data({l_in_last, l_in_data}));
+            `WF_DUT #(.WAVE(1), .WIN(WIN), .PKG_ID(0), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA),
+                .USER_W(USER_W), .MAXU(MAXU), .KVW(KVW), .XWORDS(XWORDS), .RXWORDS(RXWORDS), .SOURCE(SOURCE),
+                .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1)) c (
+                .in_valid(l_in_valid), .in_ready(l_in_ready), .in_data(l_in_data), .in_last(l_in_last),
+                .out_valid(l_out_valid), .out_ready(l_out_ready), .out_data(l_out_data), .out_last(l_out_last), .*);
+            ot_rom_pkg_ctrl_wfc_lrx #(.W(FLIT + 1), .D(4)) arx (.clk(clk), .rst_n(rst_n),
+                .l_valid(l_out_valid), .l_ready(l_out_ready), .l_data({l_out_last, l_out_data}),
+                .c_valid(out_valid), .c_ready(out_ready), .c_data({out_last, out_data}));
+            // flits inside the registered link (both directions), for the quiescence test
+            assign link_busy = atx.v || c.g_link_reg.u_rx.pv || c.g_link_reg.u_rx.cnt != 0 || c.g_link_reg.u_tx.v || arx.pv || arx.cnt != 0;
+            assign link_acc = c.g_link_reg.u_rx.c_valid && c.lk_in_ready;   // a flit taken by the DUT's controller logic
         end else begin : d
             `WF_DUT #(.WAVE(1), .WIN(WIN), .PKG_ID(0), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA),
                 .USER_W(USER_W), .MAXU(MAXU), .KVW(KVW), .XWORDS(XWORDS), .RXWORDS(RXWORDS), .SOURCE(SOURCE),
                 .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1)) c (.*);
+        end
+        if (!(gi == 1 && `OT_WFC_LINK_REG)) begin : nb
+            assign link_busy = 1'b0; assign link_acc = in_valid && in_ready;
         end
         // The reference's combinational ready may be high while its actual
         // delayed reset is held. It cannot admit a flit on that edge. Qualify
@@ -131,9 +161,36 @@ module tb_wf_ctrl_equiv;
                                tok_valid ? tok_id : {NW{1'b0}}, users_done, 1'b0,
                                wf_issue, wf_reject, wf_squash};   // proto_fault: checked below (FDLY)
 
+        // ---- vector memory model (STREAM), and the in-order stream digests
+        reg [FLIT-1:0] vm [0:(1<<VWA)-1];
+        initial for (int k = 0; k < (1<<VWA); k++) vm[k] = {FLIT/32{h32(k, 0, 32'h5A)}};
+        reg [63:0] out_dig = 0, st_dig = 0;
+        integer out_cnt = 0, st_cnt = 0;
+        integer in_cnt = 0;                     // inbound flits accepted (identical message stream per instance)
+        always @(posedge clk) if (rst_n && ((gi == 1 && `OT_WFC_LINK_REG) ? link_acc : (in_valid && admission_ready))) in_cnt <= in_cnt + 1;
+        function automatic [63:0] mix(input [63:0] d, input [FLIT-1:0] v);
+            reg [63:0] x;
+            begin
+                x = d;
+                for (int k = 0; k < FLIT / 32; k++) x = (x ^ {32'd0, v[k*32 +: 32]}) * 64'h100000001B3 + 64'h9E3779B97F4A7C15;
+                mix = x;
+            end
+        endfunction
+        always @(posedge clk) if (rst_n) begin
+            if (out_valid && out_ready) begin out_dig <= mix(out_dig, {out_data[FLIT-2:0], out_last}); out_cnt <= out_cnt + 1; end
+            if (core_start) begin
+                st_dig <= mix(st_dig, FLIT'({core_token, core_pos, core_user, kv_base}));
+                st_cnt <= st_cnt + 1;
+            end
+        end
+
         // ---- core: level done, per-job latency
         integer cbusy = 0;
         always @(posedge clk) begin
+            if (STREAM) begin
+                if (vm_re) vm_rq <= vm[vm_raddr];
+                if (vm_we) vm[vm_waddr] <= vm_wdata;
+            end else
             vm_rq <= {FLIT/32{h32(vm_raddr, cyc, 32'h77)}};
             if (core_start) begin
                 core_done <= 1'b0;
@@ -263,29 +320,46 @@ module tb_wf_ctrl_equiv;
         if (mism < 4) $display("EQUIV FAIL lockstep cyc %0d: outputs differ (xor %h)", cyc, o0 ^ o1);
     end
 
+    localparam integer QUIET = 256;
+    integer quiet = 0;
+    always @(posedge clk)
+        quiet <= (sent_n[0] >= NJOBS && sent_n[1] >= NJOBS && !g[0].in_valid && !g[1].in_valid
+                  && !g[0].core_busy && !g[1].core_busy && !g[0].out_valid && !g[1].out_valid && !g[1].link_busy) ? quiet + 1 : 0;
     integer fault_cyc [0:1];
-    initial begin fault_cyc[0] = 0; fault_cyc[1] = 0; end
+    integer fault_flit [0:1];
+    initial begin fault_cyc[0] = 0; fault_cyc[1] = 0; fault_flit[0] = 0; fault_flit[1] = 0; end
     always @(posedge clk) begin
-        if (g[0].proto_fault && fault_cyc[0] == 0) fault_cyc[0] = cyc;
-        if (g[1].proto_fault && fault_cyc[1] == 0) fault_cyc[1] = cyc;
+        if (g[0].proto_fault && fault_cyc[0] == 0) begin fault_cyc[0] = cyc; fault_flit[0] = g[0].in_cnt; end
+        if (g[1].proto_fault && fault_cyc[1] == 0) begin fault_cyc[1] = cyc; fault_flit[1] = g[1].in_cnt; end
     end
+    // STREAM (not lockstep): the fault must latch on the same inbound message -- within FDLY accepted flits of
+    // the reference's (both see the same message stream; their cycles differ)
     wire fault_ok = (fault_cyc[0] == 0 && fault_cyc[1] == 0) ||
-                    (fault_cyc[0] != 0 && fault_cyc[1] >= fault_cyc[0] && fault_cyc[1] <= fault_cyc[0] + FDLY);
+                    (fault_cyc[0] != 0 && fault_cyc[1] != 0 &&
+                     ((STREAM && !LOCKSTEP) ? (fault_flit[1] >= fault_flit[0] && fault_flit[1] <= fault_flit[0] + FDLY)
+                                            : (fault_cyc[1] >= fault_cyc[0] && fault_cyc[1] <= fault_cyc[0] + FDLY)));
 
     initial begin
         wait (rst_n);
-        while (cyc < MAXCYC && !(SOURCE ? (fin_cyc[0] != 0 && fin_cyc[1] != 0)
-                                        : (sent_n[0] >= NJOBS && sent_n[1] >= NJOBS && !g[0].in_valid && !g[1].in_valid
-                                           && !g[0].core_busy && !g[1].core_busy && !g[0].out_valid && !g[1].out_valid)))
+        // SOURCE = 0: quiescent (nothing to send, no core busy, no outbound flit) for QUIET consecutive cycles --
+        // a received job between its last flit and its core start is not busy yet
+        while (cyc < MAXCYC && !(SOURCE ? (fin_cyc[0] != 0 && fin_cyc[1] != 0) : (quiet >= QUIET)))
             @(posedge clk);
         repeat (50) @(posedge clk);
+        if (STREAM)
+            $display("EQUIV FAULTFLIT %0d/%0d", fault_flit[0], fault_flit[1]);
+        if (STREAM)
+            $display("EQUIV STREAM out=%0d/%0d dig=%h/%h starts=%0d/%0d dig=%h/%h", g[0].out_cnt, g[1].out_cnt,
+                     g[0].out_dig, g[1].out_dig, g[0].st_cnt, g[1].st_cnt, g[0].st_dig, g[1].st_dig);
         $display("EQUIV STATS source=%0d lockstep=%0d maxu=%0d users=%0d cycles=%0d fin=%0d/%0d issues=%0d/%0d rejects=%0d/%0d squashed=%0d/%0d committed_ok=%0d/%0d err=%0d/%0d fault_cyc=%0d/%0d mism=%0d",
                  SOURCE, LOCKSTEP, MAXU, USERS, cyc, fin_cyc[0], fin_cyc[1], iss_n[0], iss_n[1], rej_n[0], rej_n[1],
                  sq_n[0], sq_n[1], ok_n[0], ok_n[1], err_n[0], err_n[1], fault_cyc[0], fault_cyc[1], mism);
         if (mism != 0 || err_n[0] != 0 || err_n[1] != 0 || !fault_ok ||
             (SOURCE && (fin_cyc[0] == 0 || fin_cyc[1] == 0 || fault_cyc[0] != 0 ||
                         ok_n[0] != USERS * (PLEN + GEN - 1) || ok_n[1] != USERS * (PLEN + GEN - 1))) ||
-            (!SOURCE && iss_n[0] != iss_n[1]))
+            (!SOURCE && iss_n[0] != iss_n[1]) ||
+            (STREAM && !SOURCE && (g[0].out_cnt != g[1].out_cnt || g[0].out_dig != g[1].out_dig ||
+                                   g[0].st_cnt != g[1].st_cnt || g[0].st_dig != g[1].st_dig || g[0].out_cnt == 0)))
             begin
                 $display("EQUIV FAIL");
                 $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");

@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.native_sm.payload.v1",
+  "nc": 8,
+  "provenance": "Recovered original dshbm_sm_pq_seq stress fixture generated NC8 (prior arithmetic gate active1); full stored inputs retained. Not released checkpoint or production installation.",
+  "artifacts": {
+    "seq.hex": {
+      "path": "/tmp/codex-claude-recovery-20261007/hbm-sm/gate_preflight_current/positive/stress_haz1_g0_smh_a1/seq.hex",
+      "sha256": "217bae8ead442cc2bce48249b909346c9fd7371f7feb5f4288cd8d7188113a92"
+    },
+    "lines.hex": {
+      "path": "/tmp/codex-claude-recovery-20261007/hbm-sm/gate_preflight_current/positive/stress_haz1_g0_smh_a1/lines.hex",
+      "sha256": "542ae239ee22cf3f3df495a84795201a0f91a982eb854d8069d902dc0dabd51c"
+    },
+    "x.hex": {
+      "path": "/tmp/codex-claude-recovery-20261007/hbm-sm/gate_preflight_current/positive/stress_haz1_g0_smh_a1/x.hex",
+      "sha256": "c3a0ae29622fd0dfd035e719ae1e05c1c42522a4b3bc8f1230aa2f91352cc063"
+    }
+  }
+}

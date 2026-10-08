@@ -1,0 +1,12 @@
+CLS     -12.0   122 on.wq_data[*]$_DFF_P_/QN -> on.column[*].bank[*].u_bank/wd[*]$_DFF_P_/D
+CLS      12.0    93 on.sel_code2[*][*]$_DFF_P_/QN -> on.cd6[*][*]$_DFF_P_/D
+CLS      12.1   312 on.sel_code[*][*]$_DFF_P_/QN -> on.sel_code2[*][*]$_DFF_P_/D
+CLS      12.6    13 on.wq_row_a[*]$_DFF_P_/QN -> on.column[*].bank[*].u_bank/waddr_a[*]$_DFF_P_/D
+CLS      14.2    76 on.cd6[*][*]$_DFF_P_/QN -> rom_rd[*]$_DFF_PN0_/D
+CLS      15.8    50 on.u_row_b/q[*]$_DFF_P_/QN -> on.column[*].bank[*].u_bank/u_addr_b/q[*]$_DFF_P_/D
+CLS      16.2    19 on.rq_row_a[*][*]$_DFF_P_/QN -> on.column[*].bank[*].u_bank/raddr_a[*]$_DFF_P_/D
+CLS      17.1    16 on.column[*].bank[*].u_bank/cs_a[*]$_DFF_P_/QN -> on.column[*].bank[*].u_bank/cs2_a[*]$_DFF_P_/D
+CLS      18.2   298 on.column[*].bank[*].u_bank/cap_code[*]$_DFF_P_/QN -> on.sel_code[*][*]$_DFF_P_/D
+CLS      18.9     3 on.wq_row_a[*]$_DFF_P_/QN -> on.column[*].bank[*].u_bank/wsel_a[*]$_DFF_P_/D
+CLS      19.1     1 on.corr6[*]$_DFF_PN0_/QN -> rd_corrected[*]$_DFF_PN0_/D
+CLS      19.2    41 on.c[*]$_DFF_PN0_/QN -> on.u_ctl_b/q[*]$_DFF_PN0_/D

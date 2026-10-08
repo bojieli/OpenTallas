@@ -1,0 +1,32 @@
+{
+  "source_base": "bdb00a66a",
+  "scope": "DS S81 geometry/model correction only; --geometry-fix opt-in",
+  "baseline": {
+    "instance_lef_dimension_mismatches": 293,
+    "k16_pin_clashes": 49,
+    "python_overlaps": 0
+  },
+  "pin_model": {
+    "bank_height_um": 6.456,
+    "old_k16_pin_depth_um": 3.072,
+    "required_gap_um": 0.384,
+    "old_gap_um": 0.312,
+    "new_max_pin_depth_um": 2.152,
+    "new_gap_um": 2.152,
+    "k1_pins_changed": false,
+    "layers_changed": false
+  },
+  "station_model": {
+    "rule": "Use stn_dims for the actual joined-lane signature; retain conservative old occupancy reservation. Square footprints only for relays with faces chosen after placement.",
+    "added_stages": 0,
+    "new_compute": false,
+    "new_ports": false,
+    "new_mux": false,
+    "new_fanout": false,
+    "rate_claim": null,
+    "full_shape_recomposition": "geometry_gate writes plan_record_r8 including area, chain inventories and field round trip before physical launch"
+  },
+  "physical_closed": false,
+  "adopted": false,
+  "collective_pricing": "Use same channel and same reference after physical fix. No blanket +131 zero-latency/board-baseline adjustment. Latest central reference 4463f66d4; no ledger edit in this step."
+}

@@ -28,7 +28,7 @@ OWNER_CDC_LEAF_CANDIDATE = dict(
 
 def prepare(job, source, numerical_top, provider, output,
             consumer_prefix=None, backing_member=None, backend_dependencies=(),
-            cdc_consumer_join=False, landing_rsel=0):
+            cdc_consumer_join=False, landing_rsel=0, parallel_transport=False):
     if not numerical_top.is_file() or not provider.is_file():
         raise ValueError('genuine owner numerical top and provider source required')
     module = re.search(r'^module\s+(\w+)', numerical_top.read_text(), re.M)
@@ -95,6 +95,18 @@ def prepare(job, source, numerical_top, provider, output,
             raise ValueError('actual owner protected READ_RSEL implementation missing')
         params = [v for v in params if not v.startswith('-GLANDING_RSEL=')]
         params += ['-GLANDING_RSEL=1']
+    if parallel_transport:
+        if not cdc_consumer_join or landing_rsel != 1:
+            raise ValueError('parallel protected P0 requires explicit corrected owner RSEL1 join')
+        params = [v for v in params if not v.startswith('-GSAME_CYCLE_GO=')]
+        params += ['-GSAME_CYCLE_GO=1']  # early-go: GO accepted with its own descriptor
+        parallel_leaf = source/'rtl/hdc/kv/ot_qwen_s4_parallel_protected_pc.sv'
+        if not parallel_leaf.is_file():
+            raise FileNotFoundError('actual owner sector-protected RSEL1 leaf required: '+str(parallel_leaf))
+        paths = list(dict.fromkeys([*paths, parallel_leaf,
+            exp/'ot_qwen_p0_parallel_bank.sv', exp/'ot_qwen_p0_parallel_transport_context.sv']))
+        params = [v for v in params if not v.startswith('-GPARALLEL_TRANSPORT=')]
+        params += ['-GPARALLEL_TRANSPORT=1']
     # The authority's literal public macro and hierarchy directives are retained.
     configs = [job/'reuse/gen/public.vlt', job/'reuse/gen/hier.vlt']
     for path in configs:
@@ -117,6 +129,7 @@ def prepare(job, source, numerical_top, provider, output,
                 '--prefix', 'Vdie', '--mod-prefix', 'Vdie', '--threads', '1',
                 '--Mdir', str(obj), '-Wno-fatal', '-Wno-TIMESCALEMOD',
                 '-I/srv/opentallas-scratch/claude/fullbw-hbm/src4/rtl/hdc',
+                '-I'+str(source/'rtl/hdc/kv'),  # ot_qwen_kv_map_m.svh (KV_MAP option M, default off)
                 *hierarchy, *params, *map(str, paths+configs)]
     # Compile this top only. VM_HIER_LIBS is supplied on make's command line,
     # pointing to completed archives, so no retained leaf Makefile is invoked.
@@ -140,6 +153,8 @@ def prepare(job, source, numerical_top, provider, output,
                   consumer_prefix=consumer_prefix or top+'__DOT__u_join__DOT__u_consumer__DOT__',
                   backing_member=backing_member or top+'__DOT__u_numeric__DOT__mem',
                   backend_dependencies=list(map(str, backend_dependencies)),
+                  parallel_transport=bool(parallel_transport),
+                  transport_rate_scope=('parallel protected source candidate; exact gate/physical context pending' if parallel_transport else 'serialized protected numerical vehicle only; publish no P0 rate'),
                   cdc_consumer_join=bool(cdc_consumer_join),
                   landing_rsel=int(landing_rsel),
                   cdc_binding_scope=('Implemented protected full504 r9 read with actual warm/ACK ports; parent physical route unqualified'
@@ -169,7 +184,8 @@ if __name__ == '__main__':
                    help='Prepare explicit protected port adapter option; does not qualify raw owner CDC')
     p.add_argument('--landing-rsel', type=int, choices=[0, 1], default=0,
                    help='Actual implemented protected full504 owner r9 read option; physical qualification separate')
+    p.add_argument('--parallel-transport', action='store_true', help='Actual32 independent protectedPC return lanes/stack; no full build before mechanism gate')
     a = p.parse_args()
     r = prepare(a.authority_job, a.source_root, a.numerical_top, a.provider, a.output,
-                a.consumer_prefix, a.backing_member, a.backend_dependency, a.cdc_consumer_join, a.landing_rsel)
+                a.consumer_prefix, a.backing_member, a.backend_dependency, a.cdc_consumer_join, a.landing_rsel, a.parallel_transport)
     print(json.dumps(dict(status=r['status'], top=r['top'], version=r['version'])))

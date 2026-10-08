@@ -83,6 +83,33 @@
   "area_um2": 562680.012,
   "basis": "half of the 112G SerDes strip (die assembly 1.0 x 18.0 mm) at 1/4: the package-pair collective lanes, or the stage-hop lanes",
   "clk_to_q_ns": 0.218,
+  "corner_libs": {
+    "method": "HBM3E PHY abstract corner method (tools/mem_compiler/hbm_phy_gen.py: flop clock-to-Q / setup + 3 FO4, hold + FO4, slew 1.5 FO4 per calibrated corner) applied as corner / TT ratios to this TT view",
+    "ratios": {
+      "ff": {
+        "clk2q": 0.771295,
+        "hold": 0.880522,
+        "setup": 0.837361,
+        "slew": 0.80905,
+        "temperature": 0.0,
+        "voltage": 0.77
+      },
+      "ss": {
+        "clk2q": 1.367688,
+        "hold": 1.362413,
+        "setup": 1.342682,
+        "slew": 1.291724,
+        "temperature": 100.0,
+        "voltage": 0.63
+      }
+    },
+    "source": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.json",
+    "tool": "tools/s81_pdie_corner_libs.py",
+    "views": {
+      "ot_pdie_serdes_ff.lib": "22fc20158284b7ace4afc144673f9f33280a626e2406a0fbb375fe39ea550fe0",
+      "ot_pdie_serdes_ss.lib": "b69eec6fe924bb09a078d81a817d0c4df52d2f5bc6b3a39b50204499a1ecca48"
+    }
+  },
   "height_um": 2250.216,
   "kind": "link",
   "name": "ot_pdie_serdes",

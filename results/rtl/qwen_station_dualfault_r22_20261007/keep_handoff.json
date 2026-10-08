@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.qwen_station_dualfault_keep_handoff.v1",
+  "prior_patch": "station-dualfault.patch",
+  "model_commit": "d1a33a905cb9d75413085f960d8bb2bb92bb005d",
+  "change": "Attach keep/dont_touch to payload processes, propagated onto sequential cells by production Yosys0.68",
+  "functional_change": false,
+  "latency_change": 0,
+  "head_payload_FF": 1524,
+  "head_fault_FF": 8,
+  "evidence": "All four shapes have distinct ASAP7 sequential Q drivers; three stripped-attribute negatives fail retention; eight exact positives/five negatives and48 state upsets repeated on changed source",
+  "generic_synthesis_copy_blocker_resolved": true,
+  "full_ORFS_mapping_and_post_repair_retention_pending": true,
+  "full_system_adoption": false,
+  "remaining": [
+    "Forward control/data integrity",
+    "Root publication guard",
+    "Die reset/clock distribution",
+    "Boundary timing, actual route and post-repair retention"
+  ],
+  "reproduction": "python3 tools/qwen_station_dualfault_mapped_retention.py --yosys /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys --out /tmp/station-production-retention-new"
+}

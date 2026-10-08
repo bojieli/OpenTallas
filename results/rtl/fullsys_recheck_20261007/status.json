@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.fullsys_recheck.status.v1",
+ "updated": "2026-10-07T08:35-07:00",
+ "results": [
+  {"vehicle": "DS field full plan, QS=5/QM=5 PQ1 q-element (ba69369aa, adoption pending)", "exact": true, "detail": "59/59 nodes, 3,792 phase + 5,504 node runs, 249,920 rows", "cycles": "40,058 -> 40,257 (+0.50 %) vs last full plan QM=2", "evidence": "ds_field_qs5/"},
+  {"vehicle": "DS field full plan, adopted bf_merge_ksplit binding (Claude:bf-double full_k, qelem10 QM=2)", "exact": true, "detail": "19,056 region runs, 0 failed", "evidence": "ot-epyc1tb /srv/opentallas-scratch/claude/bf-double/run_full.out (owner bf-double)"},
+  {"vehicle": "DS SU crossing, adopted meso d8g1 + PINREG", "exact": true, "detail": "64/64 phases", "cycles": "F2S worst 5,503.5 -> 8,003.5 ps, S2F 4,947.9 -> 7,447.9 ps (+2.5 ns = +3 fast cycles each way); not in the closure-cost ledger", "evidence": "ds_su_xing/"},
+  {"vehicle": "HBM captured CP+c12 stage, SU margin (CTL12 2 / ROPI 1 / ROUT 2 / RKC 1, d773c1033)", "exact": true, "cycles": "DS1M 521 -> 551 (+30), Qwen8K 400 -> 429 (+29)", "evidence": "hbm_c12_captured_stage/"},
+  {"vehicle": "HBM captured CP+c12 stage, + RHALF (RHPAR 0 = campaign setting)", "exact": false, "detail": "Qwen8K contract fault at cycle 76 (drain/CPL identity); reported to HBM SU via main"},
+  {"vehicle": "HBM captured CP+c12 stage, + RHALF RHPAR 1", "exact": true, "cycles": "DS1M 697 (+176), Qwen8K 567 (+167)"},
+  {"vehicle": "HBM minimum parent DS1M / Qwen8K (SU CP margin c89ee8582)", "exact": null, "detail": "PENDING: resumed build on EPYC3 /srv/opentallas-scratch/claude/tk-hbm-harvest (fsr/ds1m.sh -> fsr/after.sh runs base / wrong_release / corrupt_gold for DS1M then Qwen8K; fsr/summary.txt on completion; fsr/memguard.sh kills own jobs below 80 GB MemAvailable). Old build had a file list missing 4 formatter modules (fixed)."}
+ ],
+ "orphans": [
+  {"job": "item2 service->PQ full bit-RTL (PVE1)", "decision": "nothing running; already harvested PASS 6/6 (main 31c69e24d)"},
+  {"job": "Franklin GU->SwiGLU/W2 live (EPYC1)", "decision": "HARVESTED: finished 06:13 PT rc 0, PASS GUrows 9,216 spans 768, 5,463,752 cyc (pre-closure sources)", "evidence": "orphans/franklin_gu_swiglu_w2/"},
+  {"job": "noether TP96 producer Verilator build (EPYC1)", "decision": "KILLED: 27 h, 126 GB, one cc1plus 26 h on a single TU; index path untouched by closure redesigns; rank-0 runtime + conversion + store PASS already on main"},
+  {"job": "hbm-norm-length sim (EPYC2)", "decision": "KILLED: 30 h CPU, empty run log; bench has unbounded waits and no watchdog (hang); norm VM boundary PASS already in results/rtl/hbm_norm_vm_boundary_20261006"}
+ ]
+}

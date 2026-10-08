@@ -1,0 +1,100 @@
+{
+  "name": "qwen_slab_m3_m8_archive_6a36be202",
+  "block": "ot_qwen_slab_port_group_m3_m8",
+  "owner": "Codex:qwen-elements",
+  "purpose": "Structural LAT10 KCP4 OREG1 successor, M8 bw/tw strip, current die90/50 and80fF/150ps. Preserve old m3 exit137; no postroute macro ECO. Archive dependency recovery of failed cc0db65b2 job; no RTL or timing change.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128",
+    "localhost"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 20,
+  "source": {
+    "branch": "codex/qwen-slab-m3-takeover-20261007",
+    "commit": "6a36be202",
+    "extra_paths": [
+      "src",
+      "configs",
+      "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json",
+      "results/rtl/hdc_v41_sinkhorn_campaign.json",
+      "results/rtl/hdc_v41_tselect_scale_campaign.json",
+      "results/rtl/hdc_v41_cand_campaign.json",
+      "results/speculative/v41_flash_dspark_onpolicy_greedy.json",
+      "results/arch/arch_budget_v41.json",
+      "results/arch/qwen_gpu_calibration.json",
+      "results/rtl/rom_stage_power_gating_20261004/verdict.json",
+      "results/arch/v41_die_assembly.json",
+      "results/arch/v41_die_placement.json",
+      "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "slab_exact",
+        "cmd": "python3 tools/qwen_slab_m3_takeover.py bench --out {RUN}/bench_positive",
+        "expect": "pass",
+        "pass_regex": "PASS: 1505 requests, 1505 results bit-exact",
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "slab_bad_lead",
+        "cmd": "python3 tools/qwen_slab_m3_takeover.py bench --negative --out {RUN}/bench_negative",
+        "expect": "fail",
+        "fail_regex": "EQUIVALENCE_TERMINAL_FAIL",
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "No Qwen budget sheet; in-run corner-exact reference-pin hook uses propagated res_q clock at CTS/GRT/DRT. Explicit single-corner signoff uses measured propagated arrival; no copied insertion."
+    },
+    "route": {
+      "cmd": "set -e\n[ \"$(docker image inspect openroad/orfs:latest --format '{{.Id}}')\" = \"$(docker image inspect openroad/orfs:asap7lock --format '{{.Id}}')\" ]\npython3 tools/qwen_slab_m3_takeover.py route --out {RUN}/routes/{LABEL} --name {LABEL} --threads 16",
+      "threads": 16,
+      "peak_ram_gb": 20,
+      "needs": [
+        "orfs",
+        "yosys"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record\ncp {RUN}/routes/{LABEL}/*.json {RUN}/record/\ncp {RUN}/bench_positive/result.json {RUN}/record/bench_positive.json\ncp {RUN}/bench_negative/result.json {RUN}/record/bench_negative.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_slab_structural/signoff833_die.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8"
+    ]
+  },
+  "hold_eco": {
+    "enabled": false,
+    "reason": "Macro-output-net-safe algorithm not qualified; retain original SS/FF ROM read/capture timing and failure evidence."
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "No Qwen budget sheet; master contract implemented directly using measured corner reference with90ps setup skew/50ps hold skew,80fF load/150ps slew."
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/qwen_elements_takeover_20261007/slab_m3_m8_archive_route"
+    }
+  ],
+  "cycles_added": 4,
+  "merge_target": null
+}

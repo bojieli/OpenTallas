@@ -1,0 +1,32 @@
+{
+  "exit_code": 0,
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "--entrypoint",
+    "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+    "-v",
+    "/srv/opentallas-scratch/codex/w2-current-station-8d2fee3eb/route-r2/work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_asap7_Descartes_CURRENT_NO2_H55/base:/input:ro",
+    "-v",
+    "/srv/opentallas-scratch/codex/w2-current-station-8d2fee3eb/route-r2/work/orfs/reports/asap7/opentallas_ot_hbm_native_frame_station_asap7_Descartes_CURRENT_NO2_H55/base:/reports:ro",
+    "-v",
+    "/srv/opentallas-scratch/codex/w2-current-station-8d2fee3eb/route-r2/terminal_extract/grt_diagnosis_r1:/output",
+    "openroad/orfs:asap7lock",
+    "-python",
+    "-exit",
+    "-no_init",
+    "-threads",
+    "1",
+    "/output/diagnose_failed_route.py"
+  ],
+  "files_sha256": {
+    "overflow_regions.json": "55d04afc128f1bde2a5f573c112e9eb41ff15c3fb171b2640bab6ce1f3848e17",
+    "boundary_pins.json": "1c77f3d3148397cec7d248a33736a070f14197cc9a7692d666dcf82d38b26928",
+    "root_buffer_trees.json": "236c7c5ab167ec733761ea2407834162d4c8ac470a447d7872e2f3b00987bc1c",
+    "diagnose.log": "ed69625897a7d5770e4746f8c10a4e23167b59280ae7c936190108e71b1a86f0",
+    "diagnose_failed_route.py": "219ee5b4b19d940a007edcec9e42bda72e4a0bc619e3a085c996c9e83495fbeb",
+    "layer_overflow_bins.json": "b135231affd4c959bfe715a0001fd556ca20ccaea0200e89c7dd1aff240c35c9",
+    "diagnosis.json": "cae5682e031dcdb4e3a71b4445ebf4b09631dba9687601180f40bee25ee478a0"
+  }
+}

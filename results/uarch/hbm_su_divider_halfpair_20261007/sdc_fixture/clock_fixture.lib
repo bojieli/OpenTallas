@@ -1,0 +1,17 @@
+library (test) {
+input_threshold_pct_rise : 50;
+output_threshold_pct_rise : 50;
+slew_lower_threshold_pct_rise : 20;
+slew_upper_threshold_pct_rise : 80;
+input_threshold_pct_fall : 50;
+output_threshold_pct_fall : 50;
+slew_lower_threshold_pct_fall : 20;
+slew_upper_threshold_pct_fall : 80;
+ time_unit  :  "1ps"; voltage_unit  :  "1V"; current_unit  :  "1mA"; capacitive_load_unit (1,pf); leakage_power_unit : "1nW";
+ cell (ICGx1_ASAP7_75t_R) {area : 1;
+ pin (CLK) {direction : input;capacitance : 0.001;clock : true;}
+ pin (ENA) {direction : input;capacitance : 0.001;}
+ pin (SE) {direction : input;capacitance : 0.001;}
+ pin (GCLK) {direction : output;function : "CLK &  (ENA | SE)";}
+ }
+}

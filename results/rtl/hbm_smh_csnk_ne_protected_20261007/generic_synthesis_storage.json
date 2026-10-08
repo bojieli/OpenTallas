@@ -1,0 +1,144 @@
+{
+  "schema": "opentallas.hbm.smh.csnk_ne_storage.v1",
+  "status": "pass",
+  "scope": "generic local Yosys synth/ABC full W42 depth9 sink; actual ORFS technology mapped netlist still must pass",
+  "tool": "Yosys 0.9 (git sha1 1979e0b)",
+  "source_sha256": "cc6525d3f81f160a136bae9fc15d951174625209e7fbd8fcafbd145543ec2d39",
+  "command": {
+    "cmd": [
+      "yosys",
+      "-Q",
+      "-T",
+      "-p",
+      "read_verilog -sv /tmp/codex-claude-recovery-20261007/hbm-sm/csnk_ne_synth_a2/dependencies.sv rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv; chparam -set W 42 -set PK 1 -set PRK 2 -set DEPTH 9 ot_hbm_accel_smh_csnk_ne; synth -top ot_hbm_accel_smh_csnk_ne -flatten; write_json /tmp/codex-claude-recovery-20261007/hbm-sm/csnk_ne_synth_a2/netlist.json"
+    ],
+    "rc": 0
+  },
+  "dependency_extraction": [
+    {
+      "path": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "module": "ot_hbm_accel_smv_chain",
+      "whole_source_sha256": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+      "module_sha256": "0bfd8038fa0f81b0d87f46fdb42b743ef2c2a8b7de248357240cad77892e6efb"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "module": "ot_hbm_accel_smv_pipe",
+      "whole_source_sha256": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+      "module_sha256": "4f9f376a77f597f167fa952ca4b607a26701a278a59cf6d20c2e5d87fa23b1f5"
+    },
+    {
+      "path": "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+      "module": "ot_hbm_accel_bc_kreg",
+      "whole_source_sha256": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+      "module_sha256": "19b11ed21d1adda509753fcffe45fb5cbf753e244e6ddffddf9a10864af9c7f9"
+    }
+  ],
+  "netlist_sha256": "bc9b4b49a72d89e0ebc42d615ac9ea691d34ff1ea0bc7532c8d7fbb84d729635",
+  "rails": {
+    "nonempty": {
+      "net": {
+        "hide_name": 0,
+        "bits": [
+          94
+        ],
+        "attributes": {
+          "dont_touch": 1,
+          "keep": 1,
+          "src": "rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv:34"
+        }
+      },
+      "drivers": {
+        "$auto$simplemap.cc:496:simplemap_adff$699": {
+          "hide_name": 1,
+          "type": "$_DFF_PN0_",
+          "parameters": {},
+          "attributes": {
+            "src": "rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv:40"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output",
+            "R": "input"
+          },
+          "connections": {
+            "C": [
+              2
+            ],
+            "D": [
+              962
+            ],
+            "Q": [
+              94
+            ],
+            "R": [
+              3
+            ]
+          }
+        }
+      }
+    },
+    "empty": {
+      "net": {
+        "hide_name": 0,
+        "bits": [
+          93
+        ],
+        "attributes": {
+          "dont_touch": 1,
+          "keep": 1,
+          "src": "rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv:35"
+        }
+      },
+      "drivers": {
+        "$auto$simplemap.cc:496:simplemap_adff$698": {
+          "hide_name": 1,
+          "type": "$_DFF_PN1_",
+          "parameters": {},
+          "attributes": {
+            "src": "rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv:40"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output",
+            "R": "input"
+          },
+          "connections": {
+            "C": [
+              2
+            ],
+            "D": [
+              964
+            ],
+            "Q": [
+              93
+            ],
+            "R": [
+              3
+            ]
+          }
+        }
+      }
+    }
+  },
+  "cell_counts": {
+    "$_ORNOT_": 11,
+    "$_ANDNOT_": 20,
+    "$_XNOR_": 3,
+    "$_NOT_": 5,
+    "$_NOR_": 3,
+    "$_MUX_": 813,
+    "$_XOR_": 20,
+    "$_NAND_": 2,
+    "$_OR_": 25,
+    "$_AND_": 1,
+    "$_OAI3_": 1,
+    "$_AOI3_": 1,
+    "$_DFF_P_": 462,
+    "$_DFF_PN0_": 19,
+    "$_DFF_PN1_": 2
+  },
+  "technology_mapped_independent_storage_verified": false
+}

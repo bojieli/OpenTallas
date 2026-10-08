@@ -1,0 +1,2 @@
+BURST_PASS vectors=80 payload_bytes=81920 II=1 return_to_consume_edges=3
+PASS full8192-bit II1 score40/PV32/score8 bursts, single-bit correction, UE/reset/identity negatives

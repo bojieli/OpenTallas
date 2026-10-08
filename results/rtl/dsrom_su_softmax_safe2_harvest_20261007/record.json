@@ -1,0 +1,113 @@
+{
+  "observed_utc": "2026-10-07T10:56:25.165032+00:00",
+  "base_commit": "d806a025405153bb486f230122ca409518abb578",
+  "scope": "SAFE2 NR2 divider equivalence and LPH16 full-head softmax bench; no physical qualification or adoption",
+  "candidate_source_state": "Inherited dirty RTL preserved byte-identical; candidate.patch reconstructs it over base_commit.",
+  "candidate_rtl_sha256": {
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "188ce9c0066a6791a864bee4134d8518365fba57270ccf2c145b1b022c32fe58",
+    "rtl/hdc/ot_hdc_fp32_f12.sv": "79d7ef8c1a35bf46a6f5e9f78400798141e23e829cc6422e6cfb75e91525087c",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "49bbc780aa24d1a5529e0ac9e549f4f5862167f20668f0bda830f97d4b879985",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv": "e5b292dfee16ff5c84744f8c25fd4085b33fd931520870e9cb0fc3452e31697b",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv": "58f79faa00f080d85add9dbe8f883c964778d154afa3a1366197a5709f82df34",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv": "6443328792e080f33dfeaad0a6c9b43e9bcdc0e84019aa80eba963f1678b0e64",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_exp6.sv": "6d65f82b9c5cb9c41455aced15442ae0208eaa4e08845edd8f8ff420e01e76e2",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax.sv": "d448dbea749329c3644e531f7ae2f28ab54fb45707d6b7152dd888bd9b635d9e",
+    "rtl/test/sim_hdc_prefix_beh.sv": "75c1a57d38d81da07b7ff70a37d6660c563ccfa6fa921edc53b21b68635b50b5",
+    "rtl/test/tb_dsrom_su_softmax.sv": "6acc418b47414dcae61bd28960b5ca607a6e48f3c69d2c92be43a5897d02340a"
+  },
+  "bench_sha256": "396503676ce1b8e9b827091d0dd927dd041480e40cab259664bf04f2ac41c426",
+  "divider": {
+    "status": "PASS",
+    "pairs": 10000000,
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "pairs_per_seed": 2500000,
+    "mismatches": 0,
+    "complete_drain": true,
+    "old_record_limit": "Original 40-cycle drain is shorter than NR2 pipeline; original checker also never failed on mismatches. Retained as history, superseded by complete-drain receipt.",
+    "checker_negatives": {
+      "short_drain": {
+        "returncode": 1,
+        "source_sha256": "0246819aeed1c278b8d027baed8211ca96b3286ea64ae2af19ebfb5b99fd989b"
+      },
+      "mismatch": {
+        "returncode": 1,
+        "source_sha256": "4f176b4fbd7c0a2d8ac447384f64ef761805d42d3b820ba361963c38932e2f89"
+      }
+    }
+  },
+  "softmax": {
+    "status": "PASS",
+    "exact_cases": 10,
+    "total_cases": 10,
+    "reused_existing_run": true,
+    "configuration": {
+      "lph": 16,
+      "lm": 9,
+      "la": 5,
+      "elm": 9,
+      "ela": 5,
+      "add6": 2,
+      "exp6": 1,
+      "expns": 2,
+      "denk": 1,
+      "margin": 1,
+      "safe": 2
+    },
+    "nodes_T640": {
+      "attn.max": 104,
+      "attn.exp": 225,
+      "attn.den": 120,
+      "attn.sink": 20,
+      "attn.normalize": 170
+    },
+    "normalize_delta_vs_SAFE1_cycles": 28,
+    "unified_model_adoption": false
+  },
+  "physical": {
+    "status": "UNQUALIFIED",
+    "required_SS_setup_ps": 15,
+    "required_FF_hold_ps": 15,
+    "required_DRC": 0,
+    "include_IO": true,
+    "staged_check_io_change": "Inherited staged FF-skip edit preserved, excluded from this commit and acceptance."
+  },
+  "remaining": [
+    "Price SAFE2 composed latency and area in unified model before physical build/adoption.",
+    "Obtain full-shape SS/FF +15 ps and DRC0 including IO; do not credit existing false-path/FF-skip tile recipes."
+  ],
+  "evidence_sha256": {
+    "tb_eq_short_drain_20261007.sv": "0246819aeed1c278b8d027baed8211ca96b3286ea64ae2af19ebfb5b99fd989b",
+    "fdiv_complete_20261007.sh": "6204d949214428a00aaa487fc54183e4156212b492d4b907345683a0f960aae6",
+    "fdiv_nr2.sh": "2b7b7b0777b55e24d3a67c1f1c780e09e7c365ca4463d9fa1ae1acfad65461bb",
+    "candidate.patch": "de16cfb71cc91999d08744c7fe6adf35526c69cb13dea9a691e86b471497e1ec",
+    "tb_eq_mismatch_20261007.sv": "4f176b4fbd7c0a2d8ac447384f64ef761805d42d3b820ba361963c38932e2f89",
+    "sim_safe.sh": "21297b9b6672a6ed0f46796b744aa93e4cf8e32d79003c23bc9a439a8cd5974d",
+    "src_safe/rtl/test/tb_dsrom_su_fdiv_f12_eq.sv": "4ae81442fc4542af605e5d370fa136f67009fe5a10ffcbef32729dde8b623caa",
+    "work/run_s2.log": "d69c8e9f362d2341b0a0b05b2b2d832b40af9085af641e9e5471b0ca8c6963d5",
+    "work/fdiv_complete_20261007.log": "c0bdd54dfe3e151794b458037728ff73b616611272b097c52ce0678b15aeba9b",
+    "work/fdiv_nr2_.log": "ebbf537f153c440d34dfbdb319b40a98d72eb9e946814fe1629a5c8973c51a9e",
+    "work/build_s2.log": "c367975349f626c15d976329d9d81d612d0d89957fde4c92d72bc07d5cac7353",
+    "work/checker_negative_20261007.json": "c1fcf8028d9cdbcc7305a5ad5d0a14bd3a769e0cef58e24bd8c399a842d389b2",
+    "work/checker_mismatch_20261007.log": "22c2225f806a8d02d75840cbcfce2e4e96649dc7c703d0485493d1a3796f3e99",
+    "work/fdiv_build_nr2_.log": "4cdbceedb12a6a7e1902aedf678c40b10504fc3bc7d310057c5de99fd65aa9a5",
+    "work/checker_short_drain_20261007.log": "52365935015f0f8e140b0aa6a52c00fe9a256b05903d16f81da5035dfda131cd",
+    "work/run_lph16s1.json": "c52810b81abfc56d667a934a00c26a8549444fa4577b9eb9e56d2728df4b05bd",
+    "work/run_lph16s2.json": "6bd43bc30e720204d52d6623506a688ebb4e61038477f462ce0447e0ec6958aa",
+    "work/fdiv_build_complete_20261007.log": "0857ffd0738a75d06d10b5a3dfc05ada6bdd9a94b0b2c7377d2ef5fd551f2142"
+  }
+}

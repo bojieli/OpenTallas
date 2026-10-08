@@ -1,0 +1,361 @@
+{
+ "schema": "opentallas.hbm_die_views_round.v1",
+ "round": "r10",
+ "cases": {
+  "a_real": {
+   "instances": 461,
+   "overlaps": 0,
+   "outside": 0,
+   "on_track": "PASS",
+   "pin_access": "FAIL",
+   "pa_errors": 14,
+   "macro_no_access": null,
+   "place_s": 12,
+   "pa_s": 452,
+   "exit": "0",
+   "real_views": [
+    "hfd_attn_tile",
+    "hfd_barrier",
+    "hfd_cdist_r14",
+    "hfd_cdist_r15",
+    "hfd_gath_r10",
+    "hfd_gath_r24",
+    "hfd_gath_r25",
+    "hfd_gath_r8",
+    "hfd_gath_r9",
+    "hfd_host_slab",
+    "hfd_index_q_b4",
+    "hfd_mcast_r5",
+    "hfd_mcast_r7",
+    "hfd_meso_r1",
+    "hfd_meso_r28",
+    "hfd_meso_r32",
+    "hfd_router",
+    "hfd_serdes_slab",
+    "hfd_sm",
+    "hfd_stn_r0",
+    "hfd_stn_r11",
+    "hfd_stn_r12",
+    "hfd_stn_r13",
+    "hfd_stn_r16",
+    "hfd_stn_r17",
+    "hfd_stn_r18",
+    "hfd_stn_r19",
+    "hfd_stn_r2",
+    "hfd_stn_r20",
+    "hfd_stn_r21",
+    "hfd_stn_r22",
+    "hfd_stn_r23",
+    "hfd_stn_r26",
+    "hfd_stn_r27",
+    "hfd_stn_r29",
+    "hfd_stn_r3",
+    "hfd_stn_r30",
+    "hfd_stn_r31",
+    "hfd_stn_r4"
+   ],
+   "bundle_k": null,
+   "iterations": null
+  },
+  "b_k16_i5": {
+   "grt_capacity": 103273337,
+   "grt_demand": 6156619,
+   "grt_usage_pct": 5.96,
+   "overflow_h": 5,
+   "overflow_v": 7,
+   "overflow": 371,
+   "grt_s": 209,
+   "exit": "0",
+   "real_views": [
+    "hfd_attn_tile",
+    "hfd_barrier",
+    "hfd_cdist_r14",
+    "hfd_cdist_r15",
+    "hfd_gath_r10",
+    "hfd_gath_r24",
+    "hfd_gath_r25",
+    "hfd_gath_r8",
+    "hfd_gath_r9",
+    "hfd_host_slab",
+    "hfd_index_q_b4",
+    "hfd_mcast_r5",
+    "hfd_mcast_r7",
+    "hfd_meso_r1",
+    "hfd_meso_r28",
+    "hfd_meso_r32",
+    "hfd_router",
+    "hfd_serdes_slab",
+    "hfd_sm",
+    "hfd_stn_r0",
+    "hfd_stn_r11",
+    "hfd_stn_r12",
+    "hfd_stn_r13",
+    "hfd_stn_r16",
+    "hfd_stn_r17",
+    "hfd_stn_r18",
+    "hfd_stn_r19",
+    "hfd_stn_r2",
+    "hfd_stn_r20",
+    "hfd_stn_r21",
+    "hfd_stn_r22",
+    "hfd_stn_r23",
+    "hfd_stn_r26",
+    "hfd_stn_r27",
+    "hfd_stn_r29",
+    "hfd_stn_r3",
+    "hfd_stn_r30",
+    "hfd_stn_r31",
+    "hfd_stn_r4"
+   ],
+   "bundle_k": 16,
+   "iterations": 5
+  },
+  "s_sta": {
+   "exit": "0",
+   "real_views": [
+    "hfd_attn_tile",
+    "hfd_barrier",
+    "hfd_cdist_r14",
+    "hfd_cdist_r15",
+    "hfd_gath_r10",
+    "hfd_gath_r24",
+    "hfd_gath_r25",
+    "hfd_gath_r8",
+    "hfd_gath_r9",
+    "hfd_host_slab",
+    "hfd_index_q_b4",
+    "hfd_mcast_r5",
+    "hfd_mcast_r7",
+    "hfd_meso_r1",
+    "hfd_meso_r28",
+    "hfd_meso_r32",
+    "hfd_router",
+    "hfd_serdes_slab",
+    "hfd_sm",
+    "hfd_stn_r0",
+    "hfd_stn_r11",
+    "hfd_stn_r12",
+    "hfd_stn_r13",
+    "hfd_stn_r16",
+    "hfd_stn_r17",
+    "hfd_stn_r18",
+    "hfd_stn_r19",
+    "hfd_stn_r2",
+    "hfd_stn_r20",
+    "hfd_stn_r21",
+    "hfd_stn_r22",
+    "hfd_stn_r23",
+    "hfd_stn_r26",
+    "hfd_stn_r27",
+    "hfd_stn_r29",
+    "hfd_stn_r3",
+    "hfd_stn_r30",
+    "hfd_stn_r31",
+    "hfd_stn_r4"
+   ],
+   "bundle_k": null,
+   "iterations": null
+  },
+  "s_sta_views": {
+   "source_commit": "1e3d7b59b (r10b: r10 placement + per-view report)",
+   "host": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/die/r10b/s_sta",
+   "method": "worst die path through each timed master (SS 60+150 ps setup, FF 25 ps hold, placement parasitics), paths to/from SM interim pins skipped; NA = no timed die path (forwarded-clock station links are source-synchronous, checked inside the views; neighbours without a view are untimed)",
+   "views": {
+    "hfd_attn_tile": {
+     "insts": 64,
+     "setup_ss_u210_ps": -2048.5,
+     "hold_ff_ps": 92.7
+    },
+    "hfd_barrier": {
+     "insts": 1,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_cdist_r14": {
+     "insts": 4,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_cdist_r15": {
+     "insts": 4,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_gath_r10": {
+     "insts": 2,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_gath_r24": {
+     "insts": 2,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_gath_r25": {
+     "insts": 2,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_gath_r8": {
+     "insts": 8,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_gath_r9": {
+     "insts": 2,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_index_q_b4": {
+     "insts": 4,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_mcast_r5": {
+     "insts": 4,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_mcast_r7": {
+     "insts": 4,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_meso_r1": {
+     "insts": 16,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_meso_r28": {
+     "insts": 9,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_meso_r32": {
+     "insts": 1,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_router": {
+     "insts": 1,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r0": {
+     "insts": 16,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r11": {
+     "insts": 12,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r12": {
+     "insts": 12,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r13": {
+     "insts": 12,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r16": {
+     "insts": 24,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r17": {
+     "insts": 12,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r18": {
+     "insts": 8,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r19": {
+     "insts": 4,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r2": {
+     "insts": 16,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r20": {
+     "insts": 8,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r21": {
+     "insts": 8,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r22": {
+     "insts": 16,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r23": {
+     "insts": 8,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r26": {
+     "insts": 2,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r27": {
+     "insts": 27,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r29": {
+     "insts": 2,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r3": {
+     "insts": 16,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r30": {
+     "insts": 4,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r31": {
+     "insts": 6,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    },
+    "hfd_stn_r4": {
+     "insts": 20,
+     "setup_ss_u210_ps": null,
+     "hold_ff_ps": null
+    }
+   }
+  },
+  "b_k16_i50": {
+   "grt_capacity": 103273337,
+   "grt_demand": 6311723,
+   "grt_usage_pct": 6.11,
+   "overflow_h": 7,
+   "overflow_v": 8,
+   "overflow": 454,
+   "grt_s": 4838,
+   "exit": "0",
+   "bundle_k": 16,
+   "iterations": 50
+  }
+ },
+ "source_commit": "7096823891c5f6c59d842259f64466d376495ee3",
+ "verdict": "r10 (r16i): legality PASS (461/0/0), on-track PASS (1,748,983 pins), pin access FAIL (14 DRT-0073 on 7 station masters + router interim), GRT k16 i5 overflow 371 (236 on the interim attention tile chain), die-context STA: attention tile interim -2.049 ns setup (forward chain), every other timed view has no failing die path. NOT a passing round."
+}

@@ -1,0 +1,205 @@
+{
+ "schema": "opentallas.budgets.sheet.v1",
+ "master": "dsfd_hstnh_1024",
+ "kinds": [
+  "hstn"
+ ],
+ "dies": {
+  "s81_layer": 13,
+  "s81_layer1": 13,
+  "s81_head": 13
+ },
+ "size_um": [
+  17.256,
+  53.976
+ ],
+ "tile_of": null,
+ "clock": {
+  "ports": [
+   "ck"
+  ],
+  "domains": [
+   "serial_0p9"
+  ],
+  "regions": [
+   "s81_head:clk_serial:spine.0.0.0",
+   "s81_head:clk_serial:spine.0.0.1",
+   "s81_layer1:clk_serial:die",
+   "s81_layer1:clk_serial:spine.0.0.0",
+   "s81_layer:clk_serial:spine.0.0.0",
+   "s81_layer:clk_serial:spine.0.0.1"
+  ],
+  "n_regions": 6,
+  "entry_target_ss_ps": {
+   "mean": 1412.0,
+   "min": 1403.4,
+   "max": 1422.8
+  },
+  "entry_target_ff_ps": {
+   "mean": 805.3,
+   "min": 801.0,
+   "max": 811.1
+  },
+  "die_pad_ss_ps": {
+   "mean": 444.0,
+   "min": 441.7,
+   "max": 447.4
+  },
+  "internal_insertion": {
+   "target_ss": 456.4,
+   "target_ff": 301.2,
+   "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 456.4, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+   "tolerance_ps": 100.0,
+   "ss": 456.4,
+   "ff": 301.2,
+   "ss_min": 433.6,
+   "ss_max": 502.0,
+   "ff_min": 286.1,
+   "ff_max": 331.3,
+   "grade": "target",
+   "source": "no calibration yet: the target",
+   "over_target": false
+  },
+  "calibrate_check": {
+   "compare": "closure-loop CK_SS_MEAN vs internal_insertion.ss (the value the die plan compensates) and vs internal_insertion.target_ss",
+   "tolerance_ps": 100.0,
+   "on_deviation": "FLAG (NEEDS_BUDGET): re-plan the die pin target; never silently re-calibrate the IO SDC"
+  }
+ },
+ "skew": {
+  "intra_ps": 90.0,
+  "inter_ps": 150.0,
+  "hold_io_ps": 50.0,
+  "setup_uncertainty_ps": 60.0,
+  "hold_uncertainty_ps": 25.0,
+  "route_period_ps": 770.0,
+  "signoff_period_ps": 833.333,
+  "accept_ps": 15.0
+ },
+ "control": {
+  "max_fanout_internal": 32,
+  "rule": "nets above 32 loads get kept (dont_touch) replicas; reductions > 4 inputs get a register per 4-6 levels (DESIGN SIMPLIFICATION 3/5)"
+ },
+ "interfaces": [
+  {
+   "port": "di",
+   "dir": "input",
+   "bits": 1024,
+   "bus_classes": [
+    "hub"
+   ],
+   "neighbours": [
+    "dsfd_hstnh_1024",
+    "dsfd_hstnv_1024",
+    "dsfd_sp_hc_n",
+    "dsfd_sp_vm"
+   ],
+   "connections": 39,
+   "dies": [
+    "s81_head",
+    "s81_layer",
+    "s81_layer1"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 1111.111,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 298.7,
+   "length_basis": "pins",
+   "skew_class": "intra",
+   "skew_ps": 71,
+   "hold_io_ps": 50.0,
+   "worst_instance": "s81_layer:f_hb_vm_hc_s_1<->sp_vm",
+   "also_cdc": false,
+   "input_delay_ss_ps": 540.0,
+   "output_delay_ss_ps": 481.0,
+   "input_fraction_of_T": 0.486,
+   "output_fraction_of_T": 0.433,
+   "internal_input_ps": 496.1,
+   "internal_output_ps": 555.1,
+   "as_planned_internal_input_ps": 496.1,
+   "as_planned_internal_output_ps": 555.1,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 673.2,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 298.7,
+   "input_min_delay_ff_ps": 65.6,
+   "output_min_delay_ff_ps": -18.4,
+   "feasible": true
+  },
+  {
+   "port": "dq",
+   "dir": "output",
+   "bits": 1024,
+   "bus_classes": [
+    "hub"
+   ],
+   "neighbours": [
+    "dsfd_hstnh_1024",
+    "dsfd_hstnv_1024",
+    "dsfd_sp_hc_n",
+    "dsfd_sp_hc_s",
+    "dsfd_sp_su_s",
+    "dsfd_sp_vm"
+   ],
+   "connections": 39,
+   "dies": [
+    "s81_head",
+    "s81_layer",
+    "s81_layer1"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 1111.111,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 194.3,
+   "length_basis": "pins",
+   "skew_class": "intra",
+   "skew_ps": 75,
+   "hold_io_ps": 50.0,
+   "worst_instance": "s81_layer1:f_hb_vm_hc_s_9<->sp_hc_s",
+   "also_cdc": false,
+   "input_delay_ss_ps": 425.5,
+   "output_delay_ss_ps": 366.5,
+   "input_fraction_of_T": 0.383,
+   "output_fraction_of_T": 0.33,
+   "internal_input_ps": 610.6,
+   "internal_output_ps": 669.6,
+   "as_planned_internal_input_ps": 610.6,
+   "as_planned_internal_output_ps": 669.6,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 669.7,
+   "stages_needed": 1,
+   "stages_planned": 1,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 194.3,
+   "input_min_delay_ff_ps": 54.0,
+   "output_min_delay_ff_ps": -6.8,
+   "die_fanout": 1,
+   "feasible": true
+  }
+ ],
+ "totals": {
+  "ports": 2,
+  "sync": 2,
+  "cdc": 0,
+  "infeasible": 0,
+  "fanout_flags": 0,
+  "max_length_um": 298.7,
+  "max_stages_needed": 1
+ },
+ "constants": {
+  "wire_ss_ps_per_um": 1.135,
+  "clkq_ss": 90.0,
+  "drv_out": 40.0,
+  "rcv_in": 41.0,
+  "setup_ss": 30.0,
+  "clkq_ff_min": 32.2,
+  "hold_ff": 15.0,
+  "wire_ff_credit_ps_per_um": 0.112
+ }
+}

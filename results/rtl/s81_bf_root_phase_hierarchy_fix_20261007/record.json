@@ -1,0 +1,39 @@
+{
+  "status": "PASS_SMALL_OPENROAD_CLOCK_AND_PLACEMENT_FIXTURE",
+  "scope": "Exact clock pin identity, generated clock constraints, real INV/DFF/ICG placement hooks only; full physical route pending",
+  "tool_version": "OpenROAD v2.0-17598-ga008522d8",
+  "original_failure": "OpenROAD retained module path g_half.g_root.u_inv0/u_inv/Y differs from assumed flattened dot spelling; original clock.sdc rejects it",
+  "fix": "Normalize hierarchy delimiters for semantic identity; still require exactly two unique INVx1 outputs and one phase FF/ICG",
+  "positive": {
+    "clocks": [
+      "core_clk",
+      "bf_phase_inv",
+      "bf_phase_local"
+    ],
+    "period_ps": 833.333,
+    "localized_span_um": [
+      4.968,
+      9.99,
+      15.012
+    ],
+    "post_route_hook_pass_on_placed_fixture": true
+  },
+  "negative": "Renamed second physical branch fails closed as missing/ambiguous root",
+  "RTL_changed": false,
+  "full_pair_exactness_record": "results/rtl/s81_bf_root_phase_b73d54a9c_exact/record.json",
+  "artifact_sha256": {
+    "check_fixed.log": "81f10de4bb0699949084cae647590a6a07ccfa025df0ee021f1101679b9b6020",
+    "check.tcl": "0812aa577c7eda457fd4fc110c35735f20d02c1b81ca66131397fddb33c33094",
+    "check.log": "5086df5b1680f20070713dcfce0e581ccc410bf4aaf74ee89e4d5892848bdf22",
+    "negative.log": "18d28e55a19db57a578267f08ad610b7371540735d833b98e50f11b27fa847e6",
+    "check_placement.log": "041c5c91ec9446c5a59c7fe16b61c509fd1988ce68002568154df41106059e81",
+    "negative.v": "d5babf534c6ad7242b59c83a752199ae82a05535113b1f995994fe79adf2973a",
+    "top.v": "944fc1d0e850cea4957b335ae4773ebdd6771cd8e125833744e4e902f159ba73",
+    "negative.tcl": "c56f5a7efeb105ac14158ef79c248194ea46b6d3dd03636dfa871d1ff91ed4b3"
+  },
+  "changed_source_sha256": {
+    "clock.sdc": "cde7dbba37f328254f247ba62771d266712e2af6902393f4739dc2ecf4a64486",
+    "localize.tcl": "36c46df00a77881df5b66272153caa7fba42215d006d4870cf4c98f6a7b1712c",
+    "check_placement.tcl": "8a92f74d5b0826c32a7516ded85d2f5ea340fd1c607d8311fcff45dd7aac0b02"
+  }
+}

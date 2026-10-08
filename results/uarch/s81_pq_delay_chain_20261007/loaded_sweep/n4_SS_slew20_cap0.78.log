@@ -1,0 +1,70 @@
+OpenROAD v2.0-17598-ga008522d8 
+Features included (+) or not (-): +Charts +GPU +GUI +Python : None
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /tmp/bf_phase_sta_fixture/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /tmp/bf_phase_sta_fixture/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+Startpoint: din (input port clocked by clk)
+Endpoint: ff (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock clk (rise edge)
+   0.000000    0.000000   clock network delay (ideal)
+   0.000000    0.000000 ^ input external delay
+   0.000000    0.000000 ^ din (in)
+  28.935949   28.935949 ^ original_input/Y (BUFx2_ASAP7_75t_R)
+  82.777908  111.713860 ^ h0/Y (HB4xp67_ASAP7_75t_R)
+  93.086456  204.800323 ^ h1/Y (HB4xp67_ASAP7_75t_R)
+  93.066025  297.866333 ^ h2/Y (HB4xp67_ASAP7_75t_R)
+  93.788536  391.654877 ^ h3/Y (HB4xp67_ASAP7_75t_R)
+   0.000000  391.654877 ^ ff/D (DFFHQNx1_ASAP7_75t_R)
+             391.654877   data arrival time
+
+   0.000000    0.000000   clock clk (rise edge)
+   0.000000    0.000000   clock network delay (ideal)
+   0.000000    0.000000   clock reconvergence pessimism
+               0.000000 ^ ff/CLK (DFFHQNx1_ASAP7_75t_R)
+ -15.888966  -15.888966   library hold time
+             -15.888966   data required time
+-----------------------------------------------------------------
+             -15.888966   data required time
+            -391.654877   data arrival time
+-----------------------------------------------------------------
+             407.543823   slack (MET)
+
+
+Startpoint: din (input port clocked by clk)
+Endpoint: ff (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock clk (rise edge)
+   0.000000    0.000000   clock network delay (ideal)
+   0.000000    0.000000 v input external delay
+   0.000000    0.000000 v din (in)
+  32.970604   32.970604 v original_input/Y (BUFx2_ASAP7_75t_R)
+ 110.375175  143.345779 v h0/Y (HB4xp67_ASAP7_75t_R)
+ 119.716934  263.062714 v h1/Y (HB4xp67_ASAP7_75t_R)
+ 119.733086  382.795807 v h2/Y (HB4xp67_ASAP7_75t_R)
+ 117.853836  500.649628 v h3/Y (HB4xp67_ASAP7_75t_R)
+   0.000000  500.649628 v ff/D (DFFHQNx1_ASAP7_75t_R)
+             500.649628   data arrival time
+
+ 833.333008  833.333008   clock clk (rise edge)
+   0.000000  833.333008   clock network delay (ideal)
+   0.000000  833.333008   clock reconvergence pessimism
+             833.333008 ^ ff/CLK (DFFHQNx1_ASAP7_75t_R)
+ -11.836667  821.496399   library setup time
+             821.496399   data required time
+-----------------------------------------------------------------
+             821.496399   data required time
+            -500.649628   data arrival time
+-----------------------------------------------------------------
+             320.846741   slack (MET)
+
+

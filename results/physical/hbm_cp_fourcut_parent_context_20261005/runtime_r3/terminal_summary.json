@@ -1,0 +1,201 @@
+{
+  "remote_root": "/srv/opentallas-scratch2/jobs/harvey-cp-fourcut-parent-context-r1/runtime_r3",
+  "terminal_exit": "0",
+  "corners": {
+    "schema": "hbm.cp.parent-context.corners.v1",
+    "ss": {
+      "corner": "ss",
+      "check": "setup",
+      "worst_slack_ps": -275.79,
+      "tns_ps": -3106.7,
+      "worst_register_d_slack_ps": -36.269653,
+      "worst_reg_to_reg_slack_ps": -36.27,
+      "worst_input_to_reg_slack_ps": 242.33,
+      "worst_output_port_slack_ps": -275.792938,
+      "violating_d_pins": 104,
+      "errors": [],
+      "odb_sha256": "8788296daf72b9e4487442844cce41aa5a267755ea8bf915db3748449c3924e4",
+      "spef_sha256": "2a3fb00cbfed22d9fe60be5bcea800b08e4b0a261b4e0fcd01afeed3d1716c54",
+      "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+    },
+    "ff": {
+      "corner": "ff",
+      "check": "hold",
+      "worst_slack_ps": 6.93,
+      "tns_ps": 0.0,
+      "worst_register_d_slack_ps": 6.930276,
+      "worst_reg_to_reg_slack_ps": 14.13,
+      "worst_input_to_reg_slack_ps": 11.58,
+      "worst_output_port_slack_ps": 80.670387,
+      "violating_d_pins": 0,
+      "errors": [],
+      "odb_sha256": "8788296daf72b9e4487442844cce41aa5a267755ea8bf915db3748449c3924e4",
+      "spef_sha256": "2a3fb00cbfed22d9fe60be5bcea800b08e4b0a261b4e0fcd01afeed3d1716c54",
+      "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+    },
+    "FF_endpoint_basis": "all_registers -data_pins; literal combinational */D separately labelled",
+    "uses_extracted_interconnect_and_propagated_clock": true,
+    "external_loads_analytical": true,
+    "parent_budget_adoption": false
+  },
+  "loaded_ir": {
+    "schema": "hbm.cp.context.loaded-ir.v1",
+    "inputs": {
+      "6_final.odb": "8788296daf72b9e4487442844cce41aa5a267755ea8bf915db3748449c3924e4",
+      "6_final.sdc": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7",
+      "6_final.spef": "2a3fb00cbfed22d9fe60be5bcea800b08e4b0a261b4e0fcd01afeed3d1716c54"
+    },
+    "activity": "OpenSTA vectorless input activity 0.1, propagated; clocks from actual retained SDC",
+    "source": "Ideal supply at existing child PG boundary pins; parent-grid drop excluded",
+    "grid_rebuilt": false,
+    "source_phase_ps": 0,
+    "setup_ps": 60,
+    "hold_ps": 25,
+    "workload_peak_qualified": false,
+    "adopted": false,
+    "corners": {
+      "SS": {
+        "exit": 0,
+        "nonzero_loaded_analysis_complete": true,
+        "total_power_w": 0.0015228064730763435,
+        "rails": [
+          {
+            "source_type": "PINS",
+            "net": "VDD",
+            "total_power_w": 0.00152,
+            "supply_v": 0.63,
+            "worst_voltage_v": 0.628,
+            "average_voltage_v": 0.629,
+            "average_ir_drop_v": 0.000811,
+            "worst_ir_drop_v": 0.00239,
+            "worst_drop_percent": 0.38,
+            "em_max_current_a": 6.06e-05,
+            "em_average_current_a": 8.43e-07,
+            "resistors": 64825
+          },
+          {
+            "source_type": "PINS",
+            "net": "VSS",
+            "total_power_w": 0.00152,
+            "supply_v": 0.0,
+            "worst_voltage_v": 0.00167,
+            "average_voltage_v": 0.000713,
+            "average_ir_drop_v": 0.000713,
+            "worst_ir_drop_v": 0.00167,
+            "worst_drop_percent": 0.27,
+            "em_max_current_a": 3.98e-05,
+            "em_average_current_a": 7.06e-07,
+            "resistors": 65402
+          }
+        ],
+        "raw_log": "/srv/opentallas-scratch2/jobs/harvey-cp-fourcut-parent-context-r1/runtime_r3/loaded_ir/SS.log"
+      },
+      "FF": {
+        "exit": 0,
+        "nonzero_loaded_analysis_complete": true,
+        "total_power_w": 0.0025661999825388193,
+        "rails": [
+          {
+            "source_type": "PINS",
+            "net": "VDD",
+            "total_power_w": 0.00257,
+            "supply_v": 0.77,
+            "worst_voltage_v": 0.766,
+            "average_voltage_v": 0.769,
+            "average_ir_drop_v": 0.00112,
+            "worst_ir_drop_v": 0.00352,
+            "worst_drop_percent": 0.46,
+            "em_max_current_a": 8.98e-05,
+            "em_average_current_a": 1.19e-06,
+            "resistors": 64825
+          },
+          {
+            "source_type": "PINS",
+            "net": "VSS",
+            "total_power_w": 0.00257,
+            "supply_v": 0.0,
+            "worst_voltage_v": 0.00238,
+            "average_voltage_v": 0.000983,
+            "average_ir_drop_v": 0.000983,
+            "worst_ir_drop_v": 0.00238,
+            "worst_drop_percent": 0.31,
+            "em_max_current_a": 5.89e-05,
+            "em_average_current_a": 9.87e-07,
+            "resistors": 65402
+          }
+        ],
+        "raw_log": "/srv/opentallas-scratch2/jobs/harvey-cp-fourcut-parent-context-r1/runtime_r3/loaded_ir/FF.log"
+      }
+    },
+    "context_decision": {
+      "disposition": "REPAIR_MANDATORY_BASELINE",
+      "checks": {
+        "ss": false,
+        "ff": true,
+        "DRC": false,
+        "nonzero_loaded_IR": true
+      },
+      "required_next_actions": [
+        "CP source owner: use actual terminal path classes to qualify the prepared exact control/quiet/entry/parity source cut; register its bounded unified-model entry before RTL. Keep full same-edge owner checks and accepted-debt drain.",
+        "Turing physical owner: use terminal marker coordinates/net classes to repair actual pin/via access allocation, preserving both fences and all236 reserved pins; retained mapped/placed checkpoints remain the source for any authorized physical continuation.",
+        "Turing: bind the actual permissible child rail-drop budget and workload activity before any IR/adoption claim; current vectorless input0.1/ideal boundary supply remains conditional and excludes parent-grid drop."
+      ]
+    }
+  },
+  "physical_error": null,
+  "physical_metrics": {
+    "antenna_violating_nets": 0,
+    "antenna_violating_pins": 0,
+    "clock_count": 1,
+    "core_area_um2": 1866.24,
+    "die_area_um2": 6046.62,
+    "drc_errors": 4329,
+    "flow_error_counts": {
+      "cts__flow__errors__count": 0,
+      "detailedplace__flow__errors__count": 0,
+      "detailedroute__flow__errors__count": 0,
+      "finish__flow__errors__count": 0,
+      "floorplan__flow__errors__count": 0,
+      "globalplace__flow__errors__count": 0,
+      "globalroute__flow__errors__count": 0,
+      "placeopt__flow__errors__count": 0,
+      "synth__flow__errors__count": 0
+    },
+    "fmax_basis": "minimum per-clock ORFS Fmax when available; aggregate otherwise",
+    "fmax_hz": 901611000.0,
+    "hold_tns_ns": 0.0,
+    "hold_violations": 0,
+    "hold_wns_ns": 0.0115826,
+    "instance_count": 16603,
+    "library_time_unit_ns": 0.001,
+    "macro_area_um2": 0,
+    "macro_count": 0,
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 0,
+    "missing_metadata_keys": [],
+    "orfs_aggregate_fmax_hz": 901611000.0,
+    "per_clock_fmax_hz": {},
+    "power_total_w": 0.00256624,
+    "raw_timing_library_units": {
+      "hold_tns_ns": 0,
+      "hold_wns_ns": 11.5826,
+      "setup_tns_ns": -3106.67,
+      "setup_wns_ns": -275.793
+    },
+    "routed_nets": 7062,
+    "routed_wirelength_um": 45249,
+    "sequential_area_um2": 255.121,
+    "sequential_cell_count": 673,
+    "setup_tns_ns": -3.1066700000000003,
+    "setup_violations": 116,
+    "setup_wns_ns": -0.275793,
+    "standard_cell_area_um2": 884.671,
+    "standard_cell_count": 7377,
+    "utilization_fraction": 0.474039,
+    "vias": 66210
+  },
+  "adopted": false,
+  "all_prior_failures_preserved": true,
+  "large_physical_objects_retained_remotely": true
+}

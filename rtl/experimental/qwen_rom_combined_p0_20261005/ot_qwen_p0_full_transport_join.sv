@@ -6,7 +6,9 @@
 module ot_qwen_p0_full_transport_join #(
 
     parameter integer PROTECTED_STREAM4 = 0, // source candidate, opt-in until owner gates pass
+    parameter integer PARALLEL_TRANSPORT = 0, // owner full32-PC return; defaultOFF
     parameter integer CDC_CONSUMER_JOIN = 0, // existing protected port join only; not raw CDC qualification
+    parameter integer SAME_CYCLE_GO = 0, // default OFF
     parameter integer LANDING_RSEL = 0, // corrected protected owner r9 read; default OFF
     parameter integer BASELINE_AR = 0, // explicit owner selection; off by default
     parameter integer CORE_FS = 833333, CTL_FS = 1024000,
@@ -267,6 +269,63 @@ module ot_qwen_p0_full_transport_join #(
         .st_stall_retire(st_stall_retire),
         .st_stall_mem(st_stall_mem)
     );
+    generate if(PARALLEL_TRANSPORT)begin:parallel
+    ot_qwen_p0_parallel_transport_context #(.ENABLE(PROTECTED_STREAM4),
+        .CDC_CONSUMER_JOIN(CDC_CONSUMER_JOIN),
+        .LANDING_RSEL(LANDING_RSEL),
+        .SAME_CYCLE_GO(SAME_CYCLE_GO),
+        .MEM_WORDS(HBM_LAYERS*131072), .PHASE(HBM_PHASE)) u_transport (
+        .clk(producer_clk),
+        .hclk(producer_hclk),
+        .rst_n(producer_por_n),
+        .warm_rst_n(producer_warm_rst_n),
+        .d_v(stream_d_v),
+        .go(stream_go),
+        .d_row(stream_d_row),
+        .d_n(stream_d_n),
+        .d_rdy(stream_d_rdy),
+        .fault(producer_fault),
+        .quiet(transport_quiet),
+        .l_v(stream_l_v),
+        .l_sec(stream_l_sec),
+        .l_row(stream_l_row),
+        .l_data(stream_l_data),
+        .l_pop(stream_l_pop),
+        .w_v(stream_w_v),
+        .w_sec(stream_w_sec),
+        .w_data(stream_w_data),
+        .w_tag(stream_w_tag),
+        .w_room(stream_w_room),
+        .wd_v(stream_wd_v),
+        .wd_tag(stream_wd_tag),
+        .wd_accept(stream_wd_accept),
+        .h_lv(h_lv),
+        .h_av(h_av),
+        .h_lsec(h_lsec),
+        .h_lrow(h_lrow),
+        .h_ldata(h_ldata),
+        .h_atag(h_atag),
+        .phy_fault(phy_fault),
+        .row_v(row_v),
+        .col_v(col_v),
+        .col_we(col_we),
+        .busy(busy),
+        .row_op(row_op),
+        .row_bank(row_bank),
+        .col_bank(col_bank),
+        .col_col(col_col),
+        .row_row(row_row),
+        .h_cv(h_cv),
+        .h_csec(h_csec),
+        .h_cdata(h_cdata),
+        .h_ctag(h_ctag),
+        .h_cred_ret(h_cred_ret),
+        .h_desc_commit(h_desc_commit),
+        .h_go_commit(h_go_commit),
+        .h_desc_ordinal(h_desc_ordinal),
+        .h_go_ordinal(h_go_ordinal)
+    );
+    end else begin:serialized
     ot_qwen_s4_transport_context #(.ENABLE(PROTECTED_STREAM4),
         .CDC_CONSUMER_JOIN(CDC_CONSUMER_JOIN),
         .LANDING_RSEL(LANDING_RSEL),
@@ -321,4 +380,5 @@ module ot_qwen_p0_full_transport_join #(
         .h_desc_ordinal(h_desc_ordinal),
         .h_go_ordinal(h_go_ordinal)
     );
+    end endgenerate
 endmodule

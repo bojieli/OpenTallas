@@ -1,0 +1,30 @@
+{
+  "scope": "Directed actual-provider duplicate source priority; not captured workload coincidence",
+  "NR": 2256,
+  "NW": 865,
+  "ordered_seats": [
+    0,
+    768,
+    784,
+    847,
+    848,
+    849,
+    864
+  ],
+  "roles": [
+    "ME0",
+    "MX0",
+    "SU0",
+    "SU63",
+    "REDUCER",
+    "SEQ0",
+    "SEQ15"
+  ],
+  "scalar_address": 4096,
+  "read_old": true,
+  "expected_write_batches": 1,
+  "expected_read_window_misses": 1,
+  "conditional_frame_edges": 3166,
+  "added_engine_RTL": false,
+  "clock_or_pipeline_changes": false
+}

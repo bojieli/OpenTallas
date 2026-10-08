@@ -1,0 +1,13 @@
+c12 params {'mlat': 6, 'alat': 6, 'opr': 1, 'ddiv': 21, 'sidex': 4, 'fsq': 1, 'capr': 1, 'rpad': 1, 'rsl': 2, 'rtap': 1, 'rout': 2, 'rslice': 64, 'ctl12': 2, 'ropi': 1, 'rkc': 1, 'rhalf': 1, 'rhpar': 1, 'gsh': 1, 'kimm': 1, 'denr': 1, 'dring': 2} OT_VFLAGS --unroll-count 4 -fno-dfg +define+OT_NEG_RED_NOLOCK -GOPR=1 -GDDIV=21 -GSIDEX=4 -GFSQ=1 -GCAPR=1 -GRPAD=1 -GRSL=2 -GROUT=2 -GCTL12=2 -GRTAP=1 -GRSLICE=64 -GROPI=1 -GRKC=1 -GRHALF=1 -GRHPAR=1 -GGSH=1 -GKIMM=1 -GDENR=1 -GDRING=2
+scratch /srv/opentallas-scratch2/scratch/codex/hbm-su-hub-4c1216b21/work-neg
+built N=16 M=8
+  random N=16 seed=2 ops=38 pass=False vm_bad=23 kv_bad=0 faults=55 order=0 cycles=1188
+  random N=16 seed=3 ops=37 pass=False vm_bad=37 kv_bad=0 faults=115 order=0 cycles=1728
+  random N=16 seed=1 ops=36 pass=False vm_bad=36 kv_bad=0 faults=48 order=0 cycles=1894
+random 16 0 / 3
+built N=64 M=16
+  random N=64 seed=101 ops=39 pass=False vm_bad=49 kv_bad=0 faults=119 order=0 cycles=1802
+  random N=64 seed=102 ops=36 pass=False vm_bad=62 kv_bad=0 faults=252 order=0 cycles=2151
+random 64 0 / 2
+wrote /srv/opentallas-scratch2/scratch/codex/hbm-su-hub-4c1216b21/neg.json
+C12 CAMPAIGN FAIL ['random N16_M8 #0', 'random N16_M8 #1', 'random N16_M8 #2', 'random N64_M16 #0', 'random N64_M16 #1']

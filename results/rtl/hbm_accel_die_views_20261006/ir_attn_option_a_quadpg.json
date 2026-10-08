@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.hbm_die_views_ir.v1",
+ "case": "attn tile option A: quads own M9 PG exposed bump-landable (owner-approved), bumps kept over the quads",
+ "tool": "tools/hbm_die_views.py ir-attn --quad-pg (bump-pad vias to every same-net quad M9 strap under a 20 um pad; quad M8 PG segments + M8-M9 vias from the quad LEF; quad power on its M9 straps)",
+ "host": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/ir/ira3/dbg_p/w (window w02_03, 9 tiles / 20 quads in window); full round ira3 stopped (it lacked the pad vias: volt-level islands)",
+ "window": "w02_03",
+ "budget_mv": 35.0,
+ "interior_drop_mv_by_kind": {
+  "VDD": {
+   "attn_quad": {
+    "cells": 3663,
+    "median": 263.9,
+    "p99": 1994.8,
+    "max": 2139.7
+   },
+   "attn_quad_stub": {
+    "median": 9.5,
+    "max": 33.8
+   },
+   "attn_open": {
+    "median": 5.0,
+    "max": 26.4
+   },
+   "hub": {
+    "median": 3.7,
+    "max": 8.6
+   }
+  },
+  "VSS": {
+   "attn_quad": {
+    "cells": 3663,
+    "median": 246.2,
+    "p99": 2143.4,
+    "max": 2290.8
+   },
+   "attn_quad_stub": {
+    "median": 21.3,
+    "max": 40.1
+   },
+   "attn_open": {
+    "median": 5.2,
+    "max": 22.0
+   },
+   "hub": {
+    "median": 3.7,
+    "max": 6.8
+   }
+  }
+ },
+ "r16g_same_window_interior_rail_to_rail_mv": 11.08,
+ "verdict": "FAIL (option A): quad cells median ~250 mV, worst ~2.2 V per rail vs 35 mV rail-to-rail. Current path: bump -> pad via -> one quad M9 strap (0.474 um, vertical, 562 um) -> down the strap to the loads; lateral spreading only through the quad M8 PG straps (about 6 full-width per net per quad, 2.9 / 2.5 mm of M8 PG per quad). Bumps sit on a 63.6 um lattice with 20 um pads, so about one strap column in three is under a pad; the others hang off the sparse M8. The quad abstract exposes no horizontal PG above its M2 rails, and the ASAP7 stack has no layer above M9 to spread from the bumps.",
+ "decision": "Go to option B (owner fallback 2026-10-06): re-harden the quad with its PG at <= M7 (M7 stripes 0.288 um @ 10.8 um, die contract) so the die owns M8/M9 over the tile, as every other block. Coordinate with the attention-tile owner (wt-hbm-attn)."
+}

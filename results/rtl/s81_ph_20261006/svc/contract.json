@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.s81_ph.contract.v1",
+ "kind": "svc (scan service)",
+ "master": "dsfd_svc (x4 per die, 8500.032 x 1576.776, stream 1.2 GHz)",
+ "owner": "Claude:s81-ph (2026-10-06 PM, coordinator gap item)",
+ "existing_rtl": "no service top exists (die_top_lint abstract list: NO_RTL_TOP; parts ot_hdc_v41x_attn_tile_s / ot_attn_hgrp_m6h1 leaf + ot_hdc_v41x_idx_kstream_ring + WINDOW loader rtl/dsrom_sys/s81_window_la)",
+ "die_ports": {"q 515 in (N)": "query frames from the VM: [0] v, [512:1] data, [513] live, [514] fault",
+               "rd 8864 in (S, x 4037-4463)": "HBM read responses, 32 PCs x 277 b (+ ctrl contract: 32 valids)",
+               "od 514 + of": "rows / partial frames to the collector (vr: [0] rst_n, [1] v, [513:2] data) + forwarded clock",
+               "xd 514 + xf": "index-score stream to the selector",
+               "ad 1026 + af": "two 513-b lanes to the VM: a0 attention results, a1 index frames"},
+ "partition (DESIGN SIMPLIFICATION RULES: blocks <= ~1 mm, registered latency-insensitive interfaces)": {
+   "dsfd_svc_io": "IO hub at the N-E pin group, 1080 x 129.6 um (contract pin plan physical/s81_ph_views/ports/contract/dsfd_svc_io): q pin register -> kept replicas -> one registered copy per quadrant; od / a0 = frame-atomic round-robin merges of 4 quadrant valid/ready streams through 2-slot skids; a1 / xd single-source skid -> pin; every output from a flop at its pin; synchronised reset",
+   "ot_s81ph_svc_rd (next)": "rd pin group (S, centre): per-PC pin registers -> 8 PCs per quadrant, registered, no arithmetic",
+   "quadrants (owners' hardened views)": "4 x (4 attention tiles + index reader share + WINDOW share) as macros; their margin views come from the attention / WINDOW owners"
+ },
+ "bench": "rtl/dsrom_sys/s81_ph/svc/tb_s81ph_svc_io.sv (transaction-level scoreboard: q to every quadrant in order, every source frame exactly once, atomic, per-source order; a1 / xd in order; drained), run_svc_io_bench.sh: 3 seeds x 300 frames/source PASS; mutants S81PH_SVC_MUT_NOATOM (re-arbitrate every word) and S81PH_SVC_MUT_SKID (skid loses its second slot) FAIL",
+ "cycle_cost": "q: 3 cycles pin -> quadrant; od / a0: source skid 1 + arbitration 1 (one bubble per frame) + merge register 1 + pin 1; a1 / xd: skid 1 + pin 1",
+ "open": ["svc_rd view", "quadrant compute views (attention tile leaf SS +18.9 / FF +1.5: FF below +15)", "parent slab assembly + die-context STA", "generator: the svc master becomes a hierarchical view (io + rd + quadrant macros)"]
+}

@@ -1,0 +1,9 @@
+{
+  "status": "PASS_MODEL_GENERATION_IDENTITY",
+  "function": "tools/uarch_model.py:s81_pq_r128_expanded_model",
+  "function_sha256": "44ef3291dc7f3afac0c6052606a178ae193ad31c0b246335b1edab95c9129259",
+  "model_sha256": "6858d55846eeee726261423168e00f340c9999b4b42973ce34ea89f9aec42ddc",
+  "runtime_policy": "Hash pinned model, do not import unrelated analytical designs/historical artifacts",
+  "behavior_changed": false,
+  "physical_closed": false
+}

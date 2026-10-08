@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.hbm_hub_hcpost_ml6.v1",
+ "change": "d118d672a rtl/hdc/v41x/ot_dsrom_su_hcpost.sv: AL 6 (ot_hdc_fp32_add_f12_l6x) and the ML 6 m4 alignment (u_d4 depth 3*AL + ML - 5, e4 delayed ML - 5). ML 5 builds: the extra delay is D = 0 (a wire).",
+ "root_cause": "under ML 6 the y*p product m4 (fixed LAT-5 multiplier) reached the last add one cycle before a3: the historical m6a5 exactness FAIL",
+ "bench": "tools/dsrom_su_hcpost.py prep (su_cases.pkl sha 1e00804b..., 8 golden 1M hc_post chains + 32 stress) / run --ng 64 --win 2 --wout 2, Verilator 5.050, EPYC2 /srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/hcbench",
+ "results": {
+  "ML6 AL6 fixed": "40/40 PASS",
+  "ML5 AL5 fixed": "40/40 PASS",
+  "NEGATIVE: ML6 AL5 pre-fix source (f5da9a05d file)": "0/40 PASS (40 FAIL)",
+  "ML6 AL5 fixed (the HBM HC quarter config, ot_hbm_hc_quarter.sv / tb_hc_corrected_group.sv)": "40/40 PASS"
+ },
+ "physical": "ML6 AL6 lane route m8hc (CP 0.77, HM 0.05): SS@833 +3.77 / FF +32.7 / DRC 0 -- critical path now the l6 multiplier's last stage; see physical/hbm_accel_die_views/su/lane_attempts.json",
+ "audit_ml6_claims": {
+  "question": "was any merged DS ROM / HBM lever or record built or claimed exact with hc_post at ML 6?",
+  "answer": "NO. Every ML 6 hc_post run on main is recorded as a FAIL and none was adopted: dsrom_recovery_20261004/su_hcpost/runs/run_ng16_w33_23_m6a4_h.json 0/16, run_ng16_w33_23_m6a5_h.json 0/16, run_ng256_w33_23_m6a5_h.json 0/40; levers/su_hcpost.json variants_note (L6 not used, m5a5 adopted); dshbm_matched_reference_20261005/su_fused/hcpost_run_m6a5.json 0/40 and fused.json exact:false (the M5A4 lane is the one used). The m6a5 rows in dshbm/hbm_su_c12 compositions are the SU c12 lane (MLAT 6 / ALAT 5 of ot_hdc_fastfp_lat_f12), a different module verified separately (hbm_accel_fmax_inventory_20261004/su/units/l6_alert: 27/27 N64). su_norm / su_swiglu / su_softmax / combined L20 / S81 swiglu do not instantiate hc_post. The HBM HC quarter (physical/hbm_die_abstracts_20261006/compute/ot_hbm_hc_quarter.sv, ML 6 AL 5) was recorded blocked/FAIL (not claimed exact); with the fix its lane config passes 40/40 here.",
+  "prior_finding": "results/rtl/hbm_accel_fmax_inventory_20261004/su/units/l6_alert/finding.txt (2026-10-05) had already located the u_m4 bug with a test copy; this commit is the source fix."
+ },
+ "ml7": {
+  "change": "48ae4aceb: ML 7 (ot_hdc_fp32_mul_f12_l7 = l6 + rounding-increment cut; y*p on _l6r, LM4 = 6 for ML >= 7)",
+  "bench": "same bench, EPYC2 /srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/hcbench7 (src7 = 48ae4aceb)",
+  "results": {
+   "ML7 AL6": "40/40 PASS (117 cycles/chain)",
+   "ML5 AL5 regression": "40/40 PASS (111)",
+   "NEGATIVE: ML7 AL6 with LM4 = 5 (y*p misaligned, src7neg)": "0/40 PASS (40 FAIL, 7,293-20,397 mismatches per stress case)"
+  },
+  "cycle_cost": "ML7 AL6 vs ML5 AL5: +6 cycles per hc_post chain (117 vs 111)",
+  "physical": "lane route m11hc (ML7 AL6, CP 0.77, HM 0.02, AGIdock /srv/opentallas-scratch/claude/hbm-abstracts/hub/routes/m11hc): SS@833 +70.37 PASS, FF +12.30 (< 15: post-route hold ECO), DRC 0"
+ }
+}

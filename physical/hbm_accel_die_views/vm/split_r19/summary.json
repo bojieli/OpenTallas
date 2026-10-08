@@ -1,0 +1,105 @@
+{
+ "hfd_vm_ne": {
+  "kind": "vm",
+  "w": 699.816,
+  "h": 1000.056,
+  "instances": 1,
+  "ports": {
+   "ck": [
+    1,
+    "area",
+    "input"
+   ],
+   "iNE": [
+    512,
+    "E",
+    "input"
+   ],
+   "qNE": [
+    582,
+    "E",
+    "output"
+   ],
+   "xNE": [
+    2068,
+    "E",
+    "output"
+   ],
+   "f_su_NE": [
+    2048,
+    "E",
+    "input"
+   ],
+   "t_su_NE": [
+    2048,
+    "E",
+    "output"
+   ],
+   "rst": [
+    1,
+    "W",
+    "input"
+   ],
+   "f_w_ctl": [
+    256,
+    "W",
+    "input"
+   ],
+   "f_w_row": [
+    2256,
+    "W",
+    "input"
+   ],
+   "f_w_wr": [
+    2264,
+    "W",
+    "input"
+   ],
+   "t_w_ctl": [
+    256,
+    "W",
+    "output"
+   ],
+   "t_w_row": [
+    2256,
+    "W",
+    "output"
+   ],
+   "t_w_wr": [
+    2264,
+    "W",
+    "output"
+   ],
+   "f_s_ctl": [
+    256,
+    "S",
+    "input"
+   ],
+   "f_s_row": [
+    2256,
+    "S",
+    "input"
+   ],
+   "f_s_wr": [
+    2264,
+    "S",
+    "input"
+   ],
+   "t_s_ctl": [
+    256,
+    "S",
+    "output"
+   ],
+   "t_s_row": [
+    2256,
+    "S",
+    "output"
+   ],
+   "t_s_wr": [
+    2264,
+    "S",
+    "output"
+   ]
+  }
+ }
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.qwen_write_bridge.qualification.v1",
+  "adoption": false,
+  "default_off": true,
+  "ordered_dependencies": [
+    "rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv (already integrated)",
+    "rtl/physical/ot_qwen_die_hub_identity.sv (parent hub-identity.patch)",
+    "rtl/physical/ot_qwen_kvc_packet_codec_parallel.sv (parent packet-codec-parallel patch)",
+    "This bridge package",
+    "/tmp/qwen-control-hub-binding-20261007/delivery.patch after actual controller ledger/service source"
+  ],
+  "functional_gates": [
+    "fence_gate/result.json",
+    "typed_cancel_gate/result.json"
+  ],
+  "actual_controller_binding": "Separate source-pinned control-owned receipt/fixture, includes real protected controller and17tick PHY completion; not inferred from modeled native completion in local bridge benches.",
+  "transport_scope": "Two actual fullNL4 hubs, one selected lane across54/55TMRrelay nodes; no whole array simulation. Actual fixedPC writeback boundary only, no KV snapshot/descriptor/landing scheduler replacement.",
+  "epoch_scope": "Typed cancellation is local and separate from wd. Source keeps canceled requests pending. Global fence must reconcile stopped source owners with isolated sink cancellations, both transport directions and CDCs empty, actual ledger epoch_ready, real committed completions, read drain/quarantine and refresh custody. The external global coordinator is not implemented here.",
+  "protection_gap_measured": "typed_cancel_gate/h54_n13: decoded o_packet data FF upset after valid CRC check reaches native ledger; bridgefault0/0 and external exact scoreboard fails. CRC-valid typed output storage, ledger_w data/sec/tag register, FIFO payload and pointer/control state and native hub Gray credits remain unhardened.",
+  "reset_scope": "Cold POR only except explicitly coordinated epoch ownership retirement. Epoch fence does not reset transport credits or CDC pointers.",
+  "physical": "No standalone bay or SS/FF closure yet. Do not adopt into existing52.68x60.456relay frames. Codec mapping logicdepth/area from parent are evidence only; bridge queues/comparators and actual clock boundaries require physical qualification.",
+  "storage": "Generic productionYosys0.68 predecessor source/core10472FF,strip6278FF,pair16750FF. New local guard/cancel checks add no declaredFF; final technology area unmeasured. Identity hub independently costs+673genericFF perhub when enabled.",
+  "source_sha256": {
+    "rtl/physical/ot_qwen_kvc_hub_cdc.sv": "d20b1d35c98d7a2e1924515175aec56e2f83061bc1d330c0a116f9b79b9a044c",
+    "rtl/physical/ot_qwen_kvc_write_link_bridge.sv": "35a9465a04707ea71d7cbc66842af2f046f193832ac5ca968ec91c69058969f6",
+    "rtl/physical/ot_qwen_kvc_write_link_bridge_cancel.sv": "005f74bb0f2f422dabb3b8681e9923e431be324d86a3336623542c87f6a33d0f"
+  }
+}

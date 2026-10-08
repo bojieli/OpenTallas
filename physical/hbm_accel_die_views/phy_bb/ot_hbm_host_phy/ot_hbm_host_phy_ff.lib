@@ -1,0 +1,366 @@
+library(ot_hbm_host_phy_ff) {
+    technology (cmos);
+    delay_model : table_lookup;
+    time_unit : "1ns";
+    voltage_unit : "1V";
+    current_unit : "1uA";
+    leakage_power_unit : "1uW";
+    pulling_resistance_unit : "1kohm";
+    capacitive_load_unit (1,pf);
+    nom_process : 1;
+    nom_temperature : 0.000;
+    nom_voltage : 0.77;
+    operating_conditions(ff) { process : 1; temperature : 0.000; voltage : 0.77; tree_type : balanced_tree; }
+    default_operating_conditions : ff;
+    default_max_transition : 0.320;
+    slew_lower_threshold_pct_rise : 20.000;
+    slew_upper_threshold_pct_rise : 80.000;
+    slew_lower_threshold_pct_fall : 20.000;
+    slew_upper_threshold_pct_fall : 80.000;
+    input_threshold_pct_rise : 50.000;
+    input_threshold_pct_fall : 50.000;
+    output_threshold_pct_rise : 50.000;
+    output_threshold_pct_fall : 50.000;
+    lu_table_template(ot_hbm_host_phy_t) { variable_1 : input_net_transition; variable_2 : total_output_net_capacitance; index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); }
+    lu_table_template(ot_hbm_host_phy_c) { variable_1 : related_pin_transition; variable_2 : constrained_pin_transition; index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); }
+    type (ot_hbm_host_phy_bus2) { base_type : array; data_type : bit; bit_width : 2; bit_from : 1; bit_to : 0; downto : true; }
+    type (ot_hbm_host_phy_bus4) { base_type : array; data_type : bit; bit_width : 4; bit_from : 3; bit_to : 0; downto : true; }
+    type (ot_hbm_host_phy_bus8) { base_type : array; data_type : bit; bit_width : 8; bit_from : 7; bit_to : 0; downto : true; }
+    type (ot_hbm_host_phy_bus12) { base_type : array; data_type : bit; bit_width : 12; bit_from : 11; bit_to : 0; downto : true; }
+    type (ot_hbm_host_phy_bus32) { base_type : array; data_type : bit; bit_width : 32; bit_from : 31; bit_to : 0; downto : true; }
+    type (ot_hbm_host_phy_bus64) { base_type : array; data_type : bit; bit_width : 64; bit_from : 63; bit_to : 0; downto : true; }
+    cell(ot_hbm_host_phy) {
+        area : 430965.399;
+        interface_timing : true;
+        dont_use : true;
+        dont_touch : true;
+        pin(clk) { direction : input; capacitance : 0.020; clock : true; }
+        pin(s_awvalid) {
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(s_awready) {
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        bus(s_awaddr) { bus_type : ot_hbm_host_phy_bus12;
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(s_wvalid) {
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(s_wready) {
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        bus(s_wdata) { bus_type : ot_hbm_host_phy_bus32;
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        bus(s_wstrb) { bus_type : ot_hbm_host_phy_bus4;
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(s_bvalid) {
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        pin(s_bready) {
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(s_arvalid) {
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(s_arready) {
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        bus(s_araddr) { bus_type : ot_hbm_host_phy_bus12;
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(s_rvalid) {
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        pin(s_rready) {
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        bus(s_rdata) { bus_type : ot_hbm_host_phy_bus32;
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        pin(h_dma_arvalid) {
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(h_dma_arready) {
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        bus(h_dma_araddr) { bus_type : ot_hbm_host_phy_bus64;
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(h_dma_rvalid) {
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        pin(h_dma_rready) {
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        bus(h_dma_rdata) { bus_type : ot_hbm_host_phy_bus64;
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        bus(h_dma_rresp) { bus_type : ot_hbm_host_phy_bus2;
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        pin(h_dma_rlast) {
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        pin(h_dma_awvalid) {
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(h_dma_awready) {
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        bus(h_dma_awaddr) { bus_type : ot_hbm_host_phy_bus64;
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(h_dma_wvalid) {
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(h_dma_wready) {
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        bus(h_dma_wdata) { bus_type : ot_hbm_host_phy_bus64;
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        bus(h_dma_wstrb) { bus_type : ot_hbm_host_phy_bus8;
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        pin(h_dma_bvalid) {
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+        pin(h_dma_bready) {
+            direction : output; max_capacitance : 0.500;
+            timing() { related_pin : "clk"; timing_type : rising_edge; timing_sense : non_unate;
+            cell_rise(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            cell_fall(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.1500, 0.1500", "0.1500, 0.1500"); }
+            rise_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            fall_transition(ot_hbm_host_phy_t) { index_1 ("0.005, 0.500"); index_2 ("0.001, 0.500"); values ("0.0150, 0.0150", "0.0150, 0.0150"); }
+            }
+        }
+        bus(h_dma_bresp) { bus_type : ot_hbm_host_phy_bus2;
+            direction : input; capacitance : 0.0020;
+            timing() { related_pin : "clk"; timing_type : setup_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0350, 0.0350", "0.0350, 0.0350"); }
+            }
+            timing() { related_pin : "clk"; timing_type : hold_rising;
+            rise_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            fall_constraint(ot_hbm_host_phy_c) { index_1 ("0.005, 0.500"); index_2 ("0.005, 0.500"); values ("0.0650, 0.0650", "0.0650, 0.0650"); }
+            }
+        }
+    }
+}

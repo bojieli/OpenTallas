@@ -11,7 +11,23 @@ module ot_hdc_v41_fh_macro_ctx #(
     parameter integer RETURN_EXTRA = 2,
     parameter integer PROTECT_SPLIT = 0,
     parameter integer RETIRE = 0,
-    parameter integer VM_ENDPOINT = 0, VM_GUARD = 0
+    parameter integer VM_ENDPOINT = 0, VM_GUARD = 0,
+    // MARGIN (default 0; margin-first 1): zero-cycle broadcast trees (ctx), per-group lane faults into
+    // retirement, five-deep retirement (+1), staged checked-permission endpoint; with HARD_LANE=1 the
+    // 64 SRAM lanes are the hardened lane macro and requests reach them through ADDR_PIPE=2
+    // distribution registers (RETURN_EXTRA = 2 + PROTECT_SPLIT + 2).
+    parameter integer MARGIN = 0, HARD_LANE = 0,
+    // FPIPE (default 0; needs MARGIN): registered endpoint fault aggregation (ot_hdc_v41_fh_checked_permission)
+    parameter integer FPIPE = 0,
+    // QPIN (default 0; needs MARGIN HARD_LANE): ADDR_PIPE 3 - the quadrant input-pin request stage (+1 read and write
+    // request cycle; RETURN_EXTRA = 6)
+    parameter integer QPIN = 0,
+    // SAFE (default 0; with FPIPE=2): retirement SAFE (+1 stage, registered receipt compare, registered sink busy),
+    // registered stand-in fold
+    parameter integer SAFE = 0
+    // MARGIN context folds the duplicate observation buses (result_capture = slices of the captured
+    // request; the two check mirrors) to one tied bit and the argmax level-1 consumer registers to a
+    // parity bit: the registers and every internal load stay, ~7,900 stand-in pins go.
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -21,8 +37,11 @@ module ot_hdc_v41_fh_macro_ctx #(
     input wire [46:0] native_request_owner,
     input wire [1266:0] native_checked_reply,
     output wire native_request_checked_v,native_reply_checked_v,
-    output wire [2830:0] native_captured_request,native_captured_request_check,
-    output wire [1266:0] native_captured_reply,native_captured_reply_check,
+    output wire [3:0] native_permission_capture,
+    output wire [2830:0] native_captured_request,
+    output wire [MARGIN==0?2830:0:0] native_captured_request_check,
+    output wire [1266:0] native_captured_reply,
+    output wire [MARGIN==0?1266:0:0] native_captured_reply_check,
     input wire [7:0] commit_ack_id,
     input wire [23:0] commit_ack_word,
     input wire [15:0] commit_ack_mask,
@@ -56,8 +75,8 @@ module ot_hdc_v41_fh_macro_ctx #(
     output wire  [G*W-1:0]    o_mask,
     output wire  [G*W*32-1:0] o_data,
     output wire              fault,
-    output wire [G*W*32+G*W+G*AW+G-1:0] result_capture,
-    output wire [(1+32+NW)*(G*W/2)-1:0] argmax_level1
+    output wire [MARGIN==0?G*W*32+G*W+G*AW+G-1:0:0] result_capture,
+    output wire [MARGIN==0?(1+32+NW)*(G*W/2)-1:0:0] argmax_level1
 );
     wire [G*W*32-1:0] ra_q;
     wire [G*W-1:0] mem_valid,mem_corrected,mem_poison,mem_committed;
@@ -71,13 +90,24 @@ module ot_hdc_v41_fh_macro_ctx #(
     wire [G*W*32-1:0] raw_data;
     wire [G-1:0] child_we;
     wire [(1+32+NW)*G*W-1:0] child_leaf;
+    localparam integer ADDR_PIPE = (HARD_LANE && MARGIN) ? 2 + QPIN : 0;
+    generate if (HARD_LANE) begin : g_hard_memory
+    ot_hdc_v41_fh_sram_return_hardened #(.W(W),.G(G),.AW(AW),.PROTECT_SPLIT(PROTECT_SPLIT),.ADDR_PIPE(ADDR_PIPE)) u_memory (
+        .clk(clk),.rst_n(rst_n),.rd_en(ra_re),.rd_addr(ra_addr),.rd_data(ra_q),
+        .rd_valid(mem_valid),.corrected(mem_corrected),.poisoned(mem_poison),
+        .wr_en(wr_en),.wr_addr(wr_addr),.wr_mask(wr_mask),.wr_data(wr_data),
+        .wr_committed(mem_committed),.fault(memory_fault),.address_fault_bits(memory_address_fault));
+    end else begin : g_memory
     ot_hdc_v41_fh_sram_return #(.W(W),.G(G),.AW(AW),.PROTECT_SPLIT(PROTECT_SPLIT)) u_memory (
         .clk(clk),.rst_n(rst_n),.rd_en(ra_re),.rd_addr(ra_addr),.rd_data(ra_q),
         .rd_valid(mem_valid),.corrected(mem_corrected),.poisoned(mem_poison),
         .wr_en(wr_en),.wr_addr(wr_addr),.wr_mask(wr_mask),.wr_data(wr_data),
         .wr_committed(mem_committed),.fault(memory_fault),.address_fault_bits(memory_address_fault));
+    end endgenerate
+    wire [G-1:0] head_group_fault;
     ot_hdc_v41_fh_ctx #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.ALAT(ALAT),
-        .CAPTURE(CAPTURE),.RETURN_EXTRA(RETURN_EXTRA),.RETIRE(RETIRE)) u_head (
+        .CAPTURE(CAPTURE),.RETURN_EXTRA(RETURN_EXTRA),.RETIRE(RETIRE),.MARGIN(MARGIN)) u_head (
+        .group_fault(head_group_fault),
         .retire_busy(retire_busy),.retire_warm_ack(retire_warm_ack),.warm_emit(child_warm),
         .leaf_valid(child_leaf_v),.result_valid(child_ov),
         .clk(clk),.rst_n(rst_n),.ra_re(ra_re),.ra_addr(ra_addr),.ra_q(ra_q),
@@ -102,6 +132,30 @@ module ot_hdc_v41_fh_macro_ctx #(
         .o_mask(raw_mask),
         .o_data(raw_data));
     wire parent_fault;
+    wire [2830:0] native_request_check_full;
+    wire [1266:0] native_reply_check_full;
+    wire [G*W*32+G*W+G*AW+G-1:0] result_capture_full;
+    wire [(1+32+NW)*(G*W/2)-1:0] argmax_level1_full;
+    generate if (MARGIN==0) begin : g_obs
+        assign native_captured_request_check=native_request_check_full;
+        assign native_captured_reply_check=native_reply_check_full;
+        assign result_capture=result_capture_full;
+        assign argmax_level1=argmax_level1_full;
+    end else begin : g_obs_fold
+        assign native_captured_request_check=1'b0;
+        assign native_captured_reply_check=1'b0;
+        assign result_capture=1'b0;
+        if(SAFE) begin : g_fold_reg   // stand-in observation fold, registered (SAFE)
+            localparam integer NF=((1+32+NW)*(G*W/2)+63)/64;
+            wire [NF*64-1:0] ff={{(NF*64-(1+32+NW)*(G*W/2)){1'b0}},argmax_level1_full};
+            reg [NF-1:0] f1; reg f2;
+            integer fi;
+            always @(posedge clk) begin for(fi=0;fi<NF;fi=fi+1) f1[fi]<=^ff[fi*64+:64]; f2<=^f1; end
+            assign argmax_level1=f2;
+        end else begin : g_fold_direct
+            assign argmax_level1=^argmax_level1_full;
+        end
+    end endgenerate
     wire native_ack_v,native_fault,native_bounds_fault,native_guard_busy;
     wire [7:0] native_ack_id;
     wire [23:0] native_ack_word;
@@ -110,29 +164,30 @@ module ot_hdc_v41_fh_macro_ctx #(
 `ifndef SYNTHESIS
         initial if(!RETIRE) $fatal(1,"Native endpoint context requires retirement enabled");
 `endif
-        ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(VM_GUARD)) u_native (
+        ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(VM_GUARD),.MARGIN(MARGIN),.FPIPE(FPIPE)) u_native (
             .fast_clk(clk),.cold_n(native_cold_n),
             .request_accept((|o_we)&&native_request_ready),.request_warm(commit_warm),
             .checked_reply_capture(native_reply_capture),.published_reply_v(native_reply_v),
             .native_ordinal(native_ordinal),.request_owner(native_request_owner),.request_id(commit_id),
             .head_we(o_we),.head_addr(o_addr),.head_mask(o_mask),.head_data(o_data),
             .checked_reply(native_checked_reply),.bounds_fault(native_bounds_fault),.endpoint_fault(native_fault),
-            .captured_request(native_captured_request),.captured_request_check(native_captured_request_check),
-            .captured_reply(native_captured_reply),.captured_reply_check(native_captured_reply_check),
+            .captured_request(native_captured_request),.captured_request_check(native_request_check_full),
+            .captured_reply(native_captured_reply),.captured_reply_check(native_reply_check_full),
             .request_checked_v(native_request_checked_v),.reply_checked_v(native_reply_checked_v),.guard_busy(native_guard_busy),
             .head_ack_v(native_ack_v),.head_ack_id(native_ack_id),.head_ack_word(native_ack_word),.head_ack_mask(native_ack_mask));
     end else begin : g_no_native_load
         assign native_ack_v=0;assign native_ack_id=0;assign native_ack_word=0;assign native_ack_mask=0;
         assign native_fault=0;assign native_bounds_fault=0;assign native_guard_busy=0;
         assign native_request_checked_v=0;assign native_reply_checked_v=0;
-        assign native_captured_request=0;assign native_captured_request_check=0;
-        assign native_captured_reply=0;assign native_captured_reply_check=0;
+        assign native_captured_request=0;assign native_request_check_full=0;
+        assign native_captured_reply=0;assign native_reply_check_full=0;
     end endgenerate
     // Actual clocked grant receiver copies from the fixture/provider boundary.
     // These load the checked permission paths; observation-port false paths
     // cannot conceal a slow grant. Existing consumption edge, not new cycles.
     generate if(VM_GUARD) begin : g_native_grant_receiver
         (* keep=1,dont_touch=1 *) reg request_v,request_check,reply_v,reply_check;
+        assign native_permission_capture={reply_check,reply_v,request_check,request_v};
         always @(posedge clk) begin
             if(!native_cold_n) begin
                 request_v<=0;request_check<=1;reply_v<=0;reply_check<=1;
@@ -141,10 +196,13 @@ module ot_hdc_v41_fh_macro_ctx #(
                 reply_v<=native_reply_checked_v;reply_check<=~native_reply_checked_v;
             end
         end
+    end else begin : g_no_grant_receiver
+        assign native_permission_capture=0;
     end endgenerate
     assign fault=RETIRE?parent_fault:(child_fault||memory_fault);
 `ifndef SYNTHESIS
-    initial if(RETURN_EXTRA!=2+PROTECT_SPLIT) $fatal(1,"Protected SRAM return and head latency mismatch");
+    initial if(RETURN_EXTRA!=2+PROTECT_SPLIT+ADDR_PIPE) $fatal(1,"Protected SRAM return and head latency mismatch");
+    initial if(MARGIN && !(CAPTURE && RETIRE && (!VM_ENDPOINT || VM_GUARD))) $fatal(1,"MARGIN needs CAPTURE, RETIRE and the checked endpoint");
 `endif
     generate if(RETIRE) begin : g_retirement
         localparam integer PW=5512;
@@ -158,10 +216,10 @@ module ot_hdc_v41_fh_macro_ctx #(
         wire [63:0] veto;
         wire [3:0] write_veto,retired_we;
         wire [3135:0] retired_leaf;
-        ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW)) u_parent (
+        ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW),.MARGIN(MARGIN),.SAFE(SAFE)) u_parent (
             .clk(clk),.rst_n(rst_n),.packet_v(raw_v||child_ov||(|child_we)||child_warm||child_leaf_v),
             .warm(child_warm),.packet(packet),.warm_word(raw_addr[23:0]),.warm_mask(raw_mask[15:0]),
-            .poison(mem_poison),.address_fault(memory_address_fault),.arithmetic_fault(child_fault||native_fault),
+            .poison(mem_poison),.address_fault(memory_address_fault),.arithmetic_fault(MARGIN?native_fault:(child_fault||native_fault)),.group_fault(MARGIN?head_group_fault:4'b0),
             .sink_busy(commit_busy||native_guard_busy),.ack_v(VM_ENDPOINT?native_ack_v:commit_ack_v),.ack_id(VM_ENDPOINT?native_ack_id:commit_ack_id),
             .ack_word(VM_ENDPOINT?native_ack_word:commit_ack_word),.ack_mask(VM_ENDPOINT?native_ack_mask:commit_ack_mask),
             .retired_v(rv),.retired_warm(rw),.retired_packet(retired),.retired_id(commit_id),
@@ -193,12 +251,12 @@ module ot_hdc_v41_fh_macro_ctx #(
         end
         // Observe the existing native receiving registers; do not keep a
         // second fictitious result receiver after adding the real endpoint.
-        assign result_capture={native_captured_request[2716+:4],captured_head_addr,
+        assign result_capture_full={native_captured_request[2716+:4],captured_head_addr,
             native_captured_request[16+:64],native_captured_request[592+:2048]};
     end else begin : g_legacy_result_observe
         reg [G*W*32+G*W+G*AW+G-1:0] captured;
         always @(posedge clk) captured <= {o_we,o_addr,o_mask,o_data};
-        assign result_capture=captured;
+        assign result_capture_full=captured;
     end endgenerate
     for(genvar p=0;p<G*W/2;p=p+1) begin : g_argmax_consumer
         localparam integer CW=1+32+NW;
@@ -207,7 +265,14 @@ module ot_hdc_v41_fh_macro_ctx #(
         wire x0_wins=x0[CW-1]&&(!x1[CW-1]||x0[CW-2-:32]>x1[CW-2-:32]||
             (x0[CW-2-:32]==x1[CW-2-:32]&&x0[NW-1:0]<x1[NW-1:0]));
         reg [CW-1:0] c;
-        always @(posedge clk) c<=x0_wins?x0:x1;
-        assign argmax_level1[CW*p+:CW]=c;
+        if(SAFE) begin : g_rin   // SAFE: the stand-in consumer registers its operands first (as the MARGIN glue faces)
+            reg [CW-1:0] r0,r1;
+            always @(posedge clk) begin r0<=x0; r1<=x1; end
+            wire r0_wins=r0[CW-1]&&(!r1[CW-1]||r0[CW-2-:32]>r1[CW-2-:32]||(r0[CW-2-:32]==r1[CW-2-:32]&&r0[NW-1:0]<r1[NW-1:0]));
+            always @(posedge clk) c<=r0_wins?r0:r1;
+        end else begin : g_rdir
+            always @(posedge clk) c<=x0_wins?x0:x1;
+        end
+        assign argmax_level1_full[CW*p+:CW]=c;
     end
 endmodule

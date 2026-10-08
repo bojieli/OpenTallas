@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/src/tools/w18/corner_sta.py", line 125, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/src/tools/w18/corner_sta.py", line 113, in main
+    setup_ss=run(o, "ss", a.macro, a.post_sdc), hold_ff=run(o, "ff", a.macro, a.post_sdc),
+             ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/src/tools/w18/corner_sta.py", line 82, in run
+    (orfs / f"w18_sta_{corner}.tcl").write_text(script(corner, rel, macros, post_sdc))
+                                                ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/src/tools/w18/corner_sta.py", line 49, in script
+    read_sdc {base}/{sdc}
+                     ^^^
+NameError: name 'sdc' is not defined

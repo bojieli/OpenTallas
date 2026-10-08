@@ -1,0 +1,10 @@
+read_verilog -sv /src/rtl/hbm_accel/result_delay_bank_20261007/ot_hbm_result_delay_bank.sv
+chparam -set ENABLE 1 ot_hbm_result_delay_bank
+hierarchy -check -top ot_hbm_result_delay_bank
+synth -noabc -top ot_hbm_result_delay_bank
+dfflibmap -liberty /pdk/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+techmap -map /out/inv_map.v
+clean
+stat -liberty /pdk/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /pdk/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+write_json /out/mapped.json
+write_verilog -noattr /out/mapped.v

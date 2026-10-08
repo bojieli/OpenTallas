@@ -1,0 +1,68 @@
+OT_ROUTE_HOLD_CORNERS=primary: place-and-route repair corners WC -> WC (FF hold: post-route hold ECO; sign-off unchanged)
+FAILED: FlowError: ORFS place-and-route through cts failed with exit 2:
+gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+read_db /work/results/asap7/opentallas_ot_s81_bf_native_root_phase_asap7_bf_root_phase_hierarchy_7990dfdbf_cal/base/3_place.odb
+read_sdc /work/results/asap7/opentallas_ot_s81_bf_native_root_phase_asap7_bf_root_phase_hierarchy_7990dfdbf_cal/base/3_place.sdc
+Took 7 seconds: read_sdc /work/results/asap7/opentallas_ot_s81_bf_native_root_phase_asap7_bf_root_phase_hierarchy_7990dfdbf_cal/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_pre_cts.tcl
+[INFO DPL-0006] Core area: 185493.99 um^2
+[INFO DPL-0007] Movable instances area: 63009.06 um^2
+[INFO DPL-0008] Fixed instances area within core: 31968.37 um^2
+[INFO DPL-0009] Utilization: 51.2%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 485902 cells
+[INFO DPL-0393]   height 234 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 5.72s
+Placement Analysis
+---------------------------------
+total displacement      58314.5 u
+average displacement        0.1 u
+max displacement            1.4 u
+original HPWL         2133807.2 u
+legalized HPWL        2171450.7 u
+delta HPWL                    2 %
+
+BF_ROOT_PHASE_LOCALIZED 1 phase FF + 2 inverters within 100um of actual ICG
+Took 8 seconds: source /work/hooks/pre_cts_pre_cts.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0011]  Clock net "clk" for macros has 1 sinks.
+[ERROR ODB-0370] Attempt to disconnect term A of dont_touch instance g_half.g_root.u_inv0/u_inv
+Error: cts.tcl, 36 ODB-0370
+
+Elapsed time: 0:23.06[h:]min:sec. CPU time: user 22.39 sys 0.66 (99%). Peak memory: 2810908KB.
+Elapsed time: 8:40.28[h:]min:sec. CPU time: user 544.22 sys 35.36 (111%). Peak memory: 2157756KB.
+Elapsed time: 3:43.00[h:]min:sec. CPU time: user 301.55 sys 35.84 (151%). Peak memory: 2569712KB.
+Elapsed time: 0:06.66[h:]min:sec. CPU time: user 6.29 sys 0.36 (99%). Peak memory: 925604KB.
+Elapsed time: 0:13.88[h:]min:sec. CPU time: user 13.42 sys 0.46 (99%). Peak memory: 1406584KB.
+Elapsed time: 0:56.16[h:]min:sec. CPU time: user 320.33 sys 0.72 (571%). Peak memory: 1842496KB.
+Elapsed time: 0:07.32[h:]min:sec. CPU time: user 6.92 sys 0.41 (99%). Peak memory: 1156356KB.
+Elapsed time: 19:01.43[h:]min:sec. CPU time: user 2285.41 sys 313.69 (227%). Peak memory: 5550512KB.
+Elapsed time: 4:44.58[h:]min:sec. CPU time: user 365.23 sys 105.77 (165%). Peak memory: 2607396KB.
+Elapsed time: 7:19.23[h:]min:sec. CPU time: user 511.68 sys 71.46 (132%). Peak memory: 3619504KB.
+Elapsed time: 0:39.04[h:]min:sec. CPU time: user 37.92 sys 1.12 (99%). Peak memory: 2792832KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_ot_s81_bf_native_root_phase_asap7_bf_root_phase_hierarchy_7990dfdbf_cal/base/4_1_cts.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/closure-loop/bf_root_phase_hierarchy_7990dfdbf/routes/bf_root_phase_hierarchy_7990dfdbf_cal/physical.json

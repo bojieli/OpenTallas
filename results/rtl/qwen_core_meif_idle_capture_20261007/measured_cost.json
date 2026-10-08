@@ -1,0 +1,21 @@
+{
+  "status": "pass",
+  "native_cycle_delta": 0,
+  "cases": [
+    {
+      "kind": "forced5edgeMEhold",
+      "base": 583,
+      "candidate": 583,
+      "held_ME_edges_per_variant": 160
+    },
+    {
+      "kind": "forced5edgeMEhold_and_ready_stalls",
+      "base": 593,
+      "candidate": 593,
+      "held_ME_edges_per_variant": 160
+    }
+  ],
+  "component": "64instructions32ME32SU, full379-bit issue fields, real32partialKV RMW bridge, resetabort, END",
+  "broadcast": "One real379-bit stage at actual gated ME clock:32events percase, pending-overwrite negative fails at230ns; existing41stages unchanged",
+  "analytical_program_price": "Zero added intrinsic instruction/native cycles; no final deployed token-rate claim"
+}

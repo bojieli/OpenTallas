@@ -1,0 +1,86 @@
+{
+  "schema": "hbm-bounded-harvest-v1",
+  "observed_utc": "2026-10-07T05:27:57.140927+00:00",
+  "base_commit": "cf99d667d6ae486d4b4accd57046e8c6efa970b6",
+  "acceptance": {
+    "ss_setup_ps_min": 15,
+    "ff_hold_ps_min": 15,
+    "signoff_period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "drc_max": 0
+  },
+  "ha2": {
+    "status": "FAIL",
+    "ss_setup_ps": -547.31,
+    "ff_hold_ps": -152.67,
+    "terminal_exit": 2,
+    "verified_source_files": 4,
+    "adopted": false
+  },
+  "w2_r4": [
+    {
+      "run": "/srv/opentallas-scratch/claude/tk-hbm-w2/no2-r4",
+      "status": "FLOW_COMPLETED_ENGINEERING_NOT_MET_SIGNOFF_MISSING",
+      "route_period_ps": 770,
+      "setup_route_ps": -77.7869,
+      "hold_route_ps": -189.024,
+      "drc": 0,
+      "max_slew_violations": 1,
+      "adopted": false
+    },
+    {
+      "run": "/srv/opentallas-scratch/claude/tk-hbm-w2/no3-r4",
+      "status": "FLOW_COMPLETED_ENGINEERING_NOT_MET_SIGNOFF_MISSING",
+      "route_period_ps": 770,
+      "setup_route_ps": -211.144,
+      "hold_route_ps": -205.648,
+      "drc": 0,
+      "max_slew_violations": 82,
+      "adopted": false
+    }
+  ],
+  "w2_safe": {
+    "status": "LIVE_NEGATIVE_S8_AT_OBSERVATION",
+    "source_commit": "206a3037e32ee0a8773d21ff7c61fa20de586743",
+    "quarter_positive": "PASS19",
+    "quarter_ack_edge": 213,
+    "parent_release_edge": 218,
+    "warm_ack_edge": 220,
+    "gate_qualified": false,
+    "reason": "No terminal; inherited gate treats timeout/compile failure as negative rejection. Must not qualify that as exactness."
+  },
+  "attention": {
+    "leaf": {
+      "ss_ps": 64.64,
+      "ff_ps": 15.39
+    },
+    "quad": {
+      "ss_ps": 186.54,
+      "ff_ps": 21.11,
+      "reset_exception": "mcp4"
+    },
+    "committed_record": "bf034dc02f12f3b13482c6c63aa1a9e9a20358b0",
+    "scope": "Previously committed component timing records only; no new adoption or die assembly qualification.",
+    "tile": "dt2_bd150 live GRT EPYC3 at observation"
+  },
+  "su": {
+    "controller": "ctl16m770_u26_h30 live GRT EPYC3",
+    "reducer": "tm2 io150 record does not qualify IO (infinite input path) and hold +5.02 < +15; tm3/sm3 successors retained",
+    "quarter": "hbm_su_quarter_01353018a live calibration in closure registry"
+  },
+  "sm": {
+    "front": "front_m2d terminal GRT-0116 congestion (83 overflow); tail captured",
+    "tileW": "tileW_m2d live DRT EPYC3",
+    "adopted": false
+  },
+  "packaging": {
+    "status": "PREPARED_VALIDATED_NOT_SUBMITTED",
+    "path": "physical/hbm_w2_safe_packaging_20261006",
+    "blocker": "calibrate shares final run directory, omits CTS stop, looks in absent _cal base",
+    "fix": "Separate _cal directory, explicit --pnr-stop-after cts",
+    "reserved_tooling_changed": false,
+    "workloads_spawned": 0
+  },
+  "next_action": "Parent integrate these commits; harvest existing SAFE terminals naturally and reject timeout/crash-based negative credit. After qualifying gate evidence, closure-loop owner admits corrected packaging only when the existing source/block route reservation permits; no duplicate launch."
+}

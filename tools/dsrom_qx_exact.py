@@ -36,10 +36,11 @@ ROOT = Path(__file__).resolve().parents[1]
 TB = "rtl/test/tb_dsrom_qx_exact.sv"
 RTL = ["rtl/v41rom/ot_v41_rom_elem_q_w10.sv", "rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv",
        "rtl/v41rom/ot_v41_rom_elem_w10.sv", "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv", "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv",
+       "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv", "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv", "rtl/v41rom/ot_v41_elem_pq_tags.sv",
        "rtl/v41rom/ot_v41_kreg.sv", "rtl/v41rom/ot_v41_chain3.sv"]
 RTL += [f"rtl/v41rom/{n}.sv" for n in ("ot_v41_bterm", "ot_v41_chain", "ot_v41_segtree", "ot_v41_bf16_lanes",
         "ot_v41_fadd", "ot_v41_bmul2", "ot_v41_bterm2_w10", "ot_v41_chain2", "ot_v41_segtree2", "ot_v41_bf16_lanes2",
-        "ot_v41_bterm3_w10", "ot_v41_bterm4_w10", "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5", "ot_v41_chain4", "ot_v41_fadd2")]
+        "ot_v41_bterm3_w10", "ot_v41_bterm4_w10", "ot_v41_bterm5_w10", "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5", "ot_v41_segtree6", "ot_v41_chain4", "ot_v41_fadd2")]
 RTL += [f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe", "ot_hdc_delay", "ot_hdc_cg")]
 RTL += ["rtl/common/ot_prefix.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv"]
 PASS = re.compile(r"PASS QP=(\d+) XS=(\d+) CAP=(\d+) P1=(\d+) L=(\d+) compared=(\d+) exempt=(\d+) seed=(\d+) cycles=(\d+) "
@@ -50,7 +51,19 @@ KEYS = ("QPIPE", "QP_XS", "QP_CAP", "QP_P1", "shift_L", "compared_cycles", "exem
         "gated_edges", "closed_cycles", "hits", "issues", "rows", "nonzero", "classes_mask", "wraps", "q_advances",
         "mtp_restarts", "rejected", "go_gate_closed", "go_mid_drain", "go_walking", "resets")
 CHK = ["+define+QT_CHECK", "+define+QP_CHECK"]
-BUILDS = {"pos": CHK, "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
+BUILDS = {"pos": CHK, "pos_pq0": CHK + ["+define+QX_DUT_PQ0"], "pos_qw": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QW=1"], "pos_qm": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=1"], "pos_qm2": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=2"], "pos_qm3": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=3"], "pos_qm4": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=4"], "pos_qm5": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5"],
+          "neg_qm2z": ["+define+QX_DUT_PQ0", "+define+QX_QM=2", "+define+ST6_MUTANT_Z"], "neg_qm2q": ["+define+QX_DUT_PQ0", "+define+QX_QM=2", "+define+ST6_MUTANT_Q"],
+          "pos_qm6": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=6"], "neg_qm6ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=6", "+define+BT5_MUTANT_NS"], "neg_qm6sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=6", "+define+BT5_MUTANT_SH"], "neg_qm6f4": ["+define+QX_DUT_PQ0", "+define+QX_QM=6", "+define+QM6_MUTANT_F4"], "neg_qm6sf": ["+define+QX_DUT_PQ0", "+define+QX_QM=6", "+define+QM6_MUTANT_SF"],
+          "pos_qm7": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=7"], "neg_qm7rz": ["+define+QX_DUT_PQ0", "+define+QX_QM=7", "+define+QM7_MUTANT_RZ"], "neg_qm7ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=7", "+define+BT5_MUTANT_NS"],
+          "pos_qs5": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=1"], "neg_qs5ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=1", "+define+BT5_MUTANT_NS"], "neg_qs5sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=1", "+define+BT5_MUTANT_SH"],
+          "pos_qs2": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=2"], "neg_qs2ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=2", "+define+BT5_MUTANT_NS"], "neg_qs2sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=2", "+define+BT5_MUTANT_SH"],
+          "pos_qs3": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3"], "neg_qs3ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3", "+define+BT5_MUTANT_NS"], "neg_qs3sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3", "+define+BT5_MUTANT_SH"], "neg_qs3yf": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3", "+define+ST7_MUTANT_YF"], "neg_qs3nr": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3", "+define+WRT_MUTANT_NR"], "neg_qs3sb": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=3", "+define+WRT_MUTANT_SB"],
+          # QS = 4 (2026-10-07): QS = 3 + WRD (walker nA / nB from registered end / advance decisions)
+          "pos_qs4": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=4"], "neg_qs4nq": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=4", "+define+WRD_MUTANT_NQ"], "neg_qs4l1": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=4", "+define+WRD_MUTANT_L1"], "neg_qs4sb": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=4", "+define+WRT_MUTANT_SB"],
+          # QS = 5 (2026-10-07): QS = 4 + walker / tree registers on the ungated clock with kept-copy enables ("u" = ungated)
+          "pos_qs5u": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=5"], "neg_qs5unq": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=5", "+define+WRD_MUTANT_NQ"], "neg_qs5uwe": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=5", "+define+QS5_MUTANT_WEN"], "neg_qs5ul1": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=5", "+define+WRD_MUTANT_L1"], "neg_qs5ush": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=5", "+define+BT5_MUTANT_SH"],
+          "neg_qm5ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+BT5_MUTANT_NS"], "neg_qm5sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+BT5_MUTANT_SH"],
+          "neg_qmns": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_NS"], "neg_qmsh": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_SH"], "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
           "qz0": CHK + ["-GQX=0", "-GQY=0", "-GQZ=0"], "neg_qxlu": ["+define+QX_MUTANT_LU", "-GQX=8"],
           "neg_qxca": ["+define+QX_MUTANT_CA", "-GQX=8"], "neg_qxnca": ["+define+QX_MUTANT_NCA", "-GQX=8"],
           "qx2": CHK + ["-GQX=2"], "qx3": CHK + ["-GQX=3"], "qx4": CHK + ["-GQX=4"], "qx5": CHK + ["-GQX=5"], "qx6": CHK + ["-GQX=6"], "qx7": CHK + ["-GQX=7"], "qx8": CHK + ["-GQX=8"], "neg_fw": ["+define+ST_MUTANT_FW"], "qx9": CHK + ["-GQX=9"], "neg_ns": ["+define+BT_MUTANT_NS"], "neg_pd": ["+define+CH_MUTANT_PD"], "neg_dp10": ["+define+QP_MUTANT_DP"], "neg_tree9": ["+define+QP_MUTANT_TREE"], "neg_xc": ["+define+ST_MUTANT_XC", "-GQX=8"], "neg_qxsf": ["+define+QX_MUTANT_SF", "-GQX=8"], "neg_qxhz": ["+define+QX_MUTANT_HZ", "-GQX=8"], "neg_p2s": ["+define+BT_MUTANT_P2S", "-GQX=8"],
@@ -74,6 +87,7 @@ def main() -> None:
                          "including every negative control; the comparison itself is unchanged")
     ap.add_argument("--tag", default="", help="also write the record with this suffix, so a quick run never hides the full one")
     ap.add_argument("--jobs", type=int, default=12)
+    ap.add_argument("--only", default="", help="regex: run only the builds whose name matches (e.g. pos_qm|neg_qm.*)")
     ap.add_argument("--allow-dirty", action="store_true")
     ap.add_argument("--verilator", default=str(Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"))
     a = ap.parse_args()
@@ -120,12 +134,13 @@ def main() -> None:
                   tool_version=subprocess.check_output([a.verilator, "--version"], text=True).strip(), runs=[])
     try:
         with cf.ThreadPoolExecutor(len(BUILDS)) as ex:
-            record["build_commands"] = dict(zip(BUILDS, ex.map(build, BUILDS)))
+            names = [b for b in BUILDS if not a.only or re.fullmatch(a.only, b)]
+            record["build_commands"] = dict(zip(names, ex.map(build, names)))
         n = 1 if a.quick else a.seeds
         m = 1 if a.quick else max(2, a.seeds // 2)
         record["measurement_mode"] = ("quick: one seed per configuration" if a.quick else
                                       "pos x %d seeds, every other configuration x %d" % (n, m))
-        jobs = [("pos", s) for s in range(1, n + 1)] + [("qz0", 100 + s) for s in range(1, m + 1)]
+        jobs = [("pos", s) for s in range(1, n + 1)] + [("pos_pq0", s) for s in range(1, n + 1)] + [("pos_qw", s) for s in range(1, n + 1)] + [("pos_qw", 1, ("+nan_sparse",))] + [("pos_qm", s) for s in range(1, n + 1)] + [("pos_qm", 1, ("+nan_sparse",))] + [("qz0", 100 + s) for s in range(1, m + 1)]
         jobs += [("qx9", 1400 + s) for s in range(1, m + 1)]
         jobs += [("qx8", 1300 + s) for s in range(1, m + 1)]
         jobs += [("qx7", 1200 + s) for s in range(1, m + 1)]
@@ -142,6 +157,20 @@ def main() -> None:
                  ("neg_z", 1), ("neg_cl", 1), ("neg_qxlu", 3), ("neg_qxca", 3), ("neg_qxnca", 3), ("neg_p2s", 1), ("neg_qxhz", 1), ("neg_qxsf", 1), ("neg_xc", 1), ("neg_fw", 1), ("neg_tree9", 1), ("neg_pd", 1), ("neg_dp10", 1)]
         # +nan_sparse (bench header): the QX = 10 lane-NaN partials (bterm4 NS) and their negative control on sparse NaNs
         jobs += [("pos", 1, ("+nan_sparse",)), ("neg_ns", 1, ("+nan_sparse",))]
+        jobs += [("neg_qmns", 1, ("+nan_sparse",)), ("neg_qmsh", 1)]
+        jobs += [("pos_qm2", s) for s in range(1, n + 1)] + [("pos_qm2", 7), ("neg_qm2z", 1), ("neg_qm2q", 1)]
+        jobs += [("pos_qm3", s) for s in range(1, n + 1)] + [("pos_qm3", 7)]
+        jobs += [("pos_qm4", s) for s in range(1, n + 1)] + [("pos_qm4", 1, ("+nan_sparse",))]
+        jobs += [("pos_qm5", s) for s in range(1, n + 1)] + [("pos_qm5", 1, ("+nan_sparse",))] + [("neg_qm5ns", 1, ("+nan_sparse",)), ("neg_qm5sh", 1)]
+        jobs += [("pos_qm6", s) for s in range(1, n + 1)] + [("pos_qm6", 1, ("+nan_sparse",)), ("neg_qm6ns", 1, ("+nan_sparse",)), ("neg_qm6sh", 1), ("neg_qm6f4", 1), ("neg_qm6sf", 1)]      # QM lane (ot_v41_bterm5_w10) controls
+        jobs += [("pos_qm7", s) for s in range(1, n + 1)] + [("pos_qm7", 1, ("+nan_sparse",)), ("neg_qm7rz", 1), ("neg_qm7ns", 1, ("+nan_sparse",))]
+        jobs += [("pos_qs5", s) for s in range(1, n + 1)] + [("pos_qs5", 1, ("+nan_sparse",)), ("neg_qs5ns", 1, ("+nan_sparse",)), ("neg_qs5sh", 1)]
+        jobs += [("pos_qs2", s) for s in range(1, n + 1)] + [("pos_qs2", 1, ("+nan_sparse",)), ("neg_qs2ns", 1, ("+nan_sparse",)), ("neg_qs2sh", 1)]
+        jobs += [("pos_qs3", s) for s in range(1, n + 1)] + [("pos_qs3", 1, ("+nan_sparse",)), ("neg_qs3ns", 1, ("+nan_sparse",)), ("neg_qs3sh", 1), ("neg_qs3yf", 1), ("neg_qs3nr", 1), ("neg_qs3sb", 1)]
+        jobs += [("pos_qs4", s) for s in range(1, n + 1)] + [("pos_qs4", 1, ("+nan_sparse",)), ("neg_qs4nq", 1), ("neg_qs4l1", 1), ("neg_qs4sb", 1)]
+        jobs += [("pos_qs5u", s) for s in range(1, n + 1)] + [("pos_qs5u", 1, ("+nan_sparse",)), ("neg_qs5unq", 1), ("neg_qs5ul1", 1), ("neg_qs5uwe", 1), ("neg_qs5ush", 1)]
+        if a.only:
+            jobs = [j for j in jobs if re.fullmatch(a.only, j[0])]
         with cf.ThreadPoolExecutor(a.jobs) as ex:
             results = list(ex.map(lambda j: run(*j), jobs))
         for name, seed, rc, log, lsha in results:

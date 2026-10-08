@@ -1,0 +1,10 @@
+Observed mutable publication storage failures
+
+The current full2256/865 combined ingress adapter was tested through the actual full16 checked SRAM provider with one physically initialized word. Known ordinary and XVM data returns pass. Three single-bit register-error cases FAIL the reliability gate: read_q error reaches the next native consumer; xpipe error reaches the next leased publication; last_window error after checked return is re-encoded into a valid read_seat codeword. The original failures and source pins are immutable evidence. These are local RTL storage-error tests, not arithmetic or physical signoff.
+
+Controls show that retained read_seat SECDED corrects one data-bit error and blocks native publication for two data-bit errors. Thus the protection gap is specifically the plain holding stages outside retained codewords; the existing source-seat codec is not being declared ineffective.
+
+The prebuild inventory prices a minimal codeword-carry successor before implementation: retain response codewords through output and XVM holding, and retain original check stripes beside checked-bank data through last_window. It adds170624 declared register bits including a256-bit checked-return parity output, no proposed logical pipeline cycles, and leaves real decoder/guard timing unqualified. This is a conservative whole-codeword design; no constant-folding area credit is assumed. Owner/control/pack/address state is still outside this data-hold change and remains an adoption blocker.
+
+Reproduce: python3 tools/qwen_vm_publication_storage_check.py --root . --out /tmp/publication-storage-recheck
+The runner expects the three historical failures and records quality FAIL rather than converting expected failures into a protection PASS. It requires the committed combined-provider source snapshot. No pinned production RTL is edited.

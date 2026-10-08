@@ -75,6 +75,10 @@ from rtl_v41_rom_array import Ckpt, Mat  # noqa: E402
 
 VERILATOR = os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator")
 S81 = ROOT / "results/uarch/dsrom_s81_released_binding_20261004/canonical"
+# OT_DSROM_FIELD_BINDING (default unset = the released S81 binding): an alternative allocation directory with the same
+# files (matrix_map.jsonl.gz, stage_map.json, inventory.json), e.g. tools/dsrom_bf_double_alloc.py's (bf-double 2026-10-07)
+if os.environ.get("OT_DSROM_FIELD_BINDING"):
+    S81 = Path(os.environ["OT_DSROM_FIELD_BINDING"]).resolve()
 REC = ROOT / "results/rtl/dsrom_1m_allmeasured_20261004/field.json"
 GOLD_VM = Path("/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r0")
 RANK = 0
@@ -100,16 +104,17 @@ TOOLS = [Path(__file__), ROOT / "tools/v41_die_images_w17w10.py", ROOT / "tools/
          ROOT / "tools/v41_die_field.py"]
 # --qelem N (default 0 = off): the FP8/FP4 pairs are the DS-V4.1 ROM q-element the S81 die is built from
 # (ot_v41_rom_elem_q_qx_w10 at its routed parameters, QX = N; ot_v41_pair_w17w10 QELEM), BF16-capable pairs keep W10's
-QRTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_rom_elem_q_qx_w10", "ot_v41_rom_elem_qx_w10", "ot_v41_kreg",
+QRTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_rom_elem_q_qx_w10", "ot_v41_rom_elem_qx_w10",
+                                              "ot_v41_rom_elem_q_qxpq_w10", "ot_v41_rom_elem_qx_pq_w10", "ot_v41_kreg",
                                               "ot_v41_chain3", "ot_v41_chain4", "ot_v41_fadd2",
-                                              "ot_v41_bterm3_w10", "ot_v41_bterm4_w10",
-                                              "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5")]
+                                              "ot_v41_bterm3_w10", "ot_v41_bterm4_w10", "ot_v41_bterm5_w10",
+                                              "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5", "ot_v41_segtree6")]
 # the QX 10 chain / adder files (ot_v41_chain4, ot_v41_fadd2) are listed before they are on main: keep only the
 # sources present, so --qelem builds the q-element of the checked-out tree (CLAUDE DS-INTEGRATION 2026-10-05: with
 # the two missing files the --qelem build failed on main)
 QRTL = [p for p in QRTL if p.exists()]
 SOURCES = sorted(set(RTL + DIE + ROMS + [TB] + TOOLS))
-S81_FILES = [S81 / "matrix_map.jsonl.gz", S81 / "stage_map.json", S81 / "inventory.json", S81 / "binding.json"]
+S81_FILES = [S81 / f for f in ("matrix_map.jsonl.gz", "stage_map.json", "inventory.json", "binding.json") if (S81 / f).exists()]
 
 # phase groups: (node, group, x source).  x source: "attn_norm" / "ffn_norm" (the golden layer's vector), or
 # "internal" (an operator-internal vector: the golden VM for L20, a seeded vector elsewhere)

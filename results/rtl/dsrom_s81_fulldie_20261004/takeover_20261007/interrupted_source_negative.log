@@ -1,0 +1,199 @@
+......FFFF.........                                                      [100%]
+=================================== FAILURES ===================================
+__________ test_all_512_rx_tx_bits_and_receive_clocks[True-True-1-W] ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76a152262ef0>
+side = 'W', split = True, serdes = True, count = 1
+
+    @pytest.mark.parametrize('side', ['W', 'E'])
+    @pytest.mark.parametrize('split,serdes,count', [
+        (False, True, 0), (False, True, 1), (False, True, 3),
+        (True, True, 1), (True, True, 3), (True, False, 0), (True, False, 3)])
+    def test_all_512_rx_tx_bits_and_receive_clocks(monkeypatch, side, split, serdes, count):
+        m, lk, end = link_model(monkeypatch, side, split, count, serdes)
+>       trace_bits(m, (lk, 'rx'), (end, 'di0'))
+
+tests/test_dsrom_s81_link_chains.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+m = {'buses': [('KW1t_f0', 'fclk', 1, [('collective', 'tfW1'), ('KW1t_0', 'fi0')]), ('KW1t_d0', 'lane', 512, [('collective...50.0}, 'hub': {'collective': namespace(name='collective', master='collective', x=100.0, y=100.0, w=20.0, h=20.0)}, ...}
+source = ('lnkW1', 'rx'), sink = ('hl_W1', 'di0')
+
+    def trace_bits(m, source, sink):
+        """Walk each bit through wires and identity station registers; reject missing/multiple drivers."""
+        drivers = {}
+        for _, cls, bits, eps in m['buses']:
+            if cls != 'lane':
+                continue
+            expanded = []
+            for inst, port in eps:
+                base, lo, hi = F.pslice(port)
+                lo = 0 if lo is None else lo
+                expanded.append([(inst, base, lo + j) for j in range(bits)])
+            for load in expanded[1:]:
+                for dst, src in zip(load, expanded[0]):
+                    assert dst not in drivers, ('multiple drivers', dst)
+                    drivers[dst] = src
+        for bit in range(512):
+            node = (*sink, bit)
+            seen = set()
+            while node != (*source, bit):
+                assert node not in seen, ('cycle', node)
+                seen.add(node)
+                if node[1] == 'do0':
+                    node = (node[0], 'di0', node[2])
+                else:
+>                   assert node in drivers, ('undriven', node)
+E                   AssertionError: ('undriven', ('hl_W1', 'di0', 0))
+E                   assert ('hl_W1', 'di0', 0) in {('KW1_rx_0', 'di0', 0): ('lnkW1', 'rx', 0), ('KW1_rx_0', 'di0', 1): ('lnkW1', 'rx', 1), ('KW1_rx_0', 'di0', 2): ('lnkW1', 'rx', 2), ('KW1_rx_0', 'di0', 3): ('lnkW1', 'rx', 3), ...}
+
+tests/test_dsrom_s81_link_chains.py:69: AssertionError
+__________ test_all_512_rx_tx_bits_and_receive_clocks[True-True-1-E] ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76a1520d7a90>
+side = 'E', split = True, serdes = True, count = 1
+
+    @pytest.mark.parametrize('side', ['W', 'E'])
+    @pytest.mark.parametrize('split,serdes,count', [
+        (False, True, 0), (False, True, 1), (False, True, 3),
+        (True, True, 1), (True, True, 3), (True, False, 0), (True, False, 3)])
+    def test_all_512_rx_tx_bits_and_receive_clocks(monkeypatch, side, split, serdes, count):
+        m, lk, end = link_model(monkeypatch, side, split, count, serdes)
+>       trace_bits(m, (lk, 'rx'), (end, 'di0'))
+
+tests/test_dsrom_s81_link_chains.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+m = {'buses': [('KE1t_f0', 'fclk', 1, [('collective', 'tfE1'), ('KE1t_0', 'fi0')]), ('KE1t_d0', 'lane', 512, [('collective...50.0}, 'hub': {'collective': namespace(name='collective', master='collective', x=100.0, y=100.0, w=20.0, h=20.0)}, ...}
+source = ('lnkE1', 'rx'), sink = ('hl_E1', 'di0')
+
+    def trace_bits(m, source, sink):
+        """Walk each bit through wires and identity station registers; reject missing/multiple drivers."""
+        drivers = {}
+        for _, cls, bits, eps in m['buses']:
+            if cls != 'lane':
+                continue
+            expanded = []
+            for inst, port in eps:
+                base, lo, hi = F.pslice(port)
+                lo = 0 if lo is None else lo
+                expanded.append([(inst, base, lo + j) for j in range(bits)])
+            for load in expanded[1:]:
+                for dst, src in zip(load, expanded[0]):
+                    assert dst not in drivers, ('multiple drivers', dst)
+                    drivers[dst] = src
+        for bit in range(512):
+            node = (*sink, bit)
+            seen = set()
+            while node != (*source, bit):
+                assert node not in seen, ('cycle', node)
+                seen.add(node)
+                if node[1] == 'do0':
+                    node = (node[0], 'di0', node[2])
+                else:
+>                   assert node in drivers, ('undriven', node)
+E                   AssertionError: ('undriven', ('hl_E1', 'di0', 0))
+E                   assert ('hl_E1', 'di0', 0) in {('KE1_rx_0', 'di0', 0): ('lnkE1', 'rx', 0), ('KE1_rx_0', 'di0', 1): ('lnkE1', 'rx', 1), ('KE1_rx_0', 'di0', 2): ('lnkE1', 'rx', 2), ('KE1_rx_0', 'di0', 3): ('lnkE1', 'rx', 3), ...}
+
+tests/test_dsrom_s81_link_chains.py:69: AssertionError
+__________ test_all_512_rx_tx_bits_and_receive_clocks[True-True-3-W] ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76a152260fa0>
+side = 'W', split = True, serdes = True, count = 3
+
+    @pytest.mark.parametrize('side', ['W', 'E'])
+    @pytest.mark.parametrize('split,serdes,count', [
+        (False, True, 0), (False, True, 1), (False, True, 3),
+        (True, True, 1), (True, True, 3), (True, False, 0), (True, False, 3)])
+    def test_all_512_rx_tx_bits_and_receive_clocks(monkeypatch, side, split, serdes, count):
+        m, lk, end = link_model(monkeypatch, side, split, count, serdes)
+>       trace_bits(m, (lk, 'rx'), (end, 'di0'))
+
+tests/test_dsrom_s81_link_chains.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+m = {'buses': [('KW1t_f0', 'fclk', 1, [('collective', 'tfW1'), ('KW1t_0', 'fi0')]), ('KW1t_d0', 'lane', 512, [('collective...50.0}, 'hub': {'collective': namespace(name='collective', master='collective', x=100.0, y=100.0, w=20.0, h=20.0)}, ...}
+source = ('lnkW1', 'rx'), sink = ('hl_W1', 'di0')
+
+    def trace_bits(m, source, sink):
+        """Walk each bit through wires and identity station registers; reject missing/multiple drivers."""
+        drivers = {}
+        for _, cls, bits, eps in m['buses']:
+            if cls != 'lane':
+                continue
+            expanded = []
+            for inst, port in eps:
+                base, lo, hi = F.pslice(port)
+                lo = 0 if lo is None else lo
+                expanded.append([(inst, base, lo + j) for j in range(bits)])
+            for load in expanded[1:]:
+                for dst, src in zip(load, expanded[0]):
+                    assert dst not in drivers, ('multiple drivers', dst)
+                    drivers[dst] = src
+        for bit in range(512):
+            node = (*sink, bit)
+            seen = set()
+            while node != (*source, bit):
+                assert node not in seen, ('cycle', node)
+                seen.add(node)
+                if node[1] == 'do0':
+                    node = (node[0], 'di0', node[2])
+                else:
+>                   assert node in drivers, ('undriven', node)
+E                   AssertionError: ('undriven', ('hl_W1', 'di0', 0))
+E                   assert ('hl_W1', 'di0', 0) in {('KW1_rx_0', 'di0', 0): ('lnkW1', 'rx', 0), ('KW1_rx_0', 'di0', 1): ('lnkW1', 'rx', 1), ('KW1_rx_0', 'di0', 2): ('lnkW1', 'rx', 2), ('KW1_rx_0', 'di0', 3): ('lnkW1', 'rx', 3), ...}
+
+tests/test_dsrom_s81_link_chains.py:69: AssertionError
+__________ test_all_512_rx_tx_bits_and_receive_clocks[True-True-3-E] ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76a1520d6440>
+side = 'E', split = True, serdes = True, count = 3
+
+    @pytest.mark.parametrize('side', ['W', 'E'])
+    @pytest.mark.parametrize('split,serdes,count', [
+        (False, True, 0), (False, True, 1), (False, True, 3),
+        (True, True, 1), (True, True, 3), (True, False, 0), (True, False, 3)])
+    def test_all_512_rx_tx_bits_and_receive_clocks(monkeypatch, side, split, serdes, count):
+        m, lk, end = link_model(monkeypatch, side, split, count, serdes)
+>       trace_bits(m, (lk, 'rx'), (end, 'di0'))
+
+tests/test_dsrom_s81_link_chains.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+m = {'buses': [('KE1t_f0', 'fclk', 1, [('collective', 'tfE1'), ('KE1t_0', 'fi0')]), ('KE1t_d0', 'lane', 512, [('collective...50.0}, 'hub': {'collective': namespace(name='collective', master='collective', x=100.0, y=100.0, w=20.0, h=20.0)}, ...}
+source = ('lnkE1', 'rx'), sink = ('hl_E1', 'di0')
+
+    def trace_bits(m, source, sink):
+        """Walk each bit through wires and identity station registers; reject missing/multiple drivers."""
+        drivers = {}
+        for _, cls, bits, eps in m['buses']:
+            if cls != 'lane':
+                continue
+            expanded = []
+            for inst, port in eps:
+                base, lo, hi = F.pslice(port)
+                lo = 0 if lo is None else lo
+                expanded.append([(inst, base, lo + j) for j in range(bits)])
+            for load in expanded[1:]:
+                for dst, src in zip(load, expanded[0]):
+                    assert dst not in drivers, ('multiple drivers', dst)
+                    drivers[dst] = src
+        for bit in range(512):
+            node = (*sink, bit)
+            seen = set()
+            while node != (*source, bit):
+                assert node not in seen, ('cycle', node)
+                seen.add(node)
+                if node[1] == 'do0':
+                    node = (node[0], 'di0', node[2])
+                else:
+>                   assert node in drivers, ('undriven', node)
+E                   AssertionError: ('undriven', ('hl_E1', 'di0', 0))
+E                   assert ('hl_E1', 'di0', 0) in {('KE1_rx_0', 'di0', 0): ('lnkE1', 'rx', 0), ('KE1_rx_0', 'di0', 1): ('lnkE1', 'rx', 1), ('KE1_rx_0', 'di0', 2): ('lnkE1', 'rx', 2), ('KE1_rx_0', 'di0', 3): ('lnkE1', 'rx', 3), ...}
+
+tests/test_dsrom_s81_link_chains.py:69: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dsrom_s81_link_chains.py::test_all_512_rx_tx_bits_and_receive_clocks[True-True-1-W]
+FAILED tests/test_dsrom_s81_link_chains.py::test_all_512_rx_tx_bits_and_receive_clocks[True-True-1-E]
+FAILED tests/test_dsrom_s81_link_chains.py::test_all_512_rx_tx_bits_and_receive_clocks[True-True-3-W]
+FAILED tests/test_dsrom_s81_link_chains.py::test_all_512_rx_tx_bits_and_receive_clocks[True-True-3-E]

@@ -1,0 +1,496 @@
+{
+  "captured": "2026-10-06T22:25:04.584712-07:00",
+  "base": "11a18fb2e8cbb001fcec7ee426c86e5b2412aab9",
+  "live_tool_sha256": "8250da6c3cbfb408a4d522722c7640b453fe5c9f110dc20d1c794ffa36668efb",
+  "findings": {
+    "eco": "Measured signoff post_sdc was discarded because verdict.post_sdc was empty. ECO raw input max 341250 ps vs measured overlay 591 ps; enormous setup miss already present before repair, zero added cells. Candidate was rejected; no pre_eco files; original final files hash-identical to original STA.",
+    "cancellation": "Daemon snapshot overwritten after CANCELLED. b0/b1 calibrate.a1 LOST -> migrated EPYC2 attempt2; b2 calibrate.a1 launched EPYC3 after cancellation.",
+    "boundaries": "No RTL/budget changes, no re-routes or ECO retries. Existing remote processes and all historical evidence preserved."
+  },
+  "original_hbglue_hashes_verified": {
+    "odb": "7e7363cbc681ff5907a62a7a152047b28f0aaa01f47c8db0167bfde54559d715",
+    "spef": "e031dffacf1ca4c23da0746255568045e0ebce8297af8369f6675017b205ca5c",
+    "sdc": "445890aac8e5abb1b7862d1fa1945dabc28db082af72cab6c172c686d3eab904",
+    "post_sdc": "836a1414ba60d7918d4c1922fc4a71795311d29fabf3a4aa681b19a2f322ccd6"
+  },
+  "ledger_cancellations": [
+    "- 2026-10-06T22:14:50-07:00 | hbm_svc_SE_s0_e26c4446e_r18 | hfd_svc_SE_s0 @ e26c4446e | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_e26c4446e_r18",
+    "- 2026-10-06T22:14:53-07:00 | hbm_svc_SE_s3_e26c4446e_r18 | hfd_svc_SE_s3 @ e26c4446e | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_e26c4446e_r18",
+    "- 2026-10-06T22:14:56-07:00 | hbm_svc_SW_s0_e26c4446e_r18 | hfd_svc_SW_s0 @ e26c4446e | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s0_e26c4446e_r18",
+    "- 2026-10-06T22:14:58-07:00 | hbm_idxq_b0_e26c4446e_r18 | hfd_index_q_b0 @ e26c4446e | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e26c4446e_r18",
+    "- 2026-10-06T22:15:01-07:00 | hbm_idxq_b1_e26c4446e_r18 | hfd_index_q_b1 @ e26c4446e | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e26c4446e_r18",
+    "- 2026-10-06T22:15:03-07:00 | hbm_idxq_b2_e26c4446e_r18 | hfd_index_q_b2 @ e26c4446e | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e26c4446e_r18",
+    "- 2026-10-06T22:15:06-07:00 | hbm_idxq_b3_e26c4446e_r18 | hfd_index_q_b3 @ e26c4446e | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e26c4446e_r18",
+    "- 2026-10-06T22:15:08-07:00 | hbm_idxq_b5_e26c4446e_r18 | hfd_index_q_b5 @ e26c4446e | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e26c4446e_r18"
+  ],
+  "jobs": {
+    "hbglue_cl_8ddc70024": {
+      "status": "NEEDS_RTL",
+      "stage_tag": "summary.a1",
+      "stage_started": "2026-10-06T22:18:09-07:00",
+      "updated": "2026-10-06T22:20:12-07:00",
+      "commit_full": "8ddc7002479798a1e3d5ce5875a163d672973e75",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024",
+      "events": [
+        "2026-10-06T21:48:59-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbglue_cl_8ddc70024.json",
+        "2026-10-06T21:49:54-07:00 source 8ddc70024797 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/src",
+        "2026-10-06T21:50:18-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+        "2026-10-06T21:55:35-07:00 calibrate done (rc=0)",
+        "2026-10-06T21:55:38-07:00 calibrated insertion CK_SS_MEAN=341 CK_SS_MIN=326 CK_SS_MAX=346 CK_FF_MEAN=205 CK_FF_MIN=193 CK_FF_MAX=210",
+        "2026-10-06T21:56:58-07:00 launched route (attempt 1) on ot-epyc1tb",
+        "2026-10-06T22:09:07-07:00 route done (rc=0)",
+        "2026-10-06T22:10:31-07:00 verdict SS +190.49 / FF -70.99 / DRC 0 / checks failed [] -> NOT CLOSED",
+        "2026-10-06T22:11:25-07:00 hold-only miss (SS +190.49 / FF -70.99, DRC 0): post-route hold ECO launched on /srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/5_2_route.odb",
+        "2026-10-06T22:18:04-07:00 hold ECO MISS: {'ss_ps': -340500.58, 'ff_ps': -59.43, 'drc': 0, 'cells_added': 0, 'errors': []}",
+        "2026-10-06T22:20:12-07:00 NEEDS_RTL: SS 190.49 / FF -70.99 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+      ],
+      "metrics": {
+        "corner_sta": [
+          "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/corner_sta.json"
+        ],
+        "drc_metrics": [
+          "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/logs/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/5_2_route.json"
+        ],
+        "ss_ps": 190.49,
+        "ff_ps": -70.99,
+        "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs",
+        "errors": [],
+        "ss_tns_ps": 0.0,
+        "post_sdc": [
+          "physical/s81_die_views/hbglue/margin/signoff_cl_hbglue_cl_8ddc70024.sdc"
+        ],
+        "drc": 0
+      },
+      "eco": {
+        "tried": true,
+        "rb": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base",
+        "ob": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base",
+        "pre": {
+          "ss_ps": 190.49,
+          "ff_ps": -70.99
+        },
+        "started": "2026-10-06T22:11:19-07:00",
+        "result": {
+          "ss_ps": -340500.58,
+          "ff_ps": -59.43,
+          "drc": 0,
+          "cells_added": 0,
+          "errors": []
+        }
+      }
+    },
+    "hbm_idxq_b0_e26c4446e_r18": {
+      "status": "RUNNING",
+      "stage_tag": "calibrate.a2",
+      "stage_started": "2026-10-06T22:18:13-07:00",
+      "updated": "2026-10-06T22:24:09-07:00",
+      "commit_full": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e26c4446e_r18",
+      "events": [
+        "2026-10-06T22:07:09-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idxq_b0_e26c4446e_r18.json",
+        "2026-10-06T22:08:04-07:00 source e26c4446ea94 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e26c4446e_r18/src",
+        "2026-10-06T22:09:14-07:00 launched bench_exact_split (attempt 1) on ot-epyc3",
+        "2026-10-06T22:10:35-07:00 bench_exact_split PASS (rc=0)",
+        "2026-10-06T22:11:47-07:00 launched bench_neg_lane_swap (attempt 1) on ot-epyc3",
+        "2026-10-06T22:12:56-07:00 bench_neg_lane_swap FAIL as expected (rc=1)",
+        "2026-10-06T22:13:55-07:00 launched calibrate (attempt 1) on ot-epyc3",
+        "2026-10-06T22:15:21-07:00 calibrate crashed (LOST: stage wrapper gone without an rc file); resource-related -> retry once on EPYC2",
+        "2026-10-06T22:17:17-07:00 source e26c4446ea94 synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e26c4446e_r18/src",
+        "2026-10-06T22:18:13-07:00 launched calibrate (attempt 2) on ot-epyc2"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_idxq_b0_e8b5132fb_r18b": {
+      "status": "READY",
+      "stage_tag": "bench_neg_lane_swap.a1",
+      "stage_started": "2026-10-06T22:21:24-07:00",
+      "updated": "2026-10-06T22:24:07-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e8b5132fb_r18b",
+      "events": [
+        "2026-10-06T22:16:16-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idxq_b0_e8b5132fb_r18b.json",
+        "2026-10-06T22:17:25-07:00 source e8b5132fb5b8 synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e8b5132fb_r18b/src",
+        "2026-10-06T22:18:22-07:00 launched bench_exact_split (attempt 1) on ot-epyc2",
+        "2026-10-06T22:20:15-07:00 bench_exact_split PASS (rc=0)",
+        "2026-10-06T22:21:24-07:00 launched bench_neg_lane_swap (attempt 1) on ot-epyc2",
+        "2026-10-06T22:22:49-07:00 bench_neg_lane_swap FAIL as expected (rc=1)",
+        "2026-10-06T22:24:07-07:00 calibrate waiting for capacity: EPYC2 unreachable"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_idxq_b1_e26c4446e_r18": {
+      "status": "RUNNING",
+      "stage_tag": "route.a2",
+      "stage_started": "2026-10-06T22:22:50-07:00",
+      "updated": "2026-10-06T22:24:09-07:00",
+      "commit_full": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e26c4446e_r18",
+      "events": [
+        "2026-10-06T22:07:09-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idxq_b1_e26c4446e_r18.json",
+        "2026-10-06T22:08:06-07:00 source e26c4446ea94 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e26c4446e_r18/src",
+        "2026-10-06T22:09:20-07:00 launched bench_exact_split (attempt 1) on ot-epyc3",
+        "2026-10-06T22:10:37-07:00 bench_exact_split PASS (rc=0)",
+        "2026-10-06T22:11:53-07:00 launched bench_neg_lane_swap (attempt 1) on ot-epyc3",
+        "2026-10-06T22:12:58-07:00 bench_neg_lane_swap FAIL as expected (rc=1)",
+        "2026-10-06T22:14:02-07:00 launched calibrate (attempt 1) on ot-epyc3",
+        "2026-10-06T22:15:21-07:00 calibrate crashed (LOST: stage wrapper gone without an rc file); resource-related -> retry once on EPYC2",
+        "2026-10-06T22:17:19-07:00 source e26c4446ea94 synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e26c4446e_r18/src",
+        "2026-10-06T22:18:30-07:00 launched calibrate (attempt 2) on ot-epyc2",
+        "2026-10-06T22:21:11-07:00 calibrate done (rc=0)",
+        "2026-10-06T22:21:14-07:00 calibrated insertion CK_SS_MEAN=788 CK_SS_MIN=763 CK_SS_MAX=802 CK_FF_MEAN=518 CK_FF_MIN=493 CK_FF_MAX=534",
+        "2026-10-06T22:21:29-07:00 budget check OK: measured insertion 788 <= target 900 (sheet 1132); budget SDCs regenerated from the measured insertion",
+        "2026-10-06T22:22:50-07:00 launched route (attempt 2) on ot-epyc2"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_idxq_b1_e8b5132fb_r18b": {
+      "status": "READY",
+      "stage_tag": "bench_neg_lane_swap.a1",
+      "stage_started": "2026-10-06T22:21:32-07:00",
+      "updated": "2026-10-06T22:24:07-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e8b5132fb_r18b",
+      "events": [
+        "2026-10-06T22:16:16-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idxq_b1_e8b5132fb_r18b.json",
+        "2026-10-06T22:17:28-07:00 source e8b5132fb5b8 synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e8b5132fb_r18b/src",
+        "2026-10-06T22:18:39-07:00 launched bench_exact_split (attempt 1) on ot-epyc2",
+        "2026-10-06T22:20:17-07:00 bench_exact_split PASS (rc=0)",
+        "2026-10-06T22:21:32-07:00 launched bench_neg_lane_swap (attempt 1) on ot-epyc2",
+        "2026-10-06T22:22:51-07:00 bench_neg_lane_swap FAIL as expected (rc=1)",
+        "2026-10-06T22:24:07-07:00 calibrate waiting for capacity: EPYC2 unreachable"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_idxq_b2_e26c4446e_r18": {
+      "status": "RUNNING",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:18:45-07:00",
+      "updated": "2026-10-06T22:24:09-07:00",
+      "commit_full": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e26c4446e_r18",
+      "events": [
+        "2026-10-06T22:07:09-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idxq_b2_e26c4446e_r18.json",
+        "2026-10-06T22:09:48-07:00 source e26c4446ea94 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e26c4446e_r18/src",
+        "2026-10-06T22:10:37-07:00 launched bench_exact_split (attempt 1) on ot-epyc3",
+        "2026-10-06T22:11:49-07:00 bench_exact_split PASS (rc=0)",
+        "2026-10-06T22:12:58-07:00 launched bench_neg_lane_swap (attempt 1) on ot-epyc3",
+        "2026-10-06T22:13:57-07:00 bench_neg_lane_swap FAIL as expected (rc=1)",
+        "2026-10-06T22:15:06-07:00 calibrate waiting for capacity: EPYC3 MemAvailable 869-739 GB < 40+113",
+        "2026-10-06T22:16:27-07:00 calibrate waiting for capacity: EPYC3 MemAvailable 882-751 GB < 40+113",
+        "2026-10-06T22:18:45-07:00 launched calibrate (attempt 1) on ot-epyc3"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_idxq_b2_e8b5132fb_r18b": {
+      "status": "READY",
+      "stage_tag": "bench_neg_lane_swap.a1",
+      "stage_started": "2026-10-06T22:21:41-07:00",
+      "updated": "2026-10-06T22:24:08-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e8b5132fb_r18b",
+      "events": [
+        "2026-10-06T22:16:16-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idxq_b2_e8b5132fb_r18b.json",
+        "2026-10-06T22:17:30-07:00 source e8b5132fb5b8 synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e8b5132fb_r18b/src",
+        "2026-10-06T22:18:54-07:00 launched bench_exact_split (attempt 1) on ot-epyc2",
+        "2026-10-06T22:20:18-07:00 bench_exact_split PASS (rc=0)",
+        "2026-10-06T22:21:41-07:00 launched bench_neg_lane_swap (attempt 1) on ot-epyc2",
+        "2026-10-06T22:22:51-07:00 bench_neg_lane_swap FAIL as expected (rc=1)",
+        "2026-10-06T22:24:08-07:00 calibrate waiting for capacity: EPYC2 unreachable"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_idxq_b3_e26c4446e_r18": {
+      "status": "CANCELLED",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:14:08-07:00",
+      "updated": "2026-10-06T22:15:06-07:00",
+      "commit_full": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e26c4446e_r18",
+      "events": [
+        "2026-10-06T22:07:09-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idxq_b3_e26c4446e_r18.json",
+        "2026-10-06T22:08:10-07:00 source e26c4446ea94 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e26c4446e_r18/src",
+        "2026-10-06T22:09:26-07:00 launched bench_exact_split (attempt 1) on ot-epyc3",
+        "2026-10-06T22:10:37-07:00 bench_exact_split PASS (rc=0)",
+        "2026-10-06T22:12:00-07:00 launched bench_neg_lane_swap (attempt 1) on ot-epyc3",
+        "2026-10-06T22:12:58-07:00 bench_neg_lane_swap FAIL as expected (rc=1)",
+        "2026-10-06T22:14:08-07:00 launched calibrate (attempt 1) on ot-epyc3",
+        "2026-10-06T22:15:06-07:00 CANCELLED: cancelled by a human"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_idxq_b3_e8b5132fb_r18b": {
+      "status": "READY",
+      "stage_tag": "bench_neg_lane_swap.a1",
+      "stage_started": "2026-10-06T22:21:50-07:00",
+      "updated": "2026-10-06T22:24:08-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e8b5132fb_r18b",
+      "events": [
+        "2026-10-06T22:16:16-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idxq_b3_e8b5132fb_r18b.json",
+        "2026-10-06T22:17:33-07:00 source e8b5132fb5b8 synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e8b5132fb_r18b/src",
+        "2026-10-06T22:19:03-07:00 launched bench_exact_split (attempt 1) on ot-epyc2",
+        "2026-10-06T22:20:18-07:00 bench_exact_split PASS (rc=0)",
+        "2026-10-06T22:21:50-07:00 launched bench_neg_lane_swap (attempt 1) on ot-epyc2",
+        "2026-10-06T22:22:51-07:00 bench_neg_lane_swap FAIL as expected (rc=1)",
+        "2026-10-06T22:24:08-07:00 calibrate waiting for capacity: EPYC2 unreachable"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_idxq_b5_e26c4446e_r18": {
+      "status": "CANCELLED",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:14:14-07:00",
+      "updated": "2026-10-06T22:15:08-07:00",
+      "commit_full": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e26c4446e_r18",
+      "events": [
+        "2026-10-06T22:07:09-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idxq_b5_e26c4446e_r18.json",
+        "2026-10-06T22:08:13-07:00 source e26c4446ea94 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e26c4446e_r18/src",
+        "2026-10-06T22:09:33-07:00 launched bench_exact_split (attempt 1) on ot-epyc3",
+        "2026-10-06T22:10:37-07:00 bench_exact_split PASS (rc=0)",
+        "2026-10-06T22:12:06-07:00 launched bench_neg_lane_swap (attempt 1) on ot-epyc3",
+        "2026-10-06T22:12:58-07:00 bench_neg_lane_swap FAIL as expected (rc=1)",
+        "2026-10-06T22:14:14-07:00 launched calibrate (attempt 1) on ot-epyc3",
+        "2026-10-06T22:15:08-07:00 CANCELLED: cancelled by a human"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_idxq_b5_e8b5132fb_r18b": {
+      "status": "READY",
+      "stage_tag": "bench_neg_lane_swap.a1",
+      "stage_started": "2026-10-06T22:21:58-07:00",
+      "updated": "2026-10-06T22:24:08-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e8b5132fb_r18b",
+      "events": [
+        "2026-10-06T22:16:16-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idxq_b5_e8b5132fb_r18b.json",
+        "2026-10-06T22:17:36-07:00 source e8b5132fb5b8 synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e8b5132fb_r18b/src",
+        "2026-10-06T22:19:12-07:00 launched bench_exact_split (attempt 1) on ot-epyc2",
+        "2026-10-06T22:20:18-07:00 bench_exact_split PASS (rc=0)",
+        "2026-10-06T22:21:58-07:00 launched bench_neg_lane_swap (attempt 1) on ot-epyc2",
+        "2026-10-06T22:22:52-07:00 bench_neg_lane_swap FAIL as expected (rc=1)",
+        "2026-10-06T22:24:08-07:00 calibrate waiting for capacity: EPYC2 unreachable"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_svc_SE_s0_e26c4446e_r18": {
+      "status": "CANCELLED",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:07:47-07:00",
+      "updated": "2026-10-06T22:14:50-07:00",
+      "commit_full": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_e26c4446e_r18",
+      "events": [
+        "2026-10-06T22:05:34-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SE_s0_e26c4446e_r18.json",
+        "2026-10-06T22:06:36-07:00 source e26c4446ea94 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_e26c4446e_r18/src",
+        "2026-10-06T22:07:47-07:00 launched calibrate (attempt 1) on ot-epyc3",
+        "2026-10-06T22:14:50-07:00 CANCELLED: cancelled by a human"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_svc_SE_s0_e8b5132fb_r18b": {
+      "status": "RUNNING",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:19:38-07:00",
+      "updated": "2026-10-06T22:24:10-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s0_e8b5132fb_r18b",
+      "events": [
+        "2026-10-06T22:16:16-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SE_s0_e8b5132fb_r18b.json",
+        "2026-10-06T22:17:11-07:00 source e8b5132fb5b8 synced to ot-pve1:/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s0_e8b5132fb_r18b/src",
+        "2026-10-06T22:19:38-07:00 launched calibrate (attempt 1) on ot-pve1"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_svc_SE_s1_e26c4446e_r18": {
+      "status": "RUNNING",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:07:53-07:00",
+      "updated": "2026-10-06T22:24:11-07:00",
+      "commit_full": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18",
+      "events": [
+        "2026-10-06T22:05:34-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SE_s1_e26c4446e_r18.json",
+        "2026-10-06T22:06:38-07:00 source e26c4446ea94 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18/src",
+        "2026-10-06T22:07:53-07:00 launched calibrate (attempt 1) on ot-epyc3"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_svc_SE_s3_e26c4446e_r18": {
+      "status": "CANCELLED",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:07:59-07:00",
+      "updated": "2026-10-06T22:14:53-07:00",
+      "commit_full": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_e26c4446e_r18",
+      "events": [
+        "2026-10-06T22:05:34-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SE_s3_e26c4446e_r18.json",
+        "2026-10-06T22:06:40-07:00 source e26c4446ea94 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_e26c4446e_r18/src",
+        "2026-10-06T22:07:59-07:00 launched calibrate (attempt 1) on ot-epyc3",
+        "2026-10-06T22:14:53-07:00 CANCELLED: cancelled by a human"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_svc_SE_s3_e8b5132fb_r18b": {
+      "status": "RUNNING",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:19:40-07:00",
+      "updated": "2026-10-06T22:24:10-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s3_e8b5132fb_r18b",
+      "events": [
+        "2026-10-06T22:16:16-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SE_s3_e8b5132fb_r18b.json",
+        "2026-10-06T22:17:12-07:00 source e8b5132fb5b8 synced to ot-pve1:/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s3_e8b5132fb_r18b/src",
+        "2026-10-06T22:19:40-07:00 launched calibrate (attempt 1) on ot-pve1"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_svc_SE_s5_e26c4446e_r18": {
+      "status": "RUNNING",
+      "stage_tag": "route.a1",
+      "stage_started": "2026-10-06T22:23:00-07:00",
+      "updated": "2026-10-06T22:24:12-07:00",
+      "commit_full": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_e26c4446e_r18",
+      "events": [
+        "2026-10-06T22:05:34-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SE_s5_e26c4446e_r18.json",
+        "2026-10-06T22:06:42-07:00 source e26c4446ea94 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_e26c4446e_r18/src",
+        "2026-10-06T22:08:06-07:00 launched calibrate (attempt 1) on ot-epyc3",
+        "2026-10-06T22:21:15-07:00 calibrate done (rc=0)",
+        "2026-10-06T22:21:17-07:00 calibrated insertion CK_SS_MEAN=848 CK_SS_MIN=650 CK_SS_MAX=1056 CK_FF_MEAN=531 CK_FF_MIN=416 CK_FF_MAX=682",
+        "2026-10-06T22:21:28-07:00 budget check OK: measured insertion 848 <= target 890.8 (sheet 829); budget SDCs regenerated from the measured insertion",
+        "2026-10-06T22:23:00-07:00 launched route (attempt 1) on ot-epyc3"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_svc_SW_s0_e26c4446e_r18": {
+      "status": "CANCELLED",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:08:12-07:00",
+      "updated": "2026-10-06T22:14:56-07:00",
+      "commit_full": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s0_e26c4446e_r18",
+      "events": [
+        "2026-10-06T22:05:34-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SW_s0_e26c4446e_r18.json",
+        "2026-10-06T22:06:45-07:00 source e26c4446ea94 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s0_e26c4446e_r18/src",
+        "2026-10-06T22:08:12-07:00 launched calibrate (attempt 1) on ot-epyc3",
+        "2026-10-06T22:14:56-07:00 CANCELLED: cancelled by a human"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_svc_SW_s0_e8b5132fb_r18b": {
+      "status": "RUNNING",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:19:42-07:00",
+      "updated": "2026-10-06T22:24:11-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s0_e8b5132fb_r18b",
+      "events": [
+        "2026-10-06T22:16:16-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SW_s0_e8b5132fb_r18b.json",
+        "2026-10-06T22:17:14-07:00 source e8b5132fb5b8 synced to ot-pve1:/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s0_e8b5132fb_r18b/src",
+        "2026-10-06T22:19:42-07:00 launched calibrate (attempt 1) on ot-pve1"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_svc_SW_s1_e8b5132fb_r18b": {
+      "status": "RUNNING",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:24:20-07:00",
+      "updated": "2026-10-06T22:24:20-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s1_e8b5132fb_r18b",
+      "events": [
+        "2026-10-06T22:16:16-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SW_s1_e8b5132fb_r18b.json",
+        "2026-10-06T22:17:16-07:00 source e8b5132fb5b8 synced to ot-pve1:/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s1_e8b5132fb_r18b/src",
+        "2026-10-06T22:19:42-07:00 calibrate waiting for capacity: PVE1 MemAvailable 203-136 GB < 40+32",
+        "2026-10-06T22:22:20-07:00 calibrate cannot start on PVE1 (PVE1 MemAvailable 205-136 GB < 40+32); moving to EPYC1",
+        "2026-10-06T22:23:46-07:00 source e8b5132fb5b8 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s1_e8b5132fb_r18b/src",
+        "2026-10-06T22:24:20-07:00 launched calibrate (attempt 1) on ot-epyc1tb"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_svc_SW_s3_e26c4446e_r18": {
+      "status": "READY",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:08:18-07:00",
+      "updated": "2026-10-06T22:24:26-07:00",
+      "commit_full": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_e26c4446e_r18",
+      "events": [
+        "2026-10-06T22:05:34-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SW_s3_e26c4446e_r18.json",
+        "2026-10-06T22:06:47-07:00 source e26c4446ea94 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_e26c4446e_r18/src",
+        "2026-10-06T22:08:18-07:00 launched calibrate (attempt 1) on ot-epyc3",
+        "2026-10-06T22:24:13-07:00 calibrate done (rc=0)",
+        "2026-10-06T22:24:16-07:00 calibrated insertion CK_SS_MEAN=773 CK_SS_MIN=655 CK_SS_MAX=1108 CK_FF_MEAN=483 CK_FF_MIN=421 CK_FF_MAX=721",
+        "2026-10-06T22:24:26-07:00 budget check OK: measured insertion 773 <= target 886.1 (sheet 886.1); budget SDCs regenerated from the measured insertion"
+      ],
+      "metrics": null,
+      "eco": null
+    },
+    "hbm_svc_SW_s7_e8b5132fb_r18b": {
+      "status": "RUNNING",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:24:28-07:00",
+      "updated": "2026-10-06T22:24:28-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s7_e8b5132fb_r18b",
+      "events": [
+        "2026-10-06T22:16:16-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SW_s7_e8b5132fb_r18b.json",
+        "2026-10-06T22:17:18-07:00 source e8b5132fb5b8 synced to ot-pve1:/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s7_e8b5132fb_r18b/src",
+        "2026-10-06T22:19:42-07:00 calibrate waiting for capacity: PVE1 MemAvailable 203-136 GB < 40+32",
+        "2026-10-06T22:22:20-07:00 calibrate cannot start on PVE1 (PVE1 MemAvailable 205-136 GB < 40+32); moving to EPYC1",
+        "2026-10-06T22:23:49-07:00 source e8b5132fb5b8 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s7_e8b5132fb_r18b/src",
+        "2026-10-06T22:24:28-07:00 launched calibrate (attempt 1) on ot-epyc1tb"
+      ],
+      "metrics": null,
+      "eco": null
+    }
+  },
+  "validation": [
+    "10 unittest regressions PASS (including real cross-process cancellation/launch locking)",
+    "bash -n hold_eco.sh PASS",
+    "git diff --check PASS"
+  ],
+  "live_deployment_record": "/tmp/claude-review-20261003/codex-closure-reliability-20261006/deployment.json"
+}

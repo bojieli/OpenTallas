@@ -1,0 +1,24 @@
+{
+  "candidate": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemB-ss-a318fdf47/cl/eco-r2/pass1/orfs/results/asap7/opentallas_ot_dsrom_head_elem_asap7_dshead_elemB_ss_a318fdf47/base",
+  "installed": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemB-ss-a318fdf47/routes/dshead_elemB_ss_a318fdf47/work/orfs/results/asap7/opentallas_ot_dsrom_head_elem_asap7_dshead_elemB_ss_a318fdf47/base",
+  "binding": {
+    "odb": "768d0d6849012222c6032b15ccf9898ed238e919206a6294d0d922d82ec9c4cc",
+    "sdc": "8c9f0817122bd02fb5998d89da25f352e024155b0834c27bc8c8ddf6e5c9bf2f",
+    "spef": "92d9acb7e07f25a57ebd50d29f5e56af6498fc2a8315095c7f4023cf5a057a78",
+    "physical/dsrom_fh_safe/gen/signoff_elemB.sdc": "7b80ded3c5bd5d3692f85ac2fa3eada33ea48ff218637755c1cf22106cbf13f0"
+  },
+  "source_files": {
+    "rtl/v41rom/ot_dsrom_head_elem.sv": "915f06d0423c66f72210132673040c8db4dfc7967aa4f184f7f232bb45506fef",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c"
+  },
+  "macros": {
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib": "40cc08ccdde7dd3daf88aed4dee67f5656c47164d137afe45753720daf522f32",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf"
+  },
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+}

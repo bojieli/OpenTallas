@@ -1,0 +1,211 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_stn_r33_capacity_4b51e590e",
+ "block": "hfd_stn_r33",
+ "owner": "Codex:hbm-stn-r33-takeover",
+ "source_branch": "codex/hbm-stn-r33-closure-20261006",
+ "source_commit": "4b51e590e4c8b5f4f4d1f5bc85e4ce58024ee1ed",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_r33_capacity_4b51e590e",
+ "acceptance": {
+  "ss_min_ps": 15.0,
+  "ff_min_ps": 15.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 58.94,
+  "ff_ps": 24.91,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_r33_capacity_4b51e590e/routes/hbm_stn_r33_capacity_4b51e590e/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_r33_capacity_4b51e590e/routes/hbm_stn_r33_capacity_4b51e590e/work/orfs/logs/asap7/opentallas_hfd_stn_r33_asap7_hv_hbm_stn_r33_capacity_4b51e590e/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_station_flow_regression": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.040s\n\nOK\nSTN_FLOW_REGRESSION_PASS\n"
+  },
+  "bench_exact_station": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "pos rc=0\nneg rc=1\n"
+  },
+  "bench_neg_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "STN_NEG_DETECTED\n"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  },
+  "die_pin_access": {
+   "ok": true,
+   "out": "hfd_stn_r33 OT_PA DONE DRT0073=0\n"
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 512,
+    "mean": 126.4,
+    "min": 123.3,
+    "max": 131.1
+   },
+   "all": {
+    "n": 512,
+    "mean": 126.4,
+    "min": 123.3,
+    "max": 131.1
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 512,
+    "mean": 75.0,
+    "min": 72.5,
+    "max": 79.0
+   },
+   "all": {
+    "n": 512,
+    "mean": 75.0,
+    "min": 72.5,
+    "max": 79.0
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 126,
+   "CK_SS_ALL_MEAN": 126,
+   "CK_SS_MIN": 123,
+   "CK_SS_ALL_MIN": 123,
+   "CK_SS_MAX": 131,
+   "CK_SS_ALL_MAX": 131,
+   "CK_FF_MEAN": 75,
+   "CK_FF_ALL_MEAN": 75,
+   "CK_FF_MIN": 72,
+   "CK_FF_ALL_MIN": 72,
+   "CK_FF_MAX": 79,
+   "CK_FF_ALL_MAX": 79
+  },
+  "db": "4_1_cts.odb",
+  "clock": "ck",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-06T23:02:07-07:00",
+ "job_spec": {
+  "name": "hbm_stn_r33_capacity_4b51e590e",
+  "block": "hfd_stn_r33",
+  "owner": "Codex:hbm-stn-r33-takeover",
+  "purpose": "r33 RSZ0060 capacity fix from measured 12% core occupancy; same RTL and all timing constraints; zero upstream minimum-delay credit retained",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 6,
+  "peak_ram_gb": 12,
+  "source": {
+   "branch": "codex/hbm-stn-r33-closure-20261006",
+   "commit": "4b51e590e4c8b5f4f4d1f5bc85e4ce58024ee1ed",
+   "extra_paths": [
+    "results/uarch/hbm_current_target_portmap_20261005",
+    "results/rtl/hbm_accel_die_floorplan_20261005",
+    "results/rtl/die_top_lint_20261006",
+    "results/rtl/dshbm_matched_reference_20261005",
+    "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp",
+    "results/physical/hbm_stn_r33_capacity_20261006"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "station_flow_regression",
+     "cmd": "python3 physical/hbm_accel_die_views/stations/bench/test_stn_capacity.py && echo STN_FLOW_REGRESSION_PASS",
+     "expect": "pass",
+     "pass_regex": "STN_FLOW_REGRESSION_PASS",
+     "threads": 1,
+     "peak_ram_gb": 1
+    },
+    {
+     "name": "exact_station",
+     "cmd": "bash physical/hbm_accel_die_views/stations/bench/run_bench.sh $PWD/physical/hbm_accel_die_views/stations hfd_stn_r33 $PWD {RUN}/bench; cat {RUN}/bench/hfd_stn_r33/result.txt; grep -q '^pos rc=0' {RUN}/bench/hfd_stn_r33/result.txt",
+     "expect": "pass",
+     "pass_regex": "pos rc=0",
+     "threads": 4,
+     "peak_ram_gb": 8
+    },
+    {
+     "name": "neg_mutant",
+     "cmd": "grep -q '^neg rc=1' {RUN}/bench/hfd_stn_r33/result.txt && echo STN_NEG_DETECTED && exit 1; exit 0",
+     "expect": "fail",
+     "fail_regex": "STN_NEG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "cmd": "MARGIN=1 CKINS=300 CKFF=\"167 183\" HM=0.035 CORES=6 NEED=12 bash physical/hbm_accel_die_views/stations/bench/stn_route.sh {SRC} {RUN}/routes {LABEL}${CL_LABEL_SUFFIX} hfd_stn_r33 0.45 $CL_STOP_AFTER --orfs-var OT_STN_R33_CAPACITY=1 --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_repair_capacity.tcl",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "ck",
+    "threads": 6,
+    "peak_ram_gb": 12
+   },
+   "route": {
+    "cmd": "MARGIN=1 CKINS=$CK_SS_MAX CKFF=\"$CK_FF_MIN $CK_FF_MAX\" HM=0.035 CORES=6 NEED=12 bash physical/hbm_accel_die_views/stations/bench/stn_route.sh {SRC} {RUN}/routes {LABEL}${CL_LABEL_SUFFIX} hfd_stn_r33 0.45 --orfs-var OT_STN_R33_CAPACITY=1 --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_repair_capacity.tcl",
+    "ok": "grep -qx 'rc=0' {RUN}/routes/{NAME}/exit && grep -qx 'signoff_corner_rc=0' {RUN}/routes/{NAME}/exit && grep -qx 'signoff_export_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_stn_r33.lef {RUN}/routes/{NAME}/view/hfd_stn_r33_ss.lib {RUN}/routes/{NAME}/view/hfd_stn_r33_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    },
+    {
+     "name": "die_pin_access",
+     "cmd": "bash physical/hbm_accel_die_views/stations/bench/stn_pa_check.sh {RUN}/routes/{NAME}/view/hfd_stn_r33.lef hfd_stn_r33 {RUN}/pa"
+    }
+   ],
+   "post_sdc": []
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/hbm_accel_die_views/stations/hfd_stn_r33/route_cl"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "station margin SDC recipe (stn_margin_sdc.py); ck IO from this job's calibrate"
+  },
+  "cycles_note": "Capacity-only flow correction; unchanged full-shape r33 RTL, no added cycles on any model; existing r17 hub stage plan retained."
+ }
+}

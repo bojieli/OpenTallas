@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "positive_cases": [
+    "r11_lat_all",
+    "r11_s0_all",
+    "r11_s0_all_seed5",
+    "r11_s1_all",
+    "r11_s1_all_seed7"
+  ],
+  "required_negative_cases": [
+    "r11_neg_s0_link",
+    "r11_neg_s0_upos",
+    "r11_neg_s0_vmrd",
+    "r11_neg_s1_rdp",
+    "r11_neg_s1_row2"
+  ],
+  "non_detecting_negative": {
+    "case": "r11_neg_s1_link",
+    "actual": "PASS",
+    "replacement": "r11_neg_s0_link detects link overflow; retained original summary unchanged"
+  },
+  "source_controller_sha256": "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8",
+  "checks": [
+    "42 remote artifacts + 5 source/macro artifacts hash-verified",
+    "Both source and stage accepted by existing region gate",
+    "SS/FF macro libraries, RCX, propagated clocks, 60/25 core and 50 hold IO uncertainties",
+    "Region reports before diagnostic IO false paths",
+    "Full-shape controller hash matches routed cases and committed stage bench",
+    "Five positive campaigns pass; five mechanism-specific negative controls fail"
+  ],
+  "limits": [
+    "Source all-ports die150 FF +3.2 ps does not meet +15. Region contract limits inter-region crossings to in_*/out_*.",
+    "Prior r18/r20/r21 misses preserved in harvest.",
+    "No die-level assembled closure or model headline adoption claimed."
+  ],
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+}

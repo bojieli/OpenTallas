@@ -1,0 +1,23 @@
+{
+  "observed_utc": "2026-10-07T10:52:00.434751+00:00",
+  "host": "ot-epyc1tb",
+  "root": "/srv/opentallas-scratch/claude/closure-loop/bf_hitfix_3978531b5",
+  "files": [
+    {
+      "path": "routes/bf_hitfix_3978531b5/MANIFEST",
+      "sha256": "b3e444e7443ee4c053e3ea2e8b31348f34703c96a3d9afb07ea8904ec4395fd9"
+    },
+    {
+      "path": "routes/bf_hitfix_3978531b5/work/orfs/logs/asap7/opentallas_ot_s81_bf_native_asap7_bf_hitfix_3978531b5/base/5_1_grt.json",
+      "sha256": "a4b8521409bd3a9c344625f66cb1806b3d44cdd4edccdfe13b36dc08a98d55aa"
+    },
+    {
+      "path": "routes/bf_hitfix_3978531b5/work/orfs/logs/asap7/opentallas_ot_s81_bf_native_asap7_bf_hitfix_3978531b5/base/5_1_grt.log",
+      "sha256": "e9e2856d21fd7038538d89a49d2d297e2801f9b852e50352f28ddad7dd17474c"
+    },
+    {
+      "path": "src/physical/s81_native_bf/margin/signoff_ref.sdc",
+      "sha256": "6fd90a281f69e8127887ec7fa58a2c9c280cb63eb06fcf1f824b001359a8795a"
+    }
+  ]
+}

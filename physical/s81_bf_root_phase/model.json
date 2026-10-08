@@ -1,0 +1,44 @@
+{
+  "baseline_source": "61c1cf23054e140ea7b4371bb931b82b2383e9a7",
+  "default_off": true,
+  "adopted": false,
+  "physical_closed": false,
+  "scope": "full native BF pair HALF=1, dedicated phase-clock root branch",
+  "added_cycles": 0,
+  "added_macs_per_cycle": 0,
+  "memory_bytes_per_cycle_delta": 0,
+  "boundary_bits_per_cycle_delta": 0,
+  "added_cells": {
+    "INVx1_ASAP7_75t_R": 2
+  },
+  "additional_phase_registers": 0,
+  "replicas": 1,
+  "fanout": {
+    "first_inverter": 1,
+    "second_inverter": 1
+  },
+  "added_internal_clock_nets": 2,
+  "routing": {
+    "local_branch_max_span_um": 100,
+    "tracks_added": 2,
+    "capacity_and_actual_wire_length": "must measure after placement"
+  },
+  "area_um2": 0.08748,
+  "area_status": "two actual ASAP7 INVx1 cells; incremental CTS/repair area pending",
+  "area_capacity_record": "physical/s81_bf_root_phase/area_capacity.json",
+  "slot_um": [
+    1002.888,
+    190.08
+  ],
+  "baseline_stdcell_area_um2": 67096.1,
+  "usable_stdcell_site_area_um2": 145342.231168,
+  "headroom_at_55pct_um2": 12842.0396624,
+  "slot_fit": "fits at <55% even excluding all four ROM halos; verify actual legalization",
+  "latency": "zero logical delta from HALF baseline; existing half-rate cost retained",
+  "physical_obligations": [
+    "keep phase register and both branch inverters within 100um of root ICG",
+    "generated divide-by-1 clock with propagated physical insertion",
+    "retain phase-to-ICG setup/hold and all phase-to-output crossings",
+    "fresh-session SS/FF >=15ps, DRC0, exact production clock protocol"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+ "model_commit": "6dc3c9707",
+ "variant": "r24f",
+ "adopted": false,
+ "master": "hfd_su_full",
+ "old_box_um": [
+  14690.592,
+  16606.08,
+  15036.6,
+  16953.816000000003
+ ],
+ "new_box_um": [
+  14663.376,
+  16606.08,
+  15063.384,
+  17007.816000000003
+ ],
+ "size_um": [
+  400.008,
+  401.736
+ ],
+ "extra_area_um2": 40378.176,
+ "legality": {
+  "instances": 561,
+  "overlaps": 0,
+  "overlap_examples": [],
+  "outside": 0,
+  "outside_examples": []
+ },
+ "added_generator_cycles": 0,
+ "operator_cycles": "DDIV64 +43 fast cycles/div versus DDIV21; separate SU owner measurement gate",
+ "limitation": "Slot reservation only; full lane view, pins and die-context timing remain adoption gates"
+}

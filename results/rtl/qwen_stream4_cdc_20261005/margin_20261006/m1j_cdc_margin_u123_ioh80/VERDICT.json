@@ -1,0 +1,5 @@
+{"run":"m1j_cdc_margin_u123_ioh80","date":"2026-10-06","change_vs_m1k":"IO-only hold repair: in-flow OT_IO_HOLD_SKEW 80 (sign-off 50); m1h (global hold margin 40) failed CTS on RSZ-0060 (26k hold buffers, 24,704 endpoints)",
+ "ss_setup_ps_at_833_unc60":46.02,"ff_hold_ps":8.2,"ff_input_hold_ps":36.54,"ff_output_hold_ps":30.21,"drc":0,
+ "ff_worst_class":"internal back-to-back flops: synchronizer lw_s[0]->lw_s[1] 8.2, lmem recirculation 10.96 (flow hold margin 10 ps)",
+ "verdict":"NOT CLOSED (FF internal +8.2 < +15); IO boundary closed both corners",
+ "next":"m1m: same + flow hold margin 25 ps"}

@@ -1,0 +1,57 @@
+{
+  "default_off": true,
+  "adopted": false,
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "communication_intensity_bits_per_row": 544,
+  "replica_count": 2,
+  "fifo_rows": 64,
+  "row_bits": 544,
+  "storage_bits": 69632,
+  "launch_register_bits": 5458,
+  "peer_launch_pipeline_cycles": 1,
+  "implementation": "existing synchronous ot_ha2_fifo; SRAM mapping not claimed",
+  "port_bytes_per_cycle": {
+    "write": 136.0,
+    "read": 136.0
+  },
+  "sustained_rows_per_cycle": 1.0,
+  "boundary_bits_per_cycle": {
+    "hub_arrival": 1090,
+    "reducer_launch": 1090,
+    "ready": 2
+  },
+  "mux_cost": {
+    "read_muxes": 2,
+    "inputs_per_mux": 64,
+    "width": 544
+  },
+  "demux_cost": {
+    "write_decoders": 2,
+    "leaves_per_decoder": 64
+  },
+  "fanout": {
+    "issue_credit": 2,
+    "queue_write_enable_width": 544
+  },
+  "flop_area_floor_um2": 21896.244000000002,
+  "floorplan_slot_fit": false,
+  "routing_tracks_needed": 2182,
+  "channel_capacity": null,
+  "physical_closed": false,
+  "added_local_pipeline_cycles": 2,
+  "prior_half_reducer_measured_extra_cycles": 46,
+  "conservative_extra_issue_span_cycles": 192,
+  "conservative_extra_cycles_per_reduction": 240,
+  "latency_basis": "Two local sender stages measured on full-width192-row/injector component; issue-span estimate assumes sustained half-rate service, not a bound under arbitrary receiver stalls.",
+  "additional_contention_cycles": null,
+  "composed_extra_token_cycles": 240,
+  "exposed_owner_reductions": 1,
+  "token_latency_us": 0.2,
+  "adoption_gates": [
+    "finite credit and negative controls",
+    "transaction exact endpoint sender/reducer",
+    "SS15/FF15/DRC0 in context"
+  ],
+  "protection": "Existing queue payload contract retained; overflow or reservation violations latch fault; no claimed mutable-memory reliability signoff"
+}

@@ -1,0 +1,249 @@
+{
+ "schema": "opentallas.s81_ph.contract.v1",
+ "kind": "gather",
+ "master": "dsfd_sp_gather",
+ "owner": "Claude:s81-ph",
+ "function": "S81 field return gather: the 128 return-region roots (ot_v41_ret_root, D = QD = 128) of the field, fed by the column return trunks; forwards finished rows per root to the capture and the VM control words to the capture",
+ "rtl": {
+  "top": "rtl/dsrom_sys/s81_ph/dsfd_sp_gather.sv",
+  "core": "rtl/dsrom_sys/s81_ph/ot_s81ph_gather.sv",
+  "root_subblock": "rtl/dsrom_sys/s81_ph/ot_s81ph_root_blk.sv",
+  "reused_unchanged": [
+   "rtl/v41rom/ot_v41_ret.sv ot_v41_ret_root",
+   "rtl/common/ot_ratio_cdc_fifo.sv"
+  ]
+ },
+ "inputs": {
+  "trunks": "rW0..5 / rE0..5 (generator ports unchanged): lane j = bits [69j +: 69] = {rr 68 = {fault, busy, node word 66 = {e, d32, t32, v}}, meso valid}; top 2 bits {fault, live}",
+  "lane_to_root": {
+   "rW0": [
+    9,
+    8,
+    7,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "rW1": [
+    20,
+    19,
+    18,
+    17,
+    16,
+    15,
+    14,
+    13,
+    12,
+    11,
+    10
+   ],
+   "rW2": [
+    31,
+    30,
+    29,
+    28,
+    27,
+    26,
+    25,
+    24,
+    23,
+    22,
+    21
+   ],
+   "rW3": [
+    42,
+    41,
+    40,
+    39,
+    38,
+    37,
+    36,
+    35,
+    34,
+    33,
+    32
+   ],
+   "rW4": [
+    53,
+    52,
+    51,
+    50,
+    49,
+    48,
+    47,
+    46,
+    45,
+    44,
+    43
+   ],
+   "rW5": [
+    63,
+    62,
+    61,
+    60,
+    59,
+    58,
+    57,
+    56,
+    55,
+    54
+   ],
+   "rE0": [
+    73,
+    72,
+    71,
+    70,
+    69,
+    68,
+    67,
+    66,
+    65,
+    64
+   ],
+   "rE1": [
+    84,
+    83,
+    82,
+    81,
+    80,
+    79,
+    78,
+    77,
+    76,
+    75,
+    74
+   ],
+   "rE2": [
+    95,
+    94,
+    93,
+    92,
+    91,
+    90,
+    89,
+    88,
+    87,
+    86,
+    85
+   ],
+   "rE3": [
+    106,
+    105,
+    104,
+    103,
+    102,
+    101,
+    100,
+    99,
+    98,
+    97,
+    96
+   ],
+   "rE4": [
+    117,
+    116,
+    115,
+    114,
+    113,
+    112,
+    111,
+    110,
+    109,
+    108,
+    107
+   ],
+   "rE5": [
+    127,
+    126,
+    125,
+    124,
+    123,
+    122,
+    121,
+    120,
+    119,
+    118
+   ]
+  },
+  "lane_to_root_rule": "lane j of r<half><tier> = frame order[j] (farthest column first); frame index = root/region index; identical on the head die",
+  "f_vm": "see generator change G5 (serial domain, captured at the pin, ratio CDC to stream)"
+ },
+ "outputs": {
+  "t_capture": "G2"
+ },
+ "protocol": "valid-only, no backpressure toward the field (as the field); the VM issues a phase word only after the capture status shows drained/idle (the spine waits capture_drained); a phase word the capture cannot take is a protocol fault",
+ "boundary": "every die input captured in a flop at the pin, every output launched from a flop; reset synchronised per domain, 8 kept reset copies per 128 roots",
+ "generator_changes": [
+  {
+   "id": "G1",
+   "what": "dsfd_sp_gather / dsfd_sp_capture become REAL views (their LEF pins), placed abutting: gather (S) -> capture -> VM (N); the gather->capture and capture->VM buses are abutment nets, not hub-bus stations",
+   "why": "6,947-b and 13,376-b buses; the rows of a phase leave every root at once (I66 trace: 576 rows in 6 edges, 128 writers/edge), so the return path must carry one row per root per stream cycle"
+  },
+  {
+   "id": "G2",
+   "port": "dsfd_sp_gather.t_capture",
+   "old_bits": 576,
+   "new_bits": 6947,
+   "dir": "output",
+   "peer": "dsfd_sp_capture.f_gather",
+   "layout": "per root r (0..127) [53r +: 53] = {e, pos3, row16, fp32 32, v}; [6784 +: 160] = control word {f_vm[159:1], v}; [6944 +: 3] = {live, busy, fault}"
+  },
+  {
+   "id": "G3",
+   "port": "dsfd_sp_capture.t_vm",
+   "old_bits": 512,
+   "new_bits": 13376,
+   "dir": "output",
+   "peer": "dsfd_sp_vm (capture face)",
+   "domain": "serial_0p9",
+   "layout": "per root r [104r +: 104] = {row1 {data32, addr19}, v1, row0 {data32, addr19}, v0} (row0 older); [13312 +: 64] = status {busy, live, 0, identity47, phase10, fault, drained, idle, live}"
+  },
+  {
+   "id": "G4",
+   "port": "dsfd_sp_gather.ckv, dsfd_sp_gather.rsv, dsfd_sp_capture.ckv, dsfd_sp_capture.rsv",
+   "bits": 1,
+   "dir": "input",
+   "peer": "clk_serial / rst_serial nets",
+   "why": "the serial-domain crossings (VM->gather control, capture->VM writes) are inside the views (ot_ratio_cdc_fifo); the r9 hub buses vm->gather and capture->vm cross serial/stream with no CDC"
+  },
+  {
+   "id": "G5",
+   "port": "dsfd_sp_gather.f_vm",
+   "bits": 512,
+   "dir": "input",
+   "domain": "serial_0p9 (was undefined)",
+   "layout": "[0] v, [2:1] kind (0 phase, 1 reset-request level), [49:3] identity47, [59:50] phase_id10, [89:60] obase30, [119:90] ops30, [122:120] np, [124:123] fmt, [140:125] rsplit16, [141] fp32_low, [142] fp32_high, [158:143] phase_rows16, [159] reset_request level; rest 0"
+  },
+  {
+   "id": "G6",
+   "master": "dsfd_sp_capture",
+   "old_um": [
+    1015.176,
+    107.976
+   ],
+   "new_um": [
+    1015.176,
+    302.4
+   ],
+   "why": "per-root rd64 capture + 2-row pair packer + ratio CDC (128 x DEPTH 4 x 103 b) and 20.3k pins"
+  },
+  {
+   "id": "G7",
+   "master": "dsfd_sp_gather",
+   "old_um": [
+    1015.176,
+    1369.416
+   ],
+   "new_um": "set by the root sub-block route (128 x ot_s81ph_root_blk, ROOTD 128: the S81 physical return contract keeps ROOTD 128; ~2.15 Mbit of root storage)",
+   "why": "the 128 region roots of ot_v41_field_w17w10 are not on the die in r9: the column FIFO carries the column top NODE word"
+  },
+  {
+   "id": "G8",
+   "what": "glue (dsfd_cfifo): column status {fault, busy} is carried only with a valid return word (the meso FIFO forwards data only when w_v = root valid); a column fault with no following word is not reported. Carry status on an always-valid sideband or OR it into the trunk {fault, live} bits"
+  }
+ ]
+}

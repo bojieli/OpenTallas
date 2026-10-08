@@ -1,0 +1,293 @@
+{
+  "schema": "opentallas.ds_pq_wfc.stage_qualification.v1",
+  "verdict": "PASS_FULL_SHAPE_COMPONENT_REGION_CONTEXT",
+  "accepted_15_15_region": true,
+  "host": "ot-epyc1tb",
+  "case_path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/r11/stg_u50",
+  "case": {
+    "inst": "stg",
+    "params": {
+      "WAVE": 1,
+      "WIN": 6,
+      "FLIT": 512,
+      "NW": 21,
+      "AW": 30,
+      "VWA": 15,
+      "USER_W": 10,
+      "MAXU": 866,
+      "KVW": 32768,
+      "SEND_HIDDEN": 1,
+      "HID_DEST": 1,
+      "FWD_TOKEN": 1,
+      "SOURCE": 0,
+      "XWORDS": 46,
+      "RXWORDS": 41,
+      "UPOS_LWR": 1,
+      "CONTROL_PIPE": 1,
+      "PRECOMP": 1,
+      "IN_DEC": 1,
+      "TXQ_SLICE": 1,
+      "RDY_LT": 1,
+      "FANOUT_COPY": 1,
+      "MARGIN": 1,
+      "LINK_REG": 1,
+      "LINK_SEL": 1,
+      "VM_REG": 1,
+      "SLEW_COPY": 1
+    },
+    "util": 50,
+    "macros": false,
+    "route_period_ps": 770,
+    "die_skew_ps": 150,
+    "orfs_var": [
+      "SLEW_MARGIN=30",
+      "CAP_MARGIN=20",
+      "HOLD_SLACK_MARGIN=28"
+    ],
+    "src": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-f316f0271",
+    "ctrl_sha256": "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8"
+  },
+  "signoff_period_ps": 833,
+  "period_note": "Existing signoff is 833 ps, slightly stricter than 833.333; not relaxed or rerun.",
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "region_io_hold_uncertainty_ps": 50,
+  "io_contract": "Propagated extracted clock: 150 ps stage-link skew, 90 ps intra-region skew; 20% period IO allowance.",
+  "timing": {
+    "SS": {
+      "incontext": {
+        "setup_wns_ps": 73.1,
+        "hold_wns_ps": 78.2,
+        "failing_setup": 0,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "g_upos[24].ug/lo_r[2]$_DFF_P_",
+          "g_upos[24].ug/part[19]$_SDFFCE_PN0P_"
+        ],
+        "worst_max_path_slack_ps": 73.1,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "g_slew_copy.inc_c[0][10]$_DFF_P_",
+          "g_upos[27].ug/g_local_write.wd_l[10]$_DFFE_PP_"
+        ],
+        "worst_min_path_slack_ps": 78.2,
+        "worst_min_path_group": "core_clk"
+      },
+      "reg2reg": {
+        "setup_wns_ps": 73.1,
+        "hold_wns_ps": 78.2,
+        "failing_setup": 0,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "g_upos[24].ug/lo_r[2]$_DFF_P_",
+          "g_upos[24].ug/part[19]$_SDFFCE_PN0P_"
+        ],
+        "worst_max_path_slack_ps": 73.1,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "g_slew_copy.inc_c[0][10]$_DFF_P_",
+          "g_upos[27].ug/g_local_write.wd_l[10]$_DFFE_PP_"
+        ],
+        "worst_min_path_slack_ps": 78.2,
+        "worst_min_path_group": "core_clk"
+      },
+      "region": {
+        "setup_wns_ps": 73.1,
+        "hold_wns_ps": 68.8,
+        "failing_setup": 0,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "g_upos[24].ug/lo_r[2]$_DFF_P_",
+          "g_upos[24].ug/part[19]$_SDFFCE_PN0P_"
+        ],
+        "worst_max_path_slack_ps": 73.1,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "in_data[143]",
+          "g_link_reg.u_rx.pd[143]$_DFF_P_"
+        ],
+        "worst_min_path_slack_ps": 68.8,
+        "worst_min_path_group": "core_clk"
+      }
+    },
+    "FF": {
+      "incontext": {
+        "setup_wns_ps": 396.1,
+        "hold_wns_ps": 22.5,
+        "failing_setup": 0,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "g_link_reg.u_rx.rp[0]$_SDFFE_PN1P_",
+          "hdr_pos[3]$_DFFE_PN0P_"
+        ],
+        "worst_max_path_slack_ps": 396.1,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "g_slew_copy.inc_c[0][10]$_DFF_P_",
+          "g_upos[27].ug/g_local_write.wd_l[10]$_DFFE_PP_"
+        ],
+        "worst_min_path_slack_ps": 22.5,
+        "worst_min_path_group": "core_clk"
+      },
+      "reg2reg": {
+        "setup_wns_ps": 396.1,
+        "hold_wns_ps": 22.5,
+        "failing_setup": 0,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "g_link_reg.u_rx.rp[0]$_SDFFE_PN1P_",
+          "hdr_pos[3]$_DFFE_PN0P_"
+        ],
+        "worst_max_path_slack_ps": 396.1,
+        "worst_max_path_group": "core_clk",
+        "worst_min_path": [
+          "g_slew_copy.inc_c[0][10]$_DFF_P_",
+          "g_upos[27].ug/g_local_write.wd_l[10]$_DFFE_PP_"
+        ],
+        "worst_min_path_slack_ps": 22.5,
+        "worst_min_path_group": "core_clk"
+      },
+      "region": {
+        "setup_wns_ps": 319.4,
+        "hold_wns_ps": 15.7,
+        "failing_setup": 0,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "g_link_reg.u_tx.d[454]$_DFF_P_",
+          "out_data[454]"
+        ],
+        "worst_max_path_slack_ps": 319.4,
+        "worst_max_path_group": "vlk",
+        "worst_min_path": [
+          "in_data[262]",
+          "g_link_reg.u_rx.pd[262]$_DFF_P_"
+        ],
+        "worst_min_path_slack_ps": 15.7,
+        "worst_min_path_group": "core_clk"
+      }
+    }
+  },
+  "insertion_ps": {
+    "SS": [
+      305.2,
+      350.2
+    ],
+    "FF": [
+      187.7,
+      221.3
+    ]
+  },
+  "drc_errors": 0,
+  "antenna_violating_nets": 0,
+  "antenna_violating_pins": 0,
+  "electrical_checks": {
+    "SS": {
+      "done": true,
+      "violators": {
+        "slew": 0,
+        "capacitance": 0,
+        "fanout": 0
+      }
+    },
+    "FF": {
+      "done": true,
+      "violators": {
+        "slew": 0,
+        "capacitance": 0,
+        "fanout": 0
+      }
+    }
+  },
+  "exact_stage_streams": {
+    "positive_seeds": 2,
+    "flits_per_seed": 940000,
+    "starts_per_seed": 20000,
+    "negative_controls_caught": [
+      "link",
+      "upos",
+      "vmrd"
+    ]
+  },
+  "physical_metrics": {
+    "finish__design__instance__count__class:fill_cell": 181948,
+    "finish__design__instance__area__class:fill_cell": 14255.7,
+    "finish__design__instance__count__class:tap_cell": 3780,
+    "finish__design__instance__area__class:tap_cell": 110.225,
+    "finish__design__instance__count__class:tie_cell": 640,
+    "finish__design__instance__area__class:tie_cell": 27.9936,
+    "finish__design__instance__count__class:clock_buffer": 2235,
+    "finish__design__instance__area__class:clock_buffer": 807.222,
+    "finish__design__instance__count__class:timing_repair_buffer": 36491,
+    "finish__design__instance__area__class:timing_repair_buffer": 2811.56,
+    "finish__design__instance__count__class:inverter": 12112,
+    "finish__design__instance__area__class:inverter": 534.43,
+    "finish__design__instance__count__class:clock_inverter": 591,
+    "finish__design__instance__area__class:clock_inverter": 47.3121,
+    "finish__design__instance__count__class:sequential_cell": 26782,
+    "finish__design__instance__area__class:sequential_cell": 7852.42,
+    "finish__design__instance__count__class:multi_input_combinational_cell": 79535,
+    "finish__design__instance__area__class:multi_input_combinational_cell": 7909.61,
+    "finish__design__instance__count": 344114,
+    "finish__design__instance__area": 20100.8,
+    "finish__design__io": 2405,
+    "finish__design__nets": 158311,
+    "finish__design__die__area": 35941.7,
+    "finish__design__core__area": 34356.5,
+    "finish__design__instance__count__stdcell": 162166,
+    "finish__design__instance__area__stdcell": 20100.8,
+    "finish__design__instance__count__macros": 0,
+    "finish__design__instance__area__macros": 0,
+    "finish__design__instance__count__padcells": 0,
+    "finish__design__instance__area__padcells": 0,
+    "finish__design__instance__count__cover": 0,
+    "finish__design__instance__area__cover": 0,
+    "finish__design__instance__utilization": 0.585065,
+    "finish__design__instance__utilization__stdcell": 0.585065,
+    "finish__design__rows": 686,
+    "finish__design__rows:asap7sc7p5t": 686,
+    "finish__design__sites": 2356410,
+    "finish__design__sites:asap7sc7p5t": 2356410
+  },
+  "retained_artifact_export": [
+    {
+      "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/r11/stg_u50/results/asap7/wfc_stg_stg_u50/base/6_final.def",
+      "relative": "results/asap7/wfc_stg_stg_u50/base/6_final.def",
+      "bytes": 167018739,
+      "sha256": "f9a46059116f1333b467ccd9df1df32199725a37f0c0f57a9a96569f39990ad6"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/r11/stg_u50/results/asap7/wfc_stg_stg_u50/base/6_final.gds",
+      "relative": "results/asap7/wfc_stg_stg_u50/base/6_final.gds",
+      "bytes": 191243866,
+      "sha256": "783f3865144aef5aa16ef22c7b20dbd0c05839c70b4c3189c1b9eaae66c26dee"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/r11/stg_u50/results/asap7/wfc_stg_stg_u50/base/6_final.odb",
+      "relative": "results/asap7/wfc_stg_stg_u50/base/6_final.odb",
+      "bytes": 263023492,
+      "sha256": "c6bcb9bfe2b6481740e00e0a5a63a3ef85935434e2002bdb80afb0314f0ff142"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/r11/stg_u50/results/asap7/wfc_stg_stg_u50/base/6_final.sdc",
+      "relative": "results/asap7/wfc_stg_stg_u50/base/6_final.sdc",
+      "bytes": 418626,
+      "sha256": "5029dc8b3ceeb7da0cb1c068f6748db81f483b562c79aa8c40b850f79fe9db0d"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/r11/stg_u50/results/asap7/wfc_stg_stg_u50/base/6_final.spef",
+      "relative": "results/asap7/wfc_stg_stg_u50/base/6_final.spef",
+      "bytes": 207500557,
+      "sha256": "db29db780c6dcacf91bb753217a259d7d37722f85cc2d08d75a2e873876849fb"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/r11/stg_u50/results/asap7/wfc_stg_stg_u50/base/6_final.v",
+      "relative": "results/asap7/wfc_stg_stg_u50/base/6_final.v",
+      "bytes": 24946577,
+      "sha256": "ba7eb89d890b10f19dfe6bc15e5d8526add93d4b93b1127650f335f8d0146d5d"
+    }
+  ],
+  "export_kind": "Verified remote final artifact paths and SHA256 manifest; bulk DB/DEF/GDS/SPEF/netlist remain on EPYC1.",
+  "scope": "Full-shape SOURCE=0 stage, MAXU=866, extracted SS/FF under the approved region boundary contract. No assembled-die closure or whole-controller-source closure claim.",
+  "reroutes": 0,
+  "verification_tool_runs": 0
+}

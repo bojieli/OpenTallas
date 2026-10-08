@@ -1,0 +1,74 @@
+{
+  "source_pin": "64cda61abe6779567e8601286ea0ee0245da7746",
+  "helper_pin": "2f22d245c",
+  "helper_sha256": "129755b04fd8bc38d31c4f2302142ea38c836cff05cb0c44edd9d8d338a7697a",
+  "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "post_sdc_order": [
+    "physical/hbm_su_c12/signoff_833_io150.sdc",
+    "physical/hbm_su_div64/full_generated_clocks_candidate.sdc",
+    "physical/hbm_su_div64/propagate_signoff.sdc"
+  ],
+  "inputs": [
+    {
+      "source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/routes/hbm_su_full64_64cda61ab.prev_1791400184/work/orfs/results/asap7/opentallas_ot_su64_full64_asap7_su_red_hbm_su_full64_64cda61ab/base/6_final.odb",
+      "private": "/srv/opentallas-scratch2/scratch/codex/su64-sta-recovery-2f22d245c/orfs/results/asap7/opentallas_ot_su64_full64_asap7_su_red_hbm_su_full64_64cda61ab/base/6_final.odb",
+      "sha256": "c62ee3f88ce23bbfc1b7c019a16bfa87b5f5576e34a1af88f0c922d18ad48124",
+      "bytes": 544258742
+    },
+    {
+      "source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/routes/hbm_su_full64_64cda61ab.prev_1791400184/work/orfs/results/asap7/opentallas_ot_su64_full64_asap7_su_red_hbm_su_full64_64cda61ab/base/6_final.spef",
+      "private": "/srv/opentallas-scratch2/scratch/codex/su64-sta-recovery-2f22d245c/orfs/results/asap7/opentallas_ot_su64_full64_asap7_su_red_hbm_su_full64_64cda61ab/base/6_final.spef",
+      "sha256": "fca04014ae36577cea586b40b2c804799106162a17c919a45babe2b3f50ea378",
+      "bytes": 265011268
+    },
+    {
+      "source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/routes/hbm_su_full64_64cda61ab.prev_1791400184/work/orfs/results/asap7/opentallas_ot_su64_full64_asap7_su_red_hbm_su_full64_64cda61ab/base/6_final.sdc",
+      "private": "/srv/opentallas-scratch2/scratch/codex/su64-sta-recovery-2f22d245c/orfs/results/asap7/opentallas_ot_su64_full64_asap7_su_red_hbm_su_full64_64cda61ab/base/6_final.sdc",
+      "sha256": "f2a690460134b5d72efdc4a85614deda6e87d2a9720358950699bc30963ea5a5",
+      "bytes": 698976
+    },
+    {
+      "source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/src/physical/hbm_su_c12/signoff_833_io150.sdc",
+      "private": "/srv/opentallas-scratch2/scratch/codex/su64-sta-recovery-2f22d245c/src/physical/hbm_su_c12/signoff_833_io150.sdc",
+      "sha256": "afeacc12451783d6e79d45767fa935b745b3042654aa1a8f2735dfde1ec30f78",
+      "bytes": 1536
+    },
+    {
+      "source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/src/physical/hbm_su_div64/full_generated_clocks_candidate.sdc",
+      "private": "/srv/opentallas-scratch2/scratch/codex/su64-sta-recovery-2f22d245c/src/physical/hbm_su_div64/full_generated_clocks_candidate.sdc",
+      "sha256": "a950e47f1d1f366447f975c791a10ac6befbb4f28f4ba7249302f26d37dd3682",
+      "bytes": 1406
+    },
+    {
+      "source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/src/physical/hbm_su_div64/propagate_signoff.sdc",
+      "private": "/srv/opentallas-scratch2/scratch/codex/su64-sta-recovery-2f22d245c/src/physical/hbm_su_div64/propagate_signoff.sdc",
+      "sha256": "18dff327c553e775939e2966e3462328ef1ec4917bf86b8ae0107e1e91b0a84d",
+      "bytes": 227
+    },
+    {
+      "source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/routes/hbm_su_full64_64cda61ab.prev_1791400184/args",
+      "private": "/srv/opentallas-scratch2/scratch/codex/su64-sta-recovery-2f22d245c/original_args",
+      "sha256": "0e5ac43b8d654c767080acb0c46f684ba46da318ab4745db4237d3ac59f21e11",
+      "bytes": 260
+    },
+    {
+      "source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/routes/hbm_su_full64_64cda61ab.prev_1791400184/physical.json",
+      "private": "/srv/opentallas-scratch2/scratch/codex/su64-sta-recovery-2f22d245c/original_physical.json",
+      "sha256": "3b5623f873518bb0735468a3ed07492359cd311dddc6ac1d6624632234ecb627",
+      "bytes": 43002
+    },
+    {
+      "source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/routes/hbm_su_full64_64cda61ab.prev_1791400184/corner.log",
+      "private": "/srv/opentallas-scratch2/scratch/codex/su64-sta-recovery-2f22d245c/original_corner.log",
+      "sha256": "493c15d27f7c093495b845128715f6281e0af4d3c5ac8789f6fb428e348e2991",
+      "bytes": 991
+    },
+    {
+      "source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab/routes/hbm_su_full64_64cda61ab.prev_1791400184/work/orfs/logs/asap7/opentallas_ot_su64_full64_asap7_su_red_hbm_su_full64_64cda61ab/base/5_2_route.json",
+      "private": "/srv/opentallas-scratch2/scratch/codex/su64-sta-recovery-2f22d245c/original_drc_metrics.json",
+      "sha256": "a98c3da07eff96a497d3afc6c12b4c8afbe75d62e90236616617f66ee753523b",
+      "bytes": 1548
+    }
+  ],
+  "scope": "Fresh standalone SS/FF of completed original route; automatic second route untouched"
+}

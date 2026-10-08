@@ -56,6 +56,22 @@ GEOMS = {
                     label="Z20c FH 177.12 (QX=10 CLOSED, 11 slots)"),
     "f198.72": dict(elem_h=198.72, fh=192.24, pairs=2050, q_lef=None, label="Z20b FH 192.24 (10 slots)"),
     "f216.00": dict(elem_h=216.00, fh=209.52, pairs=1798, q_lef=None, label="Z20a FH 209.52 (9 slots)"),
+    # CLAUDE S81-RERUN (item 10): the owner's 192.24 um frame on the r9 die (hub-bus stations, q-element boundary
+    # banks, column relays, 425 um station step); q abstract Z20c until QELEM posts the 192.24 um (Z22) abstract
+    "r9f198.72": dict(elem_h=198.72, fh=192.24, pairs=2050, rev="r9",
+                      q_lef="results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+                      label="S81-RERUN r9 die, FH 192.24 (10 slots; hub stations + q banks + column relays)"),
+    # MARGIN-FIRST (owner rule 2026-10-06): every common-clock hop (hub-bus / end-block stations, column relays) capped
+    # at 215 um -- a synchronous 440 um span measured SS -330 ps (meso_fifo verdict fwd_hop2_synchronous_counterfactual)
+    "r9m215f198.72": dict(elem_h=198.72, fh=192.24, pairs=2050, rev="r9", cc_reach=215.0,
+                          q_lef="results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+                          label="S81-RERUN r9 MARGIN-FIRST: common-clock hops <= 215 um (FH 192.24)"),
+    # S81-RERUN v6 die case: + VCH / corridor interleave, link fix, a station on every hop over reach (budget sheets
+    # 2026-10-06: column relays / hub stations / forwarded stations), meso FIFOs DEPTH 8 (+1 cycle a crossing)
+    "r9m215v6f198.72": dict(elem_h=198.72, fh=192.24, pairs=2050, rev="r9", cc_reach=215.0,
+                            opts="--vch-interleave --corr-interleave --link-fix --hop-fix --meso-d8 --cfifo-v2",
+                            q_lef="results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+                            label="S81-RERUN v6: r9m215 + hop stations (budget sheets) + meso depth 8 (FH 192.24)"),
 }
 LAYER_PAIRS_TOTAL = 81 * 4 * 2417          # 783,108 layer-field pairs (S81 decision)
 TP = 4
@@ -88,6 +104,14 @@ def cmd_geometry(a):
         os.environ["OT_S81_Q_LEF"] = g["q_lef"]
     import dsrom_s81_fulldie as S
     import die_top_lint as L
+    S.REV = g.get("rev", "r8")
+    S.set_cc_reach(g.get("cc_reach"))
+    S.Q_LEF = os.environ.get("OT_S81_Q_LEF", S.Q_LEF)
+    if g.get("opts"):                       # die options of a recorded case (tools/dsrom_s81_fulldie.py die_options)
+        import shlex
+        S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(
+            shlex.split(g["opts"]) + ["--gen", "r8", "--rev", g.get("rev", "r8"), "--die", a.die,
+                                     "--cc-reach-um", str(g.get("cc_reach") or 430.56)]))
     S.configure(a.die, "r8")
     S.slot_geometry(g["elem_h"])
     if a.die == "layer":
@@ -99,8 +123,16 @@ def cmd_geometry(a):
     fr, xs, rs = m["frames"], m.get("x_stages", {}), m.get("r_stages", {})
     frames = {}
     for r, f in fr.items():
-        comp = dict(x_trunk=xs.get(r, 0), entry_meso=2, slot_stations=f["last_slot"] + 1, column_return_reg=1,
-                    root_stages=f.get("ret_stages", 0), return_trunk=rs.get(r, 0), hub_meso=2)
+        mc = 4 if getattr(S, "MESO_D8", False) else 2
+        comp = dict(x_trunk=xs.get(r, 0), entry_meso=mc, slot_stations=f["last_slot"] + 1, column_return_reg=1,
+                    root_stages=f.get("ret_stages", 0), return_trunk=rs.get(r, 0), hub_meso=mc)
+        if m.get("hop_fix"):
+            comp["hop_fwd"] = m["hop_fix"].get("fwd_rt_add", 0)
+        if getattr(S, "CFIFO_V2", False):
+            comp["cfifo_v2_regs"] = 2
+        if f.get("bank_stages") is not None:          # r9: q-element boundary banks and column relays
+            comp.update(q_banks=f.get("bank_stages", 0), column_relays_x=f.get("relay_x", 0),
+                        column_relays_return=f.get("relay_ret", 0))
         frames[int(r)] = dict(rt=sum(comp.values()), half=f.get("half"), tier=f.get("tier"), col=f.get("col"), **comp)
     rec_fp = S.plan_record_r8(m)
     far = rec_fp["field_round_trip_cycles"]
@@ -144,9 +176,10 @@ def cmd_geometry(a):
                           max_bit_um=round(best, 1), centroid_um=round(cen, 1), stages_430=stages(best),
                           stages_430_centroid=stages(cen))
     hub = {k: dict(x=round(it.x, 2), y=round(it.y, 2), w=round(it.w, 2), h=round(it.h, 2)) for k, it in m["hub"].items()}
+    extra = dict(hub_stations=m["hub_stations"], column_relays=m.get("col_relays")) if m.get("hub_stations") else {}
     out = dict(schema="opentallas.dsrom-field-reprice-r8.geometry.v1", die=a.die, geom=a.geom, **g,
                q_lef_used=S.Q_LEF, slot=rec_fp["slot"], forwarded=rec_fp["forwarded"],
-               field_round_trip_farthest=far, frames=frames, hub_slabs=hub, hub_buses=buses,
+               field_round_trip_farthest=far, frames=frames, hub_slabs=hub, hub_buses=buses, **extra,
                stage_um=STAGE_UM, generator=dict(tool="tools/dsrom_s81_fulldie.py --gen r8",
                                                  sha256=sha(ROOT / "tools/dsrom_s81_fulldie.py")))
     a.out.parent.mkdir(parents=True, exist_ok=True)
@@ -166,7 +199,7 @@ def cmd_regions(a):
     plan = json.loads((pdir / "plan.json").read_text())
     out = dict(schema="opentallas.dsrom-field-reprice-r8.regions.v1", config=a.config, work=str(work),
                plan_dir=str(pdir), plan_sha256=sha(pdir / "plan.json"), phases={}, nodes={})
-    if a.config == "asbuilt":
+    if a.config.startswith("asbuilt"):
         for ph in plan["phases"]:
             rows = {}
             for reg in ph["regions"]:
@@ -180,7 +213,7 @@ def cmd_regions(a):
         groups = FS.groups_all(plan)
         for key, phs in sorted(groups.items()):
             L_, node, st = key
-            if a.config == "pq" and len(phs) > 1:
+            if a.config.startswith("pq") and len(phs) > 1:
                 regs = sorted({r for ph in phs for r in ph["regions"]})
                 runs = {}
                 for reg in regs:
@@ -275,14 +308,14 @@ def node_table(reg, wire, per_phase_extra=0):
     """{(layer, node, stage): dict(meas, total, phases, exact)} for one regions file; wire(r) -> cycles;
     per_phase_extra: cycles added once per wire crossing (hub buses on the return path, not region-dependent)."""
     out = {}
-    if reg["config"] == "asbuilt":
+    if reg["config"].startswith("asbuilt"):
         grp = {}
         for name, ph in reg["phases"].items():
             grp.setdefault((ph["layer"], ph["node"], ph["stage"]), []).append(ph)
         items = [(k, dict(mode="seq", phases=v)) for k, v in grp.items()]
     else:
         items = [((n["layer"], n["node"], n["stage"]), n) for n in reg["nodes"].values()]
-        k = spine_rule(reg["nodes"]) if reg["config"] == "pq" else None
+        k = spine_rule(reg["nodes"]) if reg["config"].startswith("pq") else None
     for key, n in items:
         if n["mode"] == "seq":
             w = lambda r: wire(r) + per_phase_extra
@@ -321,9 +354,15 @@ def cmd_check(a):
 DIES = ("layer", "layer1")
 PROXY_REF = "f198.72"                  # scan die (4 stacks, 32 of the rack) and 1-stack layer die (292)
 CONFIGS = dict(asbuilt=("regions/asbuilt.json.gz", "results/rtl/dsrom_1m_allmeasured_20261004/field.json"),
+               # as-built field with the closed DS q-element QX 10 on the FP8/FP4 pairs (the headline field since the
+               # owner's go, 2026-10-06; tools/dsrom_1m_field.py --qelem 10)
+               asbuilt_qelem10=("regions/asbuilt_qelem10.json.gz", "results/rtl/dsrom_field_qelem_20261005/field_qelem_qx10.json"),
                baseline=("regions/baseline.json.gz", "results/rtl/dsrom_field_spine_20261004/field_baseline.json"),
-               pq=("regions/pq.json.gz", "results/rtl/dsrom_field_spine_20261004/field_pq.json"))
-LEVER_CONFIG = dict(field_spine="baseline", field_spine_pq="pq")
+               pq=("regions/pq.json.gz", "results/rtl/dsrom_field_spine_20261004/field_pq.json"),
+               # PQ spine x DS q-element (2026-10-06, GAP 32 / GUARD 202 / GSLACK 32; tools/dsrom_combined_l20.py qelem-lever)
+               # (margin-first QM = 2 lanes + tree, 2026-10-06; the QM = 0 measurement: regions/pq_qelem.json.gz, field_pq_qelem.json)
+               pq_qelem=("regions/pq_qelem_qm2.json.gz", "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem_qm2.json"))
+LEVER_CONFIG = dict(field_spine="baseline", field_spine_pq="pq", qelem_pq="pq_qelem")
 # SU hub traverse already charged (stages): fused 1.2 GHz units HUB_IN 33 / HUB_OUT 23; unfused wired SU (0.9 GHz)
 # BCAST 22 / RET 15 slow stages (tools/dsrom_1m_su.py, la6_inputs/dsrom_su_norm.py)
 SU_CHARGED_NS = dict(fused=dict(inp=33 / 1.2, out=23 / 1.2), wired=dict(inp=22 / 0.9, out=15 / 0.9))
@@ -358,19 +397,29 @@ def hub_terms(geo):
     out = {}
     for d, g in geo.items():
         B = g["hub_buses"]
+        hs = g.get("hub_stations")
+        lb = (lambda k: hs[k]["path_um"]) if hs else (lambda k: B[k]["max_bit_um"])
         hr = {k[3:5]: added(v["max_bit_um"]) for k, v in B.items() if k.startswith("hr_")}
         su = {}
         for half, sl, path_out in (("s", "su_s", ("hb_su_s_hc_s", "hb_hc_s_hc_n", "hb_hc_n_vm")),
                                    ("n", "su_n", ("hb_su_n_hc_n", "hb_hc_n_vm"))):
             slab = g["hub_slabs"][sl]
             span = slab["h"] / 2 + slab["w"]           # face-centre entry -> farthest lane corner
-            l_in = B[f"hb_vm_{sl}"]["max_bit_um"] + span
-            l_out = span + sum(B[b]["max_bit_um"] for b in path_out)
+            l_in = lb(f"hb_vm_{sl}") + span
+            l_out = span + sum(lb(b) for b in path_out)
             need_in, need_out = math.ceil(l_in / STAGE_UM) / 1.2, math.ceil(l_out / STAGE_UM) / 1.2   # ns
             su[sl] = dict(in_um=round(l_in, 1), out_um=round(l_out, 1), need_in_ns=round(need_in, 3),
                           need_out_ns=round(need_out, 3), out_path=list(path_out),
                           excess_ns={k: round(max(0.0, need_in - c["inp"]) + max(0.0, need_out - c["out"]), 3)
                                      for k, c in SU_CHARGED_NS.items()})
+        if hs:                      # r9: the stations the generator actually placed (hub buses and end block -> gather)
+            hr = {k[3:5]: v["stations"] for k, v in hs.items() if k.startswith("hr_")}
+            out[d] = dict(hr_added_by_tier_half=hr, gather_capture_added=hs["hb_gather_capture"]["stations"],
+                          capture_vm_added=hs["hb_capture_vm"]["stations"],
+                          collective_vm_added=hs["hb_collective_vm"]["stations"], su=su,
+                          buses={k: dict(um=v["path_um"], added=v["stations"]) for k, v in hs.items()},
+                          basis="r9 generator stations (hub_stations)")
+            continue
         out[d] = dict(hr_added_by_tier_half=hr,
                       gather_capture_added=added(B["hb_gather_capture"]["max_bit_um"]),
                       capture_vm_added=added(B["hb_capture_vm"]["max_bit_um"]),
@@ -433,8 +482,8 @@ def cmd_record(a):
         cfgs = {}
         for c, reg in regs.items():
             new = summarise(node_table(reg, lambda r: W[r]))
-            old = summarise(node_table(reg, lambda r: OLD_WIRE_PER_PHASE)) if c != "pq" else None
-            if c == "pq":       # PQ: old charge was 80 once per node (pipelined) -- recompute that way
+            old = summarise(node_table(reg, lambda r: OLD_WIRE_PER_PHASE)) if not c.startswith("pq") else None
+            if c.startswith("pq"):  # PQ: old charge was 80 once per node (pipelined) -- recompute that way
                 old = {}
                 for key, t in node_table(reg, lambda r: 0).items():
                     w = OLD_WIRE_PER_PHASE * (1 if t["mode"] == "pq" else t["phases"])
@@ -518,6 +567,7 @@ def cmd_compose(a):
     joint_levers = tm["conditional_all"]["levers"]
     rp = json.loads((OUT / "reprice.json").read_text())
     rows = {}
+    geom0 = AD.FIELD_GEOM
     try:
         for gk in ["old80"] + list(GEOMS):
             AD.FIELD_GEOM = None if gk == "old80" else gk
@@ -537,7 +587,7 @@ def cmd_compose(a):
             print(gk, "AR", base["AR_tok_s"], "MTP", base["MTP_tok_s"], "| cond AR", joint["AR_tok_s"], "MTP",
                   joint["MTP_tok_s"], flush=True)
     finally:
-        AD.FIELD_GEOM = "f157.68"
+        AD.FIELD_GEOM = geom0
     ref = rows["old80"]
     for gk, r in rows.items():
         for k in ("headline", "conditional_all"):
@@ -592,7 +642,7 @@ if __name__ == "__main__":
     p = sub.add_parser("regions")
     p.add_argument("--work", type=Path, required=True)
     p.add_argument("--plan-dir", type=Path, required=True)
-    p.add_argument("--config", required=True, choices=["asbuilt", "baseline", "pq"])
+    p.add_argument("--config", required=True, choices=["asbuilt", "asbuilt_qelem10", "baseline", "pq", "pq_qelem"])
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("record")
     p.add_argument("--levers", action="store_true", help="also re-price the field_spine lever records")

@@ -1,0 +1,22 @@
+[
+  {
+    "leaf": "code",
+    "source_commit": "c719e44184769e92cec891a3c5be8acd452ba2ca",
+    "actual_netlist_sha256": "bc33294cc429fee27b4d1c8b6a3ab66d0d74eee07b5c5374fa3acbbcc273c769",
+    "original_status": "NEEDS_RTL",
+    "ss_ps": 9.27,
+    "ff_ps": -34.98,
+    "drc": 0,
+    "replay": "FAIL_CLOSED: FIFO word net bindings absent; legal mapped inverters and split-vector names explain initial checker errors; no claim of missing silicon merely from missing names"
+  },
+  {
+    "leaf": "scale",
+    "source_commit": "c719e44184769e92cec891a3c5be8acd452ba2ca",
+    "actual_netlist_sha256": "77df4ba3104b22371f44d188c741e25923987e9b80f888f6870eacc6bab21c69",
+    "original_status": "NEEDS_RTL",
+    "ss_ps": 83.12,
+    "ff_ps": -36.83,
+    "drc": 0,
+    "replay": "FAIL_CLOSED: FIFO word net bindings absent; legal mapped inverters and split-vector names explain initial checker errors; no claim of missing silicon merely from missing names"
+  }
+]

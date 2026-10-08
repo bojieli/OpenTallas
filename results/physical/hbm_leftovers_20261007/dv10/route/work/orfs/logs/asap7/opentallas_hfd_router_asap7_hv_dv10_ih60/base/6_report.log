@@ -1,0 +1,35 @@
+Percentage drop  : 0.60 %
+######################################
+[INFO PSM-0040] All shapes on net VSS are connected.
+########## IR report #################
+Net              : VSS
+Corner           : WC
+Total power      : 9.03e-02 W
+Supply voltage   : 0.00e+00 V
+Worstcase voltage: 2.33e-03 V
+Average voltage  : 7.21e-05 V
+Average IR drop  : 7.21e-05 V
+Worstcase IR drop: 2.33e-03 V
+Percentage drop  : 0.37 %
+######################################
+Cell type report:                         Count        Area
+  Fill cell                             1522341   439919.47
+  Tap cell                                36176     1054.89
+  Tie cell                                  304       13.30
+  Clock buffer                             1347      572.99
+  Timing Repair Buffer                    31833     3900.75
+  Inverter                                 9157      524.78
+  Clock inverter                             34        5.42
+  Sequential cell                         14332     4281.04
+  Multi-Input combinational cell          36767     4717.78
+  Total                                 1652291   454990.42
+Report metrics stage 6, finish...
+
+==========================================================================
+finish report_design_area
+--------------------------------------------------------------------------
+Design area 15071 um^2 3% utilization.
+[WARNING GUI-0076] QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Elapsed time: 30:02.64[h:]min:sec. CPU time: user 1819.60 sys 28.66 (102%). Peak memory: 23317912KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+6_report                               1802          22771                  N/A

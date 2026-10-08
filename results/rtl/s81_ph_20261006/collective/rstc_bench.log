@@ -1,0 +1,44 @@
+OK power-on: stream 66 serial 74 hbm 82 refclk cycles after lock
+OK after por glitch: stream 66 serial 74 hbm 82 refclk cycles after lock
+OK after relock: stream 66 serial 74 hbm 82 refclk cycles after lock
+TB_S81PH_COLL_RSTC PASS
+== mutant SYNCLOCK
+FAIL power-on: release at 56 64 72
+OK after por glitch: stream 66 serial 74 hbm 82 refclk cycles after lock
+FAIL ock loss (async): resets 111
+FAIL after relock: release at 0 0 0
+FAIL chatter: resets 111
+FAIL chatter: resets 111
+FAIL chatter: resets 111
+FAIL chatter: resets 111
+FAIL chatter: resets 111
+TB_S81PH_COLL_RSTC FAIL 8
+== mutant ORDER
+FAIL power-on: order
+FAIL power-on: order
+FAIL power-on: order
+FAIL power-on: order
+FAIL power-on: order
+FAIL power-on: order
+FAIL power-on: order
+FAIL power-on: order
+FAIL power-on: release at 66 58 82
+FAIL after por glitch: order
+FAIL after por glitch: order
+FAIL after por glitch: order
+FAIL after por glitch: order
+FAIL after por glitch: order
+FAIL after por glitch: order
+FAIL after por glitch: order
+FAIL after por glitch: order
+FAIL after por glitch: release at 66 58 82
+FAIL after relock: order
+FAIL after relock: order
+FAIL after relock: order
+FAIL after relock: order
+FAIL after relock: order
+FAIL after relock: order
+FAIL after relock: order
+FAIL after relock: order
+FAIL after relock: release at 66 58 82
+TB_S81PH_COLL_RSTC FAIL 27

@@ -1,0 +1,179 @@
+{
+  "source_commit": "d108b33de6991601b0f4e2bf48dabad85f4a027d",
+  "main_compared": "1abcf5d9f23ac1017788f7ba8c881c7e9e990962",
+  "entries": [
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "source_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+      "source_sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv",
+      "source_sha256": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv",
+      "source_sha256": "27ad20cff6f60e5aec62141cb9ad5b36eb262e7fcb8c1901e8bdfe7486b5e65f",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv",
+      "source_sha256": "2a15dbd9eda2bf5a96d7bda4e4d74e28b3c5c4f4b5889bc1351cebe7d20aa2dd",
+      "main_state": "missing"
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain.sv",
+      "source_sha256": "fd3787fc9bfb64499470d946e3f3a2904c36718ddca24c61d9f6cba5e0386577",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_quarter_chain_rb.sv",
+      "source_sha256": "92f4009f6657aebf4ccb736f776851ab16fbb5263242a621d8b555ed78cdadb4",
+      "main_state": "missing"
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/links/native_quarter/sources.f",
+      "source_sha256": "13c5668f0293f2217f37a63fe349f4a5cf2173427f6e8225ba153b06bf154c3b",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/links/native_quarter/tb_native_quarter_publication.sv",
+      "source_sha256": "7080c52a1a8434fd605df931dbcca2cf3d17ee95975e9785f9bee18c50a18f9f",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv",
+      "source_sha256": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv",
+      "source_sha256": "57f72d64c87c9ea4c8f1f3bf8d9043ed357f2fa97f48a0df070890a0907ec9f7",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv",
+      "source_sha256": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv",
+      "source_sha256": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/hbm_w2_check_station_20261006/bank_legacy_static.sv",
+      "source_sha256": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e",
+      "main_state": "identical"
+    },
+    {
+      "path": "physical/hbm_w2_rb_station_20261006/bank_veto_static.sv",
+      "source_sha256": "c35f7d9b350797b4251a70818cf3873240190f64a7666f7a95718a9347106e26",
+      "main_state": "missing"
+    },
+    {
+      "path": "physical/hbm_w2_rb_station_20261006/export.py",
+      "source_sha256": "43a2c235dbcc987faa07d0dd148d3890af04a876753fc0b0aa78b6f44919cd51",
+      "main_state": "missing"
+    },
+    {
+      "path": "physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl",
+      "source_sha256": "de37f7fe185cfdff077d5c0be5231b69d9d79e8891e37c30283bf6087fc91bce",
+      "main_state": "missing"
+    },
+    {
+      "path": "physical/hbm_w2_rb_station_20261006/make_sdc.py",
+      "source_sha256": "beac7b6ed6a48307f986e46327b4196a00219ccc39c684dbd2db412ed464d241",
+      "main_state": "missing"
+    },
+    {
+      "path": "physical/hbm_w2_rb_station_20261006/pin_faces.tcl",
+      "source_sha256": "6ba2f79874f6279bce130e03094a195c1e9bd234598515ce64a0144001172178",
+      "main_state": "missing"
+    },
+    {
+      "path": "physical/hbm_w2_rb_station_20261006/prepare.py",
+      "source_sha256": "717c91062b318b2787bfac61dfe46739352b69c43fe75b57ed2ff491532eff13",
+      "main_state": "missing"
+    },
+    {
+      "path": "physical/hbm_w2_rb_station_20261006/run_owned.py",
+      "source_sha256": "043479ddc1d96e5dba6e6641aa708dd2aaa216a9015bcc22cfcac1d597e85f5e",
+      "main_state": "missing"
+    },
+    {
+      "path": "physical/hbm_w2_rb_station_20261006/signoff.py",
+      "source_sha256": "9cbf4e77439160a202bacc85ef99d7ff3ef65445829cbd03b606e44ee954a610",
+      "main_state": "missing"
+    },
+    {
+      "path": "physical/hbm_w2_rb_station_20261006/sources.json",
+      "source_sha256": "93ad27d49b1157f1fe461b744452466eb9d79ef818be8331e7d69f5ca356016a",
+      "main_state": "missing"
+    },
+    {
+      "path": "physical/hbm_w2_rb_station_20261006/station_rb_static.sv",
+      "source_sha256": "2ad6976b6ce406fcca598962a2bebd28ee81a9441b41eba3f7f414954182cad2",
+      "main_state": "missing"
+    },
+    {
+      "path": "rtl/common/ot_fwd_link_stage.sv",
+      "source_sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+      "main_state": "identical"
+    },
+    {
+      "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "source_sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "main_state": "identical"
+    },
+    {
+      "path": "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv",
+      "source_sha256": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+      "main_state": "identical"
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv",
+      "source_sha256": "0a58f1d89363e94727bb84a4e9e8138f5fecfb003ec4a73851e2f29cd164db7a",
+      "main_state": "missing"
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+      "source_sha256": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+      "main_state": "identical"
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv",
+      "source_sha256": "458b71de93685042eed6eb54acdb7a389c491dfee8e86cc9d5a8cfa85333a09e",
+      "main_state": "missing"
+    },
+    {
+      "path": "rtl/test/hbm_accel/w2_rb_veto_20261006/tb_w2_rb_cross_bank_veto.sv",
+      "source_sha256": "6bb879906a829c14ac426de15d9e746469a37c2a053c70b20cf8b22e75b94191",
+      "main_state": "missing"
+    },
+    {
+      "path": "tools/run_abi3_physical.py",
+      "source_sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "main_state": "identical"
+    },
+    {
+      "path": "tools/run_abi3_physical_persistent.py",
+      "source_sha256": "a9df9a85aa1ad01b0b8e91c33df0028fd1668a2e608f6ab6009e16d0258407e6",
+      "main_state": "identical"
+    },
+    {
+      "path": "tools/w2_station_rb_gate.py",
+      "source_sha256": "2ddd23aea88fabe5bfe1a99dd3d43a5d88d1901a4947aa3c5c31d21f129ea203",
+      "main_state": "missing"
+    }
+  ],
+  "scope": "Gate testbench/RTL sources plus W2 route kit and direct shared driver imports; broader tools tree remains shipped for transitive flow dependencies.",
+  "integration_rule": "Add missing W2 source paths and review differing hunks; never overwrite evolved shared drivers wholesale. This is a source dependency inventory, not runtime main integration.",
+  "runtime_cycles_added": 0
+}

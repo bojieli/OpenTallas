@@ -1,0 +1,1285 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/carson_router_successor/base/4_cts.odb
+read_sdc /work/results/asap7/carson_router_successor/base/4_cts.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       14
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_hbm_router_topk_successor
+Die area:                 ( 0 0 ) ( 315956 315956 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     381566
+Number of terminals:      573
+Number of snets:          2
+Number of nets:           368688
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+  Complete 200000 instances.
+  Complete 300000 instances.
+[INFO DRT-0164] Number of unique instances = 276.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0018]   Complete 200000 insts.
+[INFO DRT-0018]   Complete 300000 insts.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 8172871.
+[INFO DRT-0033] V1 shape region query size = 10847143.
+[INFO DRT-0033] M2 shape region query size = 350709.
+[INFO DRT-0033] V2 shape region query size = 200970.
+[INFO DRT-0033] M3 shape region query size = 200970.
+[INFO DRT-0033] V3 shape region query size = 133980.
+[INFO DRT-0033] M4 shape region query size = 134291.
+[INFO DRT-0033] V4 shape region query size = 133980.
+[INFO DRT-0033] M5 shape region query size = 74094.
+[INFO DRT-0033] V5 shape region query size = 13456.
+[INFO DRT-0033] M6 shape region query size = 6960.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1535 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0079]   Complete 200 unique inst patterns.
+[INFO DRT-0081]   Complete 276 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0082]   Complete 50000 groups.
+[INFO DRT-0082]   Complete 60000 groups.
+[INFO DRT-0082]   Complete 70000 groups.
+[INFO DRT-0082]   Complete 80000 groups.
+[INFO DRT-0082]   Complete 90000 groups.
+[INFO DRT-0082]   Complete 100000 groups.
+[INFO DRT-0082]   Complete 200000 groups.
+[INFO DRT-0084]   Complete 251736 groups.
+#scanned instances     = 381566
+#unique  instances     = 276
+#stdCellGenAp          = 8089
+#stdCellValidPlanarAp  = 54
+#stdCellValidViaAp     = 6638
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 1121291
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 01:48:20, elapsed time = 00:07:29, memory = 2201.91 (MB), peak = 2536.57 (MB)
+Took 456 seconds: pin_access
+global_route -congestion_report_file /work/reports/asap7/carson_router_successor/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 280185
+[INFO GRT-0019] Found 5093 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 28
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    3941328       2816572          28.54%
+M3         Vertical      4678607       3480465          25.61%
+M4         Horizontal    3592082       2672443          25.60%
+M5         Vertical      3466404       2573533          25.76%
+M6         Horizontal    2409619       1633612          32.20%
+M7         Vertical      2730161       1839831          32.61%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 2259152
+[INFO GRT-0198] Via related Steiner nodes: 46811
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 2929516
+[INFO GRT-0112] Final usage 3D: 11682660
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             2816572       1159505           41.17%             0 /  0 /  0
+M3             3480465       1283820           36.89%             0 /  0 /  0
+M4             2672443        181419            6.79%             0 /  0 /  0
+M5             2573533        152205            5.91%             0 /  0 /  0
+M6             1633612         68183            4.17%             0 /  0 /  0
+M7             1839831         48980            2.66%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         15016456       2894112           19.27%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 2152162 um
+[INFO GRT-0014] Routed nets: 368688
+[INFO GRT-0303] Global routing runtime = 00:04:04
+Took 245 seconds: global_route -congestion_report_file /work/reports/asap7/carson_router_successor/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+estimate_parasitics -global_routing
+Took 23 seconds: estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    372838
+     1000 |     +0.0% |       0 |       0 |             0 |    371838
+     2000 |     +0.0% |       0 |       0 |             0 |    370838
+     3000 |     +0.0% |       0 |       0 |             0 |    369838
+     4000 |     +0.0% |       0 |       0 |             0 |    368838
+     5000 |     +0.0% |       0 |       0 |             0 |    367838
+     6000 |     +0.0% |       0 |       0 |             0 |    366838
+     7000 |     +0.0% |       0 |       0 |             0 |    365838
+     8000 |     +0.0% |       0 |       0 |             0 |    364838
+     9000 |     +0.0% |       0 |       0 |             0 |    363838
+    10000 |     +0.0% |       0 |       0 |             0 |    362838
+    11000 |     +0.0% |       0 |       0 |             0 |    361838
+    12000 |     +0.0% |       0 |       0 |             0 |    360838
+    13000 |     +0.0% |       0 |       0 |             0 |    359838
+    14000 |     +0.0% |       0 |       0 |             0 |    358838
+    15000 |     +0.0% |       0 |       0 |             0 |    357838
+    16000 |     +0.0% |       0 |       0 |             0 |    356838
+    17000 |     +0.0% |       0 |       0 |             0 |    355838
+    18000 |     +0.0% |       0 |       0 |             0 |    354838
+    19000 |     +0.0% |       0 |       0 |             0 |    353838
+    20000 |     +0.0% |       0 |       0 |             0 |    352838
+    21000 |     +0.0% |       0 |       0 |             0 |    351838
+    22000 |     +0.0% |       0 |       0 |             0 |    350838
+    23000 |     +0.0% |       0 |       0 |             0 |    349838
+    24000 |     +0.0% |       0 |       0 |             0 |    348838
+    25000 |     +0.0% |       0 |       0 |             0 |    347838
+    26000 |     +0.0% |       0 |       0 |             0 |    346838
+    27000 |     +0.0% |       0 |       0 |             0 |    345838
+    28000 |     +0.0% |       0 |       0 |             0 |    344838
+    29000 |     +0.0% |       0 |       0 |             0 |    343838
+    30000 |     +0.0% |       0 |       0 |             0 |    342838
+    31000 |     +0.0% |       0 |       0 |             0 |    341838
+    32000 |     +0.0% |       0 |       0 |             0 |    340838
+    33000 |     +0.0% |       0 |       0 |             0 |    339838
+    34000 |     +0.0% |       0 |       0 |             0 |    338838
+    35000 |     +0.0% |       0 |       0 |             0 |    337838
+    36000 |     +0.0% |       0 |       0 |             0 |    336838
+    37000 |     +0.0% |       0 |       0 |             0 |    335838
+    38000 |     +0.0% |       0 |       0 |             0 |    334838
+    39000 |     +0.0% |       0 |       2 |             1 |    333838
+    40000 |     +0.0% |       0 |       2 |             1 |    332838
+    41000 |     +0.0% |       0 |       3 |             2 |    331838
+    42000 |     +0.0% |       0 |       3 |             2 |    330838
+    43000 |     +0.0% |       0 |       3 |             2 |    329838
+    44000 |     +0.0% |       0 |       3 |             2 |    328838
+    45000 |     +0.0% |       0 |       3 |             2 |    327838
+    46000 |     +0.0% |       0 |       3 |             2 |    326838
+    47000 |     +0.0% |       0 |       3 |             2 |    325838
+    48000 |     +0.0% |       0 |       3 |             2 |    324838
+    49000 |     +0.0% |       0 |       3 |             2 |    323838
+    50000 |     +0.0% |       0 |       3 |             2 |    322838
+    51000 |     +0.0% |       0 |       8 |             7 |    321838
+    52000 |     +0.0% |       0 |       8 |             7 |    320838
+    53000 |     +0.0% |       0 |       8 |             7 |    319838
+    54000 |     +0.0% |       0 |       8 |             7 |    318838
+    55000 |     +0.0% |       0 |       8 |             7 |    317838
+    56000 |     +0.0% |       0 |       8 |             7 |    316838
+    57000 |     +0.0% |       0 |       8 |             7 |    315838
+    58000 |     +0.0% |       0 |       8 |             7 |    314838
+    59000 |     +0.0% |       0 |       8 |             7 |    313838
+    60000 |     +0.0% |       0 |       8 |             7 |    312838
+    61000 |     +0.0% |       0 |       8 |             7 |    311838
+    62000 |     +0.0% |       0 |       8 |             7 |    310838
+    63000 |     +0.0% |       0 |       8 |             7 |    309838
+    64000 |     +0.0% |       0 |       8 |             7 |    308838
+    65000 |     +0.0% |       0 |       8 |             7 |    307838
+    66000 |     +0.0% |       0 |       8 |             7 |    306838
+    67000 |     +0.0% |       0 |       8 |             7 |    305838
+    68000 |     +0.0% |       0 |       8 |             7 |    304838
+    69000 |     +0.0% |       0 |       8 |             7 |    303838
+    70000 |     +0.0% |       0 |       8 |             7 |    302838
+    71000 |     +0.0% |       0 |       8 |             7 |    301838
+    72000 |     +0.0% |       0 |       8 |             7 |    300838
+    73000 |     +0.0% |       0 |       8 |             7 |    299838
+    74000 |     +0.0% |       0 |       8 |             7 |    298838
+    75000 |     +0.0% |       0 |       8 |             7 |    297838
+    76000 |     +0.0% |       0 |       8 |             7 |    296838
+    77000 |     +0.0% |       0 |       8 |             7 |    295838
+    78000 |     +0.0% |       0 |       8 |             7 |    294838
+    79000 |     +0.0% |       0 |       8 |             7 |    293838
+    80000 |     +0.0% |       0 |       8 |             7 |    292838
+    81000 |     +0.0% |       0 |       8 |             7 |    291838
+    82000 |     +0.0% |       0 |       8 |             7 |    290838
+    83000 |     +0.0% |       0 |       8 |             7 |    289838
+    84000 |     +0.0% |       0 |       8 |             7 |    288838
+    85000 |     +0.0% |       0 |       8 |             7 |    287838
+    86000 |     +0.0% |       0 |       8 |             7 |    286838
+    87000 |     +0.0% |       0 |       8 |             7 |    285838
+    88000 |     +0.0% |       0 |       8 |             7 |    284838
+    89000 |     +0.0% |       0 |       8 |             7 |    283838
+    90000 |     +0.0% |       0 |       8 |             7 |    282838
+    91000 |     +0.0% |       0 |       8 |             7 |    281838
+    92000 |     +0.0% |       0 |       8 |             7 |    280838
+    93000 |     +0.0% |       0 |       8 |             7 |    279838
+    94000 |     +0.0% |       0 |       8 |             7 |    278838
+    95000 |     +0.0% |       0 |       8 |             7 |    277838
+    96000 |     +0.0% |       0 |       8 |             7 |    276838
+    97000 |     +0.0% |       0 |       8 |             7 |    275838
+    98000 |     +0.0% |       0 |       8 |             7 |    274838
+    99000 |     +0.0% |       0 |       8 |             7 |    273838
+   100000 |     +0.0% |       0 |       8 |             7 |    272838
+   101000 |     +0.0% |       0 |       8 |             7 |    271838
+   102000 |     +0.0% |       0 |       8 |             7 |    270838
+   103000 |     +0.0% |       0 |       8 |             7 |    269838
+   104000 |     +0.0% |       0 |       8 |             7 |    268838
+   105000 |     +0.0% |       0 |       8 |             7 |    267838
+   106000 |     +0.0% |       0 |       8 |             7 |    266838
+   107000 |     +0.0% |       0 |       8 |             7 |    265838
+   108000 |     +0.0% |       0 |       8 |             7 |    264838
+   109000 |     +0.0% |       0 |       8 |             7 |    263838
+   110000 |     +0.0% |       0 |       8 |             7 |    262838
+   111000 |     +0.0% |       0 |       8 |             7 |    261838
+   112000 |     +0.0% |       0 |       8 |             7 |    260838
+   113000 |     +0.0% |       0 |       8 |             7 |    259838
+   114000 |     +0.0% |       0 |       8 |             7 |    258838
+   115000 |     +0.0% |       0 |       8 |             7 |    257838
+   116000 |     +0.0% |       0 |       8 |             7 |    256838
+   117000 |     +0.0% |       0 |       8 |             7 |    255838
+   118000 |     +0.0% |       0 |       8 |             7 |    254838
+   119000 |     +0.0% |       0 |       8 |             7 |    253838
+   120000 |     +0.0% |       0 |       8 |             7 |    252838
+   121000 |     +0.0% |       0 |       8 |             7 |    251838
+   122000 |     +0.0% |       0 |       8 |             7 |    250838
+   123000 |     +0.0% |       0 |       8 |             7 |    249838
+   124000 |     +0.0% |       0 |       8 |             7 |    248838
+   125000 |     +0.0% |       0 |       8 |             7 |    247838
+   126000 |     +0.0% |       0 |       8 |             7 |    246838
+   127000 |     +0.0% |       0 |       8 |             7 |    245838
+   128000 |     +0.0% |       0 |       8 |             7 |    244838
+   129000 |     +0.0% |       0 |       8 |             7 |    243838
+   130000 |     +0.0% |       0 |       8 |             7 |    242838
+   131000 |     +0.0% |       0 |       8 |             7 |    241838
+   132000 |     +0.0% |       0 |       8 |             7 |    240838
+   133000 |     +0.0% |       0 |       8 |             7 |    239838
+   134000 |     +0.0% |       0 |       8 |             7 |    238838
+   135000 |     +0.0% |       0 |       8 |             7 |    237838
+   136000 |     +0.0% |       0 |       8 |             7 |    236838
+   137000 |     +0.0% |       0 |       8 |             7 |    235838
+   138000 |     +0.0% |       0 |       8 |             7 |    234838
+   139000 |     +0.0% |       0 |       8 |             7 |    233838
+   140000 |     +0.0% |       0 |       8 |             7 |    232838
+   141000 |     +0.0% |       0 |       8 |             7 |    231838
+   142000 |     +0.0% |       0 |       8 |             7 |    230838
+   143000 |     +0.0% |       0 |       8 |             7 |    229838
+   144000 |     +0.0% |       0 |       8 |             7 |    228838
+   145000 |     +0.0% |       0 |       8 |             7 |    227838
+   146000 |     +0.0% |       0 |       8 |             7 |    226838
+   147000 |     +0.0% |       0 |       8 |             7 |    225838
+   148000 |     +0.0% |       0 |       8 |             7 |    224838
+   149000 |     +0.0% |       0 |       8 |             7 |    223838
+   150000 |     +0.0% |       0 |       8 |             7 |    222838
+   151000 |     +0.0% |       0 |       8 |             7 |    221838
+   152000 |     +0.0% |       0 |       8 |             7 |    220838
+   153000 |     +0.0% |       0 |       8 |             7 |    219838
+   154000 |     +0.0% |       0 |       8 |             7 |    218838
+   155000 |     +0.0% |       0 |       8 |             7 |    217838
+   156000 |     +0.0% |       0 |       8 |             7 |    216838
+   157000 |     +0.0% |       0 |       8 |             7 |    215838
+   158000 |     +0.0% |       0 |       8 |             7 |    214838
+   159000 |     +0.0% |       0 |       8 |             7 |    213838
+   160000 |     +0.0% |       0 |       8 |             7 |    212838
+   161000 |     +0.0% |       0 |       8 |             7 |    211838
+   162000 |     +0.0% |       0 |       8 |             7 |    210838
+   163000 |     +0.0% |       0 |       8 |             7 |    209838
+   164000 |     +0.0% |       0 |       8 |             7 |    208838
+   165000 |     +0.0% |       0 |       8 |             7 |    207838
+   166000 |     +0.0% |       0 |       8 |             7 |    206838
+   167000 |     +0.0% |       0 |       8 |             7 |    205838
+   168000 |     +0.0% |       0 |       8 |             7 |    204838
+   169000 |     +0.0% |       0 |       8 |             7 |    203838
+   170000 |     +0.0% |       0 |       8 |             7 |    202838
+   171000 |     +0.0% |       0 |       8 |             7 |    201838
+   172000 |     +0.0% |       0 |       8 |             7 |    200838
+   173000 |     +0.0% |       0 |       8 |             7 |    199838
+   174000 |     +0.0% |       0 |       8 |             7 |    198838
+   175000 |     +0.0% |       0 |       8 |             7 |    197838
+   176000 |     +0.0% |       0 |       8 |             7 |    196838
+   177000 |     +0.0% |       0 |       8 |             7 |    195838
+   178000 |     +0.0% |       0 |       8 |             7 |    194838
+   179000 |     +0.0% |       0 |       8 |             7 |    193838
+   180000 |     +0.0% |       0 |       8 |             7 |    192838
+   181000 |     +0.0% |       0 |       8 |             7 |    191838
+   182000 |     +0.0% |       0 |       8 |             7 |    190838
+   183000 |     +0.0% |       0 |       8 |             7 |    189838
+   184000 |     +0.0% |       0 |       8 |             7 |    188838
+   185000 |     +0.0% |       0 |       8 |             7 |    187838
+   186000 |     +0.0% |       0 |       8 |             7 |    186838
+   187000 |     +0.0% |       0 |       8 |             7 |    185838
+   188000 |     +0.0% |       0 |       8 |             7 |    184838
+   189000 |     +0.0% |       0 |       8 |             7 |    183838
+   190000 |     +0.0% |       0 |       8 |             7 |    182838
+   191000 |     +0.0% |       0 |       8 |             7 |    181838
+   192000 |     +0.0% |       0 |       8 |             7 |    180838
+   193000 |     +0.0% |       0 |       8 |             7 |    179838
+   194000 |     +0.0% |       0 |       8 |             7 |    178838
+   195000 |     +0.0% |       0 |       8 |             7 |    177838
+   196000 |     +0.0% |       0 |       8 |             7 |    176838
+   197000 |     +0.0% |       0 |       8 |             7 |    175838
+   198000 |     +0.0% |       0 |       8 |             7 |    174838
+   199000 |     +0.0% |       0 |       8 |             7 |    173838
+   200000 |     +0.0% |       0 |       8 |             7 |    172838
+   201000 |     +0.0% |       0 |       8 |             7 |    171838
+   202000 |     +0.0% |       0 |       8 |             7 |    170838
+   203000 |     +0.0% |       0 |       8 |             7 |    169838
+   204000 |     +0.0% |       0 |       8 |             7 |    168838
+   205000 |     +0.0% |       0 |       8 |             7 |    167838
+   206000 |     +0.0% |       0 |       8 |             7 |    166838
+   207000 |     +0.0% |       0 |       8 |             7 |    165838
+   208000 |     +0.0% |       0 |       8 |             7 |    164838
+   209000 |     +0.0% |       0 |       8 |             7 |    163838
+   210000 |     +0.0% |       0 |       8 |             7 |    162838
+   211000 |     +0.0% |       0 |       8 |             7 |    161838
+   212000 |     +0.0% |       0 |       8 |             7 |    160838
+   213000 |     +0.0% |       0 |       8 |             7 |    159838
+   214000 |     +0.0% |       0 |       8 |             7 |    158838
+   215000 |     +0.0% |       0 |       8 |             7 |    157838
+   216000 |     +0.0% |       0 |       8 |             7 |    156838
+   217000 |     +0.0% |       0 |       8 |             7 |    155838
+   218000 |     +0.0% |       0 |       8 |             7 |    154838
+   219000 |     +0.0% |       0 |       8 |             7 |    153838
+   220000 |     +0.0% |       0 |       8 |             7 |    152838
+   221000 |     +0.0% |       0 |       8 |             7 |    151838
+   222000 |     +0.0% |       0 |       8 |             7 |    150838
+   223000 |     +0.0% |       0 |       8 |             7 |    149838
+   224000 |     +0.0% |       0 |       8 |             7 |    148838
+   225000 |     +0.0% |       0 |       8 |             7 |    147838
+   226000 |     +0.0% |       0 |       8 |             7 |    146838
+   227000 |     +0.0% |       0 |       8 |             7 |    145838
+   228000 |     +0.0% |       0 |       8 |             7 |    144838
+   229000 |     +0.0% |       0 |       8 |             7 |    143838
+   230000 |     +0.0% |       0 |       8 |             7 |    142838
+   231000 |     +0.0% |       0 |       8 |             7 |    141838
+   232000 |     +0.0% |       0 |       8 |             7 |    140838
+   233000 |     +0.0% |       0 |       8 |             7 |    139838
+   234000 |     +0.0% |       0 |       8 |             7 |    138838
+   235000 |     +0.0% |       0 |       8 |             7 |    137838
+   236000 |     +0.0% |       0 |       8 |             7 |    136838
+   237000 |     +0.0% |       0 |       8 |             7 |    135838
+   238000 |     +0.0% |       0 |       8 |             7 |    134838
+   239000 |     +0.0% |       0 |       8 |             7 |    133838
+   240000 |     +0.0% |       0 |       8 |             7 |    132838
+   241000 |     +0.0% |       0 |       8 |             7 |    131838
+   242000 |     +0.0% |       0 |       8 |             7 |    130838
+   243000 |     +0.0% |       0 |       8 |             7 |    129838
+   244000 |     +0.0% |       0 |       8 |             7 |    128838
+   245000 |     +0.0% |       0 |       8 |             7 |    127838
+   246000 |     +0.0% |       0 |       8 |             7 |    126838
+   247000 |     +0.0% |       0 |       8 |             7 |    125838
+   248000 |     +0.0% |       0 |       8 |             7 |    124838
+   249000 |     +0.0% |       0 |       8 |             7 |    123838
+   250000 |     +0.0% |       0 |       8 |             7 |    122838
+   251000 |     +0.0% |       0 |       8 |             7 |    121838
+   252000 |     +0.0% |       0 |       8 |             7 |    120838
+   253000 |     +0.0% |       0 |       8 |             7 |    119838
+   254000 |     +0.0% |       0 |       8 |             7 |    118838
+   255000 |     +0.0% |       0 |       8 |             7 |    117838
+   256000 |     +0.0% |       0 |       8 |             7 |    116838
+   257000 |     +0.0% |       0 |       8 |             7 |    115838
+   258000 |     +0.0% |       0 |       8 |             7 |    114838
+   259000 |     +0.0% |       0 |       8 |             7 |    113838
+   260000 |     +0.0% |       0 |       8 |             7 |    112838
+   261000 |     +0.0% |       0 |       8 |             7 |    111838
+   262000 |     +0.0% |       0 |       8 |             7 |    110838
+   263000 |     +0.0% |       0 |       8 |             7 |    109838
+   264000 |     +0.0% |       0 |       8 |             7 |    108838
+   265000 |     +0.0% |       0 |       8 |             7 |    107838
+   266000 |     +0.0% |       0 |       8 |             7 |    106838
+   267000 |     +0.0% |       0 |       8 |             7 |    105838
+   268000 |     +0.0% |       0 |       8 |             7 |    104838
+   269000 |     +0.0% |       0 |      12 |            11 |    103838
+   270000 |     +0.0% |       0 |      16 |            14 |    102838
+   271000 |     +0.0% |       0 |      16 |            14 |    101838
+   272000 |     +0.0% |       0 |      16 |            14 |    100838
+   273000 |     +0.0% |       0 |      16 |            14 |     99838
+   274000 |     +0.0% |       0 |      16 |            14 |     98838
+   275000 |     +0.0% |       0 |      16 |            14 |     97838
+   276000 |     +0.0% |       0 |      16 |            14 |     96838
+   277000 |     +0.0% |       0 |      16 |            14 |     95838
+   278000 |     +0.0% |       0 |      16 |            14 |     94838
+   279000 |     +0.0% |       0 |      16 |            14 |     93838
+   280000 |     +0.0% |       0 |      21 |            18 |     92838
+   281000 |     +0.0% |       0 |      21 |            18 |     91838
+   282000 |     +0.0% |       0 |      22 |            19 |     90838
+   283000 |     +0.0% |       0 |      22 |            19 |     89838
+   284000 |     +0.0% |       0 |      22 |            19 |     88838
+   285000 |     +0.0% |       0 |      22 |            19 |     87838
+   286000 |     +0.0% |       0 |      23 |            20 |     86838
+   287000 |     +0.0% |       0 |      23 |            20 |     85838
+   288000 |     +0.0% |       0 |      23 |            20 |     84838
+   289000 |     +0.0% |       0 |      23 |            20 |     83838
+   290000 |     +0.0% |       0 |      23 |            20 |     82838
+   291000 |     +0.0% |       0 |      60 |            53 |     81838
+   292000 |     +0.0% |       0 |      60 |            53 |     80838
+   293000 |     +0.0% |       0 |      60 |            53 |     79838
+   294000 |     +0.0% |       0 |      60 |            53 |     78838
+   295000 |     +0.0% |       0 |      60 |            53 |     77838
+   296000 |     +0.0% |       0 |      60 |            53 |     76838
+   297000 |     +0.0% |       0 |      60 |            53 |     75838
+   298000 |     +0.0% |       0 |      60 |            53 |     74838
+   299000 |     +0.0% |       0 |      60 |            53 |     73838
+   300000 |     +0.0% |       0 |      60 |            53 |     72838
+   301000 |     +0.0% |       0 |      60 |            53 |     71838
+   302000 |     +0.0% |       0 |      60 |            53 |     70838
+   303000 |     +0.0% |       0 |      60 |            53 |     69838
+   304000 |     +0.0% |       0 |      60 |            53 |     68838
+   305000 |     +0.0% |       0 |      60 |            53 |     67838
+   306000 |     +0.0% |       0 |      60 |            53 |     66838
+   307000 |     +0.0% |       0 |      60 |            53 |     65838
+   308000 |     +0.0% |       0 |      60 |            53 |     64838
+   309000 |     +0.0% |       0 |      60 |            53 |     63838
+   310000 |     +0.0% |       0 |      60 |            53 |     62838
+   311000 |     +0.0% |       0 |      60 |            53 |     61838
+   312000 |     +0.0% |       0 |      60 |            53 |     60838
+   313000 |     +0.0% |       0 |      60 |            53 |     59838
+   314000 |     +0.0% |       0 |      60 |            53 |     58838
+   315000 |     +0.0% |       0 |      60 |            53 |     57838
+   316000 |     +0.0% |       0 |      60 |            53 |     56838
+   317000 |     +0.0% |       0 |      60 |            53 |     55838
+   318000 |     +0.0% |       0 |      60 |            53 |     54838
+   319000 |     +0.0% |       0 |      60 |            53 |     53838
+   320000 |     +0.0% |       0 |      60 |            53 |     52838
+   321000 |     +0.0% |       0 |      60 |            53 |     51838
+   322000 |     +0.0% |       0 |      60 |            53 |     50838
+   323000 |     +0.0% |       0 |      60 |            53 |     49838
+   324000 |     +0.0% |       0 |      60 |            53 |     48838
+   325000 |     +0.0% |       0 |      60 |            53 |     47838
+   326000 |     +0.0% |       0 |      60 |            53 |     46838
+   327000 |     +0.0% |       0 |      60 |            53 |     45838
+   328000 |     +0.0% |       0 |      60 |            53 |     44838
+   329000 |     +0.0% |       0 |      60 |            53 |     43838
+   330000 |     +0.0% |       0 |      60 |            53 |     42838
+   331000 |     +0.0% |       0 |      60 |            53 |     41838
+   332000 |     +0.0% |       0 |      60 |            53 |     40838
+   333000 |     +0.0% |       0 |      60 |            53 |     39838
+   334000 |     +0.0% |       0 |      60 |            53 |     38838
+   335000 |     +0.0% |       0 |      60 |            53 |     37838
+   336000 |     +0.0% |       0 |      64 |            56 |     36838
+   337000 |     +0.0% |       0 |      65 |            57 |     35838
+   338000 |     +0.0% |       0 |      65 |            57 |     34838
+   339000 |     +0.0% |       0 |      65 |            57 |     33838
+   340000 |     +0.0% |       0 |      65 |            57 |     32838
+   341000 |     +0.0% |       0 |      65 |            57 |     31838
+   342000 |     +0.0% |       0 |      65 |            57 |     30838
+   343000 |     +0.0% |       0 |      65 |            57 |     29838
+   344000 |     +0.0% |       0 |      65 |            57 |     28838
+   345000 |     +0.0% |       0 |      65 |            57 |     27838
+   346000 |     +0.0% |       0 |      65 |            57 |     26838
+   347000 |     +0.0% |       0 |      65 |            57 |     25838
+   348000 |     +0.0% |       0 |      65 |            57 |     24838
+   349000 |     +0.0% |       0 |      65 |            57 |     23838
+   350000 |     +0.0% |       0 |      65 |            57 |     22838
+   351000 |     +0.0% |       0 |      65 |            57 |     21838
+   352000 |     +0.0% |       0 |      65 |            57 |     20838
+   353000 |     +0.0% |       0 |      65 |            57 |     19838
+   354000 |     +0.0% |       0 |      65 |            57 |     18838
+   355000 |     +0.0% |       0 |      65 |            57 |     17838
+   356000 |     +0.0% |       0 |      65 |            57 |     16838
+   357000 |     +0.0% |       0 |      65 |            57 |     15838
+   358000 |     +0.0% |       0 |      65 |            57 |     14838
+   359000 |     +0.0% |       0 |      65 |            57 |     13838
+   360000 |     +0.0% |       0 |      65 |            57 |     12838
+   361000 |     +0.0% |       0 |      65 |            57 |     11838
+   362000 |     +0.0% |       0 |      65 |            57 |     10838
+   363000 |     +0.0% |       0 |      65 |            57 |      9838
+   364000 |     +0.0% |       0 |      65 |            57 |      8838
+   365000 |     +0.0% |       0 |      65 |            57 |      7838
+   366000 |     +0.0% |       0 |      65 |            57 |      6838
+   367000 |     +0.0% |       0 |      65 |            57 |      5838
+   368000 |     +0.0% |       0 |      65 |            57 |      4838
+   369000 |     +0.0% |       0 |      65 |            57 |      3838
+   370000 |     +0.0% |       0 |      65 |            57 |      2838
+   371000 |     +0.0% |       0 |      65 |            57 |      1838
+   372000 |     +0.0% |       0 |      65 |            57 |       838
+    final |     +0.0% |       0 |      65 |            57 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 57 slew violations.
+[INFO RSZ-0038] Inserted 65 buffers in 57 nets.
+[INFO RSZ-0504] Runtime: 63.76s
+Took 64 seconds: repair_design -verbose -slew_margin 30
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 97166.22 um^2
+[INFO DPL-0007] Movable instances area: 54451.34 um^2
+[INFO DPL-0008] Fixed instances area within core: 269.56 um^2
+[INFO DPL-0009] Utilization: 56.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 381631 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          4 |         2 |         2
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 4.80s
+Placement Analysis
+---------------------------------
+total displacement         42.6 u
+average displacement        0.0 u
+max displacement            1.8 u
+original HPWL         1549774.7 u
+legalized HPWL        1549813.1 u
+delta HPWL                    0 %
+
+Took 5 seconds: detailed_placement
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/carson_router_successor/base/congestion_post_repair_design.rpt
+Took 7 seconds: global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/carson_router_successor/base/congestion_post_repair_design.rpt
+Repair setup and hold violations...
+estimate_parasitics -global_routing
+Took 26 seconds: estimate_parasitics -global_routing
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -verbose
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 496 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 496 out of 496 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -219.555 |   -10249.4 |   -29721.1 |    496 | g_on.g_lane\[31\].u_lane/x_q\[8\]$_DFFE_PP_/D
+      10* |       1 |       7 |        1 |      0 |     0 |    -0.0% | -203.743 |    -9963.7 |   -16437.0 |    496 | g_on.g_lane\[6\].u_lane/x_q\[5\]$_DFFE_PP_/D
+      20* |       3 |      15 |        1 |      0 |     0 |    -0.0% | -194.773 |    -9807.6 |   -15540.2 |    496 | out_ids[21]
+      30* |       4 |      24 |        1 |      0 |     0 |    -0.0% | -184.560 |    -9683.9 |   -14872.4 |    496 | out_ids[36]
+      37* |       4 |      31 |        1 |      0 |     0 |    -0.0% | -180.880 |    -9621.7 |   -14810.2 |    496 | out_ids[26]
+      40* |       4 |      31 |        3 |      0 |     0 |    -0.0% | -180.880 |    -9503.7 |   -14505.1 |    496 | out_ids[26]
+      50* |       6 |      32 |       12 |      0 |     1 |    -0.0% | -180.880 |    -9144.6 |   -14151.5 |    496 | out_ids[26]
+      60* |       9 |      35 |       15 |      0 |     2 |    -0.0% | -180.880 |    -9041.2 |   -14008.1 |    496 | out_ids[26]
+      62* |      11 |      35 |       15 |      0 |     2 |    -0.0% | -180.880 |    -9041.2 |   -13955.7 |    496 | out_ids[26]
+      67* |      11 |      39 |       15 |      0 |     2 |    -0.0% | -180.880 |    -9021.9 |   -13936.4 |    496 | out_ids[26]
+      70* |      11 |      41 |       15 |      0 |     2 |    -0.0% | -180.880 |    -9008.1 |   -13922.6 |    496 | out_ids[26]
+      72* |      11 |      43 |       15 |      0 |     2 |    -0.0% | -180.880 |    -9003.9 |   -13918.4 |    496 | out_ids[26]
+      77* |      11 |      47 |       15 |      0 |     2 |    -0.0% | -180.880 |    -8984.9 |   -13899.3 |    496 | out_ids[26]
+      80* |      11 |      47 |       17 |      0 |     2 |    -0.0% | -180.880 |    -8968.6 |   -14116.2 |    496 | out_ids[26]
+      90* |      15 |      48 |       21 |      0 |     3 |    -0.0% | -180.880 |    -8944.3 |   -12903.4 |    496 | out_ids[26]
+     100* |      20 |      48 |       26 |      0 |     3 |    -0.0% | -180.880 |    -8944.3 |   -12903.4 |    496 | out_ids[26]
+     110* |      25 |      48 |       31 |      0 |     3 |    -0.0% | -180.880 |    -8944.3 |   -12903.4 |    496 | out_ids[26]
+     120* |      30 |      48 |       36 |      0 |     3 |    -0.0% | -180.880 |    -8944.3 |   -12903.4 |    496 | out_ids[26]
+     130* |      35 |      48 |       41 |      0 |     3 |    -0.0% | -180.880 |    -8944.3 |   -12903.4 |    496 | out_ids[26]
+     137* |      13 |      48 |       20 |      0 |     3 |    -0.0% | -180.880 |    -8941.3 |   -12742.2 |    496 | out_ids[26]
+     140* |      13 |      50 |       20 |      0 |     3 |    -0.0% | -180.880 |    -8940.1 |   -12741.0 |    496 | out_ids[26]
+     140* |      13 |      50 |       20 |      0 |     3 |    -0.0% | -180.880 |    -8940.1 |   -12741.0 |    496 | out_ids[26]
+     150* |      14 |      54 |       22 |      0 |     5 |    -0.0% | -180.880 |    -8942.9 |   -12412.3 |    496 | out_ids[26]
+     160* |      19 |      54 |       27 |      0 |     5 |    -0.0% | -180.880 |    -8943.1 |   -12422.7 |    496 | out_ids[26]
+     170* |      24 |      54 |       32 |      0 |     5 |    -0.0% | -180.880 |    -8943.1 |   -12422.7 |    496 | out_ids[26]
+     180* |      29 |      54 |       37 |      0 |     5 |    -0.0% | -180.880 |    -8943.1 |   -12422.7 |    496 | out_ids[26]
+     190* |      34 |      54 |       42 |      0 |     5 |    -0.0% | -180.880 |    -8943.1 |   -12422.7 |    496 | out_ids[26]
+     200* |      39 |      54 |       47 |      0 |     5 |    -0.0% | -180.880 |    -8943.1 |   -12422.7 |    496 | out_ids[26]
+     201* |      14 |      54 |       23 |      0 |     5 |    -0.0% | -180.880 |    -8940.1 |   -12262.4 |    496 | out_ids[26]
+     204* |      14 |      56 |       23 |      0 |     5 |    -0.0% | -180.880 |    -8938.0 |   -12260.3 |    496 | out_ids[26]
+     205* |      14 |      56 |       23 |      0 |     5 |    -0.0% | -180.880 |    -8938.0 |   -12260.3 |    496 | out_ids[26]
+     206* |      14 |      56 |       23 |      0 |     5 |    -0.0% | -180.880 |    -8938.0 |   -12260.3 |    496 | out_ids[26]
+     210* |      14 |      59 |       23 |      0 |     5 |    -0.0% | -180.880 |    -8929.8 |   -12252.1 |    496 | out_ids[26]
+     210* |      14 |      59 |       23 |      0 |     5 |    -0.0% | -180.880 |    -8929.8 |   -12252.1 |    496 | out_ids[26]
+     220* |      18 |      59 |       27 |      0 |     6 |    -0.0% | -180.880 |    -8932.1 |   -12367.1 |    496 | out_ids[26]
+     230* |      23 |      59 |       32 |      0 |     6 |    -0.0% | -180.880 |    -8932.1 |   -12367.1 |    496 | out_ids[26]
+     240* |      28 |      59 |       37 |      0 |     6 |    -0.0% | -180.880 |    -8932.1 |   -12367.1 |    496 | out_ids[26]
+     250* |      33 |      59 |       42 |      0 |     6 |    -0.0% | -180.880 |    -8932.1 |   -12367.1 |    496 | out_ids[26]
+     260* |      38 |      59 |       47 |      0 |     6 |    -0.0% | -180.880 |    -8932.1 |   -12367.1 |    496 | out_ids[26]
+     261* |      14 |      59 |       23 |      0 |     5 |    -0.0% | -180.880 |    -8929.8 |   -12250.6 |    496 | out_ids[26]
+     266* |      14 |      63 |       23 |      0 |     5 |    -0.0% | -180.880 |    -8912.6 |   -12233.4 |    496 | out_ids[26]
+     270* |      14 |      66 |       23 |      0 |     5 |    -0.0% | -180.880 |    -8904.6 |   -12225.4 |    496 | out_ids[26]
+     270* |      14 |      66 |       23 |      0 |     5 |    -0.0% | -180.880 |    -8904.6 |   -12225.4 |    496 | out_ids[26]
+     271* |      14 |      66 |       23 |      0 |     5 |    -0.0% | -180.880 |    -8904.6 |   -12225.4 |    496 | out_ids[26]
+     280* |      18 |      67 |       26 |      0 |     5 |    -0.0% | -180.880 |    -8907.6 |   -12361.2 |    496 | out_ids[26]
+     290* |      23 |      67 |       31 |      0 |     5 |    -0.0% | -180.880 |    -8907.6 |   -12361.2 |    496 | out_ids[26]
+     300* |      28 |      67 |       36 |      0 |     5 |    -0.0% | -180.880 |    -8907.6 |   -12361.2 |    496 | out_ids[26]
+     310* |      33 |      67 |       41 |      0 |     5 |    -0.0% | -180.880 |    -8907.6 |   -12361.2 |    496 | out_ids[26]
+     320* |      38 |      67 |       46 |      0 |     5 |    -0.0% | -180.880 |    -8907.6 |   -12361.2 |    496 | out_ids[26]
+     327* |      16 |      67 |       25 |      0 |     5 |    -0.0% | -180.880 |    -8904.6 |   -12207.2 |    496 | out_ids[26]
+     330* |      17 |      67 |       25 |      0 |     6 |    -0.0% | -180.880 |    -8907.4 |   -12315.1 |    496 | out_ids[26]
+     340* |      21 |      67 |       30 |      0 |     7 |    -0.0% | -180.880 |    -8907.6 |   -12386.1 |    496 | out_ids[26]
+     350* |      26 |      67 |       35 |      0 |     7 |    -0.0% | -180.880 |    -8907.6 |   -12386.1 |    496 | out_ids[26]
+     360* |      31 |      67 |       40 |      0 |     7 |    -0.0% | -180.880 |    -8907.6 |   -12386.1 |    496 | out_ids[26]
+     370* |      36 |      67 |       45 |      0 |     7 |    -0.0% | -180.880 |    -8907.6 |   -12386.1 |    496 | out_ids[26]
+     380* |      41 |      67 |       50 |      0 |     7 |    -0.0% | -180.880 |    -8907.6 |   -12386.1 |    496 | out_ids[26]
+     381* |      17 |      67 |       26 |      0 |     6 |    -0.0% | -180.880 |    -8907.4 |   -12373.2 |    496 | out_ids[26]
+     390* |      21 |      67 |       30 |      0 |     6 |    -0.0% | -180.880 |    -8907.6 |   -12383.5 |    496 | out_ids[26]
+     400* |      26 |      67 |       35 |      0 |     6 |    -0.0% | -180.880 |    -8907.6 |   -12383.5 |    496 | out_ids[26]
+     410* |      31 |      67 |       40 |      0 |     6 |    -0.0% | -180.880 |    -8907.6 |   -12383.5 |    496 | out_ids[26]
+     420* |      36 |      67 |       45 |      0 |     6 |    -0.0% | -180.880 |    -8907.6 |   -12383.5 |    496 | out_ids[26]
+     430* |      41 |      67 |       50 |      0 |     6 |    -0.0% | -180.880 |    -8907.6 |   -12383.5 |    496 | out_ids[26]
+     433* |      17 |      67 |       27 |      0 |     6 |    -0.0% | -180.880 |    -8904.6 |   -12229.6 |    496 | out_ids[26]
+     440* |      20 |      67 |       29 |      0 |     7 |    -0.0% | -180.880 |    -8907.6 |   -12381.2 |    496 | out_ids[26]
+     450* |      25 |      67 |       34 |      0 |     7 |    -0.0% | -180.880 |    -8907.6 |   -12381.2 |    496 | out_ids[26]
+     460* |      30 |      67 |       39 |      0 |     7 |    -0.0% | -180.880 |    -8907.6 |   -12381.2 |    496 | out_ids[26]
+     470* |      35 |      67 |       44 |      0 |     7 |    -0.0% | -180.880 |    -8907.6 |   -12381.2 |    496 | out_ids[26]
+     480* |      40 |      67 |       49 |      0 |     7 |    -0.0% | -180.880 |    -8907.6 |   -12381.2 |    496 | out_ids[26]
+     487* |      18 |      67 |       28 |      0 |     7 |    -0.0% | -180.880 |    -8904.6 |   -12227.3 |    496 | out_ids[26]
+     489* |      18 |      68 |       28 |      0 |     7 |    -0.0% | -180.880 |    -8900.2 |   -12222.9 |    496 | out_ids[26]
+     490* |      18 |      68 |       28 |      0 |     7 |    -0.0% | -180.880 |    -8900.2 |   -12222.9 |    496 | out_ids[26]
+     491* |      18 |      69 |       28 |      0 |     7 |    -0.0% | -180.880 |    -8895.7 |   -12218.5 |    496 | out_ids[26]
+     495* |      18 |      72 |       28 |      0 |     7 |    -0.0% | -180.880 |    -8886.2 |   -12208.9 |    496 | out_ids[26]
+     500* |      18 |      76 |       28 |      0 |     7 |    -0.0% | -180.880 |    -8873.3 |   -12196.0 |    496 | out_ids[26]
+     500* |      18 |      76 |       28 |      0 |     7 |    -0.0% | -180.880 |    -8873.3 |   -12196.0 |    496 | out_ids[26]
+     502* |      18 |      77 |       28 |      0 |     7 |    -0.0% | -180.880 |    -8868.8 |   -12191.5 |    496 | out_ids[26]
+     510* |      21 |      77 |       32 |      0 |     7 |    +0.0% | -180.880 |    -8871.7 |   -12426.9 |    496 | out_ids[26]
+     520* |      26 |      77 |       37 |      0 |     7 |    +0.0% | -180.880 |    -8871.7 |   -12426.9 |    496 | out_ids[26]
+     530* |      31 |      77 |       42 |      0 |     7 |    +0.0% | -180.880 |    -8871.7 |   -12426.9 |    496 | out_ids[26]
+     540* |      36 |      77 |       47 |      0 |     7 |    +0.0% | -180.880 |    -8871.7 |   -12426.9 |    496 | out_ids[26]
+     550* |      41 |      77 |       52 |      0 |     7 |    +0.0% | -180.880 |    -8871.7 |   -12426.9 |    496 | out_ids[26]
+     557* |      19 |      77 |       31 |      0 |     7 |    +0.0% | -180.880 |    -8868.8 |   -12273.0 |    496 | out_ids[26]
+     560* |      20 |      77 |       31 |      0 |     8 |    +0.0% | -180.880 |    -8871.5 |   -12412.7 |    496 | out_ids[26]
+     570* |      25 |      77 |       36 |      0 |     8 |    +0.0% | -180.880 |    -8871.7 |   -12423.1 |    496 | out_ids[26]
+     580* |      30 |      77 |       41 |      0 |     8 |    +0.0% | -180.880 |    -8871.7 |   -12423.1 |    496 | out_ids[26]
+     590* |      35 |      77 |       46 |      0 |     8 |    +0.0% | -180.880 |    -8871.7 |   -12423.1 |    496 | out_ids[26]
+     600* |      40 |      77 |       51 |      0 |     8 |    +0.0% | -180.880 |    -8871.7 |   -12423.1 |    496 | out_ids[26]
+     610* |      45 |      77 |       56 |      0 |     8 |    +0.0% | -180.880 |    -8871.7 |   -12423.1 |    496 | out_ids[26]
+     611* |      20 |      77 |       32 |      0 |     8 |    +0.0% | -180.880 |    -8868.8 |   -12269.2 |    496 | out_ids[26]
+     616* |      20 |      81 |       32 |      0 |     8 |    +0.0% | -180.880 |    -8856.2 |   -12256.6 |    496 | out_ids[26]
+     620* |      20 |      84 |       32 |      0 |     8 |    +0.0% | -180.880 |    -8843.5 |   -12243.9 |    496 | out_ids[26]
+     621* |      20 |      85 |       32 |      0 |     8 |    +0.0% | -180.880 |    -8840.5 |   -12240.9 |    496 | out_ids[26]
+     630* |      24 |      85 |       35 |      0 |     9 |    +0.0% | -180.880 |    -8843.5 |   -12392.6 |    496 | out_ids[26]
+     640* |      29 |      85 |       40 |      0 |     9 |    +0.0% | -180.880 |    -8843.5 |   -12392.6 |    496 | out_ids[26]
+     650* |      34 |      85 |       45 |      0 |     9 |    +0.0% | -180.880 |    -8843.5 |   -12392.6 |    496 | out_ids[26]
+     660* |      39 |      85 |       50 |      0 |     9 |    +0.0% | -180.880 |    -8843.5 |   -12392.6 |    496 | out_ids[26]
+     670* |      44 |      85 |       55 |      0 |     9 |    +0.0% | -180.880 |    -8843.5 |   -12392.6 |    496 | out_ids[26]
+     675* |      21 |      85 |       33 |      0 |     9 |    +0.0% | -180.880 |    -8840.5 |   -12238.4 |    496 | out_ids[26]
+     679* |      21 |      88 |       33 |      0 |     9 |    +0.0% | -180.880 |    -8824.1 |   -12222.0 |    496 | out_ids[26]
+     680* |      21 |      88 |       33 |      0 |     9 |    +0.0% | -180.880 |    -8824.1 |   -12222.0 |    496 | out_ids[26]
+     684* |      21 |      92 |       33 |      0 |     9 |    +0.0% | -180.880 |    -8809.2 |   -12207.1 |    496 | out_ids[26]
+     690* |      23 |      92 |       35 |      0 |    10 |    +0.0% | -180.880 |    -8811.5 |   -12316.5 |    496 | out_ids[26]
+     700* |      28 |      92 |       40 |      0 |    10 |    +0.0% | -180.880 |    -8811.5 |   -12316.5 |    496 | out_ids[26]
+     710* |      33 |      92 |       45 |      0 |    10 |    +0.0% | -180.880 |    -8811.5 |   -12316.5 |    496 | out_ids[26]
+     720* |      38 |      92 |       50 |      0 |    10 |    +0.0% | -180.880 |    -8811.5 |   -12316.5 |    496 | out_ids[26]
+     730* |      43 |      92 |       55 |      0 |    10 |    +0.0% | -180.880 |    -8811.5 |   -12316.5 |    496 | out_ids[26]
+     738* |      22 |      92 |       34 |      0 |    10 |    +0.0% | -180.880 |    -8809.2 |   -12203.6 |    496 | out_ids[26]
+     740* |      23 |      92 |       34 |      0 |    10 |    +0.0% | -180.880 |    -8811.9 |   -12347.4 |    496 | out_ids[26]
+     750* |      27 |      92 |       39 |      0 |    11 |    +0.0% | -180.880 |    -8811.5 |   -12312.9 |    496 | out_ids[26]
+     760* |      32 |      92 |       44 |      0 |    11 |    +0.0% | -180.880 |    -8811.5 |   -12312.9 |    496 | out_ids[26]
+     770* |      37 |      92 |       49 |      0 |    11 |    +0.0% | -180.880 |    -8811.5 |   -12312.9 |    496 | out_ids[26]
+     780* |      42 |      92 |       54 |      0 |    11 |    +0.0% | -180.880 |    -8811.5 |   -12312.9 |    496 | out_ids[26]
+     790* |      47 |      92 |       59 |      0 |    11 |    +0.0% | -180.880 |    -8811.5 |   -12312.9 |    496 | out_ids[26]
+     792* |      23 |      92 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8809.2 |   -12200.1 |    496 | out_ids[26]
+     797* |      23 |      96 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8794.3 |   -12185.2 |    496 | out_ids[26]
+     800* |      23 |      98 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8763.2 |   -12154.1 |    496 | out_ids[26]
+     803* |      23 |     101 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8753.3 |   -12144.2 |    496 | out_ids[26]
+     810* |      26 |     101 |       38 |      0 |    11 |    +0.0% | -180.880 |    -8755.6 |   -12257.1 |    496 | out_ids[26]
+     820* |      31 |     101 |       43 |      0 |    11 |    +0.0% | -180.880 |    -8755.6 |   -12257.1 |    496 | out_ids[26]
+     830* |      36 |     101 |       48 |      0 |    11 |    +0.0% | -180.880 |    -8755.6 |   -12257.1 |    496 | out_ids[26]
+     840* |      41 |     101 |       53 |      0 |    11 |    +0.0% | -180.880 |    -8755.6 |   -12257.1 |    496 | out_ids[26]
+     850* |      46 |     101 |       58 |      0 |    11 |    +0.0% | -180.880 |    -8755.6 |   -12257.1 |    496 | out_ids[26]
+     854* |      23 |     101 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8753.3 |   -12144.2 |    496 | out_ids[26]
+     860* |      23 |     106 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8712.3 |   -12103.2 |    496 | out_ids[26]
+     860* |      23 |     106 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8712.3 |   -12103.2 |    496 | out_ids[26]
+     863* |      23 |     108 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8699.9 |   -12090.8 |    496 | out_ids[26]
+     866* |      23 |     110 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8691.4 |   -12082.3 |    496 | out_ids[26]
+     870* |      25 |     110 |       36 |      0 |    11 |    +0.0% | -180.880 |    -8694.4 |   -12236.4 |    496 | out_ids[26]
+     880* |      30 |     110 |       41 |      0 |    11 |    +0.0% | -180.880 |    -8694.4 |   -12236.4 |    496 | out_ids[26]
+     890* |      35 |     110 |       46 |      0 |    11 |    +0.0% | -180.880 |    -8694.4 |   -12236.4 |    496 | out_ids[26]
+     900* |      40 |     110 |       51 |      0 |    11 |    +0.0% | -180.880 |    -8694.4 |   -12236.4 |    496 | out_ids[26]
+     910* |      45 |     110 |       56 |      0 |    11 |    +0.0% | -180.880 |    -8694.4 |   -12236.4 |    496 | out_ids[26]
+     917* |      23 |     110 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8691.4 |   -12082.3 |    496 | out_ids[26]
+     920* |      23 |     112 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8660.2 |   -12051.1 |    496 | out_ids[26]
+     923* |      23 |     115 |       35 |      0 |    11 |    +0.0% | -180.880 |    -8652.7 |   -12043.6 |    496 | out_ids[26]
+     930* |      26 |     115 |       37 |      0 |    12 |    +0.0% | -180.880 |    -8655.7 |   -12194.8 |    496 | out_ids[26]
+     940* |      31 |     115 |       42 |      0 |    12 |    +0.0% | -180.880 |    -8655.7 |   -12194.8 |    496 | out_ids[26]
+     950* |      36 |     115 |       47 |      0 |    12 |    +0.0% | -180.880 |    -8655.7 |   -12194.8 |    496 | out_ids[26]
+     960* |      41 |     115 |       52 |      0 |    12 |    +0.0% | -180.880 |    -8655.7 |   -12194.8 |    496 | out_ids[26]
+     970* |      46 |     115 |       57 |      0 |    12 |    +0.0% | -180.880 |    -8655.7 |   -12194.8 |    496 | out_ids[26]
+     977* |      24 |     115 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8652.7 |   -12040.7 |    496 | out_ids[26]
+     980* |      24 |     117 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8641.8 |   -12029.9 |    496 | out_ids[26]
+     981* |      24 |     118 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8638.4 |   -12026.4 |    496 | out_ids[26]
+     984* |      24 |     120 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8628.0 |   -12016.0 |    496 | out_ids[26]
+     990* |      24 |     125 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8610.8 |   -11998.8 |    496 | out_ids[26]
+     990* |      24 |     125 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8610.8 |   -11998.8 |    496 | out_ids[26]
+     992* |      24 |     126 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8606.7 |   -11994.8 |    496 | out_ids[26]
+     994* |      24 |     127 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8602.8 |   -11990.8 |    496 | out_ids[26]
+     997* |      24 |     129 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8593.8 |   -11981.8 |    496 | out_ids[26]
+    1000* |      24 |     131 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8584.7 |   -11972.7 |    496 | out_ids[26]
+    1000* |      24 |     131 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8584.7 |   -11972.7 |    496 | out_ids[26]
+    1002* |      24 |     132 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8580.7 |   -11968.7 |    496 | out_ids[26]
+    1003* |      24 |     132 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8580.7 |   -11968.7 |    496 | out_ids[26]
+    1005* |      24 |     133 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8576.6 |   -11964.6 |    496 | out_ids[26]
+    1007* |      24 |     134 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8572.6 |   -11960.6 |    496 | out_ids[26]
+    1009* |      24 |     135 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8568.3 |   -11956.3 |    496 | out_ids[26]
+    1010* |      24 |     135 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8568.3 |   -11956.3 |    496 | out_ids[26]
+    1011* |      24 |     136 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8564.4 |   -11952.4 |    496 | out_ids[26]
+    1012* |      24 |     136 |       36 |      0 |    12 |    +0.0% | -180.880 |    -8564.4 |   -11952.4 |    496 | out_ids[26]
+    1020* |      26 |     140 |       37 |      0 |    12 |    +0.0% | -180.880 |    -8567.4 |   -12103.4 |    496 | out_ids[26]
+    1030* |      31 |     140 |       42 |      0 |    12 |    +0.0% | -180.880 |    -8567.4 |   -12103.4 |    496 | out_ids[26]
+    1040* |      36 |     140 |       47 |      0 |    12 |    +0.0% | -180.880 |    -8567.4 |   -12103.4 |    496 | out_ids[26]
+    1050* |      41 |     140 |       52 |      0 |    12 |    +0.0% | -180.880 |    -8567.4 |   -12103.4 |    496 | out_ids[26]
+    1060* |      46 |     140 |       57 |      0 |    12 |    +0.0% | -180.880 |    -8567.4 |   -12103.4 |    496 | out_ids[26]
+    1069* |      25 |     140 |       37 |      0 |    12 |    +0.0% | -180.880 |    -8564.4 |   -11948.5 |    496 | out_ids[26]
+    1070* |      25 |     140 |       37 |      0 |    12 |    +0.0% | -180.880 |    -8564.4 |   -11948.5 |    496 | out_ids[26]
+    1071* |      25 |     141 |       37 |      0 |    12 |    +0.0% | -180.880 |    -8560.1 |   -11944.3 |    496 | out_ids[26]
+    1073* |      25 |     142 |       37 |      0 |    12 |    +0.0% | -180.880 |    -8555.8 |   -11939.9 |    496 | out_ids[26]
+    1075* |      25 |     143 |       37 |      0 |    12 |    +0.0% | -180.880 |    -8551.2 |   -11935.4 |    496 | out_ids[26]
+    1080* |      27 |     143 |       38 |      0 |    13 |    +0.0% | -180.880 |    -8554.2 |   -12090.9 |    496 | out_ids[26]
+    1090* |      32 |     143 |       43 |      0 |    13 |    +0.0% | -180.880 |    -8554.2 |   -12090.9 |    496 | out_ids[26]
+    1100* |      37 |     143 |       48 |      0 |    13 |    +0.0% | -180.880 |    -8554.2 |   -12090.9 |    496 | out_ids[26]
+    1100* |      25 |     143 |       37 |      0 |    12 |    +0.0% | -180.880 |    -8551.2 |   -11931.9 |    496 | out_ids[26]
+    1102* |      25 |     144 |       37 |      0 |    12 |    +0.0% | -180.880 |    -8546.9 |   -11927.5 |    496 | out_ids[26]
+    1110* |      28 |     145 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8549.1 |   -12031.2 |    496 | out_ids[26]
+    1120* |      33 |     145 |       45 |      0 |    12 |    +0.0% | -180.880 |    -8549.1 |   -12031.2 |    496 | out_ids[26]
+    1130* |      38 |     145 |       50 |      0 |    12 |    +0.0% | -180.880 |    -8549.1 |   -12031.2 |    496 | out_ids[26]
+    1140* |      43 |     145 |       55 |      0 |    12 |    +0.0% | -180.880 |    -8549.1 |   -12031.2 |    496 | out_ids[26]
+    1150* |      48 |     145 |       60 |      0 |    12 |    +0.0% | -180.880 |    -8549.1 |   -12031.2 |    496 | out_ids[26]
+    1156* |      26 |     145 |       38 |      0 |    12 |    +0.0% | -180.880 |    -8546.9 |   -11918.3 |    496 | out_ids[26]
+    1160* |      28 |     145 |       39 |      0 |    12 |    +0.0% | -180.880 |    -8549.8 |   -12073.6 |    496 | out_ids[26]
+    1170* |      33 |     145 |       44 |      0 |    12 |    +0.0% | -180.880 |    -8549.8 |   -12073.6 |    496 | out_ids[26]
+    1180* |      38 |     145 |       49 |      0 |    12 |    +0.0% | -180.880 |    -8549.8 |   -12073.6 |    496 | out_ids[26]
+    1190* |      43 |     145 |       54 |      0 |    12 |    +0.0% | -180.880 |    -8549.8 |   -12073.6 |    496 | out_ids[26]
+    1200* |      48 |     145 |       59 |      0 |    12 |    +0.0% | -180.880 |    -8549.8 |   -12073.6 |    496 | out_ids[26]
+    1207* |      26 |     145 |       38 |      0 |    12 |    +0.0% | -180.880 |    -8546.9 |   -11918.3 |    496 | out_ids[26]
+    1210* |      27 |     145 |       39 |      0 |    12 |    +0.0% | -180.880 |    -8549.1 |   -12031.2 |    496 | out_ids[26]
+    1220* |      32 |     145 |       44 |      0 |    12 |    +0.0% | -180.880 |    -8549.1 |   -12031.2 |    496 | out_ids[26]
+    1230* |      37 |     145 |       49 |      0 |    12 |    +0.0% | -180.880 |    -8549.1 |   -12031.2 |    496 | out_ids[26]
+    1240* |      42 |     145 |       54 |      0 |    12 |    +0.0% | -180.880 |    -8549.1 |   -12031.2 |    496 | out_ids[26]
+    1250* |      47 |     145 |       59 |      0 |    12 |    +0.0% | -180.880 |    -8549.1 |   -12031.2 |    496 | out_ids[26]
+    1258* |      26 |     145 |       38 |      0 |    12 |    +0.0% | -180.880 |    -8546.9 |   -11918.3 |    496 | out_ids[26]
+    1260* |      26 |     146 |       38 |      0 |    12 |    +0.0% | -180.880 |    -8531.9 |   -11903.4 |    496 | out_ids[26]
+    1262* |      26 |     147 |       38 |      0 |    12 |    +0.0% | -180.880 |    -8526.5 |   -11898.0 |    496 | out_ids[26]
+    1263* |      26 |     147 |       38 |      0 |    12 |    +0.0% | -180.880 |    -8526.5 |   -11898.0 |    496 | out_ids[26]
+    1268* |      27 |     150 |       38 |      0 |    12 |    +0.0% | -180.880 |    -8529.2 |   -12037.5 |    496 | out_ids[26]
+    1270* |      27 |     151 |       38 |      0 |    12 |    +0.0% | -180.880 |    -8529.2 |   -12034.2 |    496 | out_ids[26]
+    1280* |      32 |     151 |       43 |      0 |    12 |    +0.0% | -180.880 |    -8529.4 |   -12044.2 |    496 | out_ids[26]
+    1290* |      37 |     151 |       48 |      0 |    12 |    +0.0% | -180.880 |    -8529.4 |   -12044.2 |    496 | out_ids[26]
+    1300* |      42 |     151 |       53 |      0 |    12 |    +0.0% | -180.880 |    -8529.4 |   -12044.2 |    496 | out_ids[26]
+    1310* |      47 |     151 |       58 |      0 |    12 |    +0.0% | -180.880 |    -8529.4 |   -12044.2 |    496 | out_ids[26]
+    1320* |      52 |     151 |       63 |      0 |    12 |    +0.0% | -180.880 |    -8529.4 |   -12044.2 |    496 | out_ids[26]
+    1321* |      27 |     151 |       39 |      0 |    12 |    +0.0% | -180.880 |    -8526.5 |   -11893.7 |    496 | out_ids[26]
+    1323* |      27 |     152 |       39 |      0 |    12 |    +0.0% | -180.880 |    -8521.7 |   -11888.9 |    496 | out_ids[26]
+    1324* |      27 |     152 |       39 |      0 |    12 |    +0.0% | -180.880 |    -8521.7 |   -11888.9 |    496 | out_ids[26]
+    1330* |      30 |     152 |       41 |      0 |    12 |    +0.0% | -180.880 |    -8524.7 |   -12039.4 |    496 | out_ids[26]
+    1340* |      35 |     152 |       46 |      0 |    12 |    +0.0% | -180.880 |    -8524.7 |   -12039.4 |    496 | out_ids[26]
+    1350* |      40 |     152 |       51 |      0 |    12 |    +0.0% | -180.880 |    -8524.7 |   -12039.4 |    496 | out_ids[26]
+    1360* |      45 |     152 |       56 |      0 |    12 |    +0.0% | -180.880 |    -8524.7 |   -12039.4 |    496 | out_ids[26]
+    1370* |      50 |     152 |       61 |      0 |    12 |    +0.0% | -180.880 |    -8524.7 |   -12039.4 |    496 | out_ids[26]
+    1375* |      27 |     152 |       39 |      0 |    12 |    +0.0% | -180.880 |    -8521.7 |   -11888.9 |    496 | out_ids[26]
+    1380* |      28 |     155 |       39 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12050.2 |    496 | out_ids[26]
+    1390* |      30 |     158 |       43 |      0 |    13 |    +0.0% | -180.880 |    -8524.0 |   -12044.3 |    496 | out_ids[26]
+    1400* |      35 |     158 |       48 |      0 |    13 |    +0.0% | -180.880 |    -8524.0 |   -12044.3 |    496 | out_ids[26]
+    1400* |      28 |     155 |       39 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12043.4 |    496 | out_ids[26]
+    1410* |      29 |     160 |       42 |      0 |    12 |    +0.0% | -180.880 |    -8524.7 |   -12103.6 |    496 | out_ids[26]
+    1420* |      34 |     160 |       47 |      0 |    12 |    +0.0% | -180.880 |    -8524.7 |   -12103.6 |    496 | out_ids[26]
+    1430* |      39 |     160 |       52 |      0 |    12 |    +0.0% | -180.880 |    -8524.7 |   -12103.6 |    496 | out_ids[26]
+    1440* |      44 |     160 |       57 |      0 |    12 |    +0.0% | -180.880 |    -8524.7 |   -12103.6 |    496 | out_ids[26]
+    1450* |      49 |     160 |       62 |      0 |    12 |    +0.0% | -180.880 |    -8524.7 |   -12103.6 |    496 | out_ids[26]
+    1454* |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    496 | out_ids[26]
+    1460* |      28 |     160 |       42 |      0 |    12 |    +0.0% | -180.880 |    -8524.0 |   -12062.4 |    496 | out_ids[26]
+    1470* |      33 |     160 |       47 |      0 |    12 |    +0.0% | -180.880 |    -8524.0 |   -12062.4 |    496 | out_ids[26]
+    1480* |      38 |     160 |       52 |      0 |    12 |    +0.0% | -180.880 |    -8524.0 |   -12062.4 |    496 | out_ids[26]
+    1490* |      43 |     160 |       57 |      0 |    12 |    +0.0% | -180.880 |    -8524.0 |   -12062.4 |    496 | out_ids[26]
+    1500* |      48 |     160 |       62 |      0 |    12 |    +0.0% | -180.880 |    -8524.0 |   -12062.4 |    496 | out_ids[26]
+    1500* |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    496 | out_ids[26]
+    1500* |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    496 | out_ids[26]
+    1500+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1501+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1502+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1503+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1504+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1505+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1506+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1507+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1508+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1509+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1510+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1510+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1511+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1512+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1513+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1514+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1515+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1516+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1517+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1518+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1519+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1520+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1520+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1521+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1522+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1523+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1524+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1525+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1526+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1527+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1528+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1529+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1530+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1530+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1531+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1532+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1533+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1534+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1535+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1536+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1537+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1538+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1539+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1540+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1540+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1541+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1542+ |      28 |     157 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8524.5 |   -12053.0 |    109 | out_ids[26]
+    1550+ |      28 |     164 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8507.0 |   -11145.9 |    109 | out_ids[26]
+    1552+ |      28 |     166 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8507.0 |   -11099.1 |    109 | out_ids[26]
+    1553+ |      28 |     166 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8507.0 |   -11099.1 |    109 | out_ids[26]
+    1554+ |      28 |     166 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8507.0 |   -11099.1 |    109 | out_ids[26]
+    1555+ |      28 |     166 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8507.0 |   -11099.1 |    109 | out_ids[26]
+    1559+ |      28 |     169 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8490.7 |   -11082.7 |    109 | out_ids[26]
+    1560+ |      28 |     169 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8490.7 |   -11082.7 |    109 | out_ids[26]
+    1560+ |      28 |     169 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8490.7 |   -11082.7 |    109 | out_ids[26]
+    1561+ |      28 |     169 |       40 |      0 |    12 |    +0.0% | -180.880 |    -8490.7 |   -11082.7 |    109 | out_ids[26]
+    1563+ |      28 |     169 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8490.7 |   -11077.5 |    109 | out_ids[26]
+    1565+ |      28 |     170 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8485.6 |   -11072.4 |    109 | out_ids[26]
+    1568+ |      28 |     172 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8471.6 |   -11058.4 |    109 | out_ids[26]
+    1569+ |      28 |     172 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8471.6 |   -11058.4 |    109 | out_ids[26]
+    1570+ |      28 |     172 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8471.6 |   -11058.4 |    109 | out_ids[26]
+    1570+ |      28 |     172 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8471.6 |   -11057.8 |    109 | out_ids[26]
+    1573+ |      28 |     174 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8459.3 |   -11045.4 |    109 | out_ids[26]
+    1574+ |      28 |     174 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8459.3 |   -11045.4 |    109 | out_ids[26]
+    1576+ |      28 |     175 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8453.3 |   -11039.4 |    109 | out_ids[26]
+    1578+ |      28 |     176 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8448.4 |   -11034.6 |    109 | out_ids[26]
+    1580+ |      28 |     177 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8441.7 |   -11027.8 |    109 | out_ids[26]
+    1580+ |      28 |     177 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8441.7 |   -11027.8 |    109 | out_ids[26]
+    1581+ |      28 |     177 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8441.7 |   -11027.8 |    109 | out_ids[26]
+    1583+ |      28 |     178 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8436.4 |   -11022.5 |    109 | out_ids[26]
+    1584+ |      28 |     178 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8436.4 |   -11022.5 |    109 | out_ids[26]
+    1586+ |      28 |     179 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8431.0 |   -11017.2 |    109 | out_ids[26]
+    1587+ |      28 |     179 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8431.0 |   -11017.2 |    109 | out_ids[26]
+    1588+ |      28 |     179 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8431.0 |   -11017.2 |    109 | out_ids[26]
+    1589+ |      28 |     179 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8431.0 |   -11017.2 |    109 | out_ids[26]
+    1590+ |      28 |     179 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8431.0 |   -11017.2 |    109 | out_ids[26]
+    1591+ |      28 |     180 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.0 |   -11012.2 |    109 | out_ids[26]
+    1592+ |      28 |     180 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.0 |   -11012.2 |    109 | out_ids[26]
+    1593+ |      28 |     180 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.0 |   -11012.2 |    109 | out_ids[26]
+    1594+ |      28 |     180 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.0 |   -11012.2 |    109 | out_ids[26]
+    1595+ |      28 |     180 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.0 |   -11012.2 |    109 | out_ids[26]
+    1596+ |      28 |     180 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.0 |   -11012.2 |    109 | out_ids[26]
+    1597+ |      28 |     180 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.0 |   -11012.2 |    109 | out_ids[26]
+    1598+ |      28 |     180 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.0 |   -11012.2 |    109 | out_ids[26]
+    1599+ |      28 |     180 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.0 |   -11012.2 |    109 | out_ids[26]
+    1600+ |      28 |     180 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.0 |   -11012.2 |    109 | out_ids[26]
+    1601+ |      28 |     180 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.0 |   -11012.2 |    109 | out_ids[26]
+    1603+ |      28 |     181 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -11009.3 |    109 | out_ids[26]
+    1604+ |      28 |     181 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -11009.3 |    109 | out_ids[26]
+    1605+ |      28 |     181 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -11009.3 |    109 | out_ids[26]
+    1607+ |      28 |     182 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -11003.3 |    109 | out_ids[26]
+    1608+ |      28 |     182 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -11003.3 |    109 | out_ids[26]
+    1609+ |      28 |     182 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -11003.3 |    109 | out_ids[26]
+    1610+ |      28 |     182 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -11003.3 |    109 | out_ids[26]
+    1611+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1612+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1613+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1614+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1615+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1616+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1617+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1618+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1619+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1620+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1620+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1621+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1622+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1623+ |      28 |     183 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10996.9 |    109 | out_ids[26]
+    1627+ |      28 |     187 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10922.8 |    109 | out_ids[26]
+    1628+ |      28 |     187 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10922.8 |    109 | out_ids[26]
+    1629+ |      28 |     187 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10922.8 |    109 | out_ids[26]
+    1630+ |      28 |     187 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10922.8 |    109 | out_ids[26]
+    1630+ |      28 |     187 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10922.8 |    109 | out_ids[26]
+    1631+ |      28 |     187 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8426.1 |   -10922.8 |    109 | out_ids[26]
+    1633+ |      28 |     188 |       40 |      0 |    13 |    +0.0% | -180.880 |    -8415.0 |   -10911.6 |    109 | out_ids[26]
+    1636+ |      28 |     190 |       40 |      0 |    14 |    +0.0% | -180.880 |    -8379.1 |   -10874.3 |    109 | out_ids[26]
+    1638+ |      28 |     190 |       40 |      0 |    15 |    +0.0% | -180.880 |    -8379.0 |   -10873.7 |    109 | out_ids[26]
+    1639+ |      28 |     190 |       40 |      0 |    15 |    +0.0% | -180.880 |    -8379.0 |   -10873.7 |    109 | out_ids[26]
+    1640+ |      28 |     190 |       40 |      0 |    15 |    +0.0% | -180.880 |    -8379.0 |   -10873.7 |    109 | out_ids[26]
+    1642+ |      28 |     192 |       40 |      0 |    16 |    +0.0% | -180.880 |    -8363.2 |   -10857.9 |    109 | out_ids[26]
+    1643+ |      28 |     193 |       40 |      0 |    16 |    +0.0% | -180.880 |    -8363.2 |   -10852.5 |    109 | out_ids[26]
+    1644+ |      28 |     193 |       40 |      0 |    16 |    +0.0% | -180.880 |    -8363.2 |   -10852.5 |    109 | out_ids[26]
+    1646+ |      28 |     194 |       40 |      0 |    16 |    +0.0% | -180.880 |    -8363.2 |   -10847.3 |    109 | out_ids[26]
+    final |      28 |     194 |       40 |      0 |    16 |    +0.0% | -180.880 |    -8363.2 |   -10847.3 |    101 | out_ids[26]
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 28 buffers.
+[INFO RSZ-0040] Inserted 40 buffers.
+[INFO RSZ-0051] Resized 194 instances: 193 up, 1 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 16 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 1423.65s
+[INFO RSZ-0046] Found 2056 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -144.024 | -4727.458 | g_on.g_lane[11].u_lane/x_q[40]$_DFFE_PP_/D
+       10 |       0 |      54 |            0 |    +0.0% | -98.296 | -3671.059 | g_on.g_lane[9].u_lane/x_q[40]$_DFFE_PP_/D
+       20 |       0 |     120 |            0 |    +0.0% | -74.551 | -2934.334 | g_on.g_lane[16].u_lane/x_q[30]$_DFFE_PP_/D
+       30 |       0 |     163 |            0 |    +0.0% | -58.586 | -2318.309 | g_on.g_lane[4].u_lane/x_q[22]$_DFFE_PP_/D
+       40 |       0 |     184 |            0 |    +0.0% | -49.831 | -2071.434 | g_on.g_lane[15].u_lane/x_q[10]$_DFFE_PP_/D
+       50 |       0 |     209 |            0 |    +0.0% | -24.302 | -1800.698 | g_on.g_lane[10].u_lane/x_q[35]$_DFFE_PP_/D
+       60 |       0 |     237 |            0 |    +0.0% | -22.132 | -1532.939 | g_on.g_lane[10].u_lane/x_q[36]$_DFFE_PP_/D
+       70 |       0 |     247 |            0 |    +0.0% | -20.464 | -1405.783 | g_on.g_lane[4].u_lane/x_q[33]$_DFFE_PP_/D
+       80 |       0 |     257 |            0 |    +0.0% | -18.833 | -1323.493 | g_on.g_lane[26].u_lane/x_q[26]$_DFFE_PP_/D
+       90 |       0 |     280 |            0 |    +0.0% | -16.878 | -1092.098 | g_on.g_lane[26].u_lane/x_q[25]$_DFFE_PP_/D
+      100 |       0 |     295 |            0 |    +0.0% | -15.613 | -979.246 | g_on.g_lane[4].u_lane/x_q[35]$_DFFE_PP_/D
+      110 |       0 |     310 |            0 |    +0.0% | -14.841 | -835.049 | g_on.g_lane[23].u_lane/x_q[38]$_DFFE_PP_/D
+      120 |       0 |     328 |            0 |    +0.0% | -13.657 | -686.771 | g_on.g_lane[26].u_lane/x_q[21]$_DFFE_PP_/D
+      130 |       0 |     332 |            0 |    +0.0% | -12.470 | -655.974 | g_on.g_lane[23].u_lane/x_q[34]$_DFFE_PP_/D
+      140 |       0 |     341 |            0 |    +0.0% | -11.202 | -582.960 | g_on.g_lane[23].u_lane/x_q[39]$_DFFE_PP_/D
+      150 |       0 |     355 |            0 |    +0.0% |  -9.647 | -479.526 | g_on.g_lane[16].u_lane/x_q[38]$_DFFE_PP_/D
+      160 |       0 |     365 |            0 |    +0.0% |  -7.974 | -432.964 | g_on.g_lane[17].u_lane/x_q[34]$_DFFE_PP_/D
+      170 |       0 |     373 |            0 |    +0.0% |  -7.194 | -382.602 | g_on.g_lane[17].u_lane/x_q[37]$_DFFE_PP_/D
+      180 |       0 |     388 |            0 |    +0.1% |  -6.139 | -315.998 | g_on.g_lane[9].u_lane/x_q[33]$_DFFE_PP_/D
+      190 |       0 |     398 |            0 |    +0.1% |  -5.708 | -281.641 | g_on.g_lane[23].u_lane/x_q[13]$_DFFE_PP_/D
+      200 |       0 |     410 |            0 |    +0.1% |  -5.170 | -233.334 | g_on.g_lane[22].u_lane/x_q[32]$_DFFE_PP_/D
+      210 |       0 |     427 |            0 |    +0.1% |  -4.785 | -188.938 | g_on.g_lane[16].u_lane/x_q[29]$_DFFE_PP_/D
+      220 |       0 |     438 |            0 |    +0.1% |  -4.372 | -158.635 | g_on.g_lane[23].u_lane/x_q[18]$_DFFE_PP_/D
+      230 |       0 |     450 |            0 |    +0.1% |  -3.833 | -126.388 | g_on.g_lane[9].u_lane/x_q[35]$_DFFE_PP_/D
+      240 |       0 |     465 |            0 |    +0.1% |  -3.562 | -101.856 | g_on.g_lane[8].u_lane/x_q[30]$_DFFE_PP_/D
+      250 |       0 |     475 |            0 |    +0.1% |  -2.934 | -85.282 | g_on.g_lane[23].u_lane/x_q[9]$_DFFE_PP_/D
+      260 |       0 |     489 |            0 |    +0.1% |  -2.600 | -60.874 | g_on.g_lane[9].u_lane/x_q[31]$_DFFE_PP_/D
+      270 |       0 |     497 |            0 |    +0.1% |  -2.442 | -50.742 | g_on.g_lane[23].u_lane/x_q[26]$_DFFE_PP_/D
+      280 |       0 |     509 |            0 |    +0.1% |  -2.054 | -31.998 | g_on.g_lane[26].u_lane/x_q[17]$_DFFE_PP_/D
+      290 |       0 |     518 |            0 |    +0.1% |  -1.159 | -17.784 | g_on.g_lane[17].u_lane/x_q[36]$_DFFE_PP_/D
+      300 |       0 |     526 |            0 |    +0.1% |  -0.961 |  -8.949 | g_on.g_lane[9].u_lane/x_q[27]$_DFFE_PP_/D
+      310 |       0 |     532 |            0 |    +0.1% |  -0.662 |  -4.282 | g_on.g_lane[17].u_lane/x_q[25]$_DFFE_PP_/D
+      320 |       0 |     538 |            0 |    +0.1% |  -0.287 |  -0.287 | g_on.g_lane[17].u_lane/x_q[23]$_DFFE_PP_/D
+      330 |       0 |     542 |            0 |    +0.1% |   0.387 |   0.000 | g_on.g_lane[8].u_lane/x_q[11]$_DFFE_PP_/D
+      340 |       0 |     548 |            0 |    +0.1% |   0.584 |   0.000 | g_on.g_lane[22].u_lane/x_q[24]$_DFFE_PP_/D
+      350 |       0 |     556 |            0 |    +0.1% |   1.020 |   0.000 | g_on.g_lane[9].u_lane/x_q[36]$_DFFE_PP_/D
+      360 |       0 |     563 |            0 |    +0.1% |   1.385 |   0.000 | g_on.g_lane[8].u_lane/x_q[15]$_DFFE_PP_/D
+      370 |       0 |     570 |            0 |    +0.1% |   1.826 |   0.000 | g_on.g_lane[16].u_lane/x_q[23]$_DFFE_PP_/D
+      380 |       0 |     576 |            0 |    +0.1% |   2.560 |   0.000 | g_on.g_lane[11].u_lane/x_q[32]$_DFFE_PP_/D
+      390 |       0 |     583 |            0 |    +0.1% |   2.963 |   0.000 | g_on.g_lane[1].u_lane/x_q[28]$_DFFE_PP_/D
+      400 |       0 |     591 |            0 |    +0.1% |   3.315 |   0.000 | g_on.g_lane[8].u_lane/x_q[16]$_DFFE_PP_/D
+      410 |       0 |     598 |            0 |    +0.1% |   4.088 |   0.000 | g_on.g_lane[11].u_lane/x_q[38]$_DFFE_PP_/D
+      420 |       0 |     603 |            0 |    +0.1% |   4.334 |   0.000 | g_on.g_node[20].m/c3.pair[4].active.cut.hi[4]$_DFF_P_/D
+      430 |       0 |     611 |            0 |    +0.1% |   4.706 |   0.000 | g_on.g_lane[8].u_lane/x_q[22]$_DFFE_PP_/D
+      440 |       0 |     619 |            0 |    +0.1% |   5.214 |   0.000 | g_on.g_node[9].m/pick[4].compare.cut.a_q[32]$_DFF_P_/D
+      450 |       0 |     624 |            0 |    +0.1% |   5.449 |   0.000 | g_on.g_lane[16].u_lane/x_q[15]$_DFFE_PP_/D
+      460 |       0 |     631 |            0 |    +0.1% |   5.757 |   0.000 | g_on.g_node[25].m/pick[7].bypass.d1[34]$_DFF_P_/D
+      470 |       0 |     639 |            0 |    +0.1% |   5.987 |   0.000 | g_on.g_node[15].m/pick[5].compare.cut.hi[1]$_DFF_P_/D
+      480 |       0 |     647 |            0 |    +0.1% |   6.111 |   0.000 | g_on.g_lane[11].u_lane/x_q[39]$_DFFE_PP_/D
+      490 |       0 |     655 |            0 |    +0.1% |   6.388 |   0.000 | g_on.g_node[11].m/c3.pair[2].active.cut.lo[9]$_DFF_P_/D
+      500 |       0 |     661 |            0 |    +0.1% |   6.619 |   0.000 | g_on.g_lane[16].u_lane/x_q[20]$_DFFE_PP_/D
+      510 |       0 |     670 |            0 |    +0.1% |   6.742 |   0.000 | g_on.g_node[21].m/c3.pair[2].active.cut.b_q[7]$_DFF_P_/D
+      520 |       0 |     677 |            0 |    +0.1% |   6.960 |   0.000 | g_on.g_node[19].m/c3.pair[4].active.cut.hi[34]$_DFF_P_/D
+      530 |       0 |     686 |            0 |    +0.1% |   7.078 |   0.000 | g_on.g_node[19].m/c3.pair[0].active.cut.lo[32]$_DFF_P_/D
+      540 |       0 |     695 |            0 |    +0.1% |   7.236 |   0.000 | g_on.g_node[19].m/c3.pair[4].active.cut.hi[35]$_DFF_P_/D
+      550 |       0 |     704 |            0 |    +0.1% |   7.321 |   0.000 | g_on.g_node[0].m/pick[5].compare.cut.a_q[0]$_DFF_P_/D
+      560 |       0 |     713 |            0 |    +0.1% |   7.361 |   0.000 | g_on.g_node[14].m/c3.pair[2].active.cut.lo[19]$_DFF_P_/D
+      570 |       0 |     722 |            0 |    +0.1% |   7.436 |   0.000 | g_on.g_lane[16].u_lane/x_q[19]$_DFFE_PP_/D
+      580 |       0 |     728 |            0 |    +0.1% |   7.515 |   0.000 | g_on.g_node[24].m/c2.pair[1].active.cut.hi[15]$_DFF_P_/D
+      590 |       0 |     738 |            0 |    +0.1% |   7.598 |   0.000 | g_on.g_node[17].m/pick[2].compare.cut.hi[24]$_DFF_P_/D
+      600 |       0 |     749 |            0 |    +0.1% |   7.705 |   0.000 | g_on.g_node[18].m/c2.pair[4].active.cut.hi[13]$_DFF_P_/D
+      610 |       0 |     758 |            0 |    +0.1% |   7.811 |   0.000 | g_on.g_node[19].m/c3.pair[4].active.cut.hi[30]$_DFF_P_/D
+      620 |       0 |     767 |            0 |    +0.1% |   7.886 |   0.000 | g_on.g_node[7].m/c2.pair[4].active.cut.hi[9]$_DFF_P_/D
+      630 |       0 |     776 |            0 |    +0.1% |   7.935 |   0.000 | g_on.g_node[17].m/c3.pair[4].active.cut.a_q[30]$_DFF_P_/D
+      640 |       0 |     785 |            0 |    +0.1% |   7.982 |   0.000 | g_on.g_lane[17].u_lane/x_q[15]$_DFFE_PP_/D
+      650 |       0 |     796 |            0 |    +0.1% |   8.034 |   0.000 | g_on.g_node[8].m/c1.pair[2].active.cut.hi[30]$_DFF_P_/D
+      660 |       0 |     806 |            0 |    +0.1% |   8.066 |   0.000 | g_on.g_lane[16].u_lane/x_q[16]$_DFFE_PP_/D
+      670 |       0 |     816 |            0 |    +0.1% |   8.112 |   0.000 | g_on.g_node[19].m/c3.pair[4].active.cut.hi[41]$_DFF_P_/D
+      680 |       0 |     825 |            0 |    +0.1% |   8.162 |   0.000 | g_on.g_node[1].m/pick[7].bypass.d0[31]$_DFF_P_/D
+      690 |       0 |     833 |            0 |    +0.1% |   8.211 |   0.000 | g_on.g_node[4].m/c2.pair[5].active.cut.hi[2]$_DFF_P_/D
+      700 |       0 |     842 |            0 |    +0.1% |   8.235 |   0.000 | g_on.g_node[13].m/c3.pair[4].active.cut.hi[4]$_DFF_P_/D
+      710 |       0 |     851 |            0 |    +0.1% |   8.273 |   0.000 | g_on.g_node[22].m/pick[1].bypass.d1[3]$_DFF_P_/D
+      720 |       0 |     861 |            0 |    +0.1% |   8.299 |   0.000 | g_on.g_node[28].m/c3.pair[4].active.cut.lo[28]$_DFF_P_/D
+      730 |       0 |     871 |            0 |    +0.1% |   8.340 |   0.000 | g_on.g_node[12].m/c3.pair[0].active.cut.hi[6]$_DFF_P_/D
+      740 |       0 |     881 |            0 |    +0.1% |   8.370 |   0.000 | g_on.g_node[27].m/pick[3].compare.cut.hi[16]$_DFF_P_/D
+      750 |       0 |     891 |            0 |    +0.1% |   8.407 |   0.000 | g_on.g_node[2].m/pick[7].bypass.d0[29]$_DFF_P_/D
+      760 |       0 |     902 |            0 |    +0.1% |   8.444 |   0.000 | g_on.g_node[13].m/c1.pair[0].active.cut.b_q[23]$_DFF_P_/D
+      770 |       0 |     911 |            0 |    +0.1% |   8.483 |   0.000 | g_on.g_node[10].m/pick[0].bypass.d0[37]$_DFF_P_/D
+      780 |       0 |     919 |            0 |    +0.1% |   8.498 |   0.000 | g_on.g_node[24].m/c2.pair[5].active.cut.hi[15]$_DFF_P_/D
+      790 |       0 |     929 |            0 |    +0.1% |   8.514 |   0.000 | g_on.g_node[1].m/c1.pair[3].active.cut.hi[39]$_DFF_P_/D
+      800 |       0 |     938 |            0 |    +0.1% |   8.532 |   0.000 | g_on.g_node[17].m/c2.pair[1].active.cut.b_q[23]$_DFF_P_/D
+      810 |       0 |     948 |            0 |    +0.1% |   8.562 |   0.000 | g_on.g_node[12].m/pick[7].bypass.d0[27]$_DFF_P_/D
+      820 |       0 |     956 |            0 |    +0.1% |   8.585 |   0.000 | g_on.g_node[23].m/c1.pair[0].active.cut.hi[30]$_DFF_P_/D
+      830 |       0 |     965 |            0 |    +0.1% |   8.612 |   0.000 | g_on.g_node[20].m/c2.pair[5].active.cut.b_q[31]$_DFF_P_/D
+      840 |       0 |     973 |            0 |    +0.1% |   8.648 |   0.000 | g_on.g_node[11].m/c1.pair[0].active.cut.b_q[3]$_DFF_P_/D
+      850 |       0 |     983 |            0 |    +0.1% |   8.668 |   0.000 | g_on.g_node[23].m/pick[0].bypass.d1[20]$_DFF_P_/D
+      860 |       0 |     990 |            0 |    +0.1% |   8.673 |   0.000 | g_on.g_node[3].m/c2.pair[5].active.cut.a_q[12]$_DFF_P_/D
+      870 |       0 |    1000 |            0 |    +0.1% |   8.691 |   0.000 | g_on.g_node[10].m/c1.pair[0].active.cut.lo[36]$_DFF_P_/D
+      880 |       0 |    1010 |            0 |    +0.1% |   8.714 |   0.000 | g_on.g_node[4].m/c1.pair[1].active.cut.hi[5]$_DFF_P_/D
+      890 |       0 |    1020 |            0 |    +0.1% |   8.747 |   0.000 | g_on.g_node[16].m/c1.pair[3].active.cut.b_q[30]$_DFF_P_/D
+      900 |       0 |    1030 |            0 |    +0.1% |   8.760 |   0.000 | g_on.g_node[1].m/c1.pair[3].active.cut.a_q[20]$_DFF_P_/D
+      910 |       0 |    1039 |            0 |    +0.1% |   8.771 |   0.000 | g_on.g_node[20].m/c2.pair[5].active.cut.b_q[25]$_DFF_P_/D
+      920 |       0 |    1048 |            0 |    +0.1% |   8.779 |   0.000 | g_on.g_node[10].m/c3.pair[4].active.cut.b_q[27]$_DFF_P_/D
+      930 |       0 |    1058 |            0 |    +0.1% |   8.805 |   0.000 | g_on.g_node[27].m/c2.pair[4].active.cut.hi[33]$_DFF_P_/D
+      940 |       0 |    1068 |            0 |    +0.1% |   8.815 |   0.000 | g_on.g_node[13].m/pick[5].compare.cut.hi[34]$_DFF_P_/D
+      950 |       0 |    1078 |            0 |    +0.1% |   8.842 |   0.000 | g_on.g_node[9].m/c3.pair[0].active.cut.hi[37]$_DFF_P_/D
+      960 |       0 |    1088 |            0 |    +0.1% |   8.860 |   0.000 | g_on.g_node[26].m/pick[5].compare.cut.hi[4]$_DFF_P_/D
+      970 |       0 |    1098 |            0 |    +0.1% |   8.888 |   0.000 | g_on.g_node[14].m/c2.pair[5].active.cut.b_q[31]$_DFF_P_/D
+      980 |       0 |    1106 |            0 |    +0.1% |   8.900 |   0.000 | g_on.g_node[3].m/c1.pair[3].active.cut.hi[35]$_DFF_P_/D
+      990 |       0 |    1116 |            0 |    +0.1% |   8.930 |   0.000 | g_on.g_node[28].m/c3.pair[2].active.cut.lo[19]$_DFF_P_/D
+     1000 |       0 |    1124 |            0 |    +0.1% |   8.952 |   0.000 | g_on.g_node[27].m/c1.pair[0].active.cut.hi[17]$_DFF_P_/D
+     1010 |       0 |    1134 |            0 |    +0.2% |   8.964 |   0.000 | g_on.g_node[27].m/c1.pair[0].active.cut.lo[17]$_DFF_P_/D
+     1020 |       0 |    1144 |            0 |    +0.2% |   8.978 |   0.000 | g_on.g_node[15].m/c1.pair[3].active.cut.b_q[25]$_DFF_P_/D
+     1030 |       0 |    1154 |            0 |    +0.2% |   9.002 |   0.000 | g_on.g_node[0].m/c3.pair[2].active.cut.hi[7]$_DFF_P_/D
+     1040 |       0 |    1164 |            0 |    +0.2% |   9.014 |   0.000 | g_on.g_node[19].m/c1.pair[0].active.cut.hi[22]$_DFF_P_/D
+     1050 |       0 |    1174 |            0 |    +0.2% |   9.028 |   0.000 | g_on.g_node[7].m/c2.pair[4].active.cut.a_q[2]$_DFF_P_/D
+     1060 |       0 |    1184 |            0 |    +0.2% |   9.039 |   0.000 | g_on.g_node[28].m/c2.pair[4].active.cut.b_q[38]$_DFF_P_/D
+     1070 |       0 |    1192 |            0 |    +0.2% |   9.052 |   0.000 | g_on.g_node[27].m/c1.pair[2].active.cut.b_q[28]$_DFF_P_/D
+     1080 |       0 |    1202 |            0 |    +0.2% |   9.067 |   0.000 | g_on.g_node[30].m/c1.pair[1].active.cut.hi[6]$_DFF_P_/D
+     1090 |       0 |    1212 |            0 |    +0.2% |   9.077 |   0.000 | g_on.g_node[11].m/c2.pair[4].active.cut.hi[9]$_DFF_P_/D
+     1100 |       0 |    1220 |            0 |    +0.2% |   9.095 |   0.000 | g_on.g_node[13].m/c3.pair[4].active.cut.lo[16]$_DFF_P_/D
+     1110 |       0 |    1230 |            0 |    +0.2% |   9.106 |   0.000 | g_on.g_node[14].m/c2.pair[0].active.cut.hi[36]$_DFF_P_/D
+     1120 |       0 |    1241 |            0 |    +0.2% |   9.122 |   0.000 | g_on.g_node[22].m/c3.pair[4].active.cut.hi[32]$_DFF_P_/D
+     1130 |       0 |    1249 |            0 |    +0.2% |   9.138 |   0.000 | g_on.g_node[0].m/c2.pair[1].active.cut.hi[7]$_DFF_P_/D
+     1140 |       0 |    1260 |            0 |    +0.2% |   9.155 |   0.000 | g_on.g_node[21].m/c3.pair[2].active.cut.b_q[38]$_DFF_P_/D
+     1150 |       0 |    1270 |            0 |    +0.2% |   9.165 |   0.000 | g_on.g_node[17].m/c3.pair[2].active.cut.lo[29]$_DFF_P_/D
+     1160 |       0 |    1280 |            0 |    +0.2% |   9.177 |   0.000 | g_on.g_node[9].m/c2.pair[5].active.cut.a_q[20]$_DFF_P_/D
+     1170 |       0 |    1290 |            0 |    +0.2% |   9.191 |   0.000 | g_on.g_node[5].m/pick[2].compare.cut.a_q[41]$_DFF_P_/D
+     1180 |       0 |    1300 |            0 |    +0.2% |   9.206 |   0.000 | g_on.g_node[6].m/c3.pair[2].active.cut.b_q[29]$_DFF_P_/D
+     1190 |       0 |    1310 |            0 |    +0.2% |   9.215 |   0.000 | g_on.g_node[14].m/c3.pair[2].active.cut.hi[19]$_DFF_P_/D
+     1200 |       0 |    1319 |            0 |    +0.2% |   9.229 |   0.000 | g_on.g_node[18].m/c1.pair[3].active.cut.lo[29]$_DFF_P_/D
+     1210 |       0 |    1328 |            0 |    +0.2% |   9.249 |   0.000 | g_on.g_node[21].m/c3.pair[4].active.cut.lo[14]$_DFF_P_/D
+     1220 |       0 |    1338 |            0 |    +0.2% |   9.261 |   0.000 | g_on.g_node[21].m/c1.pair[0].active.cut.a_q[40]$_DFF_P_/D
+     1230 |       0 |    1348 |            0 |    +0.2% |   9.270 |   0.000 | g_on.g_node[18].m/c3.pair[4].active.cut.a_q[29]$_DFF_P_/D
+     1240 |       0 |    1358 |            0 |    +0.2% |   9.285 |   0.000 | g_on.g_node[15].m/c3.pair[2].active.cut.a_q[16]$_DFF_P_/D
+     1250 |       0 |    1368 |            0 |    +0.2% |   9.296 |   0.000 | g_on.g_node[28].m/pick[0].bypass.d1[19]$_DFF_P_/D
+     1260 |       0 |    1378 |            0 |    +0.2% |   9.318 |   0.000 | g_on.g_node[4].m/c1.pair[0].active.cut.lo[15]$_DFF_P_/D
+     1270 |       0 |    1388 |            0 |    +0.2% |   9.328 |   0.000 | g_on.g_node[19].m/pick[2].compare.cut.hi[17]$_DFF_P_/D
+     1280 |       0 |    1397 |            0 |    +0.2% |   9.342 |   0.000 | g_on.g_node[29].m/pick[7].bypass.d1[17]$_DFF_P_/D
+     1290 |       0 |    1407 |            0 |    +0.2% |   9.352 |   0.000 | g_on.g_node[6].m/pick[4].compare.cut.hi[3]$_DFF_P_/D
+     1300 |       0 |    1417 |            0 |    +0.2% |   9.368 |   0.000 | g_on.g_node[14].m/c3.pair[2].active.cut.lo[30]$_DFF_P_/D
+     1310 |       0 |    1427 |            0 |    +0.2% |   9.384 |   0.000 | g_on.g_node[13].m/c2.pair[5].active.cut.b_q[19]$_DFF_P_/D
+     1320 |       0 |    1438 |            0 |    +0.2% |   9.392 |   0.000 | g_on.g_node[25].m/c1.pair[0].active.cut.hi[40]$_DFF_P_/D
+     1330 |       0 |    1448 |            0 |    +0.2% |   9.412 |   0.000 | g_on.g_node[16].m/c3.pair[0].active.cut.lo[31]$_DFF_P_/D
+     1340 |       0 |    1458 |            0 |    +0.2% |   9.421 |   0.000 | g_on.g_node[1].m/pick[4].compare.cut.b_q[6]$_DFF_P_/D
+     1350 |       0 |    1468 |            0 |    +0.2% |   9.432 |   0.000 | g_on.g_node[9].m/pick[3].compare.cut.hi[6]$_DFF_P_/D
+     1360 |       0 |    1478 |            0 |    +0.2% |   9.443 |   0.000 | g_on.g_node[11].m/c1.pair[2].active.cut.hi[23]$_DFF_P_/D
+     1370 |       0 |    1488 |            0 |    +0.2% |   9.455 |   0.000 | g_on.g_node[12].m/c2.pair[4].active.cut.b_q[32]$_DFF_P_/D
+     1380 |       0 |    1498 |            0 |    +0.2% |   9.461 |   0.000 | g_on.g_node[3].m/c1.pair[2].active.cut.a_q[16]$_DFF_P_/D
+     1390 |       0 |    1508 |            0 |    +0.2% |   9.475 |   0.000 | g_on.g_node[18].m/c2.pair[1].active.cut.a_q[10]$_DFF_P_/D
+     1400 |       0 |    1518 |            0 |    +0.2% |   9.487 |   0.000 | g_on.g_node[7].m/pick[7].bypass.d0[7]$_DFF_P_/D
+     1410 |       0 |    1528 |            0 |    +0.2% |   9.503 |   0.000 | g_on.g_node[23].m/c1.pair[3].active.cut.a_q[17]$_DFF_P_/D
+     1420 |       0 |    1537 |            0 |    +0.2% |   9.512 |   0.000 | g_on.g_node[22].m/c1.pair[2].active.cut.hi[26]$_DFF_P_/D
+     1430 |       0 |    1547 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1440 |       0 |    1556 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1450 |       0 |    1567 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1460 |       0 |    1577 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1470 |       0 |    1586 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1480 |       0 |    1596 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1490 |       0 |    1606 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1500 |       0 |    1616 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1510 |       0 |    1626 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1520 |       0 |    1635 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1530 |       0 |    1645 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1540 |       0 |    1655 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1550 |       0 |    1664 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1560 |       0 |    1673 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1570 |       0 |    1683 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1580 |       0 |    1693 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1590 |       0 |    1704 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1600 |       0 |    1714 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1610 |       0 |    1724 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1620 |       0 |    1734 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1630 |       0 |    1744 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1640 |       0 |    1754 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1650 |       0 |    1764 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1660 |       0 |    1774 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1670 |       0 |    1785 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1680 |       0 |    1795 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1690 |       0 |    1805 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1700 |       0 |    1815 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1710 |       0 |    1825 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1720 |       0 |    1835 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1730 |       0 |    1845 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1740 |       0 |    1855 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1750 |       0 |    1865 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1760 |       0 |    1875 |            0 |    +0.2% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1770 |       0 |    1885 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1780 |       0 |    1894 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1790 |       0 |    1904 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1800 |       0 |    1914 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1810 |       0 |    1924 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1820 |       0 |    1933 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1830 |       0 |    1943 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1840 |       0 |    1953 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1850 |       0 |    1963 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1860 |       0 |    1973 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1870 |       0 |    1983 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1880 |       0 |    1993 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1890 |       0 |    2002 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1900 |       0 |    2012 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1910 |       0 |    2022 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1920 |       0 |    2031 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1930 |       0 |    2041 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1940 |       0 |    2051 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1950 |       0 |    2061 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1960 |       0 |    2071 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1970 |       0 |    2081 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1980 |       0 |    2091 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     1990 |       0 |    2101 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     2000 |       0 |    2111 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     2010 |       0 |    2120 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     2020 |       0 |    2130 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     2030 |       0 |    2140 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     2040 |       0 |    2150 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+     2050 |       0 |    2160 |            0 |    +0.3% |   9.518 |   0.000 | g_on.g_node[12].m/c3.pair[4].active.cut.hi[39]$_DFF_P_/D
+    final |       0 |    2170 |            0 |    +0.3% |  10.002 |   0.000 | g_on.g_node[7].m/c1.pair[3].active.cut.lo[30]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 2170 hold buffers.
+[INFO RSZ-0506] Runtime: 3751.24s
+Took 5175 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -verbose
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 97166.22 um^2
+[INFO DPL-0007] Movable instances area: 54613.20 um^2
+[INFO DPL-0008] Fixed instances area within core: 269.56 um^2
+[INFO DPL-0009] Utilization: 56.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 383813 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       5800 |      1170 |      4252
+        1 |       4894 |       892 |      3296
+        2 |       3962 |       756 |      2762
+        3 |       3352 |       666 |      2491
+        4 |       2882 |       588 |      2180
+        5 |       2422 |       516 |      1870
+        6 |       2069 |       453 |      1586
+        7 |       1860 |       416 |      1441
+        8 |       1633 |       353 |      1280
+        9 |       1324 |       275 |      1031
+       10 |       1097 |       230 |       861
+       20 |        203 |        39 |       164
+       30 |         21 |         5 |        16
+       40 |         12 |         2 |        10
+       45 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 45.
+[INFO DPL-0500] Runtime: 26.88s
+Placement Analysis
+---------------------------------
+total displacement       3157.7 u
+average displacement        0.0 u
+max displacement            6.4 u
+original HPWL         1550921.6 u
+legalized HPWL        1553212.9 u
+delta HPWL                    0 %
+
+Took 27 seconds: detailed_placement
+check_placement -verbose
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/carson_router_successor/base/congestion_post_repair_timing.rpt
+Took 11 seconds: global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/carson_router_successor/base/congestion_post_repair_timing.rpt
+estimate_parasitics -global_routing
+Took 24 seconds: estimate_parasitics -global_routing
+repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+[INFO RSZ-0100] Repair move sequence: RerouteMove 
+[INFO RSZ-0094] Found 104 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 1 out of 104 (0.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       1 |        0 |      0 |     0 |    +0.0% | -188.130 |    -8430.6 |   -10942.0 |    104 | out_ids[26]
+       1* |       0 |       1 |        0 |      0 |     0 |    +0.0% | -188.130 |    -8430.6 |   -10942.0 |    104 | out_ids[26]
+       1* |       0 |       1 |        0 |      0 |     0 |    +0.0% | -188.130 |    -8430.6 |   -10942.0 |    104 | out_ids[26]
+    final |       0 |       1 |        0 |      0 |     0 |    +0.0% | -188.130 |    -8430.6 |   -10942.0 |    104 | out_ids[26]
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0051] Resized 1 instances: 0 up, 1 up match, 0 down, 0 VT
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 29.95s
+Took 30 seconds: repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+Repair antennas...
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Estimate parasitics...
+estimate_parasitics -global_routing
+Took 26 seconds: estimate_parasitics -global_routing
+Report metrics stage 5, global route...
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 54883 um^2 56% utilization.
+[INFO FLW-0007] clock core_clk period 833.000000
+[INFO FLW-0008] Clock core_clk period 970.073
+[INFO FLW-0009] Clock core_clk slack -188.130
+write_sdc -no_timestamp /work/results/asap7/carson_router_successor/base/updated_clks.sdc
+[INFO FLW-0011] Path endpoint path count 97614
+write_db /work/results/asap7/carson_router_successor/base/5_1_grt.odb
+write_sdc -no_timestamp /work/results/asap7/carson_router_successor/base/5_1_grt.sdc
+Elapsed time: 1:46:16.39[h:]min:sec. CPU time: user 14027.02 sys 119.78 (221%). Peak memory: 7605248KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb         6376           7427 e82dc052c077c421d9f1
+5_1_grt                   .sdc                             734b2eeeb78152ffff16

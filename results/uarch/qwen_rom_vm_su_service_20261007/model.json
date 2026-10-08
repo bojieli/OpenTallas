@@ -1,0 +1,425 @@
+{
+  "schema": "opentallas.qwen-su-bank-service-obligations.v1",
+  "source_sha256": {
+    "results/rtl/qwen_rom_finite_vm_schedule_20261005/inputs/top.sv": "3d5cb792affee962d4f7cd07fc4aaae38cc1d5710d1e39d09201c1ff4790fe81",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_vprm_stream4.sv": "751e0d2cad3ee1b90b6018c84bf56fc563db43fc898f8db9969d0f23533906dd",
+    "rtl/hbm_accel/qwen/finite_vm_20261005/ot_qwen_checked_vm_bank.sv": "bc57ebbbcb1d0352908ab7df89ed4318a13a85e2c7a41fc65f365b2b3c281360"
+  },
+  "trace_sha256": {
+    "events.json": "61057f2de4027f146e31d70389514037870ed8020324557c546af5c47fe92082",
+    "summary.json": "ecf3fa6ed39c3af6f8d824942989dc10eb8d29a78907fe10f5728503c46ab985"
+  },
+  "configurations": {
+    "128": {
+      "fold_bits": 7,
+      "peaks": {
+        "read_requests": 192,
+        "unique_read_scalars": 129,
+        "duplicate_scalar_read_requests": 127,
+        "max_scalar_read_fanout": 128,
+        "unique_read_words": 9,
+        "max_word_read_fanout": 128,
+        "write_requests": 64,
+        "unique_write_scalars": 64,
+        "unique_write_words": 4,
+        "scalar_read_write_aliases": 1,
+        "word_read_write_aliases": 1,
+        "su_reducer_simultaneous": false,
+        "su_reducer_scalar_aliases": 0,
+        "su_reducer_word_aliases": 0,
+        "duplicate_scalar_writes": 0,
+        "read_quanta": 3,
+        "write_quanta": 1,
+        "serial_barrier_quanta": 4,
+        "read_row_conflict": true,
+        "write_batch_conflict": false
+      },
+      "witnesses": {
+        "read_requests": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 192
+        },
+        "unique_read_scalars": {
+          "pc": 19,
+          "cycle": 8,
+          "value": 129
+        },
+        "duplicate_scalar_read_requests": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 127
+        },
+        "max_scalar_read_fanout": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 128
+        },
+        "unique_read_words": {
+          "pc": 19,
+          "cycle": 8,
+          "value": 9
+        },
+        "max_word_read_fanout": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 128
+        },
+        "write_requests": {
+          "pc": 4,
+          "cycle": 26,
+          "value": 64
+        },
+        "unique_write_scalars": {
+          "pc": 4,
+          "cycle": 26,
+          "value": 64
+        },
+        "unique_write_words": {
+          "pc": 4,
+          "cycle": 26,
+          "value": 4
+        },
+        "scalar_read_write_aliases": {
+          "pc": 18,
+          "cycle": 26,
+          "value": 1
+        },
+        "word_read_write_aliases": {
+          "pc": 18,
+          "cycle": 26,
+          "value": 1
+        },
+        "su_reducer_simultaneous": {
+          "pc": 0,
+          "cycle": 7,
+          "value": false
+        },
+        "su_reducer_scalar_aliases": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 0
+        },
+        "su_reducer_word_aliases": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 0
+        },
+        "duplicate_scalar_writes": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 0
+        },
+        "read_quanta": {
+          "pc": 19,
+          "cycle": 39,
+          "value": 3
+        },
+        "write_quanta": {
+          "pc": 0,
+          "cycle": 155,
+          "value": 1
+        },
+        "serial_barrier_quanta": {
+          "pc": 19,
+          "cycle": 39,
+          "value": 4
+        },
+        "read_row_conflict": {
+          "pc": 0,
+          "cycle": 7,
+          "value": true
+        },
+        "write_batch_conflict": {
+          "pc": 0,
+          "cycle": 7,
+          "value": false
+        }
+      },
+      "frame_counts": {
+        "scalar_read_write_aliases": 2,
+        "word_read_write_aliases": 2,
+        "su_reducer_simultaneous": 0,
+        "su_reducer_scalar_aliases": 0,
+        "su_reducer_word_aliases": 0,
+        "duplicate_scalar_writes": 0,
+        "read_row_conflict": 140,
+        "write_batch_conflict": 0
+      },
+      "per_pc": {
+        "0": {
+          "active_frames": 65,
+          "abstract_service_quanta": 67
+        },
+        "2": {
+          "active_frames": 2,
+          "abstract_service_quanta": 2
+        },
+        "4": {
+          "active_frames": 49,
+          "abstract_service_quanta": 51
+        },
+        "5": {
+          "active_frames": 2,
+          "abstract_service_quanta": 2
+        },
+        "6": {
+          "active_frames": 39,
+          "abstract_service_quanta": 40
+        },
+        "14": {
+          "active_frames": 2,
+          "abstract_service_quanta": 2
+        },
+        "15": {
+          "active_frames": 32,
+          "abstract_service_quanta": 33
+        },
+        "18": {
+          "active_frames": 83,
+          "abstract_service_quanta": 129
+        },
+        "19": {
+          "active_frames": 84,
+          "abstract_service_quanta": 194
+        },
+        "21": {
+          "active_frames": 2,
+          "abstract_service_quanta": 2
+        },
+        "22": {
+          "active_frames": 115,
+          "abstract_service_quanta": 198
+        },
+        "23": {
+          "active_frames": 96,
+          "abstract_service_quanta": 96
+        },
+        "26": {
+          "active_frames": 83,
+          "abstract_service_quanta": 129
+        },
+        "27": {
+          "active_frames": 84,
+          "abstract_service_quanta": 194
+        }
+      },
+      "abstract_service_quanta": 1139,
+      "opaque_scalar_checks": 119645,
+      "negative_controls": {
+        "actual_alias_write_before_read": "REJECTED",
+        "synthetic_duplicate_writer_reverse_priority": "REJECTED"
+      }
+    },
+    "256": {
+      "fold_bits": 8,
+      "peaks": {
+        "read_requests": 192,
+        "unique_read_scalars": 129,
+        "duplicate_scalar_read_requests": 127,
+        "max_scalar_read_fanout": 128,
+        "unique_read_words": 9,
+        "max_word_read_fanout": 128,
+        "write_requests": 64,
+        "unique_write_scalars": 64,
+        "unique_write_words": 4,
+        "scalar_read_write_aliases": 1,
+        "word_read_write_aliases": 1,
+        "su_reducer_simultaneous": false,
+        "su_reducer_scalar_aliases": 0,
+        "su_reducer_word_aliases": 0,
+        "duplicate_scalar_writes": 0,
+        "read_quanta": 2,
+        "write_quanta": 1,
+        "serial_barrier_quanta": 3,
+        "read_row_conflict": true,
+        "write_batch_conflict": false
+      },
+      "witnesses": {
+        "read_requests": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 192
+        },
+        "unique_read_scalars": {
+          "pc": 19,
+          "cycle": 8,
+          "value": 129
+        },
+        "duplicate_scalar_read_requests": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 127
+        },
+        "max_scalar_read_fanout": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 128
+        },
+        "unique_read_words": {
+          "pc": 19,
+          "cycle": 8,
+          "value": 9
+        },
+        "max_word_read_fanout": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 128
+        },
+        "write_requests": {
+          "pc": 4,
+          "cycle": 26,
+          "value": 64
+        },
+        "unique_write_scalars": {
+          "pc": 4,
+          "cycle": 26,
+          "value": 64
+        },
+        "unique_write_words": {
+          "pc": 4,
+          "cycle": 26,
+          "value": 4
+        },
+        "scalar_read_write_aliases": {
+          "pc": 18,
+          "cycle": 26,
+          "value": 1
+        },
+        "word_read_write_aliases": {
+          "pc": 18,
+          "cycle": 26,
+          "value": 1
+        },
+        "su_reducer_simultaneous": {
+          "pc": 0,
+          "cycle": 7,
+          "value": false
+        },
+        "su_reducer_scalar_aliases": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 0
+        },
+        "su_reducer_word_aliases": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 0
+        },
+        "duplicate_scalar_writes": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 0
+        },
+        "read_quanta": {
+          "pc": 0,
+          "cycle": 7,
+          "value": 2
+        },
+        "write_quanta": {
+          "pc": 0,
+          "cycle": 155,
+          "value": 1
+        },
+        "serial_barrier_quanta": {
+          "pc": 19,
+          "cycle": 26,
+          "value": 3
+        },
+        "read_row_conflict": {
+          "pc": 0,
+          "cycle": 7,
+          "value": true
+        },
+        "write_batch_conflict": {
+          "pc": 0,
+          "cycle": 7,
+          "value": false
+        }
+      },
+      "frame_counts": {
+        "scalar_read_write_aliases": 2,
+        "word_read_write_aliases": 2,
+        "su_reducer_simultaneous": 0,
+        "su_reducer_scalar_aliases": 0,
+        "su_reducer_word_aliases": 0,
+        "duplicate_scalar_writes": 0,
+        "read_row_conflict": 133,
+        "write_batch_conflict": 0
+      },
+      "per_pc": {
+        "0": {
+          "active_frames": 65,
+          "abstract_service_quanta": 66
+        },
+        "2": {
+          "active_frames": 2,
+          "abstract_service_quanta": 2
+        },
+        "4": {
+          "active_frames": 49,
+          "abstract_service_quanta": 51
+        },
+        "5": {
+          "active_frames": 2,
+          "abstract_service_quanta": 2
+        },
+        "6": {
+          "active_frames": 39,
+          "abstract_service_quanta": 40
+        },
+        "14": {
+          "active_frames": 2,
+          "abstract_service_quanta": 2
+        },
+        "15": {
+          "active_frames": 32,
+          "abstract_service_quanta": 33
+        },
+        "18": {
+          "active_frames": 83,
+          "abstract_service_quanta": 128
+        },
+        "19": {
+          "active_frames": 84,
+          "abstract_service_quanta": 193
+        },
+        "21": {
+          "active_frames": 2,
+          "abstract_service_quanta": 2
+        },
+        "22": {
+          "active_frames": 115,
+          "abstract_service_quanta": 194
+        },
+        "23": {
+          "active_frames": 96,
+          "abstract_service_quanta": 96
+        },
+        "26": {
+          "active_frames": 83,
+          "abstract_service_quanta": 128
+        },
+        "27": {
+          "active_frames": 84,
+          "abstract_service_quanta": 193
+        }
+      },
+      "abstract_service_quanta": 1130,
+      "opaque_scalar_checks": 119645,
+      "negative_controls": {
+        "actual_alias_write_before_read": "REJECTED",
+        "synthetic_duplicate_writer_reverse_priority": "REJECTED"
+      }
+    }
+  },
+  "scope": "14 independently reset static L20 SU operations only; source-bank bridge unimplemented. Opaque payloads exercise address/control ordering, not arithmetic. One bank transaction per abstract quantum, all read responses precede all writes, completion barrier releases source frame only after writes. Service quanta are NOT measured clock cycles: SRAM read/return, protection, write completion, mux, fanout, capture, source-hold and resume costs are unbound. No all-family temporal composition or final live-extent proof. Existing four-bank checked window provider does not implement these folded mappings.",
+  "source_frame_storage_lower_bound_bits": {
+    "read_response_payload": 6144,
+    "scalar_write_payload": 2080,
+    "read_request_address_enable": 4800,
+    "write_request_address_enable": 1625,
+    "total": 14649,
+    "excluded": "owner tags, protection/checks, conflict indices, request/return mux registers, FSM, bank data staging and all non-SU families; not a floorplan sizing result"
+  }
+}

@@ -1,0 +1,145 @@
+{
+ "name": "qwen_slab_m3_m8_cc0db65b2",
+ "spec": {
+  "name": "qwen_slab_m3_m8_cc0db65b2",
+  "block": "ot_qwen_slab_port_group_m3_m8",
+  "owner": "Codex:qwen-elements",
+  "purpose": "Structural LAT10 KCP4 OREG1 successor, M8 bw/tw strip, current die90/50 and80fF/150ps. Preserve old m3 exit137; no postroute macro ECO.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128",
+   "localhost"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 20,
+  "source": {
+   "branch": "codex/qwen-slab-m3-takeover-20261007",
+   "commit": "cc0db65b2"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "slab_exact",
+     "cmd": "python3 tools/qwen_slab_m3_takeover.py bench --out {RUN}/bench_positive",
+     "expect": "pass",
+     "pass_regex": "PASS: 1505 requests, 1505 results bit-exact",
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "slab_bad_lead",
+     "cmd": "python3 tools/qwen_slab_m3_takeover.py bench --negative --out {RUN}/bench_negative",
+     "expect": "fail",
+     "fail_regex": "EQUIVALENCE_TERMINAL_FAIL",
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "No Qwen budget sheet; in-run corner-exact reference-pin hook uses propagated res_q clock at CTS/GRT/DRT. Explicit single-corner signoff uses measured propagated arrival; no copied insertion."
+   },
+   "route": {
+    "cmd": "set -e\n[ \"$(docker image inspect openroad/orfs:latest --format '{{.Id}}')\" = \"$(docker image inspect openroad/orfs:asap7lock --format '{{.Id}}')\" ]\npython3 tools/qwen_slab_m3_takeover.py route --out {RUN}/routes/{LABEL} --name {LABEL} --threads 16",
+    "threads": 16,
+    "peak_ram_gb": 20,
+    "needs": [
+     "orfs"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record\ncp {RUN}/routes/{LABEL}/*.json {RUN}/record/\ncp {RUN}/bench_positive/result.json {RUN}/record/bench_positive.json\ncp {RUN}/bench_negative/result.json {RUN}/record/bench_negative.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/qwen_slab_structural/signoff833_die.sdc"
+   ],
+   "macros": [
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8"
+   ]
+  },
+  "hold_eco": {
+   "enabled": false,
+   "reason": "Macro-output-net-safe algorithm not qualified; retain original SS/FF ROM read/capture timing and failure evidence."
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "No Qwen budget sheet; master contract implemented directly using measured corner reference with90ps setup skew/50ps hold skew,80fF load/150ps slew."
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/qwen_elements_takeover_20261007/slab_m3_m8_route"
+   }
+  ],
+  "cycles_added": 4,
+  "merge_target": null
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/qwen_slab_m3_m8_cc0db65b2.json",
+ "created": "2026-10-07T09:03:31-07:00",
+ "status": "NEEDS_RTL",
+ "stage_idx": 2,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {
+  "bench_slab_exact": {
+   "expect": "pass",
+   "rc": 1,
+   "ok": false,
+   "tail": "t_v41 as A  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/srv/opentallas-scratch/claude/closure-loop/qwen_slab_m3_m8_cc0db65b2/bench_src_a1/tools/arch_budget_v41.py\", line 64, in <module>\n    import decode_critical_path as D  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/srv/opentallas-scratch/claude/closure-loop/qwen_slab_m3_m8_cc0db65b2/bench_src_a1/tools/decode_critical_path.py\", line 64, in <module>\n    from opentallas.critical_path import PackageLevel  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'opentallas'\n",
+   "track": "parallel"
+  }
+ },
+ "hosts_tried": [
+  "ot-agidock128"
+ ],
+ "events": [
+  "2026-10-07T09:03:31-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qwen_slab_m3_m8_cc0db65b2.json",
+  "2026-10-07T09:03:38-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+  "2026-10-07T09:03:46-07:00 source cc0db65b2dea synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/qwen_slab_m3_m8_cc0db65b2/src",
+  "2026-10-07T09:04:35-07:00 bench track: bench_slab_exact waiting for capacity: AGIdock MemAvailable 91-50 GB < 16+32",
+  "2026-10-07T09:04:35-07:00 route waiting for capacity: AGIdock MemAvailable 91-50 GB < 20+32",
+  "2026-10-07T09:05:19-07:00 NOTE spec in /tmp/claude-review-20261003/closure_jobs/qwen_slab_m3_m8_cc0db65b2.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)",
+  "2026-10-07T09:05:26-07:00 bench track: bench_slab_exact waiting for capacity: AGIdock MemAvailable 90-52 GB < 16+32",
+  "2026-10-07T09:05:26-07:00 route waiting for capacity: AGIdock MemAvailable 90-52 GB < 20+32",
+  "2026-10-07T09:06:25-07:00 bench track: bench_slab_exact waiting for capacity: AGIdock MemAvailable 91-52 GB < 16+32",
+  "2026-10-07T09:06:25-07:00 route waiting for capacity: AGIdock MemAvailable 91-52 GB < 20+32",
+  "2026-10-07T09:07:26-07:00 bench track: launched bench_slab_exact (bench_slab_exact.a1b1) beside route",
+  "2026-10-07T09:07:30-07:00 launched route (attempt 1) on ot-agidock128",
+  "2026-10-07T09:08:26-07:00 bench failed: stopped route (route.a1)",
+  "2026-10-07T09:08:26-07:00 NEEDS_RTL: bench_slab_exact expected PASS but rc=1"
+ ],
+ "updated": "2026-10-07T09:12:21-07:00",
+ "bench_par": true,
+ "btrack": {
+  "bench_slab_exact": {
+   "state": "done",
+   "tag": "bench_slab_exact.a1b1",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/qwen_slab_m3_m8_cc0db65b2",
+   "n": 1,
+   "started": "2026-10-07T09:07:26-07:00",
+   "stage_source": "/srv/opentallas-scratch/claude/closure-loop/qwen_slab_m3_m8_cc0db65b2/bench_src_a1"
+  }
+ },
+ "wait": null,
+ "host": "ot-agidock128",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/qwen_slab_m3_m8_cc0db65b2",
+ "commit_full": "cc0db65b2dea7a7df8db12948dcd1782d78e84d2",
+ "bwait": null,
+ "stage_key": "route",
+ "spec_change_noted": true,
+ "stage_tag": "route.a1",
+ "stage_started": "2026-10-07T09:07:30-07:00",
+ "bench_work": {},
+ "reason": "bench_slab_exact expected PASS but rc=1"
+}

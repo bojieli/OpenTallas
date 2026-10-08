@@ -1,0 +1,333 @@
+{
+ "schema": "opentallas.hbm_die_views_recompose.v1",
+ "ledger": {
+  "meso_extra": 2,
+  "gather": 1,
+  "cdist": 2,
+  "cp_su": 0,
+  "cp_native": 0,
+  "barrier": 4,
+  "coll": 6,
+  "serdes": 4,
+  "vm": 6,
+  "router": 5,
+  "cmdproc": 2,
+  "quant": 17,
+  "quant_points_bound": 161,
+  "quant_points_gate": 0,
+  "svc_fetch": 15,
+  "idx_keys": 12,
+  "idx_rows": 7,
+  "meso_hub": 4,
+  "vm_split_x": 2,
+  "vm_split_wr": 2,
+  "cmdproc_rd3": 3,
+  "loader_half": 0
+ },
+ "grt_work": "/tmp/claude-1000/hbmabs/r13",
+ "bases": {
+  "stages_430": {
+   "counts": {
+    "embedding_row": 1,
+    "x_first_load": 291,
+    "x_load_phases": 571,
+    "barrier": 343,
+    "coll_terms": 265,
+    "coll_crossings": 305,
+    "hbm_kv_rows": 48,
+    "attn": 40,
+    "expert_fetch": 40,
+    "index_scores": 8
+   },
+   "extra_cycles": {
+    "meso_paths_us": 2.941,
+    "gather": 343,
+    "cdist": 686,
+    "barrier": 1372,
+    "coll": 1590,
+    "serdes": 1220,
+    "vm": 1746,
+    "router": 200,
+    "cmdproc": 686,
+    "svc_fetch": 600,
+    "idx_keys": 96,
+    "idx_rows": 280,
+    "idx_vm": 160,
+    "vm_router": 760,
+    "vm_split": 1268,
+    "cmdproc_rd3": 1029,
+    "cp_su_tx": 0,
+    "cp_native": 0
+   },
+   "breakdown": {
+    "cp_us": 0.0,
+    "stations_us": 3.799,
+    "barrier_us": 1.143,
+    "svc_index_us": 1.58,
+    "spine_faces_us": 6.449,
+    "quant_us_gate": 0.0,
+    "quant_us_bound": 2.281,
+    "sm_faces_interim_us": 2.475,
+    "cp_mix": {
+     "su_transactions": 169,
+     "native_launches": 174
+    },
+    "total_sm_fixed_us": 12.971,
+    "total_sm_fixed_AR_pct": 2.39,
+    "total_with_sm_interim_us": 15.446,
+    "total_with_sm_interim_AR_pct": 2.84
+   },
+   "ds_wire_priced": {
+    "AR_us": 542.919,
+    "MTP_step_us": 1118.749,
+    "tau": 4.159,
+    "AR_tok_s": 1841.9,
+    "MTP_tok_s": 3717.5
+   },
+   "ds_margin": {
+    "gate_quant_off_path": {
+     "added_us": 12.971,
+     "AR_us": 555.89,
+     "AR_delta_pct": 2.39,
+     "AR_latency_increase_pct": 2.3891,
+     "AR_throughput_decrease_pct": 2.3334,
+     "AR_tok_s": 1798.9,
+     "MTP_step_us": 1131.72,
+     "MTP_delta_pct": 1.16,
+     "MTP_tok_s": 3674.9
+    },
+    "bound_quant_on_every_fused_point": {
+     "added_us": 15.252,
+     "AR_us": 558.171,
+     "AR_delta_pct": 2.81,
+     "AR_latency_increase_pct": 2.8093,
+     "AR_throughput_decrease_pct": 2.7325,
+     "AR_tok_s": 1791.6,
+     "MTP_step_us": 1134.001,
+     "MTP_delta_pct": 1.36,
+     "MTP_tok_s": 3667.5
+    }
+   },
+   "qwen_8k": {
+    "a_TP2_same_silicon": {
+     "priced_cycles": 1169600,
+     "margin_cycles": 1170694,
+     "added_cycles": 1094,
+     "delta_pct": 0.09,
+     "ar_tok_s": 1026.0,
+     "ar_tok_s_margin": 1025.0
+    },
+    "b_TP4_iso_silicon": {
+     "priced_cycles": 564741,
+     "margin_cycles": 565835,
+     "added_cycles": 1094,
+     "delta_pct": 0.19,
+     "ar_tok_s": 2124.9,
+     "ar_tok_s_margin": 2120.8
+    }
+   }
+  },
+  "stages_430_median_bundle": {
+   "counts": {
+    "embedding_row": 1,
+    "x_first_load": 291,
+    "x_load_phases": 571,
+    "barrier": 343,
+    "coll_terms": 265,
+    "coll_crossings": 305,
+    "hbm_kv_rows": 48,
+    "attn": 40,
+    "expert_fetch": 40,
+    "index_scores": 8
+   },
+   "extra_cycles": {
+    "meso_paths_us": 2.939,
+    "gather": 343,
+    "cdist": 686,
+    "barrier": 1372,
+    "coll": 1590,
+    "serdes": 1220,
+    "vm": 1746,
+    "router": 200,
+    "cmdproc": 686,
+    "svc_fetch": 600,
+    "idx_keys": 96,
+    "idx_rows": 280,
+    "idx_vm": 160,
+    "vm_router": 760,
+    "vm_split": 1268,
+    "cmdproc_rd3": 1029,
+    "cp_su_tx": 0,
+    "cp_native": 0
+   },
+   "breakdown": {
+    "cp_us": 0.0,
+    "stations_us": 3.797,
+    "barrier_us": 1.143,
+    "svc_index_us": 1.58,
+    "spine_faces_us": 6.449,
+    "quant_us_gate": 0.0,
+    "quant_us_bound": 2.281,
+    "sm_faces_interim_us": 2.583,
+    "cp_mix": {
+     "su_transactions": 169,
+     "native_launches": 174
+    },
+    "total_sm_fixed_us": 12.969,
+    "total_sm_fixed_AR_pct": 2.44,
+    "total_with_sm_interim_us": 15.552,
+    "total_with_sm_interim_AR_pct": 2.92
+   },
+   "ds_wire_priced": {
+    "AR_us": 532.066,
+    "MTP_step_us": 1107.896,
+    "tau": 4.159,
+    "AR_tok_s": 1879.5,
+    "MTP_tok_s": 3754.0
+   },
+   "ds_margin": {
+    "gate_quant_off_path": {
+     "added_us": 12.969,
+     "AR_us": 545.035,
+     "AR_delta_pct": 2.44,
+     "AR_latency_increase_pct": 2.4375,
+     "AR_throughput_decrease_pct": 2.3795,
+     "AR_tok_s": 1834.7,
+     "MTP_step_us": 1120.865,
+     "MTP_delta_pct": 1.17,
+     "MTP_tok_s": 3710.5
+    },
+    "bound_quant_on_every_fused_point": {
+     "added_us": 15.25,
+     "AR_us": 547.316,
+     "AR_delta_pct": 2.87,
+     "AR_latency_increase_pct": 2.8662,
+     "AR_throughput_decrease_pct": 2.7863,
+     "AR_tok_s": 1827.1,
+     "MTP_step_us": 1123.146,
+     "MTP_delta_pct": 1.38,
+     "MTP_tok_s": 3703.0
+    }
+   },
+   "qwen_8k": {
+    "a_TP2_same_silicon": {
+     "priced_cycles": 1168361,
+     "margin_cycles": 1169455,
+     "added_cycles": 1094,
+     "delta_pct": 0.09,
+     "ar_tok_s": 1027.1,
+     "ar_tok_s_margin": 1026.1
+    },
+    "b_TP4_iso_silicon": {
+     "priced_cycles": 563502,
+     "margin_cycles": 564596,
+     "added_cycles": 1094,
+     "delta_pct": 0.19,
+     "ar_tok_s": 2129.5,
+     "ar_tok_s_margin": 2125.4
+    }
+   }
+  },
+  "stages_430_manhattan": {
+   "counts": {
+    "embedding_row": 1,
+    "x_first_load": 291,
+    "x_load_phases": 571,
+    "barrier": 343,
+    "coll_terms": 265,
+    "coll_crossings": 305,
+    "hbm_kv_rows": 48,
+    "attn": 40,
+    "expert_fetch": 40,
+    "index_scores": 8
+   },
+   "extra_cycles": {
+    "meso_paths_us": 2.941,
+    "gather": 343,
+    "cdist": 686,
+    "barrier": 1372,
+    "coll": 1590,
+    "serdes": 1220,
+    "vm": 1746,
+    "router": 200,
+    "cmdproc": 686,
+    "svc_fetch": 600,
+    "idx_keys": 96,
+    "idx_rows": 280,
+    "idx_vm": 160,
+    "vm_router": 760,
+    "vm_split": 1268,
+    "cmdproc_rd3": 1029,
+    "cp_su_tx": 0,
+    "cp_native": 0
+   },
+   "breakdown": {
+    "cp_us": 0.0,
+    "stations_us": 3.799,
+    "barrier_us": 1.143,
+    "svc_index_us": 1.58,
+    "spine_faces_us": 6.449,
+    "quant_us_gate": 0.0,
+    "quant_us_bound": 2.281,
+    "sm_faces_interim_us": 0.0,
+    "cp_mix": {
+     "su_transactions": 169,
+     "native_launches": 174
+    },
+    "total_sm_fixed_us": 12.971,
+    "total_sm_fixed_AR_pct": 2.5,
+    "total_with_sm_interim_us": 12.971,
+    "total_with_sm_interim_AR_pct": 2.5
+   },
+   "ds_wire_priced": {
+    "AR_us": 517.974,
+    "MTP_step_us": 1093.804,
+    "tau": 4.159,
+    "AR_tok_s": 1930.6,
+    "MTP_tok_s": 3802.3
+   },
+   "ds_margin": {
+    "gate_quant_off_path": {
+     "added_us": 12.971,
+     "AR_us": 530.945,
+     "AR_delta_pct": 2.5,
+     "AR_latency_increase_pct": 2.5042,
+     "AR_throughput_decrease_pct": 2.443,
+     "AR_tok_s": 1883.4,
+     "MTP_step_us": 1106.775,
+     "MTP_delta_pct": 1.19,
+     "MTP_tok_s": 3757.8
+    },
+    "bound_quant_on_every_fused_point": {
+     "added_us": 15.252,
+     "AR_us": 533.226,
+     "AR_delta_pct": 2.94,
+     "AR_latency_increase_pct": 2.9445,
+     "AR_throughput_decrease_pct": 2.8603,
+     "AR_tok_s": 1875.4,
+     "MTP_step_us": 1109.056,
+     "MTP_delta_pct": 1.39,
+     "MTP_tok_s": 3750.0
+    }
+   },
+   "qwen_8k": {
+    "a_TP2_same_silicon": {
+     "priced_cycles": 1167303,
+     "margin_cycles": 1168397,
+     "added_cycles": 1094,
+     "delta_pct": 0.09,
+     "ar_tok_s": 1028.0,
+     "ar_tok_s_margin": 1027.0
+    },
+    "b_TP4_iso_silicon": {
+     "priced_cycles": 562444,
+     "margin_cycles": 563538,
+     "added_cycles": 1094,
+     "delta_pct": 0.19,
+     "ar_tok_s": 2133.5,
+     "ar_tok_s_margin": 2129.4
+    }
+   }
+  }
+ }
+}

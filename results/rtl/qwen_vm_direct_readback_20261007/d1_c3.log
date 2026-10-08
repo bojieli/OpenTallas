@@ -1,0 +1,14 @@
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=1 checked_ACK_delta=1 reads=0 writes=1 progress=0 chased=0
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=2 checked_ACK_delta=1 reads=0 writes=2 progress=0 chased=0
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=3 checked_ACK_delta=1 reads=0 writes=3 progress=0 chased=0
+READ_SERVICE edges=9
+READ_SERVICE edges=9
+READ_SERVICE edges=9
+FRAME steps=58 native=4 checked_ACK_delta=0 reads=3 writes=3 progress=0 chased=0
+CONFLICT got=40914576,be916038,c177f06a expected=40914576,be916038,c177f06a
+READ_SERVICE edges=9
+FATAL: /tmp/qwen-vm-direct-readback-20261007/run2/bench.sv:56: PREMATURE_CHASE_WITH_UNPAID_FRAME
+       Time: 2446000 Scope: tb_qwen_su_service_gate.frame

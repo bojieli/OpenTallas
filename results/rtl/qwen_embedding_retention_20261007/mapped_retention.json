@@ -1,0 +1,225 @@
+{
+  "scope": "ASAP7 sequential cell mapping only; final ORFS mapped retention and physical timing remain mandatory",
+  "source_sha256": {
+    "rtl/physical/ot_qwen_embed_scale_bank_retained.sv": "51bc4ab1712dd83335ba6e7e36a1973bec589fb8932286c7917beea4c38576b8",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v": "c23844e60690a83f36e7fb4fc508e91cb4f3354352299a0b13f7eb90e1b41788",
+    "rtl/physical/ot_qwen_embed_code_bank_retained.sv": "02e7678252397f36d2783e61c4e49fcb414bb7e5c1c925732c11913b666e14be"
+  },
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "cases": [
+    {
+      "kind": "scale",
+      "case": "mapped_successor",
+      "passed": true,
+      "checks": {
+        "fault/fault_n": {
+          "primary_FFs": 1,
+          "shadow_FFs": 1,
+          "separate": true
+        },
+        "wp/wp_n": {
+          "primary_FFs": 2,
+          "shadow_FFs": 2,
+          "separate": true
+        },
+        "rp/rp_n": {
+          "primary_FFs": 2,
+          "shadow_FFs": 2,
+          "separate": true
+        },
+        "credits/credits_n": {
+          "primary_FFs": 4,
+          "shadow_FFs": 4,
+          "separate": true
+        },
+        "phase/phase_n": {
+          "primary_FFs": 1,
+          "shadow_FFs": 1,
+          "separate": true
+        },
+        "valid_pipe/valid_n": {
+          "primary_FFs": 4,
+          "shadow_FFs": 4,
+          "separate": true
+        },
+        "addr_q/addr_n": {
+          "primary_FFs": 12,
+          "shadow_FFs": 12,
+          "separate": true
+        },
+        "ce_q/ce_n": {
+          "primary_FFs": 1,
+          "shadow_FFs": 1,
+          "separate": true
+        },
+        "iv_q/iv_n": {
+          "primary_FFs": 1,
+          "shadow_FFs": 1,
+          "separate": true
+        },
+        "cr_q/cr_n": {
+          "primary_FFs": 1,
+          "shadow_FFs": 1,
+          "separate": true
+        },
+        "row_q/row_n": {
+          "primary_FFs": 18,
+          "shadow_FFs": 18,
+          "separate": true
+        },
+        "fifo[0]/fifo_n[0]": {
+          "primary_FFs": 18,
+          "shadow_FFs": 18,
+          "separate": true
+        },
+        "fifo[1]/fifo_n[1]": {
+          "primary_FFs": 18,
+          "shadow_FFs": 18,
+          "separate": true
+        },
+        "lane_pipe[0]/lane_n[0]": {
+          "primary_FFs": 4,
+          "shadow_FFs": 4,
+          "separate": true
+        },
+        "lane_pipe[1]/lane_n[1]": {
+          "primary_FFs": 4,
+          "shadow_FFs": 4,
+          "separate": true
+        },
+        "lane_pipe[2]/lane_n[2]": {
+          "primary_FFs": 4,
+          "shadow_FFs": 4,
+          "separate": true
+        },
+        "lane_pipe[3]/lane_n[3]": {
+          "primary_FFs": 4,
+          "shadow_FFs": 4,
+          "separate": true
+        },
+        "capture": {
+          "capture_FFs": 256
+        },
+        "capture_en_q": {
+          "capture_enable_FFs": 8
+        }
+      }
+    },
+    {
+      "kind": "scale",
+      "case": "merged_fifo",
+      "rejected": true,
+      "reason": "('fifo[0]', 'fifo_n[0]', 'shared FFs')"
+    },
+    {
+      "kind": "scale",
+      "case": "missing_fifo",
+      "rejected": true,
+      "reason": "fifo_n[0]: missing or non-contiguous split vector storage"
+    },
+    {
+      "kind": "scale",
+      "case": "short_fifo",
+      "rejected": true,
+      "reason": "('fifo[0]', 'fifo_n[0]', 'incomplete storage', 18, 17, 18)"
+    },
+    {
+      "kind": "code",
+      "case": "mapped_successor",
+      "passed": true,
+      "checks": {
+        "fault/fault_n": {
+          "primary_FFs": 1,
+          "shadow_FFs": 1,
+          "separate": true
+        },
+        "wp/wp_n": {
+          "primary_FFs": 2,
+          "shadow_FFs": 2,
+          "separate": true
+        },
+        "rp/rp_n": {
+          "primary_FFs": 2,
+          "shadow_FFs": 2,
+          "separate": true
+        },
+        "credits/credits_n": {
+          "primary_FFs": 4,
+          "shadow_FFs": 4,
+          "separate": true
+        },
+        "phase/phase_n": {
+          "primary_FFs": 1,
+          "shadow_FFs": 1,
+          "separate": true
+        },
+        "valid_pipe/valid_n": {
+          "primary_FFs": 4,
+          "shadow_FFs": 4,
+          "separate": true
+        },
+        "addr_q/addr_n": {
+          "primary_FFs": 12,
+          "shadow_FFs": 12,
+          "separate": true
+        },
+        "ce_q/ce_n": {
+          "primary_FFs": 1,
+          "shadow_FFs": 1,
+          "separate": true
+        },
+        "iv_q/iv_n": {
+          "primary_FFs": 1,
+          "shadow_FFs": 1,
+          "separate": true
+        },
+        "cr_q/cr_n": {
+          "primary_FFs": 1,
+          "shadow_FFs": 1,
+          "separate": true
+        },
+        "ia_q/ia_n": {
+          "primary_FFs": 12,
+          "shadow_FFs": 12,
+          "separate": true
+        },
+        "fifo[0]/fifo_n[0]": {
+          "primary_FFs": 12,
+          "shadow_FFs": 12,
+          "separate": true
+        },
+        "fifo[1]/fifo_n[1]": {
+          "primary_FFs": 12,
+          "shadow_FFs": 12,
+          "separate": true
+        },
+        "capture_data": {
+          "capture_FFs": 512
+        },
+        "capture_en_q": {
+          "capture_enable_FFs": 16
+        }
+      }
+    },
+    {
+      "kind": "code",
+      "case": "merged_fifo",
+      "rejected": true,
+      "reason": "('fifo[0]', 'fifo_n[0]', 'shared FFs')"
+    },
+    {
+      "kind": "code",
+      "case": "missing_fifo",
+      "rejected": true,
+      "reason": "fifo_n[0]: missing or non-contiguous split vector storage"
+    },
+    {
+      "kind": "code",
+      "case": "short_fifo",
+      "rejected": true,
+      "reason": "('fifo[0]', 'fifo_n[0]', 'incomplete storage', 12, 11, 12)"
+    }
+  ],
+  "adoption": false
+}

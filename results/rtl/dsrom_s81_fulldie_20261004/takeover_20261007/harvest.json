@@ -1,0 +1,188 @@
+{
+  "schema": "opentallas.s81_takeover.v1",
+  "observed_at": "2026-10-07T10:49:46.022848+00:00",
+  "worktree": "/home/ubuntu/wt-s81-rerun",
+  "base_commit": "25de630083a519bb9870ae7772ee7d8c8525a687",
+  "initial_worktree_status": "clean; interrupted source was already committed",
+  "scope": "DS S81 only; no central merge, Qwen writes, remote mutations, job launches or process termination",
+  "change": {
+    "path": "tools/dsrom_s81_fulldie.py",
+    "description": "Complete RX station chain and hub termination for LINK_SPLIT; retain split injection into first RX station and unsplit fallback.",
+    "default_off": true,
+    "engine_rtl_changed": false,
+    "pipeline_stages_added_by_this_fix": 0,
+    "adopted": false
+  },
+  "validation": {
+    "command": "python3 -m pytest -q tests/test_dsrom_s81_fulldie.py tests/test_dsrom_s81_link_chains.py",
+    "exit_code": 0,
+    "tests_passed": 22,
+    "focused_tests_passed": 19,
+    "scope": "512-bit identity wiring and unique receive clocks on east/west, split/unsplit SerDes and unsplit UCIe; 0/1/3 receive stations; endpoint-order and k1/k16 slice widths; existing die inventory/legality tests.",
+    "negative_control": {
+      "source_commit": "25de630083a519bb9870ae7772ee7d8c8525a687",
+      "function": "_link_chains",
+      "pytest_exit_code": 1,
+      "split_rx_failures": 4,
+      "log": "interrupted_source_negative.log"
+    },
+    "limitations": "Placement is stubbed in focused link tests; these are generator connectivity tests, not physical timing or RTL simulation. No full-die simulation or physical rerun."
+  },
+  "v7": {
+    "record": "results/rtl/dsrom_s81_fulldie_20261004/r9m215khdcx/feasibility.json",
+    "remote_sha256": "85f9f028a3b18733a59e4baac6470be9ae2f624fc220e4dba704218c0a14e6da",
+    "cases": {
+      "scan": {
+        "grt_i50_overflow": 372,
+        "placement_overlaps": 35,
+        "pin_access_errors": 0
+      },
+      "layer1": {
+        "grt_i50_overflow": 225,
+        "placement_overlaps": 48,
+        "pin_access_errors": 0
+      },
+      "head": {
+        "grt_i50_overflow": 581,
+        "placement_overlaps": 47,
+        "pin_access_errors": 0
+      }
+    },
+    "status": "NOT_CLOSED"
+  },
+  "v8_prior": {
+    "remote_root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/s81-rerun",
+    "source_generator_sha256": "bcae3f1135162ef3ffd0d50313ff72543a7e3fe5be4e158c2897e3831d361524",
+    "source_matches_base": true,
+    "variant": {
+      "gen": "r8",
+      "cfifo_v2": true,
+      "link_fix": true,
+      "link_split": true,
+      "sel_xstg": true,
+      "hc_xface": true,
+      "hop_fix": true,
+      "meso_d8": true,
+      "fwd_pitch": 430.56,
+      "corr_interleave": true,
+      "rev": "r9",
+      "cc_reach_um": 215.0,
+      "vch_interleave": true,
+      "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+      "head_dies": 12,
+      "die": "layer",
+      "role": "scan die (4 HBM3E stacks; 32 of the rack)",
+      "pairs": 2050,
+      "bf": 440,
+      "nv": 0,
+      "head_bundles": 0,
+      "stacks": [
+        "SW",
+        "SE",
+        "NW",
+        "NE"
+      ],
+      "elem_frame_h": 198.72,
+      "slot_h": 280.8,
+      "slots": 10
+    },
+    "scan_plan_legality": {
+      "instances": 60562,
+      "overlaps": 0,
+      "overlap_examples": [],
+      "outside": 0,
+      "outside_examples": []
+    },
+    "scan_plan_pin_clashes": 0,
+    "scan_plan_round_trip_cycles": 161,
+    "earlier_check_k16_pin_clashes": 49,
+    "status": "PRE_FIX_PLAN_ONLY; missing RX tail invalidates connectivity; no v8 route closure"
+  },
+  "closed_blocks": [
+    {
+      "job": "s81-dsfd-cfifo-290446310",
+      "record": "results/closure_loop/s81-dsfd-cfifo-290446310/verdict.json",
+      "source_commit": "2904463107e8082eed8912c2cc1eaddd9bfc2f23",
+      "status": "CLOSED",
+      "ss_ps": 46.23,
+      "ff_ps": 24.9,
+      "drc": 0,
+      "benches": {
+        "bench_exact_words": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true
+        },
+        "bench_neg_xb_mutant": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true
+        }
+      },
+      "cycles_added": 4,
+      "qualification": "Recorded block closure only. Die-context re-signoff with regenerated hop budgets remains required."
+    },
+    {
+      "job": "s81-meso-d8g1-c20d75e28",
+      "record": "results/closure_loop/s81-meso-d8g1-c20d75e28/verdict.json",
+      "source_commit": "c20d75e289e3e85c09ac18f194cf7b1357ca555b",
+      "status": "CLOSED",
+      "ss_ps": 29.61,
+      "ff_ps": 27.38,
+      "drc": 0,
+      "benches": {
+        "bench_exact_d4": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true
+        },
+        "bench_neg_offset_mutant": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true
+        }
+      },
+      "cycles_added": 2,
+      "qualification": "Recorded block closure only. Die-context re-signoff with regenerated hop budgets remains required."
+    }
+  ],
+  "live_jobs": [
+    {
+      "job": "s81-swiglu-esum-05d995e9b",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/s81-swiglu-esum-05d995e9b",
+      "state": "route active in global_route.tcl, no terminal exit/corner_sta.json observed",
+      "openroad_pid": 215484,
+      "adopted": false
+    },
+    {
+      "job": "frame/m215_c",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/s81-rerun/frame/m215_c",
+      "state": "live wrapper; latest placement detail log 3_5_place_dp.tmp.log",
+      "wrapper_pid": 3178485,
+      "adopted": false
+    }
+  ],
+  "blockers": [
+    "Regenerate v8 scan/layer1/head with the fixed source; prior plan did not validate connectivity.",
+    "Resolve v7 placement overlaps and nonzero GRT overflow; resolve v8 compressed k16 pin clashes before routing claims.",
+    "Validate split/link/selector views and composed added latency; options remain off by default.",
+    "Complete hub routing-layer gate and contextual SS >=15 ps / FF >=15 ps with real budgets and DRC0; no die closure established.",
+    "Harvest existing SwiGLU and frame jobs when terminal; preserve live pinned inputs and avoid duplicate launches.",
+    "Cfifo budget-sheet opt-out explicitly requires die-budget re-signoff after hop regeneration; block CLOSED is not die adoption."
+  ],
+  "artifact_sha256": {
+    "generator_tests.log": "e2289c230135b682d66e48107f8caab30f5b37878e8daf2e9fb92df9aebb1375",
+    "interrupted_source_negative.log": "735b098b63ac6419cd93fe254066e90da2f86dadeb6fb2ee283764d4af844ee7",
+    "remote_STATUS.txt": "699c9c69695fd309b91e85459db908d1db85f97ad0f249d7d90cb01463d7c054",
+    "tests.log": "0caf379acbcb845c31b98bf4efeffb865a66d527d27d5bb4f34018bea0099078",
+    "v8_prior/check_layer.log": "01f1c57920d0ba6f68dd044fe4a83452e031118871ee4400086980b21c376f5b",
+    "v8_prior/floorplan.json": "54dba1b152c4e5436ae48244e5cdc64af72719aa44b47e444949e84414e81e27",
+    "v8_prior/plan_layer.log": "4f16d67126b38cf0cf7070eae89109439993314ff2924657ab3121cee332b90b"
+  },
+  "validated_source_sha256": {
+    "tools/dsrom_s81_fulldie.py": "71d6c9613b56a232484275e10e1f5c190789257bbf242327ceae49b839ee6c8b",
+    "tests/test_dsrom_s81_link_chains.py": "02d6f1c6c2cdb0a6e632ab9e0f3d409a0dc43aee65c607db57c38b1b03f580c8"
+  }
+}

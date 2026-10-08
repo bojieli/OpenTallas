@@ -1,0 +1,20 @@
+{
+  "source_commit": "4c1216b217dcfcf00d531a0d64e59f024472db98",
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-scratch2/scratch/codex/hbm-su-hub-4c1216b21",
+  "pids": {
+    "pos": 3125985,
+    "neg": 3125986
+  },
+  "guard": "/srv/opentallas-scratch/admit.sh 16",
+  "measured_before_launch": {
+    "mem_available_gib": 451,
+    "load1": 84.97,
+    "free_disk_gib": 444
+  },
+  "source_isolation": "Separate git archive copies src-pos/src-neg",
+  "command": "python3 tools/hbm_su_c12.py campaign --ctl12 2 --ropi 1 --rout 2 --rkc 1 --rhalf 1 --rhpar 1 --gsh 1 --kimm 1 --denr 1 --dring 2 --quick --only random --no-1024",
+  "positive_expected_cases": 5,
+  "negative_define": "OT_NEG_RED_NOLOCK",
+  "status": "LAUNCHED_NO_VERDICT"
+}

@@ -1,0 +1,15 @@
+{
+  "source_commit": "f57c3d36f668f8354c5028df5ec47bc705081b98",
+  "verdict": "FAIL: IGNORE_PEER_CREDIT negative passed; positive arithmetic result is not sufficient for adoption",
+  "source_remote": "ot-epyc2:/srv/opentallas-scratch2/claude/ha2-endpoint-credit-codex-20261007",
+  "sha256": {
+    "terminal.json": "232100c7209d3d98691a95383859d009eeae4f4786f9b4e0848db6ffa487323b",
+    "run.log": "1ccdf6f13d2a3293e93100379bb8733e92d40ae506334d34de0dd9ae3900e51b",
+    "CORRUPT_GOLDEN.log": "3c0ee19500bce95ac61766252451875c65f06ee8c16336c9db1fdeb491780fa4",
+    "IGNORE_PEER_CREDIT.log": "b7aaed230dedf3feb204201470bdf06a2444d4b28b3b275d79c1f51b7d5e450b",
+    "source_pins.json": "5935debd3a28b9a58d1abdce7419f61bf58ae0d6de6b7201ddebfd3ea4304216",
+    "command.json": "9d0e3637d1451c70e5c12899790e5ffc725dab2b86b935365b32e373918ed459",
+    "build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "run.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  }
+}

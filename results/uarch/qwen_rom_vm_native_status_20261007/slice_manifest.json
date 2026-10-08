@@ -1,0 +1,44 @@
+{
+  "source": "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "source_sha256": "387b56dd7fa82b20e62515df8b632265ae5af146c9ca5c6cb3d4d67ee52cbf85",
+  "slices": [
+    {
+      "start": "module ot_qwen_w12_matvec_part #(",
+      "end": "    //: KV ops: group g = q*S + c takes tile",
+      "sha256": "9731bfb15d2eefd798c52351eede34ddd54df4e83c859c0b87cea3b06f861294"
+    },
+    {
+      "start": "    // Tag of the element issued this cycle",
+      "end": "    generate if (LANES && FAST_ISSUE",
+      "sha256": "66429c38895292d736708ca921a2e66309da79561b698ec0cbf3a4268a7e02fb"
+    },
+    {
+      "start": "    // -- S1 (memories answer)",
+      "end": "    //: Memory read data is registered",
+      "sha256": "c81f612ee6ae5983bd7a96278b1551bc223ae2490a6cf9ec39e106cc067fc16b"
+    },
+    {
+      "start": "    wire [TW-1:0] a_tag;",
+      "end": "    // -- lanes",
+      "sha256": "28d43f94fd6c118eb5f68cd6067f94404bf18838f61ff99614a35591e60962c6"
+    },
+    {
+      "start": "    wire raw_v =",
+      "end": "    //: A status bit:",
+      "sha256": "b06a37a213d7cf0282c9b09740acc76a4a323d97f93509d60112b2caf6d38e4b"
+    },
+    {
+      "start": "    // -- results ",
+      "end": "    // -- argmax:",
+      "sha256": "ce3d4a795661b7a7294b973b64fb8104f9668a31a0151d1a19d4b200d5f7933b"
+    },
+    {
+      "start": "    // -- argmax:",
+      "end": "\nendmodule",
+      "sha256": "b7ecd620fa28900dcbb0a76375f51c267d597a39f96f5c4fa959897a9901cab6"
+    }
+  ],
+  "excluded": "Arithmetic and data returns, core scheduler and non-ME writers. W1 amax/rmax=0; argmax/MX valid/status retained, comparator datapath removed; this W1 has amax/rmax=0 and never consumes comparator output.",
+  "modified": "Module name; remove post-scale arithmetic instances only. Undriven data outputs are never observed.",
+  "sha256": "1384700f5dfb044a3fc26d8bc352414fc060f3fd832a7e69d14ad38d1ee0e948"
+}

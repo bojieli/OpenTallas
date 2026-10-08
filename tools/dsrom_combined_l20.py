@@ -392,8 +392,55 @@ FIELD_CFGS = {
     "pq0": dict(pq=0, qelem=0, plan="base"),
     "pq1": dict(pq=1, qelem=0, plan="pq"),           # recorded from the committed v9 field_pq.json (no replay)
     "pq0_q9": dict(pq=0, qelem=9, plan="base"),
-    "pq1_q9": dict(pq=1, qelem=9, plan="pq"),        # expected NOT buildable (negative structural control)
+    # PQ 1 + the PQ q-element (ot_v41_rom_elem_qx_pq_w10, 2026-10-06; before it this case was a NOT-buildable
+    # control): the spine's GAP / GUARD carry the element's configuration replay (see the element header)
+    "pq1_q10": dict(pq=1, qelem=10, plan="pq", gap=int(os.environ.get("OT_PQQ_GAP", "32")),
+                    guard=int(os.environ.get("OT_PQQ_GUARD", "202")), gslack=int(os.environ.get("OT_PQQ_GSLACK", "32"))),
 }
+
+
+def _qelem_swap(cfg, work):
+    """Point tools/dsrom_field_spine.py's build at the PQ pair FILE SWAP with the q-element (QXV, QW defines)."""
+    import dsrom_1m_field as F1
+    import dsrom_field_spine as FS
+    if not cfg["qelem"]:
+        return
+    defs = work / "qelem_defines.sv"
+    defs.write_text(f"`define OT_PAIR_PQ_QELEM 1\n`define OT_PAIR_PQ_QXV {cfg['qelem']}\n"
+                    f"`define OT_PAIR_PQ_QW {os.environ.get('OT_PQQ_QW', '0')}\n"
+                    f"`define OT_PAIR_PQ_QM {os.environ.get('OT_PQQ_QM', '0')}\n"
+                    f"`define OT_PAIR_PQ_QS {os.environ.get('OT_PQQ_QS', '0')}\n"
+                    + "".join(f"`define {d}\n" for d in os.environ.get("OT_PQQ_DEFINES", "").split(",") if d))   # e.g. a negative control
+    FS.DIE = [defs] + [SWAP_PAIR if p.name == "ot_v41_pair_pq_w17w10.sv" else p for p in FS.DIE] + list(F1.QRTL)
+    FS.SOURCES = sorted(set(FS.SOURCES) | set(F1.QRTL) | {SWAP_PAIR})
+
+
+def cmd_qelem_lever(a):
+    """Full-plan field record of PQ 1 + the PQ q-element (`field --cfg pq1_q10 --field-layers all` first) by
+    tools/dsrom_field_spine.py record --config pq (spine issue rule, S81 wire once a node), then its lever record
+    levers/qelem_pq.json (verdict PENDING_SSFF: the element's routed SS/FF closure and the owner's go decide)."""
+    import dsrom_field_spine as FS
+    cfg = FIELD_CFGS[a.cfg or "pq1_q10"]
+    work = Path(a.work).resolve() / f"field_{a.cfg or 'pq1_q10'}"
+    _qelem_swap(cfg, work)
+    import dsrom_1m_allmeasured_adapters as AD
+    rec = Path(a.out or ROOT / "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem.json")
+    FS.G.set_arith("chunk8")
+    rc = 0
+    if not a.lever_only:
+        rc = FS.cmd_record(argparse.Namespace(work=work, plan_dir=Path(a.plan_pq), config="pq", record=rec))
+        r = json.loads(rec.read_text())
+        r["config"] = "pq_qelem"          # its own row in tools/dsrom_field_reprice_r8.py (regions/pq_qelem.json.gz)
+        rec.write_text(json.dumps(r, indent=1) + "\n")
+    AD.FIELD_GEOM = None                  # S81 floorplan wire here; tools/dsrom_field_reprice_r8.py record --levers re-prices
+    note = ("PQ spine x DS q-element (ot_v41_rom_elem_qx_pq_w10 PQ=1 QX=10 QW=%s QM=%s, pair FILE SWAP "
+            "rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv) at GAP %d / GUARD %d / GSLACK %d. Replaces "
+            "field_spine_pq's nodes when adopted (the S81 die's FP8/FP4 pairs are q-elements; field_spine_pq "
+            "assumes the W10 element). Adoption waits on the routed PQ q-element (Z22, SS60/FF25) and the owner's go."
+            % (os.environ.get("OT_PQQ_QW", "0"), os.environ.get("OT_PQQ_QM", "0"), cfg["gap"], cfg["guard"], cfg["gslack"]))
+    FS.cmd_lever(argparse.Namespace(record=rec, ssff=None, lever="qelem_pq", verdict="PENDING_SSFF", note=note,
+                                    lever_out=None))
+    return rc
 
 
 def cmd_field(a):
@@ -403,14 +450,11 @@ def cmd_field(a):
     work = Path(a.work).resolve() / f"field_{a.cfg}"
     work.mkdir(parents=True, exist_ok=True)
     plan = Path(a.plan_base if cfg["plan"] == "base" else a.plan_pq)
-    if cfg["qelem"]:
-        defs = work / "qelem_defines.sv"
-        defs.write_text(f"`define OT_PAIR_PQ_QELEM 1\n`define OT_PAIR_PQ_QXV {cfg['qelem']}\n")
-        FS.DIE = [defs] + [SWAP_PAIR if p.name == "ot_v41_pair_pq_w17w10.sv" else p for p in FS.DIE] + list(F1.QRTL)
-        FS.SOURCES = sorted(set(FS.SOURCES) | set(F1.QRTL) | {SWAP_PAIR})
+    _qelem_swap(cfg, work)
     status = dict(cfg=a.cfg, **cfg, plan_dir=str(plan))
     if not (work / "build" / "tb").exists():
-        ns = argparse.Namespace(work=work, pq=cfg["pq"], gap=12, guard=180, gslack=6, jobs=a.jobs)
+        ns = argparse.Namespace(work=work, pq=cfg["pq"], gap=cfg.get("gap", 12), guard=cfg.get("guard", 180), gslack=cfg.get("gslack", 6),
+                                jobs=a.jobs)
         try:
             FS.cmd_build(ns)
         except SystemExit as e:
@@ -420,8 +464,10 @@ def cmd_field(a):
             return 2
     status["build"] = "ok"
     rcs = {}
+    full = a.field_layers == "all"          # the whole S81 plan: single-phase nodes alone + multi-phase back to back
     for mode in ("phase", "node"):          # every L20 phase alone (as-built rule), then nodes back to back
-        ns = argparse.Namespace(work=work, plan_dir=plan, mode=mode, single_only=False, layers="20", regions="",
+        ns = argparse.Namespace(work=work, plan_dir=plan, mode=mode, single_only=full and mode == "phase",
+                                layers="" if full else a.field_layers, regions="",
                                 only_nodes="", sample=0, keep=False, positions=1, force=False, jobs=a.jobs)
         rcs[mode] = FS.cmd_run(ns)
     status["run_rc"] = rcs
@@ -743,10 +789,6 @@ def cmd_record(a):
     if not parts["units"] or not parts["units"]["all_exact"]:
         fails.append("units")
     for c, s in field.items():
-        if c == "pq1_q9":
-            if s.get("build") == "ok":
-                fails.append("field pq1_q9 built (expected NOT buildable)")
-            continue
         if not s.get("exact"):
             fails.append(f"field {c}")
     fails += [f"run-vs-composition: {x['kind']} {x.get('node') or x.get('case')}" for x in xc
@@ -762,7 +804,7 @@ def cmd_record(a):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=("static", "edges", "field", "units", "compose", "record"))
+    ap.add_argument("cmd", choices=("static", "edges", "field", "units", "compose", "record", "qelem-lever"))
     ap.add_argument("--work", required=True)
     ap.add_argument("--cases")
     ap.add_argument("--cfg", choices=tuple(FIELD_CFGS))
@@ -771,9 +813,11 @@ def main():
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--out")
     ap.add_argument("--source-commit", default="")
+    ap.add_argument("--lever-only", action="store_true", help="qelem-lever: the record exists; write the lever only")
+    ap.add_argument("--field-layers", default="20", help="field: layers to run (comma list) or 'all' (full S81 plan)")
     a = ap.parse_args()
     return dict(static=cmd_static, edges=cmd_edges, field=cmd_field, units=cmd_units, compose=cmd_compose,
-                record=cmd_record)[a.cmd](a)
+                record=cmd_record, **{"qelem-lever": cmd_qelem_lever})[a.cmd](a)
 
 
 if __name__ == "__main__":

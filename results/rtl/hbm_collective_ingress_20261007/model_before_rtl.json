@@ -1,0 +1,144 @@
+{
+  "status": "MODEL_BEFORE_NATIVE_RTL_DEFAULT_OFF",
+  "ports": 8,
+  "per_port_window": 64,
+  "conservation": "Every source starts at zero. Initial acknowledged grant64 permits at most64 reservations. Outstanding = reserved unsent + physical forward flight + landing unread/pending/held + CDC storage/held + WSTG + RX packet unread/pending/held. Only actual final RX packet retirement returns credit.",
+  "landing": {
+    "implementation": "Existing ot_hbm_collective_packet_fifo ENABLE1 DEPTH64, single pclk domain before protected receive CDC",
+    "replicas": 8,
+    "macros_per_replica": 3,
+    "added_macros": 24,
+    "payload_bits": 279040,
+    "logical_encoded_bits": 331776,
+    "physical_sram_bits": 1572864,
+    "held_encoded_bits": 5184,
+    "control_plus_seal_bits": 800,
+    "raw_macro_area_um2": 170201.08800000002,
+    "macro_reservation_at_55_percent_um2": 309456.5236363636,
+    "write_bytes_per_port_cycle": 96,
+    "read_bytes_per_port_cycle": 96,
+    "payload_boundary_bits_per_cycle": 545,
+    "macro_boundary_bits_per_cycle": 768,
+    "write_II": 1,
+    "read_II": 3,
+    "push_to_visible_cycles": 2,
+    "capacity_proof": "Even if downstream refuses indefinitely, at most64 total outstanding flits can arrive. Landing holds64 independently of CDC pointer coherence or scrub. If landing count64, no additional legal arrival exists until final retirement returns a credit; a same-edge full pop cannot authorize an extra arrival.",
+    "fault_contract": "Control seal mismatch and payload UE suppress valid before consumption and assert fault. This is quarantine of the current transaction, not transparent repair or successful completion. Data CE is corrected on read. No-ready PHY traffic following a fatal landing fault cannot be claimed retained; coordinated physical purge and transaction recovery required."
+  },
+  "synchronous_packet_macros_total": 99,
+  "synchronous_packet_raw_macro_area_um2": 702079.488,
+  "cdc": {
+    "status": "II1_REFILL_CANDIDATE_NOT_ADOPTED",
+    "width": 545,
+    "depth": 64,
+    "replicas": 16,
+    "implementation": "Encoded dual-clock flop storage, protected local pointers/head reused from W2; registered Gray/complement rails through2sync stages",
+    "payload_bits": 558080,
+    "encoded_storage_bits": 663552,
+    "protected_banks_bits_per_fifo": 1872,
+    "protected_banks_failure_rails_per_fifo": 6,
+    "gray_rails_bits_per_fifo": 84,
+    "ports": {
+      "write_bits_per_wclk": 648,
+      "read_capture_bits_per_rclk": 648,
+      "read": 1,
+      "write": 1
+    },
+    "compute": {
+      "macs_per_cycle": 0,
+      "encode_slices": 9,
+      "head_check_slices": 9
+    },
+    "normal_timing": {
+      "read_initiation_interval": 1,
+      "empty_start_capture_plus_validate_cycles": 2,
+      "gray_sync_stages": 2,
+      "credit_return": "readpointer only upon acceptedpop; no same-cycle creditreuse"
+    },
+    "fault_timing": "singleerror repair holds bank for fivephase sequence per faultyword; no guessed finite latency on incoherent CDC rails",
+    "boundary": {
+      "core_period_ps": 833.333333,
+      "link_period_ps": 833.333333,
+      "relationship": "asynchronous",
+      "reset": "coordinated coldPOR, independent asyncassert/syncrelease from actual die entry; no unilateral runtime reset"
+    },
+    "area": "flopcount sized above; SS/FFcell mapping/area/floorplan pending, no2mm\u00b2fit claim",
+    "composed_cost": "Retains2empty-startreadcycles, removes2bubbles per sustainedlaterpop versusII3. Native endpoint latency/calendars unmeasured.",
+    "routing": "545payload bits +Gray/complement28bits across two clockregions per FIFO; physicalroute length/track capacity pending",
+    "predecessor": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv AW3 implementation preserved",
+    "adoption_gates": [
+      "independentclock full64depth exactness",
+      "storage/pointer/rail corruption",
+      "coordinatedreset/drain",
+      "fullnativeTU creditcapacity/latency",
+      "contextualmacro/cell SS/FF physical closure"
+    ],
+    "additional_state_bits": 0,
+    "new_logic": "Nextbinary/Gray pointer availability check and captureaddressselect; pop/refill loads nextencodedword into sameprotectedhead bank, CE/UE permissionsremain failclosed",
+    "service_contract": "II1 only for continuously available fault-free words and readyconsumer; correction pauses and empty startup explicitlypriced",
+    "actual_credit_producer": "Separate acknowledged grant/retirement protocol stillrequired; II1 is not substitute for finiteadvertisedcredits",
+    "physical_risk": "64:1encodedreadmux +captureaddress/path checks; actualSS/FFmapping required beforeclaimingII1clockclosure"
+  },
+  "credit": {
+    "status": "MODEL_BEFORE_RTL_DEFAULT_OFF",
+    "window_flits": 64,
+    "invariant": "reserved_not_finally_retired = PHY forward flight + CDC including held head + WSTG + RX packet queue including held head <=64",
+    "payload_bits": 545,
+    "message_data_bits": 64,
+    "message_encoded_bits": 72,
+    "message_layout": {
+      "kind": 8,
+      "epoch": 24,
+      "sequence": 24,
+      "count": 8
+    },
+    "per_port_state_encoded_bits": {
+      "receiver": 216,
+      "sender": 216
+    },
+    "all_8_ports_state_encoded_bits": 3456,
+    "boundary_bits_per_cycle": {
+      "data_reservation": 1,
+      "final_retirement": 1,
+      "grant_transport_max": 72,
+      "ack_transport_max": 72
+    },
+    "compute": "zero MACs; SECDED decoders, increment/decrement, comparison and 72-bit muxes; mapped area/routing/fanout unresolved",
+    "ports": "3 protected64bit state words per endpoint, each read/decode and write/encode per cycle; 27 bytes read +27 bytes written per endpoint cycle",
+    "replicas": 8,
+    "floorplan": "unplaced; eight per-port pairs, provider source may reside on another die; no slot-fit claim",
+    "protocol": "stop-and-wait grant seq; ACK exact epoch/seq/count; repeated grant reACK without credit; stale ignored; sequence exhaustion fails closed; no timeout-generated regrant",
+    "reset": "external coordinated cold reset flushes data and control transport and both endpoint states; start once with trusted fresh epoch only after quiescence, no context-arm/go coupling; epoch wrap forbidden by provider",
+    "source": "starts zero; reserve valid/ready handshake is the admission point strictly before PHY launch; transport must retain reserved flit until final retirement or coordinated reset",
+    "receiver": "initial64; only final queue retirement accrues returns; CDC pop never returns credit; debt bounds retirement accounting",
+    "serialization": "two72bit messages per grant transaction, plus provider framing/FEC. If control link width B and overhead F, each direction costs ceil((72+F)/B) link cycles; B/F unknown, no free transport",
+    "cdc": "grant/ACK adapters must transport valid-ready atomically with finite storage; synchronizer/CDC delays unknown and not implemented here",
+    "latency": "initial source grant acceptance then >=1 cycle to first reservation; subsequent grants need one receiver scheduling cycle after ACK. stop/wait RTT bounds credit replenishment; formula min(1/3,64/(forward+CDC+14+visibility+downstreamstall+return)), additionally stop/wait batching cap",
+    "physical_forward_cycles": null,
+    "physical_return_cycles": null,
+    "transport_framing_bits": null,
+    "qualification": "functional minimal synchronous component pair only; actual PHY/source binding, external epoch/reset provider, native integration, SS/FF route absent"
+  },
+  "flight": "Separate protected elastic D14 W545 component, model hbm_collective_flight_model.py when available. Real input ready gates queue pop; output held until protected CDC accepts. Existing unstallable delay cannot be connected to a pausing protected CDC.",
+  "native_retirement": "Gate both partial dispatch and result delivery selection with per-port credit_rx.final_retire_ready BEFORE rb_pop and delivery effects. Credit return sees exactly that accepted rb_pop. Landing pop, CDC pop and flight advance never return end-to-end credits.",
+  "source_reservation": "Real credit_source reserve handshake gates source queue removal before physical launch. Already reserved flits may drain after session closes new admission; cold reset/provider fences all eight ports.",
+  "control_transport": "Grant and ACK messages remain72 encoded bits. Real protected valid/ready CDC plus physical management transport must be bound; no ideal zero-time wire credited.",
+  "clock_reset": "Core and link are independent833.333ps inputs with local reset_entry release. Only coordinated cold session may purge queues/credits. Context arm does not reset pointers or epochs.",
+  "compute": "Zero new MACs; eight sets of nine SECDED encoders/decoders, control comparison and queue selection. Actual standard-cell area and mux/control fanout pending mapped inventory.",
+  "routing": "Added24 real SRAM macros with768-bit per-queue memory buses. Track count, pin locations, halos and clock distribution unmeasured; no inherited reduced collective slot.",
+  "latency": {
+    "minimum_added_receive_visibility_link_cycles": 2,
+    "landing_service_flits_per_link_cycle": 0.3333333333333333,
+    "composed_endpoint_cycles": null,
+    "single_user_token_delta_ns": null,
+    "required_measurement": "Replay full PF384 native calendar with real initial grants, final-only return, landing/CDC/flight/RX occupancy and independent clock phase. Measure two extra landing visibility cycles plus II3 contention; do not add unmatched earlier529/531 endpoint numbers."
+  },
+  "adoption_holds": [
+    "native fullshape exactness and negative controls",
+    "source and receiver conservation over all real flight stages",
+    "actual PHY/control transport binding",
+    "coordinated clock/reset composition",
+    "mapped retained protection inventory",
+    "SS/FF route and complete floorplan/token composition"
+  ]
+}

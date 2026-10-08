@@ -2,16 +2,27 @@
  "schema": "opentallas.dsrom-s81-rack.v1",
  "tool": "tools/dsrom_s81_rack.py",
  "decision_links": "OWNER 2026-10-06: full RS(544,514) FEC on every off-package link (board, in-rack cable, rack to rack) for both the DS ROM array and the HBM accelerator; light FEC is not used anywhere. In-package UCIe keeps its own spec.",
+ "geometry": {
+  "field_geom": "f183.60",
+  "stages": 85,
+  "layer_dies": 340,
+  "s81_stages": 81,
+  "extra_stages": 4,
+  "label": "Z20c FH 177.12 (QX=10 CLOSED, 11 slots)",
+  "pairs_per_layer_die": 2304,
+  "src": "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json geoms['f183.60'] (default QELEM, owner go 3661e31c6)"
+ },
  "counts": {
-  "stages": 81,
-  "layer": 324,
+  "stages": 85,
+  "layer": 340,
   "head": 12,
   "table": 36,
   "draft": 52,
-  "dies": 424,
+  "dies": 440,
   "src": {
    "head": "results/uarch/dsrom_l2_head_mac_20261004/model.json verdict.recommended_head_dies (owner-adopted 12, codex_notes 2026-10-04 '12 head dies / 372 total stay'); results/rtl/dsrom_recovery_20261004/levers/head.json 'per head die (1 of 12)'",
-   "table": "results/uarch/dsrom_l2_head_mac_20261004/model.json head_groups['12'].total_dies 372 - 324 layer - 12 head",
+   "stages": "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json geoms['f183.60'] stages / layer_dies (adopted element frame, tools/dsrom_1m_allmeasured_adapters.FIELD_GEOM; S81 = 81 stages)",
+   "table": "results/uarch/dsrom_l2_head_mac_20261004/model.json head_groups['12'].total_dies 372 - 324 S81 layer - 12 head",
    "draft": "results/rtl/dsrom_recovery_20261004/levers/draft.json dies_added (DP1-EP5)"
   }
  },
@@ -25,18 +36,18 @@
   },
   "scan_stages": [
    4,
-   16,
-   28,
-   40,
-   48,
-   56,
-   64,
-   72
+   17,
+   30,
+   42,
+   51,
+   59,
+   67,
+   76
   ],
   "scan_dies": 32,
-  "total": 468,
-  "rule_4S_plus_128_at_8_head": 452,
-  "src": "results/uarch/dsrom_return_storage_hbm_20261003/HANDOFF_SCENARIO_C.md line 17 (scenario C: 4 stacks on the 32 index-scanning rank dies, 1 on the other rank dies, 4 on each head die; tables none); scan stages results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json scan_service_homes (provisional homes: the count, 32 dies, is what the stacks need)",
+  "total": 484,
+  "rule_4S_plus_128_at_8_head": 468,
+  "src": "results/uarch/dsrom_return_storage_hbm_20261003/HANDOFF_SCENARIO_C.md line 17 (scenario C: 4 stacks on the 32 index-scanning rank dies, 1 on the other rank dies, 4 on each head die; tables none); scan stages results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json scan_service_homes (provisional homes: the count, 32 dies, is what the stacks need); at 85 stages the S81 homes [4, 16, 28, 40, 48, 56, 64, 72] are scaled to the 78 matrix stages (provisional)",
   "note": "the power model's 452 (tools/dsrom_c_recheck.py stacks = 4S + 128) is this rule with 8 head dies; draft expert replicas (DP1-EP5) hold no per-user state, the drafter's KV rides on the head dies' stacks as in scenario C"
  },
  "die_w": {
@@ -46,15 +57,15 @@
   "src": "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json scan_die_power.total_saturated_w (busiest layer die, used for every layer and draft die); tools/dsrom_c_recheck.py (HEAD_W + TABLE_W) / HEAD_TABLE_DIES (C1 ledger: one W a head or table die); results/arch/v41_rack.json hbm3e_stack_static_w"
  },
  "packing": {
-  "rule": "2 consecutive stages a 1 OU tray of 4 two-die packages (board link between them); the stage chain is a U over two racks (R1 top -> bottom, across at the bottom, R2 bottom -> top, above the Engram table trays); head trays beside S0 (8-traversal token return on the shortest cable), draft trays beside the head trays; Engram tables at the bottom of R2 (lifts S80 to the head trays' height)",
-  "minimum": "81 stages at 2 a tray = 41 trays: 40 board hops + 40 cable hops is the minimum; one stage hop crosses racks (S81 does not fit one 44 OU rack with its power shelves)",
+  "rule": "2 consecutive stages a 1 OU tray of 4 two-die packages (board link between them); the stage chain is a U over two racks (R1 top -> bottom, across at the bottom, R2 bottom -> top, above the Engram table trays); head trays beside S0 (8-traversal token return on the shortest cable), draft trays beside the head trays; Engram tables at the bottom of R2 (lifts S84 to the head trays' height)",
+  "minimum": "85 stages at 2 a tray = 43 trays: 42 board hops + 42 cable hops is the minimum; one stage hop crosses racks (S85 does not fit one 44 OU rack with its power shelves)",
   "r1_stages": [
    0,
    53
   ],
   "r2_stages": [
    54,
-   80
+   84
   ],
   "rack_crossing": {
    "src": "S53",
@@ -145,7 +156,7 @@
      "ou": 6,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S50 + S51",
+     "label": "stage tray S50 + S51 (scan die: S51, 4 stacks)",
      "pk": [
       {
        "id": 100,
@@ -175,7 +186,7 @@
         "s51r1"
        ],
        "s": 51,
-       "k": 1
+       "k": 4
       },
       {
        "id": 103,
@@ -185,17 +196,17 @@
         "s51r3"
        ],
        "s": 51,
-       "k": 1
+       "k": 4
       }
      ],
-     "w": 695.2,
-     "stacks": 8
+     "w": 728.8,
+     "stacks": 20
     },
     {
      "ou": 7,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S48 + S49 (scan die: S48, 4 stacks)",
+     "label": "stage tray S48 + S49",
      "pk": [
       {
        "id": 96,
@@ -205,7 +216,7 @@
         "s48r1"
        ],
        "s": 48,
-       "k": 4
+       "k": 1
       },
       {
        "id": 97,
@@ -215,7 +226,7 @@
         "s48r3"
        ],
        "s": 48,
-       "k": 4
+       "k": 1
       },
       {
        "id": 98,
@@ -238,8 +249,8 @@
        "k": 1
       }
      ],
-     "w": 728.8,
-     "stacks": 20
+     "w": 695.2,
+     "stacks": 8
     },
     {
      "ou": 8,
@@ -345,7 +356,7 @@
      "ou": 10,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S42 + S43",
+     "label": "stage tray S42 + S43 (scan die: S42, 4 stacks)",
      "pk": [
       {
        "id": 84,
@@ -355,7 +366,7 @@
         "s42r1"
        ],
        "s": 42,
-       "k": 1
+       "k": 4
       },
       {
        "id": 85,
@@ -365,7 +376,7 @@
         "s42r3"
        ],
        "s": 42,
-       "k": 1
+       "k": 4
       },
       {
        "id": 86,
@@ -388,14 +399,14 @@
        "k": 1
       }
      ],
-     "w": 695.2,
-     "stacks": 8
+     "w": 728.8,
+     "stacks": 20
     },
     {
      "ou": 11,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S40 + S41 (scan die: S40, 4 stacks)",
+     "label": "stage tray S40 + S41",
      "pk": [
       {
        "id": 80,
@@ -405,7 +416,7 @@
         "s40r1"
        ],
        "s": 40,
-       "k": 4
+       "k": 1
       },
       {
        "id": 81,
@@ -415,7 +426,7 @@
         "s40r3"
        ],
        "s": 40,
-       "k": 4
+       "k": 1
       },
       {
        "id": 82,
@@ -438,8 +449,8 @@
        "k": 1
       }
      ],
-     "w": 728.8,
-     "stacks": 20
+     "w": 695.2,
+     "stacks": 8
     },
     {
      "ou": 12,
@@ -645,7 +656,7 @@
      "ou": 16,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S30 + S31",
+     "label": "stage tray S30 + S31 (scan die: S30, 4 stacks)",
      "pk": [
       {
        "id": 60,
@@ -655,7 +666,7 @@
         "s30r1"
        ],
        "s": 30,
-       "k": 1
+       "k": 4
       },
       {
        "id": 61,
@@ -665,7 +676,7 @@
         "s30r3"
        ],
        "s": 30,
-       "k": 1
+       "k": 4
       },
       {
        "id": 62,
@@ -688,14 +699,14 @@
        "k": 1
       }
      ],
-     "w": 695.2,
-     "stacks": 8
+     "w": 728.8,
+     "stacks": 20
     },
     {
      "ou": 17,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S28 + S29 (scan die: S28, 4 stacks)",
+     "label": "stage tray S28 + S29",
      "pk": [
       {
        "id": 56,
@@ -705,7 +716,7 @@
         "s28r1"
        ],
        "s": 28,
-       "k": 4
+       "k": 1
       },
       {
        "id": 57,
@@ -715,7 +726,7 @@
         "s28r3"
        ],
        "s": 28,
-       "k": 4
+       "k": 1
       },
       {
        "id": 58,
@@ -738,8 +749,8 @@
        "k": 1
       }
      ],
-     "w": 728.8,
-     "stacks": 20
+     "w": 695.2,
+     "stacks": 8
     },
     {
      "ou": 18,
@@ -995,7 +1006,7 @@
      "ou": 23,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S16 + S17 (scan die: S16, 4 stacks)",
+     "label": "stage tray S16 + S17 (scan die: S17, 4 stacks)",
      "pk": [
       {
        "id": 32,
@@ -1005,7 +1016,7 @@
         "s16r1"
        ],
        "s": 16,
-       "k": 4
+       "k": 1
       },
       {
        "id": 33,
@@ -1015,7 +1026,7 @@
         "s16r3"
        ],
        "s": 16,
-       "k": 4
+       "k": 1
       },
       {
        "id": 34,
@@ -1025,7 +1036,7 @@
         "s17r1"
        ],
        "s": 17,
-       "k": 1
+       "k": 4
       },
       {
        "id": 35,
@@ -1035,7 +1046,7 @@
         "s17r3"
        ],
        "s": 17,
-       "k": 1
+       "k": 4
       }
      ],
      "w": 728.8,
@@ -1448,7 +1459,7 @@
      "label": "head tray 0: embed, LM head, norm",
      "pk": [
       {
-       "id": 162,
+       "id": 170,
        "r": "head",
        "d": [
         "h0",
@@ -1457,7 +1468,7 @@
        "k": 4
       },
       {
-       "id": 163,
+       "id": 171,
        "r": "head",
        "d": [
         "h2",
@@ -1466,7 +1477,7 @@
        "k": 4
       },
       {
-       "id": 164,
+       "id": 172,
        "r": "head",
        "d": [
         "h4",
@@ -1475,7 +1486,7 @@
        "k": 4
       },
       {
-       "id": 165,
+       "id": 173,
        "r": "head",
        "d": [
         "h6",
@@ -1494,7 +1505,7 @@
      "label": "head tray 1: embed, LM head, norm",
      "pk": [
       {
-       "id": 166,
+       "id": 174,
        "r": "head",
        "d": [
         "h8",
@@ -1503,7 +1514,7 @@
        "k": 4
       },
       {
-       "id": 167,
+       "id": 175,
        "r": "head",
        "d": [
         "h10",
@@ -1522,7 +1533,7 @@
      "label": "draft tray 0 (DP1-EP5 expert replicas)",
      "pk": [
       {
-       "id": 186,
+       "id": 194,
        "r": "draft",
        "d": [
         "d0",
@@ -1531,7 +1542,7 @@
        "k": 0
       },
       {
-       "id": 187,
+       "id": 195,
        "r": "draft",
        "d": [
         "d2",
@@ -1540,7 +1551,7 @@
        "k": 0
       },
       {
-       "id": 188,
+       "id": 196,
        "r": "draft",
        "d": [
         "d4",
@@ -1549,7 +1560,7 @@
        "k": 0
       },
       {
-       "id": 189,
+       "id": 197,
        "r": "draft",
        "d": [
         "d6",
@@ -1568,7 +1579,7 @@
      "label": "draft tray 1 (DP1-EP5 expert replicas)",
      "pk": [
       {
-       "id": 190,
+       "id": 198,
        "r": "draft",
        "d": [
         "d8",
@@ -1577,7 +1588,7 @@
        "k": 0
       },
       {
-       "id": 191,
+       "id": 199,
        "r": "draft",
        "d": [
         "d10",
@@ -1586,7 +1597,7 @@
        "k": 0
       },
       {
-       "id": 192,
+       "id": 200,
        "r": "draft",
        "d": [
         "d12",
@@ -1595,7 +1606,7 @@
        "k": 0
       },
       {
-       "id": 193,
+       "id": 201,
        "r": "draft",
        "d": [
         "d14",
@@ -1614,7 +1625,7 @@
      "label": "draft tray 2 (DP1-EP5 expert replicas)",
      "pk": [
       {
-       "id": 194,
+       "id": 202,
        "r": "draft",
        "d": [
         "d16",
@@ -1623,7 +1634,7 @@
        "k": 0
       },
       {
-       "id": 195,
+       "id": 203,
        "r": "draft",
        "d": [
         "d18",
@@ -1632,7 +1643,7 @@
        "k": 0
       },
       {
-       "id": 196,
+       "id": 204,
        "r": "draft",
        "d": [
         "d20",
@@ -1641,7 +1652,7 @@
        "k": 0
       },
       {
-       "id": 197,
+       "id": 205,
        "r": "draft",
        "d": [
         "d22",
@@ -1660,7 +1671,7 @@
      "label": "draft tray 3 (DP1-EP5 expert replicas)",
      "pk": [
       {
-       "id": 198,
+       "id": 206,
        "r": "draft",
        "d": [
         "d24",
@@ -1669,7 +1680,7 @@
        "k": 0
       },
       {
-       "id": 199,
+       "id": 207,
        "r": "draft",
        "d": [
         "d26",
@@ -1678,7 +1689,7 @@
        "k": 0
       },
       {
-       "id": 200,
+       "id": 208,
        "r": "draft",
        "d": [
         "d28",
@@ -1687,7 +1698,7 @@
        "k": 0
       },
       {
-       "id": 201,
+       "id": 209,
        "r": "draft",
        "d": [
         "d30",
@@ -1706,7 +1717,7 @@
      "label": "draft tray 4 (DP1-EP5 expert replicas)",
      "pk": [
       {
-       "id": 202,
+       "id": 210,
        "r": "draft",
        "d": [
         "d32",
@@ -1715,7 +1726,7 @@
        "k": 0
       },
       {
-       "id": 203,
+       "id": 211,
        "r": "draft",
        "d": [
         "d34",
@@ -1724,7 +1735,7 @@
        "k": 0
       },
       {
-       "id": 204,
+       "id": 212,
        "r": "draft",
        "d": [
         "d36",
@@ -1733,7 +1744,7 @@
        "k": 0
       },
       {
-       "id": 205,
+       "id": 213,
        "r": "draft",
        "d": [
         "d38",
@@ -1752,7 +1763,7 @@
      "label": "draft tray 5 (DP1-EP5 expert replicas)",
      "pk": [
       {
-       "id": 206,
+       "id": 214,
        "r": "draft",
        "d": [
         "d40",
@@ -1761,7 +1772,7 @@
        "k": 0
       },
       {
-       "id": 207,
+       "id": 215,
        "r": "draft",
        "d": [
         "d42",
@@ -1770,7 +1781,7 @@
        "k": 0
       },
       {
-       "id": 208,
+       "id": 216,
        "r": "draft",
        "d": [
         "d44",
@@ -1779,7 +1790,7 @@
        "k": 0
       },
       {
-       "id": 209,
+       "id": 217,
        "r": "draft",
        "d": [
         "d46",
@@ -1798,7 +1809,7 @@
      "label": "draft tray 6 (DP1-EP5 expert replicas)",
      "pk": [
       {
-       "id": 210,
+       "id": 218,
        "r": "draft",
        "d": [
         "d48",
@@ -1807,7 +1818,7 @@
        "k": 0
       },
       {
-       "id": 211,
+       "id": 219,
        "r": "draft",
        "d": [
         "d50",
@@ -1871,7 +1882,7 @@
      "label": "Engram table tray 0",
      "pk": [
       {
-       "id": 168,
+       "id": 176,
        "r": "table",
        "d": [
         "t0",
@@ -1880,7 +1891,7 @@
        "k": 0
       },
       {
-       "id": 169,
+       "id": 177,
        "r": "table",
        "d": [
         "t2",
@@ -1889,7 +1900,7 @@
        "k": 0
       },
       {
-       "id": 170,
+       "id": 178,
        "r": "table",
        "d": [
         "t4",
@@ -1898,7 +1909,7 @@
        "k": 0
       },
       {
-       "id": 171,
+       "id": 179,
        "r": "table",
        "d": [
         "t6",
@@ -1917,7 +1928,7 @@
      "label": "Engram table tray 1",
      "pk": [
       {
-       "id": 172,
+       "id": 180,
        "r": "table",
        "d": [
         "t8",
@@ -1926,7 +1937,7 @@
        "k": 0
       },
       {
-       "id": 173,
+       "id": 181,
        "r": "table",
        "d": [
         "t10",
@@ -1935,7 +1946,7 @@
        "k": 0
       },
       {
-       "id": 174,
+       "id": 182,
        "r": "table",
        "d": [
         "t12",
@@ -1944,7 +1955,7 @@
        "k": 0
       },
       {
-       "id": 175,
+       "id": 183,
        "r": "table",
        "d": [
         "t14",
@@ -1963,7 +1974,7 @@
      "label": "Engram table tray 2",
      "pk": [
       {
-       "id": 176,
+       "id": 184,
        "r": "table",
        "d": [
         "t16",
@@ -1972,7 +1983,7 @@
        "k": 0
       },
       {
-       "id": 177,
+       "id": 185,
        "r": "table",
        "d": [
         "t18",
@@ -1981,7 +1992,7 @@
        "k": 0
       },
       {
-       "id": 178,
+       "id": 186,
        "r": "table",
        "d": [
         "t20",
@@ -1990,7 +2001,7 @@
        "k": 0
       },
       {
-       "id": 179,
+       "id": 187,
        "r": "table",
        "d": [
         "t22",
@@ -2009,7 +2020,7 @@
      "label": "Engram table tray 3",
      "pk": [
       {
-       "id": 180,
+       "id": 188,
        "r": "table",
        "d": [
         "t24",
@@ -2018,7 +2029,7 @@
        "k": 0
       },
       {
-       "id": 181,
+       "id": 189,
        "r": "table",
        "d": [
         "t26",
@@ -2027,7 +2038,7 @@
        "k": 0
       },
       {
-       "id": 182,
+       "id": 190,
        "r": "table",
        "d": [
         "t28",
@@ -2036,7 +2047,7 @@
        "k": 0
       },
       {
-       "id": 183,
+       "id": 191,
        "r": "table",
        "d": [
         "t30",
@@ -2055,7 +2066,7 @@
      "label": "Engram table tray 4",
      "pk": [
       {
-       "id": 184,
+       "id": 192,
        "r": "table",
        "d": [
         "t32",
@@ -2064,7 +2075,7 @@
        "k": 0
       },
       {
-       "id": 185,
+       "id": 193,
        "r": "table",
        "d": [
         "t34",
@@ -2130,7 +2141,7 @@
      "ou": 9,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S56 + S57 (scan die: S56, 4 stacks)",
+     "label": "stage tray S56 + S57",
      "pk": [
       {
        "id": 112,
@@ -2140,7 +2151,7 @@
         "s56r1"
        ],
        "s": 56,
-       "k": 4
+       "k": 1
       },
       {
        "id": 113,
@@ -2150,7 +2161,7 @@
         "s56r3"
        ],
        "s": 56,
-       "k": 4
+       "k": 1
       },
       {
        "id": 114,
@@ -2173,14 +2184,14 @@
        "k": 1
       }
      ],
-     "w": 728.8,
-     "stacks": 20
+     "w": 695.2,
+     "stacks": 8
     },
     {
      "ou": 10,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S58 + S59",
+     "label": "stage tray S58 + S59 (scan die: S59, 4 stacks)",
      "pk": [
       {
        "id": 116,
@@ -2210,7 +2221,7 @@
         "s59r1"
        ],
        "s": 59,
-       "k": 1
+       "k": 4
       },
       {
        "id": 119,
@@ -2220,11 +2231,11 @@
         "s59r3"
        ],
        "s": 59,
-       "k": 1
+       "k": 4
       }
      ],
-     "w": 695.2,
-     "stacks": 8
+     "w": 728.8,
+     "stacks": 20
     },
     {
      "ou": 11,
@@ -2330,7 +2341,7 @@
      "ou": 13,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S64 + S65 (scan die: S64, 4 stacks)",
+     "label": "stage tray S64 + S65",
      "pk": [
       {
        "id": 128,
@@ -2340,7 +2351,7 @@
         "s64r1"
        ],
        "s": 64,
-       "k": 4
+       "k": 1
       },
       {
        "id": 129,
@@ -2350,7 +2361,7 @@
         "s64r3"
        ],
        "s": 64,
-       "k": 4
+       "k": 1
       },
       {
        "id": 130,
@@ -2373,14 +2384,14 @@
        "k": 1
       }
      ],
-     "w": 728.8,
-     "stacks": 20
+     "w": 695.2,
+     "stacks": 8
     },
     {
      "ou": 14,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S66 + S67",
+     "label": "stage tray S66 + S67 (scan die: S67, 4 stacks)",
      "pk": [
       {
        "id": 132,
@@ -2410,7 +2421,7 @@
         "s67r1"
        ],
        "s": 67,
-       "k": 1
+       "k": 4
       },
       {
        "id": 135,
@@ -2420,11 +2431,11 @@
         "s67r3"
        ],
        "s": 67,
-       "k": 1
+       "k": 4
       }
      ],
-     "w": 695.2,
-     "stacks": 8
+     "w": 728.8,
+     "stacks": 20
     },
     {
      "ou": 15,
@@ -2530,7 +2541,7 @@
      "ou": 17,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S72 + S73 (scan die: S72, 4 stacks)",
+     "label": "stage tray S72 + S73",
      "pk": [
       {
        "id": 144,
@@ -2540,7 +2551,7 @@
         "s72r1"
        ],
        "s": 72,
-       "k": 4
+       "k": 1
       },
       {
        "id": 145,
@@ -2550,7 +2561,7 @@
         "s72r3"
        ],
        "s": 72,
-       "k": 4
+       "k": 1
       },
       {
        "id": 146,
@@ -2573,8 +2584,8 @@
        "k": 1
       }
      ],
-     "w": 728.8,
-     "stacks": 20
+     "w": 695.2,
+     "stacks": 8
     },
     {
      "ou": 18,
@@ -2630,7 +2641,7 @@
      "ou": 19,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S76 + S77",
+     "label": "stage tray S76 + S77 (scan die: S76, 4 stacks)",
      "pk": [
       {
        "id": 152,
@@ -2640,7 +2651,7 @@
         "s76r1"
        ],
        "s": 76,
-       "k": 1
+       "k": 4
       },
       {
        "id": 153,
@@ -2650,7 +2661,7 @@
         "s76r3"
        ],
        "s": 76,
-       "k": 1
+       "k": 4
       },
       {
        "id": 154,
@@ -2673,8 +2684,8 @@
        "k": 1
       }
      ],
-     "w": 695.2,
-     "stacks": 8
+     "w": 728.8,
+     "stacks": 20
     },
     {
      "ou": 20,
@@ -2730,7 +2741,7 @@
      "ou": 21,
      "h": 1,
      "kind": "stage",
-     "label": "stage tray S80",
+     "label": "stage tray S80 + S81",
      "pk": [
       {
        "id": 160,
@@ -2751,28 +2762,128 @@
        ],
        "s": 80,
        "k": 1
+      },
+      {
+       "id": 162,
+       "r": "stage",
+       "d": [
+        "s81r0",
+        "s81r1"
+       ],
+       "s": 81,
+       "k": 1
+      },
+      {
+       "id": 163,
+       "r": "stage",
+       "d": [
+        "s81r2",
+        "s81r3"
+       ],
+       "s": 81,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 22,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S82 + S83",
+     "pk": [
+      {
+       "id": 164,
+       "r": "stage",
+       "d": [
+        "s82r0",
+        "s82r1"
+       ],
+       "s": 82,
+       "k": 1
+      },
+      {
+       "id": 165,
+       "r": "stage",
+       "d": [
+        "s82r2",
+        "s82r3"
+       ],
+       "s": 82,
+       "k": 1
+      },
+      {
+       "id": 166,
+       "r": "stage",
+       "d": [
+        "s83r0",
+        "s83r1"
+       ],
+       "s": 83,
+       "k": 1
+      },
+      {
+       "id": 167,
+       "r": "stage",
+       "d": [
+        "s83r2",
+        "s83r3"
+       ],
+       "s": 83,
+       "k": 1
+      }
+     ],
+     "w": 695.2,
+     "stacks": 8
+    },
+    {
+     "ou": 23,
+     "h": 1,
+     "kind": "stage",
+     "label": "stage tray S84",
+     "pk": [
+      {
+       "id": 168,
+       "r": "stage",
+       "d": [
+        "s84r0",
+        "s84r1"
+       ],
+       "s": 84,
+       "k": 1
+      },
+      {
+       "id": 169,
+       "r": "stage",
+       "d": [
+        "s84r2",
+        "s84r3"
+       ],
+       "s": 84,
+       "k": 1
       }
      ],
      "w": 347.6,
      "stacks": 4
     },
     {
-     "ou": 22,
+     "ou": 24,
      "h": 1,
      "kind": "mgmt",
      "label": "management switch (1 GbE OOB) + leak detection"
     }
    ],
-   "used_ou": 22,
-   "dies": 144,
-   "packages": 72,
-   "trays": 19,
-   "stacks": 144,
-   "chips_kw": 12.81,
-   "wall_kw": 15.99,
-   "prov_kw": 19.19,
+   "used_ou": 24,
+   "dies": 160,
+   "packages": 80,
+   "trays": 21,
+   "stacks": 160,
+   "chips_kw": 14.2,
+   "wall_kw": 17.71,
+   "prov_kw": 21.26,
    "shelves": 2,
-   "kg": 654
+   "kg": 698
   }
  ],
  "link_basis": {
@@ -3859,17 +3970,69 @@
    "retimer_ns": 0.0,
    "extra_cycles": 4,
    "hop_cycles": 1008
+  },
+  {
+   "src": "S80",
+   "dst": "S81",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S81",
+   "dst": "S82",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
+  },
+  {
+   "src": "S82",
+   "dst": "S83",
+   "cls": "in-tray",
+   "what": "stage hop",
+   "length_m": 0.3,
+   "medium": "board trace (<= 0.3 m, inside the 200 ns channel)",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 0.0,
+   "retimer_ns": 0.0,
+   "extra_cycles": 0,
+   "hop_cycles": 1004
+  },
+  {
+   "src": "S83",
+   "dst": "S84",
+   "cls": "in-rack",
+   "what": "stage hop",
+   "length_m": 0.848,
+   "medium": "passive twinax DAC",
+   "fec": "RS(544,514) KP4 (full)",
+   "flight_extra_ns": 2.52,
+   "retimer_ns": 0.0,
+   "extra_cycles": 4,
+   "hop_cycles": 1008
   }
  ],
  "head_hop": {
-  "src": "S80",
+  "src": "S84",
   "dst": "head",
   "cls": "rack-to-rack",
   "what": "head hop (last stage -> head dies)",
-  "length_m": 1.928,
+  "length_m": 1.832,
   "medium": "passive twinax DAC",
   "fec": "RS(544,514) KP4 (full)",
-  "flight_extra_ns": 7.49,
+  "flight_extra_ns": 7.05,
   "retimer_ns": 0.0,
   "extra_cycles": 9,
   "hop_cycles": 1013
@@ -3902,11 +4065,11 @@
  },
  "hop_summary": {
   "stage_hops": {
-   "in-tray": 40,
-   "in-rack": 39,
+   "in-tray": 42,
+   "in-rack": 41,
    "rack-to-rack": 1
   },
-  "stage_hop_extra_cycles": 163,
+  "stage_hop_extra_cycles": 171,
   "head_hop_extra_cycles": 9,
   "token_return_extra_cycles_each": 4,
   "draft_link_extra_cycles_each": 4,
@@ -3921,7 +4084,8 @@
   "results/rtl/dsrom_recovery_20261004/levers/draft.json": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
   "results/uarch/dsrom_return_storage_hbm_20261003/HANDOFF_SCENARIO_C.md": "dbcd252ab1690af56d3e18ae94f4f845076b22a7cee157c2d0632f7d7f9e5343",
   "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json": "20df9f7983c7cfead0614690552559bd2844e72b33c324ecfaa05f3ebdfb3db6",
-  "tools/dsrom_c_recheck.py": "bdf9f4b6245d96be0c76822b5839912e090e1cad2db659765a183113704daa9b"
+  "tools/dsrom_c_recheck.py": "bdf9f4b6245d96be0c76822b5839912e090e1cad2db659765a183113704daa9b",
+  "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json": "3f497ad4c973c56693c45485c043b0c4010b080071a8f5e7e2441ac959910f34"
  },
- "tool_sha256": "a8655e629cb897b162189c70a9ab2f4c5b92282bab2ade5a1ac58dd8cfcf127e"
+ "tool_sha256": "e5c09ccd1cc7addc33d6313ce6046b318580e2e04ee8715b708d1b3e203c0bf2"
 }

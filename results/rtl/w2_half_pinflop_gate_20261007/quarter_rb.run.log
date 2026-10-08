@@ -1,0 +1,19 @@
+CALENDAR_TAP_ACCEPT edge=18
+CALENDAR_ALL_SM edge=161
+CALENDAR_LAST_SM_ACK edge=189
+CALENDAR_QUARTER_ACK edge=381
+CALENDAR_PARENT_RELEASE edge=386
+CALENDAR_WARM_ACK edge=388
+CALENDAR_WARM_ACK edge=389
+CALENDAR_WARM_ACK edge=390
+CALENDAR_WARM_ACK edge=391
+CALENDAR_WARM_ACK edge=392
+CALENDAR_WARM_ACK edge=393
+CALENDAR_WARM_ACK edge=394
+CALENDAR_WARM_ACK edge=395
+CALENDAR_WARM_ACK edge=396
+CALENDAR_WARM_ACK edge=397
+CALENDAR_WARM_ACK edge=398
+CALENDAR_WARM_ACK edge=399
+PASS_NATIVE_QUARTER_PUBLICATION seed=1062026 fanouts=3/3/3/2 sm=8 full73=1 owner192=1 checks=19 heldACK_CE=1 emptyACK_CE=1 warm_debt=1 token16_negative=1 provider_macros=32 extra_macros=0
+/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-half-no2-a4608c553/gate/quarter_rb_tb.sv:256: $finish called at 483332560 (1fs)

@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.dsrom_qs5_fullplan_applicability.v1",
+  "source_commit": "e1fbc25c1",
+  "record_source_commit": "ba69369aa80a58d3a0a78d7376e682d359fcbe3e",
+  "source_hash_checks": {
+    "build_source_sha256": true,
+    "source_sha256": true
+  },
+  "baseline": "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem_qm2.json",
+  "baseline_sha256": "846f11eaa3e20477b9e6d517276ee38430ad9d6b923c7d14457bab8ca71fafb8",
+  "candidate": "results/rtl/fullsys_recheck_20261007/ds_field_qs5/field_pq_qelem_qs5.json",
+  "candidate_sha256": "521003df198da9d38d6f61b4e43c29cdde9edd68a65e1a2240b7897e99089cc3",
+  "node_count": 59,
+  "baseline_cycles": 40058,
+  "candidate_cycles": 40257,
+  "delta_cycles": 199,
+  "delta_pct": 0.49677966947925256,
+  "candidate_exact": true,
+  "claim_boundary": "Measured full-plan representative-node sum vs QM2. This is not the composed per-user token rate; feed node timing and selected geometry into the model before adoption. QS5 physical closure and die-context gates remain pending."
+}

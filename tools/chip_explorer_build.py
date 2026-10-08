@@ -59,12 +59,17 @@ FEC_RULE = 'OWNER 2026-10-06: full RS(544,514) FEC on every off-package link (bo
 
 geo = J(X / 'geo.json')
 irds = J(X / 'hbm_ds_ir.json')
-QIR = 'wt-qwen-die (branch claude/qwen-die-rebuild-20261005, untracked): results/rtl/qwen_rom_die_r17_20261005/ir/ir_record.json'
-qir = J(WT / 'ir_record.json')
+QCL = 'results/rtl/qwen_rom_closed_20261006/closure.json'      # Qwen ROM CLOSED (owner 2026-10-06)
+qcl = J(R / QCL)
+QIR = 'results/rtl/qwen_rom_die_r17_20261005/ir/ir_record.json'
+qir = J(R / QIR)
+QGRT20 = qcl['physical']['die_r20c']['grt_i50']['record']
+qgrt20 = J(R / QGRT20)
 QPS = 'branch claude/qwen-die-rebuild-20261005 @f76c3603b: results/rtl/qwen_rom_die_r17_20261005/path_sta/r17b_i5_skew19.json'
 qps = J(WT / 'r17b_i5_skew19.json')
 QGRT = 'branch claude/qwen-die-rebuild-20261005 @f76c3603b: results/rtl/qwen_rom_die_r17_20261005/grt/r17b_k16_banded_i5/summary.json'
 qgrt = J(WT / 'grt_summary.json')
+QACC = {b['variant']: b for b in qcl['physical']['accepted_blocks']}   # owner-accepted block closures
 HINV = 'results/rtl/hbm_accel_fmax_inventory_20261004/inventory.json'
 PLAN = 'docs/PROGRAM_PLAN_2026_10_05.md'
 ATLAS = 'docs/ARCHITECTURE_ATLAS.html'
@@ -72,8 +77,9 @@ LEV = 'results/rtl/dsrom_recovery_20261004/levers/'
 
 D = {}
 D['meta'] = dict(
-    date=V('2026-10-05', '', 'measured', 'build date of this page'),
-    repo_head=V('06d98ba58', 'commit', 'measured', 'git rev-parse HEAD of /home/ubuntu/OpenTallas at build'),
+    date=V(__import__('datetime').date.today().isoformat(), '', 'measured', 'build date of this page'),
+    repo_head=V(__import__('subprocess').run(['git', 'rev-parse', '--short=9', 'HEAD'], cwd=R, capture_output=True, text=True).stdout.strip(),
+                'commit', 'measured', 'git rev-parse HEAD of the checkout at build'),
     clock=V(1.2, 'GHz', 'analytical', 'every rate assumes 1.2 GHz; full-system SS/FF not qualified (' + PLAN + ' risk 2)'),
     period=V(833, 'ps', 'analytical', 'sign-off clock 0.833 ns, SS setup 60 ps / FF hold 25 ps uncertainty (' + PLAN + ' section 1)'),
     ss_unc=V(60, 'ps', 'analytical', PLAN + ' section 1'),
@@ -84,22 +90,31 @@ D['meta'] = dict(
 
 # ---------------------------------------------------------------- rates (compare)
 q = cmpj['qwen_rom']; ds = cmpj['ds_rom']; hb = cmpj['hbm_ds']
+qlv = q['levers']; qcore = qlv['core_context']
+q_lever_txt = ' + '.join('%s %+d' % (k, v['delta']['cycles']) for k, v in qlv.items() if v['cls'] == 'adopted')
 hrow = hb['rows']['median']
+UCL = 'results/arch/unified_composition_20261007/ledger.json'   # unified candidate composition (2026-10-07)
+ucl = J(R / UCL)['targets']
+uq, uds, uh = ucl['qwen_rom']['compositions'], ucl['ds_rom']['compositions'], ucl['hbm_ds']['compositions']
 qb = qhws['bases']
 D['rates'] = dict(
     qwen=dict(
-        AR=V(q['AR_tok_s'], 'tok/s', 'measured', CMP + ' qwen_rom.AR_tok_s (composed from measured: 193,955 measured cycles + 112 adopted core-context cycles at 1.2 GHz)'),
-        MTP=V(q['MTP_tok_s'], 'tok/s', 'measured', CMP + ' qwen_rom.MTP_tok_s; operating mode AR (DSpark OFF)'),
+        AR=V(q['AR_tok_s'], 'tok/s', 'analytical', CMP + ' qwen_rom.AR_tok_s (CANDIDATE: %s measured cycles + adopted levers %s at 1.2 GHz; the relay term is priced, and Qwen physical closure was reopened 2026-10-07; unified candidate %.1f in %s)' % (format(q['token_cycles_measured'], ','), q_lever_txt, uq['unified_candidate']['AR_tok_s'], UCL)),
+        MTP=V(q['MTP_tok_s'], 'tok/s', 'analytical', CMP + ' qwen_rom.MTP_tok_s; operating mode AR (DSpark OFF; re-evaluated 2026-10-07 in ' + UCL + ')'),
         cycles=V(q['token_cycles'], 'cycles', 'measured', CMP + ' qwen_rom.token_cycles'),
         cycles_measured=V(q['token_cycles_measured'], 'cycles', 'measured', QT + ' total_cycles'),
-        core_ctx=V(112, 'cycles', 'measured', CMP + ' qwen_rom.levers.core_context (r5b_f3ba, SS +0.87 / FF +7.12 ps, exact 5/5)'),
+        core_ctx=V(qcore['delta']['cycles'], 'cycles', 'measured', CMP + ' qwen_rom.levers.core_context (%s, SS %+.2f / FF %+.2f ps, %s)' % (qcore['variant'], qcore['ss_ps'], qcore['ff_ps'], qcore['verdict'])),
+        levers=V([dict(name=k, variant=v.get('variant') or {'kv_map_m': 'KV_MAP=1, Option M'}.get(k, ''), verdict=v['verdict'], cycles=v['delta']['cycles'], dAR_tok_s=v['delta']['AR_tok_s'], record=v['record'])
+                  for k, v in qlv.items() if v['cls'] == 'adopted'], 'cycles', 'measured', CMP + ' qwen_rom.levers (adopted; cycles added to the measured token)'),
+        sens=V(dict(cycles=q['modelled_sensitivity']['cycles'], token_cycles=q['modelled_sensitivity']['token_cycles'], AR=q['modelled_sensitivity']['AR_tok_s']),
+               'tok/s', 'analytical', CMP + ' qwen_rom.modelled_sensitivity (' + q['levers']['kv_map_m']['modelled_not_composed']['status'] + '; not a headline)'),
         AR_us=V(q['AR_us'], 'us', 'measured', CMP + ' qwen_rom.AR_us'),
-        dspark=V(q['dspark_reference']['tok_s'], 'tok/s', 'analytical', 'results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json (partial: tau third-party 3.1445)'),
-        dspark_ratio=V(q['dspark_reference']['speedup_vs_ar'], 'x', 'analytical', 'results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json'),
+        dspark=V(q['dspark_reference']['tok_s'], 'tok/s', 'analytical', 'results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json (partial: tau third-party 3.1445; r21 relays charged)'),
+        dspark_ratio=V(q['dspark_reference']['speedup_vs_ar'], 'x', 'analytical', 'results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json'),
     ),
     ds=dict(
-        AR=V(ds['AR_tok_s'], 'tok/s', 'measured', CMP + ' ds_rom.AR_tok_s (all-measured composition, recovery baseline + adopted levers, every off-package link on full RS(544,514) FEC; measured share ' + str(ds['measured_share']) + ')'),
-        MTP=V(ds['MTP_tok_s'], 'tok/s', 'measured', CMP + ' ds_rom.MTP_tok_s (tau 4.159 owner blend; MTP physical_qualified=false)'),
+        AR=V(ds['AR_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.AR_tok_s (composition with S81 closure costs on the historical 85-stage full-rate-BF geometry, full RS(544,514) FEC; measured share ' + str(ds['measured_share']) + '; the actual 1792 mapping with half-rate BF: %.1f AR as a partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound: %s)' % (uds['actual1792_half_dedicated']['AR_tok_s'], UCL)),
+        MTP=V(ds['MTP_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.MTP_tok_s (tau 4.159 owner blend; MTP physical_qualified=false; 85-stage geometry; 1792 sensitivity %.1f, no bound proven)' % uds['actual1792_half_dedicated']['MTP_tok_s']),
         AR_us=V(ds['AR_us'], 'us', 'measured', CMP + ' ds_rom.AR_us'),
         MTP_step_us=V(ds['MTP_step_us'], 'us', 'measured', CMP + ' ds_rom.MTP_step_us'),
         II_us=V(ds['II_us'], 'us', 'measured', CMP + ' ds_rom.II_us (slowest stage busy + hop)'),
@@ -118,6 +133,10 @@ D['rates'] = dict(
         gate_AR=V(hb['basis']['gate_AR_tok_s'], 'tok/s', 'analytical', MREF + ' gate (matched reference, before die wire)'),
         gate_MTP=V(hb['basis']['gate_MTP_tok_s'], 'tok/s', 'analytical', MREF + ' gate'),
         wire_us=V(hrow['wire_added_us'], 'us', 'analytical', CMP + ' hbm_ds.rows.median.wire_added_us (from ' + HWS + ')'),
+        AR_unified=V(uh['unified_candidate']['AR_tok_s'], 'tok/s', 'analytical', UCL + ' targets.hbm_ds.compositions.unified_candidate (matched gate + r16j die wire + r23 die closure ledger + full FEC + exact levers + priced true-credit/protected-SRAM; candidate, gated items listed; excludes the gated packet-SRAM II=3 rate cap: %.1f AR with the II=1 refill in the CDC only (9ead91a15), %.1f with it in both; full rate also gated on the native credit producer; die-view-only SM-to-SU result edge until gate sm_su_result_edge_native closes: native edge +0.10 %% AR, store-and-forward floor estimate +19.7 %% AR)' % (uh['unified_candidate_refill_cdc_only']['AR_tok_s'], uh['unified_candidate_refill_both']['AR_tok_s'])),
+        MTP_unified=V(uh['unified_candidate']['MTP_tok_s'], 'tok/s', 'analytical', UCL + ' targets.hbm_ds.compositions.unified_candidate.MTP_tok_s'),
+        AR_no_lever=V(uh['closure_fec_no_lever_credit']['AR_tok_s'], 'tok/s', 'analytical', UCL + ' targets.hbm_ds.compositions.closure_fec_no_lever_credit'),
+        closure_us=V(round(uh['unified_candidate']['AR_us'] - hrow['AR_us'], 3), 'us', 'analytical', UCL + ' unified_candidate.AR_us minus the pre-closure median row'),
         levers_us=V(round(hb['basis']['gate_AR_us'] - hb['levers_AR_us'], 3), 'us', 'analytical', CMP + ' hbm_ds.levers (joint_PQ_XMAP -36.416 + paired_W2_PACK -6.133; exact on minimum components, SS/FF not admitted)'),
     ),
     hbm_qwen=dict(
@@ -184,8 +203,11 @@ for i, s in enumerate(segs):
                         cats={k: round(v, 4) for k, v in s['cats'].items()}, n=len(s['nodes']),
                         nodes=s['nodes']))
 D['ds_stages'] = V(seg_out, 'us', 'measured', DSC + ' critical_path[] (1,762 nodes; 1,664 measured, 59 measured+vendor PHY budget, 38 inside-measured); split at each stage hop')
-D['ds_extra_hops'] = V(dict(count=23, us_each=round(dsc['info']['hop_us'], 4), total=dsc['critical_path_us_by_class']['extra_S81_hops']), 'us', 'measured',
-                       DSC + " critical_path_us_by_class.extra_S81_hops; tools/dsrom_1m_measure.py S81_EXTRA_HOPS = 81 - 58 (the S81 build adds 23 stage hops to the S58 graph)",
+_qx_hops = dsc['info'].get('r8_reprice', {}).get('extra_stage_hops', 0)   # default q-element frame (+4 at f183.60)
+_n_extra = 23 + _qx_hops
+assert abs(_n_extra * dsc['info']['hop_us'] - dsc['critical_path_us_by_class']['extra_S81_hops']) < 0.01, 'extra hop count does not reproduce extra_S81_hops'
+D['ds_extra_hops'] = V(dict(count=_n_extra, s81=23, qelem=_qx_hops, us_each=round(dsc['info']['hop_us'], 4), total=dsc['critical_path_us_by_class']['extra_S81_hops']), 'us', 'measured',
+                       DSC + " critical_path_us_by_class.extra_S81_hops; tools/dsrom_1m_measure.py S81_EXTRA_HOPS = 81 - 58 (the S81 build adds 23 stage hops to the S58 graph) + info.r8_reprice.extra_stage_hops (" + str(_qx_hops) + " for the default q-element frame " + str(dsc['info'].get('r8_reprice', {}).get('geom', '')) + ")",
                        note='Where the 23 extra stage boundaries fall is not in the composition record; the ribbon draws them as unplaced hop-only stages.')
 D['ds_by_class'] = V(dsc['critical_path_us_by_class'], 'us', 'measured', DSC + ' critical_path_us_by_class')
 D['ds_mtp'] = V(dict(II=dsc['MTP']['II_us'], verify=dsc['MTP']['verify_us'], draft=dsc['MTP']['draft_us'], seed=dsc['MTP']['seed_commit_us'],
@@ -194,21 +216,28 @@ D['ds_mtp'] = V(dict(II=dsc['MTP']['II_us'], verify=dsc['MTP']['verify_us'], dra
 D['ds_hop'] = V(round(dsc['info']['hop_us'], 4), 'us', 'measured', DSC + " info.hop_us = " + LFF + " hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 RS(544,514) PHY vendor budget 209 ns + UCIe 10 ns + 2x45 routed wire stages (1,004 cyc)",
                 note=FEC_RULE + '; was 0.7575 us on the superseded 130 ns light-FEC budget. Cable flight beyond 0.3 m is charged per hop class (' + DSR + ').')
 sysm = dsm['priced']['S81_ragged_RD64_replicated']['system']
+_r8 = dsc['info'].get('r8_reprice', {})
+assert dsr['counts']['stages'] == _r8.get('stages', 81) and dsr['counts']['layer'] == _r8.get('layer_dies', 324), \
+    'rack record ' + DSR + ' packs %d stages / %d layer dies, the composition %s / %s: re-run tools/dsrom_s81_rack.py' % (
+        dsr['counts']['stages'], dsr['counts']['layer'], _r8.get('stages'), _r8.get('layer_dies'))
 DBRP = 'results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json'
 DBR = J(R / DBRP)
 D['ds_system'] = dict(
-    stages=V(81, 'stages', 'analytical', DSM + ' decision.area.stages (S81)'),
-    layer_dies=V(sysm['layer_dies'], 'dies', 'analytical', DSM + ' priced.S81_ragged_RD64_replicated.system.layer_dies (81 stages x TP4)'),
+    stages=V(dsr['counts']['stages'], 'stages', 'analytical', DSR + ' counts.stages <- ' + dsr['counts']['src']['stages'],
+             note='S81 (' + DSM + ' decision.area.stages 81) is the pre-q-element count'),
+    layer_dies=V(dsr['counts']['layer'], 'dies', 'analytical', DSR + ' counts.layer (' + str(dsr['counts']['stages']) + ' stages x TP4)',
+                 note='S81: ' + str(sysm['layer_dies']) + ' (' + DSM + ' priced.S81_ragged_RD64_replicated.system.layer_dies)'),
     head_dies=V(dsr['counts']['head'], 'dies', 'analytical', DSR + ' counts.head <- ' + dsr['counts']['src']['head']),
     table_dies=V(dsr['counts']['table'], 'dies', 'analytical', DSR + ' counts.table <- ' + dsr['counts']['src']['table']),
-    total_dies_model=V(dsr['counts']['dies'], 'dies', 'analytical', DSR + ' counts.dies (324 layer + 12 head + 36 table + 52 draft)',
+    total_dies_model=V(dsr['counts']['dies'], 'dies', 'analytical', DSR + ' counts.dies (%(layer)d layer + %(head)d head + %(table)d table + %(draft)d draft)' % dsr['counts'],
                        note='supersedes ' + DSM + ' system.total_dies 368 (8 head dies, no draft dies)'),
     packages=V(dsr['counts']['dies'] // 2, 'packages', 'analytical', DSR + ' counts.dies / 2 (two-die packages)'),
     stacks=V(dsr['stacks']['total'], 'HBM stacks', 'analytical', DSR + ' stacks.total: ' + dsr['stacks']['src'],
-             note='4 on the 32 scan dies and the 12 head dies, 1 on the other 292 layer dies, 0 on table and draft dies; the power model\'s 452 = the same rule at 8 head dies'),
+             note='4 on the %d scan dies and the %d head dies, 1 on the other %d layer dies, 0 on table and draft dies; the power model\'s 452 = the same rule at S81 with 8 head dies' % (dsr['stacks']['scan_dies'], dsr['counts']['head'], dsr['counts']['layer'] - dsr['stacks']['scan_dies'])),
     scan_dies=V(dsr['stacks']['scan_dies'], 'dies', 'analytical', DSR + ' stacks.scan_stages ' + str(dsr['stacks']['scan_stages']) + ' x TP4'),
-    die_mm2=V(dsm['decision']['area']['die_mm2'], 'mm2', 'analytical', DSM + ' decision.area.die_mm2 (priced S81 die)'),
-    pairs=V(dsm['decision']['area']['pairs'], 'pairs/die', 'analytical', DSM + ' decision.area.pairs'),
+    die_mm2=V(dsm['decision']['area']['die_mm2'], 'mm2', 'analytical', DSM + ' decision.area.die_mm2 (priced S81 die; the q-element frame keeps the die outline)'),
+    pairs=V(dsr['geometry']['pairs_per_layer_die'], 'pairs/die', 'analytical', DSR + ' geometry.pairs_per_layer_die <- ' + dsr['geometry']['src'],
+            note='S81: ' + str(dsm['decision']['area']['pairs']) + ' (' + DSM + ' decision.area.pairs)'),
     draft_primary=V(draft['placement']['dies']['primary'], 'dies', 'analytical', DRAFT + ' placement.dies.primary'),
     draft_replicas=V(draft['placement']['dies']['expert_replicas'], 'dies', 'analytical', DRAFT + ' placement.dies.expert_replicas (5 expert TP4 groups per DSpark block x 3 blocks)'),
     draft_added=V(draft['dies_added'], 'dies', 'analytical', DRAFT + ' dies_added (vs 12 baseline draft dies)'),
@@ -308,9 +337,10 @@ D['dies'] = dict(
         geo=gwrap('qwen_rom', 'measured', 'r17b placement /tmp/qdie17/r17b_pdn/place.tcl + elements.lef (generator tools/qwen_rom_fulldie_b3r2.py on branch claude/qwen-die-rebuild-20261005 @f76c3603b; the placement files are scratch, not committed)',
                   note='Geometry from the r17b run directory; the r17b GRT and path-STA records are committed on the branch.'),
         area=V(823.78, 'mm2', 'measured', 'r17b manifest die 25,113.888 x 32,801.76 um (branch record ir_record.json meta.b3r2.die)'),
-        grt=V('overflow %s (k16, 5 iterations)' % format(qgrt['layers']['Total']['overflow'], ','), '', 'measured', QGRT + ' layers.Total.overflow (M9 38 windows <= 1.036)'),
-        ir=V({k: dict(win=v['meta']['window_um'], mv=v['rail_to_rail_interior_mv'], ok=v['pass_interior']) for k, v in qir.items() if k.startswith('r17b')},
-             'mV', 'measured', QIR, note='uncommitted IR record (worktree, untracked); spine slab window fails 35 mV interior at 37.4 mV'),
+        grt=V('r20c overflow %s (k16, 50 iterations), %s; die-top route %s' % (format(qgrt20['total']['overflow'], ','), qgrt20['verdict'].split(':')[0], qcl['physical']['die_r20c']['die_top_route']['status']),
+              '', 'measured', QGRT20 + ' total.overflow (' + QCL + ' physical.die_r20c); r17b k16 i5 was ' + format(qgrt['layers']['Total']['overflow'], ',')),
+        ir=V({k: dict(win=v['meta']['window_um'], mv=v['rail_to_rail_interior_mv'], ok=v['pass_interior']) for k, v in qir.items() if k.startswith('r19_')},
+             'mV', 'measured', QIR + ' r19_* (' + QCL + ' physical.die_r20c.ir)', note='r19 frame (full tiles with KV slices), interior rail-to-rail against the %s mV budget; windows drawn on the r17b geometry' % format(qcl['physical']['die_r20c']['ir']['budget_mv'], 'g')),
         path=V(dict(bword_worst=qps['block_words']['stages_routed_max'], link_worst=qps['links']['stages_routed'], pitch=round(qps['pitch_um'], 1)),
                'stages', 'measured', QPS),
     ),
@@ -381,16 +411,21 @@ D['blocks'] = dict(
         waypoint=B('Forwarded-link waypoint', V(None, 'mm2', 'measured', 'rectangles'), 216, 'station abstracts', 'no-rtl'),
     ),
     qwen_rom=dict(
-        tile=B('ROM tile (code ROM beside the multipliers)', V(round(0.260904 * 1.291656, 4), 'mm2', 'measured', 'r17b elements.lef qfd_tile 260.9 x 1,291.7 um'), 1536, 'ot_qwen_rom_tile_* (W12 ME + ROM banks)', 'open', note='No routed tile closure record located; corridor stage at 430.56 um closes SS +11.9 ps.'),
+        tile=B('ROM tile (code ROM beside the multipliers)', V(round(0.260904 * 1.291656, 4), 'mm2', 'measured', 'r17b elements.lef qfd_tile 260.9 x 1,291.7 um'), 1536, 'ot_qwen_rom_tile_* (W12 ME + ROM banks)', 'open', note='No routed tile closure record: the tiles are checked with assumed-constant interface views (' + QCL + ' physical.assumed_constant_views).'),
         station=B('Corridor station (registered tap)', V(round(0.05268 * 0.103656, 5), 'mm2', 'measured', 'qfd_cst LEF'), 1536, 'corridor station', 'closed',
-                  ss=V(11.9, 'ps', 'measured', 'results/rtl/qwen_corridor_gate_20261003 (D_tile_r2 430.56 um: SS60 +11.9 ps, FF25 met)'), note='FF hold met (value not recorded in the cited line).'),
-        col_head=B('Column head', V(round(0.05268 * 0.103656, 5), 'mm2', 'measured', 'qfd_chead LEF'), 64, 'column head', 'no-rtl'),
+                  ss=V(QACC['s2_cst_hm40']['ss_ps'], 'ps', 'measured', QACC['s2_cst_hm40']['record'] + ' (s2_cst_hm40)'), ff=V(QACC['s2_cst_hm40']['ff_ps'], 'ps', 'measured', QACC['s2_cst_hm40']['record'])),
+        col_head=B('Column head', V(round(0.05268 * 0.103656, 5), 'mm2', 'measured', 'qfd_chead LEF'), 64, 'column head', 'closed',
+                   ss=V(QACC['s2_chead_hm40']['ss_ps'], 'ps', 'measured', QACC['s2_chead_hm40']['record'] + ' (s2_chead_hm40)'), ff=V(QACC['s2_chead_hm40']['ff_ps'], 'ps', 'measured', QACC['s2_chead_hm40']['record'])),
         row_engine=B('Row engine (KV stream consumer)', V(round(0.328296 * 1.997976, 4), 'mm2', 'measured', 'qfd_reng LEF'), 24, 'row engine', 'open'),
-        hbm_ctrl=B('HBM controller band', V(round(0.247512 * 12.141336, 3), 'mm2', 'measured', 'qfd_ctrl LEF'), 4, 'STREAM4 controller band (976.6 MHz)', 'open', note='Landing merge -0.75 ns open (' + PLAN + ').'),
-        cdc=B('STREAM4 CDC frame (per pseudo-channel)', V(round(0.183048 ** 2, 4), 'mm2', 'measured', 'qfd_cdc LEF'), 128, 'per-PC async FIFO frame', 'open'),
+        hbm_ctrl=B('HBM controller band', V(round(0.247512 * 12.141336, 3), 'mm2', 'measured', 'qfd_ctrl LEF'), 4, 'STREAM4 controller band (976.6 MHz)', 'open', note='Per-tile landing merge -0.75 ns (results/rtl/qwen_rom_kv_fullbw_20261004/README.md); not among the owner closure accepted blocks (' + QCL + ').'),
+        cdc=B('STREAM4 CDC frame (per pseudo-channel)', V(round(0.183048 ** 2, 4), 'mm2', 'measured', 'qfd_cdc LEF'), 128, 'per-PC async FIFO frame', 'closed',
+              ss=V(QACC['r11a_4face_m30']['ss_ps'], 'ps', 'measured', QACC['r11a_4face_m30']['record']), ff=V(QACC['r11a_4face_m30']['ff_ps'], 'ps', 'measured', QACC['r11a_4face_m30']['record']),
+              note='Margin route m1j: SS %+.2f ps, internal synchroniser hold %+.2f ps (%s).' % (QACC['m1j_cdc_margin_u123_ioh80']['ss_ps'], QACC['m1j_cdc_margin_u123_ioh80']['ff_internal_hold_ps'], QACC['m1j_cdc_margin_u123_ioh80']['record'])),
         hub=B('Hub element', V(round(0.412536 ** 2, 4), 'mm2', 'measured', 'qfd_hub LEF'), 1, 'hub element', 'open'),
-        spine=B('Spine slab (VM, SU64 + SFU, tree top, constants + sequencer)', V(None, 'mm2', 'measured', 'per-instance LEF'), 4, 'qfd_sp_*', 'exact-not-closed', note='Core decode adopted r5b_f3ba closes in context (SS +0.87 / FF +7.12 ps).'),
-        band_slab=B('Band slab (port + scale groups)', V(None, 'mm2', 'measured', 'per-instance LEF'), 16, 'ot_qwen_slab_port_group x 8 per band', 'open', note='Port/scale slab share open (' + PLAN + ').'),
+        spine=B('Spine slab (VM, SU64 + SFU, tree top, constants + sequencer)', V(None, 'mm2', 'measured', 'per-instance LEF'), 4, 'qfd_sp_*', 'exact-not-closed', note='Core decode adopted %s closes in context (SS %+.2f / FF %+.2f ps, +%d token cycles); the slab masters are checked with assumed-constant views (%s).' % (qcore['variant'], qcore['ss_ps'], qcore['ff_ps'], qcore['delta']['cycles'], QCL)),
+        band_slab=B('Band slab (port + scale groups)', V(None, 'mm2', 'measured', 'per-instance LEF'), 16, 'ot_qwen_slab_port_group x 8 per band', 'closed',
+                    ss=V(QACC['r11c_456_lead2_t260_d75']['ss_ps'], 'ps', 'measured', QACC['r11c_456_lead2_t260_d75']['record']), ff=V(QACC['r11c_456_lead2_t260_d75']['ff_ps'], 'ps', 'measured', QACC['r11c_456_lead2_t260_d75']['record']),
+                    note='Slab MUL_LAT 7 (r11c) closes SS60/FF25; +%d token cycles (adopted, in the headline).' % QACC['r11c_456_lead2_t260_d75']['token_cycles_added']),
         link_fifo=B('Link FIFO', V(round(0.096744 * 0.153336, 4), 'mm2', 'measured', 'qfd_lfifo LEF'), 4, 'link FIFO', 'open'),
         link_station=B('Link station (registered wire stage)', V(None, 'mm2', 'measured', 'per-instance LEF'), 32, 'link stations', 'no-rtl'),
         io=B('IO block (collective, embedding ROM, UCIe, SerDes)', V(None, 'mm2', 'measured', 'per-instance LEF'), 4, 'qfd_io_*', 'reservation'),
@@ -417,9 +452,13 @@ C('ds', 'Actquant f12 quantiser', 11.51, 0.51, 'exact-not-closed', LEV + 'su_swi
 C('ds', 'Old field spine PQ1 R16 (rejected)', -722.82, 3.37, 'open', LEV + 'field.json ss_ff', 'routed')
 C('ds', 'Cut-through link ot_dsrom_link_ct (rejected)', -500.4, 4.2, 'open', LEV + 'hop.json ss_ff', 'pre-layout screen')
 # Qwen ROM
-C('qwen', 'Core decode r5b_f3ba (in die context)', 0.87, 7.12, 'closed', CMP + ' qwen_rom.levers.core_context', 'routed, context')
+C('qwen', 'Core decode %s (in die context)' % qcore['variant'], qcore['ss_ps'], qcore['ff_ps'], 'closed', CMP + ' qwen_rom.levers.core_context', 'routed, context')
+for _v, _lab in (('r11c_456_lead2_t260_d75', 'Port/scale slab group r11c (MUL_LAT 7)'), ('r11a_4face_m30', 'STREAM4 CDC per PC r11a'),
+                 ('s2_cst_hm40', 'Corridor station s2_cst_hm40'), ('s2_chead_hm40', 'Column head s2_chead_hm40')):
+    C('qwen', _lab, QACC[_v]['ss_ps'], QACC[_v]['ff_ps'], 'closed', QACC[_v]['record'] + ' (' + QCL + ')', 'routed')
 C('qwen', 'Corridor stage 430.56 um', 11.9, None, 'closed', 'results/rtl/qwen_corridor_gate_20261003', 'routed')
-C('qwen', 'Landing merge', -750, None, 'open', PLAN + ' section 2', 'routed')
+C('qwen', 'STREAM4 CDC margin route m1j (internal hold)', QACC['m1j_cdc_margin_u123_ioh80']['ss_ps'], QACC['m1j_cdc_margin_u123_ioh80']['ff_internal_hold_ps'], 'closed', QACC['m1j_cdc_margin_u123_ioh80']['record'], 'routed')
+C('qwen', 'Per-tile landing merge (not in the owner closure)', -750, None, 'open', 'results/rtl/qwen_rom_kv_fullbw_20261004/README.md', 'routed')
 # HBM from inventory (blocks with both numbers or SS)
 for b in inv['blocks']:
     if b.get('period_ns') == 0.833 and b.get('ss_reg_to_reg_slack_ps') is not None:
@@ -454,8 +493,10 @@ D['fused_chains'] = V([
 D['spec_table'] = V([
     ['Qwen3-8B ROM, 8K, STREAM4', 'none: compute-bound, KV fill hidden', 5282, '17,197 (4)', 3.26, 0.70],
     ['Qwen3-8B HBM accelerator, TP4, 8K', 'weight stream', 17237, '16,044 (4)', 0.93, 2.28],
-    ['DeepSeek-V4.1 ROM array, 1M', 'pipeline latency (wavefront)', '620.1 us/token', '748.9 us (6)', 1.21, 2.77],
-], '', 'measured', ATLAS + ' Table 8-14a (section 8.6)', note='Atlas snapshot; DS row predates the current 592.9 us recovery composition.')
+    ['DeepSeek-V4.1 ROM array, 1M', 'pipeline latency (wavefront)', '626.3 us/token', '758.5 us (6)', 1.21, 2.75],
+], '', 'measured', ATLAS + ' Table 8-14a (section 8.6)', note='Atlas snapshot; DS row = ' + CMP + ' ds_rom (default q-element) at the published tau 3.8879, verify from ' + DSC + '.')
+assert D['spec_table']['v'][2][2] == f"{ds['AR_us']:.1f} us/token" and D['spec_table']['v'][2][3] == f"{dsc['MTP']['verify_us']:.1f} us (6)", 'Table 8-14a DS row is stale against ' + CMP
+assert D['spec_table']['v'][2][5] == round(ds['MTP_tok_s_tau_published'] / ds['AR_tok_s'], 2), 'Table 8-14a DS speculative ratio is stale'
 
 # ---------------------------------------------------------------- links (array views) and racks (rack view)
 # Bandwidths set the drawn stroke width of each link; latencies feed the link-class tables.
@@ -468,6 +509,9 @@ TECH = 'configs/hardware/technology.json'
 tech = J(R / TECH)['links']
 ES = 'results/arch/energy_silicon_measured/energy_silicon.json'
 es = J(R / ES)
+assert es['deepseek_1m']['rom']['layer_dies'] == dsr['counts']['layer'] and es['deepseek_1m']['rom']['total_dies'] == dsr['counts']['dies'], \
+    'energy record is stale against ' + DSR + ': re-run tools/energy_silicon_measured.py'
+assert es['qwen_8k']['rom']['power']['ar']['tok_s'] == q['AR_tok_s'], 'energy record is stale against ' + CMP + ': re-run tools/energy_silicon_measured.py'
 S81FP = 'results/rtl/dsrom_s81_fulldie_20261004/floorplan.json'
 s81p = J(R / S81FP)['scan_die_power']
 HSL = 'results/uarch/hbm_switch_latency_authoritative_20261004/README.md'
@@ -581,7 +625,9 @@ D['racks'] = dict(
                       packages=ds_dies // 2, stacks=dsr['stacks']['total'], scan_dies=dsr['stacks']['scan_dies']), 'dies', 'analytical',
                  DSR + ' counts: head ' + dc['src']['head'] + '; table ' + dc['src']['table'] + '; draft ' + dc['src']['draft'] + '; stacks ' + dsr['stacks']['src'],
                  note='Resolved 2026-10-06: 12 head + 36 Engram table dies (the 8 + 36 of the C1 ledger and the 12 + 32 this page showed earlier are both stale); '
-                      'HBM stacks sized to need (scenario C): 4 on the 32 scan dies and the 12 head dies, 1 on the other 292 layer dies, none on table or draft dies = 468.'),
+                      '%d stages / %d layer dies for the adopted q-element frame (S81: 81 / 324); '
+                      'HBM stacks sized to need (scenario C): 4 on the %d scan dies and the %d head dies, 1 on the other %d layer dies, none on table or draft dies = %d.'
+                      % (dc['stages'], dc['layer'], dsr['stacks']['scan_dies'], dc['head'], dc['layer'] - dsr['stacks']['scan_dies'], dsr['stacks']['total'])),
         die_w=V(dict(layer=LAYER_W, head_table=dsr['die_w']['head_table'], stack=STACK_W), 'W', 'analytical', DSR + ' die_w: ' + dsr['die_w']['src']),
         system_kw=V(dict(ar=round(es['deepseek_1m']['rom']['power']['ar_b1_icg']['system_w'] / 1e3, 2), mtp=round(es['deepseek_1m']['rom']['power']['mtp_b1_icg']['system_w'] / 1e3, 2)), 'kW', 'analytical',
                     ES + ' deepseek_1m.rom.power.{ar_b1_icg,mtp_b1_icg}.system_w (' + es['deepseek_1m']['rom']['design'] + ')'),
@@ -629,7 +675,7 @@ q_racks = build_racks(q_trays, [dict(h=2, kind='host', label='host: CPU + NIC + 
 D['racks']['qwen'] = dict(
     racks=V(q_racks, 'racks', 'estimate', src_rack + '; 2 two-die packages per results/uarch/economics.json qwen_rom.product', note='A Qwen TP4 group is one tray: a rack holds many independent groups; one is drawn.'),
     counts=V(dict(dies=4, packages=2, stacks=16), 'dies', 'analytical', 'results/uarch/economics.json qwen_rom.product.packages'),
-    system_kw=V(dict(ar=round(es['qwen_8k']['rom']['power']['ar']['system_w'] / 1e3, 3)), 'kW', 'analytical', ES + ' qwen_8k.rom.power.ar.system_w (at 6,170 tok/s)'),
+    system_kw=V(dict(ar=round(es['qwen_8k']['rom']['power']['ar']['system_w'] / 1e3, 3)), 'kW', 'analytical', ES + ' qwen_8k.rom.power.ar.system_w (modelled power at %s tok/s, the composed rate)' % format(es['qwen_8k']['rom']['power']['ar']['tok_s'], ',.1f')),
     links=V([
         dict(cls='in-package', what='die to die inside a 2-die package', medium='UCIe advanced package', ns=10.0, GBps=D['links']['ds_ucie']['v'], st='analytical', src=TECH + ' links.rom_package_ucie'),
         dict(cls='in-tray', what='TP4 all-reduce across the two packages (72 a token)', medium='112G PAM4 board trace, light FEC (as measured; the 2026-10-06 full-FEC rule names the DS ROM array and the HBM accelerator, Qwen not yet re-priced)', ns=406.6, GBps=300.0, st='measured', src='results/uarch/economics.json qwen_rom.product.exchange.per_allreduce_ns (measured on the DS TP4 board group, transferred)'),

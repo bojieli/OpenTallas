@@ -1,0 +1,181 @@
+{
+  "schema": "opentallas.dsrom_softmax_transport.v1",
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_dsrom_su_softmax.sv": "23335ea25d938ea1f59b9ccf2be9dddb883eec8095d46fd7f69e9f6c9473ab14",
+    "rtl/test/tb_dsrom_su_softmax.sv": "5a791dedae6929bc96f502f10156d2c10c7dff5dc509d4a26c44dbc92bdeca7c"
+  },
+  "shape": {
+    "heads": 16,
+    "lanes_per_head": 16,
+    "tokens": 640,
+    "pv_elements_per_head": 512
+  },
+  "ports": {
+    "scores": {
+      "direction": "into_softmax",
+      "bits_per_stream_edge": 8192,
+      "bytes_per_stream_edge": 1024,
+      "vectors_per_row": 40,
+      "payload_bytes_per_row": 40960,
+      "serial_beats_per_vector": 8,
+      "serial_beats_per_row": 320
+    },
+    "pv": {
+      "direction": "into_softmax",
+      "bits_per_stream_edge": 8192,
+      "bytes_per_stream_edge": 1024,
+      "vectors_per_row": 32,
+      "payload_bytes_per_row": 32768,
+      "serial_beats_per_vector": 8,
+      "serial_beats_per_row": 256
+    },
+    "exponentials": {
+      "direction": "out_of_softmax",
+      "bits_per_stream_edge": 8192,
+      "bytes_per_stream_edge": 1024,
+      "vectors_per_row": 40,
+      "payload_bytes_per_row": 40960,
+      "serial_beats_per_vector": 8,
+      "serial_beats_per_row": 320
+    },
+    "result_bf16": {
+      "direction": "out_of_softmax",
+      "bits_per_stream_edge": 4096,
+      "bytes_per_stream_edge": 512,
+      "vectors_per_row": 32,
+      "payload_bytes_per_row": 16384,
+      "serial_beats_per_vector": 4,
+      "serial_beats_per_row": 128
+    }
+  },
+  "atomic_row_command": {
+    "bits": 2602,
+    "bus_beats": 3,
+    "fields": {
+      "nv": 7,
+      "lt": 3,
+      "scale": 32,
+      "sink": 512,
+      "cosv": 1024,
+      "sinv": 1024
+    },
+    "requirement": "capture all fields atomically; hold through final output; no next row until drain"
+  },
+  "auxiliary_outputs": {
+    "mx_d_bits": 512,
+    "es_d_bits": 512,
+    "den_d_bits": 512,
+    "valid_bits": 3,
+    "fault_bits": 1,
+    "transport_in_payload_totals": false,
+    "requirement": "bind local consumers or price their transport separately; payload totals exclude valid, fault and observation ports"
+  },
+  "serial_alternative": {
+    "bus_bits": 1024,
+    "clock_GHz": 0.9,
+    "ingress_beats": 579,
+    "egress_beats": 448,
+    "shared_half_duplex_beats": 1027,
+    "shared_half_duplex_transport_lower_bound_ns": 1141.111111111111,
+    "independent_direction_transport_lower_bound_ns": 643.3333333333334,
+    "max_fp32_vectors_per_stream_edge": 0.09375,
+    "full_rate_compatible": false,
+    "buffering": "reserve all row slots, gather scores before score replay, then drain exponents to P.V before gathering PV"
+  },
+  "complete_row_storage": {
+    "ingress_payload_bytes": 73728,
+    "egress_payload_bytes": 57344,
+    "excludes": "configuration, ECC, tags, validity, occupancy and implementation padding; double buffering not included"
+  },
+  "reservation_fallback": {
+    "status": "sized minimum component; no RTL/physical qualification",
+    "row_payload_bits": 8192,
+    "protected_row_bits": 9216,
+    "protection": "SECDED64+8 per64data bits; SRAM protection retained",
+    "macro_record": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
+    "macro_sha256": "9cb36a209b2f0e1ecdfe80ec8c93e7c01f5349fc5aa9b5ac2215dba9637bfb87",
+    "macro_copies": 36,
+    "macro_depth": 128,
+    "occupied_row_slots": 128,
+    "raw_macro_area_mm2": 0.14009677056,
+    "macro_reservation_mm2_at_55pct": 0.2547214010181818,
+    "layout": "disjoint score,PV,exp,and packedBF16 regions; atomic single-row ownership until output drain",
+    "SRAM_ports": "one9216-bit read and one9216-bit write per stream edge, each distributed over36macros",
+    "ingress": "gather8beats before writing whole protected vector; retain one protected assembly vector",
+    "egress": "capture every fixed-rate exp vector; pack two BF16 vectors per SRAM row",
+    "drain": "drain all exponentials after exp capture and before PV fill/replay; drain BF16 after normalize completes",
+    "replay": "40 score edges at T640; drain exp to attention P.V; gather32 PV vectors; replay PV only after den_v",
+    "no_ready_output_requirement": "exp and BF16 output phases must not overlap; prove before sharing write port",
+    "command_protected_storage_bits": 2952,
+    "admission": "reserve capacity, NOT all input data, before starting core; PV depends on exp output; no next command until final drain",
+    "dependency_chain": [
+      "scores_fill",
+      "scores_replay",
+      "exp_capture",
+      "exp_drain_to_attention_PV",
+      "PV_compute_and_fill",
+      "PV_replay_after_den_v",
+      "BF16_capture",
+      "BF16_drain"
+    ],
+    "exact_component_gate": [
+      "beat-order conservation at8192bits",
+      "atomic config despite producer stalls",
+      "output capacity conserved under indefinitely stalled drain",
+      "reject early dispatch and duplicate/extra beats",
+      "production reset/CDC/protection negatives",
+      "fixed-burst phase overlap assertion"
+    ],
+    "missing": [
+      "memory clk-to-q and read/capture schedule",
+      "ECC encode/decode stage area/latency",
+      "assembly/packing/serialization registers and mux area",
+      "CDC implementation and latency",
+      "physical ports/corridor capacity",
+      "measured parent occupancy and token latency"
+    ]
+  },
+  "protected_lane_component": {
+    "payload_bits": 64,
+    "code_bits": 72,
+    "replicas": 128,
+    "write_encode_registered_edges": 1,
+    "read_capture_edges": 1,
+    "read_syndrome_edges": 1,
+    "read_correction_edges": 1,
+    "memory_read_request_to_capture_edges": 1,
+    "write_read_initiation_interval": 1,
+    "codec_memory_port_bytes_per_edge": 9,
+    "SRAM_SS_clk_to_q_ps": 455.3205489475797,
+    "SRAM_SS_capture_data_budget_ps": 318.01245105242026,
+    "actual_SS_capture_setup_wire_clock_budget_bound": false,
+    "register_bits_per_lane": 294,
+    "full_shape_register_bits": 37632,
+    "DFF_floor_um2": 10973.4912,
+    "combinational_area": null,
+    "routed_SS_FF": null,
+    "macro_clock_assumption": "read sampled on stream edge; raw code captured on following edge before any syndrome logic",
+    "controller": "one valid pipeline per replicated64-bit lane; row address, ownership and error aggregation require separate protection",
+    "critical_path_contribution": "one encode edge before macro write; three code-input-to-decoded-valid pipeline edges; compose each dependent read/write at parent join",
+    "build_scope": "minimum codec component exactness only; no parent SRAM or CDC adoption"
+  },
+  "direct_stream_alternative": {
+    "clock_GHz": 1.2,
+    "independent_score_and_PV_bits": 16384,
+    "independent_exp_and_result_bits": 12288,
+    "status": "requires actual producer/consumer placement and bandwidth; no free shared-memory or CDC assumption"
+  },
+  "arithmetic_MACs_added": 0,
+  "adopted": false,
+  "hardware_build_admitted": false,
+  "composed_single_user_latency_ns": null,
+  "obligations": [
+    "bind exact producer and consumer per port",
+    "price SRAM ports, protection and muxes for chosen row buffers",
+    "bind physical clock domains, crossing latency and reset ownership",
+    "prove no overflow: core has no backpressure ports",
+    "preserve golden row and reduction order with atomic configuration",
+    "measure row-level latency; compose dependencies rather than sum overlapping link and compute times",
+    "place measured pin stations and verify channel capacity at actual full width"
+  ]
+}

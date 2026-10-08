@@ -1,0 +1,138 @@
+{
+"master": "dsfd_coll_ck",
+"die": "contract",
+"w_um": 216.0,
+"h_um": 216.0,
+"obs_top": 7,
+"domain": "stream_1p2",
+"instances": null,
+"orients": [
+"R0"
+],
+"ports": {
+"refclk": {
+"layer": "M4",
+"pins": [
+[
+"refclk[0]",
+"M4",
+0.0,
+100.8,
+0.192,
+100.824
+]
+],
+"bits": 1,
+"direction": "input"
+},
+"por": {
+"layer": "M4",
+"pins": [
+[
+"por[0]",
+"M4",
+0.0,
+105.6,
+0.192,
+105.624
+]
+],
+"bits": 1,
+"direction": "input"
+},
+"pll_stream": {
+"layer": "M4",
+"pins": [
+[
+"pll_stream[0]",
+"M4",
+215.808,
+96.0,
+216.0,
+96.024
+]
+],
+"bits": 1,
+"direction": "output"
+},
+"pll_serial": {
+"layer": "M4",
+"pins": [
+[
+"pll_serial[0]",
+"M4",
+215.808,
+98.4,
+216.0,
+98.424
+]
+],
+"bits": 1,
+"direction": "output"
+},
+"pll_hbm": {
+"layer": "M4",
+"pins": [
+[
+"pll_hbm[0]",
+"M4",
+215.808,
+100.8,
+216.0,
+100.824
+]
+],
+"bits": 1,
+"direction": "output"
+},
+"rst_stream": {
+"layer": "M4",
+"pins": [
+[
+"rst_stream[0]",
+"M4",
+215.808,
+103.2,
+216.0,
+103.224
+]
+],
+"bits": 1,
+"direction": "output"
+},
+"rst_serial": {
+"layer": "M4",
+"pins": [
+[
+"rst_serial[0]",
+"M4",
+215.808,
+105.6,
+216.0,
+105.624
+]
+],
+"bits": 1,
+"direction": "output"
+},
+"rst_hbm": {
+"layer": "M4",
+"pins": [
+[
+"rst_hbm[0]",
+"M4",
+215.808,
+108.0,
+216.0,
+108.024
+]
+],
+"bits": 1,
+"direction": "output"
+}
+},
+"generator": {
+"file": "tools/s81_ph/s81_ph_coll_tiles.py",
+"note": "collective clock tile: die PLL (ot_s81_pll_bb hard macro) + reset sequencer; placed by the die next to the slab"
+}
+}

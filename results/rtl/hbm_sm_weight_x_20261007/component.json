@@ -1,0 +1,166 @@
+{
+  "status": "PASS",
+  "scope": "actual extracted reqrl and sector primitives; bounded synthetic sector peer; concrete existing shared-service wrappers enabled lint only, no full provider/PHY simulation",
+  "model": {
+    "status": "prebuild_candidate",
+    "replicas": 32,
+    "MACs_per_cycle": 0,
+    "weight": {
+      "installed_stride_bytes": 160,
+      "sectors_per_line": 5,
+      "wire_bits": 1088,
+      "padding_zero_bits": 192,
+      "request_bits": 42,
+      "reqcr_ready_latency_edges": 2,
+      "permission_slots": 1,
+      "policy": "one ready pulse reserves the only request slot; wait2 edges; no further grant until response consumed",
+      "assembler_flops": 1343,
+      "request_wrapper_flops": 49,
+      "service_read_bytes": 160
+    },
+    "x": {
+      "fragment_bits": 25216,
+      "installed_stride_bytes": 3328,
+      "groups": 13,
+      "sectors_per_group": 8,
+      "sectors_per_fragment": 104,
+      "last_group_active_bits": 640,
+      "assembler_flops": 2111,
+      "context_flops": 84,
+      "wire_bits": 2048
+    },
+    "shared_service_client_flops_each": 677,
+    "shared_service": "existing loader_service_join owned returns/reverse credits/grants; explicit real issuer; no added controller",
+    "latency": "weight: permission2 + wrapper capture1 +5 serial sector request/response/grant roundtrips +output1; X:8 serial sector roundtrips/group,13 groups/fragment; consumer stalls add",
+    "protection": "stored payload parity, onehot state invalidity, bounds, exact returned tags, zero installation padding; join state and mapped protection need qualification",
+    "slot_fit": null,
+    "tracks_capacity": null,
+    "physical_admitted": false
+  },
+  "cases": [
+    {
+      "returncode": 0,
+      "output": "PASS weight16 sectors80 actual_REQCR2\n",
+      "kind": "weight",
+      "case": 0,
+      "passed": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS weight negative 1\n",
+      "kind": "weight",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS weight negative 2\n",
+      "kind": "weight",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS weight negative 3\n",
+      "kind": "weight",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS weight negative 4\n",
+      "kind": "weight",
+      "case": 4,
+      "passed": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS X extent128 groups1664 sectors13312\n",
+      "kind": "x",
+      "case": 0,
+      "passed": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS X negative 1\n",
+      "kind": "x",
+      "case": 1,
+      "passed": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS X negative 2\n",
+      "kind": "x",
+      "case": 2,
+      "passed": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS X negative 3\n",
+      "kind": "x",
+      "case": 3,
+      "passed": true
+    },
+    {
+      "returncode": 0,
+      "output": "PASS X negative 4\n",
+      "kind": "x",
+      "case": 4,
+      "passed": true
+    }
+  ],
+  "mutants": [
+    {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/weight_x_provider/tb_hbm_sm_weight_read.sv:47: unexpected fault\n       Time: 295000 Scope: tb_hbm_sm_weight_read\n",
+      "kind": "weight",
+      "mutation": "wrong_sector_stride",
+      "rejected": true
+    },
+    {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/weight_x_provider/tb_hbm_sm_weight_read.sv:47: unexpected fault\n       Time: 45000 Scope: tb_hbm_sm_weight_read\n",
+      "kind": "weight",
+      "mutation": "actual_REQCR_permission_bypass",
+      "rejected": true
+    },
+    {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/weight_x_provider/tb_hbm_sm_x_read.sv:37: X reconstruction\n       Time: 315000 Scope: tb_hbm_sm_x_read\n",
+      "kind": "x",
+      "mutation": "wrong_sector_stride",
+      "rejected": true
+    }
+  ],
+  "join_lint": [
+    {
+      "kind": "weight",
+      "returncode": 0,
+      "warning_count": 19,
+      "errors": []
+    },
+    {
+      "kind": "x",
+      "returncode": 0,
+      "warning_count": 19,
+      "errors": []
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_sector_read.sv": "6a7cc00153c099b5ef8793b8098b7c8e5bb682688cbae41ee7b62013446dc536",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_weight_read.sv": "ceb25267543fde21d04a1cc83a3d7c6c339b58c1148966d4be31f6f2b1aef5fa",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_weight_service_join.sv": "bfab45838a802650ddab62b1f423b3b692d17fb12acdd16679a965b879e7ed55",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_x_read.sv": "25a4b4cc2c74e079f10874ada90df48a10d11dde719830eaad43b5dba482ac28",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_x_service_join.sv": "3004ca3197890f302c0fb1cd104aae88e08e97159c6aa91eb38f65c44fa61d68",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/tb_hbm_sm_weight_read.sv": "619e5dbf2f4b75e1220721d6ec22c24f3e8b5a08b69f858eeba5c5ef4d89dc3a",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/tb_hbm_sm_x_read.sv": "2b3b32a6d131519ffc89c400cf2a66616e8306ed212f4f784545e4104f409f20",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "719a9f4077941311f4b0d79cc873798c213c01ab8104d37b689f9210eff91cbf",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_addr_to_service.sv": "12e260d14e8e768c14c6092dee791bf626057ffff2a492695aa80f309f3af3dc",
+    "rtl/hbm_accel/integration/ot_hbm_loader_service_join.sv": "580a0490e2fde6ea8923174d441da927d5f5b465f4bd4c7c18a57344fd0e1f7d",
+    "tools/hbm_sm_weight_x_model.py": "1488dcff7fe6e337f5e1a9126a8db01493fdafd8bee5ab40ad76d5a83ab65f4e",
+    "tools/hbm_sm_weight_x_build.py": "0357352ba4f6aa8742b38796e063c4f71684ecb137aa8f1ac1b5f99911b2b3f4",
+    "tools/hbm_sm_weight_x_gate.py": "9c93fc66b7e88d6d9859ac5d41174834d447d1bb52d9ef5bf423f63edf960795"
+  },
+  "physical_admitted": false
+}

@@ -1,0 +1,36 @@
+{
+  "status": "prebuild_candidate",
+  "replicas": 32,
+  "MACs_per_cycle": 0,
+  "weight": {
+    "installed_stride_bytes": 160,
+    "sectors_per_line": 5,
+    "wire_bits": 1088,
+    "padding_zero_bits": 192,
+    "request_bits": 42,
+    "reqcr_ready_latency_edges": 2,
+    "permission_slots": 1,
+    "policy": "one ready pulse reserves the only request slot; wait2 edges; no further grant until response consumed",
+    "assembler_flops": 1343,
+    "request_wrapper_flops": 49,
+    "service_read_bytes": 160
+  },
+  "x": {
+    "fragment_bits": 25216,
+    "installed_stride_bytes": 3328,
+    "groups": 13,
+    "sectors_per_group": 8,
+    "sectors_per_fragment": 104,
+    "last_group_active_bits": 640,
+    "assembler_flops": 2111,
+    "context_flops": 84,
+    "wire_bits": 2048
+  },
+  "shared_service_client_flops_each": 677,
+  "shared_service": "existing loader_service_join owned returns/reverse credits/grants; explicit real issuer; no added controller",
+  "latency": "weight: permission2 + wrapper capture1 +5 serial sector request/response/grant roundtrips +output1; X:8 serial sector roundtrips/group,13 groups/fragment; consumer stalls add",
+  "protection": "stored payload parity, onehot state invalidity, bounds, exact returned tags, zero installation padding; join state and mapped protection need qualification",
+  "slot_fit": null,
+  "tracks_capacity": null,
+  "physical_admitted": false
+}

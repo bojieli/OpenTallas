@@ -37,7 +37,7 @@ class CurrentReadinessTest(unittest.TestCase):
         if target.startswith('deepseek'):
             domains['serial_chain'] = .9e9
         c['timing'] = {d: {check: dict(corner=corner, uncertainty_ps=unc,
-             period_ps=1e12/hz, worst_slack_ps=0, unconstrained_paths=0, violations=0)
+             period_ps=1e12/hz, worst_slack_ps=15, unconstrained_paths=0, violations=0)
              for check,corner,unc in [('setup','SS',60),('hold','FF',25)]} for d,hz in domains.items()}
         return c
 
@@ -65,6 +65,17 @@ class CurrentReadinessTest(unittest.TestCase):
         for field,value in [('worst_slack_ps',-1),('worst_slack_ps',float('nan')),('unconstrained_paths',1),('violations',1)]:
             c=self.certificate(); c['timing']['streaming']['hold'][field]=value
             self.assertTrue(self.errors(c))
+
+    def test_owner_minimum_applies_to_both_checks_in_each_domain(self):
+        for target in m.TARGETS:
+            passing = self.certificate(target=target)
+            self.assertFalse(self.errors(passing))
+            for domain in passing['timing']:
+                for check in ('setup', 'hold'):
+                    for slack in (0, 14.999):
+                        c = copy.deepcopy(passing)
+                        c['timing'][domain][check]['worst_slack_ps'] = slack
+                        self.assertTrue(self.errors(c), (target, domain, check, slack))
 
     def test_inherited_area_and_half_track_reserve_not_routed_proof(self):
         c=self.certificate(); c['capacity_basis']='assumed_50_percent_PG_reserve'

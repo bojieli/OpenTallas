@@ -4,7 +4,8 @@
 // drain through a warm pause; accepted pipeline/cache records are never reset.
 module ot_qwen_s4_protected_pc #(
     parameter integer PC_ID=0,TAGW=9,LD=64,WB=16,AD=64,SYNC=2,MEM_WORDS=3*131072,
-    parameter integer LOCAL_WIRE_SPANS=0,ACK_BACKPRESSURE=0,LANDING_RSEL=0
+    parameter integer LOCAL_WIRE_SPANS=0,ACK_BACKPRESSURE=0,LANDING_RSEL=0,RAW_SECTOR_LANES=0,
+    parameter integer KV_MAP=0 // 1: option-M quadrant-local stripe (ot_qwen_kv_map_m.svh); default off
 )(
     input wire clk,hclk,por_n,warm_rst_n,
     output wire l_v,output wire [16:0] l_sec,output wire [7:0] l_row,
@@ -16,15 +17,21 @@ module ot_qwen_s4_protected_pc #(
     output wire [2:0] h_cred,output wire h_wv,output wire [23:0] h_wsec,
     input wire h_hand,h_wcon,output wire h_cv,output wire [23:0] h_csec,
     output wire [255:0] h_cdata,output wire [TAGW-1:0] h_ctag,
-    input wire h_av,input wire [TAGW-1:0] h_atag,output wire h_fault
+    input wire h_av,input wire [TAGW-1:0] h_atag,output wire h_fault,output wire c_quiet,h_quiet
 );
     localparam integer LP=$clog2(LD)+1,WP=$clog2(WB)+1,WW=24+256+TAGW,CW=WW+WP+1;
+    wire l_wq,l_rq,a_wq,a_rq,w_wq,w_rq;
     wire warm0,warm1;
     ot_reset_sync u_warm0(.clk(clk),.async_rst_n(warm_rst_n),.sync_rst_n(warm0));
     ot_reset_sync u_warm1(.clk(clk),.async_rst_n(warm_rst_n),.sync_rst_n(warm1));
     wire warm_ok=warm0&&warm1;
-    wire write_identity_ok=({w_sec[1:0],w_sec[15],w_sec[5:2]}==7'(PC_ID))&&(w_sec<MEM_WORDS);
-    wire landing_identity_ok=({h_lsec[1:0],h_lsec[15],h_lsec[5:2]}==7'(PC_ID))&&(h_lrow<MEM_WORDS/131072);
+`include "ot_qwen_kv_map_m.svh"
+    // Sector -> owning PC (stack*32 + q). Base map: stack = lsec[1:0]; option M: m_l2port.
+    function automatic [6:0] sec_pc(input [16:0] l);
+        sec_pc = (KV_MAP != 0) ? 7'(m_l2port(l)) : {l[1:0],l[15],l[5:2]};
+    endfunction
+    wire write_identity_ok=(sec_pc(w_sec[16:0])==7'(PC_ID))&&(w_sec<MEM_WORDS);
+    wire landing_identity_ok=(sec_pc(h_lsec)==7'(PC_ID))&&(h_lrow<MEM_WORDS/131072);
     wire lwr,awr,wwr,lv,av,wvalid,lwb,lrb,awb,arb,wwb,wrb;
     wire [280:0] ld;wire [TAGW-1:0] ad;wire [WW-1:0] wd;
     wire [LP-1:0] locc,lowner,lret;
@@ -38,11 +45,11 @@ module ot_qwen_s4_protected_pc #(
     wire take_l=lv&&l_pop&&!c_fault;
     assign l_v=lv&&!c_fault;assign {l_sec,l_row,l_data}=ld;
     assign wd_v=av&&!c_fault;assign wd_tag=ad;
-    ot_qwen_s4_protected_ring #(.WIDTH(281),.DEPTH(LD),.PC_ID(PC_ID),.KIND(0),.SYNC(SYNC),.WIRE_STAGES(LOCAL_WIRE_SPANS),.READ_RSEL(LANDING_RSEL)) u_l(
+    ot_qwen_s4_protected_ring #(.WIDTH(281),.DEPTH(LD),.PC_ID(PC_ID),.KIND(0),.SYNC(SYNC),.WIRE_STAGES(LOCAL_WIRE_SPANS),.READ_RSEL(LANDING_RSEL),.RAW_SECTOR_LANES(RAW_SECTOR_LANES)) u_l(
         .wr_clk(hclk),.rd_clk(clk),.por_n(por_n),.allow_new(1'b1),
         .wr_valid(h_lv&&landing_identity_ok),.wr_ready(lwr),.wr_data({h_lsec,h_lrow,h_ldata}),.wr_occupancy(locc),.wr_fault(lwb),
         .retired_source(synced_ret),.retired_source_valid(synced_ret_valid),
-        .rd_valid(lv),.rd_ready(take_l),.rd_data(ld),.rd_owner(lowner),.retire(take_l),.retired(lret),.rd_fault(lrb));
+        .rd_valid(lv),.rd_ready(take_l),.rd_data(ld),.rd_owner(lowner),.retire(take_l),.retired(lret),.rd_fault(lrb),.wr_quiet(l_wq),.rd_quiet(l_rq));
     // A stack return mux must explicitly accept a real WR ACK before the
     // existing AD64 owner retires. Default pulse ABI remains unchanged.
     wire ack_take=av&&!c_fault&&(ACK_BACKPRESSURE?wd_ready:1'b1);
@@ -50,7 +57,7 @@ module ot_qwen_s4_protected_pc #(
         .wr_clk(hclk),.rd_clk(clk),.por_n(por_n),.allow_new(1'b1),
         .wr_valid(h_av),.wr_ready(awr),.wr_data(h_atag),.wr_occupancy(aocc),.wr_fault(awb),
         .rd_valid(av),.rd_ready(ACK_BACKPRESSURE?ack_take:!c_fault),.rd_data(ad),.rd_owner(aowner),
-        .retire(ack_take),.retired(aret),.rd_fault(arb));
+        .retire(ack_take),.retired(aret),.rd_fault(arb),.wr_quiet(a_wq),.rd_quiet(a_rq));
     wire [LP+2:0] credit;
     wire credit_bad;
     wire [LP-1:0] credit_delta=synced_ret-credit[LP-1:0];
@@ -71,7 +78,7 @@ module ot_qwen_s4_protected_pc #(
         .wr_clk(clk),.rd_clk(hclk),.por_n(por_n),.allow_new(warm_ok&&!c_fault),
         .wr_valid(w_v&&write_identity_ok),.wr_ready(wwr),.wr_data({w_sec,w_data,w_tag}),.wr_occupancy(wocc),.wr_fault(wwb),
         .rd_valid(wvalid),.rd_ready(cache_take),.rd_data(wd),.rd_owner(wowner),
-        .retire(complete_take),.retired(wret),.rd_fault(wrb));
+        .retire(complete_take),.retired(wret),.rd_fault(wrb),.wr_quiet(w_wq),.rd_quiet(w_rq));
     wire [CW-1:0] cache [0:WB-1];wire [WB-1:0] cache_bad;
     wire cache_fault=|cache_bad;
     wire [2*WP-1:0] ptr;
@@ -111,4 +118,14 @@ module ot_qwen_s4_protected_pc #(
     ot_qwen_s4_checked_state u_hs(.clk(hclk),.por_n(por_n),.en(!hb),
         .d(hs||(h_lv&&(!lwr||!landing_identity_ok))||(h_av&&!awr)||(h_hand&&!h_wv)||(h_wcon&&!completion_match)||
            (synced_ret_valid&&(credit_delta>7))),.q(hs),.bad(hb));
+    wire cache_empty;
+    wire [WB-1:0] cache_live;
+    for(genvar q=0;q<WB;q=q+1)begin:quiet_slot
+        assign cache_live[q]=cache[q][CW-1];
+    end
+    assign cache_empty=!(|cache_live);
+    assign c_quiet=!c_fault&&l_rq&&a_rq&&w_wq;
+    assign h_quiet=!h_fault&&l_wq&&a_wq&&w_rq&&cache_empty&&
+        (hand==completed)&&!completion[WW]&&synced_ret_valid&&
+        (synced_ret==credit[LP-1:0])&&(credit[LP+:3]==0);
 endmodule

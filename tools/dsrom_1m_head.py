@@ -333,7 +333,10 @@ def write_macro(img, work: Path, inst: str):
 
 
 def cmd_bundle(a):
+    global SK
     setup_gate()
+    if a.cut:                                      # ot_v41_fadd CUT (SAFE: 511): the ROM skew follows the adder latency
+        SK = 1 + bin(int(a.cut, 0)).count("1") + a.split9
     work = a.work / "lmhead_bundle"
     work.mkdir(parents=True, exist_ok=True)
     xf, logits = golden_x()
@@ -352,10 +355,19 @@ def cmd_bundle(a):
     (work / "xb.hex").write_text(slices(x16[4096:], 64))
     out = work / "obj"
     exe = out / "Vtb_dsrom_1m_head_bundle"
+    rtl = [ROOT / p for p in BUNDLE_RTL]
+    if a.mutate:                                   # negative control: one text substitution in the element
+        old, new = a.mutate.split("=>")
+        src = (ROOT / "rtl/v41rom/ot_dsrom_head_elem.sv").read_text()
+        assert src.count(old) == 1, old
+        mut = work / "ot_dsrom_head_elem_mut.sv"
+        mut.write_text(src.replace(old, new))
+        rtl = [mut if p.name == "ot_dsrom_head_elem.sv" else p for p in rtl]
     if not exe.exists():
         subprocess.run([str(gate.VERILATOR), "--binary", "--timing", "-j", "8", "-Wno-fatal", "-Wno-lint",
                         "-Wno-style", "-O2", "--top-module", "tb_dsrom_1m_head_bundle", "-Mdir", str(out),
-                        str(ROOT / TB_BUNDLE)] + [str(ROOT / p) for p in BUNDLE_RTL],
+                        f"-GIOREG={a.ioreg}", f"-GSAFE={a.safe}", f"-GSPLIT9={a.split9}"] + ([f"-GCUT={int(a.cut, 0)}"] if a.cut else [])
+                       + [str(ROOT / TB_BUNDLE)] + [str(p) for p in rtl],
                        check=True, cwd=work, stdout=subprocess.DEVNULL)
     r = subprocess.run([str(exe), f"+DIR={work}", f"+OT_ROM_DIR={work}", f"+ROW0={BUNDLE0}"],
                        capture_output=True, text=True, check=True)
@@ -760,6 +772,12 @@ def main(argv=None):
             p.add_argument("--build-only", action="store_true")
         if c in ("record", "lever"):
             p.add_argument("--output", type=Path, required=True)
+        if c == "bundle":
+            p.add_argument("--ioreg", type=int, default=0, help="ot_dsrom_head_elem IOREG (pin-registered inputs)")
+            p.add_argument("--mutate", default="", help="negative control: OLD=>NEW in ot_dsrom_head_elem.sv")
+            p.add_argument("--safe", type=int, default=0, help="ot_dsrom_head_elem SAFE (registered argmax compare)")
+            p.add_argument("--split9", type=int, default=0, help="ot_v41_fadd SPLIT9 (+1 adder stage; needs --cut with bit 8)")
+            p.add_argument("--cut", default="", help="ot_v41_fadd CUT for the bundle (e.g. 0x1ff); sets the ROM skew SK")
         if c == 'stream-build':
             p.add_argument('--jobs', type=int, default=4)
     a = ap.parse_args(argv)

@@ -1,0 +1,29 @@
+{
+  "captured_utc": "2026-10-07T10:51:51.867820+00:00",
+  "takeover_worktree": "/home/ubuntu/wt-closure-loop",
+  "prior_source_commit": "fd4706bcdef5f8890afd889d7a3330ce6035d632",
+  "prior_patch_already_deployed": true,
+  "daemon_modified_or_restarted_by_takeover": false,
+  "source_change": "Macro timing pin coverage retained. Guide preservation preferred; fresh GRT allowed by explicit option with route-strategy provenance, subject to unchanged final timing/DRC/IO/context checks.",
+  "validation": [
+    "2 Tcl regression tests: macro timing pin export/window and original-guide failure behavior",
+    "7 ECO recovery unit tests passed"
+  ],
+  "acceptance": {
+    "ss_min_ps": 15,
+    "ff_min_ps": 15,
+    "drc": 0,
+    "original_guides_preferred": true
+  },
+  "disposition": {
+    "hbm_cmdproc_n_ac6ef1af3": "CLOSED, SS 60.84 FF 19.69 DRC 0; original guides; all eight b_addr_in pins included; record 76386110280958f705db08c4bc07721cb2267e96 merged owner branch 87677e3a8009726356e3bada2f10a6eb30b19dd0",
+    "hbm_svc_SW_s4_41d574827_bud": "CLOSED SS 95.47 FF 22.16 DRC 0; original guides",
+    "s81ph-root_tile-34b3e75dd": "NOT ACCEPTED: first pass SS 23.04 FF 9.69 DRC 0; second pass DRT-0218, no chosen result; original verdict retained",
+    "s81ph-dsfd_capt_x-501831f78-safe": "NOT ACCEPTED: first pass SS 41.50 FF -12.11 DRC 0; second pass DRT-0218, no chosen result; original verdict retained",
+    "hbm_svc_SE_s6_41d574827_bud": "CLOSED SS 136.79 FF 23.52 DRC 0; published fdd2ffeaa4fc0160a05a912d2dc5a90054a59e0a, coordinator merge 8558c47feb384028d7a051afe27c9754f52e7451. Fresh-GRT fallback is not grounds for rejection. Prior task report misattributed an original-guides acceptance rule to owner; corrected 2026-10-07.",
+    "dshead-elemB-ss-a318fdf47": "No live ECO at inspection; previous candidate SS 92.02 FF 14.54 DRC0 misses 15 ps. Include in macro-coverage retry intake.",
+    "hbm_cmdproc_s_ac6ef1af3": "No live ECO at inspection; previous candidate SS 89.81 FF -6.76 DRC0. Include in macro-coverage retry intake."
+  },
+  "deployment_recommendation": "Parent integrates and deploys. No further central merges/pushes or daemon edits/restarts by takeover. Default guide preservation; explicit allow_fresh_grt option records strategy and reason. Acceptance is unchanged strict timing/DRC/IO/context, regardless of routing strategy.",
+  "owner_clarification": "2026-10-07: original guides preferred remedy, not acceptance criterion. This correction supersedes the earlier task interpretation; measured pass/failure evidence unchanged."
+}

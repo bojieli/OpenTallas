@@ -1,0 +1,5 @@
+
+-- Running command `read_verilog -sv /tmp/window-halfwrite-yosys-compat.sv; chparam -set HALFWRITE 1 ot_dsrom_window_column_halfwrite; hierarchy -check -top ot_dsrom_window_column_halfwrite; proc; flatten; opt; memory_map; opt; write_json /tmp/window-halfwrite-generic-r3.json; stat' --
+
+1. Executing Verilog-2005 frontend: /tmp/window-halfwrite-yosys-compat.sv
+/tmp/window-halfwrite-yosys-compat.sv:14: ERROR: syntax error, unexpected ATTR_END, expecting TOK_ID

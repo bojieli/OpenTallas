@@ -1,0 +1,98 @@
+{
+  "schema": "opentallas.s81.pq_r128_expanded.v1",
+  "adopted": false,
+  "scope": "Standalone screen PHW6 SAW8 KMAX256 R128 PQ1; ROM register models, not production parent",
+  "source_commit": "d0178820d",
+  "replica_count": 1,
+  "production_replicas": null,
+  "compute": {
+    "MACs_per_cycle_delta": 0,
+    "arithmetic_unchanged": true,
+    "intensity_delta": 0,
+    "note": "Control/quantization spine; no added matrix MAC engine"
+  },
+  "memory": {
+    "vector_read_bytes_per_cycle": 256,
+    "vector_write_bytes_per_cycle_max": 512,
+    "phase_ROM_bytes_per_cycle": 16,
+    "stream_ROM_bytes_per_cycle": 6,
+    "bytes_per_cycle_delta": 0
+  },
+  "boundary": {
+    "functional_input_bits_per_cycle": 10969,
+    "functional_output_bits_per_cycle": 8310,
+    "return_bits_per_cycle": 8832,
+    "fixture_ROM_write_bits": 74,
+    "clock_reset_bits": 2,
+    "bits_per_cycle_delta": 0
+  },
+  "fanout": {
+    "added_muxes": 0,
+    "added_demuxes": 0,
+    "added_replicas": 0,
+    "added_clock_sinks": 0,
+    "observed_baseline_clock_buffers": 16885,
+    "observed_baseline_clock_inverters": 5454,
+    "note": "New CTS insertion, repair count and energy must be measured"
+  },
+  "geometry": {
+    "die_um": [
+      550.368,
+      550.368
+    ],
+    "core_box_um": [
+      2.16,
+      2.16,
+      548.208,
+      548.1
+    ],
+    "core_area_um2": 298109.44512000005,
+    "baseline_die_area_um2": 230400,
+    "die_area_delta_um2": 72504.93542400008,
+    "measured_baseline_cell_area_um2": 148012.0,
+    "measured_baseline_core_area_um2": 226149,
+    "baseline_utilisation": 0.6544888546931448,
+    "projected_same_cell_utilisation": 0.49650221562225144,
+    "repair_reserve_to_55pct_um2": 15948.194816000032,
+    "repair_reserve_to_60pct_um2": 30853.66707200001,
+    "slot_fit": true,
+    "parent_slot_assigned": false
+  },
+  "routing": {
+    "added_logical_tracks": 0,
+    "baseline_ports_including_fixture": 19357,
+    "M4_vertical_pitch_um": 0.036,
+    "M5_horizontal_pitch_um": 0.048,
+    "raw_edge_track_capacity": 53082,
+    "note": "Raw capacity before power/keepouts; legal pin assignment/congestion requires route; no parent corridor claimed"
+  },
+  "timing": {
+    "route_period_ps": 770,
+    "signoff_period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "minimum_SS_FF_slack_ps": 15,
+    "required_DRC": 0,
+    "IO_max_ps": 250,
+    "IO_min_ps": -50,
+    "input_clock_reference": "q_go/CLK measured per corner",
+    "output_clock_reference": "o_ready/CLK measured per corner",
+    "constraints_changed": false
+  },
+  "latency": {
+    "added_cycles": 0,
+    "token_delta_ns": 0,
+    "qualification": "Source-identical logical schedule; no frequency or performance credit before closure"
+  },
+  "energy": {
+    "added_logic": 0,
+    "physical_wire_clock_energy_delta": null,
+    "measurement_required": true
+  },
+  "physical_closed": false,
+  "remaining": [
+    "Fresh SS/FF timing including input and R2R hold",
+    "DRC, pin legality, real clock insertion, area and energy",
+    "Separate production parent mapping/ROM macro binding and released phase count"
+  ]
+}

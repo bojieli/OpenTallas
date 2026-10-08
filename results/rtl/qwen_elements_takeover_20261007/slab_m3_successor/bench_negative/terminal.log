@@ -1,0 +1,58 @@
+ want 46ba703e
+FAIL: result 1501 lane 12 got 00000000 want cd240eee
+FAIL: result 1501 lane 14 got 00000000 want c85365af
+FAIL: result 1501 lane 15 got 00000000 want cd4c11b0
+FAIL: argmax 1497 got 1d21ddbbf2f95 want 1bf1a6d212f90
+FAIL: argmax 1498 got 1d2fac6fd333f want 1cfdbc7de3335
+FAIL: result 1502 lane 0 got 3e1e6572 want 00000000
+FAIL: result 1502 lane 1 got 00000000 want 3f06842c
+FAIL: result 1502 lane 2 got 00000000 want b2d03bc8
+FAIL: result 1502 lane 3 got 00000000 want 4e1d885e
+FAIL: result 1502 lane 4 got 00000000 want c1f4d275
+FAIL: result 1502 lane 5 got 00000000 want ce452041
+FAIL: result 1502 lane 6 got 00000000 want b3c81035
+FAIL: result 1502 lane 7 got 00000000 want c4ab9eea
+FAIL: result 1502 lane 8 got 00000000 want b30be17c
+FAIL: result 1502 lane 9 got 00000000 want 3ca263f6
+FAIL: result 1502 lane 11 got 00000000 want 432a1946
+FAIL: result 1502 lane 12 got 00000000 want b3d61c0d
+FAIL: result 1502 lane 13 got 00000000 want ce9ffade
+FAIL: result 1502 lane 14 got 00000000 want c6d74eb1
+FAIL: result 1502 lane 15 got 00000000 want c8005734
+FAIL: argmax 1499 got 1d36024602fee want 1cd4b76dc2fed
+FAIL: argmax 1501 got 1800000003191 want 1c78527de3193
+FAIL: result 1503 lane 0 got c1c3ace3 want 42961e63
+FAIL: result 1503 lane 1 got 43b653f4 want b94bba97
+FAIL: result 1503 lane 2 got 3957bea5 want c3875f1f
+FAIL: result 1503 lane 3 got c2cecf4c want c313ea7c
+FAIL: result 1503 lane 4 got 33dde19f want cdf40413
+FAIL: result 1503 lane 5 got 4d1a6b4b want cecd3d0d
+FAIL: result 1503 lane 6 got b6ce4583 want b28360ea
+FAIL: result 1503 lane 7 got 3cbdef35 want b890f917
+FAIL: result 1503 lane 8 got 4da9bf9c want b2f99b11
+FAIL: result 1503 lane 9 got cc9a9d43 want af66e6e4
+FAIL: result 1503 lane 10 got 32531d02 want 47ab4060
+FAIL: result 1503 lane 11 got d202820c want 4697004a
+FAIL: result 1503 lane 12 got b339b199 want c7d6c18d
+FAIL: result 1503 lane 13 got c0d7ee84 want ba2edb8b
+FAIL: result 1503 lane 14 got d08a93da want 00000000
+FAIL: result 1503 lane 15 got b709df37 want 5238427d
+FAIL: result 1504 lane 0 got af5b52fd want bde994be
+FAIL: result 1504 lane 1 got 00000000 want 439a7fba
+FAIL: result 1504 lane 2 got 00000000 want bd2fa369
+FAIL: result 1504 lane 3 got 00000000 want 40ccb04a
+FAIL: result 1504 lane 4 got 00000000 want 342213cf
+FAIL: result 1504 lane 5 got 00000000 want d0365fd2
+FAIL: result 1504 lane 6 got 00000000 want b5e5f54d
+FAIL: result 1504 lane 7 got 00000000 want c13cf492
+FAIL: result 1504 lane 8 got 00000000 want 51402205
+FAIL: result 1504 lane 9 got 00000000 want d0952427
+FAIL: result 1504 lane 10 got 00000000 want b3894d93
+FAIL: result 1504 lane 11 got 00000000 want cb4e3791
+FAIL: result 1504 lane 12 got 00000000 want b0d4592d
+FAIL: result 1504 lane 13 got 00000000 want 40975d28
+FAIL: result 1504 lane 14 got 00000000 want cd9f666b
+FAIL: result 1504 lane 15 got 00000000 want 393a34d4
+FAIL: 24306 errors
+FATAL: rtl/test/tb_qwen_slab_port_group.sv:174: EQUIVALENCE_TERMINAL_FAIL
+       Time: 3067500 Scope: tb_qwen_slab_port_group

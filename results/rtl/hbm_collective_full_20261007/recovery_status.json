@@ -1,0 +1,17 @@
+{
+  "status": "COMPONENT_PASS_FULL_ENDPOINT_PREPARED_NOT_ADOPTED",
+  "baseline": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner_truecredit.sv unchanged",
+  "default_off": "PACKET_SRAM=0",
+  "gate": "Run tools/hbm_collective_full_gate.py --out FRESH_DIRECTORY --threads ADMITTED_THREADS --packet-sram 0 and1 separately on identical finalpinnedsource; compare same contributor-major calendar only",
+  "requirements": [
+    "commit source and run in pinned clean worktree",
+    "admit measured resources",
+    "exact baseline plus meaningful golden and receiver-credit negatives",
+    "extract elapsed/stalls into unified model before adoption",
+    "full component physical macro timing/route/DRC/SS/FF",
+    "global clock and reset source join from die owner",
+    "CDC and native owner mutable storage protection"
+  ],
+  "known_cost": "75 real1R1W256x256 SRAMs;531878.4um\u00b2 raw; queueII3/+2first visibility; total token cost pending accepted-event calendar",
+  "open_local_job": "Icarus fullendpoint elaboration session88221, source started before final sealed overflow/bench-stress edits; no final validation credit"
+}

@@ -1,0 +1,129 @@
+{
+  "schema": "opentallas.ha2.mutable_protection.prebuild.v1",
+  "default_enabled": false,
+  "adopted": false,
+  "physical_build_ready": false,
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d203972abf58823ce475d9b72fa857c87ef6a9492c0700846955d564552f1b6",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/collective_flight_20261007/ot_hbm_collective_protected_flight.sv": "8cf818f172c1c9fb984e0c89ad123809e0a6d7b15c468112f42e3a53853d3175",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9"
+  },
+  "MACs_per_cycle": 0,
+  "flights": [
+    {
+      "name": "hub",
+      "payload_bits": 544,
+      "valid_bits": 1,
+      "depth": 35,
+      "replicas": 2,
+      "encoded_frame_bits": 648,
+      "state_bits": 70700,
+      "nominal_latency_cycles": 35,
+      "nominal_II": 1,
+      "stall": "All stages freeze when any bank repairs or output blocked; no finite correction latency guarantee under repeated faults",
+      "boundary_bits_per_cycle": 1296,
+      "boundary_bytes_per_cycle": 162
+    },
+    {
+      "name": "delivery",
+      "payload_bits": 545,
+      "valid_bits": 1,
+      "depth": 35,
+      "replicas": 4,
+      "encoded_frame_bits": 648,
+      "state_bits": 141400,
+      "nominal_latency_cycles": 35,
+      "nominal_II": 1,
+      "stall": "All stages freeze when any bank repairs or output blocked; no finite correction latency guarantee under repeated faults",
+      "boundary_bits_per_cycle": 2592,
+      "boundary_bytes_per_cycle": 324
+    },
+    {
+      "name": "forward",
+      "payload_bits": 560,
+      "valid_bits": 1,
+      "depth": 7,
+      "replicas": 2,
+      "encoded_frame_bits": 648,
+      "state_bits": 14140,
+      "nominal_latency_cycles": 7,
+      "nominal_II": 1,
+      "stall": "All stages freeze when any bank repairs or output blocked; no finite correction latency guarantee under repeated faults",
+      "boundary_bits_per_cycle": 1296,
+      "boundary_bytes_per_cycle": 162
+    },
+    {
+      "name": "return",
+      "payload_bits": 16,
+      "valid_bits": 1,
+      "depth": 7,
+      "replicas": 2,
+      "encoded_frame_bits": 72,
+      "state_bits": 6076,
+      "nominal_latency_cycles": 7,
+      "nominal_II": 1,
+      "stall": "All stages freeze when any bank repairs or output blocked; no finite correction latency guarantee under repeated faults",
+      "boundary_bits_per_cycle": 144,
+      "boundary_bytes_per_cycle": 18
+    }
+  ],
+  "receiver": {
+    "injectors": 2,
+    "slots_per_injector": 64,
+    "payload_and_tag_bits": 560,
+    "codewords_per_slot": 9,
+    "encoded_bits_per_slot": 648,
+    "protected_bank_state_bits_per_slot": 1010,
+    "slot_banks_state_bits": 129280,
+    "control_state": "wp7,rp7,expect_arrival16,expect_retire16 packed46bits; protected72bit word plus5repairwords+2fault rails perinjector",
+    "control_state_bits": 868,
+    "output_data_tag_valid_bits": 561,
+    "output_bank_state_bits": 2020,
+    "total_state_bits": 132168,
+    "selected_row_mux2_equivalents": 81648,
+    "nominal_latency_delta_cycles": 0,
+    "latency_status": "Combinational checked row select and same-edge protected output load candidate; physical feasibility not established",
+    "write_bytes_per_cycle": 162,
+    "read_bytes_per_cycle": 162
+  },
+  "sender": {
+    "control_bits_per_injector": 46,
+    "control_fields": "reserved7,sent7,next_send16,next_return16; all permission from checked state",
+    "output_bits_per_injector": 561,
+    "total_state_bits": 2888,
+    "nominal_latency_delta_cycles": 0
+  },
+  "composed": {
+    "total_candidate_protected_state_bits": 367372,
+    "FF_area_lower_bound_um2": 107125.67520000001,
+    "area_scope": "FF-only floor; excludes parallel syndrome trees, encoding, row mux/control, clock/hold/route. No fit claim.",
+    "floorplan_slot": null,
+    "routing_tracks_status": "Encoded648-bit frame replaces raw544/560 bit boundary; actual track/channel capacity must be bound by physicalowner",
+    "fault_free_added_token_cycles_candidate": 0,
+    "latency_scope": "Preserve phase/valid/retirement on fault-free path; correction stalls consume held reservations and must be measured, never modeled free"
+  },
+  "protocol": {
+    "reserve": "Reserve64 destination slots at actual accepted hub read; issue_v must imply hub protected-flight in_r and valid source ownership",
+    "retire": "Return credit only on checked receiver row transfer into a reserved protected output; no return on ECC repair or uncorrectable row",
+    "CE": "Suppress valid/grant/pop/return before action; bank performs protected five-edge repair; all relevant transaction state remains held",
+    "UE": "Sticky dualrail fault quarantine; never silently erase outstanding reservations",
+    "reset": "Cold common reset only with all encoded valid paths discarded; warm reset cannot fabricate completion or credits",
+    "encoded_chain": "Encode at trusted producing register; carry original648/72bit code through transport, queue and held outputs. Decode/re-encode across an unprotected stored or transported boundary is forbidden.",
+    "current_reuse_gap": "Existing protected_flight raw in/out ports require additive encoded-interface variant for this chain. Do not wire unstallable hub issue directly to elastic in_r, and do not claim current helper alone closes boundary protection."
+  },
+  "prerequisites": [
+    "Unified model registration before RTL",
+    "Specify encoded port ABI and producer/consumer capture ownership with collective owner",
+    "Targeted faults on stored payload,valid,tag,pointer,credit counts,repair state and held outputs",
+    "Prove no corruption laundering at every encoded handoff",
+    "Fullwidth fault-free exact timing plus CE/UE quarantine and reset gates",
+    "Physical sizing of syndrome fanout/rowmux/clock and complete parent interface"
+  ],
+  "outside_scope": [
+    "half-rate shell FD8 queues",
+    "mutable partial launch8x546",
+    "reducer arithmetic/context protection",
+    "other16 protected link flight paths owned by collective"
+  ]
+}

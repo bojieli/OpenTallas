@@ -1,0 +1,5 @@
+%Warning-WIDTH: rtl/physical/ot_hbm_r14_stream_pc_shift.sv:101:16: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                 : ... In instance ot_qwen_ctrl_write_cancel_service_pc.controller.g_replica[0].u.core
+  101 |   generate if (!ENABLE) begin : off
+      |                ^
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.

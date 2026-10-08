@@ -1,0 +1,55 @@
+{
+  "verdict": "PASS",
+  "scope": "Original combined actual-provider positive; checked-ACK shortcut negative on procedural-boundary successor pending.",
+  "frames": {
+    "0": {
+      "edges": 3155,
+      "reads": 0,
+      "acks": 1
+    },
+    "1": {
+      "edges": 14419,
+      "reads": 1024,
+      "acks": 1
+    },
+    "2": {
+      "edges": 3136,
+      "reads": 1,
+      "acks": 0
+    },
+    "3": {
+      "edges": 3155,
+      "reads": 0,
+      "acks": 1
+    },
+    "4": {
+      "edges": 3136,
+      "reads": 1,
+      "acks": 0
+    },
+    "5": {
+      "edges": 1,
+      "reads": 0,
+      "acks": 0
+    },
+    "6": {
+      "edges": 3136,
+      "reads": 1,
+      "acks": 0
+    },
+    "7": {
+      "edges": 3125,
+      "reads": 0,
+      "acks": 0
+    }
+  },
+  "cpu_seconds": 1280.79,
+  "wall_seconds": 1280.87,
+  "peak_rss_kib": 118272,
+  "read_service_edges": 9,
+  "write_service_edges": 28,
+  "original_positive_log_sha256": "2673ec31dcb74111ec4fd2bf464bcb408b20be7505c8771a2293e72ab20f7638",
+  "original_positive_resource_sha256": "22ff27720bf43f2b194c4adb30198023ac9f9269b42d4558a2a90c37cffab5a7",
+  "callback_boundary": "No original core/collective bound. Raw core output,original pre-lease intent,per-domain effective lease must enroll atomically with collar.",
+  "target_pin_contract": "vm_me_wanted=!rst_n_i || (((ME_STALL==0)||me_mem_ok_i)&&((ME_IDLE_GATE==0)||!me_idle||me_wake)); PINREG1 usespr_mmo_q; effectivelease must notfeedback through registeredmem_ok."
+}

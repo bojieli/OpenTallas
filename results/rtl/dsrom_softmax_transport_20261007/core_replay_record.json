@@ -1,0 +1,67 @@
+{
+  "schema": "opentallas.dsrom_softmax_core_replay_gate.v1",
+  "scope": "full8192-bit minimum protected no-ready replay component",
+  "passed": true,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv": "21a2d557e128cbb980c1edb481c5592e744a789522d94c0efff9d36909d9a308",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv": "b5f7603a6bc16fe23664d8c215e5c2117b82738057a04eee90f8b75b1e758815",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_core_replay.sv": "025e343aa96d98af3d2d98466c51210205d81f5d6b6dd2ebe96f688fd68061fb",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_core_replay.sv": "ae4a172f29e9460bf8f2241d9976c8711a6ac556cd3b8104d67e023a7260a0e8",
+    "results/uarch/dsrom_softmax_transport_20261007/core_replay_prebuild.json": "2bccdc2f7673e2667575941faa9607350f79cd867383c572e97c0444a1b8d714"
+  },
+  "positive": {
+    "contiguous_bursts": [
+      40,
+      32,
+      8
+    ],
+    "vectors": 80,
+    "byte_comparisons": 81920,
+    "read_return_to_consumer_edges": 3,
+    "initiation_interval": 1,
+    "ready_port": false,
+    "single_bit_correction": true,
+    "uncorrectable_any_lane_aborts_whole_row": true,
+    "metadata_protection": true,
+    "reset_flush": true,
+    "log": "results/rtl/dsrom_softmax_transport_20261007/core_replay_positive.log"
+  },
+  "negative": {
+    "mutation": "SOFTMAX_CORE_REPLAY_SWAP_LANES",
+    "observed_exit": 1,
+    "expected_failure": "CORE_PAYLOAD row=0 lane=0",
+    "log": "results/rtl/dsrom_softmax_transport_20261007/core_replay_swap_negative.log"
+  },
+  "prebuild_record": "results/uarch/dsrom_softmax_transport_20261007/core_replay_prebuild.json",
+  "prebuild_order": "record emitted before creatingRTL in tool execution order; not a separately committed prebuild snapshot",
+  "incremental_area": {
+    "read_codec_register_bits": 28288,
+    "metadata_valid_fault_bits": 146,
+    "total_FF_bits": 28434,
+    "FF_floor_um2": 8291.3544,
+    "mapped_combinational_area_um2": null
+  },
+  "schedule": {
+    "input_return_sampled_at": "edgeN",
+    "output_visible_after": "edgeN+2 NBA",
+    "downstream_consumes_at": "edgeN+3",
+    "registered_read_request_to_consume_edges": 5,
+    "status": "last total assumes separately implemented registered-request plus macro capture; wrapper gate measures only return\u2192consume3"
+  },
+  "reproduce": [
+    "iverilog -g2012 -s tb_core_replay -o /tmp/dsrom_softmax_core_replay.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_core_replay.sv rtl/experimental/dsrom_softmax_transport_20261007/tb_core_replay.sv",
+    "vvp /tmp/dsrom_softmax_core_replay.vvp",
+    "iverilog -g2012 -DSOFTMAX_CORE_REPLAY_SWAP_LANES -s tb_core_replay -o /tmp/dsrom_softmax_core_replay_mutant.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_core_replay.sv rtl/experimental/dsrom_softmax_transport_20261007/tb_core_replay.sv",
+    "vvp /tmp/dsrom_softmax_core_replay_mutant.vvp"
+  ],
+  "adopted": false,
+  "route_admitted": false,
+  "remaining": [
+    "actual SRAM request/burst controller and protected return identity",
+    "phase controller and serial/core memory arbitration join",
+    "actual compiler/producer row integration",
+    "nativeCDC and reset epochs",
+    "mapped area actualpinclock budget SS/FF and tokencomposition"
+  ]
+}

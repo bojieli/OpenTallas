@@ -1,0 +1,120 @@
+{
+  "status": "OPEN_MUTABLE_PROTECTION_CENSUS_NOT_ADOPTED",
+  "source_sha256": {
+    "rtl/hbm_accel/collective_native_link_20261007/ot_hbm_collective_native_link_candidate.sv": "193a2ecaa07cb6089a23333797697ea060c467a52754cdc4b828f162ac396f60",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d203972abf58823ce475d9b72fa857c87ef6a9492c0700846955d564552f1b6",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv": "511bea31ca65dba6118560545e8cba08ca837855b0e52c6aab459bffeb777c9b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv": "02bec6fc2cdb69e5f6a9ea6aec09c32caa9e2b2830285855ad4494234195d241"
+  },
+  "native_shape": {
+    "NC": 8,
+    "NPT": 8,
+    "INJ": 2,
+    "DEL": 4,
+    "LANES": 16,
+    "PFMAX": 384,
+    "HUBW": 35,
+    "WSTG": 14,
+    "TC_FWD": 7,
+    "TC_RET": 7
+  },
+  "raw_relay_rows": [
+    {
+      "name": "hub_issue_flight",
+      "implementation": "ot_ha2_delay_quiet",
+      "replicas": 2,
+      "width": 544,
+      "depth": 35,
+      "payload_bits": 38080,
+      "valid_bits": 70,
+      "pointer_declared_bits": 64,
+      "protection": "none; quiet/finite credits detect occupancy, not bit corruption",
+      "count_scope": "RTL declared storage; synthesized pointer width may optimize"
+    },
+    {
+      "name": "delivery_flight",
+      "implementation": "ot_ha2_delay_quiet",
+      "replicas": 4,
+      "width": 545,
+      "depth": 35,
+      "payload_bits": 76300,
+      "valid_bits": 140,
+      "pointer_declared_bits": 128,
+      "protection": "none; quiet/finite credits detect occupancy, not bit corruption",
+      "count_scope": "RTL declared storage; synthesized pointer width may optimize"
+    },
+    {
+      "name": "truecredit_forward_flight",
+      "implementation": "ot_ha2_delay_quiet",
+      "replicas": 2,
+      "width": 560,
+      "depth": 7,
+      "payload_bits": 7840,
+      "valid_bits": 14,
+      "pointer_declared_bits": 64,
+      "protection": "none; quiet/finite credits detect occupancy, not bit corruption",
+      "count_scope": "RTL declared storage; synthesized pointer width may optimize"
+    },
+    {
+      "name": "truecredit_return_flight",
+      "implementation": "ot_ha2_delay_quiet",
+      "replicas": 2,
+      "width": 16,
+      "depth": 7,
+      "payload_bits": 224,
+      "valid_bits": 14,
+      "pointer_declared_bits": 64,
+      "protection": "none; quiet/finite credits detect occupancy, not bit corruption",
+      "count_scope": "RTL declared storage; synthesized pointer width may optimize"
+    },
+    {
+      "name": "partial_launch",
+      "payload_bits": 4360,
+      "valid_bits": 8,
+      "protection": "none",
+      "count_scope": "one registered stage before half-rate owner"
+    }
+  ],
+  "raw_relay_declared_bits_subtotal": 127370,
+  "internal_truecredit": {
+    "owner": "/root/hbm/w2",
+    "payload_queue_bits": 71680,
+    "model_total_TX_FF_bits": 1216,
+    "model_total_RX_FF_bits": 72900,
+    "protection": "Tag sequence and count/overflow checks are protocol checks; no payload SECDED. Actual current sources use plain registers/FIFOs. Source owner confirms scope before successor.",
+    "double_count": "TX/RX model totals already include payload queues and endpoint registers; do not add queue bits again"
+  },
+  "half_rate_shell": {
+    "peer_queue_payload_bits": 34880,
+    "own_queue_payload_bits": 8448,
+    "queue_control_declared_bits": 210,
+    "fast_input_capture_bits": 5452,
+    "output_capture_and_status_bits": 533,
+    "phase_gate_arm_hold_ready_bits": 17,
+    "protection": "Plain data/control flops, one-hot pointers, count/overflow checks; no payload ECC or protected phase/clock enable.",
+    "double_count": "These registers are a subset of actual full h2 mapped171444FF, not additional to that census."
+  },
+  "h2_operand_SRAM": {
+    "macros": 8,
+    "rows_per_macro": 64,
+    "payload_bits_per_row": 512,
+    "physical_payload_bits": 262144,
+    "encoded_bits_required_per_payload_row": 576,
+    "extra_check_bits_if_SECDED64": 32768,
+    "actual_source": "u_col64x512 read output mq feeds reductiontree without an SECDED decoder or separately stored checks",
+    "protection": "Absent in selected source. ROM no-ECC exemption does not cover mutable operand SRAM.",
+    "physical_obligation": "576 encoded bits per512bit payload need a real wider macro or priced sidecar. Eight existing64x512 macros cannot hold full encoded rows. Do not silently reuse current840x480 outline for changed storage."
+  },
+  "native_context_control": {
+    "protection": "Context identity/range checks exist; context latches, routing counters, delivery accounting and scheduling state still require explicit per-register fault coverage.",
+    "exact_register_count": null
+  },
+  "h2_core_control_and_arithmetic_pipeline": {
+    "protection": "Mapped full h2 inventory is known; full semantic fault/protection census remains pending. Register count alone is not proof of protection.",
+    "exact_unprotected_bits": null
+  },
+  "already_separately_protected": "New33packet/landingqueues,16dataCDC,16flight14 paths, externallink credit/session protocols. Their counts are excluded from this raw-state subtotal.",
+  "replacement_constraints": "A protected elastic relay may stall during scrub: it cannot replace an unstallable delay unless actual upstream reservation/injection and downstream acceptance are bound. Model repair stalls, row capture, extra check storage and real CTS/area before a successor. Fault quarantine is distinct from corrected successful continuation.",
+  "adoption_hold": "No complete protected collective or reliability claim. Existing fullshape arithmetic and physical screens remain useful, source-pinned evidence for their stated narrower scope."
+}

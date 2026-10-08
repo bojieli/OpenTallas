@@ -1,0 +1,20 @@
+TOKX 0 tok=2947 val=3f795753 cyc=13416
+TOKX 1 tok=662 val=3f895076 cyc=25849
+TOKX 2 tok=690 val=3f5c6de7 cyc=38282
+TOKX 3 tok=1171 val=3f830806 cyc=50715
+TOKX 4 tok=1171 val=3f8791a6 cyc=63148
+vm 110656 rtl 3c2b0000 expect 3cb30000
+vm 110657 rtl 3d0c0000 expect bc050000
+vm 110658 rtl 3c640000 expect 3d180000
+vm 110659 rtl 3d160000 expect bb480000
+vm 110660 rtl bd200000 expect bc0b0000
+vm 110661 rtl bc9c0000 expect bcea0000
+vm 110662 rtl bd6e0000 expect 3ac70000
+vm 110663 rtl 3d1c0000 expect 3c930000
+vm 110664 rtl 3c0c0000 expect 3cd70000
+vm 110665 rtl 3cc20000 expect bc8c0000
+HALF fast_cycles=126310 slow_cycles=63153
+FH tokx=5 exp_tokx=5 tokx_bad=5 stok_bad=5
+SLICE cycles=63153 heads=0 head_mismatches=0 acc_n=0 exp_acc_n=0 vm_mismatch=37 kv_mismatch=0 fault=0 busy_me=62120 busy_su=1037 busy_qe=0 busy_xu=0 busy_he=0
+FAIL
+- /srv/opentallas-scratch/claude/tk-ds-head/gold4-half-725b2fe22/src/rtl/hdc/v41/dspark_fused_head/capture_candidate/tb_hdc_core_v41_mtp_slice_checked.sv:496: Verilog $finish

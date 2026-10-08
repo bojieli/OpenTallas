@@ -1,0 +1,96 @@
+{
+  "schema": "opentallas.dsrom_softmax_sram_join_gate.v1",
+  "scope": "actual36-SRAM-bank protected score/PV ingress and II1 replay; NOT complete softmax parent or CDC",
+  "passed": true,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv": "21a2d557e128cbb980c1edb481c5592e744a789522d94c0efff9d36909d9a308",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv": "b5f7603a6bc16fe23664d8c215e5c2117b82738057a04eee90f8b75b1e758815",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_serial_row.sv": "1e4a85ebef179df1870c359f0a66099bf85f1f7d4aa495606dc63629b6d82b14",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_core_replay.sv": "025e343aa96d98af3d2d98466c51210205d81f5d6b6dd2ebe96f688fd68061fb",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_sram_join.sv": "35fe8b30583963221cc2f726a3846f0818652e3f1a03aec82ac1f573c20f0d07",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_sram_join.sv": "e834c57ad757729baf5ec5dacdcf48ef2a6b942d93e44c2d2bd60c908320661b",
+    "tools/dsrom_softmax_sram_join_model.py": "f3950804a21bcefce3c8d31c5c1ef3c8321936bf4c2024e5a69e15e48a6d8539",
+    "results/uarch/dsrom_softmax_transport_20261007/sram_join_prebuild.json": "496db296980d516eb46fbe53d31b288eddecc0c3869f76355f376094b50f29dc"
+  },
+  "model_before_build": {
+    "record": "results/uarch/dsrom_softmax_transport_20261007/sram_join_prebuild.json",
+    "order": "emitted before creating SRAM join RTL in tool execution order; no separately committed prebuild snapshot"
+  },
+  "positive": {
+    "actual_macro_instances": 36,
+    "macro_model": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "bursts": [
+      40,
+      32,
+      8,
+      32
+    ],
+    "vectors": 112,
+    "payload_bytes": 114688,
+    "first_core_beat_edges": 5,
+    "last_core_beat_edges": [
+      44,
+      36,
+      12,
+      36
+    ],
+    "core_II": 1,
+    "physical_bank_single_bit_fault": {
+      "bank": 17,
+      "row": 42,
+      "column": 35,
+      "result": "corrected exactpayload; corrected flag on PV vector42"
+    },
+    "physical_bank_double_bit_fault": {
+      "bank": 35,
+      "row": 0,
+      "columns": [
+        186,
+        187
+      ],
+      "result": "uncorrectable abort, no payload emitted"
+    },
+    "reset_stale_memory_and_tag_checks": true,
+    "logs": [
+      "results/rtl/dsrom_softmax_transport_20261007/sram_join_positive.log",
+      "results/rtl/dsrom_softmax_transport_20261007/sram_join_noinit_positive.log"
+    ],
+    "memory_init_not_relied_on": true
+  },
+  "negative": {
+    "mutation": "SOFTMAX_JOIN_ALIAS_ADDRESS",
+    "scope": "actual macro read address aliases adjacent row while retained tag/address metadata remains unchanged",
+    "observed_exit": 1,
+    "failure": "ACTUAL_SRAM_PAYLOAD addr=0 lane=0",
+    "log": "results/rtl/dsrom_softmax_transport_20261007/sram_join_alias_negative.log"
+  },
+  "clock": {
+    "functional_clock_GHz": 1.2,
+    "simulated_macro_SS_clk_to_q_ps": 455.3205489475797,
+    "setup_uncertainty_policy_ps": 60,
+    "hold_uncertainty_policy_ps": 25,
+    "STA_performed": false,
+    "physical_signoff": false,
+    "explanation": "clkq delay validates next-edge sampling convention; RTL simulation is not setup/hold STA"
+  },
+  "reproduce": [
+    "iverilog -g2012 -s tb_sram_join -o /tmp/dsrom_softmax_sram_join.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_serial_row.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_core_replay.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_sram_join.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/experimental/dsrom_softmax_transport_20261007/tb_sram_join.sv",
+    "vvp /tmp/dsrom_softmax_sram_join.vvp",
+    "iverilog -g2012 -DOT_MEM_NO_INIT -s tb_sram_join -o /tmp/dsrom_softmax_sram_join_noinit.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_serial_row.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_core_replay.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_sram_join.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/experimental/dsrom_softmax_transport_20261007/tb_sram_join.sv",
+    "vvp /tmp/dsrom_softmax_sram_join_noinit.vvp",
+    "iverilog -g2012 -DSOFTMAX_JOIN_ALIAS_ADDRESS -s tb_sram_join -o /tmp/dsrom_softmax_sram_join_mutant.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_serial_row.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_core_replay.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_sram_join.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/experimental/dsrom_softmax_transport_20261007/tb_sram_join.sv",
+    "vvp /tmp/dsrom_softmax_sram_join_mutant.vvp"
+  ],
+  "adopted": false,
+  "route_admitted": false,
+  "remaining": [
+    "E output store/drain and real E to P.V numerical join",
+    "BF16 output packing/drain",
+    "atomic full configuration snapshot",
+    "native0.9-to1.2CDC/reset contract",
+    "mapped area/corridor and actual pin clock budget",
+    "routed SS/FF and composed single-user latency"
+  ]
+}

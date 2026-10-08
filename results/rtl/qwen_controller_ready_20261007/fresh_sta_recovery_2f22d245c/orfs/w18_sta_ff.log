@@ -1,0 +1,156 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+QDM reference pin cmd_q[0]$_DFF_P_/CLK clock arrival max 230.087463 min 219.080276 skew 90 hold 50
+[WARNING STA-0441] set_input_delay relative to a clock defined on the same port/pin not allowed.
+[WARNING STA-0440] set_output_delay not allowed on power port 'VDD'.
+[WARNING STA-0440] set_output_delay not allowed on ground port 'VSS'.
+OT_IO_INTER 38 inputs 45 outputs at 150 ps
+OT_CORNER ff
+OT_WS -3.479878885048748e-11
+OT_TNS -9.455434213379021e-10
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: busy$_DFF_PN0_ (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 169.08  169.08 ^ input external delay
+   0.00  169.08 ^ rst_n (in)
+  34.50  203.58 ^ input1868/Y (BUFx16f_ASAP7_75t_R)
+  21.16  224.75 ^ hold8766/Y (BUFx2_ASAP7_75t_R)
+  15.09  239.83 ^ hold8457/Y (BUFx2_ASAP7_75t_R)
+   1.03  240.86 ^ busy$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         240.86   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  28.74   28.74 ^ wire8127/Y (BUFx12f_ASAP7_75t_R)
+  39.87   68.61 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.52   92.13 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.39  115.52 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.55  138.07 ^ clkbuf_2_3_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.64  161.71 ^ clkbuf_3_7_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.03  185.75 ^ clkbuf_4_15_0_clk/Y (BUFx24_ASAP7_75t_R)
+  40.20  225.95 ^ clkbuf_leaf_89_clk/Y (BUFx24_ASAP7_75t_R)
+   1.19  227.14 ^ busy$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00  252.14   clock uncertainty
+   0.00  252.14   clock reconvergence pessimism
+  21.47  273.61   library removal time
+         273.61   data required time
+---------------------------------------------------------
+         273.61   data required time
+        -240.86   data arrival time
+---------------------------------------------------------
+         -32.75   slack (VIOLATED)
+
+
+Startpoint: cmd[4] (input port clocked by core_clk)
+Endpoint: cmd_q[4]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 169.08  169.08 v input external delay
+   0.00  169.08 v cmd[4] (in)
+  36.13  205.21 v hold8478/Y (BUFx2_ASAP7_75t_R)
+  16.89  222.11 v input1858/Y (BUFx2_ASAP7_75t_R)
+   1.95  224.06 v cmd_q[4]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         224.06   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  28.74   28.74 ^ wire8127/Y (BUFx12f_ASAP7_75t_R)
+  39.87   68.61 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.73   92.34 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.63  115.97 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.92  138.90 ^ clkbuf_2_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.12  162.02 ^ clkbuf_3_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.56  187.58 ^ clkbuf_4_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  31.41  218.99 ^ clkbuf_leaf_193_clk/Y (BUFx24_ASAP7_75t_R)
+   3.21  222.20 ^ cmd_q[4]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  247.20   clock uncertainty
+   0.00  247.20   clock reconvergence pessimism
+  11.65  258.86   library hold time
+         258.86   data required time
+---------------------------------------------------------
+         258.86   data required time
+        -224.06   data arrival time
+---------------------------------------------------------
+         -34.80   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 36
+OT_WS_REG_D -34.798790
+OT_WS_OUT 9.779843
+OT_WS_R2R 1.704498
+OT_WS_I2R -34.798790
+OT_PATH rst_n busy$_DFF_PN0_/RESETN -32.752827
+OT_PATH rst_n core.on.stale[14]$_DFFE_PN0P_/RESETN -7.788131
+OT_PATH rst_n core.on.open[18]$_DFFE_PN0P_/RESETN -6.620204
+OT_PATH rst_n core.on.rd_oh[25]$_DFFE_PN0P_/RESETN -5.933198
+OT_PATH rst_n core.on.rd_oh[18]$_DFFE_PN0P_/RESETN -4.594131
+OT_PATH rst_n core.on.stale[18]$_DFFE_PN0P_/RESETN -4.499401
+OT_PATH rst_n core.on.done[18]$_DFFE_PN0P_/RESETN -4.155398
+OT_PATH rst_n core.on.blk[24]$_DFF_PN0_/RESETN -3.768569
+OT_PATH rst_n core.on.done[24]$_DFFE_PN0P_/RESETN -3.161554
+OT_PATH rst_n core.on.bank[24].rcd_zr$_DFF_PN1_/SETN -1.370820
+OT_PATH rst_n core.on.stale[24]$_DFFE_PN0P_/RESETN -0.490191
+OT_PATH rst_n core.on.rd_oh[27]$_DFFE_PN0P_/RESETN -0.166450
+OT_PATH cmd[4] cmd_q[4]$_DFF_P_/D -34.798790
+OT_PATH cmd[2] cmd_q[2]$_DFF_P_/D -32.897018
+OT_PATH cmd[8] cmd_q[8]$_DFF_P_/D -30.608988
+OT_PATH cmd[27] cmd_q[27]$_DFF_P_/D -29.606428
+OT_PATH cmd[25] cmd_q[25]$_DFF_P_/D -28.952312
+OT_PATH cmd[22] cmd_q[22]$_DFF_P_/D -28.062914
+OT_PATH cmd[26] cmd_q[26]$_DFF_P_/D -27.764402
+OT_PATH cmd[9] cmd_q[9]$_DFF_P_/D -26.318197
+OT_PATH cmd[24] cmd_q[24]$_DFF_P_/D -26.112640
+OT_PATH read_credit[2] read_credit_q[2]$_DFF_P_/D -26.046860
+OT_PATH cmd[5] cmd_q[5]$_DFF_P_/D -25.688618
+OT_PATH cmd[23] cmd_q[23]$_DFF_P_/D -24.808683
+OT_PATH read_credit[1] read_credit_q[1]$_DFF_P_/D -24.801037
+OT_PATH cmd[7] cmd_q[7]$_DFF_P_/D -24.634502
+OT_PATH cmd[19] cmd_q[19]$_DFF_P_/D -24.581226
+OT_PATH cmd[29] cmd_q[29]$_DFF_P_/D -24.027197
+OT_PATH cmd[10] cmd_q[10]$_DFF_P_/D -23.744507
+OT_PATH cmd[31] cmd_q[31]$_DFF_P_/D -23.369946
+OT_PATH cmd[0] cmd_q[0]$_DFF_P_/D -23.343882
+OT_PATH cmd[17] cmd_q[17]$_DFF_P_/D -23.226727
+OT_PATH cmd[21] cmd_q[21]$_DFF_P_/D -23.135994
+OT_PATH cmd[3] cmd_q[3]$_DFF_P_/D -22.946367
+OT_PATH cmd[14] cmd_q[14]$_DFF_P_/D -22.916946
+OT_PATH cmd[15] cmd_q[15]$_DFF_P_/D -22.855635
+OT_PATH cmd[13] cmd_q[13]$_DFF_P_/D -22.559565
+OT_PATH cmd[18] cmd_q[18]$_DFF_P_/D -22.398500
+OT_PATH cmd[28] cmd_q[28]$_DFF_P_/D -22.328806
+OT_PATH cmd[11] cmd_q[11]$_DFF_P_/D -21.148666
+OT_PATH cmd[6] cmd_q[6]$_DFF_P_/D -21.085897
+OT_PATH cmd[12] cmd_q[12]$_DFF_P_/D -20.760809
+OT_PATH cmd[1] cmd_q[1]$_DFF_P_/D -20.451529
+OT_PATH cmd[30] cmd_q[30]$_DFF_P_/D -20.256464
+OT_PATH cmd[16] cmd_q[16]$_DFF_P_/D -19.801826
+OT_PATH cmd_v cmd_v_q$_DFF_PN0_/D -19.285767
+OT_PATH read_credit[0] read_credit_q[0]$_DFF_P_/D -17.585350
+OT_PATH cmd[20] cmd_q[20]$_DFF_P_/D -17.329611

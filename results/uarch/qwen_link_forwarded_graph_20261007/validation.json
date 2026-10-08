@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.qwen-link-clock-graph.validation.v1",
+  "graph_tests": {
+    "positive_complete_ownership": "PASS",
+    "missing_stage": "REJECTED",
+    "duplicate_stage": "REJECTED",
+    "north_corner_lane_alias": "REJECTED",
+    "truncated_segment": "REJECTED"
+  },
+  "interface_elaboration": "iverilog -g2012 -tnull -s ot_qwen_link_graph_r22, default-disabled graph with real primitive ports: PASS",
+  "active_graph_simulated": false,
+  "minimal_active_qualification": "separate fullNL1/NL2 two-hop primitive component evidence",
+  "full_system_simulation": false,
+  "primitives": 217,
+  "directional_stream_segments": 442,
+  "all_streams_single_driver_and_reader": true,
+  "cold_POR_bound_instances": 217,
+  "warm_reset_qualified": false,
+  "adopted": false
+}

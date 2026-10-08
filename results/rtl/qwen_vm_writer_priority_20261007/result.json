@@ -1,0 +1,31 @@
+{
+  "positive": "PASS",
+  "first_writer_mutant": "REJECTED OVERWRITE_SOURCE_PRIORITY_BROKEN atsecondsource",
+  "physical_frame_edges": {
+    "initialization": 3155,
+    "collision": 3166,
+    "readback": 3136
+  },
+  "collision_actual_reads": 1,
+  "collision_checked_ACKs": 1,
+  "actual_source_seats": [
+    0,
+    768,
+    784,
+    847,
+    848,
+    849,
+    864
+  ],
+  "read_old_before_all_writes": true,
+  "untouched_neighbor": true,
+  "source_NRs": 2256,
+  "source_NWs": 865,
+  "fixture_scope": "Authorized opaque initial HEAD data only; no arithmetic",
+  "captured_workload_collision": false,
+  "full_parent_enrollment": false,
+  "physical_admission": false,
+  "adopted": false,
+  "source_order_monitor": "All7 source seats observed ascending, each actual pack_data overwrite checked afterNBA",
+  "earlier_last_writer_only_evidence_preserved": true
+}

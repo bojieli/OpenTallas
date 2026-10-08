@@ -1,0 +1,9 @@
+{
+  "verdict": "FAIL",
+  "scope": "first zero-hop descriptor component bench",
+  "observed": "descriptor order/data failure at time125",
+  "cause": "testbench enabled south ready and checked combinational source ACK without allowing a delta cycle; it missed the zero-hop ACK and replayed held valid",
+  "correction": "allow signal propagation before waiting for source ACK; zero-hop and positive-latency cases then passed",
+  "RTL_protocol_changed": false,
+  "selected": false
+}

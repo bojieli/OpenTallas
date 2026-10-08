@@ -1,0 +1,4544 @@
+{
+ "schema": "opentallas.dsrom-s81-fulldie.feasibility.v1",
+ "cases": {
+  "sa_real": {
+   "case": "a",
+   "errors": [],
+   "exit": 0,
+   "legality": {
+    "instances": 57970,
+    "outside": 0,
+    "overlaps": 0
+   },
+   "manifest": {
+    "case": "a",
+    "generated_pins": 205729,
+    "instances": 57970,
+    "nets_bits": 7370553,
+    "variant": {
+     "bf": 440,
+     "cc_reach_um": 215.0,
+     "corr_interleave": true,
+     "die": "layer",
+     "elem_frame_h": 198.72,
+     "gen": "r8",
+     "head_bundles": 0,
+     "head_dies": 12,
+     "link_fix": true,
+     "nv": 0,
+     "pairs": 2050,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "rev": "r9",
+     "role": "scan die (4 HBM3E stacks; 32 of the rack)",
+     "slot_h": 280.8,
+     "slots": 10,
+     "stacks": [
+      "SW",
+      "SE",
+      "NW",
+      "NE"
+     ],
+     "vch_interleave": true
+    }
+   },
+   "peak_rss_mb": 38194,
+   "pin_access": {
+    "examples": [],
+    "inst_terms_valid_planar": 0,
+    "macro_no_ap": 0,
+    "macro_valid_planar_ap": 1713437,
+    "macro_valid_via_ap": 978745,
+    "no_access_errors": 0,
+    "scanned_instances": 57970,
+    "status": "DONE"
+   },
+   "snap_moves": {
+    "by_master": {
+     "ot_s81_cfg7_seq": 1280
+    },
+    "count": 1280,
+    "max_um": 0.024
+   },
+   "track_assert": {
+    "macros": 57970,
+    "max_offset_nm": 0.0,
+    "no_track_grid": 0,
+    "offtrack": 0,
+    "pins_checked": 16280483,
+    "verdict": "PASS"
+   },
+   "track_assert_offenders": [],
+   "wall": "10:04.82"
+  },
+  "sb_k16_i50": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:47:23",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 16656,
+      "overflow_h": 1,
+      "overflow_total": 7,
+      "overflow_v": 0,
+      "resource": 503803,
+      "usage_pct": 3.31
+     },
+     "M5": {
+      "demand": 154879,
+      "overflow_h": 0,
+      "overflow_total": 59,
+      "overflow_v": 6,
+      "resource": 698197,
+      "usage_pct": 22.18
+     },
+     "M6": {
+      "demand": 7588796,
+      "overflow_h": 6,
+      "overflow_total": 123,
+      "overflow_v": 0,
+      "resource": 48430526,
+      "usage_pct": 15.67
+     },
+     "M7": {
+      "demand": 4136534,
+      "overflow_h": 0,
+      "overflow_total": 57,
+      "overflow_v": 3,
+      "resource": 48652180,
+      "usage_pct": 8.5
+     },
+     "M8": {
+      "demand": 1344794,
+      "overflow_h": 3,
+      "overflow_total": 60,
+      "overflow_v": 0,
+      "resource": 40153106,
+      "usage_pct": 3.35
+     },
+     "M9": {
+      "demand": 1348555,
+      "overflow_h": 0,
+      "overflow_total": 35,
+      "overflow_v": 2,
+      "resource": 40136741,
+      "usage_pct": 3.36
+     }
+    },
+    "total": {
+     "demand": 14590214,
+     "overflow_h": 10,
+     "overflow_total": 341,
+     "overflow_v": 11,
+     "resource": 178574553,
+     "usage_pct": 8.17
+    },
+    "total_wirelength_bundle_um": 150222607.0
+   },
+   "grt_s": 2844,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 516468,
+    "bundle_pins": 15481,
+    "case": "b",
+    "congestion_iterations": 50,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": false,
+    "instances": 57970,
+    "tag": "base",
+    "variant": {
+     "bf": 440,
+     "cc_reach_um": 215.0,
+     "corr_interleave": true,
+     "die": "layer",
+     "elem_frame_h": 198.72,
+     "gen": "r8",
+     "head_bundles": 0,
+     "head_dies": 12,
+     "link_fix": true,
+     "nv": 0,
+     "pairs": 2050,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "rev": "r9",
+     "role": "scan die (4 HBM3E stacks; 32 of the rack)",
+     "slot_h": 280.8,
+     "slots": 10,
+     "stacks": [
+      "SW",
+      "SE",
+      "NW",
+      "NE"
+     ],
+     "vch_interleave": true
+    },
+    "wires": 7370553
+   },
+   "peak_rss_mb": 14767,
+   "wall": "50:29.09",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.01,
+      "over_0p9": 621943,
+      "over_1": 1,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.026,
+      "over_0p9": 618476,
+      "over_1": 6,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.007,
+      "over_0p9": 223150,
+      "over_1": 1,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.054,
+      "over_0p9": 216964,
+      "over_1": 9,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 1.026,
+      "over_0p9": 175,
+      "over_1": 1,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 93,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.054,
+      "M7",
+      11901,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.027,
+      "M7",
+      17039,
+      10534,
+      "spine"
+     ],
+     [
+      1.026,
+      "M8",
+      16928,
+      11568,
+      "spine"
+     ],
+     [
+      1.026,
+      "M5",
+      11901,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.021,
+      "M5",
+      29272,
+      2994,
+      "svc_SE"
+     ],
+     [
+      1.021,
+      "M5",
+      29235,
+      2994,
+      "svc_SE"
+     ],
+     [
+      1.02,
+      "M7",
+      29272,
+      2994,
+      "svc_SE"
+     ],
+     [
+      1.014,
+      "M7",
+      29235,
+      2994,
+      "svc_SE"
+     ],
+     [
+      1.01,
+      "M5",
+      17039,
+      11716,
+      "spine"
+     ],
+     [
+      1.01,
+      "M4",
+      11901,
+      3031,
+      "band"
+     ],
+     [
+      1.007,
+      "M7",
+      17002,
+      11273,
+      "spine"
+     ],
+     [
+      1.007,
+      "M7",
+      17002,
+      10534,
+      "spine"
+     ],
+     [
+      1.007,
+      "M7",
+      15856,
+      11236,
+      "spine"
+     ],
+     [
+      1.007,
+      "M7",
+      15819,
+      11236,
+      "spine"
+     ],
+     [
+      1.007,
+      "M7",
+      11864,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.007,
+      "M6",
+      11901,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.005,
+      "M5",
+      16928,
+      11532,
+      "spine"
+     ],
+     [
+      1.005,
+      "M5",
+      15856,
+      11347,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      18221,
+      10312,
+      "other"
+     ],
+     [
+      1.0,
+      "M9",
+      18221,
+      10275,
+      "other"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      10534,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      10423,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      15893,
+      11310,
+      "vch"
+     ],
+     [
+      1.0,
+      "M8",
+      14562,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      14525,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      14488,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      14451,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18628,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18591,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18554,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18517,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18369,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18332,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18295,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18258,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17815,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17778,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17741,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17704,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17519,
+      "frame_117"
+     ]
+    ]
+   },
+   "windows_baseline_subtracted": {
+    "baseline_subtracted": true,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 703
+     },
+     "M3": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 893
+     },
+     "M4": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 832
+     },
+     "M5": {
+      "max_use_over_cap": 0.148,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 4581
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 1801,
+      "over_1": 0,
+      "windows": 418971
+     },
+     "M7": {
+      "max_use_over_cap": 1.062,
+      "over_0p9": 3321,
+      "over_1": 4,
+      "windows": 417471
+     },
+     "M8": {
+      "max_use_over_cap": 1.058,
+      "over_0p9": 32,
+      "over_1": 1,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 20,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.062,
+      "M7",
+      15856,
+      11236,
+      "spine"
+     ],
+     [
+      1.058,
+      "M8",
+      16928,
+      11568,
+      "spine"
+     ],
+     [
+      1.03,
+      "M7",
+      17039,
+      10534,
+      "spine"
+     ],
+     [
+      1.008,
+      "M7",
+      17002,
+      11273,
+      "spine"
+     ],
+     [
+      1.008,
+      "M7",
+      17002,
+      10534,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      18221,
+      10312,
+      "other"
+     ],
+     [
+      1.0,
+      "M9",
+      18221,
+      10275,
+      "other"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      10534,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      10423,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      15893,
+      11310,
+      "vch"
+     ],
+     [
+      1.0,
+      "M8",
+      14562,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      14525,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      14488,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M8",
+      14451,
+      9905,
+      "channel2"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18628,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18591,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18554,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18517,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18369,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18332,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18295,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18258,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      17519,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      17482,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      17445,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      17408,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16965,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16928,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16891,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16854,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16669,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16632,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16595,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16558,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15301,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15264,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15228,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15191,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14451,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14414,
+      "frame_106"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "cfg": {
+     "bundle_nets": 19480,
+     "bundle_um": 2587301.6,
+     "max_um": 933.2,
+     "wire_m": 41.4
+    },
+    "clock": {
+     "bundle_nets": 3,
+     "bundle_um": 337518.4,
+     "max_um": 240406.0,
+     "wire_m": 5.4
+    },
+    "col_clock": {
+     "bundle_nets": 128,
+     "bundle_um": 3361678.4,
+     "max_um": 27202.6,
+     "wire_m": 53.8
+    },
+    "col_reset": {
+     "bundle_nets": 128,
+     "bundle_um": 2989555.6,
+     "max_um": 24264.2,
+     "wire_m": 47.8
+    },
+    "col_ret": {
+     "bundle_nets": 6400,
+     "bundle_um": 1388864.4,
+     "max_um": 877.8,
+     "wire_m": 22.2
+    },
+    "fclk": {
+     "bundle_nets": 6188,
+     "bundle_um": 2722372.0,
+     "max_um": 2485.6,
+     "wire_m": 43.6
+    },
+    "go": {
+     "bundle_nets": 4870,
+     "bundle_um": 716737.6,
+     "max_um": 443.5,
+     "wire_m": 11.5
+    },
+    "hbm_read": {
+     "bundle_nets": 2216,
+     "bundle_um": 40951.7,
+     "max_um": 18.5,
+     "wire_m": 0.7
+    },
+    "hub": {
+     "bundle_nets": 5360,
+     "bundle_um": 1367501.5,
+     "max_um": 3298.7,
+     "wire_m": 21.9
+    },
+    "lane": {
+     "bundle_nets": 96178,
+     "bundle_um": 46887271.2,
+     "max_um": 3326.4,
+     "wire_m": 750.2
+    },
+    "local": {
+     "bundle_nets": 2876,
+     "bundle_um": 360193.7,
+     "max_um": 508.2,
+     "wire_m": 5.8
+    },
+    "phy_dfi": {
+     "bundle_nets": 5560,
+     "bundle_um": 6351862.4,
+     "max_um": 2818.2,
+     "wire_m": 101.6
+    },
+    "reset": {
+     "bundle_nets": 3,
+     "bundle_um": 302932.9,
+     "max_um": 223626.0,
+     "wire_m": 4.8
+    },
+    "ret_leaf": {
+     "bundle_nets": 84448,
+     "bundle_um": 19856177.9,
+     "max_um": 2337.7,
+     "wire_m": 317.7
+    },
+    "ret_tree": {
+     "bundle_nets": 24340,
+     "bundle_um": 2560514.9,
+     "max_um": 351.1,
+     "wire_m": 41.0
+    },
+    "rom_a": {
+     "bundle_nets": 2050,
+     "bundle_um": 789641.2,
+     "max_um": 397.3,
+     "wire_m": 12.6
+    },
+    "rom_ce": {
+     "bundle_nets": 14350,
+     "bundle_um": 3040329.6,
+     "max_um": 388.1,
+     "wire_m": 48.6
+    },
+    "rom_q": {
+     "bundle_nets": 43050,
+     "bundle_um": 8009250.5,
+     "max_um": 406.6,
+     "wire_m": 128.1
+    },
+    "stat": {
+     "bundle_nets": 15846,
+     "bundle_um": 2358223.6,
+     "max_um": 803.9,
+     "wire_m": 37.7
+    },
+    "x_ctl": {
+     "bundle_nets": 2688,
+     "bundle_um": 763750.7,
+     "max_um": 1228.9,
+     "wire_m": 12.2
+    },
+    "x_lane": {
+     "bundle_nets": 180304,
+     "bundle_um": 43398801.6,
+     "max_um": 2550.2,
+     "wire_m": 694.4
+    }
+   }
+  },
+  "sb_k16_i5_base": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:00:11",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 2,
+      "usage_pct": 0.0
+     },
+     "M5": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M6": {
+      "demand": 31,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 48430526,
+      "usage_pct": 0.0
+     },
+     "M7": {
+      "demand": 3,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 48652180,
+      "usage_pct": 0.0
+     },
+     "M8": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40153106,
+      "usage_pct": 0.0
+     },
+     "M9": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40136741,
+      "usage_pct": 0.0
+     }
+    },
+    "total": {
+     "demand": 34,
+     "overflow_h": 0,
+     "overflow_total": 0,
+     "overflow_v": 0,
+     "resource": 177372555,
+     "usage_pct": 0.0
+    },
+    "total_wirelength_bundle_um": 332.0
+   },
+   "grt_s": 12,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 0,
+    "bundle_pins": 15481,
+    "case": "b",
+    "congestion_iterations": 5,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": true,
+    "instances": 57970,
+    "tag": "base",
+    "variant": {
+     "bf": 440,
+     "cc_reach_um": 215.0,
+     "corr_interleave": true,
+     "die": "layer",
+     "elem_frame_h": 198.72,
+     "gen": "r8",
+     "head_bundles": 0,
+     "head_dies": 12,
+     "link_fix": true,
+     "nv": 0,
+     "pairs": 2050,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "rev": "r9",
+     "role": "scan die (4 HBM3E stacks; 32 of the rack)",
+     "slot_h": 280.8,
+     "slots": 10,
+     "stacks": [
+      "SW",
+      "SE",
+      "NW",
+      "NE"
+     ],
+     "vch_interleave": true
+    },
+    "wires": 0
+   },
+   "peak_rss_mb": 11959,
+   "wall": "3:26.01",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 215303,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 212567,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 0.714,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 0.75,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M7",
+      31527,
+      18628,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18591,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18554,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18517,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18369,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18332,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18295,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18258,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17815,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17778,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17741,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17704,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17519,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17482,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17445,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17408,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16965,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16928,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16891,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16854,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16669,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16632,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16595,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16558,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15301,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15264,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15228,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15191,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15006,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14969,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14932,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14895,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14451,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14414,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14377,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14340,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14156,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14119,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14082,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14045,
+      "frame_106"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "rom_ce": {
+     "bundle_nets": 1,
+     "bundle_um": 332.6,
+     "max_um": 332.6,
+     "wire_m": 0.0
+    }
+   }
+  },
+  "l1a_real": {
+   "case": "a",
+   "errors": [],
+   "exit": 0,
+   "legality": {
+    "instances": 57283,
+    "outside": 0,
+    "overlaps": 0
+   },
+   "manifest": {
+    "case": "a",
+    "generated_pins": 179449,
+    "instances": 57283,
+    "nets_bits": 6847429,
+    "variant": {
+     "bf": 440,
+     "cc_reach_um": 215.0,
+     "corr_interleave": true,
+     "die": "layer1",
+     "elem_frame_h": 198.72,
+     "gen": "r8",
+     "head_bundles": 0,
+     "head_dies": 12,
+     "link_fix": true,
+     "nv": 0,
+     "pairs": 2050,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "rev": "r9",
+     "role": "layer die, 1 HBM3E stack (292 of the rack)",
+     "slot_h": 280.8,
+     "slots": 10,
+     "stacks": [
+      "SW"
+     ],
+     "vch_interleave": true
+    }
+   },
+   "peak_rss_mb": 36421,
+   "pin_access": {
+    "examples": [],
+    "inst_terms_valid_planar": 0,
+    "macro_no_ap": 0,
+    "macro_valid_planar_ap": 1310071,
+    "macro_valid_via_ap": 819383,
+    "no_access_errors": 0,
+    "scanned_instances": 57283,
+    "status": "DONE"
+   },
+   "snap_moves": {
+    "by_master": {
+     "ot_s81_cfg7_seq": 1280
+    },
+    "count": 1280,
+    "max_um": 0.024
+   },
+   "track_assert": {
+    "macros": 57283,
+    "max_offset_nm": 0.0,
+    "no_track_grid": 0,
+    "offtrack": 0,
+    "pins_checked": 15234164,
+    "verdict": "PASS"
+   },
+   "track_assert_offenders": [],
+   "wall": "9:18.60"
+  },
+  "l1b_k16_i50": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:22:20",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 15005,
+      "overflow_h": 2,
+      "overflow_total": 10,
+      "overflow_v": 0,
+      "resource": 478742,
+      "usage_pct": 3.13
+     },
+     "M5": {
+      "demand": 145827,
+      "overflow_h": 0,
+      "overflow_total": 20,
+      "overflow_v": 10,
+      "resource": 655481,
+      "usage_pct": 22.25
+     },
+     "M6": {
+      "demand": 6618670,
+      "overflow_h": 6,
+      "overflow_total": 66,
+      "overflow_v": 0,
+      "resource": 52984436,
+      "usage_pct": 12.49
+     },
+     "M7": {
+      "demand": 3360554,
+      "overflow_h": 0,
+      "overflow_total": 12,
+      "overflow_v": 7,
+      "resource": 53203177,
+      "usage_pct": 6.32
+     },
+     "M8": {
+      "demand": 1291782,
+      "overflow_h": 2,
+      "overflow_total": 24,
+      "overflow_v": 0,
+      "resource": 41275852,
+      "usage_pct": 3.13
+     },
+     "M9": {
+      "demand": 1296688,
+      "overflow_h": 0,
+      "overflow_total": 5,
+      "overflow_v": 1,
+      "resource": 41259617,
+      "usage_pct": 3.14
+     }
+    },
+    "total": {
+     "demand": 12728526,
+     "overflow_h": 10,
+     "overflow_total": 137,
+     "overflow_v": 18,
+     "resource": 189857305,
+     "usage_pct": 6.7
+    },
+    "total_wirelength_bundle_um": 132041364.0
+   },
+   "grt_s": 1341,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 482615,
+    "bundle_pins": 13750,
+    "case": "b",
+    "congestion_iterations": 50,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": false,
+    "instances": 57283,
+    "tag": "base",
+    "variant": {
+     "bf": 440,
+     "cc_reach_um": 215.0,
+     "corr_interleave": true,
+     "die": "layer1",
+     "elem_frame_h": 198.72,
+     "gen": "r8",
+     "head_bundles": 0,
+     "head_dies": 12,
+     "link_fix": true,
+     "nv": 0,
+     "pairs": 2050,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "rev": "r9",
+     "role": "layer die, 1 HBM3E stack (292 of the rack)",
+     "slot_h": 280.8,
+     "slots": 10,
+     "stacks": [
+      "SW"
+     ],
+     "vch_interleave": true
+    },
+    "wires": 6847429
+   },
+   "peak_rss_mb": 14506,
+   "wall": "25:04.98",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.02,
+      "over_0p9": 622399,
+      "over_1": 3,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.016,
+      "over_0p9": 619239,
+      "over_1": 4,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 187766,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.007,
+      "over_0p9": 182336,
+      "over_1": 1,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 127,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 51,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.02,
+      "M4",
+      11901,
+      3031,
+      "band"
+     ],
+     [
+      1.02,
+      "M4",
+      11864,
+      3031,
+      "band"
+     ],
+     [
+      1.016,
+      "M5",
+      11864,
+      3031,
+      "band"
+     ],
+     [
+      1.01,
+      "M5",
+      11901,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.01,
+      "M4",
+      11901,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.007,
+      "M7",
+      11864,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.005,
+      "M5",
+      17076,
+      11716,
+      "spine"
+     ],
+     [
+      1.005,
+      "M5",
+      11938,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      11716,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      12086,
+      "vch"
+     ],
+     [
+      1.0,
+      "M8",
+      16965,
+      12086,
+      "spine"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18628,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18591,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18554,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18517,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18369,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18332,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18295,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18258,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17815,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17778,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17741,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17704,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17519,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17482,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17445,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17408,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16965,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16928,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16891,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16854,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16669,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16632,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16595,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16558,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15301,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15264,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15228,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15191,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15006,
+      "frame_106"
+     ]
+    ]
+   },
+   "windows_baseline_subtracted": {
+    "baseline_subtracted": true,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 703
+     },
+     "M3": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 893
+     },
+     "M4": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 810
+     },
+     "M5": {
+      "max_use_over_cap": 4.0,
+      "over_0p9": 1,
+      "over_1": 1,
+      "windows": 4493
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 1289,
+      "over_1": 0,
+      "windows": 452298
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 2983,
+      "over_1": 0,
+      "windows": 451669
+     },
+     "M8": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 25,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 15,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      4.0,
+      "M5",
+      11864,
+      3031,
+      "band"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      11716,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      12086,
+      "vch"
+     ],
+     [
+      1.0,
+      "M8",
+      16965,
+      12086,
+      "spine"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18628,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18591,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18554,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18517,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18369,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18332,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18295,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      18258,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      17519,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      17482,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      17445,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      17408,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16669,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16632,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16595,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      16558,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15301,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15264,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15228,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15191,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14451,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14414,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14377,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14340,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14156,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14119,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14082,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14045,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      13343,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      13306,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      13269,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      13232,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      12492,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      12456,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      12419,
+      "frame_95"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      12382,
+      "frame_95"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "cfg": {
+     "bundle_nets": 19480,
+     "bundle_um": 2589999.7,
+     "max_um": 914.8,
+     "wire_m": 41.4
+    },
+    "clock": {
+     "bundle_nets": 3,
+     "bundle_um": 260512.8,
+     "max_um": 212317.0,
+     "wire_m": 4.2
+    },
+    "col_clock": {
+     "bundle_nets": 128,
+     "bundle_um": 3361742.9,
+     "max_um": 27202.6,
+     "wire_m": 53.8
+    },
+    "col_reset": {
+     "bundle_nets": 128,
+     "bundle_um": 2989741.0,
+     "max_um": 24199.6,
+     "wire_m": 47.8
+    },
+    "col_ret": {
+     "bundle_nets": 6400,
+     "bundle_um": 1388809.0,
+     "max_um": 877.8,
+     "wire_m": 22.2
+    },
+    "fclk": {
+     "bundle_nets": 5524,
+     "bundle_um": 2443933.8,
+     "max_um": 6098.4,
+     "wire_m": 39.1
+    },
+    "go": {
+     "bundle_nets": 4870,
+     "bundle_um": 716626.7,
+     "max_um": 443.5,
+     "wire_m": 11.5
+    },
+    "hbm_read": {
+     "bundle_nets": 554,
+     "bundle_um": 10237.9,
+     "max_um": 18.5,
+     "wire_m": 0.2
+    },
+    "hub": {
+     "bundle_nets": 4516,
+     "bundle_um": 1141980.8,
+     "max_um": 4093.3,
+     "wire_m": 18.3
+    },
+    "lane": {
+     "bundle_nets": 70215,
+     "bundle_um": 34028314.3,
+     "max_um": 5904.4,
+     "wire_m": 544.5
+    },
+    "local": {
+     "bundle_nets": 2326,
+     "bundle_um": 474483.2,
+     "max_um": 6911.5,
+     "wire_m": 7.6
+    },
+    "phy_dfi": {
+     "bundle_nets": 1390,
+     "bundle_um": 1590056.2,
+     "max_um": 2772.0,
+     "wire_m": 25.4
+    },
+    "reset": {
+     "bundle_nets": 3,
+     "bundle_um": 241117.5,
+     "max_um": 207105.0,
+     "wire_m": 3.9
+    },
+    "ret_leaf": {
+     "bundle_nets": 84448,
+     "bundle_um": 19854865.8,
+     "max_um": 2300.8,
+     "wire_m": 317.7
+    },
+    "ret_tree": {
+     "bundle_nets": 24340,
+     "bundle_um": 2560625.8,
+     "max_um": 351.1,
+     "wire_m": 41.0
+    },
+    "rom_a": {
+     "bundle_nets": 2050,
+     "bundle_um": 789641.2,
+     "max_um": 397.3,
+     "wire_m": 12.6
+    },
+    "rom_ce": {
+     "bundle_nets": 14350,
+     "bundle_um": 3040680.7,
+     "max_um": 388.1,
+     "wire_m": 48.7
+    },
+    "rom_q": {
+     "bundle_nets": 43050,
+     "bundle_um": 8008548.2,
+     "max_um": 397.3,
+     "wire_m": 128.1
+    },
+    "stat": {
+     "bundle_nets": 15846,
+     "bundle_um": 2358260.5,
+     "max_um": 656.0,
+     "wire_m": 37.7
+    },
+    "x_ctl": {
+     "bundle_nets": 2688,
+     "bundle_um": 763649.0,
+     "max_um": 702.2,
+     "wire_m": 12.2
+    },
+    "x_lane": {
+     "bundle_nets": 180304,
+     "bundle_um": 43396186.7,
+     "max_um": 1958.9,
+     "wire_m": 694.3
+    }
+   }
+  },
+  "l1b_k16_i5_base": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:00:10",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 2,
+      "usage_pct": 0.0
+     },
+     "M5": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M6": {
+      "demand": 31,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 52984436,
+      "usage_pct": 0.0
+     },
+     "M7": {
+      "demand": 3,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 53203177,
+      "usage_pct": 0.0
+     },
+     "M8": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 41275852,
+      "usage_pct": 0.0
+     },
+     "M9": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 41259617,
+      "usage_pct": 0.0
+     }
+    },
+    "total": {
+     "demand": 34,
+     "overflow_h": 0,
+     "overflow_total": 0,
+     "overflow_v": 0,
+     "resource": 188723084,
+     "usage_pct": 0.0
+    },
+    "total_wirelength_bundle_um": 332.0
+   },
+   "grt_s": 11,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 0,
+    "bundle_pins": 13750,
+    "case": "b",
+    "congestion_iterations": 5,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": true,
+    "instances": 57283,
+    "tag": "base",
+    "variant": {
+     "bf": 440,
+     "cc_reach_um": 215.0,
+     "corr_interleave": true,
+     "die": "layer1",
+     "elem_frame_h": 198.72,
+     "gen": "r8",
+     "head_bundles": 0,
+     "head_dies": 12,
+     "link_fix": true,
+     "nv": 0,
+     "pairs": 2050,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "rev": "r9",
+     "role": "layer die, 1 HBM3E stack (292 of the rack)",
+     "slot_h": 280.8,
+     "slots": 10,
+     "stacks": [
+      "SW"
+     ],
+     "vch_interleave": true
+    },
+    "wires": 0
+   },
+   "peak_rss_mb": 11916,
+   "wall": "3:30.40",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 181490,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 178369,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 0.714,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 0.714,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M7",
+      31527,
+      18628,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18591,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18554,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18517,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18369,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18332,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18295,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      18258,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17815,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17778,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17741,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17704,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17519,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17482,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17445,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      17408,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16965,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16928,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16891,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16854,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16669,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16632,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16595,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      16558,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15301,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15264,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15228,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15191,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      15006,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14969,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14932,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14895,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14451,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14414,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14377,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14340,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14156,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14119,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14082,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31527,
+      14045,
+      "frame_106"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "rom_ce": {
+     "bundle_nets": 1,
+     "bundle_um": 332.6,
+     "max_um": 332.6,
+     "wire_m": 0.0
+    }
+   }
+  },
+  "ha_real": {
+   "case": "a",
+   "errors": [],
+   "exit": 0,
+   "legality": {
+    "instances": 43967,
+    "outside": 0,
+    "overlaps": 0
+   },
+   "manifest": {
+    "case": "a",
+    "generated_pins": 209317,
+    "instances": 43967,
+    "nets_bits": 5980198,
+    "variant": {
+     "bf": 316,
+     "cc_reach_um": 215.0,
+     "corr_interleave": true,
+     "die": "head",
+     "elem_frame_h": 198.72,
+     "gen": "r8",
+     "head_bundles": 85,
+     "head_dies": 12,
+     "link_fix": true,
+     "nv": 0,
+     "pairs": 1471,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "rev": "r9",
+     "role": "head die (4 stacks; 12 of the rack)",
+     "slot_h": 280.8,
+     "slots": 10,
+     "stacks": [
+      "SW",
+      "SE",
+      "NW",
+      "NE"
+     ],
+     "vch_interleave": true
+    }
+   },
+   "peak_rss_mb": 33596,
+   "pin_access": {
+    "examples": [],
+    "inst_terms_valid_planar": 0,
+    "macro_no_ap": 0,
+    "macro_valid_planar_ap": 1734757,
+    "macro_valid_via_ap": 989187,
+    "no_access_errors": 0,
+    "scanned_instances": 43967,
+    "status": "DONE"
+   },
+   "snap_moves": {
+    "by_master": {
+     "ot_s81_cfg7_seq": 916
+    },
+    "count": 916,
+    "max_um": 0.024
+   },
+   "track_assert": {
+    "macros": 43967,
+    "max_offset_nm": 0.0,
+    "no_track_grid": 0,
+    "offtrack": 0,
+    "pins_checked": 13202642,
+    "verdict": "PASS"
+   },
+   "track_assert_offenders": [],
+   "wall": "8:35.00"
+  },
+  "hb_k16_i50": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "01:02:02",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 16240,
+      "overflow_h": 2,
+      "overflow_total": 6,
+      "overflow_v": 0,
+      "resource": 417023,
+      "usage_pct": 3.89
+     },
+     "M5": {
+      "demand": 122958,
+      "overflow_h": 0,
+      "overflow_total": 50,
+      "overflow_v": 9,
+      "resource": 552203,
+      "usage_pct": 22.27
+     },
+     "M6": {
+      "demand": 6558960,
+      "overflow_h": 9,
+      "overflow_total": 204,
+      "overflow_v": 0,
+      "resource": 51476935,
+      "usage_pct": 12.74
+     },
+     "M7": {
+      "demand": 3589545,
+      "overflow_h": 0,
+      "overflow_total": 52,
+      "overflow_v": 3,
+      "resource": 51644668,
+      "usage_pct": 6.95
+     },
+     "M8": {
+      "demand": 1255221,
+      "overflow_h": 3,
+      "overflow_total": 131,
+      "overflow_v": 0,
+      "resource": 40170652,
+      "usage_pct": 3.12
+     },
+     "M9": {
+      "demand": 1146767,
+      "overflow_h": 0,
+      "overflow_total": 23,
+      "overflow_v": 2,
+      "resource": 40148423,
+      "usage_pct": 2.86
+     }
+    },
+    "total": {
+     "demand": 12689691,
+     "overflow_h": 14,
+     "overflow_total": 466,
+     "overflow_v": 14,
+     "resource": 184409904,
+     "usage_pct": 6.88
+    },
+    "total_wirelength_bundle_um": 129986703.0
+   },
+   "grt_s": 3723,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 419349,
+    "bundle_pins": 15793,
+    "case": "b",
+    "congestion_iterations": 50,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": false,
+    "instances": 43967,
+    "tag": "base",
+    "variant": {
+     "bf": 316,
+     "cc_reach_um": 215.0,
+     "corr_interleave": true,
+     "die": "head",
+     "elem_frame_h": 198.72,
+     "gen": "r8",
+     "head_bundles": 85,
+     "head_dies": 12,
+     "link_fix": true,
+     "nv": 0,
+     "pairs": 1471,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "rev": "r9",
+     "role": "head die (4 stacks; 12 of the rack)",
+     "slot_h": 280.8,
+     "slots": 10,
+     "stacks": [
+      "SW",
+      "SE",
+      "NW",
+      "NE"
+     ],
+     "vch_interleave": true
+    },
+    "wires": 5980198
+   },
+   "peak_rss_mb": 14148,
+   "wall": "1:05:46",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.015,
+      "over_0p9": 622844,
+      "over_1": 2,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.02,
+      "over_0p9": 620428,
+      "over_1": 7,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.021,
+      "over_0p9": 202462,
+      "over_1": 4,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.054,
+      "over_0p9": 197940,
+      "over_1": 8,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 1.069,
+      "over_0p9": 148,
+      "over_1": 2,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.034,
+      "over_0p9": 142,
+      "over_1": 2,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.069,
+      "M8",
+      16965,
+      11790,
+      "spine"
+     ],
+     [
+      1.054,
+      "M7",
+      17039,
+      11716,
+      "spine"
+     ],
+     [
+      1.043,
+      "M8",
+      16965,
+      11753,
+      "spine"
+     ],
+     [
+      1.034,
+      "M9",
+      17039,
+      11716,
+      "spine"
+     ],
+     [
+      1.034,
+      "M9",
+      16965,
+      11716,
+      "spine"
+     ],
+     [
+      1.021,
+      "M7",
+      29235,
+      2994,
+      "svc_SE"
+     ],
+     [
+      1.021,
+      "M7",
+      16965,
+      11716,
+      "spine"
+     ],
+     [
+      1.021,
+      "M7",
+      11864,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.021,
+      "M6",
+      16965,
+      11827,
+      "spine"
+     ],
+     [
+      1.02,
+      "M7",
+      11901,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.02,
+      "M5",
+      11901,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.015,
+      "M4",
+      11864,
+      3031,
+      "band"
+     ],
+     [
+      1.014,
+      "M6",
+      16965,
+      11790,
+      "spine"
+     ],
+     [
+      1.01,
+      "M5",
+      17076,
+      11716,
+      "spine"
+     ],
+     [
+      1.007,
+      "M7",
+      17149,
+      11679,
+      "spine"
+     ],
+     [
+      1.007,
+      "M7",
+      17002,
+      12308,
+      "spine"
+     ],
+     [
+      1.007,
+      "M7",
+      11938,
+      2994,
+      "svc_SW"
+     ],
+     [
+      1.007,
+      "M6",
+      16965,
+      11753,
+      "spine"
+     ],
+     [
+      1.007,
+      "M6",
+      15856,
+      12197,
+      "spine"
+     ],
+     [
+      1.005,
+      "M5",
+      29198,
+      3031,
+      "band"
+     ],
+     [
+      1.005,
+      "M5",
+      17112,
+      11716,
+      "spine"
+     ],
+     [
+      1.005,
+      "M5",
+      17112,
+      11679,
+      "spine"
+     ],
+     [
+      1.005,
+      "M5",
+      16965,
+      12492,
+      "spine"
+     ],
+     [
+      1.005,
+      "M5",
+      16373,
+      12012,
+      "vch"
+     ],
+     [
+      1.005,
+      "M4",
+      16965,
+      11753,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      12197,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      12160,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      12123,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      12086,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      12049,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      11790,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16484,
+      12012,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16484,
+      11975,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16484,
+      11938,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16484,
+      11901,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      12086,
+      "vch"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      12012,
+      "vch"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      11975,
+      "vch"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      11938,
+      "vch"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      11901,
+      "vch"
+     ]
+    ]
+   },
+   "windows_baseline_subtracted": {
+    "baseline_subtracted": true,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 703
+     },
+     "M3": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 893
+     },
+     "M4": {
+      "max_use_over_cap": 0.0,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 857
+     },
+     "M5": {
+      "max_use_over_cap": 0.833,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 3808
+     },
+     "M6": {
+      "max_use_over_cap": 1.031,
+      "over_0p9": 1916,
+      "over_1": 4,
+      "windows": 437289
+     },
+     "M7": {
+      "max_use_over_cap": 1.061,
+      "over_0p9": 2914,
+      "over_1": 3,
+      "windows": 437144
+     },
+     "M8": {
+      "max_use_over_cap": 1.154,
+      "over_0p9": 31,
+      "over_1": 2,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 1.077,
+      "over_0p9": 45,
+      "over_1": 2,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.154,
+      "M8",
+      16965,
+      11790,
+      "spine"
+     ],
+     [
+      1.096,
+      "M8",
+      16965,
+      11753,
+      "spine"
+     ],
+     [
+      1.077,
+      "M9",
+      17039,
+      11716,
+      "spine"
+     ],
+     [
+      1.077,
+      "M9",
+      16965,
+      11716,
+      "spine"
+     ],
+     [
+      1.061,
+      "M7",
+      17039,
+      11716,
+      "spine"
+     ],
+     [
+      1.031,
+      "M6",
+      15856,
+      12197,
+      "spine"
+     ],
+     [
+      1.023,
+      "M7",
+      16965,
+      11716,
+      "spine"
+     ],
+     [
+      1.023,
+      "M6",
+      16965,
+      11827,
+      "spine"
+     ],
+     [
+      1.016,
+      "M6",
+      16965,
+      11790,
+      "spine"
+     ],
+     [
+      1.008,
+      "M7",
+      17002,
+      12308,
+      "spine"
+     ],
+     [
+      1.008,
+      "M6",
+      16965,
+      11753,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      12197,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      12160,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      12123,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      12086,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      12049,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      17002,
+      11790,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16484,
+      12012,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16484,
+      11975,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16484,
+      11938,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16484,
+      11901,
+      "spine"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      12086,
+      "vch"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      12012,
+      "vch"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      11975,
+      "vch"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      11938,
+      "vch"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      11901,
+      "vch"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      11864,
+      "vch"
+     ],
+     [
+      1.0,
+      "M9",
+      16410,
+      11753,
+      "vch"
+     ],
+     [
+      1.0,
+      "M8",
+      17076,
+      12086,
+      "spine"
+     ],
+     [
+      1.0,
+      "M8",
+      17039,
+      12086,
+      "spine"
+     ],
+     [
+      1.0,
+      "M7",
+      31379,
+      18739,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31083,
+      18739,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31083,
+      18184,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15301,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15264,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15228,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      15191,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14747,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14710,
+      "frame_106"
+     ],
+     [
+      1.0,
+      "M7",
+      31046,
+      14673,
+      "frame_106"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "cfg": {
+     "bundle_nets": 13988,
+     "bundle_um": 1853220.6,
+     "max_um": 526.7,
+     "wire_m": 29.7
+    },
+    "clock": {
+     "bundle_nets": 3,
+     "bundle_um": 330626.0,
+     "max_um": 235454.0,
+     "wire_m": 5.3
+    },
+    "col_clock": {
+     "bundle_nets": 128,
+     "bundle_um": 2679720.1,
+     "max_um": 24375.1,
+     "wire_m": 42.9
+    },
+    "col_reset": {
+     "bundle_nets": 128,
+     "bundle_um": 2419374.3,
+     "max_um": 21982.0,
+     "wire_m": 38.7
+    },
+    "col_ret": {
+     "bundle_nets": 5715,
+     "bundle_um": 1448915.2,
+     "max_um": 1912.7,
+     "wire_m": 23.2
+    },
+    "fclk": {
+     "bundle_nets": 6107,
+     "bundle_um": 2736037.9,
+     "max_um": 6939.2,
+     "wire_m": 43.8
+    },
+    "go": {
+     "bundle_nets": 3837,
+     "bundle_um": 664596.2,
+     "max_um": 1700.2,
+     "wire_m": 10.6
+    },
+    "hb_ctl": {
+     "bundle_nets": 850,
+     "bundle_um": 261057.7,
+     "max_um": 572.9,
+     "wire_m": 4.2
+    },
+    "hb_res": {
+     "bundle_nets": 2720,
+     "bundle_um": 770763.8,
+     "max_um": 591.4,
+     "wire_m": 12.3
+    },
+    "hb_root": {
+     "bundle_nets": 765,
+     "bundle_um": 301307.2,
+     "max_um": 5054.3,
+     "wire_m": 4.8
+    },
+    "hb_x": {
+     "bundle_nets": 2720,
+     "bundle_um": 2562760.2,
+     "max_um": 5701.1,
+     "wire_m": 41.0
+    },
+    "hbm_read": {
+     "bundle_nets": 2216,
+     "bundle_um": 40951.7,
+     "max_um": 18.5,
+     "wire_m": 0.7
+    },
+    "hub": {
+     "bundle_nets": 4516,
+     "bundle_um": 1216039.4,
+     "max_um": 7096.3,
+     "wire_m": 19.5
+    },
+    "lane": {
+     "bundle_nets": 93870,
+     "bundle_um": 45857879.8,
+     "max_um": 12326.2,
+     "wire_m": 733.7
+    },
+    "local": {
+     "bundle_nets": 2920,
+     "bundle_um": 590685.5,
+     "max_um": 7761.6,
+     "wire_m": 9.5
+    },
+    "phy_dfi": {
+     "bundle_nets": 5560,
+     "bundle_um": 6360012.1,
+     "max_um": 2864.4,
+     "wire_m": 101.8
+    },
+    "reset": {
+     "bundle_nets": 3,
+     "bundle_um": 291817.6,
+     "max_um": 216105.0,
+     "wire_m": 4.7
+    },
+    "ret_leaf": {
+     "bundle_nets": 59976,
+     "bundle_um": 13910505.8,
+     "max_um": 1995.8,
+     "wire_m": 222.6
+    },
+    "ret_tree": {
+     "bundle_nets": 17625,
+     "bundle_um": 1782830.3,
+     "max_um": 360.4,
+     "wire_m": 28.5
+    },
+    "rom_a": {
+     "bundle_nets": 1471,
+     "bundle_um": 567040.3,
+     "max_um": 397.3,
+     "wire_m": 9.1
+    },
+    "rom_ce": {
+     "bundle_nets": 10297,
+     "bundle_um": 2183975.6,
+     "max_um": 388.1,
+     "wire_m": 34.9
+    },
+    "rom_q": {
+     "bundle_nets": 30891,
+     "bundle_um": 5750153.6,
+     "max_um": 406.6,
+     "wire_m": 92.0
+    },
+    "stat": {
+     "bundle_nets": 11828,
+     "bundle_um": 1793502.5,
+     "max_um": 665.3,
+     "wire_m": 28.7
+    },
+    "x_ctl": {
+     "bundle_nets": 2198,
+     "bundle_um": 594492.4,
+     "max_um": 914.8,
+     "wire_m": 9.5
+    },
+    "x_lane": {
+     "bundle_nets": 139015,
+     "bundle_um": 32986763.0,
+     "max_um": 2032.8,
+     "wire_m": 527.8
+    }
+   }
+  },
+  "hb_k16_i5_base": {
+   "case": "b",
+   "errors": [],
+   "exit": 0,
+   "grt": {
+    "elapsed_s": null,
+    "errors": [],
+    "grt_runtime": "00:00:10",
+    "layers": {
+     "M1": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M2": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M3": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M4": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 2,
+      "usage_pct": 0.0
+     },
+     "M5": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 0,
+      "usage_pct": 0.0
+     },
+     "M6": {
+      "demand": 31,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 51476935,
+      "usage_pct": 0.0
+     },
+     "M7": {
+      "demand": 3,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 51644668,
+      "usage_pct": 0.0
+     },
+     "M8": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40170652,
+      "usage_pct": 0.0
+     },
+     "M9": {
+      "demand": 0,
+      "overflow_h": 0,
+      "overflow_total": 0,
+      "overflow_v": 0,
+      "resource": 40148423,
+      "usage_pct": 0.0
+     }
+    },
+    "total": {
+     "demand": 34,
+     "overflow_h": 0,
+     "overflow_total": 0,
+     "overflow_v": 0,
+     "resource": 183440680,
+     "usage_pct": 0.0
+    },
+    "total_wirelength_bundle_um": 332.0
+   },
+   "grt_s": 11,
+   "manifest": {
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "channel": 0.1378,
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997
+     }
+    },
+    "bundle_k": 16,
+    "bundle_nets": 0,
+    "bundle_pins": 15793,
+    "case": "b",
+    "congestion_iterations": 5,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "empty_baseline": true,
+    "instances": 43967,
+    "tag": "base",
+    "variant": {
+     "bf": 316,
+     "cc_reach_um": 215.0,
+     "corr_interleave": true,
+     "die": "head",
+     "elem_frame_h": 198.72,
+     "gen": "r8",
+     "head_bundles": 85,
+     "head_dies": 12,
+     "link_fix": true,
+     "nv": 0,
+     "pairs": 1471,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "rev": "r9",
+     "role": "head die (4 stacks; 12 of the rack)",
+     "slot_h": 280.8,
+     "slots": 10,
+     "stacks": [
+      "SW",
+      "SE",
+      "NW",
+      "NE"
+     ],
+     "vch_interleave": true
+    },
+    "wires": 0
+   },
+   "peak_rss_mb": 11818,
+   "wall": "3:29.20",
+   "windows": {
+    "baseline_subtracted": false,
+    "per_layer": {
+     "M2": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M3": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M4": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627969,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M5": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 627779,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M6": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 195249,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M7": {
+      "max_use_over_cap": 1.0,
+      "over_0p9": 194287,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M8": {
+      "max_use_over_cap": 0.714,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 628672
+     },
+     "M9": {
+      "max_use_over_cap": 0.75,
+      "over_0p9": 0,
+      "over_1": 0,
+      "windows": 628672
+     }
+    },
+    "worst": [
+     [
+      1.0,
+      "M7",
+      31601,
+      18960,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18924,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18887,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18850,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18813,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18776,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18739,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18369,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18332,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18295,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18258,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18221,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      18184,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17815,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17778,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17741,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17704,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17667,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17630,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17260,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17223,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17186,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17149,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17112,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17076,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      17039,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      16706,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      16669,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      16632,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      16595,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      16558,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      16521,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31601,
+      16484,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31564,
+      18960,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31564,
+      18924,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31564,
+      18887,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31564,
+      18850,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31564,
+      18813,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31564,
+      18776,
+      "frame_117"
+     ],
+     [
+      1.0,
+      "M7",
+      31564,
+      18739,
+      "frame_117"
+     ]
+    ]
+   },
+   "wire_by_class": {
+    "rom_ce": {
+     "bundle_nets": 1,
+     "bundle_um": 332.6,
+     "max_um": 332.6,
+     "wire_m": 0.0
+    }
+   }
+  }
+ }
+}

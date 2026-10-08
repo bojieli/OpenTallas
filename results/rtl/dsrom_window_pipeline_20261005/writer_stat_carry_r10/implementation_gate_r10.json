@@ -1,0 +1,66 @@
+{
+  "status": "CHANGED_WRITER_EXACT_PASS_PHYSICAL_PENDING",
+  "prebuild_model_commit": "1c5fd1f56",
+  "positive": {
+    "compared_cycles": 820,
+    "negative_cases": 5,
+    "modular_boundary_cases": 8,
+    "final_blocks": 16,
+    "final_real_write_acknowledgements": 32,
+    "configs": 1
+  },
+  "meaningful_negative": "stale WC carry update causes actual second write grant sectors00000000 vs golden00000100; expected nonzero at1296000ps",
+  "coverage": [
+    "full128 metadata writer",
+    "same-edge ready/identity/tag/address/codes/scales/strobes/debt/status reference compare",
+    "live descriptor mutation after accepted debt preserves real completion drain",
+    "unaccepted held request reset",
+    "masked undriven inputs after capture",
+    "full32 modulo wrap"
+  ],
+  "limits": [
+    "read-side counters share checked arithmetic but actual read responses were not stimulated by this minimum write vehicle",
+    "no timing/physical credit from existing R5 d52 source which predates this writer",
+    "mutable staging protection and finite parent allocation/CTS/loaded receiver proof pending"
+  ],
+  "resources": {
+    "compile_positive": {
+      "peak_RSS_KiB": 9976,
+      "elapsed": "0:00.02"
+    },
+    "negative": {
+      "peak_RSS_KiB": 7976,
+      "elapsed": "0:00.01"
+    },
+    "compile_negative": {
+      "peak_RSS_KiB": 10004,
+      "elapsed": "0:00.02"
+    },
+    "positive": {
+      "peak_RSS_KiB": 7904,
+      "elapsed": "0:00.02"
+    }
+  },
+  "gate_source_sha256": {
+    "rtl/chip/ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+    "rtl/chip/ot_chip_v41x_window_stage4.sv": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv": "5f8d73e58df5cb67774d10e21ec5619c1a0be1784d15d3ce2dc5a38d83157bac",
+    "rtl/test/dsrom_sys/s81_window_la/tb_window_writer_stat_carry.sv": "5e953c16d2dbfe4772fb3fb5729ab32cd8cb11627f937dcad4dbb7cc8a88b5df",
+    "results/rtl/dsrom_window_pipeline_20261005/writer_stat_carry_r10/writer_reference_for_gate.sv": "a55345bb12e0cde825c5e693a2f66464a61285691985f24115e385dd73d4773b",
+    "results/rtl/dsrom_window_pipeline_20261005/writer_stat_carry_r10/writer_before_r10.sv": "a2cd6ecd33bb85718a0050886521d57d0bae7d9b3b4cbb05161b8c3bc7240606",
+    "results/uarch/dsrom_window_pipeline_20261005/writer_stat_carry_prebuild_r10.json": "33afc24698e45b9e41c97cabfccd97c1ead3b4fb98cf35d63f186dc116119c24"
+  },
+  "AGI_guard": "unchanged /srv/opentallas-scratch/admit.sh16, no wall/CPU/AS/file caps",
+  "E2_failure": "unchanged guard ENOSPC before child, originals preserved e2_admission_failure",
+  "new_FF_upper": 12,
+  "added_cycles": 0,
+  "new_ports": 0,
+  "source_pass_replayed": false,
+  "original_344_pass_repeated": false,
+  "default_OFF": true,
+  "mean_ns": 154.7125,
+  "target_ns": 140,
+  "performance": "FAIL",
+  "adoption": false,
+  "routed_SS_FF": false
+}

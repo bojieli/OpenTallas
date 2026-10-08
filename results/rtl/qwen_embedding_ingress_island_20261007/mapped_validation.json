@@ -1,0 +1,54 @@
+{
+  "scope": "Actual ASAP7 sequential FF mapping; no ORFS combinational or physical closure",
+  "source_sha256": "240b5ac1e2178b5f3577daf782a91176b523948b7262dfb7c18256a3fcd7a7ad",
+  "cases": [
+    {
+      "AW": 12,
+      "counts": {
+        "address_q": 12,
+        "address_n": 12,
+        "valid_q": 1,
+        "valid_n": 1,
+        "credit_q": 1,
+        "credit_n": 1
+      },
+      "mapped_netlist_sha256": "63fb5e26cf923ba4186628e18d530ca038e69157b32dd2b026c6ca1d61380786",
+      "negative_controls": [
+        {
+          "mutation": "merged",
+          "rejected": true,
+          "reason": "('address_n', 'shared state', ['$auto$ff.cc:337:slice$120', '$auto$ff.cc:337:slice$121', '$auto$ff.cc:337:slice$122', '$auto$ff.cc:337:slice$123', '$auto$ff.cc:337:slice$124', '$auto$ff.cc:337:slice$125', '$auto$ff.cc:337:slice$126', '$auto$ff.cc:337:slice$127', '$auto$ff.cc:337:slice$128', '$auto$ff.cc:337:slice$129', '$auto$ff.cc:337:slice$130', '$auto$ff.cc:337:slice$131'])"
+        },
+        {
+          "mutation": "missing",
+          "rejected": true,
+          "reason": "address_n: missing or non-contiguous split vector storage"
+        }
+      ]
+    },
+    {
+      "AW": 18,
+      "counts": {
+        "address_q": 18,
+        "address_n": 18,
+        "valid_q": 1,
+        "valid_n": 1,
+        "credit_q": 1,
+        "credit_n": 1
+      },
+      "mapped_netlist_sha256": "589d73b385e2bf87923c30ea36a7ae88608ec9ae8b6c27a44c19b6dcd9ef9168",
+      "negative_controls": [
+        {
+          "mutation": "merged",
+          "rejected": true,
+          "reason": "('address_n', 'shared state', ['$auto$ff.cc:337:slice$126', '$auto$ff.cc:337:slice$127', '$auto$ff.cc:337:slice$128', '$auto$ff.cc:337:slice$129', '$auto$ff.cc:337:slice$130', '$auto$ff.cc:337:slice$131', '$auto$ff.cc:337:slice$132', '$auto$ff.cc:337:slice$133', '$auto$ff.cc:337:slice$134', '$auto$ff.cc:337:slice$135', '$auto$ff.cc:337:slice$136', '$auto$ff.cc:337:slice$137', '$auto$ff.cc:337:slice$138', '$auto$ff.cc:337:slice$139', '$auto$ff.cc:337:slice$140', '$auto$ff.cc:337:slice$141', '$auto$ff.cc:337:slice$142', '$auto$ff.cc:337:slice$143'])"
+        },
+        {
+          "mutation": "missing",
+          "rejected": true,
+          "reason": "address_n: missing or non-contiguous split vector storage"
+        }
+      ]
+    }
+  ]
+}

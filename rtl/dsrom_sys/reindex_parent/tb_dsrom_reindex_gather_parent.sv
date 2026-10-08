@@ -11,6 +11,8 @@
 // Prints KGSTACK lines (per stack: blocks, sectors, first / last output cycle, HBM
 // stats) and KGATHER_PASS with the rank's last output cycle.
 module tb_hdc_v41x_idx_kgather #(
+    parameter integer SPLIT_COUNTERS = 0,
+    parameter integer IO_MARGIN = 0,   // 1: register-to-register boundary twin (ot_dsrom_reindex_io_margin.sv)
     parameter integer OPT_KC6 = 1,
     parameter integer OPT_KC7 = 0,
     parameter integer OPT_KC8 = 0,
@@ -70,7 +72,30 @@ module tb_hdc_v41x_idx_kgather #(
             .rsp_tag(h_rsp_tag[s*NPC*TAGW +:NPC*TAGW]),
             .rsp_beat(h_rsp_beat[s*NPC*BEATW +:NPC*BEATW]),
             .rsp_data(h_rsp_data[s*NPC*DW +:NPC*DW]));
-        ot_dsrom_reindex_gather_parent #( .NPC(NPC),.WB(WB),.AW(AW),.HW(HW),.TAGW(TAGW),.LENW(LENW),.BEATW(BEATW),
+        if(IO_MARGIN) begin:g_m
+        ot_dsrom_reindex_gather_parent_margin #(.SPLIT_COUNTERS(SPLIT_COUNTERS), .NPC(NPC),.WB(WB),.AW(AW),.HW(HW),.TAGW(TAGW),.LENW(LENW),.BEATW(BEATW),
+            .DW(DW),.LBW(LBW),.LMW(LMW),.DF(DF)) kg (
+            .clk(clk),.rst_n(rst_n),.lw_v(lw_v[s]),.lw_slot(3'd0),.lw_addr(lw_addr),.lw_blk(lw_blk[s]),
+            .cmd_v(cmd_v),.cmd_slot(3'd0),.cmd_base(HW'(BASE+s*BSTEP)),.cmd_skip(10'((s*OSTEP)%1024)),
+            .cmd_n(12'(nlist[s])),.busy(s_busy[s]),.fault(s_fault[s]),
+            .req_v(h_req_v[s*NPC +:NPC]),.req_rdy(h_req_rdy[s*NPC +:NPC]),
+            .req_addr(h_req_addr[s*NPC*AW +:NPC*AW]),
+            .req_len(h_req_len[s*NPC*LENW +:NPC*LENW]),
+            .req_tag(h_req_tag[s*NPC*TAGW +:NPC*TAGW]),
+            .rsp_v(h_rsp_v[s*NPC +:NPC]),.rsp_rdy(h_rsp_rdy[s*NPC +:NPC]),
+            .rsp_tag(h_rsp_tag[s*NPC*TAGW +:NPC*TAGW]),
+            .rsp_beat(h_rsp_beat[s*NPC*BEATW +:NPC*BEATW]),
+            .rsp_data(h_rsp_data[s*NPC*DW +:NPC*DW]),
+            .o_valid(s_valid[s]),.o_ready(ready),
+            .o_kv(s_kv[s*16 +:16]),.o_key(s_key[s*16*544 +:16*544]),.o_blk(s_blk[s*2*LBW +:2*LBW]),
+            .cnt_keys_streamed(s_keys[s*48 +:48]),
+            .cnt_hbm_beats(s_beats[s*48 +:48]));
+        always @(posedge clk) if(rst_n && s_fault[s]) begin
+            $display("PARENT_FAULT stack=%0d core=%b list=%b command=%b bad_command=%b req=%h drain=%b rd_seq=%0d list_v=%b count=%0d reserved=%0d",s,kg.u_core.u_control.cfault,kg.u_core.u_control.mfault,kg.u_core.u_control.command_fault,kg.u_core.u_control.bad_command,kg.u_core.u_control.qfault,kg.u_core.dfault,kg.u_core.u_control.u_c.rd_seq,kg.u_core.u_control.u_c.list_v,kg.u_core.u_control.list_count,kg.u_core.u_d.u_queue.reserved);
+            $fatal(1,"production parent fault");
+        end
+        end else begin:g_b
+        ot_dsrom_reindex_gather_parent #(.SPLIT_COUNTERS(SPLIT_COUNTERS), .NPC(NPC),.WB(WB),.AW(AW),.HW(HW),.TAGW(TAGW),.LENW(LENW),.BEATW(BEATW),
             .DW(DW),.LBW(LBW),.LMW(LMW),.DF(DF)) kg (
             .clk(clk),.rst_n(rst_n),.lw_v(lw_v[s]),.lw_slot(3'd0),.lw_addr(lw_addr),.lw_blk(lw_blk[s]),
             .cmd_v(cmd_v),.cmd_slot(3'd0),.cmd_base(HW'(BASE+s*BSTEP)),.cmd_skip(10'((s*OSTEP)%1024)),
@@ -90,6 +115,7 @@ module tb_hdc_v41x_idx_kgather #(
         always @(posedge clk) if(rst_n && s_fault[s]) begin
             $display("PARENT_FAULT stack=%0d core=%b list=%b command=%b bad_command=%b req=%h drain=%b rd_seq=%0d list_v=%b count=%0d reserved=%0d",s,kg.u_control.cfault,kg.u_control.mfault,kg.u_control.command_fault,kg.u_control.bad_command,kg.u_control.qfault,kg.dfault,kg.u_control.u_c.rd_seq,kg.u_control.u_c.list_v,kg.u_control.list_count,kg.u_d.u_queue.reserved);
             $fatal(1,"production parent fault");
+        end
         end
     end endgenerate
     function automatic [255:0] pat(input [AW-1:0] sec);

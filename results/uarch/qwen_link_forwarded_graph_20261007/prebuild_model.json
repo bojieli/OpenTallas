@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.qwen-full-cycle-forwarded-link.prebuild.v1",
+  "default_off": true,
+  "adopted": false,
+  "model_before_RTL": true,
+  "shape": {
+    "NL": 2,
+    "directional_streams": 4,
+    "bits_per_stream": 528,
+    "data_bits_per_stream": 512,
+    "opaque_control_bits_per_stream": 16,
+    "MACs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "input_bits_per_cycle": 2112,
+    "output_bits_per_cycle": 2112
+  },
+  "clock": {
+    "stream_hz": 1200000000,
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "input_clocks": 4,
+    "output_clocks": 4,
+    "buffer_inverters_per_direction": 2,
+    "buffer_implementation": "Two distinct kept inverter hierarchy cells; real non-inverting clock path, never ideal assign fck=clk",
+    "capture": "posedge of each independently owned incoming directional clock",
+    "forwarded_waveform": "same polarity/rate; clock arrival includes both cells and routed clock net",
+    "requirement": "For every downstream capture prove min(data) > propagated clock difference + hold +25ps, and max(data) < T + clock difference - setup -60ps. Zero-delay RTL cannot prove this. No false/multicycle exceptions for the forwarded data path."
+  },
+  "state": {
+    "payload_FFs": 2048,
+    "control_FFs": 64,
+    "reset_synchronizer_FFs": 8,
+    "clock_inverters": 8,
+    "old_reset_synchronizer_FFs": 2,
+    "reset_FF_delta": 6,
+    "replica_FF_and_buffer_area_proxy_um2": 624.8404800000001,
+    "source_cell_areas_um2": {
+      "DFFHQNx1_ASAP7_75t_R": 0.2916,
+      "DFFASRHQNx1_ASAP7_75t_R": 0.37908,
+      "INVx1_ASAP7_75t_R": 0.04374
+    }
+  },
+  "latency": {
+    "cycles_per_hop_per_direction": 1,
+    "added_cycles_vs_existing_full_master": 0,
+    "added_single_user_token_cycles": 0,
+    "throughput_packets_per_cycle_per_direction": 1,
+    "no_clock_speed_credit": true,
+    "reset_release_clock_edges": 2,
+    "first_nonzero_control_capture_edge_after_release": 3
+  },
+  "floorplan": {
+    "candidate_frame_um": [
+      260.04,
+      69.072
+    ],
+    "single_link_frame_um": [
+      130.008,
+      69.072
+    ],
+    "slot_fit": "New tallslot needs actual dieplacement; no in-place fit claim",
+    "signal_pin_count": 4224,
+    "clock_pin_count": 8,
+    "reset_pin_count": 1,
+    "north_south_signal_pins_per_face": 2112,
+    "pin_span_um": 252,
+    "track_pitch_um": 0.048,
+    "nominal_tracks_per_face": 5250,
+    "pin_access_and_routing": "Nominal face capacity passes; real controlclock/reset routing must be measured. Existing original frame failed horizontal-layer congestion, candidate doubles height."
+  },
+  "reset": {
+    "input": "cold POR only, async assert and independent two-FF release per directional clock",
+    "control_during_reset": 0,
+    "data_during_reset": "undefined; opaquecontrol qualifiers allzero",
+    "forward_clock_during_reset": "free running, never gated byreset",
+    "warm_reset": "Not allowed at station. System must inhibit new issues, drain outstanding credits/results at every endpoint, acknowledge quiescence, then perform coordinated reset/epoch transition. Endpoint drain proof and actual controller binding remain integration gates."
+  },
+  "functional_contract": "Exact full528-bit word delayed one edge of corresponding incoming directional clock. Data streams cannot cross clock ownership. Corners connect per-link primitive banks; no clock multiplexing/merging. Credits remain opaque bits and require existing endpointcapacity proof for total roundtrip.",
+  "qualification_gates": [
+    "NL2 independently phased two-hop exact bench and wrong-clock/misroute/bypass negatives",
+    "ASAP7 mapping retains distinct direction FFs and two clockbuffer cells perstream",
+    "Four-clock timing and clock/data hold race proof with actual routed clock insertion",
+    "Die per-direction fck wires and coldreset net bound to every instance",
+    "Warmreset quiescence/credit epoch protocol bound at endpoints",
+    "Mutable control/link integrity contract preserved; no generic faultfree bench adoption"
+  ],
+  "source_sha256": {
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+    "rtl/physical/ot_qwen_die_link_stn.sv": "1d3b983c91ae1c247adb4c8ade6ae4b4b99a024a12377db7a66d1c23ca7f9f12",
+    "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a"
+  }
+}

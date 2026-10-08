@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.softmax_epoch_join_current.v1",
+  "passed": true,
+  "current_campaigns": [
+    "epoch_join_r4_positive",
+    "epoch_join_r4_epoch_negative",
+    "epoch_join_r4_completion_negative"
+  ],
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv": "21a2d557e128cbb980c1edb481c5592e744a789522d94c0efff9d36909d9a308",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv": "5366ef10cf135546f19f07fbe1a6f3e7fc4052a159479eb63acf7970be99648b",
+    "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv": "a4e1bda9a0ab083503462a8c755f35cbe3aa52786e455e29c66834e915463497",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv": "b5f7603a6bc16fe23664d8c215e5c2117b82738057a04eee90f8b75b1e758815",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_serial_row.sv": "1e4a85ebef179df1870c359f0a66099bf85f1f7d4aa495606dc63629b6d82b14",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_core_replay.sv": "025e343aa96d98af3d2d98466c51210205d81f5d6b6dd2ebe96f688fd68061fb",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_sram_join.sv": "35fe8b30583963221cc2f726a3846f0818652e3f1a03aec82ac1f573c20f0d07",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_phase.sv": "2e9b8d2cd90ca183e9845e1a6d281bce2f7d6187b88c481eb482beff1f1fc8ef",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_epoch_join.sv": "6e0db5942e1b55c7628e20fe3e5422a2a745bc537589354400df55b272e5bc19",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_epoch_join.sv": "6ceb3dc73843057ae5c0a73e939f50b99d5b4973651872efd89499989b02519e"
+  },
+  "prebuild_sha256": "e48324bdacb62f180656cfc8486c9884c7c47aac96ce1a4bdbad16adf0c6d45a",
+  "prebuild_written_epoch": 1791398398.16083,
+  "RTL_written_epoch": 1791398703.6640651,
+  "prebuild_before_RTL": true,
+  "verified_vectors": 152,
+  "verified_payload_bytes": 155648,
+  "reset": [
+    "coordinated abort with queued ingress",
+    "coordinated abort while no-ready replay valid",
+    "all public permissions suppressed during reset"
+  ],
+  "completion": [
+    "protected epoch/tag return FIFO",
+    "withheld final destination-visible BF16 receipt prevents completion",
+    "16 chain edges of completion backpressure preserves identity"
+  ],
+  "negative_controls": [
+    "same tag prior epoch with epoch-check bypass fails",
+    "phase-retirement bypass fails before egress visibility"
+  ],
+  "historical_logs": "epoch_join_positive.log and earlier numbered campaigns retained; their source snapshots differ from current source and are not current qualification",
+  "nine_by_four_geometry": "epoch_join_prebuild.json nine_by_four section",
+  "scope": "No full-system/numerical simulation, no actual E/BF16 payload endpoint, no config snapshot, no physical adoption"
+}

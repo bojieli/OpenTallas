@@ -1,0 +1,150 @@
+{
+ "stream": "CODE-PAIR margin (successor of kant/pauli r3 constant-tie routes)",
+ "date": "2026-10-06",
+ "finding": {
+  "retained_routes": "kant r3 / pauli r3: GRT repair SS WNS -3040.65 / -2919.35 ps at rom_rd outputs (13.8k endpoints), DRT iter 28/31 with 10.0k / 4.9k violations after 34 h; unplaced price (results/rtl/qwen_code_pair_physical_20261005/timing_summary.json) reg2reg -7717 ps, capture->rom_rd -1556 ps, data macro->capture -20.7 ps at 833.333",
+  "cause": "rom_rd is combinational from the bank-local capture through the coded 5:1 mux, four W6 decode64 per port, the UE->fault OR of both ports and control/metadata decode, and the 2,660-bit virtual-bank steer to the east-edge pins; read UE and request faults sit in the same-cycle control loop (decode->fault->rd_r->read_fire->encode). Data SRAM SS clk->q 691.8 ps leaves no room for the original capture enable mux."
+ },
+ "change": {
+  "module": "ot_qwen_hbm_code_pair_margin (separate default-off top; original files byte-identical)",
+  "stages": "E(t) pin request regs (DMR) -> E(t+1) kept per-bank request/write regs (keep_hierarchy) -> E(t+2) SRAM -> E(t+3) enable-free bank-local coded capture -> E(t+4) coded 5:1 mux (DMR one-hot) -> E(t+5) coded transport + registered UE/corrected -> E(t+6) decode/steer/gate into output flops",
+  "fault": "single SECDED tag word as original; duplicated sticky fault; acceptance inhibited one edge after detection; never delivers an uncorrectable or post-detection response valid",
+  "protection_netlist": "duplicate copies are instances of kept shadow modules (ot_qwen_hbm_code_shadow_r/_n); route synthesises with SYNTH_HIERARCHICAL=1 so the copies are not merged",
+  "revision2": "control tags/visible bit/metadata as duplicated plain registers; W6 decode split at a registered syndrome; enable-free capture",
+  "revision3": "corrected-data register and DMR slot enables before the output flops (+1 edge; LAT_DELTA 6)"
+ },
+ "price": {
+  "status": "PRICED_BEFORE_ROUTE",
+  "revision": 3,
+  "default_enabled": false,
+  "added_read_edges": 6,
+  "added_write_edges_exposed": 0,
+  "added_write_edges_internal": 2,
+  "II": 1,
+  "backpressure": false,
+  "added_ff": 8530,
+  "added_ff_breakdown": {
+   "central_request": 374,
+   "per_bank_kept": 3530,
+   "mux_transport_output": 3868,
+   "syndrome": 64,
+   "duplicated_state_vs_secded": 154,
+   "corrected_data_and_slot_enables": 540
+  },
+  "codecs": {
+   "payload_encode64": 4,
+   "payload_syndrome_for_flags_decode64": 8,
+   "payload_syndrome_split": 8,
+   "payload_correction": 8,
+   "control_and_metadata_secded": "replaced by duplicate-and-compare (fail-closed)"
+  },
+  "ff_area_um2_proxy": 2487.3,
+  "headline_cost_fraction": 0.0003924903512788644,
+  "headline_cost_percent": 0.0392,
+  "pre_approved_limit_percent": 2.0,
+  "route_period_ps": 770,
+  "signoff_period_ps": 833.333,
+  "accept_ss_ps": 40,
+  "accept_ff_ps": 15,
+  "prelayout_probe_r0": "SECDED control loop -543 ps, metadata decode->visible pins -439 ps, decode->rom_rd flops -402 ps at 770 ps (EPYC1 probe_r0, floorplan stage)",
+  "prelayout_probe_r1": "rev2 at 770 ps: SRAM->capture -10.4 ps (clk->q bound), syndrome->rom_rd +36.0, slot select->rom_rd +39.7 (below the +60 plan) -> rev3 adds the corrected-data/slot-enable stage (+1 edge)",
+  "fault_semantics": "fault-free cycle-exact (+6 edges on responses); upsets of tags/metadata fail closed (no silent correction); new acceptance inhibited one edge after a detection; uncorrectable or post-detection responses never delivered valid"
+ },
+ "bench": {
+  "tool": "Verilator 5.050 (EPYC1)",
+  "runner": "tools/hbm_payload/run_code_pair_margin.sh",
+  "exact": "seeds 1,2,3 (+4,5 under negatives): ~6,693 compared cycles and ~5,350 valid responses per seed, rom_rd/rsp_v/flags == original delayed 6 edges, handshakes same-cycle; 24 single-bit SRAM corruptions over all 10 banks corrected identically; default-off top drives nothing",
+  "negatives_pass": "+NEG_UE (double-bit SRAM error): fault raised, response never valid, rd_uncorrectable reported, no acceptance after fault; +NEG_DMR (one request copy upset): fault raised, response never valid",
+  "mutants_fail": "CODE_PAIR_MARGIN_MUTANT_TAG_SKEW: delayed response mismatch at cycle 168 (FAIL as required); CODE_PAIR_MARGIN_MUTANT_NO_UE_GATE: corrupted response delivered valid (FAIL as required)",
+  "original_banklocal_bench": "PASS_CODE_PAYLOAD_PAIR_BANKLOCAL checks=79 (unchanged leaf)",
+  "logs": "results/rtl/qwen_code_pair_margin_20261006/bench/"
+ },
+ "sources": {
+  "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_pair_margin.sv": "6f9d61a2ba6dfff8f5addb5ff18d9fbac1b1f35de75185f7c6d0d15bacbf591d",
+  "rtl/test/qwen_hbm_code_payload_leaf/tb_code_pair_margin.sv": "fba8d740aaed087928dce03dc2056f7206c2b81bda334acda86b9e98695771a3",
+  "tools/hbm_payload/run_code_pair_margin.sh": "9f73c25305301825990fda9d8b2f661a44d27bda70b415fa2b4541fc2de46f68",
+  "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair_banklocal.sv": "8b713f7c9d1af826e3316e5cd18c5e768e1c1b81f7f6225e8d3e1d68bc90a516",
+  "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_read_pipeline.sv": "bdbfd5c960ceb9616c40246102f6a25063370a59363d181e89dcf184e27181d3",
+  "physical/qwen_code_pair/ot_qwen_hbm_code_pair_context.sv": "633ae741c0d32b80190d8f2ca9979da144977d3afbd8cd57035aec4ab39b52ae"
+ },
+ "adopted": false,
+ "physical": {
+  "state": "TERMINAL NOT CLOSED",
+  "host": "ot-epyc1tb",
+  "path": "/srv/opentallas-scratch/claude/takeover-ds/code-pair",
+  "source": "3b26daaa5 (pinned archive src_pinned, commit 46ffc80a5)",
+  "launched": "2026-10-06 14:58 PT (attempt 3)",
+  "route": "770 ps SS60/FF25 WC, hold WC+BC, 120 ps IO, retained slot geometry/pins/macro locations, capture fences 2560/10",
+  "terminal": "route.exit; watch.sh then runs signoff.sh (833.333 ps routed SS/FF with SPEF) -> signoff_SS.log/signoff_FF.log, watch.done",
+  "floorplan_stage_770ps": "all classes >= +65 ps except SRAM rd_out->capture -10.4 ps (SS clk->q 691.8 ps bound; +52.6 at 833 before wire)",
+  "accept": "SS >= +40, FF >= +15 at 833.333, DRC 0",
+  "flow_failures": [
+   "14:19 attempt: detailed placement DPL-0033 (10 overlaps / 15 site-alignment, bank-local cells next to the capture fences); kept fail_r1_dpl/",
+   "14:38 attempt with the retained recipe diamond legalizer: DPL-0036, one repair buffer (INVx2) trapped inside data macro p0b0 beside the fence; kept fail_r2_dpl/",
+   "attempt 3: capture fences dropped (POST_MACRO_PLACE hook removed), default legalizer; detailed placement legal (0 overlaps), in CTS at 15:30 PT. No timing setting changed."
+  ],
+  "finished": "2026-10-06 ~18:20 PT",
+  "route_exit": 0,
+  "drc": 0,
+  "antenna": 0,
+  "orfs_770": {
+   "setup_wns_ns": -1.031,
+   "hold_wns_ns": -0.686
+  },
+  "signoff_833": {
+   "SS": {
+    "reg2reg": -176.81,
+    "in2reg": -500.93,
+    "reg2out": -967.3
+   },
+   "FF": {
+    "reg2reg_hold": -11.98,
+    "in2reg_hold": -467.85,
+    "reg2out_setup_FF": -248.01
+   }
+  },
+  "reg2reg_classes_SS": [
+   "wq_data -> per-bank wd (256-bit write data fanned to 10 banks over the 864 um block) -176.8",
+   "SRAM rd_out -> bank capture -175.7 (capture flops no longer fenced beside the macro; clk->q 691.8 + wire)",
+   "syn5 -> cd6 W6 correction -163.7",
+   "sel_code -> unc5 -74.8",
+   "metadata copy -> fault -70.6",
+   "msel -> coded mux -63.4"
+  ],
+  "io": "IO classes fail mainly on a ~950 ps SS clock insertion (deep CTS from a corner clock pin) against an ideal-clock 120 ps IO contract, plus same-cycle visible_v/wr_r outputs kept for the original ABI",
+  "evidence": "route_r1/",
+  "verdict": "NOT CLOSED; not adopted"
+ },
+ "probe_r0": {
+  "host": "ot-epyc1tb",
+  "path": "/srv/opentallas-scratch/claude/takeover-ds/code-pair/probe_r0",
+  "scope": "revision 1 (SECDED control word, decoded metadata pins, unsplit decode) synthesised and floorplanned at 770 ps, stopped at global placement (pre-layout fail; not a route verdict)",
+  "hierarchy_kept": true,
+  "capture_fences": "2560 flops / 10 regions bound by connectivity",
+  "failing_classes": [
+   "   -543.1    67 on.control_code[*]$_DFFE_PN0N_/QN -> on.control_code[*]$_DFFE_PN0N_/D",
+   "   -438.8   192 on.metadata_code[*]$_DFFE_PN0P_/QN -> visible_id[*]",
+   "   -404.0    13 on.metadata_code[*]$_DFFE_PN0P_/QN -> visible_row[*]",
+   "   -401.6  2560 on.sel_code2[*][*]$_DFF_P_/QN -> rom_rd[*]$_DFF_PN0_/D",
+   "   -375.8     5 on.metadata_code[*]$_DFFE_PN0P_/QN -> visible_beat[*]",
+   "   -375.8    12 on.metadata_code[*]$_DFFE_PN0P_/QN -> visible_column[*]",
+   "   -375.8    12 on.metadata_code[*]$_DFFE_PN0P_/QN -> visible_tag[*]",
+   "   -362.9    10 on.control_code[*]$_DFFE_PN0N_/QN -> on.msel_a[*]$_DFF_PN0_/D",
+   "   -362.9    22 on.control_code[*]$_DFFE_PN0N_/QN -> on.stage[*].u_sel_b/q[*]$_DFF_PN0_/D",
+   "   -361.6   265 on.control_code[*]$_DFFE_PN0N_/QN -> on.metadata_code[*]$_DFFE_PN0P_/D",
+   "   -334.9    10 on.control_code[*]$_DFFE_PN0N_/QN -> on.osel_a[*]$_DFF_PN0_/D",
+   "   -259.5     2 on.control_code[*]$_DFFE_PN0N_/QN -> on.unc5[*]$_DFF_PN0_/D"
+  ]
+ },
+ "probe_r1": {
+  "path": "/srv/opentallas-scratch/claude/takeover-ds/code-pair/probe_r1",
+  "scope": "rev2 floorplan-stage classes at 770 ps; stopped at IO placement",
+  "classes": "probe_r1/prelayout_classes_770ps.txt"
+ },
+ "next": [
+  "split write-data distribution: per-column registered copy + per-bank-pair kept stage (+1 internal write edge, not exposed)",
+  "restore capture-flop placement beside each data macro with a legal fence (region outside the macro halo and buffer escape, or a per-bank hardened leaf)",
+  "split W6 correction across two stages (+1 read edge) and move UE/flag logic one stage earlier",
+  "IO contract: budget against measured insertion per owner rule (150 ps die-clock term) or harden the bank as a leaf so the parent has a shallow tree; ABI same-cycle wr_r/visible_v need a parent decision"
+ ]
+}

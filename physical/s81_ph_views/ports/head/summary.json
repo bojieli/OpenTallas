@@ -1,0 +1,884 @@
+{
+ "dsfd_sp_vm": {
+  "w": 1015.176,
+  "h": 879.096,
+  "domain": "serial_0p9",
+  "instances": 1,
+  "ports": {
+   "aNW": [
+    "input",
+    1027,
+    "N",
+    "M5"
+   ],
+   "col": [
+    "input",
+    515,
+    "N",
+    "M5"
+   ],
+   "aNE": [
+    "input",
+    1027,
+    "N",
+    "M5"
+   ],
+   "t_su_n": [
+    "output",
+    1024,
+    "N",
+    "M5"
+   ],
+   "aSW": [
+    "input",
+    1027,
+    "S",
+    "M5"
+   ],
+   "sel": [
+    "input",
+    515,
+    "S",
+    "M5"
+   ],
+   "aSE": [
+    "input",
+    1027,
+    "S",
+    "M5"
+   ],
+   "t_su_s": [
+    "output",
+    1024,
+    "S",
+    "M5"
+   ],
+   "t_gather": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "t_hc": [
+    "output",
+    1024,
+    "E",
+    "M4"
+   ],
+   "qSE": [
+    "output",
+    513,
+    "E",
+    "M4"
+   ],
+   "qSEs": [
+    "input",
+    3,
+    "E",
+    "M4"
+   ],
+   "ck": [
+    "input",
+    1,
+    "E",
+    "M4"
+   ],
+   "xe": [
+    "output",
+    565,
+    "E",
+    "M4"
+   ],
+   "xes": [
+    "input",
+    3,
+    "E",
+    "M4"
+   ],
+   "rst": [
+    "input",
+    1,
+    "E",
+    "M4"
+   ],
+   "f_hc": [
+    "input",
+    1024,
+    "E",
+    "M4"
+   ],
+   "qNE": [
+    "output",
+    513,
+    "E",
+    "M4"
+   ],
+   "qNEs": [
+    "input",
+    3,
+    "E",
+    "M4"
+   ],
+   "f_capture": [
+    "input",
+    512,
+    "E",
+    "M4"
+   ],
+   "f_collective": [
+    "input",
+    512,
+    "E",
+    "M4"
+   ],
+   "qSW": [
+    "output",
+    513,
+    "W",
+    "M4"
+   ],
+   "qSWs": [
+    "input",
+    3,
+    "W",
+    "M4"
+   ],
+   "xw": [
+    "output",
+    565,
+    "W",
+    "M4"
+   ],
+   "xws": [
+    "input",
+    3,
+    "W",
+    "M4"
+   ],
+   "qNW": [
+    "output",
+    513,
+    "W",
+    "M4"
+   ],
+   "qNWs": [
+    "input",
+    3,
+    "W",
+    "M4"
+   ]
+  }
+ },
+ "dsfd_sp_su_s": {
+  "w": 1015.176,
+  "h": 6307.176,
+  "domain": "serial_0p9",
+  "instances": 1,
+  "ports": {
+   "t_hc": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "f_vm": [
+    "input",
+    1024,
+    "E",
+    "M4"
+   ],
+   "ck": [
+    "input",
+    1,
+    "N",
+    "M4"
+   ],
+   "rst": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ]
+  }
+ },
+ "dsfd_sp_su_n": {
+  "w": 1015.176,
+  "h": 6309.336,
+  "domain": "serial_0p9",
+  "instances": 1,
+  "ports": {
+   "rst": [
+    "input",
+    1,
+    "S",
+    "M5"
+   ],
+   "ck": [
+    "input",
+    1,
+    "S",
+    "M5"
+   ],
+   "f_vm": [
+    "input",
+    1024,
+    "E",
+    "M4"
+   ],
+   "t_hc": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ]
+  }
+ },
+ "dsfd_sp_hc_s": {
+  "w": 1015.176,
+  "h": 8365.656,
+  "domain": "serial_0p9",
+  "instances": 1,
+  "ports": {
+   "f_su_s": [
+    "input",
+    512,
+    "W",
+    "M4"
+   ],
+   "f_vm": [
+    "input",
+    1024,
+    "W",
+    "M4"
+   ],
+   "f_n": [
+    "input",
+    1024,
+    "W",
+    "M4"
+   ],
+   "t_n": [
+    "output",
+    1024,
+    "W",
+    "M4"
+   ],
+   "ck": [
+    "input",
+    1,
+    "W",
+    "M4"
+   ],
+   "rst": [
+    "input",
+    1,
+    "N",
+    "M4"
+   ]
+  }
+ },
+ "dsfd_sp_hc_n": {
+  "w": 1015.176,
+  "h": 9674.616,
+  "domain": "serial_0p9",
+  "instances": 1,
+  "ports": {
+   "rst": [
+    "input",
+    1,
+    "S",
+    "M4"
+   ],
+   "ck": [
+    "input",
+    1,
+    "W",
+    "M4"
+   ],
+   "t_s": [
+    "output",
+    1024,
+    "W",
+    "M4"
+   ],
+   "f_s": [
+    "input",
+    1024,
+    "W",
+    "M4"
+   ],
+   "t_vm": [
+    "output",
+    1024,
+    "W",
+    "M4"
+   ],
+   "f_su_n": [
+    "input",
+    512,
+    "W",
+    "M4"
+   ]
+  }
+ },
+ "dsfd_sp_gather": {
+  "w": 1015.176,
+  "h": 1369.416,
+  "domain": "stream_1p2",
+  "instances": 1,
+  "ports": {
+   "rE0": [
+    "input",
+    692,
+    "E",
+    "M4"
+   ],
+   "rE1": [
+    "input",
+    761,
+    "E",
+    "M4"
+   ],
+   "rE2": [
+    "input",
+    761,
+    "E",
+    "M4"
+   ],
+   "rE3": [
+    "input",
+    761,
+    "E",
+    "M4"
+   ],
+   "rE4": [
+    "input",
+    761,
+    "E",
+    "M4"
+   ],
+   "rst": [
+    "input",
+    1,
+    "E",
+    "M4"
+   ],
+   "ck": [
+    "input",
+    1,
+    "E",
+    "M4"
+   ],
+   "rE5": [
+    "input",
+    692,
+    "E",
+    "M4"
+   ],
+   "t_capture": [
+    "output",
+    576,
+    "E",
+    "M4"
+   ],
+   "f_vm": [
+    "input",
+    512,
+    "E",
+    "M4"
+   ],
+   "rW0": [
+    "input",
+    692,
+    "W",
+    "M4"
+   ],
+   "rW1": [
+    "input",
+    761,
+    "W",
+    "M4"
+   ],
+   "rW2": [
+    "input",
+    761,
+    "W",
+    "M4"
+   ],
+   "rW3": [
+    "input",
+    761,
+    "W",
+    "M4"
+   ],
+   "rW4": [
+    "input",
+    761,
+    "W",
+    "M4"
+   ],
+   "rW5": [
+    "input",
+    692,
+    "W",
+    "M4"
+   ]
+  }
+ },
+ "dsfd_sp_capture": {
+  "w": 1015.176,
+  "h": 107.976,
+  "domain": "stream_1p2",
+  "instances": 1,
+  "ports": {
+   "f_gather": [
+    "input",
+    576,
+    "S",
+    "M5"
+   ],
+   "ck": [
+    "input",
+    1,
+    "S",
+    "M5"
+   ],
+   "rst": [
+    "input",
+    1,
+    "S",
+    "M5"
+   ],
+   "t_vm": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ]
+  }
+ },
+ "dsfd_sp_collective": {
+  "w": 1015.176,
+  "h": 1369.416,
+  "domain": "stream_1p2",
+  "instances": 1,
+  "ports": {
+   "pll_hbm": [
+    "output",
+    1,
+    "S",
+    "M4"
+   ],
+   "rst_hbm": [
+    "output",
+    1,
+    "E",
+    "M4"
+   ],
+   "t_vm": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "rE0": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "tdE0": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "tfE0": [
+    "output",
+    1,
+    "E",
+    "M4"
+   ],
+   "tdE1": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "tfE1": [
+    "output",
+    1,
+    "E",
+    "M4"
+   ],
+   "rE1": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "rE2": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "tdE2": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "tfE2": [
+    "output",
+    1,
+    "E",
+    "M4"
+   ],
+   "rE3": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "tdE3": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "tfE3": [
+    "output",
+    1,
+    "E",
+    "M4"
+   ],
+   "rst_serial": [
+    "output",
+    1,
+    "S",
+    "M5"
+   ],
+   "pll_serial": [
+    "output",
+    1,
+    "S",
+    "M5"
+   ],
+   "pll_stream": [
+    "output",
+    1,
+    "S",
+    "M5"
+   ],
+   "rst_stream": [
+    "output",
+    1,
+    "S",
+    "M5"
+   ],
+   "por": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ],
+   "refclk": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ],
+   "tdW0": [
+    "output",
+    512,
+    "W",
+    "M4"
+   ],
+   "tfW0": [
+    "output",
+    1,
+    "W",
+    "M4"
+   ],
+   "tdW1": [
+    "output",
+    512,
+    "W",
+    "M4"
+   ],
+   "tfW1": [
+    "output",
+    1,
+    "W",
+    "M4"
+   ],
+   "tdW2": [
+    "output",
+    512,
+    "W",
+    "M4"
+   ],
+   "tfW2": [
+    "output",
+    1,
+    "W",
+    "M4"
+   ],
+   "rW0": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ],
+   "tdW3": [
+    "output",
+    512,
+    "W",
+    "M4"
+   ],
+   "tfW3": [
+    "output",
+    1,
+    "W",
+    "M4"
+   ],
+   "rW1": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ],
+   "rW2": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ],
+   "rW3": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ]
+  }
+ },
+ "dsfd_bk_selector": {
+  "w": 5270.376,
+  "h": 321.816,
+  "domain": "stream_1p2",
+  "instances": 1,
+  "ports": {
+   "ck": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ],
+   "rst": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ],
+   "vd": [
+    "output",
+    514,
+    "N",
+    "M5"
+   ],
+   "vf": [
+    "output",
+    1,
+    "N",
+    "M5"
+   ],
+   "iSE": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "iNE": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "iSW": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ],
+   "iNW": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ]
+  }
+ },
+ "dsfd_bk_collector": {
+  "w": 5270.376,
+  "h": 881.256,
+  "domain": "stream_1p2",
+  "instances": 1,
+  "ports": {
+   "cSE": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "cNE": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "cSW": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ],
+   "cNW": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ],
+   "ck": [
+    "input",
+    1,
+    "S",
+    "M5"
+   ],
+   "rst": [
+    "input",
+    1,
+    "S",
+    "M5"
+   ],
+   "vd": [
+    "output",
+    514,
+    "S",
+    "M5"
+   ],
+   "vf": [
+    "output",
+    1,
+    "S",
+    "M5"
+   ]
+  }
+ },
+ "dsfd_ctrl": {
+  "w": 8500.032,
+  "h": 248.376,
+  "domain": "hbm",
+  "instances": 4,
+  "ports": {
+   "phy": [
+    "inout",
+    22238,
+    "S",
+    "M5"
+   ],
+   "rd": [
+    "output",
+    8864,
+    "N",
+    "M5"
+   ],
+   "ckh": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ],
+   "cks": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ],
+   "rst": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ]
+  }
+ },
+ "dsfd_svc": {
+  "w": 8500.032,
+  "h": 1576.776,
+  "domain": "stream_1p2",
+  "instances": 4,
+  "ports": {
+   "od": [
+    "output",
+    514,
+    "N",
+    "M5"
+   ],
+   "of": [
+    "output",
+    1,
+    "N",
+    "M5"
+   ],
+   "xd": [
+    "output",
+    514,
+    "N",
+    "M5"
+   ],
+   "xf": [
+    "output",
+    1,
+    "N",
+    "M5"
+   ],
+   "ad": [
+    "output",
+    1026,
+    "N",
+    "M5"
+   ],
+   "af": [
+    "output",
+    1,
+    "N",
+    "M5"
+   ],
+   "q": [
+    "input",
+    515,
+    "N",
+    "M5"
+   ],
+   "ck": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ],
+   "rst": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ],
+   "rd": [
+    "input",
+    8864,
+    "S",
+    "M5"
+   ]
+  }
+ }
+}

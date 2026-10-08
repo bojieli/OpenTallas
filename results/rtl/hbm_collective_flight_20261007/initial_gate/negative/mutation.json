@@ -1,0 +1,6 @@
+{
+  "original_sha256": "27ce7bfba04255c4e0b0cf9152ed7a004e0235595d91ccbcee3bcd833d40db7e",
+  "mutant_sha256": "d26cc55275d9c0b45c0f23fdbcba68af0a5907225685887bb943ae3960147e8e",
+  "old": "assign out_d=corrected_output[W-1:0];",
+  "new": "assign out_d=corrected_output[W-1:0] ^ {{(W-1){1'b0}},1'b1};"
+}

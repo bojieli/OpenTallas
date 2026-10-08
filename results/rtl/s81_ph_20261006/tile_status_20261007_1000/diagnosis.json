@@ -1,0 +1,28 @@
+{
+  "status": "NO_NEW_CLOSURE_CLAIM",
+  "capture": {
+    "job": "s81ph-dsfd_capt_x-6fe9f807d",
+    "ss_ps": 40.84,
+    "ff_ps": -11.11,
+    "drc": 0,
+    "eco_ss_ps": 38.47,
+    "eco_ff_ps": -10.44,
+    "eco_added_cells": 1511,
+    "remaining_requirement": "Actual minimum-delay endpoint path required before structural change",
+    "structure": {
+      "data_cdc_count": 16,
+      "data_cdc_width": 103,
+      "data_publish_lag": 1,
+      "status_cdc_width": 64,
+      "status_publish_lag": 0
+    },
+    "avoid": "Do not repeat failed ECO or guess pipeline from aggregate slack"
+  },
+  "running_jobs_preserved": [
+    "s81ph-dsfd_capt_grp-1c8d4c45f",
+    "s81ph-root_tile-77bcb3f3c",
+    "s81ph-dsfd_coll_lane_e-ac313d866-wide",
+    "s81ph-dsfd_selt_q2-22bd6ce9c-retime"
+  ],
+  "network_observation": "Direct SSH from this agent rejected socket creation; daemon snapshots are not live host observations"
+}

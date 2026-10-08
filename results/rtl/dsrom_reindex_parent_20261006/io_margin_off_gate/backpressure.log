@@ -1,0 +1,10 @@
+KGHBM s=0 rd=2312 act=1826 hit=486 conf=989 ref=500 bp=128 lat_sum_ps=303659914 lat_max_ps=302609 pc_rd_min=54 pc_rd_max=106
+KGHBM s=1 rd=1870 act=1573 hit=297 conf=685 ref=492 bp=0 lat_sum_ps=239408657 lat_max_ps=309789 pc_rd_min=41 pc_rd_max=76
+KGHBM s=2 rd=2176 act=1678 hit=498 conf=758 ref=492 bp=9 lat_sum_ps=279489447 lat_max_ps=398977 pc_rd_min=41 pc_rd_max=86
+KGHBM s=3 rd=1887 act=1538 hit=349 conf=697 ref=485 bp=16 lat_sum_ps=241767406 lat_max_ps=353894 pc_rd_min=27 pc_rd_max=80
+KGSTACK s=0 blocks=136 sectors=2312 first=102 last=539
+KGSTACK s=1 blocks=110 sectors=1870 first=114 last=493
+KGSTACK s=2 blocks=128 sectors=2176 first=101 last=623
+KGSTACK s=3 blocks=111 sectors=1887 first=114 last=558
+KGATHER_PASS blocks=136,110,128,111 sectors=8245 last=623 clk_ps=833 wb=128
+- /srv/opentallas-scratch/claude/takeover-ds/reindex/src/rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_gather_parent.sv:204: Verilog $finish

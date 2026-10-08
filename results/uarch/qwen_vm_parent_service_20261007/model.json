@@ -1,0 +1,1425 @@
+{
+  "schema": "opentallas.qwen-vm-parent-service.v1",
+  "source_sha256": {
+    "tools/qwen_rom_finite_vm_schedule.py": "e15a44afd67d732f60a0cefb217563679862d9185ae6dc3a976a54ebeb10eb7f"
+  },
+  "calendar_sha256": "6f8a3293d34a7c58130fb825e270929529a50322c0bb5827130db9aaaa3939ac",
+  "scope": "Source-pinned child control captures composed at observed native controller issue edges; no unobserved writer family is assigned zero as a production claim.",
+  "source_clock": "logical native edges held while unchanged serialized reference services immutable PRE frame",
+  "active_native_edges": 347,
+  "serialized_reference_service_edges": 3989290,
+  "conditional_additional_native_edges": 3988943,
+  "delayed_reducer_overlap": {
+    "parent_edge": 160,
+    "frame": 91,
+    "repeated_edges": 1,
+    "read_seats": 2048,
+    "write_seats": 1,
+    "families": [
+      "REDUCER"
+    ],
+    "current_adapter_window_misses": 1024,
+    "physical_write_batches": 1,
+    "conservative_current_adapter_edges": 14419
+  },
+  "frames": [
+    {
+      "frame": 0,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 2,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3147
+    },
+    {
+      "frame": 1,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 2,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 3,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 4,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 5,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 6,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 7,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 8,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 9,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 10,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 11,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 12,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 13,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 14,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 15,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 16,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 17,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 18,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 3158
+    },
+    {
+      "frame": 19,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 20,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 21,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 22,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 23,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 24,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 25,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 26,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 27,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 28,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 29,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 30,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 31,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 32,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 33,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 34,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 35,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 36,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 37,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 38,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 39,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 40,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 41,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 42,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 43,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 44,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 45,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 46,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 47,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 48,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 49,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 50,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 51,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 52,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 53,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 54,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 55,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 56,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 57,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 58,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 59,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 60,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 61,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 62,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 63,
+      "repeated_edges": 1,
+      "read_seats": 192,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 3,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3278
+    },
+    {
+      "frame": 64,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 65,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 66,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 67,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 68,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 69,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 70,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 71,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 72,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 73,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 74,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 75,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 76,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 77,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 78,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 79,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 80,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 81,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 82,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 64,
+      "families": [
+        "SU"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 4,
+      "conservative_current_adapter_edges": 3245
+    },
+    {
+      "frame": 83,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 84,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 85,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 86,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 87,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 88,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 89,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 90,
+      "repeated_edges": 7,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 91,
+      "repeated_edges": 1,
+      "read_seats": 2048,
+      "write_seats": 1,
+      "families": [
+        "REDUCER"
+      ],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 1,
+      "conservative_current_adapter_edges": 14419
+    },
+    {
+      "frame": 92,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 93,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 94,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 95,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 96,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 97,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 98,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 99,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 100,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 101,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 102,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 103,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 104,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 105,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 106,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 107,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 108,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 109,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 110,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 111,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 112,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 113,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 114,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 115,
+      "repeated_edges": 8,
+      "read_seats": 2048,
+      "write_seats": 0,
+      "families": [],
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 0,
+      "conservative_current_adapter_edges": 14389
+    },
+    {
+      "frame": 116,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 768,
+      "families": [
+        "ME"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 48,
+      "conservative_current_adapter_edges": 4565
+    },
+    {
+      "frame": 117,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 768,
+      "families": [
+        "ME"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 48,
+      "conservative_current_adapter_edges": 4565
+    },
+    {
+      "frame": 118,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 768,
+      "families": [
+        "ME"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 48,
+      "conservative_current_adapter_edges": 4565
+    },
+    {
+      "frame": 119,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 768,
+      "families": [
+        "ME"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 48,
+      "conservative_current_adapter_edges": 4565
+    },
+    {
+      "frame": 120,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 768,
+      "families": [
+        "ME"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 48,
+      "conservative_current_adapter_edges": 4565
+    },
+    {
+      "frame": 121,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 768,
+      "families": [
+        "ME"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 48,
+      "conservative_current_adapter_edges": 4565
+    },
+    {
+      "frame": 122,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 768,
+      "families": [
+        "ME"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 48,
+      "conservative_current_adapter_edges": 4565
+    },
+    {
+      "frame": 123,
+      "repeated_edges": 1,
+      "read_seats": 0,
+      "write_seats": 768,
+      "families": [
+        "ME"
+      ],
+      "current_adapter_window_misses": 0,
+      "physical_write_batches": 48,
+      "conservative_current_adapter_edges": 4565
+    }
+  ],
+  "assumptions": [
+    "Existing controller9-read/28-postverified-write calendar and full2256/865 source walkers only",
+    "Reads precede ordered writes, including delayed reducer at160; no independent-provider overlap credit",
+    "Empty logical frames cost one native edge only if actual admission implementation proves bypass",
+    "All native core, sequencer, response, progress and collective participants obey joint admission",
+    "This address-only composition does not close four-state backend data-X/postverify-ACK failure"
+  ],
+  "full_target_enrollment": false,
+  "measured_parent_latency": false,
+  "full_token_latency": null,
+  "physical_admission": false,
+  "adopted": false
+}

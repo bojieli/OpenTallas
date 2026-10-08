@@ -1,0 +1,7 @@
+Conditional joined native calendar service cost
+
+Reproduce: python3 tools/qwen_vm_parent_service_model.py --root . --calendar results/rtl/qwen_vm_composed_control_20261007/calendar.json --out /tmp/parent-service.json
+
+The actual selected PC19 SU and PC20 ME native calendars have347 active edges. The existing serialized four-bank provider model costs3,989,290 service edges, conditionally3,988,943 additional native edges when every participant is held and empty frames advance once. The reducer/ME overlap at logical edge160 costs14,419 versus14,389 for its ME reads alone: one ordered postverified write adds30 service edges. This includes the real delayed reducer, all captured read enables and source slot walking. It does not price a new folded-bank controller or transfer 9/28 timings to one.
+
+The script retains source order and asserts the captured overlap2048reads+one reducer. Existing ME +55 arithmetic cycles are already in the selected physical calendar and are not added again. Native progress/CHASE alone is not checked completion. Actual adapter bench ownership remains with vm_su_trace; its preserved four-state data-X and postverify-ACK escape prohibit treating this model as complete functional or physical qualification. All-family complete workload, collective participant admission, bounds, mutable control/output protection and physical closure remain open. No original RTL or default behavior changes.

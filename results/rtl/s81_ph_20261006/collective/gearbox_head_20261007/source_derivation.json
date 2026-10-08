@@ -1,0 +1,11 @@
+{
+  "original": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+  "original_sha256": "8d9a9b92733f50506c3cb6eda76c863cd7079760276f889c589d2867a5ab3ec9",
+  "variant": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv",
+  "variant_sha256": "768e27f838db14730361f8826b5b981cc26c54eb8130cd7cbc252afd389008e6",
+  "substitution": {
+    "before": "ot_s81ph_link_gbx #(.FFW(FFW),",
+    "after": "ot_s81ph_link_gbx_head #(.HEAD_REG(1), .FFW(FFW),"
+  },
+  "note": "Original and candidate declare same lane module; compile exactly one. Route template substitutes only the lane file and gearbox type, retaining complete endpoint/SRAM/skid geometry."
+}

@@ -1,0 +1,315 @@
+{
+ "master": "hfd_cmdproc_s",
+ "kept_out_regs": true,
+ "face_stages": 3,
+ "share_tree": {
+  "min": 3,
+  "fanout": 4
+ },
+ "note": "S band of the cmdproc split (split_spec.json): ot_hfd_cmdproc20_m cpS on faces cSE/cSW/t_su_SE/t_su_SW, f_loader; xl carries f_loader[147:294] to the N band (tapped at the f_loader pin flop), xb brings f_barrier[0:16] (release to the S faces), xt carries the S-face SM arrive bits (t_barrier[0:16]).",
+ "port_stages": {
+  "cSE": 3,
+  "cSW": 3,
+  "t_su_SE": 3,
+  "t_su_SW": 3,
+  "f_loader": 3,
+  "f_router": 2,
+  "xl": 2,
+  "xb": 2,
+  "xt": 2
+ },
+ "instances": [
+  {
+   "name": "cpS",
+   "module": "ot_hfd_cmdproc20_m",
+   "file": "physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv",
+   "params": {
+    "TW": 17,
+    "PW": 20,
+    "CONTEXT_POSITIONS": 1048576,
+    "ENABLE": 1,
+    "NSM": 16,
+    "NCMD": 256,
+    "RDREG": 2
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "cmd_we": "die:f_loader[0:1]",
+    "cmd_addr": "die:f_loader[1:9]",
+    "cmd_wdata": "die:f_loader[9:73]",
+    "db_v": "die:f_loader[73:74]",
+    "db_token": "die:f_loader[74:91]",
+    "db_pos": "die:f_loader[91:111]",
+    "db_job": "die:f_loader[111:143]",
+    "db_generation": "die:f_loader[143:147]",
+    "launch_v": [
+     "die:cSW[0:1]+cSW[103:104]+cSW[206:207]+cSW[309:310]+cSW[412:413]+cSW[515:516]+cSW[618:619]+cSW[721:722]+cSE[0:1]+cSE[103:104]+cSE[206:207]+cSE[309:310]+cSE[412:413]+cSE[515:516]+cSE[618:619]+cSE[721:722]",
+     "die:cSW[45:46]+cSW[148:149]+cSW[251:252]+cSW[354:355]+cSW[457:458]+cSW[560:561]+cSW[663:664]+cSW[766:767]+cSE[45:46]+cSE[148:149]+cSE[251:252]+cSE[354:355]+cSE[457:458]+cSE[560:561]+cSE[663:664]+cSE[766:767]"
+    ],
+    "launch_pc": [
+     "die:cSW[1:33]",
+     "die:cSW[104:136]",
+     "die:cSW[207:239]",
+     "die:cSW[310:342]",
+     "die:cSW[413:445]",
+     "die:cSW[516:548]",
+     "die:cSW[619:651]",
+     "die:cSW[722:754]",
+     "die:cSE[1:33]",
+     "die:cSE[104:136]",
+     "die:cSE[207:239]",
+     "die:cSE[310:342]",
+     "die:cSE[413:445]",
+     "die:cSE[516:548]",
+     "die:cSE[619:651]",
+     "die:cSE[722:754]",
+     "die:cSW[46:78]",
+     "die:cSW[149:181]",
+     "die:cSW[252:284]",
+     "die:cSW[355:387]",
+     "die:cSW[458:490]",
+     "die:cSW[561:593]",
+     "die:cSW[664:696]",
+     "die:cSW[767:799]",
+     "die:cSE[46:78]",
+     "die:cSE[149:181]",
+     "die:cSE[252:284]",
+     "die:cSE[355:387]",
+     "die:cSE[458:490]",
+     "die:cSE[561:593]",
+     "die:cSE[664:696]",
+     "die:cSE[767:799]"
+    ],
+    "launch_pos": [
+     "die:cSW[78:98]",
+     "die:cSW[181:201]",
+     "die:cSW[284:304]",
+     "die:cSW[387:407]",
+     "die:cSW[490:510]",
+     "die:cSW[593:613]",
+     "die:cSW[696:716]",
+     "die:cSW[799:819]",
+     "die:cSE[78:98]",
+     "die:cSE[181:201]",
+     "die:cSE[284:304]",
+     "die:cSE[387:407]",
+     "die:cSE[490:510]",
+     "die:cSE[593:613]",
+     "die:cSE[696:716]",
+     "die:cSE[799:819]"
+    ],
+    "launch_token": [
+     "die:t_su_SW[0:17]",
+     "die:t_su_SE[0:17]"
+    ],
+    "sm_done": "die:cSW[44:45]+cSW[147:148]+cSW[250:251]+cSW[353:354]+cSW[456:457]+cSW[559:560]+cSW[662:663]+cSW[765:766]+cSE[44:45]+cSE[147:148]+cSE[250:251]+cSE[353:354]+cSE[456:457]+cSE[559:560]+cSE[662:663]+cSE[765:766]",
+    "sm_fault": "cfg",
+    "res_v": "cfg",
+    "res_data": "cfg",
+    "cpl_rdy": "const:1"
+   }
+  }
+ ],
+ "extra_out": [
+  [
+   "xt",
+   0,
+   1,
+   "i_cSW[43]"
+  ],
+  [
+   "cSW",
+   41,
+   42,
+   "i_xb[0]"
+  ],
+  [
+   "xt",
+   1,
+   2,
+   "i_cSW[146]"
+  ],
+  [
+   "cSW",
+   144,
+   145,
+   "i_xb[1]"
+  ],
+  [
+   "xt",
+   2,
+   3,
+   "i_cSW[249]"
+  ],
+  [
+   "cSW",
+   247,
+   248,
+   "i_xb[2]"
+  ],
+  [
+   "xt",
+   3,
+   4,
+   "i_cSW[352]"
+  ],
+  [
+   "cSW",
+   350,
+   351,
+   "i_xb[3]"
+  ],
+  [
+   "xt",
+   4,
+   5,
+   "i_cSW[455]"
+  ],
+  [
+   "cSW",
+   453,
+   454,
+   "i_xb[4]"
+  ],
+  [
+   "xt",
+   5,
+   6,
+   "i_cSW[558]"
+  ],
+  [
+   "cSW",
+   556,
+   557,
+   "i_xb[5]"
+  ],
+  [
+   "xt",
+   6,
+   7,
+   "i_cSW[661]"
+  ],
+  [
+   "cSW",
+   659,
+   660,
+   "i_xb[6]"
+  ],
+  [
+   "xt",
+   7,
+   8,
+   "i_cSW[764]"
+  ],
+  [
+   "cSW",
+   762,
+   763,
+   "i_xb[7]"
+  ],
+  [
+   "xt",
+   8,
+   9,
+   "i_cSE[43]"
+  ],
+  [
+   "cSE",
+   41,
+   42,
+   "i_xb[8]"
+  ],
+  [
+   "xt",
+   9,
+   10,
+   "i_cSE[146]"
+  ],
+  [
+   "cSE",
+   144,
+   145,
+   "i_xb[9]"
+  ],
+  [
+   "xt",
+   10,
+   11,
+   "i_cSE[249]"
+  ],
+  [
+   "cSE",
+   247,
+   248,
+   "i_xb[10]"
+  ],
+  [
+   "xt",
+   11,
+   12,
+   "i_cSE[352]"
+  ],
+  [
+   "cSE",
+   350,
+   351,
+   "i_xb[11]"
+  ],
+  [
+   "xt",
+   12,
+   13,
+   "i_cSE[455]"
+  ],
+  [
+   "cSE",
+   453,
+   454,
+   "i_xb[12]"
+  ],
+  [
+   "xt",
+   13,
+   14,
+   "i_cSE[558]"
+  ],
+  [
+   "cSE",
+   556,
+   557,
+   "i_xb[13]"
+  ],
+  [
+   "xt",
+   14,
+   15,
+   "i_cSE[661]"
+  ],
+  [
+   "cSE",
+   659,
+   660,
+   "i_xb[14]"
+  ],
+  [
+   "xt",
+   15,
+   16,
+   "i_cSE[764]"
+  ],
+  [
+   "cSE",
+   762,
+   763,
+   "i_xb[15]"
+  ],
+  [
+   "xl",
+   0,
+   147,
+   "i0_f_loader[293:147]"
+  ]
+ ],
+ "latency": "cycle cost vs hfd_cmdproc (face_stages 5 everywhere): cpS core path in 3 + out 3 = 6 (-4); cpN in 4 (xl: S pin flop + 2 + N pin flop; cN* 4) + out 3 = 7 (-3); f_barrier[0:16] -> S faces 2+2+2+3 = 9 (-1), [16:32] -> N faces 2+3 = 5 (-5); t_barrier[0:16] 3+2+1+3 = 9 (-1), [16:32] 4+3 = 7 (-3)"
+}

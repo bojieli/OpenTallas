@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.s81.pq-parent-connector-interface.v1",
+  "PASS": true,
+  "exit_code": 0,
+  "checks": [
+    "Native real-module port declarations extracted verbatim, no width warnings",
+    "R128 raw return66x128 connects through real ROOTD128 adapter to every native PQ return port",
+    "Upstream and native root faults OR into native field fault with every individual fault exposed"
+  ],
+  "scope": "Interface elaboration using verbatim production headers; child implementations separately elaborated/tested. Not full-parent numerical or timing proof.",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_pq_parent/ot_s81_pq_parent_connector.sv": "9f1015c6c3af6f2b1dc6c861a54ce6ea34e2011e7af584111aa489926be6abd7",
+    "rtl/dsrom_sys/s81_pq_parent/ot_s81_pq_native_partition.sv": "09f55ae4ee1d489dc839f3b531deffd36575373a4c3313af2c13b4b6e92e3e8e",
+    "rtl/dsrom_sys/s81_pq_parent/ot_s81_pq_root_adapter.sv": "a5e85b5d3465c5c85c8b065083150783f777e948303a6b9d05bc93b7b95bb091"
+  },
+  "arithmetic_changed": false,
+  "architectural_added_cycles": 0,
+  "additional_fault_OR_inputs": 128,
+  "production_clock_route_pending": true,
+  "physical_adopted": false
+}

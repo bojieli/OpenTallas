@@ -1,0 +1,92 @@
+{
+  "schema": "opentallas.qwen_ctrl_shift_queue.v1",
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "model_precedes_rtl": true,
+  "source_model": "tools/uarch_model_qwen_ctrl_shift.py",
+  "replicas": 128,
+  "static_masters": 32,
+  "replicas_each_master": 4,
+  "macs_per_cycle": 0,
+  "compute_intensity_macs_per_byte": 0,
+  "memory_ports": [
+    {
+      "name": "command_fifo",
+      "depth": 8,
+      "width": 32,
+      "write_bytes_per_cycle": 4,
+      "read_bytes_per_cycle": 4
+    },
+    {
+      "name": "write_queue_onehot",
+      "depth": 4,
+      "width": 32,
+      "write_bytes_per_cycle": 4,
+      "internal_shift_bytes_per_pop": 12
+    }
+  ],
+  "boundary_bits": {
+    "command_in": 33,
+    "read_credit_in": 3,
+    "command_credit_out": 1,
+    "phy_row_out": 28,
+    "phy_column_out": 12,
+    "status_out": 2
+  },
+  "replica_mux_cost": "128 PCs; +128 onehot FF/PC (16384 total), no cross-PC mux, shift occurs only on consumed write",
+  "replica_fanout_cost": "local descriptor; global broadcast/fence is a separate unclosed block",
+  "frame_um": [
+    247.536,
+    370.44
+  ],
+  "tracks_each_face": 128,
+  "tracks_available_each_face": 1286,
+  "area": {
+    "cell_bound_um2": 17713.2928,
+    "basis": "conservative reservation; historical r6 was only NCH1 WR_EN0 and is not full-shape evidence",
+    "frame_fit_at_55pct": true,
+    "new_logic_reservation_basis": "1024um2 additional combinational allowance; mapped area must replace reservation"
+  },
+  "clock": {
+    "functional_period_ps": 1024,
+    "physical_route_target_ps": 770,
+    "physical_signoff_ps": 833.333,
+    "reason": "legacy HBM CK/2 DRAM timing counters remain at976.5625MHz; tighter physical screen does not authorize faster functional clock"
+  },
+  "latency": {
+    "input_capture_edges": 1,
+    "queue_admission_edges": 1,
+    "phy_output_edges": 1,
+    "minimum_request_to_phy_added_edges": 3,
+    "composed_worst_case_token_cycles": 144,
+    "base_token_cycles": 216713,
+    "cost_pct": 0.06640320579921477
+  },
+  "remaining": [
+    "route all32 PC/parity/refresh-phase elaborations",
+    "descriptor fanout and all-PC fence",
+    "write payload and tag queue",
+    "read landing queue and map",
+    "real PHY integration and die STA",
+    "input/reset/outputFF hold",
+    "fresh actual-corner SS/FF; no timing exception or period change"
+  ],
+  "change": {
+    "registered_bank_eligibility_bits": 32,
+    "eligibility_logic": "lookahead open,stale,refresh-block and write-RCD masks for32banks; strict refresh and write-only queue; preserve current-cycle predicate exactly",
+    "registered_head_bits": 32,
+    "added_cycles": 0,
+    "added_token_cycles": 0,
+    "read_mux": "8:1 x32 FIFO read now terminates at a head register; synchronous lookahead maintains original consume cycle",
+    "bypass": "empty push or simultaneous sole-head pop/push captures ingress command",
+    "mechanism": "Eliminate combinational rp-to-core descriptor/write control paths; bank eligibility cut targets hb_oh feedback; boundary/reset misses remain separate blockers",
+    "write_queue_onehot_bits": 128,
+    "write_queue_organisation": "Four physical oldest-first entries shift only on pop; simultaneous push targets count-pop; unchanged acceptance/issue sequence",
+    "write_queue_muxes": "128 onehot shift2:1 bits plus128 insertion mux bits reserved; dynamic rp rotation removed; registered head/candidate select stored onehot before decode"
+  },
+  "evidence": "8be556c2e routedSS\u2212110.94ps wq_rp1\u2192wab_oh18; write_ready_bank\u2192hb_oh paths to\u221256.40ps; no successor physical claim",
+  "runtime_state_protection": {
+    "implemented": false,
+    "blocks_production_adoption": true,
+    "record": "results/rtl/qwen_ctrl_shift_20261007/runtime_protection_gate.json"
+  }
+}

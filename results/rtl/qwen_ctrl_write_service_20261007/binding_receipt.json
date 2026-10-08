@@ -1,0 +1,36 @@
+{
+  "status": "RECEIVING_EDGE_NATIVE_BINDING_PASS",
+  "tests": [
+    {
+      "pc": 0,
+      "negative_control": false,
+      "returncode": 0,
+      "log": "pc0_neg0.log"
+    },
+    {
+      "pc": 31,
+      "negative_control": false,
+      "returncode": 0,
+      "log": "pc31_neg0.log"
+    },
+    {
+      "pc": 0,
+      "negative_control": true,
+      "returncode": 1,
+      "log": "pc0_neg1.log"
+    }
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_ctrl_pc_protected.sv": "c73bd887cac131c11b54bf2a36275a25f00745841efa67d6cece2092aebfcb62",
+    "rtl/physical/ot_qwen_ctrl_pc_shift.sv": "0c3f8a28bee079da5a53be8aa4659be9e15db867a4c59bf980e27afe90ade165",
+    "rtl/physical/ot_hbm_r14_stream_pc_shift.sv": "be7c10a7fb5a723d873cef8f41ef5c474eb476efb4096c9e31470f4c86bcd3c5",
+    "/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv": "fc9ceae01e8f1e86ebd326db92d0dbf6248e22621bbaed8e758b77bd9450c27e",
+    "/tmp/qwen-control-binding-20261007/tb_qwen_ctrl_ledger_binding.sv": "f8db64796d3fbf3301f2eca9ecea20b06c20455214b88d4a31ac8adf29252036"
+  },
+  "limits": [
+    "No analog PHY or CDC claim",
+    "Independent refresh owner remains external and must meet absolute deadlines",
+    "No local fault reset or automatic epoch restart",
+    "Actual SS/FF and mapped independent state pending"
+  ]
+}

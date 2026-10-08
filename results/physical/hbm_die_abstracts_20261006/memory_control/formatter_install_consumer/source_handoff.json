@@ -1,0 +1,84 @@
+{
+  "status": "ADDITIVE_HOOK_SOURCE_LINTED_NOT_CONNECTED_NUMERIC",
+  "source_base": "6696f6e5dd1539b12b9cc79fb9d9bbce5f10d046",
+  "module": "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_install_consumer.sv",
+  "parameters": {
+    "ENABLE": 1,
+    "ENTRY_PC": 0,
+    "SCORE_SOURCE": 524288,
+    "ID_SOURCE": 526336,
+    "ARENA_BASE": 65536,
+    "ARENA_LIMIT": 458752,
+    "SINK_BASE": 458752,
+    "SINK_LIMIT": 460800,
+    "CAPACITY_BYTES": 1048576,
+    "EXPECTED_PAIRS": 6144
+  },
+  "added_coded_FF": 216,
+  "new_payload_FF": 0,
+  "source_sha256": {
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_install_consumer.sv": "7299552d01014980152a8510b30e4c0962637bcc97fbd54aa75628d89c9e50cd",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_bridge.sv": "b9a814be8b4455f3f26655224cfe05348bb144958d8ff2ef1230cc16480ed2c9",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_owner.sv": "882d121877c05999659055c73ded1e5fdfb579cbbc747b56ea08d8a387e9fa87",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv": "95d3e48a9d1d4aebfc65c31373397efff755a4c5fa441229c854dd51f2807f7f",
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "47a8c62bf49b8c1339c841170add5acfd63f9700468b64afd187017f9c57b5f6",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "tools/hbm_opt_integrated_20261005_gather.py": "c4bf1c6d54686eb7ed3940f144ec168dc5d86a3507d2fbbf2d226cfa7206a030",
+    "tools/hbm_index_candidate_sources.py": "b97591906891179029d89b58fbdc8359f76177f7c0b2e19ee7657d1d0b70efe2",
+    "tools/dshbm_w2_install_sectors.py": "7eeb03b18593ba935f0673803e53034b065498ba9cd670e9ab8e516b042f0769"
+  },
+  "actual_source_diagnosis": {
+    "protected_descriptor_commit": "gather_bridge IDLE desc_v&&desc_r ->code[desc_index]=W6encode64(data), code8 validbit; NOTexclusivebookACK",
+    "CP_command_install": "cmdproc20 cmd_we writesrawcmem64; doorbellhandshake capturesCPjob/gen/token/pos; no positiveinstalled-book publication callback",
+    "book_input": "selectedparent gather_book_valid external ->u_shared.installed_book_valid",
+    "sink_commit": "existinggather_bridge sink_count increments oncheckedkind4 transaction; sink_visible at32; reused, no inferredissuecount",
+    "reverse_input": "selectedparent gather_reverse_done external ->gather/formatter; no actualbound96producer reverseACK insideparent",
+    "consumer": "existingformatter512 stagedreply reused; moduleforwards actualcheckedmatch(tag16/rank7/word6/frame73) acceptedconsumer handshakes; received6144 transportcount is NOT proof numericalselection"
+  },
+  "required_Gibbs_parent_connections": {
+    "desc": "routecaller gather_desc pins through helper parent_desc pins; actualexistingparent_desc_r returns, captureatacceptingedge",
+    "GO_book": "helpergather_start_v->parentgather_start_v; helperinstaller_book_v->parentgather_book_valid; actualCPfull73 passedheld",
+    "formatter": "helperformatter_start_v->parentformatter_start_v, useactualstart_r/internalfmt_retained/fault",
+    "queries": "caller index_pair85/token17 through helperparent_pair; parent index_pair_r real; index_pairs599/frame73 throughhelperconsumer_pairs to actualorderedconsumer",
+    "publication": "helperresult_published->parentgather_result_published; MUSTreceive realbridgegather_sink_visible/full73heldframe",
+    "reverse_release": "realproducerchecked/drainedreverseevent ->helpersource_reverse ports; helpersource_reverse_done->parentgather_reverse_done; formatter_release then retaineddrop->gather_release; oneactualfull73releaseframe",
+    "reset": "por_n actualroot; warm_req closesnewepochs butneverclearsacceptedrecord"
+  },
+  "missing_receipt_ABI": {
+    "reservation_v": "actualexclusive SOURCE/arena/sink publication callback; absent incurrentparent",
+    "reservation_frame": "actualCPfull73",
+    "reservation_checked/exclusive": "realbook/backingextent/sourcephaseverification result, notdescbitmap/doorbell/CRCfree tie",
+    "reservation_descriptor512": "eightaccepted64descriptorwords LSBword0 withexactinstalledgeometry",
+    "source_reverse_v/frame/checked/drained": "actualproducer reverseACK; absent inselectedgraph; notnormal_done alone"
+  },
+  "numerical_source_dependency": {
+    "owner": "Noether",
+    "required_index_producer_fields": {
+      "rank_count": 96,
+      "candidates_per_rank": 512,
+      "score_dtype": "FP32",
+      "id_dtype": "U32",
+      "source_path": "pinnedsource_artifact",
+      "source_phase_path": "pinnedsource_artifact",
+      "scores_span_name": "scores",
+      "ids_span_name": "ids"
+    },
+    "required_local_spans": "score/id source spans each2048BYTE,kindsource,actualproducer pinned; occupied/workspace/linkedentry proof viaexistingcompiler",
+    "unusable_as_numeric": "connected rank0 or full96pattern pages, rawBF16zeroextend asFP32, ordinal/localIDrelabelling",
+    "native_RESULT": "actualselectedID consumer->SMRESULT remains Gibbsseparatelyowned; no UR0echo/constantterminal"
+  },
+  "ownership": {
+    "Gauss": "ONLY additivehook and model/evidence, no parent/math/harness edit",
+    "Noether": "actualdistinct96rank source/order emitter",
+    "Gibbs": "parent/provider/math/realreceiptauthority",
+    "Bacon": "harness integration andgold assertions",
+    "Lorentz": "soleparentcompile/runtimecoordination"
+  },
+  "validation": "Lint_R3 enabledsingle216FFcontrol rc0/warnings0,33536KiB RSS; precedingpackage-timescaleFAIL andwidth-warninglog preserved. No simulation/parent/engine/goldenPASS.",
+  "numeric_pass": false,
+  "full_parent_connected": false,
+  "physical_closed": false,
+  "adopted": false
+}

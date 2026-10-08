@@ -202,7 +202,12 @@ def cmd_stage(a):
     if not (scr / "roms").exists():
         (scr / "roms").symlink_to((src / "roms").resolve())
     ctrl = scr / "ot_rom_pkg_ctrl_wfc_as_wf.sv"
-    ctrl.write_text((ROOT / SRC).read_text().replace("module ot_rom_pkg_ctrl_wfc #(", "module ot_rom_pkg_ctrl_wf #("))
+    text = (ROOT / SRC).read_text().replace("module ot_rom_pkg_ctrl_wfc #(", "module ot_rom_pkg_ctrl_wf #(")
+    for d in a.define:   # e.g. OT_WFC_CONTROL_PIPE=1: the copy's default for that knob
+        k, v = d.split("=")
+        assert f"`define {k} 0" in text, k
+        text = text.replace(f"`define {k} 0", f"`define {k} {v}")
+    ctrl.write_text(text)
     sys.argv = [sys.argv[0]]
     sys.path.insert(0, str(ROOT / "tools"))
     W = importlib.import_module("dsrom_wavefront_rtl_campaign")
@@ -211,7 +216,7 @@ def cmd_stage(a):
     rc = W.run_stage(scr)
     out = (scr / f"out_stage_w{a.wave}.txt").read_text()
     ref = (src / f"out_stage_w{a.wave}.txt").read_text() if (src / f"out_stage_w{a.wave}.txt").is_file() else None
-    res = dict(rc=rc, ctrl_sha256=sha(ROOT / SRC), bench_out_sha256=hashlib.sha256(out.encode()).hexdigest(),
+    res = dict(rc=rc, ctrl_sha256=sha(ROOT / SRC), defines=a.define, bench_out_sha256=hashlib.sha256(out.encode()).hexdigest(),
                ref_out_sha256=hashlib.sha256(ref.encode()).hexdigest() if ref else None,
                identical_to_reference_run=(out == ref) if ref is not None else None)
     (scr / f"stage_w{a.wave}.json").write_text(json.dumps(res, indent=1) + "\n")
@@ -311,6 +316,7 @@ def main():
     t.add_argument("--from", dest="src", type=Path, required=True)
     t.add_argument("--scratch", type=Path, required=True)
     t.add_argument("--wave", type=int, default=1)
+    t.add_argument("--define", action="append", default=[], help="KNOB=V: default of an OT_WFC_* knob in the copy")
     c = sub.add_parser("record")
     c.add_argument("--dir", type=Path, required=True)
     c.add_argument("--screen", action="append", default=[])

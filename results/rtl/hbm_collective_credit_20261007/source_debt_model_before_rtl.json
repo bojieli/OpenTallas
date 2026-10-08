@@ -1,0 +1,16 @@
+{
+  "status": "MODEL_BEFORE_RTL_DEFAULT_OFF",
+  "purpose": "actual source reservation/returned-credit debt provider; immutable original credit source wrapped with observation gates",
+  "state_encoded_bits_per_source": 72,
+  "fault_rails": 2,
+  "ports": "one 72bit encoded read/write each cycle; observe actual reserve and grant handshakes, guard BOTH before effects",
+  "state_layout": "epoch24 lastseq24 debt7 seen1 lastcount7 active1",
+  "counter_bound": 64,
+  "initial_grant": "sequence0 count64 establishes tuple only; does not retire debt",
+  "returned_grants": "new exact next sequence subtracts count; current tuple duplicates validated without decrement, stale ignored; underflow/sequence/wrap fault",
+  "same_cycle": "add one actual reserve and subtract newly accepted returned count in same protected update",
+  "CE": "guard drops before source reserve/grant handshake; one scrub cycle; no lost observer event",
+  "boundary": "observer counts every source reservation including unlaunched retained flits; control and data transport empties remain additional independent drain requirements",
+  "latency": "no additional clean-path cycle, guard in ready path requires contextual physical timing; CE onecycle stall",
+  "area": "one SECDED72 state/codec and 7bit debt arithmetic plus dualrails per source; no mapping/SSFF claim"
+}

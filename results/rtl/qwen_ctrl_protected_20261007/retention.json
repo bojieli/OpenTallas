@@ -1,0 +1,24 @@
+{
+  "pass_retention": true,
+  "stage": "generic",
+  "source_sha256": "5d872dd111d587595eb09865d971284da519f205831faac59329983574130e3c",
+  "replicas": [
+    {
+      "root": "u.g_replica[0].u",
+      "ff_cells": 2355,
+      "critical_added_ff_roots": 192
+    },
+    {
+      "root": "u.g_replica[1].u",
+      "ff_cells": 2355,
+      "critical_added_ff_roots": 192
+    }
+  ],
+  "sticky_ff_roots": [
+    "$auto$ff.cc:337:slice$13841",
+    "$auto$ff.cc:337:slice$13842"
+  ],
+  "errors": [],
+  "physical_qualification": false,
+  "note": "Generic synthesis receipt does not establish final mapped or placed independence; mapped output must pass equivalent root audit before adoption."
+}

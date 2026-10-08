@@ -1,0 +1,100 @@
+{
+  "schema": "opentallas.dsrom_softmax_payload.v2",
+  "adopted": false,
+  "build_scope": "minimum serial assembler/drain component exactness; not full core memory controller",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json": "9cb36a209b2f0e1ecdfe80ec8c93e7c01f5349fc5aa9b5ac2215dba9637bfb87"
+  },
+  "shape": {
+    "serial_bits": 1024,
+    "payload_row_bits": 8192,
+    "SECDED_row_bits": 9216,
+    "serial_beats_per_row": 8,
+    "codewords_per_beat": 16,
+    "SRAM_macros": 36,
+    "macro_width_bits": 256,
+    "macro_depth": 128
+  },
+  "mutable_payload": {
+    "write_assembly_bits": 9216,
+    "read_hold_bits": 9216,
+    "protection": "SECDED64+8 throughout retained payload; no decoded full-row stall buffer"
+  },
+  "serial_codec": {
+    "replicas": 16,
+    "lane_registered_bits": 294,
+    "register_bits": 4704,
+    "write_encode_edges": 1,
+    "read_pipeline_edges": 3,
+    "scope": "VM ingress and egress only"
+  },
+  "serial_control": {
+    "provisional_register_bits": 124,
+    "protection": "complemented counters, row tags, addresses, pending index, state, valid and fault"
+  },
+  "serial_storage_FF_bits": 23260,
+  "serial_FF_floor_um2": 6782.616000000001,
+  "serial_read_mux": {
+    "output_bits": 1152,
+    "inputs": 8,
+    "mux2_equivalents": 8064,
+    "area_um2": null,
+    "timing": "select precedes first registered code capture; physical measurement required"
+  },
+  "core_burst_path": {
+    "required_parallel_decode_lanes": 128,
+    "additional_registered_bits": 28288,
+    "decoded_bits_per_stream_edge": 8192,
+    "initiation_interval": 1,
+    "throttling_allowed": false,
+    "implemented_by_serial_component": false,
+    "reason": "existing softmax consumes40 consecutive score vectors and32 consecutive PV vectors without ready"
+  },
+  "memory": {
+    "read_ports": 1,
+    "write_ports": 1,
+    "bits_per_port_edge": 9216,
+    "SS_clk_to_q_ps": 455.3205489475797,
+    "read_request_to_raw_capture_edges": 1,
+    "raw_capture_budget_before_setup_wire_clock_ps": 318.01245105242026,
+    "raw_macro_area_mm2": 0.14009677056,
+    "floorplan_fit": false,
+    "macro_pin_stations_bound": false
+  },
+  "serial_schedule": {
+    "write_beats_initiation_interval": 1,
+    "final_input_beat_to_macro_write_edges": 2,
+    "read_requests_outstanding": 1,
+    "registered_read_address_launch_edges": 1,
+    "read_request_to_first_accepted_beat_edges": 6,
+    "subsequent_accepted_beat_interval_edges": 4,
+    "unstalled_read_request_to_last_accepted_beat_edges": 34,
+    "note": "conservative repeated decode of held protected row; prices real SRAM+capture+codec boundaries"
+  },
+  "T640_egress": {
+    "exp_rows": 40,
+    "BF16_packed_rows": 16,
+    "serial_row_transactions": 56,
+    "request_to_final_take_service_edges": 1904,
+    "excludes": "inter-row request gaps, source compute, external stalls and CDC; not token latency"
+  },
+  "domains": {
+    "component": "stream1.2GHz",
+    "serial_host": "0.9GHz boundary not implemented",
+    "uncertainty_ps": {
+      "setup": 60,
+      "hold": 25
+    },
+    "CDC_latency": null,
+    "physical_boundary_budget": null
+  },
+  "route_admitted": false,
+  "missing": [
+    "mapped mux/ECC/control area",
+    "full128-lane core replay path",
+    "native CDC and reset epoch protection",
+    "actual memory pin clock/input/output budget",
+    "producer tags and compiler integration",
+    "measured row/parent token composition"
+  ]
+}
