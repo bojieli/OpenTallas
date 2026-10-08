@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.hbm.vm.result_sink_audit.v1",
+  "verdict": "REJECT_EXISTING_VM_AS_GUARANTEED_SM_RESULT_SINK",
+  "adopted": false,
+  "source_head": "2b5a45a9b788ceb2f3d4e6ba43855ab21cb5fb09",
+  "sources": {
+    "physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_root_x.sv": "ec9574859997e1987c62c998ba973fbda8072ec0beeb9482c4156587570f8f15",
+    "physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_slice.sv": "125bcb41a85357eb2ab88ab6183eb5d2d55f3dcb9eb9f97c7c37fa67e0424b42",
+    "physical/hbm_accel_die_views/vm/tiles/hfd_vm_sw.sv": "4262bab6470d97336acf00dbe48408e5055907ac15732e40022d0b071b090b40",
+    "physical/hbm_accel_die_views/vm/tiles/make_vm_tiles.py": "ec778eb0c0ed9ea8b5656fd3704c87dd5cbbf0b82c465b6e11a7ea7e7b927a85",
+    "physical/hbm_accel_die_views/vm/split8/hfd_vm_sw_s.sv": "82d43f8fcbfafbafe5d37d6db22e81612955c1f2b2443aa9a314a8a93215440f"
+  },
+  "requested_service": {
+    "bytes_per_edge_per_sm": 32,
+    "maximum_edges_per_sm": 4096,
+    "sm_count": 32,
+    "required_peak_bytes_per_edge": 1024,
+    "per_sm_retained_bytes": 131072,
+    "all_sm_retained_bytes": 4194304
+  },
+  "actual": {
+    "global_write_ports": 1,
+    "outstanding_transaction_seats": 1,
+    "banks": 2,
+    "rows_per_bank": 128,
+    "payload_bits_per_row": 2063,
+    "owner_bits_per_row": 192,
+    "total_payload_capacity_bytes": 66016.0,
+    "total_sram_macros": 22,
+    "write_fsm": [
+      "IDLE accept",
+      "WRITE",
+      "VERIFY",
+      "WAIT_RD until mem_rd_v",
+      "CAPTURE",
+      "CHECK full data and owner readback",
+      "WACK until wr_ACK_ready",
+      "IDLE"
+    ],
+    "write_ack": "Identity-bound root SRAM readback; not acknowledgement of installation in an SM result consumer.",
+    "read_publish_ack": "Four multicast tap ACKs compare192bit owner; release requires all4, no deadline or service calendar.",
+    "arbitration": "wr_ready=IDLE&&!fault&&!rd_v;rd_ready=IDLE&&!fault&&!wr_v. Simultaneous asserted read/write blocks both; caller must enforce exclusion.",
+    "tile_slice": "Single command c_v/c_we: read enables gated!c_we and write enables c_we, no independent per-SM command ports.",
+    "die_wrapper": "Write data/control arrives via f_su_SW/f_su_NW and quadrant cross buses; q faces include placeholder/pass-through paths, not SM result storage."
+  },
+  "blockers": [
+    "No32B-per-SM result ingress queue, service calendar, or credit reservation exists in audited VM RTL.",
+    "Root is globally serialized through readback; bus width cannot establish sustained drain.",
+    "Unbounded wait on memory response, wr_ACK_ready or tap_ACK; no bounded arbitration proof for competing result streams.",
+    "Existing root ACK proves VM SRAM readback, not identified installed SM destination visibility.",
+    "Whole-die VM payload capacity66016B is below131072B for one complete4096-edge SM burst, before existing activation reservations.",
+    "No result packing, ownership/address allocation, lifetime/reclamation protocol, or complete producer/consumer join has been implemented."
+  ],
+  "decision": "Price dedicated full-shape SM result store or implement and model an independently qualified streaming sink; no free VM capacity or bandwidth credit.",
+  "route_impact": "None; all existing VM routes preserved."
+}
