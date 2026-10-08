@@ -1,0 +1,57 @@
+{
+  "name": "ot_s81_pq_ret_root_cam_p",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rc2-a7-h212-hm10-b761ac1c6/routes/s81b_pq_rc2_a7_h212_hm10_b761ac1c6/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rc2-a7-h212-hm10-b761ac1c6/routes/s81b_pq_rc2_a7_h212_hm10_b761ac1c6/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rc2-a7-h212-hm10-b761ac1c6/routes/s81b_pq_rc2_a7_h212_hm10_b761ac1c6/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rc2-a7-h212-hm10-b761ac1c6/routes/s81b_pq_rc2_a7_h212_hm10_b761ac1c6/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rc2-a7-h212-hm10-b761ac1c6/routes/s81b_pq_rc2_a7_h212_hm10_b761ac1c6/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rc2-a7-h212-hm10-b761ac1c6/routes/s81b_pq_rc2_a7_h212_hm10_b761ac1c6/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rc2-a7-h212-hm10-b761ac1c6/routes/s81b_pq_rc2_a7_h212_hm10_b761ac1c6/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_s81_pq_ret_root_cam_p.lef": "bfefae9afd8f38143e13b58f95cc7e0c67fb1c07c827631a20cecc6a135105a1",
+    "ot_s81_pq_ret_root_cam_p_ff.lib": "32810c5d1d8b895a7ea8bcbdf127c0ee89350d0479e593dca80551c6297cf810",
+    "ot_s81_pq_ret_root_cam_p_ss.lib": "4bf6799f6d19de03c4263546c3337cf9c62e213537fa82855327208daae9c85c"
+  },
+  "ok": true
+}
