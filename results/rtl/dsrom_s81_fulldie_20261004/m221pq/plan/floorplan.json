@@ -1,0 +1,1544 @@
+{
+ "schema": "opentallas.dsrom-s81-fulldie.floorplan.r8.v1",
+ "tool": "tools/dsrom_s81_fulldie.py --gen r8",
+ "tool_sha256": "166fbc0c9d4645c36b95caaf22bb3186a7c78b7296ea9d8cad4f21f7102266cc",
+ "sources_sha256": {
+  "results/uarch/dsrom_c_recheck_20261004/model.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
+  "physical/s81_die_views/q_elem_qs5f/q_elem.lef.gz": "118c9adf37c41c1e61d27a7391d600bdf2a20acca6e34dee48d7d5fd4211b343",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef": "894c15540462d7b5e015f7e9df654f6436b483e7744eaa84dcfcfdac01bb9f05",
+  "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef": "b119fdcec16ea432709ffa7fc97c9fbb801c7a703410512008f4b74133254878",
+  "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
+  "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie.lef": "da1804482bff5072298b1cae5499f629f5f8bc88df2077f1715e282260873eb4",
+  "rtl/v41die/ot_s81_cfg7_seq.sv": "be8ed2bedd04427f94a32aff88f11f0427885c94e36fe76c605c1d4b56eec682",
+  "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json": "635ae98aea31f228f7ba2d848c455ea06587e22759b62951cdb4725b3f1e569a",
+  "results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_A.lef.gz": "0bd29f9155f06f3297b85830dfce439a8fc06352363b3ba81bf86064ac159b80",
+  "results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_B.lef.gz": "f12004448d0d630436249918482a8c3747ad2886cd849f06cb99902507c3adea",
+  "rtl/v41rom/ot_dsrom_head_bundle.sv": "7072bd85f5ab821287be3ee6ba210529e6df74c95365ffd1db58e52c4f6f8ea1",
+  "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+  "rtl/common/ot_meso_fifo.sv": "aedd0aaabd4300aa5daaf2700f0918e7da42dfdf23a7b3e1acc69e3112184de6",
+  "rtl/common/ot_ratio_cdc_fifo.sv": "b608b11a3e676f0a83ddfba49b6187b5991e2d443a4d1c5269274ee6587e8557",
+  "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f"
+ },
+ "die": {
+  "w_um": 33000.0,
+  "h_um": 26000.0,
+  "mm2": 858.0
+ },
+ "variant": {
+  "su_area_mm2": 25.61188,
+  "hub_column_width_um": 1728.0,
+  "gen": "r8",
+  "geometry_fix": true,
+  "cfifo_v2": true,
+  "link_fix": true,
+  "link_split": true,
+  "sel_xstg": true,
+  "pin_relay": true,
+  "vm_face_mm2": null,
+  "ch_heights": [
+   423.36,
+   466.55999999999995,
+   552.96,
+   552.96,
+   466.55999999999995,
+   423.36,
+   259.2
+  ],
+  "vch_w": 1641.6,
+  "hc_corr": 1512.0,
+  "hc_xface": true,
+  "hop_fix": true,
+  "meso_d8": true,
+  "fwd_pitch": 430.56,
+  "corr_interleave": true,
+  "rev": "r9",
+  "cc_reach_um": 215.0,
+  "vch_interleave": true,
+  "q_lef": "physical/s81_die_views/q_elem_qs5f/q_elem.lef.gz",
+  "head_dies": 12,
+  "die": "layer1",
+  "role": "layer die, 1 HBM3E stack (292 of the rack)",
+  "pairs": 1792,
+  "bf": 512,
+  "nv": 0,
+  "head_bundles": 0,
+  "stacks": [
+   "SW"
+  ],
+  "elem_frame_h": 198.72,
+  "q_elem_frame_h": 221.4,
+  "frame_h": 2646.0,
+  "slot_h": 280.8,
+  "slots": 9
+ },
+ "slot": {
+  "elem_frame_h_um": 198.72,
+  "q_elem_frame_h_um": 221.4,
+  "frame_h_um": 2646.0,
+  "slot_h_um": 280.8,
+  "slots_per_column": 9,
+  "capacity": {
+   "elem_frame_h_um": 198.72,
+   "q_elem_frame_h_um": 221.4,
+   "frame_h_um": 2646.0,
+   "slot_h_um": 280.8,
+   "slots_per_column": 9,
+   "columns": 128,
+   "max_pairs_per_layer_die": 1792,
+   "pairs_per_layer_die_now": 2417,
+   "layer_field_pairs_total": 783108,
+   "layer_field_pairs_basis": "81 stages x 4 ranks x 2,417 (S81 decision)",
+   "layer_dies_now": 324,
+   "layer_dies_at_max": 438,
+   "extra_layer_dies": 114,
+   "inventory_compiled_pairs_TP4": 783264,
+   "rack": {
+    "scan_dies_4stack": 32,
+    "layer_dies_1stack": 292,
+    "head_dies": 12,
+    "table_dies": 36,
+    "draft_dies": 52,
+    "total": 424,
+    "layer_dies_total": 324,
+    "head_bundles_per_head_die": 85,
+    "source": "results/arch/dsrom_s81_rack_20261006/rack.json (DS-RACK scenario C: 12 head + 36 table, 1-stack layer dies)"
+   },
+   "meso_slot": {
+    "record": "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json",
+    "um2_per_W512_slot": 4842.0,
+    "cfifo_W564_slots": 2,
+    "cfifo_reservation_um2": 41057.3
+   },
+   "bf_per_region_flavours": {
+    "4": {
+     "max_pairs": 1792,
+     "bf": 512,
+     "slots_per_column": 9,
+     "slot_h_um": 280.8
+    },
+    "0": {
+     "max_pairs": 2048,
+     "bf": 0,
+     "slots_per_column": 8,
+     "slot_h_um": 280.8
+    }
+   }
+  }
+ },
+ "instances": {
+  "bf": 512,
+  "cfg": 12544,
+  "seq": 1792,
+  "q": 1280,
+  "sstn": 1152,
+  "qbank": 2560,
+  "node": 3456,
+  "cfifo": 128,
+  "pqstn": 256,
+  "pqroot": 128,
+  "hub": 9,
+  "pqrom": 3,
+  "phy": 1,
+  "ctrl": 1,
+  "svc": 1,
+  "band_blk": 2,
+  "link": 8,
+  "rstg": 256,
+  "rly": 29696,
+  "hend": 29,
+  "stn": 2111,
+  "hstn": 184,
+  "xstg": 2,
+  "lkck": 8
+ },
+ "area_mm2_by_kind": {
+  "bf": 102.041,
+  "cfg": 30.069,
+  "seq": 3.746,
+  "q": 144.79,
+  "sstn": 6.02,
+  "qbank": 1.003,
+  "node": 23.219,
+  "cfifo": 5.255,
+  "pqstn": 0.292,
+  "pqroot": 2.266,
+  "hub": 48.475,
+  "pqrom": 0.007,
+  "phy": 10.006,
+  "ctrl": 2.111,
+  "svc": 13.403,
+  "band_blk": 6.341,
+  "link": 4.238,
+  "rstg": 0.344,
+  "rly": 8.963,
+  "hend": 0.24,
+  "stn": 1.308,
+  "hstn": 0.13,
+  "xstg": 0.001,
+  "lkck": 0.001
+ },
+ "placed_footprint_mm2": 414.27,
+ "utilisation": {
+  "placed_over_die": 0.4828,
+  "field_frames_mm2": 400.61
+ },
+ "geometry": {
+  "slot_h": 280.8,
+  "slots": 9,
+  "frame_h": 2646.0,
+  "q_elem_frame_h": 221.4,
+  "x_lw": 20.304,
+  "x_fw": 327.024,
+  "x_sp": 13942.8,
+  "x_fe": 19040.4,
+  "x_le": 32718.384,
+  "y_f": 3490.56,
+  "y_top": 22511.52,
+  "ch_y": [
+   3490.56,
+   6559.919999999999,
+   9672.48,
+   12871.439999999999,
+   16070.4,
+   19182.960000000003,
+   22252.32
+  ],
+  "tier_y": [
+   3913.92,
+   7026.48,
+   10225.439999999999,
+   13424.399999999998,
+   16536.96,
+   19606.320000000003
+  ],
+  "band_depth": 3041.28,
+  "field_h": 19020.96,
+  "spine_cx": 16491.6,
+  "col_pitch": 1191.456,
+  "col_w": 1182.816,
+  "spf": 518.4,
+  "tier_cols": [
+   10,
+   11,
+   11,
+   11,
+   11,
+   10
+  ]
+ },
+ "forwarded": {
+  "stations": 2111,
+  "ot_fwd_link_stage_instances": 6405,
+  "chains": 76,
+  "max_hop_um": 429.8,
+  "hops_over_430p56": 0,
+  "over_examples": [],
+  "meso_fifos": 267,
+  "ratio_cdc_fifos": 6
+ },
+ "field_round_trip_cycles": {
+  "farthest_frame": 73,
+  "cycles": 167,
+  "x_trunk_stages": 63,
+  "column_slot_stages": 9,
+  "root_stages": 2,
+  "return_trunk_stages": 61,
+  "meso_crossings": 2,
+  "crossing_cycles_each": 4,
+  "hop_fix": {
+   "classes": {
+    "cfg": {
+     "hops": 2944,
+     "stations": 0,
+     "max_um": 276.2,
+     "max_added": 0
+    },
+    "go": {
+     "hops": 2944,
+     "stations": 0,
+     "max_um": 256.9,
+     "max_added": 0
+    },
+    "rom_a": {
+     "hops": 8960,
+     "stations": 0,
+     "max_um": 309.5,
+     "max_added": 0
+    },
+    "rom_ce": {
+     "hops": 8960,
+     "stations": 0,
+     "max_um": 311.1,
+     "max_added": 0
+    },
+    "rom_q": {
+     "hops": 8960,
+     "stations": 0,
+     "max_um": 312.5,
+     "max_added": 0
+    },
+    "x_lane": {
+     "hops": 3072,
+     "stations": 0,
+     "max_um": 157.6,
+     "max_added": 0
+    },
+    "x_ctl": {
+     "hops": 1408,
+     "stations": 0,
+     "max_um": 214.3,
+     "max_added": 0
+    },
+    "pad_fallback": {
+     "hops": 0,
+     "stations": 0,
+     "max_um": 0.0,
+     "max_added": 0,
+     "frame_out": 512
+    },
+    "stat": {
+     "hops": 1536,
+     "stations": 256,
+     "max_um": 458.9,
+     "max_added": 1
+    },
+    "ret_leaf": {
+     "hops": 4736,
+     "stations": 2304,
+     "max_um": 950.8,
+     "max_added": 2
+    },
+    "lane": {
+     "hops": 80,
+     "stations": 90,
+     "max_um": 839.4,
+     "max_added": 2
+    },
+    "local": {
+     "hops": 15,
+     "stations": 18,
+     "max_um": 757.7,
+     "max_added": 2
+    },
+    "lane:no_fclk": {
+     "hops": 28,
+     "stations": 0,
+     "max_um": 0.0,
+     "max_added": 0
+    },
+    "hub": {
+     "hops": 27,
+     "stations": 28,
+     "max_um": 272.2,
+     "max_added": 2
+    }
+   },
+   "planned_hops": 43670,
+   "fwd_rt_add": 2,
+   "reach_um": {
+    "common_clock": 410.0,
+    "forwarded": 430.56
+   }
+  },
+  "q_bank_stages": 2,
+  "column_relays_x": 1,
+  "column_relays_return": 16,
+  "basis": "per frame: x trunk stations to its tap + entry meso 2 + slot stations + return-tree root stages + return trunk stations + hub meso 2 (the tree levels and the element pipeline excluded)"
+ },
+ "bus_classes": {
+  "x_lane": {
+   "buses": 7680,
+   "wires": 2108160
+  },
+  "x_ctl": {
+   "buses": 2432,
+   "wires": 36480
+  },
+  "rom_a": {
+   "buses": 1795,
+   "wires": 21540
+  },
+  "rom_ce": {
+   "buses": 12547,
+   "wires": 12547
+  },
+  "rom_q": {
+   "buses": 12547,
+   "wires": 602256
+  },
+  "stat": {
+   "buses": 13824,
+   "wires": 23808
+  },
+  "cfg": {
+   "buses": 4224,
+   "wires": 228096
+  },
+  "go": {
+   "buses": 4224,
+   "wires": 4224
+  },
+  "ret_leaf": {
+   "buses": 23808,
+   "wires": 1499904
+  },
+  "ret_tree": {
+   "buses": 4352,
+   "wires": 287232
+  },
+  "col_ret": {
+   "buses": 1408,
+   "wires": 93952
+  },
+  "col_clock": {
+   "buses": 128,
+   "wires": 128
+  },
+  "col_reset": {
+   "buses": 128,
+   "wires": 128
+  },
+  "local": {
+   "buses": 83,
+   "wires": 54125
+  },
+  "fclk": {
+   "buses": 5838,
+   "wires": 5838
+  },
+  "lane": {
+   "buses": 5862,
+   "wires": 1109514
+  },
+  "hub": {
+   "buses": 150,
+   "wires": 112938
+  },
+  "phy_dfi": {
+   "buses": 1,
+   "wires": 22238
+  },
+  "hbm_read": {
+   "buses": 1,
+   "wires": 8864
+  },
+  "top_in": {
+   "buses": 2,
+   "wires": 2
+  },
+  "clock": {
+   "buses": 3,
+   "wires": 3
+  },
+  "reset": {
+   "buses": 3,
+   "wires": 3
+  }
+ },
+ "chains": [
+  {
+   "chain": "xWdn",
+   "lanes": [
+    566
+   ],
+   "stations": 26,
+   "length_um": 10057.4,
+   "max_hop_um": 426.2,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xW2",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12724.5,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW1",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12724.5,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW0",
+   "lanes": [
+    566
+   ],
+   "stations": 29,
+   "length_um": 11533.0,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xWup",
+   "lanes": [
+    566
+   ],
+   "stations": 18,
+   "length_um": 6935.7,
+   "max_hop_um": 425.7,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xW3",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12776.8,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW4",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12776.8,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW5",
+   "lanes": [
+    566
+   ],
+   "stations": 29,
+   "length_um": 11585.4,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xEdn",
+   "lanes": [
+    566
+   ],
+   "stations": 33,
+   "length_um": 13060.9,
+   "max_hop_um": 426.6,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xE2",
+   "lanes": [
+    566
+   ],
+   "stations": 33,
+   "length_um": 12810.6,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE1",
+   "lanes": [
+    566
+   ],
+   "stations": 33,
+   "length_um": 12810.6,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE0",
+   "lanes": [
+    566
+   ],
+   "stations": 30,
+   "length_um": 11619.2,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xEup",
+   "lanes": [
+    566
+   ],
+   "stations": 30,
+   "length_um": 11934.4,
+   "max_hop_um": 429.4,
+   "last_hop_um": 2.4
+  },
+  {
+   "chain": "xE3",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12758.4,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE4",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12758.4,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE5",
+   "lanes": [
+    566
+   ],
+   "stations": 29,
+   "length_um": 11566.9,
+   "max_hop_um": 425.1,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "rW0",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 47,
+   "length_um": 19291.2,
+   "max_hop_um": 429.4,
+   "last_hop_um": 69.1
+  },
+  {
+   "chain": "hr_W0_o",
+   "lanes": [
+    692
+   ],
+   "stations": 1,
+   "length_um": 339.3,
+   "max_hop_um": 210.8,
+   "last_hop_um": 130.7
+  },
+  {
+   "chain": "rW1",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 43,
+   "length_um": 17578.1,
+   "max_hop_um": 429.4,
+   "last_hop_um": 200.8
+  },
+  {
+   "chain": "hr_W1_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 344.1,
+   "max_hop_um": 210.8,
+   "last_hop_um": 135.4
+  },
+  {
+   "chain": "rW2",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 36,
+   "length_um": 14630.3,
+   "max_hop_um": 429.4,
+   "last_hop_um": 166.5
+  },
+  {
+   "chain": "hr_W2_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 344.1,
+   "max_hop_um": 210.8,
+   "last_hop_um": 135.4
+  },
+  {
+   "chain": "rW3",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 34,
+   "length_um": 13813.3,
+   "max_hop_um": 429.4,
+   "last_hop_um": 274.5
+  },
+  {
+   "chain": "hr_W3_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 344.1,
+   "max_hop_um": 210.8,
+   "last_hop_um": 135.4
+  },
+  {
+   "chain": "rW4",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 42,
+   "length_um": 16952.0,
+   "max_hop_um": 429.4,
+   "last_hop_um": 8.7
+  },
+  {
+   "chain": "hr_W4_o",
+   "lanes": [
+    761
+   ],
+   "stations": 1,
+   "length_um": 224.0,
+   "max_hop_um": 210.8,
+   "last_hop_um": 15.3
+  },
+  {
+   "chain": "rW5",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 46,
+   "length_um": 18813.0,
+   "max_hop_um": 429.8,
+   "last_hop_um": 14.8
+  },
+  {
+   "chain": "hr_W5_o",
+   "lanes": [
+    692
+   ],
+   "stations": 1,
+   "length_um": 339.3,
+   "max_hop_um": 210.8,
+   "last_hop_um": 130.7
+  },
+  {
+   "chain": "rE0",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 61,
+   "length_um": 25160.8,
+   "max_hop_um": 429.4,
+   "last_hop_um": 1.8
+  },
+  {
+   "chain": "hr_E0_o",
+   "lanes": [
+    692
+   ],
+   "stations": 4,
+   "length_um": 956.7,
+   "max_hop_um": 211.2,
+   "last_hop_um": 135.0
+  },
+  {
+   "chain": "rE1",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 57,
+   "length_um": 23396.7,
+   "max_hop_um": 429.4,
+   "last_hop_um": 7.1
+  },
+  {
+   "chain": "hr_E1_o",
+   "lanes": [
+    761
+   ],
+   "stations": 5,
+   "length_um": 1081.5,
+   "max_hop_um": 211.2,
+   "last_hop_um": 32.2
+  },
+  {
+   "chain": "rE2",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 43,
+   "length_um": 17613.8,
+   "max_hop_um": 429.4,
+   "last_hop_um": 173.3
+  },
+  {
+   "chain": "hr_E2_o",
+   "lanes": [
+    761
+   ],
+   "stations": 4,
+   "length_um": 961.4,
+   "max_hop_um": 211.2,
+   "last_hop_um": 122.5
+  },
+  {
+   "chain": "rE3",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 42,
+   "length_um": 17142.5,
+   "max_hop_um": 429.4,
+   "last_hop_um": 278.1
+  },
+  {
+   "chain": "hr_E3_o",
+   "lanes": [
+    761
+   ],
+   "stations": 4,
+   "length_um": 961.4,
+   "max_hop_um": 211.2,
+   "last_hop_um": 122.5
+  },
+  {
+   "chain": "rE4",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 48,
+   "length_um": 19585.2,
+   "max_hop_um": 429.8,
+   "last_hop_um": 45.2
+  },
+  {
+   "chain": "hr_E4_o",
+   "lanes": [
+    761
+   ],
+   "stations": 4,
+   "length_um": 961.4,
+   "max_hop_um": 211.2,
+   "last_hop_um": 122.5
+  },
+  {
+   "chain": "rE5",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 55,
+   "length_um": 22640.8,
+   "max_hop_um": 429.8,
+   "last_hop_um": 112.5
+  },
+  {
+   "chain": "hr_E5_o",
+   "lanes": [
+    692
+   ],
+   "stations": 4,
+   "length_um": 956.7,
+   "max_hop_um": 211.2,
+   "last_hop_um": 117.7
+  },
+  {
+   "chain": "qSW",
+   "lanes": [
+    514
+   ],
+   "stations": 28,
+   "length_um": 12012.2,
+   "max_hop_um": 429.8,
+   "last_hop_um": 111.4
+  },
+  {
+   "chain": "aSW",
+   "lanes": [
+    1026
+   ],
+   "stations": 27,
+   "length_um": 11813.4,
+   "max_hop_um": 426.6,
+   "last_hop_um": 351.6
+  },
+  {
+   "chain": "ixSW",
+   "lanes": [
+    514
+   ],
+   "stations": 13,
+   "length_um": 5525.9,
+   "max_hop_um": 426.0,
+   "last_hop_um": 43.2
+  },
+  {
+   "chain": "coSW",
+   "lanes": [
+    514
+   ],
+   "stations": 71,
+   "length_um": 30315.5,
+   "max_hop_um": 429.8,
+   "last_hop_um": 142.6
+  },
+  {
+   "chain": "sel",
+   "lanes": [
+    514
+   ],
+   "stations": 27,
+   "length_um": 11767.4,
+   "max_hop_um": 426.8,
+   "last_hop_um": 292.0
+  },
+  {
+   "chain": "col",
+   "lanes": [
+    514
+   ],
+   "stations": 26,
+   "length_um": 11236.5,
+   "max_hop_um": 426.0,
+   "last_hop_um": 186.2
+  },
+  {
+   "chain": "KW0t",
+   "lanes": [
+    512
+   ],
+   "stations": 44,
+   "length_um": 18641.4,
+   "max_hop_um": 429.8,
+   "last_hop_um": 18.2
+  },
+  {
+   "chain": "KW0r",
+   "lanes": [
+    512
+   ],
+   "stations": 43,
+   "length_um": 18113.8,
+   "max_hop_um": 429.8,
+   "last_hop_um": 295.5
+  },
+  {
+   "chain": "KW1t",
+   "lanes": [
+    512
+   ],
+   "stations": 46,
+   "length_um": 19161.7,
+   "max_hop_um": 429.8,
+   "last_hop_um": 17.1
+  },
+  {
+   "chain": "KW1r",
+   "lanes": [
+    512
+   ],
+   "stations": 49,
+   "length_um": 20250.2,
+   "max_hop_um": 429.8,
+   "last_hop_um": 43.2
+  },
+  {
+   "chain": "KW2t",
+   "lanes": [
+    512
+   ],
+   "stations": 36,
+   "length_um": 15247.7,
+   "max_hop_um": 429.4,
+   "last_hop_um": 17.1
+  },
+  {
+   "chain": "KW2r",
+   "lanes": [
+    512
+   ],
+   "stations": 39,
+   "length_um": 16335.4,
+   "max_hop_um": 429.4,
+   "last_hop_um": 184.0
+  },
+  {
+   "chain": "KW3t",
+   "lanes": [
+    512
+   ],
+   "stations": 42,
+   "length_um": 17531.6,
+   "max_hop_um": 425.5,
+   "last_hop_um": 17.1
+  },
+  {
+   "chain": "KW3r",
+   "lanes": [
+    512
+   ],
+   "stations": 44,
+   "length_um": 18618.6,
+   "max_hop_um": 425.5,
+   "last_hop_um": 344.7
+  },
+  {
+   "chain": "KE0t",
+   "lanes": [
+    512
+   ],
+   "stations": 52,
+   "length_um": 22028.2,
+   "max_hop_um": 429.8,
+   "last_hop_um": 18.5
+  },
+  {
+   "chain": "KE0r",
+   "lanes": [
+    512
+   ],
+   "stations": 51,
+   "length_um": 21501.0,
+   "max_hop_um": 429.4,
+   "last_hop_um": 282.1
+  },
+  {
+   "chain": "KE1t",
+   "lanes": [
+    512
+   ],
+   "stations": 54,
+   "length_um": 22548.1,
+   "max_hop_um": 429.4,
+   "last_hop_um": 45.2
+  },
+  {
+   "chain": "KE1r",
+   "lanes": [
+    512
+   ],
+   "stations": 56,
+   "length_um": 23637.0,
+   "max_hop_um": 425.5,
+   "last_hop_um": 260.1
+  },
+  {
+   "chain": "KE2t",
+   "lanes": [
+    512
+   ],
+   "stations": 50,
+   "length_um": 21154.7,
+   "max_hop_um": 426.4,
+   "last_hop_um": 13.1
+  },
+  {
+   "chain": "KE2r",
+   "lanes": [
+    512
+   ],
+   "stations": 53,
+   "length_um": 22242.9,
+   "max_hop_um": 426.0,
+   "last_hop_um": 141.7
+  },
+  {
+   "chain": "KE3t",
+   "lanes": [
+    512
+   ],
+   "stations": 54,
+   "length_um": 22668.6,
+   "max_hop_um": 426.4,
+   "last_hop_um": 13.1
+  },
+  {
+   "chain": "KE3r",
+   "lanes": [
+    512
+   ],
+   "stations": 56,
+   "length_um": 23756.1,
+   "max_hop_um": 427.7,
+   "last_hop_um": 367.6
+  },
+  {
+   "chain": "hb_vm_su_s",
+   "lanes": [
+    1024
+   ],
+   "stations": 6,
+   "length_um": 1221.2,
+   "max_hop_um": 214.9,
+   "last_hop_um": 182.1
+  },
+  {
+   "chain": "hb_vm_su_n",
+   "lanes": [
+    1024
+   ],
+   "stations": 10,
+   "length_um": 2227.0,
+   "max_hop_um": 211.7,
+   "last_hop_um": 127.2
+  },
+  {
+   "chain": "hb_vm_hc_s",
+   "lanes": [
+    1024
+   ],
+   "stations": 12,
+   "length_um": 2496.0,
+   "max_hop_um": 214.3,
+   "last_hop_um": 128.1
+  },
+  {
+   "chain": "hb_hc_n_vm",
+   "lanes": [
+    1024
+   ],
+   "stations": 8,
+   "length_um": 1804.8,
+   "max_hop_um": 214.7,
+   "last_hop_um": 138.9
+  },
+  {
+   "chain": "hb_vm_gather",
+   "lanes": [
+    512
+   ],
+   "stations": 2,
+   "length_um": 532.9,
+   "max_hop_um": 210.0,
+   "last_hop_um": 113.2
+  },
+  {
+   "chain": "hb_gather_capture",
+   "lanes": [
+    576
+   ],
+   "stations": 9,
+   "length_um": 1990.2,
+   "max_hop_um": 211.7,
+   "last_hop_um": 100.4
+  },
+  {
+   "chain": "hb_capture_vm",
+   "lanes": [
+    512
+   ],
+   "stations": 6,
+   "length_um": 1443.0,
+   "max_hop_um": 211.7,
+   "last_hop_um": 183.2
+  },
+  {
+   "chain": "hb_collective_vm",
+   "lanes": [
+    512
+   ],
+   "stations": 8,
+   "length_um": 1824.6,
+   "max_hop_um": 214.3,
+   "last_hop_um": 157.7
+  },
+  {
+   "chain": "hb_su_s_hc_s",
+   "lanes": [
+    512
+   ],
+   "stations": 7,
+   "length_um": 1641.6,
+   "max_hop_um": 211.9,
+   "last_hop_um": 173.9
+  },
+  {
+   "chain": "hb_su_n_hc_n",
+   "lanes": [
+    512
+   ],
+   "stations": 7,
+   "length_um": 1641.6,
+   "max_hop_um": 212.0,
+   "last_hop_um": 174.0
+  },
+  {
+   "chain": "hb_hc_s_hc_n",
+   "lanes": [
+    1024
+   ],
+   "stations": 7,
+   "length_um": 1512.0,
+   "max_hop_um": 213.8,
+   "last_hop_um": 95.3
+  },
+  {
+   "chain": "hb_hc_n_hc_s",
+   "lanes": [
+    1024
+   ],
+   "stations": 7,
+   "length_um": 1512.0,
+   "max_hop_um": 213.8,
+   "last_hop_um": 134.1
+  },
+  {
+   "chain": "hb_pq_gather",
+   "lanes": [
+    508
+   ],
+   "stations": 9,
+   "length_um": 1855.8,
+   "max_hop_um": 213.8,
+   "last_hop_um": 17.3
+  },
+  {
+   "chain": "hb_gather_pq",
+   "lanes": [
+    192
+   ],
+   "stations": 9,
+   "length_um": 1999.8,
+   "max_hop_um": 214.3,
+   "last_hop_um": 111.4
+  }
+ ],
+ "scan_die_power": {
+  "stages": 81,
+  "pairs": 2417,
+  "static_icg_w": 50.196,
+  "dynamic_saturated_w": 33.9,
+  "total_saturated_w": 84.1,
+  "cooling_limit_w": 474.56,
+  "fits_cooling": true,
+  "all_pairs_busy_in_phase_w": 744.2,
+  "basis": "static: tools/ds_energy_silicon_authoritative.LAYER_DIE_W (ICG ledger, 30.6 W of it SerDes); dynamic: uarch_model._v41_graph(proposal) L20 per-die energy (field 0.497, idx MAC 0.049, HBM IF 0.115, attention 0.007 mJ/token) x head-bound saturated 80,833.5 tok/s; IR windows use the local peak in-phase densities below, not this average"
+ },
+ "rev": "r9",
+ "column_relays": {
+  "nets": 13440,
+  "relays": 27136,
+  "by_class": {
+   "rt_": 16384,
+   "xa_": 1280,
+   "xb_": 1280,
+   "cc_": 1152,
+   "qt_": 0,
+   "es_": 2560,
+   "ss_": 0,
+   "so_": 1152,
+   "nf_": 384,
+   "cfg_": 1152,
+   "go_": 1152,
+   "rr_": 384
+  }
+ },
+ "hub_stations": {
+  "hr_W0_o": {
+   "path_um": 339.3,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W1_o": {
+   "path_um": 344.1,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W2_o": {
+   "path_um": 344.1,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W3_o": {
+   "path_um": 344.1,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W4_o": {
+   "path_um": 224.0,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W5_o": {
+   "path_um": 339.3,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_E0_o": {
+   "path_um": 956.7,
+   "stations": 4,
+   "floor_added": 2
+  },
+  "hr_E1_o": {
+   "path_um": 1081.5,
+   "stations": 5,
+   "floor_added": 2
+  },
+  "hr_E2_o": {
+   "path_um": 961.4,
+   "stations": 4,
+   "floor_added": 2
+  },
+  "hr_E3_o": {
+   "path_um": 961.4,
+   "stations": 4,
+   "floor_added": 2
+  },
+  "hr_E4_o": {
+   "path_um": 961.4,
+   "stations": 4,
+   "floor_added": 2
+  },
+  "hr_E5_o": {
+   "path_um": 956.7,
+   "stations": 4,
+   "floor_added": 2
+  },
+  "hb_vm_su_s": {
+   "path_um": 1221.2,
+   "stations": 6,
+   "floor_added": 2
+  },
+  "hb_vm_su_n": {
+   "path_um": 2227.0,
+   "stations": 10,
+   "floor_added": 5
+  },
+  "hb_vm_hc_s": {
+   "path_um": 2496.0,
+   "stations": 12,
+   "floor_added": 5
+  },
+  "hb_hc_n_vm": {
+   "path_um": 1804.8,
+   "stations": 8,
+   "floor_added": 4
+  },
+  "hb_vm_gather": {
+   "path_um": 532.9,
+   "stations": 2,
+   "floor_added": 1
+  },
+  "hb_gather_capture": {
+   "path_um": 1990.2,
+   "stations": 9,
+   "floor_added": 4
+  },
+  "hb_capture_vm": {
+   "path_um": 1443.0,
+   "stations": 6,
+   "floor_added": 3
+  },
+  "hb_collective_vm": {
+   "path_um": 1824.6,
+   "stations": 8,
+   "floor_added": 4
+  },
+  "hb_su_s_hc_s": {
+   "path_um": 1641.6,
+   "stations": 7,
+   "floor_added": 3
+  },
+  "hb_su_n_hc_n": {
+   "path_um": 1641.6,
+   "stations": 7,
+   "floor_added": 3
+  },
+  "hb_hc_s_hc_n": {
+   "path_um": 1512.0,
+   "stations": 7,
+   "floor_added": 3
+  },
+  "hb_hc_n_hc_s": {
+   "path_um": 1512.0,
+   "stations": 7,
+   "floor_added": 3
+  },
+  "hb_vm_pq": {
+   "path_um": 172.8,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hb_pq_gather": {
+   "path_um": 1855.8,
+   "stations": 9,
+   "floor_added": 4
+  },
+  "hb_gather_pq": {
+   "path_um": 1999.8,
+   "stations": 9,
+   "floor_added": 4
+  }
+ },
+ "power_model": {
+  "seq": {
+   "w": 0.000217,
+   "basis": "DERIVED ~80 loader flops x W18 per-flop clock x 1.5 (one cfg ROM read: in cfg)"
+  },
+  "sstn": {
+   "w": 0.001527,
+   "basis": "DERIVED 564 stage flops x W18 per-flop clock x 1.5"
+  },
+  "cfifo": {
+   "w": 0.007821,
+   "basis": "DERIVED meso W564 D4 (4 ring + 1 output word) + return register x W18 per-flop clock x 1.5"
+  },
+  "rstg": {
+   "w": 0.000179,
+   "basis": "DERIVED 66 stage flops"
+  },
+  "stn": {
+   "w": 0.0,
+   "basis": "per station: lane bits x W18 per-flop clock x 1.5 (inst_power_r8)"
+  },
+  "hend": {
+   "w": 0.0,
+   "basis": "per end/start block: 5 x lane bits x W18 per-flop clock x 1.5 (inst_power_r8)"
+  }
+ },
+ "legality_python": {
+  "instances": 56119,
+  "overlaps": 0,
+  "overlap_examples": [],
+  "outside": 0,
+  "outside_examples": []
+ },
+ "generated_pin_clashes": 0,
+ "windows_um": {
+  "field": [
+   5984.304,
+   9572.48,
+   10158.672,
+   12925.44
+  ],
+  "field_bf": [
+   11241.584,
+   3613.92,
+   14424.4,
+   6513.92
+  ],
+  "spine": [
+   13542.8,
+   11601.04,
+   19440.4,
+   14401.04
+  ],
+  "band_s": [
+   5384.896,
+   0.0,
+   8384.896,
+   3941.28
+  ]
+ },
+ "child_reservations": {}
+}
