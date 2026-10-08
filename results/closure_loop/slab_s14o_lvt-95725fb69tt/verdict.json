@@ -1,0 +1,168 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "slab_s14o_lvt-95725fb69tt",
+ "block": "ot_qwen_slab_port_group_s14_die",
+ "owner": "Claude:redesign-qwen",
+ "source_branch": "claude/redesign-qwen-20261008",
+ "source_commit": "95725fb69276e4de5ccb5a05226942d7b1a324b4",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-data/claude/closure-loop/slab_s14o_lvt-95725fb69tt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 0.67,
+  "ff_ps": 2.0,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/qwen_slab_structural/signoff833_die.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-data/claude/closure-loop/slab_s14o_lvt-95725fb69tt/routes/slab_s14o_lvt_95725fb69tt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-data/claude/closure-loop/slab_s14o_lvt-95725fb69tt/routes/slab_s14o_lvt_95725fb69tt/work/orfs/logs/asap7/opentallas_ot_qwen_slab_port_group_asap7_slab_s14o_lvt_95725fb69tt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_slab_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS: 1505 requests, 1505 results bit-exact vs ot_hdc_fmul; 751 argmax tops\nrtl/test/tb_qwen_slab_port_group.sv:175: $finish called at 3067500 (1ps)\n\n",
+   "track": "parallel"
+  },
+  "bench_slab_bad_lead": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "e 7 got 00000000 want c13cf492\nFAIL: result 1504 lane 8 got 00000000 want 51402205\nFAIL: result 1504 lane 9 got 00000000 want d0952427\nFAIL: result 1504 lane 10 got 00000000 want b3894d93\nFAIL: result 1504 lane 11 got 00000000 want cb4e3791\nFAIL: result 1504 lane 12 got 00000000 want b0d4592d\nFAIL: result 1504 lane 13 got 00000000 want 40975d28\nFAIL: result 1504 lane 14 got 00000000 want cd9f666b\nFAIL: result 1504 lane 15 got 00000000 want 393a34d4\nFAIL: 24306 errors\nFATAL: rtl/test/tb_qwen_slab_port_group.sv:174: EQUIVALENCE_TERMINAL_FAIL\n       Time: 3067500  Scope: tb_qwen_slab_port_group\n\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 1,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T05:40:37-07:00",
+ "job_spec": {
+  "name": "slab_s14o_lvt-95725fb69tt",
+  "block": "ot_qwen_slab_port_group_s14_die",
+  "owner": "Claude:redesign-qwen",
+  "purpose": "REDESIGN-QWEN 2026-10-08: slab_s14_die_signoff-fe4162f72-tt failed TT -7.35 (g_mul[5].u_rsm/gre_q -> u_mul.u_c3 r[21]) / FF -8.43 / TT+LB -281.7 (od2[234] -> o_data[234] reg->pin, 736 ps over 361 um, 268 endpoints; re-STA of the old 770 ps route, no TT route, no MM hold repair). Variant s14o: s14 element + pin-anchored OREG (+1 cycle/ME op) + LVT (<=~2% cells) for the -7 ps rsm->C3 path. Route at 770 ps, ORFS CORNER=TC, MM FF hold HM 50, rule H1, CTS fix hooks + consistent link budget. Bench gates adoption.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/redesign-qwen-20261008",
+   "commit": "95725fb69276e4de5ccb5a05226942d7b1a324b4",
+   "extra_paths": [
+    "src",
+    "configs",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json",
+    "results/rtl/hdc_v41_sinkhorn_campaign.json",
+    "results/rtl/hdc_v41_tselect_scale_campaign.json",
+    "results/rtl/hdc_v41_cand_campaign.json",
+    "results/speculative/v41_flash_dspark_onpolicy_greedy.json",
+    "results/arch/arch_budget_v41.json",
+    "results/arch/qwen_gpu_calibration.json",
+    "results/rtl/rom_stage_power_gating_20261004/verdict.json",
+    "results/arch/v41_die_assembly.json",
+    "results/arch/v41_die_placement.json",
+    "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "slab_exact",
+     "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --out {RUN}/bench_positive",
+     "expect": "pass",
+     "pass_regex": "PASS: 1505 requests, 1505 results bit-exact",
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "slab_bad_lead",
+     "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --negative --variant s14o --out {RUN}/bench_negative",
+     "expect": "fail",
+     "fail_regex": "EQUIVALENCE_TERMINAL_FAIL",
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "No Qwen budget sheet; in-run corner-exact reference-pin hook uses propagated res_q clock at CTS/GRT/DRT. Explicit single-corner signoff uses measured propagated arrival; no copied insertion."
+   },
+   "route": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/qwen_slab_structural/signoff833_die.sdc'; export PYTHONPATH=src:tools; export OT_MULTI_VT=lvt; set -e\n[ \"$(docker image inspect openroad/orfs:latest --format '{{.Id}}')\" = \"$(docker image inspect openroad/orfs:asap7lock --format '{{.Id}}')\" ]\npython3 tools/qwen_slab_m3_takeover.py route --variant s14o --out {RUN}/routes/{LABEL} --name {LABEL} --threads 16",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "orfs",
+     "yosys"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record\ncp {RUN}/routes/{LABEL}/*.json {RUN}/record/\ncp {RUN}/bench_positive/result.json {RUN}/record/bench_positive.json\ncp {RUN}/bench_negative/result.json {RUN}/record/bench_negative.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_slab_structural/signoff833_die.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": [
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8"
+   ]
+  },
+  "hold_eco": {
+   "enabled": false,
+   "reason": "Macro-output-net-safe algorithm not qualified; retain original SS/FF ROM read/capture timing and failure evidence."
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "No Qwen budget sheet; master contract implemented directly using measured corner reference with90ps setup skew/50ps hold skew,80fF load/150ps slew."
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/redesign_qwen_20261008/slab_s14o_lvt-95725fb69tt"
+   }
+  ],
+  "cycles_added": 1,
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "notes": "cycles added: +1 per ME op on the result path (OREG); KCP adds 0. Vt: LVT swap in repair_timing (report cell mix).",
+  "route_corner": "TC"
+ }
+}
