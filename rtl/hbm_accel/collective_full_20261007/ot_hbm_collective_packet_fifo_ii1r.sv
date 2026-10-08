@@ -21,7 +21,14 @@
 // drops ready and valid.
 // Cost: write +1 edge (pin flop), first-flit latency 2 -> 5 edges, ready reserve 2 slots (a 0-cycle-capacity
 // loss: in-flight pushes still land), consumer needs OCR=8 x 545 b slots for full rate.
-module ot_hbm_collective_packet_fifo_ii1r #(parameter integer DEPTH=256, OCR=8, WREG=0)(
+// IREL=1 (stream drive-0758, 2026-10-08): an INPUT RELAY flop on push / din / pop ahead of the pin flops.  The TC
+// routes of ii1r/ii1rb/ii1rw failed TT setup -40/-63/-56 ps on din[*] -> din_p with zero logic: a 150-200 ps
+// buffered wire from the right-edge pins to pin flops placed next to the encoder/SRAM, under the 518.67 ps die-link
+// input budget.  The relay flop takes the pin under the budget; relay -> din_p is a full flop-to-flop cycle.  Cost:
+// write +1 edge, ready reserve 3 slots (RSV=DEPTH-2-IREL: one more push in flight), credit loop 6 -> 7 edges
+// (measured: OCR=6 is the minimum full-rate credit count at IREL=0, 7 at IREL=1; OCR=8 covers both, II1 drain and
+// stream unchanged), count includes the relayed push.
+module ot_hbm_collective_packet_fifo_ii1r #(parameter integer DEPTH=256, OCR=8, WREG=0, IREL=0)(
  input wire clk,rst_n,push,input wire [544:0] din,output wire ready,
  input wire pop,output wire valid,output wire [544:0] dout,
  output wire fault,output wire [8:0] count);
@@ -29,10 +36,14 @@ module ot_hbm_collective_packet_fifo_ii1r #(parameter integer DEPTH=256, OCR=8, 
  initial if(DEPTH!=64&&DEPTH!=256)$fatal(1,"collective FIFO depth must be 64 or 256");
 `endif
  localparam [7:0] LAST=DEPTH-1;
- localparam [8:0] DEPTH9=DEPTH,RSV=DEPTH-2;
+ localparam [8:0] DEPTH9=DEPTH,RSV=DEPTH-2-IREL;
  localparam [4:0] OCRV=OCR;
  // ---- pin flops ----
  reg push_p,cr_p;reg [544:0] din_p;
+ // ---- IREL=1: input relay flops (pin -> relay -> pin flop, no logic on either hop) ----
+ reg push_r,cr_r;reg [544:0] din_r;
+ wire push_i=IREL?push_r:push,cr_i=IREL?cr_r:pop;wire [544:0] din_i=IREL?din_r:din;
+ wire inflight=IREL?push_r:1'b0;
  // ---- control (sealed); c_unread = words resident or in flight to the macro (capacity) ----
  reg [7:0] c_wp,c_rp;reg [8:0] c_unread;reg [4:0] c_ocr;reg c_ovf;
  reg [71:0] seal;reg bad_q,fault_q,ready_q,ocr_nz;
@@ -98,17 +109,17 @@ module ot_hbm_collective_packet_fifo_ii1r #(parameter integer DEPTH=256, OCR=8, 
  end endgenerate
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin
-   push_p<=0;cr_p<=0;c_wp<=0;c_rp<=0;c_unread<=0;c_ocr<=OCRV;c_ovf<=0;seal<=enc_r;
+   push_p<=0;cr_p<=0;push_r<=0;cr_r<=0;c_wp<=0;c_rp<=0;c_unread<=0;c_ocr<=OCRV;c_ovf<=0;seal<=enc_r;
    bad_q<=0;fault_q<=0;ready_q<=0;ocr_nz<=(OCR!=0);v1<=0;v2<=0;v3<=0;out_v<=0;count_q<=0;w_ce_q<=0;
   end else begin
-   push_p<=push;cr_p<=pop;
+   push_r<=push;cr_r<=pop;push_p<=push_i;cr_p<=cr_i;
    fault_q<=fault_n;
    bad_q<=seal!=enc_c;
    if(!fault_q)begin
     c_wp<=n_wp;c_rp<=n_rp;c_unread<=n_unread;c_ocr<=n_ocr;c_ovf<=n_ovf;
     seal<=enc_n;
     ocr_nz<=n_ocr!=5'd0;
-    count_q<=n_unread+{8'b0,fetch}+{8'b0,v1}+{8'b0,v2};
+    count_q<=n_unread+{8'b0,fetch}+{8'b0,v1}+{8'b0,v2}+{8'b0,inflight};
    end
    ready_q<=!fault_n&&(n_unread<=RSV);
    w_ce_q<=put;
@@ -117,7 +128,7 @@ module ot_hbm_collective_packet_fifo_ii1r #(parameter integer DEPTH=256, OCR=8, 
   end
  // data registers: no reset, no enable (validity is carried by v1..v3 / out_v)
  always @(posedge clk)begin
-  din_p<=din;w_addr_q<=c_wp;wd_q<=ram_d;
+  din_r<=din;din_p<=din_i;w_addr_q<=c_wp;wd_q<=ram_d;
   raw_q<=ram_q[647:0];
   raw2_q<=raw_q;syn_q<=syn_n;ovr_q<=ovr_n;ue_q<=|ue_n;
   out_q<=corr[544:0];

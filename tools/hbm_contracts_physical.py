@@ -54,6 +54,21 @@ BLOCKS = dict(
                    CT + 'hfd_coll_pkt_fifo_ii1w.sv'], macros=[M256], die=(397.44, 250.56), density=.45,
                    macro_tcl='physical/hbm_contracts_20261007/pkt_macros_b.tcl',
                    pins=['dout.*=left', 'din.*=right', '(clk|rst_n|push|pop|ready|valid|fault|count.*)=top'], sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    # drive-0758 2026-10-08: the ii1r/rb/rw TC routes failed TT setup only on din[*] -> din_p (pure pin wire, no logic) and,
+    # ii1r only, din_p -> SECDED encode -> wd_in (-21.85, WREG=0).  IREL=1 input relay on push/din/pop.
+    # s = a geometry + WREG=1, sw = b geometry + WREG=1, sb = b geometry, WREG=0 (fewest edges).
+    pkt_ii1s=dict(top='hfd_coll_pkt_fifo_ii1', src=[PKG, CF + 'ot_hbm_collective_packet_fifo_ii1r.sv',
+                  CT + 'hfd_coll_pkt_fifo_ii1s.sv'], macros=[M256], die=(330.048, 216), density=.55,
+                  macro_tcl='physical/hbm_contracts_20261007/pkt_macros_a.tcl',
+                  pins=['dout.*=left', 'din.*=right', '(clk|rst_n|push|pop|ready|valid|fault|count.*)=top'], sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    pkt_ii1sw=dict(top='hfd_coll_pkt_fifo_ii1', src=[PKG, CF + 'ot_hbm_collective_packet_fifo_ii1r.sv',
+                   CT + 'hfd_coll_pkt_fifo_ii1s.sv'], macros=[M256], die=(397.44, 250.56), density=.45,
+                   macro_tcl='physical/hbm_contracts_20261007/pkt_macros_b.tcl',
+                   pins=['dout.*=left', 'din.*=right', '(clk|rst_n|push|pop|ready|valid|fault|count.*)=top'], sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    pkt_ii1sb=dict(top='hfd_coll_pkt_fifo_ii1', src=[PKG, CF + 'ot_hbm_collective_packet_fifo_ii1r.sv',
+                   CT + 'hfd_coll_pkt_fifo_ii1sb.sv'], macros=[M256], die=(397.44, 250.56), density=.45,
+                   macro_tcl='physical/hbm_contracts_20261007/pkt_macros_b.tcl',
+                   pins=['dout.*=left', 'din.*=right', '(clk|rst_n|push|pop|ready|valid|fault|count.*)=top'], sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
     # redesign-hbm 2026-10-08 PIN variants: every data input lands in a flop, every output leaves a flop (consistent
     # die-link budget, R = S = 254.5 ps).  Same top names; RTL in the *_pin.sv wrappers.
     idle_pin=dict(top='hfd_coll_idle_tx', src=[CT + 'hfd_coll_idle_tx_pin.sv'],

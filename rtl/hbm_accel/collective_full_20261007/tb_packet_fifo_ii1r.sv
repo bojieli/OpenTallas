@@ -8,11 +8,11 @@
 // corrected, a double upset faults with the flit never delivered; a raw2 (post-syndrome) register upset is
 // detected; control seal and overflow (push while not ready, -DPUSH_IGNORES_READY) fault.
 module tb_packet_fifo_ii1r;
- parameter integer DEPTH=256, OCR=8, CB=8, WREG=0;
+ parameter integer DEPTH=256, OCR=8, CB=8, WREG=0, IREL=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,push=0,pop=0;reg[544:0]din=0;
  wire ready,valid,fault;wire[544:0]dout;wire[8:0]count;
- ot_hbm_collective_packet_fifo_ii1r #(.DEPTH(DEPTH),.OCR(OCR),.WREG(WREG)) dut(.*);
+ ot_hbm_collective_packet_fifo_ii1r #(.DEPTH(DEPTH),.OCR(OCR),.WREG(WREG),.IREL(IREL)) dut(.*);
  reg[544:0] expected[0:40000];reg[544:0] cbuf[0:63];
  integer wr=0,rd=0,ndel=0,cyc=0,cb_n=0,cb_h=0,cb_t=0,i,burst=0,maxburst=0,wr_old;
  reg want_pop=0,want_push=0,chk_count=1,allow_fault=0;
@@ -79,7 +79,7 @@ module tb_packet_fifo_ii1r;
   cold();
   want_push=1;for(i=0;i<CB;i=i+1)edge_step();want_push=0;repeat(12)edge_step();
   if(cb_n!=CB)$fatal(1,"setup: consumer holds %0d",cb_n);
-  push=1;din=payload(wr);edge_step();push=0;repeat(3)edge_step();
+  push=1;din=payload(wr);edge_step();push=0;repeat(3+IREL)edge_step();
   expected[wr-1]=payload(wr-1);
   dut.g_ram[0].storage.arr[CB/2][2*5]=~dut.g_ram[0].storage.arr[CB/2][2*5];
   drain();
@@ -112,11 +112,11 @@ module tb_packet_fifo_ii1r;
   cold();
   want_push=1;for(i=0;i<DEPTH+CB+40;i=i+1)edge_step();want_push=0;
   allow_fault=1;chk_count=0;push=1;din=0;
-  repeat(3)begin @(posedge clk);#1;end
+  repeat(3+IREL)begin @(posedge clk);#1;end
   push=0;
   if(!fault||ready||valid)$fatal(1,"overflow escaped");
-  $display("PASS_II1R depth=%0d ocr=%0d wreg=%0d cycles=%0d order/count/credit/II1-drain/stream/wrap/reset/single/double/raw2/control/overflow",
-   DEPTH,OCR,WREG,cyc);
+  $display("PASS_II1R depth=%0d ocr=%0d wreg=%0d irel=%0d cycles=%0d order/count/credit/II1-drain/stream/wrap/reset/single/double/raw2/control/overflow",
+   DEPTH,OCR,WREG,IREL,cyc);
   $finish;
  end
 endmodule
