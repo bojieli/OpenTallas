@@ -35,12 +35,12 @@
   "v2": {
    "top": "physical/hbm_accel_die_views/coll/rtl_sr/hfd_coll_cdc.sv",
    "what": "conservative: CDC FIFOs kept (ot_link_afifo, 8 entries)",
-   "commit": "this commit"
+   "commit": "088d3df3e"
   },
   "v3": {
    "top": "physical/hbm_accel_die_views/coll/rtl_sr/hfd_coll.sv",
-   "what": "aggressive: v1 routed at 770 ps (margin rule), signed off at 833",
-   "commit": "next commit"
+   "commit": "this commit",
+   "what": "floorplan variant of v1: place density 0.45 and macro halo 4 x 6 um (more channel around the 165 macros); every route already runs at the 770 ps effective margin (io_vclk_m: setup uncertainty 123 ps), sign-off at 833"
   }
  },
  "next_if_fails": "per-port split (8 port slices: 2 queues + 2 wire lines + receive buffer, 21 macros each; core = slots + 112-adder tree + hub/delivery lines) as replicated sub-blocks with a thin top"
