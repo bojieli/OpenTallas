@@ -87,14 +87,24 @@ def compose(case, ctx, measured=None):
     # chain-aware: the registers of a chain nearer its source take the source block's region, the rest the sink's
     #   (the region crossing then sits on one relay-to-relay hop, as the plan's inter-region budget assumes)
     inst_reg = {s['instance']: (s['domain'], s['region']) for s in sinks.values()}
-    want = {}
+    want, ramp = {}, {}
     rj = case / 'relays.json'
     for ch in (json.loads(rj.read_text()).get('chains', []) if rj.exists() else []):
         regs = ch.get('regs', [])
+        a_, b_ = inst_reg.get(ch.get('src')), inst_reg.get(ch.get('dst'))
         for k, r_ in enumerate(regs):
             end = ch.get('src') if k < (len(regs) + 1) // 2 else ch.get('dst')
+            if a_ and b_ and a_[0] != b_[0]:      # a domain-crossing chain: every relay in the endpoint domain it is clocked in
+                end = ch.get('src') if rel.get(r_) == a_[0] else ch.get('dst')
             if end in inst_reg:
                 want[r_] = inst_reg[end]
+            # a chain between two regions of one domain whose flop targets differ (e.g. HUB-Q*.0.0 at 4,003 vs 3,579 ps
+            #   SS): the relay flop times ramp linearly from the source target to the sink target, so no single hop
+            #   carries the whole inter-region difference (die CTS pads each relay sink to its ramp value)
+            if a_ and b_ and a_[0] == b_[0]:
+                f = (k + 1) / (len(regs) + 1)
+                ta, tb = tgt0[a_[1]], tgt0[b_[1]]
+                ramp[r_] = [ta[n] + (tb[n] - ta[n]) * f for n in (0, 1)]
     added, nodom = {}, []
     for inst, d in sorted(rel.items()):
         if inst not in xy or not by_dom.get(d):
@@ -105,8 +115,9 @@ def compose(case, ctx, measured=None):
             reg = want[inst][1]
         else:
             _, reg = min(by_dom[d], key=lambda q: abs(q[0][0] - p[0]) + abs(q[0][1] - p[1]))
-        t = tgt[reg]
+        t = ramp.get(inst) if inst in ramp and want.get(inst, (None,))[0] == d else tgt[reg]
         added[f'{inst}/ck'] = dict(instance=inst, port='ck', master='hfd_rly', region=reg, domain=d,
+                                   ramped=inst in ramp and t is ramp.get(inst),
                                    internal_ps=dict(RELAY_INS),
                                    entry_ps={c: round(t[n] - RELAY_INS[c], 3) for n, c in enumerate(('ss', 'ff'))})
     return added, nodom, sinks
@@ -122,7 +133,11 @@ def constraints(sinks, corner):
                  f'lappend ot_lat [list {s["domain"]} {s["entry_ps"][corner] / 1000:.6f} $p] }}')
     for d, per in PERIOD_PS.items():
         L.append(f'if {{[dict exists $ot_dom {d}]}} {{ create_clock -name {d} -period {per / 1000:.6f} [dict get $ot_dom {d}] }}')
+    # propagated mode: the clocks start AT the sink pins (no die clock net is traversed) and the view Liberty
+    #   clock -> output / setup / hold arcs carry the view's own insertion (write_timing_model, propagated); in ideal
+    #   mode OpenSTA strips the macro clock-tree arcs instead (checked on w289 -> relay: 30 ps ideal vs 221 ps arc)
     L += ['foreach e $ot_lat { lassign $e d l p; set_clock_latency -source -clock $d $l $p; incr ot_clock_bound }',
+          'set_propagated_clock [all_clocks]',
           'set_clock_uncertainty -setup 0.210 [all_clocks]', 'set_clock_uncertainty -hold 0.025 [all_clocks]',
           # mesochronous domains: no synchronous timing between different die clocks (crossings are FIFO / forwarded)
           'set cl [all_clocks]',
