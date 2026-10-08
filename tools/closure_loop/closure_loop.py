@@ -3288,6 +3288,12 @@ def cmd_retry(a):
     retry_status = ("READY" if synchronized else "SYNC") if j.get("host") else "QUEUED"
     j["status"], j["retries_used"], j["attempt"] = retry_status, 0, j["attempt"] + 1
     j["errors"] = []
+    # 2026-10-08: a bench track pinned to an artifact run on another host (bench_location) outlives that run when a
+    # purge or move deletes it -- every bench launch then failed 'No such file' until 10 loop errors.  A retry restarts
+    # the unfinished benches on the job's own run.
+    if j.get("bench_location") and j["bench_location"].get("run") != j.get("run"):
+        j.pop("bench_location", None)
+        j["btrack"] = {k: v for k, v in (j.get("btrack") or {}).items() if v.get("state") == "done"}
     event(j, "human retry: re-queued from stage " + str(j.get("stage_key")))
     save_job(j)
     ledger(j, "RETRY (human) from stage " + str(j.get("stage_key")))
