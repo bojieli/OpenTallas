@@ -29,7 +29,7 @@ def sta_tcl(kit, region):
         for ln in src:
             if ln.startswith(('read_verilog', 'link_design', 'if {[file exists /kit/die.spef]}', 'report_', 'source /kit/latency')):
                 continue
-            m = re.match(r'create_clock -name (\S+) -period (\S+) \[get_pins \{(.+)\}\]', ln)
+            m = re.match(r'create_clock -name (\S+) -period (\S+) \[get_pins (?:-quiet )?\{(\S+)(?: \S+)?\}\]', ln)
             if m:
                 clocks.append(m.groups())
                 continue
@@ -42,9 +42,9 @@ def sta_tcl(kit, region):
         for par in ('grt', 'drt'):
             T = list(head) + ['read_verilog /r/region.v', 'link_design dsfd_die', f'read_spef /r/region_{par}.spef']
             for name, per, pin in clocks:
-                port = f'p_{name}'
-                T.append(f'if {{[llength [get_pins -quiet {{{pin}}}]]}} {{ create_clock -name {name} -period {per} '
-                         f'[get_pins {{{pin}}}] }} elseif {{[llength [get_ports -quiet {{{port}}}]]}} {{ create_clock '
+                port = f'p_n_{name}\\[0\\]'
+                T.append(f'if {{[llength [get_pins -quiet {{{pin} {pin}[0]}}]]}} {{ create_clock -name {name} -period {per} '
+                         f'[get_pins -quiet {{{pin} {pin}[0]}}] }} elseif {{[llength [get_ports -quiet {{{port}}}]]}} {{ create_clock '
                          f'-name {name} -period {per} [get_ports {{{port}}}] }} else {{ create_clock -name {name} -period {per} }}')
             lat = kit / f'latency_{corner}.tcl'
             if lat.exists():
@@ -73,16 +73,22 @@ def _ends(p):
 
 
 def _wl(p):
+    """report_wire_length -file rows: 'grt: <net> <wl_um> <pins>' (or csv net,wl)"""
     out = {}
     if not p.exists():
         return out
-    with p.open() as fh:
-        for row in csv.reader(fh):
-            if len(row) >= 2 and row[0] not in ('net', 'Net', 'name'):
-                try:
-                    out[row[0]] = float(row[-1]) if len(row) == 2 else float(row[1])
-                except ValueError:
-                    pass
+    for ln in p.read_text().splitlines():
+        f = ln.replace(',', ' ').split()
+        if len(f) >= 3 and f[0] in ('grt:', 'drt:'):
+            try:
+                out[f[1]] = float(f[2])
+            except ValueError:
+                pass
+        elif len(f) >= 2 and f[0] not in ('tool', 'net', 'Net'):
+            try:
+                out[f[0]] = float(f[1])
+            except ValueError:
+                pass
     return out
 
 

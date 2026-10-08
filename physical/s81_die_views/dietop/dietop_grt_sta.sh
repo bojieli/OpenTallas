@@ -44,7 +44,7 @@ SP=$(ls $D/die_grt.spef* 2>/dev/null | head -1)
 for c in ss ff; do
   sed -e "s#/kit/die.spef#/run/$(basename $SP)#g" $K/sta_$c.tcl | sed -e "s#> /kit/paths_$c.rpt#> /run/paths_$c.rpt#; s#> /kit/drv.rpt#> /run/drv_$c.rpt#" > $D/sta_$c.tcl
   docker run --rm --name s81_sta_${c}_$(basename $D) --cpus=8 --memory=${M}g -v $D:/run -v $K:/kit -v $SRC:$SRC:ro -w /run openroad/orfs:asap7lock \
-    bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -no_init -exit /run/sta_$c.tcl > /run/sta_$c.log 2>&1; chmod -R a+rwX /run" &
+    bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v sta -no_init -exit /run/sta_$c.tcl > /run/sta_$c.log 2>&1; chmod -R a+rwX /run" &
 done
 wait
 date -u +%FT%TZ > $D/sta.end

@@ -45,7 +45,7 @@ step crop {
     \$bt setIoType [expr {\$drv_in ? "OUTPUT" : "INPUT"}]
     incr ports
   }
-  \$blk setDieArea [odb::Rect_new \$x0 \$y0 \$x1 \$y1]
+  \$blk setDieArea [odb::new_Rect \$x0 \$y0 \$x1 \$y1]
   puts "OT_CROP kept=\$kept removed=\$gone ports=\$ports nets_dropped=\$dropped"
 }
 step pins { place_pins -hor_layers M4 -ver_layers M5 -corner_avoidance 1 -min_distance 2 -min_distance_in_tracks }
@@ -74,7 +74,7 @@ python3 $SRC/tools/s81/region_correlation.py sta-tcl --kit $K --region $D > $D/s
 for c in ss ff; do for p in grt drt; do
   [ -f $D/region_$p.spef ] || continue
   docker run --rm --name s81_rsta_${N}_${c}_$p --cpus=4 -v $D:/r -v $K:/kit -v $SRC:$SRC:ro -w /r openroad/orfs:asap7lock \
-    bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -no_init -exit /r/sta_${c}_$p.tcl > /r/sta_${c}_$p.log 2>&1; chmod a+rw /r/*" &
+    bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; sta -no_init -exit /r/sta_${c}_$p.tcl > /r/sta_${c}_$p.log 2>&1; chmod a+rw /r/*" &
 done; done
 wait
 python3 $SRC/tools/s81/region_correlation.py record --region $D --name $N --box $X0 $Y0 $X1 $Y1 > $D/record.log 2>&1

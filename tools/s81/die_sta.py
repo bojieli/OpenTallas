@@ -38,7 +38,8 @@ def interim_lib(cells, corner):
          ' voltage_unit : "1V";', ' current_unit : "1mA";', ' pulling_resistance_unit : "1kohm";',
          ' leakage_power_unit : "1nW";', ' capacitive_load_unit (1, ff);', ' nom_voltage : 0.7;', ' nom_temperature : 25;',
          ' nom_process : 1;']
-    widths = sorted({w for _, _, ports in cells for _, (d, w) in ports.items() if w > 1})
+    # every port a bus (width 1 too): the die SPEF / odb netlist name 1-bit macro pins 'ck[0]' (LEF bit pins)
+    widths = sorted({w for _, _, ports in cells for _, (d, w) in ports.items()})
     for w in widths:
         L.append(f' type (b{w}) {{ base_type : array; data_type : bit; bit_width : {w}; bit_from : {w - 1}; bit_to : 0; '
                  'downto : true; }')
@@ -46,7 +47,7 @@ def interim_lib(cells, corner):
         ck = next((c for c in CLK_NAMES if c in ports and ports[c][0] == 'input'), None)
         L.append(f' cell ({name}) {{ area : {area:.3f};')
         for p, (d, w) in sorted(ports.items()):
-            head = f'  bus ({p}) {{ bus_type : b{w};' if w > 1 else f'  pin ({p}) {{'
+            head = f'  bus ({p}) {{ bus_type : b{w};'
             body = [head, f'   direction : {"input" if d == "input" else "output" if d == "output" else "inout"};']
             if d == 'input':
                 body.append('   capacitance : 1.0;')
@@ -152,7 +153,7 @@ def main():
                 lat[pk] = [nb[2], nb[3]]
         for ci, corner in enumerate(('ss', 'ff')):
             (a.out / f'latency_{corner}.tcl').write_text(''.join(
-                f'set_clock_latency {v[ci]:.1f} [get_pins {{{k_}}}]\n' for k_, v in sorted(lat.items())))
+                f'set_clock_latency {v[ci]:.1f} [get_pins -quiet {{{k_} {k_}[0]}}]\n' for k_, v in sorted(lat.items())))
         rec['clock_plan'] = dict(file=str(a.clock_plan), sinks=len(sinks), planned=sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si),
                                  nearest=len(lat) - sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si))
     for corner, (us, uh) in ((('ss', (85.0, 75.0)), ('ff', (85.0, 75.0))) if lat else (('ss', (210.0, 75.0)), ('ff', (210.0, 75.0)))):
@@ -160,7 +161,7 @@ def main():
              'foreach l $libs { read_liberty $l }', 'read_verilog /kit/die.v', 'link_design dsfd_die',
              'if {[file exists /kit/die.spef]} { read_spef /kit/die.spef; puts OT_SPEF }']
         for n_, pin, per in srcs:
-            T.append(f'create_clock -name {n_} -period {per} [get_pins {{{pin}}}]')
+            T.append(f'create_clock -name {n_} -period {per} [get_pins -quiet {{{pin} {pin}[0]}}]')
         if lat:   # planned per-sink insertion (the die tree's skew); uncertainty = signoff 60 + 25 plan tolerance
             T.append(f'source /kit/latency_{corner}.tcl')
             # a column clock is the stream trunk passed through its cfifo root: source latency = the trunk insertion

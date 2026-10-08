@@ -4489,8 +4489,10 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'W', P_([s_ for s_, lf in (('a', la), ('b', lb)) if lf]), 'M4')
         sface = [s_ for s_, lf in (('a', la),) if not lf] + ['fo'] + ([] if up_ else ['o'])
         nface = [s_ for s_, lf in (('b', lb),) if not lf] + ['fi'] + (['o'] if up_ else [])
-        _lay(Mx, 'S', P_(sface), 'M5')
-        _lay(Mx, 'N', P_(nface), 'M5')
+        # S81-DIE region DRT (m221pq PQ root-row strip): 132 M5 Lef58EolKeepOut between adjacent 1-track node pins
+        # (n_rt_* tree words): the N / S faces are laid at 2 tracks under --pq-place
+        _lay(Mx, 'S', P_(sface), 'M5', pitch=2 if PQ_PLACE else 1)
+        _lay(Mx, 'N', P_(nface), 'M5', pitch=2 if PQ_PLACE else 1)
         _lay(Mx, 'E', P_(['clk', 'rst_n']), 'M4')
     elif kind == 'xstg':           # placed beside the band block: R0 east of it, MY west of it -> o faces the block
         _lay(Mx, 'W', P_(['o']), 'M4', gap=0.0)
