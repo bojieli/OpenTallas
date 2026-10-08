@@ -1,0 +1,249 @@
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:53:23: Operator VAR 'OUT_BP' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+   53 |     parameter integer OUT_BP   = 0,             
+      |                       ^~~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:56:23: Operator VAR 'OUT_BP' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+   56 |     parameter integer OUT_BP   = 0,             
+      |                       ^~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:170:21: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'REGISTER_HEAD' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[0].g_cached.dut'
+  170 |                     if (REGISTER_HEAD) begin : g_headreg
+      |                     ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:96:31: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REGISTER_HEAD' generates 32 bits.
+                                                                                                               : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+   96 |     initial if (REGISTER_HEAD && FIFO_SRAM)
+      |                               ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:96:31: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'FIFO_SRAM' generates 32 bits.
+                                                                                                               : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+   96 |     initial if (REGISTER_HEAD && FIFO_SRAM)
+      |                               ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:123:83: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'lpar' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  123 |             uses[r] = (r != RANK) && (same_pkg(r) || RELAY == 0 || (r % PKG_DIES) == lpar);
+      |                                                                                   ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:124:56: Operator LT expects 32 bits on the LHS, but LHS's ARRAYSEL generates 3 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  124 |             if (r == RANK) can_tx[r] = cnt[2*r + lpar] < PD;
+      |                                                        ^
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:167:63: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REGISTER_HEAD' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  167 |                             if (push[F]) wp <= (REGISTER_HEAD && PD == 1) ? '0 : wp + 1'b1;
+      |                                                               ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:168:72: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REGISTER_HEAD' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  168 |                             if (pop && ppar == q) rp <= (REGISTER_HEAD && PD == 1) ? '0 : rp + 1'b1;
+      |                                                                        ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:227:46: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'g_cnt' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  227 |     wire g_free = g_idle || (g_busy && g_cnt == E - 1) || (g_first && E == 1);
+      |                                              ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:247:23: Operator ASSIGNDLY expects 2 bits on the Assign RHS, but Assign RHS's VARREF 'PD' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  247 |                 cr[r] <= PD; cnt[r] <= 0;
+      |                       ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:254:56: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'lpar' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  254 |                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
+      |                                                        ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:254:65: Operator COND expects 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  254 |                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
+      |                                                                 ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:254:65: Operator COND expects 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  254 |                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
+      |                                                                 ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:254:92: Operator COND expects 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  254 |                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
+      |                                                                                            ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:254:92: Operator COND expects 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  254 |                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
+      |                                                                                            ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:255:79: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'ppar' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  255 |                 cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+      |                                                                               ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:255:45: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  255 |                 cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+      |                                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:255:45: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  255 |                 cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+      |                                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:255:88: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  255 |                 cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:255:88: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  255 |                 cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+      |                                                                                        ^
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:405:29: Operator ASSIGNDLY expects 2 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  405 |                     go_rank <= beat * GW;
+      |                             ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:406:48: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'beat' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  406 |                     go_last <= s0_last && beat == E - 1;
+      |                                                ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:409:35: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'g_cnt' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  409 |                         if (g_cnt == E - 1) g_busy <= 1'b0;
+      |                                   ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:417:45: Operator COND expects 16 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  417 |             inflight <= inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
+      |                                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:417:45: Operator COND expects 16 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  417 |             inflight <= inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
+      |                                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:417:71: Operator COND expects 16 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  417 |             inflight <= inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
+      |                                                                       ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:417:71: Operator COND expects 16 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  417 |             inflight <= inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
+      |                                                                       ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px_headreg.sv:431:54: Operator GT expects 32 bits on the LHS, but LHS's ARRAYSEL generates 3 bits.
+                                                                                                                 : ... note: In instance 'tb_dsrom_collective_headreg.g_model[1].g_die[3].g_cached.dut'
+  431 |         for (r = 0; r < 2 * N; r = r + 1) if (cnt[r] > PD) ovf = 1'b1;
+      |                                                      ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:118:83: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'lpar' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  118 |             uses[r] = (r != RANK) && (same_pkg(r) || RELAY == 0 || (r % PKG_DIES) == lpar);
+      |                                                                                   ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:119:56: Operator LT expects 32 bits on the LHS, but LHS's ARRAYSEL generates 3 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  119 |             if (r == RANK) can_tx[r] = cnt[2*r + lpar] < PD;
+      |                                                        ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:197:46: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'g_cnt' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  197 |     wire g_free = g_idle || (g_busy && g_cnt == E - 1) || (g_first && E == 1);
+      |                                              ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:217:23: Operator ASSIGNDLY expects 2 bits on the Assign RHS, but Assign RHS's VARREF 'PD' generates 32 bits.
+                                                                                                        : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  217 |                 cr[r] <= PD; cnt[r] <= 0;
+      |                       ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:224:56: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'lpar' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  224 |                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
+      |                                                        ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:224:65: Operator COND expects 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  224 |                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
+      |                                                                 ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:224:65: Operator COND expects 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  224 |                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
+      |                                                                 ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:224:92: Operator COND expects 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  224 |                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
+      |                                                                                            ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:224:92: Operator COND expects 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  224 |                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
+      |                                                                                            ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:225:79: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'ppar' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  225 |                 cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+      |                                                                               ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:225:45: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  225 |                 cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+      |                                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:225:45: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  225 |                 cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+      |                                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:225:88: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  225 |                 cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:225:88: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  225 |                 cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+      |                                                                                        ^
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:375:29: Operator ASSIGNDLY expects 2 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                        : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  375 |                     go_rank <= beat * GW;
+      |                             ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:376:48: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'beat' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  376 |                     go_last <= s0_last && beat == E - 1;
+      |                                                ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:379:35: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'g_cnt' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  379 |                         if (g_cnt == E - 1) g_busy <= 1'b0;
+      |                                   ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:387:45: Operator COND expects 16 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  387 |             inflight <= inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
+      |                                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:387:45: Operator COND expects 16 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  387 |             inflight <= inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
+      |                                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:387:71: Operator COND expects 16 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  387 |             inflight <= inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
+      |                                                                       ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:387:71: Operator COND expects 16 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  387 |             inflight <= inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
+      |                                                                       ^
+%Warning-WIDTHEXPAND: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/rom/ot_w15_rom_oneshot_px.sv:401:54: Operator GT expects 32 bits on the LHS, but LHS's ARRAYSEL generates 3 bits.
+                                                                                                         : ... note: In instance 'tb_dsrom_collective_headreg.g_model[0].g_die[3].g_reference.dut'
+  401 |         for (r = 0; r < 2 * N; r = r + 1) if (cnt[r] > PD) ovf = 1'b1;
+      |                                                      ^
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/test/tb_dsrom_collective_headreg.sv:43:64: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'BAD_TAG' generates 32 bits.
+                                                                                                              : ... note: In instance 'tb_dsrom_collective_headreg'
+   43 |             assign tag[b][r*32+:32] = sent[b][r]/4 + ((BAD_TAG && r==2 && sent[b][r]==45)? 1:0);
+      |                                                                ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/test/tb_dsrom_collective_headreg.sv:94:25: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'mismatch' generates 32 bits.
+                                                                                                              : ... note: In instance 'tb_dsrom_collective_headreg'
+   94 |             if(mismatch || code[0]!==code[1] || (BAD_TAG ? fault[1]!=4'b1111 : fault[1]!=0)) $fatal(1,"mismatch=%0d faults=%h/%h",mismatch,code[0],code[1]);
+      |                         ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/otjobs/dsrom-headreg-c411a972b/rtl/test/tb_dsrom_collective_headreg.sv:94:58: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'BAD_TAG' generates 32 bits.
+                                                                                                              : ... note: In instance 'tb_dsrom_collective_headreg'
+   94 |             if(mismatch || code[0]!==code[1] || (BAD_TAG ? fault[1]!=4'b1111 : fault[1]!=0)) $fatal(1,"mismatch=%0d faults=%h/%h",mismatch,code[0],code[1]);
+      |                                                          ^
+make: Entering directory '/home/ubuntu/otjobs/dsrom-headreg-c411a972b/run/obj_parity_relay_gw4'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_dsrom_collective_headreg__pch.h -o Vtb_dsrom_collective_headreg__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_dsrom_collective_headreg__pch.h -o Vtb_dsrom_collective_headreg__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.fast -c Vtb_dsrom_collective_headreg.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.fast -c Vtb_dsrom_collective_headreg___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.fast -c Vtb_dsrom_collective_headreg___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.fast -c Vtb_dsrom_collective_headreg___024root__2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.fast -c Vtb_dsrom_collective_headreg_ot_hdc_fp32_add_fast__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.fast -c Vtb_dsrom_collective_headreg_ot_hdc_fp32_add_fast__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.fast -c Vtb_dsrom_collective_headreg_ot_hdc_fp32_add_fast__2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.fast -c Vtb_dsrom_collective_headreg_ot_hdc_fp32_add_fast__3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.fast -c Vtb_dsrom_collective_headreg_ot_hdc_fp32_add_fast__4.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.fast -c Vtb_dsrom_collective_headreg__main.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.slow -c Vtb_dsrom_collective_headreg___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.slow -c Vtb_dsrom_collective_headreg___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.slow -c Vtb_dsrom_collective_headreg___024root__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.slow -c Vtb_dsrom_collective_headreg_ot_hdc_fp32_add_fast__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.slow -c Vtb_dsrom_collective_headreg_ot_hdc_fp32_add_fast__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.slow -c Vtb_dsrom_collective_headreg_ot_hdc_fp32_add_fast__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.slow -c Vtb_dsrom_collective_headreg_ot_hdc_fp32_add_fast__2__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.slow -c Vtb_dsrom_collective_headreg_ot_hdc_fp32_add_fast__3__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_collective_headreg__pch.h.slow -c Vtb_dsrom_collective_headreg__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_dsrom_collective_headreg__ALL.a    -pthread -lpthread -latomic   -o Vtb_dsrom_collective_headreg
+rm Vtb_dsrom_collective_headreg__ALL.verilator_deplist.tmp
+make: Leaving directory '/home/ubuntu/otjobs/dsrom-headreg-c411a972b/run/obj_parity_relay_gw4'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.379 MB sources in 24 modules, into 8.805 MB in 19 C++ files needing 0.013 MB
+- Verilator: Walltime 9.265 s (elab=0.057, cvt=2.305, bld=6.781); cpu 2.599 s on 4 threads; allocated 275.957 MB
