@@ -20,7 +20,8 @@ import json
 from pathlib import Path
 
 
-def apply(design, top='ot_qwen_rom_core', clock='clk', exclude=('u_me.clk',), mutant_dff=False):
+def apply(design, top='ot_qwen_rom_core', clock='clk', exclude=('u_me.clk',), mutant_dff=False, only=None):
+    """only: optional set of output port names to latch (the bench passes the ports the controller cut keeps)."""
     m = design['modules'][top]
     clk_bits = m['ports'][clock]['bits']
     assert len(clk_bits) == 1 and isinstance(clk_bits[0], int), 'clock port must be one net bit'
@@ -29,7 +30,7 @@ def apply(design, top='ot_qwen_rom_core', clock='clk', exclude=('u_me.clk',), mu
                   [b for p in m['ports'].values() for b in p['bits'] if isinstance(b, int)])
     latched = 0
     for name, port in m['ports'].items():
-        if port['direction'] != 'output' or name in exclude:
+        if port['direction'] != 'output' or name in exclude or (only is not None and name not in only):
             continue
         newbits = []
         for i, b in enumerate(port['bits']):
@@ -74,3 +75,31 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+def wrap_verilog(text, ports, top='ot_qwen_rom_core', clock='clk', exclude=('u_me.clk',), only=None, mutant_dff=False):
+    """Bench form of apply(): rename `top` in a flat Verilog netlist to <top>_olin and append a <top> wrapper with the
+    same ports whose selected outputs pass through a negative-level latch (enable = clock; mutant: a rising-edge flop).
+    ports: yosys JSON port dict of `top`.  Returns (text, latched_bits); hierarchical names move under u_ol."""
+    head = f'module {top}('
+    assert text.count(head) == 1, 'expected one top module'
+    text = text.replace(head, f'module {top}_olin(', 1)
+    e = lambda n: '\\' + n + ' '
+    sel = [n for n, p in ports.items() if p['direction'] == 'output' and n not in exclude
+           and (only is None or n in only)]
+    decl, conn, body, nbits = [], [], [], 0
+    for n, p in ports.items():
+        w = len(p['bits']); rng = f'[{w-1}:0] ' if w > 1 else ''
+        if n in sel:
+            decl.append(f'  output reg {rng}{e(n)};')
+            decl.append(f'  wire {rng}{e("ol_d." + n)};')
+            conn.append(f'.{e(n)}({e("ol_d." + n)})')
+            body.append(f'  always @(posedge {clock}) {e(n)} <= {e("ol_d." + n)};' if mutant_dff else
+                        f'  always @* if (!{clock}) {e(n)} = {e("ol_d." + n)};')
+            nbits += w
+        else:
+            decl.append(f"  {p['direction']} {rng}{e(n)};")
+            conn.append(f'.{e(n)}({e(n)})')
+    wrap = [f'module {top}(' + ', '.join(e(n) for n in ports) + ');'] + decl + \
+           [f'  {top}_olin u_ol (' + ', '.join(conn) + ');'] + body + ['endmodule']
+    return text + '\n' + '\n'.join(wrap) + '\n', nbits
