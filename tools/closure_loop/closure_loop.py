@@ -2876,6 +2876,17 @@ def eco_paths(j, m):
     return rb, ob or rb
 
 
+def baked_post_sdcs(j, m, cands):
+    """spec verdict post-SDCs that the route's own in-run corner STA already read as {orfs}/w18_extra.sdc (byte-equal)"""
+    orfs = m.get("orfs_dir") or (m.get("raw") or {}).get("orfs_dir")
+    if not cands or not orfs or not j.get("host") or not j.get("run"):
+        return []
+    r = ssh(j["host"], "; ".join(f"cmp -s {shlex.quote(orfs)}/w18_extra.sdc {shlex.quote(j['run'] + '/src/' + p)} && echo {shlex.quote(p)}"
+                                 for p in cands) + "; true", timeout=60)
+    hit = set((r.stdout or "").split())
+    return [p for p in cands if p in hit]
+
+
 def start_hold_eco(j, fleet, m):
     rb, ob = eco_paths(j, m)
     if not rb:
@@ -2893,14 +2904,15 @@ def start_hold_eco(j, fleet, m):
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
-    # COREKV-ECO 2026-10-08: the spec's verdict post-SDCs always lead. A route that applies them IN-RUN (e.g. Qwen core
-    # signoff833_skew90.sdc baked into w18_extra.sdc) reports corner_sta post_sdc None -> metrics [] -> the routed-ioref
-    # step made it [io_ref_routed.sdc] only, and the ECO was timed at the 770 ps route SDC instead of the 833.333 sign-off
-    # (core_kv_banked_fullwidth_h1hm80: FF +38.85 there -> 0 endpoints, 0 cells; TT -97 = route-SDC over-constraint).
-    post_sdcs = list(v.get("post_sdc", []))
-    post_sdcs += [p for p in (m["post_sdc"] if "post_sdc" in m else []) if p not in post_sdcs]
-    if IOREF_SDC in post_sdcs:                       # the routed IO reference is always read last
-        post_sdcs = [p for p in post_sdcs if p != IOREF_SDC] + [IOREF_SDC]
+    post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    baked = baked_post_sdcs(j, m, [p for p in v.get("post_sdc", []) if p not in post_sdcs])
+    if baked:
+        # COREKV-ECO 2026-10-08: a route whose in-run corner STA read a spec verdict post-SDC as w18_extra.sdc (Qwen core
+        # signoff833_skew90.sdc) records post_sdc [] -> the routed-ioref step made it [io_ref_routed.sdc] and the ECO was
+        # timed at the 770 ps route SDC (core_kv_banked_fullwidth_h1hm80: FF +38.85 there -> 0 cells; TT -97 = route
+        # SDC). The verdict read it, so the ECO reads it too, before io_ref_routed (always last).
+        post_sdcs = baked + [p for p in post_sdcs if p != IOREF_SDC] + ([IOREF_SDC] if IOREF_SDC in post_sdcs else [])
+        event(j, f"hold ECO: verdict post-SDC(s) {baked} were applied in-run (w18_extra.sdc): passed to the ECO")
     post = " ".join(shlex.quote(p) for p in post_sdcs)
     # LOOP-GAPS 2026-10-08: the ECO is timed (TT setup, option B) and judged with the route's OWN sign-off SDC set: its
     # sign-off SDC (corner_sta sdc_name, e.g. 6_signoff.sdc) and its setup-only post-SDCs (setup_post_sdc, e.g. the
