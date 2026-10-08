@@ -43,6 +43,9 @@
 `ifndef TU_NPT
 `define TU_NPT 8
 `endif
+`ifndef TU_DUT
+`define TU_DUT ot_hbm_accel_tu_endpoint   // hbm-coll-rtl: +define+TU_DUT=ot_hbm_accel_tu_endpoint_sr
+`endif
 `ifndef TU_RXAW
 `define TU_RXAW 8
 `endif
@@ -81,9 +84,14 @@ module tb_hbm_accel_tu_endpoint #(
                  seed0, rank, NC, NOG, pf, INJ, DEL, NPT, RXAW, budget, cred, T_CORE, T_PHY, TOT);
         go_clk = 1;
     end
-    reg clk = 0, pclk = 0, rst_n = 0, prst_n = 0;
+    reg clk = 0, pclk_r = 0, rst_n = 0, prst_n = 0;
     initial begin wait(go_clk); #(T_CORE * ph0 + 0.001); forever #(T_CORE/2) clk = ~clk; end
-    initial begin wait(go_clk); #(T_PHY * ph1 + 0.001);  forever #(T_PHY/2) pclk = ~pclk; end
+    initial begin wait(go_clk); #(T_PHY * ph1 + 0.001);  forever #(T_PHY/2) pclk_r = ~pclk_r; end
+`ifdef TU_PCLK_IS_CLK
+    wire pclk = clk;      // hbm-coll-rtl: the hfd_coll die view wires pclk = clk (SYNCPHY = 1 endpoints)
+`else
+    wire pclk = pclk_r;
+`endif
     always @(posedge clk)  rst_n  <= ($realtime > 40.0);
     always @(posedge pclk) prst_n <= ($realtime > 40.0);
     initial begin wait(go_clk); #(400.0); @(posedge clk); go <= 1'b1; end
@@ -100,9 +108,13 @@ module tb_hbm_accel_tu_endpoint #(
     wire [DEL*PWT-1:0] dfl;
     wire flt;
     wire [31:0] cst;
-    ot_hbm_accel_tu_endpoint #(.ENABLE(1), .NC(NC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
+    `TU_DUT #(.ENABLE(1), .NC(NC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
         .INJ(INJ), .DEL(DEL), .HUBW(HUBW), .WSTG(WSTG), .BITS_X100(BITS_X100), .PWB(PWB), .RXAW(RXAW),
-        .SWCRED(1 << RXAW), .LAT(LAT))
+        .SWCRED(1 << RXAW), .LAT(LAT)
+`ifdef TU_SYNCPHY
+        , .SYNCPHY(1)
+`endif
+        )
       dut (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
            .inj_idx(ii), .inj_rd(ir), .inj_data(idata), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
            .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt),
