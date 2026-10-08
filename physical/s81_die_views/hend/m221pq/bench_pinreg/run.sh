@@ -2,7 +2,7 @@
 # REDESIGN-S81 2026-10-08: hub end pin-register exactness bench (iverilog). run.sh <outdir>: gold seeds 1..3 + MUT (must FAIL)
 set -u
 O=$(readlink -f ${1:-.}); mkdir -p $O; D=$(cd $(dirname $0) && pwd); R=$(cd $D/../../../../.. && pwd)
-( cd $R && git show c206a1ac1:physical/s81_die_views/hend/m221pq/dsfd_glue.sv ) | sed -E 's/^module (dsfd_)/module old_\1/' > $O/old_glue.sv
+cp $D/old_masters.sv $O/old_glue.sv
 # only the two masters under test (the glue file holds 124 masters with other primitives)
 pick() { awk -v m="$2" '$0 ~ "^module "m" " {p=1} p {print} p && /^endmodule/ {p=0}' $1; }
 { pick $R/physical/s81_die_views/hend/m221pq/dsfd_glue.sv dsfd_r2l_vr_512x1__hcol; pick $R/physical/s81_die_views/hend/m221pq/dsfd_glue.sv dsfd_l2r_vr_564x1__hx_W;
