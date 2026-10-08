@@ -41,8 +41,14 @@ proc ot_phl_rewire {} {
   set old [$pck getNet]
   set oldn [expr {$old eq "NULL" ? "NULL" : [$old getName]}]
   if {$oldn ne [$gnet getName]} {
+    # drive-1143: clk_net_protect.tcl (OT_CTS_FIX_HOOKS) marks every CTS clock net dont_touch before this rewire runs
+    # (ODB-0372 on clknet_*_leaf_clk_regs); this is a deliberate clock edit, so lift dont_touch on the two nets for
+    # the move only and restore it.
+    set dt {}
+    foreach n [list $old $gnet] { if {$n ne "NULL"} { lappend dt $n [$n isDoNotTouch]; $n setDoNotTouch 0 } }
     $pck disconnect
     $pck connect $gnet
+    foreach {n v} $dt { $n setDoNotTouch $v }
   }
   lassign [$icg getLocation] gx gy
   set dbu [[ord::get_db_block] getDbUnitsPerMicron]
