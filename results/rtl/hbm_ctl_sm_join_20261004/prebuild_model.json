@@ -1,0 +1,35 @@
+{
+  "basis": [
+    "results/uarch/hbm_accel_fmax_ctl_20261004/prebuild_model.json",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv boundary/latency constants DS2 DW4 DG3 PIO2 STK1"
+  ],
+  "scope": "one existing full-shape SM connected to existing ctl parent, not a complete layer scheduler",
+  "replicas": 1,
+  "SM_parameters": {
+    "SUB": 4,
+    "LBS": 2,
+    "LSB": 16,
+    "NC": 8,
+    "IL": 8,
+    "RMAX": 4096,
+    "XD": 128,
+    "MAX_OUT": 512
+  },
+  "boundary_bits": {
+    "HBM_response": 1088,
+    "HBM_request_addr_tag_valid": 43,
+    "X_write": 2048,
+    "result_data": 256,
+    "result_row": 12
+  },
+  "new_bridge_FF_bits": 116,
+  "new_bridge_logic_gate_reservation_bound": 300,
+  "area_proxy_um2_50pct": 532,
+  "area_basis": "Explicit conservative sizing only: 116FF at1um2 plus300 twoinput equivalent gates at0.5um2, doubled for placement. No measured spare area/track credit.",
+  "latency_edges": "plan acceptance -> held descriptor (positive variable d_ready wait) -> accepted descriptor -> START one edge -> RUN; completion only after actual rows, changed arrive and actual released; registered eng_done sampled next ctl edge. SM PIO and native arithmetic remain unchanged.",
+  "result_capacity": "caller must reserve op_rows*NC*32 bits before plan acceptance; no-ready SM output unchanged, no hidden FIFO or fake ready",
+  "full_layer_schedule_bound": false,
+  "physical_fit": false,
+  "clock_qualified": false,
+  "token_rate_adopted": false
+}
