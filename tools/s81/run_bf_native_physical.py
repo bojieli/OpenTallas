@@ -41,7 +41,7 @@ def command(a):
   if a.hitfix: cmd+=['--param','HITFIX=1']
   if a.half: cmd+=['--param','HALF=1']
   if a.recut: cmd+=['--param','RECUT='+str(a.recut_level),'--orfs-var','OT_BF_RECUT=1']   # synth.tcl: no W10 wake leaves
-  cmd+=['--param','PINREG=1','--clock-period-ns',a.period,'--core-input-delay-min-ns',io(ff-50),'--core-input-delay-max-ns',io(ss+250),
+  cmd+=['--param','PINREG=1','--clock-period-ns',a.period,'--core-input-delay-min-ns',io(ff),'--core-input-delay-max-ns',io(ss+250),
    '--output-delay-min-ns',io(-(ff+50)),'--output-delay-max-ns',io(100-(ss-150)),'--false-path-from','rst_n',
    '--die-area','0','0',str(a.die_w),str(a.die_h),'--core-area','2.16','2.16',str(round(a.die_w-2.16,3)),str(round(a.die_h-2.16,3)),
    '--hold-corners',hc,'--slew-margin-percent','20','--hold-margin-ns','0.020','--orfs-var','PLACE_DENSITY_LB_ADDON=',

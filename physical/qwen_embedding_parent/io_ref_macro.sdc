@@ -10,7 +10,7 @@ puts "EMBED parent clock reference setup $lmax hold $lmin (macro port plus measu
 unset_input_delay [all_inputs]
 unset_output_delay [all_outputs]
 set_input_delay [expr {166.667 + $lmax + 90}] -max -clock core_clk [all_inputs -no_clocks]
-set_input_delay [expr {$lmin - 50}] -min -clock core_clk [all_inputs -no_clocks]
+set_input_delay $lmin -min -clock core_clk [all_inputs -no_clocks]
 set_output_delay [expr {166.667 - $lmax + 90}] -max -clock core_clk [all_outputs]
 set_output_delay [expr {-$lmin - 50}] -min -clock core_clk [all_outputs]
 set ins {};set outs {}

@@ -10,7 +10,7 @@ set_clock_uncertainty -setup 60 [get_clocks vclk]
 set_clock_uncertainty -hold 25 [get_clocks vclk]
 set ot_in [all_inputs -no_clocks]
 set_input_delay -max 300 -clock vclk $ot_in
-set_input_delay -min -150 -clock vclk $ot_in
+set_input_delay -min 0 -clock vclk $ot_in
 set_output_delay -max 300 -clock vclk [all_outputs]
 set_output_delay -min -150 -clock vclk [all_outputs]
 set_load 3.898 [all_outputs]
