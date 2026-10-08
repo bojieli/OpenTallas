@@ -5,6 +5,19 @@ WNS, DRC, SS sensitivity, verdict; best TT variant per block; faster / fewer-sta
 import glob, json, re, sys, datetime, collections
 JOBS, INV, OUT = sys.argv[1:4]
 inv = json.load(open(INV))
+RESTA = "/home/ubuntu/wt-claude-setup-triage/results/closure_loop/tt_restatus_20261007.json"
+try:
+    RS = {e["job"]: e for e in json.load(open(RESTA))["jobs"]}
+except Exception:
+    RS = {}
+
+
+def resta(r):
+    e = RS.get(r.get("base")) or next((RS[x["name"]] for x in reversed(r["jobs"]) if x["name"] in RS), None)
+    if not e:
+        return "-"
+    g = lambda k: "" if e.get(k) is None else f"{e[k]:+.1f}"
+    return f"{e['verdict']} TT {g('ttlb_ws_ps')} FF {g('ff_ws_ps')} ({e['job']})"
 by = {r.get("tt_job"): r for r in inv["inventory"] if r.get("tt_job")}
 SLOW = re.compile(r"half|safe|deep|pipe|retime|slat|_ss\b|-ss-|r4|r5|r6|oreg|pp\b|hr\b")
 rows = []
@@ -23,7 +36,9 @@ for f in sorted(glob.glob(f"{JOBS}/*-tt.json")):
         v = f"{st} ({'/'.join(bad) or 'line met'})"
     else:
         v = st + (f": {str(j.get('reason') or '')[:90]}" if st in ("NEEDS_HUMAN", "REFUSED", "NEEDS_RTL") else "")
-    rows.append(dict(block=r["block"], variant=r["variant"], job=j["name"], tt=tt, ff=ff, drc=drc, ss=ss, v=v,
+    if st == "CANCELLED" and resta(r).startswith("CLOSED_TT"):
+        v = "not re-routed: existing route already closes at TT (re-STA)"
+    rows.append(dict(block=r["block"], variant=r["variant"], job=j["name"], tt=tt, ff=ff, drc=drc, ss=ss, v=v, rs=resta(r),
                      closed=st == "CLOSED" or (tt is not None and ff is not None and tt >= 0 and ff >= 0 and drc == 0
                                                and not j.get("failed_checks"))))
 f2 = lambda x: "" if x is None else f"{x:+.1f}"
@@ -40,6 +55,9 @@ L = [f"# TT batch (owner option B: setup TT >= 0 @ 833.333 ps, hold FF >= 0, DRC
      "pre-852d9b461 snapshots by tt_overlay.py (verdict check ttb_routed_at_TC proves the route ran at TC); flow-hold mm "
      "FF hold repair HM 50 + rule H1; CTS fix hooks cg_pushdown + clk_net_protect + link_budget_hook (consistent die-link "
      "budget; not on forwarded-clock stations); TT setup from corner_sta setup_tt or the loop's tt_resta.sh.", "",
+     "Re-STA (setup-triage tt_restatus_20261007.json @ 614782370): 48 batch variants whose existing route already closes at "
+     "TT under the consistent link budget were cancelled (not re-routed); the remaining batch jobs carry loop priority 1 "
+     "(hold-only, link-budget-only, internal setup, DRC failures and the untested faster / fewer-stage variants).", "",
      "## Faster / fewer-stage variants that close at TT", ""]
 fast = [x for x in rows if x["closed"] and not SLOW.search(x["variant"])]
 slowc = {x["block"] for x in rows if x["closed"] and SLOW.search(x["variant"])}
@@ -56,10 +74,10 @@ for b, xs in sorted(blocks.items()):
     best = max(have, key=lambda x: (x["closed"], min(x["tt"], x["ff"] if x["ff"] is not None else -1e9)))
     L.append(f"| {b} | {best['variant']} | {f2(best['tt'])} | {f2(best['ff'])} | {best['drc']} | {f2(best['ss'])} | "
              f"{', '.join(x['variant'] for x in xs if x['closed']) or '-'} |")
-L += ["", "## All TT jobs", "", "| block | variant | job | TT setup WNS | FF hold WNS | DRC | SS sensitivity | verdict |",
-      "|---|---|---|---|---|---|---|---|"]
+L += ["", "## All TT jobs", "", "| block | variant | job | re-STA of existing route (setup-triage tt_restatus) | TT setup WNS | FF hold WNS | DRC | SS sensitivity | verdict |",
+      "|---|---|---|---|---|---|---|---|---|"]
 for x in sorted(rows, key=lambda x: (x["block"], x["variant"])):
-    L.append(f"| {x['block']} | {x['variant']} | {x['job']} | {f2(x['tt'])} | {f2(x['ff'])} | {'' if x['drc'] is None else x['drc']} | {f2(x['ss'])} | {x['v']} |")
+    L.append(f"| {x['block']} | {x['variant']} | {x['job']} | {x['rs']} | {f2(x['tt'])} | {f2(x['ff'])} | {'' if x['drc'] is None else x['drc']} | {f2(x['ss'])} | {x['v']} |")
 L += ["", "## Awaiting TT views (not queued: a macro view has no _tt.lib at the job commit; fail closed at TC)", ""]
 for r in inv["inventory"]:
     if r["decision"].startswith("awaiting"):
