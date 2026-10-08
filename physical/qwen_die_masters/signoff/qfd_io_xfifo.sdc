@@ -53,7 +53,7 @@ foreach {clk ins outs} {
   set T [get_property [get_clocks $clk] period]
   puts "QDM $clk ref [get_full_name $ref] L max $lmax min $lmin skew $ot_sk"
   set_input_delay  [expr {0.2*$T + $lmax + $ot_sk}] -max -clock $clk [get_ports $ins]
-  set_input_delay  [expr {$lmin - $ot_hk}]          -min -clock $clk [get_ports $ins]
+  set_input_delay  [expr {$lmin - ([info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0)}]          -min -clock $clk [get_ports $ins]
   set_output_delay [expr {0.2*$T - $lmax + $ot_sk}] -max -clock $clk [get_ports $outs]
   set_output_delay [expr {-$lmin - $ot_hk}]         -min -clock $clk [get_ports $outs]
 }
