@@ -49,7 +49,10 @@ proc ot_mm_sync {} {
   file delete $f
   set_propagated_clock [all_clocks]
   if {[info exists ::env(OT_MM_FF_SDC)]} {
-    foreach s $::env(OT_MM_FF_SDC) { puts "OT_HOLD_MM: ff mode reads $s"; read_sdc $s }
+    foreach s $::env(OT_MM_FF_SDC) {
+      if {![file exists $s]} { puts "OT_HOLD_MM WARNING: FF SDC $s missing: ff mode keeps the route SDC for it"; continue }
+      puts "OT_HOLD_MM: ff mode reads $s"; read_sdc $s
+    }
   }
   set_false_path -setup -from [all_clocks]
   set_mode ss
