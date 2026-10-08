@@ -613,25 +613,51 @@
    }
   },
   "ot_s81ph_root_tile": {
-   "job": "s81ph-root_tile-77bcb3f3c-mmq",
+   "job": "s81ph-root_tile-77bcb3f3c-mmq-tt",
    "source_commit": "77bcb3f3c953773a13abd3ea2a9db44144bf6d30",
    "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c-mmq",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c-mmq-tt",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T04:09:31-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T09:03:19-07:00",
    "ss": {
     "mean": 374,
     "min": 364,
     "max": 378
    },
    "ff": {
-    "mean": 239,
-    "min": 229,
-    "max": 243
+    "mean": 221,
+    "min": 216,
+    "max": 227,
+    "n": 1977,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "boundary_n": 1977,
-   "budget": null
+   "budget": null,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 374,
+     "min": 364,
+     "max": 378
+    },
+    "ff": {
+     "mean": 239,
+     "min": 229,
+     "max": 243
+    },
+    "parasitics": "placement-estimated",
+    "job": "s81ph-root_tile-77bcb3f3c-mmq"
+   },
+   "tt": {
+    "mean": 275,
+    "min": 269,
+    "max": 281,
+    "n": 1977,
+    "kind": "boundary",
+    "clock": "core_clk"
+   }
   },
   "dsfd_coll_lane_e": {
    "job": "s81b-coll_lane_ne-fmt1-mm2-9ac26e269-tt",
@@ -1225,25 +1251,51 @@
    "budget": null
   },
   "ot_dsrom_head_elem_A": {
-   "job": "dshead-elemA-half-4123ff389-mmq",
-   "source_commit": "4123ff389fe8230057797bbc407e1b2dc065faa9",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemA-half-4123ff389-mmq",
+   "job": "dshead-elemA-safe-b529ca8c9-tt",
+   "source_commit": "b529ca8c93b477cdb42785a7df298bb25ffa0963",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dshead-elemA-safe-b529ca8c9-tt",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T02:42:13-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T09:03:13-07:00",
    "ss": {
     "mean": 602,
     "min": 580,
     "max": 662
    },
    "ff": {
-    "mean": 392,
-    "min": 373,
-    "max": 447
+    "mean": 287,
+    "min": 280,
+    "max": 296,
+    "n": 456,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "boundary_n": 456,
-   "budget": null
+   "budget": null,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 602,
+     "min": 580,
+     "max": 662
+    },
+    "ff": {
+     "mean": 392,
+     "min": 373,
+     "max": 447
+    },
+    "parasitics": "placement-estimated",
+    "job": "dshead-elemA-half-4123ff389-mmq"
+   },
+   "tt": {
+    "mean": 356,
+    "min": 348,
+    "max": 366,
+    "n": 456,
+    "kind": "boundary",
+    "clock": "core_clk"
+   }
   },
   "ot_dsrom_head_elem_B": {
    "job": "dshead-elemB-safe-b529ca8c9-tt",
@@ -2446,22 +2498,22 @@
    "budget": null
   },
   "ot_su12_full": {
-   "job": "hbm_su_full_r24fslot_tt_c10b5fc9a",
-   "source_commit": "c10b5fc9a40e4bb60cf47a0fd8d9735d98740e65",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_full_r24fslot_tt_c10b5fc9a",
+   "job": "hbm_su_full_tc_4aadc92bc",
+   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_full_tc_4aadc92bc",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T03:47:31-07:00",
+   "measured_at": "2026-10-08T08:59:38-07:00",
    "ss": {
-    "mean": 733,
-    "min": 713,
-    "max": 747
+    "mean": 625,
+    "min": 606,
+    "max": 661
    },
    "ff": {
-    "mean": 468,
-    "min": 454,
-    "max": 480
+    "mean": 397,
+    "min": 384,
+    "max": 432
    },
    "boundary_n": 950,
    "budget": null
@@ -3843,5 +3895,5 @@
    }
   }
  },
- "updated": "2026-10-08T08:50:41-07:00"
+ "updated": "2026-10-08T09:03:19-07:00"
 }
