@@ -139,8 +139,80 @@ proc ot_hold_window_report {why hist} {
   foreach c [lsort [array names cls]] { lappend sum "$c=$cls($c)@[format %.0f $cw($c)]" }
   puts "OT_HOLD_STALL NEEDS_RTL ($why): [join $sum { }] -> $f"
 }
+# HM-GUARD (hm-guard 2026-10-08).  HM 50 is a design margin, acceptance is FF hold >= 0 (post-route hold ECO as before).
+# A block whose REAL FF hold already passes can still have tens of thousands of back-to-back flop pairs inside the 50 ps
+# margin; repair_timing pads every one: S81 PQ root CAM 17.2k endpoints -> 21.7k buffers (85.8 -> 95.7%), HBM VM8 ~102k
+# buffers, Qwen link rx128 72.5k endpoints -> 146k buffers (80.7 -> 97.2%, 6h53m) -- all DPL-0033.  Before a hold repair
+# ot_hm_guard counts the FF endpoints inside the margin and projects the buffer area (ceil(deficit / OT_HM_BUF_PS) buffers
+# of OT_HM_BUF_AREA_UM2 each over the core area).  Over OT_HM_GUARD_MAX_EP endpoints (10k) or OT_HM_GUARD_MAX_UTIL_PTS
+# (8 points) the margin of THIS run drops to max(floor, worst real violation + floor), floor OT_HM_GUARD_FLOOR_PS (10),
+# never above the asked margin; it logs "OT_HM_AUTO" and writes REPORTS_DIR/ot_hm_auto_<stage>.rpt (the closure loop
+# turns it into a job event).  OT_HM_GUARD=0 disables it.  Margins in the library unit (ps on asap7).
+proc ot_hm_buffers {slacks hm buf_ps} {
+  # projected hold buffers: one per buf_ps of deficit below the margin, per endpoint
+  set n 0
+  foreach s $slacks { if {$s < $hm} { incr n [expr {int(ceil(($hm - $s) / double($buf_ps)))}] } }
+  return $n
+}
+proc ot_hm_decide {hm worst n_in buffers core_um2 buf_area max_ep max_pts floor} {
+  # -> {new_margin util_pts reason}; new_margin == hm when no reduction
+  set pts [expr {$core_um2 > 0 ? 100.0 * $buffers * $buf_area / $core_um2 : 0.0}]
+  if {$hm <= $floor} { return [list $hm $pts "margin $hm <= floor $floor"] }
+  set why {}
+  if {$n_in > $max_ep} { lappend why "$n_in endpoints in margin > $max_ep" }
+  if {$pts > $max_pts} { lappend why [format "projected +%.1f util points > %g" $pts $max_pts] }
+  if {![llength $why]} { return [list $hm $pts "within limits"] }
+  set viol [expr {$worst < 0 ? -$worst : 0.0}]
+  set new [expr {max($floor, $viol + $floor)}]
+  set new [expr {min($hm, ceil($new * 10.0) / 10.0)}]
+  return [list $new $pts [join $why "; "]]
+}
+proc ot_hm_core_um2 {} {
+  if {[catch {
+    set blk [ord::get_db_block]; set r [$blk getCoreArea]
+    set u [$blk getDbUnitsPerMicron]
+    set a [expr {double([$r dx]) * [$r dy] / ($u * $u)}]
+  }]} { return 0.0 }
+  return $a
+}
+proc ot_hm_guard {rt_args} {
+  if {[info exists ::env(OT_HM_GUARD)] && $::env(OT_HM_GUARD) eq "0"} { return $rt_args }
+  set i [lsearch -exact $rt_args -hold_margin]; if {$i < 0} { return $rt_args }
+  set hm [lindex $rt_args [expr {$i + 1}]]
+  set floor [ot_env_num OT_HM_GUARD_FLOOR_PS 10.0]
+  if {![string is double -strict $hm] || $hm <= $floor} { return $rt_args }
+  if {[catch {
+    set sc {}; if {[info exists ::ot_mm_synced]} { set sc [list -scenes BC] }
+    set slacks {}; set worst 1e6
+    foreach p [find_timing_paths -path_delay min {*}$sc -group_path_count 1000000 -endpoint_path_count 1 -slack_max $hm] {
+      set s [get_property $p slack]; if {$s eq "INF"} { continue }
+      lappend slacks $s; if {$s < $worst} { set worst $s }
+    }
+    if {![llength $slacks]} { set worst [lindex [ot_hold_stats] 0] }
+  } msg]} { puts "OT_HM_GUARD: endpoint count unavailable ($msg); margin $hm kept"; return $rt_args }
+  set n [llength $slacks]
+  set buf_area [ot_env_num OT_HM_BUF_AREA_UM2 0.08]
+  set nb [ot_hm_buffers $slacks $hm [ot_env_num OT_HM_BUF_PS 20.0]]
+  set core [ot_hm_core_um2]
+  lassign [ot_hm_decide $hm $worst $n $nb $core $buf_area [ot_env_num OT_HM_GUARD_MAX_EP 10000] \
+             [ot_env_num OT_HM_GUARD_MAX_UTIL_PTS 8.0] $floor] new pts why
+  set line [format "HM auto-reduced %g->%g: %d endpoints in margin (worst FF hold %.2f, ~%d buffers, +%.1f util pts of %.0f um2 core; %s)" \
+    $hm $new $n $worst $nb $pts $core $why]
+  if {$new >= $hm} {
+    puts [format "OT_HM_GUARD: margin %g kept: %d endpoints in margin, ~%d buffers, +%.1f util pts (%s)" $hm $n $nb $pts $why]
+    return $rt_args
+  }
+  puts "OT_HM_AUTO $line"
+  set stage [expr {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/4_1_cts.odb] ? "grt" : "cts"}]
+  catch {
+    set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hm_auto_${stage}.rpt" : "ot_hm_auto_${stage}.rpt"}]
+    set fh [open $f w]; puts $fh "OT_HM_AUTO stage=$stage $line"; close $fh
+  }
+  return [lreplace $rt_args [expr {$i + 1}] [expr {$i + 1}] $new]
+}
 proc ot_repair_timing {rt_args} {
   if {![ot_hold_guard_on] || [lsearch -exact $rt_args -setup] >= 0 || [lsearch -exact $rt_args -hold] >= 0} {
+    if {[lsearch -exact $rt_args -setup] < 0} { set rt_args [ot_hm_guard $rt_args] }
     return [log_cmd repair_timing {*}$rt_args]
   }
   set hm 0.0
@@ -149,6 +221,8 @@ proc ot_repair_timing {rt_args} {
   set mingain [ot_env_num OT_HOLD_MIN_GAIN_PCT 2.0]
   set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
   log_cmd repair_timing {*}$rt_args -setup
+  set rt_args [ot_hm_guard $rt_args]
+  set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
   if {[catch {set prev [ot_hold_stats]} msg]} {
     puts "OT_HOLD_GUARD: hold stats unavailable ($msg); unguarded hold repair"
     return [log_cmd repair_timing {*}$rt_args -hold]
