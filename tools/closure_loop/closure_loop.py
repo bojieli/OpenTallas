@@ -1987,6 +1987,9 @@ def step(j, fleet):
         st = stl[j["stage_idx"]]
         state, rc = poll_stage(j)
         if state in ("RUNNING", "STARTING"):
+            if j.get("unreachable"):     # 2026-10-08: clear a stale "unreachable" as the latest event once polling works
+                event(j, f"{j['host']} reachable again; {st['key']} still running")
+                j["unreachable"] = 0
             stuck_watchdog(j, st)
             return
         if state == "UNREACHABLE":
