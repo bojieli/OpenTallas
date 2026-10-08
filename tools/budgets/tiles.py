@@ -70,7 +70,8 @@ def build(ph):
         k = ['f_k', 't_sb'] if m == 'dsfd_capt_grp' else ['t_k', 'f_sb']
         dirs = (['in', 'out'] if m == 'dsfd_capt_grp' else ['out', 'in'])
         tile(m, 'dsfd_sp_capture', n, clock_ports=('ck', 'ckv'), edges=[
-            E([[k[0], dirs[0]], [k[1], dirs[1]]], caph['length_um_max'], 'ctl <-> group tiles in the S channel (no station)', 'capture tile'),
+            E([[k[0], dirs[0]], [k[1], dirs[1]]], caph['length_um_max'] / 2,
+              'ctl <-> group tiles in the S channel: one common-clock station each way (s81-die-timing 2026-10-08, KST 1)', 'capture station'),
             E(io(['f_row' if m == 'dsfd_capt_grp' else 'f_ctl'], 'in'), 21.6, 'gather t_capture -> tile through the 21.6-um channel', 'dsfd_sp_gather'),
             E(io(['t_vm' if m == 'dsfd_capt_grp' else 't_st'], 'out'), ABUT, 'tile -> VM (serial clock ckv, abutted N face)', 'dsfd_sp_vm')])
     for m in ('dsfd_coll_lane_w', 'dsfd_coll_lane_e'):
@@ -94,7 +95,7 @@ def build(ph):
     tile('dsfd_svc_pc', 'dsfd_svc', 32, edges=[
         E(io(['rq', 'qrk', 'qwd', 'qrv', 'qr_data', 'qr_tag', 'qr_beat'], 'out') + io(['qrq', 'rk', 'wd', 'rv', 'r_data', 'r_tag', 'r_beat'], 'in'),
           ABUT, 'svc PC tile <-> ctrl PC tile (S) / quadrant (N), abutted', 'dsfd_ctrl_pc / quadrant')])
-    tile('dsfd_svc_stn', 'dsfd_svc', 30, edges=[
+    tile('dsfd_svc_stn', 'dsfd_svc', sum(c['stations'] for c in svc['station_chains']), edges=[
         E(io(['q_e', 'od_wv', 'od_wd', 'od_er', 'a0_wv', 'a0_wd', 'a0_er'], 'in') +
           io(['q_w', 'od_ev', 'od_ed', 'od_wr', 'a0_ev', 'a0_ed', 'a0_wr'], 'out'), stn_max,
           f'quadrant <-> IO hub station chain (max span {stn_max:.1f} um)', 'dsfd_svc_stn / dsfd_svc_io')])
