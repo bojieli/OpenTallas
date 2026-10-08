@@ -38,12 +38,12 @@ def sbench(name, g, exp, ram=16, threads=8):
 
 
 def spine_benches(full=True):
-    out = [sbench("sb_exact", "-GCYCLES=40000 -GSEED=1", "pass"),
-           sbench("sb_link", "-GLNK=1 -GCLNK=2 -GCYCLES=40000 -GSEED=2", "pass"),
+    out = [sbench("sb_exact", "-GCYCLES=40000", "pass"),
+           sbench("sb_link", "-GLNK=1 -GCLNK=2 -GCYCLES=40000", "pass"),
            sbench("sb_mut_band", "-GBMUT=1 -GCYCLES=8000", "fail"),
            sbench("sb_mut_frame", "-GPBANDF=0 -GCYCLES=8000", "fail")]
     if full:
-        out += [sbench("sb_qwen", f"{REAL} -GQB=9 -GCYCLES=20000 -GSEED=3", "pass", ram=48, threads=16),
+        out += [sbench("sb_qwen", f"{REAL} -GQB=10 -GCYCLES=240000", "pass", ram=48, threads=16),
                 sbench("sb_mut_upper", "-GUMUT=2 -GCYCLES=8000", "fail"),
                 sbench("sb_mut_clnk", "-GLNK=1 -GCLNK=2 -GDMUT=1 -GCYCLES=8000", "fail")]
     return out

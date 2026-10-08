@@ -238,6 +238,8 @@ module tb_qfd_spine_band;
     // ---- idle soundness: at every DUT idle rise, every touched row equals the reference ----
     reg b_idle_d;
     integer idle_checks, idle_bad, img_bad, i, cyc;
+    integer idle_early = 0, chk_cnt = 0;
+    localparam integer IL_CHK = 6;
     always @(posedge clk) b_idle_d <= b_idle;
     initial begin
         idle_checks = 0; idle_bad = 0; img_bad = 0; me_want = 1; stall_on = 0; stim_on = 1;
@@ -248,9 +250,22 @@ module tb_qfd_spine_band;
         for (cyc = 0; cyc < CYCLES; cyc = cyc + 1) begin
             @(negedge clk);
             me_want = ($urandom % 8) != 0;
+            // idle soundness: every write the DUT presented before its idle rise reaches the banks within the VM's
+            // uniform write latency (ot_qfd_sp_vector_memory_bv: a read presented at edge t sees every write presented
+            // before t), so the bank image (shadow) is compared IL_CHK clock edges after the rise; the image at the rise
+            // itself is counted (idle_early) for information only
             if (b_idle && !b_idle_d && ecyc > 4) begin
-                idle_checks = idle_checks + 1;
-                for (i = 0; i < ELEMS / 16; i = i + 1) if (touched[i] && shadow[i] !== refm[i]) idle_bad = idle_bad + 1;
+                idle_checks = idle_checks + 1; chk_cnt = IL_CHK;
+                for (i = 0; i < ELEMS / 16; i = i + 1) if (touched[i] && shadow[i] !== refm[i]) idle_early = idle_early + 1;
+            end
+            if (chk_cnt > 0) begin
+                chk_cnt = chk_cnt - 1;
+                if (chk_cnt == 0)
+                    for (i = 0; i < ELEMS / 16; i = i + 1)
+                        if (touched[i] && shadow[i] !== refm[i]) begin
+                            idle_bad = idle_bad + 1;
+                            if (idle_bad == 1) $display("idle mismatch row %0d at ecyc %0d", i, ecyc);
+                        end
             end
         end
         me_want = 1; stim_on = 0;
@@ -261,11 +276,11 @@ module tb_qfd_spine_band;
         for (i = SMIN; i <= SMAX; i = i + 1) $display("split %0d ops %0d", i, split_ops[i]);
         if (mism == 0 && prog_ahead == 0 && ovbad == 0 && idle_bad == 0 && img_bad == 0 && !(|l_fault) && !m_wf && !m_wh &&
             !m_xf && !m_xh && results > 300 && idle_checks > 5 && rows_cmp > 0 && oob == 0)
-            $display("PASS qfd_spine_band GT=%0d TCUT=%0d splits=%0d..%0d LNK=%0d CLNK=%0d RD=%0d engine_edges=%0d ops=%0d bursts=%0d rows=%0d landed=%0d idle_checks=%0d",
-                     GT, TCUT, SMIN, SMAX, LNK, CLNK, RD, ecyc, ops, results, rows_cmp, land_cnt, idle_checks);
+            $display("PASS qfd_spine_band GT=%0d TCUT=%0d splits=%0d..%0d LNK=%0d CLNK=%0d RD=%0d engine_edges=%0d ops=%0d bursts=%0d rows=%0d landed=%0d idle_checks=%0d (early %0d)",
+                     GT, TCUT, SMIN, SMAX, LNK, CLNK, RD, ecyc, ops, results, rows_cmp, land_cnt, idle_checks, idle_early);
         else
-            $display("FAIL qfd_spine_band oob=%0d mism=%0d first=%0d/%0d burst_bad=%0d prog_ahead=%0d ovbad=%0d idle_bad=%0d img_bad=%0d faults ser%b w%0d wh%0d bursts=%0d rows=%0d idle_checks=%0d",
-                     oob, mism, first_bad >> 8, first_bad & 8'hff, burst_bad, prog_ahead, ovbad, idle_bad, img_bad, l_fault, m_wf, m_wh, results, rows_cmp, idle_checks);
+            $display("FAIL qfd_spine_band engine_edges=%0d oob=%0d mism=%0d first=%0d/%0d burst_bad=%0d prog_ahead=%0d ovbad=%0d idle_bad=%0d img_bad=%0d faults ser%b w%0d wh%0d bursts=%0d rows=%0d idle_checks=%0d early=%0d",
+                     ecyc, oob, mism, first_bad >> 8, first_bad & 8'hff, burst_bad, prog_ahead, ovbad, idle_bad, img_bad, l_fault, m_wf, m_wh, results, rows_cmp, idle_checks, idle_early);
         $finish;
     end
 endmodule

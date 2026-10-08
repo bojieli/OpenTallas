@@ -1,0 +1,12 @@
+split 3 ops 17
+split 4 ops 33
+split 5 ops 35
+split 6 ops 34
+split 7 ops 25
+split 8 ops 43
+split 9 ops 30
+PASS qfd_spine_band GT=384 TCUT=3 splits=3..9 LNK=0 CLNK=0 RD=5 engine_edges=11368 ops=217 bursts=3448 rows=31896 landed=3448 idle_checks=6 (early 0)
+- rtl/test/qwen_band_integrate/tb_qfd_spine_band.sv:284: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 43us; walltime 157.535 s; speed 272.511 ns/s
+- Verilator: cpu 156.296 s on 1 threads; allocated 98 MB

@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.qwen_band_integrate.v1",
+ "stream": "qwen-band-integrate",
+ "date": "2026-10-08",
+ "base": "claude/qwen-lane-band-20261008 @ 4c4406252 (on qwen-vm-me 1c346e276) + tools/qwen_slab_m3_takeover.py from origin/main (the s14o route recipe)",
+ "frame": "band-local result positions (ot_qfd_band_lanes): position p = 8b + k holds group g = b * 2^(TCUT+3-s) + k (k < 2^(TCUT+3-s)) at split s <= TCUT+3, else g = k on band 0 (k < GT >> s); band-major position order is ascending g for every in-range position, so a burst's rows reach the vector memory (6 serializers, band-ordered merge) in the monolithic spine's group order",
+ "rtl": {
+  "slab_port_groups": {
+   "ot_qwen_slab_port_group BANDF": "rtl/physical/ot_qwen_slab_port_group.sv: GID = slot 8b + k; the row-count constants (1 - g W IL, 1 - g W), the scale-address term g IL, the row base g W IL, g * ots (one constant multiplier per split SMIN..SMAX) and the in-range test are per-split constants selected by the registered split at D1; 0 cycles; BANDF 0 = unchanged (the constants become wires of the same values)",
+   "ot_qwen_me_spport_w12 BANDF": "rtl/hdc/ot_qwen_me_spine_h_w12.sv: the decode-path port element (12 x PQ 4) takes g(split, pt_id*PQ + q) for its in-range test, row base, lane-vector base and g * ots (stage E); default 0 = base",
+   "scale ROM": "a slot's ROM holds, per matrix, the scale words of the group it carries at that matrix's split (the same word count as before; the addresses are the base's for group g)"
+  },
+  "tree_top": {
+   "ot_qfd_sp_tree_top BAND": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv: ot_qfd_band_upper inside (b_pw / b_pv / b_lf in straight to its pin flops, tt_ty / tt_use / tt_v out of its station), its fault into the control element's tree fault; control element ot_qwen_me_spctl_w12 with XD - CLNK (the per-level selects leave CLNK edges early so they reach the bands with the tree words), RX = 5 + 2 LNK + CLNK (element tags, scale requests, result valid, argmax top), RXA = 5 + 2 LNK (argmax-accumulator clear at issue), BANDF (scale requests by g); upper DLY = OS + CLNK + 2 + LNK; BAND 0 = unchanged",
+   "ot_qwen_me_spctl_w12": "new params RX / RXA / BANDF (default 0: base)",
+   "ot_qfd_band_lanes / ot_qfd_band_upper": "TCUT / LG params (default 7 / 13 = the routed master; the bench's reduced geometry uses TCUT 3)"
+  },
+  "spine": "rtl/qwen_sys/band_integrate_20261008/ot_qfd_spine_band.sv ot_qfd_spine_band: tree top (BAND) + 6 ot_qfd_band_lanes on LNK-relayed word links and a CLNK-relayed control link + 12 port elements in the band frame, the ports of ot_qwen_me_spine_h_w12",
+  "cycles_added": "every ME op result +5 + 2 LNK engine edges vs the monolithic spine (the band round trip; CLNK costs no cycle). Recorded, not priced (directive)."
+ },
+ "bench": {
+  "spine": {
+   "tb": "rtl/test/qwen_band_integrate/tb_qfd_spine_band.sv (run_spine_band.sh, Verilator 5.050; exit 0 only on PASS)",
+   "method": "reference ot_qwen_me_spine_h_w12 (monolithic lanes, group order) writing a behavioural memory at its engine edges vs ot_qfd_spine_band LANDED + 6 band serializers (8 slots = the band's slots) + the banked VM merge (ot_qfd_sp_vector_memory_bv), land_cnt back; one gated engine clock (stall loop); issue side equal every edge; result side (ov, scale_re, argmax, maxima row) equal to the reference delayed RD = 5 + 2 LNK edges; each burst's rows (address, mask, masked data) in position order equal the reference's in group order; progress never ahead; every touched row equal at each DUT idle rise and at the end; no fault (band / upper lockstep checks included); splits SMIN..SMAX uniform",
+   "results": {
+    "note": "RTL as committed at 267b4cd3b (unchanged since); bench file final (idle-rise image compared 6 clock edges after the rise = the VM's uniform write latency; the image AT the rise is counted as 'early', information only). $urandom(SEED) does not reseed under Verilator 5.050: runs differ by configuration, not seed.",
+    "sb_exact (GT 384, TCUT 3, splits 3..9, LNK 0 CLNK 0)": "PASS 11,368 engine edges, 217 ops, 3,448 bursts, 31,896 rows bit-exact, all landed, 6 idle checks (early 0)",
+    "sb_link (LNK 1, CLNK 2, RD 7)": "PASS 8,076 engine edges, 170 ops, 2,712 bursts, 29,584 rows, 7 idle checks (early 1: the bank image lags the idle rise by < 6 edges)",
+    "sb_qwen (the die geometry: GT 6,144, TCUT 7, splits 7..11, W 16, NW 18, LNK 0)": "PASS 25,849 engine edges, 948 ops (182 / 211 / 176 / 194 / 185 at splits 7..11), 11,152 bursts, 183,288 rows bit-exact, 6 idle checks",
+    "sb_mut_band (BMUT 1: band level TCUT+2 pairs (0,2)(1,3))": "FAIL as required (mism 1,411, burst rows 564, image 305)",
+    "sb_mut_upper (UMUT 2: upper level TCUT+4 pairs (b0,b3)(b1,b4)(b2,b5))": "FAIL as required (mism 784, burst rows 299)",
+    "sb_mut_frame (PBANDF 0: port groups indexed by position, the pre-fix slab)": "FAIL as required (mism 947, burst rows 134, image 62)",
+    "sb_mut_clnk (DMUT 1: the tree top's control delay without the CLNK relays)": "FAIL as required (lockstep fault from the band / upper valid check at edge 81; 182 mismatching edges)",
+    "history": "campaign 1 (7817f9e7b): sb_link failed result-side (the argmax clear carried CLNK; fixed with RXA) and the reduced bench let result rows run past the bench memory (aliasing in the VM, bench constraint + oob check added)",
+    "logs": "results/rtl/qwen_band_integrate_20261008/bench/spine/"
+   }
+  },
+  "slab_port_group": {
+   "tb": "rtl/test/tb_qwen_slab_port_group.sv BANDF 1 (iverilog 12, ot-agidock128): split random in SMIN-1 .. SMAX+1 per op, expected group g(split, slot) (no write / empty mask out of range); s14o element (MUL_LAT 7, OREG, IN_STAGE, AM_SPLIT, S5_CTL, SCALE_PAIR, LEAD 9)",
+   "results": {
+    "BANDF 0 (s14o base)": "PASS 1505 requests, 1505 results bit-exact, 751 argmax tops (unchanged)",
+    "BANDF 1 slots 0 / 3 / 7 / 8 / 13 / 40 / 47": "PASS 1505 / 1505 bit-exact, 751 argmax tops each (in range 1078 / 422 / 199 / 858 / 199 / 858 / 199)",
+    "BANDF 1 slot 40 MUL_KCP 4 (s14ok)": "PASS",
+    "BMUT 1 (bench expects the slot as the group: the pre-fix element)": "FAIL as required"
+   },
+   "logs": "results/rtl/qwen_band_integrate_20261008/bench/slab/"
+  },
+  "yosys": "yosys 0.52 read + chparam + hierarchy -check: ot_qfd_sp_tree_top (qfd_sp_tree_top_b params, BAND 1) and ot_qwen_slab_port_group (BANDF 1, GID 40, s14o params): no errors"
+ },
+ "routes": {
+  "flow": "OPTION B TT: ORFS corner TC, MM FF hold HM 50 ps, rule H1, CTS fix hooks + consistent die-link budget (tt_overlay of the TT-batch snapshot 26f14af32); generator tools/qwen_band_integrate/mk_jobs.py",
+  "jobs": "see READY_TO_MERGE / qwen-band-integrate.log (qfd_sp_tree_top_b(_t)-<commit>tt, slab_s14o_bf / slab_s14ok_bf-<commit>tt)"
+ },
+ "open": [
+  "r21m die re-pack: qfd_sp_tree_top_b is 777.6 x 3732.48 (+648 um for the upper levels) and its band ports (b_pw 6 x 513 b in, tt_ty 1,538 b out) replace the r21m pw / tt_ty buses at the tree top; the die tool still sizes the r21f tree top slot",
+  "die LNK / CLNK: the RTL takes them as parameters (the routed masters use 0); the die's relay count on the band-word and control links sets them (results +2 edges per word-link relay stage, control-link relays cost none)",
+  "qwen-vm-me loop jobs (*-e0370c82ctt) are NEEDS_RTL: their mutant benches print FAIL but exit 0 (the loop reads rc), and their route command calls tools/closure_loop/tt_overlay.py, absent from that commit"
+ ]
+}
