@@ -1,0 +1,18 @@
+{
+  "_comment": "ssh alias -> share-safe label. 'ssh': null means the coordinator itself. Regions inferred 2026-10-08 from RTT (EPYC1/2 twins 0.15 ms apart, 247 ms from EPYC3). Edit lat/lon here if a site moves.",
+  "regions": {
+    "onprem":    {"label": "On-prem",   "lat": 34.05, "lon": -118.25},
+    "singapore": {"label": "Singapore", "lat": 1.35,  "lon": 103.82},
+    "stockholm": {"label": "Stockholm", "lat": 59.33, "lon": 18.07},
+    "tokyo":     {"label": "Tokyo",     "lat": 35.68, "lon": 139.69}
+  },
+  "hosts": [
+    {"id": "localhost",     "ssh": null,            "label": "COORDINATOR", "kind": "Coordinator + RTX PRO GPU", "region": "onprem"},
+    {"id": "ot-agidock128", "ssh": "ot-agidock128", "label": "ONPREM-1",    "kind": "Simulation VM",            "region": "onprem"},
+    {"id": "ot-pve1",       "ssh": "ot-pve1",       "label": "ONPREM-2",    "kind": "Build node",               "region": "onprem"},
+    {"id": "ot-epyc1tb",    "ssh": "ot-epyc1tb",    "label": "EPYC-SG-1",   "kind": "EPYC 9575F",               "region": "singapore"},
+    {"id": "ot-epyc2",      "ssh": "ot-epyc2",      "label": "EPYC-SG-2",   "kind": "EPYC 9575F",               "region": "singapore"},
+    {"id": "ot-epyc3",      "ssh": "ot-epyc3",      "label": "EPYC-STO-1",  "kind": "EPYC 9575F",               "region": "stockholm"},
+    {"id": "ot-epyc4",      "ssh": "ot-epyc4",      "label": "EPYC-TYO-1",  "kind": "EPYC 9575F",               "region": "tokyo", "pending": true}
+  ]
+}

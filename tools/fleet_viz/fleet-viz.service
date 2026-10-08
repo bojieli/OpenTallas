@@ -1,0 +1,16 @@
+[Unit]
+Description=OpenTallas live fleet visualisation (tools/fleet_viz; 127.0.0.1:8765)
+After=network-online.target
+
+[Service]
+WorkingDirectory=%h/.local/share/fleet-viz
+ExecStart=/usr/bin/python3 -u %h/.local/share/fleet-viz/server.py
+Environment=FLEET_VIZ_BIND=127.0.0.1 FLEET_VIZ_PORT=8765 FLEET_VIZ_POLL=5
+Restart=always
+RestartSec=5
+Nice=10
+CPUQuota=25%
+MemoryMax=400M
+
+[Install]
+WantedBy=default.target
