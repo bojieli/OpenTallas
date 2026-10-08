@@ -11459,3 +11459,84 @@ def dsrom_wfc_canonical_enclosing_price():
         retained_full866_gate='d1a5fbefc', retained_enclosing_gate='0d27741b0',
         retained_producer_gate='baed7ff2a',
         P_and_R_ready=False, SS_FF_closed=False, adopted=False)
+
+
+def hubble_live_gu_consumer_model():
+    """Full released two-expert component join, before additive caller RTL.
+
+    One selected SIMT instance executes the 768 actual 12-row spans. Physical
+    parent allocation and whole-command enrollment remain external inputs.
+    """
+    data_words = 4 * 2304 // 4
+    bitmap_words = 768 // 64
+    state = dict(BF16_SECDED_bits=data_words * 72,
+                 span_bitmap_SECDED_bits=bitmap_words * 72,
+                 consumer_frame_op_count_phase_SECDED_bits=216,
+                 caller_descriptor_181bit_context_SECDED_bits=216,
+                 finite_response_frame_tag_address_route_SECDED_bits=144,
+                 held_source_response_SECDED_bits=288,
+                 actual_rounded_store_memory_SECDED_bits=432)
+    bits = sum(state.values())
+    return dict(schema='opentallas.hubble.live_gu_consumer.v1',
+        scope='two released experts41/65; actual TC/CVT export to existing72W64 feed',
+        state_bits=state, total_new_protected_state_bits=bits,
+        payload_BF16_bits=4*2304*16, payload_words=data_words,
+        protection='existing W6 encode64/decode64; mutable payload/bitmap/context/debt protected',
+        ROM_ECC=False, ROM_scope='released fixture images fault-free; bounds/identity retained',
+        consumer_write_ports=3, write_bits_per_accept=3*72,
+        bitmap_ports=dict(selected_read_bits=72, completeness_read_ports=12,
+                          completeness_read_bits=12*72, write_bits=72),
+        consumer_read_ports=32, read_bits_per_W64_edge=32*72,
+        useful_BF16_bits_per_W64_edge=2*64*16,
+        expanded_GU_boundary_bits=2*64*32,
+        exporter_source_commit='f62df0e9a5e3ce82766483caa1b8e66f0f9abfc7',
+        exporter_metadata_source_commit='22a56383f12af9ba1bf02696eb419a96f9a86ebe',
+        exporter_metadata_physical_SS833_60_slack_ps=-391.608,
+        exporter_metadata_physical_FF25_slack_ps=34.039,
+        exporter_metadata_physical_admitted=False,
+        exporter_boundary_bits=2216, exporter_retained_metadata_bits=216,
+        exporter_metadata_useful_bits=171+13+4, exporter_metadata_padding_bits=4,
+        exporter_metadata_protected=True, exporter_raw_authority_shadow_bits=0,
+        exporter_codec_read_bits=216, exporter_codec_write_bits=216,
+        exporter_encoders=3, exporter_decoders=3,
+        exporter_normal_added_cut_edges=0, exporter_CE_scrub_minimum_edges=1,
+        exporter_protection_owner='Gibbs W6 coded successor; original held ALU payload fault model remains separate',
+        combined_private_and_exporter_protected_state_bits=bits+216,
+        warm_reset_binding='this minimum caller has root POR only, no warm-reset command; request tied0, unsolicited ack rejected',
+        exporter_terminal='persistent coded completion; consume only good metadata, no CE/DUE, no retained debt',
+        exporter_payload_storage_delta=0,
+        exporter_minimum_extra_edges=768,
+        exporter_backpressure='measured held-valid minus accepted edges; never free',
+        replicas=dict(consumer=1, GU_SIMT=1, existing_W64_SwiGLU=1),
+        GU_parameters=dict(NL=128,NV=16,HAS_BD=1,BD_XDEPTH=32,TC_RMAX=16,
+                           TC_LEV=4,MAXO=32,BC_DEPTH=8),
+        descriptor_spans=768, rows_per_span=12, total_GU_rows=9216,
+        selected_kernel_words=178, CVT_word_PC=173,
+        MACs_per_cycle_peak=4*2*32,
+        MAC_source='selected SIMT u_bdtc SUB4/LBS2/NC1, 32-code block dot per lane; exact chunk8/tree unchanged',
+        useful_MACs=9216*5120,
+        image_ports=dict(sector_bits=256, outstanding=1, response_min_edges=1,
+                         request_min_interval_edges=2, maximum_bytes_per_cycle=16),
+        weight_line_sectors=9, weight_line_min_service_edges=18,
+        source_limited_MACs_per_cycle_upper_bound=(4*2*32)/18,
+        source_requests_per_span=dict(activation_codes=768,activation_exponents=24,
+                                      weights=2592,rounded_stores=2),
+        total_source_transactions=768*(768+24+2592+2),
+        finite_seat_service_edges_lower_bound=2*768*(768+24+2592+2),
+        source_bytes_read=768*(24576+768+82944), source_bytes_written=9216*4,
+        composed_calendar='178 instruction-loader edges once; 768 actual TC/LSU/CVT/store/drain spans; '
+                          '768 exporter blocking edges plus actual holds; consumer completeness after '
+                          'last acknowledged store+terminal; existing323edge SwiGLU preparation and '
+                          'actual W2/provider/readback/release/CPL measured once',
+        downstream_W2_baseline_cycles=dict(original=12845,Jason_R2=12865,
+                                          retained_GU_live_SwiGLU=12845),
+        independent_latency_credit=0, measured_join_cycles=None,
+        FF_cell_area_lower_um2=round(bits*.2916,4),
+        mux2_count_proxy=32*64*(576-1),
+        mux2_area_proxy_um2=round(32*64*(576-1)*.34992,4),
+        area_excludes='SECDED logic, three-write selection, 12-way bitmap completeness reads, existing producers, CTS/PG/routing',
+        tracks_required_lower_bound=2216+4096,
+        channel_capacity=None, parent_slot_fit=None, parent_clock_binding=None,
+        parent_whole_command_enrollment=None, parent_model_ready=False,
+        numerical_component_build_authorized=True, physical_build_admitted=False,
+        adopted=False, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25)
