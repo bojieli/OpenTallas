@@ -10,7 +10,7 @@
 #     input  max = T - 60 - R      output max = T - 60 - S      (uncertainty 60 is applied by STA itself)
 # Knobs (Tcl vars before sourcing, else env, else default): ot_lb_skew (150, inter-region; 90 intra), ot_lb_link
 # (114 = 100 um pin-station segment x 1.135 ps/um SS), ot_lb_sfrac (0.5).  SETUP ONLY: read it in the SS session;
-# hold keeps flow-hold's rule-H1 SDC (this file sets no -min).  Exceptions (false/multicycle paths from/to ports) stay.
+# hold keeps flow-hold's rule-H1 SDC (this file sets no -min and removes nothing).  Exceptions (false/multicycle paths from/to ports) stay.
 proc ot_lb_get {n d} { if {[info exists ::$n]} { return [set ::$n] }; if {[info exists ::env($n)]} { return $::env($n) }; return $d }
 set ot_lb_skew [ot_lb_get ot_lb_skew 150]
 set ot_lb_link [ot_lb_get ot_lb_link 114]
@@ -83,22 +83,22 @@ foreach c [all_clocks] { foreach s [get_property $c sources] { lappend ot_lb_gsr
 set ot_lb_in [all_inputs -no_clocks]
 set ot_lb_out {}
 foreach p [all_outputs] { if {[lsearch -exact $ot_lb_gsrc [get_full_name $p]] < 0} { lappend ot_lb_out $p } }
-unset_input_delay $ot_lb_in
-unset_output_delay $ot_lb_out
+# -add_delay against a NEW virtual clock: the block's own min/max delays stay (hold model untouched), and STA takes
+# the worse of the old and the consistent max, so the consistent split can only tighten the verdict.
 set ot_lb_multi [expr {[dict size $ot_lb_vmap] > 1}]
 set ot_lb_n [dict create]
 foreach p $ot_lb_in {
   set d $ot_lb_default
   if {$ot_lb_multi} { set x [ot_lb_domain [get_full_name $p] in]; if {$x ne ""} { set d $x } }
   lassign [dict get $ot_lb_vmap $d] vc imax omax
-  set_input_delay -max $imax -clock $vc $p
+  set_input_delay -max -add_delay $imax -clock $vc $p
   dict incr ot_lb_n "in:$d"
 }
 foreach p $ot_lb_out {
   set d $ot_lb_default
   if {$ot_lb_multi} { set x [ot_lb_domain [get_full_name $p] out]; if {$x ne ""} { set d $x } }
   lassign [dict get $ot_lb_vmap $d] vc imax omax
-  set_output_delay -max $omax -clock $vc $p
+  set_output_delay -max -add_delay $omax -clock $vc $p
   dict incr ot_lb_n "out:$d"
 }
 puts "OT_LINK_BUDGET ports $ot_lb_n"
