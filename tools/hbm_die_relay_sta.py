@@ -53,6 +53,19 @@ def view_insertion(case, master, measured):
     """the hardened view's own clock insertion (ps per corner): the closure loop's measured CTS insertion when it has
     one, else the view Liberty's fastest clock -> output arc less the measured lib-to-insertion offset; None when the
     master has no view Liberty (generated placeholder: the sheet target stays)"""
+    ctp = {}
+    for c in ('ss', 'ff', 'tt'):
+        f = case / f'{master}_{c}.lib'
+        if f.exists():
+            t_ = f.read_text()
+            mn = re.search(r'timing_type : min_clock_tree_path;.*?values\("([-\d.]+)', t_, re.S)
+            mx = re.search(r'timing_type : max_clock_tree_path;.*?values\("([-\d.]+)', t_, re.S)
+            if mn and mx:
+                ctp[c] = round((float(mn.group(1)) + float(mx.group(1))) / 2, 1)
+    if all(c in ctp for c in ('ss', 'ff', 'tt')):
+        # the routed view's own clock tree (write_timing_model min / max_clock_tree_path, mean): the insertion the die
+        #   STA actually sees through the view's arcs (the calibrate CTS-only measurement is pre-route / pre-ECO)
+        return ctp, 'view Liberty clock_tree_path (min+max)/2'
     if master in measured:
         out = {c: float(measured[master][c]['mean']) for c in ('ss', 'ff')}
         f = case / f'{master}_tt.lib'
