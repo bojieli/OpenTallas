@@ -183,6 +183,8 @@ def collect(commit=None, quiet=False):
             exp = b["expect"].get("cycles")
             cyc = f"{r.get('cycles'):,}" if isinstance(r.get("cycles"), int) else "-"
             note = why or (f"token {r.get('token')}" if r.get("token") is not None else "")
+            if r.get("lint_clean") is False:
+                note += " [campaign -Wall lint fails; exactness checks pass]"
             if r.get("bench_wall_seconds"):
                 note += f" ({r['bench_wall_seconds'] / 60:.0f} min)"
             log_row([now(), name, b["target"], f"{rec['commit']} ({rec.get('label', '')})", lp, verdict,

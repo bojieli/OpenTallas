@@ -122,13 +122,27 @@ def hbm_ds_joint(work):
 
 
 # -- reduced-vehicle hardwired decode cores and the DSpark MTP golden/ISA ------------------------------------
+def hdc_exact(d):
+    """Exactness = every simulated-vs-ISA/golden check of the campaign (single step, end to end, long context);
+    the campaign's own status also folds in a strict -Wall lint, reported separately as lint_clean."""
+    parts = [d.get("single_step", {}), d.get("end_to_end", {})]
+    lc = d.get("long_context")
+    if isinstance(lc, dict) and "pass" in lc:
+        parts.append(lc)
+    return bool(d) and all(p.get("pass") is True for p in parts)
+
+
+def hdc_lint(d):
+    return (d.get("verilator_lint") or {}).get("returncode") == 0
+
+
 def v41_hdc(work):
     out = work / "campaign.json"
     rc, sec = run([HPY, TOOLS / "rtl_hdc_v41_decode_campaign.py", "--output", out], work, "campaign",
                   env=dict(os.environ, OT_SCRATCH=str(work)))
     d = json.loads(out.read_text()) if out.exists() else {}
     e, s = d.get("end_to_end", {}), d.get("single_step", {})
-    return save(work, dict(bench="v41_reduced_hdc", exact=bool(rc == 0 and d.get("status") == "pass"),
+    return save(work, dict(bench="v41_reduced_hdc", exact=hdc_exact(d), lint_clean=hdc_lint(d), campaign_status=d.get("status"),
                            cycles=s.get("cycles"), token=s.get("next_token"), e2e_cycles=e.get("total_cycles"),
                            generated=e.get("generated_tokens"), returncode=rc, wall_seconds=sec))
 
@@ -138,7 +152,7 @@ def qwen_hdc(work):
     rc, sec = run([HPY, TOOLS / "rtl_hdc_decode_campaign.py", "--output", out], work, "campaign")
     d = json.loads(out.read_text()) if out.exists() else {}
     e, s = d.get("end_to_end", {}), d.get("single_step", {})
-    return save(work, dict(bench="qwen_reduced_hdc", exact=bool(rc == 0 and d.get("status") == "pass"),
+    return save(work, dict(bench="qwen_reduced_hdc", exact=hdc_exact(d), lint_clean=hdc_lint(d), campaign_status=d.get("status"),
                            cycles=s.get("cycles"), token=s.get("next_token"), e2e_cycles=e.get("total_cycles"),
                            generated=e.get("generated_tokens"), returncode=rc, wall_seconds=sec))
 
