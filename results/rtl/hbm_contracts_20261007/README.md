@@ -3,13 +3,13 @@
 Stream `hbm-contracts`, branch `claude/hbm-contracts-20261007`. Each contract below now has RTL, an exactness bench with
 negative controls, and a physical screen launched through the closure loop. The bench record is
 [`gate_all/record.json`](gate_all/record.json): `tools/hbm_contracts_gate.py --suite all`, Verilator 5.032, with
-12 positives and 19 negatives, all behaving as required. Every source is pinned by sha256 in that record. The SM → SU
+12 positives and 20 negatives, all behaving as required. Every source is pinned by sha256 in that record. The SM → SU
 golden composition is in [`sm_su_composed/`](sm_su_composed/).
 
 | # | contract | RTL | bench verdict | cycles / token | route (loop job) |
 |---|---|---|---|---|---|
 | 1 | SM → SU native result edge | `rtl/hbm_accel/contracts_20261007/ot_hbm_sm_su_result_edge.sv`, `ot_hbm_su_result_ingress.sv` | exact: 12/12 golden cases, both SM variants; 2 standalone positives; 6 negatives | 1,029 priced (measured ≤ that, see below) | `hbm_su_rin-*` |
-| 2 | native credit producer (collective CDC) | `rtl/hbm_accel/contracts_20261007/ot_hbm_coll_credit_producer.sv` | 2 positives, 7 negatives | 0 per token; +3 cycles at link-up | `hbm_credit-*` |
+| 2 | native credit producer (collective CDC) | `rtl/hbm_accel/contracts_20261007/ot_hbm_coll_credit_producer.sv` | 2 positives, 8 negatives | 0 per token; +3 cycles at link-up | `hbm_credit-*` |
 | 3 | packet SRAM II=1 refill | `rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo_refill.sv` (`ENABLE_SRAM=2` / `PACKET_SRAM=2`) | 4 positives, 3 negatives | removes the II=3 cap (+30.78 µs AR / +172 µs MTP in the design ledger) | `hbm_pkt_ii1-*` |
 | 4 | clock lock | `rtl/hbm_accel/contracts_20261007/ot_hbm_coll_idle_insert.sv` | 4 positives (±200 ppm, at the bound, 1 %), 4 negatives | 0 for bursts ≤ 1,024 flits; worst case 0.098 % of TX slots | `hbm_idle-*` |
 
@@ -59,7 +59,14 @@ golden composition is in [`sm_su_composed/`](sm_su_composed/).
   - `ot_hbm_coll_credit_consumer` is the partner. It computes `avail = (READY ? 256 : 0) + K - sent (mod 512)`, and C is added on READY, never counted.
 - **TX flight gate** (`ot_hbm_coll_tx_flight_gate`):
   - It issues only while `issued - sync(TX CDC pops) < D_tx`.
-  - The elaboration check is `D_tx >= WSTG + 2*SYNC + H + 5 = 25`.
+  - The popped count and `allow` are registered, so there is no combinational path from the synchroniser to the
+    issue decision. The first physical screen had one (SS −127.6 ps, `allow` and `can_send` driven combinationally
+    to the block pins). Both are now registered and conservative: the bound is never exceeded, and inflight ≤ D_tx stays exact.
+  - The elaboration check is `D_tx >= WSTG + 2*SYNC + H + 7 = 27`: the design model's 25 plus those two registers.
+  - Measured in the bench: full rate down to D_tx = 22; D_tx = 21 loses rate (82–91 %, negative `NEG_credit_dtx21_rate`).
+    The default D_tx = 64 is the TX CDC depth.
+- **Consumer output.** `can_send` / `avail` are registered from the already-registered K and the send count that
+  includes the current send. They never exceed the true availability. The credit loop gains one edge (242 + 1 of 256).
 - **Assertions** (simulation):
   - CREDIT_WIDTH;
   - CREDIT_LOSS (a pop before READY);
@@ -75,7 +82,7 @@ golden composition is in [`sm_su_composed/`](sm_su_composed/).
   - A continuous drain sustains ≥ 98 % rate at C = 256 over the 240-cycle conservative loop.
   - Conservation holds after quiesce.
   - Coordinated reset works with either domain released 400 cycles late, and with simultaneous release.
-  - The TX gate shows no CDC overflow at D_tx = 64 under long PHY stalls, and full rate at D_tx = 25.
+  - The TX gate shows no CDC overflow at D_tx = 64 under long PHY stalls, and full rate at D_tx = 27.
 - **Negatives.** Each fails as required:
 
   | negative | failure |
@@ -86,9 +93,10 @@ golden composition is in [`sm_su_composed/`](sm_su_composed/).
   | CW = 8 | WIDTH |
   | C = 192 | CREDIT_RATE |
   | TX gate on CDC occupancy only | TX_FLIGHT_OVERFLOW |
-  | D_tx = 24 | bound |
+  | D_tx = 26 | refused at elaboration |
+  | D_tx = 21 with the bound check removed | TX_RATE |
 
-- **Cost.** 0 cycles per token. About 119 flops for producer, synchronisers, consumer and gate (Yosys count of `hfd_coll_credit_prod`).
+- **Cost.** 0 cycles per token. About 140 flops for producer, synchronisers, consumer, gate and reset synchronisers (Yosys count of `hfd_coll_credit_prod`).
 - **Integration.** The endpoint's `rx_credit` pulse and the bench preload are replaced by K/READY carried in the PHY TX control field. That carriage is a vendor-PHY field and remains a labelled assumption.
 
 ## 3. Packet SRAM II=1 refill

@@ -25,7 +25,7 @@ BLOCKS = dict(
     su_rin=dict(top='hfd_su_result_ingress', src=[CT + 'ot_hbm_su_result_ingress.sv', CT + 'hfd_sm_su_edge.sv'],
                 macros=[M64], die=(230, 150), density=.55),
     credit=dict(top='hfd_coll_credit_prod', src=[CT + 'ot_hbm_coll_credit_producer.sv', CT + 'hfd_coll_credit.sv'],
-                macros=[], die=(40, 40), density=.55),
+                macros=[], die=(40, 40), density=.55, sdc=['physical/hbm_contracts_20261007/credit_reset.sdc']),
     idle=dict(top='hfd_coll_idle_tx', src=[CT + 'ot_hbm_coll_idle_insert.sv', CT + 'hfd_coll_idle_tx.sv'],
               macros=[], die=(30, 30), density=.55),
 )
@@ -51,6 +51,8 @@ def command(block, out):
             '--nickname-tag', 'hc_' + block,
             '--synth-timeout-seconds', 'unlimited', '--flow-timeout-seconds', 'unlimited',
             '--keep-workdir', str(out / 'work'), '--output', str(out / 'physical.json')]
+    for extra in b.get('sdc', []):
+        cmd += ['--sdc-append', extra]
     for m in b['macros']:
         cmd += ['--macro-view', f'{m}=physical/asap7_memory_macros/{m}']
     if b['macros']:

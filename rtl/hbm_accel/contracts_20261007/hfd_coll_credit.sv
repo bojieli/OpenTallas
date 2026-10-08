@@ -3,12 +3,18 @@
 // synchronisers + one partner consumer + one TX flight gate.  For the single-clock screen the PHY and
 // partner domains are tied to clk, so every synchroniser path is timed as a full single-cycle path
 // (stricter than the asynchronous false path the real crossing gets).
+// Both reset inputs enter through local async-assert / 2-edge-release synchronisers (as
+// ot_hbm_collective_reset_entry does on the die); the raw reset ports are false paths in the screen SDC.
 module hfd_coll_credit_prod(
- input wire clk,rst_n,phy_rst_n,rb_pop,send,issue,cdc_wr,phy_pop,
+ input wire clk,rst_in_n,phy_rst_in_n,rb_pop,send,issue,cdc_wr,phy_pop,
  input wire [8:0] k_gray_link,input wire ready_link,
  output wire [8:0] k_gray_ph,output wire ready_ph,
  output wire can_send,allow,output wire [8:0] avail);
  wire [8:0] k_gray,k_seen;wire ready,ready_seen;wire [7:0] infl;
+ (* ASYNC_REG="TRUE" *) reg [1:0] rs,ps;
+ always @(posedge clk or negedge rst_in_n)if(!rst_in_n)rs<=2'b00;else rs<={rs[0],1'b1};
+ always @(posedge clk or negedge phy_rst_in_n)if(!phy_rst_in_n)ps<=2'b00;else ps<={ps[0],1'b1};
+ wire rst_n=rs[1],phy_rst_n=ps[1];
  ot_hbm_coll_credit_producer #(.C(256),.CW(9),.SYNC(2)) u_p(.clk(clk),.rst_n(rst_n),.phy_rst_n(phy_rst_n),
   .rb_pop(rb_pop),.k_gray(k_gray),.ready(ready));
  ot_hbm_coll_credit_phy_tx #(.CW(9),.SYNC(2)) u_t(.pclk(clk),.prst_n(phy_rst_n),.k_gray_core(k_gray),

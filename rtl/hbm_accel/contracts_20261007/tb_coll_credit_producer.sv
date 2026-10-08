@@ -9,7 +9,7 @@
 // release orders; TX: no CDC overflow at DTX = CDC depth under stalls, full rate at DTX_MIN.
 // -DNEG_PRELOAD: partner preloads C at its own reset (the legacy stub) -> CREDIT_LOSS / OVERFLOW.
 module tb_coll_credit_producer;
- parameter integer C=256, CW=9, SYNC=2, FWD=77, RET=137, NFLITS=30000, DTX_MIN=25, WSTG=14, H=2;
+ parameter integer C=256, CW=9, SYNC=2, FWD=77, RET=137, NFLITS=30000, DTX_MIN=27, WSTG=14, H=2;
  // PHY slightly faster than core (same nominal rate, slow phase sweep) so every synchroniser sees edges
  // inside its metastability window; the partner runs at the core rate (locked).  Arrival <= drain.
  parameter real TCORE_PS=833.333, TPH_PS=832.9, TPART_PS=833.333;

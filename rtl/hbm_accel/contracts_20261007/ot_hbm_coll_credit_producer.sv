@@ -13,7 +13,8 @@
 //                                The configured C is added on READY (one synchronised level, never counted).
 //   ot_hbm_coll_tx_flight_gate   TX endpoint, CORE domain: issue only while issued - sync(TX CDC pops) < DTX,
 //                                counting the WSTG flight and the Gray/sync lag; full rate needs
-//                                DTX >= WSTG + 2*SYNC + H + 5 (= 25 at WSTG 14, SYNC 2, H 2).
+//                                DTX >= WSTG + 2*SYNC + H + 7 (= 27 at WSTG 14, SYNC 2, H 2; the design model's 25
+//                                plus the registered popped count and the registered allow).
 // Contract assertions (simulation; `ifndef SYNTHESIS): CREDIT_WIDTH (2^CW > C), CREDIT_LOSS (a pop before
 // READY: data reached the buffer before any grant), CREDIT_READY_EARLY, CREDIT_OVERGRANT (avail > C),
 // CREDIT_OVERSEND (send with avail 0), CREDIT_STALE (partner keeps credits after the far end left READY
@@ -108,15 +109,22 @@ module ot_hbm_coll_credit_consumer #(parameter integer C=256, CW=9, SYNC=2)(
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin kb_q<=0;rdy_q<=0;end else begin kb_q<=kb;rdy_q<=rdy;end
  localparam [CW-1:0] CC=C[CW-1:0];
- wire [CW-1:0] avail=(rdy_q?CC:{CW{1'b0}})+kb_q-sent_q;
- assign can_send=avail!=0;
+ // Registered credit view (no combinational path to the partner's launch decision): the next edge's
+ // availability is computed from the already-registered K (one edge older, so never more than the truth)
+ // and the send count INCLUDING this edge's send.  avail_q <= truth always; the bound is exact.
+ wire [CW-1:0] sent_n=sent_q+{{(CW-1){1'b0}},send};
+ wire [CW-1:0] avail_n=(rdy_q?CC:{CW{1'b0}})+kb_q-sent_n;
+ reg [CW-1:0] avail_q;reg can_q;
  always @(posedge clk or negedge rst_n)
-  if(!rst_n)sent_q<=0;else if(send)sent_q<=sent_q+1'b1;
- assign avail_o=avail;assign k_seen_o=kb_q;assign ready_seen_o=rdy_q;
+  if(!rst_n)begin sent_q<=0;avail_q<=0;can_q<=0;end
+  else begin sent_q<=sent_n;avail_q<=avail_n;can_q<=avail_n!=0;end
+ assign can_send=can_q;
+ assign avail_o=avail_q;assign k_seen_o=kb_q;assign ready_seen_o=rdy_q;
 `ifndef SYNTHESIS
+ wire [CW-1:0] avail=(rdy_q?CC:{CW{1'b0}})+kb_q-sent_q;   // the true availability at this edge
  always @(posedge clk)if(rst_n)begin
   if(avail>CC)$fatal(1,"CREDIT_OVERGRANT avail=%0d > C=%0d (k_seen=%0d sent=%0d ready=%0d)",avail,C,kb_q,sent_q,rdy_q);
-  if(send&&avail==0)$fatal(1,"CREDIT_OVERSEND send with no credit");
+  if(send&&(avail==0||!can_q))$fatal(1,"CREDIT_OVERSEND send with no credit");
   if(rdy&&rdy_q&&((kb-kb_q)&{CW{1'b1}})>CC)$fatal(1,"CREDIT_K_BACKWARDS synchronised K moved from %0d to %0d",kb_q,kb);
   if(!rdy&&rdy_q&&(sent_q!=0||kb_q!=0))$fatal(1,"CREDIT_STALE far end left READY; partner must be reset with it (coordinated cold reset)");
  end
@@ -131,9 +139,9 @@ module ot_hbm_coll_tx_flight_gate #(parameter integer DTX=64, DW=8, WSTG=14, SYN
  input wire phy_pop,             // TX CDC read (PHY)
  output wire allow,              // core may issue this cycle
  output wire [DW-1:0] inflight_o);
- localparam integer BOUND=WSTG+2*SYNC+H+5;
+ localparam integer BOUND=WSTG+2*SYNC+H+7;   // +2: registered popped count and registered allow
 `ifndef SYNTHESIS
- initial if(DTX<BOUND)$fatal(1,"DTX=%0d below the full-rate bound D_tx >= WSTG+2*SYNC+H+5 = %0d",DTX,BOUND);
+ initial if(DTX<BOUND)$fatal(1,"DTX=%0d below the full-rate bound D_tx >= WSTG+2*SYNC+H+7 = %0d",DTX,BOUND);
  initial if((1<<DW)<=DTX+WSTG)$fatal(1,"DW too narrow for DTX");
 `endif
  // PHY-domain pop count as Gray, synchronised into core.
@@ -145,16 +153,19 @@ module ot_hbm_coll_tx_flight_gate #(parameter integer DTX=64, DW=8, WSTG=14, SYN
  ot_hbm_coll_sync #(.W(DW),.SYNC(SYNC)) u_s(.clk(clk),.rst_n(rst_n),.d(pg),.q(pgs));
  reg [DW-1:0] popped_s;integer j;
  always @*begin popped_s[DW-1]=pgs[DW-1];for(j=DW-2;j>=0;j=j-1)popped_s[j]=popped_s[j+1]^pgs[j];end
- reg [DW-1:0] issued,written;
+ reg [DW-1:0] issued,written,ps_q;reg allow_q;
+ wire [DW-1:0] issued_n=issued+{{(DW-1){1'b0}},issue};
+ wire [DW-1:0] written_n=written+{{(DW-1){1'b0}},cdc_wr};
+ // allow for the NEXT edge from registered counts: the popped count is one edge older (never ahead of the
+ // truth) and the issue count includes this edge's issue, so inflight <= DTX holds exactly.
+ wire [DW-1:0] inflight_n=issued_n-ps_q;
  always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin issued<=0;written<=0;end
-  else begin if(issue)issued<=issued+1'b1;if(cdc_wr)written<=written+1'b1;end
- wire [DW-1:0] cdc_occ=written-popped_s;
- wire [DW-1:0] inflight=issued-popped_s;
- assign allow=inflight<DTX;
- assign inflight_o=inflight;
+  if(!rst_n)begin issued<=0;written<=0;ps_q<=0;allow_q<=0;end
+  else begin issued<=issued_n;written<=written_n;ps_q<=popped_s;allow_q<=inflight_n<DTX;end
+ assign allow=allow_q;
+ assign inflight_o=issued-ps_q;
 `ifndef SYNTHESIS
- always @(posedge clk)if(rst_n&&issue&&!allow)$fatal(1,"TX_FLIGHT issue beyond D_tx");
- wire unused_occ=^cdc_occ;
+ always @(posedge clk)if(rst_n&&issue&&!allow_q)$fatal(1,"TX_FLIGHT issue beyond D_tx");
+ wire unused_w=^written_n;
 `endif
 endmodule
