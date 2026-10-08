@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.s81.bf_deep_exact.v1",
+ "bench": "tools/s81/bf_txn_bench.py --variant recut --level 4|5 (ot-epyc3, Verilator 5.050, each case --only)",
+ "source_commits": {
+  "rtl": "9c21d9e49 (routed)",
+  "mutant_rerun": "a commit after 9c21d9e49 that changes only the BF_DEEP_MUTANT_MUL ifdef and the bench case list"
+ },
+ "positive": {
+  "RECUT4": "TXN MATCH 456 partials, lag ns min 3.332 max 19.159 mean 8.462 (4 / 10.2 / 23 cycles)",
+  "RECUT5": "TXN MATCH 456 partials, lag ns min 3.332 max 24.157 mean 9.864 (4 / 11.8 / 29 cycles)"
+ },
+ "negatives_fail_as_required": [
+  "QP_MUTANT_DP",
+  "BF_DEEP_MUTANT_LZ (SPLIT6 combine offset)",
+  "BF_DEEP_MUTANT_MUL (product LSB in the added encode stage)"
+ ],
+ "not_exercised": {
+  "BF_DEEP_MUTANT_HZ": "issuer BF hazard window kept at LAT: TXN MATCH with identical lag -- this workload never revisits a BF chain slot within 11 cycles, so the widened window never binds",
+  "CH_MUTANT_PD": "chain forward candidates swapped: TXN MATCH -- no BF revisit at exactly LAT+1 on this workload (every revisit reads the accumulator)",
+  "GRADUAL_RNE_split": "the first mul mutant (guard leak in the subnormal path) passed: no subnormal BF16 products in this workload"
+ },
+ "verdict": "PASS on this workload (positive exact, 3 negatives fail); the revisit window, forward path and subnormal encode split need a directed vehicle before adoption"
+}
