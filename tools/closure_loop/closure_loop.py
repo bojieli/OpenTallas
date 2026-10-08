@@ -2771,10 +2771,17 @@ def do_verdict(j, fleet, stl):
         # structural (pin registers / input-min / H1 SDC), a hold ECO would crawl the same way -> NEEDS_RTL with it
         r = ssh(j["host"], f"for f in $(find {j['run']}/routes -name 'ot_hold_stall_*.rpt' -not -path '*_cal/*' 2>/dev/null "
                            f"| head -2); do echo \"== $f\"; head -45 $f; done", timeout=120)
-        if "OT_HOLD_STALL" in r.stdout:
+        # drive-0828: the guard only holds when the STALLED window explains the sign-off miss.  A repair that stalled at
+        # a residue far shallower than the final FF number (h1hm80: CTS stall I2O=2@-0.2, sign-off FF -8.2 on reg->out
+        # at the routed reference) left the miss to post-route degradation: that is the post-route hold ECO's job.
+        wins = re.findall(r"^([IR]2[OR])\s+(\d+)\s+(-?[\d.]+)", r.stdout, re.M)
+        stall_worst = min((float(c) for _, _, c in wins), default=None)
+        if "OT_HOLD_STALL" in r.stdout and stall_worst is not None and stall_worst > ff + 2.0:
+            event(j, f"hold-stall window worst {stall_worst:+.1f} is shallower than sign-off FF {ff:+.1f}: "
+                     f"the miss grew after the stalled repair -> post-route hold ECO, not NEEDS_RTL")
+        elif "OT_HOLD_STALL" in r.stdout:
             j["hold_window"] = r.stdout[-6000:]
-            cls = " ".join(re.findall(r"^([IR]2[OR])\s+(\d+)\s+(-?[\d.]+)", r.stdout, re.M) and
-                           [f"{a}={b}@{c}" for a, b, c in re.findall(r"^([IR]2[OR])\s+(\d+)\s+(-?[\d.]+)", r.stdout, re.M)])
+            cls = " ".join(f"{a}={b}@{c}" for a, b, c in wins)
             finish(j, "NEEDS_RTL", f"FF hold {ff:+.1f}: route hold repair stalled; window {cls}"[:300],
                    f"NEEDS_RTL: FF hold {ff:+.1f} ps after a STALLED route-time hold repair (hold-stall guard). Window by "
                    f"path class: {cls}. Structural fix per REDESIGN_RULES (pin registers / input-min, H1 SDC); no ECO.\n"
