@@ -112,6 +112,89 @@ module ot_hfd_loader_half #(parameter integer ENABLE=0,ND=2,SHARED=0)(
   always @(*) if (!clk_mem) hen_m_l = hen_m_q;
   assign ck_ms = clk_mem & hen_m_l; assign ph_m = hen_m_q;
  end endgenerate
+ wire k_s_awvalid;
+ wire k_s_awready;
+ wire [11:0] k_s_awaddr;
+ wire k_s_wvalid;
+ wire k_s_wready;
+ wire [31:0] k_s_wdata;
+ wire [3:0] k_s_wstrb;
+ wire k_s_bvalid;
+ wire k_s_bready;
+ wire k_s_arvalid;
+ wire k_s_arready;
+ wire [11:0] k_s_araddr;
+ wire k_s_rvalid;
+ wire k_s_rready;
+ wire [31:0] k_s_rdata;
+ wire k_h_awvalid;
+ wire k_h_awready;
+ wire [11:0] k_h_awaddr;
+ wire k_h_wvalid;
+ wire k_h_wready;
+ wire [31:0] k_h_wdata;
+ wire [3:0] k_h_wstrb;
+ wire k_h_bvalid;
+ wire k_h_bready;
+ wire k_h_arvalid;
+ wire k_h_arready;
+ wire [11:0] k_h_araddr;
+ wire k_h_rvalid;
+ wire k_h_rready;
+ wire [31:0] k_h_rdata;
+ wire k_h_dma_arvalid;
+ wire k_h_dma_arready;
+ wire [63:0] k_h_dma_araddr;
+ wire k_h_dma_rvalid;
+ wire k_h_dma_rready;
+ wire [63:0] k_h_dma_rdata;
+ wire [1:0] k_h_dma_rresp;
+ wire k_h_dma_rlast;
+ wire k_h_dma_awvalid;
+ wire k_h_dma_awready;
+ wire [63:0] k_h_dma_awaddr;
+ wire k_h_dma_wvalid;
+ wire k_h_dma_wready;
+ wire [63:0] k_h_dma_wdata;
+ wire [7:0] k_h_dma_wstrb;
+ wire k_h_dma_bvalid;
+ wire k_h_dma_bready;
+ wire [1:0] k_h_dma_bresp;
+ wire k_m_arvalid;
+ wire k_m_arready;
+ wire [63:0] k_m_araddr;
+ wire [7:0] k_m_arlen;
+ wire [2:0] k_m_arsize;
+ wire k_m_rvalid;
+ wire k_m_rready;
+ wire [63:0] k_m_rdata;
+ wire [1:0] k_m_rresp;
+ wire k_m_rlast;
+ wire k_m_awvalid;
+ wire k_m_awready;
+ wire [63:0] k_m_awaddr;
+ wire [7:0] k_m_awlen;
+ wire [2:0] k_m_awsize;
+ wire k_m_wvalid;
+ wire k_m_wready;
+ wire [63:0] k_m_wdata;
+ wire [7:0] k_m_wstrb;
+ wire k_m_wlast;
+ wire k_m_bvalid;
+ wire k_m_bready;
+ wire [1:0] k_m_bresp;
+ wire [ND-1:0] k_req_v;
+ wire [ND-1:0] k_req_rdy;
+ wire [ND-1:0] k_req_we;
+ wire [ND*32-1:0] k_req_addr;
+ wire [ND*256-1:0] k_req_wdata;
+ wire [ND*32-1:0] k_req_wstrb;
+ wire [ND*16-1:0] k_req_tag;
+ wire [ND-1:0] k_rsp_v;
+ wire [ND-1:0] k_rsp_rdy;
+ wire [ND-1:0] k_rsp_we;
+ wire [ND*16-1:0] k_rsp_tag;
+ wire [ND*256-1:0] k_rsp_data;
  wire c_s_awready;
  wire c_s_wready;
  wire c_s_bvalid;
@@ -134,7 +217,137 @@ module ot_hfd_loader_half #(parameter integer ENABLE=0,ND=2,SHARED=0)(
  wire c_m_bready;
  wire [ND-1:0] c_req_v;
  wire [ND-1:0] c_rsp_rdy;
- ot_hfd_loader_host_m #(.ENABLE(ENABLE),.ND(ND)) u_core(.clk_host(ck_hs),.rst_host_n(rst_host_n),.clk_mem(ck_ms),.rst_mem_n(rst_mem_n),.s_awvalid(s_awvalid),.s_awready(c_s_awready),.s_awaddr(s_awaddr),.s_wvalid(s_wvalid),.s_wready(c_s_wready),.s_wdata(s_wdata),.s_wstrb(s_wstrb),.s_bvalid(c_s_bvalid),.s_bready(s_bready),.s_arvalid(s_arvalid),.s_arready(c_s_arready),.s_araddr(s_araddr),.s_rvalid(c_s_rvalid),.s_rready(s_rready),.s_rdata(s_rdata),.h_awvalid(c_h_awvalid),.h_awready(h_awready),.h_awaddr(h_awaddr),.h_wvalid(c_h_wvalid),.h_wready(h_wready),.h_wdata(h_wdata),.h_wstrb(h_wstrb),.h_bvalid(h_bvalid),.h_bready(c_h_bready),.h_arvalid(c_h_arvalid),.h_arready(h_arready),.h_araddr(h_araddr),.h_rvalid(h_rvalid),.h_rready(c_h_rready),.h_rdata(h_rdata),.h_dma_arvalid(h_dma_arvalid),.h_dma_arready(c_h_dma_arready),.h_dma_araddr(h_dma_araddr),.h_dma_rvalid(c_h_dma_rvalid),.h_dma_rready(h_dma_rready),.h_dma_rdata(h_dma_rdata),.h_dma_rresp(h_dma_rresp),.h_dma_rlast(h_dma_rlast),.h_dma_awvalid(h_dma_awvalid),.h_dma_awready(c_h_dma_awready),.h_dma_awaddr(h_dma_awaddr),.h_dma_wvalid(h_dma_wvalid),.h_dma_wready(c_h_dma_wready),.h_dma_wdata(h_dma_wdata),.h_dma_wstrb(h_dma_wstrb),.h_dma_bvalid(c_h_dma_bvalid),.h_dma_bready(h_dma_bready),.h_dma_bresp(h_dma_bresp),.m_arvalid(c_m_arvalid),.m_arready(m_arready),.m_araddr(m_araddr),.m_arlen(m_arlen),.m_arsize(m_arsize),.m_rvalid(m_rvalid),.m_rready(c_m_rready),.m_rdata(m_rdata),.m_rresp(m_rresp),.m_rlast(m_rlast),.m_awvalid(c_m_awvalid),.m_awready(m_awready),.m_awaddr(m_awaddr),.m_awlen(m_awlen),.m_awsize(m_awsize),.m_wvalid(c_m_wvalid),.m_wready(m_wready),.m_wdata(m_wdata),.m_wstrb(m_wstrb),.m_wlast(m_wlast),.m_bvalid(m_bvalid),.m_bready(c_m_bready),.m_bresp(m_bresp),.req_v(c_req_v),.req_rdy(req_rdy),.req_we(req_we),.req_addr(req_addr),.req_wdata(req_wdata),.req_wstrb(req_wstrb),.req_tag(req_tag),.rsp_v(rsp_v),.rsp_rdy(c_rsp_rdy),.rsp_we(rsp_we),.rsp_tag(rsp_tag),.rsp_data(rsp_data),.irq(irq),.fault(fault));
+ ot_hfd_loader_host_m #(.ENABLE(ENABLE),.ND(ND)) u_core(.clk_host(ck_hs),.rst_host_n(rst_host_n),.clk_mem(ck_ms),.rst_mem_n(rst_mem_n),.s_awvalid(k_s_awvalid),.s_awready(k_s_awready),.s_awaddr(k_s_awaddr),.s_wvalid(k_s_wvalid),.s_wready(k_s_wready),.s_wdata(k_s_wdata),.s_wstrb(k_s_wstrb),.s_bvalid(k_s_bvalid),.s_bready(k_s_bready),.s_arvalid(k_s_arvalid),.s_arready(k_s_arready),.s_araddr(k_s_araddr),.s_rvalid(k_s_rvalid),.s_rready(k_s_rready),.s_rdata(k_s_rdata),.h_awvalid(k_h_awvalid),.h_awready(k_h_awready),.h_awaddr(k_h_awaddr),.h_wvalid(k_h_wvalid),.h_wready(k_h_wready),.h_wdata(k_h_wdata),.h_wstrb(k_h_wstrb),.h_bvalid(k_h_bvalid),.h_bready(k_h_bready),.h_arvalid(k_h_arvalid),.h_arready(k_h_arready),.h_araddr(k_h_araddr),.h_rvalid(k_h_rvalid),.h_rready(k_h_rready),.h_rdata(k_h_rdata),.h_dma_arvalid(k_h_dma_arvalid),.h_dma_arready(k_h_dma_arready),.h_dma_araddr(k_h_dma_araddr),.h_dma_rvalid(k_h_dma_rvalid),.h_dma_rready(k_h_dma_rready),.h_dma_rdata(k_h_dma_rdata),.h_dma_rresp(k_h_dma_rresp),.h_dma_rlast(k_h_dma_rlast),.h_dma_awvalid(k_h_dma_awvalid),.h_dma_awready(k_h_dma_awready),.h_dma_awaddr(k_h_dma_awaddr),.h_dma_wvalid(k_h_dma_wvalid),.h_dma_wready(k_h_dma_wready),.h_dma_wdata(k_h_dma_wdata),.h_dma_wstrb(k_h_dma_wstrb),.h_dma_bvalid(k_h_dma_bvalid),.h_dma_bready(k_h_dma_bready),.h_dma_bresp(k_h_dma_bresp),.m_arvalid(k_m_arvalid),.m_arready(k_m_arready),.m_araddr(k_m_araddr),.m_arlen(k_m_arlen),.m_arsize(k_m_arsize),.m_rvalid(k_m_rvalid),.m_rready(k_m_rready),.m_rdata(k_m_rdata),.m_rresp(k_m_rresp),.m_rlast(k_m_rlast),.m_awvalid(k_m_awvalid),.m_awready(k_m_awready),.m_awaddr(k_m_awaddr),.m_awlen(k_m_awlen),.m_awsize(k_m_awsize),.m_wvalid(k_m_wvalid),.m_wready(k_m_wready),.m_wdata(k_m_wdata),.m_wstrb(k_m_wstrb),.m_wlast(k_m_wlast),.m_bvalid(k_m_bvalid),.m_bready(k_m_bready),.m_bresp(k_m_bresp),.req_v(k_req_v),.req_rdy(k_req_rdy),.req_we(k_req_we),.req_addr(k_req_addr),.req_wdata(k_req_wdata),.req_wstrb(k_req_wstrb),.req_tag(k_req_tag),.rsp_v(k_rsp_v),.rsp_rdy(k_rsp_rdy),.rsp_we(k_rsp_we),.rsp_tag(k_rsp_tag),.rsp_data(k_rsp_data),.irq(irq),.fault(fault));
+ genvar g_s_aw;
+ for (g_s_aw = 0; g_s_aw < 1; g_s_aw = g_s_aw + 1) begin : u_sk_s_aw
+  wire ov; wire [$bits(s_awaddr)-1:0] od;
+  ot_ldh_slice #(.W($bits(s_awaddr))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(s_awvalid), .id({s_awaddr}), .ir(c_s_awready), .ov(k_s_awvalid), .od(od), .orr(k_s_awready));
+  assign {k_s_awaddr} = od;
+ end
+ genvar g_s_w;
+ for (g_s_w = 0; g_s_w < 1; g_s_w = g_s_w + 1) begin : u_sk_s_w
+  wire ov; wire [$bits(s_wdata) + $bits(s_wstrb)-1:0] od;
+  ot_ldh_slice #(.W($bits(s_wdata) + $bits(s_wstrb))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(s_wvalid), .id({s_wdata, s_wstrb}), .ir(c_s_wready), .ov(k_s_wvalid), .od(od), .orr(k_s_wready));
+  assign {k_s_wdata, k_s_wstrb} = od;
+ end
+ genvar g_s_b;
+ for (g_s_b = 0; g_s_b < 1; g_s_b = g_s_b + 1) begin : u_sk_s_b
+  wire [1-1:0] od;
+  ot_ldh_slice #(.W(1)) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(k_s_bvalid), .id(1'b0), .ir(k_s_bready), .ov(c_s_bvalid), .od(od), .orr(s_bready));
+ end
+ genvar g_s_ar;
+ for (g_s_ar = 0; g_s_ar < 1; g_s_ar = g_s_ar + 1) begin : u_sk_s_ar
+  wire ov; wire [$bits(s_araddr)-1:0] od;
+  ot_ldh_slice #(.W($bits(s_araddr))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(s_arvalid), .id({s_araddr}), .ir(c_s_arready), .ov(k_s_arvalid), .od(od), .orr(k_s_arready));
+  assign {k_s_araddr} = od;
+ end
+ genvar g_s_r;
+ for (g_s_r = 0; g_s_r < 1; g_s_r = g_s_r + 1) begin : u_sk_s_r
+  wire [$bits(s_rdata)-1:0] od;
+  ot_ldh_slice #(.W($bits(s_rdata))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(k_s_rvalid), .id({k_s_rdata}), .ir(k_s_rready), .ov(c_s_rvalid), .od(od), .orr(s_rready));
+  assign {s_rdata} = od;
+ end
+ genvar g_h_aw;
+ for (g_h_aw = 0; g_h_aw < 1; g_h_aw = g_h_aw + 1) begin : u_sk_h_aw
+  wire [$bits(h_awaddr)-1:0] od;
+  ot_ldh_slice #(.W($bits(h_awaddr))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(k_h_awvalid), .id({k_h_awaddr}), .ir(k_h_awready), .ov(c_h_awvalid), .od(od), .orr(h_awready));
+  assign {h_awaddr} = od;
+ end
+ genvar g_h_w;
+ for (g_h_w = 0; g_h_w < 1; g_h_w = g_h_w + 1) begin : u_sk_h_w
+  wire [$bits(h_wdata) + $bits(h_wstrb)-1:0] od;
+  ot_ldh_slice #(.W($bits(h_wdata) + $bits(h_wstrb))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(k_h_wvalid), .id({k_h_wdata, k_h_wstrb}), .ir(k_h_wready), .ov(c_h_wvalid), .od(od), .orr(h_wready));
+  assign {h_wdata, h_wstrb} = od;
+ end
+ genvar g_h_b;
+ for (g_h_b = 0; g_h_b < 1; g_h_b = g_h_b + 1) begin : u_sk_h_b
+  wire ov; wire [1-1:0] od;
+  ot_ldh_slice #(.W(1)) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(h_bvalid), .id(1'b0), .ir(c_h_bready), .ov(k_h_bvalid), .od(od), .orr(k_h_bready));
+ end
+ genvar g_h_ar;
+ for (g_h_ar = 0; g_h_ar < 1; g_h_ar = g_h_ar + 1) begin : u_sk_h_ar
+  wire [$bits(h_araddr)-1:0] od;
+  ot_ldh_slice #(.W($bits(h_araddr))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(k_h_arvalid), .id({k_h_araddr}), .ir(k_h_arready), .ov(c_h_arvalid), .od(od), .orr(h_arready));
+  assign {h_araddr} = od;
+ end
+ genvar g_h_r;
+ for (g_h_r = 0; g_h_r < 1; g_h_r = g_h_r + 1) begin : u_sk_h_r
+  wire ov; wire [$bits(h_rdata)-1:0] od;
+  ot_ldh_slice #(.W($bits(h_rdata))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(h_rvalid), .id({h_rdata}), .ir(c_h_rready), .ov(k_h_rvalid), .od(od), .orr(k_h_rready));
+  assign {k_h_rdata} = od;
+ end
+ genvar g_h_dma_aw;
+ for (g_h_dma_aw = 0; g_h_dma_aw < 1; g_h_dma_aw = g_h_dma_aw + 1) begin : u_sk_h_dma_aw
+  wire ov; wire [$bits(h_dma_awaddr)-1:0] od;
+  ot_ldh_slice #(.W($bits(h_dma_awaddr))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(h_dma_awvalid), .id({h_dma_awaddr}), .ir(c_h_dma_awready), .ov(k_h_dma_awvalid), .od(od), .orr(k_h_dma_awready));
+  assign {k_h_dma_awaddr} = od;
+ end
+ genvar g_h_dma_w;
+ for (g_h_dma_w = 0; g_h_dma_w < 1; g_h_dma_w = g_h_dma_w + 1) begin : u_sk_h_dma_w
+  wire ov; wire [$bits(h_dma_wdata) + $bits(h_dma_wstrb)-1:0] od;
+  ot_ldh_slice #(.W($bits(h_dma_wdata) + $bits(h_dma_wstrb))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(h_dma_wvalid), .id({h_dma_wdata, h_dma_wstrb}), .ir(c_h_dma_wready), .ov(k_h_dma_wvalid), .od(od), .orr(k_h_dma_wready));
+  assign {k_h_dma_wdata, k_h_dma_wstrb} = od;
+ end
+ genvar g_h_dma_b;
+ for (g_h_dma_b = 0; g_h_dma_b < 1; g_h_dma_b = g_h_dma_b + 1) begin : u_sk_h_dma_b
+  wire [$bits(h_dma_bresp)-1:0] od;
+  ot_ldh_slice #(.W($bits(h_dma_bresp))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(k_h_dma_bvalid), .id({k_h_dma_bresp}), .ir(k_h_dma_bready), .ov(c_h_dma_bvalid), .od(od), .orr(h_dma_bready));
+  assign {h_dma_bresp} = od;
+ end
+ genvar g_h_dma_ar;
+ for (g_h_dma_ar = 0; g_h_dma_ar < 1; g_h_dma_ar = g_h_dma_ar + 1) begin : u_sk_h_dma_ar
+  wire ov; wire [$bits(h_dma_araddr)-1:0] od;
+  ot_ldh_slice #(.W($bits(h_dma_araddr))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(h_dma_arvalid), .id({h_dma_araddr}), .ir(c_h_dma_arready), .ov(k_h_dma_arvalid), .od(od), .orr(k_h_dma_arready));
+  assign {k_h_dma_araddr} = od;
+ end
+ genvar g_h_dma_r;
+ for (g_h_dma_r = 0; g_h_dma_r < 1; g_h_dma_r = g_h_dma_r + 1) begin : u_sk_h_dma_r
+  wire [$bits(h_dma_rdata) + $bits(h_dma_rresp) + $bits(h_dma_rlast)-1:0] od;
+  ot_ldh_slice #(.W($bits(h_dma_rdata) + $bits(h_dma_rresp) + $bits(h_dma_rlast))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(k_h_dma_rvalid), .id({k_h_dma_rdata, k_h_dma_rresp, k_h_dma_rlast}), .ir(k_h_dma_rready), .ov(c_h_dma_rvalid), .od(od), .orr(h_dma_rready));
+  assign {h_dma_rdata, h_dma_rresp, h_dma_rlast} = od;
+ end
+ genvar g_m_aw;
+ for (g_m_aw = 0; g_m_aw < 1; g_m_aw = g_m_aw + 1) begin : u_sk_m_aw
+  wire [$bits(m_awaddr) + $bits(m_awlen) + $bits(m_awsize)-1:0] od;
+  ot_ldh_slice #(.W($bits(m_awaddr) + $bits(m_awlen) + $bits(m_awsize))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(k_m_awvalid), .id({k_m_awaddr, k_m_awlen, k_m_awsize}), .ir(k_m_awready), .ov(c_m_awvalid), .od(od), .orr(m_awready));
+  assign {m_awaddr, m_awlen, m_awsize} = od;
+ end
+ genvar g_m_w;
+ for (g_m_w = 0; g_m_w < 1; g_m_w = g_m_w + 1) begin : u_sk_m_w
+  wire [$bits(m_wdata) + $bits(m_wstrb) + $bits(m_wlast)-1:0] od;
+  ot_ldh_slice #(.W($bits(m_wdata) + $bits(m_wstrb) + $bits(m_wlast))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(k_m_wvalid), .id({k_m_wdata, k_m_wstrb, k_m_wlast}), .ir(k_m_wready), .ov(c_m_wvalid), .od(od), .orr(m_wready));
+  assign {m_wdata, m_wstrb, m_wlast} = od;
+ end
+ genvar g_m_b;
+ for (g_m_b = 0; g_m_b < 1; g_m_b = g_m_b + 1) begin : u_sk_m_b
+  wire ov; wire [$bits(m_bresp)-1:0] od;
+  ot_ldh_slice #(.W($bits(m_bresp))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(m_bvalid), .id({m_bresp}), .ir(c_m_bready), .ov(k_m_bvalid), .od(od), .orr(k_m_bready));
+  assign {k_m_bresp} = od;
+ end
+ genvar g_m_ar;
+ for (g_m_ar = 0; g_m_ar < 1; g_m_ar = g_m_ar + 1) begin : u_sk_m_ar
+  wire [$bits(m_araddr) + $bits(m_arlen) + $bits(m_arsize)-1:0] od;
+  ot_ldh_slice #(.W($bits(m_araddr) + $bits(m_arlen) + $bits(m_arsize))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(k_m_arvalid), .id({k_m_araddr, k_m_arlen, k_m_arsize}), .ir(k_m_arready), .ov(c_m_arvalid), .od(od), .orr(m_arready));
+  assign {m_araddr, m_arlen, m_arsize} = od;
+ end
+ genvar g_m_r;
+ for (g_m_r = 0; g_m_r < 1; g_m_r = g_m_r + 1) begin : u_sk_m_r
+  wire ov; wire [$bits(m_rdata) + $bits(m_rresp) + $bits(m_rlast)-1:0] od;
+  ot_ldh_slice #(.W($bits(m_rdata) + $bits(m_rresp) + $bits(m_rlast))) u (.clk(ck_hs), .rst_n(rst_host_n), .iv(m_rvalid), .id({m_rdata, m_rresp, m_rlast}), .ir(c_m_rready), .ov(k_m_rvalid), .od(od), .orr(k_m_rready));
+  assign {k_m_rdata, k_m_rresp, k_m_rlast} = od;
+ end
+ genvar g_req;
+ for (g_req = 0; g_req < ND; g_req = g_req + 1) begin : u_sk_req
+  wire [1 + 32 + 256 + 32 + 16-1:0] od;
+  ot_ldh_slice #(.W(1 + 32 + 256 + 32 + 16)) u (.clk(ck_ms), .rst_n(rst_mem_n), .iv(k_req_v[g_req]), .id({k_req_we[g_req*1 +: 1], k_req_addr[g_req*32 +: 32], k_req_wdata[g_req*256 +: 256], k_req_wstrb[g_req*32 +: 32], k_req_tag[g_req*16 +: 16]}), .ir(k_req_rdy[g_req]), .ov(c_req_v[g_req]), .od(od), .orr(req_rdy[g_req]));
+  assign {req_we[g_req*1 +: 1], req_addr[g_req*32 +: 32], req_wdata[g_req*256 +: 256], req_wstrb[g_req*32 +: 32], req_tag[g_req*16 +: 16]} = od;
+ end
+ genvar g_rsp;
+ for (g_rsp = 0; g_rsp < ND; g_rsp = g_rsp + 1) begin : u_sk_rsp
+  wire ov; wire [1 + 16 + 256-1:0] od;
+  ot_ldh_slice #(.W(1 + 16 + 256)) u (.clk(ck_ms), .rst_n(rst_mem_n), .iv(rsp_v[g_rsp]), .id({rsp_we[g_rsp*1 +: 1], rsp_tag[g_rsp*16 +: 16], rsp_data[g_rsp*256 +: 256]}), .ir(c_rsp_rdy[g_rsp]), .ov(k_rsp_v[g_rsp]), .od(od), .orr(k_rsp_rdy[g_rsp]));
+  assign {k_rsp_we[g_rsp*1 +: 1], k_rsp_tag[g_rsp*16 +: 16], k_rsp_data[g_rsp*256 +: 256]} = od;
+ end
  assign s_awready = c_s_awready & {$bits(c_s_awready){ph_h}};
  assign s_wready = c_s_wready & {$bits(c_s_wready){ph_h}};
  assign s_bvalid = c_s_bvalid & {$bits(c_s_bvalid){ph_h}};
@@ -157,4 +370,16 @@ module ot_hfd_loader_half #(parameter integer ENABLE=0,ND=2,SHARED=0)(
  assign m_bready = c_m_bready & {$bits(c_m_bready){ph_h}};
  assign req_v = c_req_v & {$bits(c_req_v){ph_m}};
  assign rsp_rdy = c_rsp_rdy & {$bits(c_rsp_rdy){ph_m}};
+endmodule
+
+// 2-entry register slice: ir and ov / od are registers (or a 1-level function of them); one transfer a cycle.
+module ot_ldh_slice #(parameter integer W = 1) (input wire clk, input wire rst_n, input wire iv, input wire [W-1:0] id,
+    output wire ir, output wire ov, output wire [W-1:0] od, input wire orr);
+ reg [W-1:0] m0, m1; reg wp, rp; reg [1:0] cnt;
+ assign ir = (cnt != 2'd2); assign ov = (cnt != 2'd0); assign od = rp ? m1 : m0;
+ wire push = iv && ir, pop = ov && orr;
+ always @(posedge clk or negedge rst_n)
+  if (!rst_n) begin wp <= 1'b0; rp <= 1'b0; cnt <= 2'd0; end
+  else begin if (push) wp <= ~wp; if (pop) rp <= ~rp; cnt <= cnt + {1'b0, push} - {1'b0, pop}; end
+ always @(posedge clk) if (push) begin if (wp) m1 <= id; else m0 <= id; end
 endmodule
