@@ -1,0 +1,107 @@
+{
+  "schema": "opentallas.qwen_fwd_cx_station.ssff.v1",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/qwen_fwd_cx_station_a_fwd5_lvt_f92a58eb4-tt/routes/qwen_fwd_cx_station_a_fwd5_lvt_f92a58eb4_tt/work/orfs",
+  "setup_tt": {
+    "corner": "tt",
+    "check": "setup",
+    "worst_slack_ps": 0.51,
+    "tns_ps": 0.0,
+    "worst_register_d_slack_ps": 174.549683,
+    "worst_reg_to_reg_slack_ps": 655.25,
+    "worst_input_to_reg_slack_ps": 65.19,
+    "worst_output_port_slack_ps": -1151.118042,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "6e1af587544e7ea2c3cc4a042f7b4af8ce39d14c393e03756f447b86d0bf1117",
+    "spef_sha256": "13ca9044f82f67d7c76073f89a96e302ccf2ce7f9b793430e0cb7317a4593ea8",
+    "sdc_name": "6_final.sdc",
+    "sdc_sha256": "b3116ddccabe1228124a5eb258ce15e7ec41104d7645691f5b36d0cd98e22c72",
+    "vt_flavours_added": [
+      "LVT"
+    ],
+    "libraries": [
+      "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "asap7sc7p5t_AO_LVT_TT_nldm_211120.lib.gz",
+      "asap7sc7p5t_INVBUF_LVT_TT_nldm_220122.lib.gz",
+      "asap7sc7p5t_OA_LVT_TT_nldm_211120.lib.gz",
+      "asap7sc7p5t_SEQ_LVT_TT_nldm_220123.lib",
+      "asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz"
+    ]
+  },
+  "setup_ss": {
+    "corner": "ss",
+    "check": "setup",
+    "worst_slack_ps": -104.53,
+    "tns_ps": -11443.2,
+    "worst_register_d_slack_ps": 153.770279,
+    "worst_reg_to_reg_slack_ps": 588.16,
+    "worst_input_to_reg_slack_ps": 69.07,
+    "worst_output_port_slack_ps": -1212.56543,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "6e1af587544e7ea2c3cc4a042f7b4af8ce39d14c393e03756f447b86d0bf1117",
+    "spef_sha256": "13ca9044f82f67d7c76073f89a96e302ccf2ce7f9b793430e0cb7317a4593ea8",
+    "sdc_name": "6_final.sdc",
+    "sdc_sha256": "b3116ddccabe1228124a5eb258ce15e7ec41104d7645691f5b36d0cd98e22c72",
+    "vt_flavours_added": [
+      "LVT"
+    ],
+    "libraries": [
+      "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+      "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+      "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+      "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+      "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+      "asap7sc7p5t_AO_LVT_SS_nldm_211120.lib.gz",
+      "asap7sc7p5t_INVBUF_LVT_SS_nldm_220122.lib.gz",
+      "asap7sc7p5t_OA_LVT_SS_nldm_211120.lib.gz",
+      "asap7sc7p5t_SEQ_LVT_SS_nldm_220123.lib",
+      "asap7sc7p5t_SIMPLE_LVT_SS_nldm_211120.lib.gz"
+    ]
+  },
+  "hold_ff": {
+    "corner": "ff",
+    "check": "hold",
+    "worst_slack_ps": 16.56,
+    "tns_ps": 0.0,
+    "worst_register_d_slack_ps": 16.561642,
+    "worst_reg_to_reg_slack_ps": 16.56,
+    "worst_input_to_reg_slack_ps": 126.24,
+    "worst_output_port_slack_ps": 229.559647,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "6e1af587544e7ea2c3cc4a042f7b4af8ce39d14c393e03756f447b86d0bf1117",
+    "spef_sha256": "13ca9044f82f67d7c76073f89a96e302ccf2ce7f9b793430e0cb7317a4593ea8",
+    "sdc_name": "6_final.sdc",
+    "sdc_sha256": "b3116ddccabe1228124a5eb258ce15e7ec41104d7645691f5b36d0cd98e22c72",
+    "vt_flavours_added": [
+      "LVT"
+    ],
+    "libraries": [
+      "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "asap7sc7p5t_AO_LVT_FF_nldm_211120.lib.gz",
+      "asap7sc7p5t_INVBUF_LVT_FF_nldm_220122.lib.gz",
+      "asap7sc7p5t_OA_LVT_FF_nldm_211120.lib.gz",
+      "asap7sc7p5t_SEQ_LVT_FF_nldm_220123.lib",
+      "asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz"
+    ]
+  },
+  "adoption": false,
+  "remaining": [
+    "die endpoint budgets",
+    "control/link protection",
+    "cold reset physical binding",
+    "warm drain and epoch",
+    "postroute clockbuffer and placement inventory",
+    "DRC0"
+  ],
+  "margin_pass": true
+}
