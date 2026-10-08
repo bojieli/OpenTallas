@@ -8,5 +8,5 @@ set fc_ps(qNW) 3
 set fc_ps(t_s_ctl) 1
 set fc_ps(t_s_row) 1
 set fc_ps(t_s_wr) 1
-set fc_ps(s2n) 1
+set fc_ps(s2n) 2
 set fc_ps(n2s) 1

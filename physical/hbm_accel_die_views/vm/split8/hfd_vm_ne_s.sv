@@ -50,7 +50,7 @@ module hfd_vm_ne_s (
     wire [2062:0] od_s2n = x_f_s_row[2062:0];
     wire [2062:0] o_s2n;
     for (genvar k = 0; k < 2063; k = k + 1) begin : g_o_s2n
-        ot_hfd_oreg1 u (.clk(clk), .d(od_s2n[k]), .q(o_s2n[k]));
+        ot_hfd_oreg2 u (.clk(clk), .d(od_s2n[k]), .q(o_s2n[k]));
     end
     assign s2n = o_s2n;
 endmodule
