@@ -1,0 +1,37 @@
+{
+  "cases": [
+    {
+      "case": "positive",
+      "exit": 0,
+      "log": "PASS LIM=1048576 ON=1 checks=37452 highwrap=49\n/srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/normalizer/bench.sv:61: $finish called at 12 (1s)\n"
+    },
+    {
+      "case": "disabled",
+      "exit": 0,
+      "log": "PASS LIM=1048576 ON=0 checks=37452 highwrap=49\n/srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/normalizer/bench.sv:61: $finish called at 12 (1s)\n"
+    },
+    {
+      "case": "partial",
+      "exit": 0,
+      "log": "PASS LIM=1048573 ON=1 checks=37452 highwrap=49\n/srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/normalizer/bench.sv:61: $finish called at 12 (1s)\n"
+    },
+    {
+      "case": "wrap",
+      "exit": 1,
+      "log": "FATAL: /srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/normalizer/bench.sv:39: word write f=1 slot=0 address=01000000\n       Time: 2  Scope: tb\n"
+    },
+    {
+      "case": "invalid_read",
+      "exit": 1,
+      "log": "FATAL: /srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/normalizer/bench.sv:29: scalar read f=1 slot=0\n       Time: 2  Scope: tb\n"
+    },
+    {
+      "case": "zero_return",
+      "exit": 1,
+      "log": "FATAL: /srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/normalizer/bench.sv:52: published invalid read not zero\n       Time: 2  Scope: tb\n"
+    }
+  ],
+  "source_top_sha256": "751e0d2cad3ee1b90b6018c84bf56fc563db43fc898f8db9969d0f23533906dd",
+  "source_vm_block_sha256": "6099ffb6e23c87822252efe4a857153cacea84989647343d232922df4aef284c",
+  "scope": "Combinational source-semantic requests and zero-read publication flags only. No memory timing, clock binding, numerical engine or physical qualification."
+}

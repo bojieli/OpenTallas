@@ -3,7 +3,21 @@
 // D/QD remain full128. No timing or mutable-state protection claim is made.
 module ot_s81_pq_ret_root_cam #(
     parameter integer D = 128,
-    parameter integer QD = 128
+    parameter integer QD = 128,
+    // CLAUDE s81-blocks 2026-10-07: OPC 1 = stage-C fallback of the root contract (cam.stages B note): the paired
+    // entry's operands (bd/bt/be one-hot read, operand order, parent tag) are fetched one edge after the B decision
+    // from a registered hit index; +1 cycle on the add path only.  Safe: a slot removed in B(t) can be rewritten only
+    // by an insert decided in B(t+1), whose write lands on the same edge C(t+1) samples the old entry.
+    parameter integer OPC = 0,
+    // CLAUDE s81-blocks 2026-10-07: PAR 1 = the protected root face and mutable-state parity of root_contract.json
+    // (branch claude/s81-pq-fullshape-design-v2-20261007): input station register with odd-parity check (bad word
+    // dropped, +1 input cycle), queue entries carry the face parity (checked when the head becomes the candidate),
+    // candidate parity regenerated in stage A over {tag, data, e} (covers adder results; the norm and adder logic
+    // are unprotected, disclosed), buffer entries hold it (checked on the paired entry's operand read: no add on a
+    // mismatch), bv shadow copy compared every cycle, queue counter invariant (qw - qr == qc mod QD), r_par = odd
+    // parity over {r_row, r_pos, r_fp32, r_bf16, r_e} from the output register D-inputs, upstream_fault ORed into
+    // fault.  Every protection hit raises the sticky fault (fail closed).  PAR 0: i_p / up_fault ignored, r_p 0.
+    parameter integer PAR = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -11,20 +25,37 @@ module ot_s81_pq_ret_root_cam #(
     input  wire [31:0] i_t,
     input  wire [31:0] i_d,
     input  wire        i_e,
+    input  wire        i_p,          // PAR: odd parity over {i_e, i_d, i_t} (face tree_par)
+    input  wire        up_fault,     // PAR: column / tree fault (face upstream_fault)
     output reg         r_v,
     output reg  [15:0] r_row,
     output reg  [2:0]  r_pos,
     output reg  [31:0] r_fp32,
     output reg  [15:0] r_bf16,
     output reg         r_e,
-    output reg         fault
+    output reg         r_p,          // PAR: odd parity over {r_row, r_pos, r_fp32, r_bf16, r_e}
+    output wire        fault
 );
+    reg fault_c, pfault;
+    assign fault = fault_c | ((PAR != 0) ? (pfault | up_fault) : 1'b0);
+    // PAR: input station (registered face, parity checked on the register)
+    reg        s_v, s_e, s_p;
+    reg [31:0] s_t, s_d;
+    always @(posedge clk or negedge rst_n) if (!rst_n) s_v <= 1'b0; else s_v <= i_v;
+    always @(posedge clk) begin s_t <= i_t; s_d <= i_d; s_e <= i_e; s_p <= i_p; end
+    wire       s_bad = s_v && !(^{s_e, s_d, s_t, s_p});
+    wire       w_v = (PAR != 0) ? (s_v && !s_bad) : i_v;
+    wire [31:0] w_t = (PAR != 0) ? s_t : i_t;
+    wire [31:0] w_d = (PAR != 0) ? s_d : i_d;
+    wire       w_e = (PAR != 0) ? s_e : i_e;
+    wire       w_p = s_p;
     import ot_v41_ret_pkg::*;
     localparam integer QW = $clog2(QD);
     // input queue
     reg [31:0] qt [0:QD-1];
     reg [31:0] qd [0:QD-1];
     reg        qe [0:QD-1];
+    reg        qp [0:QD-1];
     reg [QW-1:0] qr, qw;
     reg [QW:0] qc;
     // buffer
@@ -32,6 +63,8 @@ module ot_s81_pq_ret_root_cam #(
     reg [31:0] bt [0:D-1];
     reg [31:0] bd [0:D-1];
     reg        be [0:D-1];
+    reg        bp [0:D-1];
+    reg        bv_s [0:D-1];
     // adder
     wire [31:0] sum;
     wire [1:0] err;
@@ -41,7 +74,8 @@ module ot_s81_pq_ret_root_cam #(
     wire [32:0] st;
     // Stage A uses a registered queue head. Adder results retain priority.
     reg [31:0] head_t, head_d;
-    reg head_e;
+    reg head_e, head_p;
+    wire head_bad = (PAR != 0) && !sv && qc != 0 && !(^{head_e, head_d, head_t, head_p});
     wire use_q = !sv && qc != 0;
     wire [31:0] at = sv ? st[32:1] : norm(head_t);
     wire [31:0] ad = sv ? sum : head_d;
@@ -49,7 +83,7 @@ module ot_s81_pq_ret_root_cam #(
     wire av = sv || qc != 0;
     reg cv;
     reg [31:0] ct, cd;
-    reg ce;
+    reg ce, cp;
     reg [D-1:0] match_vec, frees;
     integer k, hit, fr;
     always @* begin
@@ -83,50 +117,76 @@ module ot_s81_pq_ret_root_cam #(
     ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(add), .a(add_a), .b(add_b),
                                 .y(sum), .err(err), .valid_out(sv));
     reg [32:0] tag_in;
+    reg [$clog2(D)-1:0] c2_hit;
+    reg [31:0] c2_t, c2_d;
+    reg c2_e, c2_add;
     ot_hdc_delay #(.W(33), .D(5)) u_t (.clk(clk), .rst_n(rst_n), .d(tag_in), .q(st));
     wire [32:0] rb = {1'b0, cd} + 33'h7FFF + {32'd0, cd[16]};
+    // PAR checks
+    wire        cand_bad = (PAR != 0) && cv && !(^{ce, cd, ct, cp});
+    wire        bent_bad = (PAR != 0) && (OPC == 0) && cv && !complete(ct) && hit >= 0 && !(^{be[hit], bd[hit], bt[hit], bp[hit]});
+    wire        cent_bad = (PAR != 0) && (OPC != 0) && c2_add && !(^{be[c2_hit], bd[c2_hit], bt[c2_hit], bp[c2_hit]});
+    reg         bvs_bad;
+    integer     kb;
+    always @* begin
+        bvs_bad = 1'b0;
+        for (kb = 0; kb < D; kb = kb + 1) if (bv[kb] != bv_s[kb]) bvs_bad = 1'b1;
+    end
+    wire        qc_bad = (((qw - qr) & (QD - 1)) != (qc & (QD - 1)));
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) pfault <= 1'b0;
+        else if (s_bad || head_bad || cand_bad || bent_bad || cent_bad || bvs_bad || qc_bad) pfault <= 1'b1;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            qr <= 0; qw <= 0; qc <= 0; cv <= 0; match_vec <= 0; frees <= 0; r_v <= 1'b0; fault <= 1'b0; add <= 1'b0;
-            for (k = 0; k < D; k = k + 1) bv[k] <= 1'b0;
+            qr <= 0; qw <= 0; qc <= 0; cv <= 0; match_vec <= 0; frees <= 0; r_v <= 1'b0; fault_c <= 1'b0; add <= 1'b0; c2_add <= 1'b0;
+            for (k = 0; k < D; k = k + 1) begin bv[k] <= 1'b0; bv_s[k] <= 1'b0; end
         end else begin
             r_v <= 1'b0;
-            add <= 1'b0;
-            cv <= av;
+            add <= (OPC != 0) ? (c2_add && !cent_bad) : 1'b0;
+            c2_add <= 1'b0;
+            cv <= av && !head_bad;
             match_vec <= next_match_vec; frees <= next_frees;
-            if (i_v) qw <= qw + 1'b1;
+            if (w_v) qw <= qw + 1'b1;
             if (use_q) qr <= qr + 1'b1;
-            qc <= qc + (i_v ? 1'b1 : 1'b0) - (use_q ? 1'b1 : 1'b0);
-            if (i_v && qc == QD && !use_q) fault <= 1'b1;
+            qc <= qc + (w_v ? 1'b1 : 1'b0) - (use_q ? 1'b1 : 1'b0);
+            if (w_v && qc == QD && !use_q) fault_c <= 1'b1;
             if (cv) begin
                 if (complete(ct)) begin
                     r_v <= 1'b1;
                 end else if (hit >= 0) begin
-                    add <= 1'b1;
-                    bv[hit] <= 1'b0;
+                    if (OPC != 0) c2_add <= !cand_bad; else add <= !(cand_bad || bent_bad);
+                    bv[hit] <= 1'b0; bv_s[hit] <= 1'b0;
                 end else if (fr >= 0) begin
-                    bv[fr] <= 1'b1;
-                end else fault <= 1'b1;
+                    bv[fr] <= 1'b1; bv_s[fr] <= 1'b1;
+                end else fault_c <= 1'b1;
             end
         end
     end
     wire [QW-1:0] next_qr = qr + 1'b1;
     always @(posedge clk) begin
-        ct <= at; cd <= ad; ce <= ae;
+        ct <= at; cd <= ad; ce <= ae; cp <= ~^{ae, ad, at};
         // Empty/singleton push bypass avoids reading an old RAM value when
         // the producer writes the new queue head on this same edge.
         if (use_q) begin
-            if (qc == 1 && i_v) begin head_t <= i_t; head_d <= i_d; head_e <= i_e; end
-            else if (qc > 1) begin head_t <= qt[next_qr]; head_d <= qd[next_qr]; head_e <= qe[next_qr]; end
-        end else if (qc == 0 && i_v) begin head_t <= i_t; head_d <= i_d; head_e <= i_e; end
-        if (i_v) begin qt[qw] <= i_t; qd[qw] <= i_d; qe[qw] <= i_e; end
+            if (qc == 1 && w_v) begin head_t <= w_t; head_d <= w_d; head_e <= w_e; head_p <= w_p; end
+            else if (qc > 1) begin head_t <= qt[next_qr]; head_d <= qd[next_qr]; head_e <= qe[next_qr]; head_p <= qp[next_qr]; end
+        end else if (qc == 0 && w_v) begin head_t <= w_t; head_d <= w_d; head_e <= w_e; head_p <= w_p; end
+        if (w_v) begin qt[qw] <= w_t; qd[qw] <= w_d; qe[qw] <= w_e; qp[qw] <= w_p; end
         r_row <= ct[28:13]; r_pos <= ct[31:29]; r_fp32 <= cd; r_bf16 <= rb[31:16]; r_e <= ce;
-        if (cv && !complete(ct) && hit >= 0) begin
+        r_p <= (PAR != 0) ? ~^{ct[28:13], ct[31:29], cd, rb[31:16], ce} : 1'b0;
+        if (OPC == 0 && cv && !complete(ct) && hit >= 0) begin
             // left operand: lower lo
             if (bt[hit][12:8] < ct[12:8]) begin add_a <= bd[hit]; add_b <= cd; end
             else begin add_a <= cd; add_b <= bd[hit]; end
         end
-        tag_in <= {pt, (hit >= 0) ? (be[hit] | ce) : 1'b0};
-        if (cv && !complete(ct) && hit < 0 && fr >= 0) begin bt[fr] <= ct; bd[fr] <= cd; be[fr] <= ce; end
+        // OPC: stage C operand fetch from the registered decision
+        c2_hit <= hit[$clog2(D)-1:0]; c2_t <= ct; c2_d <= cd; c2_e <= ce;
+        if (OPC != 0) begin
+            if (bt[c2_hit][12:8] < c2_t[12:8]) begin add_a <= bd[c2_hit]; add_b <= c2_d; end
+            else begin add_a <= c2_d; add_b <= bd[c2_hit]; end
+            tag_in <= {parent(bt[c2_hit], c2_t), be[c2_hit] | c2_e};
+        end
+        if (OPC == 0) tag_in <= {pt, (hit >= 0) ? (be[hit] | ce) : 1'b0};
+        if (cv && !complete(ct) && hit < 0 && fr >= 0) begin bt[fr] <= ct; bd[fr] <= cd; be[fr] <= ce; bp[fr] <= cp; end
     end
 endmodule

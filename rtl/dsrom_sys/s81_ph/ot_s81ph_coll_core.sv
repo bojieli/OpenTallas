@@ -26,6 +26,16 @@
 //    t_vm[2099:0] header [51:0] + data 2048 (layout in the contract); ts[0] = the CDC has room for >= 4 words.
 // ---------------------------------------------------------------------------
 module ot_s81ph_coll_core #(
+`ifdef OT_S81PH_GBX_FMT1
+    parameter integer GFMT = 1,                // CLAUDE s81-blocks: gearbox FMT (ot_s81ph_link_gbx), ep pacing follows
+`else
+    parameter integer GFMT = 0,
+`endif
+`ifdef OT_S81PH_EP_PIPE2
+    parameter integer EPPIPE = 2,              // CLAUDE s81-blocks: ot_s81ph_link_ep PIPE
+`else
+    parameter integer EPPIPE = -1,             // -1: the file's historical choice
+`endif
     parameter integer FB = 69,
     parameter integer CREDITS = 512,
     parameter integer SEQW = 10,
@@ -74,8 +84,8 @@ module ot_s81ph_coll_core #(
     localparam integer RFW = 1 + SEQW + $clog2(CREDITS + 1) + 32;   // 53
     localparam integer G = 509 - RFW;                      // 456
     localparam integer S = FFW + 1;                        // 596
-    localparam integer PNUM = FB * G * (IDLE_P - 1);
-    localparam integer PDEN = S * IDLE_P;
+    localparam integer PNUM = (GFMT != 0) ? FB * 3 * (IDLE_P - 1) : FB * G * (IDLE_P - 1);
+    localparam integer PDEN = (GFMT != 0) ? 4 * IDLE_P : S * IDLE_P;
     localparam integer FW = 512, TAGW = 32, PW = FW + 3 + TAGW;   // 547
     localparam integer CRW = $clog2(EDEPTH / 2 + 1) + 1;   // credit counters (<= PD a parity, + headroom)
     localparam integer MQD = EDEPTH;                       // mode FIFO entries (power of two)
@@ -125,14 +135,14 @@ module ot_s81ph_coll_core #(
         wire [514:0]  lr = lane_rx[l*515 +: 515];
         wire [511:0]  bt;
         ot_s81ph_link_ep #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(l == 0 || l == 4 ? CH_UCIE : CH_BOARD),
-            .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM)) u_ep (
+            .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(EPPIPE < 0 ? 0 : EPPIPE)) u_ep (
             .clk(clk), .rst_n(rst_n), .ch_b(1'b0),
             .in_valid(ep_iv[l]), .in_ready(ep_ir[l]), .in_data(ep_id[l]), .in_last(ep_il[l]),
             .out_valid(ep_ov[l]), .out_ready(ep_or[l]), .out_data(ep_od[l]), .out_last(ep_ol[l]),
             .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv), .r_tx(rt), .r_rx_v(rrv), .r_rx(rr),
             .credit_stalls(), .fault(ep_flt[l]), .fault_code(), .st_flits_tx(), .st_flits_rx_ok(), .st_crc_err(),
             .st_naks(), .st_replays(), .st_timeouts(), .st_retx_flits(), .st_max_replay_occ());
-        ot_s81ph_link_gbx #(.FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P)) u_gb (
+        ot_s81ph_link_gbx #(.FMT(GFMT), .FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P)) u_gb (
             .clk(clk), .rst_n(rst_n), .f_tx_v(ftv), .f_tx(ft), .r_tx_v(rtv), .r_tx(rt), .beat_tx(bt),
             .beat_rx_v(lr[0] && lr[513]), .beat_rx(lr[512:1]), .f_rx_v(frv), .f_rx(fr), .r_rx_v(rrv), .r_rx(rr),
             .locked(gb_lock[l]), .fault(gb_flt[l]));

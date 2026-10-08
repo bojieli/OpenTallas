@@ -17,11 +17,15 @@ AR_ = ["*.attn.out_allreduce", "*.ffn.combine_allreduce"]
 AG_ = ["*.attn.a_allgather", "*.attn.idx.topk_merge", "*.attn.cand.merge", "*.attn.rows_allgather", "*.ffn.router_allgather"]
 # (item, description, [(nodes, cycles, frac)])
 ITEMS = [
-    ("s81_die", "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced "
-                "meso d8g1 term (+4), giving +27: hub stations, "
-                "q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). "
-                "Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending",
-     [(k, 27, 0) for k in MAT]),
+    ("s81_die", "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ "
+                "root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, "
+                "claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each "
+                "ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), "
+                "giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full "
+                "221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root "
+                "stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; "
+                "die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress",
+     [(k, 28, 0) for k in MAT]),
     ("meso_d8g1", "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field "
                   "round trip (+4)", [(k, 4, 0) for k in MAT]),
     ("ctrl_status", "CTRL status chain: +1 cycle per column (HBM stream reads)", [(k, 1, 0) for k in HBM]),
@@ -52,6 +56,9 @@ ITEMS = [
     # code-tile block, not on the DS ROM path (no DS ROM / S81 instance)
     ("bf_rowfix", "BF rowfix: +1 per push (a field phase)", [(k, 1, 0) for k in MAT]),
     ("pq_qelem", "PQ q-element: decode stage +0.17 % node time (field phases)", [(k, 0, 0.0017) for k in MAT]),
+    ("softmax_exp_recut", "Softmax exp tile closed only with RECUT (dsrom_softmax_safe_exprcf_bd30aca4a CLOSED SS +123.11 / "
+                          "FF +16.70, f12r multiplier/adder +2 cuts, LAT 11): attn.exp 225 -> 255 (+30 over SAFE2; "
+                          "dsrom_softmax_recovery_20261007 RECUT1_or_2_vs_m5 +31)", [("*.attn.exp", 30, 0)]),
 ]
 
 def su_xing_nodes():
@@ -91,6 +98,25 @@ CANDIDATES = [
                 "first (variant A re-cut is the target).  UNDER-PRICED: BF pairs also hold 20.6 % of the q words, so HALF=1 on "
                 "shared pairs doubles those q phases too (the BF-dedicated-pair plan of the BF doubling agent replaces it)",
      [("*.attn.wo_a", 0, 0.8789), ("*.ffn.router", 0, 0.8976), ("*.attn.a_proj", 0, 0.7037), ("*.attn.cmp.wk", 0, 0.7748)]),
+    ("bf_halfphl", "BF HALF_PHL, the ACCEPTED BF closure path (ot_s81_bf_native HALF=1 HALF_PHL=1, claude/s81-bf-20261007; "
+                   "exact PASS results/rtl/s81_bf_native_20261007/halfphl_exact): every BF16 field phase doubled (as-built qx10 "
+                   "BF16 phases go->idle+1, + 2 a phase for pin capture / output register; upper bound, region return / gather stay "
+                   "full rate) + the BF16-DEDICATED allocation on the 1,792 mixed die (results/uarch/dsrom_s81_mixed1792_mapping_20261007: "
+                   "half_dedicated 120 stages / 480 dies vs full_shared 98 / 392: +22 stage hops at 1,006 cycles = measured hop 0.8367 us "
+                   "+ 2 cycles mean cable, +88 layer dies)",
+     [("*.attn.wo_a", 1764, 0), ("*.ffn.router", 519, 0), ("*.attn.cmp.wk", 205, 0)]
+     + [(f"L{L}.attn.a_proj", 1557, 0) for L in (2, 8, 14)] + [("L20.attn.a_proj", 1038, 0)]
+     + [(f"L{L}.attn.a_proj", 519, 0) for L in (24, 28, 32, 36)]
+     + [['L1.substage_hop0', 1006, 0], ['L3.substage_hop0', 1006, 0], ['L5.substage_hop0', 1006, 0], ['L7.substage_hop0', 1006, 0], ['L9.substage_hop0', 1006, 0], ['L10.substage_hop0', 1006, 0], ['L12.substage_hop0', 1006, 0], ['L14.substage_hop0', 1006, 0], ['L16.substage_hop0', 1006, 0], ['L18.substage_hop0', 1006, 0], ['L20.substage_hop0', 1006, 0], ['L21.substage_hop0', 1006, 0], ['L23.substage_hop0', 1006, 0], ['L25.substage_hop0', 1006, 0], ['L27.substage_hop0', 1006, 0], ['L29.substage_hop0', 1006, 0], ['L30.substage_hop0', 1006, 0], ['L32.substage_hop0', 1006, 0], ['L34.substage_hop0', 1006, 0], ['L36.substage_hop0', 1006, 0], ['L37.substage_hop0', 1006, 0], ['L39.substage_hop0', 1006, 0]]),
+    ("bf_deep4", "OPTIONAL lever, not the closure path: deep full-rate BF (ot_s81_bf_native RECUT=4, ot_v41_bf16_lanes3 DEEP 1: "
+                 "fadd3 every step cut, chain5 F5=0, bmul3 XS 2, extra lane input rank; claude/s81-bf-20261007 9c21d9e49; exact "
+                 "TXN MATCH 456 partials): latency only on this workload (the widened issue hazard never bound: lag identical "
+                 "with and without it), transaction lag per partial 4 / 10.2 / 23; upper bound +23 per BF16 field phase; no "
+                 "half-rate clock, no dedicated pairs (shared allocation, 98 stages); route bf_deep4_mm_9c21d9e49",
+     [(n, 23 * k, 0) for n, k, _ in [("*.attn.wo_a", 4, 0), ("*.attn.a_proj", 3, 0), ("*.ffn.router", 1, 0), ("*.attn.cmp.wk", 1, 0)]]),
+    ("bf_deep5", "OPTIONAL lever, not the closure path: as bf_deep4 with RECUT=5 (DEEP 2: + SPLIT6 / SPLIT9 in the chains and "
+                 "tree): lag per partial 4 / 11.8 / 29; upper bound +29 per BF16 field phase; route bf_deep5_mm_9c21d9e49",
+     [(n, 29 * k, 0) for n, k, _ in [("*.attn.wo_a", 4, 0), ("*.attn.a_proj", 3, 0), ("*.ffn.router", 1, 0), ("*.attn.cmp.wk", 1, 0)]]),
     ("bf_recut", "BF re-cut A (ot_s81_bf_native RECUT=2, claude/dsrom-bf-rowfix-20261007 260869fd0; exact record e2d358837; "
                  "closure-loop bf_recut_260869fd0): latency only, transaction lag per partial 4 / 7.9 / 15; upper bound "
                  "+15 per field phase (wo_a 4 phases, a_proj 3)",
@@ -103,6 +129,22 @@ CANDIDATES = [
      [("*.attn.wo_a", 72, 0), ("*.attn.a_proj", 54, 0), ("*.ffn.router", 18, 0), ("*.attn.cmp.wk", 18, 0),
       ("*.attn.wq_b", 18, 0), ("*.attn.wo_b", 18, 0), ("*.ffn.shared_gu", 18, 0), ("*.ffn.experts_gu", 18, 0),
       ("*.ffn.down", 18, 0)]),
+]
+
+
+# CLAUDE s81-blocks 2026-10-07 structural closure candidates (routes in the closure loop; adopt on CLOSED)
+CANDIDATES += [
+    ("selector_pipe2", "Selector PIPE2 (claude/s81-blocks-20261007 36b7a0452: selt_q hist input reg + pair-sum cuts, "
+                       "out-FIFO input reg, registered sweep bound, CMP_RETIME; selt_c MRG_PIPE + RQPIPE + SLAT 4): bench "
+                       "tail mean 153 vs 127 (+26 a segment over the +20 already priced)",
+     [("*.attn.idx.topk_local", 26, 0), ("*.attn.cand.topk_local", 26, 0)]),
+    ("pq_rootcam_B", "PQ root CAM stage B (4251eb216, OPC 0): measured eight-leaf root +4 cycles vs native, charged per "
+                     "field phase (upper bound: every phase exposes one 8-leaf root)", [(k, 4, 0) for k in MAT]),
+    ("pq_rootcam_CP", "PQ root CAM stage C + PAR protected face (claude/s81-blocks-20261007 387610a35, OPC 1 PAR 1): "
+                      "eight-leaf +8 vs native (input station +1, operand fetch +1 a pass)", [(k, 8, 0) for k in MAT]),
+    ("coll_gbx_fmt1", "Collective gearbox FMT1 (fixed 3-in-4 slot format, no bit shifter): slot rate 0.75 vs 0.765 per "
+                      "gearbox beat (-2.0 %), charged as +2.0 % of every collective node (upper bound; link-up is faster: "
+                      "TP4 bench end 3,012 vs 3,374 cycles)", [(k, 0, 0.02) for k in AR_ + AG_]),
 ]
 
 

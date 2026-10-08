@@ -696,10 +696,14 @@ def endpoint_dirs(die, real, by, bus, j):
     mst = by[inst].master
     if mst in real:
         rb = real[mst]
-        names = _binding(rb, port)
+        idx = None
+        if '@' in port:         # HBM r16j / r23: bit slice(s) of a real port (svc band <- PHY dfi range; split station)
+            idx = H.port_idx(port)
+            port = H.port_base(port)
+        names = _binding(rb, port)   # 'p[lo:hi]' S81 generator port slice handled there
         if names is None:
             return None, ('port_not_in_binding', port)
-        names = list(names[:bits])  # _binding already applies any S81 port slice
+        names = [names[i] if i < len(names) else None for i in idx] if idx else list(names[:bits])
         seg, pins = [], []
         for i in range(bits):
             pn = names[i] if i < len(names) else None

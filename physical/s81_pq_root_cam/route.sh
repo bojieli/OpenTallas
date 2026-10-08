@@ -26,7 +26,8 @@ unset_output_delay -clock core_clk [all_outputs]
 set_input_delay 333.5 -clock vclk \$ot_in
 set_output_delay 274.5 -clock vclk [all_outputs]
 set_input_delay -min [expr {$FMAX - $L + 32.2 - 50}] -clock vclk \$ot_in
-set_output_delay -min [expr {$FMIN - $L + 15 + 50}] -clock vclk [all_outputs]
+# CLAUDE s81-blocks: sign fixed (was FMIN - L + 65: required = L + 25 - min must equal the sign-off FMIN + 50 - 15)
+set_output_delay -min [expr {$L - $FMIN - 10}] -clock vclk [all_outputs]
 EOT
 cat > $C/signoff_ss.sdc <<EOT
 create_clock -name core_clk -period 833.333 [get_ports clk]

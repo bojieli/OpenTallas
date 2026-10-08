@@ -1,0 +1,122 @@
+{
+  "schema": "opentallas.ha2.circular_split_local_tx.v1",
+  "adopted": false,
+  "default_off": true,
+  "source_truth": {
+    "module": "ot_ha2_delay_quiet",
+    "path": "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv",
+    "implementation": "mem[D] plus rotating integer pointer, selected-slot combinational output; not a spatial shift chain",
+    "parent": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner_truecredit.sv:g_hub[i].u_h",
+    "original_depth": 35,
+    "replacement": "D34 circular store followed by a real D1 local register, then unconditional-payload truecredit TX",
+    "equivalence_required": "Original D35 versus D34+D1 on valid data, bubbles, quiet, common reset; exact TX tags and credits retained"
+  },
+  "inventory": {
+    "injectors": 2,
+    "payload_bits": 544,
+    "original_data_valid_bits": 38150,
+    "split_ring_data_valid_bits": 37060,
+    "new_local_stage_data_valid_bits": 1090,
+    "total_data_valid_bit_delta": 0,
+    "conservative_original_pointer_bits": 64,
+    "conservative_split_pointer_bits": 64,
+    "local_D1_pointer_bits_after_constant_elimination": 0,
+    "original_read_mux2_eq": 36992,
+    "split_read_mux2_eq": 35904,
+    "read_mux2_eq_delta": -1088,
+    "local_payload_enable_mux2_eq": 1088,
+    "local_payload_enable_note": "Conservative retained unless separately proved unconditional",
+    "tx_register_bits": 1216,
+    "combined_local_register_bits": 2306,
+    "tx_payload_enable_mux2_eq_delta": -1088,
+    "tx_tag_enable_mux2_eq": 32,
+    "local_valid_fanout": 544,
+    "tx_payload_valid_enable_fanout_removed": 1088
+  },
+  "area": {
+    "ff_proxy_um2": 0.2916,
+    "mux2_proxy_um2": 0.30618,
+    "combined_local_storage_um2": 672.4296,
+    "combined_local_mux_proxy_um2": 342.9216,
+    "slot_um": [
+      840.024,
+      40.176
+    ],
+    "slot_area_um2": 33748.804224,
+    "target_utilisation": 0.55,
+    "reserved_lane_islands": [
+      {
+        "x0": 150.012,
+        "x1": 250.02,
+        "y0": 1.08,
+        "y1": 39.096
+      },
+      {
+        "x0": 570.012,
+        "x1": 670.02,
+        "y0": 1.08,
+        "y1": 39.096
+      }
+    ],
+    "per_lane_island_area_um2": 3801.9041279999997,
+    "per_lane_storage_and_mux_proxy_um2": 507.67560000000003,
+    "mapping_control_CTS_repair_unmeasured": true,
+    "die_area_delta_unqualified": true,
+    "accounting": "D1 storage transferred out of D35 inventory, not newly added parent storage. Actual hard partition footprint/clock cost must be measured."
+  },
+  "ports": {
+    "MACs_per_cycle": 0,
+    "compute_intensity": 0,
+    "forward_data_bits_per_cycle": 1088,
+    "forward_bytes_per_cycle": 136.0,
+    "local_launch_capture_boundary_bits": 1090,
+    "replicas": 2,
+    "independent_lanes": true,
+    "per_lane_signal_pin_pitch_um": 0.144,
+    "native_M5_pitch_um": 0.048,
+    "per_lane_546_pin_span_um": 78.47999999999999,
+    "output_pin_windows_x_um": [
+      [
+        160.044,
+        238.524
+      ],
+      [
+        580.044,
+        658.524
+      ]
+    ],
+    "lane_island_width_um": 100.008,
+    "wire_length_requires_extracted_route": true
+  },
+  "clock": {
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "minimum_margin_ps": 15,
+    "experiment": "One real root and common CTS containing local D1 launch and TX capture registers",
+    "internal_source_clock": "Measured actual D1 clock branch, never an assigned virtual source arrival",
+    "upstream_D34_selected_slot_clock_unqualified": true,
+    "return_credit_boundary_clock_unqualified": true,
+    "report": "Internal D1-to-TX SS/FF plus full wrapper path classes and unconstrained/unqualified external boundary census"
+  },
+  "cycles": {
+    "nominal_hub_depth_before": 35,
+    "nominal_hub_depth_after": 35,
+    "physical_experiment_hub_stages": 1,
+    "hub_stages_outside_experiment": 34,
+    "nominal_token_delta": 0,
+    "adopt_delta_only_after_exact_gate": true
+  },
+  "power": {
+    "invalid_payload_switching_may_increase": true,
+    "energy_gain_claimed": false
+  },
+  "physical_build_ready": false,
+  "remaining": [
+    "W2 source-pinned split-delay and unconditional-TX exact gate",
+    "Actual wrapper elaboration and source inventory",
+    "Modeled structural candidate guarded full-shape P&R",
+    "Extracted local launch/capture CTS and complete path-class reports",
+    "Unqualified external D34/credit boundary joined in actual parent before adoption"
+  ]
+}

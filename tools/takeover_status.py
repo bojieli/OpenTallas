@@ -84,12 +84,20 @@ def tally(inv, v):
     return rows
 
 
+# die inventories the streams keep on their branches (committed, not yet on main): reported, not merged into the counts
+STREAM_INDEX = [
+    "Stream die inventories (branch commits, not on main): HBM die views index r23 = 45 closed / 3 interim / 33 missing / "
+    "2 reservation (claude/hbm-die-20261007 bc38f4908, physical/hbm_accel_die_views/index.json).",
+    "Reported in stream logs, not yet committed (no credit): Qwen full-die GRT overflow 0 (adjfix_t4p8) and die STA on GRT "
+    "parasitics SS WNS -132 ps (relay/station hops) / FF -5.50 ps (qfd_tile assumed views) -- qwen-dietop.log 19:31-19:32.",
+]
 DIE_STATE = dict(
     qwen_rom="REOPENED 2026-10-07: interim die-top only; no full-die detailed route, die SS/FF STA, DRC/LVS or IR",
     ds_rom="actual 1,792 mixed geometry (77ffa0428 / 2d811aafb) is the integration basis; die DRT/SS/FF/IR not run",
     hbm_ds="die views + r23 closure ledger; no full-die detailed route / SS / FF / IR")
-HEAD = dict(qwen_rom=("unified_candidate", "published"), ds_rom=("published", "actual1792_half_dedicated", "actual1792_full_shared"),
-            hbm_ds=("unified_candidate", "unified_candidate_refill_cdc_only", "unified_candidate_refill_both"))
+HEAD = dict(qwen_rom=("unified_candidate", "unified_candidate_with_closure_upper"),
+            ds_rom=("published", "published_m221pq_die", "actual1792_half_dedicated", "actual1792_full_shared"),
+            hbm_ds=("unified_candidate", "unified_candidate_contracts_rtl", "unified_candidate_refill_cdc_only"))
 
 
 def render(ref, rows, v):
@@ -109,7 +117,26 @@ def render(ref, rows, v):
                        for c in HEAD[t] if c in comps)
         gates = ", ".join(L["targets"][t]["gates"])
         o.append(f"| {t} | {len(r['closed'])} / {r['total']} | {DIE_STATE[t]} | {hl} | {gates} |")
-    o += ["", "Unestablished contracts (zero credit): " + ", ".join(c["id"] for c in L["unestablished_contracts"]), ""]
+    o += ["", "Unestablished contracts (zero credit): " + ", ".join(c["id"] for c in L["unestablished_contracts"]),
+          "Contracts established at RTL + bench (credit only in compositions that name them; physical pending): "
+          + ", ".join(c["id"] for c in L.get("established_contracts_rtl_bench", [])), ""]
+    E = L.get("die_level_evidence")
+    if E:
+        o += ["## Die-level evidence (academic validation; " + E["policy"] + ")", "",
+              "| Target | Full-die GRT overflow | Die SS/FF STA (GRT parasitics) | CTS skew plan | IR | Region DRT + GRT-vs-DRT error bar |",
+              "|---|---|---|---|---|---|"]
+        cols = ("grt_overflow", "die_sta_grt_parasitics", "cts_skew_plan", "ir", "region_drt_and_error_bar")
+        for t in ("qwen_rom", "ds_rom", "hbm_ds"):
+            cells = []
+            for c in cols:
+                x = E[t][c]
+                g = f" [{x['geometry']}]" if x.get("geometry") else ""
+                cells.append(f"**{x['status']}**{g}: {x['note']}")
+            o.append(f"| {t} | " + " | ".join(cells) + " |")
+        o.append("")
+    for line in STREAM_INDEX:
+        o.append(line)
+    o.append("")
     for t in ("qwen_rom", "ds_rom", "hbm_ds"):
         r = rows[t]
         o.append(f"## {t}")
