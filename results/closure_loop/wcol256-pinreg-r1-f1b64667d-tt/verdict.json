@@ -1,0 +1,200 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "wcol256-pinreg-r1-f1b64667d-tt",
+ "block": "ot_dsrom_window_column_256",
+ "owner": "Claude:redesign-s81",
+ "source_branch": "claude/redesign-s81-20261008",
+ "source_commit": "f1b64667d7674a4453f935bd1ae20a4c06ef3db0",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 41.53,
+  "ff_ps": 3.04,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/dsrom_window_columns/m6/cl_wcol256_pinreg_r1_f1b64667d_tt/signoff_ss.sdc",
+   "physical/dsrom_window_columns/m6/cl_wcol256_pinreg_r1_f1b64667d_tt/signoff_ff_guarded.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt/routes/wcol256_pinreg_r1_f1b64667d_tt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt/routes/wcol256_pinreg_r1_f1b64667d_tt/work/orfs/logs/asap7/opentallas_ot_dsrom_window_column_256_asap7_wcol256_pinreg_r1_f1b64667d_tt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_exact_pinreg": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "build g rc=0\nbuild m rc=0\nrun_g_1.log: SUMMARY compared 19930 cycles, mismatches 0 RESULT PASS\nrun_g_2.log: SUMMARY compared 19930 cycles, mismatches 0 RESULT PASS\nrun_g_3.log: SUMMARY compared 19930 cycles, mismatches 0 RESULT PASS\nrun_m1.log: SUMMARY compared 19930 cycles, mismatches 167 RESULT FAIL\n",
+   "track": "parallel"
+  },
+  "bench_neg_nobypass": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "WCOL_NEG FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "pg_reachable_M7_M9_free": {
+   "ok": true,
+   "out": ""
+  },
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1571,
+    "mean": 258.7,
+    "min": 252.9,
+    "max": 265.1
+   },
+   "all": {
+    "n": 9763,
+    "mean": 258.7,
+    "min": 252.6,
+    "max": 265.2
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1571,
+    "mean": 164.2,
+    "min": 159.4,
+    "max": 170.3
+   },
+   "all": {
+    "n": 9763,
+    "mean": 164.1,
+    "min": 159.2,
+    "max": 170.4
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 259,
+   "CK_SS_ALL_MEAN": 259,
+   "CK_SS_MIN": 253,
+   "CK_SS_ALL_MIN": 253,
+   "CK_SS_MAX": 265,
+   "CK_SS_ALL_MAX": 265,
+   "CK_FF_MEAN": 164,
+   "CK_FF_ALL_MEAN": 164,
+   "CK_FF_MIN": 159,
+   "CK_FF_ALL_MIN": 159,
+   "CK_FF_MAX": 170,
+   "CK_FF_ALL_MAX": 170
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T05:12:41-07:00",
+ "job_spec": {
+  "name": "wcol256-pinreg-r1-f1b64667d-tt",
+  "block": "ot_dsrom_window_column_256",
+  "owner": "Claude:redesign-s81",
+  "purpose": "REDESIGN-S81 (TT closure, structural): wcol256 aggressive/alt: as wcol256-pinreg but one captured enable per row (WE_REP 1, synthesis buffers the reg->reg fanout) | base: wcol256-m6-01a487c86-mmq-tt (TC route, mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget kept)",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/redesign-s81-20261008",
+   "commit": "f1b64667d7674a4453f935bd1ae20a4c06ef3db0"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_pinreg",
+     "cmd": "bash rtl/dsrom_sys/s81_window_la/pipeline/run_window_column_pinreg.sh {RUN}/bench && test $(grep -c 'run_g_.*RESULT PASS' {RUN}/bench/summary.txt) -eq 3",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2
+    },
+    {
+     "name": "neg_nobypass",
+     "cmd": "bash rtl/dsrom_sys/s81_window_la/pipeline/run_window_column_pinreg.sh {RUN}/bench_neg >/dev/null 2>&1; grep -q 'run_m1.log.*RESULT FAIL' {RUN}/bench_neg/summary.txt && { echo 'WCOL_NEG FAIL'; exit 1; }; exit 0",
+     "expect": "fail",
+     "fail_regex": "WCOL_NEG FAIL",
+     "threads": 1,
+     "peak_ram_gb": 2
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_MM_FF_SDC=\"physical/dsrom_window_columns/m6/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ss.sdc physical/dsrom_window_columns/m6/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ff_guarded.sdc\"; TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && SRC={SRC} OUT={RUN}/routes CORES=8 physical/dsrom_window_columns/m6/route_col.sh {LABEL}${CL_LABEL_SUFFIX} 256 --param WE_REP=1 $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "echo route_col.sh writes the IO SDC from CK_SS_MEAN/CK_FF_MIN/CK_FF_MAX",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   "route": {
+    "cmd": "export OT_MM_FF_SDC=\"physical/dsrom_window_columns/m6/cl_{LABEL}/signoff_ss.sdc physical/dsrom_window_columns/m6/cl_{LABEL}/signoff_ff_guarded.sdc\"; TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && SRC={SRC} OUT={RUN}/routes CORES=8 physical/dsrom_window_columns/m6/route_col.sh {LABEL} 256 --param WE_REP=1",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp -r {RUN}/routes/{LABEL}/view {RUN}/record/ && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/pg_check.txt {RUN}/routes/{LABEL}/*.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "pg_reachable_M7_M9_free",
+     "cmd": "grep -q '^pg_rc=0' {RUN}/routes/{LABEL}/exit"
+    },
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/dsrom_window_columns/m6/cl_{LABEL}/signoff_ss.sdc",
+    "physical/dsrom_window_columns/m6/cl_{LABEL}/signoff_ff_guarded.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/dsrom_window_columns/m6/ot_dsrom_window_column_256_we_rep1"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC",
+  "budget": {
+   "enabled": false,
+   "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+  }
+ }
+}
