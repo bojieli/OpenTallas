@@ -1,0 +1,41 @@
+{
+  "load": [
+    27.75048828125,
+    38.39892578125,
+    37.916015625
+  ],
+  "meminfo": "MemTotal:       1188103376 kB\nMemFree:        315819748 kB\nMemAvailable:   741788972 kB\nBuffers:        12189728 kB\nCached:         408360692 kB\nSwapCached:        12336 kB\nActive:         428721100 kB\nInactive:       394762804 kB\nActive(anon):   375945176 kB\nInactive(anon): 46439412 kB\nActive(file):   52775924 kB\nInactive(file): 348323392 kB\nUnevictable:       12624 kB\nMlocked:            9552 kB\nSwapTotal:       8388604 kB\nSwapFree:              4 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:            365500 kB\nWriteback:             0 kB\nAnonPages:      402938184 kB\nMapped:          1112732 kB\nShmem:          19444784 kB\nKReclaimable:   32154528 kB\nSlab:           37532280 kB\nSReclaimable:   32154528 kB\nSUnreclaim:      5377752 kB\nKernelStack:       95248 kB\nPageTables:       893984 kB\nSecPageTables:     50300 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    602440292 kB\nCommitted_AS:   511355428 kB\nVmallocTotal:   13743895347199 kB\nVmallocUsed:      165568 kB\nVmallocChunk:          0 kB\nPercpu:          1026048 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:  63000576 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:        15368660 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:      476252 kB\nDirectMap2M:    37898240 kB\nDirectMap1G:    1169162240 kB\n",
+  "disk_free_bytes": 508262969344,
+  "known_prior_build_peak_KiB": 126720,
+  "known_prior_run_peak_KiB": 55296,
+  "source_inventory": {
+    "ot_gpu_w6_secded_pkg.sv": {
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "bytes": 1493
+    },
+    "tb_qwen_vm_reducer_overlap.sv": {
+      "sha256": "199b325a87965c00520b118c8995862c31d952018d3a61e243d5f1e0c76f4104",
+      "bytes": 5399
+    },
+    "ot_hdc_cg.sv": {
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "bytes": 2051
+    },
+    "ot_qwen_checked_vm_bank_direct_readback.sv": {
+      "sha256": "0c2c6708a74bf52d5010025b9444aa025713a599ed134e3d5c15f00ac547bd2b",
+      "bytes": 10030
+    },
+    "ot_sram_1r1w_512x128_m4_r2c2.v": {
+      "sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+      "bytes": 6668
+    },
+    "ot_qwen_vm_bank4_direct_readback.sv": {
+      "sha256": "c49f0566c334e1a153b3a2635702706858ff5e98ed497d81038ddae3c29f94e2",
+      "bytes": 12473
+    },
+    "ot_qwen_finite_vm_adapter_direct_readback.sv": {
+      "sha256": "61e0cf6674a304f2647fe4dad9add9d09498c0e841e1294299c86ff0e15bfd19",
+      "bytes": 20106
+    }
+  }
+}
