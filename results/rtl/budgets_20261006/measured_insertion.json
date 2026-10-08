@@ -294,13 +294,13 @@
    }
   },
   "hfd_svc_SW_s6": {
-   "job": "hbm_svc_SW_s6_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s6_tc_4aadc92bc",
+   "job": "hbm_svc_SW_s6_tt_c10b5fc9a",
+   "source_commit": "c10b5fc9a40e4bb60cf47a0fd8d9735d98740e65",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s6_tt_c10b5fc9a",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T03:48:38-07:00",
+   "measured_at": "2026-10-08T07:37:42-07:00",
    "ss": {
     "mean": 770,
     "min": 734,
@@ -312,12 +312,7 @@
     "max": 631
    },
    "boundary_n": 1920,
-   "budget": {
-    "measured_ss": 770.0,
-    "ok": true,
-    "reasons": [],
-    "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
-   }
+   "budget": null
   },
   "dsfd_svc_pc": {
    "job": "s81ph-dsfd_svc_pc-da50ce55a",
@@ -948,22 +943,22 @@
    "budget": null
   },
   "hfd_loader": {
-   "job": "hbm_loader_half_4d30522ee-cgfix",
-   "source_commit": "df37bfa4eb58832ad1436fe1ba41d377cc84bee0",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_loader_half_4d30522ee-cgfix",
+   "job": "hbm_loader_halfsk_tc_a0e0d1e08",
+   "source_commit": "a0e0d1e08d1b5bd11e46613439bf718294329082",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/hbm_loader_halfsk_tc_a0e0d1e08",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T04:39:28-07:00",
+   "measured_at": "2026-10-08T07:38:48-07:00",
    "ss": {
-    "mean": 744,
-    "min": 705,
-    "max": 812
+    "mean": 1315,
+    "min": 1274,
+    "max": 1386
    },
    "ff": {
-    "mean": 500,
-    "min": 465,
-    "max": 552
+    "mean": 802,
+    "min": 768,
+    "max": 847
    },
    "boundary_n": 598,
    "budget": null
@@ -2469,22 +2464,22 @@
    "budget": null
   },
   "ot_hdc_v41x_vred_slice64_c12s": {
-   "job": "hbm_su_red_slice_6f2d14e36_c",
-   "source_commit": "6f2d14e36c63b52dc30878585af9ebf5285f1321",
+   "job": "hbm_su_red_slice_tc_4aadc92bc",
+   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
    "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_red_slice_6f2d14e36_c",
+   "run": "/srv/opentallas-data/claude/closure-loop/hbm_su_red_slice_tc_4aadc92bc",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T09:27:27-07:00",
+   "measured_at": "2026-10-08T07:43:50-07:00",
    "ss": {
-    "mean": 1027,
-    "min": 1006,
-    "max": 1074
+    "mean": 1004,
+    "min": 983,
+    "max": 1042
    },
    "ff": {
-    "mean": 670,
-    "min": 651,
-    "max": 710
+    "mean": 651,
+    "min": 633,
+    "max": 685
    },
    "boundary_n": 2596,
    "budget": null
@@ -2637,24 +2632,24 @@
    "budget": null
   },
   "ot_v41_pqc_spine_screen": {
-   "job": "pq_r128_expanded_b1528203c-e3",
-   "source_commit": "b1528203c7361ed316718b826dbd9c592acc63ad",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/pq_r128_expanded_b1528203c-e3",
+   "job": "s81fs-h1-r16u35-78f0c7ce5-tc",
+   "source_commit": "78f0c7ce55a807cfa2651861c587320bd9d3cb2e",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/s81fs-h1-r16u35-78f0c7ce5-tc",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T20:54:38-07:00",
+   "measured_at": "2026-10-08T07:38:49-07:00",
    "ss": {
-    "mean": 990,
-    "min": 966,
-    "max": 1024
+    "mean": 797,
+    "min": 773,
+    "max": 818
    },
    "ff": {
-    "mean": 643,
-    "min": 626,
-    "max": 673
+    "mean": 515,
+    "min": 499,
+    "max": 536
    },
-   "boundary_n": 19266,
+   "boundary_n": 5714,
    "budget": null
   },
   "ot_ha2_truecredit_tx_phys": {
@@ -3456,5 +3451,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-08T07:35:49-07:00"
+ "updated": "2026-10-08T07:43:50-07:00"
 }
