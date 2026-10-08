@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "scope": "complete synchronous-CE core/ingress/channel foundation only; peers intentionally execute on logical clock. No production transaction wrapper, registered verdict, or safe external commit claimed.",
+  "enabled_ratio": "1/8",
+  "observed_state_bits": 2673,
+  "normal": {
+    "returncode": 0,
+    "output": "PASS native stress records=13 full_shape_X_captures=6448 cycles=8638\nSTATE 0 CYCLES 1\nSTATE 1 CYCLES 141\nSTATE 2 CYCLES 130\nSTATE 3 CYCLES 13\nSTATE 4 CYCLES 14\nSTATE 5 CYCLES 13\nSTATE 6 CYCLES 15\nSTATE 7 CYCLES 16\nSTATE 8 CYCLES 8057\nSTATE 9 CYCLES 12\nSTATE 10 CYCLES 13\nSTATE 11 CYCLES 210\nSTATE 12 CYCLES 1\nSTATE 13 CYCLES 0\n"
+  },
+  "missing_channel_CE_mutant": {
+    "returncode": 1,
+    "output": "FATAL: /tmp/hbm-ce-gate-m8nbr0oz/tb.sv:68: CE state changed while paused\n       Time: 106691 Scope: tb_sm_serial_owner\n"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/control_20261007/protected_registered/ot_hbm_regcheck_ce_hierarchy.sv": "105d41e8672212f7c1455bca2e01a587ea7d9b8be70609b771a4db6ce1c798ff",
+    "rtl/hbm_accel/control_20261007/tb_sm_serial_owner.sv": "6ad9c59ccc32a9d6adbf610ef12fb541194c73fb07da7d1b8f0edec603b3803f",
+    "results/rtl/hbm_sm_command_20261007/stress_seq.hex": "217bae8ead442cc2bce48249b909346c9fd7371f7feb5f4288cd8d7188113a92",
+    "tools/hbm_sm_protected_registered_ce_gate.py": "c05682c918fd41aa9abc6a393fe4b70e65863d4cd5a4d4fe807f39411b5db8e3",
+    "tools/hbm_sm_protected_registered_build.py": "233f136467f0660919d9b3a2e0e3582bf6aa3813621775548848882db1f6e5f9",
+    "tools/hbm_sm_protected_registered_model.py": "9a0cdc6cbea491ec20171d35adfe00c8f459407486962fd8c985f76f64283634"
+  },
+  "physical_admitted": false
+}
