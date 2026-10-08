@@ -268,13 +268,13 @@
    }
   },
   "hfd_svc_SE_s5": {
-   "job": "hbm_svc_SE_s5_e26c4446e_r18-cgfix",
-   "source_commit": "df37bfa4eb58832ad1436fe1ba41d377cc84bee0",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_e26c4446e_r18-cgfix",
+   "job": "hbm_svc_SE_s5_tc_4aadc92bc",
+   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_tc_4aadc92bc",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T13:45:26-07:00",
+   "measured_at": "2026-10-08T15:34:26-07:00",
    "ss": {
     "mean": 785,
     "min": 724,
@@ -282,8 +282,8 @@
    },
    "ff": {
     "mean": 440,
-    "min": 404,
-    "max": 556,
+    "min": 403,
+    "max": 541,
     "n": 3204,
     "kind": "boundary",
     "clock": "core_clk"
@@ -306,9 +306,9 @@
     "job": "hbm_svc_SE_s5_tt_c10b5fc9a"
    },
    "tt": {
-    "mean": 547,
-    "min": 507,
-    "max": 681,
+    "mean": 548,
+    "min": 506,
+    "max": 667,
     "n": 3204,
     "kind": "boundary",
     "clock": "core_clk"
@@ -4092,20 +4092,46 @@
    "host": "ot-pve1",
    "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hl-E1-a1f23fa0b-mm",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T05:01:26-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T15:32:27-07:00",
    "ss": {
     "mean": 233,
     "min": 227,
     "max": 241
    },
    "ff": {
-    "mean": 144,
-    "min": 139,
-    "max": 151
+    "mean": 137,
+    "min": 130,
+    "max": 144,
+    "n": 517,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "boundary_n": 517,
-   "budget": null
+   "budget": null,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 233,
+     "min": 227,
+     "max": 241
+    },
+    "ff": {
+     "mean": 144,
+     "min": 139,
+     "max": 151
+    },
+    "parasitics": "placement-estimated",
+    "job": "s81-hend-m221pq-hl-E1-a1f23fa0b-mm"
+   },
+   "tt": {
+    "mean": 170,
+    "min": 162,
+    "max": 176,
+    "n": 517,
+    "kind": "boundary",
+    "clock": "core_clk"
+   }
   },
   "dsfd_m2l_raw_512x1__hl_E0": {
    "job": "s81-hend-m221pq-hl-E0-a1f23fa0b-mm",
@@ -4684,22 +4710,22 @@
    "budget": null
   },
   "dsfd_vm_bgq": {
-   "job": "s81b-vm_bgq-tc-50bf09d54",
+   "job": "s81b-vm_bgq-tc-50bf09d54-vf-lvt",
    "source_commit": "50bf09d546a9f3614aec799d41d0b6d183b9bec6",
-   "host": "ot-agidock128",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/s81b-vm_bgq-tc-50bf09d54",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81b-vm_bgq-tc-50bf09d54-vf-lvt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T07:12:41-07:00",
+   "measured_at": "2026-10-08T15:29:19-07:00",
    "ss": {
-    "mean": 679,
-    "min": 553,
-    "max": 938
+    "mean": 674,
+    "min": 548,
+    "max": 908
    },
    "ff": {
-    "mean": 440,
-    "min": 339,
-    "max": 630
+    "mean": 437,
+    "min": 336,
+    "max": 618
    },
    "boundary_n": 4446,
    "budget": null
@@ -4887,24 +4913,24 @@
    }
   },
   "ot_s81_pq_ret_root_cam_p": {
-   "job": "s81b-pq-rc2-a0-h212-hm10-b761ac1c6",
+   "job": "s81b-pq-rc2p-a7-h242-hm10-b761ac1c6",
    "source_commit": "b761ac1c6da46ae5bdedacf9fa38abf21ac76242",
    "host": "ot-epyc2",
-   "run": "/srv/opentallas-data/claude/closure-loop/s81b-pq-rc2-a0-h212-hm10-b761ac1c6",
+   "run": "/srv/opentallas-data/claude/closure-loop/s81b-pq-rc2p-a7-h242-hm10-b761ac1c6",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T15:27:21-07:00",
+   "measured_at": "2026-10-08T15:31:20-07:00",
    "ss": {
-    "mean": 348,
-    "min": 344,
-    "max": 354
+    "mean": 391,
+    "min": 384,
+    "max": 397
    },
    "ff": {
-    "mean": 216,
-    "min": 210,
-    "max": 221
+    "mean": 241,
+    "min": 235,
+    "max": 247
    },
-   "boundary_n": 137,
+   "boundary_n": 140,
    "budget": null
   },
   "ot_qwen_rom_core_core_p": {
@@ -4988,5 +5014,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-08T15:27:21-07:00"
+ "updated": "2026-10-08T15:34:26-07:00"
 }
