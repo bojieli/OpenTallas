@@ -21,9 +21,20 @@ M256 = 'ot_sram_1r1w_256x256_m2_r2c2'
 M64 = 'ot_sram_1r1w_64x512_m1_r2c2'
 BLOCKS = dict(
     pkt_ii1=dict(top='hfd_coll_pkt_fifo_ii1', src=[PKG, CF + 'ot_hbm_collective_packet_fifo_refill.sv',
-                 CT + 'hfd_coll_pkt_fifo_ii1.sv'], macros=[M256], die=(240, 240), density=.55),
+                 CT + 'hfd_coll_pkt_fifo_ii1.sv'], macros=[M256], die=(330.048, 216), density=.55,
+                 macro_tcl='physical/hbm_contracts_20261007/pkt_macros_a.tcl',
+                 pins=['dout.*=left', 'din.*=right', '(clk|rst_n|push|pop|ready|valid|fault|count.*)=top']),
+    # aggressive variant: wider channels and 25 um macro gaps (area is not scarce)
+    pkt_ii1b=dict(top='hfd_coll_pkt_fifo_ii1', src=[PKG, CF + 'ot_hbm_collective_packet_fifo_refill.sv',
+                  CT + 'hfd_coll_pkt_fifo_ii1.sv'], macros=[M256], die=(397.44, 250.56), density=.45,
+                  macro_tcl='physical/hbm_contracts_20261007/pkt_macros_b.tcl',
+                  pins=['dout.*=left', 'din.*=right', '(clk|rst_n|push|pop|ready|valid|fault|count.*)=top']),
     su_rin=dict(top='hfd_su_result_ingress', src=[CT + 'ot_hbm_su_result_ingress.sv', CT + 'hfd_sm_su_edge.sv'],
                 macros=[M64], die=(230, 150), density=.55),
+    su_rin_b=dict(top='hfd_su_result_ingress', src=[CT + 'ot_hbm_su_result_ingress.sv', CT + 'hfd_sm_su_edge.sv'],
+                  macros=[M64], die=(299.592, 120.96), density=.5,
+                  macro_tcl='physical/hbm_contracts_20261007/su_rin_macros_b.tcl',
+                  pins=['^r_in=left', '^out_=top', '^(op_|fault|free_o|clk|rst_n)=bottom']),
     credit=dict(top='hfd_coll_credit_prod', src=[CT + 'ot_hbm_coll_credit_producer.sv', CT + 'hfd_coll_credit.sv'],
                 macros=[], die=(40, 40), density=.55, sdc=['physical/hbm_contracts_20261007/credit_reset.sdc']),
     idle=dict(top='hfd_coll_idle_tx', src=[CT + 'ot_hbm_coll_idle_insert.sv', CT + 'hfd_coll_idle_tx.sv'],
@@ -51,6 +62,10 @@ def command(block, out):
             '--nickname-tag', 'hc_' + block,
             '--synth-timeout-seconds', 'unlimited', '--flow-timeout-seconds', 'unlimited',
             '--keep-workdir', str(out / 'work'), '--output', str(out / 'physical.json')]
+    if b.get('macro_tcl'):
+        cmd += ['--orfs-var', f"MACRO_PLACEMENT_TCL=/src/{b['macro_tcl']}"]
+    for pr in b.get('pins', []):
+        cmd += ['--pin-region', pr]
     for extra in b.get('sdc', []):
         cmd += ['--sdc-append', extra]
     for m in b['macros']:
