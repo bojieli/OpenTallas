@@ -999,7 +999,7 @@ def sync_source(j):
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
-           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl")
+           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1217,7 +1217,10 @@ def stage_tail(j, st, n=40):
     return r.stdout
 
 
-def get_metrics(j):
+TT_STA_SLOTS = threading.BoundedSemaphore(8)
+
+
+def get_metrics(j, tt_resta=True):
     v = j["spec"].get("verdict", {})
     if v.get("metrics_cmd"):
         r = ssh(j["host"], f"cd {j['run']}/src && {subst(v['metrics_cmd'], j)}", timeout=600)
@@ -1236,9 +1239,20 @@ import glob,json,sys
 cs=sorted(glob.glob(sys.argv[1])); dm=sorted(glob.glob(sys.argv[2])) if sys.argv[2] else []
 o={'corner_sta':cs,'drc_metrics':dm}
 if cs:
-  d=json.load(open(cs[-1])); o['ss_ps']=d['setup_ss']['worst_slack_ps']; o['ff_ps']=d['hold_ff']['worst_slack_ps']
-  o['orfs_dir']=d.get('orfs_dir'); o['errors']=d['setup_ss'].get('errors',[])+d['hold_ff'].get('errors',[])
-  o['ss_tns_ps']=d['setup_ss'].get('tns_ps'); o['post_sdc']=list(d.get('post_sdc',{}))
+  d=json.load(open(cs[-1])); o['ff_ps']=d['hold_ff']['worst_slack_ps']
+  o['orfs_dir']=d.get('orfs_dir'); o['post_sdc']=list(d.get('post_sdc',{}))
+  o['ss_sensitivity_ps']=d['setup_ss']['worst_slack_ps']; o['ss_sensitivity_tns_ps']=d['setup_ss'].get('tns_ps')
+  # OWNER OPTION B: setup closes at TT; ss_ps keeps its key for the loop's line checks but now holds the TT setup slack
+  tt=d.get('setup_tt')
+  if tt is None:
+    try: tt=json.load(open(cs[-1]+'.tt.json')).get('setup_tt')
+    except Exception: tt=None
+  o['setup_corner']='tt'; o['corner_sta_tt']=cs[-1]+'.tt.json' if 'setup_tt' not in d else cs[-1]
+  if tt is None:
+    o['need_tt']=True; o['ss_ps']=None; o['errors']=d['hold_ff'].get('errors',[])
+  else:
+    o['ss_ps']=tt.get('worst_slack_ps'); o['ss_tns_ps']=tt.get('tns_ps')
+    o['errors']=(tt.get('errors') or [])+d['hold_ff'].get('errors',[])+([tt['error']] if tt.get('error') else [])
 if dm:
   m=json.load(open(dm[-1])); o['drc']=m.get('detailedroute__route__drc_errors')
 print(json.dumps(o))
@@ -1249,6 +1263,13 @@ print(json.dumps(o))
         m = json.loads(r.stdout.strip().splitlines()[-1])
     except Exception:  # noqa: BLE001
         m = {"error": (r.stdout + r.stderr)[-400:]}
+    if m.get("need_tt") and tt_resta and m.get("orfs_dir") and not m.get("error"):
+        with TT_STA_SLOTS:          # TT re-STA of an existing route (option B), at most a few at once fleet-wide
+            ship_helpers(j["host"], j["run"])
+            ssh(j["host"], f"bash {j['run']}/cl/tt_resta.sh {shlex.quote(m['orfs_dir'])} {j['run']}/src "
+                           f"{shlex.quote(m['corner_sta_tt'])}", timeout=6000)
+        event(j, "option B: TT setup re-STA of the existing route")
+        return get_metrics(j, tt_resta=False)
     if v.get("drc") == "skip":
         m["drc"] = 0
         m["drc_skipped"] = True
