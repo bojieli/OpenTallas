@@ -728,24 +728,24 @@
    }
   },
   "hfd_hc": {
-   "job": "hbm_hc_quarter_r23_5b48044bf-tt",
-   "source_commit": "5b48044bf8b8057a25df074d564427a85e225784",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-data/claude/closure-loop/hbm_hc_quarter_r23_5b48044bf-tt",
+   "job": "hbm_hc_quarter_01353018a-tt",
+   "source_commit": "01353018a6761c43bfa05c659d8339be14fc48e8",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_hc_quarter_01353018a-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T05:02:30-07:00",
+   "measured_at": "2026-10-08T08:50:41-07:00",
    "ss": {
-    "mean": 3076,
-    "min": 3038,
-    "max": 3208
+    "mean": 4606,
+    "min": 4449,
+    "max": 5592
    },
    "ff": {
-    "mean": 1894,
-    "min": 1860,
-    "max": 2024
+    "mean": 3077,
+    "min": 2954,
+    "max": 3791
    },
-   "boundary_n": 2048,
+   "boundary_n": 2049,
    "budget": null
   },
   "hfd_index_q_b1": {
@@ -3128,51 +3128,25 @@
    "budget": null
   },
   "hfd_coll_pkt_fifo_ii1": {
-   "job": "hbm_pkt_ii1s-a968f7b40-tc",
+   "job": "hbm_pkt_ii1sb-a968f7b40-tc",
    "source_commit": "a968f7b406c672e27de88567bb08c2ac8ba507a0",
-   "host": "localhost",
-   "run": "/home/ubuntu/closure-loop-local/hbm_pkt_ii1s-a968f7b40-tc",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/hbm_pkt_ii1sb-a968f7b40-tc",
    "clock": "core_clk",
-   "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T08:35:57-07:00",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-08T08:47:39-07:00",
    "ss": {
-    "mean": 490,
-    "min": 476,
-    "max": 523
+    "mean": 542,
+    "min": 521,
+    "max": 579
    },
    "ff": {
-    "mean": 283,
-    "min": 267,
-    "max": 308,
-    "n": 1104,
-    "kind": "boundary",
-    "clock": "core_clk"
+    "mean": 363,
+    "min": 344,
+    "max": 398
    },
    "boundary_n": 1104,
-   "budget": null,
-   "grade": "routed",
-   "calibrate": {
-    "ss": {
-     "mean": 490,
-     "min": 476,
-     "max": 523
-    },
-    "ff": {
-     "mean": 323,
-     "min": 310,
-     "max": 355
-    },
-    "parasitics": "placement-estimated",
-    "job": "hbm_pkt_ii1s-a968f7b40-tc"
-   },
-   "tt": {
-    "mean": 344,
-    "min": 328,
-    "max": 368,
-    "n": 1104,
-    "kind": "boundary",
-    "clock": "core_clk"
-   }
+   "budget": null
   },
   "hfd_coll_idle_tx": {
    "job": "hbm_idle-36399d734",
@@ -3869,5 +3843,5 @@
    }
   }
  },
- "updated": "2026-10-08T08:42:48-07:00"
+ "updated": "2026-10-08T08:50:41-07:00"
 }
