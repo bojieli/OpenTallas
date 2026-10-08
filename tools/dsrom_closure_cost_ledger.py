@@ -52,6 +52,9 @@ ITEMS = [
     # code-tile block, not on the DS ROM path (no DS ROM / S81 instance)
     ("bf_rowfix", "BF rowfix: +1 per push (a field phase)", [(k, 1, 0) for k in MAT]),
     ("pq_qelem", "PQ q-element: decode stage +0.17 % node time (field phases)", [(k, 0, 0.0017) for k in MAT]),
+    ("softmax_exp_recut", "Softmax exp tile closed only with RECUT (dsrom_softmax_safe_exprcf_bd30aca4a CLOSED SS +123.11 / "
+                          "FF +16.70, f12r multiplier/adder +2 cuts, LAT 11): attn.exp 225 -> 255 (+30 over SAFE2; "
+                          "dsrom_softmax_recovery_20261007 RECUT1_or_2_vs_m5 +31)", [("*.attn.exp", 30, 0)]),
 ]
 
 def su_xing_nodes():
@@ -103,6 +106,22 @@ CANDIDATES = [
      [("*.attn.wo_a", 72, 0), ("*.attn.a_proj", 54, 0), ("*.ffn.router", 18, 0), ("*.attn.cmp.wk", 18, 0),
       ("*.attn.wq_b", 18, 0), ("*.attn.wo_b", 18, 0), ("*.ffn.shared_gu", 18, 0), ("*.ffn.experts_gu", 18, 0),
       ("*.ffn.down", 18, 0)]),
+]
+
+
+# CLAUDE s81-blocks 2026-10-07 structural closure candidates (routes in the closure loop; adopt on CLOSED)
+CANDIDATES += [
+    ("selector_pipe2", "Selector PIPE2 (claude/s81-blocks-20261007 36b7a0452: selt_q hist input reg + pair-sum cuts, "
+                       "out-FIFO input reg, registered sweep bound, CMP_RETIME; selt_c MRG_PIPE + RQPIPE + SLAT 4): bench "
+                       "tail mean 153 vs 127 (+26 a segment over the +20 already priced)",
+     [("*.attn.idx.topk_local", 26, 0), ("*.attn.cand.topk_local", 26, 0)]),
+    ("pq_rootcam_B", "PQ root CAM stage B (4251eb216, OPC 0): measured eight-leaf root +4 cycles vs native, charged per "
+                     "field phase (upper bound: every phase exposes one 8-leaf root)", [(k, 4, 0) for k in MAT]),
+    ("pq_rootcam_CP", "PQ root CAM stage C + PAR protected face (claude/s81-blocks-20261007 387610a35, OPC 1 PAR 1): "
+                      "eight-leaf +8 vs native (input station +1, operand fetch +1 a pass)", [(k, 8, 0) for k in MAT]),
+    ("coll_gbx_fmt1", "Collective gearbox FMT1 (fixed 3-in-4 slot format, no bit shifter): slot rate 0.75 vs 0.765 per "
+                      "gearbox beat (-2.0 %), charged as +2.0 % of every collective node (upper bound; link-up is faster: "
+                      "TP4 bench end 3,012 vs 3,374 cycles)", [(k, 0, 0.02) for k in AR_ + AG_]),
 ]
 
 

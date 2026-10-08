@@ -672,6 +672,13 @@
    "source": "PQ q-element: decode stage +0.17 % node time (field phases)"
   },
   {
+   "item": "softmax_exp_recut",
+   "nodes": "*.attn.exp",
+   "cycles": 30,
+   "frac": 0,
+   "source": "Softmax exp tile closed only with RECUT (dsrom_softmax_safe_exprcf_bd30aca4a CLOSED SS +123.11 / FF +16.70, f12r multiplier/adder +2 cuts, LAT 11): attn.exp 225 -> 255 (+30 over SAFE2; dsrom_softmax_recovery_20261007 RECUT1_or_2_vs_m5 +31)"
+  },
+  {
    "item": "su_meso_d8g1",
    "nodes": "E1.knorm.sumsq",
    "cycles": 3,

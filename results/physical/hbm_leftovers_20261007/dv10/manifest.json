@@ -1,0 +1,627 @@
+{
+  "observed_utc": "2026-10-07T10:51:46.154482+00:00",
+  "route": "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60",
+  "source_root": "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9",
+  "source_root_exists": true,
+  "files": {
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/SOURCE_COMMIT": {
+      "sha256": "33e6baace87073bc11be88a9df1b3e1b865e69df8cf66e1a957c5558a71094a7",
+      "bytes": 76,
+      "original_bytes": 76,
+      "tail_only": false,
+      "saved_as": "route/SOURCE_COMMIT"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/args": {
+      "sha256": "07f53492960a6fbe238d85d390f53d5373e45708c2bb93ccab8557d8e163495c",
+      "bytes": 978,
+      "original_bytes": 978,
+      "tail_only": false,
+      "saved_as": "route/args"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/exit": {
+      "sha256": "9a3983d65da6a80c3467c1c81545c9ec62ba3a5397bb6afed6357c870c7c00be",
+      "bytes": 40,
+      "original_bytes": 40,
+      "tail_only": false,
+      "saved_as": "route/exit"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/physical.json": {
+      "sha256": "6d4017337c30372b4ca25447ebbac4d362fa20b8308e24f7ae5c62582e07aec4",
+      "bytes": 37700,
+      "original_bytes": 37700,
+      "tail_only": false,
+      "saved_as": "route/physical.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/corner_sta.json": {
+      "sha256": "e6bb1f4d6349cceb2911027ee845e1ebb68e32b238d0182f271ef78c544bce38",
+      "bytes": 3027,
+      "original_bytes": 3027,
+      "tail_only": false,
+      "saved_as": "route/corner_sta.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/corner.log": {
+      "sha256": "0b196d72d6b1df9fd9b9595b5d16b55383a3f834f462fb76d7f52752c6c68afc",
+      "bytes": 1154,
+      "original_bytes": 1154,
+      "tail_only": false,
+      "saved_as": "route/corner.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/check.json": {
+      "sha256": "a5d8b0928e782c2a82918cc9a3cba9c6b8ae1b9fa875cd37e16f6f35dd9d7a62",
+      "bytes": 804,
+      "original_bytes": 804,
+      "tail_only": false,
+      "saved_as": "route/check.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/ports/summary.json": {
+      "sha256": "e4c331fecde89da2cc17da44fffbd07269db4e14a04e42219deb2716e97c4344",
+      "bytes": 708,
+      "original_bytes": 708,
+      "tail_only": false,
+      "saved_as": "route/ports/summary.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/view/abstract.json": {
+      "sha256": "94f6537b6e9352007ad4beb20701ddbefaa69ca84dff00c0a1fed1a81b5f6b35",
+      "bytes": 1793,
+      "original_bytes": 1793,
+      "tail_only": false,
+      "saved_as": "route/view/abstract.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/run.log": {
+      "sha256": "bfad50c42fe0ae690556ca790ecb28fe023bf6ee5125df0c20f6c72829e49d2a",
+      "bytes": 438,
+      "original_bytes": 438,
+      "tail_only": true,
+      "saved_as": "route/run.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/config.mk": {
+      "sha256": "84846739fb56e8527f0ea27d088403859eaf3bf987524cf8fce792cecaede173",
+      "bytes": 2180,
+      "original_bytes": 2180,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/config.mk"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/constraint.sdc": {
+      "sha256": "49645707a4089aa5d902fd18725f03b1be64cbd3f406aa1a8123540b5e517dad",
+      "bytes": 1330,
+      "original_bytes": 1330,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/constraint.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/hooks/post_synth_inout_retype_post_synth.tcl": {
+      "sha256": "2ee78d86fa95ea214c596be406756043c01edde426f29a12c5245b9878d6d95f",
+      "bytes": 1405,
+      "original_bytes": 1405,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/hooks/post_synth_inout_retype_post_synth.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/hooks/post_cts_post_cts_vclk.tcl": {
+      "sha256": "c4d793622243c1f876c747004899bb05cc331274f04a25058a83641aa32c31d4",
+      "bytes": 203,
+      "original_bytes": 203,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/hooks/post_cts_post_cts_vclk.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/hooks/post_global_place_face_chain_place.tcl": {
+      "sha256": "9bf1f7f9ab064e6bd8f3c92dc9fed8cb0033b0b9db629b1c4be4568f3b6ce7ad",
+      "bytes": 10442,
+      "original_bytes": 10442,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/hooks/post_global_place_face_chain_place.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl": {
+      "sha256": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976",
+      "bytes": 706,
+      "original_bytes": 706,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/hooks/pre_cts_pre_cts_fclk_root_buf.tcl": {
+      "sha256": "5de59570e0c0223ceddc577b997f47ef5e606891e383ede33b158f846a76a6d0",
+      "bytes": 2443,
+      "original_bytes": 2443,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/hooks/pre_cts_pre_cts_fclk_root_buf.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/2_4_floorplan_pdn.json": {
+      "sha256": "8d12fcf2f73174c293ca14a929553c319b7226753984a15ee1fefaa73d0937be",
+      "bytes": 134,
+      "original_bytes": 134,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/2_4_floorplan_pdn.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/2_1_floorplan.json": {
+      "sha256": "0bdad51b69e3ad7bc5e7cc6aae0313fadeffd3d915f6ea10417ba150a90c7086",
+      "bytes": 2191,
+      "original_bytes": 2191,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/2_1_floorplan.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/3_3_place_gp.json": {
+      "sha256": "2126eabd56b67b284f54933d040e15779a5b4bde48075f31532ff421894ef34d",
+      "bytes": 1897,
+      "original_bytes": 1897,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/3_3_place_gp.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/1_synth.json": {
+      "sha256": "60773b16b7aadd7875b391b6f5dd0eb10f2a610e8c2850ba707e24241e1e7d02",
+      "bytes": 804,
+      "original_bytes": 804,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/1_synth.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/5_3_fillcell.json": {
+      "sha256": "00beb92b354de96df949abd9a219d19cb882880128e5ed8497dffd3716e1695f",
+      "bytes": 198,
+      "original_bytes": 198,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/5_3_fillcell.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/3_4_place_resized.json": {
+      "sha256": "b6a8e7ddc89bea1ebacbf1e8a9d8920742359ffeb2b01ec24729b131de4b10fe",
+      "bytes": 2197,
+      "original_bytes": 2197,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/3_4_place_resized.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/6_report.json": {
+      "sha256": "ccdd42284d145860aa7a63a7e0850d9e046f8d776f477389749454511312aee2",
+      "bytes": 4094,
+      "original_bytes": 4094,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/6_report.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/3_1_place_gp_skip_io.json": {
+      "sha256": "8d12fcf2f73174c293ca14a929553c319b7226753984a15ee1fefaa73d0937be",
+      "bytes": 134,
+      "original_bytes": 134,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/3_1_place_gp_skip_io.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/3_2_place_iop.json": {
+      "sha256": "befc46f8875bb60cb97286acd086c05a2a1fb8d7e37c258a4eacb3d2c6dfadbb",
+      "bytes": 187,
+      "original_bytes": 187,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/3_2_place_iop.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/3_5_place_dp.json": {
+      "sha256": "78ffb010888cee74225e0fd2e20257b8468eabbe202e9e8d344309cd304d780c",
+      "bytes": 2836,
+      "original_bytes": 2836,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/3_5_place_dp.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/5_2_route.json": {
+      "sha256": "a54dfee6444f8f396419de02a9d532bace3f6229304d9c84b344957274dfb9df",
+      "bytes": 2071,
+      "original_bytes": 2071,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/5_2_route.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/6_1_fill.json": {
+      "sha256": "8d12fcf2f73174c293ca14a929553c319b7226753984a15ee1fefaa73d0937be",
+      "bytes": 134,
+      "original_bytes": 134,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/6_1_fill.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/4_1_cts.json": {
+      "sha256": "d97d88b8cedfe2f59f7b9b3893931c8a61a34260edf9b6c97baf672b87fe2677",
+      "bytes": 3450,
+      "original_bytes": 3450,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/4_1_cts.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/5_1_grt.json": {
+      "sha256": "97d6f454abf6b9dff6b8030f8999aa27164657b7024d010f23315bb4c94fe6c3",
+      "bytes": 1341364,
+      "original_bytes": 1341364,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/5_1_grt.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/2_2_floorplan_macro.json": {
+      "sha256": "8d12fcf2f73174c293ca14a929553c319b7226753984a15ee1fefaa73d0937be",
+      "bytes": 134,
+      "original_bytes": 134,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/2_2_floorplan_macro.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/2_3_floorplan_tapcell.json": {
+      "sha256": "8d12fcf2f73174c293ca14a929553c319b7226753984a15ee1fefaa73d0937be",
+      "bytes": 134,
+      "original_bytes": 134,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/2_3_floorplan_tapcell.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/reports/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/6_finish.rpt": {
+      "sha256": "d2cfac4fd15656091d45a23456bdf5b4c30e48622983e79974af24dbc2c2f0f3",
+      "bytes": 77219,
+      "original_bytes": 77219,
+      "tail_only": false,
+      "saved_as": "route/work/orfs/reports/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/6_finish.rpt"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/view/hfd_router_ss.lib": {
+      "sha256": "c09ae75445b2fcc2bb7b87b304e3c84bf8127cf6f8e166716d070df3daf49108",
+      "bytes": 1016808,
+      "original_bytes": 1016808,
+      "tail_only": false,
+      "saved_as": "route/view/hfd_router_ss.lib"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/view/hfd_router_ff.lib": {
+      "sha256": "e38dd94d863b35bb721e7e9a1adf2a3f0473bbc643eca693123b18ab636cb03c",
+      "bytes": 1012430,
+      "original_bytes": 1012430,
+      "tail_only": false,
+      "saved_as": "route/view/hfd_router_ff.lib"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/view/hfd_router.lef": {
+      "sha256": "86a4364fa8c687412a67ed63c463224927a4d469a69c38e9b1b137ec8203cfd2",
+      "bytes": 7013873,
+      "original_bytes": 7013873,
+      "tail_only": false,
+      "saved_as": "route/view/hfd_router.lef"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/view/export_ss.tcl": {
+      "sha256": "a28590195181449493f7edcd42e6c2a20939ee0788aa2f7832f12641a2b6efdc",
+      "bytes": 1179,
+      "original_bytes": 1179,
+      "tail_only": false,
+      "saved_as": "route/view/export_ss.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/view/export_ff.tcl": {
+      "sha256": "d83a48bf87589bee48485e19a870dbc85ad8ccfe825af6f104ff7cfc7b19cc3f",
+      "bytes": 1140,
+      "original_bytes": 1140,
+      "tail_only": false,
+      "saved_as": "route/view/export_ff.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/pa/pa.log": {
+      "sha256": "c27de2b5a6510b9f3541e88c0cf34b0c755cda280a9fea87f039ed3b56dd29db",
+      "bytes": 86842,
+      "original_bytes": 86842,
+      "tail_only": false,
+      "saved_as": "route/pa/pa.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/6_report.log": {
+      "sha256": "eba6ea93d20fa2e166f3c9c17bd8351b6017492832fafacf637471bf63ff9ad0",
+      "bytes": 1713,
+      "original_bytes": 5539,
+      "tail_only": true,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/6_report.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/6_1_merge.log": {
+      "sha256": "bc6e03634eb680cb1a83a8145f02b7bba2f79d7ffe5fe2247e7472b342816fe0",
+      "bytes": 528,
+      "original_bytes": 528,
+      "tail_only": true,
+      "saved_as": "route/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_dv10_ih60/base/6_1_merge.log"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/pdn_view.tcl": {
+      "sha256": "58e4b292be0137c8466e5bcd6f5fae2160301d09d833411c259ea09c91fc3746",
+      "bytes": 1618,
+      "original_bytes": 1618,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/pdn_view.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/.views/dv10_ih60/io_place.tcl": {
+      "sha256": "bd9089fb505e8c34b58005c8af084228e1fb7d0624244d690532a3fe835a99fd",
+      "bytes": 207824,
+      "original_bytes": 207824,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/.views/dv10_ih60/io_place.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/router/rtl/hfd_router_face_stages.tcl": {
+      "sha256": "3316e8ed344d21d6ed3173c20d8c224cd86cb785bb0731ff544e13feb0e3cc9a",
+      "bytes": 282,
+      "original_bytes": 282,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/hfd_router_face_stages.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/router/rtl/hfd_router.sv": {
+      "sha256": "1c375cab20b8d45f529eaec4acab1b85cdc65ab3da0b6c5aaf7506973f556427",
+      "bytes": 21742,
+      "original_bytes": 21742,
+      "tail_only": false,
+      "local_source_matches": false,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/hfd_router.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv": {
+      "sha256": "49da9ff0437d72340c17c38b4062074d821d3152c61092939a7df6a36ad10739",
+      "bytes": 1823,
+      "original_bytes": 1823,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/rtl/gpu/ot_gpu_router_topk_ps.sv": {
+      "sha256": "2ee77de216f7edb129be12dd549b6d85fa8bb374f6046b178bdb8ac37ab578c2",
+      "bytes": 27087,
+      "original_bytes": 27087,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/gpu/ot_gpu_router_topk_ps.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/rtl/gpu/ot_gpu_router_topk.sv": {
+      "sha256": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
+      "bytes": 7889,
+      "original_bytes": 7889,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/gpu/ot_gpu_router_topk.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/rtl/common/ot_fwd_link_stage.sv": {
+      "sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+      "bytes": 1611,
+      "original_bytes": 1611,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/rtl/common/ot_fwd_link_stage.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/vclk_latency.tcl": {
+      "sha256": "c1c475d9959c4008344840df444f42b3cb0358ec4b1c555585c269ef5ceb266c",
+      "bytes": 2684,
+      "original_bytes": 2684,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/vclk_latency.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/abi3/v41x_karb_repair_buffer_cap.tcl": {
+      "sha256": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976",
+      "bytes": 706,
+      "original_bytes": 706,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/abi3/v41x_karb_repair_buffer_cap.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/router/rtl/spec.json": {
+      "sha256": "2077700b9137f4cc71623d21af9119fc412f22c614bd8a51447aaba19ccc0cb5",
+      "bytes": 1942,
+      "original_bytes": 1942,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/spec.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/router/rtl/fclk_ports_signoff.sdc": {
+      "sha256": "d59ae23ed767dcd327f98df08c6ea55c75e922f080a7b9bee44e56afa7387099",
+      "bytes": 537,
+      "original_bytes": 537,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/fclk_ports_signoff.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/router/rtl/tb_hfd_router.sv": {
+      "sha256": "a10f18ed03a78936290870513bdaf13e9985736c6030266f4a58183c8dbdeacd",
+      "bytes": 9270,
+      "original_bytes": 9270,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/tb_hfd_router.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/router/rtl/hfd_router_wrap.json": {
+      "sha256": "9621c8ebf041c2bd30473c0eca13bab96292350129a6232adf79bb45906caf6e",
+      "bytes": 284,
+      "original_bytes": 284,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/hfd_router_wrap.json"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/router/rtl/io_vclk_m_770_ih60.sdc": {
+      "sha256": "93a101443560e59909c33aec79c3a3b2f74fe3a5a5a0213eb0a14da093ed1200",
+      "bytes": 1624,
+      "original_bytes": 1624,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/router/rtl/io_vclk_m_770_ih60.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/pre_cts_fclk_macro_buf.tcl": {
+      "sha256": "d0e2b13c8e756e15c36316283a1e45514ddffa6e67172170ac814fed50249f59",
+      "bytes": 1648,
+      "original_bytes": 1648,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/pre_cts_fclk_macro_buf.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/ir_attn_round.sh": {
+      "sha256": "5dcb710fc56e21a67f9bae6d1012e95870cbb528a32ce93984ae102c9db5bb32",
+      "bytes": 1152,
+      "original_bytes": 1152,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/ir_attn_round.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl": {
+      "sha256": "5de59570e0c0223ceddc577b997f47ef5e606891e383ede33b158f846a76a6d0",
+      "bytes": 2443,
+      "original_bytes": 2443,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/vclk_corner_true.sdc": {
+      "sha256": "fed25c5bb8bf247102fb38f45df0707e16a89453dfdc24c79e1f7747f66e13ba",
+      "bytes": 1766,
+      "original_bytes": 1766,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/route_view.sh": {
+      "sha256": "ef24839f421f50c4dde0552da14b7f790c216610310c1d52d1a061574df5eb5a",
+      "bytes": 5188,
+      "original_bytes": 5188,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/route_view.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/io_vclk_770.sdc": {
+      "sha256": "fd970753549502f7c13954f42528862de5a4f1afaa2e39777b93afaa70a37d89",
+      "bytes": 1351,
+      "original_bytes": 1351,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_770.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/io_vclk_m_770.sdc": {
+      "sha256": "02487afa59748311bb95ef4ba9e33401eb0787be4cb73c20d389187bcd4987fa",
+      "bytes": 1404,
+      "original_bytes": 1404,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_m_770.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/signoff_unc60.sdc": {
+      "sha256": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f",
+      "bytes": 271,
+      "original_bytes": 271,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/signoff_unc60.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/io_vclk_m_350.sdc": {
+      "sha256": "73b9e283d0a8171a33ea5c1293aec67276190d1e0736c3023f0bc5fe838bf69f",
+      "bytes": 1404,
+      "original_bytes": 1404,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_m_350.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/io_vclk_145.sdc": {
+      "sha256": "fd54ab785926161108c1501ca0d9c74be78e5a5be6880d98b40c6e8efff1b009",
+      "bytes": 1351,
+      "original_bytes": 1351,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_145.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl": {
+      "sha256": "2ee78d86fa95ea214c596be406756043c01edde426f29a12c5245b9878d6d95f",
+      "bytes": 1405,
+      "original_bytes": 1405,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/io_vclk_350.sdc": {
+      "sha256": "5ad0d930d8b9d56c5e37c72b10c8d3ab7984b1c20aa2480f6267852e4c105721",
+      "bytes": 1351,
+      "original_bytes": 1351,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_350.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/die_round.sh": {
+      "sha256": "7a002e2a8a15ba14f9ab919f100ad9cf176922d0a40df2e977af244e1a6c81d1",
+      "bytes": 1606,
+      "original_bytes": 1606,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/die_round.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/make_io_vclk.sh": {
+      "sha256": "80a08dfaef93465b2d92b3ca7251d4644f0afbae0315d84b1f3df7ba051e4ac3",
+      "bytes": 2414,
+      "original_bytes": 2414,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/make_io_vclk.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/io_vclk_1040.sdc": {
+      "sha256": "715e0c652eacd1d1527ac85c27adf7de3245afee2bd7b231a4115816677ab653",
+      "bytes": 1354,
+      "original_bytes": 1354,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_1040.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/io_vclk_m_145.sdc": {
+      "sha256": "b7894e79c356bf9952fe9aae5e0a73509c1bc4b794ef6e0285a0e70be1306271",
+      "bytes": 1404,
+      "original_bytes": 1404,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_m_145.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/make_io_vclk_ff.sh": {
+      "sha256": "caf7c11d804e2a3f3cf98235c4b2f278051a0f30504a32fca6b670af366f6bc5",
+      "bytes": 1801,
+      "original_bytes": 1801,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/make_io_vclk_ff.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/sync_src.sh": {
+      "sha256": "324845ebd80caa7d79d35f8278af237efc0702fdf9565447258c200243ce2bfe",
+      "bytes": 1039,
+      "original_bytes": 1039,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/sync_src.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/wire_stage_fence.tcl": {
+      "sha256": "685e9ba3283b820ac3c3cc53ec029dd8deb6b2bfd8c9bf515becf2b8d77c4af7",
+      "bytes": 13240,
+      "original_bytes": 13240,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/wire_stage_fence.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/io_vclk_m_1040.sdc": {
+      "sha256": "38fbd6b6892266cdec89c689f79cd84a2ab1ceca302c09b148e020dc0e88033c",
+      "bytes": 1407,
+      "original_bytes": 1407,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/io_vclk_m_1040.sdc"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/face_chain_place.tcl": {
+      "sha256": "9bf1f7f9ab064e6bd8f3c92dc9fed8cb0033b0b9db629b1c4be4568f3b6ce7ad",
+      "bytes": 10442,
+      "original_bytes": 10442,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/face_chain_place.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/post_cts_vclk.tcl": {
+      "sha256": "c4d793622243c1f876c747004899bb05cc331274f04a25058a83641aa32c31d4",
+      "bytes": 203,
+      "original_bytes": 203,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/post_cts_vclk.tcl"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/make_io_vclk_margin.sh": {
+      "sha256": "2ed4064632f7fbf5b78dfa597a2541889a7ef6c009bc2f5aca9133f70d663c7c",
+      "bytes": 949,
+      "original_bytes": 949,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/make_io_vclk_margin.sh"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/src_dv9/physical/hbm_accel_die_views/common/smoke/hfd_gath_r8_stub.sv": {
+      "sha256": "53c334641396c69a41885e0704785bf12cb2e09c6d6f6fb040f0edc28a0759be",
+      "bytes": 369,
+      "original_bytes": 369,
+      "tail_only": false,
+      "local_source_matches": true,
+      "saved_as": "source/physical/hbm_accel_die_views/common/smoke/hfd_gath_r8_stub.sv"
+    },
+    "/srv/opentallas-scratch2/scratch/claude/hbm-router/STATUS.md": {
+      "sha256": "87c28ea802096d340a7616472851babc7ceeb19ba45e3d968dc846db472fc988",
+      "bytes": 5676,
+      "original_bytes": 5676,
+      "tail_only": false,
+      "saved_as": "context/hbm-router/STATUS.md"
+    }
+  },
+  "missing": [
+    "corner_sta_833.json",
+    "io150.txt"
+  ],
+  "processes": [],
+  "host": "ot-epyc2"
+}

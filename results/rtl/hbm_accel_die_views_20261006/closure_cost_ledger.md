@@ -41,6 +41,9 @@ TOTAL at r23: +33.77 us = +6.28% vs pre-closure (die-level +25.50 us, SM +8.261 
 | item | cycles/token | AR % | cumulative AR % |
 |---|---|---|---|
 | attention tile r23 outline (attn agent: +1 root->quad broadcast, +2 quad->o result per tile on the critical path; +2 per tile chain hop i->o; 40 attention steps x (3 + 2 x 4 row hops)) | 440 | 0.068 | 6.35 |
+| r23 wire term RE-PRICED on the 50-iteration GRT record (die r23c b_k16_i50: wire-priced base 549.89 -> 554.455 us; congestion detours) | 5478 | 0.850 | 7.20 |
+
+TOTAL at r23 (i50 wire, attention tile included): +38.70 us = +7.20 % vs pre-closure (die-level +30.44 us, SM +8.261 us); AR 576.073 us = 1,735.9 tok/s, MTP 3,610.5 tok/s; headline_with_closure_r23_i50.json (supersedes headline_with_closure_r23.json).
 
 Conditional (priced, NOT in the total until the variant is the one that closes):
 - HA2 half-rate own-partial credit (a916e3f475e4d7ff2): +46 cycles per owner-reduction transaction (DS TP-96 NC8 PF384); x the exposed owner reductions per token (collective terms, 265) = 12,190 cyc = 10.16 us = +1.89 % AR if adopted.

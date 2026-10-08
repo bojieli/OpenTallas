@@ -2349,6 +2349,7 @@ def run_pnr(
             ORFS_IMAGE, "bash", "-lc",
             "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; "
             "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
+            "python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && "
             "python3 /src/tools/orfs_allcorner_spef.py "
             "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && "
             "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base "
@@ -3309,6 +3310,19 @@ def main(argv: list[str] | None = None, *,
     """Run with optional, invocation-scoped timeout overrides; None is unlimited."""
     args = build_parser().parse_args(argv)
     _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
+    if _ot_rhc == "mm":
+        # FLOW-HOLD (2026-10-07): multi-mode route-time repair, SS setup (scene WC) + FF hold (scene BC) each under its
+        # own constraints (tools/orfs_hold_mm.tcl, patched into the flow container by tools/orfs_hold_mm.py)
+        _ot_p = args.orfs_corner or (args.hold_corners or "WC").split(",")[0].strip()
+        args.hold_corners = ",".join(dict.fromkeys([_ot_p, "BC"]))
+        args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1"]
+        _ot_ff = " ".join(("/src/" + f.lstrip("/")) if not f.startswith("/src/") else f
+                          for f in os.environ.get("OT_MM_FF_SDC", "").split() if f)
+        if _ot_ff:
+            args.orfs_var.append(f"OT_MM_FF_SDC={_ot_ff}")
+        print(f"OT_ROUTE_HOLD_CORNERS=mm: repair scenes {args.hold_corners} (SS setup + FF hold), FF SDCs [{_ot_ff}]",
+              file=sys.stderr)
+        _ot_rhc = ""
     if _ot_rhc and args.hold_corners:
         # closure loop (2026-10-07): route-time repair corners; "primary" = --orfs-corner (or the first listed corner)
         _ot_new = (args.orfs_corner or args.hold_corners.split(",")[0].strip()) if _ot_rhc == "primary" else _ot_rhc

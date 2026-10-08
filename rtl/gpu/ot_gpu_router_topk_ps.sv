@@ -338,6 +338,50 @@ module ot_gpu_router_topk_ps_core #(
         base3 <= base2; l3 <= l2; bank3 <= bank2; fresh3 <= fresh2; hasf3 <= hasf2;
         v3 <= rst_c ? 1'b0 : v2;
     end
+    // ---- S3n (r7, OT_ROUTER_KNEG, default off): the key3 -> key4 pure copy goes through a NEGATIVE-edge register
+    // (half-cycle hold margin on the dv12 FF hold class key3 -> key4, -8.6 ps on 18 pins; 0 cycles: key4 still
+    // takes key3 of the previous posedge).  OT_NEG_ROUTER_KNEG (negative control) feeds key3n from key2 instead.
+    // ---- S3b (r7b, OT_ROUTER_K2, default off): one more posedge stage on every S3 -> S4 signal (+1 cycle a vector,
+    // latency 20 -> 21), so the dv12 key3 -> key4 hold class gets a fresh register pair; NEG: OT_NEG_ROUTER_K2 skips
+    // the stage on the keys only (keys one cycle ahead of their ranks: must FAIL).
+`ifdef OT_ROUTER_K2
+    reg [P*P-1:0] gt3b;
+    reg [31:0]    key3b [0:P-1];
+    reg [IW-1:0]  base3b;
+    reg           v3b, l3b, fresh3b;
+    reg [1:0]     bank3b;
+    reg [NB-1:0]  hasf3b;
+    genvar gk3b;
+    for (gk3b = 0; gk3b < P; gk3b = gk3b + 1) begin : g_k3b
+        always @(posedge clk) key3b[gk3b] <= key3[gk3b];
+    end
+    always @(posedge clk) begin
+        gt3b <= gt3; base3b <= base3; l3b <= l3; bank3b <= bank3; fresh3b <= fresh3; hasf3b <= hasf3;
+        v3b <= rst_c ? 1'b0 : v3;
+    end
+`ifdef OT_NEG_ROUTER_K2
+`define OT_RT_K3 key3
+`else
+`define OT_RT_K3 key3b
+`endif
+`define OT_S3(n) n``3b
+`else
+`define OT_S3(n) n``3
+`ifdef OT_ROUTER_KNEG
+    reg [31:0]    key3n [0:P-1];
+    genvar gk3;
+    for (gk3 = 0; gk3 < P; gk3 = gk3 + 1) begin : g_k3n
+`ifdef OT_NEG_ROUTER_KNEG
+        always @(negedge clk) key3n[gk3] <= key2[gk3];
+`else
+        always @(negedge clk) key3n[gk3] <= key3[gk3];
+`endif
+    end
+`define OT_RT_K3 key3n
+`else
+`define OT_RT_K3 key3
+`endif
+`endif
     // ---- S4: ranks ----
     reg [4:0]     rk4 [0:P-1];
     reg [31:0]    key4 [0:P-1];
@@ -350,14 +394,16 @@ module ot_gpu_router_topk_ps_core #(
         for (m = 0; m < P; m = m + 1) begin
             bv = 16'd0;
             for (j = 0; j < P; j = j + 1)
-                if (j < m) bv[j] = gt3[j*P+m];
-                else if (j > m) bv[j] = !gt3[m*P+j];
+                if (j < m) bv[j] = `OT_S3(gt)[j*P+m];
+                else if (j > m) bv[j] = !`OT_S3(gt)[m*P+j];
             rk4[m] <= pop16(bv);
-            key4[m] <= key3[m];
+            key4[m] <= `OT_RT_K3[m];
         end
-        base4 <= base3; l4 <= l3; bank4 <= bank3; fresh4 <= fresh3; hasf4 <= hasf3;
-        v4 <= rst_c ? 1'b0 : v3;
+        base4 <= `OT_S3(base); l4 <= `OT_S3(l); bank4 <= `OT_S3(bank); fresh4 <= `OT_S3(fresh); hasf4 <= `OT_S3(hasf);
+        v4 <= rst_c ? 1'b0 : `OT_S3(v);
     end
+`undef OT_RT_K3
+`undef OT_S3
     // ---- S5: local top-K, descending ----
     reg [EW-1:0]  L5 [0:K-1];
     reg           v5, l5, fresh5;
