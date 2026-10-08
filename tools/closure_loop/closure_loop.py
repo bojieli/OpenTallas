@@ -1653,6 +1653,91 @@ def retry_aside(j, st):
                    f"a=\"$a.$(date +%s)\"; mv {shlex.quote(d)} \"$a\"; fi\n" for d in stage_output_dirs(j, st))
 
 
+# CRASH-TRIAGE 2026-10-08: twelve routes went NEEDS_HUMAN as "crashed twice (rc=1 ok-check failed: ; ...)" while the
+# real errors (yosys Assert, syntax error, [ERROR ODB-0239], a hook's "no room on S", a FileNotFoundError) sat in
+# routes/<label>/flow.log, run.log, sta.log, prep/yosys.log or the ORFS step logs.  first_error() reads them on the
+# host and returns the first real error line (plus the failing make step) for the crash events and the verdict.
+FIRST_ERROR_PY = r"""
+import glob, os, re, sys
+dirs = sys.argv[1:]
+STRONG = re.compile(r"(ERROR: .*|Assert `.*|\[ERROR [A-Z]+-\d+\].*|^Error: .*|.*syntax error.*|^FAILED: .*|"
+                    r"^[A-Za-z_.]*(Error|Exception): .*|.*refus(es|ed) .*|.*Killed.*|.*Segmentation fault.*|.*core dumped.*)")
+GENERIC = re.compile(r"FlowError: .*(failed with exit|failed)\s*\d*:?\s*$")
+MAKE = re.compile(r"\*\*\* \[[^\]]*: (do-[\w.]+)\] Error")
+def files(d, late):
+    if late:
+        return [p for p in (os.path.join(d, n) for n in ("sta.log", "corner.log", "STATUS")) if os.path.isfile(p)]
+    pri = [os.path.join(d, n) for n in ("flow.log", "run.log", "prep/yosys.log")]
+    orfs = sorted(glob.glob(os.path.join(d, "work/orfs/logs/*/*/*/*.log")) + glob.glob(os.path.join(d, "work/*.log")),
+                  key=lambda p: os.path.getmtime(p), reverse=True)[:3]
+    return [p for p in pri + orfs if os.path.isfile(p)]
+found, step, generic = [], "", ""
+def scan(late):
+  global step, generic
+  for d in dirs:
+    for p in files(d, late):
+        try:
+            lines = open(p, errors="replace").read().splitlines()[-20000:]
+        except OSError:
+            continue
+        for i, ln in enumerate(lines):
+            m = MAKE.search(ln)
+            if m and not step:
+                step = m.group(1)
+            t = ln.strip()
+            if not t or "WARNING" in t[:12] or t.startswith("Warning"):
+                continue
+            if t.startswith("Traceback (most recent call last)"):
+                tb = next((x.strip() for x in lines[i + 1:i + 200] if re.match(r"^[A-Za-z_.]*(Error|Exception|Exit)\b", x)), "")
+                if tb:
+                    found.append((p, tb))
+                continue
+            if GENERIC.search(t):
+                generic = generic or t
+                continue
+            if STRONG.search(t):
+                found.append((p, t))
+        if found:
+            return
+scan(False)
+if not found:
+    # no error-shaped line: a failed flow's own last word (run_abi3_physical refusals print a bare sentence, e.g.
+    # "--memory-macro is a place-and-route option ... run --stages pnr"), unless the status says the flow passed
+    for d in dirs:
+        st = os.path.join(d, "status")
+        if os.path.isfile(st) and re.search(r"^flow_rc=0$", open(st, errors="replace").read(), re.M):
+            continue
+        for n in ("flow.log", "run.log"):
+            p = os.path.join(d, n)
+            if os.path.isfile(p):
+                last = [x.strip() for x in open(p, errors="replace").read().splitlines()[-50:] if x.strip()]
+                if last:
+                    found.append((p, last[-1]))
+                    break
+        if found:
+            break
+if not found:
+    scan(True)
+if found:
+    p, t = found[0]
+    print(f"{os.path.relpath(p, os.path.dirname(dirs[0]))}: {t[:240]}" + (f" [step {step}]" if step else ""))
+elif generic or step:
+    print((generic[:240] + " " if generic else "") + (f"[step {step}]" if step else ""))
+"""
+
+
+def first_error(j, st):
+    """The first real error line of a crashed stage, read on its host ('' when none is found or the host is down)."""
+    dirs = stage_output_dirs(j, st)
+    if not dirs:
+        return ""
+    try:
+        r = ssh(j["host"], "python3 - " + " ".join(shlex.quote(d) for d in dirs), timeout=120, input=FIRST_ERROR_PY)
+    except Exception:  # noqa: BLE001 - diagnostics must never turn a crash into a daemon error
+        return ""
+    return r.stdout.strip().splitlines()[-1][:400] if r.returncode == 0 and r.stdout.strip() else ""
+
+
 def crash(j, st, fleet, why):
     if preserve_completed_route(j, st, why):
         return
@@ -1666,11 +1751,15 @@ def crash(j, st, fleet, why):
                f"NEEDS_HUMAN: calibrate failed, class {m.group(1)} (deterministic, not retried)\n"
                f"detail: {m.group(2).strip()[:200]}\nOWNER ACTION ({j['spec'].get('owner')}): {act}")
         return
-    resource = bool(RESOURCE_RE.search(tail)) or why.startswith(("LOST", "bench tool crash"))
+    err = first_error(j, st) if st["kind"] != "bench" else ""
+    if err:
+        why = re.sub(r"ok-check failed: *(;|$)", "ok-check failed;", why)
+        why = f"{why}; first error: {err}"
+    resource = bool(RESOURCE_RE.search(tail + " " + err)) or why.startswith(("LOST", "bench tool crash"))
     j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
-                                            resource=resource, tail=tail[-1500:]))
+                                            resource=resource, tail=tail[-1500:], first_error=err))
     if j["retries_used"] >= 1:
-        finish(j, "NEEDS_HUMAN", f"{st['key']} crashed twice ({why}; resource={resource})",
+        finish(j, "NEEDS_HUMAN", f"{st['key']} crashed twice ({why}; resource={resource})"[:600],
                f"NEEDS_HUMAN: {st['key']} crashed twice ({why}); last log tail:\n" +
                "\n".join(tail.strip().splitlines()[-6:]))
         return
