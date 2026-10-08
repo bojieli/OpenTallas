@@ -103,6 +103,7 @@ def produce(a):
         host, run = wait_loop_route(a.loop_job)
     sub = lambda s: s.replace("{RUN}", run) if s else s
     orfs, view_src, ready, wait_file = sub(a.orfs), sub(a.view_src), sub(a.ready), sub(a.wait_file)
+    isdc = sub(a.interface_sdc)
     # the route must have its 6_final odb/spef (+ the optional marker) on the host
     probe = (f"b=$(ls -d {orfs}/results/asap7/*/base 2>/dev/null | head -1); [ -n \"$b\" ] && [ -s $b/6_final.odb ] && "
              f"[ -s $b/6_final.spef ]" + (f" && ls {wait_file} >/dev/null 2>&1" if wait_file else "")
@@ -114,6 +115,10 @@ def produce(a):
             raise SystemExit(f"{a.name}: route products never appeared on {host}")
         log(f"{a.name}: waiting on {host} for {orfs} {wait_file or ''} {ready or ''}")
         time.sleep(POLL)
+    # resolve globs ({RUN}/routes/*/...) to one path on the host
+    def one(p):
+        return sh(host, f"ls -d {p} | head -1", timeout=60).stdout.strip() if p else p
+    orfs, view_src, ready, isdc = one(orfs), one(view_src), one(ready), one(isdc)
     root = ttv_root(host)
     push_install(host, root)
     w = f"{root}/_work/{a.name}"
@@ -134,7 +139,7 @@ def produce(a):
             cmd += f"(cp {view_src}/abstract.json {w}/view/ 2>/dev/null; true) && "
             corners = "tt"
         cmd += (f"python3 {root}/view_export.py --orfs-dir {orfs} --name {a.name} --out {w}/view --corners {corners} "
-                f"--tmp-dir {w}/tmp" + (f" --interface-sdc {a.interface_sdc}" if a.interface_sdc else "")
+                f"--tmp-dir {w}/tmp" + (f" --interface-sdc {isdc}" if isdc else "")
                 + "".join(f" --macro-view {m}" for m in mvs) + f" > {w}/export.log 2>&1")
         log(f"{a.name}: exporting on {host}: {cmd}")
         r = sh(host, cmd)
@@ -150,7 +155,7 @@ def produce(a):
     rec = dict(name=a.name, host=host, orfs=orfs, src=src, loop_job=a.loop_job, run=run,
                method="ready (job export)" if ready else ("view_export tt on the existing LEF/SS/FF" if view_src
                                                           else "view_export ss,ff,tt + LEF"),
-               interface_sdc=a.interface_sdc, mv=a.mv, at=datetime.now().isoformat(timespec="seconds"),
+               interface_sdc=isdc, mv=a.mv, at=datetime.now().isoformat(timespec="seconds"),
                files={f: hashlib.sha256((out / f).read_bytes()).hexdigest() for f in files})
     (out / "PRODUCED.json").write_text(json.dumps(rec, indent=1) + "\n")
     log(f"{a.name}: PRODUCED {rec['method']} from {host}:{src}")
