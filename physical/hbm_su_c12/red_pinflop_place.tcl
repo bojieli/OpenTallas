@@ -141,6 +141,14 @@ proc ::ot_pin_place_auto {re depth} {
         set ne [llength $er]
         if {!$ne} { error "ot_pin_place_auto: no rows on $e" }
         set cur [lrepeat $ne [expr {$m0 + $dp}]]
+        set lim [expr {$dw - $m0 - $dp}]
+        # CRASH-TRIAGE 2026-10-08: placements are collected per row and committed at the end.  A flop that finds no
+        # room right of its pin in any row (pins crowded toward the edge end: the TT/cgfix re-routes' 3_1 placement
+        # moved the S pins and hit "no room on S") goes to the least-filled row past the limit, and that row is then
+        # packed back leftwards (each flop keeps its order, right end <= the next flop's left edge / the limit, clear
+        # of the tap cells).  Rows without an overflow are untouched, so a layout that fitted before is unchanged.
+        set rowp [lrepeat $ne {}]
+        set over [lrepeat $ne 0]
         set k 0
         foreach f $fl {
             lassign $f px inst
@@ -154,13 +162,42 @@ proc ::ot_pin_place_auto {re depth} {
                 if {$x < $c} { set x $c }
                 set rr [lindex $er $r]
                 set x [::ot_skip $x $w2 [lindex $rr 0] 1 $sw]
-                if {$x + $w2 > $dw - $m0 - $dp} { continue }
-                place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                if {$x + $w2 > $lim} { continue }
+                lset rowp $r [concat [lindex $rowp $r] [list [list $x $w2 $inst]]]
                 lset cur $r [expr {$x + $w2}]
-                set done 1; incr placed
+                set done 1
             }
-            if {!$done} { error "ot_pin_place_auto $re: no room on $e for [$inst getName]" }
+            if {!$done} {
+                set r 0
+                for {set t 1} {$t < $ne} {incr t} { if {[lindex $cur $t] < [lindex $cur $r]} { set r $t } }
+                set x [lindex $cur $r]
+                lset rowp $r [concat [lindex $rowp $r] [list [list $x $w2 $inst]]]
+                lset cur $r [expr {$x + $w2}]
+                lset over $r 1
+            }
             incr k
+        }
+        for {set r 0} {$r < $ne} {incr r} {
+            set rr [lindex $er $r]
+            set items [lindex $rowp $r]
+            if {[lindex $over $r]} {
+                set rl $lim
+                for {set q [expr {[llength $items] - 1}]} {$q >= 0} {incr q -1} {
+                    lassign [lindex $items $q] x w2 inst
+                    set rt [expr {$x + $w2 > $rl ? $rl : $x + $w2}]
+                    set rt [expr {$m0 + ($rt - $m0) / $sw * $sw}]
+                    set rt [::ot_skip $rt $w2 [lindex $rr 0] -1 $sw]
+                    set x [expr {$rt - $w2}]
+                    if {$x < $m0 + $dp} { error "ot_pin_place_auto $re: no room on $e for [$inst getName] (row [lindex $rr 0] full after left packing)" }
+                    lset items $q [list $x $w2 $inst]
+                    set rl $x
+                }
+            }
+            foreach it $items {
+                lassign $it x w2 inst
+                place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                incr placed
+            }
         }
     }
     puts "ot_pin_place_auto $re: $placed flops at their pins (W [llength [dict get $E W]] E [llength [dict get $E E]] S [llength [dict get $E S]] N [llength [dict get $E N]]), $skip without a port"
