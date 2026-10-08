@@ -1268,24 +1268,24 @@
    "budget": null
   },
   "ot_dsrom_head_bundle_glue": {
-   "job": "hbglue_cl_8ddc70024-lbc",
-   "source_commit": "387a4d2acd525be5ef60432f735d120cc9e0c829",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbglue_cl_8ddc70024-lbc",
+   "job": "dshead-glue-safe-351e67caa-tt",
+   "source_commit": "351e67caab47f5629b21b4ea1cc8448abac66e9d",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dshead-glue-safe-351e67caa-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T21:10:31-07:00",
+   "measured_at": "2026-10-07T22:08:50-07:00",
    "ss": {
-    "mean": 332,
-    "min": 318,
-    "max": 341
+    "mean": 330,
+    "min": 316,
+    "max": 338
    },
    "ff": {
-    "mean": 210,
-    "min": 199,
-    "max": 217
+    "mean": 208,
+    "min": 198,
+    "max": 214
    },
-   "boundary_n": 1516,
+   "boundary_n": 1547,
    "budget": null
   },
   "dsfd_svcio_ad": {
@@ -2815,5 +2815,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-07T21:51:16-07:00"
+ "updated": "2026-10-07T22:08:50-07:00"
 }
