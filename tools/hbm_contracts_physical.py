@@ -39,6 +39,20 @@ BLOCKS = dict(
                 macros=[], die=(40, 40), density=.55, sdc=['physical/hbm_contracts_20261007/credit_reset.sdc']),
     idle=dict(top='hfd_coll_idle_tx', src=[CT + 'ot_hbm_coll_idle_insert.sv', CT + 'hfd_coll_idle_tx.sv'],
               macros=[], die=(30, 30), density=.55, sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    # redesign-hbm 2026-10-08 PIN variants: every data input lands in a flop, every output leaves a flop (consistent
+    # die-link budget, R = S = 254.5 ps).  Same top names; RTL in the *_pin.sv wrappers.
+    idle_pin=dict(top='hfd_coll_idle_tx', src=[CT + 'hfd_coll_idle_tx_pin.sv'],
+                  macros=[], die=(30, 30), density=.55, sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    credit_pin=dict(top='hfd_coll_credit_prod', src=[CT + 'ot_hbm_coll_credit_producer.sv', CT + 'hfd_coll_credit_pin.sv'],
+                    macros=[], die=(40, 40), density=.55, sdc=['physical/hbm_contracts_20261007/credit_reset.sdc']),
+    su_rin_pin=dict(top='hfd_su_result_ingress', src=[CT + 'ot_hbm_su_result_ingress.sv', CT + 'ot_hbm_su_result_pinshell.sv',
+                    CT + 'hfd_su_result_ingress_pin.sv'], macros=[M64], die=(230, 150), density=.55,
+                    sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    su_rin_pin_b=dict(top='hfd_su_result_ingress', src=[CT + 'ot_hbm_su_result_ingress.sv', CT + 'ot_hbm_su_result_pinshell.sv',
+                      CT + 'hfd_su_result_ingress_pin.sv'], macros=[M64], die=(299.592, 120.96), density=.5,
+                      macro_tcl='physical/hbm_contracts_20261007/su_rin_macros_b.tcl',
+                      pins=['^r_in=left', '^out_=top', '^(op_|fault|free_o|clk|rst_n)=bottom'],
+                      sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
 )
 
 
