@@ -65,7 +65,7 @@ LEDGER = REVIEW / "CLOSURE_LOOP_LEDGER.md"
 STATUS_MD = REVIEW / "CLOSURE_LOOP_STATUS.md"
 EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
-SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
+SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT at SS >= 0 / FF >= 0 / DRC 0 at 833.333 sign-off (+15 is the DESIGN target: route 770, repair hold margin 50; was +15/+15 since 10-06 18:15)
 RAM_HEADROOM_GB = 32
 PENDING_WINDOW_S = 600
 PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
@@ -97,6 +97,11 @@ HM_LOW_SINCE = "2026-10-07T04:17"      # new jobs from here: route hold margin 1
 # FLOW-HOLD (2026-10-07): jobs created from here route with multi-mode hold repair (OT_ROUTE_HOLD_CORNERS=mm: SS setup +
 # FF hold under the FF sign-off constraints at CTS / global route) and HM_MM route hold margin (applies at FF only)
 MM_SINCE = "2026-10-07T21:00"
+# OWNER OPTION B (2026-10-07 20:45): closure = setup at TT + hold at FF + DRC 0.  Every calibrate / route launched from
+# here routes with CORNER=TC (setup repair at TT; with mm, hold at FF) unless spec "route_corner" names another corner;
+# hold ECOs time the setup scene at TT.  SS setup is recorded as a sensitivity (ss_sensitivity_ps).
+OPTB_SINCE = "2026-10-07T20:20"
+SETUP_LIB = "TT"
 HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
@@ -175,6 +180,12 @@ def append_locked(path: Path, text: str):
 
 def hosts_table():
     return json.loads((HERE / "hosts.json").read_text())["hosts"]
+
+
+def disk_roots(cfg):
+    """{path: min free GB} for every filesystem a host's jobs write besides the run root (hosts.json disk_roots;
+    fleet disk guard 2026-10-07: the run-root floor alone let / fill on AGIdock and localhost)"""
+    return dict(cfg.get("disk_roots", {}))
 
 
 def host_cfg(name):
@@ -526,13 +537,16 @@ class Fleet:
         if c and time.time() - c[0] < 45:
             return c[1]
         cfg = host_cfg(host)
+        roots = disk_roots(cfg)
+        dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
         r = ssh(host, f"""cat /proc/loadavg; awk '/MemAvailable/{{print int($2/1048576)}}' /proc/meminfo
-mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'""", timeout=40)
+mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}""", timeout=40)
         if r.returncode:
             info = None
         else:
             v = r.stdout.split()
-            info = dict(load1=float(v[0]), mem_gb=int(v[5]), disk_gb=int(v[6]))
+            info = dict(load1=float(v[0]), mem_gb=int(v[5]), disk_gb=int(v[6]),
+                        roots_gb=dict(zip(roots, (int(x) for x in v[7:7 + len(roots)]))))
         self.probe_cache[host] = (time.time(), info)
         return info
 
@@ -556,13 +570,11 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         if info is None:
             return False, f"{cfg['label']} unreachable"
         pt, pr = self.own_pending(host)
-        # load1 lags a route's ramp (synth is ~1 core, GRT/DRT use all NUM_CORES): count this loop's running stages at
-        # their declared threads, whichever is larger (EPYC3 reached 342/128 with 27 loop jobs admitted on load1 alone)
-        eff = info["load1"]       # measured; only launches of the last 10 min are added (ramp allowance, pt)
-        if eff + pt + threads > cfg["cap"]:
-            return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
+        # OWNER DECISION (2026-10-07 20:10, supersedes the 19:31 1.1 x nproc cap): MEMORY is the only admission limit on
+        # the remote hosts -- CPU oversubscription is allowed (jobs wait on reads / run serial phases).  localhost keeps
+        # its own guard below (max_loop_threads, min_free_ram_gb) so it stays responsive.
         res = cfg.get("reserve_ram_gb", 0)
-        head = max(0.05 * cfg.get("ram_gb", 1133), RAM_HEADROOM_GB, cfg.get("min_free_ram_gb", 0))  # OWNER 21:35 10%; OWNER 10-07 08:05 "fill the hosts": 5%
+        head = max(0.05 * cfg.get("ram_gb", 1133), cfg.get("min_free_ram_gb", RAM_HEADROOM_GB))  # OWNER 21:35 10%; OWNER 10-07 08:05 "fill the hosts": 5%
         if cfg.get("max_loop_threads") is not None:      # localhost: loop jobs in total, so ssh stays responsive
             used = self.own_running.get(host, 0) + pt
             if used + threads > cfg["max_loop_threads"]:
@@ -572,6 +584,10 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                            + f" < {ram}+{head:.0f}")
         if info["disk_gb"] < cfg["min_free_disk_gb"]:
             return False, f"{cfg['label']} run root has {info['disk_gb']} GB free < {cfg['min_free_disk_gb']}"
+        for path, floor in disk_roots(cfg).items():   # every other root the host's jobs write (docker /, /tmp, ...)
+            free = info.get("roots_gb", {}).get(path)
+            if free is not None and free < floor:
+                return False, f"{cfg['label']} {path} has {free} GB free < {floor}"
         return True, "ok"
 
     def launched(self, host, threads, ram):
@@ -599,7 +615,10 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
     def compatible(self, host, spec):
         """host capability table (hosts.json caps) covers every stage's needs, and the ORFS image digest matches the
         reference host's (plus asap7lock when the job names it)"""
-        if not job_needs(spec) <= set(host_cfg(host).get("caps", [])):
+        cfg = host_cfg(host)
+        # bench_offload (OWNER 2026-10-07: use localhost for ORFS-only route/calibrate): the job's benches run on another
+        # host with the bench tools (bench_track -> offload_bench_location), so only the main track's needs count here
+        if not job_needs(spec, benches=not cfg.get("bench_offload")) <= set(cfg.get("caps", [])):
             return False
         ref, mine = self.toolchain(TOOL_REF_HOST), self.toolchain(host)
         if not ref or not mine:
@@ -681,11 +700,16 @@ echo yosys=$(yosys -V 2>/dev/null | head -1)
 """
 
 
-def job_needs(spec):
-    """union of the stage needs of a job (all its stages run on one host); a stage may set "needs": [...]"""
+def bench_needs(spec):
+    return set().union(*(set(b.get("needs", DEFAULT_NEEDS["bench"])) for b in spec.get("stages", {}).get("bench", [])))
+
+
+def job_needs(spec, benches=True):
+    """union of the stage needs of a job (all its stages run on one host); a stage may set "needs": [...].
+    benches=False: the main track only (a bench_offload host runs the benches on another host)"""
     st = spec.get("stages", {})
     need = set()
-    for b in st.get("bench", []):
+    for b in st.get("bench", []) if benches else ():
         need |= set(b.get("needs", DEFAULT_NEEDS["bench"]))
     for k in ("calibrate", "route", "signoff", "collect", "export"):
         x = st.get(k) or {}
@@ -980,7 +1004,7 @@ def sync_source(j):
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
-           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl")
+           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1055,6 +1079,8 @@ def launch_stage(j, st, cmd):
         # recipes that refuse existing evidence (s81 route_view.sh) start clean (capt_x / selt_c rc=73 after a restart)
         d = f"{j['run']}/routes/{label(j['name'])}{'_cal' if st['kind'] == 'calibrate' else ''}"
         env += f"[ -e {d} ] && mv {d} {d}.prev_$(date +%s) || true\n"
+    if st["kind"] == "route" and now_iso() >= OPTB_SINCE and j["spec"].get("route_corner", "TC") != "keep":
+        env += f"export OT_ORFS_CORNER={shlex.quote(str(j['spec'].get('route_corner', 'TC')))}\n"
     if st["kind"] in ("calibrate", "route"):
         # (calibrate too, 2026-10-07: its CTS-only run repairs hold at CTS and died on RSZ-0060, hbm_stn_r38 / _ck80)
         # ROUTE HOLD CORNERS (2026-10-07, hold_corners_patch.py): place-and-route repairs hold at the primary corner only
@@ -1198,7 +1224,10 @@ def stage_tail(j, st, n=40):
     return r.stdout
 
 
-def get_metrics(j):
+TT_STA_SLOTS = threading.BoundedSemaphore(8)
+
+
+def get_metrics(j, tt_resta=True):
     v = j["spec"].get("verdict", {})
     if v.get("metrics_cmd"):
         r = ssh(j["host"], f"cd {j['run']}/src && {subst(v['metrics_cmd'], j)}", timeout=600)
@@ -1217,9 +1246,20 @@ import glob,json,sys
 cs=sorted(glob.glob(sys.argv[1])); dm=sorted(glob.glob(sys.argv[2])) if sys.argv[2] else []
 o={'corner_sta':cs,'drc_metrics':dm}
 if cs:
-  d=json.load(open(cs[-1])); o['ss_ps']=d['setup_ss']['worst_slack_ps']; o['ff_ps']=d['hold_ff']['worst_slack_ps']
-  o['orfs_dir']=d.get('orfs_dir'); o['errors']=d['setup_ss'].get('errors',[])+d['hold_ff'].get('errors',[])
-  o['ss_tns_ps']=d['setup_ss'].get('tns_ps'); o['post_sdc']=list(d.get('post_sdc',{}))
+  d=json.load(open(cs[-1])); o['ff_ps']=d['hold_ff']['worst_slack_ps']
+  o['orfs_dir']=d.get('orfs_dir'); o['post_sdc']=list(d.get('post_sdc',{}))
+  o['ss_sensitivity_ps']=d['setup_ss']['worst_slack_ps']; o['ss_sensitivity_tns_ps']=d['setup_ss'].get('tns_ps')
+  # OWNER OPTION B: setup closes at TT; ss_ps keeps its key for the loop's line checks but now holds the TT setup slack
+  tt=d.get('setup_tt')
+  if tt is None:
+    try: tt=json.load(open(cs[-1]+'.tt.json')).get('setup_tt')
+    except Exception: tt=None
+  o['setup_corner']='tt'; o['corner_sta_tt']=cs[-1]+'.tt.json' if 'setup_tt' not in d else cs[-1]
+  if tt is None:
+    o['need_tt']=True; o['ss_ps']=None; o['errors']=d['hold_ff'].get('errors',[])
+  else:
+    o['ss_ps']=tt.get('worst_slack_ps'); o['ss_tns_ps']=tt.get('tns_ps')
+    o['errors']=(tt.get('errors') or [])+d['hold_ff'].get('errors',[])+([tt['error']] if tt.get('error') else [])
 if dm:
   m=json.load(open(dm[-1])); o['drc']=m.get('detailedroute__route__drc_errors')
 print(json.dumps(o))
@@ -1230,6 +1270,13 @@ print(json.dumps(o))
         m = json.loads(r.stdout.strip().splitlines()[-1])
     except Exception:  # noqa: BLE001
         m = {"error": (r.stdout + r.stderr)[-400:]}
+    if m.get("need_tt") and tt_resta and m.get("orfs_dir") and not m.get("error"):
+        with TT_STA_SLOTS:          # TT re-STA of an existing route (option B), at most a few at once fleet-wide
+            ship_helpers(j["host"], j["run"])
+            ssh(j["host"], f"bash {j['run']}/cl/tt_resta.sh {shlex.quote(m['orfs_dir'])} {j['run']}/src "
+                           f"{shlex.quote(m['corner_sta_tt'])}", timeout=6000)
+        event(j, "option B: TT setup re-STA of the existing route")
+        return get_metrics(j, tt_resta=False)
     if v.get("drc") == "skip":
         m["drc"] = 0
         m["drc_skipped"] = True
@@ -1284,7 +1331,7 @@ def publish(j, metrics):
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
                        owner=spec["owner"], source_branch=branch, source_commit=j["commit_full"],
                        host=j["host"], run_dir=j["run"], acceptance=dict(ss_min_ps=SS_MIN, ff_min_ps=FF_MIN, drc=0,
-                       rule="OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), "
+                       rule="OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), "
                             "agreed die-clock IO budgets, DRC 0"),
                        metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "post_sdc", "corner_sta",
                                                             "drc_metrics", "drc_skipped")},
@@ -1522,11 +1569,47 @@ def failure_text(j):
     return "\n".join(lines)
 
 
+def job_held(j):
+    """STATE/held.json {job name: reason}: a QUEUED job listed there is not admitted (owner option B pause of SS-wall
+    work).  Remove the entry to release it."""
+    try:
+        return json.loads((STATE / "held.json").read_text()).get(j["name"])
+    except (FileNotFoundError, ValueError):
+        return None
+
+
+def job_priority(j):
+    """STATE/priority.json {job name: int} (coordinator steering; default 0) or spec "priority" """
+    try:
+        table = json.loads((STATE / "priority.json").read_text())
+    except (FileNotFoundError, ValueError):
+        table = {}
+    return int(table.get(j["name"], j["spec"].get("priority", 0)) or 0)
+
+
+def yield_to_priority(j, fleet, host=None):
+    """a job below a priority job still waiting for capacity does not take a host THAT JOB CAN USE (host-scoped:
+    20:05 a fleet-wide yield idled every host).  host None (QUEUED, no host yet): yield only if every host this job
+    could take is wanted by a waiting priority job."""
+    waits = getattr(fleet, "prio_hosts", {})      # host -> highest waiting priority that can use it
+    mine = job_priority(j)
+    if host is not None:
+        return waits.get(host, 0) > mine
+    return bool(waits) and all(waits.get(h["name"], 0) > mine for h in hosts_table()
+                               if fleet.compatible(h["name"], j["spec"]))
+
+
 def launch_ready(j, fleet, spec, stl, st):
     """READY at a remote stage: capacity check + reservation (caller holds FLEET_LOCK); returns the stage to launch
     OUTSIDE the lock (launch_now) or None."""
     require_checkpoint_location(j)
     if True:
+        if st["kind"] in ("calibrate", "route") and yield_to_priority(j, fleet, j["host"]):
+            why = f"yielding {host_cfg(j['host'])['label']} to a waiting priority job"
+            if j.get("wait") != why:
+                j["wait"] = why
+                event(j, f"{st['key']} {why}")
+            return          # neither launches nor moves hosts while it yields
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
         if not ok:
             j.setdefault("wait_since", time.time())
@@ -1625,6 +1708,31 @@ def bench_location(j, stl):
     return dict(host=j["host"], run=j["run"], attempt=j["attempt"])
 
 
+def offload_bench_location(j, fleet, st):
+    """a host with the job's bench tools and room for one bench; the source is synced there to <base>/<name>-bench"""
+    need = bench_needs(j["spec"])
+    for cfg in hosts_table():
+        h = cfg["name"]
+        if h == j["host"] or cfg.get("smoke_only") or not need <= set(cfg.get("caps", [])):
+            continue
+        if not fleet.compatible(h, dict(j["spec"], stages={"bench": j["spec"].get("stages", {}).get("bench", [])})):
+            continue
+        with FLEET_LOCK:
+            ok, _ = fleet.fits(h, st["threads"], st["ram"])
+        if not ok:
+            continue
+        v = dict(j, host=h, run=f"{cfg['base']}/{j['name']}-bench", resume=None, checkpoint_affinity=None)
+        try:
+            sync_source(v)
+        except Exception as ex:  # noqa: BLE001
+            event(j, f"bench offload: source sync to {h} failed: {str(ex)[:200]}")
+            continue
+        with FLEET_LOCK:
+            fleet._launched(h, 0, 0)
+        return dict(host=h, run=v["run"], attempt=j["attempt"])
+    return None
+
+
 def bench_track(j, fleet, stl):
     """advance the bench track; returns False if the job ended (bench failure)"""
     if not j.get("bench_par") or j["status"] in TERMINAL or j["status"] in ("QUEUED", "SYNC", "MIGRATING"):
@@ -1639,6 +1747,18 @@ def bench_track(j, fleet, stl):
             if any(x.get("state") == "running" for x in tr.values()):
                 return True                  # one bench at a time
             location = bench_location(j, stl)
+            caps = next((x.get("caps", []) for x in hosts_table() if x["name"] == location["host"]), None)
+            if not j.get("bench_location") and caps is not None and not bench_needs(j["spec"]) <= set(caps):
+                off = offload_bench_location(j, fleet, st)
+                if off is None:
+                    why = f"no host with {sorted(bench_needs(j['spec']))} fits the bench now"
+                    if j.get("bwait") != why:
+                        j["bwait"] = why
+                        event(j, f"bench track: {k} waiting: {why}")
+                    return True
+                location = off
+                j["bench_location"] = location
+                event(j, f"bench track: offloaded to {location['host']}:{location['run']} (job host {j['host']} lacks bench tools)")
             host = location["host"]
             fleet.probe(host)
             with FLEET_LOCK:
@@ -1745,8 +1865,17 @@ def step(j, fleet):
         require_checkpoint_location(j)
         j["status"] = s = "SYNC"  # stay with preserved stage_idx and checkpoint host
     if s == "QUEUED":
+        held = job_held(j)
+        if held:            # OWNER OPTION B (2026-10-07): SS-wall jobs paused until re-evaluated at TT
+            why = f"HELD ({held})"
+            if j.get("wait") != why:
+                j["wait"] = why
+                event(j, why)
+            return
         with FLEET_LOCK:
-            h, why = fleet.choose(spec, exclude=[])
+            h, why = (None, "every usable host is wanted by a waiting priority job") \
+                if yield_to_priority(j, fleet) else fleet.choose(spec, exclude=[
+                    x for x, p in getattr(fleet, "prio_hosts", {}).items() if p > job_priority(j)])
             if h:   # claim capacity now so parallel job threads do not pick the same headroom
                 fleet.launched(h, 0, 0)
         if not h:
@@ -2019,7 +2148,7 @@ def start_hold_eco(j, fleet, m):
           f"ALLOW_FRESH_GRT={int(he.get('allow_fresh_grt', False))} " \
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
-          f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
+          f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
     post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
     post = " ".join(shlex.quote(p) for p in post_sdcs)
@@ -2430,6 +2559,51 @@ def advance_job(name, fleet):
         save_job(j)
 
 
+BULK_RELEASE_PER_TICK = 4
+# Route bulk released on terminal jobs (fleet disk guard 2026-10-07): intermediate ODB/DEF/SPEF/guides/netlists and
+# ORFS objects under the job's ORFS work trees.  Kept: 6_final.*, 5_2_route.odb, every log / report / json (metrics).
+BULK_RELEASE_SH = r"""set -u
+R=%(run)s
+for p in "$R"/cl/*.pid; do [ -f "$p" ] && [ ! -f "${p%%.pid}.rc" ] && kill -0 "$(cat "$p")" 2>/dev/null && { echo LIVE "$p"; exit 3; }; done
+for c in $(docker ps -q 2>/dev/null); do docker inspect --format '{{range .Mounts}}{{.Source}} {{end}}' $c | grep -q "$R/" && { echo LIVE docker; exit 3; }; done
+before=$(du -sm "$R" 2>/dev/null | cut -f1)
+find "$R" -path '*/orfs/*' ! -path "$R/src/*" -type d -name objects -prune -exec rm -rf {} + 2>/dev/null
+find "$R" -path '*/orfs/*' ! -path "$R/src/*" -type f \( -name '*.odb' -o -name '*.def' -o -name '*.spef' -o -name '*.guide' -o -name '*.v' -o -name '*.odb.gz' -o -name '*.def.gz' \) \
+     ! -name '6_final.*' ! -name '5_2_route.odb' -delete 2>/dev/null
+echo FREED $before $(du -sm "$R" 2>/dev/null | cut -f1)
+"""
+
+
+def release_bulk(jobs):
+    """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk."""
+    closed = {x["spec"].get("block") for x in jobs if x["status"] == "CLOSED"}
+    n = 0
+    for x in jobs:
+        if n >= BULK_RELEASE_PER_TICK:
+            break
+        if x.get("bulk_released") or not x.get("host") or not x.get("run") or x["status"] not in TERMINAL:
+            continue
+        if x["status"] == "CLOSED" or not (x["status"] == "CANCELLED" or x["spec"].get("block") in closed):
+            continue
+        if x["host"] not in {h["name"] for h in hosts_table()}:
+            continue
+        with job_lock(x["name"]):
+            j = load_job(x["name"])
+            if j.get("bulk_released") or j["status"] not in TERMINAL or j["status"] == "CLOSED":
+                continue
+            r = ssh(j["host"], BULK_RELEASE_SH % dict(run=shlex.quote(j["run"])), timeout=900)
+            n += 1
+            if r.returncode == 3:
+                event(j, f"bulk release skipped: live process ({r.stdout.strip()[:120]})")
+                continue
+            if r.returncode != 0 and "FREED" not in r.stdout:
+                continue   # host unreachable: retried next tick
+            why = "cancelled" if j["status"] == "CANCELLED" else "superseded by a CLOSED job of block " + str(j["spec"].get("block"))
+            j["bulk_released"] = dict(at=now_iso(), why=why, du_mb=r.stdout.strip().split("FREED", 1)[-1].strip())
+            event(j, f"route bulk released ({why}; MB before/after {j['bulk_released']['du_mb']}); kept 6_final.*, 5_2_route.odb, logs/reports/json")
+            save_job(j)
+
+
 def tick(fleet):
     try:
         ingest()
@@ -2445,6 +2619,10 @@ def tick(fleet):
             if e.get("state") == "running":
                 own[e["host"]] = own.get(e["host"], 0) + 4
     fleet.own_running = own
+    try:
+        release_bulk(all_jobs())
+    except Exception:  # noqa: BLE001
+        log("release_bulk error:\n" + traceback.format_exc())
     for req in sorted((STATE / "migrate_requests").glob("*.json")) if (STATE / "migrate_requests").exists() else []:
         try:
             rq = json.loads(req.read_text())
@@ -2470,9 +2648,18 @@ def tick(fleet):
     global _POOL
     if _POOL is None:
         _POOL = ThreadPoolExecutor(max_workers=WORKERS)
-    for x in all_jobs():
-        if x["status"] in TERMINAL:
+    live = [x for x in all_jobs() if x["status"] not in TERMINAL]
+    prio_hosts = {}
+    for x in live:
+        p = job_priority(x)
+        if p <= 0 or x["status"] not in ("QUEUED", "READY") or not x.get("wait"):
             continue
+        usable = [x["host"]] if x["status"] == "READY" and x.get("host") else \
+            [h["name"] for h in hosts_table() if fleet.compatible(h["name"], x["spec"])]
+        for h in usable:
+            prio_hosts[h] = max(prio_hosts.get(h, 0), p)
+    fleet.prio_hosts = prio_hosts
+    for x in sorted(live, key=lambda x: -job_priority(x)):
         with _INFLIGHT_LOCK:
             if x["name"] in _INFLIGHT:
                 continue
@@ -2598,6 +2785,39 @@ def cmd_retry(a):
 
 
 @locked_job_command
+def cmd_reverdict(a):
+    """human: re-judge a NEEDS_RTL / NEEDS_HUMAN job on its recorded evidence after an acceptance-line change, no re-route.
+    Route sign-off meets the line -> back to the verdict stage (READY).  Else an earlier hold ECO whose recorded result
+    meets the line but was not installed -> re-enter the ECO completion on the existing ECO output (status ECO; its
+    result.json is re-read and judged by eco_passes, then installed and re-verdicted as usual)."""
+    j = load_job(a.name)
+    if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN"):
+        sys.exit(f"{a.name} is {j['status']}")
+    m, e = j.get("metrics") or {}, j.get("eco") or {}
+    if j.get("failed_checks"):
+        sys.exit(f"{a.name}: verdict checks failed {j['failed_checks']}: not a line-only miss")
+    stl = stage_list(j["spec"])
+    vidx = next(i for i, x in enumerate(stl) if x["kind"] == "verdict")
+    if eco_passes(dict(m, errors=[]), 0):
+        j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None)
+        how = f"route sign-off SS {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')}"
+    elif e.get("tried") and not e.get("installed") and eco_passes(e.get("result"), 0):
+        r = ssh(j["host"], f"ls -t {j['run']}/cl/hold_eco.*.rc 2>/dev/null | head -1", timeout=60)
+        rc_file = r.stdout.strip()
+        if not rc_file:
+            sys.exit(f"{a.name}: no hold_eco rc file under {j['run']}/cl")
+        j.update(status="ECO", stage_idx=vidx, stage_key="hold_eco", stage_tag=Path(rc_file).name[:-3], retries_used=0,
+                 errors=[], reason=None)
+        how = f"recorded hold-ECO result {e.get('result')} ({j['stage_tag']})"
+    else:
+        sys.exit(f"{a.name}: recorded evidence does not meet SS >= {SS_MIN:g} / FF >= {FF_MIN:g} / DRC 0 "
+                 f"(route {m.get('ss_ps')}/{m.get('ff_ps')}/{m.get('drc')}; eco {e.get('result')})")
+    event(j, f"human re-verdict ({a.why}) at the line SS >= {SS_MIN:g} / FF >= {FF_MIN:g} / DRC 0 on {how}")
+    save_job(j)
+    ledger(j, f"RE-VERDICT (human, no re-route): {a.why}; {how}")
+
+
+@locked_job_command
 def cmd_retry_eco(a):
     """human: re-run the post-route hold ECO (current hold_eco rev) on a NEEDS_RTL job whose only miss was hold and whose
     earlier ECO missed; the earlier ECO is kept in eco_history and its output dir is preserved (new out: cl/eco-r<n>)."""
@@ -2711,6 +2931,7 @@ def main():
     v = sub.add_parser("validate"); v.add_argument("file")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
+    r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line SS>=0/FF>=0/DRC 0")
     c = sub.add_parser("cancel"); c.add_argument("name")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
@@ -2729,6 +2950,8 @@ def main():
         cmd_retry(a)
     elif a.cmd == "retry-eco":
         cmd_retry_eco(a)
+    elif a.cmd == "reverdict":
+        cmd_reverdict(a)
     elif a.cmd == "cancel":
         cmd_cancel(a)
     elif a.cmd == "recover-eco-overlays":

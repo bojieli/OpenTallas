@@ -340,8 +340,13 @@ def receipt_views():
         v = json.loads(path.read_text())
         if v.get('status') == 'CLOSED' and v.get('block', '').startswith('hfd_'):
             receipts.append((v.get('closed_at', ''), path, v))
+    latest = {}
+    for _, path, v in sorted(receipts):
+        latest[v['block']] = path      # a later closure of one block re-exports into the same record dir
     for _, path, v in sorted(receipts):
         n, met = v['block'], v['metrics']
+        if latest[n] != path:
+            continue                   # superseded receipt: its export was overwritten by the later closure
         if (met.get('ss_ps', -1) < 15 or met.get('ff_ps', -1) < 15 or met.get('drc') != 0
                 or not v.get('checks') or not all(c.get('ok') for c in v['checks'].values())
                 or not all(b.get('ok') for b in v.get('benches', {}).values())):
@@ -638,13 +643,18 @@ def cmd_die(a):
         # positions from a provisional case (generated masters) and the real views' LEFs
         import hbm_die_relays as RL
         H.case_real(m, work)
-        lt = (work / 'elements.lef').read_text() + '\n'.join(Path(p_).read_text() for p_ in views.values())
+        # relay positions follow the planned pins: a MISMATCH view (interim, pins off the generator plan) keeps its
+        #   generator master's pins here, so its relays sit where the re-hardened view's pins will be
+        vchk = json.loads(Path(a.index).read_text())['masters']
+        lt = (work / 'elements.lef').read_text() + '\n'.join(Path(p_).read_text() for n_, p_ in views.items()
+                                                             if vchk[n_].get('check', {}).get('verdict') != 'MISMATCH')
         for nm_ in ('phy.lef', 'serdes.lef', 'ucie.lef'):
             lt += '\n' + (work / nm_).read_text()
-        relay_rec = RL.instance_relays(m, real, lt, H, L, wire_stages=not getattr(a, 'no_wire_stages', False))
+        relay_rec = RL.instance_relays(m, real, lt, H, L, wire_stages=not getattr(a, 'no_wire_stages', False),
+                                       relay_all=getattr(a, 'relay_all_pins', False))
         RL.relay_libs(m, work / 'hfd_rly_ss.lib', work / 'hfd_rly_ff.lib')
         (work / 'relays.json').write_text(json.dumps(relay_rec, indent=0))
-        print(json.dumps({k: v for k, v in relay_rec.items() if k not in ('chains', 'unplaced')}))
+        print(json.dumps({k: v for k, v in relay_rec.items() if k not in ('chains', 'unplaced', 'unplaced_detail')}))
     if a.case in ('real', 'sta'):
         H.case_real(m, work)
         # replace the generated macros that have a real view by the view's LEF
@@ -1206,6 +1216,8 @@ def main(argv=None):
     p.add_argument('--case', choices=['real', 'grt', 'sta'], required=True)
     p.add_argument('--relays', action='store_true', help='instance the r22 pin relays + budget wire stages')
     p.add_argument('--no-wire-stages', action='store_true', help='with --relays: pin relays only')
+    p.add_argument('--relay-all-pins', action='store_true', help='with --relays: a relay at every die pin whose segment '
+                   'is > 100 um (BRIEF 2026-10-07), not only the r22 relay_ends list')
     p.add_argument('--index', default=str(ROOT / VIEWS / 'index.json'))
     p.add_argument('--k', type=int, default=16)
     p.add_argument('--iters', type=int, default=50)

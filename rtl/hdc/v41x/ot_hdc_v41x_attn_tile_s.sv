@@ -675,6 +675,29 @@ module ot_hdc_v41x_attn_deq_b2 (
     end
 endmodule
 
+// y = a * b (8 x 4 bits, exact): four AND rows, two 3:2 carry-save levels, one kept-prefix add
+module ot_hdc_v41x_attn_m84 (
+    input  wire [7:0]  a,
+    input  wire [3:0]  b,
+    output wire [11:0] y
+);
+    wire [11:0] r0 = b[0] ? {4'd0, a}       : 12'd0;
+    wire [11:0] r1 = b[1] ? {3'd0, a, 1'b0} : 12'd0;
+    wire [11:0] r2 = b[2] ? {2'd0, a, 2'b0} : 12'd0;
+    wire [11:0] r3 = b[3] ? {1'd0, a, 3'b0} : 12'd0;
+    wire [11:0] s1 = r0 ^ r1 ^ r2;
+    wire [11:0] c1 = ((r0 & r1) | (r0 & r2) | (r1 & r2)) << 1;
+    wire [11:0] s2 = s1 ^ c1 ^ r3;
+`ifdef OT_NEG_ATTN_M84
+    // NEGATIVE CONTROL (compile-time only): the second level drops the (s1 & r3) carry; lockstep must FAIL
+    wire [11:0] c2 = ((s1 & c1) | (c1 & r3)) << 1;
+`else
+    wire [11:0] c2 = ((s1 & c1) | (s1 & r3) | (c1 & r3)) << 1;
+`endif
+    wire co;
+    ot_hdc_ksadd_k #(.W(12)) u_a (.a(s2), .b(c2), .cin(1'b0), .s(y), .cout(co));
+endmodule
+
 // ot_hdc_v41x_attn_bmul_s with one more stage (ML 7): the operand decode and the exponent sum (keep-prefix adder)
 // get their own stage ahead of the two 8 x 4 partial products, and the subnormal rounding increment is a
 // keep-prefix incrementer.  Same value as bmul_s / bmul_l at ML 6, one cycle later.
@@ -709,13 +732,18 @@ module ot_hdc_v41x_attn_bmul_s7 (
         d_zero <= opad || (ma_c == 8'd0) || (mb_c == 8'd0);
         d_nonfin <= !opad && ((ea == 8'hff) || (eb == 8'hff));
     end
-    // -- stage 1b: the two 8 x 4 partial products
+    // -- stage 1b: the two 8 x 4 partial products.  Margin (option-B leaf lb_u45_m6 @770: d_mb -> s1_ph -28.3 ps,
+    // +35.0 at 833.333, the leaf's only class under +40): each 8 x 4 product is four AND rows, two explicit 3:2
+    // carry-save levels and one kept-prefix add (ABC had mapped the inferred multiply to a 13-gate ripple)
     reg [11:0] s1_pl, s1_ph;
     reg [8:0]  s1_esum;
     reg        s1_sign, s1_zero, s1_nonfin;
+    wire [11:0] m84_l, m84_h;
+    ot_hdc_v41x_attn_m84 u_m84l (.a(d_ma), .b(d_mb[3:0]), .y(m84_l));
+    ot_hdc_v41x_attn_m84 u_m84h (.a(d_ma), .b(d_mb[7:4]), .y(m84_h));
     always @(posedge clk) begin
-        s1_pl <= d_ma * d_mb[3:0];
-        s1_ph <= d_ma * d_mb[7:4];
+        s1_pl <= m84_l;
+        s1_ph <= m84_h;
         s1_esum <= d_esum;
         s1_sign <= d_sign;
         s1_zero <= d_zero;

@@ -4,13 +4,13 @@
 // credits (bursts) -> the bench must FAIL (fault / loss).
 `timescale 1ns/1ps
 module tb_qwen_die_cdc_ch;
-    parameter integer N = 4000, NEG = 0, W = 72;
+    parameter integer N = 4000, NEG = 0, W = 72, PIPE = 0;
     parameter real HW = 1.0, HR = 1.35;   // half periods (swap for a faster reader)
     reg wclk = 0, rclk = 0, rst_n = 0;
     always #HW wclk = ~wclk;
     always #HR rclk = ~rclk;
     reg i_v = 0; reg [W-1:0] i_d = 0; wire i_cr, w_fault, o_v, r_fault; wire [W-1:0] o_d; reg o_cr = 0;
-    ot_qwen_die_cdc_ch #(.W(W)) u (.wclk(wclk), .wrst_n(rst_n), .i_v(i_v), .i_d(i_d), .i_cr(i_cr), .w_fault(w_fault),
+    ot_qwen_die_cdc_ch #(.W(W), .PIPE(PIPE)) u (.wclk(wclk), .wrst_n(rst_n), .i_v(i_v), .i_d(i_d), .i_cr(i_cr), .w_fault(w_fault),
         .rclk(rclk), .rrst_n(rst_n), .o_v(o_v), .o_d(o_d), .o_cr(o_cr), .r_fault(r_fault));
     reg [W-1:0] sent [0:N-1];
     integer ns = 0, nr = 0, bad = 0, credits = 4, seed = 3, k;

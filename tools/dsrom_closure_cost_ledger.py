@@ -17,11 +17,15 @@ AR_ = ["*.attn.out_allreduce", "*.ffn.combine_allreduce"]
 AG_ = ["*.attn.a_allgather", "*.attn.idx.topk_merge", "*.attn.cand.merge", "*.attn.rows_allgather", "*.ffn.router_allgather"]
 # (item, description, [(nodes, cycles, frac)])
 ITEMS = [
-    ("s81_die", "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced "
-                "meso d8g1 term (+4), giving +27: hub stations, "
-                "q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). "
-                "Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending",
-     [(k, 27, 0) for k in MAT]),
+    ("s81_die", "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ "
+                "root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, "
+                "claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each "
+                "ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), "
+                "giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full "
+                "221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root "
+                "stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; "
+                "die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress",
+     [(k, 28, 0) for k in MAT]),
     ("meso_d8g1", "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field "
                   "round trip (+4)", [(k, 4, 0) for k in MAT]),
     ("ctrl_status", "CTRL status chain: +1 cycle per column (HBM stream reads)", [(k, 1, 0) for k in HBM]),
@@ -94,6 +98,15 @@ CANDIDATES = [
                 "first (variant A re-cut is the target).  UNDER-PRICED: BF pairs also hold 20.6 % of the q words, so HALF=1 on "
                 "shared pairs doubles those q phases too (the BF-dedicated-pair plan of the BF doubling agent replaces it)",
      [("*.attn.wo_a", 0, 0.8789), ("*.ffn.router", 0, 0.8976), ("*.attn.a_proj", 0, 0.7037), ("*.attn.cmp.wk", 0, 0.7748)]),
+    ("bf_deep4", "OPTIONAL lever, not the closure path: deep full-rate BF (ot_s81_bf_native RECUT=4, ot_v41_bf16_lanes3 DEEP 1: "
+                 "fadd3 every step cut, chain5 F5=0, bmul3 XS 2, extra lane input rank; claude/s81-bf-20261007 9c21d9e49; exact "
+                 "TXN MATCH 456 partials): latency only on this workload (the widened issue hazard never bound: lag identical "
+                 "with and without it), transaction lag per partial 4 / 10.2 / 23; upper bound +23 per BF16 field phase; no "
+                 "half-rate clock, no dedicated pairs (shared allocation, 98 stages); route bf_deep4_mm_9c21d9e49",
+     [(n, 23 * k, 0) for n, k, _ in [("*.attn.wo_a", 4, 0), ("*.attn.a_proj", 3, 0), ("*.ffn.router", 1, 0), ("*.attn.cmp.wk", 1, 0)]]),
+    ("bf_deep5", "OPTIONAL lever, not the closure path: as bf_deep4 with RECUT=5 (DEEP 2: + SPLIT6 / SPLIT9 in the chains and "
+                 "tree): lag per partial 4 / 11.8 / 29; upper bound +29 per BF16 field phase; route bf_deep5_mm_9c21d9e49",
+     [(n, 29 * k, 0) for n, k, _ in [("*.attn.wo_a", 4, 0), ("*.attn.a_proj", 3, 0), ("*.ffn.router", 1, 0), ("*.attn.cmp.wk", 1, 0)]]),
     ("bf_recut", "BF re-cut A (ot_s81_bf_native RECUT=2, claude/dsrom-bf-rowfix-20261007 260869fd0; exact record e2d358837; "
                  "closure-loop bf_recut_260869fd0): latency only, transaction lag per partial 4 / 7.9 / 15; upper bound "
                  "+15 per field phase (wo_a 4 phases, a_proj 3)",
@@ -123,6 +136,17 @@ CANDIDATES += [
                       "gearbox beat (-2.0 %), charged as +2.0 % of every collective node (upper bound; link-up is faster: "
                       "TP4 bench end 3,012 vs 3,374 cycles)", [(k, 0, 0.02) for k in AR_ + AG_]),
 ]
+
+
+# Candidates priced by another composition (the number is that tool's, quoted, not re-composed here)
+EXTERNAL_CANDIDATES = [dict(
+    item="bf_halfphl", physical_adoption=False, ar_tok_s=1467.6, mtp_tok_s=4403.0, ar_pct_vs_total=-7.91, mtp_pct_vs_total=-6.21,
+    description="BF HALF_PHL, the ACCEPTED BF closure path (ot_s81_bf_native HALF=1 HALF_PHL=1, claude/s81-bf-20261007, exact "
+                "PASS results/rtl/s81_bf_native_20261007/halfphl_exact): MEASURED 1,792 half_dedicated field (merged BF16 phases + "
+                "router K split, 19,312 regions exact; 120 stages / 480 dies, 35 extra hops vs 98 / 392, 13 shared), BF16 region "
+                "go->idle x 2 + 2 a phase (upper bound on the half element); full-rate shared reference 1,577.1 on the same basis",
+    source="claude/s81-fieldphase-20261007 f42b1eb76 results/uarch/dsrom_s81_field_phases_1792_20261007/composition_basis_39e424990.json",
+    supersedes="16584ae76's -13.87 % doubled the as-built UNMERGED qx10 BF16 phases (wo_a 4 phases): refuted")]
 
 
 UNPRICED_CANDIDATES = [dict(
@@ -183,7 +207,7 @@ def main():
                candidates=[dict(item=it, description=d_, adds=a_, ar_tok_s=cand[it][0], mtp_tok_s=cand[it][1],
                                 ar_pct_vs_total=round(100 * (cand[it][0] / prev[0] - 1), 3),
                                 mtp_pct_vs_total=round(100 * (cand[it][1] / prev[1] - 1), 3)) for it, d_, a_ in CANDIDATES],
-               unpriced_candidates=UNPRICED_CANDIDATES,
+               unpriced_candidates=UNPRICED_CANDIDATES, external_candidates=EXTERNAL_CANDIDATES,
                physical_adoption=False,
                pending_defect=[dict(item=it, description=d_, adds=a_) for it, d_, a_ in PENDING],
                as_is=dict(ar_tok_s=asis[0], mtp_tok_s=asis[1], ar_pct=round(100 * (asis[0] / ar0 - 1), 3),
@@ -200,6 +224,9 @@ def main():
         ar_, mt_ = cand[it]
         L.append(f"| {it} (CANDIDATE, not adopted) | {d_} | {ar_:,.1f} | {100 * (ar_ / prev[0] - 1):+.2f} | "
                  f"{100 * (mt_ / prev[1] - 1):+.2f} | | |")
+    for r in EXTERNAL_CANDIDATES:
+        L.append(f"| {r['item']} (CANDIDATE, priced by {r['source'].split()[0]}) | {r['description']} | {r['ar_tok_s']:,.1f} | "
+                 f"{r['ar_pct_vs_total']:+.2f} | {r['mtp_pct_vs_total']:+.2f} | | |")
     for r in UNPRICED_CANDIDATES:
         L.append(f"| {r['item']} (UNPRICED, not adopted) | {r['reason']} | unknown | | | | |")
     for it, d_, a_ in PENDING:

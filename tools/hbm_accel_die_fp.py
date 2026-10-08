@@ -2656,6 +2656,11 @@ def die_power(m):
 
 
 # ------------------------------------------------------------------------------------------------ records
+RESERVATION_KEYS = ('result_pin_bays', 'native_owner_bays', 'native_descriptor_bays', 'native_control_escape_bays',
+                    'native_control_u_corridors', 'native_result_store_bays')   # the order build() extends reserved_regions
+ROUTE_CORRIDOR_KEYS = {'native_control_escape_bays', 'native_control_u_corridors'}
+
+
 def legality(m):
     return S.legality(dict(m, insts=m['insts'])) if False else _legality(m)
 
@@ -2680,8 +2685,33 @@ def _legality(m):
                     if a0 < x1 - 1e-6 and x0 < a1 - 1e-6 and b0 < y1 - 1e-6 and y0 < b1 - 1e-6:
                         ov.append((o.name, it.name))
                 grid[(a, b)].append(i)
-    return dict(instances=len(m['insts']), overlaps=len(ov), overlap_examples=ov[:20], outside=len(out),
-                outside_examples=out[:20])
+    # reserved regions (result pin / owner / descriptor / escape bays, U corridors, result stores) are obstacles too:
+    # an instance or another reservation may not overlap one (the audit omitted them until 2026-10-07)
+    rr = [tuple(b) for b in m.get('reserved_regions', [])]
+    tags = [(k, r.get('sm')) for k in RESERVATION_KEYS for r in m.get(k, [])]
+    if len(tags) != len(rr):
+        tags = [(None, None)] * len(rr)
+    rov = []
+    for k, b in enumerate(rr):
+        if b[0] < -1e-6 or b[1] < -1e-6 or b[2] > W + 1e-6 or b[3] > H + 1e-6:
+            out.append(f'reserved[{k}]')
+        for a in range(int(b[0] // 200), int(b[2] // 200) + 1):
+            for c in range(int(b[1] // 200), int(b[3] // 200) + 1):
+                for j in grid[(a, c)]:
+                    a0, b0, a1, b1 = m['insts'][j].box()
+                    if a0 < b[2] - 1e-6 and b[0] < a1 - 1e-6 and b0 < b[3] - 1e-6 and b[1] < b1 - 1e-6:
+                        rov.append((m['insts'][j].name, f'reserved[{k}]'))
+        for k2 in range(k + 1, len(rr)):
+            e = rr[k2]
+            if b[0] < e[2] - 1e-6 and e[0] < b[2] - 1e-6 and b[1] < e[3] - 1e-6 and e[1] < b[3] - 1e-6:
+                (ka, sa), (kb, sb) = tags[k], tags[k2]
+                if sa is not None and sa == sb and {ka, kb} & ROUTE_CORRIDOR_KEYS:
+                    continue        # one SM's route corridor joining its own escape portal: a connected keep-out
+                rov.append((f'reserved[{k}]', f'reserved[{k2}]'))
+    rov = sorted(set(rov))
+    return dict(instances=len(m['insts']), overlaps=len(ov) + len(rov), overlap_examples=(ov + rov)[:20],
+                outside=len(out), outside_examples=out[:20], reserved_regions=len(rr), reserved_overlaps=len(rov),
+                reserved_overlap_examples=rov[:20])
 
 
 def write_def_floorplan(m, path):

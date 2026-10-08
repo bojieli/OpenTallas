@@ -5,6 +5,7 @@
 #     below; a pass that routes to SS >= ACC_SS and FF >= HM ends the ECO), ALLOW (12: the re-route costs 12-16 ps of the repaired FF hold, ctl r6 / router dv12 / stn_r38 pass 1), SM (setup margin ps kept by repair_timing, 40), FILT (endpoint filter: repair only
 #     endpoints with SS setup > deficit + FILT, 40), PASSES (ECO -> re-route -> sign-off iterations, 2), RESAWARE
 #     (1: resistance-aware GRT like the ORFS route), HOLDCELLS (1: HB*xp67 delay cells allowed), KEEPCLK (full re-route only, 0),
+#     SETUP_LIB (SS | TT: library corner of the setup scene "ss"; OWNER OPTION B 2026-10-07 -> TT),
 #     ACC_SS / ACC_FF (acceptance line, 15 / 15), ECO_SESSION (mm by default = rev 3 multi-mode; ff = FF-only; auto = legacy two-corner detection),
 #     ALLOW_FRESH_GRT (0 by default; 1 permits fresh routing with explicit result provenance, unchanged acceptance),
 #     FREEZE / KEEPWIRES (0: opt-in macro-output / untouched-net wire preservation; rejected wires retry in a fresh process),
@@ -35,10 +36,12 @@ PS=""; for p in "$@"; do PS="$PS /src/$p"; done
 MS=""; for m in ${MACROS:-}; do MS="$MS /src/$m"; done
 CS_ARGS=$(for p in "$@"; do echo -n " --post-sdc $p"; done; for m in ${MACROS:-}; do echo -n " --macro $m"; done)
 ACC_SS=${ACC_SS:-15}; ACC_FF=${ACC_FF:-15}
+# MULTI-VT (2026-10-07): a route with LVT/SLVT cells is timed with those libraries too (absent: RVT only, unchanged)
+OT_VT="RVT"; for t in L SL; do grep -aqE "_ASAP7_75t_${t}([^A-Za-z0-9_]|\$)" $RB/$DB && OT_VT="$OT_VT $([ $t = L ] && echo LVT || echo SLVT)"; done
 orun() {  # orun <log> <tcl> [docker -e args...]: openroad in the fleet image
   local log=$1 tcl=$2; shift 2
   docker run --rm -v $CUR_DIR:/in:ro -v $(dirname $CUR_SPEF):/inspef:ro -v $OB:/ob:ro -v $P:/p -v $PWD:/src:ro -v $CLD:/cl:ro \
-    -e OT_MACROS="${MS# }" -e OT_CL=/cl "$@" $IMG bash -lc \
+    -e OT_MACROS="${MS# }" -e OT_VT="$OT_VT" -e OT_CL=/cl -e OT_SETUP_LIB=${SETUP_LIB:-SS} "$@" $IMG bash -lc \
     "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /cl/$tcl" > $log 2>&1
 }
 best=""; bestscore=-1e9
@@ -123,8 +126,10 @@ cs = json.load(open(f'{p}/corner_sta.json'))
 add = re.findall(r'OT_ECO cells_added (-?\d+)', log)
 win = re.findall(r'^OT_WIN pre (.*)$', log, re.M)
 route_strategy = re.findall(r'^OT_ECO route_strategy (.*)$', log, re.M)
-r = dict(ss_ps=cs['setup_ss']['worst_slack_ps'], ff_ps=cs['hold_ff']['worst_slack_ps'], drc=int(nv[-1]) if nv else None,
-         cells_added=int(add[0]) if add else None, errors=cs['setup_ss'].get('errors', []) + cs['hold_ff'].get('errors', []),
+su = cs.get('setup_tt') or cs['setup_ss']   # OWNER OPTION B: setup closes at TT (corner_sta.py writes setup_tt)
+r = dict(ss_ps=su['worst_slack_ps'], ff_ps=cs['hold_ff']['worst_slack_ps'], drc=int(nv[-1]) if nv else None,
+         setup_corner=su.get('corner', 'ss'), ss_sensitivity_ps=cs['setup_ss']['worst_slack_ps'],
+         cells_added=int(add[0]) if add else None, errors=su.get('errors', []) + cs['hold_ff'].get('errors', []),
          **{'pass': k}, session=session, window=win[0] if win else None, route_strategy=route_strategy)
 ok = r['ss_ps'] is not None and r['ff_ps'] is not None
 r['score'] = min(r['ss_ps'] - acc_ss, r['ff_ps'] - acc_ff) if ok and r['drc'] == 0 and not r['errors'] else -1e9

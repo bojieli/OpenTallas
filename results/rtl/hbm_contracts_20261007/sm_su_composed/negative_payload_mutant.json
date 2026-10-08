@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_accel.sm_v_gate.v1",
  "mode": "synth",
  "status": "fail",
- "generated_utc": "2026-10-08T01:58:08Z",
+ "generated_utc": "2026-10-08T02:52:42Z",
  "source_commit": "",
  "simulator": "Verilator 5.032 2025-01-01 rev (Debian 5.032-1)",
  "simulator_backend": "verilator",
@@ -15,7 +15,7 @@
    "--top-module",
    "tb_hbm_sm_su_composed",
    "--Mdir",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/smc/w2/b0_vmsh4tvm",
+   "/home/ubuntu/hc-bench/smc/w2/b0_ynagfmpq",
    "-j",
    "8",
    "-GSUB=4",
@@ -26,39 +26,39 @@
    "-GRMAX=256",
    "-GLEV=4",
    "-GENABLE=0",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_prefix.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/v41rom/ot_v41_bterm.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/v41rom/ot_v41_bterm2.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_fadd.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_fastfp.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_tree.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_issue.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_stack.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_tc_col.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_bd_col.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/v41/ot_hdc_blockdot.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_bulk_copy.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_sm_v.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_fpu.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_sfu.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_delay.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
-   "/tmp/smsu_mut_dqgeungo/ot_hbm_su_result_ingress.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/contracts_20261007/ot_hbm_sm_su_result_edge.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/contracts_20261007/tb_hbm_sm_su_composed.sv"
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_prefix.sv",
+   "/home/ubuntu/hc-bench/src/rtl/v41rom/ot_v41_bterm.sv",
+   "/home/ubuntu/hc-bench/src/rtl/v41rom/ot_v41_bterm2.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_fadd.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_fastfp.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_tree.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_issue.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_stack.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_tc_col.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_bd_col.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/v41/ot_hdc_blockdot.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_bulk_copy.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_sm_v.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_fpu.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "/home/ubuntu/hc-bench/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_sfu.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_delay.sv",
+   "/home/ubuntu/hc-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "/home/ubuntu/hc-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+   "/home/ubuntu/hc-bench/src/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv",
+   "/home/ubuntu/hc-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+   "/tmp/smsu_mut_7md1_y0m/ot_hbm_su_result_ingress.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/contracts_20261007/ot_hbm_sm_su_result_edge.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/contracts_20261007/tb_hbm_sm_su_composed.sv"
   ],
   "(1, ('LBS', 2), ('LEV', 4), ('LSB', 16), ('NC', 2), ('RMAX', 256), ('SUB', 4), ('XDEPTH', 128))": [
    "verilator",
@@ -68,7 +68,7 @@
    "--top-module",
    "tb_hbm_sm_su_composed",
    "--Mdir",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/smc/w2/b1_i5nxq60l",
+   "/home/ubuntu/hc-bench/smc/w2/b1_52btspbi",
    "-j",
    "8",
    "-GSUB=4",
@@ -79,39 +79,39 @@
    "-GRMAX=256",
    "-GLEV=4",
    "-GENABLE=1",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_prefix.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/v41rom/ot_v41_bterm.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/v41rom/ot_v41_bterm2.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_fadd.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_fastfp.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_tree.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_issue.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_stack.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_tc_col.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_bd_col.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/v41/ot_hdc_blockdot.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_bulk_copy.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/gpu/ot_gpu_sm_v.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_fpu.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_sfu.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hdc/ot_hdc_delay.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
-   "/tmp/smsu_mut_dqgeungo/ot_hbm_su_result_ingress.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/contracts_20261007/ot_hbm_sm_su_result_edge.sv",
-   "/srv/opentallas-scratch2/scratch/claude/hbm-contracts-bench/src/rtl/hbm_accel/contracts_20261007/tb_hbm_sm_su_composed.sv"
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_prefix.sv",
+   "/home/ubuntu/hc-bench/src/rtl/v41rom/ot_v41_bterm.sv",
+   "/home/ubuntu/hc-bench/src/rtl/v41rom/ot_v41_bterm2.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_fadd.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_fastfp.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_tree.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_issue.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_stack.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_tc_col.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_bd_col.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/v41/ot_hdc_blockdot.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_bulk_copy.sv",
+   "/home/ubuntu/hc-bench/src/rtl/gpu/ot_gpu_sm_v.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_fpu.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "/home/ubuntu/hc-bench/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_sfu.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hdc/ot_hdc_delay.sv",
+   "/home/ubuntu/hc-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "/home/ubuntu/hc-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+   "/home/ubuntu/hc-bench/src/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv",
+   "/home/ubuntu/hc-bench/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+   "/tmp/smsu_mut_7md1_y0m/ot_hbm_su_result_ingress.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/contracts_20261007/ot_hbm_sm_su_result_edge.sv",
+   "/home/ubuntu/hc-bench/src/rtl/hbm_accel/contracts_20261007/tb_hbm_sm_su_composed.sv"
   ]
  },
  "benchmark_clock_ns": 1.0,
@@ -122,7 +122,8 @@
  "delta_done_set": [
   17,
   18,
-  20
+  19,
+  21
  ],
  "delta_first_set": [
   19,
@@ -134,20 +135,20 @@
    "exact_original": false,
    "exact_successor": false,
    "cycles_start_to_done": [
-    230,
+    231,
     250
    ],
    "first_result": [
-    229,
+    230,
     249
    ],
    "last_result": [
-    229,
+    230,
     249
    ],
-   "delta_done": 20,
-   "delta_first": 20,
-   "delta_last": 20,
+   "delta_done": 19,
+   "delta_first": 19,
+   "delta_last": 19,
    "successor": {
     "case": "smv_fp8_k5120_gs_r1_nc2",
     "bench": "sm_v",
@@ -175,7 +176,7 @@
      "consumed": 40,
      "fault": 0,
      "released": 1,
-     "drain_last_line_to_last_result": 88,
+     "drain_last_line_to_last_result": 89,
      "released_after_done": 4
     }
    },
@@ -199,14 +200,14 @@
      "edge_stations": 4,
      "edge_done": 1,
      "edge_free": 64,
-     "cycles_start_to_done": 230,
-     "first_result": 229,
-     "last_result": 229,
+     "cycles_start_to_done": 231,
+     "first_result": 230,
+     "last_result": 230,
      "lines": 40,
      "consumed": 40,
      "fault": 0,
      "released": 1,
-     "drain_last_line_to_last_result": 76,
+     "drain_last_line_to_last_result": 78,
      "released_after_done": 4
     }
    }
@@ -217,19 +218,19 @@
    "exact_successor": false,
    "cycles_start_to_done": [
     224,
-    244
+    245
    ],
    "first_result": [
-    222,
+    221,
     241
    ],
    "last_result": [
     223,
-    243
+    244
    ],
-   "delta_done": 20,
-   "delta_first": 19,
-   "delta_last": 20,
+   "delta_done": 21,
+   "delta_first": 20,
+   "delta_last": 21,
    "successor": {
     "case": "smv_fp4_k5120_gs_r2_nc2",
     "bench": "sm_v",
@@ -250,14 +251,14 @@
      "edge_stations": 4,
      "edge_done": 1,
      "edge_free": 64,
-     "cycles_start_to_done": 244,
+     "cycles_start_to_done": 245,
      "first_result": 241,
-     "last_result": 243,
+     "last_result": 244,
      "lines": 48,
      "consumed": 48,
      "fault": 0,
      "released": 1,
-     "drain_last_line_to_last_result": 81,
+     "drain_last_line_to_last_result": 83,
      "released_after_done": 4
     }
    },
@@ -282,13 +283,13 @@
      "edge_done": 1,
      "edge_free": 64,
      "cycles_start_to_done": 224,
-     "first_result": 222,
+     "first_result": 221,
      "last_result": 223,
      "lines": 48,
      "consumed": 48,
      "fault": 0,
      "released": 1,
-     "drain_last_line_to_last_result": 69,
+     "drain_last_line_to_last_result": 70,
      "released_after_done": 4
     }
    }
@@ -339,7 +340,7 @@
      "consumed": 48,
      "fault": 0,
      "released": 1,
-     "drain_last_line_to_last_result": 88,
+     "drain_last_line_to_last_result": 89,
      "released_after_done": 4
     }
    },
@@ -370,7 +371,7 @@
      "consumed": 48,
      "fault": 0,
      "released": 1,
-     "drain_last_line_to_last_result": 78,
+     "drain_last_line_to_last_result": 79,
      "released_after_done": 4
     }
    }
@@ -421,7 +422,7 @@
      "consumed": 144,
      "fault": 0,
      "released": 1,
-     "drain_last_line_to_last_result": 80,
+     "drain_last_line_to_last_result": 81,
      "released_after_done": 4
     }
    },
@@ -452,7 +453,7 @@
      "consumed": 144,
      "fault": 0,
      "released": 1,
-     "drain_last_line_to_last_result": 71,
+     "drain_last_line_to_last_result": 72,
      "released_after_done": 4
     }
    }
@@ -503,7 +504,7 @@
      "consumed": 880,
      "fault": 0,
      "released": 1,
-     "drain_last_line_to_last_result": 119,
+     "drain_last_line_to_last_result": 120,
      "released_after_done": 4
     }
    },
@@ -534,7 +535,7 @@
      "consumed": 880,
      "fault": 0,
      "released": 1,
-     "drain_last_line_to_last_result": 109,
+     "drain_last_line_to_last_result": 110,
      "released_after_done": 4
     }
    }
@@ -544,7 +545,7 @@
    "exact_original": false,
    "exact_successor": false,
    "cycles_start_to_done": [
-    217,
+    216,
     235
    ],
    "first_result": [
@@ -552,12 +553,12 @@
     232
    ],
    "last_result": [
-    216,
+    215,
     234
    ],
-   "delta_done": 18,
+   "delta_done": 19,
    "delta_first": 20,
-   "delta_last": 18,
+   "delta_last": 19,
    "successor": {
     "case": "smv_fp4_k2304_gs_r2_gap_nc2",
     "bench": "sm_v",
@@ -585,7 +586,7 @@
      "consumed": 32,
      "fault": 0,
      "released": 1,
-     "drain_last_line_to_last_result": 74,
+     "drain_last_line_to_last_result": 75,
      "released_after_done": 4
     }
    },
@@ -609,9 +610,9 @@
      "edge_stations": 4,
      "edge_done": 1,
      "edge_free": 64,
-     "cycles_start_to_done": 217,
+     "cycles_start_to_done": 216,
      "first_result": 212,
-     "last_result": 216,
+     "last_result": 215,
      "lines": 32,
      "consumed": 32,
      "fault": 0,
@@ -653,9 +654,9 @@
   "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
   "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv": "65d1f1a1de21732b0fdaec439651192c8af6757871bc0f8599993dde55864433",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
-  "/tmp/smsu_mut_dqgeungo/ot_hbm_su_result_ingress.sv": "6e4113e5db43cb5a5e6bfc7839cdcb5842a343e35f23c939bb76a131b8b65540",
-  "rtl/hbm_accel/contracts_20261007/ot_hbm_sm_su_result_edge.sv": "7b701b9ab7dd831c5af5ef971e9cdcea7a0595494982b7c5867d63a074c65a65",
-  "rtl/hbm_accel/contracts_20261007/tb_hbm_sm_su_composed.sv": "c2c0fb8490b51ff740228c280f378162fadb7d32c52fee63a0065a7d14673fb7",
+  "/tmp/smsu_mut_7md1_y0m/ot_hbm_su_result_ingress.sv": "fb55b22c43ea53cdaca1c6a0a95af46d2967257e0553cb394fae2fa64ff752b9",
+  "rtl/hbm_accel/contracts_20261007/ot_hbm_sm_su_result_edge.sv": "81e877a0909fbce0c396afdf76bc10fda116489b61161f9c6876a8027293c40d",
+  "rtl/hbm_accel/contracts_20261007/tb_hbm_sm_su_composed.sv": "b76ca6938022aa343a72cb77746b2f85d0766a7e9f21ae8e81dcf2a2bdacc974",
   "tools/hbm_accel_sm_v_gate.py": "c235c9fbb1b6cdab1c95867ba001579cd68c0acb77c93a8445c85dc14563237d",
   "tools/rtl_gpu_sm_exact.py": "1356dbfb6f1778f11d7b3e8156342e130d504a5670fa066e93f609ae975579f8",
   "tools/w19_sm_real_ops.py": "d02a8c8adb0c3d822dabc2966efe82999e50afcad5d19cc44ac588cd4a2ef1b7"

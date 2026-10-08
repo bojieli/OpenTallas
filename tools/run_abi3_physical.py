@@ -1913,6 +1913,47 @@ def floorplan_extra_lines(floorplan: dict[str, Any] | None) -> list[str]:
     return lines
 
 
+def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
+    """Opt-in flow fixes chained after the block's own PRE_CTS hook (setup-triage 2026-10-07).
+
+    OT_CTS_FIX_HOOKS = space-separated Tcl files (repo-relative or absolute).  When set, PRE_CTS_TCL becomes
+    hooks/pre_cts_ot_cts_fix.tcl, which sources the block's own PRE_CTS hook (if any) and then each fix, in order;
+    every fix's sha256 is written to hooks/ot_cts_fix.json.  Unset: config unchanged (byte-identical).
+    """
+    fixes = os.environ.get("OT_CTS_FIX_HOOKS", "").split()
+    if not fixes:
+        return config
+    hooks_dir = case / "hooks"
+    hooks_dir.mkdir(exist_ok=True)
+    orig = None
+    kept = []
+    for line in config:
+        m = re.match(r"\s*export\s+PRE_CTS_TCL\s*=\s*(.*)$", line)
+        if m:
+            orig = m.group(1).strip()
+            continue
+        kept.append(line)
+    body = ["# Written by tools/run_abi3_physical.py (OT_CTS_FIX_HOOKS)."]
+    if orig:
+        body.append(f"source {orig}")
+    record = []
+    for i, fix in enumerate(fixes):
+        source = Path(fix)
+        if not source.is_absolute():
+            source = ROOT / source
+        if not source.is_file():
+            raise ValueError(f"OT_CTS_FIX_HOOKS: no such file {source}")
+        name = f"ot_cts_fix_{i}_{source.name}"
+        shutil.copy2(source, hooks_dir / name)
+        body.append(f"source /work/hooks/{name}")
+        record.append({"path": fix, "name": name, "sha256": sha256_file(source)})
+    (hooks_dir / "pre_cts_ot_cts_fix.tcl").write_text("\n".join(body) + "\n", encoding="utf-8")
+    (hooks_dir / "ot_cts_fix.json").write_text(json.dumps({"pre_cts_orig": orig, "fixes": record}, indent=1) + "\n",
+                                               encoding="utf-8")
+    kept.append("export PRE_CTS_TCL = /work/hooks/pre_cts_ot_cts_fix.tcl")
+    return kept
+
+
 def io_constraints_tcl(pin_regions: list[dict[str, str]]) -> str:
     """set_io_pin_constraint per region; ports are matched by Tcl regexp on the
     block's own terminal names, so a bus is pinned bit by bit, in order."""
@@ -2137,6 +2178,17 @@ def orfs_config_lines(
         config.append(f"export CORNER = {pnr['corner_env']}")
     for key, value in sorted(pnr["extra_config"].items()):
         config.append(f"export {key} = {value}")
+    if pnr["extra_config"].get("OT_MULTI_VT"):
+        # MULTI-VT (OT_MULTI_VT=lvt|lvt+slvt): synthesis maps RVT only (the platform reads ASAP7_USE_VT for the
+        # synthesis make goals, including the recursive do-yosys* ones), so the netlist ABC produces is the RVT
+        # baseline; floorplan..route load every listed VT, and repair_timing's VT swap (SKIP_VT_SWAP /
+        # SKIP_CRIT_VT_SWAP unset = on) moves only the cells it repairs to LVT/SLVT twins (same LEF footprint)
+        config.extend([
+            "ifneq ($(filter %/1_1_yosys_canonicalize.rtlil %/1_2_yosys.v do-yosys do-yosys-canonicalize,"
+            "$(MAKECMDGOALS)),)",
+            "export ASAP7_USE_VT = RVT",
+            "endif",
+        ])
     if constraints and constraints.get("slew_margin_percent") is not None:
         config.append(f"export SLEW_MARGIN = {constraints['slew_margin_percent']:g}")
     if constraints and constraints.get("hold_margin_ns") is not None:
@@ -2288,6 +2340,7 @@ def run_pnr(
     endpoint_netlist = prepare_w11_orfs_endpoint_netlist(block, work, case)
     if endpoint_netlist:
         config.append("export SYNTH_NETLIST_FILES = /work/w11_endpoint_mapped.v")
+    config = apply_cts_fix_hooks(config, case)
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
     if floorplan and floorplan.get("pin_regions"):
         (case / "io_constraints.tcl").write_text(
@@ -2377,6 +2430,11 @@ def run_pnr(
             raise FlowError(f"ORFS produced no {st} metrics at {cts_json}")
         cts = json.loads(cts_json.read_text(encoding="utf-8"))
         errors = {k: v for k, v in cts.items() if k.endswith("__flow__errors__count")}
+        try:
+            from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair
+            errors = _ot_tol(errors, logs_dir)
+        except ImportError:
+            pass
         if any(int(v) != 0 for v in errors.values()):
             raise FlowError(f"ORFS reported flow errors: {errors}")
         fmax_info = conservative_fmax_metrics(cts, st)
@@ -2449,6 +2507,12 @@ def run_pnr(
         if key.endswith("__flow__errors__count")
     }
     metrics["flow_error_counts"] = flow_errors
+    try:
+        from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair
+        flow_errors = _ot_tol(flow_errors, logs_dir)
+        metrics["flow_error_counts_tolerated"] = flow_errors
+    except ImportError:
+        pass
     if any(int(v) != 0 for v in flow_errors.values()):
         raise FlowError(f"ORFS reported flow errors: {flow_errors}")
     if endpoint_netlist and metrics.get("sequential_cell_count", 0) < 270418:
@@ -3267,13 +3331,24 @@ def main(argv: list[str] | None = None, *,
          flow_timeout: int | None | object = _TIMEOUT_UNSET) -> int:
     """Run with optional, invocation-scoped timeout overrides; None is unlimited."""
     args = build_parser().parse_args(argv)
+    _ot_oc = os.environ.get("OT_ORFS_CORNER", "").strip().upper()
+    if _ot_oc:
+        # OWNER OPTION B (2026-10-07): the closure loop routes with CORNER=TC (setup repair at TT; hold at FF via mm)
+        if _ot_oc not in ORFS_LIB_CORNERS:
+            raise SystemExit(f"OT_ORFS_CORNER={_ot_oc}: unknown ORFS corner; known {sorted(ORFS_LIB_CORNERS)}")
+        if args.orfs_corner != _ot_oc:
+            print(f"OT_ORFS_CORNER={_ot_oc}: primary corner {args.orfs_corner} -> {_ot_oc}", file=sys.stderr)
+        if args.hold_corners:
+            args.hold_corners = ",".join(_ot_oc if c.strip() == (args.orfs_corner or "WC") else c.strip()
+                                         for c in args.hold_corners.split(","))
+        args.orfs_corner = _ot_oc
     _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
     if _ot_rhc == "mm":
         # FLOW-HOLD (2026-10-07): multi-mode route-time repair, SS setup (scene WC) + FF hold (scene BC) each under its
         # own constraints (tools/orfs_hold_mm.tcl, patched into the flow container by tools/orfs_hold_mm.py)
         _ot_p = args.orfs_corner or (args.hold_corners or "WC").split(",")[0].strip()
         args.hold_corners = ",".join(dict.fromkeys([_ot_p, "BC"]))
-        args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1"]
+        args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1", f"OT_MM_SETUP_CORNER={_ot_p}"]
         _ot_ff = " ".join(("/src/" + f.lstrip("/")) if not f.startswith("/src/") else f
                           for f in os.environ.get("OT_MM_FF_SDC", "").split() if f)
         if _ot_ff:
@@ -3305,6 +3380,20 @@ def main(argv: list[str] | None = None, *,
             print(f"OT_ROUTE_HOLD_CORNERS={_ot_rhc}: place-and-route repair corners {args.hold_corners} -> {_ot_new} "
                   f"(FF hold: post-route hold ECO; sign-off unchanged)", file=sys.stderr)
             args.hold_corners = _ot_new
+    _ot_mvt = os.environ.get("OT_MULTI_VT", "").strip().lower()
+    if _ot_mvt:
+        # MULTI-VT (2026-10-07, opt-in): RVT netlist from synthesis, LVT (and SLVT) as repair_timing VT-swap targets
+        _ot_vts = {"lvt": "RVT LVT", "lvt+slvt": "RVT LVT SLVT"}.get(_ot_mvt)
+        if _ot_vts is None:
+            print(f"OT_MULTI_VT={_ot_mvt!r}: expected lvt or lvt+slvt", file=sys.stderr)
+            return 2
+        if args.vt is not None and args.vt.split() != _ot_vts.split():
+            print(f"OT_MULTI_VT={_ot_mvt} conflicts with --vt {args.vt!r}", file=sys.stderr)
+            return 2
+        args.vt = _ot_vts
+        args.orfs_var = list(args.orfs_var or []) + [f"OT_MULTI_VT={_ot_mvt}"]
+        print(f"OT_MULTI_VT={_ot_mvt}: ASAP7_USE_VT '{_ot_vts}' (synthesis RVT only; VT swap in repair_timing)",
+              file=sys.stderr)
     previous = {}
     try:
         for option, override, env, callback in (
