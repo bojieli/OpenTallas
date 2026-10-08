@@ -78,12 +78,16 @@ def tree_top_job(cfg, commit, purpose, benches):
     return name, spec
 
 
+# the slab bench imports uarch_model -> arch_budget_v41 -> decode_critical_path, which read these (as slab_s14o_lvt)
+SLAB_EXTRA_PATHS = ["src", "configs", "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json", "results/rtl/hdc_v41_sinkhorn_campaign.json", "results/rtl/hdc_v41_tselect_scale_campaign.json", "results/rtl/hdc_v41_cand_campaign.json", "results/speculative/v41_flash_dspark_onpolicy_greedy.json", "results/arch/arch_budget_v41.json", "results/arch/qwen_gpu_calibration.json", "results/rtl/rom_stage_power_gating_20261004/verdict.json", "results/arch/v41_die_assembly.json", "results/arch/v41_die_placement.json", "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json"]
+
+
 def slab_job(variant, commit, purpose):
     name = f"slab_{variant}-{commit[:9]}tt"
     tool = "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py"
     spec = dict(
         name=name, block="ot_qwen_slab_port_group_s14_die", owner=OWNER, purpose=purpose,
-        hosts=VM.HOSTS, threads=16, peak_ram_gb=24, source=dict(branch=BRANCH, commit=commit),
+        hosts=VM.HOSTS, threads=16, peak_ram_gb=24, source=dict(branch=BRANCH, commit=commit, extra_paths=SLAB_EXTRA_PATHS),
         stages=dict(
             bench=[dict(name="slab_bf_exact", cmd=f"{tool} bench --variant {variant} --out {{RUN}}/bench_positive",
                         expect="pass", pass_regex="PASS: 1505 requests, 1505 results bit-exact", needs=["iverilog"]),
