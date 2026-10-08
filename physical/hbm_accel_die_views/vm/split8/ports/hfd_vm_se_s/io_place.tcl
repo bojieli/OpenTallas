@@ -1,5 +1,5 @@
 # hfd_vm_se_s: 8-way VM sub-tile pins (make_vm_split8.py; external pins from the r22 quadrant hfd_vm_se)
-place_pin -pin_name {ck[0]} -layer M7 -location {349.6480 250.0200} -pin_size {0.0640 0.2880}
+place_pin -pin_name {ck[0]} -layer M7 -location {349.6480 250.0200} -pin_size {0.0320 0.2880}
 place_pin -pin_name {rst[0]} -layer M4 -location {0.0960 0.8760} -pin_size {0.1920 0.0240}
 place_pin -pin_name {s2n[0]} -layer M5 -location {34.1400 499.9440} -pin_size {0.0240 0.1920}
 place_pin -pin_name {s2n[1]} -layer M7 -location {34.1920 499.9440} -pin_size {0.0320 0.1920}

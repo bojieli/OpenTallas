@@ -251,7 +251,9 @@ def pin_lines(q, h, tmp):
         assert 0.0 <= y <= HH, (q, h, p, y)
         out.append((p, b, ly, x, y, sz))
     # ck (area, centre M7), rst (quadrant pin in the south half; inner face y=480 in the north half)
-    out.append(('ck', 0, 'M7', 349.648, round(HH / 2, 4), '0.0640 0.2880'))
+    # vm8-timing 2026-10-08: M7 WIDTHTABLE is 0.032/0.16/0.288/...; a 0.064-wide pin is off-table and RECTONLY flags the
+    # router's 0.032 stub on it (3 'Rect Only' markers on ck[0] at the pin's end, every vm8 half). Pin = one M7 wire wide, on track.
+    out.append(('ck', 0, 'M7', 349.648, round(HH / 2, 4), '0.0320 0.2880'))
     orig_rst = [l for l in src.read_text().splitlines() if '{rst[0]}' in l][0]
     m = re.search(r'-layer (\w+) -location \{([\d.]+) ([\d.]+)\} -pin_size \{(.*)\}', orig_rst)
     if h == 's' and q == 'nw':     # r23v k16 bundled view: the quadrant S-face rst (698.94) collides with the t_s_wr run
