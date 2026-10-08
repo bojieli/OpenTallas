@@ -6,7 +6,9 @@ ALERT_LOG and in the takeover integrate.log); (2) run tools/fleet/sweep.py in ap
 it removes only top-level items untouched for 24 h, with no live process (cwd/fd/docker mount/cmdline), no git
 checkout, and not under or above a protected path.  Protected: every absolute path named in a closure-loop job state
 (run dirs of every job, any status) and every absolute fleet path named in committed physical/ tools/ files on
-origin/main.  Git checkouts are never removed here (worktree / clone passes back them up first)."""
+origin/main, every fleet path named in /home/ubuntu/claude-takeover-20261007/* written in the last 48 h; sweep.py also
+keeps argv/env-referenced paths, dirs holding a STATUS.md, src-* regions beside a live sibling, and holds anything
+>= 10 GB for one sweep with an alert.  Git checkouts are never removed here (worktree / clone passes back them up first)."""
 import json, re, subprocess, sys, time
 from pathlib import Path
 
@@ -37,6 +39,10 @@ def protect_list():
         paths.update(PATH_RE.findall(f.read_text(errors="replace")))
     r = sh(["git", "-C", str(ROOT), "grep", "-ohIE", PATH_RE.pattern, "origin/main", "--", "physical", "tools"])
     paths.update(r.stdout.split())
+    # run roots named by the stream agents (takeover logs / STATUS / READY_TO_MERGE) in the last 48 h
+    for f in TAKEOVER_LOG.parent.glob("*"):
+        if f.is_file() and f.suffix in (".log", ".md", ".txt", ".json") and time.time() - f.stat().st_mtime < 48 * 3600:
+            paths.update(PATH_RE.findall(f.read_text(errors="replace")))
     paths.update(str(p) for p in (ROOT, Path.home() / ".cache", Path.home() / "bin", WORK))
     return sorted(p.rstrip("/.") for p in paths if p.count("/") >= 2)
 
@@ -83,10 +89,10 @@ def main():
             log(f"{h['label']} ship failed: {rr.stderr.strip()[-200:]}")
             continue
         rr = remote(name, script + f"cd {WORK} && SWEEP_SKIP={WORK} SWEEPLOG={WORK}/sweep.log python3 sweep.py "
-                    f"{h['label']} {WORK}/protect.txt {'apply' if apply else 'plan'} {roots} | grep -E '^(TOTAL|DELETED)' | tail -50",
+                    f"{h['label']} {WORK}/protect.txt {'apply' if apply else 'plan'} {roots} | grep -E '^(TOTAL|DELETED|HOLD_BIG)' | tail -80",
                     inp=prot, timeout=3600)
         for line in rr.stdout.splitlines():
-            log(f"{h['label']} {line}")
+            log(f"{h['label']} {line}", alert=line.startswith("HOLD_BIG"))
         if rr.returncode:
             log(f"{h['label']} sweep rc={rr.returncode}: {rr.stderr.strip()[-300:]}")
 
