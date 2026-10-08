@@ -1049,6 +1049,7 @@ def sync_source(j):
         j["source_archive"] = archive_receipt
         ssh(host, f"cat > {run}/cl/source_archive.json", input=json.dumps(archive_receipt, indent=1), timeout=60, check=True)
     ship_helpers(host, run)
+    corner_sta_compat(j, host, run, full)
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/job.json", input=json.dumps(spec, indent=1), timeout=60, check=True)
@@ -1063,6 +1064,29 @@ def sync_source(j):
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
     j["source_synced"] = True
+
+# Commits whose route generator passes `corner_sta.py --sdc-name 6_signoff.sdc` but whose own tools/w18/corner_sta.py
+# predates that flag (main 80a11cea9, edd8613d6): the route completes and corner STA dies with "unrecognized arguments:
+# --sdc-name" (flow-triage 2026-10-08 03:15, hbm_smh_front_s_ne_prot). Ship the corner_sta.py that honours an explicit
+# sign-off SDC (089608310 semantics) into {SRC}; the original is kept as corner_sta.py.orig_<commit>.
+CORNER_STA_GENERATORS = ("tools/hbm_accel_smh_physical.py",)
+CORNER_STA_COMPAT_REF = "089608310"
+
+
+def corner_sta_compat(j, host, run, full):
+    show = lambda rev, path: sh(["git", "-C", str(REPO), "show", f"{rev}:{path}"], timeout=60)
+    sta = show(full, "tools/w18/corner_sta.py")
+    if sta.returncode or "--sdc-name" in sta.stdout:
+        return
+    if not any(g in json.dumps(j["spec"].get("stages", {})) and "--sdc-name" in show(full, g).stdout
+               for g in CORNER_STA_GENERATORS):
+        return
+    new = show(CORNER_STA_COMPAT_REF, "tools/w18/corner_sta.py")
+    if new.returncode or "--sdc-name" not in new.stdout:
+        raise RuntimeError(f"corner_sta compat source {CORNER_STA_COMPAT_REF} lacks --sdc-name")
+    f = f"{run}/src/tools/w18/corner_sta.py"
+    ssh(host, f"cp {f} {f}.orig_{full[:9]} && cat > {f}", input=new.stdout, timeout=60, check=True)
+    event(j, f"corner_sta.py replaced by {CORNER_STA_COMPAT_REF}'s (generator passes --sdc-name)")
 
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
