@@ -1,0 +1,71 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/core_kv_banked_fullwidth_h1hm25-c180b0ed1-tt/cl/eco/pass1/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_qwen_rom_core\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 770.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\ncreat",
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -206.73,
+  "tns_ps": -230392.3,
+  "worst_register_d_slack_ps": -206.734512,
+  "worst_reg_to_reg_slack_ps": -206.73,
+  "worst_input_to_reg_slack_ps": 183.2,
+  "worst_output_port_slack_ps": -9.966028,
+  "violating_d_pins": 2024,
+  "errors": [],
+  "odb_sha256": "c230589615186eef49425f450e3834a29432d72d72b40b8ee3d1010789b12aa9",
+  "spef_sha256": "5bd2099d9e1e643be06b265a4b14cc3d9cf2f7ebfd6609a6fd0ba8f6bbe3218e",
+  "sdc_sha256": "6ec7f55c8eb8329180dc1ca03fa91265fd000e05b6812d57e304a78b5486a71a"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 16.72,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 17.668062,
+  "worst_reg_to_reg_slack_ps": 17.67,
+  "worst_input_to_reg_slack_ps": 20.95,
+  "worst_output_port_slack_ps": 16.71946,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "c230589615186eef49425f450e3834a29432d72d72b40b8ee3d1010789b12aa9",
+  "spef_sha256": "5bd2099d9e1e643be06b265a4b14cc3d9cf2f7ebfd6609a6fd0ba8f6bbe3218e",
+  "sdc_sha256": "6ec7f55c8eb8329180dc1ca03fa91265fd000e05b6812d57e304a78b5486a71a"
+ },
+ "post_sdc": {
+  "physical/qwen_core_ctx/signoff833_skew90.sdc": "1ca3f45cce769f07bf229507b313a5ec3e221b717d75fc18bd317f228554f224",
+  "physical/common_flow/io_ref_routed.sdc": "9b46ed2620aef301bfcd9334ea815e7531dba36d7db1c6ac959e8edf9273f30b"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "129755b04fd8bc38d31c4f2302142ea38c836cff05cb0c44edd9d8d338a7697a",
+ "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "closes_signoff": false,
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "source": "tt_resta.sh (job's w18_sta_ss.tcl with TT libraries)",
+  "worst_slack_ps": 69.76,
+  "tns_ps": 0.0,
+  "worst_reg_to_reg_slack_ps": "85.585983",
+  "worst_input_to_reg_slack_ps": "290.194031",
+  "worst_output_port_slack_ps": "69.764969",
+  "violating_d_pins": "0",
+  "errors": [],
+  "tcl_sha256": "8919d490ebd89659bd75c8023abec0229abce1ff118f108530a6963a7c10d1c0"
+ }
+}
