@@ -25,7 +25,9 @@ proc ot_snap_joint {value site_origin site_pitch track_origin track_pitch} {
 }
 proc ot_find {block want} {
     foreach inst [$block getInsts] {
-        if {[string map {\\ {}} [$inst getName]] eq $want} { return $inst }
+        set n [string map {\\ {}} [$inst getName]]
+        # the element sits at u_elem, g_orig.u_elem (RECUT = 0) or g_rc.u_elem (RECUT q-element build)
+        if {$n eq $want || $n eq "g_orig.$want" || $n eq "g_rc.$want"} { return $inst }
     }
     error "placement hook: no instance $want"
 }
@@ -56,6 +58,8 @@ set specs [list {u_elem.g_mac[0].g_pp.u_rom0} $xl $yl R0 \
  {u_elem.g_mac[1].g_pp.u_rom1} $xr $yh R180]
 foreach {name mx my orient} $specs {
  set inst [ot_find $block $name]
+ # rtl_macro_placer leaves its macros LOCKED; unlock before re-placing (ODB-0360 on orientation change)
+ $inst setPlacementStatus PLACED
  set px [ot_snap_joint $mx $xgrid0 $xpitch 0.0 0.048]
  set py [ot_snap_joint $my $ygrid0 $ypitch 0.0 0.048]
  place_inst -name [$inst getName] -location [format "%.3f %.3f" $px $py] -orientation $orient -status FIRM

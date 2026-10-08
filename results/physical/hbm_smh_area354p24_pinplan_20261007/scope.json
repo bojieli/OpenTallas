@@ -1,0 +1,19 @@
+{
+  "status": "planned_only",
+  "actual_route": false,
+  "geometry_um": [
+    3352.32,
+    1131.84
+  ],
+  "pieces": 27,
+  "signal_pins": 3589,
+  "backend_width_preserved_um": 319.68,
+  "backend_centered_in_tile_slot": true,
+  "actual_pin_boxes_pending_for_this_wider_variant": true,
+  "source_sha256": {
+    "tools/hbm_accel_smh_physical.py": "4c7c6cb78cba4b807a11c0e52fd5dc3f1e9790e36e2243cbf43504ff591644b8",
+    "results/uarch/hbm_smh_tile_headroom_20261007/geom_354p24.json": "8d7c7592f92198f33480387eb3c0f7943fe47b1e7b568fca37a552022cd3e3e4"
+  },
+  "gate": "Measured tile closures, widened element actual BPin/LEF readback, all die corridors and longer wires must qualify before adoption",
+  "adoption": false
+}

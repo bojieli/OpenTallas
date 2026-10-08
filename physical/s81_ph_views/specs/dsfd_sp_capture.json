@@ -1,0 +1,5 @@
+{"master": "dsfd_sp_capture", "w_um": 1015.176, "h_um": 302.4, "domain": "stream_1p2+serial_0p9",
+ "ports": [["f_gather", 6947, "input", "S", "M5", 2, 0.5],
+           ["ck", 1, "input", "S", "M5", 1, 0.04], ["rst", 1, "input", "S", "M5", 1, 0.05],
+           ["t_vm", 13376, "output", "N", "M5", 1, 0.5],
+           ["ckv", 1, "input", "N", "M5", 1, 0.96], ["rsv", 1, "input", "N", "M5", 1, 0.97]]}

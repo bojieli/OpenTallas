@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "tool": "Verilator 4.038 2020-07-11 rev v4.036-114-g0cd4a57ad",
+  "tx_lint_exit": 0,
+  "rx_lint_exit": 0,
+  "tx_expected_ports": 2254,
+  "rx_expected_ports": 2252,
+  "static_pin_boxes_unique_and_on_track": true,
+  "all_source_pins_verified": true,
+  "route_commands_prepare_only": true,
+  "actual_openroad_pin_readback_pending": true,
+  "adopted": false,
+  "parent_io_qualified": false,
+  "source_manifest_sha256": "5a0cd44192601e9f4138752caa16020883e9dac17b87257b8e22d702ec3a8793"
+}

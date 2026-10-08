@@ -1,0 +1,634 @@
+{
+  "def_path": "/home/ubuntu/closure-loop-local/dsrom_softmax_safe_exprcf_bd30aca4a/routes/dsrom_softmax_safe_exprcf_bd30aca4a/work/orfs/results/asap7/opentallas_ot_dsrom_su_softmax_exp_tile_asap7_safe_dsrom_softmax_safe_exprcf_bd30aca4a/base/6_final.def",
+  "def_sha256": "731b91c09f88d109d858d82fabfde7d559191a49141956fd889dd8b7b2345dec",
+  "units_per_um": 1000,
+  "die_um": [
+    0.0,
+    0.0,
+    189.195,
+    189.195
+  ],
+  "pins": [
+    {
+      "name": "clk",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        186.54
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "fault",
+      "direction": "OUTPUT",
+      "position_um": [
+        100.812,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "rst_n",
+      "direction": "INPUT",
+      "position_um": [
+        169.164,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "v",
+      "direction": "INPUT",
+      "position_um": [
+        112.908,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "vo",
+      "direction": "OUTPUT",
+      "position_um": [
+        146.988,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[0]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        81.804
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[10]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        80.364
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[11]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        80.652
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[12]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        79.788
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[13]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        79.116
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[14]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        79.212
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[15]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        78.06
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[16]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        77.1
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[17]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        84.684
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[18]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        84.396
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[19]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        83.34
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[1]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        80.748
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[20]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        85.932
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[21]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        86.028
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[22]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        86.316
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[23]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        85.164
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[24]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        86.22
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[25]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        85.452
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[26]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        86.124
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[27]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        81.132
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[28]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        81.9
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[29]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        82.092
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[2]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        81.708
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[30]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        86.988
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[31]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        87.084
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[3]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        80.172
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[4]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        79.884
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[5]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        79.98
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[6]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        79.5
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[7]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        80.076
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[8]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        80.94
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "x[9]",
+      "direction": "INPUT",
+      "position_um": [
+        0.042,
+        79.692
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[0]",
+      "direction": "OUTPUT",
+      "position_um": [
+        173.676,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[10]",
+      "direction": "OUTPUT",
+      "position_um": [
+        177.42,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[11]",
+      "direction": "OUTPUT",
+      "position_um": [
+        177.228,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[12]",
+      "direction": "OUTPUT",
+      "position_um": [
+        175.404,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[13]",
+      "direction": "OUTPUT",
+      "position_um": [
+        174.156,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[14]",
+      "direction": "OUTPUT",
+      "position_um": [
+        176.364,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[15]",
+      "direction": "OUTPUT",
+      "position_um": [
+        176.268,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[16]",
+      "direction": "OUTPUT",
+      "position_um": [
+        175.98,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[17]",
+      "direction": "OUTPUT",
+      "position_um": [
+        176.076,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[18]",
+      "direction": "OUTPUT",
+      "position_um": [
+        173.772,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[19]",
+      "direction": "OUTPUT",
+      "position_um": [
+        174.636,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[1]",
+      "direction": "OUTPUT",
+      "position_um": [
+        170.508,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[20]",
+      "direction": "OUTPUT",
+      "position_um": [
+        174.252,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[21]",
+      "direction": "OUTPUT",
+      "position_um": [
+        173.004,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[22]",
+      "direction": "OUTPUT",
+      "position_um": [
+        166.764,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[23]",
+      "direction": "OUTPUT",
+      "position_um": [
+        149.676,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[24]",
+      "direction": "OUTPUT",
+      "position_um": [
+        145.644,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[25]",
+      "direction": "OUTPUT",
+      "position_um": [
+        142.764,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[26]",
+      "direction": "OUTPUT",
+      "position_um": [
+        140.94,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[27]",
+      "direction": "OUTPUT",
+      "position_um": [
+        141.036,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[28]",
+      "direction": "OUTPUT",
+      "position_um": [
+        143.916,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[29]",
+      "direction": "OUTPUT",
+      "position_um": [
+        141.9,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[2]",
+      "direction": "OUTPUT",
+      "position_um": [
+        174.54,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[30]",
+      "direction": "OUTPUT",
+      "position_um": [
+        138.636,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[31]",
+      "direction": "OUTPUT",
+      "position_um": [
+        163.02,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[3]",
+      "direction": "OUTPUT",
+      "position_um": [
+        189.153,
+        170.988
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[4]",
+      "direction": "OUTPUT",
+      "position_um": [
+        176.748,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[5]",
+      "direction": "OUTPUT",
+      "position_um": [
+        189.153,
+        171.084
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[6]",
+      "direction": "OUTPUT",
+      "position_um": [
+        177.132,
+        189.153
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[7]",
+      "direction": "OUTPUT",
+      "position_um": [
+        189.153,
+        170.316
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[8]",
+      "direction": "OUTPUT",
+      "position_um": [
+        189.153,
+        169.356
+      ],
+      "orientation": "N"
+    },
+    {
+      "name": "y[9]",
+      "direction": "OUTPUT",
+      "position_um": [
+        177.324,
+        189.153
+      ],
+      "orientation": "N"
+    }
+  ]
+}

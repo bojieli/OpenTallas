@@ -1,0 +1,18 @@
+{
+  "status": "PREPARATION_TESTED_PHYSICAL_EXECUTION_PENDING",
+  "tests": 3,
+  "checks": [
+    "Changed original artifact rejected before candidate writes",
+    "Candidate directory overwrite rejected",
+    "Nonstartup endpoint rejected",
+    "Inverting-cell mutation rejected",
+    "Duplicate endpoint rejected",
+    "SS and FF scripts load newly written candidateODB/SPEF in separateprocesses",
+    "SourceSDC copied byte-identically"
+  ],
+  "runner": "tools/s81_capture_startup_patch.py",
+  "patch": "physical/s81_ph_views/capture/startup_pin_patch.tcl",
+  "plan": "one_pin_plan.json",
+  "execution": "Under hostadmission fromsamevehicle40GB16threadreservation, run preparedpin inside ORFS container with originalread-onlybase and exclusivewriteableout. Fullpipeline includes DRT, RCX, freshSS, freshFF. No independent no-route timingclaim.",
+  "remaining": "Actual OpenROAD literalinsert_buffer flow validation and opposite-transition/whole-design setup/hold/DRC gate."
+}

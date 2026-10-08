@@ -1,0 +1,128 @@
+{
+  "name": "qfd_embed_ingress_scale_padded-PIN_REQUIRED",
+  "block": "qfd_embed_ingress_scale_padded",
+  "owner": "Codex:embedding-scale",
+  "purpose": "Ten fixed physical BUFx2 stages per input including reset, priced per actual predecessor endpoint. Zero extra FF/cycles. Original clock/interface unchanged. Real parent join and full-leaf reset/hold remain mandatory.",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "PIN_REQUIRED",
+    "commit": "PIN_REQUIRED"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "exact0",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_padded -Ptb_qwen_embed_scale_bank_padded.BANK_ID=0 -o {RUN}/bench/exact0 rtl/test/tb_qwen_embed_scale_bank_padded.sv rtl/physical/ot_qwen_embed_scale_bank_padded.sv rtl/physical/ot_qwen_embedding_ingress_padded.sv && vvp {RUN}/bench/exact0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS scale bank=0 rows="
+      },
+      {
+        "name": "exact1",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_padded -Ptb_qwen_embed_scale_bank_padded.BANK_ID=1 -o {RUN}/bench/exact1 rtl/test/tb_qwen_embed_scale_bank_padded.sv rtl/physical/ot_qwen_embed_scale_bank_padded.sv rtl/physical/ot_qwen_embedding_ingress_padded.sv && vvp {RUN}/bench/exact1",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS scale bank=1 rows="
+      },
+      {
+        "name": "exact2",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_padded -Ptb_qwen_embed_scale_bank_padded.BANK_ID=2 -o {RUN}/bench/exact2 rtl/test/tb_qwen_embed_scale_bank_padded.sv rtl/physical/ot_qwen_embed_scale_bank_padded.sv rtl/physical/ot_qwen_embedding_ingress_padded.sv && vvp {RUN}/bench/exact2",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS scale bank=2 rows="
+      },
+      {
+        "name": "bad_address",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_padded -DSCALE_NEG_ADDRESS -o {RUN}/bench/bad_ADDRESS rtl/test/tb_qwen_embed_scale_bank_padded.sv rtl/physical/ot_qwen_embed_scale_bank_padded.sv rtl/physical/ot_qwen_embedding_ingress_padded.sv && vvp {RUN}/bench/bad_ADDRESS",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL scale payload/order"
+      },
+      {
+        "name": "bad_lane",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_padded -DSCALE_NEG_LANE -o {RUN}/bench/bad_LANE rtl/test/tb_qwen_embed_scale_bank_padded.sv rtl/physical/ot_qwen_embed_scale_bank_padded.sv rtl/physical/ot_qwen_embedding_ingress_padded.sv && vvp {RUN}/bench/bad_LANE",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL scale payload/order"
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_embed_ingress_scale_padded {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 16
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_embed_ingress_scale_padded --out {RUN}/record/views/qfd_embed_ingress_scale_padded --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1 && cp {RUN}/routes/{LABEL}/metadata_storage.json {RUN}/record/route/ && cp {RUN}/routes/{LABEL}/metadata_storage_synthesis.json {RUN}/record/route/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "physical_metadata_storage",
+        "cmd": "set -- {RUN}/routes/{LABEL}/work/orfs/results/asap7/*/base/1_2_yosys.v; python3 tools/check_qwen_embedding_padded_storage.py --netlist \"$1\" --width 18 --out {RUN}/routes/{LABEL}/metadata_storage_synthesis.json"
+      },
+      {
+        "name": "physical_padded_routed_storage",
+        "cmd": "set -- {RUN}/routes/{LABEL}/work/orfs/results/asap7/*/base/6_final.v; python3 tools/check_qwen_embedding_padded_storage.py --netlist \"$1\" --width 18 --out {RUN}/routes/{LABEL}/metadata_storage.json"
+      }
+    ],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_embed_ingress_scale_padded.sdc"
+    ]
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_embedding_pad10_20261007/qfd_embed_ingress_scale_padded-PIN_REQUIRED"
+    }
+  ],
+  "cycles_added": "0: moves existing capture state. Leaf7/II2, root19/service801 unchanged; 28code/40scale capture FFs, fullparent integration not qualified.",
+  "merge_target": "main"
+}

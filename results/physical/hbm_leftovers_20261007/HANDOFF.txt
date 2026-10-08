@@ -1,0 +1,19 @@
+HBM leftover handoff — 2026-10-07
+
+No main merge. No new jobs or remote writes. +15/+15 plus budgets and all relevant pins required.
+
+q8hc: REJECTED_ROUTE. Flow exit 137; wrapper die-input din_p0 flops displaced from pins along 5530 um face.
+Parent to Zeno: pin-flop placement and face-chain work in hub scope; reuse closed HC lane. No hub source edits here.
+tm3: TERMINATED_NO_SIGNOFF. No physical/corner JSON. io150_rc=0 wraps sed errors for missing w18_sta scripts and is not PASS.
+sm3: INCOMPLETE_NO_LIVE_PROCESS. No terminal record or live matching process at snapshot; do not infer success or a terminal failure from absence.
+safe_top: LIVE_NOT_QUALIFIED. Existing SAFE top ts4_pin in CTS at snapshot. No new route started.
+safe_slice: LIVE_NOT_QUALIFIED. Existing SAFE slice ss1_safe in GRT at snapshot. No new route started.
+dv10: REJECTED_MARGIN. 201 FF violating D pins; 9 route max-fanout violations; forwarding clock pins excluded.
+dv11: REJECTED_MARGIN. Both margins below +15. Preserve three-pair failure.
+dv12: SUPERSEDED_OBSERVATION. Earlier point-in-time record; completed corner timing retained separately in dv12_corner.
+dv12_corner: REJECTED_MARGIN. 18 FF violating D pins, 1 route max-fanout violation; corner timing complete, export pipeline may still run. No adoption.
+
+Parent coordination: q8hc wrapper fixes stay with Zeno; SM stays with Boyle. SU/full reducer peer-to-port bus map remains a parent/generator dependency; no speculative peer mapping added.
+Preserved snapshots, source digests, configuration, constraint hooks, remote status and log tails are indexed by review.json and each manifest.json. Do not restart the live pinned successors.
+
+DV12 completed failure diagnosis: core key3[3][3] -> key4[3][3] hold -8.62 ps; input hold now +55.51, output hold +32.18. Do not treat the JSON worst_reg_to_reg +73.8 ps as data-path coverage: detailed log shows that value is a reset/removal path. Preserve 18 D-pin violations and the remaining max-fanout violation.

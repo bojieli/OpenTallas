@@ -1,0 +1,45 @@
+{
+ "master": "hfd_cmdproc_n",
+ "cfg_bits": 544,
+ "cfg_inputs": [
+  [
+   "cpN",
+   "sm_fault",
+   16
+  ],
+  [
+   "cpN",
+   "res_v",
+   16
+  ],
+  [
+   "cpN",
+   "res_data",
+   512
+  ]
+ ],
+ "folded_output_bits": 175,
+ "folded_outputs": [
+  "w_cpN_db_rdy",
+  "w_cpN_cpl_position",
+  "w_cpN_cpl_job",
+  "w_cpN_cpl_generation",
+  "w_cpN_cpl_v",
+  "w_cpN_cpl_token",
+  "w_cpN_cpl_status",
+  "w_cpN_cpl_cycles",
+  "w_cpN_st_kernels",
+  "w_cpN_st_busy"
+ ],
+ "forwarded_clock_outputs": 4,
+ "forwarded_clock_inputs": 2,
+ "die_input_bits": 328,
+ "die_input_bits_used": 163,
+ "die_output_bits": 1821,
+ "die_output_bits_driven": 1478,
+ "share_tree": {
+  "sources": 52,
+  "chains": 1344,
+  "nodes": 520
+ }
+}

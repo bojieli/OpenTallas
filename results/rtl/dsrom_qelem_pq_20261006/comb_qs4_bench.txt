@@ -1,0 +1,9 @@
+QM=5 + QS=4 PQ1 L20 bench (QS=3 + WRD: the x-need walker reads nA / nB from registered end / advance decisions, kept copies;
+OT_PQQ_QM=5 OT_PQQ_QS=4 OT_PQQ_DEFINES=QP_CHECK,QT_CHECK, tools/dsrom_combined_l20.py field --cfg pq1_q10 --field-layers 20,
+AGIdock qelem-qm/comb_qs4, RTL cc7e9b2a9):
+2752 runs (phase) failed 0
+896 runs (node) failed 0   (every QP_CHECK / QT_CHECK assertion on, incl. WRD decision form == the registered candidates)
+Every one of the 3,648 run results identical to QS=3 (comb_qs3), node idle sum 1,633,976 = 1,633,976: zero cycles.
+QX gate (qx10qs4.json): pos_qs4 x4 seeds + nan_sparse PASS; negatives: neg_qs4sb caught; neg_qs4nq (current f(q+2)) NOT
+caught (differs only on back-to-back advances), so WRD_MUTANT_L1 (nB restarts at f(0)) added: neg_qs4l1 caught
+(qx10qs4_negl1.json, RTL 1efb44b7c, synthesised RTL identical to cc7e9b2a9).

@@ -1,0 +1,80 @@
+{
+  "schema": "opentallas.softmax_egress_payload_inventory.v1",
+  "adopted": false,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv": "21a2d557e128cbb980c1edb481c5592e744a789522d94c0efff9d36909d9a308",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv": "5366ef10cf135546f19f07fbe1a6f3e7fc4052a159479eb63acf7970be99648b",
+    "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv": "a4e1bda9a0ab083503462a8c755f35cbe3aa52786e455e29c66834e915463497",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv": "b5f7603a6bc16fe23664d8c215e5c2117b82738057a04eee90f8b75b1e758815",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_serial_row.sv": "1e4a85ebef179df1870c359f0a66099bf85f1f7d4aa495606dc63629b6d82b14",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_egress_payload.sv": "e55427f233772a96b7853216dcc48263384aaba02bcdd90de6f552f69c9d06a6",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_egress_payload.sv": "d4c9d439ae8911b7bd3507a471c9a75601e409aeb6e13cac1afcd47bd993dd86",
+    "tools/dsrom_softmax_egress_payload_model.py": "2caae6345bf8752f40681763ce61e97ac9e25310a69fe522d542ce7d4a1cc22c",
+    "tools/dsrom_softmax_egress_payload_gate.sh": "6a3d9389610d3779793490b16d596f53a67f41164fb6d2792bab5d7303adf991"
+  },
+  "source_control_fields": {
+    "state": 3,
+    "context": 49,
+    "captured": 6,
+    "sent": 6,
+    "received": 6,
+    "pending": 1,
+    "failed": 1,
+    "pending_addr": 7,
+    "return_valid": 1,
+    "return_tag": 16
+  },
+  "destination_control_fields": {
+    "identity": 56,
+    "open": 1,
+    "failed": 1
+  },
+  "complemented_control_FF_bits": 308,
+  "full_parallel_encoder_lanes": 128,
+  "encoder_data_selection_mux_bits": 8192,
+  "BF_input_lane_fanout": 2,
+  "encoded_full_capture_register_bits": 9216,
+  "encoded_half_capture_register_bits": 4608,
+  "serial_row_components": 2,
+  "conservative_serial_component_FF_bits_each": 23260,
+  "serial_inventory_source": "results/rtl/dsrom_softmax_transport_20261007/serial_row_generic_census.json",
+  "data_CDC_state_bits": 80878,
+  "receipt_CDC_state_bits": 5998,
+  "CDC_formula": "64*N*72 + (2*(1+5)+(N+5))*72 + 6 + 12*7 + 4",
+  "conservative_total_state_bits": 147528,
+  "FF_body_floor_mm2": 0.04301916480000001,
+  "reset_counting": "CDC formula charges4resetbits per FIFO; implementation shares one4bitresetentry, retaining4bit conservative overcharge",
+  "unused_serial_directions": "Full qualified serial-row inventory charged twice; unused write/read halves may optimize away, not assumed here",
+  "raw_macro_area_mm2": 0.28019354112,
+  "macro_plus_FF_floor_mm2": 0.32321270592,
+  "two_inherited_9x4_slots_mm2": 0.56892621312,
+  "occupancy_floor_percent": 56.81100614919755,
+  "minimum_reservation_at55percent_mm2": 0.5876594653090909,
+  "fits_two_inherited_slots_at55percent": false,
+  "physical_missing": [
+    "Mapped encoder/decoder/mux logic",
+    "Local pin capture and codec stations",
+    "Clock/reset tree",
+    "Power grid",
+    "cross-domain global fault suppression timing",
+    "actual budgets and SS/FF closure"
+  ],
+  "row_binding": {
+    "E": "72+i -> E vector i, FP32 bits preserved",
+    "BF": "112+i -> lower4096bits BF vector2i; upper4096bits BF vector2i+1",
+    "receipt": "one protected receipt per1024-byte actual destination SRAM row; packedBF receipt certifies two4096-bit vectors",
+    "phase_join": "Production phase controller counts BF32 events; converting each packedrow receipt into two stable phase events remains owner-join work"
+  },
+  "measured_cycles": {
+    "T640_E_first_input_to_visible_with250chain_edges_destination_stall": 1669,
+    "T128_E_first_input_to_visible_with250chain_edges_destination_stall": 612,
+    "BF32_first_input_to_visible_no_extra_stall": 606,
+    "clocks": "1.2GHz stream /0.9GHz destination chain; edges counted by bench, includes row gaps and receipt return",
+    "BF_elapsed_ns": 505.0,
+    "unbounded_stalls": "No finite upper bound without parent destination service contract"
+  },
+  "no_performance_adoption": "Standalone store/transport rows, not a numerical parent token-latency result"
+}

@@ -1,0 +1,342 @@
+{
+  "schema": "opentallas.hbm_die_round_evidence.v1",
+  "source_commit": "fc807442a7e57dae8339f95361297e4f51c2a84a",
+  "origin": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/die/r16c",
+  "round": "r16c",
+  "scope": "completed cases only; preliminary die evidence",
+  "signoff_claim": false,
+  "cases": {
+    "a_real": {
+      "placement": {
+        "instances": 504,
+        "overlaps": 0,
+        "outside": 0
+      },
+      "on_track": "PASS",
+      "pin_access": "FAIL",
+      "pin_access_errors": [
+        "No access point for w143_xmNW2/a[2063] (hfd_mcast_r6).",
+        "No access point for w209_xmNE1/a[2063] (hfd_mcast_r6).",
+        "No access point for w24_xmSW2/a[2063] (hfd_mcast_r6).",
+        "No access point for w86_xmSE1/a[2063] (hfd_mcast_r6)."
+      ],
+      "process_exit_code": 0,
+      "evidence": {
+        "run.log": {
+          "sha256": "0291457d467da7bfec6f3e98e6c562555cf45519d91c88da3044ac0908af10d6",
+          "path": "a_real/run.log"
+        },
+        "run.log.exit": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "path": "a_real/run.log.exit"
+        },
+        "manifest.json": {
+          "sha256": "412b174a5e21b598fa7ee733d4fe72f833e3f90436d70640b19b49edd80504f8",
+          "path": "a_real/manifest.json"
+        }
+      },
+      "bundle_k": null,
+      "congestion_iterations": null
+    },
+    "b_k16_i5": {
+      "pin_access_errors": [],
+      "global_route": {
+        "capacity": 103069876,
+        "demand": 5411556,
+        "usage_percent": 5.25,
+        "overflow_h": 5,
+        "overflow_v": 8,
+        "overflow": 435
+      },
+      "process_exit_code": 0,
+      "evidence": {
+        "run.log": {
+          "sha256": "17081c629a9b3f3600e41dec1db82ac551a8ba04c2def39b5978fdaa8e2d08d6",
+          "path": "b_k16_i5/run.log"
+        },
+        "run.log.exit": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "path": "b_k16_i5/run.log.exit"
+        },
+        "manifest.json": {
+          "sha256": "7bb410fb27fc19e019872171b9a9355d1b39360a8328e829ca35298d2c759786",
+          "path": "b_k16_i5/manifest.json"
+        }
+      },
+      "bundle_k": 16,
+      "congestion_iterations": 5
+    },
+    "s_sta": {
+      "pin_access_errors": [],
+      "sta": {
+        "setup_uncertainty_ps": 210,
+        "hold_uncertainty_ps": 25,
+        "extraction": "placement estimate; not post-detailed-route extraction",
+        "path_filter": "paths starting or ending at sm* instances excluded by source flow",
+        "views": [
+          {
+            "master": "hfd_attn_tile",
+            "instances": 64,
+            "setup_u210_ps": -2048.526,
+            "hold_ps": 92.668
+          },
+          {
+            "master": "hfd_barrier",
+            "instances": 1,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_cdist_r14",
+            "instances": 4,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_cdist_r15",
+            "instances": 4,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_gath_r10",
+            "instances": 2,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_gath_r24",
+            "instances": 2,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_gath_r25",
+            "instances": 2,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_gath_r8",
+            "instances": 8,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_gath_r9",
+            "instances": 2,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_index_q_b4",
+            "instances": 4,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_mcast_r5",
+            "instances": 4,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_mcast_r6",
+            "instances": 8,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_mcast_r7",
+            "instances": 4,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_meso_r1",
+            "instances": 16,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_meso_r28",
+            "instances": 9,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_meso_r32",
+            "instances": 1,
+            "setup_u210_ps": -17.115,
+            "hold_ps": 181.041
+          },
+          {
+            "master": "hfd_router",
+            "instances": 1,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r0",
+            "instances": 16,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r11",
+            "instances": 12,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r12",
+            "instances": 12,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r13",
+            "instances": 12,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r16",
+            "instances": 24,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r17",
+            "instances": 12,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r18",
+            "instances": 8,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r19",
+            "instances": 4,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r2",
+            "instances": 16,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r20",
+            "instances": 8,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r21",
+            "instances": 8,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r22",
+            "instances": 16,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r23",
+            "instances": 8,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r26",
+            "instances": 2,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r27",
+            "instances": 27,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r29",
+            "instances": 2,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r3",
+            "instances": 16,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r30",
+            "instances": 4,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r31",
+            "instances": 6,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "hfd_stn_r4",
+            "instances": 20,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+            "instances": 4,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          },
+          {
+            "master": "ot_hbm_host_phy",
+            "instances": 1,
+            "setup_u210_ps": -17.115,
+            "hold_ps": 181.041
+          },
+          {
+            "master": "ot_pdie_serdes",
+            "instances": 9,
+            "setup_u210_ps": null,
+            "hold_ps": null
+          }
+        ],
+        "reported_views": 40,
+        "views_without_numeric_result": 37,
+        "unavailable_result_meaning": "no path returned by the filtered query; not a timing pass"
+      },
+      "sta_declared_timed_instances": 415,
+      "process_exit_code": 0,
+      "evidence": {
+        "run.log": {
+          "sha256": "078c4c8a10b72011e49f167b3c73a92ae79f8507cc3be7c6972285b71c32d2d9",
+          "path": "s_sta/run.log"
+        },
+        "run.log.exit": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "path": "s_sta/run.log.exit"
+        },
+        "manifest.json": {
+          "sha256": "412b174a5e21b598fa7ee733d4fe72f833e3f90436d70640b19b49edd80504f8",
+          "path": "s_sta/manifest.json"
+        }
+      },
+      "bundle_k": null,
+      "congestion_iterations": null
+    }
+  }
+}

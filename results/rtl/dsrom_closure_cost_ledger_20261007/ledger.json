@@ -1,0 +1,1049 @@
+{
+ "schema": "opentallas.dsrom.closure_cost_ledger.v1",
+ "baseline": {
+  "ar_tok_s": 1675.0,
+  "mtp_tok_s": 4895.0,
+  "basis": "recovery composition without the S81 closure costs"
+ },
+ "items": [
+  {
+   "item": "s81_die",
+   "description": "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full 221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     28,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     28,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     28,
+     0
+    ]
+   ],
+   "ar_tok_s": 1658.9,
+   "mtp_tok_s": 4857.2,
+   "ar_pct": -0.961,
+   "mtp_pct": -0.772,
+   "cum_ar_pct": -0.961,
+   "cum_mtp_pct": -0.772
+  },
+  {
+   "item": "meso_d8g1",
+   "description": "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field round trip (+4)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     4,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     4,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     4,
+     0
+    ]
+   ],
+   "ar_tok_s": 1656.7,
+   "mtp_tok_s": 4851.9,
+   "ar_pct": -0.133,
+   "mtp_pct": -0.109,
+   "cum_ar_pct": -1.093,
+   "cum_mtp_pct": -0.88
+  },
+  {
+   "item": "ctrl_status",
+   "description": "CTRL status chain: +1 cycle per column (HBM stream reads)",
+   "cycles": [
+    [
+     "*.attn.idx.score",
+     1,
+     0
+    ],
+    [
+     "*.attn.pv",
+     1,
+     0
+    ],
+    [
+     "*.attn.scores",
+     1,
+     0
+    ]
+   ],
+   "ar_tok_s": 1656.6,
+   "mtp_tok_s": 4851.6,
+   "ar_pct": -0.006,
+   "mtp_pct": -0.006,
+   "cum_ar_pct": -1.099,
+   "cum_mtp_pct": -0.887
+  },
+  {
+   "item": "collective_lane",
+   "description": "Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, lane channel 1 cycle) over the C8 reference: all-reduce 320 rec +131 (CHB 251: 709 vs w15b 690); all-gather 24 rec +38, 57 +50, 256 +113, 1024 +348, 1056 +361",
+   "cycles": [
+    [
+     "*.attn.a_allgather",
+     50,
+     0
+    ],
+    [
+     "*.attn.cand.merge",
+     348,
+     0
+    ],
+    [
+     "*.attn.idx.topk_merge",
+     113,
+     0
+    ]
+   ],
+   "ar_tok_s": 1616.8,
+   "mtp_tok_s": 4750.3,
+   "ar_pct": -2.403,
+   "mtp_pct": -2.088,
+   "cum_ar_pct": -3.475,
+   "cum_mtp_pct": -2.956
+  },
+  {
+   "item": "link_split",
+   "description": "SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return 8 traversals +16, TP4 all-reduce 2 traversals +4, all-gather +2",
+   "cycles": [
+    [
+     "*.attn.a_allgather",
+     2,
+     0
+    ],
+    [
+     "*.attn.cand.merge",
+     2,
+     0
+    ],
+    [
+     "*.attn.idx.topk_merge",
+     2,
+     0
+    ]
+   ],
+   "ar_tok_s": 1615.4,
+   "mtp_tok_s": 4747.1,
+   "ar_pct": -0.087,
+   "mtp_pct": -0.067,
+   "cum_ar_pct": -3.558,
+   "cum_mtp_pct": -3.021
+  },
+  {
+   "item": "sel_xstg",
+   "description": "Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job",
+   "cycles": [
+    [
+     "*.attn.cand.topk_local",
+     6,
+     0
+    ],
+    [
+     "*.attn.gather",
+     6,
+     0
+    ],
+    [
+     "*.attn.idx.topk_local",
+     6,
+     0
+    ]
+   ],
+   "ar_tok_s": 1615.2,
+   "mtp_tok_s": 4746.4,
+   "ar_pct": -0.012,
+   "mtp_pct": -0.015,
+   "cum_ar_pct": -3.57,
+   "cum_mtp_pct": -3.036
+  },
+  {
+   "item": "vm_bank_group",
+   "description": "VM bank-group chain: read latency 10 -> 18 (+8 a field phase)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     8,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     8,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     8,
+     0
+    ]
+   ],
+   "ar_tok_s": 1610.9,
+   "mtp_tok_s": 4736.2,
+   "ar_pct": -0.266,
+   "mtp_pct": -0.215,
+   "cum_ar_pct": -3.827,
+   "cum_mtp_pct": -3.244
+  },
+  {
+   "item": "gather_root_v4",
+   "description": "Gather root v4: +6 cycles per phase",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     6,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     6,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     6,
+     0
+    ]
+   ],
+   "ar_tok_s": 1607.7,
+   "mtp_tok_s": 4728.5,
+   "ar_pct": -0.199,
+   "mtp_pct": -0.163,
+   "cum_ar_pct": -4.018,
+   "cum_mtp_pct": -3.401
+  },
+  {
+   "item": "capture",
+   "description": "Capture tiles: VM write +3 a phase",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     3,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     3,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     3,
+     0
+    ]
+   ],
+   "ar_tok_s": 1606.1,
+   "mtp_tok_s": 4724.7,
+   "ar_pct": -0.1,
+   "mtp_pct": -0.08,
+   "cum_ar_pct": -4.113,
+   "cum_mtp_pct": -3.479
+  },
+  {
+   "item": "selector",
+   "description": "Selector tiles: +20 a segment (mean; +15 max)",
+   "cycles": [
+    [
+     "*.attn.cand.topk_local",
+     20,
+     0
+    ],
+    [
+     "*.attn.idx.topk_local",
+     20,
+     0
+    ]
+   ],
+   "ar_tok_s": 1605.8,
+   "mtp_tok_s": 4723.6,
+   "ar_pct": -0.019,
+   "mtp_pct": -0.023,
+   "cum_ar_pct": -4.131,
+   "cum_mtp_pct": -3.502
+  },
+  {
+   "item": "collector",
+   "description": "Collector tiles: +2 a job",
+   "cycles": [
+    [
+     "*.attn.gather",
+     2,
+     0
+    ]
+   ],
+   "ar_tok_s": 1605.7,
+   "mtp_tok_s": 4723.5,
+   "ar_pct": -0.006,
+   "mtp_pct": -0.002,
+   "cum_ar_pct": -4.137,
+   "cum_mtp_pct": -3.504
+  },
+  {
+   "item": "svc_io",
+   "description": "Scan service IO hub / per-PC tiles: one register each way (+2 a request)",
+   "cycles": [
+    [
+     "*.attn.idx.score",
+     2,
+     0
+    ],
+    [
+     "*.attn.pv",
+     2,
+     0
+    ],
+    [
+     "*.attn.scores",
+     2,
+     0
+    ]
+   ],
+   "ar_tok_s": 1605.5,
+   "mtp_tok_s": 4722.9,
+   "ar_pct": -0.012,
+   "mtp_pct": -0.013,
+   "cum_ar_pct": -4.149,
+   "cum_mtp_pct": -3.516
+  },
+  {
+   "item": "softmax_safe_div",
+   "description": "Softmax SAFE2 measured against MARGIN baseline (dsrom_softmax_recovery_20261007): normalize 141 -> 171 (+30), exp 224 -> 225 (+1). Cost only; die pin FF hold remains unqualified",
+   "cycles": [
+    [
+     "*.attn.exp",
+     1,
+     0
+    ],
+    [
+     "*.attn.normalize",
+     30,
+     0
+    ]
+   ],
+   "ar_tok_s": 1602.9,
+   "mtp_tok_s": 4716.7,
+   "ar_pct": -0.162,
+   "mtp_pct": -0.131,
+   "cum_ar_pct": -4.304,
+   "cum_mtp_pct": -3.642
+  },
+  {
+   "item": "bf_rowfix",
+   "description": "BF rowfix: +1 per push (a field phase)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     1,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     1,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     1,
+     0
+    ]
+   ],
+   "ar_tok_s": 1602.3,
+   "mtp_tok_s": 4715.5,
+   "ar_pct": -0.037,
+   "mtp_pct": -0.025,
+   "cum_ar_pct": -4.34,
+   "cum_mtp_pct": -3.667
+  },
+  {
+   "item": "pq_qelem",
+   "description": "PQ q-element: decode stage +0.17 % node time (field phases)",
+   "cycles": [
+    [
+     "*.attn.a_proj",
+     0,
+     0.0017
+    ],
+    [
+     "*.attn.cmp.wk",
+     0,
+     0.0017
+    ],
+    [
+     "*.attn.wo_a",
+     0,
+     0.0017
+    ]
+   ],
+   "ar_tok_s": 1601.0,
+   "mtp_tok_s": 4712.3,
+   "ar_pct": -0.081,
+   "mtp_pct": -0.068,
+   "cum_ar_pct": -4.418,
+   "cum_mtp_pct": -3.732
+  },
+  {
+   "item": "softmax_exp_recut",
+   "description": "Softmax exp tile closed only with RECUT (dsrom_softmax_safe_exprcf_bd30aca4a CLOSED SS +123.11 / FF +16.70, f12r multiplier/adder +2 cuts, LAT 11): attn.exp 225 -> 255 (+30 over SAFE2; dsrom_softmax_recovery_20261007 RECUT1_or_2_vs_m5 +31)",
+   "cycles": [
+    [
+     "*.attn.exp",
+     30,
+     0
+    ]
+   ],
+   "ar_tok_s": 1598.5,
+   "mtp_tok_s": 4706.3,
+   "ar_pct": -0.156,
+   "mtp_pct": -0.127,
+   "cum_ar_pct": -4.567,
+   "cum_mtp_pct": -3.855
+  },
+  {
+   "item": "su_meso_d8g1",
+   "description": "SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer",
+   "cycles": [
+    [
+     "E1.knorm.sumsq",
+     3,
+     0
+    ],
+    [
+     "E14.knorm.sumsq",
+     3,
+     0
+    ],
+    [
+     "L0.attn.a_proj",
+     3,
+     0
+    ]
+   ],
+   "ar_tok_s": 1593.7,
+   "mtp_tok_s": 4694.7,
+   "ar_pct": -0.3,
+   "mtp_pct": -0.246,
+   "cum_ar_pct": -4.854,
+   "cum_mtp_pct": -4.092
+  }
+ ],
+ "total": {
+  "ar_tok_s": 1593.7,
+  "mtp_tok_s": 4694.7,
+  "ar_pct": -4.854,
+  "mtp_pct": -4.092
+ },
+ "candidates": [
+  {
+   "item": "head_elem",
+   "description": "lm_head element A/B (ot_dsrom_head_elem IOREG + SAFE argmax + CUT 511 + fadd SPLIT9): bundle EXACT 8,357 -> 8,414 (+57 a sweep); on head.lm_head and on every draft head sweep (elemB CLOSED 9adbc6104; elemA routing)",
+   "adds": [
+    [
+     "head.lm_head",
+     57,
+     0
+    ],
+    [
+     "draft.total",
+     285,
+     0
+    ]
+   ],
+   "ar_tok_s": 1593.5,
+   "mtp_tok_s": 4693.2,
+   "ar_pct_vs_total": -0.013,
+   "mtp_pct_vs_total": -0.032
+  },
+  {
+   "item": "fused_head",
+   "description": "DSpark fused head r4 structure (8 hquad LRET + ctl SAFE2 + endpoint FPIPE3, QPIN): gold4 EXACT 63,028 -> 63,153 (+125 fixed cycles per gamma-5 draft, not a Markov-scaled head occupancy; ctl/ep/hquad views routing)",
+   "adds": [
+    [
+     "draft.total",
+     125,
+     0
+    ]
+   ],
+   "ar_tok_s": 1593.7,
+   "mtp_tok_s": 4694.2,
+   "ar_pct_vs_total": 0.0,
+   "mtp_pct_vs_total": -0.011
+  },
+  {
+   "item": "bf_half",
+   "description": "BF SAFE B: element at half rate (ot_s81_bf_native HALF=1, claude/dsrom-bf-rowfix-20261007 61c1cf230, exact PASS; closure-loop bf_half_61c1cf230): BF16 field phases doubled (upper bound; fracs = BF16 phase share (go->idle+1)/node, field_qelem_qx10.json, a_proj max over layer types); adopt only if B closes first (variant A re-cut is the target).  UNDER-PRICED: BF pairs also hold 20.6 % of the q words, so HALF=1 on shared pairs doubles those q phases too (the BF-dedicated-pair plan of the BF doubling agent replaces it)",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     0,
+     0.8789
+    ],
+    [
+     "*.ffn.router",
+     0,
+     0.8976
+    ],
+    [
+     "*.attn.a_proj",
+     0,
+     0.7037
+    ],
+    [
+     "*.attn.cmp.wk",
+     0,
+     0.7748
+    ]
+   ],
+   "ar_tok_s": 1354.8,
+   "mtp_tok_s": 4103.8,
+   "ar_pct_vs_total": -14.99,
+   "mtp_pct_vs_total": -12.587
+  },
+  {
+   "item": "bf_halfphl",
+   "description": "BF HALF_PHL, the ACCEPTED BF closure path (ot_s81_bf_native HALF=1 HALF_PHL=1, claude/s81-bf-20261007; exact PASS results/rtl/s81_bf_native_20261007/halfphl_exact): every BF16 field phase doubled (as-built qx10 BF16 phases go->idle+1, + 2 a phase for pin capture / output register; upper bound, region return / gather stay full rate) + the BF16-DEDICATED allocation on the 1,792 mixed die (results/uarch/dsrom_s81_mixed1792_mapping_20261007: half_dedicated 120 stages / 480 dies vs full_shared 98 / 392: +22 stage hops at 1,006 cycles = measured hop 0.8367 us + 2 cycles mean cable, +88 layer dies)",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     1764,
+     0
+    ],
+    [
+     "*.ffn.router",
+     519,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     205,
+     0
+    ],
+    [
+     "L2.attn.a_proj",
+     1557,
+     0
+    ],
+    [
+     "L8.attn.a_proj",
+     1557,
+     0
+    ],
+    [
+     "L14.attn.a_proj",
+     1557,
+     0
+    ],
+    [
+     "L20.attn.a_proj",
+     1038,
+     0
+    ],
+    [
+     "L24.attn.a_proj",
+     519,
+     0
+    ],
+    [
+     "L28.attn.a_proj",
+     519,
+     0
+    ],
+    [
+     "L32.attn.a_proj",
+     519,
+     0
+    ],
+    [
+     "L36.attn.a_proj",
+     519,
+     0
+    ],
+    [
+     "L1.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L3.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L5.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L7.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L9.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L10.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L12.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L14.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L16.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L18.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L20.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L21.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L23.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L25.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L27.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L29.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L30.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L32.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L34.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L36.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L37.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L39.substage_hop0",
+     1006,
+     0
+    ]
+   ],
+   "ar_tok_s": 1372.7,
+   "mtp_tok_s": 4155.6,
+   "ar_pct_vs_total": -13.867,
+   "mtp_pct_vs_total": -11.483
+  },
+  {
+   "item": "bf_deep4",
+   "description": "OPTIONAL lever, not the closure path: deep full-rate BF (ot_s81_bf_native RECUT=4, ot_v41_bf16_lanes3 DEEP 1: fadd3 every step cut, chain5 F5=0, bmul3 XS 2, extra lane input rank; claude/s81-bf-20261007 9c21d9e49; exact TXN MATCH 456 partials): latency only on this workload (the widened issue hazard never bound: lag identical with and without it), transaction lag per partial 4 / 10.2 / 23; upper bound +23 per BF16 field phase; no half-rate clock, no dedicated pairs (shared allocation, 98 stages); route bf_deep4_mm_9c21d9e49",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     92,
+     0
+    ],
+    [
+     "*.attn.a_proj",
+     69,
+     0
+    ],
+    [
+     "*.ffn.router",
+     23,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     23,
+     0
+    ]
+   ],
+   "ar_tok_s": 1578.2,
+   "mtp_tok_s": 4658.4,
+   "ar_pct_vs_total": -0.973,
+   "mtp_pct_vs_total": -0.773
+  },
+  {
+   "item": "bf_deep5",
+   "description": "OPTIONAL lever, not the closure path: as bf_deep4 with RECUT=5 (DEEP 2: + SPLIT6 / SPLIT9 in the chains and tree): lag per partial 4 / 11.8 / 29; upper bound +29 per BF16 field phase; route bf_deep5_mm_9c21d9e49",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     116,
+     0
+    ],
+    [
+     "*.attn.a_proj",
+     87,
+     0
+    ],
+    [
+     "*.ffn.router",
+     29,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     29,
+     0
+    ]
+   ],
+   "ar_tok_s": 1574.3,
+   "mtp_tok_s": 4649.1,
+   "ar_pct_vs_total": -1.217,
+   "mtp_pct_vs_total": -0.971
+  },
+  {
+   "item": "bf_recut",
+   "description": "BF re-cut A (ot_s81_bf_native RECUT=2, claude/dsrom-bf-rowfix-20261007 260869fd0; exact record e2d358837; closure-loop bf_recut_260869fd0): latency only, transaction lag per partial 4 / 7.9 / 15; upper bound +15 per field phase (wo_a 4 phases, a_proj 3)",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     60,
+     0
+    ],
+    [
+     "*.attn.a_proj",
+     45,
+     0
+    ],
+    [
+     "*.ffn.router",
+     15,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     15,
+     0
+    ],
+    [
+     "*.attn.wq_b",
+     15,
+     0
+    ],
+    [
+     "*.attn.wo_b",
+     15,
+     0
+    ],
+    [
+     "*.ffn.shared_gu",
+     15,
+     0
+    ],
+    [
+     "*.ffn.experts_gu",
+     15,
+     0
+    ],
+    [
+     "*.ffn.down",
+     15,
+     0
+    ]
+   ],
+   "ar_tok_s": 1578.6,
+   "mtp_tok_s": 4659.3,
+   "ar_pct_vs_total": -0.947,
+   "mtp_pct_vs_total": -0.754
+  },
+  {
+   "item": "bf_unroll",
+   "description": "BF unroll-by-2 (ot_s81_bf_native RECUT=3, claude/dsrom-bf-rowfix-20261007 9cf64047e; exact record c394c0ace; closure-loop bf_unroll_9cf64047e): re-cut A + lane chains unrolled by 2 on a half-rate gated clock, latency only, lag per partial 4 / 8.8 / 18; upper bound +18 per field phase",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     72,
+     0
+    ],
+    [
+     "*.attn.a_proj",
+     54,
+     0
+    ],
+    [
+     "*.ffn.router",
+     18,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     18,
+     0
+    ],
+    [
+     "*.attn.wq_b",
+     18,
+     0
+    ],
+    [
+     "*.attn.wo_b",
+     18,
+     0
+    ],
+    [
+     "*.ffn.shared_gu",
+     18,
+     0
+    ],
+    [
+     "*.ffn.experts_gu",
+     18,
+     0
+    ],
+    [
+     "*.ffn.down",
+     18,
+     0
+    ]
+   ],
+   "ar_tok_s": 1575.6,
+   "mtp_tok_s": 4652.2,
+   "ar_pct_vs_total": -1.136,
+   "mtp_pct_vs_total": -0.905
+  },
+  {
+   "item": "selector_pipe2",
+   "description": "Selector PIPE2 (claude/s81-blocks-20261007 36b7a0452: selt_q hist input reg + pair-sum cuts, out-FIFO input reg, registered sweep bound, CMP_RETIME; selt_c MRG_PIPE + RQPIPE + SLAT 4): bench tail mean 153 vs 127 (+26 a segment over the +20 already priced)",
+   "adds": [
+    [
+     "*.attn.idx.topk_local",
+     26,
+     0
+    ],
+    [
+     "*.attn.cand.topk_local",
+     26,
+     0
+    ]
+   ],
+   "ar_tok_s": 1593.2,
+   "mtp_tok_s": 4693.2,
+   "ar_pct_vs_total": -0.031,
+   "mtp_pct_vs_total": -0.032
+  },
+  {
+   "item": "pq_rootcam_B",
+   "description": "PQ root CAM stage B (4251eb216, OPC 0): measured eight-leaf root +4 cycles vs native, charged per field phase (upper bound: every phase exposes one 8-leaf root)",
+   "adds": [
+    [
+     "*.attn.a_proj",
+     4,
+     0
+    ],
+    [
+     "*.attn.wq_b",
+     4,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     4,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     4,
+     0
+    ],
+    [
+     "*.attn.wo_b",
+     4,
+     0
+    ],
+    [
+     "*.ffn.router",
+     4,
+     0
+    ],
+    [
+     "*.ffn.shared_gu",
+     4,
+     0
+    ],
+    [
+     "*.ffn.experts_gu",
+     4,
+     0
+    ],
+    [
+     "*.ffn.down",
+     4,
+     0
+    ]
+   ],
+   "ar_tok_s": 1591.3,
+   "mtp_tok_s": 4689.2,
+   "ar_pct_vs_total": -0.151,
+   "mtp_pct_vs_total": -0.117
+  },
+  {
+   "item": "pq_rootcam_CP",
+   "description": "PQ root CAM stage C + PAR protected face (claude/s81-blocks-20261007 387610a35, OPC 1 PAR 1): eight-leaf +8 vs native (input station +1, operand fetch +1 a pass)",
+   "adds": [
+    [
+     "*.attn.a_proj",
+     8,
+     0
+    ],
+    [
+     "*.attn.wq_b",
+     8,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     8,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     8,
+     0
+    ],
+    [
+     "*.attn.wo_b",
+     8,
+     0
+    ],
+    [
+     "*.ffn.router",
+     8,
+     0
+    ],
+    [
+     "*.ffn.shared_gu",
+     8,
+     0
+    ],
+    [
+     "*.ffn.experts_gu",
+     8,
+     0
+    ],
+    [
+     "*.ffn.down",
+     8,
+     0
+    ]
+   ],
+   "ar_tok_s": 1589.0,
+   "mtp_tok_s": 4683.7,
+   "ar_pct_vs_total": -0.295,
+   "mtp_pct_vs_total": -0.234
+  },
+  {
+   "item": "coll_gbx_fmt1",
+   "description": "Collective gearbox FMT1 (fixed 3-in-4 slot format, no bit shifter): slot rate 0.75 vs 0.765 per gearbox beat (-2.0 %), charged as +2.0 % of every collective node (upper bound; link-up is faster: TP4 bench end 3,012 vs 3,374 cycles)",
+   "adds": [
+    [
+     "*.attn.out_allreduce",
+     0,
+     0.02
+    ],
+    [
+     "*.ffn.combine_allreduce",
+     0,
+     0.02
+    ],
+    [
+     "*.attn.a_allgather",
+     0,
+     0.02
+    ],
+    [
+     "*.attn.idx.topk_merge",
+     0,
+     0.02
+    ],
+    [
+     "*.attn.cand.merge",
+     0,
+     0.02
+    ],
+    [
+     "*.attn.rows_allgather",
+     0,
+     0.02
+    ],
+    [
+     "*.ffn.router_allgather",
+     0,
+     0.02
+    ]
+   ],
+   "ar_tok_s": 1588.9,
+   "mtp_tok_s": 4683.0,
+   "ar_pct_vs_total": -0.301,
+   "mtp_pct_vs_total": -0.249
+  }
+ ],
+ "unpriced_candidates": [
+  {
+   "item": "fh_half",
+   "physical_adoption": false,
+   "measurement": "gold4 control 63,153 -> half 126,310 root/die cycles (five drafts)",
+   "reason": "The whole reduced gold4 core/memory/VM domain was slowed, not only the head. VOCAB4040, G4 x W16 is not a full-shape draft measurement. The previous 8,387 cycles per head position underpriced blocks and leaked into verification II. A whole-domain physical clock/CDC contract and full-shape composition are missing; no numerical candidate rate is published."
+  }
+ ],
+ "physical_adoption": false,
+ "pending_defect": [],
+ "as_is": {
+  "ar_tok_s": 1593.7,
+  "mtp_tok_s": 4694.7,
+  "ar_pct": -4.854,
+  "mtp_pct": -4.092,
+  "basis": "every item + the PENDING-DEFECT all-gathers"
+ }
+}

@@ -1,0 +1,60 @@
+{
+  "schema": "opentallas.dsrom_softmax_phase_gate.v1",
+  "scope": "minimum tagged row-phase controller, not SRAM payload or CDC implementation",
+  "passed": true,
+  "source_sha256": {
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_phase.sv": "2e9b8d2cd90ca183e9845e1a6d281bce2f7d6187b88c481eb482beff1f1fc8ef",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_phase.sv": "476c40d6eb9beb74311447f27f1b5df2fbc717facf58dd7289acc139b023c1b2",
+    "results/uarch/dsrom_softmax_transport_20261007/phase_controller_prebuild.json": "14b049244fe5ecd4ee5871f0c58167102a373331492305b227275047c84007fe"
+  },
+  "positive": {
+    "checks": 454,
+    "full_shape_events": {
+      "T640": 288,
+      "T128": 160
+    },
+    "contiguous_vector_events": true,
+    "write_visibility_barrier_edges": 2,
+    "barriers_per_transaction": 4,
+    "denominator_gate": true,
+    "wrong_and_stale_tags": true,
+    "state_and_counter_upsets": true,
+    "stalled_drain_ownership": true,
+    "log": "results/rtl/dsrom_softmax_transport_20261007/phase_r2_positive.log"
+  },
+  "negative": {
+    "macro": "SOFTMAX_PHASE_IGNORE_TAG",
+    "observed_exit": 1,
+    "expected_failure": "WRONG_TAG_ESCAPED",
+    "log": "results/rtl/dsrom_softmax_transport_20261007/phase_r2_ignore_tag.log"
+  },
+  "historical_failures": {
+    "logs": [
+      "results/rtl/dsrom_softmax_transport_20261007/phase_positive.log",
+      "results/rtl/dsrom_softmax_transport_20261007/phase_ignore_tag.log"
+    ],
+    "reason": "test sampled ready at second falling edge, before the second rising edge committed write visibility barrier",
+    "fix": "test waits two rising edges plus NBA observation; no controller RTL change",
+    "qualification": "initial mutant run never reached mutation check"
+  },
+  "synthesis_record": "results/rtl/dsrom_softmax_transport_20261007/phase_synthesis.json",
+  "model_before_build": {
+    "record": "results/uarch/dsrom_softmax_transport_20261007/phase_controller_prebuild.json",
+    "assertion": "emitted before phase RTL creation in tool execution order; no separately committed prebuild snapshot"
+  },
+  "reproduce": [
+    "iverilog -g2012 -s tb_phase -o /tmp/dsrom_softmax_phase.vvp rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_phase.sv rtl/experimental/dsrom_softmax_transport_20261007/tb_phase.sv",
+    "vvp /tmp/dsrom_softmax_phase.vvp",
+    "iverilog -g2012 -DSOFTMAX_PHASE_IGNORE_TAG -s tb_phase -o /tmp/dsrom_softmax_phase_mutant.vvp rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_phase.sv rtl/experimental/dsrom_softmax_transport_20261007/tb_phase.sv",
+    "vvp /tmp/dsrom_softmax_phase_mutant.vvp"
+  ],
+  "adopted": false,
+  "route_admitted": false,
+  "remaining": [
+    "mapped combinational area and physical slot fit",
+    "protected SRAM address/request/return implementation",
+    "actual data gather/scatter and configuration storage",
+    "native clock CDC and reset epoch ownership",
+    "SS/FF budgets and composed parent latency"
+  ]
+}

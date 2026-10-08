@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "checks": {
+    "stalls": {
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_HA2_HUB_CREDIT_CAPTURE rows=192 lanes=2 width=544 flight=35 stalls=365 cycles=708\n"
+    },
+    "no_stalls": {
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_HA2_HUB_CREDIT_CAPTURE rows=192 lanes=2 width=544 flight=35 stalls=0 cycles=229\n"
+    },
+    "ignore_reservations": {
+      "returncode": 1,
+      "passed": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender_capture.sv:41: CREDIT_FAIL reservation or FIFO fault cycle=64\n       Time: 696000 Scope: tb_ha2_hub_credit_sender_capture\n"
+    },
+    "ignore_receiver_credit": {
+      "returncode": 1,
+      "passed": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender_capture.sv:43: CREDIT_FAIL send without prior-edge receiver credit\n       Time: 426000 Scope: tb_ha2_hub_credit_sender_capture.$ivl_for_loop4\n"
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender.sv": "afa0b30bde9d2ecb8798aee57b9ca846d94d924e738bdf4eca9b9404e9243022",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender_capture.sv": "8655ce951d56ef7540476f4a03c37f92cdb8f95f8fc4a84395f18a8bee1b9af6",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender_capture.sv": "96e200fae2b4fcd6c9564d0ef15aa36598324fffc0560a590bb32566dfed78f5"
+  },
+  "scope": "One full-width 2x192-row sender with real 35-cycle hub delay; input capture enabled; not full endpoint or physical adoption"
+}

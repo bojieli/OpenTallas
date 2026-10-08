@@ -1,0 +1,285 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+QCC reference pin nx_v$_DFFE_PN0P_/CLK clock arrival max 360.728333 min 343.922028
+OT_CORNER ss
+OT_WS -2.72112332666552e-11
+OT_TNS -8.595070766226343e-10
+Startpoint: u_me.rst_n$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: next_token[17]$_DFFE_PN0P_
+          (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  40.63   40.63 ^ wire10888/Y (BUFx24_ASAP7_75t_R)
+  59.84  100.47 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  34.30  134.76 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  40.36  175.13 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  41.98  217.11 ^ clkbuf_2_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  43.81  260.93 ^ clkbuf_4_14_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  46.67  307.59 ^ clkbuf_6_58__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  48.72  356.32 ^ clkbuf_leaf_375_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   1.07  357.39 ^ u_me.rst_n$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 127.20  484.59 v u_me.rst_n$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  30.81  515.41 ^ _066962_/Y (INVx5_ASAP7_75t_R)
+  62.59  577.99 ^ place9537/Y (BUFx5_ASAP7_75t_R)
+  83.29  661.28 ^ place9536/Y (BUFx3_ASAP7_75t_R)
+  69.92  731.21 ^ place9535/Y (BUFx2_ASAP7_75t_R)
+  42.49  773.70 ^ wire13173/Y (BUFx10_ASAP7_75t_R)
+  45.25  818.95 ^ load_slew13172/Y (BUFx6f_ASAP7_75t_R)
+   4.85  823.81 ^ next_token[17]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         823.81   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+  39.58  872.91 ^ wire10888/Y (BUFx24_ASAP7_75t_R)
+  57.65  930.56 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  33.72  964.29 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  39.12 1003.41 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  40.55 1043.95 ^ clkbuf_2_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  42.59 1086.54 ^ clkbuf_4_10_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  42.06 1128.60 ^ clkbuf_6_43__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  40.10 1168.70 ^ clkbuf_leaf_488_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   0.83 1169.53 ^ next_token[17]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1109.53   clock uncertainty
+   5.05 1114.58   clock reconvergence pessimism
+  30.41 1145.00   library recovery time
+        1145.00   data required time
+---------------------------------------------------------
+        1145.00   data required time
+        -823.81   data arrival time
+---------------------------------------------------------
+         321.19   slack (MET)
+
+
+Startpoint: clk (clock source 'core_clk')
+Endpoint: u_me.clk (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+ 416.67  416.67   clock core_clk (fall edge)
+   0.00  416.67   clock source latency
+   0.00  416.67 v clk (in)
+  46.59  463.26 v wire10888/Y (BUFx24_ASAP7_75t_R)
+  76.70  539.96 v clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  31.51  571.47 v g_me_cg.u_me_cg.u_icg/GCLK (ICGx1_ASAP7_75t_R)
+  65.09  636.56 v output2137/Y (BUFx24_ASAP7_75t_R)
+   9.98  646.54 v u_me.clk (out)
+         646.54   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock network delay (propagated)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+-154.00  619.33   output external delay
+         619.33   data required time
+---------------------------------------------------------
+         619.33   data required time
+        -646.54   data arrival time
+---------------------------------------------------------
+         -27.21   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 173
+OT_WS_REG_D -11.085688
+OT_WS_OUT -27.211233
+OT_WS_R2R -11.085688
+OT_WS_I2R 262.333923
+OT_PATH clk u_me.clk -27.211233
+OT_PATH st[0]$_DFFE_PN0P_/QN vw_me_we[13] -11.558254
+OT_PATH st[0]$_DFFE_PN0P_/QN vw_me_we[10] -11.466717
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[2]$_DFFE_PP_/D -11.085688
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[6]$_DFFE_PP_/D -10.824452
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[5]$_DFFE_PP_/D -10.611178
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[8]$_DFFE_PP_/D -10.554113
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[5]$_DFFE_PP_/D -10.543788
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[5]$_DFFE_PP_/D -10.520363
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[7]$_DFFE_PP_/D -10.460410
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[0]$_DFFE_PP_/D -10.170864
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[9]$_DFFE_PP_/D -10.143663
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[17]$_DFFE_PP_/D -10.106360
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_k[2]$_DFFE_PP_/D -10.054069
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[23]$_DFFE_PP_/D -9.988010
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[3]$_DFFE_PP_/D -9.929169
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[0]$_DFFE_PP_/D -9.719226
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[0]$_DFFE_PP_/D -9.693690
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[16]$_DFFE_PP_/D -9.587220
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_k[9]$_DFFE_PP_/D -9.494184
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[4]$_DFFE_PP_/D -9.406142
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[9]$_DFFE_PP_/D -9.304891
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[6]$_DFFE_PP_/D -9.294455
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[14]$_DFFE_PP_/D -9.200307
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[15]$_DFFE_PP_/D -9.103496
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_jsh[1]$_DFFE_PP_/D -9.097834
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[9]$_DFFE_PP_/D -8.990142
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_k[12]$_DFFE_PP_/D -8.935630
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[6]$_DFFE_PP_/D -8.867352
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[2]$_DFFE_PP_/D -8.766321
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[22]$_DFFE_PP_/D -8.652301
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[23]$_DFFE_PP_/D -8.630874
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[7]$_DFFE_PP_/D -8.523071
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[22]$_DFFE_PP_/D -8.477219
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[8]$_DFFE_PP_/D -8.259282
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[21]$_DFFE_PP_/D -8.248291
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[20]$_DFFE_PP_/D -8.033574
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[15]$_DFFE_PP_/D -8.009038
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[1]$_DFFE_PP_/D -7.442935
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[23]$_DFFE_PP_/D -7.339018
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[19]$_DFFE_PP_/D -7.310819
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[8]$_DFFE_PP_/D -7.135514
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[13]$_DFFE_PP_/D -6.964873
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wbase[6]$_DFFE_PP_/D -6.949108
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[14]$_DFFE_PP_/D -6.708856
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_k[1]$_DFFE_PP_/D -6.683543
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[4]$_DFFE_PP_/D -6.631695
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_split[1]$_DFFE_PP_/D -6.190825
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wbase[5]$_DFFE_PP_/D -6.185941
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[1]$_DFFE_PP_/D -6.098677
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[6]$_DFFE_PP_/D -6.094569
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[15]$_DFFE_PP_/D -6.082801
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[21]$_DFFE_PP_/D -6.018075
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[3]$_DFFE_PP_/D -5.954681
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[0]$_DFFE_PP_/D -5.892620
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_split[2]$_DFFE_PP_/D -5.809797
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_split[0]$_DFFE_PP_/D -5.773937
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[19]$_DFFE_PP_/D -5.641487
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_nout[5]$_DFFE_PP_/D -5.607403
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[5]$_DFFE_PP_/D -5.603518
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_nout[3]$_DFFE_PP_/D -5.538348
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[22]$_DFFE_PP_/D -5.489054
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ojs[3]$_DFFE_PP_/D -5.408895
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[16]$_DFFE_PP_/D -5.379697
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[20]$_DFFE_PP_/D -5.375145
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[8]$_DFFE_PP_/D -5.324075
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_tiles[11]$_DFFE_PP_/D -5.314970
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[2]$_DFFE_PP_/D -5.215606
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_tiles[10]$_DFFE_PP_/D -5.066725
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[18]$_DFFE_PP_/D -5.056733
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ojs[5]$_DFFE_PP_/D -5.045630
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ojs[4]$_DFFE_PP_/D -5.031864
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[11]$_DFFE_PP_/D -4.920287
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[22]$_DFFE_PP_/D -4.903744
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[9]$_DFFE_PP_/D -4.876544
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_k[6]$_DFFE_PP_/D -4.865552
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_nout[4]$_DFFE_PP_/D -4.848122
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[18]$_DFFE_PP_/D -4.834022
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xbase[21]$_DFFE_PP_/D -4.720224
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_nout[7]$_DFFE_PP_/D -4.611533
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[12]$_DFFE_PP_/D -4.584111
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[2]$_DFFE_PP_/D -4.563239
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[7]$_DFFE_PP_/D -4.490075
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[10]$_DFFE_PP_/D -4.458878
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[5]$_DFFE_PP_/D -4.456990
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_nout[12]$_DFFE_PP_/D -4.420353
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[14]$_DFFE_PP_/D -4.382827
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[17]$_DFFE_PP_/D -4.355738
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[11]$_DFFE_PP_/D -4.340417
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[1]$_DFFE_PP_/D -4.336198
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[22]$_DFFE_PP_/D -4.171774
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_nout[9]$_DFFE_PP_/D -4.095724
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[21]$_DFFE_PP_/D -4.094946
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[19]$_DFFE_PP_/D -4.079071
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[4]$_DFFE_PP_/D -4.066969
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_k[3]$_DFFE_PP_/D -4.027001
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_round$_DFFE_PP_/D -4.024447
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[18]$_DFFE_PP_/D -3.941181
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_nout[8]$_DFFE_PP_/D -3.912537
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_jsh[0]$_DFFE_PP_/D -3.906875
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_rmax$_DFFE_PP_/D -3.897105
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[5]$_DFFE_PP_/D -3.880008
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_k[8]$_DFFE_PP_/D -3.873901
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_k[5]$_DFFE_PP_/D -3.843037
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_nout[11]$_DFFE_PP_/D -3.798295
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[11]$_DFFE_PP_/D -3.765543
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[1]$_DFFE_PP_/D -3.641531
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[20]$_DFFE_PP_/D -3.628209
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[2]$_DFFE_PP_/D -3.583245
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[3]$_DFFE_PP_/D -3.465450
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[23]$_DFFE_PP_/D -3.428147
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_k[4]$_DFFE_PP_/D -3.420708
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[20]$_DFFE_PP_/D -3.417933
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ots[7]$_DFFE_PP_/D -3.397615
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_nout[14]$_DFFE_PP_/D -3.284373
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[19]$_DFFE_PP_/D -3.235301
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[21]$_DFFE_PP_/D -3.179235
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ots[5]$_DFFE_PP_/D -3.145817
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[13]$_DFFE_PP_/D -3.123279
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[3]$_DFFE_PP_/D -3.105405
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_csi[2]$_DFFE_PP_/D -2.985834
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_nout[2]$_DFFE_PP_/D -2.890910
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_tiles[12]$_DFFE_PP_/D -2.798983
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_cbase[16]$_DFFE_PP_/D -2.746692
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_dso[1]$_DFFE_PP_/D -2.679412
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_k[7]$_DFFE_PP_/D -2.643774
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[17]$_DFFE_PP_/D -2.614242
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[7]$_DFFE_PP_/D -2.596701
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[23]$_DFFE_PP_/D -2.568057
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[15]$_DFFE_PP_/D -2.368328
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[23]$_DFFE_PP_/D -2.355782
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ots[4]$_DFFE_PP_/D -2.335576
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[4]$_DFFE_PP_/D -2.323808
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[1]$_DFFE_PP_/D -2.320033
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_split[3]$_DFFE_PP_/D -2.319256
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[1]$_DFFE_PP_/D -2.281841
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_tiles[0]$_DFFE_PP_/D -2.266409
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[6]$_DFFE_PP_/D -2.237432
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[16]$_DFFE_PP_/D -2.144507
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[8]$_DFFE_PP_/D -2.124079
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wcs[15]$_DFFE_PP_/D -1.694311
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[8]$_DFFE_PP_/D -1.648792
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[18]$_DFFE_PP_/D -1.623146
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_csi[3]$_DFFE_PP_/D -1.567746
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ts[20]$_DFFE_PP_/D -1.543543
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_cbase[23]$_DFFE_PP_/D -1.526113
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_tiles[3]$_DFFE_PP_/D -1.520117
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[3]$_DFFE_PP_/D -1.430411
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_cbase[18]$_DFFE_PP_/D -1.391332
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[11]$_DFFE_PP_/D -1.343703
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_csi[9]$_DFFE_PP_/D -1.177169
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[13]$_DFFE_PP_/D -1.127765
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_dso[18]$_DFFE_PP_/D -1.089795
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_tiles[17]$_DFFE_PP_/D -1.039502
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_ks[19]$_DFFE_PP_/D -1.018852
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_tiles[4]$_DFFE_PP_/D -0.994982
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_tiles[5]$_DFFE_PP_/D -0.961897
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_cbase[4]$_DFFE_PP_/D -0.931921
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_tiles[1]$_DFFE_PP_/D -0.929479
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_cbase[5]$_DFFE_PP_/D -0.904166
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_csi[4]$_DFFE_PP_/D -0.779599
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xjs[15]$_DFFE_PP_/D -0.751399
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_dbase[2]$_DFFE_PP_/D -0.701439
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_imm1[0]$_DFFE_PP_/D -0.671241
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xjs[0]$_DFFE_PP_/D -0.656697
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_csi[7]$_DFFE_PP_/D -0.529687
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_tiles[9]$_DFFE_PP_/D -0.376588
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_xks[10]$_DFFE_PP_/D -0.348277
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_dso[19]$_DFFE_PP_/D -0.340950
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_js[4]$_DFFE_PP_/D -0.300648
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wbase[23]$_DFFE_PP_/D -0.220601
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_dbase[8]$_DFFE_PP_/D -0.171751
+OT_PATH u_me.go$_DFFE_PN0P_/QN g_vsu.u_su.i_cbase[6]$_DFFE_PP_/D -0.119016
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wbase[4]$_DFFE_PP_/D -0.093481
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wbase[3]$_DFFE_PP_/D -0.068945
+OT_PATH g_vsu.su_tk_d$_DFF_PN0_/QN u_me.i_wbase[2]$_DFFE_PP_/D -0.016542

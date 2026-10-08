@@ -1,0 +1,39 @@
+{
+  "status": "MINIMUM_EXACT_AND_GENERIC_COPY_INVENTORY_PASS_PHYSICAL_PENDING",
+  "adopted": false,
+  "model": "Existing halfwrite prebuild prices unchanged1280 capture bits and0 added protocol cycles; hierarchy preservation adds no logical state.",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_column_halfwrite_distributed.sv": "73fa34697319768ad2ce6fe7f49aef115d2cf1b6502bc20d2b204f00cb594cb2",
+    "tools/s81/window_halfwrite_census.py": "c6685e6bb634c972c3056dbe26c93ee6cc8fb39263d320790aa6a17c70d43c01",
+    "rtl/dsrom_sys/s81_window_la/tb_window_column_halfwrite.sv": "a2c82e5673926d3696695d2b64dbac094122f8a5eb5c9ce5ec2c7786d8f41d90",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv": "1b5694a76f8270c299c00ab220153e40064950c4332c9f1ddde18fe4e47a5cd8",
+    "physical/dsrom_window_columns/halfwrite_distributed/route.sh": "99b6255b257cc95de80616cceaff6d37473ed1667323f3b01b68932c44461cb4",
+    "physical/dsrom_window_columns/halfwrite_distributed/closure_job.template.json": "39c069a9e9a4ae8d7b7a68c113e75e110123c4dc6fe41eb3dbf39100724d3acc",
+    "results/uarch/dsrom_window_column_halfwrite_20261007/prebuild.json": "1b99b8a160c8f11b2ac3363c3b5f8aee97dd61d913e103df915fdada4fbee0d0"
+  },
+  "positive": "PASS COLUMN_HALFWRITE checks=3070 collisions=1040 reset_writes=8 added_cycles=0\n",
+  "negative": "FATAL: /tmp/tb_window_halfwrite_distributed.sv:26: COLUMN_HALFWRITE_MISMATCH check=75 ref=57abfe0da85401f257abfe0e7d17d914 got=0d7f8991f280766e0d7f899227c3ae88\n       Time: 756000 Scope: tb_window_column_halfwrite\n",
+  "generic_synthesis": "Yosys0.9; read_verilog -sv; chparam HALFWRITE1; hierarchy -check; proc; flatten; opt; memory_map; opt; write_json",
+  "compatibility_derivation": [
+    "parameter bit replaced by parameter",
+    "for(genvar NAME= changed to genvar NAME; for(NAME=",
+    "implicit .* original instance replaced by seven explicit identical port bindings"
+  ],
+  "compatibility_sources_sha256": {
+    "/tmp/window-halfwrite-yosys-compat.sv": "6a57557410a67e5cce9e2ddd6f4d0cb080e0ae01c8352c04b578c5381706b81e",
+    "/tmp/window-halfwrite-distributed-compat.sv": "3aa1c8025ad79d3151b7662578bfb3d52cf998b55d2a570ed5df48a8759908cb"
+  },
+  "testbench_derivation": "Existing tb_window_column_halfwrite module type renamed to distributed; no stimuli or comparisons changed.",
+  "negative_transform": "Replace always @(negedge clk) with always @(posedge clk), other source unchanged.",
+  "remaining": [
+    "Actual library-mapped distinct capture bits and clock topology",
+    "both half-cycle setup/hold and unchanged read output path",
+    "M2-M6 and parent PG accessibility",
+    "parent slot and clock area"
+  ],
+  "derived_artifacts_sha256": {
+    "distributed_yosys_compat.sv": "3aa1c8025ad79d3151b7662578bfb3d52cf998b55d2a570ed5df48a8759908cb",
+    "predecessor_yosys_compat.sv": "6a57557410a67e5cce9e2ddd6f4d0cb080e0ae01c8352c04b578c5381706b81e",
+    "tb_distributed.sv": "375d7b94be2a766e25c03950795b60de377487806f4539bd65c6ee344cbfa44c"
+  }
+}

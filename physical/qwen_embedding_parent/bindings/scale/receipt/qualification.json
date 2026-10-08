@@ -1,0 +1,54 @@
+{
+  "source_commit": "82c12047d09bcce0c2d4b9d68f57aeb5a29674e6",
+  "drc": 0,
+  "exactness_pass": true,
+  "corner_sta_sha256": "96c0b67bfbf6efffc7ceadd111729d9c9585a384c4689dabd9d9381b6e2c9138",
+  "metadata_storage_sha256": "139f6da7efbd848da8b2927ac3f80f3bb70c038fef7979046c5f902d7c5fa821",
+  "job_state_sha256": "06a3e355ba1e2ae238d8c6690d9ad6acc59015badcb93cebf11d708bb9f7e2c6",
+  "bench_results": {
+    "bench_exact0": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PASS scale bank=0 rows=65536 latency=7 II=2 bounds=3 metadata_faults=4 duplicate_credit=detected SS_rom_delay_ps=739.211\nrtl/test/tb_qwen_embed_scale_bank_numeric.sv:90: $finish called at 438253656 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_exact1": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PASS scale bank=1 rows=65536 latency=7 II=2 bounds=3 metadata_faults=4 duplicate_credit=detected SS_rom_delay_ps=739.211\nrtl/test/tb_qwen_embed_scale_bank_numeric.sv:90: $finish called at 438253656 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_exact2": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PASS scale bank=2 rows=20864 latency=7 II=2 bounds=3 metadata_faults=4 duplicate_credit=detected SS_rom_delay_ps=739.211\nrtl/test/tb_qwen_embed_scale_bank_numeric.sv:90: $finish called at 139209612 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_bad_address": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "FATAL: rtl/test/tb_qwen_embed_scale_bank_numeric.sv:66: FAIL scale payload/order bank=0 row=65535 data=5ac6 wanted=5ad6\n       Time: 11269  Scope: tb_qwen_embed_scale_bank_numeric\n",
+      "track": "parallel"
+    },
+    "bench_bad_lane": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "FATAL: rtl/test/tb_qwen_embed_scale_bank_numeric.sv:66: FAIL scale payload/order bank=0 row=65535 data=5ad7 wanted=5ad6\n       Time: 11269  Scope: tb_qwen_embed_scale_bank_numeric\n",
+      "track": "parallel"
+    }
+  },
+  "collection_audit": {
+    "qualification_mode": "held_route_readonly",
+    "status_sha256": "5bb5d9867f9a86488fa0e9746a35929b9294e1e9cb29b209c5d9fbf3d1661d12",
+    "drc_metrics_sha256": "60ddcd09230392acf46df41faa976aa63da9f2de3b45282dfbf7f47555b67284",
+    "source_marker_sha256": "e8c91251c0f5a6d4658c218a70e2ebcdced65e4c34278ba5352415bec2c3075a"
+  },
+  "routed_netlist_sha256": "27f313dd42d73378123145d39638d809d65a5c74cccefb235d7c0a0ecf92623e",
+  "synthesis_netlist_sha256": "570cb7024d87fcc139a51e79d167816c0eb4c6356a0cd104ad65e0144d5d9031",
+  "metadata_storage_synthesis_sha256": "aa834167c5d0a265293369180541bae752629313320de4d1f7283bd8cdfb2548"
+}

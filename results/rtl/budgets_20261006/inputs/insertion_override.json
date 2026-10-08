@@ -1,0 +1,41 @@
+{
+ "hfd_index_q_b0": {
+  "reason": "edge ck kept: R0 + x-mirrored copies cannot both take an on-track centre M7 ck pin (r16b); coordinator 2026-10-06 23:20 re-plan"
+ },
+ "hfd_index_q_b1": {
+  "reason": "edge ck kept (see b0); FF / hold side from the measured insertion (views agent: b1 hold -268 came from the 900 ps sheet FF model); ff_min = routed output leaf (2026-10-07 coordinator: b1 FF -166 on kout)",
+  "ff_min": 540,
+  "source": "routed FF leaf of the kout output pin flops (closure loop hbm_idxq_b1_fc9fb499c: u_kp.gn.st[5].r[70] CLK 542.6 ps FF) -- the CTS-stage calibration (724) missed the early edge-ck leaves; the FF IO model now launches / captures at the routed boundary leaf"
+ },
+ "hfd_index_q_b2": {
+  "reason": "edge ck kept (see b0)"
+ },
+ "hfd_index_q_b3": {
+  "reason": "edge ck kept (see b0); correct FF output boundary model using routed clock leaf; hold uncertainty 50 ps unchanged",
+  "ff_min": 587.08,
+  "source": "routed FF kout[235] launch u_kp.gn.st[3].r[234] CLK 587.08 ps; hbm_idxq_b3_2ec0ab4f9_r22 w18_sta_ff.log; CTS calibration minimum 738 ps is stale at routed output boundary"
+ },
+ "hfd_index_q_b5": {
+  "reason": "edge ck kept (see b0)"
+ },
+ "hfd_svc_SE_s3": {
+  "target_ss": 1658.2,
+  "target_ff": 1313.8,
+  "reason": "SLOT4 calibrated clock tree; re-plan die entry from measured mean and price full worst-leaf insertion OCV; previous target predates SLOT4"
+ },
+ "hfd_svc_SE_s1": {
+  "target_ss": 1720.7,
+  "target_ff": 1385.5,
+  "reason": "SLOT4 calibrated clock tree; re-plan die entry from measured mean and price full worst-leaf insertion OCV; previous target predates SLOT4"
+ },
+ "hfd_svc_SW_s1": {
+  "target_ss": 1539.9,
+  "target_ff": 1189.9,
+  "reason": "SLOT4 calibrated clock tree; re-plan die entry from measured mean and price full worst-leaf insertion OCV; previous target predates SLOT4"
+ },
+ "hfd_svc_SW_s3": {
+  "target_ss": 1216.6,
+  "target_ff": 917.8,
+  "reason": "SLOT4 calibrated clock tree; re-plan die entry from measured mean and price full worst-leaf insertion OCV; previous target predates SLOT4"
+ }
+}

@@ -1,0 +1,261 @@
+{
+ "name": "s81ph-dsfd_capt_x-501831f78-safe",
+ "spec": {
+  "name": "s81ph-dsfd_capt_x-501831f78-safe",
+  "block": "dsfd_capt_x",
+  "owner": "Claude:s81-ph (tiles)",
+  "purpose": "SAFE capture crossing tile (16 pair packers + ratio CDCs + status crossing, balanced ck/ckv sinks, ckv-root balance hook)",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/s81-placeholders-20261006",
+   "commit": "501831f78adb7dcacbd1c881a3bf40fd6073bc93"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_cap_tiled",
+     "cmd": "bash tools/s81_ph/capt_bench.sh {RUN}/bench t1 'mix mix11 mix12 mix13 trace err over range rreq' S81PH_CAP_SAFE",
+     "expect": "pass",
+     "threads": 12,
+     "peak_ram_gb": 24
+    },
+    {
+     "name": "neg_bf16_trunc",
+     "cmd": "bash tools/s81_ph/capt_bench.sh {RUN}/bench m1 'mix' S81PH_CAP_SAFE S81PH_MUTANT_BF16_TRUNC",
+     "expect": "fail",
+     "fail_regex": "CAPT_BENCH FAIL",
+     "threads": 8,
+     "peak_ram_gb": 16
+    }
+   ],
+   "calibrate": {
+    "cmd": "HM=0.035 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/common/ot_ratio_cdc_fifo.sv' SDCX=physical/s81_ph_views/tiles/ser_clock_capt.sdc PRECTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl POSTCTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_capt_x rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc HM=0.035 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/common/ot_ratio_cdc_fifo.sv' SDCX=physical/s81_ph_views/tiles/ser_clock_capt.sdc PRECTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl POSTCTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_capt_x rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/dsfd_capt_x"
+   }
+  ],
+  "cycles_added": 6,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "S81-PH tile sheet is grade 'target' (no calibration: ~600 ps); dsfd_capt_ctl measured 256 ps SS / 181 ps FF at calibrate (r1/r2), so the sheet SDC would place vclk ~350 ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+  }
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/s81ph-dsfd_capt_x-501831f78-safe.json",
+ "created": "2026-10-06T21:18:52-07:00",
+ "status": "NEEDS_RTL",
+ "stage_idx": 4,
+ "attempt": 2,
+ "retries_used": 0,
+ "benches": {
+  "bench_exact_cap_tiled": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=20 timeouts=0 mismatching_roots=0 RESULT PASS\nt1 over: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=24 timeouts=0 mismatching_roots=0 RESULT PASS\nt1 range: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=15 timeouts=0 mismatching_roots=0 RESULT PASS\nt1 rreq: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=37 timeouts=0 mismatching_roots=0 RESULT PASS\nCAPT_BENCH PASS\n"
+  },
+  "bench_neg_bf16_trunc": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "m1 mix: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=52 timeouts=0 mismatching_roots=128 RESULT FAIL\nCAPT_BENCH FAIL\n"
+  }
+ },
+ "hosts_tried": [
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "events": [
+  "2026-10-06T21:18:52-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81ph-dsfd_capt_x-501831f78-safe.json",
+  "2026-10-06T21:19:44-07:00 waiting for capacity: AGIdock MemAvailable 83-32 GB < 40+32; EPYC2 load 132+16+16 > cap 154; EPYC1 load 176+0+16 > cap 154; EPYC3 load 202+0+16 > cap 154",
+  "2026-10-06T21:20:57-07:00 waiting for capacity: AGIdock MemAvailable 87-16 GB < 40+32; EPYC2 load 136+18+16 > cap 154; EPYC1 load 176+0+16 > cap 154; EPYC3 load 180+0+16 > cap 154",
+  "2026-10-06T21:22:01-07:00 waiting for capacity: AGIdock MemAvailable 93-40 GB < 40+32; EPYC2 load 148+18+16 > cap 154; EPYC1 load 176+0+16 > cap 154; EPYC3 load 201+0+16 > cap 154",
+  "2026-10-06T21:23:06-07:00 waiting for capacity: AGIdock MemAvailable 85-40 GB < 40+32; EPYC1 load 152+0+16 > cap 154; EPYC2 load 148+16+16 > cap 154; EPYC3 load 152+0+16 > cap 154",
+  "2026-10-06T21:24:06-07:00 waiting for capacity: EPYC2 load 148+0+16 > cap 154; AGIdock MemAvailable 90-40 GB < 40+32; EPYC1 load 152+0+16 > cap 154; EPYC3 load 159+0+16 > cap 154",
+  "2026-10-06T21:25:06-07:00 waiting for capacity: AGIdock MemAvailable 88-40 GB < 40+32; EPYC2 load 148+0+16 > cap 154; EPYC1 load 152+0+16 > cap 154; EPYC3 load 152+0+16 > cap 154",
+  "2026-10-06T21:28:55-07:00 source 501831f78adb synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/src",
+  "2026-10-06T21:33:20-07:00 launched bench_exact_cap_tiled (attempt 1) on ot-epyc1tb",
+  "2026-10-06T21:34:59-07:00 bench_exact_cap_tiled PASS (rc=0)",
+  "2026-10-06T21:37:01-07:00 launched bench_neg_bf16_trunc (attempt 1) on ot-epyc1tb",
+  "2026-10-06T21:38:48-07:00 bench_neg_bf16_trunc FAIL as expected (rc=1)",
+  "2026-10-06T21:39:49-07:00 calibrate waiting for capacity: EPYC1 MemAvailable 418-340 GB < 40+113",
+  "2026-10-06T21:40:42-07:00 calibrate waiting for capacity: EPYC1 MemAvailable 385-340 GB < 40+113",
+  "2026-10-06T21:41:40-07:00 calibrate waiting for capacity: EPYC1 MemAvailable 372-340 GB < 40+113",
+  "2026-10-06T21:42:45-07:00 calibrate cannot start on EPYC1 (EPYC1 MemAvailable 373-340 GB < 40+113); moving to EPYC3",
+  "2026-10-06T21:44:24-07:00 source 501831f78adb synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/src",
+  "2026-10-06T21:45:09-07:00 launched calibrate (attempt 1) on ot-epyc3",
+  "2026-10-06T21:54:14-07:00 calibrate done (rc=0)",
+  "2026-10-06T21:54:16-07:00 calibrated insertion CK_SS_MEAN=382 CK_SS_MIN=371 CK_SS_MAX=392 CK_FF_MEAN=246 CK_FF_MIN=237 CK_FF_MAX=254",
+  "2026-10-06T21:55:48-07:00 launched route (attempt 1) on ot-epyc3",
+  "2026-10-06T22:50:21-07:00 route done (rc=0)",
+  "2026-10-06T22:51:23-07:00 verdict SS +42.31 / FF -11.62 / DRC 0 / checks failed [] -> NOT CLOSED",
+  "2026-10-06T22:51:48-07:00 hold-only miss (SS +42.31 / FF -11.62, DRC 0): post-route hold ECO launched on /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base/5_2_route.odb",
+  "2026-10-06T23:08:43-07:00 hold ECO MISS: {'ss_ps': 8.4, 'ff_ps': -2.95, 'drc': 0, 'cells_added': 7423, 'errors': []}",
+  "2026-10-06T23:09:43-07:00 NEEDS_RTL: SS 42.31 / FF -11.62 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)",
+  "2026-10-07T01:32:30-07:00 human retry-eco (hold_eco rev 2 (guide-preserving re-route, sign-off-exact SDC, +18 goal)): re-judged at the verdict; earlier ECO kept in eco_history",
+  "2026-10-07T01:33:32-07:00 verdict SS +42.31 / FF -11.62 / DRC 0 / checks failed [] -> NOT CLOSED",
+  "2026-10-07T01:34:21-07:00 hold-only miss (SS +42.31 / FF -11.62, DRC 0): post-route hold ECO launched on /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base/5_2_route.odb",
+  "2026-10-07T01:51:09-07:00 hold ECO MISS: no result (rc=9)",
+  "2026-10-07T01:52:51-07:00 NEEDS_RTL: SS 42.31 / FF -11.62 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+ ],
+ "updated": "2026-10-07T01:52:51-07:00",
+ "wait": null,
+ "host": "ot-epyc3",
+ "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe",
+ "commit_full": "501831f78adb7dcacbd1c881a3bf40fd6073bc93",
+ "stage_key": "summary",
+ "stage_tag": "summary.a2",
+ "stage_started": "2026-10-07T01:51:13-07:00",
+ "unreachable": 0,
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 897,
+    "mean": 382.0,
+    "min": 370.8,
+    "max": 392.1
+   },
+   "all": {
+    "n": 11231,
+    "mean": 381.4,
+    "min": 370.3,
+    "max": 392.1
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 897,
+    "mean": 245.7,
+    "min": 237.1,
+    "max": 253.6
+   },
+   "all": {
+    "n": 11231,
+    "mean": 245.1,
+    "min": 237.0,
+    "max": 253.6
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 382,
+   "CK_SS_ALL_MEAN": 381,
+   "CK_SS_MIN": 371,
+   "CK_SS_ALL_MIN": 370,
+   "CK_SS_MAX": 392,
+   "CK_SS_ALL_MAX": 392,
+   "CK_FF_MEAN": 246,
+   "CK_FF_ALL_MEAN": 245,
+   "CK_FF_MIN": 237,
+   "CK_FF_ALL_MIN": 237,
+   "CK_FF_MAX": 254,
+   "CK_FF_ALL_MAX": 254
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "metrics": {
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs/logs/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base/5_2_route.json"
+  ],
+  "ss_ps": 42.31,
+  "ff_ps": -11.62,
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs",
+  "errors": [],
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ],
+  "drc": 0
+ },
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "failed_checks": [],
+ "eco": {
+  "tried": true,
+  "rb": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base",
+  "ob": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base",
+  "out": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/cl/eco-r2",
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ],
+  "pre": {
+   "ss_ps": 42.31,
+   "ff_ps": -11.62
+  },
+  "started": "2026-10-07T01:34:17-07:00",
+  "result": null
+ },
+ "reason": "SS 42.31 / FF -11.62 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)",
+ "eco_history": [
+  {
+   "tried": true,
+   "rb": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base",
+   "ob": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/routes/s81ph_dsfd_capt_x_501831f78_safe/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe/base",
+   "out": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/cl/eco",
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ],
+   "pre": {
+    "ss_ps": 42.31,
+    "ff_ps": -11.62
+   },
+   "started": "2026-10-06T22:51:44-07:00",
+   "result": {
+    "ss_ps": 8.4,
+    "ff_ps": -2.95,
+    "drc": 0,
+    "cells_added": 7423,
+    "errors": []
+   }
+  }
+ ],
+ "errors": []
+}

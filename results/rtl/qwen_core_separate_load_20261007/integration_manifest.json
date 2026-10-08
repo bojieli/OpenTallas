@@ -1,0 +1,111 @@
+{
+  "schema": "qwen.core.separate_load.integration_manifest.v1",
+  "files": {
+    "tools/qwen_core_separate_load.py": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/tools/qwen_core_separate_load.py",
+      "sha256": "0eec15b60cf04f3946e11178a177bca2eb6cb5616d433bce6763f9246da7213c"
+    },
+    "tools/qwen_core_opaque_interfaces.py": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/tools/qwen_core_opaque_interfaces.py",
+      "sha256": "be87ea39dd09c3a2436f063af8957efe5130df30c4058754d9060f416dd6c553"
+    },
+    "tools/qwen_core_separate_load_prepare.py": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/tools/qwen_core_separate_load_prepare.py",
+      "sha256": "0a801c369fbb6a202d3ae49c7ef86077596327ca8fa6ec911fc34b1e7a1f30df"
+    },
+    "tools/qwen_core_separate_load_gate.py": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/tools/qwen_core_separate_load_gate.py",
+      "sha256": "0a057eb410f0095b1599e4cb51c20a09430a6fdc0453bffc3b7d487a8c6da68c"
+    },
+    "physical/qwen_die_masters/jobs/route_core_separate_load.sh": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/route_core_separate_load.sh",
+      "sha256": "5db830da1fd9af5f5bb45219c3a64dbb41d9e7b3c89fe1276b8367d3a55d4312"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/opaque_boundary_rejection.json": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/opaque_boundary_rejection.json",
+      "sha256": "5feaf1761a74556b9c25b850a04e3e07e83e01ffc1422cf305955dd08f415a29"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/component_model.json": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/component_model.json",
+      "sha256": "756190f64c3fa4599d7ad3c4320772c120636f9bd3187cfb51b6723a86817bf1"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/schedule_price.json": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/schedule_price.json",
+      "sha256": "7192a1444aaa3bafb492395f509655f30887300f1da24beb35bbb53c241aedac"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/dispatch_template.json": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/dispatch_template.json",
+      "sha256": "2a90f0bbc3a9ab550fc0c2fdbca4bf564241489e7ade7ea5b0acf5d6d249ae16"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_source_transform.json": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/full_source_transform.json",
+      "sha256": "bce3ca29a1a3b70488abd52ba1344dd56b603af15fed2624e8ad0ac3983d670a"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_interface_gate/result.json": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/portable_gate_r2/result.json",
+      "sha256": "19ef574e65c6600d7ba474b2b7709ade4446c25288d1dd6999aa93d8de85f41a"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_interface_gate/full_s0_n0.log": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/portable_gate_r2/full_s0_n0.log",
+      "sha256": "0fcdbe67c739c87d9e02d35465560b05393ecd5faca7b6204dd236793d84eb67"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_interface_gate/full_s1_n0.log": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/portable_gate_r2/full_s1_n0.log",
+      "sha256": "0fcdbe67c739c87d9e02d35465560b05393ecd5faca7b6204dd236793d84eb67"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_interface_gate/full_s0_n1.log": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/portable_gate_r2/full_s0_n1.log",
+      "sha256": "cd6edc6fd3d40877c7ef318e77beff0c04ca17af2f542d6b67ce2037c3cb35e1"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_interface_gate/full_s0_n0.compile.log": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/portable_gate_r2/full_s0_n0.compile.log",
+      "sha256": "9cd7a0ffb6124cd02c14f65c18cb4b27a633e3a75c7a2a98b7c9033d76045253"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_interface_gate/full_s1_n0.compile.log": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/portable_gate_r2/full_s1_n0.compile.log",
+      "sha256": "9cd7a0ffb6124cd02c14f65c18cb4b27a633e3a75c7a2a98b7c9033d76045253"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_interface_gate/full_s0_n1.compile.log": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/portable_gate_r2/full_s0_n1.compile.log",
+      "sha256": "9cd7a0ffb6124cd02c14f65c18cb4b27a633e3a75c7a2a98b7c9033d76045253"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_interface_gate/full0/opaque_width_gate.json": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/portable_gate_r2/full0/opaque_width_gate.json",
+      "sha256": "820cb070f2058f13af154606ce458898348c7bef7adfefbfa16d7c845540cda9"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_interface_gate/full0/opaque_header_pins.json": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/portable_gate_r2/full0/opaque_header_pins.json",
+      "sha256": "fbd3e777db55a42d8e6b3679bee0d24e972e005451924df2ecb17f3c25c9c236"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_interface_gate/full1/opaque_width_gate.json": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/portable_gate_r2/full1/opaque_width_gate.json",
+      "sha256": "820cb070f2058f13af154606ce458898348c7bef7adfefbfa16d7c845540cda9"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/full_interface_gate/full1/opaque_header_pins.json": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/portable_gate_r2/full1/opaque_header_pins.json",
+      "sha256": "7dd6eddbf3a77c21181fcb94d7bc98640bc4d6f478c34127957918f996a935c2"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/pre_specialization_failure/full_s0_n0.log": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/pre_specialization_failure/full_s0_n0.log",
+      "sha256": "e040ea55ec11e1e8bfff6e2dbd7091c2e91bc8beb4a9f2330d275f96d1fd7c2b"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/pre_specialization_failure/full0_prepare.ys": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/pre_specialization_failure/full0_prepare.ys",
+      "sha256": "888b7a823e956563ce1bd76137b1873849da79435f9a612f975bfcf257b2260c"
+    },
+    "results/rtl/qwen_core_separate_load_20261007/pre_specialization_failure/full1_prepare.ys": {
+      "source": "/tmp/qwen-elements-restored-20261007/successor/pre_specialization_failure/full1_prepare.ys",
+      "sha256": "a1b7cb5446b08fe3f1e8545c76f27d4379613997b0b326970aa844b077becba7"
+    }
+  },
+  "model_addition": {
+    "path": "tools/uarch_model.py",
+    "functions": [
+      "qwen_core_separate_load_model",
+      "qwen_core_separate_load_schedule"
+    ],
+    "source": "/tmp/qwen-elements-restored-20261007/successor/model_addition.py"
+  },
+  "generated_RTL": "Generated by qwen_core_separate_load_prepare.py from pinned existing ctx/core emitters and candidate apply(); no prebuilt SV required",
+  "dispatch": "Template deliberately has REPLACE_WITH_INTEGRATED_COMMIT and SOURCEPIN; pin then submit through fleet admission"
+}

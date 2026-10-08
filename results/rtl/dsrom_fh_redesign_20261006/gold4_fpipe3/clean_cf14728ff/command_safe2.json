@@ -1,0 +1,27 @@
+{
+  "cwd": "/srv/opentallas-scratch/claude/tk-ds-head/codex-gold4-cf14728ff/src",
+  "argv": [
+    "python3",
+    "tools/dsrom_fused_draft_head.py",
+    "run",
+    "--capture-cut",
+    "--capture-return-extra",
+    "6",
+    "--fault-retire",
+    "--checked-permission",
+    "--margin",
+    "--safe",
+    "--safe-level",
+    "2",
+    "--fpipe-level",
+    "3",
+    "--slices",
+    "/srv/opentallas-scratch/claude/dsrom-fh-close/slices/fused-gold4",
+    "--run-dir",
+    "/srv/opentallas-scratch/claude/tk-ds-head/codex-gold4-cf14728ff/safe2",
+    "--jobs",
+    "16"
+  ],
+  "source_commit": "cf14728ffebc49d8e9bb8a50e1e074c6e789123f",
+  "source_pin_sha256": "7effbabefae25a88b6769940daccac6793d5f791ae770a0d8d6a9f3be23d66d6"
+}

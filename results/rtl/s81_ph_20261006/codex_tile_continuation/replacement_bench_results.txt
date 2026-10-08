@@ -1,0 +1,12 @@
+run_g_1.log: SUMMARY seed=1 frames/src=300 words=52352 cycles=36784 errors=0 RESULT PASS
+run_g_2.log: SUMMARY seed=2 frames/src=300 words=52999 cycles=36659 errors=0 RESULT PASS
+run_g_3.log: SUMMARY seed=3 frames/src=300 words=51815 cycles=36998 errors=0 RESULT PASS
+run_m1.log: SUMMARY seed=1 frames/src=300 words=51115 cycles=2000001 errors=36521 RESULT FAIL
+run_m2.log: SUMMARY seed=1 frames/src=300 words=52369 cycles=2000001 errors=50184 RESULT FAIL
+DONE
+latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles
+latency: request rq issue -> PHY accept mean 18.73 max 151.32 cks cycles; response PHY -> rd mean 5.73 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
+TB_DSFD_CTRL PASS
+latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles
+latency: request rq issue -> PHY accept mean 18.73 max 151.32 cks cycles; response PHY -> rd mean 5.73 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
+TB_DSFD_CTRL FAIL errors=3582

@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.s81_ph.bench.v1",
+ "kind": "collector",
+ "simulator": "Verilator 5.032 on ot-epyc3 (/srv/opentallas-scratch2/claude/s81-ph/collector, rtl/dsrom_sys/s81_ph/test/run_col_bench.sh)",
+ "bench": "rtl/dsrom_sys/s81_ph/test/tb_s81ph_col.sv: golden = the UNSPLIT result image (T <= 640 words of 512 b per job, generated independently of any split); four stacks each own a subset of rows (policies: row mod 4 = the engine lane split, contiguous quarters, random owner per row = CKV owner-stack layout, all on one stack) and send header + len frames (types 1/2/3, len 0..63, opaque payload) then DONE; valid-only lanes at bubble 0 / 30 / 80 %. Checked: pace >= 2 cycles, vd rst_n, every frame bit-exact and equal to the next frame of its stack, frames whole, DONE after all frames with the job tag and OR of codes, no FAULT, VM image (address-written) == golden image; next job only after DONE",
+ "exact": {
+  "gold_s1": "PASS 40/40 jobs, 12,912 words, 2,482 frames, 0 errors",
+  "gold_s2": "PASS 40/40 jobs, 11,782 words, 1,651 frames, 0 errors",
+  "gold_s3": "PASS 40/40 jobs, 11,698 words, 1,473 frames, 0 errors"
+ },
+ "fail_closed": {
+  "fault1 overflow (700 frames on one stack)": "PASS: FAULT bit 11, no DONE after",
+  "fault2 unknown type 7": "PASS: FAULT bit 12, no DONE after",
+  "fault3 DONE tag mismatch": "PASS: FAULT bit 13, no DONE after",
+  "fault4 lane fault bit": "PASS: FAULT bit 14, no DONE after",
+  "fault5 svc fault frame": "PASS: FAULT bit 15, no DONE after"
+ },
+ "negative_controls": {
+  "mut1 OT_S81PH_COLMUT1 (a new frame may start inside another)": "FAIL as required (146 errors: data words of stack 2 out of frame from cycle 63)",
+  "mut2 OT_S81PH_COLMUT2 (DONE as soon as one stack's DONE is at its head)": "FAIL as required (DONE with 8/12 frames, image rows missing)"
+ },
+ "measured": "job 0 of gold_s1 (T 397, row mod 4, bubble 0): 409 words out in ~850 cycles = 2.08 cycles/word (PACE 2 bound)"
+}

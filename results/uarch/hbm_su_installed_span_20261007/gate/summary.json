@@ -1,0 +1,80 @@
+{
+  "schema": "opentallas.hbm.su.installed_span.gate.v1",
+  "status": "PASS",
+  "adopted": false,
+  "physical_qualified": false,
+  "full_program_join": false,
+  "model_pin": "6ca8db61b",
+  "scope": "One checked installed-span consumer with exact37bit addresses and owned return; upstream live association and fullSUprogram join remain required.",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/su/installed_span_20261007/ot_hbm_su_installed_span.sv": "18a006736675586c2ae04d8998d66ea36c7a9bd623b44e127c57987a14f2b0aa",
+    "rtl/hbm_accel/su/installed_span_20261007/tb_hbm_su_installed_span.sv": "1d84a2d77a2258c4e95a4db7e19157285f3e4b7a71321998a2a663a17ce6e088"
+  },
+  "runs": {
+    "positive": {
+      "expected_verdict_observed": true,
+      "exit_code": 0,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_installed_span",
+        "-o",
+        "/tmp/hbm-su-restore-20261007/installed_span_gate/positive/sim",
+        "/home/ubuntu/OpenTallas/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "/tmp/hbm-su-restore-20261007/installed_span_gate/positive/candidate.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/su/installed_span_20261007/tb_hbm_su_installed_span.sv"
+      ],
+      "source_sha256": "18a006736675586c2ae04d8998d66ea36c7a9bd623b44e127c57987a14f2b0aa"
+    },
+    "publication_bypass": {
+      "expected_verdict_observed": true,
+      "exit_code": 1,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_installed_span",
+        "-o",
+        "/tmp/hbm-su-restore-20261007/installed_span_gate/publication_bypass/sim",
+        "/home/ubuntu/OpenTallas/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "/tmp/hbm-su-restore-20261007/installed_span_gate/publication_bypass/candidate.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/su/installed_span_20261007/tb_hbm_su_installed_span.sv"
+      ],
+      "source_sha256": "865970868f82a09fbd61432e841a2fc646476ef3f2e6757202f67a89277ce3b1"
+    },
+    "response_owner_bypass": {
+      "expected_verdict_observed": true,
+      "exit_code": 1,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_installed_span",
+        "-o",
+        "/tmp/hbm-su-restore-20261007/installed_span_gate/response_owner_bypass/sim",
+        "/home/ubuntu/OpenTallas/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "/tmp/hbm-su-restore-20261007/installed_span_gate/response_owner_bypass/candidate.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/su/installed_span_20261007/tb_hbm_su_installed_span.sv"
+      ],
+      "source_sha256": "27eb37d33e5b954eacf26b497851028a24489d5f48f34e70b149b8758c00370c"
+    },
+    "address_truncation": {
+      "expected_verdict_observed": true,
+      "exit_code": 1,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_installed_span",
+        "-o",
+        "/tmp/hbm-su-restore-20261007/installed_span_gate/address_truncation/sim",
+        "/home/ubuntu/OpenTallas/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "/tmp/hbm-su-restore-20261007/installed_span_gate/address_truncation/candidate.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/su/installed_span_20261007/tb_hbm_su_installed_span.sv"
+      ],
+      "source_sha256": "b37040bd60893ed42bbe7e3e9c79602cbc4f09b572f9b2152119782f7bb13835"
+    }
+  }
+}

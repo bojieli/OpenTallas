@@ -1,0 +1,25 @@
+{
+  "block": "packet",
+  "top": "ot_hbm_collective_packet_fifo",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v": "682dcf8d41ea74d6a20276117ab47851fae0150cdc84862f442ea39fd38a6f01",
+    "rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo.sv": "17116e38809870495eec33c6e095893d501111a651900e9bd3e087670ecca15e"
+  },
+  "normalized_sha256": {
+    "0_ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "1_ot_sram_1r1w_256x256_m2_r2c2_bb.v": "682dcf8d41ea74d6a20276117ab47851fae0150cdc84862f442ea39fd38a6f01",
+    "2_ot_hbm_collective_packet_fifo.sv": "6def47047b937999d7d19aa5f00a08857d12136983038b04b50a7cc17935d6bf"
+  },
+  "normalization": "Replace module wildcard imports with explicit package::function references; no RTL behavior edits",
+  "command": [
+    "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys",
+    "-Q",
+    "-T",
+    "-s",
+    "/out/packet/inventory.ys"
+  ],
+  "scope": "GenericmappedFF/mux and retainedmacro inventory only; not standardcell mapping/area/clock closure",
+  "tool_version": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+  "tool_sha256": "5cd52bc790d39b1e59a88112e9132ef8de338c2a26e4b0df8222d937e65bab92"
+}

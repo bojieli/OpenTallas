@@ -1,0 +1,52 @@
+{
+  "status": "II1_REFILL_CANDIDATE_NOT_ADOPTED",
+  "width": 545,
+  "depth": 64,
+  "replicas": 16,
+  "implementation": "Encoded dual-clock flop storage, protected local pointers/head reused from W2; registered Gray/complement rails through2sync stages",
+  "payload_bits": 558080,
+  "encoded_storage_bits": 663552,
+  "protected_banks_bits_per_fifo": 1872,
+  "protected_banks_failure_rails_per_fifo": 6,
+  "gray_rails_bits_per_fifo": 84,
+  "ports": {
+    "write_bits_per_wclk": 648,
+    "read_capture_bits_per_rclk": 648,
+    "read": 1,
+    "write": 1
+  },
+  "compute": {
+    "macs_per_cycle": 0,
+    "encode_slices": 9,
+    "head_check_slices": 9
+  },
+  "normal_timing": {
+    "read_initiation_interval": 1,
+    "empty_start_capture_plus_validate_cycles": 2,
+    "gray_sync_stages": 2,
+    "credit_return": "readpointer only upon acceptedpop; no same-cycle creditreuse"
+  },
+  "fault_timing": "singleerror repair holds bank for fivephase sequence per faultyword; no guessed finite latency on incoherent CDC rails",
+  "boundary": {
+    "core_period_ps": 833.333333,
+    "link_period_ps": 833.333333,
+    "relationship": "asynchronous",
+    "reset": "coordinated coldPOR, independent asyncassert/syncrelease from actual die entry; no unilateral runtime reset"
+  },
+  "area": "flopcount sized above; SS/FFcell mapping/area/floorplan pending, no2mm\u00b2fit claim",
+  "composed_cost": "Retains2empty-startreadcycles, removes2bubbles per sustainedlaterpop versusII3. Native endpoint latency/calendars unmeasured.",
+  "routing": "545payload bits +Gray/complement28bits across two clockregions per FIFO; physicalroute length/track capacity pending",
+  "predecessor": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv AW3 implementation preserved",
+  "adoption_gates": [
+    "independentclock full64depth exactness",
+    "storage/pointer/rail corruption",
+    "coordinatedreset/drain",
+    "fullnativeTU creditcapacity/latency",
+    "contextualmacro/cell SS/FF physical closure"
+  ],
+  "additional_state_bits": 0,
+  "new_logic": "Nextbinary/Gray pointer availability check and captureaddressselect; pop/refill loads nextencodedword into sameprotectedhead bank, CE/UE permissionsremain failclosed",
+  "service_contract": "II1 only for continuously available fault-free words and readyconsumer; correction pauses and empty startup explicitlypriced",
+  "actual_credit_producer": "Separate acknowledged grant/retirement protocol stillrequired; II1 is not substitute for finiteadvertisedcredits",
+  "physical_risk": "64:1encodedreadmux +captureaddress/path checks; actualSS/FFmapping required beforeclaimingII1clockclosure"
+}

@@ -1,0 +1,58 @@
+OT_ROUTE_HOLD_CORNERS=primary: place-and-route repair corners WC,BC -> WC (FF hold: post-route hold ECO; sign-off unchanged)
+FAILED: FlowError: ORFS place-and-route through cts failed with exit 2:
+|   0.1342 |  9.564174e+03 |   +0.73% |  2.94e-05 |      
+      450 |   0.1205 |  9.582349e+03 |   +0.19% |  4.33e-05 |      
+      460 |   0.1119 |  9.213180e+03 |   -3.85% |  6.37e-05 |      
+      470 |   0.1041 |  9.299662e+03 |   +0.94% |  9.39e-05 |      
+      478 |   0.0995 |  9.434536e+03 |          |  1.33e-04 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 478
+[INFO GPL-1002] Placed Cell Area              739.4680
+[INFO GPL-1003] Available Free Area         31594.7725
+[INFO GPL-1004] Minimum Feasible Density        0.0300 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0260
+[INFO GPL-1008]     - For 80% usage of free space: 0.0293
+[INFO GPL-1009]     - For 50% usage of free space: 0.0468
+[INFO GPL-1014] Final placement area: 739.47 (+0.00%)
+Design area 759 um^2 2% utilization.
+write_db /work/results/asap7/opentallas_ot_ha2_truecredit_tx_phys_asap7_ha2_tc_tx/base/3_1_place_gp_skip_io.odb
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_1_place_gp_skip_io      .odb            3            250 3ed3df2daba1840b24b4
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement
+Running io_placement.tcl, stage 3_2_place_iop
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_ot_ha2_truecredit_tx_phys_asap7_ha2_tc_tx/base/3_1_place_gp_skip_io.odb
+read_sdc /work/results/asap7/opentallas_ot_ha2_truecredit_tx_phys_asap7_ha2_tc_tx/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+place_pins -hor_layers M4 -ver_layers M5
+Found 0 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[INFO PPL-0001] Number of available slots 18276
+[INFO PPL-0002] Number of I/O             2254
+[INFO PPL-0003] Number of I/O w/sink      2254
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 26656.92 um.
+Design area 759 um^2 2% utilization.
+write_db /work/results/asap7/opentallas_ot_ha2_truecredit_tx_phys_asap7_ha2_tc_tx/base/3_2_place_iop.odb
+source /work/hooks/post_io_placement_tx_pins.tcl
+Error: io_placement.tcl, 23 Truecredit expected2254 pin boxes, got2268
+
+Elapsed time: 0:01.06[h:]min:sec. CPU time: user 0.99 sys 0.07 (99%). Peak memory: 216932KB.
+Elapsed time: 0:01.87[h:]min:sec. CPU time: user 1.99 sys 0.13 (113%). Peak memory: 237012KB.
+Elapsed time: 0:01.16[h:]min:sec. CPU time: user 1.10 sys 0.05 (99%). Peak memory: 210028KB.
+Elapsed time: 0:01.10[h:]min:sec. CPU time: user 1.04 sys 0.06 (99%). Peak memory: 209144KB.
+Elapsed time: 0:01.46[h:]min:sec. CPU time: user 1.39 sys 0.07 (99%). Peak memory: 226312KB.
+Elapsed time: 0:03.02[h:]min:sec. CPU time: user 15.62 sys 0.07 (518%). Peak memory: 256724KB.
+Elapsed time: 0:01.18[h:]min:sec. CPU time: user 1.12 sys 0.06 (99%). Peak memory: 227008KB.
+make[1]: *** [Makefile:495: do-3_2_place_iop] Error 1
+make: *** [Makefile:495: /work/results/asap7/opentallas_ot_ha2_truecredit_tx_phys_asap7_ha2_tc_tx/base/3_2_place_iop.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_04491da6c/routes/ha2_truecredit_tx_04491da6c_cal/physical.json

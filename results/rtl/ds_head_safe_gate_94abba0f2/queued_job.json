@@ -1,0 +1,58 @@
+{
+ "name": "dshead-top-safe-94abba0f2",
+ "block": "ot_hdc_v41_fh_head_top",
+ "owner": "Claude:tk-ds-head (fused-head design agent)",
+ "purpose": "DS ROM head SAFE view (top) per owner SAFE directive 2026-10-06: route 730 ps, sign-off 833.333, IO at the calibrated insertion (resubmitted: b529ca8c9 job cancelled at calibrate for the guard_busy in-flight fix)",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 60,
+ "source": {
+  "branch": "claude/takeover-ds-head-20261006",
+  "commit": "94abba0f265ba94883fd4618fb007448902dedc8"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "bash physical/dsrom_fh_safe/cl_route.sh top {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 60
+  },
+  "route": {
+   "cmd": "bash physical/dsrom_fh_safe/cl_route.sh top {LABEL} {RUN}/routes/{LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/dsrom_fh_safe/gen/signoff_top.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [],
+  "post_sdc": [
+   "physical/dsrom_fh_safe/gen/signoff_top.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "reexport": "python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_hdc_v41_fh_head_top --post-sdc physical/dsrom_fh_safe/gen/signoff_top.sdc  --out {RUN}/routes/{LABEL}/view"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/dsrom_fh_safe/closed/top"
+  }
+ ],
+ "cycles_added": "SAFE: endpoint pin stage +1, retirement +1, receipt +1 (gold4 cost in results/rtl/dsrom_fh_redesign_20261006)",
+ "merge_target": "main",
+ "no_bench_reason": "benched outside the loop: fused head quad/top = tools/test_fh_margin.py (head_q_safe / head_q_qpin lockstep == macro_ctx + negatives; endpoint_fpipe2) and the gold4 full bench --safe (results/rtl/dsrom_fh_redesign_20261006); head element = tools/dsrom_1m_head.py bundle --ioreg 1 --safe 1 --cut 0x1ff EXACT 128/128 argmax 21946 with neg_take/neg_x inexact (needs the released checkpoint, EPYC1 only)"
+}

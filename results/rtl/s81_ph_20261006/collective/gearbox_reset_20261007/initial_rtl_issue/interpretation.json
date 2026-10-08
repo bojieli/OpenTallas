@@ -1,0 +1,5 @@
+{
+  "issue": "Initial extracted RX payload process left an obsolete second racc assignment in original control process. Simulation happened to pass because both assignments write zero on alignment loss.",
+  "fix": "Remove old assignment and make payload process sole writer; full-lane lint treats MULTIDRIVEN as error; rerun exact and negative gates on final source.",
+  "superseded_by": "Parent evidence directory r2 source SHA and logs."
+}

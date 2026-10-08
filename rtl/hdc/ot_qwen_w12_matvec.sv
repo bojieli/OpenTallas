@@ -207,8 +207,17 @@ module ot_qwen_w12_matvec_part #(
     parameter integer FAST_ISSUE = 0,
     // KV_PREP: cycles a KV-sourced op waits after its go for the pipelined per-group KV offsets (3), 0: none
     parameter integer KV_PREP = 0,
-    // MUL_LAT: the lane's BF16 product latency (5: ot_qwen_w12_bmul; 6: its product cut after the carry-save rows)
-    parameter integer MUL_LAT = 5
+    // MUL_LAT: the lane's BF16 product latency (5: ot_qwen_w12_bmul; 6: its product cut after the carry-save rows;
+    // 7: + a kept per-lane input register; 8: + the decoded operands registered)
+    parameter integer MUL_LAT = 5,
+    // WCONV = 1 (INT8_WEIGHT): the ROM port carries the weight codes already expanded to BF16 (G*W*16 bits) by
+    // the tile's ROM pipeline (ot_qwen_rom_tile_logic_w12 ROM_PIPE); values identical, the expansion moves off the
+    // capture->lane wire.  0: the original.
+    parameter integer WCONV = 0,
+    // LRST = 1: each lane group and each split-tree level takes its own kept reset copy (asserted with rst_n,
+    // released one edge later); lanes see their first valid >= 4 edges after any go, so the later release is
+    // invisible.  0: the original (rst_n everywhere).
+    parameter integer LRST = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -242,7 +251,7 @@ module ot_qwen_w12_matvec_part #(
     // Matrix weight ROM: G*W BF16 lanes, or G*W signed INT8 codes.
     output reg               wrom_re,
     output reg  [AW-1:0]     wrom_addr,
-    input  wire [G*W*((INT8_WEIGHT != 0) ? 8 : 16)-1:0] wrom_q,
+    input  wire [G*W*((INT8_WEIGHT != 0 && WCONV == 0) ? 8 : 16)-1:0] wrom_q,
     // One independent scale read per group. Row-word address is the matrix's
     // weight base plus output-row-word offset. Non-INT8 mode ties requests low.
     output reg               scale_re,
@@ -602,7 +611,15 @@ end endgenerate
             reg  [8*AW-1:0] r_part;
             wire [AW-1:0] cs_s, cs_c;
             ot_qwen_w12_csa_tree #(.W(AW), .N(8)) u_cs (.rows(r_part), .s(cs_s), .c(cs_c));
-            ot_qwen_w12_kadd #(.W(AW)) u_sum (.a(cs_s), .b(cs_c), .s(osum));
+            if (KV_PREP >= 4) begin : g_cs_reg
+                //: KV_PREP >= 4 (margin rule 2026-10-06; tile_tp4_t4 SS -18.9 ps on r_part -> 8-row CSA -> prefix sum
+                //: -> off): the two carry-save rows are registered before the kept prefix sum (offset ready after 4)
+                reg [AW-1:0] cs_s_q, cs_c_q;
+                always @(posedge clk) begin cs_s_q <= cs_s; cs_c_q <= cs_c; end
+                ot_qwen_w12_kadd #(.W(AW)) u_sum (.a(cs_s_q), .b(cs_c_q), .s(osum));
+            end else begin : g_cs_comb
+                ot_qwen_w12_kadd #(.W(AW)) u_sum (.a(cs_s), .b(cs_c), .s(osum));
+            end
             always @(posedge clk) begin
                 q_p[gq] <= qv[QW-1:0];
                 c_p[gq] <= cv[CW-1:0];
@@ -697,7 +714,7 @@ end endgenerate
     //: Memory read data is registered once as it arrives (MEM_PIPE): the
     //: weight word is 2,048 bits wide and its lanes span the whole engine, so a
     //: pin-to-lane wire gets a cycle of its own.
-    reg [GL*W*((INT8_WEIGHT != 0) ? 8 : 16)-1:0] mq_wrom;
+    reg [GL*W*((INT8_WEIGHT != 0 && WCONV == 0) ? 8 : 16)-1:0] mq_wrom;
     reg [GL*W*32-1:0] mq_kv;
     reg [GL*32-1:0]   mq_x;
     reg [GL*W*32-1:0] s2_w, s3_w;
@@ -719,7 +736,7 @@ end endgenerate
             s1_gm <= m_gm; s1b_gm <= s1_gm; s2_gm <= s1b_gm;
             mq_wrom <= wrom_q; mq_kv <= kv_q; mq_x <= x_q;
             for (l = 0; l < G * W; l = l + 1)
-                if (INT8_WEIGHT != 0)
+                if (INT8_WEIGHT != 0 && WCONV == 0)
                     s2_w[32*l +: 32] <= !s1b_gm[l / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*l +: 32] :
                                               {int8_bf16(mq_wrom[8*l +: 8]), 16'h0000};
                 else
@@ -751,6 +768,20 @@ end endgenerate
     wire [GL*W*32-1:0] sum;
     wire [G*W-1:0]    lfault;
     genvar g, gl;
+    //: LRST: kept reset copies (async assert, released one edge after rst_n): one per lane group, one per tree level
+    wire [G-1:0]  rst_g;
+    wire [LG:0]   rst_t;
+    generate if (LRST != 0) begin : g_lrst
+        (* keep *) reg [G-1:0] rg;
+        (* keep *) reg [LG:0]  rt;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin rg <= {G{1'b0}}; rt <= {(LG+1){1'b0}}; end
+            else begin rg <= {G{1'b1}}; rt <= {(LG+1){1'b1}}; end
+        end
+        assign rst_g = rg; assign rst_t = rt;
+    end else begin : g_nolrst
+        assign rst_g = {G{rst_n}}; assign rst_t = {(LG+1){rst_n}};
+    end endgenerate
     generate if (LANES) begin : g_lanes
         for (g = 0; g < G; g = g + 1) begin : g_grp
             for (gl = 0; gl < W; gl = gl + 1) begin : g_lane
@@ -761,10 +792,10 @@ end endgenerate
                 //: every product is BF16 x BF16 (weights, x rounded; BF16 KV, q and
                 //: probabilities rounded), so every lane has the small exact multiplier
                 if (MUL_LAT == 5) begin : g_legacy_mul
-                    ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(s3_v),
+                    ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_g[g]), .v(s3_v),
                                      .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 end else begin : g_candidate_mul
-                    ot_qwen_w12_bmul #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rst_n), .v(s3_v),
+                    ot_qwen_w12_bmul #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rst_g[g]), .v(s3_v),
                                      .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 end
                 // add input at c+8; the circulating sum from IL cycles earlier.
@@ -775,13 +806,13 @@ end endgenerate
                 always @(posedge clk) acc_q <= fl_first[MUL_LAT-1] ? 32'd0 : fb_pre;
                 assign acc_in = acc_q;
                 if (ACC_LAT == 5) begin : g_fadd
-                    ot_hdc_fadd u_add (clk, rst_n, vline[MUL_LAT], acc_in, prod,
+                    ot_hdc_fadd u_add (clk, rst_g[g], vline[MUL_LAT], acc_in, prod,
                                        sum[32*LI +: 32], f1);
                 end else begin : g_ladd
-                    ot_qwen_w12_ladd #(.LAT(ACC_LAT)) u_add (clk, rst_n, vline[MUL_LAT], acc_in, prod,
+                    ot_qwen_w12_ladd #(.LAT(ACC_LAT)) u_add (clk, rst_g[g], vline[MUL_LAT], acc_in, prod,
                                                        sum[32*LI +: 32], f1);
                 end
-                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*LI +: 32]), .q(fb_pre));
+                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_g[g]), .d(sum[32*LI +: 32]), .q(fb_pre));
                 assign lfault[LI] = f0 | f1;
             end
         end
@@ -816,7 +847,7 @@ end endgenerate
             localparam integer ALWAYS = PRUNE && (SMIN >= lv);
             localparam integer HOLD_TO = PRUNE ? NPG : G;      // held positions [G >> lv, HOLD_TO)
             wire [3:0] sp_sel;                      // split when the level's sums emerge
-            ot_hdc_delay #(.W(4), .D(TA)) u_sd (.clk(clk), .rst_n(rst_n), .d(split_at[4*lv-1 -: 4]), .q(sp_sel));
+            ot_hdc_delay #(.W(4), .D(TA)) u_sd (.clk(clk), .rst_n(rst_t[lv]), .d(split_at[4*lv-1 -: 4]), .q(sp_sel));
             reg  [3:0] sp_out;
             always @(posedge clk) sp_out <= sp_sel;
             assign split_at[4*lv+3 -: 4] = sp_out;
@@ -830,7 +861,7 @@ end endgenerate
             reg  [RW*W*32-1:0] lq;
             wire [GI*W*32-1:0] held;
             if (!ALWAYS && HOLD_TO > 0) begin : g_hold
-                ot_hdc_delay #(.W(HOLD_TO*W*32), .D(TA)) u_hold (.clk(clk), .rst_n(rst_n),
+                ot_hdc_delay #(.W(HOLD_TO*W*32), .D(TA)) u_hold (.clk(clk), .rst_n(rst_t[lv]),
                     .d(lvl[lv-1][HOLD_TO*W*32-1:0]), .q(held[HOLD_TO*W*32-1:0]));
                 if (HOLD_TO < GI) begin : g_hz
                     assign held[GI*W*32-1:HOLD_TO*W*32] = 0;
@@ -841,7 +872,7 @@ end endgenerate
             for (p = 0; p < PAIRS; p = p + 1) begin : g_add
                 localparam integer PW = p / W, PL = p % W;
                 wire [31:0] s_out;
-                ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_n, vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
+                ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_t[lv], vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
                                    lvl[lv-1][32*((2*PW)*W + PL) +: 32], lvl[lv-1][32*((2*PW+1)*W + PL) +: 32],
                                    s_out, pf[p]);
                 if (ALWAYS) begin : g_a

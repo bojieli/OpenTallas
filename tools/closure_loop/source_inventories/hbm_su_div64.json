@@ -1,0 +1,79 @@
+{
+  "paths": [
+    "tools",
+    "rtl"
+  ],
+  "extra_paths": [
+    "compiler/models/deepseek-v4.1-flash-reduced-v2",
+    "results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json"
+  ],
+  "required_files": [
+    "compiler/models/deepseek-v4.1-flash-reduced-v2/checkpoint_source.json",
+    "compiler/models/deepseek-v4.1-flash-reduced-v2/config.json",
+    "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+    "compiler/models/deepseek-v4.1-flash-reduced-v2/tokenizer.json",
+    "compiler/models/deepseek-v4.1-flash-reduced-v2/tokenizer_config.json",
+    "results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json",
+    "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+    "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_vec_lane_c12.sv",
+    "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_vec_side_c12.sv",
+    "rtl/hdc/ot_hdc_cg.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_delay_ring.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "rtl/hdc/v41/ot_hdc_fdiv64.sv",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv",
+    "rtl/hdc/v41/ot_hdc_softplus.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/test/hdc_v41_harness.cpp",
+    "rtl/test/tb_hbm_su_div64_sfu.sv",
+    "rtl/test/tb_hdc_v41x_vec_c12.sv",
+    "rtl/test/tb_hdc_v41x_vec_fields.svh",
+    "tools/closure_loop/prepare_su_vehicle.py",
+    "tools/closure_loop/source_archive.py",
+    "tools/closure_loop/source_inventories/hbm_su_div64.json",
+    "tools/hbm_su_c12.py",
+    "tools/hbm_su_div64.py",
+    "tools/hdc_golden.py",
+    "tools/hdc_golden_v41.py",
+    "tools/hdc_isa_v41.py",
+    "tools/hdc_program_v41.py",
+    "tools/rtl_hdc_v41x_vec_campaign.py"
+  ],
+  "runtime_files": [
+    {
+      "path": "/srv/opentallas-scratch2/scratch/claude/hbm-su/src/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors",
+      "sha256": "f96ae55457396bc881ee592f7f7eb66d6f510b6be76faf40dca9a5629c0fa74d"
+    }
+  ],
+  "runtime_environment": {
+    "OPENTALLAS_BUILD": "/srv/opentallas-scratch2/scratch/claude/hbm-su/src/build"
+  },
+  "scope": "SU random/vehicle declared inventory including actual prompt oracle. Before RTL compile, execute prepare_argv under measured target admission: validates runtime checkpoint and Python packages, then runs campaign vehicle_records including golden prefill. Checkpoint remains external.",
+  "runtime_python_packages": {
+    "numpy": null,
+    "tokenizers": "0.22.2"
+  },
+  "prepare_argv": [
+    "python3",
+    "tools/closure_loop/prepare_su_vehicle.py",
+    "--inventory",
+    "tools/closure_loop/source_inventories/hbm_su_div64.json",
+    "--out",
+    "FRESH_OUTPUT.json"
+  ]
+}

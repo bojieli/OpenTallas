@@ -1,0 +1,87 @@
+{
+  "name": "qfd_ctrl_pc_14-05c13a84a",
+  "block": "qfd_ctrl_pc_14",
+  "owner": "Codex:qwen-kvctrl",
+  "purpose": "Qwen original full-feature JEDEC PC14, WR_EN1 WQ4 PULLIN0, packet credit boundary and equal registered PHY outputs. Does not include whole qfd_ctrl payload/landing service. Functional1024ps, tighter physical833ps screen.",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/qwen-ctrl-kvc-final-20261007",
+    "commit": "05c13a84aeb3ff7e7e247dc53c5d6b2d1b708ed2"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "ctrl_exact",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc -P tb_qwen_ctrl_pc.PC=14 -P tb_qwen_ctrl_pc.NEG=0 -o {RUN}/bench/ctrl0 rtl/test/tb_qwen_ctrl_pc.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/ctrl0",
+        "expect": "pass",
+        "pass_regex": "^PASS ctrl_pc PC=14 reads=256 writes=16",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "ctrl_mutant",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc -P tb_qwen_ctrl_pc.PC=14 -P tb_qwen_ctrl_pc.NEG=1 -o {RUN}/bench/ctrl1 rtl/test/tb_qwen_ctrl_pc.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/ctrl1",
+        "expect": "fail",
+        "fail_regex": "^FAIL ctrl_pc",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_ctrl_pc_14 {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 16
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_ctrl_pc_14 --out {RUN}/record/views/qfd_ctrl_pc_14 --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_ctrl_pc_14.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_ctrl_pc_20261007/qfd_ctrl_pc_14-05c13a84a"
+    }
+  ],
+  "cycles_added": "Controller slice only: conservative4core cycles/layer=144cycles/token; preserves 976.5625MHz JEDEC semantics.",
+  "merge_target": "main"
+}

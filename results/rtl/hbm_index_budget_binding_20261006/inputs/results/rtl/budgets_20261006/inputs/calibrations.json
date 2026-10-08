@@ -1,0 +1,137 @@
+{
+ "dsfd_capt_ctl": {
+  "ff_max": 201,
+  "ff_mean": 181,
+  "ff_min": 159,
+  "source": "closure-loop calibrate s81ph-dsfd_capt_ctl-1df7cf9a9 (ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-1df7cf9a9)",
+  "ss_max": 288,
+  "ss_mean": 268,
+  "ss_min": 241
+ },
+ "hfd_index_q_b0": {
+  "ff_max": 840,
+  "ff_mean": 782,
+  "ff_min": 757,
+  "source": "closure-loop calibrate hbm_idxq_b0_70a27c406_b (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_70a27c406_b)",
+  "ss_max": 1254,
+  "ss_mean": 1186,
+  "ss_min": 1157
+ },
+ "hfd_index_q_b1": {
+  "ff_max": 779,
+  "ff_mean": 766,
+  "ff_min": 746,
+  "source": "closure-loop calibrate hbm_idxq_b1_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_70a27c406)",
+  "ss_max": 1154,
+  "ss_mean": 1132,
+  "ss_min": 1112
+ },
+ "hfd_index_q_b2": {
+  "ff_max": 927,
+  "ff_mean": 846,
+  "ff_min": 815,
+  "source": "closure-loop calibrate hbm_idxq_b2_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_70a27c406)",
+  "ss_max": 1402,
+  "ss_mean": 1309,
+  "ss_min": 1273
+ },
+ "hfd_index_q_b3": {
+  "ff_max": 892,
+  "ff_mean": 791,
+  "ff_min": 738,
+  "source": "closure-loop calibrate hbm_idxq_b3_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_70a27c406)",
+  "ss_max": 1298,
+  "ss_mean": 1185,
+  "ss_min": 1122
+ },
+ "hfd_index_q_b5": {
+  "ff_max": 890,
+  "ff_mean": 866,
+  "ff_min": 853,
+  "source": "closure-loop calibrate hbm_idxq_b5_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_70a27c406)",
+  "ss_max": 1354,
+  "ss_mean": 1324,
+  "ss_min": 1310
+ },
+ "hfd_svc_SE_s0": {
+  "ff_max": 766,
+  "ff_mean": 694,
+  "ff_min": 665,
+  "source": "closure-loop calibrate hbm_svc_SE_s0_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_70a27c406)",
+  "ss_max": 1135,
+  "ss_mean": 1057,
+  "ss_min": 1022
+ },
+ "hfd_svc_SE_s1": {
+  "ff_max": 613,
+  "ff_mean": 560,
+  "ff_min": 509,
+  "source": "closure-loop calibrate hbm_svc_SE_s1_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_70a27c406)",
+  "ss_max": 944,
+  "ss_mean": 879,
+  "ss_min": 820
+ },
+ "hfd_svc_SE_s2": {
+  "ff_max": 622,
+  "ff_mean": 476,
+  "ff_min": 449,
+  "source": "closure-loop calibrate hbm_svc_SE_s2_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s2_70a27c406)",
+  "ss_max": 961,
+  "ss_mean": 758,
+  "ss_min": 727
+ },
+ "hfd_svc_SE_s3": {
+  "ff_max": 897,
+  "ff_mean": 598,
+  "ff_min": 543,
+  "source": "closure-loop calibrate hbm-svc-SE_s3-fb5bc706e-b (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm-svc-SE_s3-fb5bc706e-b)",
+  "ss_max": 1344,
+  "ss_mean": 950,
+  "ss_min": 882
+ },
+ "hfd_svc_SE_s4": {
+  "ff_max": 661,
+  "ff_mean": 515,
+  "ff_min": 450,
+  "source": "closure-loop calibrate hbm_svc_SE_s4_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s4_70a27c406)",
+  "ss_max": 998,
+  "ss_mean": 808,
+  "ss_min": 730
+ },
+ "hfd_svc_SE_s5": {
+  "ff_max": 654,
+  "ff_mean": 525,
+  "ff_min": 476,
+  "source": "closure-loop calibrate hbm_svc_SE_s5_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_70a27c406)",
+  "ss_max": 995,
+  "ss_mean": 829,
+  "ss_min": 771
+ },
+ "hfd_svc_SE_s6": {
+  "ff_max": 376,
+  "ff_mean": 359,
+  "ff_min": 338,
+  "source": "closure-loop calibrate hbm_svc_SE_s6_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s6_70a27c406)",
+  "ss_max": 582,
+  "ss_mean": 562,
+  "ss_min": 543
+ },
+ "hfd_svc_SE_s7": {
+  "ff_max": 556,
+  "ff_mean": 402,
+  "ff_min": 362,
+  "source": "closure-loop calibrate hbm_svc_SE_s7_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s7_70a27c406)",
+  "ss_max": 836,
+  "ss_mean": 631,
+  "ss_min": 585
+ },
+ "ot_v41_rom_elem_q_qx_w10": {
+  "ff_max": 429,
+  "ff_mean": 429,
+  "ff_min": 429,
+  "source": "Z20c q element ETM: 650 ps internal insertion (S81-RERUN 2fcb276fc); FF = 0.66 x SS (model ratio, no FF record)",
+  "ss_max": 650,
+  "ss_mean": 650,
+  "ss_min": 650
+ }
+}

@@ -7,7 +7,8 @@
            published 3.8879 as the sensitivity (tools/third_party_tau.py).
   Qwen ROM Qwen3-8B 8K (P8191): the measured STREAM4 full36+HEAD token (terminal.json, 193,955 cycles) plus the
            adopted in-context core closure's added cycles (claude_context_20261005/verdict.json) and the closed
-           slab's MUL_LAT 7 (+217/token, VERDICT_r11c.json).  KV guard: the token's MEMSTAT landing sectors must equal
+           slab's MUL_LAT 7 (+217/token, VERDICT_r11c.json) and the ADOPT+exact Qwen lever records (QWEN_LEVERS:
+           KV_MAP=1 Option M, its measured cold-layer cost; modelled costs only as a labelled sensitivity).  KV guard: the token's MEMSTAT landing sectors must equal
            the config's full FP8 window (36 x 8 x 128 x 2 x 8,192 B = 576 MiB/token), else refused.
            MTP mode = AR (DSpark verdict AR_MODE: below AR on STREAM4).
   LINKS    OWNER 2026-10-06: FULL RS(544,514) FEC on every off-package link of both machines (DS ROM: RTL-measured
@@ -47,9 +48,14 @@ sys.path.insert(0, str(ROOT / "tools"))
 RECOVERY = ROOT / "results/rtl/dsrom_recovery_20261004"
 QWEN_TERMINAL = ROOT / "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json"
 QWEN_CORE = ROOT / "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json"
-QWEN_DSPARK = ROOT / "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json"
+QWEN_DSPARK = ROOT / "results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json"  # r21 relays charged (2026-10-07)
 QWEN_SLAB = ROOT / "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json"
 QWEN_CONFIG = ROOT / "compiler/models/qwen3-8b/config.json"
+# Qwen lever records (schema opentallas.qwen-rom.lever.v1): ADOPT + exact are composed with their measured token_cost;
+# any modelled cost is reported as a labelled sensitivity, never in the headline.
+QWEN_LEVERS = [ROOT / "results/rtl/qwen_stream4_kvmap_m_20261006/lever.json"]
+QWEN_CLOSURE = ROOT / "results/rtl/qwen_rom_closed_20261006/closure.json"
+QWEN_LEVER_SCHEMA = "opentallas.qwen-rom.lever.v1"
 QWEN_P0_CAPACITY = ROOT / "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json"
 # r18g die-level routed wire bound (claude/qwen-die-rebuild-20261005 279518cd0, path_sta r18g_i50_*): NOT composed --
 # GRT i50 11,534 overflow (route not closed) and the r18 frame's tiles have the KV slice / fill port removed (KV over a
@@ -57,7 +63,12 @@ QWEN_P0_CAPACITY = ROOT / "results/rtl/qwen_rom_combined_p0_20261005/stream4_cap
 QWEN_WIRE_PENDING = dict(record="claude/qwen-die-rebuild-20261005@279518cd0 results/rtl/qwen_rom_die_r17_20261005/"
                                 "path_sta/r18g_i50_wire8k_skew{0,65}.json (STREAM4 deltas per CLAUDE QWEN-PHYS 08:29Z)",
                          penalty_cycles=dict(skew0=13305, skew65=16268), grt_overflow=11534,
-                         status="PENDING: GRT not closed; r18j spreading IO words; die KV landing path not reconciled")
+                         status="PENDING: die-top route not done (r20c GRT i50 overflow 7,972; flat and region pilots did not "
+                                "complete, results/rtl/qwen_rom_closed_20261006/closure.json); r18g bound kept as the last priced wire bound")
+# r21 die relays (OWNER ADOPT 2026-10-07: relay registers at the measured 430.56 um reach): registered die-hop stage
+# counts of the r21 floorplan against the stages the measured token RTL carries; priced on the token and COMPOSED into
+# the headline (+cycles_per_ar_token)
+QWEN_RELAYS = ROOT / "results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json"
 HBM_MATCHED = ROOT / "results/rtl/dshbm_matched_reference_20261005/composition.json"
 HBM_OPT = ROOT / "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json"
 WIRE = ROOT / "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json"
@@ -225,6 +236,20 @@ def _with_flipped(recovery: Path, td: Path, names):
 
 
 # ------------------------------------------------------------------------------------------------------ Qwen ROM
+def _qwen_relays(clk, cyc):
+    r = load(QWEN_RELAYS)
+    if not str(r.get("decision", "")).startswith("OWNER APPROVED") or r["relays"]["pitch_um"] != 430.56:
+        raise Refused(f"Qwen r21 relay record {rel(QWEN_RELAYS)} is not the owner-approved 430.56 um pricing")
+    add = int(r["cycles_per_ar_token"])
+    return add, dict(cls="adopted", verdict="ADOPT (owner 2026-10-07, die relay stations at the measured 430.56 um reach)",
+                     record=rel(QWEN_RELAYS), sha256=sha(QWEN_RELAYS), relays=r["relays"]["relays"],
+                     stages_r21=r["stages_r21"], stages_rtl=r["stages_rtl"], delta_per_me_op=r["delta_per_me_op"],
+                     delta_link_per_traversal=r["delta_link_per_traversal"], token_cycles_before=cyc,
+                     AR_tok_s_before=round(clk / cyc, 1), delta_pct=round(100 * (cyc / (cyc + add) - 1), 2),
+                     alternatives_priced=r.get("alternatives_priced"), decision=r.get("decision"),
+                     delta=dict(cycles=add, AR_tok_s=round(clk / (cyc + add) - clk / cyc, 3)))
+
+
 def qwen_rom():
     t, core, dsp = load(QWEN_TERMINAL), load(QWEN_CORE), load(QWEN_DSPARK)
     if not (t["status"] == "PASS" and t["process_exit"] == 0 and t["total_cycles"] == t["total_edges"]):
@@ -294,9 +319,36 @@ def qwen_rom():
     if int(m[2].replace(",", "")) != t["total_cycles"] + ad["added_cycles_per_token"] + slab_add:
         raise Refused(f"Qwen slab cost composed on another base: {slab['cost']}")
     cyc = t["total_cycles"] + ad["added_cycles_per_token"] + slab_add
+    # ---- Qwen lever records (KV_MAP=1 Option M, owner ADOPT 2026-10-06)
+    qlev, mod_add = {}, 0
+    for f in QWEN_LEVERS:
+        r = load(f)
+        if r.get("schema") != QWEN_LEVER_SCHEMA or r.get("verdict") not in KNOWN_VERDICTS:
+            raise Refused(f"Qwen lever record {rel(f)}: bad schema/verdict")
+        if r["verdict"] == "ADOPT" and r.get("exact") is not True:
+            raise Refused(f"Qwen lever {r['lever']}: verdict ADOPT but exact={r.get('exact')!r}")
+        if r["verdict"] != "ADOPT":
+            qlev[r["lever"]] = dict(cls="excluded", verdict=r["verdict"], record=rel(f), sha256=sha(f))
+            continue
+        add = int(r["token_cost"]["cycles_composed"])
+        mc = int(r["token_cost"].get("modelled_not_composed", {}).get("cycles", 0))
+        before = cyc
+        cyc += add
+        mod_add += mc
+        qlev[r["lever"]] = dict(cls="adopted", verdict="ADOPT (exact, %s)" % r["exactness"]["KV_MAP_1"], record=rel(f), sha256=sha(f),
+                                basis=r["token_cost"]["basis"],
+                                modelled_not_composed=r["token_cost"].get("modelled_not_composed"),
+                                delta=dict(cycles=add, AR_tok_s=round(clk / cyc - clk / before, 3)))
+    pre_relay_cyc = cyc
+    relay_add, qlev["die_relays_430um"] = _qwen_relays(clk, cyc)
+    cyc += relay_add
     ar = clk / cyc
     kv["token_average_system_TBps"] = round(kv_sys_token / (cyc / clk) / 1e12, 3)
     sp = dsp["variants"]["baseline_np4"]
+    if dsp["ar"]["token_cycles"] != cyc or dsp.get("relays", {}).get("record") != rel(QWEN_RELAYS):
+        raise Refused(f"Qwen DSpark verdict {rel(QWEN_DSPARK)} is priced on AR {dsp['ar']['token_cycles']} cycles / relays "
+                      f"{dsp.get('relays', {}).get('record')}; the composed AR token is {cyc} (stale: re-run "
+                      f"tools/qwen_rom_dspark_verdict.py --relays --ar-cycles {cyc})")
     mtp_mode = dsp["verdict"] == "AR_MODE"
     return dict(
         position=t["position"], clock_hz=clk, token_cycles_measured=t["total_cycles"],
@@ -308,17 +360,25 @@ def qwen_rom():
                 "slab_mul_lat7": dict(cls="adopted", verdict="ADOPT (closed SS60 %+.2f / FF25 %+.2f ps, 0 slew/DRC)"
                                       % (sg["SS60_setup_ps"], sg["FF25_hold_ps"]), record=rel(QWEN_SLAB),
                                       variant=slab["adopted"],
-                                      delta=dict(cycles=slab_add, AR_tok_s=round(ar - clk / (cyc - slab_add), 3)))},
+                                      delta=dict(cycles=slab_add, AR_tok_s=round(clk / (t["total_cycles"] + ad["added_cycles_per_token"]
+                                                                                      + slab_add)
+                                                                                 - clk / (t["total_cycles"] + ad["added_cycles_per_token"]), 3))),
+                **qlev},
+        modelled_sensitivity=dict(cycles=mod_add, token_cycles=cyc + mod_add, AR_tok_s=round(clk / (cyc + mod_add), 1),
+                                  note="adopted levers' MODELLED (not RTL) costs added on top of the measured headline; not a headline"),
+        physical_closure=dict(status=load(QWEN_CLOSURE)["status"], bar=load(QWEN_CLOSURE)["physical"]["bar"], record=rel(QWEN_CLOSURE),
+                              die_top_route=load(QWEN_CLOSURE)["physical"]["die_r20c"]["die_top_route"]["status"]),
         kv_traffic=kv,
         pending_not_composed=dict(r18g_die_wire_bound=dict(
-            **QWEN_WIRE_PENDING, bound_tok_s=dict(skew0=round(clk / (cyc + 13305), 1), skew65=round(clk / (cyc + 16268), 1)))),
+            **QWEN_WIRE_PENDING, superseded_by="levers.die_relays_430um (registered relays replace the unregistered-wire bound)",
+            bound_tok_s=dict(skew0=round(clk / (pre_relay_cyc + 13305), 1), skew65=round(clk / (pre_relay_cyc + 16268), 1)))),
         token_cycles=cyc, AR_us=round(cyc / clk * 1e6, 3), AR_tok_s=round(ar, 1),
         MTP_mode="AR (DSpark OFF)" if mtp_mode else "DSpark", MTP_tok_s=round(ar, 1) if mtp_mode else sp["tok_s_upper"],
         dspark_reference=dict(tok_s=sp["tok_s_upper"], speedup_vs_ar=sp["speedup_vs_ar_upper"], tau=sp["tau"],
                               verdict=dsp["verdict"], record=rel(QWEN_DSPARK)),
         physical_qualified_full_system=False,
-        inputs={rel(p): sha(p) for p in (QWEN_TERMINAL, QWEN_CORE, QWEN_DSPARK, QWEN_SLAB, QWEN_CONFIG,
-                                          QWEN_TERMINAL.parent / "runtime.log", QWEN_P0_CAPACITY)})
+        inputs={rel(p): sha(p) for p in (QWEN_TERMINAL, QWEN_CORE, QWEN_DSPARK, QWEN_SLAB, QWEN_CONFIG, QWEN_RELAYS,
+                                          QWEN_TERMINAL.parent / "runtime.log", QWEN_P0_CAPACITY, QWEN_CLOSURE, *QWEN_LEVERS)})
 
 
 # ---------------------------------------------------------------------------------------------------------- HBM
@@ -426,6 +486,11 @@ def table(rec):
     L.append(f"{'  KV (all 36 layers, FP8, in token)':34s} {k['MiB_system_token']:,.0f} MiB/token; landing "
              f"{k['landing_bytes_per_core_cycle_per_rank']['mean']:,.0f} B/cyc/rank = {k['achieved_TBps_per_die']['mean']} TB/s/die "
              f"({k['pct_of_4stack_peak']['mean']}% peak), exposed {k['exposed_fill_cycles_per_die']} cyc")
+    ms = q["modelled_sensitivity"]
+    L.append(f"{'  + modelled costs (not RTL)':34s} {ms['AR_tok_s']:>10,.1f} {'':>10s} {'':>11s}  "
+             f"+{ms['cycles']} cyc (KV_MAP=1 die crossbar, cold layer); not a headline")
+    pc = q["physical_closure"]
+    L.append(f"{'  physical':34s} {pc['status']}; prior Qwen bar (SS60/FF25 >= 0); die-top route {pc['die_top_route']}")
     pw = q["pending_not_composed"]["r18g_die_wire_bound"]
     L.append(f"{'  r18g die wire bound (PENDING)':34s} {pw['bound_tok_s']['skew0']:>10,.1f} {'':>10s} {'':>11s}  "
              f"65 ps skew {pw['bound_tok_s']['skew65']:,.1f}; GRT {pw['grt_overflow']:,} overflow; not a headline")
@@ -448,6 +513,9 @@ def table(rec):
         L.append(f"{'DS ROM':9s} {k:22s} {v['cls']:12s} {x['AR_us']:>9.3f} {x['AR_tok_s']:>10.1f} "
                  f"{x['MTP_step_us']:>10.3f} {x['MTP_tok_s']:>11.1f}")
     for k, v in q["levers"].items():
+        if "delta" not in v:
+            L.append(f"{'Qwen ROM':9s} {k:22s} {v['cls']:12s} {v['verdict']}")
+            continue
         L.append(f"{'Qwen ROM':9s} {k:22s} {v['cls']:12s} {'+' + str(v['delta']['cycles']) + ' cyc':>9s} "
                  f"{v['delta']['AR_tok_s']:>10.1f}")
     for k, v in h["levers"].items():

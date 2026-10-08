@@ -1,0 +1,8 @@
+{
+  "status": "EXPECTED_FAIL",
+  "errors": [
+    "cross-replica FF output alias"
+  ],
+  "original_netlist_sha256": "b2d39920bbe849b7c77d2de7744260bfead4e9883810d00df9258d395831905e",
+  "mutation": "Alias one replica1head FF QN net to replica0head FF QN"
+}

@@ -1,0 +1,16 @@
+r7_neg_s1_row_clat40/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=1769104 fin=1537869/1769053 issues=30741/30498 rejects=2846/2847 squashed=3029/2786 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+r7_neg_s1_row_clat40/run.log:EQUIV PASS
+r7_neg_s1_row_seed13/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=934670 fin=559235/934619 issues=34667/31268 rejects=2693/2598 squashed=6955/3556 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+r7_neg_s1_row_seed13/run.log:EQUIV PASS
+r7_neg_s1_row_seed21/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=928350 fin=548484/928299 issues=34092/31085 rejects=2572/2490 squashed=6380/3373 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+r7_neg_s1_row_seed21/run.log:EQUIV PASS
+r7_neg_s1_row_seed5/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=933514 fin=556644/933463 issues=34521/31242 rejects=2737/2638 squashed=6809/3530 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+r7_neg_s1_row_seed5/run.log:EQUIV PASS
+r7_neg_s1_row_seed7/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=927863 fin=547595/927812 issues=33981/31079 rejects=2523/2478 squashed=6269/3367 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+r7_neg_s1_row_seed7/run.log:EQUIV PASS
+r8_neg2_margin/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=2000050 fin=562948/0 issues=35010/972 rejects=2846/10 squashed=7298/13 committed_ok=27712/959 err=0/0 fault_cyc=0/0 mism=0
+r8_neg2_margin/run.log:EQUIV FAIL
+r8_neg2_nomargin/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=2000050 fin=562948/0 issues=35010/971 rejects=2846/10 squashed=7298/12 committed_ok=27712/959 err=0/0 fault_cyc=0/0 mism=0
+r8_neg2_nomargin/run.log:EQUIV FAIL
+r8_s1_all/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=940838 fin=562948/940787 issues=35010/31552 rejects=2846/2753 squashed=7298/3840 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+r8_s1_all/run.log:EQUIV PASS

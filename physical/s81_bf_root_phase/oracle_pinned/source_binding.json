@@ -1,0 +1,86 @@
+{
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "model_source": "results/rtl/dsrom_actual_element_prepare_20261001/model.json",
+  "files": {
+    "rtl/common/ot_prefix.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/common/ot_prefix.sv",
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+    },
+    "rtl/hdc/ot_hdc_cg.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_cg.sv",
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    "rtl/hdc/ot_hdc_fpu.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    "rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv",
+      "sha256": "49850d3745c25fb695cb586b9e9767c88bdf7398758b991cf3ab5bfc643e6c92"
+    },
+    "rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv",
+      "sha256": "226c65a86629682eae7932ab122b317f5dd6f3025ee919ca6c1c1af298bc7c1f"
+    },
+    "rtl/v41die/ot_v41_pair_w17w10.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41die/ot_v41_pair_w17w10.sv",
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bf16_lanes.sv",
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040"
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes2.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+      "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd"
+    },
+    "rtl/v41rom/ot_v41_bmul2.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bmul2.sv",
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+    },
+    "rtl/v41rom/ot_v41_bterm.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bterm.sv",
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b"
+    },
+    "rtl/v41rom/ot_v41_bterm2_w10.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e"
+    },
+    "rtl/v41rom/ot_v41_chain.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_chain.sv",
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3"
+    },
+    "rtl/v41rom/ot_v41_chain2.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_chain2.sv",
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2"
+    },
+    "rtl/v41rom/ot_v41_fadd.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_fadd.sv",
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    },
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4"
+    },
+    "rtl/v41rom/ot_v41_segtree.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_segtree.sv",
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17"
+    },
+    "rtl/v41rom/ot_v41_segtree2.sv": {
+      "path": "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_segtree2.sv",
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3"
+    }
+  }
+}

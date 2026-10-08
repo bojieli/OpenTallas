@@ -1,0 +1,33 @@
+OT_ROUTE_HOLD_CORNERS=primary: place-and-route repair corners WC -> WC (FF hold: post-route hold ECO; sign-off unchanged)
+FAILED: FlowError: ORFS place-and-route through cts failed with exit 2:
+{"allcorner_spef_evaluator": "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl", "original_sha256": "8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c", "patched_sha256": "532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d", "helper_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"}
+cp /work/constraint.sdc /work/results/asap7/opentallas_ot_s81_bf_native_root_phase_asap7_bf_root_phase_b73d54a9c_archive_cal/base/1_2_yosys.sdc
+touch -r /work/constraint.sdc /work/results/asap7/opentallas_ot_s81_bf_native_root_phase_asap7_bf_root_phase_b73d54a9c_archive_cal/base/1_2_yosys.sdc
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+mkdir -p /work/objects/asap7/opentallas_ot_s81_bf_native_root_phase_asap7_bf_root_phase_b73d54a9c_archive_cal/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb
+Running synth_odb.tcl, stage 1_synth
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef, created 1 library cells
+link_design ot_s81_bf_native_root_phase
+Took 8 seconds: link_design ot_s81_bf_native_root_phase
+read_sdc /work/results/asap7/opentallas_ot_s81_bf_native_root_phase_asap7_bf_root_phase_b73d54a9c_archive_cal/base/1_2_yosys.sdc
+Error: 1_2_yosys.sdc, 25 BF_ROOT_PHASE real kept phase clock branch is missing
+
+Elapsed time: 0:11.49[h:]min:sec. CPU time: user 11.01 sys 0.48 (99%). Peak memory: 1478956KB.
+make[1]: *** [Makefile:445: do-1_synth] Error 1
+make: *** [Makefile:445: /work/results/asap7/opentallas_ot_s81_bf_native_root_phase_asap7_bf_root_phase_b73d54a9c_archive_cal/base/1_synth.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/closure-loop/bf_root_phase_b73d54a9c_archive/routes/bf_root_phase_b73d54a9c_archive_cal/physical.json

@@ -1,0 +1,63 @@
+{
+ "schema": "opentallas.qwen_die_element_views.v1",
+ "recipe": "r20c",
+ "etm_bound": {
+  "qfd_cdc": "ot_qwen_stream4_cdc_pc r11a (exact per bit)",
+  "qfd_port_tiles_0": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_0_f1": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_1": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_1_f1": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_2": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_2_f1": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_2_f2": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_2_f3": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_3": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_3_f1": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_3_f2": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_3_f3": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_4": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_4_f1": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_5": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)",
+  "qfd_port_tiles_5_f1": "ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)"
+ },
+ "etm_generated_not_bound": [
+  "ot_qwen_rom_core r5b_f3ba (no die master carries its controller-cut ports)"
+ ],
+ "real_lib": [
+  "ot_hbm3e_phy (its own characterised .lib)"
+ ],
+ "assumed_constants": [
+  "qfd_chead_e",
+  "qfd_chead_w",
+  "qfd_cst_n",
+  "qfd_cst_s",
+  "qfd_ctrl",
+  "qfd_hub",
+  "qfd_io_collective",
+  "qfd_io_embedding_rom",
+  "qfd_io_serdes",
+  "qfd_io_ucie",
+  "qfd_io_xfifo",
+  "qfd_kvc",
+  "qfd_kvc_n",
+  "qfd_lst_c",
+  "qfd_lst_c_split",
+  "qfd_lst_h_e",
+  "qfd_lst_h_w",
+  "qfd_lst_v",
+  "qfd_lst_v_split",
+  "qfd_sp_constants_sequencer",
+  "qfd_sp_su64_sfu",
+  "qfd_sp_tree_top",
+  "qfd_sp_vector_memory",
+  "qfd_tile",
+  "qfd_tile_e"
+ ],
+ "etm_reproduces_signoff": {
+  "ot_qwen_stream4_cdc_pc r11a": "SS +25.40 / FF +10.17 (record results/rtl/qwen_stream4_cdc_20261005/r11/r11a_4face_m30/corner_sta.json: +25.4 / +10.17)",
+  "ot_qwen_slab_port_group r11c": "SS +11.47 / FF +4.20 (record r11c_456_lead2_t260_d75.corner_sta.json: +11.47 / +4.2; io_lat.sdc post-SDC)",
+  "ot_qwen_rom_core r5b_f3ba": "SS +0.87 / FF +7.12 (record routes/r5b_f3ba corner_sta_ref.json SS +0.87; io_ref.sdc post-SDC)"
+ },
+ "etm_source": "OpenSTA write_timing_model on 6_final.odb + 6_final.spef + 6_final.sdc, set_propagated_clock, + the sign-off boundary SDC; EPYC3 /srv/opentallas-scratch/claude/qwen-die-r20/etm",
+ "link_check": "r20c die.v links against qfd_etm + qfd_elements + ot_hbm3e_phy with 0 missing liberty pins (ORD-2001 = 0)"
+}

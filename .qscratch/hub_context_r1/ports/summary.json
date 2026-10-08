@@ -1,0 +1,40 @@
+{
+ "hfd_sfu": {
+  "kind": "sfu",
+  "w": 398.712,
+  "h": 5529.576,
+  "instances": 4,
+  "ports": {
+   "f_su": [
+    1024,
+    "E",
+    "input"
+   ],
+   "t_su": [
+    1024,
+    "E",
+    "output"
+   ],
+   "ck": [
+    1,
+    "E",
+    "input"
+   ],
+   "rst": [
+    1,
+    "E",
+    "input"
+   ],
+   "f_hc": [
+    1024,
+    "W",
+    "input"
+   ],
+   "t_hc": [
+    1024,
+    "W",
+    "output"
+   ]
+  }
+ }
+}

@@ -1,0 +1,218 @@
+{
+  "budgets": {
+    "input_delay_ss_ps": null,
+    "input_min_delay_ff_ps": null,
+    "output_delay_ss_ps": null,
+    "output_min_delay_ff_ps": null
+  },
+  "clocks": {
+    "core_clk": {
+      "period_ps": 833.3333333333334,
+      "port": "ck"
+    }
+  },
+  "closure_claim": false,
+  "interfaces": [
+    {
+      "adjacent_endpoint": null,
+      "bits": 1,
+      "clock_domain": "core_clk",
+      "clock_port": "ck",
+      "dir": "input",
+      "port": "ck",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": null,
+      "bits": 1,
+      "clock_domain": "async_reset",
+      "clock_port": null,
+      "dir": "input",
+      "port": "rst",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "ck",
+        "direct_quadrant": 3,
+        "edge": "rising",
+        "evidence_grade": "composition declaration only; Q3 RTL/physical receiver absent",
+        "instances": [
+          "u_stn_q0[0]",
+          "u_stn_q1[0]",
+          "u_stn_q2[0]"
+        ],
+        "master": "dsfd_svc_stn",
+        "port": "od_ev"
+      },
+      "bits": 4,
+      "clock_domain": "core_clk",
+      "clock_port": "ck",
+      "dir": "input",
+      "port": "od_v",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "ck",
+        "direct_quadrant": 3,
+        "edge": "rising",
+        "evidence_grade": "composition declaration only; Q3 RTL/physical receiver absent",
+        "instances": [
+          "u_stn_q0[0]",
+          "u_stn_q1[0]",
+          "u_stn_q2[0]"
+        ],
+        "master": "dsfd_svc_stn",
+        "port": "od_ed"
+      },
+      "bits": 2048,
+      "clock_domain": "core_clk",
+      "clock_port": "ck",
+      "dir": "input",
+      "port": "od_d",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "ck",
+        "direct_quadrant": 3,
+        "edge": "rising",
+        "evidence_grade": "composition declaration only; Q3 RTL/physical receiver absent",
+        "instances": [
+          "u_stn_q0[0]",
+          "u_stn_q1[0]",
+          "u_stn_q2[0]"
+        ],
+        "master": "dsfd_svc_stn",
+        "port": "od_er"
+      },
+      "bits": 4,
+      "clock_domain": "core_clk",
+      "clock_port": "ck",
+      "dir": "output",
+      "port": "od_r",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "by_stack": {
+          "NE": {
+            "clock": "fi0",
+            "edge": "falling",
+            "instance": "g_coNE_d0_f_coNE_1_0",
+            "master": "dsfd_stnv_514x1",
+            "port": "di0"
+          },
+          "NW": {
+            "clock": "fi0",
+            "edge": "falling",
+            "instance": "f_coNW_1",
+            "master": "dsfd_stnh_514x1",
+            "port": "di0"
+          },
+          "SE": {
+            "clock": "fi0",
+            "edge": "falling",
+            "instance": "g_coSE_d0_f_coSE_1_0",
+            "master": "dsfd_stnh_514x1",
+            "port": "di0"
+          },
+          "SW": {
+            "clock": "fi0",
+            "edge": "falling",
+            "instance": "f_coSW_1",
+            "master": "dsfd_stnh_514x1",
+            "port": "di0"
+          }
+        },
+        "evidence_grade": "exact v6 die-netlist connection; tile-to-slab assembly and routed timing remain open"
+      },
+      "bits": 514,
+      "clock_domain": "core_clk",
+      "clock_port": "ck",
+      "dir": "output",
+      "port": "od",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "by_stack": {
+          "NE": {
+            "clock": "fi0",
+            "edge": "falling",
+            "instance": "g_coNE_d0_f_coNE_1_0",
+            "master": "dsfd_stnv_514x1",
+            "port": "fi0"
+          },
+          "NW": {
+            "clock": "fi0",
+            "edge": "falling",
+            "instance": "f_coNW_1",
+            "master": "dsfd_stnh_514x1",
+            "port": "fi0"
+          },
+          "SE": {
+            "clock": "fi0",
+            "edge": "falling",
+            "instance": "g_coSE_d0_f_coSE_1_0",
+            "master": "dsfd_stnh_514x1",
+            "port": "fi0"
+          },
+          "SW": {
+            "clock": "fi0",
+            "edge": "falling",
+            "instance": "f_coSW_1",
+            "master": "dsfd_stnh_514x1",
+            "port": "fi0"
+          }
+        },
+        "evidence_grade": "exact v6 die-netlist connection; tile-to-slab assembly and routed timing remain open"
+      },
+      "bits": 1,
+      "clock_domain": "forwarded_core_clk_inverted",
+      "clock_port": "ck",
+      "dir": "output",
+      "port": "of",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    },
+    {
+      "adjacent_endpoint": {
+        "clock": "ck",
+        "edge": "rising",
+        "evidence_grade": "tiled RTL composition",
+        "instance": "u_io.u_ad",
+        "master": "dsfd_svcio_ad",
+        "port": "fi"
+      },
+      "bits": 1,
+      "clock_domain": "core_clk",
+      "clock_port": "ck",
+      "dir": "output",
+      "port": "bad",
+      "receiver_clock_arrival_ps": null,
+      "timing_ready": false
+    }
+  ],
+  "master": "dsfd_svcio_od",
+  "not_drop_in_budget_sdc": true,
+  "output_clock_relation": "ck rising -> inverted of falling -> receiver fi0 falling",
+  "policy": {
+    "accept_ff_ps": 15,
+    "accept_ss_ps": 15,
+    "hold_io_ps": 50,
+    "hold_uncertainty_ps": 25,
+    "setup_uncertainty_ps": 60
+  },
+  "reason": "Unknown actual receiver clock/wire/slew, not zero; no SDC may be generated from this sheet",
+  "schema": "opentallas.s81.boundary_sheet.v1",
+  "status": "BLOCKED_RECEIVER_TIMING",
+  "timing_ready": false
+}

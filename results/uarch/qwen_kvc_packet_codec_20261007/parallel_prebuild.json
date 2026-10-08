@@ -1,0 +1,9 @@
+{
+  "model_before_RTL": true,
+  "candidate": "parallel-XOR-matrixCRC",
+  "payload_fields_and_polynomial": "identical originalcodec",
+  "state_bits_delta": 0,
+  "cycle_delta": 0,
+  "motivation": "Production generic serial recurrence forms roughly6kMUX+6kNOT perCRC; explicitlinearGF2 form exposes balancedparity reductions.",
+  "qualification": "Fullpacketexactgate and mappedlogic comparison required; no timingpass from Boolean depth."
+}

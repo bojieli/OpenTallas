@@ -1,0 +1,35 @@
+{
+  "status": "PASS_CELL_CHARACTERIZATION_ONLY",
+  "cases": 360,
+  "drivers": [
+    "BUFx2",
+    "BUFx12f",
+    "BUFx16f",
+    "BUFx12"
+  ],
+  "HB4_counts": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "input_slew_ps": [
+    0,
+    5,
+    20
+  ],
+  "per_net_added_wire_cap_fF": [
+    0,
+    0.2,
+    0.78
+  ],
+  "not_routed": true,
+  "adopted": false,
+  "files": {
+    "sweep.py.txt": "5e51d24afe750edc27cc5993d3d5cbc9eabe343cfd9469ef079ec41907fa7512",
+    "raw_inputs_logs.tar.gz": "fee5369e7cbf06e06ee2c823fb29b5443d575a5847653069590736d7eda218f9",
+    "rows.json": "fa1e055e350d8e413617d7b516f98526b38f655a08446164f2c9a41c9bce22dc",
+    "summary.json": "1e43290cb0ed963e1b5721639b0c19bf5a8fca813e7c2a839d9f8d7f6365a852"
+  }
+}

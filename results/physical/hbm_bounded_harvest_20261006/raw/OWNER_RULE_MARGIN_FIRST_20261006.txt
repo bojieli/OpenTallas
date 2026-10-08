@@ -1,0 +1,40 @@
+OWNER RULE 2026-10-06 (supersedes minimum-change iteration): close with margin in ONE step; do not iterate one class per round.
+- On every class that has failed, or is within ~50 ps of failing, in setup at SS: add a pipeline register stage now (+1 cycle; +2 where the path crosses >= ~400 um or a macro channel). Pair each added stage with duplicated (kept) drivers on any net with >= ~64 loads, and place the register at the far end of the long wire / at the macro pin.
+- Also stage every block-crossing bus and every macro output to the next register up front. Don't wait to see it fail.
+- Pre-approved cost: <= ~2% on the headline (AR/MTP) per lever. Measure the cycle cost, record it in the lever record and recompose. If a version would exceed 2%, say so in STATUS and run it anyway alongside a leaner one.
+- Keep the current leaner routes running only if they are already past CTS; launch the margin version in parallel on other hosts NOW (3-4 variants: density / aspect / buffer budget).
+- Hold (FF) problems are not fixed by extra stages: keep handling them with the hold repair / useful-skew budget.
+- Exact bench + negative controls are still mandatory for every changed RTL before adoption.
+
+ADDENDUM (owner, 2026-10-06): block closure must SURVIVE die integration. Closing at +3 ps is not closed.
+- Sign-off target for the three hard blocks (PQ spine, PQ q-element, HBM attention tile), and for every new block view: SS setup slack >= +60 ps at the block level (route with the SDC over-constrained to ~770 ps or less, sign off at 833.333 ps). FF hold >= +15 ps.
+- Every block boundary is register-to-register: inputs captured in a flop at the input pin, outputs launched from a flop at the output pin, no logic between pin and flop. Then die-level paths are only pin-to-pin wire, which die stations can stage.
+- IO constraints budget a die clock-arrival difference of >= 150 ps against the block's measured insertion, plus a wire allowance to the nearest die station.
+- Add as many pipeline cycles as this needs. Cost <= ~2% per lever is pre-approved; above that, report and continue.
+- After block closure, run die-context STA with the real abstract (the S81 re-run for DS, the HBM abstracts die for attention) before declaring adoption.
+
+CLARIFICATION (Claude decision, 2026-10-06 ~10:40, applies to ALL blocks): the die clock-arrival IO term is 150 ps only on ports that cross a die wire to a DIFFERENT clock region. Ports between blocks in the SAME clock region use the measured region pair skew + margin (Qwen: 90 ps = 65 measured + 25). Hold is closed by hold repair under FF-corner constraints (FF insertion, 50 ps hold IO uncertainty), never with RTL registers. Never put a register inside a one-cycle loop to meet IO budgets: move the hierarchy cut so the loop stays inside one hardened block.
+
+OWNER UPDATE (2026-10-06 18:15 PT): ACCEPTANCE LINE LOWERED. A block is CLOSED at SS >= +15 ps and FF >= +15 ps at the 833.333 ps sign-off (60/25 corners), with the agreed die-clock IO budgets (150 ps inter-region, measured + margin intra-region, FF hold model) and DRC 0. The design target stays generous (route at ~770 ps), but do NOT redesign or re-route a block that already meets +15/+15. Re-check every harvested result against this line now: anything that passes is closed, so collect, export and merge it.
+
+OWNER (2026-10-06 18:20 PT): SMALLER BLOCKS. Cap hardened blocks at about 0.5-1 mm on a side, joined by registered pin-to-pin hops; split any block that fails structurally (deep clock tree, cross-block cones). SCRIPTED CLOSURE LOOP: once /tmp/claude-review-20261003/CLOSURE_LOOP_HOWTO exists, register routes there as job JSON instead of babysitting them with agents.
+
+OWNER (2026-10-06 18:25 PT): QWEN ROM IS CLOSED. Do not start or continue any Qwen ROM work: die, elements, token, KV_MAP, pilots. All Claude Qwen jobs are stopped. Focus: the DeepSeek ROM array and the HBM accelerator only.
+
+STANDARD FLOW (Claude decision, 2026-10-06 18:35): IO constraints MUST use each block's MEASURED clock insertion. Run CTS-only calibration -> measure SS/FF insertion -> regenerate the IO SDC (common/make_io_vclk_ff.sh + stn_io_min.py) -> route. A copied/assumed insertion caused 10^5 hold buffers and congestion on glue, head, BF and softmax. Recalibrating a constraint is a correctness fix, not a settings sweep.
+
+DESIGN SIMPLIFICATION RULES (Claude decision, 2026-10-06 19:00 PT; apply to EVERY non-closing block in ONE pass):
+1. EXACTNESS = TRANSACTION-LEVEL, not cycle-level. Results, ordering and fault detection must match the original exactly (numerics and token results stay mandatory), but latency MAY increase. Rewrite lockstep benches as scoreboard/transaction compares where needed, and keep the negative controls.
+2. Every block interface is latency-insensitive: registered valid/ready with a 2-slot skid, or credits. No combinational pin-to-pin path; no same-cycle cross-block handshake.
+3. Every reduction over more than 4 inputs (fault OR, all-banks AND, top-k, compare trees) gets one register level per 4-6 gate levels.
+4. Fault/veto may land 1-2 cycles later IF nothing it protects can commit in between: hold the commit (publication/retire) until the registered fault result is known. The CP's 3-edge fault latency is the precedent.
+5. Fanout > 32 gets kept replicas; every SRAM/ROM macro output gets a register at the macro; blocks <= ~1 mm; IO SDC at the measured insertion.
+Price the added cycles in each block's record; report cost per block. Don't preserve legacy same-cycle behaviour at the cost of closure.
+
+OWNER-APPROVED (2026-10-06 ~20:30 PT, CLAUDE BUDGETS): close each block against its budget sheet (results/rtl/budgets_20261006/sheets/<master>.json; tools/budgets/make_block_sdc.py; closure-loop job "budget": {"master": ...}). The calibrate stage is a CHECK against the sheet (NEEDS_BUDGET on deviation), not a re-calibration. See BUDGETS_README.md.
+
+OWNER EXCEPTION (2026-10-06 ~20:50): the Qwen ROM DIE-TOP DETAILED ROUTE is restarted (one dedicated agent). Everything else about Qwen ROM stays closed: no element redesigns, no token work.
+
+OWNER (2026-10-06 ~21:00): for die-level relay stations and wire hops, take the FASTEST path to closure: add stages/cycles die-wide with a conservative pitch (~300 um or less), rather than optimising the pitch. A performance loss of a few percent is accepted.
+
+OWNER (2026-10-06 ~21:45): the Qwen ROM die-top work is RESUMED, concurrent with DS/HBM: insert relay stations on long die wires (closed Qwen station views, ~300 um pitch, cost accepted), fix the east-seam pin funnel, then GRT -> DRT -> die STA. Qwen element redesigns are still NOT allowed.

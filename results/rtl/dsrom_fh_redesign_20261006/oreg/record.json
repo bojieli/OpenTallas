@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.dsrom.fh.ctl-oreg.v1",
+ "source": "claude/takeover-ds-head-20261006 877db779e",
+ "change": "ctl OREG=1: o_we and commit_warm launched from pin registers, computed from the retirement registers' next-edge values (fault_retire / retire_parent *_nx); r_tag / r_v / commit_id / commit_debt were already flop-launched",
+ "trigger": "ctl r6 SS +87.9 / FF -60.1: output-port hold; loop ECO stacked delay cells on commit_warm logic (SS -335.7), BUF-only retry hit RSZ-0060",
+ "cycles_added": 0,
+ "exact": "tools/test_fh_margin.py head_q_oreg: head_q (HQ LRET SAFE2 FPIPE3 OREG) == macro_ctx lockstep, 9,000 cycles, 2,905 writes, 419 fused, 13 acks: PASS",
+ "negatives": {
+  "late_we": "FAIL lockstep 12",
+  "no_veto": "FAIL lockstep 691",
+  "warm_late": "FAIL lockstep 600"
+ },
+ "control": "head_q_ack_split (OREG=0) PASS + lret_depth / veto_skip / ep_addr FAIL",
+ "route": "closure-loop dshead-ctl-oreg-877db779e",
+ "adoption": "gated on the route verdict",
+ "oreg3": {
+  "source": "c91a967ac",
+  "change": "OREG=2: + exact subtract-free lane-address decode (ot_hdc_v41_fh_adec), 0 cycles; fixes oreg r1 SS -15.67 on wr_addr -> q_wok/address_fault",
+  "exact": {
+   "head_q_oreg2": "lockstep PASS 9,000 cyc; late_we / no_veto / warm_late FAIL",
+   "adec": "tb_fh_adec equivalence vs original decode PASS 2,400,672 checks (3 bases x 4 lanes, boundaries + 200k random); dec_low / dec_lim / dec_row FAIL"
+  },
+  "note": "head_q stimulus has no out-of-range/misaligned addresses (decode mutants passed lockstep), hence the separate decode bench",
+  "route": "closure-loop dshead-ctl-oreg3-c91a967ac",
+  "cycles_added": 0
+ }
+}

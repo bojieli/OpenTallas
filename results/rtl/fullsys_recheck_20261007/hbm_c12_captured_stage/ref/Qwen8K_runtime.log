@@ -1,0 +1,25 @@
+A 13 0
+C 21 e0 -0 -0
+C 22 e0 -0 -0
+C 23 e0 -0 -0
+C 24 e0 -0 -0
+C 76 -0 r0 -0
+C 77 -0 r0 -0
+C 78 -0 r0 -0
+C 79 -0 r0 -0
+C 188 -0 -0 s0
+A 189 1
+C 197 e1 -0 -0
+A 197 2
+C 323 e2 -0 -0
+C 324 e2 -0 -0
+C 325 e2 -0 -0
+C 326 e2 -0 -0
+C 329 -2 r1 -0
+C 378 -2 r2 -0
+C 379 -2 r2 -0
+C 380 -2 r2 -0
+C 381 -2 r2 -0
+PASS_INTEGRATED_STAGE_DRAIN position=8191 token=1a321 job=9234abcd gen=9 ops=3 held_cpl_edges=5
+END 400 ok
+- /srv/opentallas-scratch2/scratch/claude/fullsys-recheck/wt-su/rtl/test/hbm_accel/integrated_20261006/tb_hbm_integrated_su_c12.sv:277: Verilog $finish

@@ -1,0 +1,18 @@
+SCOREBOARD dir 1 flit 21 wrong
+SCOREBOARD dir 0 flit 22 wrong
+SCOREBOARD dir 0 flit 35 wrong
+SCOREBOARD dir 1 flit 34 wrong
+SCOREBOARD dir 1 flit 47 wrong
+SCOREBOARD dir 0 flit 48 wrong
+SCOREBOARD dir 0 flit 61 wrong
+SCOREBOARD dir 1 flit 60 wrong
+SCOREBOARD dir 1 flit 73 wrong
+FAULT ref 11 dut 11
+STATS cyc 2363 flits 1500/1500 tx 1801 1797 retx 301 297 replays 8 8 naks 8 8 crc_err 531
+TB_S81PH_LINK_EP FAIL errs 226
+- /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/src/rtl/dsrom_sys/s81_ph/test/tb_s81ph_link_ep.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 0.018 s; speed 123.920 us/s
+- Verilator: cpu 0.019 s on 1 threads; alloced 1018 MB
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.02
+	Maximum resident set size (kbytes): 9300

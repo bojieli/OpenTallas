@@ -1,0 +1,5 @@
+{
+  "returncode": 1,
+  "output": "FATAL: rtl/hbm_accel/collective_full_20261007/tb_packet_fifo_boundary.sv:24: full state wrong\n Time: 2540000 Scope: tb_packet_fifo_boundary",
+  "diagnosis": "Bench incorrectly required immediate head-valid when logical capacity becomes full; legal state may still have a pending SRAM capture. Correct bench waits for visible head without adding new entries."
+}

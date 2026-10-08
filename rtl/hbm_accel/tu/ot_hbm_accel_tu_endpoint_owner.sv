@@ -6,6 +6,8 @@ module ot_hbm_accel_tu_endpoint_owner #(
     parameter integer ENABLE = 0,
     parameter integer OWNER_REDUCER = 0, // default original parent
     parameter integer SLOTREG = 1,
+    parameter integer OWNER_BANKED_HALF = 0, // default off; sender/receiver credits
+    parameter integer OWNER_HUB_QAW = 6,
     parameter integer NC     = 8,
     parameter integer NOG    = 8,
     parameter integer PFMAX  = 64,
@@ -93,7 +95,7 @@ module ot_hbm_accel_tu_endpoint_owner #(
         always @* begin
             r_idx = '0; r_rd = '0;
             for (integer i = 0; i < INJ; i = i + 1)
-                if (CONTRIB && started && !context_fault && k + i < PF) begin
+                if (CONTRIB && started && !context_fault && (&hub_issue_ready) && k + i < PF) begin
                     r_rd[i] = 1'b1;           // rotated slice order: own slice last in each round
                     r_idx[16*i +: 16] = (NC == 1) ? 16'(k + i) :
                         16'(((J + 1 + 32'((k + i) % NC)) % NC) * OF + 32'((k + i) / NC));
@@ -107,12 +109,26 @@ module ot_hbm_accel_tu_endpoint_owner #(
                 if(arm)begin started<=1'b1;k<=0;end
                 else if (|r_rd) k <= k + INJ;
             end
-        wire [INJ-1:0] h_v,hub_idle;
+        wire [INJ-1:0] h_v,hub_idle,hub_raw_v,hub_issue_ready,owner_h_r;
+        wire [NPT-1:0] owner_p_r;
+        wire hub_sender_quiet,hub_sender_fault;
+        wire [INJ*(32+FW)-1:0] hub_raw_d;
         wire [INJ*(16+16+FW)-1:0] h_d;   // {injection ordinal, flit index, data}
         for (genvar i = 0; i < INJ; i = i + 1) begin : g_hub
             ot_ha2_delay_quiet #(.W(32 + FW), .D(HUBW)) u_h (.clk(clk), .rst_n(rst_n), .v_in(r_rd[i]),
-                .d_in({16'(k + i), r_idx[16*i +: 16], inj_data[FW*i +: FW]}), .quiet(hub_idle[i]), .v_out(h_v[i]),
-                .d_out(h_d[(32+FW)*i +: 32+FW]));
+                .d_in({16'(k + i), r_idx[16*i +: 16], inj_data[FW*i +: FW]}), .quiet(hub_idle[i]), .v_out(hub_raw_v[i]),
+                .d_out(hub_raw_d[(32+FW)*i +: 32+FW]));
+        end
+
+        if(OWNER_BANKED_HALF && NC>1)begin:g_hub_credit
+          initial if((1<<OWNER_HUB_QAW)<HUBW+2)$fatal(1,"HA2 hub credits do not cover flight");
+          ot_ha2_hub_credit_sender #(.W(32+FW),.INJ(INJ),.AW(OWNER_HUB_QAW)) u_sender
+            (.clk(clk),.rst_n(rst_n),.issue_v(r_rd),.arrival_v(hub_raw_v),
+             .arrival_data(hub_raw_d),.receiver_ready(owner_h_r),.issue_ready(hub_issue_ready),
+             .send_v(h_v),.send_data(h_d),.quiet(hub_sender_quiet),.fault(hub_sender_fault));
+        end else begin:g_hub_legacy
+          assign h_v=hub_raw_v;assign h_d=hub_raw_d;assign hub_issue_ready='1;
+          assign hub_sender_quiet=1;assign hub_sender_fault=0;
         end
 
         // ================= per-port transmit queues, arbiter, switch-ingress credits ==============
@@ -213,22 +229,41 @@ module ot_hbm_accel_tu_endpoint_owner #(
         wire [15:0] r_m;wire [FW-1:0] r_d;
         wire [NPT-1:0] partial_v;
         wire [NPT*PWT-1:0] partial_flit;
+        wire [NPT-1:0] partial_raw_v;
+        wire [NPT*PWT-1:0] partial_raw_flit;
         wire [NPT-1:0] invalid_partial_port;
         wire invalid_partial=|invalid_partial_port;
         for(genvar p=0;p<NPT;p=p+1)begin:g_owner_ports
           assign invalid_partial_port[p]=!rb_empty[p]&&!rb_head[p][PWT-1] &&
             (!context_bound || rb_head[p][FW+24+:8]!=RANK[7:0] ||
              rb_head[p][FW+16+:8]>=NC || rb_head[p][FW+:16]>=OF);
-          assign partial_v[p]=rb_pop[p]&&!rb_head[p][PWT-1];
-          assign partial_flit[p*PWT+:PWT]=rb_head[p];
+          assign partial_raw_v[p]=rb_pop[p]&&!rb_head[p][PWT-1];
+          assign partial_raw_flit[p*PWT+:PWT]=rb_head[p];
         end
-        if(NC>1)begin:g_owner
+        if(OWNER_BANKED_HALF && NC>1)begin:g_peer_launch
+          reg [NPT-1:0] pv;
+          reg [NPT*PWT-1:0] pd;
+          always @(posedge clk or negedge rst_n)if(!rst_n)pv<=0;else pv<=partial_raw_v;
+          always @(posedge clk)pd<=partial_raw_flit;
+          assign partial_v=pv;assign partial_flit=pd;
+        end else begin:g_peer_legacy
+          assign partial_v=partial_raw_v;assign partial_flit=partial_raw_flit;
+        end
+        if(NC>1 && !OWNER_BANKED_HALF)begin:g_owner
+          assign owner_h_r='1;assign owner_p_r='1;
           ot_ha2_tu_owner_adapter #(.NC(NC),.NOG(NOG),.PFMAX(PFMAX),.LANES(LANES),.BF16(BF16),
             .INJ(INJ),.NPT(NPT),.LAT(LAT),.SLOTREG(SLOTREG)) u_owner
           (.clk(clk),.rst_n(rst_n),.active(context_bound&&CONTRIB&&!context_fault),.arm(arm),.rank(RANK[7:0]),.pf(PF[15:0]),
             .h_v(h_v),.h_d(h_d),.p_v(partial_v),.p_flit(partial_flit),
             .r_v(r_v),.r_m(r_m),.r_d(r_d),.dupe(dupe),.issue_o(owner_issue),.quiet(owner_quiet));
+        end else if(NC>1)begin:g_half_owner
+            ot_ha2_tu_owner_banked_half #(.NC(NC),.PFMAX(PFMAX),.LANES(LANES),.BF16(BF16),
+              .INJ(INJ),.NPT(NPT),.LAT(LAT)) u_owner
+            (.clk(clk),.rst_n(rst_n),.active(context_bound&&CONTRIB&&!context_fault),.arm(arm),.rank(RANK[7:0]),.pf(PF[15:0]),
+             .h_v(h_v),.h_d(h_d),.h_r(owner_h_r),.p_v(partial_v),.p_flit(partial_flit),.p_r(owner_p_r),
+             .r_v(r_v),.r_m(r_m),.r_d(r_d),.dupe(dupe),.issue_o(owner_issue),.quiet(owner_quiet));
         end else begin:g_gather
+          assign owner_h_r='1;assign owner_p_r='1;
           assign r_v=0;assign r_m=0;assign r_d=0;assign dupe=0;assign owner_issue=0;assign owner_quiet=1;
         end
         wire [15:0] my_gi = 16'((OG * NC + J) * ROF + {16'b0, r_m});
@@ -251,7 +286,7 @@ module ot_hbm_accel_tu_endpoint_owner #(
             rb_pop = '0; dq_own_pop = 1'b0; dv = '0;
             for (integer i = 0; i < DEL; i = i + 1) dfl[i] = '0;
             for (integer p = 0; p < NPT; p = p + 1)
-                if (!rb_empty[p] && !rb_head[p][PWT-1] && !invalid_partial_port[p]) rb_pop[p] = 1'b1;        // partials -> slots
+                if (!rb_empty[p] && !rb_head[p][PWT-1] && !invalid_partial_port[p] && owner_p_r[p]) rb_pop[p] = 1'b1;        // partials -> slots
             n = 0;
             for (integer i = 0; i < NPT + 1; i = i + 1) begin
                 src = (drot + i) % (NPT + 1);
@@ -306,7 +341,7 @@ module ot_hbm_accel_tu_endpoint_owner #(
             for (integer p = 0; p < NPT; p = p + 1)
                 anyovf = anyovf | qp_ovf[p] | qr_ovf[p] | rb_ovf[p] | rx_ovf[p] | lfault[p];
         end
-        assign fault = anyovf | dupe | context_fault;
+        assign fault = anyovf | dupe | context_fault | hub_sender_fault;
         // Positive quiet uses actual existing queue/pipe/CDC pointers and credits.
         // It is LOCAL only: shared8 matched fabric release + Dewey publication still required.
         reg [15:0] delivered_words;
@@ -320,7 +355,7 @@ module ot_hbm_accel_tu_endpoint_owner #(
         always @(posedge clk or negedge rst_n)if(!rst_n)begin phy_q1<=0;phy_q2<=0;end
           else begin phy_q1<=endpoint_quiet_phy;phy_q2<=phy_q1;end
         assign endpoint_quiet_core=(&tx_core_idle)&&(&rx_core_idle)&&(&hub_idle)&&(&delivery_idle)&&
-          dq_own_empty&&!dq_own_pop&&!(|h_v)&&!(|r_rd)&&!(|del_valid)&&!r_v&&owner_quiet&&
+          hub_sender_quiet&&!(|partial_v)&&dq_own_empty&&!dq_own_pop&&!(|h_v)&&!(|r_rd)&&!(|del_valid)&&!r_v&&owner_quiet&&
           (!context_bound || ((!CONTRIB||k>=PF)&&delivered_words==expected_words));
         assign endpoint_rearm_ready=endpoint_quiet_core&&phy_q2&&!fault;
     end

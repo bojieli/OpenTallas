@@ -15,5 +15,5 @@ add_pdn_connect -grid {top} -layers {M1 M2}
 add_pdn_connect -grid {top} -layers {M2 M5}
 add_pdn_connect -grid {top} -layers {M5 M8}
 add_pdn_connect -grid {top} -layers {M8 M9}
-define_pdn_grid -macro -cells {ot_dsrom_window_column_128 ot_dsrom_window_column_256} -halo {4 4 4 4} -voltage_domains {CORE} -name {window_columns}
+define_pdn_grid -macro -cells {ot_dsrom_window_column_128 ot_dsrom_window_column_256} -halo {2.05 2.16 2.05 2.15} -voltage_domains {CORE} -name {window_columns}
 add_pdn_connect -grid {window_columns} -layers {M6 M9}

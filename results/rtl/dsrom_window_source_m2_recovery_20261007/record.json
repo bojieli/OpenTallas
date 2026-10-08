@@ -1,0 +1,36 @@
+{
+  "status": "POSITIVE_EXACT_PASS_NEGATIVE_AND_PHYSICAL_PENDING",
+  "adopted": false,
+  "source_commit": "4f5ec6f68e6b4ee6be7bc2484eb760df7a1bba7a",
+  "matched_cases": 344,
+  "baseline_pass": 344,
+  "candidate_pass": 344,
+  "deltas": {
+    "cycles": {
+      "mean": 12.462209302325581,
+      "min": -264,
+      "max": 230
+    },
+    "la_cycles": {
+      "mean": 1.177325581395349,
+      "min": -220,
+      "max": 223
+    },
+    "last_rsp_cycles": {
+      "mean": 12.462209302325581,
+      "min": -264,
+      "max": 230
+    },
+    "stream_cycles": {
+      "mean": 12.462209302325581,
+      "min": -264,
+      "max": 230
+    },
+    "own_row_write_cycles": {
+      "mean": 39.2093023255814,
+      "min": -164,
+      "max": 607
+    }
+  },
+  "interpretation": "matched workload timing; averages are not a worst-case or full token timing credit; 4 added writer stages per command require actual model composition"
+}

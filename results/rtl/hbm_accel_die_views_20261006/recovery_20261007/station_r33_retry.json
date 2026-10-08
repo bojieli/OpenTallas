@@ -1,0 +1,16 @@
+{
+  "job": "hbm_stn_stn_r33_30f87bcc4",
+  "source_commit": "30f87bcc48a16e7ce591f2751a5afd0857dcf49c",
+  "prior_failure": "CTS RSZ-0060; 2923 hold buffers, pre-primary-corner repair infrastructure",
+  "active_instances_confirmed_by_die_coordinator": [
+    "w336_iv_SW",
+    "w340_iv_SE",
+    "w344_iv_NW",
+    "w348_iv_NE",
+    "w352_vr"
+  ],
+  "retry_at": "2026-10-07T08:33:15-07:00",
+  "retry_action": "closure_loop.py retry; daemon resumed route with deployed infrastructure",
+  "cycles_added": 0,
+  "prior_failure_preserved": true
+}

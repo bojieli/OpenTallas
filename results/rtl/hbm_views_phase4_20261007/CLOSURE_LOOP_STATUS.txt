@@ -1,0 +1,88 @@
+# CLOSURE LOOP STATUS (auto, 2026-10-07T03:50:52-07:00; daemon tools/closure_loop/closure_loop.py, unit closure-loop.service)
+Active 49 | terminal 228 | ledger /tmp/claude-review-20261003/CLOSURE_LOOP_LEDGER.md | how-to /tmp/claude-review-20261003/CLOSURE_LOOP_HOWTO.md
+
+
+## Fleet (measured load1, MemAvailable; admission: load1 + own launches of last 10 min <= 3 x cores, free RAM >= peak + max(10% RAM, 32 GB))
+- EPYC3: load1 12/128 threads (idle 91%), 936 GB free of 1133, own running 7
+- EPYC1: load1 50/128 threads (idle 61%), 625 GB free of 1133, own running 17
+- EPYC2: load1 57/128 threads (idle 56%), 576 GB free of 1133, own running 16
+- PVE1: load1 7/28 threads (idle 74%), 182 GB free of 235, own running 4
+- AGIdock: load1 7/64 threads (idle 89%), 73 GB free of 125, own running 2
+
+## Active
+- bf_hitfix_3978531b5 [ot_s81_bf_native] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/bf_hitfix_3978531b5 since=2026-10-07T00:53:51-07:00 
+- code_pair_m2qd_e4ca6da7ac [ot_qwen_hbm_code_pair_margin] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/code_pair_m2qd_e4ca6da7ac since=2026-10-07T01:31:21-07:00 
+- dshead-elemA-ss-f11f3cc47 [ot_dsrom_head_elem_A] RUNNING stage=route host=PVE1 run=/srv/opentallas-scratch/claude/closure-loop/dshead-elemA-ss-f11f3cc47 since=2026-10-07T00:50:54-07:00 
+- dshead-ep-r4-cd3cbef4b [ot_hdc_v41_fh_ep_view] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/dshead-ep-r4-cd3cbef4b since=2026-10-07T02:45:38-07:00 
+- dsrom-qelem-qs3-cb92bce64 [ot_v41_rom_elem_q_qxpq_w10] RUNNING stage=route host=AGIdock run=/srv/opentallas-scratch/claude/closure-loop/dsrom-qelem-qs3-cb92bce64 since=2026-10-07T01:39:52-07:00 
+- hbm-coll-f29a13cb3 [hfd_coll] RUNNING stage=calibrate host=EPYC3 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm-coll-f29a13cb3 since=2026-10-06T22:00:20-07:00 
+- hbm-norm-engine-07750de1f [ot_hbm_norm_engine_view] RUNNING stage=calibrate host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm-norm-engine-07750de1f since=2026-10-06T21:02:31-07:00 
+- hbm-norm-engine-13ea04a58 [ot_hbm_norm_engine_view] RUNNING stage=calibrate host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm-norm-engine-13ea04a58 since=2026-10-06T21:02:40-07:00 
+- hbm_coll_4894698d3 [hfd_coll] RUNNING stage=calibrate host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_4894698d3 since=2026-10-06T22:05:43-07:00 
+- hbm_hc_quarter_01353018a [hfd_hc] RUNNING stage=route host=EPYC3 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_hc_quarter_01353018a since=2026-10-06T20:14:50-07:00 
+- hbm_idxq_b0_48529891f_r19b [hfd_index_q_b0] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b0_48529891f_r19b since=2026-10-07T01:51:08-07:00 
+- hbm_idxq_b1_48529891f [hfd_index_q_b1] SUMMARY stage=summary host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_48529891f since=2026-10-07T03:50:52-07:00 
+- hbm_idxq_b2_48529891f_r19b [hfd_index_q_b2] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b2_48529891f_r19b since=2026-10-07T01:54:38-07:00 
+- hbm_idxq_b3_48529891f_r19b [hfd_index_q_b3] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b3_48529891f_r19b since=2026-10-07T01:45:40-07:00 
+- hbm_idxq_b5_48529891f_r19b [hfd_index_q_b5] ECO stage=hold_eco host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b5_48529891f_r19b since=2026-10-07T03:37:40-07:00 
+- hbm_loader_half_4d30522ee [hfd_loader] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_loader_half_4d30522ee since=2026-10-07T02:08:29-07:00 
+- hbm_quant_0041dfda7 [hfd_quant] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_quant_0041dfda7 since=2026-10-06T20:01:24-07:00 
+- hbm_sfu_lane_67f177d39 [ot_su12_sfu] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_lane_67f177d39 since=2026-10-06T22:43:29-07:00 
+- hbm_smh_front_c_m3b_6af5cdd82 [ot_hbm_accel_smh_front_c] RUNNING stage=calibrate host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_front_c_m3b_6af5cdd82 since=2026-10-07T02:38:51-07:00 
+- hbm_smh_front_n_m3b_6af5cdd82 [ot_hbm_accel_smh_front_n] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_front_n_m3b_6af5cdd82 since=2026-10-07T02:47:21-07:00 
+- hbm_smh_tile_e_m3_fb560676a_c2 [ot_hbm_accel_smh_tile_e] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_tile_e_m3_fb560676a_c2 since=2026-10-07T02:02:50-07:00 
+- hbm_smh_tile_w_m3_fb560676a_c2 [ot_hbm_accel_smh_tile_w] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_tile_w_m3_fb560676a_c2 since=2026-10-07T02:02:59-07:00 
+- hbm_stn_mcast_r5_56a4bdb6c [hfd_mcast_r5] RUNNING stage=route host=EPYC3 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r5_56a4bdb6c since=2026-10-07T03:28:52-07:00 
+- hbm_stn_mcast_r6_46e1b48e4 [hfd_mcast_r6] RUNNING stage=route host=AGIdock run=/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r6_46e1b48e4 since=2026-10-07T01:52:45-07:00 
+- hbm_svc_SE_s0_e8b5132fb_r18b [hfd_svc_SE_s0] RUNNING stage=route host=PVE1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s0_e8b5132fb_r18b since=2026-10-06T23:49:11-07:00 
+- hbm_svc_SE_s1_e26c4446e_r18 [hfd_svc_SE_s1] RUNNING stage=route host=EPYC3 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18 since=2026-10-06T22:27:19-07:00 
+- hbm_svc_SE_s2_d6f9d25a1_bud [hfd_svc_SE_s2] RUNNING stage=route host=EPYC3 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s2_d6f9d25a1_bud since=2026-10-06T22:39:29-07:00 
+- hbm_svc_SE_s3_e8b5132fb_r18b [hfd_svc_SE_s3] RUNNING stage=route host=PVE1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s3_e8b5132fb_r18b since=2026-10-07T00:04:46-07:00 
+- hbm_svc_SE_s4_d6f9d25a1_bud [hfd_svc_SE_s4] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s4_d6f9d25a1_bud since=2026-10-06T22:36:09-07:00 
+- hbm_svc_SE_s5_e26c4446e_r18 [hfd_svc_SE_s5] RUNNING stage=route host=EPYC3 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_e26c4446e_r18 since=2026-10-06T22:23:00-07:00 
+- hbm_svc_SE_s6_41d574827_bud [hfd_svc_SE_s6] ECO_INSTALL stage=eco_install host=PVE1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud since=2026-10-07T03:49:13-07:00 
+- hbm_svc_SE_s7_d6f9d25a1_bud [hfd_svc_SE_s7] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s7_d6f9d25a1_bud since=2026-10-06T21:47:11-07:00 
+- hbm_svc_SW_s0_e8b5132fb_r18b [hfd_svc_SW_s0] RUNNING stage=route host=PVE1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s0_e8b5132fb_r18b since=2026-10-06T23:41:57-07:00 
+- hbm_svc_SW_s1_e8b5132fb_r18b [hfd_svc_SW_s1] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s1_e8b5132fb_r18b since=2026-10-06T23:02:08-07:00 
+- hbm_svc_SW_s2_d6f9d25a1_bud [hfd_svc_SW_s2] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s2_d6f9d25a1_bud since=2026-10-06T21:48:14-07:00 
+- hbm_svc_SW_s3_e26c4446e_r18 [hfd_svc_SW_s3] RUNNING stage=route host=EPYC3 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_e26c4446e_r18 since=2026-10-06T22:26:43-07:00 
+- hbm_svc_SW_s5_d6f9d25a1_bud [hfd_svc_SW_s5] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s5_d6f9d25a1_bud since=2026-10-06T21:47:19-07:00 
+- hbm_svc_SW_s6_e8b5132fb_r18b [hfd_svc_SW_s6] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s6_e8b5132fb_r18b since=2026-10-06T23:55:25-07:00 
+- hbm_svc_SW_s7_e8b5132fb_r18b [hfd_svc_SW_s7] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s7_e8b5132fb_r18b since=2026-10-06T22:33:10-07:00 
+- hbm_vm_sw_30be4c713 [hfd_vm_sw] RUNNING stage=calibrate host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/hbm_vm_sw_30be4c713 since=2026-10-07T02:17:31-07:00 
+- s81-swiglu-esum-05d995e9b [ot_dsrom_su_swiglu_lane] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/s81-swiglu-esum-05d995e9b since=2026-10-07T01:44:06-07:00 
+- s81ph-dsfd_capt_grp-fda73a869 [dsfd_capt_grp] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-fda73a869 since=2026-10-07T01:51:17-07:00 
+- s81ph-dsfd_coll_core-a53f40362 [dsfd_coll_core] RUNNING stage=calibrate host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_core-a53f40362 since=2026-10-07T03:05:07-07:00 
+- s81ph-dsfd_coll_lane_e-a53f40362 [dsfd_coll_lane_e] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-a53f40362 since=2026-10-07T03:20:58-07:00 
+- s81ph-dsfd_coll_lane_w-a53f40362 [dsfd_coll_lane_w] RUNNING stage=calibrate host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_w-a53f40362 since=2026-10-07T03:42:53-07:00 
+- s81ph-dsfd_selt_q-cd3337221-b [dsfd_selt_q] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-b since=2026-10-06T21:45:17-07:00 
+- s81ph-dsfd_selt_q2-89fd33a58-safe [dsfd_selt_q2] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q2-89fd33a58-safe since=2026-10-06T22:26:54-07:00 
+- s81ph-dsfd_vm_bg-37f7479aa [dsfd_vm_bg] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_vm_bg-37f7479aa since=2026-10-06T22:36:18-07:00 
+- s81ph-dsfd_vm_bg-936ce0365 [dsfd_vm_bg] RUNNING stage=calibrate host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_vm_bg-936ce0365 since=2026-10-07T01:23:53-07:00 
+
+## Recent terminal
+- s81ph-dsfd_svcio_ad-093da5918 [dsfd_svcio_ad] NEEDS_HUMAN calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop
+- s81ph-dsfd_svcio_ad-41c34fce0 [dsfd_svcio_ad] NEEDS_RTL SS 14.0 / FF -12.87 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)
+- s81ph-dsfd_svcio_ad-d12b194f0 [dsfd_svcio_ad] CLOSED CLOSED SS +36.93 / FF +18.49 ps DRC 0 | record claude/s81-placeholders-20261006 e4b44bc1f (13 files) | no merge target
+- s81ph-dsfd_svcio_ad-e87322073-b [dsfd_svcio_ad] NEEDS_HUMAN route crashed twice (rc=0 ok-check failed: ; resource=False)
+- s81ph-dsfd_svcio_ad-e87322073 [dsfd_svcio_ad] NEEDS_HUMAN calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop
+- s81ph-dsfd_svcio_od-093da5918 [dsfd_svcio_od] NEEDS_RTL SS 40.25 / FF 4.15 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)
+- s81ph-dsfd_svcio_od-3f0455126 [dsfd_svcio_od] NEEDS_RTL SS 33.1 / FF 3.81 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)
+- s81ph-dsfd_svcio_od-e87322073 [dsfd_svcio_od] CLOSED CLOSED SS +31.46 / FF +20.40 ps DRC 0 | record claude/s81-placeholders-20261006 61409112a (13 files) | no merge target
+- s81ph-dsfd_svcio_q-093da5918 [dsfd_svcio_q] CLOSED CLOSED SS +22.64 / FF +20.36 ps DRC 0 | record claude/s81-placeholders-20261006 e2706d313 (13 files) | no merge target
+- s81ph-dsfd_svcio_x-093da5918 [dsfd_svcio_x] CLOSED CLOSED SS +198.18 / FF +17.15 ps DRC 0 | record claude/s81-placeholders-20261006 a8cdf63f0 (13 files) | no merge target
+- s81ph-dsfd_vm_bg-34b3e75dd [dsfd_vm_bg] CANCELLED cancelled by a human
+- s81ph-dsfd_vm_bg-752a48488 [dsfd_vm_bg] CANCELLED cancelled by a human
+- s81ph-root_tile-34b3e75dd [ot_s81ph_root_tile] NEEDS_RTL SS 17.0 / FF 8.92 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)
+- s81ph-root_tile-752a48488 [ot_s81ph_root_tile] CANCELLED cancelled by a human
+- s81ph-root_tile-9037258bb [ot_s81ph_root_tile] NEEDS_RTL SS 19.4 / FF -17.22 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)
+- w2-rb-safe-no2-206a3037e [ot_hbm_native_frame_station_rb_NO2_SAFE] CANCELLED cancelled by a human
+- w2-rb-safe-no2-872c56bd4 [ot_hbm_native_frame_station_rb_NO2_SAFE] NEEDS_HUMAN route crashed twice (rc=1 ok-check failed: ; resource=False)
+- w2-rb-safe-no2-9f54fb3b9 [ot_hbm_native_frame_station_rb_NO2_SAFE] NEEDS_RTL bench_exact_gate_safe expected PASS but rc=1
+- w2-rb-safe-no2-a59036936 [ot_hbm_native_frame_station_rb_NO2_SAFE] NEEDS_HUMAN calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop
+- w2-rb-safe-no2-d108b33de-gate1 [ot_hbm_native_frame_station_rb_NO2_SAFE] NEEDS_HUMAN calibrate rsz_max_buffer: CTS timing repair hit the buffer cap (RSZ-0060): the IO SDC insertion/budget is off for this block or a net has extreme fanout -- check the IO SDC (budget/calibrated), duplic
+- w2-rb-safe-no3-206a3037e [ot_hbm_native_frame_station_rb_NO3_SAFE] CANCELLED cancelled by a human
+- w2-rb-safe-no3-872c56bd4 [ot_hbm_native_frame_station_rb_NO3_SAFE] NEEDS_HUMAN route crashed twice (rc=1 ok-check failed: ; resource=False)
+- w2-rb-safe-no3-9f54fb3b9 [ot_hbm_native_frame_station_rb_NO3_SAFE] NEEDS_RTL bench_exact_gate_safe expected PASS but rc=1
+- w2-rb-safe-no3-a59036936 [ot_hbm_native_frame_station_rb_NO3_SAFE] NEEDS_HUMAN calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop
+- w2-rb-safe-no3-d108b33de-gate1 [ot_hbm_native_frame_station_rb_NO3_SAFE] NEEDS_HUMAN calibrate rsz_max_buffer: CTS timing repair hit the buffer cap (RSZ-0060): the IO SDC insertion/budget is off for this block or a net has extreme fanout -- check the IO SDC (budget/calibrated), duplic

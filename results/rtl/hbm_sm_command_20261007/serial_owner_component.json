@@ -1,0 +1,119 @@
+{
+  "scope": "native record-reader and full NC8 operand/descriptor/retirement owner; SM consumer and external memory/allocation/result peers are component testbench models",
+  "model": {
+    "status": "prebuild_candidate",
+    "max_records": 256,
+    "MACs_per_cycle": 0,
+    "command_format": "exact existing ten little-indexed uint32 seq.hex words; no new ISA",
+    "placement": "SM-local control owner; incoming streams end in registered local capture",
+    "program_port": {
+      "request_bits": 33,
+      "response_bits": 66,
+      "payload_bytes_per_response": 4,
+      "max_outstanding": 1,
+      "record_bytes": 40
+    },
+    "allocation_port": {
+      "request_bits": 41,
+      "response_bits": 50,
+      "max_outstanding": 1,
+      "meaning": "actual selected weight-line base, not simulator line-file offset"
+    },
+    "x_port": {
+      "fragment_bits": 25216,
+      "beats_per_address": 13,
+      "data_bits_per_beat": 2048,
+      "last_beat_active_bits": 640,
+      "request_bits": 32,
+      "response_bits": 2077,
+      "bytes_per_accepted_edge": 256,
+      "queue_depth": 1
+    },
+    "SM_local_pins": {
+      "op_bits": 47,
+      "x_bits": 2063,
+      "descriptor_bits": 57,
+      "return_bits": 4
+    },
+    "storage_lower_bound_bits": {
+      "record": 320,
+      "program_address": 65,
+      "record_identity": 32,
+      "word_index": 4,
+      "operand_resident": 34,
+      "weight_base": 32,
+      "x_capture": 2063,
+      "counters": 12,
+      "state_status": 10,
+      "local_ingress_and_credit": 101
+    },
+    "total_flop_lower_bound_bits": 2673,
+    "flop_area_lower_bound_um2": 779.4468,
+    "slot_lower_bound_um2_at_55pct": 1417.176,
+    "latency": "per record 10*(request_wait + response_wait) + validate1 + allocationRTT + descriptor_wait + optional X-requestRTT + extent*13 accepted beats + capture1 + ingress/HOPS0 channel3 + real operation/arrive + actual result-publication acknowledgement; stalls measured separately",
+    "serialization": "no next record before actual arrive and matching result publication; therefore ring WAR and dependencies cannot overlap",
+    "replica_count": 32,
+    "fanout": "one local owner per selected SM; no 32-way combinational broadcast",
+    "tracks_capacity": null,
+    "slot_fit": null,
+    "admission": "not admitted; immutable pinned source/constraints and model integration required",
+    "unresolved": [
+      "program memory and actual DMA client allocation",
+      "weight allocator parent connection",
+      "result publication owner connection",
+      "mutable-state protection beyond bounds/identity",
+      "SS/FF and slot geometry"
+    ]
+  },
+  "fixture_origin": "byte-identical 130-word stress seq.hex from existing dshbm_sm_pq_seq.py recovery positive fixture; 13 original records",
+  "fixture_source": "/tmp/codex-claude-recovery-20261007/hbm-sm/gate_preflight_current/positive/stress_haz1_g0_smh_a1/seq.hex",
+  "sources": {
+    "rtl/hbm_accel/control_20261007/ot_hbm_sm_serial_owner.sv": "4a4d0ca08c4c230059f6817ad29f74e6c83ee5a3caca306d51637dc44f4e0ce5",
+    "rtl/hbm_accel/control_20261007/tb_sm_serial_owner.sv": "6ad9c59ccc32a9d6adbf610ef12fb541194c73fb07da7d1b8f0edec603b3803f",
+    "rtl/hbm_accel/control_20261007/ot_hbm_sm_seq_ingress.sv": "e82c301542110021daecc1ce6bb5d823a598a303e9673380c1e74933d39f5271",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "results/rtl/hbm_sm_command_20261007/stress_seq.hex": "217bae8ead442cc2bce48249b909346c9fd7371f7feb5f4288cd8d7188113a92",
+    "tools/hbm_sm_serial_owner_model.py": "565ad8040c3b6eee92e20a646864f4f406d4c83f1e7c1c209f5bcea6fd20a76b",
+    "tools/hbm_sm_serial_owner_gate.py": "42126003363eb151973ec20736a1e58dc0661754e10b75dc3d64729397d75674"
+  },
+  "runs": [
+    {
+      "case": "positive",
+      "returncode": 0,
+      "output": "PASS native stress records=13 full_shape_X_captures=6448 cycles=8638\nSTATE 0 CYCLES 1\nSTATE 1 CYCLES 141\nSTATE 2 CYCLES 130\nSTATE 3 CYCLES 13\nSTATE 4 CYCLES 14\nSTATE 5 CYCLES 13\nSTATE 6 CYCLES 15\nSTATE 7 CYCLES 16\nSTATE 8 CYCLES 8057\nSTATE 9 CYCLES 12\nSTATE 10 CYCLES 13\nSTATE 11 CYCLES 210\nSTATE 12 CYCLES 1\nSTATE 13 CYCLES 0"
+    },
+    {
+      "case": "unmasked_final_beat",
+      "returncode": 1,
+      "output": "FATAL: /tmp/hbm-sm-owner-aqdczabw/tb.sv:104: full-shape X capture mismatch op=0 beat=12\n       Time: 485000000000000 Scope: tb_sm_serial_owner"
+    },
+    {
+      "case": "early_retirement",
+      "returncode": 1,
+      "output": "FATAL: /tmp/hbm-sm-owner-aqdczabw/tb.sv:85: allocation identity/length\n       Time: 13665000000000000 Scope: tb_sm_serial_owner"
+    },
+    {
+      "case": "zero_allocated_base",
+      "returncode": 1,
+      "output": "FATAL: /tmp/hbm-sm-owner-aqdczabw/tb.sv:89: real allocated base lost\n       Time: 295000000000000 Scope: tb_sm_serial_owner"
+    },
+    {
+      "case": "bad_memory_response_address",
+      "returncode": 1,
+      "output": "FATAL: /tmp/hbm-sm-owner-aqdczabw/tb.sv:116: owner fault op=0 state=13\n       Time: 75000000000000 Scope: tb_sm_serial_owner"
+    },
+    {
+      "case": "bad_x_identity",
+      "returncode": 1,
+      "output": "FATAL: /tmp/hbm-sm-owner-aqdczabw/tb.sv:116: owner fault op=0 state=13\n       Time: 335000000000000 Scope: tb_sm_serial_owner"
+    },
+    {
+      "case": "bad_publication_identity",
+      "returncode": 1,
+      "output": "FATAL: /tmp/hbm-sm-owner-aqdczabw/tb.sv:116: owner fault op=1 state=13\n       Time: 13495000000000000 Scope: tb_sm_serial_owner"
+    }
+  ],
+  "passed": true,
+  "selected": false
+}

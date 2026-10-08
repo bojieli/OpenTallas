@@ -1,0 +1,336 @@
+{
+  "scope": "literal complete SMH port binding plus smallest native owner/north-front/descriptor transport composition. Full arithmetic, weight service, real program/allocator/result-publication providers are not simulated or physically bound.",
+  "model": {
+    "status": "candidate_floorplan_reservation_only",
+    "actual_pin_groups": {
+      "north_control": {
+        "bits": 49,
+        "center_bbox_um": [
+          1436.412,
+          1131.744,
+          1441.5,
+          1131.744
+        ],
+        "directions": {
+          "op_gs": "INPUT",
+          "start": "INPUT",
+          "start_ready": "OUTPUT"
+        }
+      },
+      "north_X": {
+        "bits": 2063,
+        "center_bbox_um": [
+          1436.988,
+          1131.744,
+          1639.452,
+          1131.744
+        ],
+        "directions": {
+          "xw_en": "INPUT"
+        }
+      },
+      "north_status": {
+        "bits": 4,
+        "center_bbox_um": [
+          1436.604,
+          1131.744,
+          1436.892,
+          1131.744
+        ],
+        "directions": {
+          "arrive": "OUTPUT",
+          "busy": "OUTPUT",
+          "release_in": "INPUT",
+          "released": "OUTPUT"
+        }
+      },
+      "south_descriptor": {
+        "bits": 58,
+        "center_bbox_um": [
+          1467.324,
+          0.096,
+          1473.2759999999998,
+          0.096
+        ],
+        "directions": {
+          "d_ready": "OUTPUT",
+          "d_valid": "INPUT"
+        }
+      },
+      "south_fault": {
+        "bits": 1,
+        "center_bbox_um": [
+          1467.9,
+          0.096,
+          1467.9,
+          0.096
+        ],
+        "directions": {
+          "fault": "OUTPUT"
+        }
+      }
+    },
+    "actual_pin_readback_sha256": "f5a2887273a4389b0b777671b964027114a3f80936df95887ff1415f5cdce494",
+    "actual_pin_source_odb_sha256": "872a47affa836ae5383756a2a51da7b33eea7828d3f5aa2fbeb8c159aaea1461",
+    "actual_pin_scope": "Actual 27-piece SM floorplan BPin geometry only; provisional component views do not qualify timing",
+    "owner": {
+      "status": "prebuild_candidate_not_adopted",
+      "baseline": {
+        "status": "prebuild_candidate",
+        "max_records": 256,
+        "MACs_per_cycle": 0,
+        "command_format": "exact existing ten little-indexed uint32 seq.hex words; no new ISA",
+        "placement": "SM-local control owner; incoming streams end in registered local capture",
+        "program_port": {
+          "request_bits": 33,
+          "response_bits": 66,
+          "payload_bytes_per_response": 4,
+          "max_outstanding": 1,
+          "record_bytes": 40
+        },
+        "allocation_port": {
+          "request_bits": 41,
+          "response_bits": 50,
+          "max_outstanding": 1,
+          "meaning": "actual selected weight-line base, not simulator line-file offset"
+        },
+        "x_port": {
+          "fragment_bits": 25216,
+          "beats_per_address": 13,
+          "data_bits_per_beat": 2048,
+          "last_beat_active_bits": 640,
+          "request_bits": 32,
+          "response_bits": 2077,
+          "bytes_per_accepted_edge": 256,
+          "queue_depth": 1
+        },
+        "SM_local_pins": {
+          "op_bits": 47,
+          "x_bits": 2063,
+          "descriptor_bits": 57,
+          "return_bits": 4
+        },
+        "storage_lower_bound_bits": {
+          "record": 320,
+          "program_address": 65,
+          "record_identity": 32,
+          "word_index": 4,
+          "operand_resident": 34,
+          "weight_base": 32,
+          "x_capture": 2063,
+          "counters": 12,
+          "state_status": 10,
+          "local_ingress_and_credit": 101
+        },
+        "total_flop_lower_bound_bits": 2673,
+        "flop_area_lower_bound_um2": 779.4468,
+        "slot_lower_bound_um2_at_55pct": 1417.176,
+        "latency": "per record 10*(request_wait + response_wait) + validate1 + allocationRTT + descriptor_wait + optional X-requestRTT + extent*13 accepted beats + capture1 + ingress/HOPS0 channel3 + real operation/arrive + actual result-publication acknowledgement; stalls measured separately",
+        "serialization": "no next record before actual arrive and matching result publication; therefore ring WAR and dependencies cannot overlap",
+        "replica_count": 32,
+        "fanout": "one local owner per selected SM; no 32-way combinational broadcast",
+        "tracks_capacity": null,
+        "slot_fit": null,
+        "admission": "not admitted; immutable pinned source/constraints and model integration required",
+        "unresolved": [
+          "program memory and actual DMA client allocation",
+          "weight allocator parent connection",
+          "result publication owner connection",
+          "mutable-state protection beyond bounds/identity",
+          "SS/FF and slot geometry"
+        ]
+      },
+      "scheme": "two independent registered owners; compare every output and independent per-owner critical-state parity; mismatch immediately gates all effect handshakes and latches abort",
+      "protected_fields": [
+        "320-bit record",
+        "program address/limit",
+        "record count/index",
+        "word/group/ordinal pointers",
+        "weight base",
+        "operand resident identity",
+        "FSM/arrive/publication/start flags",
+        "registered X payload/address/enable",
+        "ingress outputs before issue"
+      ],
+      "duplicate_owner_flops": 2673,
+      "sticky_abort_flops": 1,
+      "total_flops": 5347,
+      "flop_area_lower_bound_um2": 1559.1852000000001,
+      "slot_lower_bound_um2_at_55pct": 2834.882181818182,
+      "replicas": 32,
+      "nominal_added_cycles": 0,
+      "payload_compare_bits": 2268,
+      "handshake_compare_bits": 13,
+      "state_parity_compare_bits": 1,
+      "parity_tree_inputs_per_owner": 2572,
+      "balanced_parity_binary_levels": 12,
+      "local_generic_mapped_observation": {
+        "tool": "Yosys0.9; not fleet ORFS",
+        "state_flops": 5343,
+        "compare_and_gate_levels": 20,
+        "owner_parity_levels": 12,
+        "blocked_direct_pin_fanout": 13
+      },
+      "logic_cost": "second copy of baseline logic; XOR output compare plus two parity reductions over2572 owner-statebits; OR reduction and side-effect gates, not area measured",
+      "communication": "unchanged external widths; independent cores consume identical accepted source transactions; mismatch cannot acknowledge input or assert external writes/start/completion",
+      "fault_scope": "single state-bit upset or output disagreement; common-mode faults and coordinated equal parity multi-bit changes not claimed",
+      "physical_obligation": "no combinational timing assumed: compare tree and gate fanout require actual SS/FF closure; must pipeline/price if needed",
+      "open_gates": [
+        "parent memory/allocation/result binding",
+        "source/clock separation for independent physical copies",
+        "timing and compare-network physical qualification",
+        "actual ORFS mapped duplicate-bank preservation gate"
+      ],
+      "selected": false
+    },
+    "descriptor": {
+      "status": "candidate_not_adopted",
+      "protocol": "one parent descriptor outstanding, retained until returned actual south d_valid&&d_ready acceptance; finite credit is not delivery acknowledgement",
+      "payload_bits": 56,
+      "physical_forward_bits": 114,
+      "physical_reverse_bits": 6,
+      "physical_bidirectional_tracks": 120,
+      "forward_valid_bits": 1,
+      "internal_credit_return_bits": 1,
+      "consumed_ack_return_bits": 1,
+      "sticky_SM_fault_return_bits": 1,
+      "hops_each_way": 32,
+      "queue_depth": 2,
+      "replicas": 32,
+      "protected_copies": 2,
+      "total_register_bits": 4079,
+      "flop_only_um2": 1189.4364,
+      "south_queue_state_bits": 232,
+      "south_queue_flop_only_um2": 67.6512,
+      "proposed_south_bay_um": [
+        128,
+        64
+      ],
+      "south_cell_budget_at55pct_um2": 4505.6,
+      "earliest_owner_ack_edges": 66,
+      "added_vs_same_cycle_accept_edges": 66,
+      "fault_return_added_edges": 32,
+      "protection": "duplicated forward queues, credits, consumption ACK and fault-return chains; compare valid payloads/credits/ACK/fault; complementary pending rails and sticky abort",
+      "physical_route": "Illustrative32hops, not final assignment. Initial obstacle-aware26/32 paths measured3.956-5.016mm with16-31 chain registers under300um bend segmentation; sixpathsblocked. Owner/adapter flight pins and independent dual-rail packing remain unqualified.",
+      "track_payload_each_copy": 56,
+      "peak_descriptor_B_per_fast_edge": 7,
+      "conservation": "no second source send while pending; owner completion waits actual south acceptance + registered return, independent of route latency",
+      "open_gates": [
+        "actual legal hop count",
+        "independent mapped state bank preservation",
+        "south bay cell fit and SS/FF",
+        "production parent integration"
+      ],
+      "selected": false
+    },
+    "ports": {
+      "run": {
+        "to_owner": 82,
+        "from_owner": 1
+      },
+      "program_read": {
+        "to_owner": 67,
+        "from_owner": 34
+      },
+      "weight_allocation": {
+        "to_owner": 51,
+        "from_owner": 42
+      },
+      "operand_stream": {
+        "to_owner": 2078,
+        "from_owner": 33
+      },
+      "publication": {
+        "to_owner": 17,
+        "from_owner": 1
+      },
+      "completion": {
+        "to_owner": 1,
+        "from_owner": 2
+      },
+      "SM_local": {
+        "to_owner": 4,
+        "from_owner": 2168
+      }
+    },
+    "program_bytes_per_record": 40,
+    "X_fragment_bits": 25216,
+    "X_beats_per_address": 13,
+    "X_payload_peak_bytes_per_fast_edge": 256,
+    "weight_service": "existing native SMH req_v/req_addr32/req_tag10 and rsp_v/rsp_tag10/rsp_data1088 pass through unchanged; REQCR1 return semantics retained",
+    "result_service": "existing native SMH rv/rrow12/rdata256 passed to real result owner; matching publication receipt required separately",
+    "release_service": "external actual release_in to SMH; never echoed from arrive in production RTL",
+    "replicas": 32,
+    "north_owner_reserved_grid_um": [
+      256.176,
+      129.6
+    ],
+    "south_descriptor_bay_candidate_um": [
+      128,
+      64
+    ],
+    "proposed_owner_footprint_um": [
+      256,
+      128
+    ],
+    "reserved_area_um2_per_owner": 32768,
+    "total_reserved_area_mm2": 1.048576,
+    "cell_budget_um2_at_55pct": 18022.4,
+    "reservation_basis": "generous unqualified envelope; DMR flop-only1559.1852um2, actual cell-mapped comb area absent; reserve, do not assert fit",
+    "pin_plan": "256um north/south edges accommodateactual X planned pin span202.464um within each256um edge. Other control ports use remaining faces. Actual BPin/pinstation/diechannel capacity remains unqualified.",
+    "FF_setup_clock": "1.2GHz stream clock; protected combinational check remains timing-unqualified; no relaxed SDC assumed",
+    "replica_latency": "local owner three-edge ingress plus existing nativeSMH PIO=2 and fixed X write/read relative margin; producer waits real arrive+publication before next record",
+    "added_join_register_bits": 4079,
+    "added_join_cycles_per_descriptor": 66,
+    "open_gates": [
+      "legal north-south perimeter descriptor path",
+      "actual mapped cell area",
+      "registered verification boundary if required",
+      "program/operand/allocation/publication upstream owner wiring",
+      "fullnative parent exactness",
+      "physical slot/clock/SSFF"
+    ],
+    "selected": false
+  },
+  "native_SM_ports_bound": 33,
+  "op_xb_and_start_ready_native": true,
+  "release_external": true,
+  "runs": [
+    {
+      "descriptor_hops": 0,
+      "returncode": 0,
+      "output": "PASS actual north front + protected owner records=13 full_shape_X_captures=6448 cycles=8710\nSTATE 0 CYCLES 1\nSTATE 1 CYCLES 141\nSTATE 2 CYCLES 130\nSTATE 3 CYCLES 13\nSTATE 4 CYCLES 15\nSTATE 5 CYCLES 13\nSTATE 6 CYCLES 32\nSTATE 7 CYCLES 18\nSTATE 8 CYCLES 8059\nSTATE 9 CYCLES 12\nSTATE 10 CYCLES 13\nSTATE 11 CYCLES 260\nSTATE 12 CYCLES 1\nSTATE 13 CYCLES 0"
+    },
+    {
+      "descriptor_hops": 16,
+      "returncode": 0,
+      "output": "PASS actual north front + protected owner records=13 full_shape_X_captures=6448 cycles=9116\nSTATE 0 CYCLES 1\nSTATE 1 CYCLES 139\nSTATE 2 CYCLES 130\nSTATE 3 CYCLES 13\nSTATE 4 CYCLES 14\nSTATE 5 CYCLES 13\nSTATE 6 CYCLES 443\nSTATE 7 CYCLES 15\nSTATE 8 CYCLES 8057\nSTATE 9 CYCLES 12\nSTATE 10 CYCLES 13\nSTATE 11 CYCLES 263\nSTATE 12 CYCLES 1\nSTATE 13 CYCLES 0"
+    },
+    {
+      "descriptor_hops": 31,
+      "returncode": 0,
+      "output": "PASS actual north front + protected owner records=13 full_shape_X_captures=6448 cycles=9512\nSTATE 0 CYCLES 1\nSTATE 1 CYCLES 140\nSTATE 2 CYCLES 130\nSTATE 3 CYCLES 13\nSTATE 4 CYCLES 15\nSTATE 5 CYCLES 13\nSTATE 6 CYCLES 833\nSTATE 7 CYCLES 15\nSTATE 8 CYCLES 8058\nSTATE 9 CYCLES 12\nSTATE 10 CYCLES 13\nSTATE 11 CYCLES 266\nSTATE 12 CYCLES 1\nSTATE 13 CYCLES 0"
+    }
+  ],
+  "sources": {
+    "rtl/hbm_accel/control_20261007/native_join/ot_hbm_sm_native_owner_join.sv": "ce314d5e7377331e80510d63d967defbd4124c55a5e86c9f2f914279fc8ba9b5",
+    "rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv": "75849d67b78b758c49a99473d317994cba0888d082122546733aef9480701ec1",
+    "rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv": "69dbfea11f7756c0a5da3dcee59adef3a5cfdb62da77fdd5e9615c48a78fb753",
+    "rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv": "fe13809162a3e9bbfda458d5a2a7353885f69515f331ec4cfcc2e971819d2905",
+    "rtl/hbm_accel/control_20261007/ot_hbm_sm_seq_ingress.sv": "e82c301542110021daecc1ce6bb5d823a598a303e9673380c1e74933d39f5271",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "719a9f4077941311f4b0d79cc873798c213c01ab8104d37b689f9210eff91cbf",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "results/rtl/hbm_sm_command_20261007/stress_seq.hex": "217bae8ead442cc2bce48249b909346c9fd7371f7feb5f4288cd8d7188113a92",
+    "tools/hbm_sm_native_owner_join_model.py": "188d06b9a84a155c117f9b3ce5d3aff7598eb24e1b5847c6c868de2f4576f637",
+    "tools/hbm_sm_native_owner_join_build.py": "9485c8a20c794946876d1e165c4feee54687aa0b337737ab728e5a4a297c6669",
+    "tools/hbm_sm_native_front_gate.py": "74993e055db7d5826c86f6ab3d73aa634691baa432a85c588bb45d34c2a05a73",
+    "tools/hbm_sm_native_join_gate.py": "c32e7982b9efe00c69bdddbab34b21958c66054826edf6524444108f44bfbbb3",
+    "tools/hbm_sm_descriptor_bridge_model.py": "4203463d4580eead62841b48fd8ab978bb582b7ea3b88ffa6c26885c82c48602",
+    "tools/hbm_sm_serial_protection_model.py": "8710eb7d3567ea1b16ab681984b95f25b91161f04fa25149de65e5a860d586f2",
+    "tools/hbm_sm_serial_owner_model.py": "565ad8040c3b6eee92e20a646864f4f406d4c83f1e7c1c209f5bcea6fd20a76b",
+    "results/physical/hbm_smh_actual_pin_readback_20261007/actual_top_pin_boxes.json": "f5a2887273a4389b0b777671b964027114a3f80936df95887ff1415f5cdce494"
+  },
+  "passed": true,
+  "selected": false
+}

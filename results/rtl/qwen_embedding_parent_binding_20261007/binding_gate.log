@@ -1,0 +1,19 @@
+test_approved_padded_alias (__main__.BindingGate) ... ok
+test_changed_physical_hash (__main__.BindingGate) ... ok
+test_complete_fixture (__main__.BindingGate) ... ok
+test_failed_corner (__main__.BindingGate) ... ok
+test_missing_raw_export (__main__.BindingGate) ... ok
+test_missing_synthesis_padding_receipt (__main__.BindingGate) ... ok
+test_missing_view (__main__.BindingGate) ... ok
+test_nan_corner (__main__.BindingGate) ... ok
+test_non_identifier_edit_even_with_updated_hash (__main__.BindingGate) ... ok
+test_padded_topology_fixture (__main__.BindingGate) ... ok
+test_relocation (__main__.BindingGate) ... ok
+test_stale_clock (__main__.BindingGate) ... ok
+test_stale_routed_netlist (__main__.BindingGate) ... ok
+test_unknown_top (__main__.BindingGate) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.055s
+
+OK

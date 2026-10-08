@@ -1,0 +1,48 @@
+{
+  "verdict": "FAIL",
+  "source_commit": "4d290d19848f9f17e10c4a21e559d0163303cea2",
+  "stage": "DPL",
+  "failures": [
+    "84 cells failed site alignment",
+    "7 cells failed region placement"
+  ],
+  "actual_native_grid_dbu": {
+    "dbu_per_um": 1000,
+    "site_width": 54,
+    "row_height": 270,
+    "origin": [
+      1080,
+      1080
+    ]
+  },
+  "cause": "Lane1 fence X boundaries were12nm off54nm native sites; region upperY was not on270nm row boundaries.",
+  "mapped_register_bits": 2306,
+  "mapped_cells": 5014,
+  "mapped_area_um2": 835.5360600000263,
+  "pin_check_count": 2254,
+  "region_flops_each": 1153,
+  "failed_odb_sha256": "9e4a84dd8e13f36bc7a826683510f22e081a2b4fedafe8da8e4e89dd1f571416",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_relay_tx_internal_4d290d198",
+  "automatic_retry": "same-source secondattempt alsoFAIL; bothcl/route.a1.rc androute.a2.rc preserve outcomes",
+  "no_timing_verdict": true,
+  "corrected_fences_um": [
+    [
+      150.012,
+      1.08,
+      250.02,
+      38.88
+    ],
+    [
+      570.024,
+      1.08,
+      670.032,
+      38.88
+    ]
+  ],
+  "external_outline_delta_um": [
+    0,
+    0
+  ],
+  "logic_cycle_delta": 0
+}

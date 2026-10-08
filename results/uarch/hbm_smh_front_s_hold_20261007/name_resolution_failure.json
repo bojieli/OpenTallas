@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.hbm.smh.hold_name_resolution.v1",
+  "failed_candidate_pin": "09514d65f",
+  "failure": "Internal register missing",
+  "stage": "explicit insertion before placement/routing",
+  "route_exit": 1,
+  "failed_run": "/srv/opentallas-scratch/claude/front-s-hold-09514d65f",
+  "original_checkpoint_unchanged": true,
+  "candidate_ODB_written": false,
+  "partial_in_memory_output_buffers": 8382,
+  "measurements_obtained": false,
+  "correction": "Resolve internal OpenSTA names against a unique ODB instance after escape normalization",
+  "actual_original_ODB_mapping": [
+    {
+      "canonical": "g_qs[1].g_ln[0].g_use.u_dd.g_s[2].g_n.u/q[27]$_DFF_P_",
+      "actual": "g_qs\\[1\\].g_ln\\[0\\].g_use.u_dd.g_s\\[2\\].g_n.u/q\\[27\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R"
+    },
+    {
+      "canonical": "g_qs[1].g_ln[0].g_use.u_dd.g_s[4].g_n.u/q[31]$_DFF_P_",
+      "actual": "g_qs\\[1\\].g_ln\\[0\\].g_use.u_dd.g_s\\[4\\].g_n.u/q\\[31\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R"
+    },
+    {
+      "canonical": "g_qs[1].g_ln[1].g_use.u_dd.g_s[3].g_n.u/q[41]$_DFF_P_",
+      "actual": "g_qs\\[1\\].g_ln\\[1\\].g_use.u_dd.g_s\\[3\\].g_n.u/q\\[41\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R"
+    },
+    {
+      "canonical": "g_qs[1].g_ln[1].g_use.u_dd.g_s[6].g_n.u/q[39]$_DFF_P_",
+      "actual": "g_qs\\[1\\].g_ln\\[1\\].g_use.u_dd.g_s\\[6\\].g_n.u/q\\[39\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R"
+    }
+  ],
+  "validation": [
+    "all four actual ODB names normalize uniquely to requested endpoints",
+    "all four actual masters DFFHQNx1_ASAP7_75t_R",
+    "Tcl escaped-name normalization PASS",
+    "generated Tcl completeness PASS"
+  ],
+  "scope": "Name-resolution correction only; same modeled 8386 cells, constraints and endpoints"
+}

@@ -1,0 +1,45 @@
+{
+  "verdict": "PASS_FOUR_STATE_FULL_APERTURE_COMPONENT",
+  "DIRECT_READBACK": 1,
+  "calendar_sha256": "6f8a3293d34a7c58130fb825e270929529a50322c0bb5827130db9aaaa3939ac",
+  "parent_edge": 160,
+  "aperture": {
+    "NR": 2256,
+    "NW": 865,
+    "VX0": 208,
+    "NVX": 2048,
+    "reducer_seat": 848
+  },
+  "actual_frame": {
+    "read_requests": 2048,
+    "unique_read_scalars": 128,
+    "unique_aligned_windows": 64,
+    "physical_read_commands": 1024,
+    "checked_write_ACKs": 1,
+    "raw_write_ACKs": 1,
+    "admitted_native_edges": 1,
+    "physical_service_edges": 14419,
+    "sourcewalker_formula": "4 + 2256 + 865 + 11*1024 + 30*1",
+    "read_accept_return_edges": 9,
+    "write_accept_checked_ACK_edges": 28,
+    "all_VX_seats_checked": 2048,
+    "actual_XVM1_next_ME_event": true,
+    "unknown_checked_read_or_postverify_data": false
+  },
+  "whole_fixture_run": {
+    "reads": 1025,
+    "checked_writes": 262,
+    "raw_ACKs": 262,
+    "held_edges": 44127,
+    "native_edges": 9,
+    "includes_initialization": true
+  },
+  "negatives": {
+    "foreign_reducer_ACK_owner": "REJECTED exit1 source held",
+    "raw_ACK_native_shortcut": "REJECTED exit1 unpaid native edge",
+    "write_accept_native_shortcut": "REJECTED exit1 unpaid native edge"
+  },
+  "full_engine_simulated": false,
+  "numerical_exactness": false,
+  "physical_qualification": false
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.qwen.embedding_parent_binding_delta.v1",
+  "adopted": false,
+  "unified_model": "tools/uarch_model.py:qwen_embedding_ingress_island_model",
+  "base_model_source_commit": "0e025d03c",
+  "shapes": {
+    "code": {
+      "address_bits": 12,
+      "capture_FFs": 28,
+      "replicas": 2374,
+      "placement_um": [
+        2.16,
+        80
+      ]
+    },
+    "scale": {
+      "address_bits": 18,
+      "capture_FFs": 40,
+      "replicas": 3,
+      "placement_um": [
+        2.16,
+        70
+      ]
+    }
+  },
+  "new_MACs_per_cycle": 0,
+  "new_memory_bytes_per_cycle": 0,
+  "new_muxes": 0,
+  "new_demuxes": 0,
+  "added_FFs": 0,
+  "added_cycles": 0,
+  "leaf_latency_cycles": 7,
+  "leaf_II": 2,
+  "root_bound_cycles": 19,
+  "shared_service_cycles": 801,
+  "placement": {
+    "slot_um": [
+      15.12,
+      15.12
+    ],
+    "credit_input_o_cr_relocated_from": "right",
+    "credit_input_o_cr_relocated_to": "left next to address/valid",
+    "input_wire_target_um": 100,
+    "route_cost": "OPEN: both upstream credit wire and leaf ingress wire require measured parent route, with unchanged clock/IO contract"
+  },
+  "clock": {
+    "parent_reference": "actual u_ingress/clk arrival + measured SS maximum / FF minimum internal valid_q clock insertion",
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "input_transition_ps": 150,
+    "output_load_fF": 80,
+    "new_exceptions": []
+  },
+  "qualification": {
+    "component_minimum_SS_FF_slack_ps": 15,
+    "component_DRC": 0,
+    "source_pinned_views_required": true,
+    "identifier_alias_only": true,
+    "padded_component_requires_synthesis_and_routed_fixed_cell_topology": true
+  },
+  "remaining": [
+    "Current 0e025d03c code and scale components fail FF and cannot be collected for parent use",
+    "Source-pin and qualify structural padded ingress successor",
+    "Collect real component LEF/SS/FF, internal clock and topology evidence",
+    "Bind and measure full parent including relocated credit port",
+    "Full-leaf reset-removal and reg-to-reg hold remain independently open"
+  ],
+  "physical_closed": false,
+  "rate_credit": 0
+}

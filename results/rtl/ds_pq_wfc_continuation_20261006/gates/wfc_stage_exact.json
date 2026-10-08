@@ -1,0 +1,67 @@
+[
+  {
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r11_s0_all/args.txt",
+    "sha256": "bc03ae715015841f107604f1e6a173863662660a1093b19f408a84b7981062a2",
+    "bytes": 403,
+    "text": "-GSOURCE=0 -GLOCKSTEP=0 -GSTREAM=1 -GMAXU=866 -GUSERS=866 -GSEED=13 -GNJOBS=20000 -GXWORDS=46 -GRXWORDS=41 -DOT_WFC_REC_SRAM=1 -DOT_WFC_UPOS_LWR=1 -DOT_WFC_CONTROL_PIPE=1 -DOT_WFC_CFG_Q=1 -DOT_WFC_PRECOMP=1 -DOT_WFC_IN_DEC=1 -DOT_WFC_TXQ_SLICE=1 -DOT_WFC_RDY_LT=1 -DOT_WFC_FANOUT_COPY=1 -DOT_WFC_MARGIN=1 -DOT_WFC_LINK_REG=1 -DOT_WFC_VM_REG=1 -DOT_WFC_RD_PIPE=1 -DOT_WFC_SLEW_COPY=1 -DOT_WFC_LINK_SEL=1\n"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r11_s0_all/run.log",
+    "sha256": "605ae64a10c53e4419430ea98e6aadcda2ea20f2429ded89b248a139ee5a9ba8",
+    "bytes": 660,
+    "text": "EQUIV FAULTFLIT 838321/838321\nEQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/65b6a88fffe9443a starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0\nEQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1649225 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/1645505 mism=0\nEQUIV PASS\n- /srv/opentallas-scratch/claude/dsrom-wfc-split/src-f316f0271/rtl/test/dsrom_wavefront/tb_wf_ctrl_equiv.sv:369: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2ms; walltime 1.562 s; speed 1.056 ms/s\n- Verilator: cpu 1.562 s on 1 threads; allocated 11 MB\nrc 0\n"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r11_s0_all_seed5/args.txt",
+    "sha256": "5e6f9714fc28b48b97d4bbbeab72fcc8bd048bdf1a04841b4a321f55399c1a83",
+    "bytes": 412,
+    "text": "-GSOURCE=0 -GLOCKSTEP=0 -GSTREAM=1 -GMAXU=866 -GUSERS=866 -GSEED=13 -GNJOBS=20000 -GXWORDS=46 -GRXWORDS=41 -DOT_WFC_REC_SRAM=1 -DOT_WFC_UPOS_LWR=1 -DOT_WFC_CONTROL_PIPE=1 -DOT_WFC_CFG_Q=1 -DOT_WFC_PRECOMP=1 -DOT_WFC_IN_DEC=1 -DOT_WFC_TXQ_SLICE=1 -DOT_WFC_RDY_LT=1 -DOT_WFC_FANOUT_COPY=1 -DOT_WFC_MARGIN=1 -DOT_WFC_LINK_REG=1 -DOT_WFC_VM_REG=1 -DOT_WFC_RD_PIPE=1 -DOT_WFC_SLEW_COPY=1 -DOT_WFC_LINK_SEL=1 -GSEED=5\n"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r11_s0_all_seed5/run.log",
+    "sha256": "565b8449665e6b681d2a68af42b7c50255fb717fb674894c81da2fcc66e3a193",
+    "bytes": 660,
+    "text": "EQUIV FAULTFLIT 838027/838027\nEQUIV STREAM out=940000/940000 dig=07a5dadb6ead79bb/07a5dadb6ead79bb starts=20000/20000 dig=7c0ac71782a3366c/7c0ac71782a3366c\nEQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1649365 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580361/1645070 mism=0\nEQUIV PASS\n- /srv/opentallas-scratch/claude/dsrom-wfc-split/src-f316f0271/rtl/test/dsrom_wavefront/tb_wf_ctrl_equiv.sv:369: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2ms; walltime 1.601 s; speed 1.030 ms/s\n- Verilator: cpu 1.601 s on 1 threads; allocated 11 MB\nrc 0\n"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r11_neg_s0_link/args.txt",
+    "sha256": "a14c4a3916c09c047156a492054c9bc11e6722492b0cc6b132f4b5e23e52deb0",
+    "bytes": 421,
+    "text": "-GSOURCE=0 -GLOCKSTEP=0 -GSTREAM=1 -GMAXU=866 -GUSERS=866 -GSEED=13 -GNJOBS=20000 -GXWORDS=46 -GRXWORDS=41 -DOT_WFC_REC_SRAM=1 -DOT_WFC_UPOS_LWR=1 -DOT_WFC_CONTROL_PIPE=1 -DOT_WFC_CFG_Q=1 -DOT_WFC_PRECOMP=1 -DOT_WFC_IN_DEC=1 -DOT_WFC_TXQ_SLICE=1 -DOT_WFC_RDY_LT=1 -DOT_WFC_FANOUT_COPY=1 -DOT_WFC_MARGIN=1 -DOT_WFC_LINK_REG=1 -DOT_WFC_VM_REG=1 -DOT_WFC_RD_PIPE=1 -DOT_WFC_SLEW_COPY=1 -DOT_WFC_LINK_SEL=1 -DOT_WFC_NEG_LINK\n"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r11_neg_s0_link/run.log",
+    "sha256": "bc0f46f6c7328656b6e0dbe72d0220d7b062b74e184dea23a90537af8f1d7380",
+    "bytes": 343,
+    "text": "LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant)\n[59000] %Fatal: ot_rom_pkg_ctrl_wfc.sv:1862: Assertion failed in tb_wf_ctrl_equiv.g[1].d.c.g_link_reg.u_rx: LINK_REG overflow\n%Error: /srv/opentallas-scratch/claude/dsrom-wfc-split/src-f316f0271/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:1862: Verilog $stop\nAborting...\nrc 1\n"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r11_neg_s0_upos/args.txt",
+    "sha256": "9c0b9deb34487a44b073692621a736d6a88c3eace806b28c2aa95ca069654993",
+    "bytes": 421,
+    "text": "-GSOURCE=0 -GLOCKSTEP=0 -GSTREAM=1 -GMAXU=866 -GUSERS=866 -GSEED=13 -GNJOBS=20000 -GXWORDS=46 -GRXWORDS=41 -DOT_WFC_REC_SRAM=1 -DOT_WFC_UPOS_LWR=1 -DOT_WFC_CONTROL_PIPE=1 -DOT_WFC_CFG_Q=1 -DOT_WFC_PRECOMP=1 -DOT_WFC_IN_DEC=1 -DOT_WFC_TXQ_SLICE=1 -DOT_WFC_RDY_LT=1 -DOT_WFC_FANOUT_COPY=1 -DOT_WFC_MARGIN=1 -DOT_WFC_LINK_REG=1 -DOT_WFC_VM_REG=1 -DOT_WFC_RD_PIPE=1 -DOT_WFC_SLEW_COPY=1 -DOT_WFC_LINK_SEL=1 -DOT_WFC_NEG_UPOS\n"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r11_neg_s0_upos/run.log",
+    "sha256": "4c7d1ccb5b380c61212bef6a42dd0c5bd8d340042195a8d0b32f261aa37b3c1d",
+    "bytes": 601,
+    "text": "EQUIV FAULTFLIT 838321/98659\nEQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/65b6a88fffe9443a starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0\nEQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1649225 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/193493 mism=0\nEQUIV FAIL\n[1649226000] %Fatal: tb_wf_ctrl_equiv.sv:365: Assertion failed in tb_wf_ctrl_equiv: EQUIVALENCE_TERMINAL_FAIL\n%Error: /srv/opentallas-scratch/claude/dsrom-wfc-split/src-f316f0271/rtl/test/dsrom_wavefront/tb_wf_ctrl_equiv.sv:365: Verilog $stop\nAborting...\nrc 1\n"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r11_neg_s0_vmrd/args.txt",
+    "sha256": "aded054adee6ffe52a5988a065bd05c588843144daeb4fe8a45448b9c3461d5f",
+    "bytes": 421,
+    "text": "-GSOURCE=0 -GLOCKSTEP=0 -GSTREAM=1 -GMAXU=866 -GUSERS=866 -GSEED=13 -GNJOBS=20000 -GXWORDS=46 -GRXWORDS=41 -DOT_WFC_REC_SRAM=1 -DOT_WFC_UPOS_LWR=1 -DOT_WFC_CONTROL_PIPE=1 -DOT_WFC_CFG_Q=1 -DOT_WFC_PRECOMP=1 -DOT_WFC_IN_DEC=1 -DOT_WFC_TXQ_SLICE=1 -DOT_WFC_RDY_LT=1 -DOT_WFC_FANOUT_COPY=1 -DOT_WFC_MARGIN=1 -DOT_WFC_LINK_REG=1 -DOT_WFC_VM_REG=1 -DOT_WFC_RD_PIPE=1 -DOT_WFC_SLEW_COPY=1 -DOT_WFC_LINK_SEL=1 -DOT_WFC_NEG_VMRD\n"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/eq/r11_neg_s0_vmrd/run.log",
+    "sha256": "38522d0b34532759d34f9211424982eaebbc3c95648d0228a02aad6c4e3ac82b",
+    "bytes": 603,
+    "text": "EQUIV FAULTFLIT 838321/838321\nEQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/1099a220b8163aba starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0\nEQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1653040 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/1649292 mism=0\nEQUIV FAIL\n[1653041000] %Fatal: tb_wf_ctrl_equiv.sv:365: Assertion failed in tb_wf_ctrl_equiv: EQUIVALENCE_TERMINAL_FAIL\n%Error: /srv/opentallas-scratch/claude/dsrom-wfc-split/src-f316f0271/rtl/test/dsrom_wavefront/tb_wf_ctrl_equiv.sv:365: Verilog $stop\nAborting...\nrc 1\n"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/dsrom-wfc-split/src-f316f0271/rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+    "sha256": "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8",
+    "bytes": 102569
+  }
+]

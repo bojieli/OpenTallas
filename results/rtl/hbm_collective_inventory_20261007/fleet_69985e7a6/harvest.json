@@ -1,0 +1,27 @@
+{
+  "status": "PASS_GENERIC_RETENTION_ONLY",
+  "source_commit": "69985e7a6",
+  "original_and_normalized_hashes_verified": true,
+  "leaf_inventory": {
+    "cdc": {
+      "FF_bits": 43434,
+      "MUX2_cells": 308590,
+      "storage_parity_retained_bits": 4608,
+      "control_head_parity_retained_bits": 208,
+      "gray_rails": 84
+    },
+    "cdc_refill": {
+      "FF_bits": 43434,
+      "MUX2_cells": 308596,
+      "storage_parity_retained_bits": 4608,
+      "control_head_parity_retained_bits": 208,
+      "gray_rails": 84
+    }
+  },
+  "per_16_data_CDC_refill": {
+    "FF_bits": 694944,
+    "generic_MUX2_cells": 4937536
+  },
+  "model_reconciled": "41472encodedmemory +1872protectedcode +84Grayrails +6fault rails =43434actualFF/leaf",
+  "important_scope": "GenericMUX count is preABC network; not standardcellmapped area. Packet retained748FF/3SRAM measurement was DEPTH256;64logicaldepth variants still need exact mapped control inventory. No inherited proxy-fit or fullprotectedTU claim."
+}

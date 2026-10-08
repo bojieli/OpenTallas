@@ -1,0 +1,10 @@
+s1 mix: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=52 timeouts=0 mismatching_roots=0 RESULT PASS
+s1 mix11: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=55 timeouts=0 mismatching_roots=0 RESULT PASS
+s1 mix12: SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=52 timeouts=0 mismatching_roots=0 RESULT PASS
+s1 mix13: SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=52 timeouts=0 mismatching_roots=0 RESULT PASS
+s1 trace: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=34 timeouts=0 mismatching_roots=0 RESULT PASS
+s1 err: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=20 timeouts=0 mismatching_roots=0 RESULT PASS
+s1 over: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=24 timeouts=0 mismatching_roots=0 RESULT PASS
+s1 range: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=15 timeouts=0 mismatching_roots=0 RESULT PASS
+s1 rreq: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=37 timeouts=0 mismatching_roots=0 RESULT PASS
+CAPT_BENCH PASS

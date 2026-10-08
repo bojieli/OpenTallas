@@ -1,0 +1,27 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+# tools/hbm_accel_die_fp.py via tools/hbm_die_views.py reservation abstract: host_slab placeholder sized from the block ledger
+MACRO hfd_host_slab
+  CLASS BLOCK ;
+  FOREIGN hfd_host_slab 0 0 ;
+  SIZE 594.408 BY 16824.216 ;
+  SYMMETRY X Y ;
+  OBS
+    LAYER M1 ;
+      RECT 0 0 594.408 16824.216 ;
+    LAYER M2 ;
+      RECT 0 0 594.408 16824.216 ;
+    LAYER M3 ;
+      RECT 0 0 594.408 16824.216 ;
+    LAYER M4 ;
+      RECT 0 0 594.408 16824.216 ;
+    LAYER M5 ;
+      RECT 0 0 594.408 16824.216 ;
+    LAYER M6 ;
+      RECT 0 0 594.408 16824.216 ;
+    LAYER M7 ;
+      RECT 0 0 594.408 16824.216 ;
+  END
+END hfd_host_slab
+END LIBRARY

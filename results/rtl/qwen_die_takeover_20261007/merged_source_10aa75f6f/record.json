@@ -1,0 +1,43 @@
+{
+  "source_commit": "10aa75f6f986b1648efb5f7cf1d05a4422ea3cbd",
+  "scope": "Merged-source check for station repair/bench/signoff hooks only; no timing rerun",
+  "checks": [
+    {
+      "shape": "cst",
+      "negative": false,
+      "outcome": "PASS station SPLIT=0: 20000 cycles"
+    },
+    {
+      "shape": "cst",
+      "negative": true,
+      "outcome": "FAIL station SPLIT=0 NEG=1: 19995 mismatches"
+    },
+    {
+      "shape": "chead",
+      "negative": false,
+      "outcome": "PASS station SPLIT=1: 20000 cycles"
+    },
+    {
+      "shape": "chead",
+      "negative": true,
+      "outcome": "FAIL station SPLIT=1 NEG=1: 19995 mismatches"
+    },
+    {
+      "shape": "rly",
+      "negative": false,
+      "outcome": "PASS station SPLIT=0: 20000 cycles"
+    },
+    {
+      "shape": "rly",
+      "negative": true,
+      "outcome": "FAIL station SPLIT=0 NEG=1: 19995 mismatches"
+    }
+  ],
+  "source_sha256": {
+    "rtl/test/tb_qwen_die_station.sv": "e3ab13bf17872bf4d9831a135f58209adcd55efa11c30b8f9101b983de54eaf6",
+    "rtl/physical/ot_qwen_die_station.sv": "aa5d461652ab4dc751ce77f7955dfb51d099e02821f5d76a0cce3e413b7d1843",
+    "physical/qwen_die_masters/jobs/route_station.sh": "a529e0f8a1a384b1944a6b0c99f856845d11f1d9920e806bddc07bb2dcccb58e",
+    "physical/qwen_die_masters/station_signoff.sdc": "7651e451f451c64bca58638741fedfa4837536f1998c259284ac0167b9a9d627",
+    "tools/w18/corner_sta.py": "f45eefcb25afe836b66b6b589ad6dc462d5d365e633814fd5eebf742016a8d0d"
+  }
+}

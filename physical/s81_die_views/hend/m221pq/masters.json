@@ -1,0 +1,2370 @@
+{
+ "options": "--gen r8 --rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --hc-xface --link-split --sel-xstg --pin-relay --ch-heights 259.2,302.4,388.8,388.8,302.4,259.2,259.2 --bf-per-region 4 --geometry-fix --vch-w 1641.6 --hc-corr 1512 --hub-column-width 1728 --su-mm2 25.61188 --pairs 1792 --q-elem-h 221.4 --pq-place --die layer1",
+ "masters": {
+  "dsfd_l2r_vr_512x1__hq_SW": {
+   "kind": "l2r",
+   "fmt": "vr",
+   "lanes": [
+    512
+   ],
+   "w_um": 64.776,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "cks": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "rss": [
+     "input",
+     1,
+     "S"
+    ],
+    "fo": [
+     "output",
+     1,
+     "W"
+    ],
+    "od": [
+     "output",
+     514,
+     "W"
+    ],
+    "i": [
+     "input",
+     513,
+     "N"
+    ],
+    "st": [
+     "output",
+     3,
+     "N"
+    ]
+   }
+  },
+  "dsfd_l2r_vr_564x1__hx_E": {
+   "kind": "l2r",
+   "fmt": "vr",
+   "lanes": [
+    564
+   ],
+   "w_um": 69.528,
+   "h_um": 71.256,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "cks": [
+     "input",
+     1,
+     "S"
+    ],
+    "fo": [
+     "output",
+     1,
+     "S"
+    ],
+    "od": [
+     "output",
+     566,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "rss": [
+     "input",
+     1,
+     "S"
+    ],
+    "i": [
+     "input",
+     565,
+     "W"
+    ],
+    "st": [
+     "output",
+     3,
+     "W"
+    ]
+   }
+  },
+  "dsfd_l2r_vr_564x1__hx_W": {
+   "kind": "l2r",
+   "fmt": "vr",
+   "lanes": [
+    564
+   ],
+   "w_um": 69.528,
+   "h_um": 71.256,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "cks": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "rss": [
+     "input",
+     1,
+     "S"
+    ],
+    "fo": [
+     "output",
+     1,
+     "W"
+    ],
+    "od": [
+     "output",
+     566,
+     "W"
+    ],
+    "i": [
+     "input",
+     565,
+     "E"
+    ],
+    "st": [
+     "output",
+     3,
+     "E"
+    ]
+   }
+  },
+  "dsfd_m2l_raw_512x1__hl_E0": {
+   "kind": "m2l",
+   "fmt": "raw",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "W"
+    ],
+    "di0": [
+     "input",
+     512,
+     "E"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "E"
+    ]
+   }
+  },
+  "dsfd_m2l_raw_512x1__hl_E1": {
+   "kind": "m2l",
+   "fmt": "raw",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "W"
+    ],
+    "di0": [
+     "input",
+     512,
+     "E"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "E"
+    ]
+   }
+  },
+  "dsfd_m2l_raw_512x1__hl_E2": {
+   "kind": "m2l",
+   "fmt": "raw",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "W"
+    ],
+    "di0": [
+     "input",
+     512,
+     "E"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "E"
+    ]
+   }
+  },
+  "dsfd_m2l_raw_512x1__hl_E3": {
+   "kind": "m2l",
+   "fmt": "raw",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "di0": [
+     "input",
+     512,
+     "S"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "W"
+    ]
+   }
+  },
+  "dsfd_m2l_raw_512x1__hl_W0": {
+   "kind": "m2l",
+   "fmt": "raw",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "E"
+    ],
+    "di0": [
+     "input",
+     512,
+     "W"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "W"
+    ]
+   }
+  },
+  "dsfd_m2l_raw_512x1__hl_W1": {
+   "kind": "m2l",
+   "fmt": "raw",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "E"
+    ],
+    "di0": [
+     "input",
+     512,
+     "W"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "W"
+    ]
+   }
+  },
+  "dsfd_m2l_raw_512x1__hl_W2": {
+   "kind": "m2l",
+   "fmt": "raw",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "E"
+    ],
+    "di0": [
+     "input",
+     512,
+     "W"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "W"
+    ]
+   }
+  },
+  "dsfd_m2l_raw_512x1__hl_W3": {
+   "kind": "m2l",
+   "fmt": "raw",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "E"
+    ],
+    "di0": [
+     "input",
+     512,
+     "W"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "W"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_512x1__hco_SW": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "di0": [
+     "input",
+     514,
+     "S"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "W"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_512x1__hix_SW": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "W"
+    ],
+    "di0": [
+     "input",
+     514,
+     "N"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "N"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_512x1__hqe_SW": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "di0": [
+     "input",
+     514,
+     "E"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "E"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x10__hr_E0": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 108.408,
+   "h_um": 110.136,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     692,
+     "W"
+    ],
+    "di0": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "W"
+    ],
+    "di1": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "W"
+    ],
+    "di2": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "W"
+    ],
+    "di3": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "W"
+    ],
+    "di4": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "W"
+    ],
+    "di5": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "W"
+    ],
+    "di6": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "W"
+    ],
+    "di7": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "W"
+    ],
+    "di8": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "W"
+    ],
+    "di9": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "W"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x10__hr_E5": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 108.408,
+   "h_um": 110.136,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     692,
+     "W"
+    ],
+    "di0": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "W"
+    ],
+    "di1": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "W"
+    ],
+    "di2": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "W"
+    ],
+    "di3": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "W"
+    ],
+    "di4": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "W"
+    ],
+    "di5": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "W"
+    ],
+    "di6": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "W"
+    ],
+    "di7": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "W"
+    ],
+    "di8": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "W"
+    ],
+    "di9": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "W"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x10__hr_W0": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 108.408,
+   "h_um": 110.136,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "di0": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "S"
+    ],
+    "di1": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "S"
+    ],
+    "di2": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "S"
+    ],
+    "di3": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "S"
+    ],
+    "di4": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "S"
+    ],
+    "di5": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "S"
+    ],
+    "di6": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "S"
+    ],
+    "di7": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "S"
+    ],
+    "di8": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "S"
+    ],
+    "di9": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     692,
+     "E"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x10__hr_W5": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 108.408,
+   "h_um": 110.136,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     692,
+     "E"
+    ],
+    "di0": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "E"
+    ],
+    "di1": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "E"
+    ],
+    "di2": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "E"
+    ],
+    "di3": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "E"
+    ],
+    "di4": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "E"
+    ],
+    "di5": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "E"
+    ],
+    "di6": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "E"
+    ],
+    "di7": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "E"
+    ],
+    "di8": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "E"
+    ],
+    "di9": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "E"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x11__hr_E1": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 117.912,
+   "h_um": 118.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     761,
+     "W"
+    ],
+    "di0": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "W"
+    ],
+    "di1": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "W"
+    ],
+    "di2": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "W"
+    ],
+    "di3": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "W"
+    ],
+    "di4": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "W"
+    ],
+    "di5": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "W"
+    ],
+    "di6": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "W"
+    ],
+    "di7": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "W"
+    ],
+    "di8": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "W"
+    ],
+    "di9": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "W"
+    ],
+    "di10": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi10": [
+     "input",
+     1,
+     "W"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x11__hr_E2": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 117.912,
+   "h_um": 118.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     761,
+     "W"
+    ],
+    "di0": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "N"
+    ],
+    "di1": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "N"
+    ],
+    "di2": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "N"
+    ],
+    "di4": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "N"
+    ],
+    "di7": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "N"
+    ],
+    "di9": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "N"
+    ],
+    "di3": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "E"
+    ],
+    "di5": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "E"
+    ],
+    "di6": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "E"
+    ],
+    "di8": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "E"
+    ],
+    "di10": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi10": [
+     "input",
+     1,
+     "E"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x11__hr_E3": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 117.912,
+   "h_um": 118.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     761,
+     "W"
+    ],
+    "di0": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "W"
+    ],
+    "di1": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "W"
+    ],
+    "di2": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "W"
+    ],
+    "di3": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "W"
+    ],
+    "di4": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "W"
+    ],
+    "di5": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "W"
+    ],
+    "di6": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "W"
+    ],
+    "di7": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "W"
+    ],
+    "di8": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "W"
+    ],
+    "di9": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "W"
+    ],
+    "di10": [
+     "input",
+     70,
+     "W"
+    ],
+    "fi10": [
+     "input",
+     1,
+     "W"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x11__hr_E4": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 117.912,
+   "h_um": 118.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     761,
+     "W"
+    ],
+    "di0": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "E"
+    ],
+    "di1": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "E"
+    ],
+    "di2": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "E"
+    ],
+    "di3": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "E"
+    ],
+    "di4": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "E"
+    ],
+    "di5": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "E"
+    ],
+    "di6": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "E"
+    ],
+    "di7": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "E"
+    ],
+    "di8": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "E"
+    ],
+    "di9": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "E"
+    ],
+    "di10": [
+     "input",
+     70,
+     "E"
+    ],
+    "fi10": [
+     "input",
+     1,
+     "E"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x11__hr_W1": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 117.912,
+   "h_um": 118.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "di0": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "S"
+    ],
+    "di1": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "S"
+    ],
+    "di2": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "S"
+    ],
+    "di3": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "S"
+    ],
+    "di4": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "S"
+    ],
+    "di5": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "S"
+    ],
+    "di6": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "S"
+    ],
+    "di7": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "S"
+    ],
+    "di8": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "S"
+    ],
+    "di9": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "S"
+    ],
+    "di10": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi10": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     761,
+     "E"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x11__hr_W2": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 117.912,
+   "h_um": 118.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "di0": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "S"
+    ],
+    "di1": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "S"
+    ],
+    "di2": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "S"
+    ],
+    "di3": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "S"
+    ],
+    "di4": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "S"
+    ],
+    "di5": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "S"
+    ],
+    "di6": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "S"
+    ],
+    "di7": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "S"
+    ],
+    "di8": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "S"
+    ],
+    "di9": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "S"
+    ],
+    "di10": [
+     "input",
+     70,
+     "S"
+    ],
+    "fi10": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     761,
+     "E"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x11__hr_W3": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 117.912,
+   "h_um": 118.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     761,
+     "E"
+    ],
+    "di0": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "N"
+    ],
+    "di1": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "N"
+    ],
+    "di2": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "N"
+    ],
+    "di3": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "N"
+    ],
+    "di4": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "N"
+    ],
+    "di5": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "N"
+    ],
+    "di6": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "N"
+    ],
+    "di7": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "N"
+    ],
+    "di8": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "N"
+    ],
+    "di9": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "N"
+    ],
+    "di10": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi10": [
+     "input",
+     1,
+     "N"
+    ]
+   }
+  },
+  "dsfd_m2l_vr_68x11__hr_W4": {
+   "kind": "m2l",
+   "fmt": "vr",
+   "lanes": [
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68,
+    68
+   ],
+   "w_um": 117.912,
+   "h_um": 118.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     761,
+     "E"
+    ],
+    "di0": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "N"
+    ],
+    "di1": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi1": [
+     "input",
+     1,
+     "N"
+    ],
+    "di2": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi2": [
+     "input",
+     1,
+     "N"
+    ],
+    "di3": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi3": [
+     "input",
+     1,
+     "N"
+    ],
+    "di4": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi4": [
+     "input",
+     1,
+     "N"
+    ],
+    "di5": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi5": [
+     "input",
+     1,
+     "N"
+    ],
+    "di6": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi6": [
+     "input",
+     1,
+     "N"
+    ],
+    "di7": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi7": [
+     "input",
+     1,
+     "N"
+    ],
+    "di8": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi8": [
+     "input",
+     1,
+     "N"
+    ],
+    "di9": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi9": [
+     "input",
+     1,
+     "N"
+    ],
+    "di10": [
+     "input",
+     70,
+     "N"
+    ],
+    "fi10": [
+     "input",
+     1,
+     "N"
+    ]
+   }
+  },
+  "dsfd_r2l_vr_1024x1__ha_SW": {
+   "kind": "r2l",
+   "fmt": "vr",
+   "lanes": [
+    1024
+   ],
+   "w_um": 112.296,
+   "h_um": 112.296,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     1027,
+     "N"
+    ],
+    "di0": [
+     "input",
+     1026,
+     "W"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "W"
+    ]
+   }
+  },
+  "dsfd_r2l_vr_512x1__hcol": {
+   "kind": "r2l",
+   "fmt": "vr",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "di0": [
+     "input",
+     514,
+     "E"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "E"
+    ]
+   }
+  },
+  "dsfd_r2l_vr_512x1__hsel": {
+   "kind": "r2l",
+   "fmt": "vr",
+   "lanes": [
+    512
+   ],
+   "w_um": 63.048,
+   "h_um": 64.776,
+   "ports": {
+    "ck": [
+     "input",
+     1,
+     "S"
+    ],
+    "rs": [
+     "input",
+     1,
+     "S"
+    ],
+    "o": [
+     "output",
+     515,
+     "N"
+    ],
+    "di0": [
+     "input",
+     514,
+     "E"
+    ],
+    "fi0": [
+     "input",
+     1,
+     "E"
+    ]
+   }
+  }
+ }
+}

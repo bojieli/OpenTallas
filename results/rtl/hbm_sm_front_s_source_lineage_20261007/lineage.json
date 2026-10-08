@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.hbm.smh.front_s_source_lineage.v1",
+  "original_physical_source": "f7f1a0ee4bfd331c9d6bb873d9a772a5fa88cb48",
+  "fresh_exact_gate_source": "f2bae3479f12169ef514a0abb73d351a610a8e93",
+  "production_front_s_elaboration_rc": 0,
+  "production_parameters": "defaults: NC8 RMAX4096 PIO2 REQCR1; no opt-in cache",
+  "iverilog_version": "Icarus Verilog version 11.0 (stable) ()",
+  "reachable_modules": {
+    "ot_hbm_accel_bc_kreg": "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+    "ot_hbm_accel_smh_bundle_reg": "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+    "ot_hbm_accel_smh_csnk": "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+    "ot_hbm_accel_smh_csrc_r": "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+    "ot_hbm_accel_smh_front_s": "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+    "ot_hbm_accel_smh_kreg": "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+    "ot_hbm_accel_smh_reqrl": "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+    "ot_hbm_accel_smv_chain": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+    "ot_hbm_accel_smv_pipe": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv"
+  },
+  "entire_reachable_source_files_byte_identical": true,
+  "source_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "c66cccc3859542f25b7a76020c0400bfe324dd9412b6c646302fdfef4613d8d5",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784"
+  },
+  "full_campaign_source_differences": [
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+  ],
+  "changed_multiplier_reachable_from_front_s": false,
+  "gate_scope": "f2 stress exact bench NC8 active1 RMAX256: full request/front mechanism, not entire full production4096-row arithmetic workload",
+  "positive_observed": true,
+  "negative_campaign_qualification_pending": true,
+  "old_m3e_receipts_accepted_as_f7_proof": false,
+  "conclusion": "f2 fresh campaign exercises the same front_s RTL implementation as f7 original physical job; no claim of whole-SM arithmetic source identity",
+  "vvp_sha256": "4ca1fbaaf62d0a8a020c9eb0434fd88cd90efbb75599c4e8e34dcec6f8ea8949",
+  "command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "ot_hbm_accel_smh_front_s",
+    "-o",
+    "front_s_f2.vvp",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv"
+  ]
+}

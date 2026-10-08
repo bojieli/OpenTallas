@@ -1,0 +1,56 @@
+r9_s1_all/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=1029400 fin=562948/1029349 issues=35010/30927 rejects=2846/2575 squashed=7298/3215 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+r9_s1_all/run.log:EQUIV PASS
+r9_s1_all/run.log:rc 0
+r9_s1_all_seed7/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=1014084 fin=547595/1014033 issues=33981/30498 rejects=2523/2262 squashed=6269/2786 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+r9_s1_all_seed7/run.log:EQUIV PASS
+r9_s1_all_seed7/run.log:rc 0
+r9_lat_all/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=32 cycles=4807545 fin=4804444/4807494 issues=400/400 rejects=54/54 squashed=48/48 committed_ok=352/352 err=0/0 fault_cyc=0/0 mism=0
+r9_lat_all/run.log:EQUIV PASS
+r9_lat_all/run.log:rc 0
+r9_lat_r7/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=32 cycles=4807172 fin=4804444/4807121 issues=400/400 rejects=54/54 squashed=48/48 committed_ok=352/352 err=0/0 fault_cyc=0/0 mism=0
+r9_lat_r7/run.log:EQUIV PASS
+r9_lat_r7/run.log:rc 0
+r9_s1_r7/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=940838 fin=562948/940787 issues=35010/31552 rejects=2846/2753 squashed=7298/3840 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+r9_s1_r7/run.log:EQUIV PASS
+r9_s1_r7/run.log:rc 0
+r9_neg_s1_row2/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=2000050 fin=562948/0 issues=35010/968 rejects=2846/10 squashed=7298/9 committed_ok=27712/959 err=0/0 fault_cyc=0/0 mism=0
+r9_neg_s1_row2/run.log:EQUIV FAIL
+r9_neg_s1_row2/run.log:rc 1
+r9_neg_s1_rdp/run.log:EQUIV FAIL inst 1 cyc 19346: user 4 pos 1 tok 1986242 (exp pos 1 tok 1986455)
+r9_neg_s1_rdp/run.log:EQUIV FAIL inst 1 cyc 19382: user 5 pos 1 tok 1691968 (exp pos 1 tok 1691669)
+r9_neg_s1_rdp/run.log:EQUIV FAIL inst 1 cyc 19387: user 6 pos 1 tok 471656 (exp pos 1 tok 471869)
+r9_neg_s1_rdp/run.log:EQUIV FAIL inst 1 cyc 19440: user 1 pos 1 tok 889422 (exp pos 2 tok 889627)
+r9_neg_s1_rdp/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=2000050 fin=562948/0 issues=35010/1776 rejects=2846/149 squashed=7298/30 committed_ok=27712/998 err=0/748 fault_cyc=0/231 mism=0
+r9_neg_s1_rdp/run.log:EQUIV FAIL
+r9_neg_s1_rdp/run.log:rc 1
+r9_neg_s1_link/run.log:EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=1029400 fin=562948/1029349 issues=35010/30927 rejects=2846/2575 squashed=7298/3215 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0
+r9_neg_s1_link/run.log:EQUIV PASS
+r9_neg_s1_link/run.log:rc 0
+r9_neg_s0_link/run.log:LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant)
+r9_neg_s0_link/run.log:rc 1
+r9c_neg_s0_upos/run.log:EQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/65b6a88fffe9443a starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0
+r9c_neg_s0_upos/run.log:EQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1649225 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/193493 mism=0
+r9c_neg_s0_upos/run.log:EQUIV FAIL
+r9c_neg_s0_upos/run.log:rc 1
+r9c_neg_s0_vmrd/run.log:EQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/1099a220b8163aba starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0
+r9c_neg_s0_vmrd/run.log:EQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1653040 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/1649292 mism=0
+r9c_neg_s0_vmrd/run.log:EQUIV FAIL
+r9c_neg_s0_vmrd/run.log:rc 1
+r9c_s0_all/run.log:EQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/65b6a88fffe9443a starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0
+r9c_s0_all/run.log:EQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1649225 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/1645505 mism=0
+r9c_s0_all/run.log:EQUIV PASS
+r9c_s0_all/run.log:rc 0
+r9c_s0_link_only/run.log:EQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/65b6a88fffe9443a starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0
+r9c_s0_link_only/run.log:EQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1630425 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/1626747 mism=0
+r9c_s0_link_only/run.log:EQUIV PASS
+r9c_s0_link_only/run.log:rc 0
+r9c_s0_r7/run.log:EQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/65b6a88fffe9443a starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0
+r9c_s0_r7/run.log:EQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1643859 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/1640141 mism=0
+r9c_s0_r7/run.log:EQUIV PASS
+r9c_s0_r7/run.log:rc 0
+r9c_s0_vm_only/run.log:EQUIV STREAM out=940000/940000 dig=65b6a88fffe9443a/65b6a88fffe9443a starts=20000/20000 dig=3c36eb49de39bad0/3c36eb49de39bad0
+r9c_s0_vm_only/run.log:EQUIV STATS source=0 lockstep=0 maxu=866 users=866 cycles=1660901 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/1657148 mism=0
+r9c_s0_vm_only/run.log:EQUIV PASS
+r9c_s0_vm_only/run.log:rc 0
+ARGS r9_s1_all: -GSOURCE=1 -GLOCKSTEP=0 -GMAXU=866 -GUSERS=866 -GSEED=11 -GCLAT=6 -GPDLY=40 -DOT_WFC_REC_SRAM=1 -DOT_WFC_UPOS_LWR=1 -DOT_WFC_CONTROL_PIPE=1 -DOT_WFC_CFG_Q=1 -DOT_WFC_PRECOMP=1 -DOT_WFC_IN_DEC=1 -DOT_WFC_TXQ_SLICE=1 -DOT_WFC_RDY_LT=1 -DOT_WFC_FANOUT_COPY=1 -DOT_WFC_MARGIN=1 -DOT_WFC_LINK_REG=1 -DOT_WFC_VM_REG=1 -DOT_WFC_RD_PIPE=1 -DOT_WFC_SLEW_COPY=1
+ARGS r9c_s0_all: -GSOURCE=0 -GLOCKSTEP=0 -GSTREAM=1 -GMAXU=866 -GUSERS=866 -GSEED=13 -GNJOBS=20000 -GXWORDS=46 -GRXWORDS=41 -DOT_WFC_REC_SRAM=1 -DOT_WFC_UPOS_LWR=1 -DOT_WFC_CONTROL_PIPE=1 -DOT_WFC_CFG_Q=1 -DOT_WFC_PRECOMP=1 -DOT_WFC_IN_DEC=1 -DOT_WFC_TXQ_SLICE=1 -DOT_WFC_RDY_LT=1 -DOT_WFC_FANOUT_COPY=1 -DOT_WFC_MARGIN=1 -DOT_WFC_LINK_REG=1 -DOT_WFC_VM_REG=1 -DOT_WFC_RD_PIPE=1 -DOT_WFC_SLEW_COPY=1

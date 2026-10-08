@@ -1,0 +1,58 @@
+{
+  "status": "EXACT_NATIVE_TYPED_CANCEL_CANDIDATE_NOT_ADOPTED",
+  "predecessor_ledger": "fc9ceae01e8f1e86ebd326db92d0dbf6248e22621bbaed8e758b77bd9450c27e",
+  "bridge_commit": "b9d82072c",
+  "bridge_cancel_sha256": "005f74bb0f2f422dabb3b8681e9923e431be324d86a3336623542c87f6a33d0f",
+  "controller_commit": "150043a1f",
+  "added_state_bits_per_pc": 0,
+  "added_logic_reservation_um2": 256,
+  "added_local_boundary_bits_per_cycle": 11,
+  "added_fault_free_cycles": 0,
+  "abort_cost": "one acknowledged cancellation per controlleredge; physically committed writes requiretruecompletion",
+  "generic_ff_per_pc": 14840,
+  "composed_service_ff_per_pc": 19554,
+  "composed_frame_um": [
+    859.072,
+    370.44
+  ],
+  "tests": [
+    "PC0/31 native41scenarios each including34stateupsets with cancellationoffered",
+    "actualreceiving-edge wrongcancel-tag comparatorbypass expectedfailure",
+    "defaultoff",
+    "genericindependent7419bitrootcopies andaliasnegative",
+    "productionYosys0.68 frontend/synthesis/check",
+    "actualidentityhub54/55hops,16WRdone+4typedcancel with1fsclockprecision",
+    "actualpendingWRfaultreturnsreal17tickcompletion",
+    "spoofedearlyfencepreservesactualcommittedownership",
+    "one-tickearlyPHYdone negative fails receivingedge timing assertion"
+  ],
+  "first_write_ns": {
+    "54": 68.692,
+    "55": 69.716
+  },
+  "first_done_ns": {
+    "54": 151.111,
+    "55": 153.333
+  },
+  "remaining": [
+    "Actual external protectedrefreshowner",
+    "GlobalFENCE/ACK reconciliation, orderedtransportdrain andreadquarantine; no trustedboolean promotedtoimplementation",
+    "Stickycontroller recovery and safeDRAMallclosed initialization beforeepochrestart",
+    "Bridge mutablepostCRC/nativepayloadprotection gap",
+    "Actualmapped/placedindependence includingcontroller/serviceguard",
+    "FullSS/FF>=15ps,DRC0 andactualstationpinplacement; no routeyet"
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_ctrl_write_cancel.sv": "864e3973f81c61ece490e32f5c6e10fcadb465b7b2100c3ad348a337f40154af",
+    "rtl/physical/ot_qwen_ctrl_write_cancel_service_pc.sv": "632bc1b2cd43e18804641b67c4833d775a20d9ad2a7f5a5d807d7965bb72e24b",
+    "rtl/physical/ot_qwen_ctrl_write_cancel_pc00.sv": "d41274cd9caa25c147f30750bf3468c6a52b338782a44452041e130b4dd6a327",
+    "rtl/test/tb_qwen_ctrl_write_cancel.sv": "bbe98f186ffc753a3a9bce35b6ec4e22c4149dafd610350780bad8a3859c6d14",
+    "rtl/test/tb_qwen_ctrl_write_cancel_disabled.sv": "c6a9be717bf8c520d4e367c59d0d987bb28fd2af0598758ad2949261aa3c5d57",
+    "rtl/test/tb_qwen_kvc_ctrl_cancel_bridge.sv": "9b65d52ad2a5fa8be0609e60e21fbbb27438bdad9868c7ec871f49636a7ddf86",
+    "tools/qwen_ctrl_write_cancel_gate.py": "9e4cc354995f1a37499729bc38f7a9a52575fd5276fba180bfe2418abfe02f79",
+    "tools/qwen_ctrl_hub_cancel_gate.py": "a46a54950befe4a51170c3e914b059028bc5e992ba6cdfbaee6a368f4c74f82d",
+    "tools/check_qwen_ctrl_write_cancel_retention.py": "bf874a14112ecef3bc982563503da056b17faaa7bfddbf5d0af8205bb7c2ab2d",
+    "tools/uarch_model_qwen_ctrl_write_cancel.py": "1592a8241c5edbf83c9ae5c61a51fc9fcba19f56a40ec13d4b759243b54f5568",
+    "physical/qwen_die_masters/cfg/qfd_ctrl_write_cancel_00.env": "aabffeed8b1c9447aa5c12ad84bf3b0d9b63beb0795db13d7cfd30b35d55d0d3"
+  }
+}

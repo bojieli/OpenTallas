@@ -1,0 +1,56 @@
+// Full-capacity WINDOW column candidate. Default selects the unchanged column.
+// Model: uarch_model.dsrom_window_column_halfwrite_model.
+module ot_dsrom_window_column_halfwrite_distributed #(
+    parameter HALFWRITE=0
+) (
+    input wire clk, rst_n,
+    input wire [31:0] row_we,
+    input wire [127:0] write_data,
+    input wire read_v,
+    input wire [4:0] read_addr,
+    output wire [127:0] read_data
+);
+    generate if (!HALFWRITE) begin : g_original
+        ot_dsrom_window_column #(.WIDTH(128)) original (.clk(clk), .rst_n(rst_n), .row_we(row_we), .write_data(write_data), .read_v(read_v), .read_addr(read_addr), .read_data(read_data));
+    end else begin : g_halfwrite
+        reg [127:0] mem [0:31];
+        // Eight row groups limit each data-register output to four storage bits.
+        // Eight16-bit lanes limit each write-enable output to16 storage bits.
+        genvar bank; for(bank=0;bank<8;bank=bank+1) begin : g_bank
+            wire [127:0] wd;
+            (* keep_hierarchy=1 *) ot_window_capture128 capture_data (.clk(clk), .d(write_data), .q(wd));
+            genvar lane; for(lane=0;lane<8;lane=lane+1) begin : g_lane
+                wire [3:0] we;
+                (* keep_hierarchy=1 *) ot_window_capture4 capture_enable (.clk(clk), .d(row_we[4*bank+:4]), .q(we));
+                genvar row; for(row=0;row<4;row=row+1) begin : g_row
+                    always @(negedge clk)
+                        if(we[row]) mem[4*bank+row][16*lane+:16]<=wd[16*lane+:16];
+                end
+            end
+        end
+        reg [127:0] rq [0:3];
+        reg [1:0] rh;
+        reg pending;
+        reg [127:0] result;
+        genvar group; for(group=0;group<4;group=group+1) begin : g_read
+            always @(posedge clk)
+                if(read_v) rq[group]<=mem[8*group+read_addr[2:0]];
+        end
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n) pending<=0;
+            else begin
+                pending<=read_v;
+                if(read_v) rh<=read_addr[4:3];
+                if(pending) result<=rq[rh];
+            end
+        assign read_data=result;
+    end endgenerate
+endmodule
+
+// Hierarchy protects actual capture cells from cross-copy equivalence merging.
+(* keep_hierarchy=1 *) module ot_window_capture128(input wire clk, input wire [127:0] d, output reg [127:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+(* keep_hierarchy=1 *) module ot_window_capture4(input wire clk, input wire [3:0] d, output reg [3:0] q);
+    always @(posedge clk) q <= d;
+endmodule

@@ -1,0 +1,552 @@
+{
+  "schema": "opentallas.native_sm.installed_spans.v1",
+  "scope": "Recovered original dshbm_sm_pq_seq stress fixture generated NC8 (prior arithmetic gate active1); full stored inputs retained. Not released checkpoint or production installation.",
+  "model": {
+    "status": "prebuild_not_installed",
+    "replicas": 32,
+    "MACs_per_cycle": 0,
+    "program": {
+      "record_words": 10,
+      "word_bits": 32,
+      "record_bytes": 40,
+      "sector_bytes": 32
+    },
+    "weights": {
+      "payload_bits": 1088,
+      "stride_bytes": 160,
+      "sectors_per_line": 5,
+      "line_address": "native d_base/req_addr are physical_byte_address // 160; every allocated weight base is divisible by160",
+      "padding_bits": 192,
+      "service_peak_bytes_per_edge": 32,
+      "minimum_edges_per_line": 5
+    },
+    "operand": {
+      "fragment_bits": 25216,
+      "payload_bytes": 3152,
+      "stride_bytes": 3328,
+      "groups": 13,
+      "group_bits": 2048,
+      "last_group_active_bits": 640,
+      "service_sectors_per_fragment": 104,
+      "zero_padding_bytes": 176,
+      "minimum_service_edges_per_fragment": 104,
+      "minimum_SM_edges_per_fragment": 13
+    },
+    "result": {
+      "row_bits": 256,
+      "max_rows": 4096,
+      "stride_bytes": 32,
+      "visibility": "actual destination write ACK and readback comparison before publication; no installer-generated completion"
+    },
+    "mutable_metadata": "installed spans must be loaded into protected bounded provider state before run; this software output is not a hardware ownership grant",
+    "traffic": "one 256bit shared service port per active provider; finite serialized request/response timing priced by provider model",
+    "latency": "weights at least5 sector transfers/line; X at least104 transfers/fragment; actual service/credit RTT added for each outstanding window",
+    "storage": "installer adds no hardware; program/X/weight/result providers priced separately before RTL",
+    "allocation": "reuse actual tools/gpu_sys/v41_hbm.py Program.put/wr inside existing installed workspace bounds",
+    "physical_admitted": false,
+    "production_installation_complete": false
+  },
+  "source_sha256": {
+    "results/rtl/hbm_opt_integrated_20261005/normal_gather_owner/source_r2/workspace_successor.json": "09206d3b688ea441a26a84406bfd688050c011a132288532f8a36ab2d156ce8f",
+    "results/uarch/hbm_sm_native_production_20261007/recovered_payload_manifest.json": "b57da5e45b5cb46f4d24a3ee168b66022b500a8288e1b49e2760e355278d6f74",
+    "/home/ubuntu/OpenTallas/tools/gpu_sys/v41_hbm.py": "69798a0034eaeaee91d30907fa4b34ac4848d757abfbe941398af2e80523b153",
+    "/tmp/codex-claude-recovery-20261007/hbm-sm/gate_preflight_current/positive/stress_haz1_g0_smh_a1/seq.hex": "217bae8ead442cc2bce48249b909346c9fd7371f7feb5f4288cd8d7188113a92",
+    "/tmp/codex-claude-recovery-20261007/hbm-sm/gate_preflight_current/positive/stress_haz1_g0_smh_a1/lines.hex": "542ae239ee22cf3f3df495a84795201a0f91a982eb854d8069d902dc0dabd51c",
+    "/tmp/codex-claude-recovery-20261007/hbm-sm/gate_preflight_current/positive/stress_haz1_g0_smh_a1/x.hex": "c3a0ae29622fd0dfd035e719ae1e05c1c42522a4b3bc8f1230aa2f91352cc063"
+  },
+  "program_base": 119160832,
+  "program_limit": 119161352,
+  "program_storage_limit": 119161376,
+  "record_count": 13,
+  "allocation_start": 119160832,
+  "allocation_end": 121063328,
+  "spans": [
+    {
+      "name": "NATIVE_SM_PROGRAM",
+      "base": 119160832,
+      "end": 119161376,
+      "bytes": 544,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_W0",
+      "base": 119161440,
+      "end": 119174240,
+      "bytes": 12800,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X0",
+      "base": 119174240,
+      "end": 119440480,
+      "bytes": 266240,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R0",
+      "base": 119440480,
+      "end": 119440512,
+      "bytes": 32,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W1",
+      "base": 119440640,
+      "end": 119453440,
+      "bytes": 12800,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X1",
+      "base": 119453440,
+      "end": 119719680,
+      "bytes": 266240,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R1",
+      "base": 119719680,
+      "end": 119719712,
+      "bytes": 32,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W2",
+      "base": 119719840,
+      "end": 119724960,
+      "bytes": 5120,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X2",
+      "base": 119724960,
+      "end": 119778208,
+      "bytes": 53248,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R2",
+      "base": 119778208,
+      "end": 119778272,
+      "bytes": 64,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W3",
+      "base": 119778400,
+      "end": 119819360,
+      "bytes": 40960,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X3",
+      "base": 119819360,
+      "end": 119845984,
+      "bytes": 26624,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R3",
+      "base": 119845984,
+      "end": 119847008,
+      "bytes": 1024,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W4",
+      "base": 119847040,
+      "end": 119867520,
+      "bytes": 20480,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X4",
+      "base": 119867520,
+      "end": 120080512,
+      "bytes": 212992,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R4",
+      "base": 120080512,
+      "end": 120080576,
+      "bytes": 64,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W5",
+      "base": 120080640,
+      "end": 120084480,
+      "bytes": 3840,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X5",
+      "base": 120084480,
+      "end": 120164352,
+      "bytes": 79872,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R5",
+      "base": 120164352,
+      "end": 120164384,
+      "bytes": 32,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W6",
+      "base": 120164480,
+      "end": 120202880,
+      "bytes": 38400,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X6",
+      "base": 120202880,
+      "end": 120469120,
+      "bytes": 266240,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R6",
+      "base": 120469120,
+      "end": 120469216,
+      "bytes": 96,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W7",
+      "base": 120469280,
+      "end": 120510240,
+      "bytes": 40960,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X7",
+      "base": 120510240,
+      "end": 120563488,
+      "bytes": 53248,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R7",
+      "base": 120563488,
+      "end": 120564000,
+      "bytes": 512,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W8",
+      "base": 120564000,
+      "end": 120569120,
+      "bytes": 5120,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R8",
+      "base": 120569120,
+      "end": 120569184,
+      "bytes": 64,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W9",
+      "base": 120569280,
+      "end": 120582080,
+      "bytes": 12800,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X9",
+      "base": 120582080,
+      "end": 120848320,
+      "bytes": 266240,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R9",
+      "base": 120848320,
+      "end": 120848352,
+      "bytes": 32,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W10",
+      "base": 120848480,
+      "end": 120856160,
+      "bytes": 7680,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X10",
+      "base": 120856160,
+      "end": 120936032,
+      "bytes": 79872,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R10",
+      "base": 120936032,
+      "end": 120936096,
+      "bytes": 64,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W11",
+      "base": 120936160,
+      "end": 120941280,
+      "bytes": 5120,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X11",
+      "base": 120941280,
+      "end": 120994528,
+      "bytes": 53248,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R11",
+      "base": 120994528,
+      "end": 120994592,
+      "bytes": 64,
+      "reserved_only": true
+    },
+    {
+      "name": "NATIVE_SM_W12",
+      "base": 120994720,
+      "end": 121035680,
+      "bytes": 40960,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_X12",
+      "base": 121035680,
+      "end": 121062304,
+      "bytes": 26624,
+      "reserved_only": false
+    },
+    {
+      "name": "NATIVE_SM_R12",
+      "base": 121062304,
+      "end": 121063328,
+      "bytes": 1024,
+      "reserved_only": true
+    }
+  ],
+  "records": [
+    {
+      "record": 0,
+      "program_byte_address": 119160832,
+      "weight_byte_base": 119161440,
+      "weight_line_base": 744759,
+      "weight_lines": 80,
+      "weight_stride": 160,
+      "x_byte_base": 119174240,
+      "x_extent": 80,
+      "x_stride": 3328,
+      "x_ring_base": 0,
+      "x_load": true,
+      "result_byte_base": 119440480,
+      "result_rows": 1,
+      "result_stride": 32
+    },
+    {
+      "record": 1,
+      "program_byte_address": 119160872,
+      "weight_byte_base": 119440640,
+      "weight_line_base": 746504,
+      "weight_lines": 80,
+      "weight_stride": 160,
+      "x_byte_base": 119453440,
+      "x_extent": 80,
+      "x_stride": 3328,
+      "x_ring_base": 80,
+      "x_load": true,
+      "result_byte_base": 119719680,
+      "result_rows": 1,
+      "result_stride": 32
+    },
+    {
+      "record": 2,
+      "program_byte_address": 119160912,
+      "weight_byte_base": 119719840,
+      "weight_line_base": 748249,
+      "weight_lines": 32,
+      "weight_stride": 160,
+      "x_byte_base": 119724960,
+      "x_extent": 16,
+      "x_stride": 3328,
+      "x_ring_base": 32,
+      "x_load": true,
+      "result_byte_base": 119778208,
+      "result_rows": 2,
+      "result_stride": 32
+    },
+    {
+      "record": 3,
+      "program_byte_address": 119160952,
+      "weight_byte_base": 119778400,
+      "weight_line_base": 748615,
+      "weight_lines": 256,
+      "weight_stride": 160,
+      "x_byte_base": 119819360,
+      "x_extent": 8,
+      "x_stride": 3328,
+      "x_ring_base": 48,
+      "x_load": true,
+      "result_byte_base": 119845984,
+      "result_rows": 32,
+      "result_stride": 32
+    },
+    {
+      "record": 4,
+      "program_byte_address": 119160992,
+      "weight_byte_base": 119847040,
+      "weight_line_base": 749044,
+      "weight_lines": 128,
+      "weight_stride": 160,
+      "x_byte_base": 119867520,
+      "x_extent": 64,
+      "x_stride": 3328,
+      "x_ring_base": 56,
+      "x_load": true,
+      "result_byte_base": 120080512,
+      "result_rows": 2,
+      "result_stride": 32
+    },
+    {
+      "record": 5,
+      "program_byte_address": 119161032,
+      "weight_byte_base": 120080640,
+      "weight_line_base": 750504,
+      "weight_lines": 24,
+      "weight_stride": 160,
+      "x_byte_base": 120084480,
+      "x_extent": 24,
+      "x_stride": 3328,
+      "x_ring_base": 120,
+      "x_load": true,
+      "result_byte_base": 120164352,
+      "result_rows": 1,
+      "result_stride": 32
+    },
+    {
+      "record": 6,
+      "program_byte_address": 119161072,
+      "weight_byte_base": 120164480,
+      "weight_line_base": 751028,
+      "weight_lines": 240,
+      "weight_stride": 160,
+      "x_byte_base": 120202880,
+      "x_extent": 80,
+      "x_stride": 3328,
+      "x_ring_base": 16,
+      "x_load": true,
+      "result_byte_base": 120469120,
+      "result_rows": 3,
+      "result_stride": 32
+    },
+    {
+      "record": 7,
+      "program_byte_address": 119161112,
+      "weight_byte_base": 120469280,
+      "weight_line_base": 752933,
+      "weight_lines": 256,
+      "weight_stride": 160,
+      "x_byte_base": 120510240,
+      "x_extent": 16,
+      "x_stride": 3328,
+      "x_ring_base": 96,
+      "x_load": true,
+      "result_byte_base": 120563488,
+      "result_rows": 16,
+      "result_stride": 32
+    },
+    {
+      "record": 8,
+      "program_byte_address": 119161152,
+      "weight_byte_base": 120564000,
+      "weight_line_base": 753525,
+      "weight_lines": 32,
+      "weight_stride": 160,
+      "x_byte_base": 120510240,
+      "x_extent": 16,
+      "x_stride": 3328,
+      "x_ring_base": 96,
+      "x_load": false,
+      "result_byte_base": 120569120,
+      "result_rows": 2,
+      "result_stride": 32
+    },
+    {
+      "record": 9,
+      "program_byte_address": 119161192,
+      "weight_byte_base": 120569280,
+      "weight_line_base": 753558,
+      "weight_lines": 80,
+      "weight_stride": 160,
+      "x_byte_base": 120582080,
+      "x_extent": 80,
+      "x_stride": 3328,
+      "x_ring_base": 112,
+      "x_load": true,
+      "result_byte_base": 120848320,
+      "result_rows": 1,
+      "result_stride": 32
+    },
+    {
+      "record": 10,
+      "program_byte_address": 119161232,
+      "weight_byte_base": 120848480,
+      "weight_line_base": 755303,
+      "weight_lines": 48,
+      "weight_stride": 160,
+      "x_byte_base": 120856160,
+      "x_extent": 24,
+      "x_stride": 3328,
+      "x_ring_base": 64,
+      "x_load": true,
+      "result_byte_base": 120936032,
+      "result_rows": 2,
+      "result_stride": 32
+    },
+    {
+      "record": 11,
+      "program_byte_address": 119161272,
+      "weight_byte_base": 120936160,
+      "weight_line_base": 755851,
+      "weight_lines": 32,
+      "weight_stride": 160,
+      "x_byte_base": 120941280,
+      "x_extent": 16,
+      "x_stride": 3328,
+      "x_ring_base": 88,
+      "x_load": true,
+      "result_byte_base": 120994528,
+      "result_rows": 2,
+      "result_stride": 32
+    },
+    {
+      "record": 12,
+      "program_byte_address": 119161312,
+      "weight_byte_base": 120994720,
+      "weight_line_base": 756217,
+      "weight_lines": 256,
+      "weight_stride": 160,
+      "x_byte_base": 121035680,
+      "x_extent": 8,
+      "x_stride": 3328,
+      "x_ring_base": 104,
+      "x_load": true,
+      "result_byte_base": 121062304,
+      "result_rows": 32,
+      "result_stride": 32
+    }
+  ],
+  "installation_sectors": 59321,
+  "production_installation_complete": false,
+  "hardware_ownership_granted": false,
+  "loader_acknowledged": false
+}

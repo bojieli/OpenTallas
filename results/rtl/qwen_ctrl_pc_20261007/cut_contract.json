@@ -1,0 +1,107 @@
+{
+  "schema": "opentallas.qwen_ctrl_pc_cut.v1",
+  "status": "RTL_EXACT_PHYSICAL_PENDING",
+  "functional_clock": "hbm_976p6",
+  "functional_period_ps": 1024,
+  "physical_signoff_period_ps": 833.333,
+  "clock_warning": "833ps physical screen does not authorize speeding the functional JEDEC clock",
+  "width_um": 247.536,
+  "height_um": 370.44,
+  "replicas": 128,
+  "masters": 32,
+  "per_master": 4,
+  "placement": "stack WS/WN/ES/EN: PCp beside existing CDCp; master qfd_ctrl_pc_%02d % p; 32 slots per stack",
+  "control_format": {
+    "width": 32,
+    "opcode": "bits31:30:0 descriptor,1 go,2 write,3 invalid",
+    "descriptor": "bits29:19 n1..1024;bits18:0 row",
+    "write": "bits9:5 column;bits4:0 bank"
+  },
+  "ports": {
+    "inputs": {
+      "clk": 1,
+      "rst_n": 1,
+      "cmd_v": 1,
+      "cmd": 32,
+      "read_credit": 3
+    },
+    "outputs": {
+      "cmd_credit": 1,
+      "row_v": 1,
+      "row_op": 3,
+      "row_bank": 5,
+      "row_row": 19,
+      "col_v": 1,
+      "col_bank": 5,
+      "col_col": 5,
+      "col_we": 1,
+      "busy": 1,
+      "fault": 1
+    }
+  },
+  "flow": {
+    "command_fifo_depth": 8,
+    "initial_credits": 8,
+    "return": "one cmd_credit pulse per consumed command",
+    "read_credit": "0..7 read-sector credits returned separately; original controller initial32"
+  },
+  "physical_pin_regions": {
+    "command": "west",
+    "phy_row_and_column": "east",
+    "clock_reset_status": "north"
+  },
+  "coverage": {
+    "pc_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "refresh_phase": "floor(PC*118/32)",
+    "reads_per_pc": 2048,
+    "writes_per_pc": 16,
+    "descriptors_per_pc": 2,
+    "all32_banks": true,
+    "negative": "column-address scoreboard mutation fails; malformed opcode faults"
+  },
+  "omitted": [
+    "write data/tag queue",
+    "read landing/data queue",
+    "all-PC descriptor fencing",
+    "global retire/fault aggregation",
+    "KVC stream mapping and row scheduling"
+  ],
+  "rtl_sources": {
+    "rtl/physical/ot_qwen_ctrl_pc.sv": "ac4ee83ca4ad7df6bb046e75415d78d984b6330f24d389efbaa3452f7a34d809",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "a2cfb09b7868936ca886c9e92b68f08ecffdd1e8236ee1313f8ffce9d2b33dcf",
+    "rtl/test/tb_qwen_ctrl_pc.sv": "a1c7dd14146f52578089bffe0738b62050b8357594ab455d258188cfb8ae9a1b"
+  }
+}

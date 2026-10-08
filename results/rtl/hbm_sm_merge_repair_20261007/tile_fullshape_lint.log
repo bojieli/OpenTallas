@@ -1,0 +1,22 @@
+%Error: Specified --top-module 'ot_hbm_accel_smh_tile_e' isn't at the top level, it's under another cell 'ot_hbm_accel_smh'
+%Error-TIMESCALEMOD: rtl/hdc/ot_hdc_fp32_add_lat.sv:38:49: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     rtl/hdc/ot_hdc_prefix.sv:13:8: ... Location of module with timescale
+   13 | module ot_hdc_ksadd_k #(
+      |        ^~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: rtl/hdc/ot_hdc_fp32_mul_lat.sv:46:49: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     rtl/hdc/ot_hdc_prefix.sv:13:8: ... Location of module with timescale
+   13 | module ot_hdc_ksadd_k #(
+      |        ^~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: rtl/hdc/v41/ot_hdc_blockdot.sv:343:61: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     rtl/hdc/ot_hdc_prefix.sv:13:8: ... Location of module with timescale
+   13 | module ot_hdc_ksadd_k #(
+      |        ^~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: rtl/gpu/ot_gpu_bulk_copy.sv:94:43: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     rtl/hdc/ot_hdc_prefix.sv:13:8: ... Location of module with timescale
+   13 | module ot_hdc_ksadd_k #(
+      |        ^~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:83:42: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     rtl/hdc/ot_hdc_prefix.sv:13:8: ... Location of module with timescale
+   13 | module ot_hdc_ksadd_k #(
+      |        ^~~~~~~~~~~~~~
+%Error: Exiting due to 6 error(s)

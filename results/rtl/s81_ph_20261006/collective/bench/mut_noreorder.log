@@ -1,0 +1,27 @@
+DIE 1 GATHER beat 10 mismatch
+DIE 1 GATHER beat 11 mismatch
+DIE 1 GATHER beat 12 mismatch
+DIE 1 GATHER beat 13 mismatch
+DIE 1 GATHER beat 14 mismatch
+DIE 1 GATHER beat 15 mismatch
+DIE 1 GATHER beat 16 mismatch
+DIE 1 GATHER beat 17 mismatch
+DIE 1 GATHER beat 18 mismatch
+DIE 1 GATHER beat 19 mismatch
+DIE 1 GATHER beat 21 mismatch
+DIE 1 GATHER beat 22 mismatch
+DIE 1 GATHER beat 23 mismatch
+DIE 1 GATHER beat 24 mismatch
+DIE 1 GATHER beat 25 mismatch
+DIE 1 GATHER beat 33 mismatch
+DIE 1 GATHER beat 34 mismatch
+DIE 1 GATHER beat 35 mismatch
+DIE 1 GATHER beat 36 mismatch
+CYCLES dut_last 4042 ref_last 1673 first_send 1111 records 440 messages 60
+TB_S81PH_COLL_SYS FAIL errs 585
+- /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/src2/rtl/dsrom_sys/s81_ph/test/tb_s81ph_coll_sys.sv:210: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 3us; walltime 3.245 s; speed 1.039 us/s
+- Verilator: cpu 3.245 s on 1 threads; alloced 1065 MB
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:03.26
+	Maximum resident set size (kbytes): 57280

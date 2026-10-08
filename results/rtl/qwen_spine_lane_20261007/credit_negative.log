@@ -1,0 +1,4 @@
+FAIL credit position tag=0 split=7 p=1 got=40400000 expected=40000000
+[506000] %Fatal: tb_qwen_spine_lane_credit.sv:49: Assertion failed in tb_qwen_spine_lane_credit
+%Error: rtl/test/tb_qwen_spine_lane_credit.sv:49: Verilog $stop
+Aborting...

@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_ready_00-8be556c2e/src/tools/w18/corner_sta_ref.py", line 48, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_ready_00-8be556c2e/src/tools/w18/corner_sta_ref.py", line 37, in main
+    setup_ss=C.run(o, "ss", a.macro), hold_ff=C.run(o, "ff", a.macro), libraries=C.LIBS,
+             ~~~~~^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_ready_00-8be556c2e/src/tools/w18/corner_sta.py", line 82, in run
+    (orfs / f"w18_sta_{corner}.tcl").write_text(script(corner, rel, macros, post_sdc))
+                                                ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_ready_00-8be556c2e/src/tools/w18/corner_sta_ref.py", line 26, in script
+    s = _orig(corner, base, macros, post_sdc)
+  File "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_ready_00-8be556c2e/src/tools/w18/corner_sta.py", line 49, in script
+    read_sdc {base}/{sdc}
+                     ^^^
+NameError: name 'sdc' is not defined

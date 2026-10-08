@@ -2,6 +2,8 @@
 
 These rules come from the project owner and bind Codex, Claude and every sub-agent. The architectural statement is Table 5-2 of [docs/ARCHITECTURE_ATLAS.html](docs/ARCHITECTURE_ATLAS.html). The current plan is [docs/INTEGRATED_PHYSICAL_PLAN.md](docs/INTEGRATED_PHYSICAL_PLAN.md).
 
+**Latest owner decisions (confirmed 2026-10-07):** Read [docs/OWNER_DIRECTIVES_2026_10_07.md](docs/OWNER_DIRECTIVES_2026_10_07.md). It supersedes conflicting older instructions below, including the Qwen freeze, closure-cost ceilings, older margin targets, and restrictions on parallel structural variants. Model sizing, correctness, immutable evidence, and measured resource admission remain required.
+
 ## Design method (adopted 2026-09-29)
 
 1. **Microarchitecture model before build.** Before writing engine RTL or launching place and route, the block must be sized in the unified microarchitecture analytical model (`tools/uarch_model.py`, [docs/MICROARCH_MODEL.md](docs/MICROARCH_MODEL.md)). The model covers every design: Qwen3-8B ROM, Qwen3-8B HBM, DeepSeek-V4.1 ROM and DeepSeek-V4.1 HBM. For every block it states:

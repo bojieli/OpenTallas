@@ -1,0 +1,41 @@
+{
+  "status": "FROZEN_READY",
+  "new_paths": {
+    "results/rtl/hbm_sm_result_provider_20261007/component.json": "7aad572557fc9437a6f4af43e1d306fa62c788a8a6c794e2e053dbc83c1fbd1e",
+    "results/rtl/hbm_sm_result_provider_20261007/model.json": "ca59a8b0aa3337ec2cc89fcc0cb6a3a6be6a1065cce4848f817380cde43de6b2",
+    "results/rtl/hbm_sm_weight_x_20261007/component.json": "9cc938399e713ad8dfe05e79537a69efa029d0ce119270f3f97915d86e3cb364",
+    "results/rtl/hbm_sm_weight_x_20261007/prebuild_model.json": "91df4408435c23d30c299a22765e9c0c2f262913a27cba5d4bb360f65aee2f0f",
+    "rtl/hbm_accel/control_20261007/result_provider/ot_hbm_sm_result_provider.sv": "bf16ba804022422a3fdd1c8687178e9a9f0838f10d02245199b0f51881458632",
+    "rtl/hbm_accel/control_20261007/result_provider/tb_hbm_sm_result_provider.sv": "06f236a3a1501ba3bd135aea38fdd7bb7da76420e9e074aa725ae7713ee1af1f",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_sector_read.sv": "6a7cc00153c099b5ef8793b8098b7c8e5bb682688cbae41ee7b62013446dc536",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_weight_read.sv": "ceb25267543fde21d04a1cc83a3d7c6c339b58c1148966d4be31f6f2b1aef5fa",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_weight_service_join.sv": "bfab45838a802650ddab62b1f423b3b692d17fb12acdd16679a965b879e7ed55",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_x_read.sv": "25a4b4cc2c74e079f10874ada90df48a10d11dde719830eaad43b5dba482ac28",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_x_service_join.sv": "3004ca3197890f302c0fb1cd104aae88e08e97159c6aa91eb38f65c44fa61d68",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/tb_hbm_sm_weight_read.sv": "619e5dbf2f4b75e1220721d6ec22c24f3e8b5a08b69f858eeba5c5ef4d89dc3a",
+    "rtl/hbm_accel/control_20261007/weight_x_provider/tb_hbm_sm_x_read.sv": "2b3b32a6d131519ffc89c400cf2a66616e8306ed212f4f784545e4104f409f20",
+    "tools/hbm_sm_result_provider_gate.py": "83d6203fb5ac65013317d8511339cd1f8447328f108473ad63c92f598a1be9a2",
+    "tools/hbm_sm_result_provider_model.py": "73c9e5dc9adc2bb493dea7c49f9b43bedd844a03cf61255762d0b47fab0360ad",
+    "tools/hbm_sm_weight_x_build.py": "0357352ba4f6aa8742b38796e063c4f71684ecb137aa8f1ac1b5f99911b2b3f4",
+    "tools/hbm_sm_weight_x_gate.py": "9c93fc66b7e88d6d9859ac5d41174834d447d1bb52d9ef5bf423f63edf960795",
+    "tools/hbm_sm_weight_x_model.py": "1488dcff7fe6e337f5e1a9126a8db01493fdafd8bee5ab40ad76d5a83ab65f4e"
+  },
+  "dependencies": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "719a9f4077941311f4b0d79cc873798c213c01ab8104d37b689f9210eff91cbf",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_addr_to_service.sv": "12e260d14e8e768c14c6092dee791bf626057ffff2a492695aa80f309f3af3dc",
+    "rtl/hbm_accel/integration/ot_hbm_loader_service_join.sv": "580a0490e2fde6ea8923174d441da927d5f5b465f4bd4c7c18a57344fd0e1f7d",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2/ot_sram_2rw_512x64_m4_r2c2.v": "76226bc1260ea5311e0c9ca2626f1f6b1ce1d5512753cc77b07b550253407664"
+  },
+  "scope": [
+    "Weight16lines and fullX128fragments mechanism simulated with synthetic sector peer, actual reqrl extracted; service wrappers enabled-lint only",
+    "Result4096rows actual SRAM simulation and synthetic write/readback peer; sharedservice mux/issuer/installed provider binding not in this handoff",
+    "Mapped preservation, timing, physical capacity remain unqualified; VM cannot guarantee drain, 40 SRAM perSM fallback unreserved"
+  ],
+  "active_successors": [
+    "shared_service_mux",
+    "native production parent binding",
+    "registered owner verification fallback"
+  ]
+}

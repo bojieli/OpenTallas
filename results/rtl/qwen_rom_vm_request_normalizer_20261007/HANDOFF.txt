@@ -1,0 +1,69 @@
+Default-off native ROM request normalizer prerequisite
+
+Model first: /tmp/qwen-vm-normalizer-20261007/model.json was generated before
+normalizer RTL. The delivered model carries its inventory forward with explicit
+response-sideband and widened-interface costs. This is a combinational minimum
+component, not a ROM wrapper, bank implementation or physical adoption.
+
+Source-semantic distinction confirmed
+Selected vprm_stream4 uses a32-bit temporary after widening native ME/MX24-bit
+word addresses before shifting left4. The existing HBM binder packs directly
+into24-bit scalar seats. Example native word0x100000 becomes scalar0x01000000,
+outside the1,048,576-element source ABI; early24-bit narrowing instead aliases0.
+The selected native ABI returns zero for enabled out-of-range reads and ignores
+out-of-range writes. Faulting every such native request would change its behavior.
+This does not weaken checked-state, owner, descriptor or valid-address integrity.
+
+The successor has ENABLE=0 by default, producing no read-publication or service
+write enables. The caller must retain its legacy path until explicitly enrolled.
+With ENABLE=1 it packs the full ROM source shape:
+-2256 reads in VA64/VB64/VC64/collective16/VX2048 order.
+-865 writes in ME768/MX16/SU64/reducer1/collective16 order.
+It preserves32-bit scalar addresses until bounds checking, qualifies ME reads
+and ME/MX writes with original me_wanted, preserves source masks and write-data
+slot order, drops native-invalid write enables, and produces independent
+read_publish_en/read_en/read_zero flags. An enabled invalid read has publish=1,
+service-read=0 and explicit zero publication data. Disabled reads have publish=0;
+held response-register behavior and original VX/XVM latency remain external.
+All write lanes are retained in ordered slots; downstream arbitration must keep
+last-writer-wins semantics. The component does not merge/reorder writes.
+
+The aligned extent shares bounds per16-lane word; partial extents compare each
+full-width scalar lane. VWA1..24 and ABI extents up to2^24 are supported. The
+selected target is VWA16/VM_ELEMS1,048,576. A hypothetical177,808-element backing
+store cannot be substituted for that native bound without an independent full
+workload extent proof and valid-address coverage. Invalid-native requests and
+valid-native requests lacking backing capacity are distinct cases.
+
+Model inventory and limitations
+No registers or source cycles are added by this combinational component.
+Measured physical delay/area, route tracks and floorplan fit are not established.
+The default target has2305 scalar high4-bit zero tests and49 shared word high8-bit
+zero tests; the model records7258 two-input OR equivalents as a lower bound,
+qualification gates,72,192 return mux bits and2256 read-zero frame metadata bits.
+Raw ME-intent fanout is2832; per-word bounds fanout16; each zero flag fans to32
+return bits. Wider address boundaries add18,048 read and6920 write wire bits.
+These are explicit inventories, not closed cell-area or frequency claims. A
+future adapter must own/protect the2256 zero flags with the captured request
+frame. Neither that state nor source/collective clock admission is implemented.
+
+Validation
+Actual full shape is simulated; the reference uses native widened-address
+statements checked against the selected source block and source hashes.
+Each positive mode checks37,452 enabled/address/mask/publication slot conditions
+across12 frames, plus return-data zeroing and unchanged write-data slot order.
+Modes include aligned extent, deliberately partial extent and ENABLE=0. Cases
+cover max scalar address, bound/bound-1, high-word wrap, masks, disabled ME,
+disabled source families, and conflicting writers to scalar0 (sequencer wins).
+Negative controls deliberately narrow the word-derived scalar before bounds,
+remove invalid-read zero intent, or bypass the invalid-read zero response mux.
+Their immutable logs and results record rejection.
+
+Source and timing boundaries still open
+This normalization assumes stable native PRE intent. Integrating it requires
+whole-core+sequencer admission while the memory service clock continues, original
+ME supply gating, real checked ACK/postverify release, original response holding
+and XVM handling, finite collective peer participation and protected metadata.
+No folded-bank service time, token gain, arithmetic exactness or SS/FF claim.
+The earlier prefix-only normalizer gate remains separately preserved; the
+successor adds actual zero publication data and its negative control.

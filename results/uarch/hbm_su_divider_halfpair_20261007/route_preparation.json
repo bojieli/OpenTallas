@@ -1,0 +1,23 @@
+{
+  "status": "ROUTE_TEMPLATE_READY_RESOURCE_AND_SOURCE_PIN_PENDING",
+  "adopted": false,
+  "reason": "60/25ps uncertainties independent of routeperiod; generated clocks propagated at finalsignoff",
+  "tool": "OpenSTA2.6.0",
+  "positive_log": "sdc_fixture/uncertainty_check.log",
+  "checked_master_periods_ps": [
+    833.333,
+    770.0
+  ],
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "mapped_hierarchy_qualification": false,
+  "source_sha256": {
+    "physical/hbm_su_div64/propagate_signoff.sdc": "18dff327c553e775939e2966e3462328ef1ec4917bf86b8ae0107e1e91b0a84d",
+    "physical/hbm_su_div64/generated_clocks_candidate.sdc": "147df527d2b541dcdf88ce0746073316b9266d55e4768e174d23cad2ef65f39b",
+    "physical/hbm_su_div64/su_full_sources.txt": "3be9a787e2c3660c71b1ef86f909fa66de94daa6d0342db6d6208450f79a3f45",
+    "physical/hbm_su_div64/full_generated_clocks_candidate.sdc": "a950e47f1d1f366447f975c791a10ac6befbb4f28f4ba7249302f26d37dd3682",
+    "physical/hbm_su_div64/route_full64.sh": "8a7467179f9b32da00fdc5ca3ef0f0b3b0f11e152e02dea8bb800e4b7998a8ef",
+    "physical/hbm_su_div64/closure_job.template.json": "120bda8737783b2ac877e7b3bfd082982af7925e9df74fc4ddf96eb3a006d019"
+  },
+  "resource_reservation": "Unmeasured; nulltemplatefield mustbe replaced from actualhost/buildinventory beforeadmission"
+}

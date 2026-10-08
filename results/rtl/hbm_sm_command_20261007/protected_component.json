@@ -1,0 +1,286 @@
+{
+  "baseline_commit": "dd2022955",
+  "baseline_trace_identical": true,
+  "scope": "RTL minimum parent; two full-shape owners, external memory/allocation/result peers still modeled",
+  "model": {
+    "status": "prebuild_candidate_not_adopted",
+    "baseline": {
+      "status": "prebuild_candidate",
+      "max_records": 256,
+      "MACs_per_cycle": 0,
+      "command_format": "exact existing ten little-indexed uint32 seq.hex words; no new ISA",
+      "placement": "SM-local control owner; incoming streams end in registered local capture",
+      "program_port": {
+        "request_bits": 33,
+        "response_bits": 66,
+        "payload_bytes_per_response": 4,
+        "max_outstanding": 1,
+        "record_bytes": 40
+      },
+      "allocation_port": {
+        "request_bits": 41,
+        "response_bits": 50,
+        "max_outstanding": 1,
+        "meaning": "actual selected weight-line base, not simulator line-file offset"
+      },
+      "x_port": {
+        "fragment_bits": 25216,
+        "beats_per_address": 13,
+        "data_bits_per_beat": 2048,
+        "last_beat_active_bits": 640,
+        "request_bits": 32,
+        "response_bits": 2077,
+        "bytes_per_accepted_edge": 256,
+        "queue_depth": 1
+      },
+      "SM_local_pins": {
+        "op_bits": 47,
+        "x_bits": 2063,
+        "descriptor_bits": 57,
+        "return_bits": 4
+      },
+      "storage_lower_bound_bits": {
+        "record": 320,
+        "program_address": 65,
+        "record_identity": 32,
+        "word_index": 4,
+        "operand_resident": 34,
+        "weight_base": 32,
+        "x_capture": 2063,
+        "counters": 12,
+        "state_status": 10,
+        "local_ingress_and_credit": 101
+      },
+      "total_flop_lower_bound_bits": 2673,
+      "flop_area_lower_bound_um2": 779.4468,
+      "slot_lower_bound_um2_at_55pct": 1417.176,
+      "latency": "per record 10*(request_wait + response_wait) + validate1 + allocationRTT + descriptor_wait + optional X-requestRTT + extent*13 accepted beats + capture1 + ingress/HOPS0 channel3 + real operation/arrive + actual result-publication acknowledgement; stalls measured separately",
+      "serialization": "no next record before actual arrive and matching result publication; therefore ring WAR and dependencies cannot overlap",
+      "replica_count": 32,
+      "fanout": "one local owner per selected SM; no 32-way combinational broadcast",
+      "tracks_capacity": null,
+      "slot_fit": null,
+      "admission": "not admitted; immutable pinned source/constraints and model integration required",
+      "unresolved": [
+        "program memory and actual DMA client allocation",
+        "weight allocator parent connection",
+        "result publication owner connection",
+        "mutable-state protection beyond bounds/identity",
+        "SS/FF and slot geometry"
+      ]
+    },
+    "scheme": "two independent registered owners; compare every output and independent per-owner critical-state parity; mismatch immediately gates all effect handshakes and latches abort",
+    "protected_fields": [
+      "320-bit record",
+      "program address/limit",
+      "record count/index",
+      "word/group/ordinal pointers",
+      "weight base",
+      "operand resident identity",
+      "FSM/arrive/publication/start flags",
+      "registered X payload/address/enable",
+      "ingress outputs before issue"
+    ],
+    "duplicate_owner_flops": 2673,
+    "sticky_abort_flops": 1,
+    "total_flops": 5347,
+    "flop_area_lower_bound_um2": 1559.1852000000001,
+    "slot_lower_bound_um2_at_55pct": 2834.882181818182,
+    "replicas": 32,
+    "nominal_added_cycles": 0,
+    "payload_compare_bits": 2268,
+    "handshake_compare_bits": 13,
+    "state_parity_compare_bits": 1,
+    "parity_tree_inputs_per_owner": 2572,
+    "balanced_parity_binary_levels": 12,
+    "local_generic_mapped_observation": {
+      "tool": "Yosys0.9; not fleet ORFS",
+      "state_flops": 5343,
+      "compare_and_gate_levels": 20,
+      "owner_parity_levels": 12,
+      "blocked_direct_pin_fanout": 13
+    },
+    "logic_cost": "second copy of baseline logic; XOR output compare plus two parity reductions over2572 owner-statebits; OR reduction and side-effect gates, not area measured",
+    "communication": "unchanged external widths; independent cores consume identical accepted source transactions; mismatch cannot acknowledge input or assert external writes/start/completion",
+    "fault_scope": "single state-bit upset or output disagreement; common-mode faults and coordinated equal parity multi-bit changes not claimed",
+    "physical_obligation": "no combinational timing assumed: compare tree and gate fanout require actual SS/FF closure; must pipeline/price if needed",
+    "open_gates": [
+      "parent memory/allocation/result binding",
+      "source/clock separation for independent physical copies",
+      "timing and compare-network physical qualification",
+      "actual ORFS mapped duplicate-bank preservation gate"
+    ],
+    "selected": false
+  },
+  "runs": [
+    {
+      "case": "normal",
+      "returncode": 0,
+      "output": "PASS native stress records=13 full_shape_X_captures=6448 cycles=8638\nSTATE 0 CYCLES 1\nSTATE 1 CYCLES 141\nSTATE 2 CYCLES 130\nSTATE 3 CYCLES 13\nSTATE 4 CYCLES 14\nSTATE 5 CYCLES 13\nSTATE 6 CYCLES 15\nSTATE 7 CYCLES 16\nSTATE 8 CYCLES 8057\nSTATE 9 CYCLES 12\nSTATE 10 CYCLES 13\nSTATE 11 CYCLES 210\nSTATE 12 CYCLES 1\nSTATE 13 CYCLES 0"
+    },
+    {
+      "case": "protection_off",
+      "returncode": 0,
+      "output": "PASS native stress records=13 full_shape_X_captures=6448 cycles=8638\nSTATE 0 CYCLES 1\nSTATE 1 CYCLES 141\nSTATE 2 CYCLES 130\nSTATE 3 CYCLES 13\nSTATE 4 CYCLES 14\nSTATE 5 CYCLES 13\nSTATE 6 CYCLES 15\nSTATE 7 CYCLES 16\nSTATE 8 CYCLES 8057\nSTATE 9 CYCLES 12\nSTATE 10 CYCLES 13\nSTATE 11 CYCLES 210\nSTATE 12 CYCLES 1\nSTATE 13 CYCLES 0"
+    },
+    {
+      "case": "a_record",
+      "returncode": 0,
+      "output": "PASS injected a_record; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_address",
+      "returncode": 0,
+      "output": "PASS injected a_address; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_limit",
+      "returncode": 0,
+      "output": "PASS injected a_limit; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_index",
+      "returncode": 0,
+      "output": "PASS injected a_index; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_count",
+      "returncode": 0,
+      "output": "PASS injected a_count; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_word_index",
+      "returncode": 0,
+      "output": "PASS injected a_word_index; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_group",
+      "returncode": 0,
+      "output": "PASS injected a_group; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_ordinal",
+      "returncode": 0,
+      "output": "PASS injected a_ordinal; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_weight_base",
+      "returncode": 0,
+      "output": "PASS injected a_weight_base; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_resident_base",
+      "returncode": 0,
+      "output": "PASS injected a_resident_base; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_state",
+      "returncode": 0,
+      "output": "PASS injected a_state; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_arrived",
+      "returncode": 0,
+      "output": "PASS injected a_arrived; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_published",
+      "returncode": 0,
+      "output": "PASS injected a_published; effects suppressed and abort retained"
+    },
+    {
+      "case": "a_xw_data",
+      "returncode": 0,
+      "output": "PASS injected a_xw_data; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_record",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_record; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_address",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_address; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_limit",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_limit; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_index",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_index; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_count",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_count; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_word_index",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_word_index; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_group",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_group; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_ordinal",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_ordinal; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_weight_base",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_weight_base; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_resident_base",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_resident_base; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_state",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_state; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_arrived",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_arrived; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_published",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_published; effects suppressed and abort retained"
+    },
+    {
+      "case": "g_secondary.b_xw_data",
+      "returncode": 0,
+      "output": "PASS injected g_secondary.b_xw_data; effects suppressed and abort retained"
+    },
+    {
+      "case": "checker_bypass",
+      "returncode": 1,
+      "output": "FATAL: /tmp/hbm-sm-protection-1l_ssn2u/tb.sv:143: state fault not detected: checker_bypass\n       Time: 41000000000000 Scope: tb_sm_serial_owner"
+    }
+  ],
+  "sources": {
+    "rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv": "69dbfea11f7756c0a5da3dcee59adef3a5cfdb62da77fdd5e9615c48a78fb753",
+    "rtl/hbm_accel/control_20261007/tb_sm_serial_owner.sv": "6ad9c59ccc32a9d6adbf610ef12fb541194c73fb07da7d1b8f0edec603b3803f",
+    "results/rtl/hbm_sm_command_20261007/stress_seq.hex": "217bae8ead442cc2bce48249b909346c9fd7371f7feb5f4288cd8d7188113a92",
+    "rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv": "fe13809162a3e9bbfda458d5a2a7353885f69515f331ec4cfcc2e971819d2905",
+    "rtl/hbm_accel/control_20261007/ot_hbm_sm_seq_ingress.sv": "e82c301542110021daecc1ce6bb5d823a598a303e9673380c1e74933d39f5271",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "tools/hbm_sm_serial_protection_model.py": "8710eb7d3567ea1b16ab681984b95f25b91161f04fa25149de65e5a860d586f2",
+    "tools/hbm_sm_serial_protection_build.py": "d83ea84c5f8f2e83e80a4d28df13cab4eb8b92600bf5caba85d74e17c2dd2d42",
+    "tools/hbm_sm_serial_protection_gate.py": "8a82a35d7641c8acafa3f4ddf416e745db6211e6faa78b9d5e3faaa6d4f9aeba"
+  },
+  "passed": true,
+  "selected": false
+}

@@ -1,0 +1,34 @@
+{
+  "scope": "opaque64bitprimitive andonefull270bitleaf only; not production link protection or die adoption",
+  "required_before_adoption": [
+    "end-to-end identity/checksum guarded actual consumer",
+    "actualdieclock/IO binding",
+    "global replicated station fit",
+    "routedSS/FF>=15ps DRC0"
+  ],
+  "mapping": {
+    "tool": "Yosys0.68",
+    "library": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+    "library_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "cell": "DFFASRHQNx1_ASAP7_75t_R",
+    "count": 64,
+    "cell_area_um2": 0.37908,
+    "raw_FF_area_um2": 24.26112,
+    "note": "native asynchronous-reset mapping, TT library for structural area only; inverter/reset/clock buffers and routing extra"
+  },
+  "evidence_sha256": {
+    "exact/reset_ignored.log": "80a8ce32acf849aa5f2d838e71b30d69e8005e98e462b451fdb6898030fcca6a",
+    "exact/positive.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exact/row_miswire.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exact/positive.log": "dc6e1e16d5e5a5e997be51012c7e14ac5f340e8d14553d95eeafdb9855b0df5b",
+    "exact/row_miswire.log": "0721d40891974e8085b50702128b9100bcc9f26a9b1f5872e9ab07c2f4cb201d",
+    "exact/record.json": "29ed707e469d57d21d2a626698b4a74665cdf68ce60816942c96048989945639",
+    "exact/reset_ignored.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exact/slice_skew.log": "c48c234ea7f5990787b40154653ce661229b805eb2378fc2137f78c8571759a1",
+    "exact/slice_skew.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exact/fault_drop.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exact/fault_drop.log": "dd5e21e79a007271de4b729250752d3ed24b4d439e672c08c44af09b165ea7b2",
+    "mapping/yosys.log": "5ceebcd9a59af6cdf73effcf8d2329cb9968549d370ff4d26f57c8fa5bea2590",
+    "mapping/mapped.json": "282453a157f50da1172a103c59adc5af9216e45fd81f0d909f9752f7315eb9c5"
+  }
+}

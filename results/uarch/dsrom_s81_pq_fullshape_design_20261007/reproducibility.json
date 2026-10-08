@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.s81.pq-fullshape-design.reproducibility.v1",
+ "at": "2026-10-07",
+ "archived_commit": "3b695b614",
+ "method": "git archive 3b695b614 | tar -x into /var/tmp/pqd-archive.A9E8nb (outside /home/ubuntu and ~/.claude); env -i PATH=/usr/bin:/bin HOME=<archive> python3 -I tools/s81_pq_fullshape_design.py --out <archive>/rerun.json",
+ "result": {
+  "exit": 0,
+  "rerun_sha256": "8760993137ee2a5a9371d784a3c61ecc9f857cc8c0f084796932d546f52d633b",
+  "identical_to": "reproduce/design.json (byte-identical; the tool emits no timestamps)",
+  "versus_historical_d95_design_json": {
+   "sha256": "e52d69ad76daff4e351e92aa2b647b4beb191b2c5e5d207f19f61c1be873bfe0",
+   "differing_keys": [
+    "sources.snapshot",
+    "sources.snapshot_origin"
+   ],
+   "meaning": "provenance path only (absolute jobs-dir snapshot -> repo-relative pinned copy, origin recorded); every number and verdict identical"
+  }
+ },
+ "negative_controls": [
+  {
+   "tamper": "append a space to inputs/dsrom_s81_pq_parent_20261007/half_inventory.json",
+   "exit": 1,
+   "message": "snapshot hash mismatch: dsrom_s81_pq_parent_20261007/half_inventory.json"
+  },
+  {
+   "tamper": "append a line to rtl/v41rom/ot_v41_ret.sv",
+   "exit": 1,
+   "message": "repo input hash mismatch: rtl/v41rom/ot_v41_ret.sv"
+  }
+ ],
+ "pinned_inputs": {
+  "copies": "inputs/ (SHA256SUMS: pq_parent_binding.py b2d619a4, full_inventory 614fcd26, half_inventory 4b38ddb1; origin /home/ubuntu/.claude/jobs/724d7460/tmp/pq_snapshot_1117)",
+  "repo_files": "inputs/REPO_INPUTS.SHA256SUMS (spine/ret RTL, macro index, sensitivity, return-storage model, mixed1792 inventories, geometry extract, die generator)"
+ },
+ "historical_verdict": "design.json and README sections 1-4 are the d95b57661 design record, unchanged"
+}

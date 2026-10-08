@@ -1,0 +1,75 @@
+{
+  "status": "SOURCE_HIERARCHY_CONTRACT_NOT_FULL_MAPPED_CENSUS",
+  "parameters": {
+    "ENABLE": 1,
+    "LINK_PROTECTION": 1,
+    "PACKET_SRAM": 1,
+    "OWNER_REDUCER": 1,
+    "OWNER_BANKED_HALF": 1,
+    "OWNER_TRUE_CREDIT": 1,
+    "NC": 8,
+    "NPT": 8,
+    "NOG": 8,
+    "PFMAX": 384,
+    "LANES": 16,
+    "INJ": 2,
+    "DEL": 4,
+    "WSTG": 14,
+    "RXAW": 8,
+    "QAW": 6,
+    "TXAW": 6
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/collective_native_link_20261007/ot_hbm_collective_native_link_candidate.sv": "193a2ecaa07cb6089a23333797697ea060c467a52754cdc4b828f162ac396f60",
+    "rtl/hbm_accel/collective_ingress_20261007/ot_hbm_collective_protected_ingress.sv": "5a1ff0dddef236ba468546c20da7edbf429353fd145b2ece81ab662de2b3c094",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv": "511bea31ca65dba6118560545e8cba08ca837855b0e52c6aab459bffeb777c9b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv": "02bec6fc2cdb69e5f6a9ea6aec09c32caa9e2b2830285855ad4494234195d241",
+    "physical/hbm_ha2_fixedpins_20261007/config.mk": "9be8250f36725bf742a82a39cc274282afadc40ad70b76403d2cbf111d56150a"
+  },
+  "per_native_TU": {
+    "banked_half_rate_owner_instances": 1,
+    "banked_core_instances_per_owner": 1,
+    "lanes_per_core": 16,
+    "h2_operand_sram_64x512_instances": 8,
+    "packet_partial_tx_queues": 8,
+    "packet_result_tx_queues": 8,
+    "packet_own_delivery_queues": 1,
+    "packet_receive_queues": 8,
+    "packet_PHY_landing_queues": 8,
+    "packet_sram_256x256_per_queue": 3,
+    "packet_sram_256x256_total": 99,
+    "all_sram_instances_total": 107,
+    "protected_data_CDC64x545": 16,
+    "protected_flight14x545": 16,
+    "internal_truecredit_sender_wrappers": 1,
+    "internal_truecredit_receiver_wrappers": 1
+  },
+  "bindings": {
+    "owner": "g_candidate.g_on.g_half_owner.u_owner -> ot_ha2_tu_owner_banked_half -> u_core ot_ha2_tu_owner_banked; one full16lane half-rate owner, not two half-lane units",
+    "physical_h2": "config.mk DESIGN_NAME ot_ha2_tu_owner_banked_half, no parameter wrapper or shape override; source defaults NC8/PFMAX384/LANES16/INJ2/NPT8; mapped8SRAMs confirmed by physical owner"
+  },
+  "physical_h2_source_commit": "ca0d6a5a2",
+  "physical_h2_inventory_commit": "9db507c54",
+  "physical_h2_frame_um": [
+    840,
+    480
+  ],
+  "per_die_collective_instances": 1,
+  "per_die_instance_paths": [
+    "hb_coll"
+  ],
+  "die_multiplicity_owner": "/root/hbm_die_resume confirmed explicit-input R24SM3VOCEU candidate: one hb_coll per die, no quadrant replication.",
+  "excluded_from_native_die_census": "Additional peer receiver storage and peer source/credit/session/controlCDC transport in full gate are fixture/peer resources; count on their real hostingdie, never silently fold them into one TU or omit network replicas. Actual clock/reset/controltransport decomposition pending.",
+  "qualification": "Source-selected hierarchy contract plus separately mapped h2/packetleaf evidence. No whole-native mapped census, area-fit, SS/FF or die-rate claim.",
+  "clock_bindings": {
+    "clk_stream": "TOP/clk_stream -> hb_coll/clk_stream",
+    "clk_link": "TOP/clk_link -> hb_coll/clk_link",
+    "por_stream": "corresponding explicit active-high por input",
+    "por_link": "corresponding explicit active-high por input"
+  },
+  "historical_proxy_outline_um": [
+    1399.656,
+    1403.976
+  ],
+  "proxy_outline_valid_for_native": false
+}

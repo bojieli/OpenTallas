@@ -1,0 +1,59 @@
+{
+  "name": "dshead-ctl-r5-ea5837ebe",
+  "block": "ot_hdc_v41_fh_ctl",
+  "owner": "Codex:fused-head (owner transfer 04:50 PT)",
+  "purpose": "SAFE2 partitioned registered receipt compare; zero added cycles",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+    "branch": "claude/takeover-ds-head-20261006",
+    "commit": "ea5837ebe6b2ab201ea6d2d5087eb8290fe173ef"
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "CTL_SAFE=2 bash physical/dsrom_fh_safe/cl_route.sh ctl {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 16,
+      "peak_ram_gb": 40
+    },
+    "route": {
+      "cmd": "CTL_SAFE=2 bash physical/dsrom_fh_safe/cl_route.sh ctl {LABEL} {RUN}/routes/{LABEL}",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/dsrom_fh_safe/gen/signoff_ctl.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/dsrom_fh_safe/gen/signoff_ctl.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "reexport": "python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_hdc_v41_fh_ctl --post-sdc physical/dsrom_fh_safe/gen/signoff_ctl.sdc  --out {RUN}/routes/{LABEL}/view",
+    "session": "ff"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/dsrom_fh_safe/closed/ctl_r5"
+    }
+  ],
+  "cycles_added": "FPIPE3 adds +1 input edge and +1 output edge per checked transaction versus FPIPE2; full head gold4 pricing pending. SAFE2 adds zero cycles, 5 flops.",
+  "merge_target": "claude/takeover-ds-head-20261006",
+  "no_bench_reason": "Source-pinned component exactness plus detected mutants: results/rtl/dsrom_fh_redesign_20261006/fpipe3_takeover/{record.json,endpoint_gate.log,head_gate.log}; SAFE2 component 49 receipt cases + skip_word_slice mutant and 9000-cycle FPIPE3 parent equivalence in ack_split/{component_gate.log,parent_gate.json}. Full gold4 FPIPE3 requested and running separately; no die adoption before that result."
+}

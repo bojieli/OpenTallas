@@ -1,0 +1,439 @@
+{
+  "source_commit": "b4a1664821cacaa19e1f41f3c3940daeabc4c415",
+  "legacy_base": "11a18fb2e8cbb001fcec7ee426c86e5b2412aab9",
+  "old_pid": 2072500,
+  "idle_verified": {
+    "at": "2026-10-06T22:29:27.851345-07:00",
+    "threads": 1,
+    "wchan": "do_select",
+    "children": ""
+  },
+  "stop_requested": "2026-10-06T22:29:27.851361-07:00",
+  "restarted": "2026-10-06T22:29:27.943832-07:00",
+  "new_service": "MainPID=2153405\nExecStart={ path=/usr/bin/python3 ; argv[]=/usr/bin/python3 /home/ubuntu/wt-codex-closure-reliability/tools/closure_loop/closure_loop.py daemon --interval 60 ; ignore_errors=no ; start_time=[Tue 2026-10-06 22:29:27 PDT] ; stop_time=[n/a] ; pid=2153405 ; code=(null) ; status=0/0 }\nActiveState=active",
+  "dropin": "/home/ubuntu/.config/systemd/user/closure-loop.service.d/90-codex-reliability.conf",
+  "first_completed_cycle": "2026-10-06T22:30:45-07:00",
+  "snapshot": "/tmp/claude-review-20261003/codex-closure-reliability-20261006/running-223127.json",
+  "snapshot_at": "2026-10-06T22:31:27.129232-07:00",
+  "recovered": {
+    "hbm_idxq_b0_e26c4446e_r18": {
+      "backup": "/home/ubuntu/.local/state/closure_loop/cancel_recovery/hbm_idxq_b0_e26c4446e_r18.1791350967861745878.json",
+      "ledger": "- 2026-10-06T22:14:58-07:00 | hbm_idxq_b0_e26c4446e_r18 | hfd_index_q_b0 @ e26c4446e | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e26c4446e_r18",
+      "preserved_stage": {
+        "status": "RUNNING",
+        "host": "ot-epyc2",
+        "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e26c4446e_r18",
+        "stage_tag": "route.a2",
+        "stage_started": "2026-10-06T22:28:32-07:00"
+      },
+      "remote_action": "none; existing processes and evidence preserved"
+    },
+    "hbm_idxq_b1_e26c4446e_r18": {
+      "backup": "/home/ubuntu/.local/state/closure_loop/cancel_recovery/hbm_idxq_b1_e26c4446e_r18.1791350967862449677.json",
+      "ledger": "- 2026-10-06T22:15:01-07:00 | hbm_idxq_b1_e26c4446e_r18 | hfd_index_q_b1 @ e26c4446e | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e26c4446e_r18",
+      "preserved_stage": {
+        "status": "RUNNING",
+        "host": "ot-epyc2",
+        "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e26c4446e_r18",
+        "stage_tag": "route.a2",
+        "stage_started": "2026-10-06T22:22:50-07:00"
+      },
+      "remote_action": "none; existing processes and evidence preserved"
+    },
+    "hbm_idxq_b2_e26c4446e_r18": {
+      "backup": "/home/ubuntu/.local/state/closure_loop/cancel_recovery/hbm_idxq_b2_e26c4446e_r18.1791350967862994682.json",
+      "ledger": "- 2026-10-06T22:15:03-07:00 | hbm_idxq_b2_e26c4446e_r18 | hfd_index_q_b2 @ e26c4446e | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e26c4446e_r18",
+      "preserved_stage": {
+        "status": "RUNNING",
+        "host": "ot-epyc3",
+        "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e26c4446e_r18",
+        "stage_tag": "calibrate.a1",
+        "stage_started": "2026-10-06T22:18:45-07:00"
+      },
+      "remote_action": "none; existing processes and evidence preserved"
+    }
+  },
+  "jobs": [
+    {
+      "name": "hbglue_cl_8ddc70024",
+      "status": "NEEDS_RTL",
+      "updated": "2026-10-06T22:20:12-07:00",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024",
+      "stage_tag": "summary.a1"
+    },
+    {
+      "name": "hbm_idxq_b0_e26c4446e_r18",
+      "status": "CANCELLED",
+      "updated": "2026-10-06T22:29:27-07:00",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e26c4446e_r18",
+      "stage_tag": "route.a2"
+    },
+    {
+      "name": "hbm_idxq_b0_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:30:54-07:00",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e8b5132fb_r18b",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_idxq_b1_e26c4446e_r18",
+      "status": "CANCELLED",
+      "updated": "2026-10-06T22:29:27-07:00",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e26c4446e_r18",
+      "stage_tag": "route.a2"
+    },
+    {
+      "name": "hbm_idxq_b1_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:30:54-07:00",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e8b5132fb_r18b",
+      "stage_tag": "calibrate.a2"
+    },
+    {
+      "name": "hbm_idxq_b2_e26c4446e_r18",
+      "status": "CANCELLED",
+      "updated": "2026-10-06T22:29:27-07:00",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e26c4446e_r18",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_idxq_b2_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:30:54-07:00",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e8b5132fb_r18b",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_idxq_b3_e26c4446e_r18",
+      "status": "CANCELLED",
+      "updated": "2026-10-06T22:15:06-07:00",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e26c4446e_r18",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_idxq_b3_e8b5132fb_r18b",
+      "status": "NEEDS_BUDGET",
+      "updated": "2026-10-06T22:30:51-07:00",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e8b5132fb_r18b",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_idxq_b5_e26c4446e_r18",
+      "status": "CANCELLED",
+      "updated": "2026-10-06T22:15:08-07:00",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e26c4446e_r18",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_idxq_b5_e8b5132fb_r18b",
+      "status": "NEEDS_BUDGET",
+      "updated": "2026-10-06T22:30:51-07:00",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e8b5132fb_r18b",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_svc_SE_s0_e26c4446e_r18",
+      "status": "CANCELLED",
+      "updated": "2026-10-06T22:14:50-07:00",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_e26c4446e_r18",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_svc_SE_s0_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:30:55-07:00",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s0_e8b5132fb_r18b",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_svc_SE_s1_e26c4446e_r18",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:30:56-07:00",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18",
+      "stage_tag": "route.a1"
+    },
+    {
+      "name": "hbm_svc_SE_s3_e26c4446e_r18",
+      "status": "CANCELLED",
+      "updated": "2026-10-06T22:14:53-07:00",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_e26c4446e_r18",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_svc_SE_s3_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:30:55-07:00",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s3_e8b5132fb_r18b",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_svc_SE_s5_e26c4446e_r18",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:30:57-07:00",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_e26c4446e_r18",
+      "stage_tag": "route.a1"
+    },
+    {
+      "name": "hbm_svc_SW_s0_e26c4446e_r18",
+      "status": "CANCELLED",
+      "updated": "2026-10-06T22:14:56-07:00",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s0_e26c4446e_r18",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_svc_SW_s0_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:30:55-07:00",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s0_e8b5132fb_r18b",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_svc_SW_s1_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:30:58-07:00",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s1_e8b5132fb_r18b",
+      "stage_tag": "calibrate.a1"
+    },
+    {
+      "name": "hbm_svc_SW_s3_e26c4446e_r18",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:30:59-07:00",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_e26c4446e_r18",
+      "stage_tag": "route.a1"
+    },
+    {
+      "name": "hbm_svc_SW_s7_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:30:59-07:00",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s7_e8b5132fb_r18b",
+      "stage_tag": "calibrate.a1"
+    }
+  ],
+  "remote": {
+    "ot-epyc1tb": {
+      "captured": "2026-10-06T22:31:26.731436-07:00",
+      "jobs": [
+        {
+          "name": "hbglue_cl_8ddc70024",
+          "stage_tag": "summary.a1",
+          "pid": "3854528",
+          "rc": "0",
+          "identity_matches": false,
+          "process": ""
+        },
+        {
+          "name": "hbm_svc_SW_s1_e8b5132fb_r18b",
+          "stage_tag": "calibrate.a1",
+          "pid": "3914199",
+          "rc": null,
+          "identity_matches": true,
+          "process": "3914199 Tue Oct  6 22:24:19 2026       07:06 bash /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s1_e8b5132fb_r18b/cl/run.sh calibrate.a1"
+        },
+        {
+          "name": "hbm_svc_SW_s7_e8b5132fb_r18b",
+          "stage_tag": "calibrate.a1",
+          "pid": "3918202",
+          "rc": null,
+          "identity_matches": true,
+          "process": "3918202 Tue Oct  6 22:24:28 2026       06:58 bash /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s7_e8b5132fb_r18b/cl/run.sh calibrate.a1"
+        }
+      ]
+    },
+    "ot-epyc2": {
+      "captured": "2026-10-06T22:31:26.970663-07:00",
+      "jobs": [
+        {
+          "name": "hbm_idxq_b0_e26c4446e_r18",
+          "stage_tag": "route.a2",
+          "pid": "108933",
+          "rc": null,
+          "identity_matches": true,
+          "process": "108933 Tue Oct  6 22:28:31 2026       02:54 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e26c4446e_r18/cl/run.sh route.a2"
+        },
+        {
+          "name": "hbm_idxq_b0_e8b5132fb_r18b",
+          "stage_tag": "calibrate.a1",
+          "pid": "57458",
+          "rc": null,
+          "identity_matches": true,
+          "process": "57458 Tue Oct  6 22:25:36 2026       05:49 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e8b5132fb_r18b/cl/run.sh calibrate.a1"
+        },
+        {
+          "name": "hbm_idxq_b1_e26c4446e_r18",
+          "stage_tag": "route.a2",
+          "pid": "2791338",
+          "rc": null,
+          "identity_matches": true,
+          "process": "2791338 Tue Oct  6 22:22:49 2026       08:36 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e26c4446e_r18/cl/run.sh route.a2"
+        },
+        {
+          "name": "hbm_idxq_b1_e8b5132fb_r18b",
+          "stage_tag": "calibrate.a2",
+          "pid": "128816",
+          "rc": null,
+          "identity_matches": true,
+          "process": "128816 Tue Oct  6 22:29:37 2026       01:48 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e8b5132fb_r18b/cl/run.sh calibrate.a2"
+        },
+        {
+          "name": "hbm_idxq_b2_e8b5132fb_r18b",
+          "stage_tag": "calibrate.a1",
+          "pid": "64420",
+          "rc": null,
+          "identity_matches": true,
+          "process": "64420 Tue Oct  6 22:25:53 2026       05:32 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e8b5132fb_r18b/cl/run.sh calibrate.a1"
+        },
+        {
+          "name": "hbm_idxq_b3_e8b5132fb_r18b",
+          "stage_tag": "calibrate.a1",
+          "pid": "67833",
+          "rc": "0",
+          "identity_matches": false,
+          "process": ""
+        },
+        {
+          "name": "hbm_idxq_b5_e8b5132fb_r18b",
+          "stage_tag": "calibrate.a1",
+          "pid": "70528",
+          "rc": "0",
+          "identity_matches": false,
+          "process": ""
+        }
+      ]
+    },
+    "ot-epyc3": {
+      "captured": "2026-10-07T05:31:26.215812+00:00",
+      "jobs": [
+        {
+          "name": "hbm_idxq_b2_e26c4446e_r18",
+          "stage_tag": "calibrate.a1",
+          "pid": "3816828",
+          "rc": "0",
+          "identity_matches": false,
+          "process": ""
+        },
+        {
+          "name": "hbm_idxq_b3_e26c4446e_r18",
+          "stage_tag": "calibrate.a1",
+          "pid": "3761672",
+          "rc": null,
+          "identity_matches": false,
+          "process": ""
+        },
+        {
+          "name": "hbm_idxq_b5_e26c4446e_r18",
+          "stage_tag": "calibrate.a1",
+          "pid": "3764116",
+          "rc": null,
+          "identity_matches": false,
+          "process": ""
+        },
+        {
+          "name": "hbm_svc_SE_s0_e26c4446e_r18",
+          "stage_tag": "calibrate.a1",
+          "pid": "3631783",
+          "rc": null,
+          "identity_matches": false,
+          "process": ""
+        },
+        {
+          "name": "hbm_svc_SE_s1_e26c4446e_r18",
+          "stage_tag": "route.a1",
+          "pid": "3920123",
+          "rc": null,
+          "identity_matches": true,
+          "process": "3920123 Wed Oct  7 05:27:18 2026       04:06 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18/cl/run.sh route.a1"
+        },
+        {
+          "name": "hbm_svc_SE_s3_e26c4446e_r18",
+          "stage_tag": "calibrate.a1",
+          "pid": "3648605",
+          "rc": null,
+          "identity_matches": false,
+          "process": ""
+        },
+        {
+          "name": "hbm_svc_SE_s5_e26c4446e_r18",
+          "stage_tag": "route.a1",
+          "pid": "3873617",
+          "rc": null,
+          "identity_matches": true,
+          "process": "3873617 Wed Oct  7 05:22:59 2026       08:25 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_e26c4446e_r18/cl/run.sh route.a1"
+        },
+        {
+          "name": "hbm_svc_SW_s0_e26c4446e_r18",
+          "stage_tag": "calibrate.a1",
+          "pid": "3662434",
+          "rc": null,
+          "identity_matches": false,
+          "process": ""
+        },
+        {
+          "name": "hbm_svc_SW_s3_e26c4446e_r18",
+          "stage_tag": "route.a1",
+          "pid": "3911289",
+          "rc": null,
+          "identity_matches": true,
+          "process": "3911289 Wed Oct  7 05:26:42 2026       04:43 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_e26c4446e_r18/cl/run.sh route.a1"
+        }
+      ]
+    },
+    "ot-pve1": {
+      "captured": "2026-10-06T22:31:24.538050-07:00",
+      "jobs": [
+        {
+          "name": "hbm_svc_SE_s0_e8b5132fb_r18b",
+          "stage_tag": "calibrate.a1",
+          "pid": "1935187",
+          "rc": null,
+          "identity_matches": true,
+          "process": "1935187 Tue Oct  6 22:19:38 2026       11:45 bash /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s0_e8b5132fb_r18b/cl/run.sh calibrate.a1"
+        },
+        {
+          "name": "hbm_svc_SE_s3_e8b5132fb_r18b",
+          "stage_tag": "calibrate.a1",
+          "pid": "1935351",
+          "rc": null,
+          "identity_matches": true,
+          "process": "1935351 Tue Oct  6 22:19:39 2026       11:44 bash /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s3_e8b5132fb_r18b/cl/run.sh calibrate.a1"
+        },
+        {
+          "name": "hbm_svc_SW_s0_e8b5132fb_r18b",
+          "stage_tag": "calibrate.a1",
+          "pid": "1935647",
+          "rc": null,
+          "identity_matches": true,
+          "process": "1935647 Tue Oct  6 22:19:41 2026       11:42 bash /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s0_e8b5132fb_r18b/cl/run.sh calibrate.a1"
+        }
+      ]
+    }
+  },
+  "eco_units_raw": "18:OT_WS -3.405005770673597e-7\n30:341250.00 341250.00 v input external delay\n37:        341433.31   data arrival time\n53:         932.74   data required time\n55:         932.74   data required time\n56:        -341433.31   data arrival time\n58:        -340500.59   slack (VIOLATED)\n65:OT_WS_I2R -340500.593750\n54:puts \"OT_WS [sta::worst_slack_cmd {check}]\"\n89:                worst_slack_ps=round(float(g(\"OT_WS\")) * 1e12, 2) if g(\"OT_WS\") else None,\n90:                tns_ps=round(float(g(\"OT_TNS\")) * 1e12, 1) if g(\"OT_TNS\") else None,\n45:OT_ECO pre\n46:worst slack max -340499.41\n47:worst slack min -58.86\n619:worst slack max -340538.19\n620:worst slack min -59.43\n",
+  "parent_notes": [
+    "Keep this worktree until the parent repoints/removes the service drop-in after integration. Use the deployed CLI for cancellation serialization.",
+    "Old cancelled b0/b1 route.a2 processes intentionally preserved; b2 calibration completed rc0 without a next launch.",
+    "No budget bypass, no replacement submissions, no r33/r34/r36 or die-STA changes.",
+    "r33 RSZ-0060 and die STA double-format suspicion are parent-owned, excluded from this fix."
+  ]
+}

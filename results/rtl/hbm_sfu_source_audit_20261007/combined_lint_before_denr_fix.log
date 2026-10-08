@@ -1,0 +1,9 @@
+%Warning-SELRANGE: /home/ubuntu/wt-codex-hbm-sfu-audit/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:734:74: Selection index out of range: 95:95 outside 94:0
+                                                                                                      : ... note: In instance 'tb_hdc_v41x_vec.dut.g_lane[7].u_lane'
+  734 |             ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_den (clk, rst_n, vs[D_EXP + DENR], y_den_in, 32'h3F800000, den, f_den);
+      |                                                                          ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 3.403 MB sources in 94 modules, into 481.388 MB in 556 C++ files needing 0.000 MB
+- Verilator: Walltime 121.910 s (elab=1.530, cvt=114.904, bld=0.000); cpu 121.885 s on 1 threads; allocated 7184.477 MB

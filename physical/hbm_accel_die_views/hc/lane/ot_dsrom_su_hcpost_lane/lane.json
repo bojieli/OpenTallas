@@ -1,0 +1,65 @@
+{
+ "schema": "opentallas.hbm_hub_lane_view.v1",
+ "lane": "ot_dsrom_su_hcpost_lane",
+ "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/hub/routes/m11hc/eco",
+ "closed": true,
+ "margin_ok": true,
+ "recipe": "r2/r3: signals M2-M5, pins M4 left edge every track, PDN top M6 (su/route_lane.sh)",
+ "interface_sdc": "physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc (Carson real SU view)",
+ "outcheck": "NOT_REGISTER_DIRECT in c2[31] -> g_u_m27.u.u.u_k0.g_r.r[72]$_DFF_P_ ['XOR2x2_ASAP7_75t_R']\nNOT_REGISTER_DIRECT in c3[31] -> g_u_m37.u.u.u_k0.g_r.r[72]$_DFF_P_ ['XOR2x2_ASAP7_75t_R']\noutputs 18 input_paths 370 not_register_direct 121",
+ "layers": {
+  "pg": {
+   "VDD": [
+    "M1",
+    "M2",
+    "M6"
+   ],
+   "VSS": [
+    "M1",
+    "M2",
+    "M6"
+   ]
+  },
+  "obs": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "RVTN",
+   "RVTP"
+  ],
+  "size": [
+   85.32,
+   115.02
+  ]
+ },
+ "exit": {
+  "rc": "0",
+  "corner_rc": "0",
+  "post_rc": "1",
+  "export_rc": "0"
+ },
+ "signoff": "833 ps re-time (corner_sta_833.json)",
+ "route_clock_ss_worst_slack_ps": 6.48,
+ "ss_worst_slack_ps": 69.48,
+ "ff_worst_hold_slack_ps": 16.64,
+ "ss_violating_d_pins": 0,
+ "ff_violating_d_pins": 0,
+ "drc_violations": 0,
+ "antenna_violating_nets": 0.0,
+ "max_slew_cap_fanout": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "source_commit": "20d38f69e841557ca147127361c7127f0935b102",
+ "args": "ot_dsrom_su_hcpost_lane 85.32 115.02 rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv  --param ML=7 --param AL=6",
+ "acceptance": "pass",
+ "sha256": {
+  "ot_dsrom_su_hcpost_lane.lef": "b7ff21149dbbff13f3d42517711dc961a44f291fecea75b43b89906bf9b7420c",
+  "ot_dsrom_su_hcpost_lane_ff.lib": "38d384a4fb70fd420d25a9bef672852dc3c49111a0eda25f5b534a8d95527e6d",
+  "ot_dsrom_su_hcpost_lane_ss.lib": "0478fbe87be0f32310941ebd0e91f4850ec3f8c632b7d00bdf9d91324167dde2"
+ }
+}

@@ -1,0 +1,8 @@
+{
+ "master": "dsfd_selt_c",
+ "w_um": 129.6,
+ "h_um": 319.68,
+ "domain": "stream_1p2",
+ "note": "selector control tile; W/E pins mirror the quarter tiles E pins (tiles 0/1 lower, 2/3 upper)",
+ "ports": "derived (f_s/f_o/t_c/t_cr from dsfd_selt_q E pins; vd/vf/ck/rst on N)"
+}

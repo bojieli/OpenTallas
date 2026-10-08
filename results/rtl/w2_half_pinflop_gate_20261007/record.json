@@ -1,0 +1,15 @@
+{
+  "status": "EXACT_PASS_PHYSICAL_PENDING",
+  "source_commit": "a4608c55351d0f0a6bd481dc1dec510022e6039c",
+  "remote": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-half-no2-a4608c553/gate",
+  "quarter_checks": 19,
+  "bank_checks": 44,
+  "bank_configurations": 4,
+  "negative_controls_rejected_after_successful_compile": 11,
+  "quarter_ack_edge": 381,
+  "reference_banked_r1_ack_edge": 184,
+  "added_fast_cycles": 197,
+  "headline_AR_percent": 0,
+  "half_source_sha256": "dbead2e0ddcc691e3efdb4ca840b7e19a7ce6ee771dc50b42f6660ad2f0b90e4",
+  "scope": "Full quarter contains both NO2/NO3 half-rate stations with fast input/output pin flops and negedge-flop ICG. Existing station cross-bank veto gate and bank mechanisms also pass. Physical +15/+15/DRC0 still pending; unadopted."
+}

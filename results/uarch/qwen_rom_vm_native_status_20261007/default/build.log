@@ -1,0 +1,48 @@
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 6 (i_nout) of native_me_address_slice expects 18 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 14 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 7 (i_tiles) of native_me_address_slice expects 18 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 14 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 8 (i_k) of native_me_address_slice expects 18 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 14 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 9 (i_wsrc) of native_me_address_slice expects 1 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 31 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 10 (i_wbase) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 11 (i_ts) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 12 (i_ks) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 13 (i_js) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 14 (i_xbase) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 15 (i_xks) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 16 (i_xjs) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 17 (i_xcs) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 18 (i_jsh) of native_me_address_slice expects 3 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 29 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 19 (i_split) of native_me_address_slice expects 4 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 28 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 20 (i_wcs) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 21 (i_round) of native_me_address_slice expects 1 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 31 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 22 (i_obase) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 23 (i_ots) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 24 (i_ojs) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 25 (i_mmode) of native_me_address_slice expects 1 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 31 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 26 (i_oen) of native_me_address_slice expects 1 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 31 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 27 (i_amax) of native_me_address_slice expects 1 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 31 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 28 (i_rmax) of native_me_address_slice expects 1 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 31 high bits of the expression.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7: warning: Port 29 (i_mbase) of native_me_address_slice expects 24 bits, got 32.
+/tmp/qwen-vm-native-status-20261007/bench.sv:7:        : Pruning 8 high bits of the expression.

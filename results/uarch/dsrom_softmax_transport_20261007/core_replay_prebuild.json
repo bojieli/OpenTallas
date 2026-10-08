@@ -1,0 +1,57 @@
+{
+  "schema": "opentallas.dsrom_softmax_core_replay_prebuild.v1",
+  "scope": "full-width no-ready core payload/identity pipeline",
+  "source_sha256": {
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv": "b5f7603a6bc16fe23664d8c215e5c2117b82738057a04eee90f8b75b1e758815"
+  },
+  "shape": {
+    "code_lanes": 128,
+    "payload_bits": 8192,
+    "protected_input_bits": 9216,
+    "row_tag_bits": 16,
+    "address_bits": 7
+  },
+  "clock": {
+    "domain": "stream1.2GHz",
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "CDC": false
+  },
+  "registers": {
+    "codec_read_bits_per_lane": 221,
+    "codec_read_bits": 28288,
+    "metadata_bits": 138,
+    "valid_bits": 6,
+    "fault_bits": 2,
+    "total_bits": 28434,
+    "FF_floor_um2": 8291.3544
+  },
+  "schedule": {
+    "accepted_return_to_core_consume_edges": 3,
+    "initiation_interval": 1,
+    "ready_port": false,
+    "registered_request_launch_plus_macro_capture_edges": 2,
+    "total_registered_request_to_core_consume_edges": 5,
+    "score_vectors_per_burst": [
+      8,
+      40
+    ],
+    "PV_vectors_per_burst": 32,
+    "stalling_core_allowed": false
+  },
+  "area": {
+    "mapped_comb_um2": null,
+    "slot_bound": false
+  },
+  "fault_contract": "any uncorrectable word or metadata/control mismatch suppresses entire output valid and latches fault; caller must abort row",
+  "source_data_storage": "no extra decoded stall buffer; only registered ECC pipeline",
+  "adopted": false,
+  "route_admitted": false,
+  "remaining": [
+    "real SRAM read-request/address scheduler",
+    "parent phase/payload join",
+    "SS/FF input/output pin/clock budget",
+    "CDC and reset epochs",
+    "mapped area and complete token composition"
+  ]
+}

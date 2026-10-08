@@ -1,0 +1,32 @@
+{
+  "status": "BLOCKS_PRODUCTION_ADOPTION",
+  "scope": [
+    "ot_qwen_ctrl_pc_head",
+    "ot_hbm_r14_stream_pc_ready",
+    "ot_qwen_ctrl_pc_shift",
+    "ot_hbm_r14_stream_pc_shift"
+  ],
+  "diagnostic_physical_route_permitted": true,
+  "runtime_protection_implemented": false,
+  "normal_exactness_is_not_upset_detection": true,
+  "unprotected_added_state_bits_per_pc": 192,
+  "state_breakdown": {
+    "fifo_head": 32,
+    "bank_write_eligibility": 32,
+    "write_queue_bank_onehot": 128
+  },
+  "available_independent_metadata": "binary write-queue bank identity retained; compare against onehot before permitting irreversible command issue, with actual check latency and timing priced",
+  "required_before_production_adoption": [
+    "Define fault model and detection/containment contract for added mutable control state",
+    "Implement protected selection and fault response, not only an after-the-fact diagnostic comparison",
+    "Inject runtime state corruption and demonstrate detection/containment",
+    "Re-run SS/FF physical qualification with protection in the actual command path",
+    "Compose area, cycles, communication and energy costs"
+  ],
+  "other_open_obligations": [
+    "input/reset/output hold",
+    "global descriptor fences",
+    "payload/tag/landing protection and integration",
+    "actual connected die clock/load constraints"
+  ]
+}

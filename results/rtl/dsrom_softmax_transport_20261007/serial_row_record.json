@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.dsrom_softmax_serial_row_gate.v1",
+  "scope": "minimum full8192-bit protected serial assembler/SRAM-return drain; NOT core burst replay or native CDC",
+  "source_sha256": {
+    "tools/dsrom_softmax_payload_model.py": "ec59cceac37ee3d3a80a8a468826a987213bbb731ca27657470b2d44de6d387f",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv": "21a2d557e128cbb980c1edb481c5592e744a789522d94c0efff9d36909d9a308",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv": "b5f7603a6bc16fe23664d8c215e5c2117b82738057a04eee90f8b75b1e758815",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_serial_row.sv": "1e4a85ebef179df1870c359f0a66099bf85f1f7d4aa495606dc63629b6d82b14",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_serial_row.sv": "04c590deb343b533806bc106a847db6f47c142073bdd2d0fc68816ae24e8caff",
+    "results/uarch/dsrom_softmax_transport_20261007/payload_registered_prebuild.json": "129cbff7ea85b54bb03f818167a387a62c690f33aa0b2c7db57e675de925b717"
+  },
+  "passed": true,
+  "positive": {
+    "checks": 72,
+    "distinct_full_width_rows": 4,
+    "read_transactions": 8,
+    "write_data_bytes": 4096,
+    "decoded_read_bytes": 8192,
+    "read_first_accepted_beat_edges": 6,
+    "read_last_accepted_beat_edges": 34,
+    "subsequent_beat_II_edges": 4,
+    "final_write_input_to_macro_write_edges": 2,
+    "register_address_and_tag_change_after_request_test": true,
+    "stalled_output_stability": true,
+    "single_bit_corrections": 4,
+    "uncorrectable_payload_suppressed": true,
+    "wrong_sequence_wrong_return_tag_counter_upset_fail_closed": true,
+    "log": "results/rtl/dsrom_softmax_transport_20261007/serial_row_r2_positive.log"
+  },
+  "negative": {
+    "mutation": "SOFTMAX_SERIAL_SWAP_BEATS",
+    "observed_exit": 1,
+    "failure": "PAYLOAD_OR_IDENTITY row=0 beat=0",
+    "log": "results/rtl/dsrom_softmax_transport_20261007/serial_row_r2_swap_negative.log"
+  },
+  "historical_runs": {
+    "logs": [
+      "results/rtl/dsrom_softmax_transport_20261007/serial_row_positive.log",
+      "results/rtl/dsrom_softmax_transport_20261007/serial_row_swap_negative.log"
+    ],
+    "difference": "r2 adds an assertion of two-edge final-write-to-macro timing; same serial RTL"
+  },
+  "prebuild_records": [
+    "results/uarch/dsrom_softmax_transport_20261007/payload_prebuild.json",
+    "results/uarch/dsrom_softmax_transport_20261007/payload_registered_prebuild.json"
+  ],
+  "model_before_build": "v1 emitted before RTL creation; v2 emitted before adding registered protected read address/tag launch; records retain both costs",
+  "implementation": {
+    "serial_codecs": 16,
+    "retained_payload_SECDED_bits": 18432,
+    "control_register_bits": 124,
+    "full128_lane_core_replay_implemented": false,
+    "CDC_implemented": false,
+    "physical_closure": false
+  },
+  "reproduce": [
+    "iverilog -g2012 -s tb_serial_row -o /tmp/dsrom_softmax_serial_row.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_serial_row.sv rtl/experimental/dsrom_softmax_transport_20261007/tb_serial_row.sv",
+    "vvp /tmp/dsrom_softmax_serial_row.vvp",
+    "iverilog -g2012 -DSOFTMAX_SERIAL_SWAP_BEATS -s tb_serial_row -o /tmp/dsrom_softmax_serial_row_mutant.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_serial_row.sv rtl/experimental/dsrom_softmax_transport_20261007/tb_serial_row.sv",
+    "vvp /tmp/dsrom_softmax_serial_row_mutant.vvp"
+  ],
+  "synthesis": {
+    "status": "localYosys0.9 generic proc/opt progressing; no terminal area claim",
+    "log": "/tmp/dsrom_softmax_serial_yosys.log",
+    "output": "/tmp/dsrom_softmax_serial_yosys.json",
+    "codec_blackbox": "/tmp/dsrom_softmax_ecc_blackbox.sv"
+  },
+  "adopted": false,
+  "route_admitted": false,
+  "remaining": [
+    "128parallel II1 core decoder and replay pipeline",
+    "protected phase/payload integration",
+    "actual SRAM physical budget and pin stations",
+    "mapped area and channel capacity",
+    "native0.9-to1.2 CDC/reset contract",
+    "composed single-user token latency"
+  ]
+}

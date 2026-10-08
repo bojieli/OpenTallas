@@ -1,0 +1,148 @@
+{
+  "schema": "opentallas.qwen_station_r18_clock_audit.v1",
+  "recipe": "QWEN_R20C base shared by r21 before relay insertion",
+  "source_sha256": {
+    "tools/qwen_rom_fulldie_b3r2.py": "681f2765134b374d047ba7b2b311b1ef1fabe201f1ffc16f5f2b4abedeff55cd",
+    "tools/qwen_rom_fulldie.py": "767de5b2cbb5f9ef0211810c79352222cd236115b581a056a1f97c52aaf4717b",
+    "tools/die_top_lint.py": "3eb62ad6130eca3e144e642326c033f1c322004b6d7c769b86d949faa6345896",
+    "tools/qwen_station_clock_audit_r22.py": "b8bb616f9ecf4d0d42a456018ceec772df35fe658d0fe9db87cc6d74f21a1c02"
+  },
+  "effective_bus_bits": {
+    "corridor": [
+      323
+    ],
+    "head_chain": [
+      323
+    ],
+    "tap": [
+      323
+    ]
+  },
+  "clock_endpoint_count_histogram": {
+    "1": 3136
+  },
+  "reset_endpoint_count_histogram": {
+    "0": 3136
+  },
+  "generated_station_port_roles": {
+    "qfd_chead_e": {
+      "s": [
+        "forward_source"
+      ],
+      "n": [
+        "forward_source"
+      ],
+      "w": [
+        "forward_sink"
+      ],
+      "e": [
+        "forward_source"
+      ]
+    },
+    "qfd_chead_w": {
+      "s": [
+        "forward_source"
+      ],
+      "n": [
+        "forward_source"
+      ],
+      "e": [
+        "forward_sink"
+      ],
+      "w": [
+        "forward_source"
+      ]
+    },
+    "qfd_cst_n": {
+      "b": [
+        "forward_sink"
+      ],
+      "a": [
+        "forward_source"
+      ],
+      "tap": [
+        "forward_source"
+      ]
+    },
+    "qfd_cst_s": {
+      "a": [
+        "forward_sink"
+      ],
+      "b": [
+        "forward_source"
+      ],
+      "tap": [
+        "forward_source"
+      ]
+    }
+  },
+  "instances": 3136,
+  "examples": {
+    "t_0_0": {
+      "clock": [
+        [
+          "clk_r0",
+          "ck",
+          1
+        ]
+      ],
+      "reset": []
+    },
+    "s_0_0": {
+      "clock": [
+        [
+          "clk_r0",
+          "ck",
+          1
+        ]
+      ],
+      "reset": []
+    },
+    "t_0_1": {
+      "clock": [
+        [
+          "clk_r0",
+          "ck",
+          1
+        ]
+      ],
+      "reset": []
+    },
+    "s_0_1": {
+      "clock": [
+        [
+          "clk_r0",
+          "ck",
+          1
+        ]
+      ],
+      "reset": []
+    },
+    "t_0_2": {
+      "clock": [
+        [
+          "clk_r0",
+          "ck",
+          1
+        ]
+      ],
+      "reset": []
+    }
+  },
+  "conclusion": "No64clock payloadpins: already separateck1. Reset removed from bundle but noresetnet reaches auditedfieldinstances. r22 needs explicitrst_n tree.",
+  "actual_fullwidth_signal_bits": 509,
+  "clock_pin_per_instance": 1,
+  "reset_pin_required_per_instance": 1,
+  "original_station_frame_um": [
+    52.704,
+    103.68
+  ],
+  "die": {
+    "w": 25037.856,
+    "h": 32801.76,
+    "mm2": 821.286,
+    "budget_mm2": 858,
+    "margin_mm2": 36.714
+  },
+  "adoption": false
+}

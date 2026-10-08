@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.hbm.su.divider_halfpair.component.v1",
+  "adopted": false,
+  "selected": false,
+  "default_off": "Standalone module; no production instantiation",
+  "model_commit": "6dc3c9707528d66099b395bafa5058d19eb75739",
+  "slot_commit": "9b5fd9148e9e8043f894b18bd32112c6a915c07e",
+  "prior_related_module": "ot_dsrom_su_fdiv_hr wraps different DEPTH33/34 divider; does not implement unchanged DEPTH31 cores or registered aligned faults",
+  "status": "COMPONENT_EXACT_PASS_PRODUCTION_JOIN_AND_ROUTE_OPEN",
+  "latency_fast_cycles": 64,
+  "initiation_interval_fast_cycles": 1,
+  "exact_comparisons": 2520,
+  "positive": "component_positive.log",
+  "negative": "component_negative.log",
+  "coverage": [
+    "random binary32 operands",
+    "zero divisors",
+    "NaN inputs",
+    "subnormal inputs",
+    "overflow candidates",
+    "valid bubbles",
+    "continuous acceptance",
+    "two interrupted resets"
+  ],
+  "reference": "unchanged ot_hdc_fdiv; arithmetic equivalence only, not independent golden proof",
+  "source_sha256": {
+    "rtl/hdc/v41/ot_hdc_fdiv64.sv": "7228e61efa47231f332915b5496077daffa68b67d53159d7a17e9c972829a6cf",
+    "rtl/test/tb_hbm_su_fdiv64.sv": "04840305f5d18696be174588051bebea00633d5947f34709f57b31e234aac648",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "physical/hbm_su_div64/generated_clocks_candidate.sdc": "098e46d5f69491dbc710019d35f7ed7d2fb0afa2c67dd6ea094b2f92d87bb274",
+    "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv": "5b633ba38e09dc62aefc4f71a108be23fd9d476791e17012a90d741025452810",
+    "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_su_div64_phys.sv": "98f9995a6a7accfdec717f56bf721947aaf87e5fb6f19fb7014fb50826c40f08",
+    "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_vec_side_c12.sv": "95a667ed025141dd45fe34180056771212740ce9632da7a5ecc2221e21192584",
+    "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_vec_lane_c12.sv": "9ed8475daf343c30b7b96d565a661fb711e8e2314fcebbf7fc6804eb198555ef",
+    "physical/hbm_su_div64/su_full_sources.txt": "3be9a787e2c3660c71b1ef86f909fa66de94daa6d0342db6d6208450f79a3f45",
+    "physical/hbm_su_div64/full_generated_clocks_candidate.sdc": "f6e14cb7285a70617b88574eb122992006abd30f589531813e1e74d0e6cc251c",
+    "tools/hbm_su_div64.py": "9d1dad644ec285d01a7ffd7c88b2ce57f9a95511a91147917adf8ad884fd4c42"
+  },
+  "compile_command": "iverilog -g2012 -s tb -o /tmp/hbm-su-restore-20261007/review.out rtl/hdc/v41/ot_hdc_fdiv64.sv rtl/test/tb_hbm_su_fdiv64.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_sfu.sv",
+  "run_command": "vvp /tmp/hbm-su-restore-20261007/review.out",
+  "negative_compile_command": "iverilog -DNEG_PHASE -g2012 -s tb -o /tmp/hbm-su-restore-20261007/review.out rtl/hdc/v41/ot_hdc_fdiv64.sv rtl/test/tb_hbm_su_fdiv64.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_sfu.sv",
+  "remaining": [
+    "restore unified model function from prebuild commit if absent",
+    "commit source pin then run DDIV64 full-lane exact composition campaign with measured admission",
+    "validate generated clock discovery on actual mapped full-lane netlist; SS/FF route",
+    "r24f slot physical implementation and die composition"
+  ],
+  "clock_domain": {
+    "fast_ghz": 1.2,
+    "core_ghz": 0.6,
+    "serial_0p9_ghz_selected": false,
+    "basis": "existing committed prebuild6dc3c9707 HBM fast-lane candidate; serial-domain use requires separate composition",
+    "constraints": "physical/hbm_su_div64/generated_clocks_candidate.sdc",
+    "sdc_tool_validated": false
+  },
+  "sizing": {
+    "measured_full31_area_um2": 32015.784,
+    "bound_um2": 64134.67776,
+    "proposed_slot_um": [
+      400,
+      400
+    ],
+    "reserved_corridor_um": 32,
+    "utilization_with_corridor": 0.48084173599999996,
+    "conservative_method": "Duplicate entire measured full31 lane, not unmeasured divider leaves, plus272FF from existing prebuild",
+    "slot_fit_analytic": true,
+    "physical_qualification": false
+  },
+  "successor": {
+    "source_directory": "rtl/hbm_accel/su/div64_candidate",
+    "source_manifest": "physical/hbm_su_div64/su_full_sources.txt",
+    "full_top": "ot_su64_full64",
+    "elaboration": "PASS Icarus actual full lane; existing exp kadd width warning",
+    "driver": "tools/hbm_su_div64.py",
+    "default_ddiv": 21,
+    "opt_in_ddiv": 64,
+    "compile_command": "iverilog -g2012 -Irtl/hdc/v41x -s ot_su64_full64 -o /tmp/full64.out -c physical/hbm_su_div64/su_full_sources.txt",
+    "campaign_command": "python3 tools/hbm_su_div64.py campaign --ddiv 64 --quick --only sfu,random,vehicle --no-1024 --scratch RUN/div64 --out RUN/div64.json",
+    "campaign_status": "NOT_LAUNCHED: clean source pin and measured host admission required",
+    "sdc": "physical/hbm_su_div64/full_generated_clocks_candidate.sdc",
+    "sdc_validation": "OpenSTA 2.6.0 four-ICG topology fixture PASS, two complementary 1666.666ps clocks per divider; actual mapped hierarchy and timing qualification OPEN"
+  }
+}

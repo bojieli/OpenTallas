@@ -1,0 +1,16 @@
+%Warning: tracts/vmchecks-ce24d613f/src/results/rtl/qwen_hbm_activation_vm_realization_20261005/minimum_adapter_case/initial_x4096.u32.hex:0: $readmem file not found
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=1 checked_ACK_delta=1 reads=0 writes=1 progress=0 chased=0
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=2 checked_ACK_delta=1 reads=0 writes=2 progress=0 chased=0
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=3 checked_ACK_delta=1 reads=0 writes=3 progress=0 chased=0
+READ_SERVICE edges=9
+READ_SERVICE edges=9
+READ_SERVICE edges=9
+FRAME steps=58 native=4 checked_ACK_delta=0 reads=3 writes=3 progress=0 chased=0
+CONFLICT got=00000000,00000000,00000000 expected=00000000,00000000,00000000
+READ_SERVICE edges=9
+[2446000] %Fatal: bench.sv:55: Assertion failed in tb_qwen_su_service_gate.frame: PREMATURE_CHASE_WITH_UNPAID_FRAME
+%Error: /srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/su_service/src/bench.sv:55: Verilog $stop
+Aborting...

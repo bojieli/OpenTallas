@@ -1,0 +1,48 @@
+HBM index r18 budget binding audit
+
+Finding: d05ac0e82 sheets are current and reproduce exactly for HBM-only masters.
+The five failed r18b jobs retain sheet revision 1e8d0bdc5 and target 900 ps.
+No timing target, tolerance, interface constraint, RTL or closure-loop state was changed.
+Corrected artifact: HBM provenance now separates model/CTS source 681626d04 from publication 884df30c3.
+corrected_binding entries pin the complete approved d05ac0e82 sheets and their SHA256s.
+Historical NEEDS_BUDGET job snapshots are preserved under jobs/.
+
+Proof: 79 HBM sheets replayed (77 HBM-only sheets compared in full; shared PHY/SerDes insertion compared).
+20 index instances: SS/FF entry + compensated insertion = regional flop arrival;
+SS padding is nonnegative against measured clock-only CTS arrival.
+Every index interface: original regional/inter-domain skew plus BOTH endpoint OCV charges;
+forwarded-clock interface explicitly retains its approved zero extra charge.
+Clock plan reports zero intra/inter-region violations. HBM replay reports zero infeasible interfaces.
+
+block  measured_SS_mean  old_target  approved_target  extra_OCV  boundary_max_excess (ps)
+hfd_index_q_b0  1169  900.0  1254  17.7  21
+hfd_index_q_b1  1130  900.0  1154  12.7  0
+hfd_index_q_b2  1329  900.0  1402  25.1  12
+hfd_index_q_b3  1184  900.0  1298  19.9  0
+hfd_index_q_b5  1322  900.0  1354  22.7  0
+
+The mean gate passes for all five. b0/b2 boundary maxima exceed approved maxima by 21/12 ps.
+This is analytical compensation/binding evidence, not physical sign-off or automatic permission to adopt.
+Closure owner must rebind the whole sheet, regenerate route/signoff/FF SDCs, and verify route SS/FF.
+No retry/launch was issued; no failed verdict was overwritten. Closure-loop code remains with Herschel.
+
+Reproduce:
+python3 tools/budgets/check_hbm_index_binding.py --out /tmp/hbm-index-binding.json
+python3 -m unittest discover -s tests -p test_hbm_index_budget_binding.py -v
+Seven tests PASS, including negative controls for target, OCV, entry, schema and source binding.
+
+r16c i50: source fc807442a7e57dae8339f95361297e4f51c2a84a verified on ot-epyc2.
+At final inspection it remained nonterminal (extra iteration 36/50, no run.log.exit).
+No completed i50 evidence exists to harvest yet; no duplicate die run launched.
+Other r16c cases and SW_s1/SW_s7 work were not repeated.
+
+Integration: parent owns main integration; take the audit commit, not a new die launch.
+
+Reproducibility follow-up after integration on 805bb845a:
+Only the coordinator physical insertion_override.json was absent; all other original audit dependencies matched.
+Default replay now uses inputs/ snapshots exclusively for model, clock plan, calibrations, override, sheets and helper code.
+inputs/manifest.json pins every snapshot to ca4d7a97b with original path, Git blob and SHA256.
+The standalone die generator is not invoked: its extracted model and clock-only plan retain embedded source 681626d04.
+No active-main/coordinator integration claim: active_main_validated=false; snapshot PASS is historical analytical evidence only.
+Tests replay in a sparse root with NO active physical override or active common.py; helper tampering is rejected.
+Validated on a temporary 805bb845a archive plus this follow-up: seven tests pass and standalone replay is identical.

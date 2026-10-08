@@ -1,0 +1,88 @@
+{
+  "name": "core_p_done_io80-751b7b4d4",
+  "block": "ot_qwen_rom_core_core_p",
+  "owner": "Codex:qwen-elements",
+  "purpose": "Full-shape registered core controller with repaired completion pulse; 80 fF output load/150 ps input slew. Qwen ROM decode core 3banmsp (FB3+BOUND+AMQ+NXREG+MEIF+SUIF+PINREG): every input pin registered, rst_n synchronised, kv_write_drained registered+masked, feed-through outputs dropped; controller cut, route 770, sign-off 833.333 with the 90 ps intra-region die budget (r5_f2ba was +6.27 with NO die skew; m2_f3banms -138.5 at skew 90)",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+    "branch": "codex/qwen-elements-takeover-20261007",
+    "commit": "751b7b4d4",
+    "extra_paths": [
+      "configs"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "completion_exact_and_mutant",
+        "cmd": "python3 tools/qwen_core_pinreg_done_regression.py --out {RUN}/bench/completion",
+        "expect": "pass",
+        "pass_regex": "\"status\": \"pass\"",
+        "min_count_regex": "transactions=(\\d+)",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "CORE_DIE_IO=1 SRC={SRC} bash physical/qwen_die_masters/jobs/route_core.sh {LABEL} 3banmsp 30 0.5 {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 40,
+      "needs": [
+        "orfs",
+        "yosys"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS.md {RUN}/routes/{LABEL}/prep/cut_report.json {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_qwen_rom_core --out {RUN}/record/views/ot_qwen_rom_core_core_p --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_core_ctx/signoff833_skew90.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "results/rtl/qwen_elements_takeover_20261007/core_p_done_io80/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_elements_takeover_20261007/core_p_done_io80/route"
+    },
+    {
+      "from": "{RUN}/bench/completion",
+      "to": "results/rtl/qwen_elements_takeover_20261007/core_p_done_io80/bench"
+    }
+  ],
+  "cycles_added": "Completion pulse repair: 0 cycles and 0 registers relative to PINREG. Existing PINREG start/fetch staging: +2 cycles per END-only controller transaction (minimum bench); full token pricing remains pending, no adoption.",
+  "merge_target": null,
+  "no_bench_reason": "Single integrated regression runs eight positive parameter combinations with eight actual-controller/actual-sequencer transactions each and a sticky-completion mutant, requiring its explicit stale-token failure internally. Full head legacy positives were rejected and preserved; arithmetic untouched. Result does not claim full-system qualification."
+}

@@ -1,0 +1,10 @@
+
+-- Running command `read_verilog -sv /tmp/qwen-control-recovery-20261007/candidate/ot_qwen_ctrl_pc_head.sv /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv; hierarchy -top ot_qwen_ctrl_pc_head -chparam ENABLE 1 -chparam PC 0; proc; opt; check -assert; stat' --
+
+1. Executing Verilog-2005 frontend: /tmp/qwen-control-recovery-20261007/candidate/ot_qwen_ctrl_pc_head.sv
+Parsing SystemVerilog input from `/tmp/qwen-control-recovery-20261007/candidate/ot_qwen_ctrl_pc_head.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_ctrl_pc_head'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv
+/tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:113: ERROR: syntax error, unexpected invalid token

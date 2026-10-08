@@ -1,0 +1,23 @@
+{
+  "status": "CANDIDATE_NOT_CLOSED",
+  "core_clock": {
+    "port": "clk",
+    "period_ps": 833.333333,
+    "reset": "rst_n"
+  },
+  "phy_clock": {
+    "port": "pclk",
+    "period_ps": 833.333333,
+    "reset": "prst_n"
+  },
+  "relationship": "asynchronous; existing TX/RX Gray-pointer CDC retained",
+  "constraints": "60ps setup /25ps hold uncertainty; no clock aliasing; parent source/entry/CTS budgets owned by die",
+  "reset": "separate cold POR domains; context arm must wait queue occupancy zero, pipes empty, owner quiet and synchronized PHY quiet",
+  "functional_bench_phy_period_ps": 1000.0,
+  "open": [
+    "CDC storage/control protection",
+    "reset release synchronization in physical parent",
+    "independent clock distribution/source power",
+    "full-stage drain/rearm test"
+  ]
+}

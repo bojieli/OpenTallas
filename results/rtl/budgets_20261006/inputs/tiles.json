@@ -1,0 +1,1266 @@
+{
+ "schema": "opentallas.budgets.tiles.v1",
+ "source_commit": "752a48488384dbe9c95a72c084bc24e0ac800a17",
+ "tiles": {
+  "dsfd_selt_q": {
+   "slab": "dsfd_bk_selector",
+   "instances": 4,
+   "size_um": [
+    756.0,
+    159.84
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "lane",
+       "in"
+      ]
+     ],
+     "what": "die lane -> quarter: 2095.2 um, 5 common-clock stations",
+     "peer": "die station",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 349.2
+    },
+    {
+     "ports": [
+      [
+       "t_s",
+       "out"
+      ],
+      [
+       "t_o",
+       "out"
+      ],
+      [
+       "f_c",
+       "in"
+      ],
+      [
+       "f_cr",
+       "in"
+      ]
+     ],
+     "what": "quarter <-> control (near-abutted)",
+     "peer": "dsfd_selt_c",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 6.544
+    }
+   ]
+  },
+  "dsfd_selt_c": {
+   "slab": "dsfd_bk_selector",
+   "instances": 1,
+   "size_um": [
+    129.6,
+    319.68
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "f_s",
+       "in"
+      ],
+      [
+       "f_o",
+       "in"
+      ],
+      [
+       "t_c",
+       "out"
+      ],
+      [
+       "t_cr",
+       "out"
+      ]
+     ],
+     "what": "control <-> quarters (near-abutted)",
+     "peer": "dsfd_selt_q",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 6.544
+    },
+    {
+     "ports": [
+      [
+       "vd",
+       "out"
+      ],
+      [
+       "vf",
+       "out"
+      ]
+     ],
+     "what": "control -> VM station chain (slab vd/vf)",
+     "peer": "",
+     "skew_class": "intra",
+     "basis": "composition",
+     "inherit": [
+      "dsfd_bk_selector",
+      [
+       "vd",
+       "vf"
+      ]
+     ],
+     "length_um": 0.0
+    }
+   ]
+  },
+  "dsfd_colt_lane": {
+   "slab": "dsfd_bk_collector",
+   "instances": 4,
+   "size_um": [
+    432.0,
+    129.6
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "c_in",
+       "in"
+      ]
+     ],
+     "what": "die lane -> lane tile (slab die port)",
+     "peer": "",
+     "skew_class": "intra",
+     "basis": "composition",
+     "inherit": [
+      "dsfd_bk_collector",
+      null
+     ],
+     "length_um": 0.0
+    },
+    {
+     "ports": [
+      [
+       "t_w",
+       "out"
+      ],
+      [
+       "t_f",
+       "out"
+      ],
+      [
+       "f_cr",
+       "in"
+      ]
+     ],
+     "what": "lane <-> merger: 2970.6 um, 7 common-clock stations each way",
+     "peer": "die station",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 371.325
+    }
+   ]
+  },
+  "dsfd_colt_mrg": {
+   "slab": "dsfd_bk_collector",
+   "instances": 1,
+   "size_um": [
+    216.0,
+    151.2
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "f_w",
+       "in"
+      ],
+      [
+       "f_f",
+       "in"
+      ],
+      [
+       "t_cr",
+       "out"
+      ]
+     ],
+     "what": "merger <-> lane stations",
+     "peer": "die station",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 371.325
+    },
+    {
+     "ports": [
+      [
+       "vd",
+       "out"
+      ],
+      [
+       "vf",
+       "out"
+      ]
+     ],
+     "what": "merger -> VM station chain",
+     "peer": "",
+     "skew_class": "intra",
+     "basis": "composition",
+     "inherit": [
+      "dsfd_bk_collector",
+      [
+       "vd",
+       "vf"
+      ]
+     ],
+     "length_um": 0.0
+    }
+   ]
+  },
+  "dsfd_capt_grp": {
+   "slab": "dsfd_sp_capture",
+   "instances": 8,
+   "size_um": [
+    118.8,
+    324.0
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck",
+    "ckv"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "f_k",
+       "in"
+      ],
+      [
+       "t_sb",
+       "out"
+      ]
+     ],
+     "what": "ctl <-> group tiles in the S channel (no station)",
+     "peer": "capture tile",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 562.0
+    },
+    {
+     "ports": [
+      [
+       "f_row",
+       "in"
+      ]
+     ],
+     "what": "gather t_capture -> tile through the 21.6-um channel",
+     "peer": "dsfd_sp_gather",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 21.6
+    },
+    {
+     "ports": [
+      [
+       "t_vm",
+       "out"
+      ]
+     ],
+     "what": "tile -> VM (serial clock ckv, abutted N face)",
+     "peer": "dsfd_sp_vm",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 0.192
+    }
+   ]
+  },
+  "dsfd_capt_ctl": {
+   "slab": "dsfd_sp_capture",
+   "instances": 1,
+   "size_um": [
+    86.4,
+    324.0
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck",
+    "ckv"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "t_k",
+       "out"
+      ],
+      [
+       "f_sb",
+       "in"
+      ]
+     ],
+     "what": "ctl <-> group tiles in the S channel (no station)",
+     "peer": "capture tile",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 562.0
+    },
+    {
+     "ports": [
+      [
+       "f_ctl",
+       "in"
+      ]
+     ],
+     "what": "gather t_capture -> tile through the 21.6-um channel",
+     "peer": "dsfd_sp_gather",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 21.6
+    },
+    {
+     "ports": [
+      [
+       "t_st",
+       "out"
+      ]
+     ],
+     "what": "tile -> VM (serial clock ckv, abutted N face)",
+     "peer": "dsfd_sp_vm",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 0.192
+    }
+   ]
+  },
+  "dsfd_coll_lane_w": {
+   "slab": "dsfd_sp_collective",
+   "instances": 4,
+   "size_um": [
+    253.8,
+    340.2
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "lo_v",
+       "in"
+      ],
+      [
+       "lo_d",
+       "in"
+      ],
+      [
+       "li_r",
+       "in"
+      ],
+      [
+       "lo_r",
+       "out"
+      ],
+      [
+       "li_v",
+       "out"
+      ],
+      [
+       "li_d",
+       "out"
+      ],
+      [
+       "flt",
+       "out"
+      ]
+     ],
+     "what": "lane <-> core skid (abutted, 0.192 gap)",
+     "peer": "dsfd_coll_core",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 0.192
+    },
+    {
+     "ports": [
+      [
+       "rx",
+       "in"
+      ],
+      [
+       "tx",
+       "out"
+      ],
+      [
+       "tf",
+       "out"
+      ]
+     ],
+     "what": "lane <-> die link chain (slab rX/tdX/tfX)",
+     "peer": "",
+     "skew_class": "intra",
+     "basis": "composition",
+     "inherit": [
+      "dsfd_sp_collective",
+      null
+     ],
+     "length_um": 0.0
+    }
+   ]
+  },
+  "dsfd_coll_lane_e": {
+   "slab": "dsfd_sp_collective",
+   "instances": 4,
+   "size_um": [
+    253.8,
+    340.2
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "lo_v",
+       "in"
+      ],
+      [
+       "lo_d",
+       "in"
+      ],
+      [
+       "li_r",
+       "in"
+      ],
+      [
+       "lo_r",
+       "out"
+      ],
+      [
+       "li_v",
+       "out"
+      ],
+      [
+       "li_d",
+       "out"
+      ],
+      [
+       "flt",
+       "out"
+      ]
+     ],
+     "what": "lane <-> core skid (abutted, 0.192 gap)",
+     "peer": "dsfd_coll_core",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 0.192
+    },
+    {
+     "ports": [
+      [
+       "rx",
+       "in"
+      ],
+      [
+       "tx",
+       "out"
+      ],
+      [
+       "tf",
+       "out"
+      ]
+     ],
+     "what": "lane <-> die link chain (slab rX/tdX/tfX)",
+     "peer": "",
+     "skew_class": "intra",
+     "basis": "composition",
+     "inherit": [
+      "dsfd_sp_collective",
+      null
+     ],
+     "length_um": 0.0
+    }
+   ]
+  },
+  "dsfd_coll_core": {
+   "slab": "dsfd_sp_collective",
+   "instances": 1,
+   "size_um": [
+    507.384,
+    1360.8
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "lo_r",
+       "in"
+      ],
+      [
+       "li_v",
+       "in"
+      ],
+      [
+       "li_d",
+       "in"
+      ],
+      [
+       "flt",
+       "in"
+      ],
+      [
+       "lo_v",
+       "out"
+      ],
+      [
+       "lo_d",
+       "out"
+      ],
+      [
+       "li_r",
+       "out"
+      ]
+     ],
+     "what": "core <-> lane skids (abutted)",
+     "peer": "dsfd_coll_lane_*",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 0.192
+    },
+    {
+     "ports": [
+      [
+       "f_vm",
+       "in"
+      ],
+      [
+       "ts",
+       "in"
+      ],
+      [
+       "t_vm",
+       "out"
+      ]
+     ],
+     "what": "core <-> VM (slab S face)",
+     "peer": "",
+     "skew_class": "intra",
+     "basis": "composition",
+     "inherit": [
+      "dsfd_sp_collective",
+      null
+     ],
+     "length_um": 0.0
+    }
+   ]
+  },
+  "dsfd_coll_ck": {
+   "slab": "dsfd_sp_collective",
+   "instances": 1,
+   "size_um": [
+    216.0,
+    216.0
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [],
+   "edges": []
+  },
+  "dsfd_ctrl_pc": {
+   "slab": "dsfd_ctrl",
+   "instances": 32,
+   "size_um": [
+    121.068,
+    248.376
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "cks",
+    "ckh"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "k_v",
+       "out"
+      ],
+      [
+       "k_addr",
+       "out"
+      ],
+      [
+       "k_len",
+       "out"
+      ],
+      [
+       "k_tag",
+       "out"
+      ],
+      [
+       "k_we",
+       "out"
+      ],
+      [
+       "k_wdata",
+       "out"
+      ],
+      [
+       "k_wstrb",
+       "out"
+      ],
+      [
+       "kr_rdy",
+       "out"
+      ],
+      [
+       "k_rdy",
+       "in"
+      ],
+      [
+       "k_wr_done",
+       "in"
+      ],
+      [
+       "kr_v",
+       "in"
+      ],
+      [
+       "kr_tag",
+       "in"
+      ],
+      [
+       "kr_beat",
+       "in"
+      ],
+      [
+       "kr_data",
+       "in"
+      ]
+     ],
+     "what": "PC tile <-> HBM3E PHY pseudo-channel pins (abutted S face, ckh domain)",
+     "peer": "ot_hbm3e_phy",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 0.192
+    },
+    {
+     "ports": [
+      [
+       "rq",
+       "out"
+      ],
+      [
+       "rk",
+       "in"
+      ],
+      [
+       "wd",
+       "in"
+      ],
+      [
+       "r_data",
+       "in"
+      ],
+      [
+       "r_tag",
+       "in"
+      ],
+      [
+       "r_beat",
+       "in"
+      ],
+      [
+       "rv",
+       "in"
+      ]
+     ],
+     "what": "PC tile <-> svc PC tile (abutted N face)",
+     "peer": "dsfd_svc_pc",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 0.192
+    },
+    {
+     "ports": [
+      [
+       "co_w",
+       "out"
+      ],
+      [
+       "co_e",
+       "out"
+      ],
+      [
+       "ci_w",
+       "in"
+      ],
+      [
+       "ci_e",
+       "in"
+      ]
+     ],
+     "what": "status chain to the next PC tile (265.584 pitch)",
+     "peer": "dsfd_ctrl_pc",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 144.516
+    }
+   ]
+  },
+  "dsfd_ctrl_ctr": {
+   "slab": "dsfd_ctrl",
+   "instances": 1,
+   "size_um": [
+    43.2,
+    43.2
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "cks",
+    "ckh"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "co_w",
+       "in"
+      ],
+      [
+       "co_e",
+       "in"
+      ]
+     ],
+     "what": "status from PC 15 / 16",
+     "peer": "dsfd_ctrl_pc",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 50.658
+    },
+    {
+     "ports": [
+      [
+       "st",
+       "out"
+      ]
+     ],
+     "what": "status -> die (slab st)",
+     "peer": "",
+     "skew_class": "intra",
+     "basis": "composition",
+     "inherit": [
+      "dsfd_ctrl",
+      null
+     ],
+     "length_um": 0.0
+    }
+   ]
+  },
+  "dsfd_svc_pc": {
+   "slab": "dsfd_svc",
+   "instances": 32,
+   "size_um": [
+    121.068,
+    43.2
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "rq",
+       "out"
+      ],
+      [
+       "qrk",
+       "out"
+      ],
+      [
+       "qwd",
+       "out"
+      ],
+      [
+       "qrv",
+       "out"
+      ],
+      [
+       "qr_data",
+       "out"
+      ],
+      [
+       "qr_tag",
+       "out"
+      ],
+      [
+       "qr_beat",
+       "out"
+      ],
+      [
+       "qrq",
+       "in"
+      ],
+      [
+       "rk",
+       "in"
+      ],
+      [
+       "wd",
+       "in"
+      ],
+      [
+       "rv",
+       "in"
+      ],
+      [
+       "r_data",
+       "in"
+      ],
+      [
+       "r_tag",
+       "in"
+      ],
+      [
+       "r_beat",
+       "in"
+      ]
+     ],
+     "what": "svc PC tile <-> ctrl PC tile (S) / quadrant (N), abutted",
+     "peer": "dsfd_ctrl_pc / quadrant",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 0.192
+    }
+   ]
+  },
+  "dsfd_svc_stn": {
+   "slab": "dsfd_svc",
+   "instances": 30,
+   "size_um": [
+    43.2,
+    216.0
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "q_e",
+       "in"
+      ],
+      [
+       "od_wv",
+       "in"
+      ],
+      [
+       "od_wd",
+       "in"
+      ],
+      [
+       "od_er",
+       "in"
+      ],
+      [
+       "a0_wv",
+       "in"
+      ],
+      [
+       "a0_wd",
+       "in"
+      ],
+      [
+       "a0_er",
+       "in"
+      ],
+      [
+       "q_w",
+       "out"
+      ],
+      [
+       "od_ev",
+       "out"
+      ],
+      [
+       "od_ed",
+       "out"
+      ],
+      [
+       "od_wr",
+       "out"
+      ],
+      [
+       "a0_ev",
+       "out"
+      ],
+      [
+       "a0_ed",
+       "out"
+      ],
+      [
+       "a0_wr",
+       "out"
+      ]
+     ],
+     "what": "quadrant <-> IO hub station chain (max span 430.0 um)",
+     "peer": "dsfd_svc_stn / dsfd_svc_io",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 430.0
+    }
+   ]
+  },
+  "dsfd_svc_io": {
+   "slab": "dsfd_svc",
+   "instances": 1,
+   "size_um": [
+    1080.0,
+    129.6
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "q_q",
+       "out"
+      ],
+      [
+       "od_r",
+       "out"
+      ],
+      [
+       "a0_r",
+       "out"
+      ],
+      [
+       "a1_r",
+       "out"
+      ],
+      [
+       "x_r",
+       "out"
+      ],
+      [
+       "od_d",
+       "in"
+      ],
+      [
+       "od_v",
+       "in"
+      ],
+      [
+       "a0_d",
+       "in"
+      ],
+      [
+       "a0_v",
+       "in"
+      ],
+      [
+       "a1_d",
+       "in"
+      ],
+      [
+       "a1_v",
+       "in"
+      ],
+      [
+       "x_d",
+       "in"
+      ],
+      [
+       "x_v",
+       "in"
+      ]
+     ],
+     "what": "IO hub <-> first station / quadrant 3",
+     "peer": "dsfd_svc_stn",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 430.0
+    },
+    {
+     "ports": [
+      [
+       "od",
+       "out"
+      ],
+      [
+       "of",
+       "out"
+      ],
+      [
+       "xd",
+       "out"
+      ],
+      [
+       "xf",
+       "out"
+      ],
+      [
+       "ad",
+       "out"
+      ],
+      [
+       "af",
+       "out"
+      ],
+      [
+       "fault",
+       "out"
+      ],
+      [
+       "q",
+       "in"
+      ]
+     ],
+     "what": "IO hub <-> die (slab N-E pin group)",
+     "peer": "",
+     "skew_class": "intra",
+     "basis": "composition",
+     "inherit": [
+      "dsfd_svc",
+      null
+     ],
+     "length_um": 0.0
+    }
+   ]
+  },
+  "dsfd_vm_bg": {
+   "slab": "dsfd_sp_vm",
+   "instances": 4,
+   "size_um": [
+    1015.176,
+    500.04
+   ],
+   "domain": "serial_0p9",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "i_v",
+       "in"
+      ],
+      [
+       "i_we",
+       "in"
+      ],
+      [
+       "i_row",
+       "in"
+      ],
+      [
+       "i_mask",
+       "in"
+      ],
+      [
+       "i_d",
+       "in"
+      ],
+      [
+       "r_v",
+       "in"
+      ],
+      [
+       "r_d",
+       "in"
+      ],
+      [
+       "r_f",
+       "in"
+      ],
+      [
+       "r_o",
+       "in"
+      ],
+      [
+       "f_v",
+       "out"
+      ],
+      [
+       "f_we",
+       "out"
+      ],
+      [
+       "f_row",
+       "out"
+      ],
+      [
+       "f_mask",
+       "out"
+      ],
+      [
+       "f_d",
+       "out"
+      ],
+      [
+       "o_v",
+       "out"
+      ],
+      [
+       "o_d",
+       "out"
+      ],
+      [
+       "o_f",
+       "out"
+      ],
+      [
+       "o_o",
+       "out"
+      ]
+     ],
+     "what": "bank-group chain by abutment (S face of t on N face of t+1; ends at the VM request / read ports)",
+     "peer": "dsfd_vm_bg",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 0.192
+    }
+   ]
+  },
+  "ot_s81ph_root_tile": {
+   "slab": "dsfd_sp_gather",
+   "instances": 128,
+   "size_um": [
+    237.168,
+    124.2
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "ci",
+       "in"
+      ],
+      [
+       "sel",
+       "in"
+      ],
+      [
+       "fi",
+       "in"
+      ],
+      [
+       "co",
+       "out"
+      ],
+      [
+       "rso",
+       "out"
+      ],
+      [
+       "fo",
+       "out"
+      ]
+     ],
+     "what": "root chain, abutted rows (125.28 pitch)",
+     "peer": "ot_s81ph_root_tile",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 1.08
+    },
+    {
+     "ports": [
+      [
+       "li_w",
+       "in"
+      ],
+      [
+       "lt_wi",
+       "in"
+      ],
+      [
+       "li_e",
+       "in"
+      ],
+      [
+       "lt_ei",
+       "in"
+      ],
+      [
+       "lt_wo",
+       "out"
+      ],
+      [
+       "lt_eo",
+       "out"
+      ]
+     ],
+     "what": "lane taps to the neighbour columns (237.6 pitch, abutted)",
+     "peer": "ot_s81ph_root_tile / trunk",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 0.432
+    }
+   ]
+  },
+  "ot_s81ph_root_blk": {
+   "slab": "dsfd_sp_gather",
+   "instances": 128,
+   "size_um": [
+    237.6,
+    237.6
+   ],
+   "domain": "stream_1p2",
+   "clock_ports": [
+    "ck"
+   ],
+   "edges": [
+    {
+     "ports": [
+      [
+       "i",
+       "in"
+      ],
+      [
+       "o",
+       "out"
+      ],
+      [
+       "f",
+       "out"
+      ]
+     ],
+     "what": "root sub-block inside its root tile (abutted)",
+     "peer": "ot_s81ph_root_tile",
+     "skew_class": "intra",
+     "basis": "composition",
+     "length_um": 0.192
+    }
+   ]
+  }
+ }
+}

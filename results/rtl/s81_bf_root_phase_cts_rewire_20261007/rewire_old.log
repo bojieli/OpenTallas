@@ -1,0 +1,39 @@
+OpenROAD v2.0-17598-ga008522d8 
+Features included (+) or not (-): +Charts +GPU +GUI +Python : None
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /tmp/bf_phase_sta_fixture/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /tmp/bf_phase_sta_fixture/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+PIN g_half.g_root.u_inv0/u_inv/A
+PIN g_half.g_root.u_inv0/u_inv/Y
+PIN g_half.g_root.u_inv1/u_inv/A
+PIN g_half.g_root.u_inv1/u_inv/Y
+PIN g_half.ph/CLK
+PIN g_half.ph/D
+PIN g_half.ph/QN
+PIN g_half.u_hcg.u_icg/ENA
+PIN g_half.u_hcg.u_icg/GCLK
+PIN g_half.u_hcg.u_icg/SE
+PIN g_half.u_hcg.u_icg/CLK
+[INFO IFP-0001] Added 206 rows of 1031 site asap7sc7p5t.
+Placement Analysis
+---------------------------------
+total displacement          0.1 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL              30.4 u
+legalized HPWL             30.4 u
+delta HPWL                    0 %
+
+BF_ROOT_PHASE_LOCALIZED 1 phase FF + 2 inverters within 100um of actual ICG
+BF_ROOT_PHASE_SPAN g_half.g_root.u_inv0/u_inv 4.968 um
+BF_ROOT_PHASE_SPAN g_half.g_root.u_inv1/u_inv 9.99 um
+BF_ROOT_PHASE_SPAN g_half.ph 15.012 um
+BF_ROOT_PHASE_PLACEMENT_PASS
+Clock                   Period          Waveform
+----------------------------------------------------
+core_clk                833.33        0.00    416.67
+bf_phase_inv            833.33      416.67    833.33 (generated)
+bf_phase_local          833.33      833.33   1250.00 (generated)
+[ERROR ODB-0370] Attempt to disconnect iterm of dont_touch instance g_half.g_root.u_inv0/u_inv
+Error: rewire_old.tcl, 24 ODB-0370

@@ -1,0 +1,76 @@
+{
+ "master": "dsfd_selt_q2",
+ "w_um": 756.0,
+ "h_um": 159.84,
+ "domain": "stream_1p2",
+ "orients": [
+  "R0",
+  "MY"
+ ],
+ "note": "SAFE selector quarter (same pins as dsfd_selt_q): six 128x256 line-memory macros with registered outputs (tiles/place_macros_q2.tcl), slice MREG 1",
+ "ports": [
+  [
+   "lane",
+   515,
+   "input",
+   "W",
+   "M4",
+   2,
+   0.5
+  ],
+  [
+   "ck",
+   1,
+   "input",
+   "W",
+   "M4",
+   1,
+   0.05
+  ],
+  [
+   "rst",
+   1,
+   "input",
+   "W",
+   "M4",
+   1,
+   0.07
+  ],
+  [
+   "t_s",
+   865,
+   "output",
+   "E",
+   "M4",
+   2,
+   0.3
+  ],
+  [
+   "t_o",
+   354,
+   "output",
+   "E",
+   "M4",
+   2,
+   0.72
+  ],
+  [
+   "f_c",
+   66,
+   "input",
+   "E",
+   "M4",
+   2,
+   0.9
+  ],
+  [
+   "f_cr",
+   1,
+   "input",
+   "E",
+   "M4",
+   1,
+   0.95
+  ]
+ ]
+}

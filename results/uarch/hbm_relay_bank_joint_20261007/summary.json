@@ -1,0 +1,7031 @@
+{
+  "status": "INCOMPLETE_JOINT_GEOMETRY",
+  "selected": false,
+  "required_slices": 192,
+  "complete_slices": 107,
+  "complete_leaves": 3,
+  "candidate_balanced_cycles": 72,
+  "target_inventory": {
+    "banks8": 725,
+    "single_cycle_stations": 8024,
+    "physical_FF_bits": 884736,
+    "area_um2": 3970676
+  },
+  "committed_partial_inventory": {
+    "boxes": 5067,
+    "all_384_endpoints_reserved": true,
+    "completed_chain_kinds": {
+      "source": 107,
+      "delay_bank8": 401,
+      "single_cycle": 4282,
+      "sink": 107
+    },
+    "failed_attempt_reservations_released": true
+  },
+  "independent_replay": {
+    "checked_station_boxes": 5067,
+    "checked_hops": 4790,
+    "worst_pin_hop_um": 299.96000300000014,
+    "error_count": 0,
+    "errors": []
+  },
+  "fixed_control_stations": 2680,
+  "fixed_die_macros": 596,
+  "fixed_control_corridors": 18,
+  "strategy": "five arc distributions, exact obstacle-edge candidate centres, local shortest-path escape routing; unsuccessful chain transactions rolled back",
+  "unresolved_slices": [
+    {
+      "bus": "rl_sm0",
+      "group": 2,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 28,
+      "failure": {
+        "node": 28,
+        "target_um": [
+          608.208,
+          3430.9602758620686
+        ],
+        "previous_um": [
+          475.248,
+          3158.320552
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm3",
+          "box_um": [
+            625.104,
+            3248.64,
+            3700.9440000000004,
+            4380.48
+          ],
+          "distance_from_target_um": 16.896000000000072
+        },
+        {
+          "name": "w35_rgSW0",
+          "box_um": [
+            454.896,
+            3546.72,
+            536.088,
+            3628.776
+          ],
+          "distance_from_target_um": 187.87972413793125
+        },
+        {
+          "name": "sm0",
+          "box_um": [
+            625.104,
+            1596.24,
+            3700.9440000000004,
+            2728.08
+          ],
+          "distance_from_target_um": 719.7762758620687
+        },
+        {
+          "name": "w1_wl_sm4",
+          "box_um": [
+            797.472,
+            2820.96,
+            855.768,
+            2892.216
+          ],
+          "distance_from_target_um": 728.0082758620687
+        },
+        {
+          "name": "w6_rq_sm4",
+          "box_um": [
+            527.904,
+            2622.24,
+            542.568,
+            2764.776
+          ],
+          "distance_from_target_um": 731.8242758620687
+        },
+        {
+          "name": "w16_wl_sm6",
+          "box_um": [
+            1210.464,
+            2820.96,
+            1608.744,
+            2892.216
+          ],
+          "distance_from_target_um": 1141.0002758620685
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm0",
+      "group": 4,
+      "best_attempt_exponent": 1.1,
+      "placed_nodes_before_rollback": 3,
+      "failure": {
+        "node": 3,
+        "target_um": [
+          1800.7870477936488,
+          1541.0
+        ],
+        "previous_um": [
+          2170.700748,
+          1518.84
+        ],
+        "unplaced_banks": 5,
+        "unplaced_interior_singles": 21,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm0",
+          "box_um": [
+            625.104,
+            1596.24,
+            3700.9440000000004,
+            2728.08
+          ],
+          "distance_from_target_um": 55.24000000000001
+        },
+        {
+          "name": "svc_SW_s0",
+          "box_um": [
+            1249.344,
+            1207.44,
+            2266.344,
+            1466.616
+          ],
+          "distance_from_target_um": 74.38400000000001
+        },
+        {
+          "name": "phy_SW",
+          "box_um": [
+            1248.48,
+            21.6,
+            9748.536,
+            1198.8
+          ],
+          "distance_from_target_um": 342.20000000000005
+        },
+        {
+          "name": "svc_SW_s1",
+          "box_um": [
+            2267.136,
+            1207.44,
+            3573.048,
+            1466.616
+          ],
+          "distance_from_target_um": 540.7329522063512
+        },
+        {
+          "name": "control_sm0_s18_r3",
+          "box_um": [
+            2390.2560000000003,
+            1551.6799999999998,
+            2410.2560000000003,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 600.1489522063514
+        },
+        {
+          "name": "control_sm0_s18_r2",
+          "box_um": [
+            2414.5760000000005,
+            1551.6799999999998,
+            2434.5760000000005,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 624.4689522063516
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm1",
+      "group": 4,
+      "best_attempt_exponent": 0.9,
+      "placed_nodes_before_rollback": 7,
+      "failure": {
+        "node": 7,
+        "target_um": [
+          4538.4835740798835,
+          1573.4
+        ],
+        "previous_um": [
+          4717.965069,
+          1484.76
+        ],
+        "unplaced_banks": 5,
+        "unplaced_interior_singles": 24,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm1",
+          "box_um": [
+            3960.576,
+            1596.24,
+            7036.416,
+            2728.08
+          ],
+          "distance_from_target_um": 22.839999999999918
+        },
+        {
+          "name": "svc_SW_s2",
+          "box_um": [
+            3573.072,
+            1207.44,
+            4630.0560000000005,
+            1466.616
+          ],
+          "distance_from_target_um": 106.7840000000001
+        },
+        {
+          "name": "svc_SW_s3",
+          "box_um": [
+            4630.176,
+            1207.44,
+            5703.144,
+            1466.616
+          ],
+          "distance_from_target_um": 198.47642592011698
+        },
+        {
+          "name": "phy_SW",
+          "box_um": [
+            1248.48,
+            21.6,
+            9748.536,
+            1198.8
+          ],
+          "distance_from_target_um": 374.60000000000014
+        },
+        {
+          "name": "control_sm0_s12_r1",
+          "box_um": [
+            3703.1040000000003,
+            1581.9039999999995,
+            3723.1040000000003,
+            1601.9039999999995
+          ],
+          "distance_from_target_um": 823.8835740798827
+        },
+        {
+          "name": "control_sm0_s12_r2",
+          "box_um": [
+            3680.128,
+            1574.08,
+            3700.128,
+            1594.08
+          ],
+          "distance_from_target_um": 839.0355740798832
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm10",
+      "group": 0,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 8,
+      "failure": {
+        "node": 8,
+        "target_um": [
+          26737.77121120215,
+          1573.4
+        ],
+        "previous_um": [
+          26971.10014,
+          1518.599998
+        ],
+        "unplaced_banks": 5,
+        "unplaced_interior_singles": 16,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm10_s23_r1",
+          "box_um": [
+            26734.132965517245,
+            1551.6799999999998,
+            26754.132965517245,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 1.7200000000002547
+        },
+        {
+          "name": "control_sm10_s23_r0",
+          "box_um": [
+            26709.81296551724,
+            1551.6799999999998,
+            26729.81296551724,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 9.678245684909598
+        },
+        {
+          "name": "control_sm10_s23_r2",
+          "box_um": [
+            26758.452965517245,
+            1551.6799999999998,
+            26778.452965517245,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 22.401754315093967
+        },
+        {
+          "name": "sm10",
+          "box_um": [
+            26340.768,
+            1596.24,
+            29416.608,
+            2728.08
+          ],
+          "distance_from_target_um": 22.839999999999918
+        },
+        {
+          "name": "control_sm10_s23_r3",
+          "box_um": [
+            26782.772965517244,
+            1551.6799999999998,
+            26802.772965517244,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 46.721754315093676
+        },
+        {
+          "name": "control_sm10_s22_r3",
+          "box_um": [
+            26641.32579310345,
+            1551.6799999999998,
+            26661.32579310345,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 78.1654180987016
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm10",
+      "group": 1,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 9,
+      "failure": {
+        "node": 9,
+        "target_um": [
+          26703.99651475225,
+          1573.4
+        ],
+        "previous_um": [
+          26998.002346,
+          1529.08
+        ],
+        "unplaced_banks": 4,
+        "unplaced_interior_singles": 16,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm10_s23_r0",
+          "box_um": [
+            26709.81296551724,
+            1551.6799999999998,
+            26729.81296551724,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 7.536450764992878
+        },
+        {
+          "name": "sm10",
+          "box_um": [
+            26340.768,
+            1596.24,
+            29416.608,
+            2728.08
+          ],
+          "distance_from_target_um": 22.839999999999918
+        },
+        {
+          "name": "control_sm10_s23_r1",
+          "box_um": [
+            26734.132965517245,
+            1551.6799999999998,
+            26754.132965517245,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 31.856450764996225
+        },
+        {
+          "name": "control_sm10_s22_r3",
+          "box_um": [
+            26641.32579310345,
+            1551.6799999999998,
+            26661.32579310345,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 44.39072164879963
+        },
+        {
+          "name": "control_sm10_s23_r2",
+          "box_um": [
+            26758.452965517245,
+            1551.6799999999998,
+            26778.452965517245,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 56.176450764995934
+        },
+        {
+          "name": "control_sm10_s22_r2",
+          "box_um": [
+            26617.00579310345,
+            1551.6799999999998,
+            26637.00579310345,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 68.71072164879934
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm11",
+      "group": 1,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 49,
+      "failure": {
+        "node": 49,
+        "target_um": [
+          29428.768,
+          3364.3838400000004
+        ],
+        "previous_um": [
+          29384.49568,
+          3170.0
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm13",
+          "box_um": [
+            26340.768,
+            3248.64,
+            29416.608,
+            4380.48
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "w115_rgSE3",
+          "box_um": [
+            29505.168,
+            3546.72,
+            29586.36,
+            3628.776
+          ],
+          "distance_from_target_um": 258.73616000000084
+        },
+        {
+          "name": "sm10",
+          "box_um": [
+            26340.768,
+            1596.24,
+            29416.608,
+            2728.08
+          ],
+          "distance_from_target_um": 648.4638400000003
+        },
+        {
+          "name": "hs_slab",
+          "box_um": [
+            30290.544,
+            3613.68,
+            30884.952,
+            20437.896
+          ],
+          "distance_from_target_um": 1111.072160000001
+        },
+        {
+          "name": "w113_xmSE3",
+          "box_um": [
+            28237.68,
+            2797.2,
+            28704.648,
+            2918.136
+          ],
+          "distance_from_target_um": 1170.3678399999994
+        },
+        {
+          "name": "control_sm13_s27_r3",
+          "box_um": [
+            27631.456000000002,
+            3204.08,
+            27651.456000000002,
+            3224.08
+          ],
+          "distance_from_target_um": 1917.6158399999986
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm11",
+      "group": 2,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 49,
+      "failure": {
+        "node": 49,
+        "target_um": [
+          29428.768,
+          3412.4158400000015
+        ],
+        "previous_um": [
+          29428.768,
+          3151.03168
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm13",
+          "box_um": [
+            26340.768,
+            3248.64,
+            29416.608,
+            4380.48
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "w115_rgSE3",
+          "box_um": [
+            29505.168,
+            3546.72,
+            29586.36,
+            3628.776
+          ],
+          "distance_from_target_um": 210.70415999999977
+        },
+        {
+          "name": "sm10",
+          "box_um": [
+            26340.768,
+            1596.24,
+            29416.608,
+            2728.08
+          ],
+          "distance_from_target_um": 696.4958400000014
+        },
+        {
+          "name": "hs_slab",
+          "box_um": [
+            30290.544,
+            3613.68,
+            30884.952,
+            20437.896
+          ],
+          "distance_from_target_um": 1063.04016
+        },
+        {
+          "name": "w113_xmSE3",
+          "box_um": [
+            28237.68,
+            2797.2,
+            28704.648,
+            2918.136
+          ],
+          "distance_from_target_um": 1218.3998400000005
+        },
+        {
+          "name": "control_sm13_s27_r3",
+          "box_um": [
+            27631.456000000002,
+            3204.08,
+            27651.456000000002,
+            3224.08
+          ],
+          "distance_from_target_um": 1965.6478399999996
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm11",
+      "group": 3,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 49,
+      "failure": {
+        "node": 49,
+        "target_um": [
+          29433.048,
+          3375.3318400000026
+        ],
+        "previous_um": [
+          29404.69568,
+          3164.056
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm13",
+          "box_um": [
+            26340.768,
+            3248.64,
+            29416.608,
+            4380.48
+          ],
+          "distance_from_target_um": 16.43999999999869
+        },
+        {
+          "name": "w115_rgSE3",
+          "box_um": [
+            29505.168,
+            3546.72,
+            29586.36,
+            3628.776
+          ],
+          "distance_from_target_um": 243.50815999999986
+        },
+        {
+          "name": "sm10",
+          "box_um": [
+            26340.768,
+            1596.24,
+            29416.608,
+            2728.08
+          ],
+          "distance_from_target_um": 663.6918400000013
+        },
+        {
+          "name": "hs_slab",
+          "box_um": [
+            30290.544,
+            3613.68,
+            30884.952,
+            20437.896
+          ],
+          "distance_from_target_um": 1095.84416
+        },
+        {
+          "name": "w113_xmSE3",
+          "box_um": [
+            28237.68,
+            2797.2,
+            28704.648,
+            2918.136
+          ],
+          "distance_from_target_um": 1185.5958400000004
+        },
+        {
+          "name": "control_sm13_s27_r3",
+          "box_um": [
+            27631.456000000002,
+            3204.08,
+            27651.456000000002,
+            3224.08
+          ],
+          "distance_from_target_um": 1932.8438399999995
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm11",
+      "group": 4,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 42,
+      "failure": {
+        "node": 42,
+        "target_um": [
+          29428.768,
+          3370.1933023255806
+        ],
+        "previous_um": [
+          29363.714605,
+          3170.0
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm13",
+          "box_um": [
+            26340.768,
+            3248.64,
+            29416.608,
+            4380.48
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "w115_rgSE3",
+          "box_um": [
+            29505.168,
+            3546.72,
+            29586.36,
+            3628.776
+          ],
+          "distance_from_target_um": 252.92669767442067
+        },
+        {
+          "name": "sm10",
+          "box_um": [
+            26340.768,
+            1596.24,
+            29416.608,
+            2728.08
+          ],
+          "distance_from_target_um": 654.2733023255805
+        },
+        {
+          "name": "hs_slab",
+          "box_um": [
+            30290.544,
+            3613.68,
+            30884.952,
+            20437.896
+          ],
+          "distance_from_target_um": 1105.262697674421
+        },
+        {
+          "name": "w113_xmSE3",
+          "box_um": [
+            28237.68,
+            2797.2,
+            28704.648,
+            2918.136
+          ],
+          "distance_from_target_um": 1176.1773023255796
+        },
+        {
+          "name": "control_sm13_s27_r3",
+          "box_um": [
+            27631.456000000002,
+            3204.08,
+            27651.456000000002,
+            3224.08
+          ],
+          "distance_from_target_um": 1923.4253023255787
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm11",
+      "group": 5,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 49,
+      "failure": {
+        "node": 49,
+        "target_um": [
+          29435.128,
+          3422.3422400000018
+        ],
+        "previous_um": [
+          29435.128,
+          3161.04448
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm13",
+          "box_um": [
+            26340.768,
+            3248.64,
+            29416.608,
+            4380.48
+          ],
+          "distance_from_target_um": 18.520000000000437
+        },
+        {
+          "name": "w115_rgSE3",
+          "box_um": [
+            29505.168,
+            3546.72,
+            29586.36,
+            3628.776
+          ],
+          "distance_from_target_um": 194.4177599999989
+        },
+        {
+          "name": "sm10",
+          "box_um": [
+            26340.768,
+            1596.24,
+            29416.608,
+            2728.08
+          ],
+          "distance_from_target_um": 712.7822400000023
+        },
+        {
+          "name": "hs_slab",
+          "box_um": [
+            30290.544,
+            3613.68,
+            30884.952,
+            20437.896
+          ],
+          "distance_from_target_um": 1046.7537599999991
+        },
+        {
+          "name": "w113_xmSE3",
+          "box_um": [
+            28237.68,
+            2797.2,
+            28704.648,
+            2918.136
+          ],
+          "distance_from_target_um": 1234.6862400000014
+        },
+        {
+          "name": "control_sm13_s27_r3",
+          "box_um": [
+            27631.456000000002,
+            3204.08,
+            27651.456000000002,
+            3224.08
+          ],
+          "distance_from_target_um": 1981.9342400000005
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm12",
+      "group": 0,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 21,
+      "failure": {
+        "node": 21,
+        "target_um": [
+          22084.555793283907,
+          3191.3999999999996
+        ],
+        "previous_um": [
+          22199.550661,
+          3124.92
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w114_rgSE0",
+          "box_um": [
+            22001.328,
+            3093.12,
+            22082.52,
+            3175.176
+          ],
+          "distance_from_target_um": 18.259793283906674
+        },
+        {
+          "name": "sm11",
+          "box_um": [
+            19670.688,
+            3248.64,
+            22746.528,
+            4380.48
+          ],
+          "distance_from_target_um": 57.24000000000024
+        },
+        {
+          "name": "w146_ik_SE",
+          "box_um": [
+            22058.784,
+            3019.68,
+            22124.856,
+            3080.136
+          ],
+          "distance_from_target_um": 111.26399999999967
+        },
+        {
+          "name": "w93_rq_sm13",
+          "box_um": [
+            22074.336,
+            2790.72,
+            22089.0,
+            2933.256
+          ],
+          "distance_from_target_um": 258.1439999999998
+        },
+        {
+          "name": "sm8",
+          "box_um": [
+            19670.688,
+            1596.24,
+            22746.528,
+            2728.08
+          ],
+          "distance_from_target_um": 463.3199999999997
+        },
+        {
+          "name": "w86_wl_sm13",
+          "box_um": [
+            22343.904,
+            2820.96,
+            22402.199999999997,
+            2892.216
+          ],
+          "distance_from_target_um": 558.532206716091
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm13",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 34,
+      "failure": {
+        "node": 34,
+        "target_um": [
+          25794.990732898426,
+          5783.68
+        ],
+        "previous_um": [
+          26182.724847,
+          5628.56
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 9,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm15",
+          "box_um": [
+            23005.728,
+            4639.68,
+            26081.568,
+            5771.52
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "at_SE_02",
+          "box_um": [
+            25675.488,
+            6322.32,
+            27454.008,
+            7672.296
+          ],
+          "distance_from_target_um": 538.6399999999994
+        },
+        {
+          "name": "at_SE_01",
+          "box_um": [
+            23853.744,
+            6322.32,
+            25632.264,
+            7672.296
+          ],
+          "distance_from_target_um": 701.3667328984266
+        },
+        {
+          "name": "w360_host",
+          "box_um": [
+            25340.256,
+            6186.24,
+            25413.24,
+            6227.255999999999
+          ],
+          "distance_from_target_um": 784.3107328984242
+        },
+        {
+          "name": "w140_ef_SE",
+          "box_um": [
+            24684.912,
+            6048.0,
+            24800.664,
+            6067.416
+          ],
+          "distance_from_target_um": 1258.6467328984254
+        },
+        {
+          "name": "w116_rgSE1",
+          "box_um": [
+            24488.352,
+            5907.6,
+            24598.056,
+            6017.736000000001
+          ],
+          "distance_from_target_um": 1320.854732898426
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm15",
+      "group": 0,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 49,
+      "failure": {
+        "node": 49,
+        "target_um": [
+          29435.528,
+          3462.9137600000017
+        ],
+        "previous_um": [
+          29428.768,
+          3162.38752
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm13",
+          "box_um": [
+            26340.768,
+            3248.64,
+            29416.608,
+            4380.48
+          ],
+          "distance_from_target_um": 18.919999999998254
+        },
+        {
+          "name": "w115_rgSE3",
+          "box_um": [
+            29505.168,
+            3546.72,
+            29586.36,
+            3628.776
+          ],
+          "distance_from_target_um": 153.44624000000113
+        },
+        {
+          "name": "sm10",
+          "box_um": [
+            26340.768,
+            1596.24,
+            29416.608,
+            2728.08
+          ],
+          "distance_from_target_um": 753.75376
+        },
+        {
+          "name": "hs_slab",
+          "box_um": [
+            30290.544,
+            3613.68,
+            30884.952,
+            20437.896
+          ],
+          "distance_from_target_um": 1005.7822400000014
+        },
+        {
+          "name": "w113_xmSE3",
+          "box_um": [
+            28237.68,
+            2797.2,
+            28704.648,
+            2918.136
+          ],
+          "distance_from_target_um": 1275.6577599999991
+        },
+        {
+          "name": "control_sm13_s27_r3",
+          "box_um": [
+            27631.456000000002,
+            3204.08,
+            27651.456000000002,
+            3224.08
+          ],
+          "distance_from_target_um": 2022.9057599999983
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm16",
+      "group": 5,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 4,
+      "failure": {
+        "node": 4,
+        "target_um": [
+          1698.4852413793096,
+          22465.36
+        ],
+        "previous_um": [
+          1853.673931,
+          22531.84
+        ],
+        "unplaced_banks": 5,
+        "unplaced_interior_singles": 20,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm16",
+          "box_um": [
+            625.104,
+            21321.36,
+            3700.9440000000004,
+            22453.2
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "svc_NW_s0",
+          "box_um": [
+            1249.344,
+            22584.96,
+            2266.344,
+            22844.136
+          ],
+          "distance_from_target_um": 119.59999999999854
+        },
+        {
+          "name": "phy_NW",
+          "box_um": [
+            1248.48,
+            22852.8,
+            9748.536,
+            24030.0
+          ],
+          "distance_from_target_um": 387.4399999999987
+        },
+        {
+          "name": "svc_NW_s1",
+          "box_um": [
+            2267.136,
+            22584.96,
+            3573.048,
+            22844.136
+          ],
+          "distance_from_target_um": 688.2507586206889
+        },
+        {
+          "name": "control_sm16_s23_r3",
+          "box_um": [
+            2392.4159999999993,
+            22477.760000000002,
+            2412.4159999999993,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 706.3307586206911
+        },
+        {
+          "name": "control_sm16_s23_r2",
+          "box_um": [
+            2414.5759999999996,
+            22477.760000000002,
+            2434.5759999999996,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 728.4907586206914
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm17",
+      "group": 1,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 26,
+      "failure": {
+        "node": 26,
+        "target_um": [
+          3713.1040000000003,
+          20768.88147443674
+        ],
+        "previous_um": [
+          3624.464,
+          21167.688312
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 9,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm19_s12_r0",
+          "box_um": [
+            3703.1040000000003,
+            20773.2896,
+            3723.1040000000003,
+            20793.2896
+          ],
+          "distance_from_target_um": 4.408125563259091
+        },
+        {
+          "name": "sm19",
+          "box_um": [
+            625.104,
+            19930.32,
+            3700.9440000000004,
+            21062.16
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm19_s12_r1",
+          "box_um": [
+            3703.1040000000003,
+            20797.6096,
+            3723.1040000000003,
+            20817.6096
+          ],
+          "distance_from_target_um": 28.7281255632588
+        },
+        {
+          "name": "control_sm19_s12_r2",
+          "box_um": [
+            3703.1040000000003,
+            20821.9296,
+            3723.1040000000003,
+            20841.9296
+          ],
+          "distance_from_target_um": 53.04812556325851
+        },
+        {
+          "name": "control_sm19_s12_r3",
+          "box_um": [
+            3703.1040000000003,
+            20846.249600000003,
+            3723.1040000000003,
+            20866.249600000003
+          ],
+          "distance_from_target_um": 77.36812556326186
+        },
+        {
+          "name": "control_sm19_s11_r3",
+          "box_um": [
+            3703.1040000000003,
+            20652.0848,
+            3723.1040000000003,
+            20672.0848
+          ],
+          "distance_from_target_um": 96.79667443674043
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm17",
+      "group": 2,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 26,
+      "failure": {
+        "node": 26,
+        "target_um": [
+          3713.1040000000003,
+          20806.030421847903
+        ],
+        "previous_um": [
+          3646.624,
+          21184.693289
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 9,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm19_s12_r1",
+          "box_um": [
+            3703.1040000000003,
+            20797.6096,
+            3723.1040000000003,
+            20817.6096
+          ],
+          "distance_from_target_um": 0
+        },
+        {
+          "name": "sm19",
+          "box_um": [
+            625.104,
+            19930.32,
+            3700.9440000000004,
+            21062.16
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm19_s12_r0",
+          "box_um": [
+            3703.1040000000003,
+            20773.2896,
+            3723.1040000000003,
+            20793.2896
+          ],
+          "distance_from_target_um": 12.740821847903135
+        },
+        {
+          "name": "control_sm19_s12_r2",
+          "box_um": [
+            3703.1040000000003,
+            20821.9296,
+            3723.1040000000003,
+            20841.9296
+          ],
+          "distance_from_target_um": 15.899178152096283
+        },
+        {
+          "name": "control_sm19_s12_r3",
+          "box_um": [
+            3703.1040000000003,
+            20846.249600000003,
+            3723.1040000000003,
+            20866.249600000003
+          ],
+          "distance_from_target_um": 40.21917815209963
+        },
+        {
+          "name": "control_sm19_s11_r3",
+          "box_um": [
+            3703.1040000000003,
+            20652.0848,
+            3723.1040000000003,
+            20672.0848
+          ],
+          "distance_from_target_um": 133.94562184790266
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm17",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 26,
+      "failure": {
+        "node": 26,
+        "target_um": [
+          3713.1040000000003,
+          20832.724547209324
+        ],
+        "previous_um": [
+          3801.744,
+          21253.599295
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 9,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm19_s12_r2",
+          "box_um": [
+            3703.1040000000003,
+            20821.9296,
+            3723.1040000000003,
+            20841.9296
+          ],
+          "distance_from_target_um": 0
+        },
+        {
+          "name": "sm19",
+          "box_um": [
+            625.104,
+            19930.32,
+            3700.9440000000004,
+            21062.16
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm19_s12_r3",
+          "box_um": [
+            3703.1040000000003,
+            20846.249600000003,
+            3723.1040000000003,
+            20866.249600000003
+          ],
+          "distance_from_target_um": 13.525052790679183
+        },
+        {
+          "name": "control_sm19_s12_r1",
+          "box_um": [
+            3703.1040000000003,
+            20797.6096,
+            3723.1040000000003,
+            20817.6096
+          ],
+          "distance_from_target_um": 15.114947209323873
+        },
+        {
+          "name": "control_sm19_s12_r0",
+          "box_um": [
+            3703.1040000000003,
+            20773.2896,
+            3723.1040000000003,
+            20793.2896
+          ],
+          "distance_from_target_um": 39.43494720932358
+        },
+        {
+          "name": "control_sm19_s13_r0",
+          "box_um": [
+            3703.1040000000003,
+            20967.454400000002,
+            3723.1040000000003,
+            20987.454400000002
+          ],
+          "distance_from_target_um": 134.7298527906787
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm18",
+      "group": 0,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 4,
+      "failure": {
+        "node": 4,
+        "target_um": [
+          9153.008140350878,
+          22465.36
+        ],
+        "previous_um": [
+          9023.106105,
+          22531.84
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 52,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm18",
+          "box_um": [
+            7295.616,
+            21321.36,
+            10371.456,
+            22453.2
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm18_s24_r0",
+          "box_um": [
+            9133.728000000001,
+            22477.760000000002,
+            9153.728000000001,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 12.400000000001455
+        },
+        {
+          "name": "control_sm18_s24_r1",
+          "box_um": [
+            9109.408,
+            22477.760000000002,
+            9129.408,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 36.00014035087952
+        },
+        {
+          "name": "control_sm18_s24_r2",
+          "box_um": [
+            9085.088,
+            22477.760000000002,
+            9105.088,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 60.32014035087923
+        },
+        {
+          "name": "control_sm18_s23_r3",
+          "box_um": [
+            9222.572,
+            22477.760000000002,
+            9242.572,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 81.96385964912406
+        },
+        {
+          "name": "control_sm18_s24_r3",
+          "box_um": [
+            9060.768,
+            22477.760000000002,
+            9080.768,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 84.64014035087894
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm18",
+      "group": 2,
+      "best_attempt_exponent": 0.9,
+      "placed_nodes_before_rollback": 5,
+      "failure": {
+        "node": 5,
+        "target_um": [
+          9165.253740743574,
+          22465.36
+        ],
+        "previous_um": [
+          9023.85967,
+          22531.84
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 51,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm18",
+          "box_um": [
+            7295.616,
+            21321.36,
+            10371.456,
+            22453.2
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm18_s24_r0",
+          "box_um": [
+            9133.728000000001,
+            22477.760000000002,
+            9153.728000000001,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 23.92574074357435
+        },
+        {
+          "name": "control_sm18_s24_r1",
+          "box_um": [
+            9109.408,
+            22477.760000000002,
+            9129.408,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 48.24574074357588
+        },
+        {
+          "name": "control_sm18_s23_r3",
+          "box_um": [
+            9222.572,
+            22477.760000000002,
+            9242.572,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 69.7182592564277
+        },
+        {
+          "name": "control_sm18_s24_r2",
+          "box_um": [
+            9085.088,
+            22477.760000000002,
+            9105.088,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 72.56574074357559
+        },
+        {
+          "name": "control_sm18_s23_r2",
+          "box_um": [
+            9246.892,
+            22477.760000000002,
+            9266.892,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 94.03825925642741
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm18",
+      "group": 5,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 6,
+      "failure": {
+        "node": 6,
+        "target_um": [
+          9194.03392,
+          22465.36
+        ],
+        "previous_um": [
+          8941.8216,
+          22554.0
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 42,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm18",
+          "box_um": [
+            7295.616,
+            21321.36,
+            10371.456,
+            22453.2
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm18_s23_r3",
+          "box_um": [
+            9222.572,
+            22477.760000000002,
+            9242.572,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 40.93808000000172
+        },
+        {
+          "name": "control_sm18_s24_r0",
+          "box_um": [
+            9133.728000000001,
+            22477.760000000002,
+            9153.728000000001,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 52.70592000000033
+        },
+        {
+          "name": "control_sm18_s23_r2",
+          "box_um": [
+            9246.892,
+            22477.760000000002,
+            9266.892,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 65.25808000000143
+        },
+        {
+          "name": "control_sm18_s24_r1",
+          "box_um": [
+            9109.408,
+            22477.760000000002,
+            9129.408,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 77.02592000000186
+        },
+        {
+          "name": "control_sm18_s23_r1",
+          "box_um": [
+            9271.212,
+            22477.760000000002,
+            9291.212,
+            22497.760000000002
+          ],
+          "distance_from_target_um": 89.57808000000114
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm19",
+      "group": 0,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 29,
+      "failure": {
+        "node": 29,
+        "target_um": [
+          6571.615423865915,
+          21085.0
+        ],
+        "previous_um": [
+          6161.646386,
+          21146.16
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 13,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm20_s16_r1",
+          "box_um": [
+            6551.0272,
+            21086.72,
+            6571.0272,
+            21106.72
+          ],
+          "distance_from_target_um": 2.308223865915352
+        },
+        {
+          "name": "control_sm20_s16_r0",
+          "box_um": [
+            6575.3472,
+            21086.72,
+            6595.3472,
+            21106.72
+          ],
+          "distance_from_target_um": 5.4517761340866855
+        },
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 22.840000000000146
+        },
+        {
+          "name": "control_sm20_s16_r2",
+          "box_um": [
+            6526.707200000001,
+            21086.72,
+            6546.707200000001,
+            21106.72
+          ],
+          "distance_from_target_um": 26.62822386591506
+        },
+        {
+          "name": "w186_xmNW1a",
+          "box_um": [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ],
+          "distance_from_target_um": 46.279999999998836
+        },
+        {
+          "name": "control_sm20_s16_r3",
+          "box_um": [
+            6502.3872,
+            21086.72,
+            6522.3872,
+            21106.72
+          ],
+          "distance_from_target_um": 50.94822386591568
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm19",
+      "group": 1,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 25,
+      "failure": {
+        "node": 25,
+        "target_um": [
+          5198.543032264197,
+          21119.12
+        ],
+        "previous_um": [
+          4863.343184,
+          21122.4
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 24,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w170_wl_sm22",
+          "box_um": [
+            5139.504,
+            21155.04,
+            5197.8,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 36.66303226419859
+        },
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 56.95999999999913
+        },
+        {
+          "name": "w167_rq_sm21",
+          "box_um": [
+            5212.944,
+            21183.12,
+            5351.160000000001,
+            21198.216
+          ],
+          "distance_from_target_um": 78.40096773580353
+        },
+        {
+          "name": "w163_wl_sm21",
+          "box_um": [
+            5018.544,
+            21155.04,
+            5076.84,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 157.62303226419863
+        },
+        {
+          "name": "sm17",
+          "box_um": [
+            3960.576,
+            21321.36,
+            7036.416,
+            22453.2
+          ],
+          "distance_from_target_um": 202.2400000000016
+        },
+        {
+          "name": "w211_cdNW0",
+          "box_um": [
+            4912.272,
+            21090.24,
+            4980.072,
+            21293.256
+          ],
+          "distance_from_target_um": 218.47103226419677
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm19",
+      "group": 2,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 12,
+      "failure": {
+        "node": 12,
+        "target_um": [
+          3374.1712211660233,
+          21078.08
+        ],
+        "previous_um": [
+          2977.010652,
+          21144.56
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 36,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm19_s15_r3",
+          "box_um": [
+            3361.0800000000004,
+            21086.72,
+            3381.0800000000004,
+            21106.72
+          ],
+          "distance_from_target_um": 8.639999999999418
+        },
+        {
+          "name": "sm19",
+          "box_um": [
+            625.104,
+            19930.32,
+            3700.9440000000004,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "control_sm19_s15_r2",
+          "box_um": [
+            3385.4000000000005,
+            21086.72,
+            3405.4000000000005,
+            21106.72
+          ],
+          "distance_from_target_um": 19.86877883397665
+        },
+        {
+          "name": "control_sm19_s15_r1",
+          "box_um": [
+            3409.7200000000003,
+            21086.72,
+            3429.7200000000003,
+            21106.72
+          ],
+          "distance_from_target_um": 44.18877883397636
+        },
+        {
+          "name": "control_sm19_s15_r0",
+          "box_um": [
+            3434.0400000000004,
+            21086.72,
+            3454.0400000000004,
+            21106.72
+          ],
+          "distance_from_target_um": 68.50877883397652
+        },
+        {
+          "name": "w162_wl_sm21",
+          "box_um": [
+            3296.592,
+            21155.04,
+            3354.888,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 96.24322116602252
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm19",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 25,
+      "failure": {
+        "node": 25,
+        "target_um": [
+          5230.943032264197,
+          21119.12
+        ],
+        "previous_um": [
+          4888.823184,
+          21129.32
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 24,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 56.95999999999913
+        },
+        {
+          "name": "w167_rq_sm21",
+          "box_um": [
+            5212.944,
+            21183.12,
+            5351.160000000001,
+            21198.216
+          ],
+          "distance_from_target_um": 64.0
+        },
+        {
+          "name": "w170_wl_sm22",
+          "box_um": [
+            5139.504,
+            21155.04,
+            5197.8,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 69.06303226419914
+        },
+        {
+          "name": "w163_wl_sm21",
+          "box_um": [
+            5018.544,
+            21155.04,
+            5076.84,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 190.02303226419917
+        },
+        {
+          "name": "sm17",
+          "box_um": [
+            3960.576,
+            21321.36,
+            7036.416,
+            22453.2
+          ],
+          "distance_from_target_um": 202.2400000000016
+        },
+        {
+          "name": "w211_cdNW0",
+          "box_um": [
+            4912.272,
+            21090.24,
+            4980.072,
+            21293.256
+          ],
+          "distance_from_target_um": 250.8710322641973
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm19",
+      "group": 4,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 11,
+      "failure": {
+        "node": 11,
+        "target_um": [
+          3288.7439398596025,
+          21078.08
+        ],
+        "previous_um": [
+          3005.371986,
+          21144.56
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 37,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm19",
+          "box_um": [
+            625.104,
+            19930.32,
+            3700.9440000000004,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "control_sm19_s16_r0",
+          "box_um": [
+            3239.8752,
+            21086.72,
+            3259.8752,
+            21106.72
+          ],
+          "distance_from_target_um": 37.508739859601974
+        },
+        {
+          "name": "control_sm19_s16_r1",
+          "box_um": [
+            3215.5552,
+            21086.72,
+            3235.5552,
+            21106.72
+          ],
+          "distance_from_target_um": 61.82873985960214
+        },
+        {
+          "name": "control_sm19_s15_r3",
+          "box_um": [
+            3361.0800000000004,
+            21086.72,
+            3381.0800000000004,
+            21106.72
+          ],
+          "distance_from_target_um": 80.9760601403973
+        },
+        {
+          "name": "w162_wl_sm21",
+          "box_um": [
+            3296.592,
+            21155.04,
+            3354.888,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 84.80806014039672
+        },
+        {
+          "name": "control_sm19_s16_r2",
+          "box_um": [
+            3191.2352,
+            21086.72,
+            3211.2352,
+            21106.72
+          ],
+          "distance_from_target_um": 86.14873985960185
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm2",
+      "group": 0,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 10,
+      "failure": {
+        "node": 10,
+        "target_um": [
+          9581.51630701279,
+          1573.4
+        ],
+        "previous_um": [
+          9479.602683,
+          1484.76
+        ],
+        "unplaced_banks": 4,
+        "unplaced_interior_singles": 29,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm2_s25_r3",
+          "box_um": [
+            9568.024000000001,
+            1574.08,
+            9588.024000000001,
+            1594.08
+          ],
+          "distance_from_target_um": 0.6799999999998363
+        },
+        {
+          "name": "control_sm2_s25_r2",
+          "box_um": [
+            9592.344000000001,
+            1574.08,
+            9612.344000000001,
+            1594.08
+          ],
+          "distance_from_target_um": 11.507692987211612
+        },
+        {
+          "name": "sm2",
+          "box_um": [
+            7295.616,
+            1596.24,
+            10371.456,
+            2728.08
+          ],
+          "distance_from_target_um": 22.839999999999918
+        },
+        {
+          "name": "control_sm2_s25_r1",
+          "box_um": [
+            9616.664,
+            1574.08,
+            9636.664,
+            1594.08
+          ],
+          "distance_from_target_um": 35.82769298721132
+        },
+        {
+          "name": "control_sm2_s25_r0",
+          "box_um": [
+            9640.984,
+            1574.08,
+            9660.984,
+            1594.08
+          ],
+          "distance_from_target_um": 60.14769298721103
+        },
+        {
+          "name": "control_sm2_s26_r0",
+          "box_um": [
+            9464.432,
+            1574.08,
+            9484.432,
+            1594.08
+          ],
+          "distance_from_target_um": 97.76430701278832
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm20",
+      "group": 1,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 12,
+      "failure": {
+        "node": 12,
+        "target_um": [
+          4234.023041724959,
+          21078.08
+        ],
+        "previous_um": [
+          4591.931164,
+          21277.52
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 29,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "w158_wl_sm20",
+          "box_um": [
+            4069.872,
+            21155.04,
+            4468.152,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 76.95999999999913
+        },
+        {
+          "name": "sm17",
+          "box_um": [
+            3960.576,
+            21321.36,
+            7036.416,
+            22453.2
+          ],
+          "distance_from_target_um": 243.27999999999884
+        },
+        {
+          "name": "w159_rq_sm20",
+          "box_um": [
+            3746.736,
+            21183.12,
+            3884.9519999999998,
+            21198.216
+          ],
+          "distance_from_target_um": 454.11104172495607
+        },
+        {
+          "name": "w172_rq_sm22",
+          "box_um": [
+            4590.432,
+            21183.12,
+            4728.648,
+            21198.216
+          ],
+          "distance_from_target_um": 461.4489582750384
+        },
+        {
+          "name": "control_sm19_s13_r3",
+          "box_um": [
+            3703.1040000000003,
+            21040.4144,
+            3723.1040000000003,
+            21060.4144
+          ],
+          "distance_from_target_um": 528.5846417249586
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm20",
+      "group": 5,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 13,
+      "failure": {
+        "node": 13,
+        "target_um": [
+          4203.008009970554,
+          21078.08
+        ],
+        "previous_um": [
+          4541.136901,
+          21188.88
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 28,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "w158_wl_sm20",
+          "box_um": [
+            4069.872,
+            21155.04,
+            4468.152,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 76.95999999999913
+        },
+        {
+          "name": "sm17",
+          "box_um": [
+            3960.576,
+            21321.36,
+            7036.416,
+            22453.2
+          ],
+          "distance_from_target_um": 243.27999999999884
+        },
+        {
+          "name": "w159_rq_sm20",
+          "box_um": [
+            3746.736,
+            21183.12,
+            3884.9519999999998,
+            21198.216
+          ],
+          "distance_from_target_um": 423.0960099705512
+        },
+        {
+          "name": "w172_rq_sm22",
+          "box_um": [
+            4590.432,
+            21183.12,
+            4728.648,
+            21198.216
+          ],
+          "distance_from_target_um": 492.46399002944327
+        },
+        {
+          "name": "control_sm19_s13_r3",
+          "box_um": [
+            3703.1040000000003,
+            21040.4144,
+            3723.1040000000003,
+            21060.4144
+          ],
+          "distance_from_target_um": 497.56960997055376
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 0,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 21,
+      "failure": {
+        "node": 21,
+        "target_um": [
+          6378.449785315705,
+          21101.84
+        ],
+        "previous_um": [
+          6768.521754,
+          21301.28
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 28,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm20_s17_r1",
+          "box_um": [
+            6356.8624,
+            21086.72,
+            6376.8624,
+            21106.72
+          ],
+          "distance_from_target_um": 1.5873853157054327
+        },
+        {
+          "name": "control_sm20_s17_r0",
+          "box_um": [
+            6381.1824,
+            21086.72,
+            6401.1824,
+            21106.72
+          ],
+          "distance_from_target_um": 2.7326146842942762
+        },
+        {
+          "name": "control_sm20_s17_r2",
+          "box_um": [
+            6332.5424,
+            21086.72,
+            6352.5424,
+            21106.72
+          ],
+          "distance_from_target_um": 25.90738531570514
+        },
+        {
+          "name": "w186_xmNW1a",
+          "box_um": [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ],
+          "distance_from_target_um": 29.43999999999869
+        },
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 39.68000000000029
+        },
+        {
+          "name": "control_sm20_s17_r3",
+          "box_um": [
+            6308.222400000001,
+            21086.72,
+            6328.222400000001,
+            21106.72
+          ],
+          "distance_from_target_um": 50.22738531570485
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 1,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 20,
+      "failure": {
+        "node": 20,
+        "target_um": [
+          6477.772685720337,
+          21101.84
+        ],
+        "previous_um": [
+          6819.366987,
+          21168.32
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 29,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm20_s16_r3",
+          "box_um": [
+            6502.3872,
+            21086.72,
+            6522.3872,
+            21106.72
+          ],
+          "distance_from_target_um": 24.614514279663126
+        },
+        {
+          "name": "w186_xmNW1a",
+          "box_um": [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ],
+          "distance_from_target_um": 29.43999999999869
+        },
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 39.68000000000029
+        },
+        {
+          "name": "control_sm20_s16_r2",
+          "box_um": [
+            6526.707200000001,
+            21086.72,
+            6546.707200000001,
+            21106.72
+          ],
+          "distance_from_target_um": 48.934514279663745
+        },
+        {
+          "name": "control_sm20_s16_r1",
+          "box_um": [
+            6551.0272,
+            21086.72,
+            6571.0272,
+            21106.72
+          ],
+          "distance_from_target_um": 73.25451427966345
+        },
+        {
+          "name": "control_sm20_s17_r0",
+          "box_um": [
+            6381.1824,
+            21086.72,
+            6401.1824,
+            21106.72
+          ],
+          "distance_from_target_um": 76.5902857203373
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 2,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 20,
+      "failure": {
+        "node": 20,
+        "target_um": [
+          6414.276611426558,
+          21117.4
+        ],
+        "previous_um": [
+          6798.31742,
+          21294.68
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 29,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w186_xmNW1a",
+          "box_um": [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ],
+          "distance_from_target_um": 13.87999999999738
+        },
+        {
+          "name": "control_sm20_s17_r0",
+          "box_um": [
+            6381.1824,
+            21086.72,
+            6401.1824,
+            21106.72
+          ],
+          "distance_from_target_um": 23.774211426558395
+        },
+        {
+          "name": "control_sm20_s17_r1",
+          "box_um": [
+            6356.8624,
+            21086.72,
+            6376.8624,
+            21106.72
+          ],
+          "distance_from_target_um": 48.094211426558104
+        },
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 55.2400000000016
+        },
+        {
+          "name": "control_sm20_s17_r2",
+          "box_um": [
+            6332.5424,
+            21086.72,
+            6352.5424,
+            21106.72
+          ],
+          "distance_from_target_um": 72.41421142655781
+        },
+        {
+          "name": "control_sm20_s17_r3",
+          "box_um": [
+            6308.222400000001,
+            21086.72,
+            6328.222400000001,
+            21106.72
+          ],
+          "distance_from_target_um": 96.73421142655752
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 20,
+      "failure": {
+        "node": 20,
+        "target_um": [
+          6393.336832290701,
+          21101.84
+        ],
+        "previous_um": [
+          6756.505866,
+          21301.28
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 29,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm20_s17_r0",
+          "box_um": [
+            6381.1824,
+            21086.72,
+            6401.1824,
+            21106.72
+          ],
+          "distance_from_target_um": 0
+        },
+        {
+          "name": "control_sm20_s17_r1",
+          "box_um": [
+            6356.8624,
+            21086.72,
+            6376.8624,
+            21106.72
+          ],
+          "distance_from_target_um": 16.47443229070086
+        },
+        {
+          "name": "w186_xmNW1a",
+          "box_um": [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ],
+          "distance_from_target_um": 29.43999999999869
+        },
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 39.68000000000029
+        },
+        {
+          "name": "control_sm20_s17_r2",
+          "box_um": [
+            6332.5424,
+            21086.72,
+            6352.5424,
+            21106.72
+          ],
+          "distance_from_target_um": 40.79443229070057
+        },
+        {
+          "name": "control_sm20_s17_r3",
+          "box_um": [
+            6308.222400000001,
+            21086.72,
+            6328.222400000001,
+            21106.72
+          ],
+          "distance_from_target_um": 65.11443229070028
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 4,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 23,
+      "failure": {
+        "node": 23,
+        "target_um": [
+          6403.289005981104,
+          21117.4
+        ],
+        "previous_um": [
+          6772.897322,
+          21294.68
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 33,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm20_s17_r0",
+          "box_um": [
+            6381.1824,
+            21086.72,
+            6401.1824,
+            21106.72
+          ],
+          "distance_from_target_um": 12.786605981104913
+        },
+        {
+          "name": "w186_xmNW1a",
+          "box_um": [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ],
+          "distance_from_target_um": 13.87999999999738
+        },
+        {
+          "name": "control_sm20_s17_r1",
+          "box_um": [
+            6356.8624,
+            21086.72,
+            6376.8624,
+            21106.72
+          ],
+          "distance_from_target_um": 37.10660598110462
+        },
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 55.2400000000016
+        },
+        {
+          "name": "control_sm20_s17_r2",
+          "box_um": [
+            6332.5424,
+            21086.72,
+            6352.5424,
+            21106.72
+          ],
+          "distance_from_target_um": 61.42660598110433
+        },
+        {
+          "name": "control_sm20_s17_r3",
+          "box_um": [
+            6308.222400000001,
+            21086.72,
+            6328.222400000001,
+            21106.72
+          ],
+          "distance_from_target_um": 85.74660598110404
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm21",
+      "group": 5,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 17,
+      "failure": {
+        "node": 17,
+        "target_um": [
+          6460.293593248882,
+          21085.0
+        ],
+        "previous_um": [
+          6779.980723,
+          21240.12
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 24,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 22.840000000000146
+        },
+        {
+          "name": "control_sm20_s16_r3",
+          "box_um": [
+            6502.3872,
+            21086.72,
+            6522.3872,
+            21106.72
+          ],
+          "distance_from_target_um": 43.81360675111955
+        },
+        {
+          "name": "w186_xmNW1a",
+          "box_um": [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ],
+          "distance_from_target_um": 46.279999999998836
+        },
+        {
+          "name": "control_sm20_s17_r0",
+          "box_um": [
+            6381.1824,
+            21086.72,
+            6401.1824,
+            21106.72
+          ],
+          "distance_from_target_um": 60.83119324888321
+        },
+        {
+          "name": "control_sm20_s16_r2",
+          "box_um": [
+            6526.707200000001,
+            21086.72,
+            6546.707200000001,
+            21106.72
+          ],
+          "distance_from_target_um": 68.13360675112017
+        },
+        {
+          "name": "control_sm20_s17_r1",
+          "box_um": [
+            6356.8624,
+            21086.72,
+            6376.8624,
+            21106.72
+          ],
+          "distance_from_target_um": 85.15119324888292
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm22",
+      "group": 2,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 25,
+      "failure": {
+        "node": 25,
+        "target_um": [
+          5384.3583877754745,
+          21132.120000000003
+        ],
+        "previous_um": [
+          4900.111999,
+          21122.400002
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 24,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 69.96000000000276
+        },
+        {
+          "name": "w167_rq_sm21",
+          "box_um": [
+            5212.944,
+            21183.12,
+            5351.160000000001,
+            21198.216
+          ],
+          "distance_from_target_um": 84.19838777547011
+        },
+        {
+          "name": "sm17",
+          "box_um": [
+            3960.576,
+            21321.36,
+            7036.416,
+            22453.2
+          ],
+          "distance_from_target_um": 189.23999999999796
+        },
+        {
+          "name": "w170_wl_sm22",
+          "box_um": [
+            5139.504,
+            21155.04,
+            5197.8,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 209.47838777547258
+        },
+        {
+          "name": "w163_wl_sm21",
+          "box_um": [
+            5018.544,
+            21155.04,
+            5076.84,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 330.4383877754726
+        },
+        {
+          "name": "control_sm17_s0_r0",
+          "box_um": [
+            5628.528,
+            21244.4,
+            5648.528,
+            21264.4
+          ],
+          "distance_from_target_um": 356.44961222452457
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm22",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 28,
+      "failure": {
+        "node": 28,
+        "target_um": [
+          5298.426359424592,
+          21132.120000000003
+        ],
+        "previous_um": [
+          4900.111999,
+          21122.400002
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 28,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w167_rq_sm21",
+          "box_um": [
+            5212.944,
+            21183.12,
+            5351.160000000001,
+            21198.216
+          ],
+          "distance_from_target_um": 50.99999999999636
+        },
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 69.96000000000276
+        },
+        {
+          "name": "w170_wl_sm22",
+          "box_um": [
+            5139.504,
+            21155.04,
+            5197.8,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 123.54635942459026
+        },
+        {
+          "name": "sm17",
+          "box_um": [
+            3960.576,
+            21321.36,
+            7036.416,
+            22453.2
+          ],
+          "distance_from_target_um": 189.23999999999796
+        },
+        {
+          "name": "w163_wl_sm21",
+          "box_um": [
+            5018.544,
+            21155.04,
+            5076.84,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 244.5063594245903
+        },
+        {
+          "name": "w211_cdNW0",
+          "box_um": [
+            4912.272,
+            21090.24,
+            4980.072,
+            21293.256
+          ],
+          "distance_from_target_um": 318.3543594245921
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm22",
+      "group": 4,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 28,
+      "failure": {
+        "node": 28,
+        "target_um": [
+          5329.971350285207,
+          21132.120000000003
+        ],
+        "previous_um": [
+          4900.111999,
+          21122.400002
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 28,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w167_rq_sm21",
+          "box_um": [
+            5212.944,
+            21183.12,
+            5351.160000000001,
+            21198.216
+          ],
+          "distance_from_target_um": 50.99999999999636
+        },
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 69.96000000000276
+        },
+        {
+          "name": "w170_wl_sm22",
+          "box_um": [
+            5139.504,
+            21155.04,
+            5197.8,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 155.0913502852054
+        },
+        {
+          "name": "sm17",
+          "box_um": [
+            3960.576,
+            21321.36,
+            7036.416,
+            22453.2
+          ],
+          "distance_from_target_um": 189.23999999999796
+        },
+        {
+          "name": "w163_wl_sm21",
+          "box_um": [
+            5018.544,
+            21155.04,
+            5076.84,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 276.05135028520544
+        },
+        {
+          "name": "w211_cdNW0",
+          "box_um": [
+            4912.272,
+            21090.24,
+            4980.072,
+            21293.256
+          ],
+          "distance_from_target_um": 349.8993502852072
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm22",
+      "group": 5,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 38,
+      "failure": {
+        "node": 38,
+        "target_um": [
+          6521.376616492165,
+          21119.12
+        ],
+        "previous_um": [
+          6159.459572,
+          21163.44
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 26,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w186_xmNW1a",
+          "box_um": [
+            6215.616,
+            21131.28,
+            6682.584,
+            21252.216
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm20_s16_r3",
+          "box_um": [
+            6502.3872,
+            21086.72,
+            6522.3872,
+            21106.72
+          ],
+          "distance_from_target_um": 12.399999999997817
+        },
+        {
+          "name": "control_sm20_s16_r2",
+          "box_um": [
+            6526.707200000001,
+            21086.72,
+            6546.707200000001,
+            21106.72
+          ],
+          "distance_from_target_um": 17.730583507833217
+        },
+        {
+          "name": "control_sm20_s16_r1",
+          "box_um": [
+            6551.0272,
+            21086.72,
+            6571.0272,
+            21106.72
+          ],
+          "distance_from_target_um": 42.050583507832926
+        },
+        {
+          "name": "sm20",
+          "box_um": [
+            3960.576,
+            19930.32,
+            7036.416,
+            21062.16
+          ],
+          "distance_from_target_um": 56.95999999999913
+        },
+        {
+          "name": "control_sm20_s16_r0",
+          "box_um": [
+            6575.3472,
+            21086.72,
+            6595.3472,
+            21106.72
+          ],
+          "distance_from_target_um": 66.37058350783263
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm23",
+      "group": 0,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 11,
+      "failure": {
+        "node": 11,
+        "target_um": [
+          5882.183092264422,
+          19693.96
+        ],
+        "previous_um": [
+          5582.826795,
+          19893.4
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 53,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm23_s21_r3",
+          "box_um": [
+            5902.241454545455,
+            19695.68,
+            5922.241454545455,
+            19715.68
+          ],
+          "distance_from_target_um": 21.77836228103388
+        },
+        {
+          "name": "sm23",
+          "box_um": [
+            3960.576,
+            18539.28,
+            7036.416,
+            19671.12
+          ],
+          "distance_from_target_um": 22.840000000000146
+        },
+        {
+          "name": "control_sm23_s21_r2",
+          "box_um": [
+            5926.5614545454555,
+            19695.68,
+            5946.5614545454555,
+            19715.68
+          ],
+          "distance_from_target_um": 46.0983622810345
+        },
+        {
+          "name": "control_sm23_s22_r0",
+          "box_um": [
+            5798.688,
+            19695.68,
+            5818.688,
+            19715.68
+          ],
+          "distance_from_target_um": 65.21509226442322
+        },
+        {
+          "name": "control_sm23_s21_r1",
+          "box_um": [
+            5950.881454545455,
+            19695.68,
+            5970.881454545455,
+            19715.68
+          ],
+          "distance_from_target_um": 70.4183622810342
+        },
+        {
+          "name": "control_sm23_s22_r1",
+          "box_um": [
+            5774.368,
+            19695.68,
+            5794.368,
+            19715.68
+          ],
+          "distance_from_target_um": 89.53509226442293
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm24",
+      "group": 1,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 42,
+      "failure": {
+        "node": 42,
+        "target_um": [
+          21898.968,
+          19804.082604651165
+        ],
+        "previous_um": [
+          22158.122791,
+          19783.36
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w270_rgNE0",
+          "box_um": [
+            22001.328,
+            19772.64,
+            22082.52,
+            19854.696
+          ],
+          "distance_from_target_um": 102.36000000000058
+        },
+        {
+          "name": "sm27",
+          "box_um": [
+            19670.688,
+            19930.32,
+            22746.528,
+            21062.16
+          ],
+          "distance_from_target_um": 126.23739534883498
+        },
+        {
+          "name": "sm30",
+          "box_um": [
+            19670.688,
+            18539.28,
+            22746.528,
+            19671.12
+          ],
+          "distance_from_target_um": 132.96260465116575
+        },
+        {
+          "name": "w307_ik_NE",
+          "box_um": [
+            22058.784,
+            19863.36,
+            22124.856,
+            19923.816
+          ],
+          "distance_from_target_um": 219.09339534883475
+        },
+        {
+          "name": "control_sm27_s0_r0",
+          "box_um": [
+            21058.576,
+            19853.36,
+            21078.576,
+            19873.36
+          ],
+          "distance_from_target_um": 869.6693953488357
+        },
+        {
+          "name": "control_sm27_s0_r1",
+          "box_um": [
+            21035.592,
+            19856.856,
+            21055.592,
+            19876.856
+          ],
+          "distance_from_target_um": 896.1493953488352
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm24",
+      "group": 2,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 35,
+      "failure": {
+        "node": 35,
+        "target_um": [
+          21896.808,
+          19746.532
+        ],
+        "previous_um": [
+          22148.328,
+          19827.216
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm30",
+          "box_um": [
+            19670.688,
+            18539.28,
+            22746.528,
+            19671.12
+          ],
+          "distance_from_target_um": 75.41200000000026
+        },
+        {
+          "name": "w270_rgNE0",
+          "box_um": [
+            22001.328,
+            19772.64,
+            22082.52,
+            19854.696
+          ],
+          "distance_from_target_um": 130.6280000000006
+        },
+        {
+          "name": "sm27",
+          "box_um": [
+            19670.688,
+            19930.32,
+            22746.528,
+            21062.16
+          ],
+          "distance_from_target_um": 183.78800000000047
+        },
+        {
+          "name": "w307_ik_NE",
+          "box_um": [
+            22058.784,
+            19863.36,
+            22124.856,
+            19923.816
+          ],
+          "distance_from_target_um": 278.8040000000001
+        },
+        {
+          "name": "control_sm27_s0_r0",
+          "box_um": [
+            21058.576,
+            19853.36,
+            21078.576,
+            19873.36
+          ],
+          "distance_from_target_um": 925.0600000000013
+        },
+        {
+          "name": "control_sm30_s15_r3",
+          "box_um": [
+            20961.376,
+            19695.68,
+            20981.376,
+            19715.68
+          ],
+          "distance_from_target_um": 946.2839999999997
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm24",
+      "group": 4,
+      "best_attempt_exponent": 1.1,
+      "placed_nodes_before_rollback": 42,
+      "failure": {
+        "node": 42,
+        "target_um": [
+          21896.808,
+          19885.544617889907
+        ],
+        "previous_um": [
+          22162.728,
+          19775.159984
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm27",
+          "box_um": [
+            19670.688,
+            19930.32,
+            22746.528,
+            21062.16
+          ],
+          "distance_from_target_um": 44.77538211009232
+        },
+        {
+          "name": "w270_rgNE0",
+          "box_um": [
+            22001.328,
+            19772.64,
+            22082.52,
+            19854.696
+          ],
+          "distance_from_target_um": 135.3686178899079
+        },
+        {
+          "name": "w307_ik_NE",
+          "box_um": [
+            22058.784,
+            19863.36,
+            22124.856,
+            19923.816
+          ],
+          "distance_from_target_um": 161.97599999999875
+        },
+        {
+          "name": "sm30",
+          "box_um": [
+            19670.688,
+            18539.28,
+            22746.528,
+            19671.12
+          ],
+          "distance_from_target_um": 214.4246178899084
+        },
+        {
+          "name": "control_sm27_s0_r0",
+          "box_um": [
+            21058.576,
+            19853.36,
+            21078.576,
+            19873.36
+          ],
+          "distance_from_target_um": 830.4166178899068
+        },
+        {
+          "name": "control_sm27_s0_r1",
+          "box_um": [
+            21035.592,
+            19856.856,
+            21055.592,
+            19876.856
+          ],
+          "distance_from_target_um": 849.904617889908
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm25",
+      "group": 0,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 29,
+      "failure": {
+        "node": 29,
+        "target_um": [
+          22993.568,
+          19411.383849734324
+        ],
+        "previous_um": [
+          23015.728,
+          19709.107055
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 13,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm31_s10_r3",
+          "box_um": [
+            22983.568,
+            19409.523764705882,
+            23003.568,
+            19429.523764705882
+          ],
+          "distance_from_target_um": 0
+        },
+        {
+          "name": "control_sm31_s10_r2",
+          "box_um": [
+            22983.568,
+            19385.203764705882,
+            23003.568,
+            19405.203764705882
+          ],
+          "distance_from_target_um": 6.180085028441681
+        },
+        {
+          "name": "sm31",
+          "box_um": [
+            23005.728,
+            18539.28,
+            26081.568,
+            19671.12
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm31_s10_r1",
+          "box_um": [
+            22983.568,
+            19360.883764705883,
+            23003.568,
+            19380.883764705883
+          ],
+          "distance_from_target_um": 30.50008502844139
+        },
+        {
+          "name": "control_sm31_s10_r0",
+          "box_um": [
+            22983.568,
+            19336.563764705883,
+            23003.568,
+            19356.563764705883
+          ],
+          "distance_from_target_um": 54.8200850284411
+        },
+        {
+          "name": "control_sm31_s11_r0",
+          "box_um": [
+            22983.568,
+            19564.99294117647,
+            23003.568,
+            19584.99294117647
+          ],
+          "distance_from_target_um": 153.60909144214747
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm25",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 25,
+      "failure": {
+        "node": 25,
+        "target_um": [
+          22993.568,
+          19346.558861427264
+        ],
+        "previous_um": [
+          23015.728,
+          19727.540444
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 10,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm31_s10_r0",
+          "box_um": [
+            22983.568,
+            19336.563764705883,
+            23003.568,
+            19356.563764705883
+          ],
+          "distance_from_target_um": 0
+        },
+        {
+          "name": "sm31",
+          "box_um": [
+            23005.728,
+            18539.28,
+            26081.568,
+            19671.12
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm31_s10_r1",
+          "box_um": [
+            22983.568,
+            19360.883764705883,
+            23003.568,
+            19380.883764705883
+          ],
+          "distance_from_target_um": 14.324903278618876
+        },
+        {
+          "name": "control_sm31_s10_r2",
+          "box_um": [
+            22983.568,
+            19385.203764705882,
+            23003.568,
+            19405.203764705882
+          ],
+          "distance_from_target_um": 38.644903278618585
+        },
+        {
+          "name": "control_sm31_s10_r3",
+          "box_um": [
+            22983.568,
+            19409.523764705882,
+            23003.568,
+            19429.523764705882
+          ],
+          "distance_from_target_um": 62.964903278618294
+        },
+        {
+          "name": "control_sm31_s9_r3",
+          "box_um": [
+            22983.568,
+            19181.094588235293,
+            23003.568,
+            19201.094588235293
+          ],
+          "distance_from_target_um": 145.46427319197028
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm25",
+      "group": 4,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 25,
+      "failure": {
+        "node": 25,
+        "target_um": [
+          22993.568,
+          19318.11730900144
+        ],
+        "previous_um": [
+          23015.728,
+          19724.167477
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 10,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm31",
+          "box_um": [
+            23005.728,
+            18539.28,
+            26081.568,
+            19671.12
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm31_s10_r0",
+          "box_um": [
+            22983.568,
+            19336.563764705883,
+            23003.568,
+            19356.563764705883
+          ],
+          "distance_from_target_um": 18.446455704441178
+        },
+        {
+          "name": "control_sm31_s10_r1",
+          "box_um": [
+            22983.568,
+            19360.883764705883,
+            23003.568,
+            19380.883764705883
+          ],
+          "distance_from_target_um": 42.76645570444089
+        },
+        {
+          "name": "control_sm31_s10_r2",
+          "box_um": [
+            22983.568,
+            19385.203764705882,
+            23003.568,
+            19405.203764705882
+          ],
+          "distance_from_target_um": 67.0864557044406
+        },
+        {
+          "name": "control_sm31_s10_r3",
+          "box_um": [
+            22983.568,
+            19409.523764705882,
+            23003.568,
+            19429.523764705882
+          ],
+          "distance_from_target_um": 91.4064557044403
+        },
+        {
+          "name": "control_sm31_s9_r3",
+          "box_um": [
+            22983.568,
+            19181.094588235293,
+            23003.568,
+            19201.094588235293
+          ],
+          "distance_from_target_um": 117.02272076614827
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm26",
+      "group": 1,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 26,
+      "failure": {
+        "node": 26,
+        "target_um": [
+          26328.608,
+          20897.056944289157
+        ],
+        "previous_um": [
+          26395.088,
+          21156.860921
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 9,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm29",
+          "box_um": [
+            26340.768,
+            19930.32,
+            29416.608,
+            21062.16
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm29_s15_r0",
+          "box_um": [
+            26318.608,
+            20910.082909090914,
+            26338.608,
+            20930.082909090914
+          ],
+          "distance_from_target_um": 13.025964801756345
+        },
+        {
+          "name": "control_sm29_s15_r1",
+          "box_um": [
+            26318.608,
+            20934.402909090913,
+            26338.608,
+            20954.402909090913
+          ],
+          "distance_from_target_um": 37.345964801756054
+        },
+        {
+          "name": "control_sm29_s15_r2",
+          "box_um": [
+            26318.608,
+            20958.722909090913,
+            26338.608,
+            20978.722909090913
+          ],
+          "distance_from_target_um": 61.66596480175576
+        },
+        {
+          "name": "control_sm29_s15_r3",
+          "box_um": [
+            26318.608,
+            20983.042909090913,
+            26338.608,
+            21003.042909090913
+          ],
+          "distance_from_target_um": 85.98596480175547
+        },
+        {
+          "name": "control_sm29_s14_r3",
+          "box_um": [
+            26318.608,
+            20780.682181818185,
+            26338.608,
+            20800.682181818185
+          ],
+          "distance_from_target_um": 96.3747624709722
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm26",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 26,
+      "failure": {
+        "node": 26,
+        "target_um": [
+          26328.608,
+          20800.88343817847
+        ],
+        "previous_um": [
+          26217.808,
+          21218.739369
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 9,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm29_s14_r3",
+          "box_um": [
+            26318.608,
+            20780.682181818185,
+            26338.608,
+            20800.682181818185
+          ],
+          "distance_from_target_um": 0.20125636028387817
+        },
+        {
+          "name": "sm29",
+          "box_um": [
+            26340.768,
+            19930.32,
+            29416.608,
+            21062.16
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm29_s14_r2",
+          "box_um": [
+            26318.608,
+            20756.362181818185,
+            26338.608,
+            20776.362181818185
+          ],
+          "distance_from_target_um": 24.521256360283587
+        },
+        {
+          "name": "control_sm29_s14_r1",
+          "box_um": [
+            26318.608,
+            20732.042181818186,
+            26338.608,
+            20752.042181818186
+          ],
+          "distance_from_target_um": 48.841256360283296
+        },
+        {
+          "name": "control_sm29_s14_r0",
+          "box_um": [
+            26318.608,
+            20707.722181818186,
+            26338.608,
+            20727.722181818186
+          ],
+          "distance_from_target_um": 73.161256360283
+        },
+        {
+          "name": "control_sm29_s15_r0",
+          "box_um": [
+            26318.608,
+            20910.082909090914,
+            26338.608,
+            20930.082909090914
+          ],
+          "distance_from_target_um": 109.19947091244467
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm27",
+      "group": 1,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 21,
+      "failure": {
+        "node": 21,
+        "target_um": [
+          24277.62259625406,
+          21078.08
+        ],
+        "previous_um": [
+          23902.350151,
+          21144.56
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 28,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm28_s17_r2",
+          "box_um": [
+            24272.096,
+            21086.72,
+            24292.096,
+            21106.72
+          ],
+          "distance_from_target_um": 8.639999999999418
+        },
+        {
+          "name": "control_sm28_s17_r0",
+          "box_um": [
+            24243.696000000004,
+            21064.32,
+            24263.696000000004,
+            21084.32
+          ],
+          "distance_from_target_um": 13.926596254055767
+        },
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "control_sm28_s17_r1",
+          "box_um": [
+            24247.776,
+            21086.72,
+            24267.776,
+            21106.72
+          ],
+          "distance_from_target_um": 18.486596254057076
+        },
+        {
+          "name": "control_sm28_s17_r3",
+          "box_um": [
+            24296.416,
+            21086.72,
+            24316.416,
+            21106.72
+          ],
+          "distance_from_target_um": 27.433403745941177
+        },
+        {
+          "name": "w249_rq_sm29",
+          "box_um": [
+            24258.096,
+            21183.12,
+            24396.312,
+            21198.216
+          ],
+          "distance_from_target_um": 105.03999999999724
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm27",
+      "group": 2,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 21,
+      "failure": {
+        "node": 21,
+        "target_um": [
+          24275.701163171914,
+          21078.08
+        ],
+        "previous_um": [
+          23902.380483,
+          21144.56
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 28,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm28_s17_r2",
+          "box_um": [
+            24272.096,
+            21086.72,
+            24292.096,
+            21106.72
+          ],
+          "distance_from_target_um": 8.639999999999418
+        },
+        {
+          "name": "control_sm28_s17_r0",
+          "box_um": [
+            24243.696000000004,
+            21064.32,
+            24263.696000000004,
+            21084.32
+          ],
+          "distance_from_target_um": 12.00516317191068
+        },
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "control_sm28_s17_r1",
+          "box_um": [
+            24247.776,
+            21086.72,
+            24267.776,
+            21106.72
+          ],
+          "distance_from_target_um": 16.56516317191199
+        },
+        {
+          "name": "control_sm28_s17_r3",
+          "box_um": [
+            24296.416,
+            21086.72,
+            24316.416,
+            21106.72
+          ],
+          "distance_from_target_um": 29.354836828086263
+        },
+        {
+          "name": "w249_rq_sm29",
+          "box_um": [
+            24258.096,
+            21183.12,
+            24396.312,
+            21198.216
+          ],
+          "distance_from_target_um": 105.03999999999724
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm27",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 24,
+      "failure": {
+        "node": 24,
+        "target_um": [
+          24299.187763439382,
+          21078.08
+        ],
+        "previous_um": [
+          23902.678761,
+          21144.56
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 32,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm28_s17_r3",
+          "box_um": [
+            24296.416,
+            21086.72,
+            24316.416,
+            21106.72
+          ],
+          "distance_from_target_um": 8.639999999999418
+        },
+        {
+          "name": "control_sm28_s17_r2",
+          "box_um": [
+            24272.096,
+            21086.72,
+            24292.096,
+            21106.72
+          ],
+          "distance_from_target_um": 15.731763439380302
+        },
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "control_sm28_s17_r0",
+          "box_um": [
+            24243.696000000004,
+            21064.32,
+            24263.696000000004,
+            21084.32
+          ],
+          "distance_from_target_um": 35.4917634393787
+        },
+        {
+          "name": "control_sm28_s17_r1",
+          "box_um": [
+            24247.776,
+            21086.72,
+            24267.776,
+            21106.72
+          ],
+          "distance_from_target_um": 40.05176343938001
+        },
+        {
+          "name": "w249_rq_sm29",
+          "box_um": [
+            24258.096,
+            21183.12,
+            24396.312,
+            21198.216
+          ],
+          "distance_from_target_um": 105.03999999999724
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm27",
+      "group": 4,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 20,
+      "failure": {
+        "node": 20,
+        "target_um": [
+          24213.231060041355,
+          21078.08
+        ],
+        "previous_um": [
+          24005.266823,
+          21074.320001
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 29,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "control_sm28_s17_r0",
+          "box_um": [
+            24243.696000000004,
+            21064.32,
+            24263.696000000004,
+            21084.32
+          ],
+          "distance_from_target_um": 30.464939958648756
+        },
+        {
+          "name": "control_sm28_s17_r1",
+          "box_um": [
+            24247.776,
+            21086.72,
+            24267.776,
+            21106.72
+          ],
+          "distance_from_target_um": 43.18493995864628
+        },
+        {
+          "name": "control_sm28_s17_r2",
+          "box_um": [
+            24272.096,
+            21086.72,
+            24292.096,
+            21106.72
+          ],
+          "distance_from_target_um": 67.50493995864599
+        },
+        {
+          "name": "w252_wl_sm30",
+          "box_um": [
+            24185.088,
+            21155.04,
+            24243.384,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 76.95999999999913
+        },
+        {
+          "name": "control_sm28_s17_r3",
+          "box_um": [
+            24296.416,
+            21086.72,
+            24316.416,
+            21106.72
+          ],
+          "distance_from_target_um": 91.8249399586457
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm28",
+      "group": 1,
+      "best_attempt_exponent": 1.1,
+      "placed_nodes_before_rollback": 10,
+      "failure": {
+        "node": 10,
+        "target_um": [
+          23717.986047812203,
+          21078.08
+        ],
+        "previous_um": [
+          24039.166925,
+          21188.88
+        ],
+        "unplaced_banks": 3,
+        "unplaced_interior_singles": 30,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "control_sm28_s14_r3",
+          "box_um": [
+            23633.528470588237,
+            21064.32,
+            23653.528470588237,
+            21084.32
+          ],
+          "distance_from_target_um": 64.45757722396593
+        },
+        {
+          "name": "control_sm28_s15_r0",
+          "box_um": [
+            23788.997647058826,
+            21064.32,
+            23808.997647058826,
+            21084.32
+          ],
+          "distance_from_target_um": 71.01159924662352
+        },
+        {
+          "name": "control_sm28_s14_r2",
+          "box_um": [
+            23609.208470588237,
+            21064.32,
+            23629.208470588237,
+            21084.32
+          ],
+          "distance_from_target_um": 88.77757722396564
+        },
+        {
+          "name": "control_sm28_s15_r1",
+          "box_um": [
+            23813.317647058826,
+            21064.32,
+            23833.317647058826,
+            21084.32
+          ],
+          "distance_from_target_um": 95.33159924662323
+        },
+        {
+          "name": "w254_rq_sm30",
+          "box_um": [
+            23636.016,
+            21183.12,
+            23774.232,
+            21198.216
+          ],
+          "distance_from_target_um": 105.03999999999724
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm28",
+      "group": 2,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 11,
+      "failure": {
+        "node": 11,
+        "target_um": [
+          23739.52926152314,
+          21078.08
+        ],
+        "previous_um": [
+          24055.714708,
+          21255.36
+        ],
+        "unplaced_banks": 3,
+        "unplaced_interior_singles": 29,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "control_sm28_s15_r0",
+          "box_um": [
+            23788.997647058826,
+            21064.32,
+            23808.997647058826,
+            21084.32
+          ],
+          "distance_from_target_um": 49.46838553568523
+        },
+        {
+          "name": "control_sm28_s15_r1",
+          "box_um": [
+            23813.317647058826,
+            21064.32,
+            23833.317647058826,
+            21084.32
+          ],
+          "distance_from_target_um": 73.78838553568494
+        },
+        {
+          "name": "control_sm28_s14_r3",
+          "box_um": [
+            23633.528470588237,
+            21064.32,
+            23653.528470588237,
+            21084.32
+          ],
+          "distance_from_target_um": 86.00079093490422
+        },
+        {
+          "name": "control_sm28_s15_r2",
+          "box_um": [
+            23837.637647058826,
+            21064.32,
+            23857.637647058826,
+            21084.32
+          ],
+          "distance_from_target_um": 98.10838553568465
+        },
+        {
+          "name": "w254_rq_sm30",
+          "box_um": [
+            23636.016,
+            21183.12,
+            23774.232,
+            21198.216
+          ],
+          "distance_from_target_um": 105.03999999999724
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm28",
+      "group": 3,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 8,
+      "failure": {
+        "node": 8,
+        "target_um": [
+          23753.26195348837,
+          21078.08
+        ],
+        "previous_um": [
+          24124.469209,
+          21078.08
+        ],
+        "unplaced_banks": 3,
+        "unplaced_interior_singles": 32,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "control_sm28_s15_r0",
+          "box_um": [
+            23788.997647058826,
+            21064.32,
+            23808.997647058826,
+            21084.32
+          ],
+          "distance_from_target_um": 35.735693570455624
+        },
+        {
+          "name": "control_sm28_s15_r1",
+          "box_um": [
+            23813.317647058826,
+            21064.32,
+            23833.317647058826,
+            21084.32
+          ],
+          "distance_from_target_um": 60.05569357045533
+        },
+        {
+          "name": "control_sm28_s15_r2",
+          "box_um": [
+            23837.637647058826,
+            21064.32,
+            23857.637647058826,
+            21084.32
+          ],
+          "distance_from_target_um": 84.37569357045504
+        },
+        {
+          "name": "control_sm28_s14_r3",
+          "box_um": [
+            23633.528470588237,
+            21064.32,
+            23653.528470588237,
+            21084.32
+          ],
+          "distance_from_target_um": 99.73348290013382
+        },
+        {
+          "name": "w254_rq_sm30",
+          "box_um": [
+            23636.016,
+            21183.12,
+            23774.232,
+            21198.216
+          ],
+          "distance_from_target_um": 105.03999999999724
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm28",
+      "group": 4,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 11,
+      "failure": {
+        "node": 11,
+        "target_um": [
+          23697.713283931113,
+          21078.08
+        ],
+        "previous_um": [
+          24069.421257,
+          21299.68
+        ],
+        "unplaced_banks": 3,
+        "unplaced_interior_singles": 22,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 15.920000000001892
+        },
+        {
+          "name": "control_sm28_s14_r3",
+          "box_um": [
+            23633.528470588237,
+            21064.32,
+            23653.528470588237,
+            21084.32
+          ],
+          "distance_from_target_um": 44.184813342875714
+        },
+        {
+          "name": "control_sm28_s14_r2",
+          "box_um": [
+            23609.208470588237,
+            21064.32,
+            23629.208470588237,
+            21084.32
+          ],
+          "distance_from_target_um": 68.50481334287542
+        },
+        {
+          "name": "control_sm28_s15_r0",
+          "box_um": [
+            23788.997647058826,
+            21064.32,
+            23808.997647058826,
+            21084.32
+          ],
+          "distance_from_target_um": 91.28436312771373
+        },
+        {
+          "name": "control_sm28_s14_r1",
+          "box_um": [
+            23584.888470588237,
+            21064.32,
+            23604.888470588237,
+            21084.32
+          ],
+          "distance_from_target_um": 92.82481334287513
+        },
+        {
+          "name": "w254_rq_sm30",
+          "box_um": [
+            23636.016,
+            21183.12,
+            23774.232,
+            21198.216
+          ],
+          "distance_from_target_um": 105.03999999999724
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm28",
+      "group": 5,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 41,
+      "failure": {
+        "node": 41,
+        "target_um": [
+          21901.048000000003,
+          19902.716437303745
+        ],
+        "previous_um": [
+          22166.968,
+          19777.22932
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 2,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm27",
+          "box_um": [
+            19670.688,
+            19930.32,
+            22746.528,
+            21062.16
+          ],
+          "distance_from_target_um": 27.603562696254812
+        },
+        {
+          "name": "w270_rgNE0",
+          "box_um": [
+            22001.328,
+            19772.64,
+            22082.52,
+            19854.696
+          ],
+          "distance_from_target_um": 148.30043730374382
+        },
+        {
+          "name": "w307_ik_NE",
+          "box_um": [
+            22058.784,
+            19863.36,
+            22124.856,
+            19923.816
+          ],
+          "distance_from_target_um": 157.73599999999715
+        },
+        {
+          "name": "sm30",
+          "box_um": [
+            19670.688,
+            18539.28,
+            22746.528,
+            19671.12
+          ],
+          "distance_from_target_um": 231.59643730374592
+        },
+        {
+          "name": "control_sm27_s0_r0",
+          "box_um": [
+            21058.576,
+            19853.36,
+            21078.576,
+            19873.36
+          ],
+          "distance_from_target_um": 851.8284373037459
+        },
+        {
+          "name": "control_sm27_s0_r1",
+          "box_um": [
+            21035.592,
+            19856.856,
+            21055.592,
+            19876.856
+          ],
+          "distance_from_target_um": 871.3164373037471
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm29",
+      "group": 1,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 32,
+      "failure": {
+        "node": 32,
+        "target_um": [
+          25833.239623642046,
+          18527.12
+        ],
+        "previous_um": [
+          26206.523053,
+          18482.8
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 10,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm31",
+          "box_um": [
+            23005.728,
+            18539.28,
+            26081.568,
+            19671.12
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "at_NE_32",
+          "box_um": [
+            25675.488,
+            16379.28,
+            27454.008,
+            17729.256
+          ],
+          "distance_from_target_um": 797.8639999999978
+        },
+        {
+          "name": "at_NE_31",
+          "box_um": [
+            23853.744,
+            16379.28,
+            25632.264,
+            17729.256
+          ],
+          "distance_from_target_um": 998.8396236420449
+        },
+        {
+          "name": "w268_xmNE2b",
+          "box_um": [
+            26340.768,
+            19252.08,
+            26807.736,
+            19373.016000000003
+          ],
+          "distance_from_target_um": 1232.4883763579564
+        },
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 1403.2000000000007
+        },
+        {
+          "name": "control_sm31_s0_r2",
+          "box_um": [
+            24393.616,
+            18510.96,
+            24413.616,
+            18530.96
+          ],
+          "distance_from_target_um": 1419.6236236420445
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm29",
+      "group": 2,
+      "best_attempt_exponent": 1.1,
+      "placed_nodes_before_rollback": 42,
+      "failure": {
+        "node": 42,
+        "target_um": [
+          24425.23278060292,
+          18209.48
+        ],
+        "previous_um": [
+          24437.18455,
+          18355.073904
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w305_kv_NE",
+          "box_um": [
+            24459.84,
+            18210.96,
+            24526.776,
+            18271.415999999997
+          ],
+          "distance_from_target_um": 36.087219397079025
+        },
+        {
+          "name": "w272_rgNE1",
+          "box_um": [
+            24488.352,
+            18053.28,
+            24598.056,
+            18163.415999999997
+          ],
+          "distance_from_target_um": 109.18321939708039
+        },
+        {
+          "name": "w255_rq_sm30",
+          "box_um": [
+            24575.616,
+            18204.48,
+            24590.280000000002,
+            18347.016
+          ],
+          "distance_from_target_um": 150.38321939708112
+        },
+        {
+          "name": "w304_kv_NE",
+          "box_um": [
+            24459.84,
+            18342.72,
+            24526.776,
+            18403.176
+          ],
+          "distance_from_target_um": 167.84721939708106
+        },
+        {
+          "name": "w302_ef_NE",
+          "box_um": [
+            24613.632,
+            18178.56,
+            24632.616,
+            18297.336000000003
+          ],
+          "distance_from_target_um": 188.39921939708074
+        },
+        {
+          "name": "control_sm31_s0_r0",
+          "box_um": [
+            24393.616,
+            18462.32,
+            24413.616,
+            18482.32
+          ],
+          "distance_from_target_um": 264.456780602919
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm3",
+      "group": 0,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 33,
+      "failure": {
+        "node": 33,
+        "target_um": [
+          6552.397764389038,
+          3219.8399999999997
+        ],
+        "previous_um": [
+          6193.098932,
+          2953.92
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 10,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm4_s14_r3",
+          "box_um": [
+            6572.226666666667,
+            3220.536,
+            6592.226666666667,
+            3240.536
+          ],
+          "distance_from_target_um": 20.52490227763019
+        },
+        {
+          "name": "sm4",
+          "box_um": [
+            3960.576,
+            3248.64,
+            7036.416,
+            4380.48
+          ],
+          "distance_from_target_um": 28.800000000000182
+        },
+        {
+          "name": "control_sm4_s14_r2",
+          "box_um": [
+            6596.546666666667,
+            3220.536,
+            6616.546666666667,
+            3240.536
+          ],
+          "distance_from_target_um": 44.8449022776299
+        },
+        {
+          "name": "control_sm4_s14_r1",
+          "box_um": [
+            6620.866666666667,
+            3220.536,
+            6640.866666666667,
+            3240.536
+          ],
+          "distance_from_target_um": 69.16490227762961
+        },
+        {
+          "name": "control_sm4_s14_r0",
+          "box_um": [
+            6645.1866666666665,
+            3220.536,
+            6665.1866666666665,
+            3240.536
+          ],
+          "distance_from_target_um": 93.48490227762932
+        },
+        {
+          "name": "control_sm4_s15_r0",
+          "box_um": [
+            6429.448,
+            3220.536,
+            6449.448,
+            3240.536
+          ],
+          "distance_from_target_um": 103.6457643890376
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm3",
+      "group": 2,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 44,
+      "failure": {
+        "node": 44,
+        "target_um": [
+          6549.753132014374,
+          3222.3199999999997
+        ],
+        "previous_um": [
+          6291.466952,
+          3111.52
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 13,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm4_s14_r3",
+          "box_um": [
+            6572.226666666667,
+            3220.536,
+            6592.226666666667,
+            3240.536
+          ],
+          "distance_from_target_um": 22.473534652292983
+        },
+        {
+          "name": "sm4",
+          "box_um": [
+            3960.576,
+            3248.64,
+            7036.416,
+            4380.48
+          ],
+          "distance_from_target_um": 26.320000000000164
+        },
+        {
+          "name": "control_sm4_s14_r2",
+          "box_um": [
+            6596.546666666667,
+            3220.536,
+            6616.546666666667,
+            3240.536
+          ],
+          "distance_from_target_um": 46.79353465229269
+        },
+        {
+          "name": "control_sm4_s14_r1",
+          "box_um": [
+            6620.866666666667,
+            3220.536,
+            6640.866666666667,
+            3240.536
+          ],
+          "distance_from_target_um": 71.1135346522924
+        },
+        {
+          "name": "control_sm4_s14_r0",
+          "box_um": [
+            6645.1866666666665,
+            3220.536,
+            6665.1866666666665,
+            3240.536
+          ],
+          "distance_from_target_um": 95.43353465229211
+        },
+        {
+          "name": "control_sm4_s15_r0",
+          "box_um": [
+            6429.448,
+            3220.536,
+            6449.448,
+            3240.536
+          ],
+          "distance_from_target_um": 100.30513201437407
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm3",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 43,
+      "failure": {
+        "node": 43,
+        "target_um": [
+          6419.919715617031,
+          3222.3199999999997
+        ],
+        "previous_um": [
+          6297.104771,
+          3111.52
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 14,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm4_s15_r1",
+          "box_um": [
+            6405.128000000001,
+            3220.536,
+            6425.128000000001,
+            3240.536
+          ],
+          "distance_from_target_um": 0
+        },
+        {
+          "name": "control_sm4_s15_r0",
+          "box_um": [
+            6429.448,
+            3220.536,
+            6449.448,
+            3240.536
+          ],
+          "distance_from_target_um": 9.528284382969105
+        },
+        {
+          "name": "control_sm4_s15_r2",
+          "box_um": [
+            6380.808000000001,
+            3220.536,
+            6400.808000000001,
+            3240.536
+          ],
+          "distance_from_target_um": 19.111715617030313
+        },
+        {
+          "name": "sm4",
+          "box_um": [
+            3960.576,
+            3248.64,
+            7036.416,
+            4380.48
+          ],
+          "distance_from_target_um": 26.320000000000164
+        },
+        {
+          "name": "control_sm4_s15_r3",
+          "box_um": [
+            6356.488,
+            3220.536,
+            6376.488,
+            3240.536
+          ],
+          "distance_from_target_um": 43.43171561703093
+        },
+        {
+          "name": "control_sm4_s14_r3",
+          "box_um": [
+            6572.226666666667,
+            3220.536,
+            6592.226666666667,
+            3240.536
+          ],
+          "distance_from_target_um": 152.30695104963615
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm3",
+      "group": 4,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 35,
+      "failure": {
+        "node": 35,
+        "target_um": [
+          6717.505325043953,
+          3078.0
+        ],
+        "previous_um": [
+          6287.455412,
+          3100.16
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 8,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w33_xmSW1b",
+          "box_um": [
+            6215.616,
+            2926.8,
+            6682.584,
+            3047.7360000000003
+          ],
+          "distance_from_target_um": 65.18532504395307
+        },
+        {
+          "name": "sm4",
+          "box_um": [
+            3960.576,
+            3248.64,
+            7036.416,
+            4380.48
+          ],
+          "distance_from_target_um": 170.63999999999987
+        },
+        {
+          "name": "w33_xmSW1a",
+          "box_um": [
+            6215.616,
+            2797.2,
+            6682.584,
+            2918.136
+          ],
+          "distance_from_target_um": 194.78532504395343
+        },
+        {
+          "name": "control_sm4_s14_r0",
+          "box_um": [
+            6645.1866666666665,
+            3220.536,
+            6665.1866666666665,
+            3240.536
+          ],
+          "distance_from_target_um": 194.8546583772868
+        },
+        {
+          "name": "control_sm4_s13_r3",
+          "box_um": [
+            6783.645333333333,
+            3220.536,
+            6803.645333333333,
+            3240.536
+          ],
+          "distance_from_target_um": 208.67600828937975
+        },
+        {
+          "name": "w9_wl_sm5",
+          "box_um": [
+            6743.088,
+            2820.96,
+            6801.384,
+            2892.216
+          ],
+          "distance_from_target_um": 211.3666749560466
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm31",
+      "group": 1,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 28,
+      "failure": {
+        "node": 28,
+        "target_um": [
+          24295.3189671765,
+          21074.32
+        ],
+        "previous_um": [
+          24005.266823,
+          21074.32
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 28,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm28_s17_r3",
+          "box_um": [
+            24296.416,
+            21086.72,
+            24316.416,
+            21106.72
+          ],
+          "distance_from_target_um": 13.497032823503105
+        },
+        {
+          "name": "control_sm28_s17_r2",
+          "box_um": [
+            24272.096,
+            21086.72,
+            24292.096,
+            21106.72
+          ],
+          "distance_from_target_um": 15.622967176499515
+        },
+        {
+          "name": "control_sm28_s17_r0",
+          "box_um": [
+            24243.696000000004,
+            21064.32,
+            24263.696000000004,
+            21084.32
+          ],
+          "distance_from_target_um": 31.622967176495877
+        },
+        {
+          "name": "control_sm28_s17_r1",
+          "box_um": [
+            24247.776,
+            21086.72,
+            24267.776,
+            21106.72
+          ],
+          "distance_from_target_um": 39.942967176499224
+        },
+        {
+          "name": "w249_rq_sm29",
+          "box_um": [
+            24258.096,
+            21183.12,
+            24396.312,
+            21198.216
+          ],
+          "distance_from_target_um": 108.79999999999927
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm31",
+      "group": 2,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 28,
+      "failure": {
+        "node": 28,
+        "target_um": [
+          24218.048309265214,
+          21074.32
+        ],
+        "previous_um": [
+          24005.266823,
+          21074.32
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 28,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm28_s17_r0",
+          "box_um": [
+            24243.696000000004,
+            21064.32,
+            24263.696000000004,
+            21084.32
+          ],
+          "distance_from_target_um": 25.64769073478965
+        },
+        {
+          "name": "control_sm28_s17_r1",
+          "box_um": [
+            24247.776,
+            21086.72,
+            24267.776,
+            21106.72
+          ],
+          "distance_from_target_um": 42.12769073478921
+        },
+        {
+          "name": "control_sm28_s17_r2",
+          "box_um": [
+            24272.096,
+            21086.72,
+            24292.096,
+            21106.72
+          ],
+          "distance_from_target_um": 66.44769073478892
+        },
+        {
+          "name": "w252_wl_sm30",
+          "box_um": [
+            24185.088,
+            21155.04,
+            24243.384,
+            21226.296000000002
+          ],
+          "distance_from_target_um": 80.72000000000116
+        },
+        {
+          "name": "control_sm28_s17_r3",
+          "box_um": [
+            24296.416,
+            21086.72,
+            24316.416,
+            21106.72
+          ],
+          "distance_from_target_um": 90.76769073478863
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm31",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 28,
+      "failure": {
+        "node": 28,
+        "target_um": [
+          24272.492811558044,
+          21074.32
+        ],
+        "previous_um": [
+          24005.266823,
+          21074.32
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 28,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm28_s17_r0",
+          "box_um": [
+            24243.696000000004,
+            21064.32,
+            24263.696000000004,
+            21084.32
+          ],
+          "distance_from_target_um": 8.796811558040645
+        },
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm28_s17_r2",
+          "box_um": [
+            24272.096,
+            21086.72,
+            24292.096,
+            21106.72
+          ],
+          "distance_from_target_um": 12.400000000001455
+        },
+        {
+          "name": "control_sm28_s17_r1",
+          "box_um": [
+            24247.776,
+            21086.72,
+            24267.776,
+            21106.72
+          ],
+          "distance_from_target_um": 17.11681155804399
+        },
+        {
+          "name": "control_sm28_s17_r3",
+          "box_um": [
+            24296.416,
+            21086.72,
+            24316.416,
+            21106.72
+          ],
+          "distance_from_target_um": 36.32318844195834
+        },
+        {
+          "name": "w249_rq_sm29",
+          "box_um": [
+            24258.096,
+            21183.12,
+            24396.312,
+            21198.216
+          ],
+          "distance_from_target_um": 108.79999999999927
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm31",
+      "group": 4,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 29,
+      "failure": {
+        "node": 29,
+        "target_um": [
+          24386.84761922243,
+          21074.32
+        ],
+        "previous_um": [
+          23935.928309,
+          21118.64
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 27,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm28",
+          "box_um": [
+            23005.728,
+            19930.32,
+            26081.568,
+            21062.16
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm28_s17_r3",
+          "box_um": [
+            24296.416,
+            21086.72,
+            24316.416,
+            21106.72
+          ],
+          "distance_from_target_um": 82.83161922243016
+        },
+        {
+          "name": "control_sm28_s17_r2",
+          "box_um": [
+            24272.096,
+            21086.72,
+            24292.096,
+            21106.72
+          ],
+          "distance_from_target_um": 107.15161922242987
+        },
+        {
+          "name": "w249_rq_sm29",
+          "box_um": [
+            24258.096,
+            21183.12,
+            24396.312,
+            21198.216
+          ],
+          "distance_from_target_um": 108.79999999999927
+        },
+        {
+          "name": "control_sm28_s17_r0",
+          "box_um": [
+            24243.696000000004,
+            21064.32,
+            24263.696000000004,
+            21084.32
+          ],
+          "distance_from_target_um": 123.15161922242623
+        },
+        {
+          "name": "control_sm28_s17_r1",
+          "box_um": [
+            24247.776,
+            21086.72,
+            24267.776,
+            21106.72
+          ],
+          "distance_from_target_um": 131.47161922242958
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm4",
+      "group": 2,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 1,
+      "failure": {
+        "node": 1,
+        "target_um": [
+          5291.294511627908,
+          3230.536
+        ],
+        "previous_um": [
+          5410.8,
+          3225.7999999999997
+        ],
+        "unplaced_banks": 4,
+        "unplaced_interior_singles": 38,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w69_ik_SW",
+          "box_um": [
+            5290.704,
+            3157.92,
+            5356.776,
+            3218.376
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "sm4",
+          "box_um": [
+            3960.576,
+            3248.64,
+            7036.416,
+            4380.48
+          ],
+          "distance_from_target_um": 18.103999999999814
+        },
+        {
+          "name": "w66_kv_SW",
+          "box_um": [
+            5414.256,
+            3019.68,
+            5481.192,
+            3080.136
+          ],
+          "distance_from_target_um": 273.3614883720925
+        },
+        {
+          "name": "w18_rq_sm6",
+          "box_um": [
+            5530.464,
+            2978.64,
+            5545.128,
+            3121.176
+          ],
+          "distance_from_target_um": 348.52948837209215
+        },
+        {
+          "name": "w12_rq_sm5",
+          "box_um": [
+            5212.944,
+            2849.04,
+            5351.160000000001,
+            2864.136
+          ],
+          "distance_from_target_um": 366.4000000000001
+        },
+        {
+          "name": "w15_wl_sm6",
+          "box_um": [
+            5137.776,
+            2820.96,
+            5196.072,
+            2892.216
+          ],
+          "distance_from_target_um": 433.54251162790797
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 0,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 22,
+      "failure": {
+        "node": 22,
+        "target_um": [
+          6342.135410819653,
+          3178.696
+        ],
+        "previous_um": [
+          6710.148469,
+          3001.416
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 19,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm4_s15_r3",
+          "box_um": [
+            6356.488,
+            3220.536,
+            6376.488,
+            3240.536
+          ],
+          "distance_from_target_um": 56.19258918034757
+        },
+        {
+          "name": "sm4",
+          "box_um": [
+            3960.576,
+            3248.64,
+            7036.416,
+            4380.48
+          ],
+          "distance_from_target_um": 69.94399999999996
+        },
+        {
+          "name": "control_sm4_s15_r2",
+          "box_um": [
+            6380.808000000001,
+            3220.536,
+            6400.808000000001,
+            3240.536
+          ],
+          "distance_from_target_um": 80.51258918034819
+        },
+        {
+          "name": "control_sm4_s15_r1",
+          "box_um": [
+            6405.128000000001,
+            3220.536,
+            6425.128000000001,
+            3240.536
+          ],
+          "distance_from_target_um": 104.8325891803479
+        },
+        {
+          "name": "control_sm4_s15_r0",
+          "box_um": [
+            6429.448,
+            3220.536,
+            6449.448,
+            3240.536
+          ],
+          "distance_from_target_um": 129.1525891803476
+        },
+        {
+          "name": "w33_xmSW1b",
+          "box_um": [
+            6215.616,
+            2926.8,
+            6682.584,
+            3047.7360000000003
+          ],
+          "distance_from_target_um": 130.95999999999958
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 1,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 18,
+      "failure": {
+        "node": 18,
+        "target_um": [
+          6410.685117233033,
+          3145.76
+        ],
+        "previous_um": [
+          6628.133615,
+          3126.920001
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 16,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm4_s15_r1",
+          "box_um": [
+            6405.128000000001,
+            3220.536,
+            6425.128000000001,
+            3240.536
+          ],
+          "distance_from_target_um": 74.77599999999984
+        },
+        {
+          "name": "control_sm4_s15_r2",
+          "box_um": [
+            6380.808000000001,
+            3220.536,
+            6400.808000000001,
+            3240.536
+          ],
+          "distance_from_target_um": 84.65311723303239
+        },
+        {
+          "name": "control_sm4_s15_r0",
+          "box_um": [
+            6429.448,
+            3220.536,
+            6449.448,
+            3240.536
+          ],
+          "distance_from_target_um": 93.53888276696671
+        },
+        {
+          "name": "w33_xmSW1b",
+          "box_um": [
+            6215.616,
+            2926.8,
+            6682.584,
+            3047.7360000000003
+          ],
+          "distance_from_target_um": 98.02399999999989
+        },
+        {
+          "name": "sm4",
+          "box_um": [
+            3960.576,
+            3248.64,
+            7036.416,
+            4380.48
+          ],
+          "distance_from_target_um": 102.87999999999965
+        },
+        {
+          "name": "control_sm4_s15_r3",
+          "box_um": [
+            6356.488,
+            3220.536,
+            6376.488,
+            3240.536
+          ],
+          "distance_from_target_um": 108.97311723303301
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 2,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 18,
+      "failure": {
+        "node": 18,
+        "target_um": [
+          6362.107785151185,
+          3176.52
+        ],
+        "previous_um": [
+          6707.963111,
+          2999.24
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 16,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm4_s15_r3",
+          "box_um": [
+            6356.488,
+            3220.536,
+            6376.488,
+            3240.536
+          ],
+          "distance_from_target_um": 44.016000000000076
+        },
+        {
+          "name": "control_sm4_s15_r2",
+          "box_um": [
+            6380.808000000001,
+            3220.536,
+            6400.808000000001,
+            3240.536
+          ],
+          "distance_from_target_um": 62.716214848815525
+        },
+        {
+          "name": "sm4",
+          "box_um": [
+            3960.576,
+            3248.64,
+            7036.416,
+            4380.48
+          ],
+          "distance_from_target_um": 72.11999999999989
+        },
+        {
+          "name": "control_sm4_s15_r1",
+          "box_um": [
+            6405.128000000001,
+            3220.536,
+            6425.128000000001,
+            3240.536
+          ],
+          "distance_from_target_um": 87.03621484881523
+        },
+        {
+          "name": "control_sm4_s15_r0",
+          "box_um": [
+            6429.448,
+            3220.536,
+            6449.448,
+            3240.536
+          ],
+          "distance_from_target_um": 111.35621484881494
+        },
+        {
+          "name": "w33_xmSW1b",
+          "box_um": [
+            6215.616,
+            2926.8,
+            6682.584,
+            3047.7360000000003
+          ],
+          "distance_from_target_um": 128.78399999999965
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 15,
+      "failure": {
+        "node": 15,
+        "target_um": [
+          6761.66496560314,
+          3222.3199999999997
+        ],
+        "previous_um": [
+          7078.198064,
+          3288.8
+        ],
+        "unplaced_banks": 3,
+        "unplaced_interior_singles": 18,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm4_s13_r3",
+          "box_um": [
+            6783.645333333333,
+            3220.536,
+            6803.645333333333,
+            3240.536
+          ],
+          "distance_from_target_um": 21.980367730192484
+        },
+        {
+          "name": "sm4",
+          "box_um": [
+            3960.576,
+            3248.64,
+            7036.416,
+            4380.48
+          ],
+          "distance_from_target_um": 26.320000000000164
+        },
+        {
+          "name": "control_sm4_s13_r2",
+          "box_um": [
+            6806.341333333334,
+            3226.48,
+            6826.341333333334,
+            3246.48
+          ],
+          "distance_from_target_um": 48.836367730193615
+        },
+        {
+          "name": "control_sm4_s13_r1",
+          "box_um": [
+            6830.6613333333335,
+            3226.48,
+            6850.6613333333335,
+            3246.48
+          ],
+          "distance_from_target_um": 73.15636773019332
+        },
+        {
+          "name": "control_sm4_s14_r0",
+          "box_um": [
+            6645.1866666666665,
+            3220.536,
+            6665.1866666666665,
+            3240.536
+          ],
+          "distance_from_target_um": 96.47829893647395
+        },
+        {
+          "name": "control_sm4_s13_r0",
+          "box_um": [
+            6854.981333333333,
+            3226.48,
+            6874.981333333333,
+            3246.48
+          ],
+          "distance_from_target_um": 97.47636773019303
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 4,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 18,
+      "failure": {
+        "node": 18,
+        "target_um": [
+          6263.848739523302,
+          3187.336
+        ],
+        "previous_um": [
+          6696.99459,
+          2987.896
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 16,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm4",
+          "box_um": [
+            3960.576,
+            3248.64,
+            7036.416,
+            4380.48
+          ],
+          "distance_from_target_um": 61.30400000000009
+        },
+        {
+          "name": "control_sm4_s16_r0",
+          "box_um": [
+            6213.709333333333,
+            3220.536,
+            6233.709333333333,
+            3240.536
+          ],
+          "distance_from_target_um": 63.339406189969395
+        },
+        {
+          "name": "control_sm4_s16_r1",
+          "box_um": [
+            6189.389333333333,
+            3220.536,
+            6209.389333333333,
+            3240.536
+          ],
+          "distance_from_target_um": 87.65940618997001
+        },
+        {
+          "name": "control_sm4_s16_r2",
+          "box_um": [
+            6165.069333333333,
+            3220.536,
+            6185.069333333333,
+            3240.536
+          ],
+          "distance_from_target_um": 111.97940618996972
+        },
+        {
+          "name": "control_sm4_s15_r3",
+          "box_um": [
+            6356.488,
+            3220.536,
+            6376.488,
+            3240.536
+          ],
+          "distance_from_target_um": 125.8392604766982
+        },
+        {
+          "name": "control_sm4_s16_r3",
+          "box_um": [
+            6140.749333333333,
+            3220.536,
+            6160.749333333333,
+            3240.536
+          ],
+          "distance_from_target_um": 136.29940618996943
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm5",
+      "group": 5,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 18,
+      "failure": {
+        "node": 18,
+        "target_um": [
+          6373.586607576346,
+          3145.76
+        ],
+        "previous_um": [
+          6632.602466,
+          3123.6
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 16,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm4_s15_r3",
+          "box_um": [
+            6356.488,
+            3220.536,
+            6376.488,
+            3240.536
+          ],
+          "distance_from_target_um": 74.77599999999984
+        },
+        {
+          "name": "control_sm4_s15_r2",
+          "box_um": [
+            6380.808000000001,
+            3220.536,
+            6400.808000000001,
+            3240.536
+          ],
+          "distance_from_target_um": 81.99739242365467
+        },
+        {
+          "name": "w33_xmSW1b",
+          "box_um": [
+            6215.616,
+            2926.8,
+            6682.584,
+            3047.7360000000003
+          ],
+          "distance_from_target_um": 98.02399999999989
+        },
+        {
+          "name": "sm4",
+          "box_um": [
+            3960.576,
+            3248.64,
+            7036.416,
+            4380.48
+          ],
+          "distance_from_target_um": 102.87999999999965
+        },
+        {
+          "name": "control_sm4_s15_r1",
+          "box_um": [
+            6405.128000000001,
+            3220.536,
+            6425.128000000001,
+            3240.536
+          ],
+          "distance_from_target_um": 106.31739242365438
+        },
+        {
+          "name": "control_sm4_s15_r0",
+          "box_um": [
+            6429.448,
+            3220.536,
+            6449.448,
+            3240.536
+          ],
+          "distance_from_target_um": 130.6373924236541
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm7",
+      "group": 0,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 35,
+      "failure": {
+        "node": 35,
+        "target_um": [
+          7985.506666666666,
+          3191.3999999999996
+        ],
+        "previous_um": [
+          7809.365333,
+          3014.12
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w36_rgSW3",
+          "box_um": [
+            7958.736,
+            3093.12,
+            8039.928,
+            3175.176
+          ],
+          "distance_from_target_um": 16.223999999999705
+        },
+        {
+          "name": "sm5",
+          "box_um": [
+            7295.616,
+            3248.64,
+            10371.456,
+            4380.48
+          ],
+          "distance_from_target_um": 57.24000000000024
+        },
+        {
+          "name": "w22_rq_sm7",
+          "box_um": [
+            8031.744,
+            2749.68,
+            8046.407999999999,
+            2892.216
+          ],
+          "distance_from_target_um": 345.4213333333332
+        },
+        {
+          "name": "sm2",
+          "box_um": [
+            7295.616,
+            1596.24,
+            10371.456,
+            2728.08
+          ],
+          "distance_from_target_um": 463.3199999999997
+        },
+        {
+          "name": "w19_wl_sm7",
+          "box_um": [
+            7639.056,
+            2820.96,
+            7697.352,
+            2892.216
+          ],
+          "distance_from_target_um": 587.3386666666661
+        },
+        {
+          "name": "w10_wl_sm5",
+          "box_um": [
+            8295.264,
+            2820.96,
+            8693.544,
+            2892.216
+          ],
+          "distance_from_target_um": 608.9413333333328
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm7",
+      "group": 1,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 42,
+      "failure": {
+        "node": 42,
+        "target_um": [
+          8047.957581395349,
+          3208.12
+        ],
+        "previous_um": [
+          7857.187163,
+          3002.88
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm5",
+          "box_um": [
+            7295.616,
+            3248.64,
+            10371.456,
+            4380.48
+          ],
+          "distance_from_target_um": 40.51999999999998
+        },
+        {
+          "name": "w36_rgSW3",
+          "box_um": [
+            7958.736,
+            3093.12,
+            8039.928,
+            3175.176
+          ],
+          "distance_from_target_um": 40.9735813953489
+        },
+        {
+          "name": "w22_rq_sm7",
+          "box_um": [
+            8031.744,
+            2749.68,
+            8046.407999999999,
+            2892.216
+          ],
+          "distance_from_target_um": 317.4535813953494
+        },
+        {
+          "name": "sm2",
+          "box_um": [
+            7295.616,
+            1596.24,
+            10371.456,
+            2728.08
+          ],
+          "distance_from_target_um": 480.03999999999996
+        },
+        {
+          "name": "w10_wl_sm5",
+          "box_um": [
+            8295.264,
+            2820.96,
+            8693.544,
+            2892.216
+          ],
+          "distance_from_target_um": 563.2104186046504
+        },
+        {
+          "name": "w19_wl_sm7",
+          "box_um": [
+            7639.056,
+            2820.96,
+            7697.352,
+            2892.216
+          ],
+          "distance_from_target_um": 666.509581395349
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm7",
+      "group": 3,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 42,
+      "failure": {
+        "node": 42,
+        "target_um": [
+          8017.978046511627,
+          3224.48
+        ],
+        "previous_um": [
+          7857.428093,
+          2958.56
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm5",
+          "box_um": [
+            7295.616,
+            3248.64,
+            10371.456,
+            4380.48
+          ],
+          "distance_from_target_um": 24.159999999999854
+        },
+        {
+          "name": "w36_rgSW3",
+          "box_um": [
+            7958.736,
+            3093.12,
+            8039.928,
+            3175.176
+          ],
+          "distance_from_target_um": 49.30400000000009
+        },
+        {
+          "name": "w22_rq_sm7",
+          "box_um": [
+            8031.744,
+            2749.68,
+            8046.407999999999,
+            2892.216
+          ],
+          "distance_from_target_um": 346.0299534883725
+        },
+        {
+          "name": "sm2",
+          "box_um": [
+            7295.616,
+            1596.24,
+            10371.456,
+            2728.08
+          ],
+          "distance_from_target_um": 496.4000000000001
+        },
+        {
+          "name": "w10_wl_sm5",
+          "box_um": [
+            8295.264,
+            2820.96,
+            8693.544,
+            2892.216
+          ],
+          "distance_from_target_um": 609.549953488372
+        },
+        {
+          "name": "w19_wl_sm7",
+          "box_um": [
+            7639.056,
+            2820.96,
+            7697.352,
+            2892.216
+          ],
+          "distance_from_target_um": 652.8900465116276
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm7",
+      "group": 4,
+      "best_attempt_exponent": 0.9,
+      "placed_nodes_before_rollback": 35,
+      "failure": {
+        "node": 35,
+        "target_um": [
+          7962.717601521561,
+          3207.6
+        ],
+        "previous_um": [
+          7818.060895,
+          3008.16
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "w36_rgSW3",
+          "box_um": [
+            7958.736,
+            3093.12,
+            8039.928,
+            3175.176
+          ],
+          "distance_from_target_um": 32.42399999999998
+        },
+        {
+          "name": "sm5",
+          "box_um": [
+            7295.616,
+            3248.64,
+            10371.456,
+            4380.48
+          ],
+          "distance_from_target_um": 41.039999999999964
+        },
+        {
+          "name": "w22_rq_sm7",
+          "box_um": [
+            8031.744,
+            2749.68,
+            8046.407999999999,
+            2892.216
+          ],
+          "distance_from_target_um": 384.41039847843876
+        },
+        {
+          "name": "sm2",
+          "box_um": [
+            7295.616,
+            1596.24,
+            10371.456,
+            2728.08
+          ],
+          "distance_from_target_um": 479.52
+        },
+        {
+          "name": "w19_wl_sm7",
+          "box_um": [
+            7639.056,
+            2820.96,
+            7697.352,
+            2892.216
+          ],
+          "distance_from_target_um": 580.7496015215611
+        },
+        {
+          "name": "w10_wl_sm5",
+          "box_um": [
+            8295.264,
+            2820.96,
+            8693.544,
+            2892.216
+          ],
+          "distance_from_target_um": 647.9303984784383
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm8",
+      "group": 2,
+      "best_attempt_exponent": 1.1,
+      "placed_nodes_before_rollback": 3,
+      "failure": {
+        "node": 3,
+        "target_um": [
+          21495.257005602896,
+          1573.4
+        ],
+        "previous_um": [
+          21165.987528,
+          1529.08
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 45,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm8",
+          "box_um": [
+            19670.688,
+            1596.24,
+            22746.528,
+            2728.08
+          ],
+          "distance_from_target_um": 22.839999999999918
+        },
+        {
+          "name": "svc_SE_s1",
+          "box_um": [
+            21311.424,
+            1207.44,
+            22612.392,
+            1466.616
+          ],
+          "distance_from_target_um": 106.7840000000001
+        },
+        {
+          "name": "svc_SE_s0",
+          "box_um": [
+            20293.632,
+            1207.44,
+            21310.632,
+            1466.616
+          ],
+          "distance_from_target_um": 291.4090056028949
+        },
+        {
+          "name": "phy_SE",
+          "box_um": [
+            20293.632,
+            21.6,
+            28793.688000000002,
+            1198.8
+          ],
+          "distance_from_target_um": 374.60000000000014
+        },
+        {
+          "name": "control_sm8_s18_r3",
+          "box_um": [
+            20961.376,
+            1551.6799999999998,
+            20981.376,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 515.6010056028963
+        },
+        {
+          "name": "control_sm8_s18_r2",
+          "box_um": [
+            20959.456,
+            1574.08,
+            20979.456,
+            1594.08
+          ],
+          "distance_from_target_um": 516.4810056028978
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm8",
+      "group": 3,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 4,
+      "failure": {
+        "node": 4,
+        "target_um": [
+          21539.62304,
+          1573.4
+        ],
+        "previous_um": [
+          21438.79728,
+          1484.76
+        ],
+        "unplaced_banks": 2,
+        "unplaced_interior_singles": 44,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm8",
+          "box_um": [
+            19670.688,
+            1596.24,
+            22746.528,
+            2728.08
+          ],
+          "distance_from_target_um": 22.839999999999918
+        },
+        {
+          "name": "svc_SE_s1",
+          "box_um": [
+            21311.424,
+            1207.44,
+            22612.392,
+            1466.616
+          ],
+          "distance_from_target_um": 106.7840000000001
+        },
+        {
+          "name": "svc_SE_s0",
+          "box_um": [
+            20293.632,
+            1207.44,
+            21310.632,
+            1466.616
+          ],
+          "distance_from_target_um": 335.77503999999726
+        },
+        {
+          "name": "phy_SE",
+          "box_um": [
+            20293.632,
+            21.6,
+            28793.688000000002,
+            1198.8
+          ],
+          "distance_from_target_um": 374.60000000000014
+        },
+        {
+          "name": "control_sm8_s18_r3",
+          "box_um": [
+            20961.376,
+            1551.6799999999998,
+            20981.376,
+            1571.6799999999998
+          ],
+          "distance_from_target_um": 559.9670399999986
+        },
+        {
+          "name": "control_sm8_s18_r2",
+          "box_um": [
+            20959.456,
+            1574.08,
+            20979.456,
+            1594.08
+          ],
+          "distance_from_target_um": 560.8470400000001
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 0,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 29,
+      "failure": {
+        "node": 29,
+        "target_um": [
+          23212.051111111112,
+          5783.68
+        ],
+        "previous_um": [
+          22853.579556,
+          5739.36
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 6,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm15",
+          "box_um": [
+            23005.728,
+            4639.68,
+            26081.568,
+            5771.52
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm15_s5_r3",
+          "box_um": [
+            23233.31011764706,
+            5773.68,
+            23253.31011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 21.259006535947265
+        },
+        {
+          "name": "control_sm15_s5_r2",
+          "box_um": [
+            23257.63011764706,
+            5773.68,
+            23277.63011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 45.579006535946974
+        },
+        {
+          "name": "control_sm15_s5_r1",
+          "box_um": [
+            23281.95011764706,
+            5773.68,
+            23301.95011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 69.89900653594668
+        },
+        {
+          "name": "control_sm15_s5_r0",
+          "box_um": [
+            23306.27011764706,
+            5773.68,
+            23326.27011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 94.21900653594639
+        },
+        {
+          "name": "control_sm15_s6_r0",
+          "box_um": [
+            23077.84094117647,
+            5773.68,
+            23097.84094117647,
+            5793.68
+          ],
+          "distance_from_target_um": 114.21016993464218
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 1,
+      "best_attempt_exponent": 0.9,
+      "placed_nodes_before_rollback": 35,
+      "failure": {
+        "node": 35,
+        "target_um": [
+          24482.392,
+          5807.669345979786
+        ],
+        "previous_um": [
+          24645.948465,
+          5916.64
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 1,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm15",
+          "box_um": [
+            23005.728,
+            4639.68,
+            26081.568,
+            5771.52
+          ],
+          "distance_from_target_um": 36.14934597978572
+        },
+        {
+          "name": "control_sm15_s0_r1",
+          "box_um": [
+            24393.616,
+            5804.16,
+            24413.616,
+            5824.16
+          ],
+          "distance_from_target_um": 68.77599999999802
+        },
+        {
+          "name": "control_sm15_s0_r2",
+          "box_um": [
+            24393.616,
+            5779.839999999999,
+            24413.616,
+            5799.839999999999
+          ],
+          "distance_from_target_um": 76.60534597978494
+        },
+        {
+          "name": "control_sm15_s0_r0",
+          "box_um": [
+            24393.616,
+            5828.48,
+            24413.616,
+            5848.48
+          ],
+          "distance_from_target_um": 89.58665402021143
+        },
+        {
+          "name": "control_sm15_s0_r3",
+          "box_um": [
+            24371.136000000002,
+            5773.68,
+            24391.136000000002,
+            5793.68
+          ],
+          "distance_from_target_um": 105.24534597978345
+        },
+        {
+          "name": "w116_rgSE1",
+          "box_um": [
+            24488.352,
+            5907.6,
+            24598.056,
+            6017.736000000001
+          ],
+          "distance_from_target_um": 105.89065402021333
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 2,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 30,
+      "failure": {
+        "node": 30,
+        "target_um": [
+          23314.496,
+          5783.68
+        ],
+        "previous_um": [
+          22865.446667,
+          5672.88
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 6,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm15_s5_r0",
+          "box_um": [
+            23306.27011764706,
+            5773.68,
+            23326.27011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 0
+        },
+        {
+          "name": "sm15",
+          "box_um": [
+            23005.728,
+            4639.68,
+            26081.568,
+            5771.52
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm15_s5_r1",
+          "box_um": [
+            23281.95011764706,
+            5773.68,
+            23301.95011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 12.54588235294068
+        },
+        {
+          "name": "control_sm15_s5_r2",
+          "box_um": [
+            23257.63011764706,
+            5773.68,
+            23277.63011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 36.86588235294039
+        },
+        {
+          "name": "control_sm15_s5_r3",
+          "box_um": [
+            23233.31011764706,
+            5773.68,
+            23253.31011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 61.1858823529401
+        },
+        {
+          "name": "control_sm15_s4_r3",
+          "box_um": [
+            23461.739294117648,
+            5773.68,
+            23481.739294117648,
+            5793.68
+          ],
+          "distance_from_target_um": 147.24329411764847
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 3,
+      "best_attempt_exponent": 1.2,
+      "placed_nodes_before_rollback": 37,
+      "failure": {
+        "node": 37,
+        "target_um": [
+          23318.539855609073,
+          5783.68
+        ],
+        "previous_um": [
+          22854.339817,
+          5717.2
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 6,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm15_s5_r0",
+          "box_um": [
+            23306.27011764706,
+            5773.68,
+            23326.27011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 0
+        },
+        {
+          "name": "sm15",
+          "box_um": [
+            23005.728,
+            4639.68,
+            26081.568,
+            5771.52
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm15_s5_r1",
+          "box_um": [
+            23281.95011764706,
+            5773.68,
+            23301.95011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 16.589737962014624
+        },
+        {
+          "name": "control_sm15_s5_r2",
+          "box_um": [
+            23257.63011764706,
+            5773.68,
+            23277.63011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 40.90973796201433
+        },
+        {
+          "name": "control_sm15_s5_r3",
+          "box_um": [
+            23233.31011764706,
+            5773.68,
+            23253.31011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 65.22973796201404
+        },
+        {
+          "name": "control_sm15_s4_r3",
+          "box_um": [
+            23461.739294117648,
+            5773.68,
+            23481.739294117648,
+            5793.68
+          ],
+          "distance_from_target_um": 143.19943850857453
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 4,
+      "best_attempt_exponent": 1.1,
+      "placed_nodes_before_rollback": 36,
+      "failure": {
+        "node": 36,
+        "target_um": [
+          23268.31056761385,
+          5783.68
+        ],
+        "previous_um": [
+          22859.61687,
+          5672.88
+        ],
+        "unplaced_banks": 0,
+        "unplaced_interior_singles": 7,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "control_sm15_s5_r2",
+          "box_um": [
+            23257.63011764706,
+            5773.68,
+            23277.63011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 0
+        },
+        {
+          "name": "sm15",
+          "box_um": [
+            23005.728,
+            4639.68,
+            26081.568,
+            5771.52
+          ],
+          "distance_from_target_um": 12.159999999999854
+        },
+        {
+          "name": "control_sm15_s5_r1",
+          "box_um": [
+            23281.95011764706,
+            5773.68,
+            23301.95011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 13.639550033207342
+        },
+        {
+          "name": "control_sm15_s5_r3",
+          "box_um": [
+            23233.31011764706,
+            5773.68,
+            23253.31011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 15.000449966792075
+        },
+        {
+          "name": "control_sm15_s5_r0",
+          "box_um": [
+            23306.27011764706,
+            5773.68,
+            23326.27011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 37.95955003320705
+        },
+        {
+          "name": "control_sm15_s6_r0",
+          "box_um": [
+            23077.84094117647,
+            5773.68,
+            23097.84094117647,
+            5793.68
+          ],
+          "distance_from_target_um": 170.46962643738152
+        }
+      ]
+    },
+    {
+      "bus": "rl_sm9",
+      "group": 5,
+      "best_attempt_exponent": 1.0,
+      "placed_nodes_before_rollback": 29,
+      "failure": {
+        "node": 29,
+        "target_um": [
+          23150.179999999997,
+          5783.680000000001
+        ],
+        "previous_um": [
+          22904.928,
+          5577.496
+        ],
+        "unplaced_banks": 1,
+        "unplaced_interior_singles": 6,
+        "reason": "local constructive search exhausted; rolled back all partial boxes and wire reservations"
+      },
+      "nearest_fixed_obstacles": [
+        {
+          "name": "sm15",
+          "box_um": [
+            23005.728,
+            4639.68,
+            26081.568,
+            5771.52
+          ],
+          "distance_from_target_um": 12.160000000000764
+        },
+        {
+          "name": "control_sm15_s6_r0",
+          "box_um": [
+            23077.84094117647,
+            5773.68,
+            23097.84094117647,
+            5793.68
+          ],
+          "distance_from_target_um": 52.33905882352701
+        },
+        {
+          "name": "control_sm15_s6_r1",
+          "box_um": [
+            23053.52094117647,
+            5773.68,
+            23073.52094117647,
+            5793.68
+          ],
+          "distance_from_target_um": 76.65905882352672
+        },
+        {
+          "name": "control_sm15_s5_r3",
+          "box_um": [
+            23233.31011764706,
+            5773.68,
+            23253.31011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 83.13011764706243
+        },
+        {
+          "name": "control_sm15_s6_r2",
+          "box_um": [
+            23029.20094117647,
+            5773.68,
+            23049.20094117647,
+            5793.68
+          ],
+          "distance_from_target_um": 100.97905882352643
+        },
+        {
+          "name": "control_sm15_s5_r2",
+          "box_um": [
+            23257.63011764706,
+            5773.68,
+            23277.63011764706,
+            5793.68
+          ],
+          "distance_from_target_um": 107.45011764706214
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Not an infeasibility proof. Macro moves and extra die area are not justified solely by local greedy failures.",
+    "Path identity remains original270-bit result framing; protected318-bit codec endpoints and revised wire grouping require separate binding.",
+    "Control station route/views and bank/relay route/views remain unqualified.",
+    "All slices must fit with actual codec endpoints, clocks,PDN and other traffic before adopting this model."
+  ],
+  "next_step": "Joint global repacking or explicit dieowner corridor allocation for unresolved slices; preserve20um/32.4um shapes and model added stages/area before changing geometry.",
+  "tests": "6focused mixed-bank testsPASS;9previous station testsPASS",
+  "inventory_decompressed_sha256": "230e9149d43dd4f036ed77769e5ece8732238395a80848630a96fb79d9194d68",
+  "source_sha256": {
+    "/tmp/hbm-bank-control-result-paths.json": "a87be5c70b45ddf0c1e6a90dd6aa6fe5d2e1cd1d47cbbe99b4482f9c603ad836",
+    "/tmp/hbm-bank-joint-control-obstacles.json": "98d9d076f91f3b8d927d967eafe9a77ba90f60ea507a446dca9b07b5fe48688f",
+    "results/uarch/hbm_result_delay_bank_20261007/model.json": "0cf239a1d0bb485641e4418bcb35e0962461eb3255dc3fca238fa8ffc97aca43",
+    "/home/ubuntu/OpenTallas/tools/hbm_relay_bank_inventory.py": "f8e988f681e97b5547407eec2a059712cdc386e04a3560f1094c2191db0871b6",
+    "/home/ubuntu/OpenTallas/tools/hbm_relay_station_inventory.py": "1db19a3b0892284f05b04a8473fdbc7bc053ccb3c21a0f187ab48d2c3a4900de"
+  },
+  "artifacts_sha256": {
+    "results/uarch/hbm_relay_bank_joint_20261007/joint_inventory.json.gz": "c6b09f50259ef9fe80985eaf5dff4d762a0ef19f78bdca8d9de3076633ab1663",
+    "results/uarch/hbm_relay_bank_joint_20261007/result_paths.json": "a87be5c70b45ddf0c1e6a90dd6aa6fe5d2e1cd1d47cbbe99b4482f9c603ad836",
+    "results/uarch/hbm_relay_bank_joint_20261007/combined_obstacles.json": "98d9d076f91f3b8d927d967eafe9a77ba90f60ea507a446dca9b07b5fe48688f",
+    "tools/hbm_relay_bank_inventory.py": "f8e988f681e97b5547407eec2a059712cdc386e04a3560f1094c2191db0871b6",
+    "tools/test_hbm_relay_bank_inventory.py": "6ce56342df6384004b8ea32104830b32ac43628172f73dc41bfb1f2e97d09e2d"
+  }
+}

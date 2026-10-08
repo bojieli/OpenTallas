@@ -1,0 +1,245 @@
+{
+  "schema": "opentallas.qwen_station_dualfault_mapped_retention.v1",
+  "pass_all": true,
+  "cases": [
+    {
+      "case": "n0_t0_s0",
+      "expected_payload_retained": true,
+      "payload_retained": true,
+      "expected_payload_FF": 508,
+      "mapped_distinct_payload_FF": 508,
+      "mapped_total_FF": 512,
+      "fault_retained": true,
+      "fault_drivers": {
+        "bf_q": [
+          "$auto$ff.cc:337:slice$654"
+        ],
+        "bfn_q": [
+          "$auto$ff.cc:337:slice$656"
+        ],
+        "af_q": [
+          "$auto$ff.cc:337:slice$655"
+        ],
+        "afn_q": [
+          "$auto$ff.cc:337:slice$657"
+        ]
+      },
+      "sequential_netlist_sha256": "e46aa7b55ddba7c9e69e81caefde6ab58c1f45803c1fa7b401f71e50a2ccaa82",
+      "log_sha256": "25894c5ea8f61a5934d41c1c8927a1dcef2161ec1de4cdc55e14fd89f42c2896"
+    },
+    {
+      "case": "n0_t1_s0",
+      "expected_payload_retained": true,
+      "payload_retained": true,
+      "expected_payload_FF": 1016,
+      "mapped_distinct_payload_FF": 1016,
+      "mapped_total_FF": 1022,
+      "fault_retained": true,
+      "fault_drivers": {
+        "bf_q": [
+          "$auto$ff.cc:337:slice$1174"
+        ],
+        "bfn_q": [
+          "$auto$ff.cc:337:slice$1177"
+        ],
+        "af_q": [
+          "$auto$ff.cc:337:slice$1176"
+        ],
+        "afn_q": [
+          "$auto$ff.cc:337:slice$1179"
+        ],
+        "tf_q": [
+          "$auto$ff.cc:337:slice$1175"
+        ],
+        "tfn_q": [
+          "$auto$ff.cc:337:slice$1178"
+        ]
+      },
+      "sequential_netlist_sha256": "bc2be0e4ac5fa1d1a3dabf700f532b1821f4523bec569099de3ab2ba7ed23edd",
+      "log_sha256": "8d484124ef30874e2753b10641cbf78f4ca17d9d4c67ccb5c996a255ffa4c09a"
+    },
+    {
+      "case": "n0_t0_s1",
+      "expected_payload_retained": true,
+      "payload_retained": true,
+      "expected_payload_FF": 1016,
+      "mapped_distinct_payload_FF": 1016,
+      "mapped_total_FF": 1022,
+      "fault_retained": true,
+      "fault_drivers": {
+        "bf_q": [
+          "$auto$ff.cc:337:slice$1174"
+        ],
+        "bfn_q": [
+          "$auto$ff.cc:337:slice$1177"
+        ],
+        "af_q": [
+          "$auto$ff.cc:337:slice$1176"
+        ],
+        "afn_q": [
+          "$auto$ff.cc:337:slice$1179"
+        ],
+        "cf_q": [
+          "$auto$ff.cc:337:slice$1175"
+        ],
+        "cfn_q": [
+          "$auto$ff.cc:337:slice$1178"
+        ]
+      },
+      "sequential_netlist_sha256": "677e64b223947602e1165e956079dfb0701ae129dc5bddd08c518c51ed2b317f",
+      "log_sha256": "ff64e6b18b9b00baeb08c8bc45d10611f89f0edc2ddb7ec8f62740e341ab5f89"
+    },
+    {
+      "case": "n0_t1_s1",
+      "expected_payload_retained": true,
+      "payload_retained": true,
+      "expected_payload_FF": 1524,
+      "mapped_distinct_payload_FF": 1524,
+      "mapped_total_FF": 1532,
+      "fault_retained": true,
+      "fault_drivers": {
+        "bf_q": [
+          "$auto$ff.cc:337:slice$1694"
+        ],
+        "bfn_q": [
+          "$auto$ff.cc:337:slice$1698"
+        ],
+        "af_q": [
+          "$auto$ff.cc:337:slice$1697"
+        ],
+        "afn_q": [
+          "$auto$ff.cc:337:slice$1701"
+        ],
+        "tf_q": [
+          "$auto$ff.cc:337:slice$1695"
+        ],
+        "tfn_q": [
+          "$auto$ff.cc:337:slice$1699"
+        ],
+        "cf_q": [
+          "$auto$ff.cc:337:slice$1696"
+        ],
+        "cfn_q": [
+          "$auto$ff.cc:337:slice$1700"
+        ]
+      },
+      "sequential_netlist_sha256": "7edfbffea245be44eca68af807ded0ece551c3df77e2140f3d8fbea91532571e",
+      "log_sha256": "047f5d8b884276eb43923d6b531bc50a1fb307e1e83ff427596ea45312b208dd"
+    },
+    {
+      "case": "n1_t1_s0",
+      "expected_payload_retained": false,
+      "payload_retained": false,
+      "expected_payload_FF": 1016,
+      "mapped_distinct_payload_FF": 508,
+      "mapped_total_FF": 514,
+      "fault_retained": true,
+      "fault_drivers": {
+        "bf_q": [
+          "$auto$ff.cc:337:slice$666"
+        ],
+        "bfn_q": [
+          "$auto$ff.cc:337:slice$669"
+        ],
+        "af_q": [
+          "$auto$ff.cc:337:slice$668"
+        ],
+        "afn_q": [
+          "$auto$ff.cc:337:slice$671"
+        ],
+        "tf_q": [
+          "$auto$ff.cc:337:slice$667"
+        ],
+        "tfn_q": [
+          "$auto$ff.cc:337:slice$670"
+        ]
+      },
+      "sequential_netlist_sha256": "6324afebc017e166971a6210ece545a774adf22db5bd21f27b6dc6cf34ddd80c",
+      "log_sha256": "3799054ed200b4f8a0b91c6523d0c09f337cc436e7254e41a0ad748f9b143a92"
+    },
+    {
+      "case": "n1_t0_s1",
+      "expected_payload_retained": false,
+      "payload_retained": false,
+      "expected_payload_FF": 1016,
+      "mapped_distinct_payload_FF": 508,
+      "mapped_total_FF": 514,
+      "fault_retained": true,
+      "fault_drivers": {
+        "bf_q": [
+          "$auto$ff.cc:337:slice$666"
+        ],
+        "bfn_q": [
+          "$auto$ff.cc:337:slice$669"
+        ],
+        "af_q": [
+          "$auto$ff.cc:337:slice$668"
+        ],
+        "afn_q": [
+          "$auto$ff.cc:337:slice$671"
+        ],
+        "cf_q": [
+          "$auto$ff.cc:337:slice$667"
+        ],
+        "cfn_q": [
+          "$auto$ff.cc:337:slice$670"
+        ]
+      },
+      "sequential_netlist_sha256": "4865a7f2d256d7be3175b05d283a49df38d0c8431b821ad545bce558af46fb0c",
+      "log_sha256": "5d9723d09b84f1109fec61b292975459aff70435efafd6281869d230ab30de57"
+    },
+    {
+      "case": "n1_t1_s1",
+      "expected_payload_retained": false,
+      "payload_retained": false,
+      "expected_payload_FF": 1524,
+      "mapped_distinct_payload_FF": 508,
+      "mapped_total_FF": 516,
+      "fault_retained": true,
+      "fault_drivers": {
+        "bf_q": [
+          "$auto$ff.cc:337:slice$678"
+        ],
+        "bfn_q": [
+          "$auto$ff.cc:337:slice$682"
+        ],
+        "af_q": [
+          "$auto$ff.cc:337:slice$681"
+        ],
+        "afn_q": [
+          "$auto$ff.cc:337:slice$685"
+        ],
+        "tf_q": [
+          "$auto$ff.cc:337:slice$679"
+        ],
+        "tfn_q": [
+          "$auto$ff.cc:337:slice$683"
+        ],
+        "cf_q": [
+          "$auto$ff.cc:337:slice$680"
+        ],
+        "cfn_q": [
+          "$auto$ff.cc:337:slice$684"
+        ]
+      },
+      "sequential_netlist_sha256": "112f557c89eb62a543036c2cf61c3207e2928b6c1bdc3a0820805222c2ef254e",
+      "log_sha256": "27bb6d09dd6daed648fe6643ed2f12ff853a50f67534479e83e0f601b1fa0d85"
+    }
+  ],
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "yosys_binary_sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+  "source_sha256": {
+    "rtl/physical/ot_qwen_die_dualfault_station_r22.sv": "d973de6bc72cfd4a081e4cc9be58f9c3b8b0392bc7ba3dc1d330234a918cec7f",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "tools/qwen_station_dualfault_mapped_retention.py": "53e36c501b14420bb1147fbc6926b3ed8f089902cdbcdab6f2ca305b2bbf7db0"
+  },
+  "scope": "Actual ASAP7 SS sequential cell mapping and Q-driver tracing after optimization; no combinational-library mapping or P&R claimed",
+  "remaining": [
+    "Forward control/data integrity",
+    "Root publication guard",
+    "Die reset/clock distribution",
+    "Actual boundary loads and SS/FF",
+    "Final ORFS mapped and post-repair retention audit"
+  ],
+  "adoption": false
+}

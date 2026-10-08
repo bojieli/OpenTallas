@@ -26,7 +26,9 @@ module tb_qwen_rt_kv_stream4 #(
     parameter integer RNG = 10,
     parameter integer KV_MAP = 0,          // option-M stripe (service and HBM)
     parameter integer KV_MAP_HBM = -1,     // negative control: HBM map differing from the service's (-1: = KV_MAP)
-    parameter integer KV_MAP_PC = -1       // negative control: protected PC identity map differing (-1: = HBM map)
+    parameter integer KV_MAP_PC = -1,      // negative control: protected PC identity map differing (-1: = HBM map)
+    parameter integer CDC_MARGIN = 0,      // ot_qwen_stream4_cdc_pc MARGIN + receiver landing queue
+    parameter integer CDC_NEG = 0          // negative control: MARGIN element, no receiver queue
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -73,7 +75,8 @@ module tb_qwen_rt_kv_stream4 #(
         .st_wr_sectors(st_wr_sectors), .st_rsp_stall(st_rsp_stall), .st_kvok_low_desc(st_kvok_low_desc),
         .st_drain_low(st_drain_low), .st_wr_lat_max(st_wr_lat_max), .st_fill_exposed(st_fill_exposed));
     ot_qwen_hbm_stream4_cdc #(.NSTK(NSTK), .NPC(NPC), .MEM_WORDS(LAYERS * 131072), .TAGW(9), .PHASE(PHASE), .PULLIN(PULLIN),
-        .PROTECTED(PROTECTED), .SYNC(SYNC), .RSEL(RSEL), .RNG(RNG), .KV_MAP(KV_MAP_HBM < 0 ? KV_MAP : KV_MAP_HBM), .KV_MAP_PC(KV_MAP_PC)) u_hbm (
+        .PROTECTED(PROTECTED), .SYNC(SYNC), .RSEL(RSEL), .RNG(RNG), .KV_MAP(KV_MAP_HBM < 0 ? KV_MAP : KV_MAP_HBM), .KV_MAP_PC(KV_MAP_PC),
+        .CDC_MARGIN(CDC_MARGIN), .CDC_NEG(CDC_NEG)) u_hbm (
         .clk(clk), .rst_n(rst_n), .warm_rst_n(1'b1), .hclk(hclk), .d_v(hd_v), .d_rdy(hd_rdy), .d_row(hd_row), .d_n(hd_n), .go(h_go),
         .l_v(hl_v), .l_sec(hl_sec), .l_row(hl_row), .l_data(hl_data), .l_pop(hl_pop),
         .w_v(hw_v), .w_sec(hw_sec), .w_data(hw_data), .w_tag(hw_tag), .w_room(hw_room), .wd_v(hwd_v), .wd_tag(hwd_tag),

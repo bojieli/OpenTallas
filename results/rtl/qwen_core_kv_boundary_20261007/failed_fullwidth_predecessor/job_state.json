@@ -1,0 +1,162 @@
+{
+  "name": "core_separate_load_fullwidth_fbc523a6f",
+  "spec": {
+    "name": "core_separate_load_fullwidth_fbc523a6f",
+    "block": "ot_qwen_rom_core_core_p",
+    "owner": "Codex:qwen-elements",
+    "purpose": "Fullshape SW64 NW18 opaque boundary specialization plus default-off separated NEXT LOAD; retain previous truncated interface failure and physical verdict. Exact full-controller gate and model replay qualify candidate route, no adoption.",
+    "hosts": [
+      "ot-epyc1tb",
+      "ot-epyc2",
+      "ot-epyc3",
+      "ot-agidock128"
+    ],
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "source": {
+      "commit": "fbc523a6f269d91ef4bb23ee1c3476bb79182f74",
+      "extra_paths": [
+        "configs"
+      ],
+      "branch": "main"
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "full_controller_separate_load",
+          "cmd": "python3 tools/qwen_core_separate_load_gate.py --out {RUN}/bench/full_controller",
+          "expect": "pass",
+          "pass_regex": "\"status\": \"pass\"",
+          "min_count_regex": "\"positive_engine_events\": (\\d+)",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog",
+            "yosys"
+          ]
+        }
+      ],
+      "calibrate": {
+        "enabled": false,
+        "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+      },
+      "route": {
+        "cmd": "CORE_DIE_IO=1 SRC={SRC} bash physical/qwen_die_masters/jobs/route_core_separate_load.sh {LABEL} 3banmsp 30 0.5 {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+          "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 16,
+        "peak_ram_gb": 40,
+        "needs": [
+          "orfs",
+          "yosys"
+        ]
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS.md {RUN}/routes/{LABEL}/prep/cut_report.json {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_qwen_rom_core --out {RUN}/record/views/ot_qwen_rom_core_core_p --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [],
+      "post_sdc": [
+        "physical/qwen_core_ctx/signoff833_skew90.sdc"
+      ],
+      "macros": []
+    },
+    "hold_eco": {},
+    "budget": {
+      "enabled": false,
+      "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+    },
+    "record": [
+      {
+        "from": "{RUN}/record",
+        "to": "results/rtl/qwen_core_separate_load_20261007/physical"
+      },
+      {
+        "from": "{RUN}/bench/full_controller/result.json",
+        "to": "results/rtl/qwen_core_separate_load_20261007/full_interface_result.json"
+      }
+    ],
+    "cycles_added": "Analytical current TP4 program833 instructions: seq_gap1\u21922 costs0 cycles at context1/8192. Minimum decoder64-instruction vehicle +64 no-stall/+71 periodic-ready; real retained-controller full interface gate separately required. No universal deployed-token bound inferred.",
+    "merge_target": null,
+    "no_bench_reason": "Aggregate full-controller gate includes two full-width 64-instruction positive cases and a payload-mutation negative; pass result requires all three. This production prepare fixes archive input and reproduces source-qualified RTL."
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/core_separate_load_fullwidth_fbc523a6f.json",
+  "created": "2026-10-07T10:36:51-07:00",
+  "status": "NEEDS_RTL",
+  "stage_idx": 2,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {
+    "bench_full_controller_separate_load": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "1c20a09430a6fdc0453bffc3b7d487a8c6da68c\"\n  },\n  \"lowered_source_sha256\": {\n    \"full0/core.sv\": \"d9696beadefda81f32f0be43f794e563f404cc6d004518b15a3da88177bb094a\",\n    \"full1/core.sv\": \"0cd780da0e7b7f19bc213107e4ff0c758e970d516112f946b4a511d29621a5f7\",\n    \"core0.v\": \"96437997276413cc3c29f49794e0d301237aed196d150231f105dd42f9c17099\",\n    \"core1.v\": \"c12a5c2556e13c0ce4d1e6f1a593c5b99a916af30e825d9f342ef92da6908fce\"\n  },\n  \"scope\": \"Actual full controller, FB3 BOUND AMQ NXREG MEIF SUIF PINREG, retained shape G6144 SW64 NW18; minimum engine boundaries, no arithmetic or whole-system simulation\"\n}\n",
+      "track": "parallel"
+    }
+  },
+  "hosts_tried": [
+    "ot-agidock128"
+  ],
+  "events": [
+    "2026-10-07T10:36:51-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/core_separate_load_fullwidth_fbc523a6f.json",
+    "2026-10-07T10:36:51-07:00 benches run in parallel with calibrate/route (1 benches; spec bench_first opts out)",
+    "2026-10-07T10:37:14-07:00 source fbc523a6f269 synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/core_separate_load_fullwidth_fbc523a6f/src",
+    "2026-10-07T10:37:52-07:00 bench track: launched bench_full_controller_separate_load (bench_full_controller_separate_load.a1b1) beside None",
+    "2026-10-07T10:37:53-07:00 launched route (attempt 1) on ot-agidock128",
+    "2026-10-07T10:38:52-07:00 bench track: bench_full_controller_separate_load PASS (rc=0) work: [128]",
+    "2026-10-07T11:03:38-07:00 route done (rc=0)",
+    "2026-10-07T11:04:39-07:00 verdict SS -206.24 / FF -43.74 / DRC 0 / checks failed [] -> NOT CLOSED",
+    "2026-10-07T11:05:39-07:00 NEEDS_RTL: SS -206.24 / FF -43.74 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+  ],
+  "updated": "2026-10-07T11:05:39-07:00",
+  "bench_par": true,
+  "btrack": {
+    "bench_full_controller_separate_load": {
+      "state": "done",
+      "tag": "bench_full_controller_separate_load.a1b1",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/core_separate_load_fullwidth_fbc523a6f",
+      "n": 1,
+      "started": "2026-10-07T10:37:52-07:00",
+      "stage_source": "/srv/opentallas-scratch/claude/closure-loop/core_separate_load_fullwidth_fbc523a6f/bench_src_a1"
+    }
+  },
+  "wait": null,
+  "host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/core_separate_load_fullwidth_fbc523a6f",
+  "source_synced": true,
+  "commit_full": "fbc523a6f269d91ef4bb23ee1c3476bb79182f74",
+  "bwait": null,
+  "stage_key": "summary",
+  "stage_tag": "summary.a1",
+  "stage_started": "2026-10-07T11:04:39-07:00",
+  "bench_work": {
+    "bench_full_controller_separate_load": "work: [128]"
+  },
+  "wd_checked": 1791394732.512868,
+  "unreachable": 0,
+  "metrics": {
+    "corner_sta": [
+      "/srv/opentallas-scratch/claude/closure-loop/core_separate_load_fullwidth_fbc523a6f/routes/core_separate_load_fullwidth_fbc523a6f/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch/claude/closure-loop/core_separate_load_fullwidth_fbc523a6f/routes/core_separate_load_fullwidth_fbc523a6f/work/orfs/logs/asap7/opentallas_ot_qwen_rom_core_asap7_qcc_core_separate_load_fullwidth_fbc523a6f/base/5_2_route.json"
+    ],
+    "ss_ps": -206.24,
+    "ff_ps": -43.74,
+    "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/core_separate_load_fullwidth_fbc523a6f/routes/core_separate_load_fullwidth_fbc523a6f/work/orfs",
+    "errors": [],
+    "ss_tns_ps": -36944.1,
+    "post_sdc": [],
+    "drc": 0
+  },
+  "checks": {},
+  "failed_checks": [],
+  "reason": "SS -206.24 / FF -43.74 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+}

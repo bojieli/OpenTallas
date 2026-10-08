@@ -1,0 +1,44 @@
+{
+  "status": "PASS_CELL_CHARACTERIZATION_ONLY",
+  "cases": 378,
+  "driver": "BUFx2_ASAP7_75t_R",
+  "HB4_cells": 3,
+  "input_slew_ps": [
+    0,
+    5,
+    20
+  ],
+  "original_cap_fF": [
+    0,
+    0.25,
+    0.5,
+    1,
+    2,
+    3,
+    4,
+    5,
+    5.75
+  ],
+  "retained_link_cap_delta_fF": [
+    -0.78,
+    0,
+    0.78
+  ],
+  "new_link_cap_fF": [
+    0,
+    0.78
+  ],
+  "summary": {
+    "FF_min_hold_gain_ps": 117.875009,
+    "SS_max_setup_cost_ps": 339.820038
+  },
+  "original_observed_max_cap_fF": 5.73366,
+  "not_routed": true,
+  "adopted": false,
+  "files": {
+    "sweep.py.txt": "059637175b4be8ca639e7d07a6d4699594771c9ee9e2d5b8dc2058c7eb23b26f",
+    "raw_inputs_logs.tar.gz": "a35228e3e90c2079a9c4f64555b0c605b5ee790fc1b0bba660ed0398ef63c3d9",
+    "rows.json": "f80710a307000b326dc60c2f53b84b3be9fd16ba48843b2508652d04e7856e01",
+    "summary.json": "49837dc26a771c24e6bdf06d6c9c8382cb965f01506cf94f137b14e6c3faec52"
+  }
+}

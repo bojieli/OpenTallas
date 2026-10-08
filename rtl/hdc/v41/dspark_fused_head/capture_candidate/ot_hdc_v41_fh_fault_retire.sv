@@ -5,7 +5,17 @@
 // packet = {leaf valid/key/row, result data/mask/address/we, tag, valid,
 //           warm-index marker}; see dsrom_fh_fault_retire_model().
 module ot_hdc_v41_fh_fault_retire #(
-    parameter integer ENABLE=0, PACKET_BITS=5510
+    parameter integer ENABLE=0, PACKET_BITS=5510,
+    // MARGIN (default 0; margin-first 1): a six-level fault tree whose every hop is one group or one
+    // group-to-centre distance: rows (8, in their group) -> group OR (4) -> global OR at the centre
+    // -> group copies (4) -> relays (16, one per 4 lanes) -> lane / write / status copies. The
+    // packet pipe is six deep (+2 retirement cycles). The global arithmetic fault (central) enters
+    // the global OR through two registers (the cycle a lane fault reaches it); group_fault[g]
+    // (per-group lane faults) joins the rows of group g at the arithmetic-fault cycle.
+    parameter integer MARGIN=0,
+    // SAFE (default 0; needs MARGIN): one more packet stage and one more veto copy level (+1 retirement cycle), so the
+    // final packet stage and its veto copies can sit at the consumers
+    parameter integer SAFE=0
 )(
     input wire clk,rst_n,
     input wire packet_v,
@@ -13,12 +23,21 @@ module ot_hdc_v41_fh_fault_retire #(
     input wire [63:0] poison,
     input wire [3:0] address_fault,
     input wire arithmetic_fault,
+    input wire [3:0] group_fault,
     output wire retired_v,
     output wire [PACKET_BITS-1:0] retired_packet,
     output wire [63:0] lane_veto,
+    output wire [63:0] lane_veto_pre,   // the lane veto one register earlier (SAFE: the copy-1 level; lanes retiring
+                                        // locally register it beside their packet slice)
     output wire [3:0] write_veto,
     output wire fault,
-    output wire busy
+    output wire busy,
+    // OREG support (2026-10-07): the D side of the retired_v / retired_packet / write_veto registers (the values they
+    // take at the next edge), so a consumer can register a function of them at its output pin with zero added cycles.
+    // write_veto_nx is exact only with SAFE (write_veto = copy of write_v0).
+    output wire retired_v_nx,
+    output wire [PACKET_BITS-1:0] retired_packet_nx,
+    output wire [3:0] write_veto_nx
 );
     genvar p,l,g;
     generate if(!ENABLE) begin : g_original
@@ -28,49 +47,92 @@ module ot_hdc_v41_fh_fault_retire #(
         assign lane_veto={64{f}};
         assign write_veto={4{f}};
         assign fault=f;
+        assign lane_veto_pre={64{f}};
         assign busy=1'b0;
+        assign retired_v_nx=packet_v; assign retired_packet_nx=packet; assign write_veto_nx={4{f}};
     end else begin : g_cut
-        reg [PACKET_BITS-1:0] packet_pipe[0:3];
-        reg [3:0] valid_pipe;
+        localparam integer DEPTH=(MARGIN?6:4)+(SAFE?1:0);
+        reg [PACKET_BITS-1:0] packet_pipe[0:DEPTH-1];
+        reg [DEPTH-1:0] valid_pipe;
         reg [7:0] row_fault;
         reg [3:0] quadrant_fault;
         wire [15:0] relay_fault;
         integer st,r;
         always @(posedge clk) begin
             packet_pipe[0]<=packet;
-            for(st=1;st<4;st=st+1) packet_pipe[st]<=packet_pipe[st-1];
+            for(st=1;st<DEPTH;st=st+1) packet_pipe[st]<=packet_pipe[st-1];
         end
         always @(posedge clk or negedge rst_n)
             if(!rst_n) begin valid_pipe<=0;row_fault<=0;quadrant_fault<=0;end
             else begin
-                valid_pipe<={valid_pipe[2:0],packet_v};
+                valid_pipe<={valid_pipe[DEPTH-2:0],packet_v};
                 // Each eight-bank capture is a 2-row x4-column cluster,
                 // not a full-width row. Both halves share the same original
                 // W16 address-fault source. No bank or protection bit drops.
                 for(r=0;r<8;r=r+1)
                     row_fault[r]<=(|poison[(r/2)*16+(r%2)*4+:4])||
-                        (|poison[(r/2)*16+8+(r%2)*4+:4])||address_fault[r/2]||arithmetic_fault;
+                        (|poison[(r/2)*16+8+(r%2)*4+:4])||address_fault[r/2]||
+                        (MARGIN==0&&arithmetic_fault)||(MARGIN!=0&&group_fault[r/2]);
                 for(r=0;r<4;r=r+1)
                     quadrant_fault[r]<=row_fault[(r/2)*4+r%2]||row_fault[(r/2)*4+r%2+2];
             end
         // Put the OR inside each kept module. Identical relays must survive
         // synthesis/ABC; a single merged OR/register restores the long veto.
+        wire [3:0] group_copy;   // MARGIN level 4: one per group
+        wire [3:0] write_relay;  // MARGIN level 5: central copies for the write vetoes / status
+        if(MARGIN) begin : g_tree6
+            reg [3:0] group_any;
+            reg a1,a2;
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n) begin group_any<=0; a1<=0; a2<=0; end
+                else begin
+                    for(r=0;r<4;r=r+1) group_any[r]<=row_fault[2*r]||row_fault[2*r+1];
+                    a1<=arithmetic_fault; a2<=a1;
+                end
+            wire global_q,write_c4;
+            ot_hdc_v41_fh_fault_relay u_global(.clk(clk),.rst_n(rst_n),.d(group_any|{3'b0,a2}),.q(global_q));
+            for(p=0;p<4;p=p+1) begin : g_group_copy
+                ot_hdc_v41_fh_fault_copy u_gc(.clk(clk),.rst_n(rst_n),.d(global_q),.q(group_copy[p]));
+            end
+            ot_hdc_v41_fh_fault_copy u_wc4(.clk(clk),.rst_n(rst_n),.d(global_q),.q(write_c4));
+            for(p=0;p<4;p=p+1) begin : g_write_relay
+                ot_hdc_v41_fh_fault_copy u_wr(.clk(clk),.rst_n(rst_n),.d(write_c4),.q(write_relay[p]));
+            end
+        end else begin : g_tree4
+            assign group_copy=0; assign write_relay=0;
+        end
         for(p=0;p<16;p=p+1) begin : g_relay
             ot_hdc_v41_fh_fault_relay u_relay
-                (.clk(clk),.rst_n(rst_n),.d(quadrant_fault),.q(relay_fault[p]));
+                (.clk(clk),.rst_n(rst_n),.d(MARGIN?{4{group_copy[p/4]}}:quadrant_fault),.q(relay_fault[p]));
         end
+        wire [63:0] lane_v0; wire [3:0] write_v0; wire fault_v0;
         for(l=0;l<64;l=l+1) begin : g_lane
             ot_hdc_v41_fh_fault_copy u_copy
-                (.clk(clk),.rst_n(rst_n),.d(relay_fault[l/4]),.q(lane_veto[l]));
+                (.clk(clk),.rst_n(rst_n),.d(relay_fault[l/4]),.q(lane_v0[l]));
         end
         for(g=0;g<4;g=g+1) begin : g_write
             ot_hdc_v41_fh_fault_copy u_copy
-                (.clk(clk),.rst_n(rst_n),.d(relay_fault[4*g]),.q(write_veto[g]));
+                (.clk(clk),.rst_n(rst_n),.d(MARGIN?write_relay[g]:relay_fault[4*g]),.q(write_v0[g]));
         end
         ot_hdc_v41_fh_fault_copy u_status
-            (.clk(clk),.rst_n(rst_n),.d(relay_fault[0]),.q(fault));
-        assign retired_v=valid_pipe[3];
-        assign retired_packet=packet_pipe[3];
+            (.clk(clk),.rst_n(rst_n),.d(MARGIN?write_relay[0]:relay_fault[0]),.q(fault_v0));
+        if(SAFE) begin : g_safe_copy
+            for(l=0;l<64;l=l+1) begin : g_lane2
+                ot_hdc_v41_fh_fault_copy u_copy2(.clk(clk),.rst_n(rst_n),.d(lane_v0[l]),.q(lane_veto[l]));
+            end
+            for(g=0;g<4;g=g+1) begin : g_write2
+                ot_hdc_v41_fh_fault_copy u_copy2(.clk(clk),.rst_n(rst_n),.d(write_v0[g]),.q(write_veto[g]));
+            end
+            ot_hdc_v41_fh_fault_copy u_status2(.clk(clk),.rst_n(rst_n),.d(fault_v0),.q(fault));
+        end else begin : g_direct_copy
+            assign lane_veto=lane_v0; assign write_veto=write_v0; assign fault=fault_v0;
+        end
+        assign lane_veto_pre=lane_v0;
+        assign retired_v=valid_pipe[DEPTH-1];
+        assign retired_packet=packet_pipe[DEPTH-1];
+        assign retired_v_nx=valid_pipe[DEPTH-2];
+        assign retired_packet_nx=packet_pipe[DEPTH-2];
+        assign write_veto_nx=SAFE?write_v0:write_veto;
         assign busy=|valid_pipe;
     end endgenerate
 endmodule

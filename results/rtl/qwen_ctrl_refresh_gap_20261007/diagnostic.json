@@ -1,0 +1,23 @@
+{
+  "status": "CONFIRMED_REFRESH_HANDOFF_GAP_NOT_ADOPTION_PASS",
+  "tests": [
+    {
+      "inject_guard_trip_bit": 0,
+      "returncode": 0,
+      "expected_refresh_contract_met": true
+    },
+    {
+      "inject_guard_trip_bit": 1,
+      "returncode": 0,
+      "expected_refresh_contract_met": false
+    }
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_ctrl_pc_protected.sv": "c73bd887cac131c11b54bf2a36275a25f00745841efa67d6cece2092aebfcb62",
+    "rtl/physical/ot_qwen_ctrl_pc_shift.sv": "0c3f8a28bee079da5a53be8aa4659be9e15db867a4c59bf980e27afe90ade165",
+    "rtl/physical/ot_hbm_r14_stream_pc_shift.sv": "be7c10a7fb5a723d873cef8f41ef5c474eb476efb4096c9e31470f4c86bcd3c5",
+    "/tmp/qwen-control-refresh-20261007/tb_qwen_ctrl_refresh_fault.sv": "ff983897301731370a72f0953b25bf3150fff45e28982f6fb4a95901f98b0671"
+  },
+  "epoch": "tick0 is firstactivecontrolleredge, matchingstream_ack hcyc epoch;121875ps firstREFdeadlinePC0",
+  "finding": "Single guardrail upset justbefore firstREF receivingedge suppresses it; baselineacceptsoneREF bydeadline, upsetacceptsnone. Externalrefreshowner missing."
+}

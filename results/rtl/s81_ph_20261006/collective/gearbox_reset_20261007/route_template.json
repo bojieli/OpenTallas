@@ -1,0 +1,79 @@
+{
+  "name": "s81ph-dsfd_coll_lane_e-SOURCEPIN-resettrim",
+  "block": "dsfd_coll_lane_e",
+  "owner": "Codex:s81_tiles",
+  "purpose": "Partitioned TX plus exact RX payload reset-load removal; all control and visible output resets preserved, no extra latency, same365.04x340.2 outline and60/25uncertainty.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-epyc2"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "source": {
+    "branch": "main",
+    "commit": "SOURCEPIN",
+    "extra_paths": [
+      "tools/s81_collective_gearbox_reset_model.py",
+      "tools/s81_collective_gearbox_reset_gate.py",
+      "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv",
+      "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv",
+      "rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv",
+      "results/rtl/s81_ph_20261006/collective/gearbox_reset_20261007",
+      "physical/s81_ph_views/ports/contract_gearbox_pipeline",
+      "physical/s81_ph_views/collective/composition_gearbox_pipeline.json"
+    ]
+  },
+  "stages": {
+    "calibrate": {
+      "cmd": "HM=0.010 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_gearbox_pipeline dsfd_coll_lane_e rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+      "threads": 16,
+      "peak_ram_gb": 48
+    },
+    "route": {
+      "cmd": "HM=0.010 SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_gearbox_pipeline dsfd_coll_lane_e rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv $CL_STOP_AFTER",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+      "logs": [
+        "{RUN}/routes/{NAME}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "lef_check_MATCH",
+        "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+      }
+    ],
+    "post_sdc": [
+      "physical/s81_ph_views/common/signoff_unc60.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/s81_ph_views/closed_candidates/dsfd_coll_lane_e_resettrim"
+    }
+  ],
+  "cycles_added": 4,
+  "merge_target": "main",
+  "no_bench_reason": "Full-width delayed-stream equivalence and missing-marker-initialization negative gate; original clock/reset checks retained. Candidate until actual physical signoff.",
+  "budget": {
+    "enabled": false,
+    "reason": "S81-PH tile sheet is grade 'target' (no calibration: 467-900 ps); the tiles' measured insertion is far lower (svc_pc 145 ps, ctrl_ctr 61 ps at calibrate), so the sheet SDC would put vclk ~300+ ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+  },
+  "route_hold_margin_ns": 0.01,
+  "candidate_cycles_added": 2,
+  "inherited_cycles_note": "Existing lane skids2 plus gearboxTX2. RX unchanged; link roundtrip +4."
+}

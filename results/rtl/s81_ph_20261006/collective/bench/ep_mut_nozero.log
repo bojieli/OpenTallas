@@ -1,0 +1,22 @@
+MISMATCH out dir 1 cyc 28 v 0/1
+MISMATCH out dir 0 cyc 29 v 0/1
+MISMATCH out dir 1 cyc 29 v 0/1
+MISMATCH out dir 0 cyc 30 v 0/1
+MISMATCH out dir 0 cyc 31 v 0/1
+MISMATCH out dir 1 cyc 31 v 0/1
+MISMATCH out dir 0 cyc 32 v 0/1
+MISMATCH out dir 1 cyc 32 v 0/1
+MISMATCH out dir 0 cyc 33 v 0/1
+MISMATCH counters dir 0 tx 44544/24598 rx 0/1500 nak 1/465 rep 696/465
+MISMATCH counters dir 1 tx 44543/24164 rx 0/1500 nak 1/460 rep 696/461
+MISMATCH crc sum
+INCOMPLETE got 0 0 of 1500
+FAULT ref 00 dut 11
+STATS cyc 80001 flits 0/0 tx 24598 24164 retx 23098 22664 replays 465 461 naks 465 460 crc_err 5712
+TB_S81PH_LINK_EP FAIL errs 110573
+- /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/src/rtl/dsrom_sys/s81_ph/test/tb_s81ph_link_ep.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 80us; walltime 0.516 s; speed 155.767 us/s
+- Verilator: cpu 0.514 s on 1 threads; alloced 1018 MB
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.52
+	Maximum resident set size (kbytes): 9288

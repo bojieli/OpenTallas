@@ -734,6 +734,16 @@
    "shoreline_w": 20.01,
    "spine_slab": 20.95,
    "note": "r18: row engines removed (strip = KV concentrator), CDC column, slab PG region; all interior rail-to-rail <= 35 mV"
+  },
+  "r18i_shoreline_w": 20.01,
+  "r21": {
+   "tile_field": 19.27,
+   "spine_hub": 23.61,
+   "shoreline_w": 19.86,
+   "spine_slab": 19.27,
+   "note": "r21 (relays at 430.56 um, slab M8 pins): every judged window (the same rectangles as r17-r19) evaluated inside a 200 um guard band of continuing grid and bumps (--ir-guard 200); worst rail-to-rail over the WHOLE judged window <= 23.61 mV (budget 35): the r19 window-edge overruns (36.9-83.2 mV) were boundary artefacts and sit in the guard band now (38 mV max there)",
+   "budget_mv": 35.0,
+   "pass": true
   }
  },
  "r18_ir_tile_field": {
@@ -1213,5 +1223,1136 @@
   "rail_to_rail_interior_mv": 20.95,
   "pass_interior": true,
   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)"
+ },
+ "r18i_ir_shoreline_w": {
+  "case": "c",
+  "exit": 0,
+  "wall": "3:10.29",
+  "peak_rss_mb": 9146,
+  "meta": {
+   "case": "c",
+   "window": "shoreline_w",
+   "window_um": [
+    20.304,
+    7810.56,
+    2636.064,
+    10411.96
+   ],
+   "size_um": [
+    2615.76,
+    2601.4
+   ],
+   "cell_um": 20.0,
+   "loads": 16900,
+   "power_w_by_region": {
+    "phy": 0.7862,
+    "ctrl": 2.4486,
+    "inst:qfd_cdc": 0.852,
+    "strip": 1.995,
+    "tile_field": 2.7518,
+    "corridor": 0.5292,
+    "channel": 0.1042
+   },
+   "power_w": 9.467,
+   "cells_without_both_rails": 0,
+   "peak": true,
+   "cov_scale": 1.0,
+   "bump_pad": false,
+   "align": true,
+   "signal_bumps_phy": false,
+   "bump_sites": 1681,
+   "stripes": {
+    "M9": 1771,
+    "M8": 3432,
+    "vias": 2216786,
+    "width_um": 0.48,
+    "pitch_by_region": {
+     "tile_field": 9.0914,
+     "corridor": 9.0914,
+     "channel": 9.0914,
+     "hub": 12.728,
+     "strip": 1.8183,
+     "ctrl": 1.8183,
+     "io": 12.728,
+     "slab": 9.0914
+    }
+   },
+   "bumps": {
+    "array_pitch_um": 45.0,
+    "power_fraction": 0.25,
+    "vdd_pitch_um": 63.64,
+    "size_um": 20.0,
+    "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)"
+   },
+   "vdd_v": 0.7,
+   "budget_mv": 35.0,
+   "b3r2": {
+    "producer": "/home/ubuntu/wt-qwen-die/tools/qwen_rom_fulldie_b3r2.py",
+    "band": false,
+    "die": {
+     "w": 24650.784,
+     "h": 32801.76,
+     "mm2": 808.589,
+     "budget_mm2": 858,
+     "margin_mm2": 49.411
+    }
+   }
+  },
+  "worst_mv": {
+   "VDD": 9.63,
+   "VSS": 24.4
+  },
+  "avg_mv": {
+   "VDD": 1.79,
+   "VSS": 1.95
+  },
+  "rail_to_rail_worst_mv": 34.03,
+  "budget_mv": 35.0,
+  "pass": true,
+  "worst_interior_mv": {
+   "VDD": 9.63,
+   "VSS": 10.38
+  },
+  "worst_mv_by_region": {
+   "phy": {
+    "VDD": 1.89,
+    "VDD_interior": 1.89,
+    "VSS": 7.24,
+    "VSS_interior": 2.06
+   },
+   "ctrl": {
+    "VDD": 8.11,
+    "VDD_interior": 8.11,
+    "VSS": 18.74,
+    "VSS_interior": 8.8
+   },
+   "inst:qfd_cdc": {
+    "VDD": 8.09,
+    "VDD_interior": 8.09,
+    "VSS": 18.67,
+    "VSS_interior": 8.29
+   },
+   "strip": {
+    "VDD": 9.37,
+    "VDD_interior": 9.37,
+    "VSS": 19.12,
+    "VSS_interior": 8.74
+   },
+   "tile_field": {
+    "VDD": 9.63,
+    "VDD_interior": 9.63,
+    "VSS": 24.37,
+    "VSS_interior": 10.38
+   },
+   "corridor": {
+    "VDD": 9.62,
+    "VDD_interior": 9.62,
+    "VSS": 24.36,
+    "VSS_interior": 10.21
+   },
+   "channel": {
+    "VDD": 9.61,
+    "VDD_interior": 9.61,
+    "VSS": 9.56,
+    "VSS_interior": 9.56
+   }
+  },
+  "rail_to_rail_interior_mv": 20.01,
+  "pass_interior": true,
+  "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)"
+ },
+ "r19_ir_tile_field": {
+  "case": "c",
+  "exit": 0,
+  "wall": "0:25.12",
+  "peak_rss_mb": 1651,
+  "meta": {
+   "case": "c",
+   "window": "tile_field",
+   "window_um": [
+    3938.976,
+    2604.96,
+    6496.416,
+    5188.32
+   ],
+   "size_um": [
+    2557.44,
+    2583.36
+   ],
+   "cell_um": 20.0,
+   "loads": 16383,
+   "power_w_by_region": {
+    "tile_field": 5.6347,
+    "corridor": 1.2461
+   },
+   "power_w": 6.8809,
+   "cells_without_both_rails": 0,
+   "peak": true,
+   "cov_scale": 1.0,
+   "bump_pad": false,
+   "align": true,
+   "signal_bumps_phy": false,
+   "bump_sites": 1640,
+   "stripes": {
+    "M9": 562,
+    "M8": 568,
+    "vias": 159608,
+    "width_um": 0.48,
+    "pitch_by_region": {
+     "tile_field": 9.0914,
+     "corridor": 9.0914,
+     "channel": 9.0914,
+     "hub": 12.728,
+     "strip": 1.8183,
+     "ctrl": 1.8183,
+     "io": 12.728,
+     "slab": 9.0914
+    }
+   },
+   "bumps": {
+    "array_pitch_um": 45.0,
+    "power_fraction": 0.25,
+    "vdd_pitch_um": 63.64,
+    "size_um": 20.0,
+    "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)"
+   },
+   "vdd_v": 0.7,
+   "budget_mv": 35.0,
+   "b3r2": {
+    "producer": "/home/ubuntu/wt-qwen-die/tools/qwen_rom_fulldie_b3r2.py",
+    "band": false,
+    "die": {
+     "w": 25037.856,
+     "h": 32801.76,
+     "mm2": 821.286,
+     "budget_mm2": 858,
+     "margin_mm2": 36.714
+    }
+   }
+  },
+  "worst_mv": {
+   "VDD": 9.63,
+   "VSS": 38.0
+  },
+  "avg_mv": {
+   "VDD": 4.46,
+   "VSS": 4.95
+  },
+  "rail_to_rail_worst_mv": 47.63,
+  "budget_mv": 35.0,
+  "pass": false,
+  "worst_interior_mv": {
+   "VDD": 9.63,
+   "VSS": 11.23
+  },
+  "worst_mv_by_region": {
+   "tile_field": {
+    "VDD": 9.63,
+    "VDD_interior": 9.63,
+    "VSS": 38.01,
+    "VSS_interior": 11.23
+   },
+   "corridor": {
+    "VDD": 9.63,
+    "VDD_interior": 9.63,
+    "VSS": 24.36,
+    "VSS_interior": 10.21
+   }
+  },
+  "rail_to_rail_interior_mv": 20.86,
+  "pass_interior": true,
+  "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)"
+ },
+ "r19_ir_spine_hub": {
+  "case": "c",
+  "exit": 0,
+  "wall": "0:25.54",
+  "peak_rss_mb": 1669,
+  "meta": {
+   "case": "c",
+   "window": "spine_hub",
+   "window_um": [
+    10971.936,
+    14318.64,
+    14065.92,
+    16918.96
+   ],
+   "size_um": [
+    3093.984,
+    2600.32
+   ],
+   "cell_um": 20.0,
+   "loads": 19768,
+   "power_w_by_region": {
+    "tile_field": 2.8392,
+    "corridor": 0.6006,
+    "hub": 1.1177,
+    "channel": 0.6842,
+    "slab": 0.6954
+   },
+   "power_w": 5.9371,
+   "cells_without_both_rails": 252,
+   "peak": true,
+   "cov_scale": 1.0,
+   "bump_pad": false,
+   "align": true,
+   "signal_bumps_phy": false,
+   "bump_sites": 2009,
+   "stripes": {
+    "M9": 875,
+    "M8": 2011,
+    "vias": 158785,
+    "width_um": 0.48,
+    "pitch_by_region": {
+     "tile_field": 9.0914,
+     "corridor": 9.0914,
+     "channel": 9.0914,
+     "hub": 12.728,
+     "strip": 1.8183,
+     "ctrl": 1.8183,
+     "io": 12.728,
+     "slab": 9.0914
+    }
+   },
+   "bumps": {
+    "array_pitch_um": 45.0,
+    "power_fraction": 0.25,
+    "vdd_pitch_um": 63.64,
+    "size_um": 20.0,
+    "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)"
+   },
+   "vdd_v": 0.7,
+   "budget_mv": 35.0,
+   "b3r2": {
+    "producer": "/home/ubuntu/wt-qwen-die/tools/qwen_rom_fulldie_b3r2.py",
+    "band": false,
+    "die": {
+     "w": 25037.856,
+     "h": 32801.76,
+     "mm2": 821.286,
+     "budget_mm2": 858,
+     "margin_mm2": 36.714
+    }
+   }
+  },
+  "worst_mv": {
+   "VDD": 11.5,
+   "VSS": 38.0
+  },
+  "avg_mv": {
+   "VDD": 4.73,
+   "VSS": 5.41
+  },
+  "rail_to_rail_worst_mv": 49.5,
+  "budget_mv": 35.0,
+  "pass": false,
+  "worst_interior_mv": {
+   "VDD": 11.53,
+   "VSS": 14.43
+  },
+  "worst_mv_by_region": {
+   "tile_field": {
+    "VDD": 9.63,
+    "VDD_interior": 9.63,
+    "VSS": 38.01,
+    "VSS_interior": 11.23
+   },
+   "corridor": {
+    "VDD": 10.68,
+    "VDD_interior": 10.68,
+    "VSS": 24.33,
+    "VSS_interior": 10.32
+   },
+   "hub": {
+    "VDD": 11.53,
+    "VDD_interior": 11.53,
+    "VSS": 22.29,
+    "VSS_interior": 14.43
+   },
+   "channel": {
+    "VDD": 9.78,
+    "VDD_interior": 9.78,
+    "VSS": 25.57,
+    "VSS_interior": 13.48
+   },
+   "slab": {
+    "VDD": 6.22,
+    "VDD_interior": 6.22,
+    "VSS": 11.12,
+    "VSS_interior": 11.12
+   }
+  },
+  "rail_to_rail_interior_mv": 25.96,
+  "pass_interior": true,
+  "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)"
+ },
+ "r19_ir_shoreline_w": {
+  "case": "c",
+  "exit": 0,
+  "wall": "4:22.78",
+  "peak_rss_mb": 9180,
+  "meta": {
+   "case": "c",
+   "window": "shoreline_w",
+   "window_um": [
+    20.304,
+    7810.56,
+    2660.256,
+    10411.96
+   ],
+   "size_um": [
+    2639.952,
+    2601.4
+   ],
+   "cell_um": 20.0,
+   "loads": 17030,
+   "power_w_by_region": {
+    "phy": 0.7862,
+    "ctrl": 2.4486,
+    "inst:qfd_cdc": 0.852,
+    "strip": 1.995,
+    "tile_field": 2.7518,
+    "corridor": 0.5821,
+    "channel": 0.1058
+   },
+   "power_w": 9.5216,
+   "cells_without_both_rails": 0,
+   "peak": true,
+   "cov_scale": 1.0,
+   "bump_pad": false,
+   "align": true,
+   "signal_bumps_phy": false,
+   "bump_sites": 1681,
+   "stripes": {
+    "M9": 1776,
+    "M8": 3432,
+    "vias": 2218216,
+    "width_um": 0.48,
+    "pitch_by_region": {
+     "tile_field": 9.0914,
+     "corridor": 9.0914,
+     "channel": 9.0914,
+     "hub": 12.728,
+     "strip": 1.8183,
+     "ctrl": 1.8183,
+     "io": 12.728,
+     "slab": 9.0914
+    }
+   },
+   "bumps": {
+    "array_pitch_um": 45.0,
+    "power_fraction": 0.25,
+    "vdd_pitch_um": 63.64,
+    "size_um": 20.0,
+    "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)"
+   },
+   "vdd_v": 0.7,
+   "budget_mv": 35.0,
+   "b3r2": {
+    "producer": "/home/ubuntu/wt-qwen-die/tools/qwen_rom_fulldie_b3r2.py",
+    "band": false,
+    "die": {
+     "w": 25037.856,
+     "h": 32801.76,
+     "mm2": 821.286,
+     "budget_mm2": 858,
+     "margin_mm2": 36.714
+    }
+   }
+  },
+  "worst_mv": {
+   "VDD": 12.5,
+   "VSS": 24.4
+  },
+  "avg_mv": {
+   "VDD": 1.83,
+   "VSS": 1.95
+  },
+  "rail_to_rail_worst_mv": 36.9,
+  "budget_mv": 35.0,
+  "pass": false,
+  "worst_interior_mv": {
+   "VDD": 9.63,
+   "VSS": 10.38
+  },
+  "worst_mv_by_region": {
+   "phy": {
+    "VDD": 1.89,
+    "VDD_interior": 1.89,
+    "VSS": 7.24,
+    "VSS_interior": 2.06
+   },
+   "ctrl": {
+    "VDD": 8.11,
+    "VDD_interior": 8.11,
+    "VSS": 18.74,
+    "VSS_interior": 8.8
+   },
+   "inst:qfd_cdc": {
+    "VDD": 8.09,
+    "VDD_interior": 8.09,
+    "VSS": 18.67,
+    "VSS_interior": 8.29
+   },
+   "strip": {
+    "VDD": 9.37,
+    "VDD_interior": 9.37,
+    "VSS": 19.12,
+    "VSS_interior": 8.74
+   },
+   "tile_field": {
+    "VDD": 9.63,
+    "VDD_interior": 9.63,
+    "VSS": 24.37,
+    "VSS_interior": 10.38
+   },
+   "corridor": {
+    "VDD": 12.47,
+    "VDD_interior": 9.62,
+    "VSS": 24.36,
+    "VSS_interior": 10.21
+   },
+   "channel": {
+    "VDD": 12.45,
+    "VDD_interior": 9.61,
+    "VSS": 9.56,
+    "VSS_interior": 9.56
+   }
+  },
+  "rail_to_rail_interior_mv": 20.01,
+  "pass_interior": true,
+  "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)"
+ },
+ "r19_ir_spine_slab": {
+  "case": "c",
+  "exit": 0,
+  "wall": "0:30.75",
+  "peak_rss_mb": 1963,
+  "meta": {
+   "case": "c",
+   "window": "spine_slab",
+   "window_um": [
+    10971.936,
+    6471.36,
+    14065.92,
+    9071.68
+   ],
+   "size_um": [
+    3093.984,
+    2600.32
+   ],
+   "cell_um": 20.0,
+   "loads": 20020,
+   "power_w_by_region": {
+    "tile_field": 2.8392,
+    "corridor": 0.6006,
+    "slab": 2.6202,
+    "channel": 0.7098
+   },
+   "power_w": 6.7698,
+   "cells_without_both_rails": 0,
+   "peak": true,
+   "cov_scale": 1.0,
+   "bump_pad": false,
+   "align": true,
+   "signal_bumps_phy": false,
+   "bump_sites": 2009,
+   "stripes": {
+    "M9": 924,
+    "M8": 579,
+    "vias": 194041,
+    "width_um": 0.48,
+    "pitch_by_region": {
+     "tile_field": 9.0914,
+     "corridor": 9.0914,
+     "channel": 9.0914,
+     "hub": 12.728,
+     "strip": 1.8183,
+     "ctrl": 1.8183,
+     "io": 12.728,
+     "slab": 9.0914
+    }
+   },
+   "bumps": {
+    "array_pitch_um": 45.0,
+    "power_fraction": 0.25,
+    "vdd_pitch_um": 63.64,
+    "size_um": 20.0,
+    "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)"
+   },
+   "vdd_v": 0.7,
+   "budget_mv": 35.0,
+   "b3r2": {
+    "producer": "/home/ubuntu/wt-qwen-die/tools/qwen_rom_fulldie_b3r2.py",
+    "band": false,
+    "die": {
+     "w": 25037.856,
+     "h": 32801.76,
+     "mm2": 821.286,
+     "budget_mm2": 858,
+     "margin_mm2": 36.714
+    }
+   }
+  },
+  "worst_mv": {
+   "VDD": 17.6,
+   "VSS": 65.6
+  },
+  "avg_mv": {
+   "VDD": 3.6,
+   "VSS": 4.15
+  },
+  "rail_to_rail_worst_mv": 83.2,
+  "budget_mv": 35.0,
+  "pass": false,
+  "worst_interior_mv": {
+   "VDD": 9.63,
+   "VSS": 11.23
+  },
+  "worst_mv_by_region": {
+   "tile_field": {
+    "VDD": 9.63,
+    "VDD_interior": 9.63,
+    "VSS": 38.01,
+    "VSS_interior": 11.23
+   },
+   "corridor": {
+    "VDD": 9.51,
+    "VDD_interior": 9.51,
+    "VSS": 24.33,
+    "VSS_interior": 10.32
+   },
+   "slab": {
+    "VDD": 17.61,
+    "VDD_interior": 6.64,
+    "VSS": 65.57,
+    "VSS_interior": 7.48
+   },
+   "channel": {
+    "VDD": 9.59,
+    "VDD_interior": 9.59,
+    "VSS": 24.06,
+    "VSS_interior": 10.13
+   }
+  },
+  "rail_to_rail_interior_mv": 20.86,
+  "pass_interior": true,
+  "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)"
+ },
+ "r21_ir_tile_field": {
+  "case": "c",
+  "exit": 0,
+  "wall": "0:22.53",
+  "peak_rss_mb": 2130,
+  "meta": {
+   "case": "c",
+   "window": "tile_field",
+   "window_um": [
+    3738.96,
+    2404.08,
+    6696.416,
+    5388.32
+   ],
+   "size_um": [
+    2957.456,
+    2984.24
+   ],
+   "cell_um": 20.0,
+   "loads": 21903,
+   "guard_um": 200.0,
+   "judged_um": [
+    3938.976,
+    2604.96,
+    6496.416,
+    5188.32
+   ],
+   "power_w_by_region": {
+    "tile_field": 7.5096,
+    "corridor": 1.6897
+   },
+   "power_w": 9.1993,
+   "cells_without_both_rails": 0,
+   "peak": true,
+   "cov_scale": 1.0,
+   "bump_pad": false,
+   "align": true,
+   "signal_bumps_phy": false,
+   "bump_sites": 2162,
+   "stripes": {
+    "M9": 650,
+    "M8": 656,
+    "vias": 213200,
+    "width_um": 0.48,
+    "pitch_by_region": {
+     "tile_field": 9.0914,
+     "corridor": 9.0914,
+     "channel": 9.0914,
+     "hub": 12.728,
+     "strip": 1.8183,
+     "ctrl": 1.8183,
+     "io": 12.728,
+     "slab": 9.0914
+    }
+   },
+   "bumps": {
+    "array_pitch_um": 45.0,
+    "power_fraction": 0.25,
+    "vdd_pitch_um": 63.64,
+    "size_um": 20.0,
+    "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)"
+   },
+   "vdd_v": 0.7,
+   "budget_mv": 35.0,
+   "b3r2": {
+    "producer": "/home/ubuntu/wt-qwen-die/tools/qwen_rom_fulldie_b3r2.py",
+    "band": true,
+    "die": {
+     "w": 25037.856,
+     "h": 32801.76,
+     "mm2": 821.286,
+     "budget_mm2": 858,
+     "margin_mm2": 36.714
+    }
+   }
+  },
+  "worst_mv": {
+   "VDD": 13.2,
+   "VSS": 38.0
+  },
+  "avg_mv": {
+   "VDD": 4.55,
+   "VSS": 4.98
+  },
+  "rail_to_rail_worst_mv": 51.2,
+  "budget_mv": 35.0,
+  "pass": false,
+  "worst_interior_mv": {
+   "VDD": 9.62,
+   "VSS": 9.65
+  },
+  "worst_mv_by_region": {
+   "tile_field": {
+    "VDD": 13.18,
+    "VDD_interior": 9.62,
+    "VSS": 38.01,
+    "VSS_interior": 9.65
+   },
+   "corridor": {
+    "VDD": 9.63,
+    "VDD_interior": 9.62,
+    "VSS": 25.01,
+    "VSS_interior": 9.65
+   }
+  },
+  "rail_to_rail_interior_mv": 19.27,
+  "pass_interior": true,
+  "interior_rule": "the judged window inside a 200 um guard band of continuing grid and bumps"
+ },
+ "r21_ir_spine_hub": {
+  "case": "c",
+  "exit": 0,
+  "wall": "0:24.30",
+  "peak_rss_mb": 2179,
+  "meta": {
+   "case": "c",
+   "window": "spine_hub",
+   "window_um": [
+    10771.92,
+    14117.76,
+    14265.92,
+    17118.96
+   ],
+   "size_um": [
+    3494.0,
+    3001.2
+   ],
+   "cell_um": 20.0,
+   "loads": 25788,
+   "guard_um": 200.0,
+   "judged_um": [
+    10971.936,
+    14318.96,
+    14065.92,
+    16918.96
+   ],
+   "power_w_by_region": {
+    "tile_field": 4.284,
+    "corridor": 0.945,
+    "hub": 1.3518,
+    "channel": 0.785,
+    "inst:qfd_port_tiles_2_f3": 0.6954
+   },
+   "power_w": 8.0611,
+   "cells_without_both_rails": 312,
+   "peak": true,
+   "cov_scale": 1.0,
+   "bump_pad": false,
+   "align": true,
+   "signal_bumps_phy": false,
+   "bump_sites": 2585,
+   "stripes": {
+    "M9": 965,
+    "M8": 2404,
+    "vias": 210636,
+    "width_um": 0.48,
+    "pitch_by_region": {
+     "tile_field": 9.0914,
+     "corridor": 9.0914,
+     "channel": 9.0914,
+     "hub": 12.728,
+     "strip": 1.8183,
+     "ctrl": 1.8183,
+     "io": 12.728,
+     "slab": 9.0914
+    }
+   },
+   "bumps": {
+    "array_pitch_um": 45.0,
+    "power_fraction": 0.25,
+    "vdd_pitch_um": 63.64,
+    "size_um": 20.0,
+    "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)"
+   },
+   "vdd_v": 0.7,
+   "budget_mv": 35.0,
+   "b3r2": {
+    "producer": "/home/ubuntu/wt-qwen-die/tools/qwen_rom_fulldie_b3r2.py",
+    "band": true,
+    "die": {
+     "w": 25037.856,
+     "h": 32801.76,
+     "mm2": 821.286,
+     "budget_mm2": 858,
+     "margin_mm2": 36.714
+    }
+   }
+  },
+  "worst_mv": {
+   "VDD": 14.5,
+   "VSS": 38.0
+  },
+  "avg_mv": {
+   "VDD": 4.85,
+   "VSS": 5.22
+  },
+  "rail_to_rail_worst_mv": 52.5,
+  "budget_mv": 35.0,
+  "pass": false,
+  "worst_interior_mv": {
+   "VDD": 13.58,
+   "VSS": 10.03
+  },
+  "worst_mv_by_region": {
+   "tile_field": {
+    "VDD": 13.46,
+    "VDD_interior": 12.3,
+    "VSS": 38.01,
+    "VSS_interior": 9.65
+   },
+   "corridor": {
+    "VDD": 14.5,
+    "VDD_interior": 13.39,
+    "VSS": 25.01,
+    "VSS_interior": 9.52
+   },
+   "hub": {
+    "VDD": 13.58,
+    "VDD_interior": 13.58,
+    "VSS": 18.18,
+    "VSS_interior": 10.03
+   },
+   "channel": {
+    "VDD": 10.52,
+    "VDD_interior": 9.48,
+    "VSS": 23.99,
+    "VSS_interior": 9.64
+   },
+   "inst:qfd_port_tiles_2_f3": {
+    "VDD": 6.31,
+    "VDD_interior": 6.31,
+    "VSS": 8.77,
+    "VSS_interior": 8.77
+   }
+  },
+  "rail_to_rail_interior_mv": 23.61,
+  "pass_interior": true,
+  "interior_rule": "the judged window inside a 200 um guard band of continuing grid and bumps"
+ },
+ "r21_ir_shoreline_w": {
+  "case": "c",
+  "exit": 0,
+  "wall": "4:22.19",
+  "peak_rss_mb": 10784,
+  "meta": {
+   "case": "c",
+   "window": "shoreline_w",
+   "window_um": [
+    0.0,
+    7611.84,
+    2860.256,
+    10611.96
+   ],
+   "size_um": [
+    2860.256,
+    3000.12
+   ],
+   "cell_um": 20.0,
+   "loads": 21450,
+   "guard_um": 200.0,
+   "judged_um": [
+    20.304,
+    7811.96,
+    2660.256,
+    10411.96
+   ],
+   "power_w_by_region": {
+    "tile_field": 3.8648,
+    "phy": 0.9072,
+    "ctrl": 2.8253,
+    "strip": 3.2962,
+    "corridor": 0.7358,
+    "channel": 0.1243
+   },
+   "power_w": 11.7536,
+   "cells_without_both_rails": 0,
+   "peak": true,
+   "cov_scale": 1.0,
+   "bump_pad": false,
+   "align": true,
+   "signal_bumps_phy": false,
+   "bump_sites": 2115,
+   "stripes": {
+    "M9": 1826,
+    "M8": 4617,
+    "vias": 2576387,
+    "width_um": 0.48,
+    "pitch_by_region": {
+     "tile_field": 9.0914,
+     "corridor": 9.0914,
+     "channel": 9.0914,
+     "hub": 12.728,
+     "strip": 1.8183,
+     "ctrl": 1.8183,
+     "io": 12.728,
+     "slab": 9.0914
+    }
+   },
+   "bumps": {
+    "array_pitch_um": 45.0,
+    "power_fraction": 0.25,
+    "vdd_pitch_um": 63.64,
+    "size_um": 20.0,
+    "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)"
+   },
+   "vdd_v": 0.7,
+   "budget_mv": 35.0,
+   "b3r2": {
+    "producer": "/home/ubuntu/wt-qwen-die/tools/qwen_rom_fulldie_b3r2.py",
+    "band": true,
+    "die": {
+     "w": 25037.856,
+     "h": 32801.76,
+     "mm2": 821.286,
+     "budget_mm2": 858,
+     "margin_mm2": 36.714
+    }
+   }
+  },
+  "worst_mv": {
+   "VDD": 10.7,
+   "VSS": 35.0
+  },
+  "avg_mv": {
+   "VDD": 1.83,
+   "VSS": 2.06
+  },
+  "rail_to_rail_worst_mv": 45.7,
+  "budget_mv": 35.0,
+  "pass": false,
+  "worst_interior_mv": {
+   "VDD": 9.62,
+   "VSS": 10.24
+  },
+  "worst_mv_by_region": {
+   "tile_field": {
+    "VDD": 10.66,
+    "VDD_interior": 9.62,
+    "VSS": 35.0,
+    "VSS_interior": 9.65
+   },
+   "phy": {
+    "VDD": 2.53,
+    "VDD_interior": 1.72,
+    "VSS": 7.19,
+    "VSS_interior": 2.41
+   },
+   "ctrl": {
+    "VDD": 9.63,
+    "VDD_interior": 8.1,
+    "VSS": 18.75,
+    "VSS_interior": 8.32
+   },
+   "strip": {
+    "VDD": 9.74,
+    "VDD_interior": 8.18,
+    "VSS": 21.08,
+    "VSS_interior": 10.24
+   },
+   "corridor": {
+    "VDD": 10.66,
+    "VDD_interior": 9.62,
+    "VSS": 24.47,
+    "VSS_interior": 9.52
+   },
+   "channel": {
+    "VDD": 9.61,
+    "VDD_interior": 9.61,
+    "VSS": 21.0,
+    "VSS_interior": 9.63
+   }
+  },
+  "rail_to_rail_interior_mv": 19.86,
+  "pass_interior": true,
+  "interior_rule": "the judged window inside a 200 um guard band of continuing grid and bumps"
+ },
+ "r21_ir_spine_slab": {
+  "case": "c",
+  "exit": 0,
+  "wall": "0:27.80",
+  "peak_rss_mb": 2497,
+  "meta": {
+   "case": "c",
+   "window": "spine_slab",
+   "window_um": [
+    10771.92,
+    6270.48,
+    14265.92,
+    9271.68
+   ],
+   "size_um": [
+    3494.0,
+    3001.2
+   ],
+   "cell_um": 20.0,
+   "loads": 26073,
+   "guard_um": 200.0,
+   "judged_um": [
+    10971.936,
+    6471.68,
+    14065.92,
+    9071.68
+   ],
+   "power_w_by_region": {
+    "tile_field": 4.1412,
+    "corridor": 0.9135,
+    "inst:qfd_port_tiles_1": 1.4109,
+    "channel": 0.9891,
+    "inst:qfd_port_tiles_1_f1": 1.4109,
+    "hub": 0.0995,
+    "inst:qfd_port_tiles_2": 0.0302
+   },
+   "power_w": 8.9952,
+   "cells_without_both_rails": 27,
+   "peak": true,
+   "cov_scale": 1.0,
+   "bump_pad": false,
+   "align": true,
+   "signal_bumps_phy": false,
+   "bump_sites": 2585,
+   "stripes": {
+    "M9": 1184,
+    "M8": 794,
+    "vias": 250033,
+    "width_um": 0.48,
+    "pitch_by_region": {
+     "tile_field": 9.0914,
+     "corridor": 9.0914,
+     "channel": 9.0914,
+     "hub": 12.728,
+     "strip": 1.8183,
+     "ctrl": 1.8183,
+     "io": 12.728,
+     "slab": 9.0914
+    }
+   },
+   "bumps": {
+    "array_pitch_um": 45.0,
+    "power_fraction": 0.25,
+    "vdd_pitch_um": 63.64,
+    "size_um": 20.0,
+    "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)"
+   },
+   "vdd_v": 0.7,
+   "budget_mv": 35.0,
+   "b3r2": {
+    "producer": "/home/ubuntu/wt-qwen-die/tools/qwen_rom_fulldie_b3r2.py",
+    "band": true,
+    "die": {
+     "w": 25037.856,
+     "h": 32801.76,
+     "mm2": 821.286,
+     "budget_mm2": 858,
+     "margin_mm2": 36.714
+    }
+   }
+  },
+  "worst_mv": {
+   "VDD": 13.5,
+   "VSS": 38.0
+  },
+  "avg_mv": {
+   "VDD": 3.79,
+   "VSS": 4.2
+  },
+  "rail_to_rail_worst_mv": 51.5,
+  "budget_mv": 35.0,
+  "pass": false,
+  "worst_interior_mv": {
+   "VDD": 9.62,
+   "VSS": 9.65
+  },
+  "worst_mv_by_region": {
+   "tile_field": {
+    "VDD": 13.45,
+    "VDD_interior": 9.61,
+    "VSS": 38.01,
+    "VSS_interior": 9.65
+   },
+   "corridor": {
+    "VDD": 12.23,
+    "VDD_interior": 9.62,
+    "VSS": 25.01,
+    "VSS_interior": 9.52
+   },
+   "inst:qfd_port_tiles_1": {
+    "VDD": 6.31,
+    "VDD_interior": 6.31,
+    "VSS": 18.34,
+    "VSS_interior": 6.69
+   },
+   "channel": {
+    "VDD": 13.2,
+    "VDD_interior": 9.48,
+    "VSS": 24.07,
+    "VSS_interior": 9.64
+   },
+   "inst:qfd_port_tiles_1_f1": {
+    "VDD": 6.31,
+    "VDD_interior": 6.31,
+    "VSS": 18.34,
+    "VSS_interior": 6.7
+   },
+   "hub": {
+    "VDD": 11.58,
+    "VSS": 9.21
+   },
+   "inst:qfd_port_tiles_2": {
+    "VDD": 7.18,
+    "VSS": 9.86
+   }
+  },
+  "rail_to_rail_interior_mv": 19.27,
+  "pass_interior": true,
+  "interior_rule": "the judged window inside a 200 um guard band of continuing grid and bumps"
  }
 }

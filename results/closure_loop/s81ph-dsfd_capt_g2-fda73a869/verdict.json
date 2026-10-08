@@ -1,0 +1,184 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "s81ph-dsfd_capt_g2-fda73a869",
+ "block": "dsfd_capt_g2",
+ "owner": "Claude:s81-ph (tiles)",
+ "source_branch": "claude/s81-placeholders-20261006",
+ "source_commit": "fda73a8697b97860006aee8da97b6bf2d9e7a1a6",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_g2-fda73a869",
+ "acceptance": {
+  "ss_min_ps": 15.0,
+  "ff_min_ps": 15.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 60.22,
+  "ff_ps": 18.9,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_g2-fda73a869/routes/s81ph_dsfd_capt_g2_fda73a869/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_g2-fda73a869/routes/s81ph_dsfd_capt_g2_fda73a869/work/orfs/logs/asap7/opentallas_dsfd_capt_g2_asap7_s81ph_s81ph_dsfd_capt_g2_fda73a869/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_exact_cap_tiled": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=21 timeouts=0 mismatching_roots=0 RESULT PASS\nt1 over: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=27 timeouts=0 mismatching_roots=0 RESULT PASS\nt1 range: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=18 timeouts=0 mismatching_roots=0 RESULT PASS\nt1 rreq: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=41 timeouts=0 mismatching_roots=0 RESULT PASS\nCAPT_BENCH PASS\n"
+  },
+  "bench_neg_bf16_trunc": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "m1 mix: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=56 timeouts=0 mismatching_roots=128 RESULT FAIL\nCAPT_BENCH FAIL\n"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1784,
+    "mean": 313.3,
+    "min": 301.3,
+    "max": 323.6
+   },
+   "all": {
+    "n": 16031,
+    "mean": 311.7,
+    "min": 298.2,
+    "max": 323.6
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1784,
+    "mean": 198.9,
+    "min": 191.0,
+    "max": 206.1
+   },
+   "all": {
+    "n": 16031,
+    "mean": 198.0,
+    "min": 188.5,
+    "max": 206.5
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 313,
+   "CK_SS_ALL_MEAN": 312,
+   "CK_SS_MIN": 301,
+   "CK_SS_ALL_MIN": 298,
+   "CK_SS_MAX": 324,
+   "CK_SS_ALL_MAX": 324,
+   "CK_FF_MEAN": 199,
+   "CK_FF_ALL_MEAN": 198,
+   "CK_FF_MIN": 191,
+   "CK_FF_ALL_MIN": 188,
+   "CK_FF_MAX": 206,
+   "CK_FF_ALL_MAX": 206
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 9,
+ "status": "CLOSED",
+ "closed_at": "2026-10-07T03:12:39-07:00",
+ "job_spec": {
+  "name": "s81ph-dsfd_capt_g2-fda73a869",
+  "block": "dsfd_capt_g2",
+  "owner": "Claude:s81-ph (tiles)",
+  "purpose": "SAFE capture group tile g2b: structural fix of the 501831f78-safe SS -266 address/quota paths",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc3",
+   "ot-epyc2"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/s81-placeholders-20261006",
+   "commit": "fda73a8697b97860006aee8da97b6bf2d9e7a1a6"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_cap_tiled",
+     "cmd": "bash tools/s81_ph/capt_bench.sh {RUN}/bench t1 'mix mix11 mix12 mix13 trace err over range rreq' S81PH_CAP_SAFE",
+     "expect": "pass",
+     "threads": 12,
+     "peak_ram_gb": 24
+    },
+    {
+     "name": "neg_bf16_trunc",
+     "cmd": "bash tools/s81_ph/capt_bench.sh {RUN}/bench m1 'mix' S81PH_CAP_SAFE S81PH_MUTANT_BF16_TRUNC",
+     "expect": "fail",
+     "fail_regex": "CAPT_BENCH FAIL",
+     "threads": 8,
+     "peak_ram_gb": 16
+    }
+   ],
+   "calibrate": {
+    "cmd": "HM=0.035 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/common/ot_ratio_cdc_fifo.sv rtl/hdc/ot_hdc_prefix.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_capt_g2 rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc HM=0.035 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/common/ot_ratio_cdc_fifo.sv rtl/hdc/ot_hdc_prefix.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_capt_g2 rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/dsfd_capt_g2"
+   }
+  ],
+  "cycles_added": 9,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "S81-PH tile sheet is grade 'target' (no calibration: ~600 ps); dsfd_capt_ctl measured 256 ps SS / 181 ps FF at calibrate (r1/r2), so the sheet SDC would place vclk ~350 ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+  }
+ }
+}

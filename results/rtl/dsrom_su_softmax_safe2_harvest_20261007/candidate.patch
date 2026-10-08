@@ -1,0 +1,148 @@
+diff --git a/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv b/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv
+index efdc6dcfe..36d08d7b0 100644
+--- a/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv
++++ b/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv
+@@ -31,7 +31,8 @@ module ot_dsrom_su_fdiv_f12 #(
+     output reg         fault
+ );
+     localparam integer QB = 27;
+-    localparam integer DEPTH = 2 + QB + 4 + NR;     // 33 (NR 0) / 34 (NR 1)
++    localparam integer SPL = (NR == 2) ? 1 : 0;                                 // NR 2: SAFE build, every step in two stages
++    localparam integer DEPTH = 2 + QB + 4 + ((NR != 0) ? 1 : 0) + (SPL ? QB + 1 : 0);   // 33 (NR 0) / 34 (NR 1) / 62 (NR 2)
+ 
+     wire [DEPTH:0] vd;
+     ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
+@@ -51,16 +52,33 @@ module ot_dsrom_su_fdiv_f12 #(
+             end
+         end
+     endfunction
+-    wire [33:0] na = norm(a[30:23], a[22:0]);
+-    wire [33:0] nb = norm(b[30:23], b[22:0]);
++    function automatic [4:0] lzp(input [22:0] f);   // position of the leading one of f (0 when f == 0)
++        integer i; reg [4:0] p;
++        begin p = 5'd0; for (i = 0; i < 23; i = i + 1) if (f[i]) p = i[4:0]; lzp = p; end
++    endfunction
++    function automatic [33:0] norm2(input [7:0] e, input [22:0] f, input [4:0] p);   // norm with the position given
++        if (e != 8'd0) norm2 = {1'b1, f, e - 10'sd127};
++        else norm2 = {({1'b0, f} << (5'd23 - p)), $signed({5'd0, p}) - 10'sd149};
++    endfunction
++    // NR 2: a decode stage ahead of the normalise registers the operands and the leading-one positions
++    reg [31:0] z_a, z_b; reg [4:0] z_pa, z_pb;
++    wire [31:0] da = SPL ? z_a : a;
++    wire [31:0] db = SPL ? z_b : b;
++    generate if (SPL) begin : g_z
++        always @(posedge clk) begin z_a <= a; z_b <= b; z_pa <= lzp(a[22:0]); z_pb <= lzp(b[22:0]); end
++    end else begin : g_nz
++        always @* begin z_a = 32'd0; z_b = 32'd0; z_pa = 5'd0; z_pb = 5'd0; end
++    end endgenerate
++    wire [33:0] na = SPL ? norm2(da[30:23], da[22:0], z_pa) : norm(a[30:23], a[22:0]);
++    wire [33:0] nb = SPL ? norm2(db[30:23], db[22:0], z_pb) : norm(b[30:23], b[22:0]);
+ 
+     // decode in two stages: normalise both operands (subnormal leading-one count and shift) | exponent difference
+     reg        n_sign, n_zero, n_bad;
+     reg [33:0] n_a, n_b;
+     always @(posedge clk) begin
+-        n_sign <= a[31] ^ b[31];
+-        n_zero <= (a[30:0] == 31'd0);
+-        n_bad  <= (a[30:23] == 8'hFF) || (b[30:23] == 8'hFF) || (b[30:0] == 31'd0);
++        n_sign <= da[31] ^ db[31];
++        n_zero <= (da[30:0] == 31'd0);
++        n_bad  <= (da[30:23] == 8'hFF) || (db[30:23] == 8'hFF) || (db[30:0] == 31'd0);
+         n_a    <= na;
+         n_b    <= nb;
+     end
+@@ -87,7 +105,50 @@ module ot_dsrom_su_fdiv_f12 #(
+     wire              fsign, fzero, fbad, fnz;
+     wire signed [10:0] fe;
+     genvar j;
+-    generate if (NR) begin : g_nr
++    generate if (SPL) begin : g_sp
++        reg [26:0] p_rem [0:QB-1];
++        for (j = 0; j < QB; j = j + 1) begin : g_rec
++            wire [23:0]   mb  = (j == 0) ? d_mb : r_mb[j-1];
++            wire [QB-1:0] qin = (j == 0) ? {QB{1'b0}} : r_q[j-1];
++            wire          sub = (j == 0) ? 1'b1 : r_q[j-1][0];
++            wire [26:0]   x   = (j == 0) ? {3'b0, d_ma} : {p_rem[j-1][25:0], 1'b0};
++            wire [26:0]   opb = sub ? ~{3'b0, mb} : {3'b0, mb};
++            wire [13:0]   lo  = {1'b0, x[12:0]} + {1'b0, opb[12:0]} + {13'b0, sub};   // stage A: low half
++            wire [13:0]   h0  = x[26:13] + opb[26:13];                              // upper half, both carries
++            wire [13:0]   h1  = x[26:13] + opb[26:13] + 14'd1;
++            reg  [12:0] a_lo; reg a_cl; reg [13:0] a_h0, a_h1;
++            reg  [23:0] a_mb; reg [QB-1:0] a_q; reg a_sign, a_zero, a_bad; reg signed [10:0] a_e;
++            always @(posedge clk) begin
++                a_lo <= lo[12:0]; a_cl <= lo[13]; a_h0 <= h0; a_h1 <= h1;
++                a_mb <= mb; a_q <= qin;
++                a_sign <= (j == 0) ? d_sign : r_sign[j-1];
++                a_zero <= (j == 0) ? d_zero : r_zero[j-1];
++                a_bad  <= (j == 0) ? d_bad  : r_bad[j-1];
++                a_e    <= (j == 0) ? d_e    : r_e[j-1];
++            end
++            wire [26:0] p = {a_cl ? a_h1 : a_h0, a_lo};                             // stage B: select by the low carry
++            always @(posedge clk) begin
++                p_rem[j]  <= p;
++                r_q[j]    <= {a_q[QB-2:0], !p[26]};
++                r_mb[j]   <= a_mb;
++                r_sign[j] <= a_sign; r_zero[j] <= a_zero; r_bad[j] <= a_bad; r_e[j] <= a_e;
++            end
++        end
++        wire [26:0] pl = p_rem[QB-1];
++        wire [26:0] ml = {3'b0, r_mb[QB-1]};
++        wire        pz = (pl == 27'd0);
++        wire        pmz = ((pl ^ ml) == {pl[25:0] | ml[25:0], 1'b0});
++        reg [QB-1:0]      x_q;
++        reg               x_sign, x_zero, x_bad, x_nz;
++        reg signed [10:0] x_e;
++        always @(posedge clk) begin
++            x_q <= r_q[QB-1]; x_sign <= r_sign[QB-1]; x_zero <= r_zero[QB-1]; x_bad <= r_bad[QB-1];
++            x_e <= r_e[QB-1];
++            x_nz <= r_q[QB-1][0] ? !pz : !pmz;
++        end
++        assign fq = x_q; assign fsign = x_sign; assign fzero = x_zero; assign fbad = x_bad; assign fe = x_e;
++        assign fnz = x_nz;
++    end else if (NR) begin : g_nr
+         reg [26:0] p_rem [0:QB-1];                              // signed partial remainder
+         for (j = 0; j < QB; j = j + 1) begin : g_rec
+             wire [23:0]   mb  = (j == 0) ? d_mb : r_mb[j-1];
+@@ -210,7 +271,7 @@ module ot_dsrom_su_fdiv_f12 #(
+ endmodule
+ 
+ // SAFE tile (owner 2026-10-06): the divider as a hardened leaf with both operands registered at the boundary (+1 cycle).
+-module ot_dsrom_su_fdiv_tile #(parameter integer NR = 0) (
++module ot_dsrom_su_fdiv_tile #(parameter integer NR = 0) (   // NR 0 / 1 / 2 as ot_dsrom_su_fdiv_f12
+     input  wire        clk,
+     input  wire        rst_n,
+     input  wire        v,
+diff --git a/rtl/hdc/v41x/ot_dsrom_su_softmax.sv b/rtl/hdc/v41x/ot_dsrom_su_softmax.sv
+index fa0f042d0..2d0b3dcf3 100644
+--- a/rtl/hdc/v41x/ot_dsrom_su_softmax.sv
++++ b/rtl/hdc/v41x/ot_dsrom_su_softmax.sv
+@@ -69,7 +69,7 @@ module ot_dsrom_su_softmax #(
+                                          //    out to every lane's divider, -55 ps at CTS)
+     parameter integer DIVF12 = 1,        // 1: ot_dsrom_su_fdiv_f12 (DEPTH 33, 1.2 GHz); 0: ot_hdc_v41x_fdiv (19)
+     parameter integer MARGIN = 0,        // 1: the margin build (header)
+-    parameter integer SAFE   = 0         // 1: exp units and dividers as tiles with registered inputs (+1 cycle each; needs EXP6 and DIVF12)
++    parameter integer SAFE   = 0         // 1: exp units and dividers as tiles with registered inputs (+1 cycle each; needs EXP6 and DIVF12); 2: and the divider's steps in two stages (+29 cycles)
+ ) (
+     input  wire                 clk,
+     input  wire                 rst_n,
+@@ -102,8 +102,9 @@ module ot_dsrom_su_softmax #(
+     localparam integer NPV = 512 / LPH;
+     localparam integer LH = $clog2(LPH);
+     localparam integer ELA_T = EXP6 ? ((ADD6 == 2) ? 9 : 6) : ELA;    // the exp's add latency
+-    localparam integer D_EXP = 7 * ELM + 8 * ELA_T + 4 + (EXP6 ? EXPNS + ((EXPNS == 2) ? 1 : 0) : 0) + SAFE;
+-    localparam integer D_DIV = (DIVF12 ? 33 + MARGIN : 19) + SAFE;
++    localparam integer D_EXP = 7 * ELM + 8 * ELA_T + 4 + (EXP6 ? EXPNS + ((EXPNS == 2) ? 1 : 0) : 0) + ((SAFE != 0) ? 1 : 0);
++    localparam integer NRD = (SAFE >= 2) ? 2 : MARGIN;     // SAFE 2: the divider's steps in two stages (62 deep)
++    localparam integer D_DIV = (DIVF12 ? 33 + ((NRD != 0) ? 1 : 0) + ((NRD == 2) ? 28 : 0) : 19) + ((SAFE != 0) ? 1 : 0);
+     // configuration inputs: registered at the pin in the margin build
+     wire [6:0]         nv_i;
+     wire [2:0]         lt_i;
+@@ -530,7 +531,7 @@ module ot_dsrom_su_softmax #(
+         localparam integer HH = l / LPH;
+         wire fd;
+         if (DIVF12 && SAFE) begin : g_ft
+-            ot_dsrom_su_fdiv_tile #(.NR(MARGIN)) u_d (.clk(clk), .rst_n(rst_n), .v(piv[DIN]), .a(pv_in[32*l +: 32]),
++            ot_dsrom_su_fdiv_tile #(.NR(NRD)) u_d (.clk(clk), .rst_n(rst_n), .v(piv[DIN]), .a(pv_in[32*l +: 32]),
+                                       .b(denl[32*l +: 32]), .y(qd[32*l +: 32]), .vo(), .fault(fd));
+         end else if (DIVF12) begin : g_f12
+             ot_dsrom_su_fdiv_f12 #(.NR(MARGIN)) u_d (.clk(clk), .rst_n(rst_n), .v(piv[DIN]), .a(pv_in[32*l +: 32]),

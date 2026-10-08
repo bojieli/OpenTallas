@@ -1,0 +1,70 @@
+head_q_lret3 baseline ok PASS head_q (HQ=1) == macro_ctx QPIN=1 FPIPE=3 cycles=9000 writes=3766 fused=410 index_writes=20 acks=16 leaf=2538 fault
+head_q_lret3 lret_depth ok [10000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 9
+head_q_lret3 veto_skip ok [1509000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 1508
+head_q_lret3 ep_addr ok [19000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 18
+{
+ "pass": true,
+ "cases": {
+  "head_q_lret3/baseline": {
+   "phase": "simulate",
+   "returncode": 0,
+   "output": "PASS head_q (HQ=1) == macro_ctx QPIN=1 FPIPE=3 cycles=9000 writes=3766 fused=410 index_writes=20 acks=16 leaf=2538 fault_cycles=1972",
+   "expected": "PASS",
+   "ok": true
+  },
+  "head_q_lret3/lret_depth": {
+   "phase": "simulate",
+   "returncode": -6,
+   "output": "[10000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 9",
+   "expected": "FAIL",
+   "ok": true
+  },
+  "head_q_lret3/veto_skip": {
+   "phase": "simulate",
+   "returncode": -6,
+   "output": "[1509000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 1508",
+   "expected": "FAIL",
+   "ok": true
+  },
+  "head_q_lret3/ep_addr": {
+   "phase": "simulate",
+   "returncode": -6,
+   "output": "[19000] %Fatal: tb_fh_head_q.sv:56: Assertion failed in tb_fh_head_q: head_q lockstep 18",
+   "expected": "FAIL",
+   "ok": true
+  }
+ },
+ "source_sha256": {
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+  "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_matvec.sv": "876ed4e5f65aaaad1c961c9f9bb60f8440a6d9d3fb1f61e2860687678d862131",
+  "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_ctx.sv": "0f4eafebf52a10481bdf128be78fb36087146edd5f4539202e5f7e4fb91d7156",
+  "rtl/hdc/v41/dspark_fused_head/margin/tb_fh_margin_ctx.sv": "0c097ef848f84d3189c217c4d9a2989da5103e34734e06c472f9f8bb415c13e2",
+  "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+  "rtl/dft/ot_rom_secded_dec.sv": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795",
+  "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_sram_return.sv": "7ce30b050a00a3ec75f5963442a129ad180d9e5a1dde74f112039bb60271f9ec",
+  "rtl/hdc/v41/dspark_fused_head/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv": "cb00106cb655697cb228e4513ecf8c625f9b9ada0f7324bcb909077abd29a35c",
+  "rtl/hdc/v41/dspark_fused_head/margin/tb_fh_margin_addr_pipe.sv": "094dfc6b5d4d6a865af4f66409e8512fbed406fa52a21ad3d895f6f30fd3849e",
+  "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv": "fa94dd3b03fa80de055866a1d0f443ea94c028033375266639860fa41ead8a02",
+  "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_checked_permission.sv": "3caeda2b025d2a608b90dfb362eeccd468bf75e020e02d43eab8290b9b24e2fa",
+  "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv": "be5c487cd4a3920847e43b0cf93a3580c541e9ee0679e0753d7330d24f506839",
+  "rtl/hdc/v41/dspark_fused_head/margin/tb_fh_margin_checked_permission.sv": "bc9befaacecd26716e1880c25d26bcbe9d3908b5838961f82f0a2d0a8faf477c",
+  "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv": "f0380c833b1ba2c2f08f44ce78ba73cb45ae21c9f94404a4d49edbad0e7fa138",
+  "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_retire_parent.sv": "6c885402a22a9acff93d67fd7c9f69c2b1465bc4eb2006e2be578c7a6a276ee9",
+  "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_macro_ctx.sv": "fc88838faf31beb3470d2896dbd2924e6ef952c9c2a492ef12885f1dcabe0497",
+  "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_quad.sv": "5683021418d76fc82b0cbced3e8795bfe1301c1e6c39550400a17b2b15be97a2",
+  "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_head_top.sv": "32f3b4c1899c83cfa366de2e1d999f391c914673073de64bccffdfdf08b3af49",
+  "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_head_q.sv": "0ff3f773d4309a9267f1da5344ac5f17686316159414d45b6861ece28153cdee",
+  "rtl/hdc/v41/dspark_fused_head/quad/tb_fh_head_q.sv": "dfe148655cf8da9b163a7b7422916ff5d85c1fb48f5532603fe388f607bdadbe",
+  "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_hquad.sv": "dce03c3a7479e871592652d67b582328752f5eeff83e0f0b951977ca618f0b5d",
+  "rtl/hdc/v41/dspark_fused_head/quad/ot_hdc_v41_fh_ctl.sv": "aad2984278c332429de4279159c841addb13b6bd541a8d5c4a388a8b5e267aba",
+  "rtl/hdc/v41/dspark_fused_head/margin/tb_fh_margin_retire.sv": "cdd0147d4448623c5e4c39f4b889d006df2dfae91778c11c10f2b3adeeb0efe0"
+ }
+}

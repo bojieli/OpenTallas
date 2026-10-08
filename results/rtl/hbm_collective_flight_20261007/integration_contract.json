@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "module": "ot_hbm_collective_protected_flight",
+  "parameters": {"ENABLE": 1, "W": 545, "D": 14},
+  "clock": "clk; actual owning local domain, no derived clock",
+  "reset": "rst_n; actual cold-link coordinated reset only",
+  "input_acceptance": "in_v && in_r at rising clk; producer must preserve unaccepted data",
+  "output_retirement": "out_v && out_r at rising clk",
+  "permission": "all 14 banks normal; final stage empty or consumer ready allows global shift",
+  "quiet": "all banks normal and every stage valid bit zero; repair or fault suppresses quiet",
+  "fault": "any bank uncorrectable data error, protected repair-controller error, or fault rail mismatch; propagated sticky across all banks",
+  "repair": "each CE freezes global transfer; bank protected five-phase correction; output data corrected combinationally so held output payload stays unchanged during a single-bit output upset",
+  "valid_during_repair": "out_v deasserts; consumer must use actual valid/ready handshake, never infer irrevocable validity from a prior cycle",
+  "nominal_latency": "14 edges from accepted input to earliest output retirement; each global stall adds one edge",
+  "credits": "component does not create or return credits; global reservation covers all occupied stages; only final native RX packet retirement returns credit",
+  "reset_caution": "reset discards data and never authorizes credit return; lifecycle controller must prove/quarantine prior generation flight",
+  "physical_status": "unqualified; 1.2 GHz SS/FF timing and encoded storage retention require measurement"
+}

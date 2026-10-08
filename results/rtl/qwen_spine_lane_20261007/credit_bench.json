@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.qwen-spine-credit-bench.v1",
+  "source_sha256": {
+    "rtl/physical/ot_qwen_spine_lane_credit.sv": "fbfe946a27eb8c0277f2b94c702a6da8199f2e56ca9407ffd15c1afd4484aec8",
+    "rtl/physical/ot_qwen_spine_lane.sv": "7b1ff75ccc917041d721c896f0c5325a088476b04af7a8506506221173207e3c",
+    "rtl/test/tb_qwen_spine_lane_credit.sv": "8cda73cf1c2bca4c59e19b73ebce8c976968a6080a35d2f281630b19ed05f388"
+  },
+  "tool": "Verilator5.050",
+  "exact": true,
+  "packets": 96,
+  "held_positions_per_packet": 48,
+  "first_packet_latency": 45,
+  "blocked_cycles": 345,
+  "initial_credits": 32,
+  "downstream_credits": 2,
+  "negative_control": {
+    "mutation": "swap held/input positions1and2",
+    "observed": "FAIL credit position tag0 split7 p1, fatal at first retirement",
+    "expected_failure": true
+  },
+  "claim": "Component transaction proof; no die transport integration or adopted performance"
+}

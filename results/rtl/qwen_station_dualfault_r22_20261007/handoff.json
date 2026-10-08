@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.qwen_station_dualfault_handoff.v1",
+  "prerequisite_model_commit": "d1a33a905cb9d75413085f960d8bb2bb92bb005d",
+  "default_off": true,
+  "adoption": false,
+  "route_eligible": false,
+  "exact_cases": 13,
+  "state_upset_cases": 48,
+  "negative_upset_controls": 2,
+  "reverse_fault_cycles_per_station": 2,
+  "forward_cycles_per_station": 1,
+  "latency_change": 0,
+  "remaining": [
+    "Forward 380-bit control integrity and 128-bit payload integrity unimplemented",
+    "Root publication guard and actual tile fault lateness unbound",
+    "Payload copies merged by generic synthesis despite wire keep; physical independent output drivers unqualified",
+    "Full die reset/clock integration and SS/FF remain open"
+  ],
+  "reproduction": [
+    "python3 tools/qwen_station_dualfault_r22_regression.py --out /tmp/station-exact-new",
+    "python3 tools/qwen_station_dualfault_upset_regression.py --out /tmp/station-upset-new",
+    "python3 tools/qwen_station_dualfault_retention.py --out /tmp/station-retention-new"
+  ]
+}

@@ -1,0 +1,72 @@
+{
+ "schema": "opentallas.bf.unroll_exact.v1",
+ "variant": "ot_s81_bf_native PINREG=1 RECUT=3 (re-cut A + ot_v41_chain2u2 BF lane chains)",
+ "rtl_commit": "9cf64047e",
+ "column_bench": {
+  "bench": "tools/s81/bf_txn_bench.py --variant recut --level 3 (EPYC3, Verilator 5.050)",
+  "result": {
+   "variant": "recut",
+   "cases": {
+    "positive": {
+     "returncode": 0,
+     "ok": true,
+     "markers": [
+      "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+      "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+      "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+      "TXN LAG ns min=3.332 max=14.994 mean=7.292 n=456",
+      "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+      "TXN MATCH"
+     ]
+    },
+    "mutant_dp": {
+     "returncode": 1,
+     "ok": true,
+     "markers": [
+      "[7018000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=32ffffff00400010"
+     ]
+    },
+    "mutant_recut": {
+     "returncode": 1,
+     "ok": true,
+     "markers": [
+      "[7018000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=16 ref=32ffffff00400010 shadow=331ffffe80400010"
+     ]
+    },
+    "mutant_u2": {
+     "returncode": 0,
+     "ok": false,
+     "markers": [
+      "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+      "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+      "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+      "TXN LAG ns min=3.332 max=14.994 mean=7.292 n=456",
+      "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+      "TXN MATCH"
+     ],
+     "note": "not a valid negative in the column bench: beats are paced 40 cycles apart, so no slot is revisited within LAT + 1 and the forwarding paths are never used there; the forwarding negative is the directed unit bench below"
+    }
+   },
+   "pass": false,
+   "refreshed": [
+    "cand_ot_v41_rom_elem_w10.sv",
+    "cand_ot_v41_bf16_lanes2.sv",
+    "cand_ot_v41_bmul2_rne_prepare.sv",
+    "cand_ot_v41_segtree2.sv",
+    "cand_ot_v41_chain2.sv",
+    "cand_ot_v41_fadd.sv",
+    "cand_ot_v41_bterm2_w10.sv",
+    "cand_ot_prefix.sv"
+   ],
+   "source_commit": "9cf64047e7056068d0c273027031df287b77fe90",
+   "dirty": null
+  },
+  "summary": "positive: 456 partials identical to the original element (numerical + wake gates PASS), lag 4-18 cycles (mean 8.8); QP_MUTANT_DP and W10_MUTANT_RECUT FAIL"
+ },
+ "unit_bench": {
+  "bench": "rtl/test/tb_chain2u2_exact.sv (localhost, Verilator 5.050): ot_v41_chain2u2 vs ot_v41_chain2, dense random stream obeying the slot-revisit rule",
+  "positive": "U2 PASS compared=27185 outputs, same-adder forwards 43111, cross-adder forwards 7721, fault 0/0",
+  "negative": "W10_MUTANT_U2 (forwarding disabled) FAILS: U2 DIFF n=2"
+ },
+ "pass": true
+}

@@ -1,0 +1,162 @@
+{
+  "actual_simulator_negative_controls": 2,
+  "default_vp_baseline_trace_pairs_equal": 8,
+  "scope": "Native sequencer actual-module control and opaque-payload transport; synthetic legal descriptors, core_done handshake and collective loopback. No whole workload, arithmetic, ME/SU overlap, bank timing or performance claim.",
+  "sources": {
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+    "rtl/rom/ot_qwen_tp_seq_w12.sv": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055",
+    "rtl/rom/ot_qwen_tp_seq_w12_vp.sv": "5d46b3c47ba05e708908cfdb801d77ddb09741dcf201ebe3a57bd063da2dc0d8",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_stream4.sv": "d052c15b427eb88a63134edf1646c68ad32554c7b019d5d2c906d6c3754b0f9d",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "387b56dd7fa82b20e62515df8b632265ae5af146c9ca5c6cb3d4d67ee52cbf85",
+    "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+    "rtl/hdc/ot_hdc_vreduce.sv": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+    "results/rtl/qwen_rom_finite_vm_schedule_20261005/inputs/core.sv": "59492b0f4a1c46b86298fbda105d2c79f2db10ac76fde15f74509099e9a6f97e",
+    "results/rtl/qwen_rom_finite_vm_schedule_20261005/inputs/top.sv": "3d5cb792affee962d4f7cd07fc4aaae38cc1d5710d1e39d09201c1ff4790fe81"
+  },
+  "cases": [
+    {
+      "module": "ot_qwen_tp_seq_w12",
+      "base": 0,
+      "n": 16,
+      "stall": 0,
+      "pass_line": "PASS,16,16,12,33",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12",
+      "base": 0,
+      "n": 16,
+      "stall": 1,
+      "pass_line": "PASS,16,16,9,43",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12",
+      "base": 32,
+      "n": 16,
+      "stall": 0,
+      "pass_line": "PASS,16,16,12,33",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12",
+      "base": 32,
+      "n": 16,
+      "stall": 1,
+      "pass_line": "PASS,16,16,9,43",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12",
+      "base": 240,
+      "n": 16,
+      "stall": 0,
+      "pass_line": "PASS,16,16,12,33",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12",
+      "base": 240,
+      "n": 16,
+      "stall": 1,
+      "pass_line": "PASS,16,16,9,43",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12",
+      "base": 0,
+      "n": 256,
+      "stall": 0,
+      "pass_line": "PASS,256,256,252,273",
+      "events": 512,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12",
+      "base": 0,
+      "n": 256,
+      "stall": 1,
+      "pass_line": "PASS,256,256,189,463",
+      "events": 512,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12_vp",
+      "base": 0,
+      "n": 16,
+      "stall": 0,
+      "pass_line": "PASS,16,16,12,33",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12_vp",
+      "base": 0,
+      "n": 16,
+      "stall": 1,
+      "pass_line": "PASS,16,16,9,43",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12_vp",
+      "base": 32,
+      "n": 16,
+      "stall": 0,
+      "pass_line": "PASS,16,16,12,33",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12_vp",
+      "base": 32,
+      "n": 16,
+      "stall": 1,
+      "pass_line": "PASS,16,16,9,43",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12_vp",
+      "base": 240,
+      "n": 16,
+      "stall": 0,
+      "pass_line": "PASS,16,16,12,33",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12_vp",
+      "base": 240,
+      "n": 16,
+      "stall": 1,
+      "pass_line": "PASS,16,16,9,43",
+      "events": 32,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12_vp",
+      "base": 0,
+      "n": 256,
+      "stall": 0,
+      "pass_line": "PASS,256,256,252,273",
+      "events": 512,
+      "address_checker_negative_rejected": true
+    },
+    {
+      "module": "ot_qwen_tp_seq_w12_vp",
+      "base": 0,
+      "n": 256,
+      "stall": 1,
+      "pass_line": "PASS,256,256,189,463",
+      "events": 512,
+      "address_checker_negative_rejected": true
+    }
+  ]
+}
