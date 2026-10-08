@@ -5,7 +5,7 @@
 #   BF_VAR=recut : RECUT=2 (A: q-element re-cuts + BF lanes re-cut)
 #   BF_VAR=halfphl: half + HALF_PHL=1 (phase FF on the ICG clock net, ph_local.tcl PRE_CTS / ph_local_post.tcl POST_CTS)
 #   BF_VAR=unroll: RECUT=3 (A + BF lane chunk chains unrolled by 2 on a half-rate gated clock; + u2_mc.sdc)
-# Both route at 730 ps (owner SAFE rule: route target 730, sign-off 833.333).
+# Route at 730 ps (owner SAFE rule: route target 730, sign-off 833.333); BF_PERIOD=<ns> overrides the route target only.
 # usage: OUT=<dir> SRC=<src root> BF_VAR=half|recut route_var.sh <label> [extra run_abi3_physical args]
 set -o pipefail
 L=${1:?label}; shift; S=${SRC:-.}; O=${OUT:?out}/$L; mkdir -p $O; cd $S
@@ -18,7 +18,7 @@ VA="--$V"
 [ "$V" = halfphl ] && VA="--half --half-phl"
 [ "$V" = unroll ] && { VA="--recut --recut-level 3"; POST="$POST --post-sdc physical/s81_native_bf/margin/u2_mc.sdc"; }
 echo "$(date -Is) START $(hostname) var=$V ss=$SS args=$*" >> $O/MANIFEST
-python3 tools/s81/run_bf_native_physical.py --margin --wc-only --hitfix $VA --period .730 --work $O/work --output $O/physical.json \
+python3 tools/s81/run_bf_native_physical.py --margin --wc-only --hitfix $VA --period ${BF_PERIOD:-.730} --work $O/work --output $O/physical.json \
   --util 45 --tag $L --ins-ss $SS --ins-ff $SS --extra="$*" > $O/run.log 2>&1; rc=$?
 echo "rc=$rc" > $O/exit
 if [ $rc -eq 0 ] && [[ " $* " != *"--pnr-stop-after"* ]]; then
