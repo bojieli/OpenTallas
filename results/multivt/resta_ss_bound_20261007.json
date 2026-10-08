@@ -1,0 +1,2489 @@
+{
+ "hbm_stn_mcast_r6_56a4bdb6c": {
+  "name": "hbm_stn_mcast_r6_56a4bdb6c",
+  "host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r6_56a4bdb6c",
+  "orfs": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r6_56a4bdb6c/routes/hbm_stn_mcast_r6_56a4bdb6c/signoff",
+  "src": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r6_56a4bdb6c/src",
+  "out": "/srv/opentallas-scratch/claude/multivt/hbm_stn_mcast_r6_56a4bdb6c",
+  "bin": "/srv/opentallas-scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r6_56a4bdb6c/routes/hbm_stn_mcast_r6_56a4bdb6c/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r6_56a4bdb6c/routes/hbm_stn_mcast_r6_56a4bdb6c/work/orfs/logs/asap7/opentallas_hfd_mcast_r6_asap7_hv_hbm_stn_mcast_r6_56a4bdb6c/base/5_2_route.json"
+   ],
+   "ss_ps": 10.21,
+   "ff_ps": 26.23,
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r6_56a4bdb6c/routes/hbm_stn_mcast_r6_56a4bdb6c/signoff",
+   "errors": [],
+   "ss_tns_ps": 0.0,
+   "post_sdc": [],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r6_56a4bdb6c/routes/hbm_stn_mcast_r6_56a4bdb6c/signoff",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": 10.21,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 118057,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": 30.26,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 118051,
+      "L": 6,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": 30.26,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 118051,
+      "L": 6,
+      "SL": 0
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=6 ws_before=10.21405182655144 ws_after=30.264679651281767"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": 26.23,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 118057,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": 26.23,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 118051,
+      "L": 6,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": 26.23,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 118051,
+      "L": 6,
+      "SL": 0
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": 30.26,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 118051,
+      "L": 6,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": 30.26,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 118051,
+      "L": 6,
+      "SL": 0
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.4201265,
+     "switching_w": 0.6384825,
+     "leakage_w": 2.411277e-05,
+     "total_w": 1.058633
+    },
+    "LVT": {
+     "internal_w": 0.420131,
+     "switching_w": 0.6384825,
+     "leakage_w": 2.413017e-05,
+     "total_w": 1.058638
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.420131,
+     "switching_w": 0.6384825,
+     "leakage_w": 2.413017e-05,
+     "total_w": 1.058638
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "qfd_tile-load80-e721e27b5": {
+  "name": "qfd_tile-load80-e721e27b5",
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tile-load80-e721e27b5",
+  "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tile-load80-e721e27b5/routes/qfd_tile_load80_e721e27b5/work/orfs",
+  "src": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tile-load80-e721e27b5/src",
+  "out": "/srv/opentallas-scratch2/scratch/claude/multivt/qfd_tile-load80-e721e27b5",
+  "bin": "/srv/opentallas-scratch2/scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tile-load80-e721e27b5/routes/qfd_tile_load80_e721e27b5/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tile-load80-e721e27b5/routes/qfd_tile_load80_e721e27b5/work/orfs/logs/asap7/opentallas_ot_qwen_rom_tile_die_asap7_qdm_qfd_tile_load80_e721e27b5/base/5_2_route.json"
+   ],
+   "ss_ps": -787.67,
+   "ff_ps": -90.8,
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tile-load80-e721e27b5/routes/qfd_tile_load80_e721e27b5/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -2976893.5,
+   "post_sdc": [],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tile-load80-e721e27b5/routes/qfd_tile_load80_e721e27b5/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -787.67,
+     "tns_ps": -2976893.5,
+     "vt": {
+      "R": 619730,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": -746.85,
+     "tns_ps": -353472.9,
+     "vt": {
+      "R": 592437,
+      "L": 27293,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -732.81,
+     "tns_ps": -243335.3,
+     "vt": {
+      "R": 591739,
+      "L": 18448,
+      "SL": 9543
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=22078 ws_before=-787.6742591506058 ws_after=-746.8486939998797",
+     "OTVT_ROUND L 2 swapped=4033 ws_before=-746.8486939998797 ws_after=-746.8486939998797",
+     "OTVT_ROUND L 3 swapped=647 ws_before=-746.8486939998797 ws_after=-746.8486939998797",
+     "OTVT_ROUND L 4 swapped=338 ws_before=-746.8486939998797 ws_after=-746.8486939998797",
+     "OTVT_ROUND L 5 swapped=145 ws_before=-746.8486939998797 ws_after=-746.8486939998797",
+     "OTVT_ROUND L 6 swapped=44 ws_before=-746.8486939998797 ws_after=-746.8486939998797",
+     "OTVT_ROUND L 7 swapped=8 ws_before=-746.8486939998797 ws_after=-746.8486939998797",
+     "OTVT_ROUND L 8 swapped=0 ws_before=-746.8486939998797 ws_after=-746.8486939998797",
+     "OTVT_ROUND SL 1 swapped=7968 ws_before=-746.8486939998797 ws_after=-732.805927050606",
+     "OTVT_ROUND SL 2 swapped=1141 ws_before=-732.805927050606 ws_after=-732.805927050606",
+     "OTVT_ROUND SL 3 swapped=262 ws_before=-732.805927050606 ws_after=-732.805927050606",
+     "OTVT_ROUND SL 4 swapped=113 ws_before=-732.805927050606 ws_after=-732.805927050606",
+     "OTVT_ROUND SL 5 swapped=32 ws_before=-732.805927050606 ws_after=-732.805927050606",
+     "OTVT_ROUND SL 6 swapped=24 ws_before=-732.805927050606 ws_after=-732.805927050606",
+     "OTVT_ROUND SL 7 swapped=3 ws_before=-732.805927050606 ws_after=-732.805927050606",
+     "OTVT_ROUND SL 8 swapped=0 ws_before=-732.805927050606 ws_after=-732.805927050606"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -90.8,
+     "tns_ps": -58128.3,
+     "vt": {
+      "R": 619730,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -125.36,
+     "tns_ps": -59461.4,
+     "vt": {
+      "R": 592437,
+      "L": 27293,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -141.99,
+     "tns_ps": -60533.1,
+     "vt": {
+      "R": 591739,
+      "L": 18448,
+      "SL": 9543
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": -746.85,
+     "tns_ps": -353473.0,
+     "vt": {
+      "R": 592437,
+      "L": 27293,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": -732.81,
+     "tns_ps": -243335.3,
+     "vt": {
+      "R": 591739,
+      "L": 18448,
+      "SL": 9543
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.5928086,
+     "switching_w": 0.348206,
+     "leakage_w": 0.0006250199,
+     "total_w": 0.9416397
+    },
+    "LVT": {
+     "internal_w": 0.594192,
+     "switching_w": 0.3484596,
+     "leakage_w": 0.0006813306,
+     "total_w": 0.943333
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.5955867,
+     "switching_w": 0.3485466,
+     "leakage_w": 0.0009402351,
+     "total_w": 0.9450735
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "qfd_io_xfifo-load80-e721e27b5": {
+  "name": "qfd_io_xfifo-load80-e721e27b5",
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo-load80-e721e27b5",
+  "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo-load80-e721e27b5/routes/qfd_io_xfifo_load80_e721e27b5/work/orfs",
+  "src": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo-load80-e721e27b5/src",
+  "out": "/srv/opentallas-scratch2/scratch/claude/multivt/qfd_io_xfifo-load80-e721e27b5",
+  "bin": "/srv/opentallas-scratch2/scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo-load80-e721e27b5/routes/qfd_io_xfifo_load80_e721e27b5/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo-load80-e721e27b5/routes/qfd_io_xfifo_load80_e721e27b5/work/orfs/logs/asap7/opentallas_ot_qwen_die_io_xfifo_asap7_qdm_qfd_io_xfifo_load80_e721e27b5/base/5_2_route.json"
+   ],
+   "ss_ps": -851.61,
+   "ff_ps": -55.4,
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo-load80-e721e27b5/routes/qfd_io_xfifo_load80_e721e27b5/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -15401186.8,
+   "post_sdc": [],
+   "drc": 3
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo-load80-e721e27b5/routes/qfd_io_xfifo_load80_e721e27b5/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -851.61,
+     "tns_ps": -15401186.8,
+     "vt": {
+      "R": 316072,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": -558.92,
+     "tns_ps": -6847421.9,
+     "vt": {
+      "R": 182234,
+      "L": 133838,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -479.65,
+     "tns_ps": -3731370.3,
+     "vt": {
+      "R": 178937,
+      "L": 51387,
+      "SL": 85748
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=111053 ws_before=-851.6121141610711 ws_after=-561.0529818511623",
+     "OTVT_ROUND L 2 swapped=20886 ws_before=-561.0529818511623 ws_after=-558.9160245733638",
+     "OTVT_ROUND L 3 swapped=1600 ws_before=-558.9160245733638 ws_after=-558.9160245733638",
+     "OTVT_ROUND L 4 swapped=270 ws_before=-558.9160245733638 ws_after=-558.9160245733638",
+     "OTVT_ROUND L 5 swapped=27 ws_before=-558.9160245733638 ws_after=-558.9160245733638",
+     "OTVT_ROUND L 6 swapped=2 ws_before=-558.9160245733638 ws_after=-558.9160245733638",
+     "OTVT_ROUND L 7 swapped=0 ws_before=-558.9160245733638 ws_after=-558.9160245733638",
+     "OTVT_ROUND SL 1 swapped=77747 ws_before=-558.9160245733638 ws_after=-479.6469887935473",
+     "OTVT_ROUND SL 2 swapped=6836 ws_before=-479.6469887935473 ws_after=-479.6469887935473",
+     "OTVT_ROUND SL 3 swapped=1003 ws_before=-479.6469887935473 ws_after=-479.6469887935473",
+     "OTVT_ROUND SL 4 swapped=146 ws_before=-479.6469887935473 ws_after=-479.6469887935473",
+     "OTVT_ROUND SL 5 swapped=14 ws_before=-479.6469887935473 ws_after=-479.6469887935473",
+     "OTVT_ROUND SL 6 swapped=2 ws_before=-479.6469887935473 ws_after=-479.6469887935473",
+     "OTVT_ROUND SL 7 swapped=0 ws_before=-479.6469887935473 ws_after=-479.6469887935473"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -55.4,
+     "tns_ps": -23672.8,
+     "vt": {
+      "R": 316072,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -55.38,
+     "tns_ps": -23649.8,
+     "vt": {
+      "R": 182234,
+      "L": 133838,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -55.37,
+     "tns_ps": -23653.0,
+     "vt": {
+      "R": 178937,
+      "L": 51387,
+      "SL": 85748
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": -558.92,
+     "tns_ps": -6847421.9,
+     "vt": {
+      "R": 182234,
+      "L": 133838,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": -479.65,
+     "tns_ps": -3731370.0,
+     "vt": {
+      "R": 178937,
+      "L": 51387,
+      "SL": 85748
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.4266715,
+     "switching_w": 0.4727969,
+     "leakage_w": 4.997206e-05,
+     "total_w": 0.8995184
+    },
+    "LVT": {
+     "internal_w": 0.4457535,
+     "switching_w": 0.4751448,
+     "leakage_w": 0.0002173077,
+     "total_w": 0.9211156
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.4868563,
+     "switching_w": 0.4767101,
+     "leakage_w": 0.001407843,
+     "total_w": 0.9649743
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "qfd_io_collective-orfs-1e34cdc16": {
+  "name": "qfd_io_collective-orfs-1e34cdc16",
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-orfs-1e34cdc16",
+  "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-orfs-1e34cdc16/routes/qfd_io_collective_orfs_1e34cdc16/work/orfs",
+  "src": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-orfs-1e34cdc16/src",
+  "out": "/srv/opentallas-scratch2/scratch/claude/multivt/qfd_io_collective-orfs-1e34cdc16",
+  "bin": "/srv/opentallas-scratch2/scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-orfs-1e34cdc16/routes/qfd_io_collective_orfs_1e34cdc16/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-orfs-1e34cdc16/routes/qfd_io_collective_orfs_1e34cdc16/work/orfs/logs/asap7/opentallas_ot_rom_oneshot_die_m_asap7_qdm_qfd_io_collective_orfs_1e34cdc16/base/5_2_route.json"
+   ],
+   "ss_ps": -581.33,
+   "ff_ps": -64.06,
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-orfs-1e34cdc16/routes/qfd_io_collective_orfs_1e34cdc16/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -13360933.7,
+   "post_sdc": [],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-orfs-1e34cdc16/routes/qfd_io_collective_orfs_1e34cdc16/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -581.33,
+     "tns_ps": -13360933.7,
+     "vt": {
+      "R": 557639,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": -311.69,
+     "tns_ps": -4606039.5,
+     "vt": {
+      "R": 489762,
+      "L": 67877,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -274.93,
+     "tns_ps": -616363.7,
+     "vt": {
+      "R": 466575,
+      "L": 14118,
+      "SL": 76946
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=43103 ws_before=-581.328873927589 ws_after=-323.4088552517278",
+     "OTVT_ROUND L 2 swapped=17733 ws_before=-323.4088552517278 ws_after=-311.685344200896",
+     "OTVT_ROUND L 3 swapped=4933 ws_before=-311.685344200896 ws_after=-311.685344200896",
+     "OTVT_ROUND L 4 swapped=1457 ws_before=-311.685344200896 ws_after=-311.685344200896",
+     "OTVT_ROUND L 5 swapped=456 ws_before=-311.685344200896 ws_after=-311.685344200896",
+     "OTVT_ROUND L 6 swapped=132 ws_before=-311.685344200896 ws_after=-311.685344200896",
+     "OTVT_ROUND L 7 swapped=52 ws_before=-311.685344200896 ws_after=-311.685344200896",
+     "OTVT_ROUND L 8 swapped=11 ws_before=-311.685344200896 ws_after=-311.685344200896",
+     "OTVT_ROUND SL 1 swapped=43547 ws_before=-311.685344200896 ws_after=-274.83526565674765",
+     "OTVT_ROUND SL 2 swapped=24244 ws_before=-274.83526565674765 ws_after=-274.9286354131186",
+     "OTVT_ROUND SL 3 swapped=5713 ws_before=-274.9286354131186 ws_after=-274.9286354131186",
+     "OTVT_ROUND SL 4 swapped=2119 ws_before=-274.9286354131186 ws_after=-274.9286354131186",
+     "OTVT_ROUND SL 5 swapped=830 ws_before=-274.9286354131186 ws_after=-274.9286354131186",
+     "OTVT_ROUND SL 6 swapped=330 ws_before=-274.9286354131186 ws_after=-274.9286354131186",
+     "OTVT_ROUND SL 7 swapped=120 ws_before=-274.9286354131186 ws_after=-274.9286354131186",
+     "OTVT_ROUND SL 8 swapped=43 ws_before=-274.9286354131186 ws_after=-274.9286354131186"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -64.06,
+     "tns_ps": -39458.3,
+     "vt": {
+      "R": 557639,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -64.06,
+     "tns_ps": -39467.2,
+     "vt": {
+      "R": 489762,
+      "L": 67877,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -64.06,
+     "tns_ps": -39516.3,
+     "vt": {
+      "R": 466575,
+      "L": 14118,
+      "SL": 76946
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": -311.69,
+     "tns_ps": -4606041.3,
+     "vt": {
+      "R": 489762,
+      "L": 67877,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": -274.93,
+     "tns_ps": -616363.8,
+     "vt": {
+      "R": 466575,
+      "L": 14118,
+      "SL": 76946
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.5839521,
+     "switching_w": 0.3903655,
+     "leakage_w": 8.646325e-05,
+     "total_w": 0.9744041
+    },
+    "LVT": {
+     "internal_w": 0.5878502,
+     "switching_w": 0.3911514,
+     "leakage_w": 0.0001812899,
+     "total_w": 0.9791829
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.6029915,
+     "switching_w": 0.3922671,
+     "leakage_w": 0.001347831,
+     "total_w": 0.9966064
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "qfd_ctrl_pc_00-74d839a79": {
+  "name": "qfd_ctrl_pc_00-74d839a79",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_pc_00-74d839a79",
+  "orfs": "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_pc_00-74d839a79/routes/qfd_ctrl_pc_00_74d839a79/work/orfs",
+  "src": "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_pc_00-74d839a79/src",
+  "out": "/srv/opentallas-scratch/claude/multivt/qfd_ctrl_pc_00-74d839a79",
+  "bin": "/srv/opentallas-scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_pc_00-74d839a79/routes/qfd_ctrl_pc_00_74d839a79/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_pc_00-74d839a79/routes/qfd_ctrl_pc_00_74d839a79/work/orfs/logs/asap7/opentallas_ot_qwen_ctrl_pc_asap7_qdm_qfd_ctrl_pc_00_74d839a79/base/5_2_route.json"
+   ],
+   "ss_ps": -185.84,
+   "ff_ps": -34.99,
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_pc_00-74d839a79/routes/qfd_ctrl_pc_00_74d839a79/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -54104.8,
+   "post_sdc": [],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_pc_00-74d839a79/routes/qfd_ctrl_pc_00_74d839a79/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": 4.83,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 17405,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": 56.9,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 17347,
+      "L": 58,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": 56.9,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 17347,
+      "L": 58,
+      "SL": 0
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=58 ws_before=4.827138688767718 ws_after=56.895488320662935"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -34.99,
+     "tns_ps": -905.9,
+     "vt": {
+      "R": 17405,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -34.99,
+     "tns_ps": -905.9,
+     "vt": {
+      "R": 17347,
+      "L": 58,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -34.99,
+     "tns_ps": -905.9,
+     "vt": {
+      "R": 17347,
+      "L": 58,
+      "SL": 0
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": 56.9,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 17347,
+      "L": 58,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": 56.9,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 17347,
+      "L": 58,
+      "SL": 0
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.008648842,
+     "switching_w": 0.005755164,
+     "leakage_w": 2.172627e-06,
+     "total_w": 0.01440618
+    },
+    "LVT": {
+     "internal_w": 0.008652807,
+     "switching_w": 0.005755939,
+     "leakage_w": 2.286692e-06,
+     "total_w": 0.01441103
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.008652807,
+     "switching_w": 0.005755939,
+     "leakage_w": 2.286692e-06,
+     "total_w": 0.01441103
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "s81ph-dsfd_selt_c-b6fcd9853": {
+  "name": "s81ph-dsfd_selt_c-b6fcd9853",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_c-b6fcd9853",
+  "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_c-b6fcd9853/routes/s81ph_dsfd_selt_c_b6fcd9853/work/orfs",
+  "src": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_c-b6fcd9853/src",
+  "out": "/srv/opentallas-scratch2/scratch/claude/multivt/s81ph-dsfd_selt_c-b6fcd9853",
+  "bin": "/srv/opentallas-scratch2/scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_c-b6fcd9853/routes/s81ph_dsfd_selt_c_b6fcd9853/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_c-b6fcd9853/routes/s81ph_dsfd_selt_c_b6fcd9853/work/orfs/logs/asap7/opentallas_dsfd_selt_c_asap7_s81ph_s81ph_dsfd_selt_c_b6fcd9853/base/5_2_route.json"
+   ],
+   "ss_ps": -308.91,
+   "ff_ps": 16.42,
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_c-b6fcd9853/routes/s81ph_dsfd_selt_c_b6fcd9853/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -1078274.5,
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_c-b6fcd9853/routes/s81ph_dsfd_selt_c_b6fcd9853/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -308.91,
+     "tns_ps": -1078274.5,
+     "vt": {
+      "R": 190242,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": -120.62,
+     "tns_ps": -5155.1,
+     "vt": {
+      "R": 174539,
+      "L": 15703,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": 10.41,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 174268,
+      "L": 12086,
+      "SL": 3888
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=12496 ws_before=-308.90523472493214 ws_after=-270.4733104152979",
+     "OTVT_ROUND L 2 swapped=2620 ws_before=-270.4733104152979 ws_after=-231.39801186289333",
+     "OTVT_ROUND L 3 swapped=216 ws_before=-231.39801186289333 ws_after=-198.26007502388165",
+     "OTVT_ROUND L 4 swapped=118 ws_before=-198.26007502388165 ws_after=-158.8086329107341",
+     "OTVT_ROUND L 5 swapped=83 ws_before=-158.8086329107341 ws_after=-154.30379196601507",
+     "OTVT_ROUND L 6 swapped=56 ws_before=-154.30379196601507 ws_after=-151.63437172560634",
+     "OTVT_ROUND L 7 swapped=56 ws_before=-151.63437172560634 ws_after=-136.721078902724",
+     "OTVT_ROUND L 8 swapped=58 ws_before=-136.721078902724 ws_after=-120.62173482263461",
+     "OTVT_ROUND SL 1 swapped=3346 ws_before=-120.62173482263461 ws_after=-88.25651320876204",
+     "OTVT_ROUND SL 2 swapped=124 ws_before=-88.25651320876204 ws_after=-81.92835299070111",
+     "OTVT_ROUND SL 3 swapped=80 ws_before=-81.92835299070111 ws_after=-64.57245849134097",
+     "OTVT_ROUND SL 4 swapped=77 ws_before=-64.57245849134097 ws_after=-38.75888499038638",
+     "OTVT_ROUND SL 5 swapped=93 ws_before=-38.75888499038638 ws_after=-26.244117989904225",
+     "OTVT_ROUND SL 6 swapped=70 ws_before=-26.244117989904225 ws_after=-12.35711533098538",
+     "OTVT_ROUND SL 7 swapped=49 ws_before=-12.35711533098538 ws_after=7.300715587632567",
+     "OTVT_ROUND SL 8 swapped=49 ws_before=7.300715587632567 ws_after=10.40645347671898"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": 16.42,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 190242,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": 13.44,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 174539,
+      "L": 15703,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": 13.44,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 174268,
+      "L": 12086,
+      "SL": 3888
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": -120.62,
+     "tns_ps": -5155.1,
+     "vt": {
+      "R": 174539,
+      "L": 15703,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": 10.41,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 174268,
+      "L": 12086,
+      "SL": 3888
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.1446812,
+     "switching_w": 0.07962114,
+     "leakage_w": 2.098628e-05,
+     "total_w": 0.2243233
+    },
+    "LVT": {
+     "internal_w": 0.1454363,
+     "switching_w": 0.07988228,
+     "leakage_w": 3.70533e-05,
+     "total_w": 0.2253556
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.1459832,
+     "switching_w": 0.07994661,
+     "leakage_w": 8.091817e-05,
+     "total_w": 0.2260107
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "s81ph-dsfd_selt_q-cd3337221-b": {
+  "name": "s81ph-dsfd_selt_q-cd3337221-b",
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-b",
+  "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-b/routes/s81ph_dsfd_selt_q_cd3337221_b/work/orfs",
+  "src": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-b/src",
+  "out": "/srv/opentallas-scratch2/scratch/claude/multivt/s81ph-dsfd_selt_q-cd3337221-b",
+  "bin": "/srv/opentallas-scratch2/scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-b/routes/s81ph_dsfd_selt_q_cd3337221_b/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-b/routes/s81ph_dsfd_selt_q_cd3337221_b/work/orfs/logs/asap7/opentallas_dsfd_selt_q_asap7_s81ph_s81ph_dsfd_selt_q_cd3337221_b/base/5_2_route.json"
+   ],
+   "ss_ps": -434.67,
+   "ff_ps": -13.34,
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-b/routes/s81ph_dsfd_selt_q_cd3337221_b/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -1773171.7,
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-b/routes/s81ph_dsfd_selt_q_cd3337221_b/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -434.67,
+     "tns_ps": -1773171.7,
+     "vt": {
+      "R": 357780,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": -183.42,
+     "tns_ps": -114633.3,
+     "vt": {
+      "R": 300830,
+      "L": 56950,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -109.03,
+     "tns_ps": -17513.9,
+     "vt": {
+      "R": 299838,
+      "L": 44714,
+      "SL": 13228
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=45469 ws_before=-434.6667470400689 ws_after=-331.27978138480785",
+     "OTVT_ROUND L 2 swapped=7812 ws_before=-331.27978138480785 ws_after=-219.79684738937522",
+     "OTVT_ROUND L 3 swapped=1690 ws_before=-219.79684738937522 ws_after=-207.27064509173942",
+     "OTVT_ROUND L 4 swapped=1081 ws_before=-207.27064509173942 ws_after=-204.74832940209353",
+     "OTVT_ROUND L 5 swapped=535 ws_before=-204.74832940209353 ws_after=-201.93990923900174",
+     "OTVT_ROUND L 6 swapped=199 ws_before=-201.93990923900174 ws_after=-199.29968786414065",
+     "OTVT_ROUND L 7 swapped=102 ws_before=-199.29968786414065 ws_after=-187.83286037660218",
+     "OTVT_ROUND L 8 swapped=62 ws_before=-187.83286037660218 ws_after=-183.4193907868098",
+     "OTVT_ROUND SL 1 swapped=11775 ws_before=-183.4193907868098 ws_after=-119.84579995072409",
+     "OTVT_ROUND SL 2 swapped=1256 ws_before=-119.84579995072409 ws_after=-109.03089542324551",
+     "OTVT_ROUND SL 3 swapped=110 ws_before=-109.03089542324551 ws_after=-109.03089542324551",
+     "OTVT_ROUND SL 4 swapped=30 ws_before=-109.03089542324551 ws_after=-109.03089542324551",
+     "OTVT_ROUND SL 5 swapped=21 ws_before=-109.03089542324551 ws_after=-109.03089542324551",
+     "OTVT_ROUND SL 6 swapped=20 ws_before=-109.03089542324551 ws_after=-109.03089542324551",
+     "OTVT_ROUND SL 7 swapped=10 ws_before=-109.03089542324551 ws_after=-109.03089542324551",
+     "OTVT_ROUND SL 8 swapped=6 ws_before=-109.03089542324551 ws_after=-109.03089542324551"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -13.34,
+     "tns_ps": -355.3,
+     "vt": {
+      "R": 357780,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -13.34,
+     "tns_ps": -355.4,
+     "vt": {
+      "R": 300830,
+      "L": 56950,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -13.34,
+     "tns_ps": -355.4,
+     "vt": {
+      "R": 299838,
+      "L": 44714,
+      "SL": 13228
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": -183.42,
+     "tns_ps": -114633.3,
+     "vt": {
+      "R": 300830,
+      "L": 56950,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": -109.03,
+     "tns_ps": -17513.9,
+     "vt": {
+      "R": 299838,
+      "L": 44714,
+      "SL": 13228
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.101305,
+     "switching_w": 0.05696822,
+     "leakage_w": 0.0001598541,
+     "total_w": 0.158433
+    },
+    "LVT": {
+     "internal_w": 0.1020095,
+     "switching_w": 0.05708041,
+     "leakage_w": 0.0002388211,
+     "total_w": 0.1593287
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.1021569,
+     "switching_w": 0.05709542,
+     "leakage_w": 0.0004416331,
+     "total_w": 0.1596939
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "s81ph-dsfd_coll_lane_e-ac313d866-wide": {
+  "name": "s81ph-dsfd_coll_lane_e-ac313d866-wide",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-ac313d866-wide",
+  "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-ac313d866-wide/routes/s81ph_dsfd_coll_lane_e_ac313d866_wide/work/orfs",
+  "src": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-ac313d866-wide/src",
+  "out": "/srv/opentallas-scratch2/scratch/claude/multivt/s81ph-dsfd_coll_lane_e-ac313d866-wide",
+  "bin": "/srv/opentallas-scratch2/scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-ac313d866-wide/routes/s81ph_dsfd_coll_lane_e_ac313d866_wide/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-ac313d866-wide/routes/s81ph_dsfd_coll_lane_e_ac313d866_wide/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_e_asap7_s81ph_s81ph_dsfd_coll_lane_e_ac313d866_wide/base/5_2_route.json"
+   ],
+   "ss_ps": -553.14,
+   "ff_ps": -2.11,
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-ac313d866-wide/routes/s81ph_dsfd_coll_lane_e_ac313d866_wide/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -1098852.4,
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-ac313d866-wide/routes/s81ph_dsfd_coll_lane_e_ac313d866_wide/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -553.14,
+     "tns_ps": -1098852.4,
+     "vt": {
+      "R": 110657,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": -260.54,
+     "tns_ps": -342195.4,
+     "vt": {
+      "R": 76284,
+      "L": 34373,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -122.84,
+     "tns_ps": -54118.3,
+     "vt": {
+      "R": 74125,
+      "L": 10793,
+      "SL": 25739
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=22558 ws_before=-553.1431979122203 ws_after=-429.9415268249618",
+     "OTVT_ROUND L 2 swapped=5877 ws_before=-429.9415268249618 ws_after=-356.20417726534015",
+     "OTVT_ROUND L 3 swapped=3251 ws_before=-356.20417726534015 ws_after=-302.03106682336056",
+     "OTVT_ROUND L 4 swapped=1589 ws_before=-302.03106682336056 ws_after=-268.50466294803255",
+     "OTVT_ROUND L 5 swapped=625 ws_before=-268.50466294803255 ws_after=-260.54147728160615",
+     "OTVT_ROUND L 6 swapped=280 ws_before=-260.54147728160615 ws_after=-260.54147728160615",
+     "OTVT_ROUND L 7 swapped=121 ws_before=-260.54147728160615 ws_after=-260.54147728160615",
+     "OTVT_ROUND L 8 swapped=72 ws_before=-260.54147728160615 ws_after=-260.54147728160615",
+     "OTVT_ROUND SL 1 swapped=15573 ws_before=-260.54147728160615 ws_after=-184.708692785307",
+     "OTVT_ROUND SL 2 swapped=5124 ws_before=-184.708692785307 ws_after=-144.83170218682062",
+     "OTVT_ROUND SL 3 swapped=2876 ws_before=-144.83170218682062 ws_after=-131.82832603320094",
+     "OTVT_ROUND SL 4 swapped=1267 ws_before=-131.82832603320094 ws_after=-122.75802596661833",
+     "OTVT_ROUND SL 5 swapped=500 ws_before=-122.75802596661833 ws_after=-122.81864414376287",
+     "OTVT_ROUND SL 6 swapped=237 ws_before=-122.81864414376287 ws_after=-122.83685180136672",
+     "OTVT_ROUND SL 7 swapped=108 ws_before=-122.83685180136672 ws_after=-122.83685180136672",
+     "OTVT_ROUND SL 8 swapped=54 ws_before=-122.83685180136672 ws_after=-122.83685180136672"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -2.11,
+     "tns_ps": -3.2,
+     "vt": {
+      "R": 110657,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -2.11,
+     "tns_ps": -4.5,
+     "vt": {
+      "R": 76284,
+      "L": 34373,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -5.74,
+     "tns_ps": -21.5,
+     "vt": {
+      "R": 74125,
+      "L": 10793,
+      "SL": 25739
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": -260.54,
+     "tns_ps": -342195.7,
+     "vt": {
+      "R": 76284,
+      "L": 34373,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": -122.84,
+     "tns_ps": -54118.4,
+     "vt": {
+      "R": 74125,
+      "L": 10793,
+      "SL": 25739
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.1302601,
+     "switching_w": 0.09666286,
+     "leakage_w": 0.0002751361,
+     "total_w": 0.2271981
+    },
+    "LVT": {
+     "internal_w": 0.1345523,
+     "switching_w": 0.09863101,
+     "leakage_w": 0.0003184385,
+     "total_w": 0.2335018
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.1389773,
+     "switching_w": 0.09930883,
+     "leakage_w": 0.0006532135,
+     "total_w": 0.2389393
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "bf_half_61c1cf230": {
+  "name": "bf_half_61c1cf230",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/bf_half_61c1cf230",
+  "orfs": "/srv/opentallas-scratch/claude/closure-loop/bf_half_61c1cf230/routes/bf_half_61c1cf230/work/orfs",
+  "src": "/srv/opentallas-scratch/claude/closure-loop/bf_half_61c1cf230/src",
+  "out": "/srv/opentallas-scratch/claude/multivt/bf_half_61c1cf230",
+  "bin": "/srv/opentallas-scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch/claude/closure-loop/bf_half_61c1cf230/routes/bf_half_61c1cf230/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch/claude/closure-loop/bf_half_61c1cf230/routes/bf_half_61c1cf230/work/orfs/logs/asap7/opentallas_ot_s81_bf_native_asap7_bf_half_61c1cf230/base/5_2_route.json"
+   ],
+   "ss_ps": -474.68,
+   "ff_ps": -63.08,
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/bf_half_61c1cf230/routes/bf_half_61c1cf230/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -474.7,
+   "post_sdc": [
+    "physical/s81_native_bf/margin/signoff_ref.sdc",
+    "physical/s81_native_bf/margin/half_mc.sdc"
+   ],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/bf_half_61c1cf230/routes/bf_half_61c1cf230/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -474.68,
+     "tns_ps": -474.7,
+     "vt": {
+      "R": 490182,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": -399.7,
+     "tns_ps": -399.7,
+     "vt": {
+      "R": 490177,
+      "L": 5,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -358.13,
+     "tns_ps": -358.1,
+     "vt": {
+      "R": 490177,
+      "L": 0,
+      "SL": 5
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=5 ws_before=-474.67707542381277 ws_after=-399.7014941248267",
+     "OTVT_ROUND L 2 swapped=0 ws_before=-399.7014941248267 ws_after=-399.7014941248267",
+     "OTVT_ROUND SL 1 swapped=5 ws_before=-399.7014941248267 ws_after=-358.1321905699042",
+     "OTVT_ROUND SL 2 swapped=0 ws_before=-358.1321905699042 ws_after=-358.1321905699042"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -63.08,
+     "tns_ps": -107320.7,
+     "vt": {
+      "R": 490182,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -57.91,
+     "tns_ps": -98824.5,
+     "vt": {
+      "R": 490177,
+      "L": 5,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -54.65,
+     "tns_ps": -93795.6,
+     "vt": {
+      "R": 490177,
+      "L": 0,
+      "SL": 5
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": -399.7,
+     "tns_ps": -399.7,
+     "vt": {
+      "R": 490177,
+      "L": 5,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": -358.13,
+     "tns_ps": -358.1,
+     "vt": {
+      "R": 490177,
+      "L": 0,
+      "SL": 5
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.332326,
+     "switching_w": 0.2066377,
+     "leakage_w": 0.0002775427,
+     "total_w": 0.5392413
+    },
+    "LVT": {
+     "internal_w": 0.3323261,
+     "switching_w": 0.2066378,
+     "leakage_w": 0.0002775627,
+     "total_w": 0.5392414
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.3323263,
+     "switching_w": 0.2066378,
+     "leakage_w": 0.000277766,
+     "total_w": 0.5392419
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "hbm_su_full_a8cdcbe79": {
+  "name": "hbm_su_full_a8cdcbe79",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_full_a8cdcbe79",
+  "orfs": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_full_a8cdcbe79/routes/hbm_su_full_a8cdcbe79/work/orfs",
+  "src": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_full_a8cdcbe79/src",
+  "out": "/srv/opentallas-scratch/claude/multivt/hbm_su_full_a8cdcbe79",
+  "bin": "/srv/opentallas-scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_su_full_a8cdcbe79/routes/hbm_su_full_a8cdcbe79/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_su_full_a8cdcbe79/routes/hbm_su_full_a8cdcbe79/work/orfs/logs/asap7/opentallas_ot_su12_full_asap7_su_red_hbm_su_full_a8cdcbe79/base/5_2_route.json"
+   ],
+   "ss_ps": -46.6,
+   "ff_ps": -34.2,
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_full_a8cdcbe79/routes/hbm_su_full_a8cdcbe79/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -2666.5,
+   "post_sdc": [
+    "physical/hbm_su_c12/signoff_833_io150.sdc"
+   ],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_full_a8cdcbe79/routes/hbm_su_full_a8cdcbe79/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -46.6,
+     "tns_ps": -2666.5,
+     "vt": {
+      "R": 255456,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": 24.3,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 255230,
+      "L": 226,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": 24.3,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 255230,
+      "L": 226,
+      "SL": 0
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=215 ws_before=-46.598946923381845 ws_after=12.323031484129388",
+     "OTVT_ROUND L 2 swapped=11 ws_before=12.323031484129388 ws_after=24.29989542918065"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -34.2,
+     "tns_ps": -27529.7,
+     "vt": {
+      "R": 255456,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -34.2,
+     "tns_ps": -27529.7,
+     "vt": {
+      "R": 255230,
+      "L": 226,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -34.2,
+     "tns_ps": -27529.7,
+     "vt": {
+      "R": 255230,
+      "L": 226,
+      "SL": 0
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": 24.3,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 255230,
+      "L": 226,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": 24.3,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 255230,
+      "L": 226,
+      "SL": 0
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.2891936,
+     "switching_w": 0.1364169,
+     "leakage_w": 3.226908e-05,
+     "total_w": 0.4256428
+    },
+    "LVT": {
+     "internal_w": 0.2892,
+     "switching_w": 0.1364186,
+     "leakage_w": 3.251454e-05,
+     "total_w": 0.4256511
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.2892,
+     "switching_w": 0.1364186,
+     "leakage_w": 3.251454e-05,
+     "total_w": 0.4256511
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "hbm_smh_front_n_m3f_f7f1a0ee4_t8": {
+  "name": "hbm_smh_front_n_m3f_f7f1a0ee4_t8",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_front_n_m3f_f7f1a0ee4_t8",
+  "orfs": "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_front_n_m3f_f7f1a0ee4_t8/routes/hbm_smh_front_n_m3f_f7f1a0ee4_t8",
+  "src": "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_front_n_m3f_f7f1a0ee4_t8/src",
+  "out": "/srv/opentallas-scratch/claude/multivt/hbm_smh_front_n_m3f_f7f1a0ee4_t8",
+  "bin": "/srv/opentallas-scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_front_n_m3f_f7f1a0ee4_t8/routes/hbm_smh_front_n_m3f_f7f1a0ee4_t8/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_front_n_m3f_f7f1a0ee4_t8/routes/hbm_smh_front_n_m3f_f7f1a0ee4_t8/logs/asap7/smh_front_n_one_hbm_smh_front_n_m3f_f7f1a0ee4_t8/base/5_2_route.json"
+   ],
+   "ss_ps": -108.56,
+   "ff_ps": -39.45,
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_front_n_m3f_f7f1a0ee4_t8/routes/hbm_smh_front_n_m3f_f7f1a0ee4_t8",
+   "errors": [],
+   "ss_tns_ps": -79021.9,
+   "post_sdc": [],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_front_n_m3f_f7f1a0ee4_t8/routes/hbm_smh_front_n_m3f_f7f1a0ee4_t8",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -108.56,
+     "tns_ps": -79021.9,
+     "vt": {
+      "R": 130299,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": -48.65,
+     "tns_ps": -68749.8,
+     "vt": {
+      "R": 128011,
+      "L": 2288,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -46.69,
+     "tns_ps": -63632.5,
+     "vt": {
+      "R": 128011,
+      "L": 174,
+      "SL": 2114
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=2288 ws_before=-108.56460175290295 ws_after=-48.64875169374727",
+     "OTVT_ROUND L 2 swapped=0 ws_before=-48.64875169374727 ws_after=-48.64875169374727",
+     "OTVT_ROUND SL 1 swapped=2114 ws_before=-48.64875169374727 ws_after=-46.694648148104534",
+     "OTVT_ROUND SL 2 swapped=0 ws_before=-46.694648148104534 ws_after=-46.694648148104534"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -39.45,
+     "tns_ps": -196534.2,
+     "vt": {
+      "R": 130299,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -39.45,
+     "tns_ps": -196534.2,
+     "vt": {
+      "R": 128011,
+      "L": 2288,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -39.45,
+     "tns_ps": -196534.2,
+     "vt": {
+      "R": 128011,
+      "L": 174,
+      "SL": 2114
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": -48.65,
+     "tns_ps": -68749.8,
+     "vt": {
+      "R": 128011,
+      "L": 2288,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": -46.69,
+     "tns_ps": -63632.5,
+     "vt": {
+      "R": 128011,
+      "L": 174,
+      "SL": 2114
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.063817,
+     "switching_w": 0.02668764,
+     "leakage_w": 1.431177e-05,
+     "total_w": 0.09051895
+    },
+    "LVT": {
+     "internal_w": 0.06384374,
+     "switching_w": 0.02668788,
+     "leakage_w": 1.657212e-05,
+     "total_w": 0.09054819
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.06387303,
+     "switching_w": 0.0266879,
+     "leakage_w": 3.714352e-05,
+     "total_w": 0.09059807
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "hbm_quant_e7c2e5b06": {
+  "name": "hbm_quant_e7c2e5b06",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_e7c2e5b06",
+  "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_e7c2e5b06/routes/hbm_quant_e7c2e5b06/work/orfs",
+  "src": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_e7c2e5b06/src",
+  "out": "/srv/opentallas-scratch2/scratch/claude/multivt/hbm_quant_e7c2e5b06",
+  "bin": "/srv/opentallas-scratch2/scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_e7c2e5b06/routes/hbm_quant_e7c2e5b06/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_e7c2e5b06/routes/hbm_quant_e7c2e5b06/work/orfs/logs/asap7/opentallas_hfd_quant_asap7_hv_hbm_quant_e7c2e5b06/base/5_2_route.json"
+   ],
+   "ss_ps": -271.17,
+   "ff_ps": -206.47,
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_e7c2e5b06/routes/hbm_quant_e7c2e5b06/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -14772.0,
+   "post_sdc": [
+    "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+    "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc"
+   ],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_e7c2e5b06/routes/hbm_quant_e7c2e5b06/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -271.17,
+     "tns_ps": -14772.0,
+     "vt": {
+      "R": 176290,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": -112.67,
+     "tns_ps": -5304.9,
+     "vt": {
+      "R": 175615,
+      "L": 675,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -43.58,
+     "tns_ps": -1239.9,
+     "vt": {
+      "R": 175579,
+      "L": 482,
+      "SL": 229
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=608 ws_before=-271.16975331864523 ws_after=-190.60353295685672",
+     "OTVT_ROUND L 2 swapped=21 ws_before=-190.60353295685672 ws_after=-150.06851317167502",
+     "OTVT_ROUND L 3 swapped=11 ws_before=-150.06851317167502 ws_after=-134.79306559815996",
+     "OTVT_ROUND L 4 swapped=8 ws_before=-134.79306559815996 ws_after=-125.34362436866786",
+     "OTVT_ROUND L 5 swapped=8 ws_before=-125.34362436866786 ws_after=-122.57195258769116",
+     "OTVT_ROUND L 6 swapped=12 ws_before=-122.57195258769116 ws_after=-116.81222655823831",
+     "OTVT_ROUND L 7 swapped=6 ws_before=-116.81222655823831 ws_after=-112.6713167209914",
+     "OTVT_ROUND L 8 swapped=1 ws_before=-112.6713167209914 ws_after=-112.6713167209914",
+     "OTVT_ROUND SL 1 swapped=162 ws_before=-112.6713167209914 ws_after=-72.23466269579149",
+     "OTVT_ROUND SL 2 swapped=25 ws_before=-72.23466269579149 ws_after=-65.30909146817976",
+     "OTVT_ROUND SL 3 swapped=15 ws_before=-65.30909146817976 ws_after=-61.655236471835906",
+     "OTVT_ROUND SL 4 swapped=11 ws_before=-61.655236471835906 ws_after=-56.940563375462716",
+     "OTVT_ROUND SL 5 swapped=5 ws_before=-56.940563375462716 ws_after=-52.18592225020302",
+     "OTVT_ROUND SL 6 swapped=4 ws_before=-52.18592225020302 ws_after=-52.11486797662701",
+     "OTVT_ROUND SL 7 swapped=5 ws_before=-52.11486797662701 ws_after=-43.70492856509145",
+     "OTVT_ROUND SL 8 swapped=2 ws_before=-43.70492856509145 ws_after=-43.57991745251866"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -206.47,
+     "tns_ps": -55681.6,
+     "vt": {
+      "R": 176290,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -206.47,
+     "tns_ps": -55695.1,
+     "vt": {
+      "R": 175615,
+      "L": 675,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -206.47,
+     "tns_ps": -55695.1,
+     "vt": {
+      "R": 175579,
+      "L": 482,
+      "SL": 229
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": -112.67,
+     "tns_ps": -5305.0,
+     "vt": {
+      "R": 175615,
+      "L": 675,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": -43.58,
+     "tns_ps": -1239.9,
+     "vt": {
+      "R": 175579,
+      "L": 482,
+      "SL": 229
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.150216,
+     "switching_w": 0.1127134,
+     "leakage_w": 2.502119e-05,
+     "total_w": 0.2629544
+    },
+    "LVT": {
+     "internal_w": 0.1503253,
+     "switching_w": 0.1127306,
+     "leakage_w": 2.598787e-05,
+     "total_w": 0.2630818
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.1503423,
+     "switching_w": 0.1127317,
+     "leakage_w": 2.916123e-05,
+     "total_w": 0.2631032
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "hbm_svc_SE_s1_e26c4446e_r18": {
+  "name": "hbm_svc_SE_s1_e26c4446e_r18",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18",
+  "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18/routes/hbm_svc_SE_s1_e26c4446e_r18/work/orfs",
+  "src": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18/src",
+  "out": "/srv/opentallas-scratch2/scratch/claude/multivt/hbm_svc_SE_s1_e26c4446e_r18",
+  "bin": "/srv/opentallas-scratch2/scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18/routes/hbm_svc_SE_s1_e26c4446e_r18/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18/routes/hbm_svc_SE_s1_e26c4446e_r18/work/orfs/logs/asap7/opentallas_hfd_svc_SE_s1_asap7_hv_hbm_svc_SE_s1_e26c4446e_r18/base/5_2_route.json"
+   ],
+   "ss_ps": -189.34,
+   "ff_ps": -68.62,
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18/routes/hbm_svc_SE_s1_e26c4446e_r18/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -208004.4,
+   "post_sdc": [
+    "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+    "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc"
+   ],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18/routes/hbm_svc_SE_s1_e26c4446e_r18/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -189.34,
+     "tns_ps": -208004.4,
+     "vt": {
+      "R": 176612,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": -107.22,
+     "tns_ps": -2010.1,
+     "vt": {
+      "R": 163879,
+      "L": 12733,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -107.22,
+     "tns_ps": -647.9,
+     "vt": {
+      "R": 163879,
+      "L": 11763,
+      "SL": 970
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=12345 ws_before=-189.34176448937023 ws_after=-107.22411847297053",
+     "OTVT_ROUND L 2 swapped=388 ws_before=-107.22411847297053 ws_after=-107.22411847297053",
+     "OTVT_ROUND L 3 swapped=0 ws_before=-107.22411847297053 ws_after=-107.22411847297053",
+     "OTVT_ROUND SL 1 swapped=938 ws_before=-107.22411847297053 ws_after=-107.22411847297053",
+     "OTVT_ROUND SL 2 swapped=32 ws_before=-107.22411847297053 ws_after=-107.22411847297053",
+     "OTVT_ROUND SL 3 swapped=0 ws_before=-107.22411847297053 ws_after=-107.22411847297053"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -68.62,
+     "tns_ps": -205.7,
+     "vt": {
+      "R": 176612,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -68.62,
+     "tns_ps": -205.7,
+     "vt": {
+      "R": 163879,
+      "L": 12733,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -68.62,
+     "tns_ps": -205.7,
+     "vt": {
+      "R": 163879,
+      "L": 11763,
+      "SL": 970
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": -107.22,
+     "tns_ps": -2010.1,
+     "vt": {
+      "R": 163879,
+      "L": 12733,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": -107.22,
+     "tns_ps": -647.9,
+     "vt": {
+      "R": 163879,
+      "L": 11763,
+      "SL": 970
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.118247,
+     "switching_w": 0.06961019,
+     "leakage_w": 2.930742e-05,
+     "total_w": 0.1878865
+    },
+    "LVT": {
+     "internal_w": 0.1194149,
+     "switching_w": 0.06976674,
+     "leakage_w": 4.985506e-05,
+     "total_w": 0.1892315
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.1204482,
+     "switching_w": 0.06978418,
+     "leakage_w": 7.126175e-05,
+     "total_w": 0.1903036
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "hbm_su_full31_d773c1033": {
+  "name": "hbm_su_full31_d773c1033",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full31_d773c1033",
+  "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full31_d773c1033/routes/hbm_su_full31_d773c1033/work/orfs",
+  "src": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full31_d773c1033/src",
+  "out": "/srv/opentallas-scratch2/scratch/claude/multivt/hbm_su_full31_d773c1033",
+  "bin": "/srv/opentallas-scratch2/scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full31_d773c1033/routes/hbm_su_full31_d773c1033/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full31_d773c1033/routes/hbm_su_full31_d773c1033/work/orfs/logs/asap7/opentallas_ot_su12_full31_asap7_su_red_hbm_su_full31_d773c1033/base/5_2_route.json"
+   ],
+   "ss_ps": -193.85,
+   "ff_ps": -25.08,
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full31_d773c1033/routes/hbm_su_full31_d773c1033/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -124358.3,
+   "post_sdc": [
+    "physical/hbm_su_c12/signoff_833_io150.sdc"
+   ],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full31_d773c1033/routes/hbm_su_full31_d773c1033/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -193.85,
+     "tns_ps": -124358.3,
+     "vt": {
+      "R": 246897,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": 15.54,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 242082,
+      "L": 4815,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": 15.54,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 242082,
+      "L": 4815,
+      "SL": 0
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=4716 ws_before=-193.8512683707927 ws_after=-40.24747202180379",
+     "OTVT_ROUND L 2 swapped=88 ws_before=-40.24747202180379 ws_after=10.346612455691684",
+     "OTVT_ROUND L 3 swapped=11 ws_before=10.346612455691684 ws_after=15.542345188634954"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -25.08,
+     "tns_ps": -27606.2,
+     "vt": {
+      "R": 246897,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -25.08,
+     "tns_ps": -27614.3,
+     "vt": {
+      "R": 242082,
+      "L": 4815,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -25.08,
+     "tns_ps": -27614.3,
+     "vt": {
+      "R": 242082,
+      "L": 4815,
+      "SL": 0
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": 15.54,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 242082,
+      "L": 4815,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": 15.54,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 242082,
+      "L": 4815,
+      "SL": 0
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.282895,
+     "switching_w": 0.1255601,
+     "leakage_w": 3.172633e-05,
+     "total_w": 0.4084868
+    },
+    "LVT": {
+     "internal_w": 0.2834692,
+     "switching_w": 0.1256746,
+     "leakage_w": 3.639357e-05,
+     "total_w": 0.4091801
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.2834692,
+     "switching_w": 0.1256746,
+     "leakage_w": 3.639357e-05,
+     "total_w": 0.4091801
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "qfd_embed_code_bank-c719e4418": {
+  "name": "qfd_embed_code_bank-c719e4418",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank-c719e4418",
+  "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank-c719e4418/routes/qfd_embed_code_bank_c719e4418/work/orfs",
+  "src": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank-c719e4418/src",
+  "out": "/srv/opentallas-scratch2/scratch/claude/multivt/qfd_embed_code_bank-c719e4418",
+  "bin": "/srv/opentallas-scratch2/scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank-c719e4418/routes/qfd_embed_code_bank_c719e4418/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank-c719e4418/routes/qfd_embed_code_bank_c719e4418/work/orfs/logs/asap7/opentallas_ot_qwen_embed_code_bank_asap7_qdm_qfd_embed_code_bank_c719e4418/base/5_2_route.json"
+   ],
+   "ss_ps": 9.27,
+   "ff_ps": -34.98,
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank-c719e4418/routes/qfd_embed_code_bank_c719e4418/work/orfs",
+   "errors": [],
+   "ss_tns_ps": 0.0,
+   "post_sdc": [],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank-c719e4418/routes/qfd_embed_code_bank_c719e4418/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": 9.27,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 4755,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": 18.98,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 4753,
+      "L": 2,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": 18.98,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 4753,
+      "L": 2,
+      "SL": 0
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=2 ws_before=9.271194922888526 ws_after=18.98370349806555"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -34.98,
+     "tns_ps": -1044.7,
+     "vt": {
+      "R": 4755,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -34.98,
+     "tns_ps": -1044.7,
+     "vt": {
+      "R": 4753,
+      "L": 2,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -34.98,
+     "tns_ps": -1044.7,
+     "vt": {
+      "R": 4753,
+      "L": 2,
+      "SL": 0
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": 18.98,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 4753,
+      "L": 2,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": 18.98,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 4753,
+      "L": 2,
+      "SL": 0
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.02076871,
+     "switching_w": 0.0008631712,
+     "leakage_w": 0.0001038479,
+     "total_w": 0.02173573
+    },
+    "LVT": {
+     "internal_w": 0.02076871,
+     "switching_w": 0.0008631712,
+     "leakage_w": 0.000103854,
+     "total_w": 0.02173574
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.02076871,
+     "switching_w": 0.0008631712,
+     "leakage_w": 0.000103854,
+     "total_w": 0.02173574
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "wcol256-m6-01a487c86": {
+  "name": "wcol256-m6-01a487c86",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-m6-01a487c86",
+  "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-m6-01a487c86/routes/wcol256_m6_01a487c86/work/orfs",
+  "src": "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-m6-01a487c86/src",
+  "out": "/srv/opentallas-scratch2/scratch/claude/multivt/wcol256-m6-01a487c86",
+  "bin": "/srv/opentallas-scratch2/scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-m6-01a487c86/routes/wcol256_m6_01a487c86/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-m6-01a487c86/routes/wcol256_m6_01a487c86/work/orfs/logs/asap7/opentallas_ot_dsrom_window_column_256_asap7_wcol256_m6_01a487c86/base/5_2_route.json"
+   ],
+   "ss_ps": 1.44,
+   "ff_ps": -13.05,
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-m6-01a487c86/routes/wcol256_m6_01a487c86/work/orfs",
+   "errors": [],
+   "ss_tns_ps": 0.0,
+   "post_sdc": [
+    "physical/dsrom_window_columns/m6/cl_wcol256_m6_01a487c86/signoff_ss.sdc",
+    "physical/dsrom_window_columns/m6/cl_wcol256_m6_01a487c86/signoff_ff_guarded.sdc"
+   ],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-m6-01a487c86/routes/wcol256_m6_01a487c86/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": 1.44,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 46122,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": 18.44,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 46093,
+      "L": 29,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": 18.44,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 46093,
+      "L": 29,
+      "SL": 0
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=29 ws_before=1.4371837053772651 ws_after=18.443691018887876"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -13.05,
+     "tns_ps": -2159.0,
+     "vt": {
+      "R": 46122,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -13.05,
+     "tns_ps": -2159.0,
+     "vt": {
+      "R": 46093,
+      "L": 29,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -13.05,
+     "tns_ps": -2159.0,
+     "vt": {
+      "R": 46093,
+      "L": 29,
+      "SL": 0
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": 18.44,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 46093,
+      "L": 29,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": 18.44,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 46093,
+      "L": 29,
+      "SL": 0
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.02628688,
+     "switching_w": 0.008767562,
+     "leakage_w": 5.533174e-06,
+     "total_w": 0.03505997
+    },
+    "LVT": {
+     "internal_w": 0.02628719,
+     "switching_w": 0.008767617,
+     "leakage_w": 5.555716e-06,
+     "total_w": 0.03506036
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.02628719,
+     "switching_w": 0.008767617,
+     "leakage_w": 5.555716e-06,
+     "total_w": 0.03506036
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ },
+ "dshead-ctl-oreg-877db779e": {
+  "name": "dshead-ctl-oreg-877db779e",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/dshead-ctl-oreg-877db779e",
+  "orfs": "/srv/opentallas-scratch/claude/closure-loop/dshead-ctl-oreg-877db779e/routes/dshead_ctl_oreg_877db779e/work/orfs",
+  "src": "/srv/opentallas-scratch/claude/closure-loop/dshead-ctl-oreg-877db779e/src",
+  "out": "/srv/opentallas-scratch/claude/multivt/dshead-ctl-oreg-877db779e",
+  "bin": "/srv/opentallas-scratch/claude/multivt/bin",
+  "metrics": {
+   "corner_sta": [
+    "/srv/opentallas-scratch/claude/closure-loop/dshead-ctl-oreg-877db779e/routes/dshead_ctl_oreg_877db779e/corner_sta.json"
+   ],
+   "drc_metrics": [
+    "/srv/opentallas-scratch/claude/closure-loop/dshead-ctl-oreg-877db779e/routes/dshead_ctl_oreg_877db779e/work/orfs/logs/asap7/opentallas_ot_hdc_v41_fh_ctl_asap7_dshead_ctl_oreg_877db779e/base/5_2_route.json"
+   ],
+   "ss_ps": -15.67,
+   "ff_ps": -94.29,
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dshead-ctl-oreg-877db779e/routes/dshead_ctl_oreg_877db779e/work/orfs",
+   "errors": [],
+   "ss_tns_ps": -26.9,
+   "post_sdc": [
+    "physical/dsrom_fh_safe/gen/signoff_ctl.sdc"
+   ],
+   "drc": 0
+  },
+  "result": {
+   "schema": "opentallas.multivt.vt_swap_sta.v1",
+   "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dshead-ctl-oreg-877db779e/routes/dshead_ctl_oreg_877db779e/work/orfs",
+   "target_ps": 15.0,
+   "rounds": 8,
+   "ss_setup": {
+    "RVT": {
+     "ws_ps": -15.67,
+     "tns_ps": -26.9,
+     "vt": {
+      "R": 14371,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "LVT": {
+     "ws_ps": 50.22,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 14361,
+      "L": 10,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": 50.22,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 14361,
+      "L": 10,
+      "SL": 0
+     }
+    },
+    "rounds": [
+     "OTVT_ROUND L 1 swapped=10 ws_before=-15.665579944368346 ws_after=50.22238180885097"
+    ],
+    "errors": []
+   },
+   "ff_hold": {
+    "RVT": {
+     "ws_ps": -94.29,
+     "tns_ps": -29960.0,
+     "vt": {
+      "R": 14371,
+      "L": 0,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT": {
+     "ws_ps": -94.29,
+     "tns_ps": -29960.0,
+     "vt": {
+      "R": 14361,
+      "L": 10,
+      "SL": 0
+     }
+    },
+    "LVT_SLVT": {
+     "ws_ps": -94.29,
+     "tns_ps": -29960.0,
+     "vt": {
+      "R": 14361,
+      "L": 10,
+      "SL": 0
+     }
+    }
+   },
+   "ss_verify": {
+    "LVT": {
+     "ws_ps": 50.22,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 14361,
+      "L": 10,
+      "SL": 0
+     }
+    },
+    "errors": [],
+    "LVT_SLVT": {
+     "ws_ps": 50.22,
+     "tns_ps": 0.0,
+     "vt": {
+      "R": 14361,
+      "L": 10,
+      "SL": 0
+     }
+    }
+   },
+   "tt_power": {
+    "RVT": {
+     "internal_w": 0.01262171,
+     "switching_w": 0.003893923,
+     "leakage_w": 1.883365e-06,
+     "total_w": 0.01651752
+    },
+    "LVT": {
+     "internal_w": 0.01262173,
+     "switching_w": 0.003893931,
+     "leakage_w": 1.898858e-06,
+     "total_w": 0.01651756
+    },
+    "LVT_SLVT": {
+     "internal_w": 0.01262173,
+     "switching_w": 0.003893931,
+     "leakage_w": 1.898858e-06,
+     "total_w": 0.01651756
+    }
+   },
+   "tt_macro_views_missing": [],
+   "activity": "OpenSTA vectorless: primary inputs toggle density 0.1, duty 0.5, propagated; clocks from SDC",
+   "area_change_um2": 0.0,
+   "area_basis": "ASAP7 R/L/SL LEFs are identical except the VT implant OBS layer (diff = 0 after renaming)"
+  }
+ }
+}
