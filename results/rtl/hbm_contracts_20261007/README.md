@@ -3,7 +3,7 @@
 Stream `hbm-contracts`, branch `claude/hbm-contracts-20261007`. Each contract below now has RTL, an exactness bench with
 negative controls, and a physical screen launched through the closure loop. The bench record is
 [`gate_all/record.json`](gate_all/record.json): `tools/hbm_contracts_gate.py --suite all`, Verilator 5.032, with
-12 positives and 20 negatives, all behaving as required. Every source is pinned by sha256 in that record. The SM → SU
+12 positives and 21 negatives, all behaving as required. Every source is pinned by sha256 in that record. The SM → SU
 golden composition is in [`sm_su_composed/`](sm_su_composed/).
 
 | # | contract | RTL | bench verdict | cycles / token | route (loop job) |
@@ -21,19 +21,27 @@ golden composition is in [`sm_su_composed/`](sm_su_composed/).
   - an SU pin station;
   - `ot_hbm_su_result_ingress`.
 - **Flow control** is a credit reservation inside the ingress:
-  - The SU command path may start an SM op only after the lane accepts `op_rows` (`op_v && op_r`).
+  - The SU command path holds `op_v` / `op_rows` until the lane's registered `op_ack`, and starts the SM op only
+    after `op_ack`. The first screen had a combinational `op_v → op_r` handshake (SS −246 ps), now replaced by a
+    registered request and acknowledge.
   - The accepted rows are deducted from the 64 free slots, and each drained row returns one slot.
   - No ready and no credit return crosses the die, so the lane cannot overflow at any path latency.
 - **Release is ordered by protocol.**
   - Rows become visible only after `arrived == op_rows`, and `op_done` pulses once per op.
   - Each row index must be below `op_rows` and is accepted only once, enforced with a 64-b map.
   - These are sticky faults: SM fault, a row with no reservation, a repeated row, a row out of range, and `op_rows` of 0 or greater than 64.
+- **Pipeline.** Every decision comes from registered state:
+  - stage A (at the pin register) runs the range, duplicate and reservation checks, updates `seen` / `arrived` and
+    flags the head op's last row;
+  - stage B commits the SRAM write and the counters;
+  - the head-op view and `out_v` are registered.
 - **Storage** is one `ot_sram_1r1w_64x512_m1_r2c2` per SM lane (268 b used). Its 64 slots cover the 43 rows per SM per op on the DS AR walk. The read side uses the same II=1 refill head as contract 3.
 - **Measured (standalone bench, 400 ops, NST = 49 = r23 worst path `result_sm8`).**
   - One-way latency is **51 cycles**, the r23 floor stated in the contract.
-  - `op_done` comes 1 cycle after the last row reaches the ingress.
+  - `op_done` comes 1 cycle after the last row reaches the ingress (stage A → B), with one further edge for the
+    registered `out_v`.
   - The first row of the completed op is visible on that same edge, because the head is prefetched.
-  - Per barrier this gives SU pin station +1 and ingress +1. That is within the priced +1 station / +2 ingress, so **1,029 cycles/token** stays the published figure.
+  - Per barrier this gives SU pin station +1 and ingress +2, equal to the priced +1 station / +2 ingress, so **1,029 cycles/token** stays the published figure.
 - **Golden.** `tools/hbm_sm_su_composed_gate.py synth --simulator verilator --cols 1 2` runs W13's SM vectors with the SM result face routed through the edge. The rows are reserved before `start`, and the consumer applies random back-pressure.
   - **12/12 cases are bit-exact against `hdc_golden_v41`** for the original `ot_gpu_sm_v` and for the 1.2 GHz `ot_hbm_accel_sm_v`.
   - A payload mutant inside the ingress head is detected in 6/6 cases.
@@ -106,7 +114,16 @@ golden composition is in [`sm_su_composed/`](sm_su_composed/).
   - The next read refills R on the same edge.
 - **Measured.** One flit per edge: 64 flits in 64 edges, and 256 in 256. The II=3 queue takes 190 edges for 64.
 - **Registered-address fix.** It is **not needed** here: the SRAM address is already the registered `c_rp`, and `pop` reaches only `r_ce_in`, the head load enable and the control next-state.
-- **Unchanged from II=3:** ECC, seal, overflow and count semantics. The legacy II=3 bench passes against the same storage.
+- **Head decode is split across the transfer edge.** The first screen failed at SS −909 ps on a 27-level path:
+  the full SECDED decode of the held word, driving `dout` and the fault/enable fan-out.
+  - Each word's syndrome and overall parity are now registered from the macro output at transfer.
+  - The held word's data is `captured ^ (ovr && syn == position)`, 4 levels. The uncorrectable flag is a register.
+  - SRAM residency keeps full SECDED: the bench injects real array upsets, and a single upset is corrected while a
+    double upset faults.
+  - A head-register upset while held is now **detected** (per-word parity against the parity registered at load,
+    fault one edge later) rather than corrected as the II=3 queue did. This is a disclosed change in protection scope.
+  - Negative `NEG_pkt_no_correction` (mutant) fails as required.
+- **Unchanged from II=3:** seal, overflow and count semantics. The legacy II=3 bench passes against the II=3 storage.
 - **Finding.** The committed II=3 source (`ot_hbm_collective_packet_fifo.sv`) **does not parse in the ORFS Yosys 0.68 frontend**, because of the wildcard `import` inside a generate block. It has never been routable as written. The refill is written with package-scoped calls and synthesises with 3 macros.
 - **Use.** `PACKET_SRAM=2` in `ot_hbm_collective_full_candidate` / `ot_hbm_collective_native_link_candidate` selects the refill. The default is unchanged.
 
@@ -145,6 +162,15 @@ python3 tools/hbm_contracts_physical.py --block {pkt_ii1,su_rin,credit,idle} --o
 ```
 
 - **Physical routes.**
+  - First screens, at 8bd16b9e0 to de406cb5b:
+    - the packet SRAM failed GRT with auto-placed macros, then reached SS −909 with explicit floorplans;
+    - the SU ingress reached SS −246 / −127;
+    - the credit block went from SS −127.6 to +128.0 after registering its outputs, with FF −9.7;
+    - the idle block reached SS +137.6 / FF +1.9.
+  - All were fixed structurally at 456fcf4a6 and re-dropped as `hbm_*-36399d734`, with these changes:
+    - calibrated die-clock IO: `io_vclk` at the measured insertion, and FF hold with `io_vclk_ff`;
+    - flow-hold's multi-mode hold repair (HM 50 ps);
+    - explicit macro floorplans (two packet-SRAM variants and two SU-ingress variants).
   - The routes are block screens: SS ≥ +15 / FF ≥ +15 / DRC 0 at 833.333 ps with 60/25 ps uncertainty.
   - IO is an envelope of 20 % each way, because no budget sheet exists for these new masters. Die-context IO binding is a separate gate.
   - The credit block's screen ties the PHY and partner clocks to `clk`, so every synchroniser path is timed as a single-cycle path. That is stricter than the real asynchronous crossing.
