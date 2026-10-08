@@ -119,6 +119,29 @@ def ensure_hooks(s):
     return s, ["OT_CTS_FIX_HOOKS added"], True
 
 
+SMH_OLD = 'f"export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) {lib_ss}"'
+SMH_NEW = ('f"export WC_LIB_FILES = $(TC_NLDM_LIB_FILES) {lib_ss.replace(\'_ss.lib\', \'_tt.lib\')}"'
+           '  # tt_overlay v2: corner WC reads the TT liberties (option B)')
+
+
+def ensure_smh(src):
+    """SM piece flow (tools/hbm_accel_smh_physical.py writes its own config.mk, not through run_abi3_physical): in a
+    TC route stage, corner WC reads the TT std-cell + macro liberties; the mark is written here."""
+    f = src / "tools/hbm_accel_smh_physical.py"
+    tc = (os.environ.get("OT_ORFS_CORNER", "") or os.environ.get("OT_ORFS_CORNER_OVERRIDE", "")).strip().upper() == "TC"
+    if not f.is_file() or not tc:
+        return []
+    s = f.read_text()
+    if SMH_NEW not in s:
+        if s.count(SMH_OLD) != 1:
+            return ["SMH: WC_LIB_FILES anchor missing"]
+        f.write_text(s.replace(SMH_OLD, SMH_NEW))
+    if os.environ.get("OT_TTB_CORNER_MARK"):
+        with open(os.environ["OT_TTB_CORNER_MARK"], "a") as m:
+            m.write(f"TC {os.getpid()} smh_config wc_reads_tt\n")
+    return ["SMH flow: WC reads TT"]
+
+
 def main():
     src = Path(sys.argv[1])
     f = src / "tools/run_abi3_physical.py"
@@ -135,7 +158,10 @@ def main():
             f.write_text(s)
     else:
         out.append("no tools/run_abi3_physical.py")
-        ok = False
+        ok = (src / "tools/hbm_accel_smh_physical.py").is_file()
+    sm = ensure_smh(src)
+    out += sm
+    ok = ok and not any("missing" in x for x in sm)
     d = src / "physical/common_flow"
     d.mkdir(parents=True, exist_ok=True)
     for n in COMMON:
