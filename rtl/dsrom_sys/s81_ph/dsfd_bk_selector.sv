@@ -6,6 +6,7 @@
 // posedge ck, one full cycle).  Function and word formats: ot_s81ph_sel.sv.
 module dsfd_bk_selector #(
     parameter integer CMP_RETIME = 0,
+    parameter integer PIPE2 = 0, MRG_PIPE = 0, RQPIPE = 0, SLAT = 0,   // CLAUDE s81-blocks variants (ot_s81ph_sel_tile.sv)
     parameter integer SEARCH_PIPE = 1,   // adopted 10-07 (selt_c cd3337221-b SS -541; bench selector/pipeline_r1)
     parameter integer STG  = 6,
     parameter integer PACE = 2,
@@ -31,7 +32,7 @@ module dsfd_bk_selector #(
     output wire [0:0] vf
 );
     generate if (TILED != 0) begin : g_t
-        ot_s81ph_sel_t #(.CMP_RETIME(CMP_RETIME), .SEARCH_PIPE(SEARCH_PIPE), .SAFE(SAFE), .LSTG(LSTG), .PACE(PACE)) u_t (.ck(ck[0]), .rst(rst[0]), .lanes({iNE, iNW, iSE, iSW}),
+        ot_s81ph_sel_t #(.CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .MRG_PIPE(MRG_PIPE), .RQPIPE(RQPIPE), .SLAT(SLAT), .SEARCH_PIPE(SEARCH_PIPE), .SAFE(SAFE), .LSTG(LSTG), .PACE(PACE)) u_t (.ck(ck[0]), .rst(rst[0]), .lanes({iNE, iNW, iSE, iSW}),
             .vd(vd), .vf(vf[0]));
     end else begin : g_v
         reg [1:0] rst_s;
