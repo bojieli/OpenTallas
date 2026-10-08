@@ -3331,17 +3331,22 @@ def main(argv: list[str] | None = None, *,
          flow_timeout: int | None | object = _TIMEOUT_UNSET) -> int:
     """Run with optional, invocation-scoped timeout overrides; None is unlimited."""
     args = build_parser().parse_args(argv)
-    _ot_oc = os.environ.get("OT_ORFS_CORNER", "").strip().upper()
-    if _ot_oc:
-        # OWNER OPTION B (2026-10-07): the closure loop routes with CORNER=TC (setup repair at TT; hold at FF via mm)
-        if _ot_oc not in ORFS_LIB_CORNERS:
-            raise SystemExit(f"OT_ORFS_CORNER={_ot_oc}: unknown ORFS corner; known {sorted(ORFS_LIB_CORNERS)}")
-        if args.orfs_corner != _ot_oc:
-            print(f"OT_ORFS_CORNER={_ot_oc}: primary corner {args.orfs_corner} -> {_ot_oc}", file=sys.stderr)
+    # OPTION B (owner 2026-10-07 20:45): setup signs off at TT. OT_ORFS_CORNER_OVERRIDE=TC (alias OT_ORFS_CORNER, the
+    # closure loop's name) turns a recipe's --orfs-corner WC / --hold-corners WC,BC into TC / TC,BC (setup repair at TT,
+    # hold at FF) without editing every route script; the mm hold session builds its setup scene from TC
+    # (OT_MM_SETUP_CORNER).
+    _ot_cov = (os.environ.get("OT_ORFS_CORNER_OVERRIDE", "") or os.environ.get("OT_ORFS_CORNER", "")).strip().upper()
+    if _ot_cov:
+        if _ot_cov not in ORFS_LIB_CORNERS:
+            raise SystemExit(f"OT_ORFS_CORNER_OVERRIDE={_ot_cov}: unknown ORFS corner; known {sorted(ORFS_LIB_CORNERS)}")
+        _ot_prev = args.orfs_corner or "WC"
+        args.orfs_corner = _ot_cov
         if args.hold_corners:
-            args.hold_corners = ",".join(_ot_oc if c.strip() == (args.orfs_corner or "WC") else c.strip()
-                                         for c in args.hold_corners.split(","))
-        args.orfs_corner = _ot_oc
+            args.hold_corners = ",".join(dict.fromkeys(_ot_cov if c.strip().upper() in ("WC", _ot_prev) else c.strip()
+                                                       for c in args.hold_corners.split(",")))
+        args.orfs_var = list(args.orfs_var or []) + [f"OT_MM_SETUP_CORNER={_ot_cov}"]
+        print(f"OT_ORFS_CORNER_OVERRIDE={_ot_cov}: orfs corner {args.orfs_corner}, hold corners {args.hold_corners}",
+              file=sys.stderr)
     _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
     if _ot_rhc == "mm":
         # FLOW-HOLD (2026-10-07): multi-mode route-time repair, SS setup (scene WC) + FF hold (scene BC) each under its

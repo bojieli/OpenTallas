@@ -23,13 +23,14 @@ proc ot_mm_libs {c} {
   if {![info exists ::env($k)]} { error "OT_HOLD_MM: $k missing (route with --hold-corners WC,BC)" }
   return $::env($k)
 }
+proc ot_mm_sc {} { expr {[info exists ::env(OT_MM_SETUP_CORNER)] && $::env(OT_MM_SETUP_CORNER) ne "" ? $::env(OT_MM_SETUP_CORNER) : "WC"} }
 proc ot_mm_read_libs {} {
-  foreach c {WC BC} { foreach l [ot_mm_libs $c] { log_cmd read_liberty $l } }
+  foreach c [list [ot_mm_sc] BC] { foreach l [ot_mm_libs $c] { log_cmd read_liberty $l } }
 }
 proc ot_mm_read_sdc {sdc} {
   log_cmd read_sdc -mode ss $sdc
   log_cmd read_sdc -mode ff $sdc
-  define_scene WC -mode ss -liberty [ot_mm_libs WC]
+  define_scene [ot_mm_sc] -mode ss -liberty [ot_mm_libs [ot_mm_sc]]
   define_scene BC -mode ff -liberty [ot_mm_libs BC]
   # ff mode never checks setup; before CTS (ideal clocks) it checks nothing either, so placement repairs exactly as a
   # WC-only flow did.  Only the CTS (3_place.sdc) and global-route (4_cts.sdc) stages sync it before their repair.
@@ -63,7 +64,7 @@ proc ot_mm_sync {} {
   # parasitics of the refreshed mode (the stage estimated them before calling the repair)
   estimate_parasitics [expr {$::ot_mm_stage eq "4_cts.sdc" ? "-global_routing" : "-placement"}]
   puts [format "OT_HOLD_MM sync: SS setup ws %.2f / FF hold ws %.2f ps" \
-    [ot_mm_ws max WC] [ot_mm_ws min BC]]
+    [ot_mm_ws max [ot_mm_sc]] [ot_mm_ws min BC]]
 }
 proc ot_mm_unsync {} {
   if {![info exists ::ot_mm_synced]} { return }
@@ -71,7 +72,7 @@ proc ot_mm_unsync {} {
   unset_path_exceptions -hold -from [all_clocks]
   unset ::ot_mm_synced
   puts [format "OT_HOLD_MM after repair: SS setup ws %.2f / FF hold ws %.2f ps" \
-    [ot_mm_ws max WC] [ot_mm_ws min BC]]
+    [ot_mm_ws max [ot_mm_sc]] [ot_mm_ws min BC]]
 }
 proc ot_mm_ws {check scene} {
   set w 1e6

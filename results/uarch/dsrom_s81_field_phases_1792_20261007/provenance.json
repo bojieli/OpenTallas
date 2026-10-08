@@ -65,7 +65,16 @@
   }
  },
  "files": {
-  "composition.json": "5946003df8b8c673c785028c4cbb68ad1b9248913202ba3bbc28b89ddf2bc594",
+  "binding/half_dedicated_ksplit/inventory.json": "37e1429b3213f458dd8b2863ec6b2ff3629b069e7239e083237ae2f9e67b0a56",
+  "binding/half_dedicated_ksplit/mapping_verdict.json": "b38bec569b2f0c34d29b4ed379f3cb1c26c83a695146b8a689f6393e162e4b8b",
+  "binding/half_dedicated_ksplit/providers.json": "8536c9d911de79e160d1f635b4b335375685236cca8b7cd1c7d877c05e3f8035",
+  "binding/half_dedicated_ksplit/remote_sha256.txt": "bfb06ece535cea28425282e6326e95be4dccdfa55b5e4cfa4cd4e8590dd16a79",
+  "binding/half_dedicated_ksplit/resources.txt": "215bcb11c30d8b6cb71e76663ced1f0cc247a6a6b3e9224c2537648747887c01",
+  "binding/half_dedicated_ksplit/stage_map.json": "85fba9b16e50167a10b160c7dfeb88c50789d40fecca5bdaea71ca1aa095d02f",
+  "binding/half_dedicated_ksplit.resources.txt": "215bcb11c30d8b6cb71e76663ced1f0cc247a6a6b3e9224c2537648747887c01",
+  "binding/half_dedicated_ksplit.sha256": "bfb06ece535cea28425282e6326e95be4dccdfa55b5e4cfa4cd4e8590dd16a79",
+  "composition.json": "2a1724ef0fb2c197b3fdedbba7b94995be51f42ac3c27232e7aa03b3bd4f9cf5",
+  "composition_basis_39e424990.json": "c0dd5c1d0c00f45373669a4196ad101c719b5d31be4e39b16782a1ead5ad40f9",
   "geometry/layer1_m221bf.json": "ee3034b7b89abad0840e034638f45d9d9a0fc877cee97d8312e3c39b4bd4cf8c",
   "geometry/layer1_m221bf.log": "f8fafb64fe5a4d2861e228191bc5d99a4677c433bb938253eb5dfc361333f787",
   "geometry/layer1_m221q.json": "41bdaab6f93205edf2ef086305da300123012fdea88fd28f4d360f23026ec4a0",
@@ -75,6 +84,17 @@
   "geometry/layer_m221q.json": "dcc2ea49c9c0e366eb71a63894c5314c79a88a3ce095e6531525c7b463f304b6",
   "geometry/layer_m221q.log": "4b2bb4cf59b3717332ec9f56d1e92a0a86afb4e178e78fcc2a34ffc824d9bd71",
   "regions/full_shared.json.gz": "17636e6cbd327c7c53d13c479d61f121f2c492651b54be352098605551e7d4a5",
-  "regions/half_dedicated.json.gz": "ba0c67c2db23947a4f2e85ff0543206aad22c37eb61afcb3906cc5decb49be96"
+  "regions/half_dedicated.json.gz": "ba0c67c2db23947a4f2e85ff0543206aad22c37eb61afcb3906cc5decb49be96",
+  "regions/half_dedicated_ksplit.json.gz": "a43bc233518ba1229e19c02ef39057737c63f89223a51b4f6055a6b779a21ef0"
+ },
+ "ksplit": {
+  "command": "python3 tools/dsrom_bf_geometry_alloc.py --out half_dedicated_ksplit --pbf 1792 --pq 1792 --nbf-reg 4 --ksplit gate (allocator sha eee31ef9, = 9a31097cd = main; EPYC1, 5:01, 1.6 GB)",
+  "capacity_PASS": true,
+  "stages": 120,
+  "layer_dies": 480,
+  "region_runs": 19312,
+  "failed": 0,
+  "note": "BF16 merges (wo_a 4->2, L2 a_proj BF16 3->2, L20 2->1) are already produced by the allocator in dedicated mode (x-group pair avoidance + 1,024-row BF16 split); --ksplit gate adds the router K split (mode-independent FlavourPool.matrix). No new RTL: the K split is placement over the existing element segment tree, exact in the vehicle.",
+  "basis_39e424990": "composition_basis_39e424990.json: run in a detached worktree of 39e424990 (claude/s81-die / s81-bf-ledger-prod: s81_die +28, composed 1,593.7 / 4,694.7) with --extra-wire 2 (its m221pq PQ root-row stations)"
  }
 }
