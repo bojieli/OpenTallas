@@ -82,6 +82,51 @@ class NativeApertureAuthority:
             self.producers[i] = SourceCursorProducer(p.root, p)
         return SourceCursorBinding(self.producers[i], t, owner)
 
+    def begin_from_profile(self, request):
+        """Accept the actual independent ROM profile before capturing apertures.
+
+        Only begin_valid is a command INPUT. Profile fields are readonly ROM
+        outputs; the source cursor was already loaded by the owned RPC producer.
+        No command dictionary, RF-page extent or payload computes qualification.
+        Returns the captured identity/shape for the command provider to verify.
+        """
+        _, p, t, owner55 = self._actor(request)
+        seq = uint(request.get('sequence'), 64, 'owned RPC sequence')
+        with p.root.lock:
+            p.settle()
+            need(not p.get('context_live') and p.get('source_cursor_valid')
+                 and (p.get('authority_tuple'), p.get('authority_owner'),
+                      p.get('authority_sequence')) == (t, owner55, seq),
+                 'source cursor must precede ROM profile collection')
+            p.set('begin_valid', 1)
+            try:
+                while True:
+                    p.settle()
+                    need(not p.get('fault') and p.get('source_cursor_valid')
+                         and p.get('issuer_held_valid') and not p.get('issuer_held_fault')
+                         and (p.get('issuer_held_tuple'), p.get('issuer_held_owner')) == (t, owner55)
+                         and (p.get('authority_tuple'), p.get('authority_owner'),
+                              p.get('authority_sequence')) == (t, owner55, seq),
+                         'actual source scope lost before profile begin')
+                    accept = bool(p.get('begin_ready'))
+                    if accept:
+                        need(p.get('profile_valid') and
+                             (p.get('profile_tuple'), p.get('profile_PC'),
+                              p.get('profile_sequence')) == (t, request['source_PC'], seq),
+                             'begin requires independently selected ROM profile identity')
+                        shape = uint(p.get('profile_shape'), 256, 'ROM source shape fingerprint')
+                    p.tick()
+                    if accept:
+                        break
+            finally:
+                p.set('begin_valid', 0)
+            p.settle()
+            need(not p.get('fault') and p.get('context_live')
+                 and (p.get('authority_tuple'), p.get('authority_owner'),
+                      p.get('authority_sequence'), p.get('authority_shape_sha'))
+                 == (t, owner55, seq, shape), 'independent ROM profile not captured')
+            return dict(tuple239=t, owner55=owner55, sequence64=seq, shape_sha256=shape)
+
     def collect_aperture(self, request, aperture, bank, slots, version, *, workspace=False):
         """Capture actual Q identity positively, then release only the Q seat.
 

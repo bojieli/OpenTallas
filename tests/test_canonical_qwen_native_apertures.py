@@ -125,3 +125,45 @@ def test_compiled_native_RF_reservation_is_outside_all_published_homes():
     assert min(h.first for h in p.rf.values())>=32
     # Reservation does not prove TC/private-RF idle: actual signal is required.
     assert 'native_rf_workspace_free' in (OUT/'ot_gpu_qwen_native_aperture_range_owner.sv').read_text()
+
+
+def test_begin_reads_rom_profile_never_writes_profile_or_command():
+    root,p,a=enrolled(); c=p[17]; t=(5<<164)|(17<<30); owner=999; seq=27; shape=987
+    c.values.update(issuer_held_valid=1,issuer_held_tuple=t,issuer_held_owner=owner,
+                    source_cursor_valid=1,authority_tuple=t,authority_owner=owner,
+                    authority_sequence=seq,profile_valid=1,profile_tuple=t,
+                    profile_PC=5,profile_sequence=seq,profile_shape=shape,begin_ready=1)
+    def edge():
+        root.edges+=1
+        if c.get('begin_valid') and c.get('begin_ready'):
+            c.values.update(context_live=1,authority_shape_sha=c.get('profile_shape'))
+    c.tick=edge
+    got=a.begin_from_profile(dict(program_sha256=PROGRAM_SHA,source_PC=5,sequence=seq))
+    assert got==dict(tuple239=t,owner55=owner,sequence64=seq,shape_sha256=shape)
+    assert root.edges==1 and root.writes==[(17,'begin_valid',1),(17,'begin_valid',0)]
+
+
+@pytest.mark.parametrize('key,value',[('profile_tuple',0),('profile_PC',6),('profile_sequence',28),('profile_valid',0)])
+def test_begin_rejects_profile_identity_mutations_before_edge(key,value):
+    root,p,a=enrolled(); c=p[17]; t=(5<<164)|(17<<30)
+    c.values.update(issuer_held_valid=1,issuer_held_tuple=t,issuer_held_owner=999,
+                    source_cursor_valid=1,authority_tuple=t,authority_owner=999,
+                    authority_sequence=27,profile_valid=1,profile_tuple=t,
+                    profile_PC=5,profile_sequence=27,profile_shape=987,begin_ready=1)
+    c.values[key]=value
+    with pytest.raises(TransportError,match='ROM profile identity'):
+        a.begin_from_profile(dict(program_sha256=PROGRAM_SHA,source_PC=5,sequence=27))
+    assert root.edges==0 and root.writes==[(17,'begin_valid',1),(17,'begin_valid',0)]
+
+
+def test_begin_waits_rom_service_and_stops_lost_owned_scope():
+    root,p,a=enrolled(); c=p[17]; t=(5<<164)|(17<<30)
+    c.values.update(issuer_held_valid=1,issuer_held_tuple=t,issuer_held_owner=999,
+                    source_cursor_valid=1,authority_tuple=t,authority_owner=999,
+                    authority_sequence=27,begin_ready=0,profile_valid=0)
+    def edge():
+        root.edges+=1; c.values['issuer_held_valid']=0
+    c.tick=edge
+    with pytest.raises(TransportError,match='scope lost'):
+        a.begin_from_profile(dict(program_sha256=PROGRAM_SHA,source_PC=5,sequence=27))
+    assert root.edges==1 and root.writes==[(17,'begin_valid',1),(17,'begin_valid',0)]
