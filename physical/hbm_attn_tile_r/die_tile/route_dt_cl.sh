@@ -2,7 +2,7 @@
 # route_dt_cl.sh <label> [run_abi3_physical args]: closure-loop route of the bank-built HBM attention die tile
 # hfd_attn_tile_b in an outline from the die generator.  env: OUT, DW / DH (outline), IOP (io_place), MPL (macro
 # placement from tools/hbm_attn_die_tile_place.py), PARAMS ("NAME=V ..." stage counts, must match MPL), PD, HM,
-# CTSA, PER (route, default 0.770), CORES; HALO (macro row halo um, default 1); SLIVER (um: hard placement blockage over
+# CTSA, PER (route, default 0.770), CORES; HALO (MACRO_ROWS_HALO_X/Y um, default 1); SLIVER (um: hard placement blockage over
 # every macro gap narrower than this, sliver_block.tcl, appended to the POST_PDN hook; unset = none); PADG / PADD (std
 # cell padding in sites at global / detail placement; unset = platform default).  Quads = the closed option-B quad (quad_b, CTS view for the route), banks =
 # the closed SN / EW banks; PG <= M7 (the die drops M8 / M9 over the tile).  Sign-off 833 with signoff_833_int.sdc.
@@ -23,7 +23,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top hfd_attn_tile_b $P \
   --source rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv --source $D/quad_parent_phys.sv --source $D/quad_bb.sv --source $D/die_tile/bank_bb.sv \
   --macro-view ot_attn_tile_m6h1q=$D/quad_b_cts/ot_attn_tile_m6h1q \
   --macro-view ot_attn_bank_sn544=$D/bank/ot_attn_bank_sn544 --macro-view ot_attn_bank_ew544=$D/bank/ot_attn_bank_ew544 \
-  --macro-place-halo ${HALO:-1} ${HALO:-1} \
+  --macro-place-halo 1 1 \
   --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --false-path-io --stages pnr \
   --die-area 0 0 ${DW:?} ${DH:?} --core-area 0 0 $DW $DH --place-density ${PD:-0.40} --routing-layers M2 M7 \

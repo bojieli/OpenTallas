@@ -20,6 +20,7 @@ foreach ot_i [$ot_blk getInsts] {
   lappend ot_bbs [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
 }
 set ot_nb 0
+set ot_rects {}
 set ot_area 0.0
 set ot_n [llength $ot_bbs]
 for {set i 0} {$i < $ot_n} {incr i} {
@@ -41,8 +42,24 @@ for {set i 0} {$i < $ot_n} {incr i} {
     lassign $r x0 y0 x1 y1
     if {$x1 <= $x0 || $y1 <= $y0} {continue}
     odb::dbBlockage_create $ot_blk $x0 $y0 $x1 $y1
+    lappend ot_rects [list $x0 $y0 $x1 $y1]
     incr ot_nb
     set ot_area [expr {$ot_area + ($x1 - $x0) / double($ot_dbu) * ($y1 - $y0) / double($ot_dbu)}]
   }
 }
+# tapcell / endcap instances (fixed, physical only) inside a blocked sliver would fail check_placement's "placed in
+# rows" test; no logic can sit in the sliver, so its taps and row-end caps go with it.
+set ot_rm 0
+foreach ot_i [$ot_blk getInsts] {
+  set ot_ty [[$ot_i getMaster] getType]
+  if {![string match "CORE_WELLTAP" $ot_ty] && ![string match "ENDCAP*" $ot_ty] && \
+      ![string match "TAP_*" [$ot_i getName]] && ![string match "PHY_EDGE_*" [$ot_i getName]]} {continue}
+  set b [$ot_i getBBox]
+  set cx0 [$b xMin]; set cy0 [$b yMin]; set cx1 [$b xMax]; set cy1 [$b yMax]
+  foreach ot_r $ot_rects {
+    lassign $ot_r x0 y0 x1 y1
+    if {$cx0 < $x1 && $cx1 > $x0 && $cy0 < $y1 && $cy1 > $y0} { odb::dbInst_destroy $ot_i; incr ot_rm; break }
+  }
+}
+puts "OT_SLIVER_PHYS_REMOVED $ot_rm"
 puts [format "OT_SLIVER_BLOCKAGES %d (gap < %.1f um, %.1f um^2)" $ot_nb $ot_sliver_um $ot_area]
