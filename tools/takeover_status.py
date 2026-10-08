@@ -92,9 +92,9 @@ STREAM_INDEX = [
     "parasitics SS WNS -132 ps (relay/station hops) / FF -5.50 ps (qfd_tile assumed views) -- qwen-dietop.log 19:31-19:32.",
 ]
 DIE_STATE = dict(
-    qwen_rom="REOPENED 2026-10-07: interim die-top only; no full-die detailed route, die SS/FF STA, DRC/LVS or IR",
-    ds_rom="actual 1,792 mixed geometry (77ffa0428 / 2d811aafb) is the integration basis; die DRT/SS/FF/IR not run",
-    hbm_ds="die views + r23 closure ledger; no full-die detailed route / SS / FF / IR")
+    qwen_rom="REOPENED 2026-10-07; die-level items in the evidence table below (no flat full-die DRT by design)",
+    ds_rom="actual 1,792 mixed geometry (77ffa0428 / 2d811aafb) is the basis; die-level items below were run on earlier geometries",
+    hbm_ds="r23 die views; die-level items in the evidence table below")
 HEAD = dict(qwen_rom=("unified_candidate", "unified_candidate_with_closure_upper"),
             ds_rom=("published", "published_m221pq_die", "actual1792_half_dedicated", "actual1792_full_shared"),
             hbm_ds=("unified_candidate", "unified_candidate_contracts_rtl", "unified_candidate_refill_cdc_only"))
