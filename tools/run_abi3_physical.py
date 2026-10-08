@@ -1913,6 +1913,47 @@ def floorplan_extra_lines(floorplan: dict[str, Any] | None) -> list[str]:
     return lines
 
 
+def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
+    """Opt-in flow fixes chained after the block's own PRE_CTS hook (setup-triage 2026-10-07).
+
+    OT_CTS_FIX_HOOKS = space-separated Tcl files (repo-relative or absolute).  When set, PRE_CTS_TCL becomes
+    hooks/pre_cts_ot_cts_fix.tcl, which sources the block's own PRE_CTS hook (if any) and then each fix, in order;
+    every fix's sha256 is written to hooks/ot_cts_fix.json.  Unset: config unchanged (byte-identical).
+    """
+    fixes = os.environ.get("OT_CTS_FIX_HOOKS", "").split()
+    if not fixes:
+        return config
+    hooks_dir = case / "hooks"
+    hooks_dir.mkdir(exist_ok=True)
+    orig = None
+    kept = []
+    for line in config:
+        m = re.match(r"\s*export\s+PRE_CTS_TCL\s*=\s*(.*)$", line)
+        if m:
+            orig = m.group(1).strip()
+            continue
+        kept.append(line)
+    body = ["# Written by tools/run_abi3_physical.py (OT_CTS_FIX_HOOKS)."]
+    if orig:
+        body.append(f"source {orig}")
+    record = []
+    for i, fix in enumerate(fixes):
+        source = Path(fix)
+        if not source.is_absolute():
+            source = ROOT / source
+        if not source.is_file():
+            raise ValueError(f"OT_CTS_FIX_HOOKS: no such file {source}")
+        name = f"ot_cts_fix_{i}_{source.name}"
+        shutil.copy2(source, hooks_dir / name)
+        body.append(f"source /work/hooks/{name}")
+        record.append({"path": fix, "name": name, "sha256": sha256_file(source)})
+    (hooks_dir / "pre_cts_ot_cts_fix.tcl").write_text("\n".join(body) + "\n", encoding="utf-8")
+    (hooks_dir / "ot_cts_fix.json").write_text(json.dumps({"pre_cts_orig": orig, "fixes": record}, indent=1) + "\n",
+                                               encoding="utf-8")
+    kept.append("export PRE_CTS_TCL = /work/hooks/pre_cts_ot_cts_fix.tcl")
+    return kept
+
+
 def io_constraints_tcl(pin_regions: list[dict[str, str]]) -> str:
     """set_io_pin_constraint per region; ports are matched by Tcl regexp on the
     block's own terminal names, so a bus is pinned bit by bit, in order."""
@@ -2288,6 +2329,7 @@ def run_pnr(
     endpoint_netlist = prepare_w11_orfs_endpoint_netlist(block, work, case)
     if endpoint_netlist:
         config.append("export SYNTH_NETLIST_FILES = /work/w11_endpoint_mapped.v")
+    config = apply_cts_fix_hooks(config, case)
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
     if floorplan and floorplan.get("pin_regions"):
         (case / "io_constraints.tcl").write_text(
