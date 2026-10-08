@@ -1,0 +1,18 @@
+{
+  "pass_all": true,
+  "source_sha256": {
+    "rtl/physical/ot_qwen_link_fwd_cx_tmr.sv": "edb941fb541ae6b431df8867e5c03e1fcd855eb342fcf3de916b0639971ec70f",
+    "physical/qwen_link_fwd_cx_station/clocks.sdc": "f6c0fe4d963a4c98f7a0697cc101adde2c6e053711c5bf503eeb4e28d8fd634d",
+    "physical/qwen_link_fwd_cx_station/pair_cx.sv": "38435b1cb80df0e78ac611b2b058fb1c2bc4799d777df6a37af2f0cf97240eb1",
+    "physical/qwen_link_fwd_cx_station/prepare.py": "72e5d7a80d77ca392c2e343dcf359198072bb0e8cfceb9ddde47b4148466ca20",
+    "physical/qwen_link_fwd_cx_station/propagate.tcl": "fe70cc9b07462f751564437dec06b92eb11c023d2509cc9c03285d06f75a90e2",
+    "physical/qwen_link_fwd_cx_station/tb_cx.sv": "fe9e4667d8c8af87c8f5c986d543fc1653d1e09a001abdef09df586bd38a6772",
+    "physical/qwen_link_fwd_cx_station/reset_inventory.tcl": "4ffdde0e4f70d414e071b1ea1828794726a284762056838c623aab41e6b9b61f",
+    "physical/qwen_link_fwd_cx_station/audit.tcl": "c9cf02c2b2e53ff79ff3c2805fed75cdb882dcce9d0e20ff003e7aa862c3e333",
+    "physical/qwen_link_fwd_cx_station/bench.sh": "e4c5fe29766d8d60fd2011dddf17626c44e8dffa740613c83dcbc3fa9f164409"
+  },
+  "mapped_sha256": "c2bf926b329850976922ff16da3e70857e1c7a58e901257a562c2887fa4f0321",
+  "bench": "golden PASS\nneg_wrong_clock FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:32: clock ownership/polarity mismatc\nmut_vote_and FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:59: hop2 exact mismatch stream=0 edg\nmut_vote_or FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:85: TMR vote leaked control under re\nmut_fwd_noninverted FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:32: clock ownership/polarity mismatc\nmut_capture_rising FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:49: hop1 exact mismatch stream=0 edg\nmut_control_rising FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:49: hop1 exact mismatch stream=0 edg\nmut_single_chain FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:49: hop1 exact mismatch stream=0 edg\n",
+  "scope": "Route frontend: two-hop exact bench (golden PASS, wrong-clock negative + 6 RTL mutants FAIL), mapped ASAP7 synthesis, 4-clock port SDC intake. Unrouted STA is not closure.",
+  "adoption": false
+}
