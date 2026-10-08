@@ -169,13 +169,13 @@
    }
   },
   "hfd_svc_SE_s4": {
-   "job": "hbm_svc_SE_s4_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s4_tc_4aadc92bc",
+   "job": "hbm_svc_SE_s4_tt_c10b5fc9a",
+   "source_commit": "c10b5fc9a40e4bb60cf47a0fd8d9735d98740e65",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/hbm_svc_SE_s4_tt_c10b5fc9a",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T09:45:03-07:00",
+   "measured_at": "2026-10-08T12:07:17-07:00",
    "ss": {
     "mean": 857,
     "min": 767,
@@ -183,8 +183,8 @@
    },
    "ff": {
     "mean": 450,
-    "min": 394,
-    "max": 633,
+    "min": 395,
+    "max": 638,
     "n": 3793,
     "kind": "boundary",
     "clock": "core_clk"
@@ -213,8 +213,8 @@
    },
    "tt": {
     "mean": 556,
-    "min": 492,
-    "max": 770,
+    "min": 493,
+    "max": 775,
     "n": 3793,
     "kind": "boundary",
     "clock": "core_clk"
@@ -946,25 +946,51 @@
    }
   },
   "dsfd_coll_lane_e": {
-   "job": "s81b-coll_lane_ne-fmt1-mm2-9ac26e269-tt",
-   "source_commit": "9ac26e269739f75074dbb7f38b5994be5783910c",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81b-coll_lane_ne-fmt1-mm2-9ac26e269-tt",
+   "job": "s81ph-dsfd_coll_lane_e-a53f40362-tt",
+   "source_commit": "a53f40362ba02f64d84edf50a286728f4ab34557",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-a53f40362-tt",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T06:50:43-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T12:02:09-07:00",
    "ss": {
     "mean": 582,
     "min": 522,
     "max": 725
    },
    "ff": {
-    "mean": 374,
-    "min": 326,
-    "max": 486
+    "mean": 335,
+    "min": 273,
+    "max": 454,
+    "n": 3246,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "boundary_n": 3246,
-   "budget": null
+   "budget": null,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 582,
+     "min": 522,
+     "max": 725
+    },
+    "ff": {
+     "mean": 374,
+     "min": 326,
+     "max": 486
+    },
+    "parasitics": "placement-estimated",
+    "job": "s81b-coll_lane_ne-fmt1-mm2-9ac26e269-tt"
+   },
+   "tt": {
+    "mean": 407,
+    "min": 336,
+    "max": 546,
+    "n": 3246,
+    "kind": "boundary",
+    "clock": "core_clk"
+   }
   },
   "hfd_svc_SW_s3": {
    "job": "hbm_svc_SW_s3_tc_hm25_d4441ee39",
@@ -2270,22 +2296,22 @@
    "budget": null
   },
   "ot_hbm_accel_smh_front_n": {
-   "job": "hbm_smh_front_n_tt_f170efb96",
-   "source_commit": "f170efb962416f2e59f55aea38423c27ab942272",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_front_n_tt_f170efb96",
+   "job": "hbm_smh_front_n_m3f_f7f1a0ee4-tt",
+   "source_commit": "f7f1a0ee4bfd331c9d6bb873d9a772a5fa88cb48",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_smh_front_n_m3f_f7f1a0ee4-tt",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T11:25:42-07:00",
+   "measured_at": "2026-10-08T12:11:53-07:00",
    "ss": {
     "mean": 688,
     "min": 668,
     "max": 742
    },
    "ff": {
-    "mean": 382,
-    "min": 367,
-    "max": 408,
+    "mean": 364,
+    "min": 347,
+    "max": 391,
     "n": 10832,
     "kind": "boundary",
     "clock": "core_clk"
@@ -2308,9 +2334,9 @@
     "job": "hbm_smh_front_n_m3f_f7f1a0ee4-tt"
    },
    "tt": {
-    "mean": 468,
-    "min": 453,
-    "max": 497,
+    "mean": 445,
+    "min": 427,
+    "max": 474,
     "n": 10832,
     "kind": "boundary",
     "clock": "core_clk"
@@ -2683,21 +2709,21 @@
    }
   },
   "ot_hbm_accel_smh_tile_w": {
-   "job": "hbm_smh_tile_e_ttm_c77ebf0d0",
-   "source_commit": "c77ebf0d038d5c66526fe43431ff23567c4a4a71",
+   "job": "hbm_smh_tile_w_m3e_2ce7ed794-tt",
+   "source_commit": "2ce7ed794f50a88f81145c4be1f10d3f0b9de800",
    "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_tile_e_ttm_c77ebf0d0",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_tile_w_m3e_2ce7ed794-tt",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T12:00:17-07:00",
+   "measured_at": "2026-10-08T12:02:23-07:00",
    "ss": {
     "mean": 706,
     "min": 689,
     "max": 810
    },
    "ff": {
-    "mean": 416,
-    "min": 393,
+    "mean": 409,
+    "min": 385,
     "max": 474,
     "n": 13482,
     "kind": "boundary",
@@ -2721,9 +2747,9 @@
     "job": "hbm_smh_tile_e_m3f_tc_4aadc92bc"
    },
    "tt": {
-    "mean": 509,
-    "min": 486,
-    "max": 571,
+    "mean": 502,
+    "min": 476,
+    "max": 569,
     "n": 13482,
     "kind": "boundary",
     "clock": "core_clk"
@@ -3595,24 +3621,24 @@
    "budget": null
   },
   "ot_v41_pqc_spine_screen": {
-   "job": "s81fs-h1-r128x550-78f0c7ce5-tc",
-   "source_commit": "78f0c7ce55a807cfa2651861c587320bd9d3cb2e",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81fs-h1-r128x550-78f0c7ce5-tc",
+   "job": "s81fs-h1-r16u35-3f8ec327e-mmq",
+   "source_commit": "3f8ec327ea6733ac3b76089b0b2cd1e9b275a4e3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81fs-h1-r16u35-3f8ec327e-mmq",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T09:33:44-07:00",
+   "measured_at": "2026-10-08T12:11:02-07:00",
    "ss": {
-    "mean": 975,
-    "min": 955,
-    "max": 1028
+    "mean": 803,
+    "min": 788,
+    "max": 838
    },
    "ff": {
-    "mean": 624,
-    "min": 610,
-    "max": 675
+    "mean": 518,
+    "min": 507,
+    "max": 547
    },
-   "boundary_n": 19266,
+   "boundary_n": 5714,
    "budget": null
   },
   "ot_ha2_truecredit_tx_phys": {
@@ -4627,5 +4653,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-08T12:00:17-07:00"
+ "updated": "2026-10-08T12:11:53-07:00"
 }
