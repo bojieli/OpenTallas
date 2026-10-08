@@ -1,6 +1,6 @@
 # OpenTallas Chip Explorer
 
-An interactive single-file companion site for the three designs (Qwen3-8B ROM at 8K, the DeepSeek-V4.1 ROM array at 1M, and the HBM accelerator). It has six sections:
+An interactive single-file companion site for the three designs (Qwen3-8B ROM at 8K, the DeepSeek-V4.1 ROM array at 1M, and the HBM accelerator). It has seven sections:
 
 1. **Die floorplans:** drawn to scale from real block geometry. This comes first because the die is the core of each design.
 2. **Animated token:** one decode token's data path, animated on the floorplan, with a speculation mode.
@@ -8,6 +8,7 @@ An interactive single-file companion site for the three designs (Qwen3-8B ROM at
 4. **System array:** packages, dies, stages and links. Every array view lays itself out at its panel's width (a ResizeObserver redraws on resize), so the DeepSeek pipeline wraps as a serpentine and nothing scrolls sideways, at desktop or at 400 px. Links are drawn with a `--link` token stroke whose width scales with the link's bandwidth (`DATA.links`); hovering a link lights it and its endpoints, and flow dashes show traffic direction (static under `prefers-reduced-motion`).
 5. **Rack:** ORv3 rack elevations drawn to scale (48 mm OpenU, 44 OU, 600 mm frame) with power shelves, trays, switch tier, busbar and liquid manifolds; the deployment's racks side by side with the token path (DS ROM) or switch uplinks (HBM); a to-scale tray plan; per-rack totals; link classes by distance. Hover a tray for its dies, click it for its plan, click a die to open it in the die section.
 6. **Machine comparison.**
+7. **Element stories:** 24 cards, one per element or mechanism, grouped by target and filterable by target and status (closed / in progress / gated / reference). Each card has a plain summary, the problem with numbers, a naive-versus-trick toggle on an inline-SVG diagram with a step-by-step stepper (static under `prefers-reduced-motion`), the evidence, the price paid, a reviewer table of every number with its record, and the failed attempts. Diagrams are schematic; bar charts plot recorded values. `#story-<id>` opens a card.
 
 Published view: https://claude.ai/artifact/5nPT6Gbv82bWNaFrpigSTc (private; share from the page's Share menu).
 
@@ -49,6 +50,8 @@ The rack record packs the adopted configuration: the default q-element frame (QX
 - **Head and table dies.** The split is 12 head dies plus 36 Engram table dies, with 340 layer dies making 388 dies, plus 52 draft dies for 440 in total (S81: 372 and 424). Two older figures are stale: 8 + 36 from the C1 ledger, and 12 + 32 that this page showed earlier.
 
 The HBM accelerator fits one rack; its packing is still built here (`build_racks`) and marked estimate.
+
+Element stories (section 7) are assembled by `tools/chip_explorer_stories.py`, imported by the build; its `INPUTS` list names every record it reads. Every number on a card is a fact `{v, unit, status, src}` read from a committed record (a missing record fails the build), and `DATA.story_facts` repeats them for the provenance drawer. A card's status is recomputed at build time: it is **closed** when every block it names has a passing verdict under `results/closure_loop/`. Failed and in-flight routes exist only in the closure loop's job state, so `tools/chip_explorer_snapshot_loop.py` copies those fields into `inputs/loop_attempts.json`; `inputs/stories/` holds snapshots of branch-only records (`MANIFEST.json` gives branch, commit and sha256). To update the cards as closures land: re-run the snapshot tool, rebuild, commit.
 
 Known stale inputs, to refresh when they land on main:
 - Qwen ROM r17b. It is being rebuilt without the near-HBM row engines and with its clocks wired.

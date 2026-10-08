@@ -1,0 +1,32 @@
+{
+ "bf_halfphl_exact.json": {
+  "branch": "claude/s81-bf-20261007",
+  "commit": "d4aab7c27",
+  "path": "results/rtl/s81_bf_native_20261007/halfphl_exact/terminal.json",
+  "sha256": "761a17aeda30dc98f8f96ef682422c3e0ed06f05f75f99238ac15953ce3d724b"
+ },
+ "bf_halfphl_price.json": {
+  "branch": "claude/s81-bf-20261007",
+  "commit": "d4aab7c27",
+  "path": "results/rtl/s81_bf_native_20261007/halfphl_price.json",
+  "sha256": "b26751c6020a0249cbf0b85d3efede79e2eece4439cbfebd4ac9fccfbc1fcff1"
+ },
+ "bf_root_phase_diagnosis.json": {
+  "branch": "claude/s81-bf-20261007",
+  "commit": "d4aab7c27",
+  "path": "results/rtl/s81_bf_native_20261007/root_phase_diagnosis.json",
+  "sha256": "f8ff9090fd30aff3277fe369b25567ec0d6bf376375a6c9ff9eb8d847f794cb6"
+ },
+ "qwen_closure_cost_ledger.json": {
+  "branch": "claude/qwen-blocks-20261007",
+  "commit": "591f6a683",
+  "path": "results/rtl/qwen_closure_cost_ledger_20261007/ledger.json",
+  "sha256": "d85e68246fb74733aa9266a7e2f59cedfc5f5ab07ed189e1fe08ac352ec4eafa"
+ },
+ "ot_qwen_rom_tile_w12.sv.txt": {
+  "branch": "claude/qwen-blocks-20261007",
+  "commit": "591f6a683",
+  "path": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+  "sha256": "de9381e994c444f87df6b51b2fc64cc5351c47aff8d16ec292d1ba96e9a6e070"
+ }
+}

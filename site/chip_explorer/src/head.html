@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout concept: a layout-viewer bench. A narrow instrument bar on top, then six numbered
-   plates (system, rack, die, token, timing, compare) each with a wide drawing area that scrolls
+   plates (system, rack, die, token, timing, compare, element stories) each with a wide drawing area that scrolls
    inside itself and a side readout. Metal-layer colour coding marks block kinds; a separate
    traffic-light set marks closure. */
 :root{
@@ -192,6 +192,52 @@ svg [tabindex]:focus-visible > rect:first-child, svg [tabindex]:focus-visible .c
 .rk-die:hover > rect:first-child{stroke:var(--link-hot);stroke-width:2px}
 .cool-sup{stroke:var(--cool-sup)} .cool-ret{stroke:var(--cool-ret)}
 td .pill{vertical-align:1px}
+
+
+/* element stories (section 7) */
+.st-filters{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-bottom:6px}
+.st-filters .lab{font:600 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.st-count{font-size:13px;margin:6px 0 4px}
+.st-group{margin-top:22px}
+.st-group > h3{display:flex;gap:10px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:12px}
+.st-group > h3 small{font:12px var(--f-mono);color:var(--muted);font-weight:400;letter-spacing:0}
+.st-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px}
+.st-card{border:1px solid var(--line);background:var(--surface);padding:14px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.st-card[data-open="true"]{grid-column:1/-1;border-color:var(--ink)}
+.st-card .el{font:11.5px/1.35 var(--f-mono);color:var(--muted);overflow-wrap:anywhere}
+.st-card h4{font:600 20px/1.15 var(--f-display);letter-spacing:.02em;margin:0;text-wrap:balance}
+.st-card .sum{font-size:14px;max-width:80ch}
+.st-card .top{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.st-card .open{align-self:flex-start;margin-top:auto}
+.sb{display:inline-flex;align-items:center;gap:5px;font:600 10px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:2px;border:1px solid currentColor;white-space:nowrap;flex:none}
+.sb i{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
+.sb-closed{color:var(--s-closed)} .sb-in-progress{color:var(--s-enc)} .sb-gated{color:var(--s-open)} .sb-reference{color:var(--p-analytical)}
+.st-body{display:grid;gap:14px;border-top:1px dashed var(--line);padding-top:12px}
+.st-body h5{font:600 11px/1.2 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.st-body p{font-size:14px;max-width:85ch}
+.st-dia{border:1px solid var(--line);background:var(--surface-2);min-width:0}
+.st-dia .tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--line)}
+.st-dia .tools .ctr{font:600 12px/1 var(--f-mono);color:var(--muted);margin-left:auto;white-space:nowrap}
+.st-dia .txt{padding:10px 12px 0}
+.st-dia .txt h6{font:600 15px/1.25 var(--f-body);margin:0 0 4px}
+.st-dia .cap{padding:8px 12px 10px;font-size:13.5px;min-height:2.6em}
+.st-dia .scroll{padding:6px 8px 0}
+.st-dia svg{display:block}
+.st-dia .schem{font:11px var(--f-mono);color:var(--muted);padding:0 12px 8px}
+.st-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.st-pair > div{min-width:0}
+.st-body details{border:1px solid var(--line);background:var(--surface);padding:0 12px}
+.st-body details[open]{padding-bottom:10px}
+.st-body summary{cursor:pointer;padding:9px 0;font:600 13px var(--f-body)}
+.st-body table td.src{font:11px/1.4 var(--f-mono);color:var(--muted);overflow-wrap:anywhere}
+.st-body ul{margin:6px 0 0;padding-left:18px;font-size:13.5px}
+.st-body ul li{margin:4px 0}
+.st-body .recs{font:11px/1.5 var(--f-mono);color:var(--muted);overflow-wrap:anywhere}
+.dg-node rect{stroke-width:1.2}
+.dg-node.hot rect{stroke-width:2.4}
+.dg-edge{fill:none;stroke-width:1.6}
+.dg-pk{pointer-events:none}
+@media (max-width:900px){ .st-pair{grid-template-columns:minmax(0,1fr)} }
 
 @media (max-width:900px){
   .hero{grid-template-columns:minmax(0,1fr)}
