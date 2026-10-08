@@ -135,10 +135,17 @@ def ssh(host, script, timeout=120, check=False, input=None):
         if input is None:
             return sh(["bash", "-s"], timeout=timeout, check=check, input=script)
         return sh(["bash", "-c", script], timeout=timeout, check=check, input=input)
-    with transport_command(host) as base:
-        if input is None:
-            return sh(base + ["bash -s"], timeout=timeout, check=check, input=script)
-        return sh(base + [script], timeout=timeout, check=check, input=input)
+    try:
+        with transport_command(host) as base:
+            if input is None:
+                return sh(base + ["bash -s"], timeout=timeout, check=check, input=script)
+            return sh(base + [script], timeout=timeout, check=check, input=input)
+    except RuntimeError as e:
+        # an unreachable host (ssh master refused, e.g. PVE1 kex reset 2026-10-08 00:50) is an rc=255 ssh failure that
+        # every caller already handles, not a daemon crash (the daemon crash-looped on the toolchain probe for ~45 min)
+        if check or not str(e).startswith("ssh: master connection failed"):
+            raise
+        return subprocess.CompletedProcess(args=[host], returncode=255, stdout="", stderr=str(e))
 
 
 def is_local(host):
