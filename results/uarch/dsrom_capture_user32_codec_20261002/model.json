@@ -1,0 +1,103 @@
+{
+  "C_stations_and_visibility_credit_provider_unselected": true,
+  "TX_RX256word_256bit_CRC_and_boundary684_unchanged": true,
+  "TXplusRX_metadata_gross_FF": 1168,
+  "actual_fullphase_consumer_and_currentprogram_origin": null,
+  "additional_codec_validation_capture_edges": null,
+  "additional_context_enrollment_packet_not_free": true,
+  "body_um2": 1387.25784,
+  "busiest_twoport_gross_reserve_mm2": 0.00554903136,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "clock_RESETN_SETN_additional_loads_fF": {
+    "FF": {
+      "CLK": 587.681536,
+      "RESETN": 937.7977119999999,
+      "SETN": 1360.0892800000001
+    },
+    "SS": {
+      "CLK": 506.89097599999997,
+      "RESETN": 822.3012,
+      "SETN": 1198.84688
+    }
+  },
+  "codec_allowedcell_proposal_counts": {
+    "BUFx4_ASAP7_75t_R": 2674,
+    "DFFASRHQNx1_ASAP7_75t_R": 1168,
+    "INVx1_ASAP7_75t_R": 3142,
+    "NAND2x1_ASAP7_75t_R": 5522,
+    "TIEHIx1_ASAP7_75t_R": 1168
+  },
+  "command": {
+    "fields": {
+      "EID": 9,
+      "generation": 32,
+      "go": 1,
+      "key": 32,
+      "obase": 19,
+      "operation_sequence": 32,
+      "output_position_stride": 19,
+      "owner_stage": 6,
+      "phase": 10,
+      "positions_minus1": 3,
+      "rank": 2,
+      "row_format": 2,
+      "user": 32,
+      "x_position_stride": 19,
+      "xbase": 19
+    },
+    "new237": 237,
+    "one256flit": true,
+    "source221": 221,
+    "unused_flit_bits": 19
+  },
+  "conditional_context_enrollment_next_packet_credit_occupied_edges": 2681,
+  "conditional_enrollment_WAIT_ACK_edges": 2677,
+  "context_association": {
+    "PC14_Xversion32_not_in_fff6_header_or_command": true,
+    "context_enrollment_payload_bits": 203,
+    "enrollment_header144_oneflit": true,
+    "enrollment_packet_flits": 2,
+    "full169_clones_or_local_existing_context_containment_not_free": true,
+    "full169_context_plus_sequence32_route1_valid1": 203,
+    "reset_wrap_old_debt_fence_unimplemented": true,
+    "selected_software_proposal": "explicit fullcontext enrollment before any command GO; exact stage/rank/expert/phase/key/gen/user/Xversion/PC and sequence/shard bound to one live context until visibility+returnedcredit/source/packet fences"
+  },
+  "equality_compare_bits202_per_direction": 202,
+  "equality_compare_gate_depth_timing_and_codec_capture_pipeline_unqualified": true,
+  "existing128assemblerheader_containment_not_subtracted": true,
+  "frozen_context169_unchanged": true,
+  "fulltoken_rate_credit": false,
+  "header": {
+    "fields": {
+      "generation": 32,
+      "operation_sequence": 32,
+      "owner_stage": 6,
+      "packet_kind": 3,
+      "packet_ordinal": 3,
+      "payload_bits": 18,
+      "rank": 2,
+      "reserved": 16,
+      "user": 32
+    },
+    "new144": 144,
+    "one256flit": true,
+    "source128": 128,
+    "unused_flit_bits": 112
+  },
+  "header_and_command_width_increase_total32": true,
+  "metadata_gross_FF_per_direction": 584,
+  "net_pin_site_PG_clock_reset_legal_geometry": null,
+  "new_jobs": [],
+  "no_extra_packet_memory_FF_from_width_change": true,
+  "owner_context46_extra_is_already_separate_and_not_recharged_as169": true,
+  "physical_build_admitted": false,
+  "physical_route_shard_separate": true,
+  "port_replica_scope": "gross TX/RX codec per neighbor endpoint; two neighbor endpoints on busiest owner conditional; physical homes unbound",
+  "reserve50pct_mm2_per_neighbor_endpoint": 0.00277451568,
+  "schema": "DS_CAPTURE_USER32_CODEC_PROPOSAL_1",
+  "semantic_codec_is_new_not_source_RTL_qualified": true,
+  "shared_onephase_owner_slot_replacement_credit": null,
+  "source_commit": "fff6dc9c0b609955b2db2ac8565eb6ab0baadaf2",
+  "user32_no_65535_restriction": true,
+  "width_change_alone_extra_payload_flits": 0
+}
