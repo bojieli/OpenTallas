@@ -100,7 +100,7 @@ MM_SINCE = "2026-10-07T21:00"
 # OWNER OPTION B (2026-10-07 20:45): closure = setup at TT + hold at FF + DRC 0.  Every calibrate / route launched from
 # here routes with CORNER=TC (setup repair at TT; with mm, hold at FF) unless spec "route_corner" names another corner;
 # hold ECOs time the setup scene at TT.  SS setup is recorded as a sensitivity (ss_sensitivity_ps).
-OPTB_SINCE = "2026-10-07T20:45"
+OPTB_SINCE = "2026-10-07T20:20"
 SETUP_LIB = "TT"
 HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
