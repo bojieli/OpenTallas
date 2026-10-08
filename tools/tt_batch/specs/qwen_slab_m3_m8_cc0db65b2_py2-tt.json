@@ -1,0 +1,99 @@
+{
+ "name": "qwen_slab_m3_m8_cc0db65b2_py2-tt",
+ "block": "ot_qwen_slab_port_group_m3_m8",
+ "owner": "Codex:qwen-elements",
+ "purpose": "TT-BATCH (owner option B, one large batch): qwen_slab_m3_m8_cc0db65b2_py2 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Structural LAT10 KCP4 OREG1 successor, M8 bw/tw strip, current die90/50 and80fF/150ps. Preserve old m3 exit137; no postroute macro ECO. | qwen-blocks relaunch: bench env fix (PYTHONPATH=src for the opentallas package; the cc0db65b2 run stopped on ModuleNotFoundError, not on RTL)",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 20,
+ "source": {
+  "branch": "codex/qwen-slab-m3-takeover-20261007",
+  "commit": "cc0db65b2",
+  "paths": [
+   "Makefile",
+   "physical",
+   "rtl",
+   "tools",
+   "src",
+   "configs"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "slab_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --out {RUN}/bench_positive",
+    "expect": "pass",
+    "pass_regex": "PASS: 1505 requests, 1505 results bit-exact",
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "slab_bad_lead",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --negative --out {RUN}/bench_negative",
+    "expect": "fail",
+    "fail_regex": "EQUIVALENCE_TERMINAL_FAIL",
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "No Qwen budget sheet; in-run corner-exact reference-pin hook uses propagated res_q clock at CTS/GRT/DRT. Explicit single-corner signoff uses measured propagated arrival; no copied insertion."
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; set -e\n[ \"$(docker image inspect openroad/orfs:latest --format '{{.Id}}')\" = \"$(docker image inspect openroad/orfs:asap7lock --format '{{.Id}}')\" ]\nPYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py route --out {RUN}/routes/{LABEL} --name {LABEL} --threads 16",
+   "threads": 16,
+   "peak_ram_gb": 20,
+   "needs": [
+    "orfs"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record\ncp {RUN}/routes/{LABEL}/*.json {RUN}/record/\ncp {RUN}/bench_positive/result.json {RUN}/record/bench_positive.json\ncp {RUN}/bench_negative/result.json {RUN}/record/bench_negative.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_slab_structural/signoff833_die.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8"
+  ]
+ },
+ "hold_eco": {
+  "enabled": false,
+  "reason": "Macro-output-net-safe algorithm not qualified; retain original SS/FF ROM read/capture timing and failure evidence."
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "No Qwen budget sheet; master contract implemented directly using measured corner reference with90ps setup skew/50ps hold skew,80fF load/150ps slew."
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/qwen_elements_takeover_20261007/slab_m3_m8_route"
+  }
+ ],
+ "cycles_added": 4,
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

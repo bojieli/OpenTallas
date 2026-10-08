@@ -1,0 +1,66 @@
+{
+ "name": "hbm_su_full_a8cdcbe79-tt",
+ "block": "ot_su12_full",
+ "owner": "Claude:hbm-su",
+ "purpose": "TT-BATCH (owner option B, one large batch): hbm_su_full_a8cdcbe79 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: hfd_su_full slot (346.008 x 347.736, r16i spine slot): the full SU lane ot_su12_full (lane 0 + side ports; every IO register-direct) with CALIBRATED IO (0.2T+150 vs vclk at CK_SS_MEAN), route 770, sign-off 833 io150. Previous full_u30_h25 (auto die, 833, fpio): SS +4.77 / FF +5.33.",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/hbm-su-attn-close-20261005",
+  "commit": "a8cdcbe7973a1b3b135ef325ad11c8c5f357fbfa"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=16 PD=0.5 PER=0.770 SRCF=physical/hbm_su_c12/su_full_sources.txt DIE=\"346.008 347.736\" bash physical/hbm_su_c12/red_route_cl.sh {LABEL}${CL_LABEL_SUFFIX} ot_su12_full box $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OUT={RUN}/routes CORES=16 PD=0.5 PER=0.770 SRCF=physical/hbm_su_c12/su_full_sources.txt DIE=\"346.008 347.736\" bash physical/hbm_su_c12/red_route_cl.sh {LABEL}${CL_LABEL_SUFFIX} ot_su12_full box $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/view && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_su12_full --out {RUN}/record/view && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {CL}/calib.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_su_c12/signoff_833_io150.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/hbm_su_c12/views/hfd_su_full"
+  }
+ ],
+ "no_bench_reason": "RTL = the c12 full lane (ot_su12_lane KIND 2), unchanged; exact in every c12 SU campaign (e.g. hbm-su/out/campaign_r13c2.json PASS)",
+ "cycles_added": 0,
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

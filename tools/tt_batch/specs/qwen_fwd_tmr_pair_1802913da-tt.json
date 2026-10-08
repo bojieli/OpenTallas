@@ -1,0 +1,134 @@
+{
+ "name": "qwen_fwd_tmr_pair_1802913da-tt",
+ "block": "ot_qwen_link_forwarded_tmr_pair",
+ "owner": "Claude:qwen-blocks",
+ "purpose": "TT-BATCH (owner option B, one large batch): qwen_fwd_tmr_pair_1802913da re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks (forwarded-clock link: own contract, no common-clock budget); original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Full NL1 bidirectional two-hop 430.56um source synchronous physical diagnostic; two real INV per clock/hop; every interstage setup/hold timed without exceptions. Actual die frames/endpoints/protection/reset remain unqualified. Synchronized majority clear with independent TMR release storage; unchanged 2cycle path. | qwen-blocks relaunch on current main kit: the 9bb32a0da route died in POST_IO_PLACEMENT (old regions.tcl found no STA handles for the 8 kept clock inverters; ODB has them: s0/active.link[0].ab/inv0/_0_ INVx3 x8); main regions.tcl resolves them from the ODB",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/qwen-blocks-20261007",
+  "commit": "1802913da9ab842ee73d6c84014792653a71f6c2",
+  "paths": [
+   "rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv",
+   "tools/run_abi3_physical.py",
+   "tools/orfs_allcorner_spef.py",
+   "tools/w18/corner_sta.py",
+   "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+   "physical/qwen_link_forwarded_tmr_pair",
+   "results/uarch/qwen_link_forwarded_tmr_pair_20261007/prebuild_model.json",
+   "configs/pdk/asap7_local_liberty_lock.json",
+   "results/uarch/qwen_link_forwarded_tmr_20261007/prebuild_model.json"
+  ],
+  "required_files": [
+   "configs/pdk/asap7_local_liberty_lock.json",
+   "physical/qwen_link_forwarded_tmr_pair/audit.tcl",
+   "physical/qwen_link_forwarded_tmr_pair/clocks.sdc",
+   "physical/qwen_link_forwarded_tmr_pair/closure_job.template.json",
+   "physical/qwen_link_forwarded_tmr_pair/pair.sv",
+   "physical/qwen_link_forwarded_tmr_pair/prepare.py",
+   "physical/qwen_link_forwarded_tmr_pair/propagate.tcl",
+   "physical/qwen_link_forwarded_tmr_pair/regions.tcl",
+   "physical/qwen_link_forwarded_tmr_pair/reset_inventory.tcl",
+   "physical/qwen_link_forwarded_tmr_pair/route.sh",
+   "physical/qwen_link_forwarded_tmr_pair/signoff.py",
+   "physical/qwen_link_forwarded_tmr_pair/tb_pair.sv",
+   "results/uarch/qwen_link_forwarded_tmr_20261007/prebuild_model.json",
+   "results/uarch/qwen_link_forwarded_tmr_pair_20261007/prebuild_model.json",
+   "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+   "rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv",
+   "tools/orfs_allcorner_spef.py",
+   "tools/run_abi3_physical.py",
+   "tools/w18/corner_sta.py"
+  ]
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "enabled": false,
+   "reason": "This vehicle contains both real launch and capture clock trees; internal timing uses actual propagated clock and parasitics, not calibrated virtual insertion."
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} bash physical/qwen_link_forwarded_tmr_pair/route.sh {LABEL} {RUN}/routes",
+   "ok": "grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/routes/{LABEL}/status {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "production_adoption_hold",
+    "cmd": "python3 -c \"raise SystemExit('Diagnostic only: actual die frame, native endpoint, integrity and reset are unqualified')\""
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ]
+ },
+ "hold_eco": {},
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/qwen_link_forwarded_tmr_pair_20261007/9bb32a0da_1802913da"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": null,
+ "no_bench_reason": "Actual route frontend runs full two-hop fixture positive and wrong-clock negative before synth/P&R; component gate also covers misroute and stage bypass.",
+ "dispatch_prerequisites": [
+  "Fill committed source pin",
+  "Fill measured resource reservation and use host admission",
+  "Install adoption hold before dispatch",
+  "Verify listed archive inventory includes route frontend dependencies",
+  "Raw POR reaches 24 release-rail FFs; local majority clears 64 control FFs. Both actual recovery/removal paths must close without exceptions; no whole-link protection claim"
+ ],
+ "archive_paths": [
+  "rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv",
+  "tools/run_abi3_physical.py",
+  "tools/orfs_allcorner_spef.py",
+  "tools/w18/corner_sta.py",
+  "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+  "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+  "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+  "physical/qwen_link_forwarded_tmr_pair",
+  "results/uarch/qwen_link_forwarded_tmr_pair_20261007/prebuild_model.json",
+  "configs/pdk/asap7_local_liberty_lock.json",
+  "results/uarch/qwen_link_forwarded_tmr_20261007/prebuild_model.json"
+ ],
+ "host_require": [
+  "ot-epyc2"
+ ],
+ "resource_basis": {
+  "available_mib": 377177,
+  "disk_free_gib": 278,
+  "reservation_gib": 96,
+  "host_floor_gib": 100,
+  "basis": "Capacity reservation from measured current host headroom; not peak estimate or process cap."
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

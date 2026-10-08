@@ -10,6 +10,7 @@ OT_ROUTE_HOLD_CORNERS=primary keeps place-and-route repair at the primary corner
 consistent; FF hold is closed after the route by the hold ECO against the exact FF sign-off constraints.  Sign-off
 (tools/w18/corner_sta.py, SS + FF) is unchanged.
    hold_corners_patch.py <src snapshot dir>      (idempotent; original kept as run_abi3_physical.py.pre_holdcorners)"""
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -63,6 +64,23 @@ DOCKER_ANCHOR = '"python3 /src/tools/orfs_allcorner_spef.py "'
 DOCKER_MM = '"python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && "\n            '
 
 
+TC_MARK = "OT_ORFS_CORNER_OVERRIDE"
+TC_CODE = r'''    # OPTION B (owner 2026-10-07 20:45): setup signs off at TT.  OT_ORFS_CORNER_OVERRIDE=TC (alias OT_ORFS_CORNER, the
+    # closure loop's name) keeps every recipe's corner NAMES (WC primary, WC,BC hold; the loop ships its own WC-scene mm
+    # hold session into each snapshot) but makes the WC corner READ the TT liberties: WC_NLDM_LIB_FILES =
+    # $(TC_NLDM_LIB_FILES) and every macro's WC view = its _tt.lib.  Setup repair runs at TT; hold stays at BC (FF).
+    # v1 (renaming the corner to TC, 852d9b461 / c10b5fc9a) died in floorplan report_metrics: STA-0102 (hbm-blocks
+    # 4aadc92bc).  Shipped by hold_corners_patch into snapshots pinned before it.
+    _ot_cov = (os.environ.get("OT_ORFS_CORNER_OVERRIDE", "") or os.environ.get("OT_ORFS_CORNER", "")).strip().upper()
+    if _ot_cov == "TC":
+        try:
+            ORFS_CORNER_MACRO_TAG["WC"] = "tt"
+        except NameError:
+            pass
+        args.orfs_var = list(args.orfs_var or []) + ["WC_NLDM_LIB_FILES=$(TC_NLDM_LIB_FILES)"]
+        print("OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)", file=sys.stderr)
+'''
+
 
 def patch(src):
     f = Path(src) / "tools/run_abi3_physical.py"
@@ -86,6 +104,20 @@ def patch(src):
             shutil.copy2(f, f.with_suffix(".py.pre_holdcorners"))
         s = s.replace(ANCHOR, ANCHOR + CODE)
         msg.append(f"patched {f}")
+    # option B: TC routing for snapshots that predate it (must run before the mm block, which reads args.orfs_corner)
+    oc = re.search(r'    _ot_oc = os\.environ\.get\("OT_ORFS_CORNER".*?        args\.orfs_corner = _ot_oc\n', s, re.S)
+    if oc:                                       # the loop's own v1 (852d9b461..): renamed WC -> TC (STA-0102)
+        s = s[:oc.start()] + s[oc.end():]
+        msg.append("removed OT_ORFS_CORNER rename (v1)")
+    if 'WC_NLDM_LIB_FILES=$(TC_NLDM_LIB_FILES)' not in s:
+        v1 = re.search(r"    # OPTION B \((?:owner|shipped)[^\n]*\n(?:    #[^\n]*\n)*    _ot_cov = .*?\n(?=    _ot_rhc = |    args = )",
+                       s, re.S)
+        if v1:                                   # v1 (renamed the corner to TC: STA-0102) -> v2
+            s = s[:v1.start()] + TC_CODE + s[v1.end():]
+            msg.append("option-B TC override v1 -> v2 (WC reads TT)")
+        elif s.count(ANCHOR) == 1:
+            s = s.replace(ANCHOR, ANCHOR + TC_CODE)
+            msg.append("option-B TC override v2 added (WC reads TT)")
     # the flow container patch (inert unless the config exports OT_HOLD_MM=1)
     if "orfs_hold_mm.py /OpenROAD-flow-scripts" not in s:
         if s.count(DOCKER_ANCHOR) == 1:

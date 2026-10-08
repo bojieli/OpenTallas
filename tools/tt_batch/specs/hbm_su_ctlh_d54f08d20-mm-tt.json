@@ -1,0 +1,62 @@
+{
+ "name": "hbm_su_ctlh_d54f08d20-mm-tt",
+ "block": "ot_su12_ctl16h",
+ "owner": "Claude:hbm-su",
+ "purpose": "TT-BATCH (owner option B, one large batch): hbm_su_ctlh_d54f08d20-mm re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: FLOW-HOLD requeue of hbm_su_ctlh_d54f08d20 (SS 51.5 / FF -31.61): multi-mode route-time hold repair (SS setup + FF hold at CTS/GRT, HM 50 ps at FF) and rule-H1 IO hold; no RTL change from the branch head",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 60,
+ "source": {
+  "branch": "claude/flow-hold-20261007",
+  "commit": "ef256b29997026ac030b7f7ee7076aa91e0ea7af"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "enabled": false,
+   "reason": "IO false-pathed SU-lane-internal vehicle (signoff_833_fpio.sdc): no IO SDC to calibrate; same as ctl16m770_u26"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC='physical/hbm_su_c12/signoff_833_fpio.sdc' OUT={RUN}/routes CORES=16 PER=0.770 UTIL=26 PD=0.55 bash physical/hbm_su_c12/ctl_route_cl.sh {LABEL}${CL_LABEL_SUFFIX} ot_su12_ctl16h $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_su_c12/signoff_833_fpio.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/hbm_su_c12/views/ot_su12_ctl16h"
+  }
+ ],
+ "no_bench_reason": "exact SU campaign with the half-rate reducer + controller rule runs on EPYC2 (hbm-su/out/campaign_rh{p0,p1}.json at 876d053c9, same RTL; negative campaign_rhn0 = OT_NEG_RHALF_NOGATE must fault); adoption gated on those",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

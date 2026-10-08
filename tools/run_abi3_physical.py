@@ -3331,29 +3331,27 @@ def main(argv: list[str] | None = None, *,
          flow_timeout: int | None | object = _TIMEOUT_UNSET) -> int:
     """Run with optional, invocation-scoped timeout overrides; None is unlimited."""
     args = build_parser().parse_args(argv)
-    # OPTION B (owner 2026-10-07 20:45): setup signs off at TT. OT_ORFS_CORNER_OVERRIDE=TC (alias OT_ORFS_CORNER, the
-    # closure loop's name) turns a recipe's --orfs-corner WC / --hold-corners WC,BC into TC / TC,BC (setup repair at TT,
-    # hold at FF) without editing every route script; the mm hold session builds its setup scene from TC
-    # (OT_MM_SETUP_CORNER).
+    # OPTION B (owner 2026-10-07 20:45): setup signs off at TT.  OT_ORFS_CORNER_OVERRIDE=TC (alias OT_ORFS_CORNER, the
+    # closure loop's name) keeps every recipe's corner NAMES (WC primary, WC,BC hold; the loop ships its own WC-scene mm
+    # hold session into each snapshot) but makes the WC corner READ the TT liberties: WC_NLDM_LIB_FILES =
+    # $(TC_NLDM_LIB_FILES) and every macro's WC view = its _tt.lib.  Setup repair runs at TT; hold stays at BC (FF).
+    # v1 (renaming the corner to TC, 852d9b461 / c10b5fc9a) died in floorplan report_metrics: STA-0102 (hbm-blocks
+    # 4aadc92bc).
     _ot_cov = (os.environ.get("OT_ORFS_CORNER_OVERRIDE", "") or os.environ.get("OT_ORFS_CORNER", "")).strip().upper()
-    if _ot_cov:
-        if _ot_cov not in ORFS_LIB_CORNERS:
-            raise SystemExit(f"OT_ORFS_CORNER_OVERRIDE={_ot_cov}: unknown ORFS corner; known {sorted(ORFS_LIB_CORNERS)}")
-        _ot_prev = args.orfs_corner or "WC"
-        args.orfs_corner = _ot_cov
-        if args.hold_corners:
-            args.hold_corners = ",".join(dict.fromkeys(_ot_cov if c.strip().upper() in ("WC", _ot_prev) else c.strip()
-                                                       for c in args.hold_corners.split(",")))
-        args.orfs_var = list(args.orfs_var or []) + [f"OT_MM_SETUP_CORNER={_ot_cov}"]
-        print(f"OT_ORFS_CORNER_OVERRIDE={_ot_cov}: orfs corner {args.orfs_corner}, hold corners {args.hold_corners}",
-              file=sys.stderr)
+    if _ot_cov == "TC":
+        try:
+            ORFS_CORNER_MACRO_TAG["WC"] = "tt"
+        except NameError:
+            pass
+        args.orfs_var = list(args.orfs_var or []) + ["WC_NLDM_LIB_FILES=$(TC_NLDM_LIB_FILES)"]
+        print("OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)", file=sys.stderr)
     _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
     if _ot_rhc == "mm":
         # FLOW-HOLD (2026-10-07): multi-mode route-time repair, SS setup (scene WC) + FF hold (scene BC) each under its
         # own constraints (tools/orfs_hold_mm.tcl, patched into the flow container by tools/orfs_hold_mm.py)
         _ot_p = args.orfs_corner or (args.hold_corners or "WC").split(",")[0].strip()
         args.hold_corners = ",".join(dict.fromkeys([_ot_p, "BC"]))
-        args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1", f"OT_MM_SETUP_CORNER={_ot_p}"]
+        args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1"]
         _ot_ff = " ".join(("/src/" + f.lstrip("/")) if not f.startswith("/src/") else f
                           for f in os.environ.get("OT_MM_FF_SDC", "").split() if f)
         if _ot_ff:

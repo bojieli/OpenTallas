@@ -1,0 +1,88 @@
+{
+ "name": "s81b-selt_q2-pipe2-mm2-9ac26e269-tt",
+ "block": "dsfd_selt_q2",
+ "owner": "Claude:s81-blocks",
+ "purpose": "TT-BATCH (owner option B, one large batch): s81b-selt_q2-pipe2-mm2-9ac26e269 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: SAFE quarter (128x256 macros, registered macro outputs) + PIPE2 + CMP_RETIME; pairs with selt_c SLAT 4 | flow-hold mm route-time hold repair (SS setup + FF hold, HM 50 ps at FF)",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/s81-blocks-20261007",
+  "commit": "9ac26e269739f75074dbb7f38b5994be5783910c"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_pipe2",
+    "cmd": "command -v verilator >/dev/null && JOBS=8 bash tools/s81_ph/selt_pipeline_bench.sh {RUN}/bench p2 1 -GMRG_PIPE=1 -GRQPIPE=1 -GPIPE2=1 -GSLAT=4 -GCMP_RETIME=1 +define+OT_S81PH_SEL_SAFE",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 10
+   },
+   {
+    "name": "neg_threshold",
+    "cmd": "command -v verilator >/dev/null && JOBS=8 bash tools/s81_ph/selt_pipeline_bench.sh {RUN}/bench mt 1 -GMRG_PIPE=1 -GRQPIPE=1 -GPIPE2=1 -GSLAT=4 -GCMP_RETIME=1 +define+OT_S81PH_SEL_SAFE +define+S81PH_MUT_THRESHOLD",
+    "expect": "fail",
+    "fail_regex": "SELT_PIPE FAIL",
+    "threads": 8,
+    "peak_ram_gb": 10
+   }
+  ],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OT_MM_FF_SDC=\"physical/s81_ph_views/common/signoff_unc60.sdc\" SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/common/ot_fwd_link_stage.sv' MACROS='ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2' PDN=physical/s81_ph_views/tiles/pdn_tile_sym.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_selt_q2 rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/tiles/place_macros_q2.tcl --param PIPE2=1 --param CMP_RETIME=1 $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC=\"physical/s81_ph_views/common/signoff_unc60.sdc\" SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/common/ot_fwd_link_stage.sv' MACROS='ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2' PDN=physical/s81_ph_views/tiles/pdn_tile_sym.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_selt_q2 rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/tiles/place_macros_q2.tcl --param PIPE2=1 --param CMP_RETIME=1 $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/dsfd_selt_q2"
+  }
+ ],
+ "cycles_added": 48,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "same calibrated IO SDC flow as the predecessor route; the fix is internal pipelining"
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

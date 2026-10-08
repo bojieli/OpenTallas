@@ -1,0 +1,143 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qfd_lst_h-5a3bb1721-lbc",
+ "block": "qfd_lst_h",
+ "owner": "Claude:setup-triage (block owner claude/qwen-elements-final-20261007 / Claude:qwen-elements)",
+ "source_branch": "claude/setup-triage-20261007",
+ "source_commit": "387a4d2acd525be5ef60432f735d120cc9e0c829",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_lst_h-5a3bb1721-lbc",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 244.84,
+  "ff_ps": 42.17,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/qfd_lst_h-5a3bb1721-lbc/routes/qfd_lst_h_5a3bb1721_lbc/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/qfd_lst_h-5a3bb1721-lbc/routes/qfd_lst_h_5a3bb1721_lbc/work/orfs/logs/asap7/opentallas_ot_qwen_die_link_stn_asap7_qdm_qfd_lst_h_5a3bb1721_lbc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_link_stn_s0_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS link_stn SHAPE=0 NL=1 checks=49993\nrtl/test/tb_qwen_die_link_stn.sv:40: $finish called at 100004000 (1ps)\n",
+   "track": "parallel"
+  },
+  "bench_link_stn_s0_neg": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FAIL link_stn SHAPE=0 NL=1 NEG=1: 49993 mismatches of 49993\nrtl/test/tb_qwen_die_link_stn.sv:40: $finish called at 100004000 (1ps)\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {},
+ "calibration": null,
+ "cycles_added": "one registered stage both directions (credit links): already in the r21 relay/station pricing (430.56 um reach), +0 vs the record",
+ "status": "CLOSED",
+ "closed_at": "2026-10-07T21:01:39-07:00",
+ "job_spec": {
+  "name": "qfd_lst_h-5a3bb1721-lbc",
+  "block": "qfd_lst_h",
+  "owner": "Claude:setup-triage (block owner claude/qwen-elements-final-20261007 / Claude:qwen-elements)",
+  "purpose": "SETUP-TRIAGE requeue of qfd_lst_h-5a3bb1721 (SS 154.51 / FF 44.42): flow fixes (physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl; post_sdc +['physical/common_flow/link_budget_consistent.sdc']) + flow-hold mm hold repair; source = origin/main + setup-triage fixes, no RTL change by this stream. ",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "claude/setup-triage-20261007",
+   "commit": "387a4d2acd525be5ef60432f735d120cc9e0c829"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "link_stn_s0_exact",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/ls00 -P tb_qwen_die_link_stn.SHAPE=0 -P tb_qwen_die_link_stn.NEG=0 rtl/test/tb_qwen_die_link_stn.sv rtl/physical/ot_qwen_die_link_stn.sv && vvp -n {RUN}/bench/ls00 | tee {RUN}/bench/ls00.log && grep -q '^PASS' {RUN}/bench/ls00.log",
+     "expect": "pass",
+     "pass_regex": "^PASS link_stn",
+     "min_count_regex": "checks=(\\d+)",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "link_stn_s0_neg",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/ls01 -P tb_qwen_die_link_stn.SHAPE=0 -P tb_qwen_die_link_stn.NEG=1 rtl/test/tb_qwen_die_link_stn.sv rtl/physical/ot_qwen_die_link_stn.sv && vvp -n {RUN}/bench/ls01 | tee {RUN}/bench/ls01.log && grep -q '^PASS' {RUN}/bench/ls01.log",
+     "expect": "fail",
+     "fail_regex": "^FAIL link_stn",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+   },
+   "route": {
+    "cmd": "export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_lst_h.sdc'; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_lst_h {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_lst_h --out {RUN}/record/views/qfd_lst_h --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_lst_h.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/qwen_elements_final_20261007/qfd_lst_h"
+   }
+  ],
+  "cycles_added": "one registered stage both directions (credit links): already in the r21 relay/station pricing (430.56 um reach), +0 vs the record",
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05
+ }
+}

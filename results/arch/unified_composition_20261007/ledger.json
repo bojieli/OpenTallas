@@ -790,7 +790,7 @@
     },
     {
      "id": "actual1792_half_dedicated_hops",
-     "item": "Actual 1792 mapping, BF-dedicated half-rate (120 stages: 40 BF + 80 q): +35 stage hops",
+     "item": "Actual 1792 mapping, BF-dedicated half-rate (120 stages: 40 BF + 80 q): +35 stage hops [SUPERSEDED by the measured fieldphase compositions]",
      "status": "priced-candidate",
      "effect": {
       "unit": "us",
@@ -814,7 +814,7 @@
     },
     {
      "id": "actual1792_full_shared_hops",
-     "item": "Actual 1792 mapping, shared BF pairs (98 stages, gate K-split alias): +13 stage hops",
+     "item": "Actual 1792 mapping, shared BF pairs (98 stages, gate K-split alias): +13 stage hops [SUPERSEDED by the measured fieldphase compositions]",
      "status": "priced-candidate",
      "effect": {
       "unit": "us",
@@ -838,7 +838,7 @@
     },
     {
      "id": "bf_half_rate_doubling",
-     "item": "BF half-rate (owner 2026-10-07): BF16 field phases doubled",
+     "item": "BF half-rate (owner 2026-10-07): BF16 field phases doubled [SUPERSEDED by the measured fieldphase compositions]",
      "status": "priced-candidate",
      "effect": {
       "unit": "us",
@@ -1009,22 +1009,27 @@
     },
     {
      "id": "bf_halfphl_price",
-     "item": "BF HALF_PHL half-rate on dedicated BF pairs (BF16 field phases x2 + 2 a phase), upper bound",
+     "item": "BF HALF_PHL half-rate on dedicated BF pairs, priced on the measured 1,792 fieldphase (HALF + router K split)",
      "status": "priced-candidate",
      "effect": {
       "unit": "us",
-      "AR": 47.408,
-      "MTP_step": null
+      "AR": 53.914,
+      "MTP_step": 58.691
      },
      "role": "info",
      "source": [
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "candidates[bf_halfphl]",
-       "commit": "5a07bf71d (branch claude/s81-bf-ledger-20261007 only)"
+       "commit": "31f23a48a"
+      },
+      {
+       "file": "results/uarch/dsrom_s81_field_phases_1792_20261007/composition_basis_39e424990.json",
+       "pointer": "variants.half_dedicated_ksplit.compositions.half_rate",
+       "commit": "f42b1eb76 (branch claude/s81-fieldphase-20261007 only)"
       }
      ],
-     "note": "AR -7.68 %% / MTP -6.31 %% (upper bound) priced on the option-B 2,304-pair base (AR 1,754.3 -> 1,619.6), which FAILED legal fit -- the relative cost is what transfers; the dedicated allocation's +6 stages / +24 layer dies are not in that composition. On the 1,792 basis the ledger's 1,792 rows still use the older bf_half doubling (-15 %%, upper bound); the HALF_PHL price is the newer, smaller upper bound for the same mechanism. Exact PASS 6d26df595; routes running"
+     "note": "CORRECTED price: AR -7.91 %% / MTP -6.21 %% (1,593.7 / 4,694.7 -> 1,467.6 / 4,403.0, half-rate BF upper bound), confirmed by s81-bf (main 31f23a48a); the earlier -7.68 %% / -6.31 %% on the legal-fit-failed option-B base (5a07bf71d) and 16584ae76 are superseded. Optional full-rate recut at TT in flight (full-rate BF on the same mapping: 1,577.1 / 4,674.3)"
     },
     {
      "id": "s81_die_m221pq",
@@ -1046,19 +1051,34 @@
      "note": "composed ledger TOTAL AR 1,593.7 (-4.85 %%) / MTP 4,694.7 on the published basis; see composition published_m221pq_die"
     },
     {
-     "id": "field_phases_1792",
-     "item": "Field phase timings of the 1792 geometry (remapped regions, BF/q stage split)",
-     "status": "gated-unknown",
+     "id": "wfc_die150_ff",
+     "item": "WFC (wavefront controller) source block: die150 FF hold closed",
+     "status": "measured",
      "effect": null,
-     "role": "gate",
+     "role": "info",
      "source": [
       {
-       "file": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/provenance.json",
-       "pointer": "variants.*.full_token_latency",
-       "commit": "2d811aafb"
+       "file": "results/rtl/dsrom_wfc_split_20261006/closure.json",
+       "pointer": "src r24",
+       "commit": "dc8570b5d (branch claude/s81-die-20261007 only)"
       }
      ],
-     "note": "'unpriced until matching field phase measurements and new geometry timing are composed'"
+     "note": "src r24: SS +31.5 ps (all modes) / FF +22.7 ps in incontext/die150/region/reg2reg, DRC / antenna / DRV 0, RTL unchanged (hold-ECO IO model at 150 ps on every port, slew margin 30); meets the closure line; not yet on main"
+    },
+    {
+     "id": "field_phases_1792",
+     "item": "Field phase timings of the 1792 geometry: MEASURED (s81-fieldphase)",
+     "status": "measured",
+     "effect": null,
+     "role": "info",
+     "source": [
+      {
+       "file": "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json",
+       "pointer": "variants.*.nodes, phase_ledger",
+       "commit": "f42b1eb76"
+      }
+     ],
+     "note": "qelem10 field vehicle on every region of every stage of both 1,792 mappings, 7 representative layers: 19,312 + 18,416 region runs, all exact; actual mixed221 die wire, per-phase block adders; BF half rate a composed upper bound (phase ledger: measured / composed / model-only). Feeds the actual1792 compositions"
     },
     {
      "id": "bf_half_physical",
@@ -1110,7 +1130,7 @@
       {
        "file": "docs/PROGRAM_PLAN_2026_10_05.md",
        "pointer": null,
-       "commit": "6a20923a3"
+       "commit": "3d61f1050"
       }
      ],
      "note": "no native end-to-end S81 token yet"
@@ -1163,16 +1183,16 @@
      "note": "closure-cost ledger TOTAL on the historical 85-stage full-rate-BF geometry"
     },
     "actual1792_half_dedicated": {
-     "AR_us": 767.592,
-     "MTP_step_us": 1042.946,
-     "AR_tok_s": 1302.8,
-     "MTP_tok_s": 3987.7,
+     "AR_us": 688.857,
+     "MTP_step_us": 952.971,
+     "AR_tok_s": 1451.7,
+     "MTP_tok_s": 4364.2,
      "tau": 4.159,
      "stages": 120,
      "dies": 480,
      "pairs_per_layer_die": 1792,
      "bf_rate": "half",
-     "dies_note": "480 = layer dies, the Codex basis (2d811aafb inventory layer_dies). An earlier revision of this ledger printed 580 by also counting the 12 head + 36 table + 52 draft dies of the 85-stage rack record; those are outside the 1792 mapping and not re-sized for it",
+     "dies_note": "layer dies (Codex basis, 2d811aafb inventory); head / table / draft dies are outside the 1,792 mapping",
      "basis": [
       {
        "file": "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json",
@@ -1183,42 +1203,52 @@
        "file": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/half_dedicated/inventory.json",
        "pointer": "stages, layer_dies",
        "commit": "2d811aafb"
+      },
+      {
+       "file": "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json",
+       "pointer": "variants.half_dedicated.compositions.half_rate",
+       "commit": "f42b1eb76"
       }
      ],
      "adopted": false,
      "closure": false,
-     "status": "priced-candidate (current physical integration basis; not an adopted rate)",
-     "label": "partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
-     "bound": "none proven",
-     "caveat": "BF16 doubling priced; field phases at this geometry unmeasured",
+     "status": "measured field phases + composed (current physical integration basis; not an adopted rate)",
+     "label": "measured-field composition; BF half rate composed as an upper bound on latency",
+     "bound": "half-rate BF: latency upper bound (rate lower bound) for the BF term only",
+     "full_rate_bf": {
+      "AR_tok_s": 1569.2,
+      "MTP_tok_s": 4655.5,
+      "note": "sensitivity if full-rate BF closes (recut at TT in flight)"
+     },
+     "serial_substages": {
+      "AR_tok_s": 1289.2,
+      "MTP_tok_s": 3992.3
+     },
+     "region_runs": 19312,
+     "all_exact": true,
      "gated_by": [
       "pq_root_protected_face",
       "pq_stage_b_timing",
       "pq_half_serial_lane_exactness",
-      "field_phases_1792",
       "bf_half_physical",
       "s81_die_closure",
       "native_token",
       "mtp_physical",
       "fused_head_half"
      ],
-     "lines": [
-      "actual1792_half_dedicated_hops",
-      "bf_half_rate_doubling"
-     ],
-     "note": "published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured"
+     "note": "s81-fieldphase: every region of every stage measured exact on the field vehicle; composed with the actual mixed221 die wire and per-phase block adders on the published ledger basis; replaces the earlier partial-priced sensitivity"
     },
     "actual1792_full_shared": {
-     "AR_us": 749.057,
-     "MTP_step_us": 1024.411,
-     "AR_tok_s": 1335.0,
-     "MTP_tok_s": 4059.9,
+     "AR_us": 756.943,
+     "MTP_step_us": 1039.161,
+     "AR_tok_s": 1321.1,
+     "MTP_tok_s": 4002.3,
      "tau": 4.159,
      "stages": 98,
      "dies": 392,
      "pairs_per_layer_die": 1792,
      "bf_rate": "half",
-     "dies_note": "392 = layer dies, the Codex basis (2d811aafb inventory layer_dies). An earlier revision of this ledger printed 492 by also counting the 12 head + 36 table + 52 draft dies of the 85-stage rack record; those are outside the 1792 mapping and not re-sized for it",
+     "dies_note": "layer dies (Codex basis, 2d811aafb inventory); head / table / draft dies are outside the 1,792 mapping",
      "basis": [
       {
        "file": "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json",
@@ -1229,30 +1259,54 @@
        "file": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/full_shared/inventory.json",
        "pointer": "stages, layer_dies",
        "commit": "2d811aafb"
+      },
+      {
+       "file": "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json",
+       "pointer": "variants.full_shared.compositions.half_rate",
+       "commit": "f42b1eb76"
       }
      ],
      "adopted": false,
      "closure": false,
-     "status": "priced-candidate (current physical integration basis; not an adopted rate)",
-     "label": "partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
-     "bound": "none proven",
-     "caveat": "BF16 doubling priced; shared-pair q-phase halving NOT priced (undercount); field phases unmeasured",
+     "status": "measured field phases + composed (current physical integration basis; not an adopted rate)",
+     "label": "measured-field composition; BF half rate composed as an upper bound on latency",
+     "bound": "half-rate BF: latency upper bound (rate lower bound) for the BF term only",
+     "full_rate_bf": {
+      "AR_tok_s": 1665.2,
+      "MTP_tok_s": 4858.7,
+      "note": "sensitivity if full-rate BF closes (recut at TT in flight)"
+     },
+     "serial_substages": {
+      "AR_tok_s": 1134.5,
+      "MTP_tok_s": 3568.3
+     },
+     "region_runs": 18416,
+     "all_exact": true,
      "gated_by": [
       "pq_root_protected_face",
       "pq_stage_b_timing",
       "pq_half_serial_lane_exactness",
-      "field_phases_1792",
       "bf_half_physical",
       "s81_die_closure",
       "native_token",
       "mtp_physical",
       "fused_head_half"
      ],
-     "lines": [
-      "actual1792_full_shared_hops",
-      "bf_half_rate_doubling"
-     ],
-     "note": "published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured"
+     "note": "s81-fieldphase: every region of every stage measured exact on the field vehicle; composed with the actual mixed221 die wire and per-phase block adders on the published ledger basis; replaces the earlier partial-priced sensitivity"
+    },
+    "published_per_phase_rebased": {
+     "AR_tok_s": 1552.5,
+     "MTP_tok_s": 4591.8,
+     "AR_us": 644.122,
+     "MTP_step_us": 905.745,
+     "tau": 4.159,
+     "status": "measured field phases + composed (85-stage historical geometry)",
+     "record": {
+      "file": "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json",
+      "pointer": "variants.half_dedicated.compositions.published_per_phase",
+      "commit": "f42b1eb76"
+     },
+     "note": "FINDING (s81-fieldphase): the published composition is about 2.6 % optimistic -- re-based with the per-phase wire and block adders it is 1552.5 / 4591.8 instead of 1594.2 / 4696.0"
     },
     "published_m221pq_die": {
      "AR_tok_s": 1593.7,
@@ -1264,7 +1318,7 @@
      "record": {
       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
       "pointer": "total",
-      "commit": "39e424990 (branch claude/s81-die-20261007 only)"
+      "commit": "31f23a48a"
      },
      "note": "the DS closure-cost ledger TOTAL with s81_die re-priced on the m221pq layer1 die (+28 a field phase); 85-stage historical geometry, same basis as 'published'"
     },
@@ -1304,8 +1358,8 @@
        "dies": 480,
        "pairs_per_layer_die": 1792,
        "bf_rate": "half",
-       "AR_tok_s": 1302.8,
-       "MTP_tok_s": 3987.7,
+       "AR_tok_s": 1451.7,
+       "MTP_tok_s": 4364.2,
        "status": "partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
        "bound": "none proven"
       },
@@ -1319,8 +1373,8 @@
        "dies": 392,
        "pairs_per_layer_die": 1792,
        "bf_rate": "half",
-       "AR_tok_s": 1335.0,
-       "MTP_tok_s": 4059.9,
+       "AR_tok_s": 1321.1,
+       "MTP_tok_s": 4002.3,
        "status": "partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
        "bound": "none proven"
       }
@@ -1341,7 +1395,6 @@
     "pq_root_protected_face",
     "pq_stage_b_timing",
     "pq_half_serial_lane_exactness",
-    "field_phases_1792",
     "bf_half_physical",
     "s81_die_closure",
     "native_token",
@@ -2540,9 +2593,9 @@
    "MTP": 1.263
   },
   "ds_rom_1792_half_dedicated_over_hbm_unified": {
-   "note": "partial-priced sensitivity (unmeasured field phases), no bound proven",
-   "AR": 0.7502,
-   "MTP": 1.0712
+   "note": "measured-field 1,792 HALF composition (half-rate BF upper bound) over the HBM unified candidate",
+   "AR": 0.836,
+   "MTP": 1.1723
   },
   "stale": {
    "record": {
@@ -2770,7 +2823,7 @@
      "pointer": "r21 pre-DRT die STA",
      "commit": "a9bf510a0"
     },
-    "note": "committed: r21 die STA on placement parasitics fails every relay / station hop (SS -287 ps worst; closed station views were routed at 3.9 fF, re-route kit at 80 fF committed a9bf510a0). Reported in qwen-dietop.log, not committed: GRT-parasitic FF worst -5.50 ps (all on qfd_tile assumed views), SS WNS -132 ps on relay/station hops"
+    "note": "committed: r21 die STA on placement parasitics fails every relay / station hop (SS -287 ps worst; closed station views were routed at 3.9 fF, re-route kit at 80 fF committed a9bf510a0). Reported in qwen-dietop.log, not committed: on the overflow-0 full-die GRT (adjfix_t4p8, estimate_parasitics -global_routing, signoff833 ETMs) SS WNS -90.23 ps / TNS -8.69 us (1,124,207 endpoints, almost all relay hops; chead -37.95, cst -20.02) and FF worst -5.50 ps (qfd_tile assumed views); with every die hop on M8 the placement-length STA gives +71.45 ps. Under owner option B the closing setup corner is TT; these SS figures are a sensitivity"
    },
    "cts_skew_plan": {
     "status": "missing",
@@ -3251,6 +3304,20 @@
    "lbpin": 2,
    "note": "24 <job>-lbc re-routes (source 387a4d2ac, link_budget_hook + cg_pushdown + clk_net_protect), 14 <job>-cgfix (class A/B CTS fixes) and 2 <job>-lbpin queued to re-close them; qfd_chead / qfd_cst re-sign-off jobs need a Qwen re-route; colt_mrg / svc_pc need their budget sheets adopted (s81-blocks)"
   },
+  "reclosed": [
+   {
+    "job": "qfd_lst_h-5a3bb1721-lbc",
+    "block": "qfd_lst_h",
+    "ss_ps": 244.84,
+    "ff_ps": 42.17,
+    "drc": 0,
+    "record": {
+     "file": "results/rtl/qwen_die_masters_20261006",
+     "pointer": "closure-loop verdict",
+     "commit": "a95df3ae1 (branch claude/setup-triage-20261007; routed at 387a4d2ac with the link-budget hook)"
+    }
+   }
+  ],
   "consequence": "a job counts as closed only if its link-budget SS is >= 0 (closure line); revoked and unverified jobs carry no closure credit until their re-routes re-close under the consistent budget"
  },
  "established_contracts_rtl_bench": [
@@ -3387,34 +3454,19 @@
      "commit": "9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
     }
    ]
-  },
-  {
-   "id": "field_phases_1792",
-   "target": "ds_rom",
-   "contract": "Field phase timings of the 1,792 mapping",
-   "ledger_line": "field_phases_1792",
-   "state": "not measured",
-   "performance_credit": 0,
-   "source": [
-    {
-     "file": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/provenance.json",
-     "pointer": "variants.*.full_token_latency",
-     "commit": "2d811aafb"
-    }
-   ]
   }
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "3955482c9145651b888e3db27e4208ec3770db3b375ecf6e85af111838a84e3c"
+  "sha256": "adddf631ed004d6c18c0559b0eccbf6611c37be5f50a58e556ca40cbd714a688"
  },
  "source_sha256": {
   "AGENTS.md": "d47e33869ed5fefa3be09cffa270ccb831227173fcf0295b5ebecc178b55a042",
   "docs/ANALYTICAL_REPORT.md": "dbc78387895d08babad980deb1be38df2f062e242cfa989b22681f87d92c604c",
   "docs/ARCHITECTURE_ATLAS.html": "4717f85e63c32fb3f7fde0e08d2ef9d6651531c85f41986d520105cbbbe0aa4e",
-  "docs/INTEGRATED_PHYSICAL_PLAN.md": "3a7aea9b00a18ea553764c111adeca4e4606ce510d57f450f0625a45dddf496f",
+  "docs/INTEGRATED_PHYSICAL_PLAN.md": "c3a165d0effee2a6a252eeb6120864c172fc5ad7b9ceb2c7b7761560181ca563",
   "docs/OWNER_DIRECTIVES_2026_10_07.md": "6a76cc1accb8ff5b3a14110a7b40a46552374c53205ac6389ebd5a9199c19517",
-  "docs/PROGRAM_PLAN_2026_10_05.md": "5c15b88d87c6f640dfeec6663142262cf3014acb3f074985c3a3c44cefbe90f4",
+  "docs/PROGRAM_PLAN_2026_10_05.md": "c7110dfaf97c7a47313723b488b521874f3a7843bde434693bac5ae41ed31e56",
   "physical/s81_bf_root_phase/model.json": "92aaf33923a033ae8a573cede9ac562a81b7786b19305d0b3b97ec14b20ccd82",
   "results/arch/dsrom_s81_rack_20261006/rack.json": "eac1c069ec5aaefe11a796a8fd6b2c5adf788ed8ffe7b78d8890b4b1720aface",
   "results/arch/energy_silicon_measured/README.md": "04f6a48a85d3d85383f1a4df947f95a8842e2ac2cbcc00675289da8519c6047b",
@@ -3434,6 +3486,7 @@
   "results/rtl/dsrom_s81_fulldie_20261004/STATUS.md": "bf088160ea8f55a4f1a79837ef334f4fa7c37636648b74047182c1db6285bcdc",
   "results/rtl/dsrom_s81_fulldie_20261004/v9d/feasibility.json": "44ec44d1ba30ab54227e043ff2d54bd59e36da0aeeef40ec05963d4b067aae6e",
   "results/rtl/dsrom_s81_fulldie_20261004/v9e/feasibility.json": "38e566838e94401eec2a4417ad227ce58b1ffc8e238e838c6739251d6eae0045",
+  "results/rtl/dsrom_wfc_split_20261006/closure.json": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "results/rtl/fullsys_recheck_20261007/status.json": "3ef6e4f0cb7f616ad7ddfc2b17cbb88db00401cae66e2edd3ce9d5a305e7ff76",
   "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md": "484175ef1390873d5c3379fe213907b94169efee7d8539be4eb739f20501f1a1",
   "results/rtl/hbm_accel_die_views_20261006/coordinator_r19c/audit.json": "9edde26876fc87bd9d73c09841cf1a34840aed42c2bdd08b62818b9f1751647c",
@@ -3456,6 +3509,7 @@
   "results/rtl/qwen_ctrl_shift_20261007/model.json": "12ca47e170b26b082b3f51a28c6f01684bf943705d6468dd6578e6a08357d123",
   "results/rtl/qwen_ctrl_shift_20261007/qualification.json": "4df6d84d47b0f54ededa60df892d9ec2d6574d81e2e77b90002ccbab98c22249",
   "results/rtl/qwen_ctrl_shift_20261007/runtime_protection_gate.json": "828d5bad3648d34e23ef901927bb25b4bf50709df4170ee6f83610106faca5a7",
+  "results/rtl/qwen_die_masters_20261006": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
   "results/rtl/qwen_rom_closed_20261006/closure.json": "fb9a41ab4aac5501433bdc0fa641af64357a4d1ac23e24637edfcb0ee5c2c899",
   "results/rtl/qwen_rom_die_r17_20261005/ir/ir_record.json": "603e5469b3af4cee1ed18dab84ed4e6115522e611008f0682cee594eb9abdb9b",
@@ -3467,9 +3521,10 @@
   "results/rtl/s81_bf_root_phase_hierarchy_fix_20261007/actual_calibration_failure.json": "553fc5283adbd3a4fecd0a6e5adc464e793157c215e712a8831dc3b07e0e2e92",
   "results/rtl/s81_bf_root_phase_hierarchy_fix_20261007/record.json": "9bfc15fdc16e70d44dba5505d74ed9a4dcd11d5113f5fa443c834f8933551898",
   "results/rtl/s81_pq_root_cam_20261007/record.json": "b41254837a2b5c70675a13846ecb505c4db8bcaa2c7cea9794989297f479484e",
+  "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json": "2a1724ef0fb2c197b3fdedbba7b94995be51f42ac3c27232e7aa03b3bd4f9cf5",
+  "results/uarch/dsrom_s81_field_phases_1792_20261007/composition_basis_39e424990.json": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "results/uarch/dsrom_s81_mixed1792_mapping_20261007/full_shared/inventory.json": "98e61b29fe043a6ba665a69a57ab387bd6212c19f8f85fc85e34ab72a09459b6",
   "results/uarch/dsrom_s81_mixed1792_mapping_20261007/half_dedicated/inventory.json": "37e1429b3213f458dd8b2863ec6b2ff3629b069e7239e083237ae2f9e67b0a56",
-  "results/uarch/dsrom_s81_mixed1792_mapping_20261007/provenance.json": "2716518b8f203b0eb4e2fe8cf3977c1d87cd1f541fe224b40bc39db6031e5f67",
   "results/uarch/dsrom_s81_mixed_geometry_20261007/model.json": "ba5c996a2f532af9614ed249c3292329b4da9af15e767b735b7c594b93a802b1",
   "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/comparison_current_main.json": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/root_contract/root_contract.json": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
@@ -3483,8 +3538,8 @@
   "results/uarch/qwen_station_fullwidth_r22_20261007/model_dual_fault_r1.json": "4534b4003ec08365a0ef3f543deb0670dc906641ceebf5fd90c6685c38981155",
   "results/uarch/s81_pq_root_cam_20261007/model.json": "0c82097e0020b325b46396de710bd7fbeab103ed8e8fbc431396d7f3812cf134",
   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
-  "tools/chip_explorer_build.py": "06ce4a5fe6f2a4cf5ea5949b8c27b42c6ce402f9c3a623ae8b2058b224ed7075",
+  "tools/chip_explorer_build.py": "4926d22a1e676416edf0b45c92e47d0c13d2ef92a0b50cadd723ba9108da168a",
   "tools/qwen_die_sta_classes.py": "5f69de4a422d2ff93437c472f335a06a9a458d9ecfb88eb9a534433b3f0d5907",
-  "tools/unified_composition.py": "3955482c9145651b888e3db27e4208ec3770db3b375ecf6e85af111838a84e3c"
+  "tools/unified_composition.py": "adddf631ed004d6c18c0559b0eccbf6611c37be5f50a58e556ca40cbd714a688"
  }
 }

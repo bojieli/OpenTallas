@@ -1,0 +1,96 @@
+{
+ "name": "qfd_sp_tree_lane-lat7-dcc823ab4-tt",
+ "block": "qfd_sp_tree_lane",
+ "owner": "Codex:qwen-spine-cuts",
+ "purpose": "TT-BATCH (owner option B, one large batch): qfd_sp_tree_lane-lat7-dcc823ab4 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Actual full48-position tree lane at GT6144 TCUT7 SMIN7 LAT7,16 replicas;600.048um frame; input150ps output80fF; real SS/FF +15/+15 DRC0 required",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/qwen-spine-cuts-20261007",
+  "commit": "dcc823ab45ff57aec943cc515a5a905e2761a539"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "spine_exact",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_spine_lane -P tb_qwen_spine_lane.NEG=0 -o {RUN}/bench/t0 rtl/test/tb_qwen_spine_lane.sv rtl/physical/ot_qwen_spine_lane.sv rtl/hdc/ot_qwen_me_spine_h_w12.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv && vvp -n {RUN}/bench/t0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS spine",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "spine_neg",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_spine_lane -P tb_qwen_spine_lane.NEG=1 -o {RUN}/bench/t1 rtl/test/tb_qwen_spine_lane.sv rtl/physical/ot_qwen_spine_lane.sv rtl/hdc/ot_qwen_me_spine_h_w12.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv && vvp -n {RUN}/bench/t1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^FAIL spine"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_sp_tree_lane {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_sp_tree_lane --out {RUN}/record/views/qfd_sp_tree_lane --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_sp_tree_lane.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_spine_lane_20261007/qfd_sp_tree_lane-lat7-dcc823ab4"
+  }
+ ],
+ "cycles_added": "Candidate only:41-cycle top vs21-cycle LAT3 top, +20 cycles per exposed matvec operation. Conservative 36*7+head=253 operation bound: +5060 cycles/token (+2.335% on216713). No adopted timing/calendar change until closure/exactness and die transport integration.",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

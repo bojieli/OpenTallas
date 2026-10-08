@@ -1,0 +1,123 @@
+{
+ "name": "hbm_result_relay64_ew_screen_5588e3440-tt",
+ "block": "hfd_result_relay64_ew",
+ "owner": "Codex:hbm-relays",
+ "purpose": "TT-BATCH (owner option B, one large batch): hbm_result_relay64_ew_screen_5588e3440 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Primitive screening only: actual regionalclock/IO budgets, end-to-end link/control protection andcheckedconsumer, global replicated fit remain OPEN. Never export/adopt this screening view.",
+ "source": {
+  "branch": "main",
+  "commit": "5588e3440ce38d57a788b335d28baea306c8edcd",
+  "paths": [
+   "tools",
+   "configs",
+   "Makefile",
+   "rtl/hbm_accel/result_relay_stage_20261007",
+   "physical/hbm_result_relay_stage_20261007",
+   "physical/hbm_accel_die_views/common/pdn_view.tcl",
+   "physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+   "results/uarch/hbm_result_relay_stage_20261007"
+  ],
+  "required_files": [
+   "tools/hbm_result_relay_physical.py",
+   "tools/hbm_result_relay_gate.py",
+   "tools/hbm_result_relay_model.py",
+   "tools/run_abi3_physical.py",
+   "tools/w18/corner_sta.py",
+   "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv",
+   "physical/hbm_result_relay_stage_20261007/ew/pins.tcl",
+   "physical/hbm_result_relay_stage_20261007/ns/pins.tcl",
+   "physical/hbm_result_relay_stage_20261007/screening.sdc",
+   "physical/hbm_accel_die_views/common/pdn_view.tcl",
+   "physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+   "results/uarch/hbm_result_relay_stage_20261007/result_paths.json",
+   "configs/pdk/asap7_local_liberty_lock.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "full270bit_exact_and_negatives",
+    "cmd": "python3 tools/hbm_result_relay_gate.py --out {RUN}/bench_gate",
+    "expect": "pass",
+    "needs": [
+     "iverilog"
+    ],
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "mutant_controls_detected",
+    "cmd": "python3 -c \"import json; p=json.load(open('{RUN}/bench_gate/record.json')); assert p['status']=='PASS' and all(x['returncode']!=0 for x in p['cases'][1:]); print('RELAY_MUTANTS_DETECTED'); raise SystemExit(1)\"",
+    "expect": "fail",
+    "fail_regex": "RELAY_MUTANTS_DETECTED",
+    "needs": [],
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "Permanent-held primitive characterization; actualdieclockbudget unresolved. Fullroute includesCTS andfreshSS/FF signoff; this is notcontext qualification."
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/hbm_result_relay_physical.py --orientation ew --out {RUN}/route",
+   "ok": "python3 -c \"from pathlib import Path; assert Path('{RUN}/route/route.exit').read_text().strip()=='0'; assert Path('{RUN}/route/corner.exit').read_text().strip()=='0'\"",
+   "logs": [
+    "{RUN}/route/route.log",
+    "{RUN}/route/corner.log"
+   ],
+   "needs": [
+    "orfs"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/route/physical.json {RUN}/route/corner_sta.json {RUN}/route/screening_contract.json {RUN}/record/",
+   "needs": []
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/route/corner_sta.json",
+  "drc_metrics": "{RUN}/route/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "permanent_screening_adoption_block",
+    "cmd": "python3 -c \"print('SCREENING_NOT_CONTEXT_OR_PROTECTION_QUALIFIED'); raise SystemExit(1)\""
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ]
+ },
+ "smoke": true,
+ "record": [],
+ "cycles_added": 1,
+ "cycles_note": "onephysicalregister edge; encodedfulltree/tokencomposition notqualified",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "hosts": [
+  "ot-epyc2",
+  "ot-pve1",
+  "ot-agidock128",
+  "ot-epyc1tb"
+ ],
+ "host_require": [
+  "ot-epyc2",
+  "ot-pve1",
+  "ot-agidock128",
+  "ot-epyc1tb"
+ ],
+ "resource_basis": {
+  "basis": "16GiB capacity reservation for64FF/130pin primitive against measured fleet headroom; no process limit or claim of measured peak.",
+  "compile_threads": 8
+ },
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

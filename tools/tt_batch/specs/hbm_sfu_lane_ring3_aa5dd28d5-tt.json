@@ -1,0 +1,100 @@
+{
+ "name": "hbm_sfu_lane_ring3_aa5dd28d5-tt",
+ "block": "ot_su12_sfu",
+ "owner": "Claude:hbm-blocks",
+ "purpose": "TT-BATCH (owner option B, one large batch): hbm_sfu_lane_ring3_aa5dd28d5 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: SFU lane (DENR valid-align fix 4c1216b21 + DRING=3): ot_hdc_v41x_ins RING 3 = RING 2 timing wheel as generate wiring; RING 2 jobs sat >10 h in the yosys AST frontend (ot_hdc_v41x_ins derive). 0 cycles vs DRING=2.",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 12,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/hbm-blocks-sfu-20261007",
+  "commit": "aa5dd28d5ec2946ae9fc9d8a378481c3705f0ae7"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "c12_campaign_exact",
+    "cmd": "python3 tools/hbm_su_c12.py campaign --gsh 1 --kimm 1 --denr 1 --dring 3 --quick --only random --no-1024 --scratch {RUN}/bw --out {RUN}/bench_pos.json > {RUN}/bench_pos.log 2>&1; grep -E 'random N=' {RUN}/bench_pos.log; n=$(grep -c 'pass=True' {RUN}/bench_pos.log); ! grep -q 'pass=False' {RUN}/bench_pos.log && [ $n -ge 5 ] && echo SFU_EXACT_PASS",
+    "expect": "pass",
+    "threads": 5,
+    "peak_ram_gb": 16,
+    "pass_regex": "SFU_EXACT_PASS",
+    "note": "random N16 x3 + N64 x2 vs golden; the vehicle stage needs python tokenizers (absent on the fleet), as in the GSH/KIMM bench"
+   },
+   {
+    "name": "c12_neg_ring3_read_late",
+    "cmd": "mkdir -p {RUN}/negative_src && cp -a rtl tools {RUN}/negative_src/ && cd {RUN}/negative_src && sed -i 's/localparam integer JR = (j - 1 + N) % N;/localparam integer JR = (j - 2 + N) % N;/' rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv && grep -q 'JR = (j - 2 + N)' rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv && python3 tools/hbm_su_c12.py campaign --gsh 1 --kimm 1 --denr 1 --dring 3 --quick --only random --no-1024 --scratch {RUN}/bwn --out {RUN}/bench_neg.json > {RUN}/bench_neg.log 2>&1; grep -E 'random N=' {RUN}/bench_neg.log; grep -q 'pass=False' {RUN}/bench_neg.log && echo SFU_NEG_DETECTED && exit 1; exit 0",
+    "expect": "fail",
+    "fail_regex": "SFU_NEG_DETECTED",
+    "threads": 5,
+    "peak_ram_gb": 16,
+    "note": "Negative source isolated explicitly; its mutation never touches the route source."
+   },
+   {
+    "name": "ins_ring3_vs_ring2_ring0",
+    "cmd": "iverilog -g2012 -o {RUN}/ring3.vvp -s tb_v41x_ins_ring3 -P tb_v41x_ins_ring3.CYC=40000 rtl/test/tb_v41x_ins_ring3.sv rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv && vvp -n {RUN}/ring3.vvp",
+    "expect": "pass",
+    "pass_regex": "^PASS RING3==RING2==RING0",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "lane element: IO false-pathed and register-direct (route_lane.sh --false-path-io + outcheck), no IO SDC to calibrate; the quarter carries the lane clock"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; R={RUN} SRC=src SRCS=\"rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_c12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41/ot_hdc_fsqrt_c12.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv\" KEEP=\"ot_hdc_fp32_mul_f12_l6 ot_hdc_fp32_add_f12_l6x ot_dsrom_fdiv_f12 ot_hdc_fsqrt_c12\" CORES=12 NEED=24 CP=0.77 HM=0.035 bash physical/hbm_accel_die_views/su/route_lane.sh {LABEL} ot_su12_sfu 159.84 330.48 --param GSH=1 --param KIMM=1 --param DENR=1 --param DRING=3",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/ot_su12_sfu.lef {RUN}/routes/{LABEL}/view/ot_su12_sfu_ss.lib {RUN}/routes/{LABEL}/view/ot_su12_sfu_ff.lib {RUN}/routes/{LABEL}/corner_sta_833.json {RUN}/routes/{LABEL}/outcheck.txt {RUN}/record/ && cp {RUN}/routes/{LABEL}/args {RUN}/record/route_args.txt"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta_833.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "register_direct_io",
+    "cmd": "grep -q 'not_register_direct 0' {RUN}/routes/{LABEL}/outcheck.txt"
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/su/signoff833_clk.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/hbm_accel_die_views/su/lane/ot_su12_sfu_ring3"
+  }
+ ],
+ "cycles_added": 1,
+ "cycles_note": "+1 cycle per lane sigmoid / SiLU (D_SIG 121 -> 122); DRING 0",
+ "merge_target": null,
+ "hold_eco": {
+  "reexport": true
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}
