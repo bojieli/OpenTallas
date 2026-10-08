@@ -567,9 +567,11 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         pt, pr = self.own_pending(host)
         # load1 lags a route's ramp (synth is ~1 core, GRT/DRT use all NUM_CORES): count this loop's running stages at
         # their declared threads, whichever is larger (EPYC3 reached 342/128 with 27 loop jobs admitted on load1 alone)
-        # OWNER 2026-10-07 19:31 (no oversubscription): cap = ~1.1 x nproc (hosts.json); the load term is the larger of
-        # measured load1 and this loop's own running stages at their declared threads (a ramping route under-reports)
-        eff = max(info["load1"], self.own_running.get(host, 0))
+        # OWNER 2026-10-07 19:31 (no oversubscription): cap = ~1.1 x nproc (hosts.json).  Load = measured load1 + the
+        # declared threads of this loop's launches of the last 10 min (pt below: not ramped yet).  Declared threads of
+        # long-running stages are NOT counted (20:05: they overstate real use 2-3x -- synth/GPL/DPL/STA are serial -- and
+        # starved the fleet at 38-58 % idle).
+        eff = info["load1"]
         if eff + pt + threads > cfg["cap"]:
             return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
         res = cfg.get("reserve_ram_gb", 0)
@@ -1554,10 +1556,16 @@ def job_priority(j):
     return int(table.get(j["name"], j["spec"].get("priority", 0)) or 0)
 
 
-def yield_to_priority(j, fleet):
-    """a job below the highest priority still waiting for capacity does not take capacity first"""
-    top = getattr(fleet, "prio_waiting", 0)
-    return top > 0 and job_priority(j) < top
+def yield_to_priority(j, fleet, host=None):
+    """a job below a priority job still waiting for capacity does not take a host THAT JOB CAN USE (host-scoped:
+    20:05 a fleet-wide yield idled every host).  host None (QUEUED, no host yet): yield only if every host this job
+    could take is wanted by a waiting priority job."""
+    waits = getattr(fleet, "prio_hosts", {})      # host -> highest waiting priority that can use it
+    mine = job_priority(j)
+    if host is not None:
+        return waits.get(host, 0) > mine
+    return bool(waits) and all(waits.get(h["name"], 0) > mine for h in hosts_table()
+                               if fleet.compatible(h["name"], j["spec"]))
 
 
 def launch_ready(j, fleet, spec, stl, st):
@@ -1565,8 +1573,8 @@ def launch_ready(j, fleet, spec, stl, st):
     OUTSIDE the lock (launch_now) or None."""
     require_checkpoint_location(j)
     if True:
-        if st["kind"] in ("calibrate", "route") and yield_to_priority(j, fleet):
-            why = f"yielding to priority-{fleet.prio_waiting} jobs waiting for capacity"
+        if st["kind"] in ("calibrate", "route") and yield_to_priority(j, fleet, j["host"]):
+            why = f"yielding {host_cfg(j['host'])['label']} to a waiting priority job"
             if j.get("wait") != why:
                 j["wait"] = why
                 event(j, f"{st['key']} {why}")
@@ -1827,8 +1835,9 @@ def step(j, fleet):
         j["status"] = s = "SYNC"  # stay with preserved stage_idx and checkpoint host
     if s == "QUEUED":
         with FLEET_LOCK:
-            h, why = (None, f"yielding to priority-{fleet.prio_waiting} jobs waiting for capacity") \
-                if yield_to_priority(j, fleet) else fleet.choose(spec, exclude=[])
+            h, why = (None, "every usable host is wanted by a waiting priority job") \
+                if yield_to_priority(j, fleet) else fleet.choose(spec, exclude=[
+                    x for x, p in getattr(fleet, "prio_hosts", {}).items() if p > job_priority(j)])
             if h:   # claim capacity now so parallel job threads do not pick the same headroom
                 fleet.launched(h, 0, 0)
         if not h:
@@ -2602,9 +2611,16 @@ def tick(fleet):
     if _POOL is None:
         _POOL = ThreadPoolExecutor(max_workers=WORKERS)
     live = [x for x in all_jobs() if x["status"] not in TERMINAL]
-    waiting = [job_priority(x) for x in live if x["status"] in ("QUEUED", "READY") and x.get("wait")
-               and "yielding to priority" not in str(x.get("wait"))]
-    fleet.prio_waiting = max([p for p in waiting if p > 0], default=0)
+    prio_hosts = {}
+    for x in live:
+        p = job_priority(x)
+        if p <= 0 or x["status"] not in ("QUEUED", "READY") or not x.get("wait"):
+            continue
+        usable = [x["host"]] if x["status"] == "READY" and x.get("host") else \
+            [h["name"] for h in hosts_table() if fleet.compatible(h["name"], x["spec"])]
+        for h in usable:
+            prio_hosts[h] = max(prio_hosts.get(h, 0), p)
+    fleet.prio_hosts = prio_hosts
     for x in sorted(live, key=lambda x: -job_priority(x)):
         with _INFLIGHT_LOCK:
             if x["name"] in _INFLIGHT:
