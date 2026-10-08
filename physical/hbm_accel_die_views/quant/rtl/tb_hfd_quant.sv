@@ -63,7 +63,7 @@ module tb_hfd_quant;
     reg [0:0] q3_aq_fault; always @(posedge clk) q3_aq_fault <= q2_aq_fault;
     reg [0:0] q4_aq_fault; always @(posedge clk) q4_aq_fault <= q3_aq_fault;
     reg [0:0] q5_aq_fault; always @(posedge clk) q5_aq_fault <= q4_aq_fault;
-    ot_hfd_actquant_m #(.MR(1), .MLAT(6)) ref_aq (.clk(r_aq_clk), .rst_n(r_aq_rst_n), .v(r_aq_v), .fp4(r_aq_fp4), .x(r_aq_x), .vo(r_aq_vo), .q(r_aq_q), .e(r_aq_e), .y(r_aq_y), .fault(r_aq_fault));
+    ot_hfd_actquant_m #(.MR(1), .MLAT(6), .TS0(1), .TSPL(1)) ref_aq (.clk(r_aq_clk), .rst_n(r_aq_rst_n), .v(r_aq_v), .fp4(r_aq_fp4), .x(r_aq_x), .vo(r_aq_vo), .q(r_aq_q), .e(r_aq_e), .y(r_aq_y), .fault(r_aq_fault));
     integer err = 0, nchk = 0, cyc;
     integer seed = 20261006;
     task automatic randomize_inputs; begin
