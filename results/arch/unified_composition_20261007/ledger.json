@@ -199,7 +199,7 @@
       {
        "file": "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json",
        "pointer": "service_requirement",
-       "commit": "uncommitted (this delivery)"
+       "commit": "9dcc970be"
       }
      ],
      "note": "full_token_extra=null; the only priced reference is the serialized four-bank walker: +3,719,840 engine edges for the 264 captured edges of ONE component (not a token cost, not composable; 19.2x the whole measured token); ready_for_new_bank_RTL=False. Contract re-check 2026-10-07 (qwen-contracts, ce24d613f): 10/10 component packages reproduce, incl. the known publication-storage coverage failures; demand per ME operation: 2048 seats on each of 256 consecutive edges (128 unique scalars, fanout 16); no VM organisation serving it exists in RTL, so no token cost is composable. Protected bank element routed for measurement: qfd_vm_bank_checked (loop)"
@@ -219,7 +219,7 @@
       {
        "file": "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json",
        "pointer": "packages",
-       "commit": "uncommitted (this delivery)"
+       "commit": "9dcc970be"
       }
      ],
      "note": "service quanta are not clock cycles; SRAM, protection, write completion, mux, fanout, capture unbound. Contract re-check 2026-10-07 (qwen-contracts, ce24d613f): 10/10 component packages reproduce, incl. the known publication-storage coverage failures; demand per ME operation: 2048 seats on each of 256 consecutive edges (128 unique scalars, fanout 16); no VM organisation serving it exists in RTL, so no token cost is composable. Protected bank element routed for measurement: qfd_vm_bank_checked (loop)"
@@ -239,7 +239,7 @@
       {
        "file": "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json",
        "pointer": "verdict",
-       "commit": "uncommitted (this delivery)"
+       "commit": "9dcc970be"
       }
      ],
      "note": "OPEN_MODEL_AND_NATIVE_SCHEDULE_BINDING; one dynamic writer unresolved. Contract re-check 2026-10-07 (qwen-contracts, ce24d613f): 10/10 component packages reproduce, incl. the known publication-storage coverage failures; demand per ME operation: 2048 seats on each of 256 consecutive edges (128 unique scalars, fanout 16); no VM organisation serving it exists in RTL, so no token cost is composable. Protected bank element routed for measurement: qfd_vm_bank_checked (loop)"
