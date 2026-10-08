@@ -71,7 +71,7 @@ set_multicycle_path -hold 1 -from [get_cells -hierarchical *u_rom?]";;
    --step-tcl POST_PDN=$HG/keep.tcl --step-tcl POST_CTS=$HG/keep.tcl --step-tcl POST_GLOBAL_ROUTE=$HG/keep.tcl);;
  *) echo "unknown view $V"; exit 2;;
 esac
-IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-50)/1000" | bc -l)
+IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-${IN_HOLD_SKEW:-0})/1000" | bc -l)
 OMAX=$(echo "(250-$ISS)/1000" | bc -l); OMIN=$(echo "-($IFF+50)/1000" | bc -l)
 G=physical/dsrom_fh_safe/gen; mkdir -p $G
 cat > $G/signoff_$V.sdc <<S2
@@ -81,7 +81,7 @@ set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay -max $(echo "$ISS+250" | bc) -clock core_clk [all_inputs -no_clocks]
-set_input_delay -min $(echo "$IFF-50" | bc) -clock core_clk [all_inputs -no_clocks]
+set_input_delay -min $(echo "$IFF-${IN_HOLD_SKEW:-0}" | bc) -clock core_clk [all_inputs -no_clocks]
 set_output_delay -max $(echo "250-$ISS" | bc) -clock core_clk [all_outputs]
 set_output_delay -min $(echo "-($IFF+50)" | bc) -clock core_clk [all_outputs]
 set_load 3.898 [all_outputs]

@@ -30,7 +30,7 @@ else
  args+=(--param FPIPE=1 --die-area 0 0 700 700 --core-area 2 2 698 698 --core-utilization 25)
  MAC=()
 fi
-IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-50)/1000" | bc -l)
+IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-${IN_HOLD_SKEW:-0})/1000" | bc -l)
 OMAX=$(echo "(250-$ISS)/1000" | bc -l); OMIN=$(echo "-($IFF+50)/1000" | bc -l)
 STOP=(); [ $MODE = cal ] && STOP=(--pnr-stop-after cts --orfs-var SKIP_CTS_REPAIR_TIMING=1)   # calibration: clock tree only
 FP="set_false_path -from [get_ports rst_n]"; [ $V = quad ] && FP="$FP
@@ -42,7 +42,7 @@ set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay -max $(echo "$ISS+250" | bc) -clock core_clk [all_inputs -no_clocks]
-set_input_delay -min $(echo "$IFF-50" | bc) -clock core_clk [all_inputs -no_clocks]
+set_input_delay -min $(echo "$IFF-${IN_HOLD_SKEW:-0}" | bc) -clock core_clk [all_inputs -no_clocks]
 set_output_delay -max $(echo "250-$ISS" | bc) -clock core_clk [all_outputs]
 set_output_delay -min $(echo "-($IFF+50)" | bc) -clock core_clk [all_outputs]
 set_load 3.898 [all_outputs]

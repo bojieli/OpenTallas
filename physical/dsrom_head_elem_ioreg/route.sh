@@ -15,7 +15,7 @@ export OT_ORFS_NUM_CORES=16 NUM_CORES=16 OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_F
 export OPENTALLAS_ORFS_IMAGE=${OPENTALLAS_ORFS_IMAGE:-sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29}
 M=ot_rom_4096x274_m8
 if [ $E = A ]; then P=(--param LV=8 --param PAD=0 --param JOIN=1 --param ROWS=32); else P=(--param LV=6 --param PAD=2 --param JOIN=0 --param ROWS=128); fi
-IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-50)/1000" | bc -l)
+IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-${IN_HOLD_SKEW:-0})/1000" | bc -l)
 OMAX=$(echo "(250-$ISS)/1000" | bc -l); OMIN=$(echo "-($IFF+50)/1000" | bc -l)
 H=physical/dsrom_head_elem_ioreg
 STOP=(); [ $MODE = cal ] && STOP=(--pnr-stop-after cts --orfs-var SKIP_CTS_REPAIR_TIMING=1)   # calibration: clock tree only
@@ -26,7 +26,7 @@ set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay -max $(echo "$ISS+250" | bc) -clock core_clk [all_inputs -no_clocks]
-set_input_delay -min $(echo "$IFF-50" | bc) -clock core_clk [all_inputs -no_clocks]
+set_input_delay -min $(echo "$IFF-${IN_HOLD_SKEW:-0}" | bc) -clock core_clk [all_inputs -no_clocks]
 set_output_delay -max $(echo "250-$ISS" | bc) -clock core_clk [all_outputs]
 set_output_delay -min $(echo "-($IFF+50)" | bc) -clock core_clk [all_outputs]
 set_load 3.898 [all_outputs]
