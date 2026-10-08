@@ -34,15 +34,52 @@ h1 .g{background:linear-gradient(90deg,var(--accent),#a78bfa 60%,var(--hot));-we
 .stats{display:flex;gap:6px 16px;flex-wrap:wrap;font:12px var(--mono);color:var(--dim);margin-bottom:8px}
 .stats b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 canvas.chart{width:100%;display:block}
-#ramArea{height:230px}
+#ramArea{height:200px}
 #tanks{height:170px;margin-top:10px}
 #closeChart{height:170px}
 .legend2{display:flex;gap:6px 12px;flex-wrap:wrap;font:11px var(--mono);color:var(--dim);margin-top:8px}
 .legend2 span{display:inline-flex;align-items:center;gap:5px}
 .sw{width:9px;height:9px;border-radius:3px;display:inline-block}
-.ticker{list-style:none;margin:0;padding:0;max-height:360px;overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
-.ticker li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:7px 2px;border-bottom:1px solid #141c33;font-size:13px;animation:slidein .7s ease-out}
-.ticker li.new{background:linear-gradient(90deg,#5ee7ff22,transparent)}
+.ticker{list-style:none;margin:0;padding:0;max-height:640px;overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.ticker li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:9px 8px;border-bottom:1px solid #141c33;font-size:13px;animation:slidein .7s ease-out;border-radius:8px}
+.ticker li .bk{font:800 15px var(--mono);color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ticker li .jn{grid-column:2;color:var(--dim);font:11.5px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ticker li .sl{grid-column:3;grid-row:1/3;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.ticker li .sl span{font:700 12.5px var(--mono);font-variant-numeric:tabular-nums;padding:2px 7px;border-radius:6px;background:#4ade801f;color:var(--ok);white-space:nowrap}
+.ticker li .sl span.neg{background:#ff5d731f;color:var(--hot)}
+.ticker li .tag{grid-row:1/3}
+.ticker li.hot{background:linear-gradient(90deg,#ff5d7326,#ffb44d14 50%,transparent);box-shadow:inset 3px 0 0 #ffb44d}
+.ticker li.fresh{background:linear-gradient(90deg,#ff5d7355,#ffb44d33 45%,#5ee7ff11);box-shadow:inset 4px 0 0 #ff5d73,0 0 18px #ff5d7333;animation:slidein .7s ease-out,glow 2.4s ease-in-out infinite}
+.ticker li.new{animation:flash 1.8s ease-out 2}
+@keyframes glow{50%{box-shadow:inset 4px 0 0 #ffd23f,0 0 26px #ff5d7355}}
+@keyframes flash{0%{background:#ffd23f88;transform:scale(1.02)}100%{}}
+.closepanel{border-color:#ff5d7355;box-shadow:0 0 0 1px #ff5d7322,0 10px 40px #ff5d7314;position:relative;overflow:hidden}
+.closepanel .ptitle span:first-child{color:#ffb4c0;font-weight:700;font-size:12.5px;letter-spacing:.12em}
+.closepanel.boom{animation:boom 1.6s ease-out}
+@keyframes boom{0%{box-shadow:0 0 0 0 #ffd23fcc,0 0 60px #ff5d73aa}100%{box-shadow:0 0 0 22px #ffd23f00,0 10px 40px #ff5d7314}}
+.flame{display:inline-block;width:10px;height:10px;border-radius:50%;background:radial-gradient(#ffd23f,#ff5d73);box-shadow:0 0 12px #ff5d73;animation:pulse 1.2s infinite;margin-right:6px}
+#toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-220%);z-index:9;background:linear-gradient(90deg,#ff5d73,#ffb44d);color:#05070d;font:800 15px var(--mono);padding:12px 22px;border-radius:12px;box-shadow:0 12px 50px #ff5d7388;transition:transform .5s cubic-bezier(.2,.9,.3,1.3);max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#toast.on{transform:translate(-50%,0)}
+.jobs{margin-top:14px}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;font:12px var(--mono)}
+.ctl select,.ctl input{background:#0b1020;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:4px 7px;font:12px var(--mono)}
+.ctl input[type=search]{min-width:200px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:3px 9px;cursor:pointer;user-select:none;color:var(--dim);background:#0b1020}
+.chip.on{color:#05070d;font-weight:700}
+.tblwrap{max-height:70vh;overflow:auto;border:1px solid var(--line);border-radius:10px}
+table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-variant-numeric:tabular-nums}
+.jt th{position:sticky;top:0;background:#0f1629;color:var(--dim);text-align:left;font-weight:600;padding:5px 7px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;z-index:1}
+.jt th.s::after{content:' \25B4'}.jt th.s.d::after{content:' \25BE'}
+.jt td{padding:3px 7px;border-bottom:1px solid #121a30;white-space:nowrap;max-width:340px;overflow:hidden;text-overflow:ellipsis;vertical-align:top}
+.jt td.ev{max-width:none;white-space:normal;color:var(--dim);min-width:280px}
+.jt tr.grp td{background:#131c35;color:var(--ink);font-weight:700;padding:5px 7px;position:sticky;top:25px}
+.jt tr.grp td small{color:var(--dim);font-weight:400;margin-left:10px}
+.jt tr:hover td{background:#16203b}
+.st{font-weight:700;padding:1px 6px;border-radius:5px;color:#05070d}
+.stmd{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:12px;margin-top:12px}
+.stmd pre{margin:0;font:11px/1.45 var(--mono);color:var(--dim);white-space:pre-wrap;word-break:break-word;max-height:300px;overflow:auto;background:#0b1020;border:1px solid var(--line);border-radius:8px;padding:8px}
+.stmd pre b{color:var(--ink)}
+@media (max-width:900px){.stmd{grid-template-columns:1fr}}
 @keyframes slidein{from{opacity:0;transform:translateY(-8px)}}
 .tag{font:700 10px var(--mono);padding:3px 7px;border-radius:6px;color:#05070d;letter-spacing:.03em;white-space:nowrap}
 .ticker .h{color:var(--dim);font:12px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -84,6 +121,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
 </style>
 </head>
 <body>
+<div id="toast"></div>
 <div class="wrap">
   <header>
     <div>
@@ -95,24 +133,29 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
 
   <div class="cols">
     <div class="col">
-      <div class="coltitle">Compute load</div>
+      <div class="coltitle">CPU</div>
+      <section class="panel">
+        <div class="ptitle"><span>Threads busy · last 60 min</span><b id="cpu-now"></b></div>
+        <div class="stats" id="cpu-stats"></div>
+        <canvas class="chart" id="cpuSpark" style="height:46px"></canvas>
+      </section>
+      <section class="hosts big" id="hostsBig"></section>
+      <section class="hosts small" id="hostsSmall"></section>
+      <div class="coltitle">Memory</div>
       <section class="panel">
         <div class="ptitle"><span>RAM in use across the fleet · last 60 min</span><b id="ram-now"></b></div>
         <canvas class="chart" id="ramArea"></canvas>
         <div class="legend2" id="ramLegend"></div>
         <canvas class="chart" id="tanks"></canvas>
       </section>
-      <section class="panel">
-        <div class="ptitle"><span>Threads busy</span><b id="cpu-now"></b></div>
-        <div class="stats" id="cpu-stats"></div>
-        <canvas class="chart" id="cpuSpark" style="height:46px"></canvas>
-      </section>
-      <section class="hosts big" id="hostsBig"></section>
-      <section class="hosts small" id="hostsSmall"></section>
     </div>
 
     <div class="col">
       <div class="coltitle">Timing closure</div>
+      <section class="panel closepanel" id="closepanel">
+        <div class="ptitle"><span><i class="flame"></i>Live closures</span><span id="closeHot"></span></div>
+        <ul class="ticker" id="ticker"></ul>
+      </section>
       <section class="panel">
         <div class="ptitle"><span>Closure loop</span></div>
         <div class="stats" id="loop-stats"></div>
@@ -124,12 +167,24 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
         <canvas class="chart" id="closeChart"></canvas>
         <div class="legend2" id="closeLegend"></div>
       </section>
-      <section class="panel">
-        <div class="ptitle"><span>Live closures</span><span>Most recent first</span></div>
-        <ul class="ticker" id="ticker"></ul>
-      </section>
     </div>
   </div>
+
+  <section class="panel jobs" id="jobsPanel" hidden>
+    <div class="ptitle"><span>Closure loop · live progress (every active job)</span><b id="jobsNow"></b></div>
+    <div class="ctl">
+      <select id="fHost"><option value="">all hosts</option></select>
+      <select id="fTgt"><option value="">all targets</option><option>TT</option><option>SS</option></select>
+      <span id="fSt"></span>
+      <input id="fTxt" placeholder="filter job / block / event" type="search">
+      <label><input type="checkbox" id="fGrp" checked> group by host</label>
+    </div>
+    <div class="tblwrap"><table class="jt"><thead><tr id="jHead"></tr></thead><tbody id="jBody"></tbody></table></div>
+    <div class="stmd">
+      <div><div class="ptitle" style="margin-bottom:4px"><span>Loop status · fleet admission</span><span id="mdAge"></span></div><pre id="mdFleet"></pre></div>
+      <div><div class="ptitle" style="margin-bottom:4px"><span>Loop status · recent terminal</span></div><pre id="mdTerm"></pre></div>
+    </div>
+  </section>
 
   <footer>
     <div class="legend">core load <span class="r"></span> 0 to 100%</div>
@@ -140,7 +195,10 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
 (() => {
 'use strict';
 const qs = new URLSearchParams(location.search);
-const Q = qs.get('safe') === '0' ? '?safe=0' : '';
+const SAFE = qs.get('safe') === '1';
+const Q = SAFE ? '?safe=1' : '';
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
+const sgn = v => v == null ? '?' : (v >= 0 ? '+' : '') + Number(v).toFixed(1);
 const CATS = ['Qwen ROM', 'DeepSeek S81', 'HBM accelerator', 'Other'];
 const CATCOL = {'Qwen ROM':'#7c9cff','HBM accelerator':'#38e1c6','DeepSeek S81':'#ffb44d','Other':'#c084fc'};
 const HOSTCOL = ['#5ee7ff','#a78bfa','#f472b6','#ffb44d','#4ade80','#7c9cff','#38e1c6','#fb7185','#a3e635'];
@@ -379,10 +437,27 @@ function updateLoop(d) {
     row.querySelector('.tr i').style.width = (100 * v / mx).toFixed(1) + '%';
     row.querySelector('b').textContent = fmt(v);
   }
-  const keyOf = r => r.t + '|' + r.host + '|' + r.cat + '|' + (r.block || '');
+  const keyOf = r => r.t + '|' + r.host + '|' + r.cat + '|' + (r.name || r.block || '');
   const fresh = seen ? d.recent.filter(r => !seen.has(keyOf(r))) : [];
   seen = new Set(d.recent.map(keyOf));
-  $('ticker').innerHTML = d.recent.slice(0, 14).map(r => `<li class="${fresh.includes(r) ? 'new' : ''}"><span class="tag" style="background:${CATCOL[r.cat] || CATCOL.Other}">${r.cat.toUpperCase()}</span><span class="h">closed on ${r.host}${r.block ? ' · ' + r.block : ''}</span><span class="t">${ago(r.t)}</span></li>`).join('') || '<li><span></span><span class="h">waiting for closures</span><span></span></li>';
+  const now = Date.now() / 1000;
+  const hr = d.recent.filter(r => now - r.t < 3600).length;
+  $('closeHot').innerHTML = `<b style="color:#ffd23f">${hr}</b> in the last hour · ${fmt(L.closed_today)} blocks today`;
+  $('ticker').innerHTML = d.recent.slice(0, 20).map(r => {
+    const cls = [fresh.includes(r) ? 'new' : '', now - r.t < 900 ? 'fresh' : now - r.t < 3600 ? 'hot' : ''].join(' ');
+    const sl = r.setup !== undefined ? `<span class="${r.setup < 0 ? 'neg' : ''}">${r.setup_corner} ${sgn(r.setup)} ps</span><span class="${r.hold < 0 ? 'neg' : ''}">FF ${sgn(r.hold)} ps</span>` : '';
+    return `<li class="${cls}"><span class="tag" style="background:${CATCOL[r.cat] || CATCOL.Other}">${r.cat.toUpperCase()}</span>` +
+      `<span class="bk" title="${esc(r.block)}">${esc(r.block || 'block')} <small style="color:var(--dim);font-weight:400">on ${esc(r.host)}</small></span>` +
+      `<span class="sl">${sl}<small class="t">${ago(r.t)}</small></span>` +
+      `<span class="jn" title="${esc(r.name)}">${esc(r.name || '')}${r.target ? ' · target ' + esc(r.target.replace(/>=/g, '≥')) : ''}${r.into ? ' · into ' + esc(r.into) : ''}</span></li>`;
+  }).join('') || '<li><span></span><span class="h">waiting for closures</span><span></span></li>';
+  if (fresh.length) {
+    const r = fresh[0], p = $('closepanel');
+    p.classList.remove('boom'); void p.offsetWidth; p.classList.add('boom');
+    const tt = $('toast');
+    tt.textContent = `CLOSED  ${r.block || r.cat}` + (r.setup !== undefined ? `  ${r.setup_corner} ${sgn(r.setup)} / FF ${sgn(r.hold)} ps` : '') + `  on ${r.host}` + (fresh.length > 1 ? `  (+${fresh.length - 1} more)` : '');
+    tt.classList.add('on'); clearTimeout(tt._t); tt._t = setTimeout(() => tt.classList.remove('on'), 6000);
+  }
 }
 
 // ---- data
@@ -403,7 +478,7 @@ function onData(d) {
     (gp.length ? `<span>GPU <b>${gp[0].util}%</b> · ${fmt(gp[0].mem_used)}/${fmt(gp[0].mem_total)} GB</span>` : '');
   updateHosts(d); updateLoop(d); drawCpu(); drawClosures();
   areaT0 = performance.now();
-  $('foot').textContent = (d.safe ? 'share-safe view · ' : 'PRIVATE view · ') + `updates every ${d.poll} s`;
+  $('foot').textContent = (d.safe ? 'share-safe view · ' : 'INTERNAL view (?safe=1 to share) · ') + `updates every ${d.poll} s`;
 }
 let es = null;
 function connect() {
@@ -414,6 +489,59 @@ function connect() {
   });
 }
 connect();
+
+// ---- live job table (internal view only)
+const STS = ['RUNNING', 'SYNC', 'ECO', 'READY', 'QUEUED'];
+const STCOL = {RUNNING: '#4ade80', SYNC: '#5ee7ff', ECO: '#ffb44d', READY: '#a78bfa', QUEUED: '#8a97b8'};
+const COLS = [['label', 'host'], ['name', 'job'], ['block', 'block'], ['target', 'target'], ['stage', 'stage'], ['status', 'status'], ['age', 'age'], ['ev', 'latest event / wait']];
+const ls = k => { try { return JSON.parse(localStorage.getItem('fv3.' + k)); } catch (e) { return null; } };
+const lsw = (k, v) => { try { localStorage.setItem('fv3.' + k, JSON.stringify(v)); } catch (e) {} };
+const F = Object.assign({host: '', tgt: '', txt: '', grp: true, sts: STS.slice(), sort: 'age', dir: -1}, ls('f') || {});
+let J = null;
+const dur = s => s < 60 ? Math.round(s) + 's' : s < 3600 ? Math.round(s / 60) + 'm' : s < 86400 ? (s / 3600).toFixed(1) + 'h' : (s / 86400).toFixed(1) + 'd';
+function renderJobs() {
+  if (!J) return;
+  lsw('f', F);
+  const now = Date.now() / 1000, order = J.hosts;
+  const rows = J.jobs.map(j => Object.assign({}, j, {age: j.since ? now - j.since : 0, ev: (j.status === 'RUNNING' || j.status === 'ECO') ? (j.event || j.wait) : (j.wait || j.reason || j.event)}));
+  const cnt = {}; rows.forEach(r => cnt[r.status] = (cnt[r.status] || 0) + 1);
+  $('fSt').innerHTML = STS.map(s => `<span class="chip ${F.sts.includes(s) ? 'on' : ''}" data-s="${s}" style="${F.sts.includes(s) ? 'background:' + STCOL[s] : ''}">${s} ${cnt[s] || 0}</span>`).join(' ');
+  const hs = [...new Set(rows.map(r => r.label))].sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99) || a.localeCompare(b));
+  const sel = $('fHost'); if (sel.options.length - 1 !== hs.length) { sel.innerHTML = '<option value="">all hosts</option>' + hs.map(h => `<option>${esc(h)}</option>`).join(''); }
+  sel.value = F.host; $('fTgt').value = F.tgt; $('fGrp').checked = F.grp; if (document.activeElement !== $('fTxt')) $('fTxt').value = F.txt;
+  const tx = F.txt.toLowerCase();
+  const vis = rows.filter(r => F.sts.includes(r.status) && (!F.host || r.label === F.host) && (!F.tgt || r.target.startsWith(F.tgt)) &&
+    (!tx || (r.name + ' ' + r.block + ' ' + r.ev + ' ' + r.stage).toLowerCase().includes(tx)));
+  const k = F.sort, dir = F.dir;
+  vis.sort((a, b) => (F.grp ? (hs.indexOf(a.label) - hs.indexOf(b.label)) : 0) || ((a[k] > b[k]) - (a[k] < b[k])) * dir || a.name.localeCompare(b.name));
+  $('jHead').innerHTML = COLS.map(([c, t]) => `<th data-c="${c}" class="${F.sort === c ? 's' + (F.dir < 0 ? ' d' : '') : ''}">${t}</th>`).join('');
+  let html = '', g = null;
+  for (const r of vis) {
+    if (F.grp && r.label !== g) {
+      g = r.label; const gr = vis.filter(x => x.label === g), c2 = {}; gr.forEach(x => c2[x.status] = (c2[x.status] || 0) + 1);
+      html += `<tr class="grp"><td colspan="8">${esc(g)} · ${gr.length}<small>${STS.filter(s => c2[s]).map(s => s + ' ' + c2[s]).join(' · ')}</small></td></tr>`;
+    }
+    html += `<tr><td>${esc(r.label)}</td><td title="${esc(r.owner)}">${esc(r.name)}</td><td>${esc(r.block)}</td><td>${esc(r.target.replace(/>=/g, '≥'))}</td><td>${esc(r.stage)}${r.attempt > 1 ? ' a' + r.attempt : ''}</td>` +
+      `<td><span class="st" style="background:${STCOL[r.status] || '#8a97b8'}">${r.status}</span></td><td>${dur(r.age)}</td><td class="ev">${esc(r.ev)}</td></tr>`;
+  }
+  $('jBody').innerHTML = html || '<tr><td colspan="8">no matching jobs</td></tr>';
+  $('jobsNow').textContent = `${vis.length} shown of ${rows.length} active · ${STS.map(s => (cnt[s] || 0) + ' ' + s.toLowerCase()).join(' · ')}`;
+  const st = J.status || {};
+  $('mdFleet').innerHTML = [...(st.head || []), '', ...(st.fleet || []).map((l, i) => i ? esc(l).replace(/^(\w+):/, '<b>$1</b>:') : '<b>' + esc(l) + '</b>')].map(l => l.startsWith('<') ? l : esc(l)).join('\n');
+  $('mdTerm').innerHTML = (st.terminal || []).map(l => esc(l).replace(/^(\S+) \[([^\]]+)\] (\w+)/, '<b>$1</b> [$2] <b>$3</b>')).join('\n');
+  $('mdAge').textContent = st.mtime ? 'written ' + ago(st.mtime) : 'not found';
+}
+function pollJobs() {
+  if (SAFE) return;
+  fetch('/api/jobs').then(r => r.ok ? r.json() : null).then(d => { if (d) { J = d; $('jobsPanel').hidden = false; renderJobs(); } }).catch(() => {}).finally(() => setTimeout(pollJobs, 10000));
+}
+$('fHost').onchange = e => { F.host = e.target.value; renderJobs(); };
+$('fTgt').onchange = e => { F.tgt = e.target.value; renderJobs(); };
+$('fGrp').onchange = e => { F.grp = e.target.checked; renderJobs(); };
+$('fTxt').oninput = e => { F.txt = e.target.value; renderJobs(); };
+$('fSt').onclick = e => { const s = e.target.dataset && e.target.dataset.s; if (!s) return; F.sts = F.sts.includes(s) ? F.sts.filter(x => x !== s) : F.sts.concat(s); renderJobs(); };
+$('jHead').onclick = e => { const c = e.target.dataset && e.target.dataset.c; if (!c) return; if (F.sort === c) F.dir = -F.dir; else { F.sort = c; F.dir = c === 'age' ? -1 : 1; } renderJobs(); };
+pollJobs();
 window.addEventListener('resize', () => { for (const c of cards.values()) layoutGrid(c); drawCpu(); drawClosures(); areaT0 = 0; });
 
 // ---- frame loop (about 30 fps; rAF pauses when hidden)

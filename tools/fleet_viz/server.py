@@ -9,9 +9,10 @@ Endpoints (bind 127.0.0.1:8765 by default):
   /                 the page            /api/fleet   JSON snapshot
   /api/stream       server-sent events (latest history point only; /api/fleet
                     carries the full 60-minute history)
-Share-safe mode is the default: labels and generic categories only. `?safe=0`
-adds real host aliases and block names, and is honoured only for direct
-loopback requests that carry no proxy forwarding headers.
+Internal view is the default: real host aliases, job and block names, slacks
+and the live job table (/api/jobs). `?safe=1` gives the share-safe view (labels
+and generic categories only); requests that arrive through a proxy (forwarding
+headers) or from a non-loopback address are always served share-safe.
 """
 import collections, datetime, json, os, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
@@ -23,6 +24,8 @@ AGENT = (HERE / 'agent.py').read_text()
 POLL = float(os.environ.get('FLEET_VIZ_POLL', '5'))
 BIND = os.environ.get('FLEET_VIZ_BIND', '127.0.0.1')
 PORT = int(os.environ.get('FLEET_VIZ_PORT', '8765'))
+STATUS_MD = pathlib.Path(os.environ.get('FLEET_VIZ_STATUS_MD', '/tmp/claude-review-20261003/CLOSURE_LOOP_STATUS.md'))
+ACTIVE = ('RUNNING', 'SYNC', 'ECO', 'READY', 'QUEUED')
 JOBS = pathlib.Path(os.environ.get('FLEET_VIZ_JOBS', os.path.expanduser('~/.local/state/closure_loop/jobs')))
 CTL = pathlib.Path(os.environ.get('XDG_RUNTIME_DIR', '/tmp')) / 'fleet-viz-ssh'
 
@@ -89,9 +92,35 @@ def parse_ts(s):
     try: return datetime.datetime.fromisoformat(s).timestamp()
     except Exception: return 0.0
 
+def summarise(j):
+    s = j.get('spec', {}); m = j.get('metrics') or {}; ev = j.get('events') or []
+    tt = s.get('route_corner') == 'TC' or m.get('setup_corner') == 'tt'
+    last = ev[-1] if ev else ''
+    if re.match(r'\d{4}-\d\d-\d\dT\S+ ', last): last = last.split(' ', 1)[1]
+    since = parse_ts(j.get('stage_started') or j.get('wait_since') or j.get('created') or '')
+    return dict(name=j.get('name'), status=j.get('status'), host=j.get('host'), cat=category(j),
+                block=s.get('block') or j.get('name'), updated=parse_ts(j.get('updated', '')),
+                stage=j.get('stage_key') or '', since=since, wait=(j.get('wait') or '')[:300],
+                reason=(j.get('reason') or '')[:300], event=last[:300], target=('TT' if tt else 'SS') + '>=0 / FF>=0',
+                setup=m.get('ss_ps'), setup_corner='TT' if tt else 'SS', hold=m.get('ff_ps'), drc=m.get('drc'),
+                into=s.get('merge_target') or '', owner=s.get('owner') or '', attempt=j.get('attempt'))
+
+def status_md():
+    try: txt = STATUS_MD.read_text()
+    except OSError: return dict(head=[], fleet=[], terminal=[], mtime=0)
+    sec = 'head'; out = dict(head=[], fleet=[], terminal=[], mtime=STATUS_MD.stat().st_mtime)
+    for line in txt.splitlines():
+        if line.startswith('## '):
+            sec = 'fleet' if line[3:].startswith('Fleet') else 'terminal' if 'terminal' in line else 'skip'
+            if sec == 'fleet': out['fleet'].append(line[3:])
+            continue
+        if line.strip() and sec in out: out[sec].append(line.lstrip('-# ').strip())
+    out['terminal'] = out['terminal'][:60]
+    return out
+
 class Closures:
     def __init__(self):
-        self.cache = {}; self.data = {}; self.lock = threading.Lock()
+        self.cache = {}; self.data = {}; self.active = []; self.lock = threading.Lock()
         threading.Thread(target=self.run, daemon=True, name='closures').start()
 
     def scan(self):
@@ -105,9 +134,7 @@ class Closures:
             if c and c[0] == mt: continue
             try: j = json.loads(open(f.path).read())
             except Exception: continue
-            s = j.get('spec', {})
-            self.cache[f.name] = (mt, dict(status=j.get('status'), host=j.get('host'), cat=category(j),
-                                         block=s.get('block') or j.get('name'), updated=parse_ts(j.get('updated', ''))))
+            self.cache[f.name] = (mt, summarise(j))
         for k in set(self.cache) - seen: del self.cache[k]
         jobs = [v for _, v in self.cache.values()]
         midnight = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
@@ -122,7 +149,9 @@ class Closures:
         for j in closed:
             k = 23 - (hour0 - (int(j['updated']) // 3600) * 3600) // 3600
             if 0 <= k < 24: bins[j['cat']][k] += 1
+        active = sorted((j for j in jobs if j['status'] in ACTIVE), key=lambda j: (j['host'] or '~', j['name']))
         with self.lock:
+            self.active = active
             self.data = dict(counts=dict(counts), running_by_host=dict(running), running_by_cat=dict(run_cat),
                              closed_today=len({j['block'] for j in today}), closed_today_jobs=len(today),
                              closed_24h_by_cat=dict(collections.Counter(j['cat'] for j in closed if j['updated'] >= day_ago)),
@@ -151,12 +180,12 @@ except Exception:
 _snap = {}; _cond = threading.Condition()
 
 def build(safe):
-    hosts = []; alias_to_label = {h.cfg['id']: h.cfg['label'] for h in HOSTS}
+    hosts = []; alias_to_label = {h.cfg['id']: h.cfg['label'] if safe else h.cfg.get('name', h.cfg['id']) for h in HOSTS}
     with CLOSURES.lock: cl = dict(CLOSURES.data)
     tot = dict(cores=0, busy=0.0, mem_total=0.0, mem_used=0.0, docker=0, hosts_up=0)
     for h in HOSTS:
         st, d = h.snap(); c = h.cfg
-        e = dict(label=c['label'], kind=c['kind'], region=c['region'], state=st,
+        e = dict(label=c['label'] if safe else c.get('name', c['id']), kind=c['kind'], region=c['region'], state=st,
                  routes=cl.get('running_by_host', {}).get(c['id'], 0))
         if not safe: e['alias'] = c['id']
         if d and st in ('up', 'stale'):
@@ -172,7 +201,8 @@ def build(safe):
     recent = []
     for j in cl.get('recent', []):
         r = dict(t=j['updated'], cat=j['cat'], host=alias_to_label.get(j['host'], 'fleet'))
-        if not safe: r['block'] = j['block']
+        if not safe:
+            r.update({k: j[k] for k in ('block', 'name', 'setup', 'setup_corner', 'hold', 'drc', 'target', 'into')})
         recent.append(r)
     counts = cl.get('counts', {})
     return dict(t=time.time(), poll=POLL, safe=safe, regions=CFG['regions'], hosts=hosts,
@@ -182,7 +212,7 @@ def build(safe):
                           closed_total=cl.get('closed_total', 0), running_by_cat=cl.get('running_by_cat', {}),
                           closed_24h_by_cat=cl.get('closed_24h_by_cat', {}),
                           closed_hourly=cl.get('closed_hourly', dict(start=0, bins={}))),
-                hist_hosts=HIST_HOSTS, history=list(HISTORY), recent=recent)
+                hist_hosts=HIST_HOSTS if safe else [h.cfg.get('name', h.cfg['id']) for h in HOSTS], history=list(HISTORY), recent=recent)
 
 def ticker():
     n = 0
@@ -218,7 +248,7 @@ class H(BaseHTTPRequestHandler):
     def safe(self, q):
         local = self.client_address[0] in ('127.0.0.1', '::1')
         proxied = any(self.headers.get(k) for k in ('X-Forwarded-For', 'X-Real-IP', 'Forwarded', 'CF-Connecting-IP'))
-        return not (q.get('safe', ['1'])[0] == '0' and local and not proxied)
+        return q.get('safe', ['0'])[0] == '1' or not local or proxied
 
     def send(self, code, body, ctype):
         self.send_response(code); self.send_header('Content-Type', ctype); self.send_header('Content-Length', str(len(body)))
@@ -235,6 +265,13 @@ class H(BaseHTTPRequestHandler):
         if u.path == '/api/fleet':
             with _cond: body = _snap.get('full', {}).get(safe)
             if body is None: return self.send(503, b'{"warming":true}', 'application/json')
+            return self.send(200, body.encode(), 'application/json')
+        if u.path == '/api/jobs':
+            if safe: return self.send(403, b'{"safe":true}', 'application/json')
+            lab = {h.cfg['id']: h.cfg.get('name', h.cfg['id']) for h in HOSTS}
+            with CLOSURES.lock: act = list(CLOSURES.active)
+            rows = [dict(j, label=lab.get(j['host'], j['host'] or 'unplaced')) for j in act]
+            body = json.dumps(dict(t=time.time(), jobs=rows, status=status_md(), hosts=[h.cfg.get('name', h.cfg['id']) for h in HOSTS]), separators=(',', ':'))
             return self.send(200, body.encode(), 'application/json')
         if u.path == '/api/stream':
             self.send_response(200); self.send_header('Content-Type', 'text/event-stream')
