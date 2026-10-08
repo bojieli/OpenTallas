@@ -1,0 +1,167 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "s81ph-root_tile-77bcb3f3c-mmq-tt",
+ "block": "ot_s81ph_root_tile",
+ "owner": "Claude:s81-ph",
+ "source_branch": "claude/s81-placeholders-20261006",
+ "source_commit": "77bcb3f3c953773a13abd3ea2a9db44144bf6d30",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c-mmq-tt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 14.08,
+  "ff_ps": 14.78,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c-mmq-tt/routes/s81ph_root_tile_77bcb3f3c_mmq_tt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c-mmq-tt/routes/s81ph_root_tile_77bcb3f3c_mmq_tt/work/orfs/logs/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_77bcb3f3c_mmq_tt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "bench t5 (benchB on EPYC2, +UNORD): 9 cases PASS, mutants BF16_TRUNC / LANE_SWAP / NOFWD FAIL; record results/rtl/s81_ph_20261006/gather/bench_t5_summary.txt",
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  },
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1977,
+    "mean": 374.3,
+    "min": 364.2,
+    "max": 378.0
+   },
+   "all": {
+    "n": 24384,
+    "mean": 372.3,
+    "min": 363.7,
+    "max": 378.4
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1977,
+    "mean": 238.7,
+    "min": 228.9,
+    "max": 242.9
+   },
+   "all": {
+    "n": 24384,
+    "mean": 237.2,
+    "min": 228.3,
+    "max": 242.9
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 374,
+   "CK_SS_ALL_MEAN": 372,
+   "CK_SS_MIN": 364,
+   "CK_SS_ALL_MIN": 364,
+   "CK_SS_MAX": 378,
+   "CK_SS_ALL_MAX": 378,
+   "CK_FF_MEAN": 239,
+   "CK_FF_ALL_MEAN": 237,
+   "CK_FF_MIN": 229,
+   "CK_FF_ALL_MIN": 228,
+   "CK_FF_MAX": 243,
+   "CK_FF_ALL_MAX": 243
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 6,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T09:05:50-07:00",
+ "job_spec": {
+  "name": "s81ph-root_tile-77bcb3f3c-mmq-tt",
+  "block": "ot_s81ph_root_tile",
+  "owner": "Claude:s81-ph",
+  "purpose": "TT-BATCH (owner option B, one large batch): s81ph-root_tile-77bcb3f3c-mmq re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: FLOW-HOLD requeue of s81ph-root_tile-77bcb3f3c (SS 29.84 / FF -17.66) on its own source, snapshot patched in-stage by claude/flow-hold-20261007 @e9dd417e7 (hold_corners_patch mm + h1_patch); multi-mode route-time hold repair, HM 50 ps at FF. gather root tile v4 (tile_m3 post-CTS -83: queue read mux, operand AND-OR, free-list take chain) -> one calibrated route",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc3",
+   "ot-epyc2"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/s81-placeholders-20261006",
+   "commit": "77bcb3f3c953773a13abd3ea2a9db44144bf6d30"
+  },
+  "no_bench_reason": "bench t5 (benchB on EPYC2, +UNORD): 9 cases PASS, mutants BF16_TRUNC / LANE_SWAP / NOFWD FAIL; record results/rtl/s81_ph_20261006/gather/bench_t5_summary.txt",
+  "stages": {
+   "calibrate": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc' && SRC={SRC} OUT={RUN}/routes CORES=16 NEED=24 CLK=ck SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_p.sv rtl/gpu/ot_fp32_add_rne_deep.sv rtl/hdc/ot_hdc_prefix.sv' SDCX=physical/s81_ph_views/gather/root_tile_io.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract ot_s81ph_root_tile rtl/dsrom_sys/s81_ph/ot_s81ph_root_tile.sv $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc' && SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=24 CLK=ck SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_p.sv rtl/gpu/ot_fp32_add_rne_deep.sv rtl/hdc/ot_hdc_prefix.sv' SDCX=physical/s81_ph_views/gather/root_tile_io.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract ot_s81ph_root_tile rtl/dsrom_sys/s81_ph/ot_s81ph_root_tile.sv $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    },
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/ot_s81ph_root_tile"
+   }
+  ],
+  "cycles_added": 6,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "S81-PH tile sheet is grade 'target' (no calibration: 467-900 ps); the tiles' measured insertion is far lower (svc_pc 145 ps, ctrl_ctr 61 ps at calibrate), so the sheet SDC would put vclk ~300+ ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC"
+ }
+}
