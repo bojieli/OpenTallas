@@ -9,65 +9,65 @@
   {
    "item": "s81_die",
    "nodes": "*.attn.a_proj",
-   "cycles": 27,
+   "cycles": 28,
    "frac": 0,
-   "source": "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced meso d8g1 term (+4), giving +27: hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending"
+   "source": "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full 221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress"
   },
   {
    "item": "s81_die",
    "nodes": "*.attn.wq_b",
-   "cycles": 27,
+   "cycles": 28,
    "frac": 0,
-   "source": "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced meso d8g1 term (+4), giving +27: hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending"
+   "source": "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full 221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress"
   },
   {
    "item": "s81_die",
    "nodes": "*.attn.cmp.wk",
-   "cycles": 27,
+   "cycles": 28,
    "frac": 0,
-   "source": "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced meso d8g1 term (+4), giving +27: hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending"
+   "source": "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full 221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress"
   },
   {
    "item": "s81_die",
    "nodes": "*.attn.wo_a",
-   "cycles": 27,
+   "cycles": 28,
    "frac": 0,
-   "source": "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced meso d8g1 term (+4), giving +27: hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending"
+   "source": "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full 221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress"
   },
   {
    "item": "s81_die",
    "nodes": "*.attn.wo_b",
-   "cycles": 27,
+   "cycles": 28,
    "frac": 0,
-   "source": "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced meso d8g1 term (+4), giving +27: hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending"
+   "source": "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full 221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress"
   },
   {
    "item": "s81_die",
    "nodes": "*.ffn.router",
-   "cycles": 27,
+   "cycles": 28,
    "frac": 0,
-   "source": "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced meso d8g1 term (+4), giving +27: hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending"
+   "source": "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full 221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress"
   },
   {
    "item": "s81_die",
    "nodes": "*.ffn.shared_gu",
-   "cycles": 27,
+   "cycles": 28,
    "frac": 0,
-   "source": "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced meso d8g1 term (+4), giving +27: hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending"
+   "source": "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full 221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress"
   },
   {
    "item": "s81_die",
    "nodes": "*.ffn.experts_gu",
-   "cycles": 27,
+   "cycles": 28,
    "frac": 0,
-   "source": "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced meso d8g1 term (+4), giving +27: hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending"
+   "source": "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full 221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress"
   },
   {
    "item": "s81_die",
    "nodes": "*.ffn.down",
-   "cycles": 27,
+   "cycles": 28,
    "frac": 0,
-   "source": "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced meso d8g1 term (+4), giving +27: hub stations, q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending"
+   "source": "S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221.4, hub column 1,728, PQ root row in tier channels 0-5 + PQ core slot after the VM; tools/dsrom_s81_fulldie.py --pq-place, claude/s81-die-20261007): maximum field round trip 167 + 2 PQ root-row return stations (N / S of each ret_root_r128) = 169 vs 137 at the reference frame, less the separately priced meso d8g1 term (+4), giving +28 (v9d: +27): hub stations, q banks, column relays (incl. relays displaced out of the full 221.4 um q frames), 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2), PQ root stations (+2; the root pipeline itself is the PQ lever's). Python-legal floorplan on real abstracts; die GRT / GRT-parasitic SS-FF STA / IR / region DRT in progress"
   },
   {
    "item": "meso_d8g1",

@@ -1,0 +1,5 @@
+PASS hub ar_words=2400 x3_words=2400
+- /home/ubuntu/wt-claude-qwen-contracts/rtl/test/tb_qwen_die_hub_fr.sv:77: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48us; walltime 0.051 s; speed 942.407 us/s
+- Verilator: cpu 0.051 s on 1 threads; allocated 7 MB

@@ -3309,6 +3309,19 @@ def main(argv: list[str] | None = None, *,
          flow_timeout: int | None | object = _TIMEOUT_UNSET) -> int:
     """Run with optional, invocation-scoped timeout overrides; None is unlimited."""
     args = build_parser().parse_args(argv)
+    # OPTION B (owner 2026-10-07 20:45): setup signs off at TT. OT_ORFS_CORNER_OVERRIDE=TC turns a recipe's
+    # --orfs-corner WC / --hold-corners WC,BC into TC / TC,BC (setup repair at TT, hold at FF) without editing every
+    # route script; the mm hold session then builds its setup scene from TC (OT_MM_SETUP_CORNER).
+    _ot_cov = os.environ.get("OT_ORFS_CORNER_OVERRIDE", "").strip().upper()
+    if _ot_cov:
+        if args.orfs_corner:
+            args.orfs_corner = _ot_cov
+        if args.hold_corners:
+            args.hold_corners = ",".join(dict.fromkeys(_ot_cov if c.strip().upper() == "WC" else c.strip()
+                                                       for c in args.hold_corners.split(",")))
+        args.orfs_var = list(args.orfs_var or []) + [f"OT_MM_SETUP_CORNER={_ot_cov}"]
+        print(f"OT_ORFS_CORNER_OVERRIDE={_ot_cov}: orfs corner {args.orfs_corner}, hold corners {args.hold_corners}",
+              file=sys.stderr)
     _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
     if _ot_rhc == "mm":
         # FLOW-HOLD (2026-10-07): multi-mode route-time repair, SS setup (scene WC) + FF hold (scene BC) each under its

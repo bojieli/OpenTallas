@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.qwen-vm-direct-readback.v1",
+  "default_enabled": false,
+  "added_register_bits": 0,
+  "added_pipeline_edges": 0,
+  "raw_bank_or_bits": 2048,
+  "raw_bank_or_4input_terms": 2048,
+  "original_and_successor_same_register_clock": true,
+  "source_capture_epoch_and_ACK_unchanged": true,
+  "full16_data_macros": 256,
+  "check_macros": 32,
+  "area_delta": "Expected zero boolean hardware delta; full implementation not mapped or physically qualified",
+  "composed_latency": "Existing serialized reference 9-read/28-write minimum service unchanged; selected joined calendar composition applies conditionally",
+  "source_sha256": {
+    "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv": "a0d6c5b0058d3ef997b4f862cd7f02a53b87876efd6b40cceb19874980624984",
+    "rtl/hbm_accel/qwen/finite_vm_20261005/ot_qwen_checked_vm_bank.sv": "bc57ebbbcb1d0352908ab7df89ed4318a13a85e2c7a41fc65f365b2b3c281360",
+    "rtl/hbm_accel/qwen/finite_vm_20261005/ot_qwen_finite_vm_adapter.sv": "30261cc7a1ee7f3f12aac7ac23413956acf1504dea0bac7ec3f14bd3f84e1063"
+  },
+  "fault_coverage": "No new silicon corruption detector; simulation unknown-postverify diagnostic remains separate"
+}
