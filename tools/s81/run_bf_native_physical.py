@@ -31,7 +31,7 @@ def command(a):
   # (owner 2026-10-06): in max = ss+150+100, in min = ff-50, out max = 100-(ss-150), out min = -(ff+50)
   ss=a.ins_ss if a.ins_ss else 150.0; ff=a.ins_ff if a.ins_ff else 175.0
   io=lambda v: str(round(v/1000.0,4))
-  cmd+=['--param','PINREG=1','--clock-period-ns','.770','--core-input-delay-min-ns',io(ff-50),'--core-input-delay-max-ns',io(ss+250),
+  cmd+=['--param','PINREG=1','--clock-period-ns','.770','--core-input-delay-min-ns',io(ff),'--core-input-delay-max-ns',io(ss+250),
    '--output-delay-min-ns',io(-(ff+50)),'--output-delay-max-ns',io(100-(ss-150)),'--false-path-from','rst_n',
    '--die-area','0','0',str(a.die_w),str(a.die_h),'--core-area','2.16','2.16',str(round(a.die_w-2.16,3)),str(round(a.die_h-2.16,3)),
    '--hold-corners','BC','--slew-margin-percent','20','--hold-margin-ns','0.020','--orfs-var','PLACE_DENSITY_LB_ADDON=',

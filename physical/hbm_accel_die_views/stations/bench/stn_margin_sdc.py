@@ -41,7 +41,7 @@ for l in open(src):
         # MAX leaf insertion minus the 50 ps die-skew allowance, outputs are captured no earlier than its FF MIN leaf
         # insertion plus 50 ps -- one SDC for routing (hold repair at BC) and for both sign-off corners
         if FFM:
-            mn = (Lmax - L - 25) if m.group(1) == 'set_input_delay' else (L - Lmin - 25)   # + 25 ps hold uncertainty = 50
+            mn = ((Lmin + Lmax) / 2 - L) if m.group(1) == 'set_input_delay' else (L - (Lmin + Lmax) / 2 - 25)   # + 25 ps hold uncertainty = 50
             # + the minimum arrival credit of the connected die path (stations/io_min_delay.json, stn_io_min.py):
             # upstream pin-launch clk->Q at FF + 50 % of the measured FF wire delay over the minimum die wire
             mn += IOMIN.get('in' if m.group(1) == 'set_input_delay' else 'out', {}).get('min_delay_ps', 0.0)

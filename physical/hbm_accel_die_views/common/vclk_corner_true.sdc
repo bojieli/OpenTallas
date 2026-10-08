@@ -30,10 +30,10 @@ if {[llength [get_libs -quiet *_FF_*]] && [llength [get_clocks -quiet vclk]]} {
   report_clock_latency -clocks core_clk
   set ot_s [sta::redirect_string_end]
   if {[regexp {rise -> rise.*?([0-9.]+)\s+([0-9.]+)\s+latency} $ot_s -> ot_lo ot_hi]} {
-    set_clock_latency $ot_lo [get_clocks vclk]
+    set_clock_latency [expr {($ot_lo + $ot_hi) / 2.0}] [get_clocks vclk]
     set_output_delay -min 0 -clock vclk [ot_dir_ports {output bidirect}]
-    set_input_delay -min [expr {$ot_hi - $ot_lo}] -clock vclk [ot_dir_ports {input bidirect}]
-    set_clock_uncertainty -hold 50 -from [get_clocks vclk] -to [get_clocks core_clk]
+    set_input_delay -min 0 -clock vclk [ot_dir_ports {input bidirect}]
+    set_clock_uncertainty -hold 25 -from [get_clocks vclk] -to [get_clocks core_clk]
     set_clock_uncertainty -hold 50 -from [get_clocks core_clk] -to [get_clocks vclk]
     puts "OT_VCLK_CT: FF insertion $ot_lo .. $ot_hi ps: outputs vs vclk $ot_lo, inputs launched at $ot_hi, IO hold uncertainty 50"
   } else {

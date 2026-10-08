@@ -95,7 +95,7 @@ def main():
             # inout die ports (the retyped cSE/cSW/h buses) are 'bidirect' to STA: both roles get their credit
             lines.append(f'    foreach ot_q [get_ports -quiet {{{p} {p}[*]}}] {{ set ot_d [ot_port_dir $ot_q]; '
                          f'if {{$ot_d in {{input bidirect}}}} '
-                         f'{{ set_input_delay -min [expr {{$ot_hi - $ot_lo + {r["credit_in_ps"]}}}] -clock vclk $ot_q }}; '
+                         f'{{ set_input_delay -min [expr {{0.0 + {r["credit_in_ps"]}}}] -clock vclk $ot_q }}; '
                          f'if {{$ot_d in {{output bidirect}}}} '
                          f'{{ set_output_delay -min {r["credit_out_ps"]} -clock vclk $ot_q }} }}')
         lines += ['    puts "OT_IOMIN: per-port die-path hold credit applied"', '  }', '}', '']

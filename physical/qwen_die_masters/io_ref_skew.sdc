@@ -20,7 +20,8 @@ set qdm_lmax [get_property $qdm_ref arrival_max_rise]
 set qdm_lmin [get_property $qdm_ref arrival_min_rise]
 puts "QDM reference pin [get_full_name $qdm_ref] clock arrival max $qdm_lmax min $qdm_lmin skew $ot_sk hold $ot_hk"
 set_input_delay [expr 166.667 + $qdm_lmax + $ot_sk] -max -clock core_clk [all_inputs -no_clocks]
-set_input_delay [expr $qdm_lmin - $ot_hk] -min -clock core_clk [all_inputs -no_clocks]
+set ot_hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]
+set_input_delay [expr $qdm_lmin - $ot_hki] -min -clock core_clk [all_inputs -no_clocks]
 set_output_delay [expr 166.667 - $qdm_lmax + $ot_sk] -max -clock core_clk [all_outputs]
 set_output_delay [expr 0 - $qdm_lmin - $ot_hk] -min -clock core_clk [all_outputs]
 if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
