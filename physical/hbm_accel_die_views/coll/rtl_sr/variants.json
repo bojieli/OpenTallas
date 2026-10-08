@@ -59,5 +59,15 @@
    "top_commit": "this",
    "cost": "die-view AR 1160 vs 1152 (sr) vs 1144 (flop)"
   }
+ },
+ "round3": {
+  "date": "2026-10-08 14:50 PT",
+  "stream": "drive-1443",
+  "cal_failures": {
+   "v1 sr (PD .55, halo 2x5)": "2_2 rtl_macro_placer MPL-0008 annealing failed at the hub/txq macro cluster (utilisation auto-raised to 0.417)",
+   "v2 cdc, v3 pd45": "3_3 POST_GLOBAL_PLACE face_chain_place.tcl: an input pin-flop chain walked into a delay-line SRAM (u_ep.g_on.g_del[3].u_d/u_m.g_m[0].u_sram) and setLocation on the LOCKED macro -> ODB-0359"
+  },
+  "fix": "common/face_chain_place.tcl: a macro (BLOCK master) or LOCKED/FIRM/COVER instance ends every chain walk and is never moved; v1 macro halo 2x5 -> 4x6 (the halo with which v3 placed all 165 macros)",
+  "jobs": "v1 sr3, v2 srcdc3, v3 srpd453, v4 ps slice + armed ps top (ttv.py produce/queue); all at the fix commit with the 35-run SAMECOL bench + m7"
  }
 }
