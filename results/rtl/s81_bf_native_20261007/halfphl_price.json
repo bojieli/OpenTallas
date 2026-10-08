@@ -1,0 +1,73 @@
+{
+ "schema": "opentallas.s81.bf_halfphl_price.v1",
+ "candidate": "HALF_PHL (ot_s81_bf_native HALF=1 HALF_PHL=1), claude/s81-bf-20261007",
+ "cycles_per_bf_pass": {
+  "element": "every element cycle = 2 clk cycles (BF16 field-vehicle phase time x2, upper bound)",
+  "pin": 1,
+  "output": 1,
+  "phl_delta_vs_half": 0,
+  "per_node_adds_cycles": {
+   "attn.wo_a (2 BF16 phases, meas 884)": 888,
+   "ffn.router (ksplit, meas 389)": 391,
+   "attn.cmp.wk (meas 201)": 203,
+   "attn.a_proj L2/8/14 (3 phases, meas 1448 - FP8 410)": 1042,
+   "attn.a_proj L20 (meas 931 - 410)": 523,
+   "attn.a_proj L24/28/32/36 (meas 926 - 410)": 518
+  }
+ },
+ "composition": {
+  "ledger_branch": "claude/s81-bf-ledger-20261007 (on the adopted bf_merge_ksplit geometry 505a9b484)",
+  "total_before_ar": 1754.3,
+  "total_before_mtp": 5098.3,
+  "with_bf_halfphl_ar": 1619.6,
+  "with_bf_halfphl_mtp": 4776.6,
+  "ar_pct": -7.678,
+  "mtp_pct": -6.31
+ },
+ "area_and_dies": {
+  "allocator": "tools/dsrom_bf_double_alloc.py --pbf 2304 --ksplit gate [--shared] (bf-double branch)",
+  "allocations": {
+   "shared_full_rate_bf": {
+    "stages": 77,
+    "bf_stages": 77,
+    "q_stages": 0,
+    "layer_dies": 308,
+    "compiled_pairs_TP4": 709632,
+    "BF_pairs_TP4": 157696,
+    "pairs_bf_stage": 2304,
+    "pairs_q_stage": 2432,
+    "bf_pairs_per_region_bf_stage": 4,
+    "BF_dedicated": false
+   },
+   "dedicated_half_rate_bf": {
+    "stages": 83,
+    "bf_stages": 40,
+    "q_stages": 43,
+    "layer_dies": 332,
+    "compiled_pairs_TP4": 786944,
+    "BF_pairs_TP4": 81920,
+    "pairs_bf_stage": 2304,
+    "pairs_q_stage": 2432,
+    "bf_pairs_per_region_bf_stage": 4,
+    "BF_dedicated": true
+   }
+  },
+  "delta": {
+   "stages": 6,
+   "layer_dies": 24
+  },
+  "note": "half-rate BF needs BF16-dedicated BF pairs (a q phase on a BF pair would also run at half rate); the extra 6 pipeline stages add stage hops to the token path that this upper bound does NOT yet include (needs the dedicated-plan field measurement); per-pair area +2 flops +1 XNOR (HALF_PHL) over HALF"
+ },
+ "not_included": [
+  "stage-hop latency of the +6 stages",
+  "BF-pair doubling (owner option): would recover most of the x2 BF16 phase time at +512 BF pairs per BF stage; not measured"
+ ],
+ "physical": {
+  "jobs": [
+   "bf_halfphl_0e90389e9_f (730 ps)",
+   "bf_halfphl_p700_4000b1ea7_f (700 ps)",
+   "bf_halfphl_u40_24998a67e (700 ps, util 40)"
+  ],
+  "status": "routing"
+ }
+}
