@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenTallas hourly fleet disk sweeper (tools/fleet/fleet_sweep.py; 24 h untouched, no live use, not protected; alert at 85%)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/wt-fleet-sweep
+ExecStartPre=/usr/bin/git -C %h/wt-fleet-sweep fetch -q origin main
+ExecStartPre=/usr/bin/git -C %h/wt-fleet-sweep checkout -q --detach origin/main
+ExecStart=/usr/bin/timeout 3300 /usr/bin/python3 %h/wt-fleet-sweep/tools/fleet/fleet_sweep.py
+Nice=10
