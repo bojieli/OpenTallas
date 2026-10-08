@@ -1696,6 +1696,7 @@ def launch_ready(j, fleet, spec, stl, st):
             # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
             h, _ = fleet.choose(spec, exclude=[j["host"]])
             if h:
+                fleet.launched(h, spec.get("threads", 16), spec.get("peak_ram_gb", 32))  # 2026-10-08: claim, no herd moves
                 event(j, f"{st['key']} cannot start on {host_cfg(j['host'])['label']} ({why}); moving to {host_cfg(h)['label']}")
                 j["hosts_tried"].append(h)
                 j["host"], j["run"], j["status"], j["wait"] = h, f"{host_cfg(h)['base']}/{j['name']}", "SYNC", None
