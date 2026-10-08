@@ -159,17 +159,30 @@
     {
      "id": "link_credit_rtt",
      "item": "Link credit capacity vs the forwarded-path transport round trip",
-     "status": "gated-unknown",
-     "effect": null,
-     "role": "gate",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "cycles",
+      "AR": 0
+     },
+     "role": "candidate",
      "source": [
+      {
+       "file": "results/rtl/qwen_contracts_20261007/link_credit_rtt/bench_gate/result.json",
+       "pointer": "cases",
+       "commit": "fb8202f9b"
+      },
+      {
+       "file": "results/rtl/qwen_contracts_20261007/link_credit_rtt/pricing.json",
+       "pointer": null,
+       "commit": "fb8202f9b"
+      },
       {
        "file": "results/uarch/qwen_link_forwarded_graph_20261007/graph_prebuild_model.json",
        "pointer": "paths[].transport_credit_roundtrip_cycles",
        "commit": "3267a11f5"
       }
      ],
-     "note": "registered path [54, 55] stations, credit RTT [108, 110] cycles; the historical 8-credit abstract does not sustain it. Per-traversal stall unknown until endpoint credit capacity/service is composed"
+     "note": "full-rate hub successor ot_qwen_die_hub_fr: CR=128 link credits >= the measured credit round trip [117, 119] cycles (54/55 stations); exact gate (Verilator + Icarus): rate 1.000 / 1.000 words a cycle, 0 credit stalls, 16384 checks a case, 4 negatives end in the named native fault; the predecessor's 4-credit window measures 0.033 (credit-starved). Token: +0 cycles (same registered stations; the 136-sector-a-layer posted KV-new write-back serialises at 1 word a cycle, off the token path: measured STREAM4 stall_drain = stall_retire = 0). Area: ~+0.45 mm2 a die estimated (536246 added flops: hub 276838, 4 strip receive buffers 259408; x1.6 mux allowance, 55% util); routes pending. Physical: routes pending: qfd_hub_fr-b3af3a9ed, qfd_hub_fr_w648-b3af3a9ed, qfd_link_rx128-b3af3a9ed queued"
     },
     {
      "id": "vm_me_service",
@@ -182,9 +195,14 @@
        "file": "results/uarch/qwen_rom_vm_me_service_20261007/model.json",
        "pointer": "serialized_reference",
        "commit": "46d889a23"
+      },
+      {
+       "file": "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json",
+       "pointer": "service_requirement",
+       "commit": "9dcc970be"
       }
      ],
-     "note": "full_token_extra=null; the only priced reference is the serialized four-bank walker: +3,719,840 engine edges for the 264 captured edges of ONE component (not a token cost, not composable); ready_for_new_bank_RTL=False"
+     "note": "full_token_extra=null; the only priced reference is the serialized four-bank walker: +3,719,840 engine edges for the 264 captured edges of ONE component (not a token cost, not composable; 19.2x the whole measured token); ready_for_new_bank_RTL=False. Contract re-check 2026-10-07 (qwen-contracts, ce24d613f): 10/10 component packages reproduce, incl. the known publication-storage coverage failures; demand per ME operation: 2048 seats on each of 256 consecutive edges (128 unique scalars, fanout 16); no VM organisation serving it exists in RTL, so no token cost is composable. Protected bank element routed for measurement: qfd_vm_bank_checked (loop)"
     },
     {
      "id": "vm_su_service",
@@ -197,9 +215,14 @@
        "file": "results/uarch/qwen_rom_vm_su_service_20261007/model.json",
        "pointer": "scope",
        "commit": "9789baddc"
+      },
+      {
+       "file": "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json",
+       "pointer": "packages",
+       "commit": "9dcc970be"
       }
      ],
-     "note": "service quanta are not clock cycles; SRAM, protection, write completion, mux, fanout, capture unbound"
+     "note": "service quanta are not clock cycles; SRAM, protection, write completion, mux, fanout, capture unbound. Contract re-check 2026-10-07 (qwen-contracts, ce24d613f): 10/10 component packages reproduce, incl. the known publication-storage coverage failures; demand per ME operation: 2048 seats on each of 256 consecutive edges (128 unique scalars, fanout 16); no VM organisation serving it exists in RTL, so no token cost is composable. Protected bank element routed for measurement: qfd_vm_bank_checked (loop)"
     },
     {
      "id": "vm_recovery",
@@ -212,9 +235,14 @@
        "file": "results/uarch/qwen_rom_vm_recovery_20261007/disposition.json",
        "pointer": "status",
        "commit": "f7741bdc8"
+      },
+      {
+       "file": "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json",
+       "pointer": "verdict",
+       "commit": "9dcc970be"
       }
      ],
-     "note": "OPEN_MODEL_AND_NATIVE_SCHEDULE_BINDING; one dynamic writer unresolved"
+     "note": "OPEN_MODEL_AND_NATIVE_SCHEDULE_BINDING; one dynamic writer unresolved. Contract re-check 2026-10-07 (qwen-contracts, ce24d613f): 10/10 component packages reproduce, incl. the known publication-storage coverage failures; demand per ME operation: 2048 seats on each of 256 consecutive edges (128 unique scalars, fanout 16); no VM organisation serving it exists in RTL, so no token cost is composable. Protected bank element routed for measurement: qfd_vm_bank_checked (loop)"
     },
     {
      "id": "die_top_route",
@@ -229,7 +257,7 @@
        "commit": "c148ca60a"
       }
      ],
-     "note": "die-top route not done; r18g bound (+13,305..16,268 cycles) is history, not composed"
+     "note": "die-top route not done; r18g bound (+13,305..16,268 cycles) is history, not composed. Owner: stream qwen-dietop (branch claude/qwen-dietop-20261007; academic-validation method: full-die GRT overflow 0, GRT-parasitic SS/FF STA, CTS clock plan, IR, representative-region DRT). The full-rate link (gate link_credit_rtt) grows the qfd_hub frame and adds a 128-word receive buffer at each strip endpoint"
     },
     {
      "id": "routed_masters",
@@ -244,22 +272,35 @@
        "commit": "161e1ddd5"
       }
      ],
-     "note": "interim views cannot establish closure; relay masters qfd_cst / qfd_chead closed at 833 ps (+57.00/+17.75, +37.93/+17.62) carry no cycle change"
+     "note": "interim views cannot establish closure; relay masters qfd_cst / qfd_chead closed at 833 ps (+57.00/+17.75, +37.93/+17.62) carry no cycle change. Owner: stream qwen-blocks (branch claude/qwen-blocks-20261007); the full-rate hub qfd_hub_fr and the strip receive buffer qfd_link_rx128 are routed by stream qwen-contracts (gate link_credit_rtt)"
     },
     {
      "id": "protected_kv_transport",
      "item": "Protected KV transport (HBM->die landing)",
-     "status": "gated-unknown",
-     "effect": null,
-     "role": "gate",
+     "status": "measured",
+     "effect": {
+      "unit": "cycles",
+      "AR": 0
+     },
+     "role": "info",
      "source": [
+      {
+       "file": "results/rtl/qwen_contracts_20261007/protected_kv_transport/decision.json",
+       "pointer": null,
+       "commit": "fb8202f9b"
+      },
       {
        "file": "results/rtl/qwen_rom_closed_20261006/closure.json",
        "pointer": "kv_path.protected_full_width_transport",
        "commit": "c148ca60a"
+      },
+      {
+       "file": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+       "pointer": null,
+       "commit": "756e8c54f"
       }
      ],
-     "note": "shipped STREAM4 landing has no transport protection; protected full-width path has no full token (full36_r1 FAIL retained); cost unknown"
+     "note": "owner decision 2026-10-06: NOT shipped. The shipped composition is the measured exact STREAM4 token (193955 cycles, 144 current-KV checks, next token 18); the protected full-width path has only a cold L0 (exact, 6188 vs 6044 cycles) and full36_r1 FAIL_RUNTIME at L0 cycle 14 (retained). Not a performance gate: 0 cycles, 0 credit; the missing transport protection stays a GAP in no_ecc_inventory"
     }
    ],
    "compositions": {
@@ -285,25 +326,21 @@
      "AR_tok_s": 5533.0,
      "status": "priced-candidate",
      "gated_by": [
-      "link_credit_rtt",
       "vm_me_service",
       "vm_su_service",
       "vm_recovery",
       "die_top_route",
-      "routed_masters",
-      "protected_kv_transport"
+      "routed_masters"
      ],
      "note": "published + every priced candidate cost (crossbar model, controller SHIFT worst case, forwarded clocks 0)"
     }
    },
    "gates": [
-    "link_credit_rtt",
     "vm_me_service",
     "vm_su_service",
     "vm_recovery",
     "die_top_route",
-    "routed_masters",
-    "protected_kv_transport"
+    "routed_masters"
    ],
    "dspark": {
     "published": {
@@ -347,7 +384,7 @@
     "gated_inputs": {
      "vm_service": "gated: per-ME-op cost unknown.  Any per-ME-op addition y lowers the DSpark ratio, because a step issues 1003 ME ops for 3.1445 tokens (319 a token) against 217 a token for AR; the AR_MODE verdict is robust to it",
      "link_credit": {
-      "note": "gated: per-traversal credit stall x unknown.  AR crosses the link 72 times a token, a step 96 times for 3.1445 tokens, so link stalls hurt AR more per token",
+      "note": "resolved (gate link_credit_rtt, full-rate hub CR=128): measured 0 credit stalls a traversal, so x = 0 and the break-even below is not reached.  AR crosses the link 72 times a token, a step 96 times for 3.1445 tokens, so a link stall would hurt AR more per token",
       "break_even_stall_cycles_per_traversal_equal_payload": 2190,
       "break_even_if_verify_stall_scales_with_np": null,
       "reading": "DSpark reaches AR only if each link traversal stalls >= 2190 cycles and the verify traversal (np=4 positions) stalls no more than an AR one; if the stall scales with payload the threshold is never reached"
@@ -355,7 +392,7 @@
      "die_route_and_masters": "gated: affects AR and the step through the same ME-op and link counts",
      "tau": "third-party 3.1445 (no Qwen DSpark acceptance measured on the target workload mix)"
     },
-    "verdict": "AR_MODE holds: the re-evaluation with the newer priced inputs gives 3901.4 tok/s (0.705x); every gated per-ME-op cost moves the ratio down; only an unmeasured link-credit stall above ~2190 cycles a traversal could move it up"
+    "verdict": "AR_MODE holds: the re-evaluation with the newer priced inputs gives 3901.4 tok/s (0.705x); every gated per-ME-op cost moves the ratio down; a link-credit stall above ~2190 cycles a traversal could have moved it up, but the full-rate hub measures 0 credit stalls"
    },
    "physical_status": "REOPENED 2026-10-07 (owner directive 14): no full-die route, SS/FF, DRC or IR"
   },
@@ -2843,7 +2880,7 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "2f0c79aeeae37e5f96df043caf41cf2f32d48896da41a9e301931f0911224a19"
+  "sha256": "e56f79aebb28296334113217c86fdbc5b02b116081ea35dcaebffbcad21e27c3"
  },
  "source_sha256": {
   "AGENTS.md": "d47e33869ed5fefa3be09cffa270ccb831227173fcf0295b5ebecc178b55a042",
@@ -2882,6 +2919,10 @@
   "results/rtl/hbm_collective_full_20261007/storage_model.json": "ed03682d76b4a2448b632953d82898fc3ec46656e782fd83bb4fb224d3a719bc",
   "results/rtl/hbm_sm_command_20261007/protected_component.json": "cf5525b5bc2dad2ac632bcbdc7b26b9f61cce1720a424a82e404b99a5d827f96",
   "results/rtl/hbm_sm_su_result_contract_20261007/contract.json": "bd7ca0c7224164d2c25c48fc71e989afc9b8f3fae7b49d5779b46248a8bcb6c8",
+  "results/rtl/qwen_contracts_20261007/link_credit_rtt/bench_gate/result.json": "6309227d42b1ee893bd2d18dcaa76954ad69d324a74db0dd8109efefad94cb6d",
+  "results/rtl/qwen_contracts_20261007/link_credit_rtt/pricing.json": "c096c781cbb1356f1e39d221f6d64515871215c186980effcc3c87a008e3395c",
+  "results/rtl/qwen_contracts_20261007/protected_kv_transport/decision.json": "c1aee5f63362f5fe1fcf64463fb8f522d11e546a8e53e248b7d4254c121c948c",
+  "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json": "f4715d6c970cdc2bfc9af2a4236eb10b9832b5c6eacb77acd7e984c497c74a2c",
   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
   "results/rtl/qwen_ctrl_shift_20261007/model.json": "12ca47e170b26b082b3f51a28c6f01684bf943705d6468dd6578e6a08357d123",
   "results/rtl/qwen_ctrl_shift_20261007/qualification.json": "4df6d84d47b0f54ededa60df892d9ec2d6574d81e2e77b90002ccbab98c22249",
@@ -2914,6 +2955,6 @@
   "results/uarch/s81_pq_root_cam_20261007/model.json": "0c82097e0020b325b46396de710bd7fbeab103ed8e8fbc431396d7f3812cf134",
   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "tools/chip_explorer_build.py": "146a386013f68a12600e1cca553e0fac06515fc974fb7f6b11654cd9835f52f3",
-  "tools/unified_composition.py": "2f0c79aeeae37e5f96df043caf41cf2f32d48896da41a9e301931f0911224a19"
+  "tools/unified_composition.py": "e56f79aebb28296334113217c86fdbc5b02b116081ea35dcaebffbcad21e27c3"
  }
 }

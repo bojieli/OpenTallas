@@ -1,0 +1,24 @@
+{"0": {"exit_code": 0, "marker": "PASS full_aperture_parent160"}, "1": {"exit_code": 1, "marker": "FOREIGN_REDUCER_ACK_REJECTED"}, "2": {"exit_code": 1, "marker": "UNPAID_NATIVE_ADVANCE"}, "3": {"exit_code": 1, "marker": "UNPAID_NATIVE_ADVANCE"}}
+	Command being timed: "python3 tools/qwen_vm_reducer_overlap_gate.py --root . --out /srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/reducer_overlap"
+	User time (seconds): 417.78
+	System time (seconds): 0.17
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 6:58.08
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 125076
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 89774
+	Voluntary context switches: 32
+	Involuntary context switches: 2022
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 27152
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

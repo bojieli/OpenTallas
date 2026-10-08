@@ -1,0 +1,4 @@
+PASS captured_intent0 live_supply1 native_only_admission PINREG=1 checked_ACK=1
+PASS actual_source_ICG MEIF_go_take lease_qualified_resume PINREG=1 accepted=1
+PASS captured_intent1 supply_hold_and_PINREG_contract PINREG=1 checked_ACK=2
+rtl/test/qwen_vm_core_clock_join_20261007/tb_core_clock_join.sv:61: $finish called at 796000 (1ps)

@@ -1,0 +1,7 @@
+EPOCH 0 hops=54 CR=128 delivered=4096/4096 credit_rtt=117/117 rate_milli=891/891 span=4594/4594 stalls=485/485 max_inflight=128/128 cycles=4772
+EPOCH 1 hops=54 CR=128 delivered=4096/4096 credit_rtt=117/117 rate_milli=891/891 span=4594/4594 stalls=485/485 max_inflight=128/128 cycles=4772
+PASS link_fullrate HOPS=54 CR=128 checks=16384 epochs=2
+- /home/ubuntu/wt-claude-qwen-contracts/rtl/test/tb_qwen_link_fullrate.sv:137: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 97us; walltime 0.075 s; speed 1.304 ms/s
+- Verilator: cpu 0.075 s on 1 threads; allocated 7 MB
