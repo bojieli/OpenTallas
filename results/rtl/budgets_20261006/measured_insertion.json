@@ -28,13 +28,13 @@
    }
   },
   "dsfd_ctrl_pc": {
-   "job": "s81ph-dsfd_ctrl_pc-e87322073-lbc-tt",
+   "job": "s81ph-dsfd_ctrl_pc-e87322073-lbc",
    "source_commit": "387a4d2acd525be5ef60432f735d120cc9e0c829",
    "host": "ot-epyc2",
-   "run": "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_ctrl_pc-e87322073-lbc-tt",
+   "run": "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_ctrl_pc-e87322073-lbc",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T00:23:07-07:00",
+   "measured_at": "2026-10-08T09:50:49-07:00",
    "ss": {
     "mean": 343,
     "min": 327,
@@ -498,13 +498,13 @@
    }
   },
   "hfd_svc_SW_s5": {
-   "job": "hbm_svc_SW_s5_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s5_tc_4aadc92bc",
+   "job": "hbm_svc_SW_s5_tt_c10b5fc9a",
+   "source_commit": "c10b5fc9a40e4bb60cf47a0fd8d9735d98740e65",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s5_tt_c10b5fc9a",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T09:33:59-07:00",
+   "measured_at": "2026-10-08T09:52:02-07:00",
    "ss": {
     "mean": 816,
     "min": 749,
@@ -512,8 +512,8 @@
    },
    "ff": {
     "mean": 417,
-    "min": 399,
-    "max": 540,
+    "min": 400,
+    "max": 541,
     "n": 2509,
     "kind": "boundary",
     "clock": "core_clk"
@@ -978,13 +978,13 @@
    }
   },
   "dsfd_colt_lane": {
-   "job": "s81ph-dsfd_colt_lane-7345266ce-e-lbc-tt",
+   "job": "s81ph-dsfd_colt_lane-7345266ce-e-lbc",
    "source_commit": "387a4d2acd525be5ef60432f735d120cc9e0c829",
    "host": "ot-epyc2",
-   "run": "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_colt_lane-7345266ce-e-lbc-tt",
+   "run": "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_colt_lane-7345266ce-e-lbc",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T00:25:03-07:00",
+   "measured_at": "2026-10-08T09:49:49-07:00",
    "ss": {
     "mean": 517,
     "min": 502,
@@ -1376,22 +1376,22 @@
    }
   },
   "ot_dsrom_head_elem_B": {
-   "job": "dshead-elemB-safe-b529ca8c9-tt",
-   "source_commit": "b529ca8c93b477cdb42785a7df298bb25ffa0963",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemB-safe-b529ca8c9-tt",
+   "job": "dshead-elemB-ss-a318fdf47-lbc",
+   "source_commit": "387a4d2acd525be5ef60432f735d120cc9e0c829",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemB-ss-a318fdf47-lbc",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T08:37:51-07:00",
+   "measured_at": "2026-10-08T09:49:09-07:00",
    "ss": {
     "mean": 534,
     "min": 515,
     "max": 574
    },
    "ff": {
-    "mean": 282,
-    "min": 272,
-    "max": 288,
+    "mean": 284,
+    "min": 279,
+    "max": 304,
     "n": 291,
     "kind": "boundary",
     "clock": "core_clk"
@@ -1414,9 +1414,9 @@
     "job": "dshead-elemB-ss-a318fdf47-lbc-tt"
    },
    "tt": {
-    "mean": 349,
-    "min": 339,
-    "max": 355,
+    "mean": 352,
+    "min": 346,
+    "max": 374,
     "n": 291,
     "kind": "boundary",
     "clock": "core_clk"
@@ -1486,22 +1486,22 @@
    "budget": null
   },
   "dsfd_svcio_q": {
-   "job": "s81ph-dsfd_svcio_q-351607d29-ostg-lvt-tc",
-   "source_commit": "351607d299226e8fe72da6864c9c93c93676e630",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_svcio_q-351607d29-ostg-lvt-tc",
+   "job": "s81ph-dsfd_svcio_q-093da5918-lbc",
+   "source_commit": "387a4d2acd525be5ef60432f735d120cc9e0c829",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918-lbc",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T03:58:28-07:00",
+   "measured_at": "2026-10-08T09:51:51-07:00",
    "ss": {
-    "mean": 248,
-    "min": 231,
-    "max": 277
+    "mean": 230,
+    "min": 203,
+    "max": 268
    },
    "ff": {
-    "mean": 158,
-    "min": 144,
-    "max": 184
+    "mean": 150,
+    "min": 126,
+    "max": 185
    },
    "boundary_n": 1030,
    "budget": null
@@ -1549,13 +1549,13 @@
    "budget": null
   },
   "dsfd_svcio_od": {
-   "job": "s81ph-dsfd_svcio_od-e87322073-lbc-tt",
+   "job": "s81ph-dsfd_svcio_od-e87322073-lbc",
    "source_commit": "387a4d2acd525be5ef60432f735d120cc9e0c829",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svcio_od-e87322073-lbc-tt",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-e87322073-lbc",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T23:52:16-07:00",
+   "measured_at": "2026-10-08T09:55:52-07:00",
    "ss": {
     "mean": 290,
     "min": 271,
@@ -1612,22 +1612,22 @@
    "budget": null
   },
   "dsfd_svcio_ad": {
-   "job": "s81ph-dsfd_svcio_ad-d12b194f0-lbc-tt",
+   "job": "s81ph-dsfd_svcio_ad-d12b194f0-lbc",
    "source_commit": "387a4d2acd525be5ef60432f735d120cc9e0c829",
    "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0-lbc-tt",
+   "run": "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0-lbc",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T00:08:04-07:00",
+   "measured_at": "2026-10-08T09:53:50-07:00",
    "ss": {
     "mean": 385,
     "min": 372,
-    "max": 399
+    "max": 397
    },
    "ff": {
     "mean": 245,
     "min": 235,
-    "max": 256
+    "max": 254
    },
    "boundary_n": 3598,
    "budget": null
@@ -1953,13 +1953,13 @@
    "budget": null
   },
   "ot_meso_fifo_w512d8g1": {
-   "job": "s81-meso-d8g1-c20d75e28-lbc-tt",
+   "job": "s81-meso-d8g1-c20d75e28-lbc",
    "source_commit": "387a4d2acd525be5ef60432f735d120cc9e0c829",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-meso-d8g1-c20d75e28-lbc-tt",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-meso-d8g1-c20d75e28-lbc",
    "clock": "wclk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T23:56:14-07:00",
+   "measured_at": "2026-10-08T09:55:46-07:00",
    "ss": {
     "mean": 316,
     "min": 302,
@@ -4041,31 +4041,43 @@
    }
   },
   "qfd_io_emb_root": {
-   "job": "qfd_io_emb_root-c1e4eba84tt",
-   "source_commit": "c1e4eba84ec2216c88452b0846c8753e8d2b017a",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_emb_root-c1e4eba84tt",
+   "job": "qfd_io_emb_root-1e23a4915-lvt-tc",
+   "source_commit": "1e23a4915b965f94b805d846ac9bb11fc52b4dd3",
+   "host": "localhost",
+   "run": "/home/ubuntu/closure-loop-local/qfd_io_emb_root-1e23a4915-lvt-tc",
    "parasitics": "routed (6_final.spef)",
    "grade": "routed",
-   "measured_at": "2026-10-08T09:22:16-07:00",
+   "measured_at": "2026-10-08T09:53:08-07:00",
    "ff": {
-    "mean": 166,
-    "min": 153,
+    "mean": 163,
+    "min": 150,
     "max": 178,
     "n": 578,
     "kind": "boundary",
     "clock": "core_clk"
    },
-   "calibrate": null,
+   "calibrate": {
+    "ss": null,
+    "ff": {
+     "mean": 166,
+     "min": 153,
+     "max": 178,
+     "n": 578,
+     "kind": "boundary",
+     "clock": "core_clk"
+    },
+    "parasitics": "routed (6_final.spef)",
+    "job": "qfd_io_emb_root-c1e4eba84tt"
+   },
    "tt": {
-    "mean": 204,
-    "min": 191,
-    "max": 218,
+    "mean": 200,
+    "min": 186,
+    "max": 216,
     "n": 578,
     "kind": "boundary",
     "clock": "core_clk"
    }
   }
  },
- "updated": "2026-10-08T09:46:09-07:00"
+ "updated": "2026-10-08T09:55:52-07:00"
 }
