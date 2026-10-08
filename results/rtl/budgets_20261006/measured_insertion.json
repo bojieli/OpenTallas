@@ -811,22 +811,25 @@
    "budget": null
   },
   "hfd_svc_SW_s3": {
-   "job": "hbm_svc_SW_s3_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s3_tc_4aadc92bc",
+   "job": "hbm_svc_SW_s3_tt_c10b5fc9a",
+   "source_commit": "c10b5fc9a40e4bb60cf47a0fd8d9735d98740e65",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_tt_c10b5fc9a",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T03:57:53-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T11:25:01-07:00",
    "ss": {
     "mean": 813,
     "min": 767,
     "max": 1021
    },
    "ff": {
-    "mean": 512,
-    "min": 473,
-    "max": 664
+    "mean": 446,
+    "min": 421,
+    "max": 576,
+    "n": 4896,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "boundary_n": 4896,
    "budget": {
@@ -834,6 +837,29 @@
     "ok": true,
     "reasons": [],
     "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
+   },
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 813,
+     "min": 767,
+     "max": 1021
+    },
+    "ff": {
+     "mean": 512,
+     "min": 473,
+     "max": 664
+    },
+    "parasitics": "placement-estimated",
+    "job": "hbm_svc_SW_s3_tc_4aadc92bc"
+   },
+   "tt": {
+    "mean": 553,
+    "min": 525,
+    "max": 706,
+    "n": 4896,
+    "kind": "boundary",
+    "clock": "core_clk"
    }
   },
   "hfd_quant": {
@@ -2041,13 +2067,13 @@
    "budget": null
   },
   "ot_hbm_accel_smh_front_n": {
-   "job": "hbm_smh_front_n_ttm_9c4dc2544",
-   "source_commit": "9c4dc254424bd07d76bf452423347f108186586c",
+   "job": "hbm_smh_front_n_tt_f170efb96",
+   "source_commit": "f170efb962416f2e59f55aea38423c27ab942272",
    "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_front_n_ttm_9c4dc2544",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_front_n_tt_f170efb96",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T10:39:57-07:00",
+   "measured_at": "2026-10-08T11:25:42-07:00",
    "ss": {
     "mean": 688,
     "min": 668,
@@ -2055,8 +2081,8 @@
    },
    "ff": {
     "mean": 382,
-    "min": 366,
-    "max": 409,
+    "min": 367,
+    "max": 408,
     "n": 10832,
     "kind": "boundary",
     "clock": "core_clk"
@@ -2079,9 +2105,9 @@
     "job": "hbm_smh_front_n_m3f_f7f1a0ee4-tt"
    },
    "tt": {
-    "mean": 469,
-    "min": 452,
-    "max": 498,
+    "mean": 468,
+    "min": 453,
+    "max": 497,
     "n": 10832,
     "kind": "boundary",
     "clock": "core_clk"
@@ -3046,13 +3072,13 @@
    "budget": null
   },
   "hfd_vm_ne_s": {
-   "job": "hbm_vm8_nes_r2p_1c3be936a-tt",
-   "source_commit": "1c3be936ac4c149b1ecb47234ade3a322d3ded33",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_nes_r2p_1c3be936a-tt",
+   "job": "hbm_vm8_nes_r2p_pd40_3f101cd1c-tt",
+   "source_commit": "3f101cd1c4136573d5d0d799922a41062d42704a",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/hbm_vm8_nes_r2p_pd40_3f101cd1c-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T04:27:33-07:00",
+   "measured_at": "2026-10-08T11:22:59-07:00",
    "ss": {
     "mean": 530,
     "min": 490,
@@ -3445,13 +3471,13 @@
    "budget": null
   },
   "dsfd_l2r_vr_512x1__hq_SW": {
-   "job": "s81-hend-m221pq-hq-SW-pinreg-m5w-lvt-28efeed64-tt",
+   "job": "s81-hend-m221pq-hq-SW-pinreg-m5w-lvt-hm10-28efeed64-tt",
    "source_commit": "28efeed64548d07f72a907e138dc3dbf99a44d8c",
    "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hq-SW-pinreg-m5w-lvt-28efeed64-tt",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hq-SW-pinreg-m5w-lvt-hm10-28efeed64-tt",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T11:16:30-07:00",
+   "measured_at": "2026-10-08T11:17:29-07:00",
    "ss": {
     "mean": 166,
     "min": 162,
@@ -4377,5 +4403,5 @@
    }
   }
  },
- "updated": "2026-10-08T11:16:30-07:00"
+ "updated": "2026-10-08T11:25:42-07:00"
 }
