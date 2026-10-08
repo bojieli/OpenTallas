@@ -1058,22 +1058,22 @@
    "budget": null
   },
   "ot_dsrom_head_elem_A": {
-   "job": "dshead-elemA-half-4123ff389",
-   "source_commit": "4123ff389fe8230057797bbc407e1b2dc065faa9",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemA-half-4123ff389",
+   "job": "dshead-elemA-half-4123ff389-mm",
+   "source_commit": "ef256b29997026ac030b7f7ee7076aa91e0ea7af",
+   "host": "localhost",
+   "run": "/home/ubuntu/closure-loop-local/dshead-elemA-half-4123ff389-mm",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T05:20:04-07:00",
+   "measured_at": "2026-10-07T19:19:41-07:00",
    "ss": {
-    "mean": 599,
-    "min": 581,
-    "max": 633
+    "mean": 589,
+    "min": 561,
+    "max": 608
    },
    "ff": {
-    "mean": 390,
-    "min": 372,
-    "max": 424
+    "mean": 375,
+    "min": 352,
+    "max": 389
    },
    "boundary_n": 456,
    "budget": null
@@ -2668,5 +2668,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-07T19:13:37-07:00"
+ "updated": "2026-10-07T19:19:41-07:00"
 }
