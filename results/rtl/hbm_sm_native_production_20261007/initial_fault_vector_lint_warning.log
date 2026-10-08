@@ -1,0 +1,996 @@
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/result_provider/ot_hbm_sm_result_provider.sv:20:13: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.results
+   20 | generate if(!ENABLE) begin:off
+      |             ^
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv:57:11: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'PROTECT' generates 32 bits.
+                                                                                            : ... In instance ot_hbm_sm_native_clients.native.owner
+   57 |  generate if(PROTECT)begin: g_secondary
+      |           ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:233:35: Operator VAR 'SA1' expects 11 bits on the Initial value, but Initial value's MODDIVS generates 32 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm
+  233 |                 localparam [10:0] SA1 = FA % 2048;
+      |                                   ^~~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:234:35: Operator VAR 'SA2' expects 11 bits on the Initial value, but Initial value's MODDIVS generates 32 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm
+  234 |                 localparam [10:0] SA2 = FB % 2048;
+      |                                   ^~~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:235:35: Operator VAR 'SG1' expects 5 bits on the Initial value, but Initial value's DIVS generates 32 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm
+  235 |                 localparam [4:0]  SG1 = FA / 2048;
+      |                                   ^~~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:236:35: Operator VAR 'SG2' expects 5 bits on the Initial value, but Initial value's DIVS generates 32 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm
+  236 |                 localparam [4:0]  SG2 = FB / 2048;
+      |                                   ^~~
+%Warning-WIDTH: rtl/hdc/ot_hdc_fp32_add_lat.sv:207:14: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... In instance ot_hbm_sm_native_clients.native.sm.g_c[7]..g_be_w.u_be.u.g_hs.u_stack.g_lv[0].u_add.u.u_ca
+  207 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv:510:43: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                              : ... In instance ot_hbm_sm_native_clients.native.sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[0].u_leaf.g_k.u_tc.g_lane[15].u_mul
+  510 |             if (e != 0) dec = {1'b1, m, e - 10'sd127};
+      |                                           ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1623:27: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'g0' generates 5 bits.
+                                                            : ... In instance ot_hbm_sm_native_clients.native.sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[0].u_leaf
+ 1623 |             ml1[b] <= (g0 < NBEAT) ? oh[g0] : 1'b0;
+      |                           ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1623:40: Bit extraction of var[12:0] requires 4 bit index, not 5 bits.
+                                                            : ... In instance ot_hbm_sm_native_clients.native.sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[0].u_leaf
+ 1623 |             ml1[b] <= (g0 < NBEAT) ? oh[g0] : 1'b0;
+      |                                        ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1624:28: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'g1n' generates 6 bits.
+                                                            : ... In instance ot_hbm_sm_native_clients.native.sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[0].u_leaf
+ 1624 |             mh1[b] <= (g1n < NBEAT) ? oh[g1n] : 1'b0;
+      |                            ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1624:41: Bit extraction of var[12:0] requires 4 bit index, not 6 bits.
+                                                            : ... In instance ot_hbm_sm_native_clients.native.sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[0].u_leaf
+ 1624 |             mh1[b] <= (g1n < NBEAT) ? oh[g1n] : 1'b0;
+      |                                         ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1679:29: Input port connection 'rr_addr' expects 14 bits on the pin connection, but pin connection's CONST '12'h0' generates 12 bits.
+                                                            : ... In instance ot_hbm_sm_native_clients.native.sm.g_c[7].g_p[1]..g_te.u_t.u.g_lf[0].u_leaf
+ 1679 |             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
+      |                             ^~~~~~~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:381:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 1 bits.
+                                                            : ... In instance ot_hbm_sm_native_clients.native.descriptor.a
+  381 |             if (f_v) wp <= (wp == DEPTH - 1) ? {AW{1'b0}} : wp + 1'b1;
+      |                                ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:382:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rp' generates 1 bits.
+                                                            : ... In instance ot_hbm_sm_native_clients.native.descriptor.a
+  382 |             if (pop) rp <= (rp == DEPTH - 1) ? {AW{1'b0}} : rp + 1'b1;
+      |                                ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/ot_hbm_sm_seq_ingress.sv:26:26: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                             : ... In instance ot_hbm_sm_native_clients.native.owner.a.ingress
+   26 |  assign seq_ready=ENABLE && !active && !fault && operand_published;
+      |                          ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/ot_hbm_sm_seq_ingress.sv:27:19: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                             : ... In instance ot_hbm_sm_native_clients.native.owner.a.ingress
+   27 |  wire send=ENABLE && pending && !fault;
+      |                   ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/ot_hbm_sm_seq_ingress.sv:29:22: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                             : ... In instance ot_hbm_sm_native_clients.native.owner.a.ingress
+   29 |  assign start=ENABLE && ch_valid;
+      |                      ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/ot_hbm_sm_seq_ingress.sv:33:38: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                             : ... In instance ot_hbm_sm_native_clients.native.owner.a.ingress
+   33 |   .m_valid(ch_valid),.m_ready(ENABLE && start_ready),.m_data(received));
+      |                                      ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/ot_hbm_sm_seq_ingress.sv:36:8: Logical Operator IF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                            : ... In instance ot_hbm_sm_native_clients.native.owner.a.ingress
+   36 |   else if(ENABLE) begin
+      |        ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:613:63: Operator SUB expects 4 bits on the RHS, but RHS's VARREF 'fire_q' generates 1 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fn.u_sch
+  613 |         else begin vq <= s_valid; rq <= s_ready; cred <= cred - fire_q + ret; end
+      |                                                               ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:613:72: Operator ADD expects 4 bits on the RHS, but RHS's VARREF 'ret' generates 1 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fn.u_sch
+  613 |         else begin vq <= s_valid; rq <= s_ready; cred <= cred - fire_q + ret; end
+      |                                                                        ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:565:29: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 4 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_sch
+  565 |     wire [AW-1:0] wp1 = (wp == DEPTH - 1) ? {AW{1'b0}} : wp + 1'b1;
+      |                             ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:566:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rp1' generates 4 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_sch
+  566 |     wire [AW-1:0] rp2 = (rp1 == DEPTH - 1) ? {AW{1'b0}} : rp1 + 1'b1;
+      |                              ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:573:24: Operator ADD expects 4 bits on the RHS, but RHS's VARREF 'f_v' generates 1 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_sch
+  573 |             cnt <= cnt + f_v - pop;
+      |                        ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:573:30: Operator SUB expects 4 bits on the RHS, but RHS's VARREF 'pop' generates 1 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_sch
+  573 |             cnt <= cnt + f_v - pop;
+      |                              ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:531:27: Operator SUB expects 4 bits on the RHS, but RHS's VARREF 'fire' generates 1 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_rch
+  531 |         else cred <= cred - fire + ret;
+      |                           ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:531:34: Operator ADD expects 4 bits on the RHS, but RHS's VARREF 'ret' generates 1 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_rch
+  531 |         else cred <= cred - fire + ret;
+      |                                  ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:87:29: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'q_cnt' generates 3 bits.
+                                                                          : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+   87 |     assign d_ready = (q_cnt < DQ);
+      |                             ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:126:26: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'used' generates 11 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  126 |     wire free_up = (used + 1'b1 < DEPTH), free_eq = (used < DEPTH), free_dn = (used - 1'b1 < DEPTH);
+      |                          ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:126:59: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'used' generates 11 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  126 |     wire free_up = (used + 1'b1 < DEPTH), free_eq = (used < DEPTH), free_dn = (used - 1'b1 < DEPTH);
+      |                                                           ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:126:85: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'used' generates 11 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  126 |     wire free_up = (used + 1'b1 < DEPTH), free_eq = (used < DEPTH), free_dn = (used - 1'b1 < DEPTH);
+      |                                                                                     ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:127:33: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 10 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  127 |     wire cred_up = (outstanding + 1 < MAX_OUT), cred_eq = (outstanding < MAX_OUT), cred_dn = (outstanding - 1 < MAX_OUT);
+      |                                 ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:127:72: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 10 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  127 |     wire cred_up = (outstanding + 1 < MAX_OUT), cred_eq = (outstanding < MAX_OUT), cred_dn = (outstanding - 1 < MAX_OUT);
+      |                                                                        ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:127:107: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 10 bits.
+                                                                            : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  127 |     wire cred_up = (outstanding + 1 < MAX_OUT), cred_eq = (outstanding < MAX_OUT), cred_dn = (outstanding - 1 < MAX_OUT);
+      |                                                                                                           ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:183:75: Operator AND expects 32 bits on the LHS, but LHS's ARRAYSEL generates 7 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  183 |                     bf1[bk*NBG + bg] <= full[(((bg << PL) | (bank_ptr[bk] & ((1 << PL) - 1))) << BB) | bk];
+      |                                                                           ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:185:66: Operator SHIFTR expects 32 bits on the LHS, but LHS's SEL generates 7 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  185 |                 bank_full[bk] <= bf1[bk*NBG + (bp_d[bk*PB +: PB] >> PL)];
+      |                                                                  ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:186:48: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 3 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  186 |                 if (take_c[1] && cslot[BB-1:0] == bk) bank_ptr[bk] <= bank_ptr[bk] + 1'b1;
+      |                                                ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:199:57: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  199 |                 set_hi[k] <= rsp_v && (rsp_tag[TW-1:LO] == k);
+      |                                                         ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:200:59: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  200 |                 clr_hi[k] <= take_c[0] && (cslot[TW-1:LO] == k);
+      |                                                           ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:203:47: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  203 |                 set_lo[k] <= (rsp_tag[LO-1:0] == k);
+      |                                               ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:204:45: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  204 |                 clr_lo[k] <= (cslot[LO-1:0] == k);
+      |                                             ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:324:51: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_wp' generates 2 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  324 |             if (d_valid && d_ready) q_wp <= (q_wp == DQ - 1) ? 0 : q_wp + 1'b1;
+      |                                                   ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv:327:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_rp' generates 2 bits.
+                                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_bc
+  327 |                 q_rp <= (q_rp == DQ - 1) ? 0 : q_rp + 1'b1;
+      |                               ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:106:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ph' generates 3 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  106 |     wire [SW-1:0] ph_nx = (ph == IL - 1) ? {SW{1'b0}} : ph + 1'b1;
+      |                               ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:107:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'si' generates 3 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  107 |     wire [SW-1:0] si_nx = (si == IL - 1) ? {SW{1'b0}} : si + 1'b1;
+      |                               ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:108:34: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rows_q' generates 13 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  108 |     wire [SW:0] rs_sat = (rows_q >= IL) ? IL[SW:0] : rows_q[SW:0];
+      |                                  ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:109:31: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'g_q' generates 8 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  109 |     wire [SW:0] gq_sat = (g_q >= IL) ? IL[SW:0] : g_q[SW:0];
+      |                               ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:118:61: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rb_n' generates 13 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  118 |     (* keep *) wire [RW:0] rb_n_inc; assign rb_n_inc = rb_n + IL;
+      |                                                             ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:118:54: Operator ASSIGNW expects 13 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  118 |     (* keep *) wire [RW:0] rb_n_inc; assign rb_n_inc = rb_n + IL;
+      |                                                      ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:119:63: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wb_n' generates 21 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  119 |     (* keep *) wire [RW+8:0] wb_n_inc; assign wb_n_inc = wb_n + IL;
+      |                                                               ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:119:56: Operator ASSIGNW expects 21 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  119 |     (* keep *) wire [RW+8:0] wb_n_inc; assign wb_n_inc = wb_n + IL;
+      |                                                        ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:122:20: Operator ADD expects 17 bits on the LHS, but LHS's VARREF 'pp0' generates 15 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  122 |         s01 <= pp0 + {pp1, 2'b0};
+      |                    ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:123:20: Operator ADD expects 17 bits on the LHS, but LHS's VARREF 'pp2' generates 15 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  123 |         s23 <= pp2 + {pp3, 2'b0};
+      |                    ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:124:24: Operator ADD expects 21 bits on the LHS, but LHS's VARREF 's01' generates 17 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  124 |         items_q <= s01 + {s23, 4'b0};
+      |                        ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:126:42: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wb_n' generates 21 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  126 |             next_mask[f] <= gs_q ? (wb_n + f < items_q) : (rb_n + f < rows_q);
+      |                                          ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:126:65: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rb_n' generates 13 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  126 |             next_mask[f] <= gs_q ? (wb_n + f < items_q) : (rb_n + f < rows_q);
+      |                                                                 ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:172:27: Operator ASSIGNW expects 8 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  172 |     wire [DWD-1:0] d_head = (op_bf ? DBF : 0) + SLAT * lvl(op_g);
+      |                           ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:185:67: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'on' generates 3 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  185 |     assign launch = start_v && hv_q && !init_q && !issuing && (on < NOUT) && gap_ok;
+      |                                                                   ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:186:68: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'on' generates 3 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  186 |     assign hz_wait = start_v && hv_q && !init_q && !issuing && (on < NOUT) && !gap_ok;
+      |                                                                    ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:189:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'oh' generates 2 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  189 |     wire [NW-1:0]  oh_nx = (oh == NOUT - 1) ? {NW{1'b0}} : oh + 1'b1;
+      |                                ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:190:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ot' generates 2 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  190 |     wire [NW-1:0]  ot_nx = (ot == NOUT - 1) ? {NW{1'b0}} : ot + 1'b1;
+      |                                ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:209:22: Operator ADD expects 3 bits on the RHS, but RHS's VARREF 'launch' generates 1 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  209 |             on <= on + launch - head_done;
+      |                      ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:209:31: Operator SUB expects 3 bits on the RHS, but RHS's VARREF 'head_done' generates 1 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  209 |             on <= on + launch - head_done;
+      |                               ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:216:18: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  216 |             rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1; cxb_n <= 0;
+      |                  ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:216:63: Operator ASSIGNDLY expects 21 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  216 |             rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1; cxb_n <= 0;
+      |                                                               ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:230:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'si_nx' generates 3 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  230 |                 ls_q <= (si_nx == IL - 1);
+      |                                ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:234:56: Operator ADD expects 32 or 3 bits on the RHS, but RHS's VARREF 'launch' generates 1 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  234 |             busy <= launch || init_q || issuing || (on + launch - head_done != 0);
+      |                                                        ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:234:65: Operator SUB expects 32 or 3 bits on the RHS, but RHS's VARREF 'head_done' generates 1 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  234 |             busy <= launch || init_q || issuing || (on + launch - head_done != 0);
+      |                                                                 ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:243:22: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  243 |                 rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1;
+      |                      ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv:243:67: Operator ASSIGNDLY expects 21 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc.u_issue
+  243 |                 rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1;
+      |                                                                   ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:63:29: Logical Operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   63 |  assign start=ingress_start && ENABLE && !fault && !protocol_abort;
+      |                             ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:65:26: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   65 |  assign run_ready=ENABLE && state==IDLE && !fault;
+      |                          ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:66:30: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   66 |  assign mem_req_valid=ENABLE && state==READ_REQ && !fault;
+      |                              ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:68:30: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   68 |  assign mem_rsp_ready=ENABLE && state==READ_WAIT && !fault;
+      |                              ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:69:28: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   69 |  assign alloc_valid=ENABLE && state==ALLOC && !fault;
+      |                            ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:71:32: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   71 |  assign alloc_rsp_ready=ENABLE && state==ALLOC_WAIT && !fault;
+      |                                ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:72:24: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   72 |  assign d_valid=ENABLE && state==DESC && !fault;
+      |                        ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:74:28: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   74 |  assign x_req_valid=ENABLE && state==XREQ && !fault;
+      |                            ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:76:24: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   76 |  assign x_ready=ENABLE && state==XLOAD && !fault;
+      |                        ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:77:34: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   77 |  assign publication_ready=ENABLE && state==WAIT_DONE && started && !published && !fault;
+      |                                  ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:78:21: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   78 |  assign done=ENABLE && state==COMPLETE && !fault;
+      |                     ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:118:33: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'load_x' generates 32 bits.
+                                                                                                  : ... In instance ot_hbm_sm_native_clients.native.owner.a
+  118 |      CHECK:if(!valid_record || (!load_x && !reuse_ok))begin fault<=1;state<=FAILED;end
+      |                                 ^
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:127:7: Logical Operator IF expects 1 bit on the If, but If's VARREF 'load_x' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+  127 |       if(load_x)state<=XREQ;else state<=SEND;
+      |       ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:137:19: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ordinal' generates 8 bits.
+                                                                                                  : ... In instance ot_hbm_sm_native_clients.native.owner.a
+  137 |         if(ordinal+1==extent)begin
+      |                   ^
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:90:14: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.native.owner.a
+   90 |    if(ENABLE && !fault)begin
+      |              ^~
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1095:1088 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1103:1096 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1111:1104 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1119:1112 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1127:1120 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1135:1128 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1143:1136 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1151:1144 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1159:1152 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1167:1160 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1175:1168 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1183:1176 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1191:1184 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1199:1192 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1207:1200 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1215:1208 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1223:1216 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1231:1224 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1239:1232 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1247:1240 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1255:1248 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1263:1256 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1271:1264 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1279:1272 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1287:1280 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1295:1288 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1303:1296 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1311:1304 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1319:1312 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1327:1320 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1335:1328 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1343:1336 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1351:1344 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1359:1352 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1367:1360 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1375:1368 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1383:1376 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1391:1384 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1399:1392 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1407:1400 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1415:1408 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1423:1416 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1431:1424 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1439:1432 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1447:1440 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1455:1448 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1463:1456 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1471:1464 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1479:1472 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1487:1480 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1495:1488 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1503:1496 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1511:1504 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1519:1512 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1527:1520 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1535:1528 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1543:1536 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1551:1544 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1559:1552 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1567:1560 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1575:1568 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1583:1576 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1591:1584 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1599:1592 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1607:1600 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1615:1608 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1623:1616 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1631:1624 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1639:1632 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1647:1640 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1655:1648 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1663:1656 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1671:1664 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1679:1672 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1687:1680 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1695:1688 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1703:1696 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1711:1704 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1719:1712 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1727:1720 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1735:1728 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1743:1736 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1751:1744 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1759:1752 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1767:1760 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1775:1768 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1783:1776 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1791:1784 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1799:1792 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1807:1800 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1815:1808 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1823:1816 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1831:1824 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1839:1832 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1847:1840 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1855:1848 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1863:1856 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1871:1864 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1879:1872 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1887:1880 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1895:1888 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1903:1896 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1911:1904 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1919:1912 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1927:1920 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1935:1928 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1943:1936 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1951:1944 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1959:1952 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1967:1960 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1975:1968 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1983:1976 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1991:1984 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 1999:1992 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 2007:2000 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 2015:2008 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 2023:2016 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 2031:2024 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 2039:2032 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1141:63: Selection index out of range: 2047:2040 outside 1087:0
+                                                               : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fc
+ 1141 |                     assign fp8w[8*bb +: 8] = (J < LB / 2) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                                               ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:849:68: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wm_grp' generates 7 bits.
+                                                           : ... In instance ot_hbm_sm_native_clients.native.sm.g_fd.u_fn
+  849 |         for (gq = 0; gq < NBEAT; gq = gq + 1) w0_oh[gq] <= (wm_grp == gq);
+      |                                                                    ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:17:19: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                              : ... In instance ot_hbm_sm_native_clients.native.descriptor
+   17 |  wire send=ENABLE && s_valid && !pending && a_ready && b_ready && !blocked;
+      |                   ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:19:24: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                              : ... In instance ot_hbm_sm_native_clients.native.descriptor
+   19 |  assign s_ready=ENABLE && pending && a_ack && b_ack && !blocked;
+      |                        ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:20:24: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                              : ... In instance ot_hbm_sm_native_clients.native.descriptor
+   20 |  assign d_valid=ENABLE && a_valid && b_valid && !blocked;
+      |                        ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:36:8: Logical Operator IF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                             : ... In instance ot_hbm_sm_native_clients.native.descriptor
+   36 |   else if(ENABLE)begin
+      |        ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv:92:26: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PROTECT' generates 32 bits.
+                                                                                            : ... In instance ot_hbm_sm_native_clients.native.owner
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_allocation.sv:30:26: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                   : ... In instance ot_hbm_sm_native_clients.allocation
+   30 |  assign req_ready=ENABLE && !stop && !a[49];
+      |                          ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_allocation.sv:31:26: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                   : ... In instance ot_hbm_sm_native_clients.allocation
+   31 |  assign rsp_valid=ENABLE && !stop && a[49];
+      |                          ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_allocation.sv:36:7: Logical Operator IF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                                  : ... In instance ot_hbm_sm_native_clients.allocation
+   36 |  else if(ENABLE)begin
+      |       ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_provider_leaf.sv:83:22: Logical Operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                      : ... In instance ot_hbm_sm_native_clients.native
+   83 |  wire sm_rst_n=rst_n && ENABLE;
+      |                      ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/result_provider/ot_hbm_sm_result_provider.sv:38:30: Operator LT expects 13 bits on the LHS, but LHS's VARREF 'result_row' generates 12 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.results
+   38 |  wire legal_result=result_row<held_rows&&!seen_word[result_row[5:0]]&&!seen_word[65];
+      |                              ^
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/result_provider/ot_hbm_sm_result_provider.sv:38:52: Bit extraction of var[65:0] requires 7 bit index, not 6 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.results
+   38 |  wire legal_result=result_row<held_rows&&!seen_word[result_row[5:0]]&&!seen_word[65];
+      |                                                    ^
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/result_provider/ot_hbm_sm_result_provider.sv:60:43: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 3 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.results
+   60 |     .a_ce_in(take_result&&result_row[11:9]==BANK_INDEX),.a_we_in(1'b1),.a_addr_in(result_row[8:0]),
+      |                                           ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/result_provider/ot_hbm_sm_result_provider.sv:62:46: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 3 bits.
+                                                                                                 : ... In instance ot_hbm_sm_native_clients.results
+   62 |     .b_ce_in(state==FETCH&&!fault&&slot[11:9]==BANK_INDEX),.b_we_in(1'b0),.b_addr_in(slot[8:0]),
+      |                                              ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/program_provider/ot_hbm_sm_program_word.sv:38:22: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                               : ... In instance ot_hbm_sm_native_clients.program_reader
+   38 |  assign fault=ENABLE && blocked;
+      |                      ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/program_provider/ot_hbm_sm_program_word.sv:39:30: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                               : ... In instance ot_hbm_sm_native_clients.program_reader
+   39 |  assign mem_req_ready=ENABLE && state==IDLE && bounds_ok && !blocked;
+      |                              ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/program_provider/ot_hbm_sm_program_word.sv:40:30: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                               : ... In instance ot_hbm_sm_native_clients.program_reader
+   40 |  assign mem_rsp_valid=ENABLE && state==OUT && !blocked;
+      |                              ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/program_provider/ot_hbm_sm_program_word.sv:44:34: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                               : ... In instance ot_hbm_sm_native_clients.program_reader
+   44 |  assign service_req_valid=ENABLE && state==SEND && !blocked;
+      |                                  ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/program_provider/ot_hbm_sm_program_word.sv:46:34: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                               : ... In instance ot_hbm_sm_native_clients.program_reader
+   46 |  assign service_rsp_ready=ENABLE && state==WAIT && !blocked;
+      |                                  ^~
+%Warning-WIDTH: rtl/hbm_accel/control_20261007/program_provider/ot_hbm_sm_program_word.sv:50:8: Logical Operator IF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                              : ... In instance ot_hbm_sm_native_clients.program_reader
+   50 |   else if(ENABLE)begin
+      |        ^~
+%Warning-UNOPTFLAT: rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:75:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbm_sm_native_clients.native.sm.g_c[0].g_be_e.u_be.u.g_hs.u_stack.g_lv[0].go'
+                                                                : ... In instance ot_hbm_sm_native_clients.native.sm.g_c[0].g_be_e.u_be.u
+   75 |             wire          go   = v_in && !lone && (have || last_in);
+      |                           ^~
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:75:27:      Example path: ot_hbm_sm_native_clients.native.sm.g_c[0].g_be_e.u_be.u.g_hs.u_stack.g_lv[0].go
+                    rtl/hdc/ot_hdc_sfu.sv:25:15:      Example path: ASSIGNW
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:110:27:      Example path: ot_hbm_sm_native_clients.native.sm.g_c[0].g_be_e.u_be.u.g_hs.u_stack.g_lv[0].gv
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:121:30:      Example path: ASSIGNW
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:43:27:      Example path: ot_hbm_sm_native_clients.native.sm.g_c[0].g_be_e.u_be.u.g_hs.u_stack.lv_v
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:74:32:      Example path: ASSIGNW
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:74:27:      Example path: ot_hbm_sm_native_clients.native.sm.g_c[0].g_be_e.u_be.u.g_hs.u_stack.g_lv[0].lone
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:75:32:      Example path: ASSIGNW
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:75:27:      Example path: ot_hbm_sm_native_clients.native.sm.g_c[0].g_be_e.u_be.u.g_hs.u_stack.g_lv[0].go
+%Warning-UNOPTFLAT: rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_x_read.sv:23:7: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbm_sm_native_clients.x_reader.blocked'
+   23 |  wire blocked=sticky||af||parity!=(^q)||!(state==IDLE||state==SEND||state==WAIT)||
+      |       ^~~~~~~
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_x_read.sv:23:7:      Example path: ot_hbm_sm_native_clients.x_reader.blocked
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_x_read.sv:27:11:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_x_read.sv:22:7:      Example path: ot_hbm_sm_native_clients.x_reader.av
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_sector_read.sv:20:14:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_sector_read.sv:20:7:      Example path: ot_hbm_sm_native_clients.x_reader.sectors.blocked
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_sector_read.sv:24:18:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_x_read.sv:22:13:      Example path: ot_hbm_sm_native_clients.x_reader.ov
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_x_read.sv:23:14:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_x_read.sv:23:7:      Example path: ot_hbm_sm_native_clients.x_reader.blocked
+%Warning-UNOPTFLAT: rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_weight_read.sv:19:7: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbm_sm_native_clients.weight_reader.blocked'
+   19 |  wire blocked=sticky||af||parity!=(^q)||!(state==GRANT||state==FLIGHT||state==LAND||state==SEND||state==WAIT)||
+      |       ^~~~~~~
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_weight_read.sv:19:7:      Example path: ot_hbm_sm_native_clients.weight_reader.blocked
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_weight_read.sv:23:11:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_weight_read.sv:18:7:      Example path: ot_hbm_sm_native_clients.weight_reader.av
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_sector_read.sv:20:14:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_sector_read.sv:20:7:      Example path: ot_hbm_sm_native_clients.weight_reader.sectors.blocked
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_sector_read.sv:24:18:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_weight_read.sv:18:13:      Example path: ot_hbm_sm_native_clients.weight_reader.ov
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_weight_read.sv:19:14:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/weight_x_provider/ot_hbm_sm_weight_read.sv:19:7:      Example path: ot_hbm_sm_native_clients.weight_reader.blocked
+%Warning-UNOPTFLAT: rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:14:7: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbm_sm_native_clients.native.descriptor.mismatch'
+   14 |  wire mismatch=(pending==pending_n) || (a_ready!=b_ready) || (a_valid!=b_valid) ||
+      |       ^~~~~~~~
+                    rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:14:7:      Example path: ot_hbm_sm_native_clients.native.descriptor.mismatch
+                    rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:16:14:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:16:7:      Example path: ot_hbm_sm_native_clients.native.descriptor.blocked
+                    rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:20:16:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_provider_leaf.sv:81:7:      Example path: ot_hbm_sm_native_clients.native.south_d_valid
+                    rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:18:14:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:18:7:      Example path: ot_hbm_sm_native_clients.native.descriptor.consume
+                    rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:328:21:      Example path: ASSIGNW
+                    rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:327:24:      Example path: ot_hbm_sm_native_clients.native.descriptor.ack_a.t
+                    rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:14:15:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv:14:7:      Example path: ot_hbm_sm_native_clients.native.descriptor.mismatch
+%Warning-UNOPTFLAT: rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:59:7: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbm_sm_native_clients.native.owner.a.protocol_abort'
+   59 |  wire protocol_abort=sm_fault || ingress_fault ||
+      |       ^~~~~~~~~~~~~~
+                    rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:59:7:      Example path: ot_hbm_sm_native_clients.native.owner.a.protocol_abort
+                    rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:63:14:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv:43:8:      Example path: ot_hbm_sm_native_clients.native.owner.a_start
+                    rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv:92:17:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv:55:7:      Example path: ot_hbm_sm_native_clients.native.owner.mismatch
+                    rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv:93:14:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv:93:7:      Example path: ot_hbm_sm_native_clients.native.owner.blocked
+                    rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected.sv:97:22:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_clients.sv:15:7:      Example path: ot_hbm_sm_native_clients.mem_req_valid
+                    rtl/hbm_accel/control_20261007/program_provider/ot_hbm_sm_program_word.sv:37:14:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/program_provider/ot_hbm_sm_program_word.sv:37:7:      Example path: ot_hbm_sm_native_clients.program_reader.blocked
+                    rtl/hbm_accel/control_20261007/program_provider/ot_hbm_sm_program_word.sv:40:22:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_clients.sv:15:35:      Example path: ot_hbm_sm_native_clients.mem_rsp_valid
+                    rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:59:21:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/protected/ot_hbm_sm_serial_protected_core.sv:59:7:      Example path: ot_hbm_sm_native_clients.native.owner.a.protocol_abort
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbm_sm_native_clients.native.sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_tc.g_lane[0].u_mul.u_psum.g'
+                                                  : ... In instance ot_hbm_sm_native_clients.native.sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_tc.g_lane[0].u_mul
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_hbm_sm_native_clients.native.sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_tc.g_lane[0].u_mul.u_psum.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_hbm_sm_native_clients.native.sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_tc.g_lane[0].u_mul.u_psum.g
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbm_sm_native_clients.native.sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_tc.g_lane[0].u_mul.u_psum.p'
+                                                  : ... In instance ot_hbm_sm_native_clients.native.sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_tc.g_lane[0].u_mul
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_hbm_sm_native_clients.native.sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_tc.g_lane[0].u_mul.u_psum.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_hbm_sm_native_clients.native.sm.g_c[0].g_p[0].g_tw.u_t.u.g_lf[0].u_leaf.g_k.u_tc.g_lane[0].u_mul.u_psum.p
+%Warning-UNOPTFLAT: rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_clients.sv:24:12: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbm_sm_native_clients.provider_fault'
+   24 |  wire[4:0] provider_fault;wire peer_fault=service_fault||(|provider_fault);
+      |            ^~~~~~~~~~~~~~
+                    rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_clients.sv:24:12:      Example path: ot_hbm_sm_native_clients.provider_fault
+                    rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_clients.sv:67:27:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/result_provider/ot_hbm_sm_result_provider.sv:5:23:      Example path: ot_hbm_sm_native_clients.__Vcellinp__results__installed
+                    rtl/hbm_accel/control_20261007/result_provider/ot_hbm_sm_result_provider.sv:40:14:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/result_provider/ot_hbm_sm_result_provider.sv:10:37:      Example path: ot_hbm_sm_native_clients.__Vcellout__results__fault
+                    rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_clients.sv:69:112:      Example path: ASSIGNW
+                    rtl/hbm_accel/control_20261007/production_join/ot_hbm_sm_native_clients.sv:24:12:      Example path: ot_hbm_sm_native_clients.provider_fault
