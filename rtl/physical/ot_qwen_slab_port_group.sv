@@ -84,7 +84,18 @@ module ot_qwen_slab_port_group #(
     parameter integer OREG = 0,
     //   MUL_KCP > 1 (margin m3 2026-10-06): the multiplier's C1 operand register as MUL_KCP kept copies (ot_hdc_fp32_mul_lat
     //               KCP), so the partial-product broadcast is local.  No cycle; values unchanged.
-    parameter integer MUL_KCP = 1
+    parameter integer MUL_KCP = 1,
+    //   BANDF 1 (qwen-band-integrate 2026-10-08, r21m band-lane spine): GID is the group's SLOT p = 8b + k (band b's
+    //               slab, slot k) and the group it holds depends on the op's split (ot_qfd_band_lanes frame):
+    //               g = b * 2^(TCUT+3-s) + k (k < 2^(TCUT+3-s)) at s <= TCUT+3, else g = k on band 0 (k < GT >> s).
+    //               The row-count constants, the scale address term g*IL, the row base g*W*IL, g*ots and the in-range
+    //               test are per-split constants selected by the registered split at D1 (one constant multiplier per
+    //               split SMIN..SMAX).  0 cycles; values = the base's for group g.  The scale ROM holds, per matrix,
+    //               the words of the group the slot carries at that matrix's split (the same count as before).
+    parameter integer BANDF = 0,
+    parameter integer TCUT = 7,
+    parameter integer SMIN = 7,
+    parameter integer SMAX = 11
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -147,9 +158,54 @@ module ot_qwen_slab_port_group #(
     // ---- D1 (cycle 2): the group's row-count differences, scale address and result address terms -------
     // RTL: lane l of group GID is in range iff (mmode ? lb + GID*W : nb + GID*W*IL) + l < nout; here
     // dn / dl = nout - (nb + GID*W*IL) / nout - (lb + GID*W) (exact, DW-bit signed) and lane l iff d > l.
-    localparam [DW-1:0] CDN = 1 - GID * W * IL, CDL = 1 - GID * W;
-    localparam [AW-1:0] CSB = GID * IL;
-    localparam [NW-1:0] CRB = GID * W * IL;
+    // BANDF: the group held at split s (constant per instance and split), its in-range flag
+    localparam integer TB = TCUT + 3;
+    function automatic integer bf_g(input integer sp);
+        bf_g = (BANDF == 0) ? GID : (sp <= TB) ? (((GID >> 3) << (TB - sp)) + (GID & 7)) : (GID & 7);
+    endfunction
+    function automatic integer bf_ok(input integer sp);
+        bf_ok = (BANDF == 0) ? (GID < (GT >> sp)) :
+                (sp < SMIN || sp > SMAX) ? 0 :
+                (sp <= TB) ? (((GID & 7) >> (TB - sp)) == 0) : (((GID >> 3) == 0) && ((GID & 7) < (GT >> sp)));
+    endfunction
+    wire [DW-1:0] CDN, CDL;
+    wire [AW-1:0] CSB;
+    wire [NW-1:0] CRB;
+    wire [AW-1:0] gots;
+    wire          gok;
+    generate if (BANDF == 0) begin : g_gid
+        assign CDN = 1 - GID * W * IL; assign CDL = 1 - GID * W;
+        assign CSB = GID * IL; assign CRB = GID * W * IL;
+        assign gok = GID < (GT >> t_split);
+        // GID * ots for the result address (RTL o_addr1 = r_oa + (gb + q) * r_ots)
+        ot_qwen_slab_pg_cmul #(.W(AW), .K(GID)) u_gots (.a(t_ots), .p(gots));
+    end else begin : g_band
+        wire [16*DW-1:0] cdn_s, cdl_s;
+        wire [16*AW-1:0] csb_s, gots_s;
+        wire [16*NW-1:0] crb_s;
+        wire [15:0]      ok_s;
+        genvar sp;
+        for (sp = 0; sp < 16; sp = sp + 1) begin : g_s
+            localparam integer GS = bf_g(sp);
+            localparam integer OK = bf_ok(sp);
+            localparam [DW-1:0] KDN = 1 - GS * W * IL, KDL = 1 - GS * W;
+            localparam [AW-1:0] KSB = GS * IL;
+            localparam [NW-1:0] KRB = GS * W * IL;
+            assign ok_s[sp] = (OK != 0);
+            if (OK != 0) begin : g_on
+                assign cdn_s[sp*DW +: DW] = KDN; assign cdl_s[sp*DW +: DW] = KDL;
+                assign csb_s[sp*AW +: AW] = KSB; assign crb_s[sp*NW +: NW] = KRB;
+                ot_qwen_slab_pg_cmul #(.W(AW), .K(GS)) u_gots (.a(t_ots), .p(gots_s[sp*AW +: AW]));
+            end else begin : g_off
+                assign cdn_s[sp*DW +: DW] = 0; assign cdl_s[sp*DW +: DW] = 0;
+                assign csb_s[sp*AW +: AW] = 0; assign crb_s[sp*NW +: NW] = 0; assign gots_s[sp*AW +: AW] = 0;
+            end
+        end
+        assign CDN = cdn_s[t_split*DW +: DW]; assign CDL = cdl_s[t_split*DW +: DW];
+        assign CSB = csb_s[t_split*AW +: AW]; assign CRB = crb_s[t_split*NW +: NW];
+        assign gots = gots_s[t_split*AW +: AW];
+        assign gok = ok_s[t_split];
+    end endgenerate
     wire [DW-1:0] dn, dl;
     wire [DW-1:0] nb_ext = {{(DW-NW-1){1'b0}}, t_nb};
     wire [DW-1:0] lb_ext = {{(DW-NW-1){1'b0}}, t_lb};
@@ -158,12 +214,8 @@ module ot_qwen_slab_port_group #(
     ot_qwen_slab_pg_add3 #(.W(DW)) u_dl (.a(nout_ext), .b(~lb_ext), .c(CDL), .s(dl));
     wire [AW-1:0] sb, ots95;
     ot_qwen_slab_pg_add3 #(.W(AW)) u_sb (.a(t_sbase), .b({{(AW-NW-1+LW){1'b0}}, t_nb[NW:LW]}), .c(CSB), .s(sb));
-    // GID * ots for the result address (RTL o_addr1 = r_oa + (gb + q) * r_ots)
-    wire [AW-1:0] gots;
-    ot_qwen_slab_pg_cmul #(.W(AW), .K(GID)) u_gots (.a(t_ots), .p(gots));
     wire [NW-1:0] rb16;
     ot_hdc_ksadd_k #(.W(NW)) u_rb (.a(t_nb[NW-1:0]), .b(CRB), .cin(1'b0), .s(rb16), .cout());
-    wire [$clog2(GT):0] t_ports = GT >> t_split;
     wire [DW-1:0] dnm1, dlm1;   // d - 1 (S5_CTL): d > 0  <=>  d - 1 >= 0
     ot_qwen_slab_pg_add3 #(.W(DW)) u_dnm (.a(nout_ext), .b(~nb_ext), .c(CDN - 1'b1), .s(dnm1));
     ot_qwen_slab_pg_add3 #(.W(DW)) u_dlm (.a(nout_ext), .b(~lb_ext), .c(CDL - 1'b1), .s(dlm1));
@@ -175,7 +227,7 @@ module ot_qwen_slab_port_group #(
     always @(posedge clk) begin
         d_v <= rs && t_v;
         {d_last, d_oen, d_amax, d_rmax, d_wsrc} <= {t_last, t_oen, t_amax, t_rmax, t_wsrc};
-        d_portok <= GID < t_ports;
+        d_portok <= gok;
         d_d <= t_mmode ? dl : dn;
         d_pos_q <= !(t_mmode ? dlm1[DW-1] : dnm1[DW-1]);
         d_sb <= sb; d_sbase <= t_sbase; d_oa <= t_oa; d_gots <= gots; d_rb <= rb16;

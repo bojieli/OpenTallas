@@ -229,7 +229,17 @@ module ot_qwen_me_spctl_w12 #(
     parameter integer KV_PREP = 0,
     parameter integer MUL_LAT = 5,
     parameter integer SCALE_LAT = 5,
-    parameter integer LANDED = 0       // qwen-vm-me: progress / idle count LANDED result bursts (land_cnt), 0 = base
+    parameter integer LANDED = 0,      // qwen-vm-me: progress / idle count LANDED result bursts (land_cnt), 0 = base
+    // qwen-band-integrate 2026-10-08 (default 0 = base):
+    //   RX    extra edges between the tree lanes' level-(LG-1) words and the port elements (the band-lane blocks'
+    //         +5 + 2 LNK): the element tags (p_v_e2 / p_f_e2), the scale requests, the result valid, the argmax top
+    //         and the argmax-accumulator clear move RX edges later, so every result-side output is the base's
+    //         delayed RX edges (the per-level tree selects t_sel_e / t_tv_e are unchanged: the bands are lane-timed).
+    //   BANDF 1: the result-port positions are BAND-LOCAL (ot_qfd_band_lanes frame): position p = 8b + k holds group
+    //         g = b * 2^(TCUT+3-s) + k (k < 2^(TCUT+3-s)) at split s <= TCUT+3, else g = k on band 0 (k < GT >> s);
+    //         the scale requests use g (rows, scale address, in-range test).  Needs GT = 48 << TCUT, SMIN >= TCUT.
+    parameter integer RX = 0,
+    parameter integer BANDF = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -678,7 +688,7 @@ end endgenerate
         s1_tag <= m_tag; s1b_tag <= s1_tag; s2_tag <= s1b_tag; s3_tag <= s2_tag;
     end
     //: a_tag = s3_tag + (SD + OD + XDD); the port elements take it TWO cycles early (a_tag_e2) and register it twice
-    localparam integer AD = SD + OD + XDD;
+    localparam integer AD = SD + OD + XDD + RX;
     wire [TW-1:0] a_tag_e2;
     reg  [TW-1:0] a_tag_e1, a_tag;
     ot_qwen_me_rdelay_w12 #(.W(TW), .D(AD - 2)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag_e2));
@@ -729,7 +739,7 @@ end endgenerate
     // -- post-scale: the scale requests, ONE CYCLE EARLIER than the monolithic engine's ---------------------
     //: pre = s3 + (SD - 2 + OD + XDD) in ot_qwen_w12_matvec_part; here s3 + (SD - 3 + OD + XDD); the port element
     //: registers scale_q once before its multiplier, so the multiplier sees the same word on the same edge
-    localparam integer PD = SD - 3 + OD + XDD;
+    localparam integer PD = SD - 3 + OD + XDD + RX;
     wire [TW-1:0] pre_tag;
     wire [PD:0]   pre_vline;
     ot_qwen_me_rdelay_w12 #(.W(TW), .D(PD)) u_pretag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(pre_tag));
@@ -748,13 +758,36 @@ end endgenerate
     assign {pre_last, pre_oen, pre_amax, pre_wsrc, pre_mmode, pre_split, pre_oa, pre_ots, pre_nb, pre_lb, pre_nout,
             pre_rmax, pre_j, pre_opend, pre_mbase, pre_sbase} = pre_tag;
     wire [GOUT-1:0] pre_scale_active;
+    //: BANDF: the group each result-port position holds at the op's split (ot_qfd_band_lanes frame)
+    localparam integer TB = TCUT + 3;
+    function automatic [16:0] bframe(input [3:0] sp, input integer p);   // {in range, group}
+        integer bb, kk, gg;
+        reg ok;
+        reg [15:0] g16;
+        begin
+            bb = p >> 3; kk = p & 7;
+            if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
+            else          begin ok = (bb == 0) && (kk < (GT >> sp)); gg = kk; end
+            g16 = gg;
+            bframe = {ok, g16};
+        end
+    endfunction
+    wire [NPG*32-1:0] pgi;
+    wire [NPG-1:0]    pgok;
     genvar pg;
     generate
         for (pg = 0; pg < NPG; pg = pg + 1) begin : g_scale_request_mask
-            assign pre_scale_active[pg] = pre_vline[PD] && pre_last && !pre_wsrc &&
-                ((gb + pg) < (GT >> pre_split)) &&
-                (pre_mmode ? (pre_lb + (gb + pg)*W < pre_nout) :
-                             (pre_nb + (gb + pg)*(W*IL) < pre_nout));
+            if (BANDF != 0) begin : g_bf
+                wire [16:0] fr = bframe(pre_split, pg);
+                assign pgi[pg*32 +: 32] = {16'd0, fr[15:0]};
+                assign pgok[pg] = fr[16];
+            end else begin : g_lin
+                assign pgi[pg*32 +: 32] = gb + pg;
+                assign pgok[pg] = ((gb + pg) < (GT >> pre_split));
+            end
+            assign pre_scale_active[pg] = pre_vline[PD] && pre_last && !pre_wsrc && pgok[pg] &&
+                (pre_mmode ? (pre_lb + pgi[pg*32 +: 32]*W < pre_nout) :
+                             (pre_nb + pgi[pg*32 +: 32]*(W*IL) < pre_nout));
         end
     endgenerate
     integer sg;
@@ -766,7 +799,7 @@ end endgenerate
         for (sg = 0; sg < NPG; sg = sg + 1)
             scale_addr[sg*AW +: AW] <= !pre_scale_active[sg] ? pre_sbase :
                 (SCALE_LOCAL != 0) ? pre_sbase + pre_t * IL + pre_j :
-                                     pre_sbase + (pre_nb >> LW) + (gb + sg) * IL;
+                                     pre_sbase + (pre_nb >> LW) + pgi[sg*32 +: 32] * IL;
     end
 
     // -- result tag (a_tag + SCALE_LAT, the post-scale multiply) and the result valid ---------------------------------
@@ -871,6 +904,13 @@ end endgenerate
     wire [31:0]   top_val = top_key[31] ? {1'b0, top_key[30:0]} : ~top_key;
     wire [NW-1:0] top_idx = top[NW-1:0];
     reg [31:0] best_key;
+    //: the accumulator clear of an amax op at its issue (RX > 0: RX edges later, with the results)
+    wire am_clr;
+    generate if (RX > 0) begin : g_amc
+        ot_hdc_delay #(.W(1), .D(RX), .RESET(1)) u_amc (.clk(clk), .rst_n(rst_n), .d(go && ready && i_amax), .q(am_clr));
+    end else begin : g_amc0
+        assign am_clr = go && ready && i_amax;
+    end endgenerate
     //: top > best (key, then the lower index): the same kept carry as the tree nodes
     wire best_gt;
     wire [32+NW-1:0] best_s;
@@ -880,7 +920,7 @@ end endgenerate
         if (!rst_n) begin
             am_any <= 1'b0; am_idx <= 0; am_val <= 0; best_key <= 0;
         end else begin
-            if (go && ready && i_amax) am_any <= 1'b0;
+            if (am_clr) am_any <= 1'b0;
             else if (tv[LV] && !t_rmax && top_v && (!am_any || best_gt)) begin
                 am_any <= 1'b1; best_key <= top_key; am_idx <= top_idx; am_val <= top_val;
             end
@@ -1093,7 +1133,12 @@ module ot_qwen_me_spport_w12 #(
     parameter integer SMIN = 3,
     parameter integer PQ = 4,
     parameter integer TREE_LAT = 3,
-    parameter integer SCALE_LAT = 5       // 5: ot_hdc_fmul (the monolithic engine's); 6: ot_hdc_fp32_mul_lat #(6)
+    parameter integer SCALE_LAT = 5,      // 5: ot_hdc_fmul (the monolithic engine's); 6: ot_hdc_fp32_mul_lat #(6)
+    // qwen-band-integrate 2026-10-08: BANDF 1 = the positions are band-local (ot_qfd_band_lanes frame, see
+    // ot_qwen_me_spctl_w12 BANDF): position p holds group g(split, p), so the in-range test, row base, lane-vector
+    // base and (g * ots) take g instead of p.  Default 0 = base.
+    parameter integer BANDF = 0,
+    parameter integer TCUT = 7
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -1138,10 +1183,25 @@ module ot_qwen_me_spport_w12 #(
     wire [PQ*4-1:0]   e_dlo;
     wire [PQ*BW-1:0]  e_rowb;
     wire [PQ*AW-1:0]  e_qots;
+    localparam integer TB = TCUT + 3;
+    function automatic [16:0] bframe(input [3:0] sp, input [31:0] p);   // {in range, group}
+        reg [31:0] bb, kk, gg;
+        reg ok;
+        reg [15:0] g16;
+        begin
+            bb = p >> 3; kk = p & 7;
+            if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
+            else          begin ok = (bb == 0) && (kk < (GT >> sp)); gg = kk; end
+            g16 = gg[15:0];
+            bframe = {ok, g16};
+        end
+    endfunction
     genvar b, g, e;
     generate for (g = 0; g < PQ; g = g + 1) begin : g_e
-        wire [31:0] qg = q0 + g;
-        assign e_gok[g] = (qg < e_ports);
+        wire [31:0] qp = q0 + g;
+        wire [16:0] fr = bframe(e_split, qp);
+        wire [31:0] qg = (BANDF != 0) ? {16'd0, fr[15:0]} : qp;
+        assign e_gok[g] = (BANDF != 0) ? fr[16] : (qg < e_ports);
         //: row base nb + qg*W*IL, lane-vector base lb + qg*W; the lane mask is base + lane < nout
         wire [BW-1:0] rowb, lvb, base, nd;
         ot_qwen_w12_kadd #(.W(BW)) u_rb (.a({{(BW-NW-1){1'b0}}, e_nb}), .b(qg * (W * IL)), .s(rowb));
