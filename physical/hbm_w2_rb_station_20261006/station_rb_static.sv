@@ -22,6 +22,20 @@
 // verdict about exactly that data (ot_hbm_w2_protected_bank_veto_on); output
 // flops add one more edge to both. Station control outside W6 words is dual
 // rail or kept copies checked against each other; any disagreement is fatal.
+// Margin structure (signoff r2 classes; no logic depth > one cut per edge):
+//  * ACK compare: the captured ACK takes one more edge (stage 2) while the
+//    frame/owner inequalities against the held frame are registered; the
+//    seats, ack_bad and arr_bad then see a registered verdict.
+//  * Cross-bank veto: the station-wide fault OR is registered (fault_x) and
+//    gates every station action one edge after a bank or rail fault. Each
+//    bank vetoes its own presented data on the same edge (normal), so a
+//    faulted bank never presents; the registered veto only bounds how long
+//    the HEALTHY banks keep moving verified data (<= 3 edges after an upset,
+//    shorter than any path from an upset to an output offer: seat write ->
+//    PREP/COMMIT -> CHECK/VERIFY/EVAL -> verdict pipeline -> ov flop).
+//  * Rail and copy checks are registered per term before the sticky OR.
+//  * Cold POR: one kept release copy per bank (all sample the same stage-0
+//    flop, so every copy releases on the same edge).
 module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3)(
  input wire clk_sm,por_n,release_held,
  input wire in_v,output wire in_r,input wire [2062:0] in_data,
@@ -57,6 +71,12 @@ function automatic [71:0] encode64(input [63:0] data);
   ot_hbm_w2_keep_reg #(.W(1)) u_rs0(.clk(clk_sm),.rst_n(por_n),.d(1'b1),.q(rs[0]));
   ot_hbm_w2_keep_reg #(.W(1)) u_rs1(.clk(clk_sm),.rst_n(por_n),.d(rs[0]),.q(rs[1]));
   wire rst_n=rs[1];
+  // Kept per-bank release copies (same rs[0] source: same release edge).
+  wire [NO+5:0] rsc;
+  for(genvar k=0;k<NO+6;k=k+1)begin:rsc_copy
+   ot_hbm_w2_keep_reg #(.W(1)) u_rsc(.clk(clk_sm),.rst_n(por_n),.d(rs[0]),.q(rsc[k]));
+  end
+  wire rst_p=rsc[0],rst_c=rsc[1],rst_g=rsc[2],rst_r=rsc[3],rst_s=rsc[4],rst_e=rsc[5];
   // ---------------- input pin capture (no logic before the flop) ----------
   reg [PW-1:0] id_p;reg [NO-1:0] or_p,ackv_p;reg [NO*192-1:0] acko_p;
   reg [NO*73-1:0] ackf_p;reg rr_p,held_p;
@@ -66,15 +86,26 @@ function automatic [71:0] encode64(input [63:0] data);
    acko_p<=ACK_owner;ackf_p<=ACK_frame;rr_p<=release_r;held_p<=release_held;
   end
   ot_hbm_w2_keep_reg #(.W(1)) u_iv(.clk(clk_sm),.rst_n(rst_n),.d(in_v),.q(iv_p));
+  // ACK stage 2: the captured ACK waits one edge while its inequalities
+  // against the held frame/owner are registered (frame0/owner0 are static
+  // while any ACK of the transaction can arrive).
+  wire [191:0] owner0;wire [72:0] frame0;
+  reg [NO-1:0] ackv_q,fne_q,one_q;reg [NO*192-1:0] acko_q;
+  always @(posedge clk_sm)begin
+   ackv_q<=ackv_p;acko_q<=acko_p;
+   for(integer t=0;t<NO;t=t+1)begin
+    fne_q[t]<=ackf_p[t*73+:73]!=frame0;one_q[t]<=acko_p[t*192+:192]!=owner0;
+   end
+  end
   // ---------------- protected state ----------------------------------------
-  wire fault_any;
+  wire fault_any,fault_now;
   wire [PN*72-1:0] E;wire E_v,E_bad;
   wire P_in_r,P_out_v,P_empty,P_fault,P_in_v,P_out_r;wire [PW-1:0] P_d;
   wire [NO-1:0] A_in_r,A_out_v,A_empty,A_fault,A_in_v;wire [NO*192-1:0] A_d;
   wire C_normal,C_fault,C_rep,C_load;wire [63:0] C_q,C_next;
   wire G_normal,G_fault,G_rep;
   wire R_in_r,R_out_v,R_empty,R_fault,R_in_v,R_out_r;wire [RW-1:0] R_d;
-  wire [191:0] owner0=P_d[2136+:192];wire [72:0] frame0=P_d[2063+:73];
+  assign owner0=P_d[2136+:192];assign frame0=P_d[2063+:73];
   wire active=C_q[0];wire [3:0] sent=C_q[4:1],acked=C_q[8:5];
   // ---------------- forward input: pulsed in_r, encoded seat E -------------
   // gr drives in_r (dual rail); grc are kept copies of the previous gr, one
@@ -88,7 +119,7 @@ function automatic [71:0] encode64(input [63:0] data);
   wire [PN*64-1:0] raw_in={{(PN*64-PW-1){1'b0}},1'b1,id_p};
   reg [71:0] Ew[0:PN-1];
   for(genvar w=0;w<PN;w=w+1)begin:seat
-   ot_hbm_w2_keep_reg #(.W(2)) u_c(.clk(clk_sm),.rst_n(rst_n),.d({in_v,gr}),.q({ivc[w],grc[w]}));
+   ot_hbm_w2_keep_reg #(.W(2)) u_c(.clk(clk_sm),.rst_n(rst_e),.d({in_v,gr}),.q({ivc[w],grc[w]}));
    always @(posedge clk_sm)if(ivc[w]&&grc[w])Ew[w]<=encode64(raw_in[w*64+:64]);
    assign E[w*72+:72]=Ew[w];
   end
@@ -105,7 +136,7 @@ function automatic [71:0] encode64(input [63:0] data);
   wire receipt_capacity=&A_in_r;
   assign P_in_v=E_v&&!cons[0]&&!cons[1]&&!quiesce&&!fault_any&&receipt_capacity;
   ot_hbm_w2_protected_cut_veto_on #(.W(PW),.PREENC(0),.DIST(1)) u_payload(
-   .clk(clk_sm),.por_n(rst_n),.in_v(P_in_v),.in_r(P_in_r),.in_d({PW{1'b0}}),.in_codes(E),
+   .clk(clk_sm),.por_n(rst_p),.in_v(P_in_v),.in_r(P_in_r),.in_d({PW{1'b0}}),.in_codes(E),
    .out_v(P_out_v),.out_r(P_out_r),.out_d(P_d),.empty(P_empty),.fault(P_fault));
   wire cv=P_out_v;
   // ---------------- learned transfers -----------------------------------
@@ -116,10 +147,10 @@ function automatic [71:0] encode64(input [63:0] data);
   wire [NO-1:0] frame_bad;
   wire ack_consume=C_normal&&cv&&active&&!P_fault;
   for(genvar t=0;t<NO;t=t+1)begin:receipts
-   assign frame_bad[t]=ackv_p[t]&&(ackf_p[t*73+:73]!=frame0);
-   assign A_in_v[t]=ackv_p[t]&&!fault_any&&!frame_bad[t];
+   assign frame_bad[t]=ackv_q[t]&&fne_q[t];
+   assign A_in_v[t]=ackv_q[t]&&!fault_any&&!frame_bad[t];
    ot_hbm_w2_protected_cut_veto_on #(.W(192),.PREENC(1),.DIST(0)) u_ack(
-    .clk(clk_sm),.por_n(rst_n),.in_v(A_in_v[t]),.in_r(A_in_r[t]),.in_d(acko_p[t*192+:192]),
+    .clk(clk_sm),.por_n(rsc[6+t]),.in_v(A_in_v[t]),.in_r(A_in_r[t]),.in_d(acko_q[t*192+:192]),
     .in_codes({4*72{1'b0}}),.out_v(A_out_v[t]),.out_r(ack_consume),.out_d(A_d[t*192+:192]),
     .empty(A_empty[t]),.fault(A_fault[t]));
   end
@@ -129,7 +160,7 @@ function automatic [71:0] encode64(input [63:0] data);
    if(!rst_n)begin seat_match<=0;arr_bad<=0;frame_bad_q<=0;end
    else for(integer t=0;t<NO;t=t+1)begin
     seat_match[t]<=A_d[t*192+:192]==owner0;
-    arr_bad[t]<=ackv_p[t]&&C_normal&&cv&&(acko_p[t*192+:192]!=owner0);
+    arr_bad[t]<=ackv_q[t]&&C_normal&&cv&&one_q[t];
     frame_bad_q[t]<=frame_bad[t];
    end
   reg ack_bad;reg [3:0] ns,na;
@@ -137,9 +168,9 @@ function automatic [71:0] encode64(input [63:0] data);
    ack_bad=0;ns=sent;na=acked;
    for(integer t=0;t<NO;t=t+1)begin
     if(learned[t]||pend[t])ns[t]=1;
-    if(ackv_p[t]&&!A_in_r[t])ack_bad=1;
+    if(ackv_q[t]&&!A_in_r[t])ack_bad=1;
     if(C_normal&&cv)begin
-     if(ackv_p[t]&&(!active||!sent_eff[t]||acked[t]))ack_bad=1;
+     if(ackv_q[t]&&(!active||!sent_eff[t]||acked[t]))ack_bad=1;
      if(A_out_v[t])begin
       if(!active||!sent_eff[t]||acked[t]||!seat_match[t])ack_bad=1;
       else na[t]=1;
@@ -158,17 +189,17 @@ function automatic [71:0] encode64(input [63:0] data);
   reg illegal_q;
   always @(posedge clk_sm or negedge rst_n)if(!rst_n)illegal_q<=0;else illegal_q<=illegal;
   ot_hbm_w2_protected_bank_veto_on #(.WORDS(1),.STAGE(1),.DIST(0)) u_permissions(
-   .clk(clk_sm),.por_n(rst_n),.load(C_load),.load_sel(1'b1),.fatal(illegal_q),
+   .clk(clk_sm),.por_n(rst_c),.load(C_load),.load_sel(1'b1),.fatal(illegal_q),
    .encoded_d(encode64(C_next)),.q(C_q),.normal(C_normal),.fault(C_fault),.repairing(C_rep));
   ot_hbm_w2_protected_bank_veto_on #(.WORDS(1),.STAGE(1),.DIST(0)) u_frame_guard(
-   .clk(clk_sm),.por_n(rst_n),.load(1'b0),.load_sel(1'b0),.fatal(|frame_bad_q),
+   .clk(clk_sm),.por_n(rst_g),.load(1'b0),.load_sel(1'b0),.fatal(|frame_bad_q),
    .encoded_d(72'b0),.q(),.normal(G_normal),.fault(G_fault),.repairing(G_rep));
   assign R_in_v=release_all&&!fault_any;
   wire rv,rv_d,rel_pend,rel_learned;wire rv_bad,rp_bad;
   assign rel_learned=rv_d&&rr_p;
   assign R_out_r=rel_learned||rel_pend;
   ot_hbm_w2_protected_cut_veto_on #(.W(RW),.PREENC(1),.DIST(0)) u_receipt(
-   .clk(clk_sm),.por_n(rst_n),.in_v(R_in_v),.in_r(R_in_r),.in_d({frame0,owner0}),
+   .clk(clk_sm),.por_n(rst_r),.in_v(R_in_v),.in_r(R_in_r),.in_d({frame0,owner0}),
    .in_codes({5*72{1'b0}}),.out_v(R_out_v),.out_r(R_out_r),.out_d(R_d),
    .empty(R_empty),.fault(R_fault));
   // A learned release is recorded by R in the same edge when R is normal
@@ -199,10 +230,18 @@ function automatic [71:0] encode64(input [63:0] data);
   assign out_v=ov;assign in_r=gr;assign release_v=rv;
   assign release_owner=rel_q[191:0];assign release_frame=rel_q[264:192];
   // ---------------- fault / status ----------------------------------------
-  wire dr_bad=gr_bad||copy_bad||cons_bad||E_bad||pend_bad||rp_bad||ov_bad||rv_bad;
-  reg dr_bad_q;
-  always @(posedge clk_sm or negedge rst_n)if(!rst_n)dr_bad_q<=0;else if(dr_bad)dr_bad_q<=1;
-  assign fault_any=P_fault||(|A_fault)||C_fault||G_fault||R_fault||illegal_q||dr_bad_q;
+  reg [7:0] dr_term;reg dr_bad_q;
+  always @(posedge clk_sm or negedge rst_s)
+   if(!rst_s)begin dr_term<=0;dr_bad_q<=0;end
+   else begin
+    dr_term<={gr_bad,copy_bad,cons_bad,E_bad,pend_bad,rp_bad,ov_bad,rv_bad};
+    if(|dr_term)dr_bad_q<=1;
+   end
+  assign fault_now=P_fault||(|A_fault)||C_fault||G_fault||R_fault||illegal_q||dr_bad_q;
+  // Registered cross-bank veto (sticky like every fault source).
+  reg fault_x;
+  always @(posedge clk_sm or negedge rst_s)if(!rst_s)fault_x<=0;else if(fault_now)fault_x<=1;
+  assign fault_any=fault_x;
   wire native_empty=P_empty&&!E_v&&(&A_empty)&&C_normal&&!active&&!(|pend);
   wire drained_next=native_empty&&R_empty&&!rel_pend&&G_normal&&!fault_any;
   wire paused_next=C_rep||(!P_fault&&!P_empty&&!cv)||(!(|A_fault)&&(|(~A_empty&~A_out_v)))||
@@ -210,7 +249,7 @@ function automatic [71:0] encode64(input [63:0] data);
   reg fault_q,drained_q,paused_q;
   always @(posedge clk_sm or negedge rst_n)
    if(!rst_n)begin fault_q<=0;drained_q<=0;paused_q<=0;end
-   else begin fault_q<=fault_any;drained_q<=drained_next;paused_q<=paused_next;end
+   else begin fault_q<=fault_now||fault_x;drained_q<=drained_next;paused_q<=paused_next;end
   assign fault=fault_q;assign drained=drained_q;assign paused=paused_q;
  end endgenerate
 endmodule

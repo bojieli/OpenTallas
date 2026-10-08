@@ -13,10 +13,16 @@ Contract (decided for die integration):
     station hop); each block keeps INT ps for its own pin<->flop wire, clk->Q
     budgeted CLKQ. Input max = L+SKEW+CLKQ+INT+WIRE; output max =
     WIRE+INT+SETUP+SKEW-L (external capture up to SKEW early).
-  * Hold: the whole SKEW (150 ps, not scaled to FF) is budgeted on the
-    receiving side only (input min = Lff_min-SKEW+CLKQ_MIN); output min
-    asks nothing beyond the block's own launch (output min = -Lff_min), so
-    the skew is never double counted.
+  * Hold: HOLD_SKEW (50 ps hold IO uncertainty, owner clarification
+    2026-10-06: hold is closed by hold repair under FF-corner constraints,
+    FF insertion + 50 ps) is budgeted on the receiving side only (input min
+    = Lff_min-HOLD_SKEW+CLKQ_MIN); output min asks nothing beyond the
+    block's own launch (output min = -Lff_min), so it is never double counted.
+  * IO_REF_PERIOD: the IO budgets are a die contract at the sign-off period.
+    When the block is routed over-constrained (770 ps) the input/output
+    delays are shifted by (period - IO_REF_PERIOD) so the pin windows equal
+    the sign-off windows; only reg2reg is over-constrained. Hold-repair
+    buffers on the input pins then see the true setup window.
 """
 import argparse
 from pathlib import Path
@@ -27,6 +33,8 @@ p.add_argument('--l-max', type=float, required=True, help='SS clk_sm insertion, 
 p.add_argument('--l-min', type=float, required=True, help='SS clk_sm insertion, earliest flop (setup: output side)')
 p.add_argument('--l-ff-min', type=float, required=True, help='FF clk_sm insertion, earliest flop (hold side)')
 p.add_argument('--skew-ps', type=float, default=150.0)
+p.add_argument('--hold-skew-ps', type=float, default=50.0)
+p.add_argument('--io-ref-period-ps', type=float, default=None, help='sign-off period the IO windows refer to (default: --period-ps)')
 p.add_argument('--wire-ps', type=float, default=200.0)
 p.add_argument('--int-ps', type=float, default=60.0)
 p.add_argument('--clkq-ps', type=float, default=100.0)
@@ -37,13 +45,14 @@ a = p.parse_args()
 # Each budget takes the insertion that is pessimistic for it: inputs are
 # captured by our latest flop at SS (setup) and earliest flop at FF (hold);
 # outputs are captured externally up to SKEW before our earliest SS flop.
-in_max = a.l_max + a.skew_ps + a.clkq_ps + a.int_ps + a.wire_ps
-in_min = a.l_ff_min - a.skew_ps + a.clkq_min_ps
-out_max = a.wire_ps + a.int_ps + a.setup_ps + a.skew_ps - a.l_min
+shift = a.period_ps - (a.io_ref_period_ps if a.io_ref_period_ps else a.period_ps)
+in_max = a.l_max + a.skew_ps + a.clkq_ps + a.int_ps + a.wire_ps + shift
+in_min = a.l_ff_min - a.hold_skew_ps + a.clkq_min_ps
+out_max = a.wire_ps + a.int_ps + a.setup_ps + a.skew_ps - a.l_min + shift
 out_min = -(a.l_ff_min - 60.0)  # launch-only promise; 60 ps below our earliest FF flop
 L = a.l_max
 lines = [
-    f'# W2 rb station receiver clock-root contract: period {a.period_ps} ps, L SS {a.l_min}..{a.l_max} FFmin {a.l_ff_min} ps, skew +-{a.skew_ps} ps (setup and hold)',
+    f'# W2 rb station receiver clock-root contract: period {a.period_ps} ps, L SS {a.l_min}..{a.l_max} FFmin {a.l_ff_min} ps, setup skew {a.skew_ps} ps, hold skew {a.hold_skew_ps} ps, IO windows at {a.io_ref_period_ps or a.period_ps} ps',
     f'create_clock -name clk_sm -period {a.period_ps:.3f} [get_ports clk_sm]',
     'set prev [get_ports clk_sm]', 'set master clk_sm',
     'for {set i 0} {$i<4} {incr i} {',

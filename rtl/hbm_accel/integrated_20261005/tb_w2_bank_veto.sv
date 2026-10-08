@@ -14,6 +14,9 @@ module tb_w2_bank_veto(input wire clk,output reg done=0);
 `ifndef VETO_DIST
  `define VETO_DIST 1
 `endif
+`ifndef VETO_RED
+ `define VETO_RED 1
+`endif
  localparam integer FAULT_EDGES=6,REPAIR_EDGES=40;
  reg por_n=0,load=0,load_sel=0;
  reg [37*64-1:0] d=0,expected=0;reg [37*72-1:0] enc=0;
@@ -21,7 +24,7 @@ module tb_w2_bank_veto(input wire clk,output reg done=0);
  integer edge_count=0,checks=0,start_edge,k,normal_edges=0;
  reg armed=0;
  always @(posedge clk)edge_count<=edge_count+1;
- ot_hbm_w2_protected_bank_veto_on #(.WORDS(37),.STAGE(`VETO_STAGE),.DIST(`VETO_DIST)) dut(
+ ot_hbm_w2_protected_bank_veto_on #(.WORDS(37),.STAGE(`VETO_STAGE),.DIST(`VETO_DIST),.RED(`VETO_RED)) dut(
   .clk(clk),.por_n(por_n),.load(load),.load_sel(load_sel),.fatal(1'b0),.encoded_d(enc),
   .q(q),.normal(normal),.fault(fault),.repairing(repairing));
  // Registered-veto invariant: a permission is a verdict about exactly the
@@ -107,8 +110,8 @@ module tb_w2_bank_veto(input wire clk,output reg done=0);
   dut.word[3].u_cp.q[0]=~dut.word[3].u_cp.q[0];
   wait_fault("commit-select copy corruption permitted");
   if(normal_edges<20)$fatal(1,"monitor saw too few normal edges");
-  $display("PASS_W2_VETO words=37 stage=%0d dist=%0d checks=%0d normal_edges_monitored=%0d current_owner34bit62=1 protected_snapshot=1 protected_status=1 parallel_CE=1 DUE_refusal=1 changed_repair_identity=1 copy_check=1",
-   `VETO_STAGE,`VETO_DIST,checks,normal_edges);
+  $display("PASS_W2_VETO words=37 stage=%0d dist=%0d red=%0d checks=%0d normal_edges_monitored=%0d current_owner34bit62=1 protected_snapshot=1 protected_status=1 parallel_CE=1 DUE_refusal=1 changed_repair_identity=1 copy_check=1",
+   `VETO_STAGE,`VETO_DIST,`VETO_RED,checks,normal_edges);
   done=1;
  end
 endmodule

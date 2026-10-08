@@ -22,9 +22,9 @@ p.add_argument('--core-width', type=float, required=True)
 p.add_argument('--core-height', type=float, required=True)
 p.add_argument('--place-density', type=float, default=0.50)
 p.add_argument('--period-ps', type=float, default=770.0)
-p.add_argument('--l-max', type=float, default=500.0)
+p.add_argument('--l-max', type=float, default=510.0)
 p.add_argument('--l-min', type=float, default=440.0)
-p.add_argument('--l-ff-min', type=float, default=250.0)
+p.add_argument('--l-ff-min', type=float, default=280.0)
 p.add_argument('--min-ff', type=int, default=20000)
 p.add_argument('--threads', type=int, default=16)
 p.add_argument('--tag', default='tk_W2_rb')
@@ -78,6 +78,7 @@ driver.parse_stat = station_stat
 sdc = run/'station.sdc'
 subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', str(a.period_ps),
                 '--l-max', str(a.l_max), '--l-min', str(a.l_min), '--l-ff-min', str(a.l_ff_min),
+                '--io-ref-period-ps', '833.333',
                 '--out', str(sdc)], check=True)
 native_synth = driver.run_synthesis
 
