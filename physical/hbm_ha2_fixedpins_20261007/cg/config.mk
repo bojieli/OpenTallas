@@ -31,8 +31,8 @@ export DESIGN_NICKNAME = ha2_owner_banked_h2_fixedpins_cg
 export PRE_IO_PLACEMENT_TCL = /src/physical/hbm_ha2_fixedpins_20261007/pins.tcl
 export POST_IO_PLACEMENT_TCL = /src/physical/hbm_ha2_fixedpins_20261007/check_pins.tcl
 # drive-1443 (2026-10-08): half-rate gater fix -- cg_pushdown clones u_icg per sink cluster, gclk re-generated on every
-# clone, clk stopped at en_l (cg_gclk_pre_cts.tcl); route SDC route_h2_cg.sdc = route_h2.sdc + rule H1 input min + the
-# same gclk/sense block as make_sdc.py --half.
+# clone, clk stopped at en_l (cg_gclk_pre_cts.tcl); route SDC route_h2_cg.sdc = make_sdc.py --half --h1 at 730 ps with the
+# TT / FF insertion measured on the ca0d6a5a2-tt route (TT setup repair, BC/FF hold repair see their own IO reference).
 export PRE_CTS_TCL = /src/physical/hbm_ha2_fixedpins_20261007/cg_gclk_pre_cts.tcl
 export OT_CG_K ?= 48
 export OT_CG_MIN ?= 64
