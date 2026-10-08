@@ -56,3 +56,38 @@ def source_cost(floorplan, *, measured_added_drain_cycles, measured_added_done_c
         bench_scope='one complete NC8/RMAX4096 element, seeded BF16 K1004 R3; finite request/ACK/barrier debt',
         accelerator_hardware_changed=False,
         headline_clock_or_rate_credit=False)
+
+
+def boundary_relocation_cost(floorplan, *, measured_added_done_cycles):
+    """Prospective placement-only delta; clock/route admission remains open.
+
+    Reuses all original ports, storage and cells. Zero incremental sequential
+    latency is a source fact, not a zero cost assigned to an unknown service.
+    """
+    model = source_cost(floorplan, measured_added_drain_cycles=12,
+                        measured_added_done_cycles=measured_added_done_cycles)
+    model['placement_candidate'] = dict(
+        hook='physical/hbm_accel_sm_views/sm_v_boundary_regions_r3.tcl',
+        enrolment='opt-in POST_PDN; exact NC8/PIO2/202-macro instance census',
+        existing_flops=dict(response_capture=1099, result_launch=270,
+                            bulkcopy_count_and_credit=8),
+        added_flops=0, added_memory_bits=0, changed_port_bits=0,
+        added_sequential_cycles=0, incremental_cell_area_mm2=0,
+        fences='actual macro-free south/east corridors and ring-group gap',
+        storage_and_ports='unchanged complete source_cost above; no receiver or RF ACK bypass',
+        clock_load='existing 224842 register sinks plus 202 macro sinks; unchanged',
+        macro_clock_latency='retained leaf SS/FF liberty arcs; no clock insertion suppression',
+        setup_external_ps=473, output_external_ps=323,
+        setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+        observed_cts=dict(rv_setup_slack_ps=-4002.18,
+                          rv_launch_clock_arrival_ps=3674.45,
+                          rv_total_arrival_ps=4452.18,
+                          rsp_data_1039_hold_slack_ps=-3598.67,
+                          bulkcopy_internal_setup_slack_ps=-2455.22),
+        predicted_routed_slack_ps=None, new_clock_supply_admitted=False,
+        composed_latency_gain=None, route_admitted=False,
+        blockers=['preserve live sm_r2 through terminal',
+                  'source-bound clock-tree correction and complete load/routing price',
+                  'actual contextual receiver/RF physical placement remains unjoined'],
+        expected_effect='shorter existing boundary/count wires; no assumed clock or rate gain')
+    return model
