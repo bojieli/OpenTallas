@@ -36,6 +36,9 @@ REMOTE = "/srv/opentallas-scratch/claude/exactness"
 ARCHIVE = ["rtl", "tools", "physical/asap7_memory_macros", "physical/hbm_accel_macros",
            "compiler/models/qwen3-reduced-v1", "compiler/models/deepseek-v4.1-flash-reduced-v2",
            ":(glob)results/abi3/*reference_oracle*", "AGENTS.md"]
+# bench-tool fixes overlaid on every staged commit (tool code only): the tile ROM accessor regex that a76724a9c's
+# BAW generate scope broke on main
+TOOL_OVERLAY = ["tools/qwen_rom_rt_rm_access.py"]
 BUILD_MODELS = REPO / "build/models"          # reduced-vehicle checkpoints (untracked, 43 MB)
 STREAM_LOG = {"qwen_rom": "qwen-blocks.log", "hbm_qwen": "hbm-blocks.log", "hbm_ds": "hbm-blocks.log",
               "ds_v41": "s81-blocks.log"}
@@ -106,8 +109,10 @@ def stage(commit, host):
     if subprocess.run(["git", "cat-file", "-e", f"{commit}:tools/exactness/bench.py"], cwd=REPO,
                       capture_output=True).returncode:
         overlay = True
-    # The harness itself always comes from this checkout so every commit is measured the same way.
-    tar = subprocess.Popen(["tar", "-c", "-C", str(HERE.parent.parent), "tools/exactness"], stdout=subprocess.PIPE)
+    # The harness itself always comes from this checkout so every commit is measured the same way, plus the bench
+    # TOOL fixes it depends on (backward-compatible; never RTL), recorded in HARNESS_OVERLAY.
+    tar = subprocess.Popen(["tar", "-c", "-C", str(HERE.parent.parent), "tools/exactness", *TOOL_OVERLAY],
+                           stdout=subprocess.PIPE)
     subprocess.run(["ssh", host, f"tar -x -C {tmp}"], stdin=tar.stdout, check=True)
     fix = f"{REMOTE}/fixtures/build"
     if ssh(host, f"test -d {fix}/models && echo yes", check=False).strip() != "yes":
