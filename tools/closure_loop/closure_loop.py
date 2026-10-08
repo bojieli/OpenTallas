@@ -984,6 +984,23 @@ def prepared_source_archive(source, commit):
         yield archive, receipt
 
 
+# Directories a stage cmd names (OT_CTS_FIX_HOOKS=physical/common_flow/...) that a narrow source.paths list omits:
+# the hooks are read from {SRC}, so a spec with paths [tools, rtl, physical/<view>] failed calibrate with
+# "OT_CTS_FIX_HOOKS: no such file .../cg_pushdown.tcl" (flow-triage 2026-10-08).
+IMPLIED_SRC_DIRS = ["physical/common_flow"]
+
+
+def implied_src_paths(spec, paths, commit):
+    stages = json.dumps(spec.get("stages", {}))
+    out = []
+    for d in IMPLIED_SRC_DIRS:
+        if d not in stages or any(d == p or d.startswith(p.rstrip("/") + "/") for p in paths):
+            continue
+        if sh(["git", "-C", str(REPO), "cat-file", "-e", f"{commit}:{d}"], timeout=60).returncode == 0:
+            out.append(d)
+    return out
+
+
 def sync_source(j):
     require_checkpoint_location(j)
     j["source_synced"] = False
@@ -1000,6 +1017,7 @@ def sync_source(j):
         raise ValueError(f"source commit {full[:12]} is not on origin/{src['branch']}")
     j["commit_full"] = full
     paths = list(src.get("paths", DEFAULT_SRC_PATHS)) + list(src.get("extra_paths", []))
+    paths += implied_src_paths(spec, paths, full)
     run = j["run"]
     with prepared_source_archive(src, full) as (verified_tar, archive_receipt):
         ssh(host, f"set -e; mkdir -p {run}/src {run}/cl; test ! -e {run}/src/SOURCE_COMMIT || "
