@@ -96,6 +96,11 @@ for f in ("physical/dsrom_window_columns/m6/route_col.sh", "physical/dsrom_windo
     ]
 IHK = "([info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0)"
 AUDIT = [(f, a, b.replace("IHK", IHK)) for f, a, b in AUDIT]
+# H1_SDC_ONLY=1 (live snapshots, h1-verify): never rewrite a script a running stage may be executing (bash reads its script
+# incrementally); only the timing-constraint files the remaining stages read.
+import os
+if os.environ.get("H1_SDC_ONLY") == "1":
+    AUDIT = [x for x in AUDIT if x[0].endswith((".sdc", ".tcl"))]
 for f, a, b in AUDIT:
     q = R / f
     if q.is_file():
