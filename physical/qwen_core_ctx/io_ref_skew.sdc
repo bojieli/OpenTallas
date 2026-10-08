@@ -33,15 +33,3 @@ set_input_delay [expr 166.6 + $qcc_lmax + $ot_sk] -max -clock core_clk [all_inpu
 set_input_delay [expr 0 + $qcc_lmin - $ot_hk] -min -clock core_clk [all_inputs -no_clocks]
 set_output_delay [expr 166.6 - $qcc_lmax + $ot_sk] -max -clock core_clk $qcc_outs
 set_output_delay [expr 0 - $qcc_lmin - $ot_hk] -min -clock core_clk $qcc_outs
-# inter-region ports (coordinator decision 2026-10-06: 150 ps on ports that cross a die wire to a DIFFERENT clock region;
-# intra-region ports keep OT_IO_SKEW = 90): OT_IO_INTER = comma-separated port globs, OT_IO_SKEW_INTER (default 150)
-if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
-  set ot_ski [expr {[info exists ::env(OT_IO_SKEW_INTER)] ? $::env(OT_IO_SKEW_INTER) : 150}]
-  set ot_ii {}; set ot_io {}
-  foreach g [split $::env(OT_IO_INTER) ","] {
-    foreach p [get_ports -quiet $g] { if {[get_property $p direction] eq "input"} { lappend ot_ii $p } else { lappend ot_io $p } }
-  }
-  if {[llength $ot_ii]} { set_input_delay [expr 166.6 + $qcc_lmax + $ot_ski] -max -clock core_clk $ot_ii }
-  if {[llength $ot_io]} { set_output_delay [expr 166.6 - $qcc_lmax + $ot_ski] -max -clock core_clk $ot_io }
-  puts "OT_IO_INTER [llength $ot_ii] inputs [llength $ot_io] outputs at $ot_ski ps"
-}

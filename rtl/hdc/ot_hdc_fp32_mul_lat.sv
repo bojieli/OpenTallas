@@ -10,7 +10,6 @@
 //   S3  select, subnormal shift, sticky/round bits        | C3 (LAT >= 4)
 //       round increment (prefix add)                      | C4 (LAT >= 7)
 //       encode                                            | C6 (LAT >= 9; margin rule 2026-10-06)
-//   C7 (LAT >= 10; margin m3 2026-10-06) sits in front of S1: field / zero / non-finite decode | LZC, power
 //       refusals -> y
 // Every prefix adder is ot_hdc_ksadd_k (rtl/hdc/ot_hdc_prefix.sv, (* keep *) levels).
 // Uses ot_hdc_w11_cut (rtl/hdc/ot_hdc_fp32_add_lat.sv).
@@ -20,11 +19,7 @@ module ot_hdc_fp32_mul_lat #(
     // CUTS >= 0 picks the extra cuts explicitly, bit k-1 = C<k> (LAT must be 3 + their count); -1: by LAT as above.
     // W11 serial domain: CUTS = 4'b0101 (C1 + C3, LAT 5) cuts the INPUT side, so an operand multiplexer in front
     // of the unit shares stage 1 with the decode / normalise instead of the partial-product rows
-    parameter integer CUTS = -1,
-    // KCP > 1 (margin m3, 2026-10-06): the C1 operand register is KCP kept copies (ot_hdc_mul_kcp48), each driving
-    // 24/KCP partial products, so the 24-load operand broadcast to the partial-product rows is a local net.  Values
-    // identical (every copy captures the same a_n / b_n); no added cycle.  Needs CUT1.
-    parameter integer KCP = 1
+    parameter integer CUTS = -1
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -41,8 +36,7 @@ module ot_hdc_fp32_mul_lat #(
     localparam integer CUT4 = (CUTS >= 0) ? (CUTS / 8) % 2 : (LAT >= 7) ? 1 : 0;
     localparam integer CUT5 = (CUTS >= 0) ? (CUTS / 16) % 2 : (LAT >= 8) ? 1 : 0;
     localparam integer CUT6 = (CUTS >= 0) ? (CUTS / 32) % 2 : (LAT >= 9) ? 1 : 0;
-    localparam integer CUT7 = (CUTS >= 0) ? (CUTS / 64) % 2 : (LAT >= 10) ? 1 : 0;
-    generate if (CUTS >= 0 && CUT1 + CUT2 + CUT3 + CUT4 + CUT5 + CUT6 + CUT7 + 3 != LAT) begin : g_bad_cuts
+    generate if (CUTS >= 0 && CUT1 + CUT2 + CUT3 + CUT4 + CUT5 + CUT6 + 3 != LAT) begin : g_bad_cuts
         ot_hdc_fp32_mul_lat_CUTS_must_match_LAT u_trap ();
     end endgenerate
     localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
@@ -55,30 +49,24 @@ module ot_hdc_fp32_mul_lat #(
     endfunction
 
     // ---- S1a: decode, normalise --------------------------------------------------------------------
-    // C7: field / zero / non-finite decode | LZC, power
-    wire [68:0] c7;
-    ot_hdc_w11_cut #(.W(69), .CUT(CUT7)) u_c7 (.clk(clk), .rst_n(rst_n),
-        .d({valid_in, a, b, (a[30:23] == 8'd0), (b[30:23] == 8'd0),
-            (a[30:23] == 8'hff) || (b[30:23] == 8'hff), (a[30:0] == 31'd0) || (b[30:0] == 31'd0)}), .q(c7));
-    wire        x_v, x_afz, x_bfz, nonfinite, zero;
-    wire [31:0] x_a, x_b;
-    assign {x_v, x_a, x_b, x_afz, x_bfz, nonfinite, zero} = c7;
-    wire [7:0]  a_field = x_a[30:23];
-    wire [7:0]  b_field = x_b[30:23];
-    wire [23:0] a_raw = {!x_afz, x_a[22:0]};
-    wire [23:0] b_raw = {!x_bfz, x_b[22:0]};
+    wire [7:0]  a_field = a[30:23];
+    wire [7:0]  b_field = b[30:23];
+    wire [23:0] a_raw = {(a_field != 8'd0), a[22:0]};
+    wire [23:0] b_raw = {(b_field != 8'd0), b[22:0]};
+    wire nonfinite = (a_field == 8'hff) || (b_field == 8'hff);
+    wire zero = (a[30:0] == 31'd0) || (b[30:0] == 31'd0);
     wire [5:0] a_lz, b_lz;
     ot_hdc_lzc32 u_la (.x({a_raw, 8'hff}), .n(a_lz));
     ot_hdc_lzc32 u_lb (.x({b_raw, 8'hff}), .n(b_lz));
-    wire signed [11:0] a_power = x_afz ? (-12'sd149 - {7'd0, a_lz[4:0]})
+    wire signed [11:0] a_power = (a_field == 8'd0) ? (-12'sd149 - {7'd0, a_lz[4:0]})
                                                    : ($signed({4'd0, a_field}) - 12'sd150);
-    wire signed [11:0] b_power = x_bfz ? (-12'sd149 - {7'd0, b_lz[4:0]})
+    wire signed [11:0] b_power = (b_field == 8'd0) ? (-12'sd149 - {7'd0, b_lz[4:0]})
                                                    : ($signed({4'd0, b_field}) - 12'sd150);
     // C5: decode / LZC | normalise shift
     localparam integer W5 = 1 + 1 + 2 + 1 + 24 + 24 + 5 + 5 + 12 + 12;
     wire [W5-1:0] c5;
     ot_hdc_w11_cut #(.W(W5), .CUT(CUT5)) u_c5 (.clk(clk), .rst_n(rst_n),
-        .d({x_v, nonfinite || zero, (nonfinite ? E_NONFINITE : E_NONE), x_a[31] ^ x_b[31], a_raw, b_raw, a_lz[4:0],
+        .d({valid_in, nonfinite || zero, (nonfinite ? E_NONFINITE : E_NONE), a[31] ^ b[31], a_raw, b_raw, a_lz[4:0],
             b_lz[4:0], a_power, b_power}), .q(c5));
     wire        n_v, n_bz, n_sign;
     wire [1:0]  n_err;
@@ -103,21 +91,7 @@ module ot_hdc_fp32_mul_lat #(
     wire power_c;
     ot_hdc_ksadd_k #(.W(12)) u_pw (.a(p_ap), .b(p_bp), .cin(1'b0), .s(power), .cout(power_c));
     wire [48*8-1:0] rows;
-    generate if (KCP > 1 && CUT1 != 0) begin : g_kcp
-        wire [KCP*24-1:0] ka, kb;
-        genvar k;
-        for (k = 0; k < KCP; k = k + 1) begin : g_c
-            ot_hdc_mul_kcp48 u_k (.clk(clk), .rst_n(rst_n),
-`ifdef NEGK
-                .d({a_n ^ ((k == 1) ? 24'd1 : 24'd0), b_n}),   // bench negative control only
-`else
-                .d({a_n, b_n}),
-`endif .q({ka[24*k +: 24], kb[24*k +: 24]}));
-        end
-        ot_hdc_mul24_rows_k #(.K(KCP)) u_rows (.a(ka), .b(kb), .rows(rows));
-    end else begin : g_nokcp
-        ot_hdc_mul24_rows u_rows (.a(p_a), .b(p_b), .rows(rows));
-    end endgenerate
+    ot_hdc_mul24_rows u_rows (.a(p_a), .b(p_b), .rows(rows));
 
     reg        s1_v, s1_byp, s1_sign;
     reg [1:0]  s1_err;
@@ -284,44 +258,4 @@ endmodule
 module ot_hdc_fp32_mul_lat5i (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
                               output wire [1:0] err, output wire valid_out);
     ot_hdc_fp32_mul_lat #(.LAT(5), .CUTS(5)) u (.*);
-endmodule
-
-// KCP copy of the C1 operand register: kept (SYNTH_KEEP_MODULES) so equal-D copies are never merged into one driver
-module ot_hdc_mul_kcp48 (input wire clk, input wire rst_n, input wire [47:0] d, output reg [47:0] q);
-    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 48'd0; else q <= d;
-endmodule
-
-// ot_hdc_mul24_rows with the operands supplied as K copies: partial product i reads copy i*K/24 (identical values)
-module ot_hdc_mul24_rows_k #(parameter integer K = 2) (
-    input  wire [K*24-1:0] a,
-    input  wire [K*24-1:0] b,
-    output wire [48*8-1:0] rows
-);
-    function automatic [95:0] csa;
-        input [47:0] r0, r1, r2;
-        begin
-            csa[47:0] = r0 ^ r1 ^ r2;
-            csa[95:48] = ((r0 & r1) | (r0 & r2) | (r1 & r2)) << 1;
-        end
-    endfunction
-    wire [48*24-1:0] l0;
-    wire [48*16-1:0] l1;
-    wire [48*11-1:0] l2;
-    genvar i;
-    generate
-        for (i = 0; i < 24; i = i + 1) begin : g_pp
-            assign l0[48*i +: 48] = {24'd0, a[24*(i*K/24) +: 24] & {24{b[24*(i*K/24) + i]}}} << i;
-        end
-        for (i = 0; i < 8; i = i + 1) begin : g_l1
-            assign l1[96*i +: 96] = csa(l0[144*i +: 48], l0[144*i + 48 +: 48], l0[144*i + 96 +: 48]);
-        end
-        for (i = 0; i < 5; i = i + 1) begin : g_l2
-            assign l2[96*i +: 96] = csa(l1[144*i +: 48], l1[144*i + 48 +: 48], l1[144*i + 96 +: 48]);
-        end
-        assign l2[480 +: 48] = l1[720 +: 48];
-        for (i = 0; i < 3; i = i + 1) begin : g_l3
-            assign rows[96*i +: 96] = csa(l2[144*i +: 48], l2[144*i + 48 +: 48], l2[144*i + 96 +: 48]);
-        end
-        assign rows[288 +: 96] = l2[432 +: 96];
-    endgenerate
 endmodule

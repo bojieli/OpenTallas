@@ -81,10 +81,7 @@ module ot_qwen_slab_port_group #(
     //   OREG 1 (owner margin rule 2026-10-06): every result / argmax output leaves through one more register, a kept
     //               per-bit module (ot_qwen_slab_pg_oreg1, SYNTH_KEEP_MODULES) the placer puts at the output pin.
     //               +1 cycle per ME op on the result path (values unchanged).
-    parameter integer OREG = 0,
-    //   MUL_KCP > 1 (margin m3 2026-10-06): the multiplier's C1 operand register as MUL_KCP kept copies (ot_hdc_fp32_mul_lat
-    //               KCP), so the partial-product broadcast is local.  No cycle; values unchanged.
-    parameter integer MUL_KCP = 1
+    parameter integer OREG = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -322,7 +319,7 @@ module ot_qwen_slab_port_group #(
             end else begin : g_noin
                 assign i_v = l_v; assign i_a = res_q[32*si +: 32]; assign i_b = l_ws ? 16'h3F80 : m6[16*si +: 16];
             end
-            ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT), .KCP(MUL_KCP)) u_mul (.clk(clk), .rst_n(rsm),
+            ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rsm),
                 .valid_in(i_v),
                 .a(i_a), .b({i_b, 16'd0}),
                 .y(scaled[32*si +: 32]), .err(err), .valid_out(vo));
