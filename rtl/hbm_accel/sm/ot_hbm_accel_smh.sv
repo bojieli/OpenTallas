@@ -321,6 +321,25 @@ module ot_hbm_accel_smh_kreg #(
     end endgenerate
 endmodule
 
+// ot_hbm_accel_smh_kreg with its flops kept (a deliberate duplicate copy that synthesis must not merge)
+module ot_hbm_accel_smh_kregk #(
+    parameter integer W = 1,
+    parameter integer RST = 0
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    (* keep *) reg [W-1:0] r;
+    generate if (RST != 0) begin : g_r
+        always @(posedge clk or negedge rst_n) if (!rst_n) r <= {W{1'b0}}; else r <= d;
+    end else begin : g_n
+        always @(posedge clk) r <= d;
+    end endgenerate
+    assign q = r;
+endmodule
+
 // A 2-entry skid with a registered ready (s_ready = not full, from the count register) and a registered head
 // (m_data leaves a flop): one transfer a cycle, order and data unchanged, +1 cycle from s to m.
 module ot_hbm_accel_smh_skid #(
@@ -538,7 +557,10 @@ module ot_hbm_accel_smh_csnk #(
     parameter integer W = 8,
     parameter integer PK = 1,
     parameter integer PRK = 1,
-    parameter integer DEPTH = 9
+    parameter integer DEPTH = 9,
+    parameter integer FASTV = 0     // hbm-blocks 2026-10-07: 1 = m_valid (cnt != 0) and the two head-landing pointer
+                                    //    compares (wp == rp, wp == rp1) held in flops computed from the next state:
+                                    //    front_s m3f u_rch.cnt -> head +7.36 ps / 9 levels; same behaviour, 0 cycles
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -560,11 +582,25 @@ module ot_hbm_accel_smh_csnk #(
     reg  [CW-1:0] cnt;
     reg  [W-1:0]  head;
     wire          pop = m_valid && m_ready;
-    assign m_valid = (cnt != 0);
     assign m_data = head;
     wire [AW-1:0] wp1 = (wp == DEPTH - 1) ? {AW{1'b0}} : wp + 1'b1;
     wire [AW-1:0] rp2 = (rp1 == DEPTH - 1) ? {AW{1'b0}} : rp1 + 1'b1;
-    wire          land_head = f_v && (pop ? (wp == rp1) : (wp == rp));
+    wire          land_head;
+    generate if (FASTV != 0) begin : g_fv
+        reg mv, e0, e1;
+        wire [CW-1:0] cnt_n = cnt + f_v - pop;
+        wire [AW-1:0] wp_n  = f_v ? wp1 : wp;
+        wire [AW-1:0] rp_n  = pop ? rp1 : rp;
+        wire [AW-1:0] rp1_n = pop ? rp2 : rp1;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin mv <= 1'b0; e0 <= 1'b1; e1 <= (DEPTH == 1); end
+            else begin mv <= (cnt_n != 0); e0 <= (wp_n == rp_n); e1 <= (wp_n == rp1_n); end
+        assign m_valid = mv;
+        assign land_head = f_v && (pop ? e1 : e0);
+    end else begin : g_sv
+        assign m_valid = (cnt != 0);
+        assign land_head = f_v && (pop ? (wp == rp1) : (wp == rp));
+    end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin wp <= 0; rp <= 0; rp1 <= (DEPTH == 1) ? {AW{1'b0}} : 1; cnt <= 0; end
         else begin
@@ -874,14 +910,18 @@ module ot_hbm_accel_smh_front_n #(
     end endgenerate
     assign bout_l0 = o_b[0 +: BBW];
     assign bout_r0 = o_b[BBW +: BBW];
-    // row 0's bundle: landed at the south face (one copy), then the O register per side at its pins
-    wire [RBW-1:0] r0l;
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl (.clk(clk), .rst_n(rst_n),
-        .d(fi_row0), .q(r0l));
+    // row 0's bundle: landed in one copy PER SIDE (hbm-blocks 2026-10-07: m3f u_rl -> u_ol -108.56 ps / 5 levels, one
+    // south-face copy feeding both edge registers; each copy now sits between the face and its side, 0 cycles), then
+    // the O register per side at its pins
+    wire [RBW-1:0] r0l_l, r0l_r;
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rl (.clk(clk), .rst_n(rst_n),
+        .d(fi_row0), .q(r0l_l));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rr (.clk(clk), .rst_n(rst_n),
+        .d(fi_row0), .q(r0l_r));
     ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_ol (.clk(clk), .rst_n(rst_n),
-        .d(r0l), .q(rout_l0));
+        .d(r0l_l), .q(rout_l0));
     ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_or (.clk(clk), .rst_n(rst_n),
-        .d(r0l), .q(rout_r0));
+        .d(r0l_r), .q(rout_r0));
 endmodule
 
 module ot_hbm_accel_smh_front_c #(
@@ -1275,7 +1315,7 @@ module ot_hbm_accel_smh_front_s #(
         .s_valid(d_valid), .s_ready(d_ready), .s_data({d_base, d_lines}), .o_v(fd_v), .o_d(fd_d), .i_ret(fd_ret));
     // request channel sink (landing at the north face) and m2's registered skid beside the pins
     wire o_req_v, o_req_ready; wire [41:0] o_req_d;
-    ot_hbm_accel_smh_csnk #(.W(42), .PK(1), .PRK(PIH - 1), .DEPTH(CHD)) u_rch (.clk(clk), .rst_n(rst_n),
+    ot_hbm_accel_smh_csnk #(.W(42), .PK(1), .PRK(PIH - 1), .DEPTH(CHD), .FASTV(1)) u_rch (.clk(clk), .rst_n(rst_n),
         .i_v(fq_v), .i_d(fq_d), .o_ret(fq_ret), .m_valid(o_req_v), .m_ready(o_req_ready), .m_data(o_req_d));
     generate if (REQCR != 0) begin : g_rc
         ot_hbm_accel_smh_reqrl #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
@@ -1340,19 +1380,27 @@ module ot_hbm_accel_smh_bundle_reg #(
     parameter integer W = 8,
     parameter integer V = 4,        // bits below the NV top valids that are data (c's non-valid part, w ...)
     parameter integer NV = 2,
-    parameter integer X = 7         // x_ce sits at bit X (above the X-bit x address)
+    parameter integer X = 7,        // x_ce sits at bit X (above the X-bit x address)
+    parameter integer K = 0         // 1: kept flops (a deliberate duplicate of another bundle register)
 ) (
     input  wire         clk,
     input  wire         rst_n,
     input  wire [W-1:0] d,
     output wire [W-1:0] q
 );
+    generate if (K != 0) begin : g_k
+        ot_hbm_accel_smh_kregk #(.W(NV), .RST(1)) u_v (.clk(clk), .rst_n(rst_n), .d(d[W-1 -: NV]), .q(q[W-1 -: NV]));
+        ot_hbm_accel_smh_kregk #(.W(W-NV-X-1)) u_d (.clk(clk), .rst_n(rst_n), .d(d[W-NV-1:X+1]), .q(q[W-NV-1:X+1]));
+        ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_x (.clk(clk), .rst_n(rst_n), .d(d[X]), .q(q[X]));
+        ot_hbm_accel_smh_kregk #(.W(X)) u_a (.clk(clk), .rst_n(rst_n), .d(d[X-1:0]), .q(q[X-1:0]));
+    end else begin : g_p
     ot_hbm_accel_smh_kreg #(.W(NV), .RST(1)) u_v (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(d[W-1 -: NV]),
         .q(q[W-1 -: NV]));
     ot_hbm_accel_smh_kreg #(.W(W-NV-X-1)) u_d (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(d[W-NV-1:X+1]),
         .q(q[W-NV-1:X+1]));
     ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_x (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(d[X]), .q(q[X]));
     ot_hbm_accel_smh_kreg #(.W(X)) u_a (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(d[X-1:0]), .q(q[X-1:0]));
+    end endgenerate
 endmodule
 
 // ---------------------------------------------------------------------------
