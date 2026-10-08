@@ -1,0 +1,75 @@
+{
+  "schema": "dsrom.actual_system.visible_integration.v1",
+  "source_pin": "1bfb4b6e855b723c06f8885ee1de4de950158c5a",
+  "source_sha256": {
+    "rtl/test/dsrom_sys/tb_dsrom_system.sv": "947a723e0f217cad9646d5cd3f7a681d5383681e06b579fdb3393264efe1ccd0",
+    "rtl/chip/ot_chip_v41x_kv_prefetch.sv": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d",
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/dsrom_sys/c8/ot_dsrom_c8_write_journal.sv": "f7b96790f5423da0a4f97cfa8a679f6e384b49b656173f17bf3ddc3f8041b722"
+  },
+  "purpose": "Connect actual system writer completion and root identity; not historical transport token replay or selected ROM return qualification",
+  "default_off": true,
+  "stage_count_owner": "Claude final refit; S82 placeholder only; no stage count chosen here",
+  "units": {
+    "MACs_per_cycle": 0,
+    "new_memory_data_ports": 0,
+    "journal_ports_per_node": 128,
+    "journal_seats_per_PC": 64,
+    "physical_stacks_per_node": 4,
+    "per_stack_native_KV_completion_count_bits": 6,
+    "per_stack_pending_bound": 2048,
+    "pending_bits_per_stack": 12,
+    "native_write_bytes_per_cycle_per_node_max": 4096,
+    "KV_issuer_bytes_per_cycle_per_node_max": 128,
+    "native_visible_bits_per_cycle_per_node_max": 9856,
+    "source_ACK_count_max_per_stack_cycle": 32
+  },
+  "cost_per_node": {
+    "state_bits_conservative": 779255,
+    "FF_cell_floor_mm2": 0.22723075800000003,
+    "FF_50pct_reservation_mm2": 0.45446151600000007,
+    "journal_compare_replicas": 8192,
+    "match_key_bits": 45,
+    "match_mux_fanin": 64,
+    "new_native_receipt_metadata_tracks_lower_bound": 5760,
+    "new_internal_KV_ACK_count_tracks": 24,
+    "clock_and_reset_sinks_upper": 779255,
+    "slot_union_and_track_capacity_physical_bound": false
+  },
+  "finite_control": {
+    "native_backend_QD": 64,
+    "native_backend_reorder_window": 16,
+    "native_backend_MAXSKIP": 16,
+    "KV_writequeue_sectors_per_stack": 128,
+    "index_writer_record_FIFO": 4,
+    "read_release": "all accepted KV native completions counted, not boolean OR; pending must zero before prefetch/refetch",
+    "root_release": "actual core done armed after launch, native journals quiet, KV queue+receipt debt quiet, index bridge no staged writes, no fault/quarantine",
+    "identity": "latch {local_launch_epoch16,actual core cur_u zeroextended10,actual core_pos zeroextended21} on core_start; no offered/retire tuple injection",
+    "reset": "root active/pending native or queued writes quarantine; no reset-empty reconciliation"
+  },
+  "latency": {
+    "native_journal_registration_cycles": 1,
+    "root_retirement_registration_cycles": 1,
+    "token_contribution_formula": "sum over actual stage launches max(core_done_cycle,last_NATIVE_ACK+1,KV_staging_empty,index_bridge_empty)+1; preserve stage/link order; actual run supplies event maxima",
+    "KV_service_bound": "source backend refresh/row/scheduler and finite queue; no perfect service or fixed ACK timer",
+    "CLK_PS_retained_fixture": 1000,
+    "headline_1p2GHz_or_SSFF_claim": false
+  },
+  "admission": {
+    "implementation_component": true,
+    "isolated_control_correctness_check": true,
+    "selected_ROM_system_token": false,
+    "reason": "actual selected field/return READY/capacity and executable ownership/calendar still required; old HBM behavioral weight fixture must not be relabeled",
+    "physical": false
+  },
+  "applies_to_targets": {
+    "DS_ROM": "actual-root writer completion integration; selected ROM return remains required",
+    "DS_HBM": "native completion principle transferable only source-matched integration",
+    "Qwen_ROM": "not integrated; distinct owner",
+    "Qwen_HBM": "not integrated; distinct owner"
+  },
+  "ROM_ECC_added": false,
+  "mutable_protection_adopted": false,
+  "no_historical_gate_rerun": true
+}
