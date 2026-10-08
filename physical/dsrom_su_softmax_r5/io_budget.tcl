@@ -23,7 +23,9 @@ set ins {}
 foreach p [all_inputs -no_clocks] { if {[get_name $p] ne "rst_n"} { lappend ins $p } }
 # upstream launch: clock at L +- S, clk->q ~50 ps, wire 0..W
 set_input_delay -max [expr $L + $S + 50 + $W] -clock core_clk $ins
-set_input_delay -min [expr $L - $S + 50] -clock core_clk $ins
+# RULE H1 (h1-verify 2026-10-08): the die skew S is carried once, by the sender (output min below); the receiver
+# launches at L with no -S.  Hold clk->q is the FF minimum 20 ps (boundary_io.sdc), not the setup 50.
+set_input_delay -min [expr $L + 20] -clock core_clk $ins
 # downstream capture: clock at L +- S, setup ~30 ps / hold ~10 ps, wire 0..W
 set_output_delay -max [expr 30 + $W - ($L - $S)] -clock core_clk [all_outputs]
 set_output_delay -min [expr 10 - ($L + $S)] -clock core_clk [all_outputs]

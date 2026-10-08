@@ -30,7 +30,8 @@ set qcc_lmax [get_property $qcc_ref arrival_max_rise]
 set qcc_lmin [get_property $qcc_ref arrival_min_rise]
 puts "QCC reference pin [get_full_name $qcc_ref] clock arrival max $qcc_lmax min $qcc_lmin"
 set_input_delay [expr 166.6 + $qcc_lmax + $ot_sk] -max -clock core_clk [all_inputs -no_clocks]
-set_input_delay [expr 0 + $qcc_lmin - $ot_hk] -min -clock core_clk [all_inputs -no_clocks]
+set ot_hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]
+set_input_delay [expr 0 + $qcc_lmin - $ot_hki] -min -clock core_clk [all_inputs -no_clocks]
 set_output_delay [expr 166.6 - $qcc_lmax + $ot_sk] -max -clock core_clk $qcc_outs
 set_output_delay [expr 0 - $qcc_lmin - $ot_hk] -min -clock core_clk $qcc_outs
 # inter-region ports (coordinator decision 2026-10-06: 150 ps on ports that cross a die wire to a DIFFERENT clock region;

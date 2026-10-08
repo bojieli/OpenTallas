@@ -34,6 +34,6 @@ set bf_lmax [expr {$bf_amax / $bf_n}]; set bf_lmin [expr {$bf_amin / $bf_n}]
 puts "BF_IO boundary registers $bf_n insertion mean max $bf_lmax min $bf_lmin"
 set bf_ins [all_inputs -no_clocks]
 set_input_delay -max [expr {$bf_lmax + 250}] -clock core_clk $bf_ins
-set_input_delay -min [expr {$bf_lmin - 50}] -clock core_clk $bf_ins
+set_input_delay -min $bf_lmin -clock core_clk $bf_ins
 set_output_delay -max [expr {250 - $bf_lmax}] -clock core_clk [all_outputs]
 set_output_delay -min [expr {-($bf_lmin + 50)}] -clock core_clk [all_outputs]

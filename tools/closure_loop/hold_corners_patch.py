@@ -81,6 +81,13 @@ TC_CODE = r'''    # OPTION B (owner 2026-10-07 20:45): setup signs off at TT.  O
         print("OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)", file=sys.stderr)
 '''
 
+CAL_CODE = r'''    # UNSTICK (owner 2026-10-08): the closure loop's calibrate is CTS-only to MEASURE clock insertion: no CTS timing or
+    # hold repair (OT_CAL_CTS_ONLY=1 in the calibrate stage env; 40 calibrates sat 4-25 h in CTS hold repair).
+    if os.environ.get("OT_CAL_CTS_ONLY", "") == "1":
+        args.orfs_var = list(args.orfs_var or []) + ["SKIP_CTS_REPAIR_TIMING=1"]
+        print("OT_CAL_CTS_ONLY: calibrate run, SKIP_CTS_REPAIR_TIMING=1 (no CTS setup/hold repair)", file=sys.stderr)
+'''
+
 
 def patch(src):
     f = Path(src) / "tools/run_abi3_physical.py"
@@ -118,6 +125,9 @@ def patch(src):
         elif s.count(ANCHOR) == 1:
             s = s.replace(ANCHOR, ANCHOR + TC_CODE)
             msg.append("option-B TC override v2 added (WC reads TT)")
+    if "OT_CAL_CTS_ONLY" not in s and s.count(ANCHOR) == 1:
+        s = s.replace(ANCHOR, ANCHOR + CAL_CODE)
+        msg.append("calibrate CTS-only (no repair) added")
     # the flow container patch (inert unless the config exports OT_HOLD_MM=1)
     if "orfs_hold_mm.py /OpenROAD-flow-scripts" not in s:
         if s.count(DOCKER_ANCHOR) == 1:

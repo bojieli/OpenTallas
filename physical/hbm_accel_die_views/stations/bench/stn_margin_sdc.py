@@ -8,8 +8,9 @@ common/make_io_vclk_margin.sh / io_vclk_m_<L>.sdc adapted to the station clockin
   0.2 T + 150 ps budget (the 150 ps die clock-arrival allowance); forwarded-clock IO (f_* / o_*) is source-synchronous
   (the clock travels with its bus) and keeps the 0.2 T budget against its own clock.
 * hold: corner-true IO hold in one SDC (coordinator-approved 2026-10-06; common/make_io_vclk_ff.sh is the post-SDC
-  form): with the FF leaf insertion range Lmin..Lmax (4th/5th arguments, measured on a routed view), input -min delay
-  Lmax - L - 25 and output -min delay L - Lmin - 25 against vclk at L (with the 25 ps hold uncertainty: 50 ps), i.e. the neighbour's die-clock leaf lands in
+  form): with the FF leaf insertion range Lmin..Lmax (4th/5th arguments, measured on a routed view), RULE H1 (h1-verify
+  2026-10-08): output -min delay L - (Lmin + Lmax) / 2 - 25 (latest capture: the mean leaf + 50 ps with the 25 ps hold uncertainty: the sender carries
+  the link term once) and input -min delay (Lmin + Lmax) / 2 - L (nominal launch, no die term), i.e. the neighbour's die-clock leaf lands in
   this block's own FF leaf spread with a 50 ps die-skew allowance; the 150 ps die arrival term stays on setup.  One
   SS L on the hold side alone demands ~130 ps of hold buffers per output (M2_hfd_meso_r32: -7.75 ps after 7 buffers).
 * the hold-side -min delays also credit the connected die path's minimum arrival (io_min_delay.json: upstream FF
@@ -24,8 +25,8 @@ import sys
 
 src, L, mode = sys.argv[1], float(sys.argv[2]), sys.argv[3]
 FFM = len(sys.argv) > 5
-Lmin = float(sys.argv[4]) if len(sys.argv) > 4 else L   # outputs: FF min leaf insertion
-Lmax = float(sys.argv[5]) if len(sys.argv) > 5 else Lmin   # inputs: FF max leaf insertion
+Lmin = float(sys.argv[4]) if len(sys.argv) > 4 else L   # FF min leaf insertion
+Lmax = float(sys.argv[5]) if len(sys.argv) > 5 else Lmin   # FF max leaf insertion (outputs: latest capture)
 T = 833.333
 _iom = __import__('pathlib').Path(src).resolve().parents[1] / 'io_min_delay.json'
 _mst = __import__('pathlib').Path(src).stem
@@ -41,7 +42,9 @@ for l in open(src):
         # MAX leaf insertion minus the 50 ps die-skew allowance, outputs are captured no earlier than its FF MIN leaf
         # insertion plus 50 ps -- one SDC for routing (hold repair at BC) and for both sign-off corners
         if FFM:
-            mn = (Lmax - L - 25) if m.group(1) == 'set_input_delay' else (L - Lmin - 25)   # + 25 ps hold uncertainty = 50
+            # RULE H1 (h1-verify 2026-10-08): outputs captured at the nominal (mean) leaf + 50 (sender carries the link term);
+            # inputs launched at the mean leaf, plain 25 ps (was Lmin + 50 / Lmax - 50: both optimistic, 50 counted twice)
+            mn = ((Lmin + Lmax) / 2 - L) if m.group(1) == 'set_input_delay' else (L - (Lmin + Lmax) / 2 - 25)   # + 25 ps hold uncertainty
             # + the minimum arrival credit of the connected die path (stations/io_min_delay.json, stn_io_min.py):
             # upstream pin-launch clk->Q at FF + 50 % of the measured FF wire delay over the minimum die wire
             mn += IOMIN.get('in' if m.group(1) == 'set_input_delay' else 'out', {}).get('min_delay_ps', 0.0)

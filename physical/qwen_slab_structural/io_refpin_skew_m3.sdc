@@ -16,7 +16,8 @@ unset_output_delay [all_outputs]
 set qss_in  [get_ports {rst_n p_* res_in*}]
 set qss_out [get_ports {o_we o_addr* o_mask* o_data* ov am_tv am_top* am_rmax fault}]
 set_input_delay  [expr {0.2 * 833.333 + $ot_sk}] -max -clock clk -reference_pin $qss_ref $qss_in
-set_input_delay  [expr {-$ot_hk}]                -min -clock clk -reference_pin $qss_ref $qss_in
+set ot_hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]
+set_input_delay  [expr {-$ot_hki}]                -min -clock clk -reference_pin $qss_ref $qss_in
 set_output_delay [expr {0.2 * 833.333 + $ot_sk}] -max -clock clk -reference_pin $qss_ref $qss_out
 set_output_delay [expr {-$ot_hk}]                -min -clock clk -reference_pin $qss_ref $qss_out
 puts "QSS S1 boundary: -reference_pin res_q\[0\]/CLK, skew $ot_sk hold $ot_hk"

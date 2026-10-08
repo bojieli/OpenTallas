@@ -1,9 +1,11 @@
 # H16 quad parent IO budget (OWNER RULE 2026-10-06 ADDENDUM), referenced to a quad clk pin so it holds at every stage:
 #   inputs  : captured by the ROOT bank at ~ qclk + DIN (DIN: parent register latency over the quad pin; CTS aligns the
 #             parent tree to the quad's input strip, quad_cts view) -> max DIN + 300 (150 ps die clock-arrival
-#             difference + 150 ps to the nearest station), min DIN - 150;
+#             difference + 150 ps to the nearest station), min DIN (rule H1: the sender's output min carries the
+#             150 ps arrival difference once; the receiver's input min carries none);
 #   outputs : launched by the quad's leaf output flops at qclk + QINS (the quad ETM's max_clock_tree_path) -> the die
-#             captures at QINS +/- 150: max 300 - QINS, min -(QINS - 150).
+#             captures at QINS +/- 150: max 300 - QINS, min -(QINS + 150) (hold against the LATEST capture, QINS + 150;
+#             h1-reroute 2026-10-08: was -(QINS - 150), the earliest capture, a sign error that made the hold check 300 ps optimistic).
 # DIN / QINS here are the route-time estimates; the sign-off SDC (route_p19.sh) re-states them from the routed tile.
 set ot_din 260
 set ot_qins 682
@@ -12,6 +14,6 @@ set ot_in [all_inputs -no_clocks]
 unset_input_delay -clock core_clk $ot_in
 unset_output_delay -clock core_clk [all_outputs]
 set_input_delay -max [expr {$ot_din + 300}] -clock core_clk -reference_pin $ot_qclk $ot_in
-set_input_delay -min [expr {$ot_din - 150}] -clock core_clk -reference_pin $ot_qclk $ot_in
+set_input_delay -min $ot_din -clock core_clk -reference_pin $ot_qclk $ot_in
 set_output_delay -max [expr {300 - $ot_qins}] -clock core_clk -reference_pin $ot_qclk [all_outputs]
-set_output_delay -min [expr {-($ot_qins - 150)}] -clock core_clk -reference_pin $ot_qclk [all_outputs]
+set_output_delay -min [expr {-($ot_qins + 150)}] -clock core_clk -reference_pin $ot_qclk [all_outputs]
