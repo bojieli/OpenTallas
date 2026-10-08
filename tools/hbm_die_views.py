@@ -405,6 +405,10 @@ def cmd_index(a):
                                  **({k: v[k] for k in ('dir', 'lef', 'lib', 'check', 'source', 'files_sha256', 'receipt', 'receipt_sha256', 'functional_closure', 'die_context_closed') if k in v} if v else {}))
         if margin:
             idx['masters'][n]['margin'] = margin
+        r_ = idx['masters'][n]
+        if r_.get('lib') and (ROOT / r_['dir'] / f'{n}_tt.lib').is_file():      # OPTION B: TT model (tools/hbm_view_tt.py)
+            r_['lib'] = dict(r_['lib'], tt=f'{n}_tt.lib')
+            r_.setdefault('files_sha256', {})[f'{n}_tt.lib'] = sha(ROOT / r_['dir'] / f'{n}_tt.lib')
         if v and v.get('lef'):     # re-check against the CURRENT generator round (a view routed on an older outline)
             c_ = check_lef(n, ROOT / v['dir'] / v['lef'], allow_extra=v.get('die_top_io', ()))
             idx['masters'][n]['check'] = {k: c_[k] for k in ('verdict', 'problems', 'positions', 'size_view',
@@ -447,6 +451,8 @@ def sta_tcl(m, work, index):
         d = ROOT / v['dir']
         (work / f'{n}_ss.lib').write_bytes((d / v['lib']['ss']).read_bytes())
         (work / f'{n}_ff.lib').write_bytes((d / v['lib']['ff']).read_bytes())
+        if v['lib'].get('tt'):       # OPTION B: the TT model for die setup (tools/hbm_die_relay_sta.py --setup-corner tt)
+            (work / f'{n}_tt.lib').write_bytes((d / v['lib']['tt']).read_bytes())
         lib_lines += [f'read_liberty -corner ss /work/{n}_ss.lib', f'read_liberty -corner ff /work/{n}_ff.lib']
     # OWNER 2026-10-06 ~19:20: the PHY black boxes are timed too (their interface Liberty: PHY-side pins launched /
     # captured by PHY flops on the PHY clock pin)
@@ -455,8 +461,12 @@ def sta_tcl(m, work, index):
                 'ot_hbm3e_phy_v41x_aw30_e8p5': 'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_{c}.lib'}
     for n, pat in phy_libs.items():
         if any(it.master == n for it in m['insts']):
-            for c in ('ss', 'ff'):
+            for c in ('ss', 'ff', 'tt'):
+                if c == 'tt' and not (ROOT / pat.format(c=c)).is_file():
+                    continue
                 (work / f'{n}_{c}.lib').write_bytes((ROOT / pat.format(c=c)).read_bytes())
+                if c == 'tt':
+                    continue
                 lib_lines.append(f'read_liberty -corner {c} /work/{n}_{c}.lib')
             libs[n] = dict(phy_bb=True)
     if m.get('relay_masters'):      # the instanced die relays / wire stages (tools/hbm_die_relays.py)
@@ -655,9 +665,9 @@ def cmd_die(a):
             lt += '\n' + (work / nm_).read_text()
         relay_rec = RL.instance_relays(m, real, lt, H, L, wire_stages=not getattr(a, 'no_wire_stages', False),
                                        relay_all=getattr(a, 'relay_all_pins', False))
-        RL.relay_libs(m, work / 'hfd_rly_ss.lib', work / 'hfd_rly_ff.lib')
+        RL.relay_libs(m, work / 'hfd_rly_ss.lib', work / 'hfd_rly_ff.lib', work / 'hfd_rly_tt.lib')
         (work / 'relays.json').write_text(json.dumps(relay_rec, indent=0))
-        print(json.dumps({k: v for k, v in relay_rec.items() if k not in ('chains', 'unplaced', 'unplaced_detail')}))
+        print(json.dumps({k: v for k, v in relay_rec.items() if k not in ('chains', 'unplaced', 'unplaced_detail', 'instance_metadata')}))
     if a.case in ('real', 'sta'):
         H.case_real(m, work)
         # replace the generated macros that have a real view by the view's LEF
