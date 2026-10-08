@@ -35,6 +35,10 @@ module ot_s81ph_link_ep #(
     parameter integer PHY_DEN        = 1,
     parameter integer SRAM           = 0,
     parameter integer PIPE           = 0,     // CLAUDE S81-PH coll lane v3: 1 = sender pipelined (see the PIPE notes below)
+                                              // CLAUDE s81-blocks 2026-10-07: 2 = PIPE 1 + (a) the freed-count difference
+                                              // d_fr registered in S2 (fr_seen only changes in S2-apply cycles, as una for
+                                              // s2dack), (b) rdy_r / rep_r / credits / snd / snd_i computed for accept = 0
+                                              // and 1 in parallel and selected by accept at the flop (lane e -489 / w -408)
     // derived frame widths (ports)
     parameter integer FFW_P = SEQW + 1 + FLIT_BYTES * 8 + 32,
     parameter integer RFW_P = 1 + SEQW + $clog2(CREDITS + 1) + 32
@@ -192,7 +196,7 @@ module ot_s81ph_link_ep #(
     wire [SEQW-1:0] rr_ack0 = rr_f[RFW-2 -: SEQW];
     wire [CW-1:0]   rr_fr0  = rr_f[32 +: CW];
     // PIPE: pending slot P and decode stage S2
-    reg             pv, s2v, pnak, s2nak, s2bad; reg [SEQW-1:0] pack, s2ack, s2dack; reg [CW-1:0] pfr, s2fr;
+    reg             pv, s2v, pnak, s2nak, s2bad; reg [SEQW-1:0] pack, s2ack, s2dack; reg [CW-1:0] pfr, s2fr, s2dfr;
     wire            p_take = pv && !s2v;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin pv <= 1'b0; s2v <= 1'b0; pnak <= 1'b0; end
@@ -203,14 +207,14 @@ module ot_s81ph_link_ep #(
         end
     always @(posedge clk) begin
         if (rr_ok0) begin pack <= rr_ack0; pfr <= rr_fr0; end
-        if (p_take) begin s2ack <= pack; s2fr <= pfr; s2nak <= pnak; s2dack <= pack - una; s2bad <= (pack - una) > occ; end
+        if (p_take) begin s2ack <= pack; s2fr <= pfr; s2nak <= pnak; s2dack <= pack - una; s2bad <= (pack - una) > occ; s2dfr <= pfr - fr_seen; end
     end
     wire            rr_ok   = PIPE ? s2v : rr_ok0;
     wire            rr_nak  = PIPE ? s2nak : rr_nak0;
     wire [SEQW-1:0] rr_ack  = PIPE ? s2ack : rr_ack0;
     wire [CW-1:0]   rr_fr   = PIPE ? s2fr : rr_fr0;
     wire [SEQW-1:0] d_ack   = PIPE ? s2dack : (rr_ack - una);
-    wire [CW-1:0]   d_fr    = rr_fr - fr_seen;
+    wire [CW-1:0]   d_fr    = (PIPE >= 2) ? s2dfr : (rr_fr - fr_seen);
     wire            ack_bad = rr_ok && (PIPE ? s2bad : (d_ack > occ));
     wire [CW:0]     cred_sum = {1'b0, credits} + {1'b0, d_fr};
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
@@ -368,6 +372,28 @@ module ot_s81ph_link_ep #(
 `endif
     wire            pace_ok_nx = (PHY_NUM == 0) ? 1'b1 : (launch ? pace_ok_launch : (!pace_ok ? pace_ok_inc : pace_ok_r));
     wire [SEQW-1:0] occ_nx = nxt_nx - una_n;
+    // PIPE 2: the same next-state functions for accept = 0 (_0) and accept = 1 (_1)
+    wire            lnch_0 = replaying && pace_ok;
+    wire [SEQW-1:0] sndl_0 = lnch_0 ? snd + 1'b1 : snd, sndl_1 = snd + 1'b1;
+    wire [IW-1:0]   sndil_0 = lnch_0 ? idx_add(snd_i, 1) : snd_i, sndil_1 = idx_add(snd_i, 1);
+    wire            skip_0 = ack_ok && (d_ack > (sndl_0 - una)), skip_1 = ack_ok && (d_ack > (sndl_1 - una));
+    wire [SEQW-1:0] sndnx_0 = rewind ? una_n : (skip_0 ? rr_ack : sndl_0);
+    wire [SEQW-1:0] sndnx_1 = rewind ? una_n : (skip_1 ? rr_ack : sndl_1);
+    wire [IW-1:0]   sndinx_0 = (rewind || skip_0) ? una_i_n : sndil_0;
+    wire [IW-1:0]   sndinx_1 = (rewind || skip_1) ? una_i_n : sndil_1;
+    wire [SEQW-1:0] nxtnx_1 = nxt + 1'b1;
+    wire [CW-1:0]   cred_r  = credits + ((rr_ok && !fr_bad) ? d_fr : {CW{1'b0}});
+    wire [CW-1:0]   cred_1  = cred_r - 1'b1;
+    wire            pok_0   = (PHY_NUM == 0) ? 1'b1 : (lnch_0 ? pace_ok_launch : (!pace_ok ? pace_ok_inc : pace_ok_r));
+    wire            pok_1   = (PHY_NUM == 0) ? 1'b1 : pace_ok_launch;
+`ifdef OT_DSROM_LINK_MUT_FREECREDIT
+    wire            cok_0 = 1'b1, cok_1 = 1'b1;
+`else
+    wire            cok_0 = cred_r != 0, cok_1 = cred_1 != 0;
+`endif
+    wire            rdy_0 = cok_0 && ((nxt - una_n) < RPS) && (sndnx_0 == nxt) && pok_0;
+    wire            rdy_1 = cok_1 && ((nxtnx_1 - una_n) < RPS) && (sndnx_1 == nxtnx_1) && pok_1;
+    wire            rep_0 = sndnx_0 != nxt, rep_1 = sndnx_1 != nxtnx_1;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -395,6 +421,12 @@ module ot_s81ph_link_ep #(
                 nxt_i <= idx_add(nxt_i, 1);
             end
             una <= una_n; una_i <= una_i_n;
+            if (PIPE >= 2) begin
+                rdy_r <= accept ? rdy_1 : rdy_0;
+                rep_r <= accept ? rep_1 : rep_0;
+                snd   <= accept ? sndnx_1 : sndnx_0;
+                snd_i <= accept ? sndinx_1 : sndinx_0;
+            end else begin
             rdy_r <= cred_ok_nx && (occ_nx < RPS) && (snd_nx == nxt_nx) && pace_ok_nx;
             rep_r <= snd_nx != nxt_nx;
             if (rewind) begin
@@ -404,10 +436,12 @@ module ot_s81ph_link_ep #(
             end else begin
                 snd <= snd_l; snd_i <= snd_i_l;
             end
+            end
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
             credits <= credits;
 `else
-            credits <= credits - {{(CW-1){1'b0}}, accept} + ((rr_ok && !fr_bad) ? d_fr : {CW{1'b0}});
+            if (PIPE >= 2) credits <= accept ? cred_1 : cred_r;
+            else credits <= credits - {{(CW-1){1'b0}}, accept} + ((rr_ok && !fr_bad) ? d_fr : {CW{1'b0}});
 `endif
             if (rr_ok) fr_seen <= rr_fr;
             if (occ == 0 || progress || rewind) timer <= 0;
