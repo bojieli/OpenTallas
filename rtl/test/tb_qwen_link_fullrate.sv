@@ -122,7 +122,7 @@ module tb_qwen_link_fullrate;
     if(watchdog>N*200+20000)$fatal(1,"CONSERVATION_TIMEOUT sent=%0d/%0d received=%0d/%0d",asrc,bsrc,agot,bgot);
    end
    repeat(HOPS+8)@(negedge ca);
-   if(!A.g_rx[0].u_rx.ib_empty || !B.g_rx[0].u_rx.ib_empty || A.g_rx[0].u_rx.u_af.wr_bin!=A.g_rx[0].u_rx.u_af.rd_bin || B.g_rx[0].u_rx.u_af.wr_bin!=B.g_rx[0].u_rx.u_af.rd_bin || A.sne || B.sne || A.xv_q || B.xv_q || aov || bov || A.lne!=0 || B.lne!=0)$fatal(1,"LIVE_STATE_AT_DRAIN");
+   if(!A.g_rx[0].u_rx.ib_empty || !B.g_rx[0].u_rx.ib_empty || A.g_rx[0].u_rx.g_af.u_af.wr_bin!=A.g_rx[0].u_rx.g_af.u_af.rd_bin || B.g_rx[0].u_rx.g_af.u_af.wr_bin!=B.g_rx[0].u_rx.g_af.u_af.rd_bin || A.sne || B.sne || A.xv_q || B.xv_q || aov || bov || A.lne!=0 || B.lne!=0)$fatal(1,"LIVE_STATE_AT_DRAIN");
    if(asent!=N || bsent!=N || bpop!=N || apop!=N)$fatal(1,"DRAIN_INVARIANT");
    ra=(N-1)*1.0/(arx1-arx0);rb=(N-1)*1.0/(brx1-brx0);
    $display("EPOCH %0d hops=%0d CR=%0d delivered=%0d/%0d credit_rtt=%0d/%0d rate_milli=%0d/%0d span=%0d/%0d stalls=%0d/%0d max_inflight=%0d/%0d cycles=%0d",
