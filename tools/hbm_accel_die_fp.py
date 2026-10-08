@@ -114,7 +114,7 @@ def seg_stages(m, bid, L):
     extra += m.get('relay_count', {}).get(bid, 0)                 # r22: relay stations abutting block pins
     return 1 + math.ceil(max(0.0, L - REACH_INTER_UM) / REACH_INTRA_UM) + extra
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r23'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
+FINAL_ROUND = 'r25'             # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands; r16j = r16i + svc x-band segments; r17 = r16j + budget stage plan)
 # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
 #                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
@@ -347,6 +347,9 @@ R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0, split_st
 R23V = dict(R23, vm_split8=True)
 # r24 (coordinator 2026-10-07): R23 + 8 per-segment ck pins on every hub quarter (hfd_su / hfd_sfu / hfd_hc)
 R24 = dict(R23, hub_ck_seg=8)
+R24P = dict(R24, hub_pin_p4=True, hub_pin_window=1200.0)   # r24 + hub quarter face buses at 4 tracks a bit (2 when
+#   only that fits) in a 1,200 um window: r24 HC E face 2,048 bits in 196 um = its only GRT overflow; SU E face 9.5k bits
+#   at 1 track a bit in 500 um
 # Candidate only: paired half-rate DDIV64 full lane, sized by unified-model
 # commit 6dc3c9707.  Reserve >=400 x 400 um on the existing macro/site lattice;
 # keep the other slots and adopted floorplan unchanged.
@@ -368,7 +371,18 @@ R24SM3VOC = dict(R24SM3VO, native_descriptor_bays=True)
 R24SM3VOCE = dict(R24SM3VOC, native_control_escape_bays=True)
 R24SM3VOCEU = dict(R24SM3VOCE, native_control_u_corridors=True)
 R24SM3VOCEUR = dict(R24SM3VOCEU, native_result_store_bays=True)
-ADOPTED = R23
+# r25 (coordinator 2026-10-07 ~21:00, hbm-die owner decisions): r24p hub faces (4 tracks a bit, 1,200 um window) + the
+#   VM quadrant cross buses on two pin layers at 2 tracks a bit + hfd_cmdproc split into its two closed halves (r19c
+#   placement, both CLOSED: hfd_cmdproc_n SS +60.84 / FF +19.69, hfd_cmdproc_s).  Attention tile height 1,600.5 um is
+#   R25A (adopted only if its queued route converges)
+R25 = dict(R24P, vm_cross_2layer=True, hub_ports_file='physical/hbm_accel_die_views/hub_ports_r24p.json', split_masters=dict(R24P.get('split_masters', {}),
+           hfd_cmdproc='physical/hbm_accel_die_views/cmdproc/split/split.json'))
+# the split moves the router / loader ck and rst peer projections by < 1 um: keep the r23 positions (the router's
+#   queued r23-pin re-harden and the loader route stay valid)
+R25['pin_centre'] = {**R25.get('pin_centre', {}), **{(m_, p_): c_ for m_ in ('hfd_router', 'hfd_loader')
+                                                     for p_, c_ in (('rst', 366.0253), ('ck', 612.5932))}}
+R25A = dict(R25, attn_tile_h_um=1600.5)
+ADOPTED = R25
 
 
 def build(variant=None, *, geometry_only=False, network_probe=False):
@@ -950,7 +964,7 @@ def relay_ends(m):
     m['relay_count'] = dict(cnt)
 
 
-def hub_pin_window(mst, window):
+def hub_pin_window(mst, window, p4=False):
     """r23 (hub owner a4649202a85580933, OWNER 2x hub): the SU / SFU / HC quarter ports of each long (E / W) face sit in
     one window <= `window` um centred on the face's port band (the bit-weighted mean of the generator's peer-projected
     port centres), so the registered transport tiles reach every die port within ~250 um.  All on M4 (the quarters are
@@ -966,6 +980,9 @@ def hub_pin_window(mst, window):
         bits = {p_: mst.ports[p_][1] for p_ in pns}
         c = sum(mst.ports[p_][4] * bits[p_] for p_ in pns) / max(1, sum(bits.values()))
         pitch = 2 if sum(b * 2 * t + 4 * t for b in bits.values()) <= window else 1
+        if p4 and sum(b * 4 * t + 4 * t for b in bits.values()) <= window:
+            pitch = 4       # r24p (hbm-blocks 2026-10-07): 4 tracks a bit when the face's buses fit the window: the r24 HC
+                            # quarter's E face (2,048 bits at 0.096 um in 196 um) was its only GRT overflow (33,722)
         span = sum(b * pitch * t + 4 * t for b in bits.values())
         c_ = min(max(c, span / 2 + 2.0), mst.h - span / 2 - 2.0)
         y = c_ - span / 2
@@ -1141,7 +1158,7 @@ def split_station(m, role, h_data=1024):
             m['station_roles'][role + t_] = dict(r_, split_of=role)
 
 
-def vm_cross_align(M, k):
+def vm_cross_align(M, k, two_layer=False):
     """r23 (r23b GRT: 55k overflow at the abutting VM tile edges): every cross bus between two abutting VM tiles has its
     pins at the SAME along-edge positions on both faces (zero-length die nets, as the index_q band cross buses), packed
     from the edge middle at one track per bit (M4 on E / W, M5 on N / S)."""
@@ -1158,6 +1175,39 @@ def vm_cross_align(M, k):
         need = [max(1, b_) * t + 4 * t for b_ in bits]      # bits: the master's port width at this k (bundled)
         y = along / 2 - sum(need) / 2
         assert y > 2 * t, ('VM cross buses do not fit the edge', a, b)
+        if two_layer and k == 1:
+            # r25 (coordinator 2026-10-07 VM decision): ~9.5k cross pins per shared edge at 1 track a bit -> two pin
+            #   layers at 2 tracks a bit each (E/W: even bits M4 at 0.096, odd bits M6 at 0.128; N/S: M5 / M7), same
+            #   along-edge positions on both faces (zero-length die nets); explicit rects (k = 1)
+            L2 = {'M4': 'M6', 'M5': 'M7'}[L_]
+            trk = {'M4': (0.012, 0.048), 'M5': (0.012, 0.048), 'M6': (0.016, 0.064), 'M7': (0.016, 0.064)}
+            hw = {'M4': 0.012, 'M5': 0.012, 'M6': 0.016, 'M7': 0.016}
+            span = [math.ceil(b_ / 2) * 2 * trk[L2][1] + 8 * trk[L2][1] for b_ in bits]
+            y = along / 2 - sum(span) / 2
+            assert y > 1.0, ('VM cross buses do not fit the edge on two layers', a, b)
+            dep = 0.192
+            for (X, pa, Y, pb), b_, sp in zip(runs, bits, span):
+                ra, rb = [], []
+                for i in range(b_):
+                    ly = L_ if i % 2 == 0 else L2
+                    off, pt = trk[ly]
+                    pos = y + 4 * trk[L2][1] + (i // 2) * 2 * pt
+                    pos = off + math.ceil((pos - off) / pt - 1e-9) * pt
+                    for (Z, pz, fz, rr) in ((X, pa, fa, ra), (Y, pb, fb, rb)):
+                        W_, H_ = Z.w, Z.h
+                        if fz == 'E':
+                            box = (W_ - dep, pos - hw[ly], W_, pos + hw[ly])
+                        elif fz == 'W':
+                            box = (0.0, pos - hw[ly], dep, pos + hw[ly])
+                        elif fz == 'N':
+                            box = (pos - hw[ly], H_ - dep, pos + hw[ly], H_)
+                        else:
+                            box = (pos - hw[ly], 0.0, pos + hw[ly], dep)
+                        rr.append((f'{pz}[{i}]', ly, tuple(round(v, 4) for v in box)))
+                X.ports[pa] = ('rects', ra)
+                Y.ports[pb] = ('rects', rb)
+                y += sp
+            continue
         for (X, pa, Y, pb), b_, nd in zip(runs, bits, need):
             c = round(y + 2 * t + (nd - 4 * t) / 2, 4)
             X.ports[pa] = ('face', b_, fa, L_, c, 1)
@@ -2494,13 +2544,19 @@ def masters(m, k=1):
     if m['variant'].get('hub_pin_window') and k == 1:    # r23: hub quarter ports in a <= 500 um window per face
         for nm_ in ('hfd_su', 'hfd_sfu', 'hfd_hc'):
             if nm_ in M:
-                hub_pin_window(M[nm_], m['variant']['hub_pin_window'])
+                hub_pin_window(M[nm_], m['variant']['hub_pin_window'], p4=bool(m['variant'].get('hub_pin_p4')))
+    if m['variant'].get('hub_ports_file') and k == 1:   # r25: hub quarter E/W faces frozen at the r24p plan (the
+        #   cmdproc split shifts the peer-projected SU E window by ~2.6 um; the queued r24p quarter routes stay valid)
+        for nm_, specs in json.loads((ROOT / m['variant']['hub_ports_file']).read_text()).items():
+            if nm_ in M:
+                for p_, sp_ in specs.items():
+                    M[nm_].ports[p_] = tuple(sp_)
     if m['variant'].get('hub_ck_seg'):      # r24: per-segment ck pins on the 5.53 mm hub quarters
         for nm_ in HUB_QUARTERS:
             if nm_ in M:
                 hub_ck_seg(M[nm_], m['variant']['hub_ck_seg'], k)
     if m['variant'].get('vm_cross_aligned') and 'hfd_vm_sw' in M:   # r23: abutting VM tiles' cross buses face to face
-        vm_cross_align(M, k)
+        vm_cross_align(M, k, two_layer=bool(m['variant'].get('vm_cross_2layer')))
     if m['variant'].get('vm_ck_centre'):      # r20: the VM tiles' ck as the centre M7 area pin
         for q in ('sw', 'se', 'nw', 'ne'):
             if f'hfd_vm_{q}' in M:
@@ -3241,7 +3297,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

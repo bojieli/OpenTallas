@@ -484,13 +484,15 @@ def _sub(port, sel, bits, H, nreal=None):
     return H.port_base(port) + '@' + _ranges(ib)
 
 
-def relay_libs(m, path_ss, path_ff):
+def relay_libs(m, path_ss, path_ff, path_tt=None):
     """interface Liberty of every hfd_rly master (SS / FF), bus-level timing groups (ps / fF)"""
     rm = m.get('relay_masters', {})
     C = dict(ss=dict(ins_min=70.0, ins_max=90.0, ckq=60.0, r=0.30, setup=30.0, hold=15.0, tr=12.0, v=0.63, t=100.0),
-             ff=dict(ins_min=40.0, ins_max=55.0, ckq=30.0, r=0.15, setup=15.0, hold=10.0, tr=6.0, v=0.77, t=0.0))
+             ff=dict(ins_min=40.0, ins_max=55.0, ckq=30.0, r=0.15, setup=15.0, hold=10.0, tr=6.0, v=0.77, t=0.0),
+             # TT (0.70 V, 25 C): mid-way between the SS and FF recipe values (analytic, as the SS / FF ones)
+             tt=dict(ins_min=55.0, ins_max=72.0, ckq=45.0, r=0.22, setup=22.0, hold=12.0, tr=9.0, v=0.70, t=25.0))
     caps = [1.44, 5.76, 23.04, 92.16, 368.64]
-    for corner, path in (('ss', path_ss), ('ff', path_ff)):
+    for corner, path in (('ss', path_ss), ('ff', path_ff)) + ((('tt', path_tt),) if path_tt else ()):
         c = C[corner]
         L_ = [f'library (hfd_rly_{corner}) {{', '  delay_model : table_lookup;', '  time_unit : "1ps";',
               '  voltage_unit : "1V";', '  current_unit : "1mA";', '  pulling_resistance_unit : "1kohm";',

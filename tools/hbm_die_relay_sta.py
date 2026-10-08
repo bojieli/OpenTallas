@@ -17,7 +17,7 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-RELAY_INS = dict(ss=80.0, ff=47.5)
+RELAY_INS = dict(ss=80.0, ff=47.5, tt=63.5)
 DOM = {'n_clk_stream': 'clk_stream', 'n_clk_serial': 'clk_serial', 'n_clk_hbm': 'clk_hbm', 'n_clk_link': 'clk_link'}
 PERIOD_PS = {'clk_stream': 833.333, 'clk_serial': 1111.111, 'clk_hbm': 1024.0, 'clk_link': 833.333}
 
@@ -38,7 +38,7 @@ def relay_clocks(case):
     return out
 
 
-LIB_TO_INS = dict(ss=110.0, ff=40.0)   # lib min ck->out minus measured insertion, mean over the 6 blocks with both
+LIB_TO_INS = dict(ss=110.0, ff=40.0, tt=75.0)   # lib min ck->out minus measured insertion, mean over the 6 blocks with both
 
 
 def lib_ck_out_min(path):
@@ -53,8 +53,25 @@ def view_insertion(case, master, measured):
     """the hardened view's own clock insertion (ps per corner): the closure loop's measured CTS insertion when it has
     one, else the view Liberty's fastest clock -> output arc less the measured lib-to-insertion offset; None when the
     master has no view Liberty (generated placeholder: the sheet target stays)"""
+    ctp = {}
+    for c in ('ss', 'ff', 'tt'):
+        f = case / f'{master}_{c}.lib'
+        if f.exists():
+            t_ = f.read_text()
+            mn = re.search(r'timing_type : min_clock_tree_path;.*?values\("([-\d.]+)', t_, re.S)
+            mx = re.search(r'timing_type : max_clock_tree_path;.*?values\("([-\d.]+)', t_, re.S)
+            if mn and mx:
+                ctp[c] = round((float(mn.group(1)) + float(mx.group(1))) / 2, 1)
+    if all(c in ctp for c in ('ss', 'ff', 'tt')):
+        # the routed view's own clock tree (write_timing_model min / max_clock_tree_path, mean): the insertion the die
+        #   STA actually sees through the view's arcs (the calibrate CTS-only measurement is pre-route / pre-ECO)
+        return ctp, 'view Liberty clock_tree_path (min+max)/2'
     if master in measured:
-        return {c: float(measured[master][c]['mean']) for c in ('ss', 'ff')}, 'measured (closure-loop calibrate)'
+        out = {c: float(measured[master][c]['mean']) for c in ('ss', 'ff')}
+        f = case / f'{master}_tt.lib'
+        v = lib_ck_out_min(f) if f.exists() else None
+        out['tt'] = round(v - LIB_TO_INS['tt'], 1) if v is not None else round((out['ss'] + out['ff']) / 2, 1)
+        return out, 'measured (closure-loop calibrate); tt from the view TT Liberty'
     out = {}
     for c in ('ss', 'ff'):
         f = case / f'{master}_{c}.lib'
@@ -62,6 +79,9 @@ def view_insertion(case, master, measured):
         if v is None:
             return None, None
         out[c] = round(v - LIB_TO_INS[c], 1)
+    f = case / f'{master}_tt.lib'
+    v = lib_ck_out_min(f) if f.exists() else None
+    out['tt'] = round(v - LIB_TO_INS['tt'], 1) if v is not None else round((out['ss'] + out['ff']) / 2, 1)
     return out, 'view Liberty min ck->out - offset'
 
 
@@ -69,17 +89,32 @@ def compose(case, ctx, measured=None):
     xy = places(case)
     rel = relay_clocks(case)
     sinks = {k: dict(v) for k, v in ctx['sinks'].items()}
+    # a planned sink whose block the generator split (r25 hfd_cmdproc -> hb_cmdproc_n / _s): each half takes the
+    #   parent's region (both halves sit in the parent's outline)
+    for k in list(sinks):
+        s_ = sinks[k]
+        if s_['instance'] not in xy:
+            for h in ('_n', '_s'):
+                i_ = s_['instance'] + h
+                if i_ in xy:
+                    sinks[f'{i_}/{s_["port"]}'] = dict(s_, instance=i_, master=s_['master'] + h, split_of=s_['instance'])
+            if any(s_['instance'] + h in xy for h in ('_n', '_s')):
+                del sinks[k]
     # the plan's sheets carry TARGET insertions ('no calibration yet'); a hardened view's actual insertion is smaller
     #   and its Liberty arcs embed it: entry = region target - ACTUAL insertion keeps every flop at the region target
-    tgt0 = ctx['region_flop_target_ps']
+    # TT region flop targets: the plan has SS / FF only; TT = their mean (interpolation, labelled) -- only the
+    #   relative arrival of sinks in one domain matters for timing, and every sink of a region keeps one target
+    tgt0 = {r_: list(t_[:2]) + [(t_[0] + t_[1]) / 2] for r_, t_ in ctx['region_flop_target_ps'].items()}
     for k, s_ in sinks.items():
+        if 'tt' not in s_.get('entry_ps', {}):        # placeholder / sheet-target sink: TT entry interpolated
+            s_['entry_ps'] = dict(s_['entry_ps'], tt=round((s_['entry_ps']['ss'] + s_['entry_ps']['ff']) / 2, 3))
         ins, src = view_insertion(case, s_['master'], measured or {})
         if ins:
             t_ = tgt0[s_['region']]
             s_['internal_ps'] = ins
             s_['insertion_source'] = src
-            s_['entry_ps'] = {c: round(t_[n] - ins[c], 3) for n, c in enumerate(('ss', 'ff'))}
-    tgt = ctx['region_flop_target_ps']
+            s_['entry_ps'] = {c: round(t_[n] - ins[c], 3) for n, c in enumerate(('ss', 'ff', 'tt'))}
+    tgt = tgt0
     by_dom = defaultdict(list)
     for k, s in sinks.items():
         if s['instance'] in xy:
@@ -104,7 +139,7 @@ def compose(case, ctx, measured=None):
             if a_ and b_ and a_[0] == b_[0]:
                 f = (k + 1) / (len(regs) + 1)
                 ta, tb = tgt0[a_[1]], tgt0[b_[1]]
-                ramp[r_] = [ta[n] + (tb[n] - ta[n]) * f for n in (0, 1)]
+                ramp[r_] = [ta[n] + (tb[n] - ta[n]) * f for n in (0, 1, 2)]
     added, nodom = {}, []
     for inst, d in sorted(rel.items()):
         if inst not in xy or not by_dom.get(d):
@@ -119,7 +154,7 @@ def compose(case, ctx, measured=None):
         added[f'{inst}/ck'] = dict(instance=inst, port='ck', master='hfd_rly', region=reg, domain=d,
                                    ramped=inst in ramp and t is ramp.get(inst),
                                    internal_ps=dict(RELAY_INS),
-                                   entry_ps={c: round(t[n] - RELAY_INS[c], 3) for n, c in enumerate(('ss', 'ff'))})
+                                   entry_ps={c: round(t[n] - RELAY_INS[c], 3) for n, c in enumerate(('ss', 'ff', 'tt'))})
     return added, nodom, sinks
 
 
@@ -147,8 +182,48 @@ def constraints(sinks, corner):
     return '\n'.join(L) + '\n'
 
 
+def tt_prefix(prefix, case):
+    """OPTION B: add a TT analysis corner (setup sign-off) to the case prefix: every view's TT model, or -- for a view
+    without one (interim, no final route) -- its SS model in the TT slot (pessimistic, listed)"""
+    out, fallback = [], []
+    for ln in prefix.splitlines():
+        if ln.strip() == 'define_corners ss ff':
+            out.append('define_corners tt ss ff')
+            continue
+        out.append(ln)
+        m = re.match(r'read_liberty -corner ss /work/(\S+)_ss\.lib$', ln.strip())
+        if m:
+            n = m.group(1)
+            if (case / f'{n}_tt.lib').exists():
+                out.append(f'read_liberty -corner tt /work/{n}_tt.lib')
+            else:
+                out.append(f'read_liberty -corner tt /work/{n}_ss.lib')
+                fallback.append(n)
+    return '\n'.join(out) + '\n', fallback
+
+
+PAD_SCALE = dict(ff=1.0, tt=1.4, ss=1.9)    # a hold-pad delay cell's delay at TT / SS relative to FF (ASAP7 BUF chains)
+
+
+def hold_pads(path, corner):
+    """die-level hold padding (rule H1, die links): a delay on the die net into each listed load pin (the relay input,
+    or the receiving block pin for a relay -> block hop), sized at FF; the same cells cost PAD_SCALE x at TT / SS
+    setup, so every corner is timed with them"""
+    if not path:
+        return ''
+    pads = json.loads(Path(path).read_text())
+    L = ['# die hold pads (tools/hbm_die_relay_sta.py --hold-pads)', 'set ot_npad 0']
+    for pin, ps in sorted(pads.items()):
+        v = ps * PAD_SCALE[corner] / 1000.0
+        L.append(f'set l [get_pins -quiet {{{pin}}}]; if {{[llength $l]}} {{ foreach d [get_pins -quiet -of_objects '
+                 f'[get_nets -of_objects $l] -filter "direction==output"] {{ set_annotated_delay -net -incremental '
+                 f'-from $d -to $l {v:.6f}; incr ot_npad }} }}')
+    L.append('puts "OT_HOLD_PADS n=$ot_npad"')
+    return '\n'.join(L) + '\n'
+
+
 def report(corner):
-    k = 'max' if corner == 'ss' else 'min'
+    k = 'min' if corner == 'ff' else 'max'
     return f'''
 puts "OT_WNS corner={corner} ns=[sta::worst_slack -{k}] tns_ns=[sta::total_negative_slack -{k}]"
 set f [open /out/paths_{corner}.txt w]
@@ -167,7 +242,7 @@ puts OT_DONE
 def budgets(case):
     """per-path budgets: failing endpoints grouped by (start instance, end instance) with worst slack and count"""
     out = {}
-    for c in ('ss', 'ff'):
+    for c in ('tt', 'ss', 'ff'):
         p = case / f'paths_{c}.txt'
         if not p.exists():
             continue
@@ -190,6 +265,7 @@ def main():
     ap.add_argument('--case', required=True)
     ap.add_argument('--clock-context', help='clock_context.json from tools/hbm_die_clock_context.py')
     ap.add_argument('--budgets', action='store_true')
+    ap.add_argument('--hold-pads', help='JSON {load pin: FF pad ps} (die-level hold padding)')
     ap.add_argument('--measured', help='measured_insertion.json (closure-loop calibrate) for view insertion')
     a = ap.parse_args()
     case = Path(a.case)
@@ -208,7 +284,11 @@ def main():
     prefix = base.partition('set_cmd_units -time ns')[0]
     assert 'estimate_parasitics' in prefix, 'case run.tcl has no parasitics step before the clock boundary'
     for c in ('ss', 'ff'):
-        (case / f'run_clock_{c}.tcl').write_text(prefix + constraints(sinks, c) + report(c))
+        (case / f'run_clock_{c}.tcl').write_text(prefix + constraints(sinks, c) + hold_pads(a.hold_pads, c) + report(c))
+    ttp, tt_fallback = tt_prefix(prefix, case)
+    (case / 'run_clock_tt.tcl').write_text(ttp + constraints(sinks, 'tt') + hold_pads(a.hold_pads, 'tt') + report('tt'))
+    (case / 'tt_fallback.json').write_text(json.dumps(tt_fallback) + '\n')
+    print(json.dumps(dict(tt_models_missing=tt_fallback)))
     # OWNER STEER 2026-10-07 (3): die timing on GLOBAL-ROUTE parasitics: full-die GRT (M4-M9, coarse M2/M3 tracks so
     #   the gcell is GRT_TILE_UM, the dietop_round method) -> estimate_parasitics -global_routing -> SS then FF
     tile = 9.6
@@ -225,7 +305,7 @@ def main():
         f'make_tracks M2 -x_offset 0.009 -x_pitch {p_:.3f} -y_offset 0.045 -y_pitch {p_:.3f}',
         'make_tracks M1 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036']) + '\n')
     mt = '/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl'
-    gp = prefix.replace(f'source {mt}', 'source /work/make_tracks_coarse.tcl').replace(
+    gp = ttp.replace(f'source {mt}', 'source /work/make_tracks_coarse.tcl').replace(
         f'set ::env(MAKE_TRACKS) {mt}', 'set ::env(MAKE_TRACKS) /work/make_tracks_coarse.tcl')
     gp = gp.replace('estimate_parasitics -placement', '''set_routing_layers -signal M4-M9 -clock M4-M9
 set_global_routing_layer_adjustment M4-M5 0.30
@@ -238,8 +318,10 @@ write_db /out/ckpt_grt.odb
 report_wire_length -net * -global_route -file /out/wirelength_grt.csv
 estimate_parasitics -global_routing''')
     assert 'global_route' in gp
-    (case / 'run_grt_sta.tcl').write_text(gp + constraints(sinks, 'ss') + report('ss').replace('puts OT_DONE', '')
-                                          + constraints(sinks, 'ff') + report('ff'))
+    # OPTION B: setup at TT, hold at FF, SS setup as a sensitivity
+    (case / 'run_grt_sta.tcl').write_text(gp + constraints(sinks, 'tt') + hold_pads(a.hold_pads, 'tt') + report('tt').replace('puts OT_DONE', '')
+                                          + constraints(sinks, 'ff') + hold_pads(a.hold_pads, 'ff') + report('ff').replace('puts OT_DONE', '')
+                                          + constraints(sinks, 'ss') + hold_pads(a.hold_pads, 'ss') + report('ss'))
     print(json.dumps(dict(planned_sinks=len(ctx['sinks']), relay_sinks=len(added), relays_without_domain=len(nodom))))
 
 
