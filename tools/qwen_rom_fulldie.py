@@ -69,6 +69,9 @@ CTRL_W, STRIP_W = 247.536, 328.32
 RE_H = 1998.0
 FIFO = (96.768, 136.08)
 IO_DEPTH = 1563.84
+# r22 (2026-10-07): horizontal routing channel between the top tile row and the IO band (0 = r21: the IO macros sit
+# directly on the top tile row, so IO words leaving an S face land on a tile body (OBS M1-M7) and escape on M8/M9 only)
+IO_CHAN = 0.0
 STATION = (CORR, 69.12)        # corridor station / column-head frame
 LST_V = (VCH, 34.56)
 LST_H = (34.56, HCH)
@@ -231,7 +234,7 @@ def _build(spine_w, tree_mode):
         y += TILE_SLOT[1]
     y_top = y
     mid = row_y[12]
-    y_io = y_top
+    y_io = y_top + IO_CHAN
     H = up(y_io + IO_DEPTH + EDGE, GY)
     insts = []
     regions = []
@@ -453,6 +456,8 @@ def _build(spine_w, tree_mode):
                            IO_DEPTH - SHAVE, kind='xfifo', region='io', domain='cdc')
         insts.append(io['xfifo'])
     regions.append(dict(name='io_band', kind='io', rect=[x_arr_w, y_io, x_eband, y_io + IO_DEPTH]))
+    if IO_CHAN > 0:
+        regions.append(dict(name='io_chan', kind='channel', rect=[x_arr_w, y_top, x_eband, y_io]))
     # ---- link waypoints: vertical legs in the spine channel, corner at the channel heights, horizontal
     lst = []
     legs = {}
