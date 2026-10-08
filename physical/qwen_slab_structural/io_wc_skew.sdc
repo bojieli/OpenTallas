@@ -40,6 +40,6 @@ unset_output_delay [all_outputs]
 set qss_in  [get_ports {rst_n p_* res_in*}]
 set qss_out [get_ports {o_we o_addr* o_mask* o_data* ov am_tv am_top* am_rmax fault}]
 set_input_delay  [expr {166.667 + $qss_late + $ot_sk}] -max -clock clk $qss_in
-set_input_delay  [expr {$qss_early - $qss_hx - $ot_hk}] -min -clock clk $qss_in
+set_input_delay  [expr {$qss_early - $qss_hx - ([info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0)}] -min -clock clk $qss_in
 set_output_delay [expr {166.667 - $qss_early + $ot_sk}] -max -clock clk $qss_out
 set_output_delay [expr {-$qss_late_bc - $qss_hx - $ot_hk}] -min -clock clk $qss_out
