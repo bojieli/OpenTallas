@@ -41,9 +41,11 @@ module tb_qwen_me_partition_w12;
     // is ready
     parameter integer FAST_ISSUE = 0, KV_PREP = 0;
     parameter integer MUL_LAT = 5;           // the lane product latency (ot_qwen_w12_matvec_part MUL_LAT)
+    // the tiles' 1.2 GHz ROM pipeline (ot_qwen_rom_tile_logic_w12 ROM_PIPE / ROM_ARELAY, LRST): memories ROM_ARELAY + 2 later
+    parameter integer ROM_PIPE = 0, ROM_ARELAY = 1, LRST = 0, ROM_MUT = 0, BAW = 12;
     localparam integer IL = 8, AW = 24, NW = 16;
     localparam integer NT = GT / TG, NXC = 1 << SMAX, LT = $clog2(TG);
-    localparam integer XD = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA;
+    localparam integer XD = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA + ((ROM_PIPE != 0) ? (ROM_ARELAY + 2) : 0);
     localparam integer ZERO_WIRE = (XD == 0 && ORD == 0);
     localparam integer LX = (MUL_LAT - 5) + (ACC_LAT - 5) + $clog2(GT) * (TREE_LAT - 3);   // the deeper adders' extra latency
     localparam integer EV = (LX != 0 || KV_PREP != 0);
@@ -125,7 +127,7 @@ module tb_qwen_me_partition_w12;
     wire [NXC-1:0] a_x_re;
     wire [NXC*AW-1:0] a_x_addr;
     reg  [NXC*32-1:0] a_x_q;
-    localparam integer CB = 2;
+    localparam integer CB = (BAW == 11) ? 4 : 2;     // the same 8,192 words in 2,048-word banks at BAW 11
     wire [NT*CB-1:0] a_t_rom_ce;
     wire [NT*12-1:0] a_t_rom_addr;
     reg  [NT*2*CB*266-1:0] a_t_rom_rd;
@@ -136,7 +138,7 @@ module tb_qwen_me_partition_w12;
     wire [NW-1:0] a_am_idx; wire [31:0] a_am_val;
     wire [AW-1:0] a_mx_addr; wire [W-1:0] a_mx_mask; wire [W*32-1:0] a_mx_data; wire [15:0] a_progress;
     ot_qwen_me_array_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT),
-                       .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .CODE_BANKS(CB), .KV_LOCAL(0), .MEM_EXTRA(MEM_EXTRA),
+                       .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .CODE_BANKS(CB), .KV_LOCAL(0), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .LRST(LRST), .BAW(BAW),
                        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_arr (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(a_ready), .idle(a_idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc), .i_wbase(i_wbase), .i_ts(i_ts),
@@ -176,7 +178,7 @@ module tb_qwen_me_partition_w12;
                         a_t_rom_rd[((g*2 + pc)*CB + b)*266 +: 266] <= 266'd0;
                         for (l = 0; l < 2 * W; l = l + 1)
                             a_t_rom_rd[((g*2 + pc)*CB + b)*266 + 8*l +: 8] <=
-                                rom(b * 4096 + a_t_rom_addr[g*12 +: 12],
+                                rom(b * (1 << BAW) + a_t_rom_addr[g*12 +: 12],
                                     (((MUTANT != 0 && g < 2) ? (1 - g) : g) * TG + 2*pc) * W + l);
                     end
         for (g = 0; g < NXC; g = g + 1)

@@ -1,0 +1,10 @@
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=1
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=2
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=3
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=4
+FRAME kind=0 physical_edges=4325 read_delta=0 checked_ACK_delta=40 native=5
+FRAME kind=0 physical_edges=3155 read_delta=0 checked_ACK_delta=1 native=6
+FRAME kind=1 physical_edges=14419 read_delta=1024 checked_ACK_delta=1 native=7
+FRAME kind=2 physical_edges=3136 read_delta=1 checked_ACK_delta=0 native=9
+PASS full_aperture_parent160 VX2048 delayed_reducer checked_ACK native_hold XVM1 read9=1025 write28=262 rawACKs=262 native=9 held=44127
+/srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/reducer_overlap/src/tb_qwen_vm_reducer_overlap.sv:86: $finish called at 441390000 (1ps)
