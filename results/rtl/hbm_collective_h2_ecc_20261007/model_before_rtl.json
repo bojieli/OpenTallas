@@ -1,0 +1,80 @@
+{
+  "status": "MODEL_BEFORE_RTL_DEFAULT_OFF_NOT_ADOPTED",
+  "scope": "One full16lane NC8 PFMAX384 banked core inside one half-rate owner. Existing arithmetic golden reductiontree and rounding unchanged.",
+  "source_macro_specs_sha256": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json": "1b0c5feadedec0ea1a0557da2fd960711b08d8407841e562c68c6c4846ddf34c",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.json": "7b0d80214f9c901dcd2a1835a7201d664ca4373863efcbd6e7198f2767bbf012"
+  },
+  "logical_memory": {
+    "columns": 8,
+    "rows_per_column": 64,
+    "payload_bits_per_row": 512,
+    "payload_SECDED_words": 8,
+    "identity_SECDED_words": 1,
+    "encoded_bits_per_row": 648,
+    "physical_port_bits": 768,
+    "logical_encoded_bits": 331776
+  },
+  "identity": "Protected stored metadata64 = reservedzero22 +valid1 +generation32 +column3 +row6. Read request carries the same expected tuple through protected metadata registers. Metadata mismatch or UE quarantines before arithmetic acceptance. Context generation must be real protected local state advanced once per accepted arm without wrap, never guessed from simulation.",
+  "macros": {
+    "name": "ot_sram_1r1w_128x256_m1_r2c2",
+    "per_column": 3,
+    "total": 24,
+    "physical_bits": 786432,
+    "raw_area_um2": 93452.46566399999,
+    "old_name": "ot_sram_1r1w_64x512_m1_r2c2",
+    "old_total": 8,
+    "old_raw_area_um2": 106587.72633600002
+  },
+  "ports": {
+    "each_macro": "1R1W on one core clock, real simultaneous different-address read/write supported",
+    "physical_bytes_read_per_column_cycle": 96,
+    "physical_bytes_written_per_column_cycle": 96,
+    "encoded_bytes_per_column_cycle": 81,
+    "payload_bytes_per_column_cycle": 64,
+    "per_8_columns_payload_read_bytes_per_core_cycle": 512,
+    "MACs_added": 0
+  },
+  "collision": "Same-address read/write asserted together is explicitly faulted and quarantined; no reliance on read-during-write data ordering. Full reducer prdy/write/issue ordering must prove this absent on legal inputs.",
+  "capture": {
+    "encoded_data_register_stages": 2,
+    "encoded_data_bits_per_column": 1296,
+    "request_metadata_stages": 3,
+    "request_metadata_bits_per_column": 216,
+    "fault_dualrail_bits_per_column": 2,
+    "total_registered_bits_per_column": 1514,
+    "old_RQ_RQ2_payload_bits_per_column": 1024,
+    "added_register_bits_all_columns": 3920
+  },
+  "clock": {
+    "core": "Actual existing half-rate gated core,1666.667ps nominal derived from833.333ps stream, not a relaxed SDC substitution",
+    "new_macro_SS_clk_to_q_ps": 455.3205489475797,
+    "old_macro_SS_clk_to_q_ps": 460.3849396734295,
+    "uncertainty_setup_ps": 60,
+    "uncertainty_hold_ps": 25,
+    "physical_ECC_decode_slack_ps": null
+  },
+  "energy_per_column_access_fJ": {
+    "new_SS_read": 857.5355753088364,
+    "old_SS_read": 434.8308308250413,
+    "new_SS_write": 2933.737528588837,
+    "old_SS_write": 1137.5453380890413,
+    "ECC_and_clock_energy": null
+  },
+  "latency": {
+    "intended_issue_to_tree_core_edges": 4,
+    "intended_added_core_cycles": 0,
+    "measured_added_core_cycles": null,
+    "contract": "Retain actual address-register\u2192macro\u2192encodedRQ\u2192encodedRQ2 edges, decode/check before tree admission. If final ECC/check path fails physical timing, add a real stage and shift valid/index together, price two streaming cycles per added half-rate core cycle."
+  },
+  "routing": "Three independent256bit macro buses percolumn instead of one512bit bus; common address/enable fanout3,8parallel payloadECCdecode slices+1identityslice percolumn. Actual track demand/halo/clock/SSFF and wholecore footprint pending.",
+  "scope_holds": [
+    "actual protected generation/arm/read identity integration",
+    "minimum full512bit64row column exact/CE/UE/identity/collision gate",
+    "fullshape banked reduction exactness against unchanged golden",
+    "remaining core/shell mutablecontrol protection",
+    "actual24macro physical placement and SSFF closure",
+    "fullnative token latency recomposition"
+  ],
+  "no_claim": "Raw macro area reduction is not total area or floorplan fit. Existing h2 routed evidence belongs to old8macro raw source and cannot qualify this successor."
+}

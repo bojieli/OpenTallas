@@ -29,13 +29,53 @@ Every line of the three targets carries a status, its effect on the single-user 
 | DS ROM 1M | published (85 stages, full-rate BF) | 1,596.7 | 4,702.0 | closure-cost ledger TOTAL |
 | DS ROM 1M | actual 1792, HALF BF-dedicated: 120 stages / 480 dies (77ffa0428 geometry, 2d811aafb mapping) | 1,305.0 | 3,993.3 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. Only the +35 stage hops and the BF16 half-rate doubling are priced. No bound is proven. |
 | DS ROM 1M | actual 1792, FULL shared: 98 stages / 392 dies (77ffa0428, 2d811aafb) | 1,337.3 | 4,065.7 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. The halving of the q phases on BF pairs is not priced (undercount). No bound is proven. |
+| DS ROM 1M | + full-shape PQ partition | — | — | **Partial-priced candidate**, line `pq_fullshape_partition`. Cost per field phase: 14 non-CAM cycles (design v2, 9a8c86255, branch only) plus the **measured** native root-CAM delta. The CAM delta, including publication, is +1 isolated, +2 two-leaf or +4 eight-leaf (main 4251eb216), for a total of +15..+18, about 0.47–0.56% AR. MTP is not priced, and the per-token critical phases on the 1,792 mapping are not composed. Geometry is provisional: roots in the new 164.16 µm row, core 0.32 mm² in the 449 × 1,728 µm slot, return write-back blocks 0.40 mm². Protection storage is +387 bits a root (49,536 for 128 roots), sizing only. The protected root face/parity is OPEN (the native interface lacks it): zero credit. Stage-B timing is unmeasured (the stage-C fallback is modelled, default-off), and HALF serial-lane beat-shift exactness is not shown. |
 | DS ROM 1M | option B, 2,304 pairs mixed slots, 85 stages / 340 dies, full-rate BF (505a9b484) | (1,754.3) | (5,098.3) | **Numerical, legal-fit failed, not physically qualified.** These are field-vehicle numbers only: never measured silicon, never a qualified or adopted rate. The mixed183 geometry fits at most 2,048 pairs (77ffa0428). The branch label "DS ADOPT" is quoted in the ledger for history only. |
 | HBM DS 1M | three_machine row (stale) | 1,948.8 | 3,944.2 | no die closure costs |
 | HBM DS 1M | r23 closure headline | 1,750.9 | 3,626.1 | light FEC, no lever credit |
 | HBM DS 1M | closure + full FEC, no lever credit | 1,656.7 | 3,526.2 | includes the priced true-credit and protected-SRAM costs |
 | HBM DS 1M | unified candidate | 1,782.3 | 3,772.7 | adds the exact levers (minimum-component exactness, SS/FF not admitted). Excludes the gated II=3 rate cap (next rows). |
-| HBM DS 1M | unified, II=3 cap stands | 1,688.0 | 3,262.1 | packet-SRAM receive queue and candidate protected CDC drain at II=3, a third of line rate per port: +30.78 µs AR / +172 µs MTP on the measured receive streaming of 18,470 / 103,196 cycles. The rotation-latency term below is also included. Source: historical CDC design b49366616 (`claude/hbm-collective-cdc-design-20261007`); this conditional sensitivity is not physical adoption. |
-| HBM DS 1M | unified, 3-bank rotation (II=1) | 1,780.5 | 3,770.7 | the rotation lands for both the CDC and the packet SRAM: +2 cycles a pass (+1.02 µs), replacing the +2 × 265 SRAM term; +12,093 µm² |
+| HBM DS 1M | unified, refill in the CDC only | 1,688.0 | 3,262.1 | The CDC rate cap is resolved by the II=1 refill (B′), measured in RTL on main at 9ead91a15; SS timing is unmeasured, with a risk on the 64:1 × 648-bit read-address path and a proposed function-preserving fix. The packet SRAM is still at II=3, which is gated: +30.78 µs AR / +172 µs MTP on 18,470 / 103,196 cycles of measured receive streaming. Refill latency: +1.02 µs. |
+| HBM DS 1M | unified, refill in both the CDC and the packet SRAM | 1,780.5 | 3,770.7 | Full line rate. +1.02 µs (2 cycles a pass × 610 passes) replaces the +2 × 265 SRAM term; ~60–100 µm² of logic, no added state. Recommended by the v2 design (2ae0d7d33, branch only). The full-rate credit contract is gated: the native credit producer is missing, and today a testbench preloads the credits. The 3-bank rotation (+12,093 µm²) is the fallback only. |
+
+**SM→SU result edge (all HBM DS rows).** Every HBM DS row has a die-view-only result edge until gate `sm_su_result_edge_native` closes (audit 8c8bb2af2, branch `claude/hbm-sm-su-result-contract-20261007` only). The published handoff (343 cycles a token, "stations gather a2 +1") is not a native edge: in the die view it ends in hfd_su's XOR exercise envelope, and in RTL it runs through the GPU-comparator memory model. Two alternatives are listed and not summed:
+
+| Alternative | Cycles a token | Status | Effect on the unified candidate | AR / MTP tok/s |
+|---|---:|---|---|---|
+| Proposed native edge (SU ingress FIFOs + relay slices) | 1,029 | priced candidate | +0.10% AR / +0.05% MTP | 1,780.5 / 3,770.8 |
+| RTL store-and-forward floor (applies if no native edge is built) | 132,520 | estimate | +19.7% AR / +10.0% MTP (+19.6% / +10.0% over the published 343) | 1,489.8 / 3,430.0 |
+
+The Qwen 8K HBM rows are unaffected.
+
+**Unestablished contracts (zero performance credit).** These are listed in `unestablished_contracts`:
+
+- the protected PQ root face/parity;
+- the HBM CDC frequency lock (a hardware contract, not an assumption);
+- the native credit producer;
+- the SM→SU native edge;
+- the packet-SRAM II=1 refill;
+- PQ stage-B timing;
+- HALF serial-lane exactness for a beat shift of ≤2 cycles;
+- the 1,792 field phases.
+
+The HBM refill compositions are conditional sensitivities on these contracts. No composition takes credit for any of them. Every cited source file present in the tree is pinned by sha256 under `source_sha256`. Lines cite their main commits.
+
+**Die-level evidence (owner steer 2026-10-07: academic validation, not tape-out).** `die_level_evidence` covers each die. The five items are:
+
+- full-die GRT overflow;
+- die SS/FF STA on GRT parasitics;
+- the CTS-validated skew plan;
+- IR;
+- representative-region DRT with the GRT-vs-DRT error bar.
+
+Each item is marked done, in progress or missing. Each names the geometry it was run on, which for DS and HBM is a previous geometry rather than the current basis. There is no flat full-die DRT, by design.
+
+Current state:
+
+- Region DRT and the error bar are missing on all three dies.
+- Die STA on GRT parasitics is missing for Qwen and DS; HBM is in progress.
+- IR has committed records on all three, on earlier frames.
+- The CTS plan is done for DS and HBM, on earlier geometries, and missing for Qwen.
 
 DS ROM / HBM, per user, both sides candidates:
 

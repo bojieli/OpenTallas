@@ -392,6 +392,23 @@
    "cum_mtp_pct": -3.708
   },
   {
+   "item": "softmax_exp_recut",
+   "description": "Softmax exp tile closed only with RECUT (dsrom_softmax_safe_exprcf_bd30aca4a CLOSED SS +123.11 / FF +16.70, f12r multiplier/adder +2 cuts, LAT 11): attn.exp 225 -> 255 (+30 over SAFE2; dsrom_softmax_recovery_20261007 RECUT1_or_2_vs_m5 +31)",
+   "cycles": [
+    [
+     "*.attn.exp",
+     30,
+     0
+    ]
+   ],
+   "ar_tok_s": 1599.0,
+   "mtp_tok_s": 4707.5,
+   "ar_pct": -0.162,
+   "mtp_pct": -0.127,
+   "cum_ar_pct": -4.537,
+   "cum_mtp_pct": -3.83
+  },
+  {
    "item": "su_meso_d8g1",
    "description": "SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer",
    "cycles": [
@@ -411,19 +428,19 @@
      0
     ]
    ],
-   "ar_tok_s": 1596.7,
-   "mtp_tok_s": 4702.0,
-   "ar_pct": -0.306,
+   "ar_tok_s": 1594.2,
+   "mtp_tok_s": 4696.0,
+   "ar_pct": -0.3,
    "mtp_pct": -0.244,
-   "cum_ar_pct": -4.675,
-   "cum_mtp_pct": -3.943
+   "cum_ar_pct": -4.824,
+   "cum_mtp_pct": -4.065
   }
  ],
  "total": {
-  "ar_tok_s": 1596.7,
-  "mtp_tok_s": 4702.0,
-  "ar_pct": -4.675,
-  "mtp_pct": -3.943
+  "ar_tok_s": 1594.2,
+  "mtp_tok_s": 4696.0,
+  "ar_pct": -4.824,
+  "mtp_pct": -4.065
  },
  "candidates": [
   {
@@ -441,10 +458,10 @@
      0
     ]
    ],
-   "ar_tok_s": 1596.6,
-   "mtp_tok_s": 4700.4,
+   "ar_tok_s": 1594.1,
+   "mtp_tok_s": 4694.5,
    "ar_pct_vs_total": -0.006,
-   "mtp_pct_vs_total": -0.034
+   "mtp_pct_vs_total": -0.032
   },
   {
    "item": "fused_head",
@@ -456,8 +473,8 @@
      0
     ]
    ],
-   "ar_tok_s": 1596.7,
-   "mtp_tok_s": 4701.4,
+   "ar_tok_s": 1594.2,
+   "mtp_tok_s": 4695.4,
    "ar_pct_vs_total": 0.0,
    "mtp_pct_vs_total": -0.013
   },
@@ -486,10 +503,10 @@
      0.7748
     ]
    ],
-   "ar_tok_s": 1357.2,
-   "mtp_tok_s": 4109.7,
-   "ar_pct_vs_total": -15.0,
-   "mtp_pct_vs_total": -12.597
+   "ar_tok_s": 1355.4,
+   "mtp_tok_s": 4105.1,
+   "ar_pct_vs_total": -14.979,
+   "mtp_pct_vs_total": -12.583
   },
   {
    "item": "bf_recut",
@@ -541,10 +558,10 @@
      0
     ]
    ],
-   "ar_tok_s": 1581.7,
-   "mtp_tok_s": 4666.5,
-   "ar_pct_vs_total": -0.939,
-   "mtp_pct_vs_total": -0.755
+   "ar_tok_s": 1579.2,
+   "mtp_tok_s": 4660.6,
+   "ar_pct_vs_total": -0.941,
+   "mtp_pct_vs_total": -0.754
   },
   {
    "item": "bf_unroll",
@@ -596,10 +613,185 @@
      0
     ]
    ],
-   "ar_tok_s": 1578.7,
-   "mtp_tok_s": 4659.5,
-   "ar_pct_vs_total": -1.127,
-   "mtp_pct_vs_total": -0.904
+   "ar_tok_s": 1576.2,
+   "mtp_tok_s": 4653.6,
+   "ar_pct_vs_total": -1.129,
+   "mtp_pct_vs_total": -0.903
+  },
+  {
+   "item": "selector_pipe2",
+   "description": "Selector PIPE2 (claude/s81-blocks-20261007 36b7a0452: selt_q hist input reg + pair-sum cuts, out-FIFO input reg, registered sweep bound, CMP_RETIME; selt_c MRG_PIPE + RQPIPE + SLAT 4): bench tail mean 153 vs 127 (+26 a segment over the +20 already priced)",
+   "adds": [
+    [
+     "*.attn.idx.topk_local",
+     26,
+     0
+    ],
+    [
+     "*.attn.cand.topk_local",
+     26,
+     0
+    ]
+   ],
+   "ar_tok_s": 1593.7,
+   "mtp_tok_s": 4694.5,
+   "ar_pct_vs_total": -0.031,
+   "mtp_pct_vs_total": -0.032
+  },
+  {
+   "item": "pq_rootcam_B",
+   "description": "PQ root CAM stage B (4251eb216, OPC 0): measured eight-leaf root +4 cycles vs native, charged per field phase (upper bound: every phase exposes one 8-leaf root)",
+   "adds": [
+    [
+     "*.attn.a_proj",
+     4,
+     0
+    ],
+    [
+     "*.attn.wq_b",
+     4,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     4,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     4,
+     0
+    ],
+    [
+     "*.attn.wo_b",
+     4,
+     0
+    ],
+    [
+     "*.ffn.router",
+     4,
+     0
+    ],
+    [
+     "*.ffn.shared_gu",
+     4,
+     0
+    ],
+    [
+     "*.ffn.experts_gu",
+     4,
+     0
+    ],
+    [
+     "*.ffn.down",
+     4,
+     0
+    ]
+   ],
+   "ar_tok_s": 1591.9,
+   "mtp_tok_s": 4690.6,
+   "ar_pct_vs_total": -0.144,
+   "mtp_pct_vs_total": -0.115
+  },
+  {
+   "item": "pq_rootcam_CP",
+   "description": "PQ root CAM stage C + PAR protected face (claude/s81-blocks-20261007 387610a35, OPC 1 PAR 1): eight-leaf +8 vs native (input station +1, operand fetch +1 a pass)",
+   "adds": [
+    [
+     "*.attn.a_proj",
+     8,
+     0
+    ],
+    [
+     "*.attn.wq_b",
+     8,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     8,
+     0
+    ],
+    [
+     "*.attn.wo_a",
+     8,
+     0
+    ],
+    [
+     "*.attn.wo_b",
+     8,
+     0
+    ],
+    [
+     "*.ffn.router",
+     8,
+     0
+    ],
+    [
+     "*.ffn.shared_gu",
+     8,
+     0
+    ],
+    [
+     "*.ffn.experts_gu",
+     8,
+     0
+    ],
+    [
+     "*.ffn.down",
+     8,
+     0
+    ]
+   ],
+   "ar_tok_s": 1589.5,
+   "mtp_tok_s": 4685.1,
+   "ar_pct_vs_total": -0.295,
+   "mtp_pct_vs_total": -0.232
+  },
+  {
+   "item": "coll_gbx_fmt1",
+   "description": "Collective gearbox FMT1 (fixed 3-in-4 slot format, no bit shifter): slot rate 0.75 vs 0.765 per gearbox beat (-2.0 %), charged as +2.0 % of every collective node (upper bound; link-up is faster: TP4 bench end 3,012 vs 3,374 cycles)",
+   "adds": [
+    [
+     "*.attn.out_allreduce",
+     0,
+     0.02
+    ],
+    [
+     "*.ffn.combine_allreduce",
+     0,
+     0.02
+    ],
+    [
+     "*.attn.a_allgather",
+     0,
+     0.02
+    ],
+    [
+     "*.attn.idx.topk_merge",
+     0,
+     0.02
+    ],
+    [
+     "*.attn.cand.merge",
+     0,
+     0.02
+    ],
+    [
+     "*.attn.rows_allgather",
+     0,
+     0.02
+    ],
+    [
+     "*.ffn.router_allgather",
+     0,
+     0.02
+    ]
+   ],
+   "ar_tok_s": 1589.4,
+   "mtp_tok_s": 4684.2,
+   "ar_pct_vs_total": -0.301,
+   "mtp_pct_vs_total": -0.251
   }
  ],
  "unpriced_candidates": [
@@ -613,10 +805,10 @@
  "physical_adoption": false,
  "pending_defect": [],
  "as_is": {
-  "ar_tok_s": 1596.7,
-  "mtp_tok_s": 4702.0,
-  "ar_pct": -4.675,
-  "mtp_pct": -3.943,
+  "ar_tok_s": 1594.2,
+  "mtp_tok_s": 4696.0,
+  "ar_pct": -4.824,
+  "mtp_pct": -4.065,
   "basis": "every item + the PENDING-DEFECT all-gathers"
  }
 }

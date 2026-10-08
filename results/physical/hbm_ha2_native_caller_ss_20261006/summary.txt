@@ -1,0 +1,61 @@
+2026-10-06 13:50 PT Claude:tk-hbm-harvest: SS analysis re-run from 1_synth.odb (orfs/ss_odb.tcl, no remap): 1,463,677 regs, ideal clock, SS worst -3,828 ps: drot[4] (9-way %9 rotating dispatch) -> rb pop -> u_rb.rp. TU caller dispatch needs one-hot rotation + registered pops before any routed verdict. Pre-route ideal-clock only; not adoptable.
+OT_REGISTERS 1463677
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[6].u_rb.rp[8]$_DFFE_PN0P_
+        -3828.27   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[5].u_rb.rp[8]$_DFFE_PN0P_
+        -3820.99   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[5].u_rb.rp[7]$_DFFE_PN0P_
+        -3813.73   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[6].u_rb.rp[7]$_DFFE_PN0P_
+        -3806.41   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[0].u_rb.rp[8]$_DFFE_PN0P_
+        -3804.08   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[2].u_rb.rp[8]$_DFFE_PN0P_
+        -3800.34   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[0].u_rb.rp[6]$_DFFE_PN0P_
+        -3797.14   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[0].u_rb.rp[4]$_DFFE_PN0P_
+        -3782.02   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[0].u_rb.rp[5]$_DFFE_PN0P_
+        -3782.01   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[0].u_rb.rp[7]$_DFFE_PN0P_
+        -3781.26   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[2].u_rb.rp[4]$_DFFE_PN0P_
+        -3778.28   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[2].u_rb.rp[7]$_DFFE_PN0P_
+        -3777.57   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[5].u_rb.rp[5]$_DFFE_PN0P_
+        -3776.31   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[5].u_rb.rp[4]$_DFFE_PN0P_
+        -3776.23   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[5].u_rb.rp[6]$_DFFE_PN0P_
+        -3776.23   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[6].u_rb.rp[6]$_DFFE_PN0P_
+        -3776.22   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.u_dqo.rp[5]$_DFFE_PN0P_
+        -3771.11   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.u_dqo.rp[6]$_DFFE_PN0P_
+        -3771.07   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.u_dqo.rp[4]$_DFFE_PN0P_
+        -3770.93   slack (VIOLATED)
+Startpoint: g_on.drot[4]$_DFF_PN0_
+Endpoint: g_on.g_rx[6].u_rb.rp[5]$_DFFE_PN0P_

@@ -149,14 +149,25 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
   genvar p;
   generate for (p = 0; p < 4; p = p + 1) begin : ga
     wire [12:0] t13;
+    if (SLOT >= 4) begin : gr
+    ot_svs_asm_r #(.NB(5), .TW(13)) u_a (.ck(ck), .rst_n(rn), .bv(sv[p]), .btag(sq[p*277+260 +: 13]),
+      .bbeat({1'b0, sq[p*277+256 +: 4]}), .bdata(sq[p*277 +: 256]), .full(full[p]), .tag(t13), .data(dt[p]),
+      .take(k_take[p]));
+    end else begin : gp
     ot_svc_asm #(.NB(5), .TW(13)) u_a (.ck(ck), .rst_n(rn), .bv(sv[p]), .btag(sq[p*277+260 +: 13]),
       .bbeat({1'b0, sq[p*277+256 +: 4]}), .bdata(sq[p*277 +: 256]), .full(full[p]), .tag(t13), .data(dt[p]),
       .take(k_take[p]));
+    end
     assign tg[p] = t13[9:0];
   end endgenerate
   wire [9:0] t10;
+  generate if (SLOT >= 4) begin : gwr
+  ot_svs_asm_r #(.NB(5), .TW(10)) u_wa (.ck(ck), .rst_n(rn), .bv(wsv), .btag(wsq[270:261]), .bbeat(wsq[260:256]),
+    .bdata(wsq[255:0]), .full(full[4]), .tag(t10), .data(dt[4]), .take(w_take));
+  end else begin : gwp
   ot_svc_asm #(.NB(5), .TW(10)) u_wa (.ck(ck), .rst_n(rn), .bv(wsv), .btag(wsq[270:261]), .bbeat(wsq[260:256]),
     .bdata(wsq[255:0]), .full(full[4]), .tag(t10), .data(dt[4]), .take(w_take));
+  end endgenerate
   assign tg[4] = t10;
   reg [2:0] lr;
   reg lv, lv2; reg [9:0] lt; reg [1087:0] ld;
@@ -170,7 +181,78 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
   always @(posedge ck or negedge rn)
     if (!rn) begin lv <= 1'b0; lr <= 3'd0; end
     else begin lv <= any; if (any) lr <= (sel == 3'd4) ? 3'd0 : sel + 3'd1; end
-  generate if (SLOT == 2) begin : gs2
+  generate if (SLOT == 4) begin : gs4
+    // views agent 2026-10-07 (SE_s7 d6f9d25a1 SLOT 2 route -45 ps, owner: stage EVERY failing class): assembler inputs
+    // registered with a pre-decoded one-hot beat enable in kept copies (ot_svs_asm_r, +1 cycle; chain -> b[beat] -45),
+    // slot write enables from 8 kept sv_q copies (sv_q -> sd 1,088 x 5 loads, -43), one-hot grant in 8 kept copies with
+    // per-chunk line enables (gq -> ld -34), one more line register before the port (SLOT 3).  +3 cycles per K/W line vs
+    // SLOT 1 (+2 vs SLOT 2), same order.
+    reg [4:0] sv_q, gq; (* keep *) reg [4:0] svr [0:7]; (* keep *) reg [4:0] gqr [0:7];
+    reg [9:0] st [0:4]; reg [1087:0] sd [0:4];
+    wire [4:0] fill = full & ~sv_q;
+    wire [4:0] drain = any ? (5'd1 << sel) : 5'd0;
+    assign cand = sv_q;
+    assign k_take = fill[3:0];
+    assign w_take = fill[4];
+    integer r;
+    always @(posedge ck or negedge rn)
+      if (!rn) begin sv_q <= 5'd0; gq <= 5'd0; for (r = 0; r < 8; r = r + 1) begin svr[r] <= 5'd0; gqr[r] <= 5'd0; end end
+      else begin
+        sv_q <= (sv_q & ~drain) | fill; gq <= drain;
+        for (r = 0; r < 8; r = r + 1) begin svr[r] <= (sv_q & ~drain) | fill; gqr[r] <= drain; end
+      end
+    for (p = 0; p < 5; p = p + 1) begin : gsl
+      always @(posedge ck) if (fill[p]) st[p] <= tg[p];
+      for (genvar c = 0; c < 8; c = c + 1) begin : gc
+        always @(posedge ck) if (full[p] & ~svr[c][p]) sd[p][c*136 +: 136] <= dt[p][c*136 +: 136];
+      end
+    end
+    reg [1087:0] dsel; reg [9:0] tsel; integer q;
+    always @* begin
+      dsel = 1088'd0; tsel = 10'd0;
+      for (q = 0; q < 5; q = q + 1) begin
+        for (r = 0; r < 8; r = r + 1) dsel[r*136 +: 136] = dsel[r*136 +: 136] | ({136{gqr[r][q]}} & sd[q][r*136 +: 136]);
+        tsel = tsel | ({10{gq[q]}} & st[q]);
+      end
+    end
+    reg lv2a; reg [9:0] lta; reg [1087:0] lda;
+    always @(posedge ck or negedge rn) if (!rn) begin lv2a <= 1'b0; lv2 <= 1'b0; end else begin lv2a <= |gq; lv2 <= lv2a; end
+    always @(posedge ck) if (|gq) lta <= tsel;
+    for (genvar c = 0; c < 8; c = c + 1) begin : gl
+      always @(posedge ck) if (|gqr[c]) lda[c*136 +: 136] <= dsel[c*136 +: 136];
+    end
+    always @(posedge ck) begin lt <= lta; ld <= lda; end
+  end else if (SLOT == 3) begin : gs3
+    // views agent 2026-10-07 (SE_s7 aggressive variant, owner LAUNCH IMMEDIATELY: stages on every class within 100 ps):
+    // SLOT 2 + the one-hot grant held in 8 KEPT copies (each drives 136 of the 1,088 data bits: no 1,088-load net on the
+    // grant) + the line re-registered once more before the port (ld -> l7 was +83.5 ps over 7 levels).  +2 cycles per
+    // K/W line vs SLOT 1 (+1 vs SLOT 2), same order.
+    reg [4:0] sv_q; (* keep *) reg [4:0] gqr [0:7]; reg [4:0] gq; reg [9:0] st [0:4]; reg [1087:0] sd [0:4];
+    wire [4:0] fill = full & ~sv_q;
+    wire [4:0] drain = any ? (5'd1 << sel) : 5'd0;
+    assign cand = sv_q;
+    assign k_take = fill[3:0];
+    assign w_take = fill[4];
+    integer r;
+    always @(posedge ck or negedge rn)
+      if (!rn) begin sv_q <= 5'd0; gq <= 5'd0; for (r = 0; r < 8; r = r + 1) gqr[r] <= 5'd0; end
+      else begin sv_q <= (sv_q & ~drain) | fill; gq <= drain; for (r = 0; r < 8; r = r + 1) gqr[r] <= drain; end
+    for (p = 0; p < 5; p = p + 1) begin : gsl
+      always @(posedge ck) if (fill[p]) begin st[p] <= tg[p]; sd[p] <= dt[p][1087:0]; end
+    end
+    reg [1087:0] dsel; reg [9:0] tsel; integer q;
+    always @* begin
+      dsel = 1088'd0; tsel = 10'd0;
+      for (q = 0; q < 5; q = q + 1) begin
+        for (r = 0; r < 8; r = r + 1) dsel[r*136 +: 136] = dsel[r*136 +: 136] | ({136{gqr[r][q]}} & sd[q][r*136 +: 136]);
+        tsel = tsel | ({10{gq[q]}} & st[q]);
+      end
+    end
+    reg lv2a; reg [9:0] lta; reg [1087:0] lda;
+    always @(posedge ck or negedge rn) if (!rn) begin lv2a <= 1'b0; lv2 <= 1'b0; end else begin lv2a <= |gq; lv2 <= lv2a; end
+    always @(posedge ck) if (|gq) begin lta <= tsel; lda <= dsel; end
+    always @(posedge ck) begin lt <= lta; ld <= lda; end
+  end else if (SLOT == 2) begin : gs2
     // views agent (SE_s7 70a27c406: lr -> rot -> off -> mod-5 sel -> 5:1 x 1088 mux -> ld, 25 levels, -267.6 ps over
     // 400 endpoints): SLOT 1 plus a REGISTERED one-hot grant: the arbitration (5-bit) lands in gq, the slot data are
     // read one cycle later by an AND-OR over gq (a drained slot is refilled no earlier than the edge that reads it, so
@@ -216,7 +298,7 @@ module ot_svs_asm #(parameter integer SLOT = 0) (
     assign w_take = any && (sel == 3'd4);
     always @(posedge ck) if (any) begin lt <= tg[sel]; ld <= dt[sel][1087:0]; end
   end endgenerate
-  assign line = {ld, lt, (SLOT == 2) ? lv2 : lv};
+  assign line = {ld, lt, (SLOT >= 2) ? lv2 : lv};
 endmodule
 
 // KV (KV = 1) / index-key (KV = 0) assembler at its port
@@ -302,3 +384,35 @@ module ot_svs_lane (
   assign o_v = v; assign o_d = {t, b, d}; assign room_q = rq;
 endmodule
 `default_nettype wire
+
+// views agent 2026-10-07: ot_svc_asm with its beat input registered (+1 cycle).  The one-hot write enable is decoded
+// BEFORE the register and held in 4 kept copies (64-bit data chunks each), so no beat-decode cone or 1,280-load enable
+// net follows the wire-stage chain.  Same function as ot_svc_asm one cycle later (a beat arriving with take on a full
+// assembler is written but not marked, as there).
+module ot_svs_asm_r #(parameter integer NB = 5, parameter integer TW = 13) (
+  input wire ck, input wire rst_n,
+  input wire bv, input wire [TW-1:0] btag, input wire [4:0] bbeat, input wire [255:0] bdata,
+  output wire full, output wire [TW-1:0] tag, output wire [NB*256-1:0] data, input wire take);
+  reg [NB-1:0] have, oh_q; (* keep *) reg [NB-1:0] we_q [0:3]; reg bv_q;
+  reg [TW-1:0] t, t_q; reg [255:0] d_q;
+  reg [255:0] b [0:NB-1];
+  wire [NB-1:0] oh = bv ? NB'(1 << bbeat) : {NB{1'b0}};
+  integer k;
+  assign full = &have;
+  assign tag = t;
+  genvar g, c;
+  generate for (g = 0; g < NB; g = g + 1) begin : gd
+    assign data[g*256 +: 256] = b[g];
+    for (c = 0; c < 4; c = c + 1) begin : gc
+      always @(posedge ck) if (we_q[c][g]) b[g][c*64 +: 64] <= d_q[c*64 +: 64];
+    end
+  end endgenerate
+  always @(posedge ck) begin d_q <= bdata; t_q <= btag; if (bv_q) t <= t_q; end
+  always @(posedge ck or negedge rst_n)
+    if (!rst_n) begin bv_q <= 1'b0; oh_q <= {NB{1'b0}}; for (k = 0; k < 4; k = k + 1) we_q[k] <= {NB{1'b0}}; have <= {NB{1'b0}}; end
+    else begin
+      bv_q <= bv; oh_q <= oh; for (k = 0; k < 4; k = k + 1) we_q[k] <= oh;
+      if (full && take) have <= {NB{1'b0}};
+      else have <= have | oh_q;
+    end
+endmodule

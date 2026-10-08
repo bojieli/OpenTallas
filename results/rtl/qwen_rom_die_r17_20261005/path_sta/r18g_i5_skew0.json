@@ -1,0 +1,207 @@
+{
+ "schema": "opentallas.qwen-rom-die.path-sta.v1",
+ "wirelength": "/tmp/qdie17/pull/r18g_i5/wirelength.csv",
+ "pitch_um": 430.56,
+ "measured_stage": {
+  "record": "results/rtl/qwen_corridor_gate_20261003 (D_tile_r2 430.56 um: SS60 +11.9 ps, FF25 met; A spans 504 um: SS -29..-79 ps)"
+ },
+ "block_words": {
+  "count": 96,
+  "worst": {
+   "word": "bword_90",
+   "legs": [
+    "bword_90",
+    "pfrag_0_port_tiles_0_f1",
+    "pword_0"
+   ],
+   "routed_um": [
+    11697.8,
+    314.2,
+    14894.9
+   ],
+   "centre_um": [
+    10887.7,
+    1037.7,
+    14763.6
+   ],
+   "stages_routed": 64,
+   "stages_floorplan": 64
+  },
+  "stages_routed_max": 64,
+  "stages_floorplan_max": 64,
+  "mean_routed": 36.77,
+  "delta_vs_floorplan": 0
+ },
+ "links": {
+  "per_stack": [
+   {
+    "stack": "WS",
+    "hops": 10,
+    "routed_um": 19847.5,
+    "stages_routed_hops": 51,
+    "stages_routed_min": 47,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   },
+   {
+    "stack": "WN",
+    "hops": 10,
+    "routed_um": 20614.4,
+    "stages_routed_hops": 52,
+    "stages_routed_min": 48,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   },
+   {
+    "stack": "ES",
+    "hops": 10,
+    "routed_um": 20097.0,
+    "stages_routed_hops": 50,
+    "stages_routed_min": 47,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   },
+   {
+    "stack": "EN",
+    "hops": 10,
+    "routed_um": 20503.6,
+    "stages_routed_hops": 51,
+    "stages_routed_min": 48,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   }
+  ],
+  "worst": "WN",
+  "stages_routed": 52,
+  "floorplan_priced": 53
+ },
+ "single_hop": {
+  "hbm_cdc": {
+   "hops": 128,
+   "worst_um": 55.4,
+   "worst": "cdh_EN_31",
+   "over_pitch": [],
+   "over_504": 0,
+   "n_over_pitch": 0
+  },
+  "cdc_core": {
+   "hops": 128,
+   "worst_um": 55.4,
+   "worst": "cdc_EN_31",
+   "over_pitch": [],
+   "over_504": 0,
+   "n_over_pitch": 0
+  },
+  "phy_dfi": {
+   "hops": 4,
+   "worst_um": 18.5,
+   "worst": "dfi_WN",
+   "over_pitch": [],
+   "over_504": 0,
+   "n_over_pitch": 0
+  },
+  "spine_local": {
+   "hops": 2,
+   "worst_um": 2679.6,
+   "worst": "x3",
+   "over_pitch": [
+    {
+     "bus": "x3",
+     "routed_um": 2679.6,
+     "stages_needed": 7
+    },
+    {
+     "bus": "attn_ret",
+     "routed_um": 1099.6,
+     "stages_needed": 3
+    }
+   ],
+   "over_504": 2,
+   "n_over_pitch": 2
+  },
+  "sequencer": {
+   "hops": 6,
+   "worst_um": 17223.4,
+   "worst": "seq_coll",
+   "over_pitch": [
+    {
+     "bus": "seq_coll",
+     "routed_um": 17223.4,
+     "stages_needed": 41
+    },
+    {
+     "bus": "seq_done",
+     "routed_um": 2938.3,
+     "stages_needed": 7
+    }
+   ],
+   "over_504": 2,
+   "n_over_pitch": 2
+  },
+  "crom": {
+   "hops": 2,
+   "worst_um": 295.7,
+   "worst": "crom_a",
+   "over_pitch": [],
+   "over_504": 0,
+   "n_over_pitch": 0
+  }
+ },
+ "pipelined_hops": {
+  "corridor": {
+   "hops": 1536,
+   "worst_um": 1626.2,
+   "worst": "cor_20_17",
+   "stages_worst_hop": 4
+  },
+  "head_chain": {
+   "hops": 64,
+   "worst_um": 2670.4,
+   "worst": "head_32",
+   "stages_worst_hop": 7
+  },
+  "tree_block": {
+   "hops": 2880,
+   "worst_um": 4010.2,
+   "worst": "tree_95_3_0b",
+   "stages_worst_hop": 10
+  },
+  "link_channel": {
+   "hops": 24,
+   "worst_um": 3160.1,
+   "worst": "lnkh_0E_0",
+   "stages_worst_hop": 8
+  },
+  "link_spine": {
+   "hops": 12,
+   "worst_um": 2513.3,
+   "worst": "lnkv_0_E_0",
+   "stages_worst_hop": 6
+  },
+  "io": {
+   "hops": 12,
+   "worst_um": 18784.9,
+   "worst": "emb",
+   "stages_worst_hop": 44
+  },
+  "tree_spine": {
+   "hops": 1,
+   "worst_um": 776.2,
+   "worst": "tt_res",
+   "stages_worst_hop": 2
+  }
+ },
+ "method": "GRT wire length per k-bundled net (worst bundle of each bus); stages = ceil(routed / 430.56 um); block-word and link paths sum their registered hops; single-hop classes must fit one stage",
+ "skew_ps": 0.0,
+ "floorplan": {
+  "slab_group_h": 455.76,
+  "cdc": "183.048,183.048",
+  "die": {
+   "w": 24650.784,
+   "h": 32801.76,
+   "mm2": 808.589,
+   "budget_mm2": 858,
+   "margin_mm2": 49.411
+  }
+ }
+}

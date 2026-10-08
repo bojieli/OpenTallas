@@ -184,6 +184,11 @@ module ot_v41_rom_elem_qx_w10 #(
     parameter integer QZ_NE = 4,        // QZ: copies of each capture register's load enable per macro
     parameter integer QY = 0,           // see the header; 0 = the qz circuit
     parameter integer QX = 0,           // see the header; 0 = the QY circuit
+    // QBF (BF rowfix re-cut A, 2026-10-07, default 0 = unchanged): permit BF16 = 1 under QPIPE / QZ (the S81 BF pair on
+    // the q-element's closed walker / issue / tree / chain fixes); GRADUAL_RNE is passed to the BF16 lanes (mandatory
+    // multiplier repair of the BF view).  With QBF = 0 or BF16 = 0 nothing below changes.
+    parameter integer QBF = 0,
+    parameter integer GRADUAL_RNE = 0,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -428,7 +433,7 @@ module ot_v41_rom_elem_qx_w10 #(
             $display("QZ_CHECK FAIL: registered gate enable %b != cg_en_q %b at %t", z_q, cg_en_q, $time); $fatal(1);
         end
 `endif
-        if (QTIMING_FIX == 0 || QPIPE == 0 || FAST == 0 || PP == 0 || QP_CAP != 0 || BF16 != 0 || BP != 0) begin : g_qz_bad
+        if (QTIMING_FIX == 0 || QPIPE == 0 || FAST == 0 || PP == 0 || QP_CAP != 0 || (BF16 != 0 && QBF == 0) || BP != 0) begin : g_qz_bad
             initial begin $display("ot_v41_rom_elem_qz_w10: QZ requires QTIMING_FIX = QPIPE = FAST = PP = 1, QP_CAP = BF16 = BP = 0"); $finish; end
         end
     end else begin : g_nqz_cg
@@ -1429,7 +1434,7 @@ module ot_v41_rom_elem_qx_w10 #(
     reg [255:0] c3_q0, c3_q1;
     reg [9:0]   c3_e0, c3_e1;
     always @(posedge gclk) if (QPIPE != 0 && QP_CAP != 0) begin c3_q0 <= i2_q0; c3_e0 <= i2_e0; c3_q1 <= i2_q1; c3_e1 <= i2_e1; end
-    if (QPIPE != 0 && (BF16 != 0 || BP != 0 || FAST == 0)) begin : g_qp_unsupported
+    if (QPIPE != 0 && ((BF16 != 0 && QBF == 0) || BP != 0 || FAST == 0)) begin : g_qp_unsupported
         initial begin $display("ot_v41_rom_elem_qp_w10: QPIPE requires FAST = 1, BF16 = 0, BP = 0"); $finish; end
     end
     genvar mb;
@@ -1786,7 +1791,14 @@ module ot_v41_rom_elem_qx_w10 #(
     wire [31:0] bf_val;
     wire [TG-1:0] bf_tree;
     if (BF16 != 0) begin : g_bf
-        if (FAST != 0) begin : g_f
+        if (FAST != 0 && QBF != 0) begin : g_fq
+        // QBF: the BF view lanes (GRADUAL_RNE multiplier repair; QBF >= 2: lanes re-cut, QBF >= 3: + unrolled chunk chains;
+        // see ot_v41_bf16_lanes2_rne_prepare.sv RC)
+        ot_v41_bf16_lanes2 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 3 ? 2 : QBF >= 2 ? 1 : 0)) u_bf (.clk(gclk), .rst_n(rst_m), .v(mi2_v && mi2_bf),
+            .w(cap[255:0]), .x(i2_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),
+            .tree(mi2_t[TW-HW-1 -: TG]), .final_i(mi2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
+            .ofinal(bf_final), .oerr(bf_err), .fault(b_fault));
+        end else if (FAST != 0) begin : g_f
         ot_v41_bf16_lanes2 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT)) u_bf (.clk(gclk), .rst_n(rst_m), .v(mi2_v && mi2_bf),
             .w(cap[255:0]), .x(i2_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),
             .tree(mi2_t[TW-HW-1 -: TG]), .final_i(mi2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),

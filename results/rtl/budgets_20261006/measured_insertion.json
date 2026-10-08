@@ -995,22 +995,22 @@
    "budget": null
   },
   "dsfd_selt_c": {
-   "job": "s81ph-dsfd_selt_c-9497b5ad1-half",
-   "source_commit": "9497b5ad10f8387a7ec9deb3bc39dba545b981d1",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_selt_c-9497b5ad1-half",
+   "job": "s81b-selt_c-slat4-36b7a0452",
+   "source_commit": "36b7a045263174acb95c00c55b8b1f64ac5a9c91",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81b-selt_c-slat4-36b7a0452",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T05:48:03-07:00",
+   "measured_at": "2026-10-07T19:13:37-07:00",
    "ss": {
-    "mean": 497,
-    "min": 478,
-    "max": 522
+    "mean": 434,
+    "min": 423,
+    "max": 450
    },
    "ff": {
-    "mean": 309,
-    "min": 295,
-    "max": 328
+    "mean": 273,
+    "min": 265,
+    "max": 287
    },
    "boundary_n": 5229,
    "budget": null
@@ -2049,22 +2049,22 @@
    }
   },
   "hfd_router": {
-   "job": "hbm_router_k2_a2d8b481d",
-   "source_commit": "a2d8b481d7b45953b070a713c929460cd512e62f",
+   "job": "hbm_router_r23_kneg_94fab53cc_b",
+   "source_commit": "94fab53ccc96a4bdac81f3cd18335962690109ed",
    "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_router_k2_a2d8b481d",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_router_r23_kneg_94fab53cc_b",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T07:38:38-07:00",
+   "measured_at": "2026-10-07T18:44:33-07:00",
    "ss": {
-    "mean": 853,
-    "min": 744,
-    "max": 1053
+    "mean": 862,
+    "min": 688,
+    "max": 1175
    },
    "ff": {
-    "mean": 566,
-    "min": 492,
-    "max": 679
+    "mean": 593,
+    "min": 460,
+    "max": 838
    },
    "boundary_n": 1091,
    "budget": null
@@ -2668,5 +2668,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-07T16:40:45-07:00"
+ "updated": "2026-10-07T19:13:37-07:00"
 }

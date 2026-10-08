@@ -2,7 +2,7 @@
 // Lockstep: ot_hdc_v41_fh_head_q (top + 4 hardened quadrants) == ot_hdc_v41_fh_macro_ctx MARGIN=1 HARD_LANE=1 (FPIPE as
 // given), every output every cycle, open loop with a checked-endpoint responder (request -> commit -> checked reply ->
 // warm ACK) driven from the reference. Valid-address fused traffic, SRAM writes, index writes, periodic resets.
-module tb_fh_head_q #(parameter integer FPIPE = 1, parameter integer QPIN = 0, parameter integer SAFE = 0, parameter integer HQ = 0, parameter integer LRET = 0, parameter integer CYCLES = 9000);
+module tb_fh_head_q #(parameter integer FPIPE = 1, parameter integer QPIN = 0, parameter integer SAFE = 0, parameter integer HQ = 0, parameter integer LRET = 0, parameter integer OREG = 0, parameter integer CYCLES = 9000);
  localparam integer W=16,G=4,AW=24,NW=16,TW=1+1+1+1+1+2+AW+AW+3*(NW+1)+2+AW+3+AW+1;
  import ot_dsrom_vm_pkg::*;
  reg clk=0; always #0.5 clk=~clk;
@@ -31,7 +31,7 @@ module tb_fh_head_q #(parameter integer FPIPE = 1, parameter integer QPIN = 0, p
  .o_mask(om``s),.o_data(od``s),.fault(f``s),.result_capture(rc``s),.argmax_level1(am``s)
  ot_hdc_v41_fh_macro_ctx #(.ALAT(7),.CAPTURE(1),.RETURN_EXTRA(5+QPIN),.PROTECT_SPLIT(1),.RETIRE(1),.VM_ENDPOINT(1),.VM_GUARD(1),
    .HARD_LANE(1),.MARGIN(1),.FPIPE(FPIPE),.QPIN(QPIN),.SAFE(SAFE)) ref0(`CONN(0));
- ot_hdc_v41_fh_head_q #(.FPIPE(FPIPE),.QPIN(QPIN),.SAFE(SAFE),.HQ(HQ),.LRET(LRET)) dut(`CONN(1));
+ ot_hdc_v41_fh_head_q #(.FPIPE(FPIPE),.QPIN(QPIN),.SAFE(SAFE),.HQ(HQ),.LRET(LRET),.OREG(OREG)) dut(`CONN(1));
  // checked endpoint responder (as tb_hdc_core_v41_mtp_slice_checked), driven by the reference
  reg [1:0] cv=0; request_t pk0,pk1; reg sent=0;
  integer i,j,seed=11,writes=0,acks=0,fused=0,iws=0,faults=0,leafv=0;

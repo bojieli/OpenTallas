@@ -34,7 +34,15 @@ module tb_ot_s81ph_vm_mem;
     wire fault;
     wire [2:0] fault_code;
     wire [$clog2(QD):0] max_occ;
-`ifdef TILED
+`ifdef TILED_HALF
+    // CLAUDE s81-blocks: bit-sliced chains (dsfd_vm_mem_s, NSLICE 2 or 4); a control mismatch between the halves is a failure
+    wire slice_mismatch;
+    always @(posedge clk) if (rst_n && slice_mismatch) begin $display("FAIL slice mismatch"); $finish; end
+`ifndef NSLICE
+`define NSLICE 2
+`endif
+    dsfd_vm_mem_s #(.NS(`NSLICE), .NP(NP), .NB(NB), .QD(QD), .RQ(RQ)) dut (.clk(clk), .rst_n(rst_n), .slice_mismatch(slice_mismatch), .i_v(i_v), .i_we(i_we),
+`elsif TILED
     dsfd_vm_mem #(.NP(NP), .NB(NB), .QD(QD), .RQ(RQ)) dut (.clk(clk), .rst_n(rst_n), .i_v(i_v), .i_we(i_we),
 `else
     ot_s81ph_vm_mem #(.NP(NP), .NB(NB), .QD(QD), .RQ(RQ)) dut (.clk(clk), .rst_n(rst_n), .grp(1'b0), .i_v(i_v), .i_we(i_we),

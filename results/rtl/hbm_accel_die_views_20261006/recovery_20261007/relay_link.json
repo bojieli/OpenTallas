@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.hbm.relay_link_recovery.v1",
+ "source_commit": "467c433b2",
+ "image": "openroad/orfs:asap7lock",
+ "host": "ot-epyc2",
+ "run": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/die/r23r/s_sta/bis",
+ "failure": {
+  "file": "W1.log",
+  "verdict": "SIGNAL11",
+  "master": "hfd_rly_5",
+  "width": 1
+ },
+ "positive_controls": [
+  "W4.log:OT_LINKED",
+  "S0.log:OT_LINKED",
+  "S1.log:OT_LINKED"
+ ],
+ "fix": "Bind one-bit relay data ports by escaped Liberty bit names d[0]/q[0]; preserve width and connectivity.",
+ "full_link": {
+  "file": "fullbits.log",
+  "verdict": "OT_LINKED",
+  "relay_instances": 1104,
+  "total_instances": 1665,
+  "netlist_sha256": "a6253c54f49f074568637a3402537bd0394a702869e042dedf6c1f72eee12fa2"
+ },
+ "physical_closure": false,
+ "limitation": "Relay Liberty remains analytical, not measured hardened view; link PASS is parser/connectivity evidence only.",
+ "cycles_added": 0
+}

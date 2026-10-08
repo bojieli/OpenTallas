@@ -1,0 +1,241 @@
+{
+  "schema": "opentallas.fh_half.v1",
+  "status": "MODEL_ONLY_NOT_ADOPTED",
+  "ctl_sha256": "5156b45a9e44f054abbf8506a420008909c4f3d7632169df8b1f326617df06d4",
+  "ports": {
+    "input": [
+      {
+        "name": "commit_busy",
+        "width": 1
+      },
+      {
+        "name": "native_cold_n",
+        "width": 1
+      },
+      {
+        "name": "s3_v_in",
+        "width": 1
+      },
+      {
+        "name": "a_tag_p_in",
+        "width": 160
+      },
+      {
+        "name": "wr_en",
+        "width": 4
+      },
+      {
+        "name": "wr_addr",
+        "width": 96
+      },
+      {
+        "name": "go_fus",
+        "width": 1
+      },
+      {
+        "name": "i_iaddr",
+        "width": 24
+      },
+      {
+        "name": "busy_in",
+        "width": 5
+      },
+      {
+        "name": "o_we1_in",
+        "width": 4
+      },
+      {
+        "name": "tv_in",
+        "width": 1
+      },
+      {
+        "name": "ov1_in",
+        "width": 1
+      },
+      {
+        "name": "q_warm_word",
+        "width": 24
+      },
+      {
+        "name": "q_warm_mask",
+        "width": 16
+      },
+      {
+        "name": "q_poison",
+        "width": 64
+      },
+      {
+        "name": "q_group_fault",
+        "width": 8
+      },
+      {
+        "name": "ep_ack_v",
+        "width": 1
+      },
+      {
+        "name": "ep_fault",
+        "width": 1
+      },
+      {
+        "name": "ep_guard_busy",
+        "width": 1
+      },
+      {
+        "name": "ep_request_checked_v",
+        "width": 1
+      },
+      {
+        "name": "ep_reply_checked_v",
+        "width": 1
+      },
+      {
+        "name": "ep_ack_id",
+        "width": 8
+      },
+      {
+        "name": "ep_ack_word",
+        "width": 24
+      },
+      {
+        "name": "ep_ack_mask",
+        "width": 16
+      }
+    ],
+    "output": [
+      {
+        "name": "native_permission_capture",
+        "width": 4
+      },
+      {
+        "name": "commit_warm",
+        "width": 1
+      },
+      {
+        "name": "commit_debt",
+        "width": 1
+      },
+      {
+        "name": "commit_id",
+        "width": 8
+      },
+      {
+        "name": "ra_re",
+        "width": 4
+      },
+      {
+        "name": "ra_addr",
+        "width": 96
+      },
+      {
+        "name": "r_tag",
+        "width": 160
+      },
+      {
+        "name": "r_v",
+        "width": 1
+      },
+      {
+        "name": "o_we",
+        "width": 4
+      },
+      {
+        "name": "fault",
+        "width": 1
+      },
+      {
+        "name": "q_rok",
+        "width": 4
+      },
+      {
+        "name": "q_wok",
+        "width": 4
+      },
+      {
+        "name": "q_rrow",
+        "width": 36
+      },
+      {
+        "name": "q_wrow",
+        "width": 36
+      },
+      {
+        "name": "q_rv_mid",
+        "width": 4
+      },
+      {
+        "name": "q_fsel_m",
+        "width": 4
+      },
+      {
+        "name": "q_iwg_m",
+        "width": 4
+      },
+      {
+        "name": "q_iw_e",
+        "width": 24
+      },
+      {
+        "name": "q_lane_veto",
+        "width": 64
+      }
+    ]
+  },
+  "root_period_ps": 833,
+  "internal_min_period_ps": 1666,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "replicas": 1,
+  "macs_per_cycle": 0,
+  "memory_ports": [],
+  "payload_storage_bits": 1848,
+  "queue_depth_each": 2,
+  "input_bits_per_frame": 464,
+  "output_bits_per_frame": 460,
+  "input_max_bytes_per_root_cycle": 29.0,
+  "output_max_bytes_per_root_cycle": 28.75,
+  "payload_muxes": {
+    "input": "one 2:1 selector per bit",
+    "output": "one 2:1 selector per bit"
+  },
+  "clock_gate": "one low-transparent latch plus AND; root phase flop; dynamic empty/full stops only remove edges",
+  "max_frames_per_root_cycle": 0.5,
+  "trial_slot_um": [
+    400,
+    400
+  ],
+  "fit": "UNMEASURED: synthesis area and routed context required",
+  "route_tracks": {
+    "input": 464,
+    "output": 460,
+    "assumed_signal_pitch_um": 0.048,
+    "combined_corridor_um_one_layer": 44.352000000000004,
+    "capacity": "analytical reservation only; actual hub-layer acceptance pending"
+  },
+  "fanout": "phase/gate control plus ctl clock sinks; clock CTS and boundary-enable fanout require measurement",
+  "latency": {
+    "head_baseline_root_cycles": 14844,
+    "whole_head_half_root_cycles": 29688,
+    "added_root_cycles": 14844,
+    "added_us": 12.365052,
+    "external_boundary": "accepted input -> execution next eligible root edge; capture updated outputs one root edge later; output consumed no earlier than following root edge; queueing/backpressure additional",
+    "whole_region": "multiply every fixed-latency peer delay by two in root cycles; preserve delay in logical ticks"
+  },
+  "integration": {
+    "raw_pins_have_ready": false,
+    "requires": "co-gate ctl, hquad, endpoint and any fixed-latency feedback state, or prove equivalent cycle-coherent elastic adapters",
+    "frame": "one complete raw-input snapshot per logical tick, including idle ticks; never independently decimate pulse fields",
+    "backpressure": "producer holds valid and all 464 payload bits until accepted; receiver holds result_ready low to stop execution losslessly",
+    "feedback": "do not prequeue frames whose peer feedback depends on an uncompleted logical tick",
+    "adoption": "parent region integration and golden token tests mandatory; block scoreboard alone does not qualify full head"
+  },
+  "timing": {
+    "generated_edges": [
+      3,
+      4,
+      7
+    ],
+    "additional_multicycle": false,
+    "crossings": "root-to-slow and slow-to-root timed at actual related edges; no false paths",
+    "signoff": "propagated root/generated clocks at SS and FF; >=15ps setup/hold, DRC0, gate waveform and IO clock binding proofs"
+  }
+}

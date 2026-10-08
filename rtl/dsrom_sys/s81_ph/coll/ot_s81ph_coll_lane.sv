@@ -1,4 +1,18 @@
 `timescale 1ns/1ps
+`ifndef OT_S81PH_GFMT_DEF
+`ifdef OT_S81PH_GBX_FMT1
+`define OT_S81PH_GFMT_DEF 1
+`else
+`define OT_S81PH_GFMT_DEF 0
+`endif
+`endif
+`ifndef OT_S81PH_EPPIPE_DEF
+`ifdef OT_S81PH_EP_PIPE2
+`define OT_S81PH_EPPIPE_DEF 2
+`else
+`define OT_S81PH_EPPIPE_DEF -1
+`endif
+`endif
 // ---------------------------------------------------------------------------------------------------------------
 // ot_s81ph_coll_lane -- one link lane TILE of the S81 collective slab (CLAUDE S81-PH coll v2, redesign pass).
 // coll_m1 (the whole slab, 156k flops, 104 macros, ~1M nets) stayed 7 h in timing-driven global placement; the slab
@@ -22,6 +36,16 @@
 // lock losses are recovered by the link protocol as before.  UPGATE = 0: the v3 lane.
 // ---------------------------------------------------------------------------------------------------------------
 module ot_s81ph_coll_lane #(
+`ifdef OT_S81PH_GBX_FMT1
+    parameter integer GFMT = 1,                // CLAUDE s81-blocks: gearbox FMT (ot_s81ph_link_gbx), ep pacing follows
+`else
+    parameter integer GFMT = 0,
+`endif
+`ifdef OT_S81PH_EP_PIPE2
+    parameter integer EPPIPE = 2,              // CLAUDE s81-blocks: ot_s81ph_link_ep PIPE
+`else
+    parameter integer EPPIPE = -1,             // -1: the file's historical choice
+`endif
     parameter integer FB = 69,
     parameter integer CREDITS = 512,
     parameter integer SEQW = 10,
@@ -50,8 +74,8 @@ module ot_s81ph_coll_lane #(
     localparam integer RFW = 1 + SEQW + $clog2(CREDITS + 1) + 32;
     localparam integer G = 509 - RFW;
     localparam integer S = FFW + 1;
-    localparam integer PNUM = FB * G * (IDLE_P - 1);
-    localparam integer PDEN = S * IDLE_P;
+    localparam integer PNUM = (GFMT != 0) ? FB * 3 * (IDLE_P - 1) : FB * G * (IDLE_P - 1);
+    localparam integer PDEN = (GFMT != 0) ? 4 * IDLE_P : S * IDLE_P;
     reg [1:0] rst_s;
     always @(posedge clk or negedge rs_n) if (!rs_n) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rst_n = rst_s[1];
@@ -69,14 +93,14 @@ module ot_s81ph_coll_lane #(
         .out_v(li_v), .out_r(li_r), .out_d(li_d));
     wire ftv, rtv, frv, rrv; wire [FFW-1:0] ft, fr; wire [RFW-1:0] rt, rr; wire ep_f, gb_f, gb_l;
     ot_s81ph_link_ep #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
-        .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(1)) u_ep (
+        .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(EPPIPE < 0 ? 1 : EPPIPE)) u_ep (
         .clk(clk), .rst_n(rst_n), .ch_b(ch_b),
         .in_valid(iv && (UPGATE == 0 || up)), .in_ready(ir), .in_data(id), .in_last(il),
         .out_valid(ov), .out_ready(orr), .out_data(od), .out_last(ol),
         .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv), .r_tx(rt), .r_rx_v(rrv), .r_rx(rr),
         .credit_stalls(), .fault(ep_f), .fault_code(), .st_flits_tx(), .st_flits_rx_ok(), .st_crc_err(),
         .st_naks(), .st_replays(), .st_timeouts(), .st_retx_flits(), .st_max_replay_occ());
-    ot_s81ph_link_gbx #(.FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P)) u_gb (
+    ot_s81ph_link_gbx #(.FMT(GFMT), .FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P)) u_gb (
         .clk(clk), .rst_n(rst_n), .f_tx_v(ftv), .f_tx(ft), .r_tx_v(rtv && (UPGATE == 0 || lk1)), .r_tx(rt), .beat_tx(tx),
         .beat_rx_v(lr[0] && lr[513]), .beat_rx(lr[512:1]), .f_rx_v(frv), .f_rx(fr), .r_rx_v(rrv), .r_rx(rr),
         .locked(gb_l), .fault(gb_f));
@@ -88,17 +112,17 @@ module ot_s81ph_coll_lane #(
 endmodule
 
 // tile tops (pin plans differ: W lanes face the slab's W edge, E lanes the E edge)
-module dsfd_coll_lane_w (
+module dsfd_coll_lane_w #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
-module dsfd_coll_lane_e (
+module dsfd_coll_lane_e #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule

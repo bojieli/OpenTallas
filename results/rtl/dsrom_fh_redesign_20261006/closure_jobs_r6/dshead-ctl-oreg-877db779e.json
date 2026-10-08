@@ -1,0 +1,61 @@
+{
+ "name": "dshead-ctl-oreg-877db779e",
+ "block": "ot_hdc_v41_fh_ctl",
+ "owner": "Claude:tk-ds-head (fused-head owner, takeover 2026-10-07)",
+ "purpose": "ctl OREG: o_we / commit_warm from pin registers (0 cycles, cycle-identical lockstep); SAFE2, route hold IO from SS; parallel to ctl-r6 ECO retry and ctl-half",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/takeover-ds-head-20261006",
+  "commit": "877db779efe6649b588c243b088983b8729827e9"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "ROUTE_HOLD_IO=ss HM=0.010 CTL_SAFE=2 CTL_OREG=1 bash physical/dsrom_fh_safe/cl_route.sh ctl {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "ROUTE_HOLD_IO=ss HM=0.010 CTL_SAFE=2 CTL_OREG=1 bash physical/dsrom_fh_safe/cl_route.sh ctl {LABEL} {RUN}/routes/{LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/dsrom_fh_safe/gen/signoff_ctl.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [],
+  "post_sdc": [
+   "physical/dsrom_fh_safe/gen/signoff_ctl.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "reexport": "python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_hdc_v41_fh_ctl --post-sdc physical/dsrom_fh_safe/gen/signoff_ctl.sdc  --out {RUN}/routes/{LABEL}/view",
+  "session": "ff"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/dsrom_fh_safe/closed/ctl_oreg"
+  }
+ ],
+ "cycles_added": "0 (retimed: output registers computed from the retirement next-edge values; head_q_oreg lockstep == macro_ctx)",
+ "merge_target": "claude/takeover-ds-head-20261006",
+ "no_bench_reason": "tools/test_fh_margin.py --only head_q_oreg (lockstep vs macro_ctx + 3 mutants) runs in parallel on EPYC1 and gates adoption; results/rtl/dsrom_fh_redesign_20261006/oreg/"
+}

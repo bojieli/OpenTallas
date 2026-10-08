@@ -1,0 +1,25 @@
+{
+  "job": "bf_hitfix_3978531b5",
+  "source_commit": "3978531b5eab63e4a402fffb5503504fe8578c53",
+  "scope": "User-added BF companion harvest only",
+  "status": "RUNNING_DETAILED_ROUTE",
+  "adopted": false,
+  "exact_record": "results/rtl/s81_bf_native_20261006/hitfix_exact/terminal.json",
+  "exact_sha256": "b0f79aaa38fa84452671bd99a9048987db7dafa267f3589f5a044e1209dfd3a4",
+  "exact_summary": "124422 same-cycle shadow comparisons, numerical/wake PASS, front-pair negative detected; +0 cycles.",
+  "grt": {
+    "setup_ws_ps": -319.779,
+    "hold_ws_ps": 18.7427,
+    "basis": "GRT estimates at route constraints, not final routed SS/FF signoff",
+    "setup_tns": -2514950.0
+  },
+  "pending": [
+    "Finish existing route and automatic ECO/verdict",
+    "Structural RTL follow-up belongs to coordinator/assigned BF implementation owner if actual final result misses; no new route launched here"
+  ],
+  "integration": "Coordinator only; no central main merge or push, no duplicate launch, no running job modified.",
+  "validation": {
+    "harvest_hashes": "PASS",
+    "files": 8
+  }
+}

@@ -1,0 +1,3 @@
+ROUTER_PS PIPESEL=2 RATE=2 NEG=0 SEED=3 vectors ref=1000 dut=1000 bad=0 latency ref=23 dut=23..23
+ROUTER_PS PASS
+rtl/test/hbm_router_ps/tb_router_topk_ps.sv:90: $finish called at 51239500 (1ps)

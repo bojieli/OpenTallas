@@ -51,8 +51,8 @@ def probe(data, clearance=12.16, max_segment_um=300):
     by = {i['name']:i for i in data['insts']}
     obstacles = [(i['name'], i.get('box_um', [i['x'],i['y'],i['x']+i['w'],i['y']+i['h']]))
                  for i in data['insts']]
-    for key in ('native_owner_bays','native_descriptor_bays','result_pin_bays'):
-        obstacles += [(key+':'+b['sm'],b['box_um']) for b in data[key]]
+    for key in ('native_owner_bays','native_descriptor_bays','result_pin_bays','native_result_store_bays'):
+        obstacles += [(key+':'+b['sm'],b['box_um']) for b in data.get(key,[])]
     owners = {b['sm']:b['box_um'] for b in data['native_owner_bays']}
     adapters = {b['sm']:b['box_um'] for b in data['native_descriptor_bays']}
     if set(owners) != set(adapters):

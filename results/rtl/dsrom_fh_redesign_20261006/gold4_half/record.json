@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.dsrom.fh.half-rate-gate.v1",
+ "variant": "SAFE half-rate backstop: whole draft-core domain (core + fused-head views hquad/ctl/ep + local memories + VM endpoint) on the die clock gated every other cycle (OT_FH_HALF)",
+ "source": "claude/takeover-ds-head-20261006 725b2fe22 + TB counter fix 8384fad12; config FPIPE=3 SAFE=2 RETURN_EXTRA=6 (route views of 60f5a0a90 / 4123ff389)",
+ "full_rate_control": {"pass": true, "cycles": 63153, "tokx_bad": 0},
+ "half": {"pass": true, "slow_cycles": 63153, "die_cycles": 126310, "tokx": 5, "tokx_bad": 0, "vm_mismatch": 0},
+ "negative_OT_FH_HALF_MUTANT": {"pass": false, "tokx_bad": 5, "stok_bad": 5, "vm_mismatch": 37, "mutation": "protected return pipe left on the die clock"},
+ "cost": "draft-core domain time x2 (+63,157 die cycles per gamma-5 gold4 draft slice); priced in the DS ledger as candidate fh_half = draft.head_occ +100 %",
+ "not_covered": "start/done crossing to the S81 die is not modelled in this bench (the closed head bundle glue is register-to-register)",
+ "adoption": "only for a view whose full-rate route misses; physical routes dshead-{ctl,ep,hquad,elemA}-half-4123ff389"
+}

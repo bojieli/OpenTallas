@@ -1,0 +1,107 @@
+{
+  "schema": "opentallas.softmax_egress_events_gate.v1",
+  "passed": true,
+  "adopted": false,
+  "source_sha256": {
+    "tools/dsrom_softmax_egress_events_model.py": "a71db815941c89fcdc8d2cd7ad8615f0ae5bcfd3cbfd3f19688cf6af618fb271",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_egress_events.sv": "da0d3a509fbf77892df2865e4be770cc1a9a6fe32ca120c70319f4e21c58b28e",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_egress_events.sv": "e37f75f247b17c415e34c8c86ab200aa30bf258a2b955a2510a36a3200aa1307",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_phase.sv": "2e9b8d2cd90ca183e9845e1a6d281bce2f7d6187b88c481eb482beff1f1fc8ef"
+  },
+  "prebuild_model": "results/uarch/dsrom_softmax_transport_20261007/egress_events_prebuild.json",
+  "prebuild_sha256": "6b0a60c65be512c0ee475730a1b33191bfd214e408976cf73e6b1ed22978b4a3",
+  "prebuild_before_RTL": true,
+  "current_campaigns": [
+    "egress_events_r4_positive.log",
+    "egress_events_r4_epoch_negative.log",
+    "egress_events_r4_half_negative.log"
+  ],
+  "evidence_sha256": {
+    "results/rtl/dsrom_softmax_transport_20261007/egress_events_r4_positive.log": "183fa4ca2083fcdf22bbddf9a091b6eb5267e19cea0ab3296d1d388be423c0e3",
+    "results/rtl/dsrom_softmax_transport_20261007/egress_events_r4_epoch_negative.log": "83e82ef550dd95eaf46381688c4394977634567400336b427a2c11f1a75c443d",
+    "results/rtl/dsrom_softmax_transport_20261007/egress_events_r4_half_negative.log": "91bff596f10e8d36ce790e86070424a8f50ff8879883110cae318fa90e514652"
+  },
+  "result": {
+    "expanded_events": 224,
+    "T640_events": 144,
+    "T128_events": 80,
+    "BF_commit_to_lower_upper_event_edges": [
+      1,
+      2
+    ],
+    "BF_first_packed_commit_to_last_CAP_O_edges": 32,
+    "BF_first_input_to_last_CAP_O_edges": 34,
+    "phase_barrier_after_capture_edges": 2,
+    "actual_phase_controller": true,
+    "no_payload_simulation": "Payload exactness separately pinned by egress_payload_record.json"
+  },
+  "coverage": [
+    "Full Ecommits and Ereceipts retained while bridge blocked",
+    "E/packedBF exact order/identity against real phase controller",
+    "All32BFevents produced from16packedcommits/receipts",
+    "Finalpackedreceipt withheld retains last2events and prevents completion",
+    "Premature release, stale source/receipt epoch, receiptbeforecapture, duplicatecapture, earlyBF and controlupset rejected",
+    "Queued pendingevents cleared by coordinated reset",
+    "Complete holds until explicit release"
+  ],
+  "negative_controls": {
+    "epoch": {
+      "macro": "SOFTMAX_EVENTS_IGNORE_EPOCH",
+      "exit_code": 1,
+      "signature": "STALE_EPOCH_NOT_REJECTED"
+    },
+    "packed_half": {
+      "macro": "SOFTMAX_EVENTS_DROP_UPPER",
+      "exit_code": 1,
+      "signature": "EARLY_PACKED_COMPLETION"
+    }
+  },
+  "generic_census": {
+    "tool": "Yosys proc;opt;stat",
+    "FF_bits": 194,
+    "model_FF_bits": 194,
+    "generic_cells": {
+      "$add": 24,
+      "$eq": 23,
+      "$ge": 5,
+      "$le": 8,
+      "$logic_and": 50,
+      "$logic_not": 9,
+      "$logic_or": 19,
+      "$lt": 4,
+      "$ne": 11,
+      "$not": 20,
+      "$dff": 22,
+      "$mux": 103,
+      "$pmux": 3
+    },
+    "mapped_area": false,
+    "physical_fit": false
+  },
+  "compile": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_egress_events",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_phase.sv",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_egress_events.sv",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_egress_events.sv"
+  ],
+  "history": {
+    "logs": [
+      "egress_events_positive.log",
+      "egress_events_r2_compile.log",
+      "egress_events_r2_positive.log",
+      "egress_events_r3_positive.log"
+    ],
+    "status": "Preserved development failures; current pins apply only to R4",
+    "first": "Bench declaration syntax failure",
+    "second_third": "Initial bridge exposed combinational protocol-error checks as public fault after accepted counters advanced; corrected to latch errors at acceptance edge and suppress event admission on bad inputs"
+  },
+  "scope": [
+    "194FF control bridge only",
+    "Source captures are actualpackedSRAMcommits, never b_valid offers",
+    "Monotonic epoch admission remains parent responsibility",
+    "Production combined numerical join and physical SS/FF budgets are separate"
+  ]
+}

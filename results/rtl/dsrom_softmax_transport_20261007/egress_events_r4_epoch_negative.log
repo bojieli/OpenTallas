@@ -1,0 +1,4 @@
+CAMPAIGN PASS ep1 E40 CAP_O32 DRAIN_O32 packed_commit_to_events=1,2 last_CAP_O_from_first_packed_commit=32edges
+CAMPAIGN PASS ep2 E8 CAP_O32 DRAIN_O32 packed_commit_to_events=1,2 last_CAP_O_from_first_packed_commit=32edges
+FATAL: rtl/experimental/dsrom_softmax_transport_20261007/tb_egress_events.sv:93: STALE_EPOCH_NOT_REJECTED
+       Time: 521667084 Scope: tb_egress_events

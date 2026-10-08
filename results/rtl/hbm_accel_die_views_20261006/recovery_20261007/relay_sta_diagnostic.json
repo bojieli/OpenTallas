@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.hbm.die_sta_diagnostic.v1",
+ "source_commit": "467c433b2",
+ "netlist_repair_commit": "daa8431bf",
+ "host": "ot-epyc2",
+ "run": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/die/r23r/s_sta/bis/fullbits_sta.tcl",
+ "log_sha256": "b3cb02e3241fe2bb5ebbe55611b76f376d6e48d4cd6f816dff4f51f9774c015b",
+ "verdict": "FAIL_DIAGNOSTIC_NOT_SIGNOFF",
+ "timed_instances": 1557,
+ "setup_slack_ns_uncertainty_60ps": -6.357,
+ "setup_slack_ns_uncertainty_210ps": -6.507,
+ "hold_slack_ns": -3.608,
+ "physical_closed": false,
+ "limitations": [
+  "Legacy scalar OT_STA_* values incorrectly multiply native ns; values above are from detailed path report units",
+  "Clock model sets all die macro clock source arrivals to zero without clock-plan pad",
+  "Serial domain incorrectly uses833.333ps rather than1111.111ps in legacy diagnostic",
+  "Generated relay Liberty analytical, not hardened measurement",
+  "102 relay placements fail legality; overlapping fallback not adoptable",
+  "Clock slew traverses unimplemented clock network; clock-tree signoff required"
+ ]
+}

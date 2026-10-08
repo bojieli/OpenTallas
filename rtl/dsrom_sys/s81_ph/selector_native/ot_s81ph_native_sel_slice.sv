@@ -44,8 +44,13 @@ module ot_s81ph_native_sel_slice #(
     parameter integer KW = $clog2(K + 1),
     parameter integer CB = KW + 1,    // saturating histogram bin width
     parameter integer CMP_RETIME = 0, // split comparison across existing i0/i1 capture edges
-    parameter integer MREG = 0        // CLAUDE S81-PH SAFE tile: 1 = mem_rdata arrives one edge later (a register
+    parameter integer MREG = 0,       // CLAUDE S81-PH SAFE tile: 1 = mem_rdata arrives one edge later (a register
                                       // behind the line-memory macro); the read tokens wait one more edge (default 0)
+    // CLAUDE s81-blocks 2026-10-07 (selt_q cd3337221-b SS -434.7): PIPE2 1 = histograms HPIPE 1 (inputs registered,
+    // pair-sum cuts in both group-sum trees; status gsum +3 edges, gbin +1, settle counters +2), the sweep bound tsw
+    // registered (a stale, lower GC bound keeps a superset), and one register in front of the output FIFO (o0: every
+    // room check counts it; mem_rdata -> o0 directly).  Function unchanged; latency only.
+    parameter integer PIPE2 = 0
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -238,7 +243,10 @@ module ot_s81ph_native_sel_slice #(
         t2_last <= t1_last;
         r1_d <= rp_beat ? i0_lane : tq_fl ? {W*EW{1'b0}} : mem_rdata;
     end
-    wire [15:0] tsw = (sw_k == K_GC) ? r_T : sw_T;
+    wire [15:0] tsw_c = (sw_k == K_GC) ? r_T : sw_T;
+    reg  [15:0] tsw_r;
+    always @(posedge clk) tsw_r <= tsw_c;
+    wire [15:0] tsw = (PIPE2 != 0) ? tsw_r : tsw_c;
     wire [W-1:0]    c1_gt_d, c1_eq_d, p2_en;
     wire [W*8-1:0]  p2_dg;
     generate
@@ -280,11 +288,11 @@ module ot_s81ph_native_sel_slice #(
     wire p2m = (sw_k == K_P2) && (sw_st != SW_IDLE);
     wire sw_start;                                   // a sweep starts on this edge
     wire hc_busy, hf_busy;
-    ot_s81ph_native_sel_hist #(.W(W), .CB(CB)) u_hc (
+    ot_s81ph_native_sel_hist #(.W(W), .CB(CB), .HPIPE(PIPE2)) u_hc (
         .clk(clk), .rst_n(rst_n), .clr(seg_clr), .i_v(i1_v), .i_en(i1_s), .i_dg(hi_digits(i1_k)),
         .gsel(r_cg), .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
     wire f_clr = seg_clr || r_fclr || (sw_start && p2q);
-    ot_s81ph_native_sel_hist #(.W(W), .CB(CB)) u_hf (
+    ot_s81ph_native_sel_hist #(.W(W), .CB(CB), .HPIPE(PIPE2)) u_hf (
         .clk(clk), .rst_n(rst_n), .clr(f_clr), .i_v(p2m ? r1_v : i1_v), .i_en(p2m ? p2_en : i1_fm),
         .i_dg(p2m ? p2_dg : lo_digits(i1_k)), .gsel(r_fg), .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
     function automatic [W*8-1:0] hi_digits(input [W*16-1:0] k);
@@ -362,8 +370,11 @@ module ot_s81ph_native_sel_slice #(
     reg  [W*EW-1:0] pend;
     reg            e_go, e_empty;
     reg  [OCW-1:0] ocnt;
+    reg            o0_v;
+    reg  [EW*W:0]  o0_d;
+    wire [OCW-1:0] occ = ocnt + ((PIPE2 != 0) ? {{(OCW-1){1'b0}}, o0_v} : {OCW{1'b0}});   // FIFO + o0
     wire em_issue = (ph == P_EM) && e_go && (e_rd < a_end) &&
-                    ({{(8-OCW){1'b0}}, ocnt} + {5'd0, e_infl} < OD);
+                    ({{(8-OCW){1'b0}}, occ} + {5'd0, e_infl} < OD);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             t1_v <= 1'b0; t1_fl <= 1'b0; t1_em <= 1'b0; mem_re <= 1'b0;
@@ -481,7 +492,7 @@ module ot_s81ph_native_sel_slice #(
             e_infl <= e_infl + {2'd0, em_issue} - {2'd0, tq_v && tq_em};
             if (em_issue) e_rd <= e_rd + 1'b1;
             if (ph == P_EM && e_go && (e_rd == a_end) && !e_empty) e_go <= 1'b0;
-            if (ph == P_EM && e_empty && ocnt < OD) begin e_empty <= 1'b0; e_go <= 1'b0; end
+            if (ph == P_EM && e_empty && occ < OD) begin e_empty <= 1'b0; e_go <= 1'b0; end
             if (ph == P_EM && out_valid && out_ready && out_last) begin ph <= P_DONE; s_emitted <= 1'b1; end
 
             // status
@@ -492,32 +503,41 @@ module ot_s81ph_native_sel_slice #(
             s_nhead   <= head;
         end
     end
-    reg [1:0] hf_cnt;
+    localparam [2:0] SETTLE = (PIPE2 != 0) ? 3'd5 : 3'd3;   // edges from the last hbin update to final group sums
+    reg [2:0] hf_cnt;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) hf_cnt <= 2'd3;
-        else if (hf_busy || (p2m && r1_v)) hf_cnt <= 2'd3;
+        if (!rst_n) hf_cnt <= SETTLE;
+        else if (hf_busy || (p2m && r1_v)) hf_cnt <= SETTLE;
         else if (hf_cnt != 0) hf_cnt <= hf_cnt - 1'b1;
     end
     // histogram settle: the group sums are final 3 edges after the last beat left the input stages
-    reg [1:0] hs_cnt;
+    reg [2:0] hs_cnt;
     wire      hs_quiet = (hs_cnt == 0) && !i0_v && !i1_v && !hc_busy && !hf_busy;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) hs_cnt <= 2'd3;
-        else if (i0_v || i1_v || hc_busy || hf_busy) hs_cnt <= 2'd3;
+        if (!rst_n) hs_cnt <= SETTLE;
+        else if (i0_v || i1_v || hc_busy || hf_busy) hs_cnt <= SETTLE;
         else if (hs_cnt != 0) hs_cnt <= hs_cnt - 1'b1;
     end
 
     // -- output FIFO (shift register; entry 0 drives the port) ------------------------------------
     reg  [EW*W:0]  ofq [0:OD-1];                    // {last, line}
     // direct delivery from pass 3
-    wire           d_room     = (ocnt < OD);
+    wire           d_room     = (occ < OD);
     wire           d_mid      = (sw_k == K_P3) && (sw_st != SW_IDLE) && dmode && f_push && pend_v && d_room;
     wire           d_fin_push = sw_fin && (sw_k == K_P3) && dmode && pend_v && d_room;
     wire           d_fin      = sw_fin && (sw_k == K_P3) && dmode && (pend_v ? d_room : 1'b1) && (w != 0);
     wire           d_push     = d_mid || d_fin_push;
-    wire           o_push = (tq_v && tq_em) || (ph == P_EM && e_empty && ocnt < OD) || d_push;
-    wire [EW*W:0]  o_in   = (tq_v && tq_em) ? {tq_last, mem_rdata} : d_push ? {d_fin_push, pend} :
-                            {1'b1, {W*EW{1'b0}}};
+    wire           o_push_c = (tq_v && tq_em) || (ph == P_EM && e_empty && occ < OD) || d_push;
+    wire [EW*W:0]  o_in_c   = (tq_v && tq_em) ? {tq_last, mem_rdata} : d_push ? {d_fin_push, pend} :
+                              {1'b1, {W*EW{1'b0}}};
+    // PIPE2: o0 holds one entry on its way into the FIFO (counted by occ in every room check)
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) o0_v <= 1'b0;
+        else if (seg_clr) o0_v <= 1'b0;
+        else o0_v <= o_push_c;
+    always @(posedge clk) if (o_push_c) o0_d <= o_in_c;
+    wire           o_push = (PIPE2 != 0) ? o0_v : o_push_c;
+    wire [EW*W:0]  o_in   = (PIPE2 != 0) ? o0_d : o_in_c;
     wire           o_pop  = (ocnt != 0) && out_ready;
     integer oi;
     always @(posedge clk or negedge rst_n) begin
