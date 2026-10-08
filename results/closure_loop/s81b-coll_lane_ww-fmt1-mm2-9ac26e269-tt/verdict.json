@@ -1,0 +1,195 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt",
+ "block": "dsfd_coll_lane_w",
+ "owner": "Claude:s81-blocks",
+ "source_branch": "claude/s81-blocks-20261007",
+ "source_commit": "9ac26e269739f75074dbb7f38b5994be5783910c",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 17.91,
+  "ff_ps": 11.88,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt/routes/s81b_coll_lane_ww_fmt1_mm2_9ac26e269_tt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt/routes/s81b_coll_lane_ww_fmt1_mm2_9ac26e269_tt/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_w_asap7_s81ph_s81b_coll_lane_ww_fmt1_mm2_9ac26e269_tt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_exact_coll_tp4": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "CYCLES dut_last 3012 ref_last 1462 first_send 1111 records 277 messages 40\nTB_S81PH_COLL_SYS PASS\n",
+   "track": "parallel"
+  },
+  "bench_neg_noreorder": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "CYCLES dut_last 3012 ref_last 1462 first_send 1111 records 277 messages 40\nTB_S81PH_COLL_SYS FAIL errs 309\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  },
+  "ttb_routed_at_TC": {
+   "ok": false,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 3246,
+    "mean": 524.0,
+    "min": 471.4,
+    "max": 669.1
+   },
+   "all": {
+    "n": 12152,
+    "mean": 517.9,
+    "min": 469.7,
+    "max": 724.3
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 3246,
+    "mean": 337.4,
+    "min": 293.7,
+    "max": 470.0
+   },
+   "all": {
+    "n": 12152,
+    "mean": 331.3,
+    "min": 292.3,
+    "max": 523.6
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 524,
+   "CK_SS_ALL_MEAN": 518,
+   "CK_SS_MIN": 471,
+   "CK_SS_ALL_MIN": 470,
+   "CK_SS_MAX": 669,
+   "CK_SS_ALL_MAX": 724,
+   "CK_FF_MEAN": 337,
+   "CK_FF_ALL_MEAN": 331,
+   "CK_FF_MIN": 294,
+   "CK_FF_ALL_MIN": 292,
+   "CK_FF_MAX": 470,
+   "CK_FF_ALL_MAX": 524
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T03:40:52-07:00",
+ "job_spec": {
+  "name": "s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt",
+  "block": "dsfd_coll_lane_w",
+  "owner": "Claude:s81-blocks",
+  "purpose": "TT-BATCH (owner option B, one large batch): s81b-coll_lane_ww-fmt1-mm2-9ac26e269 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: collective lane W (contract_wide_lanes): gearbox FMT1 (fixed 3-in-4 slot positions, no 1052-b bit shifter; payload regs unreset) + ep PIPE2 (late accept select, registered d_fr): removes the ic/tcnt/sh/rcnt -> tacc/beat_tx/racc/f_rx and out_v -> rdy_r / fr_seen -> credits classes (-456..-734) | flow-hold mm route-time hold repair (SS setup + FF hold, HM 50 ps at FF)",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "source": {
+   "branch": "claude/s81-blocks-20261007",
+   "commit": "9ac26e269739f75074dbb7f38b5994be5783910c"
+  },
+  "stages": {
+   "calibrate": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OT_MM_FF_SDC=\"physical/s81_ph_views/common/signoff_unc60.sdc\" SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes dsfd_coll_lane_w rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv --param GFMT=1 --param EPPIPE=2 $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 16,
+    "peak_ram_gb": 48
+   },
+   "route": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC=\"physical/s81_ph_views/common/signoff_unc60.sdc\" SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes dsfd_coll_lane_w rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv --param GFMT=1 --param EPPIPE=2 $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+   },
+   "bench": [
+    {
+     "name": "exact_coll_tp4",
+     "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench f1p2 +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2",
+     "expect": "pass",
+     "threads": 8,
+     "peak_ram_gb": 12
+    },
+    {
+     "name": "neg_noreorder",
+     "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench mut +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_MUT_NOREORDER",
+     "expect": "fail",
+     "fail_regex": "TB_S81PH_COLL_SYS FAIL",
+     "threads": 8,
+     "peak_ram_gb": 12
+    }
+   ]
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ],
+   "macros": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/dsfd_coll_lane_w"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "S81-PH tile sheet is grade 'target' (no calibration: 467-900 ps); the tiles' measured insertion is far lower (svc_pc 145 ps, ctrl_ctr 61 ps at calibrate), so the sheet SDC would put vclk ~300+ ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+  },
+  "route_hold_margin_ns": 0.05,
+  "route_hold_corners": "mm",
+  "route_corner": "TC"
+ }
+}
