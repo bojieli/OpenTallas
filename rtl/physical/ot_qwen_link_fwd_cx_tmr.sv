@@ -35,7 +35,7 @@ module ot_qwen_link_fwd_cx_station #(
 endmodule
 
 (* keep_hierarchy = 1 *)
-module ot_qwen_link_fwd_cx_dir_tmr #(parameter integer LW=528, CW=16, FWD_INV=5)(
+module ot_qwen_link_fwd_cx_dir_tmr #(parameter integer LW=528, CW=16, FWD_INV=7)(
     input wire rst_n, fclk_i, input wire [LW-1:0] d_i,
     output wire fclk_o, output wire [LW-1:0] d_o
 );
