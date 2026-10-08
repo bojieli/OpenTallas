@@ -1,0 +1,280 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-06T01:57:55.977462+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_dsrom_su_softmax",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": true,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "DIN": 1,
+      "DOUT": 1,
+      "ELA": 5,
+      "ELM": 6,
+      "H": 1,
+      "LA": 5,
+      "LM": 6,
+      "LPH": 8,
+      "LTMAX": 1,
+      "NVMAX": 2,
+      "RWD": 1,
+      "RWU": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fpu.sv",
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "size_bytes": 5251
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "size_bytes": 10519
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_sfu.sv",
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "size_bytes": 7751
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "size_bytes": 19069
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+        "sha256": "188ce9c0066a6791a864bee4134d8518365fba57270ccf2c145b1b022c32fe58",
+        "size_bytes": 6588
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+        "sha256": "79d7ef8c1a35bf46a6f5e9f78400798141e23e829cc6422e6cfb75e91525087c",
+        "size_bytes": 27241
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+        "size_bytes": 11377
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+        "size_bytes": 12112
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_prefix.sv",
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "size_bytes": 2803
+      },
+      {
+        "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+        "sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+        "size_bytes": 42441
+      },
+      {
+        "path": "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+        "sha256": "256515db82d87a94d1f2f7c52e7be5a2016fb25dc851a2e43c457403dd898b97",
+        "size_bytes": 6907
+      },
+      {
+        "path": "rtl/hdc/v41x/ot_dsrom_su_softmax.sv",
+        "sha256": "449c02c4fb477a4b0f89c736cce647be197b04c38ebd86192ec013b5d1c71bbe",
+        "size_bytes": 23601
+      }
+    ],
+    "top": "ot_dsrom_su_softmax"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 137:\nenblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3027* |       2 |     988 |      499 |    108 |   646 |    +0.1% |  -59.956 |   -85801.8 |   -61723.4 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3030* |       2 |     989 |      499 |    108 |   647 |    +0.1% |  -59.956 |   -85745.1 |   -61706.4 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3034* |       2 |     989 |      499 |    108 |   647 |    +0.1% |  -59.956 |   -85745.1 |   -61706.4 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3040* |       2 |     991 |      500 |    108 |   649 |    +0.1% |  -59.956 |   -85676.0 |   -61697.4 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3044* |       2 |     994 |      500 |    108 |   650 |    +0.1% |  -59.956 |   -85561.5 |   -61682.2 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3049* |       2 |     997 |      500 |    109 |   650 |    +0.1% |  -59.956 |   -85558.0 |   -61608.4 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3050* |       2 |     997 |      500 |    109 |   650 |    +0.1% |  -59.956 |   -85558.0 |   -61608.4 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3051* |       2 |     998 |      500 |    109 |   650 |    +0.1% |  -59.956 |   -85558.0 |   -61608.4 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3053* |       2 |     998 |      500 |    109 |   650 |    +0.1% |  -59.956 |   -85558.0 |   -61608.4 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3060* |       2 |    1003 |      501 |    109 |   650 |    +0.1% |  -59.956 |   -85203.2 |   -61548.7 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3070* |       2 |    1005 |      502 |    109 |   657 |    +0.1% |  -59.956 |   -85206.2 |   -61549.1 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3073* |       2 |    1008 |      502 |    109 |   657 |    +0.1% |  -59.956 |   -85286.4 |   -61570.8 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3080* |       2 |    1012 |      503 |    109 |   658 |    +0.1% |  -59.956 |   -85581.4 |   -61644.2 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3084* |       2 |    1010 |      502 |    109 |   657 |    +0.1% |  -59.956 |   -85323.2 |   -61553.2 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n    3090* |       2 |    1014 |      502 |    109 |   658 |    +0.1% |  -59.956 |   -85312.6 |   -61496.0 |   2532 | g_b\\[4\\].u_e.g_h\\[6\\].u_a.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r\\[0\\]$_DFF_P_/D\n\nElapsed time: 0:24.20[h:]min:sec. CPU time: user 23.02 sys 1.16 (99%). Peak memory: 2814944KB.\nElapsed time: 48:16.72[h:]min:sec. CPU time: user 2960.19 sys 46.52 (103%). Peak memory: 5044916KB.\nElapsed time: 0:08.78[h:]min:sec. CPU time: user 7.75 sys 1.01 (99%). Peak memory: 2106184KB.\nElapsed time: 0:06.60[h:]min:sec. CPU time: user 5.83 sys 0.76 (99%). Peak memory: 1506532KB.\nElapsed time: 0:25.80[h:]min:sec. CPU time: user 24.82 sys 0.98 (99%). Peak memory: 2234356KB.\nElapsed time: 6:08.79[h:]min:sec. CPU time: user 1228.11 sys 2.92 (333%). Peak memory: 3859352KB.\nElapsed time: 0:08.05[h:]min:sec. CPU time: user 7.12 sys 0.91 (99%). Peak memory: 2226312KB.\nElapsed time: 45:01.18[h:]min:sec. CPU time: user 4515.16 sys 161.81 (173%). Peak memory: 12365368KB.\nElapsed time: 13:07.27[h:]min:sec. CPU time: user 961.61 sys 66.07 (130%). Peak memory: 6651648KB.\nElapsed time: 17:40.67[h:]min:sec. CPU time: user 1247.57 sys 79.33 (125%). Peak memory: 8933336KB.\nElapsed time: 54:16.67[h:]min:sec. CPU time: user 4207.75 sys 74.66 (131%). Peak memory: 15864012KB.\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T20:11:52.325163+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_dsrom_su_softmax",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "--source",
+      "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "--source",
+      "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+      "--source",
+      "rtl/hdc/v41x/ot_dsrom_su_softmax.sv",
+      "--param",
+      "H=1",
+      "--param",
+      "LPH=8",
+      "--param",
+      "NVMAX=2",
+      "--param",
+      "LTMAX=1",
+      "--param",
+      "DIN=1",
+      "--param",
+      "DOUT=1",
+      "--param",
+      "RWU=1",
+      "--param",
+      "RWD=1",
+      "--false-path-io",
+      "--param",
+      "LM=6",
+      "--param",
+      "LA=5",
+      "--param",
+      "ELM=6",
+      "--param",
+      "ELA=5",
+      "--orfs-var",
+      "SYNTH_KEEP_MODULES=ot_hdc_fp32_mul_f12_l6 ot_hdc_fp32_add_f12_l5x",
+      "--core-utilization",
+      "30",
+      "--place-density",
+      "0.4",
+      "--hold-margin-ns",
+      "0.015",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "pnr",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--orfs-var",
+      "NUM_CORES=16",
+      "--slew-margin-percent",
+      "30",
+      "--nickname-tag",
+      "smx_r2u30d4",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/claude/dsrom-suchains/softmax/route/r2u30d4",
+      "--output",
+      "/srv/opentallas-scratch/claude/dsrom-suchains/softmax/route/r2u30d4.json",
+      "--force"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/claude/dsrom-suchains/softmax/src2/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "7d826655f41cd1c7888040f131c8240871b119e63e461cd3e7dd8f93f10fd2f4",
+      "tree": "/srv/opentallas-scratch/claude/dsrom-suchains/softmax/src2"
+    },
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/claude/dsrom-suchains/softmax/src2"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
