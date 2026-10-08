@@ -19,8 +19,8 @@ import dsrom_s81_fulldie as F
 
 BASIS='results/uarch/dsrom_s81_mixed_geometry_20261007/mixed221_layer1_plan.json'
 DESIGN='results/uarch/dsrom_s81_pq_fullshape_design_20261007/design.json'
-ROOT_ROW=164.16
-ROOT_SIZE=(132.192,133.92)
+ROOT_ROW=272.16  # CLAUDE pq-rootcam 2026-10-08: grown root slot (was 164.16 / 133.92), = F.PQ_ROOT_ROW
+ROOT_SIZE=(132.192,241.92)
 CORE_HEIGHT=449.28
 SRAM='physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef'
 ROM='physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef'
@@ -78,7 +78,7 @@ def bind_before_routes(m,old_channels):
                     kind='pq_root_reservation',region=f'pq_root_row_{rid}',domain=f'column_{rid}')
         m['insts'].append(root)
         stations=[]
-        for side,dy in [('S',2.16),('N',153.36)]:
+        for side,dy in [('S',2.16),('N',15.12+ROOT_SIZE[1]+4.32)]:
             st=F.Inst(f'pq_root_{rid}_pin_{side}','s81_pq_root_station_reservation',x0+4.32,y0+dy,
                        ROOT_SIZE[0],8.64,kind='pq_pin_station_reservation',region=f'pq_root_row_{rid}',domain=f'column_{rid}')
             m['insts'].append(st);stations.append(st.d())
