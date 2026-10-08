@@ -778,6 +778,97 @@ module ot_hdc_v41x_ins #(
     generate
         if (DMAX == 0) begin : g_wire
             assign vo = v; assign q = d; assign coll = 1'b0; assign busy = 1'b0;
+        end else if (RING >= 3) begin : g_ring3
+            // RING 3 (hbm-blocks 2026-10-07): RING 2's timing wheel (per-16-bit-chunk slot-pointer copies) with every
+            // rotation written as constant generate wiring.  RING 2 calls rot() inside always @(*) blocks once per
+            // (slot, chunk, depth) and ORs the read word bit by bit: at the SFU lane's DMAX/K/W the yosys AST frontend
+            // sat > 10 h deriving this module.  Same vo / q / coll / busy as RING 2 cycle for cycle.
+            localparam integer N = DMAX;
+            initial if (canbe(1) || DMAX < 2) $error("ot_hdc_v41x_ins RING: depth 1 not supported");
+            localparam integer CH = 16;
+            localparam integer NC = (W + CH - 1) / CH;
+            reg [N-1:0] oh;                          // slot e mod N (valid side)
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) oh <= {{(N-1){1'b0}}, 1'b1};
+                else oh <= {oh[N-2:0], oh[N-1]};
+            wire [N-1:0] ohc [0:NC-1];               // per-chunk kept copies (data side)
+            genvar c0;
+            for (c0 = 0; c0 < NC; c0 = c0 + 1) begin : g_ohc
+                (* keep *) reg [N-1:0] r;
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) r <= {{(N-1){1'b0}}, 1'b1};
+                    else r <= {r[N-2:0], r[N-1]};
+                assign ohc[c0] = r;
+            end
+            wire [N-1:0] we;                         // valid-side write enables
+            wire [N-1:0] rs;                         // slot read at this edge: rot(oh, 1)
+            reg  [N-1:0] mv;
+            wire [W-1:0] acc [0:N];                  // read word, OR-accumulated over the slots
+            assign acc[0] = {W{1'b0}};
+            genvar j, c, k;
+            for (j = 0; j < N; j = j + 1) begin : g_s
+                localparam integer JR = (j - 1 + N) % N;
+                assign rs[j] = oh[JR];
+                wire [K-1:0] wt;
+                for (k = 0; k < K; k = k + 1) begin : g_k
+                    localparam integer DK = DEPTHS[16*k +: 16];
+                    localparam integer JW = (j - (DK % N) + N) % N;
+                    if (DK != 0) begin : g_d
+                        assign wt[k] = v && sel[k] && oh[JW];
+                    end else begin : g_z
+                        assign wt[k] = 1'b0;
+                    end
+                end
+                assign we[j] = |wt;
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) mv[j] <= 1'b0;
+                    else if (we[j]) mv[j] <= 1'b1;
+                    else if (rs[j]) mv[j] <= 1'b0;
+                wire [W-1:0] mj;                     // slot j's data
+                wire [W-1:0] rmask;                  // per-chunk read select of slot j
+                for (c = 0; c < NC; c = c + 1) begin : g_c
+                    localparam integer LO = c * CH;
+                    localparam integer WC = (W - LO < CH) ? (W - LO) : CH;
+                    wire [K-1:0] wtc;
+                    for (k = 0; k < K; k = k + 1) begin : g_k
+                        localparam integer DK = DEPTHS[16*k +: 16];
+                        localparam integer JW = (j - (DK % N) + N) % N;
+                        if (DK != 0) begin : g_d
+                            assign wtc[k] = v && sel[k] && ohc[c][JW];
+                        end else begin : g_z
+                            assign wtc[k] = 1'b0;
+                        end
+                    end
+                    wire wec = |wtc;
+                    reg [WC-1:0] mc;
+                    if (RESET_DATA != 0) begin : g_rd
+                        always @(posedge clk or negedge rst_n)
+                            if (!rst_n) mc <= {WC{1'b0}}; else if (wec) mc <= d[LO +: WC];
+                    end else begin : g_nd
+                        always @(posedge clk) if (wec) mc <= d[LO +: WC];
+                    end
+                    assign mj[LO +: WC] = mc;
+                    assign rmask[LO +: WC] = {WC{ohc[c][JR]}};
+                end
+                assign acc[j + 1] = acc[j] | (mj & rmask);
+            end
+            wire [W-1:0] rd = acc[N];
+            wire cw = |(we & mv);
+            wire rdv = |(mv & rs);
+            reg qv;
+            reg [W-1:0] qr;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) qv <= 1'b0; else qv <= rdv;
+            if (RESET_DATA != 0) begin : g_qrd
+                always @(posedge clk or negedge rst_n) if (!rst_n) qr <= {W{1'b0}}; else qr <= rd;
+            end else begin : g_qnd
+                always @(posedge clk) qr <= rd;
+            end
+            wire now = v && has(0, sel);
+            assign vo = now || qv;
+            assign q  = now ? d : qr;
+            assign coll = cw || (now && qv);
+            assign busy = qv || (|mv);
         end else if (RING != 0) begin : g_ring
             localparam integer N = DMAX;
             initial if (canbe(1) || DMAX < 2) $error("ot_hdc_v41x_ins RING: depth 1 not supported");

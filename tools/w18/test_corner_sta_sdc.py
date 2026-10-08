@@ -28,7 +28,7 @@ class SelectedSdcTest(unittest.TestCase):
                     args += ['--sdc-name', selected]
                 with patch.object(sta.subprocess, 'run', return_value=fake) as docker, contextlib.redirect_stdout(io.StringIO()):
                     sta.main(args)
-                self.assertEqual(docker.call_count, 3)  # TT + SS + FF (owner option B)
+                self.assertEqual(docker.call_count, 3)   # tt (option B closure), ss (sensitivity), ff
                 rec = json.loads(output.read_text())
                 self.assertEqual(rec['sdc'], selected)
                 self.assertEqual(rec['sdc_name'], selected)

@@ -45,19 +45,44 @@ p.add_argument('--int-ps', type=float, default=60.0)
 p.add_argument('--clkq-ps', type=float, default=100.0)
 p.add_argument('--clkq-min-ps', type=float, default=30.0)
 p.add_argument('--setup-ps', type=float, default=25.0)
+p.add_argument('--link-ps', type=float, default=None,
+               help='MEASURED die link delay between this pin and the neighbour pin (wire + pin station), ps; default '
+                    '--link-um x 1.135 ps/um (SS buffered wire, memory ss-wire-reach-504um)')
+p.add_argument('--link-um', type=float, default=100.0, help='die link length when --link-ps is not given (pin-station '
+               'rule: last segment <= ~100 um)')
+p.add_argument('--sender-frac', type=float, default=0.5, help='share of the link budget given to the sender side')
+p.add_argument('--legacy-split', action='store_true', help='the pre-2026-10-07 per-side budgets (they overlap: invalid '
+               'evidence, kept only to reproduce old routes)')
 p.add_argument('--out', type=Path, required=True)
 a = p.parse_args()
 # Each budget takes the insertion that is pessimistic for it: inputs are
 # captured by our latest flop at SS (setup) and earliest flop at FF (hold);
 # outputs are captured externally up to SKEW before our earliest SS flop.
 shift = a.period_ps - (a.io_ref_period_ps if a.io_ref_period_ps else a.period_ps)
-in_max = a.l_max + a.skew_ps + a.clkq_ps + a.int_ps + a.wire_ps + shift
+# CONSISTENT link split (setup-triage 2026-10-07, owner-delegated decision): one registered die link is
+#   S (sender clk->Q + reg->pin) + LINK (measured wire + pin station) + R (receiver pin->flop + setup) + SKEW <= T - 60
+# and BOTH sides' SDCs must take their window from the same split S + R = T - 60 - SKEW - LINK.  The legacy budgets
+# gave the receiver T-60-(SKEW+CLKQ+INT+WIRE) = 263 ps and the sender T-60-(WIRE+INT+SETUP+SKEW) = 338 ps: 601 ps of
+# windows for a 423 ps link (WIRE 200), so neither SDC proved the link.
+T_ref = a.io_ref_period_ps if a.io_ref_period_ps else a.period_ps
+link = a.link_ps if a.link_ps is not None else 1.135 * a.link_um
+B = T_ref - 60.0 - a.skew_ps - link
+S = a.sender_frac * B
+R = B - S
+assert abs(S + R + link + a.skew_ps - (T_ref - 60.0)) < 1e-6
+if a.legacy_split:
+    in_max = a.l_max + a.skew_ps + a.clkq_ps + a.int_ps + a.wire_ps + shift
+else:
+    in_max = a.l_max + a.skew_ps + link + S + shift   # receiver window = T - 60 - (in_max - L) = R
 in_min = (a.l_ff_max + 32.2 + a.wire_credit_ps) if a.l_ff_max else a.l_ff_min - a.hold_skew_ps + a.clkq_min_ps
 hold_unc = a.hold_skew_ps if a.l_ff_max else 25
 if a.hold_relax:
     in_min = 0.0
     hold_unc = 0
-out_max = a.wire_ps + a.int_ps + a.setup_ps + a.skew_ps - a.l_min + shift
+if a.legacy_split:
+    out_max = a.wire_ps + a.int_ps + a.setup_ps + a.skew_ps - a.l_min + shift
+else:
+    out_max = link + R + a.skew_ps - a.l_min + shift   # sender window = T - 60 - out_max - L = S
 out_min = -(a.l_ff_min - 60.0)  # launch-only promise; 60 ps below our earliest FF flop
 if a.route_ss_hold and not a.hold_relax:
     in_min = a.l_min - a.hold_skew_ps + a.clkq_min_ps
@@ -65,7 +90,7 @@ if a.route_ss_hold and not a.hold_relax:
     hold_unc = 25
 L = a.l_max
 lines = [
-    f'# W2 rb station receiver clock-root contract: period {a.period_ps} ps, L SS {a.l_min}..{a.l_max} FFmin {a.l_ff_min} ps, setup skew {a.skew_ps} ps, hold skew {a.hold_skew_ps} ps, IO windows at {a.io_ref_period_ps or a.period_ps} ps',
+    f'# W2 rb station receiver clock-root contract ({"LEGACY overlapping split" if a.legacy_split else f"consistent link split S {S:.1f} / R {R:.1f} / link {link:.1f}"}): period {a.period_ps} ps, L SS {a.l_min}..{a.l_max} FFmin {a.l_ff_min} ps, setup skew {a.skew_ps} ps, hold skew {a.hold_skew_ps} ps, IO windows at {a.io_ref_period_ps or a.period_ps} ps',
     f'create_clock -name clk_sm -period {a.period_ps:.3f} [get_ports clk_sm]',
     'set prev [get_ports clk_sm]', 'set master clk_sm',
     'for {set i 0} {$i<4} {incr i} {',
@@ -97,4 +122,4 @@ lines = [
 if a.half:
     lines += ['set ot_g {}', 'foreach p [get_pins -hierarchical *] {', ' set n [get_full_name $p]', ' if {[regexp {u_icg.*/Y$} $n]} {', '  set c [get_cells -of_objects $p]', '  if {[regexp {AND} [get_property $c ref_name]]} {lappend ot_g $p}', ' }', '}', 'if {[llength $ot_g]!=1} {error "expected one ICG AND output, found [llength $ot_g]"}', 'create_generated_clock -name gclk -source [get_ports clk_sm] -divide_by 2 [lindex $ot_g 0]']
 a.out.write_text('\n'.join(lines)+'\n')
-print(a.out, dict(in_max=in_max, in_min=in_min, out_max=out_max, out_min=out_min))
+print(a.out, dict(in_max=in_max, in_min=in_min, out_max=out_max, out_min=out_min, link=link, S=S, R=R, legacy=a.legacy_split))

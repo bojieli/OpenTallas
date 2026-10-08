@@ -509,181 +509,6 @@
    "mtp_pct_vs_total": -12.587
   },
   {
-   "item": "bf_halfphl",
-   "description": "BF HALF_PHL, the ACCEPTED BF closure path (ot_s81_bf_native HALF=1 HALF_PHL=1, claude/s81-bf-20261007; exact PASS results/rtl/s81_bf_native_20261007/halfphl_exact): every BF16 field phase doubled (as-built qx10 BF16 phases go->idle+1, + 2 a phase for pin capture / output register; upper bound, region return / gather stay full rate) + the BF16-DEDICATED allocation on the 1,792 mixed die (results/uarch/dsrom_s81_mixed1792_mapping_20261007: half_dedicated 120 stages / 480 dies vs full_shared 98 / 392: +22 stage hops at 1,006 cycles = measured hop 0.8367 us + 2 cycles mean cable, +88 layer dies)",
-   "adds": [
-    [
-     "*.attn.wo_a",
-     1764,
-     0
-    ],
-    [
-     "*.ffn.router",
-     519,
-     0
-    ],
-    [
-     "*.attn.cmp.wk",
-     205,
-     0
-    ],
-    [
-     "L2.attn.a_proj",
-     1557,
-     0
-    ],
-    [
-     "L8.attn.a_proj",
-     1557,
-     0
-    ],
-    [
-     "L14.attn.a_proj",
-     1557,
-     0
-    ],
-    [
-     "L20.attn.a_proj",
-     1038,
-     0
-    ],
-    [
-     "L24.attn.a_proj",
-     519,
-     0
-    ],
-    [
-     "L28.attn.a_proj",
-     519,
-     0
-    ],
-    [
-     "L32.attn.a_proj",
-     519,
-     0
-    ],
-    [
-     "L36.attn.a_proj",
-     519,
-     0
-    ],
-    [
-     "L1.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L3.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L5.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L7.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L9.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L10.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L12.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L14.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L16.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L18.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L20.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L21.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L23.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L25.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L27.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L29.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L30.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L32.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L34.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L36.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L37.substage_hop0",
-     1006,
-     0
-    ],
-    [
-     "L39.substage_hop0",
-     1006,
-     0
-    ]
-   ],
-   "ar_tok_s": 1372.7,
-   "mtp_tok_s": 4155.6,
-   "ar_pct_vs_total": -13.867,
-   "mtp_pct_vs_total": -11.483
-  },
-  {
    "item": "bf_deep4",
    "description": "OPTIONAL lever, not the closure path: deep full-rate BF (ot_s81_bf_native RECUT=4, ot_v41_bf16_lanes3 DEEP 1: fadd3 every step cut, chain5 F5=0, bmul3 XS 2, extra lane input rank; claude/s81-bf-20261007 9c21d9e49; exact TXN MATCH 456 partials): latency only on this workload (the widened issue hazard never bound: lag identical with and without it), transaction lag per partial 4 / 10.2 / 23; upper bound +23 per BF16 field phase; no half-rate clock, no dedicated pairs (shared allocation, 98 stages); route bf_deep4_mm_9c21d9e49",
    "adds": [
@@ -1035,6 +860,19 @@
    "physical_adoption": false,
    "measurement": "gold4 control 63,153 -> half 126,310 root/die cycles (five drafts)",
    "reason": "The whole reduced gold4 core/memory/VM domain was slowed, not only the head. VOCAB4040, G4 x W16 is not a full-shape draft measurement. The previous 8,387 cycles per head position underpriced blocks and leaked into verification II. A whole-domain physical clock/CDC contract and full-shape composition are missing; no numerical candidate rate is published."
+  }
+ ],
+ "external_candidates": [
+  {
+   "item": "bf_halfphl",
+   "physical_adoption": false,
+   "ar_tok_s": 1467.6,
+   "mtp_tok_s": 4403.0,
+   "ar_pct_vs_total": -7.91,
+   "mtp_pct_vs_total": -6.21,
+   "description": "BF HALF_PHL, the ACCEPTED BF closure path (ot_s81_bf_native HALF=1 HALF_PHL=1, claude/s81-bf-20261007, exact PASS results/rtl/s81_bf_native_20261007/halfphl_exact): MEASURED 1,792 half_dedicated field (merged BF16 phases + router K split, 19,312 regions exact; 120 stages / 480 dies, 35 extra hops vs 98 / 392, 13 shared), BF16 region go->idle x 2 + 2 a phase (upper bound on the half element); full-rate shared reference 1,577.1 on the same basis",
+   "source": "claude/s81-fieldphase-20261007 f42b1eb76 results/uarch/dsrom_s81_field_phases_1792_20261007/composition_basis_39e424990.json",
+   "supersedes": "16584ae76's -13.87 % doubled the as-built UNMERGED qx10 BF16 phases (wo_a 4 phases): refuted"
   }
  ],
  "physical_adoption": false,

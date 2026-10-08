@@ -1,0 +1,57 @@
+{
+  "name": "ot_dsrom_window_column_128",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/wcol128-m6-01a487c86/routes/wcol128_m6_01a487c86/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/wcol128-m6-01a487c86/routes/wcol128_m6_01a487c86/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/wcol128-m6-01a487c86/routes/wcol128_m6_01a487c86/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/wcol128-m6-01a487c86/routes/wcol128_m6_01a487c86/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/wcol128-m6-01a487c86/routes/wcol128_m6_01a487c86/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/wcol128-m6-01a487c86/routes/wcol128_m6_01a487c86/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/wcol128-m6-01a487c86/routes/wcol128_m6_01a487c86/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_dsrom_window_column_128.lef": "7ca2039fe4a375780ffa9abe8ba469040522b191dc6641f6079be96cdf734404",
+    "ot_dsrom_window_column_128_ff.lib": "94b1c361d1c4dfd200df559024014ef66837cedd9906cd86e6bf16bfae51796f",
+    "ot_dsrom_window_column_128_ss.lib": "def6a7a892140130c7646e7a47d3347a363dbb4141dee6e562e53a1633018f86"
+  },
+  "ok": true
+}

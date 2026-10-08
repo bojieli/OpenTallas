@@ -8,7 +8,7 @@ ORFS=$1; SRC=$2; OUT=$3; D=$(dirname "$OUT"); mkdir -p "$D"
 T=$ORFS/w18_sta_ss.tcl
 if [ ! -f "$T" ]; then echo "{\"error\": \"no $T (setup_tt unmeasurable)\"}" > "$OUT"; exit 3; fi
 TCL=$D/tt_resta_$(basename "$OUT" .json).tcl
-sed -e 's/_\(S\?L\?\|R\)VT_SS_nldm/_\1VT_TT_nldm/g' -e 's/_ss\.lib/_tt.lib/g' -e 's/^puts "OT_CORNER ss"/puts "OT_CORNER tt"/' "$T" > "$TCL"
+sed -e 's/_\(R\|L\|SL\)VT_SS_nldm/_\1VT_TT_nldm/g' -e 's/_ss\.lib/_tt.lib/g' -e 's/^puts "OT_CORNER ss"/puts "OT_CORNER tt"/' "$T" > "$TCL"
 LOG=${TCL%.tcl}.log
 timeout 5400 docker run --rm -v "$ORFS:/work:ro" -v "$SRC:/src:ro" -v "$D:/tt" openroad/orfs:asap7lock bash -lc \
   "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /tt/$(basename "$TCL")" > "$LOG" 2>&1

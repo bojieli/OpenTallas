@@ -25,7 +25,11 @@
    "pq_qelem",
    "softmax_exp_recut",
    "su_meso_d8g1"
-  ]
+  ],
+  "wire_items_replaced": {
+   "s81_die": 27,
+   "meso_d8g1": 4
+  }
  },
  "geometry": {
   "far_round_trip": {
@@ -38,6 +42,7 @@
     "layer1": 164
    }
   },
+  "extra_wire_per_phase": 0,
   "dir": "results/uarch/dsrom_s81_field_phases_1792_20261007/geometry"
  },
  "phase_ledger": [
@@ -2217,6 +2222,1068 @@
      "field_only_AR_tok_s": 1148.8,
      "field_only_MTP_tok_s": 3602.1,
      "sum_layer_field_delta_cycles": 293892
+    },
+    "published_per_phase": {
+     "AR_tok_s": 1552.5,
+     "MTP_tok_s": 4591.8,
+     "AR_us": 644.122,
+     "MTP_step_us": 905.745,
+     "field_only_AR_tok_s": 1552.5,
+     "field_only_MTP_tok_s": 4591.8,
+     "sum_layer_field_delta_cycles": 20237
+    }
+   }
+  },
+  "half_dedicated_ksplit": {
+   "sensitivities": {
+    "selector_plus22": {
+     "what": "selector tile +22 a segment (claude/s81-blocks-20261007 b17a8dda2 MRG_PIPE+RQPIPE bench) vs the ledger's +20",
+     "AR_tok_s": 1469.8,
+     "MTP_tok_s": 4408.6,
+     "AR_pct_vs_half_rate": -0.006
+    },
+    "pq_root_cam_8leaf": {
+     "what": "PQ root CAM measured +4 a phase (eight-leaf, results/rtl/s81_pq_root_cam_20261007) on every field phase, IF the PQ spine is adopted (the PQ phase pipelining itself is not measured at 1,792)",
+     "AR_tok_s": 1465.3,
+     "MTP_tok_s": 4397.4,
+     "AR_pct_vs_half_rate": -0.311
+    },
+    "pq_stage_c": {
+     "what": "PQ CAM stage-C fallback +7 a phase (modelled, default-off)",
+     "AR_tok_s": 1462.0,
+     "MTP_tok_s": 4388.8,
+     "AR_pct_vs_half_rate": -0.535
+    }
+   },
+   "stages": 120,
+   "layer_dies": 480,
+   "extra_hops": 35,
+   "region_runs": 19312,
+   "failed": 0,
+   "all_exact": true,
+   "nodes": {
+    "E1.wkv": {
+     "published": 1197,
+     "published_phases": 2,
+     "published_per_phase": 1246,
+     "full_rate": 1875,
+     "half_rate": 1875,
+     "half_rate_serial": 1875,
+     "stages": {
+      "3": 1875
+     },
+     "phases": {
+      "3": 3
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L0.attn.a_proj": {
+     "published": 592,
+     "published_phases": 1,
+     "published_per_phase": 592,
+     "full_rate": 607,
+     "half_rate": 607,
+     "half_rate_serial": 607,
+     "stages": {
+      "0": 607
+     },
+     "phases": {
+      "0": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L0.attn.wo_a": {
+     "published": 2387,
+     "published_phases": 4,
+     "published_per_phase": 2534,
+     "full_rate": 1288,
+     "half_rate": 2175,
+     "half_rate_serial": 2175,
+     "stages": {
+      "0": 2175
+     },
+     "phases": {
+      "0": 2
+     },
+     "bf16_phases": 2,
+     "exact": true
+    },
+    "L0.attn.wo_b": {
+     "published": 521,
+     "published_phases": 1,
+     "published_per_phase": 521,
+     "full_rate": 528,
+     "half_rate": 528,
+     "half_rate_serial": 528,
+     "stages": {
+      "0": 528
+     },
+     "phases": {
+      "0": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L0.attn.wq_b": {
+     "published": 522,
+     "published_phases": 1,
+     "published_per_phase": 522,
+     "full_rate": 1002,
+     "half_rate": 1002,
+     "half_rate_serial": 1002,
+     "stages": {
+      "0": 1002
+     },
+     "phases": {
+      "0": 2
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L0.ffn.down": {
+     "published": 2209,
+     "published_phases": 5,
+     "published_per_phase": 2405,
+     "full_rate": 1454,
+     "half_rate": 1454,
+     "half_rate_serial": 3422,
+     "stages": {
+      "1": 984,
+      "2": 984,
+      "0": 1454
+     },
+     "phases": {
+      "1": 2,
+      "2": 2,
+      "0": 3
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L0.ffn.experts_gu": {
+     "published": 2227,
+     "published_phases": 4,
+     "published_per_phase": 2374,
+     "full_rate": 1202,
+     "half_rate": 1202,
+     "half_rate_serial": 3598,
+     "stages": {
+      "1": 1198,
+      "2": 1198,
+      "0": 1202
+     },
+     "phases": {
+      "1": 2,
+      "2": 2,
+      "0": 2
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L0.ffn.router": {
+     "published": 686,
+     "published_phases": 1,
+     "published_per_phase": 686,
+     "full_rate": 566,
+     "half_rate": 956,
+     "half_rate_serial": 956,
+     "stages": {
+      "0": 956
+     },
+     "phases": {
+      "0": 1
+     },
+     "bf16_phases": 1,
+     "exact": true
+    },
+    "L0.ffn.shared_gu": {
+     "published": 606,
+     "published_phases": 1,
+     "published_per_phase": 606,
+     "full_rate": 613,
+     "half_rate": 613,
+     "half_rate_serial": 613,
+     "stages": {
+      "0": 613
+     },
+     "phases": {
+      "0": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L1.attn.a_proj": {
+     "published": 592,
+     "published_phases": 1,
+     "published_per_phase": 592,
+     "full_rate": 607,
+     "half_rate": 607,
+     "half_rate_serial": 607,
+     "stages": {
+      "3": 607
+     },
+     "phases": {
+      "3": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L1.attn.wo_a": {
+     "published": 2387,
+     "published_phases": 4,
+     "published_per_phase": 2534,
+     "full_rate": 1288,
+     "half_rate": 2175,
+     "half_rate_serial": 2175,
+     "stages": {
+      "3": 2175
+     },
+     "phases": {
+      "3": 2
+     },
+     "bf16_phases": 2,
+     "exact": true
+    },
+    "L1.attn.wo_b": {
+     "published": 521,
+     "published_phases": 1,
+     "published_per_phase": 521,
+     "full_rate": 528,
+     "half_rate": 528,
+     "half_rate_serial": 528,
+     "stages": {
+      "3": 528
+     },
+     "phases": {
+      "3": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L1.attn.wq_b": {
+     "published": 522,
+     "published_phases": 1,
+     "published_per_phase": 522,
+     "full_rate": 1002,
+     "half_rate": 1002,
+     "half_rate_serial": 1002,
+     "stages": {
+      "3": 1002
+     },
+     "phases": {
+      "3": 2
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L1.ffn.down": {
+     "published": 1350,
+     "published_phases": 3,
+     "published_per_phase": 1448,
+     "full_rate": 1949,
+     "half_rate": 1949,
+     "half_rate_serial": 3424,
+     "stages": {
+      "3": 1949,
+      "4": 491,
+      "5": 984
+     },
+     "phases": {
+      "3": 4,
+      "4": 1,
+      "5": 2
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L1.ffn.experts_gu": {
+     "published": 1681,
+     "published_phases": 3,
+     "published_per_phase": 1779,
+     "full_rate": 1804,
+     "half_rate": 1804,
+     "half_rate_serial": 3600,
+     "stages": {
+      "3": 1804,
+      "4": 598,
+      "5": 1198
+     },
+     "phases": {
+      "3": 3,
+      "4": 1,
+      "5": 2
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L1.ffn.router": {
+     "published": 686,
+     "published_phases": 1,
+     "published_per_phase": 686,
+     "full_rate": 566,
+     "half_rate": 956,
+     "half_rate_serial": 956,
+     "stages": {
+      "3": 956
+     },
+     "phases": {
+      "3": 1
+     },
+     "bf16_phases": 1,
+     "exact": true
+    },
+    "L1.ffn.shared_gu": {
+     "published": 606,
+     "published_phases": 1,
+     "published_per_phase": 606,
+     "full_rate": 613,
+     "half_rate": 613,
+     "half_rate_serial": 613,
+     "stages": {
+      "3": 613
+     },
+     "phases": {
+      "3": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L2.attn.a_proj": {
+     "published": 2519,
+     "published_phases": 4,
+     "published_per_phase": 2666,
+     "full_rate": 1997,
+     "half_rate": 3032,
+     "half_rate_serial": 3032,
+     "stages": {
+      "6": 3032
+     },
+     "phases": {
+      "6": 3
+     },
+     "bf16_phases": 2,
+     "exact": true
+    },
+    "L2.attn.cmp.wk": {
+     "published": 373,
+     "published_phases": 1,
+     "published_per_phase": 373,
+     "full_rate": 379,
+     "half_rate": 582,
+     "half_rate_serial": 582,
+     "stages": {
+      "6": 582
+     },
+     "phases": {
+      "6": 1
+     },
+     "bf16_phases": 1,
+     "exact": true
+    },
+    "L2.attn.wo_a": {
+     "published": 2387,
+     "published_phases": 4,
+     "published_per_phase": 2534,
+     "full_rate": 1288,
+     "half_rate": 2175,
+     "half_rate_serial": 2175,
+     "stages": {
+      "6": 2175
+     },
+     "phases": {
+      "6": 2
+     },
+     "bf16_phases": 2,
+     "exact": true
+    },
+    "L2.attn.wo_b": {
+     "published": 521,
+     "published_phases": 1,
+     "published_per_phase": 521,
+     "full_rate": 528,
+     "half_rate": 528,
+     "half_rate_serial": 528,
+     "stages": {
+      "6": 528
+     },
+     "phases": {
+      "6": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L2.attn.wq_b": {
+     "published": 968,
+     "published_phases": 2,
+     "published_per_phase": 1017,
+     "full_rate": 1504,
+     "half_rate": 1504,
+     "half_rate_serial": 1504,
+     "stages": {
+      "6": 1504
+     },
+     "phases": {
+      "6": 3
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L2.ffn.down": {
+     "published": 1335,
+     "published_phases": 3,
+     "published_per_phase": 1433,
+     "full_rate": 1949,
+     "half_rate": 1949,
+     "half_rate_serial": 3424,
+     "stages": {
+      "7": 491,
+      "8": 984,
+      "6": 1949
+     },
+     "phases": {
+      "7": 1,
+      "8": 2,
+      "6": 4
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L2.ffn.experts_gu": {
+     "published": 1139,
+     "published_phases": 2,
+     "published_per_phase": 1188,
+     "full_rate": 1804,
+     "half_rate": 1804,
+     "half_rate_serial": 3600,
+     "stages": {
+      "7": 598,
+      "8": 1198,
+      "6": 1804
+     },
+     "phases": {
+      "7": 1,
+      "8": 2,
+      "6": 3
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L2.ffn.router": {
+     "published": 686,
+     "published_phases": 1,
+     "published_per_phase": 686,
+     "full_rate": 566,
+     "half_rate": 956,
+     "half_rate_serial": 956,
+     "stages": {
+      "6": 956
+     },
+     "phases": {
+      "6": 1
+     },
+     "bf16_phases": 1,
+     "exact": true
+    },
+    "L2.ffn.shared_gu": {
+     "published": 606,
+     "published_phases": 1,
+     "published_per_phase": 606,
+     "full_rate": 613,
+     "half_rate": 613,
+     "half_rate_serial": 613,
+     "stages": {
+      "6": 613
+     },
+     "phases": {
+      "6": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L20.attn.a_proj": {
+     "published": 1879,
+     "published_phases": 3,
+     "published_per_phase": 1977,
+     "full_rate": 1302,
+     "half_rate": 1819,
+     "half_rate_serial": 1819,
+     "stages": {
+      "60": 1819
+     },
+     "phases": {
+      "60": 2
+     },
+     "bf16_phases": 1,
+     "exact": true
+    },
+    "L20.attn.cmp.wk": {
+     "published": 373,
+     "published_phases": 1,
+     "published_per_phase": 373,
+     "full_rate": 379,
+     "half_rate": 582,
+     "half_rate_serial": 582,
+     "stages": {
+      "60": 582
+     },
+     "phases": {
+      "60": 1
+     },
+     "bf16_phases": 1,
+     "exact": true
+    },
+    "L20.attn.wo_a": {
+     "published": 2387,
+     "published_phases": 4,
+     "published_per_phase": 2534,
+     "full_rate": 1288,
+     "half_rate": 2175,
+     "half_rate_serial": 2175,
+     "stages": {
+      "60": 2175
+     },
+     "phases": {
+      "60": 2
+     },
+     "bf16_phases": 2,
+     "exact": true
+    },
+    "L20.attn.wo_b": {
+     "published": 521,
+     "published_phases": 1,
+     "published_per_phase": 521,
+     "full_rate": 528,
+     "half_rate": 528,
+     "half_rate_serial": 528,
+     "stages": {
+      "60": 528
+     },
+     "phases": {
+      "60": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L20.attn.wq_b": {
+     "published": 968,
+     "published_phases": 2,
+     "published_per_phase": 1017,
+     "full_rate": 1504,
+     "half_rate": 1504,
+     "half_rate_serial": 1504,
+     "stages": {
+      "60": 1504
+     },
+     "phases": {
+      "60": 3
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L20.ffn.down": {
+     "published": 2199,
+     "published_phases": 5,
+     "published_per_phase": 2395,
+     "full_rate": 1477,
+     "half_rate": 1477,
+     "half_rate_serial": 3422,
+     "stages": {
+      "61": 1477,
+      "62": 491,
+      "60": 1454
+     },
+     "phases": {
+      "61": 3,
+      "62": 1,
+      "60": 3
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L20.ffn.experts_gu": {
+     "published": 2231,
+     "published_phases": 4,
+     "published_per_phase": 2378,
+     "full_rate": 1798,
+     "half_rate": 1798,
+     "half_rate_serial": 3598,
+     "stages": {
+      "61": 1798,
+      "62": 598,
+      "60": 1202
+     },
+     "phases": {
+      "61": 3,
+      "62": 1,
+      "60": 2
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L20.ffn.router": {
+     "published": 686,
+     "published_phases": 1,
+     "published_per_phase": 686,
+     "full_rate": 566,
+     "half_rate": 956,
+     "half_rate_serial": 956,
+     "stages": {
+      "60": 956
+     },
+     "phases": {
+      "60": 1
+     },
+     "bf16_phases": 1,
+     "exact": true
+    },
+    "L20.ffn.shared_gu": {
+     "published": 606,
+     "published_phases": 1,
+     "published_per_phase": 606,
+     "full_rate": 613,
+     "half_rate": 613,
+     "half_rate_serial": 613,
+     "stages": {
+      "60": 613
+     },
+     "phases": {
+      "60": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L21.attn.a_proj": {
+     "published": 595,
+     "published_phases": 1,
+     "published_per_phase": 595,
+     "full_rate": 607,
+     "half_rate": 607,
+     "half_rate_serial": 607,
+     "stages": {
+      "63": 607
+     },
+     "phases": {
+      "63": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L21.attn.wo_a": {
+     "published": 2387,
+     "published_phases": 4,
+     "published_per_phase": 2534,
+     "full_rate": 1288,
+     "half_rate": 2175,
+     "half_rate_serial": 2175,
+     "stages": {
+      "63": 2175
+     },
+     "phases": {
+      "63": 2
+     },
+     "bf16_phases": 2,
+     "exact": true
+    },
+    "L21.attn.wo_b": {
+     "published": 521,
+     "published_phases": 1,
+     "published_per_phase": 521,
+     "full_rate": 528,
+     "half_rate": 528,
+     "half_rate_serial": 528,
+     "stages": {
+      "63": 528
+     },
+     "phases": {
+      "63": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L21.attn.wq_b": {
+     "published": 522,
+     "published_phases": 1,
+     "published_per_phase": 522,
+     "full_rate": 1002,
+     "half_rate": 1002,
+     "half_rate_serial": 1002,
+     "stages": {
+      "63": 1002
+     },
+     "phases": {
+      "63": 2
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L21.ffn.down": {
+     "published": 1360,
+     "published_phases": 3,
+     "published_per_phase": 1458,
+     "full_rate": 1454,
+     "half_rate": 1454,
+     "half_rate_serial": 3422,
+     "stages": {
+      "63": 1454,
+      "64": 984,
+      "65": 984
+     },
+     "phases": {
+      "63": 3,
+      "64": 2,
+      "65": 2
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L21.ffn.experts_gu": {
+     "published": 1677,
+     "published_phases": 3,
+     "published_per_phase": 1775,
+     "full_rate": 1202,
+     "half_rate": 1202,
+     "half_rate_serial": 3598,
+     "stages": {
+      "63": 1202,
+      "64": 1198,
+      "65": 1198
+     },
+     "phases": {
+      "63": 2,
+      "64": 2,
+      "65": 2
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L21.ffn.router": {
+     "published": 686,
+     "published_phases": 1,
+     "published_per_phase": 686,
+     "full_rate": 566,
+     "half_rate": 956,
+     "half_rate_serial": 956,
+     "stages": {
+      "63": 956
+     },
+     "phases": {
+      "63": 1
+     },
+     "bf16_phases": 1,
+     "exact": true
+    },
+    "L21.ffn.shared_gu": {
+     "published": 606,
+     "published_phases": 1,
+     "published_per_phase": 606,
+     "full_rate": 613,
+     "half_rate": 613,
+     "half_rate_serial": 613,
+     "stages": {
+      "63": 613
+     },
+     "phases": {
+      "63": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L24.attn.a_proj": {
+     "published": 1239,
+     "published_phases": 2,
+     "published_per_phase": 1288,
+     "full_rate": 1302,
+     "half_rate": 1819,
+     "half_rate_serial": 1819,
+     "stages": {
+      "72": 1819
+     },
+     "phases": {
+      "72": 2
+     },
+     "bf16_phases": 1,
+     "exact": true
+    },
+    "L24.attn.wo_a": {
+     "published": 2387,
+     "published_phases": 4,
+     "published_per_phase": 2534,
+     "full_rate": 1288,
+     "half_rate": 2175,
+     "half_rate_serial": 2175,
+     "stages": {
+      "72": 2175
+     },
+     "phases": {
+      "72": 2
+     },
+     "bf16_phases": 2,
+     "exact": true
+    },
+    "L24.attn.wo_b": {
+     "published": 521,
+     "published_phases": 1,
+     "published_per_phase": 521,
+     "full_rate": 528,
+     "half_rate": 528,
+     "half_rate_serial": 528,
+     "stages": {
+      "72": 528
+     },
+     "phases": {
+      "72": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L24.attn.wq_b": {
+     "published": 968,
+     "published_phases": 2,
+     "published_per_phase": 1017,
+     "full_rate": 1504,
+     "half_rate": 1504,
+     "half_rate_serial": 1504,
+     "stages": {
+      "72": 1504
+     },
+     "phases": {
+      "72": 3
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L24.ffn.down": {
+     "published": 2222,
+     "published_phases": 5,
+     "published_per_phase": 2418,
+     "full_rate": 1970,
+     "half_rate": 1970,
+     "half_rate_serial": 3420,
+     "stages": {
+      "73": 1970,
+      "72": 959,
+      "74": 491
+     },
+     "phases": {
+      "73": 4,
+      "72": 2,
+      "74": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L24.ffn.experts_gu": {
+     "published": 2773,
+     "published_phases": 5,
+     "published_per_phase": 2969,
+     "full_rate": 2398,
+     "half_rate": 2398,
+     "half_rate_serial": 3596,
+     "stages": {
+      "73": 2398,
+      "72": 600,
+      "74": 598
+     },
+     "phases": {
+      "73": 4,
+      "72": 1,
+      "74": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L24.ffn.router": {
+     "published": 686,
+     "published_phases": 1,
+     "published_per_phase": 686,
+     "full_rate": 566,
+     "half_rate": 956,
+     "half_rate_serial": 956,
+     "stages": {
+      "72": 956
+     },
+     "phases": {
+      "72": 1
+     },
+     "bf16_phases": 1,
+     "exact": true
+    },
+    "L24.ffn.shared_gu": {
+     "published": 606,
+     "published_phases": 1,
+     "published_per_phase": 606,
+     "full_rate": 613,
+     "half_rate": 613,
+     "half_rate_serial": 613,
+     "stages": {
+      "72": 613
+     },
+     "phases": {
+      "72": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L3.attn.a_proj": {
+     "published": 600,
+     "published_phases": 1,
+     "published_per_phase": 600,
+     "full_rate": 607,
+     "half_rate": 607,
+     "half_rate_serial": 607,
+     "stages": {
+      "9": 607
+     },
+     "phases": {
+      "9": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L3.attn.wo_a": {
+     "published": 2387,
+     "published_phases": 4,
+     "published_per_phase": 2534,
+     "full_rate": 1288,
+     "half_rate": 2175,
+     "half_rate_serial": 2175,
+     "stages": {
+      "9": 2175
+     },
+     "phases": {
+      "9": 2
+     },
+     "bf16_phases": 2,
+     "exact": true
+    },
+    "L3.attn.wo_b": {
+     "published": 521,
+     "published_phases": 1,
+     "published_per_phase": 521,
+     "full_rate": 528,
+     "half_rate": 528,
+     "half_rate_serial": 528,
+     "stages": {
+      "9": 528
+     },
+     "phases": {
+      "9": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L3.attn.wq_b": {
+     "published": 522,
+     "published_phases": 1,
+     "published_per_phase": 522,
+     "full_rate": 1002,
+     "half_rate": 1002,
+     "half_rate_serial": 1002,
+     "stages": {
+      "9": 1002
+     },
+     "phases": {
+      "9": 2
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L3.ffn.down": {
+     "published": 2672,
+     "published_phases": 6,
+     "published_per_phase": 2917,
+     "full_rate": 2956,
+     "half_rate": 2956,
+     "half_rate_serial": 3420,
+     "stages": {
+      "10": 2956,
+      "9": 464
+     },
+     "phases": {
+      "10": 6,
+      "9": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L3.ffn.experts_gu": {
+     "published": 3311,
+     "published_phases": 6,
+     "published_per_phase": 3556,
+     "full_rate": 3598,
+     "half_rate": 3598,
+     "half_rate_serial": 3598,
+     "stages": {
+      "10": 3598
+     },
+     "phases": {
+      "10": 6
+     },
+     "bf16_phases": 0,
+     "exact": true
+    },
+    "L3.ffn.router": {
+     "published": 686,
+     "published_phases": 1,
+     "published_per_phase": 686,
+     "full_rate": 566,
+     "half_rate": 956,
+     "half_rate_serial": 956,
+     "stages": {
+      "9": 956
+     },
+     "phases": {
+      "9": 1
+     },
+     "bf16_phases": 1,
+     "exact": true
+    },
+    "L3.ffn.shared_gu": {
+     "published": 606,
+     "published_phases": 1,
+     "published_per_phase": 606,
+     "full_rate": 613,
+     "half_rate": 613,
+     "half_rate_serial": 613,
+     "stages": {
+      "9": 613
+     },
+     "phases": {
+      "9": 1
+     },
+     "bf16_phases": 0,
+     "exact": true
+    }
+   },
+   "compositions": {
+    "half_rate": {
+     "AR_tok_s": 1469.9,
+     "MTP_tok_s": 4408.7,
+     "AR_us": 680.317,
+     "MTP_step_us": 943.353,
+     "field_only_AR_tok_s": 1536.5,
+     "field_only_MTP_tok_s": 4551.0,
+     "sum_layer_field_delta_cycles": 30122
+    },
+    "full_rate_bf": {
+     "AR_tok_s": 1579.7,
+     "MTP_tok_s": 4680.6,
+     "AR_us": 633.024,
+     "MTP_step_us": 888.554,
+     "field_only_AR_tok_s": 1656.9,
+     "field_only_MTP_tok_s": 4841.3,
+     "sum_layer_field_delta_cycles": -27460
+    },
+    "half_rate_serial": {
+     "AR_tok_s": 1303.5,
+     "MTP_tok_s": 4029.5,
+     "AR_us": 767.168,
+     "MTP_step_us": 1032.139,
+     "field_only_AR_tok_s": 1355.6,
+     "field_only_MTP_tok_s": 4148.0,
+     "sum_layer_field_delta_cycles": 134327
     },
     "published_per_phase": {
      "AR_tok_s": 1552.5,
