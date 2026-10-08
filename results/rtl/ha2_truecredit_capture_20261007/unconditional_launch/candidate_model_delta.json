@@ -1,0 +1,18 @@
+{
+  "model_parent_commit": "f0cab332c",
+  "physical_model_commit": "87aa53a7d",
+  "variant": "TX and D1 CAPTURE_ALWAYS=1, defaults0",
+  "payload_bits_preserved": 38080,
+  "valid_bits_preserved": 70,
+  "TX_payload_enable_muxes_removed": 1088,
+  "local_D1_payload_enable_muxes_removed": 1088,
+  "relative_to_conservative_physical_model_D1_mux_delta": -1088,
+  "local_D1_plus_TX_register_bits": 2306,
+  "latency_delta_cycles": 0,
+  "latency_evidence": "fullwidth lockstep7+7 and64+64 passed, D35 vs D34+D1 reset/bubble test passed150valid comparisons",
+  "switching_upper_bound_extra_payload_bit_transitions_per_edge": 2176,
+  "switching_scope": "Upper bound for two1088bit registers under adversarial invalid data, not workload estimate. Gate measured TX stress transitions only; D1 incremental switching/energy require mapped activity and capacitance. No absolute power claim.",
+  "energy_formula": "incremental E=sum over rising events of C_i*V^2; balanced-transition approximation E=0.5*sum(toggle_count_i*C_i*V^2), minus removed enable/mux activity. Clock activity unchanged in register count.",
+  "physical_build_ready": false,
+  "parent_clock_obligation": "upstreamD34ring selectedslot and returncredit arrivals still unbound"
+}

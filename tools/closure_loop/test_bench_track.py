@@ -107,7 +107,7 @@ class VacuousPass(unittest.TestCase):
 
 
 class Watchdog(unittest.TestCase):
-    def test_requeue_then_needs_human(self):
+    def test_quiet_output_never_kills_or_restarts_work(self):
         import time, datetime as dt
         old = (dt.datetime.now().astimezone() - dt.timedelta(hours=4)).isoformat()
         j = job(status="RUNNING", stage_started=old)
@@ -116,11 +116,12 @@ class Watchdog(unittest.TestCase):
         with patch.object(cl, "ssh", return_value=quiet), patch.object(cl, "kill_own_stage") as kill, \
                 patch.object(cl, "ledger"), patch.object(cl, "experiment"), patch.object(cl, "log"):
             cl.stuck_watchdog(j, st)
-            self.assertEqual(j["status"], "READY")
-            j.update(status="RUNNING", wd_checked=0)
+            self.assertEqual(j["status"], "RUNNING")
+            j.update(wd_checked=0)
             cl.stuck_watchdog(j, st)
-        self.assertEqual(j["status"], "NEEDS_HUMAN")
-        self.assertEqual(kill.call_count, 2)
+        self.assertEqual(j["status"], "RUNNING")
+        kill.assert_not_called()
+        self.assertTrue(j["quiet_output_reported"])
 
     def test_growing_log_is_left_alone(self):
         import datetime as dt

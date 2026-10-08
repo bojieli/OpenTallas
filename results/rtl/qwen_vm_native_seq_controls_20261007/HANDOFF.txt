@@ -1,0 +1,72 @@
+Native sequencer VM controls, 2026-10-07
+
+Scope and outcome
+The actual current rtl/rom/ot_qwen_tp_seq_w12.sv and its vp successor in default
+mode pass 16 minimum-component simulations (2 modules x 4 descriptor cases x 2
+backpressure patterns). Eight baseline/vp PRE-edge traces are byte-identical.
+The runner captures 2,432 enabled read/write events, with word addresses and
+all-lane 0xffff masks. It records the candidate folded bank and row as annotations
+only: bank=(word^(word>>7))&127, row=word>>7. No bank RTL is instantiated.
+Two actual simulator wrong-address-expectation controls fail. Per-case altered
+trace checks additionally detect address corruption, but are checker tests only.
+
+Native integration binding
+rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_stream4.sv instantiates
+ot_qwen_tp_seq_w12 with VWA=8. The archived schedule inputs/top.sv uses the same
+module and width. It expands each s_vre or s_vwe word to 16 contiguous FP32
+elements at (word<<4)+lane. These are full 512-bit accesses, unlike SU scalar
+addresses. Synthetic descriptors use AR words [0,16), [32,48), [240,256) and
+[0,256); zero count represents 256 with ENABLE_AR256=1. No descriptor exceeds
+this native address range. vp uses ENABLE_ARP=0 and LA=0.
+
+Each run drives a synthetic core_done handshake and an opaque payload collective
+loopback. The bench checks unchanged transport payload, enabled addresses and
+counts, not numerical collective arithmetic. The native scheduler supports
+simultaneous collective reads and writes: 12 simultaneous cycles in a 16-word
+unstalled case and 252 in a 256-word case; stalls reduce these to 9 and 189.
+Neither input bench nor trace establishes that this descriptor occurred in the
+pinned L20/head workload. Those saved inputs contain programs but no collective
+descriptor image. No ME, SU, reducer or MX actor is simulated here. Inactive
+bench actors do not prove inactive production actors.
+
+Source-bound dependency prerequisites for writer-family composition
+1. inputs/core.sv line 271 defines drained = me_idle && su_idle &&
+   (!KV_VEC_WRITE_BRIDGE || kv_write_drained). END fin requires drained at line
+   282; fin registers done at line 315. Sequencer S_CWAIT samples core_done
+   before entering S_COLL. Collectives therefore depend on actual unit drain
+   correctness and boundary sequencing, not merely program instruction order.
+2. ME outputs are gated by the actual me_en: vw_me_we=me_o_we&replicated(me_en),
+   vw_mx_we=me_mx_we&me_en. ME_STALL/me_mem_ok and idle gating must remain in any
+   PRE-edge capture. Do not count a held strobe on each parent clock.
+3. rtl/hdc/ot_qwen_w12_matvec.sv MX control: tv[LV] && t_rmax && t_opend asserts
+   mx_we on the following edge. mx_addr=t_mbase>>LW; the native mask marks IL
+   lanes (t_mbase[LW-1:0]+rj)%W in that same word, not a bank crossing carry.
+   Payload depends on the original RMAX reduction tree and rk/rseen history.
+   Its registered idle condition explicitly includes !mx_we plus all listed
+   valid/pending/result pipelines; this must be preserved and verified in a
+   proposed exclusion proof.
+4. rtl/hdc/ot_hdc_vstream.sv stages rd_v=l_ov[0]&&l_red[1:0]!=0, and captures
+   reduction address from l_raddr lane 0. ot_hdc_vreduce output registers
+   o_we=sval[LV]&&top_last and o_addr=st[LV][AW-1:0]. busy includes o_we and all
+   reduction pipeline valids; SU idle includes !rd_v&&!reducer_busy and pending
+   VM/KV writes. Exact reducer arithmetic/valid latency cannot be replaced by
+   an assumed delay to claim a parent conflict schedule.
+5. The parent behavioral commit priority is ME then MX then SU then reducer then
+   sequencer (last writer wins for the same element). SRAM reordering must
+   preserve that rule unless cross-family exclusion is independently proven.
+
+Remaining work
+Bind actual production descriptors and emitted SU/core source; capture minimal
+parent issue plus original native unit boundary controls, retaining clocks and
+all drain/busy predicates. Prove or measure ME/SU/MX/reducer-to-collective
+exclusion across END and next-segment launch, including the final registered
+collective write. Then combine native traces with real immutable L20/head
+programs, dynamic inputs and exact slot/latency parameters. No all-workload
+coissue proof, conflict-free bank claim, numerical exactness claim, physical
+qualification, model adoption or performance claim is made here.
+
+Reproduce
+python3 tools/qwen_vm_native_seq_controls.py --repo /path/to/repo --out /tmp/seq
+The runner leaves full enabled traces and logs plus source SHA256 manifest.
+Its 4,000-cycle assertion is a finite testbench protocol bound for a <=256-word
+synthetic case, not a resource deadline on a physical build.

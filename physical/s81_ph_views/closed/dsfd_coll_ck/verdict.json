@@ -1,0 +1,13 @@
+{
+ "job": "s81ph-dsfd_coll_ck-752a48488",
+ "block": "dsfd_coll_ck",
+ "commit": "752a48488384dbe9c95a72c084bc24e0ac800a17",
+ "verdict": "CLOSED (verdict met; loop collect crashed on the missing calib.json of a calibrate-disabled job: collected by hand)",
+ "ss_ps": 9592.12,
+ "ff_ps": 31.29,
+ "drc": 0,
+ "checks": {
+  "lef_check_MATCH": true
+ },
+ "calibration": "disabled: no stream-clock registers (PLL macro, clock buffers, refclk reset sequencer)"
+}

@@ -1,0 +1,76 @@
+{
+ "master": "dsfd_selt_q",
+ "w_um": 756.0,
+ "h_um": 159.84,
+ "domain": "stream_1p2",
+ "orients": [
+  "R0",
+  "MY"
+ ],
+ "note": "selector quarter tile; W face = die lane (+ ck/rst), E face = control tile (abutted); the three SRAM macros along the S edge, x 21.6 .. 561.6 (tiles/place_macros_tile.tcl), E end free for the pins",
+ "ports": [
+  [
+   "lane",
+   515,
+   "input",
+   "W",
+   "M4",
+   2,
+   0.5
+  ],
+  [
+   "ck",
+   1,
+   "input",
+   "W",
+   "M4",
+   1,
+   0.05
+  ],
+  [
+   "rst",
+   1,
+   "input",
+   "W",
+   "M4",
+   1,
+   0.07
+  ],
+  [
+   "t_s",
+   865,
+   "output",
+   "E",
+   "M4",
+   2,
+   0.3
+  ],
+  [
+   "t_o",
+   354,
+   "output",
+   "E",
+   "M4",
+   2,
+   0.72
+  ],
+  [
+   "f_c",
+   66,
+   "input",
+   "E",
+   "M4",
+   2,
+   0.9
+  ],
+  [
+   "f_cr",
+   1,
+   "input",
+   "E",
+   "M4",
+   1,
+   0.95
+  ]
+ ]
+}

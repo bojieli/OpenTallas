@@ -1,0 +1,5 @@
+PASS credit packets=96 held_positions=48 blocked_cycles=345 first_latency=45
+- rtl/test/tb_qwen_spine_lane_credit.sv:57: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.013 s; speed 390.284 us/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 8 MB

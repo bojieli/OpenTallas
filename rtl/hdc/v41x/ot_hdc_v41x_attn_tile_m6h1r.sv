@@ -105,20 +105,20 @@ module ot_attn_tile_m6h1r #(
         end
     endgenerate
     assign ov = gov[0];
-    // The leaves' rst_n is a 3-cycle path (the leaf's reset recovery is 1,062 ps against its clk pin at SS, longer
+    // The leaves' rst_n is a 4-cycle path (option-B leaf: 1,833 ps; was 3) (the leaf's reset recovery is 1,062 ps against its clk pin at SS, longer
     // than a cycle; physical/hbm_attn_tile_r/leaf_reset_mcp.sdc): the tile's rst_n must hold every value for at
-    // least 3 cycles (a quasi-static reset).  Checked here in simulation.
+    // least 4 cycles (a quasi-static reset).  Checked here in simulation.
     // synthesis translate_off
     reg rst_prev = 1'b0;
-    integer rst_age = 3;
+    integer rst_age = 4;
     always @(posedge clk) begin
         if (rst_n !== rst_prev) begin
-            if (rst_age < 3) begin
-                $display("OT_ATTN_TILE_RST_PROTOCOL rst_n changed after %0d cycles (need >= 3)", rst_age);
-                $fatal(1, "ot_attn_tile_m6h1r: rst_n held < 3 cycles");
+            if (rst_age < 4) begin
+                $display("OT_ATTN_TILE_RST_PROTOCOL rst_n changed after %0d cycles (need >= 4)", rst_age);
+                $fatal(1, "ot_attn_tile_m6h1r: rst_n held < 4 cycles");
             end
             rst_age = 1;
-        end else if (rst_age < 3) rst_age = rst_age + 1;
+        end else if (rst_age < 4) rst_age = rst_age + 1;
         rst_prev <= rst_n;
     end
     // synthesis translate_on
@@ -268,15 +268,15 @@ module ot_attn_tile_m6h1q #(
             end
         end
     endgenerate
-    // the leaves' rst_n is a 3-cycle path (physical/hbm_attn_tile_r/leaf_reset_mcp.sdc): rst_n holds every value >= 3 cycles
+    // the leaves' rst_n is a 4-cycle path (physical/hbm_attn_tile_r/leaf_reset_mcp.sdc): rst_n holds every value >= 4 cycles
     // synthesis translate_off
     reg rst_prev = 1'b0;
-    integer rst_age = 3;
+    integer rst_age = 4;
     always @(posedge clk) begin
         if (rst_n !== rst_prev) begin
-            if (rst_age < 3) $fatal(1, "ot_attn_tile_m6h1q: rst_n held < 3 cycles");
+            if (rst_age < 4) $fatal(1, "ot_attn_tile_m6h1q: rst_n held < 4 cycles");
             rst_age = 1;
-        end else if (rst_age < 3) rst_age = rst_age + 1;
+        end else if (rst_age < 4) rst_age = rst_age + 1;
         rst_prev <= rst_n;
     end
     // synthesis translate_on
@@ -320,9 +320,15 @@ endmodule
 // The H16 tile as a parent of four hardened quads: the quads face one central register channel (left quads mirrored
 // so their input edge faces it); ROOT -> ROW bank (one per quad row, between its two quads) -> quads.  Quad (y, x) holds
 // heads GB = 8 y + 2 x .. (ot_attn_tile_m6h1q); the function of ot_attn_tile_m6h1 with every input, rst_n included,
-// delayed 3 cycles (ROOT, ROW, the quad's HC) and the outputs taken straight from the quads' leaves.
+// delayed 3 + PMID cycles (ROOT, [MID,] ROW, the quad's HC) and the outputs taken straight from the quads' leaves.
+// PMID: banks per quad row between ROOT and ROW (+PMID cycles; the far row's quad inputs sit ~950 um from the
+// bottom-edge ROOT, so each ~300-475 um hop gets its own stage).  POUT: banks on every quad output (+POUT cycles; the
+// first beside the quad result pins, the last at the tile's output pins), so every tile pin is flop-direct.
 // ---------------------------------------------------------------------------
-module ot_attn_tile_m6h1p (
+module ot_attn_tile_m6h1p #(
+    parameter integer PMID = 0,
+    parameter integer POUT = 0
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          ld_v,
@@ -345,8 +351,14 @@ module ot_attn_tile_m6h1p (
     wire [15:0] gov;
     genvar y, x, l;
     generate for (y = 0; y < 2; y = y + 1) begin : g_y
-        wire [PW-1:0] row_q;
-        (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_row (.clk(clk), .d(root_q), .q(row_q));
+        wire [PW-1:0] row_q, mid_q;
+        wire [PW-1:0] mid_c [0:PMID];
+        assign mid_c[0] = root_q;
+        for (l = 0; l < PMID; l = l + 1) begin : g_mid
+            (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_mid (.clk(clk), .d(mid_c[l]), .q(mid_c[l + 1]));
+        end
+        assign mid_q = mid_c[PMID];
+        (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_row (.clk(clk), .d(mid_q), .q(row_q));
         wire          q_rst_n, q_ld_v, q_ld_mode, q_ld_w2v, q_iv;
         wire [2:0]    q_ld_bank, q_ibank;
         wire [7:0]    q_ld_grp;
@@ -355,11 +367,18 @@ module ot_attn_tile_m6h1p (
         assign {q_rst_n, q_ld_v, q_ld_mode, q_ld_bank, q_ld_grp, q_ld_w, q_ld_w2v, q_iv, q_ibank, q_ib} = row_q;
         for (x = 0; x < 2; x = x + 1) begin : g_x
             localparam integer GB = 8 * y + 2 * x;
-            wire [3:0]   qv, qf;
-            wire [127:0] qy;
+            wire [3:0]   qv, qf, qv0, qf0;
+            wire [127:0] qy, qy0;
             ot_attn_tile_m6h1q u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
                 .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
-                .ib(q_ib), .gov(qv), .oy(qy), .oflt(qf));
+                .ib(q_ib), .gov(qv0), .oy(qy0), .oflt(qf0));
+            wire [135:0] oc [0:POUT];
+            assign oc[0] = {qv0, qf0, qy0};
+            genvar o;
+            for (o = 0; o < POUT; o = o + 1) begin : g_out
+                (* keep = "true" *) ot_attn_rp_reg #(.W(136)) u_o (.clk(clk), .d(oc[o]), .q(oc[o + 1]));
+            end
+            assign {qv, qf, qy} = oc[POUT];
             for (l = 0; l < 4; l = l + 1) begin : g_l
                 localparam integer G = GB + 4 * (l / 2) + (l % 2);
                 assign {gov[G], oflt[G], oy[G*32 +: 32]} = {qv[l], qf[l], qy[l*32 +: 32]};

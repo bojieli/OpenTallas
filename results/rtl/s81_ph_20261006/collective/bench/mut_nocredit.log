@@ -1,0 +1,12 @@
+DIE 0 INCOMPLETE dut 238 ref 819 of 819
+DIE 1 INCOMPLETE dut 238 ref 819 of 819
+DIE 2 INCOMPLETE dut 238 ref 819 of 819
+DIE 3 INCOMPLETE dut 238 ref 819 of 819
+CYCLES dut_last 2879 ref_last 2162 first_send 1111 records 819 messages 120
+TB_S81PH_COLL_SYS FAIL errs 4
+- /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/src2/rtl/dsrom_sys/s81_ph/test/tb_s81ph_coll_sys.sv:210: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 334us; walltime 450.533 s; speed 740.534 ns/s
+- Verilator: cpu 450.487 s on 1 threads; alloced 1066 MB
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 7:30.55
+	Maximum resident set size (kbytes): 58476

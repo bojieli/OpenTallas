@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.qwen-vm-native-me-service-cost.v1",
+  "source_sha256": {
+    "tools/qwen_rom_finite_vm_schedule.py": "e15a44afd67d732f60a0cefb217563679862d9185ae6dc3a976a54ebeb10eb7f",
+    "tools/qwen_rom_vm_me_service_model.py": "21f826df04c6cd6d63983566abfabf37a86b56dbe3284cbb74dd19b751bc672c"
+  },
+  "trace_sha256": "0189c0761f293625b257de2413f2f63a6de0395b5a763928967ea20dc95fba08",
+  "scope": "Current-source captured W1 operation address schedule, no parent co-issue claim; all slots of original NR2256/NW865 source-ordered adapter counted",
+  "source_slots": {
+    "read": 2256,
+    "write": 865,
+    "active_read_peak": 2048,
+    "active_write_peak": 768,
+    "read_request_address_enable_bits": 56400,
+    "read_result_bits": 72192,
+    "write_address_enable_data_bits": 49305,
+    "raw_scalar_frame_bits": 177897,
+    "coded_scalar_frame_bits": 224712,
+    "additional_epoch_owner_ack_publication_state": "not included",
+    "measured_W1_max_scalar_fanout": 16,
+    "broadcast": "128 unique scalar reads serve2048 source slots:16 recipients/scalar. Native existingx topology supplies that duplication; a new provider must price and implement its scatter/holding registers; no uninstalled broadcast saving credited",
+    "write_priority": "all reads from old frame; ME ascending port/lane, then MX, SU ascending lane, reducer, sequencer. Disabled source seats remain in existing walker cost; no dropped writes or reordered golden reductions"
+  },
+  "serialized_reference": {
+    "actual_component_basis": "Existing pinned finite four-bank controller calendar:9 read/28 postverified-write caller edges, plus walker/request/flush stages. Applies only to that existing serialized reference, not folded-bank option.",
+    "per_active_logical_edge_formula": "4+2256+865+11*source_order_window_misses+30*ordered_masked_write_batches",
+    "active_native_edges": 264,
+    "by_kind": {
+      "read": {
+        "captured_edges": 256,
+        "service_edges": 3683584,
+        "single_edge_costs": [
+          14389
+        ]
+      },
+      "write": {
+        "captured_edges": 8,
+        "service_edges": 36520,
+        "single_edge_costs": [
+          4565
+        ]
+      }
+    },
+    "reference_service_edges": 3720104,
+    "conditional_extra_engine_edges": 3719840,
+    "conditional_extra_at_833ps_ns": 3098626.7199999997,
+    "composition_conditions": [
+      "All native producer/response/tag/collective clocks and finite debt obey one captured logical edge until ordered service and postverification finish",
+      "Non-ME requests absent only for this isolated component; source-current parent overlap may increase demand",
+      "Idle native edges advance once, not3125times; requires implemented empty-frame proof",
+      "No cross-edge cache reuse assumed"
+    ],
+    "measured_in_integrated_parent": false,
+    "full_token_extra": null
+  },
+  "arithmetic_successor": {
+    "measured_write_retirement_delta_edges": 55,
+    "bank_service_delta_separate": true,
+    "already_priced_by_existing_arithmetic_successor": true
+  },
+  "baseline_frame_area_terms": {
+    "encoded_frame_bits": 224712,
+    "codec_pairs": 3185,
+    "codec_body_mm2": 0.9189012924000001,
+    "pipeline_cut_bits": 11520,
+    "control_allowance_bits": 8192,
+    "FF_body_estimate_mm2": 0.0712740384,
+    "mux_estimate_mm2": 0.048884800000000006,
+    "preliminary_50pct_placement_mm2": 3.6731843828400006,
+    "area_before_remaining_output_XVM_control_protection": true,
+    "loaded_clock_wire_corridor_mm2": null,
+    "parent_home_mm2": null,
+    "slot_fit": false
+  },
+  "next_implementable_bridge": "Replay real native family calendars through captured logical-edge service and verify hold/resume, old-read-before-write and final ACK before granting source advancement. Final bank topology must follow all-family collision and captured-state/codec/crossing sizing.",
+  "ready_for_new_bank_RTL": false,
+  "physical_admission": false,
+  "adopted": false
+}

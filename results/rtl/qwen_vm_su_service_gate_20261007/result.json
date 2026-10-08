@@ -1,0 +1,65 @@
+{
+  "verdict": "TWO_STATE_PROTOCOL_PASS_FOUR_STATE_UNQUALIFIED",
+  "simulator": "Verilator5.050",
+  "positive": {
+    "physical_writes": 4,
+    "checked_ACKs": 4,
+    "raw_ACKs": 4,
+    "physical_reads": 5,
+    "held_edges": 319,
+    "native_edges": 8,
+    "read_service_edges": 9,
+    "write_service_edges": 28,
+    "conflict_frame_edges": 58,
+    "alias_frame_edges": 66,
+    "readback_frame_edges": 36
+  },
+  "negative_exit_codes": {
+    "foreign_ACK_owner": 1,
+    "unpaid_native_edge": 1,
+    "premature_CHASE": 1
+  },
+  "source_tuples": {
+    "PC19_PC27_cycle39": [
+      [
+        "va",
+        48,
+        6192
+      ],
+      [
+        "vb",
+        0,
+        0
+      ],
+      [
+        "vc",
+        16,
+        2064
+      ]
+    ],
+    "PC18_PC26_cycle26": {
+      "vb_lane0_read": 0,
+      "SU_lane0_write": 0
+    }
+  },
+  "geometry": {
+    "NR": 5,
+    "NW": 16,
+    "VX0": 3,
+    "NVX": 2,
+    "HEAD_CACHE": 0,
+    "W1_FRAME": 0,
+    "depth_groups": 16,
+    "data_macros": 256,
+    "check_macros": 32
+  },
+  "four_state": {
+    "requested_macros_known": true,
+    "bank_word_continuous_OR_X": true,
+    "decoded_unknown_checked_ACK_escape": true,
+    "root_cause_unresolved": true
+  },
+  "full_native_SU": false,
+  "full_parent_scheduler": false,
+  "physical_qualified": false
+}

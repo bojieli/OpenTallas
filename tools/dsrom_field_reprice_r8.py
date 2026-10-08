@@ -72,6 +72,21 @@ GEOMS = {
                             opts="--vch-interleave --corr-interleave --link-fix --hop-fix --meso-d8 --cfifo-v2",
                             q_lef="results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
                             label="S81-RERUN v6: r9m215 + hop stations (budget sheets) + meso depth 8 (FH 192.24)"),
+    # s81-fieldphase (2026-10-07): the actual legal 1,792-pair mixed geometry (77ffa0428 mixed221: q frame 221.4 um, BF
+    # frame 198.72 um, 4 BF a region; tools/s81/mixed_geometry.py BASE options = the current S81 die revision) for the
+    # 2d811aafb mappings: m221bf = a BF-flavour die (4 BF a region), m221q = a q-only die (HALF dedicated's q stages)
+    "m221bf": dict(elem_h=198.72, fh=192.24, pairs=1792, rev="r9", cc_reach=215.0, q_lef=None,
+                   opts="--vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --hc-xface "
+                        "--link-split --sel-xstg --pin-relay --ch-heights 259.2,302.4,388.8,388.8,302.4,259.2,259.2 "
+                        "--bf-per-region 4 --geometry-fix --vch-w 1641.6 --hc-corr 1512 --hub-column-width 1728 "
+                        "--su-mm2 25.61188 --pairs 1792 --q-elem-h 221.4",
+                   label="actual 1,792 mixed221 BF die (current S81 die options, 77ffa0428)"),
+    "m221q": dict(elem_h=198.72, fh=192.24, pairs=1792, rev="r9", cc_reach=215.0, q_lef=None,
+                  opts="--vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --hc-xface "
+                       "--link-split --sel-xstg --pin-relay --ch-heights 259.2,302.4,388.8,388.8,302.4,259.2,259.2 "
+                       "--bf-per-region 0 --geometry-fix --vch-w 1641.6 --hc-corr 1512 --hub-column-width 1728 "
+                       "--su-mm2 25.61188 --pairs 1792 --q-elem-h 221.4",
+                  label="actual 1,792 mixed221 q-only die (HALF dedicated q stages)"),
 }
 LAYER_PAIRS_TOTAL = 81 * 4 * 2417          # 783,108 layer-field pairs (S81 decision)
 TP = 4

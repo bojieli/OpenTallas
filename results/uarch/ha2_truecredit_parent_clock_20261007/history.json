@@ -1,0 +1,6 @@
+{
+  "current": "model_r2_actual_ring.json",
+  "historical": "model.json",
+  "historical_error": "Initial model described D35 as a fixed final relay; actual ot_ha2_delay_quiet is circular mem[ptr] with a selected-slot output. No build was launched under the incorrect assumption.",
+  "replacement": "Model D34 circular storage plus D1 local launch as an explicit structural replacement, preserving35 total slots with changed mux/decode and requiring cycle equivalence."
+}

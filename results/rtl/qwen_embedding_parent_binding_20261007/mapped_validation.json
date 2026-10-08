@@ -1,0 +1,148 @@
+[
+  {
+    "kind": "code",
+    "test": "full_shape_mapping",
+    "result": {
+      "verdict": "PASS",
+      "hard_macro": "qfd_embed_ingress_code",
+      "local_storage": {
+        "fault/fault_n": [
+          1,
+          1
+        ],
+        "wp/wp_n": [
+          2,
+          2
+        ],
+        "rp/rp_n": [
+          2,
+          2
+        ],
+        "credits/credits_n": [
+          4,
+          4
+        ],
+        "phase/phase_n": [
+          1,
+          1
+        ],
+        "valid_pipe/valid_n": [
+          4,
+          4
+        ],
+        "addr_q/addr_n": [
+          12,
+          12
+        ],
+        "ce_q/ce_n": [
+          1,
+          1
+        ],
+        "fifo[0]/fifo_n[0]": [
+          12,
+          12
+        ],
+        "fifo[1]/fifo_n[1]": [
+          12,
+          12
+        ],
+        "capture_data": 512,
+        "capture_en_q": 16
+      },
+      "component_qualification_required": true
+    }
+  },
+  {
+    "kind": "code",
+    "test": "flattened",
+    "result": "REJECTED",
+    "reason": "exactly one real u_ingress hard macro required"
+  },
+  {
+    "kind": "code",
+    "test": "aliased",
+    "result": "REJECTED",
+    "reason": "wrong macro binding address_n"
+  },
+  {
+    "kind": "scale",
+    "test": "full_shape_mapping",
+    "result": {
+      "verdict": "PASS",
+      "hard_macro": "qfd_embed_ingress_scale",
+      "local_storage": {
+        "fault/fault_n": [
+          1,
+          1
+        ],
+        "wp/wp_n": [
+          2,
+          2
+        ],
+        "rp/rp_n": [
+          2,
+          2
+        ],
+        "credits/credits_n": [
+          4,
+          4
+        ],
+        "phase/phase_n": [
+          1,
+          1
+        ],
+        "valid_pipe/valid_n": [
+          4,
+          4
+        ],
+        "addr_q/addr_n": [
+          12,
+          12
+        ],
+        "ce_q/ce_n": [
+          1,
+          1
+        ],
+        "fifo[0]/fifo_n[0]": [
+          18,
+          18
+        ],
+        "fifo[1]/fifo_n[1]": [
+          18,
+          18
+        ],
+        "lane_pipe[0]/lane_n[0]": [
+          4,
+          4
+        ],
+        "lane_pipe[1]/lane_n[1]": [
+          4,
+          4
+        ],
+        "lane_pipe[2]/lane_n[2]": [
+          4,
+          4
+        ],
+        "lane_pipe[3]/lane_n[3]": [
+          4,
+          4
+        ],
+        "capture": 256,
+        "capture_en_q": 8
+      },
+      "component_qualification_required": true
+    }
+  },
+  {
+    "kind": "scale",
+    "test": "flattened",
+    "result": "REJECTED",
+    "reason": "exactly one real u_ingress hard macro required"
+  },
+  {
+    "kind": "scale",
+    "test": "aliased",
+    "result": "REJECTED",
+    "reason": "wrong macro binding address_n"
+  }
+]

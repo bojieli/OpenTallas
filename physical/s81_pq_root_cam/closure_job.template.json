@@ -1,0 +1,65 @@
+{
+  "name": "s81-pq-root-cam-SOURCEPIN",
+  "block": "ot_s81_pq_ret_root_cam",
+  "owner": "Codex:S81",
+  "purpose": "Actual fullROOTD128 staged siblingCAM, reservedcurrentrootoutline, calibratedcolumn-clock planningbudgets. No production protection or parentadoption claim.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 44,
+  "source": {
+    "branch": "SOURCE_BRANCH",
+    "commit": "SOURCE_COMMIT"
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "SRC={SRC} OUT={RUN}/routes CORES=16 bash physical/s81_pq_root_cam/route.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "echo route_col.sh writes the IO SDC from CK_SS_MEAN/CK_FF_MIN/CK_FF_MAX",
+      "threads": 16,
+      "peak_ram_gb": 44
+    },
+    "route": {
+      "cmd": "SRC={SRC} OUT={RUN}/routes CORES=16 bash physical/s81_pq_root_cam/route.sh {LABEL}",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp -r {RUN}/routes/{LABEL}/view {RUN}/record/ && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/pg_check.txt {RUN}/routes/{LABEL}/*.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "pg_reachable_M7_M9_free",
+        "cmd": "grep -q '^pg_rc=0' {RUN}/routes/{LABEL}/exit"
+      }
+    ],
+    "post_sdc": [
+      "physical/s81_pq_root_cam/cl_{LABEL}/signoff_ss.sdc",
+      "physical/s81_pq_root_cam/cl_{LABEL}/signoff_ff_guarded.sdc"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/s81_pq_root_cam/view"
+    }
+  ],
+  "cycles_added": 4,
+  "no_bench_reason": "Committed4251eb216 exact fullROOTD128 gate384roots,128occupancy/queueoverflow/reset, wrongsibling and no-insert-forward negatives, fullR128replica elaboration. Sourcehashes must match results/rtl/s81_pq_root_cam_20261007/record.json. +4cycles is measured isolated8leaf path vsnative, not composed token delta. Parentclock/protection/slot/port adoption held.",
+  "merge_target": null,
+  "hold_eco": {
+    "session": "ff"
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "schema": "opentallas.softmax_epoch_join_prebuild.v1",
+  "adopted": false,
+  "route_admitted": false,
+  "scope": "Actual score/PV SRAM and no-ready replay, protected phase events and bidirectional epoch CDC; E/BF16 payload endpoint retirement is an explicit external receipt contract",
+  "source_sha256": {
+    "tools/dsrom_softmax_cdc_model.py": "53ec2d384d656c9a3978ee319d2312ae7c398e562292643bd921c22a47010b68",
+    "tools/dsrom_softmax_sram_join_model.py": "f3950804a21bcefce3c8d31c5c1ef3c8321936bf4c2024e5a69e15e48a6d8539",
+    "tools/dsrom_softmax_bank_census.py": "f70d2f2d4b6ee48e806fc13e59ccc7f5f4c69a78e68c27b83e246501f644f83d",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_phase.sv": "2e9b8d2cd90ca183e9845e1a6d281bce2f7d6187b88c481eb482beff1f1fc8ef",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_sram_join.sv": "35fe8b30583963221cc2f726a3846f0818652e3f1a03aec82ac1f573c20f0d07"
+  },
+  "packet": {
+    "ingress_bits": 1084,
+    "fields": {
+      "opcode": 2,
+      "epoch": 32,
+      "row_tag": 16,
+      "row_address": 7,
+      "beat": 3,
+      "payload": 1024
+    },
+    "ingress_SECDED_words": 17,
+    "completion_bits": 64,
+    "completion_fields": {
+      "epoch": 32,
+      "tag": 16,
+      "reserved_zero": 16
+    },
+    "completion_SECDED_words": 1,
+    "opcodes": {
+      "0": "begin; payload[0] short",
+      "1": "score/PV data; row region implies kind",
+      "2,3": "illegal"
+    }
+  },
+  "state": {
+    "wrapper_protected_fields": {
+      "active": 1,
+      "epoch": 32,
+      "last_epoch": 32,
+      "have_epoch": 1,
+      "tag": 16,
+      "failed": 1
+    },
+    "wrapper_FF_bits": 166,
+    "ingress_FIFO_bits": 80874,
+    "completion_FIFO_bits": 5994,
+    "reset_bits": 4,
+    "total_incremental_FF_bits": 87038,
+    "area_FF_body_floor_mm2": 0.025380280800000002,
+    "combinational_area": null,
+    "existing_SRAM_phase_replay": "Existing priced components retained without duplication credit"
+  },
+  "schedule": {
+    "ingress_destination_II": 3,
+    "completion_destination_II": 3,
+    "clock_GHz": {
+      "stream": 1.2,
+      "chain": 0.9
+    },
+    "score_prefill_beats": {
+      "T640": 320,
+      "T128": 64
+    },
+    "PV_prefill_beats": 256,
+    "score_replay_II": 1,
+    "PV_replay_II": 1,
+    "command_to_first_replay_beat_edges": 5,
+    "phase_write_visibility_barriers": 2,
+    "completion": "Only after phase IDLE, both actual bank replay bursts done, ingress FIFO empty, and completion FIFO ready. E and BF16 drain phase events must mean destination-visible accepted payload, not source send.",
+    "denominator": "Actual tagged den_v gates PV replay; E drain must complete before PV fill.",
+    "service_bound": "Continuous ready and healthy state only. Ingress FIFO64 finite seats; input stalls while phase cannot accept. No unconditional bounded external attention wait."
+  },
+  "epoch": {
+    "width": 32,
+    "within_reset": "Strictly increasing begin epoch; no wrap accepted. Every data and external event must match active epoch/tag. Mismatch faults and suppresses forwarding/completion.",
+    "cold_reset": "One raw cold-abort net to both reset entries. Both local queues, bank ownership and phase abort; externally outstanding owners must also abort. No unilateral reset.",
+    "external_monotonicity": "Cold reset loses last-epoch register. External owner must supply fresh epoch and quarantine old producer replies; global nonreuse not proved by this component."
+  },
+  "config": {
+    "snapshot_bits": 2602,
+    "SECDED_words64": 41,
+    "encoded_storage_bits": 2952,
+    "raw_command_transport_beats1024": 3,
+    "implemented": false,
+    "area_or_latency_credit": 0,
+    "requirement": "Full config must be protected and bound before production start; minimum component uses short/tag only and cannot launch numerical engine"
+  },
+  "nine_by_four": {
+    "width_um": 1093.416,
+    "height_um": 260.15999999999997,
+    "area_mm2": 0.2844631065599999,
+    "macro_area_mm2": 0.14009677055999997,
+    "gaps_um": [
+      30,
+      32
+    ],
+    "macros_per_row": 9,
+    "rows": 4,
+    "protected_bits_per_row": 2304,
+    "complete_SECDED_words_per_row": 32,
+    "row_boundary_split_codewords": 0,
+    "within_row_bank_split_codewords": 32,
+    "read_pins_face": "left for R0; codec/station access remains required",
+    "pin_census_reference": "bank_pin_census.json",
+    "assigned_slot": false,
+    "PG_clock_via_capacity": null,
+    "mapped_codec_area": null
+  },
+  "missing": [
+    "Actual E/BF16 payload transport linked to visible endpoint receipts",
+    "Config snapshot and numerical core connection",
+    "Production epoch-owner drain/abort binding",
+    "Mapped area, nine-by-four placement, pin/PG/codec routing and SS/FF budgets"
+  ]
+}

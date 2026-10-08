@@ -40,7 +40,31 @@ template<class P> void put(P& p,unsigned start,unsigned n,uint32_t value){
  }
 }
 // Full73 fields, never narrowed into a uint64_t or borrowed from a live signal.
-constexpr uint32_t JOB=0x9234abcd,GEN=9,TOKEN=0x10001,POSITION=0xfffff;
+// Stage shape: defaults are the released DS1M L20.attn.hc_pre_norm stage; a
+// different parent build (NORM_KIND/NORM_D/NORM_PUBLISH_QUANT) passes the same
+// values with -DOT_KIND/-DOT_D/-DOT_QUANT/-DOT_POSITION (CFLAGS).
+#ifndef OT_KIND
+#define OT_KIND 0
+#endif
+#ifndef OT_D
+#define OT_D 5120
+#endif
+#ifndef OT_QUANT
+#define OT_QUANT 1
+#endif
+#ifndef OT_POSITION
+#define OT_POSITION 0xfffff
+#endif
+#ifndef OT_STAGE
+#if OT_KIND==1
+#define OT_STAGE "Qwen8K.head_rmsnorm.KIND1"
+#else
+#define OT_STAGE "L20.attn.hc_pre_norm"
+#endif
+#endif
+constexpr uint32_t JOB=0x9234abcd,GEN=9,TOKEN=0x10001,POSITION=OT_POSITION;
+constexpr unsigned SD=OT_D,SN=64,XW=(OT_KIND==0?4:1)*SD,YROWS=SD/32,QB=OT_QUANT?SD/64:0,
+ OROWS=YROWS+3*QB,OSPAN=OROWS*32,CPW=XW+SD,NE=(SD/SN)*(1+(OT_QUANT?1:0)),YBASE=3584;
 template<class P> void frame(P& p,bool foreign=false){
  put(p,0,32,JOB);put(p,32,4,GEN);put(p,36,17,TOKEN^(foreign?0x10000:0));put(p,53,20,POSITION);
 }
@@ -55,12 +79,12 @@ static std::vector<Row> hex(const std::filesystem::path& path,size_t count,unsig
 }
 struct Gold {
  std::vector<Row> y,c,e,q,cfg;
- explicit Gold(const std::filesystem::path& dir):y(hex(dir/"ey.mem",5120,32)),c(hex(dir/"eqc.mem",160,256)),e(hex(dir/"eqe.mem",160,16)),q(hex(dir/"eqy.mem",160,512)),cfg(hex(dir/"cfg.mem",6,32)){
+ explicit Gold(const std::filesystem::path& dir):y(hex(dir/"ey.mem",SD,32)),c(OT_QUANT?hex(dir/"eqc.mem",2*QB,256):std::vector<Row>{}),e(OT_QUANT?hex(dir/"eqe.mem",2*QB,16):std::vector<Row>{}),q(OT_QUANT?hex(dir/"eqy.mem",2*QB,512):std::vector<Row>{}),cfg(hex(dir/"cfg.mem",6,32)){
   for(auto r:e)require((r[0]&0xffff)==((r[0]&0x3ff)|((r[0]&0x200)?0xfc00:0)),"noncanonical signed16 to signed10 scale");
  }
  Row row(unsigned i)const{Row r{};
-  if(i<160){for(unsigned k=0;k<32;++k)r[k]=y[i*32+k][0];}
-  else{unsigned b=(i-160)/3,t=(i-160)%3;
+  if(i<YROWS){for(unsigned k=0;k<32;++k)r[k]=y[i*32+k][0];}
+  else{unsigned b=(i-YROWS)/3,t=(i-YROWS)%3;
    if(t==0){for(unsigned k=0;k<8;++k){r[k]=c[2*b][k];r[8+k]=c[2*b+1][k];}}
    if(t==1)r[0]=(e[2*b][0]&0x3ff)|((e[2*b+1][0]&0x3ff)<<10);
    if(t==2){for(unsigned k=0;k<16;++k){r[k]=q[2*b][k];r[16+k]=q[2*b+1][k];}}
@@ -138,11 +162,11 @@ int main(int argc,char**argv){try{
  d.db_v=1;s.phase="accepted CP session";s.wait([&]{return d.fixture_db_accepts==1;});s.neg();d.db_v=0;
  // Loader/preloaded CP aperture is owned exclusively by this one die0 stage.
  // The acknowledged native root bind is the actual output allocation.
- frame(d.sfu_vm_bind_frame);put(d.sfu_vm_bind_rank,0,7,41);put(d.sfu_vm_bind_base,0,32,3584);put(d.sfu_vm_bind_span,0,32,12800);
+ frame(d.sfu_vm_bind_frame);put(d.sfu_vm_bind_rank,0,7,41);put(d.sfu_vm_bind_base,0,32,YBASE);put(d.sfu_vm_bind_span,0,32,OSPAN);
  d.sfu_vm_bind_v=1;s.phase="actual native allocation";s.wait([&]{return d.fixture_bind_accepts==1;});s.neg();d.sfu_vm_bind_v=0;
  require((d.sfu_vm_retained&1)&&owned(d.sfu_vm_held_frame),"output allocation not accepted");
  frame(d.norm_allocation_frame);d.norm_allocation_valid=1;
- put(d.norm_xbase,0,24,0);put(d.norm_gain_base,0,24,20480);put(d.norm_ybase,0,24,3584);
+ put(d.norm_xbase,0,24,0);put(d.norm_gain_base,0,24,XW);put(d.norm_ybase,0,24,YBASE);
  for(unsigned i=0;i<4;++i)put(d.norm_post_pre,i*32,32,gold.cfg[i][0]);
  put(d.norm_n_f,0,32,gold.cfg[4][0]);put(d.norm_eps,0,32,gold.cfg[5][0]);
  // Descriptor fields label the one actual native call, not a fake SM program.
@@ -153,26 +177,26 @@ int main(int argc,char**argv){try{
  s.neg();d.norm_enroll_v=0;frame(d.norm_enroll_frame);d.norm_enroll_v=1;s.phase="correct norm enrollment (pinned line855 circularity if refused)";
  s.wait([&]{return d.fixture_enroll_accepts==1;});s.neg();d.norm_enroll_v=0;
  frame(d.norm_publication_owner);s.phase="actual engine/provider publication";s.wait([&]{return (d.norm_publication_v&1)!=0;});s.held();
- require(d.fixture_cp_requests==25600&&d.fixture_cp_returns==25600&&d.fixture_ACKs==400&&d.fixture_final_ACK_addr==16352,"actual CP/400 checked ACK accounting incomplete");
- require(bits(d.norm_reserve_events,0,16)==160,"actual norm input/reservation shape");
+ require(d.fixture_cp_requests==CPW&&d.fixture_cp_returns==CPW&&d.fixture_ACKs==OROWS&&d.fixture_final_ACK_addr==YBASE+(OROWS-1)*32,"actual CP/400 checked ACK accounting incomplete");
+ require(bits(d.norm_reserve_events,0,16)==NE,"actual norm input/reservation shape");
  // Read all400 actual same-root rows, including code/scales/BF16 and padding.
  frame(d.sfu_vm_index_read_frame);put(d.sfu_vm_index_read_rank,0,7,41);put(d.sfu_vm_index_read_words,0,6,32);
- for(unsigned row=0;row<400;++row){s.neg();put(d.sfu_vm_index_read_addr,0,32,3584+row*32);put(d.sfu_vm_index_read_tag,0,8,row&255);
+ for(unsigned row=0;row<OROWS;++row){s.neg();put(d.sfu_vm_index_read_addr,0,32,YBASE+row*32);put(d.sfu_vm_index_read_tag,0,8,row&255);
   d.sfu_vm_index_read_v=1;auto count=d.fixture_read_accepts;s.phase="same-bank read request row="+std::to_string(row);
   s.wait([&]{return d.fixture_read_accepts==count+1;});s.neg();d.sfu_vm_index_read_v=0;
   s.wait([&]{return (d.sfu_vm_index_rsp_v&1)!=0;});Row actual{};
   for(unsigned k=0;k<32;++k)actual[k]=bits(d.sfu_vm_index_rsp_data,k*32,32);
   for(unsigned hold=0;hold<3;++hold){s.held();require((d.sfu_vm_index_rsp_v&1)&&owned(d.sfu_vm_index_rsp_frame)&&bits(d.sfu_vm_index_rsp_tag,0,8)==(row&255)&&bits(d.sfu_vm_index_rsp_rank,0,7)==41,"held protected read response identity");
    for(unsigned k=0;k<32;++k)require(bits(d.sfu_vm_index_rsp_data,k*32,32)==actual[k],"held protected read data changed");s.sm();}
-  auto expected=gold.row(row);for(unsigned k=0;k<32;++k)require(actual[k]==expected[k],"released stage golden mismatch word="+std::to_string(3584+row*32+k));
+  auto expected=gold.row(row);for(unsigned k=0;k<32;++k)require(actual[k]==expected[k],"released stage golden mismatch word="+std::to_string(YBASE+row*32+k));
   s.neg();d.sfu_vm_index_rsp_r=1;count=d.fixture_rsp_accepts;s.wait([&]{return d.fixture_rsp_accepts==count+1;});s.neg();d.sfu_vm_index_rsp_r=0;
  }
- require(d.fixture_read_accepts==400&&d.fixture_rsp_accepts==400,"not all protected rows accepted");
+ require(d.fixture_read_accepts==OROWS&&d.fixture_rsp_accepts==OROWS,"not all protected rows accepted");
  s.neg();d.cp_reset_req=1;s.phase="warm held caller lease";
  for(unsigned i=0;i<7;++i){s.sm();s.held();require(!(d.cp_reset_ack&1)&&!(d.norm_warm_ack&1)&&!(d.sfu_vm_warm_ack&1)&&(d.norm_publication_v&1),"warm reset freed held caller debt");}
  if(wrong_release){s.neg();frame(d.norm_publication_owner,true);d.norm_publication_r=1;s.edges(7);
   require((d.norm_fault&1)&&(d.norm_retained&1)&&(d.sfu_vm_retained&1)&&!(d.norm_publication_v&1)&&!(d.cp_reset_ack&1)&&d.fixture_cpl_accepts==0,"foreign full73 release not refused with retained debt");
-  std::cout<<"PARENT_STAGE_WRONG_FULL73_RELEASE_REFUSED actual_golden_rows=400 ACK=400 held_owner=1 token_qualified=0 physical_qualified=0\n";s.finish();return 0;}
+  std::cout<<"PARENT_STAGE_WRONG_FULL73_RELEASE_REFUSED stage=" OT_STAGE " position="<<POSITION<<" actual_golden_rows="<<OROWS<<" ACK="<<OROWS<<" held_owner=1 token_qualified=0 physical_qualified=0\n";s.finish();return 0;}
  s.neg();d.norm_publication_r=1;s.phase="real stage reverse release";s.wait([&]{return !(d.norm_retained&1);});s.neg();d.norm_publication_r=0;
  frame(d.sfu_vm_retire_frame);d.sfu_vm_retire_v=1;s.phase="actual root retirement";s.wait([&]{return d.fixture_retire_accepts==1;});s.neg();d.sfu_vm_retire_v=0;
  s.phase="actual CP completion after drains";s.wait([&]{return (d.cpl_v&1)!=0;});
@@ -182,5 +206,5 @@ int main(int argc,char**argv){try{
  s.phase="joint warm reset acknowledgment";s.wait([&]{return (d.cp_reset_ack&1)&&(d.norm_warm_ack&1)&&(d.sfu_vm_warm_ack&1);});
  if(continue_sfu){run_native_sfu_next(s,dir);if(continue_formatter){FormatterFixture f(formatter_dir);run_formatter_source_next(s,f);}s.finish();return 0;}
  if(continue_formatter){FormatterFixture f(formatter_dir);run_formatter_source_next(s,f);s.finish();return 0;}
- std::cout<<"PARENT_ONE_STAGE_PASS stage=L20.attn.hc_pre_norm actual_CP=25600/25600 ACK=400 readback_words=12800 lastWORD=16383 full73_refusal=1 warm_held=1 cpl_status=2 token_qualified=0 SFU_execution_covered=0 formatter_execution_covered=0 physical_qualified=0 cycles="<<s.cycles<<"\n";s.finish();return 0;
+ std::cout<<"PARENT_ONE_STAGE_PASS stage=" OT_STAGE " position="<<POSITION<<" actual_CP="<<CPW<<"/"<<CPW<<" ACK="<<OROWS<<" readback_words="<<OSPAN<<" lastWORD="<<(YBASE+OSPAN-1)<<" full73_refusal=1 warm_held=1 cpl_status=2 token_qualified=0 SFU_execution_covered=0 formatter_execution_covered=0 physical_qualified=0 cycles="<<s.cycles<<"\n";s.finish();return 0;
  }catch(const std::exception& e){std::cerr<<"PARENT_STAGE_FAIL "<<e.what()<<"\n";return 1;}}

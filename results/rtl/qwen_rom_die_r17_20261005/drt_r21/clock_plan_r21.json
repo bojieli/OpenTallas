@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.qwen_die_clock_plan.v1",
+ "recipe": "r21 (430.56 um relays, slab M8 pins)",
+ "roots": {
+  "stream": "hub_el/pll_r<k>: one region clock net per decision-C clock region, from the io_collective stream PLL via clk_root",
+  "serial": "io_collective/pll_serial -> clk_serial (0.9 GHz serial blocks, CDC hosts)",
+  "links": "forwarded clock with every link hop (fck_*, one per link relay / station)",
+  "hbm": "ctrl_<stack>/pll_hbm -> PHY clk + CDC hclk (976.6 MHz)",
+  "ucie_serdes": "io_collective/pll_{ucie,serdes}"
+ },
+ "regions": {
+  "count": 121,
+  "by_kind": {
+   "tile_block": 96,
+   "spine_band": 6,
+   "strip": 12,
+   "io": 7
+  },
+  "max_extent_mm": 5.2639,
+  "rule": "every region <= 5.25 mm extent (one H-tree within the 60 ps setup uncertainty)"
+ },
+ "clock_nets": {
+  "count": 329,
+  "largest_fanout": [
+   [
+    "clk_r46",
+    174
+   ],
+   [
+    "clk_r52",
+    159
+   ],
+   [
+    "clk_r49",
+    155
+   ],
+   [
+    "clk_r43",
+    151
+   ],
+   [
+    "clk_r47",
+    149
+   ],
+   [
+    "clk_r53",
+    145
+   ],
+   [
+    "clk_r37",
+    144
+   ],
+   [
+    "clk_r51",
+    144
+   ]
+  ]
+ },
+ "data_hops": {
+  "count": {
+   "intra_region": 15342,
+   "inter_region": 1378,
+   "cross_domain(serial/stream)": 8,
+   "cross_domain(lnkh/stream)": 48,
+   "cross_domain(lnkh)": 108,
+   "cross_domain(lnkv/stream)": 24,
+   "cross_domain(lnkv)": 25,
+   "unclocked_or_fwd": 267,
+   "cross_domain(stream/ucie)": 2,
+   "cross_domain(serdes/stream)": 2
+  },
+  "bits": {
+   "intra_region": 6997461,
+   "inter_region": 699146,
+   "cross_domain(serial/stream)": 3340,
+   "cross_domain(lnkh/stream)": 50688,
+   "cross_domain(lnkh)": 114048,
+   "cross_domain(lnkv/stream)": 33792,
+   "cross_domain(lnkv)": 34848,
+   "unclocked_or_fwd": 120478,
+   "cross_domain(stream/ucie)": 2048,
+   "cross_domain(serdes/stream)": 2048
+  },
+  "inter_region_by_class": {
+   "corridor": 320,
+   "head_chain": 14,
+   "kv_land": 384,
+   "cdc_core": 168,
+   "spine_local": 1,
+   "io": 8,
+   "tree_spine": 477,
+   "sequencer": 6
+  }
+ },
+ "io_budget": {
+  "intra_region_ps": 90,
+  "intra_basis": "measured region pair skew 65 + 25 margin (CLARIFICATION 2026-10-06)",
+  "inter_region_ps": 150,
+  "hold_uncertainty_ps": 50,
+  "rule": "element IO SDC: 90 ps on ports whose die hop stays in the region, 150 ps on ports whose hop crosses to another clock region; relays take the region clock where they sit"
+ },
+ "measured_insertion": "results/rtl/budgets_20261006/measured_insertion.json (main): the station / relay family s2_cst_hm40 / s2_chead_hm40 ETMs carry their own insertion; the die STA uses ideal region roots + element ETMs (propagated inside)"
+}

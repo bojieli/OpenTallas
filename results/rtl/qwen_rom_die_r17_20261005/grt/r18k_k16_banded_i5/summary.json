@@ -1,0 +1,176 @@
+{
+ "case": "r18k_k16_banded_i5",
+ "exit": "0",
+ "grt_s": 554,
+ "peak_rss_gb": 12.2,
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 28074,
+   "demand": 2364,
+   "usage_pct": 8.42,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 71656,
+   "demand": 8402,
+   "usage_pct": 11.73,
+   "max_h": 0,
+   "max_v": 1,
+   "overflow": 1
+  },
+  "M6": {
+   "resource": 16535691,
+   "demand": 378015,
+   "usage_pct": 2.29,
+   "max_h": 1,
+   "max_v": 0,
+   "overflow": 4
+  },
+  "M7": {
+   "resource": 16123980,
+   "demand": 4457544,
+   "usage_pct": 27.65,
+   "max_h": 0,
+   "max_v": 1,
+   "overflow": 3
+  },
+  "M8": {
+   "resource": 47020640,
+   "demand": 4203968,
+   "usage_pct": 8.94,
+   "max_h": 3,
+   "max_v": 0,
+   "overflow": 982
+  },
+  "M9": {
+   "resource": 46903502,
+   "demand": 5358867,
+   "usage_pct": 11.43,
+   "max_h": 0,
+   "max_v": 3,
+   "overflow": 9285
+  },
+  "Total": {
+   "resource": 126683543,
+   "demand": 14409160,
+   "usage_pct": 11.37,
+   "max_h": 4,
+   "max_v": 5,
+   "overflow": 10275
+  }
+ },
+ "windows": {
+  "M2": {
+   "windows": 592296,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M3": {
+   "windows": 592296,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M4": {
+   "windows": 592296,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M5": {
+   "windows": 592296,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M6": {
+   "windows": 592296,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    1404.48,
+    36.96
+   ]
+  },
+  "M7": {
+   "windows": 592296,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    1404.48,
+    36.96
+   ]
+  },
+  "M8": {
+   "windows": 592296,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 0.9397,
+   "at": [
+    20328.0,
+    32561.76
+   ]
+  },
+  "M9": {
+   "windows": 592296,
+   "over": 5,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0345,
+   "at": [
+    6985.44,
+    14784.0
+   ],
+   "over_bbox_um": [
+    6985.44,
+    4398.24,
+    17592.96,
+    14857.92
+   ]
+  }
+ }
+}

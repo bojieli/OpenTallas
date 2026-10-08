@@ -1,0 +1,63 @@
+{
+ "name": "s81ph-dsfd_svcio_q-093da5918",
+ "block": "dsfd_svcio_q",
+ "owner": "Claude:s81-ph",
+ "purpose": "svc IO hub r3 tile q",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-epyc2"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/s81-placeholders-20261006",
+  "commit": "093da59182006519c48a4cd844af9dea6cfd6618"
+ },
+ "stages": {
+  "calibrate": {
+   "cmd": "SRC={SRC} OUT={RUN}/routes CORES=8 NEED=24 SRCS='rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io.sv rtl/common/ot_fwd_link_stage.sv' CLK=ck SDCX='physical/s81_ph_views/svc/tile.sdc physical/s81_ph_views/common/fwd_clk_out.sdc' bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract dsfd_svcio_q rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "route": {
+   "cmd": "SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=8 NEED=24 SRCS='rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io.sv rtl/common/ot_fwd_link_stage.sv' CLK=ck SDCX='physical/s81_ph_views/svc/tile.sdc physical/s81_ph_views/common/fwd_clk_out.sdc' bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract dsfd_svcio_q rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/dsfd_svcio_q"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": null,
+ "no_bench_reason": "tiled IO hub bench in job s81ph-dsfd_svcio_od-093da5918 (record results/rtl/s81_ph_20261006/svc/bench_io_r3_tiled.txt)",
+ "budget": {
+  "enabled": false,
+  "reason": "new r3 tile, no budget sheet entry with a calibration yet (sheet would be grade target); routed on the calibrated measured insertion, calib.json recorded"
+ }
+}

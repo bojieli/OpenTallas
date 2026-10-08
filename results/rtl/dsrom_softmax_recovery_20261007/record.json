@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.softmax_recovery.v1",
+  "source_commit": "5a040eeab",
+  "scope": "Arithmetic gates and measured cycle deltas; internal tile route qualified, integration adoption conditional on die-context IO hold and exp closure.",
+  "divider": {
+    "full_drain_pairs": 10000000,
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "mismatches": 0,
+    "run": "ot-epyc2:/srv/opentallas-scratch2/scratch/codex/div2b-gate-5a040eeab",
+    "runner": "tools/dsrom_su_div2b_gate.sh",
+    "legacy_log": "fdiv_nr2b_.log",
+    "legacy_limit": "Inherited remote checker drained 40 cycles and did not fail on mismatch; superseded by source-pinned full-drain seed logs."
+  },
+  "softmax": {
+    "configuration": "LPH16 LM9 LA5 ELM9 ELA5 ADD6=2 EXP6=1 EXPNS=2 DENK=1 MARGIN=1 SAFE=2",
+    "exact_rows": 10,
+    "T640_nodes": {
+      "attn.max": 104,
+      "attn.exp": 225,
+      "attn.den": 120,
+      "attn.sink": 20,
+      "attn.normalize": 171
+    },
+    "source_matching": "All current RTL files and softmax bench/runner match harvested remote tree hashes. Divider equivalence checker mismatch intentionally repaired and rerun separately.",
+    "run": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/dsrom-su-softmax-r5/work/run_lph16s2b.json"
+  },
+  "cycle_deltas": {
+    "baseline_m5_T640": {
+      "attn.max": 104,
+      "attn.exp": 224,
+      "attn.den": 120,
+      "attn.sink": 20,
+      "attn.normalize": 141
+    },
+    "registered_input_SAFE1_T640": {
+      "attn.max": 104,
+      "attn.exp": 225,
+      "attn.den": 120,
+      "attn.sink": 20,
+      "attn.normalize": 142
+    },
+    "SAFE2_vs_m5": {
+      "attn.exp": 1,
+      "attn.normalize": 30
+    },
+    "SAFE2_vs_SAFE1": {
+      "attn.exp": 0,
+      "attn.normalize": 29
+    },
+    "RECUT1_or_2_vs_m5": {
+      "attn.exp": 31,
+      "attn.normalize": 1
+    },
+    "same_deltas_T128": true,
+    "correction": "Claude provisional baseline combined exp225 from SAFE1 with normalize141 from m5. Preserve distinct configurations; current SAFE2 normalize171, not170."
+  },
+  "physical": {
+    "job": "dsrom_softmax_safe_div2b_6133b4bbf",
+    "internal_SS_setup_ps": 184.78,
+    "internal_FF_hold_ps": 17.99,
+    "DRC": 0,
+    "FF_input_IO_ps": -137.603012,
+    "FF_output_IO_ps": -121.185066,
+    "io_hold_gate": "Deferred by inherited check_io.py to die context; not full IO-qualified.",
+    "default_opt_in_unchanged": true,
+    "adopted_in_unified_model": false
+  },
+  "running_exp_jobs": [
+    "dsrom_softmax_safe_exphrf_bd30aca4a",
+    "dsrom_softmax_safe_exprcf_bd30aca4a",
+    "dsrom_softmax_safe_exprc2f_bd30aca4a"
+  ],
+  "code_pair_job": "code_pair_iofixed_d2cc11e78",
+  "evidence_sha256": {
+    "div2b_gate.txt": "da181ffb5d42cbe03e5876ff2229e93c0ceefedae2c2bca1b98fefe525be2c63",
+    "fdiv_nr2b_.log": "224986fc684b62ab51566d19e4263f120098c5178c75796fc90ecf8a771c6d68",
+    "run_lph16m5.json": "2707f237a947dbf2be891e9e4db5f444f092d62a3dd5ff8017190de4a2400178",
+    "run_lph16r1.json": "636274d64851db24ec2121c4cad6b98f54233d6e1cf8cf6bfbf4552626c9b18a",
+    "run_lph16r2.json": "fd5686568af418643800e6181b2e05f4cf29afa25fb701c736cb135d8c2b92cb",
+    "run_lph16s1.json": "c52810b81abfc56d667a934a00c26a8549444fa4577b9eb9e56d2728df4b05bd",
+    "run_lph16s2b.json": "9e79cca5781074179f32aa85874686ccb6a6caad186da40a2791df6f2fd9bcca",
+    "run_s2b.log": "f973fd47bcf61c3dd2f1a3f518b2b6523bd02670283d5c751402490c7a6a00d5",
+    "seed_1.log": "f732a0e9a97cccd300537598e1c1a8e0952c97b055ddc749695d039f5b0d8a0c",
+    "seed_2.log": "8ab84d481fc75376ab3ee335036092e3018841013b38324dac17268d7fa52214",
+    "seed_3.log": "455cbd12a6aea190f5611a71fecccf8624f43928372ef94419a97323d9f8811b",
+    "seed_4.log": "595a0379d4631c2764c54d803130308d78853b8ecf6d132cc8946fa27466bdb7",
+    "source_comparison.json": "306687031f39f50a860590c27568351a2d660ec03cd822b86e4dbdf111bbf123"
+  }
+}

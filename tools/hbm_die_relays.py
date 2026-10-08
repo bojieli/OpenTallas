@@ -298,7 +298,8 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True, relay_all=False):
         return f, {'W': (-1, 0), 'E': (1, 0), 'S': (0, -1), 'N': (0, 1)}[f]
 
     rec = dict(relay_ends_dropped_short=0, buses_cut=0, relays=0, wire_stages=0, unplaced=[], unknown_dir_bits=0, skipped_multi=0, skipped_fclk=0,
-               pin_fallback=0, chains=[])
+               pin_fallback=0, chains=[], instance_metadata={},
+               qualification="diagnostic-only: analytic views and unqualified flow control")
     new_buses, new_insts = [], []
     gx, gy = H.GX, H.GY
     n_id = [0]
@@ -423,6 +424,19 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True, relay_all=False):
                 else:
                     inf, outf = ('S', 'N') if (nxt_x[1] >= 0 if prev is not None or kind == 'ws' else us[1] >= 0) else ('N', 'S')
                 it = mk(bid, g, nb, q, th, inf, outf, d_)
+                rec['instance_metadata'][it.name] = dict(
+                    master=it.master, bits=nb, kind=kind, original_bus=bid,
+                    original_source=list(src), original_sink=list(dst),
+                    original_bit_indices=list(sel),
+                    clock_domain_found=(src[0] in dom and dst[0] in dom),
+                    source_clock_domain=ds_, sink_clock_domain=dt_,
+                    clock_domain=d_, clock_reference_instance=dst[0] if kind == 'relay' and q == p1 else src[0],
+                    source_pin_centroid_um=list(ps), sink_pin_centroid_um=list(pt),
+                    source_pin_coordinates_found=oks, sink_pin_coordinates_found=okt,
+                    cross_domain=ds_ != dt_,
+                    box_um=list(it.box()), requested_centre_um=list(q),
+                    placed_legal=it.name not in rec['unplaced'],
+                    input_face=inf, output_face=outf)
                 rec['relays' if kind == 'relay' else 'wire_stages'] += 1
                 nodes.append((it.name, None))
                 chain.append(it.name)

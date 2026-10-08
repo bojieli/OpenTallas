@@ -1,0 +1,15 @@
+{
+  "commit": "c89f7616831a1354fffe2a591e037fd337af6c2c",
+  "paths": [
+    "rtl/common/ot_ratio_cdc_fifo.sv",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv",
+    "physical/s81_ph_views/common/route_view.sh",
+    "physical/s81_ph_views/common/vclk_latency.tcl",
+    "physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl",
+    "physical/s81_ph_views/tiles/ser_clock_capt.sdc",
+    "physical/s81_ph_views/capture/capt_x_lag.sdc",
+    "physical/s81_ph_views/capture/post_cts_capt_domains.tcl",
+    "results/rtl/s81_ph_20261006/capture/x_clock_domain_diagnosis_20261007"
+  ],
+  "purpose": "Minimum actual dsfd_capt_x lint and hook source closure, not full route package"
+}

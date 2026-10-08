@@ -1,0 +1,314 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/ha2_relay_tx_internal/base/3_4_place_resized.odb
+read_sdc /work/results/asap7/ha2_relay_tx_internal/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+detailed_placement
+[INFO DPL-0006] Core area: 31671.26 um^2
+[INFO DPL-0007] Movable instances area: 1086.44 um^2
+[INFO DPL-0008] Fixed instances area within core: 76.49 um^2
+[INFO DPL-0009] Utilization: 3.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 10459 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       1169 |       407 |       595
+        1 |       1074 |       392 |       515
+        2 |       1074 |       392 |       515
+        3 |       1074 |       392 |       515
+        4 |       1074 |       392 |       515
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 1074 for 3 consecutive iterations.
+Using old diamond search for 392 remaining illegal cells.
+diamond recovery: recovered 190/392 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |        336 |       202 |       132
+      403 |        336 |       202 |       132
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 336 for 3 consecutive iterations. Using diamond search for 202 remaining illegal cells.
+diamond recovery: recovered 0/202 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 202
+[INFO DPL-0500] Runtime: 10.13s
+Placement Analysis
+---------------------------------
+total displacement       4892.7 u
+average displacement        0.5 u
+max displacement           29.5 u
+original HPWL          312069.8 u
+legalized HPWL         313906.2 u
+delta HPWL                    1 %
+
+Took 11 seconds: detailed_placement
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 4877 fixed cells.
+[INFO DPL-0318] Collected 7836 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (1080, 1080) - (838944, 38880)
+[INFO DPL-0310] Assigned 7836 cells into segments.  Movement in X-direction is 8645616.000000, movement in Y-direction is 1890.000000.
+[WARNING DPL-0200] Unexpected displacement during legalization.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 97 site alignment problems.
+[INFO DPL-0311] Found 61 overlaps between adjacent cells.
+Violation in input1034
+Violation in input403
+Violation in input1049
+Violation in input1039
+Violation in input1033
+Violation in input1032
+Violation in input569
+Violation in input410
+Violation in input1048
+Violation in input1035
+Violation in input409
+Violation in input1084
+Violation in input369
+Violation in input1041
+Violation in input1031
+Violation in input1043
+Violation in input1037
+Violation in input1059
+Violation in _5039_
+Violation in place3320
+Violation in wire3523
+Violation in wire3531
+Violation in output2184
+Violation in output1696
+Violation in output1534
+Violation in wire3611
+Violation in output1886
+Violation in wire3536
+Violation in wire3541
+Violation in wire3521
+Violation in output2153
+Violation in wire3504
+Violation in output2170
+Violation in output1371
+Violation in output1500
+Violation in output1504
+Violation in output1507
+Violation in wire3585
+Violation in output1834
+Violation in wire3584
+Violation in wire3583
+Violation in output1955
+Violation in output2178
+Violation in output1533
+Violation in output1532
+Violation in wire3551
+Violation in output1933
+Violation in output1929
+Violation in output1962
+Violation in output1956
+Violation in output2151
+Violation in wire3586
+Violation in wire3580
+Violation in wire3578
+Violation in wire3524
+Violation in wire3538
+Violation in output1928
+Violation in output2135
+Violation in output1975
+Violation in wire3510
+Violation in output1828
+Violation in wire3582
+Violation in wire3591
+Violation in wire3539
+Violation in output1897
+Violation in output2136
+Violation in output2122
+Violation in wire3525
+Violation in wire3529
+Violation in output1702
+Violation in output1712
+Violation in wire3545
+Violation in output1922
+Violation in wire3532
+Violation in output2162
+Violation in output2155
+Violation in output1709
+Violation in wire3576
+Violation in output2172
+Violation in output1548
+Violation in output2168
+Violation in output2154
+[INFO DPL-0312] Found 82 edge spacing violations and 21 padding violations.
+[WARNING DPL-0201] Placement check failure during legalization.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 3.284230e+08.
+[INFO DPL-0302] End of matching; objective is 3.283410e+08, improvement is 0.02 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 3.256144e+08.
+[INFO DPL-0307] End of global swaps; objective is 3.256144e+08, improvement is 0.83 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 3.254864e+08.
+[INFO DPL-0309] End of vertical swaps; objective is 3.254864e+08, improvement is 0.04 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 3.253169e+08.
+[INFO DPL-0305] End of reordering; objective is 3.253169e+08, improvement is 0.05 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 156720 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 156720, swaps 5090, moves 59712 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 3.246112e+08, Scratch cost 3.214297e+08, Incremental cost 3.214297e+08, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 3.214297e+08.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.98 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.980109 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 3428 cell flips.
+[INFO DPL-0384] End of flipping; objective is 3.213069e+08, improvement is 0.26 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 84 site alignment problems.
+[INFO DPL-0311] Found 51 overlaps between adjacent cells.
+Violation in input417
+Violation in input409
+Violation in output1534
+Violation in wire3611
+Violation in wire3585
+Violation in wire3584
+Violation in wire3583
+Violation in output1533
+Violation in output1532
+Violation in wire3586
+Violation in wire3580
+Violation in wire3578
+Violation in wire3602
+Violation in wire3582
+Violation in wire3565
+Violation in output1702
+[INFO DPL-0312] Found 16 edge spacing violations and 12 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL           313906.2 u (  268507.4,    45398.8)
+Final HPWL              321274.2 u (  276104.4,    45169.8)
+Delta HPWL                   2.3 % (       2.8,       -0.5)
+
+optimize_mirroring
+[INFO DPL-0020] Mirrored 737 instances
+[INFO DPL-0021] HPWL before          321274.2 u
+[INFO DPL-0022] HPWL after           321257.7 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+[WARNING DPL-0006] Site aligned check failed (84).
+ input1031
+ input1032
+ input1033
+ input1034
+ input1035
+ input1037
+ input1039
+ input1041
+ input1043
+ input1044
+ input1048
+ input1049
+ input1052
+ input1055
+ input1056
+ input1060
+ input1063
+ input1178
+ input1186
+ input1187
+ input137
+ input152
+ input220
+ input403
+ input404
+ input405
+ input408
+ input409
+ input410
+ input411
+ input413
+ input415
+ input417
+ input420
+ input569
+ input637
+ input670
+ output1296
+ output1319
+ output1532
+ output1533
+ output1534
+ output1537
+ output1540
+ output1542
+ output1696
+ output1698
+ output1707
+ output1750
+ output1777
+ output1832
+ output2154
+ output2155
+ output2162
+ output2166
+ output2168
+ output2169
+ output2170
+ output2172
+ output2174
+ output2175
+ output2178
+ output2179
+ output2180
+ output2184
+ output2308
+ output2312
+ wire3447
+ wire3564
+ wire3565
+ wire3566
+ wire3568
+ wire3578
+ wire3580
+ wire3582
+ wire3583
+ wire3584
+ wire3585
+ wire3586
+ wire3591
+ wire3592
+ wire3602
+ wire3606
+ wire3611
+[WARNING DPL-0008] Region placement check failed (7).
+ u_tx.g_lane\[1\].next_return\[10\]$_DFFE_PN0P_
+ u_tx.g_lane\[1\].next_return\[12\]$_DFFE_PN0P__54
+ u_tx.g_lane\[1\].next_return\[13\]$_DFFE_PN0P_
+ u_tx.g_lane\[1\].next_return\[14\]$_DFFE_PN0P_
+ u_tx.g_lane\[1\].next_return\[5\]$_DFFE_PN0P_
+ u_tx.g_lane\[1\].next_return\[8\]$_DFFE_PN0P_
+ u_tx.g_lane\[1\].next_return\[9\]$_DFFE_PN0P_
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+write_db /work/results/asap7/ha2_relay_tx_internal/base/3_5_place_dp-failed.odb
+Error: detail_place.tcl, 39 DPL-0033
+Elapsed time: 0:12.70[h:]min:sec. CPU time: user 12.48 sys 0.22 (99%). Peak memory: 436716KB.

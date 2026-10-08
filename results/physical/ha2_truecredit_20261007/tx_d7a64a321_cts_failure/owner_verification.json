@@ -1,0 +1,18 @@
+{
+  "receipt_hashes_verified": true,
+  "io_placement_passed": true,
+  "persisted_exact_signal_and_geometry_checks_passed": true,
+  "signal_count": 2254,
+  "CTS_passed": false,
+  "failure": "RSZ-0060 Max buffer count reached",
+  "hold_buffers_inserted": 2106,
+  "worst_hold_slack_ps": -581.654,
+  "worst_hold_endpoint": "u_core.send_data[375]$_DFFE_PP_/D",
+  "actual_clock_path_available": false,
+  "reason": "CTS failed before writing CTS ODB or full path report",
+  "constraints_relaxed": false,
+  "parent_interface_qualified": false,
+  "historical_predecessor_image_digest_verified": false,
+  "current_recovery_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "adopted": false
+}

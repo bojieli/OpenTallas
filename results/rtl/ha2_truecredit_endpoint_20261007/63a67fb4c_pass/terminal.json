@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "checks": {
+    "baseline": {
+      "returncode": 0,
+      "correct": true,
+      "output": "PASS_HA2_TRUECREDIT_ENDPOINT lanes=16 PF=384 owner_results=24 issued=384 peer_flits=336 hub_stalls=108 peer_stalls=287 first_issue=5 last_delivery=533 elapsed=529\nSCOPE one endpoint own-reduction outputs bit-exact vs unchanged adapter on accepted transactions; not full collective/fabric or physical adoption\n- /srv/opentallas-scratch2/scratch/codex/ha2-truecredit-63a67fb4c/src/rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_endpoint.sv:65: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01\n- Verilator: $finish at 448ns; walltime 1.150 s; speed 390.434 ns/s\n- Verilator: cpu 1.147 s on 1 threads; alloced 1065 MB\n"
+    },
+    "CORRUPT_GOLDEN": {
+      "returncode": -6,
+      "correct": true,
+      "output": "[141251000] %Fatal: tb_ha2_truecredit_endpoint.sv:58: Assertion failed in tb_ha2_truecredit_endpoint.unnamedblk5.check_delivery: ENDPOINT_FAIL numerical or identity mismatch m=0\n%Error: /srv/opentallas-scratch2/scratch/codex/ha2-truecredit-63a67fb4c/src/rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_endpoint.sv:58: Verilog $stop\nAborting...\n"
+    },
+    "IGNORE_PEER_CREDIT": {
+      "returncode": -6,
+      "correct": true,
+      "output": "[45417000] %Fatal: tb_ha2_truecredit_endpoint.sv:42: Assertion failed in tb_ha2_truecredit_endpoint.unnamedblk4: ENDPOINT_CREDIT_VIOLATION peer=0 cycle=50\n%Error: /srv/opentallas-scratch2/scratch/codex/ha2-truecredit-63a67fb4c/src/rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_endpoint.sv:42: Verilog $stop\nAborting...\n"
+    }
+  },
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv": "a3e09f1933e7d76969ffd4e25b113d5127483667082d846bdbca4850515d610d",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv": "755267df5522c9bf08a612e4d504fe6eb1dbea9d33e4954b8d2a0b6dbafe172b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv": "b08049440bdd2f7afa66b496b778f61d1a5fd15a10f1d8177d8a4a7d8c510445",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv": "b96be44ecfe9bb2148aa88131169894229f9b1a60432b4bb0477fb28dbddd877",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner_truecredit.sv": "633f8bc75f65dec540338f82983057040a363f95c31804ed4fb90a1e66716794",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv": "02bec6fc2cdb69e5f6a9ea6aec09c32caa9e2b2830285855ad4494234195d241",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv": "511bea31ca65dba6118560545e8cba08ca837855b0e52c6aab459bffeb777c9b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender.sv": "afa0b30bde9d2ecb8798aee57b9ca846d94d924e738bdf4eca9b9404e9243022",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d203972abf58823ce475d9b72fa857c87ef6a9492c0700846955d564552f1b6",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_endpoint.sv": "50bf855e003107d2754bd47baff002d5559705d045b7b0aede14e5cd2580e903",
+    "tools/ha2_truecredit_endpoint_gate.py": "fc2c67b501817f93eea19951c533b94da9f88fcd31d0734b42430db62ff8d410",
+    "tools/ha2_hub_credit_gate.py": "7ec2499a71cc7c4e173277189254c65d29efd3910bb07ed56383f1cf7d6443e1"
+  },
+  "private_source_sha256": "d8eb1e6642c8c7ff90be81bb1eba180c0a92d56217213d4c1eacbf3be89c81fb",
+  "original_predicate": "!invalid_partial_port[p] && owner_p_r[p]) rb_pop[p]",
+  "replacement": "!invalid_partial_port[p] && (owner_p_r[p] || $test$plusargs(\"IGNORE_PEER_CREDIT\"))) rb_pop[p]",
+  "mutation": "One dispatch predicate; enabled only by +IGNORE_PEER_CREDIT",
+  "scope": "One full-width PF384 endpoint with internal truecredit7+7 candidate; exactness and peer dispatch guard only. Physical qualification and collective composition remain pending."
+}

@@ -1,0 +1,97 @@
+Startpoint: u_elem.g_mac[0].g_bf.g_f.u_bf.g_l[0].u_c.fwd5$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_elem.g_mac[1].g_bf.g_f.u_bf.g_l[1].u_c.u_add.u_c0.g_r.r[12]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  35.99   35.99 ^ wire139991/Y (BUFx24_ASAP7_75t_R)
+  44.65   80.64 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  35.66  116.29 ^ delaybuf_39_core_clk/Y (BUFx24_ASAP7_75t_R)
+  32.25  148.54 ^ delaybuf_40_core_clk/Y (BUFx24_ASAP7_75t_R)
+  32.31  180.85 ^ delaybuf_41_core_clk/Y (BUFx24_ASAP7_75t_R)
+  32.36  213.21 ^ delaybuf_42_core_clk/Y (BUFx24_ASAP7_75t_R)
+  34.26  247.47 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  41.74  289.21 ^ clkbuf_1_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  39.81  329.02 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  43.12  372.14 ^ clkbuf_3_7_0_clk/Y (BUFx24_ASAP7_75t_R)
+  54.58  426.71 ^ u_elem.g_wake.g_leaf[3].u_cg.u_icg/GCLK (ICGx1_ASAP7_75t_R)
+  50.50  477.21 ^ clkbuf_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  42.51  519.72 ^ clkbuf_1_0_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  41.68  561.40 ^ clkbuf_1_0_1_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  42.48  603.88 ^ clkbuf_1_0_2_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  41.16  645.04 ^ clkbuf_1_0_3_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  40.52  685.56 ^ clkbuf_2_0_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  43.24  728.80 ^ clkbuf_3_0_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  41.13  769.93 ^ clkbuf_3_0_1_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  40.80  810.72 ^ clkbuf_4_0_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  41.67  852.39 ^ clkbuf_5_1_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  44.43  896.82 ^ clkbuf_7_7_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  42.90  939.72 ^ clkbuf_8_14__f_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  50.92  990.64 ^ clkbuf_leaf_2329_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+   2.87  993.51 ^ u_elem.g_mac[0].g_bf.g_f.u_bf.g_l[0].u_c.fwd5$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 102.42 1095.93 v u_elem.g_mac[0].g_bf.g_f.u_bf.g_l[0].u_c.fwd5$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  54.12 1150.05 v place136799/Y (BUFx10_ASAP7_75t_R)
+  54.53 1204.58 v place136798/Y (BUFx12f_ASAP7_75t_R)
+  33.21 1237.79 v place136797/Y (BUFx12f_ASAP7_75t_R)
+  49.48 1287.27 v rebuffer140033/Y (BUFx12f_ASAP7_75t_R)
+  45.71 1332.98 v place136796/Y (BUFx12f_ASAP7_75t_R)
+  36.69 1369.66 v place136795/Y (BUFx12f_ASAP7_75t_R)
+  57.04 1426.70 v rebuffer147326/Y (BUFx6f_ASAP7_75t_R)
+  31.64 1458.34 v place136792/Y (BUFx12f_ASAP7_75t_R)
+  33.46 1491.80 v place136791/Y (BUFx12f_ASAP7_75t_R)
+  56.66 1548.46 v _580557_/Y (OA211x2_ASAP7_75t_R)
+  67.88 1616.34 v _580558_/Y (AO21x2_ASAP7_75t_R)
+  50.13 1666.47 v _580559_/Y (AND2x4_ASAP7_75t_R)
+  57.87 1724.34 v _598356_/Y (OR4x1_ASAP7_75t_R)
+  73.60 1797.94 v _598357_/Y (OR5x1_ASAP7_75t_R)
+  75.00 1872.94 v _598360_/Y (OR4x1_ASAP7_75t_R)
+  38.23 1911.17 ^ _598361_/Y (INVx3_ASAP7_75t_R)
+  43.23 1954.40 ^ clone140135/Y (BUFx6f_ASAP7_75t_R)
+  20.74 1975.14 v _598402_/Y (AOI21x1_ASAP7_75t_R)
+  19.69 1994.83 ^ _598403_/Y (NOR2x1_ASAP7_75t_R)
+   0.06 1994.89 ^ u_elem.g_mac[1].g_bf.g_f.u_bf.g_l[1].u_c.u_add.u_c0.g_r.r[12]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+        1994.89   data arrival time
+
+ 770.00  770.00   clock core_clk (rise edge)
+   0.00  770.00   clock source latency
+   0.00  770.00 ^ clk (in)
+  35.04  805.04 ^ wire139991/Y (BUFx24_ASAP7_75t_R)
+  43.15  848.19 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  34.82  883.00 ^ delaybuf_39_core_clk/Y (BUFx24_ASAP7_75t_R)
+  31.75  914.76 ^ delaybuf_40_core_clk/Y (BUFx24_ASAP7_75t_R)
+  31.81  946.57 ^ delaybuf_41_core_clk/Y (BUFx24_ASAP7_75t_R)
+  31.86  978.43 ^ delaybuf_42_core_clk/Y (BUFx24_ASAP7_75t_R)
+  33.85 1012.28 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  40.63 1052.91 ^ clkbuf_1_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  38.56 1091.47 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  41.98 1133.46 ^ clkbuf_3_7_0_clk/Y (BUFx24_ASAP7_75t_R)
+  49.77 1183.23 ^ u_elem.g_wake.g_leaf[3].u_cg.u_icg/GCLK (ICGx1_ASAP7_75t_R)
+  47.27 1230.50 ^ clkbuf_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  41.24 1271.75 ^ clkbuf_1_1_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  40.12 1311.87 ^ clkbuf_1_1_1_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  40.38 1352.25 ^ clkbuf_1_1_2_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  41.01 1393.26 ^ clkbuf_1_1_3_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  40.11 1433.37 ^ clkbuf_2_3_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  41.11 1474.48 ^ clkbuf_3_6_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  39.81 1514.29 ^ clkbuf_3_6_1_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  38.66 1552.95 ^ clkbuf_4_12_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  41.43 1594.38 ^ clkbuf_5_25_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  43.58 1637.96 ^ clkbuf_7_103_0_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  43.81 1681.77 ^ clkbuf_8_207__f_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+  51.31 1733.08 ^ clkbuf_leaf_908_u_elem.g_mac[0].g_bf.g_f.u_bf.clk/Y (BUFx24_ASAP7_75t_R)
+   2.11 1735.19 ^ u_elem.g_mac[1].g_bf.g_f.u_bf.g_l[1].u_c.u_add.u_c0.g_r.r[12]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00 1675.19   clock uncertainty
+  16.71 1691.90   clock reconvergence pessimism
+ -16.79 1675.11   library setup time
+        1675.11   data required time
+---------------------------------------------------------
+        1675.11   data required time
+        -1994.89   data arrival time
+---------------------------------------------------------
+        -319.78   slack (VIOLATED)

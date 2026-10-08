@@ -28,13 +28,28 @@
 #      repair_timing -setup on capt_x, so off by default), OT_GUIDES (1: keep the route's GRT guides, see below),
 #      OT_WINDOW_ONLY (1: report the endpoint windows and stop), OT_THREADS (8), OT_MAX_BUF_PCT (30), OT_MINL/OT_MAXL (M2/M7), OT_MINCLKL (M4), OT_CL (helper dir)
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
+proc ot_libc {c} {   ;# OWNER OPTION B: the setup scene ("ss") reads OT_SETUP_LIB (SS default, TT under option B)
+  if {$c eq "ss" && [info exists ::env(OT_SETUP_LIB)] && $::env(OT_SETUP_LIB) ne ""} { return [string toupper $::env(OT_SETUP_LIB)] }
+  return [string toupper $c]
+}
 proc envd {n d} { expr {[info exists ::env($n)] && $::env($n) ne "" ? $::env($n) : $d} }
+proc ot_vt_libs {C} {
+  set r {}
+  foreach vt [envd OT_VT RVT] {
+    lappend r asap7sc7p5t_AO_${vt}_${C}_nldm_211120.lib.gz asap7sc7p5t_INVBUF_${vt}_${C}_nldm_220122.lib.gz \
+      asap7sc7p5t_OA_${vt}_${C}_nldm_211120.lib.gz asap7sc7p5t_SEQ_${vt}_${C}_nldm_220123.lib \
+      asap7sc7p5t_SIMPLE_${vt}_${C}_nldm_211120.lib.gz
+  }
+  return $r
+}
 set hm [envd OT_HOLD_MARGIN 21]; set sm [envd OT_SETUP_MARGIN 40]; set filt [envd OT_SETUP_FILTER 40]
 set acc_ss [envd OT_ACCEPT_SS 15]; set acc_ff [envd OT_ACCEPT_FF 15]
 set session [envd OT_SESSION two]
 set_thread_count [envd OT_THREADS 8]
 read_lef $P/lef/asap7_tech_1x_201209.lef
 read_lef $P/lef/asap7sc7p5t_28_R_1x_220121a.lef
+# MULTI-VT: OT_VT (hold_eco.sh, from the odb) adds the LVT/SLVT LEFs and libraries; default RVT only
+foreach vt [envd OT_VT RVT] { if {$vt ne "RVT"} { read_lef $P/lef/asap7sc7p5t_28_[string map {VT ""} $vt]_1x_220121a.lef } }
 foreach m [envd OT_MACROS ""] { read_lef $m/[file tail $m].lef }
 set corners [expr {$session in {two mm} ? {ss ff} : {ff}}]
 if {$session eq "mm"} {
@@ -44,11 +59,9 @@ if {$session eq "mm"} {
   # session: dshead-ctl-r6 gained 27 ps FF hold on commit_warm with 6 HB4 cells and lost 423 ps SS setup, +87.9 ->
   # -335.7; the same repair in this session ends SS +41.9 / FF +21.0.)
   foreach c $corners {
-    set C [string toupper $c]; set L($c) {}
-    foreach l [list asap7sc7p5t_AO_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_INVBUF_RVT_${C}_nldm_220122.lib.gz \
-                 asap7sc7p5t_OA_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_SEQ_RVT_${C}_nldm_220123.lib \
-                 asap7sc7p5t_SIMPLE_RVT_${C}_nldm_211120.lib.gz] { read_liberty $P/lib/NLDM/$l; lappend L($c) $P/lib/NLDM/$l }
-    foreach m [envd OT_MACROS ""] { read_liberty $m/[file tail $m]_$c.lib; lappend L($c) $m/[file tail $m]_$c.lib }
+    set C [ot_libc $c]; set L($c) {}
+    foreach l [ot_vt_libs $C] { read_liberty $P/lib/NLDM/$l; lappend L($c) $P/lib/NLDM/$l }
+    foreach m [envd OT_MACROS ""] { read_liberty $m/[file tail $m]_[string tolower [ot_libc $c]].lib; lappend L($c) $m/[file tail $m]_[string tolower [ot_libc $c]].lib }
   }
   read_db $::env(OT_DB)
   read_sdc -mode ss $::env(OT_SDC_SS)
@@ -68,11 +81,9 @@ if {$session eq "mm"} {
 } else {
 define_corners {*}$corners
 foreach c $corners {
-  set C [string toupper $c]
-  foreach l [list asap7sc7p5t_AO_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_INVBUF_RVT_${C}_nldm_220122.lib.gz \
-               asap7sc7p5t_OA_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_SEQ_RVT_${C}_nldm_220123.lib \
-               asap7sc7p5t_SIMPLE_RVT_${C}_nldm_211120.lib.gz] { read_liberty -corner $c $P/lib/NLDM/$l }
-  foreach m [envd OT_MACROS ""] { read_liberty -corner $c $m/[file tail $m]_$c.lib }
+  set C [ot_libc $c]
+  foreach l [ot_vt_libs $C] { read_liberty -corner $c $P/lib/NLDM/$l }
+  foreach m [envd OT_MACROS ""] { read_liberty -corner $c $m/[file tail $m]_[string tolower [ot_libc $c]].lib }
 }
 read_db $::env(OT_DB)
 read_sdc $::env(OT_SDC)
@@ -242,9 +253,17 @@ foreach i [$block getInsts] {
 # the session then failed with a corrupted Tcl command name ('filler_plf') -- not safe to enable yet): nets driven by a macro output keep their detailed wires unless the ECO
 # touched them (a new / moved / resized cell on the net).  Qwen slab s14 (guide-preserving ECO): the re-route
 # re-detoured ROM -> capture-register nets, worst register-D setup +44.55 -> +4.66 while reg2reg stayed +122.  If DRT
-# rejects the kept wires, they are stripped and DRT runs again (logged).
+# rejects the kept wires, the shell retries from the original route in a fresh process (logged).
 set frozen {}
-if {[envd OT_FREEZE_MACRO_NETS 0]} {
+if {[envd OT_KEEP_UNTOUCHED 0]} {
+  # NARROW RE-ROUTE (OT_KEEP_UNTOUCHED=1): every signal/clock net the ECO did not touch keeps its detailed wires; only
+  # the dirty nets (a new / moved / resized cell on them) are re-routed.  The guide-preserving full re-route still moves
+  # untouched critical wires (ctl r6 SS +87.9 route -> +16.0 after a 6-cell repair).
+  foreach nt [$block getNets] {
+    if {[$nt getSigType] in {POWER GROUND} || [dict exists $dirty [$nt getName]]} continue
+    if {[$nt getWire] ne "NULL"} { lappend frozen $nt }
+  }
+} elseif {[envd OT_FREEZE_MACRO_NETS 0]} {
   foreach i [$block getInsts] {
     if {![[$i getMaster] isBlock]} continue
     foreach it [$i getITerms] {
@@ -263,17 +282,18 @@ foreach net [$block getNets] {
   if {[dict exists $fz [$net getName]]} continue
   set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w; incr nstrip }
 }
-puts "OT_ECO reroute: $ninst new/moved/resized instances, $nstrip wires stripped, [dict size $fz] macro-output nets frozen"
+puts "OT_ECO reroute: $ninst new/moved/resized instances, $nstrip wires stripped, [dict size $fz] nets frozen"
 set ra [expr {[envd OT_RES_AWARE 1] ? "-resistance_aware" : ""}]
 if {$guides} { global_route -end_incremental -allow_congestion {*}$ra } else { global_route -allow_congestion -congestion_iterations 30 {*}$ra }
 # Preserve guides by default because fresh GRT has measured setup-regression
 # risk. An explicitly requested fallback is valid if the unchanged final
 # timing, DRC, IO and context checks pass; route strategy is not acceptance.
 set drt_err [catch {detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1} err]
-if {$drt_err && [info exists fz] && [dict size $fz]} {
-  puts "OT_ECO macro-net freeze rejected by DRT ($err): frozen wires stripped, DRT again"
-  foreach nt $frozen { set w [$nt getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w } }
-  set drt_err [catch {detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1} err]
+if {$drt_err && [dict size $fz]} {
+  # a second detailed_route in the same session is not safe (cmdproc_n: the session's Tcl state was corrupted after a
+  # DRT re-run, 'filler_plf'): stop here; hold_eco.sh re-runs this pass in a fresh process with the wires stripped
+  puts "OT_ECO freeze_rejected by DRT ($err): [dict size $fz] kept nets"
+  exit 3
 }
 if {$drt_err} {
   if {!$guides || !$allow_fresh} { error "OT_ECO detailed_route failed: $err" }

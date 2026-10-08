@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.qwen_cdc_die_reclassification.v1",
+  "route_source_commit": "5a3bb172156f5c91d365367cb8218164dbddd19c",
+  "signoff_source_commit": "b9fbbd447",
+  "job": "cdc_policy60_host-b9fbbd447",
+  "verdict": "FAIL",
+  "ss_ps": -118.04,
+  "ff_ps": -5.8,
+  "drc": 0,
+  "policy": "833.333ps core/1024ps hclk;60/25uncertainty;90/50die skew;80fF output/150ps input",
+  "diagnosis": "Real output load dominates: l_data[249] output1250 BUFx2 contributes354.38ps, preceded by133.95ps BUFx2. Worst register-D slack+31.02ps; no setup-violating D pins. Historical route did not optimize for80fF.",
+  "next": "Run unchanged CDC RTL through the already corrected80fF physical contract; this is constraint-correct physical implementation, no clock/uncertainty change or parameter sweep. No ECO on the setup-failing clone.",
+  "cycles_added": 0,
+  "adopted": false
+}

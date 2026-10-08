@@ -1,0 +1,175 @@
+{
+  "schema": "opentallas.hbm.smh.tile_headroom_model.v1",
+  "basis": "tileW m3f CTS 108103 um2 instance area; apply conservatively to E/W, not an E measurement",
+  "baseline_tile_um": [
+    319.68,
+    509.76
+  ],
+  "baseline_element_um": [
+    3075.84,
+    1131.84
+  ],
+  "baseline_die_um": [
+    30904.848,
+    24051.6
+  ],
+  "SM_count": 32,
+  "tiles_per_SM": 16,
+  "candidates": [
+    {
+      "tile_geometry_um": {
+        "tile_w": 354.24,
+        "tile_h": 509.76,
+        "be_h": 77.76,
+        "front_w": 432.0,
+        "gap": 8.64,
+        "margin": 8.64,
+        "be_w": 319.68
+      },
+      "element_um": [
+        3352.32,
+        1131.84
+      ],
+      "measured_tile_instance_area_um2": 108103.0,
+      "gross_utilization": 0.5986519383725434,
+      "core_utilization": 0.6048877332664383,
+      "core_utilization_at_most_60_percent": false,
+      "die_um": [
+        32563.728,
+        24051.6
+      ],
+      "outline_33mm_headroom_um": 436.272,
+      "legal_outline": true,
+      "all_512_tile_outline_delta_mm2": 9.0200604672,
+      "die_outline_delta_mm2": 39.89871820800002,
+      "changed_backend_views": 0,
+      "backend_instances": 256,
+      "backend_preservation": {
+        "selected_first_alternative": true,
+        "actual_macro_width_um": 319.68,
+        "placement_shift_inside_wider_tile_slot_um": 17.28,
+        "tile_gout_to_backend_gin_x_residual_um": 0.0,
+        "adjacent_backend_wire_gap_um": 43.2,
+        "adjacent_backend_added_wire_um": 34.56,
+        "backend_to_front_added_wire_um": 17.28,
+        "wire_timing_requalification_required": true,
+        "generator_centered_backend_option_implemented": true
+      },
+      "nominal_added_cycles": 0,
+      "arithmetic_changed": false,
+      "wire_timing_and_clock_not_qualified": true,
+      "ready_for_route": false
+    },
+    {
+      "tile_geometry_um": {
+        "tile_w": 362.88,
+        "tile_h": 509.76,
+        "be_h": 77.76,
+        "front_w": 432.0,
+        "gap": 8.64,
+        "margin": 8.64,
+        "be_w": 319.68
+      },
+      "element_um": [
+        3421.44,
+        1131.84
+      ],
+      "measured_tile_instance_area_um2": 108103.0,
+      "gross_utilization": 0.5843983207922447,
+      "core_utilization": 0.5903994043259249,
+      "core_utilization_at_most_60_percent": true,
+      "die_um": [
+        32978.448,
+        24051.6
+      ],
+      "outline_33mm_headroom_um": 21.552,
+      "legal_outline": true,
+      "all_512_tile_outline_delta_mm2": 11.275075583999998,
+      "die_outline_delta_mm2": 49.87339776000005,
+      "changed_backend_views": 0,
+      "backend_instances": 256,
+      "backend_preservation": {
+        "selected_first_alternative": true,
+        "actual_macro_width_um": 319.68,
+        "placement_shift_inside_wider_tile_slot_um": 21.599999999999994,
+        "tile_gout_to_backend_gin_x_residual_um": 0.0,
+        "adjacent_backend_wire_gap_um": 51.84,
+        "adjacent_backend_added_wire_um": 43.2,
+        "backend_to_front_added_wire_um": 21.6,
+        "wire_timing_requalification_required": true,
+        "generator_centered_backend_option_implemented": true
+      },
+      "nominal_added_cycles": 0,
+      "arithmetic_changed": false,
+      "wire_timing_and_clock_not_qualified": true,
+      "ready_for_route": false
+    },
+    {
+      "tile_geometry_um": {
+        "tile_w": 397.44,
+        "tile_h": 509.76,
+        "be_h": 77.76,
+        "front_w": 432.0,
+        "gap": 8.64,
+        "margin": 8.64,
+        "be_w": 319.68
+      },
+      "element_um": [
+        3697.92,
+        1131.84
+      ],
+      "measured_tile_instance_area_um2": 108103.0,
+      "gross_utilization": 0.5335810755059626,
+      "core_utilization": 0.5387797842755708,
+      "core_utilization_at_most_60_percent": true,
+      "die_um": [
+        34637.328,
+        24051.6
+      ],
+      "outline_33mm_headroom_um": -1637.328,
+      "legal_outline": false,
+      "all_512_tile_outline_delta_mm2": 20.2951360512,
+      "die_outline_delta_mm2": 89.77211596799998,
+      "changed_backend_views": 0,
+      "backend_instances": 256,
+      "backend_preservation": {
+        "selected_first_alternative": true,
+        "actual_macro_width_um": 319.68,
+        "placement_shift_inside_wider_tile_slot_um": 38.879999999999995,
+        "tile_gout_to_backend_gin_x_residual_um": 0.0,
+        "adjacent_backend_wire_gap_um": 86.4,
+        "adjacent_backend_added_wire_um": 77.76,
+        "backend_to_front_added_wire_um": 38.88,
+        "wire_timing_requalification_required": true,
+        "generator_centered_backend_option_implemented": true
+      },
+      "nominal_added_cycles": 0,
+      "arithmetic_changed": false,
+      "wire_timing_and_clock_not_qualified": true,
+      "ready_for_route": false
+    }
+  ],
+  "compute_and_memory_delta": {
+    "MACs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "boundary_bits_per_cycle": 0,
+    "replicas": 0,
+    "mux_bits": 0,
+    "fanout_sinks": 0
+  },
+  "selection": null,
+  "adoption": false,
+  "requirements_before_route": [
+    "Expose this sizing through the unified uarch model",
+    "Verify new 32-SM geometry, all pin positions, relay corridors and track capacity",
+    "Implement centered original-width backend placement; use actual unchanged E/W views and requalify longer parent wires",
+    "Source pin and isolate candidate jobs; measured host admission",
+    "Actual CTS/route growth may exceed area measured on the original tile"
+  ],
+  "source_sha256": {
+    "tools/hbm_accel_die_fp.py": "45a84079ab08eecf5d0fd4a28f4eda34f0e1756e59a56c06621c3af10db1b1bc",
+    "tools/hbm_accel_smh_physical.py": "c5c2bd8f1ca458baf3cf9fb8afd83a2e3677344e3311e0005ded44f4c0a3267d",
+    "tools/hbm_smh_tile_headroom_model.py": "4701a7ee78e1244a33156dc8ab7b6edaf7184f697971855214c4c7a3b91b1e12",
+    "results/uarch/hbm_smh_tile_headroom_20261007/measurement.json": "9e124d8feac8a33b535b68496ca8e08d6648550f09031717dc74c9afff6aa926"
+  }
+}

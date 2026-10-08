@@ -1,0 +1,21 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+STA_INV raw=s0/active.link[0].ab/inv0/_0_ normalized=s0.active.link[0].ab.inv0._0_
+STA_INV raw=s0/active.link[0].ab/inv1/_0_ normalized=s0.active.link[0].ab.inv1._0_
+STA_INV raw=s0/active.link[0].ba/inv0/_0_ normalized=s0.active.link[0].ba.inv0._0_
+STA_INV raw=s0/active.link[0].ba/inv1/_0_ normalized=s0.active.link[0].ba.inv1._0_
+STA_INV raw=s1/active.link[0].ab/inv0/_0_ normalized=s1.active.link[0].ab.inv0._0_
+STA_INV raw=s1/active.link[0].ab/inv1/_0_ normalized=s1.active.link[0].ab.inv1._0_
+STA_INV raw=s1/active.link[0].ba/inv0/_0_ normalized=s1.active.link[0].ba.inv0._0_
+STA_INV raw=s1/active.link[0].ba/inv1/_0_ normalized=s1.active.link[0].ba.inv1._0_
+ODB_INV raw=s0/active.link\[0\].ab/inv0/_0_ normalized=s0.active.link[0].ab.inv0._0_ master=INVx3_ASAP7_75t_R
+ODB_INV raw=s0/active.link\[0\].ab/inv1/_0_ normalized=s0.active.link[0].ab.inv1._0_ master=INVx3_ASAP7_75t_R
+ODB_INV raw=s0/active.link\[0\].ba/inv0/_0_ normalized=s0.active.link[0].ba.inv0._0_ master=INVx3_ASAP7_75t_R
+ODB_INV raw=s0/active.link\[0\].ba/inv1/_0_ normalized=s0.active.link[0].ba.inv1._0_ master=INVx3_ASAP7_75t_R
+ODB_INV raw=s1/active.link\[0\].ab/inv0/_0_ normalized=s1.active.link[0].ab.inv0._0_ master=INVx3_ASAP7_75t_R
+ODB_INV raw=s1/active.link\[0\].ab/inv1/_0_ normalized=s1.active.link[0].ab.inv1._0_ master=INVx3_ASAP7_75t_R
+ODB_INV raw=s1/active.link\[0\].ba/inv0/_0_ normalized=s1.active.link[0].ba.inv0._0_ master=INVx3_ASAP7_75t_R
+ODB_INV raw=s1/active.link\[0\].ba/inv1/_0_ normalized=s1.active.link[0].ba.inv1._0_ master=INVx3_ASAP7_75t_R
+TMR_ACTUAL_ODB_CLOCK_RESOLVER_PASS count=8

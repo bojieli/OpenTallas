@@ -1,0 +1,11 @@
+{
+  "status": "RESOLVER_TESTED_PHYSICAL_RETRY_PENDING",
+  "predecessor": "9f53e42a8b72d4c132617805dc70b046ee0a260f",
+  "failure": "Original patch failed before insertion because STA unescaped brackets differ from ODB escaped brackets; original inputs remain unchanged.",
+  "resolution": "Unique literal STA pin maps directly through sta::sta_to_db_pin; exact D terminal and original DFFHQNx1 master checked.",
+  "test_rc": 0,
+  "files": {
+    "physical/s81_ph_views/capture/startup_pin_patch.tcl": "89610e3cd7012efa103f1bc28d623d661ec9bf42ddae2d7163c6baa186cc484d",
+    "tools/test_s81_capture_startup_patch.py": "de6f2aee497cf60e121d8702e863fa67fccc6bbbeee0875a367162522c3b2b3a"
+  }
+}

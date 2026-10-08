@@ -1,0 +1,121 @@
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:100:16: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  100 |   generate if (!ENABLE) begin : off
+      |                ^
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:107:42: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  107 |     localparam integer PERIOD = REF_MODE ? T_REFIPB : T_REFI;
+      |                                          ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:177:41: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'READY_CUT' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  177 |     localparam READY_ACTIVE = READY_CUT && PULLIN == 0 && AQ_RD == 0;
+      |                                         ^~
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:142:51: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wq_rp' generates 2 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  142 |       assign wq_bq[i*5 +: 5] = wq_bank[WQW'(wq_rp + i)];
+      |                                                   ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:159:31: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  159 |     wire act_block = REF_MODE ? (ref_n != 0 && ref_n < RW'(T_RREFD))
+      |                               ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:161:31: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  161 |     wire rd_block  = REF_MODE ? 1'b0 : (ref_c <= RW'(T_RP + T_RTP + 2));
+      |                               ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:162:22: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  162 |     wire preall_ok = !REF_MODE && ref_n <= RW'(T_RP + 2) && ref_n >= RW'(T_RP) && (|open);
+      |                      ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:183:17: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  183 |       (REF_MODE && ref_c == RW'(LEAD)) ? (32'b1 << bsel) : blk;
+      |                 ^~
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:217:16: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'rcd' generates 5 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  217 |           (rcd <= T_RCD-T_RCDW+1);
+      |                ^~
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:237:64: Operator SUB expects 7 bits on the LHS, but LHS's CONST '3'h2' generates 3 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  237 |                         (ahead && d <= 3'd2) ? 7'd16 + 7'(3'd2 - d) :
+      |                                                                ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:237:64: Operator SUB expects 7 bits on the RHS, but RHS's VARREF 'd' generates 3 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  237 |                         (ahead && d <= 3'd2) ? 7'd16 + 7'(3'd2 - d) :
+      |                                                                ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:293:57: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 2 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  293 |           s2k[q] <= m2[q*9 + 2 +: 7]; s2i[q] <= s1i[4*q + m2[q*9 +: 2]];
+      |                                                         ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:355:32: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  355 |     wire forced_pre = REF_MODE && ref_pend && |(blk & open & ras_z & rtp_z);
+      |                                ^~
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:368:37: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  368 |                          !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel);
+      |                                     ^~
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:378:81: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wq_rp' generates 2 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  378 |         wcand = 1'b1; wab_n = wq_bq[ai*5 +: 5]; wcrd_n = AQ && wq_rd[WQW'(wq_rp + ai)];
+      |                                                                                 ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:386:31: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  386 |                    !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && wab == bsel) &&
+      |                               ^~
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:410:64: Operator FUNCREF 'act_bank' expects 32 bits on the Function Argument, but Function Argument's VARREF 'act_sel' generates 3 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  410 |       else if (act_ok_any) begin r_v = 1; r_op = ACT; r_bank = act_bank(act_sel, k); r_oh = act_oh; end
+      |                                                                ^~~~~~~~
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:405:16: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  405 |       else if (!REF_MODE && ref_due_n) begin r_v = 1; r_prio = 1; r_op = REFAB; end
+      |                ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:404:20: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  404 |       if (REF_MODE && ref_due_n && ref_pend) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
+      |                    ^~
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:439:40: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  439 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:439:40: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  439 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:439:64: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  439 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                                                ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:439:64: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  439 |           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      |                                                                ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:445:31: Operator COND expects 32 or 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  445 |             if (wq_n - (wr_ok ? 1'b1 : 1'b0) != 0) begin nb = wq_bank[rpn]; nc = wq_col[rpn]; nr = AQ && wq_rd[rpn]; end
+      |                               ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:445:31: Operator COND expects 32 or 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  445 |             if (wq_n - (wr_ok ? 1'b1 : 1'b0) != 0) begin nb = wq_bank[rpn]; nc = wq_col[rpn]; nr = AQ && wq_rd[rpn]; end
+      |                               ^
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:467:24: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  467 |           if (REF_MODE && ref_c == RW'(LEAD)) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end
+      |                        ^~
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:480:35: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  480 |                         (REF_MODE && (|(blk & open) || |(blk & ~aok_z))) || (!REF_MODE && |open))) fault_r <= 1;
+      |                                   ^~
+%Warning-WIDTH: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:480:78: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REF_MODE' generates 32 bits.
+                                                                                                  : ... In instance ot_qwen_ctrl_pc_head.core
+  480 |                         (REF_MODE && (|(blk & open) || |(blk & ~aok_z))) || (!REF_MODE && |open))) fault_r <= 1;
+      |                                                                              ^
+%Warning-UNSIGNED: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:230:33: Comparison is constant due to unsigned arithmetic
+                                                                                                     : ... In instance ot_qwen_ctrl_pc_head.core
+  230 |       wire ahead = (S >= k && S <= last) || next_posted;
+      |                                 ^~
+%Warning-CMPCONST: /tmp/qwen-control-recovery-20261007/candidate/ot_hbm_r14_stream_pc_ready.sv:230:23: Comparison is constant due to limited range
+                                                                                                     : ... In instance ot_qwen_ctrl_pc_head.core
+  230 |       wire ahead = (S >= k && S <= last) || next_posted;
+      |                       ^~

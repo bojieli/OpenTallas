@@ -1,0 +1,23 @@
+{
+  "status": "prebuild_candidate",
+  "MACs_per_cycle": 0,
+  "clients": 5,
+  "replicas": 32,
+  "request_context_bits": 94,
+  "context": "{liveowner73,record16,source5} captured with actual client request; not inferred from static installed image",
+  "request_capture_bits": 814,
+  "response_capture_bits": 930,
+  "control_bits": 10,
+  "total_mutable_bits": 1754,
+  "shared_join_bits": 677,
+  "request_boundary_bits": 2025,
+  "response_boundary_bits": 2810,
+  "registered_added_edges": 2,
+  "queue": "one total transaction, ready cleared after capture until checked response consumed; shared real join withholds next request until reverse grant",
+  "service_bytes_per_edge": 32,
+  "arbiter": "fixed priority0..NCLIENT-1, native serial schedule separatesprogram/X/weight/result phases; no arbitrary multiworkload throughput guarantee",
+  "comparison": "406request and465response duplicated/inverted-bank integrity checks; final sideeffects suppressed immediately; mappedpreservation and timing unqualified",
+  "area_flop_lower_bound_um2": 708.8796000000001,
+  "physical_admitted": false,
+  "identity": "existing real loader join compares full192bit actual ownedreturn; successor exposes that actual checked returned identity, mux associates captured context and retains throughclient consumption"
+}

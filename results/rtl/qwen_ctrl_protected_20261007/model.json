@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.qwen_ctrl_protected.v1",
+  "status": "PROPOSED_NOT_ADOPTED",
+  "model_precedes_rtl": true,
+  "source_model": "tools/uarch_model_qwen_ctrl_protected.py",
+  "replicas": 128,
+  "controller_copies_per_pc": 2,
+  "controller_copies_total": 256,
+  "macs_per_cycle": 0,
+  "compute_intensity_macs_per_byte": 0,
+  "fault_model": "one sequential-state bit upset in one controller replica or one guard sticky-state bit; no simultaneous common-mode, clock, reset, input-wire or combinational faults",
+  "isolation": "independent retained replicas; synthesis/mapping must prove no shared state roots",
+  "memory_ports": [
+    {
+      "name": "command_fifo",
+      "depth": 8,
+      "width": 32,
+      "write_bytes_per_cycle": 4,
+      "read_bytes_per_cycle": 4
+    },
+    {
+      "name": "write_queue_onehot",
+      "depth": 4,
+      "width": 32,
+      "write_bytes_per_cycle": 4,
+      "internal_shift_bytes_per_pop": 12
+    }
+  ],
+  "boundary_bits": {
+    "command_in": 33,
+    "read_credit_in": 3,
+    "command_credit_out": 1,
+    "phy_row_out": 28,
+    "phy_column_out": 12,
+    "status_out": 2
+  },
+  "internal_boundary_bits_per_cycle": {
+    "command_input_fanout": 72,
+    "qualified_output_packet_each": 43,
+    "total_output_compare": 86
+  },
+  "routing": {
+    "max_final_wire_um": 100,
+    "guard_width_um": 64.0,
+    "placement": "two full controller leaves with output faces toward central guard; mirror right leaf",
+    "tracks_per_face": 128,
+    "tracks_available_per_face": 1286
+  },
+  "replica_mux_cost": "43 equality XOR/XNOR bits and balanced reduction; gates all emitted fields, valid, write enable and returned credits; two separately retained sticky-halt bits",
+  "replica_fanout_cost": "incoming command/read-credit fanout2; clock and reset distribution must qualify actual three-region context",
+  "area": {
+    "frame_um": [
+      559.072,
+      370.44
+    ],
+    "cell_reservation_um2": 36451.1688,
+    "guard_logic_reservation_um2": 1024,
+    "frame_area_per_pc_um2": 207102.63168,
+    "total_frame_increment_um2": 14771890.66752,
+    "utilisation_target": 0.55,
+    "measured": false
+  },
+  "latency": {
+    "added_cycles": 0,
+    "added_token_cycles": 0,
+    "output_logic_depth": "43bit equality balanced tree plus fail-closed field gates; actual SS/FF gate delay unmeasured",
+    "command_data_alignment": "no stage added to any JEDEC command; external write-data alignment unchanged in fault-free operation",
+    "credit_reservation": "unchanged eight ingress credits and same-cycle return; no delayed credit added; after fault no new credits emitted",
+    "refresh": "no added command cycle, so first and later refresh timestamps equal pinned controller; baseline DRAM startup epoch and parent fault-refresh handoff still require binding"
+  },
+  "energy": {
+    "controller_activity_factor_bound": 2,
+    "extra_compare_bits_per_cycle": 43,
+    "joules_unmeasured": true
+  },
+  "adoption_blocks": [
+    "physical SS/FF plus actual load",
+    "preserved independent mapped state",
+    "runtime fault containment gate",
+    "parent fault abort and already-issued write drain",
+    "external PHY valid/NOP binding",
+    "startup refresh epoch contract"
+  ],
+  "physical_phy_scope": "same row_v/col_v accepted-command contract as ot_qwen_hbm_stream_ack; no pin-level CA encoder claim"
+}

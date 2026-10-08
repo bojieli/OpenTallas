@@ -1,0 +1,22 @@
+{
+  "observed_at": "2026-10-07T17:52:00.768247+00:00",
+  "status": "INCONCLUSIVE_NEGATIVE_NO_TERMINAL_VERDICT",
+  "adoption_hold_released": false,
+  "source_commit": "4f5ec6f68e6b4ee6be7bc2484eb760df7a1bba7a",
+  "source_hash_mismatches": [],
+  "cases": 344,
+  "verdict_counts": {
+    "NONE": 280,
+    "PASS": 64
+  },
+  "simulator_returncodes": {
+    "2": 280,
+    "0": 64
+  },
+  "diagnosis": "CPP stops at2000000 cycles with rc2 unless gotFinish. Bench watches fault and MAX_CYCLES only in phase3/4, not own-row writer phase6. Zero ACT/RD/WR cannot by itself establish expected detection. Run a direct production skid request-payload assertion on the same pinned mutant.",
+  "files": {
+    "runs.json": "230e74af1f12060803fb792fecf96094af96b69cf8f6d91e18f34492e579678f",
+    "gate.log": "a02d341108407144f561e2c6438066a1370710b5ebfb886f1e686a9c123ac7d6",
+    "exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  }
+}

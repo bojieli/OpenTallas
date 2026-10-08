@@ -1,0 +1,17 @@
+{
+  "job": "hbm_smh_front_s_ne_prot_80a11cea9",
+  "source_commit": "80a11cea9191ca09153367debd21e79bef473605",
+  "host": "ot-agidock128",
+  "checkpoint": "2_2_floorplan_macro.odb",
+  "same_ODB_as_original_failed_readback": true,
+  "original_failed_readback": "../mapped_storage_a1/receipt.json",
+  "corrected_checker_only": true,
+  "independent_mapped_rail_storage": true,
+  "live_output_loads_both_rails": true,
+  "RTL_fault_gate": "../gate.json",
+  "routed_SS_FF_and_checker_timing_pending": true,
+  "adoption": false,
+  "raw_OpenROAD_process_rc": 1,
+  "raw_process_failure": "embedded Python SystemExit(False) treated as an error despite completed PASS inspection",
+  "success_exit_fix_pending": true
+}

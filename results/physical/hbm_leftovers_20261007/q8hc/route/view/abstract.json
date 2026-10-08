@@ -1,0 +1,59 @@
+{
+  "name": "hfd_hc",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 1,
+      "done": false,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/hc/lane/ot_dsrom_su_hcpost_lane:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 1,
+      "done": false,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/physical/hbm_accel_die_views/hc/lane/ot_dsrom_su_hcpost_lane:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [
+    "physical/hbm_accel_die_views/hc/lane/ot_dsrom_su_hcpost_lane"
+  ],
+  "files": {},
+  "ok": false
+}

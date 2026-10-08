@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.softmax_cdc_candidate.v1",
+  "adopted": false,
+  "route_admitted": false,
+  "source_sha256": {
+    "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv": "a4e1bda9a0ab083503462a8c755f35cbe3aa52786e455e29c66834e915463497",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv": "5366ef10cf135546f19f07fbe1a6f3e7fc4052a159479eb63acf7970be99648b",
+    "rtl/dsrom_sys/s81_ph/su/ot_s81ph_su_xing.sv": "f75955abd76367fa9eaeebe8a382106a415c2e6975cf8394e22526338f634f22",
+    "rtl/dsrom_sys/c8/ot_chip_v41x_die_owner_safe_c8.sv": "f98410f8a72ba6b0361a5d1fddda7386de4a11d93f193adbb4e7eddea659c47f"
+  },
+  "packet": {
+    "bits": 1050,
+    "fields": {
+      "payload": 1024,
+      "row_tag": 16,
+      "row_address": 7,
+      "beat": 3
+    },
+    "kind": "implicit disjoint row regions; tag/address checked by SRAM join",
+    "words64": 17,
+    "encoded_bits": 1224
+  },
+  "storage": {
+    "depth": 64,
+    "encoded_FF_bits": 78336,
+    "protected_bank_bits": 2448,
+    "bank_fault_rails": 6,
+    "Gray_rails_and_sync_bits": 84,
+    "reset_release_bits": 4,
+    "total_state_bits_per_fifo": 80878,
+    "replicas": 2,
+    "total_two_FIFO_state_bits": 161756,
+    "FF_body_floor_mm2": 0.047168049600000005,
+    "combinational_mapping_area": null
+  },
+  "compute": {
+    "MAC_per_cycle": 0,
+    "encode_slices_per_fifo": 17,
+    "head_decode_slices_per_fifo": 17
+  },
+  "ports": {
+    "write_encoded_bits_per_source_edge": 1224,
+    "read_encoded_bits_per_destination_capture": 1224,
+    "read_initiation_interval": 3,
+    "logical_payload_bytes_per_accept": 128
+  },
+  "domains": {
+    "stream_GHz": 1.2,
+    "chain_GHz": 0.9,
+    "ratio": "4 stream edges : 3 chain edges",
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "physical_clock_budget": null
+  },
+  "schedule": {
+    "fault_free_no_stall_empty_latency": "first following destination edge captures Gray sync0; second sync1; third head capture; fourth validate; fifth accepts output",
+    "empty_latency_bound_destination_periods": 5,
+    "read_II_destination_edges": 3,
+    "ingress_max_beats_per_ns": 0.4,
+    "egress_max_beats_per_ns": 0.3,
+    "credit": "pop changes protected read pointer and Gray at the same destination edge; next two source edges synchronize return; next source edge can accept against released credit",
+    "pop_to_reusable_credit_bound_source_periods": 3,
+    "full_queue_fault_free_service_bound_destination_edges": 192,
+    "bound_conditions": "continuous out_r, healthy protected state and coherent rails; arbitrary consumer stalls/fault repair do not have a finite success bound",
+    "T640_ingress_beats": 579,
+    "T640_egress_beats": 448,
+    "T640_isolated_CDC_service_ns": {
+      "ingress": 1447.5,
+      "egress": 1493.3333333333333
+    },
+    "serializer": "E/output serializer II4 stream edges ->0.3G beats/s equal to egress CDC steady rate; row request/launch overhead makes serializer slower. Full component calendar must account for row gaps.",
+    "core_prefill": "Store complete40 score vectors (320 beats) or8 (64 beats), and complete32PV vectors (256 beats), in reserved SRAM regions before no-ready core replay. FIFO64 depth alone cannot absorb40vector core burst.",
+    "E_dependency": "capture40 E vectors to row bank, drain to attention, await actual P.V, then fill32 PV vectors; never wait forPV beforeEdrain"
+  },
+  "reset": {
+    "actual_parent": "S81 SU crossing has one clk/rst_n; c8 parent one raw rst_n synchronized to rn for all engines",
+    "candidate": "one coordinated cold abort asserted to both local reset entries; local two-edge release; no unilateral runtime reset",
+    "abort": "external producer/consumer row reservations and tag ownership must also abort; FIFO reset alone does not certify parent drain or quarantine late service replies",
+    "warm": "close admissions, retire accepted writes/output, exchange empty and epoch receipts before reuse; integration unimplemented"
+  },
+  "routing": {
+    "encoded_cross_domain_payload_bits": 1224,
+    "Gray_complement_bits": 28,
+    "available_tracks": null,
+    "slot": null
+  },
+  "missing": [
+    "Production epoch/empty/retirement wiring",
+    "Full1050bit3:4 minimum component gate",
+    "Actual input/output budgets, mapped cells and placed channels",
+    "Composed parent token calendar including serializer gaps"
+  ]
+}

@@ -20,10 +20,10 @@ set -u
 lab=$1; master=$2; topsrc=$3; shift 3
 # 2026-10-06: CTS without clock NDR by default (svc segments crashed post-CTS repair_timing on ODB-0445, the clock NDR
 # undo); CTSA=keep_ndr restores the ORFS default
-[ "${CTSA:-}" = keep_ndr ] && CTSA= || CTSA=${CTSA:--apply_ndr none}
+[ "${CTSA:-}" = keep_ndr ] && CTSA= || CTSA=${CTSA:--sink_clustering_enable -repair_clock_nets -apply_ndr none}
 W=$OUT/$lab; mkdir -p $W; cd $SRC
 export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
-python3 tools/hbm_die_views.py ports --master $master --out $W/ports > $W/ports.log 2>&1 || { echo "rc=ports" > $W/exit; exit 1; }
+python3 tools/hbm_die_views.py ${VARIANT:+--variant $VARIANT} ports --master $master --out $W/ports > $W/ports.log 2>&1 || { echo "rc=ports" > $W/exit; exit 1; }
 read DW DH < <(python3 -c "import json;d=json.load(open('$W/ports/$master/ports.json'));print(d['w_um'],d['h_um'])")
 mkdir -p $SRC/.views/$lab; cp $W/ports/$master/io_place.tcl $SRC/.views/$lab/io_place.tcl
 srcargs="--source $topsrc"; for s in ${SRCS:-}; do srcargs="$srcargs --source $s"; done
@@ -33,7 +33,7 @@ echo "SRC=$SRC master=$master top=$topsrc DW=$DW DH=$DH PD=${PD:-0.55} POSTSYN=$
 cat SOURCE_COMMIT > $W/SOURCE_COMMIT
 /srv/opentallas-scratch/admit.sh ${NEED:-24} -- python3 tools/run_abi3_physical.py --view asap7 --top $master $srcargs $mvargs \
   ${MACROS:+--macro-place-halo ${HALO:-5 5}} \
-  --clock-port ck --clock-period-ns ${PER:-0.833} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
+  --clock-port "${CKP:-ck}" --clock-period-ns ${PER:-0.833} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction ${IOF:-0.2} ${SDCA:+--sdc-append $SDCA} --stages pnr \
   --die-area 0 0 $DW $DH --core-area 0 0.54 $DW $(python3 -c "print(round($DH-0.54,4))") --place-density ${PD:-0.55} --routing-layers M2 ${MAXL:-M7} \
   --orfs-var PDN_TCL=/src/${PDN:-physical/hbm_accel_die_views/common/pdn_view.tcl} --orfs-var IO_CONSTRAINTS=/src/.views/$lab/io_place.tcl \
@@ -51,5 +51,5 @@ echo "corner_rc=$?" >> $W/exit
 mvx=""; for mv in ${MACROS:-}; do mvx="$mvx --macro-view $(echo $mv | cut -d= -f2)"; done
 python3 tools/hbm_fmax_attn_abstract.py --orfs-dir $W/work/orfs --name $master --out $W/view $mvx --tmp-dir $W/abs_tmp > $W/export.log 2>&1
 echo "export_rc=$?" >> $W/exit
-python3 tools/hbm_die_views.py check --master $master --lef $W/view/$master.lef > $W/check.json 2>&1
+python3 tools/hbm_die_views.py ${VARIANT:+--variant $VARIANT} check --master $master --lef $W/view/$master.lef > $W/check.json 2>&1
 echo "check_rc=$?" >> $W/exit

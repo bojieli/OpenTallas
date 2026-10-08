@@ -1,0 +1,30 @@
+{
+  "model_before_RTL": true,
+  "parent_contract": "parent_prebuild_contract.json",
+  "declared_control_FF_each_endpoint": 29,
+  "control_shape": {
+    "state": 2,
+    "target_epoch": 8,
+    "watermark_sequence": 16,
+    "watermark_exhausted": 1,
+    "request_seen": 1,
+    "done_pulse": 1
+  },
+  "snapshot": "Codec registered510bit output owns ACKsnapshot until tx_ready; no separate208bit snapshot storage.",
+  "baseline_generic_FF_pair": 16750,
+  "prebuild_additional_FF_pair_budget": 4100,
+  "mapped_pruning_caveat": "ACK208data+8target bits activate previouslyconstant ROLE1 encoder and16deepTXFIFO storage, plus source decoded outputs; at least~3888 previouslypruned bits may return, plus opcode/control. Declaredcodecwidthunchanged is notmappedFFdelta0. Exactmapping required before physicallaunch.",
+  "comparator_cost": "Exact8entry set match uses64 parallel25bit compares plus valid masking/popcount and duplicate rejection; new boundary checks16bitsequence+exhausted+8bepoch.",
+  "FIFO_capacity": "ExistingTX16 holds<=8 ownedWRITE/DONE plus1fence/ACK. No new buffer or warmreset. Sourcebusy blocksnewroom, honors <=2reservedlatewv.",
+  "startup_fix": "Native source w_room also requires TXCDC tx_ready/rendezvous; first accepted write cannot precede online FIFO. Currentbaselineimplicitstartup wait no longer assumed.",
+  "clock_period_ns": {
+    "core": 1.1111111111111112,
+    "hub": 0.8333333333333334,
+    "controller": 1.024
+  },
+  "MAC_per_cycle": 0,
+  "communication": "Two extra528wireflits per fence, oneeachdirection. Bare108/110streamedges plus actualcodec/CDC/credits/controller drain; fixturemeasures.",
+  "replicas": "2endpoints foronefixedPC pair; fullPC aggregation/globalenrollment notpricedorimplemented bythisminimumvehicle.",
+  "physical": "No endpointbay or placement budget yet; no P&R until fullprimitivearea/boundaryclockbudget priced. Existing430.56umrelaypath unchanged.",
+  "adoption": false
+}

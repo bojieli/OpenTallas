@@ -1,0 +1,52 @@
+{
+  "scope": "Recovery of Claude W2 and HA2 work; no physical adoption claim.",
+  "w2": {
+    "source_commit": "a4608c55351d0f0a6bd481dc1dec510022e6039c",
+    "safe_previous_commit": "e9e514e40",
+    "safe_previous_signoff_ps": {
+      "NO2": {
+        "SS": -18.92,
+        "FF": -34.56
+      },
+      "NO3": {
+        "SS": -34.49,
+        "FF": -35.58
+      }
+    },
+    "queued": [
+      "w2-rb-safe-no2-a4608c553",
+      "w2-rb-safe-no3-a4608c553",
+      "w2-rb-half-no2-a4608c553",
+      "w2-rb-half-no3-a4608c553"
+    ],
+    "half_quarter_ack": {
+      "candidate_edge": 381,
+      "banked_r1_edge": 184,
+      "added_edges": 197,
+      "candidate_log": "ot-epyc2:/srv/opentallas-scratch2/claude/tk-hbm-w2h/q2/quarter_rb.run.log",
+      "baseline": "results/rtl/w2_rb_gate_r1/terminal.json"
+    },
+    "headline_AR_cost_percent": 0,
+    "headline_reason": "W2 remains outside the headline path, per owner instruction.",
+    "adoption_gate": "Full bank/quarter/veto/negative gate on this source, calibrated SS>=15/FF>=15/DRC0 and die-context verification. Both variants remain unadopted."
+  },
+  "ha2": {
+    "half_exactness": "PASS 4 scenarios against unchanged TU adapter; negatives 1-3 raise dupe; read-address mutant and removed-dupe mutant FAIL (rc134).",
+    "source_reference": "claude/takeover-hbm-harvest-20261006 at cc62569a4; source hashes in ha2_exact_negedge/source.sha256",
+    "live_routes": {
+      "h2": "ot-epyc2:/srv/opentallas-scratch2/claude/tk-hbm-harvest/ha2h/h2",
+      "r3": "ot-epyc1tb:/srv/opentallas-scratch/claude/tk-hbm-harvest/ha2bk/r3"
+    },
+    "extra_cycles_vs_TU_adapter": 46,
+    "extra_cycles_vs_banked": 38,
+    "per_token_cost": "46 multiplied by exposed owner-reduction count; HBM die coordinator owns composition.",
+    "sender_protocol": "h_v[i]/h_d[i] may issue only after observing h_r[i]=1 on prior fast edge; preserve order and hold pending partial. FD=8, credit drops above3 occupied. Signals remain internal to TU collective endpoint.",
+    "adoption": "Pending physical closure and actual sender integration."
+  },
+  "other_streams": {
+    "franklin_GU": "Already harvested PASS on main in results/rtl/fullsys_recheck_20261007/orphans/franklin_gu_swiglu_w2; no duplicate record.",
+    "noether_TP96": "Historical original-agent termination already in fullsys recheck inventory.",
+    "DS1M_Qwen8K": "Live SU-margin minimum-parent build retained by exactness owner; does not include W2 SAFE/HALF or HA2 PQREG/HALF.",
+    "norm_engine": "Separate norm recovery owner."
+  }
+}

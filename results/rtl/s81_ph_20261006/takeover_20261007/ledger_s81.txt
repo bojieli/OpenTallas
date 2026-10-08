@@ -1,0 +1,639 @@
+2026-10-06T19:12:37-07:00 | s81ph-root_tile-9037258bb | ot_s81ph_root_tile @ 9037258bb | NEEDS_HUMAN: calibrate crashed twice (rc=3); last log tail: | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-9037258bb
+    calibrate: no ORFS base /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-9037258bb/routes/s81ph-root_tile-9037258bb_cal/work/orfs/results/asap7/*/base
+- 2026-10-06T19:19:21-07:00 | s81ph-dsfd_ctrl_pc-7b70146b5 | dsfd_ctrl_pc @ 7b70146b5 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-7b70146b5
+- 2026-10-06T19:19:23-07:00 | s81ph-dsfd_ctrl_ctr-7b70146b5 | dsfd_ctrl_ctr @ 7b70146b5 | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_ctr-7b70146b5
+- 2026-10-06T19:19:23-07:00 | s81ph-dsfd_coll_core-1df7cf9a9 | dsfd_coll_core @ 1df7cf9a9 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_core-1df7cf9a9
+- 2026-10-06T19:19:24-07:00 | s81ph-dsfd_coll_lane_e-1df7cf9a9 | dsfd_coll_lane_e @ 1df7cf9a9 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-1df7cf9a9
+- 2026-10-06T19:19:24-07:00 | s81ph-dsfd_coll_lane_w-1df7cf9a9 | dsfd_coll_lane_w @ 1df7cf9a9 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_w-1df7cf9a9
+- 2026-10-06T19:19:24-07:00 | s81ph-dsfd_vm_bg-37f7479aa | dsfd_vm_bg @ 37f7479aa | CANCELLED by a human | -
+- 2026-10-06T19:20:21-07:00 | s81ph-dsfd_ctrl_ctr-7b70146b5 | dsfd_ctrl_ctr @ 7b70146b5 | NEEDS_HUMAN: calibrate crashed twice (rc=3); last log tail: | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_ctr-7b70146b5
+    calibrate: no ORFS base /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_ctr-7b70146b5/routes/s81ph-dsfd_ctrl_ctr-7b70146b5_cal/work/orfs/results/asap7/*/base
+- 2026-10-06T19:29:46-07:00 | s81ph-dsfd_ctrl_ctr-7b70146b5 | dsfd_ctrl_ctr @ 7b70146b5 | REQUEUED automatically: loop fix label-sanitise-20261006 (failed in calibrate: rc=3) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_ctr-7b70146b5
+- 2026-10-06T19:29:46-07:00 | s81ph-root_tile-9037258bb | ot_s81ph_root_tile @ 9037258bb | REQUEUED automatically: loop fix label-sanitise-20261006 (failed in calibrate: rc=3) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-9037258bb
+- 2026-10-06T19:49:21-07:00 | s81ph-dsfd_coll_ck-752a48488 | dsfd_coll_ck @ 752a48488 | NEEDS_HUMAN: collect crashed twice (rc=1); last log tail: | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488
+    cp: cannot stat '/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/cl/calib.json': No such file or directory
+- 2026-10-06T19:49:28-07:00 | s81ph-dsfd_ctrl_ctr-752a48488 | dsfd_ctrl_ctr @ 752a48488 | NEEDS_HUMAN: route crashed twice (rc=0 ok-check failed: ); last log tail: | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_ctrl_ctr-752a48488
+    Elapsed time: 0:03.33[h:]min:sec. CPU time: user 6.43 sys 0.31 (202%). Peak memory: 453764KB.
+    Elapsed time: 0:04.40[h:]min:sec. CPU time: user 9.23 sys 0.57 (222%). Peak memory: 1140936KB.
+    make[1]: *** [Makefile:589: do-5_2_route] Error 1
+    make: *** [Makefile:589: /work/results/asap7/opentallas_dsfd_ctrl_ctr_asap7_s81ph_s81ph_dsfd_ctrl_ctr_752a48488/base/5_2_route.odb] Error 2
+    partial record written to /srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_ctrl_ctr-752a48488/routes/s81ph_dsfd_ctrl_ctr_752a48488/physical.json
+- 2026-10-06T19:52:35-07:00 | s81ph-dsfd_ctrl_pc-752a48488 | dsfd_ctrl_pc @ 752a48488 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-752a48488
+- 2026-10-06T19:52:58-07:00 | s81ph-dsfd_capt_ctl-1df7cf9a9 | dsfd_capt_ctl @ 1df7cf9a9 | NEEDS_RTL: SS -5.78 / FF -22.01 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-1df7cf9a9
+    setup_ss worst -5.78 ps over 1355 endpoints; worst classes:
+      -5.8 ps n=126 lv=3 u_s.mem[*][*]$_DFFE_PP_/QN -> u_s.sh[*][*]$_DFF_P_/D
+      +14.6 ps n=2 lv=3 u_s.w_st[*]$_SDFFE_PN0P_/QN -> u_s.w_st_r[*]$_DFF_P_/D
+      +38.6 ps n=2 lv=2 u_s.wp[*]$_SDFFE_PP0P_/QN -> u_s.wp_r[*]$_DFF_P_/D
+      +70.7 ps n=2 lv=4 u_s.rp[*]$_SDFFE_PP0P_/QN -> u_s.rp_w[*]$_DFF_P_/D
+      +73.4 ps n=2 lv=4 u_s.r_st[*]$_SDFFE_PN0P_/QN -> u_s.r_st_w[*]$_DFF_P_/D
+      +143.7 ps n=10 lv=12 c0_d[*]$_DFF_P_/QN -> h_ph[*]$_DFFE_PN0P_/D
+      +148.4 ps n=42 lv=12 c0_d[*]$_DFF_P_/QN -> h_id[*]$_DFFE_PN0P_/D
+      +154.1 ps n=400 lv=8 kq[*][*]$_DFF_PN0_/QN -> t_k[*]
+      +159.1 ps n=29 lv=14 c0_d[*]$_DFF_P_/QN -> c_ops[*]$_DFFE_PP_/D
+      +175.6 ps n=16 lv=13 c0_d[*]$_DFF_P_/QN -> c_rs[*]$_DFFE_PP_/D
+    hold_ff worst -22.01 ps over 1355 endpoints; worst classes:
+      -22.0 ps n=353 lv=7 kq[*][*]$_DFF_PN0_/QN -> t_k[*]
+      -21.2 ps n=47 lv=9 st[*]$_DFFE_PN0P_/QN -> t_st[*]
+      +0.6 ps n=2 lv=4 u_s.r_st[*]$_SDFFE_PN0P_/QN -> u_s.r_st_w[*]$_DFF_P_/D
+      +0.8 ps n=2 lv=4 u_s.rp[*]$_SDFFE_PP0P_/QN -> u_s.rp_w[*]$_DFF_P_/D
+      +3.8 ps n=29 lv=3 c0_d[*]$_DFF_P_/QN -> h_id[*]$_DFFE_PN0P_/D
+      +5.6 ps n=13 lv=3 c0_d[*]$_DFF_P_/QN -> c_rows[*]$_DFFE_PP_/D
+      +7.1 ps n=29 lv=3 c_ob[*]$_DFFE_PP_/QN -> kq[*][*]$_DFF_PN0_/D
+      +8.2 ps n=18 lv=2 h_id[*]$_DFFE_PN0P_/QN -> s_now[*]$_DFF_PN0_/D
+      +8.4 ps n=30 lv=5 c0_d[*]$_DFF_P_/QN -> c_ob[*]$_DFFE_PP_/D
+      +8.7 ps n=10 lv=3 c0_d[*]$_DFF_P_/QN -> h_ph[*]$_DFFE_PN0P_/D
+- 2026-10-06T19:57:40-07:00 | s81ph-dsfd_selt_q-1df7cf9a9 | dsfd_selt_q @ 1df7cf9a9 | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-1df7cf9a9
+- 2026-10-06T19:57:43-07:00 | s81ph-dsfd_selt_c-1df7cf9a9 | dsfd_selt_c @ 1df7cf9a9 | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_c-1df7cf9a9
+- 2026-10-06T19:57:46-07:00 | s81ph-dsfd_colt_lane-1df7cf9a9 | dsfd_colt_lane @ 1df7cf9a9 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_colt_lane-1df7cf9a9
+- 2026-10-06T19:57:49-07:00 | s81ph-dsfd_colt_mrg-1df7cf9a9 | dsfd_colt_mrg @ 1df7cf9a9 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-1df7cf9a9
+- 2026-10-06T19:57:52-07:00 | s81ph-dsfd_capt_grp-1df7cf9a9 | dsfd_capt_grp @ 1df7cf9a9 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1df7cf9a9
+- 2026-10-06T19:58:00-07:00 | s81ph-dsfd_ctrl_ctr-7b70146b5 | dsfd_ctrl_ctr @ 7b70146b5 | NEEDS_HUMAN: route crashed twice (rc=0 ok-check failed: ); last log tail: | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_ctr-7b70146b5
+    Elapsed time: 0:03.57[h:]min:sec. CPU time: user 6.89 sys 0.32 (201%). Peak memory: 451064KB.
+    Elapsed time: 0:05.31[h:]min:sec. CPU time: user 10.76 sys 0.58 (213%). Peak memory: 1133516KB.
+    make[1]: *** [Makefile:589: do-5_2_route] Error 1
+    make: *** [Makefile:589: /work/results/asap7/opentallas_dsfd_ctrl_ctr_asap7_s81ph_s81ph_dsfd_ctrl_ctr_7b70146b5/base/5_2_route.odb] Error 2
+    partial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_ctr-7b70146b5/routes/s81ph_dsfd_ctrl_ctr_7b70146b5/physical.json
+- 2026-10-06T20:03:46-07:00 | s81ph-dsfd_svc_pc-752a48488 | dsfd_svc_pc @ 752a48488 | NEEDS_RTL: SS 249.26 / FF -5.32 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_pc-752a48488
+    hold_ff worst -5.32 ps over 804 endpoints; worst classes:
+      -5.3 ps n=227 lv=4 rq[*]$_DFF_P_/QN -> rq[*]
+      -3.0 ps n=157 lv=4 qr_data[*]$_DFF_P_/QN -> qr_data[*]
+      -2.5 ps n=9 lv=4 qr_tag[*]$_DFF_P_/QN -> qr_tag[*]
+      -0.3 ps n=4 lv=4 qr_beat[*]$_DFF_P_/QN -> qr_beat[*]
+      +1.8 ps n=1 lv=4 qrk$_DFF_PN0_/QN -> qrk[*]
+      +1.9 ps n=1 lv=4 qwd$_DFF_PN0_/QN -> qwd[*]
+      +3.6 ps n=1 lv=4 qrv$_DFF_PN0_/QN -> qrv[*]
+      +12.2 ps n=1 lv=3 rst_s[*]$_DFF_PN0_/QN -> qrv$_DFF_PN0_/RESETN
+      +18.2 ps n=1 lv=3 rst_s[*]$_DFF_PN0_/QN -> rst_s[*]$_DFF_PN0_/D
+      +46.3 ps n=1 lv=5 rst_s[*]$_DFF_PN0_/QN -> qrk$_DFF_PN0_/RESETN
+- 2026-10-06T20:04:46-07:00 | s81ph-dsfd_ctrl_ctr-003f8e1b8 | dsfd_ctrl_ctr @ 003f8e1b8 | NEEDS_RTL: SS 307.0 / FF 8.41 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_ctrl_ctr-003f8e1b8
+    hold_ff worst 8.41 ps over 20 endpoints; worst classes:
+      +8.4 ps n=2 lv=3 u_hs.s1[*]$_DFF_PN0_/QN -> u_hs.s2[*]$_DFF_PN0_/D
+      +10.1 ps n=2 lv=3 st[*]$_DFF_PN0_/QN -> st[*]
+      +10.3 ps n=1 lv=2 u_hrs.s2$_DFF_PN0_/QN -> phy_rst_n$_DFF_PN0_/RESETN
+      +10.4 ps n=1 lv=2 u_hrs.s2$_DFF_PN0_/QN -> oor_h$_DFF_PN0_/RESETN
+      +10.8 ps n=1 lv=3 phy_rst_n$_DFF_PN0_/QN -> phy_rst_n[*]
+      +11.3 ps n=2 lv=2 u_srs.s2$_DFF_PN0_/QN -> st[*]$_DFF_PN0_/RESETN
+      +12.8 ps n=2 lv=2 u_srs.s2$_DFF_PN0_/QN -> u_hs.s2[*]$_DFF_PN0_/RESETN
+      +13.0 ps n=2 lv=2 u_srs.s2$_DFF_PN0_/QN -> u_hs.s1[*]$_DFF_PN0_/RESETN
+      +17.4 ps n=1 lv=3 co_w[*] -> st[*]$_DFF_PN0_/D
+      +18.0 ps n=1 lv=3 u_srs.s1$_DFF_PN0_/QN -> u_srs.s2$_DFF_PN0_/D
+- 2026-10-06T20:05:45-07:00 | s81ph-dsfd_ctrl_pc-7b70146b5 | dsfd_ctrl_pc @ 7b70146b5 | NEEDS_RTL: SS 33.96 / FF -31.02 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-7b70146b5
+    hold_ff worst -31.02 ps over 1714 endpoints; worst classes:
+      -31.0 ps n=205 lv=6 u_pc.r_data[*]$_DFFE_PN_/QN -> r_data[*]
+      -29.1 ps n=149 lv=7 u_pc.k_wdata[*]$_DFFE_PP_/QN -> k_wdata[*]
+      -24.5 ps n=13 lv=5 u_pc.k_addr[*]$_DFFE_PP_/QN -> k_addr[*]
+      -23.1 ps n=6 lv=5 u_pc.r_tag[*]$_DFFE_PN_/QN -> r_tag[*]
+      -23.1 ps n=18 lv=6 u_pc.k_wstrb[*]$_DFFE_PP_/QN -> k_wstrb[*]
+      -21.4 ps n=1 lv=5 u_pc.rv$_DFF_PN0_/QN -> rv[*]
+      -20.6 ps n=1 lv=4 u_pc.u_r.w_rdy$_DFF_PN0_/QN -> kr_rdy[*]
+      -18.9 ps n=2 lv=5 u_pc.k_tag[*]$_DFFE_PP_/QN -> k_tag[*]
+      -17.5 ps n=1 lv=4 u_pc.k_we$_DFFE_PP_/QN -> k_we[*]
+      -16.5 ps n=1 lv=5 u_pc.u_wd.d_p$_DFF_PN0_/QN -> wd[*]
+- 2026-10-06T20:05:45-07:00 | s81ph-dsfd_coll_core-752a48488 | dsfd_coll_core @ 752a48488 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_core-752a48488
+- 2026-10-06T20:05:48-07:00 | s81ph-dsfd_coll_lane_e-752a48488 | dsfd_coll_lane_e @ 752a48488 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-752a48488
+- 2026-10-06T20:05:52-07:00 | s81ph-dsfd_coll_lane_w-752a48488 | dsfd_coll_lane_w @ 752a48488 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_w-752a48488
+- 2026-10-06T20:05:55-07:00 | s81ph-dsfd_ctrl_pc-003f8e1b8 | dsfd_ctrl_pc @ 003f8e1b8 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-003f8e1b8
+- 2026-10-06T20:05:59-07:00 | s81ph-dsfd_svc_stn-752a48488 | dsfd_svc_stn @ 752a48488 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_stn-752a48488
+- 2026-10-06T20:06:02-07:00 | s81ph-dsfd_vm_bg-752a48488 | dsfd_vm_bg @ 752a48488 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_vm_bg-752a48488
+- 2026-10-06T20:06:05-07:00 | s81ph-root_tile-752a48488 | ot_s81ph_root_tile @ 752a48488 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-752a48488
+- 2026-10-06T20:07:44-07:00 | s81ph-dsfd_coll_ck-752a48488 | dsfd_coll_ck @ 752a48488 | REQUEUED automatically: loop fix calib-json-placeholder-20261006 (failed in collect: rc=1) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488
+- 2026-10-06T20:10:23-07:00 | s81ph-dsfd_ctrl_pc-34b3e75dd | dsfd_ctrl_pc @ 34b3e75dd | NEEDS_RTL: bench bench_exact_gold expected PASS, got rc=2 | PVE1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-34b3e75dd
+    BUILD_FAILED
+    rtl/dsrom_sys/s81_ph/ctrl/run_ctrl_bench.sh: line 10: verilator: command not found
+- 2026-10-06T20:10:24-07:00 | s81ph-dsfd_svc_stn-34b3e75dd | dsfd_svc_stn @ 34b3e75dd | NEEDS_RTL: bench bench_exact expected PASS, got rc=2 | AGIdock:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_stn-34b3e75dd
+    BUILD_FAIL
+- 2026-10-06T20:10:24-07:00 | s81ph-dsfd_svc_pc-34b3e75dd | dsfd_svc_pc @ 34b3e75dd | NEEDS_RTL: bench bench_exact expected PASS, got rc=2 | AGIdock:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_pc-34b3e75dd
+    BUILD_FAIL
+- 2026-10-06T20:10:37-07:00 | s81ph-dsfd_coll_ck-752a48488 | dsfd_coll_ck @ 752a48488 | CLOSED SS +9592.12 / FF +31.29 ps DRC 0 | record claude/s81-placeholders-20261006 4e96a26dc (6 files) | no merge target | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488
+- 2026-10-06T20:15:29-07:00 | s81ph-dsfd_svc_pc-34b3e75dd | dsfd_svc_pc @ 34b3e75dd | REQUEUED automatically: loop fix host-caps-20261006 (bench BUILD_FAIL rc=2 on AGIdock, toolchain mismatch) | -
+- 2026-10-06T20:15:29-07:00 | s81ph-dsfd_svc_stn-34b3e75dd | dsfd_svc_stn @ 34b3e75dd | REQUEUED automatically: loop fix host-caps-20261006 (bench BUILD_FAIL rc=2 on AGIdock, toolchain mismatch) | -
+- 2026-10-06T20:15:39-07:00 | s81ph-dsfd_capt_ctl-cd3337221-b | dsfd_capt_ctl @ cd3337221 | NEEDS_RTL: SS -6.32 / FF -14.55 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-cd3337221-b
+    setup_ss worst -6.32 ps over 1355 endpoints; worst classes:
+      -6.3 ps n=126 lv=4 u_s.mem[*][*]$_DFFE_PP_/QN -> u_s.sh[*][*]$_DFF_P_/D
+      +13.8 ps n=2 lv=3 u_s.w_st[*]$_SDFFE_PN0P_/QN -> u_s.w_st_r[*]$_DFF_P_/D
+      +13.9 ps n=2 lv=3 u_s.wp[*]$_SDFFE_PP0P_/QN -> u_s.wp_r[*]$_DFF_P_/D
+      +75.3 ps n=2 lv=4 u_s.rp[*]$_SDFFE_PP0P_/QN -> u_s.rp_w[*]$_DFF_P_/D
+      +102.7 ps n=2 lv=3 u_s.r_st[*]$_SDFFE_PN0P_/QN -> u_s.r_st_w[*]$_DFF_P_/D
+      +111.2 ps n=9 lv=14 c0_d[*]$_DFF_P_/QN -> h_ph[*]$_DFFE_PN0P_/D
+      +120.2 ps n=16 lv=14 c0_d[*]$_DFF_P_/QN -> c_rows[*]$_DFFE_PP_/D
+      +127.3 ps n=400 lv=10 kq[*][*]$_DFF_PN0_/QN -> t_k[*]
+      +129.4 ps n=26 lv=14 c0_d[*]$_DFF_P_/QN -> c_ops[*]$_DFFE_PP_/D
+      +133.8 ps n=32 lv=14 c0_d[*]$_DFF_P_/QN -> h_id[*]$_DFFE_PN0P_/D
+    hold_ff worst -14.55 ps over 1355 endpoints; worst classes:
+      -14.6 ps n=2 lv=3 u_s.r_st[*]$_SDFFE_PN0P_/QN -> u_s.r_st_w[*]$_DFF_P_/D
+      -2.9 ps n=2 lv=4 u_s.rp[*]$_SDFFE_PP0P_/QN -> u_s.rp_w[*]$_DFF_P_/D
+      +13.2 ps n=29 lv=12 st[*]$_DFFE_PN0P_/QN -> t_st[*]
+      +14.7 ps n=371 lv=10 kq[*][*]$_DFF_PN0_/QN -> t_k[*]
+      +17.3 ps n=126 lv=4 u_s.mem[*][*]$_DFFE_PP_/QN -> u_s.sh[*][*]$_DFF_P_/D
+      +39.2 ps n=2 lv=3 u_s.w_st[*]$_SDFFE_PN0P_/QN -> u_s.w_st_r[*]$_DFF_P_/D
+      +40.3 ps n=37 lv=6 h_id[*]$_DFFE_PN0P_/QN -> s_now[*]$_DFF_PN0_/D
+      +44.1 ps n=12 lv=7 c0_d[*]$_DFF_P_/QN -> h_id[*]$_DFFE_PN0P_/D
+      +44.4 ps n=11 lv=7 c0_d[*]$_DFF_P_/QN -> c_rs[*]$_DFFE_PP_/D
+      +44.7 ps n=5 lv=5 hold[*]$_DFFE_PN0P_/QN -> hold[*]$_DFFE_PN0P_/D
+- 2026-10-06T20:16:52-07:00 | s81ph-dsfd_capt_grp-cd3337221-b | dsfd_capt_grp @ cd3337221 | CANCELLED by a human | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-cd3337221-b
+- 2026-10-06T20:17:38-07:00 | s81ph-dsfd_capt_grp-1df7cf9a9 | dsfd_capt_grp @ 1df7cf9a9 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1df7cf9a9
+- 2026-10-06T20:17:41-07:00 | s81ph-dsfd_colt_lane-1df7cf9a9 | dsfd_colt_lane @ 1df7cf9a9 | CANCELLED by a human | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-1df7cf9a9
+- 2026-10-06T20:17:44-07:00 | s81ph-dsfd_colt_mrg-1df7cf9a9 | dsfd_colt_mrg @ 1df7cf9a9 | CANCELLED by a human | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-1df7cf9a9
+- 2026-10-06T20:18:07-07:00 | s81ph-dsfd_colt_lane-1df7cf9a9 | dsfd_colt_lane @ 1df7cf9a9 | NEEDS_RTL: SS -4.75 / FF -39.61 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-1df7cf9a9
+    setup_ss worst -4.75 ps over 1200 endpoints; worst classes:
+      -4.8 ps n=328 lv=17 u_q.rp[*]$_DFFE_PN0P_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +0.3 ps n=11 lv=7 u_q.g_tile[*].genblk1.g_m1.u_m/rd_out[*] -> u_q.ob[*][*]$_DFFE_PP_/D
+      +1.6 ps n=61 lv=16 u_q.wp[*]$_DFFE_PN0P_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +62.7 ps n=396 lv=9 ow[*]$_DFF_PN0_/QN -> t_w[*]
+      +211.0 ps n=4 lv=6 flt[*]$_DFF_PN0_/QN -> t_f[*]
+      +322.9 ps n=2 lv=5 rst[*] -> rst_s[*]$_DFF_PN0_/RESETN
+      +784.7 ps n=362 lv=14 rst_s[*]$_DFF_PN0_/QN -> ow[*]$_DFF_PN0_/RESETN
+      +859.0 ps n=1 lv=12 rst_s[*]$_DFF_PN0_/QN -> push$_DFF_PN0_/RESETN
+      +869.9 ps n=1 lv=12 rst_s[*]$_DFF_PN0_/QN -> cr$_DFF_PN0_/RESETN
+      +870.5 ps n=3 lv=12 rst_s[*]$_DFF_PN0_/QN -> flt[*]$_DFF_PN0_/RESETN
+    hold_ff worst -39.61 ps over 1200 endpoints; worst classes:
+      -39.6 ps n=396 lv=9 ow[*]$_DFF_PN0_/QN -> t_w[*]
+      -12.7 ps n=4 lv=6 flt[*]$_DFF_PN0_/QN -> t_f[*]
+      +3.4 ps n=293 lv=4 w[*]$_DFF_P_/QN -> pd[*]$_DFF_P_/D
+      +10.3 ps n=33 lv=3 u_q.ob[*][*]$_DFFE_PP_/QN -> ow[*]$_DFF_PN0_/D
+      +12.9 ps n=1 lv=2 e_fmt$_DFF_PN0_/QN -> flt[*]$_DFF_PN0_/D
+      +13.7 ps n=3 lv=2 flt[*]$_DFF_PN0_/QN -> flt[*]$_DFF_PN0_/D
+      +14.1 ps n=3 lv=3 pd[*]$_DFF_P_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +16.3 ps n=67 lv=2 u_q.ob[*][*]$_DFFE_PP_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +46.0 ps n=326 lv=12 rst_s[*]$_DFF_PN0_/QN -> ow[*]$_DFF_PN0_/RESETN
+      +179.1 ps n=1 lv=7 rst_s[*]$_DFF_PN0_/QN -> u_q.inflight$_DFF_PN0_/RESETN
+- 2026-10-06T20:19:08-07:00 | s81ph-dsfd_ctrl_ctr-34b3e75dd | dsfd_ctrl_ctr @ 34b3e75dd | CLOSED SS +243.73 / FF +32.32 ps DRC 0 | record claude/s81-placeholders-20261006 49c695301 (13 files) | no merge target | AGIdock:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_ctrl_ctr-34b3e75dd
+- 2026-10-06T20:22:48-07:00 | s81ph-dsfd_svc_pc-34b3e75dd | dsfd_svc_pc @ 34b3e75dd | CANCELLED by a human | AGIdock:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_pc-34b3e75dd
+- 2026-10-06T20:22:48-07:00 | s81ph-dsfd_svc_stn-34b3e75dd | dsfd_svc_stn @ 34b3e75dd | CANCELLED by a human | AGIdock:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_stn-34b3e75dd
+- 2026-10-06T20:23:14-07:00 | s81ph-dsfd_svc_pc-da50ce55a | dsfd_svc_pc @ da50ce55a | NEEDS_HUMAN: route crashed twice (rc=0 ok-check failed: ); last log tail: | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_pc-da50ce55a
+    Elapsed time: 0:02.55[h:]min:sec. CPU time: user 2.57 sys 0.12 (105%). Peak memory: 332920KB.
+    Elapsed time: 0:03.55[h:]min:sec. CPU time: user 3.49 sys 0.17 (103%). Peak memory: 357496KB.
+    make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+    make: *** [Makefile:548: /work/results/asap7/opentallas_dsfd_svc_pc_asap7_s81ph_s81ph_dsfd_svc_pc_da50ce55a/base/4_1_cts.odb] Error 2
+    partial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_pc-da50ce55a/routes/s81ph_dsfd_svc_pc_da50ce55a/physical.json
+- 2026-10-06T20:23:55-07:00 | s81ph-dsfd_svc_pc-752a48488 | dsfd_svc_pc @ 752a48488 | REQUEUED automatically: loop fix hold-eco-20261006 (hold-only: SS +249.26 / FF -5.32) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_pc-752a48488
+- 2026-10-06T20:26:06-07:00 | s81ph-dsfd_svc_pc-752a48488 | dsfd_svc_pc @ 752a48488 | HOLD-ECO missed: before SS +249.26 / FF -5.32, after None | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_pc-752a48488
+- 2026-10-06T20:27:15-07:00 | s81ph-dsfd_capt_ctl-05a9f681f-c | dsfd_capt_ctl @ 05a9f681f | NEEDS_HUMAN: calibrate crashed twice (rc=4); last log tail: | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-05a9f681f-c
+    no 4_1_cts.odb / SDC under /srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-05a9f681f-c/routes/s81ph_dsfd_capt_ctl_05a9f681f_c_cal/work/orfs/results/asap7/opentallas_dsfd_capt_ctl_asap7_s81ph_s81ph_dsfd_capt_ctl_05a9f681f_c_cal/base
+- 2026-10-06T20:27:15-07:00 | s81ph-dsfd_svc_pc-752a48488 | dsfd_svc_pc @ 752a48488 | NEEDS_RTL: SS 249.26 / FF -5.32 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_pc-752a48488
+    hold_ff worst -5.32 ps over 804 endpoints; worst classes:
+      -5.3 ps n=227 lv=4 rq[*]$_DFF_P_/QN -> rq[*]
+      -3.0 ps n=157 lv=4 qr_data[*]$_DFF_P_/QN -> qr_data[*]
+      -2.5 ps n=9 lv=4 qr_tag[*]$_DFF_P_/QN -> qr_tag[*]
+      -0.3 ps n=4 lv=4 qr_beat[*]$_DFF_P_/QN -> qr_beat[*]
+      +1.8 ps n=1 lv=4 qrk$_DFF_PN0_/QN -> qrk[*]
+      +1.9 ps n=1 lv=4 qwd$_DFF_PN0_/QN -> qwd[*]
+      +3.6 ps n=1 lv=4 qrv$_DFF_PN0_/QN -> qrv[*]
+      +12.2 ps n=1 lv=3 rst_s[*]$_DFF_PN0_/QN -> qrv$_DFF_PN0_/RESETN
+      +18.2 ps n=1 lv=3 rst_s[*]$_DFF_PN0_/QN -> rst_s[*]$_DFF_PN0_/D
+      +46.3 ps n=1 lv=5 rst_s[*]$_DFF_PN0_/QN -> qrk$_DFF_PN0_/RESETN
+- 2026-10-06T20:27:47-07:00 | s81ph-dsfd_capt_grp-05a9f681f-c | dsfd_capt_grp @ 05a9f681f | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_grp-05a9f681f-c
+- 2026-10-06T20:29:14-07:00 | s81ph-dsfd_svc_pc-752a48488 | dsfd_svc_pc @ 752a48488 | HOLD-ECO missed: before SS +249.26 / FF -5.32, after None | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_pc-752a48488
+- 2026-10-06T20:30:08-07:00 | s81ph-dsfd_svc_pc-752a48488 | dsfd_svc_pc @ 752a48488 | NEEDS_RTL: SS 249.26 / FF -5.32 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_pc-752a48488
+    hold_ff worst -5.32 ps over 804 endpoints; worst classes:
+      -5.3 ps n=227 lv=4 rq[*]$_DFF_P_/QN -> rq[*]
+      -3.0 ps n=157 lv=4 qr_data[*]$_DFF_P_/QN -> qr_data[*]
+      -2.5 ps n=9 lv=4 qr_tag[*]$_DFF_P_/QN -> qr_tag[*]
+      -0.3 ps n=4 lv=4 qr_beat[*]$_DFF_P_/QN -> qr_beat[*]
+      +1.8 ps n=1 lv=4 qrk$_DFF_PN0_/QN -> qrk[*]
+      +1.9 ps n=1 lv=4 qwd$_DFF_PN0_/QN -> qwd[*]
+      +3.6 ps n=1 lv=4 qrv$_DFF_PN0_/QN -> qrv[*]
+      +12.2 ps n=1 lv=3 rst_s[*]$_DFF_PN0_/QN -> qrv$_DFF_PN0_/RESETN
+      +18.2 ps n=1 lv=3 rst_s[*]$_DFF_PN0_/QN -> rst_s[*]$_DFF_PN0_/D
+      +46.3 ps n=1 lv=5 rst_s[*]$_DFF_PN0_/QN -> qrk$_DFF_PN0_/RESETN
+- 2026-10-06T20:34:11-07:00 | s81ph-dsfd_svc_pc-752a48488 | dsfd_svc_pc @ 752a48488 | HOLD-ECO installed: SS +249.26/FF -5.32 -> SS +220.00/FF +20.11, DRC 0, 1221 cells; re-verdict | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_pc-752a48488
+- 2026-10-06T20:37:11-07:00 | s81ph-dsfd_colt_lane-cd3337221-b | dsfd_colt_lane @ cd3337221 | NEEDS_RTL: SS -4.32 / FF -6.47 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-cd3337221-b
+    setup_ss worst -4.32 ps over 1200 endpoints; worst classes:
+      -4.3 ps n=19 lv=7 u_q.g_tile[*].genblk1.g_m1.u_m/rd_out[*] -> u_q.ob[*][*]$_DFFE_PP_/D
+      -1.7 ps n=353 lv=18 u_q.wp[*]$_DFFE_PN0P_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +16.4 ps n=27 lv=16 u_q.rp[*]$_DFFE_PN0P_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +23.6 ps n=1 lv=11 u_q.oh$_DFF_PN0_/QN -> ow[*]$_DFF_PN0_/D
+      +66.7 ps n=400 lv=12 ow[*]$_DFF_PN0_/QN -> t_w[*]
+      +273.5 ps n=2 lv=7 rst[*] -> rst_s[*]$_DFF_PN0_/RESETN
+      +788.0 ps n=356 lv=15 rst_s[*]$_DFF_PN0_/QN -> ow[*]$_DFF_PN0_/RESETN
+      +849.1 ps n=1 lv=13 rst_s[*]$_DFF_PN0_/QN -> push$_DFF_PN0_/RESETN
+      +865.9 ps n=1 lv=13 rst_s[*]$_DFF_PN0_/QN -> cr$_DFF_PN0_/RESETN
+      +866.2 ps n=3 lv=13 rst_s[*]$_DFF_PN0_/QN -> flt[*]$_DFF_PN0_/RESETN
+    hold_ff worst -6.47 ps over 1200 endpoints; worst classes:
+      -6.5 ps n=4 lv=8 flt[*]$_DFF_PN0_/QN -> t_f[*]
+      -1.8 ps n=396 lv=12 ow[*]$_DFF_PN0_/QN -> t_w[*]
+      +36.4 ps n=84 lv=7 w[*]$_DFF_P_/QN -> pd[*]$_DFF_P_/D
+      +37.3 ps n=78 lv=3 pd[*]$_DFF_P_/QN -> u_q.g_tile[*].genblk1.g_m1.u_m/wd_in[*]
+      +40.8 ps n=1 lv=4 u_q.wp[*]$_DFFE_PN0P_/QN -> u_q.wp[*]$_DFFE_PN0P_/D
+      +41.9 ps n=12 lv=6 u_q.ob[*][*]$_DFFE_PP_/QN -> ow[*]$_DFF_PN0_/D
+      +43.6 ps n=3 lv=3 u_q.wp[*]$_DFFE_PN0P_/QN -> u_q.g_tile[*].genblk1.g_m1.u_m/w_addr_in[*]
+      +43.6 ps n=82 lv=5 pd[*]$_DFF_P_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +47.8 ps n=1 lv=5 flt[*]$_DFF_PN0_/QN -> flt[*]$_DFF_PN0_/D
+      +48.3 ps n=1 lv=4 fc[*]$_DFF_PN0_/QN -> fc[*]$_DFF_PN0_/D
+- 2026-10-06T20:38:12-07:00 | s81ph-dsfd_capt_ctl-89f05c376-d | dsfd_capt_ctl @ 89f05c376 | NEEDS_HUMAN: calibrate crashed twice (rc=4); last log tail: | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-89f05c376-d
+    no 4_1_cts.odb / SDC under /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-89f05c376-d/routes/s81ph_dsfd_capt_ctl_89f05c376_d_cal/work/orfs/results/asap7/opentallas_dsfd_capt_ctl_asap7_s81ph_s81ph_dsfd_capt_ctl_89f05c376_d_cal/base
+- 2026-10-06T20:38:24-07:00 | s81ph-dsfd_svc_pc-752a48488 | dsfd_svc_pc @ 752a48488 | CLOSED SS +220.00 / FF +20.11 ps DRC 0 | record claude/s81-placeholders-20261006 d1b41d2b3 (13 files) | no merge target | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_pc-752a48488
+- 2026-10-06T20:40:25-07:00 | s81ph-dsfd_ctrl_pc-da50ce55a | dsfd_ctrl_pc @ da50ce55a | HOLD-ECO missed: before SS +57.00 / FF -9.22, after {'ss_ps': 10.18, 'ff_ps': 23.13, 'drc': 0, 'cells_added': 746, 'errors': []} | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-da50ce55a
+- 2026-10-06T20:40:49-07:00 | s81ph-dsfd_ctrl_pc-da50ce55a | dsfd_ctrl_pc @ da50ce55a | NEEDS_RTL: SS 57.0 / FF -9.22 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-da50ce55a
+    hold_ff worst -9.22 ps over 1714 endpoints; worst classes:
+      -9.2 ps n=173 lv=9 u_pc.k_wdata[*]$_DFFE_PP_/QN -> k_wdata[*]
+      -6.0 ps n=1 lv=4 u_pc.k_v$_DFFE_PN0P_/QN -> k_v[*]
+      -5.3 ps n=13 lv=6 u_pc.k_addr[*]$_DFFE_PP_/QN -> k_addr[*]
+      -3.2 ps n=180 lv=8 u_pc.r_data[*]$_DFFE_PN_/QN -> r_data[*]
+      -0.9 ps n=17 lv=7 u_pc.k_wstrb[*]$_DFFE_PP_/QN -> k_wstrb[*]
+      -0.1 ps n=1 lv=6 u_pc.u_r.w_rdy$_DFF_PN0_/QN -> kr_rdy[*]
+      +0.3 ps n=1 lv=6 u_pc.u_wd.d_p$_DFF_PN0_/QN -> wd[*]
+      +0.9 ps n=1 lv=5 u_pc.k_we$_DFFE_PP_/QN -> k_we[*]
+      +5.8 ps n=3 lv=6 u_pc.k_tag[*]$_DFFE_PP_/QN -> k_tag[*]
+      +7.0 ps n=6 lv=7 u_pc.r_tag[*]$_DFFE_PN_/QN -> r_tag[*]
+- 2026-10-06T20:40:56-07:00 | s81ph-dsfd_capt_grp-89f05c376-d | dsfd_capt_grp @ 89f05c376 | CANCELLED by a human | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-89f05c376-d
+- 2026-10-06T20:46:26-07:00 | s81ph-dsfd_capt_ctl-05a9f681f-c | dsfd_capt_ctl @ 05a9f681f | CALIBRATE CLASSIFIED: odb_dont_touch (job-side) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-05a9f681f-c
+    detail: [ERROR ODB-0370] Attempt to disconnect term A of dont_touch instance ot_ser_bal_buf_0
+    OWNER ACTION (Claude:s81-ph (tiles)): CTS must rewire a dont_touch instance (ODB-0370): do not dont_touch cells on clock/repair nets (or release them in PRE_CTS), re-drop
+- 2026-10-06T20:46:26-07:00 | s81ph-dsfd_capt_ctl-89f05c376-d | dsfd_capt_ctl @ 89f05c376 | CALIBRATE CLASSIFIED: est_parasitics (job-side) | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-89f05c376-d
+    detail: [ERROR EST-0104] inconsistent parasitics state (cts.tcl:83)
+    OWNER ACTION (Claude:s81-ph (tiles)): EST-0104 inconsistent parasitics state in CTS: a step hook (PRE_CTS/POST_PLACE tcl) leaves estimate_parasitics in a mixed state -- fix the hook, re-drop
+- 2026-10-06T20:46:26-07:00 | s81ph-root_tile-9037258bb | ot_s81ph_root_tile @ 9037258bb | CALIBRATE CLASSIFIED: earlier rc=3 = loop label bug (nickname-tag '-'), loop-side, FIXED; auto re-queued, calibrate now PASSES (CK_SS_MEAN 373 ps), job continuing | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-9037258bb
+- 2026-10-06T20:51:43-07:00 | s81ph-dsfd_svc_stn-da50ce55a | dsfd_svc_stn @ da50ce55a | HOLD-ECO installed: SS +49.16/FF +7.95 -> SS +41.39/FF +24.01, DRC 0, 356 cells; re-verdict | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a
+- 2026-10-06T20:54:44-07:00 | s81ph-dsfd_colt_lane-c3413659a-c | dsfd_colt_lane @ c3413659a | NEEDS_HUMAN: calibrate crashed twice (rc=4); last log tail: | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-c3413659a-c
+    calibrate: no 4_1_cts.odb under /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-c3413659a-c/routes/s81ph_dsfd_colt_lane_c3413659a_c_cal/work/orfs/results/asap7/opentallas_dsfd_colt_lane_asap7_s81ph_s81ph_dsfd_colt_lane_c3413659a_c_cal/base
+    bash: /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-c3413659a-c/cl/cal_classify.sh: No such file or directory
+- 2026-10-06T20:55:55-07:00 | s81ph-dsfd_svc_stn-da50ce55a | dsfd_svc_stn @ da50ce55a | CLOSED SS +41.39 / FF +24.01 ps DRC 0 | record claude/s81-placeholders-20261006 c1b49428b (13 files) | no merge target | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a
+- 2026-10-06T20:59:11-07:00 | s81ph-dsfd_capt_ctl-ee7d4fc82-e | dsfd_capt_ctl @ ee7d4fc82 | HOLD-ECO missed: before SS +57.40 / FF +0.39, after {'ss_ps': 24.24, 'ff_ps': 3.17, 'drc': 0, 'cells_added': 177, 'errors': []} | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-ee7d4fc82-e
+- 2026-10-06T21:00:11-07:00 | s81ph-dsfd_capt_ctl-ee7d4fc82-e | dsfd_capt_ctl @ ee7d4fc82 | NEEDS_RTL: SS 57.4 / FF 0.39 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-ee7d4fc82-e
+    hold_ff worst 0.39 ps over 1355 endpoints; worst classes:
+      +0.4 ps n=126 lv=4 u_s.mem[*][*]$_DFFE_PP_/QN -> u_s.sh[*][*]$_DFF_P_/D
+      +5.9 ps n=2 lv=2 u_s.rp[*]$_SDFFE_PP0P_/QN -> u_s.rp_w[*]$_DFF_P_/D
+      +7.4 ps n=2 lv=2 u_s.r_st[*]$_SDFFE_PN0P_/QN -> u_s.r_st_w[*]$_DFF_P_/D
+      +9.7 ps n=2 lv=3 u_s.w_st[*]$_SDFFE_PN0P_/QN -> u_s.w_st_r[*]$_DFF_P_/D
+      +10.6 ps n=2 lv=3 u_s.wp[*]$_SDFFE_PP0P_/QN -> u_s.wp_r[*]$_DFF_P_/D
+      +27.5 ps n=385 lv=12 kq[*][*]$_DFF_PN0_/QN -> t_k[*]
+      +34.2 ps n=15 lv=11 st[*]$_DFFE_PN0P_/QN -> t_st[*]
+      +55.8 ps n=106 lv=7 u_s.mem[*][*]$_DFFE_PP_/QN -> u_s.mem[*][*]$_DFFE_PP_/D
+      +56.9 ps n=63 lv=8 u_s.sh[*][*]$_DFF_P_/QN -> st[*]$_DFFE_PN0P_/D
+      +59.4 ps n=34 lv=8 h_id[*]$_DFFE_PN0P_/QN -> s_now[*]$_DFF_PN0_/D
+- 2026-10-06T21:03:28-07:00 | s81ph-dsfd_capt_grp-ee7d4fc82-e | dsfd_capt_grp @ ee7d4fc82 | CANCELLED by a human | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-ee7d4fc82-e
+- 2026-10-06T21:21:03-07:00 | s81ph-dsfd_colt_lane-c25065335-d | dsfd_colt_lane @ c25065335 | NEEDS_RTL: SS -25.68 / FF -18.81 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-c25065335-d
+    setup_ss worst -25.68 ps over 1200 endpoints; worst classes:
+      -25.7 ps n=120 lv=4 u_q.g_m[*].u_m/rd_out[*] -> u_q.rq_r[*]$_DFF_P_/D
+      +24.7 ps n=20 lv=5 c_in[*] -> w[*]$_DFF_P_/D
+      +43.4 ps n=19 lv=11 u_q.rq_r[*]$_DFF_P_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +83.0 ps n=204 lv=16 fc[*]$_DFF_PN0_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +90.9 ps n=24 lv=15 u_q.f2$_DFF_PN0_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +95.7 ps n=13 lv=14 u_q.oc[*]$_DFF_PN0_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +131.9 ps n=399 lv=10 ow[*]$_DFF_PN0_/QN -> t_w[*]
+      +186.2 ps n=1 lv=9 flt[*]$_DFF_PN0_/QN -> t_f[*]
+      +307.2 ps n=2 lv=4 rst[*] -> rst_s[*]$_DFF_PN0_/RESETN
+      +812.8 ps n=380 lv=16 rst_s[*]$_DFF_PN0_/QN -> ow[*]$_DFF_PN0_/RESETN
+    hold_ff worst -18.81 ps over 1200 endpoints; worst classes:
+      -18.8 ps n=4 lv=9 flt[*]$_DFF_PN0_/QN -> t_f[*]
+      -15.3 ps n=396 lv=10 ow[*]$_DFF_PN0_/QN -> t_w[*]
+      +7.1 ps n=141 lv=4 pd[*]$_DFF_P_/QN -> u_q.g_m[*].u_m/wd_in[*]
+      +19.7 ps n=56 lv=5 w[*]$_DFF_P_/QN -> pd[*]$_DFF_P_/D
+      +19.9 ps n=8 lv=3 u_q.wp[*]$_DFFE_PN0P_/QN -> u_q.g_m[*].u_m/w_addr_in[*]
+      +20.6 ps n=3 lv=3 u_q.rp[*]$_DFFE_PN0P_/QN -> u_q.g_m[*].u_m/r_addr_in[*]
+      +21.6 ps n=48 lv=5 u_q.ob[*][*]$_DFFE_PP_/QN -> ow[*]$_DFF_PN0_/D
+      +29.7 ps n=51 lv=4 u_q.rq_r[*]$_DFF_P_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +30.6 ps n=92 lv=5 u_q.ob[*][*]$_DFFE_PP_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +34.7 ps n=1 lv=3 rem[*]$_DFFE_PN0P_/QN -> rem[*]$_DFFE_PN0P_/D
+- 2026-10-06T21:32:52-07:00 | s81ph-root_tile-9037258bb | ot_s81ph_root_tile @ 9037258bb | HOLD-ECO missed: before SS +19.40 / FF -17.22, after {'ss_ps': -5.57, 'ff_ps': 16.29, 'drc': 0, 'cells_added': 17262, 'errors': []} | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-9037258bb
+- 2026-10-06T21:35:01-07:00 | s81ph-root_tile-9037258bb | ot_s81ph_root_tile @ 9037258bb | NEEDS_RTL: SS 19.4 / FF -17.22 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-9037258bb
+    hold_ff worst -17.22 ps over 1200 endpoints; worst classes:
+      -17.2 ps n=1 lv=4 fo[*]$_DFF_PN0_/QN -> fo[*]
+      -16.2 ps n=23 lv=4 lt_eo[*]$_DFF_P_/QN -> lt_eo[*]
+      -13.7 ps n=363 lv=5 co[*]$_DFF_P_/QN -> co[*]
+      -13.6 ps n=6 lv=4 u_root.a4_d[*]$_DFF_P_/QN -> co[*]
+      -11.9 ps n=6 lv=5 lt_wo[*]$_DFF_P_/QN -> lt_wo[*]
+      -9.8 ps n=1 lv=4 co[*]$_DFF_PN0_/QN -> co[*]
+      +3.8 ps n=2 lv=2 u_root.p_v[*]$_DFF_PN0_/QN -> u_root.p_v[*]$_DFF_PN0_/D
+      +5.8 ps n=10 lv=3 u_root.r1_g[*][*]$_DFF_P_/QN -> u_root.r2_w[*]$_DFF_P_/D
+      +7.0 ps n=3 lv=2 u_root.a4_t[*]$_DFF_P_/QN -> u_root.tag_in[*]$_DFF_P_/D
+      +7.5 ps n=6 lv=3 u_root.p_t[*][*]$_DFF_P_/QN -> u_root.p_t[*][*]$_DFF_P_/D
+- 2026-10-06T21:36:04-07:00 | s81ph-dsfd_coll_lane_w-1df7cf9a9 | dsfd_coll_lane_w @ 1df7cf9a9 | NEEDS_RTL: SS -940.93 / FF -94.56 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_w-1df7cf9a9
+    setup_ss worst -940.93 ps over 1200 endpoints; worst classes:
+      -940.9 ps n=21 lv=21 u.u_ep.u_rb.g_sram.g_t[*].u_m/rd_out[*] -> u.u_ep.tp_hi[*]$_DFFE_PP_/D
+      -932.5 ps n=45 lv=31 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.u_rb.g_sram.g_t[*].u_m/r_addr_in[*]
+      -932.1 ps n=11 lv=31 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.tp_hi[*]$_DFFE_PP_/D
+      -895.4 ps n=1 lv=30 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.rb_fwd$_DFF_PN0_/D
+      -860.1 ps n=32 lv=30 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.tp_lo[*]$_DFFE_PP_/D
+      -792.6 ps n=124 lv=29 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ski.out_d[*]$_DFFE_PP_/D
+      -791.5 ps n=9 lv=30 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.snd_i[*]$_DFF_PN0_/D
+      -749.1 ps n=10 lv=29 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.snd[*]$_DFF_PN0_/D
+      -688.7 ps n=1 lv=26 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ski.out_v$_DFFE_PN0P_/D
+      -651.1 ps n=66 lv=27 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.rb_fwd_d[*]$_DFFE_PN0P_/D
+    hold_ff worst -94.56 ps over 1200 endpoints; worst classes:
+      -94.6 ps n=397 lv=15 u.u_gb.beat_tx[*]$_DFF_PN0_/QN -> tx[*]
+      -51.4 ps n=2 lv=7 u.u_sko.out_d[*]$_DFFE_PP_/QN -> li_d[*]
+      -47.0 ps n=1 lv=7 u.flt[*]$_DFF_PN0_/QN -> flt[*]
+      -30.5 ps n=52 lv=9 u.lr[*]$_DFF_PN0_/QN -> u.u_gb.bg[*]$_DFF_PN0_/D
+      -24.6 ps n=10 lv=5 u.u_ep.exp_seq[*]$_DFFE_PN0P_/QN -> u.u_ep.tx_ack[*]$_DFFE_PN0P_/D
+      -23.6 ps n=7 lv=5 u.u_ep.rg_f[*]$_DFF_PN0_/QN -> u.u_gb.beat_tx[*]$_DFF_PN0_/D
+      -17.1 ps n=1 lv=3 u.u_ep.c_crc_ok_r$_DFF_PN0_/QN -> u.u_ep.nak_req$_DFFE_PN0P_/D
+      -12.1 ps n=20 lv=6 u.u_ski.sk_d[*]$_DFFE_PP_/QN -> u.u_ski.out_d[*]$_DFFE_PP_/D
+      -10.5 ps n=6 lv=5 u.u_ep.exp_seq[*]$_DFFE_PN0P_/QN -> u.u_ep.rg_f[*]$_DFF_PN0_/D
+      -3.7 ps n=19 lv=3 u.u_sko.sk_d[*]$_DFFE_PP_/QN -> u.u_sko.out_d[*]$_DFFE_PP_/D
+- 2026-10-06T21:38:47-07:00 | s81ph-dsfd_ctrl_pc-91478d7e6 | dsfd_ctrl_pc @ 91478d7e6 | HOLD-ECO missed: before SS +75.18 / FF -9.65, after {'ss_ps': 68.4, 'ff_ps': 4.75, 'drc': 0, 'cells_added': 761, 'errors': []} | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-91478d7e6
+- 2026-10-06T21:38:47-07:00 | s81ph-dsfd_capt_ctl-48203c4d9-f | dsfd_capt_ctl @ 48203c4d9 | CLOSED SS +138.68 / FF +15.23 ps DRC 0 | record claude/s81-placeholders-20261006 ae1910896 (13 files) | no merge target | AGIdock:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-48203c4d9-f
+- 2026-10-06T21:39:45-07:00 | s81ph-dsfd_ctrl_pc-91478d7e6 | dsfd_ctrl_pc @ 91478d7e6 | NEEDS_RTL: SS 75.18 / FF -9.65 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-91478d7e6
+    hold_ff worst -9.65 ps over 1714 endpoints; worst classes:
+      -9.7 ps n=12 lv=6 u_pc.k_addr[*]$_DFFE_PP_/QN -> k_addr[*]
+      -5.0 ps n=170 lv=9 u_pc.k_wdata[*]$_DFFE_PP_/QN -> k_wdata[*]
+      -2.9 ps n=183 lv=8 u_pc.r_data[*]$_DFFE_PN_/QN -> r_data[*]
+      -1.6 ps n=1 lv=5 u_pc.k_v$_DFFE_PN0P_/QN -> k_v[*]
+      -0.4 ps n=19 lv=8 u_pc.k_wstrb[*]$_DFFE_PP_/QN -> k_wstrb[*]
+      +2.4 ps n=1 lv=6 u_pc.u_wd.d_p$_DFF_PN0_/QN -> wd[*]
+      +3.3 ps n=6 lv=8 u_pc.r_tag[*]$_DFFE_PN_/QN -> r_tag[*]
+      +3.5 ps n=1 lv=7 u_pc.u_q.w_credit$_DFF_PN0_/QN -> rk[*]
+      +8.7 ps n=1 lv=8 u_pc.co[*]$_DFF_PN0_/QN -> co_w[*]
+      +9.9 ps n=1 lv=7 u_pc.k_we$_DFFE_PP_/QN -> k_we[*]
+- 2026-10-06T21:47:09-07:00 | s81ph-dsfd_svcio_ad-093da5918 | dsfd_svcio_ad @ 093da5918 | NEEDS_HUMAN: calibrate failed, class synth_or_place (deterministic, not retried) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-093da5918
+    detail: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consid
+    OWNER ACTION (Claude:s81-ph): the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop
+- 2026-10-06T21:54:17-07:00 | s81ph-dsfd_svcio_x-093da5918 | dsfd_svcio_x @ 093da5918 | HOLD-ECO installed: SS +213.06/FF +12.42 -> SS +198.18/FF +17.15, DRC 0, 135 cells; re-verdict | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_x-093da5918
+- 2026-10-06T21:59:21-07:00 | s81ph-dsfd_svcio_q-093da5918 | dsfd_svcio_q @ 093da5918 | HOLD-ECO installed: SS +60.57/FF +6.59 -> SS +22.64/FF +20.36, DRC 0, 159 cells; re-verdict | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918
+- 2026-10-06T21:59:33-07:00 | s81ph-dsfd_svcio_x-093da5918 | dsfd_svcio_x @ 093da5918 | CLOSED SS +198.18 / FF +17.15 ps DRC 0 | record claude/s81-placeholders-20261006 a8cdf63f0 (13 files) | no merge target | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_x-093da5918
+- 2026-10-06T22:03:56-07:00 | s81ph-dsfd_svcio_q-093da5918 | dsfd_svcio_q @ 093da5918 | CLOSED SS +22.64 / FF +20.36 ps DRC 0 | record claude/s81-placeholders-20261006 e2706d313 (13 files) | no merge target | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918
+- 2026-10-06T22:09:19-07:00 | s81ph-dsfd_capt_g2-501831f78-safe | dsfd_capt_g2 @ 501831f78 | NEEDS_RTL: SS -265.94 / FF 10.67 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_g2-501831f78-safe
+    setup_ss worst -265.94 ps over 1200 endpoints; worst classes:
+      -265.9 ps n=100 lv=24 g_r[*].ops[*]$_DFFE_PP_/QN -> g_r[*].m1[*]$_DFF_P_/D
+      -255.8 ps n=240 lv=25 g_r[*].ob[*]$_DFFE_PP_/QN -> g_r[*].s1[*]$_DFF_P_/D
+      -234.9 ps n=35 lv=23 g_r[*].s1[*]$_DFF_P_/QN -> g_r[*].a2[*]$_DFF_P_/D
+      -216.4 ps n=15 lv=20 g_r[*].m1[*]$_DFF_P_/QN -> g_r[*].a2[*]$_DFF_P_/D
+      -180.2 ps n=6 lv=21 g_r[*].rs[*]$_DFFE_PP_/QN -> g_r[*].lt1$_DFF_P_/D
+      -179.9 ps n=4 lv=22 kq[*]$_DFF_P_/QN -> g_r[*].q2[*]$_DFF_P_/D
+      +158.2 ps n=384 lv=10 rst_h[*]$_DFF_PN0_/QN -> g_r[*].wq[*]$_DFF_PN0_/RESETN
+      +201.6 ps n=400 lv=8 g_r[*].wq[*]$_DFF_PN0_/QN -> t_w[*]
+      +211.0 ps n=15 lv=10 rst_h[*]$_DFF_PN0_/QN -> g_r[*].w_ok$_DFF_PN0_/RESETN
+      +241.9 ps n=1 lv=9 rst_h[*]$_DFF_PN0_/QN -> g_r[*].gate$_DFF_PN0_/RESETN
+    hold_ff worst 10.67 ps over 1200 endpoints; worst classes:
+      +10.7 ps n=398 lv=7 g_r[*].wq[*]$_DFF_PN0_/QN -> t_w[*]
+      +15.0 ps n=1 lv=7 o2$_DFF_PN0_/QN -> t_sb[*]
+      +18.8 ps n=59 lv=5 g_r[*].d3[*]$_DFF_P_/QN -> g_r[*].d4[*]$_DFF_P_/D
+      +18.9 ps n=1 lv=7 a2r$_DFF_PN0_/QN -> t_sb[*]
+      +21.1 ps n=61 lv=5 g_r[*].d2[*]$_DFF_P_/QN -> g_r[*].d3[*]$_DFF_P_/D
+      +23.1 ps n=39 lv=5 g_r[*].d1[*]$_DFF_P_/QN -> g_r[*].d2[*]$_DFF_P_/D
+      +25.7 ps n=36 lv=4 g_r[*].b1[*]$_DFF_P_/QN -> g_r[*].dt2[*]$_DFF_P_/D
+      +26.9 ps n=42 lv=6 g_r[*].d4[*]$_DFF_P_/QN -> g_r[*].f1[*]$_DFF_P_/D
+      +28.2 ps n=28 lv=5 fr[*]$_DFF_P_/QN -> g_r[*].d1[*]$_DFF_P_/D
+      +29.4 ps n=1 lv=5 fr[*]$_DFF_P_/QN -> g_r[*].v1$_DFF_PN0_/D
+- 2026-10-06T22:15:11-07:00 | s81ph-dsfd_ctrl_pc-093da5918 | dsfd_ctrl_pc @ 093da5918 | HOLD-ECO missed: before SS +64.93 / FF -6.95, after {'ss_ps': 19.59, 'ff_ps': 12.8, 'drc': 0, 'cells_added': 752, 'errors': []} | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-093da5918
+- 2026-10-06T22:16:55-07:00 | s81ph-dsfd_ctrl_pc-093da5918 | dsfd_ctrl_pc @ 093da5918 | NEEDS_RTL: SS 64.93 / FF -6.95 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-093da5918
+    hold_ff worst -6.95 ps over 1940 endpoints; worst classes:
+      -7.0 ps n=256 lv=9 u_pc.k_wdata[*]$_DFFE_PP_/QN -> k_wdata[*]
+      -6.1 ps n=1 lv=4 u_pc.k_v$_DFFE_PN0P_/QN -> k_v[*]
+      -4.9 ps n=30 lv=7 u_pc.k_addr[*]$_DFFE_PP_/QN -> k_addr[*]
+      -3.8 ps n=256 lv=8 u_pc.r_data[*]$_DFFE_PN_/QN -> r_data[*]
+      -0.3 ps n=32 lv=8 u_pc.k_wstrb[*]$_DFFE_PP_/QN -> k_wstrb[*]
+      +2.1 ps n=1 lv=6 u_pc.u_wd.d_p$_DFF_PN0_/QN -> wd[*]
+      +2.9 ps n=1 lv=6 u_pc.k_we$_DFFE_PP_/QN -> k_we[*]
+      +3.3 ps n=1 lv=7 u_pc.u_q.w_credit$_DFF_PN0_/QN -> rk[*]
+      +3.6 ps n=17 lv=8 u_pc.r_tag[*]$_DFFE_PN_/QN -> r_tag[*]
+      +7.2 ps n=17 lv=7 u_pc.k_tag[*]$_DFFE_PP_/QN -> k_tag[*]
+- 2026-10-06T22:17:00-07:00 | s81ph-dsfd_svcio_od-093da5918 | dsfd_svcio_od @ 093da5918 | HOLD-ECO missed: before SS +40.25 / FF +4.15, after {'ss_ps': -17.65, 'ff_ps': 17.93, 'drc': 0, 'cells_added': 306, 'errors': []} | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-093da5918
+- 2026-10-06T22:19:01-07:00 | s81ph-dsfd_svcio_od-093da5918 | dsfd_svcio_od @ 093da5918 | NEEDS_RTL: SS 40.25 / FF 4.15 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-093da5918
+    hold_ff worst 4.15 ps over 834 endpoints; worst classes:
+      +4.2 ps n=395 lv=7 od[*]$_DFF_P_/QN -> od[*]
+      +19.9 ps n=1 lv=6 bad$_DFF_PN0_/QN -> bad[*]
+      +21.7 ps n=4 lv=6 u_m.g_s[*].u_k.ir_q$_DFF_PN0_/QN -> od_r[*]
+      +27.8 ps n=36 lv=4 u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/QN -> u_m.o_d[*]$_DFF_P_/D
+      +30.0 ps n=61 lv=6 u_m.o_d[*]$_DFF_P_/QN -> od[*]$_DFF_P_/D
+      +30.8 ps n=1 lv=3 u_m.o_v$_DFF_PN0_/QN -> od[*]$_DFF_P_/D
+      +31.2 ps n=92 lv=4 u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/D
+      +34.0 ps n=106 lv=4 u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/D
+      +34.1 ps n=103 lv=4 u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/D
+      +35.2 ps n=1 lv=3 u_m.sel_c[*][*]$_SDFFCE_PP0P_/QN -> u_m.sel_c[*][*]$_SDFFCE_PP0P_/D
+- 2026-10-06T22:20:20-07:00 | s81ph-dsfd_colt_lane-7345266ce-e | dsfd_colt_lane @ 7345266ce | HOLD-ECO missed: before SS +47.67 / FF -9.99, after {'ss_ps': -4.42, 'ff_ps': 11.0, 'drc': 0, 'cells_added': 833, 'errors': []} | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-7345266ce-e
+- 2026-10-06T22:21:31-07:00 | s81ph-dsfd_colt_lane-7345266ce-e | dsfd_colt_lane @ 7345266ce | NEEDS_RTL: SS 47.67 / FF -9.99 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-7345266ce-e
+    hold_ff worst -9.99 ps over 1200 endpoints; worst classes:
+      -10.0 ps n=398 lv=9 ow[*]$_DFF_PN0_/QN -> t_w[*]
+      -4.6 ps n=2 lv=7 flt[*]$_DFF_PN0_/QN -> t_f[*]
+      +22.4 ps n=136 lv=3 pd[*]$_DFF_P_/QN -> u_q.g_m[*].u_m/wd_in[*]
+      +22.7 ps n=59 lv=5 w[*]$_DFF_P_/QN -> pd[*]$_DFF_P_/D
+      +25.8 ps n=28 lv=5 u_q.ob[*][*]$_DFFE_PP_/QN -> ow[*]$_DFF_PN0_/D
+      +28.4 ps n=42 lv=5 u_q.rq_r[*]$_DFFE_PP_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +29.9 ps n=4 lv=3 u_q.wp[*]$_DFFE_PN0P_/QN -> u_q.g_m[*].u_m/w_addr_in[*]
+      +30.5 ps n=1 lv=4 e_link$_DFF_PN0_/QN -> flt[*]$_DFF_PN0_/D
+      +30.8 ps n=106 lv=5 u_q.ob[*][*]$_DFFE_PP_/QN -> u_q.ob[*][*]$_DFFE_PP_/D
+      +31.7 ps n=18 lv=4 u_q.rq_r[*]$_DFFE_PP_/QN -> u_q.rq_r[*]$_DFFE_PP_/D
+- 2026-10-06T22:27:24-07:00 | s81ph-dsfd_svcio_ad-41c34fce0 | dsfd_svcio_ad @ 41c34fce0 | NEEDS_RTL: SS 14.0 / FF -12.87 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-41c34fce0
+    setup_ss worst 14.0 ps over 836 endpoints; worst classes:
+      +14.0 ps n=400 lv=10 a0_v[*] -> u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/D
+      +176.0 ps n=394 lv=9 ad[*]$_DFF_P_/QN -> ad[*]
+      +219.9 ps n=1 lv=6 fault$_DFFE_PN0P_/QN -> fault[*]
+      +221.4 ps n=4 lv=5 u_m.g_s[*].u_k.ir_q$_DFF_PN0_/QN -> a0_r[*]
+      +225.3 ps n=1 lv=4 u_m.g_s[*].u_k.up_c[*]$_DFF_PN0_/QN -> a1_r[*]
+      +399.4 ps n=12 lv=7 u_rs.rst_s[*]$_DFF_PN0_/QN -> u_m.rem[*]$_DFFE_PN0P_/RESETN
+      +406.4 ps n=1 lv=7 u_rs.rst_s[*]$_DFF_PN0_/QN -> u_m.bad$_DFFE_PN0P_/RESETN
+      +408.5 ps n=2 lv=7 u_rs.rst_s[*]$_DFF_PN0_/QN -> u_m.cur[*]$_DFFE_PN0P_/RESETN
+      +409.2 ps n=1 lv=7 u_rs.rst_s[*]$_DFF_PN0_/QN -> u_m.o_v$_DFF_PN0_/RESETN
+      +409.6 ps n=1 lv=7 u_rs.rst_s[*]$_DFF_PN0_/QN -> u_k1.v0_c[*]$_DFF_PN0_/RESETN
+    hold_ff worst -12.87 ps over 836 endpoints; worst classes:
+      -12.9 ps n=400 lv=8 ad[*]$_DFF_P_/QN -> ad[*]
+      +29.8 ps n=11 lv=5 u_m.o_d[*]$_DFF_P_/QN -> ad[*]$_DFF_P_/D
+      +29.8 ps n=56 lv=5 u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/D
+      +31.3 ps n=8 lv=4 u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/QN -> u_m.o_d[*]$_DFF_P_/D
+      +31.5 ps n=23 lv=5 u_k1.d0[*]$_DFF_P_/QN -> ad[*]$_DFF_P_/D
+      +32.4 ps n=278 lv=4 u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/D
+      +32.5 ps n=23 lv=4 u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/D
+      +34.3 ps n=1 lv=4 u_m.g_s[*].u_k.ir_q$_DFF_PN0_/QN -> u_m.g_s[*].u_k.v0_c[*]$_DFFE_PN0P_/D
+      +48.0 ps n=1 lv=5 u_rs.rst_s[*]$_DFF_PN0_/QN -> fault$_DFFE_PN0P_/RESETN
+      +49.0 ps n=1 lv=5 u_rs.rst_s[*]$_DFF_PN0_/QN -> fi_q$_DFF_PN0_/RESETN
+- 2026-10-06T22:57:08-07:00 | s81ph-dsfd_ctrl_pc-3f0455126 | dsfd_ctrl_pc @ 3f0455126 | HOLD-ECO missed: before SS +70.18 / FF -4.20, after {'ss_ps': 4.74, 'ff_ps': 24.3, 'drc': 0, 'cells_added': 539, 'errors': []} | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-3f0455126
+- 2026-10-06T22:58:06-07:00 | s81ph-dsfd_ctrl_pc-3f0455126 | dsfd_ctrl_pc @ 3f0455126 | NEEDS_RTL: SS 70.18 / FF -4.2 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-3f0455126
+    hold_ff worst -4.2 ps over 1940 endpoints; worst classes:
+      -4.2 ps n=256 lv=7 u_pc.k_wdata[*]$_DFFE_PP_/QN -> k_wdata[*]
+      -0.9 ps n=256 lv=7 u_pc.r_data[*]$_DFFE_PN_/QN -> r_data[*]
+      -0.1 ps n=1 lv=3 u_pc.u_wd.d_p$_DFF_PN0_/QN -> wd[*]
+      +0.2 ps n=32 lv=7 u_pc.k_wstrb[*]$_DFFE_PP_/QN -> k_wstrb[*]
+      +4.6 ps n=1 lv=4 u_pc.k_we$_DFFE_PP_/QN -> k_we[*]
+      +5.6 ps n=17 lv=6 u_pc.r_tag[*]$_DFFE_PN_/QN -> r_tag[*]
+      +6.7 ps n=2 lv=5 u_pc.co[*]$_DFF_PN0_/QN -> co_w[*]
+      +7.7 ps n=1 lv=5 u_pc.rv$_DFF_PN0_/QN -> rv[*]
+      +8.3 ps n=2 lv=5 u_pc.co[*]$_DFF_PN0_/QN -> co_e[*]
+      +10.2 ps n=1 lv=3 u_pc.k_v$_DFFE_PN0P_/QN -> k_v[*]
+- 2026-10-06T23:00:06-07:00 | s81ph-dsfd_svcio_od-3f0455126 | dsfd_svcio_od @ 3f0455126 | HOLD-ECO missed: before SS +33.10 / FF +3.81, after {'ss_ps': -24.81, 'ff_ps': 19.38, 'drc': 0, 'cells_added': 294, 'errors': []} | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-3f0455126
+- 2026-10-06T23:01:07-07:00 | s81ph-dsfd_svcio_od-3f0455126 | dsfd_svcio_od @ 3f0455126 | NEEDS_RTL: SS 33.1 / FF 3.81 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-3f0455126
+    hold_ff worst 3.81 ps over 834 endpoints; worst classes:
+      +3.8 ps n=399 lv=6 od[*]$_DFF_P_/QN -> od[*]
+      +12.6 ps n=1 lv=3 bad$_DFF_PN0_/QN -> bad[*]
+      +28.3 ps n=39 lv=5 u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/QN -> u_m.o_d[*]$_DFF_P_/D
+      +30.7 ps n=1 lv=3 u_m.o_v$_DFF_PN0_/QN -> od[*]$_DFF_P_/D
+      +30.9 ps n=57 lv=7 u_m.o_d[*]$_DFF_P_/QN -> od[*]$_DFF_P_/D
+      +32.0 ps n=78 lv=4 u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/D
+      +33.7 ps n=119 lv=4 u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/D
+      +34.1 ps n=105 lv=4 u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/D
+      +34.7 ps n=1 lv=3 u_m.sel_c[*][*]$_SDFFCE_PP0P_/QN -> u_m.sel_c[*][*]$_SDFFCE_PP0P_/D
+      +39.5 ps n=1 lv=4 u_rs.rst_s[*]$_DFF_PN0_/QN -> u_m.o_v$_DFF_PN0_/RESETN
+- 2026-10-06T23:08:43-07:00 | s81ph-dsfd_capt_x-501831f78-safe | dsfd_capt_x @ 501831f78 | HOLD-ECO missed: before SS +42.31 / FF -11.62, after {'ss_ps': 8.4, 'ff_ps': -2.95, 'drc': 0, 'cells_added': 7423, 'errors': []} | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe
+- 2026-10-06T23:09:43-07:00 | s81ph-dsfd_capt_x-501831f78-safe | dsfd_capt_x @ 501831f78 | NEEDS_RTL: SS 42.31 / FF -11.62 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe
+    hold_ff worst -11.62 ps over 1427 endpoints; worst classes:
+      -11.6 ps n=46 lv=3 g_r[*].u_x.wp[*]$_SDFFE_PP0P_/QN -> g_r[*].u_x.wp_r[*]$_DFF_P_/D
+      -7.9 ps n=28 lv=3 g_r[*].u_x.w_st[*]$_SDFFE_PN0P_/QN -> g_r[*].u_x.w_st_r[*]$_DFF_P_/D
+      -4.9 ps n=321 lv=4 g_r[*].u_x.mem[*][*]$_DFFE_PP_/QN -> g_r[*].u_x.sh[*][*]$_DFF_P_/D
+      -3.1 ps n=1 lv=2 u_s.wp[*]$_SDFFE_PP0P_/QN -> u_s.wp_r[*]$_DFF_P_/D
+      -2.4 ps n=377 lv=7 g_r[*].od[*]$_DFF_P_/QN -> t_vm[*]
+      +1.7 ps n=1 lv=6 hq$_DFF_PN0_/QN -> t_ho[*]
+      +2.3 ps n=32 lv=2 g_r[*].u_x.r_st[*]$_SDFFE_PN0P_/QN -> g_r[*].u_x.r_st_w[*]$_DFF_P_/D
+      +2.8 ps n=3 lv=3 u_s.mem[*][*]$_DFFE_PP_/QN -> u_s.sh[*][*]$_DFF_P_/D
+      +4.1 ps n=1 lv=2 u_s.w_st[*]$_SDFFE_PN0P_/QN -> u_s.w_st_r[*]$_DFF_P_/D
+      +4.9 ps n=48 lv=2 g_r[*].u_x.rp[*]$_SDFFE_PP0P_/QN -> g_r[*].u_x.rp_w[*]$_DFF_P_/D
+- 2026-10-06T23:15:03-07:00 | s81ph-dsfd_svcio_ad-e87322073 | dsfd_svcio_ad @ e87322073 | NEEDS_HUMAN: calibrate failed, class synth_or_place (deterministic, not retried) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-e87322073
+    detail: ERROR: Module `\ot_s81ph_rfifo' referenced in module `\ot_s81ph_inq' in cell `\u_f' is not part of the design.
+    OWNER ACTION (Claude:s81-ph): the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop
+- 2026-10-06T23:24:16-07:00 | s81ph-dsfd_coll_lane_w-34b3e75dd | dsfd_coll_lane_w @ 34b3e75dd | NEEDS_RTL: SS -970.95 / FF -128.08 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_w-34b3e75dd
+    setup_ss worst -970.95 ps over 1200 endpoints; worst classes:
+      -971.0 ps n=14 lv=30 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.tp_hi[*]$_DFFE_PP_/D
+      -964.1 ps n=18 lv=21 u.u_ep.u_rb.g_sram.g_t[*].u_m/rd_out[*] -> u.u_ep.tp_hi[*]$_DFFE_PP_/D
+      -900.4 ps n=1 lv=29 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.rb_fwd$_DFF_PN0_/D
+      -896.9 ps n=45 lv=30 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.u_rb.g_sram.g_t[*].u_m/r_addr_in[*]
+      -858.7 ps n=30 lv=31 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.tp_lo[*]$_DFFE_PP_/D
+      -813.3 ps n=2 lv=19 u.u_ep.u_rb.g_sram.g_t[*].u_m/rd_out[*] -> u.u_ep.tp_lo[*]$_DFFE_PP_/D
+      -796.1 ps n=9 lv=29 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.snd_i[*]$_DFF_PN0_/D
+      -770.7 ps n=137 lv=27 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ski.out_d[*]$_DFFE_PP_/D
+      -745.0 ps n=10 lv=28 u.u_ep.nxt[*]$_DFFE_PN0P_/QN -> u.u_ep.snd[*]$_DFF_PN0_/D
+      -679.2 ps n=1 lv=26 u.u_ep.snd[*]$_DFF_PN0_/QN -> u.u_ski.out_v$_DFFE_PN0P_/D
+    hold_ff worst -128.08 ps over 1200 endpoints; worst classes:
+      -128.1 ps n=399 lv=13 u.u_gb.beat_tx[*]$_DFF_PN0_/QN -> tx[*]
+      -83.4 ps n=1 lv=6 u.flt[*]$_DFF_PN0_/QN -> flt[*]
+      -2.1 ps n=10 lv=6 u.u_ep.exp_seq[*]$_DFFE_PN0P_/QN -> u.u_ep.tx_ack[*]$_DFFE_PN0P_/D
+      -1.1 ps n=9 lv=7 u.u_ep.rg_f[*]$_DFF_PN0_/QN -> u.u_gb.beat_tx[*]$_DFF_PN0_/D
+      +1.1 ps n=77 lv=10 u.lr[*]$_DFF_PN0_/QN -> u.u_gb.bg[*]$_DFF_PN0_/D
+      +2.6 ps n=11 lv=6 u.u_ep.exp_seq[*]$_DFFE_PN0P_/QN -> u.u_ep.rg_f[*]$_DFF_PN0_/D
+      +2.8 ps n=1 lv=6 u.u_ep.nak_sent$_DFFE_PN0P_/QN -> u.u_ep.nak_req$_DFFE_PN0P_/D
+      +6.3 ps n=1 lv=4 u.u_ep.freed[*]$_DFFE_PN0P_/QN -> u.u_ep.tx_fr[*]$_DFFE_PN0P_/D
+      +6.6 ps n=2 lv=4 u.u_ep.freed[*]$_DFFE_PN0P_/QN -> u.u_ep.rg_f[*]$_DFF_PN0_/D
+      +9.7 ps n=57 lv=9 u.u_ep.xp_f[*][*]$_DFFE_PP_/QN -> u.u_ep.xp_f[*][*]$_DFFE_PP_/D
+- 2026-10-06T23:26:33-07:00 | s81ph-dsfd_coll_lane_e-1df7cf9a9 | dsfd_coll_lane_e @ 1df7cf9a9 | NEEDS_HUMAN: route crashed twice (rc=0 ok-check failed: ); last log tail: | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-1df7cf9a9
+    Elapsed time: 4:13.31[h:]min:sec. CPU time: user 414.86 sys 41.15 (180%). Peak memory: 1619132KB.
+    Elapsed time: 3:13:51.23[h:]min:sec. CPU time: user 12878.85 sys 304.46 (113%). Peak memory: 2626468KB.
+    make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+    make: *** [Makefile:585: /work/results/asap7/opentallas_dsfd_coll_lane_e_asap7_s81ph_s81ph_dsfd_coll_lane_e_1df7cf9a9/base/5_1_grt.odb] Error 2
+    partial record written to /srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-1df7cf9a9/routes/s81ph_dsfd_coll_lane_e_1df7cf9a9/physical.json
+- 2026-10-06T23:38:33-07:00 | s81ph-dsfd_ctrl_pc-e87322073 | dsfd_ctrl_pc @ e87322073 | HOLD-ECO installed: SS +50.90/FF -4.73 -> SS +54.28/FF +18.37, DRC 0, 603 cells; re-verdict | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-e87322073
+- 2026-10-06T23:40:36-07:00 | s81ph-dsfd_svcio_od-e87322073 | dsfd_svcio_od @ e87322073 | HOLD-ECO missed: before SS +32.03 / FF +6.72, after {'ss_ps': -13.31, 'ff_ps': 17.36, 'drc': 0, 'cells_added': 246, 'errors': []} | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-e87322073
+- 2026-10-06T23:42:00-07:00 | s81ph-dsfd_svcio_od-e87322073 | dsfd_svcio_od @ e87322073 | NEEDS_RTL: SS 32.03 / FF 6.72 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-e87322073
+    hold_ff worst 6.72 ps over 834 endpoints; worst classes:
+      +6.7 ps n=397 lv=6 od[*]$_DFF_P_/QN -> od[*]
+      +15.0 ps n=1 lv=4 bad$_DFF_PN0_/QN -> bad[*]
+      +17.0 ps n=2 lv=4 u_m.g_s[*].u_k.ir_q$_DFF_PN0_/QN -> od_r[*]
+      +26.8 ps n=37 lv=4 u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/QN -> u_m.o_d[*]$_DFF_P_/D
+      +28.7 ps n=76 lv=5 u_m.o_d[*]$_DFF_P_/QN -> od[*]$_DFF_P_/D
+      +30.1 ps n=74 lv=5 u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/D
+      +32.3 ps n=116 lv=4 u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d0[*]$_DFFE_PP_/D
+      +32.3 ps n=1 lv=4 u_m.g_s[*].u_k.ir_q$_DFF_PN0_/QN -> u_m.g_s[*].u_k.v0_c[*]$_DFFE_PN0P_/D
+      +34.0 ps n=95 lv=4 u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/QN -> u_m.g_s[*].u_k.d1[*]$_DFFE_PP_/D
+      +34.7 ps n=1 lv=3 u_m.hdr$_DFFE_PN0P_/QN -> u_m.hdr$_DFFE_PN0P_/D
+- 2026-10-06T23:47:25-07:00 | s81ph-dsfd_ctrl_pc-e87322073 | dsfd_ctrl_pc @ e87322073 | CLOSED SS +54.28 / FF +18.37 ps DRC 0 | record claude/s81-placeholders-20261006 75546f775 (13 files) | no merge target | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-e87322073
+- 2026-10-07T00:01:37-07:00 | s81ph-dsfd_coll_lane_e-34b3e75dd | dsfd_coll_lane_e @ 34b3e75dd | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-34b3e75dd
+- 2026-10-07T00:07:57-07:00 | s81ph-dsfd_svcio_ad-e87322073-b | dsfd_svcio_ad @ e87322073 | NEEDS_HUMAN: route crashed twice (rc=0 ok-check failed: ); last log tail: | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-e87322073-b
+    Elapsed time: 6:10.19[h:]min:sec. CPU time: user 458.55 sys 15.86 (128%). Peak memory: 1455556KB.
+    Elapsed time: 9:09.47[h:]min:sec. CPU time: user 1229.65 sys 21.61 (227%). Peak memory: 2224256KB.
+    make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+    make: *** [Makefile:585: /work/results/asap7/opentallas_dsfd_svcio_ad_asap7_s81ph_s81ph_dsfd_svcio_ad_e87322073_b/base/5_1_grt.odb] Error 2
+    partial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-e87322073-b/routes/s81ph_dsfd_svcio_ad_e87322073_b/physical.json
+- 2026-10-07T00:14:11-07:00 | s81ph-dsfd_capt_grp-48203c4d9-f | dsfd_capt_grp @ 48203c4d9 | NEEDS_RTL: SS -241.66 / FF -18.42 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-48203c4d9-f
+    setup_ss worst -241.66 ps over 1202 endpoints; worst classes:
+      -241.7 ps n=248 lv=23 g_r[*].ob[*]$_DFFE_PP_/QN -> g_r[*].s1[*]$_DFF_P_/D
+      -206.7 ps n=105 lv=22 g_r[*].ops[*]$_DFFE_PP_/QN -> g_r[*].m1[*]$_DFF_P_/D
+      -178.6 ps n=26 lv=20 g_r[*].m1[*]$_DFF_P_/QN -> g_r[*].a2[*]$_DFF_P_/D
+      -155.6 ps n=19 lv=19 kq[*]$_DFF_P_/QN -> g_r[*].q2[*]$_DFF_P_/D
+      -144.6 ps n=2 lv=18 g_r[*].s1[*]$_DFF_P_/QN -> g_r[*].a2[*]$_DFF_P_/D
+      -132.5 ps n=48 lv=23 g_r[*].u_x.rp[*]$_SDFFE_PP0P_/QN -> g_r[*].od[*]$_DFF_P_/D
+      -64.1 ps n=29 lv=5 g_r[*].u_x.w_st[*]$_SDFFE_PN0P_/QN -> g_r[*].u_x.w_st_r[*]$_DFF_P_/D
+      -7.5 ps n=2 lv=3 u_s.w_st[*]$_SDFFE_PN0P_/QN -> u_s.w_st_r[*]$_DFF_P_/D
+      -4.1 ps n=321 lv=5 g_r[*].u_x.mem[*][*]$_DFFE_PP_/QN -> g_r[*].u_x.sh[*][*]$_DFF_P_/D
+      +9.6 ps n=9 lv=14 rst_h[*]$_DFF_PN0_/QN -> g_r[*].v4$_DFF_PN0_/RESETN
+    hold_ff worst -18.42 ps over 1600 endpoints; worst classes:
+      -18.4 ps n=116 lv=4 u_s.mem[*][*]$_DFFE_PP_/QN -> u_s.sh[*][*]$_DFF_P_/D
+      -17.5 ps n=1 lv=2 u_s.wp[*]$_SDFFE_PP0P_/QN -> u_s.wp_r[*]$_DFF_P_/D
+      -14.7 ps n=48 lv=4 g_r[*].u_x.rp[*]$_SDFFE_PP0P_/QN -> g_r[*].u_x.rp_w[*]$_DFF_P_/D
+      -6.3 ps n=273 lv=4 g_r[*].u_x.mem[*][*]$_DFFE_PP_/QN -> g_r[*].u_x.sh[*][*]$_DFF_P_/D
+      -4.3 ps n=5 lv=2 g_r[*].u_x.wp[*]$_SDFFE_PP0P_/QN -> g_r[*].u_x.wp_r[*]$_DFF_P_/D
+      -2.2 ps n=31 lv=3 g_r[*].u_x.r_st[*]$_SDFFE_PN0P_/QN -> g_r[*].u_x.r_st_w[*]$_DFF_P_/D
+      +0.7 ps n=3 lv=4 g_r[*].u_x.sh[*][*]$_DFF_P_/QN -> g_r[*].od[*]$_DFF_P_/D
+      +4.1 ps n=2 lv=3 g_r[*].u_x.w_st[*]$_SDFFE_PN0P_/QN -> g_r[*].u_x.w_st_r[*]$_DFF_P_/D
+      +5.8 ps n=1 lv=5 o2$_DFF_PN0_/QN -> t_sb[*]
+      +6.3 ps n=394 lv=9 g_r[*].od[*]$_DFF_P_/QN -> t_vm[*]
+- 2026-10-07T00:20:23-07:00 | s81ph-dsfd_colt_mrg-cd3337221-b | dsfd_colt_mrg @ cd3337221 | CLOSED SS +54.28 / FF +22.00 ps DRC 0 | record claude/s81-placeholders-20261006 e0e889bd0 (13 files) | no merge target | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-cd3337221-b
+- 2026-10-07T00:48:32-07:00 | s81ph-dsfd_capt_g2-54b6490d5 | dsfd_capt_g2 @ 54b6490d5 | NEEDS_RTL: SS -31.03 / FF 8.87 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_g2-54b6490d5
+    setup_ss worst -31.03 ps over 1200 endpoints; worst classes:
+      -31.0 ps n=95 lv=19 g_r[*].pr[*]$_DFF_P_/QN -> g_r[*].q2[*]$_DFF_P_/D
+      -1.1 ps n=55 lv=17 g_r[*].ob[*]$_DFFE_PP_/QN -> g_r[*].s1lo[*]$_DFF_P_/D
+      +39.6 ps n=165 lv=17 g_r[*].ops[*]$_DFFE_PP_/QN -> g_r[*].pp01[*]$_DFF_P_/D
+      +39.7 ps n=36 lv=15 fr[*]$_DFF_P_/QN -> g_r[*].bf1[*]$_DFF_P_/D
+      +45.3 ps n=16 lv=14 g_r[*].rcv[*]$_DFFE_PN0P_/QN -> g_r[*].rcv[*]$_DFFE_PN0P_/D
+      +51.5 ps n=7 lv=15 g_r[*].d5[*]$_DFF_P_/QN -> g_r[*].pp01[*]$_DFF_P_/D
+      +53.1 ps n=11 lv=14 g_r[*].v5$_DFF_PN0_/QN -> g_r[*].rcv[*]$_DFFE_PN0P_/D
+      +55.6 ps n=13 lv=11 g_r[*].obh[*]$_DFF_P_/QN -> g_r[*].s1[*]$_DFF_P_/D
+      +66.8 ps n=1 lv=14 g_r[*].rcv[*]$_DFFE_PN0P_/QN -> g_r[*].w1bad$_DFF_PN0_/D
+      +77.8 ps n=1 lv=15 g_r[*].lo2$_DFF_P_/QN -> g_r[*].dt2[*]$_DFF_P_/D
+    hold_ff worst 8.87 ps over 1200 endpoints; worst classes:
+      +8.9 ps n=398 lv=6 g_r[*].wq[*]$_DFF_PN0_/QN -> t_w[*]
+      +17.8 ps n=24 lv=4 g_r[*].b2[*]$_DFF_P_/QN -> g_r[*].dt2[*]$_DFF_P_/D
+      +18.1 ps n=1 lv=5 a2r$_DFF_PN0_/QN -> t_sb[*]
+      +21.9 ps n=55 lv=5 g_r[*].d2[*]$_DFF_P_/QN -> g_r[*].d3[*]$_DFF_P_/D
+      +21.9 ps n=1 lv=6 o2$_DFF_PN0_/QN -> t_sb[*]
+      +22.0 ps n=14 lv=6 g_r[*].d5[*]$_DFF_P_/QN -> g_r[*].f1[*]$_DFF_P_/D
+      +22.5 ps n=40 lv=6 g_r[*].d4[*]$_DFF_P_/QN -> g_r[*].d5[*]$_DFF_P_/D
+      +23.2 ps n=27 lv=5 g_r[*].d1[*]$_DFF_P_/QN -> g_r[*].d2[*]$_DFF_P_/D
+      +24.0 ps n=40 lv=5 g_r[*].d3[*]$_DFF_P_/QN -> g_r[*].d4[*]$_DFF_P_/D
+      +24.6 ps n=16 lv=4 g_r[*].f2[*]$_DFF_P_/QN -> g_r[*].dt2[*]$_SDFF_PN0_/D
+- 2026-10-07T01:06:17-07:00 | s81ph-root_tile-34b3e75dd | ot_s81ph_root_tile @ 34b3e75dd | HOLD-ECO missed: before SS +17.00 / FF +8.92, after {'ss_ps': -3.21, 'ff_ps': 26.08, 'drc': 0, 'cells_added': 762, 'errors': []} | PVE1:/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd
+- 2026-10-07T01:09:06-07:00 | s81ph-dsfd_capt_grp-6780c1abc | dsfd_capt_grp @ 6780c1abc | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_grp-6780c1abc
+- 2026-10-07T01:09:57-07:00 | s81ph-dsfd_vm_bg-34b3e75dd | dsfd_vm_bg @ 34b3e75dd | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_vm_bg-34b3e75dd
+- 2026-10-07T01:12:57-07:00 | s81ph-root_tile-34b3e75dd | ot_s81ph_root_tile @ 34b3e75dd | NEEDS_RTL: SS 17.0 / FF 8.92 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | PVE1:/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd
+    hold_ff worst 8.92 ps over 1200 endpoints; worst classes:
+      +8.9 ps n=286 lv=8 co[*]$_DFF_P_/QN -> co[*]
+      +9.6 ps n=13 lv=7 u_root.a4_d[*]$_DFF_P_/QN -> co[*]
+      +11.3 ps n=30 lv=6 lt_eo[*]$_DFF_P_/QN -> lt_eo[*]
+      +11.8 ps n=7 lv=5 u_root.a4_t[*]$_DFF_P_/QN -> co[*]
+      +12.5 ps n=57 lv=7 lt_wo[*]$_DFF_P_/QN -> lt_wo[*]
+      +15.0 ps n=5 lv=7 co[*]$_DFF_PN0_/QN -> co[*]
+      +17.8 ps n=2 lv=7 fo[*]$_DFF_PN0_/QN -> fo[*]
+      +27.7 ps n=41 lv=4 u_root.bd[*][*]$_DFFE_PP_/QN -> u_root.o1_d[*][*]$_DFF_P_/D
+      +28.9 ps n=3 lv=4 u_root.ins_r[*]$_DFF_PN0_/QN -> u_root.s2_ins[*]$_DFF_P_/D
+      +29.2 ps n=41 lv=4 u_root.qm[*][*]$_DFFE_PP_/QN -> u_root.r1_g[*][*]$_DFF_P_/D
+- 2026-10-07T01:32:30-07:00 | s81ph-dsfd_svcio_od-e87322073 | dsfd_svcio_od @ e87322073 | RETRY-ECO (human, hold_eco rev 2): hold_eco rev 2 (guide-preserving re-route, sign-off-exact SDC, +18 goal); earlier ECO /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-e87322073/cl/eco -> {'ss_ps': -13.31, 'ff_ps': 17.36, 'drc': 0, 'cells_added': 246, 'errors': []} kept | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-e87322073
+- 2026-10-07T01:32:30-07:00 | s81ph-dsfd_colt_lane-7345266ce-e | dsfd_colt_lane @ 7345266ce | RETRY-ECO (human, hold_eco rev 2): hold_eco rev 2 (guide-preserving re-route, sign-off-exact SDC, +18 goal); earlier ECO None -> {'ss_ps': -4.42, 'ff_ps': 11.0, 'drc': 0, 'cells_added': 833, 'errors': []} kept | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-7345266ce-e
+- 2026-10-07T01:32:30-07:00 | s81ph-dsfd_capt_x-501831f78-safe | dsfd_capt_x @ 501831f78 | RETRY-ECO (human, hold_eco rev 2): hold_eco rev 2 (guide-preserving re-route, sign-off-exact SDC, +18 goal); earlier ECO /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe/cl/eco -> {'ss_ps': 8.4, 'ff_ps': -2.95, 'drc': 0, 'cells_added': 7423, 'errors': []} kept | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe
+- 2026-10-07T01:32:30-07:00 | s81ph-root_tile-34b3e75dd | ot_s81ph_root_tile @ 34b3e75dd | RETRY-ECO (human, hold_eco rev 2): hold_eco rev 2 (guide-preserving re-route, sign-off-exact SDC, +18 goal); earlier ECO /srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd/cl/eco -> {'ss_ps': -3.21, 'ff_ps': 26.08, 'drc': 0, 'cells_added': 762, 'errors': []} kept | PVE1:/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd
+- 2026-10-07T01:49:15-07:00 | s81ph-dsfd_svcio_od-e87322073 | dsfd_svcio_od @ e87322073 | HOLD-ECO installed: SS +32.03/FF +6.72 -> SS +31.46/FF +20.40, DRC 0, 16 cells; re-verdict | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-e87322073
+- 2026-10-07T01:51:09-07:00 | s81ph-dsfd_capt_x-501831f78-safe | dsfd_capt_x @ 501831f78 | HOLD-ECO missed: before SS +42.31 / FF -11.62, after None | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe
+- 2026-10-07T01:52:50-07:00 | s81ph-dsfd_colt_lane-7345266ce-e | dsfd_colt_lane @ 7345266ce | HOLD-ECO installed: SS +47.67/FF -9.99 -> SS +47.24/FF +21.73, DRC 0, 2 cells; re-verdict | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-7345266ce-e
+- 2026-10-07T01:52:51-07:00 | s81ph-dsfd_capt_x-501831f78-safe | dsfd_capt_x @ 501831f78 | NEEDS_RTL: SS 42.31 / FF -11.62 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe
+    hold_ff worst -11.62 ps over 1427 endpoints; worst classes:
+      -11.6 ps n=46 lv=3 g_r[*].u_x.wp[*]$_SDFFE_PP0P_/QN -> g_r[*].u_x.wp_r[*]$_DFF_P_/D
+      -7.9 ps n=28 lv=3 g_r[*].u_x.w_st[*]$_SDFFE_PN0P_/QN -> g_r[*].u_x.w_st_r[*]$_DFF_P_/D
+      -4.9 ps n=321 lv=4 g_r[*].u_x.mem[*][*]$_DFFE_PP_/QN -> g_r[*].u_x.sh[*][*]$_DFF_P_/D
+      -3.1 ps n=1 lv=2 u_s.wp[*]$_SDFFE_PP0P_/QN -> u_s.wp_r[*]$_DFF_P_/D
+      -2.4 ps n=377 lv=7 g_r[*].od[*]$_DFF_P_/QN -> t_vm[*]
+      +1.7 ps n=1 lv=6 hq$_DFF_PN0_/QN -> t_ho[*]
+      +2.3 ps n=32 lv=2 g_r[*].u_x.r_st[*]$_SDFFE_PN0P_/QN -> g_r[*].u_x.r_st_w[*]$_DFF_P_/D
+      +2.8 ps n=3 lv=3 u_s.mem[*][*]$_DFFE_PP_/QN -> u_s.sh[*][*]$_DFF_P_/D
+      +4.1 ps n=1 lv=2 u_s.w_st[*]$_SDFFE_PN0P_/QN -> u_s.w_st_r[*]$_DFF_P_/D
+      +4.9 ps n=48 lv=2 g_r[*].u_x.rp[*]$_SDFFE_PP0P_/QN -> g_r[*].u_x.rp_w[*]$_DFF_P_/D
+- 2026-10-07T01:56:31-07:00 | s81ph-dsfd_svcio_od-e87322073 | dsfd_svcio_od @ e87322073 | CLOSED SS +31.46 / FF +20.40 ps DRC 0 | record claude/s81-placeholders-20261006 61409112a (13 files) | no merge target | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-e87322073
+- 2026-10-07T02:01:03-07:00 | s81ph-dsfd_colt_lane-7345266ce-e | dsfd_colt_lane @ 7345266ce | CLOSED SS +47.24 / FF +21.73 ps DRC 0 | record claude/s81-placeholders-20261006 096b63d10 (13 files) | no merge target | EPYC3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-7345266ce-e
+- 2026-10-07T02:41:44-07:00 | s81ph-dsfd_selt_c-cd3337221-b | dsfd_selt_c @ cd3337221 | NEEDS_RTL: SS -541.05 / FF 19.43 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_selt_c-cd3337221-b
+    setup_ss worst -541.05 ps over 1200 endpoints; worst classes:
+      -541.0 ps n=52 lv=29 u_ctl.u_cs.acc_b2[*]$_DFF_P_/QN -> u_ctl.u_cs.u3_r[*]$_DFF_P_/D
+      -526.1 ps n=22 lv=26 u_ctl.u_cs.s2_r[*]$_DFF_P_/QN -> u_ctl.u_cs.s3_r[*]$_DFF_P_/D
+      -521.4 ps n=44 lv=28 u_ctl.u_fs.acc_b2[*]$_DFF_P_/QN -> u_ctl.u_fs.u3_r[*]$_DFF_P_/D
+      -504.0 ps n=19 lv=25 u_ctl.u_cs.sa_r[*]$_DFF_P_/QN -> u_ctl.u_cs.s2_r[*]$_DFF_P_/D
+      -492.0 ps n=36 lv=26 u_ctl.u_cs.gs_r[*]$_DFF_P_/QN -> u_ctl.u_cs.sa_r[*]$_DFF_P_/D
+      -462.8 ps n=13 lv=24 u_ctl.u_fs.s2_r[*]$_DFF_P_/QN -> u_ctl.u_fs.s3_r[*]$_DFF_P_/D
+      -458.2 ps n=20 lv=26 u_ctl.u_fs.sa_r[*]$_DFF_P_/QN -> u_ctl.u_fs.s2_r[*]$_DFF_P_/D
+      -455.9 ps n=15 lv=25 u_ctl.u_cs.u2_r[*]$_DFF_P_/QN -> u_ctl.u_cs.u3_r[*]$_DFF_P_/D
+      -452.7 ps n=15 lv=24 u_ctl.u_fs.gs_r[*]$_DFF_P_/QN -> u_ctl.u_fs.sa_r[*]$_DFF_P_/D
+      -448.0 ps n=7 lv=23 u_ctl.u_cs.sb_r[*]$_DFF_P_/QN -> u_ctl.u_cs.u2_r[*]$_DFF_P_/D
+- 2026-10-07T02:47:21-07:00 | s81ph-dsfd_svcio_ad-d12b194f0 | dsfd_svcio_ad @ d12b194f0 | HOLD-ECO installed: SS +31.89/FF -2.42 -> SS +36.93/FF +18.49, DRC 0, 980 cells; re-verdict | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0
+- 2026-10-07T02:59:24-07:00 | s81ph-dsfd_coll_core-1df7cf9a9 | dsfd_coll_core @ 1df7cf9a9 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_core-1df7cf9a9
+- 2026-10-07T02:59:29-07:00 | s81ph-dsfd_coll_core-34b3e75dd | dsfd_coll_core @ 34b3e75dd | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_core-34b3e75dd
+- 2026-10-07T02:59:32-07:00 | s81ph-dsfd_coll_lane_w-46f583118 | dsfd_coll_lane_w @ 46f583118 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_w-46f583118
+- 2026-10-07T02:59:36-07:00 | s81ph-dsfd_coll_lane_e-46f583118 | dsfd_coll_lane_e @ 46f583118 | CANCELLED by a human | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-46f583118
+- 2026-10-07T03:02:05-07:00 | s81ph-dsfd_capt_g2-fda73a869 | dsfd_capt_g2 @ fda73a869 | HOLD-ECO installed: SS +58.81/FF +12.43 -> SS +60.22/FF +18.90, DRC 0, 125 cells; re-verdict | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_g2-fda73a869
+- 2026-10-07T03:05:08-07:00 | s81ph-dsfd_svcio_ad-d12b194f0 | dsfd_svcio_ad @ d12b194f0 | CLOSED SS +36.93 / FF +18.49 ps DRC 0 | record claude/s81-placeholders-20261006 e4b44bc1f (13 files) | no merge target | EPYC1:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0
+- 2026-10-07T03:12:44-07:00 | s81ph-dsfd_capt_g2-fda73a869 | dsfd_capt_g2 @ fda73a869 | CLOSED SS +60.22 / FF +18.90 ps DRC 0 | record claude/s81-placeholders-20261006 185dc234e (13 files) | no merge target | EPYC2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_g2-fda73a869
+- 2026-10-07T03:36:52-07:00 | s81ph-root_tile-34b3e75dd | ot_s81ph_root_tile @ 34b3e75dd | HOLD-ECO missed: before SS +17.00 / FF +8.92, after None | PVE1:/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd
+- 2026-10-07T03:39:17-07:00 | s81ph-root_tile-34b3e75dd | ot_s81ph_root_tile @ 34b3e75dd | NEEDS_RTL: SS 17.0 / FF 8.92 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0) | PVE1:/srv/opentallas-scratch/claude/closure-loop/s81ph-root_tile-34b3e75dd
+    hold_ff worst 8.92 ps over 1200 endpoints; worst classes:
+      +8.9 ps n=286 lv=8 co[*]$_DFF_P_/QN -> co[*]
+      +9.6 ps n=13 lv=7 u_root.a4_d[*]$_DFF_P_/QN -> co[*]
+      +11.3 ps n=30 lv=6 lt_eo[*]$_DFF_P_/QN -> lt_eo[*]
+      +11.8 ps n=7 lv=5 u_root.a4_t[*]$_DFF_P_/QN -> co[*]
+      +12.5 ps n=57 lv=7 lt_wo[*]$_DFF_P_/QN -> lt_wo[*]
+      +15.0 ps n=5 lv=7 co[*]$_DFF_PN0_/QN -> co[*]
+      +17.8 ps n=2 lv=7 fo[*]$_DFF_PN0_/QN -> fo[*]
+      +27.7 ps n=41 lv=4 u_root.bd[*][*]$_DFFE_PP_/QN -> u_root.o1_d[*][*]$_DFF_P_/D
+      +28.9 ps n=3 lv=4 u_root.ins_r[*]$_DFF_PN0_/QN -> u_root.s2_ins[*]$_DFF_P_/D
+      +29.2 ps n=41 lv=4 u_root.qm[*][*]$_DFFE_PP_/QN -> u_root.r1_g[*][*]$_DFF_P_/D

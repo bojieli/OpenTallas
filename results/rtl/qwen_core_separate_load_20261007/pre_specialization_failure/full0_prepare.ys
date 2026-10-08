@@ -1,0 +1,23 @@
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_verilog -sv -I/home/ubuntu/OpenTallas/rtl/hdc /tmp/qwen-elements-restored-20261007/successor/full0/core.sv
+read_verilog -sv -I/home/ubuntu/OpenTallas/rtl/hdc /home/ubuntu/OpenTallas/rtl/hdc/ot_hdc_stream.sv
+read_verilog -sv -I/home/ubuntu/OpenTallas/rtl/hdc /home/ubuntu/OpenTallas/rtl/hdc/ot_hdc_prefix.sv
+read_verilog -sv -I/home/ubuntu/OpenTallas/rtl/hdc /tmp/qwen-elements-restored-20261007/successor/full0/gen/ot_hdc_vstream_rt.sv
+read_verilog -sv -I/home/ubuntu/OpenTallas/rtl/hdc /home/ubuntu/OpenTallas/rtl/hdc/ot_qwen_me_array_w12.sv
+read_verilog -sv -I/home/ubuntu/OpenTallas/rtl/hdc /home/ubuntu/OpenTallas/rtl/hdc/ot_hdc_cg.sv
+read_verilog -sv -I/home/ubuntu/OpenTallas/rtl/hdc /home/ubuntu/OpenTallas/rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv
+read_verilog -sv -I/home/ubuntu/OpenTallas/rtl/hdc /home/ubuntu/OpenTallas/rtl/hdc/ot_hdc_dyn_ttiles.sv
+blackbox ot_qwen_me_spine_w12
+blackbox ot_hdc_vstream_rt
+blackbox ot_hdc_stream
+blackbox ot_qwen_core_wrom_port
+hierarchy -check -top ot_qwen_rom_core -chparam ACC_LAT 5 -chparam AW 24 -chparam BD 41 -chparam EMB_ADDR_BASE 0 -chparam EMB_CODE_LANES 64 -chparam FAST_ISSUE 0 -chparam G 6144 -chparam HALF 64 -chparam HD 128 -chparam HID 4096 -chparam INT8_EMBED 0 -chparam INT8_SCALE_WCS_BASE 1 -chparam INT8_WEIGHT 1 -chparam KV_FP8 1 -chparam KV_HBM 1 -chparam KV_PREP 0 -chparam KV_VEC_WRITE_BRIDGE 1 -chparam LV 7 -chparam MEM_EXTRA 1 -chparam ME_IDLE_GATE 1 -chparam ME_STALL 1 -chparam MUL_LAT 5 -chparam NW 18 -chparam NWS 5 -chparam ORD 7 -chparam PAW 12 -chparam QWEN_FULLSHAPE 1 -chparam SCALE_LOCAL 0 -chparam SMAX 11 -chparam SMIN 7 -chparam SU_VEC 1 -chparam SW 64 -chparam TCUT 7 -chparam TREE_LAT 3 -chparam TWS 38 -chparam VPOS 0 -chparam DEC_LA 1 -chparam W 16 -chparam XVM 1 -chparam DEC_LA_ISSUE_FB 3 -chparam DEC_LA_BOUND 1 -chparam DEC_LA_AMQ 1 -chparam DEC_LA_NXREG 1 -chparam DEC_LA_MEIF 1 -chparam DEC_LA_SUIF 1 -chparam DEC_LA_PINREG 1
+proc
+flatten
+opt_clean
+expose -evert t:ot_qwen_me_spine_w12 t:$paramod*ot_qwen_me_spine_w12* t:ot_hdc_vstream_rt t:$paramod*ot_hdc_vstream_rt* t:ot_hdc_stream t:$paramod*ot_hdc_stream* t:ot_qwen_core_wrom_port t:$paramod*ot_qwen_core_wrom_port*
+rename -wire
+opt_clean
+proc
+write_json /tmp/qwen-elements-restored-20261007/successor/full0/original.json
+write_verilog -noattr /tmp/qwen-elements-restored-20261007/successor/full0/control.v

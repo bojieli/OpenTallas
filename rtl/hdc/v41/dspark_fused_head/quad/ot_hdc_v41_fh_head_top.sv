@@ -18,6 +18,10 @@ module ot_hdc_v41_fh_head_top #(
     // endpoint is its own view: the retirement packet here is the narrow control part (we, tag, valids), the lane
     // veto leaves one register early (q_lane_veto), leaf/data/mask/address and the argmax stand-in live outside.
     parameter integer LRET = 0,
+    // OREG (2026-10-07, default 0; needs LRET and SAFE): o_we and commit_warm launched from registers at the output
+    // pins, computed one stage early from the retirement registers' next-edge values: cycle-identical (0 cycles),
+    // removes the retirement logic between the last register and the pins (ctl r6 output hold/setup window).
+    parameter integer OREG = 0,            // 2: OREG + exact subtract-free address decode (0 cycles)
     parameter integer ROWS = 505,
     parameter [AW-1:0] LG_BASE_WORD = 0
 ) (
@@ -213,10 +217,18 @@ module ot_hdc_v41_fh_head_top #(
     generate for (ga = 0; ga < G; ga = ga + 1) begin : g_address
         wire [AW-1:0] ra = ra_addr[ga*AW+:AW] - LG_BASE_WORD;
         wire [AW-1:0] wa = wr_addr[ga*AW+:AW] - LG_BASE_WORD;
+        if (OREG >= 2) begin : g_fast_dec
+            // OREG=2 (2026-10-07, exact, 0 cycles): subtract-free decode (ot_hdc_v41_fh_adec; tb_fh_adec equivalence)
+            ot_hdc_v41_fh_adec #(.AW(AW), .LG(LG), .ROWS(ROWS), .GA(ga), .BASE(LG_BASE_WORD)) u_rdec (
+                .en(ra_re[ga]), .a(ra_addr[ga*AW+:AW]), .ok(read_ok[ga]), .row(read_row[ga*9+:9]));
+            ot_hdc_v41_fh_adec #(.AW(AW), .LG(LG), .ROWS(ROWS), .GA(ga), .BASE(LG_BASE_WORD)) u_wdec (
+                .en(wr_en[ga]), .a(wr_addr[ga*AW+:AW]), .ok(write_ok[ga]), .row(write_row[ga*9+:9]));
+        end else begin : g_sub_dec
         assign read_ok[ga] = ra_re[ga] && ra_addr[ga*AW+:AW] >= LG_BASE_WORD && ra[LG-1:0] == ga && (ra >> LG) < ROWS;
         assign write_ok[ga] = wr_en[ga] && wr_addr[ga*AW+:AW] >= LG_BASE_WORD && wa[LG-1:0] == ga && (wa >> LG) < ROWS;
         assign read_row[ga*9+:9] = 9'(ra >> LG);
         assign write_row[ga*9+:9] = 9'(wa >> LG);
+        end
         always @(posedge clk or negedge rst_n)
             if (!rst_n) address_fault[ga] <= 0;
             else if ((ra_re[ga] && !read_ok[ga]) || (wr_en[ga] && !write_ok[ga])) address_fault[ga] <= 1;
@@ -274,7 +286,9 @@ module ot_hdc_v41_fh_head_top #(
     assign q_lane_veto = veto_pre;
     wire [PW-1:0] retired;
     wire [63:0] veto;
-    wire [3:0] write_veto,retired_we;
+    wire [3:0] write_veto,retired_we,write_veto_nx;
+    wire rv_nx, rw_nx;
+    wire [PW-1:0] retired_nx;
     wire [3135:0] retired_leaf;
     wire [TW-1:0] raw_tag_out;
     wire raw_v_out;
@@ -286,7 +300,8 @@ module ot_hdc_v41_fh_head_top #(
         .ack_word(native_ack_word),.ack_mask(native_ack_mask),
         .retired_v(rv),.retired_warm(rw),.retired_packet(retired),.retired_id(commit_id),
         .lane_veto(veto),.lane_veto_pre(veto_pre),.write_veto(write_veto),.busy(retire_busy),.warm_ack(retire_warm_ack),
-        .fault(parent_fault),.warm_debt(commit_debt));
+        .fault(parent_fault),.warm_debt(commit_debt),
+        .retired_v_nx(rv_nx),.retired_warm_nx(rw_nx),.retired_packet_nx(retired_nx),.write_veto_nx(write_veto_nx));
     generate if(LRET) begin : g_narrow
         assign packet={o_we_q,r_tag_q,r_v_q,child_ov,child_leaf_v,warm_emit};
         assign {retired_we,raw_tag_out,raw_v_out,retired_ov,retired_leaf_v,retired_warm_payload}=retired;
@@ -296,8 +311,24 @@ module ot_hdc_v41_fh_head_top #(
         assign {retired_leaf,retired_we,o_addr,o_mask,o_data,raw_tag_out,raw_v_out,
             retired_ov,retired_leaf_v,retired_warm_payload}=retired;
     end endgenerate
-    assign o_we=rv?(retired_we&~write_veto):4'b0;
-    assign commit_warm=rw&&(|o_we);
+    generate if(OREG) begin : g_oreg
+`ifndef SYNTHESIS
+        initial if (!(LRET && SAFE)) $fatal(1, "OREG needs LRET and SAFE");
+`endif
+`ifdef OT_FH_OREG_MUTANT
+        wire [3:0] we_nx = rv ? (retired_we & ~write_veto) : 4'b0;   // negative control: one cycle late
+`else
+        wire [3:0] we_nx = rv_nx ? (retired_nx[PW-1-:4] & ~write_veto_nx) : 4'b0;
+`endif
+        (* keep=1 *) reg [3:0] o_we_r; (* keep=1 *) reg warm_r;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin o_we_r <= 4'b0; warm_r <= 1'b0; end
+            else begin o_we_r <= we_nx; warm_r <= rw_nx && (|we_nx); end
+        assign o_we = o_we_r; assign commit_warm = warm_r;
+    end else begin : g_ocomb
+        assign o_we=rv?(retired_we&~write_veto):4'b0;
+        assign commit_warm=rw&&(|o_we);
+    end endgenerate
     genvar l;
     for(l=0;l<64;l=l+1) begin : g_local_veto
         assign leaf[l*49+:49]={retired_leaf[l*49+48]&&!veto[l],retired_leaf[l*49+:48]};

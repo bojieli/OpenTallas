@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.dsrom_softmax_compiler_join.v1",
+  "source_sha256": {
+    "tools/dsrom_1m_su.py": "62d0096b88ae6ce5044674fc5cbbcdd82311e0c510e2d949dfca688b1bd40b32",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax.sv": "23335ea25d938ea1f59b9ccf2be9dddb883eec8095d46fd7f69e9f6c9473ab14",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74",
+    "rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "be2cd15b4977825dec71fe890a36f5eabe0345bdcf1ff2718af669f16ebab27a"
+  },
+  "campaigns": [
+    {
+      "tokens": 128,
+      "score_and_exp_vectors": 8,
+      "probability_words": 32,
+      "probability_port_bits": 1024,
+      "all_indices_unique": true,
+      "missing_transpose_negative_detected": true
+    },
+    {
+      "tokens": 640,
+      "score_and_exp_vectors": 40,
+      "probability_words": 160,
+      "probability_port_bits": 1024,
+      "all_indices_unique": true,
+      "missing_transpose_negative_detected": true
+    }
+  ],
+  "production_lowering_changed": false,
+  "adopted": false,
+  "instructions": [
+    "gather VM S0[h*T+t] into score[v][h*16+lane]",
+    "dispatch scores with atomically held nv/lt/scale/sink/cos/sin",
+    "scatter exp vectors into VM E[h*T+t] or apply exp_to_probability_words at direct adapter",
+    "apply existing adapter rne16 exactly once before P.V; do not reinterpret FP32 bits as BF16",
+    "wait actual attention P.V output, gather PV[h*512+d]",
+    "wait actual den_v, then replay PV vectors to normalize",
+    "scatter BF16 output to head-major O; shift BF16 code left16 when storing BF16-as-FP32 VM words"
+  ],
+  "result_VM_representation": "BF16 code shifted left16, not integer zero extension in lowbits",
+  "remaining": [
+    "bind production instruction encoding and row tags",
+    "attention score/PV tile output gather and credits",
+    "RTL transpose/beat assembler and protected reservation control",
+    "exact numerical producer\u2192consumer test on actual row",
+    "native clock/CDC and full timing composition"
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.qwen-vm-publication-storage.v1",
+  "NR": 2256,
+  "NW": 865,
+  "NVX": 2048,
+  "source_sha256": {
+    "rtl/hbm_accel/qwen/finite_vm_20261005/ot_qwen_finite_vm_adapter.sv": "30261cc7a1ee7f3f12aac7ac23413956acf1504dea0bac7ec3f14bd3f84e1063",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+  },
+  "current_storage": [
+    {
+      "name": "read_seat",
+      "bits": 162432,
+      "protection": "SECDED72 carries64 payload bits; read_ue contributes to native_tick gate",
+      "lifetime": "Captured request and returned scalar until next captured frame"
+    },
+    {
+      "name": "write_seat",
+      "bits": 62280,
+      "protection": "SECDED72; write_ue contributes to native_tick gate",
+      "lifetime": "Captured ordered writer until service/ACK completion"
+    },
+    {
+      "name": "last_window",
+      "bits": 2048,
+      "protection": "Plain registers after checked SRAM return",
+      "lifetime": "RWAIT capture through each RSLOT use; data is then re-encoded into read_seat"
+    },
+    {
+      "name": "xpipe",
+      "bits": 65536,
+      "protection": "Plain data registers",
+      "lifetime": "Between leased ME events; next eligible ME event copies to read_q"
+    },
+    {
+      "name": "xpipe_en",
+      "bits": 2048,
+      "protection": "Plain eligibility bits",
+      "lifetime": "Between leased ME events"
+    },
+    {
+      "name": "read_q",
+      "bits": 72192,
+      "protection": "Plain published registers",
+      "lifetime": "Holds until that source slot receives another published value"
+    }
+  ],
+  "concrete_hypotheses": [
+    "A last_window storage error after checked return can be encoded as a new valid read_seat value",
+    "An xpipe storage error can pass through the next leased ME publication without touching retained response SECDED",
+    "A read_q storage error can reach the next native consumer while frame_ue remains clear"
+  ],
+  "selected_probe_scope": "Full2256/865 adapter geometry, one initialized physical word, no engine arithmetic; compare ordinary read, VX latency, and codeword correction controls",
+  "candidate_before_RTL": {
+    "approach": "Retain existing response codewords through XVM and published holding rather than dropping protection before consumer; carry checked data/check stripes across last_window",
+    "read_q_replacement_declared_bits": 162432,
+    "read_q_declared_delta_bits": 90240,
+    "xpipe_replacement_declared_bits": 147456,
+    "xpipe_declared_delta_including_existing_en_bits": 79872,
+    "window_coded_bits": 2304,
+    "window_delta_bits": 256,
+    "total_declared_delta_bits": 170624,
+    "note": "Declared whole-codeword carry cost, not shortened-code constant-folding credit. Existing field/enable bits must retain original timing. Native publication must gate on decoder UE from owned published/XVM data. Window source check propagation and owner/control checks remain unimplemented.",
+    "boundary_check_bits_per_checked_window": 256,
+    "added_native_cycles_candidate": 0,
+    "zero_cycle_claim_qualification": "Logical candidate only; no physical timing credit, all decoder/UE reduction and source clock fanout costs need mapping",
+    "additional_decoder_replicas": 4336,
+    "new_encoder_replicas": "None for direct response codeword copies; checked-window check propagation must be implemented before claiming no re-encoding gap",
+    "cell_FF_floor_um2": 49753.9584,
+    "full64_codec_pair_conservative_body_um2": 1250975.19744,
+    "area_scope": "FF count plus conservative existing full64 encoder+decoder proxy; not mapped floorplan area, no slot assigned",
+    "checked_bank_output_check_register_bits": 256,
+    "window_note": "Carry original sampled parity with corrected checked-bank output; do not recompute parity from a potentially changed held decoded register."
+  },
+  "unchanged_obligations": {
+    "read_seats": 2256,
+    "write_seats": 865,
+    "parent160_reference_edges": 14419,
+    "selected_joined_reference_edges": 3989290,
+    "actual_service_delta": null
+  },
+  "ready_for_engine_RTL": false,
+  "fault_probe_results_pending": false,
+  "physical_admission": false,
+  "adopted": false,
+  "minimum_component_RTL_ready": true,
+  "fault_results": {
+    "baseline": "PASS",
+    "plain_read_q": "FAIL: storage error reaches native consumer",
+    "plain_xpipe": "FAIL: storage error reaches leased publication",
+    "plain_last_window": "FAIL: wrong data becomes a valid re-encoded response",
+    "retained_read_seat_single_bit": "PASS: corrected",
+    "retained_read_seat_double_bit": "PASS: native publication stopped"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "source": "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc_refill.sv",
+  "replacement_from": "assign out_d=hq[W-1:0];",
+  "replacement_to": "assign out_d=hq[W-1:0]^{{(W-1){1'b0}},1'b1};",
+  "mutant_sha256": "5fd2fecc98ff84e457a8a54b0aeeb6dc381d25e477d22dc489f64171317a5fe3"
+}

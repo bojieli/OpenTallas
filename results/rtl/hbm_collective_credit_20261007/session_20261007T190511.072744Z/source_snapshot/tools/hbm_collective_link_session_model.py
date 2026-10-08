@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+"""Cold-link source coordinator and two local reset agents, sized before RTL."""
+import json
+
+def model():
+ return dict(status='MODEL_BEFORE_RTL_DEFAULT_OFF',phases=['QUIESCE','RESET','RELEASE_NEXT_EPOCH','START','RUN'],
+  scope='one source-owned coordinator controls source and receiver local agents; eight data ports may share a cold link generation only if ALL port drain/grant obligations are ANDed',
+  messages=dict(data_bits=64,encoded_bits=72,layout='phase8 epoch24 sequence24 tag8',per_generation=20,encoded_control_bits=1440),
+  state=dict(coordinator_encoded_bits=72,each_agent_encoded_bits=144,fault_rails_per_module=2,three_modules_encoded_plus_rails=366),
+  compute='zero MACs; 24bit epoch/sequence comparisons/increments, SECDED codec, phase FSM; no numerical operation',
+  boundaries='Each management link is72 bits/cycle command and72 bits/cycle ACK at maximum. Actual PHY framing/FEC and CDC cost unknown.',
+  local_adapters='two synchronizer flops per status, reset_entry four flops, each local start adapter protected one-shot state plus synchronizers; enumerate implemented inventory after RTL',
+  initialization='POR holds both endpoint resets; physical quiesce and reset ACK establish purge before epoch1. Epoch initialized0 only on always-on POR which also demands physical purge handshake.',
+  reinitialization='stop new reservations, allow already reserved unsent traffic to launch/drain; wait both quiet signals, all reserved debt0, dataflightempty and credittransportempty before closing launch gate and reset. No context/go input.',
+  epoch='source increments24bit epoch only after both reset/quarantine ACKs; never wraps. RELEASE carries successor epoch. Sequence24bit also never wraps.',
+  external_contract='Always-on management transport must preserve atomic valid-ready frames and run independently of data reset/credit. PHY quiesce ACK attests launch gating and receive quarantine/drain; PHY reset ACK attests old data/control transport purged. ACK must deassert after request deassert. No fixed-delay inference.',
+  quiet_contract='Native endpoint quiet_core/phy alone insufficient. All source reserved unsent+inflight debt, held CDC head, forwardflight and old grant/ACK transport accounted; AND all ports in session.',
+  recovery='Faults close new-admission and local launch gates and assert endpoint resets. No successful recovery/regrant from a failed graceful drain unless external provider establishes purge via a new always-on POR/recovery contract.',
+  latency='5 ordered phases each needing two commands+twoACKs. At least one local control scheduling cycle per command plus synchronizer observations. Reset release uses existing2edges per local clock. Start is one pulse per domain, then explicit observed initialcreditACK before RUN. Actual serialization ceil((72+F)/B), managementCDC and wire flights must be added; unavailable values prohibit performance credit.',
+  physical='unmapped; replicas2localagents+1coordinator per coldlink session; no slot-fit/routingtrack/SSFF claim; asynchronous assertion, synchronized release require physical recovery/removal signoff')
+if __name__=='__main__':print(json.dumps(model(),indent=2))

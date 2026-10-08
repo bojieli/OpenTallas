@@ -1,0 +1,15 @@
+{
+  "pass": true,
+  "stage": "generic synth -noabc; not placed independence",
+  "replicas": 2,
+  "ff_per_replica": 7419,
+  "guard_ff": 2,
+  "total_ff": 14840,
+  "independent_state_bits": 14838,
+  "library_mapped_check_required": true,
+  "source_sha256": "fc9ceae01e8f1e86ebd326db92d0dbf6248e22621bbaed8e758b77bd9450c27e",
+  "synth_log_sha256": "e255b631761cd4ecb8a84a60ae2ddf07bb49d3612347670ddaaa4ad64dc6ce61",
+  "synth_json_sha256": "cc0f601894de8f24ca52ecfdfdfde278676e19a2d511beef393157dea70ec123",
+  "frontend": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+  "generic_cells": 79302
+}

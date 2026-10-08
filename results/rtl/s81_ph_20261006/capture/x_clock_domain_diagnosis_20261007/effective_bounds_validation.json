@@ -1,0 +1,16 @@
+{
+  "status": "CANDIDATE_HOOK_UNIT_VALIDATED_NOT_PHYSICAL_CLOSURE",
+  "source": "physical/s81_ph_views/capture/post_cts_capt_domains.tcl",
+  "sha256": "3c622d278c5a683cae747e64054b4c92d042ea8a07c4941d71ec1824684bb26b",
+  "original_setup_budget_source": "physical/s81_ph_views/tiles/ser_clock_capt.sdc",
+  "original_setup_budget": "0.2 * ser_clk period +150ps",
+  "correction": "Explicitly restate -max on vclk_s after unsetting core delays; then set measured -min on vclk_s.",
+  "test": "Stateful SDC API stub models min/max perclock perport; tests retained original max and recovery from missingmax, coreoutput unchanged, missingmeasurement failclosed",
+  "expected": {
+    "serial_period_ps": 1111.111,
+    "serial_max_ps": 372.2222,
+    "serial_min_ps": 140,
+    "virtual_clock_latency_ps": 360
+  },
+  "limitation": "No OpenSTA execution claimed; successor route must verify effective generated SDC and full endpoint setup/hold."
+}

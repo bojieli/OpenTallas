@@ -1,0 +1,65 @@
+{
+  "name": "window-column128-halfwrite-distributed-SOURCEPIN",
+  "block": "ot_dsrom_window_column_halfwrite_distributed",
+  "owner": "Codex:S81",
+  "purpose": "Preserve 1280 real distributed capture FF bits across generic synthesis; full128x32 mixed-edge write storage; unchanged protocol latency.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-pve1"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+    "branch": "SOURCE_BRANCH",
+    "commit": "SOURCE_COMMIT"
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "SRC={SRC} OUT={RUN}/routes CORES=8 bash physical/dsrom_window_columns/halfwrite_distributed/route.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "echo route_col.sh writes the IO SDC from CK_SS_MEAN/CK_FF_MIN/CK_FF_MAX",
+      "threads": 8,
+      "peak_ram_gb": 24
+    },
+    "route": {
+      "cmd": "SRC={SRC} OUT={RUN}/routes CORES=8 bash physical/dsrom_window_columns/halfwrite_distributed/route.sh {LABEL}",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp -r {RUN}/routes/{LABEL}/view {RUN}/record/ && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/pg_check.txt {RUN}/routes/{LABEL}/*.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "pg_reachable_M7_M9_free",
+        "cmd": "grep -q '^pg_rc=0' {RUN}/routes/{LABEL}/exit"
+      }
+    ],
+    "post_sdc": [
+      "physical/dsrom_window_columns/halfwrite_distributed/cl_{LABEL}/signoff_ss.sdc",
+      "physical/dsrom_window_columns/halfwrite_distributed/cl_{LABEL}/signoff_ff_guarded.sdc"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/dsrom_window_columns/halfwrite_distributed/view"
+    }
+  ],
+  "cycles_added": 0,
+  "no_bench_reason": "Minimum full column exactness and wrong-edge negative pass, and generic synthesis counts match 1280 distributed capture bits. Source-pinned evidence results/uarch/dsrom_window_halfwrite_distributed_20261007/record.json. Adoption held until actual mapped copy inventory, both half-cycle SS/FF, PG and parent physical checks.",
+  "merge_target": null,
+  "hold_eco": {
+    "session": "ff"
+  }
+}

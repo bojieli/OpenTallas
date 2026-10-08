@@ -1,0 +1,12 @@
+{
+  "scope": "analytical address mapping only, no RTL or provider qualification",
+  "positive_words": 32768,
+  "rows": 4096,
+  "logical_base_word": 123,
+  "installed_base_bytes": 4294967296,
+  "installed_limit_bytes": 4295098368,
+  "checks": "Every translated37bit byte address and8word sector offset matches exact formula; no32bit truncation",
+  "negative_logical_words": [122, 32891],
+  "negative_verdict": "both rejected ValueError",
+  "passed": true
+}

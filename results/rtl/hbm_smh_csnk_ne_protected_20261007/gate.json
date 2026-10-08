@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.hbm.smh.csnk_ne_exact.v1",
+  "status": "pass",
+  "scope": "one full W42 depth9 sink, actual credit source and pipeline stages; cycle equivalence plus independent FIFO data/order scoreboard",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "719a9f4077941311f4b0d79cc873798c213c01ab8104d37b689f9210eff91cbf",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv": "cc6525d3f81f160a136bae9fc15d951174625209e7fbd8fcafbd145543ec2d39",
+    "rtl/test/tb_hbm_smh_csnk_ne.sv": "6254944e07b346502cb8b8cd1afd79842286f0d31928815e3d69dbaee9bc2ede",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "rtl/test/tb_hbm_smh_csnk_ne_fault.sv": "cf6290444801c6a9d5c600163cf5c09cfe7dcd7c364b5155dcd0d7cca6be798f"
+  },
+  "tool_sha256": "30bc7d6715507e410e0f13219e334a2792b7d80e8e0732660c84bd93b791e4e5",
+  "cases": {
+    "positive": {
+      "returncode": 0,
+      "gate_pass": true,
+      "output": "PASS cycles=10038 accepted=4394 delivered=4390 empty=1840 full=1867 simultaneous=3205 last_pop=183 wrap=487 resets=1\n",
+      "compile": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_smh_csnk_ne",
+        "-o",
+        "/tmp/codex-claude-recovery-20261007/hbm-sm/csnk_ne_protected_combined_a1/positive.vvp",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv",
+        "/home/ubuntu/OpenTallas/rtl/test/tb_hbm_smh_csnk_ne.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+        "/home/ubuntu/OpenTallas/rtl/test/tb_hbm_smh_csnk_ne_fault.sv"
+      ]
+    },
+    "mutant_last_pop": {
+      "returncode": 1,
+      "gate_pass": true,
+      "output": "FATAL: /home/ubuntu/OpenTallas/rtl/test/tb_hbm_smh_csnk_ne.sv:25: equivalence failure cycle=110 valid=1/0 credit=1/1 data=15700000008/15700000008\n       Time: 1125000 Scope: tb_hbm_smh_csnk_ne\n",
+      "compile": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_smh_csnk_ne",
+        "-o",
+        "/tmp/codex-claude-recovery-20261007/hbm-sm/csnk_ne_protected_combined_a1/mutant_last_pop.vvp",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+        "/tmp/codex-claude-recovery-20261007/hbm-sm/csnk_ne_protected_combined_a1/mutant.sv",
+        "/home/ubuntu/OpenTallas/rtl/test/tb_hbm_smh_csnk_ne.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+        "/home/ubuntu/OpenTallas/rtl/test/tb_hbm_smh_csnk_ne_fault.sv"
+      ]
+    },
+    "cached_rail_faults": {
+      "returncode": 0,
+      "gate_pass": true,
+      "output": "PASS injections=4 empty/nonempty x both rails; no false pop/publication; repair sticky fault and reset\n",
+      "compile": [
+        "iverilog",
+        "-g2012",
+        "-DOT_SMH_RCH_NONEMPTY",
+        "-s",
+        "tb_hbm_smh_csnk_ne_fault",
+        "-o",
+        "/tmp/codex-claude-recovery-20261007/hbm-sm/csnk_ne_protected_combined_a1/cached_rail_faults.vvp",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv",
+        "/home/ubuntu/OpenTallas/rtl/test/tb_hbm_smh_csnk_ne.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+        "/home/ubuntu/OpenTallas/rtl/test/tb_hbm_smh_csnk_ne_fault.sv"
+      ]
+    }
+  },
+  "physical_closure": false,
+  "state_protection_qualified": false,
+  "cached_bit_fault_detection_RTL_pass": true,
+  "synthesis_independent_rail_storage_verified": false,
+  "existing_count_pointer_protection_changed": false
+}

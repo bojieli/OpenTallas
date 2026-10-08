@@ -1,0 +1,17 @@
+{
+  "scope": "Actual literal core ICG/PINREG/MEIF go-take statements joined to actual protected full16 provider, reduced request aperture NR1 NW1",
+  "source_core_sha256": "08a60f68209b7ca00c4d5df684a353b742f1e98ea54afc355d2caa52502ba183",
+  "cases": {
+    "PINREG0": "PASS",
+    "PINREG1": "PASS",
+    "lease_disabled": "REJECTED UNPAID_SOURCE_ME_CLOCK"
+  },
+  "captured_intent0_live_supply1": "Only native edge admitted; ME clock and take remain disabled, pending go preserved; next paid ME edge accepts once",
+  "captured_intent1": "PINREG0 waits original supply after checkedACK; PINREG1 retains sampled readiness while native clock held and consumes new raw supply only on the next native edge",
+  "real_checked_ACKs_per_positive": 2,
+  "arithmetic_executed": false,
+  "full_core_execution": false,
+  "whole_ROM_clock_enrollment": false,
+  "physical_admission": false,
+  "adopted": false
+}

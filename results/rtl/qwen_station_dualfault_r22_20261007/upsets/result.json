@@ -1,0 +1,118 @@
+{
+  "schema": "opentallas.qwen_station_dualfault_upset.v1",
+  "pass_all": true,
+  "cases": [
+    {
+      "case": "m0_t0_s0",
+      "expected_pass": true,
+      "observed_pass": true,
+      "upset_checks": 8,
+      "exit_code": 0,
+      "log_sha256": "c1b8f58c7c6465fdb40fb3b91362f447356beb5900c670fe04d4b082362d72a6"
+    },
+    {
+      "case": "m0_t1_s0",
+      "expected_pass": true,
+      "observed_pass": true,
+      "upset_checks": 12,
+      "exit_code": 0,
+      "log_sha256": "236c1b0fab35c03d4deb48dbc20d9a7d5b78875fee154bb5c5e94166f4f54b8e"
+    },
+    {
+      "case": "m0_t0_s1",
+      "expected_pass": true,
+      "observed_pass": true,
+      "upset_checks": 12,
+      "exit_code": 0,
+      "log_sha256": "236c1b0fab35c03d4deb48dbc20d9a7d5b78875fee154bb5c5e94166f4f54b8e"
+    },
+    {
+      "case": "m0_t1_s1",
+      "expected_pass": true,
+      "observed_pass": true,
+      "upset_checks": 16,
+      "exit_code": 0,
+      "log_sha256": "b2c8bdbe1fb3b4dbda98c714a1827ff8f525335bc2920d63877314fe9e8ea0cf"
+    },
+    {
+      "case": "m1_t0_s0",
+      "expected_pass": false,
+      "observed_pass": false,
+      "upset_checks": 8,
+      "exit_code": 1,
+      "log_sha256": "ed66f7a7ce27b568efbab334e359309bcbea4b3e8b5b5bfa89e85f9a87e90a8b"
+    },
+    {
+      "case": "m1_t1_s0",
+      "expected_pass": false,
+      "observed_pass": false,
+      "upset_checks": 12,
+      "exit_code": 1,
+      "log_sha256": "339f96b41d41532bafcbbbb559d88b2e78e59ad367231ee55188484e9eef6a71"
+    },
+    {
+      "case": "m1_t0_s1",
+      "expected_pass": false,
+      "observed_pass": false,
+      "upset_checks": 12,
+      "exit_code": 1,
+      "log_sha256": "163128eaf51883485ec34b2c4929e4b918e46fc4cb07fa89b0be6906367fb09e"
+    },
+    {
+      "case": "m1_t1_s1",
+      "expected_pass": false,
+      "observed_pass": false,
+      "upset_checks": 16,
+      "exit_code": 1,
+      "log_sha256": "b20c579dc29cfacd505b24ee60e06438e259e132804e1e55254ba157664f4e09"
+    },
+    {
+      "case": "m2_t0_s0",
+      "expected_pass": false,
+      "observed_pass": false,
+      "upset_checks": 8,
+      "exit_code": 1,
+      "log_sha256": "089d5814b4f88f7379b5a1d93721530263d02eb3eaf3b8a4e85cb5172705fb5c"
+    },
+    {
+      "case": "m2_t1_s0",
+      "expected_pass": false,
+      "observed_pass": false,
+      "upset_checks": 12,
+      "exit_code": 1,
+      "log_sha256": "3569a29a37b02505560a0291f068a822b25f162d87d7c7fb46ad6fcdad14fc0c"
+    },
+    {
+      "case": "m2_t0_s1",
+      "expected_pass": false,
+      "observed_pass": false,
+      "upset_checks": 12,
+      "exit_code": 1,
+      "log_sha256": "11170c7f4aee4b8030036f1862568cd0d4805bd8f1b357369305602e60fceafa"
+    },
+    {
+      "case": "m2_t1_s1",
+      "expected_pass": false,
+      "observed_pass": false,
+      "upset_checks": 16,
+      "exit_code": 1,
+      "log_sha256": "138a70801cca286b8b46383b4ce5af457cad7c263ec73a954e1592feb78c0c3a"
+    }
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_die_dualfault_station_r22.sv": "d192971bdc15263bf3d9981c15136a267654598a77e229595cb18843db1571fd",
+    "tools/qwen_station_dualfault_upset_regression.py": "e0f4de38688f874b5d9843cf4db7e247d5ae06a4c0a72bd8db8643868de2bbd1"
+  },
+  "covered": "Every active reverse-fault state bit, both valid starting polarities, all four branch shapes; cold POR pair; two broken-protection controls",
+  "excluded": [
+    "forward descriptor/go and data protection",
+    "multiple simultaneous upsets",
+    "combinational faults",
+    "mapped sequential driver retention",
+    "reset-tree release",
+    "root publication guard",
+    "SS/FF timing",
+    "whole-token adoption"
+  ],
+  "adoption": false
+}

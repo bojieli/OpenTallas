@@ -1,0 +1,24 @@
+{
+  "status": "EXACT_PASS_PHYSICAL_PENDING",
+  "adopted": false,
+  "source_sha256": {
+    "tools/uarch_model.py": "495452202bc83a14fcb31409ebb3444a9f16083c2dc541539ef26412688a9420",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv": "1b5694a76f8270c299c00ab220153e40064950c4332c9f1ddde18fe4e47a5cd8",
+    "rtl/dsrom_sys/s81_window_la/pipeline/tb_window_column_split.sv": "3592620a2b8d9615120ae985856b891dbcfb28f24e3445245b24d9c17f5752d1",
+    "physical/dsrom_window_columns/place_stage.tcl": "f78fbc0483ec10cac14a209e313ccb78e36fc22e50998b68652a30c84eb953bd",
+    "tools/dsrom_window_stage_hier_physical.py": "ce7762da1108c8c80d5375924bf7bb8e1e07a70bfb547ad2301673b58edc03c0"
+  },
+  "tests": {
+    "exact": "1569 checks, 517 collisions; reset, bubbles, multi-row writes",
+    "negative": "split result XOR-bit mutant fails check101",
+    "local_yosys": "unavailable frontend capability: existing genvar declaration syntax rejected; Icarus elaboration and exact simulation pass"
+  },
+  "added_cycles": 0,
+  "prerequisite": "wcol128-m6-01a487c86 hold ECO then parent route with actual view; 256 M6 failure retained",
+  "original_failed_job": "wcol256-m6-01a487c86",
+  "original_slack_ps": {
+    "SS": 1.44,
+    "FF": -13.05
+  },
+  "parent_macro_count": 132
+}

@@ -1,0 +1,10 @@
+QM=5 + QS=3 PQ1 L20 bench (SAFE QS=3: bterm5 P0B=3 midpoint register + registered CSA terms, segtree6 YF, walker WRT;
+OT_PQQ_QM=5 OT_PQQ_QS=3 OT_PQQ_DEFINES=QP_CHECK,QT_CHECK, tools/dsrom_combined_l20.py field --cfg pq1_q10 --field-layers 20,
+AGIdock qelem-qm/comb_qs3; sources = this commit's rtl/v41rom/ot_v41_{bterm5_w10,segtree6,rom_elem_qx_pq_w10}.sv, sha256 in qx10qs3.json):
+2752 runs (phase) failed 0
+896 runs (node) failed 0   (every internal QP_CHECK / QT_CHECK assertion on, incl. the YF forward == direct form)
+Cycle cost (same 3,648 runs, sum of node idle): QM=5 1,625,633 -> QS=2 1,628,414 -> QS=3 1,633,976 = +0.513 % vs QM=5
+(+0.342 % vs QS=2; per run +0..+3 cycles).  Pre-approved (<= 2 %).
+Rejected on the way: segment tree II2 (QX gate exact on PQ0, but the PQ1 field changed tree results in ~700 runs; WRT +
+P0B=3 alone exact 3,648/3,648); walker II2 (the field sends back-to-back x beats: 10,224 back-to-back hits, 8 per
+ffn.down run, measured by a QX_GAPSTAT instrumented L20 run), replaced by WRT (zero cycles).

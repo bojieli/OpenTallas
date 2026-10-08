@@ -1,0 +1,30 @@
+{
+  "scope": "WC calibration diagnostic only, no routed SS/FF signoff",
+  "original_recovery_pin": "d7a64a321",
+  "diagnostic_replay_pin": "656ba8949",
+  "saved_state_report_pin": "6da74f69e",
+  "data_min": {
+    "start": "arrival_data[375]",
+    "end": "u_core.send_data[375]$_DFFE_PP_/D",
+    "input_min_ps": 0,
+    "virtual_launch_latency_ps": 0,
+    "capture_latency_ps": 681.89502,
+    "arrival_ps": 151.546432,
+    "required_ps": 733.200562,
+    "hold_ps": 26.30551,
+    "uncertainty_ps": 25,
+    "slack_ps": -581.654114
+  },
+  "valid_max": {
+    "start": "arrival_v[0]",
+    "end": "u_core.send_data[339]$_DFFE_PP_/D",
+    "arrival_ps": 1481.095581,
+    "required_ps": 1377.336426,
+    "slack_ps": -103.759109
+  },
+  "limitations": [
+    "Original failed CTS was preserved. One identical diagnostic CTS replay saved its failed ODB before unsupported report redirect caused wrapper failure.",
+    "Saved failure was reloaded read-only with unchanged saved SDC and WC libraries, fresh placement parasitics; no second CTS/repair.",
+    "The min path matches original reported hold failure; this is pre-route placement-parasitic diagnostic evidence."
+  ]
+}

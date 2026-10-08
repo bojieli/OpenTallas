@@ -1,0 +1,86 @@
+{
+  "schema": "qwen.core.pinreg.done.v1",
+  "status": "pass",
+  "scope": "actual extracted core controller + real TP sequencer; END-only program; arithmetic input boundary",
+  "added_cycles": 0,
+  "new_registers": 0,
+  "default0_unchanged": true,
+  "adopted": false,
+  "physical_signoff": false,
+  "emitted_core_sha256": "f7c85b82c042a65d9ee8ea17a68f252cb8b943e4855a731cb4c5d91e170e0c52",
+  "source_sha256": {
+    "tools/qwen_core_pinreg_done_regression.py": "ac180cf326178bf8183ea1a29907831667f659e539813d8946a75bb44c643d7a",
+    "tools/qwen_rom_core_issue_fallback_w12.py": "55d6affc5a232f82861890cd848571caba2ea4f6134f3cc2ab38d72cd21a99e0",
+    "tools/qwen_rom_core_takeover_component.py": "9e2c9e0b28cfb4ce7046c9b8d3b7885614c91b3494d5ab2f8c13147e1a68f188",
+    "tools/qwen_rom_core_dec_emit_w12.py": "c1fc24f159ea730356c73d272f948149edca65cc0861a853718a0bbe45af1d75",
+    "tools/qwen_rom_verify_core_emit_w12.py": "77ce26ad3a9399d6cf55aa559041ea1f7e8ef8d96ffc4078cdeaa1bba0b5b5d2",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "rtl/rom/ot_qwen_tp_seq_w12_vp.sv": "5d46b3c47ba05e708908cfdb801d77ddb09741dcf201ebe3a57bd063da2dc0d8"
+  },
+  "runs": [
+    {
+      "name": "positive_p0_a0_l0",
+      "returncode": 0,
+      "expected_negative": false,
+      "passed": true,
+      "log": "PASS transactions=8 edges=103 pinreg=0 amq=0 la=0"
+    },
+    {
+      "name": "positive_p0_a0_l1",
+      "returncode": 0,
+      "expected_negative": false,
+      "passed": true,
+      "log": "PASS transactions=8 edges=103 pinreg=0 amq=0 la=1"
+    },
+    {
+      "name": "positive_p0_a1_l0",
+      "returncode": 0,
+      "expected_negative": false,
+      "passed": true,
+      "log": "PASS transactions=8 edges=111 pinreg=0 amq=1 la=0"
+    },
+    {
+      "name": "positive_p0_a1_l1",
+      "returncode": 0,
+      "expected_negative": false,
+      "passed": true,
+      "log": "PASS transactions=8 edges=111 pinreg=0 amq=1 la=1"
+    },
+    {
+      "name": "positive_p1_a0_l0",
+      "returncode": 0,
+      "expected_negative": false,
+      "passed": true,
+      "log": "PASS transactions=8 edges=119 pinreg=1 amq=0 la=0"
+    },
+    {
+      "name": "positive_p1_a0_l1",
+      "returncode": 0,
+      "expected_negative": false,
+      "passed": true,
+      "log": "PASS transactions=8 edges=119 pinreg=1 amq=0 la=1"
+    },
+    {
+      "name": "positive_p1_a1_l0",
+      "returncode": 0,
+      "expected_negative": false,
+      "passed": true,
+      "log": "PASS transactions=8 edges=127 pinreg=1 amq=1 la=0"
+    },
+    {
+      "name": "positive_p1_a1_l1",
+      "returncode": 0,
+      "expected_negative": false,
+      "passed": true,
+      "log": "PASS transactions=8 edges=127 pinreg=1 amq=1 la=1"
+    },
+    {
+      "name": "negative_sticky_p1_a1_l1",
+      "returncode": 1,
+      "expected_negative": true,
+      "passed": true,
+      "log": "FATAL: /tmp/qwen-core-done-hdfu3gnd/tb.sv:47: stale completion i=1 expected=108 actual=107\n       Time: 270000000000000 Scope: tb"
+    }
+  ]
+}

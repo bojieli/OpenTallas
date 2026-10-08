@@ -9,6 +9,66 @@
   "remote_mutations": 0,
   "main_merged": false,
   "runs": {
+    "q8hc": {
+      "verdict": "REJECTED_ROUTE",
+      "observed_route_wns_ps": -4909.901,
+      "timing_scope": "GRT repair at 770 ps, not corner signoff",
+      "reason": "Flow exit 137; wrapper die-input din_p0 flops displaced from pins along 5530 um face.",
+      "next": "Parent to Zeno: pin-flop placement and face-chain work in hub scope; reuse closed HC lane. No hub source edits here.",
+      "host": "ot-epyc2",
+      "remote_route": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc",
+      "observed_utc": "2026-10-07T10:51:38.132848+00:00",
+      "manifest": "q8hc/manifest.json",
+      "manifest_sha256": "13d24a7373310facc99dacdece9fafa36faf6edd357f6ce65ff3e9779e163026",
+      "accepted": false
+    },
+    "tm3": {
+      "verdict": "TERMINATED_NO_SIGNOFF",
+      "exit": "rc=143; corner_rc=1",
+      "reason": "No physical/corner JSON. io150_rc=0 wraps sed errors for missing w18_sta scripts and is not PASS.",
+      "successor": "safe_top (ts4_pin), already live",
+      "host": "ot-epyc2",
+      "remote_route": "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/tm3_io_u30",
+      "observed_utc": "2026-10-07T10:51:38.120767+00:00",
+      "manifest": "tm3/manifest.json",
+      "manifest_sha256": "0e242f18b56f3cc8dce7762760f093d43c1bbce806158cd699671c28a589a5ef",
+      "accepted": false
+    },
+    "sm3": {
+      "verdict": "INCOMPLETE_NO_LIVE_PROCESS",
+      "observed_route_wns_ps": -250.81,
+      "timing_scope": "Last GRT log at 770 ps, not corner signoff",
+      "reason": "No terminal record or live matching process at snapshot; do not infer success or a terminal failure from absence.",
+      "successor": "safe_slice (ss1_safe), already live",
+      "host": "ot-epyc2",
+      "remote_route": "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/sm3_io_u30",
+      "observed_utc": "2026-10-07T10:51:38.115093+00:00",
+      "manifest": "sm3/manifest.json",
+      "manifest_sha256": "8d15aad5a06a061e450d22e35726780d9aa0ba795c548e7ba44a4ef76d9f9b9e",
+      "accepted": false
+    },
+    "safe_top": {
+      "verdict": "LIVE_NOT_QUALIFIED",
+      "reason": "Existing SAFE top ts4_pin in CTS at snapshot. No new route started.",
+      "cycle_cost": "SAFE reducer +4 cycles/reduction; not an adopted system-rate gain.",
+      "host": "ot-epyc2",
+      "remote_route": "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/ts4_pin",
+      "observed_utc": "2026-10-07T10:51:42.042303+00:00",
+      "manifest": "safe_top/manifest.json",
+      "manifest_sha256": "92c38f1466b5ab4c5a286a1eee4fe5a34a5c58692613bf235c83891b1d5299d2",
+      "accepted": false
+    },
+    "safe_slice": {
+      "verdict": "LIVE_NOT_QUALIFIED",
+      "reason": "Existing SAFE slice ss1_safe in GRT at snapshot. No new route started.",
+      "exact_evidence": "safe_bench.out: 20000 cycles, 4050 events, zero mismatches; planted negative 1652 mismatches. Historical receipt, not a new campaign.",
+      "host": "ot-epyc2",
+      "remote_route": "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/rm/routes/ss1_safe",
+      "observed_utc": "2026-10-07T10:51:42.033763+00:00",
+      "manifest": "safe_slice/manifest.json",
+      "manifest_sha256": "81d02cf1c2b6e8bd0c9e53a255df71f8a2f68fb1933073ffc3c368d38f8fa73a",
+      "accepted": false
+    },
     "dv10": {
       "verdict": "REJECTED_MARGIN",
       "ss_setup_ps": 30.68,

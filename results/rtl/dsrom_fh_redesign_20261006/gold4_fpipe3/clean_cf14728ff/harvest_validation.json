@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.fh.clean-gold4-harvest.v1",
+  "source_commit": "cf14728ffebc49d8e9bb8a50e1e074c6e789123f",
+  "route_commit": "60f5a0a9050fcea5f5db815d4b72c04144730c70",
+  "all_40_input_hashes_checked_against_commit": 40,
+  "golden_before_after_identical": true,
+  "route_capture_rtl_binding": {
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_matvec.sv": {
+      "bench_sha256": "876ed4e5f65aaaad1c961c9f9bb60f8440a6d9d3fb1f61e2860687678d862131",
+      "route_sha256": "876ed4e5f65aaaad1c961c9f9bb60f8440a6d9d3fb1f61e2860687678d862131",
+      "identical": true
+    },
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_core_v41.sv": {
+      "bench_sha256": "04fd6de1df256cd14821fa1576f00e1b27d0ee1e0d2d1e8a1e11216db7c3fead",
+      "route_sha256": "04fd6de1df256cd14821fa1576f00e1b27d0ee1e0d2d1e8a1e11216db7c3fead",
+      "identical": true
+    },
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv": {
+      "bench_sha256": "f0380c833b1ba2c2f08f44ce78ba73cb45ae21c9f94404a4d49edbad0e7fa138",
+      "route_sha256": "f0380c833b1ba2c2f08f44ce78ba73cb45ae21c9f94404a4d49edbad0e7fa138",
+      "identical": true
+    },
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_retire_parent.sv": {
+      "bench_sha256": "b892c1821142fda3eb74258f6ddde43aedca2a167abdedd6cb509e4798542972",
+      "route_sha256": "b892c1821142fda3eb74258f6ddde43aedca2a167abdedd6cb509e4798542972",
+      "identical": true
+    },
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_checked_permission.sv": {
+      "bench_sha256": "3caeda2b025d2a608b90dfb362eeccd468bf75e020e02d43eab8290b9b24e2fa",
+      "route_sha256": "3caeda2b025d2a608b90dfb362eeccd468bf75e020e02d43eab8290b9b24e2fa",
+      "identical": true
+    },
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv": {
+      "bench_sha256": "be5c487cd4a3920847e43b0cf93a3580c541e9ee0679e0753d7330d24f506839",
+      "route_sha256": "be5c487cd4a3920847e43b0cf93a3580c541e9ee0679e0753d7330d24f506839",
+      "identical": true
+    }
+  },
+  "exact": {
+    "tokens": 5,
+    "token_errors": 0,
+    "vm_mismatches": 0,
+    "cycles": 63153,
+    "fpipe2_cycles": 63128,
+    "delta_cycles": 25
+  },
+  "scope": "Previously completed component draft slice; harvested existing source-pinned run, no new simulation. OREG3 is separately gated by head_q_oreg2/adec benches in oreg/record.json. Half-rate die start/done crossing remains unproved; no adoption inferred."
+}

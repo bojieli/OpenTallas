@@ -1,0 +1,11 @@
+{
+  "source": "rtl/hdc/ot_hdc_core_vector_weight.sv",
+  "source_sha256": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+  "base_emitter_sha256": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+  "verify_emitter_sha256": "77ce26ad3a9399d6cf55aa559041ea1f7e8ef8d96ffc4078cdeaa1bba0b5b5d2",
+  "emitted_sha256": "dfbd25f8476d37cfc33b4dd441d3d7ebeca5a94c2d2b746337420367e9dac871",
+  "extraction": "sequencer through before units; actual fetch, decoded NEXT, dispatch, drain, dynamic offsets and state processes unchanged; ready/idle/progress child inputs exposed; unused arithmetic argmax tied zero; memory supply gates good",
+  "me_status_sha256": "dbc3e2366bb1c680a592256a34dc8dcc9c8b094ffe8cd37c93a50a14c750d125",
+  "me_status_accept_edge": 5,
+  "native_me_idle_age": 500
+}

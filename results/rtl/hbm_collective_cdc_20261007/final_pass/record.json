@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "checks": {
+    "positive": {
+      "returncode": 0,
+      "passed": true,
+      "output": " ... Linking\n ... Removing symbol tables\n ... Compiletf functions\nCompiling VVP ...\n ... VVP file version 11.0 (stable)\nCompile cleanup...\n ...      804 functors (net_fun pool=524288 bytes)\n                273 logic\n                  0 bufif\n                  0 resolv\n                 69 signals\n ...      686 filters (net_fil pool=524288 bytes)\n ...     1981 opcodes (49152 bytes)\n ...      207 nets\n ...      804 vvp_nets (1048544 bytes)\n ...        0 arrays (0 words)\n ...        5 memories\n                  5 logic (2138 words)\n                  0 real (0 words)\n ...       51 scopes\n ... 0.007934 seconds, 16344.0/8308.0/5472.0 KBytes size/rss/shared\nRunning ...\n ...execute EndOfCompile callbacks\n ...propagate initialization events\n ...execute StartOfSim callbacks\n ...run scheduler\nCDC_PROGRESS edges=128 writes=69 reads=5 fault=0 wb=69 rb=5 hp=1 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=256 writes=108 reads=45 fault=0 wb=108 rb=44 hp=2 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=384 writes=149 reads=86 fault=0 wb=21 rb=85 hp=2 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=512 writes=190 reads=127 fault=0 wb=62 rb=126 hp=2 reset=11 por=00 inv=1 inr=0\nCDC_PROGRESS edges=640 writes=231 reads=168 fault=0 wb=103 rb=39 hp=2 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=768 writes=272 reads=209 fault=0 wb=16 rb=80 hp=2 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=896 writes=313 reads=250 fault=0 wb=57 rb=122 hp=0 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=1024 writes=354 reads=291 fault=0 wb=98 rb=35 hp=0 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=1152 writes=395 reads=332 fault=0 wb=11 rb=76 hp=0 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=1280 writes=436 reads=373 fault=0 wb=52 rb=117 hp=1 reset=11 por=00 inv=1 inr=1\nCDC_PROGRESS edges=1408 writes=478 reads=414 fault=0 wb=94 rb=30 hp=1 reset=11 por=00 inv=1 inr=0\nCDC_PROGRESS edges=1536 writes=512 reads=456 fault=0 wb=0 rb=72 hp=0 reset=11 por=00 inv=0 inr=1\nCDC_PROGRESS edges=1664 writes=512 reads=499 fault=0 wb=0 rb=114 hp=2 reset=11 por=00 inv=0 inr=1\nPASS_CDC full545x64 independent_clocks512flits wrap/stalls/full/correction/rails/drain/coordinated_reset/control_double/payload_double\n ...execute Postsim callbacks\n ... 4.07481 seconds, 16344.0/8376.0/5484.0 KBytes size/rss/shared\nEvent counts:\n        7764 time steps (pool=113)\n       42942 thread schedule events\n       34740 assign events\n             ...assign(vec4) pool=9362\n             ...assign(vec8) pool=204\n             ...assign(real) pool=256\n             ...assign(word) pool=128\n             ...assign(word/r) pool=204\n       48937 other events (pool=4096)\n"
+    },
+    "corrupt_output": {
+      "returncode": 1,
+      "passed": true,
+      "output": " ... Linking\n ... Removing symbol tables\n ... Compiletf functions\nCompiling VVP ...\n ... VVP file version 11.0 (stable)\nCompile cleanup...\n ...      806 functors (net_fun pool=524288 bytes)\n                275 logic\n                  0 bufif\n                  0 resolv\n                 69 signals\n ...      688 filters (net_fil pool=524288 bytes)\n ...     1981 opcodes (49152 bytes)\n ...      207 nets\n ...      806 vvp_nets (1048544 bytes)\n ...        0 arrays (0 words)\n ...        5 memories\n                  5 logic (2138 words)\n                  0 real (0 words)\n ...       51 scopes\n ... 0.007844 seconds, 16344.0/8300.0/5456.0 KBytes size/rss/shared\nRunning ...\n ...execute EndOfCompile callbacks\n ...propagate initialization events\n ...execute StartOfSim callbacks\n ...run scheduler\nFATAL: /tmp/hbm-collective-cdc-final-20261007/monitored_bench.sv:15: CDC_DATA mismatch 0\n       Time: 115267500 Scope: tb_protected_cdc\n ...execute Postsim callbacks\n ... 0.380784 seconds, 16344.0/8420.0/5520.0 KBytes size/rss/shared\nEvent counts:\n         504 time steps (pool=113)\n        2364 thread schedule events\n        3333 assign events\n             ...assign(vec4) pool=9362\n             ...assign(vec8) pool=204\n             ...assign(real) pool=256\n             ...assign(word) pool=128\n             ...assign(word/r) pool=204\n        2826 other events (pool=4096)\n"
+    }
+  },
+  "manifest": {
+    "source_sha256": {
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+      "rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv": "5366ef10cf135546f19f07fbe1a6f3e7fc4052a159479eb63acf7970be99648b",
+      "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv": "a4e1bda9a0ab083503462a8c755f35cbe3aa52786e455e29c66834e915463497",
+      "rtl/hbm_accel/collective_cdc_20261007/tb_protected_cdc.sv": "2ad089b349abf3d9c7441edbcf3ff6dbfb6ccfc6d6648c65e761e5c216a355d0"
+    },
+    "private_bench_sha256": "675de7c766047cdfe5d87f3aa14901d04b98631d046352f0114352febf6b15f9",
+    "commands": {
+      "positive": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_protected_cdc",
+        "-o",
+        "/tmp/hbm-collective-cdc-final-20261007/positive.vvp",
+        "/home/ubuntu/OpenTallas/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv",
+        "/tmp/hbm-collective-cdc-final-20261007/monitored_bench.sv"
+      ],
+      "corrupt_output": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_protected_cdc",
+        "-o",
+        "/tmp/hbm-collective-cdc-final-20261007/corrupt_output.vvp",
+        "/home/ubuntu/OpenTallas/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+        "/home/ubuntu/OpenTallas/rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv",
+        "/tmp/hbm-collective-cdc-final-20261007/mutant.sv",
+        "/tmp/hbm-collective-cdc-final-20261007/monitored_bench.sv"
+      ]
+    }
+  },
+  "scope": "One full545x64 protectedCDC with actual die resetentry; not nativeendpoint/physicaltiming adoption"
+}

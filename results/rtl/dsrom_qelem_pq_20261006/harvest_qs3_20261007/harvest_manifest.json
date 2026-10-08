@@ -1,0 +1,31 @@
+{
+  "observed_utc": "2026-10-07T10:47:29.784623+00:00",
+  "host": "ot-agidock128",
+  "root": "/srv/opentallas-scratch/claude/closure-loop/dsrom-qelem-qs3-cb92bce64",
+  "files": [
+    {
+      "path": "cl/job.json",
+      "sha256": "0c11393cae04849f4495aaaebb1856cc0f402aaa05c959006853e2085f65d6c6"
+    },
+    {
+      "path": "cl/calib.json",
+      "sha256": "56a74f6fad4016e92e66b97a43eb466d192211f5a3df6a5ab61c6b7f1535e7a0"
+    },
+    {
+      "path": "cl/route.a1.start",
+      "sha256": "a8540b14651d54bbed7cfe72bebd85854a2c4f6fd27dbcfd89d20b9a0137ac1b"
+    },
+    {
+      "path": "cl/route.a1.pid",
+      "sha256": "a3cc5b202a53ec4144010c1c3fd39a51817b119492849e70626bedbd62eb132c"
+    },
+    {
+      "path": "routes/jobs/dsrom_qelem_qs3_cb92bce64/receipt.json",
+      "sha256": "f49b898a95bef9ff76094c778c77dd3ece6908cf5a7bef485a3684e4077dacb2"
+    },
+    {
+      "path": "src/physical/abi3/gen/dsrom_q_cl_signoff.sdc",
+      "sha256": "da4e024ea390514892f591c1e74148374f9a63e46dc01e7cb7a8ac6bbf6962d2"
+    }
+  ]
+}

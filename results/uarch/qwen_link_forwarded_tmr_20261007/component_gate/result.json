@@ -1,0 +1,103 @@
+{
+  "schema": "opentallas.qwen_forwarded_link_tmr.component_gate.v1",
+  "pass_all": true,
+  "functional": [
+    {
+      "case": "nl1_neg0",
+      "returncode": 0,
+      "expected_failure": false,
+      "qualified": true
+    },
+    {
+      "case": "nl2_neg0",
+      "returncode": 0,
+      "expected_failure": false,
+      "qualified": true
+    },
+    {
+      "case": "nl2_neg1",
+      "returncode": 1,
+      "expected_failure": true,
+      "qualified": true
+    },
+    {
+      "case": "nl2_neg2",
+      "returncode": 1,
+      "expected_failure": true,
+      "qualified": true
+    },
+    {
+      "case": "nl2_neg3",
+      "returncode": 1,
+      "expected_failure": true,
+      "qualified": true
+    },
+    {
+      "case": "mapped_shared_storage_negative",
+      "expected_failure": true,
+      "qualified": true,
+      "distinct_release_bits": 2,
+      "mutant_sha256": "44e17581f23d52f13d235d695034d741a86aa2d6a63a944db5e8b36e03afaf3b"
+    }
+  ],
+  "mapping": [
+    {
+      "NL": 1,
+      "total_state_FF": 1068,
+      "distinct_word_FF": 1056,
+      "clock_inverters": 4,
+      "clock_cell": "INVx1_ASAP7_75t_R",
+      "release_FF": 12,
+      "raw_POR_FF": 12,
+      "local_majority_clear_FF": 32,
+      "release_logic_cells_per_stream": [
+        "MAJIxp5_ASAP7_75t_R"
+      ],
+      "release_logic_area_um2": 0.20412,
+      "full_mapped_area_um2": 362.371319999997,
+      "netlist_sha256": "b7f52c9766f9e1b38a258f18529b21761be9de9d79d9e7e5ad72b0aca7a70bf7",
+      "qualified": true
+    },
+    {
+      "NL": 2,
+      "total_state_FF": 2136,
+      "distinct_word_FF": 2112,
+      "clock_inverters": 8,
+      "clock_cell": "INVx1_ASAP7_75t_R",
+      "release_FF": 24,
+      "raw_POR_FF": 24,
+      "local_majority_clear_FF": 64,
+      "release_logic_cells_per_stream": [
+        "MAJIxp5_ASAP7_75t_R"
+      ],
+      "release_logic_area_um2": 0.40824,
+      "full_mapped_area_um2": 724.742639999994,
+      "netlist_sha256": "fbdf50d202319cf0a9f93d9b907fa49cd3dfee80ebd0de6ac1be68643ecafdb8",
+      "qualified": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv": "cd7142ec0db3465c0b4134888e6947a2bc1d7223c0d2fc02093729e568921881",
+    "rtl/test/tb_qwen_die_link_fwd_full_tmr.sv": "dbd307e32133d283be3e851797134abbef52758225e705318a9ccaa768d57659",
+    "tools/qwen_link_forwarded_tmr_gate.py": "08fe056ab5b1e31c37104879c5d7fa102504337b928760861b2ec1d142a28ad6"
+  },
+  "library_sha256": {
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+  },
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "yosys_sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+  "scope": "Minimum full NL2 two-hop zero-delay RTL and ASAP7 sequential plus clock-inverter mapping. All data/reset logic mapped for area; P&R, full link protection, clock insertion/hold race and root reset remain unqualified.",
+  "adoption": false,
+  "log_sha256": {
+    "mapped_nl1.log": "fa61ad0c3bd859ae4c62d4274216b5d008c41a28149703b364297b9e6bddb7fc",
+    "mapped_nl2.log": "abd2dcdbe4a9b3b0bb92d562ec012098882e46d60e730561b54276753090a8a6",
+    "merged_rails.log": "f896668223c9d76278ba18618ebf984fdd0ea5723940391d162c2d3bab036477",
+    "nl1_neg0.log": "25672156a219d9dac048ddbb7d866d10ec46dfd76b342d40fd1fb08561583fa2",
+    "nl2_neg0.log": "6f96b1e45d82e4751d6b54c8b3a789e7b1da4bffb08c32c9c7e6884e3a2604fc",
+    "nl2_neg1.log": "417ec8179355e7cbbed2ce80195700c583fbe82d7c35bbd2fb09dfa55c7e2faf",
+    "nl2_neg2.log": "f1d5e911b17bfdc8924b0da878e5b6826497e248d96c942ebeb58fecf5d198d6",
+    "nl2_neg3.log": "8db020b133552dd1a2bc7a39307cabe8f5b80bf7d67b08c307b56ae95d45cd56"
+  }
+}

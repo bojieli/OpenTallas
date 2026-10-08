@@ -1,0 +1,22 @@
+== v3b/board_err.out
+CYCLES dut_last 40381 ref_last 2389 first_send 1114 records 985 messages 150
+TB_S81PH_COLL_SYS PASS
+== v3b/main.out
+CYCLES dut_last 10277 ref_last 2834 first_send 1113 records 1345 messages 200
+TB_S81PH_COLL_SYS PASS
+== v3b/mut.out
+CYCLES dut_last 10277 ref_last 2834 first_send 1113 records 1345 messages 200
+TB_S81PH_COLL_SYS FAIL errs 1215
+== v3b/nospec.out
+CYCLES dut_last 9886 ref_last 2824 first_send 1111 records 1360 messages 200
+TB_S81PH_COLL_SYS PASS
+== v3b/perf.out
+CYCLES dut_last 2329 ref_last 1568 first_send 1111 records 448 messages 1
+TB_S81PH_COLL_SYS PASS
+== v3b/ucie_err.out
+CYCLES dut_last 66176 ref_last 2352 first_send 1111 records 953 messages 150
+TB_S81PH_COLL_SYS PASS
+== ep lockstep (PIPE 0 regression)
+TB_S81PH_LINK_EP PASS
+TB_S81PH_LINK_EP PASS
+# v3: lane ep PIPE 1; perf (448-record AR) 2329 cycles (v2 2606, v1 2587); board_err +6.9% (37786 -> 40381) under a bit error every 61 beats; ucie_err EPER 29 seed 5 new case

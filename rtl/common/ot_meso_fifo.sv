@@ -81,9 +81,14 @@ module ot_meso_fifo #(
     parameter bit ONREG    = 0,      // views agent 2026-10-07: the data ring's r_on / r_align arrive as flops (next state of
                                      // the read FSM registered, one copy per 64-bit chunk): rs -> AND -> 8-chunk broadcast
                                      // (mcast_r5 56a4bdb6c -2.26 ps, 14 levels) starts at a flop; 0 cycles (exact retiming)
-    parameter bit RSPLIT   = 0       // RDREG only, data ring: the readout flop is split into two half-select flops
+    parameter bit RSPLIT   = 0,      // RDREG only, data ring: the readout flop is split into two half-select flops
                                      // (slots 0..DEPTH/2-1 / DEPTH/2..DEPTH-1, one AO level each) ORed after them;
                                      // same cycle.  Default off.
+    // PINREG (S81-RERUN fail-fast fix, default 0): wrst_n / rrst_n captured in a flop at the pin before any use.
+    // The resets are sampled synchronously; with them registered no input pin reaches the 512-bit ring write
+    // enables, w_rdy or r_v through logic (meso_d4 2e2d7aa3f: wrst_n -> s_d SS -40.1, -> w_rdy -11.8, rrst_n -> r_v
+    // -0.1).  Cost: reset assertion / release seen one cycle later on each side; no steady-state cycle.
+    parameter bit PINREG   = `ifdef OT_MESO_PINREG 1 `else 0 `endif
 ) (
     input  logic         wclk,
     input  logic         wrst_n,     // synchronous to wclk
@@ -155,7 +160,7 @@ module ot_meso_fifo #(
         logic [0:0]   c_rd; logic c_rv, c_lap_ok, c_glo, c_ghi;
 
         ot_meso_ring #(.W(W), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI), .RDREG(RDREG), .WCHK(WCHK), .PLREG(PLREG), .RSPLIT(RSPLIT), .ONV(ONREG)) u_data (
-            .tclk(wclk), .t_v(w_send), .t_d(w_d),
+            .tclk(wclk), .t_v(w_send), .t_d(w_d_i),
             .rclk(rclk), .r_align(r_align), .r_on(r_on), .r_align_v(r_al_v), .r_on_v(r_on_v),
             .r_d(d_rd), .r_v(d_rv), .r_lap_ok(d_lap_ok), .r_glo_ok(d_glo), .r_ghi_ok(d_ghi)
 `ifdef OT_MESO_DEBUG
@@ -260,14 +265,14 @@ module ot_meso_fifo #(
         if (ONREG) begin : g_onreg
             // next state of r_on / r_align from the read FSM below (same terms): on stays on unless the peer goes DOWN,
             // ALIGN with r_set == SETTLE turns it on; align is ALIGN with r_set reaching SETTLE next edge
-            wire on_n = rrst_n && (ws_r != S_DOWN) && (r_on || ((rs == S_ALIGN) && (r_set == SW'(SETTLE))));
-            wire al_n = rrst_n && (ws_r != S_DOWN) && (rs == S_ALIGN) && (SETTLE > 0) && (r_set == SW'(SETTLE - 1));
+            wire on_n = rrst_i && (ws_r != S_DOWN) && (r_on || ((rs == S_ALIGN) && (r_set == SW'(SETTLE))));
+            wire al_n = rrst_i && (ws_r != S_DOWN) && (rs == S_ALIGN) && (SETTLE > 0) && (r_set == SW'(SETTLE - 1));
             (* keep *) logic [NCHF-1:0] onq, alq;
             always_ff @(posedge rclk) begin onq <= {NCHF{on_n}}; alq <= {NCHF{al_n}}; end
             assign r_on_v = onq; assign r_al_v = alq;
 `ifndef SYNTHESIS
             reg seen_rst = 1'b0;             // compare only once both sides come from a reset state (2-state sims start random)
-            always @(posedge rclk) if (!rrst_n) seen_rst <= 1'b1;
+            always @(posedge rclk) if (!rrst_i) seen_rst <= 1'b1;
             always @(posedge rclk) if (seen_rst && !$isunknown(rs) && !$isunknown(onq[0]) && (onq[0] !== r_on || alq[0] !== r_align))
                 $display("PLREG_MISMATCH ONREG %m t=%0t onq=%b on=%b alq=%b al=%b", $time, onq[0], r_on, alq[0], r_align);
 `endif
@@ -286,17 +291,17 @@ module ot_meso_fifo #(
         logic [W-1:0] o_d; logic o_v;
         if (OBYP) begin : g_obyp
             // the arriving word is presented in the cycle it arrives (d_rd / d_rv are the RDREG readout flops)
-            assign r_v      = rrst_n && !r_flt && r_on && d_hit;
+            assign r_v      = rrst_i && !r_flt && r_on && d_hit;
             assign r_d      = d_rd;
         end else begin : g_oreg
-            assign r_v      = rrst_n && !r_flt && o_v;
+            assign r_v      = rrst_i && !r_flt && o_v;
             assign r_d      = o_d;
         end
         assign r_take   = r_v && r_rdy;
         wire   load     = !o_v || r_rdy;
 `ifndef SYNTHESIS
         if (NOBP) begin : g_nobp_check
-            always @(posedge rclk) if (rrst_n && !r_rdy) $error("ot_meso_fifo NOBP: r_rdy low (no-backpressure invariant broken)");
+            always @(posedge rclk) if (rrst_i && !r_rdy) $error("ot_meso_fifo NOBP: r_rdy low (no-backpressure invariant broken)");
         end
 `endif
         if (NOBP) begin : g_nobp

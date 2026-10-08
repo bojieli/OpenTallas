@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_svcio_ad",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0/routes/s81ph_dsfd_svcio_ad_d12b194f0/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0/routes/s81ph_dsfd_svcio_ad_d12b194f0/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0/routes/s81ph_dsfd_svcio_ad_d12b194f0/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0/routes/s81ph_dsfd_svcio_ad_d12b194f0/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0/routes/s81ph_dsfd_svcio_ad_d12b194f0/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0/routes/s81ph_dsfd_svcio_ad_d12b194f0/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0/routes/s81ph_dsfd_svcio_ad_d12b194f0/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_svcio_ad.lef": "c46505a57b394c335f2c26232be706ea18aa1d0a915e404c6c2c3df111f507bc",
+    "dsfd_svcio_ad_ff.lib": "d03933d684dae4fddf6fd1fb834e6d233619467483a12f71675aff30351a731b",
+    "dsfd_svcio_ad_ss.lib": "bc530d56876d96422f2f71deabf2f04c75bdc6482cd4c8d2354860719c13521e"
+  },
+  "ok": true
+}

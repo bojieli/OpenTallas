@@ -521,6 +521,10 @@ def readme(d):
          ". No measured residual or energy-win credit is assigned to failed E1. Earlier PG/spine rows retain their historical provenance.", "",
          "Status of every row = its weakest term (measured < composed_from_measured < published < partial < modelled < "
          "assumed). The `unvalidated` list in the JSON names the terms that are not measured.", "",
+         "**Scope (2026-10-07):** every rate here is a candidate composition, not a closed rate. The DS ROM rows are on the "
+         "historical 85-stage full-rate-BF geometry; the actual 1,792-pair half-rate-BF mapping has 98 or 120 stages and "
+         "392 or 480 layer dies, and is not priced here. Qwen ROM physical closure was reopened on 2026-10-07. The HBM rows "
+         "carry no die closure cost. See `results/arch/unified_composition_20261007/ledger.json`.", "",
          "## DeepSeek-V4.1 at 1M (batch 1)", "",
          "| Design | Per-user tok/s | Rate status | Static W | Dynamic W | System W | J/token | tok/s per kW | Row status |",
          "|---|---:|---|---:|---:|---:|---:|---:|---|"]

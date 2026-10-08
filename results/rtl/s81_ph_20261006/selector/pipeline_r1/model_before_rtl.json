@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.s81.selector_pipeline_model.v1",
+  "enabled_by_default": false,
+  "adopted": false,
+  "target": "DeepSeek V4.1 ROM S81 selector control",
+  "clock_hz": 1200000000.0,
+  "macs_per_cycle": 0,
+  "integer_sum_II": 1,
+  "compute_intensity": "two threshold searches per edge, four quarters and 16 radix bins per search",
+  "geometry": {
+    "Q": 4,
+    "W": 16,
+    "K": 512,
+    "CB": 11,
+    "SW": 17,
+    "XW": 21,
+    "searches": 2
+  },
+  "memory_ports": {
+    "control_tile": 0,
+    "quarter_macros_unchanged": true
+  },
+  "boundaries_bits_per_cycle": {
+    "f_s": 3460,
+    "f_o": 1416,
+    "t_c": 264,
+    "t_cr": 4,
+    "vd": 514,
+    "vf": 1
+  },
+  "port_bytes_per_cycle": {
+    "f_s": 432.5,
+    "f_o": 177,
+    "t_c": 33,
+    "t_cr": 0.5,
+    "vd": 64.25
+  },
+  "communication_intensity": "unchanged registered tile interfaces; internal extra registered sum stages only",
+  "routing": {
+    "new_external_tracks": 0,
+    "existing_horizontal_data_tracks_per_face": 2572,
+    "M4_pitch_um": 0.048,
+    "face_capacity_tracks": 6660,
+    "note": "two quarters on each W/E face; same pin plan, no die channel change; internal route unmeasured"
+  },
+  "replication": {
+    "control_tiles_per_selector": 1,
+    "searches_per_tile": 2,
+    "extra_FF_bits": 7454,
+    "sum_FF_bits": 6880,
+    "metadata_FF_upper_bits": 574,
+    "max_sum_operand_bin_fanout": 4,
+    "extra_boundary_mux_demux": 0,
+    "accumulator_fanout": 16,
+    "group_selector_mux": "unchanged 16:1 registered result path"
+  },
+  "floorplan": {
+    "outline_um": [
+      129.6,
+      319.68
+    ],
+    "baseline_routed_cell_um2": 19974.4,
+    "candidate_cell_estimate_um2": 23234.78,
+    "utilization_estimate": 0.5608130217408768,
+    "estimate_basis": "actual baseline plus added FF and 50% local-buffer allowance",
+    "fits_area_estimate": true,
+    "physical_fit_proven": false
+  },
+  "timing": {
+    "extra_search_cycles": 7,
+    "group_extra": 3,
+    "bin_extra": 4,
+    "II": 1,
+    "WAIT": 24,
+    "HOLD": 48,
+    "HC0": 35,
+    "HF0": 58,
+    "CLRW": 35,
+    "rule": "quota/group/accumulator travel with their partial sum; WAIT +7, coarse warmup +7, fine hold +14, stale drain +7"
+  },
+  "composition": {
+    "context": 1048576,
+    "invocations": 8,
+    "affected_nodes": [
+      "L2.attn.idx.topk_local",
+      "L8.attn.idx.topk_local",
+      "L14.attn.idx.topk_local",
+      "L20.attn.idx.topk_local",
+      "L24.attn.idx.topk_local",
+      "L28.attn.idx.topk_local",
+      "L32.attn.idx.topk_local",
+      "L36.attn.idx.topk_local"
+    ],
+    "delta_cycles_per_segment": 56,
+    "serial_upper_delta_ns": 373.33333333333337,
+    "graph_before_us": 202.71250592870817,
+    "graph_after_us": 203.0858392620415,
+    "graph_delta_us": 0.3733333333333388,
+    "rate_penalty_percent": 0.18383031268449646,
+    "mtp_per_verify_position_extra_cycles": 448,
+    "mtp_rule": "multiply by verified positions; acceptance unchanged; no drafter speed credit",
+    "basis": "arch_graph local top-k dependency DAG; sensitivity only, not replacement of current headline",
+    "replay_gate": "must measure equal replay count; otherwise price additional full scans before route"
+  },
+  "gates": {
+    "exact": false,
+    "negative": false,
+    "SSFF": false,
+    "hub_pin_map": "unchanged",
+    "adopted": false,
+    "performance_credit": false
+  }
+}

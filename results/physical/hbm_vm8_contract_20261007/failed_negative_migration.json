@@ -1,0 +1,102 @@
+[
+  {
+    "job": "hbm_vm8_swn_654733cc5",
+    "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+    "status": "NEEDS_RTL",
+    "reason": "bench_vm8_neg_xbus expected FAIL but rc=0",
+    "exact_location": {
+      "state": "done",
+      "tag": "bench_vm8_exact.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_swn_654733cc5",
+      "n": 1,
+      "started": "2026-10-07T07:17:15-07:00"
+    },
+    "negative_location": {
+      "state": "done",
+      "tag": "bench_vm8_neg_xbus.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_swn_654733cc5",
+      "n": 1,
+      "started": "2026-10-07T08:03:53-07:00"
+    },
+    "negative_log": "grep: /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_swn_654733cc5/vm8_bench.log: No such file or directory\n",
+    "diagnosis": "Log-dependent negative moved away from exact producer host/run; missing log, not arithmetic mismatch.",
+    "preserve_failed_verdict": true
+  },
+  {
+    "job": "hbm_vm8_nen_654733cc5",
+    "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+    "status": "NEEDS_RTL",
+    "reason": "bench_vm8_neg_xbus expected FAIL but rc=0",
+    "exact_location": {
+      "state": "done",
+      "tag": "bench_vm8_exact.a1b1",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_nen_654733cc5",
+      "n": 1,
+      "started": "2026-10-07T06:53:39-07:00"
+    },
+    "negative_location": {
+      "state": "done",
+      "tag": "bench_vm8_neg_xbus.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nen_654733cc5",
+      "n": 1,
+      "started": "2026-10-07T07:17:27-07:00"
+    },
+    "negative_log": "grep: /srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nen_654733cc5/vm8_bench.log: No such file or directory\n",
+    "diagnosis": "Log-dependent negative moved away from exact producer host/run; missing log, not arithmetic mismatch.",
+    "preserve_failed_verdict": true
+  },
+  {
+    "job": "hbm_vm8_nes_654733cc5",
+    "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+    "status": "NEEDS_RTL",
+    "reason": "bench_vm8_neg_xbus expected FAIL but rc=0",
+    "exact_location": {
+      "state": "done",
+      "tag": "bench_vm8_exact.a1b1",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_nes_654733cc5",
+      "n": 1,
+      "started": "2026-10-07T06:53:45-07:00"
+    },
+    "negative_location": {
+      "state": "done",
+      "tag": "bench_vm8_neg_xbus.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nes_654733cc5",
+      "n": 1,
+      "started": "2026-10-07T07:17:39-07:00"
+    },
+    "negative_log": "grep: /srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nes_654733cc5/vm8_bench.log: No such file or directory\n",
+    "diagnosis": "Log-dependent negative moved away from exact producer host/run; missing log, not arithmetic mismatch.",
+    "preserve_failed_verdict": true
+  },
+  {
+    "job": "hbm_vm8_sws_654733cc5",
+    "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+    "status": "NEEDS_RTL",
+    "reason": "bench_vm8_neg_xbus expected FAIL but rc=0",
+    "exact_location": {
+      "state": "done",
+      "tag": "bench_vm8_exact.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_sws_654733cc5",
+      "n": 1,
+      "started": "2026-10-07T07:17:51-07:00"
+    },
+    "negative_location": {
+      "state": "done",
+      "tag": "bench_vm8_neg_xbus.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_sws_654733cc5",
+      "n": 1,
+      "started": "2026-10-07T08:03:56-07:00"
+    },
+    "negative_log": "grep: /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_sws_654733cc5/vm8_bench.log: No such file or directory\n",
+    "diagnosis": "Log-dependent negative moved away from exact producer host/run; missing log, not arithmetic mismatch.",
+    "preserve_failed_verdict": true
+  }
+]

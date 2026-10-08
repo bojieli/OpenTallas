@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.hbm.su.div64.minimum_gate.v1",
+  "status": "CANDIDATE_MINIMUM_EXACTNESS_PASS_PHYSICAL_OPEN",
+  "adopted": false,
+  "runtime_source_pins": {
+    "random_vehicle": "b36512817",
+    "sfu64_negative": "fc5e1ef3d",
+    "route": "64cda61ab"
+  },
+  "source_join": {
+    "sfu64": {
+      "input_count": 34,
+      "route_source_mismatches": [
+        "rtl/test/tb_hbm_su_div64_sfu.sv"
+      ],
+      "explanation": "Only newer dedicated testbench differs; all production RTL matches routed source."
+    },
+    "negative_phase": {
+      "input_count": 34,
+      "route_source_mismatches": [
+        "rtl/test/tb_hbm_su_div64_sfu.sv"
+      ],
+      "explanation": "Only newer dedicated testbench differs; all production RTL matches routed source."
+    },
+    "vehicle": {
+      "input_count": 34,
+      "route_source_mismatches": [],
+      "explanation": "Only newer dedicated testbench differs; all production RTL matches routed source."
+    }
+  },
+  "divider": {
+    "fast_latency_cycles": 64,
+    "initiation_interval_cycles": 1,
+    "extra_vs31": 33,
+    "extra_vs21": 43,
+    "measurement": "earlier committed component_gate.json 2520 exact result/fault/valid comparisons",
+    "model": "hbm_su_divider_halfpair_model; serial cost43/div at1.2GHz,35.833333ns/div; no final tokenrate adoption"
+  },
+  "positive": {
+    "sfu_checks_each": 50000,
+    "random_cases": 5,
+    "vehicle_batches": 5,
+    "vehicle_ops": 198,
+    "vehicle_refused_ops": 2,
+    "scope": "minimum N16/N64 mechanism components; not full-array or whole-token simulation"
+  },
+  "negative": {
+    "mutation": "NEG_PHASE swaps alternating divider output banks",
+    "cases": 5,
+    "ended_cases": 5,
+    "vm_mismatch_words": 4320,
+    "kv_mismatch_words": 37,
+    "status": "EXPECTED_NUMERICAL_REJECTION"
+  },
+  "historical_failures_preserved": [
+    "b365_random_then_packaging_failure.log: original command failed missing compiler config after five successful random cases; not relabeled successful"
+  ],
+  "rsqrt_contract": {
+    "reference_fault_timing_differences": 3793,
+    "matched_baseline_sfu21_fault_timing_differences": 3793,
+    "new_div64_difference": false,
+    "unchanged_module_body_sha256": "10a37682e4c4577f7bc8490049005f97ad1f1a744a7e91a57d2d13c414446f51",
+    "parameters": {
+      "LM": 6,
+      "LA": 6
+    },
+    "source_diagnosis": "Both old reference and c12 rsqrt assign fault=OR of13 intermediate-stage arithmetic fault events. These are not delayed to corresponding output transaction; stage latency changes move fault events across cycles. Existing test aligns overallresult latency and separately counts faults; this is not a result-aligned fault proof. c12 side ORs faults regardless output valid and lane registers aggregate fault. DDIV does not enter rsqrt cone.",
+    "scope": "div64 candidate preserves current c12 rsqrt behavior. Broader event/fault contract remains separate debt; zero rsqrt data error counter applies only when neither compared fault bit is asserted."
+  },
+  "physical_snapshot": {
+    "status": "RUNNING",
+    "stage": "route",
+    "host": "ot-epyc2",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab",
+    "events": [
+      "2026-10-07T10:28:59-07:00 ot-epyc2 unreachable while polling calibrate (will keep polling)",
+      "2026-10-07T10:35:54-07:00 calibrate done (rc=0)",
+      "2026-10-07T10:35:57-07:00 calibrated insertion CK_SS_MEAN=771 CK_SS_MIN=753 CK_SS_MAX=814 CK_FF_MEAN=497 CK_FF_MIN=482 CK_FF_MAX=537",
+      "2026-10-07T10:37:18-07:00 launched route (attempt 1) on ot-epyc2"
+    ],
+    "qualification": false
+  },
+  "artifacts_sha256": {
+    "negative_phase.json": "109fa9ad62a1514a8c060913e5ed0168abbc2cbdb39ae86dcaa9a0b2518f3b38",
+    "baseline_sfu21_binary_source.sha256": "ba496da891222b163703d52e2fb20e7f9e5463205efd71d95c8c341923b3460b",
+    "vehicle_checkpoint.sha256": "672b206043ac4845d03166bac23dc7fa1a6168b56bfa09aa6675656c4b3f007f",
+    "baseline_sfu21_exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "b365_random_then_packaging_failure.log": "23b3b88e50ff94aff1b34bb099c82916e94cfb4c314c0e5fdfabcaeaabf79fb7",
+    "baseline_sfu21_resources.txt": "dd78febc3c78cd5863dd7031e112fce63982a7270b001e36c6e1456b7f655ea9",
+    "baseline_sfu21_runtime.log": "72b053e9bc7bbc5e0cd3cadbb19fa22bcec4f667636a2b5853cc7ecb5fe2882e",
+    "sfu64.json": "6878a072996f748f8f2090204182ab8f34e147c424c4e9206c32fdd1676695c6",
+    "vehicle_inputs_resources.txt": "8fc7809afcf273598aa271126d33746188216b7afffe1a16a2fca951cd039711",
+    "vehicle_inputs_recovery.json": "c161b6cd9ee190649c8088b80cad1a58b16a44446815418947ca451bc1dbe423"
+  }
+}

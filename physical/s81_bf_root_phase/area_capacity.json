@@ -1,0 +1,42 @@
+{
+  "cell": "INVx1_ASAP7_75t_R",
+  "libraries": [
+    {
+      "path": "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+      "sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+      "corner": "SS",
+      "area_um2": 0.04374
+    },
+    {
+      "path": "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+      "corner": "FF",
+      "area_um2": 0.04374
+    }
+  ],
+  "per_cell_area_um2": 0.04374,
+  "added_area_um2": 0.08748,
+  "baseline_original_run": "bf_half_61c1cf230",
+  "baseline_record": "physical/s81_bf_root_phase/baseline_6_report.json",
+  "baseline_sha256": "d7616fd31b874fa2da73377e30c0ef3a2864f68a2ffbca197ff50b6a61679260",
+  "slot_um": [
+    1002.888,
+    190.08
+  ],
+  "measured_core_area_um2": 185494,
+  "baseline_stdcell_area_um2": 67096.1,
+  "macro_count": 4,
+  "macro_um": [
+    125.304,
+    62.952
+  ],
+  "macro_halo_each_side_um": 5.4,
+  "conservative_macro_and_halo_exclusion_um2": 40151.768832,
+  "remaining_stdcell_site_area_um2": 145342.231168,
+  "baseline_stdcell_utilization_including_macro_halos": 0.4616421494344897,
+  "candidate_stdcell_utilization_including_macro_halos": 0.46164275132424537,
+  "stdcell_area_capacity_at_55pct_um2": 79938.2271424,
+  "headroom_at_55pct_after_candidate_um2": 12842.0396624,
+  "area_status": "Actual library and baseline routed area; incremental CTS/hold repair cells not measured",
+  "physical_closed": false
+}

@@ -1,0 +1,10 @@
+{
+  "all_receipt_hashes_match": true,
+  "exact_functional_port_set_matches_source_pin_plan": true,
+  "signal_count": 2254,
+  "signal_boxes": 2254,
+  "power_ground_boxes": 14,
+  "total_boxes": 2268,
+  "original_failed_verdict_preserved": true,
+  "fix_scope": "Exclude classified POWER/GROUND only; keep exact expected functional identities, one box per port and geometry checks"
+}

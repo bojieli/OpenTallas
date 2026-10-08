@@ -1,0 +1,198 @@
+{
+ "schema": "opentallas.closure_loop.path_summary.v1",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_front_s_m3_fb560676a_c2/routes/hbm_smh_front_s_m3_fb560676a_c2/results/asap7/smh_front_s_one_hbm_smh_front_s_m3_fb560676a_c2/base",
+ "setup_ss": {
+  "paths_seen": 800,
+  "worst_slack_ps": -184.09,
+  "classes": [
+   {
+    "start_class": "req_ready",
+    "end_class": "u_rsk.tail[*]$_DFFE_PP_/D",
+    "worst_slack_ps": -184.09,
+    "paths": 42,
+    "max_levels": 7,
+    "example_start": "req_ready",
+    "example_end": "u_rsk.tail[34]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "req_ready",
+    "end_class": "u_rsk.head[*]$_DFFE_PP_/D",
+    "worst_slack_ps": -180.76,
+    "paths": 42,
+    "max_levels": 7,
+    "example_start": "req_ready",
+    "example_end": "u_rsk.head[18]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "req_ready",
+    "end_class": "u_rsk.cnt[*]$_DFF_PN0_/D",
+    "worst_slack_ps": -139.94,
+    "paths": 2,
+    "max_levels": 6,
+    "example_start": "req_ready",
+    "example_end": "u_rsk.cnt[0]$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "d_valid",
+    "end_class": "u_dch.cred[*]$_DFF_PN1_/D",
+    "worst_slack_ps": -113.29,
+    "paths": 2,
+    "max_levels": 7,
+    "example_start": "d_valid",
+    "example_end": "u_dch.cred[3]$_DFF_PN1_/D"
+   },
+   {
+    "start_class": "d_valid",
+    "end_class": "u_dch.cred[*]$_DFF_PN0_/D",
+    "worst_slack_ps": -100.03,
+    "paths": 2,
+    "max_levels": 7,
+    "example_start": "d_valid",
+    "example_end": "u_dch.cred[1]$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "d_valid",
+    "end_class": "u_dch.u_fv.g_s[*].g_r.u/q$_DFF_PN0_/D",
+    "worst_slack_ps": -37.95,
+    "paths": 1,
+    "max_levels": 6,
+    "example_start": "d_valid",
+    "example_end": "u_dch.u_fv.g_s[0].g_r.u/q$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "u_rsk.cnt[*]$_DFF_PN0_/QN",
+    "end_class": "req_v",
+    "worst_slack_ps": 18.71,
+    "paths": 1,
+    "max_levels": 4,
+    "example_start": "u_rsk.cnt[0]$_DFF_PN0_/QN",
+    "example_end": "req_v"
+   },
+   {
+    "start_class": "u_rch.cnt[*]$_DFF_PN0_/QN",
+    "end_class": "u_rch.head[*]$_DFFE_PP_/D",
+    "worst_slack_ps": 29.46,
+    "paths": 22,
+    "max_levels": 10,
+    "example_start": "u_rch.cnt[2]$_DFF_PN0_/QN",
+    "example_end": "u_rch.head[9]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_dch.cred[*]$_DFF_PN1_/QN",
+    "end_class": "d_ready",
+    "worst_slack_ps": 40.69,
+    "paths": 1,
+    "max_levels": 4,
+    "example_start": "u_dch.cred[0]$_DFF_PN1_/QN",
+    "example_end": "d_ready"
+   },
+   {
+    "start_class": "rsp_v",
+    "end_class": "u_prv.g_s[*].g_r.u/q$_DFF_PN0_/D",
+    "worst_slack_ps": 42.0,
+    "paths": 1,
+    "max_levels": 2,
+    "example_start": "rsp_v",
+    "example_end": "u_prv.g_s[0].g_r.u/q$_DFF_PN0_/D"
+   }
+  ],
+  "errors": []
+ },
+ "hold_ff": {
+  "paths_seen": 800,
+  "worst_slack_ps": -18.12,
+  "classes": [
+   {
+    "start_class": "u_or.u_d/q[*]$_DFF_P_/QN",
+    "end_class": "rout_r3[*]",
+    "worst_slack_ps": -18.12,
+    "paths": 322,
+    "max_levels": 4,
+    "example_start": "u_or.u_d/q[283]$_DFF_P_/QN",
+    "example_end": "rout_r3[291]"
+   },
+   {
+    "start_class": "u_prd.g_s[*].g_n.u/q[*]$_DFF_P_/QN",
+    "end_class": "fp_d[*]",
+    "worst_slack_ps": -16.07,
+    "paths": 18,
+    "max_levels": 4,
+    "example_start": "u_prd.g_s[1].g_n.u/q[546]$_DFF_P_/QN",
+    "example_end": "fp_d[546]"
+   },
+   {
+    "start_class": "u_ol.u_d/q[*]$_DFF_P_/QN",
+    "end_class": "rout_l3[*]",
+    "worst_slack_ps": -15.33,
+    "paths": 57,
+    "max_levels": 4,
+    "example_start": "u_ol.u_d/q[1]$_DFF_P_/QN",
+    "example_end": "rout_l3[9]"
+   },
+   {
+    "start_class": "u_ol.u_a/q[*]$_DFF_P_/QN",
+    "end_class": "rout_l3[*]",
+    "worst_slack_ps": -12.52,
+    "paths": 3,
+    "max_levels": 3,
+    "example_start": "u_ol.u_a/q[5]$_DFF_P_/QN",
+    "example_end": "rout_l3[5]"
+   },
+   {
+    "start_class": "g_qs[*].g_ln[*].g_use.u_dd.g_s[*].g_n.u/q[*]$_DFF_P_/QN",
+    "end_class": "g_qs[*].g_ln[*].g_use.u_dd.g_s[*].g_n.u/q[*]$_DFF_P_/D",
+    "worst_slack_ps": 12.14,
+    "paths": 313,
+    "max_levels": 6,
+    "example_start": "g_qs[1].g_ln[0].g_use.u_dd.g_s[3].g_n.u/q[28]$_DFF_P_/QN",
+    "example_end": "g_qs[1].g_ln[0].g_use.u_dd.g_s[4].g_n.u/q[28]$_DFF_P_/D"
+   },
+   {
+    "start_class": "g_qs[*].g_ln[*].g_use.u_dd.g_s[*].g_n.u/q[*]$_DFF_P_/QN",
+    "end_class": "u_prd_o.g_s[*].g_n.u/q[*]$_DFF_P_/D",
+    "worst_slack_ps": 15.29,
+    "paths": 48,
+    "max_levels": 4,
+    "example_start": "g_qs[1].g_ln[1].g_use.u_dd.g_s[7].g_n.u/q[16]$_DFF_P_/QN",
+    "example_end": "u_prd_o.g_s[0].g_n.u/q[164]$_DFF_P_/D"
+   },
+   {
+    "start_class": "fault_q$_DFF_PN0_/QN",
+    "end_class": "u_pfo.g_s[*].g_r.u/q$_DFF_PN0_/D",
+    "worst_slack_ps": 17.09,
+    "paths": 1,
+    "max_levels": 2,
+    "example_start": "fault_q$_DFF_PN0_/QN",
+    "example_end": "u_pfo.g_s[0].g_r.u/q$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "u_prd_o.g_s[*].g_n.u/q[*]$_DFF_P_/QN",
+    "end_class": "u_prd_o.g_s[*].g_n.u/q[*]$_DFF_P_/D",
+    "worst_slack_ps": 23.08,
+    "paths": 18,
+    "max_levels": 3,
+    "example_start": "u_prd_o.g_s[0].g_n.u/q[195]$_DFF_P_/QN",
+    "example_end": "u_prd_o.g_s[1].g_n.u/q[195]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_rsk.head[*]$_DFFE_PP_/QN",
+    "end_class": "u_rsk.head[*]$_DFFE_PP_/D",
+    "worst_slack_ps": 24.41,
+    "paths": 1,
+    "max_levels": 3,
+    "example_start": "u_rsk.head[7]$_DFFE_PP_/QN",
+    "example_end": "u_rsk.head[7]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "g_qs[*].g_ln[*].g_use.u_dv.g_s[*].g_r.u/q[*]$_DFF_PN0_/QN",
+    "end_class": "g_qs[*].g_ln[*].g_use.u_dv.g_s[*].g_r.u/q[*]$_DFF_PN0_/D",
+    "worst_slack_ps": 25.18,
+    "paths": 2,
+    "max_levels": 4,
+    "example_start": "g_qs[0].g_ln[0].g_use.u_dv.g_s[5].g_r.u/q[0]$_DFF_PN0_/QN",
+    "example_end": "g_qs[0].g_ln[0].g_use.u_dv.g_s[6].g_r.u/q[0]$_DFF_PN0_/D"
+   }
+  ],
+  "errors": []
+ }
+}

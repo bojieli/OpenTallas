@@ -1,0 +1,17 @@
+{
+  "scope": "Complete FB3+BOUND+AMQ+NXREG+MEIF+SUIF+PINREG source transform, no elab/route claim",
+  "default_off": true,
+  "original_sha256": "d9696beadefda81f32f0be43f794e563f404cc6d004518b15a3da88177bb094a",
+  "candidate_sha256": "0cd780da0e7b7f19bc213107e4ff0c758e970d516112f946b4a511d29621a5f7",
+  "new_state_bits": 0,
+  "mechanism": "LOAD requires !nx_v with DEC_LA_SEPARATE_LOAD=1; existing issue clears nx_v, next edge loads",
+  "remaining": [
+    "full controller interface exactness",
+    "actual token/readiness composition",
+    "pin hold and output setup remain"
+  ],
+  "source_sha256": {
+    "tools/qwen_rom_core_ctx_claude.py": "f1a2ca771b672a9050d0cc8f66b537b09dc6ba33d876934514a66bb0082f8a80",
+    "tools/qwen_rom_core_issue_fallback_w12.py": "55d6affc5a232f82861890cd848571caba2ea4f6134f3cc2ab38d72cd21a99e0"
+  }
+}

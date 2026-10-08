@@ -1,0 +1,11 @@
+{
+  "historical_failure": [
+    {
+      "case": "docker or make failure rc7, no checkpoint",
+      "old_checker_rc": 0,
+      "old_checker_stdout": "STAGES_TO_RUN: \nRESUME_FROM=\nRESUME_OK=1\n",
+      "old_checker_stderr": ""
+    }
+  ],
+  "repair_validation": "5 unittest cases pass: make failure, empty output, absent checkpoint, earlier stage, valid route"
+}

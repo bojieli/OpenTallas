@@ -1,0 +1,11 @@
+%Warning-TIMESCALEMOD: /tmp/s81-capture-c89f76168-lint/src/rtl/common/ot_ratio_cdc_fifo.sv:45:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   45 | module ot_ratio_cdc_fifo #(
+      |        ^~~~~~~~~~~~~~~~~
+                       /tmp/s81-capture-c89f76168-lint/src/rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv:29:8: ... Location of module with timescale
+   29 | module dsfd_capt_grp #(
+      |        ^~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.088 MB sources in 8 modules, into 0.278 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 0.042 s (elab=0.004, cvt=0.028, bld=0.000); cpu 0.042 s on 1 threads; allocated 40.152 MB

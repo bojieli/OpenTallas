@@ -1,0 +1,54 @@
+{
+  "schema": "qwen.meif_idle_capture.full_interface_gate.v1",
+  "status": "fail",
+  "positive_engine_events": 128,
+  "positive_KV_RMW_bytes": 64,
+  "measured_cycle_cost": {
+    "expected_zero": true
+  },
+  "rows": [
+    {
+      "name": "full_s0_n0",
+      "returncode": 0,
+      "negative": false,
+      "passed": true
+    },
+    {
+      "name": "full_s1_n0",
+      "returncode": 0,
+      "negative": false,
+      "passed": true
+    },
+    {
+      "name": "full_s0_n1",
+      "returncode": 1,
+      "negative": true,
+      "passed": true
+    },
+    {
+      "name": "full_s0_n2",
+      "returncode": 0,
+      "negative": true,
+      "passed": false
+    }
+  ],
+  "source_sha256": {
+    "tools/qwen_rom_core_ctx_claude.py": "f1a2ca771b672a9050d0cc8f66b537b09dc6ba33d876934514a66bb0082f8a80",
+    "tools/qwen_core_separate_load.py": "0eec15b60cf04f3946e11178a177bca2eb6cb5616d433bce6763f9246da7213c",
+    "tools/qwen_core_opaque_interfaces.py": "be87ea39dd09c3a2436f063af8957efe5130df30c4058754d9060f416dd6c553",
+    "tools/qwen_core_kv_boundary.py": "08347b140b4d90703e860dea1fa8da1123a17ea37ba9f573352e0b339e697af9",
+    "tools/qwen_core_meif_idle_capture.py": "3ca0143145f2000aa1e5686851f1b8154c91183aefc941d63fd1a9d3f4cc64a0",
+    "tools/gate.py": "177a4a5e661c176ca4f64ca60d631eb99fa4f7b5afc86532eee8a2724a81a8a0",
+    "tools/qwen_core_kv_bridge_tb.py": "e01f966e54153f360d5445cb070104d14305566ce7db28d1286cb8059c32e4fa",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv": "44aea25c27b18063f4ec1af1500571952735700fc2a91175f387f1c8af5cdde9",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv": "a876c739314e4b26edf81bcd86944b769e6027256f798a1ce0680db3d84ab056",
+    "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32"
+  },
+  "lowered_source_sha256": {
+    "full0/core.sv": "23567de96a4c80a7bcbe8afddd6cb4701be28faa0568b09b64638e0b710a1bb2",
+    "full1/core.sv": "8075fd629f16c1abf0bf1b9e1d30ccc1a70f13093b0d09aebffb22ad8781d565",
+    "core0.v": "8cc149b69163eef912dcbe5b4b4b45d43ccd5f94774c722c30487b70f1082e34",
+    "core1.v": "bd0a84112c03bcd48720dc93f32a711871a5d635428b1397b907706ef226f30c"
+  },
+  "scope": "Actual full controller, FB3 BOUND AMQ NXREG MEIF SUIF PINREG, retained shape G6144 SW64 NW18; minimum engine boundaries, no arithmetic or whole-system simulation"
+}

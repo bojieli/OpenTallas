@@ -1,0 +1,2551 @@
+{
+  "creator": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "modules": {
+    "hfd_result_relay64_ew": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:25.1-28.10"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "d": {
+          "direction": "input",
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67 ]
+        },
+        "q": {
+          "direction": "output",
+          "bits": [ 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131 ]
+        }
+      },
+      "cells": {
+        "$auto$dfflibmap.cc:553:dfflibmap$145": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 132 ],
+            "Y": [ 131 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$147": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 133 ],
+            "Y": [ 130 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$149": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 134 ],
+            "Y": [ 129 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$151": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 135 ],
+            "Y": [ 128 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$153": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 136 ],
+            "Y": [ 127 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$155": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 137 ],
+            "Y": [ 126 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$157": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 138 ],
+            "Y": [ 125 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$159": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 139 ],
+            "Y": [ 124 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$161": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 140 ],
+            "Y": [ 123 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$163": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 141 ],
+            "Y": [ 122 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$165": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 142 ],
+            "Y": [ 121 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$167": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 143 ],
+            "Y": [ 120 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$169": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 144 ],
+            "Y": [ 119 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$171": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 145 ],
+            "Y": [ 118 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$173": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 146 ],
+            "Y": [ 117 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$175": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 147 ],
+            "Y": [ 116 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$177": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 148 ],
+            "Y": [ 115 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$179": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 149 ],
+            "Y": [ 114 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$181": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 150 ],
+            "Y": [ 113 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$183": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 151 ],
+            "Y": [ 112 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$185": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 152 ],
+            "Y": [ 111 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$187": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 153 ],
+            "Y": [ 110 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$189": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 154 ],
+            "Y": [ 109 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$191": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 155 ],
+            "Y": [ 108 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$193": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 156 ],
+            "Y": [ 107 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$195": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 157 ],
+            "Y": [ 106 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$197": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 158 ],
+            "Y": [ 105 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$199": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 159 ],
+            "Y": [ 104 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$201": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 160 ],
+            "Y": [ 103 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$203": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 161 ],
+            "Y": [ 102 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$205": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 162 ],
+            "Y": [ 101 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$207": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 163 ],
+            "Y": [ 100 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$209": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 164 ],
+            "Y": [ 99 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$211": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 165 ],
+            "Y": [ 98 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$213": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 166 ],
+            "Y": [ 97 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$215": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 167 ],
+            "Y": [ 96 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$217": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 168 ],
+            "Y": [ 95 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$219": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 169 ],
+            "Y": [ 94 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$221": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 170 ],
+            "Y": [ 93 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$223": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 171 ],
+            "Y": [ 92 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$225": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 172 ],
+            "Y": [ 91 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$227": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 173 ],
+            "Y": [ 90 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$229": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 174 ],
+            "Y": [ 89 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$231": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 175 ],
+            "Y": [ 88 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$233": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 176 ],
+            "Y": [ 87 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$235": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 177 ],
+            "Y": [ 86 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$237": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 178 ],
+            "Y": [ 85 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$239": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 179 ],
+            "Y": [ 84 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$241": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 180 ],
+            "Y": [ 83 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$243": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 181 ],
+            "Y": [ 82 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$245": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 182 ],
+            "Y": [ 81 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$247": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 183 ],
+            "Y": [ 80 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$249": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 184 ],
+            "Y": [ 79 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$251": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 185 ],
+            "Y": [ 78 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$253": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 186 ],
+            "Y": [ 77 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$255": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 187 ],
+            "Y": [ 76 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$257": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 188 ],
+            "Y": [ 75 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$259": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 189 ],
+            "Y": [ 74 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$261": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 190 ],
+            "Y": [ 73 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$263": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 191 ],
+            "Y": [ 72 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$265": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 192 ],
+            "Y": [ 71 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$267": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 193 ],
+            "Y": [ 70 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$269": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 194 ],
+            "Y": [ 69 ]
+          }
+        },
+        "$auto$dfflibmap.cc:553:dfflibmap$271": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 195 ],
+            "Y": [ 68 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$100": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 24 ],
+            "QN": [ 175 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$101": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 25 ],
+            "QN": [ 174 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$102": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 26 ],
+            "QN": [ 173 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$103": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 27 ],
+            "QN": [ 172 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$104": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 28 ],
+            "QN": [ 171 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$105": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 29 ],
+            "QN": [ 170 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$106": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 30 ],
+            "QN": [ 169 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$107": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 31 ],
+            "QN": [ 168 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$108": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 32 ],
+            "QN": [ 167 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$109": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 33 ],
+            "QN": [ 166 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$110": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 34 ],
+            "QN": [ 165 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$111": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 35 ],
+            "QN": [ 164 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$112": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 36 ],
+            "QN": [ 163 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$113": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 37 ],
+            "QN": [ 162 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$114": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 38 ],
+            "QN": [ 161 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$115": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 39 ],
+            "QN": [ 160 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$116": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 40 ],
+            "QN": [ 159 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$117": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 41 ],
+            "QN": [ 158 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$118": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 42 ],
+            "QN": [ 157 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$119": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 43 ],
+            "QN": [ 156 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$120": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 44 ],
+            "QN": [ 155 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$121": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 45 ],
+            "QN": [ 154 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$122": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 46 ],
+            "QN": [ 153 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$123": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 47 ],
+            "QN": [ 152 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$124": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 48 ],
+            "QN": [ 151 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$125": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 49 ],
+            "QN": [ 150 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$126": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 50 ],
+            "QN": [ 149 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$127": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 51 ],
+            "QN": [ 148 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$128": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 52 ],
+            "QN": [ 147 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$129": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 53 ],
+            "QN": [ 146 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$130": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 54 ],
+            "QN": [ 145 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$131": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 55 ],
+            "QN": [ 144 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$132": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 56 ],
+            "QN": [ 143 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$133": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 57 ],
+            "QN": [ 142 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$134": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 58 ],
+            "QN": [ 141 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$135": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 59 ],
+            "QN": [ 140 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$136": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 60 ],
+            "QN": [ 139 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$137": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 61 ],
+            "QN": [ 138 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$138": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 62 ],
+            "QN": [ 137 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$139": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 63 ],
+            "QN": [ 136 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$140": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 64 ],
+            "QN": [ 135 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$141": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 65 ],
+            "QN": [ 134 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$142": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 66 ],
+            "QN": [ 133 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$143": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 67 ],
+            "QN": [ 132 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$80": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 4 ],
+            "QN": [ 195 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$81": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 5 ],
+            "QN": [ 194 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$82": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 6 ],
+            "QN": [ 193 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$83": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 7 ],
+            "QN": [ 192 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$84": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 8 ],
+            "QN": [ 191 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$85": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 9 ],
+            "QN": [ 190 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$86": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 10 ],
+            "QN": [ 189 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$87": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 11 ],
+            "QN": [ 188 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$88": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 12 ],
+            "QN": [ 187 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$89": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 13 ],
+            "QN": [ 186 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$90": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 14 ],
+            "QN": [ 185 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$91": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 15 ],
+            "QN": [ 184 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$92": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 16 ],
+            "QN": [ 183 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$93": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 17 ],
+            "QN": [ 182 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$94": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 18 ],
+            "QN": [ 181 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$95": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 19 ],
+            "QN": [ 180 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$96": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 20 ],
+            "QN": [ 179 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$97": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 21 ],
+            "QN": [ 178 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$98": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 22 ],
+            "QN": [ 177 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "$auto$ff.cc:337:slice$99": {
+          "hide_name": 1,
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:16.9-18.31"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 23 ],
+            "QN": [ 176 ],
+            "RESETN": [ 3 ],
+            "SETN": [ "1" ]
+          }
+        },
+        "u_stage": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:27.52-27.63",
+            "module": "$paramod$9b9dfc9545f295e2b3e9e2cde287b65e39d84f89\\ot_hbm_result_relay_slice",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "ot_hbm_result_relay_slice",
+            "module_src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:5.1-23.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        }
+      },
+      "netnames": {
+        "$auto$dfflibmap.cc:546:dfflibmap$144": {
+          "hide_name": 1,
+          "bits": [ 132 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$146": {
+          "hide_name": 1,
+          "bits": [ 133 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$148": {
+          "hide_name": 1,
+          "bits": [ 134 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$150": {
+          "hide_name": 1,
+          "bits": [ 135 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$152": {
+          "hide_name": 1,
+          "bits": [ 136 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$154": {
+          "hide_name": 1,
+          "bits": [ 137 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$156": {
+          "hide_name": 1,
+          "bits": [ 138 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$158": {
+          "hide_name": 1,
+          "bits": [ 139 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$160": {
+          "hide_name": 1,
+          "bits": [ 140 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$162": {
+          "hide_name": 1,
+          "bits": [ 141 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$164": {
+          "hide_name": 1,
+          "bits": [ 142 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$166": {
+          "hide_name": 1,
+          "bits": [ 143 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$168": {
+          "hide_name": 1,
+          "bits": [ 144 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$170": {
+          "hide_name": 1,
+          "bits": [ 145 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$172": {
+          "hide_name": 1,
+          "bits": [ 146 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$174": {
+          "hide_name": 1,
+          "bits": [ 147 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$176": {
+          "hide_name": 1,
+          "bits": [ 148 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$178": {
+          "hide_name": 1,
+          "bits": [ 149 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$180": {
+          "hide_name": 1,
+          "bits": [ 150 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$182": {
+          "hide_name": 1,
+          "bits": [ 151 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$184": {
+          "hide_name": 1,
+          "bits": [ 152 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$186": {
+          "hide_name": 1,
+          "bits": [ 153 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$188": {
+          "hide_name": 1,
+          "bits": [ 154 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$190": {
+          "hide_name": 1,
+          "bits": [ 155 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$192": {
+          "hide_name": 1,
+          "bits": [ 156 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$194": {
+          "hide_name": 1,
+          "bits": [ 157 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$196": {
+          "hide_name": 1,
+          "bits": [ 158 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$198": {
+          "hide_name": 1,
+          "bits": [ 159 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$200": {
+          "hide_name": 1,
+          "bits": [ 160 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$202": {
+          "hide_name": 1,
+          "bits": [ 161 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$204": {
+          "hide_name": 1,
+          "bits": [ 162 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$206": {
+          "hide_name": 1,
+          "bits": [ 163 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$208": {
+          "hide_name": 1,
+          "bits": [ 164 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$210": {
+          "hide_name": 1,
+          "bits": [ 165 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$212": {
+          "hide_name": 1,
+          "bits": [ 166 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$214": {
+          "hide_name": 1,
+          "bits": [ 167 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$216": {
+          "hide_name": 1,
+          "bits": [ 168 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$218": {
+          "hide_name": 1,
+          "bits": [ 169 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$220": {
+          "hide_name": 1,
+          "bits": [ 170 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$222": {
+          "hide_name": 1,
+          "bits": [ 171 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$224": {
+          "hide_name": 1,
+          "bits": [ 172 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$226": {
+          "hide_name": 1,
+          "bits": [ 173 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$228": {
+          "hide_name": 1,
+          "bits": [ 174 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$230": {
+          "hide_name": 1,
+          "bits": [ 175 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$232": {
+          "hide_name": 1,
+          "bits": [ 176 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$234": {
+          "hide_name": 1,
+          "bits": [ 177 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$236": {
+          "hide_name": 1,
+          "bits": [ 178 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$238": {
+          "hide_name": 1,
+          "bits": [ 179 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$240": {
+          "hide_name": 1,
+          "bits": [ 180 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$242": {
+          "hide_name": 1,
+          "bits": [ 181 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$244": {
+          "hide_name": 1,
+          "bits": [ 182 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$246": {
+          "hide_name": 1,
+          "bits": [ 183 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$248": {
+          "hide_name": 1,
+          "bits": [ 184 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$250": {
+          "hide_name": 1,
+          "bits": [ 185 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$252": {
+          "hide_name": 1,
+          "bits": [ 186 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$254": {
+          "hide_name": 1,
+          "bits": [ 187 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$256": {
+          "hide_name": 1,
+          "bits": [ 188 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$258": {
+          "hide_name": 1,
+          "bits": [ 189 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$260": {
+          "hide_name": 1,
+          "bits": [ 190 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$262": {
+          "hide_name": 1,
+          "bits": [ 191 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$264": {
+          "hide_name": 1,
+          "bits": [ 192 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$266": {
+          "hide_name": 1,
+          "bits": [ 193 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$268": {
+          "hide_name": 1,
+          "bits": [ 194 ],
+          "attributes": {
+          }
+        },
+        "$auto$dfflibmap.cc:546:dfflibmap$270": {
+          "hide_name": 1,
+          "bits": [ 195 ],
+          "attributes": {
+          }
+        },
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:25.41-25.44"
+          }
+        },
+        "d": {
+          "hide_name": 0,
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67 ],
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:26.23-26.24"
+          }
+        },
+        "q": {
+          "hide_name": 0,
+          "bits": [ 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131 ],
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:26.45-26.46"
+          }
+        },
+        "rst_n": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:25.46-25.51"
+          }
+        },
+        "u_stage.clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "u_stage clk",
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:9.16-9.19"
+          }
+        },
+        "u_stage.d": {
+          "hide_name": 0,
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67 ],
+          "attributes": {
+            "hdlname": "u_stage d",
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:11.24-11.25"
+          }
+        },
+        "u_stage.g_registered.payload": {
+          "hide_name": 0,
+          "bits": [ 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131 ],
+          "attributes": {
+            "hdlname": "u_stage g_registered.payload",
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:15.21-15.28"
+          }
+        },
+        "u_stage.q": {
+          "hide_name": 0,
+          "bits": [ 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131 ],
+          "attributes": {
+            "hdlname": "u_stage q",
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:12.25-12.26"
+          }
+        },
+        "u_stage.rst_n": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "u_stage rst_n",
+            "src": "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv:10.16-10.21"
+          }
+        }
+      }
+    }
+  }
+}

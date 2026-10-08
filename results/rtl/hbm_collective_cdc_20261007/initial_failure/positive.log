@@ -1,0 +1,72 @@
+ ... Linking
+ ... Removing symbol tables
+ ... Compiletf functions
+Compiling VVP ...
+ ... VVP file version 11.0 (stable)
+Compile cleanup...
+ ...      801 functors (net_fun pool=524288 bytes)
+                273 logic
+                  0 bufif
+                  0 resolv
+                 63 signals
+ ...      680 filters (net_fil pool=524288 bytes)
+ ...     1995 opcodes (49152 bytes)
+ ...      197 nets
+ ...      801 vvp_nets (1048544 bytes)
+ ...        0 arrays (0 words)
+ ...        9 memories
+                  9 logic (2146 words)
+                  0 real (0 words)
+ ...       53 scopes
+ ... 0.007948 seconds, 16344.0/8368.0/5528.0 KBytes size/rss/shared
+Running ...
+ ...execute EndOfCompile callbacks
+ ...propagate initialization events
+ ...execute StartOfSim callbacks
+ ...run scheduler
+CDC_PROGRESS edges=128 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=256 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=384 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=512 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=640 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=768 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=896 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=1024 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=1152 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=1280 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=1408 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=1536 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=1664 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=1792 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=1920 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=2048 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=2176 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=2304 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=2432 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=2560 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=2688 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=2816 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=2944 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=3072 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=3200 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=3328 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=3456 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=3584 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=3712 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=3840 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=3968 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+CDC_PROGRESS edges=4096 writes=0 reads=0 fault=0 wb=0 rb=0 hp=0
+FATAL: /tmp/hbm-collective-cdc-monitored-run-20261007/monitored_bench.sv:59: CDC_PROGRESS_FAIL exceeded source/calendar bound writes=0 reads=0 fault=0
+       Time: 41972739 Scope: tb_protected_cdc
+ ...execute Postsim callbacks
+ ... 2.44448 seconds, 16344.0/8488.0/5592.0 KBytes size/rss/shared
+Event counts:
+       18268 time steps (pool=113)
+       57334 thread schedule events
+       51232 assign events
+             ...assign(vec4) pool=9362
+             ...assign(vec8) pool=204
+             ...assign(real) pool=256
+             ...assign(word) pool=128
+             ...assign(word/r) pool=204
+        1770 other events (pool=4096)

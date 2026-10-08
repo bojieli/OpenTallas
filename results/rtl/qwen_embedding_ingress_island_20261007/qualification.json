@@ -1,0 +1,29 @@
+{
+  "baseline_commit": "860d3eb7c",
+  "reason": "Fresh FF endpoint evidence requires a different capture-clock/floorplan element; no rerun of unchanged full leaf",
+  "source_sha256": {
+    "rtl/physical/ot_qwen_embedding_ingress_island.sv": "240b5ac1e2178b5f3577daf782a91176b523948b7262dfb7c18256a3fcd7a7ad",
+    "tools/check_qwen_embedding_ingress_storage.py": "7e6a7fc5e1d687d31d4ce87f4a8e7cea21e15dc76208d9632b2c0bc0766c3227",
+    "rtl/physical/ot_qwen_embed_code_bank_island.sv": "87fb4d26e805282336f81335d23b72150b2c270ae181c598d7a8df7482c62cba",
+    "rtl/test/tb_qwen_embed_code_bank_island.sv": "2e0bf402626aace607abe4082c50c8e9449d5db4012a65ba903d400febd292a2",
+    "physical/qwen_die_masters/cfg/qfd_embed_ingress_code.env": "938b5f0b0ead549b19124d48c7e7eb83b621c586178472b2ddbf124c93504356",
+    "physical/qwen_die_masters/signoff/qfd_embed_ingress_code.sdc": "bac63cbc1304a0d5a695ce5fe95547beb2be99d23ad6e072d4a238b5c76af9eb",
+    "rtl/physical/ot_qwen_embed_scale_bank_island.sv": "e0bc1731b86e7eae892da3495ab02a17740ef3f9d79238024bc5a7198e26ad85",
+    "rtl/test/tb_qwen_embed_scale_bank_island.sv": "1e620a51858f8f532347d8f75ec2bd9f923134b65b8efc0eeaded01237c1de65",
+    "physical/qwen_die_masters/cfg/qfd_embed_ingress_scale.env": "8f51659eb88cf71396009358351d2121ca0793d17c2b210918e654396a02ef45",
+    "physical/qwen_die_masters/signoff/qfd_embed_ingress_scale.sdc": "ee52cc7c8499b2bf3eb48f51ed67b9b5adba7e1ca5d1823bd8b53cabbc46b3a0"
+  },
+  "prior_failures": {
+    "code": {
+      "report_sha256": "80ad36783f18aa0ae9246869a37b0fe6185863d6295694566ecd46f669d1f7ed",
+      "input_hold_ps": -36.343094,
+      "reset_removal_ps": -35.959126
+    },
+    "scale": {
+      "report_sha256": "49254d9d3cf35cd42a71da47e5dd0bfaaba1d5e1fe3460ada5c0d84634020a79",
+      "input_hold_ps": -32.375547,
+      "reset_removal_ps": -5.1
+    }
+  },
+  "dispatch_scope": "Separate ingress island only; full payload leaf needs real macro binding and remains unqualified"
+}

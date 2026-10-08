@@ -1,0 +1,15 @@
+{
+  "yosys_version": "Yosys 0.9 (git sha1 1979e0b)",
+  "command_for_each_enable": "read_verilog -sv rtl/physical/ot_qwen_die_hub_identity.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv; chparam -set ENABLE_IDENTITY {0,1} ot_qwen_die_hub_identity; synth -top ot_qwen_die_hub_identity -flatten -noabc; write_json OUTPUT",
+  "artifacts_sha256": {
+    "synth_0.json": "2fcd6ac0040a628baa9961be92e78064161870cd1083b14f22e0976397a66c30",
+    "synth_1.json": "a8308dd20e5a88864bc04140fd68ae7b71c190a54477665894c4446f79e22367",
+    "synth_0.log": "73a9d50c89caeff8334fdac63b1726606f6c7e24f8dca72b3e2924ea62780e63",
+    "synth_1.log": "94391ee949ca06b6f9fb190d901fa51452dd042314e2287a9210ffe940fc32f7"
+  },
+  "source_sha256": {
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "e865aecae51ae3b929bc9401c970e825073338b77dee87ead88d66ce9e8631fd",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  }
+}

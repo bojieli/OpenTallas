@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.closure_loop.path_summary.v1",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_selt_c-cd3337221-b/routes/s81ph_dsfd_selt_c_cd3337221_b/work/orfs/results/asap7/opentallas_dsfd_selt_c_asap7_s81ph_s81ph_dsfd_selt_c_cd3337221_b/base",
+ "setup_ss": {
+  "paths_seen": 1200,
+  "worst_slack_ps": -541.05,
+  "classes": [
+   {
+    "start_class": "u_ctl.u_cs.acc_b2[*]$_DFF_P_/QN",
+    "end_class": "u_ctl.u_cs.u3_r[*]$_DFF_P_/D",
+    "worst_slack_ps": -541.05,
+    "paths": 52,
+    "max_levels": 29,
+    "example_start": "u_ctl.u_cs.acc_b2[1]$_DFF_P_/QN",
+    "example_end": "u_ctl.u_cs.u3_r[40]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_ctl.u_cs.s2_r[*]$_DFF_P_/QN",
+    "end_class": "u_ctl.u_cs.s3_r[*]$_DFF_P_/D",
+    "worst_slack_ps": -526.07,
+    "paths": 22,
+    "max_levels": 26,
+    "example_start": "u_ctl.u_cs.s2_r[273]$_DFF_P_/QN",
+    "example_end": "u_ctl.u_cs.s3_r[124]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_ctl.u_fs.acc_b2[*]$_DFF_P_/QN",
+    "end_class": "u_ctl.u_fs.u3_r[*]$_DFF_P_/D",
+    "worst_slack_ps": -521.41,
+    "paths": 44,
+    "max_levels": 28,
+    "example_start": "u_ctl.u_fs.acc_b2[2]$_DFF_P_/QN",
+    "example_end": "u_ctl.u_fs.u3_r[81]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_ctl.u_cs.sa_r[*]$_DFF_P_/QN",
+    "end_class": "u_ctl.u_cs.s2_r[*]$_DFF_P_/D",
+    "worst_slack_ps": -504.02,
+    "paths": 19,
+    "max_levels": 25,
+    "example_start": "u_ctl.u_cs.sa_r[171]$_DFF_P_/QN",
+    "example_end": "u_ctl.u_cs.s2_r[206]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_ctl.u_cs.gs_r[*]$_DFF_P_/QN",
+    "end_class": "u_ctl.u_cs.sa_r[*]$_DFF_P_/D",
+    "worst_slack_ps": -492.01,
+    "paths": 36,
+    "max_levels": 26,
+    "example_start": "u_ctl.u_cs.gs_r[421]$_DFF_P_/QN",
+    "example_end": "u_ctl.u_cs.sa_r[219]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_ctl.u_fs.s2_r[*]$_DFF_P_/QN",
+    "end_class": "u_ctl.u_fs.s3_r[*]$_DFF_P_/D",
+    "worst_slack_ps": -462.8,
+    "paths": 13,
+    "max_levels": 24,
+    "example_start": "u_ctl.u_fs.s2_r[316]$_DFF_P_/QN",
+    "example_end": "u_ctl.u_fs.s3_r[82]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_ctl.u_fs.sa_r[*]$_DFF_P_/QN",
+    "end_class": "u_ctl.u_fs.s2_r[*]$_DFF_P_/D",
+    "worst_slack_ps": -458.22,
+    "paths": 20,
+    "max_levels": 26,
+    "example_start": "u_ctl.u_fs.sa_r[171]$_DFF_P_/QN",
+    "example_end": "u_ctl.u_fs.s2_r[206]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_ctl.u_cs.u2_r[*]$_DFF_P_/QN",
+    "end_class": "u_ctl.u_cs.u3_r[*]$_DFF_P_/D",
+    "worst_slack_ps": -455.9,
+    "paths": 15,
+    "max_levels": 25,
+    "example_start": "u_ctl.u_cs.u2_r[211]$_DFF_P_/QN",
+    "example_end": "u_ctl.u_cs.u3_r[230]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_ctl.u_fs.gs_r[*]$_DFF_P_/QN",
+    "end_class": "u_ctl.u_fs.sa_r[*]$_DFF_P_/D",
+    "worst_slack_ps": -452.68,
+    "paths": 15,
+    "max_levels": 24,
+    "example_start": "u_ctl.u_fs.gs_r[211]$_DFF_P_/QN",
+    "example_end": "u_ctl.u_fs.sa_r[254]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_ctl.u_cs.sb_r[*]$_DFF_P_/QN",
+    "end_class": "u_ctl.u_cs.u2_r[*]$_DFF_P_/D",
+    "worst_slack_ps": -447.99,
+    "paths": 7,
+    "max_levels": 23,
+    "example_start": "u_ctl.u_cs.sb_r[103]$_DFF_P_/QN",
+    "example_end": "u_ctl.u_cs.u2_r[97]$_DFF_P_/D"
+   }
+  ],
+  "errors": []
+ }
+}

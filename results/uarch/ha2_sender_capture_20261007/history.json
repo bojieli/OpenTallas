@@ -1,0 +1,5 @@
+{
+  "current": "model_internal_boundary_corrected.json",
+  "historical": "model.json",
+  "correction": "Original diagnostic model incorrectly associated the HA2 sender with an SU-adjacent die slot/divider detour. Actual h_v/h_d/h_r remain internal to TU/collective. Historical file is retained unchanged; neither record establishes actual physical placement or adoption."
+}

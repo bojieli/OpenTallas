@@ -1,0 +1,41 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+ROW origin=1080 1080 site_w=54 site_h=270 spacing=54
+REGION local_lane_0 type=INCLUSIVE
+BOX 150012 1080 250020 39096
+REGION local_lane_1 type=INCLUSIVE
+BOX 570012 1080 670020 39096
+CELL u_tx.g_lane\[0\].next_return\[0\]$_DFFE_PN0P_ origin=243378 10260 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[10\]$_DFFE_PN0P_ origin=245646 6480 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[11\]$_DFFE_PN0P_ origin=248616 2160 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[12\]$_DFFE_PN0P_ origin=248616 6480 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[13\]$_DFFE_PN0P_ origin=248616 17280 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[14\]$_DFFE_PN0P_ origin=248562 8640 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[15\]$_DFFE_PN0P_ origin=246024 7560 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[1\]$_DFFE_PN0P_ origin=248616 9180 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[2\]$_DFFE_PN0P_ origin=244674 14580 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[3\]$_DFFE_PN0P_ origin=248616 16740 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[4\]$_DFFE_PN0P_ origin=247212 16200 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[5\]$_DFFE_PN0P_ origin=248076 10260 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[6\]$_DFFE_PN0P_ origin=246132 1620 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[7\]$_DFFE_PN0P_ origin=247536 7020 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[8\]$_DFFE_PN0P_ origin=248562 17820 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[0\].next_return\[9\]$_DFFE_PN0P_ origin=248616 7020 group=_d01a957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[0\]$_DFFE_PN0P_ origin=668574 16200 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[10\]$_DFFE_PN0P_ origin=668628 14040 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[11\]$_DFFE_PN0P_ origin=667980 16200 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[12\]$_DFFE_PN0P_ origin=668574 17820 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[13\]$_DFFE_PN0P_ origin=668628 14040 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[14\]$_DFFE_PN0P_ origin=668628 15120 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[15\]$_DFFE_PN0P_ origin=668520 17280 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[1\]$_DFFE_PN0P_ origin=668520 18900 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[2\]$_DFFE_PN0P_ origin=668574 15660 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[3\]$_DFFE_PN0P_ origin=667980 16740 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[4\]$_DFFE_PN0P_ origin=667980 16740 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[5\]$_DFFE_PN0P_ origin=668628 13500 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[6\]$_DFFE_PN0P_ origin=668574 15120 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[7\]$_DFFE_PN0P_ origin=668574 15660 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[8\]$_DFFE_PN0P_ origin=668628 14580 group=_401b957eb05b0000_p_odb__dbGroup
+CELL u_tx.g_lane\[1\].next_return\[9\]$_DFFE_PN0P_ origin=668628 14580 group=_401b957eb05b0000_p_odb__dbGroup

@@ -11,8 +11,16 @@
 //   2 decode (normalise | exponent difference) | 27 restoring steps, ONE quotient bit a stage (the same 27 bits and final remainder as the
 //   radix-4 unit: floor(2x/mb) = 2 b_k + b_{k+1}) | F1 leading bit, sig, guard, sticky, biased exponent and the
 //   subnormal shift | F2 denormalise | F3 round increment | F4 overflow test and select.   DEPTH 33, II 1.
+// NR = 1 (MARGIN build, owner margin-first rule 2026-10-06; x6u40 r_mb -> r_rem +41 ps): NON-RESTORING steps.  The
+//   partial remainder p_j = x_j - mb (x_j the restoring step's dividend) is kept signed; p_{j+1} = 2 p_j - mb when
+//   p_j >= 0 else 2 p_j + mb, q_j = (p_j >= 0): the same 27 quotient bits, and no remainder select behind the
+//   step's carry (the add/subtract choice is the previous step's registered sign).  One more stage (R) recovers the
+//   restoring remainder's nonzero test carry-free: r = q ? p : p + mb, and p + mb == 0 (mod 2^27) iff
+//   (p ^ mb) == ((p | mb) << 1).   DEPTH 34.
 // ---------------------------------------------------------------------------
-module ot_dsrom_su_fdiv_f12 (
+module ot_dsrom_su_fdiv_f12 #(
+    parameter integer NR = 0
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -23,7 +31,8 @@ module ot_dsrom_su_fdiv_f12 (
     output reg         fault
 );
     localparam integer QB = 27;
-    localparam integer DEPTH = 2 + QB + 4;     // 33
+    localparam integer SPL = (NR == 2) ? 1 : 0;                                 // NR 2: SAFE build, every step in two stages
+    localparam integer DEPTH = 2 + QB + 4 + ((NR != 0) ? 1 : 0) + (SPL ? QB + 2 : 0);   // 33 (NR 0) / 34 (NR 1) / 63 (NR 2)
 
     wire [DEPTH:0] vd;
     ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
@@ -43,16 +52,51 @@ module ot_dsrom_su_fdiv_f12 (
             end
         end
     endfunction
-    wire [33:0] na = norm(a[30:23], a[22:0]);
-    wire [33:0] nb = norm(b[30:23], b[22:0]);
+    function automatic [4:0] lzp(input [22:0] f);   // position of the leading one of f (0 when f == 0)
+        integer i; reg [4:0] p;
+        begin p = 5'd0; for (i = 0; i < 23; i = i + 1) if (f[i]) p = i[4:0]; lzp = p; end
+    endfunction
+    function automatic [33:0] norm2(input [7:0] e, input [22:0] f, input [4:0] p);   // norm with the position given
+        if (e != 8'd0) norm2 = {1'b1, f, e - 10'sd127};
+        else norm2 = {({1'b0, f} << (5'd23 - p)), $signed({5'd0, p}) - 10'sd149};
+    endfunction
+    // NR 2: a decode stage ahead of the normalise registers the operands and the leading-one positions
+    reg [31:0] z_a, z_b; reg [4:0] z_pa, z_pb;
+    wire [31:0] da = SPL ? z_a : a;
+    wire [31:0] db = SPL ? z_b : b;
+    generate if (SPL) begin : g_z
+        always @(posedge clk) begin z_a <= a; z_b <= b; z_pa <= lzp(a[22:0]); z_pb <= lzp(b[22:0]); end
+    end else begin : g_nz
+        always @* begin z_a = 32'd0; z_b = 32'd0; z_pa = 5'd0; z_pb = 5'd0; end
+    end endgenerate
+    // NR 2: the subnormal shift split in two stages: coarse (by 8 * sh[4:3]) here, fine (sh[2:0]) in the normalise stage
+    reg [23:0] zz_ma, zz_mb; reg [2:0] zz_sa, zz_sb; reg [9:0] zz_ea, zz_eb; reg zz_sign, zz_zero, zz_bad;
+    wire [4:0] sha = 5'd23 - z_pa, shb = 5'd23 - z_pb;
+    generate if (SPL) begin : g_zz
+        always @(posedge clk) begin
+            zz_ma <= (da[30:23] != 8'd0) ? {1'b1, da[22:0]} : ({1'b0, da[22:0]} << {sha[4:3], 3'b000});
+            zz_mb <= (db[30:23] != 8'd0) ? {1'b1, db[22:0]} : ({1'b0, db[22:0]} << {shb[4:3], 3'b000});
+            zz_sa <= (da[30:23] != 8'd0) ? 3'd0 : sha[2:0];
+            zz_sb <= (db[30:23] != 8'd0) ? 3'd0 : shb[2:0];
+            zz_ea <= (da[30:23] != 8'd0) ? da[30:23] - 10'sd127 : $signed({5'd0, z_pa}) - 10'sd149;
+            zz_eb <= (db[30:23] != 8'd0) ? db[30:23] - 10'sd127 : $signed({5'd0, z_pb}) - 10'sd149;
+            zz_sign <= da[31] ^ db[31];
+            zz_zero <= (da[30:0] == 31'd0);
+            zz_bad  <= (da[30:23] == 8'hFF) || (db[30:23] == 8'hFF) || (db[30:0] == 31'd0);
+        end
+    end else begin : g_nzz
+        always @* begin zz_ma = 24'd0; zz_mb = 24'd0; zz_sa = 3'd0; zz_sb = 3'd0; zz_ea = 10'd0; zz_eb = 10'd0; zz_sign = 1'b0; zz_zero = 1'b0; zz_bad = 1'b0; end
+    end endgenerate
+    wire [33:0] na = SPL ? {(zz_ma << zz_sa), zz_ea} : norm(a[30:23], a[22:0]);
+    wire [33:0] nb = SPL ? {(zz_mb << zz_sb), zz_eb} : norm(b[30:23], b[22:0]);
 
     // decode in two stages: normalise both operands (subnormal leading-one count and shift) | exponent difference
     reg        n_sign, n_zero, n_bad;
     reg [33:0] n_a, n_b;
     always @(posedge clk) begin
-        n_sign <= a[31] ^ b[31];
-        n_zero <= (a[30:0] == 31'd0);
-        n_bad  <= (a[30:23] == 8'hFF) || (b[30:23] == 8'hFF) || (b[30:0] == 31'd0);
+        n_sign <= SPL ? zz_sign : (a[31] ^ b[31]);
+        n_zero <= SPL ? zz_zero : (a[30:0] == 31'd0);
+        n_bad  <= SPL ? zz_bad : ((a[30:23] == 8'hFF) || (b[30:23] == 8'hFF) || (b[30:0] == 31'd0));
         n_a    <= na;
         n_b    <= nb;
     end
@@ -75,8 +119,93 @@ module ot_dsrom_su_fdiv_f12 (
     reg               r_zero [0:QB-1];
     reg               r_bad  [0:QB-1];
     reg signed [10:0] r_e    [0:QB-1];
+    wire [QB-1:0]     fq;                                       // the step array's result, F1's inputs
+    wire              fsign, fzero, fbad, fnz;
+    wire signed [10:0] fe;
     genvar j;
-    generate
+    generate if (SPL) begin : g_sp
+        reg [26:0] p_rem [0:QB-1];
+        for (j = 0; j < QB; j = j + 1) begin : g_rec
+            wire [23:0]   mb  = (j == 0) ? d_mb : r_mb[j-1];
+            wire [QB-1:0] qin = (j == 0) ? {QB{1'b0}} : r_q[j-1];
+            wire          sub = (j == 0) ? 1'b1 : r_q[j-1][0];
+            wire [26:0]   x   = (j == 0) ? {3'b0, d_ma} : {p_rem[j-1][25:0], 1'b0};
+            wire [26:0]   opb = sub ? ~{3'b0, mb} : {3'b0, mb};
+            wire [12:0]   lo_s; wire lo_c;                                          // stage A: low half (keep-prefix: ABC cannot re-ripple it)
+            ot_hdc_kadd #(.W(13), .K(1)) u_lo (.a(x[12:0]), .b(opb[12:0]), .cin(sub), .s(lo_s), .cout(lo_c));
+            wire [13:0]   lo  = {lo_c, lo_s};
+            wire [13:0]   h0, h1; wire h0_c, h1_c;                                  // upper half, both carries
+            ot_hdc_kadd #(.W(14), .K(1)) u_h0 (.a(x[26:13]), .b(opb[26:13]), .cin(1'b0), .s(h0), .cout(h0_c));
+            ot_hdc_kadd #(.W(14), .K(1)) u_h1 (.a(x[26:13]), .b(opb[26:13]), .cin(1'b1), .s(h1), .cout(h1_c));
+            reg  [12:0] a_lo; reg a_cl; reg [13:0] a_h0, a_h1;
+            reg  [23:0] a_mb; reg [QB-1:0] a_q; reg a_sign, a_zero, a_bad; reg signed [10:0] a_e;
+            always @(posedge clk) begin
+                a_lo <= lo[12:0]; a_cl <= lo[13]; a_h0 <= h0; a_h1 <= h1;
+                a_mb <= mb; a_q <= qin;
+                a_sign <= (j == 0) ? d_sign : r_sign[j-1];
+                a_zero <= (j == 0) ? d_zero : r_zero[j-1];
+                a_bad  <= (j == 0) ? d_bad  : r_bad[j-1];
+                a_e    <= (j == 0) ? d_e    : r_e[j-1];
+            end
+            wire [26:0] p = {a_cl ? a_h1 : a_h0, a_lo};                             // stage B: select by the low carry
+            always @(posedge clk) begin
+                p_rem[j]  <= p;
+                r_q[j]    <= {a_q[QB-2:0], !p[26]};
+                r_mb[j]   <= a_mb;
+                r_sign[j] <= a_sign; r_zero[j] <= a_zero; r_bad[j] <= a_bad; r_e[j] <= a_e;
+            end
+        end
+        wire [26:0] pl = p_rem[QB-1];
+        wire [26:0] ml = {3'b0, r_mb[QB-1]};
+        wire        pz = (pl == 27'd0);
+        wire        pmz = ((pl ^ ml) == {pl[25:0] | ml[25:0], 1'b0});
+        reg [QB-1:0]      x_q;
+        reg               x_sign, x_zero, x_bad, x_nz;
+        reg signed [10:0] x_e;
+        always @(posedge clk) begin
+            x_q <= r_q[QB-1]; x_sign <= r_sign[QB-1]; x_zero <= r_zero[QB-1]; x_bad <= r_bad[QB-1];
+            x_e <= r_e[QB-1];
+            x_nz <= r_q[QB-1][0] ? !pz : !pmz;
+        end
+        assign fq = x_q; assign fsign = x_sign; assign fzero = x_zero; assign fbad = x_bad; assign fe = x_e;
+        assign fnz = x_nz;
+    end else if (NR) begin : g_nr
+        reg [26:0] p_rem [0:QB-1];                              // signed partial remainder
+        for (j = 0; j < QB; j = j + 1) begin : g_rec
+            wire [23:0]   mb  = (j == 0) ? d_mb : r_mb[j-1];
+            wire [QB-1:0] qin = (j == 0) ? {QB{1'b0}} : r_q[j-1];
+            wire          sub = (j == 0) ? 1'b1 : r_q[j-1][0];  // previous p >= 0: subtract mb, else add it
+            wire [26:0]   x   = (j == 0) ? {3'b0, d_ma} : {p_rem[j-1][25:0], 1'b0};
+            wire [26:0]   p;
+            wire          unused_c;
+            ot_hdc_kadd #(.W(27), .K(1)) u_as (.a(x), .b(sub ? ~{3'b0, mb} : {3'b0, mb}), .cin(sub), .s(p),
+                                               .cout(unused_c));
+            always @(posedge clk) begin
+                p_rem[j]  <= p;
+                r_q[j]    <= {qin[QB-2:0], !p[26]};
+                r_mb[j]   <= mb;
+                r_sign[j] <= (j == 0) ? d_sign : r_sign[j-1];
+                r_zero[j] <= (j == 0) ? d_zero : r_zero[j-1];
+                r_bad[j]  <= (j == 0) ? d_bad  : r_bad[j-1];
+                r_e[j]    <= (j == 0) ? d_e    : r_e[j-1];
+            end
+        end
+        // R: the restoring remainder's nonzero test; the rest of the step state moves one stage
+        wire [26:0] pl = p_rem[QB-1];
+        wire [26:0] ml = {3'b0, r_mb[QB-1]};
+        wire        pz = (pl == 27'd0);
+        wire        pmz = ((pl ^ ml) == {pl[25:0] | ml[25:0], 1'b0});
+        reg [QB-1:0]      x_q;
+        reg               x_sign, x_zero, x_bad, x_nz;
+        reg signed [10:0] x_e;
+        always @(posedge clk) begin
+            x_q <= r_q[QB-1]; x_sign <= r_sign[QB-1]; x_zero <= r_zero[QB-1]; x_bad <= r_bad[QB-1];
+            x_e <= r_e[QB-1];
+            x_nz <= r_q[QB-1][0] ? !pz : !pmz;
+        end
+        assign fq = x_q; assign fsign = x_sign; assign fzero = x_zero; assign fbad = x_bad; assign fe = x_e;
+        assign fnz = x_nz;
+    end else begin : g_rs
         for (j = 0; j < QB; j = j + 1) begin : g_rec
             wire [23:0]   mb  = (j == 0) ? d_mb : r_mb[j-1];
             wire [QB-1:0] qin = (j == 0) ? {QB{1'b0}} : r_q[j-1];
@@ -94,24 +223,26 @@ module ot_dsrom_su_fdiv_f12 (
                 r_e[j]    <= (j == 0) ? d_e    : r_e[j-1];
             end
         end
-    endgenerate
+        assign fq = r_q[QB-1]; assign fsign = r_sign[QB-1]; assign fzero = r_zero[QB-1]; assign fbad = r_bad[QB-1];
+        assign fe = r_e[QB-1]; assign fnz = |r_rem[QB-1];
+    end endgenerate
 
     // ---- F1: leading bit, significand, guard, sticky, biased exponent, subnormal shift ----
-    wire [QB-1:0] q = r_q[QB-1];
-    wire signed [10:0] be1 = r_e[QB-1] + (q[26] ? 11'sd127 : 11'sd126);
+    wire [QB-1:0] q = fq;
+    wire signed [10:0] be1 = fe + (q[26] ? 11'sd127 : 11'sd126);
     reg        f1_sign, f1_zero, f1_bad, f1_g, f1_st, f1_sub, f1_ovf;
     reg [23:0] f1_sig;
     reg [7:0]  f1_field;
     reg [4:0]  f1_sh;
     wire [10:0] sh_full = 11'sd1 - be1;
     always @(posedge clk) begin
-        f1_sign <= r_sign[QB-1];
-        f1_zero <= r_zero[QB-1];
-        f1_bad  <= r_bad[QB-1];
+        f1_sign <= fsign;
+        f1_zero <= fzero;
+        f1_bad  <= fbad;
         if (q[26]) begin
-            f1_sig <= q[26:3]; f1_g <= q[2]; f1_st <= (|q[1:0]) || (|r_rem[QB-1]);
+            f1_sig <= q[26:3]; f1_g <= q[2]; f1_st <= (|q[1:0]) || fnz;
         end else begin
-            f1_sig <= q[25:2]; f1_g <= q[1]; f1_st <= q[0] || (|r_rem[QB-1]);
+            f1_sig <= q[25:2]; f1_g <= q[1]; f1_st <= q[0] || fnz;
         end
         f1_sub   <= (be1 < 11'sd1);
         f1_ovf   <= (be1 > 11'sd254);
@@ -158,4 +289,50 @@ module ot_dsrom_su_fdiv_f12 (
         else if (f3_zero || f3_code == 31'd0) begin y <= 32'd0; fault <= 1'b0; end
         else begin y <= {f3_sign, f3_code}; fault <= 1'b0; end
     end
+endmodule
+
+// SAFE tile (owner 2026-10-06): the divider as a hardened leaf with both operands registered at the boundary (+1 cycle).
+module ot_dsrom_su_fdiv_tile #(parameter integer NR = 0) (   // NR 0 / 1 / 2 as ot_dsrom_su_fdiv_f12
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire [31:0] y,
+    output wire        vo,
+    output wire        fault
+);
+    reg [31:0] ar, br; reg vr;
+    always @(posedge clk) begin ar <= a; br <= b; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) vr <= 1'b0; else vr <= v;
+    ot_dsrom_su_fdiv_f12 #(.NR(NR)) u (.clk(clk), .rst_n(rst_n), .v(vr), .a(ar), .b(br), .y(y), .vo(vo), .fault(fault));
+endmodule
+
+// SAFE half-rate backstop (owner 2026-10-07): two unchanged dividers on clock-gated half-rate domains (even / odd cycles),
+// II 1 outside, multicycle-2 SDC on u_a.* / u_b.*.  Latency a,b -> y: 2 * DEPTH + 1 (DEPTH 33 NR 0, 34 NR 1).
+module ot_dsrom_su_fdiv_hr #(parameter integer NR = 0) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output reg  [31:0] y,
+    output wire        vo,
+    output wire        fault
+);
+    localparam integer DEPTH = 2 + 27 + 4 + ((NR != 0) ? 1 : 0);
+    reg ph; reg [31:0] ar, br; reg vr;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin ph <= 1'b0; vr <= 1'b0; end else begin ph <= ~ph; vr <= v; end
+    always @(posedge clk) begin ar <= a; br <= b; end
+    wire gclk_a, gclk_b;
+    ot_hdc_cg u_cga (.clk(clk), .en(!ph | !rst_n), .gclk(gclk_a));
+    ot_hdc_cg u_cgb (.clk(clk), .en(ph | !rst_n), .gclk(gclk_b));
+    wire [31:0] ya, yb; wire fa, fb;
+    ot_dsrom_su_fdiv_f12 #(.NR(NR)) u_a (.clk(gclk_a), .rst_n(rst_n), .v(vr & ~ph), .a(ar), .b(br), .y(ya), .vo(), .fault(fa));
+    ot_dsrom_su_fdiv_f12 #(.NR(NR)) u_b (.clk(gclk_b), .rst_n(rst_n), .v(vr & ph), .a(ar), .b(br), .y(yb), .vo(), .fault(fb));
+    always @(posedge clk) y <= ph ? ya : yb;      // A updates at the end of even cycles (ph 0), visible while ph = 1
+    wire [2*DEPTH+1:0] vd;
+    ot_hdc_vline #(.D(2 * DEPTH + 1)) u_vl (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
+    assign vo = vd[2*DEPTH+1];
+    assign fault = fa | fb;
 endmodule

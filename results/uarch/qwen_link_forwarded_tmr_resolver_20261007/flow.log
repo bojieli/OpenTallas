@@ -1,0 +1,54 @@
+OT_ROUTE_HOLD_CORNERS=primary: place-and-route repair corners WC,BC -> WC (FF hold: post-route hold ECO; sign-off unchanged)
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+se/3_1_place_gp_skip_io.odb
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_1_place_gp_skip_io      .odb            3            283 afcf20c46d77ac0b03f8
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement
+Running io_placement.tcl, stage 3_2_place_iop
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_ot_qwen_link_forwarded_tmr_pair_asap7_qfwd_qwen_fwd_tmr_pair_9bb32a0da/base/3_1_place_gp_skip_io.odb
+read_sdc /work/results/asap7/opentallas_ot_qwen_link_forwarded_tmr_pair_asap7_qfwd_qwen_fwd_tmr_pair_9bb32a0da/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+place_pins -hor_layers M4 -ver_layers M5 -min_distance 1 -min_distance_in_tracks
+Found 0 macro blocks.
+[INFO PPL-0044] Pin group: [ a_i[0] a_i[1] a_i[2] a_i[3] a_i[4] ... ]
+[INFO PPL-0044] Pin group: [ b_i[0] b_i[1] b_i[2] b_i[3] b_i[4] ... ]
+[INFO PPL-0044] Pin group: [ clk_ab clk_ba_o rst_n ]
+[INFO PPL-0044] Pin group: [ clk_ab_o clk_ba ]
+[INFO PPL-0067] Restrict pins [ b_i[0] b_i[100] b_i[101] b_i[102] b_i[103] ... ] to region 434.00u-556.00u at the TOP edge.
+[INFO PPL-0067] Restrict pins [ a_i[0] a_i[100] a_i[101] a_i[102] a_i[103] ... ] to region 4.00u-126.00u at the BOTTOM edge.
+[INFO PPL-0067] Restrict pins [ clk_ab clk_ba_o rst_n ] to region 4.00u-64.00u at the LEFT edge.
+[INFO PPL-0067] Restrict pins [ clk_ab_o clk_ba ] to region 4.00u-64.00u at the RIGHT edge.
+[INFO PPL-0001] Number of available slots 26116
+[INFO PPL-0002] Number of I/O             2117
+[INFO PPL-0003] Number of I/O w/sink      2117
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0006] Number of I/O Groups    4
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0100] Group of size 1056 placed during fallback mode.
+[INFO PPL-0100] Group of size 1056 placed during fallback mode.
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 528941.62 um.
+Design area 974 um^2 3% utilization.
+write_db /work/results/asap7/opentallas_ot_qwen_link_forwarded_tmr_pair_asap7_qfwd_qwen_fwd_tmr_pair_9bb32a0da/base/3_2_place_iop.odb
+source /work/hooks/post_io_placement_regions.tcl
+FORWARDED_REGION s0 2.16 2.16 127.848 66.912 cells=3244
+FORWARDED_REGION s1 432.72 2.16 558.408 66.912 cells=3244
+Error: io_placement.tcl, 23 expected eight real clock inverter cells: 
+
+Elapsed time: 0:02.01[h:]min:sec. CPU time: user 1.91 sys 0.09 (99%). Peak memory: 229836KB.
+Elapsed time: 0:02.95[h:]min:sec. CPU time: user 3.00 sys 0.22 (109%). Peak memory: 241068KB.
+Elapsed time: 0:01.54[h:]min:sec. CPU time: user 1.47 sys 0.07 (99%). Peak memory: 211116KB.
+Elapsed time: 0:01.18[h:]min:sec. CPU time: user 1.11 sys 0.07 (99%). Peak memory: 208256KB.
+Elapsed time: 0:01.58[h:]min:sec. CPU time: user 1.52 sys 0.07 (99%). Peak memory: 228628KB.
+Elapsed time: 0:03.55[h:]min:sec. CPU time: user 14.89 sys 0.14 (423%). Peak memory: 290432KB.
+Elapsed time: 0:01.56[h:]min:sec. CPU time: user 1.48 sys 0.08 (99%). Peak memory: 230768KB.
+make[1]: *** [Makefile:495: do-3_2_place_iop] Error 1
+make: *** [Makefile:495: /work/results/asap7/opentallas_ot_qwen_link_forwarded_tmr_pair_asap7_qfwd_qwen_fwd_tmr_pair_9bb32a0da/base/3_2_place_iop.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/qwen_fwd_tmr_pair_9bb32a0da/routes/qwen_fwd_tmr_pair_9bb32a0da/physical.json

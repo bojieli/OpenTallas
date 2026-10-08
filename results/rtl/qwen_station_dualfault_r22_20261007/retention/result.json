@@ -1,0 +1,135 @@
+{
+  "schema": "opentallas.qwen_station_dualfault_retention.v1",
+  "cases": [
+    {
+      "case": "t0_s0",
+      "active_fault_state_bits": 4,
+      "fault_drivers": {
+        "bf_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$588"
+        ],
+        "bfn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$77"
+        ],
+        "af_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$586"
+        ],
+        "afn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$587"
+        ]
+      },
+      "fault_drivers_distinct": true,
+      "modeled_payload_FF": 508,
+      "observed_distinct_payload_outputs": 508,
+      "payload_copies_distinct": true,
+      "log_sha256": "1bfeda311cd524a708af95cc69555a674b95b21bcc9e8a7341257b87637ddfe0",
+      "netlist_sha256": "b43cb325d557b5288511f2bdf15ea742b3f67ae5f2c5f323649293b3d800a7aa"
+    },
+    {
+      "case": "t1_s0",
+      "active_fault_state_bits": 6,
+      "fault_drivers": {
+        "bf_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$614"
+        ],
+        "bfn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$83"
+        ],
+        "af_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$85"
+        ],
+        "afn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$84"
+        ],
+        "tf_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$82"
+        ],
+        "tfn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$81"
+        ]
+      },
+      "fault_drivers_distinct": true,
+      "modeled_payload_FF": 1016,
+      "observed_distinct_payload_outputs": 508,
+      "payload_copies_distinct": false,
+      "log_sha256": "c2a232e943d763ebfbf9f5d4efe55172169501749b43e233e97b97b12ddccb37",
+      "netlist_sha256": "a918b98b136a7b224baec9362e228dd0a8a1dc39af98a60ba5ff99d7a391ef45"
+    },
+    {
+      "case": "t0_s1",
+      "active_fault_state_bits": 6,
+      "fault_drivers": {
+        "bf_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$614"
+        ],
+        "bfn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$82"
+        ],
+        "af_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$85"
+        ],
+        "afn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$83"
+        ],
+        "cf_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$84"
+        ],
+        "cfn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$81"
+        ]
+      },
+      "fault_drivers_distinct": true,
+      "modeled_payload_FF": 1016,
+      "observed_distinct_payload_outputs": 508,
+      "payload_copies_distinct": false,
+      "log_sha256": "fa9449f5e818acd7ae48d9c3d5053d6307067dc004d87fe1c17990f1c8ce1190",
+      "netlist_sha256": "018e3022d24d82612d5256d2b8783a10e97690fc8ed1cbd9a22a84535de9f486"
+    },
+    {
+      "case": "t1_s1",
+      "active_fault_state_bits": 8,
+      "fault_drivers": {
+        "bf_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$90"
+        ],
+        "bfn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$85"
+        ],
+        "af_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$87"
+        ],
+        "afn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$88"
+        ],
+        "tf_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$91"
+        ],
+        "tfn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$86"
+        ],
+        "cf_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$92"
+        ],
+        "cfn_q": [
+          "$auto$simplemap.cc:496:simplemap_adff$89"
+        ]
+      },
+      "fault_drivers_distinct": true,
+      "modeled_payload_FF": 1524,
+      "observed_distinct_payload_outputs": 508,
+      "payload_copies_distinct": false,
+      "log_sha256": "93760f40572406b9026dbc0ec752e42e1875e2faa8a7dc5e90f88f8de3ff082f",
+      "netlist_sha256": "bf82d78246e264429c751da4dba910a0cdc7d8f0011c178eb632a15bcdde6f14"
+    }
+  ],
+  "fault_generic_retention_pass": true,
+  "payload_generic_retention_pass": false,
+  "route_eligible": false,
+  "adoption": false,
+  "blocker": "Yosys synth merges equivalent payload register copies despite wire keep attributes. Physical independent output drivers need a retained-cell synthesis policy or structural implementation; cell-library mapping and die loads remain unqualified.",
+  "source_sha256": {
+    "rtl/physical/ot_qwen_die_dualfault_station_r22.sv": "d192971bdc15263bf3d9981c15136a267654598a77e229595cb18843db1571fd",
+    "tools/qwen_station_dualfault_retention.py": "0f1e2aa6d44bc4436b46974aab1948c5fdef50be38a22f54afe36a36c00e33cf"
+  },
+  "yosys_version": "Yosys 0.9 (git sha1 1979e0b)"
+}

@@ -1,0 +1,9 @@
+READ row=0 stall=0 first=6 last=34 corrected=0
+READ row=0 stall=1 first=7 last=42 corrected=1
+READ row=1 stall=0 first=6 last=34 corrected=0
+READ row=1 stall=1 first=7 last=42 corrected=1
+READ row=2 stall=0 first=6 last=34 corrected=0
+READ row=2 stall=1 first=7 last=42 corrected=1
+READ row=3 stall=0 first=6 last=34 corrected=0
+READ row=3 stall=1 first=7 last=42 corrected=1
+PASS checks=72 protected8beat rows, single-bit correction, UE suppression, stalls, tags/counters; first6 last34 edges

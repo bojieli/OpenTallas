@@ -1,0 +1,38 @@
+{
+  "schema": "qwen.separate_load.full_interface_gate.v1",
+  "status": "pass",
+  "positive_engine_events": 128,
+  "rows": [
+    {
+      "name": "full_s0_n0",
+      "returncode": 0,
+      "negative": false,
+      "passed": true
+    },
+    {
+      "name": "full_s1_n0",
+      "returncode": 0,
+      "negative": false,
+      "passed": true
+    },
+    {
+      "name": "full_s0_n1",
+      "returncode": 1,
+      "negative": true,
+      "passed": true
+    }
+  ],
+  "source_sha256": {
+    "tools/qwen_rom_core_ctx_claude.py": "f1a2ca771b672a9050d0cc8f66b537b09dc6ba33d876934514a66bb0082f8a80",
+    "tools/qwen_core_separate_load.py": "0eec15b60cf04f3946e11178a177bca2eb6cb5616d433bce6763f9246da7213c",
+    "tools/qwen_core_opaque_interfaces.py": "be87ea39dd09c3a2436f063af8957efe5130df30c4058754d9060f416dd6c553",
+    "tools/qwen_core_separate_load_gate.py": "0a057eb410f0095b1599e4cb51c20a09430a6fdc0453bffc3b7d487a8c6da68c"
+  },
+  "lowered_source_sha256": {
+    "full0/core.sv": "d9696beadefda81f32f0be43f794e563f404cc6d004518b15a3da88177bb094a",
+    "full1/core.sv": "0cd780da0e7b7f19bc213107e4ff0c758e970d516112f946b4a511d29621a5f7",
+    "core0.v": "0430b20300ab9a8d7166f673155fcd500283458a8fb20928b20e80fc95f171fc",
+    "core1.v": "1a97c9f2b63b89c9ddd881f026252b6954aaae5f4a8adc2fb519c3a3642e5828"
+  },
+  "scope": "Actual full controller, FB3 BOUND AMQ NXREG MEIF SUIF PINREG, retained shape G6144 SW64 NW18; minimum engine boundaries, no arithmetic or whole-system simulation"
+}

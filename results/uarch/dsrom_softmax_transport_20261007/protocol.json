@@ -1,0 +1,30 @@
+{
+  "scope": "analytical full-width protocol simulation; NOT RTL or arithmetic exactness",
+  "passed": true,
+  "campaigns": [
+    {
+      "tokens": 128,
+      "payload_bytes": 65536,
+      "rejected_illegal_transactions": 8,
+      "stalled_drain_cycles": 1000
+    },
+    {
+      "tokens": 640,
+      "payload_bytes": 131072,
+      "rejected_illegal_transactions": 8,
+      "stalled_drain_cycles": 1000
+    }
+  ],
+  "beat_order_mutant_rejected": true,
+  "source_sha256": {
+    "dsrom_softmax_transport_protocol.py": "0579992f77e8142a402bd7c78887593225c662190dd4a5c6e3f70a6820a00a54",
+    "dsrom_softmax_transport.py": "9118275ef7d09466c2394ab676239373b1d03b93a136f7e22910485424f56bc6"
+  },
+  "pending": [
+    "actual RTL and SRAM read timing",
+    "CDC and atomic reset",
+    "ECC and protection negatives",
+    "producer/consumer phase overlap proof",
+    "physical closure and composed token latency"
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "name": "qfd_hub-load80-e721e27b5",
+  "block": "qfd_hub",
+  "owner": "Codex:qwen-masters",
+  "purpose": "Qwen r21 qfd_hub (412.536 square): 4 credit link endpoints + x3/ar staging; 5 clocks; route 770 / sign-off 833.333, 150 ps on every port; corrected die output load 80 fF and input transition 150 ps (95043d69f), retained obsolete failures",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "codex/qwen-masters-final-20261007",
+    "commit": "e721e27b561104aac303e4cdd1187b59cd163e20"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "hub_exact",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/hb0 -P tb_qwen_die_hub.NEG=0 rtl/test/tb_qwen_die_hub.sv rtl/physical/ot_qwen_die_hub.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/hb0 | tee {RUN}/bench/hb0.log && grep -q '^PASS' {RUN}/bench/hb0.log",
+        "expect": "pass",
+        "pass_regex": "^PASS hub",
+        "min_count_regex": "ar_words=(\\d+)",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "hub_neg",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/hb1 -P tb_qwen_die_hub.NEG=1 rtl/test/tb_qwen_die_hub.sv rtl/physical/ot_qwen_die_hub.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/hb1 | tee {RUN}/bench/hb1.log && grep -q '^PASS' {RUN}/bench/hb1.log",
+        "expect": "fail",
+        "fail_regex": "^FAIL hub",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_hub {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 32
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_hub --out {RUN}/record/views/qfd_hub --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_hub.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_masters_final_20261007/qfd_hub-load80-e721e27b5"
+    }
+  ],
+  "cycles_added": "link endpoint CDC (~4-6 cycles a crossing) on the KV-new (x3) and attention-return (ar) paths, off the AR token's critical path (KV-new writes are posted; ar carries no token-critical data after r18): 0 cycles on the AR token",
+  "merge_target": "main"
+}

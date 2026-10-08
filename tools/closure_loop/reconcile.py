@@ -30,6 +30,8 @@ LIVE_RE = re.compile(r"^\s*(running|admitted|queued|active|current|launched|pend
                      r"preflight)", re.I)
 STOP = {"claude", "codex", "route", "routes", "bench", "campaign", "running", "final", "token", "parent", "source", "src",
         "physical", "native", "full", "hold", "margin", "check", "station", "export", "lane"}
+from ssh_transport import command as transport_command
+
 ROOTS = "/srv/opentallas-scratch /srv/opentallas-scratch2 /srv/opentallas/scratch-overflow /srv/opentallas/repos /srv/opentallas-scratch2/jobs"
 PROBE = r"""
 echo '@@PS'; ps -eo pid=,args= 2>/dev/null
@@ -58,10 +60,11 @@ def tokens(name):
 def probe(host, paths):
     roots = ROOTS + " /home/ubuntu"
     script = PROBE % (" ".join(sorted(set(paths))) or "/nonexistent", ROOTS)
-    cmd = ["bash", "-s"] if host == "local" else ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", host, "bash -s"]
     try:
-        out = subprocess.run(cmd, input=script, capture_output=True, text=True, timeout=240).stdout
-    except subprocess.TimeoutExpired:
+        with transport_command(host) as base:
+            cmd = ["bash", "-s"] if host in ("local", "localhost") else base + ["bash -s"]
+            out = subprocess.run(cmd, input=script, capture_output=True, text=True, timeout=240).stdout
+    except (subprocess.TimeoutExpired, RuntimeError):
         return None
     if "@@END" not in out:
         return None

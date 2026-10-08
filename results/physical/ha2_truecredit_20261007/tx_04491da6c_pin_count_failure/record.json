@@ -1,0 +1,31 @@
+{
+  "source_commit": "04491da6ced8430c9976dc56cf828dbe4d73633d",
+  "host": "ot-epyc2",
+  "odb": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_04491da6c/routes/ha2_truecredit_tx_04491da6c_cal/work/orfs/results/asap7/opentallas_ot_ha2_truecredit_tx_phys_asap7_ha2_tc_tx/base/3_2_place_iop.odb",
+  "odb_sha256": "8f26fa80aa7b7bdf58c5ba96da9a1d5a4f8b082b636b3813e5324def08d092cf",
+  "scope": "Read-only OpenDB inspection, actual BTerm sigtype/BPin/box counts. Input directory mounted read-only; no route/ECO/restart.",
+  "summary": {
+    "GROUND": {
+      "bterms": 1,
+      "bpins": 1,
+      "boxes": 7
+    },
+    "POWER": {
+      "bterms": 1,
+      "bpins": 1,
+      "boxes": 7
+    },
+    "SIGNAL": {
+      "bterms": 2254,
+      "bpins": 2254,
+      "boxes": 2254
+    }
+  },
+  "conclusion": "2254 signal boxes plus14 POWER/GROUND boxes explains2268 total; checker counted PG.",
+  "artifacts": {
+    "inspect.py": "5b03bec51341b3166f2509291fa22730dd927f6f7e66464a9e354fce96188190",
+    "inspection.log": "c2239ce605ed13138ec9357fb0f9c4fc55ff77bb48f6728b2532baca75c72e40",
+    "classification.json": "5c6f795a7069bc29dbd75b0351532444c152b7a8ed63262d3b975d6c95eb417f",
+    "original_run.log": "9d257766ca7efe0aad7404ab64493d1f7083acb076c3588d01a9c5fa7352cf17"
+  }
+}
