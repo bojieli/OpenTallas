@@ -2289,6 +2289,14 @@ def routed_ioref(j, m):
                   ff_r2r=res["hold_ff"].get("worst_reg_to_reg_slack_ps"), json=out)
         if not rr["available"]:
             rr["why"] = f"re-STA incomplete (TT {tt} / FF {ff}; {errs[:2]})"
+        # a corner whose SDC has no insertion-reference virtual clock is unchanged by the re-STA: keep the route's own
+        # sign-off number there (the bare re-STA does not reproduce every recipe's sign-off: dshead-elemB-safe TT
+        # -201 route vs +121 re-STA with no clock moved)
+        for c, k in (("tt", "ss_ps"), ("ff", "ff_ps")):
+            if rr["available"] and not io[c]:
+                rr[c + "_resta_raw"], rr[c] = rr[c], m.get(k)
+        if rr["available"] and (rr["tt"] is None or rr["ff"] is None):
+            rr.update(available=False, why="route sign-off number missing for an unchanged corner")
     except (IndexError, ValueError, KeyError, TypeError) as ex:
         rr["why"] = f"re-STA output unreadable ({ex}; rc={r.returncode})"
     j["routed_ioref"] = rr
