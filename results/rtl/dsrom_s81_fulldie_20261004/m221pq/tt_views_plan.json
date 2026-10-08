@@ -1,0 +1,219 @@
+[
+ {
+  "view": "physical/dsrom_window_columns/ot_dsrom_window_column_128",
+  "name": "ot_dsrom_window_column_128",
+  "orfs_dir": "/srv/opentallas-scratch/codex/item7-column-20261006/w128_slew30/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_ot_dsrom_window_column_asap7_window_column_w128_u55/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_ot_dsrom_window_column_asap7_window_column_w128_u55/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_ot_dsrom_window_column_asap7_window_column_w128_u55/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name ot_dsrom_window_column_128_tt /out/ot_dsrom_window_column_128_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n"
+ },
+ {
+  "view": "physical/dsrom_window_columns/ot_dsrom_window_column_256",
+  "name": "ot_dsrom_window_column_256",
+  "orfs_dir": "/srv/opentallas-scratch/codex/item7-column-20261006/w256_slew30/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_ot_dsrom_window_column_asap7_window_column_w256_u55/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_ot_dsrom_window_column_asap7_window_column_w256_u55/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_ot_dsrom_window_column_asap7_window_column_w256_u55/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name ot_dsrom_window_column_256_tt /out/ot_dsrom_window_column_256_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n"
+ },
+ {
+  "view": "physical/s81_die_views/hbglue/ot_s81_head_delay8x32",
+  "name": "ot_s81_head_delay8x32",
+  "orfs_dir": "/srv/opentallas-scratch/codex/item8-hbglue-hier-20261006/leaf/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_ot_s81_head_delay8x32_asap7_native_hier_leaf/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_ot_s81_head_delay8x32_asap7_native_hier_leaf/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_ot_s81_head_delay8x32_asap7_native_hier_leaf/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name ot_s81_head_delay8x32_tt /out/ot_s81_head_delay8x32_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n"
+ },
+ {
+  "view": "physical/s81_die_views/meso/view_d8g1/view",
+  "name": "ot_meso_fifo",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-meso-d8g1-c20d75e28/routes/s81_meso_d8g1_c20d75e28/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_ot_meso_fifo_asap7_s81meso_s81_meso_d8g1_c20d75e28/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_ot_meso_fifo_asap7_s81meso_s81_meso_d8g1_c20d75e28/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_ot_meso_fifo_asap7_s81meso_s81_meso_d8g1_c20d75e28/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name ot_meso_fifo_tt /out/ot_meso_fifo_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc2"
+ },
+ {
+  "view": "physical/s81_die_views/swiglu/view_esum/view",
+  "name": "ot_dsrom_su_swiglu_lane",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-swiglu-esum-05d995e9b/routes/s81_swiglu_esum_05d995e9b/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_ot_dsrom_su_swiglu_lane_asap7_s81swg_s81_swiglu_esum_05d995e9b/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_ot_dsrom_su_swiglu_lane_asap7_s81swg_s81_swiglu_esum_05d995e9b/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_ot_dsrom_su_swiglu_lane_asap7_s81swg_s81_swiglu_esum_05d995e9b/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name ot_dsrom_su_swiglu_lane_tt /out/ot_dsrom_su_swiglu_lane_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc1tb"
+ },
+ {
+  "view": "physical/s81_die_views/views/dsfd_cfifo",
+  "name": "dsfd_cfifo",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-cfifo-290446310/routes/s81_dsfd_cfifo_290446310/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_cfifo_asap7_s81g_s81_dsfd_cfifo_290446310/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_cfifo_asap7_s81g_s81_dsfd_cfifo_290446310/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_cfifo_asap7_s81g_s81_dsfd_cfifo_290446310/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_cfifo_tt /out/dsfd_cfifo_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc2"
+ },
+ {
+  "view": "physical/s81_die_views/views/dsfd_stnh_512x1",
+  "name": "dsfd_stnh_512x1",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-2e2d7aa3f/routes/s81_dsfd_stnh_512x1_2e2d7aa3f/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_stnh_512x1_asap7_s81g_s81_dsfd_stnh_512x1_2e2d7aa3f/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_stnh_512x1_asap7_s81g_s81_dsfd_stnh_512x1_2e2d7aa3f/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_stnh_512x1_asap7_s81g_s81_dsfd_stnh_512x1_2e2d7aa3f/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_stnh_512x1_tt /out/dsfd_stnh_512x1_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-agidock128"
+ },
+ {
+  "view": "physical/s81_die_views/views/dsfd_stnh_514x1",
+  "name": "dsfd_stnh_514x1",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-514x1-2e2d7aa3f/routes/s81_dsfd_stnh_514x1_2e2d7aa3f/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_stnh_514x1_asap7_s81g_s81_dsfd_stnh_514x1_2e2d7aa3f/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_stnh_514x1_asap7_s81g_s81_dsfd_stnh_514x1_2e2d7aa3f/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_stnh_514x1_asap7_s81g_s81_dsfd_stnh_514x1_2e2d7aa3f/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_stnh_514x1_tt /out/dsfd_stnh_514x1_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-agidock128"
+ },
+ {
+  "view": "physical/s81_die_views/views/dsfd_stnh_566x1",
+  "name": "dsfd_stnh_566x1",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-566x1-2e2d7aa3f/routes/s81_dsfd_stnh_566x1_2e2d7aa3f/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_stnh_566x1_asap7_s81g_s81_dsfd_stnh_566x1_2e2d7aa3f/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_stnh_566x1_asap7_s81g_s81_dsfd_stnh_566x1_2e2d7aa3f/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_stnh_566x1_asap7_s81g_s81_dsfd_stnh_566x1_2e2d7aa3f/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_stnh_566x1_tt /out/dsfd_stnh_566x1_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-agidock128"
+ },
+ {
+  "view": "physical/s81_die_views/views/dsfd_stnv_512x1",
+  "name": "dsfd_stnv_512x1",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnv-512x1-2e2d7aa3f/routes/s81_dsfd_stnv_512x1_2e2d7aa3f/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_stnv_512x1_asap7_s81g_s81_dsfd_stnv_512x1_2e2d7aa3f/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_stnv_512x1_asap7_s81g_s81_dsfd_stnv_512x1_2e2d7aa3f/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_stnv_512x1_asap7_s81g_s81_dsfd_stnv_512x1_2e2d7aa3f/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_stnv_512x1_tt /out/dsfd_stnv_512x1_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-agidock128"
+ },
+ {
+  "view": "physical/s81_die_views/views/dsfd_stnv_514x1",
+  "name": "dsfd_stnv_514x1",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnv-514x1-2e2d7aa3f/routes/s81_dsfd_stnv_514x1_2e2d7aa3f/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_stnv_514x1_asap7_s81g_s81_dsfd_stnv_514x1_2e2d7aa3f/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_stnv_514x1_asap7_s81g_s81_dsfd_stnv_514x1_2e2d7aa3f/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_stnv_514x1_asap7_s81g_s81_dsfd_stnv_514x1_2e2d7aa3f/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_stnv_514x1_tt /out/dsfd_stnv_514x1_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-agidock128"
+ },
+ {
+  "view": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_W",
+  "name": "dsfd_l2r_vr_564x1__hx_W",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hx-W-c206a1ac1-mm/routes/s81_hend_m221pq_hx_W_c206a1ac1_mm/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_l2r_vr_564x1__hx_W_asap7_s81g_s81_hend_m221pq_hx_W_c206a1ac1_mm/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_l2r_vr_564x1__hx_W_asap7_s81g_s81_hend_m221pq_hx_W_c206a1ac1_mm/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_l2r_vr_564x1__hx_W_asap7_s81g_s81_hend_m221pq_hx_W_c206a1ac1_mm/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_l2r_vr_564x1__hx_W_tt /out/dsfd_l2r_vr_564x1__hx_W_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc1tb"
+ },
+ {
+  "view": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_512x1__hcol",
+  "name": "dsfd_r2l_vr_512x1__hcol",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/routes/s81_hend_m221pq_hcol_c206a1ac1_mm/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_r2l_vr_512x1__hcol_asap7_s81g_s81_hend_m221pq_hcol_c206a1ac1_mm/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_r2l_vr_512x1__hcol_asap7_s81g_s81_hend_m221pq_hcol_c206a1ac1_mm/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_r2l_vr_512x1__hcol_asap7_s81g_s81_hend_m221pq_hcol_c206a1ac1_mm/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_r2l_vr_512x1__hcol_tt /out/dsfd_r2l_vr_512x1__hcol_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc1tb"
+ },
+ {
+  "view": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_512x1__hsel",
+  "name": "dsfd_r2l_vr_512x1__hsel",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hsel-c206a1ac1-mm/routes/s81_hend_m221pq_hsel_c206a1ac1_mm/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_r2l_vr_512x1__hsel_asap7_s81g_s81_hend_m221pq_hsel_c206a1ac1_mm/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_r2l_vr_512x1__hsel_asap7_s81g_s81_hend_m221pq_hsel_c206a1ac1_mm/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_r2l_vr_512x1__hsel_asap7_s81g_s81_hend_m221pq_hsel_c206a1ac1_mm/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_r2l_vr_512x1__hsel_tt /out/dsfd_r2l_vr_512x1__hsel_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc1tb"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_capt_ctl",
+  "name": "dsfd_capt_ctl",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-48203c4d9-f/routes/s81ph_dsfd_capt_ctl_48203c4d9_f/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_capt_ctl_asap7_s81ph_s81ph_dsfd_capt_ctl_48203c4d9_f/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_capt_ctl_asap7_s81ph_s81ph_dsfd_capt_ctl_48203c4d9_f/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_capt_ctl_asap7_s81ph_s81ph_dsfd_capt_ctl_48203c4d9_f/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_capt_ctl_tt /out/dsfd_capt_ctl_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-agidock128"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_capt_g2",
+  "name": "dsfd_capt_g2",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_g2-fda73a869/routes/s81ph_dsfd_capt_g2_fda73a869/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_capt_g2_asap7_s81ph_s81ph_dsfd_capt_g2_fda73a869/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_capt_g2_asap7_s81ph_s81ph_dsfd_capt_g2_fda73a869/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_capt_g2_asap7_s81ph_s81ph_dsfd_capt_g2_fda73a869/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_capt_g2_tt /out/dsfd_capt_g2_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc2"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_coll_ck",
+  "name": "dsfd_coll_ck",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/routes/s81ph_dsfd_coll_ck_752a48488/work/orfs",
+  "mounts": [
+   "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/src/physical/s81_ph_views/macros/ot_s81_pll_bb:/mv0:ro"
+  ],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\nread_liberty /mv0/ot_s81_pll_bb_tt.lib\nread_lef /mv0/ot_s81_pll_bb.lef\n\nread_db /in/results/asap7/opentallas_dsfd_coll_ck_asap7_s81ph_s81ph_dsfd_coll_ck_752a48488/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_coll_ck_asap7_s81ph_s81ph_dsfd_coll_ck_752a48488/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_coll_ck_asap7_s81ph_s81ph_dsfd_coll_ck_752a48488/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_coll_ck_tt /out/dsfd_coll_ck_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc1tb"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_colt_lane",
+  "name": "dsfd_colt_lane",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-7345266ce-e/routes/s81ph_dsfd_colt_lane_7345266ce_e/work/orfs",
+  "mounts": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-7345266ce-e/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro"
+  ],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\nread_liberty /mv0/ot_sram_1r1w_256x256_m2_r2c2_tt.lib\nread_lef /mv0/ot_sram_1r1w_256x256_m2_r2c2.lef\n\nread_db /in/results/asap7/opentallas_dsfd_colt_lane_asap7_s81ph_s81ph_dsfd_colt_lane_7345266ce_e/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_colt_lane_asap7_s81ph_s81ph_dsfd_colt_lane_7345266ce_e/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_colt_lane_asap7_s81ph_s81ph_dsfd_colt_lane_7345266ce_e/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_colt_lane_tt /out/dsfd_colt_lane_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc3"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_colt_mrg",
+  "name": "dsfd_colt_mrg",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_mrg-cd3337221-b/routes/s81ph_dsfd_colt_mrg_cd3337221_b/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_colt_mrg_asap7_s81ph_s81ph_dsfd_colt_mrg_cd3337221_b/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_colt_mrg_asap7_s81ph_s81ph_dsfd_colt_mrg_cd3337221_b/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_colt_mrg_asap7_s81ph_s81ph_dsfd_colt_mrg_cd3337221_b/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_colt_mrg_tt /out/dsfd_colt_mrg_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc3"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_ctrl_ctr",
+  "name": "dsfd_ctrl_ctr",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_ctrl_ctr-34b3e75dd/routes/s81ph_dsfd_ctrl_ctr_34b3e75dd/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_ctrl_ctr_asap7_s81ph_s81ph_dsfd_ctrl_ctr_34b3e75dd/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_ctrl_ctr_asap7_s81ph_s81ph_dsfd_ctrl_ctr_34b3e75dd/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_ctrl_ctr_asap7_s81ph_s81ph_dsfd_ctrl_ctr_34b3e75dd/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_ctrl_ctr_tt /out/dsfd_ctrl_ctr_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-agidock128"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_ctrl_pc",
+  "name": "dsfd_ctrl_pc",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-e87322073/routes/s81ph_dsfd_ctrl_pc_e87322073/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_ctrl_pc_asap7_s81ph_s81ph_dsfd_ctrl_pc_e87322073/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_ctrl_pc_asap7_s81ph_s81ph_dsfd_ctrl_pc_e87322073/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_ctrl_pc_asap7_s81ph_s81ph_dsfd_ctrl_pc_e87322073/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_ctrl_pc_tt /out/dsfd_ctrl_pc_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc3"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_svc_pc",
+  "name": "dsfd_svc_pc",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svc_pc-752a48488/routes/s81ph_dsfd_svc_pc_752a48488/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_svc_pc_asap7_s81ph_s81ph_dsfd_svc_pc_752a48488/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_svc_pc_asap7_s81ph_s81ph_dsfd_svc_pc_752a48488/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_svc_pc_asap7_s81ph_s81ph_dsfd_svc_pc_752a48488/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_svc_pc_tt /out/dsfd_svc_pc_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc1tb"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_svc_stn",
+  "name": "dsfd_svc_stn",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svc_stn-da50ce55a/routes/s81ph_dsfd_svc_stn_da50ce55a/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_svc_stn_asap7_s81ph_s81ph_dsfd_svc_stn_da50ce55a/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_svc_stn_asap7_s81ph_s81ph_dsfd_svc_stn_da50ce55a/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_svc_stn_asap7_s81ph_s81ph_dsfd_svc_stn_da50ce55a/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_svc_stn_tt /out/dsfd_svc_stn_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc2"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_svcio_ad",
+  "name": "dsfd_svcio_ad",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0/routes/s81ph_dsfd_svcio_ad_d12b194f0/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_svcio_ad_asap7_s81ph_s81ph_dsfd_svcio_ad_d12b194f0/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_svcio_ad_asap7_s81ph_s81ph_dsfd_svcio_ad_d12b194f0/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_svcio_ad_asap7_s81ph_s81ph_dsfd_svcio_ad_d12b194f0/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_svcio_ad_tt /out/dsfd_svcio_ad_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc1tb"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_svcio_od",
+  "name": "dsfd_svcio_od",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_od-e87322073/routes/s81ph_dsfd_svcio_od_e87322073/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_svcio_od_asap7_s81ph_s81ph_dsfd_svcio_od_e87322073/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_svcio_od_asap7_s81ph_s81ph_dsfd_svcio_od_e87322073/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_svcio_od_asap7_s81ph_s81ph_dsfd_svcio_od_e87322073/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_svcio_od_tt /out/dsfd_svcio_od_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc3"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_svcio_q",
+  "name": "dsfd_svcio_q",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918/routes/s81ph_dsfd_svcio_q_093da5918/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_svcio_q_asap7_s81ph_s81ph_dsfd_svcio_q_093da5918/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_svcio_q_asap7_s81ph_s81ph_dsfd_svcio_q_093da5918/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_svcio_q_asap7_s81ph_s81ph_dsfd_svcio_q_093da5918/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_svcio_q_tt /out/dsfd_svcio_q_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc3"
+ },
+ {
+  "view": "physical/s81_ph_views/closed/dsfd_svcio_x",
+  "name": "dsfd_svcio_x",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_x-093da5918/routes/s81ph_dsfd_svcio_x_093da5918/work/orfs",
+  "mounts": [],
+  "tcl": "read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n\nread_db /in/results/asap7/opentallas_dsfd_svcio_x_asap7_s81ph_s81ph_dsfd_svcio_x_093da5918/base/6_final.odb\nread_sdc /in/results/asap7/opentallas_dsfd_svcio_x_asap7_s81ph_s81ph_dsfd_svcio_x_093da5918/base/6_final.sdc\nread_spef /in/results/asap7/opentallas_dsfd_svcio_x_asap7_s81ph_s81ph_dsfd_svcio_x_093da5918/base/6_final.spef\nset_propagated_clock [all_clocks]\nputs \"OT_WS [sta::worst_slack_cmd max]\"\nwrite_timing_model -library_name dsfd_svcio_x_tt /out/dsfd_svcio_x_tt.lib\nputs \"OT_EXPORT_DONE\"\nexit\n",
+  "host": "ot-epyc3"
+ }
+]
