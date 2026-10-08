@@ -79,6 +79,17 @@ CANDIDATES = [
                 "first (variant A re-cut is the target).  UNDER-PRICED: BF pairs also hold 20.6 % of the q words, so HALF=1 on "
                 "shared pairs doubles those q phases too (the BF-dedicated-pair plan of the BF doubling agent replaces it)",
      [("*.attn.wo_a", 0, 0.8789), ("*.ffn.router", 0, 0.8976), ("*.attn.a_proj", 0, 0.7037), ("*.attn.cmp.wk", 0, 0.7748)]),
+    ("bf_halfphl", "BF HALF_PHL (ot_s81_bf_native HALF=1 HALF_PHL=1, claude/s81-bf-20261007 4000b1ea7; exact PASS "
+                   "results/rtl/s81_bf_native_20261007/halfphl_exact; closure-loop bf_halfphl_0e90389e9_f / _p700_4000b1ea7_f): "
+                   "the half-rate element with the phase FF on the ICG clock net (0 cycles vs HALF).  Priced on the adopted "
+                   "bf_merge_ksplit field: every BF16 field-vehicle phase doubled (merged meas from merge_price.json / "
+                   "router_ksplit_price.json; a_proj less its as-built FP8 phase, 410) + 2 per BF16 phase (pin capture, "
+                   "output register).  UPPER BOUND (region return / gather stay full rate).  Requires BF16-DEDICATED BF "
+                   "pairs (q never on a BF pair: tools/dsrom_bf_double_alloc.py without --shared) -- the die/stage count "
+                   "of that allocation is reported in results/rtl/s81_bf_native_20261007/halfphl_price.json",
+     [("*.attn.wo_a", 888, 0), ("*.ffn.router", 391, 0), ("*.attn.cmp.wk", 203, 0)]
+     + [(f"L{L}.attn.a_proj", 1042, 0) for L in (2, 8, 14)] + [("L20.attn.a_proj", 523, 0)]
+     + [(f"L{L}.attn.a_proj", 518, 0) for L in (24, 28, 32, 36)]),
     ("bf_recut", "BF re-cut A (ot_s81_bf_native RECUT=2, claude/dsrom-bf-rowfix-20261007 260869fd0; exact record e2d358837; "
                  "closure-loop bf_recut_260869fd0): latency only, transaction lag per partial 4 / 7.9 / 15; upper bound "
                  "+15 per field phase (wo_a 4 phases, a_proj 3)",
