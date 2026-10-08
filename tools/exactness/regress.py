@@ -35,7 +35,7 @@ STATE = Path(os.path.expanduser("~/.local/state/exactness"))
 REMOTE = "/srv/opentallas-scratch/claude/exactness"
 ARCHIVE = ["rtl", "tools", "physical/asap7_memory_macros", "physical/hbm_accel_macros",
            "compiler/models/qwen3-reduced-v1", "compiler/models/deepseek-v4.1-flash-reduced-v2",
-           ":(glob)results/abi3/*reference_oracle*", "AGENTS.md"]
+           ":(glob)results/abi3/*reference_oracle*", "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4", "AGENTS.md"]
 # bench-tool fixes overlaid on every staged commit (tool code only): the tile ROM accessor regex that a76724a9c's
 # BAW generate scope broke on main
 TOOL_OVERLAY = ["tools/qwen_rom_rt_rm_access.py"]
