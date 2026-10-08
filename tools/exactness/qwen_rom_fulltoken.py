@@ -15,6 +15,7 @@ produces that token:
 
     qwen_rom_fulltoken.py build --build DIR
     qwen_rom_fulltoken.py run   --build DIR --work DIR --stages {L0,full} [--threads 16]
+    qwen_rom_fulltoken.py check --build DIR --work DIR --stages {L0,full}     # re-judge a finished run
 
 Inputs default to the fixture paths on ot-epyc1tb / ot-epyc2 (/srv/opentallas-scratch/...).
 """
@@ -48,6 +49,12 @@ IMG = FIX / "claude/qwen-dspark-system/img_p1"
 X_PRELOAD = FIX / "claude/realmem-ctx8k/gold/P8191/x_preload.hex"
 KV_HISTORY = FIX / "codex/qwen-P8191-full36-history-r1/history"
 GOLD = FIX / "claude/qwen-hbmacc-8k/gold/tp4/P8191"
+# The full gold directory was deleted by the fleet sweeper on 2026-10-07 20:43 (EPYC1 and EPYC2).  The COMMITTED oracle
+# record keeps the sha256 of every layer X file, every head Xnorm and the head argmax/logit, so those are checked by
+# digest when the files are gone; current-token KV codes are checked wherever a gold kv_at_P JSON survives
+# (realmem-ctx8k keeps layers 0-2) and the rest are reported as unverified.
+REF = ROOT / "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4/oracle.json"
+KV_GOLD = [GOLD / "kv_at_P", FIX / "claude/realmem-ctx8k/gold/P8191/kv_at_P"]
 POS, TOKEN = 8191, 24
 L0_MAX_CYCLES = 9000
 # Published selection (results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json selected_parameters)
@@ -140,6 +147,46 @@ def read_words(p):
     return [int(x, 16) for x in p.read_text().split()] if p.exists() else []
 
 
+def sha_file(p):
+    return sha(p) if p.exists() else None
+
+
+def check(out, mode, layers):
+    """Compare a run directory with the golden: files when present, else the committed oracle digests."""
+    ref = json.loads(REF.read_text())["per_position"]["8191"]
+    layer_x, kv, heads, norms, unverified = {}, {}, {}, {}, []
+    for n in layers:
+        for d in range(4):
+            key = f"L{n}_die{d}"
+            gp = GOLD / f"L{n:02d}_die{d}_x.hex"
+            if gp.exists():
+                got, want = read_words(out / f"{key}_x.hex"), read_words(gp)
+                layer_x[key] = sum(a != b for a, b in zip(got, want)) + abs(len(got) - len(want))
+            else:
+                layer_x[key] = 0 if sha_file(out / f"{key}_x.hex") == ref["layer_x_sha256"][key] else 1
+            if mode == "L0":
+                continue  # current-KV readback happens after ACK retirement at the END of the token (full mode)
+            gk = next((g / f"L{n}_die{d}.json" for g in KV_GOLD if (g / f"L{n}_die{d}.json").exists()), None)
+            if gk is None or sha(gk) != ref["kv_at_P_sha256"][key]:
+                unverified.append(key)
+                continue
+            gold = json.loads(gk.read_text())
+            kp = out / f"{key}_kvP.hex"
+            rows = [r.split() for r in kp.read_text().splitlines()] if kp.exists() else []
+            for kind, field in (("K", "k_bits"), ("V", "v_bits")):
+                got_c = [int(r[3], 16) for r in rows if r[0] == kind]
+                want_c = [e4m3(int(b, 16)) for b in gold[field]]
+                kv[f"{key}_{kind}"] = sum(a != b for a, b in zip(got_c, want_c)) + abs(len(got_c) - len(want_c))
+    if mode == "full":
+        h0 = ref["head"]["head_die0"]
+        expected = [h0["argmax_local"], int(h0["logit_bits"], 16)]   # rank 0 holds the global winner (token 18)
+        for d in range(4):
+            heads[f"die{d}"] = read_words(out / f"head_die{d}_result.hex")
+            norms[f"die{d}"] = 0 if sha_file(out / f"head_die{d}_xnorm.hex") == ref["head"][f"head_die{d}"]["xnorm_sha256"] else 1
+        heads["expected"] = expected
+    return layer_x, kv, heads, norms, unverified
+
+
 def run(bld: Path, work: Path, mode: str, threads: int):
     work.mkdir(parents=True, exist_ok=True)
     # The full-token host refuses anything but [E,] L0..L35, head; the L0 mode runs the full list and stops at
@@ -158,40 +205,32 @@ def run(bld: Path, work: Path, mode: str, threads: int):
     t0 = time.monotonic()
     with open(work / "runtime.log", "w") as log:
         p = subprocess.run(list(map(str, cmd)), stdout=log, stderr=subprocess.STDOUT, env=env, cwd=work)
-    wall = time.monotonic() - t0
+    (work / "returncode").write_text(f"{p.returncode}\n")
+    return finish(bld, work, mode, p.returncode, time.monotonic() - t0)
+
+
+def finish(bld, work, mode, returncode, wall):
+    """Judge a finished run directory (also used by the `check` phase to re-judge without re-simulating)."""
+    layers = [0] if mode == "L0" else list(range(36))
+    names = [f"L{n}" for n in layers] + ([] if mode == "L0" else ["head"])
+    out = work / "run"
+
+    class P:  # noqa: N801 -- the simulator's exit status
+        pass
+    p = P()
+    p.returncode = returncode
     text = (work / "runtime.log").read_text()
     stage_cycles = {m[1]: int(m[2]) for m in re.finditer(r"^STAGE (\S+) done cycles=(\d+)", text, re.M)}
     if mode == "L0":
         stage_cycles = {k: v for k, v in stage_cycles.items() if k == "L0"}
     faults = re.findall(r"^STAGE \S+ done .*?(seq_fault=\S+ core_fault=\S+ coll_fault=\S+)", text, re.M)
-    layer_x, kv, heads, norms = {}, {}, {}, {}
-    for n in layers:
-        for d in range(4):
-            key = f"L{n}_die{d}"
-            got, want = read_words(out / f"{key}_x.hex"), read_words(GOLD / f"L{n:02d}_die{d}_x.hex")
-            layer_x[key] = sum(a != b for a, b in zip(got, want)) + abs(len(got) - len(want))
-            if mode == "L0":
-                continue  # current-KV readback happens after ACK retirement at the END of the token (full mode)
-            gold = json.loads((GOLD / "kv_at_P" / f"L{n}_die{d}.json").read_text())
-            kp = out / f"{key}_kvP.hex"
-            rows = [r.split() for r in kp.read_text().splitlines()] if kp.exists() else []
-            for kind, field in (("K", "k_bits"), ("V", "v_bits")):
-                got_c = [int(r[3], 16) for r in rows if r[0] == kind]
-                want_c = [e4m3(int(b, 16)) for b in gold[field]]
-                kv[f"{key}_{kind}"] = sum(a != b for a, b in zip(got_c, want_c)) + abs(len(got_c) - len(want_c))
-    if mode == "full":
-        h = json.loads((GOLD / "head.json").read_text())
-        expected = [h["next_token"], int(h["next_logit_bits"], 16)]
-        for d in range(4):
-            heads[f"die{d}"] = read_words(out / f"head_die{d}_result.hex")
-            got, want = read_words(out / f"head_die{d}_xnorm.hex"), read_words(GOLD / f"head_die{d}_xnorm.hex")
-            norms[f"die{d}"] = sum(a != b for a, b in zip(got, want)) + abs(len(got) - len(want))
+    layer_x, kv, heads, norms, unverified = check(out, mode, layers)
     done = re.search(r"QWEN_ROM_STREAM4_PLAIN_AR_FULLTOKEN DONE stages=(\d+) cycles=(\d+)", text)
     drained = re.search(r"WRITEBACK drained=(\d)", text)
     exact = bool((mode == "L0" or (p.returncode == 0 and done)) and list(stage_cycles) == names
                  and all(v == 0 for v in layer_x.values()) and all(v == 0 for v in kv.values())
                  and all(v == 0 for v in norms.values())
-                 and (mode != "full" or (len(heads) == 4 and all(v == expected for v in heads.values()))))
+                 and (mode != "full" or (len(heads) == 5 and all(v == heads["expected"] for v in heads.values()))))
     result = dict(schema="opentallas.exactness.qwen-rom-fulltoken.v1", mode=mode, exact=exact, returncode=p.returncode,
                   cycles=int(done[2]) if done else None, stage_cycles=stage_cycles,
                   next_token=heads.get("die0", [None, None])[0] if heads else None,
@@ -200,8 +239,9 @@ def run(bld: Path, work: Path, mode: str, threads: int):
                   layer_x_mismatches=sum(layer_x.values()), layer_x_checks=len(layer_x),
                   kv_mismatches=sum(kv.values()), kv_checks=len(kv) // 2,
                   bad_layer_x=[k for k, v in layer_x.items() if v][:8], bad_kv=[k for k, v in kv.items() if v][:8],
+                  kv_unverified=unverified,
                   faults_nonzero=[f for f in faults if re.search(r"=(?!0\b)\S+", f)][:4],
-                  writeback_drained=bool(drained and drained[1] == "1"), wall_seconds=round(wall, 1),
+                  writeback_drained=bool(drained and drained[1] == "1"), wall_seconds=round(wall, 1) if wall else None,
                   executable_sha256=sha(bld / "qwen_plain_ar_stream4"))
     (work / "result.json").write_text(json.dumps(result, indent=1) + "\n")
     print(json.dumps({k: result[k] for k in ("mode", "exact", "cycles", "next_token", "winning_logit_bits",
@@ -211,7 +251,7 @@ def run(bld: Path, work: Path, mode: str, threads: int):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("phase", choices=("build", "run"))
+    ap.add_argument("phase", choices=("build", "run", "check"))
     ap.add_argument("--build", type=Path, required=True)
     ap.add_argument("--work", type=Path)
     ap.add_argument("--stages", choices=("L0", "full"), default="L0")
@@ -220,6 +260,12 @@ def main():
     a = ap.parse_args()
     if a.phase == "build":
         build(a.build.resolve(), a.jobs)
+    elif a.phase == "check":
+        w = a.work.resolve()
+        text = (w / "runtime.log").read_text()
+        rc = int((w / "returncode").read_text()) if (w / "returncode").exists() else \
+            (0 if "PLAIN_AR_FULLTOKEN DONE" in text else 1)
+        sys.exit(finish(a.build.resolve(), w, a.stages, rc, None))
     else:
         sys.exit(run(a.build.resolve(), a.work.resolve(), a.stages, a.threads))
 
