@@ -17,7 +17,8 @@ def test_nodes_reproduce():
     for v, x in rec["variants"].items():
         assert x["failed"] == 0 and x["all_exact"]
         reg = json.load(gzip.open(F.OUT / "regions" / f"{v}.json.gz", "rt"))
-        fl = json.loads((F.MAP / v / "stage_map.json").read_text())["stage_flavour"]
+        bdir = F.MAP / v if (F.MAP / v).exists() else F.OUT / "binding" / v
+        fl = json.loads((bdir / "stage_map.json").read_text())["stage_flavour"]
         half = F.node_cycles(reg, dict(enumerate(fl)), wires, True, adder)
         full = F.node_cycles(reg, dict(enumerate(fl)), wires, False, adder)
         for n, y in x["nodes"].items():
