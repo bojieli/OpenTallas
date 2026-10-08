@@ -30,6 +30,13 @@ def patch(scripts: Path, helper: str) -> dict:
     ut = ut.replace(RTH, "  if {[llength [info commands ot_mm_sync]]} { ot_mm_sync }\n"
                          "  set ot_rc [catch {log_cmd repair_timing {*}$additional_args} ot_msg ot_opts]\n"
                          "  if {[llength [info commands ot_mm_unsync]]} { ot_mm_unsync }\n"
+                         # flow-triage 2026-10-08: an mm repair that exhausts repair_timing's buffer budget (RSZ-0060)
+                         # throws AFTER inserting its buffers, killing the stage (no 4_1_cts.odb) although the design is
+                         # whole; continue in mm mode only (tolerate_flow_errors then zeroes the count) so the sign-off
+                         # STA, not a dead stage, reports the residual FF hold.
+                         "  if {$ot_rc && [info exists ::ot_mm_active] && [regexp {RSZ-0060|Max buffer count} $ot_msg]} {\n"
+                         "    puts \"OT_HOLD_MM: repair hit the buffer cap (RSZ-0060); continuing on the repaired design, sign-off decides\"\n"
+                         "    return\n  }\n"
                          "  if {$ot_rc} { return -options $ot_opts $ot_msg }\n}", 1)
     sha = lambda s: hashlib.sha256(s.encode()).hexdigest()  # noqa: E731
     out.update(load_before=sha(load.read_text()), util_before=sha(util.read_text()))
