@@ -25,3 +25,5 @@ echo "label=$lab sdc=$SDC die=${DW}x${DH} pd=${PD:-0.45} $*" > $W/args
   --slew-margin-percent 60 --purpose signoff_target --nickname-tag nev_$lab --keep-workdir $W/work --force \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit
+
+# Variant B of the hierarchical-synthesis launch (KEEP=200: most per-lane arithmetic kept as its own module).
