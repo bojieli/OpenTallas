@@ -2651,6 +2651,8 @@ def step(j, fleet):
             event(j, f"{st['key']} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc}) "
                      f"{(j.get('bench_work') or {}).get(st['key'], '')}")
         else:
+            if st["kind"] in ("route", "calibrate"):
+                hm_auto_events(j)
             if rc != 0 and ok_extra and st["kind"] == "signoff" and st.get("ok"):
                 # a sign-off script that exits non-zero for "not closed" but wrote its evidence (the job's ok check
                 # passes) is a verdict, not a crash: w2-rb-safe-no2/no3 exited 1 on SS -18.9 and the retry then refused
@@ -2750,6 +2752,29 @@ def adoption_held(j):
         j["wait"] = note
         event(j, note)
     return True
+
+
+def hm_auto_lines(text):
+    """OT_HM_AUTO report lines (tools/orfs_hold_mm.tcl ot_hm_guard) -> event texts"""
+    return [ln.split("OT_HM_AUTO", 1)[1].strip() for ln in text.splitlines() if ln.startswith("OT_HM_AUTO")]
+
+
+def hm_auto_events(j):
+    """HM-GUARD (2026-10-08): a route-time hold repair that auto-reduced its margin (too many endpoints inside HM / too
+    much projected buffer area) leaves REPORTS_DIR/ot_hm_auto_<stage>.rpt: one job event per report and attempt"""
+    try:
+        r = ssh(j["host"], f"cat $(find {j['run']}/routes -name 'ot_hm_auto_*.rpt' 2>/dev/null | head -4) "
+                           f"</dev/null 2>/dev/null", timeout=60)
+    except Exception as ex:  # an event is informative only: never fail a stage on it
+        log(f"[{j['name']}] hm_auto_events: {ex}")
+        return
+    seen = j.setdefault("hm_auto_seen", [])
+    for ln in hm_auto_lines(r.stdout or ""):
+        key = f"{j.get('attempt')}|{ln}"
+        if key not in seen:
+            seen.append(key)
+            event(j, ln)
+    j["hm_auto_seen"] = seen[-20:]
 
 
 def do_verdict(j, fleet, stl):
