@@ -1,0 +1,123 @@
+{
+ "name": "qfd_io_serdes_adapter_rxd512-351607d29tc",
+ "block": "qfd_io_serdes",
+ "owner": "Claude:gaps-design",
+ "purpose": "GAPS-DESIGN item 1: Qwen SerDes link at line rate. RXD 128 -> 512 (credit RTT ~460 FDI cycles at 223-cycle KP4+PCS one way; rate sweep tb RATE=1: 128 -> 0.290, 256 -> 0.591, 512 -> 1.000 words/cycle); receive buffer = 8 x ot_sram_1r1w_512x128_m4_r2c2 with macro-output capture flops + 4-entry skid. Route at TC (OT_ORFS_CORNER_OVERRIDE=TC), mm FF hold HM 50, H1 die-master SDC. Supersedes qfd_io_serdes_adapter-646cf264dtt (RXD 128).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/gaps-design-20261008",
+  "commit": "351607d299226e8fe72da6864c9c93c93676e630"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "rate512_sram",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_link_adapter -Ptb_qfd_link_adapter.RXD=512 -Ptb_qfd_link_adapter.SRAM=1 -Ptb_qfd_link_adapter.LAT=223 -Ptb_qfd_link_adapter.N=2000 -Ptb_qfd_link_adapter.RATE=1 -Ptb_qfd_link_adapter.MINRATE=950 -o {RUN}/bench/rate512_sram rtl/test/tb_qfd_link_adapter.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v && vvp -n {RUN}/bench/rate512_sram",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS qfd_link_adapter"
+   },
+   {
+    "name": "rate128_neg",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_link_adapter -Ptb_qfd_link_adapter.RXD=128 -Ptb_qfd_link_adapter.SRAM=0 -Ptb_qfd_link_adapter.LAT=223 -Ptb_qfd_link_adapter.N=2000 -Ptb_qfd_link_adapter.RATE=1 -Ptb_qfd_link_adapter.MINRATE=950 -o {RUN}/bench/rate128_neg rtl/test/tb_qfd_link_adapter.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v && vvp -n {RUN}/bench/rate128_neg",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^FAIL qfd_link_adapter"
+   },
+   {
+    "name": "exact512_sram",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_link_adapter -Ptb_qfd_link_adapter.RXD=512 -Ptb_qfd_link_adapter.SRAM=1 -Ptb_qfd_link_adapter.LAT=223 -Ptb_qfd_link_adapter.N=1500 -o {RUN}/bench/exact512_sram rtl/test/tb_qfd_link_adapter.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v && vvp -n {RUN}/bench/exact512_sram",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS qfd_link_adapter"
+   },
+   {
+    "name": "stall512_sram",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_link_adapter -Ptb_qfd_link_adapter.RXD=512 -Ptb_qfd_link_adapter.SRAM=1 -Ptb_qfd_link_adapter.LAT=223 -Ptb_qfd_link_adapter.N=3000 -Ptb_qfd_link_adapter.STALL=1 -Ptb_qfd_link_adapter.SW=1500 -o {RUN}/bench/stall512_sram rtl/test/tb_qfd_link_adapter.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v && vvp -n {RUN}/bench/stall512_sram",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS qfd_link_adapter"
+   },
+   {
+    "name": "mutant512_sram",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_link_adapter -Ptb_qfd_link_adapter.RXD=512 -Ptb_qfd_link_adapter.SRAM=1 -Ptb_qfd_link_adapter.LAT=223 -Ptb_qfd_link_adapter.N=3000 -Ptb_qfd_link_adapter.STALL=1 -Ptb_qfd_link_adapter.SW=1500 -Ptb_qfd_link_adapter.MUT=1 -o {RUN}/bench/mutant512_sram rtl/test/tb_qfd_link_adapter.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v && vvp -n {RUN}/bench/mutant512_sram",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^FAIL qfd_link_adapter"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO referenced in-run to the block propagated clock (io_ref_skew.sdc, rule H1); no Qwen r21 budget sheet"
+  },
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_io_serdes_adapter_rxd512.sdc' && SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_io_serdes_adapter_rxd512 {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_io_serdes_rxd512 --post-sdc physical/qwen_die_masters/signoff/qfd_io_serdes_adapter_rxd512.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_io_serdes_rxd512 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_io_serdes_adapter_rxd512.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+ },
+ "record": [
+  {
+   "to": "physical/qwen_die_masters/views",
+   "from": "{RUN}/record/views"
+  },
+  {
+   "to": "results/rtl/gaps_design_20261008/routes/qfd_io_serdes_adapter_rxd512-351607d29tc",
+   "from": "{RUN}/record/route"
+  }
+ ],
+ "cycles_added": "+3 receive cycles (registered SRAM read, macro-output capture, skid) on a 223-cycle one-way link; throughput 0.29 -> 1.00 of line rate",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05
+}
