@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s2_tc_4aadc92bc/routes/hbm_svc_SW_s2_tc_4aadc92bc_cal/work/orfs/results/asap7/opentallas_hfd_svc_SW_s2_asap7_hv_hbm_svc_SW_s2_tc_4aadc92bc_cal/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "ss": {
+  "boundary": {
+   "n": 5658,
+   "mean": 752.2,
+   "min": 716.2,
+   "max": 810.7
+  },
+  "all": {
+   "n": 27578,
+   "mean": 741.6,
+   "min": 701.3,
+   "max": 810.7
+  },
+  "errors": []
+ },
+ "ff": {
+  "boundary": {
+   "n": 5658,
+   "mean": 478.5,
+   "min": 441.7,
+   "max": 532.6
+  },
+  "all": {
+   "n": 27578,
+   "mean": 465.7,
+   "min": 437.5,
+   "max": 532.6
+  },
+  "errors": []
+ },
+ "env": {
+  "CK_SS_MEAN": 752,
+  "CK_SS_ALL_MEAN": 742,
+  "CK_SS_MIN": 716,
+  "CK_SS_ALL_MIN": 701,
+  "CK_SS_MAX": 811,
+  "CK_SS_ALL_MAX": 811,
+  "CK_FF_MEAN": 478,
+  "CK_FF_ALL_MEAN": 466,
+  "CK_FF_MIN": 442,
+  "CK_FF_ALL_MIN": 438,
+  "CK_FF_MAX": 533,
+  "CK_FF_ALL_MAX": 533
+ },
+ "budget_accepted": {
+  "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it",
+  "sheet_ss": 882.7,
+  "sheet_grade": "target",
+  "target_ss": 882.7,
+  "measured": {
+   "ss": 752,
+   "ff": 478,
+   "ss_min": 716,
+   "ss_max": 811,
+   "ff_min": 442,
+   "ff_max": 533,
+   "grade": "measured",
+   "source": "closure-loop calibrate hbm_svc_SW_s2_tc_4aadc92bc (ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s2_tc_4aadc92bc)",
+   "over_target": false
+  },
+  "sheets_ref": "50dd846e4f13d92863a67b1b8d577d02825fe80e"
+ }
+}
