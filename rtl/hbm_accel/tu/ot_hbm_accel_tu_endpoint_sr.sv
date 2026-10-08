@@ -12,7 +12,8 @@
 //     (only legal when pclk is clk, as hfd_coll wires it) replaces them with 2-entry flop FIFOs (occupancy <= 1);
 //   * the runtime multiplies and f / OF, f % OF divisions -> compares against registered m * OF constants;
 //   * operand-slot writes: one writer per contributor column per cycle (a second partial for the same column waits
-//     a cycle in its receive buffer), so each column has one 10:1 write mux instead of one per slot.
+//     a cycle in its receive buffer), so each column has one one-hot 10-source write select instead of a demux of
+//     every port into every slot; delivery lanes likewise use constant-index one-hot selects.
 // Primitive instance sites carry (* keep_hierarchy *) (as the coll _kh endpoint): one ABC run per unique module.
 // Defaults: RXAW 8 (256-entry receive buffers = the switch egress credit pool, two 128-deep banks), QAW 7 (128-deep
 // queues); the flop original ran the die view at 16 entries.  TXAW 3.
@@ -271,7 +272,6 @@ module ot_hbm_accel_tu_endpoint_sr #(
         assign rx_credit = rb_pop;
 
         // ================= operand slots and the golden reduction tree (HA2) ======================
-        reg [FW-1:0] opd [0:NC-1][0:OFMX-1];
         reg [OFMX-1:0] pres [0:NC-1];
         reg dupe;
         integer rptr;
@@ -280,8 +280,17 @@ module ot_hbm_accel_tu_endpoint_sr #(
         wire issue = &col;
         wire [FW-1:0] lvl [0:LV][0:NC-1];
         wire [LV:0] lvv;
-        reg  [FW-1:0] opsel [0:NC-1];
-        always @* for (integer c = 0; c < NC; c = c + 1) opsel[c] = opd[c][rptr < OF ? rptr : 0];
+        reg [NC-1:0] cw_v;
+        reg [$clog2(OFMX)-1:0] cw_fl [0:NC-1];
+        reg [FW-1:0] cw_d [0:NC-1];
+        reg cw_dupe;
+        // operand slots: one array per contributor column with ONE write port (cw_*: one writer per column a cycle)
+        wire [FW-1:0] opsel [0:NC-1];
+        for (genvar c = 0; c < NC; c = c + 1) begin : g_col
+            reg [FW-1:0] slot [0:OFMX-1];
+            always @(posedge clk) if (NC > 1 && cw_v[c]) slot[cw_fl[c]] <= cw_d[c];
+            assign opsel[c] = slot[rptr < OF ? rptr : 0];
+        end
         for (genvar c = 0; c < NC; c = c + 1) begin : g_l0
             assign lvl[0][c] = opsel[c];
         end
@@ -348,6 +357,9 @@ module ot_hbm_accel_tu_endpoint_sr #(
         integer drot;
         reg [DEL-1:0] dv;
         reg [PWT-1:0] dfl [0:DEL-1];
+        reg [NPT:0] rdy, dsel [0:DEL-1];
+        reg [3:0] pos [0:NPT];
+        reg taken;
         always @* begin : dispatch
             integer n, src, c;
             reg [NC-1:0] ctk;          // contributor columns written this cycle (one writer per column)
@@ -361,16 +373,26 @@ module ot_hbm_accel_tu_endpoint_sr #(
                     if (c >= NC) rb_pop[p] = 1'b1;                                 // malformed: popped, flagged
                     else if (!ctk[c]) begin rb_pop[p] = 1'b1; ctk[c] = 1'b1; end   // else waits a cycle in rb
                 end
-            n = 0;
-            for (integer i = 0; i < NPT + 1; i = i + 1) begin
-                src = (drot + i) % (NPT + 1);
-                if (n < DEL) begin
-                    if (src == NPT) begin
-                        if (!dq_own_empty) begin dq_own_pop = 1'b1; dv[n] = 1'b1; dfl[n] = dq_own_head; n = n + 1; end
-                    end else if (!rb_empty[src] && rb_head[src][PWT-1]) begin
-                        rb_pop[src] = 1'b1; dv[n] = 1'b1; dfl[n] = rb_head[src]; n = n + 1;
-                    end
-                end
+            // delivery: the first DEL ready sources in the rotated order (drot, drot+1, ...) take lanes 0, 1, ...;
+            // written as constant-index one-hot selects (lane of source s = ready sources ahead of it)
+            for (integer s = 0; s <= NPT; s = s + 1) begin
+                rdy[s] = (s == NPT) ? !dq_own_empty : (!rb_empty[s % NPT] && rb_head[s % NPT][PWT-1]);
+                pos[s] = 4'((s + (NPT + 1) - drot) % (NPT + 1));
+            end
+            for (integer s = 0; s <= NPT; s = s + 1) begin
+                n = 0;
+                for (integer t = 0; t <= NPT; t = t + 1) if (rdy[t] && pos[t] < pos[s]) n = n + 1;
+                for (integer l = 0; l < DEL; l = l + 1) dsel[l][s] = rdy[s] && n == l;
+            end
+            for (integer l = 0; l < DEL; l = l + 1) begin
+                dv[l] = |dsel[l];
+                for (integer s = 0; s <= NPT; s = s + 1)
+                    if (dsel[l][s]) dfl[l] = dfl[l] | ((s == NPT) ? dq_own_head : rb_head[s % NPT]);
+            end
+            for (integer s = 0; s <= NPT; s = s + 1) begin
+                taken = 1'b0;
+                for (integer l = 0; l < DEL; l = l + 1) taken = taken | dsel[l][s];
+                if (s == NPT) dq_own_pop = taken; else if (taken) rb_pop[s % NPT] = 1'b1;
             end
         end
         for (genvar i = 0; i < DEL; i = i + 1) begin : g_del
@@ -379,26 +401,35 @@ module ot_hbm_accel_tu_endpoint_sr #(
         end
 
         // ================= slot writes: one writer per contributor column (hub own slice, else one port) ===========
-        reg [NC-1:0] cw_v;
-        reg [$clog2(OFMX)-1:0] cw_fl [0:NC-1];
-        reg [FW-1:0] cw_d [0:NC-1];
-        reg cw_dupe;
         always @* begin : colw
             integer c, fl;
-            cw_v = '0; cw_dupe = 1'b0;
-            for (integer x = 0; x < NC; x = x + 1) begin cw_fl[x] = '0; cw_d[x] = '0; end
+            reg [INJ-1:0] hw;
+            reg [NPT-1:0] pw;
+            cw_v = '0; cw_dupe = 1'b0; hw = '0; pw = '0;
             for (integer i = 0; i < INJ; i = i + 1)
                 if (NC > 1 && h_v[i] && integer'(hs[i]) == J) begin
+                    hw[i] = 1'b1;
                     if (pres[J % NC][hfo[i]]) cw_dupe = 1'b1;
-                    cw_v[J % NC] = 1'b1; cw_fl[J % NC] = hfo[i][$clog2(OFMX)-1:0]; cw_d[J % NC] = h_d[(32+FW)*i +: FW];
                 end
             for (integer p = 0; p < NPT; p = p + 1)
                 if (rb_pop[p] && !rb_head[p][PWT-1]) begin
                     c  = integer'(rb_head[p][FW+16 +: 8]);
                     fl = integer'(rb_head[p][FW +: 16]);
                     if (c >= NC || fl >= OF || pres[c % NC][fl[$clog2(OFMX)-1:0]] || rb_head[p][FW+24 +: 8] != 8'(RANK)) cw_dupe = 1'b1;
-                    else begin cw_v[c] = 1'b1; cw_fl[c] = fl[$clog2(OFMX)-1:0]; cw_d[c] = rb_head[p][FW-1:0]; end
+                    else pw[p] = 1'b1;
                 end
+            // one writer per column (dispatch arbitration): the column's word is the OR of its one-hot sources
+            for (integer x = 0; x < NC; x = x + 1) begin
+                cw_fl[x] = '0; cw_d[x] = '0;
+                for (integer i = 0; i < INJ; i = i + 1)
+                    if (hw[i] && J % NC == x) begin
+                        cw_v[x] = 1'b1; cw_fl[x] = cw_fl[x] | hfo[i][$clog2(OFMX)-1:0]; cw_d[x] = cw_d[x] | h_d[(32+FW)*i +: FW];
+                    end
+                for (integer p = 0; p < NPT; p = p + 1)
+                    if (pw[p] && rb_head[p][FW+16 +: 8] == 8'(x)) begin
+                        cw_v[x] = 1'b1; cw_fl[x] = cw_fl[x] | rb_head[p][FW +: $clog2(OFMX)]; cw_d[x] = cw_d[x] | rb_head[p][FW-1:0];
+                    end
+            end
         end
 
         // ================= injection dispatch, result multicast, slot writes =====================
@@ -438,7 +469,7 @@ module ot_hbm_accel_tu_endpoint_sr #(
                 if (NC > 1) begin
                     if (cw_dupe) dupe <= 1'b1;
                     for (integer c = 0; c < NC; c = c + 1)
-                        if (cw_v[c]) begin pres[c][cw_fl[c]] <= 1'b1; opd[c][cw_fl[c]] <= cw_d[c]; end
+                        if (cw_v[c]) pres[c][cw_fl[c]] <= 1'b1;
                     if (issue) begin
                         for (integer c = 0; c < NC; c = c + 1) pres[c][rptr] <= 1'b0;
                         rptr <= rptr + 1;

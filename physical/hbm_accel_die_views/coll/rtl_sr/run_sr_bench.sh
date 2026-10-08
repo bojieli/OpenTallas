@@ -23,7 +23,7 @@ case $MUT in
   none) ;;
   m1) sed -i "s/cnt - 7'(D - 3)/cnt - 7'(D - 2)/" $P ;;
   m2) sed -i "s/rawb\[(NBK > 1) ? bs2/rawb[(NBK > 1) ? bs1/" $P ;;
-  m3) sed -i "s/cw_d\[c\] = rb_head\[p\]\[FW-1:0\]/cw_d[c] = rb_head[0][FW-1:0]/" $E ;;
+  m3) sed -i "s/cw_d\[x\] = cw_d\[x\] | rb_head\[p\]\[FW-1:0\]/cw_d[x] = cw_d[x] | rb_head[0][FW-1:0]/" $E ;;
   m4) sed -i "s/if (f >= mOF\[m\])/if (f > mOF[m])/" $E ;;
   m5) sed -i "s/ocr <= 3'(K);/ocr <= 3'(K + 1);/" $P ;;
   m6) sed -i "s/u_ep (.clk(w_ep_clk), .rst_n(w_ep_rst_n), .pclk(w_ep_pclk)/u_ep (.clk(w_ep_clk), .rst_n(w_ep_rst_n), .pclk(w_ep_clk)/; s/assign w_ep_rank = {i_f_cmdproc\[7:0\]}/assign w_ep_rank = {i_f_cmdproc[8:1]}/" $WR ;;
