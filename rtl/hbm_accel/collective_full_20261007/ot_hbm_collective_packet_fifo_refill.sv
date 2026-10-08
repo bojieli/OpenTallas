@@ -16,6 +16,13 @@
 // captured load enable and the control next-state, so the CDC's registered-address fix
 // (addr = (hp==0) ? rb : rb_next) has no analogue here.
 // count = unread + pending + held, exactly as before; ready = count < DEPTH; overflow latches.
+// Head decode is SPLIT across the transfer edge (the full SECDED decode of the held word was a 27-level
+// path to dout and to the fault/enable fan-out; first screen SS -909 ps): at the transfer edge each word's
+// syndrome and overall parity are registered from the macro output (ram_q), so the head's data path is
+// captured ^ (ovr && syn == position) (4 levels) and its uncorrectable flag is a register.  The SRAM
+// residency keeps full SECDED (single corrected, double detected).  While held, the head register is
+// checked by per-word parity against the parity registered at load: an upset there is DETECTED (fault one
+// edge later; valid drops), not corrected -- the II=3 queue corrected it combinationally.
 // Written for the ORFS Yosys frontend (no wildcard import inside a generate block, explicit
 // package-scoped SECDED calls, no size casts): the II=3 source does not parse there.
 module ot_hbm_collective_packet_fifo_refill #(parameter integer ENABLE=0, DEPTH=256)(
@@ -36,17 +43,40 @@ module ot_hbm_collective_packet_fifo_refill #(parameter integer ENABLE=0, DEPTH=
  reg [71:0] seal;reg [647:0] captured;
  wire [767:0] ram_q;wire [767:0] ram_d;
  wire bad=seal!=ot_gpu_w6_secded_pkg::encode64(c_word);
- wire [575:0] decoded;wire [8:0] ue;
+ wire [575:0] decoded;wire [8:0] par_live;
+ reg [62:0] syn_q;reg [8:0] ovr_q;reg ue_q,hpar_q;
  wire [575:0] din_pad={31'b0,din};
+ // SECDED (ot_gpu_w6_secded_pkg layout): code position p = 1..71 at bit p-1, parity bits at 2^k, bit 71 overall.
+ function automatic [6:0] syndrome7(input [71:0] code);
+  integer k,p;
+  begin
+   syndrome7=7'd0;
+   for(k=0;k<7;k=k+1)for(p=1;p<=71;p=p+1)if((p&(1<<k))!=0)syndrome7[k]=syndrome7[k]^code[p-1];
+  end
+ endfunction
+ function automatic [63:0] correct64(input [71:0] code,input [6:0] syn,input ovr);
+  integer p,j;
+  begin
+   correct64=64'd0;j=0;
+   for(p=1;p<=71;p=p+1)if((p&(p-1))!=0)begin correct64[j]=code[p-1]^(ovr&&syn==p[6:0]);j=j+1;end
+  end
+ endfunction
  genvar s;
+ wire [8:0] ue_load;wire [62:0] syn_load;wire [8:0] ovr_load;
  generate for(s=0;s<9;s=s+1)begin:g_decode
-  wire [65:0] d=ot_gpu_w6_secded_pkg::decode64(captured[s*72+:72]);
-  assign decoded[s*64+:64]=d[63:0];assign ue[s]=d[65];
+  // load-time syndrome / parity from the macro output word
+  assign syn_load[s*7+:7]=syndrome7(ram_q[s*72+:72]);
+  assign ovr_load[s]=^ram_q[s*72+:72];
+  assign ue_load[s]=(syn_load[s*7+:7]!=0)&&!(ovr_load[s]&&syn_load[s*7+:7]<=7'd71);
+  // held-word data: registered syndrome selects the flip
+  assign decoded[s*64+:64]=correct64(captured[s*72+:72],syn_q[s*7+:7],ovr_q[s]);
+  assign par_live[s]=^captured[s*72+:72];
   assign ram_d[s*72+:72]=ot_gpu_w6_secded_pkg::encode64(din_pad[s*64+:64]);
  end endgenerate
  assign ram_d[767:648]=120'b0;
  wire [8:0] count_i=c_unread+{8'b0,c_pending}+{8'b0,c_held};
- wire fault_i=bad||c_overflow||(c_held&&((|ue)||(|decoded[575:545])));
+ // head faults: uncorrectable at load (registered), parity change while held (registered), nonzero pad bits
+ wire fault_i=bad||c_overflow||(c_held&&(ue_q||hpar_q||(|decoded[575:545])));
  assign count=EN?count_i:9'd0;
  assign fault=EN&&fault_i;
  assign valid=EN&&c_held&&!fault_i;assign dout=EN?decoded[544:0]:545'b0;
@@ -72,9 +102,11 @@ module ot_hbm_collective_packet_fifo_refill #(parameter integer ENABLE=0, DEPTH=
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin
    c_wp<=0;c_rp<=0;c_unread<=0;c_pending<=0;c_held<=0;c_overflow<=0;seal<=0;captured<=0;
+   syn_q<=0;ovr_q<=0;ue_q<=0;hpar_q<=0;
   end else if(!fault)begin
    c_wp<=n_wp;c_rp<=n_rp;c_unread<=n_unread;c_pending<=n_pending;c_held<=n_held;c_overflow<=n_overflow;
    seal<=ot_gpu_w6_secded_pkg::encode64(n_word);
-   if(xfer)captured<=ram_q[647:0];
+   if(xfer)begin captured<=ram_q[647:0];syn_q<=syn_load;ovr_q<=ovr_load;ue_q<=|ue_load;hpar_q<=1'b0;end
+   else if(c_held)hpar_q<=hpar_q||(par_live!=ovr_q);
   end
 endmodule

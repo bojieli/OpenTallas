@@ -7,15 +7,28 @@
 # hold_eco_sdc.py merges the two files (SS max side, FF min side) for the ECO session.
 # env: OT_CORNER (ss|ff), OT_DB, OT_SDC, OT_SPEF, OT_POST_SDC, OT_MACROS, OT_EFF (output sdc)
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
+proc ot_libc {c} {   ;# OWNER OPTION B: the setup scene ("ss") reads OT_SETUP_LIB (SS default, TT under option B)
+  if {$c eq "ss" && [info exists ::env(OT_SETUP_LIB)] && $::env(OT_SETUP_LIB) ne ""} { return [string toupper $::env(OT_SETUP_LIB)] }
+  return [string toupper $c]
+}
 proc envd {n d} { expr {[info exists ::env($n)] && $::env($n) ne "" ? $::env($n) : $d} }
-set c $::env(OT_CORNER); set C [string toupper $c]
+proc ot_vt_libs {C} {
+  set r {}
+  foreach vt [envd OT_VT RVT] {
+    lappend r asap7sc7p5t_AO_${vt}_${C}_nldm_211120.lib.gz asap7sc7p5t_INVBUF_${vt}_${C}_nldm_220122.lib.gz \
+      asap7sc7p5t_OA_${vt}_${C}_nldm_211120.lib.gz asap7sc7p5t_SEQ_${vt}_${C}_nldm_220123.lib \
+      asap7sc7p5t_SIMPLE_${vt}_${C}_nldm_211120.lib.gz
+  }
+  return $r
+}
+set c $::env(OT_CORNER); set C [ot_libc $c]
 read_lef $P/lef/asap7_tech_1x_201209.lef
 read_lef $P/lef/asap7sc7p5t_28_R_1x_220121a.lef
+# MULTI-VT: OT_VT (hold_eco.sh, from the odb) adds the LVT/SLVT LEFs and libraries; default RVT only
+foreach vt [envd OT_VT RVT] { if {$vt ne "RVT"} { read_lef $P/lef/asap7sc7p5t_28_[string map {VT ""} $vt]_1x_220121a.lef } }
 foreach m [envd OT_MACROS ""] { read_lef $m/[file tail $m].lef }
-foreach l [list asap7sc7p5t_AO_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_INVBUF_RVT_${C}_nldm_220122.lib.gz \
-             asap7sc7p5t_OA_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_SEQ_RVT_${C}_nldm_220123.lib \
-             asap7sc7p5t_SIMPLE_RVT_${C}_nldm_211120.lib.gz] { read_liberty $P/lib/NLDM/$l }
-foreach m [envd OT_MACROS ""] { read_liberty $m/[file tail $m]_$c.lib }
+foreach l [ot_vt_libs $C] { read_liberty $P/lib/NLDM/$l }
+foreach m [envd OT_MACROS ""] { read_liberty $m/[file tail $m]_[string tolower [ot_libc $c]].lib }
 read_db $::env(OT_DB)
 read_sdc $::env(OT_SDC)
 if {[file exists [envd OT_SPEF ""]]} { read_spef $::env(OT_SPEF) }

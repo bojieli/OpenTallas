@@ -8,7 +8,8 @@ it), route_hold_corners mm / HM 50 ps (flow-hold rule), merge_target null, name 
 import json, sys, os, re, copy, subprocess
 JOBS = os.path.expanduser("~/.local/state/closure_loop/jobs")
 DROP = "/tmp/claude-review-20261003/closure_jobs"
-HOOKS = "physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl"
+HOOKS = os.environ.get("TRI_HOOKS", "physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl")
+POST_ADD = os.environ.get("TRI_POST_ADD", "").split()
 
 def main():
     commit, tag = sys.argv[1], sys.argv[2]
@@ -27,7 +28,10 @@ def main():
         src = sp.get("source", {})
         sp["source"] = {k: v for k, v in src.items() if k not in ("branch", "commit")}
         sp["source"].update(branch="claude/setup-triage-20261007", commit=commit)
-        post = " ".join(sp.get("verdict", {}).get("post_sdc", []))
+        if POST_ADD:
+            sp.setdefault("verdict", {}).setdefault("post_sdc", [])
+            sp["verdict"]["post_sdc"] = [x for x in sp["verdict"]["post_sdc"] if x not in POST_ADD] + POST_ADD
+        post = " ".join(x for x in sp.get("verdict", {}).get("post_sdc", []) if x not in POST_ADD)
         env = f"export OT_CTS_FIX_HOOKS='{HOOKS}'; " + (f"export OT_MM_FF_SDC='{post}'; " if post else "")
         env += "".join(f"export {k}='{v}'; " for k, v in extra_env.items())
         for stg in ("calibrate", "route"):
@@ -40,8 +44,7 @@ def main():
         sp["merge_target"] = None
         sp["owner"] = f"Claude:setup-triage (block owner {src.get('branch','?')} / {st['spec'].get('owner','?')})"
         sp["purpose"] = (f"SETUP-TRIAGE requeue of {n} (SS {st.get('metrics',{}).get('ss_ps')} / FF {st.get('metrics',{}).get('ff_ps')}): "
-                         "class A/B flow fixes only (clock-gate push-down with latch cloning, CTS-net dont_touch before repair, "
-                         "fixed SDC patterns) + flow-hold mm hold repair; source = origin/main + setup-triage fixes, no RTL change "
+                         f"flow fixes ({HOOKS}; post_sdc +{POST_ADD}) + flow-hold mm hold repair; source = origin/main + setup-triage fixes, no RTL change "
                          "by this stream. " + " ".join(f"{k}={v}" for k, v in extra_env.items()))
         out = f"{DROP}/{new}.json"
         json.dump(sp, open(out, "w"), indent=1)

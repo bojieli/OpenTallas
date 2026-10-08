@@ -1,0 +1,72 @@
+{
+  "name": "ot_attn_tile_m6h1q",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/hbm-attn/routes_qb/qb1_bd150/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/routes_qb/qb1_bd150/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/src_qb/physical/hbm_attn_tile_r/quad_b/ot_attn_tile_m6h1q:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/src_qb/physical/hbm_attn_tile_r/quad_interface.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/src_qb/physical/hbm_attn_tile_r/leaf_b/ot_attn_hgrp_m6h1:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/routes_qb/qb1_bd150/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/src_qb/physical/hbm_attn_tile_r/quad_b/ot_attn_tile_m6h1q:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/src_qb/physical/hbm_attn_tile_r/quad_interface.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/src_qb/physical/hbm_attn_tile_r/leaf_b/ot_attn_hgrp_m6h1:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/scratch/claude/hbm-attn/src_qb/physical/hbm_attn_tile_r/quad_interface.sdc",
+    "sha256": "0323c69541a5c2f5141d870a2e3ab1753a660803d35ce1c78f61dadc60205aba",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "physical/hbm_attn_tile_r/leaf_b/ot_attn_hgrp_m6h1"
+  ],
+  "files": {
+    "ot_attn_tile_m6h1q.lef": "ea8cb8c56b89f5417225bbce8bda092d89cd32874d6de5abe3286ffeaff8797d",
+    "ot_attn_tile_m6h1q_ff.lib": "fc7dfb63fefa9a6a72f53029f7ceabfafce0e2b0f10e617e7a7e26c44f4c9605",
+    "ot_attn_tile_m6h1q_ss.lib": "34f8a4631e11db188d35dc895539fc7c0fb492cad6e5622f9a2f862fbc1733e1"
+  },
+  "ok": true
+}

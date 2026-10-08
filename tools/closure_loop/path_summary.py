@@ -27,6 +27,8 @@ def tcl(corner, macros, post, npaths):
     L = [f"read_lef {PLAT}/lef/asap7_tech_1x_201209.lef", f"read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef"]
     L += [f"read_lef /srcroot/{m}/{Path(m).name}.lef" for m in macros]
     L += [f"read_liberty {PLAT}/lib/NLDM/{l}" for l in LIBS[corner]]
+    # MULTI-VT: LVT/SLVT twins (unique cell names; an RVT-only db links and times exactly as before)
+    L += [f"read_liberty {PLAT}/lib/NLDM/{l.replace('_RVT_', f'_{v}_')}" for v in ("LVT", "SLVT") for l in LIBS[corner]]
     L += [f"read_liberty /srcroot/{m}/{Path(m).name}_{corner}.lib" for m in macros]
     L += ["read_db /base/6_final.odb", "read_sdc /base/6_final.sdc", "read_spef /base/6_final.spef",
           "set_propagated_clock [all_clocks]"] + [f"read_sdc /srcroot/{p}" for p in post]
