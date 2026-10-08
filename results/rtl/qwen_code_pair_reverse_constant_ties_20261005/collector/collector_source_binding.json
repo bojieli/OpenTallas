@@ -1,0 +1,11 @@
+{
+  "base_files_sha256": {
+    "qwen_code_pair_banklocal_corner.py": "ed3115178003d95dac675ef44873826be7a08297d65916db53fe4918a8714e5d",
+    "qwen_code_pair_directcapture_corner.py": "091ea8e8bb696549b27679acbd706231c64f16161141d82a9390aafc7a3dc6ef"
+  },
+  "changes": [
+    "Capture fences from frozen actual slot/model.json rather than ascending-only arithmetic; pin-distance budgets unchanged.",
+    "Pin existing Docker image, explicit mounted TMPDIR and16 threads for corner collection."
+  ],
+  "rtl_geometry_sdc_changed": false
+}
