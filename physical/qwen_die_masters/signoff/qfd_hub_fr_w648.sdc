@@ -68,7 +68,7 @@ foreach {clk sk ins outs} {
   puts "QDM $clk ref [get_full_name $ref] L max $lmax min $lmin skew $sk"
   if {[llength $ins]} {
     set_input_delay  [expr {0.2*$T + $lmax + $sk}] -max -clock $clk [get_ports $ins]
-    set_input_delay  [expr {$lmin - $ot_hk}]       -min -clock $clk [get_ports $ins] }
+    set_input_delay  [expr {$lmin - ([info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0)}]       -min -clock $clk [get_ports $ins] }
   if {[llength $outs]} {
     set_output_delay [expr {0.2*$T - $lmax + $sk}] -max -clock $clk [get_ports $outs]
     set_output_delay [expr {-$lmin - $ot_hk}]      -min -clock $clk [get_ports $outs] }
