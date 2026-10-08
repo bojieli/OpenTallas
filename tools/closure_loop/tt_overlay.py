@@ -157,6 +157,10 @@ def ensure_smh(src):
     if not f.is_file() or not tc:
         return []
     s = f.read_text()
+    if "WC_LIB_FILES" not in s:
+        # 2026-10-08 drive-0502: commits predating the SM generator's corner-lib line (e.g. 4b111850a) have nothing to
+        # patch; a non-SM route (Qwen die masters) on such a snapshot must not fail the overlay on it
+        return ["SMH: generator has no WC_LIB_FILES line (predates corner libs; not patched)"]
     s = s.replace(SMH_BAD, SMH_NEW)
     if SMH_NEW not in s:
         if s.count(SMH_OLD) != 1:
