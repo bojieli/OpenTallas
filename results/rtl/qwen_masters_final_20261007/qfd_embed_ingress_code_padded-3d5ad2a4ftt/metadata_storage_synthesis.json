@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS",
+  "counts": {
+    "address_q": 12,
+    "address_n": 12,
+    "valid_q": 1,
+    "valid_n": 1,
+    "credit_q": 1,
+    "credit_n": 1
+  },
+  "width": 12,
+  "input_padding": {
+    "stages_per_input": 10,
+    "input_bits": 15,
+    "fixed_buffer_cells": 150,
+    "cell_type": "BUFx2_ASAP7_75t_R",
+    "connectivity_verified": true
+  },
+  "netlist_sha256": "96b26a0cce07a5ebc935a22dd7bb954e604b9b2d2b79cb900dd3a7e80a0394b0"
+}
