@@ -66,7 +66,8 @@ class Layout:
             self.NH, self.KV, self.FF = len(sl["heads"]), len(sl["kv"]), len(sl["ff"])
             self.row0 = int(sl["vocab"][0])
         self.GUB = min(W * IL, self.FF)          # gate/up interleave block
-        assert self.FF % self.GUB == 0
+        while self.FF % self.GUB:
+            self.GUB //= 2
         self.half = self.HD // 2
         self.eps = F(c["rms_norm_eps"])
         assert self.HD % W == 0 or W % self.HD == 0

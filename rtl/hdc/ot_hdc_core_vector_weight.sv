@@ -20,8 +20,9 @@
 // instructions issue on consecutive cycles (the issue gap is 1, was 5).
 //
 // Memories sit outside the core behind synchronous-read ports: program ROM,
-// weight ROM (W x BF16 per word), constant ROM (FP32 pairs), KV SRAM (W x FP32
-// per word, element write) and the vector memory (FP32 elements).
+// BF16 stream/embedding ROM, optional signed INT8 matrix ROM and per-row BF16
+// scale ROM, constant ROM (FP32 pairs), KV SRAM (W x FP32 per word, element
+// write) and vector memory (FP32 elements).
 // ---------------------------------------------------------------------------
 module ot_hdc_core_vector_weight #(
     parameter integer INSTR_BITS = 1024,   // must equal ISA_INSTR_BITS (tools/hdc_isa.py)
@@ -51,7 +52,13 @@ module ot_hdc_core_vector_weight #(
     parameter integer LV     = 4,
     parameter integer KV_FP8 = (SU_VEC != 0),
     parameter integer KV_VEC_WRITE_BRIDGE = 0,
-    parameter integer W_HBM = 0
+    parameter integer W_HBM = 0,
+    // INT8_WEIGHT replaces only matrix ROM products. The embedding stream
+    // still reads BF16 until its own INT8 dequantisation path is integrated.
+    parameter integer INT8_WEIGHT = 0,
+    parameter integer INT8_EMBED = 0,
+    parameter integer EMB_CODE_LANES = 64,
+    parameter integer EMB_ADDR_BASE = 0 // element address of embedding row 0 in the program
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -71,6 +78,21 @@ module ot_hdc_core_vector_weight #(
     output wire              wrom_re,
     output wire [AW-1:0]     wrom_addr,
     input  wire [G*W*16-1:0] wrom_q,
+    // Separate matrix code and scale banks avoid aliasing the stream's BF16
+    // embedding reads. Both are synchronous, with one-cycle read latency.
+    output wire              int8_wrom_re,
+    output wire [AW-1:0]     int8_wrom_addr,
+    input  wire [G*W*8-1:0] int8_wrom_q,
+    output wire              scale_re,
+    output wire [G*AW-1:0]   scale_addr,
+    input  wire [G*W*16-1:0] scale_q,
+    // Independent 8-bit embedding bank and one BF16 scale per token row.
+    output wire              embed_code_re,
+    output wire [AW-1:0]     embed_code_addr,
+    input  wire [EMB_CODE_LANES*8-1:0] embed_code_q,
+    output wire              embed_scale_re,
+    output wire [NW-1:0]     embed_scale_addr,
+    input  wire [15:0]       embed_scale_q,
     // constant ROM
     output wire [SW-1:0]     crom_re,
     output wire [SW*AW-1:0]  crom_addr,
@@ -346,14 +368,67 @@ module ot_hdc_core_vector_weight #(
     // -- units ----------------------------------------------------------------------
     wire me_wrom_re, su_wrom_re;
     wire [AW-1:0] me_wrom_addr, su_wrom_addr;
-    ot_hdc_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW)) u_me (
+    wire [SW-1:0] su_va_re;
+    wire [SW*AW-1:0] su_va_addr;
+    wire [SW*32-1:0] su_va_q;
+    reg embed_active, embed_scale_pending;
+    reg [15:0] embed_scale_hold;
+    reg [SW-1:0] embed_sel;
+    reg [SW*$clog2(EMB_CODE_LANES)-1:0] embed_lanes;
+    wire [SW-1:0] embed_faults;
+    assign embed_scale_re = (INT8_EMBED != 0) && start && st == S_IDLE;
+    assign embed_scale_addr = token;
+    assign embed_code_re = (INT8_EMBED != 0) && (|(su_va_re & {SW{embed_active}}));
+    assign embed_code_addr = (su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES);
+    assign va_re = su_va_re & ~({SW{(INT8_EMBED != 0) && embed_active}});
+    assign va_addr = su_va_addr;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            embed_active <= 1'b0;
+            embed_scale_pending <= 1'b0;
+            embed_sel <= 0;
+        end else begin
+            if (su_go) embed_active <= (INT8_EMBED != 0) && a_src;
+            embed_scale_pending <= embed_scale_re;
+            embed_sel <= su_va_re & {SW{(INT8_EMBED != 0) && embed_active}};
+        end
+    end
+    always @(posedge clk) begin
+        if (embed_scale_pending) embed_scale_hold <= embed_scale_q;
+    end
+    genvar el;
+    generate if (INT8_EMBED != 0) begin : g_int8_embed
+    for (el = 0; el < SW; el = el + 1) begin : g_embed_decode
+        localparam integer ELI = $clog2(EMB_CODE_LANES);
+        always @(posedge clk) embed_lanes[el*ELI +: ELI] <= su_va_addr[el*AW +: ELI];
+        wire [31:0] decoded;
+        wire bad;
+        ot_hdc_qwen_int8_embed_decode u_decode (
+            .code(embed_code_q[8*embed_lanes[el*ELI +: ELI] +: 8]),
+            .scale(embed_scale_hold), .value(decoded), .fault(bad));
+        assign su_va_q[el*32 +: 32] = embed_sel[el] ? decoded : va_q[el*32 +: 32];
+        assign embed_faults[el] = embed_sel[el] && bad;
+    end
+    end else begin : g_plain_embed
+        assign su_va_q = va_q;
+        assign embed_faults = 0;
+    end endgenerate
+    wire [G*W*((INT8_WEIGHT != 0) ? 8 : 16)-1:0] me_wrom_q;
+    generate if (INT8_WEIGHT != 0) begin : g_int8_matrix_word
+        assign me_wrom_q = int8_wrom_q;
+    end else begin : g_bf16_matrix_word
+        assign me_wrom_q = wrom_q;
+    end endgenerate
+    ot_hdc_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW),
+                    .INT8_WEIGHT(INT8_WEIGHT)) u_me (
         .clk(clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
         .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_wcs(me_wcs), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots), .i_ojs(me_ojs),
         .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax), .i_rmax(me_rmax), .i_mbase(me_mbase),
         .mx_we(vw_mx_we), .mx_addr(vw_mx_addr), .mx_mask(vw_mx_mask), .mx_data(vw_mx_data),
-        .wrom_re(me_wrom_re), .wrom_addr(me_wrom_addr), .wrom_q(wrom_q),
+        .wrom_re(me_wrom_re), .wrom_addr(me_wrom_addr), .wrom_q(me_wrom_q),
+        .scale_re(scale_re), .scale_addr(scale_addr), .scale_q(scale_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
         .x_re(vx_re), .x_addr(vx_addr), .x_q(vx_q),
         .ov(me_ov), .o_we(vw_me_we), .o_addr(vw_me_addr), .o_mask(vw_me_mask), .o_data(vw_me_data),
@@ -368,13 +443,13 @@ module ot_hdc_core_vector_weight #(
     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
         .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
         .i_nout(su_nout), .i_nin(su_nin),
-        .i_asrc(a_src), .i_abase(a_base), .i_aso(a_so), .i_asi(a_si),
+        .i_asrc((INT8_EMBED != 0) ? 1'b0 : a_src), .i_abase(a_base), .i_aso(a_so), .i_asi(a_si),
         .i_bsrc(b_src), .i_bbase(b_base), .i_bso(b_so), .i_bsi(b_si),
         .i_csrc(c_src), .i_cbase(c_base), .i_cso(c_so), .i_csi(c_si),
         .i_ma(ma), .i_mb(mb), .i_ad(ad), .i_sfu(sfu), .i_mc(mc), .i_md(md),
         .i_dst(dst), .i_dbase(d_base), .i_dso(d_so), .i_dsi(d_si),
         .i_red(red), .i_redsq(redsq), .i_rbase(r_base), .i_rso(r_so), .i_imm1(imm1), .i_imm2(imm2),
-        .va_re(va_re), .va_addr(va_addr), .va_q(va_q),
+        .va_re(su_va_re), .va_addr(su_va_addr), .va_q(su_va_q),
         .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q),
         .vc_re(vc_re), .vc_addr(vc_addr), .vc_q(vc_q),
         .wrom_re(su_wrom_re), .wrom_addr(su_wrom_addr), .wrom_q(wrom_q),
@@ -389,13 +464,13 @@ module ot_hdc_core_vector_weight #(
     ot_hdc_stream #(.W(W), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
         .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
         .i_nout(su_nout), .i_nin(su_nin),
-        .i_asrc(a_src), .i_abase(a_base), .i_aso(a_so), .i_asi(a_si),
+        .i_asrc((INT8_EMBED != 0) ? 1'b0 : a_src), .i_abase(a_base), .i_aso(a_so), .i_asi(a_si),
         .i_bsrc(b_src), .i_bbase(b_base), .i_bso(b_so), .i_bsi(b_si),
         .i_csrc(c_src), .i_cbase(c_base), .i_cso(c_so), .i_csi(c_si),
         .i_ma(ma), .i_mb(mb), .i_ad(ad), .i_sfu(sfu), .i_mc(mc), .i_md(md),
         .i_dst(dst), .i_dbase(d_base), .i_dso(d_so), .i_dsi(d_si),
         .i_red(red), .i_redsq(redsq), .i_rbase(r_base), .i_rso(r_so), .i_imm1(imm1), .i_imm2(imm2),
-        .va_re(va_re), .va_addr(va_addr), .va_q(va_q),
+        .va_re(su_va_re), .va_addr(su_va_addr), .va_q(su_va_q),
         .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q),
         .vc_re(vc_re), .vc_addr(vc_addr), .vc_q(vc_q),
         .wrom_re(su_wrom_re), .wrom_addr(su_wrom_addr), .wrom_q(wrom_q),
@@ -411,13 +486,16 @@ module ot_hdc_core_vector_weight #(
 
     // The embedding read is the only stream use of the weight ROM; a barrier
     // keeps it apart from matrix-vector reads.
-    assign wrom_re = me_wrom_re | su_wrom_re;
+    assign wrom_re = ((INT8_WEIGHT != 0) ? 1'b0 : me_wrom_re) |
+                     ((INT8_EMBED != 0) ? 1'b0 : su_wrom_re);
+    assign int8_wrom_re = (INT8_WEIGHT != 0) ? me_wrom_re : 1'b0;
+    assign int8_wrom_addr = me_wrom_addr;
     assign wrom_su = su_wrom_re;
     assign wrom_addr = su_wrom_re ? su_wrom_addr : me_wrom_addr;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;
         else if (start && st == S_IDLE) fault <= 1'b0;
-        else if (me_fault || su_fault || dyn_tiles_bad_instruction) fault <= 1'b1;
+        else if (me_fault || su_fault || (|embed_faults) || dyn_tiles_bad_instruction) fault <= 1'b1;
     end
 endmodule

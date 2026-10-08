@@ -19,7 +19,7 @@ each op), applied in exactly the order the hardware applies it:
 * softmax     max, exp(s - max), reduction sum, reciprocal, multiply (softmax());
               attention normalises AFTER the weighted sum (attend): P.V of
               the unnormalised exp, then x 1/Z
-* attention   KV cache in BF16; q and the probabilities rounded to BF16 before
+* attention   KV cache in the configured BF16 or FP8 format; q and the probabilities rounded to BF16 before
               their products (exact BF16 x BF16 products, FP32 accumulation);
               both products K-split INTERLEAVED over the core's lane groups
               (attn_splits, matvec_il): scores over head_dim, the weighted sum
@@ -452,7 +452,7 @@ class Model:
                 q = np.stack([rope(rmsnorm(q[i], qn, self.eps), cos, sin, half) for i in range(len(q))])
                 k = np.stack([rope(rmsnorm(k[i], kn, self.eps), cos, sin, half) for i in range(len(k))])
                 for i, g in enumerate(s["kv"]):
-                    kb, vb = to_bf16(k[i]), to_bf16(v[i])
+                    kb, vb = kv_round(k[i]), kv_round(v[i])
                     if g in kv_new:
                         assert np.array_equal(bits(kv_new[g][0]), bits(kb)) and \
                             np.array_equal(bits(kv_new[g][1]), bits(vb)), "replicated KV head differs"
