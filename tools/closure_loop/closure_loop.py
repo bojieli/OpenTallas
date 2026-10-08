@@ -1545,12 +1545,29 @@ def failure_text(j):
     return "\n".join(lines)
 
 
+def job_priority(j):
+    """STATE/priority.json {job name: int} (coordinator steering; default 0) or spec "priority" """
+    try:
+        table = json.loads((STATE / "priority.json").read_text())
+    except (FileNotFoundError, ValueError):
+        table = {}
+    return int(table.get(j["name"], j["spec"].get("priority", 0)) or 0)
+
+
+def yield_to_priority(j, fleet):
+    """a job below the highest priority still waiting for capacity does not take capacity first"""
+    top = getattr(fleet, "prio_waiting", 0)
+    return top > 0 and job_priority(j) < top
+
+
 def launch_ready(j, fleet, spec, stl, st):
     """READY at a remote stage: capacity check + reservation (caller holds FLEET_LOCK); returns the stage to launch
     OUTSIDE the lock (launch_now) or None."""
     require_checkpoint_location(j)
     if True:
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
+        if ok and st["kind"] in ("calibrate", "route") and yield_to_priority(j, fleet):
+            ok, why = False, f"yielding to priority-{fleet.prio_waiting} jobs waiting for capacity"
         if not ok:
             j.setdefault("wait_since", time.time())
         if not ok and not checkpoint_location(j) and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
@@ -1806,7 +1823,8 @@ def step(j, fleet):
         j["status"] = s = "SYNC"  # stay with preserved stage_idx and checkpoint host
     if s == "QUEUED":
         with FLEET_LOCK:
-            h, why = fleet.choose(spec, exclude=[])
+            h, why = (None, f"yielding to priority-{fleet.prio_waiting} jobs waiting for capacity") \
+                if yield_to_priority(j, fleet) else fleet.choose(spec, exclude=[])
             if h:   # claim capacity now so parallel job threads do not pick the same headroom
                 fleet.launched(h, 0, 0)
         if not h:
@@ -2579,9 +2597,11 @@ def tick(fleet):
     global _POOL
     if _POOL is None:
         _POOL = ThreadPoolExecutor(max_workers=WORKERS)
-    for x in all_jobs():
-        if x["status"] in TERMINAL:
-            continue
+    live = [x for x in all_jobs() if x["status"] not in TERMINAL]
+    waiting = [job_priority(x) for x in live if x["status"] in ("QUEUED", "READY") and x.get("wait")
+               and "yielding to priority" not in str(x.get("wait"))]
+    fleet.prio_waiting = max([p for p in waiting if p > 0], default=0)
+    for x in sorted(live, key=lambda x: -job_priority(x)):
         with _INFLIGHT_LOCK:
             if x["name"] in _INFLIGHT:
                 continue
