@@ -2986,20 +2986,46 @@
    "host": "ot-epyc4",
    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsrom_softmax_safe_exphr_6133b4bbf-mm-tt",
    "clock": "clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T04:39:26-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T15:13:49-07:00",
    "ss": {
     "mean": 541,
     "min": 476,
     "max": 563
    },
    "ff": {
-    "mean": 335,
-    "min": 291,
-    "max": 357
+    "mean": 282,
+    "min": 258,
+    "max": 303,
+    "n": 35817,
+    "kind": "all",
+    "clock": "core_clk"
    },
    "boundary_n": null,
-   "budget": null
+   "budget": null,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 541,
+     "min": 476,
+     "max": 563
+    },
+    "ff": {
+     "mean": 335,
+     "min": 291,
+     "max": 357
+    },
+    "parasitics": "placement-estimated",
+    "job": "dsrom_softmax_safe_exphr_6133b4bbf-mm-tt"
+   },
+   "tt": {
+    "mean": 352,
+    "min": 325,
+    "max": 374,
+    "n": 35817,
+    "kind": "all",
+    "clock": "core_clk"
+   }
   },
   "hfd_stn_r38": {
    "job": "hbm_stn_r38_88136dcd2_bud2-lbc",
@@ -4910,5 +4936,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-08T15:03:47-07:00"
+ "updated": "2026-10-08T15:13:49-07:00"
 }
