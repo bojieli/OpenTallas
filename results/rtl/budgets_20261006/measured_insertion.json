@@ -2029,16 +2029,16 @@
    "run": "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_svcio_ad-d12b194f0-lbc",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T11:43:33-07:00",
+   "measured_at": "2026-10-08T14:12:22-07:00",
    "ss": {
     "mean": 385,
     "min": 372,
     "max": 397
    },
    "ff": {
-    "mean": 220,
-    "min": 209,
-    "max": 232,
+    "mean": 219,
+    "min": 208,
+    "max": 230,
     "n": 3598,
     "kind": "boundary",
     "clock": "core_clk"
@@ -2061,9 +2061,9 @@
     "job": "s81ph-dsfd_svcio_ad-d12b194f0-lbc"
    },
    "tt": {
-    "mean": 274,
-    "min": 263,
-    "max": 286,
+    "mean": 273,
+    "min": 262,
+    "max": 284,
     "n": 3598,
     "kind": "boundary",
     "clock": "core_clk"
@@ -2761,22 +2761,22 @@
    }
   },
   "ot_hbm_accel_smh_tile_w": {
-   "job": "hbm_smh_tile_w_m3h_ab93b2422-tt",
-   "source_commit": "ab93b242269abe5cee86a991e1ddc0ddca550561",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_tile_w_m3h_ab93b2422-tt",
+   "job": "hbm_smh_tile_w_m3f_tc_4aadc92bc",
+   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_tile_w_m3f_tc_4aadc92bc",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T12:19:50-07:00",
+   "measured_at": "2026-10-08T14:21:04-07:00",
    "ss": {
     "mean": 706,
     "min": 689,
     "max": 810
    },
    "ff": {
-    "mean": 425,
-    "min": 404,
-    "max": 491,
+    "mean": 417,
+    "min": 394,
+    "max": 480,
     "n": 13482,
     "kind": "boundary",
     "clock": "core_clk"
@@ -2799,9 +2799,9 @@
     "job": "hbm_smh_tile_e_m3f_tc_4aadc92bc"
    },
    "tt": {
-    "mean": 521,
-    "min": 497,
-    "max": 590,
+    "mean": 511,
+    "min": 486,
+    "max": 577,
     "n": 13482,
     "kind": "boundary",
     "clock": "core_clk"
@@ -4847,5 +4847,5 @@
    }
   }
  },
- "updated": "2026-10-08T14:06:42-07:00"
+ "updated": "2026-10-08T14:21:04-07:00"
 }
