@@ -2870,6 +2870,370 @@
    }
   }
  },
+ "block_signoff_link_budget": {
+  "closure_line": "OWNER DECISION 2026-10-07: SS >= 0 ps / FF >= 0 ps / DRC 0 at 833.333 ps sign-off (+15 ps is a design target only); consistent die-link budget and rule H1 still apply",
+  "rule": "sender share + measured link + receiver share + 150 ps skew <= T - 60 ps: S = R = 254.7 ps at 833.333 ps (LINK 114 ps = 100 um x 1.135 ps/um)",
+  "method": "physical/common_flow/link_budget_consistent.sdc (-max -add_delay on top of each job's own sign-off SDC), SS only, on the existing ODBs, no re-route; branch claude/setup-triage-20261007 @ 387a4d2ac",
+  "record": {
+   "file": "results/arch/unified_composition_20261007/link_budget_restatus_20261007.json",
+   "pointer": null,
+   "commit": "28d6aeaf7"
+  },
+  "counts_at_re_sta": {
+   "REVOKED": 30,
+   "HOLDS": 10,
+   "NOT CHECKED": 14
+  },
+  "counts_under_closure_line": {
+   "REVOKED": 28,
+   "HOLDS": 12,
+   "NOT CHECKED": 14
+  },
+  "holds": [
+   {
+    "job": "dsrom_softmax_safe_div2b_6133b4bbf",
+    "block": "ot_dsrom_su_fdiv_tile",
+    "closed_ss_ps": 184.78,
+    "link_budget_ss_ps": 184.8
+   },
+   {
+    "job": "dsrom_softmax_safe_divhr_6133b4bbf",
+    "block": "ot_dsrom_su_fdiv_hr",
+    "closed_ss_ps": 95.74,
+    "link_budget_ss_ps": 95.7
+   },
+   {
+    "job": "dsrom_softmax_safe_exprcf_bd30aca4a",
+    "block": "ot_dsrom_su_softmax_exp_tile",
+    "closed_ss_ps": 123.11,
+    "link_budget_ss_ps": 123.1
+   },
+   {
+    "job": "hbm_cmdproc_n_ac6ef1af3",
+    "block": "hfd_cmdproc_n",
+    "closed_ss_ps": 60.84,
+    "link_budget_ss_ps": 60.8
+   },
+   {
+    "job": "hbm_cmdproc_s_ac6ef1af3",
+    "block": "hfd_cmdproc_s",
+    "closed_ss_ps": 91.36,
+    "link_budget_ss_ps": 30.9
+   },
+   {
+    "job": "hbm_stn_gath_r9_pa_fbf6b0da5",
+    "block": "hfd_gath_r9",
+    "closed_ss_ps": 113.06,
+    "link_budget_ss_ps": 42.9
+   },
+   {
+    "job": "hbm_stn_r33_capacity_4b51e590e",
+    "block": "hfd_stn_r33",
+    "closed_ss_ps": 58.94,
+    "link_budget_ss_ps": 0.7
+   },
+   {
+    "job": "qfd_embed_ingress_code-0e025d03c",
+    "block": "qfd_embed_ingress_code",
+    "closed_ss_ps": 234.22,
+    "link_budget_ss_ps": 15.1
+   },
+   {
+    "job": "qfd_embed_ingress_scale-0e025d03c",
+    "block": "qfd_embed_ingress_scale",
+    "closed_ss_ps": 236.48,
+    "link_budget_ss_ps": 19.7
+   },
+   {
+    "job": "s81ph-dsfd_coll_ck-752a48488",
+    "block": "dsfd_coll_ck",
+    "closed_ss_ps": 9592.12,
+    "link_budget_ss_ps": 9592.1
+   },
+   {
+    "job": "s81ph-dsfd_ctrl_ctr-34b3e75dd",
+    "block": "dsfd_ctrl_ctr",
+    "closed_ss_ps": 243.73,
+    "link_budget_ss_ps": 40.7
+   },
+   {
+    "job": "s81ph-dsfd_svc_pc-752a48488",
+    "block": "dsfd_svc_pc",
+    "closed_ss_ps": 220.0,
+    "link_budget_ss_ps": 9.4
+   }
+  ],
+  "revoked": {
+   "label": "revoked: link budget",
+   "jobs": [
+    {
+     "job": "dshead-ctl-half-4123ff389",
+     "block": "ot_hdc_v41_fh_ctl",
+     "closed_ss_ps": 484.18,
+     "link_budget_ss_ps": -222.4
+    },
+    {
+     "job": "dshead-elemB-ss-a318fdf47",
+     "block": "ot_dsrom_head_elem_B",
+     "closed_ss_ps": 91.75,
+     "link_budget_ss_ps": -200.1
+    },
+    {
+     "job": "hbglue_cl_8ddc70024",
+     "block": "ot_dsrom_head_bundle_glue",
+     "closed_ss_ps": 74.53,
+     "link_budget_ss_ps": -186.1
+    },
+    {
+     "job": "hbm_router_kneg_368f1f6d2_b",
+     "block": "hfd_router",
+     "closed_ss_ps": 36.82,
+     "link_budget_ss_ps": -58.5
+    },
+    {
+     "job": "hbm_stn_r38_88136dcd2",
+     "block": "hfd_stn_r38",
+     "closed_ss_ps": 143.86,
+     "link_budget_ss_ps": -48.1
+    },
+    {
+     "job": "hbm_stn_r38_88136dcd2_bud2",
+     "block": "hfd_stn_r38",
+     "closed_ss_ps": 193.57,
+     "link_budget_ss_ps": -5.3
+    },
+    {
+     "job": "hbm_stn_stn_r33_30f87bcc4",
+     "block": "hfd_stn_r33",
+     "closed_ss_ps": 47.88,
+     "link_budget_ss_ps": -5.4
+    },
+    {
+     "job": "hbm_svc_SE_s6_41d574827_bud",
+     "block": "hfd_svc_SE_s6",
+     "closed_ss_ps": 136.79,
+     "link_budget_ss_ps": -215.9
+    },
+    {
+     "job": "hbm_svc_SE_s7_9ffaeb8e2_r23",
+     "block": "hfd_svc_SE_s7",
+     "closed_ss_ps": 40.4,
+     "link_budget_ss_ps": -144.7
+    },
+    {
+     "job": "hbm_svc_SE_s8_9ffaeb8e2_r23",
+     "block": "hfd_svc_SE_s8",
+     "closed_ss_ps": 152.72,
+     "link_budget_ss_ps": -271.7
+    },
+    {
+     "job": "hbm_svc_SW_s4_41d574827_bud",
+     "block": "hfd_svc_SW_s4",
+     "closed_ss_ps": 95.47,
+     "link_budget_ss_ps": -158.9
+    },
+    {
+     "job": "qfd_chead_signoff833_host-f1c7e6550",
+     "block": "qfd_chead_signoff833",
+     "closed_ss_ps": 37.93,
+     "link_budget_ss_ps": -166.9
+    },
+    {
+     "job": "qfd_cst_signoff833_host-f1c7e6550",
+     "block": "qfd_cst_signoff833",
+     "closed_ss_ps": 57.0,
+     "link_budget_ss_ps": -161.9
+    },
+    {
+     "job": "qfd_embed_ingress_code_numeric-82c12047d",
+     "block": "qfd_embed_ingress_code_numeric",
+     "closed_ss_ps": 113.23,
+     "link_budget_ss_ps": -84.3
+    },
+    {
+     "job": "qfd_embed_ingress_scale_numeric-82c12047d",
+     "block": "qfd_embed_ingress_scale_numeric",
+     "closed_ss_ps": 110.23,
+     "link_budget_ss_ps": -86.2
+    },
+    {
+     "job": "qfd_lst_h-5a3bb1721",
+     "block": "qfd_lst_h",
+     "closed_ss_ps": 154.51,
+     "link_budget_ss_ps": -32.6
+    },
+    {
+     "job": "s81-dsfd-cfifo-290446310",
+     "block": "dsfd_cfifo",
+     "closed_ss_ps": 46.23,
+     "link_budget_ss_ps": -181.7
+    },
+    {
+     "job": "s81-meso-d8g1-c20d75e28",
+     "block": "ot_meso_fifo_w512d8g1",
+     "closed_ss_ps": 29.61,
+     "link_budget_ss_ps": -128.3
+    },
+    {
+     "job": "s81ph-dsfd_capt_ctl-48203c4d9-f",
+     "block": "dsfd_capt_ctl",
+     "closed_ss_ps": 138.68,
+     "link_budget_ss_ps": -75.6
+    },
+    {
+     "job": "s81ph-dsfd_capt_g2-fda73a869",
+     "block": "dsfd_capt_g2",
+     "closed_ss_ps": 60.22,
+     "link_budget_ss_ps": -90.8
+    },
+    {
+     "job": "s81ph-dsfd_colt_lane-7345266ce-e",
+     "block": "dsfd_colt_lane",
+     "closed_ss_ps": 47.24,
+     "link_budget_ss_ps": -177.2
+    },
+    {
+     "job": "s81ph-dsfd_colt_mrg-cd3337221-b",
+     "block": "dsfd_colt_mrg",
+     "closed_ss_ps": 54.28,
+     "link_budget_ss_ps": -64.7
+    },
+    {
+     "job": "s81ph-dsfd_ctrl_pc-e87322073",
+     "block": "dsfd_ctrl_pc",
+     "closed_ss_ps": 54.28,
+     "link_budget_ss_ps": -243.2
+    },
+    {
+     "job": "s81ph-dsfd_svc_stn-da50ce55a",
+     "block": "dsfd_svc_stn",
+     "closed_ss_ps": 41.39,
+     "link_budget_ss_ps": -143.9
+    },
+    {
+     "job": "s81ph-dsfd_svcio_ad-d12b194f0",
+     "block": "dsfd_svcio_ad",
+     "closed_ss_ps": 36.93,
+     "link_budget_ss_ps": -154.7
+    },
+    {
+     "job": "s81ph-dsfd_svcio_od-e87322073",
+     "block": "dsfd_svcio_od",
+     "closed_ss_ps": 31.46,
+     "link_budget_ss_ps": -139.9
+    },
+    {
+     "job": "s81ph-dsfd_svcio_q-093da5918",
+     "block": "dsfd_svcio_q",
+     "closed_ss_ps": 22.64,
+     "link_budget_ss_ps": -196.4
+    },
+    {
+     "job": "s81ph-dsfd_svcio_x-093da5918",
+     "block": "dsfd_svcio_x",
+     "closed_ss_ps": 198.18,
+     "link_budget_ss_ps": -17.3
+    }
+   ]
+  },
+  "unverified": {
+   "label": "unverified (needs a per-link model)",
+   "reason": "forwarded-clock / source-synchronous station links: the common-clock split does not model them; they need a per-link model before they count",
+   "jobs": [
+    {
+     "job": "hbm_stn_gath_r25_336e4655e_kw",
+     "block": "hfd_gath_r25",
+     "closed_ss_ps": 72.52,
+     "link_budget_ss_ps": -526.2
+    },
+    {
+     "job": "hbm_stn_mcast_r5_71de4b0f3",
+     "block": "hfd_mcast_r5",
+     "closed_ss_ps": 45.79,
+     "link_budget_ss_ps": -532.3
+    },
+    {
+     "job": "hbm_stn_mcast_r7_336e4655e",
+     "block": "hfd_mcast_r7",
+     "closed_ss_ps": 75.07,
+     "link_budget_ss_ps": -540.4
+    },
+    {
+     "job": "hbm_stn_meso_r35_30f87bcc4",
+     "block": "hfd_meso_r35",
+     "closed_ss_ps": 86.92,
+     "link_budget_ss_ps": -157.8
+    },
+    {
+     "job": "hbm_stn_meso_r37_30f87bcc4",
+     "block": "hfd_meso_r37",
+     "closed_ss_ps": 53.95,
+     "link_budget_ss_ps": -226.5
+    },
+    {
+     "job": "hbm_stn_r19_c50fcf0ba_k25",
+     "block": "hfd_stn_r19",
+     "closed_ss_ps": 86.82,
+     "link_budget_ss_ps": -414.6
+    },
+    {
+     "job": "hbm_stn_r39_ad75a0248",
+     "block": "hfd_stn_r39",
+     "closed_ss_ps": 48.58,
+     "link_budget_ss_ps": -445.3
+    },
+    {
+     "job": "hbm_stn_stn_r34_30f87bcc4",
+     "block": "hfd_stn_r34",
+     "closed_ss_ps": 106.24,
+     "link_budget_ss_ps": -415.8
+    },
+    {
+     "job": "hbm_stn_stn_r36_30f87bcc4",
+     "block": "hfd_stn_r36",
+     "closed_ss_ps": 104.56,
+     "link_budget_ss_ps": -391.5
+    },
+    {
+     "job": "s81-dsfd-stnh-512x1-2e2d7aa3f",
+     "block": "dsfd_stnh_512x1",
+     "closed_ss_ps": 83.89,
+     "link_budget_ss_ps": -344.4
+    },
+    {
+     "job": "s81-dsfd-stnh-514x1-2e2d7aa3f",
+     "block": "dsfd_stnh_514x1",
+     "closed_ss_ps": 81.75,
+     "link_budget_ss_ps": -344.3
+    },
+    {
+     "job": "s81-dsfd-stnh-566x1-2e2d7aa3f",
+     "block": "dsfd_stnh_566x1",
+     "closed_ss_ps": 79.84,
+     "link_budget_ss_ps": -345.2
+    },
+    {
+     "job": "s81-dsfd-stnv-512x1-2e2d7aa3f",
+     "block": "dsfd_stnv_512x1",
+     "closed_ss_ps": 82.06,
+     "link_budget_ss_ps": -343.4
+    },
+    {
+     "job": "s81-dsfd-stnv-514x1-2e2d7aa3f",
+     "block": "dsfd_stnv_514x1",
+     "closed_ss_ps": 77.67,
+     "link_budget_ss_ps": -347.7
+    }
+   ]
+  },
+  "requeued": {
+   "lbc": 24,
+   "cgfix": 14,
+   "lbpin": 2,
+   "note": "24 <job>-lbc re-routes (source 387a4d2ac, link_budget_hook + cg_pushdown + clk_net_protect), 14 <job>-cgfix (class A/B CTS fixes) and 2 <job>-lbpin queued to re-close them; qfd_chead / qfd_cst re-sign-off jobs need a Qwen re-route; colt_mrg / svc_pc need their budget sheets adopted (s81-blocks)"
+  },
+  "consequence": "a job counts as closed only if its link-budget SS is >= 0 (closure line); revoked and unverified jobs carry no closure credit until their re-routes re-close under the consistent budget"
+ },
  "established_contracts_rtl_bench": [
   {
    "id": "sm_su_native_edge",
@@ -3023,7 +3387,7 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "8dc23dfe7e2da7e7d3d5be54abc16997d387c8b501966edbaa4a8d1a7c6d3a6c"
+  "sha256": "3955482c9145651b888e3db27e4208ec3770db3b375ecf6e85af111838a84e3c"
  },
  "source_sha256": {
   "AGENTS.md": "d47e33869ed5fefa3be09cffa270ccb831227173fcf0295b5ebecc178b55a042",
@@ -3037,6 +3401,7 @@
   "results/arch/energy_silicon_measured/README.md": "04f6a48a85d3d85383f1a4df947f95a8842e2ac2cbcc00675289da8519c6047b",
   "results/arch/three_machine_compose/compose.json": "23f7a3a735a54c78fb97a5ae322457de967e0dd2d6b47f1a6c4033451c75305b",
   "results/arch/three_machine_compose/table.txt": "4836b0e7709430b987d40dc66feee86bc9f6298b7a5466e2c63c376c8e2c06ee",
+  "results/arch/unified_composition_20261007/link_budget_restatus_20261007.json": "499419a6f18b69be79df61ad2535f542108778b7c53507dc273bfd6a7a74ca05",
   "results/arch/unified_composition_20261007/qwen_dspark/dspark_ctrlshift_candidate.json": "fa770bfaa79c239a8bbcce563cbaa9a123194769bc99a9e5350a5e9f58d608f1",
   "results/physical/hbm_die_20261007/ir_r23/feasibility_r23.json": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "results/physical/hbm_die_abstracts_20261006/integration/consumer_binding_20261006.json": "df26a498738d5bc4d008642adc08aef7543ad1e1ae40f2c3c6a9c4f4202b4766",
@@ -3101,6 +3466,6 @@
   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "tools/chip_explorer_build.py": "146a386013f68a12600e1cca553e0fac06515fc974fb7f6b11654cd9835f52f3",
   "tools/qwen_die_sta_classes.py": "5f69de4a422d2ff93437c472f335a06a9a458d9ecfb88eb9a534433b3f0d5907",
-  "tools/unified_composition.py": "8dc23dfe7e2da7e7d3d5be54abc16997d387c8b501966edbaa4a8d1a7c6d3a6c"
+  "tools/unified_composition.py": "3955482c9145651b888e3db27e4208ec3770db3b375ecf6e85af111838a84e3c"
  }
 }
