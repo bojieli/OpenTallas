@@ -1,0 +1,116 @@
+{
+  "status": "PASS_STATIC_PORT_PARAMETER_EQUIVALENCE",
+  "conditions": [
+    "wrapper ENABLE=1 PAIRS=128 FEED_PROTECT=1",
+    "bench STALL=0",
+    "wrapper cancel=0",
+    "corresponding ROM macro returns identical personalized payloads; timing qualified separately"
+  ],
+  "checks": [
+    {
+      "module": "ot_hbm_accel_sm_v",
+      "parameters": {
+        "ENABLE": "1",
+        "SUB": "4",
+        "LBS": "2",
+        "LSB": "16",
+        "NC": "1",
+        "RMAX": "4096",
+        "LEV": "4",
+        "XD": "128",
+        "MAX_OUT": "512",
+        "IL": "8",
+        "DS": "2",
+        "DW": "4",
+        "DG": "3",
+        "PIO": "2",
+        "STK": "1",
+        "TCK": "1"
+      },
+      "ports": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "start": "start",
+        "op_rows": "op_rows",
+        "op_c": "op_c",
+        "op_g": "op_g",
+        "op_gs": "op_gs",
+        "op_fmt": "op_fmt",
+        "busy": "busy",
+        "d_valid": "d_valid",
+        "d_ready": "d_ready",
+        "d_base": "d_base",
+        "d_lines": "d_lines",
+        "req_v": "req_v",
+        "req_ready": "req_ready",
+        "req_addr": "req_addr",
+        "req_tag": "req_tag",
+        "rsp_v": "rsp_v",
+        "rsp_tag": "rsp_tag",
+        "rsp_data": "rsp_data",
+        "xw_en": "xw_en",
+        "xw_addr": "xw_addr",
+        "xw_grp": "xw_grp",
+        "xw_data": "xw_data",
+        "rv": "rv",
+        "rrow": "rrow",
+        "rdata": "rdata",
+        "fault": "fault",
+        "arrive": "arrive",
+        "release_in": "release_in",
+        "released": "released"
+      },
+      "all_ports_equal": true
+    },
+    {
+      "module": "ot_hbrom_rom_feed",
+      "parameters": {
+        "ENABLE": "1",
+        "PAIRS": "128",
+        "PROTECT": "1"
+      },
+      "ports": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "cfg_valid": "cfg_valid",
+        "cfg_ready": "cfg_ready",
+        "cfg_fmt": "op_fmt",
+        "cfg_rows": "op_rows",
+        "cfg_groups": "op_g",
+        "cfg_group_slot": "op_gs",
+        "cfg_base_record": "cfg_base_record",
+        "cfg_region_records": "cfg_region_records",
+        "cfg_virtual_base": "d_base",
+        "cfg_epoch": "cfg_epoch",
+        "req_v": "req_v",
+        "req_ready": "req_ready",
+        "req_addr": "req_addr",
+        "req_tag": "req_tag",
+        "rsp_v": "rsp_v",
+        "rsp_tag": "rsp_tag",
+        "rsp_data": "rsp_data",
+        "cancel": "1'b0",
+        "cancel_done": "cancel_done",
+        "idle": "feed_idle",
+        "fault": "feed_fault",
+        "rom_ce": "rom_ce",
+        "rom_addr": "rom_addr",
+        "rom_q": "rom_q",
+        "capture_ce": "capture_ce"
+      },
+      "all_ports_equal": true
+    }
+  ],
+  "ROM_count": 256,
+  "ROM_index": "8*bankgroup+2*stream+parity",
+  "limitations": [
+    "No connected arithmetic pass is asserted by this source check",
+    "Wrapper blackboxes carry real timing in physical flow; benchmark uses explicit SS delay",
+    "Configuration validity and activation publication remain caller obligations"
+  ],
+  "source_sha256": {
+    "rtl/hbrom/ot_hbrom_compute_tile.sv": "180112517bcbca22f92268c43874d36349153afd98f3e4e5c260d9b9fdd5a221",
+    "tests/rtl/hbrom_compute_tb.sv": "e371f383b87077f81207ab2147181a19cd0534a043b92e964b305d7266bf61de",
+    "tools/hbrom/check_compute_tile_connections.py": "9362ef951644a5cf1ce578ce8d4891f836db91c98f56a51bae985f6520683605"
+  }
+}

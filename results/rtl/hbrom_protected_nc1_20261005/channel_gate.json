@@ -1,0 +1,27 @@
+{
+  "status": "PASS_LOCAL_CHANNEL_ONLY",
+  "scope": "32ordered56bitbeats under deterministic downstream stalls; single primarycredit register forced zero then release; outputs failstop andsticky. Not proof of all internal faultsites or fullNC1 compute.",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "88e6fd591d576f7082541a41915058e37185cb9d6086c1f0a63af6b51764c024",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "rtl/hbrom/ot_hbrom_control_channel.sv": "8b555453873ff27f03b473e184946d4733484b639de6f99b100545360462094f",
+    "results/rtl/hbrom_protected_nc1_20261005/tb_control_channel.sv": "2b03aa0e9423c28ccc82d68191d27466f59aa007d5937a1e4b5b4055c959f49e"
+  },
+  "compile": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_control_channel",
+    "-o",
+    "/tmp/hbrom-control-channel.vvp",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+    "rtl/hbrom/ot_hbrom_control_channel.sv",
+    "results/rtl/hbrom_protected_nc1_20261005/tb_control_channel.sv"
+  ],
+  "run": [
+    "vvp",
+    "/tmp/hbrom-control-channel.vvp"
+  ],
+  "stdout": "PASS channel clean32/stalls + primary credit upset fail-stop"
+}

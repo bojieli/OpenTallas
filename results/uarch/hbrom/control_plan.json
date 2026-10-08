@@ -64,34 +64,14 @@
       "compare_or2_count": 62
     },
     {
-      "name": "ring_alloc_cons_used",
-      "entries": 3,
-      "bits_per_entry": 11,
-      "raw_bits": 33,
-      "purpose": "Phase-bit pointers and occupancy",
-      "protected_storage_bits": 66,
-      "compare_xor2_count": 33,
-      "compare_or2_count": 30
-    },
-    {
-      "name": "ring_outstanding",
-      "entries": 1,
-      "bits_per_entry": 10,
-      "raw_bits": 10,
-      "purpose": "Issued responses not yet committed",
-      "protected_storage_bits": 20,
-      "compare_xor2_count": 10,
-      "compare_or2_count": 9
-    },
-    {
-      "name": "ring_allocated_full_bits",
+      "name": "ring_allocated_bits",
       "entries": 1024,
-      "bits_per_entry": 2,
-      "raw_bits": 2048,
-      "purpose": "Allocated and returned/complete, separate bit-local checks",
-      "protected_storage_bits": 4096,
-      "compare_xor2_count": 2048,
-      "compare_or2_count": 1024
+      "bits_per_entry": 1,
+      "raw_bits": 1024,
+      "purpose": "Additional allocation authorization; native full bitmap belongs to inner_control_plan",
+      "protected_storage_bits": 2048,
+      "compare_xor2_count": 1024,
+      "compare_or2_count": 0
     },
     {
       "name": "ring_slot_identity",
@@ -326,22 +306,23 @@
     "note": "Pipeline latency allowance, not measured timing. Counter reservation occurs before command-check stage; pipeline slots count against credits. Guard checks must accept one per cycle. Existing timing must add these stages explicitly."
   },
   "area": {
-    "raw_state_bits": 86339,
-    "duplicated_raw_bits": 172678,
-    "seal_bits": 15302,
-    "protected_state_bits": 187980,
-    "xor2_count": 86339,
-    "or2_count": 78796,
+    "raw_state_bits": 85272,
+    "duplicated_raw_bits": 170544,
+    "seal_bits": 15294,
+    "protected_state_bits": 185838,
+    "xor2_count": 85272,
+    "or2_count": 77733,
     "dff_um2": 0.2916,
     "gate_allowance_um2": 0.3,
-    "storage_cell_mm2": 0.054814968000000006,
-    "compare_logic_allowance_mm2": 0.0541311,
-    "packed_total_allowance_mm2": 0.21789213600000001,
-    "packed_increment_over_unprotected_mm2": 0.16753923120000003,
+    "storage_cell_mm2": 0.054190360800000004,
+    "compare_logic_allowance_mm2": 0.053489699999999994,
+    "packed_total_allowance_mm2": 0.2153601216,
+    "packed_increment_over_unprotected_mm2": 0.1656294912,
     "basis": "DFF area existing floorplan coefficient; logic .3um2/gate explicit allowance. 50% utilization. Independent NEXT-STATE arithmetic cones, CTS, hold fixing and compare distribution require synthesis; not a bound or signoff claim."
   },
   "scope": {
     "included": "New descriptor-owner, ROM feed, ring metadata, activation validity, result and completion wrapper state at full NC1 shape.",
+    "native_bulk_accounting": "Native full1024 + alloc/cons/used33 + outstanding10 =1067 overlapping bits excluded here. Complete1949bit native control inventory and DMR accounted in inner_control_plan; slot generation and separate allocated bits remain outer-only.",
     "additional_required": "Existing sm_v internal arithmetic pipeline tags, issuer/stack counters and bulk-copy retiming duplicates need independent control-cone inventory and protection integration before claiming full-tile protection. Existing duplicate fanout registers are NOT DMR without independent next-state cones and compare.",
     "template": "Immutable descriptor templates are ROM: no ECC required. Mutable fetched copies appear in inventory. Template address/bounds controlled by protected descriptor state."
   },

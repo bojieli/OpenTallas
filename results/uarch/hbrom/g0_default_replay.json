@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.hbrom.default_replay.v1",
+  "rows": [
+    {
+      "tp": 4,
+      "old_tpot_us": 1303.3480627777765,
+      "new_tpot_us": 1303.3480627777765,
+      "same_tpot": true,
+      "same_feasible": true
+    },
+    {
+      "tp": 8,
+      "old_tpot_us": 1365.6090281111108,
+      "new_tpot_us": 1365.6090281111108,
+      "same_tpot": true,
+      "same_feasible": true
+    }
+  ],
+  "source_pins": {
+    "tools/hbrom_model.py": "34abe3d619a3b32f0875c5e605d227d2a0cde667600a261463d796c9a46ee75d",
+    "tools/hbrom_allocator.py": "813d56e64af07a8f1cc870e1ddca2331d0a1f292d82543d2702321e19be07150",
+    "tools/hbrom_transport.py": "17dd71dc8ea48776eaf416e08058a16406faeb4262581b522aca8105a589de09",
+    "tools/hbrom_inputs.py": "4a5fe1710880a93114e2dc0404ada2d7580ce7e78427a150662f25ebae9391b9"
+  },
+  "inputs_sha256": "779a0c0dbacb13b3aca0540abb184369df6900b500af16218ffb868a5c36591c"
+}

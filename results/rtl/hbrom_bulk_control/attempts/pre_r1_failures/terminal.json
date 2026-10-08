@@ -1,0 +1,18 @@
+{
+  "verdict": "FAIL",
+  "status": "development_attempt_failures_retained",
+  "failures": [
+    {
+      "attempt": "a0",
+      "failure": "iverilog syntax error invalid repeat concatenation in test payload expression",
+      "resolution": "Corrected concatenation syntax"
+    },
+    {
+      "attempt": "a1",
+      "failure": "flow incomplete 0 0 at5004ns",
+      "cause": "Invalid response tags were captured while rsp_v=0, introducing X into protected state image even without live transaction",
+      "resolution": "Capture response tags only with valid and gate set_lo by valid"
+    }
+  ],
+  "qualification": false
+}

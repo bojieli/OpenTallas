@@ -19,6 +19,8 @@ INPUTS = ROOT / 'results/uarch/hbrom/inputs'
 
 def service_area(role='full_service', *, index_keys_per_cycle=64,
                  he_lanes=1536, quantizers=32, persistent_layers=40):
+    if role in ('layer', 'source_owner', 'source_owner_candidates', 'head'):
+        return _layer_service_area(role, index_keys_per_cycle, he_lanes, quantizers)
     if role not in ('full_service', 'dedicated_service', 'compute_only', 'archive'):
         raise ValueError('unknown service role')
     for v in (index_keys_per_cycle, he_lanes, quantizers, persistent_layers):
@@ -118,10 +120,58 @@ def service_area(role='full_service', *, index_keys_per_cycle=64,
                 claim='nonzero analytical reservations, not guaranteed physical bounds or SS/FF closure')
 
 
+def _layer_service_area(role, index_keys_per_cycle, he_lanes, quantizers):
+    """One colocated layer per rank, with HBM only on the four source owners."""
+    base=service_area('full_service',index_keys_per_cycle=index_keys_per_cycle,
+                      he_lanes=he_lanes,quantizers=quantizers,persistent_layers=1)
+    rows=base['components']
+    if role!='source_owner_candidates':
+        rows=[r for r in rows if r['name']!='index_candidate_keys']
+    if role in ('layer','head'):
+        absent={'HBM_PHY','HBM_controllers_readers_collectors','index_scorer',
+                'index_select_and_merge','selector_lists_and_membership'}
+        rows=[r for r in rows if r['name'] not in absent]
+        for r in rows:
+            if r['name']=='selector_merge_and_router_select':
+                r.update(name='router_select',unit_reservation_mm2=1,area_mm2=1,
+                         includes='local top6/index-order selection; remote index selection not duplicated')
+    if role=='head':
+        absent={'attention_compute','attention_packed_staging','attention_stationary_PWORDS2',
+                'attention_scores_probability_PV','persistent_windows','attention_load_registers'}
+        rows=[r for r in rows if r['name'] not in absent]
+        for r in rows:
+            if r['name']=='router_select':
+                r.update(name='head_select',includes='exact local/global argmax candidate tracking and tie order')
+    else:
+        # Separate forward lease lets selected rows remain live while next hop accepts them.
+        n=math.ceil(147456/8192)
+        rows.append(dict(name='selected_forward_slot',replicas=n,
+                         unit_reservation_mm2=10.893/1536,area_mm2=n*10.893/1536,
+                         basis='whole256x256 SRAM macros at inherited density',
+                         includes='147456B additional immutable selected-row forwarding lease',
+                         evidence='analytic_macro_reservation',measured_for_hbrom=False))
+    # Recompute parity after deleting role-inapplicable data arrays and adding forward lease.
+    extra=sum(r['area_mm2'] for r in rows if r['evidence']=='analytic_macro_reservation')
+    for r in rows:
+        if r['name']=='SRAM_protection_parity':
+            r['area_mm2']=r['unit_reservation_mm2']=(10.893+extra)/8
+    base.update(role=role,components=rows,total_mm2=sum(r['area_mm2'] for r in rows),
+                missing_measured_components=[r['name'] for r in rows if r['evidence']=='analytical_allowance'])
+    base['assumptions']['persistent_layers']=0 if role=='head' else 1
+    base['assumptions']['HBM_stacks']=4 if role.startswith('source_owner') else 0
+    base['communication_obligations']=(
+        'source_owner is L2/L8/L14; source_owner_candidates is L20. All other layers retain local SU/attention. '
+        'L24/28/32/36 index queries execute remotely at L20: charge query, IDs and selected-row responses, '
+        'source-owner index resource contention, forwarding hops and protected row leases. '
+        'Head has no attention/window/HBM/index. SRAM-only windows persist per layer; initial context population '
+        'and updates require explicit source transport. No free remote service is implied by area savings.')
+    return base
+
+
 def build(compute_dies=4, archive_dies=1):
     if compute_dies<=0 or archive_dies<0:
         raise ValueError('invalid die counts')
-    roles={r:service_area(r) for r in ('full_service','dedicated_service','compute_only','archive')}
+    roles={r:service_area(r) for r in ('full_service','dedicated_service','compute_only','archive','layer','source_owner','source_owner_candidates','head')}
     uniform=dict(role_counts={'full_service':compute_dies,'archive':archive_dies},
                  extra_service_dies=0,HBM_stacks=4*compute_dies)
     dedicated=dict(role_counts={'compute_only':compute_dies,'dedicated_service':4,'archive':archive_dies},
@@ -134,6 +184,9 @@ def build(compute_dies=4, archive_dies=1):
     paths=[INPUTS/f'hbrom-{n}.json' for n in ('hub','attention','index')]+[Path(__file__), ROOT/'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30/ot_hbm3e_phy_v41x_aw30.lef']
     return dict(schema='opentallas.hbrom.service-area.v1',roles=roles,
                 scenarios=dict(uniform_colocated=uniform,dedicated_four_rank=dedicated),
+                source_owner_layer_roles={str(l): ('source_owner_candidates' if l==20 else 'source_owner' if l in (2,8,14) else 'layer') for l in range(40)},
+                source_role_count_at_TP4=dict(source_owner=12,source_owner_candidates=4,layer=144,head=4),
+                source_role_HBM_stacks=64,
                 selection='uniform_colocated until remote-service calendar is composed',
                 known_primitive_and_macro_base_mm2=38.601+16.690446336+21.677952+40,
                 source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},

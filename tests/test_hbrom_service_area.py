@@ -39,3 +39,18 @@ def test_replication_and_persistent_capacity_scale():
 @pytest.mark.parametrize('kwargs',[{'role':'bad'},{'index_keys_per_cycle':3},{'quantizers':0},{'persistent_layers':True}])
 def test_invalid_shapes(kwargs):
     with pytest.raises(ValueError):service_area(**kwargs)
+
+
+def test_source_roles_do_not_duplicate_index_and_hbm():
+    layer=service_area('layer');owner=service_area('source_owner');last=service_area('source_owner_candidates')
+    names=lambda x:{r['name'] for r in x['components']}
+    assert 'HBM_PHY' not in names(layer)
+    assert 'index_scorer' not in names(layer)
+    assert 'index_candidate_keys' not in names(owner)
+    assert 'index_candidate_keys' in names(last)
+    assert all('selected_forward_slot' in names(x) for x in (layer,owner,last))
+    assert layer['assumptions']['persistent_layers']==1
+    assert layer['total_mm2']<owner['total_mm2']<last['total_mm2']
+    head=service_area('head')
+    assert {'SU_VM','HE_projection','head_select'}<=names(head)
+    assert not {'HBM_PHY','attention_compute','persistent_windows','index_scorer'}&names(head)

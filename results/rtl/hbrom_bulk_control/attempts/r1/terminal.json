@@ -1,0 +1,27 @@
+{
+  "verdict": "PASS",
+  "compile_command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_hbrom_bulk_control",
+    "-o",
+    "/tmp/hbrom-bulk-control-r1.vvp",
+    "rtl/test/hbrom/tb_hbrom_bulk_control.sv",
+    "rtl/hbrom/ot_hbrom_bulk_copy_control_protected.sv",
+    "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v"
+  ],
+  "run_command": [
+    "vvp",
+    "/tmp/hbrom-bulk-control-r1.vvp"
+  ],
+  "compile_returncode": 0,
+  "run_returncode": 0,
+  "source_sha256": {
+    "rtl/test/hbrom/tb_hbrom_bulk_control.sv": "49d4a963543df82711a3ba1bc9dd712dd55121c3d6972900a4c4fd0c278b5fc7",
+    "rtl/hbrom/ot_hbrom_bulk_copy_control_protected.sv": "6e36f0625c237c5a1e33360e29c60fde1224a3f06169b67e81dc4262cdf59c25",
+    "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v": "ba2cbf7634c3951ff68505f012b1d28cf415e161181a89ab620b28d5172a3598"
+  },
+  "coverage": "Full1024ring512outstanding1224payload,1300linewrap,1400cycleconsumerstall,actual SRAM behavioral generated model,bitmap/pointer/outputWE faults",
+  "limitation": "No SS/FF or synthesis preservation qualification; no exhaustive state fault sweep."
+}

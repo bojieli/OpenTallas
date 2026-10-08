@@ -289,16 +289,53 @@ def evaluate(inputs, candidate):
         else:
             stage = t.get('stage', 'auxiliary')
         stages.setdefault(stage, []).append(t)
+    geometry_by_stage = {name: geom for name in stages}
+    roles_by_stage = {}
+    role_config = inputs.get('roles_config') if candidate.get('role_specific', False) else None
+    if candidate.get('role_specific', False) and role_config is None:
+        raise ValueError('role-specific candidate requires explicit roles_config')
+    if role_config is not None:
+        if layers_per_stage != role_config['layers_per_stage']:
+            raise ValueError('role ledger not composed for this layers_per_stage')
+        geometry_by_stage = {}
+        for stage in stages:
+            role = role_config['stage_roles'][stage]
+            definition = role_config['roles'][role]
+            role_physical = definition['physical']
+            role_fixed = positive(role_physical, 'fixed_service_mm2')
+            role_slots = role_physical['cluster_slots_by_geometry'][f'{pairs}:{ntiles}']
+            role_count = min(math.floor((die_area-role_fixed)/cluster_slot_area), int(role_slots))
+            if role_count < 1:
+                raise ValueError(f'no cluster fits service role {role}')
+            role_stacks = role_physical['hbm_stacks_per_compute_die']
+            if isinstance(role_stacks,bool) or not isinstance(role_stacks,int) or role_stacks<0:
+                raise ValueError('explicit nonnegative integer HBM stack inventory required')
+            rg = dict(geom)
+            rg.update(clusters_per_die=role_count, role=role, fixed_service_mm2=role_fixed,
+                per_die_area_mm2=role_fixed+role_count*cluster_slot_area,
+                compute_mm2_per_die=role_count*(ntiles*tile_area+shared_area),
+                rom_mm2_per_die=role_count*pairs*ntiles*pair_area,
+                network_mm2_per_die=role_count*ntiles*network['area_mm2'],
+                local_sram_bytes_per_die=role_count*(ntiles*positive(compute,'local_sram_bytes')+compute.get('shared_sram_bytes',0)),
+                activation_broadcast_cycles=max(positive(physical,'activation_broadcast_cycles'),math.ceil(math.log2(role_count*ntiles+1))),
+                physical_floorplan=definition['physical_floorplan'],
+                hbm_stacks_per_compute_die=role_stacks)
+            geometry_by_stage[stage] = rg
+            roles_by_stage[stage] = role
+        # Compatibility summary is the most compute-constrained installed stage;
+        # all timing and capacity below use the actual individual stage geometry.
+        geom = min(geometry_by_stage.values(), key=lambda g:g['clusters_per_die'])
     packed = {}
-    rank_capacity_records = (pairs // 4) * 8192 * count * ntiles
     for name, ts in stages.items():
+        stage_count = geometry_by_stage[name]['clusters_per_die']
+        rank_capacity_records = (pairs // 4) * 8192 * stage_count * ntiles
         bound = storage_record_lower_bound(ts, tp)
         if bound > rank_capacity_records:
             packed[name] = dict(fits=False, necessary_records_per_rank=bound,
                                 capacity_records_per_rank=rank_capacity_records,
                                 rejection='aggregate native-record lower bound already exceeds capacity')
         else:
-            packed[name] = hbrom_allocator.allocate(ts, tp, count * ntiles, pairs,
+            packed[name] = hbrom_allocator.allocate(ts, tp, stage_count * ntiles, pairs,
                 emit_runs=False, emit_summaries=False, layout_mode=candidate.get('layout_mode', 'padded'))
     rejection = []
     if any(not p['fits'] for p in packed.values()):
@@ -316,24 +353,34 @@ def evaluate(inputs, candidate):
                          dies=ceildiv(auxiliary_bytes, aux_capacity),
                          role='storage-only retained tables and inactive checkpoint payload')
     dies = len(stages) * tp + auxiliary['dies'] + inputs.get('additional_service_dies', 0)
+    installed_units = dict(
+        compute_tiles=sum(g['clusters_per_die']*ntiles for g in geometry_by_stage.values())*tp,
+        compute_role_rom_macros=sum(g['clusters_per_die']*ntiles*pairs*2 for g in geometry_by_stage.values())*tp,
+        archive_rom_macros=auxiliary.get('pairs_per_die',0)*2*auxiliary['dies'],
+        tile_sram_bytes=sum(g['local_sram_bytes_per_die'] for g in geometry_by_stage.values())*tp,
+        compute_role_occupied_area_mm2=sum(g['per_die_area_mm2'] for g in geometry_by_stage.values())*tp,
+        logic_die_outline_area_mm2=dies*die_area,
+        role_die_counts={r:sum(role==r for role in roles_by_stage.values())*tp for r in sorted(set(roles_by_stage.values()))})
     stacks_per_compute = physical.get('hbm_stacks_per_compute_die')
-    hbm_stacks = None if stacks_per_compute is None else len(stages) * tp * stacks_per_compute
+    hbm_stacks = (sum(g['hbm_stacks_per_compute_die'] for g in geometry_by_stage.values())*tp
+                  if role_config is not None else
+                  None if stacks_per_compute is None else len(stages)*tp*stacks_per_compute)
     dram_per_stack = physical.get('hbm_dram_dies_per_stack')
     base_per_stack = physical.get('hbm_base_dies_per_stack')
     dram_dies = None if hbm_stacks is None or dram_per_stack is None else hbm_stacks * dram_per_stack
     base_dies = None if hbm_stacks is None or base_per_stack is None else hbm_stacks * base_per_stack
     memory_inventory = dict(hbm_stacks=hbm_stacks, dram_dies=dram_dies, hbm_base_dies=base_dies,
         total_physical_dies=None if dram_dies is None or base_dies is None else dies + dram_dies + base_dies,
-        basis=physical.get('hbm_inventory_basis', 'unqualified stack construction assumption'),
+        basis=physical.get('hbm_inventory_basis', physical.get('hbm_stack_basis', 'unqualified stack construction assumption')),
         hbm_dram_area_mm2=None, total_silicon_area_mm2=None,
         area_status='HBM DRAM/base actual die areas missing; no iso-total-silicon claim')
     if dies > inputs['max_logic_dies']:
         rejection.append('logic die envelope exceeded')
     if rejection:
         return dict(candidate=candidate, feasible=False, rejection=rejection,
-                    geometry=geom, storage=packed,
+                    geometry=geom, geometry_by_stage=geometry_by_stage, roles_by_stage=roles_by_stage, storage=packed,
                     topology=dict(tp=tp, stages=list(stages), logic_dies=dies,
-                                  auxiliary=auxiliary, memory_inventory=memory_inventory, layers_per_stage=layers_per_stage),
+                                  auxiliary=auxiliary, memory_inventory=memory_inventory, installed_units=installed_units, layers_per_stage=layers_per_stage),
                     qualified=False, default_enabled=False)
     nodes = (hbrom_transport.reprice_nodes(inputs['baseline_dag'], tp, layers_per_stage)
              if 'baseline_dag' in inputs else
@@ -348,7 +395,12 @@ def evaluate(inputs, candidate):
                                  r.replace(f'layer_{layer}:', f'layer_{layer // layers_per_stage}:'))
                                  for r in node.get('resources', [])]
         if node.get('kind') == 'weight':
-            service = weight_service(node, geom, compute, macro, network, tp)
+            stage = f"layer_{int(node['layer']) // layers_per_stage}" if node.get('layer') is not None and int(node['layer']) >= 0 else node.get('stage', 'auxiliary')
+            if stage not in geometry_by_stage:
+                raise ValueError(f'weight node {node["id"]} has no resident stage {stage}')
+            service = weight_service(node, geometry_by_stage[stage], compute, macro, network, tp)
+            service['resident_stage'] = stage
+            service['clusters_in_resident_stage'] = geometry_by_stage[stage]['clusters_per_die']
             node['duration_ns'] = service['duration_ns']
             services[node['id']] = service
             stage = f"layer_{int(node['layer']) // layers_per_stage}" if node.get('layer') is not None and int(node['layer']) >= 0 else node.get('stage', 'auxiliary')
@@ -359,6 +411,8 @@ def evaluate(inputs, candidate):
     for gate in ('exact', 'ss_setup', 'ff_hold', 'in_context_route', 'power', 'gain'):
         if inputs.get('gates', {}).get(gate) is not True:
             blockers.append(gate + ' not qualified')
+    if role_config is not None:
+        blockers.append('role-specific service/PHY geometry and source transport not contextually qualified')
     if shared_area:
         blockers.append('cluster-shared RF/vector service requires finite port implementation gate')
     if inputs.get('auxiliary_storage_bytes', 0):
@@ -372,8 +426,8 @@ def evaluate(inputs, candidate):
     if not inputs.get('dag_complete', False):
         blockers.append('full token dependency DAG unverified')
     return dict(candidate=candidate, feasible=not rejection, rejection=rejection,
-                geometry=geom, topology=dict(tp=tp, stages=list(stages),
-                logic_dies=dies, auxiliary=auxiliary, memory_inventory=memory_inventory, layers_per_stage=layers_per_stage,
+                geometry=geom, geometry_by_stage=geometry_by_stage, roles_by_stage=roles_by_stage, topology=dict(tp=tp, stages=list(stages),
+                logic_dies=dies, auxiliary=auxiliary, memory_inventory=memory_inventory, installed_units=installed_units, layers_per_stage=layers_per_stage,
                 links=inputs.get('topology', {})), storage=packed,
                 service=services, schedule=scheduled,
                 tpot_us=scheduled['tpot_ns'] / 1000,

@@ -26,7 +26,7 @@
     "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "88e6fd591d576f7082541a41915058e37185cb9d6086c1f0a63af6b51764c024",
     "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv": "02d3f6bbaa7bf63203b7fedcf4675e5b5f9f3534a5514d37c3c077f22b403f00",
     "tools/hbrom_control_model.py": "5e8f89183612b6213fddf72fe984a2984f21ebe8d20eb8572192e00f35104115",
-    "tools/hbrom_protection_model.py": "7112def77a3a09d19e6aed325bfb7b6727adaebb2a616ec839b90ed3464302f4"
+    "tools/hbrom_protection_model.py": "60532e47308f2bb6edc81ee0fbf67033f95ff9497960b2af84513be21e3b57f2"
   },
   "inventory": [
     {
@@ -163,11 +163,11 @@
       "protection_status": "PRICED_ALLOWANCE_REQUIRES_ELABORATED_INVENTORY"
     },
     {
-      "name": "native_bulk_state_allowance",
-      "raw_bits": 4096,
+      "name": "native_bulk_state_extracted",
+      "raw_bits": 1949,
       "source": "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
-      "signals": "Includes native q_base/len/pointers/count and high-part lookahead, full1024, alloc/cons/used/outstanding, issue/take/active/headfull local kreg copies, response tags, predecode set/clear, bank pointers/full, read parity, output queue reservations/pointers/we. Separate from outer scheduler ownership. MUST replace allowance with elaborated inventory.",
-      "protection_status": "PRICED_ALLOWANCE_REQUIRES_ELABORATED_INVENTORY"
+      "signals": "Scheduler extracted1949 bits: desc384,queue7,active57,ring/full/alloc/cons/used/outstanding1067,eligibility18,hf/rok16,addr40,qnz/qone8,next/rsp32,predecode128,bankfull/rspqq19,hiincrement26,bankptr56,SRAMqueue/parity/WE91. Outer model must exclude alias1067; allocated bitmap and slot identities remain additional.",
+      "protection_status": "IMPLEMENTED_NATIVE_DMR_PENDING_TEST_AND_PHYSICAL"
     }
   ],
   "scheme": {
@@ -181,16 +181,16 @@
     "integration": "Outer hbrom_control_model protects NEW scheduler state. This inventory adds native-inner state; physical removal of redundant native bookkeeping can subtract it only with source evidence."
   },
   "area": {
-    "raw_control_bits": 14259,
-    "incremental_flops": 14723,
-    "local_compare_groups": 232,
-    "xor2": 14259,
-    "or2": 14027,
-    "nextstate_twoinput_gate_allowance": 57036,
+    "raw_control_bits": 12112,
+    "incremental_flops": 12510,
+    "local_compare_groups": 199,
+    "xor2": 12112,
+    "or2": 11913,
+    "nextstate_twoinput_gate_allowance": 48448,
     "dff_um2": 0.2916,
     "gate_allowance_um2": 0.3,
-    "incremental_cell_allowance_mm2": 0.0301682268,
-    "incremental_packed_50pct_mm2": 0.0603364536,
+    "incremental_cell_allowance_mm2": 0.025628616000000003,
+    "incremental_packed_50pct_mm2": 0.05125723200000001,
     "status": "Uncharacterized gate and native-bulk/column inventory allowances, not synthesized bound; arithmetic excluded; existing primary control already in NC1 area"
   },
   "latency": {
@@ -204,7 +204,7 @@
   },
   "explicit_gaps": [
     "All protection described here absent in original native RTL; external protected wrapper alone cannot see or cover inner pend_v/seen or tag upset.",
-    "Column metadata and native bulk exact elaborated bit inventory still required; allowance cannot establish all-state coverage.",
+    "Column metadata exact elaborated bit inventory still required; allowance cannot establish all-state coverage. Native bulk extracted1949 bits owned by scheduler; no all-state qualification implied.",
     "Shared guard comparators, common inputs, reset and clock common-mode failures remain outside DMR guarantee.",
     "SECDED codec staging-control metadata must be added to actual protected successor inventory when SRAM agent creates codec pipeline.",
     "Final netlist must enumerate every sequential CONTROL bit and assign protected replica/check or justified non-control classification; no unclassified mutable-control bits allowed."

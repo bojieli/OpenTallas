@@ -1,0 +1,94 @@
+{
+  "schema": "hbrom.protection-minimum-gate.v1",
+  "scope": "Actual fixed4leafARstore and full1024/512 ring with behavioral SRAM; no arithmetic,control-protection,SSFF or adoption claim",
+  "sources_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "rtl/hbrom/ot_hbrom_bulk_copy_protected.sv": "cfb11067f5ac6b468d158dde17ebd04bceed03e3e1459932eaf6d18d19159b67",
+    "rtl/hbrom/ot_hbrom_secded_pipeline_pkg.sv": "61a945a6aceef7fec90910a1c70832886699fbef23371cb3ebc6c9d4d993803d",
+    "rtl/hbrom/ot_hbrom_smv_leaf_protected.sv": "823de2aa8c7883eb1620a550d778b4850c8a8785f0ed90be68199fd4a96824a4",
+    "rtl/hbrom/ot_hbrom_xstore_protected.sv": "b6dd30a7a0a461f704973d88843d29f8ed19f998b8511b82ef79755b3a218d6f",
+    "tests/rtl/tb_hbrom_bulk_copy_protected.sv": "90463ea5c100c14d8e15cfd4c688bedbb4b4dcf307b6bf7d51ab561251709ad1",
+    "tests/rtl/tb_hbrom_secded_pipeline.sv": "5014f3d6e3b96e1a6f5941d999fbbec1e682d2cd8cee59309803ed5885ca7449",
+    "tests/rtl/tb_hbrom_xstore_protected.sv": "608047ca96e7d8a2fa0d3878882c3b88b8b5ce2f0a70d5e1a00c5e0dd902bc1f"
+  },
+  "cases": {
+    "codec": {
+      "verdict": "PASS",
+      "commands": [
+        [
+          "iverilog",
+          "-g2012",
+          "-s",
+          "tb",
+          "-o",
+          "/tmp/hbrom-protection-gate_r1-codec.vvp",
+          "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+          "rtl/hbrom/ot_hbrom_secded_pipeline_pkg.sv",
+          "tests/rtl/tb_hbrom_secded_pipeline.sv"
+        ],
+        [
+          "vvp",
+          "/tmp/hbrom-protection-gate_r1-codec.vvp"
+        ]
+      ],
+      "returncodes": [
+        0,
+        0
+      ]
+    },
+    "xstore": {
+      "verdict": "PASS",
+      "commands": [
+        [
+          "iverilog",
+          "-g2012",
+          "-s",
+          "tb",
+          "-o",
+          "/tmp/hbrom-protection-gate_r1-xstore.vvp",
+          "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+          "rtl/hbrom/ot_hbrom_secded_pipeline_pkg.sv",
+          "rtl/hbrom/ot_hbrom_xstore_protected.sv",
+          "tests/rtl/tb_hbrom_xstore_protected.sv"
+        ],
+        [
+          "vvp",
+          "/tmp/hbrom-protection-gate_r1-xstore.vvp"
+        ]
+      ],
+      "returncodes": [
+        0,
+        0
+      ]
+    },
+    "ring": {
+      "verdict": "PASS",
+      "commands": [
+        [
+          "iverilog",
+          "-g2012",
+          "-s",
+          "tb",
+          "-o",
+          "/tmp/hbrom-protection-gate_r1-ring.vvp",
+          "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+          "rtl/hbrom/ot_hbrom_secded_pipeline_pkg.sv",
+          "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+          "rtl/hbrom/ot_hbrom_bulk_copy_protected.sv",
+          "tests/rtl/tb_hbrom_bulk_copy_protected.sv"
+        ],
+        [
+          "vvp",
+          "/tmp/hbrom-protection-gate_r1-ring.vvp"
+        ]
+      ],
+      "returncodes": [
+        0,
+        0
+      ]
+    }
+  },
+  "sources_unchanged": true,
+  "verdict": "PASS"
+}

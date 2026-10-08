@@ -1,0 +1,46 @@
+{
+  "schema": "hbrom.new_architecture.design_brief.v1",
+  "status": "ARCHITECTURE_SELECTION_ONLY",
+  "owner_objective": "Choose a new ROM dataflow architecture only with a credible path to pure AR performance similar to HBM and MTP speed on par with HBM; otherwise stop this effort.",
+  "rejected_predecessor": {
+    "name": "adapted HBM compute fed by ROM",
+    "target_clock_budget_us": 707.85844,
+    "reason": "Marginal versus725.057us existingROM and no credibleHBMparity; no further gap closure or hardware work."
+  },
+  "reference": {
+    "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+    "sha256": "8287b3865cb7626f4015246d5949110aa22f1d02d84812218ebc0513344304d0",
+    "AR_us": 460.053,
+    "MTP_step_us": 888.077,
+    "MTP_effective_outputs_per_step": 3.8879,
+    "MTP_tok_s": 4377.9,
+    "scope": "Conditional component composition, not qualified product; use matchedcheckpoint/context/arithmetic andsameacceptance for comparison. Corrections and architectural improvements must apply fairly."
+  },
+  "screening_targets": {
+    "AR_primary_us": 460.053,
+    "AR_outer_screen_us": 500,
+    "AR_outer_screen_note": "Prior architecture screening target, about8.7percent slower than citedHBM; passing this alone doesnotestablishparity oradmission. Seek referenceparity.",
+    "MTP_step_primary_us": 888.077,
+    "MTP_rule": "Price drafter, P6 verification includingexpertunion, statecommit/rejection and seed work; sameacceptance. NoARonlyadmission."
+  },
+  "candidate_principles": [
+    "Decouple immutablecapacity fromactivecompute sizing; shortlistcolocatedROM/sharedcompute withlocalSRAMstate.",
+    "Provision verification-column parallelism at architecture selection, not after ARdesign.",
+    "Choose directhierarchicalcollectives from message deadlines, actuallinkarea/power andexactgoldentree.",
+    "Group sameinputexpertmatrix rows intoexactworkgroups andretainoperandsnearconsumers.",
+    "Count allauxiliarylookup/drafterweights andfinite speculative state, notmerelymainmodelROM."
+  ],
+  "required_before_selection": [
+    "Whole-system area/capacity roles andlink/shoreline inventory",
+    "AR andMTP criticaldependency schedules withreal data andexpertunion",
+    "Bandwidth, buffering, routing-distance andclock budgets",
+    "MatchedHBM comparison withcommonimprovements/costcorrections",
+    "Power/silicon accounting andexplicit uncertainty margin"
+  ],
+  "stop_conditions": [
+    "No architecture meets both AR andMTP performance objectives undercrediblephysical assumptions.",
+    "Requiredinterconnect bandwidth/latency/area isphysicallyunsupported.",
+    "Verification or drafterhardware consumescapacitythatdestroysARtarget."
+  ],
+  "hardware_authorization": "NoRTL edits/builds/simulation/synthesis/P&R while architecture selection isunresolved."
+}

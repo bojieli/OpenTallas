@@ -807,8 +807,22 @@
       ]
     }
   ],
+  "fault_domain": {
+    "protected": "SRAM encoded data cells and read capture checked before consumer publication; mutable control metadata; links retain their own protection.",
+    "assumed_fault_free": "Pre-encode source and decoded arithmetic/datapath pipeline registers, same scope as native arithmetic. No end-to-end datapath transient tolerance claimed.",
+    "root_scope_decision": "Full payload-pipeline DMR explicitly excluded by root; does not weaken SRAM/HBM/link/control protection."
+  },
+  "local_metadata_dmr": {
+    "extra_flops": 525,
+    "flop_area_um2": 0.2916,
+    "compare_twoinput_gates_per_bit": 2,
+    "gate_area_allowance_um2": 0.3,
+    "packed_allowance_mm2_at_50pct": 0.00093618,
+    "extra_cycles": 0,
+    "scope": "4leaf metadata shadow+fault pair360bits,4xstore shadows140bits,ringcodec shadows25bits. Native bulkcontroller DMR separately owned/priced."
+  },
   "remaining_mandatory_gates": [
-    "Mutable control protection: duplicate sealed control image or SECDED state, including x write/valid bitmap, descriptors, ring ownership. Needs exact state inventory/area before qualification.",
+    "Mutable control implementation exists as separate successors; exact state inventory and contextual physical qualification remain required.",
     "Read pipeline poison and no stale result after fault.",
     "Fault inject every data+check bit; prove single correction and all double-bit detection; pointer/tag fault cases.",
     "All partial writes including leaf3 split and repeated/out-of-order groups compared against original raw layout.",

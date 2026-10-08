@@ -52,9 +52,7 @@ def build(*, ring_depth=1024, max_out=512, network_latency=17, rows=4096,
     add('descriptor_pointers_and_count', 2, max(1,dw), 'Read and write pointers')
     add('descriptor_count', 1, dw+1, 'Full/empty discrimination')
     add('transaction_epoch_and_operation_sequence', 2, 32, 'No reuse or wrap until quiescence')
-    add('ring_alloc_cons_used', 3, tw+1, 'Phase-bit pointers and occupancy')
-    add('ring_outstanding', 1, max_out.bit_length(), 'Issued responses not yet committed')
-    add('ring_allocated_full_bits', ring_depth, 2, 'Allocated and returned/complete, separate bit-local checks')
+    add('ring_allocated_bits', ring_depth, 1, 'Additional allocation authorization; native full bitmap belongs to inner_control_plan')
     add('ring_slot_identity', ring_depth, 64, 'Epoch32 and operation sequence32 bound at allocation')
     add('active_line_address_and_remaining', 1, 56, '32-bit address plus 24-bit remaining lines')
     add('activation_write_valid_bits', activation_words*activation_beats, 1, 'One existing NC1 context; every independently written 2048-bit beat has valid state')
@@ -126,6 +124,7 @@ def build(*, ring_depth=1024, max_out=512, network_latency=17, rows=4096,
                   packed_increment_over_unprotected_mm2=2*(flop_area+logic_area-raw*dff/1e6),
                   basis='DFF area existing floorplan coefficient; logic .3um2/gate explicit allowance. 50% utilization. Independent NEXT-STATE arithmetic cones, CTS, hold fixing and compare distribution require synthesis; not a bound or signoff claim.'),
         scope=dict(included='New descriptor-owner, ROM feed, ring metadata, activation validity, result and completion wrapper state at full NC1 shape.',
+                   native_bulk_accounting='Native full1024 + alloc/cons/used33 + outstanding10 =1067 overlapping bits excluded here. Complete1949bit native control inventory and DMR accounted in inner_control_plan; slot generation and separate allocated bits remain outer-only.',
                    additional_required='Existing sm_v internal arithmetic pipeline tags, issuer/stack counters and bulk-copy retiming duplicates need independent control-cone inventory and protection integration before claiming full-tile protection. Existing duplicate fanout registers are NOT DMR without independent next-state cones and compare.',
                    template='Immutable descriptor templates are ROM: no ECC required. Mutable fetched copies appear in inventory. Template address/bounds controlled by protected descriptor state.'),
         mandatory_checks=['Exhaustive single-bit mutation of protected descriptors, epochs, pointers and validity bits denies unauthorized commits.',

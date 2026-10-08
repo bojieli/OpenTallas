@@ -90,9 +90,9 @@ def build():
         'Bounded allocation 1024 control bits/sub for both column first/last/valid/tag delay paths, sticky faults and bterm control. MUST replace allowance with elaborated inventory before qualification.',
         'PRICED_ALLOWANCE_REQUIRES_ELABORATED_INVENTORY')
     bulk='rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv'
-    add('native_bulk_state_allowance',4096,bulk,
-        'Includes native q_base/len/pointers/count and high-part lookahead, full1024, alloc/cons/used/outstanding, issue/take/active/headfull local kreg copies, response tags, predecode set/clear, bank pointers/full, read parity, output queue reservations/pointers/we. Separate from outer scheduler ownership. MUST replace allowance with elaborated inventory.',
-        'PRICED_ALLOWANCE_REQUIRES_ELABORATED_INVENTORY')
+    add('native_bulk_state_extracted',1949,bulk,
+        'Scheduler extracted1949 bits: desc384,queue7,active57,ring/full/alloc/cons/used/outstanding1067,eligibility18,hf/rok16,addr40,qnz/qone8,next/rsp32,predecode128,bankfull/rspqq19,hiincrement26,bankptr56,SRAMqueue/parity/WE91. Outer model must exclude alias1067; allocated bitmap and slot identities remain additional.',
+        'IMPLEMENTED_NATIVE_DMR_PENDING_TEST_AND_PHYSICAL')
     raw=sum(r['raw_bits'] for r in inv)
     # 64-bit local comparison groups, duplicated sticky poison at each group.
     guards=sum(math.ceil(r['raw_bits']/64) for r in inv)
@@ -123,7 +123,7 @@ def build():
           rule='Guard adds one matched control+data feed stage before column ingress and one result publication stage. Do NOT insert per-MAC or per-stack-level wait states. Local state/command comparisons inside loops must fit existing cycles at SS; otherwise this proposal is not qualified and must be repriced. Guard valid/address at actual SRAM write edge; mismatch suppresses write before it commits.',
           overlap='Outer scheduler one-cycle ROM issue / activation publish / output publish seals may absorb these SAME physical stages only if netlist proves they coincide; otherwise add cycles. Baseline separate upper allowance is +2 cycles/op plus +1 activation ingress latency; no steady-state issue penalty assumed pending SS.'),
         explicit_gaps=['All protection described here absent in original native RTL; external protected wrapper alone cannot see or cover inner pend_v/seen or tag upset.',
-          'Column metadata and native bulk exact elaborated bit inventory still required; allowance cannot establish all-state coverage.',
+          'Column metadata exact elaborated bit inventory still required; allowance cannot establish all-state coverage. Native bulk extracted1949 bits owned by scheduler; no all-state qualification implied.',
           'Shared guard comparators, common inputs, reset and clock common-mode failures remain outside DMR guarantee.',
           'SECDED codec staging-control metadata must be added to actual protected successor inventory when SRAM agent creates codec pipeline.',
           'Final netlist must enumerate every sequential CONTROL bit and assign protected replica/check or justified non-control classification; no unclassified mutable-control bits allowed.'],
