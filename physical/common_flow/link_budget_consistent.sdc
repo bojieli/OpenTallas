@@ -18,9 +18,14 @@ set ot_lb_sfrac [ot_lb_get ot_lb_sfrac 0.5]
 set ot_lb_clks {}
 foreach c [all_clocks] {
   set src [get_property $c sources]
-  if {[llength $src] == 1 && [get_property $c is_generated] == 0 && [llength [get_ports -quiet [get_full_name [lindex $src 0]]]]} { lappend ot_lb_clks $c }
+  if {[llength $src] == 1 && [get_property $c is_generated] == 0 && [llength [get_ports -quiet [get_full_name [lindex $src 0]]]]} {
+    # forwarded (source-synchronous) clocks arrive on data-side ports (fi*, fk*, a[N], ...): their ports are timed by the
+    # per-link source-synchronous model (tools/setup_triage/srcsync), not by this common-clock split
+    if {[regexp {^f} [get_full_name $c]] || [regexp {^(fi|fk|fclk)} [get_full_name [lindex $src 0]]]} { lappend ot_lb_fwd [get_full_name $c] } else { lappend ot_lb_clks $c }
+  }
 }
-if {[llength $ot_lb_clks] < 1} { error "OT_LINK_BUDGET: no port-sourced clock" }
+if {[info exists ot_lb_fwd]} { puts "OT_LINK_BUDGET forwarded clocks (own SDC kept, srcsync model): $ot_lb_fwd" }
+if {[llength $ot_lb_clks] < 1} { puts "OT_LINK_BUDGET: no common port clock (all forwarded): nothing to apply" } else {
 # one virtual clock per port-sourced clock, at that clock's measured mid insertion
 set ot_lb_vmap [dict create]
 foreach c $ot_lb_clks {
@@ -52,6 +57,7 @@ proc ot_lb_clk_of_inst {inst} {
       set n [get_full_name $c]
       for {set i 0} {$i < 8 && [get_property [get_clocks $n] is_generated]} {incr i} { set n [get_full_name [get_property [get_clocks $n] master_clock]] }
       if {[dict exists $::ot_lb_vmap $n]} { return $n }
+      if {[info exists ::ot_lb_fwd] && [lsearch -exact $::ot_lb_fwd $n] >= 0} { return FWD }
     }
   }
   return ""
@@ -80,25 +86,50 @@ proc ot_lb_domain {portname dir} {
 }
 set ot_lb_gsrc {}
 foreach c [all_clocks] { foreach s [get_property $c sources] { lappend ot_lb_gsrc [get_full_name $s] } }
-set ot_lb_in [all_inputs -no_clocks]
+# Reset / async ports are not die-link data: their paths end at recovery/removal checks the block SDCs treat separately
+# (synchronised resets, false paths).  setup-triage 2026-10-07 fix: idxq b0 -1763 / svc SE_s1 -1267 were rst -> async
+# recovery artefacts.  Exclude ports named like resets and any port whose fan-in register set is only async pins.
+set ot_lb_in {}
+foreach p [all_inputs -no_clocks] { if {![regexp -nocase {(^|[._])(rst|reset|por|rstn|rst_n|arst)} [get_full_name $p]]} { lappend ot_lb_in $p } }
 set ot_lb_out {}
-foreach p [all_outputs] { if {[lsearch -exact $ot_lb_gsrc [get_full_name $p]] < 0} { lappend ot_lb_out $p } }
+foreach p [all_outputs] { if {[lsearch -exact $ot_lb_gsrc [get_full_name $p]] < 0 && ![regexp -nocase {(^|[._])(rst|reset|por)} [get_full_name $p]]} { lappend ot_lb_out $p } }
 # -add_delay against a NEW virtual clock: the block's own min/max delays stay (hold model untouched), and STA takes
 # the worse of the old and the consistent max, so the consistent split can only tighten the verdict.
 set ot_lb_multi [expr {[dict size $ot_lb_vmap] > 1}]
 set ot_lb_n [dict create]
 foreach p $ot_lb_in {
   set d $ot_lb_default
-  if {$ot_lb_multi} { set x [ot_lb_domain [get_full_name $p] in]; if {$x ne ""} { set d $x } }
+  set x [ot_lb_domain [get_full_name $p] in]
+  if {$x eq "FWD"} { dict incr ot_lb_n "in:skip_fwd"; continue }
+  if {$x ne ""} { set d $x }
   lassign [dict get $ot_lb_vmap $d] vc imax omax
   set_input_delay -max -add_delay $imax -clock $vc $p
   dict incr ot_lb_n "in:$d"
 }
 foreach p $ot_lb_out {
   set d $ot_lb_default
-  if {$ot_lb_multi} { set x [ot_lb_domain [get_full_name $p] out]; if {$x ne ""} { set d $x } }
+  set x [ot_lb_domain [get_full_name $p] out]
+  if {$x eq "FWD"} { dict incr ot_lb_n "out:skip_fwd"; continue }
+  if {$x ne ""} { set d $x }
   lassign [dict get $ot_lb_vmap $d] vc imax omax
   set_output_delay -max -add_delay $omax -clock $vc $p
   dict incr ot_lb_n "out:$d"
 }
-puts "OT_LINK_BUDGET ports $ot_lb_n"
+# each virtual clock times only its own domain: no cross-domain (CDC) or async recovery/removal path is a link check
+foreach {cn v} $ot_lb_vmap {
+  set vc [lindex $v 0]
+  foreach c [all_clocks] {
+    set n [get_full_name $c]
+    if {[string match ot_lb_v_* $n]} continue
+    # generated clocks (gated / half-rate / forwarded-out) stay timed; only other port/virtual domains are cut
+    if {[get_property $c is_generated]} continue
+    if {$n ne $cn} { set_false_path -from [get_clocks $vc] -to $c; set_false_path -from $c -to [get_clocks $vc] }
+  }
+}
+set ot_lb_async {}
+foreach pin [get_pins -quiet -hierarchical -filter "direction==input"] {
+  if {[regexp {/(RESETN|SETN|RN|SN|RESET|SET)$} [get_full_name $pin]]} { lappend ot_lb_async $pin }
+}
+if {[llength $ot_lb_async]} { foreach {cn v} $ot_lb_vmap { set_false_path -from [get_clocks [lindex $v 0]] -to $ot_lb_async } }
+puts "OT_LINK_BUDGET ports $ot_lb_n async_pins_excluded [llength $ot_lb_async]"
+}
