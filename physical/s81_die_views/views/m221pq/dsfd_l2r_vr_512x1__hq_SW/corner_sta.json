@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.w18.corner_sta.v1",
- "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hq-SW-pinreg-m5w-lvt-28efeed64-tt/routes/s81_hend_m221pq_hq_SW_pinreg_m5w_lvt_28efeed64_tt/work/orfs",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hq-SW-pinreg-m5w-lvt-hm10-28efeed64-tt/routes/s81_hend_m221pq_hq_SW_pinreg_m5w_lvt_hm10_28efeed64_tt/work/orfs",
  "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design dsfd_l2r_vr_512x1__hq_SW\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 1111.1080 [get_ports {ck[0]}]\nset_clock_uncertainty -setup 123.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core",
  "sdc_name": "6_final.sdc",
  "setup_tt": {
@@ -15,7 +15,7 @@
   "violating_d_pins": 0,
   "errors": [],
   "odb_sha256": "25bd0500799ab2bb99f05fc166459ca833074cf2a8edd12c7bf70e3c92469a1f",
-  "spef_sha256": "dc4915a0d12c8c59e2ea1fb70c2d12cbc7e1f97f306c1554df47f2d59fa2f0f6",
+  "spef_sha256": "0cc618cc854b24eddd24cba828fb768c6dacece91968e5d13c6245d4cf5d5eab",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "13a3370c043b60d6a3735a4f8707ffdafb9ddb2f8839cbce7bad56ad5a289dc7",
   "vt_flavours_added": [
@@ -46,7 +46,7 @@
   "violating_d_pins": 514,
   "errors": [],
   "odb_sha256": "25bd0500799ab2bb99f05fc166459ca833074cf2a8edd12c7bf70e3c92469a1f",
-  "spef_sha256": "dc4915a0d12c8c59e2ea1fb70c2d12cbc7e1f97f306c1554df47f2d59fa2f0f6",
+  "spef_sha256": "0cc618cc854b24eddd24cba828fb768c6dacece91968e5d13c6245d4cf5d5eab",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "13a3370c043b60d6a3735a4f8707ffdafb9ddb2f8839cbce7bad56ad5a289dc7",
   "vt_flavours_added": [
@@ -77,7 +77,7 @@
   "violating_d_pins": 0,
   "errors": [],
   "odb_sha256": "25bd0500799ab2bb99f05fc166459ca833074cf2a8edd12c7bf70e3c92469a1f",
-  "spef_sha256": "dc4915a0d12c8c59e2ea1fb70c2d12cbc7e1f97f306c1554df47f2d59fa2f0f6",
+  "spef_sha256": "0cc618cc854b24eddd24cba828fb768c6dacece91968e5d13c6245d4cf5d5eab",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "13a3370c043b60d6a3735a4f8707ffdafb9ddb2f8839cbce7bad56ad5a289dc7",
   "vt_flavours_added": [
