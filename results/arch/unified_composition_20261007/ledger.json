@@ -3304,6 +3304,20 @@
    "lbpin": 2,
    "note": "24 <job>-lbc re-routes (source 387a4d2ac, link_budget_hook + cg_pushdown + clk_net_protect), 14 <job>-cgfix (class A/B CTS fixes) and 2 <job>-lbpin queued to re-close them; qfd_chead / qfd_cst re-sign-off jobs need a Qwen re-route; colt_mrg / svc_pc need their budget sheets adopted (s81-blocks)"
   },
+  "option_b_status": {
+   "record": {
+    "file": "results/closure_loop/option_b_status_20261007/status.json",
+    "pointer": "counts",
+    "commit": "fc5ee68fd"
+   },
+   "counts": {
+    "closed_blocks": 30,
+    "closed_rows": 30,
+    "unverified_blocks": 16,
+    "revoked_blocks": 13
+   },
+   "note": "AUTHORITATIVE under owner option B: TT setup >= 0 under the consistent link budget, FF >= 0, DRC 0 (TT re-STA of the final routes, 614782370). Supersedes the SS re-STA counts above; 13 previously closed blocks fail TT under the budget (may change: setup-triage is checking a possible reset-path artifact)"
+  },
   "reclosed": [
    {
     "job": "qfd_lst_h-5a3bb1721-lbc",
@@ -3458,7 +3472,7 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "adddf631ed004d6c18c0559b0eccbf6611c37be5f50a58e556ca40cbd714a688"
+  "sha256": "56cd1b02b84a41f5a6a3a7d119519bd701d9bc74a3203ddd56d23f8608686915"
  },
  "source_sha256": {
   "AGENTS.md": "d47e33869ed5fefa3be09cffa270ccb831227173fcf0295b5ebecc178b55a042",
@@ -3474,6 +3488,7 @@
   "results/arch/three_machine_compose/table.txt": "4836b0e7709430b987d40dc66feee86bc9f6298b7a5466e2c63c376c8e2c06ee",
   "results/arch/unified_composition_20261007/link_budget_restatus_20261007.json": "499419a6f18b69be79df61ad2535f542108778b7c53507dc273bfd6a7a74ca05",
   "results/arch/unified_composition_20261007/qwen_dspark/dspark_ctrlshift_candidate.json": "fa770bfaa79c239a8bbcce563cbaa9a123194769bc99a9e5350a5e9f58d608f1",
+  "results/closure_loop/option_b_status_20261007/status.json": "ceca0b0a7c1fad5e5266a1e9594d740a6b528c8ce6e9d752ee89ba24bab0783b",
   "results/physical/hbm_die_20261007/ir_r23/feasibility_r23.json": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "results/physical/hbm_die_abstracts_20261006/integration/consumer_binding_20261006.json": "df26a498738d5bc4d008642adc08aef7543ad1e1ae40f2c3c6a9c4f4202b4766",
   "results/rtl/budgets_20261006/README.md": "82a8f4ff140e0a30a60dd71c4ffcc14f3f427c5df28ea6ad2061b870ea6e021f",
@@ -3540,6 +3555,6 @@
   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "tools/chip_explorer_build.py": "4926d22a1e676416edf0b45c92e47d0c13d2ef92a0b50cadd723ba9108da168a",
   "tools/qwen_die_sta_classes.py": "5f69de4a422d2ff93437c472f335a06a9a458d9ecfb88eb9a534433b3f0d5907",
-  "tools/unified_composition.py": "adddf631ed004d6c18c0559b0eccbf6611c37be5f50a58e556ca40cbd714a688"
+  "tools/unified_composition.py": "56cd1b02b84a41f5a6a3a7d119519bd701d9bc74a3203ddd56d23f8608686915"
  }
 }

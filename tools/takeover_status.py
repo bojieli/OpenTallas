@@ -22,16 +22,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 INV = ROOT / "results/rtl/die_top_lint_20261006"
 LEDGER = ROOT / "results/arch/unified_composition_20261007/ledger.json"
-LB = ROOT / "results/arch/unified_composition_20261007/link_budget_restatus_20261007.json"   # consistent die-link budget re-STA
+LB = ROOT / "results/arch/unified_composition_20261007/link_budget_restatus_20261007.json"   # SS re-STA (superseded by OB)
+OB = ROOT / "results/closure_loop/option_b_status_20261007/status.json"   # option-B TT re-STA with the link budget (authoritative)
 # CLOSURE LINE (OWNER DECISION 2026-10-07 evening): SS >= 0 / FF >= 0 / DRC 0 at 833.333 ps sign-off; +15 ps is a
 # design target only. The consistent die-link budget and rule H1 still apply: a block counts only if its link-budget
 # SS is also >= 0 (forwarded-clock stations stay unverified until a per-link model exists).
 SS_LINE, FF_LINE = 0.0, 0.0
-LINE_TEXT = ("Closure line (OWNER OPTION B, 2026-10-07 20:45): TT setup >= 0 ps, FF hold >= 0 ps, DRC 0 at 833.333 ps "
+LINE_TEXT = ("Closure line (OWNER OPTION B, 2026-10-07 20:45; counts from results/closure_loop/option_b_status_20261007/"
+             "status.json, TT re-STA of the final routes with the link budget): TT setup >= 0 ps, FF hold >= 0 ps, DRC 0 at 833.333 ps "
              "sign-off; SS setup is a sensitivity; +15 ps is a design target only. The consistent die-link budget "
              "(S + link + R + 150 ps skew <= T - 60) and rule H1 still apply. Loop verdicts committed before option B carry "
              "SS setup (SS >= 0 implies TT >= 0); verdicts after it carry TT setup in the same field. The link-budget "
-             "re-STA ran at SS, so its revocations are conservative under option B until the TT re-verdicts land")
+             "revocations are subject to setup-triage's check of a possible reset-path artifact in the link-budget SDC")
 PAT = re.compile(r"^closure-loop: (\S+) CLOSED SS ([+-]?[\d.]+) / FF ([+-]?[\d.]+) ps DRC (\d+) at ([\d.]+)")
 
 
@@ -97,6 +99,28 @@ def link_budget():
         b = canon(r["block"])
         if b not in out or rank[r["verdict"]] > rank[out[b]["verdict"]]:
             out[b] = r
+    return out
+
+
+def apply_option_b(v):
+    """Authoritative when present: integrate's option-B status (TT setup >= 0 under the consistent link budget, FF >= 0,
+    DRC 0). Closed / unverified / revoked come from it; re-close jobs from branches (newer) still supersede."""
+    d = json.loads(OB.read_text())
+    out = {}
+    for b in d["closed"]:
+        out[canon(b["block"])] = dict(commit=(b.get("commit") or "")[:9], at="", ss=b["tt_lb_ps"], ff=b["ff_ps"], drc=b["drc"],
+                                      period=833.333, accepted=True, lb="HOLDS", lb_ss=b["tt_lb_ps"], source="option_b")
+    for b in d["unverified_forwarded_clock"]["blocks"]:
+        out[canon(b["block"])] = dict(commit=(b.get("commit") or "")[:9], at="", ss=b.get("tt_ps"), ff=b.get("ff_ps"), drc=b.get("drc", 0),
+                                      period=833.333, accepted=False, lb="NOT CHECKED", lb_ss=b.get("tt_lb_ps"), source="option_b")
+    for b in d["revoked_previously_closed"]["blocks"]:
+        out[canon(b["block"])] = dict(commit="", at="", ss=b.get("tt_ps"), ff=b.get("ff_ps"), drc=0, period=833.333,
+                                      accepted=False, lb="REVOKED", lb_ss=b["tt_link_budget_ps"], source="option_b")
+    for blk, x in v.items():
+        if x.get("reclose"):
+            out[blk] = dict(x, lb="HOLDS" if x["accepted"] else "REVOKED", lb_ss=x["ss"])
+        elif blk not in out and x["accepted"]:
+            out[blk] = dict(x, accepted=False, lb="not re-checked", source="loop commit")
     return out
 
 
@@ -202,11 +226,11 @@ def render(ref, rows, v):
     for t in ("qwen_rom", "ds_rom", "hbm_ds"):
         r = rows[t]
         o.append(f"## {t}")
-        o.append("Closed: " + (", ".join(f"{b} ({v[b]['commit']} SS {v[b]['ss']:+.2f} / FF {v[b]['ff']:+.2f}"
+        o.append("Closed: " + (", ".join(f"{b} ({v[b]['commit']} setup {v[b]['ss']:+.2f} / FF {v[b]['ff']:+.2f}"
                                           + (f"; re-closed under the link budget by {v[b]['reclose']}, branch commit" if v[b].get("reclose") else "")
                                           + ")" for b in r["closed"]) or "none"))
         if r["revoked"]:
-            o.append("Revoked: link budget (new SS under the consistent split): "
+            o.append("Revoked: link budget (TT setup slack under the consistent split): "
                      + ", ".join(f"{b} ({v[b]['lb_ss']:+.1f})" for b in r["revoked"]))
         if r["unverified"]:
             o.append("Unverified (needs a per-link model; forwarded-clock / source-synchronous): "
@@ -219,6 +243,11 @@ def render(ref, rows, v):
     o.append("Holding verdicts on blocks outside the inventories (sub-blocks or new masters; not counted): " + (", ".join(other) or "none"))
     orev = sorted(b for b in v if v[b].get("lb") == "REVOKED" and not any(b in rows[t]["revoked"] for t in rows))
     o.append("Revoked (link budget) outside the inventories: " + (", ".join(f"{b} ({v[b]['lb_ss']:+.1f})" for b in orev) or "none"))
+    if OB.exists():
+        d_ = json.loads(OB.read_text())
+        o += ["", f"Option-B status (results/closure_loop/option_b_status_20261007/status.json, evidence {d_['evidence_commit']}): "
+                  f"{d_['counts']} over all loop blocks (inventory masters and sub-blocks). Revocations may change: setup-triage "
+                  "is checking a possible reset-path artifact in the link-budget check."]
     if LB.exists():
         L_ = json.loads(LB.read_text())
         o += ["", f"Link-budget re-STA ({L_['rule']}; {L_['method']}): {L_['counts']}. Re-close queue: {L_['requeued']['note']}."]
@@ -230,7 +259,7 @@ def main():
     ap.add_argument("--ref", default="HEAD")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
-    v = apply_link_budget(verdicts(a.ref))
+    v = apply_option_b(verdicts(a.ref)) if OB.exists() else apply_link_budget(verdicts(a.ref))
     rows = tally(masters(), v)
     a.out.write_text(render(a.ref, rows, v))
     print({t: f"{len(r['closed'])}/{r['total']}" for t, r in rows.items()})
