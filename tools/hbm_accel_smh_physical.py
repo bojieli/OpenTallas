@@ -1061,7 +1061,27 @@ def run_sh(work: Path, label, src, need, cores, macros, target="finish", admit=T
     (work / "run.sh").chmod(0o755)
 
 
+SIGNOFF_HOLD_UNC_PS = 25.0   # set_clock_uncertainty -hold of the generated SDC (sign-off at FF)
+
+
+def loop_hold_margin(arg_ps, env=None):
+    """ORFS HOLD_SLACK_MARGIN (ps) for this piece.  The closure loop exports HM (ns: spec route_hold_margin_ns, default
+    HM_MM 0.050) to every calibrate / route stage; a piece routed with its own --hold-margin 25 ignored it (redesign-0315,
+    hbm_smh_front_s m3f/m3g: FF -18..-28).  When HM is set the repair aims HM + the sign-off hold uncertainty (50 + 25 =
+    75 ps), never below an explicit larger --hold-margin."""
+    hm = (os.environ if env is None else env).get("HM", "").strip()
+    if not hm:
+        return arg_ps
+    try:
+        want = float(hm) * 1000.0 + SIGNOFF_HOLD_UNC_PS
+    except ValueError:
+        return arg_ps
+    return f"{max(float(arg_ps), want):g}"
+
+
 def cmd_block(a):
+    a.hold_margin = loop_hold_margin(a.hold_margin)
+    print(f"HOLD_SLACK_MARGIN {a.hold_margin} ps (loop HM={os.environ.get('HM', '')} ns)")
     work = Path(a.out)
     work.mkdir(parents=True, exist_ok=True)
     g = json.loads(Path(a.geom).read_text()) if a.geom else GEOM

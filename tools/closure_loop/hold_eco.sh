@@ -6,6 +6,10 @@
 #     endpoints with SS setup > deficit + FILT, 40), PASSES (ECO -> re-route -> sign-off iterations, 2), RESAWARE
 #     (1: resistance-aware GRT like the ORFS route), HOLDCELLS (1: HB*xp67 delay cells allowed), KEEPCLK (full re-route only, 0),
 #     SETUP_LIB (SS | TT: library corner of the setup scene "ss"; OWNER OPTION B 2026-10-07 -> TT),
+#     SDC_NAME (the route's SIGN-OFF SDC basename in the sign-off base, e.g. 6_signoff.sdc; default 6_final.sdc): every
+#     corner session, the ECO base's 6_final.sdc and the sign-off corner_sta use it, never the planning/route SDC,
+#     SETUP_POST_SDC (src-rel SDCs re-timing the SETUP corners only, e.g. physical/common_flow/nbr_clk_measured.sdc: the
+#     route's measured neighbour clock; corner_sta.json setup_post_sdc); setup is judged at TT (setup_tt, tt_ps),
 #     ACC_SS / ACC_FF (acceptance line, 15 / 15), ECO_SESSION (mm by default = rev 3 multi-mode; ff = FF-only; auto = legacy two-corner detection),
 #     ALLOW_FRESH_GRT (0 by default; 1 permits fresh routing with explicit result provenance, unchanged acceptance),
 #     FREEZE / KEEPWIRES (0: opt-in macro-output / untouched-net wire preservation; rejected wires retry in a fresh process),
@@ -19,7 +23,7 @@
 #   stop at the first pass that meets ACC_SS and FF >= HM; every pass starts from the original route, the next with a
 #   larger hold allowance; the best pass is kept.
 # -> <out>/eco.log (all passes), <out>/orfs -> the chosen pass, <out>/corner_sta.json, <out>/result.json
-#    {ss_ps, ff_ps, drc, cells_added, pass, session, window}
+#    {ss_ps (= tt_ps: setup at TT, option B), tt_ps, ss_sensitivity_ps, ff_ps, drc, sdc_name, setup_post_sdc, cells_added, pass, session, window}
 set -eo pipefail
 ECO_SESSION=${ECO_SESSION:-mm}
 case "$ECO_SESSION" in mm|ff|auto) ;; *) echo "ECO_SESSION must be mm, ff or auto"; exit 2 ;; esac
@@ -36,6 +40,15 @@ PS=""; for p in "$@"; do PS="$PS /src/$p"; done
 MS=""; for m in ${MACROS:-}; do MS="$MS /src/$m"; done
 CS_ARGS=$(for p in "$@"; do echo -n " --post-sdc $p"; done; for m in ${MACROS:-}; do echo -n " --macro $m"; done)
 ACC_SS=${ACC_SS:-15}; ACC_FF=${ACC_FF:-15}
+# LOOP-GAPS 2026-10-08 (redesign-0315: hbm_smh_front_s m3f/m3g ECOs close at TT +100 / FF +20 but were scored at SS with
+# the planning neighbour clock): the ECO is timed and judged with the job's own sign-off SDC set.
+export SDC_NAME=${SDC_NAME:-6_final.sdc}
+[ -f "$OB/$SDC_NAME" ] || { echo "sign-off SDC $OB/$SDC_NAME missing"; exit 2; }
+SPS=""; for p in ${SETUP_POST_SDC:-}; do SPS="$SPS /src/$p"; done
+SN=""; grep -q -- "--sdc-name" tools/w18/corner_sta.py && SN="--sdc-name $SDC_NAME"
+seed_sdc() {  # the ECO base carries the sign-off SDC (also as 6_final.sdc: a corner_sta.py without --sdc-name reads it)
+  cp "$OB/$SDC_NAME" "$EB/6_final.sdc"; [ "$SDC_NAME" = 6_final.sdc ] || cp "$OB/$SDC_NAME" "$EB/$SDC_NAME"
+}
 # MULTI-VT (2026-10-07): a route with LVT/SLVT cells is timed with those libraries too (absent: RVT only, unchanged)
 OT_VT="RVT"; for t in L SL; do grep -aqE "_ASAP7_75t_${t}([^A-Za-z0-9_]|\$)" $RB/$DB && OT_VT="$OT_VT $([ $t = L ] && echo LVT || echo SLVT)"; done
 orun() {  # orun <log> <tcl> [docker -e args...]: openroad in the fleet image
@@ -47,12 +60,13 @@ orun() {  # orun <log> <tcl> [docker -e args...]: openroad in the fleet image
 best=""; bestscore=-1e9
 for k in $(seq 1 ${PASSES:-2}); do
   P=$OUT/pass$k; EB=$P/orfs/results/asap7/$D/base; mkdir -p $EB
-  cp $OB/6_final.sdc $EB/6_final.sdc
+  seed_sdc
   echo "OT_PASS $k input $CUR_DIR/$CUR_DB spef $CUR_SPEF" | tee -a $OUT/eco.log
   FAILED=0
   for c in ss ff; do
-    orun $P/corner_$c.log hold_eco_corner.tcl -e OT_CORNER=$c -e OT_DB=/in/$CUR_DB -e OT_SDC=/ob/6_final.sdc \
-      -e OT_SPEF=/inspef/$(basename $CUR_SPEF) -e OT_POST_SDC="${PS# }" -e OT_EFF=/p/eff_$c.sdc \
+    CPS="$PS"; [ $c = ss ] && CPS="$PS$SPS"     # setup-only post SDCs (measured neighbour clock) on the setup scene
+    orun $P/corner_$c.log hold_eco_corner.tcl -e OT_CORNER=$c -e OT_DB=/in/$CUR_DB -e OT_SDC=/ob/$SDC_NAME \
+      -e OT_SPEF=/inspef/$(basename $CUR_SPEF) -e OT_POST_SDC="${CPS# }" -e OT_EFF=/p/eff_$c.sdc \
       -e OT_CRIT_PS=$(awk "BEGIN{print ${SM:-40} + 20}")
     grep -q "OT_CORNER_EFF done" $P/corner_$c.log || { echo "corner $c session failed"; tail -20 $P/corner_$c.log; FAILED=1; break; }
   done
@@ -109,16 +123,35 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
     grep "OT_ECO freeze_rejected" $L | tee -a $OUT/eco.log; mv $L $P/eco_${SESSION}_kept.log
     mv "$EB" "${EB}_kept"
     mkdir -p "$EB"
-    cp "$OB/6_final.sdc" "$EB/6_final.sdc"
+    cp "$OB/${SDC_NAME:-6_final.sdc}" "$EB/6_final.sdc"   # = seed_sdc (spelled out: the retry block is unit-tested alone)
     orun $L hold_eco.tcl "${ECO_ENV[@]}" "${SARGS[@]}" -e OT_FREEZE_MACRO_NETS=0 -e OT_KEEP_UNTOUCHED=0 || true
   fi
   cat $L >> $OUT/eco.log
   if [ "${WINDOW_ONLY:-0}" = 1 ]; then grep "OT_WIN\|session" $L; exit 0; fi
   grep -q "OT_ECO done" $L || { echo "ECO pass $k failed (no OT_ECO done)"; tail -20 $L; [ -n "$best" ] && break; exit 9; }
-  python3 tools/w18/corner_sta.py $CS_ARGS --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
+  seed_sdc   # the ECO may have rewritten the base's SDC
+  python3 tools/w18/corner_sta.py $CS_ARGS $SN --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
     || { echo "corner_sta failed"; tail $P/corner.log; exit 8; }
+  if [ -n "${SETUP_POST_SDC:-}" ]; then   # setup corners re-timed with the measured neighbour clock (the route's own merge)
+    python3 tools/w18/corner_sta.py $CS_ARGS $(for q in $SETUP_POST_SDC; do echo -n " --post-sdc $q"; done) $SN \
+      --orfs-dir $P/orfs --output $P/corner_sta_setup_post.json > $P/corner_setup_post.log 2>&1 \
+      || { echo "setup post-SDC corner_sta failed"; tail $P/corner_setup_post.log; exit 8; }
+    cp $P/corner_sta.json $P/corner_sta_hold_model.json
+    python3 -c "import json,sys; b=json.load(open(sys.argv[1])); p=json.load(open(sys.argv[2]))
+for k in ('setup_tt', 'setup_ss'):
+    if k in p: b[k] = p[k]
+b['setup_post_sdc'] = p['post_sdc']; json.dump(b, open(sys.argv[1], 'w'), indent=1)" $P/corner_sta.json $P/corner_sta_setup_post.json
+  fi
+  if ! python3 -c "import json,sys; sys.exit(0 if 'setup_tt' in json.load(open('$P/corner_sta.json')) else 1)"; then
+    # a snapshot corner_sta.py that predates option B: TT re-STA of its own (last-written) setup script
+    bash $CLD/tt_resta.sh $P/orfs $PWD $P/corner_sta.tt.json > $P/tt_resta.log 2>&1 || true
+    python3 -c "import json,sys; b=json.load(open(sys.argv[1])); t=json.load(open(sys.argv[2]))
+b['setup_tt'] = t.get('setup_tt') or dict(corner='tt', worst_slack_ps=None, errors=[t.get('error', 'tt_resta failed')])
+json.dump(b, open(sys.argv[1], 'w'), indent=1)" $P/corner_sta.json $P/corner_sta.tt.json \
+      || { echo "TT re-STA failed"; tail $P/tt_resta.log; exit 8; }
+  fi
   python3 - $P $k $SESSION $ACC_SS $ACC_FF <<'PY'
-import json, re, sys
+import json, os, re, sys
 p, k, session, acc_ss, acc_ff = sys.argv[1], int(sys.argv[2]), sys.argv[3], float(sys.argv[4]), float(sys.argv[5])
 log = open(f'{p}/eco_{session}.log').read()
 nv = re.findall(r'Number of violations = (\d+)', log)
@@ -126,9 +159,11 @@ cs = json.load(open(f'{p}/corner_sta.json'))
 add = re.findall(r'OT_ECO cells_added (-?\d+)', log)
 win = re.findall(r'^OT_WIN pre (.*)$', log, re.M)
 route_strategy = re.findall(r'^OT_ECO route_strategy (.*)$', log, re.M)
-su = cs.get('setup_tt') or cs['setup_ss']   # OWNER OPTION B: setup closes at TT (corner_sta.py writes setup_tt)
-r = dict(ss_ps=su['worst_slack_ps'], ff_ps=cs['hold_ff']['worst_slack_ps'], drc=int(nv[-1]) if nv else None,
-         setup_corner=su.get('corner', 'ss'), ss_sensitivity_ps=cs['setup_ss']['worst_slack_ps'],
+su = cs['setup_tt']   # OWNER OPTION B: setup closes at TT (setup_tt always present: corner_sta.py or tt_resta.sh above)
+r = dict(ss_ps=su['worst_slack_ps'], tt_ps=su['worst_slack_ps'], ff_ps=cs['hold_ff']['worst_slack_ps'],
+         drc=int(nv[-1]) if nv else None, sdc_name=os.environ.get("SDC_NAME", "6_final.sdc"),
+         setup_post_sdc=list(cs.get('setup_post_sdc') or []),
+         setup_corner=su.get('corner', 'tt'), ss_sensitivity_ps=cs['setup_ss']['worst_slack_ps'],
          cells_added=int(add[0]) if add else None, errors=su.get('errors', []) + cs['hold_ff'].get('errors', []),
          **{'pass': k}, session=session, window=win[0] if win else None, route_strategy=route_strategy)
 ok = r['ss_ps'] is not None and r['ff_ps'] is not None

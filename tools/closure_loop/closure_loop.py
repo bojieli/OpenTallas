@@ -343,13 +343,13 @@ def stage_list(spec):
             tail += "\n" + cal["sdc_cmd"]
         out.append(dict(key="calibrate", kind="calibrate", cmd=cal["cmd"] + tail, ok=cal.get("ok"),
                         threads=cal.get("threads", spec.get("threads", 16)), ram=cal.get("peak_ram_gb", spec.get("peak_ram_gb", 32)),
-                        logs=cal.get("logs", [])))
+                        logs=cal.get("logs", []), out_dir=cal.get("out_dir")))
     for k in ("route", "signoff"):
         if st.get(k, {}).get("cmd"):
             t, r = STAGE_DEFAULTS[k] or (spec.get("threads", 16), spec.get("peak_ram_gb", 32))
             out.append(dict(key=k, kind=k, cmd=st[k]["cmd"], ok=st[k].get("ok"),
                             threads=st[k].get("threads", t), ram=st[k].get("peak_ram_gb", r),
-                            logs=st[k].get("logs", [])))
+                            logs=st[k].get("logs", []), out_dir=st[k].get("out_dir")))
     out.append(dict(key="verdict", kind="verdict"))
     for k in ("collect", "export"):
         if st.get(k, {}).get("cmd"):
@@ -1161,11 +1161,8 @@ def launch_stage(j, st, cmd):
         env += f"export HM={j['spec'].get('route_hold_margin_ns', hm_default)}\n"
     if is_local(j["host"]):
         env += f"export OPENTALLAS_ORFS_IMAGE={LOCAL_ORFS_REF}\n"
-    if st["kind"] in ("calibrate", "route") and j["attempt"] > 1 and not j.get("resume"):
-        # a re-run of a killed / crashed stage: the previous attempt's route dir is kept as evidence under a new name, so
-        # recipes that refuse existing evidence (s81 route_view.sh) start clean (capt_x / selt_c rc=73 after a restart)
-        d = f"{j['run']}/routes/{label(j['name'])}{'_cal' if st['kind'] == 'calibrate' else ''}"
-        env += f"[ -e {d} ] && mv {d} {d}.prev_$(date +%s) || true\n"
+    if j["attempt"] > 1 and not j.get("resume"):
+        env += retry_aside(j, st)
     if st["kind"] == "route" and now_iso() >= OPTB_SINCE and j["spec"].get("route_corner", "TC") != "keep":
         env += f"export OT_ORFS_CORNER={shlex.quote(str(j['spec'].get('route_corner', 'TC')))}\n"
     if st["kind"] in ("calibrate", "route"):
@@ -1293,7 +1290,16 @@ def bench_outcome(j, st, rc, ok_extra=True):
             if work is False:
                 return False
         return ok
-    return rc != 0 and (not st.get("fail_regex") or re.search(st["fail_regex"], full, re.M) is not None)
+    return expected_fail_seen(st, rc, full)
+
+
+def expected_fail_seen(st, rc, full):
+    """expect FAIL (negative control): the log's own verdict decides, regardless of rc -- a mutant bench that prints
+    FAIL but exits 0 was read as "expected FAIL but rc=0" (LOOP-GAPS 2026-10-08).  With fail_regex: it must match (a
+    crash with rc != 0 and no FAIL verdict is not a detected mutant).  Without: rc != 0 or a conventional ^FAIL line."""
+    if st.get("fail_regex"):
+        return re.search(st["fail_regex"], full, re.M) is not None
+    return rc != 0 or re.search(r"^FAIL\b", full, re.M) is not None
 
 
 WORK_RE = re.compile(r"\b(compared|comparisons|checks?|checked|vectors|cases|tokens|results|matches|transactions|"
@@ -1349,6 +1355,7 @@ o={'corner_sta':cs,'drc_metrics':dm}
 if cs:
   d=json.load(open(cs[-1])); o['ff_ps']=d['hold_ff']['worst_slack_ps']
   o['orfs_dir']=d.get('orfs_dir'); o['post_sdc']=list(d.get('post_sdc',{}))
+  o['sdc_name']=d.get('sdc_name') or d['hold_ff'].get('sdc_name') or '6_final.sdc'; o['setup_post_sdc']=list(d.get('setup_post_sdc') or [])
   o['ss_sensitivity_ps']=d['setup_ss']['worst_slack_ps']; o['ss_sensitivity_tns_ps']=d['setup_ss'].get('tns_ps')
   # OWNER OPTION B: setup closes at TT; ss_ps keeps its key for the loop's line checks but now holds the TT setup slack
   tt=d.get('setup_tt')
@@ -1587,6 +1594,26 @@ def preserve_completed_route(j, st, why):
            "NEEDS_HUMAN: repair post-route helper and resume diagnostics against existing route; "
            "no automatic reroute or migration\n" + ", ".join(x["path"] for x in evidence["helper_errors"]))
     return True
+
+
+def stage_output_dirs(j, st):
+    """the directories a stage writes: spec "out_dir" (str or list, placeholders allowed), else for calibrate / route the
+    loop's {RUN}/routes/{LABEL}[_cal] convention"""
+    out = st.get("out_dir")
+    if out:
+        return [subst(d, j) for d in ([out] if isinstance(out, str) else out)]
+    if st["kind"] in ("calibrate", "route"):
+        return [f"{j['run']}/routes/{label(j['name'])}{'_cal' if st['kind'] == 'calibrate' else ''}"]
+    return []
+
+
+def retry_aside(j, st):
+    """LOOP-GAPS 2026-10-08: a re-run of a killed / crashed stage (same-host retry, restart) moves the previous attempt's
+    output aside as <dir>.attempt<N> (kept as evidence) so the relaunch starts clean: a leftover prep/ masked core_p's
+    real error with FileExistsError (flow-triage 10-07), s81 route_view.sh refused existing evidence (rc=73)."""
+    prev = j["attempt"] - 1
+    return "".join(f"if [ -e {shlex.quote(d)} ]; then a={shlex.quote(f'{d}.attempt{prev}')}; [ -e \"$a\" ] && "
+                   f"a=\"$a.$(date +%s)\"; mv {shlex.quote(d)} \"$a\"; fi\n" for d in stage_output_dirs(j, st))
 
 
 def crash(j, st, fleet, why):
@@ -2211,7 +2238,8 @@ def do_verdict(j, fleet, stl):
 def eco_passes(res, rc):
     if rc != 0 or not isinstance(res, dict) or res.get("errors"):
         return False
-    for key, minimum in (("ss_ps", SS_MIN), ("ff_ps", FF_MIN)):
+    # option B: setup is judged at TT (tt_ps; older results carry it in ss_ps)
+    for key, minimum in (("tt_ps" if "tt_ps" in res else "ss_ps", SS_MIN), ("ff_ps", FF_MIN)):
         value = res.get(key)
         if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < minimum:
             return False
@@ -2259,6 +2287,12 @@ def start_hold_eco(j, fleet, m):
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
     post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
     post = " ".join(shlex.quote(p) for p in post_sdcs)
+    # LOOP-GAPS 2026-10-08: the ECO is timed (TT setup, option B) and judged with the route's OWN sign-off SDC set: its
+    # sign-off SDC (corner_sta sdc_name, e.g. 6_signoff.sdc) and its setup-only post-SDCs (setup_post_sdc, e.g. the
+    # measured neighbour clock nbr_clk_measured.sdc) -- not 6_final.sdc's planning neighbour clock (redesign-0315 m3f/m3g)
+    env += f" SDC_NAME={shlex.quote(m.get('sdc_name') or '6_final.sdc')}"
+    if m.get("setup_post_sdc"):
+        env += f" SETUP_POST_SDC={shlex.quote(' '.join(m['setup_post_sdc']))}"
     recovery = j.get("eco_overlay_recovery") or {}
     hist = len(j.get("eco_history") or [])
     out = recovery.get("out", f"{j['run']}/cl/eco" + (f"-r{hist + 1}" if hist else ""))   # earlier ECOs stay as evidence
@@ -2266,7 +2300,8 @@ def start_hold_eco(j, fleet, m):
         env += f" ECO_GUARD={shlex.quote(recovery['guard'])}"
     cmd = f"{env} bash {{CL}}/hold_eco.sh {rb} {ob} {out} {j['spec']['block']} {post}"
     ship_helpers(j["host"], j["run"])
-    j["eco"] = dict(tried=True, rb=rb, ob=ob, out=out, post_sdc=post_sdcs, pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso())
+    j["eco"] = dict(tried=True, rb=rb, ob=ob, out=out, post_sdc=post_sdcs, sdc_name=m.get("sdc_name") or "6_final.sdc",
+                    setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso())
     st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
     launch_stage(j, st, cmd)
     fleet.launched(j["host"], 8, 32)
