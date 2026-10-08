@@ -111,10 +111,17 @@ def main():
     ap.add_argument("--kx", type=float, default=0.624)
     ap.add_argument("--cx", type=float, default=519.228)
     ap.add_argument("--qshift", type=float, default=0.0, help="r23: both quad columns move this far toward the centre (multiple of 0.048)")
+    ap.add_argument("--th", type=float, default=1349.976, help="hbm-blocks 2026-10-07: tile height; the growth (a multiple of 2.16 um) "
+                    "goes to the middle channel between the quad rows (r23 GRT: 8.2M overflow, M6-H in the 124 um middle channel)")
     for k, v in dict(NK=4, NC=2, NR=3, PMID=1, NFC=2, NFR=3, NL=6, NI=4).items():
         ap.add_argument(f"--{k}", type=int, default=v)
     a = ap.parse_args()
-    global TW, CW_, QR_X, QL_X
+    global TW, CW_, QR_X, QL_X, TH, CH_, QY
+    dh = round(a.th - TH, 3)
+    assert abs(dh / 2.16 - round(dh / 2.16)) < 1e-6, ("height growth off the 2.16 um lattice", dh)
+    TH = a.th
+    CH_ = int(TH / 0.27) * 0.27
+    QY = (QY[0], round(QY[1] + dh, 3))
     dw = round(a.tw - TW, 3)
     assert abs(dw / 0.048 - round(dw / 0.048)) < 1e-6, ("width growth off the 0.048 phase", dw)
     TW = a.tw
@@ -180,7 +187,10 @@ def main():
 
     cx = cc_x
     pipe("u_pk", pin["k"], a.NK, 2, 1, [(cx, 25.0)], rc, "k")
-    pipe("u_pq", pin["q"], a.NK, 1, 1, [(cx, TH - 25.0)], rc, "q")
+    if a.th > 1349.976 + 1e-6:      # taller tile: q runs the (now wide) middle channel like ri, not over the top
+        pipe("u_pq", pin["q"], a.NK, 1, 1, [(TW - 30.0, mc_y), (cx, mc_y)], rc, "q")
+    else:
+        pipe("u_pq", pin["q"], a.NK, 1, 1, [(cx, TH - 25.0)], rc, "q")
     pipe("u_pc", pin["ci"], a.NC, 3, 1, [(cx, 25.0)], rc, "ci")
     pipe("u_pr", pin["ri"], a.NR, 3, 1, [(TW - 30.0, mc_y), (cx, mc_y)], rc, "ri")
     cfc = (sum(p[0] for p in pin["cf"]) / 3, sum(p[1] for p in pin["cf"]) / 3)
