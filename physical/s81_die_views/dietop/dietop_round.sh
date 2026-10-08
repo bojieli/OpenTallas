@@ -30,7 +30,7 @@ set_global_routing_layer_adjustment M6-M9 0.146
 step grt { global_route -congestion_iterations $CI -allow_congestion -verbose -congestion_report_file /work/grt_congestion.rpt }
 step guides { write_guides /work/route.guide }
 step ckpt_grt { write_db /work/ckpt_grt.odb }
-set ok_drt [step drt { detailed_route -bottom_routing_layer M4 -top_routing_layer M9 -output_drc /work/drt_drc.rpt -droute_end_iter 20 -verbose 1 }]
+set ok_drt [step drt { detailed_route -output_drc /work/drt_drc.rpt -droute_end_iter 20 -verbose 1 }]
 step ckpt_drt { write_db /work/ckpt_drt.odb }
 step antenna { puts "OT_ANTENNA [check_antennas -report_file /work/antenna.rpt]" }
 if {\$ok_drt} { step rcx { define_process_corner -ext_model_index 0 X; extract_parasitics -ext_model_file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules; write_spef /work/die.spef } }
