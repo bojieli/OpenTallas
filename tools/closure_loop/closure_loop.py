@@ -1139,7 +1139,21 @@ def launch_stage(j, st, cmd):
             ff = j["spec"].get("route_ff_sdc")
             if ff is None:
                 ff = (j["spec"].get("verdict") or {}).get("post_sdc") or []
-            ff = [f for f in ([ff] if isinstance(ff, str) else ff) if f and "{" not in f]
+            # {NAME}/{LABEL} name the recipe's generated sign-off SDC (route_cl.sh <label>); the calibrate stage runs the
+            # recipe on {LABEL}${CL_LABEL_SUFFIX}, so its SDC carries _cal.  Before 2026-10-08 any path with "{" was
+            # DROPPED, so the FF scene silently timed the route SDC (vclk at the SS insertion: ~-200 ps output hold,
+            # RSZ-0060; tt-fix.log F2).  Paths still holding an unknown placeholder after substitution are dropped loudly.
+            sfx = "_cal" if st["kind"] == "calibrate" and "CL_LABEL_SUFFIX" in cmd else ""
+            ff_sub = []
+            for f in ([ff] if isinstance(ff, str) else ff):
+                if not f:
+                    continue
+                f = subst(f.replace("{NAME}", label(j["name"]) + sfx).replace("{LABEL}", label(j["name"]) + sfx), j)
+                if "{" in f:
+                    log(f"{j['name']}: route FF SDC {f} has an unknown placeholder: dropped")
+                    continue
+                ff_sub.append(f)
+            ff = ff_sub
             if ff:
                 env += f"mkdir -p {j['run']}/src/.ot_mm\n"
                 rel = []
