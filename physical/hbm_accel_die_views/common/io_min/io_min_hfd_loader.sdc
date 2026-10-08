@@ -5,8 +5,8 @@ if {[llength [get_libs -quiet *_FF_*]] && [llength [get_clocks -quiet vclk]]} {
   report_clock_latency -clocks core_clk
   set ot_s [sta::redirect_string_end]
   if {[regexp {rise -> rise.*?([0-9.]+)\s+([0-9.]+)\s+latency} $ot_s -> ot_lo ot_hi]} {
-    foreach ot_q [get_ports -quiet {h h[*]}] { set ot_d [ot_port_dir $ot_q]; if {$ot_d in {input bidirect}} { set_input_delay -min [expr {($ot_lo + $ot_hi) / 2.0 - $ot_hi + 205.04}] -clock vclk $ot_q }; if {$ot_d in {output bidirect}} { set_output_delay -min 172.84 -clock vclk $ot_q } }
-    foreach ot_q [get_ports -quiet {t_cmdproc t_cmdproc[*]}] { set ot_d [ot_port_dir $ot_q]; if {$ot_d in {input bidirect}} { set_input_delay -min [expr {($ot_lo + $ot_hi) / 2.0 - $ot_hi + 141.84}] -clock vclk $ot_q }; if {$ot_d in {output bidirect}} { set_output_delay -min 109.64 -clock vclk $ot_q } }
+    foreach ot_q [get_ports -quiet {h h[*]}] { set ot_d [ot_port_dir $ot_q]; if {$ot_d in {input bidirect}} { set_input_delay -min [expr {0.0 + 205.04}] -clock vclk $ot_q }; if {$ot_d in {output bidirect}} { set_output_delay -min 172.84 -clock vclk $ot_q } }
+    foreach ot_q [get_ports -quiet {t_cmdproc t_cmdproc[*]}] { set ot_d [ot_port_dir $ot_q]; if {$ot_d in {input bidirect}} { set_input_delay -min [expr {0.0 + 141.84}] -clock vclk $ot_q }; if {$ot_d in {output bidirect}} { set_output_delay -min 109.64 -clock vclk $ot_q } }
     puts "OT_IOMIN: per-port die-path hold credit applied"
   }
 }

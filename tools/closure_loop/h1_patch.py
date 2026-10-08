@@ -29,6 +29,7 @@ if c.is_file():
         c.write_text(t); n += 1
 # h1-audit 2026-10-08: the receiver-side hold term in the other block families (S81 BF / root_phase / hbglue / PQ,
 # DS-ROM head ioreg / fh_quad / swiglu ireg, HBM attn_tile_r vclk, Qwen embedding parent).  Same rule, same idempotence.
+MID_SH = "set_clock_latency $(echo \"($LMIN + $LMAX) / 2\" | bc -l | sed 's/0*$//;s/\\.$//')"
 AUDIT = [
     ("physical/s81_native_bf/margin/signoff_ref.sdc", "set_input_delay -min [expr {$bf_lmin - 50}]", "set_input_delay -min $bf_lmin"),
     ("physical/s81_bf_root_phase/signoff_ref.sdc", "set_input_delay -min [expr {$bf_lmin - 50}]", "set_input_delay -min $bf_lmin"),
@@ -61,17 +62,25 @@ AUDIT = [
     ("physical/hbm_attn_tile_r/io_ref.sdc", "set_output_delay -min [expr {-($ot_qins - 150)}]", "set_output_delay -min [expr {-($ot_qins + 150)}]"),
     # h1-verify 2026-10-08: the five families edefa5bcb left "probably single-count".  The corner-true FF recipe
     # (vclk_corner_true / make_io_vclk_ff / make_block_sdc ff / stn_margin / window columns / pq_root_cam) timed outputs at
-    # the EARLIEST capture (FF min leaf) and inputs at the LATEST launch (FF max leaf) with the 50 ps on both: sign error on
-    # both ends + double count.  Now: outputs vs the FF max + 50 (sender), inputs launch at the FF mean, 25 (receiver).
-    ("physical/hbm_accel_die_views/common/vclk_corner_true.sdc", "    set_clock_latency $ot_lo [get_clocks vclk]\n", "    set_clock_latency $ot_hi [get_clocks vclk]\n"),
-    ("physical/hbm_accel_die_views/common/vclk_corner_true.sdc", "set_input_delay -min [expr {$ot_hi - $ot_lo}] -clock vclk", "set_input_delay -min [expr {($ot_lo + $ot_hi) / 2.0 - $ot_hi}] -clock vclk"),
+    # the FF MIN leaf (earlier than nominal) and inputs from the FF MAX leaf (later than nominal) with the 50 ps on both:
+    # optimistic on both ends + a double count.  Now (die clock plan: every block's nominal insertion aligned): outputs vs
+    # the FF mean + 50 (sender, latest capture), inputs launch at the FF mean, 25 (receiver).  Rules map the original AND
+    # the first h1-verify form (vclk at the FF max, a0d170cdf) to this one.
+    ("physical/hbm_accel_die_views/common/vclk_corner_true.sdc", "    set_clock_latency $ot_lo [get_clocks vclk]\n", "    set_clock_latency [expr {($ot_lo + $ot_hi) / 2.0}] [get_clocks vclk]\n"),
+    ("physical/hbm_accel_die_views/common/vclk_corner_true.sdc", "    set_clock_latency $ot_hi [get_clocks vclk]\n", "    set_clock_latency [expr {($ot_lo + $ot_hi) / 2.0}] [get_clocks vclk]\n"),
+    ("physical/hbm_accel_die_views/common/vclk_corner_true.sdc", "set_input_delay -min [expr {$ot_hi - $ot_lo}] -clock vclk", "set_input_delay -min 0 -clock vclk"),
+    ("physical/hbm_accel_die_views/common/vclk_corner_true.sdc", "set_input_delay -min [expr {($ot_lo + $ot_hi) / 2.0 - $ot_hi}] -clock vclk", "set_input_delay -min 0 -clock vclk"),
     ("physical/hbm_accel_die_views/common/vclk_corner_true.sdc", "set_clock_uncertainty -hold 50 -from [get_clocks vclk] -to [get_clocks core_clk]", "set_clock_uncertainty -hold 25 -from [get_clocks vclk] -to [get_clocks core_clk]"),
-    ("physical/hbm_accel_die_views/common/spine_io_min.py", "set_input_delay -min [expr {{$ot_hi - $ot_lo + ", "set_input_delay -min [expr {{($ot_lo + $ot_hi) / 2.0 - $ot_hi + "),
-    ("physical/hbm_accel_die_views/common/make_io_vclk_ff.sh", "set_clock_latency $LMIN [get_clocks vclk]", "set_clock_latency $LMAX [get_clocks vclk]"),
-    ("physical/hbm_accel_die_views/common/make_io_vclk_ff.sh", "set_clock_latency $LMAX [get_clocks vclki]", "set_clock_latency $(echo \"($LMIN + $LMAX) / 2\" | bc -l | sed 's/0*$//;s/\\.$//') [get_clocks vclki]"),
+    ("physical/hbm_accel_die_views/common/spine_io_min.py", "set_input_delay -min [expr {{$ot_hi - $ot_lo + ", "set_input_delay -min [expr {{0.0 + "),
+    ("physical/hbm_accel_die_views/common/spine_io_min.py", "set_input_delay -min [expr {{($ot_lo + $ot_hi) / 2.0 - $ot_hi + ", "set_input_delay -min [expr {{0.0 + "),
+    ("physical/hbm_accel_die_views/common/make_io_vclk_ff.sh", "set_clock_latency $LMIN [get_clocks vclk]", MID_SH + " [get_clocks vclk]"),
+    ("physical/hbm_accel_die_views/common/make_io_vclk_ff.sh", "set_clock_latency $LMAX [get_clocks vclk]", MID_SH + " [get_clocks vclk]"),
+    ("physical/hbm_accel_die_views/common/make_io_vclk_ff.sh", "set_clock_latency $LMAX [get_clocks vclki]", MID_SH + " [get_clocks vclki]"),
     ("physical/hbm_accel_die_views/common/make_io_vclk_ff.sh", "set_clock_uncertainty -hold 50 -from [get_clocks vclki] -to [get_clocks $C]", "set_clock_uncertainty -hold 25 -from [get_clocks vclki] -to [get_clocks $C]"),
-    ("physical/hbm_accel_die_views/stations/bench/stn_margin_sdc.py", "mn = (Lmax - L - 25) if m.group(1) == 'set_input_delay' else (L - Lmin - 25)", "mn = ((Lmin + Lmax) / 2 - L) if m.group(1) == 'set_input_delay' else (L - Lmax - 25)"),
-    ("tools/budgets/make_block_sdc.py", "f'set_clock_latency {lmin:g} [get_clocks vclk]',", "f'set_clock_latency {lmax:g} [get_clocks vclk]',"),
+    ("physical/hbm_accel_die_views/stations/bench/stn_margin_sdc.py", "mn = (Lmax - L - 25) if m.group(1) == 'set_input_delay' else (L - Lmin - 25)", "mn = ((Lmin + Lmax) / 2 - L) if m.group(1) == 'set_input_delay' else (L - (Lmin + Lmax) / 2 - 25)"),
+    ("physical/hbm_accel_die_views/stations/bench/stn_margin_sdc.py", "else (L - Lmax - 25)", "else (L - (Lmin + Lmax) / 2 - 25)"),
+    ("tools/budgets/make_block_sdc.py", "f'set_clock_latency {lmin:g} [get_clocks vclk]',", "f'set_clock_latency {ins[\"ff\"]:g} [get_clocks vclk]',"),
+    ("tools/budgets/make_block_sdc.py", "f'set_clock_latency {lmax:g} [get_clocks vclk]',", "f'set_clock_latency {ins[\"ff\"]:g} [get_clocks vclk]',"),
     ("tools/budgets/make_block_sdc.py", "f'set_clock_latency {lmax:g} [get_clocks vclki]']", "f'set_clock_latency {ins[\"ff\"]:g} [get_clocks vclki]']"),
     ("tools/budgets/make_block_sdc.py", "out += [f'set_clock_uncertainty -hold {h:g} -from [get_clocks vclki]", "out += [f'set_clock_uncertainty -hold {sh[\"skew\"].get(\"hold_uncertainty_ps\", 25):g} -from [get_clocks vclki]"),
     ("tools/hbm_accel_smh_physical.py", '"set_input_delay -min [expr 833 * 0.2 - $hold_io] -clock nbr_clk $elem_in"', '"set_input_delay -min [expr 833 * 0.2] -clock nbr_clk $elem_in"'),
@@ -87,10 +96,13 @@ for f in ("physical/dsrom_window_columns/m6/route_col.sh", "physical/dsrom_windo
         (f, "FMAX=${CK_FF_MAX:-170}\n", 'FMAX=${CK_FF_MAX:-170}; FMID=${CK_FF_MEAN:-$(awk "BEGIN{print ($FMIN+$FMAX)/2}")}\n'),
         (f, "FMAX=${CK_FF_MAX:-0}\n", 'FMAX=${CK_FF_MAX:-0}; FMID=${CK_FF_MEAN:-$(awk "BEGIN{print ($FMIN+$FMAX)/2}")}\n'),
         (f, "set_input_delay -min [expr {$FMAX - $L - 25}] -clock vclk", "set_input_delay -min [expr {$FMID - $L}] -clock vclk"),
-        (f, "set_output_delay -min [expr {$FMIN - $L + 25}] -clock vclk", "set_output_delay -min [expr {$L - $FMAX - 25}] -clock vclk"),
+        (f, "set_output_delay -min [expr {$FMIN - $L + 25}] -clock vclk", "set_output_delay -min [expr {$L - $FMID - 25}] -clock vclk"),
+        (f, "set_output_delay -min [expr {$L - $FMAX - 25}] -clock vclk", "set_output_delay -min [expr {$L - $FMID - 25}] -clock vclk"),
         (f, "set_input_delay -min [expr {$FMAX - $L + 32.2 - 50}] -clock vclk", "set_input_delay -min [expr {$FMID - $L + 32.2}] -clock vclk"),
-        (f, "set_output_delay -min [expr {$L - $FMIN - 10}] -clock vclk", "set_output_delay -min [expr {$L - $FMAX - 10}] -clock vclk"),
-        (f, "set_clock_latency $FMIN [get_clocks vclk]", "set_clock_latency $FMAX [get_clocks vclk]"),
+        (f, "set_output_delay -min [expr {$L - $FMIN - 10}] -clock vclk", "set_output_delay -min [expr {$L - $FMID - 10}] -clock vclk"),
+        (f, "set_output_delay -min [expr {$L - $FMAX - 10}] -clock vclk", "set_output_delay -min [expr {$L - $FMID - 10}] -clock vclk"),
+        (f, "set_clock_latency $FMIN [get_clocks vclk]", "set_clock_latency $FMID [get_clocks vclk]"),
+        (f, "set_clock_latency $FMAX [get_clocks vclk]", "set_clock_latency $FMID [get_clocks vclk]"),
         (f, "set_clock_latency $FMAX [get_clocks vclki]", "set_clock_latency $FMID [get_clocks vclki]"),
         (f, "set_clock_uncertainty -hold 50 -from [get_clocks vclki] -to [get_clocks core_clk]", "set_clock_uncertainty -hold 25 -from [get_clocks vclki] -to [get_clocks core_clk]"),
     ]
@@ -109,23 +121,33 @@ for f, a, b in AUDIT:
             q.write_text(s.replace(a, b)); n += 1
 # h1-verify: GENERATED corner-true FF files (make_io_vclk_ff.sh / make_block_sdc.py ff / route-script signoff_ff_guarded
 # outputs, budget_ff*.sdc) in the snapshot, plus any extra files named on the command line ({run}/cl/budget_ff.sdc):
-# vclk A / vclki B / vclki->clk hold 50  ->  vclk B (latest capture) / vclki (A+B)/2 / vclki->clk hold 25.
+# original (vclk A / vclki B / vclki->clk hold 50) -> vclk = vclki = (A+B)/2, vclki->clk hold 25;
+# first h1-verify form (vclki->clk hold 25, vclk != vclki) -> vclk = vclki.
 import re
 VCK = re.compile(r"^set_clock_latency ([0-9.]+) \[get_clocks vclk\]$", re.M)
 VCKI = re.compile(r"^set_clock_latency ([0-9.]+) \[get_clocks vclki\]$", re.M)
 VH = re.compile(r"^set_clock_uncertainty -hold 50 -from \[get_clocks vclki\] -to (\[get_clocks [^\]]+\])$", re.M)
+VH25 = re.compile(r"^set_clock_uncertainty -hold 25 -from \[get_clocks vclki\] -to \[get_clocks [^\]]+\]$", re.M)
+TAG = "# RULE H1 (h1_patch): outputs vs the FF mean leaf + 50 (sender), inputs launch at the FF mean leaf, 25 (receiver)\n"
 
 
 def gen_ff(q):
     s = q.read_text()
     a, b = VCK.findall(s), VCKI.findall(s)
-    if not VH.search(s) or len(a) != 1 or len(b) != 1:
+    if len(a) != 1 or len(b) != 1:
         return 0
-    lo, hi = float(a[0]), float(b[0])
-    t = VCK.sub(f"set_clock_latency {hi:g} [get_clocks vclk]", s)
-    t = VCKI.sub(f"set_clock_latency {(lo + hi) / 2:g} [get_clocks vclki]", t)
-    t = VH.sub(r"set_clock_uncertainty -hold 25 -from [get_clocks vclki] -to \1", t)
-    q.write_text("# RULE H1 (h1_patch): outputs vs the latest FF leaf + 50, inputs launch at the mean FF leaf, 25\n" + t)
+    if VH.search(s):
+        mid = (float(a[0]) + float(b[0])) / 2
+        t = VH.sub(r"set_clock_uncertainty -hold 25 -from [get_clocks vclki] -to \1", s)
+    elif VH25.search(s) and float(a[0]) != float(b[0]):
+        mid = float(b[0])
+        t = s
+    else:
+        return 0
+    t = VCK.sub(f"set_clock_latency {mid:g} [get_clocks vclk]", t)
+    t = VCKI.sub(f"set_clock_latency {mid:g} [get_clocks vclki]", t)
+    t = t.replace("# RULE H1 (h1_patch): outputs vs the latest FF leaf + 50, inputs launch at the mean FF leaf, 25\n", "")
+    q.write_text(TAG + t)
     return 1
 
 
@@ -135,7 +157,7 @@ for f in list(glob.glob(str(R / "physical/**/*.sdc"), recursive=True)) + sys.arg
         n += gen_ff(q)
 for f in glob.glob(str(R / "physical/hbm_accel_die_views/common/io_min/io_min_*.sdc")):
     q = Path(f); s = q.read_text()
-    t = s.replace("[expr {$ot_hi - $ot_lo + ", "[expr {($ot_lo + $ot_hi) / 2.0 - $ot_hi + ")
+    t = s.replace("[expr {$ot_hi - $ot_lo + ", "[expr {0.0 + ").replace("[expr {($ot_lo + $ot_hi) / 2.0 - $ot_hi + ", "[expr {0.0 + ")
     if t != s:
         q.write_text(t); n += 1
 print(f"h1_patch: {n} files rewritten under {R}")

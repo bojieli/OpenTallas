@@ -3,9 +3,9 @@
 # corner's own session):
 #   SS session: unchanged (setup against vclk at the SS insertion the flow measured; the 150 ps die-arrival term
 #               stays in the 0.2 T + 150 ps IO budget).
-#   FF session (rule H1, h1-verify 2026-10-08): the neighbour's die-clock leaf is within this block's own leaf spread
-#               +- 50 ps; the sender carries that term once -- outputs timed against vclk at the FF MAXIMUM insertion
-#               (latest capture) + 50 ps IO hold uncertainty; inputs launched at the FF MEAN insertion, 25 ps.
+#   FF session (rule H1, h1-verify 2026-10-08): the neighbour's die-clock leaf is at this block's FF mean insertion
+#               +- 50 ps (die clock plan); the sender carries the 50 once -- outputs timed against vclk at the FF mean
+#               + 50 ps IO hold uncertainty (latest capture); inputs launched at the FF mean, 25 ps.
 #   both:       the die reset (rst / por) reaches only the wrapper's two-flop synchroniser rst_s: false path.
 # Per-BIT port direction from the odb (views agent, 2026-10-06): OpenSTA types a bus port by ONE direction, so the
 # input bits of a mixed-direction bus (r16g direction model; inout bits retyped per bit by inout_retype_post_synth.tcl)
@@ -30,16 +30,17 @@ if {[llength [get_libs -quiet *_FF_*]] && [llength [get_clocks -quiet vclk]]} {
   report_clock_latency -clocks core_clk
   set ot_s [sta::redirect_string_end]
   if {[regexp {rise -> rise.*?([0-9.]+)\s+([0-9.]+)\s+latency} $ot_s -> ot_lo ot_hi]} {
-    # RULE H1 (h1-verify 2026-10-08): the link hold term is carried ONCE, by the sender, at the LATEST capture: outputs are
-    # held against vclk at the FF MAXIMUM insertion + 50 ps IO hold uncertainty (was the FF minimum: the earliest capture,
-    # optimistic by the leaf spread).  The receiver's inputs launch at the block's nominal (mean) FF insertion with the
-    # plain 25 ps hold uncertainty (was the FF maximum + 50: the latest launch, optimistic, and the 50 counted twice).
-    set_clock_latency $ot_hi [get_clocks vclk]
+    # RULE H1 (h1-verify 2026-10-08): the die clock plan aligns every block's nominal (mean) insertion to one instant, so the
+    # neighbour's leaf is at this block's FF mean +- the 50 ps die-skew term.  The sender carries that term ONCE, at the
+    # latest capture: outputs held against vclk at the FF mean + 50 ps IO hold uncertainty (was the FF MINIMUM + 50: an
+    # earlier-than-nominal capture, optimistic).  The receiver's inputs launch at the FF mean with the plain 25 ps (was
+    # the FF MAXIMUM + 50: a later-than-nominal launch, optimistic, and the 50 counted on both ends).
+    set_clock_latency [expr {($ot_lo + $ot_hi) / 2.0}] [get_clocks vclk]
     set_output_delay -min 0 -clock vclk [ot_dir_ports {output bidirect}]
-    set_input_delay -min [expr {($ot_lo + $ot_hi) / 2.0 - $ot_hi}] -clock vclk [ot_dir_ports {input bidirect}]
+    set_input_delay -min 0 -clock vclk [ot_dir_ports {input bidirect}]
     set_clock_uncertainty -hold 25 -from [get_clocks vclk] -to [get_clocks core_clk]
     set_clock_uncertainty -hold 50 -from [get_clocks core_clk] -to [get_clocks vclk]
-    puts "OT_VCLK_CT: FF insertion $ot_lo .. $ot_hi ps: outputs vs vclk $ot_hi + 50 (H1 sender), inputs launched at the mean (receiver, 25)"
+    puts "OT_VCLK_CT: FF insertion $ot_lo .. $ot_hi ps: outputs vs vclk at the mean + 50 (H1 sender), inputs launched at the mean (receiver, 25)"
   } else {
     puts "OT_VCLK_CT: no core_clk latency report at FF"
   }

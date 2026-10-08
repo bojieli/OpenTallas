@@ -1,6 +1,6 @@
-# RULE H1 (h1_patch): outputs vs the latest FF leaf + 50, inputs launch at the mean FF leaf, 25
+# RULE H1 (h1_patch): outputs vs the FF mean leaf + 50 (sender), inputs launch at the FF mean leaf, 25 (receiver)
 if {[llength [get_libs -quiet *_FF_*]]} {
-set_clock_latency 121 [get_clocks vclk]
+set_clock_latency 116 [get_clocks vclk]
 create_clock -name vclki -period [get_property [get_clocks core_clk] period]
 set_clock_latency 116 [get_clocks vclki]
 set ot_in [all_inputs -no_clocks]

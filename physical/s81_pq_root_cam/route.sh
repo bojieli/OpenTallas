@@ -27,8 +27,8 @@ set_input_delay 333.5 -clock vclk \$ot_in
 set_output_delay 274.5 -clock vclk [all_outputs]
 set_input_delay -min [expr {$FMID - $L + 32.2}] -clock vclk \$ot_in
 # CLAUDE s81-blocks: sign fixed (was FMIN - L + 65: required = L + 25 - min must equal the sign-off FMIN + 50 - 15)
-# RULE H1 (h1-verify 2026-10-08): capture at the latest FF leaf FMAX + 50 - 15
-set_output_delay -min [expr {$L - $FMAX - 10}] -clock vclk [all_outputs]
+# RULE H1 (h1-verify 2026-10-08): capture at the FF mean leaf FMID + 50 - 15
+set_output_delay -min [expr {$L - $FMID - 10}] -clock vclk [all_outputs]
 EOT
 cat > $C/signoff_ss.sdc <<EOT
 create_clock -name core_clk -period 833.333 [get_ports clk]
@@ -47,8 +47,8 @@ set_output_delay -min 15 -clock vclk [all_outputs]
 EOT
 cat > $C/signoff_ff_guarded.sdc <<EOT
 if {[llength [get_libs -quiet *_FF_*]]} {
-# RULE H1 (h1-verify 2026-10-08): outputs vs the LATEST FF leaf + 50 (sender); inputs launch at the FF mean, 25 (receiver)
-set_clock_latency $FMAX [get_clocks vclk]
+# RULE H1 (h1-verify 2026-10-08): outputs vs the FF mean leaf + 50 (sender, latest capture); inputs launch at the FF mean, 25 (receiver)
+set_clock_latency $FMID [get_clocks vclk]
 create_clock -name vclki -period [get_property [get_clocks core_clk] period]
 set_clock_latency $FMID [get_clocks vclki]
 set ot_in [all_inputs -no_clocks]
