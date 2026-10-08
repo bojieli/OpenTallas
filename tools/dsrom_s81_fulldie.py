@@ -2188,6 +2188,8 @@ NVR = RET                           # NV5 draft-head result word back into its l
 SEQ_XL, SSTN_X, R_CFGX = 326.16, 365.04, 37.152
 CF_X = 328.32                       # column FIFO x in the frame
 GLUE_RTL = 'results/rtl/dsrom_s81_fulldie_20261004/r8/dsfd_glue.sv'
+# REDESIGN-S81 2026-10-08: r2l / l2r hub end blocks register every pin (TT link-budget misses on hx_W / hcol / hsel)
+HEND_PINREG = True
 # Slot parameterisation (owner decision 2026-10-06: taller q-element slot, fewer elements per die, 55-60 % cell
 # utilisation).  ELEM_FRAME_H = the element frame height in its slot (157.68 today: q / BF outline + halo); the slot is
 # the cfg band (ELEM_DY) + the element frame + 4.32; SLOTS8 = the slots per column that fit the field height between
@@ -4779,6 +4781,19 @@ def glue_rtl(m):
                          f'.w_d(i[{pw}:1]), .rclk(cks[0]), .rrst_n(rss_), .r_v(rv), .r_rdy(1\'b1), .r_d(rd_), '
                          '.w_live(wl), .r_live(rl));',
                          '    assign fo = cks;', '    assign od = {rd_, rv, rss_};', "    assign st = {1'b0, wl, wr};"]
+                if HEND_PINREG:
+                    # REDESIGN-S81 2026-10-08 (hx_W TT -130 rp->od read mux to the pin, -32 r_st_w->st, -21 i->mem):
+                    # a flop at every pin -- i captured on ck before the FIFO (+1 ck cycle), od / st launched from
+                    # flops (+1 cks cycle on od); same stream, no protocol change
+                    body[-6:] = ['    wire wr, wl, rv, rl;', f'    wire [{pw - 1}:0] rd_;',
+                                 f'    reg [{pw}:0] i_q; always @(posedge ck[0]) i_q <= i;   // input pin flop',
+                                 f'    ot_ratio_cdc_fifo #(.W({pw})) u_c (.wclk(ck[0]), .wrst_n(rsl), .w_v(i_q[0]), .w_rdy(wr), '
+                                 f'.w_d(i_q[{pw}:1]), .rclk(cks[0]), .rrst_n(rss_), .r_v(rv), .r_rdy(1\'b1), .r_d(rd_), '
+                                 '.w_live(wl), .r_live(rl));',
+                                 '    assign fo = cks;',
+                                 f'    reg [{pw + 1}:0] od_q; always @(posedge cks[0]) od_q <= {{rd_, rv, rss_}};   // output pin flop',
+                                 "    reg [2:0] st_q; always @(posedge ck[0]) st_q <= {1'b0, wl, wr};   // output pin flop",
+                                 '    assign od = od_q;', '    assign st = st_q;']
             else:
                 body.append(_sync('rsl', 'ck[0]', 'rs[0]'))
                 base, lv, fl = 0, [], []
@@ -4799,11 +4814,20 @@ def glue_rtl(m):
                         body.append(f'    ot_ratio_cdc_fifo #(.W({pw})) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), .w_v({wv}), '
                                     f'.w_rdy(), .w_d({wd}), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv{j}), .r_rdy(1\'b1), '
                                     f'.r_d(rq{j}), .w_live(), .r_live(rl{j}));')
-                    body.append(f'    assign o[{base + pw}:{base}] = {{rq{j}, rv{j}}};')
+                    pr = HEND_PINREG and kind == 'r2l'
+                    body.append(f'    assign {"o_d" if pr else "o"}[{base + pw}:{base}] = {{rq{j}, rv{j}}};')
                     base += pw + 1
                     lv.append(f'rl{j}')
                     fl += [f'wf{j}', f'rf{j}']
-                body.append(f'    assign o[{base + 1}:{base}] = {{{" | ".join(fl)}, {" & ".join(lv)}}};   // {{fault, live}}')
+                if HEND_PINREG and kind == 'r2l':
+                    # REDESIGN-S81 2026-10-08 (hcol TT -15.4 / hsel -10.3: rp -> sh[rp] read mux -> o pin): every
+                    # output from a flop (+1 ck cycle, same stream)
+                    body.insert(body.index(next(b for b in body if 'wire rv0' in b)), f'    wire [{base + 1}:0] o_d;')
+                    body.append(f'    assign o_d[{base + 1}:{base}] = {{{" | ".join(fl)}, {" & ".join(lv)}}};   // {{fault, live}}')
+                    body.append(f'    reg [{base + 1}:0] o_q; always @(posedge ck[0]) o_q <= o_d;   // output pin flop')
+                    body.append('    assign o = o_q;')
+                else:
+                    body.append(f'    assign o[{base + 1}:{base}] = {{{" | ".join(fl)}, {" & ".join(lv)}}};   // {{fault, live}}')
         out.append(f'module {mst} (\n{_decl(ports)}\n);')
         out += body
         out.append('endmodule\n')

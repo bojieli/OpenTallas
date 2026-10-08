@@ -49,7 +49,20 @@ module dsfd_svcio_od (
     output reg [513:0] od, output wire [0:0] of, output reg [0:0] bad);
     wire rn; ot_s81ph_rsync u_rs (.ck(ck[0]), .rst(rst[0]), .rn(rn));
     wire m_v, m_bad; wire [511:0] m_d;
+`ifdef SVCIO_OD_NOINQ
     ot_s81ph_fmerge #(.N(4)) u_m (.clk(ck[0]), .rst_n(rn), .s_v(od_v), .s_d(od_d), .s_r(od_r), .o_v(m_v), .o_d(m_d), .bad(m_bad));
+`else
+    // REDESIGN-S81 2026-10-08 (TT + consistent link budget -22.5 / TT re-STA -27.4: od_v pin -> 3 logic -> u_k.d1):
+    // every quadrant input through a pin-registered queue (ot_s81ph_inq, as dsfd_svcio_ad r3b), then the merge.
+    // +2 cycles on the od path; od_r = the queue's registered room2 (producer valid/ready contract unchanged).
+    wire [3:0] q0_v, q0_r; wire [2047:0] q0_d;
+    genvar gq;
+    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_iq
+        ot_s81ph_inq u_iq (.clk(ck[0]), .rst_n(rn), .i_v(od_v[gq]), .i_d(od_d[512*gq +: 512]), .i_r(od_r[gq]),
+            .o_v(q0_v[gq]), .o_d(q0_d[512*gq +: 512]), .o_r(q0_r[gq]));
+    end endgenerate
+    ot_s81ph_fmerge #(.N(4)) u_m (.clk(ck[0]), .rst_n(rn), .s_v(q0_v), .s_d(q0_d), .s_r(q0_r), .o_v(m_v), .o_d(m_d), .bad(m_bad));
+`endif
     always @(posedge ck[0]) od <= {m_d, m_v & rn, rn};
     always @(posedge ck[0] or negedge rn) if (!rn) bad <= 1'b0; else bad <= m_bad;
     ot_fwd_clk_inv u_of (.a(ck[0]), .y(of[0]));
