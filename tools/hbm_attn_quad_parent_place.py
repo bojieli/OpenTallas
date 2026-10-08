@@ -24,6 +24,9 @@ def main():
     ap.add_argument("--channel", type=float, default=60.0)
     ap.add_argument("--rowgap", type=float, default=20.0)
     ap.add_argument("--margin", type=float, default=10.0)
+    ap.add_argument("--m9-lattice", action="store_true",
+                    help="also put each quad's M9 VDD / VSS pins on the parent's M9 strap lattice (pdn.tcl: pitch 5.4, "
+                         "offset 1.5 from x 0), so physical/hbm_attn_tile_r/quad_m9_bridge.tcl can join them")
     a = ap.parse_args()
     lef = a.lef.read_text()
     w, h = (round(float(x) * 1000) for x in re.search(r"SIZE ([\d.]+) BY ([\d.]+)", lef).groups())
@@ -41,9 +44,23 @@ def main():
     xm_ph = (12 - (w - p5)) % 48                    # MY: x0 + w - p5 on track 12
     x0 = up(E, xm_ph)
     x1 = up(x0 + w + C, xr_ph)
+    if a.m9_lattice:
+        vss = re.search(r"PIN VSS\b(.*?)END VSS", lef, re.S).group(1)
+        xs, lay = [], None
+        for ln in vss.splitlines():
+            t = ln.split()
+            if t[:1] == ["LAYER"]:
+                lay = t[1]
+            elif t[:1] == ["RECT"] and lay == "M9":
+                xs.append(round((float(t[1]) + float(t[3])) * 500))
+        pv = {x % 5400 for x in xs}
+        pv = max(pv, key=lambda v: sum(1 for x in xs if x % 5400 == v))   # the regular lattice (not a partial strap)
+        x0 = next(v for v in range(x0, x0 + 10800 * 2, 48) if (v - x0) % 48 == 0 and (v + w - pv - 1500) % 5400 == 0)
+        x1 = next(v for v in range(x1, x1 + 10800 * 2, 48) if (v - x1) % 48 == 0 and (v + pv - 1500) % 5400 == 0)
     y0 = up(E, y_ph)
     y1 = up(y0 + h + G, y_ph)
     dw = math.ceil((x1 + w + E) / 54) * 54
+    C = x1 - x0 - w
     dh = math.ceil((y1 + h + E) / 270) * 270
     L = [f"# H16 parent of four quads (tools/hbm_attn_quad_parent_place.py): quad {w/1000} x {h/1000} um, channel {C/1000} um,",
          f"# row gap {G/1000} um; quad pin phases M4 y {p4} / M5 x {p5} nm; die {dw/1000} x {dh/1000} um"]

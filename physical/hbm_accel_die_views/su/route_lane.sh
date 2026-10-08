@@ -5,6 +5,8 @@
 # platform's 2-track spacing gives 1,672 slots), PDN top M6 (su/pdn_lane_m6.tcl) so M6 / M7 over the lane stay open to the quarter and the quarter's M7
 # stripes feed the lane; r1 (MAXL=M7 PINL="M4 M6" PDN=common/pdn_view.tcl) blocks every quarter layer over a lane.
 # SS60/FF25 at 0.833 ns, IO false-pathed (register-direct, checked after the route), corner STA.
+#   PINKO=1: M3/M5 keepout beside every signal pin through GRT/DRT (removed after DRT) so the abstract leaves the pin
+#   stubs reachable from the quarter (r24 SFU quarter DRT-0073 on lane pins)
 #   route_lane.sh <label> <top> <W> <H> [run_abi3_physical args]   env: R (scratch base), SRC (snapshot dir, default src0), SRCS, KEEP, CORES, NEED, MAXL, PINL, PDN, PPA, IOC, CP (route clock ns; < 0.833 over-constrains, sign-off re-time at 833 in corner_sta_833.json)
 R=${R:?}; lab=$1; top=$2; W_=$3; H_=$4; shift 4
 W=$R/routes/$lab; mkdir -p $W; cd $R/${SRC:-src0}
@@ -25,7 +27,8 @@ S=""; for s in $SRCS; do S="$S --source $s"; done
   --place-density ${PD:-0.65} --hold-margin-ns ${HM:-0.01} --orfs-var ADDER_MAP_FILE= \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag hub_$lab \
   ${KEEP:+--orfs-var "SYNTH_KEEP_MODULES=$KEEP"} \
-  --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
+  --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
+  $( [ "${PINKO:-0}" = 1 ] && echo "--step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/su/lane_pin_keepout_pregrt.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/su/lane_pin_keepout_postdrt.tcl" || echo "--step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl" ) \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit

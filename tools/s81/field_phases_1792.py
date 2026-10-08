@@ -184,6 +184,10 @@ def cmd_compose(a):
     import dsrom_1m_measure as M
     import dsrom_closure_cost_ledger as LED
     rp = json.loads(REPRICE.read_text())["geoms"][PUB_GEOM]["configs"][PUB_CFG]
+    # the published per-node wire adders as the ledger in this tree charges them (s81_die +27 on main, +28 since 39e424990)
+    for it, _, rows in LED.ITEMS:
+        if it in WIRE_ITEMS:
+            WIRE_ITEMS[it] = max(c for _, c, _ in rows)
     adder = sum(PHASE_ADDERS.values())
     rep = {L: t["rep"] for t in M.TYPES.values() for L in t["layers"]}
     c = json.loads(CMP.read_text())["ds_rom"]
@@ -192,18 +196,22 @@ def cmd_compose(a):
     wires, far = {}, {}
     for fl, geom in (("bf", "m221bf"), ("q", "m221q")):
         wires[fl], far[fl] = wire_table(a.geo_dir, geom)
+        # --extra-wire: cycles a phase the current die adds beyond the generator geometry (39e424990: 2 PQ root-row
+        # stations on the m221pq layer1 die, round trip 167 + 2)
+        wires[fl] = {r: w + a.extra_wire for r, w in wires[fl].items()}
     ar0, mtp0 = LED.compose([it for it, _, _ in LED.ITEMS])
     rec = dict(schema="opentallas.s81.field_phases_1792.v1", tool="tools/s81/field_phases_1792.py",
                basis=dict(published_AR_tok_s=ar0, published_MTP_tok_s=mtp0, published_geometry="f183.60, 85 stages",
                           published_field=f"{REPRICE.relative_to(ROOT)} geoms.{PUB_GEOM}.configs.{PUB_CFG} + ledger "
                                           "s81_die +27, meso_d8g1 +4 and the +18 per-phase block adders once a node",
-                          hop_us=hop_us, ledger_items=[it for it, _, _ in LED.ITEMS]),
-               geometry=dict(far_round_trip=far, dir=str(a.geo_dir.relative_to(ROOT)) if a.geo_dir.is_relative_to(ROOT) else str(a.geo_dir)),
+                          hop_us=hop_us, ledger_items=[it for it, _, _ in LED.ITEMS], wire_items_replaced=dict(WIRE_ITEMS)),
+               geometry=dict(far_round_trip=far, extra_wire_per_phase=a.extra_wire, dir=str(a.geo_dir.relative_to(ROOT)) if a.geo_dir.is_relative_to(ROOT) else str(a.geo_dir)),
                phase_ledger=PHASE_LEDGER, variants={})
-    for v in ("half_dedicated", "full_shared"):
+    for v in a.variants.split(","):
         reg = json.load(gzip.open(a.regions_dir / f"{v}.json.gz", "rt"))
-        inv = json.loads((MAP / v / "inventory.json").read_text())
-        sm_fl = json.loads((a.binding_dir / v / "stage_map.json").read_text())["stage_flavour"] if a.binding_dir else None
+        bdir = MAP / v if (MAP / v).exists() else OUT / "binding" / v
+        inv = json.loads((bdir / "inventory.json").read_text())
+        sm_fl = json.loads((bdir / "stage_map.json").read_text())["stage_flavour"]
         stage_flavour = {i: f for i, f in enumerate(sm_fl)}
         full = node_cycles(reg, stage_flavour, wires, False, adder)
         half = node_cycles(reg, stage_flavour, wires, True, adder)
@@ -287,7 +295,8 @@ def main():
     p = sub.add_parser("compose")
     p.add_argument("--regions-dir", type=Path, default=OUT / "regions")
     p.add_argument("--geo-dir", type=Path, default=OUT / "geometry")
-    p.add_argument("--binding-dir", type=Path, default=MAP)
+    p.add_argument("--variants", default="half_dedicated,full_shared")
+    p.add_argument("--extra-wire", type=int, default=0)
     p.add_argument("--out", type=Path, default=OUT / "composition.json")
     a = ap.parse_args()
     return dict(regions=cmd_regions, compose=cmd_compose)[a.cmd](a)

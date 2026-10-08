@@ -1,0 +1,35 @@
+[INFO DPL-0008] Fixed instances area within core: 1297370.01 um^2
+[INFO DPL-0009] Utilization: 71.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 106162 cells
+[INFO DPL-0393]   height 44 row(s): 91 cells
+[INFO DPL-0393]   height 392 row(s): 17 cells
+[INFO DPL-0393]   height 2085 row(s): 4 cells
+[INFO DPL-0500] Runtime: 2.72s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL        12657983.3 u
+legalized HPWL       12657983.3 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 1301525 um^2 71% utilization.
+write_db /work/results/asap7/opentallas_hfd_attn_tile_b_asap7_dt_dt2_bd150/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_hfd_attn_tile_b_asap7_dt_dt2_bd150/base/4_cts.sdc
+Elapsed time: 0:27.18[h:]min:sec. CPU time: user 36.83 sys 17.83 (201%). Peak memory: 7253656KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb           27           7083 dc6e5643748cd8c3d79a

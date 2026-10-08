@@ -55,6 +55,10 @@ CODE = r'''    _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
             args.hold_corners = _ot_new
 '''
 MARK = "OT_ROUTE_HOLD_CORNERS"
+TOL_A = '        if any(int(v) != 0 for v in errors.values()):\n            raise FlowError(f"ORFS reported flow errors: {errors}")'
+TOL_A2 = '        try:\n            from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair\n            errors = _ot_tol(errors, logs_dir)\n        except ImportError:\n            pass\n        if any(int(v) != 0 for v in errors.values()):\n            raise FlowError(f"ORFS reported flow errors: {errors}")'
+TOL_B = '    if any(int(v) != 0 for v in flow_errors.values()):\n        raise FlowError(f"ORFS reported flow errors: {flow_errors}")'
+TOL_B2 = '    try:\n        from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair\n        flow_errors = _ot_tol(flow_errors, logs_dir)\n        metrics["flow_error_counts_tolerated"] = flow_errors\n    except ImportError:\n        pass\n    if any(int(v) != 0 for v in flow_errors.values()):\n        raise FlowError(f"ORFS reported flow errors: {flow_errors}")'
 DOCKER_ANCHOR = '"python3 /src/tools/orfs_allcorner_spef.py "'
 DOCKER_MM = '"python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && "\n            '
 
@@ -89,11 +93,17 @@ def patch(src):
             msg.append("container hook orfs_hold_mm.py added")
         else:
             msg.append("NO container anchor: OT_ROUTE_HOLD_CORNERS=mm unavailable in this snapshot")
+    # tolerate RSZ-0060 inside a completed multi-pass mm repair (orfs_hold_mm.tolerate_flow_errors)
+    if "_ot_tol" not in s:
+        for a, b in ((TOL_A, TOL_A2), (TOL_B, TOL_B2)):
+            if s.count(a) == 1:
+                s = s.replace(a, b)
+                msg.append("flow-error tolerance added")
     f.write_text(s)
     here = Path(__file__).resolve().parent
-    for h in ("orfs_hold_mm.py", "orfs_hold_mm.tcl"):
+    for h in ("orfs_hold_mm.py", "orfs_hold_mm.tcl"):  # (always refresh: the helper grows)
         for cand in (here / h, here.parent / h):
-            if cand.is_file() and not (Path(src) / "tools" / h).is_file():
+            if cand.is_file() and (not (Path(src) / "tools" / h).is_file() or (Path(src) / "tools" / h).read_bytes() != cand.read_bytes()):
                 shutil.copy2(cand, Path(src) / "tools" / h)
                 msg.append(f"shipped tools/{h}")
                 break

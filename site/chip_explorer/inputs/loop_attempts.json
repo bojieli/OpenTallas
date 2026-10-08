@@ -1,0 +1,1686 @@
+{
+ "schema": "opentallas.chip-explorer.loop-attempts.v1",
+ "taken": "2026-10-07T19:59-07:00",
+ "source": "closure-loop job state (~/.local/state/closure_loop/jobs on the loop host); failed and in-flight routes only exist there; closed blocks are also committed under results/closure_loop/",
+ "blocks": {
+  "ot_s81_bf_native": [
+   {
+    "job": "bf_deep4_mm_9c21d9e49",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "9c21d9e49",
+    "branch": "claude/s81-bf-20261007",
+    "owner": "Claude:s81-bf",
+    "purpose": "OPTIONAL lever (owner: validate own levers): deep full-rate BF, ot_s81_bf_native RECUT=4 (ot_v41_bf16_lanes3 DEEP 1: fadd3 all-cut + tree SPLIT6, chain5 F5=0, bmul3 XS2, extra lane input rank, family-dependent issue hazard). Full-rate element, no half-rate clock; MM route hold repair. HALF_PHL remains the closure path."
+   },
+   {
+    "job": "bf_deep5_mm_9c21d9e49",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "9c21d9e49",
+    "branch": "claude/s81-bf-20261007",
+    "owner": "Claude:s81-bf",
+    "purpose": "OPTIONAL lever (owner: validate own levers): deep full-rate BF, ot_s81_bf_native RECUT=5 (ot_v41_bf16_lanes3 DEEP 2: fadd3 all-cut + SPLIT6 + SPLIT9, chain5 F5=0, bmul3 XS2, extra lane input rank, family-dependent issue hazard). Full-rate element, no half-rate clock; MM route hold repair. HALF_PHL remains the closure path."
+   },
+   {
+    "job": "bf_half_61c1cf230-cgfix",
+    "status": "RUNNING",
+    "updated": "2026-10-07T19:59:55-07:00",
+    "commit": "df37bfa4e",
+    "branch": "claude/setup-triage-20261007",
+    "owner": "Claude:setup-triage (block owner claude/dsrom-bf-rowfix-20261007 / Claude:bf-rowfix (SAFE B half-rate))",
+    "purpose": "SETUP-TRIAGE requeue of bf_half_61c1cf230 (SS -474.68 / FF -63.08): class A/B flow fixes only (clock-gate push-down with latch cloning, CTS-net dont_touch before repair, fixed SDC patterns) + flow-hold mm hold repair; source = origin/main + setup-triage fixes, no RTL change by this stream. "
+   },
+   {
+    "job": "bf_half_61c1cf230",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T08:52:00-07:00",
+    "commit": "61c1cf230",
+    "branch": "claude/dsrom-bf-rowfix-20261007",
+    "owner": "Claude:bf-rowfix (SAFE B half-rate)",
+    "purpose": "BF native pair SAFE B: PINREG=1 HITFIX=1 HALF=1 - the unchanged element on a half-rate latch+AND gated clock (element + pin regs multicycle 2/1, half_mc.sdc), registered crossings at the pins; route 730 ps, WC repair, IO from the measured insertion; sign-off 833.333 (signoff_ref.sdc + half_mc.sdc). Previous HITFIX full-rate route: GRT SS -256 over 102 classes.",
+    "ss_ps": -474.68,
+    "ff_ps": -63.08,
+    "drc": 0,
+    "reason": "SS -474.68 / FF -63.08 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "bf_halfphl_0e90389e9",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:42:49-07:00",
+    "commit": "0e90389e9",
+    "branch": "claude/s81-bf-20261007",
+    "owner": "Claude:s81-bf",
+    "purpose": "BF native pair HALF=1 HALF_PHL=1 (s81-bf): the HALF route 61c1cf230 failed only ph -> u_hcg.u_icg/ENA (-474.68 ps; CTS put the ungated phase leaf at 1110 ps, the ICG CLK at 153 ps). Phase FF now drives only the ICG enable and sits on the ICG clock net (PRE_CTS ph_local.tcl, checked POST_CTS); clk consumers use ph_d = t XNOR t_d. Route 730 ps, sign-off 833.333 (signoff_ref + half_mc)."
+   },
+   {
+    "job": "bf_halfphl_0e90389e9_f",
+    "status": "RUNNING",
+    "updated": "2026-10-07T19:59:55-07:00",
+    "commit": "0e90389e9",
+    "branch": "claude/s81-bf-20261007",
+    "owner": "Claude:s81-bf",
+    "purpose": "BF native pair HALF=1 HALF_PHL=1 (s81-bf): the HALF route 61c1cf230 failed only ph -> u_hcg.u_icg/ENA (-474.68 ps; CTS put the ungated phase leaf at 1110 ps, the ICG CLK at 153 ps). Phase FF now drives only the ICG enable and sits on the ICG clock net (PRE_CTS ph_local.tcl, checked POST_CTS); clk consumers use ph_d = t XNOR t_d. Route 730 ps, sign-off 833.333 (signoff_ref + half_mc)."
+   },
+   {
+    "job": "bf_halfphl_mm_a730_e2d2f5d6e",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "e2d2f5d6e",
+    "branch": "claude/s81-bf-20261007",
+    "owner": "Claude:s81-bf",
+    "purpose": "BF native pair HALF=1 HALF_PHL=1 (s81-bf): the HALF route 61c1cf230 failed only ph -> u_hcg.u_icg/ENA (-474.68 ps; CTS put the ungated phase leaf at 1110 ps, the ICG CLK at 153 ps). Phase FF now drives only the ICG enable and sits on the ICG clock net (PRE_CTS ph_local.tcl, checked POST_CTS); clk consumers use ph_d = t XNOR t_d. OWNER-ACCEPTED BF path; flow-hold MM route repair (SS setup + FF hold, HM 50). Route 730 ps, sign-off 833.333 (signoff_ref + half_mc)."
+   },
+   {
+    "job": "bf_halfphl_mm_b700_e2d2f5d6e",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "e2d2f5d6e",
+    "branch": "claude/s81-bf-20261007",
+    "owner": "Claude:s81-bf",
+    "purpose": "BF native pair HALF=1 HALF_PHL=1 (s81-bf): the HALF route 61c1cf230 failed only ph -> u_hcg.u_icg/ENA (-474.68 ps; CTS put the ungated phase leaf at 1110 ps, the ICG CLK at 153 ps). Phase FF now drives only the ICG enable and sits on the ICG clock net (PRE_CTS ph_local.tcl, checked POST_CTS); clk consumers use ph_d = t XNOR t_d. OWNER-ACCEPTED BF path; flow-hold MM route repair (SS setup + FF hold, HM 50). Route 700 ps, sign-off 833.333 (signoff_ref + half_mc)."
+   },
+   {
+    "job": "bf_halfphl_mm_c700u40_e2d2f5d6e",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "e2d2f5d6e",
+    "branch": "claude/s81-bf-20261007",
+    "owner": "Claude:s81-bf",
+    "purpose": "BF native pair HALF=1 HALF_PHL=1 (s81-bf): the HALF route 61c1cf230 failed only ph -> u_hcg.u_icg/ENA (-474.68 ps; CTS put the ungated phase leaf at 1110 ps, the ICG CLK at 153 ps). Phase FF now drives only the ICG enable and sits on the ICG clock net (PRE_CTS ph_local.tcl, checked POST_CTS); clk consumers use ph_d = t XNOR t_d. OWNER-ACCEPTED BF path; flow-hold MM route repair (SS setup + FF hold, HM 50). Route 700 ps util 40, sign-off 833.333 (signoff_ref + half_mc)."
+   },
+   {
+    "job": "bf_halfphl_p700_4000b1ea7",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:42:49-07:00",
+    "commit": "4000b1ea7",
+    "branch": "claude/s81-bf-20261007",
+    "owner": "Claude:s81-bf",
+    "purpose": "BF native pair HALF=1 HALF_PHL=1 (s81-bf): the HALF route 61c1cf230 failed only ph -> u_hcg.u_icg/ENA (-474.68 ps; CTS put the ungated phase leaf at 1110 ps, the ICG CLK at 153 ps). Phase FF now drives only the ICG enable and sits on the ICG clock net (PRE_CTS ph_local.tcl, checked POST_CTS); clk consumers use ph_d = t XNOR t_d. Route 700 ps, sign-off 833.333 (signoff_ref + half_mc)."
+   },
+   {
+    "job": "bf_halfphl_p700_4000b1ea7_f",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:51:50-07:00",
+    "commit": "4000b1ea7",
+    "branch": "claude/s81-bf-20261007",
+    "owner": "Claude:s81-bf",
+    "purpose": "BF native pair HALF=1 HALF_PHL=1 (s81-bf): the HALF route 61c1cf230 failed only ph -> u_hcg.u_icg/ENA (-474.68 ps; CTS put the ungated phase leaf at 1110 ps, the ICG CLK at 153 ps). Phase FF now drives only the ICG enable and sits on the ICG clock net (PRE_CTS ph_local.tcl, checked POST_CTS); clk consumers use ph_d = t XNOR t_d. Route 700 ps, sign-off 833.333 (signoff_ref + half_mc)."
+   },
+   {
+    "job": "bf_halfphl_u40_24998a67e",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:51:52-07:00",
+    "commit": "24998a67e",
+    "branch": "claude/s81-bf-20261007",
+    "owner": "Claude:s81-bf",
+    "purpose": "BF native pair HALF=1 HALF_PHL=1 (s81-bf): the HALF route 61c1cf230 failed only ph -> u_hcg.u_icg/ENA (-474.68 ps; CTS put the ungated phase leaf at 1110 ps, the ICG CLK at 153 ps). Phase FF now drives only the ICG enable and sits on the ICG clock net (PRE_CTS ph_local.tcl, checked POST_CTS); clk consumers use ph_d = t XNOR t_d. Route 700 ps at core utilisation 40 (more area), sign-off 833.333 (signoff_ref + half_mc)."
+   },
+   {
+    "job": "bf_hitfix_3978531b5",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:42:50-07:00",
+    "commit": "3978531b5",
+    "branch": "claude/dsrom-bf-rowfix-20261007",
+    "owner": "Claude:pq-adopt (BF rowfix)",
+    "purpose": "BF native pair PINREG=1 HITFIX=1 (x-need match from registered class offsets, no 532-bit match enable, replicated FIFO flag; 0 cycles) routed with setup repaired at WC (bf_m2 ran ORFS CORNERS=BC: every repair at FF, SS sign-off -605.6), IO from the measured insertion"
+   },
+   {
+    "job": "bf_recut_260869fd0",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T05:01:25-07:00",
+    "commit": "260869fd0",
+    "branch": "claude/dsrom-bf-rowfix-20261007",
+    "owner": "Claude:bf-rowfix (re-cut A)",
+    "purpose": "BF native pair re-cut A: PINREG=1 RECUT=2 - the BF pair on the DS q-element ot_v41_rom_elem_qx_w10 (QX 10 closed walker/x-need/issue/per-macro/tree/chain re-cuts, BF16 under QBF) + BF lanes re-cut (8-stage multiplier, chain4 kept forward copies, fully cut tree adders); route 730 ps, WC repair, IO from the measured insertion; sign-off 833.333 (signoff_ref.sdc). Previous HITFIX full-rate route: GRT SS -256 over 102 classes.",
+    "reason": "calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop"
+   },
+   {
+    "job": "bf_recut_5e31c66a7-cgfix",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "df37bfa4e",
+    "branch": "claude/setup-triage-20261007",
+    "owner": "Claude:setup-triage (block owner claude/dsrom-bf-rowfix-20261007 / Claude:bf-rowfix (re-cut A))",
+    "purpose": "SETUP-TRIAGE requeue of bf_recut_5e31c66a7 (SS -329.85 / FF -103.74): class A/B flow fixes only (clock-gate push-down with latch cloning, CTS-net dont_touch before repair, fixed SDC patterns) + flow-hold mm hold repair; source = origin/main + setup-triage fixes, no RTL change by this stream. "
+   },
+   {
+    "job": "bf_recut_5e31c66a7",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T11:19:57-07:00",
+    "commit": "5e31c66a7",
+    "branch": "claude/dsrom-bf-rowfix-20261007",
+    "owner": "Claude:bf-rowfix (re-cut A)",
+    "purpose": "BF native pair re-cut A: PINREG=1 RECUT=2 - the BF pair on the DS q-element ot_v41_rom_elem_qx_w10 (QX 10 closed walker/x-need/issue/per-macro/tree/chain re-cuts, BF16 under QBF) + BF lanes re-cut (8-stage multiplier, chain4 kept forward copies, fully cut tree adders); route 730 ps, WC repair, IO from the measured insertion; sign-off 833.333 (signoff_ref.sdc). Previous HITFIX full-rate route: GRT SS -256 over 102 classes. Resubmitted from 5e31c66a7: bf_recut_260869fd0 died in calibrate synthesis (synth.tcl asserted the original element's wake leaves).",
+    "ss_ps": -329.85,
+    "ff_ps": -103.74,
+    "drc": 0,
+    "reason": "SS -329.85 / FF -103.74 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "bf_unroll_5e31c66a7",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T13:24:28-07:00",
+    "commit": "5e31c66a7",
+    "branch": "claude/dsrom-bf-rowfix-20261007",
+    "owner": "Claude:bf-rowfix (unroll-by-2)",
+    "purpose": "BF native pair unroll variant: PINREG=1 RECUT=3 = re-cut A + the BF lane chunk chains unrolled by 2 on a half-rate gated clock (ot_v41_chain2u2, MC2/1 on hs_* via u2_mc.sdc); route 730 ps, sign-off 833.333 (signoff_ref.sdc + u2_mc.sdc). Owner LAUNCH IMMEDIATELY: route launched at lint, bench in parallel gates adoption. Resubmitted from 5e31c66a7: bf_unroll_9cf64047e died in calibrate synthesis (synth.tcl asserted the original element's wake leaves).",
+    "ss_ps": -483.86,
+    "ff_ps": -81.27,
+    "drc": 0,
+    "reason": "SS -483.86 / FF -81.27 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "bf_unroll_9cf64047e",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T05:06:45-07:00",
+    "commit": "9cf64047e",
+    "branch": "claude/dsrom-bf-rowfix-20261007",
+    "owner": "Claude:bf-rowfix (unroll-by-2)",
+    "purpose": "BF native pair unroll variant: PINREG=1 RECUT=3 = re-cut A + the BF lane chunk chains unrolled by 2 on a half-rate gated clock (ot_v41_chain2u2, MC2/1 on hs_* via u2_mc.sdc); route 730 ps, sign-off 833.333 (signoff_ref.sdc + u2_mc.sdc). Owner LAUNCH IMMEDIATELY: route launched at lint, bench in parallel gates adoption.",
+    "reason": "calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop"
+   }
+  ],
+  "ot_s81_bf_native_root_phase": [
+   {
+    "job": "bf_root_phase_8be556c2e",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:59:55-07:00",
+    "commit": "8be556c2e",
+    "branch": "main",
+    "owner": "Codex:s81/bf_pq",
+    "purpose": "Structural local phase-clock root branch; +2 inverters, no cycle delta. No adoption until full transaction and production-clock SS/FF checks pass.",
+    "reason": "bench_full_pair_exact expected PASS but rc=1"
+   },
+   {
+    "job": "bf_root_phase_b73d54a9c_archive",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T10:29:04-07:00",
+    "commit": "b73d54a9c",
+    "branch": "main",
+    "owner": "Codex:s81/bf_pq",
+    "purpose": "Structural local phase-clock root branch; +2 inverters, no cycle delta. No adoption until full transaction and production-clock SS/FF checks pass.",
+    "reason": "calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop"
+   },
+   {
+    "job": "bf_root_phase_cts_rewire_7ab4873f4",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T14:14:33-07:00",
+    "commit": "7ab4873f4",
+    "branch": "main",
+    "owner": "Codex:s81/bf_pq",
+    "purpose": "BF local phase root physical successor: FIRM locality with CTS rewiring allowed; post-CTS census; identical b73 RTL/exact vehicle, no latency/area delta.",
+    "reason": "calibrate flow_error: ORFS error before CTS completed: see the CALIBRATE_FAIL detail, fix, re-drop"
+   },
+   {
+    "job": "bf_root_phase_hierarchy_7990dfdbf",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T12:05:41-07:00",
+    "commit": "7990dfdbf",
+    "branch": "main",
+    "owner": "Codex:s81/bf_pq",
+    "purpose": "BF local phase root physical successor: semantic kept-hierarchy pin lookup; identical b73 RTL/exact vehicle, no latency/area delta.",
+    "reason": "calibrate odb_dont_touch: CTS must rewire a dont_touch instance (ODB-0370): do not dont_touch cells on clock/repair nets (or release them in PRE_CTS), re-drop"
+   }
+  ],
+  "ot_v41_rom_elem_q_qxpq_w10": [
+   {
+    "job": "dsrom-qelem-qs3-48d02e7af",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T08:52:00-07:00",
+    "commit": "48d02e7af",
+    "branch": "claude/dsrom-qelem-pq-20261006",
+    "owner": "Claude:ds-pq (DS PQ adoption takeover)",
+    "purpose": "DS ROM PQ q-element SAFE QS=3 (owner fail-fast structural decision 2026-10-06 23:00): bterm5 midpoint register on the decode->product wire + registered CSA terms, segment tree YF (register-only in-flight forward), write-retimed need walker; route at the Z29c 0.730 over-constraint (period 0.833 + 163 ps setup uncertainty), sign-off 0.833 SS/FF at the calibrated insertion",
+    "reason": "calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop"
+   },
+   {
+    "job": "dsrom-qelem-qs3-cb92bce64",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:49:51-07:00",
+    "commit": "cb92bce64",
+    "branch": "claude/dsrom-qelem-pq-20261006",
+    "owner": "Claude:ds-pq (DS PQ adoption takeover)",
+    "purpose": "DS ROM PQ q-element SAFE QS=3 (owner fail-fast structural decision 2026-10-06 23:00): bterm5 midpoint register on the decode->product wire + registered CSA terms, segment tree YF (register-only in-flight forward), write-retimed need walker; route at the Z29c 0.730 over-constraint (period 0.833 + 163 ps setup uncertainty), sign-off 0.833 SS/FF at the calibrated insertion"
+   },
+   {
+    "job": "dsrom-qelem-qs4-cc7e9b2a9",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T06:49:24-07:00",
+    "commit": "cc7e9b2a9",
+    "branch": "claude/dsrom-qelem-pq-20261006",
+    "owner": "Claude:ds-pq (DS PQ adoption takeover)",
+    "purpose": "DS ROM PQ q-element QS=4 = QS=3 + WRD (walker nA/nB from registered end/advance decisions with kept copies; QS3 CTS worst hpk -> nA_r -62.9 at 730), routed in parallel with dsrom-qelem-qs3-cb92bce64 (owner order 2026-10-07); route 0.730 over-constraint, sign-off 0.833 SS/FF at the calibrated insertion",
+    "reason": "route crashed twice (rc=1 ok-check failed: ; resource=False)"
+   },
+   {
+    "job": "dsrom-qelem-qs4r-cc7e9b2a9",
+    "status": "RUNNING",
+    "updated": "2026-10-07T19:58:55-07:00",
+    "commit": "cc7e9b2a9",
+    "branch": "claude/dsrom-qelem-pq-20261006",
+    "owner": "Claude:ds-pq (DS PQ adoption takeover)",
+    "purpose": "DS ROM PQ q-element QS=4 = QS=3 + WRD (walker nA/nB from registered end/advance decisions with kept copies; QS3 CTS worst hpk -> nA_r -62.9 at 730), routed in parallel with dsrom-qelem-qs3-cb92bce64 (owner order 2026-10-07); route 0.730 over-constraint, sign-off 0.833 SS/FF at the calibrated insertion | RESUBMIT: first route failed GRT-0116 (7 H / 7 V max overflow, 459 total at ROUTING_LAYER_ADJUSTMENT 0.22, GRT advised lowering it); flow fix RLA 0.12, RTL unchanged"
+   },
+   {
+    "job": "dsrom-qelem-qs5-1b89b1b6d",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:49:52-07:00",
+    "commit": "1b89b1b6d",
+    "branch": "claude/dsrom-qelem-pq-20261006",
+    "owner": "Claude:ds-pq (DS PQ adoption takeover)",
+    "purpose": "DS ROM PQ q-element QS=5 = QS=4 + walker/tree loop registers on the ungated clock with kept-copy enables (owner third route 2026-10-07; removes 35-80 ps gated/ungated loop skew); parallel to QS3/QS4; route 0.730, sign-off 0.833 SS/FF at the calibrated insertion"
+   },
+   {
+    "job": "dsrom-qelem-qs5-5a2b2209f",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T05:47:32-07:00",
+    "commit": "5a2b2209f",
+    "branch": "claude/dsrom-qelem-pq-20261006",
+    "owner": "Claude:ds-pq (DS PQ adoption takeover)",
+    "purpose": "DS ROM PQ q-element QS=5 = QS=4 + walker/tree loop registers on the ungated clock with kept-copy enables (owner third route 2026-10-07; removes 35-80 ps gated/ungated loop skew); parallel to QS3/QS4; route 0.730, sign-off 0.833 SS/FF at the calibrated insertion",
+    "reason": "calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop"
+   },
+   {
+    "job": "dsrom-qelem-qs5f-e1fbc25c1",
+    "status": "ECO",
+    "updated": "2026-10-07T19:59:55-07:00",
+    "commit": "e1fbc25c1",
+    "branch": "claude/dsrom-qelem-pq-20261006",
+    "owner": "Claude:ds-pq (DS PQ adoption takeover)",
+    "purpose": "DS ROM PQ q-element QS=5 (RTL = 1b89b1b6d, benched exact) in a LARGER footprint per the owner no-squeeze rule after GRT congestion: FH 221.4 (+15.2% area vs 192.24, ~52% utilisation), width 510.84 and pin faces/order unchanged, RLA 0.12; route 0.730, sign-off 0.833",
+    "ss_ps": 24.98,
+    "ff_ps": -26.71,
+    "drc": 0,
+    "reason": ""
+   },
+   {
+    "job": "dsrom-qelem-qs5r-1b89b1b6d",
+    "status": "RUNNING",
+    "updated": "2026-10-07T19:58:55-07:00",
+    "commit": "1b89b1b6d",
+    "branch": "claude/dsrom-qelem-pq-20261006",
+    "owner": "Claude:ds-pq (DS PQ adoption takeover)",
+    "purpose": "DS ROM PQ q-element QS=5 = QS=4 + walker/tree loop registers on the ungated clock with kept-copy enables (owner third route 2026-10-07; removes 35-80 ps gated/ungated loop skew); parallel to QS3/QS4; route 0.730, sign-off 0.833 SS/FF at the calibrated insertion | RESUBMIT at RLA 0.12: QS3 and QS4 routes at RLA 0.22 both failed GRT congestion (GRT-0232 / GRT-0116, ~460 overflow after repair); flow fix, RTL unchanged"
+   }
+  ],
+  "ot_dsrom_su_fdiv_tile": [
+   {
+    "job": "dsrom_softmax_safe_div2_e52c8b1ef",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:49:53-07:00",
+    "commit": "e52c8b1ef",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE=2 divider tile: non-restoring steps in two stages, split normalise (+29 cycles)",
+    "ss_ps": -245.82,
+    "ff_ps": 5.39,
+    "drc": 0,
+    "reason": "SS -245.82 / FF 5.39 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0); checks failed: io_budget_ge_15"
+   },
+   {
+    "job": "dsrom_softmax_safe_div2b_0e308d916",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:50:51-07:00",
+    "commit": "0e308d916",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE=2 divider tile v2: keep-prefix split steps + split normalise (depth 63)"
+   },
+   {
+    "job": "dsrom_softmax_safe_div2b_6133b4bbf",
+    "status": "CLOSED",
+    "updated": "2026-10-07T07:55:52-07:00",
+    "commit": "6133b4bbf",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE=2 divider tile v2: keep-prefix split steps + split normalise (depth 63)",
+    "ss_ps": 184.78,
+    "ff_ps": 17.99,
+    "drc": 0,
+    "reason": "CLOSED SS +184.78 / FF +17.99 ps DRC 0 | record claude/dsrom-su-softmax-20261004 534741f3a (5 files) | merged into claude/dsrom-su-softmax-20261004 534741f3a"
+   }
+  ],
+  "ot_dsrom_su_fdiv_hr": [
+   {
+    "job": "dsrom_softmax_safe_divhr_6133b4bbf",
+    "status": "CLOSED",
+    "updated": "2026-10-07T08:06:24-07:00",
+    "commit": "6133b4bbf",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE=3 half-rate divider (two cores, multicycle-2)",
+    "ss_ps": 95.74,
+    "ff_ps": 17.77,
+    "drc": 0,
+    "reason": "CLOSED SS +95.74 / FF +17.77 ps DRC 0 | record claude/dsrom-su-softmax-20261004 e823d80b6 (5 files) | merged into claude/dsrom-su-softmax-20261004 e823d80b6"
+   },
+   {
+    "job": "dsrom_softmax_safe_divhr_e52c8b1ef",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:50:52-07:00",
+    "commit": "e52c8b1ef",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE=3 half-rate divider (two cores, multicycle-2)",
+    "ss_ps": 25.84,
+    "ff_ps": 2.53,
+    "drc": 0,
+    "reason": "SS 25.84 / FF 2.53 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0); checks failed: io_budget_ge_15"
+   }
+  ],
+  "ot_dsrom_su_softmax_exp_tile": [
+   {
+    "job": "dsrom_softmax_safe_exp_34813e335",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T19:50:53-07:00",
+    "commit": "34813e335",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE softmax exp tile (9 instances per block): registered input, exp6 on the margin adders, route 730/sign-off 833, IO false-pathed + re-timed",
+    "reason": "calibrate rsz_max_buffer: CTS timing repair hit the buffer cap (RSZ-0060): the IO SDC insertion/budget is off for this block or a net has extreme fanout -- check the IO SDC (budget/calibrated), duplicate high-fanout drivers, re-drop"
+   },
+   {
+    "job": "dsrom_softmax_safe_exp_d806a0254",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:50:53-07:00",
+    "commit": "d806a0254",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE softmax exp tile (9 instances per block): registered input, exp6 on the margin adders, route 730/sign-off 833, IO false-pathed + re-timed",
+    "ss_ps": -217.87,
+    "ff_ps": 21.98,
+    "drc": 0,
+    "reason": "SS -217.87 / FF 21.98 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0); checks failed: io_budget_ge_15"
+   },
+   {
+    "job": "dsrom_softmax_safe_exprc2_09d4d345e",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:51:54-07:00",
+    "commit": "09d4d345e",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE exp tile RECUT=2: f12r units + the cancellation shift split across the cut (ADDX=1)",
+    "ss_ps": 166.23,
+    "ff_ps": -20.3,
+    "drc": 0,
+    "reason": "SS 166.23 / FF -20.3 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0); checks failed: io_budget_ge_15"
+   },
+   {
+    "job": "dsrom_softmax_safe_exprc2_6133b4bbf",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:52:50-07:00",
+    "commit": "6133b4bbf",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE exp tile RECUT=2: f12r units + the cancellation shift split across the cut (ADDX=1)",
+    "ss_ps": 166.23,
+    "ff_ps": -20.3,
+    "drc": 0,
+    "reason": "SS 166.23 / FF -20.3 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0); checks failed: io_budget_ge_15"
+   },
+   {
+    "job": "dsrom_softmax_safe_exprc2f_bd30aca4a",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:52:51-07:00",
+    "commit": "bd30aca4a",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE exp tile RECUT=2: f12r units + the cancellation shift split across the cut (ADDX=1)",
+    "ss_ps": 148.21,
+    "ff_ps": -17.3,
+    "drc": 0,
+    "reason": "SS 148.21 / FF -17.3 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "dsrom_softmax_safe_exprc_6133b4bbf",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:52:52-07:00",
+    "commit": "6133b4bbf",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE exp tile RECUT: f12r multiplier/adder with +2 cuts each (LAT 11), exp DEPTH 172",
+    "ss_ps": 151.18,
+    "ff_ps": -13.34,
+    "drc": 0,
+    "reason": "SS 151.18 / FF -13.34 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0); checks failed: io_budget_ge_15"
+   },
+   {
+    "job": "dsrom_softmax_safe_exprc_76ee9fbfd",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:52:53-07:00",
+    "commit": "76ee9fbfd",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE exp tile RECUT: f12r multiplier/adder with +2 cuts each (LAT 11), exp DEPTH 172"
+   },
+   {
+    "job": "dsrom_softmax_safe_exprcf_bd30aca4a",
+    "status": "CLOSED",
+    "updated": "2026-10-07T10:07:08-07:00",
+    "commit": "bd30aca4a",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE exp tile RECUT: f12r multiplier/adder with +2 cuts each (LAT 11), exp DEPTH 172",
+    "ss_ps": 123.11,
+    "ff_ps": 16.7,
+    "drc": 0,
+    "reason": "CLOSED SS +123.11 / FF +16.70 ps DRC 0 | record claude/dsrom-su-softmax-20261004 e899af215 (5 files) | merged into claude/dsrom-su-softmax-20261004 e899af215"
+   }
+  ],
+  "ot_dsrom_su_softmax_exp_hr": [
+   {
+    "job": "dsrom_softmax_safe_exphr_6133b4bbf-mm",
+    "status": "RUNNING",
+    "updated": "2026-10-07T19:59:55-07:00",
+    "commit": "ef256b299",
+    "branch": "claude/flow-hold-20261007",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "FLOW-HOLD requeue of dsrom_softmax_safe_exphr_6133b4bbf (SS 140.66 / FF -22.21): multi-mode route-time hold repair (SS setup + FF hold at CTS/GRT, HM 50 ps at FF) and rule-H1 IO hold; no RTL change from the branch head"
+   },
+   {
+    "job": "dsrom_softmax_safe_exphr_6133b4bbf",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T07:33:47-07:00",
+    "commit": "6133b4bbf",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE=3 half-rate exp (two cores on gated even/odd clocks, multicycle-2): II 1, latency 2*DEPTH+1",
+    "ss_ps": 140.66,
+    "ff_ps": -22.21,
+    "drc": 0,
+    "reason": "SS 140.66 / FF -22.21 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0); checks failed: io_budget_ge_15"
+   },
+   {
+    "job": "dsrom_softmax_safe_exphr_e52c8b1ef",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:51:53-07:00",
+    "commit": "e52c8b1ef",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE=3 half-rate exp (two cores on gated even/odd clocks, multicycle-2): II 1, latency 2*DEPTH+1"
+   },
+   {
+    "job": "dsrom_softmax_safe_exphrf_bd30aca4a",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T12:21:38-07:00",
+    "commit": "bd30aca4a",
+    "branch": "claude/dsrom-su-softmax-20261004",
+    "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+    "purpose": "SAFE=3 half-rate exp (two cores on gated even/odd clocks, multicycle-2): II 1, latency 2*DEPTH+1",
+    "ss_ps": 91.83,
+    "ff_ps": -18.72,
+    "drc": 0,
+    "reason": "SS 91.83 / FF -18.72 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   }
+  ],
+  "hfd_coll_credit_prod": [
+   {
+    "job": "hbm_credit-020f7671c",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:01:34-07:00",
+    "commit": "020f7671c",
+    "branch": "claude/hbm-contracts-20261007",
+    "owner": "Claude:hbm-contracts",
+    "purpose": "HBM collective native Gray credit producer + partner consumer + TX flight gate (single-clock screen; replaces the tb credit preload)",
+    "ss_ps": -127.61,
+    "ff_ps": -10.17,
+    "drc": 0,
+    "reason": "SS -127.61 / FF -10.17 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "hbm_credit-36399d734",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "36399d734",
+    "branch": "claude/hbm-contracts-20261007",
+    "owner": "Claude:hbm-contracts",
+    "purpose": "HBM contract block credit (structural fixes 456fcf4a6, calibrated die-clock IO, flow-hold mm hold repair)"
+   },
+   {
+    "job": "hbm_credit-444859f1d-x",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "444859f1d",
+    "branch": "claude/hbm-contracts-20261007",
+    "owner": "Claude:hbm-contracts",
+    "purpose": "HBM collective native Gray credit producer + consumer + TX flight gate, registered outputs + reset synchronisers (re-route of 020f7671c SS -127.6: combinational sync->pin) [re-drop off EPYC3: die-top host at its memory floor]"
+   },
+   {
+    "job": "hbm_credit-444859f1d",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:55:54-07:00",
+    "commit": "444859f1d",
+    "branch": "claude/hbm-contracts-20261007",
+    "owner": "Claude:hbm-contracts",
+    "purpose": "HBM collective native Gray credit producer + consumer + TX flight gate, registered outputs + reset synchronisers (re-route of 020f7671c SS -127.6: combinational sync->pin)"
+   }
+  ],
+  "hfd_coll_pkt_fifo_ii1": [
+   {
+    "job": "hbm_pkt_ii1-020f7671c",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:21:39-07:00",
+    "commit": "020f7671c",
+    "branch": "claude/hbm-contracts-20261007",
+    "owner": "Claude:hbm-contracts",
+    "purpose": "HBM collective packet SRAM II=1 refill (545 b x 256, 3 x 256x256 macros); removes the II=3 rate cap (+30.78 us AR / +172 us MTP)"
+   },
+   {
+    "job": "hbm_pkt_ii1-36399d734",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "36399d734",
+    "branch": "claude/hbm-contracts-20261007",
+    "owner": "Claude:hbm-contracts",
+    "purpose": "HBM contract block pkt_ii1 (structural fixes 456fcf4a6, calibrated die-clock IO, flow-hold mm hold repair)"
+   },
+   {
+    "job": "hbm_pkt_ii1-8bd16b9e0",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T18:37:32-07:00",
+    "commit": "8bd16b9e0",
+    "branch": "claude/hbm-contracts-20261007",
+    "owner": "Claude:hbm-contracts",
+    "purpose": "HBM collective packet SRAM II=1 refill queue (545 b x 256, 3 x 256x256 macros); removes the II=3 rate cap (+30.78 us AR / +172 us MTP)",
+    "reason": "route crashed twice (rc=1 ok-check failed: ; resource=False)"
+   },
+   {
+    "job": "hbm_pkt_ii1-de406cb5b",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:44:55-07:00",
+    "commit": "de406cb5b",
+    "branch": "claude/hbm-contracts-20261007",
+    "owner": "Claude:hbm-contracts",
+    "purpose": "HBM contract block pkt_ii1 (explicit macro floorplan + pin regions)",
+    "ss_ps": -909.44,
+    "ff_ps": -58.18,
+    "drc": 0,
+    "reason": "SS -909.44 / FF -58.18 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "hbm_pkt_ii1b-36399d734",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "36399d734",
+    "branch": "claude/hbm-contracts-20261007",
+    "owner": "Claude:hbm-contracts",
+    "purpose": "HBM contract block pkt_ii1b (structural fixes 456fcf4a6, calibrated die-clock IO, flow-hold mm hold repair)"
+   },
+   {
+    "job": "hbm_pkt_ii1b-de406cb5b",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:48:55-07:00",
+    "commit": "de406cb5b",
+    "branch": "claude/hbm-contracts-20261007",
+    "owner": "Claude:hbm-contracts",
+    "purpose": "HBM contract block pkt_ii1b (explicit macro floorplan + pin regions)",
+    "ss_ps": -927.85,
+    "ff_ps": -45.85,
+    "drc": 0,
+    "reason": "SS -927.85 / FF -45.85 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   }
+  ],
+  "hfd_coll_pkt_fifo_ii3": [
+   {
+    "job": "hbm_pkt_ii3ref-8bd16b9e0",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T18:37:32-07:00",
+    "commit": "8bd16b9e0",
+    "branch": "claude/hbm-contracts-20261007",
+    "owner": "Claude:hbm-contracts",
+    "purpose": "REFERENCE ONLY (never adopted): the legacy II=3 packet SRAM at the same shape, to price the refill's timing/area delta",
+    "reason": "route crashed twice (rc=1 ok-check failed: ; resource=False)"
+   }
+  ],
+  "hfd_result_relay64_ew": [
+   {
+    "job": "hbm_result_relay64_ew_screen_5588e3440",
+    "status": "READY",
+    "updated": "2026-10-07T19:59:55-07:00",
+    "commit": "5588e3440",
+    "branch": "main",
+    "owner": "Codex:hbm-relays",
+    "purpose": "Primitive screening only: actual regionalclock/IO budgets, end-to-end link/control protection andcheckedconsumer, global replicated fit remain OPEN. Never export/adopt this screening view."
+   }
+  ],
+  "hfd_result_relay64_ns": [
+   {
+    "job": "hbm_result_relay64_ns_screen_5588e3440",
+    "status": "READY",
+    "updated": "2026-10-07T19:59:55-07:00",
+    "commit": "5588e3440",
+    "branch": "main",
+    "owner": "Codex:hbm-relays",
+    "purpose": "Primitive screening only: actual regionalclock/IO budgets, end-to-end link/control protection andcheckedconsumer, global replicated fit remain OPEN. Never export/adopt this screening view."
+   }
+  ],
+  "ot_v41_pqc_spine_screen": [
+   {
+    "job": "pq_r128_expanded_b1528203c-e3",
+    "status": "RUNNING",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "b1528203c",
+    "branch": "main",
+    "owner": "Claude:s81-fieldphase (from Codex:s81/bf_pq)",
+    "purpose": "Source-identical d017 R128 PQ screen expanded550.368um; no cycle delta; no production parent claim | RE-HOSTED 2026-10-07 to EPYC3 (EPYC1/EPYC2 run roots below the 200 GB disk floor); spec otherwise identical to pq_r128_expanded_b1528203c"
+   },
+   {
+    "job": "pq_r128_expanded_b1528203c",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T18:57:52-07:00",
+    "commit": "b1528203c",
+    "branch": "main",
+    "owner": "Codex:s81/bf_pq",
+    "purpose": "Source-identical d017 R128 PQ screen expanded550.368um; no cycle delta; no production parent claim"
+   },
+   {
+    "job": "pq_r16_explicit_delay_0ccbe07d0-e3",
+    "status": "RUNNING",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "0ccbe07d0",
+    "branch": "main",
+    "owner": "Claude:s81-fieldphase (from Codex:s81/bf_pq)",
+    "purpose": "One-shot explicit noninverting3HB4 return capture stations, matchedoriginal R16 timing/topology, +0cycles, not productionparent | RE-HOSTED 2026-10-07 to EPYC3 (EPYC1/EPYC2 run roots below the 200 GB disk floor); spec otherwise identical to pq_r16_explicit_delay_0ccbe07d0"
+   },
+   {
+    "job": "pq_r16_explicit_delay_0ccbe07d0",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T18:57:51-07:00",
+    "commit": "0ccbe07d0",
+    "branch": "main",
+    "owner": "Codex:s81/bf_pq",
+    "purpose": "One-shot explicit noninverting3HB4 return capture stations, matchedoriginal R16 timing/topology, +0cycles, not productionparent"
+   },
+   {
+    "job": "s81fs-h1-r128x550-3f8ec327e-b",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:22:24-07:00",
+    "commit": "3f8ec327e",
+    "branch": "claude/s81-fieldphase-20261007",
+    "owner": "Claude:s81-fieldphase",
+    "purpose": "v13b field spine R128 (x550) re-route under flow-hold rule H1 (input min 0 vs -50; output min -50 kept); RTL source-identical to d0178820d (sha-enforced); +0 cycles | -b: bench needs [] so PVE1 (ORFS-only, free RAM) can take it"
+   },
+   {
+    "job": "s81fs-h1-r128x550-3f8ec327e-mm",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:42:53-07:00",
+    "commit": "3f8ec327e",
+    "branch": "claude/s81-fieldphase-20261007",
+    "owner": "Claude:s81-fieldphase",
+    "purpose": "v13b field spine R128 (x550) re-route under flow-hold rule H1 (input min 0 vs -50; output min -50 kept); RTL source-identical to d0178820d (sha-enforced); +0 cycles | flow-hold MM route-time hold repair (SS setup + FF hold scenes, FF SDC = signoff_h1.sdc), bench needs [] (PVE1 eligible)"
+   },
+   {
+    "job": "s81fs-h1-r128x550-3f8ec327e-mmq",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "3f8ec327e",
+    "branch": "claude/s81-fieldphase-20261007",
+    "owner": "Claude:s81-fieldphase",
+    "purpose": "FLOW-HOLD requeue of s81fs-h1-r128x550-3f8ec327e-mm (SS None / FF None) on its own source, snapshot patched in-stage by claude/flow-hold-20261007 @3aff1e111 (hold_corners_patch mm + h1_patch); multi-mode route-time hold repair (SS setup + FF hold under the FF sign-off SDCs at CTS/GRT, HM 50 ps at FF). v13b field spine R128 (x550) re-route under flow-hold rule H1 (input min 0 vs -50; output min -50 kept); RTL source-identical to d0178820d (sha-enforced); +0 cycles | flow-hold MM route-time hold repair (SS setup + FF hold scenes, FF SDC = signoff_h1.sdc), bench needs [] (PVE1 eligible)"
+   },
+   {
+    "job": "s81fs-h1-r128x550-3f8ec327e",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:19:57-07:00",
+    "commit": "3f8ec327e",
+    "branch": "claude/s81-fieldphase-20261007",
+    "owner": "Claude:s81-fieldphase",
+    "purpose": "v13b field spine R128 (x550) re-route under flow-hold rule H1 (input min 0 vs -50; output min -50 kept); RTL source-identical to d0178820d (sha-enforced); +0 cycles"
+   },
+   {
+    "job": "s81fs-h1-r16u35-3f8ec327e-b",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:22:25-07:00",
+    "commit": "3f8ec327e",
+    "branch": "claude/s81-fieldphase-20261007",
+    "owner": "Claude:s81-fieldphase",
+    "purpose": "v13b field spine R16 (u35) re-route under flow-hold rule H1 (input min 0 vs -50; output min -50 kept); RTL source-identical to d0178820d (sha-enforced); +0 cycles | -b: bench needs [] so PVE1 (ORFS-only, free RAM) can take it"
+   },
+   {
+    "job": "s81fs-h1-r16u35-3f8ec327e-mm",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:42:53-07:00",
+    "commit": "3f8ec327e",
+    "branch": "claude/s81-fieldphase-20261007",
+    "owner": "Claude:s81-fieldphase",
+    "purpose": "v13b field spine R16 (u35) re-route under flow-hold rule H1 (input min 0 vs -50; output min -50 kept); RTL source-identical to d0178820d (sha-enforced); +0 cycles | flow-hold MM route-time hold repair (SS setup + FF hold scenes, FF SDC = signoff_h1.sdc), bench needs [] (PVE1 eligible)"
+   },
+   {
+    "job": "s81fs-h1-r16u35-3f8ec327e-mmq",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "3f8ec327e",
+    "branch": "claude/s81-fieldphase-20261007",
+    "owner": "Claude:s81-fieldphase",
+    "purpose": "FLOW-HOLD requeue of s81fs-h1-r16u35-3f8ec327e-mm (SS None / FF None) on its own source, snapshot patched in-stage by claude/flow-hold-20261007 @3aff1e111 (hold_corners_patch mm + h1_patch); multi-mode route-time hold repair (SS setup + FF hold under the FF sign-off SDCs at CTS/GRT, HM 50 ps at FF). v13b field spine R16 (u35) re-route under flow-hold rule H1 (input min 0 vs -50; output min -50 kept); RTL source-identical to d0178820d (sha-enforced); +0 cycles | flow-hold MM route-time hold repair (SS setup + FF hold scenes, FF SDC = signoff_h1.sdc), bench needs [] (PVE1 eligible)"
+   },
+   {
+    "job": "s81fs-h1-r16u35-3f8ec327e",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:20:08-07:00",
+    "commit": "3f8ec327e",
+    "branch": "claude/s81-fieldphase-20261007",
+    "owner": "Claude:s81-fieldphase",
+    "purpose": "v13b field spine R16 (u35) re-route under flow-hold rule H1 (input min 0 vs -50; output min -50 kept); RTL source-identical to d0178820d (sha-enforced); +0 cycles"
+   }
+  ],
+  "qfd_ctrl_pc_00": [
+   {
+    "job": "qfd_ctrl_pc_00-05c13a84a",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T08:48:47-07:00",
+    "commit": "05c13a84a",
+    "branch": "codex/qwen-ctrl-kvc-final-20261007",
+    "owner": "Codex:qwen-kvctrl",
+    "purpose": "Qwen original full-feature JEDEC PC0, WR_EN1 WQ4 PULLIN0, packet credit boundary and equal registered PHY outputs. Does not include whole qfd_ctrl payload/landing service. Functional1024ps, tighter physical833ps screen."
+   },
+   {
+    "job": "qfd_ctrl_pc_00-74d839a79",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T09:27:30-07:00",
+    "commit": "74d839a79",
+    "branch": "codex/qwen-ctrl-kvc-final-20261007",
+    "owner": "Codex:qwen-kvctrl",
+    "purpose": "Qwen original full-feature JEDEC PC0, WR_EN1 WQ4 PULLIN0, packet credit boundary and equal registered PHY outputs. Does not include whole qfd_ctrl payload/landing service. Functional1024ps, tighter physical833ps screen.",
+    "ss_ps": -185.84,
+    "ff_ps": -34.99,
+    "drc": 0,
+    "reason": "SS -185.84 / FF -34.99 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "qfd_ctrl_ready_hbm_00-9631f4025",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:58-07:00",
+    "commit": "9631f4025",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "Qwen JEDEC scheduler PC0: ready-cut RTL (8be556c2e) in its die domain hbm_976p6, sign-off 1.024 ns (PC0 re-STA of the existing route: SS +79.73)"
+   }
+  ],
+  "qfd_ctrl_shift_00": [
+   {
+    "job": "qfd_ctrl_shift_00-95f7e75c1",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T18:29:29-07:00",
+    "commit": "95f7e75c1",
+    "branch": "main",
+    "owner": "Codex:qwen-control",
+    "purpose": "Exact oldest-first write queue plus stored bank-onehot. Targets measured wq_rp\u2192wab_oh\u2212110.94 and write_ready\u2192hb_oh\u221256.40. Zero cycles; input/reset/output hold still separate obligations.",
+    "ss_ps": -88.92,
+    "ff_ps": -37.93,
+    "drc": 0,
+    "reason": "SS -88.92 / FF -37.93 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   }
+  ],
+  "qfd_hub_fr": [
+   {
+    "job": "qfd_hub_fr-32c8ac189-mm",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:53:04-07:00",
+    "commit": "32c8ac189",
+    "branch": "claude/qwen-contracts-20261007",
+    "owner": "Claude:qwen-contracts",
+    "purpose": "Gate link_credit_rtt: full-rate Qwen hub successor (CR=128 link credits covering the measured 117/119-cycle credit RTT; per-link 8-word output FIFOs; 8-word x3 skid; native credit range faults), frame 561.6 um square; same r21 pins/kit as qfd_hub [flow-hold: rule H1 kit + multi-mode route hold repair]"
+   },
+   {
+    "job": "qfd_hub_fr-5718fabd6-mm",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "5718fabd6",
+    "branch": "claude/qwen-contracts-20261007",
+    "owner": "Claude:qwen-contracts",
+    "purpose": "Gate link_credit_rtt: full-rate Qwen hub successor (CR=128 link credits covering the measured 117/119-cycle credit RTT; per-link 8-word output FIFOs; 8-word x3 skid; native credit range faults), frame 561.6 um square; same r21 pins/kit as qfd_hub [flow-hold: rule H1 kit + multi-mode route hold repair]"
+   },
+   {
+    "job": "qfd_hub_fr-b3af3a9ed",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:24:44-07:00",
+    "commit": "b3af3a9ed",
+    "branch": "claude/qwen-contracts-20261007",
+    "owner": "Claude:qwen-contracts",
+    "purpose": "Gate link_credit_rtt: full-rate Qwen hub successor (CR=128 link credits covering the measured 117/119-cycle credit RTT; per-link 8-word output FIFOs; 8-word x3 skid; native credit range faults), frame 561.6 um square; same r21 pins/kit as qfd_hub"
+   }
+  ],
+  "qfd_hub_fr_w648": [
+   {
+    "job": "qfd_hub_fr_w648-32c8ac189-mm",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:53:04-07:00",
+    "commit": "32c8ac189",
+    "branch": "claude/qwen-contracts-20261007",
+    "owner": "Claude:qwen-contracts",
+    "purpose": "Gate link_credit_rtt: full-rate Qwen hub successor (CR=128 link credits covering the measured 117/119-cycle credit RTT; per-link 8-word output FIFOs; 8-word x3 skid; native credit range faults), frame 648.0 um square; same r21 pins/kit as qfd_hub [flow-hold: rule H1 kit + multi-mode route hold repair]"
+   },
+   {
+    "job": "qfd_hub_fr_w648-5718fabd6-mm",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "5718fabd6",
+    "branch": "claude/qwen-contracts-20261007",
+    "owner": "Claude:qwen-contracts",
+    "purpose": "Gate link_credit_rtt: full-rate Qwen hub successor (CR=128 link credits covering the measured 117/119-cycle credit RTT; per-link 8-word output FIFOs; 8-word x3 skid; native credit range faults), frame 648.0 um square; same r21 pins/kit as qfd_hub [flow-hold: rule H1 kit + multi-mode route hold repair]"
+   },
+   {
+    "job": "qfd_hub_fr_w648-b3af3a9ed",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:24:44-07:00",
+    "commit": "b3af3a9ed",
+    "branch": "claude/qwen-contracts-20261007",
+    "owner": "Claude:qwen-contracts",
+    "purpose": "Gate link_credit_rtt: full-rate Qwen hub successor (CR=128 link credits covering the measured 117/119-cycle credit RTT; per-link 8-word output FIFOs; 8-word x3 skid; native credit range faults), frame 648.0 um square; same r21 pins/kit as qfd_hub"
+   }
+  ],
+  "qfd_link_rx128": [
+   {
+    "job": "qfd_link_rx128-32c8ac189-mm",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:53:04-07:00",
+    "commit": "32c8ac189",
+    "branch": "claude/qwen-contracts-20261007",
+    "owner": "Claude:qwen-contracts",
+    "purpose": "Gate link_credit_rtt: far-end (strip/qfd_kvc side) receive endpoint of the full-rate link: ot_qwen_die_cdc_ch W=523 IBUF=128 OCRED=8, routed standalone to price the receive buffer the strip endpoint grows by [flow-hold: rule H1 kit + multi-mode route hold repair]"
+   },
+   {
+    "job": "qfd_link_rx128-5718fabd6-mm",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:56-07:00",
+    "commit": "5718fabd6",
+    "branch": "claude/qwen-contracts-20261007",
+    "owner": "Claude:qwen-contracts",
+    "purpose": "Gate link_credit_rtt: far-end (strip/qfd_kvc side) receive endpoint of the full-rate link: ot_qwen_die_cdc_ch W=523 IBUF=128 OCRED=8, routed standalone to price the receive buffer the strip endpoint grows by [flow-hold: rule H1 kit + multi-mode route hold repair]"
+   },
+   {
+    "job": "qfd_link_rx128-b3af3a9ed",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:24:47-07:00",
+    "commit": "b3af3a9ed",
+    "branch": "claude/qwen-contracts-20261007",
+    "owner": "Claude:qwen-contracts",
+    "purpose": "Gate link_credit_rtt: far-end (strip/qfd_kvc side) receive endpoint of the full-rate link: ot_qwen_die_cdc_ch W=523 IBUF=128 OCRED=8, routed standalone to price the receive buffer the strip endpoint grows by"
+   }
+  ],
+  "qfd_tile": [
+   {
+    "job": "qfd_tile-5a3bb1721",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T07:16:38-07:00",
+    "commit": "5a3bb1721",
+    "branch": "claude/qwen-elements-final-20261007",
+    "owner": "Claude:qwen-elements",
+    "purpose": "Qwen r21 qfd_tile (west arrays, 266.952 x 1291.656): ot_qwen_rom_tile_die = W12 tile (10 ROM + 2 KV SRAM, MUL_LAT 8 / KV_PREP 4) + landing hop li W -> lo E + land merge; route 770 / sign-off 833.333"
+   },
+   {
+    "job": "qfd_tile-b3ac8745e",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T08:13:46-07:00",
+    "commit": "b3ac8745e",
+    "branch": "claude/qwen-elements-final-20261007",
+    "owner": "Claude:qwen-elements",
+    "purpose": "Qwen r21 qfd_tile (west arrays, landing li W -> lo E): ot_qwen_rom_tile_die = W12 tile (10 ROM + 2 KV SRAM, MUL_LAT 8 / KV_PREP 4) + 2-cycle landing hop (984 b, 3 slots) + land merge NSRC 3; route 770 / sign-off 833.333"
+   },
+   {
+    "job": "qfd_tile-load80-e721e27b5",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T14:05:33-07:00",
+    "commit": "e721e27b5",
+    "branch": "codex/qwen-masters-final-20261007",
+    "owner": "Codex:qwen-masters",
+    "purpose": "Qwen r21 qfd_tile (west arrays, landing li W -> lo E): ot_qwen_rom_tile_die = W12 tile (10 ROM + 2 KV SRAM, MUL_LAT 8 / KV_PREP 4) + 2-cycle landing hop (984 b, 3 slots) + land merge NSRC 3; route 770 / sign-off 833.333; corrected die output load 80 fF and input transition 150 ps (95043d69f), retained obsolete failures",
+    "ss_ps": -787.67,
+    "ff_ps": -90.8,
+    "drc": 0,
+    "reason": "SS -787.67 / FF -90.8 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "qfd_tile_h-216a06602mm",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:49:46-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile half-depth ROM banks (BAW 11, 10 x ot_rom_2048x266_m8 a column, SS clk->q 604 ps) + ROM_PIPE ARELAY 2 + LRST, balanced macro clock (clustering 2/150, no skew view) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_h-216a06602mmb",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile half-depth ROM banks (BAW 11, 10 x ot_rom_2048x266_m8 a column, SS clk->q 604 ps) + ROM_PIPE ARELAY 2 + LRST, balanced macro clock (clustering 2/150, no skew view) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_h-ebbf50d31",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:39:47-07:00",
+    "commit": "ebbf50d31",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile half-depth ROM banks (BAW 11, 10 x ot_rom_2048x266_m8 a column, SS clk->q 604 ps) + ROM_PIPE ARELAY 2 + LRST, balanced macro clock (clustering 2/150, no skew view)"
+   },
+   {
+    "job": "qfd_tile_rp1-216a06602mm",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:49:46-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile ROM read pipeline ROM_PIPE=1 ROM_ARELAY=1 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_rp1-216a06602mmb",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile ROM read pipeline ROM_PIPE=1 ROM_ARELAY=1 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_rp1-ed8c42bc6",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:03:55-07:00",
+    "commit": "ed8c42bc6",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile ROM read pipeline ROM_PIPE=1 ROM_ARELAY=1 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   },
+   {
+    "job": "qfd_tile_rp1-f6e3d8cad",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:36:11-07:00",
+    "commit": "f6e3d8cad",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile ROM read pipeline ROM_PIPE=1 ROM_ARELAY=1 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   },
+   {
+    "job": "qfd_tile_rp2-216a06602mm",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:49:46-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_rp2-216a06602mmb",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_rp2-ed8c42bc6",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:03:57-07:00",
+    "commit": "ed8c42bc6",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   },
+   {
+    "job": "qfd_tile_rp2-f6e3d8cad",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:36:11-07:00",
+    "commit": "f6e3d8cad",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   },
+   {
+    "job": "qfd_tile_rp2s330-ed8c42bc6",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:03:57-07:00",
+    "commit": "ed8c42bc6",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (330 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   },
+   {
+    "job": "qfd_tile_rp2s330-f6e3d8cad",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:32:49-07:00",
+    "commit": "f6e3d8cad",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (330 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   }
+  ],
+  "qfd_tile_e": [
+   {
+    "job": "qfd_tile_e-5a3bb1721",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T07:16:43-07:00",
+    "commit": "5a3bb1721",
+    "branch": "claude/qwen-elements-final-20261007",
+    "owner": "Claude:qwen-elements",
+    "purpose": "Qwen r21 qfd_tile_e (east arrays): same netlist as qfd_tile, landing li E -> lo W"
+   },
+   {
+    "job": "qfd_tile_e-b3ac8745e",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T08:13:49-07:00",
+    "commit": "b3ac8745e",
+    "branch": "claude/qwen-elements-final-20261007",
+    "owner": "Claude:qwen-elements",
+    "purpose": "Qwen r21 qfd_tile_e (east arrays, landing li E -> lo W): ot_qwen_rom_tile_die = W12 tile (10 ROM + 2 KV SRAM, MUL_LAT 8 / KV_PREP 4) + 2-cycle landing hop (984 b, 3 slots) + land merge NSRC 3; route 770 / sign-off 833.333"
+   },
+   {
+    "job": "qfd_tile_e-load80-e721e27b5",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T13:57:33-07:00",
+    "commit": "e721e27b5",
+    "branch": "codex/qwen-masters-final-20261007",
+    "owner": "Codex:qwen-masters",
+    "purpose": "Qwen r21 qfd_tile_e (east arrays, landing li E -> lo W): ot_qwen_rom_tile_die = W12 tile (10 ROM + 2 KV SRAM, MUL_LAT 8 / KV_PREP 4) + 2-cycle landing hop (984 b, 3 slots) + land merge NSRC 3; route 770 / sign-off 833.333; corrected die output load 80 fF and input transition 150 ps (95043d69f), retained obsolete failures",
+    "ss_ps": -786.38,
+    "ff_ps": -140.19,
+    "drc": 0,
+    "reason": "SS -786.38 / FF -140.19 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "qfd_tile_e_h-216a06602mm",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:49:47-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e half-depth ROM banks (BAW 11, 10 x ot_rom_2048x266_m8 a column, SS clk->q 604 ps) + ROM_PIPE ARELAY 2 + LRST, balanced macro clock (clustering 2/150, no skew view) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_e_h-216a06602mmb",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e half-depth ROM banks (BAW 11, 10 x ot_rom_2048x266_m8 a column, SS clk->q 604 ps) + ROM_PIPE ARELAY 2 + LRST, balanced macro clock (clustering 2/150, no skew view) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_e_h-ebbf50d31",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:38:52-07:00",
+    "commit": "ebbf50d31",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e half-depth ROM banks (BAW 11, 10 x ot_rom_2048x266_m8 a column, SS clk->q 604 ps) + ROM_PIPE ARELAY 2 + LRST, balanced macro clock (clustering 2/150, no skew view)"
+   },
+   {
+    "job": "qfd_tile_e_rp1-216a06602mm",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:49:47-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e ROM read pipeline ROM_PIPE=1 ROM_ARELAY=1 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_e_rp1-216a06602mmb",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e ROM read pipeline ROM_PIPE=1 ROM_ARELAY=1 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_e_rp1-ed8c42bc6",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:03:51-07:00",
+    "commit": "ed8c42bc6",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e ROM read pipeline ROM_PIPE=1 ROM_ARELAY=1 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   },
+   {
+    "job": "qfd_tile_e_rp1-f6e3d8cad",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:36:11-07:00",
+    "commit": "f6e3d8cad",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e ROM read pipeline ROM_PIPE=1 ROM_ARELAY=1 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   },
+   {
+    "job": "qfd_tile_e_rp2-216a06602mm",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:49:47-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_e_rp2-216a06602mmb",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "216a06602",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off"
+   },
+   {
+    "job": "qfd_tile_e_rp2-ed8c42bc6",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:03:52-07:00",
+    "commit": "ed8c42bc6",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   },
+   {
+    "job": "qfd_tile_e_rp2-f6e3d8cad",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:36:11-07:00",
+    "commit": "f6e3d8cad",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   },
+   {
+    "job": "qfd_tile_e_rp2s330-ed8c42bc6",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:03:54-07:00",
+    "commit": "ed8c42bc6",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (330 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   },
+   {
+    "job": "qfd_tile_e_rp2s330-f6e3d8cad",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:32:49-07:00",
+    "commit": "f6e3d8cad",
+    "branch": "claude/qwen-blocks-20261007",
+    "owner": "Claude:qwen-blocks",
+    "purpose": "qfd_tile_e ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (330 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7)"
+   }
+  ],
+  "ot_meso_fifo_w512d4": [
+   {
+    "job": "s81-meso-d4-21e5409bf",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-06T22:12:58-07:00",
+    "commit": "21e5409bf",
+    "branch": "claude/s81-rerun-20261006",
+    "owner": "Claude:s81-rerun",
+    "purpose": "S81 die meso FIFO W512 D4 view, fail-fast structural fix PINREG=1 (2e2d7aa3f: SS -40.14 wrst_n -> ring write enables / FF +7.27 r_d outputs): resets registered at the pin, r_rdy constant (tied in the die), HM 35 + auto hold ECO",
+    "ss_ps": 4.67,
+    "ff_ps": 9.47,
+    "drc": 0,
+    "reason": "SS 4.67 / FF 9.47 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "s81-meso-d4-2e2d7aa3f",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-06T21:07:18-07:00",
+    "commit": "2e2d7aa3f",
+    "branch": "claude/s81-rerun-20261006",
+    "owner": "Claude:s81-rerun",
+    "purpose": "S81 die meso FIFO (dsfd_cfifo / hub end slots): meso_d4_v7 closed at SS +10.13 / FF +9.44 (below the +15/+15 line); the same RTL re-routed in the calibrated flow (770 ps route, 833.333 sign-off, IO 0.2 T + 150 ps against the measured per-clock insertion); replaces s81-meso-d4-f21799d1c (its route SDC false-pathed output hold checks); vclk set before the CTS-stage repair (calibration RSZ-0060 on r_d hold)",
+    "ss_ps": -40.14,
+    "ff_ps": 7.27,
+    "drc": 0,
+    "reason": "SS -40.14 / FF 7.27 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "s81-meso-d4-96885ea7e-mm",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T19:45:52-07:00",
+    "commit": "ef256b299",
+    "branch": "claude/flow-hold-20261007",
+    "owner": "Claude:s81-rerun",
+    "purpose": "FLOW-HOLD requeue of s81-meso-d4-96885ea7e (SS 14.14 / FF 11.14): multi-mode route-time hold repair (SS setup + FF hold at CTS/GRT, HM 50 ps at FF) and rule-H1 IO hold; no RTL change from the branch head",
+    "reason": "bench_exact_d4 expected PASS but rc=1"
+   },
+   {
+    "job": "s81-meso-d4-96885ea7e-mmq",
+    "status": "QUEUED",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "96885ea7e",
+    "branch": "claude/s81-rerun-20261006",
+    "owner": "Claude:s81-rerun",
+    "purpose": "FLOW-HOLD requeue of s81-meso-d4-96885ea7e (SS 14.14 / FF 11.14) on its own source, snapshot patched in-stage by claude/flow-hold-20261007 @e9dd417e7 (hold_corners_patch mm + h1_patch); multi-mode route-time hold repair, HM 50 ps at FF. S81 meso FIFO W512 D4 view, fail-fast step 2: every input registered at the pin (wrst/rrst, w_v, w_d; w_rdy credit lookahead), +1 cycle a crossing; 21e5409bf was SS +4.67 (w_v -> ring enables) / FF +9.47 (r_d, hold ECO)"
+   },
+   {
+    "job": "s81-meso-d4-96885ea7e",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T00:01:13-07:00",
+    "commit": "96885ea7e",
+    "branch": "claude/s81-rerun-20261006",
+    "owner": "Claude:s81-rerun",
+    "purpose": "S81 meso FIFO W512 D4 view, fail-fast step 2: every input registered at the pin (wrst/rrst, w_v, w_d; w_rdy credit lookahead), +1 cycle a crossing; 21e5409bf was SS +4.67 (w_v -> ring enables) / FF +9.47 (r_d, hold ECO)",
+    "ss_ps": 14.14,
+    "ff_ps": 11.14,
+    "drc": 0,
+    "reason": "SS 14.14 / FF 11.14 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "s81-meso-d4-e654bb52a-c",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-06T20:26:05-07:00",
+    "commit": "e654bb52a",
+    "branch": "claude/s81-rerun-20261006",
+    "owner": "Claude:s81-rerun",
+    "purpose": "S81 die meso FIFO (dsfd_cfifo / hub end slots): meso_d4_v7 closed at SS +10.13 / FF +9.44 (below the +15/+15 line); the same RTL re-routed in the calibrated flow (770 ps route, 833.333 sign-off, IO 0.2 T + 150 ps against the measured per-clock insertion); replaces s81-meso-d4-f21799d1c (its route SDC false-pathed output hold checks); -c: quoted calibrate sdc_cmd echo (unquoted parenthesis broke the stage script)",
+    "reason": "calibrate crashed twice (rc=4; resource=False)"
+   },
+   {
+    "job": "s81-meso-d4-e654bb52a",
+    "status": "CANCELLED",
+    "updated": "2026-10-06T20:10:13-07:00",
+    "commit": "e654bb52a",
+    "branch": "claude/s81-rerun-20261006",
+    "owner": "Claude:s81-rerun",
+    "purpose": "S81 die meso FIFO (dsfd_cfifo / hub end slots): meso_d4_v7 closed at SS +10.13 / FF +9.44 (below the +15/+15 line); the same RTL re-routed in the calibrated flow (770 ps route, 833.333 sign-off, IO 0.2 T + 150 ps against the measured per-clock insertion); replaces s81-meso-d4-f21799d1c (its route SDC false-pathed output hold checks)"
+   },
+   {
+    "job": "s81-meso-d4-f21799d1c",
+    "status": "CANCELLED",
+    "updated": "2026-10-06T19:49:04-07:00",
+    "commit": "f21799d1c",
+    "branch": "claude/s81-rerun-20261006",
+    "owner": "Claude:s81-rerun",
+    "purpose": "S81 die meso FIFO (dsfd_cfifo / hub end slots): meso_d4_v7 closed at SS +10.13 / FF +9.44 (below the +15/+15 line); the same RTL re-routed in the calibrated flow (770 ps route, 833.333 sign-off, IO 0.2 T + 150 ps against the measured per-clock insertion)"
+   }
+  ],
+  "ot_meso_fifo_w512d8g1": [
+   {
+    "job": "s81-meso-d8g1-3ad951aae",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T00:15:14-07:00",
+    "commit": "3ad951aae",
+    "branch": "claude/s81-rerun-20261006",
+    "owner": "Claude:s81-rerun",
+    "purpose": "S81 die meso FIFO W512 view in the die configuration d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1 / GUARD_HI 7 / CREDITS 16, PINREG): crossing arcs at 1.5 T - 60 (d4/d8 at T/2 - 60 missed by the s_v1 -> cnt arc: +14.1 / -65); +1 cycle a crossing over d8 (OFFSET 3 -> 4) and +1 for the pin registers",
+    "reason": "calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop"
+   },
+   {
+    "job": "s81-meso-d8g1-c20d75e28",
+    "status": "CLOSED",
+    "updated": "2026-10-07T01:47:41-07:00",
+    "commit": "c20d75e28",
+    "branch": "claude/s81-rerun-20261006",
+    "owner": "Claude:s81-rerun",
+    "purpose": "S81 die meso FIFO W512 view in the die configuration d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1 / GUARD_HI 7 / CREDITS 16, PINREG): crossing arcs at 1.5 T - 60 (d4/d8 at T/2 - 60 missed by the s_v1 -> cnt arc: +14.1 / -65); +1 cycle a crossing over d8 (OFFSET 3 -> 4) and +1 for the pin registers; re-drop: 3ad951aae calibration failed in yosys (parameter check fired on an intermediate chparam set)",
+    "ss_ps": 29.61,
+    "ff_ps": 27.38,
+    "drc": 0,
+    "reason": "CLOSED SS +29.61 / FF +27.38 ps DRC 0 | record claude/s81-rerun-20261006 2a0e4744b (13 files) | merged into claude/s81-rerun-20261006 2a0e4744b"
+   }
+  ],
+  "dsfd_coll_lane_e": [
+   {
+    "job": "s81b-coll_lane_ne-fmt1-9581a871a",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:24:54-07:00",
+    "commit": "9581a871a",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "collective lane E (contract): gearbox FMT1 (fixed 3-in-4 slot positions, no 1052-b bit shifter; payload regs unreset) + ep PIPE2 (late accept select, registered d_fr): removes the ic/tcnt/sh/rcnt -> tacc/beat_tx/racc/f_rx and out_v -> rdy_r / fr_seen -> credits classes (-456..-734)"
+   },
+   {
+    "job": "s81b-coll_lane_ne-fmt1-mm-9ac26e269",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "9ac26e269",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "collective lane E (contract): gearbox FMT1 (fixed 3-in-4 slot positions, no 1052-b bit shifter; payload regs unreset) + ep PIPE2 (late accept select, registered d_fr): removes the ic/tcnt/sh/rcnt -> tacc/beat_tx/racc/f_rx and out_v -> rdy_r / fr_seen -> credits classes (-456..-734) | flow-hold mm route-time hold repair (SS setup + FF hold, HM 50 ps at FF)"
+   },
+   {
+    "job": "s81b-coll_lane_we-fmt1-9581a871a",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:24:54-07:00",
+    "commit": "9581a871a",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "collective lane E (contract_wide_lanes): gearbox FMT1 (fixed 3-in-4 slot positions, no 1052-b bit shifter; payload regs unreset) + ep PIPE2 (late accept select, registered d_fr): removes the ic/tcnt/sh/rcnt -> tacc/beat_tx/racc/f_rx and out_v -> rdy_r / fr_seen -> credits classes (-456..-734)"
+   },
+   {
+    "job": "s81b-coll_lane_we-fmt1-mm-9ac26e269",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "9ac26e269",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "collective lane E (contract_wide_lanes): gearbox FMT1 (fixed 3-in-4 slot positions, no 1052-b bit shifter; payload regs unreset) + ep PIPE2 (late accept select, registered d_fr): removes the ic/tcnt/sh/rcnt -> tacc/beat_tx/racc/f_rx and out_v -> rdy_r / fr_seen -> credits classes (-456..-734) | flow-hold mm route-time hold repair (SS setup + FF hold, HM 50 ps at FF)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_e-1df7cf9a9",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-06T23:26:33-07:00",
+    "commit": "1df7cf9a9",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph",
+    "purpose": "collective v2 lane tile (E column, 4 instances)",
+    "reason": "route crashed twice (rc=0 ok-check failed: ; resource=False)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_e-34b3e75dd",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T00:01:37-07:00",
+    "commit": "34b3e75dd",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph",
+    "purpose": "collective v2 lane tile (E column, 4 instances)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_e-46f583118",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T02:59:36-07:00",
+    "commit": "46f583118",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph",
+    "purpose": "collective v2 lane tile (E column, 4 instances)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_e-752a48488",
+    "status": "CANCELLED",
+    "updated": "2026-10-06T20:05:48-07:00",
+    "commit": "752a48488",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph",
+    "purpose": "collective v2 lane tile (E column, 4 instances)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_e-7aa6f7358-pipeline",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "7aa6f7358",
+    "branch": "main",
+    "owner": "Codex:s81_tiles",
+    "purpose": "Partitioned gearbox shift, +2 TX cycles including reverse, +2820 FF/lane; 365.04x340.2 outline, actual calibrated IO and unchanged 60/25ps uncertainty."
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_e-a53f40362",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-07T08:12:44-07:00",
+    "commit": "a53f40362",
+    "branch": "claude/s81-coll-fix-20261007",
+    "owner": "Claude:s81-coll-fix",
+    "purpose": "collective v4 lane tile (E column, 4 instances): link-up gate (UPGATE)",
+    "reason": "route crashed twice (rc=0 ok-check failed: ; resource=False)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_e-ac313d866-wide",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T10:47:00-07:00",
+    "commit": "ac313d866",
+    "branch": "codex/s81-tiles-recovery-20261007",
+    "owner": "Codex:s81_tiles",
+    "purpose": "No-squeeze 345.6 x 340.2 lane footprint: measured predecessor 67535 um2 cells (78.5% utilization), new estimate 57.6%; identical RTL, zero added cycles",
+    "ss_ps": -553.14,
+    "ff_ps": -2.11,
+    "drc": 0,
+    "reason": "SS -553.14 / FF -2.11 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_e-ea4ac869f-head",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "ea4ac869f",
+    "branch": "main",
+    "owner": "Codex:s81_tiles",
+    "purpose": "Full-width registered FIFO head, zero added cycles; +595 FF/lane. Retain 345.6 x 340.2 outline, actual calibrated IO, 60/25 uncertainty."
+   }
+  ],
+  "dsfd_coll_lane_w": [
+   {
+    "job": "s81b-coll_lane_ww-fmt1-9581a871a",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:24:54-07:00",
+    "commit": "9581a871a",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "collective lane W (contract_wide_lanes): gearbox FMT1 (fixed 3-in-4 slot positions, no 1052-b bit shifter; payload regs unreset) + ep PIPE2 (late accept select, registered d_fr): removes the ic/tcnt/sh/rcnt -> tacc/beat_tx/racc/f_rx and out_v -> rdy_r / fr_seen -> credits classes (-456..-734)"
+   },
+   {
+    "job": "s81b-coll_lane_ww-fmt1-mm-9ac26e269",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "9ac26e269",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "collective lane W (contract_wide_lanes): gearbox FMT1 (fixed 3-in-4 slot positions, no 1052-b bit shifter; payload regs unreset) + ep PIPE2 (late accept select, registered d_fr): removes the ic/tcnt/sh/rcnt -> tacc/beat_tx/racc/f_rx and out_v -> rdy_r / fr_seen -> credits classes (-456..-734) | flow-hold mm route-time hold repair (SS setup + FF hold, HM 50 ps at FF)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_w-1df7cf9a9",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-06T21:36:04-07:00",
+    "commit": "1df7cf9a9",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph",
+    "purpose": "collective v2 lane tile (W column, 4 instances)",
+    "ss_ps": -940.93,
+    "ff_ps": -94.56,
+    "drc": 0,
+    "reason": "SS -940.93 / FF -94.56 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_w-34b3e75dd",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-06T23:24:16-07:00",
+    "commit": "34b3e75dd",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph",
+    "purpose": "collective v2 lane tile (W column, 4 instances)",
+    "ss_ps": -970.95,
+    "ff_ps": -128.08,
+    "drc": 0,
+    "reason": "SS -970.95 / FF -128.08 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_w-46f583118",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T02:59:32-07:00",
+    "commit": "46f583118",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph",
+    "purpose": "collective v2 lane tile (W column, 4 instances)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_w-752a48488",
+    "status": "CANCELLED",
+    "updated": "2026-10-06T20:05:52-07:00",
+    "commit": "752a48488",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph",
+    "purpose": "collective v2 lane tile (W column, 4 instances)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_w-a53f40362",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T18:32:05-07:00",
+    "commit": "a53f40362",
+    "branch": "claude/s81-coll-fix-20261007",
+    "owner": "Claude:s81-coll-fix",
+    "purpose": "collective v4 lane tile (W column, 4 instances): link-up gate (UPGATE)"
+   },
+   {
+    "job": "s81ph-dsfd_coll_lane_w-ac313d866-wide",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T11:12:43-07:00",
+    "commit": "ac313d866",
+    "branch": "codex/s81-tiles-recovery-20261007",
+    "owner": "Codex:s81_tiles",
+    "purpose": "No-squeeze 345.6 x 340.2 lane footprint: measured predecessor 67535 um2 cells (78.5% utilization), new estimate 57.6%; identical RTL, zero added cycles",
+    "ss_ps": -456.33,
+    "ff_ps": -30.23,
+    "drc": 0,
+    "reason": "SS -456.33 / FF -30.23 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   }
+  ],
+  "ot_s81_pq_ret_root_cam": [
+   {
+    "job": "s81b-pq-rootcam-B-35f9cd031",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:00:48-07:00",
+    "commit": "35f9cd031",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "ROOTD128 root CAM stage-B timing: 2-stage pipelined CAM (4251eb216 RTL, OPC 0) in the reserved 132.192 x 133.92 um root slot; calibrated column-clock planning IO. No production protection/parent adoption claim."
+   },
+   {
+    "job": "s81b-pq-rootcam-B-36b7a0452",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T18:52:36-07:00",
+    "commit": "36b7a0452",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "ROOTD128 root CAM stage-B timing: 2-stage pipelined CAM (4251eb216 RTL, OPC 0) in the reserved 132.192 x 133.92 um root slot; calibrated column-clock planning IO. No production protection/parent adoption claim.",
+    "reason": "bench_exact_cam expected PASS but rc=1"
+   },
+   {
+    "job": "s81b-pq-rootcam-B-41bb7821c",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:24:59-07:00",
+    "commit": "41bb7821c",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "ROOTD128 root CAM stage-B timing: 2-stage pipelined CAM (4251eb216 RTL, OPC 0) in the reserved 132.192 x 133.92 um root slot; calibrated column-clock planning IO. No production protection/parent adoption claim. | route IO output-min sign fixed"
+   },
+   {
+    "job": "s81b-pq-rootcam-B-mm-9ac26e269",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "9ac26e269",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "ROOTD128 root CAM stage-B timing: 2-stage pipelined CAM (4251eb216 RTL, OPC 0) in the reserved 132.192 x 133.92 um root slot; calibrated column-clock planning IO. No production protection/parent adoption claim. | route IO output-min sign fixed | flow-hold mm route-time hold repair (SS setup + FF hold, HM 50 ps at FF)"
+   },
+   {
+    "job": "s81b-pq-rootcam-C-35f9cd031",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:00:49-07:00",
+    "commit": "35f9cd031",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "ROOTD128 root CAM stage-C fallback: OPC 1 operand fetch stage (+1 per pass) in the reserved 132.192 x 133.92 um root slot; calibrated column-clock planning IO. No production protection/parent adoption claim."
+   },
+   {
+    "job": "s81b-pq-rootcam-C-36b7a0452",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-07T18:52:36-07:00",
+    "commit": "36b7a0452",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "ROOTD128 root CAM stage-C fallback: OPC 1 operand fetch stage (+1 per pass) in the reserved 132.192 x 133.92 um root slot; calibrated column-clock planning IO. No production protection/parent adoption claim.",
+    "reason": "bench_exact_cam expected PASS but rc=1"
+   },
+   {
+    "job": "s81b-pq-rootcam-C-41bb7821c",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:24:59-07:00",
+    "commit": "41bb7821c",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "ROOTD128 root CAM stage-C fallback: OPC 1 operand fetch stage (+1 per pass) in the reserved 132.192 x 133.92 um root slot; calibrated column-clock planning IO. No production protection/parent adoption claim. | route IO output-min sign fixed"
+   },
+   {
+    "job": "s81b-pq-rootcam-C-mm-9ac26e269",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "9ac26e269",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "ROOTD128 root CAM stage-C fallback: OPC 1 operand fetch stage (+1 per pass) in the reserved 132.192 x 133.92 um root slot; calibrated column-clock planning IO. No production protection/parent adoption claim. | route IO output-min sign fixed | flow-hold mm route-time hold repair (SS setup + FF hold, HM 50 ps at FF)"
+   },
+   {
+    "job": "s81b-pq-rootcam-CP-387610a35",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:00:49-07:00",
+    "commit": "387610a35",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "ROOTD128 root CAM stage C (OPC 1) + PAR 1 protected 141-pin face and state parity (root_contract.json) in the reserved 132.192 x 133.92 um slot"
+   },
+   {
+    "job": "s81b-pq-rootcam-CP-41bb7821c",
+    "status": "CANCELLED",
+    "updated": "2026-10-07T19:24:59-07:00",
+    "commit": "41bb7821c",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "ROOTD128 root CAM stage C (OPC 1) + PAR 1 protected 141-pin face and state parity (root_contract.json) in the reserved 132.192 x 133.92 um slot | route IO output-min sign fixed"
+   },
+   {
+    "job": "s81b-pq-rootcam-CP-mm-9ac26e269",
+    "status": "READY",
+    "updated": "2026-10-07T19:58:57-07:00",
+    "commit": "9ac26e269",
+    "branch": "claude/s81-blocks-20261007",
+    "owner": "Claude:s81-blocks",
+    "purpose": "ROOTD128 root CAM stage C (OPC 1) + PAR 1 protected 141-pin face and state parity (root_contract.json) in the reserved 132.192 x 133.92 um slot | route IO output-min sign fixed | flow-hold mm route-time hold repair (SS setup + FF hold, HM 50 ps at FF)"
+   }
+  ],
+  "dsfd_colt_lane": [
+   {
+    "job": "s81ph-dsfd_colt_lane-1df7cf9a9",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-06T20:18:07-07:00",
+    "commit": "1df7cf9a9",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph (tiles)",
+    "purpose": "collector lane tile (parser + 2-macro SRAM frame FIFO + complete-frame credit sender), replicated x4 (2 R0 + 2 MY); replaces col_m2 (-2288, CTS depth 56-66 over 5.3 mm)",
+    "ss_ps": -4.75,
+    "ff_ps": -39.61,
+    "drc": 0,
+    "reason": "SS -4.75 / FF -39.61 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "s81ph-dsfd_colt_lane-7345266ce-e",
+    "status": "CLOSED",
+    "updated": "2026-10-07T02:01:03-07:00",
+    "commit": "7345266ce",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph (tiles)",
+    "purpose": "collector lane tile r4 (fail-fast): SRAM read at II 2 + multicycle 2 through the macro outputs (r3 SS -25.7 rd_out -> rq_r / FF -18.8 outputs); HM 0.035 + loop hold ECO",
+    "ss_ps": 47.24,
+    "ff_ps": 21.73,
+    "drc": 0,
+    "reason": "CLOSED SS +47.24 / FF +21.73 ps DRC 0 | record claude/s81-placeholders-20261006 096b63d10 (13 files) | no merge target"
+   },
+   {
+    "job": "s81ph-dsfd_colt_lane-c25065335-d",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-06T21:21:03-07:00",
+    "commit": "c25065335",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph (tiles)",
+    "purpose": "collector lane tile (parser + 2-macro SRAM frame FIFO + complete-frame credit sender), replicated x4 (2 R0 + 2 MY); replaces col_m2 (-2288, CTS depth 56-66 over 5.3 mm) | r2: HM 0.050 (capt_ctl r1 FF output hold -22 ps at the BC-derived min delay) | r3: lane FIFO with the macro output registered at the macro (r2 SS -4.32 rd_out -> ob), HM 0.035 + loop hold ECO (HM 0.090 hit RSZ-0060)",
+    "ss_ps": -25.68,
+    "ff_ps": -18.81,
+    "drc": 0,
+    "reason": "SS -25.68 / FF -18.81 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   },
+   {
+    "job": "s81ph-dsfd_colt_lane-c3413659a-c",
+    "status": "NEEDS_HUMAN",
+    "updated": "2026-10-06T20:54:44-07:00",
+    "commit": "c3413659a",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph (tiles)",
+    "purpose": "collector lane tile (parser + 2-macro SRAM frame FIFO + complete-frame credit sender), replicated x4 (2 R0 + 2 MY); replaces col_m2 (-2288, CTS depth 56-66 over 5.3 mm) | r2: HM 0.050 (capt_ctl r1 FF output hold -22 ps at the BC-derived min delay) | r3: lane FIFO with the macro output registered at the macro (r2 SS -4.32 rd_out -> ob), HM 0.090 (r2 FF -6.5 outputs)",
+    "reason": "calibrate crashed twice (rc=4; resource=False)"
+   },
+   {
+    "job": "s81ph-dsfd_colt_lane-cd3337221-b",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-06T20:37:11-07:00",
+    "commit": "cd3337221",
+    "branch": "claude/s81-placeholders-20261006",
+    "owner": "Claude:s81-ph (tiles)",
+    "purpose": "collector lane tile (parser + 2-macro SRAM frame FIFO + complete-frame credit sender), replicated x4 (2 R0 + 2 MY); replaces col_m2 (-2288, CTS depth 56-66 over 5.3 mm) | r2: HM 0.050 (capt_ctl r1 FF output hold -22 ps at the BC-derived min delay)",
+    "ss_ps": -4.32,
+    "ff_ps": -6.47,
+    "drc": 0,
+    "reason": "SS -4.32 / FF -6.47 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+   }
+  ]
+ }
+}

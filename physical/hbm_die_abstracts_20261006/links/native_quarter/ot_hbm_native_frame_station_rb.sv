@@ -44,7 +44,7 @@
 //    valid, no fault). R_in_r and acked==ALL are stale-safe: acked only rises
 //    until the release, and a release clears active and rel_q on the same edge.
 //    Cost: +1 edge per release.
-module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0,FCLK=1)(
+module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=0,SAFE=0,FCLK=1,STATUS_PIN=1)(
  input wire clk_sm,por_n,release_held,
  input wire in_v,output wire in_r,input wire [2062:0] in_data,
  input wire [191:0] in_owner,input wire [72:0] in_frame,
@@ -302,6 +302,17 @@ module ot_hbm_native_frame_station_rb #(parameter integer ENABLE=0,NO=3,REL_REG=
   always @(posedge clk_sm or negedge rst_n)
    if(!rst_n)begin fault_q<=0;drained_q<=0;paused_q<=0;end
    else begin fault_q<=fault_now||fault_x;drained_q<=drained_next;paused_q<=paused_next;end
-  assign fault=fault_q;assign drained=drained_q;assign paused=paused_q;
+  // STATUS_PIN=1 (setup-triage 2026-10-07, default): one more plain (reset-free) flop per status output, placed at the
+  // pin. Routed SAFE NO3 c09f9b505 missed SS by -47.8 ps on fault: async-reset flop clk->QN 147 + INV 105 + port
+  // buffer 82 = 334 ps against a 286 ps reg->pin window. Cost: +1 cycle on fault/drained/paused (all three, so their
+  // relative timing is unchanged); no throughput or datapath change. The pin flops follow the reset value of the
+  // _q flops one edge after reset.
+  if (STATUS_PIN) begin:g_spin
+   reg fault_p,drained_p,paused_p;
+   always @(posedge clk_sm) begin fault_p<=fault_q;drained_p<=drained_q;paused_p<=paused_q; end
+   assign fault=fault_p;assign drained=drained_p;assign paused=paused_p;
+  end else begin:g_snopin
+   assign fault=fault_q;assign drained=drained_q;assign paused=paused_q;
+  end
  end endgenerate
 endmodule
