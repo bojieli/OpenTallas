@@ -97,7 +97,7 @@ HM_LOW_SINCE = "2026-10-07T04:17"      # new jobs from here: route hold margin 1
 # FLOW-HOLD (2026-10-07): jobs created from here route with multi-mode hold repair (OT_ROUTE_HOLD_CORNERS=mm: SS setup +
 # FF hold under the FF sign-off constraints at CTS / global route) and HM_MM route hold margin (applies at FF only)
 MM_SINCE = "2026-10-07T21:00"
-HM_MM = 0.030
+HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
 STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (2, 8), "export": (2, 8),
