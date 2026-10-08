@@ -217,7 +217,7 @@ module ot_qwen_hbm_code_pair_margin #(
   // per-bank distribution stage, W6 correction in two stages: +3 read edges over MARGIN2=0 (LAT_DELTA 9 vs the original
   // context).  Interface change: rd_r is a registered credit (!fault); wr_r is a registered single-slot credit; a
   // request is accepted only when its own span/published/format qualifiers hold (checked after the pin flops).
-  localparam integer P=(MARGIN2>=1)?1:0, Q=(MARGIN2>=2)?1:0, D=P;   // Q (MARGIN2=2): stage-2 request regs, 2-stage encode, staged detect, syndrome flags, 2-stage receipts, output pin stage
+  localparam integer P=(MARGIN2>=1)?1:0, Q=(MARGIN2>=2)?1:0, D=P, R=(MARGIN2>=3)?1:0;   // R (MARGIN2=3, qwen-blocks 2026-10-07): 2-entry visible receipt buffer, visible_r reaches only its pointer/mux   // Q (MARGIN2=2): stage-2 request regs, 2-stage encode, staged detect, syndrome flags, 2-stage receipts, output pin stage
   function automatic [71:0] w6_flip(input [7:0] syn);
     begin
       w6_flip='0;
@@ -544,7 +544,10 @@ module ot_qwen_hbm_code_pair_margin #(
     wire head_ok = fa_v && fb_v && cmp_ok_q;
     // two copies all the way to the pins: FIFO heads (compared, registered) -> S1 (a,b) -> compare -> visible regs (a,b)
     wire s1_same = ~|(s1_a ^ s1_b);
-    wire xfer2 = Q && s1_v && s1_same && !fault_int && (!vq_v || take_out);
+    // R: the receipt moves into a 2-entry output buffer whenever its tail slot is free (a flop), so visible_r never
+    // reaches the receipt FIFO / S1 / detect cones; it only pops the buffer (head <- tail or the incoming receipt)
+    reg vt_v; reg [$bits(metadata_t)-1:0] vt_meta, vt_meta_b;
+    wire xfer2 = Q && s1_v && s1_same && !fault_int && (R ? !vt_v : (!vq_v || take_out));
     wire xfer = Q && head_ok && !fault_int && (!s1_v || xfer2);
     assign rc_push=Q ? rc_push2 : (P && write_fire);
     assign rc_pop=Q ? xfer : (P && visible_v_q && visible_r);
@@ -557,7 +560,7 @@ module ot_qwen_hbm_code_pair_margin #(
 `ifdef CODE_PAIR_MARGIN_MUTANT_NO_META_CMP
     wire vis_cmp_bad=1'b0;                         // bench-only negative control
 `else
-    wire vis_cmp_bad=vq_v && (vq_meta!=vq_meta_b);
+    wire vis_cmp_bad=(vq_v && (vq_meta!=vq_meta_b)) || (R && vt_v && (vt_meta!=vt_meta_b));
 `endif
     wire detect_raw=control_bad || (Q ? ((fa_v||fb_v) && !cmp_ok_q || fa_ovf || fb_ovf || (s1_v && !s1_same) || vis_cmp_bad) : P ? (!metadata_same || fa_ovf || fb_ovf) : (c.visible && metadata_bad)) || (|request_bad) || format_bad ||
                 (|bank_err) || (|sel_err) || out_err || out_err7 || (Q ? (|unc6) : (|unc5)) || (fq_a!=fq_b);
@@ -586,15 +589,29 @@ module ot_qwen_hbm_code_pair_margin #(
     end
     assign cmp_sl_nx[15] = (fa_vn==fb_vn);
     always @(posedge clk or negedge por_n)
-      if(!por_n) begin cmp_sl_q<=0; vq_v<=0; s1_v<=0; end
+      if(!por_n) begin cmp_sl_q<=0; vq_v<=0; s1_v<=0; vt_v<=0; end
       else if(Q) begin
         cmp_sl_q<=cmp_sl_nx;
         s1_v<=(xfer || (s1_v && !xfer2)) && !fault_nx;
-        vq_v<=(xfer2 || (vq_v && !take_out)) && !fault_nx;
+        if(R) begin
+          // occupancy n' = vq_v + vt_v + push - pop (push only into a free tail, pop only from a valid head)
+          vq_v<=((vq_v + vt_v + xfer2 - take_out) >= 2'd1) && !fault_nx;
+          vt_v<=((vq_v + vt_v + xfer2 - take_out) == 2'd2) && !fault_nx;
+        end else
+          vq_v<=(xfer2 || (vq_v && !take_out)) && !fault_nx;
       end
     always @(posedge clk) begin
       if(Q && xfer) begin s1_a<=fa_dout; s1_b<=fb_dout; end
-      if(Q && xfer2) begin vq_meta<=s1_a; vq_meta_b<=s1_b; end
+      if(R) begin
+        // head: loads when empty or popped -- from the tail if it holds one, else the incoming receipt
+        if(!vq_v || take_out) begin
+          if(vt_v) begin vq_meta<=vt_meta; vq_meta_b<=vt_meta_b; end
+          else if(xfer2) begin vq_meta<=s1_a; vq_meta_b<=s1_b; end
+        end
+        // tail: the incoming receipt when the head stays occupied (head valid and either not popped or the tail
+        // moves into it this edge)
+        if(xfer2 && vq_v && (!take_out || vt_v)) begin vt_meta<=s1_a; vt_meta_b<=s1_b; end
+      end else if(Q && xfer2) begin vq_meta<=s1_a; vq_meta_b<=s1_b; end
     end
     wire [3:0] occ_n=occ + {3'b0,wr_r_q} - {3'b0,(wrr_p && !write_fire)} - {3'b0,Q ? take_out : rc_pop};
     wire meta_same_nx=P ? (fa_vn==fb_vn && fa_dn==fb_dn) : (write_fire ? 1'b1 : metadata_same);

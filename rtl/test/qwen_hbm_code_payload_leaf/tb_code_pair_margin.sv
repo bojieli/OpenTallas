@@ -9,7 +9,7 @@
 // must never deliver the response valid and must raise the sticky fault.
 module tb_code_pair_margin #(parameter integer M2=0);
   import ot_hbm_r14_pkg::*;
-  localparam integer LAT_DELTA=(M2==2?11:(M2?9:6)), ROWS=4496;
+  localparam integer LAT_DELTA=(M2>=2?11:(M2?9:6)), ROWS=4496;
   reg clk=0, por_n=0;
   always #416.6665 clk=~clk;
   reg wr_v=0, wr_span_bound=0, wr_kind=0, visible_r=0;
@@ -188,7 +188,7 @@ module tb_code_pair_margin #(parameter integer M2=0);
       for(integer j=0;j<24;j=j+1) begin
         integer col, b, row, bit_i;
         a=rnd256(); col=j%2; b=j%5; row=b*1024+7; bit_i=(j*41+(j/6)*7)%256;
-        write_row(row,col,a); idle(M2==2?22:(M2?14:8));
+        write_row(row,col,a); idle(M2>=2?22:(M2?14:8));
         case(col*5+b)
           0: begin dut_o.u_leaf.on.column[0].bank[0].data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}});
                    dut_m.on.column[0].bank[0].u_bank.data_store.word_write(7,a^(256'b1<<bit_i),{256{1'b1}}); end
@@ -237,14 +237,14 @@ module tb_code_pair_margin #(parameter integer M2=0);
     if(neg_ue || neg_dmr) begin
       reg [255:0] a;
       compare_on=0;
-      a=rnd256(); write_row(3*1024+9,1,a); idle(M2==2?22:(M2?14:8));
+      a=rnd256(); write_row(3*1024+9,1,a); idle(M2>=2?22:(M2?14:8));
       if(neg_ue) begin
         dut_m.on.column[1].bank[3].u_bank.data_store.word_write(9,a^256'b11,{256{1'b1}});
         dut_o.u_leaf.on.column[1].bank[3].data_store.word_write(9,a^256'b11,{256{1'b1}});
         read_one(1,3*1024+9,2);
       end else begin
         @(negedge clk); wr_v=0; rd_v=2'b10; rd_row=0; rd_row[25:13]=3*1024+9; virtual_bank=6'(2<<3);
-        repeat(M2==2?3:(M2?2:1)) @(posedge clk); #1 dut_m.on.u_req_b.q[1]=1'b0;   // upset ONE copy (the kept shadow) of the registered request
+        repeat(M2>=2?3:(M2?2:1)) @(posedge clk); #1 dut_m.on.u_req_b.q[1]=1'b0;   // upset ONE copy (the kept shadow) of the registered request
         @(negedge clk); rd_v=0;
       end
       saw_valid=0; saw_unc=0;
