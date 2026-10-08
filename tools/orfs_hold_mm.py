@@ -13,14 +13,24 @@ from pathlib import Path
 LIB = "  source $::env(SCRIPTS_DIR)/read_liberty.tcl"
 SDC = "  log_cmd read_sdc $::env(RESULTS_DIR)/$sdc_file"
 RTH = "  log_cmd repair_timing {*}$additional_args\n}"
+# unstick 2026-10-08: the hold-stall guard (ot_repair_timing in orfs_hold_mm.tcl), when the helper defines it
+GUARD_CALL = ("  if {[llength [info commands ot_repair_timing]]} {\n"
+              "    set ot_rc [catch {ot_repair_timing $additional_args} ot_msg ot_opts]\n"
+              "  } else {\n"
+              "    set ot_rc [catch {log_cmd repair_timing {*}$additional_args} ot_msg ot_opts]\n"
+              "  }\n")
 
 
 def patch(scripts: Path, helper: str) -> dict:
     load, util = scripts / "load.tcl", scripts / "util.tcl"
     lt, ut = load.read_text(), util.read_text()
     out = {"helper": helper}
-    if "ot_mm_on" in lt and "ot_mm_sync" in ut:
+    if "ot_mm_on" in lt and "ot_repair_timing" in ut:
         return {**out, "status": "already patched"}
+    old_catch = "  set ot_rc [catch {log_cmd repair_timing {*}$additional_args} ot_msg ot_opts]\n"
+    if "ot_mm_on" in lt and "ot_mm_sync" in ut and ut.count(old_catch) == 1:   # earlier generation: add the hold guard
+        util.write_text(ut.replace(old_catch, GUARD_CALL, 1))
+        return {**out, "status": "upgraded (hold-stall guard)"}
     for name, text, anchor in (("load.tcl", lt, LIB), ("load.tcl", lt, SDC), ("util.tcl", ut, RTH)):
         if text.count(anchor) != 1:
             raise SystemExit(f"orfs_hold_mm: anchor {anchor!r} not found exactly once in {name}; refusing")
@@ -28,7 +38,11 @@ def patch(scripts: Path, helper: str) -> dict:
     lt = lt.replace(SDC, f"  if {{[ot_mm_on]}} {{ ot_mm_read_sdc $::env(RESULTS_DIR)/$sdc_file }} else {{\n{SDC}\n  }}", 1)
     # repair_timing_helper is the CTS / post-GRT (and placement) repair: refresh the FF mode before, restore after
     ut = ut.replace(RTH, "  if {[llength [info commands ot_mm_sync]]} { ot_mm_sync }\n"
-                         "  set ot_rc [catch {log_cmd repair_timing {*}$additional_args} ot_msg ot_opts]\n"
+                         "  if {[llength [info commands ot_repair_timing]]} {\n"
+                         "    set ot_rc [catch {ot_repair_timing $additional_args} ot_msg ot_opts]\n"
+                         "  } else {\n"
+                         "    set ot_rc [catch {log_cmd repair_timing {*}$additional_args} ot_msg ot_opts]\n"
+                         "  }\n"
                          "  if {[llength [info commands ot_mm_unsync]]} { ot_mm_unsync }\n"
                          # flow-triage 2026-10-08: an mm repair that exhausts repair_timing's buffer budget (RSZ-0060)
                          # throws AFTER inserting its buffers, killing the stage (no 4_1_cts.odb) although the design is
