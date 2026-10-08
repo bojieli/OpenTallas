@@ -409,30 +409,25 @@
    "budget": null
   },
   "hfd_svc_SW_s5": {
-   "job": "hbm_svc_SW_s5_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s5_tc_4aadc92bc",
+   "job": "hbm_svc_SW_s5_2ec0ab4f9_r22-tt-lvt",
+   "source_commit": "4dbb676f7dd65ae26dd10f5206c9d5e875c63670",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/hbm_svc_SW_s5_2ec0ab4f9_r22-tt-lvt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T03:51:17-07:00",
+   "measured_at": "2026-10-08T07:00:40-07:00",
    "ss": {
-    "mean": 749,
-    "min": 714,
-    "max": 1023
+    "mean": 816,
+    "min": 749,
+    "max": 1034
    },
    "ff": {
-    "mean": 474,
-    "min": 446,
-    "max": 673
+    "mean": 532,
+    "min": 463,
+    "max": 750
    },
    "boundary_n": 2509,
-   "budget": {
-    "measured_ss": 749.0,
-    "ok": true,
-    "reasons": [],
-    "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
-   }
+   "budget": null
   },
   "hfd_cmdproc_n": {
    "job": "hbm_cmdproc_n_ac6ef1af3",
@@ -1651,22 +1646,22 @@
    "budget": null
   },
   "ot_hdc_v41_fh_hquad": {
-   "job": "dshead-hquad-half-h1-5afebaa10-tt",
-   "source_commit": "5afebaa10471b5060fb81afd59212917719c45d9",
+   "job": "dshead-hquad-r4-h1-3108c4327-tt",
+   "source_commit": "3108c43278bf6fefc78c634f6abc5053d39f6bab",
    "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/dshead-hquad-half-h1-5afebaa10-tt",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dshead-hquad-r4-h1-3108c4327-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T06:49:39-07:00",
+   "measured_at": "2026-10-08T07:03:39-07:00",
    "ss": {
-    "mean": 586,
-    "min": 551,
-    "max": 743
+    "mean": 590,
+    "min": 550,
+    "max": 712
    },
    "ff": {
-    "mean": 382,
-    "min": 354,
-    "max": 509
+    "mean": 386,
+    "min": 352,
+    "max": 489
    },
    "boundary_n": 1784,
    "budget": null
@@ -3403,5 +3398,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-08T06:50:43-07:00"
+ "updated": "2026-10-08T07:03:39-07:00"
 }
