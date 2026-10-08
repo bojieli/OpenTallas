@@ -508,11 +508,13 @@ def hbm_ds():
     r23 = load(H_R23)
     cm = load(CMP)["hbm_ds"]
     tau = m["tau"]
-    rows = []
+    rows, after_total = [], False   # rows below the first "TOTAL at r23:" line are not in the r23 headline
     for l in (ROOT / H_LEDGER).read_text().splitlines():
+        if l.startswith("TOTAL at r23:"):
+            after_total = True
         mm = re.match(r"\| (.+?) \| (\d+) \| ([\d.]+) \| ([\d.]+) \|$", l)
         if mm:
-            rows.append((mm.group(1), int(mm.group(2))))
+            rows.append((mm.group(1), int(mm.group(2)), after_total))
     pre = r23["pre_closure"]["AR_us"]
     lines = [
         L("matched_gate", "Matched reference gate (measured RTL nodes, light-FEC TU budget)", "measured",
@@ -521,11 +523,11 @@ def hbm_ds():
           dict(unit="us", AR=round(pre - m["AR_us"], 3), MTP_step=round(pre - m["AR_us"], 3)),
           src(H_R23, "pre_closure"), "same die traversals on the AR walk and the verify walk", "published"),
     ]
-    for i, (name, cyc) in enumerate(rows):
+    for i, (name, cyc, beyond) in enumerate(rows):
         us = round(cyc / CLK * 1e6, 3)
         lines.append(L("closure_%02d" % i, name[:170], "priced-candidate", dict(unit="us", AR=us, MTP_step=us),
                        src(H_LEDGER, "row %d" % i), "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)",
-                       "published" if i < len(rows) - 1 else "candidate"))
+                       "candidate" if beyond else "published"))
     fec = cm["full_fec"]
     lines.append(L("full_fec", "Full RS(544,514) FEC on every switch crossing (owner 2026-10-06)", "priced-candidate",
                    dict(unit="us", AR=fec["AR_us"], MTP_step=fec["MTP_step_us"]), src(CMP, "hbm_ds.full_fec"),
