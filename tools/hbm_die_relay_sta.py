@@ -150,10 +150,10 @@ def constraints(sinks, corner):
 def report(corner):
     k = 'max' if corner == 'ss' else 'min'
     return f'''
-puts "OT_WNS corner={corner} [sta::format_time [sta::worst_slack -{k}] 4] tns=[sta::format_time [sta::total_negative_slack -{k}] 3]"
+puts "OT_WNS corner={corner} ns=[sta::worst_slack -{k}] tns_ns=[sta::total_negative_slack -{k}]"
 set f [open /out/paths_{corner}.txt w]
 set n 0
-foreach pe [find_timing_paths -path_delay {k} -corner {corner} -group_path_count 200000 -endpoint_path_count 1 -slack_max 0.0] {{
+foreach pe [find_timing_paths -path_delay {k} -corner {corner} -group_path_count 200000 -endpoint_path_count 1 -slack_max 0.015] {{
   puts $f "[get_full_name [get_property $pe startpoint]] [get_full_name [get_property $pe endpoint]] [get_property $pe slack]"
   incr n
 }}
@@ -209,6 +209,37 @@ def main():
     assert 'estimate_parasitics' in prefix, 'case run.tcl has no parasitics step before the clock boundary'
     for c in ('ss', 'ff'):
         (case / f'run_clock_{c}.tcl').write_text(prefix + constraints(sinks, c) + report(c))
+    # OWNER STEER 2026-10-07 (3): die timing on GLOBAL-ROUTE parasitics: full-die GRT (M4-M9, coarse M2/M3 tracks so
+    #   the gcell is GRT_TILE_UM, the dietop_round method) -> estimate_parasitics -global_routing -> SS then FF
+    tile = 9.6
+    p_ = tile / 15.0
+    (case / 'make_tracks_coarse.tcl').write_text('\n'.join([
+        'make_tracks Pad -x_offset 0.116 -x_pitch 0.080 -y_offset 0.116 -y_pitch 0.080',
+        'make_tracks M9 -x_offset 0.116 -x_pitch 0.080 -y_offset 0.116 -y_pitch 0.080',
+        'make_tracks M8 -x_offset 0.116 -x_pitch 0.080 -y_offset 0.116 -y_pitch 0.080',
+        'make_tracks M7 -x_offset 0.016 -x_pitch 0.064 -y_offset 0.016 -y_pitch 0.064',
+        'make_tracks M6 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.016 -y_pitch 0.064',
+        'make_tracks M5 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048',
+        'make_tracks M4 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.012 -y_pitch 0.048',
+        f'make_tracks M3 -x_offset 0.009 -x_pitch {p_:.3f} -y_offset 0.009 -y_pitch {p_:.3f}',
+        f'make_tracks M2 -x_offset 0.009 -x_pitch {p_:.3f} -y_offset 0.045 -y_pitch {p_:.3f}',
+        'make_tracks M1 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036']) + '\n')
+    mt = '/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl'
+    gp = prefix.replace(f'source {mt}', 'source /work/make_tracks_coarse.tcl').replace(
+        f'set ::env(MAKE_TRACKS) {mt}', 'set ::env(MAKE_TRACKS) /work/make_tracks_coarse.tcl')
+    gp = gp.replace('estimate_parasitics -placement', '''set_routing_layers -signal M4-M9 -clock M4-M9
+set_global_routing_layer_adjustment M4-M5 0.30
+set_global_routing_layer_adjustment M6-M9 0.146
+set t0 [clock seconds]
+global_route -congestion_iterations 30 -allow_congestion -verbose -congestion_report_file /out/grt_congestion.rpt
+puts "OT_GRT_S [expr {[clock seconds]-$t0}]"
+write_guides /out/route.guide
+write_db /out/ckpt_grt.odb
+report_wire_length -net * -global_route -file /out/wirelength_grt.csv
+estimate_parasitics -global_routing''')
+    assert 'global_route' in gp
+    (case / 'run_grt_sta.tcl').write_text(gp + constraints(sinks, 'ss') + report('ss').replace('puts OT_DONE', '')
+                                          + constraints(sinks, 'ff') + report('ff'))
     print(json.dumps(dict(planned_sinks=len(ctx['sinks']), relay_sinks=len(added), relays_without_domain=len(nodom))))
 
 
