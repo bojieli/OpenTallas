@@ -62,6 +62,9 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer ROM_PIPE = 0,
     parameter integer ROM_ARELAY = 1,
     parameter integer ROM_MUT = 0,        // bench negative control: 1 = the capture register's bank select one edge early
+    // BAW: bank address width (12: ot_rom_4096x266_m8 banks; 11: ot_rom_2048x266_m8 half-depth banks, SS clk->q
+    // 604 ps, twice CODE_BANKS for the same words -- the single-cycle capture then closes with a balanced clock)
+    parameter integer BAW = 12,
     // LRST = 1: lane / tree-level reset copies inside the engine (ot_qwen_w12_matvec_part LRST)
     parameter integer LRST = 0,
     parameter integer NREG = 1,
@@ -191,9 +194,9 @@ module ot_qwen_rom_tile_logic_w12 #(
     generate if (ROM_PIPE == 0) begin : g_rom_orig
     reg  [CODE_BANKS-1:0] code_sel_q;
         for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_ce
-            assign rom_ce[b] = wrom_re && (wrom_addr[AW-1:12] == b);
+            assign rom_ce[b] = wrom_re && (wrom_addr[AW-1:BAW] == b);
         end
-    assign rom_addr = wrom_addr[11:0];
+    assign rom_addr = {{(12-BAW){1'b0}}, wrom_addr[BAW-1:0]};
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) code_sel_q <= {CODE_BANKS{1'b0}};
         else if (wrom_re) code_sel_q <= rom_ce;
@@ -228,7 +231,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         assign rom_addr_n = rom_addr;
     end else begin : g_rom_pipe
         //: request relay: ROM_ARELAY stages, one kept copy per bank group, decoded at the first stage
-        wire [CODE_BANKS-1:0] ce0 = {CODE_BANKS{wrom_re}} & (({{(CODE_BANKS-1){1'b0}}, 1'b1}) << wrom_addr[AW-1:12]);
+        wire [CODE_BANKS-1:0] ce0 = {CODE_BANKS{wrom_re}} & (({{(CODE_BANKS-1){1'b0}}, 1'b1}) << wrom_addr[AW-1:BAW]);
         (* keep *) reg [CODE_BANKS-1:0] rq_ce_s [1:ROM_ARELAY];
         (* keep *) reg [CODE_BANKS-1:0] rq_ce_n [1:ROM_ARELAY];
         (* keep *) reg [11:0]           rq_ad_s [1:ROM_ARELAY];
@@ -243,8 +246,8 @@ module ot_qwen_rom_tile_logic_w12 #(
                 end
             end
             always @(posedge clk) begin
-                rq_ad_s[a] <= (a == 1) ? wrom_addr[11:0] : rq_ad_s[a-1];
-                rq_ad_n[a] <= (a == 1) ? wrom_addr[11:0] : rq_ad_n[a-1];
+                rq_ad_s[a] <= (a == 1) ? {{(12-BAW){1'b0}}, wrom_addr[BAW-1:0]} : rq_ad_s[a-1];
+                rq_ad_n[a] <= (a == 1) ? {{(12-BAW){1'b0}}, wrom_addr[BAW-1:0]} : rq_ad_n[a-1];
             end
         end
         for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_ce
@@ -389,7 +392,8 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer TREE_LAT = 3,       // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
     parameter integer ROM_PIPE = 0,       // ot_qwen_rom_tile_logic_w12 ROM_PIPE (the KV write port takes ROM_ARELAY more stages)
     parameter integer ROM_ARELAY = 1,
-    parameter integer LRST = 0
+    parameter integer LRST = 0,
+    parameter integer BAW = 12            // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -418,7 +422,7 @@ module ot_qwen_rom_tile_w12 #(
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(1),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .LRST(LRST)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .LRST(LRST), .BAW(BAW)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_rd(rom_rd),
@@ -428,8 +432,14 @@ module ot_qwen_rom_tile_w12 #(
     generate
         for (p = 0; p < 2; p = p + 1) begin : g_col
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
-                ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in(rom_ce[b]), .addr_in((ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr),
-                                          .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
+                wire [11:0] ra = (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr;
+                if (BAW == 11) begin : g_h
+                    ot_rom_2048x266_m8 u_rom (.clk(clk), .ce_in(rom_ce[b]), .addr_in(ra[10:0]),
+                                              .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
+                end else begin : g_f
+                    ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in(rom_ce[b]), .addr_in(ra),
+                                              .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
+                end
             end
         end
     endgenerate
