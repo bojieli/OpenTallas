@@ -66,12 +66,15 @@ def qwen_rom(work, mode):
 
 
 # -- HBM accelerator, Qwen3-8B TP2 at P8191 (tools/qwen_hbmacc_rt_token_w12.py) ---------------------------
-HBMQ = S / "claude/qwen-hbmacc-8k"
+# Durable fixture tree (KEEP STATUS.md in every dir; literal path so tools/fleet/fleet_sweep.py protects it): the TP2
+# P8191 gold regenerated 2026-10-08 on the local GPU and verified against the committed oracle digests
+# (tools/exactness/regen_fixtures.sh, fixtures.py verify); run fixtures = qwen_hbmacc_layer_parallel.py --plan.
+HBMQ = Path("/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191")
 
 
 def hbm_qwen(work, which):
-    fix = {"L0": (HBMQ / "runs/a_p8191/L0", 160, "gold/tp2_l3/P8191", 5000, True, 4),
-           "head": (HBMQ / "runs/a_p8191_w224_head/head", 224, "gold/tp2/P8191", 0, False, 16)}[which]
+    fix = {"L0": (HBMQ / "hbmq_runs/a_p8191/L0", 160, "gold/tp2_l3/P8191", 5000, True, 4),
+           "head": (HBMQ / "hbmq_runs/a_p8191_w224_head/head", 224, "gold/tp2/P8191", 0, False, 16)}[which]
     src, winw, oracle, preroll, kv, _ = fix
     build = work.parent / f"hbm_qwen_build_w{winw}"
     cmd = [PY, TOOLS / "qwen_hbmacc_rt_token_w12.py", "--workdir", work / "rt", "--build-dir", build,
@@ -95,9 +98,11 @@ def hbm_qwen(work, which):
 
 
 # -- HBM accelerator, DeepSeek SM PQ/XMAP production gate on retained P1/P6 fixtures -----------------------
-# The r2 job's fixtures were swept from scratch2 at 19:44 on 10-07 (P6 lost). The four P1 fixtures survive in the
-# r1 job and were copied into the harness's own fixture tree; expected cycles re-baselined there.
-JOINT = S / "claude/exactness/fixtures/hbm_ds_joint"
+# The r2 job's fixtures were swept from scratch2 at 19:44 on 10-07. The four P1 fixtures survived in the r1 job; the
+# four P6 fixtures were recovered 2026-10-08 from their origin job (EPYC1 /srv/opentallas/jobs-overflow/
+# euclid-hbm-opt1-production-r1/work/p6_*_haz1_g0), every file sha256-equal to the committed
+# results/rtl/dshbm_hbm_opt_20261005/joint_r2/retained_layouts.json source_sha256.
+JOINT = Path("/srv/opentallas-scratch/claude/exactness/fixtures/hbm_ds_joint")
 
 
 def hbm_ds_joint(work):
