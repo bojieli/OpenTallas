@@ -26,7 +26,7 @@
     "--io-delay-fraction",
     "0.2",
     "--sdc-append",
-    "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/routes/ha2_truecredit_tx_reg_tc_9fb461b6d/screening_route.sdc",
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/routes/ha2_truecredit_tx_reg_tt_90356ef04/screening_route.sdc",
     "--stages",
     "synth,pnr",
     "--die-area",
@@ -56,9 +56,9 @@
     "--flow-timeout-seconds",
     "unlimited",
     "--keep-workdir",
-    "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/routes/ha2_truecredit_tx_reg_tc_9fb461b6d/work",
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/routes/ha2_truecredit_tx_reg_tt_90356ef04/work",
     "--output",
-    "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/routes/ha2_truecredit_tx_reg_tc_9fb461b6d/physical.json"
+    "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/routes/ha2_truecredit_tx_reg_tt_90356ef04/physical.json"
   ],
   "source_manifest": {
     "scope": "Independent TX/RX added logic, not covered by half-core h2 view",

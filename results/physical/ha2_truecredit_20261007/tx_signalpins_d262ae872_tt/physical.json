@@ -26,7 +26,7 @@
     "status": "not_met"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-10-08T10:25:45.242107+00:00",
+  "completed_at": "2026-10-08T10:32:52.654615+00:00",
   "corner": {
     "liberty": [
       {
@@ -81,7 +81,7 @@
     "extra_sdc": {
       "files": [
         {
-          "path": "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/routes/ha2_truecredit_tx_reg_tc_9fb461b6d/screening_route.sdc",
+          "path": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/routes/ha2_truecredit_tx_reg_tt_90356ef04/screening_route.sdc",
           "sha256": "19a1c16ab464bd49e4409a5f29f62d0b6e76f3124c73a7a91bc4897441d7d80a"
         }
       ],
@@ -136,10 +136,10 @@
     "top": "ot_ha2_truecredit_tx_phys",
     "utilization_fraction": 0.0490521
   },
-  "elapsed_seconds": 642.018,
+  "elapsed_seconds": 1079.585,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-10-08T10:15:03.223898+00:00",
+  "generated_at": "2026-10-08T10:14:53.069457+00:00",
   "git": {
     "commit": null,
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
@@ -149,7 +149,7 @@
   },
   "place_and_route": {
     "adder_map": "yosys_kogge_stone",
-    "artifact_dir": "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/routes/ha2_truecredit_tx_reg_tc_9fb461b6d/physical_artifacts",
+    "artifact_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/routes/ha2_truecredit_tx_reg_tt_90356ef04/physical_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
@@ -168,7 +168,7 @@
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "aad3042a744088ecdad2dbf8a5e02e8a04759af694bb5701ae0dc3c63f31b98a",
+        "sha256": "c34ee6e60241debc361a4db4883c36ef2eec719b2613050b305f393e3ecf845c",
         "size_bytes": 26167438
       },
       "6_final.odb": {
@@ -178,7 +178,7 @@
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "cc6d93c25d555648541730c2204254e61246ff39cc4ebedffd8a130579065151",
+        "sha256": "dbcf4aadb988d526a3c3d3eb8c7aa09e4abcfda6e95438acc2c11942f2c274f5",
         "size_bytes": 13145929
       },
       "6_final.v": {
@@ -203,8 +203,8 @@
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "496d25a8972a3b33b23255ff232beb4122f9d24c979d03213b0fcbe66617e2ec",
-        "size_bytes": 24351
+        "sha256": "d54a918087740302efe1927dd50a46a1f795c4d9f47f4d11b016946105aabc55",
+        "size_bytes": 24350
       }
     },
     "clock_period_ns": 0.833333,
@@ -234,7 +234,7 @@
           "name": "post_io_placement_tx_pins_signal_only.tcl",
           "path": "physical/ha2_truecredit_20261007/tx_pins_signal_only.tcl",
           "sha256": "5e24f5954b4b1d4f4aca8049f6fab3da7522131ca2951c69643f313d200ca8d4",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/src/physical/ha2_truecredit_20261007/tx_pins_signal_only.tcl"
+          "source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/src/physical/ha2_truecredit_20261007/tx_pins_signal_only.tcl"
         }
       ]
     },
@@ -514,7 +514,7 @@
       "--io-delay-fraction",
       "0.2",
       "--sdc-append",
-      "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/routes/ha2_truecredit_tx_reg_tc_9fb461b6d/screening_route.sdc",
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/routes/ha2_truecredit_tx_reg_tt_90356ef04/screening_route.sdc",
       "--stages",
       "synth,pnr",
       "--die-area",
@@ -544,23 +544,23 @@
       "--flow-timeout-seconds",
       "unlimited",
       "--keep-workdir",
-      "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/routes/ha2_truecredit_tx_reg_tc_9fb461b6d/work",
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/routes/ha2_truecredit_tx_reg_tt_90356ef04/work",
       "--output",
-      "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/routes/ha2_truecredit_tx_reg_tc_9fb461b6d/physical.json"
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/routes/ha2_truecredit_tx_reg_tt_90356ef04/physical.json"
     ],
     "driver": {
       "commit": null,
       "file_modified_since_commit": false,
       "note": "the driver and the sources come from the same tree; git.commit describes both",
-      "path": "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/src/tools/run_abi3_physical.py",
+      "path": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/src/tools/run_abi3_physical.py",
       "same_tree_as_sources": true,
-      "sha256": "9364b2afaf92b785dd9a2f58cc8d672a7499f3c98071f005042511fbe00c9864",
-      "tree": "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/src"
+      "sha256": "8cf7f85d3c1e04a7f2b7e6c63bc1d3b2b6d723c5bbdb76e9dbd77a1f89882437",
+      "tree": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/src"
     },
     "orfs_num_cores": 8,
-    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
     "python": "3.14.4",
-    "source_root": "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/src"
+    "source_root": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/src"
   },
   "schema_version": 1,
   "stages_completed": [

@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.w18.corner_sta.v1",
- "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_reg_tc_9fb461b6d/routes/ha2_truecredit_tx_reg_tc_9fb461b6d/work/orfs",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/routes/ha2_truecredit_tx_reg_tt_90356ef04/work/orfs",
  "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_ha2_truecredit_tx_phys\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.3330 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_cl",
  "sdc_name": "6_final.sdc",
  "setup_ss": {
@@ -15,7 +15,7 @@
   "violating_d_pins": 759,
   "errors": [],
   "odb_sha256": "5d1e4b3ae1daa16608bbfc9ba94a2a2312e8a3cd177f6a046b0098a4862b3ed2",
-  "spef_sha256": "cc6d93c25d555648541730c2204254e61246ff39cc4ebedffd8a130579065151",
+  "spef_sha256": "dbcf4aadb988d526a3c3d3eb8c7aa09e4abcfda6e95438acc2c11942f2c274f5",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "fa84db67dd9746d67ef4cae166bd4a9c7d0d27f1665c1e91bec98439c59800a2"
  },
@@ -31,7 +31,7 @@
   "violating_d_pins": 0,
   "errors": [],
   "odb_sha256": "5d1e4b3ae1daa16608bbfc9ba94a2a2312e8a3cd177f6a046b0098a4862b3ed2",
-  "spef_sha256": "cc6d93c25d555648541730c2204254e61246ff39cc4ebedffd8a130579065151",
+  "spef_sha256": "dbcf4aadb988d526a3c3d3eb8c7aa09e4abcfda6e95438acc2c11942f2c274f5",
   "sdc_name": "6_final.sdc",
   "sdc_sha256": "fa84db67dd9746d67ef4cae166bd4a9c7d0d27f1665c1e91bec98439c59800a2"
  },
