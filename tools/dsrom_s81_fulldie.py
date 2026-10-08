@@ -3360,8 +3360,10 @@ VM_FACE_MM2 = None              # --vm-face-mm2 (v9e): minimum VM slab area on e
 PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a relay station abutting every hardened-block pin
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
 PQ_PLACE = False                # --pq-place (S81-DIE 2026-10-07): production PQ roots / core on the mixed221 layer die
-PQ_ROOT_ROW = 164.16            #   root row added to each tier channel 0..TIERS-1 (4.32 + 8.64 + 133.92 + 8.64 + 8.64)
-PQ_ROOT_WH = (132.192, 133.92)  #   ret_root_r128 reserved outline (results/uarch/s81_pq_root_cam_20261007/model.json)
+PQ_ROOT_ROW = 272.16            #   root row added to each tier channel 0..TIERS-1 (4.32 + 8.64 + 241.92 + 8.64 + 8.64)
+PQ_ROOT_WH = (132.192, 241.92)  #   ret_root_r128 reserved outline.  CLAUDE pq-rootcam 2026-10-08: grown from 133.92 (placed at
+                                #   85.8% util, rule ~55-60%) for the pipelined CAM ot_s81_pq_ret_root_cam_p: PAR 1 routes in
+                                #   the full 241.92 slot, PAR 0 in 211.68 inside it (physical/s81_pq_root_cam_p/route.sh DIE_H)
 PQ_STN_H = 8.64                 #   return station height (S / N face of the root, full root width)
 PQ_CORE_H = 449.28              #   PQ core slot height after the VM (x the hub column width)
 PQ_TI, PQ_RO = NODEB, CRET      #   root in = the raw tree word (66); root out carried at the column return width (68):
@@ -4965,8 +4967,8 @@ def die_options(ap):
     ap.add_argument('--geometry-fix', action='store_true', help='r9: canonical station footprints and bounded '
                     'k16 pin depth; default off pending geometry and physical gates')
     ap.add_argument('--pq-place', action='store_true', help='S81-DIE (2026-10-07): production PQ placement on the '
-                    'mixed layer die: a 164.16 um root row in the first TIERS tier channels (one ret_root_r128 a '
-                    'region, 132.192 x 133.92, between two 8.64 um return stations in the 142.56 um return strip) and '
+                    'mixed layer die: a 272.16 um root row in the first TIERS tier channels (one ret_root_r128 a '
+                    'region, 132.192 x 241.92, between two 8.64 um return stations in the 142.56 um return strip) and '
                     'the PQ core in a 449.28 um x hub-column slot after the VM (with its 3 stream / phase ROMs)')
     return ap
 

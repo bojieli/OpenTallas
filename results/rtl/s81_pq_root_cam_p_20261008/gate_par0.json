@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.s81.pq-root-cam-p-gate.v1",
+  "dut": "ot_s81_pq_ret_root_cam_p",
+  "PAR": 0,
+  "cases": {
+    "positive": {
+      "exit_code": 0,
+      "gate_passed": true,
+      "caught_by": null,
+      "latency_delta_vs_native": {
+        "complete": 2,
+        "two_leaf": 4,
+        "eight_leaf": 8
+      },
+      "compiled_source_sha256": "73b9312785c24e1bd3386bfe99aa0f93495960afcc9e542ed10eab619b28227a"
+    },
+    "no_insert_forward": {
+      "exit_code": 1,
+      "gate_passed": true,
+      "caught_by": "FATAL: /tmp/claude-1000/pqg/par0/tb_no_insert_forward.sv:60: unexpected fault in bounded exact campaign\n       Time: 5516000 Scope: root_cam_tb",
+      "latency_delta_vs_native": null,
+      "compiled_source_sha256": "58c53788d9b5ece94782770e3a9d604e4093f771eee03d818fd60376e6d57b74"
+    },
+    "wrong_sibling": {
+      "exit_code": 1,
+      "gate_passed": true,
+      "caught_by": "FATAL: /tmp/claude-1000/pqg/par0/tb_wrong_sibling.sv:107: pairing/result mismatch row352 ref0800000008001 got0000000000001\n       Time: 24220000 Scope: root_cam",
+      "latency_delta_vs_native": null,
+      "compiled_source_sha256": "c2b9adcf1d8d7a57cddb0c4cb57e628077c81357bc77f36449a42125a5c4ac22"
+    },
+    "no_free_on_remove": {
+      "exit_code": 1,
+      "gate_passed": true,
+      "caught_by": "FATAL: /tmp/claude-1000/pqg/par0/tb_no_free_on_remove.sv:60: unexpected fault in bounded exact campaign\n       Time: 6156000 Scope: root_cam_tb",
+      "latency_delta_vs_native": null,
+      "compiled_source_sha256": "581543015acf9b2d0375cea82682b6cb002cb053661acf9b442475e95bf081f1"
+    },
+    "wrong_parent_lo": {
+      "exit_code": 1,
+      "gate_passed": true,
+      "caught_by": "FATAL: /tmp/claude-1000/pqg/par0/tb_wrong_parent_lo.sv:60: unexpected fault in bounded exact campaign\n       Time: 11706000 Scope: root_cam_tb",
+      "latency_delta_vs_native": null,
+      "compiled_source_sha256": "f0dc6600de7f75b1704f85517426b53dd5b2342db391cc18961db50b28dc0296"
+    },
+    "stale_entry_read": {
+      "exit_code": 1,
+      "gate_passed": true,
+      "caught_by": "FATAL: /tmp/claude-1000/pqg/par0/tb_stale_entry_read.sv:107: pairing/result mismatch row160 ref0808000008080 got07f0000007f00\n       Time: 24220000 Scope: root_",
+      "latency_delta_vs_native": null,
+      "compiled_source_sha256": "d32822f8f11074a6b695400fb484fe1ab81e4e72b86ea5b760ecb00254339616"
+    }
+  },
+  "source_sha256": {
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+    "rtl/dsrom_sys/s81_pq_parent/ot_s81_pq_ret_root_cam_p.sv": "73b9312785c24e1bd3386bfe99aa0f93495960afcc9e542ed10eab619b28227a",
+    "tests/rtl/s81_pq_parent/root_cam_tb.sv": "16d0582162039f2ba9fe0aa56459c5e167135de6f35ad24c969ee2c73d357e83"
+  },
+  "tool_sha256": "83a11dc2259677cf8ea27edb751912d4f3fbeb97820985230a44f51e90d51cde",
+  "exact_roots": 384,
+  "ROOTD": 128,
+  "QD": 128,
+  "all_passed": true,
+  "adopted": false
+}
