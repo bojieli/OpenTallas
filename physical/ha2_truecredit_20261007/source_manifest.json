@@ -2,9 +2,9 @@
   "scope": "Independent TX/RX added logic, not covered by half-core h2 view",
   "files": {
     "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
-    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d203972abf58823ce475d9b72fa857c87ef6a9492c0700846955d564552f1b6",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d6db07d4ed8f086c4b3144f3a3d6a571f580f0b6671d23aaeab0c15ee4b5700",
     "physical/ha2_truecredit_20261007/ot_ha2_truecredit_rx_phys.sv": "47024effd0b75734dc1dc6a8491c0800cfbf34669583416b962484f015b05be0",
-    "physical/ha2_truecredit_20261007/ot_ha2_truecredit_tx_phys.sv": "7e835c626102dd74fdda791ba08001d8e0be5b929533357ca9976ca8764d0175",
+    "physical/ha2_truecredit_20261007/ot_ha2_truecredit_tx_phys.sv": "b9993bc95221d4cd7ccd909ec12218f64c1ee25a84555e6ca14202d0fa13800d",
     "physical/ha2_truecredit_20261007/tx_pins.tcl": "18d7cc4ffc505ffa6c94507c4f617688257a8520941bc0e1d75934f4dd5a97f6",
     "physical/ha2_truecredit_20261007/rx_pins.tcl": "179038e756731e73479907356781caf8ea30fe025492302eec6ceba05a914664",
     "physical/ha2_truecredit_20261007/tx_check_pins.tcl": "03f96529a86f479b27105337b6078b05ffef713a53b3556e485462527e5b211a",
@@ -13,5 +13,19 @@
     "physical/ha2_truecredit_20261007/model.json": "581300d53677bc957b041d2ef20aec2ad2cf1066d96d6bc30f7aa7400b260d40",
     "tools/ha2_truecredit_physical.py": "8d016508c6509338e007293c3d7aac7c71936f21fffd100971fa254ffffb9065",
     "tools/ha2_truecredit_physical_model.py": "14efd3a13ca8547356ff1f2bb989742b10fb93cf14beef7d459c200f3bc0382b"
-  }
+  },
+  "revisions": [
+    {
+      "by": "hbm-blocks 2026-10-07",
+      "file": "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv",
+      "old_sha256": "9d203972abf58823ce475d9b72fa857c87ef6a9492c0700846955d564552f1b6",
+      "why": "sender REG option (pin-landed arrival/return, registered issue_ready / reserved>sent); tx wrapper REG=1"
+    },
+    {
+      "by": "hbm-blocks 2026-10-07",
+      "file": "physical/ha2_truecredit_20261007/ot_ha2_truecredit_tx_phys.sv",
+      "old_sha256": "7e835c626102dd74fdda791ba08001d8e0be5b929533357ca9976ca8764d0175",
+      "why": "sender REG option (pin-landed arrival/return, registered issue_ready / reserved>sent); tx wrapper REG=1"
+    }
+  ]
 }
