@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+"""Qwen ROM token bench on the PARTITIONED core (qwen-missing 2026-10-07).
+
+Builds the exactness harness's Qwen ROM plain-AR STREAM4 die (tools/exactness/qwen_rom_fulltoken.py) with the core
+replaced by ot_qwen_rom_core_part (tools/qwen_missing/emit_partition.py): the controller (die master
+qfd_sp_constants_sequencer), the matrix-engine spine (qfd_sp_tree_top) and the stream unit (qfd_sp_su64_sfu) as
+three modules wired across the partition boundary.  The die files' four issue-stall observation counters read the
+controller's state through core.<net>; in the partitioned build they read core.u_ctrl.<net> (copies of the two die
+files, nothing else changed).  Everything else -- fixtures, host, checks -- is the harness's.
+
+    partition_token.py build --variant part|base --build DIR [--jobs 16]
+    partition_token.py run   --build DIR --work DIR --stages L0|full
+The 'base' variant is the unmodified harness build from this tree (the same-tree reference for the comparison).
+"""
+from __future__ import annotations
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools" / "exactness"))
+sys.path.insert(0, str(ROOT / "tools" / "qwen_missing"))
+import qwen_rom_fulltoken as F  # noqa: E402
+import emit_partition as P  # noqa: E402
+
+CTRL_NETS = ("st", "nx_v", "d_unit", "me_wsrc", "kv_gate", "su_ready", "su_idle", "me_idle", "d_barrier")
+
+
+def part_core(text: str) -> str:
+    core = P.EMIT.emit(text)
+    part = P.emit_part(core).replace("module ot_qwen_rom_core_part #(", "module ot_qwen_rom_core #(", 1)
+    return P.emit_ctrl(core) + "\n" + part
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("phase", choices=("build", "run"))
+    ap.add_argument("--variant", choices=("part", "base"), default="part")
+    ap.add_argument("--build", type=Path, required=True)
+    ap.add_argument("--work", type=Path)
+    ap.add_argument("--stages", choices=("L0", "full"), default="L0")
+    ap.add_argument("--threads", type=int, default=16)
+    ap.add_argument("--jobs", type=int, default=16)
+    a = ap.parse_args()
+    bld = a.build.resolve()
+    if a.phase == "run":
+        sys.exit(F.run(bld, a.work.resolve(), a.stages, a.threads))
+    if a.variant == "part":
+        F.EMIT.emit = part_core
+        orig = F.die_sources
+        gen = ROOT / "build" / "qwen_missing_part" / bld.name
+        gen.mkdir(parents=True, exist_ok=True)
+
+        def die_sources():
+            out = []
+            for f in orig():
+                t = f.read_text()
+                if "core." in t:
+                    n = 0
+                    for net in CTRL_NETS:
+                        t, k = re.subn(rf"\bcore\.{net}\b", f"core.u_ctrl.{net}", t)
+                        n += k
+                    if n == 0:
+                        raise SystemExit(f"{f}: core reference pattern changed")
+                    g = gen / f.name
+                    g.write_text(t)
+                    out.append(g)
+                else:
+                    out.append(f)
+            return out
+        F.die_sources = die_sources
+    F.build(bld, a.jobs)
+
+
+if __name__ == "__main__":
+    main()

@@ -50,12 +50,13 @@ def main():
     ap.add_argument("--post-sdc", required=True)
     ap.add_argument("--macro", action="append", default=[])
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--corners", default="ss,ff", help="corners to export (option B adds tt); default ss,ff")
     a = ap.parse_args()
     o = a.orfs_dir.resolve(); a.out.mkdir(parents=True, exist_ok=True); out = a.out.resolve()
     base = next((o / "results/asap7").glob("*/base"))
     rel = f"/work/{base.relative_to(o)}"
     rec = dict(schema="opentallas.w18.export_view.v1", name=a.name, orfs_dir=str(o), post_sdc=a.post_sdc)
-    for corner in ("ss", "ff"):
+    for corner in a.corners.split(","):
         (o / f"w18_export_{corner}.tcl").write_text(script(corner, rel, a.name, a.macro, a.post_sdc, extra_vts(base / "6_final.odb")))
         cmd = ["docker", "run", "--rm", "-v", f"{o}:/work", "-v", f"{ROOT}:/src:ro", "-v", f"{out}:/out",
                "openroad/orfs:latest", "bash", "-lc",
