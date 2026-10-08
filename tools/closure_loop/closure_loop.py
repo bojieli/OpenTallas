@@ -2083,16 +2083,32 @@ def assumed_insertion(j):
 
 
 def start_parallel_calibrate(j, stl, st):
-    if j.get("ctrack") or j["spec"].get("calibrate_parallel") is False:
+    if j["spec"].get("calibrate_parallel") is False:
         return False
-    env, src = assumed_insertion(j)
+    c0 = j.get("ctrack")
+    if c0 and c0.get("state") == "done" and c0.get("measured"):
+        # moved back to calibrate (pre-CTS host move): the measurement exists, route on it
+        env, src = {**c0["assumed"], **{k: v for k, v in c0["measured"].items() if v is not None}}, "measured (parallel calibrate)"
+    else:
+        # a pending / running / failed track of an earlier placement (host move) is replaced
+        env, src = assumed_insertion(j)
     if not env:
         return False
+    if c0 and c0.get("state") == "running":
+        try:
+            ssh(c0["host"], f"p=$(cat {c0['run']}/cl/{c0['tag']}.pid 2>/dev/null); [ -n \"$p\" ] && kill -TERM -- -$p 2>/dev/null; true",
+                timeout=60)
+        except Exception:  # noqa: BLE001
+            pass
     text = "".join(f"{k}={v}\n" for k, v in env.items())
     r = ssh(j["host"], f"mkdir -p {j['run']}/cl && cat > {j['run']}/cl/calib.env && cp {j['run']}/cl/calib.env "
                        f"{j['run']}/cl/calib.assumed.env", input=text, timeout=60)
     if r.returncode:
         return False
+    if c0 and c0.get("state") == "done":
+        j["stage_idx"] += 1
+        event(j, f"calibrate already measured in parallel: route on {src}")
+        return True
     j["ctrack"] = dict(state="pending", assumed=env, source=src, sdc_cmd=st.get("sdc_cmd"), n=0,
                        stage_idx=j["stage_idx"])
     j["stage_idx"] += 1
