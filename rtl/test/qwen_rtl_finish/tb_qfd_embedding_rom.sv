@@ -5,14 +5,14 @@
 // bank + its scale), random single words, random scales -- every response compared with the ROM content of its request.
 // MUT = 1 (one bank off in the root decode): must FAIL.
 module tb_qfd_embedding_rom;
-    parameter integer NCOL = 3, NTAP = 4, NCODE = 10, NSCALE = 2, LWB = 6, LSB = 8, CRD = 4, MUT = 0, NREQ = 6000, SEED = 9;
+    parameter integer NCOL = 3, NTAP = 4, NCODE = 10, NSCALE = 2, LWB = 6, LSB = 8, CRD = 4, MUT = 0, PINREG = 0, NREQ = 6000, SEED = 9;
     localparam integer AW = 24;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
     reg ea_v, ea_kind; reg [AW-1:0] ea_addr;
     wire ea_cr, eq_v, fault; wire [511:0] eq_data;
     ot_qfd_io_embedding_rom #(.AW(AW), .NCOL(NCOL), .NTAP(NTAP), .NCODE(NCODE), .NSCALE(NSCALE), .LWB(LWB), .LSB(LSB),
-        .CRD(CRD), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .ea_v(ea_v), .ea_kind(ea_kind), .ea_addr(ea_addr),
+        .CRD(CRD), .MUT(MUT), .PINREG(PINREG)) dut (.clk(clk), .rst_n(rst_n), .ea_v(ea_v), .ea_kind(ea_kind), .ea_addr(ea_addr),
         .ea_cr(ea_cr), .eq_v(eq_v), .eq_data(eq_data), .fault(fault));
     // the reference ROM content (as the banks are filled)
     function automatic [511:0] word(input [31:0] a);
@@ -67,7 +67,7 @@ module tb_qfd_embedding_rom;
         @(negedge clk); ea_v = 0;
         repeat (3000) @(negedge clk);
         if (bad == 0 && got == sent && !fault && sent == NREQ)
-            $display("PASS qfd_embedding_rom NCOL=%0d NTAP=%0d requests=%0d responses=%0d cycles=%0d", NCOL, NTAP, sent, got, cyc);
+            $display("PASS qfd_embedding_rom NCOL=%0d NTAP=%0d PINREG=%0d requests=%0d responses=%0d cycles=%0d", NCOL, NTAP, PINREG, sent, got, cyc);
         else
             $display("FAIL qfd_embedding_rom mismatches=%0d sent=%0d got=%0d fault=%0d", bad, sent, got, fault);
         $finish;

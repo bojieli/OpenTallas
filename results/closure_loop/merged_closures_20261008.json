@@ -5,12 +5,12 @@
  "scope": "CLOSED closure-loop jobs since 2026-10-07 20:45 PT (option B), minus revoked / adoption-held / bench-failed",
  "main_after_merge": "110e635304ea02513abd0043956a228c15c85ea5",
  "counts": {
-  "closed": 191,
+  "closed": 192,
   "revoked": 9,
   "held": 0,
   "bench_failed": 0,
   "already_on_main": 71,
-  "merged": 111
+  "merged": 112
  },
  "notes": [
   "Records of the codex/qwen-ctrl-kvc-final 74d839a79 qfd_ctrl_pc_NN routes conflict with main's physical/qwen_die_masters/views/qfd_ctrl_pc_NN and signoff/qfd_ctrl_pc_NN.sdc (ready_hbm design, 3d5ad2a4f / 216a06602): main's views and SDCs kept; codex record commits are ancestors of main but their view files are not the live ones.",
@@ -68,6 +68,10 @@
   {
    "entry": "drive-0532 8a9a669df (ii1r packet-SRAM redesign) + record 203f04d42",
    "action": "merged by drive-0828 2026-10-08 after routed-ioref re-judge CLOSED hbm_pkt_ii1rw-8a9a669df-tc"
+  },
+  {
+   "entry": "drive-0928 1e23a4915 + 532869b2c (qfd_io_emb_root PINREG option, default 0) + record b84637e6d",
+   "action": "merged by drive-0958 2026-10-08 after qfd_io_emb_root-1e23a4915-lvt-tc CLOSED; PINREG variant cancelled (0-cycle LVT wins)"
   }
  ],
  "jobs": [
@@ -2528,6 +2532,20 @@
    "source_on_main": false,
    "record_on_main": false,
    "merged_sha": "(drive-0828 merge, see ready_to_merge)",
+   "status": "merged"
+  },
+  {
+   "job": "qfd_io_emb_root-1e23a4915-lvt-tc",
+   "closed": "2026-10-08 09:50:49-07:00",
+   "closed_by": "closure loop (LVT swap on the unchanged r21 root, TC route; TT/SS >= 0: SS +5.21 / FF +29.25 / DRC 0; was TT -5.34 at c1e4eba84tt)",
+   "branch": "claude/drive-0928-20261008",
+   "source_commit": "1e23a4915b965f94b805d846ac9bb11fc52b4dd3",
+   "record_commit": "b84637e6da4253e083238dcc6ced4745b9a03ed7",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "(drive-0958 merge, see ready_to_merge)",
    "status": "merged"
   }
  ]
