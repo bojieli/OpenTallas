@@ -935,15 +935,20 @@ def _link_budget_summary():
     d = _J(LB_FILE)
     by = {}
     for r in d["rows"]:
-        by.setdefault(r["verdict"], []).append(dict(job=r["job"], block=r["block"], closed_ss_ps=r["closed_ss_ps"],
+        ss = r.get("period_correction", r["link_budget_ss_ps"])
+        v = "NOT CHECKED" if r["verdict"] == "NOT CHECKED" else ("HOLDS" if ss >= 0 else "REVOKED")
+        by.setdefault(v, []).append(dict(job=r["job"], block=r["block"], closed_ss_ps=r["closed_ss_ps"],
                                                     link_budget_ss_ps=r.get("period_correction", r["link_budget_ss_ps"])))
-    return dict(rule=d["rule"], method=d["method"], record=src(LB_FILE), counts=d["counts"],
+    return dict(closure_line="OWNER DECISION 2026-10-07: SS >= 0 ps / FF >= 0 ps / DRC 0 at 833.333 ps sign-off (+15 ps is a "
+                             "design target only); consistent die-link budget and rule H1 still apply",
+                rule=d["rule"], method=d["method"], record=src(LB_FILE),
+                counts_at_re_sta=d["counts"], counts_under_closure_line={k: len(v) for k, v in by.items()},
                 holds=by.get("HOLDS", []),
                 revoked=dict(label="revoked: link budget", jobs=by.get("REVOKED", [])),
                 unverified=dict(label="unverified (needs a per-link model)", reason=d["unchecked_reason"], jobs=by.get("NOT CHECKED", [])),
                 requeued=d["requeued"],
-                consequence="only the HOLDS jobs count as closed blocks; revoked and unverified jobs carry no closure credit "
-                            "until their re-routes re-close under the consistent budget")
+                consequence="a job counts as closed only if its link-budget SS is >= 0 (closure line); revoked and unverified "
+                            "jobs carry no closure credit until their re-routes re-close under the consistent budget")
 
 
 def _pins(rec):

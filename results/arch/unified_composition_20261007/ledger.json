@@ -2871,6 +2871,7 @@
   }
  },
  "block_signoff_link_budget": {
+  "closure_line": "OWNER DECISION 2026-10-07: SS >= 0 ps / FF >= 0 ps / DRC 0 at 833.333 ps sign-off (+15 ps is a design target only); consistent die-link budget and rule H1 still apply",
   "rule": "sender share + measured link + receiver share + 150 ps skew <= T - 60 ps: S = R = 254.7 ps at 833.333 ps (LINK 114 ps = 100 um x 1.135 ps/um)",
   "method": "physical/common_flow/link_budget_consistent.sdc (-max -add_delay on top of each job's own sign-off SDC), SS only, on the existing ODBs, no re-route; branch claude/setup-triage-20261007 @ 387a4d2ac",
   "record": {
@@ -2878,9 +2879,14 @@
    "pointer": null,
    "commit": "28d6aeaf7"
   },
-  "counts": {
+  "counts_at_re_sta": {
    "REVOKED": 30,
    "HOLDS": 10,
+   "NOT CHECKED": 14
+  },
+  "counts_under_closure_line": {
+   "REVOKED": 28,
+   "HOLDS": 12,
    "NOT CHECKED": 14
   },
   "holds": [
@@ -2921,6 +2927,12 @@
     "link_budget_ss_ps": 42.9
    },
    {
+    "job": "hbm_stn_r33_capacity_4b51e590e",
+    "block": "hfd_stn_r33",
+    "closed_ss_ps": 58.94,
+    "link_budget_ss_ps": 0.7
+   },
+   {
     "job": "qfd_embed_ingress_code-0e025d03c",
     "block": "qfd_embed_ingress_code",
     "closed_ss_ps": 234.22,
@@ -2943,6 +2955,12 @@
     "block": "dsfd_ctrl_ctr",
     "closed_ss_ps": 243.73,
     "link_budget_ss_ps": 40.7
+   },
+   {
+    "job": "s81ph-dsfd_svc_pc-752a48488",
+    "block": "dsfd_svc_pc",
+    "closed_ss_ps": 220.0,
+    "link_budget_ss_ps": 9.4
    }
   ],
   "revoked": {
@@ -2971,12 +2989,6 @@
      "block": "hfd_router",
      "closed_ss_ps": 36.82,
      "link_budget_ss_ps": -58.5
-    },
-    {
-     "job": "hbm_stn_r33_capacity_4b51e590e",
-     "block": "hfd_stn_r33",
-     "closed_ss_ps": 58.94,
-     "link_budget_ss_ps": 0.7
     },
     {
      "job": "hbm_stn_r38_88136dcd2",
@@ -3091,12 +3103,6 @@
      "block": "dsfd_ctrl_pc",
      "closed_ss_ps": 54.28,
      "link_budget_ss_ps": -243.2
-    },
-    {
-     "job": "s81ph-dsfd_svc_pc-752a48488",
-     "block": "dsfd_svc_pc",
-     "closed_ss_ps": 220.0,
-     "link_budget_ss_ps": 9.4
     },
     {
      "job": "s81ph-dsfd_svc_stn-da50ce55a",
@@ -3226,7 +3232,7 @@
    "lbpin": 2,
    "note": "24 <job>-lbc re-routes (source 387a4d2ac, link_budget_hook + cg_pushdown + clk_net_protect), 14 <job>-cgfix (class A/B CTS fixes) and 2 <job>-lbpin queued to re-close them; qfd_chead / qfd_cst re-sign-off jobs need a Qwen re-route; colt_mrg / svc_pc need their budget sheets adopted (s81-blocks)"
   },
-  "consequence": "only the HOLDS jobs count as closed blocks; revoked and unverified jobs carry no closure credit until their re-routes re-close under the consistent budget"
+  "consequence": "a job counts as closed only if its link-budget SS is >= 0 (closure line); revoked and unverified jobs carry no closure credit until their re-routes re-close under the consistent budget"
  },
  "established_contracts_rtl_bench": [
   {
@@ -3381,7 +3387,7 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "c406a725728fb183952a22fa8739085b573476da5e165482d72c1fef433852f0"
+  "sha256": "3955482c9145651b888e3db27e4208ec3770db3b375ecf6e85af111838a84e3c"
  },
  "source_sha256": {
   "AGENTS.md": "d47e33869ed5fefa3be09cffa270ccb831227173fcf0295b5ebecc178b55a042",
@@ -3460,6 +3466,6 @@
   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "tools/chip_explorer_build.py": "146a386013f68a12600e1cca553e0fac06515fc974fb7f6b11654cd9835f52f3",
   "tools/qwen_die_sta_classes.py": "5f69de4a422d2ff93437c472f335a06a9a458d9ecfb88eb9a534433b3f0d5907",
-  "tools/unified_composition.py": "c406a725728fb183952a22fa8739085b573476da5e165482d72c1fef433852f0"
+  "tools/unified_composition.py": "3955482c9145651b888e3db27e4208ec3770db3b375ecf6e85af111838a84e3c"
  }
 }

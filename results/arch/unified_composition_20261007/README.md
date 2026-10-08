@@ -80,13 +80,15 @@ Current state:
 - IR has committed records on all three, on earlier frames.
 - The CTS plan is done for DS and HBM, on earlier geometries, and missing for Qwen.
 
-**Block sign-off under the consistent die-link budget (coordinator decision 2026-10-07).** The rule is sender share + link + receiver share + 150 ps skew ≤ T − 60, which gives 254.7 ps a side at 833.333 ps. It was applied to all 54 closed loop jobs, by SS re-STA on their existing ODBs (setup-triage, 387a4d2ac). The record is `link_budget_restatus_20261007.json`, and the ledger summary is `block_signoff_link_budget`:
+**Closure line (owner decision, 2026-10-07 evening).** A block is closed at **SS ≥ 0 ps, FF ≥ 0 ps and DRC 0 at the 833.333 ps sign-off**. The +15 ps margin is a design target only. The consistent die-link budget and rule H1 still apply: sender share + link + receiver share + 150 ps skew ≤ T − 60, or 254.7 ps a side.
 
-- **10 hold** and still count as closed.
-- **30 are revoked: link budget**, listed with their new slack.
-- **14 forwarded-clock stations are unverified.** They need a per-link model, and the common-clock split does not apply to them.
+**Block sign-off under the consistent link budget.** All 54 closed loop jobs were re-run through SS STA on their existing ODBs (setup-triage, 387a4d2ac). The record is `link_budget_restatus_20261007.json`, and the ledger summary is `block_signoff_link_budget`. Under the closure line:
 
-Revoked and unverified jobs carry no closure credit. 24 `-lbc` re-routes, 14 `-cgfix` and 2 `-lbpin` are queued to re-close them.
+- **12 hold.** At the old +15 reading only 10 held; hfd_stn_r33 (+0.7) and dsfd_svc_pc (+9.4) now pass.
+- **28 are revoked: link budget**, listed with their new slack.
+- **14 forwarded-clock stations are unverified.** They need a per-link model.
+
+Revoked and unverified jobs carry no closure credit. 24 `-lbc` re-routes, 14 `-cgfix` and 2 `-lbpin` are queued to re-close them. Counts are re-taken from committed re-verdicts as they land.
 
 DS ROM / HBM, per user, both sides candidates:
 

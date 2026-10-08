@@ -23,6 +23,12 @@ ROOT = Path(__file__).resolve().parents[1]
 INV = ROOT / "results/rtl/die_top_lint_20261006"
 LEDGER = ROOT / "results/arch/unified_composition_20261007/ledger.json"
 LB = ROOT / "results/arch/unified_composition_20261007/link_budget_restatus_20261007.json"   # consistent die-link budget re-STA
+# CLOSURE LINE (OWNER DECISION 2026-10-07 evening): SS >= 0 / FF >= 0 / DRC 0 at 833.333 ps sign-off; +15 ps is a
+# design target only. The consistent die-link budget and rule H1 still apply: a block counts only if its link-budget
+# SS is also >= 0 (forwarded-clock stations stay unverified until a per-link model exists).
+SS_LINE, FF_LINE = 0.0, 0.0
+LINE_TEXT = ("Closure line (owner decision 2026-10-07): SS >= 0 ps, FF >= 0 ps, DRC 0 at 833.333 ps sign-off, under the "
+             "consistent die-link budget (S + link + R + 150 ps skew <= T - 60) and rule H1; +15 ps is a design target only")
 PAT = re.compile(r"^closure-loop: (\S+) CLOSED SS ([+-]?[\d.]+) / FF ([+-]?[\d.]+) ps DRC (\d+) at ([\d.]+)")
 
 
@@ -63,7 +69,7 @@ def verdicts(ref):
             blk, ss, ff, drc, per = m.group(1), float(m.group(2)), float(m.group(3)), int(m.group(4)), float(m.group(5))
             blk = canon(blk)
             latest[blk] = dict(commit=h, at=t, ss=ss, ff=ff, drc=drc, period=per,
-                               accepted=abs(per - 833.333) < 0.01 and ss >= 15 and ff >= 15 and drc == 0)
+                               accepted=abs(per - 833.333) < 0.01 and ss >= SS_LINE and ff >= FF_LINE and drc == 0)
     return latest
 
 
@@ -89,8 +95,8 @@ def apply_link_budget(v):
             if r is None:
                 x["lb"] = "not re-checked"
             else:
-                x["lb"] = r["verdict"]
-                x["lb_ss"] = r["link_budget_ss_ps"] if r["verdict"] != "HOLDS" or "period_correction" not in r else r["period_correction"]
+                x["lb_ss"] = r.get("period_correction", r["link_budget_ss_ps"])
+                x["lb"] = ("NOT CHECKED" if r["verdict"] == "NOT CHECKED" else "HOLDS" if x["lb_ss"] >= SS_LINE else "REVOKED")
             x["accepted"] = x["lb"] == "HOLDS"
     return v
 
@@ -137,8 +143,8 @@ def render(ref, rows, v):
     sha = subprocess.check_output(["git", "rev-parse", "--short=9", ref], cwd=ROOT, text=True).strip()
     now = datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M %Z")
     o = [f"# Takeover status ({now}; evidence = commits on {ref} @ {sha})", "",
-         "Only committed evidence counts. A block is closed when its latest committed closure-loop verdict is at 833.333 ps "
-         "with SS >= +15, FF >= +15 and DRC 0. Totals come from the committed 2026-10-06 die abstract inventories, which may "
+         "Only committed evidence counts. " + LINE_TEXT + ". A block is closed when its latest committed closure-loop verdict "
+         "meets that line and its link-budget re-STA SS is >= 0. Totals come from the committed 2026-10-06 die abstract inventories, which may "
          "lag the current S81 1,792 geometry and the HBM retile. No headline is adopted; every rate is a candidate.", "",
          "| Target | Blocks closed / total | Die-level state | Headline candidates (AR / MTP tok/s) | Open gates |",
          "|---|---|---|---|---|"]
@@ -181,7 +187,7 @@ def render(ref, rows, v):
             o.append("Unverified (needs a per-link model; forwarded-clock / source-synchronous): "
                      + ", ".join(f"{b} (common-clock split {v[b]['lb_ss']:+.1f})" if "lb_ss" in v[b] else f"{b} (not re-checked)" for b in r["unverified"]))
         if r["closed_below_rule"]:
-            o.append("Committed CLOSED verdicts below the +15/+15 rule or off-period (not counted): "
+            o.append("Committed CLOSED verdicts below the closure line or off-period (not counted): "
                      + ", ".join(f"{b} (SS {v[b]['ss']:+.2f} / FF {v[b]['ff']:+.2f} @ {v[b]['period']})" for b in r["closed_below_rule"]))
         o.append("")
     other = sorted(b for b in v if v[b]["accepted"] and not any(b in rows[t]["closed"] for t in rows))
