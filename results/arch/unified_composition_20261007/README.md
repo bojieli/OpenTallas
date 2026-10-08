@@ -82,6 +82,8 @@ Current state:
 
 **Closure line (OWNER OPTION B, 2026-10-07 20:45).** A block is closed at **TT setup ≥ 0 ps, FF hold ≥ 0 ps and DRC 0** at the 833.333 ps sign-off. SS setup is a sensitivity, and +15 ps is a design target only. The consistent die-link budget and rule H1 still apply. The link-budget re-STA below ran at SS, so its revocations are conservative until the TT re-verdicts land.
 
+**Option-B block status (authoritative).** The source is `results/closure_loop/option_b_status_20261007/status.json` on main: a TT re-STA of the final routes with the link budget (614782370). It gives **30 blocks closed**, **16 forwarded-clock stations unverified** and **13 previously closed blocks revoked**, because they fail TT under the budget. The revoked blocks are cfifo, colt_lane, ctrl_pc, svc_stn, svcio_ad/od/q, hfd_svc_SE_s8, head_bundle_glue, head_elem_B, meso_fifo_w512d8g1, qfd_chead and qfd_cst. Setup-triage is checking a possible reset-path artifact in the link-budget check, so these may change. The SS re-STA below is superseded.
+
 **Block sign-off under the consistent link budget.** All 54 closed loop jobs were re-run through SS STA on their existing ODBs (setup-triage, 387a4d2ac). The record is `link_budget_restatus_20261007.json`, and the ledger summary is `block_signoff_link_budget`. Under the closure line:
 
 - **12 hold.** At the old +15 reading only 10 held; hfd_stn_r33 (+0.7) and dsfd_svc_pc (+9.4) now pass.

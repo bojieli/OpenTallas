@@ -965,6 +965,12 @@ def _link_budget_summary():
                 revoked=dict(label="revoked: link budget", jobs=by.get("REVOKED", [])),
                 unverified=dict(label="unverified (needs a per-link model)", reason=d["unchecked_reason"], jobs=by.get("NOT CHECKED", [])),
                 requeued=d["requeued"],
+                option_b_status=dict(record=src("results/closure_loop/option_b_status_20261007/status.json", "counts"),
+                                     counts=_J("results/closure_loop/option_b_status_20261007/status.json")["counts"],
+                                     note="AUTHORITATIVE under owner option B: TT setup >= 0 under the consistent link budget, FF >= 0, "
+                                          "DRC 0 (TT re-STA of the final routes, 614782370). Supersedes the SS re-STA counts above; "
+                                          "13 previously closed blocks fail TT under the budget (may change: setup-triage is checking "
+                                          "a possible reset-path artifact)"),
                 reclosed=[dict(job="qfd_lst_h-5a3bb1721-lbc", block="qfd_lst_h", ss_ps=244.84, ff_ps=42.17, drc=0,
                                record=src("results/rtl/qwen_die_masters_20261006", "closure-loop verdict",
                                           commit="a95df3ae1 (branch claude/setup-triage-20261007; routed at 387a4d2ac with the link-budget hook)"))],
