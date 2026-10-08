@@ -1,0 +1,152 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qfd_kvc_decode_pc-d85c4b6ce-mmq-tt",
+ "block": "qfd_kvc_decode_pc",
+ "owner": "Codex:qwen-kvctrl",
+ "source_branch": "codex/qwen-ctrl-kvc-final-20261007",
+ "source_commit": "d85c4b6ce0aa535adeb0cb531b5a1067c9158897",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_kvc_decode_pc-d85c4b6ce-mmq-tt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 141.27,
+  "ff_ps": 26.59,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_kvc_decode_pc-d85c4b6ce-mmq-tt/routes/qfd_kvc_decode_pc_d85c4b6ce_mmq_tt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_kvc_decode_pc-d85c4b6ce-mmq-tt/routes/qfd_kvc_decode_pc_d85c4b6ce_mmq_tt/work/orfs/logs/asap7/opentallas_ot_qwen_kvc_decode_pc_asap7_qdm_qfd_kvc_decode_pc_d85c4b6ce_mmq_tt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_decode_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS kvc_decode transactions=131328 exhaustive_sectors=131072 malformed=covered duplicate_credit=detected\nrtl/test/tb_qwen_kvc_decode_pc.sv:108: $finish called at 1532340000 (1ps)\n",
+   "track": "parallel"
+  },
+  "bench_decode_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FAIL kvc_decode                        data/mask sent=41 got=37\nFATAL: rtl/test/tb_qwen_kvc_decode_pc.sv:26: \n       Time: 495000  Scope: tb_qwen_kvc_decode_pc.fail\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": "Decoder only: four edges x36 layers = conservative 144 cycles/AR token, no overlap credit.",
+ "status": "CLOSED",
+ "closed_at": "2026-10-07T23:35:12-07:00",
+ "job_spec": {
+  "name": "qfd_kvc_decode_pc-d85c4b6ce-mmq-tt",
+  "block": "qfd_kvc_decode_pc",
+  "owner": "Codex:qwen-kvctrl",
+  "purpose": "TT-BATCH (owner option B, one large batch): qfd_kvc_decode_pc-d85c4b6ce-mmq re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: FLOW-HOLD requeue of qfd_kvc_decode_pc-d85c4b6ce (SS 70.51 / FF -32.57) on its own source, snapshot patched in-stage by claude/flow-hold-20261007 @3aff1e111 (hold_corners_patch mm + h1_patch); multi-mode route-time hold repair (SS setup + FF hold under the FF sign-off SDCs at CTS/GRT, HM 50 ps at FF). Per-PC landing decoder ONLY; full 256b beat, four registered edges, exact mask/sector validation. Not complete KVC. SS/FF +15ps, 80fF/150ps die ports.",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "codex/qwen-ctrl-kvc-final-20261007",
+   "commit": "d85c4b6ce0aa535adeb0cb531b5a1067c9158897"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "decode_exact",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_kvc_decode_pc -P tb_qwen_kvc_decode_pc.NEG=0 -o {RUN}/bench/dec0 rtl/test/tb_qwen_kvc_decode_pc.sv rtl/physical/ot_qwen_kvc_decode_pc.sv && vvp -n {RUN}/bench/dec0",
+     "expect": "pass",
+     "pass_regex": "^PASS kvc_decode transactions=131328",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "decode_mutant",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_kvc_decode_pc -P tb_qwen_kvc_decode_pc.NEG=1 -o {RUN}/bench/dec1 rtl/test/tb_qwen_kvc_decode_pc.sv rtl/physical/ot_qwen_kvc_decode_pc.sv && vvp -n {RUN}/bench/dec1",
+     "expect": "fail",
+     "fail_regex": "^FAIL kvc_decode",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+   },
+   "route": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && export OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_kvc_decode_pc.sdc' && SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_kvc_decode_pc {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_kvc_decode_pc --out {RUN}/record/views/qfd_kvc_decode_pc --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_kvc_decode_pc.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/qwen_kvc_leaf_20261007/qfd_kvc_decode_pc-d85c4b6ce"
+   }
+  ],
+  "cycles_added": "Decoder only: four edges x36 layers = conservative 144 cycles/AR token, no overlap credit.",
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC"
+ }
+}
