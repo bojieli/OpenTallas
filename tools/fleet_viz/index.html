@@ -284,6 +284,37 @@ const $ = id => document.getElementById(id);
 const fmt = (n, d = 0) => n == null ? '-' : Number(n).toLocaleString('en-US', {maximumFractionDigits: d, minimumFractionDigits: d});
 const ago = t => { const s = Math.max(0, NOW() - t); return s < 10 ? 'now' : s < 60 ? Math.floor(s) + 's ago' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? (s / 3600).toFixed(1) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
 const gb = g => g >= 1000 ? fmt(g / 1024, 2) + ' TB' : fmt(g) + ' GB';
+// ---- keyed, incremental DOM: write only what changed (no wholesale innerHTML, no animation replay, scroll/hover kept)
+const setHTML = (el, h) => { if (el._h !== h) { el._h = h; el.innerHTML = h; } };
+const setText = (el, t) => { t = String(t); if (el.textContent !== t) el.textContent = t; };
+const frag = h => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstElementChild; };
+function reconcile(list, items) {   // items: [[key, outerHTML]] in display order; returns the newly inserted nodes
+  const seen = {}, want = new Map();
+  for (const [k, h] of items) { const n = seen[k] = (seen[k] || 0) + 1; want.set(n > 1 ? k + '#' + n : k, h); }   // duplicate keys stay distinct
+  const old = new Map(), added = [];
+  for (const n of [...list.children]) { if (n._k != null && want.has(n._k) && !old.has(n._k)) old.set(n._k, n); else n.remove(); }
+  const nodes = [];
+  for (const [k, h] of want) {
+    let n = old.get(k);
+    if (n) {
+      if (n._h !== h) {   // content changed: patch attributes and children of the same node
+        const m = frag(h);
+        for (const a of [...n.attributes]) if (!m.hasAttribute(a.name)) n.removeAttribute(a.name);
+        for (const a of m.attributes) if (n.getAttribute(a.name) !== a.value) n.setAttribute(a.name, a.value);
+        if (n.innerHTML !== m.innerHTML) n.innerHTML = m.innerHTML;
+        n._h = h;
+      }
+    } else { n = frag(h); n._k = k; n._h = h; added.push(n); }
+    n._i = nodes.length; nodes.push(n);
+  }
+  // keep the longest run of existing nodes already in order; move or insert only the rest (minimal DOM moves)
+  const seq = [...list.children].map(n => n._i), tails = [], prev = new Array(seq.length), stay = new Set();
+  seq.forEach((v, i) => { let lo = 0, hi = tails.length; while (lo < hi) { const m = (lo + hi) >> 1; if (seq[tails[m]] < v) lo = m + 1; else hi = m; } prev[i] = lo ? tails[lo - 1] : -1; tails[lo] = i; });
+  for (let i = tails.length ? tails[tails.length - 1] : -1; i >= 0; i = prev[i]) stay.add(seq[i]);
+  let next = null;
+  for (let i = nodes.length - 1; i >= 0; i--) { const n = nodes[i]; if (!stay.has(i)) list.insertBefore(n, next); next = n; }
+  return added;
+}
 const DPR = Math.min(2, window.devicePixelRatio || 1);
 function fit(cv) {   // size a canvas to its CSS box; returns [ctx, w, h]
   const w = cv.clientWidth, h = cv.clientHeight;
@@ -341,30 +372,30 @@ function updateHosts(d) {
   d.hosts.forEach((h, i) => {
     const c = card(h, i), el = c.el, up = h.cores && h.cores.length && (h.state === 'up' || h.state === 'stale');
     el.className = 'host ' + (/EPYC/.test(h.kind) ? 'bigc ' : 'smallc ') + (up ? '' : h.state);
-    el.querySelector('.hk').textContent = h.kind + ' · ' + ((d.regions[h.region] || {}).label || '') + (h.alias ? ' · ' + h.alias : '');
+    setText(el.querySelector('.hk'), h.kind + ' · ' + ((d.regions[h.region] || {}).label || '') + (h.alias ? ' · ' + h.alias : ''));
     el.querySelector('.offline').hidden = !!up; c.cv.hidden = !up;
     if (!up) {
-      el.querySelector('.offline').textContent = h.state === 'pending' ? 'COMING ONLINE' : h.state === 'down' ? 'UNREACHABLE' : 'CONNECTING';
-      el.querySelector('.hb').innerHTML = '<small>' + (h.state === 'pending' ? 'soon' : 'offline') + '</small>';
+      setText(el.querySelector('.offline'), h.state === 'pending' ? 'COMING ONLINE' : h.state === 'down' ? 'UNREACHABLE' : 'CONNECTING');
+      setHTML(el.querySelector('.hb'), '<small>' + (h.state === 'pending' ? 'soon' : 'offline') + '</small>');
       for (const s of ['.mu', '.mp', '.ld', '.dk']) el.querySelector(s).textContent = '-';
-      el.querySelector('.rt').textContent = h.routes; el.querySelector('.bar i').style.width = '0';
+      setText(el.querySelector('.rt'), h.routes); el.querySelector('.bar i').style.width = '0';
       return;
     }
     if (c.n !== h.cores.length) { c.n = h.cores.length; c.cur = h.cores.slice(); layoutGrid(c); }
     c.tgt = h.cores.slice();
     const busy = h.cores.reduce((a, b) => a + b, 0) / h.cores.length;
-    el.querySelector('.hb').innerHTML = `${Math.round(busy)}%<small> of ${h.cores.length} thr</small>`;
+    setHTML(el.querySelector('.hb'), `${Math.round(busy)}%<small> of ${h.cores.length} thr</small>`);
     el.style.borderColor = busy > 80 ? '#ff5d7355' : busy > 40 ? '#5ee7ff33' : '';
     const mp = 100 * h.mem_used / h.mem_total;
-    el.querySelector('.mu').textContent = `${gb(h.mem_used)} / ${gb(h.mem_total)}`;
-    el.querySelector('.mp').textContent = Math.round(mp) + '%';
+    setText(el.querySelector('.mu'), `${gb(h.mem_used)} / ${gb(h.mem_total)}`);
+    setText(el.querySelector('.mp'), Math.round(mp) + '%');
     el.querySelector('.bar i').style.width = mp.toFixed(1) + '%';
-    el.querySelector('.ld').textContent = fmt(h.load, 0);
-    el.querySelector('.dk').textContent = h.docker ?? '-';
-    el.querySelector('.rt').textContent = h.routes;
+    setText(el.querySelector('.ld'), fmt(h.load, 0));
+    setText(el.querySelector('.dk'), h.docker ?? '-');
+    setText(el.querySelector('.rt'), h.routes);
     const gp = el.querySelector('.gpu');
     gp.hidden = !(h.gpu && h.gpu.length);
-    if (!gp.hidden) gp.innerHTML = h.gpu.map(g => `GPU <b>${g.util}%</b> · ${fmt(g.mem_used)}/${fmt(g.mem_total)} GB · ${g.power} W · ${g.temp}°C`).join('<br>');
+    if (!gp.hidden) setHTML(gp, h.gpu.map(g => `GPU <b>${g.util}%</b> · ${fmt(g.mem_used)}/${fmt(g.mem_total)} GB · ${g.power} W · ${g.temp}°C`).join('<br>'));
   });
 }
 
@@ -488,16 +519,16 @@ function drawClosures() {
       g.fillStyle = '#4a5678'; g.fillText(i === 23 ? 'now' : d.toLocaleTimeString('en-US', {hour: 'numeric', hour12: true}).replace(' ', '').toLowerCase(), padL + (i + .5) * bw, h - 4);
     }
   }
-  $('closeLegend').innerHTML = CATS.filter(c => bins[c] || c !== 'Other').map(c => `<span><i class="sw" style="background:${CATCOL[c]}"></i>${c} ${(D.loop.closed_24h_by_cat || {})[c] || 0}</span>`).join('');
-  $('close24').textContent = `${fmt(Object.values(D.loop.closed_24h_by_cat || {}).reduce((a, b) => a + b, 0))} in 24 h`;
+  setHTML($('closeLegend'), CATS.filter(c => bins[c] || c !== 'Other').map(c => `<span><i class="sw" style="background:${CATCOL[c]}"></i>${c} ${(D.loop.closed_24h_by_cat || {})[c] || 0}</span>`).join(''));
+  setText($('close24'), `${fmt(Object.values(D.loop.closed_24h_by_cat || {}).reduce((a, b) => a + b, 0))} in 24 h`);
 }
 
 // ---- ticker + loop stats
 let seen = null;
 function updateLoop(d) {
   const L = d.loop;
-  $('loop-stats').innerHTML = `<span>blocks closed today <b>${fmt(L.closed_today)}</b></span><span>closing runs <b>${fmt(L.closed_today_jobs)}</b></span>` +
-    `<span>routes running <b>${fmt(L.running)}</b></span><span>queued <b>${fmt(L.queued)}</b></span><span>closed all-time <b>${fmt(L.closed_total)}</b></span>`;
+  setHTML($('loop-stats'), `<span>blocks closed today <b>${fmt(L.closed_today)}</b></span><span>closing runs <b>${fmt(L.closed_today_jobs)}</b></span>` +
+    `<span>routes running <b>${fmt(L.running)}</b></span><span>queued <b>${fmt(L.queued)}</b></span><span>closed all-time <b>${fmt(L.closed_total)}</b></span>`);
   const rc = L.running_by_cat || {}, mx = Math.max(1, ...Object.values(rc));
   const rb = $('runbars');
   if (!rb.children.length) rb.innerHTML = CATS.map(c => `<div class="rb" data-c="${c}"><span><i class="sw" style="background:${CATCOL[c]}"></i> ${c}</span><span class="tr"><i style="background:${CATCOL[c]};width:0"></i></span><b>0</b></div>`).join('');
@@ -505,23 +536,27 @@ function updateLoop(d) {
     const c = row.dataset.c, v = rc[c] || 0;
     row.hidden = c === 'Other' && !v;
     row.querySelector('.tr i').style.width = (100 * v / mx).toFixed(1) + '%';
-    row.querySelector('b').textContent = fmt(v);
+    setText(row.querySelector('b'), fmt(v));
   }
   const keyOf = r => r.t + '|' + r.host + '|' + r.cat + '|' + (r.name || r.block || '');
   const fresh = seen ? d.recent.filter(r => !seen.has(keyOf(r))) : [];
   seen = new Set(d.recent.map(keyOf));
   const now = NOW();
   const hr = d.recent.filter(r => now - r.t < 3600).length;
-  if (SAFE) $('closeHot').innerHTML = `<b style="color:#ffd23f">${hr}</b> in the last hour · ${fmt(L.closed_today)} blocks today`;
+  if (SAFE) setHTML($('closeHot'), `<b style="color:#ffd23f">${hr}</b> in the last hour · ${fmt(L.closed_today)} blocks today`);
   if (!SAFE) return;
-  $('ticker').innerHTML = d.recent.slice(0, 20).map(r => {
-    const cls = [fresh.includes(r) ? 'new' : '', now - r.t < 900 ? 'fresh' : now - r.t < 3600 ? 'hot' : ''].join(' ');
+  const items = d.recent.slice(0, 20).map(r => {
+    const cls = now - r.t < 900 ? 'fresh' : now - r.t < 3600 ? 'hot' : '';
     const sl = r.setup !== undefined ? `<span class="${r.setup < 0 ? 'neg' : ''}">${r.setup_corner} ${sgn(r.setup)} ps</span><span class="${r.hold < 0 ? 'neg' : ''}">FF ${sgn(r.hold)} ps</span>` : '';
-    return `<li class="${cls}"><span class="tag" style="background:${CATCOL[r.cat] || CATCOL.Other}">${r.cat.toUpperCase()}</span>` +
+    return [keyOf(r), `<li class="${cls}"><span class="tag" style="background:${CATCOL[r.cat] || CATCOL.Other}">${r.cat.toUpperCase()}</span>` +
       `<span class="bk" title="${esc(r.block)}">${esc(r.block || 'block')} <small style="color:var(--dim);font-weight:400">on ${esc(r.host)}</small></span>` +
-      `<span class="sl">${sl}<small class="t" data-t="${r.t}">${ago(r.t)}</small></span>` +
-      `<span class="jn" title="${esc(r.name)}">${esc(r.name || '')}${r.target ? ' · target ' + esc(r.target.replace(/>=/g, '≥')) : ''}${r.into ? ' · into ' + esc(r.into) : ''}</span></li>`;
-  }).join('') || '<li><span></span><span class="h">waiting for closures</span><span></span></li>';
+      `<span class="sl">${sl}<small class="t" data-t="${r.t}"></small></span>` +
+      `<span class="jn" title="${esc(r.name)}">${esc(r.name || '')}${r.target ? ' · target ' + esc(r.target.replace(/>=/g, '≥')) : ''}${r.into ? ' · into ' + esc(r.into) : ''}</span></li>`];
+  });
+  if (!items.length) items.push(['__none', '<li><span></span><span class="h">waiting for closures</span><span></span></li>']);
+  const fk = new Set(fresh.map(keyOf));
+  for (const n of reconcile($('ticker'), items)) if (fk.has(n._k)) n.classList.add('new');
+  tickAges();
   if (fresh.length) {
     const r = fresh[0], p = $('closepanel');
     p.classList.remove('boom'); void p.offsetWidth; p.classList.add('boom');
@@ -540,18 +575,18 @@ function onData(d) {
   while (HIST.length && HIST[0][0] < d.t - 3700) HIST.shift();
   HH = d.hist_hosts || []; D = d; lastT = d.t;
   const T = d.totals;
-  $('ram-now').textContent = `${fmt(T.mem_used / 1024, 2)} of ${fmt(T.mem_total / 1024, 2)} TB · ${T.mem_total ? Math.round(100 * T.mem_used / T.mem_total) : 0}%`;
+  setText($('ram-now'), `${fmt(T.mem_used / 1024, 2)} of ${fmt(T.mem_total / 1024, 2)} TB · ${T.mem_total ? Math.round(100 * T.mem_used / T.mem_total) : 0}%`);
   const old = HIST.find(r => r[0] >= d.t - 3600);
-  $('ramLegend').innerHTML = d.hosts.map((h, k) => `<span><i class="sw" style="background:${HOSTCOL[k % HOSTCOL.length]}"></i>${h.label} ${h.mem_used != null ? gb(h.mem_used) : '-'}</span>`).join('') +
-    (old && d.t - old[0] > 90 ? `<span style="margin-left:auto">${T.mem_used >= old[4] ? '+' : '-'}${gb(Math.abs(T.mem_used - old[4]))} in ${Math.round((d.t - old[0]) / 60)} min</span>` : '');
-  $('cpu-now').textContent = `${fmt(T.busy)} of ${fmt(T.cores)} · ${T.cores ? Math.round(100 * T.busy / T.cores) : 0}%`;
+  setHTML($('ramLegend'), d.hosts.map((h, k) => `<span><i class="sw" style="background:${HOSTCOL[k % HOSTCOL.length]}"></i>${h.label} ${h.mem_used != null ? gb(h.mem_used) : '-'}</span>`).join('') +
+    (old && d.t - old[0] > 90 ? `<span style="margin-left:auto">${T.mem_used >= old[4] ? '+' : '-'}${gb(Math.abs(T.mem_used - old[4]))} in ${Math.round((d.t - old[0]) / 60)} min</span>` : ''));
+  setText($('cpu-now'), `${fmt(T.busy)} of ${fmt(T.cores)} · ${T.cores ? Math.round(100 * T.busy / T.cores) : 0}%`);
   const gp = d.hosts.flatMap(h => h.gpu || []);
-  $('cpu-stats').innerHTML = `<span>hosts up <b>${T.hosts_up}/${d.hosts.length}</b></span><span>containers <b>${fmt(T.docker)}</b></span>` +
-    (gp.length ? `<span>GPU <b>${gp[0].util}%</b> · ${fmt(gp[0].mem_used)}/${fmt(gp[0].mem_total)} GB</span>` : '');
+  setHTML($('cpu-stats'), `<span>hosts up <b>${T.hosts_up}/${d.hosts.length}</b></span><span>containers <b>${fmt(T.docker)}</b></span>` +
+    (gp.length ? `<span>GPU <b>${gp[0].util}%</b> · ${fmt(gp[0].mem_used)}/${fmt(gp[0].mem_total)} GB</span>` : ''));
   updateHosts(d); updateLoop(d); if (!SAFE && d.vver != null && d.vver !== VV) loadVerdicts(d.vver); drawCpu(); drawClosures();
   if (!REPLAY || areaFirst) areaT0 = REPLAY ? 0 : performance.now();   // replay frames arrive faster than the reveal sweep
-  if (REPLAY) { $('foot').textContent = (d.safe ? 'share-safe ' : 'INTERNAL ') + `replay · one frame per ${d.poll} s recorded`; return; }
-  $('foot').textContent = (d.safe ? 'share-safe view · ' : 'INTERNAL view (?safe=1 to share) · ') + `updates every ${d.poll} s`;
+  if (REPLAY) { setText($('foot'), (d.safe ? 'share-safe ' : 'INTERNAL ') + `replay · one frame per ${d.poll} s recorded`); return; }
+  setText($('foot'), (d.safe ? 'share-safe view · ' : 'INTERNAL view (?safe=1 to share) · ') + `updates every ${d.poll} s`);
 }
 let es = null;
 function connect() {
@@ -567,39 +602,41 @@ if (!REPLAY) connect();
 const KINDS = [['', 'All'], ['closed', 'Closed'], ['timing', 'Failed timing'], ['check', 'Check failed'], ['flow', 'Flow failures']];
 const KCOL = {closed: '#4ade80', timing: '#ff8a4d', check: '#f472b6', flow: '#9b8cc9'};
 const VF = Object.assign({kind: '', tgt: ''}, relabel(ls('vf')) || {});
-let VV = null, VD = [], vseen = null, vFetchT = 0;
-function loadVerdicts(v) {
+let VV = null, VD = [], vseen = null, vFetchT = 0, vHash = null;
+function loadVerdicts(v) {   // skips the render when the payload is unchanged
   VV = v;
-  if (REPLAY) { VD = rpVerdicts(); renderVerdicts(); return; }
+  if (REPLAY) { const d = rpVerdicts(), h = d.length + '|' + (d[0] ? d[0].t : 0) + '|' + (d.length ? d[d.length - 1].t : 0); if (h === vHash) return; vHash = h; VD = d; renderVerdicts(); return; }
   vFetchT = Date.now();
-  fetch('/api/verdicts').then(r => r.ok ? r.json() : null).then(d => { if (d) { VD = relabel(d.verdicts); renderVerdicts(); } }).catch(() => { VV = null; });
+  fetch('/api/verdicts').then(r => r.ok ? r.text() : null).then(x => { if (x == null || x === vHash) return; vHash = x; VD = relabel(JSON.parse(x).verdicts); renderVerdicts(); }).catch(() => { VV = null; });
 }
 function renderVerdicts() {
   lsw('vf', VF);
-  $('ticker').hidden = true; $('vfeed').hidden = false; $('vctl').hidden = false; $('feedTitle').textContent = 'Live verdicts';
-  const now = NOW(), key = v => v.t + '|' + v.name + '|' + v.status;
+  for (const [id, h] of [['ticker', true], ['vfeed', false], ['vctl', false]]) if ($(id).hidden !== h) $(id).hidden = h;
+  setText($('feedTitle'), 'Live verdicts');
+  const now = NOW(), key = v => v.name + '|' + v.status + '|' + v.t;   // job + verdict + time
   const fresh = vseen ? VD.filter(v => !vseen.has(key(v)) && now - v.t < 3600) : [];   // vseen is reset on a replay seek: rebuild silently
   vseen = new Set(VD.map(key));
   const cnt = {}; VD.forEach(v => cnt[v.kind] = (cnt[v.kind] || 0) + 1);
-  $('vchips').innerHTML = KINDS.map(([k, t]) => `<span class="chip ${VF.kind === k ? 'on' : ''}" title="${t} ${k ? cnt[k] || 0 : VD.length}" data-k="${k}" style="${VF.kind === k ? 'background:' + (KCOL[k] || '#5ee7ff') : ''}">${t} ${k ? cnt[k] || 0 : VD.length}</span>`).join(' ');
-  $('vTgt').value = VF.tgt;
+  setHTML($('vchips'), KINDS.map(([k, t]) => `<span class="chip ${VF.kind === k ? 'on' : ''}" title="${t} ${k ? cnt[k] || 0 : VD.length}" data-k="${k}" style="${VF.kind === k ? 'background:' + (KCOL[k] || '#5ee7ff') : ''}">${t} ${k ? cnt[k] || 0 : VD.length}</span>`).join(' '));
+  if ($('vTgt').value !== VF.tgt) $('vTgt').value = VF.tgt;
   const day = VD.filter(v => now - v.t < 86400);
-  $('closeHot').innerHTML = [['closed', '#4ade80'], ['timing', '#ff8a4d'], ['check', '#f472b6'], ['flow', '#9b8cc9']].map(([k, c]) => `<span class="nw"><b style="color:${c}">${day.filter(v => v.kind === k).length}</b> ${k}</span>`).join(' · ') + ' · <span class="nw">24 h</span>';
+  setHTML($('closeHot'), [['closed', '#4ade80'], ['timing', '#ff8a4d'], ['check', '#f472b6'], ['flow', '#9b8cc9']].map(([k, c]) => `<span class="nw"><b style="color:${c}">${day.filter(v => v.kind === k).length}</b> ${k}</span>`).join(' · ') + ' · <span class="nw">24 h</span>');
   const chip = (lab, v, z) => v == null ? '' : `<span class="${v < 0 ? 'n' : z ? 'z' : 'p'}">${lab} ${sgn(v)}${lab === 'DRC' ? '' : ' ps'}</span>`;
   const vis = VD.filter(v => (!VF.kind || v.kind === VF.kind) && (!VF.tgt || v.corner === VF.tgt));
   const fs = new Set(fresh.map(key));
-  const st0 = $('vfeed').scrollTop;
-  $('vfeed').innerHTML = vis.map(v => {
-    const age = now - v.t, cls = ['k-' + v.kind, fs.has(key(v)) ? 'new' : '', age < 900 ? 'fresh' : age < 3600 ? 'hot' : ''].join(' ');
+  const items = vis.map(v => {   // fresh/hot/new classes and age text are applied to the live nodes, not baked into the row key
+    const cls = 'k-' + v.kind;
     const drc = v.drc == null ? '' : `<span class="${v.drc > 0 ? 'n' : 'z'}">DRC ${v.drc}</span>`;
     const why = v.kind === 'closed' ? (v.why || '') : (v.why + (v.detail ? ' · ' + v.detail : ''));
-    return `<li class="${cls}" data-t="${v.t}"><span class="vs" title="${esc(v.status)}">${esc(v.status)}</span>` +
+    return [key(v), `<li class="${cls}" data-t="${v.t}"><span class="vs" title="${esc(v.status)}">${esc(v.status)}</span>` +
       `<span class="bk" title="${esc(v.block)}">${esc(v.block)} <small>on ${esc(v.host || '?')} · ${esc(v.target.replace(/>=/g, '≥'))}</small></span>` +
-      `<span class="sl">${chip(v.corner, v.setup)}${chip('FF', v.hold)}${drc}<small data-t="${v.t}">${ago(v.t)}</small></span>` +
+      `<span class="sl">${chip(v.corner, v.setup)}${chip('FF', v.hold)}${drc}<small data-t="${v.t}"></small></span>` +
       (v.kind === 'check' ? `<span class="ck" title="${esc(v.check)}">✗ check failed: ${esc(v.check)}</span>` : '') +
-      `<span class="jn" title="${esc(v.name)}">${esc(v.name)}</span><span class="why" title="${esc(why)}">${esc(why)}</span></li>`;
-  }).join('') || '<li><span></span><span class="jn">no verdicts match</span></li>';
-  $('vfeed').scrollTop = fresh.length ? 0 : st0;
+      `<span class="jn" title="${esc(v.name)}">${esc(v.name)}</span><span class="why" title="${esc(why)}">${esc(why)}</span></li>`];
+  });
+  if (!items.length) items.push(['__none', '<li><span></span><span class="jn">no verdicts match</span></li>']);
+  for (const n of reconcile($('vfeed'), items)) if (fs.has(n._k)) n.classList.add('new');   // only genuinely new rows pulse
+  tickAges();
   if (fresh.length) {
     const v = fresh[0], p = $('closepanel'), tt = $('toast');
     p.classList.remove('boom'); void p.offsetWidth; p.classList.add('boom');
@@ -613,13 +650,14 @@ function renderVerdicts() {
 }
 function tickAges() {   // relative ages and fresh/hot highlights against NOW() (the replay clock in replay)
   const now = NOW();
-  for (const e of document.querySelectorAll('#vfeed [data-t], #ticker [data-t]')) {
+  for (const e of document.querySelectorAll('#vfeed [data-t], #ticker [data-t], #eBody .age[data-t]')) {
     const t = +e.dataset.t, a = now - t;
     if (e.tagName === 'LI') { e.classList.toggle('fresh', a < 900); e.classList.toggle('hot', a >= 900 && a < 3600); }
-    else { const s = ago(t); if (e.textContent !== s) e.textContent = s; }
+    else setText(e, ago(t));
   }
+  for (const e of document.querySelectorAll('#ticker li')) { const s = e.querySelector('[data-t]'); if (s) { const a = now - s.dataset.t; e.classList.toggle('fresh', a < 900); e.classList.toggle('hot', a >= 900 && a < 3600); } }
 }
-function vReset() { vseen = null; VV = null; $('vban').hidden = true; }   // a replay seek rebuilds the feed for the new time, no banner
+function vReset() { vseen = null; VV = null; vHash = null; $('vban').hidden = true; }   // a replay seek rebuilds the feed for the new time, no banner
 $('vban').onclick = () => { $('vfeed').scrollTop = 0; $('vban').hidden = true; };
 $('vchips').onclick = e => { const k = e.target.dataset && e.target.dataset.k; if (k == null) return; VF.kind = k; renderVerdicts(); };
 $('vTgt').onchange = e => { VF.tgt = e.target.value; renderVerdicts(); };
@@ -630,7 +668,7 @@ const STS = ['RUNNING', 'SYNC', 'ECO', 'READY', 'QUEUED'];
 const STCOL = {RUNNING: '#4ade80', SYNC: '#5ee7ff', ECO: '#ffb44d', READY: '#a78bfa', QUEUED: '#8a97b8'};
 const COLS = [['label', 'host'], ['name', 'job'], ['block', 'block'], ['target', 'target'], ['stage', 'stage'], ['status', 'status'], ['age', 'age'], ['ev', 'latest event / wait']];
 const F = Object.assign({host: '', tgt: '', txt: '', grp: true, sts: STS.slice(), sort: 'age', dir: -1}, relabel(ls('f')) || {});
-let J = null;
+let J = null, jHash = null;
 const dur = s => s < 60 ? Math.round(s) + 's' : s < 3600 ? Math.round(s / 60) + 'm' : s < 86400 ? (s / 3600).toFixed(1) + 'h' : (s / 86400).toFixed(1) + 'd';
 function renderJobs() {
   if (!J) return;
@@ -638,35 +676,41 @@ function renderJobs() {
   const now = NOW(), order = J.hosts;
   const rows = J.jobs.map(j => Object.assign({}, j, {age: j.since ? now - j.since : 0, ev: (j.status === 'RUNNING' || j.status === 'ECO') ? (j.event || j.wait) : (j.wait || j.reason || j.event)}));
   const cnt = {}; rows.forEach(r => cnt[r.status] = (cnt[r.status] || 0) + 1);
-  $('fSt').innerHTML = STS.map(s => `<span class="chip ${F.sts.includes(s) ? 'on' : ''}" data-s="${s}" style="${F.sts.includes(s) ? 'background:' + STCOL[s] : ''}">${s} ${cnt[s] || 0}</span>`).join(' ');
+  setHTML($('fSt'), STS.map(s => `<span class="chip ${F.sts.includes(s) ? 'on' : ''}" data-s="${s}" style="${F.sts.includes(s) ? 'background:' + STCOL[s] : ''}">${s} ${cnt[s] || 0}</span>`).join(' '));
   const hs = [...new Set(rows.map(r => r.label))].sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99) || a.localeCompare(b));
   const sel = $('fHost'); if (sel.options.length - 1 !== hs.length) { sel.innerHTML = '<option value="">all hosts</option>' + hs.map(h => `<option>${esc(h)}</option>`).join(''); }
-  sel.value = F.host; $('fTgt').value = F.tgt; $('fGrp').checked = F.grp; if (document.activeElement !== $('fTxt')) $('fTxt').value = F.txt;
+  if (sel.value !== F.host) sel.value = F.host; if ($('fTgt').value !== F.tgt) $('fTgt').value = F.tgt; $('fGrp').checked = F.grp; if (document.activeElement !== $('fTxt')) $('fTxt').value = F.txt;
   const tx = F.txt.toLowerCase();
   const vis = rows.filter(r => F.sts.includes(r.status) && (!F.host || r.label === F.host) && (!F.tgt || r.target.startsWith(F.tgt)) &&
     (!tx || (r.name + ' ' + r.block + ' ' + r.ev + ' ' + r.stage).toLowerCase().includes(tx)));
   const k = F.sort, dir = F.dir;
   vis.sort((a, b) => (F.grp ? (hs.indexOf(a.label) - hs.indexOf(b.label)) : 0) || ((a[k] > b[k]) - (a[k] < b[k])) * dir || a.name.localeCompare(b.name));
-  $('jHead').innerHTML = COLS.map(([c, t]) => `<th data-c="${c}" class="${F.sort === c ? 's' + (F.dir < 0 ? ' d' : '') : ''}">${t}</th>`).join('');
-  let html = '', g = null;
+  setHTML($('jHead'), COLS.map(([c, t]) => `<th data-c="${c}" class="${F.sort === c ? 's' + (F.dir < 0 ? ' d' : '') : ''}">${t}</th>`).join(''));
+  const items = []; let g = null;
   for (const r of vis) {
     if (F.grp && r.label !== g) {
       g = r.label; const gr = vis.filter(x => x.label === g), c2 = {}; gr.forEach(x => c2[x.status] = (c2[x.status] || 0) + 1);
-      html += `<tr class="grp"><td colspan="8">${esc(g)} · ${gr.length}<small>${STS.filter(s => c2[s]).map(s => s + ' ' + c2[s]).join(' · ')}</small></td></tr>`;
+      items.push(['g|' + g, `<tr class="grp"><td colspan="8">${esc(g)} · ${gr.length}<small>${STS.filter(s => c2[s]).map(s => s + ' ' + c2[s]).join(' · ')}</small></td></tr>`]);
     }
-    html += `<tr><td>${esc(r.label)}</td><td title="${esc(r.owner)}">${esc(r.name)}</td><td>${esc(r.block)}</td><td>${esc(r.target.replace(/>=/g, '≥'))}</td><td>${esc(r.stage)}${r.attempt > 1 ? ' a' + r.attempt : ''}</td>` +
-      `<td><span class="st" style="background:${STCOL[r.status] || '#8a97b8'}">${r.status}</span></td><td>${dur(r.age)}</td><td class="ev">${esc(r.ev)}</td></tr>`;
+    items.push(['j|' + r.name, `<tr><td>${esc(r.label)}</td><td title="${esc(r.owner)}">${esc(r.name)}</td><td>${esc(r.block)}</td><td>${esc(r.target.replace(/>=/g, '≥'))}</td><td>${esc(r.stage)}${r.attempt > 1 ? ' a' + r.attempt : ''}</td>` +
+      `<td><span class="st" style="background:${STCOL[r.status] || '#8a97b8'}">${r.status}</span></td><td class="ag" data-s="${r.since || ''}"></td><td class="ev">${esc(r.ev)}</td></tr>`]);
   }
-  $('jBody').innerHTML = html || '<tr><td colspan="8">no matching jobs</td></tr>';
-  $('jobsNow').textContent = `${vis.length} shown of ${rows.length} active · ${STS.map(s => (cnt[s] || 0) + ' ' + s.toLowerCase()).join(' · ')}`;
+  if (!items.length) items.push(['__none', '<tr><td colspan="8">no matching jobs</td></tr>']);
+  reconcile($('jBody'), items); jobAges();
+  setText($('jobsNow'), `${vis.length} shown of ${rows.length} active · ${STS.map(s => (cnt[s] || 0) + ' ' + s.toLowerCase()).join(' · ')}`);
   const st = J.status || {};
-  $('mdFleet').innerHTML = [...(st.head || []), '', ...(st.fleet || []).map((l, i) => i ? esc(l).replace(/^(\w+):/, '<b>$1</b>:') : '<b>' + esc(l) + '</b>')].map(l => l.startsWith('<') ? l : esc(l)).join('\n');
-  $('mdTerm').innerHTML = (st.terminal || []).map(l => esc(l).replace(/^(\S+) \[([^\]]+)\] (\w+)/, '<b>$1</b> [$2] <b>$3</b>')).join('\n');
-  $('mdAge').textContent = st.mtime ? 'written ' + ago(st.mtime) : 'not found';
+  setHTML($('mdFleet'), [...(st.head || []), '', ...(st.fleet || []).map((l, i) => i ? esc(l).replace(/^(\w+):/, '<b>$1</b>:') : '<b>' + esc(l) + '</b>')].map(l => l.startsWith('<') ? l : esc(l)).join('\n'));
+  setHTML($('mdTerm'), (st.terminal || []).map(l => esc(l).replace(/^(\S+) \[([^\]]+)\] (\w+)/, '<b>$1</b> [$2] <b>$3</b>')).join('\n'));
+  jobAges();
+}
+function jobAges() {   // age cells and the status-file age, in place
+  const now = NOW();
+  for (const e of $('jBody').querySelectorAll('td.ag')) setText(e, dur(e.dataset.s ? now - e.dataset.s : 0));
+  const st = (J && J.status) || {}; setText($('mdAge'), st.mtime ? 'written ' + ago(st.mtime) : 'not found');
 }
 function pollJobs() {
   if (SAFE) return;
-  fetch('/api/jobs').then(r => r.ok ? r.json() : null).then(d => { if (d) { J = relabel(d); $('jobsPanel').hidden = false; renderJobs(); } }).catch(() => {}).finally(() => setTimeout(pollJobs, 10000));
+  fetch('/api/jobs').then(r => r.ok ? r.text() : null).then(x => { if (x == null) return; if (x === jHash) { jobAges(); return; } jHash = x; J = relabel(JSON.parse(x)); if ($('jobsPanel').hidden) $('jobsPanel').hidden = false; renderJobs(); }).catch(() => {}).finally(() => setTimeout(pollJobs, 10000));
 }
 $('fHost').onchange = e => { F.host = e.target.value; renderJobs(); };
 $('fTgt').onchange = e => { F.tgt = e.target.value; renderJobs(); };
@@ -684,12 +728,12 @@ const ECOL = {'closed (TT era)': '#4ade80', 'closed (TT re-verified)': '#2dd4bf'
 const ECOLS = [['element', 'element'], ['category', 'status'], ['purpose', 'what it is'], ['tt', 'TT setup'], ['ff', 'FF hold'], ['ss', 'SS sens.'], ['drc', 'DRC'],
   ['die', 'die µm²'], ['util', 'util'], ['live', 'live'], ['failed', 'failed'], ['jobs', 'jobs'], ['closed_t', 'closed'], ['lt', 'latest event']];
 const EF = Object.assign({tgt: '', txt: '', grp: true, sts: null, sort: 'category', dir: 1}, relabel(ls('ef')) || {});
-let ED = null;
+let ED = null, eHash = null;
 const esgn = x => x == null ? "" : (x > 0 ? "+" : "") + x.toFixed(1);
 const ecls = x => x == null ? "en" : x < 0 ? "en eneg" : "en epos";
 function renderElements() {
   if (!ED) return;
-  $('elPanel').hidden = false; lsw('ef', EF);
+  if ($('elPanel').hidden) $('elPanel').hidden = false; lsw('ef', EF);
   const cats = ED.cats, tg = ED.targets.filter(t => ED.summary[t]);
   const tot = {}; let all = 0;
   let sh = '<tr><th>target</th>' + cats.map(c => `<th><span class="sw" style="background:${ECOL[c]}"></span>${esc(c)}</th>`).join('') + '<th>total</th></tr>';
@@ -698,17 +742,17 @@ function renderElements() {
     sh += `<tr><td>${esc(t)}</td>` + cats.map(c => { tot[c] = (tot[c] || 0) + (s[c] || 0); return `<td class="${s[c] && !SAFE ? 'c' : ''}" data-t="${esc(t)}" data-c="${esc(c)}" style="${s[c] ? 'color:' + ECOL[c] : 'color:var(--faint)'}">${s[c] || '·'}</td>`; }).join('') + `<td><b>${n}</b></td></tr>`;
   }
   sh += '<tr><td><b>all</b></td>' + cats.map(c => `<td class="${tot[c] && !SAFE ? 'c' : ''}" data-t="" data-c="${esc(c)}"><b>${tot[c] || '·'}</b></td>`).join('') + `<td><b>${all}</b></td></tr>`;
-  $('elSum').innerHTML = sh;
+  setHTML($('elSum'), sh);
   const closed = cats.filter(c => c.startsWith('closed')).reduce((a, c) => a + (tot[c] || 0), 0);
-  $('elNow').textContent = `${closed} of ${all} closed · as of ${ago(ED.t)}`;
+  setText($('elNow'), `${closed} of ${all} closed · as of ${ago(ED.t)}`);
   const rowsOK = !SAFE && ED.rows;
-  $('elCtl').hidden = $('elWrap').hidden = !rowsOK;
+  for (const id of ['elCtl', 'elWrap']) if ($(id).hidden !== !rowsOK) $(id).hidden = !rowsOK;
   if (!rowsOK) return;
   if (!EF.sts) EF.sts = cats.slice();
   const cnt = {}; ED.rows.forEach(r => cnt[r.category] = (cnt[r.category] || 0) + 1);
-  $('eSt').innerHTML = cats.filter(c => cnt[c]).map(c => `<span class="chip ${EF.sts.includes(c) ? 'on' : ''}" data-s="${esc(c)}" style="${EF.sts.includes(c) ? 'background:' + ECOL[c] : ''}">${esc(c)} ${cnt[c]}</span>`).join(' ');
+  setHTML($('eSt'), cats.filter(c => cnt[c]).map(c => `<span class="chip ${EF.sts.includes(c) ? 'on' : ''}" data-s="${esc(c)}" style="${EF.sts.includes(c) ? 'background:' + ECOL[c] : ''}">${esc(c)} ${cnt[c]}</span>`).join(' '));
   const sel = $('eTgt'); if (sel.options.length - 1 !== tg.length) sel.innerHTML = '<option value="">all targets</option>' + tg.map(t => `<option>${esc(t)}</option>`).join('');
-  sel.value = EF.tgt; $('eGrp').checked = EF.grp; if (document.activeElement !== $('eTxt')) $('eTxt').value = EF.txt;
+  if (sel.value !== EF.tgt) sel.value = EF.tgt; $('eGrp').checked = EF.grp; if (document.activeElement !== $('eTxt')) $('eTxt').value = EF.txt;
   const tx = EF.txt.toLowerCase();
   const rows = ED.rows.map(r => Object.assign({}, r, {tt: r.best.tt, ff: r.best.ff, ss: r.best.ss, drc: r.best.drc, die: r.area && r.area.die, util: r.area && r.area.util,
     lt: r.latest ? r.latest.t : 0, cix: cats.indexOf(r.category)}));
@@ -717,27 +761,28 @@ function renderElements() {
   const k = EF.sort === 'category' ? 'cix' : EF.sort, dir = EF.dir;
   const v = x => x == null ? -Infinity : x;
   vis.sort((a, b) => (EF.grp ? tg.indexOf(a.target) - tg.indexOf(b.target) : 0) || ((v(a[k]) > v(b[k])) - (v(a[k]) < v(b[k]))) * dir || a.cix - b.cix || a.element.localeCompare(b.element));
-  $('eHead').innerHTML = ECOLS.map(([c, t]) => `<th data-c="${c}" class="${EF.sort === c ? 's' + (EF.dir < 0 ? ' d' : '') : ''}">${t}</th>`).join('');
-  let html = '', g = null;
+  setHTML($('eHead'), ECOLS.map(([c, t]) => `<th data-c="${c}" class="${EF.sort === c ? 's' + (EF.dir < 0 ? ' d' : '') : ''}">${t}</th>`).join(''));
+  const items = []; let g = null;
   const tf = t => t ? new Date(t * 1000).toLocaleString('en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false}) : '';
   for (const r of vis) {
     if (EF.grp && r.target !== g) {
       g = r.target; const c2 = {}; vis.filter(x => x.target === g).forEach(x => c2[x.category] = (c2[x.category] || 0) + 1);
-      html += `<tr class="grp"><td colspan="${ECOLS.length}">${esc(g)} · ${Object.values(c2).reduce((a, b) => a + b, 0)}<small>${cats.filter(c => c2[c]).map(c => c + ' ' + c2[c]).join(' · ')}</small></td></tr>`;
+      items.push(['g|' + g, `<tr class="grp"><td colspan="${ECOLS.length}">${esc(g)} · ${Object.values(c2).reduce((a, b) => a + b, 0)}<small>${cats.filter(c => c2[c]).map(c => c + ' ' + c2[c]).join(' · ')}</small></td></tr>`]);
     }
     const b = r.best, lt = r.latest;
     const tip = `best job ${b.job || '-'} (${b.corner || '-'} line)` + (r.via ? ` · via ${r.via}` : '') + (r.revoked ? ` · revoked ${r.revoked.verdict || ''} TT link budget ${r.revoked.tt_lb ?? ''}` : '') + ` · owner ${r.owner}`;
-    html += `<tr class="el" style="--c:${ECOL[r.category]}"><td title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}">${esc(r.element)}${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
+    items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}">${esc(r.element)}${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
       `<td><span class="st" style="background:${ECOL[r.category]}" title="${esc(tip)}">${esc(r.category)}</span></td><td class="pu" title="${esc(r.purpose)}"><div>${esc(r.purpose)}</div></td>` +
       `<td class="${ecls(b.tt)}">${esgn(b.tt)}</td><td class="${ecls(b.ff)}">${esgn(b.ff)}</td><td class="en" style="color:var(--dim)">${esgn(b.ss)}</td>` +
       `<td class="${b.drc == null ? 'en' : b.drc ? 'en eneg' : 'en'}">${b.drc ?? ''}</td><td class="en">${r.die == null ? '' : Math.round(r.die).toLocaleString('en-US')}</td>` +
       `<td class="en">${r.util == null ? '' : Math.round(r.util * 100) + '%'}</td><td class="en">${r.live || ''}</td><td class="en">${r.failed || ''}</td><td class="en">${r.jobs}</td>` +
-      `<td>${tf(r.closed_t)}</td><td class="ev" title="${esc(lt ? lt.job + ': ' + lt.text : '')}">${lt ? `<div><span class="age" data-t="${lt.t}">${ago(lt.t)}</span> <b>${esc(lt.status)}</b> <small>${esc(lt.job)}</small> ${esc(lt.text)}</div>` : ''}</td></tr>`;
+      `<td>${tf(r.closed_t)}</td><td class="ev" title="${esc(lt ? lt.job + ': ' + lt.text : '')}">${lt ? `<div><span class="age" data-t="${lt.t}"></span> <b>${esc(lt.status)}</b> <small>${esc(lt.job)}</small> ${esc(lt.text)}</div>` : ''}</td></tr>`]);
   }
-  $('eBody').innerHTML = html || `<tr><td colspan="${ECOLS.length}">no matching elements</td></tr>`;
+  if (!items.length) items.push(['__none', `<tr><td colspan="${ECOLS.length}">no matching elements</td></tr>`]);
+  reconcile($('eBody'), items); tickAges();
 }
 function pollElements() {
-  fetch('/api/elements' + Q).then(r => r.ok ? r.json() : null).then(d => { if (d && d.t) { ED = relabel(d); renderElements(); } }).catch(() => {}).finally(() => setTimeout(pollElements, 60000));
+  fetch('/api/elements' + Q).then(r => r.ok ? r.text() : null).then(x => { if (x == null || x === eHash) return; const d = JSON.parse(x); if (d && d.t) { eHash = x; ED = relabel(d); renderElements(); } }).catch(() => {}).finally(() => setTimeout(pollElements, 60000));
 }
 $('eTgt').onchange = e => { EF.tgt = e.target.value; renderElements(); };
 $('eGrp').onchange = e => { EF.grp = e.target.checked; renderElements(); };
@@ -787,8 +832,8 @@ function rpShow(force) {
     const ee = atT(RP.elems, RT); if (ee && ee !== ED) { ED = ee; renderElements(); }
     if (!SAFE && RP.jobs0) {
       const rows = rpJobs();
-      if (rows) { J = {t: RT, jobs: rows, status: atT(RP.mds, RT) || {}, hosts: RP.hosts.map(h => h.label)}; $('jobsPanel').hidden = false; renderJobs(); }
-      else if (J) J.status = atT(RP.mds, RT) || J.status;
+      if (rows) { J = {t: RT, jobs: rows, status: atT(RP.mds, RT) || {}, hosts: RP.hosts.map(h => h.label)}; if ($('jobsPanel').hidden) $('jobsPanel').hidden = false; renderJobs(); }
+      else if (J) { J.status = atT(RP.mds, RT) || J.status; jobAges(); }
     }
   }
   $('rScrub').value = Math.round(RT - RP.t0);
@@ -800,8 +845,8 @@ function rpTick(t) {
   if (t - rDraw > 100) { rDraw = t; rpShow(false); }
   if (t - rAges > 1000) { rAges = t; tickAges(); }
   $('live').classList.remove('stale');
-  $('clock').textContent = 'REPLAY · ' + tstr(RT);
-  $('rclock').innerHTML = `<small>RECORDED ${rPlaying ? '▶ ' + rSpeed + '×' : '❚❚ paused'}${SAFE ? ' · share-safe' : ''}</small>${tstr(RT, true)}`;
+  setText($('clock'), 'REPLAY · ' + tstr(RT));
+  setHTML($('rclock'), `<small>RECORDED ${rPlaying ? '▶ ' + rSpeed + '×' : '❚❚ paused'}${SAFE ? ' · share-safe' : ''}</small>${tstr(RT, true)}`);
 }
 function rpStart(P) {
   P = relabel(P);
@@ -841,7 +886,7 @@ function frame(t) {
   const age = NOW() - lastT;
   $('live').classList.toggle('stale', !lastT || age > 30);
   if (REPLAY) { rpTick(t); return; }
-  $('clock').textContent = lastT ? 'LIVE · ' + new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}) : 'connecting';
+  setText($('clock'), lastT ? 'LIVE · ' + new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}) : 'connecting');
 }
 requestAnimationFrame(frame);
 })();
