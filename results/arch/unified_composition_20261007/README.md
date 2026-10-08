@@ -25,7 +25,7 @@ Every line of the three targets carries a status, its effect on the single-user 
 |---|---|---:|---:|---|
 | Qwen ROM 8K | published (`three_machine_compose`) | 5,537.3 | AR mode | measured token and levers, plus the r21 relays (priced, owner-adopted). Closure reopened 2026-10-07. |
 | Qwen ROM 8K | unified candidate | 5,533.0 | AR mode | adds the controller SHIFT worst case (+144) and the crossbar model (+24); forwarded clocks add 0 |
-| Qwen ROM 8K | DSpark, re-evaluated | 3,901.4 (0.705×) | — | AR_MODE holds. The VM service and link-credit inputs are gated. |
+| Qwen ROM 8K | DSpark, re-evaluated | 3,901.4 (0.705×) | — | AR_MODE holds. The VM service input is gated. The link credit is resolved: the full-rate hub measures 0 credit stalls. |
 | DS ROM 1M | published (85 stages, full-rate BF) | 1,596.7 | 4,702.0 | closure-cost ledger TOTAL |
 | DS ROM 1M | actual 1792, HALF BF-dedicated: 120 stages / 480 dies (77ffa0428 geometry, 2d811aafb mapping) | 1,305.0 | 3,993.3 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. Only the +35 stage hops and the BF16 half-rate doubling are priced. No bound is proven. |
 | DS ROM 1M | actual 1792, FULL shared: 98 stages / 392 dies (77ffa0428, 2d811aafb) | 1,337.3 | 4,065.7 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. The halving of the q phases on BF pairs is not priced (undercount). No bound is proven. |
@@ -65,6 +65,11 @@ DS ROM / HBM, per user, both sides candidates:
 - On the published 85-stage geometry: 0.90× AR and 1.25× MTP.
 - For the BF-dedicated 1792 mapping: 0.73× AR and 1.06× MTP. This is a partial-priced sensitivity; no bound is proven.
 - The earlier 0.8193× and 1.1921× omitted the HBM die closure costs.
+
+**Qwen gates resolved on 2026-10-07 (stream qwen-contracts, branch `claude/qwen-contracts-20261007`).**
+
+- `link_credit_rtt` is now a **priced candidate** at +0 token cycles. The full-rate hub successor `ot_qwen_die_hub_fr` has 128 link credits, which covers the measured 117/119-cycle credit round trip. Its exact gate (Verilator and Icarus) streams 1.000 word a cycle over 54 and 55 actual link stations with 0 credit stalls. The predecessor's 4-credit window measures 0.033. Four negatives end in the named native fault: credit underflow, credit overflow, ar-credit overflow and skid overflow. The area is in `link_credit_rtt/pricing.json`: an analytic estimate until the routes `qfd_hub_fr` and `qfd_link_rx128` close.
+- `protected_kv_transport` is **no longer a performance gate**. By the owner decision of 2026-10-06, the shipped path is the measured, exact STREAM4 token. The protected full-width path has only a cold L0, and full36_r1 FAIL is retained. The missing transport protection stays a GAP in the no-ECC inventory.
 
 ## What else the ledger holds
 

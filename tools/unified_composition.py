@@ -54,6 +54,9 @@ Q_VM_ME = "results/uarch/qwen_rom_vm_me_service_20261007/model.json"
 Q_VM_SU = "results/uarch/qwen_rom_vm_su_service_20261007/model.json"
 Q_VM_REC = "results/uarch/qwen_rom_vm_recovery_20261007/disposition.json"
 Q_SPINE_P = "results/rtl/qwen_spine_lane_20261007/mutable_protection_blocker.json"
+Q_LINKFR = "results/rtl/qwen_contracts_20261007/link_credit_rtt/bench_gate/result.json"   # full-rate hub gate
+Q_LINKFR_P = "results/rtl/qwen_contracts_20261007/link_credit_rtt/pricing.json"            # area + cycle pricing
+Q_KV_DECISION = "results/rtl/qwen_contracts_20261007/protected_kv_transport/decision.json"
 Q_STATION = "results/uarch/qwen_station_fullwidth_r22_20261007/model_dual_fault_r1.json"
 DS_LEDGER = "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json"
 DS_LINKS = "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json"
@@ -194,6 +197,38 @@ def tok_s_us(us, tau=1.0):
 
 
 # ===================================================================================================== Qwen ROM 8K
+def _link_credit_line(fwd):
+    """Gate link_credit_rtt.  Before the full-rate hub (claude/qwen-contracts-20261007) this was gated-unknown: 4 link
+    credits against the measured 117/119-cycle credit round trip.  The successor sizes credits to the round trip; the
+    exact gate measures the rate, and the pricing record carries the routed area (or the analytic flop estimate while
+    the routes are pending)."""
+    g, pr = load(Q_LINKFR), load(Q_LINKFR_P)
+    by = {(c["case"], c["sim"]): c for c in g["cases"]}
+    pos = [by[("pos_h54_cr128", "verilator")]["epochs"][0], by[("pos_h55_cr128", "verilator")]["epochs"][0]]
+    cr4 = by[("sweep_h54_cr4", "verilator")]["epochs"][0]
+    assert g["pass_all"]
+    return L("link_credit_rtt", "Link credit capacity vs the forwarded-path transport round trip", "priced-candidate",
+             dict(unit="cycles", AR=pr["token_cycles_added"]), [src(Q_LINKFR, "cases"), src(Q_LINKFR_P), src(Q_FWD, "paths[].transport_credit_roundtrip_cycles")],
+             "full-rate hub successor ot_qwen_die_hub_fr: CR=%d link credits >= the measured credit round trip %s cycles "
+             "(54/55 stations); exact gate (Verilator + Icarus): rate %.3f / %.3f words a cycle, 0 credit stalls, "
+             "%d checks a case, 4 negatives end in the named native fault; the predecessor's 4-credit window measures "
+             "%.3f (credit-starved). Token: +%d cycles (same registered stations; the %d-sector-a-layer posted KV-new "
+             "write-back serialises at 1 word a cycle, off the token path: measured STREAM4 stall_drain = stall_retire = 0). "
+             "Area: %s. Physical: %s"
+             % (pr["credits"], [p["credit_rtt_a"] for p in pos], pos[0]["rate_milli_a"] / 1000, pos[1]["rate_milli_a"] / 1000,
+                4 * by[("pos_h54_cr128", "verilator")]["params"]["N"], cr4["rate_milli_a"] / 1000, pr["token_cycles_added"],
+                pr["kv_new_sectors_per_layer"], pr["area"]["summary"], pr["physical"]["summary"]), "candidate")
+
+
+def _protected_kv_line():
+    """Gate protected_kv_transport: owner decision 2026-10-06 (not shipped), recorded with its evidence."""
+    d = load(Q_KV_DECISION)
+    return L("protected_kv_transport", "Protected KV transport (HBM->die landing)", "measured",
+             dict(unit="cycles", AR=0), [src(Q_KV_DECISION), src(Q_CLOSURE, "kv_path.protected_full_width_transport"),
+                                        src("results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json")],
+             d["ledger_note"], "info")
+
+
 def qwen():
     q = load(CMP)["qwen_rom"]
     lv = q["levers"]
@@ -234,11 +269,7 @@ def qwen():
           "same registered-hop count as r21 (0 added stage cycles); area proxy %.0f um2; active graph simulated=%s, adopted=%s; "
           "the protected-reset (TMR) successor graph r23 on main (8f68043a0) also adds 0 token cycles and is not adopted"
           % (fwd["area_proxy_um2"], fwdv["active_graph_simulated"], fwdv["adopted"]), "candidate"),
-        L("link_credit_rtt", "Link credit capacity vs the forwarded-path transport round trip", "gated-unknown", None,
-          src(Q_FWD, "paths[].transport_credit_roundtrip_cycles"),
-          "registered path %s stations, credit RTT %s cycles; the historical 8-credit abstract does not sustain it. "
-          "Per-traversal stall unknown until endpoint credit capacity/service is composed"
-          % (sorted({p["registered_stations"] for p in fwd["paths"]}), sorted({p["transport_credit_roundtrip_cycles"] for p in fwd["paths"]})), "gate"),
+        _link_credit_line(fwd),
         L("vm_me_service", "Native VM ME bank service (captured W1 source slots, protected bank)", "gated-unknown", None,
           src(Q_VM_ME, "serialized_reference"),
           "full_token_extra=null; the only priced reference is the serialized four-bank walker: +%s engine edges for the "
@@ -249,14 +280,16 @@ def qwen():
         L("vm_recovery", "Qwen VM bank recovery / native schedule binding", "gated-unknown", None, src(Q_VM_REC, "status"),
           load(Q_VM_REC)["status"] + "; one dynamic writer unresolved", "gate"),
         L("die_top_route", "Full-die detailed route, SS/FF, DRC and IR of the reopened Qwen die (directive 14)", "gated-unknown", None,
-          src(Q_CLOSURE, "physical"), "die-top route not done; r18g bound (+13,305..16,268 cycles) is history, not composed", "gate"),
+          src(Q_CLOSURE, "physical"), "die-top route not done; r18g bound (+13,305..16,268 cycles) is history, not composed. "
+          "Owner: stream qwen-dietop (branch claude/qwen-dietop-20261007; academic-validation method: full-die GRT overflow 0, "
+          "GRT-parasitic SS/FF STA, CTS clock plan, IR, representative-region DRT). The full-rate link (gate link_credit_rtt) "
+          "grows the qfd_hub frame and adds a 128-word receive buffer at each strip endpoint", "gate"),
         L("routed_masters", "Real routed views for previously assumed masters", "gated-unknown", None,
           src("docs/OWNER_DIRECTIVES_2026_10_07.md"), "interim views cannot establish closure; relay masters qfd_cst / qfd_chead "
-          "closed at 833 ps (+57.00/+17.75, +37.93/+17.62) carry no cycle change", "gate"),
-        L("protected_kv_transport", "Protected KV transport (HBM->die landing)", "gated-unknown", None,
-          src(Q_CLOSURE, "kv_path.protected_full_width_transport"),
-          "shipped STREAM4 landing has no transport protection; protected full-width path has no full token (full36_r1 FAIL "
-          "retained); cost unknown", "gate"),
+          "closed at 833 ps (+57.00/+17.75, +37.93/+17.62) carry no cycle change. Owner: stream qwen-blocks (branch "
+          "claude/qwen-blocks-20261007); the full-rate hub qfd_hub_fr and the strip receive buffer qfd_link_rx128 are routed "
+          "by stream qwen-contracts (gate link_credit_rtt)", "gate"),
+        _protected_kv_line(),
     ]
     pub = q["token_cycles"]
     published_sum = sum(x["effect"]["AR"] for x in lines if x["role"] in ("base", "published"))
@@ -301,8 +334,9 @@ def qwen():
             vm_service=("gated: per-ME-op cost unknown.  Any per-ME-op addition y lowers the DSpark ratio, because a step "
                         "issues %d ME ops for %.4f tokens (%.0f a token) against %d a token for AR; the AR_MODE verdict is "
                         "robust to it" % (step_ops, tau, step_ops / tau, rel["me_ops_per_ar_token"])),
-            link_credit=dict(note=("gated: per-traversal credit stall x unknown.  AR crosses the link %d times a token, a step %d "
-                                   "times for %.4f tokens, so link stalls hurt AR more per token" % (ar_link, step_links, tau)),
+            link_credit=dict(note=("resolved (gate link_credit_rtt, full-rate hub CR=128): measured 0 credit stalls a traversal, "
+                                   "so x = 0 and the break-even below is not reached.  AR crosses the link %d times a token, a "
+                                   "step %d times for %.4f tokens, so a link stall would hurt AR more per token" % (ar_link, step_links, tau)),
                              break_even_stall_cycles_per_traversal_equal_payload=round(x_eq),
                              break_even_if_verify_stall_scales_with_np=(round((step / tau - pub) / den) if den > 0 else None),
                              reading=("DSpark reaches AR only if each link traversal stalls >= %d cycles and the verify "
@@ -312,8 +346,8 @@ def qwen():
             die_route_and_masters="gated: affects AR and the step through the same ME-op and link counts",
             tau="third-party 3.1445 (no Qwen DSpark acceptance measured on the target workload mix)"),
         verdict=("AR_MODE holds: the re-evaluation with the newer priced inputs gives %.1f tok/s (%.3fx); every gated "
-                 "per-ME-op cost moves the ratio down; only an unmeasured link-credit stall above ~%d cycles a traversal "
-                 "could move it up" % (new["variants"]["baseline_np4"]["tok_s_upper"],
+                 "per-ME-op cost moves the ratio down; a link-credit stall above ~%d cycles a traversal could have moved it "
+                 "up, but the full-rate hub measures 0 credit stalls" % (new["variants"]["baseline_np4"]["tok_s_upper"],
                                       new["variants"]["baseline_np4"]["speedup_vs_ar_upper"], round(x_eq))),
     )
     return dict(clock_hz=CLK, context="P8191, TP4, 4 dies, STREAM4 KV", lines=lines, compositions=comps, gates=gates,
