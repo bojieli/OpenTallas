@@ -79,6 +79,25 @@ def contract(model, plan, sheets):
                              'HBM functional clock is 976.5625MHz (1024ps) per existing protocol/budget contract; a 1.2GHz service requires separate crossing/ratio implementation and pricing.'])
 
 
+def bind_pin_names(rec, mapping):
+    """Apply explicit, evidence-backed plan-to-netlist identities, never guesses."""
+    unknown = set(mapping) - set(rec['sinks'])
+    if unknown:
+        raise ValueError(f'pin map contains unknown planned sinks: {sorted(unknown)}')
+    used = set()
+    for key, sink in rec['sinks'].items():
+        pin = mapping.get(key, key if '[' in sink['port'] else key + '[0]')
+        if not isinstance(pin, str) or not pin.startswith(sink['instance'] + '/'):
+            raise ValueError(f'{key}: mapped pin must remain on its planned instance')
+        if any(c in pin for c in '{};\\\n\r'):
+            raise ValueError(f'{key}: unsupported Tcl pin characters')
+        if pin in used:
+            raise ValueError(f'duplicate clock pin mapping: {pin}')
+        used.add(pin)
+        sink['netlist_pin'] = pin
+    rec['explicit_pin_map'] = dict(mapping)
+
+
 def constraints(rec, corner):
     lines = ['set_cmd_units -time ns -capacitance fF',
              '# Clock nets are ideal here: data wires retain their actual parasitics.',
@@ -91,7 +110,7 @@ def constraints(rec, corner):
              '  }', '  return {}', '}',
              'set ot_domain_pins [dict create]']
     for key, s in rec['sinks'].items():
-        pin = key if '[' in s['port'] else key + '[0]'
+        pin = s.get('netlist_pin', key if '[' in s['port'] else key + '[0]')
         lines += [f'set p [ot_clock_pin {{{pin}}}]',
                   f'if {{![llength $p]}} {{ lappend ot_clock_missing {{{pin}}} }} else {{ dict lappend ot_domain_pins {s["domain"]} $p }}']
     for domain, period in PERIOD_PS.items():
@@ -99,7 +118,7 @@ def constraints(rec, corner):
                   f'  create_clock -name {domain} -period {period / 1000:.9f} [dict get $ot_domain_pins {domain}]',
                   '}']
     for key, s in rec['sinks'].items():
-        pin = key if '[' in s['port'] else key + '[0]'
+        pin = s.get('netlist_pin', key if '[' in s['port'] else key + '[0]')
         lines += [f'set p [ot_clock_pin {{{pin}}}]',
                   f'if {{[llength $p]}} {{ set_clock_latency -source -clock {s["domain"]} {s["entry_ps"][corner] / 1000:.9f} $p; dict set ot_bound_names {{{pin}}} 1; incr ot_clock_bound }}']
     lines += ['set_clock_uncertainty -setup 0.210 [all_clocks]',
@@ -137,12 +156,16 @@ def main():
     ap.add_argument('--die-model', required=True)
     ap.add_argument('--clock-plan', required=True)
     ap.add_argument('--sheets', required=True)
+    ap.add_argument('--pin-map', help='JSON object mapping planned sinks to actual netlist clock pins')
     ap.add_argument('--sta-base', help='existing die STA Tcl; preserve its loading, geometry and parasitics prefix')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     paths = [Path(a.die_model), Path(a.clock_plan)]
     sheets = {p.stem: read(p) for p in Path(a.sheets).glob('*.json')}
     rec = contract(read(a.die_model), read(a.clock_plan), sheets)
+    bind_pin_names(rec, read(a.pin_map) if a.pin_map else {})
+    if a.pin_map:
+        paths.append(Path(a.pin_map))
     used = sorted({s['master'] for s in rec['sinks'].values()})
     paths += [Path(a.sheets) / (m + '.json') for m in used]
     if a.sta_base:

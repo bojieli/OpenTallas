@@ -24,6 +24,7 @@ import re
 from collections import defaultdict
 
 REACH_INTER_UM, REACH_INTRA_UM = 359.0, 412.0
+RELAY_MIN_SEG_UM = 100.0
 BIT_UM2 = 0.7               # station recipe: ~0.7 um2 per stage bit
 HALO = 2.16
 
@@ -84,8 +85,30 @@ class Free:
                         return False
         return True
 
+    def inside(self, x, y):
+        """the obstacle box strictly containing (x, y), or None"""
+        for c in self.g.get((int(x // self.B), int(y // self.B)), ()):
+            if c[0] < x < c[2] and c[1] < y < c[3]:
+                return c
+        return None
+
+    def escape(self, cx, cy, w, h):
+        """a requested point inside a hard block (an interior / area pin, or a wire-stage point on a straight L path that
+        crosses a macro) moves to the nearest point just outside that block, where a register can actually sit; the
+        wire from the pin to it runs over the block on the die layers above the block's obstructions"""
+        for _ in range(8):
+            c = self.inside(cx, cy)
+            if c is None:
+                return cx, cy
+            m_ = HALO + max(w, h) / 2 + 0.5
+            opts = [(cx - c[0], c[0] - m_, cy), (c[2] - cx, c[2] + m_, cy), (cy - c[1], cx, c[1] - m_), (c[3] - cy, cx, c[3] + m_)]
+            opts = [o for o in opts if 1.0 < o[1] < self.W - 1.0 and 1.0 < o[2] < self.H - 1.0]
+            _, cx, cy = min(opts)
+        return cx, cy
+
     def place(self, cx, cy, w, h, gx, gy, reach=600.0):
         """lower-left of a free w x h box nearest (cx, cy) (ring search, 2.16 um steps), or None"""
+        cx, cy = self.escape(cx, cy, w, h)
         step = 2.16
         for r in range(0, int(reach / step) + 1):
             cand = []
@@ -173,7 +196,7 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True):
         f = min(d, key=d.get)
         return f, {'W': (-1, 0), 'E': (1, 0), 'S': (0, -1), 'N': (0, 1)}[f]
 
-    rec = dict(buses_cut=0, relays=0, wire_stages=0, unplaced=[], unknown_dir_bits=0, skipped_multi=0, skipped_fclk=0,
+    rec = dict(relay_ends_dropped_short=0, buses_cut=0, relays=0, wire_stages=0, unplaced=[], unknown_dir_bits=0, skipped_multi=0, skipped_fclk=0,
                pin_fallback=0, chains=[])
     new_buses, new_insts = [], []
     gx, gy = H.GX, H.GY
@@ -226,6 +249,8 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True):
         a, b = near(A, b), near(B_, a)
         Lm = abs(a[0] - b[0]) + abs(a[1] - b[1])
         n_ws = math.ceil(max(0.0, Lm - REACH_INTER_UM) / REACH_INTRA_UM) if wire_stages else 0
+        # r22 rule: a relay abuts a pin whose die segment is > 100 um; abutting blocks (r23 vm_cross_aligned seams, L = 0)
+        #   have no segment to cut and no room between the faces
         rel = [(bid, e[0]) in rends for e in eps]
         if n_ws == 0 and not any(rel):
             keep.append(bus)
@@ -260,6 +285,13 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True):
             src, dst = eps[s_], eps[t_]
             (ps, oks), (pt, okt) = pin_xy(src[0], src[1], sel), pin_xy(dst[0], dst[1], sel)
             rec['pin_fallback'] += (not oks) + (not okt)
+            if abs(ps[0] - pt[0]) + abs(ps[1] - pt[1]) <= RELAY_MIN_SEG_UM and n_ws == 0 and any(rel):
+                rec['relay_ends_dropped_short'] += sum(rel)
+                new_buses.append((f'{bid}_{g}0', 'x_leaf', len(sel), [(src[0], _sub(src[1], sel, bits, H, nreal(src))),
+                                                                      (dst[0], _sub(dst[1], sel, bits, H, nreal(dst)))]))
+                rec['chains'].append(dict(bus=bid, dir=g, bits=len(sel), len_um=round(Lm, 1), relays=0, wire_stages=0,
+                                          regs=[], note='pin segment <= 100 um: no relay (r22 rule)'))
+                continue
             ds_ = dom.get(src[0]) or dom.get(dst[0]) or 'stream'
             dt_ = dom.get(dst[0]) or ds_
             nb = len(sel)
