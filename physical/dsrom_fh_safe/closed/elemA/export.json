@@ -1,21 +1,21 @@
 {
  "schema": "opentallas.w18.export_view.v1",
  "name": "ot_dsrom_head_elem",
- "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dshead-elemA-safe-b529ca8c9-tt/routes/dshead_elemA_safe_b529ca8c9_tt/work/orfs",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dshead-elemA-ss-f11f3cc47-tt/routes/dshead_elemA_ss_f11f3cc47_tt/work/orfs",
  "post_sdc": "physical/dsrom_fh_safe/gen/signoff_elemA.sdc",
  "ss": {
   "done": true,
-  "ws_max": "-1.0376943748724443e-10",
-  "ws_min": "-3.151723326766387e-11"
+  "ws_max": "-9.053646721213227e-11",
+  "ws_min": "-9.317602245317858e-11"
  },
  "ff": {
   "done": true,
-  "ws_max": "1.6078938180896785e-10",
-  "ws_min": "2.3018864592216914e-11"
+  "ws_max": "1.1522960363663515e-10",
+  "ws_min": "1.790920189925771e-11"
  },
  "files": {
-  "ot_dsrom_head_elem.lef": "e27d9d2e25df6691f5ab6ea09f8bc1023556395f9278ea7a5e74bd923ec0addc",
-  "ot_dsrom_head_elem_ff.lib": "e6f914cdc88d715da3dbb1b4b6852da3008795547ec4adb0386fae352a5d6967",
-  "ot_dsrom_head_elem_ss.lib": "e612e5024b244e5e91612974641f18c8637c6aee5a86b098c596397131faea3c"
+  "ot_dsrom_head_elem.lef": "e433ccd08124a611bfe0a8906844d10cd353426574431bb4967953ca94e06dc8",
+  "ot_dsrom_head_elem_ff.lib": "e19bf9951f56179a32070ec3873d9cf617a32fdb1e0c878087be6aa66d7f692c",
+  "ot_dsrom_head_elem_ss.lib": "8a0f5105e9ebcd840e844ef370f7faeb7e993605357de2b02beec752957f5f6c"
  }
 }

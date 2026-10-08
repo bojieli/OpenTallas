@@ -1,39 +1,39 @@
 {
  "schema": "opentallas.w18.corner_sta.v1",
- "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dshead-elemA-safe-b529ca8c9-tt/cl/eco/pass2/orfs",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dshead-elemA-ss-f11f3cc47-tt/cl/eco/pass1/orfs",
  "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_dsrom_head_elem\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 730.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\ncre",
  "setup_ss": {
   "corner": "ss",
   "check": "setup",
-  "worst_slack_ps": -103.77,
-  "tns_ps": -3462.0,
-  "worst_register_d_slack_ps": -103.76944,
-  "worst_reg_to_reg_slack_ps": -103.77,
-  "worst_input_to_reg_slack_ps": 233.41,
-  "worst_output_port_slack_ps": 106.005203,
-  "violating_d_pins": 158,
+  "worst_slack_ps": -90.54,
+  "tns_ps": -1875.7,
+  "worst_register_d_slack_ps": -90.536469,
+  "worst_reg_to_reg_slack_ps": -90.54,
+  "worst_input_to_reg_slack_ps": 159.54,
+  "worst_output_port_slack_ps": 120.027321,
+  "violating_d_pins": 90,
   "errors": [],
-  "odb_sha256": "d200ecc76617682557e9a8e329aaadbb46335a7c3e53721810244066be48a39d",
-  "spef_sha256": "0b03138754b8ed00fe944b602914f9d53273505d9823ed14d4ccd68c669500f9",
-  "sdc_sha256": "4c7e92fb300bd4d54aab0b2a206e7c99cb742af337e178c0ab43b4837a72287e"
+  "odb_sha256": "3a4d0b7e742c786b694dc29b6cbee7c3681f8fb6820445de85c96c08b5bc3272",
+  "spef_sha256": "249dac77702373c5e2bcf3325dbf63f83a0d9177a14173bbae8401a2d351e9af",
+  "sdc_sha256": "24e5d6f389330c014aec386c411b11a5944da33c2410f25c2e1e63d61b937973"
  },
  "hold_ff": {
   "corner": "ff",
   "check": "hold",
-  "worst_slack_ps": 23.02,
+  "worst_slack_ps": 17.91,
   "tns_ps": 0.0,
-  "worst_register_d_slack_ps": 33.722664,
-  "worst_reg_to_reg_slack_ps": 33.72,
-  "worst_input_to_reg_slack_ps": 88.9,
-  "worst_output_port_slack_ps": 23.018866,
+  "worst_register_d_slack_ps": 32.363056,
+  "worst_reg_to_reg_slack_ps": 32.36,
+  "worst_input_to_reg_slack_ps": 61.89,
+  "worst_output_port_slack_ps": 17.909203,
   "violating_d_pins": 0,
   "errors": [],
-  "odb_sha256": "d200ecc76617682557e9a8e329aaadbb46335a7c3e53721810244066be48a39d",
-  "spef_sha256": "0b03138754b8ed00fe944b602914f9d53273505d9823ed14d4ccd68c669500f9",
-  "sdc_sha256": "4c7e92fb300bd4d54aab0b2a206e7c99cb742af337e178c0ab43b4837a72287e"
+  "odb_sha256": "3a4d0b7e742c786b694dc29b6cbee7c3681f8fb6820445de85c96c08b5bc3272",
+  "spef_sha256": "249dac77702373c5e2bcf3325dbf63f83a0d9177a14173bbae8401a2d351e9af",
+  "sdc_sha256": "24e5d6f389330c014aec386c411b11a5944da33c2410f25c2e1e63d61b937973"
  },
  "post_sdc": {
-  "physical/dsrom_fh_safe/gen/signoff_elemA.sdc": "f47f2bb71378ff9995e19f4b3bf7a79f3e576528fe9eecebf438f8cb66b6c1bd",
+  "physical/dsrom_fh_safe/gen/signoff_elemA.sdc": "8f1094ca2be11571521d6084a633fcc22e5a4979240c48ba92c76fbcdca62483",
   "physical/common_flow/io_ref_routed.sdc": "cdb9a5170ef5e3732ae52e9d50208bc9b1906ae7e348b22dd9c45ea40fcc6d9a"
  },
  "libraries": {
@@ -59,13 +59,13 @@
   "corner": "tt",
   "check": "setup",
   "source": "tt_resta.sh (job's w18_sta_ss.tcl with TT libraries)",
-  "worst_slack_ps": 184.98,
+  "worst_slack_ps": 136.26,
   "tns_ps": 0.0,
-  "worst_reg_to_reg_slack_ps": "184.984421",
-  "worst_input_to_reg_slack_ps": "190.736435",
-  "worst_output_port_slack_ps": "390.947876",
+  "worst_reg_to_reg_slack_ps": "200.391708",
+  "worst_input_to_reg_slack_ps": "136.264999",
+  "worst_output_port_slack_ps": "411.497681",
   "violating_d_pins": "0",
   "errors": [],
-  "tcl_sha256": "97af39e18c037f608e6f4a15413fd0146deed48a7f8635fee011c7fd31ca4c66"
+  "tcl_sha256": "a3086c8d36e23bc15062918e0fb698317d7f98dafb4f134e55e23a5f4e9a1c5d"
  }
 }
