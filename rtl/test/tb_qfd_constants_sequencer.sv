@@ -481,7 +481,8 @@ module tb_qfd_constants_sequencer;
         .pi_su_kv_we(pi_su_kv_we),
         .pi_su_progress(pi_su_progress),
         .pi_su_progress_rows(pi_su_progress_rows),
-        .pi_su_fault(pi_su_fault));
+        .pi_su_fault(pi_su_fault),
+        .po_su_asrc_raw());
     ot_qwen_tp_seq_w12 #(.N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1)) ref_seq (
         .clk(clk), .rst_n(rst_n), .start(h_start), .token(tp_token), .pos(tp_pos), .done(r_s_done),

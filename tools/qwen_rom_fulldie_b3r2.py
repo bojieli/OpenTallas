@@ -66,7 +66,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
-             tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0):
+             tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
+             su_vm_abut=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -218,7 +219,70 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         _io_south(v)
         _relays(v, m, relay_pitch)
     m['b3r2']['r21_relay_pitch_um'] = relay_pitch
+    if su_vm_abut:
+        _su_vm_bus(v, m)      # outermost: after the relays (an abutted bus takes no relay)
+    m['b3r2']['r21v_su_vm_abut'] = su_vm_abut
     return v, m
+
+
+# r21v (qwen-split-exact 2026-10-07): the stream unit <-> vector memory bus.  ot_qwen_rom_core's u_su reads three
+# operands (va / vb / vc: per lane re + AW-bit address out, FP32 back) and writes one (vm_we / vm_waddr / vm_wdata)
+# per lane, SW = 64, AW = 24: 3 x (64 + 1,536) + (64 + 1,536 + 2,048) = 8,448 bits SU -> VM and 3 x 2,048 = 6,144
+# bits VM -> SU (14,592).  The reads are FIXED-LATENCY (the lane captures va/vb/vc_q one edge after re: the vector
+# memory's registered output), so the bus takes NO pin station: the two masters abut face to face (SU64 N face on
+# the VM S face, b3r3 _repack_b3r3 stacks them in the W spine column) and every bit is an abutted M5 pin pair at
+# the same x (one M5 track each, both masters 777.576 um wide, R0).  The VM's read data leaves its output register
+# (owner rule: capture flop at the macro); the SU's write / address bits leave the lane's registers.
+SU_VM_A_BITS = 3 * (64 + 64 * 24) + (64 + 64 * 24 + 64 * 32)      # 8,448 SU -> VM
+SU_VM_Q_BITS = 3 * 64 * 32                                        # 6,144 VM -> SU
+SU_VM_ABUT_TOL_UM = 0.05                                          # the generator's SHAVE gap (0.024 um) + rounding
+
+
+def _su_vm_bus(v, m):
+    by = {i.name: i for i in m['insts']}
+    su, vm = by['sp_su64_sfu'], by['sp_vector_memory']
+    gap = vm.y - (su.y + su.h)
+    if abs(su.x - vm.x) > 1e-6 or abs(su.w - vm.w) > 1e-6 or not (0.0 <= gap <= SU_VM_ABUT_TOL_UM) \
+            or su.orient != 'R0' or vm.orient != 'R0':
+        raise ValueError(f'su_vm_abut: SU64 {su.x:.3f},{su.y:.3f} {su.w:.3f}x{su.h:.3f} {su.orient} and VM '
+                         f'{vm.x:.3f},{vm.y:.3f} {vm.w:.3f}x{vm.h:.3f} {vm.orient} do not abut (gap {gap:.3f} um): '
+                         'route the bus with relay stations and matching RTL latency instead')
+    if su.domain != vm.domain:
+        raise ValueError(f'su_vm_abut: SU64 ({su.domain}) and VM ({vm.domain}) in different clock domains')
+    m['buses'] += [('su_vm_a', 'spine_local', SU_VM_A_BITS, [('sp_su64_sfu', 'va'), ('sp_vector_memory', 'sa')]),
+                   ('su_vm_q', 'spine_local', SU_VM_Q_BITS, [('sp_vector_memory', 'sq'), ('sp_su64_sfu', 'vq')])]
+    w = su.w
+    p = 0.048                                       # M5 track (qwen_rom_fulldie TRK)
+    a_span, q_span = SU_VM_A_BITS * p, SU_VM_Q_BITS * p
+    lo = 2.0                                        # um clear of the face corners and between the two groups
+    a_c = lo + a_span / 2
+    q_c = lo + a_span + lo + q_span / 2
+    if lo + a_span + lo + q_span > w - lo:
+        raise ValueError(f'su_vm_abut: {SU_VM_A_BITS + SU_VM_Q_BITS} M5 pins do not fit the {w:.3f} um face')
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        out = base(model, k, port_bits)
+        s, q = out['qfd_sp_su64_sfu'], out['qfd_sp_vector_memory']
+        for M_, f, mine in ((s, 'N', ('va', 'vq')), (q, 'S', ('sa', 'sq'))):
+            for pn in mine:                 # the base wrapper's default pin group for the new bus: replaced here
+                if pn in M_.ports:
+                    M_.ports.pop(pn)
+                    M_.order.remove(pn)
+            taken = [pn for pn, sp in M_.ports.items() if sp[0] == 'face' and sp[2] == f]
+            if taken:
+                raise ValueError(f'su_vm_abut: {M_.name} {f} face already holds {taken}')
+        s.face('va', SU_VM_A_BITS, 'N', 'M5', a_c, 1)
+        s.face('vq', SU_VM_Q_BITS, 'N', 'M5', q_c, 1)
+        q.face('sa', SU_VM_A_BITS, 'S', 'M5', a_c, 1)
+        q.face('sq', SU_VM_Q_BITS, 'S', 'M5', q_c, 1)
+        return out
+    v.masters = masters
+    m['r21v_su_vm'] = dict(bits_su_to_vm=SU_VM_A_BITS, bits_vm_to_su=SU_VM_Q_BITS, gap_um=round(gap, 4),
+                           face_um=round(w, 3), layer='M5', pitch_tracks=1,
+                           a_span_um=[round(a_c - a_span / 2, 3), round(a_c + a_span / 2, 3)],
+                           q_span_um=[round(q_c - q_span / 2, 3), round(q_c + q_span / 2, 3)],
+                           stations=0, rtl_latency_added=0)
 
 
 BWP_H = 60.48       # r20f block-word waypoint frame height: 512 M4 face pins at 2 tracks (49.2 um) + margins, on GY
@@ -2591,6 +2655,8 @@ def main(argv=None):
                     'one word per port-group slot (seam fix)')
     ap.add_argument('--io-chan', type=float, default=0.0, help='r22: routing channel (um, on 2.16) between the top tile '
                     'row and the IO band; the die grows by it')
+    ap.add_argument('--su-vm-abut', action='store_true', help='r21v: SU64 <-> VM bus (14,592 b) as abutted M5 pins '
+                    '(SU64 N face on the VM S face), no stations')
     ap.add_argument('--corr-um', type=float, default=None, help='r20e: corridor width (um, on 0.432)')
     ap.add_argument('--corr-m9-adj', type=float, default=None, help='r20d: GRT M9 adjustment over the corridors')
     ap.add_argument('--tree-interleave', action='store_true', help='r20: tree-word pin sub-columns interleaved across '
@@ -2625,7 +2691,7 @@ def main(argv=None):
                     edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
                     slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
                     slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
-                    r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch, io_chan=a.io_chan)
+                    r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch, io_chan=a.io_chan, su_vm_abut=a.su_vm_abut)
     if a.mode == 'relaycost':
         rec = dict(relay_token_cost(v, m), relays=m.get('r21_relays'))
         if a.out:

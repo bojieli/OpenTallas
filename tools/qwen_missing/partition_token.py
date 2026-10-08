@@ -8,8 +8,11 @@ three modules wired across the partition boundary.  The die files' four issue-st
 controller's state through core.<net>; in the partitioned build they read core.u_ctrl.<net> (copies of the two die
 files, nothing else changed).  Everything else -- fixtures, host, checks -- is the harness's.
 
-    partition_token.py build --variant part|base --build DIR [--jobs 16]
-    partition_token.py run   --build DIR --work DIR --stages L0|full
+    partition_token.py build --variant part|base --build DIR [--jobs 16] [--dcu N --duc N --comp 0|1]
+    partition_token.py run   --build DIR --work DIR --stages L0|full [--max-cycles N]
+--dcu / --duc put pin stations on the controller -> unit / unit -> controller nets of the partition and --comp 1
+adds the split-exact compensation (rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv); --comp 0 with
+stations is the negative (must fail).  The build records its station configuration in build/STN.json.
 The 'base' variant is the unmodified harness build from this tree (the same-tree reference for the comparison).
 """
 from __future__ import annotations
@@ -28,10 +31,15 @@ import emit_partition as P  # noqa: E402
 CTRL_NETS = ("st", "nx_v", "d_unit", "me_wsrc", "kv_gate", "su_ready", "su_idle", "me_idle", "d_barrier")
 
 
+BASE_EMIT = F.EMIT.emit          # the unpatched core emitter (F.EMIT and P.EMIT are the same module object)
+SPLIT_RTL = ROOT / "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv"
+STN = dict(dcu=0, duc=0, comp=1)
+
+
 def part_core(text: str) -> str:
-    core = P.EMIT.emit(text)
-    part = P.emit_part(core).replace("module ot_qwen_rom_core_part #(", "module ot_qwen_rom_core #(", 1)
-    return P.emit_ctrl(core) + "\n" + part
+    core = BASE_EMIT(text)
+    part = P.emit_part(core, **STN).replace("module ot_qwen_rom_core_part #(", "module ot_qwen_rom_core #(", 1)
+    return P.emit_ctrl(core) + "\n" + part + "\n" + SPLIT_RTL.read_text()
 
 
 def main():
@@ -43,7 +51,15 @@ def main():
     ap.add_argument("--stages", choices=("L0", "full"), default="L0")
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--jobs", type=int, default=16)
+    ap.add_argument("--dcu", type=int, default=0, help="ctrl -> unit pin stations (sequencer OS + unit IS)")
+    ap.add_argument("--duc", type=int, default=0, help="unit -> ctrl pin stations (unit OS + sequencer IS)")
+    ap.add_argument("--comp", type=int, default=1, help="1: split-exact compensation; 0: stations only (negative)")
+    ap.add_argument("--max-cycles", type=int, default=0, help="L0 cycle guard (default: the harness's; stations "
+                    "add issue gaps)")
     a = ap.parse_args()
+    if a.max_cycles:
+        F.L0_MAX_CYCLES = a.max_cycles
+    STN.update(dcu=a.dcu, duc=a.duc, comp=a.comp)
     bld = a.build.resolve()
     if a.phase == "run":
         sys.exit(F.run(bld, a.work.resolve(), a.stages, a.threads))
@@ -57,12 +73,12 @@ def main():
             out = []
             for f in orig():
                 t = f.read_text()
-                if "core." in t:
+                if re.search(r"\bcore\.\w", t):    # a hierarchical read of the core instance (not 'score.')
                     n = 0
                     for net in CTRL_NETS:
                         t, k = re.subn(rf"\bcore\.{net}\b", f"core.u_ctrl.{net}", t)
                         n += k
-                    if n == 0:
+                    if n == 0 or re.search(r"\bcore\.(?!u_ctrl\.)\w", t):
                         raise SystemExit(f"{f}: core reference pattern changed")
                     g = gen / f.name
                     g.write_text(t)
@@ -72,6 +88,8 @@ def main():
             return out
         F.die_sources = die_sources
     F.build(bld, a.jobs)
+    import json
+    (bld / "STN.json").write_text(json.dumps(dict(variant=a.variant, **STN), indent=1) + "\n")
 
 
 if __name__ == "__main__":

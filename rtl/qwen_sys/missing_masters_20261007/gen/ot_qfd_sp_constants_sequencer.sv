@@ -627,7 +627,8 @@ module ot_qfd_sp_constants_sequencer #(
         .pi_su_kv_we(q_pi_su_kv_we),
         .pi_su_progress(q_pi_su_progress),
         .pi_su_progress_rows(q_pi_su_progress_rows),
-        .pi_su_fault(q_pi_su_fault));
+        .pi_su_fault(q_pi_su_fault),
+        .po_su_asrc_raw());
     ot_qwen_tp_seq_w12 #(.N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1)) u_seq (
         .clk(clk), .rst_n(rs), .start(q_h_start), .token(q_tp_token), .pos(q_tp_pos), .done(b_s_done),
