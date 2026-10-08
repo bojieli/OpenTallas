@@ -78,6 +78,7 @@ HUB_EL = 412.56
 # pseudo-channel in a column between the controller and the strip; the controller -> row-engine read bus is carried
 # through them (controller -> CDC HCLK side, CDC core side -> the row engine serving that PC).
 CDC = None
+XCOL = 0.0          # qwen-vm-me r21m: width (um) of a third spine column C east of the E column (0: two columns)
 STRIP_SPAN = False             # r17d: strip/CDC/controller PG regions per stack span instead of the full column
 # r18 (die-top lint Q1-Q15, main 694e21a6e): near-HBM attention DROPPED (no row engines, no hub combine); the strip
 # column keeps one KV landing concentrator per stack (qfd_kvc, stack span tall, KVC_W wide: the strip-end link
@@ -215,7 +216,7 @@ def _build(spine_w, tree_mode):
     x_wband = up(EDGE, GX)
     x_arr_w = up(x_wband + band, GX)
     x_spine = x_arr_w + 32 * TILE_SLOT[0]
-    x_arr_e = up(x_spine + 2 * cw + VCH, GX)
+    x_arr_e = up(x_spine + 2 * cw + VCH + XCOL, GX)
     x_eband = x_arr_e + 32 * TILE_SLOT[0]
     W = up(x_eband + band + EDGE, GX)
     # y layout: 7 rows, channel S, 10 rows, channel N, 7 rows, IO band
