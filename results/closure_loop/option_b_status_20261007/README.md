@@ -1,12 +1,13 @@
-# Option-B block closure status (2026-10-07)
+# Option-B block closure status (2026-10-07, v2)
 
-`status.json` is the integration record of which blocks count as closed under the owner's option-B rule:
-setup at TT (833.333 ps, >= 0) under the consistent die-link budget, hold at FF (>= 0), DRC 0. SS setup slack is
-reported as a sensitivity only. The evidence is setup-triage's re-STA of existing final routes at 614782370
-(`../tt_restatus_20261007.json`, `../tt_closed_list_20261007.json`); sha256 pins are in `status.json`.
+`status.json` records which blocks count as closed under the owner's option-B rule: setup at TT (833.333 ps, >= 0)
+under the consistent die-link budget (per-link source-synchronous model for forwarded-clock station links), hold at FF
+(>= 0), DRC 0. SS setup is a sensitivity only. Evidence: setup-triage 254ef7315 (`../tt_restatus_20261007.json`,
+`../tt_closed_list_20261007.json`, v2 with the corrected link-budget check); sha256 pins in `status.json`.
 
-- `closed`: 30 blocks closed at TT with the link budget applied.
-- `unverified_forwarded_clock`: 16 forwarded-clock station blocks that pass TT setup without the common-clock split.
-  They are held, not closed, until a per-link forwarded-clock model exists.
-- `revoked_previously_closed`: 13 blocks the loop had closed at the SS line that fail at TT under the link budget.
-  They no longer count as closed.
+- `closed`: 42 blocks (31 common-clock with the consistent split, 11 forwarded-clock stations under the per-link model).
+- `unverified_forwarded_clock`: forwarded-clock blocks not yet decided by the per-link model.
+- `revoked_previously_closed`: 17 blocks the loop had closed at the SS line that are not closed at TT; they no longer
+  count as closed.
+
+v1 (fc5ee68fd: 30 closed / 16 held / 13 revoked) is superseded.
