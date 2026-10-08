@@ -16,6 +16,7 @@ Root port depth (vm_wr_skew_finding.md): wr_v / bank / addr / owner / data_hi cr
 crosses the SW seam once (+2): the write port stays ONE depth (7); the read port (f_su_SE[200:0]) crosses the SE seam (+2).
 Cost (bench mode 2, 8-way vs 4-tile per output bit, run_vm_split8.sh): +2 on every path that crosses one seam.
     python3 make_vm_split8.py      (writes hfd_vm_<q>_{s,n}.sv, hfd_vm_<q>_j8.sv, tb_vm_split8.sv, ports/<master>/*, *_face_stages.tcl)"""
+import os
 import json, re, subprocess, sys, tempfile
 from pathlib import Path
 D = Path(__file__).resolve().parent
@@ -230,6 +231,72 @@ def tb():
     assert t.count('`VMQ(') == 4 and 'u.u_sw`SWH.u_mr' in t
     return t
 
+def respread(pins):
+    """VM8_PIN2 (hbm-blocks 2026-10-07): every external E / W face of a half re-placed at 2 tracks (0.096 um) a bit when
+    the face's bits fit the half's edge, port order kept, centred on the original centroid; N / S faces likewise along
+    the width.  The quadrant generator packs these faces at 1 track a bit (vm8 nws: qNW + iNW = 1,094 pins in 53 um on M4
+    -> GRT overflow 72,652, 6,386 gcells at that corner; nwn / sen the same at their W faces)."""
+    def face(x, y, sz):
+        vert = float(sz.split()[0]) < float(sz.split()[1])          # N / S pins are taller than wide
+        if vert:
+            return 'S' if y < 1.0 else 'N' if y > HH - 1.0 else None
+        return 'W' if x < 1.0 else 'E' if x > QW - 1.0 else None
+    byf = {}
+    for i, (p, b, ly, x, y, sz) in enumerate(pins):
+        f = face(x, y, sz)
+        if f:
+            byf.setdefault(f, []).append(i)
+    out = list(pins)
+    for f, idx in byf.items():
+        along = (lambda t: t[4]) if f in 'EW' else (lambda t: t[3])
+        idx.sort(key=lambda i: along(pins[i]))
+        L = HH if f in 'EW' else QW
+        step = 2 * PITCH
+        ports = []                                  # (port, [indices]) in face order
+        for i in idx:
+            if not ports or ports[-1][0] != pins[i][0]:
+                ports.append((pins[i][0], []))
+            ports[-1][1].append(i)
+        gap = 4 * PITCH
+        span = len(idx) * step + gap * (len(ports) - 1)
+        if span > L - 4.0:
+            continue                                # does not fit at 2 tracks: keep the generator's packing
+        c = sum(along(pins[i]) for i in idx) / len(idx)
+        start = min(max(c - span / 2, 2.0), L - 2.0 - span)
+        ph = along(pins[idx[0]]) % PITCH
+        pos = round((start - ph) / PITCH) * PITCH + ph
+        for pn, ii in ports:
+            for i in ii:
+                p, b, ly, x, y, sz = pins[i]
+                if f in 'EW':
+                    out[i] = (p, b, ly, x, round(pos, 4), sz)
+                else:
+                    out[i] = (p, b, ly, round(pos, 4), y, sz)
+                pos += step
+            pos += gap - step + step
+    return out
+
+def rst_free(pins):
+    """move rst to the nearest free 0.096 um slot of its face when a re-spread pin covers it"""
+    r = [i for i, t in enumerate(pins) if t[0] == 'rst']
+    if not r:
+        return pins
+    i = r[0]; p, b, ly, x, y, sz = pins[i]
+    ew = x < 1.0 or x > QW - 1.0
+    taken = sorted((t[4] if ew else t[3]) for j, t in enumerate(pins) if j != i and abs((t[3] if ew else t[4]) - (x if ew else y)) < 1.0)
+    v = y if ew else x
+    L = HH if ew else QW
+    def free(u):
+        return 1.0 <= u <= L - 1.0 and all(abs(u - w) > 0.3 for w in taken)
+    k = 0
+    while not free(v + k * 2 * PITCH) and not free(v - k * 2 * PITCH):
+        k += 1
+        assert k < 20000, 'no free rst slot'
+    v = v + k * 2 * PITCH if free(v + k * 2 * PITCH) else v - k * 2 * PITCH
+    pins = list(pins)
+    pins[i] = (p, b, ly, x, round(v, 4), sz) if ew else (p, b, ly, round(v, 4), y, sz)
+    return pins
+
 def pin_lines(q, h, tmp):
     """io_place.tcl lines of one half from the quadrant's generator pins"""
     src = Path(tmp) / f'hfd_vm_{q}' / 'io_place.tcl'
@@ -248,6 +315,9 @@ def pin_lines(q, h, tmp):
             y -= 6.24
         assert 0.0 <= y <= HH, (q, h, p, y)
         out.append((p, b, ly, x, y, sz))
+    if os.environ.get('VM8_PIN2', '') == '1':
+        out = respread(out)
+    # (VM8_PIN2) rst keeps its spot unless a re-spread face pin sits on it: then the nearest free track on its face
     # ck (area, centre M7), rst (quadrant pin in the south half; inner face y=480 in the north half)
     out.append(('ck', 0, 'M7', 349.648, round(HH / 2, 4), '0.0640 0.2880'))
     orig_rst = [l for l in src.read_text().splitlines() if '{rst[0]}' in l][0]
@@ -259,6 +329,8 @@ def pin_lines(q, h, tmp):
     else:
         out.append(('rst', 0, 'M4', 699.72 if q in ('sw', 'nw') else 0.096, 480.0, '0.1920 0.0240'))
     # seam: top edge of the south half / bottom edge of the north half, same x per bit (abutted straight wires), M5
+    if os.environ.get('VM8_PIN2', '') == '1':
+        out = rst_free(out)
     s2n, n2s = SEAM[q]
     x0 = round(QW / 2 - (s2n + n2s) * PITCH / 2, 3)
     x0 = round(round(x0 / PITCH) * PITCH, 3)
@@ -290,7 +362,8 @@ if __name__ == '__main__':
     tmp = tempfile.mkdtemp(prefix='vm8p_')
     root = D.parents[3]
     for q in ('sw', 'nw', 'se', 'ne'):
-        subprocess.run([sys.executable, 'tools/hbm_die_views.py', 'ports', '--master', f'hfd_vm_{q}', '--out', tmp], cwd=root,
+        vv = os.environ.get('VM8_VARIANT', '')          # hbm-blocks 2026-10-07: e.g. r23vp (VM faces at 2 tracks a bit)
+        subprocess.run([sys.executable, 'tools/hbm_die_views.py'] + (['--variant', vv] if vv else []) + ['ports', '--master', f'hfd_vm_{q}', '--out', tmp], cwd=root,
                        check=True, stdout=subprocess.DEVNULL)
     for f in (sw_s, sw_n, nw_s, nw_n, se_s, se_n, ne_s, ne_n):
         s = f(); (D / f'hfd_vm_{s.t}.sv').write_text(s.text())
