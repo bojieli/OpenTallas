@@ -32,7 +32,9 @@ module ot_hdc_vstream_lane #(
     parameter integer AW   = 24,
     parameter integer NW   = 16,
     parameter integer LANE = 0,
-    parameter integer KV_FP8 = 1      // the vector core's KV cache is FP8 E4M3 (hdc_golden.KV_FMT)
+    parameter integer KV_FP8 = 1,     // the vector core's KV cache is FP8 E4M3 (hdc_golden.KV_FMT)
+    parameter integer ML = 0          // extra memory-read latency: every memory answers 1 + ML edges after its read
+                                      // strobe (the element's tag and valid wait ML more cycles before S1); 0 = original
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -114,6 +116,18 @@ def generate():
     b0 = src.index("    // -- address cycle")
     b1 = src.index("    // -- reducer")
     body = src[lp0:lp1] + src[b0:b1]
+    # ML (qwen-rtl-finish 2026-10-07): the S1 stage takes the element's tag and valid ML cycles late, so memories that
+    # answer 1 + ML edges after the strobe (a far constant / weight ROM behind stations) are captured exactly
+    for old, new in (("    always @(posedge clk) s1_tag <= e_tag;\n",
+                      "    wire [FT-1:0] e_tag_m;\n"
+                      "    ot_hdc_delay #(.W(FT), .D(ML)) u_ml_tag (.clk(clk), .rst_n(rst_n), .d(e_tag), .q(e_tag_m));\n"
+                      "    always @(posedge clk) s1_tag <= e_tag_m;\n"),
+                     ("    reg          e_v;\n", "    reg          e_v;\n    wire         e_v_m;\n"
+                      "    ot_hdc_delay #(.W(1), .D(ML), .RESET(1)) u_ml_v (.clk(clk), .rst_n(rst_n), .d(e_v), .q(e_v_m));\n"),
+                     ("else begin s1_v <= e_v; s2_v <= s1_v;", "else begin s1_v <= e_v_m; s2_v <= s1_v;")):
+        if body.count(old) != 1:
+            raise SystemExit(f"lane ML anchor: {old!r}")
+        body = body.replace(old, new)
     return HEADER + body + FOOTER
 
 

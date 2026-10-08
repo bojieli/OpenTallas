@@ -27,7 +27,8 @@ module ot_hdc_vstream #(
     parameter integer WR = 64,
     parameter integer AW = 24,
     parameter integer NW = 16,
-    parameter integer KV_FP8 = 1      // KV cache in FP8 E4M3 (else BF16): hdc_golden.KV_FMT
+    parameter integer KV_FP8 = 1,     // KV cache in FP8 E4M3 (else BF16): hdc_golden.KV_FMT
+    parameter integer ML = 0          // lane memory-read latency (ot_hdc_vstream_lane ML): memories answer 1 + ML edges late
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -83,7 +84,10 @@ module ot_hdc_vstream #(
     output wire [31:0]       red_data,
     output reg  [15:0]       progress,
     output reg  [15:0]       progress_rows,  // outer iterations (rows) the latest instruction has written
-    output reg               fault
+    output reg               fault,
+    // observation (qwen-rtl-finish 2026-10-07: the split controller's issue shell rebuilds ready from these)
+    output wire              obs_active,
+    output wire [7:0]        obs_inflight
 );
     localparam integer LS = $clog2(SW);
 
@@ -157,7 +161,7 @@ module ot_hdc_vstream #(
     genvar l;
     generate for (l = 0; l < SW; l = l + 1) begin : g_lane
         wire live = ({1'b0, v} << LS) + l < {1'b0, nin_r};
-        ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(l), .KV_FP8(KV_FP8)) u_lane (
+        ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(l), .KV_FP8(KV_FP8), .ML(ML)) u_lane (
             .clk(clk), .rst_n(rst_n), .emit0(emit), .live(live), .i(v), .fin_th(fin_th), .i_last_r(v_last_r),
             .cura0(cura), .curb0(curb), .curc0(curc), .curd0(curd), .rrow(rrow),
             .asi(asi), .bsi(bsi), .csi(csi), .dsi(dsi),
@@ -237,4 +241,6 @@ module ot_hdc_vstream #(
             fault <= fault_q;
         end
     end
+    assign obs_active = active;
+    assign obs_inflight = inflight;
 endmodule

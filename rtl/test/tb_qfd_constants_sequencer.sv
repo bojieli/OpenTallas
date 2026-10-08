@@ -4,7 +4,7 @@
 // wired as the runtime die wires them; every output of the master must equal the reference's IS + OS cycles
 // earlier (4-state).  MUT = 1 inverts one input-station bit (pi_me_ready): must FAIL.
 module tb_qfd_constants_sequencer;
-    parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3;
+    parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3, RT = 4;
     localparam integer W = 16, G = 6144, AW = 24, NW = 18, PAW = 12, SW = 64, LV = 7, D = 4;
     localparam integer SMIN = 7, SMAX = 11, TCUT = 7, L = IS + OS;
     reg clk = 0, rst_n = 0;
@@ -12,9 +12,6 @@ module tb_qfd_constants_sequencer;
     reg [1-1:0] h_start;
     reg [NW-1:0] tp_token;
     reg [NW-1:0] tp_pos;
-    reg [512-1:0] embed_code_q;
-    reg [16-1:0] embed_scale_q;
-    reg [SW*32-1:0] va_q;
     reg [1-1:0] kv_write_drained;
     reg [1-1:0] kv_ok;
     reg [1-1:0] me_mem_ok;
@@ -33,10 +30,8 @@ module tb_qfd_constants_sequencer;
     reg [64-1:0] dw_data;
     reg [1-1:0] pi_me_ready;
     reg [1-1:0] pi_me_idle;
-    reg [1-1:0] pi_me_mx_we;
     reg [1-1:0] pi_me_wrom_re;
     reg [AW-1:0] pi_me_wrom_addr;
-    reg [(G >> SMIN)-1:0] pi_me_o_we;
     reg [NW-1:0] pi_me_am_idx;
     reg [32-1:0] pi_me_am_val;
     reg [1-1:0] pi_me_am_any;
@@ -46,8 +41,6 @@ module tb_qfd_constants_sequencer;
     reg [8-1:0] pi_su_rt_inflight;
     reg [1-1:0] pi_su_ready;
     reg [1-1:0] pi_su_idle;
-    reg [SW-1:0] pi_su_va_re;
-    reg [SW*AW-1:0] pi_su_va_addr;
     reg [1-1:0] pi_su_wrom_re;
     reg [AW-1:0] pi_su_wrom_addr;
     reg [SW-1:0] pi_su_kv_we;
@@ -60,12 +53,6 @@ module tb_qfd_constants_sequencer;
     wire [1-1:0] m_s_fault, r_s_fault;
     wire [1-1:0] m_core_fault, r_core_fault;
     wire [1-1:0] m_coll_busy, r_coll_busy;
-    wire [1-1:0] m_embed_code_re, r_embed_code_re;
-    wire [AW-1:0] m_embed_code_addr, r_embed_code_addr;
-    wire [1-1:0] m_embed_scale_re, r_embed_scale_re;
-    wire [NW-1:0] m_embed_scale_addr, r_embed_scale_addr;
-    wire [SW-1:0] m_va_re, r_va_re;
-    wire [SW*AW-1:0] m_va_addr, r_va_addr;
     wire [1-1:0] m_kv_write_flush, r_kv_write_flush;
     wire [1-1:0] m_kvd_v, r_kvd_v;
     wire [AW-1:0] m_kvd_wbase, r_kvd_wbase;
@@ -92,6 +79,8 @@ module tb_qfd_constants_sequencer;
     wire [1-1:0] m_c_mode, r_c_mode;
     wire [32-1:0] m_c_tag, r_c_tag;
     wire [1-1:0] m_rom_fault, r_rom_fault;
+    wire [1-1:0] m_su_asrc, r_su_asrc;
+    wire [NW-1:0] m_su_tok, r_su_tok;
     wire [1-1:0] m_po_me_go, r_po_me_go;
     wire [NW-1:0] m_po_me_i_nout, r_po_me_i_nout;
     wire [NW-1:0] m_po_me_i_tiles, r_po_me_i_tiles;
@@ -148,21 +137,19 @@ module tb_qfd_constants_sequencer;
     wire [AW-1:0] m_po_su_i_rso, r_po_su_i_rso;
     wire [32-1:0] m_po_su_i_imm1, r_po_su_i_imm1;
     wire [32-1:0] m_po_su_i_imm2, r_po_su_i_imm2;
-    wire [SW*32-1:0] m_po_su_va_q, r_po_su_va_q;
     wire m_me_clk, r_me_clk;
-    ot_qfd_sp_constants_sequencer #(.IS(IS), .OS(OS), .MUT(MUT)) dut (
+    wire me_mem_ok_m;
+    ot_hdc_delay #(.W(1), .D(IS)) u_mmo (.clk(clk), .rst_n(1'b1), .d(me_mem_ok), .q(me_mem_ok_m));
+    ot_qfd_sp_constants_sequencer #(.IS(IS), .OS(OS), .MUT(MUT), .RT(RT)) dut (
         .clk(clk),
         .rst_n(rst_n),
         .po_me_clk(m_me_clk),
         .h_start(h_start),
         .tp_token(tp_token),
         .tp_pos(tp_pos),
-        .embed_code_q(embed_code_q),
-        .embed_scale_q(embed_scale_q),
-        .va_q(va_q),
         .kv_write_drained(kv_write_drained),
         .kv_ok(kv_ok),
-        .me_mem_ok(me_mem_ok),
+        .me_mem_ok(me_mem_ok_m),
         .vm_rq(vm_rq),
         .c_ready(c_ready),
         .r_valid(r_valid),
@@ -178,10 +165,8 @@ module tb_qfd_constants_sequencer;
         .dw_data(dw_data),
         .pi_me_ready(pi_me_ready),
         .pi_me_idle(pi_me_idle),
-        .pi_me_mx_we(pi_me_mx_we),
         .pi_me_wrom_re(pi_me_wrom_re),
         .pi_me_wrom_addr(pi_me_wrom_addr),
-        .pi_me_o_we(pi_me_o_we),
         .pi_me_am_idx(pi_me_am_idx),
         .pi_me_am_val(pi_me_am_val),
         .pi_me_am_any(pi_me_am_any),
@@ -191,8 +176,6 @@ module tb_qfd_constants_sequencer;
         .pi_su_rt_inflight(pi_su_rt_inflight),
         .pi_su_ready(pi_su_ready),
         .pi_su_idle(pi_su_idle),
-        .pi_su_va_re(pi_su_va_re),
-        .pi_su_va_addr(pi_su_va_addr),
         .pi_su_wrom_re(pi_su_wrom_re),
         .pi_su_wrom_addr(pi_su_wrom_addr),
         .pi_su_kv_we(pi_su_kv_we),
@@ -205,12 +188,6 @@ module tb_qfd_constants_sequencer;
         .s_fault(m_s_fault),
         .core_fault(m_core_fault),
         .coll_busy(m_coll_busy),
-        .embed_code_re(m_embed_code_re),
-        .embed_code_addr(m_embed_code_addr),
-        .embed_scale_re(m_embed_scale_re),
-        .embed_scale_addr(m_embed_scale_addr),
-        .va_re(m_va_re),
-        .va_addr(m_va_addr),
         .kv_write_flush(m_kv_write_flush),
         .kvd_v(m_kvd_v),
         .kvd_wbase(m_kvd_wbase),
@@ -237,6 +214,8 @@ module tb_qfd_constants_sequencer;
         .c_mode(m_c_mode),
         .c_tag(m_c_tag),
         .rom_fault(m_rom_fault),
+        .su_asrc(m_su_asrc),
+        .su_tok(m_su_tok),
         .po_me_go(m_po_me_go),
         .po_me_i_nout(m_po_me_i_nout),
         .po_me_i_tiles(m_po_me_i_tiles),
@@ -292,8 +271,7 @@ module tb_qfd_constants_sequencer;
         .po_su_i_rbase(m_po_su_i_rbase),
         .po_su_i_rso(m_po_su_i_rso),
         .po_su_i_imm1(m_po_su_i_imm1),
-        .po_su_i_imm2(m_po_su_i_imm2),
-        .po_su_va_q(m_po_su_va_q));
+        .po_su_i_imm2(m_po_su_i_imm2));
     // ---- reference: controller + TP sequencer + stores as the runtime die wires them ----
     wire core_start, core_done, core_fault_w; wire [NW-1:0] core_tok, core_pos, core_ntok; wire [31:0] core_nval;
     wire prog_re; wire [11:0] prog_addr, prog_base; reg [1023:0] prog_q; wire desc_re; wire [5:0] desc_addr; reg [63:0] desc_q;
@@ -306,6 +284,22 @@ module tb_qfd_constants_sequencer;
         if (desc_re) desc_q <= (desc_addr < 8) ? desc_mem[desc_addr[2:0]] : 64'd0;
     end
     assign r_core_fault = core_fault_w;
+    wire rrs_w = rst_n; wire [NW-1:0] rcore_tok_w = core_tok;
+    wire rs_me_ready, rs_me_idle, rs_su_ready, rs_su_idle;
+    wire [15:0] rs_me_progress, rs_su_progress, rs_su_progress_rows;
+    wire rme_go_w, rsu_go_w, rme_amax_w, rme_en_w, res_re_w; wire [2:0] rsu_sfu_w;
+    ot_qfd_issue_shell #(.RT_ME(RT), .RT_SU(RT), .COMP(1)) ru_shell (.clk(clk), .rst_n(rrs_w),
+        .me_go(rme_go_w), .su_go(rsu_go_w), .me_en(rme_en_w), .su_sfu(rsu_sfu_w), .me_amax(rme_amax_w),
+        .d_me_ready(pi_me_ready), .d_me_idle(pi_me_idle), .d_me_progress(pi_me_progress),
+        .d_su_ready(pi_su_ready), .d_su_idle(pi_su_idle), .d_su_active(pi_su_rt_active),
+        .d_su_inflight(pi_su_rt_inflight), .d_su_progress(pi_su_progress), .d_su_rows(pi_su_progress_rows),
+        .c_me_ready(rs_me_ready), .c_me_idle(rs_me_idle), .c_me_progress(rs_me_progress),
+        .c_su_ready(rs_su_ready), .c_su_idle(rs_su_idle), .c_su_progress(rs_su_progress),
+        .c_su_rows(rs_su_progress_rows));
+    reg [NW-1:0] rtok_l;
+    always @(posedge clk) if (res_re_w) rtok_l <= rcore_tok_w;
+    assign rme_go_w = r_po_me_go; assign rsu_go_w = r_po_su_go; assign rme_amax_w = r_po_me_i_amax;
+    assign rsu_sfu_w = r_po_su_i_sfu; assign rme_en_w = r_me_clk_en; assign r_su_tok = rtok_l;
     ot_qwen_rom_core_ctrl #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT)) ref_core (
         .clk(clk),
         .rst_n(rst_n),
@@ -329,12 +323,12 @@ module tb_qfd_constants_sequencer;
         .scale_gre(),
         .scale_addr(),
         .scale_q('0),
-        .embed_code_re(r_embed_code_re),
-        .embed_code_addr(r_embed_code_addr),
-        .embed_code_q(embed_code_q),
-        .embed_scale_re(r_embed_scale_re),
-        .embed_scale_addr(r_embed_scale_addr),
-        .embed_scale_q(embed_scale_q),
+        .embed_code_re(),
+        .embed_code_addr(),
+        .embed_code_q('0),
+        .embed_scale_re(res_re_w),
+        .embed_scale_addr(),
+        .embed_scale_q('0),
         .crom_re(),
         .crom_addr(),
         .crom_q('0),
@@ -344,9 +338,9 @@ module tb_qfd_constants_sequencer;
         .kv_wdata(),
         .kv_write_drained(kv_write_drained),
         .kv_write_flush(r_kv_write_flush),
-        .va_re(r_va_re),
-        .va_addr(r_va_addr),
-        .va_q(va_q),
+        .va_re(),
+        .va_addr(),
+        .va_q('0),
         .vb_re(),
         .vb_addr(),
         .vb_q('0),
@@ -403,8 +397,8 @@ module tb_qfd_constants_sequencer;
         .me_clk_en(r_me_clk_en),
         .po_me_clk(r_me_clk),
         .po_me_go(r_po_me_go),
-        .pi_me_ready(pi_me_ready),
-        .pi_me_idle(pi_me_idle),
+        .pi_me_ready(rs_me_ready),
+        .pi_me_idle(rs_me_idle),
         .po_me_i_nout(r_po_me_i_nout),
         .po_me_i_tiles(r_po_me_i_tiles),
         .po_me_i_k(r_po_me_i_k),
@@ -429,20 +423,20 @@ module tb_qfd_constants_sequencer;
         .po_me_i_amax(r_po_me_i_amax),
         .po_me_i_rmax(r_po_me_i_rmax),
         .po_me_i_mbase(r_po_me_i_mbase),
-        .pi_me_mx_we(pi_me_mx_we),
+        .pi_me_mx_we('0),
         .pi_me_wrom_re(pi_me_wrom_re),
         .pi_me_wrom_addr(pi_me_wrom_addr),
-        .pi_me_o_we(pi_me_o_we),
+        .pi_me_o_we('0),
         .pi_me_am_idx(pi_me_am_idx),
         .pi_me_am_val(pi_me_am_val),
         .pi_me_am_any(pi_me_am_any),
-        .pi_me_progress(pi_me_progress),
+        .pi_me_progress(rs_me_progress),
         .pi_me_fault(pi_me_fault),
         .pi_su_rt_active(pi_su_rt_active),
         .pi_su_rt_inflight(pi_su_rt_inflight),
         .po_su_go(r_po_su_go),
-        .pi_su_ready(pi_su_ready),
-        .pi_su_idle(pi_su_idle),
+        .pi_su_ready(rs_su_ready),
+        .pi_su_idle(rs_su_idle),
         .po_su_i_nout(r_po_su_i_nout),
         .po_su_i_nin(r_po_su_i_nin),
         .po_su_i_asrc(r_po_su_i_asrc),
@@ -473,16 +467,16 @@ module tb_qfd_constants_sequencer;
         .po_su_i_rso(r_po_su_i_rso),
         .po_su_i_imm1(r_po_su_i_imm1),
         .po_su_i_imm2(r_po_su_i_imm2),
-        .pi_su_va_re(pi_su_va_re),
-        .pi_su_va_addr(pi_su_va_addr),
-        .po_su_va_q(r_po_su_va_q),
+        .pi_su_va_re('0),
+        .pi_su_va_addr('0),
+        .po_su_va_q(),
         .pi_su_wrom_re(pi_su_wrom_re),
         .pi_su_wrom_addr(pi_su_wrom_addr),
         .pi_su_kv_we(pi_su_kv_we),
-        .pi_su_progress(pi_su_progress),
-        .pi_su_progress_rows(pi_su_progress_rows),
+        .pi_su_progress(rs_su_progress),
+        .pi_su_progress_rows(rs_su_progress_rows),
         .pi_su_fault(pi_su_fault),
-        .po_su_asrc_raw());
+        .po_su_asrc_raw(r_su_asrc));
     ot_qwen_tp_seq_w12 #(.N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1)) ref_seq (
         .clk(clk), .rst_n(rst_n), .start(h_start), .token(tp_token), .pos(tp_pos), .done(r_s_done),
@@ -493,19 +487,19 @@ module tb_qfd_constants_sequencer;
         .vm_rq(vm_rq), .vm_we(r_vm_we), .vm_waddr(r_vm_waddr), .vm_wdata(r_vm_wdata), .c_valid(r_c_valid),
         .c_ready(c_ready), .c_data(r_c_data), .c_last(r_c_last), .c_mode(r_c_mode), .c_tag(r_c_tag),
         .r_valid(r_valid), .r_data(r_data), .r_last(r_last), .r_rank(r_rank), .r_err(r_err));
-    wire [$bits({m_s_done, m_seq_ntok, m_seq_nval, m_s_fault, m_core_fault, m_coll_busy, m_embed_code_re, m_embed_code_addr, m_embed_scale_re, m_embed_scale_addr, m_va_re, m_va_addr, m_kv_write_flush, m_kvd_v, m_kvd_wbase, m_kvd_ts, m_kvd_ks, m_kvd_js, m_kvd_wcs, m_kvd_split, m_kvd_jsh, m_kvd_tiles, m_kvd_k, m_kvd_nout, m_kvd_kindk, m_kvd_pos, m_me_clk_en, m_vm_re, m_vm_raddr, m_vm_we, m_vm_waddr, m_vm_wdata, m_c_valid, m_c_data, m_c_last, m_c_mode, m_c_tag, m_rom_fault, m_po_me_go, m_po_me_i_nout, m_po_me_i_tiles, m_po_me_i_k, m_po_me_i_wsrc, m_po_me_i_wbase, m_po_me_i_ts, m_po_me_i_ks, m_po_me_i_js, m_po_me_i_xbase, m_po_me_i_xks, m_po_me_i_xjs, m_po_me_i_xcs, m_po_me_i_jsh, m_po_me_i_split, m_po_me_i_wcs, m_po_me_i_round, m_po_me_i_obase, m_po_me_i_ots, m_po_me_i_ojs, m_po_me_i_mmode, m_po_me_i_oen, m_po_me_i_amax, m_po_me_i_rmax, m_po_me_i_mbase, m_po_su_go, m_po_su_i_nout, m_po_su_i_nin, m_po_su_i_asrc, m_po_su_i_abase, m_po_su_i_aso, m_po_su_i_asi, m_po_su_i_bsrc, m_po_su_i_bbase, m_po_su_i_bso, m_po_su_i_bsi, m_po_su_i_csrc, m_po_su_i_cbase, m_po_su_i_cso, m_po_su_i_csi, m_po_su_i_ma, m_po_su_i_mb, m_po_su_i_ad, m_po_su_i_sfu, m_po_su_i_mc, m_po_su_i_md, m_po_su_i_dst, m_po_su_i_dbase, m_po_su_i_dso, m_po_su_i_dsi, m_po_su_i_red, m_po_su_i_redsq, m_po_su_i_rbase, m_po_su_i_rso, m_po_su_i_imm1, m_po_su_i_imm2, m_po_su_va_q})-1:0] o_m = {m_s_done, m_seq_ntok, m_seq_nval, m_s_fault, m_core_fault, m_coll_busy, m_embed_code_re, m_embed_code_addr, m_embed_scale_re, m_embed_scale_addr, m_va_re, m_va_addr, m_kv_write_flush, m_kvd_v, m_kvd_wbase, m_kvd_ts, m_kvd_ks, m_kvd_js, m_kvd_wcs, m_kvd_split, m_kvd_jsh, m_kvd_tiles, m_kvd_k, m_kvd_nout, m_kvd_kindk, m_kvd_pos, m_me_clk_en, m_vm_re, m_vm_raddr, m_vm_we, m_vm_waddr, m_vm_wdata, m_c_valid, m_c_data, m_c_last, m_c_mode, m_c_tag, m_rom_fault, m_po_me_go, m_po_me_i_nout, m_po_me_i_tiles, m_po_me_i_k, m_po_me_i_wsrc, m_po_me_i_wbase, m_po_me_i_ts, m_po_me_i_ks, m_po_me_i_js, m_po_me_i_xbase, m_po_me_i_xks, m_po_me_i_xjs, m_po_me_i_xcs, m_po_me_i_jsh, m_po_me_i_split, m_po_me_i_wcs, m_po_me_i_round, m_po_me_i_obase, m_po_me_i_ots, m_po_me_i_ojs, m_po_me_i_mmode, m_po_me_i_oen, m_po_me_i_amax, m_po_me_i_rmax, m_po_me_i_mbase, m_po_su_go, m_po_su_i_nout, m_po_su_i_nin, m_po_su_i_asrc, m_po_su_i_abase, m_po_su_i_aso, m_po_su_i_asi, m_po_su_i_bsrc, m_po_su_i_bbase, m_po_su_i_bso, m_po_su_i_bsi, m_po_su_i_csrc, m_po_su_i_cbase, m_po_su_i_cso, m_po_su_i_csi, m_po_su_i_ma, m_po_su_i_mb, m_po_su_i_ad, m_po_su_i_sfu, m_po_su_i_mc, m_po_su_i_md, m_po_su_i_dst, m_po_su_i_dbase, m_po_su_i_dso, m_po_su_i_dsi, m_po_su_i_red, m_po_su_i_redsq, m_po_su_i_rbase, m_po_su_i_rso, m_po_su_i_imm1, m_po_su_i_imm2, m_po_su_va_q};
-    wire [$bits({r_s_done, r_seq_ntok, r_seq_nval, r_s_fault, r_core_fault, r_coll_busy, r_embed_code_re, r_embed_code_addr, r_embed_scale_re, r_embed_scale_addr, r_va_re, r_va_addr, r_kv_write_flush, r_kvd_v, r_kvd_wbase, r_kvd_ts, r_kvd_ks, r_kvd_js, r_kvd_wcs, r_kvd_split, r_kvd_jsh, r_kvd_tiles, r_kvd_k, r_kvd_nout, r_kvd_kindk, r_kvd_pos, r_me_clk_en, r_vm_re, r_vm_raddr, r_vm_we, r_vm_waddr, r_vm_wdata, r_c_valid, r_c_data, r_c_last, r_c_mode, r_c_tag, r_rom_fault, r_po_me_go, r_po_me_i_nout, r_po_me_i_tiles, r_po_me_i_k, r_po_me_i_wsrc, r_po_me_i_wbase, r_po_me_i_ts, r_po_me_i_ks, r_po_me_i_js, r_po_me_i_xbase, r_po_me_i_xks, r_po_me_i_xjs, r_po_me_i_xcs, r_po_me_i_jsh, r_po_me_i_split, r_po_me_i_wcs, r_po_me_i_round, r_po_me_i_obase, r_po_me_i_ots, r_po_me_i_ojs, r_po_me_i_mmode, r_po_me_i_oen, r_po_me_i_amax, r_po_me_i_rmax, r_po_me_i_mbase, r_po_su_go, r_po_su_i_nout, r_po_su_i_nin, r_po_su_i_asrc, r_po_su_i_abase, r_po_su_i_aso, r_po_su_i_asi, r_po_su_i_bsrc, r_po_su_i_bbase, r_po_su_i_bso, r_po_su_i_bsi, r_po_su_i_csrc, r_po_su_i_cbase, r_po_su_i_cso, r_po_su_i_csi, r_po_su_i_ma, r_po_su_i_mb, r_po_su_i_ad, r_po_su_i_sfu, r_po_su_i_mc, r_po_su_i_md, r_po_su_i_dst, r_po_su_i_dbase, r_po_su_i_dso, r_po_su_i_dsi, r_po_su_i_red, r_po_su_i_redsq, r_po_su_i_rbase, r_po_su_i_rso, r_po_su_i_imm1, r_po_su_i_imm2, r_po_su_va_q})-1:0] o_r = {r_s_done, r_seq_ntok, r_seq_nval, r_s_fault, r_core_fault, r_coll_busy, r_embed_code_re, r_embed_code_addr, r_embed_scale_re, r_embed_scale_addr, r_va_re, r_va_addr, r_kv_write_flush, r_kvd_v, r_kvd_wbase, r_kvd_ts, r_kvd_ks, r_kvd_js, r_kvd_wcs, r_kvd_split, r_kvd_jsh, r_kvd_tiles, r_kvd_k, r_kvd_nout, r_kvd_kindk, r_kvd_pos, r_me_clk_en, r_vm_re, r_vm_raddr, r_vm_we, r_vm_waddr, r_vm_wdata, r_c_valid, r_c_data, r_c_last, r_c_mode, r_c_tag, r_rom_fault, r_po_me_go, r_po_me_i_nout, r_po_me_i_tiles, r_po_me_i_k, r_po_me_i_wsrc, r_po_me_i_wbase, r_po_me_i_ts, r_po_me_i_ks, r_po_me_i_js, r_po_me_i_xbase, r_po_me_i_xks, r_po_me_i_xjs, r_po_me_i_xcs, r_po_me_i_jsh, r_po_me_i_split, r_po_me_i_wcs, r_po_me_i_round, r_po_me_i_obase, r_po_me_i_ots, r_po_me_i_ojs, r_po_me_i_mmode, r_po_me_i_oen, r_po_me_i_amax, r_po_me_i_rmax, r_po_me_i_mbase, r_po_su_go, r_po_su_i_nout, r_po_su_i_nin, r_po_su_i_asrc, r_po_su_i_abase, r_po_su_i_aso, r_po_su_i_asi, r_po_su_i_bsrc, r_po_su_i_bbase, r_po_su_i_bso, r_po_su_i_bsi, r_po_su_i_csrc, r_po_su_i_cbase, r_po_su_i_cso, r_po_su_i_csi, r_po_su_i_ma, r_po_su_i_mb, r_po_su_i_ad, r_po_su_i_sfu, r_po_su_i_mc, r_po_su_i_md, r_po_su_i_dst, r_po_su_i_dbase, r_po_su_i_dso, r_po_su_i_dsi, r_po_su_i_red, r_po_su_i_redsq, r_po_su_i_rbase, r_po_su_i_rso, r_po_su_i_imm1, r_po_su_i_imm2, r_po_su_va_q};
+    wire [$bits({m_s_done, m_seq_ntok, m_seq_nval, m_s_fault, m_core_fault, m_coll_busy, m_kv_write_flush, m_kvd_v, m_kvd_wbase, m_kvd_ts, m_kvd_ks, m_kvd_js, m_kvd_wcs, m_kvd_split, m_kvd_jsh, m_kvd_tiles, m_kvd_k, m_kvd_nout, m_kvd_kindk, m_kvd_pos, m_vm_re, m_vm_raddr, m_vm_we, m_vm_waddr, m_vm_wdata, m_c_valid, m_c_data, m_c_last, m_c_mode, m_c_tag, m_rom_fault, m_su_asrc, m_su_tok, m_po_me_go, m_po_me_i_nout, m_po_me_i_tiles, m_po_me_i_k, m_po_me_i_wsrc, m_po_me_i_wbase, m_po_me_i_ts, m_po_me_i_ks, m_po_me_i_js, m_po_me_i_xbase, m_po_me_i_xks, m_po_me_i_xjs, m_po_me_i_xcs, m_po_me_i_jsh, m_po_me_i_split, m_po_me_i_wcs, m_po_me_i_round, m_po_me_i_obase, m_po_me_i_ots, m_po_me_i_ojs, m_po_me_i_mmode, m_po_me_i_oen, m_po_me_i_amax, m_po_me_i_rmax, m_po_me_i_mbase, m_po_su_go, m_po_su_i_nout, m_po_su_i_nin, m_po_su_i_asrc, m_po_su_i_abase, m_po_su_i_aso, m_po_su_i_asi, m_po_su_i_bsrc, m_po_su_i_bbase, m_po_su_i_bso, m_po_su_i_bsi, m_po_su_i_csrc, m_po_su_i_cbase, m_po_su_i_cso, m_po_su_i_csi, m_po_su_i_ma, m_po_su_i_mb, m_po_su_i_ad, m_po_su_i_sfu, m_po_su_i_mc, m_po_su_i_md, m_po_su_i_dst, m_po_su_i_dbase, m_po_su_i_dso, m_po_su_i_dsi, m_po_su_i_red, m_po_su_i_redsq, m_po_su_i_rbase, m_po_su_i_rso, m_po_su_i_imm1, m_po_su_i_imm2})-1:0] o_m = {m_s_done, m_seq_ntok, m_seq_nval, m_s_fault, m_core_fault, m_coll_busy, m_kv_write_flush, m_kvd_v, m_kvd_wbase, m_kvd_ts, m_kvd_ks, m_kvd_js, m_kvd_wcs, m_kvd_split, m_kvd_jsh, m_kvd_tiles, m_kvd_k, m_kvd_nout, m_kvd_kindk, m_kvd_pos, m_vm_re, m_vm_raddr, m_vm_we, m_vm_waddr, m_vm_wdata, m_c_valid, m_c_data, m_c_last, m_c_mode, m_c_tag, m_rom_fault, m_su_asrc, m_su_tok, m_po_me_go, m_po_me_i_nout, m_po_me_i_tiles, m_po_me_i_k, m_po_me_i_wsrc, m_po_me_i_wbase, m_po_me_i_ts, m_po_me_i_ks, m_po_me_i_js, m_po_me_i_xbase, m_po_me_i_xks, m_po_me_i_xjs, m_po_me_i_xcs, m_po_me_i_jsh, m_po_me_i_split, m_po_me_i_wcs, m_po_me_i_round, m_po_me_i_obase, m_po_me_i_ots, m_po_me_i_ojs, m_po_me_i_mmode, m_po_me_i_oen, m_po_me_i_amax, m_po_me_i_rmax, m_po_me_i_mbase, m_po_su_go, m_po_su_i_nout, m_po_su_i_nin, m_po_su_i_asrc, m_po_su_i_abase, m_po_su_i_aso, m_po_su_i_asi, m_po_su_i_bsrc, m_po_su_i_bbase, m_po_su_i_bso, m_po_su_i_bsi, m_po_su_i_csrc, m_po_su_i_cbase, m_po_su_i_cso, m_po_su_i_csi, m_po_su_i_ma, m_po_su_i_mb, m_po_su_i_ad, m_po_su_i_sfu, m_po_su_i_mc, m_po_su_i_md, m_po_su_i_dst, m_po_su_i_dbase, m_po_su_i_dso, m_po_su_i_dsi, m_po_su_i_red, m_po_su_i_redsq, m_po_su_i_rbase, m_po_su_i_rso, m_po_su_i_imm1, m_po_su_i_imm2};
+    wire [$bits({r_s_done, r_seq_ntok, r_seq_nval, r_s_fault, r_core_fault, r_coll_busy, r_kv_write_flush, r_kvd_v, r_kvd_wbase, r_kvd_ts, r_kvd_ks, r_kvd_js, r_kvd_wcs, r_kvd_split, r_kvd_jsh, r_kvd_tiles, r_kvd_k, r_kvd_nout, r_kvd_kindk, r_kvd_pos, r_vm_re, r_vm_raddr, r_vm_we, r_vm_waddr, r_vm_wdata, r_c_valid, r_c_data, r_c_last, r_c_mode, r_c_tag, r_rom_fault, r_su_asrc, r_su_tok, r_po_me_go, r_po_me_i_nout, r_po_me_i_tiles, r_po_me_i_k, r_po_me_i_wsrc, r_po_me_i_wbase, r_po_me_i_ts, r_po_me_i_ks, r_po_me_i_js, r_po_me_i_xbase, r_po_me_i_xks, r_po_me_i_xjs, r_po_me_i_xcs, r_po_me_i_jsh, r_po_me_i_split, r_po_me_i_wcs, r_po_me_i_round, r_po_me_i_obase, r_po_me_i_ots, r_po_me_i_ojs, r_po_me_i_mmode, r_po_me_i_oen, r_po_me_i_amax, r_po_me_i_rmax, r_po_me_i_mbase, r_po_su_go, r_po_su_i_nout, r_po_su_i_nin, r_po_su_i_asrc, r_po_su_i_abase, r_po_su_i_aso, r_po_su_i_asi, r_po_su_i_bsrc, r_po_su_i_bbase, r_po_su_i_bso, r_po_su_i_bsi, r_po_su_i_csrc, r_po_su_i_cbase, r_po_su_i_cso, r_po_su_i_csi, r_po_su_i_ma, r_po_su_i_mb, r_po_su_i_ad, r_po_su_i_sfu, r_po_su_i_mc, r_po_su_i_md, r_po_su_i_dst, r_po_su_i_dbase, r_po_su_i_dso, r_po_su_i_dsi, r_po_su_i_red, r_po_su_i_redsq, r_po_su_i_rbase, r_po_su_i_rso, r_po_su_i_imm1, r_po_su_i_imm2})-1:0] o_r = {r_s_done, r_seq_ntok, r_seq_nval, r_s_fault, r_core_fault, r_coll_busy, r_kv_write_flush, r_kvd_v, r_kvd_wbase, r_kvd_ts, r_kvd_ks, r_kvd_js, r_kvd_wcs, r_kvd_split, r_kvd_jsh, r_kvd_tiles, r_kvd_k, r_kvd_nout, r_kvd_kindk, r_kvd_pos, r_vm_re, r_vm_raddr, r_vm_we, r_vm_waddr, r_vm_wdata, r_c_valid, r_c_data, r_c_last, r_c_mode, r_c_tag, r_rom_fault, r_su_asrc, r_su_tok, r_po_me_go, r_po_me_i_nout, r_po_me_i_tiles, r_po_me_i_k, r_po_me_i_wsrc, r_po_me_i_wbase, r_po_me_i_ts, r_po_me_i_ks, r_po_me_i_js, r_po_me_i_xbase, r_po_me_i_xks, r_po_me_i_xjs, r_po_me_i_xcs, r_po_me_i_jsh, r_po_me_i_split, r_po_me_i_wcs, r_po_me_i_round, r_po_me_i_obase, r_po_me_i_ots, r_po_me_i_ojs, r_po_me_i_mmode, r_po_me_i_oen, r_po_me_i_amax, r_po_me_i_rmax, r_po_me_i_mbase, r_po_su_go, r_po_su_i_nout, r_po_su_i_nin, r_po_su_i_asrc, r_po_su_i_abase, r_po_su_i_aso, r_po_su_i_asi, r_po_su_i_bsrc, r_po_su_i_bbase, r_po_su_i_bso, r_po_su_i_bsi, r_po_su_i_csrc, r_po_su_i_cbase, r_po_su_i_cso, r_po_su_i_csi, r_po_su_i_ma, r_po_su_i_mb, r_po_su_i_ad, r_po_su_i_sfu, r_po_su_i_mc, r_po_su_i_md, r_po_su_i_dst, r_po_su_i_dbase, r_po_su_i_dso, r_po_su_i_dsi, r_po_su_i_red, r_po_su_i_redsq, r_po_su_i_rbase, r_po_su_i_rso, r_po_su_i_imm1, r_po_su_i_imm2};
     reg [$bits(o_r)-1:0] hist [0:L];
     integer i, k, cyc, bad, first_bad, seed, starts;
     always @(posedge clk) begin for (i = L; i > 0; i = i - 1) hist[i] <= hist[i-1]; hist[0] <= o_r; end
     wire [$bits(o_r)-1:0] o_rd = hist[L-1];
+    // the unstationed ICG enable leaves IS edges after the reference's (its inputs are IS late, no output station)
+    wire me_en_rd; integer bad_en;
+    ot_hdc_delay #(.W(1), .D(IS)) u_men (.clk(clk), .rst_n(1'b1), .d(r_me_clk_en), .q(me_en_rd));
     task rnd_inputs;
         begin
             for (k = 0; k < NW; k = k + 32) tp_token[k +: 32] = $random(seed);
             for (k = 0; k < NW; k = k + 32) tp_pos[k +: 32] = $random(seed);
-            for (k = 0; k < 512; k = k + 32) embed_code_q[k +: 32] = $random(seed);
-            embed_scale_q = $random(seed);
-            for (k = 0; k < SW*32; k = k + 32) va_q[k +: 32] = $random(seed);
             kv_write_drained = $random(seed);
             kv_ok = $random(seed);
             me_mem_ok = $random(seed);
@@ -518,10 +512,8 @@ module tb_qfd_constants_sequencer;
             r_err = $random(seed);
             pi_me_ready = $random(seed);
             pi_me_idle = $random(seed);
-            pi_me_mx_we = $random(seed);
             pi_me_wrom_re = $random(seed);
             for (k = 0; k < AW; k = k + 32) pi_me_wrom_addr[k +: 32] = $random(seed);
-            for (k = 0; k < (G >> SMIN); k = k + 32) pi_me_o_we[k +: 32] = $random(seed);
             for (k = 0; k < NW; k = k + 32) pi_me_am_idx[k +: 32] = $random(seed);
             for (k = 0; k < 32; k = k + 32) pi_me_am_val[k +: 32] = $random(seed);
             pi_me_am_any = $random(seed);
@@ -531,8 +523,6 @@ module tb_qfd_constants_sequencer;
             pi_su_rt_inflight = $random(seed);
             pi_su_ready = $random(seed);
             pi_su_idle = $random(seed);
-            for (k = 0; k < SW; k = k + 32) pi_su_va_re[k +: 32] = $random(seed);
-            for (k = 0; k < SW*AW; k = k + 32) pi_su_va_addr[k +: 32] = $random(seed);
             pi_su_wrom_re = $random(seed);
             for (k = 0; k < AW; k = k + 32) pi_su_wrom_addr[k +: 32] = $random(seed);
             for (k = 0; k < SW; k = k + 32) pi_su_kv_we[k +: 32] = $random(seed);
@@ -555,7 +545,7 @@ module tb_qfd_constants_sequencer;
         @(negedge clk); dw_v = 0;
         for (cyc = 0; cyc < CYCLES; cyc = cyc + 1) begin
             @(negedge clk);
-            if (cyc > L + 2 && o_m !== o_rd) begin bad = bad + 1; if (first_bad < 0) first_bad = cyc; end
+            if (cyc > L + 2 && (o_m !== o_rd || m_me_clk_en !== me_en_rd)) begin bad = bad + 1; if (first_bad < 0) first_bad = cyc; end
             rnd_inputs;
             h_start = (cyc % 700) == 5; if (h_start) starts = starts + 1;
         end

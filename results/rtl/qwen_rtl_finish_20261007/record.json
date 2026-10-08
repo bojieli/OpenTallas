@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.qwen-rtl-finish.v1",
+ "stream": "qwen-rtl-finish 2026-10-07",
+ "branch": "claude/qwen-rtl-finish-20261007",
+ "masters": {
+  "qfd_sp_tree_top": {
+   "rtl": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv ot_qfd_sp_tree_top",
+   "structure": "the W12 spine CONTROL element ot_qwen_me_spctl_w12 (issue loop, tags, per-level tree selects, scale requests, argmax top, slot maxima, progress, idle, fault) with IS/OS pin stations; the x read leaves as a 53-bit descriptor (x_dv, x_dc, x_dcs, x_dsp); 16 tree lanes (qfd_sp_tree_lane), 12 port elements (ot_qwen_me_spport_w12) and the VM x root are separate masters",
+   "face_bits": {"one_master_spine_r21_rtl": 248294, "tree_top": 3070},
+   "exactness": "ot_qfd_spine_part (tree top + VM x root + lanes + port elements, IS=OS=0) against ot_qwen_me_spine_h_w12, every output every cycle: local 20,000 cycles, 555 ops, 8,584 result slots, 0 mismatching cycles (pre-x_rdy build; fleet benches tt_lockstep / tt_lockstep_g192 / tt_mutant in the route jobs)",
+   "cost": "0 cycles in the partition; IS+OS on the issue loop (split controller issue shell RT); x_rdy holds a new ME op <= BMAX-2 = 6 edges after a back-to-back op",
+   "routes": ["qfd_sp_tree_top (IS=OS=1, 777.6 x 3084.48, PD 0.55)", "qfd_sp_tree_top_s2 (IS=OS=2, PD 0.45)"]
+  },
+  "qfd_sp_vector_memory": {
+   "rtl": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv ot_qfd_sp_vector_memory",
+   "structure": "64 row banks (row = 16 elements) x 2 ot_sram_1r1w_256x256 macros = 128 macros, capture flops at the macros (3-slot ring, engine-pause safe); an x tuple (S = 2^split seats at x_dc + c*d) is served as B = floor((S-1)d/1008)+1 beats of 63 consecutive rows (one per bank, conflict-free), rotated (2 stages) and shifted (1 stage), then decimated into an assembly line by a |DSET|:1 mux per entry (fixed wires per stride, DSET = {0,1,2,3,4,6,8,12,16,24,32,48,64,96}); the line is copied S-periodically to the 2,048 x seats at the fixed edge k+1+XVM (XVM = 15); held tuples (IL slot hold) are not re-read; row write (1/cycle, masked) and row read (credit, RL 3) ports",
+   "serves": "the 2,048-seat ME x read every cycle for contiguous tuples (S <= 1008: attention QK S=128, PV S=512) and for strided weight tuples held >= B edges (Qwen3-8B TP4: q/k/v/lm_head S=2048 d=2 B=5, gate/up S=256 d=16 B=5, down S=512 d=6 B=4, o S=512 d=2 B=2; IL hold 8)",
+   "not_served": "the split SU's 3 x 64 scalar fixed-latency abutted lane ports (vm_su_service gate stays open)",
+   "exactness": "tb_qfd_vector_memory against the token bench's behavioural VM semantics (every seat read at the edge after the descriptor, XVM registers, engine-gated, ELEMS-bounded): local PASS 30,000 cycles, 9,452 tuples, 3,667 row reads, engine pauses 1/8; fleet: 2 seeds, a 64-bank / 1,008-element-beat / 512-seat configuration, mutant",
+   "cost": "XVM 1 -> 15 inside the fixed BD x-network budget (x network stages 39 -> 25): 0 cycles; x_rdy gap <= 6 edges per back-to-back ME op",
+   "area_note": "~1.8 mm2 of macros + ~0.3 mm2 logic against the r21 0.725 mm2 slab (route variants 777.6 x 3110.4 and 1555.2 square)",
+   "routes": ["qfd_sp_vector_memory (777.6 x 3110.4)", "qfd_sp_vector_memory_sq (1555.2 x 1555.2)"]
+  },
+  "qfd_io_embedding_rom": {
+   "rtl": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_io_embedding_rom.sv ot_qfd_emb_root + ot_qfd_emb_tap (+ ot_qfd_io_embedding_rom assembly with protocol-faithful behavioural banks)",
+   "structure": "root at the die face: request FIFO (its depth = the die-side credits), bank decode (code word a -> bank a>>12, scale row r -> bank 2374 + r>>16), in-order issue to ONE bank at a time over 8 column chains (one request / 2 edges, <= 4 outstanding), response OR-merge; one registered tap beside every bank parent (request chain down, response chain up, 4-entry queue, bank credits)",
+   "exactness": "tb_qfd_embedding_rom against the ROM semantics: local PASS 6,000 requests (token rows of 64 code words + scale, random words, random scales), mutant FAIL",
+   "routes": ["qfd_io_emb_root (259.2 x 259.2)", "qfd_io_emb_tap (52.68 x 86.4)"]
+  },
+  "qfd_sp_su64_sfu (re-cut)": {
+   "rtl": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv ot_qfd_sp_su64_sfu_ab",
+   "structure": "control ports stationed (IS/OS), VM ports abutted (no stations), constant ROM across the spine channel answered at ML = IS + OS + CRX edges (ot_hdc_vstream_lane ML: the element tag / valid wait ML before S1; the abutted VM answers are delayed ML inside the master), the INT8 embedding decode on the SU side with a token row buffer fetched from the embedding ROM (the a_src op's go held during the fetch, reported busy)",
+   "routes": ["qfd_sp_su64_sfu_ab (IS=OS=1, sign-off 1.111 ns)", "qfd_sp_su64_sfu_ab_s2 (IS=OS=2, 0.833 ns)"],
+   "replaces": ["qfd_sp_su64_sfu-646cf264dtt", "qfd_sp_su64_sfu_s2-646cf264dtt"]
+  },
+  "qfd_sp_constants_sequencer (re-cut)": {
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv (tools/qwen_missing/emit_partition.py --committed)",
+   "structure": "issue shell (ot_qfd_issue_shell, RT) inside; me_mem_ok -> me_clk_en unstationed (ICG enable path); embedding code / scale ports and the va loop removed (su_asrc, su_tok out); engine-local VM write enables and SU-local va ports not controller pins",
+   "replaces": ["qfd_sp_constants_sequencer-646cf264dtt"]
+  }
+ },
+ "die_abstract": {
+  "recipe": "die_top_lint --qwen-recipe r21f = r21v + rtl_finish (tools/qwen_rom_fulldie_b3r2.py _rtl_finish)",
+  "lint": "results/rtl/qwen_rtl_finish_20261007/die_top_lint_r21f.json: 12,617 instances, 17,878 buses, pin_fit_errors 0, connectivity findings 0, unbound real pins 0"
+ },
+ "open": [
+  "ME result path: band result serializer + tree-top 6:1 result-row merge onto the VM row write port are not RTL (pword_* / tt_res keep their r21 path in the abstract)",
+  "tree lanes and port elements are not placed as die instances in r21f (their control rides c<b> / f<b> to the band slabs)",
+  "VM: the SU's 3 x 64 scalar fixed-latency lane ports; the 65,536-bit x seat output is the x-network root face (r21 head chains carry 323 b)",
+  "spine column re-pack for the larger VM",
+  "full Qwen ROM token bench with the banked VM: not run (the VM does not serve the SU lane ports); L0 token with the SU memory latency ML on the split partition launched instead"
+ ]
+}

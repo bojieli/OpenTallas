@@ -207,7 +207,7 @@ def _rst(w: str) -> str:
     return ", .RESET(1)" if w in ("1", "8", "16") else ""
 
 
-def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1) -> str:
+def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int = 0) -> str:
     """ot_qwen_rom_core_part: the core re-wired across the three die masters with DCU / DUC pin stations and the
     split-exact compensation.  DCU = DUC = 0 (any COMP) is cycle-identical to ot_qwen_rom_core."""
     params, port_text = header(core)
@@ -316,9 +316,17 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1) -> str:
           "        .su_va_re(u_su_va_re), .su_va_addr(u_su_va_addr), .su_va_q(u_su_va_q), .va_re(va_re), .va_addr(va_addr),",
           "        .va_q(va_q), .embed_code_re(embed_code_re), .embed_code_addr(embed_code_addr), .embed_code_q(embed_code_q),",
           "        .fault(u_su_efault));"]
+    # qwen-rtl-finish: SU_ML > 0 models the re-cut SU master (ot_qfd_sp_su64_sfu_ab): every memory answers the lanes
+    # 1 + SU_ML edges after the strobe (the far constant / weight ROM; the abutted VM's answers delayed inside the master)
+    SU_MEM = {"va_q": "SW*32", "vb_q": "SW*32", "vc_q": "SW*32", "wrom_q": "W*16", "crom_q": "SW*64"}
     su = []
     for p, ex, k, w in SU:
-        if k in ("out", "in"):
+        if su_ml and p in SU_MEM:
+            src = f"u_su_{p}" if k in ("out", "in") else ex
+            L.append(f"    wire [{SU_MEM[p]}-1:0] ml_{p};")
+            L.append(f"    ot_hdc_delay #(.W({SU_MEM[p]}), .D({su_ml})) u_ml_{p} (.clk(clk), .rst_n(rst_n), .d({src}), .q(ml_{p}));")
+            su.append(f".{p}(ml_{p})")
+        elif k in ("out", "in"):
             su.append(f".{p}(u_su_{p})")
         elif k in ("rst", "clk"):
             su.append(f".{p}({ex})")
@@ -326,7 +334,7 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1) -> str:
             su.append(f".{p}(su_kv_we)")
         else:
             su.append(f".{p}({ex})")
-    L.append("    ot_hdc_vstream_rt #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (\n        "
+    L.append(f"    ot_hdc_vstream_rt #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML({su_ml})) u_su (\n        "
              + ",\n        ".join(su) + ");")
     L.append("    assign kv_we = su_kv_we;")
     L.append("endmodule")
@@ -375,12 +383,69 @@ SEQ_OUT = [("s_done", "1"), ("seq_ntok", "NW"), ("seq_nval", "32"), ("s_fault", 
 SEQ_PARAMS = dict(G=6144, NW=18, SW=64, LV=7, D=4, ENABLE_AR256=1, QWEN_FULLSHAPE=1, SMIN=7, SMAX=11, TCUT=7)
 
 
+# qwen-rtl-finish 2026-10-07 (re-cut from the split-exact partition): the embedding decode and its code / scale reads
+# live on the stream-unit side (ot_qfd_sp_su64_sfu_ab: row buffer), so the sequencer master drops the va loop and the
+# embedding ports and sends the token and the per-op selector instead; the engine-local VM write enables (ME_LOCAL) and
+# the SU-local va loop (SU_LOCAL) are not controller pins; me_mem_ok / me_clk_en form the engine clock-gate enable path
+# (split-exact class E) and are NOT stationed; the issue shell (classes A-C) sits inside the master.
+SEQ_DROP = {"embed_code_q", "embed_scale_q", "va_q", "embed_code_re", "embed_code_addr", "embed_scale_re",
+            "embed_scale_addr", "va_re", "va_addr"}
+SEQ_UNSTN = {"me_mem_ok", "me_clk_en"}
+SEQ_EXTRA_OUT = [("su_asrc", "1"), ("su_tok", "NW")]
+
+
+def _local(u, p):
+    return (u == "me" and p in ME_LOCAL) or (u == "su" and p in SU_LOCAL)
+
+
+def _shell(u, p):
+    return (u == "me" and p in SHELL_ME) or (u == "su" and p in SHELL_SU)
+
+
 def seq_ports():
-    ins = list(SEQ_IN) + [(f"pi_{u}_{p}", w) for u, tab in (("me", ME), ("su", SU)) for p, _, k, w in tab
-                          if k in ("in", "dir_ok")]
-    outs = list(SEQ_OUT) + [(f"po_{u}_{p}", w) for u, tab in (("me", ME), ("su", SU)) for p, _, k, w in tab
-                            if k == "out" and not (u == "me" and p == "clk")]
+    ins = [x for x in SEQ_IN if x[0] not in SEQ_DROP] + \
+          [(f"pi_{u}_{p}", w) for u, tab in (("me", ME), ("su", SU)) for p, _, k, w in tab
+           if k in ("in", "dir_ok") and not _local(u, p)]
+    outs = [x for x in SEQ_OUT if x[0] not in SEQ_DROP] + SEQ_EXTRA_OUT + \
+           [(f"po_{u}_{p}", w) for u, tab in (("me", ME), ("su", SU)) for p, _, k, w in tab
+            if k == "out" and not (u == "me" and p == "clk") and not (u == "su" and p == "va_q")]
     return ins, outs
+
+
+def _shell_text(pfx, qin, rt="RT"):
+    """the controller-side issue shell (ot_qfd_split_exact.sv) and the token latch, for the master (q_) / bench (ref)"""
+    return [f"    wire {pfx}s_me_ready, {pfx}s_me_idle, {pfx}s_su_ready, {pfx}s_su_idle;",
+            f"    wire [15:0] {pfx}s_me_progress, {pfx}s_su_progress, {pfx}s_su_progress_rows;",
+            f"    wire {pfx}me_go_w, {pfx}su_go_w, {pfx}me_amax_w, {pfx}me_en_w, {pfx}es_re_w; wire [2:0] {pfx}su_sfu_w;",
+            f"    ot_qfd_issue_shell #(.RT_ME({rt}), .RT_SU({rt}), .COMP(1)) {pfx}u_shell (.clk(clk), .rst_n({pfx}rs_w),",
+            f"        .me_go({pfx}me_go_w), .su_go({pfx}su_go_w), .me_en({pfx}me_en_w), .su_sfu({pfx}su_sfu_w), .me_amax({pfx}me_amax_w),",
+            f"        .d_me_ready({qin}pi_me_ready), .d_me_idle({qin}pi_me_idle), .d_me_progress({qin}pi_me_progress),",
+            f"        .d_su_ready({qin}pi_su_ready), .d_su_idle({qin}pi_su_idle), .d_su_active({qin}pi_su_rt_active),",
+            f"        .d_su_inflight({qin}pi_su_rt_inflight), .d_su_progress({qin}pi_su_progress), .d_su_rows({qin}pi_su_progress_rows),",
+            f"        .c_me_ready({pfx}s_me_ready), .c_me_idle({pfx}s_me_idle), .c_me_progress({pfx}s_me_progress),",
+            f"        .c_su_ready({pfx}s_su_ready), .c_su_idle({pfx}s_su_idle), .c_su_progress({pfx}s_su_progress),",
+            f"        .c_su_rows({pfx}s_su_progress_rows));",
+            f"    reg [NW-1:0] {pfx}tok_l;",
+            f"    always @(posedge clk) if ({pfx}es_re_w) {pfx}tok_l <= {pfx}core_tok_w;"]
+
+
+def _unit_conns(pfx, src_pref, out_pref):
+    cc = []
+    for u, tab in (("me", ME), ("su", SU)):
+        for p, _, k, w in tab:
+            if k == "out" and not (u == "me" and p == "clk"):
+                if u == "su" and p == "va_q":
+                    cc.append(".po_su_va_q()")
+                else:
+                    cc.append(f".po_{u}_{p}({out_pref}po_{u}_{p})")
+            elif k in ("in", "dir_ok"):
+                if _local(u, p):
+                    cc.append(f".pi_{u}_{p}('0)")
+                elif _shell(u, p):
+                    cc.append(f".pi_{u}_{p}({pfx}s_{u}_{p})")
+                else:
+                    cc.append(f".pi_{u}_{p}({src_pref}pi_{u}_{p})")
+    return cc
 
 
 def emit_seq_master() -> str:
@@ -392,12 +457,16 @@ def emit_seq_master() -> str:
          "// program store (64 x 1,024 b) and segment-descriptor store (8 x 64 b) of the runtime die (configuration",
          "// flops written through pw_* / dw_*, read with the die's registered-response semantics), every port through",
          "// IS input / OS output stations (ot_hdc_delay; one-bit ports on reset lines) except po_me_clk, the engine's",
-         "// gated clock (ICG output, a clock pin of the spine master).  The constant ROM is not in this master.",
+         "// gated clock (ICG output, a clock pin of the spine master), and the ICG enable path me_mem_ok -> me_clk_en",
+         "// (split-exact class E).  qwen-rtl-finish re-cut: the issue shell (ot_qfd_issue_shell, RT) sits here; the INT8",
+         "// embedding decode and its ROM reads moved to the stream unit (su_asrc / su_tok leave instead).  The constant",
+         "// ROM is not in this master.",
          "module ot_qfd_sp_constants_sequencer #(",
          "    parameter integer W = 16, parameter integer G = %d, parameter integer AW = 24, parameter integer NW = %d," % (P["G"], P["NW"]),
          "    parameter integer PAW = 12, parameter integer SW = %d, parameter integer LV = %d, parameter integer D = %d," % (P["SW"], P["LV"], P["D"]),
          "    parameter integer SMIN = %d, parameter integer SMAX = %d, parameter integer TCUT = %d," % (P["SMIN"], P["SMAX"], P["TCUT"]),
-         "    parameter integer IS = 1, parameter integer OS = 1, parameter integer MUT = 0",
+         "    parameter integer IS = 1, parameter integer OS = 1, parameter integer MUT = 0,",
+         "    parameter integer RT = 4    // engine / unit edges from a go to post-accept status (DCU + DUC, ot_qfd_issue_shell)",
          ") (", "    input  wire clk,", "    input  wire rst_n,", "    output wire po_me_clk,"]
     L += [f"    input  wire [{w}-1:0] {n}," for n, w in ins]
     L += [f"    output wire [{w}-1:0] {n}," for n, w in outs]
@@ -409,11 +478,21 @@ def emit_seq_master() -> str:
         L.append(f"    wire [{w}-1:0] q_{n};")
         rst = ", .RESET(1)" if w == "1" else ""
         src = f"{n} ^ (MUT != 0 ? 1 : 0)" if n == "pi_me_ready" else n
-        L.append(f"    ot_hdc_delay #(.W({w}), .D(IS){rst}) u_i_{n} (.clk(clk), .rst_n(rst_n), .d({src}), .q(q_{n}));")
+        if n in SEQ_UNSTN:
+            L.append(f"    assign q_{n} = {n};   // not stationed (ICG enable path)")
+        else:
+            L.append(f"    ot_hdc_delay #(.W({w}), .D(IS){rst}) u_i_{n} (.clk(clk), .rst_n(rst_n), .d({src}), .q(q_{n}));")
     for n, w in outs:
         L.append(f"    wire [{w}-1:0] b_{n};")
         rst = ", .RESET(1)" if w == "1" else ""
-        L.append(f"    ot_hdc_delay #(.W({w}), .D(OS){rst}) u_o_{n} (.clk(clk), .rst_n(rst_n), .d(b_{n}), .q({n}));")
+        if n in SEQ_UNSTN:
+            L.append(f"    assign {n} = b_{n};   // not stationed (ICG enable path)")
+        else:
+            L.append(f"    ot_hdc_delay #(.W({w}), .D(OS){rst}) u_o_{n} (.clk(clk), .rst_n(rst_n), .d(b_{n}), .q({n}));")
+    L += ["    wire rs_w = rs; wire [NW-1:0] core_tok_w;"]
+    L += _shell_text("", "q_")
+    L += ["    assign me_go_w = b_po_me_go; assign su_go_w = b_po_su_go; assign me_amax_w = b_po_me_i_amax;",
+          "    assign su_sfu_w = b_po_su_i_sfu; assign me_en_w = b_me_clk_en; assign b_su_tok = tok_l;"]
     # program / descriptor stores (the runtime die's semantics)
     L += ["    wire core_start, core_done, core_fault_w; wire [NW-1:0] core_tok, core_pos, core_ntok; wire [31:0] core_nval;",
           "    wire prog_re; wire [11:0] prog_addr, prog_base; reg [1023:0] prog_q;",
@@ -434,15 +513,15 @@ def emit_seq_master() -> str:
             ".INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(%d), .HID(4096), .HALF(64), .HD(128), "
             ".EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), "
             ".ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT)" % P["QWEN_FULLSHAPE"])
-    cc = [".clk(clk)", ".rst_n(rs)", ".start(core_start)", ".token(core_tok)", ".pos(core_pos)", ".done(core_done)",
+    cc = [".clk(clk)", ".rst_n(rs)", ".start(core_start)", ".token(core_tok_w)", ".pos(core_pos)", ".done(core_done)",
           ".next_token(core_ntok)", ".next_val(core_nval)", ".cycles()", ".fault(core_fault_w)",
           ".prog_re(prog_re)", ".prog_addr(prog_addr)", ".prog_q(prog_q)", ".wrom_re(wrom_re_w)", ".wrom_addr()",
           ".wrom_q('0)", ".int8_wrom_re()", ".int8_wrom_addr()", ".scale_re()", ".scale_gre()", ".scale_addr()",
-          ".scale_q('0)", ".embed_code_re(b_embed_code_re)", ".embed_code_addr(b_embed_code_addr)",
-          ".embed_code_q(q_embed_code_q)", ".embed_scale_re(b_embed_scale_re)", ".embed_scale_addr(b_embed_scale_addr)",
-          ".embed_scale_q(q_embed_scale_q)", ".crom_re()", ".crom_addr()", ".crom_q('0)", ".kv_re()", ".kv_we()",
+          ".scale_q('0)", ".embed_code_re()", ".embed_code_addr()",
+          ".embed_code_q('0)", ".embed_scale_re(es_re_w)", ".embed_scale_addr()",
+          ".embed_scale_q('0)", ".crom_re()", ".crom_addr()", ".crom_q('0)", ".kv_re()", ".kv_we()",
           ".kv_waddr()", ".kv_wdata()", ".kv_write_drained(q_kv_write_drained)", ".kv_write_flush(b_kv_write_flush)",
-          ".va_re(b_va_re)", ".va_addr(b_va_addr)", ".va_q(q_va_q)", ".vb_re()", ".vb_addr()", ".vb_q('0)",
+          ".va_re()", ".va_addr()", ".va_q('0)", ".vb_re()", ".vb_addr()", ".vb_q('0)",
           ".vc_re()", ".vc_addr()", ".vc_q('0)", ".vw_me_we()", ".vw_me_addr()", ".vw_me_mask()", ".vw_me_data()",
           ".vw_su_we()", ".vw_su_addr()", ".vw_su_data()", ".vw_rd_we()", ".vw_rd_addr()", ".vw_rd_data()",
           ".vw_mx_we()", ".vw_mx_addr()", ".vw_mx_mask()", ".vw_mx_data()", ".me_ov()", ".kvd_v(b_kvd_v)"]
@@ -452,19 +531,15 @@ def emit_seq_master() -> str:
            ".wd_nout()", ".vx_re()", ".vx_addr()", ".vx_q('0)", ".tgo()", ".tb()", ".xl_d()", ".t_lvl('0)",
            ".fab_fault(1'b0)", ".w_ok(1'b1)", ".emb_ok(1'b1)", ".me_mem_ok(q_me_mem_ok)", ".me_clk_en(b_me_clk_en)",
            ".po_me_clk(po_me_clk)"]
-    for u, tab in (("me", ME), ("su", SU)):
-        for p, _, k, w in tab:
-            if k == "out" and not (u == "me" and p == "clk"):
-                cc.append(f".po_{u}_{p}(b_po_{u}_{p})")
-            elif k in ("in", "dir_ok"):
-                cc.append(f".pi_{u}_{p}(q_pi_{u}_{p})")
-    cc.append(".po_su_asrc_raw()")   # split-exact (ot_qfd_split_exact.sv): used by the SU-side embedding decode
+    cc += _unit_conns("", "q_", "b_")
+    cc.append(".po_su_asrc_raw(b_su_asrc)")   # split-exact: the SU-side embedding decode's per-op selector
     L.append(f"    ot_qwen_rom_core_ctrl #(.{cpar}) u_ctrl (\n        " + ",\n        ".join(cc) + ");")
     L += ["    ot_qwen_tp_seq_w12 #(.N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),",
           "        .QWEN_FULLSHAPE(%d), .ENABLE_AR256(%d)) u_seq (" % (P["QWEN_FULLSHAPE"], P["ENABLE_AR256"]),
           "        .clk(clk), .rst_n(rs), .start(q_h_start), .token(q_tp_token), .pos(q_tp_pos), .done(b_s_done),",
+          "        // (core_tok_w: the token the controller latches at its embedding-scale read)",
           "        .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),",
-          "        .core_start(core_start), .core_token(core_tok), .core_pos(core_pos), .core_done(core_done),",
+          "        .core_start(core_start), .core_token(core_tok_w), .core_pos(core_pos), .core_done(core_done),",
           "        .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w), .prog_base(prog_base),",
           "        .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(b_vm_re), .vm_raddr(b_vm_raddr),",
           "        .vm_rq(q_vm_rq), .vm_we(b_vm_we), .vm_waddr(b_vm_waddr), .vm_wdata(b_vm_wdata), .c_valid(b_c_valid),",
@@ -513,7 +588,7 @@ def emit_seq_tb() -> str:
          "// wired as the runtime die wires them; every output of the master must equal the reference's IS + OS cycles",
          "// earlier (4-state).  MUT = 1 inverts one input-station bit (pi_me_ready): must FAIL.",
          "module tb_qfd_constants_sequencer;",
-         "    parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3;",
+         "    parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3, RT = 4;",
          "    localparam integer W = 16, G = %d, AW = 24, NW = %d, PAW = 12, SW = %d, LV = %d, D = %d;" % (P["G"], P["NW"], P["SW"], P["LV"], P["D"]),
          "    localparam integer SMIN = %d, SMAX = %d, TCUT = %d, L = IS + OS;" % (P["SMIN"], P["SMAX"], P["TCUT"]),
          "    reg clk = 0, rst_n = 0;", "    always #0.5 clk = ~clk;"]
@@ -522,8 +597,10 @@ def emit_seq_tb() -> str:
     for n, w in outs:
         L.append(f"    wire [{w}-1:0] m_{n}, r_{n};")
     L.append("    wire m_me_clk, r_me_clk;")
-    mc = [".clk(clk)", ".rst_n(rst_n)", ".po_me_clk(m_me_clk)"] + [f".{n}({n})" for n, _ in ins] + [f".{n}(m_{n})" for n, _ in outs]
-    L.append("    ot_qfd_sp_constants_sequencer #(.IS(IS), .OS(OS), .MUT(MUT)) dut (\n        " + ",\n        ".join(mc) + ");")
+    mc = [".clk(clk)", ".rst_n(rst_n)", ".po_me_clk(m_me_clk)"] + [f".{n}({n}_m)" if n in SEQ_UNSTN else f".{n}({n})" for n, _ in ins] + [f".{n}(m_{n})" for n, _ in outs]
+    # me_mem_ok enters the master unstationed: the bench presents it IS edges late so the master stays the reference shifted
+    L += ["    wire me_mem_ok_m;", "    ot_hdc_delay #(.W(1), .D(IS)) u_mmo (.clk(clk), .rst_n(1'b1), .d(me_mem_ok), .q(me_mem_ok_m));"]
+    L.append("    ot_qfd_sp_constants_sequencer #(.IS(IS), .OS(OS), .MUT(MUT), .RT(RT)) dut (\n        " + ",\n        ".join(mc) + ");")
     # reference, wired like the runtime die
     L += ["    // ---- reference: controller + TP sequencer + stores as the runtime die wires them ----",
           "    wire core_start, core_done, core_fault_w; wire [NW-1:0] core_tok, core_pos, core_ntok; wire [31:0] core_nval;",
@@ -536,16 +613,20 @@ def emit_seq_tb() -> str:
           "        if (prog_re) prog_q <= (prog_a < 64) ? prog_mem[prog_a[5:0]] : 1024'd0;",
           "        if (desc_re) desc_q <= (desc_addr < 8) ? desc_mem[desc_addr[2:0]] : 64'd0;",
           "    end",
-          "    assign r_core_fault = core_fault_w;"]
+          "    assign r_core_fault = core_fault_w;",
+          "    wire rrs_w = rst_n; wire [NW-1:0] rcore_tok_w = core_tok;"]
+    L += _shell_text("r", "")
+    L += ["    assign rme_go_w = r_po_me_go; assign rsu_go_w = r_po_su_go; assign rme_amax_w = r_po_me_i_amax;",
+          "    assign rsu_sfu_w = r_po_su_i_sfu; assign rme_en_w = r_me_clk_en; assign r_su_tok = rtok_l;"]
     rc = [".clk(clk)", ".rst_n(rst_n)", ".start(core_start)", ".token(core_tok)", ".pos(core_pos)", ".done(core_done)",
           ".next_token(core_ntok)", ".next_val(core_nval)", ".cycles()", ".fault(core_fault_w)",
           ".prog_re(prog_re)", ".prog_addr(prog_addr)", ".prog_q(prog_q)", ".wrom_re(r_rom_fault)", ".wrom_addr()",
           ".wrom_q('0)", ".int8_wrom_re()", ".int8_wrom_addr()", ".scale_re()", ".scale_gre()", ".scale_addr()",
-          ".scale_q('0)", ".embed_code_re(r_embed_code_re)", ".embed_code_addr(r_embed_code_addr)",
-          ".embed_code_q(embed_code_q)", ".embed_scale_re(r_embed_scale_re)", ".embed_scale_addr(r_embed_scale_addr)",
-          ".embed_scale_q(embed_scale_q)", ".crom_re()", ".crom_addr()", ".crom_q('0)", ".kv_re()", ".kv_we()",
+          ".scale_q('0)", ".embed_code_re()", ".embed_code_addr()",
+          ".embed_code_q('0)", ".embed_scale_re(res_re_w)", ".embed_scale_addr()",
+          ".embed_scale_q('0)", ".crom_re()", ".crom_addr()", ".crom_q('0)", ".kv_re()", ".kv_we()",
           ".kv_waddr()", ".kv_wdata()", ".kv_write_drained(kv_write_drained)", ".kv_write_flush(r_kv_write_flush)",
-          ".va_re(r_va_re)", ".va_addr(r_va_addr)", ".va_q(va_q)", ".vb_re()", ".vb_addr()", ".vb_q('0)",
+          ".va_re()", ".va_addr()", ".va_q('0)", ".vb_re()", ".vb_addr()", ".vb_q('0)",
           ".vc_re()", ".vc_addr()", ".vc_q('0)", ".vw_me_we()", ".vw_me_addr()", ".vw_me_mask()", ".vw_me_data()",
           ".vw_su_we()", ".vw_su_addr()", ".vw_su_data()", ".vw_rd_we()", ".vw_rd_addr()", ".vw_rd_data()",
           ".vw_mx_we()", ".vw_mx_addr()", ".vw_mx_mask()", ".vw_mx_data()", ".me_ov()", ".kvd_v(r_kvd_v)"]
@@ -555,13 +636,8 @@ def emit_seq_tb() -> str:
            ".wd_nout()", ".vx_re()", ".vx_addr()", ".vx_q('0)", ".tgo()", ".tb()", ".xl_d()", ".t_lvl('0)",
            ".fab_fault(1'b0)", ".w_ok(1'b1)", ".emb_ok(1'b1)", ".me_mem_ok(me_mem_ok)", ".me_clk_en(r_me_clk_en)",
            ".po_me_clk(r_me_clk)"]
-    for u, tab in (("me", ME), ("su", SU)):
-        for p, _, k, w in tab:
-            if k == "out" and not (u == "me" and p == "clk"):
-                rc.append(f".po_{u}_{p}(r_po_{u}_{p})")
-            elif k in ("in", "dir_ok"):
-                rc.append(f".pi_{u}_{p}(pi_{u}_{p})")
-    rc.append(".po_su_asrc_raw()")
+    rc += _unit_conns("r", "", "r_")
+    rc.append(".po_su_asrc_raw(r_su_asrc)")
     cpar = ("W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), "
             ".INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(%d), .HID(4096), .HALF(64), .HD(128), "
             ".EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), "
@@ -577,12 +653,15 @@ def emit_seq_tb() -> str:
           "        .vm_rq(vm_rq), .vm_we(r_vm_we), .vm_waddr(r_vm_waddr), .vm_wdata(r_vm_wdata), .c_valid(r_c_valid),",
           "        .c_ready(c_ready), .c_data(r_c_data), .c_last(r_c_last), .c_mode(r_c_mode), .c_tag(r_c_tag),",
           "        .r_valid(r_valid), .r_data(r_data), .r_last(r_last), .r_rank(r_rank), .r_err(r_err));"]
-    m_all = "{" + ", ".join(f"m_{n}" for n, _ in outs) + "}"
-    r_all = "{" + ", ".join(f"r_{n}" for n, _ in outs) + "}"
+    m_all = "{" + ", ".join(f"m_{n}" for n, _ in outs if n not in SEQ_UNSTN) + "}"
+    r_all = "{" + ", ".join(f"r_{n}" for n, _ in outs if n not in SEQ_UNSTN) + "}"
     L += [f"    wire [$bits({m_all})-1:0] o_m = {m_all};", f"    wire [$bits({r_all})-1:0] o_r = {r_all};",
           "    reg [$bits(o_r)-1:0] hist [0:L];", "    integer i, k, cyc, bad, first_bad, seed, starts;",
           "    always @(posedge clk) begin for (i = L; i > 0; i = i - 1) hist[i] <= hist[i-1]; hist[0] <= o_r; end",
           "    wire [$bits(o_r)-1:0] o_rd = hist[L-1];",
+          "    // the unstationed ICG enable leaves IS edges after the reference's (its inputs are IS late, no output station)",
+          "    wire me_en_rd; integer bad_en;",
+          "    ot_hdc_delay #(.W(1), .D(IS)) u_men (.clk(clk), .rst_n(1'b1), .d(r_me_clk_en), .q(me_en_rd));",
           "    task rnd_inputs;", "        begin"]
     for n, w in ins:
         if n in ("pw_v", "dw_v", "h_start", "pw_addr", "pw_data", "dw_addr", "dw_data"):
@@ -604,7 +683,7 @@ def emit_seq_tb() -> str:
           "        @(negedge clk); dw_v = 0;",
           "        for (cyc = 0; cyc < CYCLES; cyc = cyc + 1) begin",
           "            @(negedge clk);",
-          "            if (cyc > L + 2 && o_m !== o_rd) begin bad = bad + 1; if (first_bad < 0) first_bad = cyc; end",
+          "            if (cyc > L + 2 && (o_m !== o_rd || m_me_clk_en !== me_en_rd)) begin bad = bad + 1; if (first_bad < 0) first_bad = cyc; end",
           "            rnd_inputs;",
           "            h_start = (cyc % 700) == 5; if (h_start) starts = starts + 1;",
           "        end",

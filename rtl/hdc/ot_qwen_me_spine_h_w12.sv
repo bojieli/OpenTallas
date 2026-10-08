@@ -271,6 +271,13 @@ module ot_qwen_me_spctl_w12 #(
     output reg  [(1<<SMAX)*AW-1:0] x_addr,
     input  wire [(1<<SMAX)*32-1:0] x_q,
     output reg  [(1<<SMAX)*32-1:0] xl0,
+    // the x read as a descriptor (qwen-rtl-finish 2026-10-07, die master qfd_sp_tree_top): x_re[c] = x_dv for every
+    // enabled port, x_addr[c] = x_dc + (c mod 2^x_dsp) * x_dcs (mod 2^AW), the x network select stage's split = x_dsp
+    // (op_split, before its 2 + XVM delay).  Equivalent to x_re / x_addr; a caller uses one or the other.
+    output reg               x_dv,
+    output reg  [AW-1:0]     x_dc,
+    output reg  [AW-1:0]     x_dcs,
+    output wire [3:0]        x_dsp,
     // tree elements: per level (index = level) the hold/sum select and the adder valid, one cycle early
     output wire [$clog2(GT):0] t_sel_e,
     output wire [$clog2(GT):0] t_tv_e,
@@ -581,6 +588,15 @@ end endgenerate
         else
             for (gi = 0; gi < NX; gi = gi + 1)
                 x_re[gi] <= (gi < NPX) && xre_en[gi];
+    end
+    //: descriptor form of the same read (registered on the same edges as x_re / x_addr)
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) x_dv <= 1'b0;
+        else x_dv <= active;
+    end
+    always @(posedge clk) begin
+        x_dc <= xc;
+        if (go_acc) x_dcs <= i_xcs;
     end
     //: x_addr = xc + c * xcs (c = port mod S): c * xcs is constant through the op, latched at the go as the
     //: carry-save pair of its shifted rows (one row per set bit b of the port number, kept when b < split)
@@ -935,6 +951,7 @@ end endgenerate
     localparam integer NXL = NX / TG;
     reg  [3:0] op_split;
     always @(posedge clk) if (go && ready) op_split <= i_split;
+    assign x_dsp = op_split;
     wire [3:0] x_split;
     ot_hdc_delay #(.W(4), .D(2 + XVM)) u_xs (.clk(clk), .rst_n(rst_n), .d(op_split), .q(x_split));
     genvar r, i;

@@ -108,10 +108,10 @@ def emit_vstream(text: str) -> str:
     """ot_hdc_vstream with every lane instance parameter-identical (LANE = 0), the lane's address offset
     LANE x stride added by the parent instead: cura0 + l*asi (same AW-bit sum), so a simulator can
     compile the lane once (Verilator hier_block).  Simulation only; algebraically the same module."""
-    old = "ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(l), .KV_FP8(KV_FP8)) u_lane ("
+    old = "ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(l), .KV_FP8(KV_FP8), .ML(ML)) u_lane ("
     if text.count(old) != 1:
         raise SystemExit("vstream lane anchor")
-    text = text.replace(old, "ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8)) u_lane (")
+    text = text.replace(old, "ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .ML(ML)) u_lane (")
     for a, st in (("cura", "asi"), ("curb", "bsi"), ("curc", "csi"), ("curd", "dsi")):
         pat = f".{a}0({a}),"
         if text.count(pat) != 1:
