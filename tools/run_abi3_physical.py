@@ -1954,9 +1954,14 @@ def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
     return kept
 
 
-def io_constraints_tcl(pin_regions: list[dict[str, str]]) -> str:
+def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = False) -> str:
     """set_io_pin_constraint per region; ports are matched by Tcl regexp on the
-    block's own terminal names, so a bus is pinned bit by bit, in order."""
+    block's own terminal names, so a bus is pinned bit by bit, in order.
+
+    exhaustive (--pin-regions-exhaustive): before any constraint, every signal
+    terminal must match EXACTLY ONE region regex, else the floorplan errors out.
+    A prefix written '^(x_|go)(\\[|$)' matches only a port named 'x_', so the
+    x_* bus went unconstrained while 'go' kept the region non-empty."""
     lines = [
         "# Written by tools/run_abi3_physical.py --pin-region.",
         "proc ot_match_pins {pattern} {",
@@ -1969,6 +1974,24 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]]) -> str:
         "  return [lsort -dictionary $names]",
         "}",
     ]
+    if exhaustive:
+        pats = " ".join("{" + r["regex"] + "}" for r in pin_regions)
+        lines += [
+            "proc ot_check_pin_regions {patterns} {",
+            "  set bad {}",
+            "  foreach bterm [[ord::get_db_block] getBTerms] {",
+            "    if {[lsearch -exact {POWER GROUND} [$bterm getSigType]] >= 0} { continue }",
+            "    set name [$bterm getName]",
+            "    set n 0",
+            "    foreach p $patterns { if {[regexp -- $p $name]} { incr n } }",
+            "    if {$n != 1} { lappend bad \"$name:$n\" }",
+            "  }",
+            "  if {[llength $bad] > 0} {",
+            "    error \"--pin-regions-exhaustive: [llength $bad] ports match no region or more than one (port:matches): [lrange $bad 0 23]\"",
+            "  }",
+            "}",
+            f"ot_check_pin_regions [list {pats}]",
+        ]
     for region in pin_regions:
         edge_region = region["edge"] + ":*"
         if "range_um" in region:
@@ -2344,7 +2367,8 @@ def run_pnr(
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
     if floorplan and floorplan.get("pin_regions"):
         (case / "io_constraints.tcl").write_text(
-            io_constraints_tcl(floorplan["pin_regions"]), encoding="utf-8"
+            io_constraints_tcl(floorplan["pin_regions"], bool(floorplan.get("pin_regions_exhaustive"))),
+            encoding="utf-8"
         )
     if floorplan and floorplan.get("step_tcl"):
         (case / "hooks").mkdir(exist_ok=True)
@@ -3238,6 +3262,10 @@ def build_parser() -> argparse.ArgumentParser:
              "within EDGE:LOW-HIGH microns along that edge; repeatable and recorded",
     )
     parser.add_argument(
+        "--pin-regions-exhaustive", action="store_true",
+        help="fail the floorplan unless every signal port matches exactly one --pin-region",
+    )
+    parser.add_argument(
         "--routing-layers", nargs=2, default=None, metavar=("MIN", "MAX"),
         help="override the platform's MIN_ROUTING_LAYER / MAX_ROUTING_LAYER",
     )
@@ -3638,6 +3666,10 @@ def _main(args: argparse.Namespace, *, argv: list[str] | None = None) -> int:
             args.die_area, args.core_area, args.pin_region, args.routing_layers,
             args.step_tcl,
         )
+        if args.pin_regions_exhaustive:
+            if not (floorplan and floorplan.get("pin_regions")):
+                raise ValueError("--pin-regions-exhaustive needs --pin-region")
+            floorplan["pin_regions_exhaustive"] = True
     except ValueError as exc:
         print(str(exc), file=sys.stderr)
         return 2

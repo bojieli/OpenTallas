@@ -21,7 +21,7 @@ export OT_MM_FF_SDC=${OT_MM_FF_SDC:-physical/qwen_die_masters/io_ref_skew.sdc}
 echo "$(date -Is) start $NAME cfg=$CFG src=$(cat SOURCE_COMMIT 2>/dev/null) stop=$STOP" >> $W/STATUS
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@]}" \
   --die-area 0 0 $FW $FH --core-area 2.16 2.16 $(python3 -c "print(round($FW-2.16,3), round($FH-2.16,3))") \
-  "${PINS[@]}" "${EXTRA[@]}" \
+  "${PINS[@]}" ${PINS:+--pin-regions-exhaustive} "${EXTRA[@]}" \
   --routing-layers ${RLAYERS:-M2 M7} --clock-port ${CLKPORT:-clk} --clock-period-ns 0.770 --clock-uncertainty-ns 0.06 \
   --clock-uncertainty-hold-ns 0.025 --orfs-corner ${CORNER:-WC} --hold-corners ${CORNER:-WC},BC --io-delay-fraction 0.2 --stages ${STAGES:-synth,pnr} \
   --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.010} --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \

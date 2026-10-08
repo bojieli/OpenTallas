@@ -106,3 +106,19 @@ def test_step_tcl_hook_is_emitted_and_hashed():
         flow.resolve_floorplan(None, None, None, None, ["PDN=tools/rom_express_link_place.tcl"])
     with pytest.raises(ValueError):
         flow.resolve_floorplan(None, None, None, None, ["POST_PDN=tools/no_such_hook.tcl"])
+
+
+def test_exhaustive_pin_regions_check_every_port():
+    fp = flow.resolve_floorplan(None, None, [r"^(clk|rst_n)$=top", r"^(go|x_\w+)(\[|$)=left"], None)
+    assert "ot_check_pin_regions" not in flow.io_constraints_tcl(fp["pin_regions"])
+    tcl = flow.io_constraints_tcl(fp["pin_regions"], exhaustive=True)
+    check = tcl.index("ot_check_pin_regions [list {^(clk|rst_n)$} {^(go|x_\\w+)(\\[|$)}]")
+    assert check < tcl.index("set_io_pin_constraint")
+    assert "if {$n != 1}" in tcl
+
+
+def test_qwen_die_master_pin_regions_cover_every_port():
+    import qwen_pin_region_lint as lint
+    bad = [r["cfg"] for r in map(lint.lint, ["qfd_sp_tree_top_b", "qfd_sp_su64_sfu_bv", "qfd_sp_res_ser_t",
+                                             "qfd_sp_vector_memory_bv", "qfd_io_emb_root"]) if not r["ok"]]
+    assert bad == []
