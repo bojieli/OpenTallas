@@ -697,6 +697,19 @@ print('hbm l20 nodes', len(l20), round(sum(x[1] for x in l20), 3))
 print(collections.Counter(x[3] for x in l20))
 
 
+# ---------------------------------------------------------------- Element stories (section 7)
+# Inputs: tools/chip_explorer_stories.py INPUTS (committed records under results/, rtl/ headers, the closure-loop
+# verdicts, and the snapshots in site/chip_explorer/inputs/stories/ + inputs/loop_attempts.json). Every number on a
+# card is a fact {v, unit, status, src}; story_facts repeats them per card so the provenance drawer lists them.
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+import chip_explorer_stories as _stories
+D['stories'] = _stories.build()
+D['story_facts'] = {c['id']: {f['k']: dict(v=f['v'], unit=f['unit'], status=f['status'], src=f['src']) for f in c['facts']} for c in D['stories']['cards']}
+(BUILD / 'data.json').write_text(json.dumps(D, separators=(',', ':')))
+print('stories', len(D['stories']['cards']), collections.Counter(c['status'] for c in D['stories']['cards']))
+
+
 def assemble():
     S = R / 'site/chip_explorer/src'
     data = (BUILD / 'data.json').read_text()
