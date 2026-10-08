@@ -65,6 +65,8 @@ class Free:
     def __init__(self, boxes, W, H, B=200.0):
         self.W, self.H, self.B = W, H, B
         self.g = defaultdict(list)
+        self.base = list(boxes)        # the hard blocks (relays added later are small and not path obstacles)
+        self._blk = None
         for b in boxes:
             self.add(b)
 
@@ -106,6 +108,65 @@ class Free:
             _, cx, cy = min(opts)
         return cx, cy
 
+    CELL = 30.0
+
+    def _blocked(self):
+        if getattr(self, '_blk', None) is None:
+            import numpy as np
+            C = self.CELL
+            nx, ny = int(self.W // C) + 1, int(self.H // C) + 1
+            blk = np.zeros((nx, ny), dtype=bool)
+            for c in self.base:
+                i0, i1 = int((c[0] - HALO) // C), int((c[2] + HALO) // C)
+                j0, j1 = int((c[1] - HALO) // C), int((c[3] + HALO) // C)
+                blk[max(i0, 0):min(i1, nx - 1) + 1, max(j0, 0):min(j1, ny - 1) + 1] = True
+            self._blk = blk
+        return self._blk
+
+    def grid_path(self, p0, p1):
+        """shortest 4-connected path p0 -> p1 through cells free of hard blocks (start / goal cells may be blocked:
+        an interior pin leaves its block by the nearest way); polyline of die points, turns only"""
+        import heapq
+        blk = self._blocked()
+        C = self.CELL
+        nx, ny = blk.shape
+        s = (min(max(int(p0[0] // C), 0), nx - 1), min(max(int(p0[1] // C), 0), ny - 1))
+        g = (min(max(int(p1[0] // C), 0), nx - 1), min(max(int(p1[1] // C), 0), ny - 1))
+        h = lambda c: abs(c[0] - g[0]) + abs(c[1] - g[1])
+        dist = {s: 0}
+        prev = {}
+        pq = [(h(s), 0, s)]
+        while pq:
+            f, d, c = heapq.heappop(pq)
+            if c == g:
+                break
+            if d > dist.get(c, 1e18):
+                continue
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                n_ = (c[0] + dx, c[1] + dy)
+                if not (0 <= n_[0] < nx and 0 <= n_[1] < ny):
+                    continue
+                # blocked cells cost 40x: leaving / entering a block (interior pins) stays possible but is the last resort
+                nd = d + (40 if blk[n_] and n_ != g else 1)
+                if nd < dist.get(n_, 1e18):
+                    dist[n_] = nd
+                    prev[n_] = c
+                    heapq.heappush(pq, (nd + h(n_), nd, n_))
+        if g not in prev and g != s:
+            return [p0, (p1[0], p0[1]), p1]
+        cells = [g]
+        while cells[-1] != s:
+            cells.append(prev[cells[-1]])
+        cells.reverse()
+        pts = [p0] + [((c[0] + 0.5) * C, (c[1] + 0.5) * C) for c in cells[1:-1]] + [p1]
+        poly = [pts[0]]
+        for k in range(1, len(pts) - 1):      # keep turn points only
+            a, b, c = poly[-1], pts[k], pts[k + 1]
+            if not ((abs(a[0] - b[0]) < 1e-6 and abs(b[0] - c[0]) < 1e-6) or (abs(a[1] - b[1]) < 1e-6 and abs(b[1] - c[1]) < 1e-6)):
+                poly.append(b)
+        poly.append(pts[-1])
+        return poly
+
     def place(self, cx, cy, w, h, gx, gy, reach=600.0):
         """lower-left of a free w x h box nearest (cx, cy) (ring search, 2.16 um steps), or None"""
         cx, cy = self.escape(cx, cy, w, h)
@@ -126,6 +187,46 @@ class Free:
         return None
 
 
+def _lpath(p0, p1, f, hfirst):
+    """point at arc fraction f along the L path p0 -> p1 (horizontal leg first or vertical first); (q, travel_h)"""
+    Lx, Ly = abs(p1[0] - p0[0]), abs(p1[1] - p0[1])
+    s = f * (Lx + Ly)
+    if hfirst:
+        if s <= Lx:
+            return (p0[0] + math.copysign(s, p1[0] - p0[0]), p0[1]), True
+        return (p1[0], p0[1] + math.copysign(s - Lx, p1[1] - p0[1])), False
+    if s <= Ly:
+        return (p0[0], p0[1] + math.copysign(s, p1[1] - p0[1])), False
+    return (p0[0] + math.copysign(s - Ly, p1[0] - p0[0]), p1[1]), True
+
+
+def stage_points(p0, p1, n_ws, d_, free, rec, pin_s=None, pin_t=None):
+    """the wire-stage points of one chain p0 -> p1, channel-following (2026-10-07): the path is a shortest Manhattan
+    path on a CELL-um grid that avoids every hard block (Free.grid_path), and the stages sit along it at equal arc
+    length, at least the budget's n_ws and as many more as keep every hop within the register reach (pin hop 359 um,
+    stage hop 412 um).  A detour around a macro is longer than the straight L the budget priced: those stages are
+    extra_wire_stages (cycles to price)."""
+    path = free.grid_path(p0, p1)
+    seg = [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(path, path[1:])]
+    L = sum(seg)
+    need = 0 if L <= REACH_INTER_UM else math.ceil((L - REACH_INTER_UM) / REACH_INTRA_UM)
+    n = max(n_ws, need)
+    if n > n_ws:
+        rec['extra_wire_stages'] = rec.get('extra_wire_stages', 0) + n - n_ws
+    rec['path_um_total'] = rec.get('path_um_total', 0.0) + L
+    out = []
+    for k in range(n):
+        t = L * (k + 1) / (n + 1)
+        acc = 0.0
+        for k2, ((a, b), sl) in enumerate(zip(zip(path, path[1:]), seg)):
+            if acc + sl >= t or k2 == len(seg) - 1:
+                f = (t - acc) / sl if sl else 0.0
+                q = (a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f)
+                out.append((q, abs(b[0] - a[0]) >= abs(b[1] - a[1]), d_, 'ws'))
+                break
+            acc += sl
+    return out
+
 def _ranges(idx):
     out, s = [], None
     for i in idx:
@@ -141,7 +242,7 @@ def _ranges(idx):
     return ','.join(out)
 
 
-def instance_relays(m, real, lef_text, H, L, wire_stages=True):
+def instance_relays(m, real, lef_text, H, L, wire_stages=True, relay_all=False):
     """rewrite m (insts, buses, stn_faces) with the relay / wire-stage instances; returns the record"""
     by = {it.name: it for it in m['insts']}
     L.CUR_M['_by'] = by
@@ -252,7 +353,7 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True):
         # r22 rule: a relay abuts a pin whose die segment is > 100 um; abutting blocks (r23 vm_cross_aligned seams, L = 0)
         #   have no segment to cut and no room between the faces
         rel = [(bid, e[0]) in rends for e in eps]
-        if n_ws == 0 and not any(rel):
+        if n_ws == 0 and not any(rel) and not relay_all:
             keep.append(bus)
             continue
         try:
@@ -285,12 +386,18 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True):
             src, dst = eps[s_], eps[t_]
             (ps, oks), (pt, okt) = pin_xy(src[0], src[1], sel), pin_xy(dst[0], dst[1], sel)
             rec['pin_fallback'] += (not oks) + (not okt)
-            if abs(ps[0] - pt[0]) + abs(ps[1] - pt[1]) <= RELAY_MIN_SEG_UM and n_ws == 0 and any(rel):
+            if relay_all:       # BRIEF 2026-10-07: a relay station at EVERY die-level pin whose segment is > ~100 um
+                d_pp = abs(ps[0] - pt[0]) + abs(ps[1] - pt[1])
+                rel_ = [d_pp > RELAY_MIN_SEG_UM] * 2
+                rec['relay_ends_added_rule'] = rec.get('relay_ends_added_rule', 0) + sum(
+                    1 for k_ in (s_, t_) if rel_[k_] and (bid, eps[k_][0]) not in rends)
+                rel = rel_
+            if abs(ps[0] - pt[0]) + abs(ps[1] - pt[1]) <= RELAY_MIN_SEG_UM and n_ws == 0 and (any(rel) or relay_all):
                 rec['relay_ends_dropped_short'] += sum(rel)
                 new_buses.append((f'{bid}_{g}0', 'x_leaf', len(sel), [(src[0], _sub(src[1], sel, bits, H, nreal(src))),
                                                                       (dst[0], _sub(dst[1], sel, bits, H, nreal(dst)))]))
                 rec['chains'].append(dict(bus=bid, dir=g, bits=len(sel), len_um=round(Lm, 1), relays=0, wire_stages=0,
-                                          regs=[], note='pin segment <= 100 um: no relay (r22 rule)'))
+                                          src=src[0], dst=dst[0], regs=[], note='pin segment <= 100 um: no relay (r22 rule)'))
                 continue
             ds_ = dom.get(src[0]) or dom.get(dst[0]) or 'stream'
             dt_ = dom.get(dst[0]) or ds_
@@ -303,17 +410,7 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True):
             p1 = (pt[0] + ut[0] * 8.0, pt[1] + ut[1] * 8.0)
             if rel[s_]:
                 pts.append((p0, fs in 'EW', ds_, 'relay'))
-            for k in range(n_ws):       # along the L path p0 -> (p1.x, p0.y) -> p1 at equal arc length
-                f = (k + 1) / (n_ws + 1)
-                Lx, Ly = abs(p1[0] - p0[0]), abs(p1[1] - p0[1])
-                s = f * (Lx + Ly)
-                if s <= Lx:
-                    q = (p0[0] + math.copysign(s, p1[0] - p0[0]), p0[1])
-                    th = True
-                else:
-                    q = (p1[0], p0[1] + math.copysign(s - Lx, p1[1] - p0[1]))
-                    th = False
-                pts.append((q, th, ds_, 'ws'))
+            pts += stage_points(p0, p1, n_ws, ds_, free, rec, ps if rel[s_] else None, pt if rel[t_] else None)
             if rel[t_]:
                 pts.append((p1, ft in 'EW', dt_, 'relay'))
             prev = None
@@ -336,8 +433,11 @@ def instance_relays(m, real, lef_text, H, L, wire_stages=True):
                 ea = (a_[0], a_[1]) if a_[1] is not None else (a_[0], 'q')
                 eb = (b2[0], b2[1]) if b2[1] is not None else (b2[0], 'd')
                 new_buses.append((f'{bid}_{g}{j}', 'x_leaf', nb, [ea, eb]))
-            rec['chains'].append(dict(bus=bid, dir=g, bits=nb, len_um=round(Lm, 1), relays=sum(rel), wire_stages=n_ws,
-                                      regs=chain))
+            xy_ = [ps] + [(by[r_].x + by[r_].w / 2, by[r_].y + by[r_].h / 2) for r_ in chain] + [pt]
+            hops = [round(abs(a_[0] - b_[0]) + abs(a_[1] - b_[1]), 1) for a_, b_ in zip(xy_, xy_[1:])]
+            rec['chains'].append(dict(bus=bid, dir=g, bits=nb, src=src[0], dst=dst[0], len_um=round(Lm, 1), relays=sum(rel),
+                                      wire_stages=sum(1 for q_ in pts if q_[3] == 'ws'), planned_wire_stages=n_ws,
+                                      regs=chain, hops_um=hops, max_hop_um=max(hops)))
     m['insts'] += new_insts
     buses = list(keep)
     adds = defaultdict(list)

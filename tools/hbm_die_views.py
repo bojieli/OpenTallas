@@ -643,10 +643,15 @@ def cmd_die(a):
         # positions from a provisional case (generated masters) and the real views' LEFs
         import hbm_die_relays as RL
         H.case_real(m, work)
-        lt = (work / 'elements.lef').read_text() + '\n'.join(Path(p_).read_text() for p_ in views.values())
+        # relay positions follow the planned pins: a MISMATCH view (interim, pins off the generator plan) keeps its
+        #   generator master's pins here, so its relays sit where the re-hardened view's pins will be
+        vchk = json.loads(Path(a.index).read_text())['masters']
+        lt = (work / 'elements.lef').read_text() + '\n'.join(Path(p_).read_text() for n_, p_ in views.items()
+                                                             if vchk[n_].get('check', {}).get('verdict') != 'MISMATCH')
         for nm_ in ('phy.lef', 'serdes.lef', 'ucie.lef'):
             lt += '\n' + (work / nm_).read_text()
-        relay_rec = RL.instance_relays(m, real, lt, H, L, wire_stages=not getattr(a, 'no_wire_stages', False))
+        relay_rec = RL.instance_relays(m, real, lt, H, L, wire_stages=not getattr(a, 'no_wire_stages', False),
+                                       relay_all=getattr(a, 'relay_all_pins', False))
         RL.relay_libs(m, work / 'hfd_rly_ss.lib', work / 'hfd_rly_ff.lib')
         (work / 'relays.json').write_text(json.dumps(relay_rec, indent=0))
         print(json.dumps({k: v for k, v in relay_rec.items() if k not in ('chains', 'unplaced', 'unplaced_detail')}))
@@ -1211,6 +1216,8 @@ def main(argv=None):
     p.add_argument('--case', choices=['real', 'grt', 'sta'], required=True)
     p.add_argument('--relays', action='store_true', help='instance the r22 pin relays + budget wire stages')
     p.add_argument('--no-wire-stages', action='store_true', help='with --relays: pin relays only')
+    p.add_argument('--relay-all-pins', action='store_true', help='with --relays: a relay at every die pin whose segment '
+                   'is > 100 um (BRIEF 2026-10-07), not only the r22 relay_ends list')
     p.add_argument('--index', default=str(ROOT / VIEWS / 'index.json'))
     p.add_argument('--k', type=int, default=16)
     p.add_argument('--iters', type=int, default=50)

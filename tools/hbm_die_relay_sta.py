@@ -38,27 +38,78 @@ def relay_clocks(case):
     return out
 
 
-def compose(case, ctx):
+LIB_TO_INS = dict(ss=110.0, ff=40.0)   # lib min ck->out minus measured insertion, mean over the 6 blocks with both
+
+
+def lib_ck_out_min(path):
+    t = Path(path).read_text()
+    v = [float(m.group(1)) for m in re.finditer(
+        r'related_pin : "ck(?:\[0\])?";\s*timing_type : rising_edge;\s*cell_rise\([^)]*\) \{\s*index_1[^;]*;\s*'
+        r'(?:index_2[^;]*;\s*)?values\("([-\d.]+)', t)]
+    return min(v) if v else None
+
+
+def view_insertion(case, master, measured):
+    """the hardened view's own clock insertion (ps per corner): the closure loop's measured CTS insertion when it has
+    one, else the view Liberty's fastest clock -> output arc less the measured lib-to-insertion offset; None when the
+    master has no view Liberty (generated placeholder: the sheet target stays)"""
+    if master in measured:
+        return {c: float(measured[master][c]['mean']) for c in ('ss', 'ff')}, 'measured (closure-loop calibrate)'
+    out = {}
+    for c in ('ss', 'ff'):
+        f = case / f'{master}_{c}.lib'
+        v = lib_ck_out_min(f) if f.exists() else None
+        if v is None:
+            return None, None
+        out[c] = round(v - LIB_TO_INS[c], 1)
+    return out, 'view Liberty min ck->out - offset'
+
+
+def compose(case, ctx, measured=None):
     xy = places(case)
     rel = relay_clocks(case)
-    sinks = dict(ctx['sinks'])
+    sinks = {k: dict(v) for k, v in ctx['sinks'].items()}
+    # the plan's sheets carry TARGET insertions ('no calibration yet'); a hardened view's actual insertion is smaller
+    #   and its Liberty arcs embed it: entry = region target - ACTUAL insertion keeps every flop at the region target
+    tgt0 = ctx['region_flop_target_ps']
+    for k, s_ in sinks.items():
+        ins, src = view_insertion(case, s_['master'], measured or {})
+        if ins:
+            t_ = tgt0[s_['region']]
+            s_['internal_ps'] = ins
+            s_['insertion_source'] = src
+            s_['entry_ps'] = {c: round(t_[n] - ins[c], 3) for n, c in enumerate(('ss', 'ff'))}
     tgt = ctx['region_flop_target_ps']
     by_dom = defaultdict(list)
     for k, s in sinks.items():
         if s['instance'] in xy:
             by_dom[s['domain']].append((xy[s['instance']], s['region']))
+    # chain-aware: the registers of a chain nearer its source take the source block's region, the rest the sink's
+    #   (the region crossing then sits on one relay-to-relay hop, as the plan's inter-region budget assumes)
+    inst_reg = {s['instance']: (s['domain'], s['region']) for s in sinks.values()}
+    want = {}
+    rj = case / 'relays.json'
+    for ch in (json.loads(rj.read_text()).get('chains', []) if rj.exists() else []):
+        regs = ch.get('regs', [])
+        for k, r_ in enumerate(regs):
+            end = ch.get('src') if k < (len(regs) + 1) // 2 else ch.get('dst')
+            if end in inst_reg:
+                want[r_] = inst_reg[end]
     added, nodom = {}, []
     for inst, d in sorted(rel.items()):
         if inst not in xy or not by_dom.get(d):
             nodom.append(inst)
             continue
         p = xy[inst]
-        _, reg = min(by_dom[d], key=lambda q: abs(q[0][0] - p[0]) + abs(q[0][1] - p[1]))
+        if inst in want and want[inst][0] == d:
+            reg = want[inst][1]
+        else:
+            _, reg = min(by_dom[d], key=lambda q: abs(q[0][0] - p[0]) + abs(q[0][1] - p[1]))
         t = tgt[reg]
         added[f'{inst}/ck'] = dict(instance=inst, port='ck', master='hfd_rly', region=reg, domain=d,
                                    internal_ps=dict(RELAY_INS),
                                    entry_ps={c: round(t[n] - RELAY_INS[c], 3) for n, c in enumerate(('ss', 'ff'))})
-    return added, nodom
+    return added, nodom, sinks
 
 
 def constraints(sinks, corner):
@@ -124,6 +175,7 @@ def main():
     ap.add_argument('--case', required=True)
     ap.add_argument('--clock-context', help='clock_context.json from tools/hbm_die_clock_context.py')
     ap.add_argument('--budgets', action='store_true')
+    ap.add_argument('--measured', help='measured_insertion.json (closure-loop calibrate) for view insertion')
     a = ap.parse_args()
     case = Path(a.case)
     if a.budgets:
@@ -132,9 +184,10 @@ def main():
         print(json.dumps({c: {k: v for k, v in x.items() if k != 'rows'} for c, x in b.items()}))
         return
     ctx = json.loads(Path(a.clock_context).read_text())
-    added, nodom = compose(case, ctx)
-    sinks = dict(ctx['sinks'], **added)
-    (case / 'relay_clock_context.json').write_text(json.dumps(dict(relay_sinks=added, relays_without_domain=nodom,
+    measured = json.loads(Path(a.measured).read_text())['blocks'] if a.measured else {}
+    added, nodom, sinks0 = compose(case, ctx, measured)
+    sinks = dict(sinks0, **added)
+    (case / 'relay_clock_context.json').write_text(json.dumps(dict(view_sinks=sinks0, relay_sinks=added, relays_without_domain=nodom,
                                                                    relay_internal_ps=RELAY_INS), indent=0))
     base = (case / 'run.tcl').read_text()
     prefix = base.partition('set_cmd_units -time ns')[0]
