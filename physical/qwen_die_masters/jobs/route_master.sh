@@ -29,7 +29,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@
   --step-tcl PRE_GLOBAL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
   --step-tcl PRE_DETAIL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_DETAIL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
   --step-tcl PRE_FILLCELL=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_FILLCELL=physical/qwen_die_masters/post_plain.tcl \
-  --orfs-var 'CTS_ARGS=-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75' \
+  --orfs-var "CTS_ARGS=${CTSA:--sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75}" \
   --orfs-var OT_IO_SKEW=90 --orfs-var OT_IO_HOLD_SKEW=50 --orfs-var "OT_REF_GLOB=$REFGLOB" \
   --orfs-var "OT_IO_INTER=$INTER" --orfs-var OT_IO_SKEW_INTER=150 "${SO[@]}" \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag qdm_$NAME \
