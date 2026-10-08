@@ -49,6 +49,7 @@ X_PRELOAD = FIX / "claude/realmem-ctx8k/gold/P8191/x_preload.hex"
 KV_HISTORY = FIX / "codex/qwen-P8191-full36-history-r1/history"
 GOLD = FIX / "claude/qwen-hbmacc-8k/gold/tp4/P8191"
 POS, TOKEN = 8191, 24
+L0_MAX_CYCLES = 9000
 # Published selection (results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json selected_parameters)
 DIE = ["-GG=6144", "-GNW=18", "-GSNW=18", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", "-GD=4", "-GSW=64", "-GLV=7",
        "-GSCALE_LOCAL=0", "-GMEM_EXTRA=1", "-GSMIN=7", "-GSMAX=11", "-GTCUT=7", "-GBD=41", "-GXVM=1", "-GNWS=5",
@@ -141,13 +142,17 @@ def read_words(p):
 
 def run(bld: Path, work: Path, mode: str, threads: int):
     work.mkdir(parents=True, exist_ok=True)
+    # The full-token host refuses anything but [E,] L0..L35, head; the L0 mode runs the full list and stops at
+    # --max-cycles once layer 0 has retired (published L0: cycles 7..6,051).
     layers = [0] if mode == "L0" else list(range(36))
     names = [f"L{n}" for n in layers] + ([] if mode == "L0" else ["head"])
     stages = work / "stages.txt"
-    stages.write_text("".join(f"{n} " + " ".join(str(IMG / f"{n}-d{d}") for d in range(4)) + " 0\n" for n in names))
+    stages.write_text("".join(f"{n} " + " ".join(str(IMG / f"{n}-d{d}") for d in range(4)) + " 0\n"
+                              for n in [f"L{n}" for n in range(36)] + ["head"]))
     out = work / "run"
     cmd = [bld / "qwen_plain_ar_stream4", "--stages", stages, out, X_PRELOAD, "--pos", POS, "--token", TOKEN,
-           "--kv-dir", KV_HISTORY, "--kv-ideal", 0, "--early-go", 1, "--posted-wb", 1]
+           "--kv-dir", KV_HISTORY, "--kv-ideal", 0, "--early-go", 1, "--posted-wb", 1,
+           *(["--max-cycles", L0_MAX_CYCLES] if mode == "L0" else [])]
     env = dict(os.environ, RT_THREADS=str(threads))
     env.pop("RT_PROGRESS", None)
     t0 = time.monotonic()
@@ -156,6 +161,8 @@ def run(bld: Path, work: Path, mode: str, threads: int):
     wall = time.monotonic() - t0
     text = (work / "runtime.log").read_text()
     stage_cycles = {m[1]: int(m[2]) for m in re.finditer(r"^STAGE (\S+) done cycles=(\d+)", text, re.M)}
+    if mode == "L0":
+        stage_cycles = {k: v for k, v in stage_cycles.items() if k == "L0"}
     faults = re.findall(r"^STAGE \S+ done .*?(seq_fault=\S+ core_fault=\S+ coll_fault=\S+)", text, re.M)
     layer_x, kv, heads, norms = {}, {}, {}, {}
     for n in layers:
@@ -179,7 +186,7 @@ def run(bld: Path, work: Path, mode: str, threads: int):
             norms[f"die{d}"] = sum(a != b for a, b in zip(got, want)) + abs(len(got) - len(want))
     done = re.search(r"QWEN_ROM_STREAM4_PLAIN_AR_FULLTOKEN DONE stages=(\d+) cycles=(\d+)", text)
     drained = re.search(r"WRITEBACK drained=(\d)", text)
-    exact = bool(p.returncode == 0 and done and list(stage_cycles) == names
+    exact = bool((mode == "L0" or (p.returncode == 0 and done)) and list(stage_cycles) == names
                  and all(v == 0 for v in layer_x.values()) and all(v == 0 for v in kv.values())
                  and all(v == 0 for v in norms.values())
                  and (mode != "full" or (len(heads) == 4 and all(v == expected for v in heads.values()))))

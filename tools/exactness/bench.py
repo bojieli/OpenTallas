@@ -25,6 +25,9 @@ TOOLS = ROOT / "tools"
 PY = sys.executable
 S = Path("/srv/opentallas-scratch")
 S2 = Path("/srv/opentallas-scratch2")
+# reduced-vehicle goldens need `tokenizers` (V4.1 Engram token map): a venv on the bench host carries it
+VENV = S / "claude/exactness/venv/bin/python"
+HPY = str(VENV) if VENV.exists() else PY
 
 
 def save(work, rec):
@@ -121,7 +124,7 @@ def hbm_ds_joint(work):
 # -- reduced-vehicle hardwired decode cores and the DSpark MTP golden/ISA ------------------------------------
 def v41_hdc(work):
     out = work / "campaign.json"
-    rc, sec = run([PY, TOOLS / "rtl_hdc_v41_decode_campaign.py", "--output", out], work, "campaign",
+    rc, sec = run([HPY, TOOLS / "rtl_hdc_v41_decode_campaign.py", "--output", out], work, "campaign",
                   env=dict(os.environ, OT_SCRATCH=str(work)))
     d = json.loads(out.read_text()) if out.exists() else {}
     e, s = d.get("end_to_end", {}), d.get("single_step", {})
@@ -132,7 +135,7 @@ def v41_hdc(work):
 
 def qwen_hdc(work):
     out = work / "campaign.json"
-    rc, sec = run([PY, TOOLS / "rtl_hdc_decode_campaign.py", "--output", out], work, "campaign")
+    rc, sec = run([HPY, TOOLS / "rtl_hdc_decode_campaign.py", "--output", out], work, "campaign")
     d = json.loads(out.read_text()) if out.exists() else {}
     e, s = d.get("end_to_end", {}), d.get("single_step", {})
     return save(work, dict(bench="qwen_reduced_hdc", exact=bool(rc == 0 and d.get("status") == "pass"),
@@ -142,7 +145,7 @@ def qwen_hdc(work):
 
 def v41_mtp(work):
     out = work / "mtp.json"
-    rc, sec = run([PY, TOOLS / "exactness/v41_mtp_isa.py", "--output", out], work, "mtp")
+    rc, sec = run([HPY, TOOLS / "exactness/v41_mtp_isa.py", "--output", out], work, "mtp")
     d = json.loads(out.read_text()) if out.exists() else {}
     return save(work, dict(bench="v41_mtp_isa", exact=bool(rc == 0 and d.get("exact")), cycles=None,
                            token=(d.get("golden") or {}).get("greedy_tokens"), runs=d.get("runs"),

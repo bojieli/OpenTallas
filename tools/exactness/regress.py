@@ -205,6 +205,14 @@ def status():
             print(f"{rec['commit']} {rec.get('label', ''):20s} {name:18s} {st:8s} {run.get('reason', '')[:100]}")
 
 
+def pending(label):
+    for p in STATE.glob("*.json"):
+        rec = json.loads(p.read_text())
+        if rec.get("label") == label and any(not r.get("logged") for r in rec["runs"].values()):
+            return True
+    return False
+
+
 def wait_for(commit, benches, poll=120):
     while True:
         rec = json.loads((STATE / f"{commit}.json").read_text())
@@ -289,9 +297,10 @@ def watch(interval=600, nightly_hour=1):
             subprocess.run(["git", "fetch", "-q", "origin"], cwd=REPO)
             head = git("rev-parse", "--short=12", "origin/main")
             prev = seen.read_text().strip() if seen.exists() else None
-            if head != prev:
+            if head != prev and not pending("main"):
+                # coalesce: while a main run is in flight, newer heads wait and the newest one is tested next
                 touched = git("diff", "--name-only", prev, head, "--", "rtl", "physical/asap7_memory_macros",
-                              "physical/hbm_accel_macros") if prev else "first"
+                              "physical/hbm_accel_macros", "tools/runtime") if prev else "first"
                 if touched:
                     launch(head, "fast", label="main")
                 seen.write_text(head)
