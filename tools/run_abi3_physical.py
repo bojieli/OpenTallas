@@ -1954,9 +1954,14 @@ def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
     return kept
 
 
-def io_constraints_tcl(pin_regions: list[dict[str, str]]) -> str:
+def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = False) -> str:
     """set_io_pin_constraint per region; ports are matched by Tcl regexp on the
-    block's own terminal names, so a bus is pinned bit by bit, in order."""
+    block's own terminal names, so a bus is pinned bit by bit, in order.
+
+    exhaustive (--pin-regions-exhaustive): before any constraint, every signal
+    terminal must match EXACTLY ONE region regex, else the floorplan errors out.
+    A prefix written '^(x_|go)(\\[|$)' matches only a port named 'x_', so the
+    x_* bus went unconstrained while 'go' kept the region non-empty."""
     lines = [
         "# Written by tools/run_abi3_physical.py --pin-region.",
         "proc ot_match_pins {pattern} {",
@@ -1969,6 +1974,24 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]]) -> str:
         "  return [lsort -dictionary $names]",
         "}",
     ]
+    if exhaustive:
+        pats = " ".join("{" + r["regex"] + "}" for r in pin_regions)
+        lines += [
+            "proc ot_check_pin_regions {patterns} {",
+            "  set bad {}",
+            "  foreach bterm [[ord::get_db_block] getBTerms] {",
+            "    if {[lsearch -exact {POWER GROUND} [$bterm getSigType]] >= 0} { continue }",
+            "    set name [$bterm getName]",
+            "    set n 0",
+            "    foreach p $patterns { if {[regexp -- $p $name]} { incr n } }",
+            "    if {$n != 1} { lappend bad \"$name:$n\" }",
+            "  }",
+            "  if {[llength $bad] > 0} {",
+            "    error \"--pin-regions-exhaustive: [llength $bad] ports match no region or more than one (port:matches): [lrange $bad 0 23]\"",
+            "  }",
+            "}",
+            f"ot_check_pin_regions [list {pats}]",
+        ]
     for region in pin_regions:
         edge_region = region["edge"] + ":*"
         if "range_um" in region:
@@ -2178,6 +2201,17 @@ def orfs_config_lines(
         config.append(f"export CORNER = {pnr['corner_env']}")
     for key, value in sorted(pnr["extra_config"].items()):
         config.append(f"export {key} = {value}")
+    if pnr["extra_config"].get("OT_MULTI_VT"):
+        # MULTI-VT (OT_MULTI_VT=lvt|lvt+slvt): synthesis maps RVT only (the platform reads ASAP7_USE_VT for the
+        # synthesis make goals, including the recursive do-yosys* ones), so the netlist ABC produces is the RVT
+        # baseline; floorplan..route load every listed VT, and repair_timing's VT swap (SKIP_VT_SWAP /
+        # SKIP_CRIT_VT_SWAP unset = on) moves only the cells it repairs to LVT/SLVT twins (same LEF footprint)
+        config.extend([
+            "ifneq ($(filter %/1_1_yosys_canonicalize.rtlil %/1_2_yosys.v do-yosys do-yosys-canonicalize,"
+            "$(MAKECMDGOALS)),)",
+            "export ASAP7_USE_VT = RVT",
+            "endif",
+        ])
     if constraints and constraints.get("slew_margin_percent") is not None:
         config.append(f"export SLEW_MARGIN = {constraints['slew_margin_percent']:g}")
     if constraints and constraints.get("hold_margin_ns") is not None:
@@ -2333,7 +2367,8 @@ def run_pnr(
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
     if floorplan and floorplan.get("pin_regions"):
         (case / "io_constraints.tcl").write_text(
-            io_constraints_tcl(floorplan["pin_regions"]), encoding="utf-8"
+            io_constraints_tcl(floorplan["pin_regions"], bool(floorplan.get("pin_regions_exhaustive"))),
+            encoding="utf-8"
         )
     if floorplan and floorplan.get("step_tcl"):
         (case / "hooks").mkdir(exist_ok=True)
@@ -2419,6 +2454,11 @@ def run_pnr(
             raise FlowError(f"ORFS produced no {st} metrics at {cts_json}")
         cts = json.loads(cts_json.read_text(encoding="utf-8"))
         errors = {k: v for k, v in cts.items() if k.endswith("__flow__errors__count")}
+        try:
+            from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair
+            errors = _ot_tol(errors, logs_dir)
+        except ImportError:
+            pass
         if any(int(v) != 0 for v in errors.values()):
             raise FlowError(f"ORFS reported flow errors: {errors}")
         fmax_info = conservative_fmax_metrics(cts, st)
@@ -2491,6 +2531,12 @@ def run_pnr(
         if key.endswith("__flow__errors__count")
     }
     metrics["flow_error_counts"] = flow_errors
+    try:
+        from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair
+        flow_errors = _ot_tol(flow_errors, logs_dir)
+        metrics["flow_error_counts_tolerated"] = flow_errors
+    except ImportError:
+        pass
     if any(int(v) != 0 for v in flow_errors.values()):
         raise FlowError(f"ORFS reported flow errors: {flow_errors}")
     if endpoint_netlist and metrics.get("sequential_cell_count", 0) < 270418:
@@ -3216,6 +3262,10 @@ def build_parser() -> argparse.ArgumentParser:
              "within EDGE:LOW-HIGH microns along that edge; repeatable and recorded",
     )
     parser.add_argument(
+        "--pin-regions-exhaustive", action="store_true",
+        help="fail the floorplan unless every signal port matches exactly one --pin-region",
+    )
+    parser.add_argument(
         "--routing-layers", nargs=2, default=None, metavar=("MIN", "MAX"),
         help="override the platform's MIN_ROUTING_LAYER / MAX_ROUTING_LAYER",
     )
@@ -3309,14 +3359,18 @@ def main(argv: list[str] | None = None, *,
          flow_timeout: int | None | object = _TIMEOUT_UNSET) -> int:
     """Run with optional, invocation-scoped timeout overrides; None is unlimited."""
     args = build_parser().parse_args(argv)
-    # OPTION B (owner 2026-10-07 20:45): setup signs off at TT.  OT_ORFS_CORNER_OVERRIDE=TC keeps every recipe's corner
-    # NAMES (WC primary, WC,BC hold; the closure loop ships its own WC-scene mm hold session into each snapshot) but
-    # makes the WC corner READ the TT liberties: WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES) and every macro's WC view =
-    # its _tt.lib (fails closed without one).  Setup repair therefore runs at TT; hold stays at BC (FF).  First version
-    # (renaming the corner to TC) died in floorplan report_metrics: STA-0102, the shipped mm session builds scene WC.
-    _ot_cov = os.environ.get("OT_ORFS_CORNER_OVERRIDE", "").strip().upper()
+    # OPTION B (owner 2026-10-07 20:45): setup signs off at TT.  OT_ORFS_CORNER_OVERRIDE=TC (alias OT_ORFS_CORNER, the
+    # closure loop's name) keeps every recipe's corner NAMES (WC primary, WC,BC hold; the loop ships its own WC-scene mm
+    # hold session into each snapshot) but makes the WC corner READ the TT liberties: WC_NLDM_LIB_FILES =
+    # $(TC_NLDM_LIB_FILES) and every macro's WC view = its _tt.lib.  Setup repair runs at TT; hold stays at BC (FF).
+    # v1 (renaming the corner to TC, 852d9b461 / c10b5fc9a) died in floorplan report_metrics: STA-0102 (hbm-blocks
+    # 4aadc92bc).
+    _ot_cov = (os.environ.get("OT_ORFS_CORNER_OVERRIDE", "") or os.environ.get("OT_ORFS_CORNER", "")).strip().upper()
     if _ot_cov == "TC":
-        ORFS_CORNER_MACRO_TAG["WC"] = "tt"
+        try:
+            ORFS_CORNER_MACRO_TAG["WC"] = "tt"
+        except NameError:
+            pass
         args.orfs_var = list(args.orfs_var or []) + ["WC_NLDM_LIB_FILES=$(TC_NLDM_LIB_FILES)"]
         print("OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)", file=sys.stderr)
     _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
@@ -3357,6 +3411,20 @@ def main(argv: list[str] | None = None, *,
             print(f"OT_ROUTE_HOLD_CORNERS={_ot_rhc}: place-and-route repair corners {args.hold_corners} -> {_ot_new} "
                   f"(FF hold: post-route hold ECO; sign-off unchanged)", file=sys.stderr)
             args.hold_corners = _ot_new
+    _ot_mvt = os.environ.get("OT_MULTI_VT", "").strip().lower()
+    if _ot_mvt:
+        # MULTI-VT (2026-10-07, opt-in): RVT netlist from synthesis, LVT (and SLVT) as repair_timing VT-swap targets
+        _ot_vts = {"lvt": "RVT LVT", "lvt+slvt": "RVT LVT SLVT"}.get(_ot_mvt)
+        if _ot_vts is None:
+            print(f"OT_MULTI_VT={_ot_mvt!r}: expected lvt or lvt+slvt", file=sys.stderr)
+            return 2
+        if args.vt is not None and args.vt.split() != _ot_vts.split():
+            print(f"OT_MULTI_VT={_ot_mvt} conflicts with --vt {args.vt!r}", file=sys.stderr)
+            return 2
+        args.vt = _ot_vts
+        args.orfs_var = list(args.orfs_var or []) + [f"OT_MULTI_VT={_ot_mvt}"]
+        print(f"OT_MULTI_VT={_ot_mvt}: ASAP7_USE_VT '{_ot_vts}' (synthesis RVT only; VT swap in repair_timing)",
+              file=sys.stderr)
     previous = {}
     try:
         for option, override, env, callback in (
@@ -3598,6 +3666,10 @@ def _main(args: argparse.Namespace, *, argv: list[str] | None = None) -> int:
             args.die_area, args.core_area, args.pin_region, args.routing_layers,
             args.step_tcl,
         )
+        if args.pin_regions_exhaustive:
+            if not (floorplan and floorplan.get("pin_regions")):
+                raise ValueError("--pin-regions-exhaustive needs --pin-region")
+            floorplan["pin_regions_exhaustive"] = True
     except ValueError as exc:
         print(str(exc), file=sys.stderr)
         return 2
