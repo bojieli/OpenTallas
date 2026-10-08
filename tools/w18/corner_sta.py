@@ -33,7 +33,16 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def script(corner: str, base: str, macros: list[str], post_sdc: list[str] = ()) -> str:
+def sdc_basename(value: str) -> str:
+    """Accept a single Tcl-safe file name within the routed result directory."""
+    if value in (".", "..") or not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.-]*", value):
+        raise argparse.ArgumentTypeError("SDC name must be a simple file basename")
+    return value
+
+
+def script(corner: str, base: str, macros: list[str], post_sdc: list[str] = (),
+           sdc_name: str = "6_final.sdc") -> str:
+    sdc_basename(sdc_name)
     libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{l}" for l in LIBS[corner])
     mlibs = "\n".join(f"read_liberty /src/{m}/{Path(m).name}_{corner}.lib" for m in macros)
     mlefs = "\n".join(f"read_lef /src/{m}/{Path(m).name}.lef" for m in macros)
@@ -46,7 +55,7 @@ read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
 {libs}
 {mlibs}
 read_db {base}/6_final.odb
-read_sdc {base}/{sdc}
+read_sdc {base}/{sdc_name}
 read_spef {base}/6_final.spef
 set_propagated_clock [all_clocks]
 {post}
@@ -62,9 +71,23 @@ set wo 1e9
 foreach p [all_outputs] {{ set s [get_property $p slack_{check}]; if {{$s ne "INF" && $s < $wo}} {{ set wo $s }} }}
 puts "OT_WS_OUT $wo"
 set pr [find_timing_paths -path_delay {check} -from [all_registers -clock_pins] -to [all_registers -data_pins] -group_path_count 1]
-if {{[llength $pr]}} {{ puts "OT_WS_R2R [get_property [lindex $pr 0] slack]" }} else {{ puts "OT_WS_R2R INF" }}
+# find_timing_paths returns one worst path PER GROUP. Select the minimum
+# across groups; index 0 can be asynchronous even when core_clk is worse.
+set ot_worst INF
+foreach ot_path $pr {{
+    set ot_slack [get_property $ot_path slack]
+    if {{$ot_worst eq "INF" || $ot_slack < $ot_worst}} {{ set ot_worst $ot_slack }}
+}}
+puts "OT_WS_R2R $ot_worst"
 set pi [find_timing_paths -path_delay {check} -from [all_inputs] -to [all_registers -data_pins] -group_path_count 1]
-if {{[llength $pi]}} {{ puts "OT_WS_I2R [get_property [lindex $pi 0] slack]" }} else {{ puts "OT_WS_I2R INF" }}
+# find_timing_paths returns one worst path PER GROUP. Select the minimum
+# across groups; index 0 can be asynchronous even when core_clk is worse.
+set ot_worst INF
+foreach ot_path $pi {{
+    set ot_slack [get_property $ot_path slack]
+    if {{$ot_worst eq "INF" || $ot_slack < $ot_worst}} {{ set ot_worst $ot_slack }}
+}}
+puts "OT_WS_I2R $ot_worst"
 exit
 """
 
@@ -76,10 +99,23 @@ def _f(v):
         return None
 
 
-def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = ()) -> dict:
+def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = (),
+        sdc_name: str = "6_final.sdc") -> dict:
+    sdc_basename(sdc_name)
     base = next((orfs / "results/asap7").glob("*/base"))
+    selected_sdc = base / sdc_name
+    if not selected_sdc.is_file():
+        raise FileNotFoundError(selected_sdc)
     rel = f"/work/{base.relative_to(orfs)}"
-    (orfs / f"w18_sta_{corner}.tcl").write_text(script(corner, rel, macros, post_sdc))
+    # Pass only non-default arguments: several sign-off wrappers replace this module's script() with a function of the
+    # older (corner, base, macros[, post_sdc]) signature (corner_sta_ref, hbm_cp_*, hbm_su_cp_side, qwen tmr signoff);
+    # passing sdc_name unconditionally made every one of them raise TypeError (corner_rc=1, "route crashed").
+    args = [corner, rel, macros]
+    if post_sdc or sdc_name != "6_final.sdc":
+        args.append(post_sdc)
+    if sdc_name != "6_final.sdc":
+        args.append(sdc_name)
+    (orfs / f"w18_sta_{corner}.tcl").write_text(script(*args))
     cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/work", "-v", f"{ROOT}:/src:ro", "openroad/orfs:asap7lock", "bash",
            "-lc", f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/w18_sta_{corner}.tcl"]
     out = subprocess.run(cmd, capture_output=True, text=True).stdout
@@ -95,7 +131,7 @@ def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = ()) ->
                 violating_d_pins=int(g("OT_VIOL_D_PINS")) if g("OT_VIOL_D_PINS") else None,
                 errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
                 odb_sha256=sha(base / "6_final.odb"), spef_sha256=sha(base / "6_final.spef"),
-                sdc_sha256=sha(base / sdc))
+                sdc_name=sdc_name, sdc_sha256=sha(selected_sdc))
 
 
 def main(argv=None):
@@ -103,14 +139,17 @@ def main(argv=None):
     ap.add_argument("--orfs-dir", type=Path, required=True)
     ap.add_argument("--macro", action="append", default=[], help="repo-relative macro view dir")
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--sdc-name", type=sdc_basename, default="6_final.sdc",
+                    help="SDC basename in routed results (default: 6_final.sdc)")
     ap.add_argument("--post-sdc", action="append", default=[],
                     help="repo-relative SDC read after the design is loaded and the clock propagated (e.g. a "
                          "-reference_pin die-context boundary); absent: unchanged behaviour")
     a = ap.parse_args(argv)
     o = a.orfs_dir.resolve()
     rec = dict(schema="opentallas.w18.corner_sta.v1", orfs_dir=str(o),
-               sdc=(next((o / "results/asap7").glob("*/base")) / "6_final.sdc").read_text()[:600],
-               setup_ss=run(o, "ss", a.macro, a.post_sdc), hold_ff=run(o, "ff", a.macro, a.post_sdc),
+               sdc=(next((o / "results/asap7").glob("*/base")) / a.sdc_name).read_text()[:600], sdc_name=a.sdc_name,
+               setup_ss=run(o, "ss", a.macro, a.post_sdc, a.sdc_name),
+               hold_ff=run(o, "ff", a.macro, a.post_sdc, a.sdc_name),
                post_sdc={p: sha(ROOT / p) for p in a.post_sdc},
                libraries=LIBS, tool_sha256=sha(Path(__file__)),
                policy="AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps")
