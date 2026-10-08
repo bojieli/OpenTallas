@@ -47,7 +47,7 @@
    "label": "EPYC2",
    "cores": 128,
    "cap": 141,
-   "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop",
+   "base": "/srv/opentallas-data/claude/closure-loop",
    "max_job_threads": 128,
    "max_job_ram_gb": 1076,
    "min_free_disk_gb": 200,
@@ -59,8 +59,10 @@
    ],
    "ram_gb": 1133,
    "disk_roots": {
-    "/": 100
-   }
+    "/": 100,
+    "/srv/opentallas-scratch2": 100
+   },
+   "note": " | 2026-10-07 23:10: new runs on the empty /srv/opentallas-data NVMe (2.9 TB); scratch2 keeps running jobs."
   },
   {
    "name": "ot-pve1",
@@ -88,7 +90,7 @@
    "base": "/srv/opentallas-scratch/claude/closure-loop",
    "max_job_threads": 64,
    "max_job_ram_gb": 118,
-   "min_free_disk_gb": 60,
+   "min_free_disk_gb": 0,
    "caps": [
     "verilator",
     "yosys",
@@ -96,10 +98,8 @@
     "orfs"
    ],
    "ram_gb": 125,
-   "disk_roots": {
-    "/": 60
-   },
-   "min_free_ram_gb": 8
+   "min_free_ram_gb": 8,
+   "note": " | OWNER 2026-10-07 23:00: disk floor removed."
   },
   {
    "name": "localhost",
@@ -114,9 +114,9 @@
     "orfs"
    ],
    "ram_gb": 188,
-   "max_loop_threads": 24,
+   "max_loop_threads": 48,
    "min_free_ram_gb": 40,
-   "note": "OWNER 2026-10-07 05:00: the coordinator host, capped so ssh stays responsive: <= 24 loop threads in total, MemAvailable >= job peak + 40 GB. ORFS only (local Verilator 4.038 / Yosys 0.9 differ from the fleet); the loop runs stages here directly (no ssh to itself). Fleet ORFS image loaded 2026-10-07 (old local latest kept as openroad/orfs:local-old-3985ce6d). RE-ENABLED 2026-10-07 07:00 after the smoke test (s81ph-dsfd_ctrl_ctr-34b3e75dd-localsmoke: calibrate -> route -> sign-off SS +307.0 / FF +8.41 / DRC 0 on localhost; ORFS image digest, yosys-0.68 and opensta binaries identical to the fleet; /srv/opentallas-scratch/admit.sh installed with a 40 GB reserve).",
+   "note": "OWNER 2026-10-07 05:00: the coordinator host, capped so ssh stays responsive: <= 24 loop threads in total, MemAvailable >= job peak + 40 GB. ORFS only (local Verilator 4.038 / Yosys 0.9 differ from the fleet); the loop runs stages here directly (no ssh to itself). Fleet ORFS image loaded 2026-10-07 (old local latest kept as openroad/orfs:local-old-3985ce6d). RE-ENABLED 2026-10-07 07:00 after the smoke test (s81ph-dsfd_ctrl_ctr-34b3e75dd-localsmoke: calibrate -> route -> sign-off SS +307.0 / FF +8.41 / DRC 0 on localhost; ORFS image digest, yosys-0.68 and opensta binaries identical to the fleet; /srv/opentallas-scratch/admit.sh installed with a 40 GB reserve). | OWNER 2026-10-07 23:00: loop threads cap 48.",
    "disk_roots": {
     "/": 150
    },
