@@ -4,9 +4,9 @@ closure flow without moving the job to a newer commit (its RTL and benches stay 
 
    tt_overlay.py <snapshot root> [--no-link-budget]        (idempotent; run in the calibrate and route commands)
 
-1. CORNER (option B): tools/run_abi3_physical.py honours OT_ORFS_CORNER (the loop exports TC for every route launched
-   from OPTB_SINCE; OT_ORFS_CORNER_OVERRIDE of claude/hbm-blocks-tt c10b5fc9a is read too) and passes OT_MM_SETUP_CORNER to the flow-hold mm session, exactly as main 852d9b461 does.  Snapshots
-   pinned before 852d9b461 ignore OT_ORFS_CORNER and silently route at WC (SS).  Each application of a corner appends
+1. CORNER (option B), v2: with OT_ORFS_CORNER=TC (loop route env) or OT_ORFS_CORNER_OVERRIDE=TC, corner WC reads the
+   TT liberties (std cells + macro _tt.lib) and keeps its NAME (hbm-blocks 4aadc92bc; a TC rename dies at floorplan with
+   STA-0102 under the loop's WC-scene mm session).  Any older rename block (main 852d9b461, c10b5fc9a, v1) is replaced.  Each application of a corner appends
    '<corner> <pid>' to $OT_TTB_CORNER_MARK so a verdict check can prove the route ran at TC.
 2. CTS FIX HOOKS (setup-triage df37bfa4e / 387a4d2ac): run_abi3_physical honours OT_CTS_FIX_HOOKS (PRE_CTS chain), and
    physical/common_flow/{cg_pushdown,clk_net_protect,link_budget_hook}.tcl + link_budget_consistent.sdc are refreshed
@@ -27,25 +27,20 @@ OVL = HERE.parent.parent                          # <overlay> root (holds physic
 
 RHC_ANCHOR = '    _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()\n'
 PARSE_ANCHOR = "    args = build_parser().parse_args(argv)\n"
-CORNER_CODE = r'''    _ot_oc = (os.environ.get("OT_ORFS_CORNER", "") or os.environ.get("OT_ORFS_CORNER_OVERRIDE", "")).strip().upper()
-    if _ot_oc:
-        # OWNER OPTION B (2026-10-07): the closure loop routes with CORNER=TC (setup repair at TT; hold at FF via mm)
-        # (tt_overlay.py: snapshot pinned before main 852d9b461)
-        if _ot_oc not in ORFS_LIB_CORNERS:
-            raise SystemExit(f"OT_ORFS_CORNER={_ot_oc}: unknown ORFS corner; known {sorted(ORFS_LIB_CORNERS)}")
-        if args.orfs_corner != _ot_oc:
-            print(f"OT_ORFS_CORNER={_ot_oc}: primary corner {args.orfs_corner} -> {_ot_oc}", file=sys.stderr)
-        if args.hold_corners:
-            args.hold_corners = ",".join(_ot_oc if c.strip() == (args.orfs_corner or "WC") else c.strip()
-                                         for c in args.hold_corners.split(","))
-        args.orfs_corner = _ot_oc
+CORNER_CODE = r'''    # TTB-CORNER-BEGIN (tt_overlay v2 = hbm-blocks 4aadc92bc semantics): OWNER OPTION B, setup repair at TT.  Keep the
+    # WC/BC corner NAMES (the loop's mm hold session builds scene WC; renaming the corner to TC died in floorplan
+    # report_metrics, STA-0102) and make corner WC READ the TT liberties: WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES), every
+    # macro's WC view = its _tt.lib.  Hold stays at BC (FF).
+    _ot_tc = (os.environ.get("OT_ORFS_CORNER", "") or os.environ.get("OT_ORFS_CORNER_OVERRIDE", "")).strip().upper()
+    if _ot_tc == "TC":
+        ORFS_CORNER_MACRO_TAG["WC"] = "tt"
+        args.orfs_var = list(args.orfs_var or []) + ["WC_NLDM_LIB_FILES=$(TC_NLDM_LIB_FILES)"]
+        print(f"OT_ORFS_CORNER=TC (tt_overlay v2): corner WC reads the TT liberties (std cells + macro _tt.lib); "
+              f"orfs corner {args.orfs_corner}, hold corners {args.hold_corners}", file=sys.stderr)
         if os.environ.get("OT_TTB_CORNER_MARK"):
             with open(os.environ["OT_TTB_CORNER_MARK"], "a") as _ot_mf:
-                _ot_mf.write(f"{_ot_oc} {os.getpid()} hold_corners={args.hold_corners}\n")
-'''
-MARK_CODE = r'''        if os.environ.get("OT_TTB_CORNER_MARK"):
-            with open(os.environ["OT_TTB_CORNER_MARK"], "a") as _ot_mf:
-                _ot_mf.write(f"{_ot_oc} {os.getpid()} hold_corners={args.hold_corners}\n")
+                _ot_mf.write(f"TC {os.getpid()} wc_reads_tt orfs_corner={args.orfs_corner} hold={args.hold_corners}\n")
+    # TTB-CORNER-END
 '''
 MAIN_CORNER_TAIL = "        args.orfs_corner = _ot_oc\n"
 MM_OLD = 'args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1"]'
@@ -95,28 +90,22 @@ COMMON = ["cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl", "lin
 
 
 def ensure_corner(s):
-    """(text, messages, ok): OT_ORFS_CORNER + OT_MM_SETUP_CORNER + the corner mark in a run_abi3_physical.py text."""
+    """(text, messages, ok): replace whatever corner code sits between parse_args and the hold-corner block (main
+    852d9b461 rename, hbm-blocks c10b5fc9a v1 rename / 4aadc92bc v2, tt_overlay v1) with the v2 WC-reads-TT block."""
     msg = []
-    if 'os.environ.get("OT_ORFS_CORNER", "")' not in s:
-        if s.count(RHC_ANCHOR) == 1:
-            s = s.replace(RHC_ANCHOR, CORNER_CODE + RHC_ANCHOR)
-        elif s.count(PARSE_ANCHOR) == 1:
-            s = s.replace(PARSE_ANCHOR, PARSE_ANCHOR + CORNER_CODE)
-        else:
-            return s, ["NO anchor for OT_ORFS_CORNER"], False
-        msg.append("OT_ORFS_CORNER added")
-    elif "OT_TTB_CORNER_MARK" not in s:
-        if s.count(MAIN_CORNER_TAIL) != 1:
-            return s, ["OT_ORFS_CORNER present but no mark anchor"], False
-        s = s.replace(MAIN_CORNER_TAIL, MAIN_CORNER_TAIL + MARK_CODE)
-        msg.append("corner mark added")
-    if MM_OLD in s:
-        s = s.replace(MM_OLD, MM_NEW)
-        msg.append("OT_MM_SETUP_CORNER added")
-    if "OT_HOLD_MM=1" in s and "OT_MM_SETUP_CORNER" not in s:
-        return s, msg + ["mm session without OT_MM_SETUP_CORNER (unknown mm form)"], False
-    if "ORFS_LIB_CORNERS = " not in s:
-        return s, msg + ["no ORFS_LIB_CORNERS (snapshot predates --orfs-corner)"], False
+    if "ORFS_CORNER_MACRO_TAG = " not in s or "ORFS_LIB_CORNERS = " not in s:
+        return s, ["snapshot predates per-corner macro views (ORFS_CORNER_MACRO_TAG)"], False
+    if s.count(PARSE_ANCHOR) != 1:
+        return s, ["NO parse_args anchor"], False
+    a = s.index(PARSE_ANCHOR) + len(PARSE_ANCHOR)
+    b = s.index(RHC_ANCHOR, a) if RHC_ANCHOR in s[a:] else a
+    seg = s[a:b]
+    if seg == CORNER_CODE:
+        return s, msg, True
+    if seg.strip() and "CORNER" not in seg:
+        return s, [f"unexpected code between parse_args and the hold-corner block ({len(seg)} chars)"], False
+    s = s[:a] + CORNER_CODE + s[b:]
+    msg.append("corner block v2 (WC reads TT)" + (" replaced a rename block" if seg.strip() else " added"))
     return s, msg, True
 
 
