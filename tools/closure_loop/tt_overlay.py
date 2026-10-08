@@ -134,8 +134,9 @@ def ensure_hooks(s, src):
 
 
 SMH_OLD = 'f"export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) {lib_ss}"'
-SMH_NEW = ('f"export WC_LIB_FILES = $(TC_NLDM_LIB_FILES) {lib_ss.replace(\'_ss.lib\', \'_tt.lib\')}"'
-           '  # tt_overlay v2: corner WC reads the TT liberties (option B)')
+SMH_NEW = 'f"export WC_LIB_FILES = $(TC_NLDM_LIB_FILES) {lib_ss.replace(\'_ss.lib\', \'_tt.lib\')}"'
+# v2 first deploy appended an inline comment that swallowed the list comma (strings concatenated -> "export" read as a lib)
+SMH_BAD = SMH_NEW + '  # tt_overlay v2: corner WC reads the TT liberties (option B)'
 
 
 SMH_CORNER_LINE = '  echo "corner_rc=$?" >> $W/status\n'
@@ -156,6 +157,7 @@ def ensure_smh(src):
     if not f.is_file() or not tc:
         return []
     s = f.read_text()
+    s = s.replace(SMH_BAD, SMH_NEW)
     if SMH_NEW not in s:
         if s.count(SMH_OLD) != 1:
             return ["SMH: WC_LIB_FILES anchor missing"]
