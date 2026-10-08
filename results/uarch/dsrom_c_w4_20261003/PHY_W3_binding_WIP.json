@@ -1,0 +1,19 @@
+{
+  "W4_owner": "Maxwell",
+  "W3_owner": "Chandra",
+  "existing_PHY_abstract": "physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30/ot_hbm3e_phy_v41x_aw30.json",
+  "sha256": "c7f1388b9b63f2564131b779e6ce24ce6cf9c5d4a6d96b5d14471d062249c101",
+  "footprint": {
+    "area_mm2": 10.00196001504,
+    "basis": "the technology.json entries of ot_hbm3e_phy (beachfront 12.0 mm, 10 mm2 per stack); results/arch/v41_die_assembly.json draws each PHY 12.0001 x 0.8335 mm",
+    "height_um": 833.49,
+    "width_um": 12000.096
+  },
+  "claim_boundary": "a placement and connection abstract for licensed IP; footprint and boundary timing are assumed, the port list is the adopted RTL's",
+  "scenario_C_freed_edge_assumption_mm_per_stack": 8.5,
+  "existing_abstract_width_mm": 12.000096,
+  "area_credit_mm2": 0,
+  "action": "Choose source-matched scan/non-scan PHY/controller/SerDes envelopes once, reconcile 8.5mm handoff versus 12.000096mm retained abstract, supply actual rectangle and pin/halo/PG corridor contract. No area credit from assumed vendor footprint; controller min_period900ps not1.2GHz-qualified.",
+  "RD4": "rejected9reuse vs4; retain qualified return cost",
+  "W7_admission": false
+}
