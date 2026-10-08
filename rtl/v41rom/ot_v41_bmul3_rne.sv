@@ -159,12 +159,13 @@ module ot_v41_bmul3_rne #(
         reg r_v, r_s, r_z, r_nf; reg signed [10:0] r_be; reg [22:0] r_f, r_sub; reg [31:0] r_gy;
         always @(posedge clk or negedge rst_n) if (!rst_n) r_v <= 1'b0; else r_v <= a_v;
         always @(posedge clk) begin
-            r_s <= a_s; r_z <= a_z; r_nf <= a_nf; r_be <= a_be; r_sub <= a_sub; r_f <= a_f;
+            r_s <= a_s; r_z <= a_z; r_nf <= a_nf; r_be <= a_be; r_sub <= a_sub;
 `ifdef BF_DEEP_MUTANT_MUL
-            r_gy <= GRADUAL_RNE != 0 ? (gy ^ {31'd0, a_g}) : 32'd0;   // negative control: guard leaks into the LSB
+            r_f <= a_f ^ 23'd1;   // negative control: product significand LSB flipped in the added encode stage
 `else
-            r_gy <= GRADUAL_RNE != 0 ? gy : 32'd0;
+            r_f <= a_f;
 `endif
+            r_gy <= GRADUAL_RNE != 0 ? gy : 32'd0;
         end
         assign k_v = r_v; assign k_s = r_s; assign k_z = r_z; assign k_nf = r_nf; assign k_be = r_be; assign k_f = r_f;
         assign k_sub = r_sub; assign k_gy = r_gy;

@@ -170,7 +170,7 @@ def main():
         muts = [('mutant_dp', ['+define+QP_MUTANT_DP']), ('mutant_recut', ['+define+W10_MUTANT_RECUT'])]
         if a.level == 3: muts.append(('mutant_u2', ['+define+W10_MUTANT_U2']))
         if a.level >= 4:   # deep full-rate BF (s81-bf): revisit window, LZC split, multiplier encode split
-            muts = [('mutant_dp', ['+define+QP_MUTANT_DP']), ('mutant_hz', ['+define+BF_DEEP_MUTANT_HZ']),
+            muts = [('mutant_dp', ['+define+QP_MUTANT_DP']), ('mutant_fwd', ['+define+CH_MUTANT_PD']),
                     ('mutant_lz', ['+define+BF_DEEP_MUTANT_LZ']), ('mutant_mul', ['+define+BF_DEEP_MUTANT_MUL'])]
     files[pair] = src.rstrip()[:-len('endmodule')] + sh.replace('@VAR@', a.variant) + '\n'
     try:
