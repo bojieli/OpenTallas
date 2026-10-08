@@ -53,12 +53,25 @@ module tb_packet_fifo_refill;
   cold();
   push=1;din=payload(991);edge_step();push=0;while(!valid)edge_step();
   if(cyc<0)$fatal(1,"");
+`ifdef II3_BASELINE
   dut.g_on.captured[3]=~dut.g_on.captured[3];#1;
+`else
+  dut.captured[3]=~dut.captured[3];#1;
+`endif
   if(fault||dout!==payload(991))$fatal(1,"single correction failed");
+`ifdef II3_BASELINE
   dut.g_on.captured[4]=~dut.g_on.captured[4];#1;
+`else
+  dut.captured[4]=~dut.captured[4];#1;
+`endif
   if(!fault||valid||ready)$fatal(1,"double error escaped");
   cold();#1;
-  dut.g_on.seal[0]=1;#1;if(!fault||ready)$fatal(1,"control seal escaped");
+`ifdef II3_BASELINE
+  dut.g_on.seal[0]=1;#1;
+`else
+  dut.seal[0]=1;#1;
+`endif
+  if(!fault||ready)$fatal(1,"control seal escaped");
   cold();
   for(i=0;i<DEPTH;i=i+1)begin push=1;din=payload(wr);edge_step();end
   @(posedge clk);#1;if(!fault||ready||valid)$fatal(1,"overflow escaped");

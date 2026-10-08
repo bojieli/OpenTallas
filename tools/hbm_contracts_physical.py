@@ -4,7 +4,6 @@
 
 Blocks:
   pkt_ii1   hfd_coll_pkt_fifo_ii1   II=1 refill collective packet SRAM queue (3 x 256x256 macros)
-  pkt_ii3   hfd_coll_pkt_fifo_ii3   the II=3 queue at the same shape (reference only)
   su_rin    hfd_su_result_ingress   SM -> SU native result edge, one SU ingress lane (64x512 macro)
   credit    hfd_coll_credit_prod    native Gray credit producer + partner credit consumer
   idle      hfd_coll_idle_tx        plesiochronous idle-insertion TX pacer
@@ -21,17 +20,13 @@ CT = 'rtl/hbm_accel/contracts_20261007/'
 M256 = 'ot_sram_1r1w_256x256_m2_r2c2'
 M64 = 'ot_sram_1r1w_64x512_m1_r2c2'
 BLOCKS = dict(
-    pkt_ii1=dict(top='hfd_coll_pkt_fifo_ii1', src=[PKG, CF + 'ot_hbm_collective_packet_fifo.sv',
-                 CF + 'ot_hbm_collective_packet_fifo_refill.sv', CT + 'hfd_coll_pkt_fifo_ii1.sv'],
-                 macros=[M256], die=(240, 240), density=.55),
-    pkt_ii3=dict(top='hfd_coll_pkt_fifo_ii3', src=[PKG, CF + 'ot_hbm_collective_packet_fifo.sv',
-                 CF + 'ot_hbm_collective_packet_fifo_refill.sv', CT + 'hfd_coll_pkt_fifo_ii1.sv'],
-                 macros=[M256], die=(240, 240), density=.55),
+    pkt_ii1=dict(top='hfd_coll_pkt_fifo_ii1', src=[PKG, CF + 'ot_hbm_collective_packet_fifo_refill.sv',
+                 CT + 'hfd_coll_pkt_fifo_ii1.sv'], macros=[M256], die=(240, 240), density=.55),
     su_rin=dict(top='hfd_su_result_ingress', src=[CT + 'ot_hbm_su_result_ingress.sv', CT + 'hfd_sm_su_edge.sv'],
                 macros=[M64], die=(230, 150), density=.55),
     credit=dict(top='hfd_coll_credit_prod', src=[CT + 'ot_hbm_coll_credit_producer.sv', CT + 'hfd_coll_credit.sv'],
                 macros=[], die=(40, 40), density=.55),
-    idle=dict(top='hfd_coll_idle_tx', src=[CT + 'ot_hbm_coll_idle_insert.sv', CT + 'hfd_coll_credit.sv'],
+    idle=dict(top='hfd_coll_idle_tx', src=[CT + 'ot_hbm_coll_idle_insert.sv', CT + 'hfd_coll_idle_tx.sv'],
               macros=[], die=(30, 30), density=.55),
 )
 

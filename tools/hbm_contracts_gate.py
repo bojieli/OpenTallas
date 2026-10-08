@@ -34,7 +34,10 @@ CT = 'rtl/hbm_accel/contracts_20261007/'
 
 PKT_SRC = [PKG, M256, CF + 'ot_hbm_collective_packet_fifo.sv', CF + 'ot_hbm_collective_packet_fifo_refill.sv']
 PKT_REFILL = CF + 'ot_hbm_collective_packet_fifo_refill.sv'
-CREDIT_SRC = [CT + 'ot_hbm_coll_credit_producer.sv']
+CREDIT_SRC = [PKG, 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv',
+              'rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv',
+              'rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc_refill.sv',
+              CT + 'ot_hbm_coll_credit_producer.sv']
 SMSU_SRC = ['rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv', M64,
             CT + 'ot_hbm_su_result_ingress.sv', CT + 'ot_hbm_sm_su_result_edge.sv']
 IDLE_SRC = [CT + 'ot_hbm_coll_idle_insert.sv']
@@ -55,10 +58,10 @@ SUITES = dict(
              expect='fail', params=dict(DEPTH=64), defines=['II3_BASELINE'], fail_regex=r'II1 drain took'),
         case('NEG_pkt_xfer_overwrites_head', 'tb_packet_fifo_refill', PKT_SRC, CF + 'tb_packet_fifo_refill.sv', r'PASS_II1 ',
              expect='fail', params=dict(DEPTH=64), fail_regex=r'DATA order mismatch|COUNT mismatch',
-             mutate=(PKT_REFILL, 'wire xfer=c.pending&&(!c.held||take)&&!fault;', 'wire xfer=c.pending&&!fault;')),
+             mutate=(PKT_REFILL, 'wire xfer=c_pending&&(!c_held||take)&&!fault;', 'wire xfer=c_pending&&!fault;')),
         case('NEG_pkt_fetch_overwrites_latch', 'tb_packet_fifo_refill', PKT_SRC, CF + 'tb_packet_fifo_refill.sv', r'PASS_II1 ',
              expect='fail', params=dict(DEPTH=64), fail_regex=r'DATA order mismatch|COUNT mismatch',
-             mutate=(PKT_REFILL, 'wire fetch=c.unread!=0&&(!c.pending||xfer)&&!fault;', 'wire fetch=c.unread!=0&&!fault;')),
+             mutate=(PKT_REFILL, 'wire fetch=c_unread!=0&&(!c_pending||xfer)&&!fault;', 'wire fetch=c_unread!=0&&!fault;')),
     ],
     credit=[
         case('credit_positive', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT '),
@@ -67,19 +70,23 @@ SUITES = dict(
         case('NEG_credit_preload_partner', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
              expect='fail', defines=['NEG_PRELOAD'], fail_regex=r'CREDIT_(OVERFLOW|LOSS)'),
         case('NEG_credit_binary_counter', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
-             expect='fail', fail_regex=r'CREDIT_GRAY|CREDIT_OVERGRANT|CREDIT_OVERFLOW',
-             mutate=(CT + 'ot_hbm_coll_credit_producer.sv', 'assign k_gray_d=k_bin_n^(k_bin_n>>1);', 'assign k_gray_d=k_bin_n;')),
+             expect='fail', fail_regex=r'CREDIT_K_BACKWARDS|CREDIT_OVERGRANT|CREDIT_OVERFLOW|CREDIT_ORDER',
+             mutate=[(CT + 'ot_hbm_coll_credit_producer.sv', 'assign k_gray_d=k_bin_n^(k_bin_n>>1);', 'assign k_gray_d=k_bin_n;'),
+                     (CT + 'ot_hbm_coll_credit_producer.sv', 'always @*begin kb[CW-1]=kg[CW-1];for(j=CW-2;j>=0;j=j-1)kb[j]=kb[j+1]^kg[j];end',
+                      'always @*kb=kg;')]),
         case('NEG_credit_early_ready', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
              expect='fail', fail_regex=r'CREDIT_READY_EARLY|CREDIT_OVERFLOW|CREDIT_LOSS',
-             mutate=(CT + 'ot_hbm_coll_credit_producer.sv', 'wire both_released=phy_rel_s[SYNC-1]&&core_live;',
+             mutate=(CT + 'ot_hbm_coll_credit_producer.sv', 'wire both_released=phy_rel_q[0]&&core_live;',
                      'wire both_released=core_live;')),
         case('NEG_credit_width8', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
              expect='fail', params=dict(CW=8), fail_regex=r'CREDIT_WIDTH|width'),
         case('NEG_credit_tx_gate_occupancy_only', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
              expect='fail', fail_regex=r'TX_FLIGHT_OVERFLOW',
              mutate=(CT + 'ot_hbm_coll_credit_producer.sv', 'wire [DW-1:0] inflight=issued-popped_s;', 'wire [DW-1:0] inflight=cdc_occ;')),
+        case('NEG_credit_C_below_loop', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
+             expect='fail', params=dict(C=192), fail_regex=r'CREDIT_RATE'),
         case('NEG_credit_dtx_below_bound', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
-             expect='fail', params=dict(DTX=24), fail_regex=r'D_tx|DTX'),
+             expect='fail', params=dict(DTX_MIN=24), fail_regex=r'D_tx|DTX'),
     ],
     smsu=[
         case('smsu_edge_positive', 'tb_sm_su_result_edge', SMSU_SRC, CT + 'tb_sm_su_result_edge.sv', r'PASS_SMSU '),
@@ -121,15 +128,18 @@ def run_case(c, out: Path, sim: str, jobs: int):
     d = out / c['name']
     d.mkdir(parents=True)
     srcs = []
+    muts = c['mutate'] if isinstance(c['mutate'], list) else ([c['mutate']] if c['mutate'] else [])
     for s in c['src']:
         p = ROOT / s
-        if c['mutate'] and s == c['mutate'][0]:
+        mine = [m for m in muts if m[0] == s]
+        if mine:
             text = p.read_text()
-            old, new = c['mutate'][1], c['mutate'][2]
-            if text.count(old) != 1:
-                return dict(c, verdict='ERROR', why=f'mutation anchor not unique in {s}')
+            for _, old, new in mine:
+                if text.count(old) != 1:
+                    return dict(name=c['name'], expect=c['expect'], verdict='ERROR', why=f'mutation anchor not unique in {s}')
+                text = text.replace(old, new)
             p = d / ('mutant_' + Path(s).name)
-            p.write_text(text.replace(old, new))
+            p.write_text(text)
         srcs.append(str(p))
     if sim == 'verilator':
         build = ['verilator', '--binary', '--timing', '-j', str(jobs), '-Wno-fatal', '-Wno-lint', '-Wno-style',

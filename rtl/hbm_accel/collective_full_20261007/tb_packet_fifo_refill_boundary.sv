@@ -9,13 +9,13 @@ module tb_packet_fifo_refill_boundary;
  integer simultaneous=0;
  ot_hbm_collective_packet_fifo_refill #(.ENABLE(1),.DEPTH(64)) dut(.*);
  always @(posedge clk)if(rst_n)begin
-  if(dut.g_on.put&&dut.g_on.fetch)begin
+  if(dut.put&&dut.fetch)begin
    simultaneous=simultaneous+1;
-   if(dut.g_on.c.wp==dut.g_on.c.rp)$fatal(1,"same-address access escaped");
+   if(dut.c_wp==dut.c_rp)$fatal(1,"same-address access escaped");
   end
-  if(dut.g_on.fetch&&dut.g_on.c.pending&&!dut.g_on.xfer)$fatal(1,"read latch overwritten");
-  if(dut.g_on.c.pending&&count==0)$fatal(1,"pending falsely quiet");
-  if(dut.g_on.c.held&&count==0)$fatal(1,"held falsely quiet");
+  if(dut.fetch&&dut.c_pending&&!dut.xfer)$fatal(1,"read latch overwritten");
+  if(dut.c_pending&&count==0)$fatal(1,"pending falsely quiet");
+  if(dut.c_held&&count==0)$fatal(1,"held falsely quiet");
  end
  initial begin
   repeat(3)@(negedge clk);rst_n=1;pop=1;
