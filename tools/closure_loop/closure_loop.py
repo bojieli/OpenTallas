@@ -565,15 +565,9 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         if info is None:
             return False, f"{cfg['label']} unreachable"
         pt, pr = self.own_pending(host)
-        # load1 lags a route's ramp (synth is ~1 core, GRT/DRT use all NUM_CORES): count this loop's running stages at
-        # their declared threads, whichever is larger (EPYC3 reached 342/128 with 27 loop jobs admitted on load1 alone)
-        # OWNER 2026-10-07 19:31 (no oversubscription): cap = ~1.1 x nproc (hosts.json).  Load = measured load1 + the
-        # declared threads of this loop's launches of the last 10 min (pt below: not ramped yet).  Declared threads of
-        # long-running stages are NOT counted (20:05: they overstate real use 2-3x -- synth/GPL/DPL/STA are serial -- and
-        # starved the fleet at 38-58 % idle).
-        eff = info["load1"]
-        if eff + pt + threads > cfg["cap"]:
-            return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
+        # OWNER DECISION (2026-10-07 20:10, supersedes the 19:31 1.1 x nproc cap): MEMORY is the only admission limit on
+        # the remote hosts -- CPU oversubscription is allowed (jobs wait on reads / run serial phases).  localhost keeps
+        # its own guard below (max_loop_threads, min_free_ram_gb) so it stays responsive.
         res = cfg.get("reserve_ram_gb", 0)
         head = max(0.05 * cfg.get("ram_gb", 1133), cfg.get("min_free_ram_gb", RAM_HEADROOM_GB))  # OWNER 21:35 10%; OWNER 10-07 08:05 "fill the hosts": 5%
         if cfg.get("max_loop_threads") is not None:      # localhost: loop jobs in total, so ssh stays responsive
