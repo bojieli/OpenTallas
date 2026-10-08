@@ -11,7 +11,11 @@ the kit's die.v / clocks / latency and swaps views in place:
     clock pins (interim convention) is subtracted again (the tile ETM arcs carry the tiles' insertion);
   * kit.json / index.json updated (schema of die_sta.py --index-out).
 
-  kit_swap_views.py --kit OLD_KIT --views-root SRC --out NEW_KIT [--index-out index.json]
+  * --rebalance (s81-die-timing 2026-10-08): rewrite the pin latencies to the balanced die tree of die_sta.py
+    (balance_latency: every flop at its planned arrival; closed / assembled views' in-arc insertion subtracted, the
+    interim routed-insertion add of sta_v2/v3 undone) and the die hold uncertainty 75 -> 50 (rule H1).
+
+  kit_swap_views.py --kit OLD_KIT --views-root SRC --out NEW_KIT [--index-out index.json] [--rebalance --measured J]
 """
 import argparse
 import json
@@ -38,12 +42,46 @@ def drop_cells(lib, cells):
     return ''.join(out)
 
 
+def rebalance(a, K, vr):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from die_sta import balance_latency, measured_insertion, closed_libs
+    pm = {m.group(2).lstrip('\\'): m.group(1) for m in
+          re.finditer(r'^\s*(\w+)\s+(\\?\S+)\s*\(', (a.out / 'die.v').read_text(), re.M)}
+    rows, lat = {}, {}
+    for c, ci in CORNERS.items():
+        for ln in (a.out / f'latency_{c}.tcl').read_text().splitlines():
+            m = re.match(r'set_clock_latency ([-\d.]+) \[get_pins -quiet \{(\S+) ', ln)
+            if m:
+                k_ = m.group(2)
+                rows[k_] = ln
+                lat.setdefault(k_, [0.0, 0.0, 0.0])[ci] = float(m.group(1))
+    pin_master = {k_: pm[k_.split('/')[0]] for k_ in lat}
+    for k_, v in lat.items():         # undo the interim routed-insertion add (planned arrival back)
+        add = K['masters'].get(pin_master[k_], {}).get('insertion_added_ps')
+        if add:
+            lat[k_] = [v[i] - add[i] for i in range(3)]
+    mi = measured_insertion(a.measured or vr / 'results/rtl/budgets_20261006/measured_insertion.json')
+    libs = dict(ss={m_: (vr / r['libs']['ss'].split(' ')[0], r['view']) for m_, r in K['masters'].items()
+                    if r.get('libs', {}).get('ss')})
+    K['routed_insertion'] = dict(K.get('routed_insertion') or {}, **balance_latency(lat, pin_master, K['masters'], mi, libs))
+    for c, ci in CORNERS.items():
+        (a.out / f'latency_{c}.tcl').write_text(''.join(
+            f'set_clock_latency {v[ci]:.1f} [get_pins -quiet {{{k_} {k_}[0]}}]\n' for k_, v in sorted(lat.items())))
+        t = (a.out / f'sta_{c}.tcl').read_text().replace('set_clock_uncertainty -hold 75.0 ', 'set_clock_uncertainty -hold 50.0 ')
+        (a.out / f'sta_{c}.tcl').write_text(t)
+    K['hold_uncertainty_ps'] = 50.0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--kit', type=Path, required=True)
     ap.add_argument('--views-root', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--index-out', type=Path)
+    ap.add_argument('--rebalance', action='store_true')
+    ap.add_argument('--measured', type=Path, help='measured_insertion.json (default: <views-root>/results/rtl/'
+                    'budgets_20261006/measured_insertion.json)')
     a = ap.parse_args()
     if a.out.exists():
         shutil.rmtree(a.out)
@@ -78,6 +116,7 @@ def main():
                         tt_fixed.append(mst)
         for mst in swapped:
             libs.insert(-1, str(asm[mst] / f'{mst}_{c}.lib'))
+        libs = list(dict.fromkeys(libs))
         (a.out / f'libs_{c}.txt').write_text('\n'.join(libs) + '\n')
         (a.out / f'interim_{c}.lib').write_text(drop_cells((a.kit / f'interim_{c}.lib').read_text(), set(swapped)))
         lat = (a.kit / f'latency_{c}.tcl')
@@ -98,6 +137,8 @@ def main():
                                  tiles=K['masters'][mst].get('tiles'), instances=inst[mst],
                                  insertion_removed_ps=K['masters'][mst].get('insertion_added_ps'),
                                  glue_worst_ps=aj['glue_worst_ps'], tiles_ss_as_tt=aj['corners']['tt']['tiles_ss_as_tt'])
+    if a.rebalance:
+        rebalance(a, K, vr)
     n = defaultdict(int)
     for v in K['masters'].values():
         n[v['view']] += 1
