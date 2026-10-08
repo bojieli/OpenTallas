@@ -8,7 +8,9 @@ module ot_hdc_vstream_lane #(
     parameter integer AW   = 24,
     parameter integer NW   = 16,
     parameter integer LANE = 0,
-    parameter integer KV_FP8 = 1      // the vector core's KV cache is FP8 E4M3 (hdc_golden.KV_FMT)
+    parameter integer KV_FP8 = 1,     // the vector core's KV cache is FP8 E4M3 (hdc_golden.KV_FMT)
+    parameter integer ML = 0          // extra memory-read latency: every memory answers 1 + ML edges after its read
+                                      // strobe (the element's tag and valid wait ML more cycles before S1); 0 = original
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -112,6 +114,8 @@ module ot_hdc_vstream_lane #(
     // -- address cycle (c') -----------------------------------------------------
     // Tag fields of one element.
     reg          e_v;
+    wire         e_v_m;
+    ot_hdc_delay #(.W(1), .D(ML), .RESET(1)) u_ml_v (.clk(clk), .rst_n(rst_n), .d(e_v), .q(e_v_m));
     reg          e_asrc, e_bsrc, e_csrc, e_mc, e_md, e_redsq;
     reg [1:0]    e_ma, e_mb, e_dst, e_red;
     reg [2:0]    e_ad;
@@ -149,7 +153,7 @@ module ot_hdc_vstream_lane #(
     reg          s1_v, s2_v, s3_v;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin s1_v <= 0; s2_v <= 0; s3_v <= 0; end
-        else begin s1_v <= e_v; s2_v <= s1_v; s3_v <= s2_v; end
+        else begin s1_v <= e_v_m; s2_v <= s1_v; s3_v <= s2_v; end
     end
     wire          t_asrc, t_bsrc, t_csrc, t_mc, t_md, t_redsq;
     wire [1:0]    t_ma, t_mb, t_dst, t_red;
@@ -159,7 +163,9 @@ module ot_hdc_vstream_lane #(
     wire          t_ifirst, t_first8, t_final, t_last;
     wire [2:0]    t_p;
     wire [AW-1:0] t_daddr, t_raddr;
-    always @(posedge clk) s1_tag <= e_tag;
+    wire [FT-1:0] e_tag_m;
+    ot_hdc_delay #(.W(FT), .D(ML)) u_ml_tag (.clk(clk), .rst_n(rst_n), .d(e_tag), .q(e_tag_m));
+    always @(posedge clk) s1_tag <= e_tag_m;
     assign {t_asrc, t_bsrc, t_csrc, t_mc, t_md, t_redsq, t_ma, t_mb, t_dst, t_red, t_ad, t_imm1, t_imm2,
             t_lane, t_ifirst, t_first8, t_final, t_last, t_p, t_daddr, t_raddr} = s1_tag;
     reg [31:0] s2_a, s2_blo, s2_bhi, s2_c, s2_imm1, s2_imm2;
