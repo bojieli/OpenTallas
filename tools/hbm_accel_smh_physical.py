@@ -1035,6 +1035,24 @@ def run_sh(work: Path, label, src, need, cores, macros, target="finish", admit=T
     txt = RUN.format(label=label, work=work, src=src, need=need, cores=cores, cname=f"claude-smh-{label}",
                      macro_args=margs, target=target, make_extra=make_extra,
                      admit="/srv/opentallas-scratch/admit.sh $NEED -- " if admit else "")
+    # setup-triage IO fix (OPTION B, 2026-10-07): OT_SMH_POST_SDC (space-separated repo paths, normally
+    # physical/common_flow/nbr_clk_measured.sdc) re-times the SETUP corners (TT sign-off, SS sensitivity) with the
+    # neighbour clock at this route's measured insertion.  The FF hold check keeps the generator SDC (its dlo term
+    # models the FF neighbour against the SS planning latency; re-referencing nbr_clk there would double-count it).
+    _post = os.environ.get("OT_SMH_POST_SDC", "").split()
+    if _post:
+        pa = " ".join(f"--post-sdc {q}" for q in _post)
+        merge = ("import json,sys; b=json.load(open(sys.argv[1])); p=json.load(open(sys.argv[2])); "
+                 "b['setup_tt']=p['setup_tt']; b['setup_ss']=p['setup_ss']; b['setup_post_sdc']=p['post_sdc']; "
+                 "json.dump(b,open(sys.argv[1],'w'),indent=1)")
+        step = (f'  echo "corner_rc=$?" >> $W/status\n'
+                f'  (cd $S && python3 tools/w18/corner_sta.py --orfs-dir $W {margs} {pa} --sdc-name 6_signoff.sdc '
+                f'--output $W/corner_sta_setup_post.json) > $W/corner_setup_post.log 2>&1 && '
+                f'cp $W/corner_sta.json $W/corner_sta_hold_model.json && '
+                f'python3 -c "{merge}" $W/corner_sta.json $W/corner_sta_setup_post.json\n'
+                f'  echo "setup_post_rc=$?" >> $W/status\n')
+        assert txt.count('  echo "corner_rc=$?" >> $W/status\n') == 1
+        txt = txt.replace('  echo "corner_rc=$?" >> $W/status\n', step)
     # two abstract sessions (SS and FF)
     txt = txt.replace('"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/abstract.tcl"',
                       '"mkdir -p /work/views; for c in ss ff; do /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/'
