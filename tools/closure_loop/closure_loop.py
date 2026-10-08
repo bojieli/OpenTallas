@@ -2893,7 +2893,14 @@ def start_hold_eco(j, fleet, m):
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
-    post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    # COREKV-ECO 2026-10-08: the spec's verdict post-SDCs always lead. A route that applies them IN-RUN (e.g. Qwen core
+    # signoff833_skew90.sdc baked into w18_extra.sdc) reports corner_sta post_sdc None -> metrics [] -> the routed-ioref
+    # step made it [io_ref_routed.sdc] only, and the ECO was timed at the 770 ps route SDC instead of the 833.333 sign-off
+    # (core_kv_banked_fullwidth_h1hm80: FF +38.85 there -> 0 endpoints, 0 cells; TT -97 = route-SDC over-constraint).
+    post_sdcs = list(v.get("post_sdc", []))
+    post_sdcs += [p for p in (m["post_sdc"] if "post_sdc" in m else []) if p not in post_sdcs]
+    if IOREF_SDC in post_sdcs:                       # the routed IO reference is always read last
+        post_sdcs = [p for p in post_sdcs if p != IOREF_SDC] + [IOREF_SDC]
     post = " ".join(shlex.quote(p) for p in post_sdcs)
     # LOOP-GAPS 2026-10-08: the ECO is timed (TT setup, option B) and judged with the route's OWN sign-off SDC set: its
     # sign-off SDC (corner_sta sdc_name, e.g. 6_signoff.sdc) and its setup-only post-SDCs (setup_post_sdc, e.g. the
