@@ -1,0 +1,47 @@
+{
+ "schema": "hbm-coll-rtl.variants.v1",
+ "date": "2026-10-08",
+ "stream": "hbm-coll-rtl",
+ "replaces": "hbm_coll_d51dc71a2(-tt): flop endpoint, 4.80 M cells / 686 k flops (synth_stat), 4.18 M nets, repair_design frozen",
+ "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_sr.sv + rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv",
+ "bench": "physical/hbm_accel_die_views/coll/rtl_sr/run_sr_bench.sh (28 runs PASS; mutants m1..m6 FAIL)",
+ "estimate": {
+  "tool": "yosys 0.68 synth -flatten -run :fine; memory_map; techmap (pre-ABC generic gates)",
+  "gates_total": 1015967,
+  "flops": 270214,
+  "fp32_adders": 112,
+  "fp32_adder_gates": 410000,
+  "macros": {
+   "cell": "ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 165,
+   "area_um2_each": 3892,
+   "area_um2": 642180,
+   "slot_um2": 1965083,
+   "note": "3 macros a 545 b word: 17 queues (QAW 7), 8 receive buffers x 2 banks (RXAW 8), 22 delay lines (HUBW 35 x 6, WSTG 14 x 16)"
+  }
+ },
+ "cycles": {
+  "basis": "tb_hbm_accel_tu_endpoint campaign set (92 runs each side, ha2hub INJ 2 / DEL 4, T_PHY 1.0 ns), sr vs flop endpoint at the RTL defaults",
+  "allreduce": "+15..+17 core cycles of ~1144..1459",
+  "gather": "+7..+14 of ~586..9717",
+  "source": "+4 edges a SRAM-queue crossing (pin flop, macro, capture, head); delay lines keep their latency D"
+ },
+ "variants": {
+  "v1": {
+   "top": "physical/hbm_accel_die_views/coll/rtl_sr/hfd_coll.sv",
+   "what": "SYNCPHY 1 (pclk = clk: 2-entry sync FIFOs replace the CDC FIFOs), route 833 ps",
+   "commit": "92f17970a1444db31eb1d637f2761b5f35fb9528"
+  },
+  "v2": {
+   "top": "physical/hbm_accel_die_views/coll/rtl_sr/hfd_coll_cdc.sv",
+   "what": "conservative: CDC FIFOs kept (ot_link_afifo, 8 entries)",
+   "commit": "this commit"
+  },
+  "v3": {
+   "top": "physical/hbm_accel_die_views/coll/rtl_sr/hfd_coll.sv",
+   "what": "aggressive: v1 routed at 770 ps (margin rule), signed off at 833",
+   "commit": "next commit"
+  }
+ },
+ "next_if_fails": "per-port split (8 port slices: 2 queues + 2 wire lines + receive buffer, 21 macros each; core = slots + 112-adder tree + hub/delivery lines) as replicated sub-blocks with a thin top"
+}
