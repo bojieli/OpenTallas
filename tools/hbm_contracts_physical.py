@@ -58,7 +58,7 @@ def command(block, out, stop_after=None, label_suffix=''):
             '--orfs-var', 'ADDER_MAP_FILE=', '--orfs-var', 'CTS_ARGS=-apply_ndr none',
             '--step-tcl', 'PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl',
             '--step-tcl', 'PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl',
-            '--slew-margin-percent', '20', '--hold-margin-ns', '.015', '--purpose', 'characterization',
+            '--slew-margin-percent', '20', '--hold-margin-ns', os.environ.get('HM', '.015'), '--purpose', 'characterization',
             '--nickname-tag', 'hc_' + block + label_suffix,
             '--synth-timeout-seconds', 'unlimited', '--flow-timeout-seconds', 'unlimited',
             '--keep-workdir', str(out / 'work'), '--output', str(out / 'physical.json')]
