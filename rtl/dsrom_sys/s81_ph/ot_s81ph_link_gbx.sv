@@ -159,24 +159,26 @@ module ot_s81ph_link_gbx #(
             default: gpay = {{(G-3*K1){1'b0}}, rem[S-1 -: 3*K1]};
         endcase
     end
+    // control flops reset; the payload (beat bits 3 and up, the slot FIFO, rem) is data: no reset (lane SS
+    // -40..-171 ps was the reset tree into these wide registers)
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            sh <= 0; st <= 0; sn <= 0; ph <= 0; ic <= 0; idle_q <= (IDLE_P == 1); beat_tx <= 0; fault <= 1'b0; rem <= 0;
+            sh <= 0; st <= 0; sn <= 0; ph <= 0; ic <= 0; idle_q <= (IDLE_P == 1); beat_tx[2:0] <= 3'd0; fault <= 1'b0;
         end else begin
-            if (f_tx_v) begin sf[st] <= f_tx; st <= st + 1'b1; end
+            if (f_tx_v) st <= st + 1'b1;
             sn <= sn + (f_tx_v ? 3'd1 : 3'd0) - (take ? 3'd1 : 3'd0);
             if (take) sh <= sh + 1'b1;
             if (f_tx_v && sn == 4 && !take) fault <= 1'b1;
             ic <= idle_q ? 0 : ic + 1'b1;
             idle_q <= !idle_q && (ic == IDLE_P - 2);
-            if (idle_q) begin
-                beat_tx <= {{G{1'b0}}, r_tx, r_tx_v, 1'b1, 1'b0};
-            end else begin
-                beat_tx <= {gpay, r_tx, r_tx_v, 1'b0, ph == 2'd0};
-                ph <= ph + 1'b1;
-                if (need) rem <= slot;
-            end
+            beat_tx[2:0] <= idle_q ? {r_tx_v, 1'b1, 1'b0} : {r_tx_v, 1'b0, ph == 2'd0};
+            if (!idle_q) ph <= ph + 1'b1;
         end
+    end
+    always @(posedge clk) begin
+        if (f_tx_v) sf[st] <= f_tx;
+        beat_tx[511:3] <= idle_q ? {{G{1'b0}}, r_tx} : {gpay, r_tx};
+        if (!idle_q && need) rem <= slot;
     end
     // receiver
     reg            bv, bm, bi;
@@ -195,13 +197,23 @@ module ot_s81ph_link_gbx #(
             default: cut = {bg[3*K1-1:0], hold[G-2*K1-1:0]};
         endcase
     end
+    always @(posedge clk) begin
+        bg <= beat_rx[511 -: G]; r_rx <= beat_rx[3 +: RFW]; f_rx <= cut[1 +: FFW];
+        if (gb && hunt == 2 && bm == due) begin
+            case (rph)
+                2'd0: hold <= bg;
+                2'd1: hold <= {{K1{1'b0}}, bg[G-1:K1]};
+                2'd2: hold <= {{(2*K1){1'b0}}, bg[G-1:2*K1]};
+                default: hold <= hold;
+            endcase
+        end else if (gb && hunt != 2 && bm && hunt == 1 && due) hold <= bg;
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            bv <= 0; bm <= 0; bi <= 0; bg <= 0; hunt <= 0; mc <= 0; locked <= 0; hold <= 0;
-            f_rx_v <= 0; f_rx <= 0; r_rx_v <= 0; r_rx <= 0;
+            bv <= 0; bm <= 0; bi <= 0; hunt <= 0; mc <= 0; locked <= 0; f_rx_v <= 0; r_rx_v <= 0;
         end else begin
-            bv <= beat_rx_v; bm <= beat_rx[0]; bi <= beat_rx[1]; bg <= beat_rx[511 -: G];
-            r_rx_v <= beat_rx_v && beat_rx[2]; r_rx <= beat_rx[3 +: RFW];
+            bv <= beat_rx_v; bm <= beat_rx[0]; bi <= beat_rx[1];
+            r_rx_v <= beat_rx_v && beat_rx[2];
             f_rx_v <= 1'b0;
             if (gb) begin
                 mc <= (bm || due) ? 2'd0 : mc + 1'b1;
@@ -209,22 +221,13 @@ module ot_s81ph_link_gbx #(
                     locked <= 1'b0;
                     if (bm) begin
                         if (hunt == 1 && due) begin       // second marker exactly 4 beats on: lock, group starts here
-                            hunt <= 2; locked <= 1'b1; hold <= bg;
+                            hunt <= 2; locked <= 1'b1;
                         end else hunt <= 1;
                     end else if (hunt == 1 && due) hunt <= 0;
                 end else if (bm != due) begin          // marker where none is due, or a missing one: re-hunt
                     hunt <= bm ? 1 : 0; locked <= 1'b0;
                 end else begin
-                    if (rph != 2'd0) begin
-                        f_rx_v <= cut[0];
-                        f_rx <= cut[1 +: FFW];
-                    end
-                    case (rph)
-                        2'd0: hold <= bg;
-                        2'd1: hold <= {{K1{1'b0}}, bg[G-1:K1]};
-                        2'd2: hold <= {{(2*K1){1'b0}}, bg[G-1:2*K1]};
-                        default: hold <= hold;
-                    endcase
+                    if (rph != 2'd0) f_rx_v <= cut[0];
                 end
             end
         end
