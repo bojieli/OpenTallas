@@ -8,7 +8,7 @@ import qwen_core_opaque_interfaces as O
 import qwen_core_kv_boundary as K
 from qwen_core_kv_bridge_tb import bridge_lines
 R=C.ROOT
-ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--yosys',default='/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys');args=ap.parse_args();P=args.out.resolve();P.mkdir(parents=True,exist_ok=False)
+ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--yosys',default='/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys');ap.add_argument('--out-latch',choices=['none','latch','mutant'],default='none');args=ap.parse_args();P=args.out.resolve();P.mkdir(parents=True,exist_ok=False)
 C.RETAINED=R/'physical/qwen_core_ctx/retained_screen_synth.ys'
 for cand in [0,1]:
  dest=P/f'full{cand}';original=C.core_text
@@ -21,6 +21,13 @@ for cand in [0,1]:
  O.rewrite(prep)
  with (dest/'yosys.log').open('w') as log:subprocess.run([args.yosys,'-Q','-T','-s',str(prep)],stdout=log,stderr=subprocess.STDOUT,check=True)
  (dest/'opaque_width_gate.json').write_text(json.dumps(O.validate(dest/'specialized_before_blackbox.json'),indent=2)+'\n')
+ if cand and args.out_latch!='none':
+  # drive-0602: candidate core gets the output lockup-latch stage (tools/qwen_core_out_latch.py); 'mutant' = rising-edge flop
+  import qwen_core_out_latch as OL
+  subprocess.run([args.yosys,'-Q','-T','-p',f'read_verilog {dest}/control.v; proc; write_json {dest}/control_pre_ol.json'],stdout=subprocess.DEVNULL,check=True)
+  dj=json.loads((dest/'control_pre_ol.json').read_text());nl=OL.apply(dj,mutant_dff=args.out_latch=='mutant')
+  (dest/'control_ol.json').write_text(json.dumps(dj)+'\n');(dest/'out_latch.json').write_text(json.dumps(dict(mode=args.out_latch,latched_bits=nl))+'\n')
+  subprocess.run([args.yosys,'-Q','-T','-p',f'read_json {dest}/control_ol.json; write_verilog -noattr {dest}/control.v'],stdout=subprocess.DEVNULL,check=True)
 ports=json.loads((P/'full0/original.json').read_text())['modules']['ot_qwen_rom_core']['ports']
 lines=['`timescale 1ns/1ps','module tb #(parameter NEG=0, STALL=0);','reg clk=0; always #5 clk=~clk; reg rst_n=0,start=0; integer cycle=0,i,j; reg [1023:0] mem[0:64];','`include "ot_hdc_isa.svh"','always @(posedge clk) cycle<=cycle+1;']
 outs={};widths={}
@@ -80,7 +87,7 @@ for stall,neg in [(0,0),(1,0),(0,1),(0,2)]:
  if r.returncode:raise RuntimeError(r.stderr[-3500:])
  r=subprocess.run(['vvp',str(P/name)],text=True,capture_output=True);(P/(name+'.log')).write_text(r.stdout+r.stderr);print(name,r.returncode,r.stdout,r.stderr);rows.append(dict(name=name,returncode=r.returncode,negative=bool(neg),passed=(r.returncode!=0 and ('ME event mismatch 7' if neg==1 else 'liveness') in r.stdout) if neg else (r.returncode==0 and 'PASS full controller' in r.stdout)))
 
-record=dict(schema="qwen.kv_banked_boundary.full_interface_gate.v1",status="pass" if all(r["passed"] for r in rows) else "fail",positive_engine_events=128,positive_KV_RMW_bytes=64,measured_cycle_cost=dict(no_stall=30,periodic_backpressure=28),rows=rows,source_sha256={(str(f.relative_to(R)) if f.is_relative_to(R) else "tools/"+f.name):hashlib.sha256(f.read_bytes()).hexdigest() for f in [Path(C.__file__),Path(S.__file__),Path(O.__file__),Path(K.__file__),Path(__file__),Path(__file__).with_name("qwen_core_kv_bridge_tb.py"),R/"rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv",R/"rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv",R/"rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv"]},lowered_source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in [P/"full0/core.sv",P/"full1/core.sv",P/"core0.v",P/"core1.v"]},scope="Actual full controller, FB3 BOUND AMQ NXREG MEIF SUIF PINREG, retained shape G6144 SW64 NW18; minimum engine boundaries, no arithmetic or whole-system simulation")
+record=dict(schema="qwen.kv_banked_boundary.full_interface_gate.v1",out_latch=args.out_latch,status="pass" if all(r["passed"] for r in rows) else "fail",positive_engine_events=128,positive_KV_RMW_bytes=64,measured_cycle_cost=dict(no_stall=30,periodic_backpressure=28),rows=rows,source_sha256={(str(f.relative_to(R)) if f.is_relative_to(R) else "tools/"+f.name):hashlib.sha256(f.read_bytes()).hexdigest() for f in [Path(C.__file__),Path(S.__file__),Path(O.__file__),Path(K.__file__),Path(__file__),Path(__file__).with_name("qwen_core_kv_bridge_tb.py"),R/"rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv",R/"rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv",R/"rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv"]},lowered_source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in [P/"full0/core.sv",P/"full1/core.sv",P/"core0.v",P/"core1.v"]},scope="Actual full controller, FB3 BOUND AMQ NXREG MEIF SUIF PINREG, retained shape G6144 SW64 NW18; minimum engine boundaries, no arithmetic or whole-system simulation")
 (P/"result.json").write_text(json.dumps(record,indent=2)+"\n")
 print(json.dumps(record,indent=2))
 if record["status"]!="pass":raise SystemExit(1)

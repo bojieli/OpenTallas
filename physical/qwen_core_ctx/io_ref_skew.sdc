@@ -30,7 +30,12 @@ set qcc_lmax [get_property $qcc_ref arrival_max_rise]
 set qcc_lmin [get_property $qcc_ref arrival_min_rise]
 puts "QCC reference pin [get_full_name $qcc_ref] clock arrival max $qcc_lmax min $qcc_lmin"
 set_input_delay [expr 166.6 + $qcc_lmax + $ot_sk] -max -clock core_clk [all_inputs -no_clocks]
-set_input_delay [expr 0 + $qcc_lmin - $ot_hk] -min -clock core_clk [all_inputs -no_clocks]
+# RULE H1 (flow-hold 2026-10-07, applied here 2026-10-08 drive-0602; physical/qwen_die_masters/io_ref_skew.sdc had it, this
+# core-context copy did not): a die link's hold budget (OT_IO_HOLD_SKEW + hold uncertainty) is carried ONCE, by the SENDER's
+# output min below; the receiver's input min keeps only L_min - OT_IO_IN_HOLD_SKEW (default 0).  With both sides at 50 a
+# port-to-port feedthrough (u_me.o_we -> vw_me_we) needed 125 ps of hold delay for a 50 ps skew (FF -68.02 on 77d93ac50).
+set ot_hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]
+set_input_delay [expr 0 + $qcc_lmin - $ot_hki] -min -clock core_clk [all_inputs -no_clocks]
 set_output_delay [expr 166.6 - $qcc_lmax + $ot_sk] -max -clock core_clk $qcc_outs
 set_output_delay [expr 0 - $qcc_lmin - $ot_hk] -min -clock core_clk $qcc_outs
 # inter-region ports (coordinator decision 2026-10-06: 150 ps on ports that cross a die wire to a DIFFERENT clock region;
