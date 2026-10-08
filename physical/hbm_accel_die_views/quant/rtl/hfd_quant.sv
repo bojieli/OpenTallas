@@ -31,7 +31,7 @@ module hfd_quant (
     assign w_aq_v = 1'd1;
     assign w_aq_fp4 = tgl;
     assign w_aq_x = {i_f_vm[1023:0]};
-    ot_hfd_actquant_m #(.MR(1), .MLAT(6)) u_aq (.clk(w_aq_clk), .rst_n(w_aq_rst_n), .v(w_aq_v), .fp4(w_aq_fp4), .x(w_aq_x), .vo(w_aq_vo), .q(w_aq_q), .e(w_aq_e), .y(w_aq_y), .fault(w_aq_fault));
+    ot_hfd_actquant_m #(.MR(1), .MLAT(6), .TS0(1)) u_aq (.clk(w_aq_clk), .rst_n(w_aq_rst_n), .v(w_aq_v), .fp4(w_aq_fp4), .x(w_aq_x), .vo(w_aq_vo), .q(w_aq_q), .e(w_aq_e), .y(w_aq_y), .fault(w_aq_fault));
     for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_aq_vo
         (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_aq_vo[k]), .q());
     end
