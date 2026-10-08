@@ -12,7 +12,12 @@ module ot_qwen_die_cdc_ch #(
     parameter integer W = 1024,
     parameter integer IBUF = 4,
     parameter integer OCRED = 4,
-    parameter integer AD = 8
+    parameter integer AD = 8,
+    // PIPE = 1 (qwen-blocks 2026-10-07; 0 = original): a kept pin relay before the input capture (+1 wclk), the wide
+    // async FIFO (ot_qwen_async_fifo_w: registered write, per-slice read-pointer copies; +1 wclk before visibility),
+    // an enable-free output capture (o_d is meaningful only with o_v) and a kept output pin station (+1 rclk).
+    // Order, values, credits and faults unchanged.
+    parameter integer PIPE = 0
 ) (
     input  wire         wclk,
     input  wire         wrst_n,
@@ -35,8 +40,19 @@ module ot_qwen_die_cdc_ch #(
     // ---- write face ------------------------------------------------------------------------------------------------
     reg         iv_q;
     reg [W-1:0] id_q;
-    always @(posedge wclk or negedge wr_n) if (!wr_n) iv_q <= 1'b0; else iv_q <= i_v;
-    always @(posedge wclk) id_q <= i_d;
+    wire         i_v_p;
+    wire [W-1:0] i_d_p;
+    generate if (PIPE != 0) begin : g_ipr
+        (* keep *) reg         pv;
+        (* keep *) reg [W-1:0] pd;
+        always @(posedge wclk or negedge wr_n) if (!wr_n) pv <= 1'b0; else pv <= i_v;
+        always @(posedge wclk) pd <= i_d;
+        assign i_v_p = pv; assign i_d_p = pd;
+    end else begin : g_ipw
+        assign i_v_p = i_v; assign i_d_p = i_d;
+    end endgenerate
+    always @(posedge wclk or negedge wr_n) if (!wr_n) iv_q <= 1'b0; else iv_q <= i_v_p;
+    always @(posedge wclk) id_q <= i_d_p;
     reg [W-1:0] ib [0:IBUF-1];
     reg [IA:0]  iw, ir;
     wire        ib_empty = (iw == ir);
@@ -59,9 +75,15 @@ module ot_qwen_die_cdc_ch #(
     wire         af_v;
     wire [W-1:0] af_d;
     wire         send;
-    ot_async_fifo #(.WIDTH(W), .DEPTH(AD)) u_af (
-        .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid(pop), .wr_ready(af_ready), .wr_data(ib[ir[IA-1:0]]), .wr_overflow(),
-        .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
+    generate if (PIPE != 0) begin : g_afw
+        ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD)) u_af (
+            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid(pop), .wr_ready(af_ready), .wr_data(ib[ir[IA-1:0]]), .wr_overflow(),
+            .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
+    end else begin : g_af
+        ot_async_fifo #(.WIDTH(W), .DEPTH(AD)) u_af (
+            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid(pop), .wr_ready(af_ready), .wr_data(ib[ir[IA-1:0]]), .wr_overflow(),
+            .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
+    end endgenerate
     // ---- read face -------------------------------------------------------------------------------------------------
     reg          ocr_q, ov_q, rf_q;
     reg [W-1:0]  od_q;
@@ -75,8 +97,16 @@ module ot_qwen_die_cdc_ch #(
             cred <= cred - {{(CB-1){1'b0}}, send} + {{(CB-1){1'b0}}, ocr_q};
             rf_q <= rf_q | (cred - {{(CB-1){1'b0}}, send} + {{(CB-1){1'b0}}, ocr_q} > OCRED[CB-1:0]);
         end
-    always @(posedge rclk) if (send) od_q <= af_d;
-    assign o_v = ov_q;
-    assign o_d = od_q;
+    generate if (PIPE != 0) begin : g_ops
+        always @(posedge rclk) od_q <= af_d;            // enable-free: o_d is meaningful only with o_v
+        (* keep *) reg         ovp;
+        (* keep *) reg [W-1:0] odp;
+        always @(posedge rclk or negedge rr_n) if (!rr_n) ovp <= 1'b0; else ovp <= ov_q;
+        always @(posedge rclk) odp <= od_q;
+        assign o_v = ovp; assign o_d = odp;
+    end else begin : g_opw
+        always @(posedge rclk) if (send) od_q <= af_d;
+        assign o_v = ov_q; assign o_d = od_q;
+    end endgenerate
     assign r_fault = rf_q;
 endmodule

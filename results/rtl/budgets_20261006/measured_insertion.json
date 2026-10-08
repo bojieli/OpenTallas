@@ -1683,22 +1683,22 @@
    "budget": null
   },
   "ot_hbm_accel_smh_front_c": {
-   "job": "hbm_smh_front_c_m3_fb560676a_c2",
-   "source_commit": "fb560676a71ccd6e68e83993eca2628cd888f995",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_front_c_m3_fb560676a_c2",
+   "job": "hbm_smh_front_c_m3g_nrd_e40b3d6c7",
+   "source_commit": "e40b3d6c75e302ba7a6961c9a455a307a5f49816",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_front_c_m3g_nrd_e40b3d6c7",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T01:28:19-07:00",
+   "measured_at": "2026-10-07T20:04:51-07:00",
    "ss": {
-    "mean": 797,
-    "min": 753,
-    "max": 879
+    "mean": 766,
+    "min": 722,
+    "max": 891
    },
    "ff": {
-    "mean": 513,
-    "min": 475,
-    "max": 580
+    "mean": 496,
+    "min": 457,
+    "max": 607
    },
    "boundary_n": 12370,
    "budget": null
@@ -1997,22 +1997,22 @@
    "budget": null
   },
   "ot_dsrom_su_softmax_exp_hr": {
-   "job": "dsrom_softmax_safe_exphrf_bd30aca4a",
-   "source_commit": "bd30aca4ae85a68de73ffea830c3a60a35418d3c",
+   "job": "dsrom_softmax_safe_exphr_6133b4bbf-mm",
+   "source_commit": "ef256b29997026ac030b7f7ee7076aa91e0ea7af",
    "host": "localhost",
-   "run": "/home/ubuntu/closure-loop-local/dsrom_softmax_safe_exphrf_bd30aca4a",
+   "run": "/home/ubuntu/closure-loop-local/dsrom_softmax_safe_exphr_6133b4bbf-mm",
    "clock": "clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T08:23:55-07:00",
+   "measured_at": "2026-10-07T19:53:54-07:00",
    "ss": {
-    "mean": 555,
-    "min": 516,
-    "max": 592
+    "mean": 560,
+    "min": 504,
+    "max": 595
    },
    "ff": {
-    "mean": 340,
-    "min": 310,
-    "max": 373
+    "mean": 345,
+    "min": 305,
+    "max": 377
    },
    "boundary_n": null,
    "budget": null
@@ -2661,7 +2661,28 @@
    },
    "boundary_n": 19266,
    "budget": null
+  },
+  "ot_ha2_truecredit_tx_phys": {
+   "job": "ha2_truecredit_tx_cal650_4071ff1d8",
+   "source_commit": "4071ff1d89817c9655bf31aa30ee1a8bf40a3749",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/ha2_truecredit_tx_cal650_4071ff1d8",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-07T19:53:54-07:00",
+   "ss": {
+    "mean": 650,
+    "min": 621,
+    "max": 835
+   },
+   "ff": {
+    "mean": 442,
+    "min": 418,
+    "max": 576
+   },
+   "boundary_n": 1216,
+   "budget": null
   }
  },
- "updated": "2026-10-07T19:35:55-07:00"
+ "updated": "2026-10-07T20:04:51-07:00"
 }
