@@ -7,7 +7,7 @@
 # truth; the calibrate run's CTS (or an assumed) insertion is not (hbm_pkt_ii1r: vclk FF 363 from calibrate vs the
 # routed FF mean ~307 -> output-port-only hold -43).  Only the insertion-reference virtual clocks (vclk*, ot_lb_v_*,
 # nbr_clk) move; window clocks with explicit min/max source latency (io_clk, io_ci/io_co) are kept.  Virtual clock -> real clock: ot_lb_v_<name> / a name match, else
-# the only real clock with register sinks, else the dominant one (>= 4x the register sinks of any other); otherwise left unchanged (OT_IOREF skip).  Prints one OT_IOREF line per clock.
+# the only real clock with register sinks, else core_clk for vclk*, else the dominant one (>= 4x the register sinks of any other); otherwise left unchanged (OT_IOREF skip).  Prints one OT_IOREF line per clock.
 set ot_ir_real {}
 foreach c [all_clocks] { if {[llength [get_property $c sources]]} { lappend ot_ir_real [get_full_name $c] } }
 set ot_ir_bnd [dict create]
@@ -47,6 +47,10 @@ foreach c [all_clocks] {
   # DRIVE-1113 2026-10-08: several real clocks (e.g. hfd_svc_SW_s3: core_clk + forwarded input clocks fq4 / fe that only
   # write two-clock FIFOs) -> the insertion reference is the DOMINANT real clock: the one with >= 4x the register sinks
   # of every other (the forwarded clocks clock a few hundred FIFO flops).  Before this every such block skipped vclk.
+  # FWDCLK-SWEEP 2026-10-08: the budget SDC convention makes vclk / vclki the IO reference of core_clk (forwarded input
+  # clocks are declared asynchronous to {core_clk vclk}); hfd_index_q_b0 (core_clk + fk0 / fk1 key-capture clocks) is
+  # below the 4x dominance ratio and was skipped.  A vclk* clock resolves to core_clk when that real clock exists.
+  if {$rc eq "" && [string match vclk* $vn] && [dict exists $ot_ir_ins core_clk]} { set rc core_clk }
   if {$rc eq "" && [dict size $ot_ir_nreg] > 1} {
     set ot_ir_srt [lsort -stride 2 -index 1 -integer -decreasing $ot_ir_nreg]
     if {[lindex $ot_ir_srt 1] >= 4 * [lindex $ot_ir_srt 3]} { set rc [lindex $ot_ir_srt 0] }
