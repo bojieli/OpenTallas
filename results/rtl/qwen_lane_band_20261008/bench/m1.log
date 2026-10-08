@@ -1,0 +1,6 @@
+MISMATCH op@0 split 11 group 0 lane 0: band c7a2dfad lane c7a2dfac
+MISMATCH op@0 split 11 group 0 lane 1: band 47b6f392 lane 47b6f393
+MISMATCH op@0 split 11 group 0 lane 3: band 47bd3d04 lane 47bd3d03
+MISMATCH op@0 split 11 group 1 lane 1: band 471b193b lane 471b193a
+MISMATCH op@2 split 10 group 0 lane 0: band bf748aa0 lane bf748a80
+FAIL qfd_band_lanes 5380 mismatching words of 29400 (ops 559, NL 4, LNK 0, MUT 1)
