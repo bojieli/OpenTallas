@@ -92,7 +92,8 @@ def apply_cts_fix_hooks(config, case):
 '''
 CFG_ANCHOR = '    (case / "config.mk").write_text("\\n".join(config) + "\\n", encoding="utf-8")\n'
 FN_ANCHOR = "\ndef io_constraints_tcl("
-COMMON = ["cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl", "link_budget_consistent.sdc"]
+COMMON = ["cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl", "link_budget_consistent.sdc",
+          "nbr_clk_measured_ttb.sdc"]
 
 
 def ensure_corner(s):
@@ -137,6 +138,16 @@ SMH_NEW = ('f"export WC_LIB_FILES = $(TC_NLDM_LIB_FILES) {lib_ss.replace(\'_ss.l
            '  # tt_overlay v2: corner WC reads the TT liberties (option B)')
 
 
+SMH_CORNER_LINE = '  echo "corner_rc=$?" >> $W/status\n'
+SMH_NBR = (SMH_CORNER_LINE +
+           "  # tt_overlay: setup corners re-timed with nbr_clk at the measured insertion (hbm-blocks 9e81f6c70 semantics);\n"
+           "  # the loop's tt_resta.sh re-times this tcl at TT; FF hold (w18_sta_ff.tcl) keeps the generator model\n"
+           "  if [ -f $W/w18_sta_ss.tcl ] && ! grep -q OT_NBR_MEASURED_TTB $W/w18_sta_ss.tcl; then "
+           "cp $W/w18_sta_ss.tcl $W/w18_sta_ss.planning.tcl && cp $S/physical/common_flow/nbr_clk_measured_ttb.sdc $W/ && "
+           "sed -i 's#^set_propagated_clock \\[all_clocks\\]$#&\\nsource /work/nbr_clk_measured_ttb.sdc ;\\# OT_NBR_MEASURED_TTB#' "
+           "$W/w18_sta_ss.tcl; echo \"nbr_measured_rc=$?\" >> $W/status; fi\n")
+
+
 def ensure_smh(src):
     """SM piece flow (tools/hbm_accel_smh_physical.py writes its own config.mk, not through run_abi3_physical): in a
     TC route stage, corner WC reads the TT std-cell + macro liberties; the mark is written here."""
@@ -148,7 +159,12 @@ def ensure_smh(src):
     if SMH_NEW not in s:
         if s.count(SMH_OLD) != 1:
             return ["SMH: WC_LIB_FILES anchor missing"]
-        f.write_text(s.replace(SMH_OLD, SMH_NEW))
+        s = s.replace(SMH_OLD, SMH_NEW)
+    if "OT_NBR_MEASURED_TTB" not in s and "OT_SMH_POST_SDC" not in s:
+        if s.count(SMH_CORNER_LINE) != 1:
+            return ["SMH: corner_rc anchor missing"]
+        s = s.replace(SMH_CORNER_LINE, SMH_NBR)
+    f.write_text(s)
     if os.environ.get("OT_TTB_CORNER_MARK"):
         with open(os.environ["OT_TTB_CORNER_MARK"], "a") as m:
             m.write(f"TC {os.getpid()} smh_config wc_reads_tt\n")
