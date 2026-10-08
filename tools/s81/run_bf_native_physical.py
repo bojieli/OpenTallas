@@ -38,7 +38,7 @@ def command(a):
   io=lambda v: str(round(v/1000.0,4))
   # --wc-only (BF rowfix closure 2026-10-07): ORFS repairs at the WC (SS) corner only, the route's hold IO follows the
   # SS insertion (pass --ins-ff = --ins-ss); --hold-corners BC made ORFS CORNERS=BC, i.e. setup repaired at FF (bf_m2)
-  hc='WC' if a.wc_only else 'BC'
+  hc=a.corner if a.wc_only else 'BC'
   if a.hitfix: cmd+=['--param','HITFIX=1']
   if a.half: cmd+=['--param','HALF=1']
   if a.half_phl: cmd+=['--param','HALF_PHL=1']
@@ -51,7 +51,7 @@ def command(a):
  else:
   cmd+=['--clock-period-ns','.833','--io-delay-fraction','.2','--hold-corners','WC,BC']
  cmd+=['--clock-uncertainty-ns','.060',
- '--clock-uncertainty-hold-ns','.025','--orfs-corner','WC',
+ '--clock-uncertainty-hold-ns','.025','--orfs-corner',a.corner,
  '--stages','pnr','--synth-timeout-seconds','unlimited',
  '--flow-timeout-seconds','unlimited','--core-utilization',str(a.util),
  '--place-density','.60','--max-transition-ns','.25',
@@ -67,6 +67,11 @@ def command(a):
   assert karb in cmd and a.half and a.margin
   cmd[cmd.index(karb)]='PRE_CTS=physical/s81_native_bf/margin/ph_local.tcl'
   cmd+=['--step-tcl','POST_CTS=physical/s81_native_bf/margin/ph_local_post.tcl']
+ if a.recut_cgl:   # s81-bf: element clock-gate enable FF onto an ancestor clock net (cg_local.tcl; carries the karb cap)
+  karb='PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl'
+  assert karb in cmd and a.recut and a.margin
+  cmd[cmd.index(karb)]='PRE_CTS=physical/s81_native_bf/margin/cg_local.tcl'
+  cmd+=['--step-tcl','POST_CTS=physical/s81_native_bf/margin/cg_local_post.tcl']
  if a.extra: cmd+=a.extra.split()
  return cmd
 
@@ -75,7 +80,7 @@ def main():
  p.add_argument('--output',type=Path,required=True);p.add_argument('--util',type=int,default=55)
  p.add_argument('--tag',default='s81_bf_native_u55')
  p.add_argument('--margin',action='store_true');p.add_argument('--ins-ss',type=float,default=0.0);p.add_argument('--ins-ff',type=float,default=0.0);p.add_argument('--die-w',type=float,default=1002.888);p.add_argument('--die-h',type=float,default=190.08);p.add_argument('--print',action='store_true')
- p.add_argument('--wc-only',action='store_true');p.add_argument('--hitfix',action='store_true');p.add_argument('--half',action='store_true');p.add_argument('--half-phl',action='store_true');p.add_argument('--period',default='.770');p.add_argument('--recut',action='store_true');p.add_argument('--recut-level',type=int,default=2);p.add_argument('--extra',default='')
+ p.add_argument('--wc-only',action='store_true');p.add_argument('--hitfix',action='store_true');p.add_argument('--half',action='store_true');p.add_argument('--half-phl',action='store_true');p.add_argument('--recut-cgl',action='store_true');p.add_argument('--corner',default='WC',choices=('WC','TC'));p.add_argument('--period',default='.770');p.add_argument('--recut',action='store_true');p.add_argument('--recut-level',type=int,default=2);p.add_argument('--extra',default='')
  a=p.parse_args()
  cmd=command(a)
  if a.print:
