@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.s81.pq-w2-codec-sizing.v1",
+  "source_design_sha256": "e52d69ad76daff4e351e92aa2b647b4beb191b2c5e5d207f19f61c1be873bfe0",
+  "native_bits": 1633,
+  "union_bits": 1085,
+  "fixed_bits": 25,
+  "q_overlay_bits": 542,
+  "bf_overlay_bits": 1060,
+  "replicas": "one encoder at core, one decoder per consuming endpoint",
+  "MACs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "added_FF_bits": 0,
+  "added_pipeline_cycles": 0,
+  "encode_logic": "542 family-select bit muxes plus518 BF-only mask bits; all fixedfields direct wires",
+  "decode_logic": "shared overlay wire fanout; consumer family-valid determines observable payload",
+  "guards": "Both-family-valid or inconsistent duplicate b/pos rejects input, fault exposed; malformed receiveboth-valid rejects output",
+  "timing_area_qualified": false,
+  "consumer_dontcare_proof_pending": true,
+  "default_ENABLE": 0,
+  "physical_adopted": false,
+  "guard_logic": "Two3-bit duplicate-identity comparisons, family-valid checks,1085-bit transmit reject mask and1633-bit receive reject mask; exact mapped area/timing pending"
+}
