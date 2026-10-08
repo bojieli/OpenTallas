@@ -578,26 +578,28 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                         roots_gb=dict(zip(roots, (int(x) for x in v[7:7 + len(roots)]))))
         return info
 
-    def own_pending(self, host):
+    def own_pending(self, host, job=None):
         t0 = time.time() - PENDING_WINDOW_S
         self.pending[host] = [p for p in self.pending.get(host, []) if p[0] >= t0]
-        # RAM of a launch is held back 5 min (was 10: a route reaches its
-        # memory over hours, so 10 min of declared peaks hid 356 GB of EPYC3's 485 GB free at 07:48 while 38 jobs waited)
+        # RAM of a launch is held back 3 min (a route reaches its memory over hours).  2026-10-08: a job's own claim
+        # (taken when it was chosen/moved) must not count against its own launch -- it made every moved job miss the
+        # host it was moved to, move again and re-claim, which held 368 GB of EPYC2 idle while 30 jobs waited
         tr = time.time() - PENDING_RAM_WINDOW_S
-        return sum(p[1] for p in self.pending[host]), sum(p[2] for p in self.pending[host] if p[0] >= tr)
+        other = [p for p in self.pending[host] if job is None or len(p) < 4 or p[3] != job]
+        return sum(p[1] for p in other), sum(p[2] for p in other if p[0] >= tr)
 
-    def fits(self, host, threads, ram):
+    def fits(self, host, threads, ram, job=None):
         with FLEET_LOCK:
-            return self._fits(host, threads, ram)
+            return self._fits(host, threads, ram, job)
 
-    def _fits(self, host, threads, ram):
+    def _fits(self, host, threads, ram, job=None):
         cfg = host_cfg(host)
         if threads > cfg["max_job_threads"] or ram > cfg["max_job_ram_gb"]:
             return False, f"job {threads} thr / {ram} GB exceeds {cfg['label']} per-job limit"
         info = self.probe(host)
         if info is None:
             return False, f"{cfg['label']} unreachable"
-        pt, pr = self.own_pending(host)
+        pt, pr = self.own_pending(host, job)
         # OWNER DECISION (2026-10-07 20:10, supersedes the 19:31 1.1 x nproc cap): MEMORY is the only admission limit on
         # the remote hosts -- CPU oversubscription is allowed (jobs wait on reads / run serial phases).  localhost keeps
         # its own guard below (max_loop_threads, min_free_ram_gb) so it stays responsive.
@@ -618,12 +620,15 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                 return False, f"{cfg['label']} {path} has {free} GB free < {floor}"
         return True, "ok"
 
-    def launched(self, host, threads, ram):
+    def launched(self, host, threads, ram, job=None):
         with FLEET_LOCK:
-            self._launched(host, threads, ram)
+            self._launched(host, threads, ram, job)
 
-    def _launched(self, host, threads, ram):
-        self.pending.setdefault(host, []).append((time.time(), threads, ram))
+    def _launched(self, host, threads, ram, job=None):
+        if job is not None:   # one claim per job: a launch or a new host choice replaces its earlier claims
+            for hh in self.pending:
+                self.pending[hh] = [p for p in self.pending[hh] if len(p) < 4 or p[3] != job]
+        self.pending.setdefault(host, []).append((time.time(), threads, ram, job))
         self.probe_cache.pop(host, None)
 
     def choose(self, spec, exclude=()):
@@ -1771,14 +1776,14 @@ def launch_ready(j, fleet, spec, stl, st):
                 j["wait"] = why
                 event(j, f"{st['key']} {why}")
             return          # neither launches nor moves hosts while it yields
-        ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
+        ok, why = fleet.fits(j["host"], st["threads"], st["ram"], j["name"])
         if not ok:
             j.setdefault("wait_since", time.time())
         if not ok and not checkpoint_location(j) and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
             # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
             h, _ = fleet.choose(spec, exclude=[j["host"]])
             if h:
-                fleet.launched(h, spec.get("threads", 16), spec.get("peak_ram_gb", 32))  # 2026-10-08: claim, no herd moves
+                fleet.launched(h, spec.get("threads", 16), spec.get("peak_ram_gb", 32), j["name"])  # 2026-10-08: claim, no herd moves
                 event(j, f"{st['key']} cannot start on {host_cfg(j['host'])['label']} ({why}); moving to {host_cfg(h)['label']}")
                 j["hosts_tried"].append(h)
                 j["host"], j["run"], j["status"], j["wait"] = h, f"{host_cfg(h)['base']}/{j['name']}", "SYNC", None
@@ -1803,7 +1808,7 @@ def launch_ready(j, fleet, spec, stl, st):
             if j["name"] not in keys.setdefault(key, []):
                 keys[key].append(j["name"])
             keys_path().write_text(json.dumps(keys, indent=1) + "\n")
-        fleet._launched(j["host"], st["threads"], st["ram"])        # reservation, taken under FLEET_LOCK
+        fleet._launched(j["host"], st["threads"], st["ram"], j["name"])  # reservation (replaces the job's claim)
         return st
 
 
@@ -2220,7 +2225,7 @@ def step(j, fleet):
                 if yield_to_priority(j, fleet) else fleet.choose(spec, exclude=[
                     x for x, p in getattr(fleet, "prio_hosts", {}).items() if p > job_priority(j)])
             if h:   # claim capacity now so parallel job threads do not pick the same headroom
-                fleet.launched(h, spec.get("threads", 16), spec.get("peak_ram_gb", 32))  # 2026-10-08: claim real size
+                fleet.launched(h, spec.get("threads", 16), spec.get("peak_ram_gb", 32), j["name"])  # 2026-10-08: claim real size
         if not h:
             if j.get("wait") != why:
                 j["wait"] = why
@@ -2876,7 +2881,7 @@ def migrate_overloaded(jobs, fleet):
         j.update(host=h, run=f"{host_cfg(h)['base']}/{j['name']}", status="SYNC", stage_idx=idx, wait=None,
                  attempt=j["attempt"] + 1)
         j.pop("wait_since", None)
-        fleet.launched(h, j["spec"].get("threads", 16), j["spec"].get("peak_ram_gb", 32))  # 2026-10-08
+        fleet.launched(h, j["spec"].get("threads", 16), j["spec"].get("peak_ram_gb", 32), j["name"])  # 2026-10-08
         event(j, f"LOAD REBALANCE: {old} over cap (load {info['load1']:.0f}, {info['mem_gb']} GB free); pre-CTS job "
                  f"moved to {host_cfg(h)['label']} (resumes at {stl[idx]['key']})")
         experiment(j, f"running: moved {old} -> {host_cfg(h)['label']}")
