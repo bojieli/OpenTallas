@@ -1,0 +1,825 @@
+{
+ "schema": "opentallas.qwen_link_fullrate.gate.v1",
+ "gate": "link_credit_rtt",
+ "pass_all": true,
+ "cases": [
+  {
+   "case": "pos_h54_cr128",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "cbf1971671f7b8670cbf57ebe96171e5bea79574f466d62b3d343d641e94bdae",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 54,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 1000,
+     "rate_milli_b": 1000,
+     "span_a": 4095,
+     "span_b": 4095,
+     "stalls_a": 0,
+     "stalls_b": 0,
+     "max_inflight_a": 57,
+     "max_inflight_b": 57,
+     "cycles": 4277
+    },
+    {
+     "epoch": 1,
+     "hops": 54,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 1000,
+     "rate_milli_b": 1000,
+     "span_a": 4095,
+     "span_b": 4095,
+     "stalls_a": 0,
+     "stalls_b": 0,
+     "max_inflight_a": 57,
+     "max_inflight_b": 57,
+     "cycles": 4277
+    }
+   ]
+  },
+  {
+   "case": "pos_h54_cr128",
+   "sim": "iverilog",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "2563a5849ca7a335f7f751899ef3aad7666f9d9cc7cb69abed55210522a4aef4",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 54,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 1000,
+     "rate_milli_b": 1000,
+     "span_a": 4095,
+     "span_b": 4095,
+     "stalls_a": 0,
+     "stalls_b": 0,
+     "max_inflight_a": 57,
+     "max_inflight_b": 57,
+     "cycles": 4278
+    },
+    {
+     "epoch": 1,
+     "hops": 54,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 1000,
+     "rate_milli_b": 1000,
+     "span_a": 4095,
+     "span_b": 4095,
+     "stalls_a": 0,
+     "stalls_b": 0,
+     "max_inflight_a": 57,
+     "max_inflight_b": 57,
+     "cycles": 4278
+    }
+   ]
+  },
+  {
+   "case": "pos_h55_cr128",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 55,
+    "N": 4096,
+    "CR": 128
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "ce05619ba5e996ac23b8ac9893bcc5a4daacd78e5a7bb7f3e8cbbc6995927ecf",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 55,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 119,
+     "credit_rtt_b": 119,
+     "rate_milli_a": 1000,
+     "rate_milli_b": 1000,
+     "span_a": 4095,
+     "span_b": 4095,
+     "stalls_a": 0,
+     "stalls_b": 0,
+     "max_inflight_a": 58,
+     "max_inflight_b": 58,
+     "cycles": 4280
+    },
+    {
+     "epoch": 1,
+     "hops": 55,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 119,
+     "credit_rtt_b": 119,
+     "rate_milli_a": 1000,
+     "rate_milli_b": 1000,
+     "span_a": 4095,
+     "span_b": 4095,
+     "stalls_a": 0,
+     "stalls_b": 0,
+     "max_inflight_a": 58,
+     "max_inflight_b": 58,
+     "cycles": 4280
+    }
+   ]
+  },
+  {
+   "case": "pos_h55_cr128",
+   "sim": "iverilog",
+   "params": {
+    "HOPS": 55,
+    "N": 4096,
+    "CR": 128
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "7ab576724ca86e8f7668a3b4371225bff7a92ea8cdaa36f4e49302f522d32e23",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 55,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 119,
+     "credit_rtt_b": 119,
+     "rate_milli_a": 1000,
+     "rate_milli_b": 1000,
+     "span_a": 4095,
+     "span_b": 4095,
+     "stalls_a": 0,
+     "stalls_b": 0,
+     "max_inflight_a": 58,
+     "max_inflight_b": 58,
+     "cycles": 4280
+    },
+    {
+     "epoch": 1,
+     "hops": 55,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 119,
+     "credit_rtt_b": 119,
+     "rate_milli_a": 1000,
+     "rate_milli_b": 1000,
+     "span_a": 4095,
+     "span_b": 4095,
+     "stalls_a": 0,
+     "stalls_b": 0,
+     "max_inflight_a": 58,
+     "max_inflight_b": 58,
+     "cycles": 4280
+    }
+   ]
+  },
+  {
+   "case": "pos_h54_cr128_bp",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128,
+    "BP": 1
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "c19b186ec65211d2c27ca9598c787a59131730d95d4e82c57613d68515ba172b",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 54,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 891,
+     "rate_milli_b": 891,
+     "span_a": 4594,
+     "span_b": 4594,
+     "stalls_a": 485,
+     "stalls_b": 485,
+     "max_inflight_a": 128,
+     "max_inflight_b": 128,
+     "cycles": 4772
+    },
+    {
+     "epoch": 1,
+     "hops": 54,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 891,
+     "rate_milli_b": 891,
+     "span_a": 4594,
+     "span_b": 4594,
+     "stalls_a": 485,
+     "stalls_b": 485,
+     "max_inflight_a": 128,
+     "max_inflight_b": 128,
+     "cycles": 4772
+    }
+   ]
+  },
+  {
+   "case": "pos_h54_cr128_bp",
+   "sim": "iverilog",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128,
+    "BP": 1
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "b3d8ea0c289ffd517bb1e01333ff7ca85ec2f4cc9f204fce8990b0945fd9ece3",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 54,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 891,
+     "rate_milli_b": 891,
+     "span_a": 4594,
+     "span_b": 4594,
+     "stalls_a": 485,
+     "stalls_b": 485,
+     "max_inflight_a": 128,
+     "max_inflight_b": 128,
+     "cycles": 4772
+    },
+    {
+     "epoch": 1,
+     "hops": 54,
+     "CR": 128,
+     "delivered_a": 4096,
+     "delivered_b": 4096,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 891,
+     "rate_milli_b": 891,
+     "span_a": 4594,
+     "span_b": 4594,
+     "stalls_a": 485,
+     "stalls_b": 485,
+     "max_inflight_a": 128,
+     "max_inflight_b": 128,
+     "cycles": 4772
+    }
+   ]
+  },
+  {
+   "case": "sweep_h54_cr4",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 1024,
+    "CR": 4
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "9e2319d014f33738fea29148d2833c506c4de1c0c23d26543e4cea5fc20d070d",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 54,
+     "CR": 4,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 33,
+     "rate_milli_b": 33,
+     "span_a": 30093,
+     "span_b": 30093,
+     "stalls_a": 28956,
+     "stalls_b": 28956,
+     "max_inflight_a": 4,
+     "max_inflight_b": 4,
+     "cycles": 30275
+    },
+    {
+     "epoch": 1,
+     "hops": 54,
+     "CR": 4,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 33,
+     "rate_milli_b": 33,
+     "span_a": 30093,
+     "span_b": 30093,
+     "stalls_a": 28956,
+     "stalls_b": 28956,
+     "max_inflight_a": 4,
+     "max_inflight_b": 4,
+     "cycles": 30275
+    }
+   ]
+  },
+  {
+   "case": "sweep_h54_cr8",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 1024,
+    "CR": 8
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "285e27caa8987bdb2d9aeb924ee9372163dff4dd51ac62b5453b5845cfcf7ee5",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 54,
+     "CR": 8,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 68,
+     "rate_milli_b": 68,
+     "span_a": 14993,
+     "span_b": 14993,
+     "stalls_a": 13860,
+     "stalls_b": 13860,
+     "max_inflight_a": 8,
+     "max_inflight_b": 8,
+     "cycles": 15175
+    },
+    {
+     "epoch": 1,
+     "hops": 54,
+     "CR": 8,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 68,
+     "rate_milli_b": 68,
+     "span_a": 14993,
+     "span_b": 14993,
+     "stalls_a": 13860,
+     "stalls_b": 13860,
+     "max_inflight_a": 8,
+     "max_inflight_b": 8,
+     "cycles": 15175
+    }
+   ]
+  },
+  {
+   "case": "sweep_h54_cr16",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 1024,
+    "CR": 16
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "697db74905069ae0608002ee3feb7c566d6ffe90a362ede97b2af59e8dcfba32",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 54,
+     "CR": 16,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 137,
+     "rate_milli_b": 137,
+     "span_a": 7449,
+     "span_b": 7449,
+     "stalls_a": 6324,
+     "stalls_b": 6324,
+     "max_inflight_a": 16,
+     "max_inflight_b": 16,
+     "cycles": 7631
+    },
+    {
+     "epoch": 1,
+     "hops": 54,
+     "CR": 16,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 137,
+     "rate_milli_b": 137,
+     "span_a": 7449,
+     "span_b": 7449,
+     "stalls_a": 6324,
+     "stalls_b": 6324,
+     "max_inflight_a": 16,
+     "max_inflight_b": 16,
+     "cycles": 7631
+    }
+   ]
+  },
+  {
+   "case": "sweep_h54_cr32",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 1024,
+    "CR": 32
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "ce0f0bc0f1b041032a4f3d51c0dd0ec36621847c7e660d2a5538331304d32e0f",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 54,
+     "CR": 32,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 277,
+     "rate_milli_b": 277,
+     "span_a": 3689,
+     "span_b": 3689,
+     "stalls_a": 2580,
+     "stalls_b": 2580,
+     "max_inflight_a": 32,
+     "max_inflight_b": 32,
+     "cycles": 3871
+    },
+    {
+     "epoch": 1,
+     "hops": 54,
+     "CR": 32,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 277,
+     "rate_milli_b": 277,
+     "span_a": 3689,
+     "span_b": 3689,
+     "stalls_a": 2580,
+     "stalls_b": 2580,
+     "max_inflight_a": 32,
+     "max_inflight_b": 32,
+     "cycles": 3871
+    }
+   ]
+  },
+  {
+   "case": "sweep_h54_cr64",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 1024,
+    "CR": 64
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "84a3f72ba2257df392a0552e85cfb9f1fac6b6791b9b8222e9ecdc4f33a2a3ee",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 54,
+     "CR": 64,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 558,
+     "rate_milli_b": 558,
+     "span_a": 1833,
+     "span_b": 1833,
+     "stalls_a": 756,
+     "stalls_b": 756,
+     "max_inflight_a": 57,
+     "max_inflight_b": 57,
+     "cycles": 2015
+    },
+    {
+     "epoch": 1,
+     "hops": 54,
+     "CR": 64,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 558,
+     "rate_milli_b": 558,
+     "span_a": 1833,
+     "span_b": 1833,
+     "stalls_a": 756,
+     "stalls_b": 756,
+     "max_inflight_a": 57,
+     "max_inflight_b": 57,
+     "cycles": 2015
+    }
+   ]
+  },
+  {
+   "case": "sweep_h54_cr256",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 1024,
+    "CR": 256
+   },
+   "kind": "pos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "4dcd3e6ef43b923d32f1222e5dad61a10b8b8e39b3d05f10f551e4e343465f1a",
+   "epochs": [
+    {
+     "epoch": 0,
+     "hops": 54,
+     "CR": 256,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 1000,
+     "rate_milli_b": 1000,
+     "span_a": 1023,
+     "span_b": 1023,
+     "stalls_a": 0,
+     "stalls_b": 0,
+     "max_inflight_a": 57,
+     "max_inflight_b": 57,
+     "cycles": 1205
+    },
+    {
+     "epoch": 1,
+     "hops": 54,
+     "CR": 256,
+     "delivered_a": 1024,
+     "delivered_b": 1024,
+     "credit_rtt_a": 117,
+     "credit_rtt_b": 117,
+     "rate_milli_a": 1000,
+     "rate_milli_b": 1000,
+     "span_a": 1023,
+     "span_b": 1023,
+     "stalls_a": 0,
+     "stalls_b": 0,
+     "max_inflight_a": 57,
+     "max_inflight_b": 57,
+     "cycles": 1205
+    }
+   ]
+  },
+  {
+   "case": "neg1_h54_cr128",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128,
+    "NEG": 1
+   },
+   "kind": "neg",
+   "returncode": 1,
+   "qualified": true,
+   "log_sha256": "242d7641d33a15885a934211caae1730a6e9d806c8499a6c77322a545aa28070",
+   "epochs": [],
+   "expected_native_fault": "B cause[1] receive-buffer overflow AND A cause[3] credit counter below zero",
+   "observed": "NATIVE_FAULT a=1 causeA=001000 b=1 causeB=000010 tick=543"
+  },
+  {
+   "case": "neg1_h54_cr128",
+   "sim": "iverilog",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128,
+    "NEG": 1
+   },
+   "kind": "neg",
+   "returncode": 1,
+   "qualified": true,
+   "log_sha256": "465d2a517407c3507d16fa75288a15a131c2f1cad8f596db95abc802878985d7",
+   "epochs": [],
+   "expected_native_fault": "B cause[1] receive-buffer overflow AND A cause[3] credit counter below zero",
+   "observed": "NATIVE_FAULT a=1 causeA=001000 b=1 causeB=000010 tick=543"
+  },
+  {
+   "case": "neg2_h54_cr128",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128,
+    "NEG": 2
+   },
+   "kind": "neg",
+   "returncode": 1,
+   "qualified": true,
+   "log_sha256": "547142705a499ab322b2d9a667aa9b52baeaa27ace4f708d4f2df7217e595043",
+   "epochs": [],
+   "expected_native_fault": "A cause[3] link credit overflow",
+   "observed": "NATIVE_FAULT a=1 causeA=001000 b=0 causeB=000000 tick=9"
+  },
+  {
+   "case": "neg2_h54_cr128",
+   "sim": "iverilog",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128,
+    "NEG": 2
+   },
+   "kind": "neg",
+   "returncode": 1,
+   "qualified": true,
+   "log_sha256": "1e1b356186dfe16d5a9ff479d346203a36a78fa8b1a1b413011cc786f0e94bc4",
+   "epochs": [],
+   "expected_native_fault": "A cause[3] link credit overflow",
+   "observed": "NATIVE_FAULT a=1 causeA=001000 b=0 causeB=000000 tick=9"
+  },
+  {
+   "case": "neg3_h54_cr128",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128,
+    "NEG": 3
+   },
+   "kind": "neg",
+   "returncode": 1,
+   "qualified": true,
+   "log_sha256": "c09daf44e32da1546aa2fcb07ba1294121a126c2114183ffb77316cb015f30d6",
+   "epochs": [],
+   "expected_native_fault": "A cause[4] ar credit overflow",
+   "observed": "NATIVE_FAULT a=1 causeA=010000 b=0 causeB=000000 tick=6"
+  },
+  {
+   "case": "neg3_h54_cr128",
+   "sim": "iverilog",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128,
+    "NEG": 3
+   },
+   "kind": "neg",
+   "returncode": 1,
+   "qualified": true,
+   "log_sha256": "10d65387e4da8098b43976c2486cb316ebda6651471af66f0feff8ecacce7622",
+   "epochs": [],
+   "expected_native_fault": "A cause[4] ar credit overflow",
+   "observed": "NATIVE_FAULT a=1 causeA=010000 b=0 causeB=000000 tick=6"
+  },
+  {
+   "case": "neg4_h54_cr128",
+   "sim": "verilator",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128,
+    "NEG": 4
+   },
+   "kind": "neg",
+   "returncode": 1,
+   "qualified": true,
+   "log_sha256": "70b9d1bac6f11de7427cc5150cb7e245edfe48722f0471114697ed7d64d5e167",
+   "epochs": [],
+   "expected_native_fault": "A cause[0] x3 skid overflow",
+   "observed": "NATIVE_FAULT a=1 causeA=000001 b=0 causeB=000000 tick=493"
+  },
+  {
+   "case": "neg4_h54_cr128",
+   "sim": "iverilog",
+   "params": {
+    "HOPS": 54,
+    "N": 4096,
+    "CR": 128,
+    "NEG": 4
+   },
+   "kind": "neg",
+   "returncode": 1,
+   "qualified": true,
+   "log_sha256": "c8685c65a71027e4a9c2257bc49329c20bdd167ea9c81686b4b63997735bfb9c",
+   "epochs": [],
+   "expected_native_fault": "A cause[0] x3 skid overflow",
+   "observed": "NATIVE_FAULT a=1 causeA=000001 b=0 causeB=000000 tick=493"
+  },
+  {
+   "case": "hub4_pos",
+   "sim": "verilator",
+   "params": {
+    "N": 600
+   },
+   "kind": "hubpos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "5852569810e4215a8d6ea4ce4f5cf8c774bdf56c52700d2007a289b30d8bbd1b",
+   "epochs": []
+  },
+  {
+   "case": "hub4_pos",
+   "sim": "iverilog",
+   "params": {
+    "N": 600
+   },
+   "kind": "hubpos",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "4f8930272d201a8cb3caa51af2580c5b7811997f26fbcd5902a55de8edf3e15d",
+   "epochs": []
+  },
+  {
+   "case": "hub4_neg",
+   "sim": "verilator",
+   "params": {
+    "N": 600,
+    "NEG": 1
+   },
+   "kind": "hubneg",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "bd8a4d7be6f76534c0435346716bb4a4bef2ad79d5964817b82657e294184ad2",
+   "epochs": []
+  },
+  {
+   "case": "hub4_neg",
+   "sim": "iverilog",
+   "params": {
+    "N": 600,
+    "NEG": 1
+   },
+   "kind": "hubneg",
+   "returncode": 0,
+   "qualified": true,
+   "log_sha256": "1a4a68e74cb3fcd7673d3bd123d99afa70fa89fc29fee85bece94153d2fd33b6",
+   "epochs": []
+  }
+ ],
+ "scope": "Two ot_qwen_die_hub_fr endpoints (one active lane) over 54/55 actual ot_qwen_die_link_fwd_full_tmr stations with independently phased equal-rate clocks; N words each way per drained epoch x 2 cold epochs; exact order/value scoreboard; rate = (N-1)/(last-first delivery) in receiver cycles. Negatives must end in the named native fault cause. The 4-link scoreboard bench drives all four lanes with random selects and random ar back-pressure.",
+ "source_sha256": {
+  "rtl/physical/ot_qwen_die_hub_fr.sv": "6d04213b6c9381eacb6b4f8157789cd0feea778e17571e26c592d626f58a4029",
+  "rtl/physical/ot_qwen_die_cdc_ch.sv": "e865aecae51ae3b929bc9401c970e825073338b77dee87ead88d66ce9e8631fd",
+  "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+  "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+  "rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv": "cd7142ec0db3465c0b4134888e6947a2bc1d7223c0d2fc02093729e568921881"
+ },
+ "bench_sha256": {
+  "rtl/test/tb_qwen_link_fullrate.sv": "9651e40ddc00b124d41ce2d683273ed06aced7744d58f159ee9ae86f181b54c7",
+  "rtl/test/tb_qwen_die_hub_fr.sv": "a82a58d174c9f41e4227ea54f140f726535fa4c48fb9ff13d77a9a052f50bab1"
+ },
+ "tool_sha256": "b0d9a08a78f565b8f65a57bbf59330766ce67a29411c544d39387d0f9779bde7",
+ "simulators": [
+  "verilator",
+  "iverilog"
+ ],
+ "n": 4096
+}
