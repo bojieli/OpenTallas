@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_2ec0ab4f9_r22/routes/hbm_idxq_b3_2ec0ab4f9_r22_cal/work/orfs/results/asap7/opentallas_hfd_index_q_b3_asap7_hv_hbm_idxq_b3_2ec0ab4f9_r22_cal/base",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_2ec0ab4f9_r22-tt/routes/hbm_idxq_b3_2ec0ab4f9_r22_tt_cal/work/orfs/results/asap7/opentallas_hfd_index_q_b3_asap7_hv_hbm_idxq_b3_2ec0ab4f9_r22_tt_cal/base",
  "db": "4_1_cts.odb",
  "sdc": "4_cts.sdc",
  "clock": "core_clk",
@@ -8,42 +8,42 @@
  "ss": {
   "boundary": {
    "n": 3142,
-   "mean": 1185.3,
+   "mean": 1184.3,
    "min": 1122.5,
-   "max": 1298.5
+   "max": 1298.3
   },
   "all": {
    "n": 6286,
-   "mean": 1160.3,
-   "min": 1113.3,
-   "max": 1298.5
+   "mean": 1159.9,
+   "min": 1113.5,
+   "max": 1298.3
   },
   "errors": []
  },
  "ff": {
   "boundary": {
    "n": 3142,
-   "mean": 791.5,
+   "mean": 790.8,
    "min": 737.9,
-   "max": 892.4
+   "max": 892.2
   },
   "all": {
    "n": 6286,
-   "mean": 769.6,
-   "min": 730.2,
-   "max": 892.4
+   "mean": 769.3,
+   "min": 730.1,
+   "max": 892.2
   },
   "errors": []
  },
  "env": {
-  "CK_SS_MEAN": 1185,
+  "CK_SS_MEAN": 1184,
   "CK_SS_ALL_MEAN": 1160,
   "CK_SS_MIN": 1122,
-  "CK_SS_ALL_MIN": 1113,
+  "CK_SS_ALL_MIN": 1114,
   "CK_SS_MAX": 1298,
   "CK_SS_ALL_MAX": 1298,
-  "CK_FF_MEAN": 792,
-  "CK_FF_ALL_MEAN": 770,
+  "CK_FF_MEAN": 791,
+  "CK_FF_ALL_MEAN": 769,
   "CK_FF_MIN": 738,
   "CK_FF_ALL_MIN": 730,
   "CK_FF_MAX": 892,
@@ -55,16 +55,16 @@
   "sheet_grade": "measured",
   "target_ss": 1298,
   "measured": {
-   "ss": 1185,
-   "ff": 792,
+   "ss": 1184,
+   "ff": 791,
    "ss_min": 1122,
    "ss_max": 1298,
    "ff_min": 738,
    "ff_max": 892,
    "grade": "measured",
-   "source": "closure-loop calibrate hbm_idxq_b3_2ec0ab4f9_r22 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_2ec0ab4f9_r22)",
+   "source": "closure-loop calibrate hbm_idxq_b3_2ec0ab4f9_r22-tt (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_2ec0ab4f9_r22-tt)",
    "over_target": false
   },
-  "sheets_ref": "992128474100857ded7f5201f71bf4ab1753fc9c"
+  "sheets_ref": "06d47356edf75a948d815710f661c2e9369ee8a1"
  }
 }
