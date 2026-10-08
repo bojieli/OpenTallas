@@ -6,9 +6,9 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
 
-read_db /in/results/asap7/opentallas_dsfd_svcio_od_asap7_s81ph_s81ph_dsfd_svcio_od_093da5918/base/6_final.odb
-read_sdc /in/results/asap7/opentallas_dsfd_svcio_od_asap7_s81ph_s81ph_dsfd_svcio_od_093da5918/base/6_final.sdc
-read_spef /in/results/asap7/opentallas_dsfd_svcio_od_asap7_s81ph_s81ph_dsfd_svcio_od_093da5918/base/6_final.spef
+read_db /in/results/asap7/opentallas_dsfd_svcio_od_asap7_s81ph_s81ph_dsfd_svcio_od_3f0455126/base/6_final.odb
+read_sdc /in/results/asap7/opentallas_dsfd_svcio_od_asap7_s81ph_s81ph_dsfd_svcio_od_3f0455126/base/6_final.sdc
+read_spef /in/results/asap7/opentallas_dsfd_svcio_od_asap7_s81ph_s81ph_dsfd_svcio_od_3f0455126/base/6_final.spef
 set_propagated_clock [all_clocks]
 puts "OT_WS [sta::worst_slack_cmd min]"
 write_timing_model -library_name dsfd_svcio_od_ff /out/dsfd_svcio_od_ff.lib
