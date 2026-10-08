@@ -993,22 +993,22 @@
    }
   },
   "hfd_svc_SW_s3": {
-   "job": "hbm_svc_SW_s3_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s3_tc_4aadc92bc",
+   "job": "hbm_svc_SW_s3_tc_d4441ee39",
+   "source_commit": "d4441ee392066c552658b3a7ce24382a3c7d78d4",
+   "host": "localhost",
+   "run": "/home/ubuntu/closure-loop-local/hbm_svc_SW_s3_tc_d4441ee39",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T12:36:12-07:00",
+   "measured_at": "2026-10-08T14:05:54-07:00",
    "ss": {
     "mean": 844,
     "min": 795,
     "max": 1060
    },
    "ff": {
-    "mean": 445,
-    "min": 422,
-    "max": 576,
+    "mean": 444,
+    "min": 415,
+    "max": 589,
     "n": 4896,
     "kind": "boundary",
     "clock": "core_clk"
@@ -1031,9 +1031,9 @@
     "job": "hbm_svc_SW_s3_tc_hm25_d4441ee39"
    },
    "tt": {
-    "mean": 553,
-    "min": 525,
-    "max": 706,
+    "mean": 551,
+    "min": 519,
+    "max": 722,
     "n": 4896,
     "kind": "boundary",
     "clock": "core_clk"
@@ -2196,22 +2196,22 @@
    "budget": null
   },
   "dsfd_selt_q2": {
-   "job": "s81b-selt_q2-sq-mm2-9ac26e269-tt",
+   "job": "s81b-selt_q2-pipe2-mm2-9ac26e269-tt",
    "source_commit": "9ac26e269739f75074dbb7f38b5994be5783910c",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-sq-mm2-9ac26e269-tt",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81b-selt_q2-pipe2-mm2-9ac26e269-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T13:56:09-07:00",
+   "measured_at": "2026-10-08T14:06:42-07:00",
    "ss": {
-    "mean": 679,
-    "min": 660,
-    "max": 699
+    "mean": 814,
+    "min": 779,
+    "max": 871
    },
    "ff": {
-    "mean": 438,
-    "min": 424,
-    "max": 453
+    "mean": 530,
+    "min": 500,
+    "max": 578
    },
    "boundary_n": 1576,
    "budget": null
@@ -4628,11 +4628,11 @@
    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/core_kv_banked_fullwidth_h1hm25-c180b0ed1-tt",
    "parasitics": "routed (6_final.spef)",
    "grade": "routed",
-   "measured_at": "2026-10-08T13:45:37-07:00",
+   "measured_at": "2026-10-08T14:04:23-07:00",
    "ff": {
     "mean": 209,
     "min": 200,
-    "max": 218,
+    "max": 219,
     "n": 2212,
     "kind": "boundary",
     "clock": "core_clk"
@@ -4847,5 +4847,5 @@
    }
   }
  },
- "updated": "2026-10-08T13:56:09-07:00"
+ "updated": "2026-10-08T14:06:42-07:00"
 }
