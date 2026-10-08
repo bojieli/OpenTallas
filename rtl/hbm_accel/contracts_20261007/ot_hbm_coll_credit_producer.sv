@@ -55,7 +55,7 @@ module ot_hbm_coll_sync #(parameter integer W=1, SYNC=2, parameter [W-1:0] RV={W
  assign q=s[SYNC-1];
 endmodule
 
-module ot_hbm_coll_credit_producer #(parameter integer C=256, CW=9, SYNC=2)(
+module ot_hbm_coll_credit_producer #(parameter integer C=256, CW=9, SYNC=2, PIN=0)(
  input wire clk,rst_n,          // core domain (released by ot_hbm_collective_reset_entry)
  input wire phy_rst_n,          // PHY-domain reset level (its own released prst_n), sampled here
  input wire rb_pop,             // receive-buffer pop (one flit retired), core domain
@@ -69,7 +69,12 @@ module ot_hbm_coll_credit_producer #(parameter integer C=256, CW=9, SYNC=2)(
  ot_hbm_coll_sync #(.W(1),.SYNC(SYNC)) u_phy_rel(.clk(clk),.rst_n(rst_n),.d(phy_rst_n),.q(phy_rel_q));
  reg core_live,ready_q;reg [CW-1:0] k_bin,k_gray_q;
  wire both_released=phy_rel_q[0]&&core_live;
- wire [CW-1:0] k_bin_n=k_bin+{{(CW-1){1'b0}},rb_pop};
+ // PIN=1: rb_pop lands in a pin flop first (no logic between the port and a flop); K advances one edge later
+ // (a credit returns one cycle later: conservative, never early).
+ reg rb_pop_p;
+ always @(posedge clk or negedge rst_n)if(!rst_n)rb_pop_p<=1'b0;else rb_pop_p<=rb_pop;
+ wire rb_pop_i=PIN?rb_pop_p:rb_pop;
+ wire [CW-1:0] k_bin_n=k_bin+{{(CW-1){1'b0}},rb_pop_i};
  wire [CW-1:0] k_gray_d;
  assign k_gray_d=k_bin_n^(k_bin_n>>1);
  always @(posedge clk or negedge rst_n)
@@ -92,7 +97,7 @@ module ot_hbm_coll_credit_phy_tx #(parameter integer CW=9, SYNC=2)(
  ot_hbm_coll_sync #(.W(CW+1),.SYNC(SYNC)) u_s(.clk(pclk),.rst_n(prst_n),.d({ready_core,k_gray_core}),.q({ready_ph,k_gray_ph}));
 endmodule
 
-module ot_hbm_coll_credit_consumer #(parameter integer C=256, CW=9, SYNC=2)(
+module ot_hbm_coll_credit_consumer #(parameter integer C=256, CW=9, SYNC=2, PIN=0)(
  input wire clk,rst_n,                         // partner core domain
  input wire [CW-1:0] k_gray_link,input wire ready_link, // as received from the link (asynchronous here)
  input wire send,                              // one flit launched (must hold a credit)
@@ -112,16 +117,22 @@ module ot_hbm_coll_credit_consumer #(parameter integer C=256, CW=9, SYNC=2)(
  // Registered credit view (no combinational path to the partner's launch decision): the next edge's
  // availability is computed from the already-registered K (one edge older, so never more than the truth)
  // and the send count INCLUDING this edge's send.  avail_q <= truth always; the bound is exact.
- wire [CW-1:0] sent_n=sent_q+{{(CW-1){1'b0}},send};
+ // PIN=1: send lands in a pin flop (send_p); the count known at an edge then misses the send of the cycle
+ // ending at that edge, so the next can_send needs avail_n >= 2 (one launch may sit in the pin flop).
+ // Exact bound kept: a launch never exceeds the true credit.
+ reg send_p;
+ always @(posedge clk or negedge rst_n)if(!rst_n)send_p<=1'b0;else send_p<=send;
+ wire send_i=PIN?send_p:send;
+ wire [CW-1:0] sent_n=sent_q+{{(CW-1){1'b0}},send_i};
  wire [CW-1:0] avail_n=(rdy_q?CC:{CW{1'b0}})+kb_q-sent_n;
  reg [CW-1:0] avail_q;reg can_q;
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin sent_q<=0;avail_q<=0;can_q<=0;end
-  else begin sent_q<=sent_n;avail_q<=avail_n;can_q<=avail_n!=0;end
+  else begin sent_q<=sent_n;avail_q<=avail_n;can_q<=PIN?(avail_n>{{(CW-1){1'b0}},1'b1}):(avail_n!=0);end
  assign can_send=can_q;
  assign avail_o=avail_q;assign k_seen_o=kb_q;assign ready_seen_o=rdy_q;
 `ifndef SYNTHESIS
- wire [CW-1:0] avail=(rdy_q?CC:{CW{1'b0}})+kb_q-sent_q;   // the true availability at this edge
+ wire [CW-1:0] avail=(rdy_q?CC:{CW{1'b0}})+kb_q-sent_q-((PIN!=0)?{{(CW-1){1'b0}},send_p}:{CW{1'b0}});   // the true availability at this edge
  always @(posedge clk)if(rst_n)begin
   if(avail>CC)$fatal(1,"CREDIT_OVERGRANT avail=%0d > C=%0d (k_seen=%0d sent=%0d ready=%0d)",avail,C,kb_q,sent_q,rdy_q);
   if(send&&(avail==0||!can_q))$fatal(1,"CREDIT_OVERSEND send with no credit");
@@ -131,7 +142,7 @@ module ot_hbm_coll_credit_consumer #(parameter integer C=256, CW=9, SYNC=2)(
 `endif
 endmodule
 
-module ot_hbm_coll_tx_flight_gate #(parameter integer DTX=64, DW=8, WSTG=14, SYNC=2, H=2)(
+module ot_hbm_coll_tx_flight_gate #(parameter integer DTX=64, DW=8, WSTG=14, SYNC=2, H=2, PIN=0)(
  input wire clk,rst_n,           // core domain
  input wire pclk,prst_n,         // PHY domain (TX CDC read side)
  input wire issue,               // a flit enters the WSTG pipeline (core)
@@ -140,28 +151,36 @@ module ot_hbm_coll_tx_flight_gate #(parameter integer DTX=64, DW=8, WSTG=14, SYN
  output wire allow,              // core may issue this cycle
  output wire [DW-1:0] inflight_o);
  localparam integer BOUND=WSTG+2*SYNC+H+7;   // +2: registered popped count and registered allow
+ localparam integer BOUND_P=BOUND+2*PIN;      // PIN=1: issue and phy_pop pin flops, one edge each
 `ifndef SYNTHESIS
- initial if(DTX<BOUND)$fatal(1,"DTX=%0d below the full-rate bound D_tx >= WSTG+2*SYNC+H+7 = %0d",DTX,BOUND);
+ initial if(DTX<BOUND_P)$fatal(1,"DTX=%0d below the full-rate bound D_tx >= WSTG+2*SYNC+H+7(+2 PIN) = %0d",DTX,BOUND_P);
  initial if((1<<DW)<=DTX+WSTG)$fatal(1,"DW too narrow for DTX");
 `endif
  // PHY-domain pop count as Gray, synchronised into core.
+ // PIN=1: issue / cdc_wr (core) and phy_pop (PHY) land in pin flops first.  The popped count then lags one
+ // more PHY edge (conservative) and the issued count misses the issue of the cycle ending at the edge, so
+ // allow compares against DTX-1: inflight <= DTX holds exactly.
+ reg issue_p,cdc_wr_p,phy_pop_p;
+ always @(posedge pclk or negedge prst_n)if(!prst_n)phy_pop_p<=1'b0;else phy_pop_p<=phy_pop;
+ always @(posedge clk or negedge rst_n)if(!rst_n)begin issue_p<=1'b0;cdc_wr_p<=1'b0;end else begin issue_p<=issue;cdc_wr_p<=cdc_wr;end
+ wire issue_i=PIN?issue_p:issue,cdc_wr_i=PIN?cdc_wr_p:cdc_wr,phy_pop_i=PIN?phy_pop_p:phy_pop;
  reg [DW-1:0] pb,pg;
  always @(posedge pclk or negedge prst_n)
   if(!prst_n)begin pb<=0;pg<=0;end
-  else if(phy_pop)begin pb<=pb+1'b1;pg<=(pb+1'b1)^((pb+1'b1)>>1);end
+  else if(phy_pop_i)begin pb<=pb+1'b1;pg<=(pb+1'b1)^((pb+1'b1)>>1);end
  wire [DW-1:0] pgs;
  ot_hbm_coll_sync #(.W(DW),.SYNC(SYNC)) u_s(.clk(clk),.rst_n(rst_n),.d(pg),.q(pgs));
  reg [DW-1:0] popped_s;integer j;
  always @*begin popped_s[DW-1]=pgs[DW-1];for(j=DW-2;j>=0;j=j-1)popped_s[j]=popped_s[j+1]^pgs[j];end
  reg [DW-1:0] issued,written,ps_q;reg allow_q;
- wire [DW-1:0] issued_n=issued+{{(DW-1){1'b0}},issue};
- wire [DW-1:0] written_n=written+{{(DW-1){1'b0}},cdc_wr};
+ wire [DW-1:0] issued_n=issued+{{(DW-1){1'b0}},issue_i};
+ wire [DW-1:0] written_n=written+{{(DW-1){1'b0}},cdc_wr_i};
  // allow for the NEXT edge from registered counts: the popped count is one edge older (never ahead of the
  // truth) and the issue count includes this edge's issue, so inflight <= DTX holds exactly.
  wire [DW-1:0] inflight_n=issued_n-ps_q;
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin issued<=0;written<=0;ps_q<=0;allow_q<=0;end
-  else begin issued<=issued_n;written<=written_n;ps_q<=popped_s;allow_q<=inflight_n<DTX;end
+  else begin issued<=issued_n;written<=written_n;ps_q<=popped_s;allow_q<=inflight_n<(DTX-PIN);end
  assign allow=allow_q;
  assign inflight_o=issued-ps_q;
 `ifndef SYNTHESIS
