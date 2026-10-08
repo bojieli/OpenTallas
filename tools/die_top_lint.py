@@ -107,8 +107,14 @@ QWEN_R22 = dict(QWEN_R21, io_chan=129.6)  # r21 + 129.6 um IO-band routing chann
 # r21f + the banked VM with SU replicas and the ME result path, column C, tree lanes, band serializers (qwen-vm-me);
 # the SU and the VM on the core clock (r20g: the RTL runs them on the 1.2 GHz engine clock)
 QWEN_R21M = dict(QWEN_R21F, su_core_clock=True, vm_me=True)
+# r21m + the band-integrated tree top (qwen-band-integrate: ot_qfd_sp_tree_top BAND 1 with ot_qfd_band_upper,
+# cfg qfd_sp_tree_top_b 777.6 x 3,732.48 PD 0.55); r21bt: the _t variants (tree top 4,354.56 PD 0.45, band lanes
+# qfd_sp_band_lanes_t 1,555.2 PD 0.40)
+QWEN_R21B = dict(QWEN_R21M, tt_h=3732.48)
+QWEN_R21BT = dict(QWEN_R21M, tt_h=4354.56, bl_h=1555.2)
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
-                'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M}
+                'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
+                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -2102,7 +2108,7 @@ def main(argv=None):
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_head'])
-    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m'])
+    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '

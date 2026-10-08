@@ -72,7 +72,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
              tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
-             su_vm_abut=False, rtl_finish=False, vm_me=False):
+             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -128,6 +128,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         if not (b3r3 and rtl_finish and su_vm_abut and slab_group_h):
             raise ValueError('r21m (vm_me) builds on r21f: b3r3, slab_group_h, su_vm_abut and rtl_finish')
         v.XCOL = VM_ME_XCOL          # a third spine column M (the base generator's x layout)
+        v.R21M_TT_H, v.R21M_BL_H = tt_h, bl_h   # r21b: routed slot heights of the band tree top / band lanes (0: r21m)
         v.RELAY_RINGS = 400          # an off-corridor relay may sit up to ~3.5 mm from its path point (was 1.4)
     m = v.build(tree_mode='banded')
     _split_south(v, m)
@@ -475,17 +476,29 @@ def _repack_r21m(v, m):
         return it
     hub_lo, hub_hi = hub.y, hub.y + hub.h + v.SHAVE
     hub_c = (hub_lo + hub_hi) / 2
-    h_tt, h_cs = hh(area['tree_top']), hh(area['constants_sequencer'])
+    tt_h = getattr(v, 'R21M_TT_H', 0.0)
+    h_tt = v.up(tt_h, v.GY) if tt_h else hh(area['tree_top'])
+    h_cs = hh(area['constants_sequencer'])
     h_vm, h_su = v.up(VM_BV_H, v.GY), v.up(SU_BV_H, v.GY)
-    y_tt = _place_near(v, free, 'W', h_tt, hub_hi + h_tt / 2)
-    y_st = _place_near(v, free, 'M', h_vm + h_su, hub_c - h_su / 2)       # SU + VM stack: VM centred on the hub
-    y_su, y_vm = y_st, y_st + h_su
+    if tt_h:
+        # r21b: the band tree top (777.6 x 3,732.48 / 4,354.56) no longer fits W above the hub without pushing band 3's
+        # serializer / slab / band-lane stack out of its column; it moves to M on top of the VM (its x_ / mx_ /
+        # land_cnt face is the bottom one, toward the VM).  SU + VM + tree top are one stack in M, VM centred on the
+        # hub where the interval allows (else the least shift down), the sequencer below as before.
+        y_st = _place_near(v, free, 'M', h_su + h_vm + h_tt, hub_c - h_su / 2 + h_tt / 2)
+        y_su, y_vm = y_st, y_st + h_su
+        y_tt, tt_col = y_vm + h_vm, 'M'
+        m['geo']['r21b_vm_shift_um'] = round((y_vm + h_vm / 2) - hub_c, 3)
+    else:
+        y_tt, tt_col = _place_near(v, free, 'W', h_tt, hub_hi + h_tt / 2), 'W'
+        y_st = _place_near(v, free, 'M', h_vm + h_su, hub_c - h_su / 2)       # SU + VM stack: VM centred on the hub
+        y_su, y_vm = y_st, y_st + h_su
     y_cs = _place_near(v, free, 'M', h_cs, y_su - h_cs / 2)              # the sequencer below the SU (constant ROM)
     put('sp_vector_memory', 'qfd_sp_vector_memory', 'M', y_vm, h_vm, dom['vector_memory'])
     put('sp_su64_sfu', 'qfd_sp_su64_sfu', 'M', y_su, h_su, dom['su64_sfu'])
-    put('sp_tree_top', 'qfd_sp_tree_top', 'W', y_tt, h_tt, dom['tree_top'])
+    put('sp_tree_top', 'qfd_sp_tree_top', tt_col, y_tt, h_tt, dom['tree_top'])
     put('sp_constants_sequencer', 'qfd_sp_constants_sequencer', 'M', y_cs, h_cs, dom['constants_sequencer'])
-    for n, y, h, c in (('vector_memory', y_vm, h_vm, 'M'), ('su64_sfu', y_su, h_su, 'M'), ('tree_top', y_tt, h_tt, 'W'),
+    for n, y, h, c in (('vector_memory', y_vm, h_vm, 'M'), ('su64_sfu', y_su, h_su, 'M'), ('tree_top', y_tt, h_tt, tt_col),
                        ('constants_sequencer', y_cs, h_cs, 'M')):
         parts.append(dict(name=n, col=c, y=round(y, 3), h=h))
     # band slabs (r17 over W / E / M, held to their band's column segment); the W primary carries the serializer
@@ -499,7 +512,9 @@ def _repack_r21m(v, m):
     rpg = RTL_PORT_GROUPS // (2 * BANDS)                       # result-port groups per half (4) for per (8) block words
     m['geo']['slab_h_um'] = v.up(rpg * v.SLAB_GROUP_H + per * BW_FIFO_BITS * FIFO_MM2_PER_BIT * 1e6 / cw, v.GY)
     m['geo']['slab_port_groups'] = dict(result_groups=RTL_PORT_GROUPS, per_half=rpg, block_words=PORT_GROUPS, bw_per_half=per)
-    _repack_r17(v, m, free, put, parts, tgt, order, cw, spans, lanes_h=v.up(BL_H, v.GY), ser_h=v.up(SER_H, v.GY),
+    bl_h = getattr(v, 'R21M_BL_H', 0.0) or BL_H
+    m['geo']['r21m_slots_um'] = dict(tree_top=h_tt, band_lanes=v.up(bl_h, v.GY), res_ser=v.up(SER_H, v.GY))
+    _repack_r17(v, m, free, put, parts, tgt, order, cw, spans, lanes_h=v.up(bl_h, v.GY), ser_h=v.up(SER_H, v.GY),
                 rtl_groups=True)
     m['geo']['spine_parts_r21m'] = parts
     m['geo']['spine_free_after_um'] = {c: [[round(a, 1), round(b_, 1)] for a, b_ in iv] for c, iv in free.items()}
@@ -553,7 +568,11 @@ def _vm_me(v, m):
         band_integrate=dict(slab_port_group='ot_qwen_slab_port_group BANDF 1 (GID = slot 8b + k; group g(split, slot))',
                             spine='rtl/qwen_sys/band_integrate_20261008/ot_qfd_spine_band.sv',
                             bench='rtl/test/qwen_band_integrate/tb_qfd_spine_band.sv'),
-        open=['tree top slot: qfd_sp_tree_top_b is 777.6 x 3732.48 (the upper levels; r21m slot is the r21f tree top\'s)',
+        tree_top_slot_um=[round(m['geo']['cw'], 3), m['geo'].get('r21m_slots_um', {}).get('tree_top')],
+        tree_top_col='M (r21b: on the VM, SU + VM + tree top one stack)' if getattr(v, 'R21M_TT_H', 0.0) else 'W',
+        open=([] if getattr(v, 'R21M_TT_H', 0.0) else
+              ['tree top slot: qfd_sp_tree_top_b is 777.6 x 3732.48 (the upper levels; r21m slot is the r21f tree top\'s); '
+               'recipe r21b / r21bt']) + [
               'band lane <-> slab words connect each band at its W primary slab (a band\'s fragments reach it by pfrag)'],
         slab_port_groups='RTL_PORT_GROUPS 48 (8 a band, 4 a half; 12 port elements x PQ 4), block-word FIFOs stay 96')
     base = v.masters
@@ -562,10 +581,16 @@ def _vm_me(v, m):
         o = base(model, k, port_bits)
         # the SU <-> VM abutted bus owns the VM S face and the SU N face (_su_vm_bus): every other default pin group
         # the wrappers put there moves to the side faces (VM: E, toward the band column; SU: W)
-        for mn, f, keep, to in (('qfd_sp_vector_memory', 'S', ('sa', 'sq'), 'W'), ('qfd_sp_su64_sfu', 'N', ('va', 'vq'), 'W'),
-                                ('qfd_sp_vector_memory', 'E', (), 'W')):
+        moves = [('qfd_sp_vector_memory', 'S', ('sa', 'sq'), 'W', None), ('qfd_sp_su64_sfu', 'N', ('va', 'vq'), 'W', None),
+                 ('qfd_sp_vector_memory', 'E', (), 'W', None)]
+        if getattr(v, 'R21M_TT_H', 0.0):
+            # r21b: the tree top sits in M; its band-lane words (bw*: band word + valid, lc* / lf*: lane control /
+            # fault, ty: the split-11/12 return to band 0) face the band-lane blocks in W
+            moves.append(('qfd_sp_tree_top', 'E', (), 'W', re.compile(r'^(bw|lc|lf)\d+$|^ty$')))
+        for mn, f, keep, to, only in moves:
             M_ = o[mn]
-            mv = [pn for pn, sp in M_.ports.items() if sp[0] == 'face' and sp[2] == f and pn not in keep]
+            mv = [pn for pn, sp in M_.ports.items() if sp[0] == 'face' and sp[2] == f and pn not in keep
+                  and (only is None or only.match(pn))]
             for pn in mv:
                 _, w_, _, _, _, pitch = M_.ports[pn]
                 M_.ports.pop(pn)
@@ -674,7 +699,9 @@ def _io_south(v):
         # spine blocks whose words sat as area pins inside the body (a relay can only be beside a macro): the tree
         # top's port-slab words, its result word and done to its E face (the vertical channel), the sequencer's
         # collective / embedding-address / done words to its W face (the channel), the VM's tree-result word to E
-        moves = (('qfd_sp_tree_top', ['bw0', 'bw1', 'bw2', 'bw3', 'bw4', 'bw5', 'r', 'md'], 'E'),
+        # (r21b: the tree top sits in column M, its band words come from the band-lane blocks in W: W face)
+        moves = (('qfd_sp_tree_top', ['bw0', 'bw1', 'bw2', 'bw3', 'bw4', 'bw5', 'r', 'md'],
+                  'W' if getattr(v, 'R21M_TT_H', 0.0) else 'E'),
                  ('qfd_sp_constants_sequencer', ['cd', 'ea', 'md'], 'W'),
                  ('qfd_sp_vector_memory', ['tr'], 'E'))
         for mn, ports, face in moves:
