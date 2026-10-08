@@ -72,6 +72,8 @@ def command(a):
   assert karb in cmd and a.recut and a.margin
   cmd[cmd.index(karb)]='PRE_CTS=physical/s81_native_bf/margin/cg_local.tcl'
   cmd+=['--step-tcl','POST_CTS=physical/s81_native_bf/margin/cg_local_post.tcl']
+  import os
+  if os.environ.get('OT_CGL_FRAC'): cmd+=['--orfs-var','OT_CGL_FRAC='+os.environ['OT_CGL_FRAC']]   # read by cg_local.tcl in the flow container
  if a.extra: cmd+=a.extra.split()
  return cmd
 
