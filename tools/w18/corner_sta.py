@@ -107,7 +107,15 @@ def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = (),
     if not selected_sdc.is_file():
         raise FileNotFoundError(selected_sdc)
     rel = f"/work/{base.relative_to(orfs)}"
-    (orfs / f"w18_sta_{corner}.tcl").write_text(script(corner, rel, macros, post_sdc, sdc_name))
+    # Pass only non-default arguments: several sign-off wrappers replace this module's script() with a function of the
+    # older (corner, base, macros[, post_sdc]) signature (corner_sta_ref, hbm_cp_*, hbm_su_cp_side, qwen tmr signoff);
+    # passing sdc_name unconditionally made every one of them raise TypeError (corner_rc=1, "route crashed").
+    args = [corner, rel, macros]
+    if post_sdc or sdc_name != "6_final.sdc":
+        args.append(post_sdc)
+    if sdc_name != "6_final.sdc":
+        args.append(sdc_name)
+    (orfs / f"w18_sta_{corner}.tcl").write_text(script(*args))
     cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/work", "-v", f"{ROOT}:/src:ro", "openroad/orfs:asap7lock", "bash",
            "-lc", f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/w18_sta_{corner}.tcl"]
     out = subprocess.run(cmd, capture_output=True, text=True).stdout
