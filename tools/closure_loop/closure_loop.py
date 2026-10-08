@@ -699,8 +699,9 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             pt, pr = self.own_pending(h)
             fc = (cfg["cap"] - info["load1"] - pt - threads) / cfg["cap"]
             fr = (info["mem_gb"] - pr - cfg.get("reserve_ram_gb", 0) - ram) / cfg.get("ram_gb", 1133)
-            # OWNER 2026-10-08: memory is the resource; rank by free RAM after pending claims, load only as a tie-breaker
-            return fr + 0.1 * max(fc, -1.0) + (0.02 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
+            # OWNER 2026-10-08: memory is the only ADMISSION limit; ranking sends a job where it runs fastest among hosts
+            # that fit -- free CPU weighs 0.5 (was 0.1: AGIdock sat at load 15/64 with 67 GB free while EPYCs ran 4x over)
+            return fr + 0.5 * max(fc, -1.0) + (0.02 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
         order.sort(key=score, reverse=True)
         why = []
         for h in order:
@@ -1115,7 +1116,7 @@ def corner_sta_compat(j, host, run, full):
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
-           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh")
+           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -2060,7 +2061,97 @@ def stuck_watchdog(j, st):
 # holds them).  The loop has no generic measured-clock re-STA, so a CLOSED verdict on an assumption that moved by more
 # than the threshold is re-routed as well (conservative: it was never timed at the measured insertion).
 # Without an assumption (no measurement, no sheet) calibrate stays sequential (minutes now: no repair).
+# SYNTH-RESTA 2026-10-08: the measured-clock re-STA exists now (measured_resta / meas_resta.py): before re-routing, the
+# finished route is re-timed at sign-off (TT setup + FF hold) with its IO SDCs regenerated from the MEASURED insertion;
+# the route is redone only if that re-STA fails, or if no measured SDC can be derived for the recipe (route scripts
+# that write the IO SDC internally: 'echo ...' sdc_cmd).
 CAL_REROUTE_PS = 50.0
+
+
+def measured_sdc_args(j):
+    """meas_resta.py arguments that give a finished route its IO model at the MEASURED insertion: (args, None) or
+    (None, why).  Budget jobs: the sign-off budget SDCs the loop regenerated from the measurement (budget_check) replace
+    the route's copies; sdc_cmd jobs: the recipe's sdc_cmd re-run on the measured env, inserted after the base SDC."""
+    env = (j.get("calibration") or {}).get("env")
+    if not env:
+        return None, "no measured env"
+    stages = j["spec"].get("stages")
+    rc = (stages.get("route") or {}).get("cmd", "") if isinstance(stages, dict) else ""
+    run = j["run"]
+    if j.get("budget"):
+        if not (j["budget"].get("check") or {}).get("ok") or (j["budget"].get("insertion_used") or {}).get("grade") != "measured":
+            return None, "budget SDCs were not regenerated from the measurement (flagged or audited sheet)"
+        m1 = re.search(r"cp \$BUDGET_SDC_SIGNOFF (\S+)", rc)
+        m2 = re.search(r"cat \$BUDGET_SDC_FF; echo '\}'; \} > (\S+)", rc)
+        if not m1:
+            return None, "route cmd does not install $BUDGET_SDC_SIGNOFF as a sign-off post-SDC"
+        args = ["--replace", f"{m1.group(1)}={run}/cl/budget_signoff.sdc"]
+        if m2:
+            r = ssh(j["host"], f"{{ echo 'if {{[llength [get_libs -quiet *_FF_*]]}} {{'; cat {run}/cl/budget_ff.sdc; echo '}}'; }} "
+                               f"> {run}/cl/meas_budget_ff_guarded.sdc", timeout=60)
+            if r.returncode:
+                return None, "measured budget_ff.sdc unreadable"
+            args += ["--replace", f"{m2.group(1)}={run}/cl/meas_budget_ff_guarded.sdc"]
+        return args, None
+    sdc_cmd = (j.get("ctrack") or {}).get("sdc_cmd")
+    if not sdc_cmd:
+        return None, "no sdc_cmd"
+    out = re.search(r"--out\s+(\S+)", sdc_cmd)
+    cmd = sdc_cmd.replace(out.group(0), f"--out {run}/cl/meas_io.sdc") if out else sdc_cmd
+    text = "".join(f"{k}={v}\n" for k, v in env.items())
+    r = ssh(j["host"], f"cat > {run}/cl/calib.measured.env", input=text, timeout=60)
+    if r.returncode:
+        return None, "cannot write calib.measured.env"
+    r = ssh(j["host"], f"cd {run}/src && set -a && . {run}/cl/calib.measured.env && set +a && ( {subst(cmd, j)} )", timeout=600)
+    if r.returncode:
+        return None, f"sdc_cmd failed on the measured env (rc={r.returncode})"
+    if out:
+        path = f"{run}/cl/meas_io.sdc"
+    else:
+        last = (r.stdout.strip().splitlines() or [""])[-1].strip()
+        if not last.endswith(".sdc"):
+            return None, "sdc_cmd names no SDC file (the route script writes its IO SDC internally)"
+        path = last if last.startswith("/") else f"{run}/src/{last}"
+    if ssh(j["host"], f"test -s {shlex.quote(path)}", timeout=60).returncode:
+        return None, f"measured SDC {path} missing"
+    return ["--insert", path], None
+
+
+def measured_resta(j, m):
+    """the measured-clock re-STA of the finished route (once per route attempt): None when not needed, else the record
+    {available, tt, ff, ...}"""
+    c = j.get("ctrack") or {}
+    if c.get("state") != "done" or c.get("delta_ps", 0) <= CAL_REROUTE_PS or j.get("cal_rerouted"):
+        return None
+    mr = j.get("meas_resta")
+    if mr and mr.get("attempt") == j["attempt"]:
+        return mr
+    mr = dict(attempt=j["attempt"], at=now_iso(), delta_ps=c.get("delta_ps"), available=False)
+    orfs = m.get("orfs_dir") or (m.get("raw") or {}).get("orfs_dir")
+    args, why = (None, "no orfs_dir in the verdict metrics") if not orfs else measured_sdc_args(j)
+    if not args:
+        mr["why"] = why
+    else:
+        with TT_STA_SLOTS:
+            ship_helpers(j["host"], j["run"])
+            r = ssh(j["host"], f"python3 {j['run']}/cl/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
+                               f"--out {j['run']}/cl/meas_resta.a{j['attempt']}.json " + " ".join(shlex.quote(x) for x in args),
+                    timeout=12000)
+        try:
+            res = json.loads([x for x in r.stdout.splitlines() if x.startswith("{")][-1])
+            tt, ff = res["setup_tt"].get("worst_slack_ps"), res["hold_ff"].get("worst_slack_ps")
+            errs = (res["setup_tt"].get("errors") or []) + (res["hold_ff"].get("errors") or []) + \
+                [res[k]["error"] for k in ("setup_tt", "hold_ff") if res[k].get("error")]
+            mr.update(available=tt is not None and ff is not None and not errs, tt=tt, ff=ff, errors=errs[:5],
+                      args=args, json=f"{j['run']}/cl/meas_resta.a{j['attempt']}.json")
+            if not mr["available"]:
+                mr["why"] = f"re-STA incomplete (TT {tt} / FF {ff}; {errs[:2]})"
+        except (IndexError, ValueError, KeyError, TypeError) as ex:
+            mr["why"] = f"re-STA output unreadable ({ex}; rc={r.returncode})"
+    j["meas_resta"] = mr
+    event(j, f"measured-clock re-STA (insertion moved {c.get('delta_ps', 0):.0f} ps): " +
+             (f"TT setup {mr['tt']:+.2f} / FF hold {mr['ff']:+.2f}" if mr["available"] else f"unavailable: {mr['why']}"))
+    return mr
 
 
 def assumed_insertion(j):
@@ -2190,9 +2281,11 @@ def cal_reroute(j, stl, closed):
     j["stage_idx"], j["stage_key"] = ri, "route"
     j["attempt"] = (j["attempt"] if isinstance(j["attempt"], int) else 1) + 1
     j["status"] = "READY"
+    mr = j.get("meas_resta") or {}
+    how = (f"measured-clock re-STA FAILED: TT {mr.get('tt')} / FF {mr.get('ff')}" if mr.get("available")
+           else f"no measured-clock re-STA: {mr.get('why', 'not run')}")
     event(j, f"measured insertion moved {c['delta_ps']:.0f} ps > {CAL_REROUTE_PS:.0f} from the route's assumption "
-             f"({'CLOSED' if closed else 'NOT CLOSED'} on the assumption; no generic measured re-STA): re-route on the "
-             f"measured insertion")
+             f"({'CLOSED' if closed else 'NOT CLOSED'} on the assumption; {how}): re-route on the measured insertion")
     return True
 
 
@@ -2461,7 +2554,15 @@ def do_verdict(j, fleet, stl):
     closed = ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
     event(j, f"verdict SS {ss:+.2f} / FF {ff:+.2f} / DRC {drc} / checks failed {failed} -> "
              f"{'CLOSED' if closed else 'NOT CLOSED'}")
-    if cal_reroute(j, stl, closed):
+    mr = measured_resta(j, m)
+    if mr and mr.get("available"):
+        mclosed = mr["tt"] >= SS_MIN and mr["ff"] >= FF_MIN and drc == 0 and not failed and benches_ok
+        if mclosed:
+            # the finished route signs off on the MEASURED clock: no re-route; its verdict numbers are the measured ones
+            m.update(ss_ps=mr["tt"], ff_ps=mr["ff"], measured_resta=mr, assumed_clock=dict(ss_ps=ss, ff_ps=ff))
+            j["metrics"], ss, ff, closed = m, mr["tt"], mr["ff"], True
+            event(j, f"measured-clock re-STA CLOSES the route (TT {ss:+.2f} / FF {ff:+.2f}): no re-route")
+    if not (mr and mr.get("available") and closed) and cal_reroute(j, stl, closed):
         return
     if closed:
         j["stage_idx"] += 1
