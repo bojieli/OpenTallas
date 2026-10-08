@@ -5,12 +5,12 @@
  "scope": "CLOSED closure-loop jobs since 2026-10-07 20:45 PT (option B), minus revoked / adoption-held / bench-failed",
  "main_after_merge": "110e635304ea02513abd0043956a228c15c85ea5",
  "counts": {
-  "closed": 190,
+  "closed": 191,
   "revoked": 9,
   "held": 0,
   "bench_failed": 0,
   "already_on_main": 71,
-  "merged": 110
+  "merged": 111
  },
  "notes": [
   "Records of the codex/qwen-ctrl-kvc-final 74d839a79 qfd_ctrl_pc_NN routes conflict with main's physical/qwen_die_masters/views/qfd_ctrl_pc_NN and signoff/qfd_ctrl_pc_NN.sdc (ready_hbm design, 3d5ad2a4f / 216a06602): main's views and SDCs kept; codex record commits are ancestors of main but their view files are not the live ones.",
@@ -64,6 +64,10 @@
   {
    "entry": "s81-blocks-wsrc route_ctl.sh",
    "action": "skipped: not main-based WINDOW source; no TT-era closure"
+  },
+  {
+   "entry": "drive-0532 8a9a669df (ii1r packet-SRAM redesign) + record 203f04d42",
+   "action": "merged by drive-0828 2026-10-08 after routed-ioref re-judge CLOSED hbm_pkt_ii1rw-8a9a669df-tc"
   }
  ],
  "jobs": [
@@ -2511,6 +2515,20 @@
    "source_on_main": true,
    "record_on_main": true,
    "added_by": "coordinator"
+  },
+  {
+   "job": "hbm_pkt_ii1rw-8a9a669df-tc",
+   "closed": "2026-10-08 08:30:00-07:00",
+   "closed_by": "flow-ioref routed-ioref re-judge (TT +12.05 / FF +17.31 / DRC 0; was TT -55.91 / FF -2.18 at the calibrate reference)",
+   "branch": "claude/drive-0532-20261008",
+   "source_commit": "8a9a669df0241701d5e48f719d6cf169a81af58c",
+   "record_commit": "203f04d4214a1d49d5cb861e438db867c9a01ee6",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "(drive-0828 merge, see ready_to_merge)",
+   "status": "merged"
   }
  ]
 }
