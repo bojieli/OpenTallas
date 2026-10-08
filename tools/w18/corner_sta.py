@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """W18: sign-off-corner STA of a routed ORFS result (AGENTS.md, 2026-09-30: headline clocks close SETUP at SS
-and HOLD at FF, 60 ps / 25 ps uncertainty; TT is pathfinding only).
+and HOLD at FF, 60 ps / 25 ps uncertainty; OWNER OPTION B 2026-10-07: setup is closed at TT, SS is a sensitivity).
 
 Reads the routed 6_final.odb, its SPEF (the extraction's RC is corner-independent here: ASAP7 ships one RC
 deck) and its SDC (which carries the 60/25 ps uncertainty), and times it twice with OpenSTA:
-  SS libraries -> setup (report_worst_slack -max, TNS, the worst path)
+  TT libraries -> setup (closure)   SS libraries -> setup (sensitivity: ss_sensitivity)
   FF libraries -> hold  (report_worst_slack -min, the worst path)
 Memory macros are read at the same corner from their own views (``--macro DIR``, <name>_ss.lib / _ff.lib).
 
@@ -27,7 +27,11 @@ LIBS = {"ss": ["asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz", "asap7sc7p5t_INVBUF_R
                "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"],
         "ff": ["asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz", "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
                "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz", "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
-               "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"]}
+               "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"],
+        "tt": ["asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz", "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+               "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz", "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+               "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"]}
+SETUP_CORNERS = ("ss", "tt")   # OWNER OPTION B 2026-10-07 20:45: closure = setup at TT + hold at FF; SS = sensitivity
 
 
 def sha(p):
@@ -76,7 +80,7 @@ def script(corner: str, base: str, macros: list[str], post_sdc: list[str] = (),
     vt_lefs = "".join(f"\nread_lef {PLAT}/lef/asap7sc7p5t_28_{_VT_TAG[v]}_1x_220121a.lef" for v in vts)
     mlibs = "\n".join(f"read_liberty /src/{m}/{Path(m).name}_{corner}.lib" for m in macros)
     mlefs = "\n".join(f"read_lef /src/{m}/{Path(m).name}.lef" for m in macros)
-    check = "max" if corner == "ss" else "min"
+    check = "max" if corner in SETUP_CORNERS else "min"
     post = "\n".join(f"read_sdc /src/{p}" for p in post_sdc)
     return f"""
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
@@ -156,7 +160,7 @@ def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = (),
     out = subprocess.run(cmd, capture_output=True, text=True).stdout
     (orfs / f"w18_sta_{corner}.log").write_text(out)
     g = lambda k: (re.search(rf"^{k} (\S+)", out, re.M) or [None, None])[1]  # noqa: E731
-    return dict(corner=corner, check="setup" if corner == "ss" else "hold",
+    return dict(corner=corner, check="setup" if corner in SETUP_CORNERS else "hold",
                 worst_slack_ps=round(float(g("OT_WS")) * 1e12, 2) if g("OT_WS") else None,
                 tns_ps=round(float(g("OT_TNS")) * 1e12, 1) if g("OT_TNS") else None,
                 worst_register_d_slack_ps=float(g("OT_WS_REG_D")) if g("OT_WS_REG_D") else None,
@@ -184,16 +188,19 @@ def main(argv=None):
     o = a.orfs_dir.resolve()
     rec = dict(schema="opentallas.w18.corner_sta.v1", orfs_dir=str(o),
                sdc=(next((o / "results/asap7").glob("*/base")) / a.sdc_name).read_text()[:600], sdc_name=a.sdc_name,
+               setup_tt=run(o, "tt", a.macro, a.post_sdc, a.sdc_name),
                setup_ss=run(o, "ss", a.macro, a.post_sdc, a.sdc_name),
                hold_ff=run(o, "ff", a.macro, a.post_sdc, a.sdc_name),
                post_sdc={p: sha(ROOT / p) for p in a.post_sdc},
                libraries=LIBS, tool_sha256=sha(Path(__file__)),
-               policy="AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps")
-    rec["closes_signoff"] = bool(rec["setup_ss"]["worst_slack_ps"] is not None and rec["setup_ss"]["worst_slack_ps"] >= 0
+               policy="OWNER OPTION B 2026-10-07: setup at TT (833.333, >= 0), hold at FF (>= 0), DRC 0; setup at SS is "
+                      "reported as a sensitivity (ss_sensitivity); 60/25 ps uncertainty")
+    rec["ss_sensitivity"] = rec["setup_ss"]["worst_slack_ps"]
+    rec["closes_signoff"] = bool(rec["setup_tt"]["worst_slack_ps"] is not None and rec["setup_tt"]["worst_slack_ps"] >= 0
                                  and rec["hold_ff"]["worst_slack_ps"] is not None and rec["hold_ff"]["worst_slack_ps"] >= 0)
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
-    print(json.dumps({k: rec[k] for k in ("setup_ss", "hold_ff", "closes_signoff")}, indent=1))
+    print(json.dumps({k: rec[k] for k in ("setup_tt", "setup_ss", "hold_ff", "closes_signoff")}, indent=1))
 
 
 if __name__ == "__main__":

@@ -28,6 +28,10 @@
 #      repair_timing -setup on capt_x, so off by default), OT_GUIDES (1: keep the route's GRT guides, see below),
 #      OT_WINDOW_ONLY (1: report the endpoint windows and stop), OT_THREADS (8), OT_MAX_BUF_PCT (30), OT_MINL/OT_MAXL (M2/M7), OT_MINCLKL (M4), OT_CL (helper dir)
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
+proc ot_libc {c} {   ;# OWNER OPTION B: the setup scene ("ss") reads OT_SETUP_LIB (SS default, TT under option B)
+  if {$c eq "ss" && [info exists ::env(OT_SETUP_LIB)] && $::env(OT_SETUP_LIB) ne ""} { return [string toupper $::env(OT_SETUP_LIB)] }
+  return [string toupper $c]
+}
 proc envd {n d} { expr {[info exists ::env($n)] && $::env($n) ne "" ? $::env($n) : $d} }
 proc ot_vt_libs {C} {
   set r {}
@@ -55,9 +59,9 @@ if {$session eq "mm"} {
   # session: dshead-ctl-r6 gained 27 ps FF hold on commit_warm with 6 HB4 cells and lost 423 ps SS setup, +87.9 ->
   # -335.7; the same repair in this session ends SS +41.9 / FF +21.0.)
   foreach c $corners {
-    set C [string toupper $c]; set L($c) {}
+    set C [ot_libc $c]; set L($c) {}
     foreach l [ot_vt_libs $C] { read_liberty $P/lib/NLDM/$l; lappend L($c) $P/lib/NLDM/$l }
-    foreach m [envd OT_MACROS ""] { read_liberty $m/[file tail $m]_$c.lib; lappend L($c) $m/[file tail $m]_$c.lib }
+    foreach m [envd OT_MACROS ""] { read_liberty $m/[file tail $m]_[string tolower [ot_libc $c]].lib; lappend L($c) $m/[file tail $m]_[string tolower [ot_libc $c]].lib }
   }
   read_db $::env(OT_DB)
   read_sdc -mode ss $::env(OT_SDC_SS)
@@ -77,9 +81,9 @@ if {$session eq "mm"} {
 } else {
 define_corners {*}$corners
 foreach c $corners {
-  set C [string toupper $c]
+  set C [ot_libc $c]
   foreach l [ot_vt_libs $C] { read_liberty -corner $c $P/lib/NLDM/$l }
-  foreach m [envd OT_MACROS ""] { read_liberty -corner $c $m/[file tail $m]_$c.lib }
+  foreach m [envd OT_MACROS ""] { read_liberty -corner $c $m/[file tail $m]_[string tolower [ot_libc $c]].lib }
 }
 read_db $::env(OT_DB)
 read_sdc $::env(OT_SDC)
