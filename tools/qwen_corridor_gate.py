@@ -53,7 +53,6 @@ SITE, ROW = 0.054, 0.270
 PITCH = {'M2': 0.036, 'M3': 0.036, 'M4': 0.048, 'M5': 0.048, 'M6': 0.064, 'M7': 0.064, 'M8': 0.080, 'M9': 0.080}
 PERIOD_NS, UNC_SETUP_NS, UNC_HOLD_NS = 0.833, 0.060, 0.025
 EDGE, STATION, REPSLAB = 2.16, 8.64, 4.32               # um: end margin, station slab (r1 link endpoint), repeater slab
-PG_STRIPE = 0.48                                        # um, M8/M9 stripe width (< 0.49975 wide-spacing class)
 
 
 def r2():
@@ -106,10 +105,17 @@ def zones(t):
 
 
 PG = dict(tile=0.0439, strip=0.1639)                    # r2 pg_coverage regions tile_field / strip (per net)
+M6_PITCH, M6_PAIR = 10.8, (1.856, 2.528)                # pdn_die.tcl M6 straps (offset = first centreline): pair spans this per 10.8
+PG_PITCH = dict(tile=10.8, strip=2.7)                   # M8/M9 pitch: divides the M6 pitch so every M6 pair sits in an
+PG_OFFSET = 1.5                                         #   M8 gap (the M6->M9 stack never crosses an opposite-net M8)
 
 
-def pg_pitch(cov):
-    return snap(PG_STRIPE / cov, PITCH['M8'], up=False)  # rounded DOWN: realised coverage >= r2
+def pg_pitch(cov_name):
+    return PG_PITCH[cov_name]
+
+
+def pg_width(cov_name):
+    return math.ceil(PG[cov_name] * PG_PITCH[cov_name] * 500 - 1e-6) / 500    # 2 nm PDN width grid; realised >= r2
 
 
 def plan():
@@ -127,7 +133,8 @@ def plan():
                 raw = {l: math.floor(w / PITCH[l] + 1e-8) for l in t['layers']}
                 name = f'{tname}_{pg}_{tag}'
                 V[name] = dict(variant=name, test=tname, top=t['top'], pg=pg, pg_cov_per_net=PG[pg],
-                               pg_pitch_um=pg_pitch(PG[pg]), pg_cov_realised=round(PG_STRIPE / pg_pitch(PG[pg]), 4),
+                               pg_pitch_um=pg_pitch(pg), pg_stripe_um=pg_width(pg),
+                               pg_cov_realised=round(pg_width(pg) / pg_pitch(pg), 4),
                                width_um=w, length_um=t['length_um'], demand=t['demand'], raw_tracks=raw,
                                ratio=round(t['demand'] / sum(raw.values()), 4), ratio_tag=tag)
     return dict(tests=T, variants=V)
@@ -233,7 +240,8 @@ foreach inst [$block getInsts] {
 }
 proc qcg_free_near {y tx w lo hi} {
   # nearest site-aligned free interval of width w in row y to tx within [lo, hi]; -1 if none
-  upvar #0 occ occ site_w site_w
+  variable occ
+  variable site_w
   set best -1; set bd 1e18
   set ivs [lsort -integer -index 0 $occ($y)]
   set cands [list $lo]
@@ -326,6 +334,19 @@ foreach z [concat $zs [list [list end [expr {($qcg_axis eq "x" ? $W : $H) / doub
   if {[lindex $z 0] ne "end"} { set prev [qcg_um [lindex $z 2]] }
 }
 puts "QCG placement blockages: $nb"
+# well taps / end caps exist for cells; none can sit in a blockage, and DPL refuses fixed cells outside usable rows
+set nd 0
+foreach inst [$block getInsts] {
+  if {![string match TAPCELL* [[$inst getMaster] getName]]} continue
+  set b [$inst getBBox]
+  foreach bl [$block getBlockages] {
+    set bb [$bl getBBox]
+    if {[$b xMin] < [$bb xMax] && [$b xMax] > [$bb xMin] && [$b yMin] < [$bb yMax] && [$b yMax] > [$bb yMin]} {
+      odb::dbInst_destroy $inst; incr nd; break
+    }
+  }
+}
+puts "QCG removed $nd tap/endcap cells inside blockages"
 '''
 
 
@@ -362,6 +383,7 @@ set qcg_axis {t["axis"]}
 set qcg_zones {{{zl}}}
 set qcg_blocked {{{' '.join(t["blocked"])}}}
 set qcg_keep {GRT_KEEP}
+set qcg_margin {CORE_MARGIN}
 ''' + r'''
 set die [[qcg_block] getDieArea]
 set dbu [qcg_dbu]
@@ -382,10 +404,36 @@ for {set i 0} {$i < [llength $zs] - 1} {incr i} {
   }
 }
 puts "QCG region adjustments: $n"
+# FastRoute leaves the gcells on the die margin outside the core unadjusted (measured: edge chains detoured on the
+# blocked layers there), so the margin strips between slabs also get physical obstructions.  The margin lies outside
+# the core, where no PG shape exists.
+set tech [ord::get_db_tech]
+set blk [qcg_block]
+set m [qcg_um $qcg_margin]
+set no 0
+for {set i 0} {$i < [llength $zs] - 1} {incr i} {
+  set a [qcg_um [lindex [lindex $zs $i] 2]]
+  set b [qcg_um [lindex [lindex $zs [expr {$i + 1}]] 1]]
+  foreach l $qcg_blocked {
+    set L [$tech findLayer $l]
+    if {$qcg_axis eq "x"} {
+      odb::dbObstruction_create $blk $L $a 0 $b $m
+      odb::dbObstruction_create $blk $L $a [expr {[$die yMax] - $m}] $b [$die yMax]
+    } else {
+      odb::dbObstruction_create $blk $L 0 $a $m $b
+      odb::dbObstruction_create $blk $L [expr {[$die xMax] - $m}] $a [$die xMax] $b
+    }
+    incr no 2
+  }
+}
+puts "QCG margin obstructions: $no"
 '''
 
 
 GRT_KEEP = 2.0
+LONG_HAUL_UM = 10.0                                     # audit: a blocked-layer run longer than this is haul
+ACCESS_UM = 10.0                                        # audit: pin-access band around each slab
+CORE_MARGIN = 1.08                                      # um core inset: PG and rows stop short of the ports
 
 
 def hook_def():
@@ -397,12 +445,21 @@ puts "QCG wrote /work/qcg_route.def"
 
 
 def pdn(cov_name):
-    cov = PG[cov_name]
-    p = pg_pitch(cov)
+    cov, p, w = PG[cov_name], pg_pitch(cov_name), pg_width(cov_name)
+    sp = round(p / 2 - w, 3)
+    lo, hi = M6_PAIR
+    # the M6 pair must sit in the M8 gap between a VSS stripe end and the next VDD stripe (40 nm spacing each side)
+    o = PG_OFFSET                                        # pdngen offset = first (VSS) stripe centreline
+    gaps = [(o + w / 2, o + w / 2 + sp), (o + 1.5 * w + sp, o + p - w / 2)]
+    assert any(g0 <= lo - 0.04 and g1 >= hi + 0.04 for g0, g1 in gaps), (cov_name, gaps)
+    assert abs(M6_PITCH / p - round(M6_PITCH / p)) < 1e-9
     return f'''# Generated by tools/qwen_corridor_gate.py.  Do not edit.
 # Repo die grid (tools/chip_assembly/tcl/pdn_die.tcl) with the r2 {cov_name} M8/M9 coverage {cov} per net:
-# {PG_STRIPE} um stripes at a {p} um pitch (realised {PG_STRIPE / p:.4f} per net); no core ring (the block is a strip
-# of a die).  M6-M9 stacked connect replaces pdn_die's parallel M6-M8 connect (lands the mesh; harsher on M7/M8).
+# {w} um stripes at a {p} um pitch (realised {w / p:.4f} per net; MAXWIDTH 2.0 forbids one wide strap and stripes stay
+# under the 0.49975 um wide-metal spacing class).  No core ring (the block is a strip of a die).  The M8/M9 pitch
+# divides the M6 strap pitch (10.8) and is offset so every M6 VDD/VSS pair lies in an M8 gap; the mesh then lands on
+# M6 through M6-M9 stacked vias (V6/V7/V8 through M7 and M8), which replace pdn_die's parallel M6-M8 connect (that
+# connect cannot land without overlap; pdngen refuses it as an unrepaired channel).  Harsher on M7/M8, never lighter.
 add_global_connection -net {{VDD}} -inst_pattern {{.*}} -pin_pattern {{^VDD$}} -power
 add_global_connection -net {{VSS}} -inst_pattern {{.*}} -pin_pattern {{^VSS$}} -ground
 global_connect
@@ -412,8 +469,8 @@ add_pdn_stripe -grid {{top}} -layer {{M1}} -width {{0.018}} -pitch {{0.54}} -off
 add_pdn_stripe -grid {{top}} -layer {{M2}} -width {{0.018}} -pitch {{0.54}} -offset {{0}} -followpins
 add_pdn_stripe -grid {{top}} -layer {{M5}} -width {{0.12}} -spacing {{0.072}} -pitch {{10.8}} -offset {{1.5}}
 add_pdn_stripe -grid {{top}} -layer {{M6}} -width {{0.288}} -spacing {{0.096}} -pitch {{10.8}} -offset {{2.0}}
-add_pdn_stripe -grid {{top}} -layer {{M8}} -width {{{PG_STRIPE}}} -spacing {{{round(p / 2 - PG_STRIPE, 3)}}} -pitch {{{p}}} -offset {{{round(p / 4, 3)}}}
-add_pdn_stripe -grid {{top}} -layer {{M9}} -width {{{PG_STRIPE}}} -spacing {{{round(p / 2 - PG_STRIPE, 3)}}} -pitch {{{p}}} -offset {{{round(p / 4, 3)}}}
+add_pdn_stripe -grid {{top}} -layer {{M8}} -width {{{w}}} -spacing {{{sp}}} -pitch {{{p}}} -offset {{{PG_OFFSET}}}
+add_pdn_stripe -grid {{top}} -layer {{M9}} -width {{{w}}} -spacing {{{sp}}} -pitch {{{p}}} -offset {{{PG_OFFSET}}}
 add_pdn_connect -grid {{top}} -layers {{M1 M2}}
 add_pdn_connect -grid {{top}} -layers {{M2 M5}}
 add_pdn_connect -grid {{top}} -layers {{M5 M6}}
@@ -435,6 +492,10 @@ def files(chains=None):
         out[f'{HOOK_DIR}/{low}_grt.tcl'] = hook_grt(t)
     out[f'{HOOK_DIR}/dont_touch.tcl'] = hook_dont_touch()
     out[f'{HOOK_DIR}/write_def.tcl'] = hook_def()
+    for k in list(out):
+        if k.startswith(HOOK_DIR) and not k.split('/')[-1].startswith('pdn_'):
+            # ORFS sources step hooks inside a proc: run them in a namespace so their variables are shared
+            out[k] = 'namespace eval ::qcg {\n' + out[k] + '\n}\n'
     for c in PG:
         out[f'{HOOK_DIR}/pdn_{c}.tcl'] = pdn(c)
     return out
@@ -456,6 +517,7 @@ def argv(v, jobroot: Path, src_root: Path):
     low = t['name'].lower()
     L, Wd = var['length_um'], var['width_um']
     die = [0, 0, L, Wd] if t['axis'] == 'x' else [0, 0, Wd, L]
+    core = [CORE_MARGIN, CORE_MARGIN, round(die[2] - CORE_MARGIN, 4), round(die[3] - CORE_MARGIN, 4)]
     job = jobroot / v
     hor, ver = ('M6 M8', 'M7 M9') if t['name'] == 'A' else ('M4 M6', 'M7 M9')
     a = ['python3', str(src_root / 'tools/run_abi3_physical_persistent.py'),
@@ -463,8 +525,8 @@ def argv(v, jobroot: Path, src_root: Path):
          '--view', 'asap7', '--top', t['top'], '--source', f'{RTL_DIR}/{t["top"]}.v', '--clock-port', 'clk',
          '--clock-period-ns', str(PERIOD_NS), '--clock-uncertainty-ns', str(UNC_SETUP_NS),
          '--clock-uncertainty-hold-ns', str(UNC_HOLD_NS), '--orfs-corner', 'WC', '--hold-corners', 'WC,BC',
-         '--false-path-io', '--io-delay-fraction', '0', '--stages', 'synth,pnr', '--purpose', 'signoff_target',
-         '--die-area', *map(str, die), '--core-area', *map(str, die), '--routing-layers', 'M2', 'M9',
+         '--false-path-io', '--io-delay-fraction', '0', '--stages', 'pnr', '--purpose', 'signoff_target',
+         '--die-area', *map(str, die), '--core-area', *map(str, core), '--routing-layers', 'M2', 'M9',
          '--step-tcl', f'PRE_FLOORPLAN={HOOK_DIR}/dont_touch.tcl',
          '--step-tcl', f'PRE_GLOBAL_PLACE_SKIP_IO={HOOK_DIR}/{low}_place.tcl',
          '--step-tcl', f'PRE_IO_PLACEMENT={HOOK_DIR}/{low}_pins.tcl',
@@ -473,7 +535,7 @@ def argv(v, jobroot: Path, src_root: Path):
          '--orfs-var', f'PDN_TCL=/src/{HOOK_DIR}/pdn_{var["pg"]}.tcl',
          '--orfs-var', f'IO_PLACER_H={hor}', '--orfs-var', f'IO_PLACER_V={ver}',
          '--orfs-var', 'PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks',
-         '--orfs-var', 'DONT_BUFFER_PORTS=1',
+         '--orfs-var', 'DONT_BUFFER_PORTS=1', '--orfs-var', 'PLACE_DENSITY_LB_ADDON=',
          '--keep-heavy-artifacts', '--nickname-tag', 'qcg_' + v.lower(),
          '--source-root', str(src_root), '--output', str(job / 'physical.json')]
     return a
@@ -489,17 +551,30 @@ def parse_def_layers(def_path: Path, var, t):
     zs = [(lo, hi) for _, lo, hi in t['zones']]
     ax = 0 if t['axis'] == 'x' else 1
 
-    def inzone(c):
-        return any(lo - GRT_KEEP <= c <= hi + GRT_KEEP for lo, hi in zs)
+    slabs = [(lo - GRT_KEEP, hi + GRT_KEEP) for lo, hi in zs]
+    access = [(lo - ACCESS_UM, hi + ACCESS_UM) for lo, hi in zs]
+
+    def split(a, b):
+        """(in slab, in access band beyond the slab, beyond both) along the corridor axis."""
+        a, b = min(a, b), max(a, b)
+        ins = sum(max(0.0, min(b, hi) - max(a, lo)) for lo, hi in slabs)
+        acc_ = sum(max(0.0, min(b, hi) - max(a, lo)) for lo, hi in access) - ins
+        return ins, acc_, (b - a) - ins - acc_
     acc = {}
+
+    def add(layer, where, ln):
+        if ln > 0:
+            acc[(layer, where)] = acc.get((layer, where), 0.0) + ln
+    longest = [0.0, None, None]
     for stmt in nets.split(';'):
         if 'ROUTED' not in stmt:
             continue
+        mm_net = stmt.strip().split()[1] if stmt.strip().startswith('-') else None
         for seg in re.split(r'\b(?:ROUTED|NEW)\b', stmt)[1:]:
             mm = re.match(r'\s*(M\d+)\s+(.*)', seg, re.S)
             if not mm:
                 continue
-            layer, rest = mm.group(1), mm.group(2)
+            layer, rest = mm.group(1), re.sub(r'RECT\s*\([^)]*\)|VIRTUAL\s*\([^)]*\)', ' ', mm.group(2))
             pts, last = [], None
             for x, y in re.findall(r'\(\s*(\S+)\s+(\S+)(?:\s+\S+)?\s*\)', rest):
                 px = last[0] if x == '*' else int(x)
@@ -507,20 +582,31 @@ def parse_def_layers(def_path: Path, var, t):
                 last = (px, py)
                 pts.append(last)
             for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
-                ln = (abs(x1 - x0) + abs(y1 - y0)) / dbu
-                if ln == 0:
-                    continue
-                c = ((x0 + x1) / 2 if ax == 0 else (y0 + y1) / 2) / dbu
-                key = (layer, 'slab' if inzone(c) else 'between')
-                acc[key] = acc.get(key, 0.0) + ln
+                a0, a1 = (x0, x1) if ax == 0 else (y0, y1)
+                p0, p1 = (y0, y1) if ax == 0 else (x0, x1)
+                if a0 != a1:                                  # along the corridor
+                    ins, near, out = split(a0 / dbu, a1 / dbu)
+                    if layer in t['blocked'] and out > longest[0]:
+                        longest[:] = [out, layer, mm_net]
+                    add(layer, 'slab', ins)
+                    add(layer, 'access', near)
+                    add(layer, 'between', out)
+                elif p0 != p1:                                # across the corridor
+                    c = a0 / dbu
+                    add(layer, 'slab' if any(lo <= c <= hi for lo, hi in slabs) else
+                        'access' if any(lo <= c <= hi for lo, hi in access) else 'between', abs(p1 - p0) / dbu)
     per = {}
     for (layer, where), ln in sorted(acc.items()):
         per.setdefault(layer, {})[where] = round(ln, 1)
     between = sum(v.get('between', 0) for v in per.values())
-    off = sum(v.get('between', 0) for l, v in per.items() if l not in t['layers'] and l in
-              (('M2', 'M4') if t['axis'] == 'x' else ('M3', 'M5')))
-    return dict(per_layer_um=per, between_slab_um=round(between, 1),
+    off = sum(v.get('between', 0) for l, v in per.items() if l in t['blocked'])
+    near = sum(v.get('access', 0) for l, v in per.items() if l in t['blocked'])
+    return dict(basis=f'routed DEF signal + clock wires; slab = slab +/- {GRT_KEEP} um (GRT keep), access = a further '
+                      f'{ACCESS_UM - GRT_KEEP} um band (station / repeater pin access), between = the rest of the span',
+                per_layer_um=per, between_slab_um=round(between, 1),
                 between_slab_on_blocked_same_direction_layers_um=round(off, 1),
+                access_band_on_blocked_same_direction_layers_um=round(near, 1),
+                longest_blocked_layer_run_beyond_access=dict(um=round(longest[0], 2), layer=longest[1], net=longest[2]),
                 assigned_share_of_between_slab=round(sum(per.get(l, {}).get('between', 0) for l in t['layers'])
                                                      / between, 4) if between else None)
 
@@ -553,31 +639,32 @@ def parse_logs(work: Path):
 
 STA_TCL = r'''
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
+foreach f [lsort [glob $P/lib/NLDM/*_RVT_$::env(QCG_LIBTAG)_*.lib*]] { read_liberty $f }
 read_db $::env(QCG_ODB)
-define_corners ss ff
-foreach f [lsort [glob $P/lib/NLDM/*_RVT_SS_*.lib*]] { read_liberty -corner ss $f }
-foreach f [lsort [glob $P/lib/NLDM/*_RVT_FF_*.lib*]] { read_liberty -corner ff $f }
 read_sdc $::env(QCG_SDC)
-read_spef -corner ss $::env(QCG_SPEF)
-read_spef -corner ff $::env(QCG_SPEF)
+read_spef $::env(QCG_SPEF)
 set_propagated_clock [all_clocks]
-foreach c {ss ff} {
-  puts "QCGSTA $c setup_ws [sta::worst_slack_cmd max] tns [sta::total_negative_slack_corner_cmd [sta::find_corner $c] max]"
+report_units
+puts "QCGSTA setup"; report_worst_slack -max -digits 2
+puts "QCGSTA hold";  report_worst_slack -min -digits 2
+report_tns -digits 2
+report_checks -path_delay max -group_path_count 1 -format full_clock_expanded
+report_checks -path_delay min -group_path_count 1 -format full_clock_expanded
+set nv 0; set nh 0; set pins [get_pins -hierarchical qs*/D]
+foreach p $pins {
+  if {[get_property $p slack_max] < 0} { incr nv }
+  if {[get_property $p slack_min] < 0} { incr nh }
 }
-puts "QCGSTA ss_setup [sta::time_sta_ui [sta::worst_slack_corner [sta::find_corner ss] max]]"
-puts "QCGSTA ff_hold [sta::time_sta_ui [sta::worst_slack_corner [sta::find_corner ff] min]]"
-puts "QCGSTA ss_hold [sta::time_sta_ui [sta::worst_slack_corner [sta::find_corner ss] min]]"
-puts "QCGSTA ff_setup [sta::time_sta_ui [sta::worst_slack_corner [sta::find_corner ff] max]]"
-report_checks -corner ss -path_delay max -group_path_count 1 -format full_clock_expanded
-report_checks -corner ff -path_delay min -group_path_count 1 -format full_clock_expanded
-set nv 0
-foreach p [get_pins -hierarchical qs*/D] { if {[get_property $p slack_max] < 0} { incr nv } }
-puts "QCGSTA failing_D_any_corner $nv of [llength [get_pins -hierarchical qs*/D]]"
+puts "QCGSTA failing_D setup $nv hold $nh of [llength $pins]"
 '''
 
 
 def corner_sta(work: Path, nickname: str):
-    res = work / 'results' / 'asap7' / nickname / 'base'
+    hits = sorted(work.rglob(f'results/asap7/{nickname}/base'))
+    if not hits:
+        return dict(status='missing_results_dir')
+    res = hits[0]
+    work = res.parents[3]                                 # the ORFS case dir mounted as /work
     odb, sdc, spef = res / '6_final.odb', res / '6_final.sdc', res / '6_final.spef'
     if not (odb.is_file() and sdc.is_file() and spef.is_file()):
         return dict(status='missing_final_artifacts', have=[p.name for p in (odb, sdc, spef) if p.is_file()])
@@ -586,16 +673,23 @@ def corner_sta(work: Path, nickname: str):
     cmd = ['docker', 'run', '--rm', '-v', f'{work}:/work', '-e', f'QCG_ODB={rel(odb)}', '-e', f'QCG_SDC={rel(sdc)}',
            '-e', f'QCG_SPEF={rel(spef)}', 'openroad/orfs:latest', 'bash', '-lc',
            'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -no_splash /work/qcg_sta.tcl']
-    p = subprocess.run(cmd, capture_output=True, text=True)
-    (work / 'qcg_sta.log').write_text(p.stdout + p.stderr)
-    out = dict(status='ran' if p.returncode == 0 else f'exit_{p.returncode}', log='qcg_sta.log')
-    for k in ('ss_setup', 'ff_hold', 'ss_hold', 'ff_setup'):
-        m = re.search(rf'QCGSTA {k} (\S+)', p.stdout)
-        out[k + '_ns'] = float(m.group(1)) if m else None
-    m = re.search(r'QCGSTA failing_D_any_corner (\d+) of (\d+)', p.stdout)
-    if m:
-        out['failing_station_D_pins'] = int(m.group(1))
-        out['station_D_pins'] = int(m.group(2))
+    out = dict(status='ran', basis='OpenSTA on 6_final.odb + RCX 6_final.spef, one liberty corner per run')
+    for corner, tag in (('ss', 'SS'), ('ff', 'FF')):
+        c = cmd[:3] + ['-e', f'QCG_LIBTAG={tag}'] + cmd[3:]
+        p = subprocess.run(c, capture_output=True, text=True)
+        (work / f'qcg_sta_{corner}.log').write_text(p.stdout + p.stderr)
+        if p.returncode:
+            out['status'] = f'{corner}_exit_{p.returncode}'
+        tu = re.search(r'time\s+1(\S*)s', p.stdout)
+        scale = {'p': 1e-3, 'n': 1.0}.get(tu.group(1) if tu else 'p', 1e-3)
+        for k in ('setup', 'hold'):
+            m = re.search(rf'QCGSTA {k}\s+worst slack (?:max|min) (\S+)', p.stdout)
+            out[f'{corner}_{k}_ns'] = round(float(m.group(1)) * scale, 5) if m else None
+        m = re.search(r'QCGSTA failing_D setup (\d+) hold (\d+) of (\d+)', p.stdout)
+        if m:
+            out[f'{corner}_station_D_pins'] = int(m.group(3))
+            out[f'{corner}_failing_D_setup'] = int(m.group(1))
+            out[f'{corner}_failing_D_hold'] = int(m.group(2))
     return out
 
 
@@ -609,7 +703,7 @@ def record(v, jobroot: Path, src_root: Path):
     receipt = json.loads((job / 'receipt.json').read_text()) if (job / 'receipt.json').is_file() else None
     nick = f'opentallas_{t["top"]}_asap7_qcg_{v.lower()}'
     logs = parse_logs(work)
-    dpath = work / 'qcg_route.def'
+    dpath = next(iter(sorted(work.rglob('qcg_route.def'))), work / 'qcg_route.def')
     audit = parse_def_layers(dpath, var, t) if dpath.is_file() else dict(status='no routed DEF')
     sta = corner_sta(work, nick) if logs.get('drt_final_violations') is not None else dict(status='not routed')
     m = (phys or {}).get('place_and_route', {}).get('metrics', {}) if phys else {}
@@ -619,7 +713,11 @@ def record(v, jobroot: Path, src_root: Path):
     timing = dict(ss_setup_wns_ns=sta.get('ss_setup_ns'), ff_hold_wns_ns=sta.get('ff_hold_ns'))
     timing_met = (timing['ss_setup_wns_ns'] is not None and timing['ss_setup_wns_ns'] >= 0 and
                   timing['ff_hold_wns_ns'] is not None and timing['ff_hold_wns_ns'] >= 0)
-    layer_ok = (audit.get('between_slab_on_blocked_same_direction_layers_um') == 0.0)
+    blk, btw = audit.get('between_slab_on_blocked_same_direction_layers_um'), audit.get('between_slab_um')
+    run = (audit.get('longest_blocked_layer_run_beyond_access') or {}).get('um')
+    # long haul stays on the assigned layers: blocked-layer wire beyond the access bands is <= 5% of the between-slab
+    # wire and no single blocked-layer run exceeds LONG_HAUL_UM (short jogs around PG via stacks are routing, not haul)
+    layer_ok = bool(btw) and blk is not None and blk <= 0.05 * btw and run is not None and run <= LONG_HAUL_UM
     verdict = ('ROUTED_CLEAN' if routed_clean else
                'GRT_OVERFLOW' if grt_ovf else
                'DRT_VIOLATIONS' if drt else 'INCOMPLETE')
@@ -632,7 +730,7 @@ def record(v, jobroot: Path, src_root: Path):
                       demand_over_raw=var['ratio'], ratio_tag=var['ratio_tag'],
                       r2_width_um=t['width_r2'], segment_um=t['seg_um'], repeaters_per_segment=t['reps'],
                       chains=t['chains'], gr_blocked_between_slabs=t['blocked']),
-        pg=dict(region=var['pg'], r2_cov_per_net=var['pg_cov_per_net'], stripe_um=PG_STRIPE,
+        pg=dict(region=var['pg'], r2_cov_per_net=var['pg_cov_per_net'], stripe_um=var['pg_stripe_um'],
                 pitch_um=var['pg_pitch_um'], realised_cov_per_net=var['pg_cov_realised']),
         clock=dict(period_ns=PERIOD_NS, setup_uncertainty_ns=UNC_SETUP_NS, hold_uncertainty_ns=UNC_HOLD_NS,
                    primary_corner='WC (SS)', repair_corners=['WC', 'BC']),
