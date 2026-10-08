@@ -25,8 +25,9 @@ def job(label, mst, kind, commit, branch, glue):
     lab = '{LABEL}'
     env = (f'SRC={{SRC}} OUT={{RUN}}/routes CORES=8 DIE={label} GLUE={glue} SDCGEN=make_sdc_hend.sh HEND_KIND={kind} '
            f'POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl CLK=ck PD=0.45 '
+           f"OT_MM_FF_SDC='physical/s81_die_views/common/signoff_unc60.sdc' "
            f'SRCS="rtl/common/ot_ratio_cdc_fifo.sv"')
-    name = f's81-hend-{label}-{mst.split("__")[1].replace("_", "-")}-{commit}'
+    name = f's81-hend-{label}-{mst.split("__")[1].replace("_", "-")}-{commit}-mm'
     return name, dict(
         name=name, block=mst, owner='Claude:s81-die',
         purpose=f'S81 {label} die hub end/start block {mst} ({kind}; registered FIFO crossing, pins at the generator '
@@ -34,6 +35,10 @@ def job(label, mst, kind, commit, branch, glue):
                 'the benched ot_meso_fifo d8g1 / ot_ratio_cdc_fifo primitives)',
         hosts=['ot-agidock128', 'ot-pve1', 'ot-epyc1tb', 'ot-epyc2'], threads=8, peak_ram_gb=16,
         source=dict(branch=branch, commit=commit),
+        no_bench_reason='structural wrapper (generated glue RTL) of the benched ot_meso_fifo d8g1 / ot_ratio_cdc_fifo '
+                        'primitives (meso_fifo d8g1 closure-loop s81-meso-d8g1 benches; two_clock ratio_cdc benches); '
+                        'die-level composition exactness is the end-to-end RTL token, not this view',
+        route_hold_corners='mm', route_hold_margin_ns=0.05,
         stages=dict(
             bench=[],
             calibrate=dict(cmd=f'{env} physical/s81_die_views/glue/route.sh {lab}${{CL_LABEL_SUFFIX}} {mst} $CL_STOP_AFTER',

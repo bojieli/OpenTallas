@@ -8309,7 +8309,7 @@
 },
 "generator": {
 "file": "tools/dsrom_s81_fulldie.py",
-"sha256": "166fbc0c9d4645c36b95caaf22bb3186a7c78b7296ea9d8cad4f21f7102266cc",
+"sha256": "fbda0cf6375656b4b17f2f27e905c040afcbb518254fa2566c73cd52892d1f84",
 "options": "--gen r8 --rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --hc-xface --link-split --sel-xstg --pin-relay --ch-heights 259.2,302.4,388.8,388.8,302.4,259.2,259.2 --bf-per-region 4 --geometry-fix --vch-w 1641.6 --hc-corr 1512 --hub-column-width 1728 --su-mm2 25.61188 --pairs 1792 --q-elem-h 221.4 --pq-place --die layer1"
 }
 }
