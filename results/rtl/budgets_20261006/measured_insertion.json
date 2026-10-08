@@ -1035,22 +1035,25 @@
    "budget": null
   },
   "hfd_svc_SE_s3": {
-   "job": "hbm_svc_SE_s3_tt_c10b5fc9a",
-   "source_commit": "c10b5fc9a40e4bb60cf47a0fd8d9735d98740e65",
+   "job": "hbm_svc_SE_s3_e8b5132fb_r18b",
+   "source_commit": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
    "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_tt_c10b5fc9a",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_e8b5132fb_r18b",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T04:17:30-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T12:32:16-07:00",
    "ss": {
     "mean": 939,
     "min": 880,
     "max": 1312
    },
    "ff": {
-    "mean": 579,
-    "min": 531,
-    "max": 852
+    "mean": 524,
+    "min": 484,
+    "max": 752,
+    "n": 6665,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "boundary_n": 6665,
    "budget": {
@@ -1058,6 +1061,29 @@
     "ok": true,
     "reasons": [],
     "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
+   },
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 939,
+     "min": 880,
+     "max": 1312
+    },
+    "ff": {
+     "mean": 579,
+     "min": 531,
+     "max": 852
+    },
+    "parasitics": "placement-estimated",
+    "job": "hbm_svc_SE_s3_tt_c10b5fc9a"
+   },
+   "tt": {
+    "mean": 654,
+    "min": 610,
+    "max": 919,
+    "n": 6665,
+    "kind": "boundary",
+    "clock": "core_clk"
    }
   },
   "hfd_hc": {
@@ -3243,22 +3269,22 @@
    "budget": null
   },
   "hfd_vm_nw_n": {
-   "job": "hbm_vm8_nwn_r2p_1c3be936a-tt",
-   "source_commit": "1c3be936ac4c149b1ecb47234ade3a322d3ded33",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_nwn_r2p_1c3be936a-tt",
+   "job": "hbm_vm8_nwn_sp_hm25_a5b5873d9-tt",
+   "source_commit": "a5b5873d9c6f0ba5e26a78f77b649a40573b1e57",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nwn_sp_hm25_a5b5873d9-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T04:52:29-07:00",
+   "measured_at": "2026-10-08T12:24:57-07:00",
    "ss": {
-    "mean": 514,
-    "min": 463,
-    "max": 631
+    "mean": 513,
+    "min": 469,
+    "max": 595
    },
    "ff": {
-    "mean": 349,
-    "min": 306,
-    "max": 436
+    "mean": 347,
+    "min": 311,
+    "max": 424
    },
    "boundary_n": 16917,
    "budget": null
@@ -4653,5 +4679,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-08T12:23:04-07:00"
+ "updated": "2026-10-08T12:32:16-07:00"
 }
