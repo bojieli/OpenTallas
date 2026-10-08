@@ -20,12 +20,22 @@
 //   faults        sticky, flop-launched: die-face overrun, link receive-buffer overrun, sequence error, credit
 //                 overflow.
 // Order and values are preserved exactly; latency is not cycle-fixed (credit flow control end to end).
+//
+// gaps-design 2026-10-08 (link at line rate): with RXD = 128 the SerDes link (223 FDI cycles one way, credit round trip
+// ~460 cycles) ran at ~28 % of line rate (credit-starved: RXD / RTT).  The receive buffer is now RXD = 512 words held in
+// SRAM (SRAM = 1: 8 x ot_sram_1r1w_512x128_m4_r2c2 through ot_s81ph_mem1r1w, registered read) with a capture flop at
+// the macro outputs (no logic before it) and a SKD-entry register skid in front of the die RX face; a word's link
+// credit returns when it is read out of the SRAM (its skid slot is reserved before the read issues, so the skid cannot
+// overrun).  Receive latency +3 FDI cycles (registered read, macro-output capture, skid); rate sweep in
+// rtl/test/tb_qfd_link_adapter.sv (RATE = 1).  SRAM = 0 keeps a flop array of the same cycle behaviour (benches).
 // ---------------------------------------------------------------------------
 module ot_qfd_link_adapter #(
     parameter integer W = 1024,
     parameter integer IBUF = 4,          // die-face receive buffer (credits given to the die-bus sender)
     parameter integer OCRED = 4,         // credits for the die-bus receiver (xfifo RX side)
     parameter integer RXD = 32,          // link receive buffer (credits given to the far adapter): >= link RTT
+    parameter integer SRAM = 0,          // 1: receive buffer in SRAM macros (RXD <= 512)
+    parameter integer SKD = 4,           // die-RX skid entries (>= read pipeline depth 2 + 1 for full rate)
     parameter integer MUT = 0            // bench mutant: 1 = one extra link credit (overruns the far buffer)
 ) (
     input  wire          clk,
@@ -80,25 +90,38 @@ module ot_qfd_link_adapter #(
     wire [W-1:0]  rx_pay = rq_f[CRW+8 +: W];
     wire [CRW-1:0] rx_cr = rq_f[8 +: CRW];
     wire [7:0]    rx_sq = rq_f[7:0];
-    reg [W-1:0]  rb [0:RXD-1];
-    reg [RA:0]   rb_n;
+    reg [RA:0]   rb_n;                   // words written to the receive buffer and not yet read out
     reg [RA-1:0] rb_wp, rb_rp;
     reg [OB-1:0] o_cred;
-    wire pop_rb = (rb_n != 0) && (o_cred != 0);
+    // receive buffer: registered-read 1R1W array; a read issues only with a skid slot reserved
+    localparam integer SA = (SKD <= 2) ? 1 : $clog2(SKD);
+    reg [SA:0]   sk_res;                 // skid slots reserved: reads in flight + words held
+    wire rd_go = (rb_n != 0) && (sk_res != SKD);
+    wire [W-1:0] rb_q;
+    ot_s81ph_mem1r1w #(.W(W), .DEPTH(RXD), .SRAM(SRAM)) u_rb (.clk(clk), .we(rx_pay_v), .wa(rb_wp), .wd(rx_pay),
+        .re(rd_go), .ra(rb_rp), .q(rb_q));
+    reg          rd_v0, rd_v1;           // read issued / word in the capture flop
+    reg [W-1:0]  rb_cap;                 // capture flop at the macro outputs (no logic before it)
+    always @(posedge clk) rb_cap <= rb_q;
+    reg [W-1:0]  sk [0:SKD-1];
+    reg [SA:0]   sk_n;
+    reg [SA-1:0] sk_wp, sk_rp;
+    wire pop_rb = (sk_n != 0) && (o_cred != 0);
     always @(posedge clk) begin
         if (ci_v) ib[ib_wp] <= ci_d;
-        if (rx_pay_v) rb[rb_wp] <= rx_pay;
+        if (rd_v1) sk[sk_wp] <= rb_cap;
         if (send) tx_flit[CRW+8 +: W] <= ib[ib_rp];
         tx_flit[W+CRW+8] <= send;
         tx_flit[8 +: CRW] <= flit ? cr_owed : {CRW{1'b0}};
         tx_flit[7:0] <= tx_seq;
-        if (pop_rb) r_d <= rb[rb_rp];
+        if (pop_rb) r_d <= sk[sk_rp];
     end
     always @(posedge clk or negedge rs) begin
         if (!rs) begin
             ib_n <= 0; ib_wp <= 0; ib_rp <= 0; c_cr <= 1'b0; tx_v <= 1'b0; tx_seq <= 0; rx_seq <= 0;
             tx_cred <= RXD + ((MUT != 0) ? 1 : 0); cr_owed <= 0;
             rb_n <= 0; rb_wp <= 0; rb_rp <= 0; o_cred <= OCRED; r_v <= 1'b0;
+            sk_res <= 0; sk_n <= 0; sk_wp <= 0; sk_rp <= 0; rd_v0 <= 1'b0; rd_v1 <= 1'b0;
             f_die_ovr <= 1'b0; f_link_ovr <= 1'b0; f_seq <= 1'b0; f_cred <= 1'b0; fault <= 1'b0;
         end else begin
             // die TX face
@@ -110,7 +133,7 @@ module ot_qfd_link_adapter #(
             // link TX: one flit a cycle while up; the credit field returns everything owed so far
             tx_v <= flit;
             if (flit) tx_seq <= tx_seq + 1'b1;
-            cr_owed <= (flit ? {CRW{1'b0}} : cr_owed) + (pop_rb ? 1'b1 : 1'b0);
+            cr_owed <= (flit ? {CRW{1'b0}} : cr_owed) + (rd_go ? 1'b1 : 1'b0);   // the SRAM slot is free once read
             tx_cred <= tx_cred - (send ? 1'b1 : 1'b0) + (rq_v ? rx_cr : {CRW{1'b0}});
             if (rq_v && tx_cred + rx_cr > RXD + ((MUT != 0) ? 1 : 0)) f_cred <= 1'b1;
             // link RX
@@ -119,9 +142,16 @@ module ot_qfd_link_adapter #(
                 if (rx_sq != rx_seq) f_seq <= 1'b1;
             end
             if (rx_pay_v) rb_wp <= (rb_wp == RXD - 1) ? 0 : rb_wp + 1'b1;
-            if (pop_rb) rb_rp <= (rb_rp == RXD - 1) ? 0 : rb_rp + 1'b1;
-            rb_n <= rb_n + (rx_pay_v ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
-            if (rx_pay_v && rb_n == RXD && !pop_rb) f_link_ovr <= 1'b1;
+            if (rd_go) rb_rp <= (rb_rp == RXD - 1) ? 0 : rb_rp + 1'b1;
+            rb_n <= rb_n + (rx_pay_v ? 1'b1 : 1'b0) - (rd_go ? 1'b1 : 1'b0);
+            if (rx_pay_v && rb_n == RXD && !rd_go) f_link_ovr <= 1'b1;
+            // read pipeline and skid
+            rd_v0 <= rd_go;
+            rd_v1 <= rd_v0;
+            if (rd_v1) sk_wp <= (sk_wp == SKD - 1) ? 0 : sk_wp + 1'b1;
+            if (pop_rb) sk_rp <= (sk_rp == SKD - 1) ? 0 : sk_rp + 1'b1;
+            sk_n <= sk_n + (rd_v1 ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
+            sk_res <= sk_res + (rd_go ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
             // die RX face
             r_v <= pop_rb;
             o_cred <= o_cred - (pop_rb ? 1'b1 : 1'b0) + (r_cr ? 1'b1 : 1'b0);

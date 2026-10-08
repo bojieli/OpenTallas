@@ -173,7 +173,31 @@ def v41_mtp(work):
                            golden=d.get("golden"), returncode=rc, wall_seconds=sec))
 
 
+# -- DS ROM S81 one-layer token bench (gaps-design 2026-10-08, tools/s81/token_bench_l20.py) ---------------------
+# fixture = the prep output (1,792 binding, L20 plan / x / rank-0 checkpoint slices, golden layer record + executor VM
+# snapshots), made on the checkpoint host by `token_bench_l20.py prep` and kept with a STATUS.md
+S81TOK = S / "claude/exactness/fixtures/s81_token_l20"
+
+
+def s81_token(work):
+    tb = work / "tb"
+    shutil.copytree(S81TOK, tb, ignore=shutil.ignore_patterns("runs", "build", "select", "token_bench*.json",
+                                                             "chain_ops.json"))
+    rc, sec = run([PY, TOOLS / "s81/token_bench_l20.py", "run", "--work", tb, "--jobs", os.environ.get("S81TOK_JOBS", "40")],
+                  work, "token")
+    d = json.loads((tb / "token_bench.json").read_text()) if (tb / "token_bench.json").exists() else {}
+    m = json.loads((tb / "token_bench_mutant.json").read_text()) if (tb / "token_bench_mutant.json").exists() else {}
+    c = d.get("chain", {})
+    return save(work, dict(bench="s81_token_l20", exact=bool(rc == 0 and d.get("verdict") == "PASS"),
+                           mutant_detected=m.get("verdict") == "FAIL", cycles=(d.get("select") or {}).get("cycles"),
+                           token=None, field_ops_rtl=c.get("field_ops_rtl"), field_rows_rtl=c.get("field_rows_rtl"),
+                           golden_composed_ops=c.get("golden_composed_ops"), chain_ok=c.get("chain_ok"),
+                           final_mismatch_words=c.get("final_mismatch_words"), select_exact=(d.get("select") or {}).get("exact"),
+                           returncode=rc, wall_seconds=sec))
+
+
 BENCHES = {
+    "s81_token_l20": s81_token,
     "qwen_rom_L0": lambda w: qwen_rom(w, "L0"),
     "qwen_rom_full": lambda w: qwen_rom(w, "full"),
     "hbm_qwen_L0": lambda w: hbm_qwen(w, "L0"),

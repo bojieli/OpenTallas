@@ -164,7 +164,7 @@ L20_PCS = {"a_proj.fp8": [7, 8], "a_proj.bf16": [24, 42], "wq_b": [14, 39], "cmp
                                                          266: (123, 124, 131)}.items()},
            **{f"exp{e}.w2": [c] for e, c in {41: 110, 65: 115, 158: 120, 164: 125, 259: 128, 266: 131}.items()}}
 LAYERS = (0, 1, 2, 3, 20, 21, 24)       # one per layer type (tools/dsrom_1m_measure.TYPES reps)
-REF = Path("/home/ubuntu/w17work/ref/ctx1048576_seed20260930")
+REF = Path(os.environ.get("OT_DSROM_FIELD_REF", "/home/ubuntu/w17work/ref/ctx1048576_seed20260930"))
 SEED = 20260930
 
 
@@ -742,7 +742,10 @@ def run_one(args):
                go_to_last_w=(op["last_w"] - op["go"]) if op.get("last_w", -1) >= 0 else None,
                go_to_idle=(op["idle"] - op["go"]) if op else None,
                image_s=round(t1 - t0, 2), sim_s=round(t2 - t1, 2), tail=lines[-1:] if lines else p.stderr[-300:])
-    (rd / "result.json").write_text(json.dumps(dict(res, xcheck=xcheck)) + "\n")
+    # gaps-design 2026-10-08: the RTL's own row words (aligned with xcheck; None = not written) for the chained token
+    # bench tools/s81/token_bench_l20.py, which feeds them forward through the layer's VM instead of the golden rows
+    rtl_words = [(writes[ad][-1] if writes.get(ad) else None) for ad in expect]
+    (rd / "result.json").write_text(json.dumps(dict(res, xcheck=xcheck, rtl=rtl_words)) + "\n")
     if not keep:
         shutil.rmtree(img)
         (rd / "sim.log").write_text("\n".join(ln for ln in lines if not ln.startswith("W ")) + "\n")
