@@ -1,0 +1,6 @@
+view=asap7 corner=TT block=hfd_router top=hfd_router purpose=signoff_target
+  pnr:   wirelength=1240476 um vias=895177 DRC=0 antenna_nets=0 Fmax=1155.64 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=9
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=60
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/physical.json
