@@ -65,6 +65,8 @@ def visit(d,depth):
     if d==CUR or CUR.startswith(d+'/'):
         return descend(d,depth)
     if os.path.islink(d) : return
+    if not os.path.isdir(d) and not d.startswith('/tmp/'):
+        return            # plain files under the scratch roots belong to a job tree; only whole dirs are units there
     r=recent(d)
     if r or is_anc(d):
         return descend(d,depth)
@@ -94,9 +96,12 @@ def visit(d,depth):
     else:
         log(f'PLAN {d} {sz}MB')
 def maxdepth(d):
-    if d.startswith('/tmp/claude-1000/'): return 3
+    # Deletion UNITS, never pieces of a live tree: below a recently touched dir only whole child dirs at most this deep
+    # go (the first hourly apply 19:42 at depth 4 removed single files -- terminal.json, physical.json, SOURCE_COMMIT --
+    # out of otherwise live job and source trees).
+    if d.startswith('/tmp/claude-1000/'): return 2
     if d.startswith('/tmp/'): return 1
-    return 4
+    return 3
 def descend(d,depth):
     if not os.path.isdir(d) or os.path.islink(d): return
     if depth>=maxdepth(d+'/x'): log(f'KEEP {d}: touched <24h (unit)'); return
