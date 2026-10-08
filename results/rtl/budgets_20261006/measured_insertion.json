@@ -3594,22 +3594,22 @@
    "budget": null
   },
   "hfd_vm_sw_n": {
-   "job": "hbm_vm8_swn_r2p_1c3be936a-tt",
-   "source_commit": "1c3be936ac4c149b1ecb47234ade3a322d3ded33",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_swn_r2p_1c3be936a-tt",
+   "job": "hbm_vm8_swn_sp_hm25_a5b5873d9-tt",
+   "source_commit": "a5b5873d9c6f0ba5e26a78f77b649a40573b1e57",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_swn_sp_hm25_a5b5873d9-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T13:46:07-07:00",
+   "measured_at": "2026-10-08T14:51:42-07:00",
    "ss": {
-    "mean": 507,
-    "min": 466,
-    "max": 580
+    "mean": 509,
+    "min": 453,
+    "max": 570
    },
    "ff": {
-    "mean": 341,
-    "min": 306,
-    "max": 402
+    "mean": 342,
+    "min": 293,
+    "max": 392
    },
    "boundary_n": 21351,
    "budget": null
@@ -4788,23 +4788,23 @@
    }
   },
   "ot_s81_pq_ret_root_cam_p": {
-   "job": "s81b-pq-rcpp-h242-hm10-08f27dc4f",
+   "job": "s81b-pq-rcp-h212-hm25-08f27dc4f",
    "source_commit": "08f27dc4fa422b0bea273b64a509c44d2769df76",
    "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81b-pq-rcpp-h242-hm10-08f27dc4f",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81b-pq-rcp-h212-hm25-08f27dc4f",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T13:41:50-07:00",
+   "measured_at": "2026-10-08T14:54:33-07:00",
    "ss": {
     "mean": 393,
     "min": 376,
     "max": 401
    },
    "ff": {
-    "mean": 266,
-    "min": 246,
-    "max": 288,
-    "n": 935,
+    "mean": 203,
+    "min": 193,
+    "max": 212,
+    "n": 923,
     "kind": "boundary",
     "clock": "core_clk"
    },
@@ -4826,10 +4826,10 @@
     "job": "s81b-pq-rcpp-h242-hm10-08f27dc4f"
    },
    "tt": {
-    "mean": 325,
-    "min": 302,
-    "max": 348,
-    "n": 935,
+    "mean": 249,
+    "min": 240,
+    "max": 259,
+    "n": 923,
     "kind": "boundary",
     "clock": "core_clk"
    }
@@ -4873,5 +4873,5 @@
    }
   }
  },
- "updated": "2026-10-08T14:40:42-07:00"
+ "updated": "2026-10-08T14:54:33-07:00"
 }
