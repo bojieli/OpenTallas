@@ -791,6 +791,22 @@ def label(name):
     return re.sub(r"[^A-Za-z0-9_]", "_", name)
 
 
+TT_OVERLAY_REL = "python3 tools/closure_loop/tt_overlay.py "
+TT_OVERLAY_FLEET = ("/srv/opentallas-scratch/claude/ttbatch/26f14af32/tools/closure_loop/tt_overlay.py",
+                    "/home/ubuntu/closure-loop-local/ttbatch/26f14af32/tools/closure_loop/tt_overlay.py")
+
+
+def tt_overlay_fallback(cmd):
+    """2026-10-08: specs that call the snapshot's own tools/closure_loop/tt_overlay.py on a commit predating it (26f14af32;
+    qfd_io_emb_tap-4b111850att, qfd_sp_*-e0370c82ctt: 'can't open file ... tt_overlay.py') run the fleet's tt-batch
+    overlay copy (kept at main on every host) instead; a snapshot that carries the file keeps its own."""
+    if TT_OVERLAY_REL not in cmd:
+        return cmd
+    pick = ("python3 \"$(test -f tools/closure_loop/tt_overlay.py && echo tools/closure_loop/tt_overlay.py || "
+            f"ls -d {' '.join(TT_OVERLAY_FLEET)} 2>/dev/null | head -1)\" ")
+    return cmd.replace(TT_OVERLAY_REL, pick)
+
+
 def subst(text, j):
     m = dict(RUN=j["run"], SRC=j.get("stage_source", f"{j['run']}/src"), CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
              LABEL=label(j["name"]), RAW_NAME=j["name"],
@@ -1233,6 +1249,7 @@ def launch_stage(j, st, cmd):
                 f"cd {private} || exit $?\n")
         # A few legacy recipes spell {RUN}/src instead of using {SRC}.
         cmd = cmd.replace("{RUN}/src", "{SRC}")
+    cmd = tt_overlay_fallback(cmd)
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
     # idempotent launch (2026-10-07): a daemon restart between a launch and the job-state save re-launched the same tag;
