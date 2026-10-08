@@ -375,7 +375,7 @@ R24SM3VOCEUR = dict(R24SM3VOCEU, native_result_store_bays=True)
 #   VM quadrant cross buses on two pin layers at 2 tracks a bit + hfd_cmdproc split into its two closed halves (r19c
 #   placement, both CLOSED: hfd_cmdproc_n SS +60.84 / FF +19.69, hfd_cmdproc_s).  Attention tile height 1,600.5 um is
 #   R25A (adopted only if its queued route converges)
-R25 = dict(R24P, vm_cross_2layer=True, split_masters=dict(R24P.get('split_masters', {}),
+R25 = dict(R24P, vm_cross_2layer=True, hub_ports_file='physical/hbm_accel_die_views/hub_ports_r24p.json', split_masters=dict(R24P.get('split_masters', {}),
            hfd_cmdproc='physical/hbm_accel_die_views/cmdproc/split/split.json'))
 # the split moves the router / loader ck and rst peer projections by < 1 um: keep the r23 positions (the router's
 #   queued r23-pin re-harden and the loader route stay valid)
@@ -2545,6 +2545,12 @@ def masters(m, k=1):
         for nm_ in ('hfd_su', 'hfd_sfu', 'hfd_hc'):
             if nm_ in M:
                 hub_pin_window(M[nm_], m['variant']['hub_pin_window'], p4=bool(m['variant'].get('hub_pin_p4')))
+    if m['variant'].get('hub_ports_file') and k == 1:   # r25: hub quarter E/W faces frozen at the r24p plan (the
+        #   cmdproc split shifts the peer-projected SU E window by ~2.6 um; the queued r24p quarter routes stay valid)
+        for nm_, specs in json.loads((ROOT / m['variant']['hub_ports_file']).read_text()).items():
+            if nm_ in M:
+                for p_, sp_ in specs.items():
+                    M[nm_].ports[p_] = tuple(sp_)
     if m['variant'].get('hub_ck_seg'):      # r24: per-segment ck pins on the 5.53 mm hub quarters
         for nm_ in HUB_QUARTERS:
             if nm_ in M:
