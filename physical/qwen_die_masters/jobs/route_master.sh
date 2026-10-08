@@ -11,6 +11,9 @@ CFG=$1; NAME=$2; OUT=$3; STOP=${4:-}
 SRC=${SRC:?}; W=$OUT/$NAME; mkdir -p $W; cd $SRC
 D=/src/physical/qwen_die_masters
 source physical/qwen_die_masters/cfg/$CFG.env
+# drive-1143: a macro view lives only inside the ORFS image, so run_abi3_physical refuses host synth with
+# --macro-view / --memory-macro ("run --stages pnr"); any cfg naming one routes with STAGES=pnr.
+case " ${EXTRA[*]:-} " in *" --macro-view "*|*" --memory-macro "*) STAGES=pnr;; esac
 S=(); for f in $SRCS; do S+=(--source $f); done
 M=(); for m in "${MACROS[@]}"; do M+=(--macro $m); done
 SO=()
