@@ -3564,6 +3564,16 @@ def _hop_fix(m, P):
                         if PAD < 2.16:
                             rec['pad_fallback'][f'{PAD:g}'] = rec['pad_fallback'].get(f'{PAD:g}', 0) + 1
                         break
+                if pl is None and reg is not None and not fwd and PQ_PLACE:
+                    # S81-DIE (qs5f q abstract fills its 221.4 um frame): a frame relay with no spot inside its frame
+                    # takes the nearest legal spot within reach (the strip / channel next to the frame)
+                    for span, rows in ((300.0, 30), (1200.0, 120)):
+                        pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
+                                    reach=R - 10.0, span=span, rows=rows)
+                        if pl:
+                            pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
+                            rec['pad_fallback']['frame_out'] = rec['pad_fallback'].get('frame_out', 0) + 1
+                            break
                 if pl is None and PIN_RELAY and reg is None:   # a pin relay beside a slab: anywhere legal on the die
                     for span, rows in ((300.0, 30), (1200.0, 120)):
                         pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
