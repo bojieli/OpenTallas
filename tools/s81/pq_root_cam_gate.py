@@ -16,6 +16,8 @@ SOURCES = ['rtl/proto/ot_fp32_add_rne_pipe.sv', 'rtl/hdc/ot_hdc_delay.sv',
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--opc', type=int, default=0, help='OPC parameter of the DUT (1 = stage-C operand fetch)')
+    p.add_argument('--only', help='run one case (positive / no_insert_forward / wrong_sibling)')
     a = p.parse_args()
     a.out.mkdir(parents=True, exist_ok=False)
     original = (ROOT / SOURCES[3]).read_text()
@@ -26,14 +28,21 @@ def main():
          "if (1'b0 && insert_b && fr == n) begin"),
         ('wrong_sibling', 'sibling(effective_tag, at)',
          'effective_tag[28:13] == at[28:13]')]:
+        if a.only and name != a.only:
+            continue
         source = ROOT / SOURCES[3]
         if old:
             assert original.count(old) == 1
             source = a.out / (name + '.sv')
             source.write_text(original.replace(old, new))
         binary = a.out / (name + '.vvp')
+        tb = ROOT / SOURCES[4]
+        if a.opc:
+            t = tb.read_text(); o = 'ot_s81_pq_ret_root_cam #(.D(128),.QD(128)) dut'
+            assert t.count(o) == 1
+            tb = a.out / ('tb_opc_' + name + '.sv'); tb.write_text(t.replace(o, o.replace('.QD(128))', f'.QD(128),.OPC({a.opc}))')))
         cmd = ['iverilog', '-g2012', '-s', 'root_cam_tb', '-o', str(binary),
-               *[str(ROOT / q) for q in SOURCES[:3]], str(source), str(ROOT / SOURCES[4])]
+               *[str(ROOT / q) for q in SOURCES[:3]], str(source), str(tb)]
         compile_run = subprocess.run(cmd, text=True, capture_output=True)
         (a.out / (name + '_compile.log')).write_text(compile_run.stdout + compile_run.stderr)
         if compile_run.returncode:

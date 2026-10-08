@@ -3,7 +3,12 @@
 // D/QD remain full128. No timing or mutable-state protection claim is made.
 module ot_s81_pq_ret_root_cam #(
     parameter integer D = 128,
-    parameter integer QD = 128
+    parameter integer QD = 128,
+    // CLAUDE s81-blocks 2026-10-07: OPC 1 = stage-C fallback of the root contract (cam.stages B note): the paired
+    // entry's operands (bd/bt/be one-hot read, operand order, parent tag) are fetched one edge after the B decision
+    // from a registered hit index; +1 cycle on the add path only.  Safe: a slot removed in B(t) can be rewritten only
+    // by an insert decided in B(t+1), whose write lands on the same edge C(t+1) samples the old entry.
+    parameter integer OPC = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -83,15 +88,19 @@ module ot_s81_pq_ret_root_cam #(
     ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(add), .a(add_a), .b(add_b),
                                 .y(sum), .err(err), .valid_out(sv));
     reg [32:0] tag_in;
+    reg [$clog2(D)-1:0] c2_hit;
+    reg [31:0] c2_t, c2_d;
+    reg c2_e, c2_add;
     ot_hdc_delay #(.W(33), .D(5)) u_t (.clk(clk), .rst_n(rst_n), .d(tag_in), .q(st));
     wire [32:0] rb = {1'b0, cd} + 33'h7FFF + {32'd0, cd[16]};
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            qr <= 0; qw <= 0; qc <= 0; cv <= 0; match_vec <= 0; frees <= 0; r_v <= 1'b0; fault <= 1'b0; add <= 1'b0;
+            qr <= 0; qw <= 0; qc <= 0; cv <= 0; match_vec <= 0; frees <= 0; r_v <= 1'b0; fault <= 1'b0; add <= 1'b0; c2_add <= 1'b0;
             for (k = 0; k < D; k = k + 1) bv[k] <= 1'b0;
         end else begin
             r_v <= 1'b0;
-            add <= 1'b0;
+            add <= (OPC != 0) ? c2_add : 1'b0;
+            c2_add <= 1'b0;
             cv <= av;
             match_vec <= next_match_vec; frees <= next_frees;
             if (i_v) qw <= qw + 1'b1;
@@ -102,7 +111,7 @@ module ot_s81_pq_ret_root_cam #(
                 if (complete(ct)) begin
                     r_v <= 1'b1;
                 end else if (hit >= 0) begin
-                    add <= 1'b1;
+                    if (OPC != 0) c2_add <= 1'b1; else add <= 1'b1;
                     bv[hit] <= 1'b0;
                 end else if (fr >= 0) begin
                     bv[fr] <= 1'b1;
@@ -121,12 +130,19 @@ module ot_s81_pq_ret_root_cam #(
         end else if (qc == 0 && i_v) begin head_t <= i_t; head_d <= i_d; head_e <= i_e; end
         if (i_v) begin qt[qw] <= i_t; qd[qw] <= i_d; qe[qw] <= i_e; end
         r_row <= ct[28:13]; r_pos <= ct[31:29]; r_fp32 <= cd; r_bf16 <= rb[31:16]; r_e <= ce;
-        if (cv && !complete(ct) && hit >= 0) begin
+        if (OPC == 0 && cv && !complete(ct) && hit >= 0) begin
             // left operand: lower lo
             if (bt[hit][12:8] < ct[12:8]) begin add_a <= bd[hit]; add_b <= cd; end
             else begin add_a <= cd; add_b <= bd[hit]; end
         end
-        tag_in <= {pt, (hit >= 0) ? (be[hit] | ce) : 1'b0};
+        // OPC: stage C operand fetch from the registered decision
+        c2_hit <= hit[$clog2(D)-1:0]; c2_t <= ct; c2_d <= cd; c2_e <= ce;
+        if (OPC != 0) begin
+            if (bt[c2_hit][12:8] < c2_t[12:8]) begin add_a <= bd[c2_hit]; add_b <= c2_d; end
+            else begin add_a <= c2_d; add_b <= bd[c2_hit]; end
+            tag_in <= {parent(bt[c2_hit], c2_t), be[c2_hit] | c2_e};
+        end
+        if (OPC == 0) tag_in <= {pt, (hit >= 0) ? (be[hit] | ce) : 1'b0};
         if (cv && !complete(ct) && hit < 0 && fr >= 0) begin bt[fr] <= ct; bd[fr] <= cd; be[fr] <= ce; end
     end
 endmodule
