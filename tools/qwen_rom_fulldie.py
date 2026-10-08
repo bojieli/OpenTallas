@@ -1432,6 +1432,9 @@ WINDOWS = {
     # r17: a full band-slab stack (bands 1 W/E: 8 routed port groups each) at its measured density
     'spine_slab': lambda g: (g['x_spine'] - 2 * TILE_SLOT[0], g['row_y'][6] - 1300, g['x_arr_e'] + 2 * TILE_SLOT[0],
                              g['row_y'][6] + 1300),
+    # r22: the IO edge -- top tile rows, the IO routing channel and the SerDes / UCIe end of the IO band
+    'io_edge': lambda g: (g['x_arr_e'] + 20 * TILE_SLOT[0], g['y_top'] - 1300, g['x_arr_e'] + 28 * TILE_SLOT[0],
+                          g['y_io'] + IO_DEPTH),
 }
 # r17: measured per-instance power density (W/mm2) by master prefix, overriding the region density under the
 # instance (empty = the b3r16 region densities everywhere)
