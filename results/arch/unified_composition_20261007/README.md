@@ -60,6 +60,23 @@ The Qwen 8K HBM rows are unaffected.
 
 The HBM refill compositions are conditional sensitivities on these contracts. No composition takes credit for any of them. Every cited source file present in the tree is pinned by sha256 under `source_sha256`. Lines cite their main commits.
 
+**Die-level evidence (owner steer 2026-10-07: academic validation, not tape-out).** `die_level_evidence` covers each die. The five items are:
+
+- full-die GRT overflow;
+- die SS/FF STA on GRT parasitics;
+- the CTS-validated skew plan;
+- IR;
+- representative-region DRT with the GRT-vs-DRT error bar.
+
+Each item is marked done, in progress or missing. Each names the geometry it was run on, which for DS and HBM is a previous geometry rather than the current basis. There is no flat full-die DRT, by design.
+
+Current state:
+
+- Region DRT and the error bar are missing on all three dies.
+- Die STA on GRT parasitics is missing for Qwen and DS; HBM is in progress.
+- IR has committed records on all three, on earlier frames.
+- The CTS plan is done for DS and HBM, on earlier geometries, and missing for Qwen.
+
 DS ROM / HBM, per user, both sides candidates:
 
 - On the published 85-stage geometry: 0.90× AR and 1.25× MTP.

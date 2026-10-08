@@ -2616,7 +2616,13 @@ def write_netlist(m, k, path, top='hfd_die'):
                     bus_bits[base][b_] = f'{net}[{i}]'
             else:
                 port, net, n = c
-                parts.append(f'.{port}({net})')
+                # OpenSTA 26Q3 collapses one-bit Liberty data buses to bit pins.
+                # Binding the bus name crashes VerilogReader::makeModuleInst;
+                # the explicit escaped bit pin preserves the same connection.
+                if m.get('relay_masters', {}).get(it.master) == 1 and port in ('d', 'q'):
+                    parts.append(f'.{Q.esc(port + "[0]")}({net}[0])')
+                else:
+                    parts.append(f'.{port}({net})')
         for base, bits_ in bus_bits.items():
             hi = max(bits_)
             cat = ', '.join(bits_.get(j, "1'bz") for j in range(hi, -1, -1))

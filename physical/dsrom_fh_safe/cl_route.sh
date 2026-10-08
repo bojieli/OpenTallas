@@ -76,14 +76,16 @@ set_multicycle_path -hold 1 -from [get_cells -hierarchical *u_rom?]";;
    --step-tcl POST_PDN=$HG/keep.tcl --step-tcl POST_CTS=$HG/keep.tcl --step-tcl POST_GLOBAL_ROUTE=$HG/keep.tcl);;
  *) echo "unknown view $V"; exit 2;;
 esac
-IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-50)/1000" | bc -l)
+IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-${IN_HOLD_SKEW:-0})/1000" | bc -l)
 OMAX=$(echo "(250-$ISS)/1000" | bc -l); OMIN=$(echo "-($IFF+50)/1000" | bc -l)
+# RULE H1 (flow-hold 2026-10-07): a die link's 50 ps hold term is carried ONCE, by the sender's output min
+# (-(IFF+50)); the receiver's input min is IFF - IN_HOLD_SKEW (default 0; was IFF-50, counted on both sides).
 # ROUTE_HOLD_IO=ss (r5, 2026-10-07): the implementation flow repairs hold at WC as well as BC with ONE SDC, so the
 # FF-derived IO min (IFF-50) made every boundary path a fake WC hold violation (~SS-FF insertion, 200-280 ps):
 # hquad r4 11,540 / ctl r4 14,968 / elemB 38,140 flow hold buffers, hquad DPL-0033. With ss the ROUTE IO min uses
-# the SS insertion (WC-consistent); the sign-off SDC below keeps the FF model and FF hold goes to the loop hold ECO.
+# the SS insertion (WC-consistent; rule H1: input min = ISS - IN_HOLD_SKEW); the sign-off SDC below keeps the FF model and FF hold goes to the loop hold ECO.
 if [ "${ROUTE_HOLD_IO:-ff}" = ss ]; then
- IMIN=$(echo "($ISS-50)/1000" | bc -l); OMIN=$(echo "-($ISS+50)/1000" | bc -l)
+ IMIN=$(echo "($ISS-${IN_HOLD_SKEW:-0})/1000" | bc -l); OMIN=$(echo "-($ISS+50)/1000" | bc -l)
 fi
 G=physical/dsrom_fh_safe/gen; mkdir -p $G
 # HALF=1 (SAFE backstop, OWNER 2026-10-07 05:00): the UNCHANGED view on the half-rate generated clock of the fused-head
@@ -99,7 +101,7 @@ set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay -max $(echo "$ISS+250" | bc) -clock core_clk [all_inputs -no_clocks]
-set_input_delay -min $(echo "$IFF-50" | bc) -clock core_clk [all_inputs -no_clocks]
+set_input_delay -min $(echo "$IFF-${IN_HOLD_SKEW:-0}" | bc) -clock core_clk [all_inputs -no_clocks]
 set_output_delay -max $(echo "250-$ISS" | bc) -clock core_clk [all_outputs]
 set_output_delay -min $(echo "-($IFF+50)" | bc) -clock core_clk [all_outputs]
 set_load 3.898 [all_outputs]

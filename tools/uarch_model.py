@@ -59,6 +59,17 @@ def qwen_station_fullwidth_r22_model(**kwargs):
     return model(**kwargs)
 
 
+def hbm_ha2_relay_tx_physical_model():
+    """Real circular-delay split and common-clock local launch/TX sizing."""
+    from ha2_relay_tx_physical_model import model
+    return model()
+
+def hbm_ha2_fixedpin_model():
+    """Physical-only full-shape HA2 half-rate boundary relocation; no latency credit."""
+    from hbm_ha2_fixedpin_model import model
+    return model()
+
+
 def qwen_stream4_mutable_interface_model():
     """Selected protected STREAM4 rings/owner/control, sized before RTL."""
     from qwen_stream4_protected_model import model
@@ -14063,3 +14074,5 @@ def ha2_truecredit_protection_model():
     """Size encoded HA2 storage and explicit unresolved physical obligations."""
     from tools.ha2_truecredit_protection_model import model
     return model()
+
+

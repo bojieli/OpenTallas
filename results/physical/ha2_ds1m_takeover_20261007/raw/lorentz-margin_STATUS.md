@@ -1,0 +1,2 @@
+2026-10-06 15:10 PT Claude:tk-hbm-harvest: integrated minimum parent, margin CP (c89ee8582 settings), hierarchical verilate+build+run (base, +WRONG_RELEASE). Fixture: L20.attn.hc_pre_norm retained stage (first-norm-fixture-33e31834a). Terminal: work/build.exit, work/run_*/run.exit.
+DS1M fixture == c12 DS1M capture (x 20480 / golden 5120 words bit-identical). Negative runs: +WRONG_RELEASE (launcher) and corrupt_gold (gold_corrupt/ ey[1000]^bit16; run by hand after build). Method: results/rtl/hbm_parent_margin_benches_20261006/README.md

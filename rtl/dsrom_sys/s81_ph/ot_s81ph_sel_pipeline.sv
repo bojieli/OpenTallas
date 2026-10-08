@@ -3,6 +3,10 @@
 // sel_lib SHA256 c7624c6f573a6623db6e840d15ef1fe4376e6bd1ead7e8e23dc6215e5d52e850
 // sel_ctl SHA256 497f3079a4f70d07b7b9668ff44a1facdcaef61e3ea2e09ee1726c3be1aa0d0c
 // A: +3 edges; B: +4 edges; II=1. Every added arithmetic cut carries quota/group/offset.
+// HAND EDITS after generation (CLAUDE s81-blocks 2026-10-07, keep when regenerating): ot_s81ph_sel_ctl_pipe
+// parameters RQPIPE (tie-quota prefix sums registered in an added C_R2 state, +1 edge a segment; selt_c b6fcd9853
+// qs/eq -> c_rem -302/-285 ps) and SLAT (extra slice status latency added to every wait/hold, not to the round trip
+// XR that aligns step B with the slices' gbin).
 module ot_s81ph_sel_su_pipe #(
     parameter integer Q  = 4,
     parameter integer CB = 11,
@@ -168,7 +172,9 @@ module ot_s81ph_sel_ctl_pipe #(
     // (the waits and holdoffs grow by the round trip), PERM 1: slice i serves quarter qs[2i +: 2] (tie quotas in
     // quarter order)
     parameter integer XD   = 0,
-    parameter integer PERM = 0
+    parameter integer PERM = 0,
+    parameter integer RQPIPE = 0,                   // 1: tie quotas from registered prefix sums (C_R2, +1 edge)
+    parameter integer SLAT = 0                      // extra edges of slice status latency (waits / holds only)
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -205,14 +211,14 @@ module ot_s81ph_sel_ctl_pipe #(
     localparam integer XW   = CB + 10;              // search sums
     localparam integer QC   = KW + 1;               // coarse quota width
     localparam integer XR   = 2 * XD;               // round trip added by the tile hops
-    localparam integer WAIT = 20 + XR;              // search latency after the counts settle
-    localparam integer HOLD = 40 + 2 * XR;          // fine results ignored after a bucket change
-    localparam integer HC0  = 27 + 2 * XR, HF0 = 50 + 2 * XR, CLRW = 27 + 2 * XR;
-    localparam integer TW   = (XD == 0) ? 6 : 8;    // wait / hold counter width
+    localparam integer WAIT = 20 + XR + SLAT;       // search latency after the counts settle
+    localparam integer HOLD = 40 + 2 * XR + 2 * SLAT; // fine results ignored after a bucket change
+    localparam integer HC0  = 27 + 2 * XR + 2 * SLAT, HF0 = 50 + 2 * XR + 2 * SLAT, CLRW = 27 + 2 * XR + 2 * SLAT;
+    localparam integer TW   = (XD == 0 && SLAT == 0) ? 6 : 8;    // wait / hold counter width
     localparam integer KI   = K;
     localparam [QC-1:0] KQ  = KI[QC-1:0];
     localparam [XW-1:0] QINV = {XW{1'b1}};          // a quota no count reaches
-    localparam [2:0] C_ING = 3'd0, C_FL = 3'd1, C_P2 = 3'd2, C_W2 = 3'd3, C_R = 3'd4, C_P3 = 3'd5, C_CLR = 3'd6;
+    localparam [2:0] C_ING = 3'd0, C_FL = 3'd1, C_P2 = 3'd2, C_W2 = 3'd3, C_R = 3'd4, C_P3 = 3'd5, C_CLR = 3'd6, C_R2 = 3'd7;
 
     // status inputs, registered
     reg [Q-1:0] st_last, st_hfin, st_stopped, st_done2, st_emitted, st_ovf;
@@ -260,6 +266,22 @@ module ot_s81ph_sel_ctl_pipe #(
     reg  [CB+2:0]   pre;
     integer i;
     integer j;
+    // RQPIPE: the prefix sums of the tie counts, registered in C_R (rem_r from them in C_R2)
+    reg  [Q*(CB+3)-1:0] pre_d, pre_r;
+    reg  [Q*QC-1:0]     rem_r;
+    reg  [CB+2:0]       prq;
+    integer ri, rj;
+    always @(*) begin
+        for (ri = 0; ri < Q; ri = ri + 1) begin
+            prq = 0;
+            for (rj = 0; rj < Q; rj = rj + 1)
+                if ((PERM == 0) ? (rj < ri) : (qs[2*rj +: 2] < qs[2*ri +: 2])) prq = prq + {3'b000, eq[CB*rj +: CB]};
+            pre_d[(CB+3)*ri +: CB+3] = prq;
+        end
+        for (ri = 0; ri < Q; ri = ri + 1)
+            rem_r[QC*ri +: QC] = ({{(CB+3-QC){1'b0}}, t} > pre_r[(CB+3)*ri +: CB+3]) ? t - pre_r[(CB+3)*ri +: QC] : {QC{1'b0}};
+    end
+    always @(posedge clk) pre_r <= pre_d;
     generate if (PERM == 0) begin : g_rq
         always @(*) begin
             pre = 0;
@@ -330,7 +352,11 @@ module ot_s81ph_sel_ctl_pipe #(
                     end
                 end
                 C_R: begin
-                    st <= C_P3; c_rem <= rem_d; c_st <= {bs, ls}; c_p3 <= 1'b1; rep_req <= c_rep;
+                    if (RQPIPE != 0) st <= C_R2;     // pre_r captures the prefix sums on this edge
+                    else begin st <= C_P3; c_rem <= rem_d; c_st <= {bs, ls}; c_p3 <= 1'b1; rep_req <= c_rep; end
+                end
+                C_R2: begin
+                    st <= C_P3; c_rem <= rem_r; c_st <= {bs, ls}; c_p3 <= 1'b1; rep_req <= c_rep;
                 end
                 C_P3: begin
                     if (&st_emitted) begin st <= C_CLR; c_hclr <= 1'b1; wcnt <= CLRW[TW-1:0]; end

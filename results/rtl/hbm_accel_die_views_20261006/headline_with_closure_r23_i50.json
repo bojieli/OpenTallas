@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.hbm_closure_headline.v1",
+ "generator_round": "r23",
+ "wire_record": "die r23c GRT k16 i50 (EPYC2, 50 congestion iterations; recompose_r23_r23ci50wire__cp_in_su.json)",
+ "pre_closure": {
+  "AR_us": 537.376,
+  "AR_tok_s": 1860.9,
+  "basis": "r16j wire-priced DS AR (r13 wire record), no closure cost"
+ },
+ "with_closure": {
+  "AR_us": 576.073,
+  "AR_tok_s": 1735.9,
+  "AR_delta_pct": 7.2,
+  "MTP_step_us": 1151.903,
+  "MTP_tok_s": 3610.5,
+  "tau": 4.159,
+  "die_level_us": 30.436,
+  "sm_element_us": 8.261,
+  "cp": "inside the SU block (adopted)"
+ },
+ "note": "HBM die closure cost composed into the DS-on-HBM headline: die-level (margin / stages / splits / relays / 2x hub / bigger attention tile on the r23 wire record) + SM element m2+m3 (SM stream). The r23 record grows the die to 30.59 x 24.62 mm (wire-priced base 549.89 us vs 538.48 at r22). RE-PRICED 2026-10-07 ~09:00 (coordinator phase 2): the 50-iteration GRT record lengthens the wire-priced base 549.89 -> 554.455 us (+4.565 us, congestion detours), and the attention-tile r23 outline line (+440 cycles = 0.367 us) is included; MTP step takes both terms too."
+}

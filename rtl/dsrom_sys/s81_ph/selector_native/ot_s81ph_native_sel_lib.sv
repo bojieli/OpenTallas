@@ -132,7 +132,12 @@ endmodule
 // ---------------------------------------------------------------------------
 module ot_s81ph_native_sel_hist #(
     parameter integer W  = 16,
-    parameter integer CB = 11
+    parameter integer CB = 11,
+    // CLAUDE s81-blocks 2026-10-07 (selt_q cd3337221-b SS -434.7: hbin -> gs1, gs1 -> gsum, clr -> hbin): HPIPE 1 =
+    // the inputs (valid, enables, digits, clear) registered one edge, and each 4-bin group sum split into two
+    // registered Kogge-Stone pair sums (+1 edge in each of the two trees).  gsel -> gbin is unchanged (the control's
+    // step-B round trip stays aligned); gsum arrives 3 edges later, gbin 1 (the slice's settle counters cover it).
+    parameter integer HPIPE = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -149,20 +154,37 @@ module ot_s81ph_native_sel_hist #(
     localparam integer HW = LW + 1;                 // per-beat count width
     localparam [CB-1:0] SAT = {CB{1'b1}};
 
+    // HPIPE: registered inputs (x_*); HPIPE 0: the ports themselves
+    wire           x_v, x_clr;
+    wire [W-1:0]   x_en;
+    wire [W*8-1:0] x_dg;
+    generate if (HPIPE != 0) begin : g_xin
+        reg          r_v, r_clr;
+        reg [W-1:0]  r_en;
+        reg [W*8-1:0] r_dg;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin r_v <= 1'b0; r_clr <= 1'b0; end
+            else begin r_v <= i_v; r_clr <= clr; end
+        always @(posedge clk) begin r_en <= i_en; r_dg <= i_dg; end
+        assign x_v = r_v; assign x_clr = r_clr; assign x_en = r_en; assign x_dg = r_dg;
+    end else begin : g_xd
+        assign x_v = i_v; assign x_clr = clr; assign x_en = i_en; assign x_dg = i_dg;
+    end endgenerate
+
     reg          v1, v2;
     reg [W*16-1:0] h1_hi, h1_lo;
     genvar gl, gb;
     wire [W*16-1:0] h1_hi_d, h1_lo_d;
     generate
         for (gl = 0; gl < W; gl = gl + 1) begin : g_pre
-            wire [7:0] d = i_dg[8*gl +: 8];
-            assign h1_hi_d[16*gl +: 16] = i_en[gl] ? (16'h0001 << d[7:4]) : 16'h0000;
+            wire [7:0] d = x_dg[8*gl +: 8];
+            assign h1_hi_d[16*gl +: 16] = x_en[gl] ? (16'h0001 << d[7:4]) : 16'h0000;
             assign h1_lo_d[16*gl +: 16] = 16'h0001 << d[3:0];
         end
     endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin v1 <= 1'b0; v2 <= 1'b0; end
-        else begin v1 <= i_v && !clr; v2 <= v1 && !clr; end
+        else begin v1 <= x_v && !x_clr; v2 <= v1 && !x_clr; end
     end
     always @(posedge clk) begin h1_hi <= h1_hi_d; h1_lo <= h1_lo_d; end
 
@@ -189,23 +211,50 @@ module ot_s81ph_native_sel_hist #(
     endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) hbin <= {256*CB{1'b0}};
-        else if (clr) hbin <= {256*CB{1'b0}};
+        else if (x_clr) hbin <= {256*CB{1'b0}};
         else if (v2) hbin <= hbin_d;
     end
 
     // group sums: 4-bin sums, then 16-bin sums
     reg [64*(CB+2)-1:0] gs1;
     integer j;
-    always @(posedge clk) begin
-        for (j = 0; j < 64; j = j + 1)
-            gs1[(CB+2)*j +: CB+2] <= {2'b00, hbin[CB*(4*j) +: CB]} + {2'b00, hbin[CB*(4*j+1) +: CB]}
-                                    + {2'b00, hbin[CB*(4*j+2) +: CB]} + {2'b00, hbin[CB*(4*j+3) +: CB]};
-        for (j = 0; j < 16; j = j + 1)
-            gsum[(CB+4)*j +: CB+4] <= {2'b00, gs1[(CB+2)*(4*j) +: CB+2]} + {2'b00, gs1[(CB+2)*(4*j+1) +: CB+2]}
-                                     + {2'b00, gs1[(CB+2)*(4*j+2) +: CB+2]} + {2'b00, gs1[(CB+2)*(4*j+3) +: CB+2]};
-        gbin <= hbin[16*CB*gsel +: 16*CB];
-    end
-    assign busy = v1 || v2;
+    generate if (HPIPE == 0) begin : g_sum0
+        always @(posedge clk) begin
+            for (j = 0; j < 64; j = j + 1)
+                gs1[(CB+2)*j +: CB+2] <= {2'b00, hbin[CB*(4*j) +: CB]} + {2'b00, hbin[CB*(4*j+1) +: CB]}
+                                        + {2'b00, hbin[CB*(4*j+2) +: CB]} + {2'b00, hbin[CB*(4*j+3) +: CB]};
+            for (j = 0; j < 16; j = j + 1)
+                gsum[(CB+4)*j +: CB+4] <= {2'b00, gs1[(CB+2)*(4*j) +: CB+2]} + {2'b00, gs1[(CB+2)*(4*j+1) +: CB+2]}
+                                         + {2'b00, gs1[(CB+2)*(4*j+2) +: CB+2]} + {2'b00, gs1[(CB+2)*(4*j+3) +: CB+2]};
+        end
+    end else begin : g_sum1
+        // pair sums (registered), then the group sums of the pairs, for both trees
+        reg  [128*(CB+1)-1:0] p1;
+        wire [128*(CB+1)-1:0] p1_d;
+        wire [64*(CB+2)-1:0]  gs1_d;
+        reg  [32*(CB+3)-1:0]  p2;
+        wire [32*(CB+3)-1:0]  p2_d;
+        wire [16*(CB+4)-1:0]  gsum_d;
+        for (gb = 0; gb < 128; gb = gb + 1) begin : g_p1
+            ot_hdc_ksadd_k #(.W(CB+1)) u_a (.a({1'b0, hbin[CB*(2*gb) +: CB]}), .b({1'b0, hbin[CB*(2*gb+1) +: CB]}),
+                .cin(1'b0), .s(p1_d[(CB+1)*gb +: CB+1]), .cout());
+        end
+        for (gb = 0; gb < 64; gb = gb + 1) begin : g_g1
+            ot_hdc_ksadd_k #(.W(CB+2)) u_a (.a({1'b0, p1[(CB+1)*(2*gb) +: CB+1]}), .b({1'b0, p1[(CB+1)*(2*gb+1) +: CB+1]}),
+                .cin(1'b0), .s(gs1_d[(CB+2)*gb +: CB+2]), .cout());
+        end
+        for (gb = 0; gb < 32; gb = gb + 1) begin : g_p2
+            ot_hdc_ksadd_k #(.W(CB+3)) u_a (.a({1'b0, gs1[(CB+2)*(2*gb) +: CB+2]}), .b({1'b0, gs1[(CB+2)*(2*gb+1) +: CB+2]}),
+                .cin(1'b0), .s(p2_d[(CB+3)*gb +: CB+3]), .cout());
+        end
+        for (gb = 0; gb < 16; gb = gb + 1) begin : g_g2
+            ot_hdc_ksadd_k #(.W(CB+4)) u_a (.a({1'b0, p2[(CB+3)*(2*gb) +: CB+3]}), .b({1'b0, p2[(CB+3)*(2*gb+1) +: CB+3]}),
+                .cin(1'b0), .s(gsum_d[(CB+4)*gb +: CB+4]), .cout());
+        end
+        always @(posedge clk) begin p1 <= p1_d; gs1 <= gs1_d; p2 <= p2_d; gsum <= gsum_d; end
+    end endgenerate
+    always @(posedge clk) gbin <= hbin[16*CB*gsel +: 16*CB];
+    assign busy = ((HPIPE != 0) && x_v) || v1 || v2;
 endmodule
 
 // ---------------------------------------------------------------------------

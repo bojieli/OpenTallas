@@ -473,16 +473,24 @@ def ds_rom():
           [src(PQ_CAM_MODEL, "mutable_state_protection"), src(PQ_ROOT, "parity", commit=PQ_COMMIT)],
           "OPEN: the native root interface lacks the proposed parity; no implicit parity or protection qualification", "gate"),
         L("pq_stage_b_timing", "PQ CAM stage-B timing", "gated-unknown", None, src(PQ_CAM_MODEL, "physical_gate"),
-          "not measured (Codex S81 coordinates it); the stage-C fallback is modelled and default-off", "gate"),
+          "not measured. Stage-C fallback (OPC=1) RTL committed at 36b7a0452 (branch claude/s81-blocks-20261007), default-off; "
+          "s81-blocks.log reports it exact at +3 two-leaf / +7 eight-leaf vs native (stage B +2 / +4) but no result record is "
+          "committed; routes launched in the reserved 132 x 134 um slot. No credit until a stage closes", "gate"),
         L("pq_half_serial_lane_exactness", "HALF serial-lane exactness for a beat shift of <= 2 cycles", "gated-unknown", None,
           src(PQ_FILE, "changes", commit=PQ_COMMIT), "exactness of the HALF (BF-dedicated) serial lane under the <= 2-cycle beat shift not shown", "gate"),
+        L("selector_selt_c_cuts", "Selector selt_c structural cuts (MRG_PIPE + RQPIPE): +22 cycles a segment vs the ledger's +20",
+          "gated-unknown", None, src("rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv", "MRG_PIPE, RQPIPE", commit="b17a8dda2 (branch claude/s81-blocks-20261007 only)"),
+          "RTL committed; s81-blocks.log reports bench PASS (tail mean 129 vs 127) but no result record is committed. If it "
+          "closes it adds +2 cycles a selector segment over the ledger's selector item; not composed", "info"),
         L("field_phases_1792", "Field phase timings of the 1792 geometry (remapped regions, BF/q stage split)", "gated-unknown", None,
           src(f"{DS_MAP}/provenance.json", "variants.*.full_token_latency"), "'unpriced until matching field phase measurements and new geometry timing are composed'", "gate"),
         L("bf_half_physical", "BF half-rate clock root qualification (current exact BF closure path)", "gated-unknown", None,
           [src(DS_BFROOT, "physical_obligations"), src(DS_BFFAIL + "/record.json"), src(DS_BFFAIL + "/actual_calibration_failure.json")],
           "half-rate BF is the current exact BF closure path, not an immutable requirement: full rate may return if it meets "
           "the correctness and physical gates. The 449ebc571 root-phase failure was a script hierarchy failure (not an "
-          "arithmetic rejection), fixed in 7990dfdbf and now calibrating; SS/FF >= +15 ps, DRC 0 still to be shown", "gate"),
+          "arithmetic rejection), fixed in 7990dfdbf and now calibrating; SS/FF >= +15 ps, DRC 0 still to be shown. HALF route limiter "
+          "(ph -> ICG enable, -474.7 ps): structural HALF_PHL fix exact PASS (456 partials, negatives FAIL) on branch "
+          "claude/s81-bf-20261007 6d26df595; routes running (s81-bf)", "gate"),
         L("s81_die_closure", "S81 die DRT / SS / FF / IR at the final mixed-BF/PQ geometry", "gated-unknown", None,
           src(DS_LEDGER, "items[s81_die].description"), "global-route feasibility only", "gate"),
         L("native_token", "Native end-to-end S81 token (connected RTL)", "gated-unknown", None,
@@ -552,11 +560,13 @@ def hbm_ds():
     r23 = load(H_R23)
     cm = load(CMP)["hbm_ds"]
     tau = m["tau"]
-    rows = []
+    rows, after_total = [], False   # rows below the first "TOTAL at r23:" line are not in the r23 headline
     for l in (ROOT / H_LEDGER).read_text().splitlines():
+        if l.startswith("TOTAL at r23:"):
+            after_total = True
         mm = re.match(r"\| (.+?) \| (\d+) \| ([\d.]+) \| ([\d.]+) \|$", l)
         if mm:
-            rows.append((mm.group(1), int(mm.group(2))))
+            rows.append((mm.group(1), int(mm.group(2)), after_total))
     pre = r23["pre_closure"]["AR_us"]
     lines = [
         L("matched_gate", "Matched reference gate (measured RTL nodes, light-FEC TU budget)", "measured",
@@ -565,11 +575,11 @@ def hbm_ds():
           dict(unit="us", AR=round(pre - m["AR_us"], 3), MTP_step=round(pre - m["AR_us"], 3)),
           src(H_R23, "pre_closure"), "same die traversals on the AR walk and the verify walk", "published"),
     ]
-    for i, (name, cyc) in enumerate(rows):
+    for i, (name, cyc, beyond) in enumerate(rows):
         us = round(cyc / CLK * 1e6, 3)
         lines.append(L("closure_%02d" % i, name[:170], "priced-candidate", dict(unit="us", AR=us, MTP_step=us),
                        src(H_LEDGER, "row %d" % i), "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)",
-                       "published" if i < len(rows) - 1 else "candidate"))
+                       "candidate" if beyond else "published"))
     fec = cm["full_fec"]
     lines.append(L("full_fec", "Full RS(544,514) FEC on every switch crossing (owner 2026-10-06)", "priced-candidate",
                    dict(unit="us", AR=fec["AR_us"], MTP_step=fec["MTP_step_us"]), src(CMP, "hbm_ds.full_fec"),
@@ -617,7 +627,10 @@ def hbm_ds():
           "of line rate even with the CDC refilled, +%.2f us AR / +%.0f us MTP on the measured receive streaming (%s cycles a "
           "AR token, %s a MTP step; +%.2f %% AR, +%.2f %% MTP step on the gate)"
           % (H_CDC_V["ii3_AR_us"], H_CDC_V["ii3_MTP_us"], format(H_CDC_V["ser_AR"], ","), format(H_CDC_V["ser_MTP"], ","),
-             H_CDC_V["ii3_AR_pct"], H_CDC_V["ii3_MTP_pct"]), "gate"),
+             H_CDC_V["ii3_AR_pct"], H_CDC_V["ii3_MTP_pct"])
+          + ". Progress: the packet-SRAM II=1 refill queue RTL (opt-in ENABLE_SRAM=2) is committed at 8bd16b9e0 (branch "
+            "claude/hbm-contracts-20261007, not on main); its bench PASS is reported in hbm-contracts.log but no result "
+            "record is committed; physical closure and integration pending, so no credit", "gate"),
         L("credit_producer_native", "Native credit producer for the full-rate credit contract", "gated-unknown", None,
           src(H_REFILL, "actual_credit_producer", commit=H_REFILL_COMMIT),
           "missing in the native RTL (today a testbench preload); full rate needs >= %d credits in flight against the "
@@ -775,6 +788,85 @@ UNESTABLISHED = [
 ]
 
 
+# Die-level evidence (OWNER STEER 2026-10-07 ~19:00 PT: academic validation, not tape-out). Hierarchical sign-off:
+# blocks at full rigor; per die: GRT overflow 0, die SS/FF STA on GRT parasitics, CTS-validated clock plan, IR, and
+# detail route of REPRESENTATIVE REGIONS with the GRT-vs-DRT error bar. NO flat full-die DRT, by design.
+# status: done | in progress | missing.  "in progress" names live work from the stream logs (no credit until committed).
+DIE_ITEMS = ("grt_overflow", "die_sta_grt_parasitics", "cts_skew_plan", "ir", "region_drt_and_error_bar")
+
+
+def die_level_evidence():
+    Q = "results/rtl/qwen_rom_closed_20261006/closure.json"
+    QIR = "results/rtl/qwen_rom_die_r17_20261005/ir/ir_record.json"
+    S = "results/rtl/dsrom_s81_fulldie_20261004"
+    B = "results/rtl/budgets_20261006/README.md"
+    H = "results/rtl/hbm_accel_die_views_20261006/die_r10.json"
+    HF = "results/rtl/hbm_accel_die_floorplan_20261005/feasibility.json"
+    q = _J(Q)["physical"]["die_r20c"]
+    s9 = {v: _J(f"{S}/{v}/feasibility.json")["cases"] for v in ("v9d", "v9e")}
+    ov = lambda c: sum(l.get("overflow_total", 0) for l in c["grt"]["layers"].values())
+    hir = _J(HF)["ir_summary"]
+    ir_last = max((k for k in hir if k.startswith("ir1")), key=lambda k: int("".join(ch for ch in k[2:] if ch.isdigit()) or 0))
+    E = dict(policy="no flat full-die detail route, by design (owner steer 2026-10-07); representative regions only",
+             qwen_rom=dict(
+                 grt_overflow=dict(status="in progress", evidence=src(Q, "physical.die_r20c.grt_i50"),
+                     note="last committed full-die GRT r20c i50 overflow %s (NOT CLOSED); r21 GRT overflow 71,398 traced to the "
+                          "PDN being counted twice (grt.tcl PG-proxy on a PDN odb); r22 floorplan (IO channel, branch "
+                          "claude/qwen-dietop-20261007 bfc2ac6c5) re-running (qwen-dietop)" % format(q["grt_i50"]["overflow"], ",")),
+                 die_sta_grt_parasitics=dict(status="missing", evidence=None,
+                     note="no die SS/FF STA on GRT parasitics; the r18g path bound is a wire bound, not die STA"),
+                 cts_skew_plan=dict(status="missing", evidence=None,
+                     note="the CTS-validated die clock plan (budgets_20261006) covers S81 and HBM only; Qwen forwarded-clock graph "
+                          "is a candidate without CTS validation"),
+                 ir=dict(status="done", evidence=src(QIR),
+                     note="r19 frame: worst interior %.2f mV vs 35 mV budget (window-edge maxima exceed 35 mV); frame predates r21/r22"
+                          % q["ir"]["worst_interior_mv"]),
+                 region_drt_and_error_bar=dict(status="missing", evidence=src(Q, "physical.die_r20c.die_top_route"),
+                     note="the r20c representative-region pilot (66.6 mm2) was killed in CUGR maze routing; no region DRT and no "
+                          "GRT-vs-DRT error bar")),
+             ds_rom=dict(
+                 grt_overflow=dict(status="done", evidence=[src(f"{S}/v9d/feasibility.json", "cases.*_k16_i50"), src(f"{S}/v9e/feasibility.json", "cases.hb_k16_i50")],
+                     note="bundled full-die GRT i50 overflow: scan %d, layer1 %d (v9d, 2,048 pairs), head %d (v9e); pin access + "
+                          "legality 0. On the previous geometry: the actual 1,792 mixed geometry has no full-die GRT yet"
+                          % (ov(s9["v9d"]["sb_k16_i50"]), ov(s9["v9d"]["l1b_k16_i50"]), ov(s9["v9e"]["hb_k16_i50"]))),
+                 die_sta_grt_parasitics=dict(status="missing", evidence=None,
+                     note="no die SS/FF STA on GRT parasitics (frame-block / macro-context vehicles only)"),
+                 cts_skew_plan=dict(status="done", evidence=src(B, "section 1 table"),
+                     note="clock-only CTS validates the plan for scan/layer, layer1 and head (trunk bound 45-50 ps, columns <= 37.9 ps, "
+                          "meso wander 384-386 ps < 417 ps, tight) on r9m215_v4, not on the 1,792 geometry"),
+                 ir=dict(status="done", evidence=src(f"{S}/STATUS.md", "PSM IR table"),
+                     note="PSM rail-to-rail interior 28.6-32.2 mV (r5/r7 frames, before the recovery levers) and 13.3 mV interior on "
+                          "r9m215 v3; not re-run on the 1,792 geometry"),
+                 region_drt_and_error_bar=dict(status="missing", evidence=None,
+                     note="no representative-region DRT or GRT-vs-DRT error bar; the v9b_r1 die-top DRT resume on EPYC3 (s81-die) "
+                          "is a flat run, outside the steer")),
+             hbm_ds=dict(
+                 grt_overflow=dict(status="in progress", evidence=src(H, "overflow"),
+                     note="last committed full-die GRT record r10 overflow 371 (i5) / 454 (i50); later rounds (r14b/r16g 'routes "
+                          "clean', r23c wire record) have no committed overflow record in the tree; hbm-die owns the r23 die"),
+                 die_sta_grt_parasitics=dict(status="in progress", evidence=None,
+                     note="relay-die STA r23_rly1 (1,056 relays, clock-plan entry per pin, placement RC) SS+FF running on EPYC2 "
+                          "(hbm-die); not yet GRT parasitics, not committed"),
+                 cts_skew_plan=dict(status="done", evidence=src(B, "section 1 table"),
+                     note="clock-only CTS validates the r16j plan: 34 regions, intra bound max 56.7 ps (budget 29-90), meso wander "
+                          "270 ps < 417 ps; the r23 die and the explicit clock inputs (148467f54) are not re-validated"),
+                 ir=dict(status="done", evidence=src(HF, "ir_summary"),
+                     note="latest committed IR set %s: all_pass=%s, worst interior %.2f mV; the attention-tile exception record "
+                          "(ir_attn_exception_ira1.json) shows 241.6 mV locally, handled by its option-A quad PG record"
+                          % (ir_last, hir[ir_last]["all_pass"], hir[ir_last]["worst_interior_rail_to_rail_mv"])),
+                 region_drt_and_error_bar=dict(status="missing", evidence=None,
+                     note="the r23c die-top DRT (flat) was killed after 11 h (25,785 violations, 10 % of iteration 0); no region "
+                          "DRT or error bar yet")))
+    geo = dict(qwen_rom=dict(grt_overflow="r20c", ir="r19 frame"),
+               ds_rom=dict(grt_overflow="v9d/v9e (2,048 pairs), not the 1,792 basis", cts_skew_plan="r9m215_v4, not the 1,792 basis",
+                           ir="r5/r7 and r9m215 v3, not the 1,792 basis"),
+               hbm_ds=dict(grt_overflow="r10", cts_skew_plan="r16j, not r23", ir="die floorplan 2026-10-05 rounds, not r23"))
+    for t_, items in geo.items():
+        for k, g in items.items():
+            E[t_][k]["geometry"] = g
+    return E
+
+
 def _pins(rec):
     """sha256 of every cited source file present in this tree (immutable evidence pin)."""
     files = set()
@@ -782,7 +874,7 @@ def _pins(rec):
     def walk(x):
         if isinstance(x, dict):
             if isinstance(x.get("file"), str):
-                files.add(x["file"])
+                files.add((x["file"], "branch" in str(x.get("commit", ""))))
             for v in x.values():
                 walk(v)
         elif isinstance(x, list):
@@ -790,9 +882,12 @@ def _pins(rec):
                 walk(v)
     walk(rec)
     out = {}
-    for f in sorted(files):
+    for f, branch_only in sorted(files):
         path = ROOT / f
-        out[f] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else "not in this tree (pinned by the commit cited at the line)"
+        if branch_only:
+            out.setdefault(f, "branch-only citation: pinned by the commit cited at the line, not by this tree's copy")
+        else:
+            out[f] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else "not in this tree (pinned by the commit cited at the line)"
     return out
 
 
@@ -813,6 +908,7 @@ def ledger():
                      "price of a committed design/candidate (or a measured component not admitted at SS/FF); gated-unknown = a "
                      "cost that is not bound and is never summed. A numerical component PASS is not physical adoption."),
                targets=dict(qwen_rom=q, ds_rom=d, hbm_ds=h), ratios=ratios, no_ecc_inventory=no_ecc(), stale_claims=STALE,
+               die_level_evidence=die_level_evidence(),
                unestablished_contracts=[dict(id=i, target=tg, contract=nm, ledger_line=ln, state=st, performance_credit=0,
                                              source=next(x for x in dict(qwen_rom=q, ds_rom=d, hbm_ds=h)[tg]["lines"] if x["id"] == ln)["source"])
                                         for i, tg, nm, ln, st in UNESTABLISHED],
