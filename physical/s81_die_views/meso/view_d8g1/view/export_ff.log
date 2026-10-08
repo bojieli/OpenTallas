@@ -16,5 +16,7 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
 [WARNING STA-0450] virtual clock vw can not be propagated.
 [WARNING STA-0450] virtual clock vr can not be propagated.
-OT_WS 2.738356763565264e-11
+[WARNING STA-0450] virtual clock ot_lb_v_wclk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_rclk can not be propagated.
+OT_WS 6.970868327016433e-12
 OT_EXPORT_DONE
