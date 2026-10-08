@@ -23,7 +23,7 @@ CLOCK_NETS = re.compile(r'^(clk_(stream|serial|hbm)|ck_col_\d+)$')
 def sta_tcl(kit, region):
     v = (region / 'region.v').read_text() if (region / 'region.v').exists() else ''
     ports = set(re.findall(r'^\s*(?:input|output|inout)\s+(?:\[[^\]]+\]\s*)?(p_[\w\[\]$]+)\s*[;,]', v, re.M))
-    for corner in ('ss', 'ff'):
+    for corner in ('ss', 'tt', 'ff'):
         src = (kit / f'sta_{corner}.tcl').read_text().splitlines()
         keep, clocks = [], []
         for ln in src:
@@ -50,7 +50,7 @@ def sta_tcl(kit, region):
             if lat.exists():
                 T.append(f'foreach ln [split [read [open /kit/latency_{corner}.tcl]] "\\n"] {{ catch {{ eval $ln }} }}')
             T += [l.replace('[get_clocks -quiet {clk_stream ck_col_*}]', '[get_clocks -quiet {clk_stream ck_col_*}]') for l in rest]
-            dly = 'max' if corner == 'ss' else 'min'
+            dly = 'min' if corner == 'ff' else 'max'
             T += [f'report_checks -path_delay {dly} -group_path_count 5000 -endpoint_path_count 1 -format end '
                   f'-digits 1 > /r/end_{corner}_{par}.rpt',
                   f'puts "OT_WNS {corner} {par} [sta::format_time [sta::worst_slack_cmd {dly}] 1]"',
@@ -110,14 +110,14 @@ def record(region, name, box):
                   p95_ratio=round(sorted(ratios)[int(0.95 * (len(ratios) - 1))], 4),
                   max_ratio=round(max(ratios), 3))
     timing = {}
-    for c in ('ss', 'ff'):
+    for c in ('ss', 'tt', 'ff'):
         eg, ed = _ends(region / f'end_{c}_grt.rpt'), _ends(region / f'end_{c}_drt.rpt')
         k = [e for e in eg if e in ed]
         dl = [ed[e] - eg[e] for e in k]
         wns = {p: (float(m.group(1)) if (m := re.search(r'OT_WNS %s %s (\S+)' % (c, p),
                    (region / f'sta_{c}_{p}.log').read_text(errors='ignore') if (region / f'sta_{c}_{p}.log').exists() else ''))
                    else None) for p in ('grt', 'drt')}
-        timing[c] = dict(check='setup' if c == 'ss' else 'hold', wns_grt_ps=wns['grt'], wns_drt_ps=wns['drt'],
+        timing[c] = dict(check='hold' if c == 'ff' else 'setup', wns_grt_ps=wns['grt'], wns_drt_ps=wns['drt'],
                          endpoints=len(k))
         if dl:
             timing[c].update(delta_drt_minus_grt_ps=dict(mean=round(statistics.mean(dl), 2),

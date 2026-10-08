@@ -71,7 +71,7 @@ docker run --rm --name s81_region_$N --cpus=$T --memory=${M}g -v $G:/g:ro -v $D:
 echo $? > $D/run.exit
 # timing correlation: same STA on both parasitics, per corner
 python3 $SRC/tools/s81/region_correlation.py sta-tcl --kit $K --region $D > $D/sta_gen.log 2>&1
-for c in ss ff; do for p in grt drt; do
+for c in ss tt ff; do for p in grt drt; do
   [ -f $D/region_$p.spef ] || continue
   docker run --rm --name s81_rsta_${N}_${c}_$p --cpus=4 -v $D:/r -v $K:/kit -v $SRC:$SRC:ro -w /r openroad/orfs:asap7lock \
     bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; sta -no_init -exit /r/sta_${c}_$p.tcl > /r/sta_${c}_$p.log 2>&1; chmod a+rw /r/*" &
