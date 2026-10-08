@@ -189,7 +189,12 @@ module tb_qfd_su_master_ab;
             if (quiet > IS + OS + CRX + 8) begin
                 randomize_instr; go_r = 1; go_d = 1; ops = ops + 1; quiet = 0; end
         end
-        repeat (400) @(negedge clk);
+        // drain: both units idle (the master's last go may still be held for an embedding row fetch)
+        quiet = 0;
+        for (cyc = 0; cyc < 20000 && quiet < 64; cyc = cyc + 1) begin
+            @(negedge clk); go_r = 0; go_d = 0;
+            quiet = (r_idle && d_idle && !d_act) ? quiet + 1 : 0;
+        end
         for (i = 0; i < VMN; i = i + 1) if (vm_r[i] !== vm_d[i]) bad = bad + 1;
         hbad = 0;
         for (hk = 0; hk < 7; hk = hk + 1) if (hr[hk] !== hd[hk] || nr[hk] != nd[hk]) begin

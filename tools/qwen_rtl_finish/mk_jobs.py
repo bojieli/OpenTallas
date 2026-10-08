@@ -143,23 +143,23 @@ def main():
             "re-partitioned: lanes / port elements / VM x root are separate masters)", tree_benches(), 96,
             cycles="0 in the partition (IS=OS=0 composition cycle-identical to ot_qwen_me_spine_h_w12); stations IS+OS on "
                    "the issue loop (absorbed by the split controller's issue shell RT); x_rdy gate <= BMAX-2 = 6 edges per back-to-back ME op"),
-        job("qfd_sp_tree_top_s2", c, "r21 qfd_sp_tree_top variant: IS=OS=2, PD 0.45", tree_benches()[:1], 96,
+        job("qfd_sp_tree_top_s2", c, "r21 qfd_sp_tree_top variant: IS=OS=2, PD 0.45", [tree_benches()[0], tree_benches()[2]], 96,
             cycles="as qfd_sp_tree_top with IS=OS=2"),
         job("qfd_sp_vector_memory", c, "r21 qfd_sp_vector_memory: banked VM (64 row banks x 2 ot_sram_1r1w_256x256), "
             "parallel ME x service (beats + stride decimation, XVM=15), row ports; 777.6 x 3110.4", vm_benches(), 256, M,
             cycles="XVM 1 -> 15 inside the fixed BD x-network budget (0 added); x_rdy issue gap <= 6 edges per back-to-back ME op"),
-        job("qfd_sp_vector_memory_sq", c, "r21 qfd_sp_vector_memory variant: 1555.2 x 1555.2, PD 0.45", vm_benches(False), 256, M,
+        job("qfd_sp_vector_memory_sq", c, "r21 qfd_sp_vector_memory variant: 1555.2 x 1555.2, PD 0.45", [vm_benches()[0], vm_benches()[3]], 256, M,
             cycles="as qfd_sp_vector_memory"),
         job("qfd_io_emb_root", c, "r21 qfd_io_embedding_rom root (die-face request FIFO + credits, bank decode, in-order "
             "one-bank issue over 8 column chains, response merge)", emb_benches(), 32, threads=8,
             cycles="token row fetch ~2 x 64 + 2 x 297 chain edges, hidden behind the SU embedding op's go hold"),
-        job("qfd_io_emb_tap", c, "r21 qfd_io_embedding_rom column tap (one per bank parent)", emb_benches(False), 16,
+        job("qfd_io_emb_tap", c, "r21 qfd_io_embedding_rom column tap (one per bank parent)", [emb_benches()[0], emb_benches()[2]], 16,
             threads=8, cycles="one chain hop each way per tap"),
         job("qfd_sp_su64_sfu_ab", c, "r21 qfd_sp_su64_sfu RE-CUT (split-exact): control IS=OS=1, VM abutted, constant ROM "
             "ML=4, embedding row buffer; sign-off 1.111 ns (serial_0p9); REPLACES qfd_sp_su64_sfu-646cf264dtt",
             su_benches(), 160, cycles="SU element latency +ML (4) edges; embedding op go held for the row fetch (once per token)"),
         job("qfd_sp_su64_sfu_ab_s2", c, "r21 qfd_sp_su64_sfu RE-CUT variant IS=OS=2 (ML=6), sign-off 0.833 ns; REPLACES "
-            "qfd_sp_su64_sfu_s2-646cf264dtt", su_benches(False), 160, cycles="SU element latency +6 edges"),
+            "qfd_sp_su64_sfu_s2-646cf264dtt", [su_benches()[1], su_benches()[2]], 160, cycles="SU element latency +6 edges"),
         job("qfd_sp_constants_sequencer", c, "r21 qfd_sp_constants_sequencer RE-CUT (split-exact): issue shell inside, "
             "me_mem_ok -> me_clk_en unstationed, embedding decode moved to the SU; REPLACES "
             "qfd_sp_constants_sequencer-646cf264dtt", seq_benches(), 96,
