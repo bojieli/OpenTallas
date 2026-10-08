@@ -1,0 +1,25 @@
+{
+ "variant": "recut",
+ "cases": {
+  "mutant_recut": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[7015000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=16 ref=32ffffff00400010 shadow=331ffffe80400010"
+   ]
+  }
+ },
+ "pass": true,
+ "refreshed": [
+  "cand_ot_v41_rom_elem_w10.sv",
+  "cand_ot_v41_bf16_lanes2.sv",
+  "cand_ot_v41_bmul2_rne_prepare.sv",
+  "cand_ot_v41_segtree2.sv",
+  "cand_ot_v41_chain2.sv",
+  "cand_ot_v41_fadd.sv",
+  "cand_ot_v41_bterm2_w10.sv",
+  "cand_ot_prefix.sv"
+ ],
+ "source_commit": "d629a9d9d995b3038fab403d5629b8612b877a31",
+ "dirty": null
+}
