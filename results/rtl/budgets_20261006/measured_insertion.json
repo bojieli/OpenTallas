@@ -576,22 +576,22 @@
    "budget": null
   },
   "dsfd_coll_lane_e": {
-   "job": "s81ph-dsfd_coll_lane_e-7aa6f7358-pipeline-tt",
-   "source_commit": "7aa6f73581169ff5f3c8955d26ed8444b60aed8a",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-7aa6f7358-pipeline-tt",
+   "job": "s81b-coll_lane_ne-fmt1-mm2-9ac26e269-tt",
+   "source_commit": "9ac26e269739f75074dbb7f38b5994be5783910c",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81b-coll_lane_ne-fmt1-mm2-9ac26e269-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T05:57:38-07:00",
+   "measured_at": "2026-10-08T06:50:43-07:00",
    "ss": {
-    "mean": 559,
-    "min": 515,
-    "max": 762
+    "mean": 582,
+    "min": 522,
+    "max": 725
    },
    "ff": {
-    "mean": 361,
-    "min": 320,
-    "max": 522
+    "mean": 374,
+    "min": 326,
+    "max": 486
    },
    "boundary_n": 3246,
    "budget": null
@@ -623,30 +623,25 @@
    }
   },
   "hfd_quant": {
-   "job": "hbm_quant_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
+   "job": "hbm_quant_ts0_tt_c7f108c44",
+   "source_commit": "c7f108c446019e09b6ee6556748e2a44b5cd4ab6",
    "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_tc_4aadc92bc",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_ts0_tt_c7f108c44",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T04:03:27-07:00",
+   "measured_at": "2026-10-08T06:44:42-07:00",
    "ss": {
-    "mean": 656,
-    "min": 606,
-    "max": 1168
+    "mean": 666,
+    "min": 592,
+    "max": 1198
    },
    "ff": {
-    "mean": 451,
-    "min": 405,
-    "max": 823
+    "mean": 459,
+    "min": 395,
+    "max": 849
    },
    "boundary_n": 3072,
-   "budget": {
-    "measured_ss": 656.0,
-    "ok": true,
-    "reasons": [],
-    "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
-   }
+   "budget": null
   },
   "hfd_svc_SE_s3": {
    "job": "hbm_svc_SE_s3_tt_c10b5fc9a",
@@ -1656,22 +1651,22 @@
    "budget": null
   },
   "ot_hdc_v41_fh_hquad": {
-   "job": "dshead-hquad-r5-60f5a0a90-tt",
-   "source_commit": "60f5a0a9050fcea5f5db815d4b72c04144730c70",
-   "host": "ot-pve1",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/dshead-hquad-r5-60f5a0a90-tt",
+   "job": "dshead-hquad-half-h1-5afebaa10-tt",
+   "source_commit": "5afebaa10471b5060fb81afd59212917719c45d9",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dshead-hquad-half-h1-5afebaa10-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T03:38:32-07:00",
+   "measured_at": "2026-10-08T06:49:39-07:00",
    "ss": {
-    "mean": 590,
-    "min": 550,
-    "max": 712
+    "mean": 586,
+    "min": 551,
+    "max": 743
    },
    "ff": {
-    "mean": 386,
-    "min": 352,
-    "max": 489
+    "mean": 382,
+    "min": 354,
+    "max": 509
    },
    "boundary_n": 1784,
    "budget": null
@@ -2080,13 +2075,13 @@
    "budget": null
   },
   "hfd_mcast_r6a": {
-   "job": "hbm_stn_mcast_r6a_f78eb159f-mmq",
+   "job": "hbm_stn_mcast_r6a_f78eb159f-mmq-tt",
    "source_commit": "f78eb159fb6cbe890b5600137c7895af59d375c8",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r6a_f78eb159f-mmq",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r6a_f78eb159f-mmq-tt",
    "clock": "ck",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T02:36:56-07:00",
+   "measured_at": "2026-10-08T06:48:40-07:00",
    "ss": {
     "mean": 542,
     "min": 531,
@@ -3385,7 +3380,28 @@
    },
    "boundary_n": 793,
    "budget": null
+  },
+  "ot_s81_pq_ret_root_cam": {
+   "job": "s81b-pq-rootcam-B-tc-50bf09d54",
+   "source_commit": "50bf09d546a9f3614aec799d41d0b6d183b9bec6",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rootcam-B-tc-50bf09d54",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-08T06:47:46-07:00",
+   "ss": {
+    "mean": 281,
+    "min": 268,
+    "max": 291
+   },
+   "ff": {
+    "mean": 179,
+    "min": 170,
+    "max": 189
+   },
+   "boundary_n": 9240,
+   "budget": null
   }
  },
- "updated": "2026-10-08T06:38:03-07:00"
+ "updated": "2026-10-08T06:50:43-07:00"
 }
