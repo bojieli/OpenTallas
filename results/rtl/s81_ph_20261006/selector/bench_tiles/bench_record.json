@@ -1,0 +1,25 @@
+{
+ "kind": "selector",
+ "rtl": "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv (dsfd_selt_q x4, dsfd_selt_c, composition ot_s81ph_sel_t; dsfd_bk_selector TILED 1)",
+ "shared_rtl_change": "rtl/hdc/v41x/ot_hdc_v41x_sel.sv / _sel_lib.sv: default-off params (ctl XD, PERM + qs port tied 0 in the native top; su XR). Native defaults bit-identical: flat bench (OT_S81PH_SEL_FLAT) PASS with tail max 225 / mean 71 = the pre-change gold run",
+ "bench": "tools/s81_ph/selt_bench.sh (tb_s81ph_sel: 8 directed + 24 random segments incl. 2 overflow/replay segments and lane->quarter permutations, every IDX beat / count / replays vs the native ot_hdc_v41x_sel; 3 fail-closed cases), Verilator 5.032 on EPYC1",
+ "exact": "t1 PASS: segments 32, out_beats 561, replays 4, errors 0",
+ "negative_controls": {
+  "OT_S81PH_MUT1 (index +1 on lane 15)": "FAIL 473 errors",
+  "OT_S81PH_MUT2 (quarter order ignores the lane qslot)": "FAIL 6659 errors"
+ },
+ "cycles": {
+  "tail_minus_ref_max": {
+   "flat": 225,
+   "tiled": 240
+  },
+  "tail_minus_ref_mean": {
+   "flat": 71,
+   "tiled": 91
+  },
+  "added_per_segment": "+20 mean / +15 max ck cycles per select segment (control waits + 2 x XD hops, XD 2; LSTG 5 lane stations included)"
+ },
+ "schema": "opentallas.s81_ph.bench.v1",
+ "date": "2026-10-06",
+ "owner": "Claude:s81-ph (tiles)"
+}

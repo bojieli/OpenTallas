@@ -1,0 +1,9 @@
+{
+  "source": "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv",
+  "replacement_from": "assign out_d=hq[W-1:0];",
+  "replacement_to": "assign out_d=hq[W-1:0]^{{(W-1){1'b0}},1'b1};",
+  "replacement_count": 1,
+  "mutant_sha256": "e3b673c74c37dbd1eaeb92df58a11437e1fdece3223748d383a277f255e5021e",
+  "expected": "Nonzero return and CDC_DATA mismatch from actual545bit scoreboard",
+  "observed_returncode": 1
+}

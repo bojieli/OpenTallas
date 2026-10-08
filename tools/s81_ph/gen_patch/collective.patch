@@ -1,0 +1,25 @@
+--- a/tools/dsrom_s81_fulldie.py	2026-10-06 09:39:08.803707859 -0700
++++ b/tools/dsrom_s81_fulldie.py	2026-10-06 09:39:08.813708028 -0700
+@@ -166,6 +166,10 @@
+ HBM_RD_BITS = 8192 + 544 + 128   # controller -> scan service: kr_data + kr_tag + kr_beat (the PHY's read side)
+ LINK_BITS = 1024
+ CLK_BITS = 3
++# CLAUDE S81-PH collective contract (default off; OT_S81_PH_COLL=1): results/rtl/s81_ph_20261006/collective/
++# contract.json.  VM -> collective input f_vm 592 b (engine records / pass-through flits / config) and its CDC
++# status ts 3 b; collective -> VM t_vm widened 512 -> 2100 b (header 52 + one 4-word all-gather beat).
++PH_COLL = os.environ.get('OT_S81_PH_COLL', '0') == '1'
+ 
+ # spine slabs (mm2): fixed.json source service rectangles (S82 W4 reservations) and the R49 / C9 capture homes
+ HUB_MM2 = dict(collective=1.38967, vm=0.89234, gather=1.38823, su=12.80594, hc=18.31349, capture=0.10868,
+@@ -3020,7 +3024,10 @@
+                                  ('vm', 'gather', 512, 't_gather', 'f_vm'), ('gather', 'capture', 576, 't_capture', 'f_gather'),
+                                  ('capture', 'vm', 512, 't_vm', 'f_capture'), ('collective', 'vm', 512, 't_vm', 'f_collective'),
+                                  ('su_s', 'hc_s', 512, 't_hc', 'f_su_s'), ('su_n', 'hc_n', 512, 't_hc', 'f_su_n'),
+-                                 ('hc_s', 'hc_n', 1024, 't_n', 'f_s'), ('hc_n', 'hc_s', 1024, 't_s', 'f_n')):
++                                 ('hc_s', 'hc_n', 1024, 't_n', 'f_s'), ('hc_n', 'hc_s', 1024, 't_s', 'f_n')) + \
++            ((('vm', 'collective', 592, 't_collective', 'f_vm'), ('vm', 'collective', 3, 'tcs', 'ts')) if PH_COLL else ()):
++        if PH_COLL and (a_, b_) == ('collective', 'vm'):
++            bits = 2100
+         if REV == 'r9':
+             _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb)
+         else:

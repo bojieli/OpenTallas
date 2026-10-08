@@ -1,0 +1,214 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+OT_CORNER ff
+OT_WS 1.9130447226345382e-11
+OT_TNS 0.0
+Startpoint: fault$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: fault (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  30.62   30.62 ^ wire8543/Y (BUFx16f_ASAP7_75t_R)
+  38.63   69.24 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  18.52   87.77 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.64  110.41 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.31  131.72 ^ clkbuf_2_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.47  153.19 ^ clkbuf_2_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  21.57  174.76 ^ clkbuf_3_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  22.85  197.61 ^ clkbuf_4_7_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  20.91  218.52 ^ clkbuf_6_29_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  23.72  242.24 ^ clkbuf_7_59__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  26.23  268.47 ^ clkbuf_leaf_515_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   1.17  269.64 ^ fault$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  38.19  307.83 ^ fault$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  36.97  344.80 ^ hold63193/Y (HB4xp67_ASAP7_75t_R)
+  13.92  358.72 ^ hold40299/Y (BUFx2_ASAP7_75t_R)
+  18.59  377.31 ^ place8229/Y (BUFx3_ASAP7_75t_R)
+  27.56  404.87 ^ hold40300/Y (BUFx2_ASAP7_75t_R)
+   7.71  412.58 v _074118_/Y (INVx1_ASAP7_75t_R)
+  17.67  430.26 v output2025/Y (BUFx2_ASAP7_75t_R)
+   2.87  433.13 v fault (out)
+         433.13   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+ 389.00  414.00   output external delay
+         414.00   data required time
+---------------------------------------------------------
+         414.00   data required time
+        -433.13   data arrival time
+---------------------------------------------------------
+          19.13   slack (MET)
+
+
+OT_VIOL_D_PINS 0
+OT_WS_REG_D 20.401459
+OT_WS_OUT 19.130447
+OT_WS_R2R 21.167095
+OT_WS_I2R 20.401459
+OT_BIND_MACRO ff u_rom0/ce_in 30.416225
+OT_BIND_MACRO ff {u_rom0/addr_in[0]} 41.772282
+OT_BIND_MACRO ff {u_rom0/addr_in[1]} 35.602966
+OT_BIND_MACRO ff {u_rom0/addr_in[2]} 39.104553
+OT_BIND_MACRO ff {u_rom0/addr_in[3]} 72.522408
+OT_BIND_MACRO ff {u_rom0/addr_in[4]} 72.386566
+OT_BIND_MACRO ff {u_rom0/addr_in[5]} 30.477592
+OT_BIND_MACRO ff {u_rom0/addr_in[6]} 71.407074
+OT_BIND_MACRO ff {u_rom0/addr_in[7]} 72.283981
+OT_BIND_MACRO ff {u_rom0/addr_in[8]} 79.274223
+OT_BIND_MACRO ff {u_rom0/addr_in[9]} 66.086334
+OT_BIND_MACRO ff {u_rom0/addr_in[10]} 76.493507
+OT_BIND_MACRO ff {u_rom0/addr_in[11]} 65.521034
+OT_BIND_MACRO ff u_rom1/ce_in 59.909771
+OT_BIND_MACRO ff {u_rom1/addr_in[0]} 73.323624
+OT_BIND_MACRO ff {u_rom1/addr_in[1]} 102.020058
+OT_BIND_MACRO ff {u_rom1/addr_in[2]} 85.266571
+OT_BIND_MACRO ff {u_rom1/addr_in[3]} 79.773689
+OT_BIND_MACRO ff {u_rom1/addr_in[4]} 61.794182
+OT_BIND_MACRO ff {u_rom1/addr_in[5]} 104.230232
+OT_BIND_MACRO ff {u_rom1/addr_in[6]} 56.187889
+OT_BIND_MACRO ff {u_rom1/addr_in[7]} 85.999710
+OT_BIND_MACRO ff {u_rom1/addr_in[8]} 80.006668
+OT_BIND_MACRO ff {u_rom1/addr_in[9]} 83.210907
+OT_BIND_MACRO ff {u_rom1/addr_in[10]} 77.153702
+OT_BIND_MACRO ff {u_rom1/addr_in[11]} 81.036758
+OT_BIND_CONSTANT ff {best_bits[0]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[10]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[11]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[12]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[13]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[14]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[15]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[16]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[17]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[18]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[19]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[1]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[20]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[21]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[22]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[23]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[24]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[25]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[26]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[27]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[28]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[29]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[2]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[30]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[31]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[3]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[4]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[5]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[6]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[7]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[8]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_bits[9]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[0]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[10]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[11]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[12]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[13]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[14]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[15]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[16]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[17]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[18]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[19]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[1]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[20]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[21]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[22]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[23]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[24]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[25]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[26]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[27]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[28]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[29]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[2]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[30]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[31]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[3]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[4]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[5]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[6]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[7]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[8]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_key[9]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[0]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[10]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[11]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[12]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[13]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[14]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[15]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[16]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[1]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[2]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[3]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[4]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[5]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[6]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[7]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[8]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {best_row[9]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff done TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[0]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[10]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[11]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[12]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[13]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[14]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[15]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[16]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[17]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[18]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[19]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[1]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[20]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[21]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[22]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[23]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[24]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[25]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[26]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[27]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[28]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[29]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[2]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[30]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[31]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[3]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[4]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[5]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[6]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[7]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[8]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff {l_d[9]} TIELOx1_ASAP7_75t_R
+OT_BIND_CONSTANT ff l_v TIELOx1_ASAP7_75t_R
+OT_BIND_DONE ff macro_count 26 macro_worst 30.416225 outputs 34 constants 115 period 833.333008

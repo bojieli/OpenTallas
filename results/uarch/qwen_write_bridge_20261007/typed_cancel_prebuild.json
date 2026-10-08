@@ -1,0 +1,14 @@
+{
+  "model_before_RTL": true,
+  "successor": "ot_qwen_kvc_write_link_bridge_cancel",
+  "predecessor_unchanged": "ot_qwen_kvc_write_link_bridge",
+  "wire_format_unchanged": true,
+  "cancel_boundary": "Local ledger_cancel_v+tag9 held until ledger_cancel_take. Fixed PC/current epoch implicit in native port, strict stopped epoch only. No CANCEL packet/opcode and no wd.",
+  "state_delta_FF": 0,
+  "logic_delta": "8x9bit equality comparisons against existing live+handed tag table; OR/select. No new cancellation FIFO in bridge; ledger owns stable producer queue.",
+  "latency": "One controller accepting edge clears handed and retains live; at most8 cancellation acknowledgments per endpoint, one/edge. Cold reset only except explicit global epoch fence.",
+  "ownership": "Commit ledger may only cancel healthy physicallyunissued records. RealPHY committed entries require true completion; bridge rejects wrong/duplicate cancellation, cancellation while running, and later true completion for canceled entry.",
+  "fence": "Both endpoints stopped; all transport/codec/CDC drained; actual ledger epoch_ready and read owner quarantine; source pending identities match sink isolated cancellations; then pulse both epoch fences. Source outstanding gets no fake wd, canceled count diagnostic visible.",
+  "mutable_protection": "Existing wholebridge/hub state reliability still unqualified; typedcancel comparator does not imply full protection.",
+  "adoption": false
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.qwen-spine-mutable-protection-blocker.v1",
+  "source_sha256": {
+    "rtl/physical/ot_qwen_spine_lane_credit.sv": "fbfe946a27eb8c0277f2b94c702a6da8199f2e56ca9407ffd15c1afd4484aec8"
+  },
+  "adoption": false,
+  "status": "ADOPTION_BLOCKED",
+  "reason": "ROM no-ECC policy does not exempt mutable FIFO, payload/tag/split/valid pipeline, pointer, occupancy, credit or fault/commit state. Current exact functional bench is fault-free only.",
+  "unprotected": [
+    "32x1536 payload FIFO",
+    "32x32 tag FIFO",
+    "input capture and split/tag/valid pipeline",
+    "FIFO read staging and tag/select state",
+    "read/write pointers occupancy outstanding reservations credits",
+    "fault latch and output/credit commit registers"
+  ],
+  "existing_routes": "Diagnostic only; preserve all route and benchmark evidence. No protected-system or fault-stop claim.",
+  "next_gate": "Source-modeled default-off protected successor; single-upset failstop before affected transaction/credit release; physical retention check rejects optimized-away redundant flops; end-to-end output integrity contract; exact and injection-negative benches before adoption."
+}

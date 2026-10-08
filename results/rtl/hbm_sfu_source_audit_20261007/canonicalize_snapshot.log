@@ -1,0 +1,51 @@
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_ot_su12_sfu_asap7_hub_hbm_sfu_lane_f244ad7e3_r2/base/clock_period.txt
+Setting clock period to 770
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv
+12. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv
+13. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv
+14. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv
+15. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_delay.sv
+16. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fpu.sv
+17. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+18. Executing Verilog-2005 frontend: /src/rtl/proto/ot_fp32_add_rne_pipe.sv
+19. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_sfu.sv
+20. Executing Verilog-2005 frontend: /src/rtl/hdc/v41/ot_hdc_fdiv.sv
+21. Executing Verilog-2005 frontend: /src/rtl/hdc/v41/ot_hdc_softplus.sv
+22. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fastfp.sv
+23. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv
+24. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_f12.sv
+25. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_dsrom_su_add6.sv
+26. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_dsrom_su_f12.sv
+27. Executing Verilog-2005 frontend: /src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv
+28. Executing Verilog-2005 frontend: /src/rtl/hdc/v41/ot_hdc_fsqrt.sv
+29. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_mul_lat.sv
+30. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_add_lat.sv
+31. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_prefix.sv
+32. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+33. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_su12_sfu'.
+34. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_su12_sfu'.
+35. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_su12_sfu'.
+36. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_su12_sfu'.
+37. Executing HIERARCHY pass (managing design hierarchy).
+38. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_su12_sfu'.
+38.1. Analyzing design hierarchy..
+38.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_su12_lane'.
+38.3. Analyzing design hierarchy..
+38.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_v41x_vec_lane'.
+Warning: Replacing memory \off0 with list of registers. See /src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:341
+Warning: Replacing memory \off1 with list of registers. See /src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:341
+/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:731: Warning: Range select out of bounds on signal `\g_sfu.vs': Setting result bit to undef.
+38.5. Analyzing design hierarchy..
+38.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_v41x_ins'.

@@ -1,0 +1,19 @@
+{
+  "status": "SUCCESSOR_SFU_PARAMETER_BINDING_FIXED_RUNTIME_PENDING",
+  "adopted": false,
+  "bug": "Inherited sfu_equivalence didnot pass selected DDIV; c12 benchdirectdivider supported21or19only",
+  "previous_pin": "b36512817 SFUunitresultcannotqualify64; randomvehicle selected64remainapplicable",
+  "fix": "ExplicitGDDIV/GFSQ; successorbench64and31branches; isolatedobjdirectoryincludesDDIV; recordselectedDDIV; missingterminalfailsclosed",
+  "checks": [
+    "PythoncompilePASS",
+    "adaptermockexplicit64bindingandmissingterminalrejectionPASS",
+    "IcarusSFUactualbenchDDIV64FSQ1elaborationPASS existingexpwidthwarnings"
+  ],
+  "source_sha256": {
+    "tools/hbm_su_div64.py": "a0bfbd70e35fe5a71a24cb2ab5bb928c4e1d5675fba76fbee8bb3aac44b560a6",
+    "rtl/test/tb_hbm_su_div64_sfu.sv": "c2aef1f5d4f73e1b7e4a3edb2e400235cfb13a6a6353ed92727df8f3f7843471"
+  },
+  "next_command": "python3 tools/hbm_su_div64.py campaign --ddiv 64 --quick --only sfu --no-1024 --scratch RUN/sfu64 --out RUN/sfu64.json",
+  "negative_command": "OT_VFLAGS=-DNEG_PHASE python3 tools/hbm_su_div64.py campaign --ddiv 64 --quick --only random --no-1024 --scratch RUN/div64_phase_negative --out RUN/div64_phase_negative.json",
+  "negative_expectation": "nonzero due data mismatches, not merely build failure"
+}

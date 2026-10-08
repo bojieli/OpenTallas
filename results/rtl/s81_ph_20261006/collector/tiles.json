@@ -1,0 +1,60 @@
+{
+ "slab": "dsfd_bk_collector",
+ "outline_um": [
+  5270.376,
+  881.256
+ ],
+ "tiles": [
+  {
+   "inst": "u_m",
+   "master": "dsfd_colt_mrg",
+   "x": 2808.0,
+   "y": 0.0,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_l0 (SW)",
+   "master": "dsfd_colt_lane",
+   "x": 6.544,
+   "y": 187.92,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_l2 (NW)",
+   "master": "dsfd_colt_lane",
+   "x": 6.544,
+   "y": 540.0,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_l1 (SE)",
+   "master": "dsfd_colt_lane",
+   "x": 4834.144,
+   "y": 187.92,
+   "orient": "MY"
+  },
+  {
+   "inst": "u_l3 (NE)",
+   "master": "dsfd_colt_lane",
+   "x": 4834.144,
+   "y": 540.0,
+   "orient": "MY"
+  }
+ ],
+ "hops": [
+  {
+   "what": "lane tile t_w/t_f (517 b) -> merger f_w/f_f, and merger t_cr -> lane f_cr (1 b)",
+   "length_um_max": 2970.6,
+   "stations": 7,
+   "kind": "common-clock register station, <= 430 um a span, each direction; HOPS 7 in the composition"
+  },
+  {
+   "what": "merger vd/vf -> VM station chain",
+   "kind": "unchanged (dsfd_bk_collector vd/vf)"
+  }
+ ],
+ "mirror_rule": "tiles placed R0 and MY (dsfd_selt_q, dsfd_colt_lane) carry pins only on their W / E faces (M4: y unchanged by MY) and the symmetric M7 PG grid of physical/s81_ph_views/tiles/pdn_tile_sym.tcl (VDD 5.256 / VSS 10.656 mod 10.8 on a width multiple of 10.8): place every instance, R0 or MY, at x0 = 6.544 (mod 10.8) so its stripes land on the die VDD 1.0 / VSS 6.4 (mod 10.8) grid; y0 on the 2.16 grid",
+ "credits": "DM 12 landing entries per lane (round trip 2 x 7 + 5 = 19 edges at 0.5 word/edge)",
+ "schema": "opentallas.s81_ph.tiles.v1",
+ "generator": "tools/s81_ph/s81_ph_tiles_plan.py"
+}

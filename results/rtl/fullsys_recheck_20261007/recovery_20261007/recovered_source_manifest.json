@@ -1,0 +1,1740 @@
+{
+  "schema": "opentallas.fullsys_recheck.recovered_source_manifest.v1",
+  "host": "ot-epyc3",
+  "campaigns": {
+    "lorentz-margin": {
+      "path": "/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin",
+      "files": {
+        "src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": {
+          "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+          "bytes": 6668
+        },
+        "src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": {
+          "sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+          "bytes": 6668
+        },
+        "src/physical/hbm_die_abstracts_20261006/compute/ot_hbm_compute_frame1024.sv": {
+          "sha256": "f820f397cbe369b4d7818658d7c2a0e8b55cfb3418d04f0638b362461805efb3",
+          "bytes": 3760
+        },
+        "src/physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv": {
+          "sha256": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+          "bytes": 13200
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/FORMATTER_JOIN.txt": {
+          "sha256": "b0ad2308c9b09a9fe369f1eef65a52912bba496b23de45c351e6e3c539ada2a1",
+          "bytes": 2430
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/INTEGRATED_FORMATTER_CONTINUATION_20261006.txt": {
+          "sha256": "c89ca729b02381fee17e529b2aa394c431fa0925ce8d2f03661c6505608708a2",
+          "bytes": 7850
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/INTEGRATED_MINIMUM_PARENT_HARNESS_20261006.txt": {
+          "sha256": "7f37e9e82a0d26edda949a748162da262776eab231ce645401408c0753aed9d2",
+          "bytes": 7142
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/export_barrier.py": {
+          "sha256": "d246451ffd0529edbea986d450d667728192510bd5d2c60a55c47d0de988338a",
+          "bytes": 5678
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/export_barrier_views.py": {
+          "sha256": "e7fbb26926adbe5d48df51307d8148a76fd044bb512b3650dc1017b07d4bc131",
+          "bytes": 7310
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/export_status.json": {
+          "sha256": "14868ce4fea44532ca7986fa81f2a22594f50ecab2796a7c1ae4423e6b1ab9d5",
+          "bytes": 341
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/formatter_join.f": {
+          "sha256": "ebcf5759ee9feb78ae315943f9a172e8d30e7f7ffe9d4c645e0526aaabeeaf3d",
+          "bytes": 193
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/formatter_provider.files.f": {
+          "sha256": "a5427e0a86f51d8f8691cd4bf71ba0356073f7a2d3272773a629c867f8cd6818",
+          "bytes": 6514
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_formatter_continuation.inc": {
+          "sha256": "c23eaaa78f0eb21195d128f895c916e3b23e89b67a04323022c81b9cc9bc3e20",
+          "bytes": 12467
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_minimum_parent_inputs.inc": {
+          "sha256": "e2ad92cd588cc3523a74c238b4b661e15b9d976cd12e15de221887886fd41992",
+          "bytes": 5954
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_minimum_parent_main.cpp": {
+          "sha256": "f9ab2a848d8397af84961cf5968e27c5192f28a48380b0d6f34cfb21306d5753",
+          "bytes": 15938
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_sfu_continuation.inc": {
+          "sha256": "7d756a799b730858e34f87ba81b512432efad7bf6ba6fd67d533abbc366fa63d",
+          "bytes": 7445
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/minimum_parent_margin.files.f": {
+          "sha256": "d154cef42400940faeb5fc3d4c2c8f75d8034468a54e766e13b801a285ea223a",
+          "bytes": 6756
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/minimum_parent_margin.files.f.orig": {
+          "sha256": "d476f38930069e8bf1d7f3b14688f91528d8b75ffb937169f10048e3f7f4ff6b",
+          "bytes": 6399
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/minimum_parent_margin.vlt": {
+          "sha256": "d4962256cc40bc1e5bfa628c50d4893bccc669acec86cc184dd7c60f7bef50ca",
+          "bytes": 976
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/abstract.json": {
+          "sha256": "c9f84fe2398ba167e15ac18149d1a3c60959e8297b1b34723964f22e2ed519a6",
+          "bytes": 2473
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/clock_contract.json": {
+          "sha256": "907fae9318f7ea5534f4d29f22b5d2a4933b194f4b3b3c3379b2a6ba5217fefa",
+          "bytes": 1622
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/export.json": {
+          "sha256": "753965a455447c265ed56aff60f06f88ebceb757fe5777f3654235e1c9a11c18",
+          "bytes": 2918
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/export_ff.log": {
+          "sha256": "9209dda8a3fbcb16b2bb6474c56c64874005de13b55756356f24a99f7012f565",
+          "bytes": 2162
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/export_ff.tcl": {
+          "sha256": "0d10767bd4488111bbca55eceab9199eeae40ef3113c16192d82352fb5cba1e6",
+          "bytes": 1112
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/export_ss.log": {
+          "sha256": "5a94e0cd9e5ca60afbf4c7e5584c29602bf0d5f1691cbaa0061da40f0cfeccaf",
+          "bytes": 2170
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/export_ss.tcl": {
+          "sha256": "b327577ed2f35d388384c9af2797248966857f452c483b6ea1e353f1eca4a374",
+          "bytes": 1158
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/interface.sdc": {
+          "sha256": "2299a1dad872c2fcdeb379226a7e49fe774f3c250c683f38e263c0d757fddb7b",
+          "bytes": 539
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1.lef": {
+          "sha256": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb",
+          "bytes": 5452373
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ff.lib": {
+          "sha256": "135ba0be869272642f1b579a983b999da2e105fce385fc70d80830600351f0d8",
+          "bytes": 954725
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ss.lib": {
+          "sha256": "55ced69cc7da41a731f2e21d00adfa35a4d6924d3b76d302bd5302f78b81f41b",
+          "bytes": 954863
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/pins.json": {
+          "sha256": "ffaeeb52326696d5886ffc4497b8d58ef8532374f80728a9e8c74811f65a997d",
+          "bytes": 419062
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/abstract.json": {
+          "sha256": "f85a9038c552ccd47005d271ebc93155d6edf7f2c2284378973c2b06e060bc29",
+          "bytes": 3439
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/capacity_before_ff.json": {
+          "sha256": "91e214820a47e7f63dc82415db7cff1e053ef460b2d68395a163f61a4b75c618",
+          "bytes": 384
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/capacity_before_ss.json": {
+          "sha256": "d46562f4a3a55c2813a93aa3f6b7865f809ef37dab7b86fca02a95f2b7f7559c",
+          "bytes": 381
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/clock_contract.json": {
+          "sha256": "62899063c0ef43d032e6cb992e9b72afad2260eb671a8c15c2e2a208c1dbf967",
+          "bytes": 1273
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/export.json": {
+          "sha256": "19200e9abb4b45123759970732666930d2619efc8c371c2f050265d8a8fe2b3f",
+          "bytes": 4027
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/export_ff.log": {
+          "sha256": "ed879f4b89acd04fe4046861a3a63965c3ec514f822b3ed8e370bbe4f4feacc1",
+          "bytes": 2447
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/export_ff.tcl": {
+          "sha256": "ef51ad1f4788b0c18c99b1b03ad711f4b3b906010cdcfa2f7d21ada7ceab71a9",
+          "bytes": 1327
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/export_ss.log": {
+          "sha256": "b4ef853ef3f6ab94f8d8aac75af38c603851256b8abaabdd1eb626102ce6ac30",
+          "bytes": 2454
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/export_ss.tcl": {
+          "sha256": "1fc3748bbd8f9ce813e8f3b60595bbf91eb30f0effdd40325c2c23513157fc41",
+          "bytes": 1375
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/launch_receipt.json": {
+          "sha256": "d800147c97ece7b05f058266416918df3ae54100efeab56c06f594271cb36b46",
+          "bytes": 1954
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/ot_gpu_barrier_node.lef": {
+          "sha256": "a90ce787d9264e0668b99f4eb9db518f6f37706c36e856bbc46beac2a545f812",
+          "bytes": 14594
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/ot_gpu_barrier_node_ff.lib": {
+          "sha256": "42b7233a1784b6864e1f90290e3181cafc9600ef6dff4a49167fdf4e5d51d7ec",
+          "bytes": 56668
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/ot_gpu_barrier_node_ss.lib": {
+          "sha256": "4455784ef6c855b0a6d103e5f6204096207d35e0910e2eef6feb5bf38045f3b7",
+          "bytes": 56856
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/pins.json": {
+          "sha256": "1409a03b70ff88cc33f877c2f74c95ecad01556d7d2bbdb481f8ac35120a7158",
+          "bytes": 17384
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/post_guard_capacity.json": {
+          "sha256": "8fdd3bc1345a8480d85d2dea24602b480269e914098e08b8e7cc8ee94b4edadf",
+          "bytes": 382
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_stream_service.sv": {
+          "sha256": "6ce388676188d0fed0a0b587b73f3a6b0d335cf7e3a73c2712290e5fe049156a",
+          "bytes": 3635
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": {
+          "sha256": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+          "bytes": 6266
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv": {
+          "sha256": "3e669ab7e65fd4a27fbe1b647437f1bcabe285324fd9617ddf36ab010f7e2233",
+          "bytes": 7540
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_install_consumer.sv": {
+          "sha256": "7299552d01014980152a8510b30e4c0962637bcc97fbd54aa75628d89c9e50cd",
+          "bytes": 9870
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_preinstall.sv": {
+          "sha256": "1933c0b54144df353ff864de7c30cd2bac8d2d760bd73c0d6e6182da5f4b635e",
+          "bytes": 12600
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_preinstall_gather_owner.sv": {
+          "sha256": "5c8b1a6c310c1241f7f6adef6cb668d595c48c3d780a5e9ba0fcd6159903295d",
+          "bytes": 14095
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_selected_id_consumer.sv": {
+          "sha256": "f12d4769cf3c72542053fb8bb9863a113a74f926cf79b5ce5bcdc7ebd14a26a1",
+          "bytes": 11298
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": {
+          "sha256": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+          "bytes": 7651
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv": {
+          "sha256": "95d3e48a9d1d4aebfc65c31373397efff755a4c5fa441229c854dd51f2807f7f",
+          "bytes": 7225
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_norm_samebank_readback_checker.sv": {
+          "sha256": "91592a5cf96bc26d29a3e9c52c7942d1e2daa9f5f3b38a33016b082b78c818d1",
+          "bytes": 4015
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_vm_sfu_result_publication.sv": {
+          "sha256": "a0751dc0f9050191a225a5c6d85df79aa78a831c51cb251df75061f0fe7e94b0",
+          "bytes": 5038
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/prepare_integrated_formatter_fixture.py": {
+          "sha256": "993ba5abf9e981bc85b0c7e39afb81ee83b2b417ff95c0017c8030885de0f609",
+          "bytes": 12721
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/prepare_integrated_minimum_parent_fixture.py": {
+          "sha256": "b68196e8e7a6797f87afffce972ca00c877f9bf3a8343b21bc8a8573c92ef5bc",
+          "bytes": 6408
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/prepare_views.py": {
+          "sha256": "d95bde0918ed5bd5101daf2775ce5f1fbbad107a24c5b252e489ce2c5c1f972f",
+          "bytes": 4650
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/prepare_vm_root.py": {
+          "sha256": "82fb94d17196de698b8dba4d9e654bd2b21edd67570418c4fd18548da42888ec",
+          "bytes": 2426
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/run_formatter_join.py": {
+          "sha256": "e750b63bb48e76c3cbbdb620569273e9ba293c0a9a3c03de6e92c39b84df8264",
+          "bytes": 5710
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/run_index_fp32_adapter.py": {
+          "sha256": "5e87cd5233f62ed4f1cd69165ad4af97f2418ffb0a5c2fb669f4e1089a1c7be6",
+          "bytes": 4853
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/run_minimum_parent_margin.sh": {
+          "sha256": "b060fae411755aa44e5072539dca7b88be445ed6b282efbc1877981d56e3bbc2",
+          "bytes": 2047
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/run_sfu_result_publication.py": {
+          "sha256": "3b549b4d83ec86ec9ad07b6d271febbcbfc25d4461675abf6ec7a16baa4ba353",
+          "bytes": 5407
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/run_vm_sfu_warm_join.py": {
+          "sha256": "74cd95cf0073cb783a0f7de793f4c193eb53303f4ee82c66838105c5457ad2f0",
+          "bytes": 5360
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/sm_compat/check_actual_leaf.py": {
+          "sha256": "1db026c966c6258e97d8dccf28cf66146e8f2039854afe80f05ac72a4e6c79b4",
+          "bytes": 3078
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/sm_compat/ot_hbm_accel_bd_col_bb.v": {
+          "sha256": "14b26f253cb6f07111f95f25b5af615fc7f4058879e02aa17885dabdc45aeac9",
+          "bytes": 1058
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/sm_compat/ot_hbm_accel_tc16_bb.v": {
+          "sha256": "859730ff2c7511ae4cd005961d47be0acf1dd7dfd84485cd71a66ea693bfda41",
+          "bytes": 848
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/sm_compat/supported_shapes.json": {
+          "sha256": "5da3c56efbc77d517b9e95672c3e1c4e2fd7c46b7c716322ce403e0176f16076",
+          "bytes": 1156
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_formatter_preinstall.sv": {
+          "sha256": "43f156dcfc30805319a9f080c558d55fc7c0e76c1a889bbf6ed674d2d4d1e6a7",
+          "bytes": 19605
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_h17.sv": {
+          "sha256": "49c3bff4003a23397e6a55616e0474843565dac6d53dc9293e1640c0afc15449",
+          "bytes": 521
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_formatter_provider_join.sv": {
+          "sha256": "f5bc518061f55458625f1da68ea590b6298ebac9273f4775f98e19a2636cd968",
+          "bytes": 15364
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_integrated_minimum_parent.sv": {
+          "sha256": "de48eed8ed3d2c18af6fbbfbccb7a5543faf1b435a7dd9056497c0cf3470a857",
+          "bytes": 48618
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_index_fp32_sram_adapter.sv": {
+          "sha256": "51e3a68eecb585486c91cc453fcdfb47f7de37a1f4e1475ffee9d909a200b62a",
+          "bytes": 6688
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_norm_engine_native_publication.sv": {
+          "sha256": "77e09a9a106ae7e61109da8810287287ea9246ddefc84b58c0ffda4995c185c9",
+          "bytes": 19027
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_norm_quant_native_publication.sv": {
+          "sha256": "51508f0539bc5bc405be33f52283f42cbd6b613a778c4c8ecf839aee3f8db5f8",
+          "bytes": 18818
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_vm_root.sv": {
+          "sha256": "e2660d45da55a5ff848108eaf6eda99abcf381b685d91c603fefdf390428115d",
+          "bytes": 4040
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_vm_sfu_publication_warm_join.sv": {
+          "sha256": "a79beebb931647c8b416b27609706fed95944a3f3c7d1524c7fb016400a61b4a",
+          "bytes": 9312
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_vm_sfu_result_publication.sv": {
+          "sha256": "6ead0ce215d9f9b01943ab8d628497b455edbf0c83e060889d50b2650ae65e41",
+          "bytes": 10000
+        },
+        "src/results/rtl/hbm_integrated_sfu_provider_join_20261006/selected_parameters.json": {
+          "sha256": "d0e0b7ac8449aa448cc592b045e0c8ddf1d27298f7e7eb967534332c67111025",
+          "bytes": 2852
+        },
+        "src/rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": {
+          "sha256": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+          "bytes": 18599
+        },
+        "src/rtl/abi3/ot_a3_fp32_sqrt_rne.sv": {
+          "sha256": "09f03bc02617c6b6d20f75992f25c47f0b3b0401d0004c86141ed0f1c5e94e55",
+          "bytes": 9500
+        },
+        "src/rtl/chip/ot_chip_v41x_coll_transpose.sv": {
+          "sha256": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
+          "bytes": 10447
+        },
+        "src/rtl/chip/ot_coll_topk_merge.sv": {
+          "sha256": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6",
+          "bytes": 16678
+        },
+        "src/rtl/chip/ot_w15_coll_dma.sv": {
+          "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+          "bytes": 11631
+        },
+        "src/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv": {
+          "sha256": "7230273667d61d7c87e67f93cff39523420a00913b40b76b03ae76e849ee3e94",
+          "bytes": 7146
+        },
+        "src/rtl/gpu/ot_gpu_barrier_node.sv": {
+          "sha256": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+          "bytes": 1844
+        },
+        "src/rtl/gpu/ot_gpu_bd_col.sv": {
+          "sha256": "9637b23a0e48ae59818d2dc4a0a8e5333a73961c1783f37b82ca79d70a762df5",
+          "bytes": 5602
+        },
+        "src/rtl/gpu/ot_gpu_bulk_copy.sv": {
+          "sha256": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+          "bytes": 6787
+        },
+        "src/rtl/gpu/ot_gpu_fadd.sv": {
+          "sha256": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+          "bytes": 1459
+        },
+        "src/rtl/gpu/ot_gpu_issue.sv": {
+          "sha256": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+          "bytes": 7358
+        },
+        "src/rtl/gpu/ot_gpu_sm.sv": {
+          "sha256": "43489304c695bed14c53eb93bf7d93e71db5e66e8ccc4610572b1d5b9bdcc6f7",
+          "bytes": 9756
+        },
+        "src/rtl/gpu/ot_gpu_sm_bd.sv": {
+          "sha256": "f0229375762a515aae5cba3f82e275a143909ede5357daebcd94f2e85f5f7abb",
+          "bytes": 6314
+        },
+        "src/rtl/gpu/ot_gpu_stack.sv": {
+          "sha256": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+          "bytes": 6310
+        },
+        "src/rtl/gpu/ot_gpu_tc_col.sv": {
+          "sha256": "e81c971fde92e9dda728ab962219998c033da61005f6858c6ff6bfc25d85616f",
+          "bytes": 5975
+        },
+        "src/rtl/gpu/ot_gpu_tree.sv": {
+          "sha256": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+          "bytes": 2607
+        },
+        "src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": {
+          "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+          "bytes": 1493
+        },
+        "src/rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20.sv": {
+          "sha256": "a645259efa9b605d5be5edccd3135bfb8587c22641af84018fa5bd604c286f61",
+          "bytes": 9456
+        },
+        "src/rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": {
+          "sha256": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+          "bytes": 6397
+        },
+        "src/rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv": {
+          "sha256": "c72c1c0f8619d2dbf527b138bb2e16157688b5038d55f03915b2c023ebc18880",
+          "bytes": 33356
+        },
+        "src/rtl/gpu_sys/ot_gpu_bd_line.sv": {
+          "sha256": "f3e8ea0358815ec6acf07eef8c837080b95ef21cb59d05c9f778e979e6e9d81c",
+          "bytes": 2050
+        },
+        "src/rtl/gpu_sys/ot_gpu_cdc_fifo.sv": {
+          "sha256": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+          "bytes": 2134
+        },
+        "src/rtl/gpu_sys/ot_gpu_cmdproc.sv": {
+          "sha256": "d0b1f0710af11ea1f60acb790ad23c9192e0794fd94383f23728ea663d327c5a",
+          "bytes": 5362
+        },
+        "src/rtl/gpu_sys/ot_gpu_coll_endpoint.sv": {
+          "sha256": "adf09a0bbf30c47f0c514c5476d39173bb3478414ae43a93195c012658d3a36b",
+          "bytes": 10592
+        },
+        "src/rtl/gpu_sys/ot_gpu_coll_fabric.sv": {
+          "sha256": "4755fb6105464f97dbddd51d80c1f5d84a43cea7a5d408b4862f0999ebd44608",
+          "bytes": 5184
+        },
+        "src/rtl/gpu_sys/ot_gpu_coll_mux.sv": {
+          "sha256": "fa7250f9fe44dc7a4ed18eb37d826b9ac9670d9d6dfccad15ccdf06d1a1db6cb",
+          "bytes": 3130
+        },
+        "src/rtl/gpu_sys/ot_gpu_hbm_partition.sv": {
+          "sha256": "1a2f10061d9bb7900fc9b9fd9b306c10345985d8f5be7be8d7f38fdb8330497f",
+          "bytes": 14839
+        },
+        "src/rtl/gpu_sys/ot_gpu_hbm_system.sv": {
+          "sha256": "22d8da84b86d866c0aaa9407fb3b4155a69976890ca05a7383503aac48b15c72",
+          "bytes": 16004
+        },
+        "src/rtl/gpu_sys/ot_gpu_host_bridge.sv": {
+          "sha256": "015ee63361328844b27e407f1fb48497e6788eaf54387b64e49741c7e74a0a96",
+          "bytes": 7383
+        },
+        "src/rtl/gpu_sys/ot_gpu_l2_slice.sv": {
+          "sha256": "22f6c39433c9551e2c931853225a41de1a84bc1f44ae2f231a8cec793cc8986a",
+          "bytes": 10422
+        },
+        "src/rtl/gpu_sys/ot_gpu_memsys.sv": {
+          "sha256": "73882cfce6282a027a678edc4eadf92b67875dae3544faf25c5fe1d026aba986",
+          "bytes": 6015
+        },
+        "src/rtl/gpu_sys/ot_gpu_mreq_cdc.sv": {
+          "sha256": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
+          "bytes": 3067
+        },
+        "src/rtl/gpu_sys/ot_gpu_reset_ctrl.sv": {
+          "sha256": "a1a8221698457376ac0eadfcb9e80e0a7a8683ef27e244c39b6ae78b9e53da2d",
+          "bytes": 3732
+        },
+        "src/rtl/gpu_sys/ot_gpu_simt_divlane.sv": {
+          "sha256": "01cc0cc9d0acb9eca4c65393e4c8cec96593e4bb9327ae2f71983f8dfd9f5275",
+          "bytes": 1433
+        },
+        "src/rtl/gpu_sys/ot_gpu_simt_lane.sv": {
+          "sha256": "97d0ea8512443174bc48789435697676f051e64159966eaa842217688f2a9c4e",
+          "bytes": 7570
+        },
+        "src/rtl/gpu_sys/ot_gpu_simt_sm.sv": {
+          "sha256": "a92b3700e326883c255be11c119cd6e3984b376c5a3cc85cd629b431f769c326",
+          "bytes": 33577
+        },
+        "src/rtl/gpu_sys/ot_gpu_sys_glue.sv": {
+          "sha256": "ef972587276d1689ac664dd8905ee98f7100c6cb4389075921ec89a1e63ad129",
+          "bytes": 3871
+        },
+        "src/rtl/gpu_sys/ot_gpu_xbar.sv": {
+          "sha256": "5fa9a43e08af4ef23455b1b98b7e1094245775700a6441c2883f81cd0563cc0d",
+          "bytes": 6736
+        },
+        "src/rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": {
+          "sha256": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+          "bytes": 2309
+        },
+        "src/rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv": {
+          "sha256": "a094761b1f8a4c794e0217f465e25016aa19d1485ea942635c30d3675623ec96",
+          "bytes": 8798
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": {
+          "sha256": "f60aab76ac2ca7631b208fe2d9b899cd9b5ea484b5ba85966f066f66f098e7fe",
+          "bytes": 88339
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_admit_guard.sv": {
+          "sha256": "d62f6adc608ebdfe36cdb00be7cf5d1751b3787da84306412d28547ba0937f10",
+          "bytes": 1016
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv": {
+          "sha256": "2d147fe2f62f2669ada289e3c6a7d6f3b1473bb844a6da85668322f78f894d10",
+          "bytes": 1345
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_bridge.sv": {
+          "sha256": "b9a814be8b4455f3f26655224cfe05348bb144958d8ff2ef1230cc16480ed2c9",
+          "bytes": 12078
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_owner.sv": {
+          "sha256": "882d121877c05999659055c73ded1e5fdfb579cbbc747b56ea08d8a387e9fa87",
+          "bytes": 6395
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": {
+          "sha256": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+          "bytes": 2175
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": {
+          "sha256": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+          "bytes": 3492
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": {
+          "sha256": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+          "bytes": 8716
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": {
+          "sha256": "cd97f7cdca3c5d701949c91f829e9376bdc4f3474c788b24e67f7f1be9813ff9",
+          "bytes": 3750
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": {
+          "sha256": "fcd6c1b7a7d244e80d56857eae9b414e388ef873c0273f1c6ff93354320b0760",
+          "bytes": 44151
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv": {
+          "sha256": "2423b70ed5e126220b70857ff90390c7042fe82e697af1753c4668ecb5780a53",
+          "bytes": 6444
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w15_store.sv": {
+          "sha256": "a3b437fb1d53c712c23626b1a665fc6295df82fc6ec81117b59dc65dd0c6a571",
+          "bytes": 5457
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv": {
+          "sha256": "bfc1a96fa98639b4a27563afdbdf21ebfa0b3d71e0c9c75ef0ffbe387d32bc18",
+          "bytes": 25764
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_sector_adapter.sv": {
+          "sha256": "17ce25ec8eac80df2fe39d56eb612726072ebf10223d2f3faa436c6ecd77e347",
+          "bytes": 5909
+        },
+        "src/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": {
+          "sha256": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+          "bytes": 3972
+        },
+        "src/rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_stream.sv": {
+          "sha256": "cd9d935963a8836bb885cb49913d03aadb57442c78d5ec802c74baba255ca53c",
+          "bytes": 9001
+        },
+        "src/rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_vm.sv": {
+          "sha256": "83b4a2ea2f6fe787b253edf079055dfc07b39413e70914d55f8e8670330192a0",
+          "bytes": 6066
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_norm_stage.sv": {
+          "sha256": "6092c25aa05253042844804082037a1673f51cb1e315c58a9f10311038aa8880",
+          "bytes": 6721
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_c12_stage.sv": {
+          "sha256": "40f6236d53401d3b2df126ab6b255e05fea9db61b7e2050e15793f3bd2e2275b",
+          "bytes": 4656
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_provider_join.sv": {
+          "sha256": "7dc556c694e79511c2c4b930a113c02e19d7535c846b23a646f0962989f59c0d",
+          "bytes": 8864
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv": {
+          "sha256": "49b472d7c40d05b91250368d5fdf497370a688189f0eed0229ddc363a3b11ffa",
+          "bytes": 3693
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_su_provider_adapter.sv": {
+          "sha256": "c188e01425ce04f5c9748cd9f8ab12893207bc7e109b9061657b516d46ec2264",
+          "bytes": 2689
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_su_provider_margin.sv": {
+          "sha256": "4ea268f906921ce7d7c116bf37b27ff9f917401b92ad89d374828597e8b242f4",
+          "bytes": 3201
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_norm_native_vm_adapter.sv": {
+          "sha256": "f9d9c32f98c468bad29466fe657ebc2c6190b5b675e4c6925cd4e3c6430b2a68",
+          "bytes": 7696
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/00_ot_hdc_fastfp_lat_c12.sv": {
+          "sha256": "f1990353c17e9bb78ad0275f5d5896da4a7652ba2db5ac4104b53342646aeb29",
+          "bytes": 7531
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/01_ot_hdc_fp32_f12.sv": {
+          "sha256": "7d8ef17a0a6a1b184969a71e0e41d9f6638af044a82d8d62198ad9583d989459",
+          "bytes": 28525
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/02_ot_hdc_prefix.sv": {
+          "sha256": "8cf1c6b38a21fb026f5c74ce3fc20d9d5ae3ec63cae7a98d49c2415bda21321e",
+          "bytes": 2930
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/03_ot_dsrom_su_add6.sv": {
+          "sha256": "a1c047b941c09337677209d1bc4e67e0d4615700c06d2e2ab005499676312177",
+          "bytes": 773
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/04_ot_dsrom_su_f12.sv": {
+          "sha256": "91bbe3be9541484be88ba30268dca12d5ccb57f4b3c7ef7bde190e2a09ff871e",
+          "bytes": 44770
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/05_ot_hdc_fsqrt_c12.sv": {
+          "sha256": "3993456426d9dd12a862be36eb091a42717df47e6b9e5d14138ca7d41d4703a6",
+          "bytes": 8180
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/06_ot_hdc_v41x_sfu_c12.sv": {
+          "sha256": "1d745779b93c9b5451d7ec95f2541b1394a02b076ffb5ba55d4ddcfb659b2465",
+          "bytes": 46735
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/07_ot_hdc_cg.sv": {
+          "sha256": "24df5bff25dd8e726003f3b26ad658318243d93fc3f1ff9f1ee6c9969c5148c3",
+          "bytes": 2174
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/08_ot_hdc_delay.sv": {
+          "sha256": "904b16a8065ec0c2d37414e709d756e200304c300ea5b60edf41452a55a19adc",
+          "bytes": 1500
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/09_ot_hdc_sfu.sv": {
+          "sha256": "7a47dd6ab7fb9592ff2ed7c5a9970eddd00733ad7f6718dd38ed97c77537f0fe",
+          "bytes": 8169
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/10_ot_hbm_compute_held_exec.sv": {
+          "sha256": "6de531368387f8b821b00b5df7a070a6b8f7e231bfefd124743df52f7ef73380",
+          "bytes": 3027
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/11_ot_hbm_sfu_quarter.sv": {
+          "sha256": "ba155ca1dfa2a8042d967528a890804a54ff3e431be185ba4c5bc83051d31819",
+          "bytes": 3818
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/12_ot_hbm_sfu_side_result_c12.sv": {
+          "sha256": "c3f4061b464949da87b362bd707c117a103a2647c0c4aa1569d9f106b021aeb3",
+          "bytes": 9293
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/13_ot_hbm_sfu_quarter_framed.sv": {
+          "sha256": "64793ffdae175050efce9ddd0014cfb161e61bc3b9565893b1cbd1c05e17b5b6",
+          "bytes": 2091
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/14_ot_hdc_fastfp.sv": {
+          "sha256": "71c211a3afec72700771f1b0c299858b1102ba578d04faf57e822e5071829f1d",
+          "bytes": 19784
+        },
+        "src/rtl/hbm_accel/integration/ot_hbm_pcwb_p2_return_bind.sv": {
+          "sha256": "dd1e9deab4af2d6cea240cb6a3662041bc134de2db1450b819547721587af239",
+          "bytes": 2808
+        },
+        "src/rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv": {
+          "sha256": "fc317d78f21d413d85f9b0e9e1d2a823d89164ded1eb3227ca7efb2b21df8f50",
+          "bytes": 8585
+        },
+        "src/rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv": {
+          "sha256": "2a96bcd06aff1b7e559a2ad994edf9e7c24cc9461ebe9b522cc4809d7b28730c",
+          "bytes": 7309
+        },
+        "src/rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv": {
+          "sha256": "cab80ae86b57afc86eb15ece85328cfb4149923e2d17d650f2d817f8ba672aef",
+          "bytes": 16022
+        },
+        "src/rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv": {
+          "sha256": "20f41640e1963cc85072f1a622120e1efd983312bf551f35f9eafe9f7ff3b6fb",
+          "bytes": 43633
+        },
+        "src/rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv": {
+          "sha256": "50d0d7c6488ec8a6803ca285d20ee93897bb1fc49c039c888296e5315fe73092",
+          "bytes": 39660
+        },
+        "src/rtl/hdc/kv/ot_hdc_hbm_model.sv": {
+          "sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+          "bytes": 20850
+        },
+        "src/rtl/hdc/ot_hdc_cg.sv": {
+          "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+          "bytes": 2051
+        },
+        "src/rtl/hdc/ot_hdc_delay.sv": {
+          "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+          "bytes": 1395
+        },
+        "src/rtl/hdc/ot_hdc_fastfp.sv": {
+          "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+          "bytes": 19069
+        },
+        "src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv": {
+          "sha256": "188ce9c0066a6791a864bee4134d8518365fba57270ccf2c145b1b022c32fe58",
+          "bytes": 6588
+        },
+        "src/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+          "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+          "bytes": 12112
+        },
+        "src/rtl/hdc/ot_hdc_fp32_f12.sv": {
+          "sha256": "79d7ef8c1a35bf46a6f5e9f78400798141e23e829cc6422e6cfb75e91525087c",
+          "bytes": 27241
+        },
+        "src/rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+          "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+          "bytes": 11377
+        },
+        "src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+          "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+          "bytes": 10519
+        },
+        "src/rtl/hdc/ot_hdc_fpu.sv": {
+          "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+          "bytes": 5251
+        },
+        "src/rtl/hdc/ot_hdc_prefix.sv": {
+          "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+          "bytes": 2803
+        },
+        "src/rtl/hdc/ot_hdc_sfu.sv": {
+          "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+          "bytes": 7751
+        },
+        "src/rtl/hdc/v41/ot_hdc_actquant.sv": {
+          "sha256": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+          "bytes": 10817
+        },
+        "src/rtl/hdc/v41/ot_hdc_blockdot.sv": {
+          "sha256": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
+          "bytes": 16915
+        },
+        "src/rtl/hdc/v41/ot_hdc_fdiv.sv": {
+          "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+          "bytes": 6738
+        },
+        "src/rtl/hdc/v41/ot_hdc_fsqrt.sv": {
+          "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+          "bytes": 7078
+        },
+        "src/rtl/hdc/v41/ot_hdc_softplus.sv": {
+          "sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+          "bytes": 5238
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_aq12.sv": {
+          "sha256": "2f7ec21829e132dc0be7fb8c7de896e4a50456220498f1dc7ee298a386a98aa1",
+          "bytes": 9425
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_divc.sv": {
+          "sha256": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+          "bytes": 8318
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": {
+          "sha256": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+          "bytes": 1165
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_su_hcpost.sv": {
+          "sha256": "4e66073602783771451baf348ee31ebbc5c6edf8c1b76ef8bb737a4460849508",
+          "bytes": 12685
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_su_norm.sv": {
+          "sha256": "da8017e7d28af8846ab5fc01eb70cc412b12c7ac024586d0838d206caf9057fb",
+          "bytes": 28213
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": {
+          "sha256": "44853bdf059f7b7640f10a5237e4d73c6494622632431abaf7b3426239be515d",
+          "bytes": 17629
+        },
+        "src/rtl/hdc/v41x/ot_hdc_v41x_vec.sv": {
+          "sha256": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13",
+          "bytes": 51032
+        },
+        "src/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": {
+          "sha256": "928bca5da13c0aa9679e337cd60fd556b84e9bcb5ab55d1ddbaa3efbbf4e1e69",
+          "bytes": 16157
+        },
+        "src/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": {
+          "sha256": "71b52f3016e76f1ef9ed3ca81333a73a0866b071dd4fa1c9f5727c49701c550b",
+          "bytes": 4522
+        },
+        "src/rtl/host/ot_host_if.sv": {
+          "sha256": "a093c932db0a17352479d87b28bacc5b86e7d1e134c5c233d9087272cc15bc74",
+          "bytes": 33076
+        },
+        "src/rtl/link/ot_link_afifo.sv": {
+          "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+          "bytes": 4344
+        },
+        "src/rtl/link/ot_link_nvls_switch.sv": {
+          "sha256": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+          "bytes": 8808
+        },
+        "src/rtl/proto/ot_fp32_add_rne_pipe.sv": {
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+          "bytes": 11904
+        },
+        "src/rtl/test/tb_hdc_v41x_vec_fields.svh": {
+          "sha256": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
+          "bytes": 2119
+        },
+        "src/rtl/v41rom/ot_v41_bterm.sv": {
+          "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+          "bytes": 11773
+        },
+        "src/rtl/v41rom/ot_v41_bterm2.sv": {
+          "sha256": "7bcef5af5f27d2c8f43f8d185d0a6a3932ec003aa9a10979d166fdd0396154f9",
+          "bytes": 10596
+        },
+        "fixture/die0_p0.hex": {
+          "sha256": "ee115e4d53688806adde27246d259d4ab38acb403f0ab827ccbdee9fc9f136aa",
+          "bytes": 111728
+        },
+        "fixture/die0_p1.hex": {
+          "sha256": "d8c2a47b0a7ac4e12ee9ad61762823e21203e3041e75c5b60b4ebb7a5f1b7922",
+          "bytes": 111728
+        },
+        "fixture/die1_p0.hex": {
+          "sha256": "07dc3ef9b017123c4847a7490dad10f15cdef04ab94c233a891ced1ba8e7796e",
+          "bytes": 68
+        },
+        "fixture/die1_p1.hex": {
+          "sha256": "07dc3ef9b017123c4847a7490dad10f15cdef04ab94c233a891ced1ba8e7796e",
+          "bytes": 68
+        },
+        "fixture/fixture_manifest.json": {
+          "sha256": "7f5f67ea1bcc2b407b3512855d543897860db7e475387488ad1053c04a30237f",
+          "bytes": 1618
+        },
+        "fixture/gold/cfg.mem": {
+          "sha256": "b88aa9d6b0933b929cd9481dffe8b471ee4d0ca6e5df2012e8250186f79679b0",
+          "bytes": 54
+        },
+        "fixture/gold/eqc.mem": {
+          "sha256": "279e90327e21465622d703455303efb78dd4525cb4756fa9e41d6412177a68de",
+          "bytes": 10400
+        },
+        "fixture/gold/eqe.mem": {
+          "sha256": "a9a5537e0d27665ac84ff25aa758b6833955a386d9cefa14aad0da6d6e1fc394",
+          "bytes": 800
+        },
+        "fixture/gold/eqy.mem": {
+          "sha256": "2ec27a9bd55debace006c7134037a22b4c47ae2ee2f252fd3172aebb29eac00b",
+          "bytes": 20640
+        },
+        "fixture/gold/ey.mem": {
+          "sha256": "c1dc401770017fad13fdf96bde3f305baadb17b139e30334f7c6c0adcedfca47",
+          "bytes": 46080
+        },
+        "fixture/gold/w.mem": {
+          "sha256": "93e4e41f7cb05544c846b3316c0866659ac28c7e64a9820ec491f7b0f82a3f52",
+          "bytes": 46080
+        },
+        "fixture/gold/x.mem": {
+          "sha256": "afa68c72c5a4233b2dba671efdbd41b647c24cf07f83865524eb1b63ed283566",
+          "bytes": 184320
+        },
+        "gold_corrupt/cfg.mem": {
+          "sha256": "b88aa9d6b0933b929cd9481dffe8b471ee4d0ca6e5df2012e8250186f79679b0",
+          "bytes": 54
+        },
+        "gold_corrupt/eqc.mem": {
+          "sha256": "279e90327e21465622d703455303efb78dd4525cb4756fa9e41d6412177a68de",
+          "bytes": 10400
+        },
+        "gold_corrupt/eqe.mem": {
+          "sha256": "a9a5537e0d27665ac84ff25aa758b6833955a386d9cefa14aad0da6d6e1fc394",
+          "bytes": 800
+        },
+        "gold_corrupt/eqy.mem": {
+          "sha256": "2ec27a9bd55debace006c7134037a22b4c47ae2ee2f252fd3172aebb29eac00b",
+          "bytes": 20640
+        },
+        "gold_corrupt/ey.mem": {
+          "sha256": "f379a5ce4399cc8b502f9559946b5d66e7a7e2b28bdf8a03a74f5171d961d254",
+          "bytes": 46080
+        },
+        "gold_corrupt/w.mem": {
+          "sha256": "93e4e41f7cb05544c846b3316c0866659ac28c7e64a9820ec491f7b0f82a3f52",
+          "bytes": 46080
+        },
+        "gold_corrupt/x.mem": {
+          "sha256": "afa68c72c5a4233b2dba671efdbd41b647c24cf07f83865524eb1b63ed283566",
+          "bytes": 184320
+        }
+      }
+    },
+    "lorentz-margin-qwen8k": {
+      "path": "/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin-qwen8k",
+      "files": {
+        "src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": {
+          "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+          "bytes": 6668
+        },
+        "src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": {
+          "sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+          "bytes": 6668
+        },
+        "src/physical/hbm_die_abstracts_20261006/compute/ot_hbm_compute_frame1024.sv": {
+          "sha256": "f820f397cbe369b4d7818658d7c2a0e8b55cfb3418d04f0638b362461805efb3",
+          "bytes": 3760
+        },
+        "src/physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv": {
+          "sha256": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+          "bytes": 13200
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/FORMATTER_JOIN.txt": {
+          "sha256": "b0ad2308c9b09a9fe369f1eef65a52912bba496b23de45c351e6e3c539ada2a1",
+          "bytes": 2430
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/INTEGRATED_FORMATTER_CONTINUATION_20261006.txt": {
+          "sha256": "c89ca729b02381fee17e529b2aa394c431fa0925ce8d2f03661c6505608708a2",
+          "bytes": 7850
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/INTEGRATED_MINIMUM_PARENT_HARNESS_20261006.txt": {
+          "sha256": "7f37e9e82a0d26edda949a748162da262776eab231ce645401408c0753aed9d2",
+          "bytes": 7142
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/export_barrier.py": {
+          "sha256": "d246451ffd0529edbea986d450d667728192510bd5d2c60a55c47d0de988338a",
+          "bytes": 5678
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/export_barrier_views.py": {
+          "sha256": "e7fbb26926adbe5d48df51307d8148a76fd044bb512b3650dc1017b07d4bc131",
+          "bytes": 7310
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/export_status.json": {
+          "sha256": "14868ce4fea44532ca7986fa81f2a22594f50ecab2796a7c1ae4423e6b1ab9d5",
+          "bytes": 341
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/formatter_join.f": {
+          "sha256": "ebcf5759ee9feb78ae315943f9a172e8d30e7f7ffe9d4c645e0526aaabeeaf3d",
+          "bytes": 193
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/formatter_provider.files.f": {
+          "sha256": "a5427e0a86f51d8f8691cd4bf71ba0356073f7a2d3272773a629c867f8cd6818",
+          "bytes": 6514
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_formatter_continuation.inc": {
+          "sha256": "c23eaaa78f0eb21195d128f895c916e3b23e89b67a04323022c81b9cc9bc3e20",
+          "bytes": 12467
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_minimum_parent_inputs.inc": {
+          "sha256": "e2ad92cd588cc3523a74c238b4b661e15b9d976cd12e15de221887886fd41992",
+          "bytes": 5954
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_minimum_parent_main.cpp": {
+          "sha256": "c3917949629d0efafbd2954545bbe5489ef5ab6041304feb8d15fc73cd8bc494",
+          "bytes": 16875
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_sfu_continuation.inc": {
+          "sha256": "7d756a799b730858e34f87ba81b512432efad7bf6ba6fd67d533abbc366fa63d",
+          "bytes": 7445
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/minimum_parent_margin.files.f": {
+          "sha256": "d154cef42400940faeb5fc3d4c2c8f75d8034468a54e766e13b801a285ea223a",
+          "bytes": 6756
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/minimum_parent_margin.files.f.orig": {
+          "sha256": "d476f38930069e8bf1d7f3b14688f91528d8b75ffb937169f10048e3f7f4ff6b",
+          "bytes": 6399
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/minimum_parent_margin.vlt": {
+          "sha256": "d4962256cc40bc1e5bfa628c50d4893bccc669acec86cc184dd7c60f7bef50ca",
+          "bytes": 976
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/abstract.json": {
+          "sha256": "c9f84fe2398ba167e15ac18149d1a3c60959e8297b1b34723964f22e2ed519a6",
+          "bytes": 2473
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/clock_contract.json": {
+          "sha256": "907fae9318f7ea5534f4d29f22b5d2a4933b194f4b3b3c3379b2a6ba5217fefa",
+          "bytes": 1622
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/export.json": {
+          "sha256": "753965a455447c265ed56aff60f06f88ebceb757fe5777f3654235e1c9a11c18",
+          "bytes": 2918
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/export_ff.log": {
+          "sha256": "9209dda8a3fbcb16b2bb6474c56c64874005de13b55756356f24a99f7012f565",
+          "bytes": 2162
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/export_ff.tcl": {
+          "sha256": "0d10767bd4488111bbca55eceab9199eeae40ef3113c16192d82352fb5cba1e6",
+          "bytes": 1112
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/export_ss.log": {
+          "sha256": "5a94e0cd9e5ca60afbf4c7e5584c29602bf0d5f1691cbaa0061da40f0cfeccaf",
+          "bytes": 2170
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/export_ss.tcl": {
+          "sha256": "b327577ed2f35d388384c9af2797248966857f452c483b6ea1e353f1eca4a374",
+          "bytes": 1158
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/interface.sdc": {
+          "sha256": "2299a1dad872c2fcdeb379226a7e49fe774f3c250c683f38e263c0d757fddb7b",
+          "bytes": 539
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1.lef": {
+          "sha256": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb",
+          "bytes": 5452373
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ff.lib": {
+          "sha256": "135ba0be869272642f1b579a983b999da2e105fce385fc70d80830600351f0d8",
+          "bytes": 954725
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ss.lib": {
+          "sha256": "55ced69cc7da41a731f2e21d00adfa35a4d6924d3b76d302bd5302f78b81f41b",
+          "bytes": 954863
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_attn_hgrp_m6h1/pins.json": {
+          "sha256": "ffaeeb52326696d5886ffc4497b8d58ef8532374f80728a9e8c74811f65a997d",
+          "bytes": 419062
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/abstract.json": {
+          "sha256": "f85a9038c552ccd47005d271ebc93155d6edf7f2c2284378973c2b06e060bc29",
+          "bytes": 3439
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/capacity_before_ff.json": {
+          "sha256": "91e214820a47e7f63dc82415db7cff1e053ef460b2d68395a163f61a4b75c618",
+          "bytes": 384
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/capacity_before_ss.json": {
+          "sha256": "d46562f4a3a55c2813a93aa3f6b7865f809ef37dab7b86fca02a95f2b7f7559c",
+          "bytes": 381
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/clock_contract.json": {
+          "sha256": "62899063c0ef43d032e6cb992e9b72afad2260eb671a8c15c2e2a208c1dbf967",
+          "bytes": 1273
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/export.json": {
+          "sha256": "19200e9abb4b45123759970732666930d2619efc8c371c2f050265d8a8fe2b3f",
+          "bytes": 4027
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/export_ff.log": {
+          "sha256": "ed879f4b89acd04fe4046861a3a63965c3ec514f822b3ed8e370bbe4f4feacc1",
+          "bytes": 2447
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/export_ff.tcl": {
+          "sha256": "ef51ad1f4788b0c18c99b1b03ad711f4b3b906010cdcfa2f7d21ada7ceab71a9",
+          "bytes": 1327
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/export_ss.log": {
+          "sha256": "b4ef853ef3f6ab94f8d8aac75af38c603851256b8abaabdd1eb626102ce6ac30",
+          "bytes": 2454
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/export_ss.tcl": {
+          "sha256": "1fc3748bbd8f9ce813e8f3b60595bbf91eb30f0effdd40325c2c23513157fc41",
+          "bytes": 1375
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/launch_receipt.json": {
+          "sha256": "d800147c97ece7b05f058266416918df3ae54100efeab56c06f594271cb36b46",
+          "bytes": 1954
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/ot_gpu_barrier_node.lef": {
+          "sha256": "a90ce787d9264e0668b99f4eb9db518f6f37706c36e856bbc46beac2a545f812",
+          "bytes": 14594
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/ot_gpu_barrier_node_ff.lib": {
+          "sha256": "42b7233a1784b6864e1f90290e3181cafc9600ef6dff4a49167fdf4e5d51d7ec",
+          "bytes": 56668
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/ot_gpu_barrier_node_ss.lib": {
+          "sha256": "4455784ef6c855b0a6d103e5f6204096207d35e0910e2eef6feb5bf38045f3b7",
+          "bytes": 56856
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/pins.json": {
+          "sha256": "1409a03b70ff88cc33f877c2f74c95ecad01556d7d2bbdb481f8ac35120a7158",
+          "bytes": 17384
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32/post_guard_capacity.json": {
+          "sha256": "8fdd3bc1345a8480d85d2dea24602b480269e914098e08b8e7cc8ee94b4edadf",
+          "bytes": 382
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_stream_service.sv": {
+          "sha256": "6ce388676188d0fed0a0b587b73f3a6b0d335cf7e3a73c2712290e5fe049156a",
+          "bytes": 3635
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": {
+          "sha256": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+          "bytes": 6266
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv": {
+          "sha256": "3e669ab7e65fd4a27fbe1b647437f1bcabe285324fd9617ddf36ab010f7e2233",
+          "bytes": 7540
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_install_consumer.sv": {
+          "sha256": "7299552d01014980152a8510b30e4c0962637bcc97fbd54aa75628d89c9e50cd",
+          "bytes": 9870
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_preinstall.sv": {
+          "sha256": "1933c0b54144df353ff864de7c30cd2bac8d2d760bd73c0d6e6182da5f4b635e",
+          "bytes": 12600
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_preinstall_gather_owner.sv": {
+          "sha256": "5c8b1a6c310c1241f7f6adef6cb668d595c48c3d780a5e9ba0fcd6159903295d",
+          "bytes": 14095
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_selected_id_consumer.sv": {
+          "sha256": "f12d4769cf3c72542053fb8bb9863a113a74f926cf79b5ce5bcdc7ebd14a26a1",
+          "bytes": 11298
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": {
+          "sha256": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+          "bytes": 7651
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv": {
+          "sha256": "95d3e48a9d1d4aebfc65c31373397efff755a4c5fa441229c854dd51f2807f7f",
+          "bytes": 7225
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_norm_samebank_readback_checker.sv": {
+          "sha256": "91592a5cf96bc26d29a3e9c52c7942d1e2daa9f5f3b38a33016b082b78c818d1",
+          "bytes": 4015
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_vm_sfu_result_publication.sv": {
+          "sha256": "a0751dc0f9050191a225a5c6d85df79aa78a831c51cb251df75061f0fe7e94b0",
+          "bytes": 5038
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/prepare_integrated_formatter_fixture.py": {
+          "sha256": "993ba5abf9e981bc85b0c7e39afb81ee83b2b417ff95c0017c8030885de0f609",
+          "bytes": 12721
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/prepare_integrated_minimum_parent_fixture.py": {
+          "sha256": "b68196e8e7a6797f87afffce972ca00c877f9bf3a8343b21bc8a8573c92ef5bc",
+          "bytes": 6408
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/prepare_parent_boundary_fixture.py": {
+          "sha256": "bf0f8892641152697b3f07c52e4d39a6db62e3959083818b4893c2c4bb44be02",
+          "bytes": 4227
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/prepare_views.py": {
+          "sha256": "d95bde0918ed5bd5101daf2775ce5f1fbbad107a24c5b252e489ce2c5c1f972f",
+          "bytes": 4650
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/prepare_vm_root.py": {
+          "sha256": "82fb94d17196de698b8dba4d9e654bd2b21edd67570418c4fd18548da42888ec",
+          "bytes": 2426
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/run_formatter_join.py": {
+          "sha256": "e750b63bb48e76c3cbbdb620569273e9ba293c0a9a3c03de6e92c39b84df8264",
+          "bytes": 5710
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/run_index_fp32_adapter.py": {
+          "sha256": "5e87cd5233f62ed4f1cd69165ad4af97f2418ffb0a5c2fb669f4e1089a1c7be6",
+          "bytes": 4853
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/run_minimum_parent_margin.sh": {
+          "sha256": "e8b405f80f3b77176e8a51cb12ebdba797728770ac5e5c80dfe0a30ce1c887d1",
+          "bytes": 2431
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/run_sfu_result_publication.py": {
+          "sha256": "3b549b4d83ec86ec9ad07b6d271febbcbfc25d4461675abf6ec7a16baa4ba353",
+          "bytes": 5407
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/run_vm_sfu_warm_join.py": {
+          "sha256": "74cd95cf0073cb783a0f7de793f4c193eb53303f4ee82c66838105c5457ad2f0",
+          "bytes": 5360
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/sm_compat/check_actual_leaf.py": {
+          "sha256": "1db026c966c6258e97d8dccf28cf66146e8f2039854afe80f05ac72a4e6c79b4",
+          "bytes": 3078
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/sm_compat/ot_hbm_accel_bd_col_bb.v": {
+          "sha256": "14b26f253cb6f07111f95f25b5af615fc7f4058879e02aa17885dabdc45aeac9",
+          "bytes": 1058
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/sm_compat/ot_hbm_accel_tc16_bb.v": {
+          "sha256": "859730ff2c7511ae4cd005961d47be0acf1dd7dfd84485cd71a66ea693bfda41",
+          "bytes": 848
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/sm_compat/supported_shapes.json": {
+          "sha256": "5da3c56efbc77d517b9e95672c3e1c4e2fd7c46b7c716322ce403e0176f16076",
+          "bytes": 1156
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_formatter_preinstall.sv": {
+          "sha256": "43f156dcfc30805319a9f080c558d55fc7c0e76c1a889bbf6ed674d2d4d1e6a7",
+          "bytes": 19605
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_h17.sv": {
+          "sha256": "49c3bff4003a23397e6a55616e0474843565dac6d53dc9293e1640c0afc15449",
+          "bytes": 521
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_formatter_provider_join.sv": {
+          "sha256": "f5bc518061f55458625f1da68ea590b6298ebac9273f4775f98e19a2636cd968",
+          "bytes": 15364
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_integrated_minimum_parent.sv": {
+          "sha256": "de48eed8ed3d2c18af6fbbfbccb7a5543faf1b435a7dd9056497c0cf3470a857",
+          "bytes": 48618
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_index_fp32_sram_adapter.sv": {
+          "sha256": "51e3a68eecb585486c91cc453fcdfb47f7de37a1f4e1475ffee9d909a200b62a",
+          "bytes": 6688
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_norm_engine_native_publication.sv": {
+          "sha256": "77e09a9a106ae7e61109da8810287287ea9246ddefc84b58c0ffda4995c185c9",
+          "bytes": 19027
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_norm_quant_native_publication.sv": {
+          "sha256": "51508f0539bc5bc405be33f52283f42cbd6b613a778c4c8ecf839aee3f8db5f8",
+          "bytes": 18818
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_vm_root.sv": {
+          "sha256": "e2660d45da55a5ff848108eaf6eda99abcf381b685d91c603fefdf390428115d",
+          "bytes": 4040
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_vm_sfu_publication_warm_join.sv": {
+          "sha256": "a79beebb931647c8b416b27609706fed95944a3f3c7d1524c7fb016400a61b4a",
+          "bytes": 9312
+        },
+        "src/physical/hbm_die_abstracts_20261006/memory_control/tb_vm_sfu_result_publication.sv": {
+          "sha256": "6ead0ce215d9f9b01943ab8d628497b455edbf0c83e060889d50b2650ae65e41",
+          "bytes": 10000
+        },
+        "src/results/rtl/hbm_integrated_sfu_provider_join_20261006/selected_parameters.json": {
+          "sha256": "d0e0b7ac8449aa448cc592b045e0c8ddf1d27298f7e7eb967534332c67111025",
+          "bytes": 2852
+        },
+        "src/rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": {
+          "sha256": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+          "bytes": 18599
+        },
+        "src/rtl/abi3/ot_a3_fp32_sqrt_rne.sv": {
+          "sha256": "09f03bc02617c6b6d20f75992f25c47f0b3b0401d0004c86141ed0f1c5e94e55",
+          "bytes": 9500
+        },
+        "src/rtl/chip/ot_chip_v41x_coll_transpose.sv": {
+          "sha256": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
+          "bytes": 10447
+        },
+        "src/rtl/chip/ot_coll_topk_merge.sv": {
+          "sha256": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6",
+          "bytes": 16678
+        },
+        "src/rtl/chip/ot_w15_coll_dma.sv": {
+          "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+          "bytes": 11631
+        },
+        "src/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv": {
+          "sha256": "7230273667d61d7c87e67f93cff39523420a00913b40b76b03ae76e849ee3e94",
+          "bytes": 7146
+        },
+        "src/rtl/gpu/ot_gpu_barrier_node.sv": {
+          "sha256": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+          "bytes": 1844
+        },
+        "src/rtl/gpu/ot_gpu_bd_col.sv": {
+          "sha256": "9637b23a0e48ae59818d2dc4a0a8e5333a73961c1783f37b82ca79d70a762df5",
+          "bytes": 5602
+        },
+        "src/rtl/gpu/ot_gpu_bulk_copy.sv": {
+          "sha256": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+          "bytes": 6787
+        },
+        "src/rtl/gpu/ot_gpu_fadd.sv": {
+          "sha256": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+          "bytes": 1459
+        },
+        "src/rtl/gpu/ot_gpu_issue.sv": {
+          "sha256": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+          "bytes": 7358
+        },
+        "src/rtl/gpu/ot_gpu_sm.sv": {
+          "sha256": "43489304c695bed14c53eb93bf7d93e71db5e66e8ccc4610572b1d5b9bdcc6f7",
+          "bytes": 9756
+        },
+        "src/rtl/gpu/ot_gpu_sm_bd.sv": {
+          "sha256": "f0229375762a515aae5cba3f82e275a143909ede5357daebcd94f2e85f5f7abb",
+          "bytes": 6314
+        },
+        "src/rtl/gpu/ot_gpu_stack.sv": {
+          "sha256": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+          "bytes": 6310
+        },
+        "src/rtl/gpu/ot_gpu_tc_col.sv": {
+          "sha256": "e81c971fde92e9dda728ab962219998c033da61005f6858c6ff6bfc25d85616f",
+          "bytes": 5975
+        },
+        "src/rtl/gpu/ot_gpu_tree.sv": {
+          "sha256": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+          "bytes": 2607
+        },
+        "src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": {
+          "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+          "bytes": 1493
+        },
+        "src/rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20.sv": {
+          "sha256": "a645259efa9b605d5be5edccd3135bfb8587c22641af84018fa5bd604c286f61",
+          "bytes": 9456
+        },
+        "src/rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": {
+          "sha256": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+          "bytes": 6397
+        },
+        "src/rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv": {
+          "sha256": "c72c1c0f8619d2dbf527b138bb2e16157688b5038d55f03915b2c023ebc18880",
+          "bytes": 33356
+        },
+        "src/rtl/gpu_sys/ot_gpu_bd_line.sv": {
+          "sha256": "f3e8ea0358815ec6acf07eef8c837080b95ef21cb59d05c9f778e979e6e9d81c",
+          "bytes": 2050
+        },
+        "src/rtl/gpu_sys/ot_gpu_cdc_fifo.sv": {
+          "sha256": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+          "bytes": 2134
+        },
+        "src/rtl/gpu_sys/ot_gpu_cmdproc.sv": {
+          "sha256": "d0b1f0710af11ea1f60acb790ad23c9192e0794fd94383f23728ea663d327c5a",
+          "bytes": 5362
+        },
+        "src/rtl/gpu_sys/ot_gpu_coll_endpoint.sv": {
+          "sha256": "adf09a0bbf30c47f0c514c5476d39173bb3478414ae43a93195c012658d3a36b",
+          "bytes": 10592
+        },
+        "src/rtl/gpu_sys/ot_gpu_coll_fabric.sv": {
+          "sha256": "4755fb6105464f97dbddd51d80c1f5d84a43cea7a5d408b4862f0999ebd44608",
+          "bytes": 5184
+        },
+        "src/rtl/gpu_sys/ot_gpu_coll_mux.sv": {
+          "sha256": "fa7250f9fe44dc7a4ed18eb37d826b9ac9670d9d6dfccad15ccdf06d1a1db6cb",
+          "bytes": 3130
+        },
+        "src/rtl/gpu_sys/ot_gpu_hbm_partition.sv": {
+          "sha256": "1a2f10061d9bb7900fc9b9fd9b306c10345985d8f5be7be8d7f38fdb8330497f",
+          "bytes": 14839
+        },
+        "src/rtl/gpu_sys/ot_gpu_hbm_system.sv": {
+          "sha256": "22d8da84b86d866c0aaa9407fb3b4155a69976890ca05a7383503aac48b15c72",
+          "bytes": 16004
+        },
+        "src/rtl/gpu_sys/ot_gpu_host_bridge.sv": {
+          "sha256": "015ee63361328844b27e407f1fb48497e6788eaf54387b64e49741c7e74a0a96",
+          "bytes": 7383
+        },
+        "src/rtl/gpu_sys/ot_gpu_l2_slice.sv": {
+          "sha256": "22f6c39433c9551e2c931853225a41de1a84bc1f44ae2f231a8cec793cc8986a",
+          "bytes": 10422
+        },
+        "src/rtl/gpu_sys/ot_gpu_memsys.sv": {
+          "sha256": "73882cfce6282a027a678edc4eadf92b67875dae3544faf25c5fe1d026aba986",
+          "bytes": 6015
+        },
+        "src/rtl/gpu_sys/ot_gpu_mreq_cdc.sv": {
+          "sha256": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
+          "bytes": 3067
+        },
+        "src/rtl/gpu_sys/ot_gpu_reset_ctrl.sv": {
+          "sha256": "a1a8221698457376ac0eadfcb9e80e0a7a8683ef27e244c39b6ae78b9e53da2d",
+          "bytes": 3732
+        },
+        "src/rtl/gpu_sys/ot_gpu_simt_divlane.sv": {
+          "sha256": "01cc0cc9d0acb9eca4c65393e4c8cec96593e4bb9327ae2f71983f8dfd9f5275",
+          "bytes": 1433
+        },
+        "src/rtl/gpu_sys/ot_gpu_simt_lane.sv": {
+          "sha256": "97d0ea8512443174bc48789435697676f051e64159966eaa842217688f2a9c4e",
+          "bytes": 7570
+        },
+        "src/rtl/gpu_sys/ot_gpu_simt_sm.sv": {
+          "sha256": "a92b3700e326883c255be11c119cd6e3984b376c5a3cc85cd629b431f769c326",
+          "bytes": 33577
+        },
+        "src/rtl/gpu_sys/ot_gpu_sys_glue.sv": {
+          "sha256": "ef972587276d1689ac664dd8905ee98f7100c6cb4389075921ec89a1e63ad129",
+          "bytes": 3871
+        },
+        "src/rtl/gpu_sys/ot_gpu_xbar.sv": {
+          "sha256": "5fa9a43e08af4ef23455b1b98b7e1094245775700a6441c2883f81cd0563cc0d",
+          "bytes": 6736
+        },
+        "src/rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": {
+          "sha256": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+          "bytes": 2309
+        },
+        "src/rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv": {
+          "sha256": "a094761b1f8a4c794e0217f465e25016aa19d1485ea942635c30d3675623ec96",
+          "bytes": 8798
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": {
+          "sha256": "f60aab76ac2ca7631b208fe2d9b899cd9b5ea484b5ba85966f066f66f098e7fe",
+          "bytes": 88339
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_admit_guard.sv": {
+          "sha256": "d62f6adc608ebdfe36cdb00be7cf5d1751b3787da84306412d28547ba0937f10",
+          "bytes": 1016
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv": {
+          "sha256": "2d147fe2f62f2669ada289e3c6a7d6f3b1473bb844a6da85668322f78f894d10",
+          "bytes": 1345
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_bridge.sv": {
+          "sha256": "b9a814be8b4455f3f26655224cfe05348bb144958d8ff2ef1230cc16480ed2c9",
+          "bytes": 12078
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_owner.sv": {
+          "sha256": "882d121877c05999659055c73ded1e5fdfb579cbbc747b56ea08d8a387e9fa87",
+          "bytes": 6395
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": {
+          "sha256": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+          "bytes": 2175
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": {
+          "sha256": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+          "bytes": 3492
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": {
+          "sha256": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+          "bytes": 8716
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": {
+          "sha256": "cd97f7cdca3c5d701949c91f829e9376bdc4f3474c788b24e67f7f1be9813ff9",
+          "bytes": 3750
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": {
+          "sha256": "fcd6c1b7a7d244e80d56857eae9b414e388ef873c0273f1c6ff93354320b0760",
+          "bytes": 44151
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv": {
+          "sha256": "2423b70ed5e126220b70857ff90390c7042fe82e697af1753c4668ecb5780a53",
+          "bytes": 6444
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w15_store.sv": {
+          "sha256": "a3b437fb1d53c712c23626b1a665fc6295df82fc6ec81117b59dc65dd0c6a571",
+          "bytes": 5457
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv": {
+          "sha256": "bfc1a96fa98639b4a27563afdbdf21ebfa0b3d71e0c9c75ef0ffbe387d32bc18",
+          "bytes": 25764
+        },
+        "src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_sector_adapter.sv": {
+          "sha256": "17ce25ec8eac80df2fe39d56eb612726072ebf10223d2f3faa436c6ecd77e347",
+          "bytes": 5909
+        },
+        "src/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": {
+          "sha256": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+          "bytes": 3972
+        },
+        "src/rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_stream.sv": {
+          "sha256": "cd9d935963a8836bb885cb49913d03aadb57442c78d5ec802c74baba255ca53c",
+          "bytes": 9001
+        },
+        "src/rtl/hbm_accel/integrated_20261006/codex_norm_boundary/ot_hbm_integrated_norm_vm.sv": {
+          "sha256": "83b4a2ea2f6fe787b253edf079055dfc07b39413e70914d55f8e8670330192a0",
+          "bytes": 6066
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_norm_stage.sv": {
+          "sha256": "6092c25aa05253042844804082037a1673f51cb1e315c58a9f10311038aa8880",
+          "bytes": 6721
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_c12_stage.sv": {
+          "sha256": "40f6236d53401d3b2df126ab6b255e05fea9db61b7e2050e15793f3bd2e2275b",
+          "bytes": 4656
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_provider_join.sv": {
+          "sha256": "7dc556c694e79511c2c4b930a113c02e19d7535c846b23a646f0962989f59c0d",
+          "bytes": 8864
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv": {
+          "sha256": "49b472d7c40d05b91250368d5fdf497370a688189f0eed0229ddc363a3b11ffa",
+          "bytes": 3693
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_su_provider_adapter.sv": {
+          "sha256": "c188e01425ce04f5c9748cd9f8ab12893207bc7e109b9061657b516d46ec2264",
+          "bytes": 2689
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_su_provider_margin.sv": {
+          "sha256": "4ea268f906921ce7d7c116bf37b27ff9f917401b92ad89d374828597e8b242f4",
+          "bytes": 3201
+        },
+        "src/rtl/hbm_accel/integrated_20261006/ot_hbm_norm_native_vm_adapter.sv": {
+          "sha256": "f9d9c32f98c468bad29466fe657ebc2c6190b5b675e4c6925cd4e3c6430b2a68",
+          "bytes": 7696
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/00_ot_hdc_fastfp_lat_c12.sv": {
+          "sha256": "f1990353c17e9bb78ad0275f5d5896da4a7652ba2db5ac4104b53342646aeb29",
+          "bytes": 7531
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/01_ot_hdc_fp32_f12.sv": {
+          "sha256": "7d8ef17a0a6a1b184969a71e0e41d9f6638af044a82d8d62198ad9583d989459",
+          "bytes": 28525
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/02_ot_hdc_prefix.sv": {
+          "sha256": "8cf1c6b38a21fb026f5c74ce3fc20d9d5ae3ec63cae7a98d49c2415bda21321e",
+          "bytes": 2930
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/03_ot_dsrom_su_add6.sv": {
+          "sha256": "a1c047b941c09337677209d1bc4e67e0d4615700c06d2e2ab005499676312177",
+          "bytes": 773
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/04_ot_dsrom_su_f12.sv": {
+          "sha256": "91bbe3be9541484be88ba30268dca12d5ccb57f4b3c7ef7bde190e2a09ff871e",
+          "bytes": 44770
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/05_ot_hdc_fsqrt_c12.sv": {
+          "sha256": "3993456426d9dd12a862be36eb091a42717df47e6b9e5d14138ca7d41d4703a6",
+          "bytes": 8180
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/06_ot_hdc_v41x_sfu_c12.sv": {
+          "sha256": "1d745779b93c9b5451d7ec95f2541b1394a02b076ffb5ba55d4ddcfb659b2465",
+          "bytes": 46735
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/07_ot_hdc_cg.sv": {
+          "sha256": "24df5bff25dd8e726003f3b26ad658318243d93fc3f1ff9f1ee6c9969c5148c3",
+          "bytes": 2174
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/08_ot_hdc_delay.sv": {
+          "sha256": "904b16a8065ec0c2d37414e709d756e200304c300ea5b60edf41452a55a19adc",
+          "bytes": 1500
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/09_ot_hdc_sfu.sv": {
+          "sha256": "7a47dd6ab7fb9592ff2ed7c5a9970eddd00733ad7f6718dd38ed97c77537f0fe",
+          "bytes": 8169
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/10_ot_hbm_compute_held_exec.sv": {
+          "sha256": "6de531368387f8b821b00b5df7a070a6b8f7e231bfefd124743df52f7ef73380",
+          "bytes": 3027
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/11_ot_hbm_sfu_quarter.sv": {
+          "sha256": "ba155ca1dfa2a8042d967528a890804a54ff3e431be185ba4c5bc83051d31819",
+          "bytes": 3818
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/12_ot_hbm_sfu_side_result_c12.sv": {
+          "sha256": "c3f4061b464949da87b362bd707c117a103a2647c0c4aa1569d9f106b021aeb3",
+          "bytes": 9293
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/13_ot_hbm_sfu_quarter_framed.sv": {
+          "sha256": "64793ffdae175050efce9ddd0014cfb161e61bc3b9565893b1cbd1c05e17b5b6",
+          "bytes": 2091
+        },
+        "src/rtl/hbm_accel/integrated_20261006/sfu_c12_selected/14_ot_hdc_fastfp.sv": {
+          "sha256": "71c211a3afec72700771f1b0c299858b1102ba578d04faf57e822e5071829f1d",
+          "bytes": 19784
+        },
+        "src/rtl/hbm_accel/integration/ot_hbm_pcwb_p2_return_bind.sv": {
+          "sha256": "dd1e9deab4af2d6cea240cb6a3662041bc134de2db1450b819547721587af239",
+          "bytes": 2808
+        },
+        "src/rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv": {
+          "sha256": "fc317d78f21d413d85f9b0e9e1d2a823d89164ded1eb3227ca7efb2b21df8f50",
+          "bytes": 8585
+        },
+        "src/rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv": {
+          "sha256": "2a96bcd06aff1b7e559a2ad994edf9e7c24cc9461ebe9b522cc4809d7b28730c",
+          "bytes": 7309
+        },
+        "src/rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv": {
+          "sha256": "cab80ae86b57afc86eb15ece85328cfb4149923e2d17d650f2d817f8ba672aef",
+          "bytes": 16022
+        },
+        "src/rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv": {
+          "sha256": "20f41640e1963cc85072f1a622120e1efd983312bf551f35f9eafe9f7ff3b6fb",
+          "bytes": 43633
+        },
+        "src/rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv": {
+          "sha256": "50d0d7c6488ec8a6803ca285d20ee93897bb1fc49c039c888296e5315fe73092",
+          "bytes": 39660
+        },
+        "src/rtl/hdc/kv/ot_hdc_hbm_model.sv": {
+          "sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+          "bytes": 20850
+        },
+        "src/rtl/hdc/ot_hdc_cg.sv": {
+          "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+          "bytes": 2051
+        },
+        "src/rtl/hdc/ot_hdc_delay.sv": {
+          "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+          "bytes": 1395
+        },
+        "src/rtl/hdc/ot_hdc_fastfp.sv": {
+          "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+          "bytes": 19069
+        },
+        "src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv": {
+          "sha256": "188ce9c0066a6791a864bee4134d8518365fba57270ccf2c145b1b022c32fe58",
+          "bytes": 6588
+        },
+        "src/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+          "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+          "bytes": 12112
+        },
+        "src/rtl/hdc/ot_hdc_fp32_f12.sv": {
+          "sha256": "79d7ef8c1a35bf46a6f5e9f78400798141e23e829cc6422e6cfb75e91525087c",
+          "bytes": 27241
+        },
+        "src/rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+          "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+          "bytes": 11377
+        },
+        "src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+          "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+          "bytes": 10519
+        },
+        "src/rtl/hdc/ot_hdc_fpu.sv": {
+          "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+          "bytes": 5251
+        },
+        "src/rtl/hdc/ot_hdc_prefix.sv": {
+          "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+          "bytes": 2803
+        },
+        "src/rtl/hdc/ot_hdc_sfu.sv": {
+          "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+          "bytes": 7751
+        },
+        "src/rtl/hdc/v41/ot_hdc_actquant.sv": {
+          "sha256": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+          "bytes": 10817
+        },
+        "src/rtl/hdc/v41/ot_hdc_blockdot.sv": {
+          "sha256": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
+          "bytes": 16915
+        },
+        "src/rtl/hdc/v41/ot_hdc_fdiv.sv": {
+          "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+          "bytes": 6738
+        },
+        "src/rtl/hdc/v41/ot_hdc_fsqrt.sv": {
+          "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+          "bytes": 7078
+        },
+        "src/rtl/hdc/v41/ot_hdc_softplus.sv": {
+          "sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+          "bytes": 5238
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_aq12.sv": {
+          "sha256": "2f7ec21829e132dc0be7fb8c7de896e4a50456220498f1dc7ee298a386a98aa1",
+          "bytes": 9425
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_divc.sv": {
+          "sha256": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+          "bytes": 8318
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": {
+          "sha256": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+          "bytes": 1165
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_su_hcpost.sv": {
+          "sha256": "4e66073602783771451baf348ee31ebbc5c6edf8c1b76ef8bb737a4460849508",
+          "bytes": 12685
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_su_norm.sv": {
+          "sha256": "da8017e7d28af8846ab5fc01eb70cc412b12c7ac024586d0838d206caf9057fb",
+          "bytes": 28213
+        },
+        "src/rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": {
+          "sha256": "44853bdf059f7b7640f10a5237e4d73c6494622632431abaf7b3426239be515d",
+          "bytes": 17629
+        },
+        "src/rtl/hdc/v41x/ot_hdc_v41x_vec.sv": {
+          "sha256": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13",
+          "bytes": 51032
+        },
+        "src/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": {
+          "sha256": "928bca5da13c0aa9679e337cd60fd556b84e9bcb5ab55d1ddbaa3efbbf4e1e69",
+          "bytes": 16157
+        },
+        "src/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": {
+          "sha256": "71b52f3016e76f1ef9ed3ca81333a73a0866b071dd4fa1c9f5727c49701c550b",
+          "bytes": 4522
+        },
+        "src/rtl/host/ot_host_if.sv": {
+          "sha256": "a093c932db0a17352479d87b28bacc5b86e7d1e134c5c233d9087272cc15bc74",
+          "bytes": 33076
+        },
+        "src/rtl/link/ot_link_afifo.sv": {
+          "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+          "bytes": 4344
+        },
+        "src/rtl/link/ot_link_nvls_switch.sv": {
+          "sha256": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+          "bytes": 8808
+        },
+        "src/rtl/proto/ot_fp32_add_rne_pipe.sv": {
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+          "bytes": 11904
+        },
+        "src/rtl/test/tb_hdc_v41x_vec_fields.svh": {
+          "sha256": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
+          "bytes": 2119
+        },
+        "src/rtl/v41rom/ot_v41_bterm.sv": {
+          "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+          "bytes": 11773
+        },
+        "src/rtl/v41rom/ot_v41_bterm2.sv": {
+          "sha256": "7bcef5af5f27d2c8f43f8d185d0a6a3932ec003aa9a10979d166fdd0396154f9",
+          "bytes": 10596
+        },
+        "fixture/die0_p0.hex": {
+          "sha256": "8c95c45ab33215cb6e0665f8ee60d1a9faa65fa3cd4ca889d589d3efee02567c",
+          "bytes": 35568
+        },
+        "fixture/die0_p1.hex": {
+          "sha256": "db4f5f6cf248b9fba519d4a3f90609417b9e57545b5fe6a020cd8a0ac5c656f0",
+          "bytes": 35568
+        },
+        "fixture/die1_p0.hex": {
+          "sha256": "07dc3ef9b017123c4847a7490dad10f15cdef04ab94c233a891ced1ba8e7796e",
+          "bytes": 68
+        },
+        "fixture/die1_p1.hex": {
+          "sha256": "07dc3ef9b017123c4847a7490dad10f15cdef04ab94c233a891ced1ba8e7796e",
+          "bytes": 68
+        },
+        "fixture/fixture_manifest.json": {
+          "sha256": "4abbedb00b5e0a1350f7e5a585362b5aa63f4ccc3a83b962a9e3df88b63e91c4",
+          "bytes": 1386
+        },
+        "fixture/gold/cfg.mem": {
+          "sha256": "55a563b852a6e3b34e501172ec6196f82b0b2c50b2917cd71d0c81aedb624009",
+          "bytes": 54
+        },
+        "fixture/gold/ey.mem": {
+          "sha256": "d4261ac912f941bbd455d68dac0a1d23dfdb8e469164e4d32ae2e9168c4c0777",
+          "bytes": 36864
+        },
+        "fixture/gold/w.mem": {
+          "sha256": "8bdbbf6401e2a591466c3b9d8cd28e976fb91e5538a756763c1e4ba1fd7965ca",
+          "bytes": 36864
+        },
+        "fixture/gold/x.mem": {
+          "sha256": "877b098e62d5c862918bd5062aea50f73e8ae2c85cd8709f73f619e4da825ced",
+          "bytes": 36864
+        },
+        "fixture/gold_corrupt/cfg.mem": {
+          "sha256": "55a563b852a6e3b34e501172ec6196f82b0b2c50b2917cd71d0c81aedb624009",
+          "bytes": 54
+        },
+        "fixture/gold_corrupt/ey.mem": {
+          "sha256": "1d4da9fc458995cfe10c42076a5b876119988ee57d93e49775c119b641e0327c",
+          "bytes": 36864
+        },
+        "fixture/gold_corrupt/w.mem": {
+          "sha256": "8bdbbf6401e2a591466c3b9d8cd28e976fb91e5538a756763c1e4ba1fd7965ca",
+          "bytes": 36864
+        },
+        "fixture/gold_corrupt/x.mem": {
+          "sha256": "877b098e62d5c862918bd5062aea50f73e8ae2c85cd8709f73f619e4da825ced",
+          "bytes": 36864
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "source": "80a11cea9191ca09153367debd21e79bef473605",
+  "outputs": 3108,
+  "outputs_below25": 2794,
+  "internal_below25": 181,
+  "eligible_output_min_ss_ps": 251.2296,
+  "eligible_output_min_ff_ps": -24.5492,
+  "internal_min_ss_ps": 593.198364,
+  "internal_min_ff_ps": 15.600271,
+  "input_sha256": {
+    "topology.log": "0fbb2759d6bc6a888fc34a1f51447a3ece3341cccf95b3f90dc5cd12c78356fd",
+    "runs.json": "68a9eb1e74ff17eac47672a9305d4f3799c348f42bf115273b256340f2ccecb2",
+    "inputs.json": "34b7101cf5fb8492b23504634fe21a3f41e83064dcf237176880a6d74b35631b",
+    "complete.json": "97a73372511424794d943fe34855665ce8c100345904b4297221af5d7c4d9dd9",
+    "outputs_ss.log": "04181c6f6de48c2165ef638d9c5b8674eb564eb3f11547a419bf7f6c27b3c201",
+    "outputs_ff.log": "4ce3576996eb33ec14d02d56061db48b5d6fac5e4a5806fbf0a81ba3998afcc6"
+  },
+  "qualification": "Endpoint census only; new delay chains require fresh extracted SS/FF"
+}

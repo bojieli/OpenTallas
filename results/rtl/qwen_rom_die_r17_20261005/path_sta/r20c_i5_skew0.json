@@ -1,0 +1,270 @@
+{
+ "schema": "opentallas.qwen-rom-die.path-sta.v1",
+ "wirelength": "/tmp/qdie17/h/r20c_k16_banded_i5/wirelength.csv",
+ "pitch_um": 430.56,
+ "measured_stage": {
+  "record": "results/rtl/qwen_corridor_gate_20261003 (D_tile_r2 430.56 um: SS60 +11.9 ps, FF25 met; A spans 504 um: SS -29..-79 ps)"
+ },
+ "block_words": {
+  "count": 96,
+  "worst": {
+   "word": "bword_90",
+   "legs": [
+    "bword_90",
+    "pfrag_0_port_tiles_0_f1",
+    "pword_0"
+   ],
+   "routed_um": [
+    11476.1,
+    314.2,
+    15199.8
+   ],
+   "centre_um": [
+    11078.2,
+    1037.7,
+    14763.6
+   ],
+   "stages_routed": 64,
+   "stages_floorplan": 64
+  },
+  "stages_routed_max": 64,
+  "stages_floorplan_max": 64,
+  "mean_routed": 37.68,
+  "delta_vs_floorplan": 0
+ },
+ "links": {
+  "per_stack": [
+   {
+    "stack": "WS",
+    "hops": 10,
+    "routed_um": 20189.4,
+    "stages_routed_hops": 51,
+    "stages_routed_min": 47,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   },
+   {
+    "stack": "WN",
+    "hops": 10,
+    "routed_um": 20947.1,
+    "stages_routed_hops": 55,
+    "stages_routed_min": 49,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   },
+   {
+    "stack": "ES",
+    "hops": 10,
+    "routed_um": 19773.6,
+    "stages_routed_hops": 49,
+    "stages_routed_min": 46,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   },
+   {
+    "stack": "EN",
+    "hops": 10,
+    "routed_um": 21048.7,
+    "stages_routed_hops": 55,
+    "stages_routed_min": 49,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   }
+  ],
+  "worst": "WN",
+  "stages_routed": 55,
+  "floorplan_priced": 53
+ },
+ "single_hop": {
+  "kv_land": {
+   "hops": 1536,
+   "worst_um": 175.6,
+   "worst": "kvl_W0_27",
+   "over_pitch": [],
+   "over_504": 0,
+   "n_over_pitch": 0
+  },
+  "hbm_cdc": {
+   "hops": 256,
+   "worst_um": 286.4,
+   "worst": "cdhi_EN_21",
+   "over_pitch": [],
+   "over_504": 0,
+   "n_over_pitch": 0
+  },
+  "cdc_core": {
+   "hops": 256,
+   "worst_um": 268.0,
+   "worst": "cdci_WN_23",
+   "over_pitch": [],
+   "over_504": 0,
+   "n_over_pitch": 0
+  },
+  "phy_dfi": {
+   "hops": 4,
+   "worst_um": 18.5,
+   "worst": "dfi_WN",
+   "over_pitch": [],
+   "over_504": 0,
+   "n_over_pitch": 0
+  },
+  "spine_local": {
+   "hops": 2,
+   "worst_um": 2651.9,
+   "worst": "x3",
+   "over_pitch": [
+    {
+     "bus": "x3",
+     "routed_um": 2651.9,
+     "stages_needed": 7
+    },
+    {
+     "bus": "attn_ret",
+     "routed_um": 1071.8,
+     "stages_needed": 3
+    }
+   ],
+   "over_504": 2,
+   "n_over_pitch": 2
+  },
+  "sequencer": {
+   "hops": 6,
+   "worst_um": 17195.6,
+   "worst": "seq_coll",
+   "over_pitch": [
+    {
+     "bus": "seq_coll",
+     "routed_um": 17195.6,
+     "stages_needed": 40
+    },
+    {
+     "bus": "seq_done",
+     "routed_um": 2106.7,
+     "stages_needed": 5
+    }
+   ],
+   "over_504": 2,
+   "n_over_pitch": 2
+  },
+  "crom": {
+   "hops": 2,
+   "worst_um": 295.7,
+   "worst": "crom_a",
+   "over_pitch": [],
+   "over_504": 0,
+   "n_over_pitch": 0
+  },
+  "reset": {
+   "hops": 8,
+   "worst_um": 13980.1,
+   "worst": "rst_hbm_ES",
+   "over_pitch": [
+    {
+     "bus": "rst_hbm_ES",
+     "routed_um": 13980.1,
+     "stages_needed": 33
+    },
+    {
+     "bus": "rst_hbm_EN",
+     "routed_um": 13943.2,
+     "stages_needed": 33
+    },
+    {
+     "bus": "rst_hbm_WS",
+     "routed_um": 13601.3,
+     "stages_needed": 32
+    },
+    {
+     "bus": "rst_kv_WN",
+     "routed_um": 13305.6,
+     "stages_needed": 31
+    },
+    {
+     "bus": "rst_hbm_WN",
+     "routed_um": 13213.2,
+     "stages_needed": 31
+    },
+    {
+     "bus": "rst_kv_WS",
+     "routed_um": 12991.4,
+     "stages_needed": 31
+    },
+    {
+     "bus": "rst_kv_EN",
+     "routed_um": 12298.4,
+     "stages_needed": 29
+    },
+    {
+     "bus": "rst_kv_ES",
+     "routed_um": 12215.3,
+     "stages_needed": 29
+    }
+   ],
+   "over_504": 8,
+   "n_over_pitch": 8
+  }
+ },
+ "pipelined_hops": {
+  "corridor": {
+   "hops": 1536,
+   "worst_um": 1506.1,
+   "worst": "cor_53_6",
+   "stages_worst_hop": 4
+  },
+  "head_chain": {
+   "hops": 64,
+   "worst_um": 2661.1,
+   "worst": "head_32",
+   "stages_worst_hop": 7
+  },
+  "tree_block": {
+   "hops": 2880,
+   "worst_um": 4370.5,
+   "worst": "tree_42_3_0b",
+   "stages_worst_hop": 11
+  },
+  "link_channel": {
+   "hops": 24,
+   "worst_um": 3030.7,
+   "worst": "lnkh_1W_0",
+   "stages_worst_hop": 8
+  },
+  "link_spine": {
+   "hops": 12,
+   "worst_um": 2596.4,
+   "worst": "lnkv_1_0",
+   "stages_worst_hop": 7
+  },
+  "io": {
+   "hops": 12,
+   "worst_um": 18757.2,
+   "worst": "emb",
+   "stages_worst_hop": 44
+  },
+  "tree_spine": {
+   "hops": 1,
+   "worst_um": 730.0,
+   "worst": "tt_res",
+   "stages_worst_hop": 2
+  },
+  "clock_trunk": {
+   "hops": 160,
+   "worst_um": 32497.1,
+   "worst": "clk_r90",
+   "stages_worst_hop": 76
+  }
+ },
+ "method": "GRT wire length per k-bundled net (worst bundle of each bus); stages = ceil(routed / 430.56 um); block-word and link paths sum their registered hops; single-hop classes must fit one stage",
+ "skew_ps": 0.0,
+ "floorplan": {
+  "slab_group_h": 455.76,
+  "cdc": "183.048,183.048",
+  "die": {
+   "w": 25037.856,
+   "h": 32801.76,
+   "mm2": 821.286,
+   "budget_mm2": 858,
+   "margin_mm2": 36.714
+  }
+ }
+}

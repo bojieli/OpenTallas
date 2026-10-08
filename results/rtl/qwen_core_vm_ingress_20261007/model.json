@@ -1,0 +1,29 @@
+{
+  "default_enabled": false,
+  "adopted": false,
+  "raw_mode_requires_capture_collar": true,
+  "MACs_per_cycle": 0,
+  "new_memory_ports": 0,
+  "new_boundary_payload_bits": 0,
+  "required_new_control_ports": 2,
+  "lease_binding_cost": "Original-intent output and direct ME-lease input; one effective-enable AND plus fanout to existing execution/acceptance loads. This binding is not implemented by raw-write transform.",
+  "source_register_delta": 0,
+  "owned_capture_register_delta": 0,
+  "source_native_cycle_delta": 0,
+  "replicas": 4,
+  "me_groups": 48,
+  "lanes_per_group": 16,
+  "moved_enable_terms": 49,
+  "me_write_seats": 784,
+  "source_enable": "Original pre-lease supply/idle/wake enable; never post-admission lease",
+  "immutable_epoch": "Captured enable/address/mask/data are held through checked ACK; current me enable cannot requalify them",
+  "fallback": {
+    "packet_bits_per_group": 553,
+    "me_only_register_bits": 26544,
+    "register_bits_including_mx": 27097,
+    "register_cell_area_floor_um2_including_mx": 7901.485200000001,
+    "write_visibility_delta_cycles": 1
+  },
+  "physical_status": "Core and actual ingress collar must both close SS/FF with real interface budgets",
+  "final_clock_enrollment": "Parent wrapper and collective peers must share checked native epoch; not supplied by this boundary transform"
+}

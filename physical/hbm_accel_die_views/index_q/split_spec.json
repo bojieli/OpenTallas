@@ -1,0 +1,404 @@
+{
+ "parent": "hfd_index_q",
+ "out": "physical/hbm_accel_die_views/index_q/split",
+ "note": "index_q SEGMENT SPLIT (coordinator DECISION 2026-10-06; one-pin slot measured 5.46-6.22 ns insertion / 758 ps skew): six bands b0 (bottom) .. b5 (top), each with its own ck / rst (b0-b4 new die clock leaves on the bottom (b0: top) edge at x 520, b5 keeps the parent ck / rst); cross buses abut on the shared edges (zero-length die nets): key chain kout -> kin up every boundary, a0 row b0 -> b1 -> b2, a3 row b5 -> b4 -> b3 -> b2, a2 row b3 -> b2. Gap 0.024 um between bands.",
+ "bands": [
+  {
+   "name": "hfd_index_q_b0",
+   "y0": 0.0,
+   "h": 970.056,
+   "ports": [
+    "k",
+    "a0"
+   ],
+   "new": [
+    {
+     "port": "ck",
+     "bits": 1,
+     "direction": "input",
+     "edge": "top",
+     "x0": 520.032,
+     "role": "die clock leaf (new die net)"
+    },
+    {
+     "port": "rst",
+     "bits": 1,
+     "direction": "input",
+     "edge": "top",
+     "x0": 520.416,
+     "role": "die reset (same die net as hfd_index_q rst)"
+    },
+    {
+     "port": "kout",
+     "bits": 513,
+     "direction": "output",
+     "edge": "top",
+     "x0": 600.0,
+     "role": "key chain {data512, valid}"
+    },
+    {
+     "port": "a0o",
+     "bits": 529,
+     "direction": "output",
+     "edge": "top",
+     "x0": 100.032,
+     "role": "a0 row to b1"
+    }
+   ]
+  },
+  {
+   "name": "hfd_index_q_b1",
+   "y0": 970.08,
+   "h": 970.056,
+   "ports": [],
+   "new": [
+    {
+     "port": "ck",
+     "bits": 1,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 520.032,
+     "role": "die clock leaf (new die net)"
+    },
+    {
+     "port": "rst",
+     "bits": 1,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 520.416,
+     "role": "die reset (same die net as hfd_index_q rst)"
+    },
+    {
+     "port": "kin",
+     "bits": 513,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 600.0,
+     "role": "key chain {data512, valid}"
+    },
+    {
+     "port": "kout",
+     "bits": 513,
+     "direction": "output",
+     "edge": "top",
+     "x0": 600.0,
+     "role": "key chain {data512, valid}"
+    },
+    {
+     "port": "a0i",
+     "bits": 529,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 100.032,
+     "role": "a0 row from b0"
+    },
+    {
+     "port": "a0o",
+     "bits": 529,
+     "direction": "output",
+     "edge": "top",
+     "x0": 100.032,
+     "role": "a0 row to b2"
+    }
+   ]
+  },
+  {
+   "name": "hfd_index_q_b2",
+   "y0": 1940.16,
+   "h": 959.976,
+   "ports": [
+    "a1",
+    "t_su"
+   ],
+   "new": [
+    {
+     "port": "ck",
+     "bits": 1,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 520.032,
+     "role": "die clock leaf (new die net)"
+    },
+    {
+     "port": "rst",
+     "bits": 1,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 520.416,
+     "role": "die reset (same die net as hfd_index_q rst)"
+    },
+    {
+     "port": "kin",
+     "bits": 513,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 600.0,
+     "role": "key chain {data512, valid}"
+    },
+    {
+     "port": "kout",
+     "bits": 513,
+     "direction": "output",
+     "edge": "top",
+     "x0": 600.0,
+     "role": "key chain {data512, valid}"
+    },
+    {
+     "port": "a0i",
+     "bits": 529,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 100.032,
+     "role": "a0 row from b1"
+    },
+    {
+     "port": "a3i",
+     "bits": 529,
+     "direction": "input",
+     "edge": "top",
+     "x0": 250.08,
+     "role": "a3 row from b3"
+    },
+    {
+     "port": "a2i",
+     "bits": 529,
+     "direction": "input",
+     "edge": "top",
+     "x0": 400.128,
+     "role": "a2 row from b3"
+    }
+   ]
+  },
+  {
+   "name": "hfd_index_q_b3",
+   "y0": 2900.16,
+   "h": 970.056,
+   "ports": [
+    "a2"
+   ],
+   "new": [
+    {
+     "port": "ck",
+     "bits": 1,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 520.032,
+     "role": "die clock leaf (new die net)"
+    },
+    {
+     "port": "rst",
+     "bits": 1,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 520.416,
+     "role": "die reset (same die net as hfd_index_q rst)"
+    },
+    {
+     "port": "kin",
+     "bits": 513,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 600.0,
+     "role": "key chain {data512, valid}"
+    },
+    {
+     "port": "kout",
+     "bits": 513,
+     "direction": "output",
+     "edge": "top",
+     "x0": 600.0,
+     "role": "key chain {data512, valid}"
+    },
+    {
+     "port": "a3o",
+     "bits": 529,
+     "direction": "output",
+     "edge": "bottom",
+     "x0": 250.08,
+     "role": "a3 row to b2"
+    },
+    {
+     "port": "a2o",
+     "bits": 529,
+     "direction": "output",
+     "edge": "bottom",
+     "x0": 400.128,
+     "role": "a2 row to b2"
+    },
+    {
+     "port": "a3i",
+     "bits": 529,
+     "direction": "input",
+     "edge": "top",
+     "x0": 250.08,
+     "role": "a3 row from b4"
+    }
+   ]
+  },
+  {
+   "name": "hfd_index_q_b4",
+   "y0": 3870.24,
+   "h": 829.896,
+   "ports": [],
+   "new": [
+    {
+     "port": "ck",
+     "bits": 1,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 520.032,
+     "role": "die clock leaf (new die net)"
+    },
+    {
+     "port": "rst",
+     "bits": 1,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 520.416,
+     "role": "die reset (same die net as hfd_index_q rst)"
+    },
+    {
+     "port": "kin",
+     "bits": 513,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 600.0,
+     "role": "key chain {data512, valid}"
+    },
+    {
+     "port": "kout",
+     "bits": 513,
+     "direction": "output",
+     "edge": "top",
+     "x0": 600.0,
+     "role": "key chain {data512, valid}"
+    },
+    {
+     "port": "a3o",
+     "bits": 529,
+     "direction": "output",
+     "edge": "bottom",
+     "x0": 250.08,
+     "role": "a3 row to b3"
+    },
+    {
+     "port": "a3i",
+     "bits": 529,
+     "direction": "input",
+     "edge": "top",
+     "x0": 250.08,
+     "role": "a3 row from b5"
+    }
+   ]
+  },
+  {
+   "name": "hfd_index_q_b5",
+   "y0": 4700.16,
+   "h": 829.416,
+   "ports": [
+    "a3",
+    "ck",
+    "rst",
+    "t_vm"
+   ],
+   "new": [
+    {
+     "port": "kin",
+     "bits": 513,
+     "direction": "input",
+     "edge": "bottom",
+     "x0": 600.0,
+     "role": "key chain {data512, valid}"
+    },
+    {
+     "port": "a3o",
+     "bits": 529,
+     "direction": "output",
+     "edge": "bottom",
+     "x0": 250.08,
+     "role": "a3 row to b4"
+    }
+   ]
+  }
+ ],
+ "cross": [
+  {
+   "from": "hfd_index_q_b0.kout",
+   "to": "hfd_index_q_b1.kin",
+   "bits": 513,
+   "carries": "key chain"
+  },
+  {
+   "from": "hfd_index_q_b1.kout",
+   "to": "hfd_index_q_b2.kin",
+   "bits": 513,
+   "carries": "key chain"
+  },
+  {
+   "from": "hfd_index_q_b2.kout",
+   "to": "hfd_index_q_b3.kin",
+   "bits": 513,
+   "carries": "key chain"
+  },
+  {
+   "from": "hfd_index_q_b3.kout",
+   "to": "hfd_index_q_b4.kin",
+   "bits": 513,
+   "carries": "key chain"
+  },
+  {
+   "from": "hfd_index_q_b4.kout",
+   "to": "hfd_index_q_b5.kin",
+   "bits": 513,
+   "carries": "key chain"
+  },
+  {
+   "from": "hfd_index_q_b0.a0o",
+   "to": "hfd_index_q_b1.a0i",
+   "bits": 529,
+   "carries": "hfd_index_q a0 row"
+  },
+  {
+   "from": "hfd_index_q_b1.a0o",
+   "to": "hfd_index_q_b2.a0i",
+   "bits": 529,
+   "carries": "hfd_index_q a0 row"
+  },
+  {
+   "from": "hfd_index_q_b5.a3o",
+   "to": "hfd_index_q_b4.a3i",
+   "bits": 529,
+   "carries": "hfd_index_q a3 row"
+  },
+  {
+   "from": "hfd_index_q_b4.a3o",
+   "to": "hfd_index_q_b3.a3i",
+   "bits": 529,
+   "carries": "hfd_index_q a3 row"
+  },
+  {
+   "from": "hfd_index_q_b3.a3o",
+   "to": "hfd_index_q_b2.a3i",
+   "bits": 529,
+   "carries": "hfd_index_q a3 row"
+  },
+  {
+   "from": "hfd_index_q_b3.a2o",
+   "to": "hfd_index_q_b2.a2i",
+   "bits": 529,
+   "carries": "hfd_index_q a2 row"
+  }
+ ],
+ "die_nets": [
+  "hfd_index_q_b0.ck <- die clock leaf",
+  "hfd_index_q_b1.ck <- die clock leaf",
+  "hfd_index_q_b2.ck <- die clock leaf",
+  "hfd_index_q_b3.ck <- die clock leaf",
+  "hfd_index_q_b4.ck <- die clock leaf",
+  "hfd_index_q_b0.rst <- die reset (net of hfd_index_q.rst)",
+  "hfd_index_q_b1.rst <- die reset (net of hfd_index_q.rst)",
+  "hfd_index_q_b2.rst <- die reset (net of hfd_index_q.rst)",
+  "hfd_index_q_b3.rst <- die reset (net of hfd_index_q.rst)",
+  "hfd_index_q_b4.rst <- die reset (net of hfd_index_q.rst)"
+ ]
+}

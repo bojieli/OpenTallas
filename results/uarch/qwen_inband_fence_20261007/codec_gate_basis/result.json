@@ -1,0 +1,49 @@
+{
+  "pass_all": true,
+  "cases": [
+    {
+      "case": "enabled",
+      "expected_pass": true,
+      "observed_pass": true,
+      "gate_pass": true
+    },
+    {
+      "case": "disabled",
+      "expected_pass": true,
+      "observed_pass": true,
+      "gate_pass": true
+    },
+    {
+      "case": "crc_mutant",
+      "expected_pass": false,
+      "observed_pass": false,
+      "gate_pass": true
+    },
+    {
+      "case": "ack_invalid_slot_mutant",
+      "expected_pass": false,
+      "observed_pass": false,
+      "gate_pass": true
+    },
+    {
+      "case": "fence_metadata_mutant",
+      "expected_pass": false,
+      "observed_pass": false,
+      "gate_pass": true
+    },
+    {
+      "case": "reserved_mutant",
+      "expected_pass": false,
+      "observed_pass": false,
+      "gate_pass": true
+    }
+  ],
+  "source_sha256": "78547a8a7c0c78a3bab635daa922316fe5f1b5e38d83c27506567fc55db598f0",
+  "legal_vectors": 128,
+  "decoder_vectors": 650,
+  "malformed_encoder_vectors": 10,
+  "single_bit_positions": 510,
+  "CRC_affine_basis_vectors": 480,
+  "golden": "Independent integer polynomial division; canceledmask layout explicit; exhausted65535 watermark variants included.",
+  "scope": "Codec framing only; exact cancellation-set/epoch readiness validation belongs to bridge. No physical or mutable-storage qualification."
+}

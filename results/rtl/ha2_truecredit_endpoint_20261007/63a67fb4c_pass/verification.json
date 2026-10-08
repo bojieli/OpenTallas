@@ -1,0 +1,14 @@
+{
+  "source_commit": "63a67fb4cb65a3849d92f0b372d28e58d5012932",
+  "all_source_pins_match_commit": true,
+  "private_dispatch_mutation_hash_matches": true,
+  "verdict": "PASS exact endpoint and both negative controls",
+  "candidate_forward_hops": 7,
+  "candidate_return_hops": 7,
+  "actual_physical_hops_measured": false,
+  "scope": "One real16lanePF384 endpoint, internal truecredit candidate; no physical adoption",
+  "artifact_sha256": {
+    "terminal.json": "6638f33675c317e2a6dce138b6dc084e23f33e00bb11ad6dfd109c5ee878d183",
+    "source_pins.json": "0f27b9447e60af61caeaf23be3fa8d3ae604dfc6ebeb36bf6f9f0474a99b15be"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "status": "PREBUILD_DEFAULT_OFF_NOT_ADOPTED",
+  "lever": "WINDOW SPLIT_COLUMNS=2",
+  "MACs_per_cycle": 0,
+  "compute_intensity_MAC_per_byte": 0,
+  "communication_intensity": "byte-preserving staging",
+  "replicas": 132,
+  "rows_per_replica": 32,
+  "bits_per_replica": 128,
+  "storage_bits": 540672,
+  "per_replica_port_bytes_per_cycle": {
+    "write": 16,
+    "read": 16
+  },
+  "aggregate_port_bytes_per_cycle": {
+    "write": 2112,
+    "read": 2112
+  },
+  "per_replica_boundary_bits_per_cycle": {
+    "write_data": 128,
+    "read_data": 128,
+    "row_write_enable": 32,
+    "read_control": 6
+  },
+  "payload_control_fanout": 2,
+  "scale_control_fanout": 1,
+  "extra_control_pin_loads": 2432,
+  "extra_mux_bits": 0,
+  "extra_demux_bits": 0,
+  "read_mux_per_replica": "four 8:1 128-bit groups then one registered 4:1 128-bit mux",
+  "column_area_um2": 787147.3214879999,
+  "preliminary_bank_side_um": 823.332,
+  "preliminary_parent_side_um": 1746.664,
+  "channel_width_um": 32.0,
+  "routing_pitch_um": 0.048,
+  "track_capacity_basis": "preliminary pitch assumption, not a routed hub-layer PASS",
+  "hub_routing_layer_check": "PENDING_COMPOSED_PARENT",
+  "tracks_per_layer": 666,
+  "per_replica_signal_track_demand": 294,
+  "fits_one_layer_channel": true,
+  "added_cycles": 0,
+  "added_single_user_token_ns": 0,
+  "exactness": "two disjoint 128-bit slices retain the original 256-bit storage semantics",
+  "physical_gate": "replace preliminary dimensions with closed M2-M6 128-bit abstract; parent SS/FF/DRC"
+}

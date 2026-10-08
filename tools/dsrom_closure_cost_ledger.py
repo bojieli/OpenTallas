@@ -5,7 +5,7 @@ one item at a time, cumulative, like the HBM ledger.  Writes results/rtl/dsrom_r
 
     python3 tools/dsrom_closure_cost_ledger.py
 """
-import json, subprocess, sys
+import json, shutil, subprocess, sys, tempfile
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LEV = ROOT / "results/rtl/dsrom_recovery_20261004/levers/s81_die_tiles.json"
@@ -17,9 +17,11 @@ AR_ = ["*.attn.out_allreduce", "*.ffn.combine_allreduce"]
 AG_ = ["*.attn.a_allgather", "*.attn.idx.topk_merge", "*.attn.cand.merge", "*.attn.rows_allgather", "*.ffn.router_allgather"]
 # (item, description, [(nodes, cycles, frac)])
 ITEMS = [
-    ("s81_die", "S81 v6b die: field round trip 165 vs 137 at the same frame, less the meso d8g1 term (+24): hub stations, "
-                "q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2)",
-     [(k, 24, 0) for k in MAT]),
+    ("s81_die", "S81 v9d scan/layer1 floorplan: maximum field round trip 168 vs 137 at the same frame, less the separately priced "
+                "meso d8g1 term (+4), giving +27: hub stations, "
+                "q banks, column relays, 215 um common-clock hops, budget-sheet hop stations, column FIFO v2 (+2). "
+                "Measured global-route feasibility; die DRT/SS/FF qualification and final mixed-BF/PQ geometry remain pending",
+     [(k, 27, 0) for k in MAT]),
     ("meso_d8g1", "meso FIFOs d8g1 (DEPTH 8 / OFFSET 4 / GUARD_LO 1): +1 per crossing over d8, +2 over d4: 2 crossings a field "
                   "round trip (+4)", [(k, 4, 0) for k in MAT]),
     ("ctrl_status", "CTRL status chain: +1 cycle per column (HBM stream reads)", [(k, 1, 0) for k in HBM]),
@@ -43,12 +45,38 @@ ITEMS = [
     ("selector", "Selector tiles: +20 a segment (mean; +15 max)", [(k, 20, 0) for k in ("*.attn.idx.topk_local", "*.attn.cand.topk_local")]),
     ("collector", "Collector tiles: +2 a job", [("*.attn.gather", 2, 0)]),
     ("svc_io", "Scan service IO hub / per-PC tiles: one register each way (+2 a request)", [(k, 2, 0) for k in HBM]),
-    ("softmax_safe_div", "Softmax SAFE divider: +29 on normalize", [("*.attn.normalize", 29, 0)]),
+    ("softmax_safe_div", "Softmax SAFE2 measured against MARGIN baseline (dsrom_softmax_recovery_20261007): "
+                         "normalize 141 -> 171 (+30), exp 224 -> 225 (+1). Cost only; die pin FF hold remains unqualified",
+     [("*.attn.normalize", 30, 0), ("*.attn.exp", 1, 0)]),
     # code_pair (LAT_DELTA 11 a field phase) removed 2026-10-07: ot_qwen_hbm_code_pair_margin is a Qwen HBM-accelerator
     # code-tile block, not on the DS ROM path (no DS ROM / S81 instance)
     ("bf_rowfix", "BF rowfix: +1 per push (a field phase)", [(k, 1, 0) for k in MAT]),
     ("pq_qelem", "PQ q-element: decode stage +0.17 % node time (field phases)", [(k, 0, 0.0017) for k in MAT]),
+    ("softmax_exp_recut", "Softmax exp tile closed only with RECUT (dsrom_softmax_safe_exprcf_bd30aca4a CLOSED SS +123.11 / "
+                          "FF +16.70, f12r multiplier/adder +2 cuts, LAT 11): attn.exp 225 -> 255 (+30 over SAFE2; "
+                          "dsrom_softmax_recovery_20261007 RECUT1_or_2_vs_m5 +31)", [("*.attn.exp", 30, 0)]),
 ]
+
+def su_xing_nodes():
+    """non-hop nodes with a dependency in the other clock domain (uarch_model SLOW_KINDS rule, as apply_cdc)"""
+    sys.path.insert(0, str(ROOT / "tools"))
+    import dsrom_1m_allmeasured as A
+    import uarch_model as u
+    _, g, _ = A.base_graph()
+    out = []
+    for n, nd in g.nodes.items():
+        if nd.get("kind") in ("hop", "join"):
+            continue
+        sl = nd["kind"] in u.SLOW_KINDS
+        if any((g.nodes[d]["kind"] in u.SLOW_KINDS) != sl for d in nd["deps"] if g.nodes[d]["kind"] != "join"):
+            out.append(n)
+    return sorted(out)
+
+
+ITEMS.append(("su_meso_d8g1", "SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases "
+                              "exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast "
+                              "edge consumer", [(n, 3, 0) for n in su_xing_nodes()]))
+
 
 # PENDING-DEFECT (OWNER decision (b), 2026-10-07): measured but not in the headline until the slab is repaired
 PENDING = []   # collective all-gathers lifted 2026-10-07 (slab v4 fixes the three coll_price defects)
@@ -56,9 +84,10 @@ PENDING = []   # collective all-gathers lifted 2026-10-07 (slab v4 fixes the thr
 CANDIDATES = [
     ("head_elem", "lm_head element A/B (ot_dsrom_head_elem IOREG + SAFE argmax + CUT 511 + fadd SPLIT9): bundle EXACT "
                   "8,357 -> 8,414 (+57 a sweep); on head.lm_head and on every draft head sweep (elemB CLOSED 9adbc6104; elemA routing)",
-     [("head.lm_head", 57, 0), ("draft.head_occ", 57, 0)]),
+     [("head.lm_head", 57, 0), ("draft.total", 285, 0)]),
     ("fused_head", "DSpark fused head r4 structure (8 hquad LRET + ctl SAFE2 + endpoint FPIPE3, QPIN): gold4 EXACT "
-                   "63,028 -> 63,153 (+125 per gamma-5 draft = +25 a draft position; ctl/ep/hquad views routing)", [("draft.head_occ", 25, 0)]),
+                   "63,028 -> 63,153 (+125 fixed cycles per gamma-5 draft, not a Markov-scaled head occupancy; "
+                   "ctl/ep/hquad views routing)", [("draft.total", 125, 0)]),
     ("bf_half", "BF SAFE B: element at half rate (ot_s81_bf_native HALF=1, claude/dsrom-bf-rowfix-20261007 61c1cf230, "
                 "exact PASS; closure-loop bf_half_61c1cf230): BF16 field phases doubled (upper bound; fracs = BF16 phase "
                 "share (go->idle+1)/node, field_qelem_qx10.json, a_proj max over layer types); adopt only if B closes "
@@ -80,6 +109,31 @@ CANDIDATES = [
 ]
 
 
+# CLAUDE s81-blocks 2026-10-07 structural closure candidates (routes in the closure loop; adopt on CLOSED)
+CANDIDATES += [
+    ("selector_pipe2", "Selector PIPE2 (claude/s81-blocks-20261007 36b7a0452: selt_q hist input reg + pair-sum cuts, "
+                       "out-FIFO input reg, registered sweep bound, CMP_RETIME; selt_c MRG_PIPE + RQPIPE + SLAT 4): bench "
+                       "tail mean 153 vs 127 (+26 a segment over the +20 already priced)",
+     [("*.attn.idx.topk_local", 26, 0), ("*.attn.cand.topk_local", 26, 0)]),
+    ("pq_rootcam_B", "PQ root CAM stage B (4251eb216, OPC 0): measured eight-leaf root +4 cycles vs native, charged per "
+                     "field phase (upper bound: every phase exposes one 8-leaf root)", [(k, 4, 0) for k in MAT]),
+    ("pq_rootcam_CP", "PQ root CAM stage C + PAR protected face (claude/s81-blocks-20261007 387610a35, OPC 1 PAR 1): "
+                      "eight-leaf +8 vs native (input station +1, operand fetch +1 a pass)", [(k, 8, 0) for k in MAT]),
+    ("coll_gbx_fmt1", "Collective gearbox FMT1 (fixed 3-in-4 slot format, no bit shifter): slot rate 0.75 vs 0.765 per "
+                      "gearbox beat (-2.0 %), charged as +2.0 % of every collective node (upper bound; link-up is faster: "
+                      "TP4 bench end 3,012 vs 3,374 cycles)", [(k, 0, 0.02) for k in AR_ + AG_]),
+]
+
+
+UNPRICED_CANDIDATES = [dict(
+    item="fh_half", physical_adoption=False,
+    measurement="gold4 control 63,153 -> half 126,310 root/die cycles (five drafts)",
+    reason="The whole reduced gold4 core/memory/VM domain was slowed, not only the head. "
+           "VOCAB4040, G4 x W16 is not a full-shape draft measurement. The previous 8,387 cycles per head "
+           "position underpriced blocks and leaked into verification II. A whole-domain physical clock/CDC "
+           "contract and full-shape composition are missing; no numerical candidate rate is published.")]
+
+
 def lever(items, pending=False, extra=()):
     src = ITEMS + (PENDING if pending else []) + list(extra)
     if pending and items is not None:
@@ -88,16 +142,23 @@ def lever(items, pending=False, extra=()):
         items = list(items) + [it for it, _, _ in extra]
     adds = [dict(item=it, nodes=n, cycles=c, frac=f, source=desc) for it, desc, rows in src for n, c, f in rows]
     return dict(schema="opentallas.dsrom-recovery.addcycles.v1", lever="s81_die_tiles", verdict="ADOPT", items=items,
-                note="S81 die integration + S81 tile closure costs (CLAUDE S81-RERUN), priced per operation on the measured "
+                physical_adoption=False,
+                note="Cost composition only: ADOPT applies these costs, not physical qualification. S81 die integration "
+                     "+ tile closure costs, priced per operation on the measured "
                      "composition; the ledger is tools/dsrom_closure_cost_ledger.py", adds=adds)
 
 
 def compose(items, pending=False, extra=()):
-    LEV.write_text(json.dumps(lever(items, pending, extra), indent=1) + "\n")
-    tmp = OUT / "tmp.json"
-    subprocess.run([sys.executable, str(ROOT / "tools/dsrom_1m_allmeasured.py"), "--out", str(tmp)], check=True,
-                   capture_output=True)
-    d = json.loads(tmp.read_text()); tmp.unlink()
+    # Candidate evaluation must never temporarily install an ADOPT lever in the selected tree.
+    # A stopped process previously left whichever candidate was last evaluated enabled there.
+    with tempfile.TemporaryDirectory(prefix=".ledger-", dir=OUT) as td:
+        scratch = Path(td)
+        shutil.copytree(LEV.parent, scratch / "levers")
+        (scratch / "levers" / LEV.name).write_text(json.dumps(lever(items, pending, extra), indent=1) + "\n")
+        tmp = scratch / "composition.json"
+        subprocess.run([sys.executable, str(ROOT / "tools/dsrom_1m_allmeasured.py"),
+                        "--recovery", str(scratch), "--out", str(tmp)], check=True, capture_output=True)
+        d = json.loads(tmp.read_text())
     return d["AR_tok_s"], d["MTP"]["MTP_tok_s"]
 
 
@@ -122,6 +183,8 @@ def main():
                candidates=[dict(item=it, description=d_, adds=a_, ar_tok_s=cand[it][0], mtp_tok_s=cand[it][1],
                                 ar_pct_vs_total=round(100 * (cand[it][0] / prev[0] - 1), 3),
                                 mtp_pct_vs_total=round(100 * (cand[it][1] / prev[1] - 1), 3)) for it, d_, a_ in CANDIDATES],
+               unpriced_candidates=UNPRICED_CANDIDATES,
+               physical_adoption=False,
                pending_defect=[dict(item=it, description=d_, adds=a_) for it, d_, a_ in PENDING],
                as_is=dict(ar_tok_s=asis[0], mtp_tok_s=asis[1], ar_pct=round(100 * (asis[0] / ar0 - 1), 3),
                           mtp_pct=round(100 * (asis[1] / mtp0 - 1), 3), basis="every item + the PENDING-DEFECT all-gathers"))
@@ -137,10 +200,12 @@ def main():
         ar_, mt_ = cand[it]
         L.append(f"| {it} (CANDIDATE, not adopted) | {d_} | {ar_:,.1f} | {100 * (ar_ / prev[0] - 1):+.2f} | "
                  f"{100 * (mt_ / prev[1] - 1):+.2f} | | |")
+    for r in UNPRICED_CANDIDATES:
+        L.append(f"| {r['item']} (UNPRICED, not adopted) | {r['reason']} | unknown | | | | |")
     for it, d_, a_ in PENDING:
         L.append(f"| {it} (PENDING-DEFECT, not in the headline) | {d_} | | | | | |")
-    L += ["", f"Measured as-is (PENDING-DEFECT included): AR {asis[0]:,.1f} ({100 * (asis[0] / ar0 - 1):+.2f} %), "
-              f"MTP {asis[1]:,.1f} ({100 * (asis[1] / mtp0 - 1):+.2f} %).  The headline uses the table total."]
+    L += ["", f"Composed as-is (PENDING-DEFECT included): AR {asis[0]:,.1f} ({100 * (asis[0] / ar0 - 1):+.2f} %), "
+              f"MTP {asis[1]:,.1f} ({100 * (asis[1] / mtp0 - 1):+.2f} %).  The table is a modeled cost composition, not physical adoption."]
     (OUT / "ledger.md").write_text("\n".join(L) + "\n")
     print("\n".join(L))
 

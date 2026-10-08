@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.s81_ph.contract.v1",
+ "kind": "collective",
+ "master": "dsfd_sp_collective",
+ "owner": "Claude:s81-ph (fork D)",
+ "outline_um": [1015.176, 1369.416],
+ "instances_per_die": {"layer": 1, "layer1": 1, "head": 1},
+ "rtl": {
+  "top": "rtl/dsrom_sys/s81_ph/dsfd_sp_collective.sv",
+  "parts": {
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv": "engine + 8 lanes + VM interface",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv": "one die's end of a reliable link pair, derived from ot_dsrom_link_ct (external channels, SRAM, margin CRC split); ct itself unchanged",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv": "512-b beat format of a lane (marker, idle, reverse frame, forward slot gearbox)",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv": "reset controller (por -> lock -> stream, serial, hbm)",
+   "rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv": "die PLL black box (hard IP) + bench model",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv": "registered-read 1R1W (flops / 512x128 SRAM macros)",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv": "small register FIFO",
+   "rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv": "TP4 collective engine, UNCHANGED, C8 parent parameters"
+  }
+ },
+ "function": {
+  "engine": "ot_w15_rom_oneshot_die_px_acceptedpop #(FIX_ACCEPTED_POP 1, N 4, LANES 16, TAGW 32, DEPTH 256, PKG_DIES 2, RELAY 0, ADD_LAT 3, PAIRWISE 1, GW 4, OUT_BP 1, FIFO_SRAM 1, SRAM_MACRO 1) = the S81 C8 parent's collective engine (rtl/dsrom_sys/s81_capture_parent/ot_chip_v41x_die_owner_safe_c8.sv u_coll, FULL_SHAPE; L20 C8 CL_RELAY 0). The DMA (ot_w15_coll_dma: VM reads/writes) belongs to the VM side; the VM <-> collective interface is the engine's own e_* / o_* record streams.",
+  "runtime_rank": "one die master serves all four ranks: the engine is built with RANK 0 and the die's rank R (config word) relabels it: engine port j = absolute rank R ^ j. Pairwise fold ((p0+p1)+(p2+p3)) becomes ((pR + pR^1) + (pR^2 + pR^3)), equal bit for bit by commutativity of the binary32 RNE add (checked against engines built with RANK = R, Inf/NaN/-0/denormals included, err flags equal). The all-gather beat is reordered to absolute rank order (slot a <- engine word a ^ R).",
+  "lanes": {"0 W0": "UCIe, package peer (rank R^1) = engine port 1", "1 W1": "board T1 to partner-package rank R^2 = engine port 2", "2 W2": "board T1 to partner-package rank R^3 = engine port 3", "3 W3, 4 E0, 5 E1, 6 E2, 7 E3": "pass-through channels 0..4 (stage hop in/out, token return, draft: the VM program's assignment)"},
+  "pairing": "lane l of die R connects to lane l of its partner die (W0<->W0, W1<->W1, W2<->W2): symmetric because R^2^2 = R and R^3^3 = R"
+ },
+ "link_layer": {
+  "endpoint": "ot_s81ph_link_ep = ot_dsrom_link_ct protocol (seq, CRC-32, go-back-N, ACK/NAK, cumulative credits), FLIT_BYTES 69 (552 b), CREDITS 512, SEQW 10, TX_STAGES 2, RX_STAGES 3, replay buffer + receive FIFO in 10 x ot_sram_1r1w_512x128 per lane; CHANNEL_CYCLES (ACK-timeout basis) 100 UCIe / 400 board",
+  "forward_frame_bits": 595, "reverse_frame_bits": 53,
+  "beat": "[0] marker, [1] idle, [2] reverse valid, [55:3] reverse frame, [511:56] 456 b of the forward slot stream (slot = {v, frame595} = 596 b)",
+  "pacing": "ep PHY_NUM 32187672 / PHY_DEN 610304 = 69 B x 456 x 1023 / (596 x 1024): 0.7644 frames / cycle, one idle beat every 1024",
+  "alignment": "receiver locks on two marker beats 149 gearbox beats apart; a misplaced / missing marker re-hunts; frames cut misaligned fail CRC and are replayed",
+  "engine_flit": "[546:0] engine record {tag, mode, last, par, data}, [547] record valid, [549:548] / [551:550] credit returns parity 0 / 1 (0..3)",
+  "pass_through_flit": "552 b payload from / to the VM, last = ep in_last"
+ },
+ "ports": {
+  "refclk": "in, die reference clock (100 MHz assumed) -> PLL and reset sequencer",
+  "por": "in, active-low power-on reset (async)",
+  "pll_stream / pll_serial / pll_hbm": "out, PLL clocks (kept buffers); pll_stream also clocks this slab",
+  "rst_stream / rst_serial / rst_hbm": "out, active-low; asserted asynchronously while por low or lock low; released in order stream, serial, hbm, 8 refclk apart, after lock held 64 refclk; every consumer synchronises release",
+  "rW0..3 / rE0..3 [514:0]": "in, hub meso end block {fault, live, data 512, valid}",
+  "tdW0..3 / tdE0..3 [511:0]": "out, lane beat (registered)",
+  "tfW0..3 / tfE0..3": "out, forwarded clock = slab clock (kept buffer), first station captures on its falling edge (r9 start-block convention)",
+  "f_vm [591:0] (NEW)": "in, VM -> collective word {data 552 [591:40], tag 32 [39:8], mode [7], last [6], link 3 [5:3], type 2 [2:1], valid [0]}; type 1 engine record (data[511:0]), 2 pass-through flit on link 0..4, 3 config {data[2] engine enable, data[1:0] rank}. VM sends only with credits: q0 engine 16, q1..q5 pass-through 8 each.",
+  "ts [2:0] (NEW)": "in, status of the stream->serial CDC end block on t_vm: ts[0] = room for >= 4 words (CDC depth >= 8), ts[1] = live",
+  "t_vm [2099:0] (WIDENED from 512)": "out, {data 2048 [2099:52], rank [51:50], fault vector [49:42] {lane meso, mode fifo, out queue, in queue, engine, gearbox, ep, skid}, fault [41], credits 6 x 4 b [40:17] (q0..q5), err [16], gather [15], pass-through last [14], word lasts [13:10], word mask [9:6], pass-through link [5:3], type [2:1] (1 engine, 2 pass-through, 3 status), valid [0]}. Engine beats: one all-gather beat (4 words, absolute rank order) or up to 4 packed reduce words."
+ },
+ "generator_changes": [
+  {"what": "add bus VM -> collective 'f_vm' 592 b (VM port 't_collective')", "why": "the collective has no input from the VM: engine records, pass-through flits and the rank config must reach it", "patch": "tools/s81_ph/gen_patch/collective.patch (OT_S81_PH_COLL=1)"},
+  {"what": "add bus VM-side CDC status -> collective 'ts' 3 b (VM port 'tcs' in the patch; in the final netlist it is the CDC end block's status)", "why": "t_vm flow control"},
+  {"what": "widen collective -> VM 't_vm' 512 -> 2100 b", "why": "the C8 engine's all-gather beat is GW 4 = 2048 b; reduce results pack 4 a beat (the serial VM drains 0.75 beat / stream cycle)"},
+  {"what": "insert ratio-CDC end blocks (ot_ratio_cdc_fifo, depth >= 8, stream <-> serial) on f_vm and t_vm", "why": "VM is serial 0.9 GHz, the collective stream 1.2 GHz; the r9 hub buses are common-clock stations with no CDC"},
+  {"what": "link macro RX beat valid (rx valid pin -> dsfd_m2l_raw w_v) and TX idle deletion allowed on beats with bit 1 set", "why": "two dies' PLLs are plesiochronous: the PHY must be able to delete flagged idle beats / present invalid cycles; the slab already handles both"},
+  {"what": "head die: place dsfd_sp_collective pins as on the layer die (13 of 35 ports differ: f_vm, ts, t_vm, ...) or harden a second view", "why": "one RTL, two pin maps"},
+  {"what": "OPTIONAL lane width 512 -> >= 652 b (PHY parallel width)", "why": "the reliable-link framing costs 23.6 % of a 512-b beat (0.764 records / cycle); a lane >= 652 b carries one 596-b slot + reverse slot a cycle (1.0 record / cycle, as the C8 abstract link)"}
+ ],
+ "pll_reservation": {"master": "ot_s81_pll_bb", "outline_um": [172.8, 172.8], "area_mm2": 0.0299, "status": "ASSUMED outline / pins (analog hard IP), no timing claim", "views": "physical/s81_ph_views/macros/ot_s81_pll_bb"}
+}

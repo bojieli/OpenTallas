@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hbm.su.controller_eco_harvest.v1",
+  "source_commit": "dbf7fb9af46ef26c51b08ac12cff0ee88faa05d2",
+  "source_claim": "Original route SOURCE_COMMIT records CTL12=2 round 11 + reducer RKC (dbf7fb9af).",
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-scratch2/scratch/claude/hbm-su/routes/ctl16m770_u26/eco2",
+  "master": "ot_su12_ctl16c",
+  "scope": "SU-lane-internal controller vehicle. IO false-pathed; this is not a die-boundary closure or exported die abstract.",
+  "setup_ss_ps": 39.98,
+  "hold_ff_ps": 20.24,
+  "drc": 0,
+  "period_ps": 833.333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "latency_delta_cycles": 0,
+  "verdict": "PASS_INTERNAL_VEHICLE",
+  "preserves_original_failures": true,
+  "files": {
+    "SOURCE_COMMIT": "333fe39f0761ebb314f3a7fe0d8869f094c4f21686b5214e3dd65c1dfab32a3a",
+    "args": "bef5b430b609f3807543c3ccb9c9e07be4f1ac8eb803ac10733d55ae97cb4dd6",
+    "corner.log": "0605134ac2f5618c4f33b4917711d472aed96fc74a7fa87721f904e860b74943",
+    "corner_sta.json": "c05aa0257600d07cad18de6126812e5ef6c70076bc7b880fea8e7519d04a22df",
+    "eco.log": "ffe42484a996dc5211fc67d8b812832906056aae40cfe95c674a170c4a6009f3",
+    "eco2.out": "51e5640328ccf07e3c8520160e9122239cb774a0f24250062f52440a44985ad1",
+    "result.json": "91fe618cf076f7d0629fc260226d6b7f2629228494994b2bb363b8f9a43ee14d"
+  }
+}

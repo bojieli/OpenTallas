@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.qwen_pinreg_failure.v1",
+  "source_commit": "cf1004f358db46ee09053c545febf48bf585c5e0",
+  "route_source_commit": "30619b5520fdb14a9bf9536e5ece98aa3d534ed8",
+  "proof_host": "ot-epyc1tb",
+  "proof_root": "/srv/opentallas-scratch/claude/qwen-core-decode/proof/pinreg1",
+  "expected_tokens": [
+    98951,
+    484,
+    3856,
+    334
+  ],
+  "observed_tokens": [
+    98951,
+    98951,
+    484,
+    484
+  ],
+  "positive_gate": "FAIL: c_H1 and c_H2 status fail; tokens_ok false, source_stable true",
+  "mutant_gate": "Inadmissible as discrimination evidence until positive case passes; mutant also fails token comparison",
+  "action": "Cancelled core_p-30619b552 and core_pu-30619b552 before adoption, preserved remote checkpoints. Three inherited layer proof runs left intact. No new whole-system test launched.",
+  "diagnosis": "PINREG delays start one edge; sequencer changes S_RUN to S_CWAIT while the previous sticky done remains asserted. Existing sequencer can publish the previous head result before new core transaction clears done. Minimum emitted-controller/actual-sequencer regression in progress.",
+  "files": {
+    "c_H1.json": "30afbaf9ac4b4364319ade4086191be9be08cece3a481901a21c148a93ca5ffc",
+    "c_H2.json": "017cbb224b959f8597f5e2edcdc007f76124d5eeea90851494d157bae1cdc936",
+    "negative_c_H1.json": "b65e89699fdc8f822dad6673547b74c6ed15726876445917e959ca7b9c1965f7"
+  }
+}

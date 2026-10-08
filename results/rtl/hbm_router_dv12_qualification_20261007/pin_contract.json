@@ -1,0 +1,69 @@
+{
+  "period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "internal_hold_uncertainty_ps": 25,
+  "io_hold_uncertainty_ps": 50,
+  "ordinary_io_max_budget_ps": 316.6,
+  "pin_count": 2118,
+  "pin_groups": {
+    "ck[0]": {
+      "count": 1,
+      "kind": "root_clock"
+    },
+    "rst[0]": {
+      "count": 1,
+      "kind": "external_reset_to_two_flop_synchronizer",
+      "contract": "Held at least 8 core edges in qualification bench; async input timing exempt in existing SDC. Synchronized reset recovery/removal remains checked."
+    },
+    "f_su_SW[1:0]": {
+      "count": 2,
+      "kind": "active_valid_last",
+      "input_face_cycles": 4
+    },
+    "f_su_SW[255:2],f_su_NE[255:0],f_su_NW[255:0],f_su_SE[255:0]": {
+      "count": 1022,
+      "kind": "unused_reserved_inputs",
+      "claim": "No computational dependency; not timing-carrying interface payload."
+    },
+    "f_vm[511:0]": {
+      "count": 512,
+      "kind": "active_input_scores",
+      "input_face_cycles": 2
+    },
+    "eNE/eNW/eSE/eSW[53:0]": {
+      "count": 216,
+      "kind": "active_expert_ids",
+      "face_cycles": {
+        "eNE": 3,
+        "eNW": 4,
+        "eSE": 3,
+        "eSW": 4
+      }
+    },
+    "eNE/eNW/eSE/eSW[54]": {
+      "count": 4,
+      "kind": "active_valid"
+    },
+    "eNE/eNW/eSE/eSW[127:55]": {
+      "count": 292,
+      "kind": "zero_padding"
+    },
+    "eNE/eNW/eSE/eSW[128]": {
+      "count": 4,
+      "kind": "forwarded_inverted_clock",
+      "qualification": "Separate edge/skew and actual receiver binding required; false-path in existing common-clock signoff alone insufficient."
+    },
+    "t_cmdproc[54:0]": {
+      "count": 55,
+      "kind": "active_ids_valid",
+      "face_cycles": 2
+    },
+    "t_cmdproc[63:55]": {
+      "count": 9,
+      "kind": "zero_padding"
+    }
+  },
+  "alignment_requirement": "Upstream sends f_vm scores 2 cycles later than associated SW valid/last to compensate 2-cycle vs 4-cycle input face delay; wrapper structural lockstep does not prove parent scheduling.",
+  "all_pin_timing_qualified": false,
+  "new_false_paths": false
+}

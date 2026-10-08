@@ -6,7 +6,8 @@ module tb_window_column_split;
     reg [255:0] write_data=0;
     reg read_v=0;
     reg [4:0] read_addr=0;
-    wire [255:0] q256;
+    wire [255:0] q256, qsplit;
+    ot_dsrom_window_column_256_split split128(clk,rst_n,row_we,write_data,read_v,read_addr,qsplit);
     wire [127:0] q128;
     ot_dsrom_window_column #(.WIDTH(256)) dut256(clk,rst_n,row_we,write_data,read_v,read_addr,q256);
     ot_dsrom_window_column #(.WIDTH(128)) dut128(clk,rst_n,row_we,write_data[127:0],read_v,read_addr,q128);
@@ -27,7 +28,7 @@ module tb_window_column_split;
         for(integer i=0;i<32;i=i+1)
             if(row_we[i]) reference[i]=write_data;
         #1;
-        if(q256 !== (expected ^ (mutation && checks>100 ? 256'd1 : 256'd0)) || q128 !== expected[127:0])
+        if(qsplit !== (expected ^ (mutation && checks>100 ? 256'd1 : 256'd0)) || q256 !== expected || q128 !== expected[127:0])
             $fatal(1,"column mismatch check=%0d actual=%h expected=%h", checks,q256,expected);
         checks=checks+1;
     end
@@ -55,7 +56,7 @@ module tb_window_column_split;
         end
         row_we=0; read_v=0; repeat(3) tick();
         if(collisions<100 || checks<1500) $fatal(1,"coverage missing");
-        $display("PASS column split width128+256 checks=%0d read_write_collisions=%0d added_cycles=0",checks,collisions);
+        $display("PASS column split width128+256+2x128 checks=%0d read_write_collisions=%0d added_cycles=0",checks,collisions);
         $finish;
     end
 endmodule

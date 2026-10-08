@@ -1,0 +1,11 @@
+{
+  "yosys_sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+  "source_sha256": "df334a0028422b5e8d687b071b6e19e699f6b0fc75c9872dcddea818d829ccf8",
+  "command": "read_verilog -sv rtl/physical/ot_qwen_kvc_packet_codec.sv; chparam -set ENABLE 1 TOP; synth -top TOP -flatten -noabc; write_json OUTPUT",
+  "artifact_sha256": {
+    "encode.json": "6cdd6807b6df26b521390ec39d8e9ef29e65be8609ac8f5bd4c7e2f44ef27ff1",
+    "decode.json": "392fdd9e9d58b69cd1f8ca0107c46c1e7a36e92d4f2f643192656247e0fb7d76",
+    "encode.log": "f9d86355f7af7a5cce415c6daa283791c5e4d69c07d7f9122f49484ff31f6d41",
+    "decode.log": "c6492e0b7640b229d9d1889b68d479d08a07a6040e2d15dc10760c6ac746a8b2"
+  }
+}

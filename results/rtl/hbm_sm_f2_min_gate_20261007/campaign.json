@@ -1,0 +1,68 @@
+{
+  "source_commit": "f2bae3479",
+  "wrapper_sha256": "48fb9c05267a5d34cf4dceb5084d239f68baaf49fe155b6f26dfb23db9c6eac2",
+  "cases": [
+    {
+      "name": "stress_positive",
+      "rc": 0,
+      "passed": true,
+      "expected_status": "pass",
+      "actual_status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 3397,
+      "command": [
+        "/usr/bin/python3",
+        "/srv/opentallas-scratch2/scratch/codex/hbm-sm-min-f2bae3479/src/tools/dshbm_sm_pq_seq.py",
+        "run",
+        "--seq",
+        "stress",
+        "--smh",
+        "--nc",
+        "8",
+        "--active",
+        "1",
+        "--req-credit",
+        "--req-stalls",
+        "--build-jobs",
+        "4",
+        "--workdir",
+        "/srv/opentallas-scratch2/scratch/codex/hbm-sm-min-f2bae3479/out/stress_positive",
+        "--out",
+        "/srv/opentallas-scratch2/scratch/codex/hbm-sm-min-f2bae3479/out/stress_positive.json"
+      ]
+    },
+    {
+      "name": "request_leak_negative",
+      "rc": 0,
+      "passed": true,
+      "expected_status": "fail",
+      "actual_status": "fail",
+      "mismatching_ops": 13,
+      "total_cycles": null,
+      "command": [
+        "/usr/bin/python3",
+        "/srv/opentallas-scratch2/scratch/codex/hbm-sm-min-f2bae3479/src/tools/dshbm_sm_pq_seq.py",
+        "run",
+        "--seq",
+        "stress",
+        "--smh",
+        "--nc",
+        "8",
+        "--active",
+        "1",
+        "--req-credit",
+        "--req-stalls",
+        "--build-jobs",
+        "4",
+        "--workdir",
+        "/srv/opentallas-scratch2/scratch/codex/hbm-sm-min-f2bae3479/out/request_leak_negative",
+        "--out",
+        "/srv/opentallas-scratch2/scratch/codex/hbm-sm-min-f2bae3479/out/request_leak_negative.json",
+        "--mut-reqleak",
+        "--expect-fail"
+      ]
+    }
+  ],
+  "complete": true,
+  "passed": true
+}

@@ -1,0 +1,217 @@
+{
+ "schema": "opentallas.hbm_die_cts_spec.v1",
+ "round": "r17",
+ "adopted": "2026-10-06 (coordinator: adopt the budgets die clock plan as the die CTS spec)",
+ "plan": "results/rtl/hbm_accel_die_views_20261006/r17_budget/clock_plan_hbm.json.gz",
+ "method": "budgets_20261006 clock plan (tools/budgets/clock_plan.py): PLL on hb_coll -> balanced buffered H-tree per domain on M8/M9 to every clock-region root, roots padded to the slowest region tree of their trunk -> region trees on M6/M7 -> partition clock pins; forwarded-link stations carry their own clocks",
+ "regions": 34,
+ "max_intra_ps": 56.7,
+ "inter_region_violations": 0,
+ "region_targets": {
+  "clk_hbm:SVCNE.0.0": {
+   "entry_ss_ps": 2190.0,
+   "entry_ff_ps": 1160.0,
+   "pad_ss_ps": 0.0,
+   "intra_budget_ps": 43
+  },
+  "clk_hbm:SVCNE.1": {
+   "entry_ss_ps": 2190.0,
+   "entry_ff_ps": 1160.0,
+   "pad_ss_ps": 47.5,
+   "intra_budget_ps": 38
+  },
+  "clk_hbm:SVCNW.0": {
+   "entry_ss_ps": 2190.0,
+   "entry_ff_ps": 1160.0,
+   "pad_ss_ps": 23.8,
+   "intra_budget_ps": 41
+  },
+  "clk_hbm:SVCNW.1": {
+   "entry_ss_ps": 2190.0,
+   "entry_ff_ps": 1160.0,
+   "pad_ss_ps": 0.0,
+   "intra_budget_ps": 43
+  },
+  "clk_hbm:SVCSE.0.0": {
+   "entry_ss_ps": 2190.0,
+   "entry_ff_ps": 1160.0,
+   "pad_ss_ps": 0.0,
+   "intra_budget_ps": 43
+  },
+  "clk_hbm:SVCSE.1": {
+   "entry_ss_ps": 2190.0,
+   "entry_ff_ps": 1160.0,
+   "pad_ss_ps": 47.5,
+   "intra_budget_ps": 38
+  },
+  "clk_hbm:SVCSW.0": {
+   "entry_ss_ps": 2190.0,
+   "entry_ff_ps": 1160.0,
+   "pad_ss_ps": 23.8,
+   "intra_budget_ps": 41
+  },
+  "clk_hbm:SVCSW.1": {
+   "entry_ss_ps": 2190.0,
+   "entry_ff_ps": 1160.0,
+   "pad_ss_ps": 0.0,
+   "intra_budget_ps": 43
+  },
+  "clk_link:die.0": {
+   "entry_ss_ps": 1280.0,
+   "entry_ff_ps": 680.0,
+   "pad_ss_ps": 0.0,
+   "intra_budget_ps": 49
+  },
+  "clk_link:die.1.0": {
+   "entry_ss_ps": 1280.0,
+   "entry_ff_ps": 680.0,
+   "pad_ss_ps": 48.0,
+   "intra_budget_ps": 43
+  },
+  "clk_link:die.1.1.1.1": {
+   "entry_ss_ps": 1280.0,
+   "entry_ff_ps": 680.0,
+   "pad_ss_ps": 188.2,
+   "intra_budget_ps": 29
+  },
+  "clk_serial:HUB-C.0.0": {
+   "entry_ss_ps": 850.0,
+   "entry_ff_ps": 450.0,
+   "pad_ss_ps": 406.9,
+   "intra_budget_ps": 37
+  },
+  "clk_serial:HUB-C.0.1.0": {
+   "entry_ss_ps": 850.0,
+   "entry_ff_ps": 450.0,
+   "pad_ss_ps": 192.3,
+   "intra_budget_ps": 57
+  },
+  "clk_serial:HUB-C.1.0": {
+   "entry_ss_ps": 850.0,
+   "entry_ff_ps": 450.0,
+   "pad_ss_ps": 0.0,
+   "intra_budget_ps": 78
+  },
+  "clk_stream:GNEe": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 95.6,
+   "intra_budget_ps": 71
+  },
+  "clk_stream:GNEw": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 47.7,
+   "intra_budget_ps": 75
+  },
+  "clk_stream:GNWe": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 71.8,
+   "intra_budget_ps": 73
+  },
+  "clk_stream:GNWw": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 0.0,
+   "intra_budget_ps": 82
+  },
+  "clk_stream:GSEe": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 71.8,
+   "intra_budget_ps": 73
+  },
+  "clk_stream:GSEw": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 0.0,
+   "intra_budget_ps": 80
+  },
+  "clk_stream:GSWe": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 71.8,
+   "intra_budget_ps": 73
+  },
+  "clk_stream:GSWw": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 0.0,
+   "intra_budget_ps": 82
+  },
+  "clk_stream:HUB-QNE.0.0": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 190.9,
+   "intra_budget_ps": 61
+  },
+  "clk_stream:HUB-QNE.1.0": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 383.9,
+   "intra_budget_ps": 40
+  },
+  "clk_stream:HUB-QNE.1.1": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 311.4,
+   "intra_budget_ps": 47
+  },
+  "clk_stream:HUB-QNW.0.0": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 168.1,
+   "intra_budget_ps": 47
+  },
+  "clk_stream:HUB-QNW.1.0": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 144.3,
+   "intra_budget_ps": 64
+  },
+  "clk_stream:HUB-QSE.0.0": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 190.9,
+   "intra_budget_ps": 61
+  },
+  "clk_stream:HUB-QSE.1.0": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 311.4,
+   "intra_budget_ps": 47
+  },
+  "clk_stream:HUB-QSE.1.1": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 311.4,
+   "intra_budget_ps": 47
+  },
+  "clk_stream:HUB-QSW.0.0": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 119.6,
+   "intra_budget_ps": 54
+  },
+  "clk_stream:HUB-QSW.1.0": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 144.3,
+   "intra_budget_ps": 64
+  },
+  "clk_stream:HUB-SP": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 359.1,
+   "intra_budget_ps": 44
+  },
+  "clk_stream:HUB-V": {
+   "entry_ss_ps": 2690.0,
+   "entry_ff_ps": 1430.0,
+   "pad_ss_ps": 281.0,
+   "intra_budget_ps": 52
+  }
+ },
+ "block_rule": "each block closes against its budget sheet: clock pin arrival = region target entry; internal insertion <= the sheet target"
+}

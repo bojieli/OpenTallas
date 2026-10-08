@@ -1,0 +1,5 @@
+S0 pf=64 mode=0 throttle=0 results=4 ref_first_issue->last=84 dut_first_issue->last=106 ref_last=102 dut_last=148 dut_ready_stalls=56
+S1 pf=384 mode=0 throttle=0 results=24 ref_first_issue->last=405 dut_first_issue->last=426 ref_last=570 dut_last=616 dut_ready_stalls=343
+S2 pf=384 mode=1 throttle=0 results=24 ref_first_issue->last=405 dut_first_issue->last=426 ref_last=1038 dut_last=1084 dut_ready_stalls=331
+S3 pf=384 mode=1 throttle=1 results=24 ref_first_issue->last=405 dut_first_issue->last=426 ref_last=1506 dut_last=1552 dut_ready_stalls=122
+PASS banked HA2 owner reducer: 4 scenarios bit-exact vs unchanged TU adapter (CUTS=0)

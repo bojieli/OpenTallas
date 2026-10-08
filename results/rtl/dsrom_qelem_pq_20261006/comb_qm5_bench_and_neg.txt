@@ -1,0 +1,11 @@
+QM=5 PQ1 L20 bench negative control QM5_MUTANT_RG (two-stage replay read one entry off; source 096624ca2, OT_PQQ_QM=5 OT_PQQ_DEFINES=QM5_MUTANT_RG, tools/dsrom_combined_l20.py field --cfg pq1_q10 --field-layers 20)
+stopped after the first 80 completed runs: 80 FAIL / 0 PASS (caught; runs time out on the corrupted configuration replay)
+0 L20.attn.a_proj#p0.st37 0 FAIL 6 {} ['FAIL timeout'] [(98304, None, 1038876672), (98305, None, 1041498112), (98306, [990969856], 1015480320)]
+1 L20.attn.a_proj#p0.st37 1 FAIL 6 {} ['FAIL timeout'] [(98304, None, 3182100480), (98305, None, 3132227584), (98308, [3169583104], 3139305472)]
+2 L20.attn.a_proj#p0.st37 2 FAIL 6 {} ['FAIL timeout'] [(98304, None, 3163357184), (98305, None, 3175874560), (98308, [3168403456], 1028718592)]
+
+QM=5 PQ1 L20 bench positive (comb_qm5, source 96a1ac93a):
+2752 runs (phase)
+failed 0
+896 runs (node)
+failed 0

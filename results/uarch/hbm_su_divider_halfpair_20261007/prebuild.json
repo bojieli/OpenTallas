@@ -1,0 +1,97 @@
+{
+  "schema": "opentallas.hbm.su.divider_halfpair.prebuild.v1",
+  "selected": false,
+  "adopted": false,
+  "default_parameter": {
+    "DDIV": 21
+  },
+  "proposed_parameter": {
+    "DDIV": 64
+  },
+  "MACs_per_cycle": 0,
+  "divides_per_fast_cycle": 1,
+  "compute_intensity_divides_per_payload_byte": 0.08333333333333333,
+  "memory_ports": {
+    "new_ports": 0,
+    "bytes_per_fast_cycle": 0
+  },
+  "boundary_bits_per_fast_cycle": {
+    "input": 65,
+    "output": 34,
+    "new_external_bits": 0
+  },
+  "replicas": {
+    "cores_per_divider": 2,
+    "divider_instances_per_full_lane": 2,
+    "input_capture_fanout": 2,
+    "output_mux": "34 parallel 2:1 muxes per divider",
+    "demux": "alternating physical clock gates; every input captured once",
+    "added_wrapper_ff_bound": 272
+  },
+  "clocks": {
+    "fast_ghz": 1.2,
+    "each_core_ghz": 0.6,
+    "duty": "one 50-percent-fast-clock high pulse every two fast periods",
+    "phase0_master_edges": [
+      1,
+      2,
+      5
+    ],
+    "phase1_master_edges": [
+      3,
+      4,
+      7
+    ],
+    "crossings": "one fast input register; opposite-bank capture then output register",
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "no_relaxation_of_fast_crossings": true
+  },
+  "area": {
+    "measured_full31_um2": 32015.784,
+    "conservative_cell_upper_um2": 64134.67776,
+    "source": "EPYC3 full31 d773c1033 physical.json; not a divider-only estimate",
+    "proposed_slot_um": [
+      400,
+      400
+    ],
+    "reserved_corridor_um": 32,
+    "planned_utilization_with_corridor": 0.48084173599999996,
+    "target_utilization": 0.55,
+    "old_slot_um": [
+      346.008,
+      347.736
+    ],
+    "old_slot_fit_with_corridor": false,
+    "proposed_slot_fit": true
+  },
+  "routing": {
+    "bank_boundary_tracks_needed": 200,
+    "conservative_channel_track_capacity": 444,
+    "track_pitch_assumption_um": 0.072,
+    "requires_physical_validation": true
+  },
+  "latency": {
+    "divider_fast_cycles": 64,
+    "core_slow_cycles": 31,
+    "extra_vs_DDIV21": 43,
+    "extra_vs_DDIV31": 33,
+    "serial_divides": 1,
+    "serial_chain_added_fast_cycles": 43,
+    "serial_chain_added_ns": 35.833333333333336,
+    "M1_and_SFU_both_divide_extra_cycles": 86,
+    "composed_by": "tools/hbm_su_c12.py:set_c12 DDIV=64; controller H_MD/D_SIG/D_SP/D_EG",
+    "per_design_selection": {
+      "Qwen3-8B ROM": false,
+      "DeepSeek-V4.1 ROM": false,
+      "Qwen3-8B HBM": "conditional DDIV64",
+      "DeepSeek-V4.1 HBM": "conditional DDIV64"
+    }
+  },
+  "adoption_gates": [
+    "small divider transaction scoreboard incl faults/reset/bubbles and negative",
+    "c12 controller/lane exact composition at DDIV64",
+    "full-lane physical shape SS>=15ps/FF>=15ps/DRC0 with generated clocks",
+    "expanded slot installed in die context and latency ledger recomposed"
+  ]
+}

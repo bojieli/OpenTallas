@@ -1,0 +1,121 @@
+{
+  "schema": "opentallas.hbm.smh.mapped_rail_storage.v1",
+  "status": "pass",
+  "rails": {
+    "nonempty": {
+      "storage_instance": "u_rch.nonempty$_DFF_PN0_",
+      "storage_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "connections": {
+        "CLK": "clk",
+        "D": "_1029_",
+        "QN": "_0541_",
+        "VDD": null,
+        "VSS": null,
+        "RESETN": "rst_n",
+        "SETN": "net14"
+      },
+      "outputs": [
+        {
+          "net": "_0541_",
+          "pin": "QN",
+          "loads": [
+            {
+              "instance": "_2591_",
+              "master": "OR3x1_ASAP7_75t_R",
+              "pin": "C"
+            },
+            {
+              "instance": "_2577_",
+              "master": "BUFx2_ASAP7_75t_R",
+              "pin": "A"
+            }
+          ]
+        }
+      ],
+      "lookup": "source-named mapped DFF; positive-polarity net absorbed"
+    },
+    "empty": {
+      "storage_instance": "u_rch.empty$_DFF_PN1_",
+      "storage_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "connections": {
+        "CLK": "clk",
+        "D": "_1028_",
+        "QN": "_0542_",
+        "VDD": null,
+        "VSS": null,
+        "RESETN": "net13",
+        "SETN": "rst_n"
+      },
+      "outputs": [
+        {
+          "net": "_0542_",
+          "pin": "QN",
+          "loads": [
+            {
+              "instance": "_4618_",
+              "master": "XNOR2x2_ASAP7_75t_R",
+              "pin": "A"
+            },
+            {
+              "instance": "_2703_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "pin": "A"
+            },
+            {
+              "instance": "_2685_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A1"
+            },
+            {
+              "instance": "_2613_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A1"
+            },
+            {
+              "instance": "_2608_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "pin": "B"
+            },
+            {
+              "instance": "_2603_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "pin": "B"
+            },
+            {
+              "instance": "_2580_",
+              "master": "INVx2_ASAP7_75t_R",
+              "pin": "A"
+            }
+          ]
+        }
+      ],
+      "driver_path": [
+        {
+          "net": "u_rch.empty",
+          "instance": "_2581_",
+          "master": "BUFx2_ASAP7_75t_R",
+          "output": "Y"
+        },
+        {
+          "net": "_1032_",
+          "instance": "_2580_",
+          "master": "INVx2_ASAP7_75t_R",
+          "output": "Y"
+        },
+        {
+          "net": "_0542_",
+          "instance": "u_rch.empty$_DFF_PN1_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "output": "QN"
+        }
+      ],
+      "lookup": "named net driver trace"
+    }
+  },
+  "errors": [],
+  "scope": "distinct mapped storage for the two cached occupancy rails only",
+  "timing_qualified": false,
+  "fault_injection_scope": "single cached state bit; existing count/pointers unchanged",
+  "odb_sha256": "0679f4c0d1eafb7d9c97c3930b9be26a85b3b6dfa53dcb091422bb627851c1ab",
+  "tool_sha256": "59ebcd17d7ae0c9b221de8765dccf840fa5edbbfc1e6d288d2c30b74e3bcd6ef"
+}

@@ -1,0 +1,93 @@
+{
+  "status": "exactness_pass_physical_pending",
+  "adopted": false,
+  "default_MEM": 0,
+  "source_commit": "f4ae1db37",
+  "rtl_route_pin": "cc383b8fcb76d8e8bd05436dc00f409335838f2e",
+  "source_validation": "All 30 source, macro-model, bench and golden files hashed remotely and matched against this worktree; manifest in source.sha256.",
+  "original_run_host": "ot-epyc1tb",
+  "original_run_root": "/srv/opentallas-scratch/claude/norm_mem1_bench",
+  "run_completed_utc": "2026-10-07T15:03:22Z",
+  "harvested_utc": "2026-10-07T15:34:00Z",
+  "compiler_flags": {
+    "verilator": "--binary --timing -O1",
+    "make": "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0",
+    "build_jobs": 16
+  },
+  "bench_scope": "N64 D5120 HC1 QUANT1 LM5 LA6 RXS1 SXC1 FREG1 RW9 BW9; DS1M golden row plus three rotated rows; overlapping next-row X writes and current-row scale reads; gain reload before fourth row.",
+  "benches": {
+    "positive": {
+      "file": "positive.log",
+      "sha256": "5daf7917786e0e45437eca6f888041259415ff7d426c4ab2cc1ab0684e0085bd",
+      "expected": "PASS",
+      "observed": "PASS",
+      "exit_code": 0,
+      "summary": "LOCKSTEP rows=4 y_vecs=320 q_vecs=320 rstd=4 mism=0 gold_y_err=0 gold_q_err=0 fault=00"
+    },
+    "address_off_by_one": {
+      "file": "negative_address.log",
+      "sha256": "4fb4491e7c840aa545cf6e85bc87ac5a90d3ea2a19bacbdb59b6c6cf74de5d05",
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "exit_code": 1,
+      "summary": "LOCKSTEP rows=4 y_vecs=320 q_vecs=320 rstd=4 mism=392 gold_y_err=5115 gold_q_err=160 fault=00"
+    },
+    "read_not_issued_ahead": {
+      "file": "negative_read_latency.log",
+      "sha256": "6fc07531a9450fdc2f86333e60b4d188e46406d95097c55fd7fe8dd3bbafba9e",
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "exit_code": 1,
+      "summary": "LOCKSTEP rows=4 y_vecs=320 q_vecs=320 rstd=4 mism=388 gold_y_err=5051 gold_q_err=158 fault=00"
+    }
+  },
+  "negative_control_choice": "1R1W SRAM has no ping-pong bank parity. Address mutation plus one-cycle read-late mutation exercise address and overlap/read alignment instead.",
+  "storage_accounting": {
+    "N": 64,
+    "NV": 80,
+    "logical_bits_each_X_or_W": 163840,
+    "logical_flop_storage_bits_replaced": 327680,
+    "macro_count": 16,
+    "macro_rows": 128,
+    "macro_width_bits": 256,
+    "physical_macro_storage_bits": 524288,
+    "macro_area_um2_each": 3893.852736,
+    "macro_area_um2_total": 62301.643776,
+    "macro_clock_pins": 16,
+    "bytes_per_read_port_each_X_or_W": 256,
+    "bytes_per_write_port_each_X_or_W": 256,
+    "flop_count_measured": null,
+    "clock_sinks_measured": null,
+    "total_area_measured": null,
+    "synthesis_time_measured": null,
+    "note": "Storage deltas are structural arithmetic, not mapped/CTS measurements; arithmetic/control/pin registers remain."
+  },
+  "latency": {
+    "MEM1_added_cycles": 0,
+    "view_capture_launch_cycles": 2,
+    "net_added_view_cycles": 0,
+    "view_accounting": "Already included in BCAST7/RET8 wire stages per view contract."
+  },
+  "upstream_reread_feasibility": "Possible only if upstream retains the exact post-mix X row and guarantees a second 256-byte/cycle stream for 80 cycles, with finite flow control and alignment to rstd. Current engine has input-only X stream and no replay request/ready port. Replaying the 4-way HC source instead needs four times that input traffic and repeats the exact mix. No such replay is implemented or credited.",
+  "physical_jobs": {
+    "MEM1": {
+      "job": "hbm-norm-engine-mem1-cc383b8fc",
+      "host": "EPYC3",
+      "stage": "calibrate",
+      "state": "RUNNING",
+      "last_observed": "Yosys SHARE pass, process live"
+    },
+    "MEMSPLIT": {
+      "job": "hbm-norm-engine-cc62569a4",
+      "host": "EPYC1",
+      "stage": "calibrate",
+      "state": "RUNNING",
+      "last_observed": "host Yosys synthesis live"
+    }
+  },
+  "remaining_gates": [
+    "Mapped flop/clock-sink/area/synthesis-time comparison",
+    "SS setup >=15ps and FF hold >=15ps, DRC0",
+    "Die-context abstract integration and model adoption"
+  ]
+}

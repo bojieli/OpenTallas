@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.s81_ph.hc.v1",
+ "owner": "Claude:s81-ph (lead), 2026-10-06",
+ "design": "REMOTE-READ split of the HE adapter (contracts_hub.json kinds.hc.decision): unchanged he_adapt/hcp semantics in the HC slab, weight banks RESIDENT in the slab (ROM die), x loads cross the die (RX = DF + DR on the load tags; x reads are 8 consecutive elements = half a 512-b VM row, so the row-port VM serves them), masked writes return DR later, ready/idle held while a go is in flight",
+ "rtl": ["rtl/dsrom_sys/s81_ph/hc/ot_s81ph_he_adapt.sv", "rtl/dsrom_sys/s81_ph/hc/ot_s81ph_he_xing.sv"],
+ "bench": {
+  "runner": "tools/s81_ph/su_split_bench.py --unit he (decode campaign single bit-exact step, --units he, reduced V4.1 vehicle)",
+  "shim": "rtl/dsrom_sys/s81_ph/test/ot_hdc_v41x_he_adapt_s81ph_shim.sv",
+  "host": "ot-epyc3 /srv/opentallas-scratch2/claude/s81-ph/su/bench_he",
+  "runs": {"df0_dr0": {"pass": true, "next_token": 3118, "cycles": 344109, "mismatches": [0, 0, 0]},
+           "df3_dr3": {"pass": true, "next_token": 3118, "cycles": 344109, "mismatches": [0, 0, 0]},
+           "df8_dr8": {"pass": true, "next_token": 3118, "cycles": 344109, "mismatches": [0, 0, 0]}},
+  "negative_controls": {"NEG1 x-read delay one short": {"pass": false, "logit/vm/kv mismatches": [4040, 12688, 4122]},
+                        "NEG2 ready/idle not held while a go is in flight": {"pass": true, "note": "benign in this program (no HE-idle wait within DF+DR of an HE go); not a valid negative here"}}
+ },
+ "cycle_cost": "0 cycles on the reduced-vehicle step at D 3 and 8 (HE ops are off the critical path there); full-shape cost to be priced by COMPOSE",
+ "open": ["hc_s/hc_n split of one logical unit (MAC groups by index, partial rows over t_n/f_s)", "resident weight ROM sizing per die", "su->hc buses unused once SU writes go straight to the VM (generator patch)", "physical view + route"],
+ "state": "RTL + exact bench PASS (1 valid negative FAILs); physical pending"
+}

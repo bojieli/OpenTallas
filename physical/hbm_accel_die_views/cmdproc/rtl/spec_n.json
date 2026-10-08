@@ -1,0 +1,328 @@
+{
+ "master": "hfd_cmdproc_n",
+ "kept_out_regs": true,
+ "face_stages": 3,
+ "share_tree": {
+  "min": 3,
+  "fanout": 4
+ },
+ "note": "N band of the cmdproc split (split_spec.json): ot_hfd_cmdproc20_m cpN on faces cNE/cNW/t_su_NE/t_su_NW; command/doorbell from xl (S band), f_barrier/t_barrier at the north edge (bits 0..15 through xb/xt).",
+ "port_stages": {
+  "cNE": 3,
+  "cNW": 3,
+  "t_su_NE": 3,
+  "t_su_NW": 3,
+  "f_barrier": 2,
+  "f_coll": 2,
+  "t_barrier": 3,
+  "t_coll": 2,
+  "xl": 1,
+  "xt": 1,
+  "xb": 2
+ },
+ "port_in_stages": {
+  "cNE": 4,
+  "cNW": 4,
+  "xl": 3
+ },
+ "instances": [
+  {
+   "name": "cpN",
+   "module": "ot_hfd_cmdproc20_m",
+   "file": "physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv",
+   "params": {
+    "TW": 17,
+    "PW": 20,
+    "CONTEXT_POSITIONS": 1048576,
+    "ENABLE": 1,
+    "NSM": 16,
+    "NCMD": 256,
+    "RDREG": 2
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "cmd_we": "die:xl[0:1]",
+    "cmd_addr": "die:xl[1:9]",
+    "cmd_wdata": "die:xl[9:73]",
+    "db_v": "die:xl[73:74]",
+    "db_token": "die:xl[74:91]",
+    "db_pos": "die:xl[91:111]",
+    "db_job": "die:xl[111:143]",
+    "db_generation": "die:xl[143:147]",
+    "launch_v": [
+     "die:cNW[0:1]+cNW[103:104]+cNW[206:207]+cNW[309:310]+cNW[412:413]+cNW[515:516]+cNW[618:619]+cNW[721:722]+cNE[0:1]+cNE[103:104]+cNE[206:207]+cNE[309:310]+cNE[412:413]+cNE[515:516]+cNE[618:619]+cNE[721:722]",
+     "die:cNW[45:46]+cNW[148:149]+cNW[251:252]+cNW[354:355]+cNW[457:458]+cNW[560:561]+cNW[663:664]+cNW[766:767]+cNE[45:46]+cNE[148:149]+cNE[251:252]+cNE[354:355]+cNE[457:458]+cNE[560:561]+cNE[663:664]+cNE[766:767]"
+    ],
+    "launch_pc": [
+     "die:cNW[1:33]",
+     "die:cNW[104:136]",
+     "die:cNW[207:239]",
+     "die:cNW[310:342]",
+     "die:cNW[413:445]",
+     "die:cNW[516:548]",
+     "die:cNW[619:651]",
+     "die:cNW[722:754]",
+     "die:cNE[1:33]",
+     "die:cNE[104:136]",
+     "die:cNE[207:239]",
+     "die:cNE[310:342]",
+     "die:cNE[413:445]",
+     "die:cNE[516:548]",
+     "die:cNE[619:651]",
+     "die:cNE[722:754]",
+     "die:cNW[46:78]",
+     "die:cNW[149:181]",
+     "die:cNW[252:284]",
+     "die:cNW[355:387]",
+     "die:cNW[458:490]",
+     "die:cNW[561:593]",
+     "die:cNW[664:696]",
+     "die:cNW[767:799]",
+     "die:cNE[46:78]",
+     "die:cNE[149:181]",
+     "die:cNE[252:284]",
+     "die:cNE[355:387]",
+     "die:cNE[458:490]",
+     "die:cNE[561:593]",
+     "die:cNE[664:696]",
+     "die:cNE[767:799]"
+    ],
+    "launch_pos": [
+     "die:cNW[78:98]",
+     "die:cNW[181:201]",
+     "die:cNW[284:304]",
+     "die:cNW[387:407]",
+     "die:cNW[490:510]",
+     "die:cNW[593:613]",
+     "die:cNW[696:716]",
+     "die:cNW[799:819]",
+     "die:cNE[78:98]",
+     "die:cNE[181:201]",
+     "die:cNE[284:304]",
+     "die:cNE[387:407]",
+     "die:cNE[490:510]",
+     "die:cNE[593:613]",
+     "die:cNE[696:716]",
+     "die:cNE[799:819]"
+    ],
+    "launch_token": [
+     "die:t_su_NW[0:17]",
+     "die:t_su_NE[0:17]"
+    ],
+    "sm_done": "die:cNW[44:45]+cNW[147:148]+cNW[250:251]+cNW[353:354]+cNW[456:457]+cNW[559:560]+cNW[662:663]+cNW[765:766]+cNE[44:45]+cNE[147:148]+cNE[250:251]+cNE[353:354]+cNE[456:457]+cNE[559:560]+cNE[662:663]+cNE[765:766]",
+    "sm_fault": "cfg",
+    "res_v": "cfg",
+    "res_data": "cfg",
+    "cpl_rdy": "const:1"
+   }
+  }
+ ],
+ "extra_out": [
+  [
+   "t_barrier",
+   16,
+   17,
+   "i_cNW[43]"
+  ],
+  [
+   "cNW",
+   41,
+   42,
+   "i_f_barrier[16]"
+  ],
+  [
+   "t_barrier",
+   17,
+   18,
+   "i_cNW[146]"
+  ],
+  [
+   "cNW",
+   144,
+   145,
+   "i_f_barrier[17]"
+  ],
+  [
+   "t_barrier",
+   18,
+   19,
+   "i_cNW[249]"
+  ],
+  [
+   "cNW",
+   247,
+   248,
+   "i_f_barrier[18]"
+  ],
+  [
+   "t_barrier",
+   19,
+   20,
+   "i_cNW[352]"
+  ],
+  [
+   "cNW",
+   350,
+   351,
+   "i_f_barrier[19]"
+  ],
+  [
+   "t_barrier",
+   20,
+   21,
+   "i_cNW[455]"
+  ],
+  [
+   "cNW",
+   453,
+   454,
+   "i_f_barrier[20]"
+  ],
+  [
+   "t_barrier",
+   21,
+   22,
+   "i_cNW[558]"
+  ],
+  [
+   "cNW",
+   556,
+   557,
+   "i_f_barrier[21]"
+  ],
+  [
+   "t_barrier",
+   22,
+   23,
+   "i_cNW[661]"
+  ],
+  [
+   "cNW",
+   659,
+   660,
+   "i_f_barrier[22]"
+  ],
+  [
+   "t_barrier",
+   23,
+   24,
+   "i_cNW[764]"
+  ],
+  [
+   "cNW",
+   762,
+   763,
+   "i_f_barrier[23]"
+  ],
+  [
+   "t_barrier",
+   24,
+   25,
+   "i_cNE[43]"
+  ],
+  [
+   "cNE",
+   41,
+   42,
+   "i_f_barrier[24]"
+  ],
+  [
+   "t_barrier",
+   25,
+   26,
+   "i_cNE[146]"
+  ],
+  [
+   "cNE",
+   144,
+   145,
+   "i_f_barrier[25]"
+  ],
+  [
+   "t_barrier",
+   26,
+   27,
+   "i_cNE[249]"
+  ],
+  [
+   "cNE",
+   247,
+   248,
+   "i_f_barrier[26]"
+  ],
+  [
+   "t_barrier",
+   27,
+   28,
+   "i_cNE[352]"
+  ],
+  [
+   "cNE",
+   350,
+   351,
+   "i_f_barrier[27]"
+  ],
+  [
+   "t_barrier",
+   28,
+   29,
+   "i_cNE[455]"
+  ],
+  [
+   "cNE",
+   453,
+   454,
+   "i_f_barrier[28]"
+  ],
+  [
+   "t_barrier",
+   29,
+   30,
+   "i_cNE[558]"
+  ],
+  [
+   "cNE",
+   556,
+   557,
+   "i_f_barrier[29]"
+  ],
+  [
+   "t_barrier",
+   30,
+   31,
+   "i_cNE[661]"
+  ],
+  [
+   "cNE",
+   659,
+   660,
+   "i_f_barrier[30]"
+  ],
+  [
+   "t_barrier",
+   31,
+   32,
+   "i_cNE[764]"
+  ],
+  [
+   "cNE",
+   762,
+   763,
+   "i_f_barrier[31]"
+  ],
+  [
+   "t_barrier",
+   0,
+   16,
+   "i_xt[15:0]"
+  ],
+  [
+   "xb",
+   0,
+   16,
+   "i_f_barrier[15:0]"
+  ]
+ ],
+ "latency": "cycle cost vs hfd_cmdproc (face_stages 5 everywhere): cpS core path in 3 + out 3 = 6 (-4); cpN in 4 (xl: S pin flop + 2 + N pin flop; cN* 4) + out 3 = 7 (-3); f_barrier[0:16] -> S faces 2+2+2+3 = 9 (-1), [16:32] -> N faces 2+3 = 5 (-5); t_barrier[0:16] 3+2+1+3 = 9 (-1), [16:32] 4+3 = 7 (-3)"
+}

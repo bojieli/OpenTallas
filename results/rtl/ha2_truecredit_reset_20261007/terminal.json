@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "checks": {
+    "candidate_flight_reset": {
+      "passed": true,
+      "returncode": 0,
+      "forward_hops": 7,
+      "return_hops": 7,
+      "mutant": 0,
+      "output": "RESET_INTERRUPTION fwd=7 ret=7 issued=83/64 received=23/0 hubquiet=10 fwdquiet=10 retquiet=10\nPASS_TRUECREDIT_RESET fwd=7 ret=7 fresh_rows=192 injectors=2 cycles=955\n"
+    },
+    "long_flight_reset": {
+      "passed": true,
+      "returncode": 0,
+      "forward_hops": 64,
+      "return_hops": 64,
+      "mutant": 0,
+      "output": "RESET_INTERRUPTION fwd=64 ret=64 issued=83/64 received=52/0 hubquiet=10 fwdquiet=10 retquiet=10\nPASS_TRUECREDIT_RESET fwd=64 ret=64 fresh_rows=192 injectors=2 cycles=1052\n"
+    },
+    "return_pipe_reset_removed": {
+      "passed": true,
+      "returncode": 1,
+      "forward_hops": 7,
+      "return_hops": 7,
+      "mutant": 1,
+      "output": "RESET_INTERRUPTION fwd=7 ret=7 issued=83/64 received=23/0 hubquiet=10 fwdquiet=10 retquiet=10\nFATAL: rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_reset.sv:88: RESET_STALE_RETURN_PIPE\n       Time: 2711000 Scope: tb_ha2_truecredit_reset\n"
+    },
+    "stale_credit_before_new_send": {
+      "passed": true,
+      "returncode": 1,
+      "forward_hops": 7,
+      "return_hops": 7,
+      "mutant": 2,
+      "output": "RESET_INTERRUPTION fwd=7 ret=7 issued=83/64 received=23/0 hubquiet=10 fwdquiet=10 retquiet=10\nFATAL: rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_reset.sv:68: RESET_PROTOCOL_FAULT epoch=1 tx=1 rx=0\n       Time: 2766000 Scope: tb_ha2_truecredit_reset.run_phase\n"
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d203972abf58823ce475d9b72fa857c87ef6a9492c0700846955d564552f1b6",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_reset.sv": "3504aad9bf1cd3a29706e3fabdc6a854abfc58144186addbafbc705047a4e9d1",
+    "tools/ha2_truecredit_reset_gate.py": "1fdf24f7afe9e03df16decbe4ea999c95244d9a600d6127efa79360f12d2c5d0"
+  },
+  "reset_contract": "One common reset asynchronously clears sender/receiver accounting, FIFO validity and EVERY hub/forward/return valid pipeline. Payload arrays need not clear. Release is common before fresh traffic.",
+  "session_identity": "Forward/return sequence IDs reset together. They are ordering IDs, not persistent epochs. A partial reset retaining matching old traffic is outside this contract; the reset-pipeline negative proves flushing is necessary.",
+  "scope": "Minimum full-width 2x544 mechanism. Reset interrupts simultaneous hub, forward and return flights; fresh epoch-coded payloads complete192rows/injector and fully drain64-slot accounting. No production RTL change or new physical claim."
+}

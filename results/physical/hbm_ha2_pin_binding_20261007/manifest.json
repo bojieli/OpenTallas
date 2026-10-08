@@ -1,0 +1,143 @@
+{
+  "status": "actual-placed-pin-contract-mismatch",
+  "adopted": false,
+  "host": "ot-epyc2",
+  "source_hashes": {
+    "/srv/opentallas-scratch2/claude/tk-hbm-harvest/ha2h/h2/results/asap7/ha2_owner_banked_h2/base/3_5_place_dp.odb": "6131013d33d987ac3b25166ed3ca14d85f9dae9f845b0ec954cd06cbf1e853af",
+    "/srv/opentallas-scratch2/claude/tk-hbm-harvest/ha2h/src2/physical/hbm_ha2_owner_banked_20261006/config_h2.mk": "bef6d9fb5be57ef15cf43db77640a3a0b27013232daa5474b15302dbf0892d1d",
+    "/srv/opentallas-scratch2/claude/tk-hbm-harvest/ha2h/src2/rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv": "511bea31ca65dba6118560545e8cba08ca837855b0e52c6aab459bffeb777c9b"
+  },
+  "artifact_sha256": "aa3ea0c9290abd34a9b1b4ad137e5b2409a431bfe8152d5909b9b2c23f8c9d38",
+  "die_um": [
+    0.0,
+    0.0,
+    840.0,
+    480.0
+  ],
+  "signal_pin_shapes": 6028,
+  "data_injectors": [
+    {
+      "injector": 0,
+      "bits": 544,
+      "faces": {
+        "S": {
+          "bits": 267,
+          "span_um": [
+            2.316,
+            793.932
+          ]
+        },
+        "N": {
+          "bits": 202,
+          "span_um": [
+            24.876,
+            737.1959999999999
+          ]
+        },
+        "E": {
+          "bits": 25,
+          "span_um": [
+            81.228,
+            336.492
+          ]
+        },
+        "W": {
+          "bits": 50,
+          "span_um": [
+            33.228,
+            437.292
+          ]
+        }
+      }
+    },
+    {
+      "injector": 1,
+      "bits": 544,
+      "faces": {
+        "W": {
+          "bits": 46,
+          "span_um": [
+            21.996000000000002,
+            415.404
+          ]
+        },
+        "N": {
+          "bits": 182,
+          "span_um": [
+            35.532,
+            828.3
+          ]
+        },
+        "S": {
+          "bits": 293,
+          "span_um": [
+            0.78,
+            759.7560000000001
+          ]
+        },
+        "E": {
+          "bits": 23,
+          "span_um": [
+            29.1,
+            409.068
+          ]
+        }
+      }
+    }
+  ],
+  "control_pins": [
+    {
+      "name": "h_r[0]",
+      "direction": "OUTPUT",
+      "layer": "M5",
+      "rect_um": [
+        240.864,
+        0.0,
+        240.888,
+        0.084
+      ]
+    },
+    {
+      "name": "h_r[1]",
+      "direction": "OUTPUT",
+      "layer": "M5",
+      "rect_um": [
+        168.768,
+        0.0,
+        168.792,
+        0.084
+      ]
+    },
+    {
+      "name": "h_v[0]",
+      "direction": "INPUT",
+      "layer": "M5",
+      "rect_um": [
+        99.744,
+        0.0,
+        99.768,
+        0.084
+      ]
+    },
+    {
+      "name": "h_v[1]",
+      "direction": "INPUT",
+      "layer": "M5",
+      "rect_um": [
+        389.088,
+        0.0,
+        389.112,
+        0.084
+      ]
+    }
+  ],
+  "finding": "Each 544-bit injection bus spans all four macro faces. One receiver-adjacent queue on one face cannot place all final data segments within 100um; control pin proximity does not qualify data.",
+  "actual_hierarchy": "h_v/h_d/h_r are internal TU collective interfaces. hb_coll external inj_data remains distinct; no new die partial bus is justified.",
+  "remaining_gates": [
+    "full collective hierarchy placement and actual sender pin binding",
+    "fixed-face grouped pin successor or distributed capture stations with exact alignment",
+    "price sender/receiver queues plus mux/control/clock/repair in actual collective envelope",
+    "measured full-shape SS/FF+15ps and DRC0; live h2 route is preserved"
+  ],
+  "source_scope": "3_5_place_dp.odb pins; placement is real, routed signoff is not claimed"
+}

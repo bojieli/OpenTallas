@@ -1,0 +1,27 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+# tools/hbm_accel_die_fp.py via tools/hbm_die_views.py reservation abstract: serdes_slab placeholder sized from the block ledger
+MACRO hfd_serdes_slab
+  CLASS BLOCK ;
+  FOREIGN hfd_serdes_slab 0 0 ;
+  SIZE 2462.376 BY 3656.856 ;
+  SYMMETRY X Y ;
+  OBS
+    LAYER M1 ;
+      RECT 0 0 2462.376 3656.856 ;
+    LAYER M2 ;
+      RECT 0 0 2462.376 3656.856 ;
+    LAYER M3 ;
+      RECT 0 0 2462.376 3656.856 ;
+    LAYER M4 ;
+      RECT 0 0 2462.376 3656.856 ;
+    LAYER M5 ;
+      RECT 0 0 2462.376 3656.856 ;
+    LAYER M6 ;
+      RECT 0 0 2462.376 3656.856 ;
+    LAYER M7 ;
+      RECT 0 0 2462.376 3656.856 ;
+  END
+END hfd_serdes_slab
+END LIBRARY

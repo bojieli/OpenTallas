@@ -20,6 +20,12 @@ class Fleet:
     def launched(self, *a):
         pass
 
+    def _launched(self, *a):
+        pass
+
+    def probe(self, *a):
+        return {}
+
 
 def job(**kw):
     j = dict(name="t", spec=SPEC, status="READY", stage_idx=0, attempt=1, benches={}, events=[], host="h", run="/r",
@@ -88,6 +94,75 @@ class BenchTrack(unittest.TestCase):
         keys["b@c"].append("x")
         self.assertIsNotNone(cl.route_key_full(keys, "b@c", "y"))
         self.assertIsNone(cl.route_key_full(keys, "b@c", "a"))
+
+
+class VacuousPass(unittest.TestCase):
+    def test_work(self):
+        self.assertEqual(cl.bench_work("PASS compared=0 checks: 0")[0], False)
+        self.assertEqual(cl.bench_work("PASS compared=12")[0], True)
+        self.assertIsNone(cl.bench_work("all good")[0])
+        self.assertEqual(cl.bench_work("reducer results 0", r"reducer results (\d+)")[0], False)
+        self.assertEqual(cl.bench_work("reducer results 7", r"reducer results (\d+)")[0], True)
+        self.assertEqual(cl.bench_work("nothing", r"reducer results (\d+)")[0], False)
+
+
+class Watchdog(unittest.TestCase):
+    def test_quiet_output_never_kills_or_restarts_work(self):
+        import time, datetime as dt
+        old = (dt.datetime.now().astimezone() - dt.timedelta(hours=4)).isoformat()
+        j = job(status="RUNNING", stage_started=old)
+        st = dict(key="calibrate")
+        quiet = SimpleNamespace(returncode=0, stdout="END\n")
+        with patch.object(cl, "ssh", return_value=quiet), patch.object(cl, "kill_own_stage") as kill, \
+                patch.object(cl, "ledger"), patch.object(cl, "experiment"), patch.object(cl, "log"):
+            cl.stuck_watchdog(j, st)
+            self.assertEqual(j["status"], "RUNNING")
+            j.update(wd_checked=0)
+            cl.stuck_watchdog(j, st)
+        self.assertEqual(j["status"], "RUNNING")
+        kill.assert_not_called()
+        self.assertTrue(j["quiet_output_reported"])
+
+    def test_growing_log_is_left_alone(self):
+        import datetime as dt
+        old = (dt.datetime.now().astimezone() - dt.timedelta(hours=4)).isoformat()
+        j = job(status="RUNNING", stage_started=old)
+        with patch.object(cl, "ssh", return_value=SimpleNamespace(returncode=0, stdout="/r/x.log\nEND\n")), \
+                patch.object(cl, "kill_own_stage") as kill:
+            cl.stuck_watchdog(j, dict(key="route"))
+        self.assertEqual(j["status"], "RUNNING")
+        kill.assert_not_called()
+
+
+class BenchCrash(unittest.TestCase):
+    def test_positive_bench_bus_error_is_a_crash(self):
+        st = dict(expect="pass")
+        self.assertTrue(cl.bench_crashed(st, 1, "g++: internal compiler error: Bus error (program cc1plus)"))
+        self.assertTrue(cl.bench_crashed(st, 135, ""))
+        self.assertFalse(cl.bench_crashed(st, 1, "mismatch at word 7\nFAIL"))
+        self.assertFalse(cl.bench_crashed(st, 134, "compared=4000 errors=3 abort"))
+
+
+class Transient(unittest.TestCase):
+    def test_classify(self):
+        import subprocess
+        self.assertTrue(cl.is_transient(subprocess.TimeoutExpired(["ssh", "-o", "x", "h", "bash -s"], 300)))
+        self.assertTrue(cl.is_transient(RuntimeError("command failed rc=255: ssh h")))
+        self.assertFalse(cl.is_transient(KeyError("metrics")))
+
+    def test_backoff_then_move(self):
+        import subprocess
+        j = job(status="READY", stage_tag=None, hosts_tried=["h"])
+        stl = cl.stage_list(SPEC)
+        j["stage_idx"] = next(i for i, x in enumerate(stl) if x["kind"] == "bench")
+        fleet = SimpleNamespace(choose=lambda spec, exclude: ("h2", None))
+        ex = subprocess.TimeoutExpired(["ssh", "h"], 300)
+        with patch.object(cl, "log"), patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
+            self.assertTrue(cl.handle_transient(j, fleet, ex))
+            self.assertEqual(j["host"], "h")
+            cl.handle_transient(j, fleet, ex)
+            cl.handle_transient(j, fleet, ex)
+        self.assertEqual((j["host"], j["status"]), ("h2", "SYNC"))
 
 
 if __name__ == "__main__":

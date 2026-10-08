@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.s81.pq-root-io-budget.v1",
+  "source_sha256": {
+    "results/uarch/dsrom_s81_pq_parent_geometry_20261007/binding.json": "8b7a73dc2046c9f393ed52e8b95954f17c3d32cd044b7b2d8f90ce33ca1ab235",
+    "tools/budgets/common.py": "e2711a8dff6959d73d1845202885fd5bd9b22ee3873325df06f505dc47c8fd80",
+    "tools/budgets/budget_sheet.py": "72337fc567a6fcce7c7907f91b3f4258e09f02c6bba741d2afc00651e5f8c200",
+    "tools/budgets/make_block_sdc.py": "5b1638f9cfa05d7092f7e036c12d1503ca008f61984baf74dd2f02d78e726793",
+    "tools/s81/pq_root_budget.py": "bddd66742cb70b9da34d32b692db1cf9ca97dd1f7f8ce0dd4f3a476019f6c2ee"
+  },
+  "scope": "New production root reservation; planning budget, not current-die clock signoff",
+  "outline_um": [
+    132.192,
+    133.92
+  ],
+  "replicas": 128,
+  "clocks": {
+    "root_source": "cfN.co",
+    "reset_source": "cfN.rs",
+    "period_ps": 833.333,
+    "SS_setup_uncertainty_ps": 60.0,
+    "internal_FF_hold_uncertainty_ps": 25.0,
+    "effective_interface_FF_hold_uncertainty_ps": 50.0,
+    "FF_pairwise_replaces_global": true,
+    "FF_pairwise_is_not_global_plus_50": true,
+    "convention": "Exactly make_block_sdc.ff_min: global hold25, pairwise vclki->core/core->vclk hold50. Effective IO50, not75.",
+    "maximum_intra_column_setup_skew_ps": 90.0,
+    "internal_insertion_SS_target_ps": 545.091,
+    "absolute_entry_insertion_ps": null,
+    "FF_entry_min_max": "Populate from actual per-corner CTS calibration; do not reuse old2050pair clock plan"
+  },
+  "station_wire": {
+    "maximum_um": 100.0,
+    "minimum_um": 0.0,
+    "min_wire_credit_ps": 0,
+    "maximum_length_not_used_for_hold_credit": true,
+    "actual_pin_geometry_and_obstacle_path_required": true
+  },
+  "input": {
+    "max_SS_ps": 333.5,
+    "min_FF_ps": 32.2,
+    "source": "Registered S station driven by native raw tree identity/data/error"
+  },
+  "output": {
+    "max_SS_ps": 274.5,
+    "min_FF_ps": 15.0,
+    "destination": "Registered N station in same column clock domain"
+  },
+  "acceptance": {
+    "SS_setup_slack_ps": 15,
+    "FF_hold_slack_ps": 15,
+    "DRC": 0
+  },
+  "calibration_obligations": [
+    "Rebuild current column CTS with new root/station capacitances; same-column skew including nonshared5% OCV must fit90ps",
+    "Measure root SS/FF insertion mean,min,max; use fresh corner-matched extrema for virtual IO clocks",
+    "Verify actual station cell clk-to-Q, slew, output loading and pin routes against shared anchor budget; extra cost must be priced",
+    "Actual final pin wires <=100um and finite producer occupancy; no ready fabricated for native root",
+    "Pipeline CAM exactness, source-matched hard views and mutable-state protection remain adoption gates"
+  ],
+  "station_latency": {
+    "new_input_and_output_registers_cycles": 2,
+    "adopted_delta": "Charge2 unless replacing explicitly identified existing return registers; legacy transport geometry excludes these new data connections"
+  },
+  "physical_adopted": false
+}

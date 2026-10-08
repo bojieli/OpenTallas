@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dsrom_softmax_safe_divhr_6133b4bbf/routes/dsrom_softmax_safe_divhr_6133b4bbf_cal/work/orfs/results/asap7/opentallas_ot_dsrom_su_fdiv_hr_asap7_safe_dsrom_softmax_safe_divhr_6133b4bbf_cal/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "clk",
+ "parasitics": "placement-estimated",
+ "ss": {
+  "boundary": null,
+  "all": {
+   "n": 5090,
+   "mean": 337.5,
+   "min": 294.2,
+   "max": 348.6
+  },
+  "errors": []
+ },
+ "ff": {
+  "boundary": null,
+  "all": {
+   "n": 5090,
+   "mean": 198.7,
+   "min": 173.4,
+   "max": 207.2
+  },
+  "errors": []
+ },
+ "env": {
+  "CK_SS_MEAN": 338,
+  "CK_SS_ALL_MEAN": 338,
+  "CK_SS_MIN": 294,
+  "CK_SS_ALL_MIN": 294,
+  "CK_SS_MAX": 349,
+  "CK_SS_ALL_MAX": 349,
+  "CK_FF_MEAN": 199,
+  "CK_FF_ALL_MEAN": 199,
+  "CK_FF_MIN": 173,
+  "CK_FF_ALL_MIN": 173,
+  "CK_FF_MAX": 207,
+  "CK_FF_ALL_MAX": 207
+ }
+}

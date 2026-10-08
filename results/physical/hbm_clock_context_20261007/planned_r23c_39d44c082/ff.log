@@ -1,0 +1,1263 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/phy.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/serdes.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/ucie.lef, created 2 library cells
+[INFO ODB-0221] 1000000 lines parsed!
+[INFO ODB-0221] 2000000 lines parsed!
+[INFO ODB-0227] LEF file: /work/elements.lef, created 38 library cells
+[INFO ODB-0221] 1000000 lines parsed!
+[INFO ODB-0227] LEF file: /work/views.lef, created 45 library cells
+[WARNING STA-1212] /work/hfd_cdist_r14_ss.lib line 19987, timing group from output port.
+[WARNING STA-1212] /work/hfd_cdist_r14_ss.lib line 20007, timing group from output port.
+[WARNING STA-1212] /work/hfd_cdist_r14_ff.lib line 19987, timing group from output port.
+[WARNING STA-1212] /work/hfd_cdist_r14_ff.lib line 20007, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ss.lib line 39065, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ss.lib line 39085, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ss.lib line 39109, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ss.lib line 39129, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ss.lib line 39153, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ss.lib line 39173, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ss.lib line 39197, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ss.lib line 39217, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ss.lib line 39241, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ss.lib line 39261, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ff.lib line 39065, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ff.lib line 39085, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ff.lib line 39109, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ff.lib line 39129, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ff.lib line 39153, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ff.lib line 39173, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ff.lib line 39197, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ff.lib line 39217, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ff.lib line 39241, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r10_ff.lib line 39261, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ss.lib line 13058, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ss.lib line 13078, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ss.lib line 13102, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ss.lib line 13122, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ss.lib line 13146, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ss.lib line 13166, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ff.lib line 13058, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ff.lib line 13078, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ff.lib line 13102, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ff.lib line 13122, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ff.lib line 13146, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r24_ff.lib line 13166, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ss.lib line 39065, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ss.lib line 39085, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ss.lib line 39109, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ss.lib line 39129, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ss.lib line 39153, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ss.lib line 39173, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ss.lib line 39197, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ss.lib line 39217, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ss.lib line 39241, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ss.lib line 39261, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ff.lib line 39065, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ff.lib line 39085, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ff.lib line 39109, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ff.lib line 39129, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ff.lib line 39153, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ff.lib line 39173, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ff.lib line 39197, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ff.lib line 39217, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ff.lib line 39241, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r25_ff.lib line 39261, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ss.lib line 13058, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ss.lib line 13078, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ss.lib line 13102, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ss.lib line 13122, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ss.lib line 13146, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ss.lib line 13166, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ff.lib line 13058, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ff.lib line 13078, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ff.lib line 13102, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ff.lib line 13122, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ff.lib line 13146, timing group from output port.
+[WARNING STA-1212] /work/hfd_gath_r9_ff.lib line 13166, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ss.lib line 49835, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ss.lib line 49855, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ss.lib line 49879, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ss.lib line 49899, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ss.lib line 49923, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ss.lib line 49943, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ss.lib line 49967, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ss.lib line 49987, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ss.lib line 50011, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ss.lib line 50031, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ff.lib line 49835, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ff.lib line 49855, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ff.lib line 49879, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ff.lib line 49899, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ff.lib line 49923, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ff.lib line 49943, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ff.lib line 49967, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ff.lib line 49987, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ff.lib line 50011, timing group from output port.
+[WARNING STA-1212] /work/hfd_mcast_r5_ff.lib line 50031, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ss.lib line 26528, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ss.lib line 26548, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ss.lib line 26572, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ss.lib line 26592, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ss.lib line 26616, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ss.lib line 26636, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ff.lib line 26528, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ff.lib line 26548, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ff.lib line 26572, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ff.lib line 26592, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ff.lib line 26616, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r0_ff.lib line 26636, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ss.lib line 52042, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ss.lib line 52062, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ss.lib line 52086, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ss.lib line 52106, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ss.lib line 52130, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ss.lib line 52150, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ss.lib line 52174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ss.lib line 52194, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ss.lib line 52218, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ss.lib line 52238, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ff.lib line 52042, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ff.lib line 52062, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ff.lib line 52086, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ff.lib line 52106, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ff.lib line 52130, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ff.lib line 52150, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ff.lib line 52174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ff.lib line 52194, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ff.lib line 52218, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r11_ff.lib line 52238, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 167, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 1559, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 1583, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 1607, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 2639, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 4031, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 4055, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 4079, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 5111, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 6503, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 6527, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 6551, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 7583, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 8975, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 8999, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 9023, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 10055, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 11447, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 11471, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 11495, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 12527, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 13919, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 13943, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 13967, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 14999, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 16391, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 16415, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 16439, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 17471, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 18863, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 18887, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 18911, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 19952, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 19972, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 19996, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ss.lib line 20016, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 167, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 1559, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 1583, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 1607, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 2639, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 4031, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 4055, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 4079, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 5111, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 6503, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 6527, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 6551, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 7583, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 8975, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 8999, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 9023, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 10055, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 11447, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 11471, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 11495, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 12527, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 13919, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 13943, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 13967, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 14999, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 16391, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 16415, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 16439, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 17471, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 18863, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 18887, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 18911, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 19952, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 19972, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 19996, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r12_ff.lib line 20016, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 167, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 1559, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 1583, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 1607, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 2639, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 4031, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 4055, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 4079, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 5111, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 6503, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 6527, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 6551, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 7583, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 8975, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 8999, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 9023, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 10055, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 11447, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 11471, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 11495, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 12527, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 13919, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 13943, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 13967, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 14999, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 16391, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 16415, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 16439, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 17471, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 18863, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 18887, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 18911, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 19952, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 19972, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 19996, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ss.lib line 20016, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 167, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 1559, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 1583, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 1607, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 2639, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 4031, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 4055, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 4079, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 5111, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 6503, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 6527, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 6551, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 7583, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 8975, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 8999, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 9023, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 10055, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 11447, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 11471, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 11495, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 12527, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 13919, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 13943, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 13967, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 14999, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 16391, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 16415, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 16439, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 17471, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 18863, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 18887, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 18911, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 19952, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 19972, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 19996, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r13_ff.lib line 20016, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r16_ss.lib line 3174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r16_ss.lib line 3194, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r16_ff.lib line 3174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r16_ff.lib line 3194, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r17_ss.lib line 3174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r17_ss.lib line 3194, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r17_ff.lib line 3174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r17_ff.lib line 3194, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ss.lib line 25064, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ss.lib line 25084, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ss.lib line 25108, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ss.lib line 25128, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ss.lib line 25152, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ss.lib line 25172, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ff.lib line 25064, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ff.lib line 25084, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ff.lib line 25108, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ff.lib line 25128, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ff.lib line 25152, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r18_ff.lib line 25172, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ss.lib line 25064, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ss.lib line 25084, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ss.lib line 25108, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ss.lib line 25128, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ss.lib line 25152, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ss.lib line 25172, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ff.lib line 25064, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ff.lib line 25084, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ff.lib line 25108, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ff.lib line 25128, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ff.lib line 25152, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r19_ff.lib line 25172, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r2_ss.lib line 1140, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r2_ss.lib line 1160, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r2_ff.lib line 1140, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r2_ff.lib line 1160, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r20_ss.lib line 24703, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r20_ss.lib line 24723, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r20_ss.lib line 24747, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r20_ss.lib line 24767, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r20_ff.lib line 24703, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r20_ff.lib line 24723, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r20_ff.lib line 24747, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r20_ff.lib line 24767, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r21_ss.lib line 24703, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r21_ss.lib line 24723, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r21_ss.lib line 24747, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r21_ss.lib line 24767, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r21_ff.lib line 24703, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r21_ff.lib line 24723, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r21_ff.lib line 24747, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r21_ff.lib line 24767, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r22_ss.lib line 14047, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r22_ss.lib line 14067, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r22_ss.lib line 14091, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r22_ss.lib line 14111, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r22_ff.lib line 14047, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r22_ff.lib line 14067, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r22_ff.lib line 14091, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r22_ff.lib line 14111, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r23_ss.lib line 14047, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r23_ss.lib line 14067, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r23_ss.lib line 14091, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r23_ss.lib line 14111, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r23_ff.lib line 14047, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r23_ff.lib line 14067, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r23_ff.lib line 14091, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r23_ff.lib line 14111, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ss.lib line 52042, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ss.lib line 52062, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ss.lib line 52086, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ss.lib line 52106, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ss.lib line 52130, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ss.lib line 52150, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ss.lib line 52174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ss.lib line 52194, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ss.lib line 52218, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ss.lib line 52238, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ff.lib line 52042, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ff.lib line 52062, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ff.lib line 52086, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ff.lib line 52106, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ff.lib line 52130, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ff.lib line 52150, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ff.lib line 52174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ff.lib line 52194, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ff.lib line 52218, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r26_ff.lib line 52238, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 142, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 166, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 190, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 214, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 238, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 262, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 286, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 310, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 334, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 358, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 382, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 406, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 430, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 454, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 478, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 502, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 526, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 550, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 574, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 598, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 622, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 646, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 670, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 694, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 718, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 742, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 766, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 790, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 814, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 838, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 862, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 886, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 910, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 934, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 958, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 982, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1006, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1030, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1054, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1078, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1102, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1126, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1150, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1198, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1222, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1246, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1270, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1294, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1318, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1342, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1366, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1390, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1414, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1438, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1462, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1486, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1510, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1534, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1558, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1582, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1606, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1630, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1654, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1678, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1702, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1726, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1750, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1774, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1798, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1822, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1846, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1870, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1894, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1918, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1942, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1966, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 1990, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2014, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2038, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2062, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2086, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2110, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2134, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2158, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2182, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2206, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2230, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2254, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2278, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2302, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2326, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2350, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2374, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2398, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2422, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2446, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2470, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2494, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2518, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2542, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2566, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2590, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2614, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2638, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2662, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2686, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2710, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2734, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2758, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2782, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2806, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2830, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2854, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2878, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2902, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2926, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2950, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2974, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 2998, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3022, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3046, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3070, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3094, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3118, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3142, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3166, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3190, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3214, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3238, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3262, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3286, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3310, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3334, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3358, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3382, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3406, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3430, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3454, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3478, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3502, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3526, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3550, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3574, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3598, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3622, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3646, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3670, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3694, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3718, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3742, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3766, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3790, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3814, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3838, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3862, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3886, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3910, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3934, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3958, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 3982, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4006, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4030, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4054, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4078, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4102, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4126, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4150, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4198, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4222, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4246, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4270, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4294, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4318, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4342, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4366, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4390, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4414, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4438, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4462, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4486, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4510, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4534, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4558, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4582, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4606, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4630, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4654, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4678, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4702, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4726, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4750, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4774, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4798, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4822, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4846, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4870, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4894, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4918, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4942, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4966, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 4990, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5014, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5038, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5062, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5086, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5110, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5134, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5158, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5182, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5206, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5230, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5254, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5278, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5302, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5326, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5350, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5374, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5398, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5422, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5446, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5470, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5494, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5518, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5542, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5566, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5590, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5614, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5638, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5662, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5686, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5710, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5734, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5758, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5782, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5806, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5830, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5854, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5878, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5902, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5926, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5950, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5974, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 5998, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6022, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6046, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6070, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6094, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6118, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6142, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6166, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6190, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6214, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6238, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6262, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6286, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6310, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6334, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6358, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6382, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6406, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6430, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6454, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6478, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6502, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6526, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6550, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6574, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6598, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6622, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6646, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6670, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6694, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6718, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6742, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6766, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6790, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6814, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6838, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6862, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6886, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6910, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6934, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6958, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 6982, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7006, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7030, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7054, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7078, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7102, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7126, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7150, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7198, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7222, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7246, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7270, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7294, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7318, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7342, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7366, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7390, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7414, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7438, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7462, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7486, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7510, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7534, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7558, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7582, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7606, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7630, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7654, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7678, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7702, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7726, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7750, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7774, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7798, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7822, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7846, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7870, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7894, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7918, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7942, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7966, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 7990, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8014, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8038, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8062, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8086, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8110, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8134, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8158, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8182, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8206, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8230, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8254, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8278, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8302, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8326, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8350, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8374, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8398, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8422, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8446, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8470, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8494, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8518, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8542, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8566, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8590, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8614, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8638, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8662, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8686, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8710, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8734, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8758, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8782, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8806, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8830, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8854, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8878, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8902, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8926, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8950, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8974, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 8998, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9022, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9046, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9070, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9094, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9118, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9142, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9166, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9190, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9214, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9238, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9262, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9286, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9310, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9334, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9358, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9382, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9406, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9430, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9454, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9478, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9502, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9526, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9550, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9574, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9598, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9622, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9646, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9670, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9694, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9718, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9742, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9766, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9790, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9814, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9838, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9862, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9886, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9910, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9934, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9958, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 9982, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10006, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10030, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10054, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10078, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10102, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10126, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10150, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10198, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10222, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10246, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10270, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10294, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10318, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10342, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10366, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10390, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10414, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10438, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10462, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10486, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10510, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10534, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10558, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10582, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10606, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10630, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10654, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10678, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10702, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10726, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10750, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10774, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10798, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10822, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10846, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10870, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10894, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10918, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10942, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10966, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 10990, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11014, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11038, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11062, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11086, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11110, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11134, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11158, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11182, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11206, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11230, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11254, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11278, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11302, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11326, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11350, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11374, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11398, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11422, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11446, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11470, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11494, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11518, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11542, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11566, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11590, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11614, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11638, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11662, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11686, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11710, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11734, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11758, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11782, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 11806, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 23527, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ss.lib line 23547, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 142, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 166, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 190, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 214, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 238, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 262, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 286, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 310, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 334, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 358, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 382, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 406, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 430, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 454, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 478, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 502, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 526, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 550, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 574, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 598, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 622, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 646, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 670, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 694, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 718, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 742, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 766, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 790, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 814, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 838, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 862, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 886, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 910, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 934, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 958, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 982, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1006, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1030, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1054, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1078, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1102, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1126, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1150, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1174, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1198, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1222, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1246, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1270, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1294, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1318, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1342, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1366, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1390, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1414, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1438, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1462, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1486, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1510, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1534, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1558, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1582, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1606, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1630, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1654, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1678, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1702, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1726, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1750, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1774, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1798, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1822, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1846, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1870, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1894, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1918, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1942, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1966, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 1990, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2014, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2038, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2062, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2086, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2110, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2134, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2158, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2182, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2206, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2230, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2254, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2278, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2302, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2326, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2350, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2374, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2398, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2422, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2446, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2470, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2494, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2518, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2542, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2566, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2590, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2614, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2638, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2662, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2686, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2710, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2734, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2758, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2782, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2806, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2830, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2854, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2878, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2902, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2926, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2950, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2974, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 2998, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3022, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3046, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3070, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3094, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3118, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3142, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3166, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3190, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3214, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3238, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3262, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3286, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3310, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3334, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3358, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3382, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3406, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3430, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3454, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3478, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3502, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3526, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3550, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3574, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3598, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3622, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3646, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3670, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3694, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3718, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3742, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3766, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3790, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3814, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3838, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3862, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3886, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3910, timing group from output port.
+[WARNING STA-1212] /work/hfd_stn_r27_ff.lib line 3934, timing group from output port.
+[WARNING STA-1212] message limit (1000) reached. This message will no longer print.
+[WARNING STA-0200] /work/die.v line 1116, instance lk_S0 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1116, instance lk_S0 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1117, instance lk_S1 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1117, instance lk_S1 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1118, instance lk_S2 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1118, instance lk_S2 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1119, instance lk_S3 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1119, instance lk_S3 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1120, instance lk_S4 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1120, instance lk_S4 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1122, instance lk_N0 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1122, instance lk_N0 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1123, instance lk_N1 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1123, instance lk_N1 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1124, instance lk_N2 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1124, instance lk_N2 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1125, instance lk_N3 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1125, instance lk_N3 port tx size 512 does not match net size 487.
+[WARNING ORD-2011] LEF master hfd_cmdproc has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_coll has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_hc has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_index_q_b0 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_index_q_b1 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_index_q_b2 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_index_q_b3 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_index_q_b5 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_loader has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_quant has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_sfu has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_su has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_su_full has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_su_red has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_vm_ne has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_vm_nw has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_vm_se has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_vm_sw has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_host_slab has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_serdes_slab has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s0 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s1 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s2 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s3 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s4 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s5 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s7 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s8 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s0 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s1 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s2 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s3 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s5 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s6 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s7 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r39 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_mcast_r6a has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_mcast_r6b has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r33 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r38 has no liberty cell.
+[INFO IFP-0001] Added 91192 rows of 566488 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 30590.352 24621.840 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 30590.352 24621.840 ) um
+[INFO IFP-0102] Core area:                    753190752.488 um^2
+[INFO IFP-0103] Total instances area:         438670538.303 um^2
+[INFO IFP-0104] Effective utilization:                0.582
+[INFO IFP-0105] Number of instances:                    561
+OT_MTS_PLACE hb_router hfd_router R0 requested (14163.552, 9338.688) placed (14163.552, 9337.680)
+OT_MTS_PLACE lk_host ot_hbm_host_phy R0 requested (29706.480, 11484.720) placed (29706.480, 11483.640)
+OT_CLOCK_CONTEXT corner=ff bound=281 missing=10
+OT_CLOCK_MISSING {lk_host/ck[0]} {lk_N0/ck[0]} {lk_N1/ck[0]} {lk_N2/ck[0]} {lk_N3/ck[0]} {lk_S0/ck[0]} {lk_S1/ck[0]} {lk_S2/ck[0]} {lk_S3/ck[0]} {lk_S4/ck[0]}
+OT_CLOCK_UNMAPPED count=14 pins={hb_coll/pll_stream[0]} {hb_coll/pll_serial[0]} {hb_coll/pll_hbm[0]} lk_host/clk lk_S4/clk lk_S3/clk lk_S2/clk lk_S1/clk lk_S0/clk lk_N3/clk lk_N2/clk lk_N1/clk lk_N0/clk {hb_coll/pll_link[0]}
+OT_CLOCK_CONTEXT_SLACK corner=ff path=min slack_ns=-0.785319
+Startpoint: sm29 (rising edge-triggered flip-flop clocked by clk_stream)
+Endpoint: w241_rgNE1 (rising edge-triggered flip-flop clocked by clk_stream)
+Path Group: clk_stream
+Path Type: min
+Corner: ff
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock clk_stream (rise edge)
+                           1.420500    1.420500   clock network delay (ideal)
+            3423.383789    0.000000    1.420500 ^ sm29/ck[0] (hfd_sm)
+  67.622612    0.037726   -0.737200    0.683300 v sm29/r[257] (hfd_sm)
+               0.398353    0.118452    0.801752 v w241_rgNE1/t1[257] (hfd_gath_r24)
+                                       0.801752   data arrival time
+
+               0.000000    0.000000    0.000000   clock clk_stream (rise edge)
+                           1.667900    1.667900   clock network delay (ideal)
+                           0.025000    1.692900   clock uncertainty
+                           0.000000    1.692900   clock reconvergence pessimism
+                                       1.692900 ^ w241_rgNE1/ck[0] (hfd_gath_r24)
+                           0.236688    1.456212   macro clock tree delay
+                           0.130859    1.587072   library hold time
+                                       1.587072   data required time
+---------------------------------------------------------------------------------------
+                                       1.587072   data required time
+                                      -0.801752   data arrival time
+---------------------------------------------------------------------------------------
+                                      -0.785319   slack (VIOLATED)
+
+
+Startpoint: sm13 (rising edge-triggered flip-flop clocked by clk_stream)
+Endpoint: w101_rgSE1 (rising edge-triggered flip-flop clocked by clk_stream)
+Path Group: clk_stream
+Path Type: min
+Corner: ff
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock clk_stream (rise edge)
+                           1.420500    1.420500   clock network delay (ideal)
+            1288.912842    0.000000    1.420500 ^ sm13/ck[0] (hfd_sm)
+  67.849480    0.037995   -0.737178    0.683322 v sm13/r[257] (hfd_sm)
+               0.400975    0.119175    0.802497 v w101_rgSE1/t1[257] (hfd_gath_r24)
+                                       0.802497   data arrival time
+
+               0.000000    0.000000    0.000000   clock clk_stream (rise edge)
+                           1.667900    1.667900   clock network delay (ideal)
+                           0.025000    1.692900   clock uncertainty
+                           0.000000    1.692900   clock reconvergence pessimism
+                                       1.692900 ^ w101_rgSE1/ck[0] (hfd_gath_r24)
+                           0.236688    1.456212   macro clock tree delay
+                           0.130859    1.587072   library hold time
+                                       1.587072   data required time
+---------------------------------------------------------------------------------------
+                                       1.587072   data required time
+                                      -0.802497   data arrival time
+---------------------------------------------------------------------------------------
+                                      -0.784575   slack (VIOLATED)
+
+
+Startpoint: sm29 (rising edge-triggered flip-flop clocked by clk_stream)
+Endpoint: w241_rgNE1 (rising edge-triggered flip-flop clocked by clk_stream)
+Path Group: clk_stream
+Path Type: min
+Corner: ff
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock clk_stream (rise edge)
+                           1.420500    1.420500   clock network delay (ideal)
+            3423.383789    0.000000    1.420500 ^ sm29/ck[0] (hfd_sm)
+  67.929573    0.037794   -0.737130    0.683370 v sm29/r[258] (hfd_sm)
+               0.401972    0.119481    0.802851 v w241_rgNE1/t1[258] (hfd_gath_r24)
+                                       0.802851   data arrival time
+
+               0.000000    0.000000    0.000000   clock clk_stream (rise edge)
+                           1.667900    1.667900   clock network delay (ideal)
+                           0.025000    1.692900   clock uncertainty
+                           0.000000    1.692900   clock reconvergence pessimism
+                                       1.692900 ^ w241_rgNE1/ck[0] (hfd_gath_r24)
+                           0.236688    1.456213   macro clock tree delay
+                           0.129558    1.585771   library hold time
+                                       1.585771   data required time
+---------------------------------------------------------------------------------------
+                                       1.585771   data required time
+                                      -0.802851   data arrival time
+---------------------------------------------------------------------------------------
+                                      -0.782920   slack (VIOLATED)
+
+
+Startpoint: sm13 (rising edge-triggered flip-flop clocked by clk_stream)
+Endpoint: w101_rgSE1 (rising edge-triggered flip-flop clocked by clk_stream)
+Path Group: clk_stream
+Path Type: min
+Corner: ff
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock clk_stream (rise edge)
+                           1.420500    1.420500   clock network delay (ideal)
+            1288.912842    0.000000    1.420500 ^ sm13/ck[0] (hfd_sm)
+  68.156448    0.038063   -0.737108    0.683392 v sm13/r[258] (hfd_sm)
+               0.404607    0.120208    0.803599 v w101_rgSE1/t1[258] (hfd_gath_r24)
+                                       0.803599   data arrival time
+
+               0.000000    0.000000    0.000000   clock clk_stream (rise edge)
+                           1.667900    1.667900   clock network delay (ideal)
+                           0.025000    1.692900   clock uncertainty
+                           0.000000    1.692900   clock reconvergence pessimism
+                                       1.692900 ^ w101_rgSE1/ck[0] (hfd_gath_r24)
+                           0.236688    1.456213   macro clock tree delay
+                           0.129558    1.585771   library hold time
+                                       1.585771   data required time
+---------------------------------------------------------------------------------------
+                                       1.585771   data required time
+                                      -0.803599   data arrival time
+---------------------------------------------------------------------------------------
+                                      -0.782172   slack (VIOLATED)
+
+
+Startpoint: sm29 (rising edge-triggered flip-flop clocked by clk_stream)
+Endpoint: w241_rgNE1 (rising edge-triggered flip-flop clocked by clk_stream)
+Path Group: clk_stream
+Path Type: min
+Corner: ff
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock clk_stream (rise edge)
+                           1.420500    1.420500   clock network delay (ideal)
+            3423.383789    0.000000    1.420500 ^ sm29/ck[0] (hfd_sm)
+  67.780487    0.037770   -0.737636    0.682864 v sm29/r[259] (hfd_sm)
+               0.400219    0.118991    0.801855 v w241_rgNE1/t1[259] (hfd_gath_r24)
+                                       0.801855   data arrival time
+
+               0.000000    0.000000    0.000000   clock clk_stream (rise edge)
+                           1.667900    1.667900   clock network delay (ideal)
+                           0.025000    1.692900   clock uncertainty
+                           0.000000    1.692900   clock reconvergence pessimism
+                                       1.692900 ^ w241_rgNE1/ck[0] (hfd_gath_r24)
+                           0.236688    1.456212   macro clock tree delay
+                           0.127424    1.583637   library hold time
+                                       1.583637   data required time
+---------------------------------------------------------------------------------------
+                                       1.583637   data required time
+                                      -0.801855   data arrival time
+---------------------------------------------------------------------------------------
+                                      -0.781781   slack (VIOLATED)
+
+
+Warning: There are 1348 unclocked register/latch pins.
+Warning: There are 576807 unconstrained endpoints.
+OT_CLOCK_CONTEXT_DONE
+	Command being timed: "openroad -threads 1 -no_init -exit /context/run_clock_ff.tcl"
+	User time (seconds): 126.71
+	System time (seconds): 2.09
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:08.86
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 5783036
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1483704
+	Voluntary context switches: 1
+	Involuntary context switches: 2005
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

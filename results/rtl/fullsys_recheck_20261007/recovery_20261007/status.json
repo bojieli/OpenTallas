@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.fullsys_recheck.recovery.v1",
+  "recovered_at": "2026-10-07T15:34:00Z",
+  "prior_evidence": "../status.json",
+  "source_manifest": "recovered_source_manifest.json",
+  "status": "building; no new exactness verdict",
+  "host": "ot-epyc3",
+  "root": "/srv/opentallas-scratch/claude/tk-hbm-harvest",
+  "jobs": {
+    "DS1M": {
+      "runner": "fsr/ds1m.sh",
+      "pid": 3559727,
+      "retained_objects_observed": 481,
+      "state": "existing pinned hierarchical build proceeding; no restart"
+    },
+    "Qwen8K": {
+      "runner": "fsr/qwen8k.sh",
+      "after_pid": 3641917,
+      "retained_objects_observed": 168,
+      "state": "queued after DS1M; resume existing generated hierarchy using make -j2",
+      "repair": "Removed rm -rf work from queued script to preserve completed objects; removed arbitrary 8h timeout from queued simulation. Original script preserved."
+    }
+  },
+  "limits": [
+    "DS1M live runner retains historical 8h simulation timeout; build not restarted to change settings.",
+    "Historical memguard terminates own compile below80GiB available; retained failures under runners/.",
+    "Minimum-parent source only covers SU CP margin c89ee8582, not newer W2 SAFE/REL_REG, SM REQCR, HA2 PQREG, or c12 phase-lock. Separate owner component evidence required."
+  ],
+  "prior_failure_followup": {
+    "half_rate_parity": "HBM SU owner reports cae10b8fb phase-lock, fullshape results committed9756a99db: RHPAR0/1 both exact; original RHPAR0 failure retained.",
+    "su_crossing_cost": "S81 owner confirms su_meso_d8g1 already priced at main87a946c15."
+  },
+  "completion_files": [
+    "fsr/summary.txt",
+    "fsr/ds1m.done",
+    "fsr/qwen8k.done"
+  ],
+  "negative_controls": [
+    "wrong_release",
+    "corrupt_gold"
+  ]
+}

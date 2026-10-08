@@ -1,0 +1,21 @@
+{
+  "observed_utc": "2026-10-07T15:36:56.933918+00:00",
+  "source": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+    "sha256": "06ea2a654fbb788d0f8fedfb18f161c5cf8def8381a42270af32bd47fc01074d",
+    "mtime_epoch": 1791387001.0124724,
+    "bytes": 50907
+  },
+  "canonicalize_log": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2/routes/hbm_sfu_lane_f244ad7e3_r2/work/orfs/logs/asap7/opentallas_ot_su12_sfu_asap7_hub_hbm_sfu_lane_f244ad7e3_r2/base/1_1_yosys_canonicalize.log",
+    "sha256": "0423125ebaf7e80f88c214585d71cdd31b4c599c03153c3fa85bdb1f5e75f218",
+    "mtime_epoch": 1791385478.3472285,
+    "bytes": 4442
+  },
+  "yosys_pid": 1193683,
+  "yosys_cmdline": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl ",
+  "yosys_process_stat": "1193683 (yosys) R 1193680 1193255 1193255 0 -1 4194560 85894 1217 0 0 193893 42 1 0 20 0 1 0 36737378 391327744 81739 18446744073709551615 1 1 0 0 0 0 0 4096 0 0 0 0 17 120 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
+  "boot_time_line": "btime 1791018103",
+  "clock_ticks": 100,
+  "route_stage": "#!/bin/bash\n# closure-loop hbm_sfu_lane_f244ad7e3_r2 stage route attempt 1\nset -o pipefail\nexport RUN=/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2\nexport SRC=/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2/src\nexport CL=/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2/cl\nexport HOST=ot-epyc1tb\nexport NAME=hbm_sfu_lane_f244ad7e3_r2\nexport LABEL=hbm_sfu_lane_f244ad7e3_r2\nexport RAW_NAME=hbm_sfu_lane_f244ad7e3_r2\nexport BLOCK=ot_su12_sfu\nexport COMMIT=f244ad7e3bf9349fd0571641feeefcafb593b90d\nexport THREADS=12\nexport CL_PHASE=route\nexport CL_LABEL_SUFFIX=''\nexport CL_STOP_AFTER=''\nexport HM=0.01\nexport OT_ROUTE_HOLD_CORNERS=primary\npython3 /srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2/cl/hold_corners_patch.py /srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2/src\n[ -f /srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2/cl/calib.json ] || echo '{\"calibrate\": \"disabled\"}' > /srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2/cl/calib.json\n[ -f /srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2/cl/calib.env ] && { set -a; . /srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2/cl/calib.env; set +a; }\nR=/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2 SRC=src SRCS=\"rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_c12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41/ot_hdc_fsqrt_c12.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv\" KEEP=\"ot_hdc_fp32_mul_f12_l6 ot_hdc_fp32_add_f12_l6x ot_dsrom_fdiv_f12 ot_hdc_fsqrt_c12\" CORES=12 NEED=24 CP=0.77 HM=0.035 bash physical/hbm_accel_die_views/su/route_lane.sh hbm_sfu_lane_f244ad7e3_r2 ot_su12_sfu 159.84 330.48 --param GSH=1 --param KIMM=1 --param DENR=1 --param DRING=2\n"
+}

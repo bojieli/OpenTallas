@@ -126,13 +126,81 @@ def merge_regions(d, regs, max_merge):
     return {(r if '+' not in r else r): l for r, l in regs.items()}
 
 
+FAMILY_ROOTS = [True]
+# HBM VM early branch (OWNER 2026-10-07, VM-split fallback): the VM region's trunk tap arrives EARLY_PS earlier than the
+# tree's padded root instant; every HUB-V sink gets that much die pad (the VM tiles' deeper trees use it, the face
+# stations take it as die-side delay).  Applied when the region root pad covers it.
+# HBM hub early branch (coordinator 2026-10-07, r23 2x hub): the hub quarters hfd_su / hfd_sfu / hfd_hc are 5.53 mm tall
+# against the 900 ps block-insertion target; the serial trunk taps every HUB-C sub-region 500 ps early (prefix key: the
+# key applies to the region and to its '.'-suffixed sub-regions).
+EARLY_PS = {'clk_stream:HUB-V': 300.0, 'clk_serial:HUB-C': 500.0}
+
+
+def early_ps(r):
+    for k_, v_ in EARLY_PS.items():     # HBM: sibling regions share their family root point (see clock_nets)
+        if r == k_ or r.startswith(k_ + '.'):
+            return v_
+    return 0.0
+
+
+def clock_root_xy(d, root):
+    """Resolve an explicit die input without inventing a root macro or PLL."""
+    inst, port = root
+    if inst == 'TOP':
+        pin = d.get('top_input_ports', {}).get(port)
+        if not pin or pin.get('use') != 'CLOCK' or pin.get('direction') != 'input':
+            raise ValueError(f'missing physical clock input: TOP/{port}')
+        xy = pin.get('center_um')
+        if not xy or len(xy) != 2 or not all(math.isfinite(v) for v in xy):
+            raise ValueError(f'invalid clock input center: TOP/{port}')
+        if not all(0 <= v <= limit for v, limit in zip(xy, d['outline_um'])):
+            raise ValueError(f'clock input outside die: TOP/{port}')
+        return tuple(xy)
+    xy, known = C.port_xy(d, d['by'][inst], port)
+    if d.get('strict_clock_pins') and not known:
+        raise ValueError(f'missing physical clock root: {inst}/{port}')
+    return xy
+
+
+def clock_period_ps(d, trees, name):
+    """Keep a regional branch on its parent clock's real period."""
+    tree = name.removeprefix('REGION:').split(':', 1)[0]
+    tr = trees[tree]
+    inst, port = tr['root']
+    if inst == 'TOP':
+        value = d['top_input_ports'][port].get('period_ns')
+        if value is None or not math.isfinite(value) or value <= 0:
+            raise ValueError(f'invalid clock period: TOP/{port}')
+        return value * 1000
+    # Retain historical cases, correcting their domain periods explicitly.
+    if 'serial' in tree or 'serial' in port:
+        return C.PERIODS['serial_0p9']
+    if 'hbm' in tree or 'hbm' in port:
+        return C.PERIODS['hbm']
+    return C.PERIODS['stream_1p2']
+
+
+def validate_clock_pins(d, trees):
+    """A candidate must bind every sink; an outline-center fallback is not a pin."""
+    missing = []
+    for tree, tr in trees.items():
+        clock_root_xy(d, tr['root'])
+        clock_period_ps(d, trees, tree)
+        for inst, port in tr['sinks']:
+            if inst not in d['by'] or not C.port_xy(d, d['by'][inst], port)[1]:
+                missing.append(f'{tree}:{inst}/{port}')
+    if missing and d.get('strict_clock_pins'):
+        raise ValueError('unbound clock sinks: ' + ', '.join(missing))
+    return missing
+
+
 def clock_nets(d, trees, groups, group):
     """[(clock name, root xy, [(inst, port, x, y)])] for the case group"""
     nets = []
     if group in ('trunk', 'region'):
         for t in groups[group]:
             tr = trees[t]
-            (rx, ry), _ = C.port_xy(d, d['by'][tr['root'][0]], tr['root'][1])
+            rx, ry = clock_root_xy(d, tr['root'])
             l = []
             for inst, port in dict.fromkeys(tr['sinks']):
                 (x, y), _ = C.port_xy(d, d['by'][inst], port)
@@ -140,25 +208,51 @@ def clock_nets(d, trees, groups, group):
             nets.append((t, (rx, ry), l))
         return nets
     R = plan_regions(d, trees)
+    fam_root = {}
+    if d.get('die') == 'hbm' and FAMILY_ROOTS[0]:
+        # HBM r23 (die 30.6 mm wide, stream trunk 3.1 ns: sibling regions of one SM group (G<q>w / G<q>e) or one scan
+        # quadrant (HUB-Q<q> cuts) diverged near the PLL, 150-160 ps): sibling regions share one root point (their
+        # family's sink bbox centre), so the trunk is common down to the family and only the region trees differ
+        for t, regs in R.items():
+            fam = defaultdict(list)
+            for r, sl in regs.items():
+                rect = r.split(':', 1)[1] if ':' in r else r
+                fk = re.sub(r'^(G[NS][EW])[we]$', r'\1', rect.split('.')[0])
+                fam[fk] += [(r, p) for p in sl]
+            for fk, l in fam.items():
+                xs, ys = [p[2] for _, p in l], [p[3] for _, p in l]
+                c = ((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2)
+                for r in {r for r, _ in l}:
+                    fam_root[r] = c
     for t, regs in R.items():
         tr = trees[t]
-        (rx, ry), _ = C.port_xy(d, d['by'][tr['root'][0]], tr['root'][1])
-        if group == 'htop':      # PLL -> every region root
-            l = []
+        rx, ry = clock_root_xy(d, tr['root'])
+        if group == 'htop':      # PLL -> every region root (family members share ONE trunk sink at the family root)
+            l, seen = [], {}
             for r, sl in regs.items():
                 xs, ys = [p[2] for p in sl], [p[3] for p in sl]
-                l.append((f'REGION:{r}', '', (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2))
-            nets.append((t, (rx, ry), l))
+                cx, cy = fam_root.get(r, ((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2))
+                if r in fam_root:
+                    k_ = (round(cx, 3), round(cy, 3))
+                    if k_ in seen:
+                        seen[k_][0] += '|' + r
+                        continue
+                    seen[k_] = [f'REGION:{r}', '', cx, cy]
+                    l.append(seen[k_])
+                else:
+                    l.append([f'REGION:{r}', '', cx, cy])
+            nets.append((t, (rx, ry), [tuple(x) for x in l]))
         else:                    # hreg: one tree per region from its root
             for r, sl in regs.items():
                 xs, ys = [p[2] for p in sl], [p[3] for p in sl]
-                nets.append((f'REGION:{r}', ((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2), sl))
+                nets.append((f'REGION:{r}', fam_root.get(r, ((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2)), sl))
     return nets
 
 
 def emit(a):
     d = C.load_die(a.die_model)
     trees, groups = plan_groups(d)
+    missing_clock_pins = validate_clock_pins(d, trees)
     nets = clock_nets(d, trees, groups, a.group)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -171,7 +265,7 @@ def emit(a):
         v.append(f'  wire ck_{k};')
         v.append(f'  {ROOT_CELL} {rn} (.A(ref), .Y(ck_{k}));')
         place.append(f'place_inst -name {rn} -location {{{min(max(rx, 1.0), W - 2):.3f} {min(max(ry, 1.0), H - 2):.3f}}} -status FIRM')
-        sdc.append(f'create_clock -name {esc(t)} -period 833.333 [get_pins {rn}/Y]')
+        sdc.append(f'create_clock -name {esc(t)} -period {clock_period_ps(d, trees, t):.9f} [get_pins {rn}/Y]')
         for inst, port, x, y in l:
             x = min(max(x, 1.0), W - 2.0)
             y = min(max(y, 1.0), H - 2.0)
@@ -186,7 +280,9 @@ def emit(a):
     (out / 'clocks.sdc').write_text('\n'.join(sdc) + '\n')
     lay = LAYERS.get(a.group, LAYERS['trunk'])
     (out / 'sinks.json').write_text(json.dumps(dict(die=d['die'], group=a.group, layers=lay,
-                                                    trees=[x[0] for x in nets], sinks=sinks)) + '\n')
+                                                    trees=[x[0] for x in nets], sinks=sinks,
+                                                    missing_clock_pins=missing_clock_pins,
+                                                    timing_scope='tree insertion after root driver output; external source, receiver and phase unqualified')) + '\n')
     common = f"""foreach l [glob {PLAT}/lib/NLDM/*RVT_%C%*] {{ read_liberty $l }}
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
@@ -312,12 +408,26 @@ class Forest:
             for t, (a1, a2) in rm.items():
                 tt = t[len('REGION:'):].split(':')[0]
                 pad[t[len('REGION:'):]] = (tree_max[tt][0] - a1, tree_max[tt][1] - a2)
+        self.tree_lift = defaultdict(float)
+        for tt_ in sorted({r_.split(':')[0] for r_ in pad}):   # early branches: the trunk taps these regions
+            early = {r_: early_ps(r_) for r_ in pad if r_.split(':')[0] == tt_ and early_ps(r_)}   # EARLY_PS[r] earlier
+            if not early:              # (their sinks get that much die pad for deeper block trees; flop alignment unchanged)
+                continue
+            lift = max(0.0, max(e_ - pad[r_][0] for r_, e_ in early.items()))   # the root pads do not cover it: the
+            if lift:                   # whole tree's flop instant moves by `lift` (every region padded `lift` later)
+                for o_ in list(pad):
+                    if o_.split(':')[0] == tt_:
+                        pad[o_] = (pad[o_][0] + lift, pad[o_][1] + lift * 0.53)
+                self.tree_lift[tt_] += lift
+            for r_, e_ in early.items():
+                pad[r_] = (max(0.0, pad[r_][0] - e_), max(0.0, pad[r_][1] - e_ * 0.53))
         self.pad = pad
         if 'htop' in self.cases:
             sj, par, ass, aff = self.cases['htop']
             for sn, t, inst, port, x, y, ex in sj['sinks']:
                 k = 'htop:' + sn
-                top[inst[len('REGION:'):]] = (t, k)
+                for r_ in inst[len('REGION:'):].split('|'):     # a family sink serves every member region
+                    top[r_] = (t, k)
         for g, (sj, par, ass, aff) in self.cases.items():
             if g == 'htop':
                 continue
@@ -365,8 +475,11 @@ def record(a):
     for (inst, port), s_ in F.sinks.items():
         by_inst[inst].append((inst, port))
     pairs = {}
+    fb_ = set(d.get('fclk_buses', []))
     for bid, cls, bits, eps in d['buses']:
         if cls in ('clock', 'col_clock', 'clock_trunk', 'reset', 'reset_tree', 'col_reset', 'fclk', 'top_in'):
+            continue
+        if bid in fb_:      # a forwarded-clock segment: the capture clock travels with the data (no tree pair)
             continue
         for e in eps[1:]:
             for sa in by_inst.get(eps[0][0], []):
@@ -388,6 +501,7 @@ def record(a):
         ib = max(intra.get(r, [0.0]))
         pin = stats([x['pin_ss'] for x in l if 'pin_ss' in x])
         out_regions[r] = dict(tree=l[0]['tree'], sinks=len(l), insertion_ss=ss, insertion_ff=ff, region_tree_ss=pin,
+                              early_branch_ps=early_ps(r),
                               planned_root_pad_ss_ps=round(F.pad.get(r, (0.0, 0.0))[0], 1),
                               target_entry_insertion_ss_ps=round(ss['mean'], -1), target_entry_insertion_ff_ps=round(ff['mean'], -1),
                               target_tolerance_ps=round((ss['max'] - ss['min']) / 2, 1),

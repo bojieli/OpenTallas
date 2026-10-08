@@ -23,22 +23,22 @@
    "link"
   ],
   "regions": [
-   "hbm:clk_link:die.0",
-   "hbm:clk_link:die.1.0",
+   "hbm:clk_link:die.0.0",
+   "hbm:clk_link:die.0.1",
    "s81_head:forwarded",
    "s81_layer1:forwarded",
    "s81_layer:forwarded"
   ],
   "n_regions": 5,
   "entry_target_ss_ps": {
-   "mean": 1497.1,
-   "min": 1495.4,
-   "max": 1498.5
+   "mean": 251.2,
+   "min": 250.4,
+   "max": 251.9
   },
   "entry_target_ff_ps": {
-   "mean": 793.9,
-   "min": 793.2,
-   "max": 794.4
+   "mean": 132.6,
+   "min": 132.3,
+   "max": 132.9
   },
   "die_pad_ss_ps": {
    "mean": 0.4,
@@ -99,26 +99,26 @@
    "period_ps": 833.333,
    "clock_domain": null,
    "timing": "sync",
-   "length_um": 1554.6,
+   "length_um": 1083.7,
    "length_basis": "pins",
    "skew_class": "intra",
-   "skew_ps": 52,
+   "skew_ps": 49,
    "hold_io_ps": 50.0,
-   "worst_instance": "hbm:lk_S4<->w289_lk_lk_S4",
+   "worst_instance": "hbm:lk_S1<->w293_lk_lk_S1",
    "also_cdc": false,
-   "input_delay_ss_ps": 295.5,
-   "output_delay_ss_ps": 236.5,
-   "input_fraction_of_T": 0.355,
-   "output_fraction_of_T": 0.284,
-   "internal_input_ps": 462.8,
-   "internal_output_ps": 521.8,
-   "as_planned_internal_input_ps": 223.4,
-   "as_planned_internal_output_ps": 282.4,
+   "input_delay_ss_ps": 292.5,
+   "output_delay_ss_ps": 233.5,
+   "input_fraction_of_T": 0.351,
+   "output_fraction_of_T": 0.28,
+   "internal_input_ps": 465.8,
+   "internal_output_ps": 524.8,
+   "as_planned_internal_input_ps": 271.8,
+   "as_planned_internal_output_ps": 330.8,
    "feasible_input": true,
    "feasible_output": true,
-   "reach_um": 445.2,
-   "stages_needed": 4,
-   "stages_planned": 5,
+   "reach_um": 447.9,
+   "stages_needed": 3,
+   "stages_planned": 4,
    "extra_stages_needed": 0,
    "segment_after_stages_um": 100.0,
    "input_min_delay_ff_ps": 43.4,
@@ -225,8 +225,8 @@
   "cdc": 0,
   "infeasible": 2,
   "fanout_flags": 0,
-  "max_length_um": 1554.6,
-  "max_stages_needed": 4
+  "max_length_um": 1083.7,
+  "max_stages_needed": 3
  },
  "constants": {
   "wire_ss_ps_per_um": 1.135,

@@ -1,0 +1,38 @@
+{
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv": "5366ef10cf135546f19f07fbe1a6f3e7fc4052a159479eb63acf7970be99648b",
+    "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv": "c95d3def8cc9ab6e2e5a8d19cfe1fa9948ce691252cf8ef97e82ba72df69742d",
+    "rtl/hbm_accel/collective_cdc_20261007/tb_protected_cdc.sv": "314f9dc34d000834ca6e5b813b82232ea44e6a8441c78fd22b7097d372a55a49"
+  },
+  "private_bench_sha256": "1adfbde88f05a9c41b74bffa0b52c7226082fcf237d7ef8a133910ce5c825296",
+  "commands": {
+    "positive": [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_protected_cdc",
+      "-o",
+      "/tmp/hbm-collective-cdc-monitored-run-20261007/positive.vvp",
+      "/home/ubuntu/OpenTallas/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "/home/ubuntu/OpenTallas/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+      "/home/ubuntu/OpenTallas/rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv",
+      "/home/ubuntu/OpenTallas/rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv",
+      "/tmp/hbm-collective-cdc-monitored-run-20261007/monitored_bench.sv"
+    ],
+    "corrupt_output": [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_protected_cdc",
+      "-o",
+      "/tmp/hbm-collective-cdc-monitored-run-20261007/corrupt_output.vvp",
+      "/home/ubuntu/OpenTallas/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "/home/ubuntu/OpenTallas/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+      "/home/ubuntu/OpenTallas/rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv",
+      "/tmp/hbm-collective-cdc-monitored-run-20261007/mutant.sv",
+      "/tmp/hbm-collective-cdc-monitored-run-20261007/monitored_bench.sv"
+    ]
+  }
+}

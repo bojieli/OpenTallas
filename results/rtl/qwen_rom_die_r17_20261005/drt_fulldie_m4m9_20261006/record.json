@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.qwen_die_fulldie_grt.v1",
+ "state": "PAUSED (owner decision 2026-10-06 ~20:30 PT: fleet to DS/HBM element closure); not converged, no DRT yet",
+ "host": "ot-epyc3 /srv/opentallas-scratch/claude/qwen-die-r20/dietop_m4 (r20c floorplan_pdn.odb, 3,334 macros, 3,975,054 nets, flat k=1)",
+ "setup": "set_routing_layers -signal M4-M9; GRT tile = OT_TILE_UM via M2/M3 track re-pitch (no die signal on M2/M3); M4-M5 adj 0.30, M6-M9 0.146, r20c corridor/spine/strip region adjustments (regadj.tcl); docker --memory guard",
+ "runs": {
+  "t9p6_i0": {"tile_um": 9.6, "gcells": 8914953, "iters": 0, "load_s": 5.1, "load_rss_gb": 3.5, "grt_s": 597.6, "peak_rss_gb": 40.4, "exit": 0,
+              "overflow_total": 106671, "overflow_by_layer": {"M4": 2, "M5": 15, "M6": 4947, "M7": 6208, "M8": 95084, "M9": 415},
+              "max_h": 134, "max_v": 132, "wirelength_um": 2186767468, "guides": "route.guide (547 MB, on host)"},
+  "t9p6_i30": {"tile_um": 9.6, "iters_reached": 3, "time_per_iter_min": "~15", "peak_rss_gb": 45.2, "state": "stopped by owner pause (no checkpoint: FastRoute keeps no mid-run state)"},
+  "t4p8_i30": {"tile_um": 4.8, "gcells": 35652978, "iters_reached": 1, "setup_to_first_iter_min": "~35", "peak_rss_gb": 74.9, "state": "stopped by owner pause"},
+  "t9p6_cugr_i30": {"tile_um": 9.6, "peak_rss_gb": 13.6, "state": "stopped at launch+1 min by owner pause"},
+  "drt_probe": {"state": "stopped in GRT setup at launch+1 min by owner pause; no DRT measurement"}
+ },
+ "findings": [
+  "Memory: the full flat die routes globally in 40-75 GB on M4-M9 with a 4.8-9.6 um tile (vs 941.9 GB killed with the default M2 grid). Step 1 is memory-feasible.",
+  "Initial (0-iteration) overflow 106,671, 89% M8 horizontal. The congestion report puts 99.8% of reported overflow in one gcell column x 13,420.8-13,430.4 (the spine/east-array seam: the east port slabs' right edge 13,426.536 against the first east tile column 13,426.56), all heights, dominant nets = east-array block words (n_bword_*), reported 2D capacity 1-2.",
+  "Cause, as read from the LEFs: the slab block-word pins are M6 (x = slab + 747.6, inside the 40 um M6/M7-free strip), the tile_e OBS covers M1-M7, so every east block word must arrive on M8 over the tiles and drop to M6 inside the 40 um strip; the 0-iteration layer assignment puts M6/M7 segments across the seam into the tile OBS. Whether rip-up resolves it is unmeasured (the i30 runs were stopped at iteration 3/1).",
+  "The r20c k16-bundled diagnosis (tree-word vertical legs in the corridors) does not appear in the flat 0-iteration map; the flat run is the one to trust."
+ ],
+ "resume": [
+  "1. Re-run t9p6 (OT_ITERS=30 OT_TILE_UM=9.6, 16 thr, 300 GB guard): ~10 min setup+initial, ~15 min/iteration (~8 h); writes ckpt_grt.odb + route.guide + grt_congestion.rpt; analyse with tools/qwen_die_grt_congestion.py RPT r20c_geom.json.",
+  "2. If the seam overflow persists: design change = put the slab block-word pins on M8 (area pins, as the tree-top) or widen the M6/M7-free strip / move the bw pin column to the slab's east edge; then regenerate the slab abstract and re-run (1).",
+  "3. DRT: dietop_m4/drt_probe/drt.tcl pattern (GRT then detailed_route -bottom_routing_layer M4 -top_routing_layer M9, 48-64 thr, 600-900 GB guard) on the converged ckpt; no repeaters exist in the die netlist (stage flops for >430 um hops are not in die.v), so die STA will report the unbuffered wires per class."
+ ]
+}

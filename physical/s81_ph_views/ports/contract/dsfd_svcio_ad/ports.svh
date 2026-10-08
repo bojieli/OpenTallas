@@ -1,0 +1,12 @@
+    input wire [2047:0] a0_d,
+    output wire [3:0] a0_r,
+    input wire [3:0] a0_v,
+    input wire [511:0] a1_d,
+    output wire [0:0] a1_r,
+    input wire [0:0] a1_v,
+    output wire [1025:0] ad,
+    output wire [0:0] af,
+    input wire [0:0] ck,
+    output wire [0:0] fault,
+    input wire [0:0] fi,
+    input wire [0:0] rst

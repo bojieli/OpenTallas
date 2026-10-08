@@ -1,0 +1,245 @@
+{
+  "name": "hbm_vm8_nen_654733cc5",
+  "spec": {
+    "name": "hbm_vm8_nen_654733cc5",
+    "block": "hfd_vm_ne_n",
+    "owner": "Claude:hbm-vm-split8",
+    "purpose": "hfd_vm_ne_n: VM 8-way FALLBACK sub-tile (owner 2026-10-07): r22 quadrant hfd_vm_ne cut at y=500, 699.816 x 500.04 um, centre M7 ck, registered seam s2n/n2s (+2 per crossing); stand-alone pins from vm/split8/ports (r23v spec, generator not yet)",
+    "hosts": [
+      "ot-epyc2",
+      "ot-epyc1tb",
+      "ot-epyc3"
+    ],
+    "threads": 12,
+    "peak_ram_gb": 40,
+    "source": {
+      "branch": "claude/hbm-vm-split8-20261007",
+      "commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "extra_paths": [
+        "results/uarch/hbm_current_target_portmap_20261005",
+        "results/rtl/hbm_accel_die_floorplan_20261005",
+        "results/rtl/die_top_lint_20261006",
+        "results/rtl/dshbm_matched_reference_20261005",
+        "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+      ]
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "vm8_exact",
+          "cmd": "bash physical/hbm_accel_die_views/vm/split8/run_vm_split8.sh {RUN}/bench > {RUN}/vm8_bench.log 2>&1; tail -60 {RUN}/vm8_bench.log; grep -q 'VM_SPLIT8_BENCH PASS' {RUN}/vm8_bench.log",
+          "expect": "pass",
+          "pass_regex": "VM_SPLIT8_BENCH PASS",
+          "threads": 16,
+          "peak_ram_gb": 24
+        },
+        {
+          "name": "vm8_neg_xbus",
+          "cmd": "for i in $(seq 1 720); do grep -q \"VM_SPLIT8_BENCH \\(PASS\\|FAIL\\)\" {RUN}/vm8_bench.log 2>/dev/null && break; sleep 10; done; grep -q VM_SPLIT8_NEG_XBUS_DETECTED {RUN}/vm8_bench.log && echo VM8_XBUS_MUTANT_FAILS && exit 1; exit 0",
+          "expect": "fail",
+          "fail_regex": "VM8_XBUS_MUTANT_FAILS",
+          "threads": 1,
+          "peak_ram_gb": 1
+        },
+        {
+          "name": "vm8_neg_seam",
+          "cmd": "for i in $(seq 1 720); do grep -q \"VM_SPLIT8_BENCH \\(PASS\\|FAIL\\)\" {RUN}/vm8_bench.log 2>/dev/null && break; sleep 10; done; grep -q VM_SPLIT8_NEG_SEAM_DETECTED {RUN}/vm8_bench.log && echo VM8_SEAM_MUTANT_FAILS && exit 1; exit 0",
+          "expect": "fail",
+          "fail_regex": "VM8_SEAM_MUTANT_FAILS",
+          "threads": 1,
+          "peak_ram_gb": 1
+        },
+        {
+          "name": "vm8_neg_port_depth",
+          "cmd": "for i in $(seq 1 720); do grep -q \"VM_SPLIT8_BENCH \\(PASS\\|FAIL\\)\" {RUN}/vm8_bench.log 2>/dev/null && break; sleep 10; done; grep -q VM_PORT_DEPTH_NEG_DETECTED {RUN}/vm8_bench.log && echo VM8_PORT_SKEW_DETECTED && exit 1; exit 0",
+          "expect": "fail",
+          "fail_regex": "VM8_PORT_SKEW_DETECTED",
+          "threads": 1,
+          "peak_ram_gb": 1
+        }
+      ],
+      "calibrate": {
+        "cmd": "PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"12\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" FCP=\"3\" FCF=\"physical/hbm_accel_die_views/vm/split8/hfd_vm_ne_n_face_stages.tcl\" PDN=\"physical/hbm_accel_die_views/vm/pdn_vm.tcl\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/common/ot_fwd_link_stage.sv physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_slice.sv physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_root_x.sv\" physical/hbm_accel_die_views/vm/split8/route_sub.sh {LABEL}${CL_LABEL_SUFFIX} hfd_vm_ne_n physical/hbm_accel_die_views/vm/split8/hfd_vm_ne_n.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+        "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+        "clock": "core_clk",
+        "sdc_cmd": "physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/hbm_accel_die_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+        "threads": 12,
+        "peak_ram_gb": 40
+      },
+      "route": {
+        "cmd": "PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"12\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" FCP=\"3\" FCF=\"physical/hbm_accel_die_views/vm/split8/hfd_vm_ne_n_face_stages.tcl\" PDN=\"physical/hbm_accel_die_views/vm/pdn_vm.tcl\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/common/ot_fwd_link_stage.sv physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_slice.sv physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_root_x.sv\" physical/hbm_accel_die_views/vm/split8/route_sub.sh {LABEL}${CL_LABEL_SUFFIX} hfd_vm_ne_n physical/hbm_accel_die_views/vm/split8/hfd_vm_ne_n.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+        "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+        "logs": [
+          "{RUN}/routes/{NAME}/run.log"
+        ]
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_vm_ne_n.lef {RUN}/routes/{NAME}/view/hfd_vm_ne_n_ss.lib {RUN}/routes/{NAME}/view/hfd_vm_ne_n_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [
+        {
+          "name": "lef_check_MATCH",
+          "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+        }
+      ],
+      "post_sdc": [
+        "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+        "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+      ],
+      "macros": []
+    },
+    "record": [
+      {
+        "from": "{RUN}/record",
+        "to": "physical/hbm_accel_die_views/vm/split8/route_ne_n"
+      }
+    ],
+    "cycles_added": 2,
+    "merge_target": "claude/hbm-abstracts-20261006",
+    "budget": {
+      "enabled": false,
+      "reason": "8-way fallback sub-tile: no budget sheet until the coordinator lands r23v; io_vclk_m at the calibrated CK_SS_MEAN (cmdproc recipe)"
+    },
+    "cycles_note": "+2 per seam crossing (sender pin oreg1 + receiver pin register); per-path table in the vm8 bench mode 2 (8-way vs 4-tile)"
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/hbm_vm8_nen_654733cc5.json",
+  "created": "2026-10-07T06:37:26-07:00",
+  "status": "NEEDS_RTL",
+  "stage_idx": 5,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {
+    "bench_vm8_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "e 31: 3406563 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/0 fault=1/1 hash= DIFF\n[2968000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_XBUS_DETECTED\nphysical/hbm_accel_die_views/vm/split8/run_vm_split8.sh: line 31: 3417077 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1\nVM_TILES mode=1 seed=1 events=40/40 fault=1/1 hash= DIFF\n[3654000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL\nVM_SPLIT8_NEG_SEAM_DETECTED\nVM_SPLIT8_BENCH PASS\n",
+      "track": "parallel"
+    },
+    "bench_vm8_neg_xbus": {
+      "expect": "fail",
+      "rc": 0,
+      "ok": false,
+      "tail": "grep: /srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nen_654733cc5/vm8_bench.log: No such file or directory\n",
+      "track": "parallel"
+    }
+  },
+  "hosts_tried": [
+    "ot-epyc3",
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc1tb"
+  ],
+  "events": [
+    "2026-10-07T06:37:26-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_vm8_nen_654733cc5.json",
+    "2026-10-07T06:41:46-07:00 benches run in parallel with calibrate/route (4 benches; spec bench_first opts out)",
+    "2026-10-07T06:46:30-07:00 source 654733cc547e synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_nen_654733cc5/src",
+    "2026-10-07T06:53:39-07:00 bench track: launched bench_vm8_exact (bench_vm8_exact.a1b1) beside None",
+    "2026-10-07T06:53:47-07:00 calibrate waiting for capacity: EPYC3 MemAvailable 337-224 GB < 40+113",
+    "2026-10-07T06:58:18-07:00 calibrate cannot start on EPYC3 (EPYC3 MemAvailable 148-56 GB < 40+113); moving to EPYC1",
+    "2026-10-07T07:05:51-07:00 source 654733cc547e synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nen_654733cc5/src",
+    "2026-10-07T07:16:03-07:00 bench track: bench_vm8_exact PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-07T07:17:27-07:00 bench track: launched bench_vm8_neg_xbus (bench_vm8_neg_xbus.a1b1) beside calibrate",
+    "2026-10-07T07:20:12-07:00 calibrate waiting for capacity: EPYC1 MemAvailable 531-402 GB < 40+113",
+    "2026-10-07T07:25:53-07:00 calibrate cannot start on EPYC1 (EPYC1 load 233+140+12 > cap 384); moving to EPYC2",
+    "2026-10-07T07:42:12-07:00 source 654733cc547e synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_nen_654733cc5/src",
+    "2026-10-07T07:56:30-07:00 calibrate waiting for capacity: EPYC2 MemAvailable 574-464 GB < 40+113",
+    "2026-10-07T07:59:58-07:00 calibrate cannot start on EPYC2 (EPYC2 MemAvailable 427-316 GB < 40+113); moving to EPYC1",
+    "2026-10-07T08:01:19-07:00 source 654733cc547e synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nen_654733cc5/src",
+    "2026-10-07T08:04:16-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+    "2026-10-07T08:08:07-07:00 ot-epyc1tb unreachable while polling calibrate (will keep polling)",
+    "2026-10-07T08:45:19-07:00 calibrate done (rc=0)",
+    "2026-10-07T08:45:22-07:00 calibrated insertion CK_SS_MEAN=558 CK_SS_MIN=373 CK_SS_MAX=658 CK_FF_MEAN=361 CK_FF_MIN=246 CK_FF_MAX=436",
+    "2026-10-07T08:50:37-07:00 launched route (attempt 1) on ot-epyc1tb",
+    "2026-10-07T09:03:39-07:00 ot-epyc1tb unreachable while polling route (will keep polling)",
+    "2026-10-07T09:18:37-07:00 bench failed: stopped route (route.a1)",
+    "2026-10-07T09:18:37-07:00 NEEDS_RTL: bench_vm8_neg_xbus expected FAIL but rc=0"
+  ],
+  "updated": "2026-10-07T11:06:39-07:00",
+  "bench_par": true,
+  "btrack": {
+    "bench_vm8_exact": {
+      "state": "done",
+      "tag": "bench_vm8_exact.a1b1",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_nen_654733cc5",
+      "n": 1,
+      "started": "2026-10-07T06:53:39-07:00"
+    },
+    "bench_vm8_neg_xbus": {
+      "state": "done",
+      "tag": "bench_vm8_neg_xbus.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nen_654733cc5",
+      "n": 1,
+      "started": "2026-10-07T07:17:27-07:00"
+    }
+  },
+  "wait": null,
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_nen_654733cc5",
+  "commit_full": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+  "bwait": null,
+  "stage_key": "route",
+  "bench_work": {
+    "bench_vm8_exact": "WARN: pass log has no count line (set min_count_regex)"
+  },
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-07T08:50:37-07:00",
+  "wd_checked": 1791389130.2200732,
+  "unreachable": 2,
+  "calibration": {
+    "ss": {
+      "boundary": {
+        "n": 14743,
+        "mean": 558.5,
+        "min": 372.7,
+        "max": 658.2
+      },
+      "all": {
+        "n": 27061,
+        "mean": 516.1,
+        "min": 372.7,
+        "max": 658.2
+      },
+      "errors": []
+    },
+    "ff": {
+      "boundary": {
+        "n": 14743,
+        "mean": 361.1,
+        "min": 246.5,
+        "max": 436.0
+      },
+      "all": {
+        "n": 27061,
+        "mean": 330.1,
+        "min": 241.0,
+        "max": 436.0
+      },
+      "errors": []
+    },
+    "env": {
+      "CK_SS_MEAN": 558,
+      "CK_SS_ALL_MEAN": 516,
+      "CK_SS_MIN": 373,
+      "CK_SS_ALL_MIN": 373,
+      "CK_SS_MAX": 658,
+      "CK_SS_ALL_MAX": 658,
+      "CK_FF_MEAN": 361,
+      "CK_FF_ALL_MEAN": 330,
+      "CK_FF_MIN": 246,
+      "CK_FF_ALL_MIN": 241,
+      "CK_FF_MAX": 436,
+      "CK_FF_ALL_MAX": 436
+    },
+    "db": "4_1_cts.odb",
+    "clock": "core_clk",
+    "parasitics": "placement-estimated"
+  },
+  "reason": "bench_vm8_neg_xbus expected FAIL but rc=0"
+}

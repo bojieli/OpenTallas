@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "scope": "minimum one full270bit leaf; fault-free transport only, not link/control error protection",
+  "frames": 2048,
+  "reset_epochs": 3,
+  "latency_cycles": 72,
+  "physical_slices": 6,
+  "physical_bits_per_slice": 64,
+  "cases": [
+    {
+      "case": "positive",
+      "returncode": 0,
+      "expected_gate": true
+    },
+    {
+      "case": "slice_skew",
+      "returncode": 1,
+      "expected_gate": true
+    },
+    {
+      "case": "row_miswire",
+      "returncode": 1,
+      "expected_gate": true
+    },
+    {
+      "case": "fault_drop",
+      "returncode": 1,
+      "expected_gate": true
+    },
+    {
+      "case": "reset_ignored",
+      "returncode": 1,
+      "expected_gate": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv": "65d1f1a1de21732b0fdaec439651192c8af6757871bc0f8599993dde55864433",
+    "results/uarch/hbm_result_relay_stage_20261007/result_paths.json": "ae054a2bdcd2c88453a73a96534f01f4af21de101d4050edf5e329486c8c3a03",
+    "tools/hbm_result_relay_model.py": "cc1650009a693aa462a1bb3ae341cbaddfc3d074b6ec5695a7895c4f4fc3a370",
+    "tools/hbm_result_relay_gate.py": "cf6ee3c5a9cf00cd5fa7fefc93110a557a243d771a9a9cbc87ffb31e62a30471"
+  }
+}

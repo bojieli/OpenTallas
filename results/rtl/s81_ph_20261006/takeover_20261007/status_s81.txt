@@ -1,0 +1,27 @@
+# CLOSURE LOOP STATUS (auto, 2026-10-07T03:52:24-07:00; daemon tools/closure_loop/closure_loop.py, unit closure-loop.service)
+- EPYC3: load1 12/128 threads (idle 91%), 933 GB free of 1133, own running 7
+- EPYC1: load1 48/128 threads (idle 62%), 613 GB free of 1133, own running 17
+- EPYC2: load1 50/128 threads (idle 61%), 568 GB free of 1133, own running 15
+- s81ph-dsfd_capt_grp-fda73a869 [dsfd_capt_grp] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-fda73a869 since=2026-10-07T01:51:17-07:00 
+- s81ph-dsfd_coll_core-a53f40362 [dsfd_coll_core] RUNNING stage=calibrate host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_core-a53f40362 since=2026-10-07T03:05:07-07:00 
+- s81ph-dsfd_coll_lane_e-a53f40362 [dsfd_coll_lane_e] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-a53f40362 since=2026-10-07T03:20:58-07:00 
+- s81ph-dsfd_coll_lane_w-a53f40362 [dsfd_coll_lane_w] RUNNING stage=calibrate host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_w-a53f40362 since=2026-10-07T03:42:53-07:00 
+- s81ph-dsfd_selt_q-cd3337221-b [dsfd_selt_q] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-b since=2026-10-06T21:45:17-07:00 
+- s81ph-dsfd_selt_q2-89fd33a58-safe [dsfd_selt_q2] RUNNING stage=route host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q2-89fd33a58-safe since=2026-10-06T22:26:54-07:00 
+- s81ph-dsfd_vm_bg-37f7479aa [dsfd_vm_bg] RUNNING stage=route host=EPYC1 run=/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_vm_bg-37f7479aa since=2026-10-06T22:36:18-07:00 
+- s81ph-dsfd_vm_bg-936ce0365 [dsfd_vm_bg] RUNNING stage=calibrate host=EPYC2 run=/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_vm_bg-936ce0365 since=2026-10-07T01:23:53-07:00 
+- s81ph-dsfd_svcio_ad-093da5918 [dsfd_svcio_ad] NEEDS_HUMAN calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop
+- s81ph-dsfd_svcio_ad-41c34fce0 [dsfd_svcio_ad] NEEDS_RTL SS 14.0 / FF -12.87 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)
+- s81ph-dsfd_svcio_ad-d12b194f0 [dsfd_svcio_ad] CLOSED CLOSED SS +36.93 / FF +18.49 ps DRC 0 | record claude/s81-placeholders-20261006 e4b44bc1f (13 files) | no merge target
+- s81ph-dsfd_svcio_ad-e87322073-b [dsfd_svcio_ad] NEEDS_HUMAN route crashed twice (rc=0 ok-check failed: ; resource=False)
+- s81ph-dsfd_svcio_ad-e87322073 [dsfd_svcio_ad] NEEDS_HUMAN calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop
+- s81ph-dsfd_svcio_od-093da5918 [dsfd_svcio_od] NEEDS_RTL SS 40.25 / FF 4.15 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)
+- s81ph-dsfd_svcio_od-3f0455126 [dsfd_svcio_od] NEEDS_RTL SS 33.1 / FF 3.81 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)
+- s81ph-dsfd_svcio_od-e87322073 [dsfd_svcio_od] CLOSED CLOSED SS +31.46 / FF +20.40 ps DRC 0 | record claude/s81-placeholders-20261006 61409112a (13 files) | no merge target
+- s81ph-dsfd_svcio_q-093da5918 [dsfd_svcio_q] CLOSED CLOSED SS +22.64 / FF +20.36 ps DRC 0 | record claude/s81-placeholders-20261006 e2706d313 (13 files) | no merge target
+- s81ph-dsfd_svcio_x-093da5918 [dsfd_svcio_x] CLOSED CLOSED SS +198.18 / FF +17.15 ps DRC 0 | record claude/s81-placeholders-20261006 a8cdf63f0 (13 files) | no merge target
+- s81ph-dsfd_vm_bg-34b3e75dd [dsfd_vm_bg] CANCELLED cancelled by a human
+- s81ph-dsfd_vm_bg-752a48488 [dsfd_vm_bg] CANCELLED cancelled by a human
+- s81ph-root_tile-34b3e75dd [ot_s81ph_root_tile] NEEDS_RTL SS 17.0 / FF 8.92 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)
+- s81ph-root_tile-752a48488 [ot_s81ph_root_tile] CANCELLED cancelled by a human
+- s81ph-root_tile-9037258bb [ot_s81ph_root_tile] NEEDS_RTL SS 19.4 / FF -17.22 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)

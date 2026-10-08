@@ -1,0 +1,457 @@
+
+-- Running command `read_verilog -sv /tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv; chparam -set ENABLE_FULLWIDTH 1 -set TAP 0 -set SPLIT 0 ot_qwen_die_dualfault_station_r22; hierarchy -top ot_qwen_die_dualfault_station_r22; synth -top ot_qwen_die_dualfault_station_r22; write_json /tmp/qwen-station-retention-m2jm6o43/t0_s0.json' --
+
+1. Executing Verilog-2005 frontend: /tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv
+Parsing SystemVerilog input from `/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_die_dualfault_station_r22'.
+Successfully finished Verilog frontend.
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_die_dualfault_station_r22'.
+Parameter \ENABLE_FULLWIDTH = 1
+Parameter \TAP = 0
+Parameter \SPLIT = 0
+Generating RTLIL representation for module `$paramod\ot_qwen_die_dualfault_station_r22\ENABLE_FULLWIDTH=1\TAP=0\SPLIT=0'.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_dualfault_station_r22
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_dualfault_station_r22
+Removed 0 unused modules.
+
+4. Executing SYNTH pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_dualfault_station_r22
+
+4.1.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_dualfault_station_r22
+Removed 0 unused modules.
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15 in module ot_qwen_die_dualfault_station_r22.
+Removed a total of 0 dead cases.
+
+4.2.3. Executing PROC_INIT pass (extract init attributes).
+
+4.2.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15'.
+
+4.2.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:33$9'.
+     1/1: $0\g_selected.b_q[507:0]
+Creating decoders for process `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15'.
+     1/8: $0\g_selected.af_q[0:0]
+     2/8: $0\g_selected.afn_q[0:0]
+     3/8: $0\g_selected.cfn_q[0:0]
+     4/8: $0\g_selected.tfn_q[0:0]
+     5/8: $0\g_selected.bfn_q[0:0]
+     6/8: $0\g_selected.cf_q[0:0]
+     7/8: $0\g_selected.tf_q[0:0]
+     8/8: $0\g_selected.bf_q[0:0]
+
+4.2.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.2.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_qwen_die_dualfault_station_r22.\g_selected.b_q' using process `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:33$9'.
+  created $dff cell `$procdff$24' with positive edge clock.
+Creating register for signal `\ot_qwen_die_dualfault_station_r22.\g_selected.bf_q' using process `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15'.
+  created $adff cell `$procdff$25' with positive edge clock and negative level reset.
+Creating register for signal `\ot_qwen_die_dualfault_station_r22.\g_selected.tf_q' using process `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15'.
+  created $adff cell `$procdff$26' with positive edge clock and negative level reset.
+Creating register for signal `\ot_qwen_die_dualfault_station_r22.\g_selected.cf_q' using process `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15'.
+  created $adff cell `$procdff$27' with positive edge clock and negative level reset.
+Creating register for signal `\ot_qwen_die_dualfault_station_r22.\g_selected.bfn_q' using process `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15'.
+  created $adff cell `$procdff$28' with positive edge clock and negative level reset.
+Creating register for signal `\ot_qwen_die_dualfault_station_r22.\g_selected.tfn_q' using process `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15'.
+  created $adff cell `$procdff$29' with positive edge clock and negative level reset.
+Creating register for signal `\ot_qwen_die_dualfault_station_r22.\g_selected.cfn_q' using process `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15'.
+  created $adff cell `$procdff$30' with positive edge clock and negative level reset.
+Creating register for signal `\ot_qwen_die_dualfault_station_r22.\g_selected.afn_q' using process `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15'.
+  created $adff cell `$procdff$31' with positive edge clock and negative level reset.
+Creating register for signal `\ot_qwen_die_dualfault_station_r22.\g_selected.af_q' using process `\ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15'.
+  created $adff cell `$procdff$32' with positive edge clock and negative level reset.
+
+4.2.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:33$9'.
+Removing empty process `ot_qwen_die_dualfault_station_r22.$proc$/tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv:52$15'.
+Cleaned up 0 empty switches.
+
+4.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+
+4.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+Removed 1 unused cells and 11 unused wires.
+<suppressed ~2 debug messages>
+
+4.5. Executing CHECK pass (checking for obvious problems).
+checking module ot_qwen_die_dualfault_station_r22..
+found and reported 0 problems.
+
+4.6. Executing OPT pass (performing simple optimizations).
+
+4.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+
+4.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_dualfault_station_r22'.
+<suppressed ~9 debug messages>
+Removed a total of 3 cells.
+
+4.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_dualfault_station_r22..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+4.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_dualfault_station_r22.
+Performed a total of 0 changes.
+
+4.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_dualfault_station_r22'.
+Removed a total of 0 cells.
+
+4.6.6. Executing OPT_RMDFF pass (remove dff with constant values).
+Removing $procdff$26 ($adff) from module ot_qwen_die_dualfault_station_r22.
+Removing $procdff$29 ($adff) from module ot_qwen_die_dualfault_station_r22.
+Replaced 2 DFF cells.
+
+4.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+4.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+<suppressed ~7 debug messages>
+
+4.6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_dualfault_station_r22..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+4.6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_dualfault_station_r22.
+Performed a total of 0 changes.
+
+4.6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_dualfault_station_r22'.
+Removed a total of 0 cells.
+
+4.6.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+Removed 0 unused cells and 7 unused wires.
+<suppressed ~1 debug messages>
+
+4.6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+
+4.6.16. Finished OPT passes. (There is nothing left to do.)
+
+4.7. Executing WREDUCE pass (reducing word size of cells).
+
+4.8. Executing PEEPOPT pass (run peephole optimizers).
+
+4.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+
+4.10. Executing TECHMAP pass (map to technology primitives).
+
+4.10.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/cmp2lut.v
+Parsing Verilog input from `/usr/bin/../share/yosys/cmp2lut.v' to AST representation.
+Generating RTLIL representation for module `\_90_lut_cmp_'.
+Successfully finished Verilog frontend.
+
+4.10.2. Continuing TECHMAP pass.
+No more expansions possible.
+<suppressed ~20 debug messages>
+
+4.11. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_qwen_die_dualfault_station_r22:
+  created 0 $alu and 0 $macc cells.
+
+4.12. Executing SHARE pass (SAT-based resource sharing).
+
+4.13. Executing OPT pass (performing simple optimizations).
+
+4.13.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+
+4.13.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_dualfault_station_r22'.
+Removed a total of 0 cells.
+
+4.13.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_dualfault_station_r22..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+4.13.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_dualfault_station_r22.
+Performed a total of 0 changes.
+
+4.13.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_dualfault_station_r22'.
+Removed a total of 0 cells.
+
+4.13.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.13.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+
+4.13.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+
+4.13.9. Finished OPT passes. (There is nothing left to do.)
+
+4.14. Executing FSM pass (extract and optimize FSM).
+
+4.14.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+4.14.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+4.14.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.14.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+
+4.14.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.14.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+4.14.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+4.14.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+4.15. Executing OPT pass (performing simple optimizations).
+
+4.15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+
+4.15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_dualfault_station_r22'.
+Removed a total of 0 cells.
+
+4.15.3. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.15.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+
+4.15.5. Finished fast OPT passes.
+
+4.16. Executing MEMORY pass.
+
+4.16.1. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
+
+4.16.2. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+
+4.16.3. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+4.16.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+
+4.16.5. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.17. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+
+4.18. Executing OPT pass (performing simple optimizations).
+
+4.18.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+
+4.18.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_dualfault_station_r22'.
+Removed a total of 0 cells.
+
+4.18.3. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.18.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+
+4.18.5. Finished fast OPT passes.
+
+4.19. Executing MEMORY_MAP pass (converting $mem cells to logic and flip-flops).
+
+4.20. Executing OPT pass (performing simple optimizations).
+
+4.20.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+
+4.20.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_dualfault_station_r22'.
+Removed a total of 0 cells.
+
+4.20.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_die_dualfault_station_r22..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+4.20.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_die_dualfault_station_r22.
+Performed a total of 0 changes.
+
+4.20.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_dualfault_station_r22'.
+Removed a total of 0 cells.
+
+4.20.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.20.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+
+4.20.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+
+4.20.9. Finished OPT passes. (There is nothing left to do.)
+
+4.21. Executing TECHMAP pass (map to technology primitives).
+
+4.21.1. Executing Verilog-2005 frontend: <techmap.v>
+Parsing Verilog input from `<techmap.v>' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+4.21.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $not.
+No more expansions possible.
+<suppressed ~9 debug messages>
+
+4.22. Executing OPT pass (performing simple optimizations).
+
+4.22.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+<suppressed ~1 debug messages>
+
+4.22.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_dualfault_station_r22'.
+Removed a total of 0 cells.
+
+4.22.3. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.22.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+4.22.5. Finished fast OPT passes.
+
+4.23. Executing ABC pass (technology mapping using ABC).
+
+4.23.1. Extracting gate netlist of module `\ot_qwen_die_dualfault_station_r22' to `<abc-temp-dir>/input.blif'..
+Extracted 4 gates and 6 wires to a netlist network with 2 inputs and 2 outputs.
+
+4.23.1.1. Executing ABC.
+Running ABC command: berkeley-abc -s -f <abc-temp-dir>/abc.script 2>&1
+ABC: ABC command line: "source <abc-temp-dir>/abc.script".
+ABC: 
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: Entered genlib library with 17 gates from file "<abc-temp-dir>/stdcells.genlib".
+ABC: + strash 
+ABC: + dretime 
+ABC: + retime 
+ABC: + map 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+
+4.23.1.2. Re-integrating ABC results.
+ABC RESULTS:            ANDNOT cells:        1
+ABC RESULTS:             ORNOT cells:        1
+ABC RESULTS:        internal signals:        2
+ABC RESULTS:           input signals:        2
+ABC RESULTS:          output signals:        2
+Removing temp directory.
+
+4.24. Executing OPT pass (performing simple optimizations).
+
+4.24.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_die_dualfault_station_r22.
+
+4.24.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_die_dualfault_station_r22'.
+Removed a total of 0 cells.
+
+4.24.3. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.24.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_die_dualfault_station_r22..
+Removed 0 unused cells and 6 unused wires.
+<suppressed ~2 debug messages>
+
+4.24.5. Finished fast OPT passes.
+
+4.25. Executing HIERARCHY pass (managing design hierarchy).
+
+4.25.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_dualfault_station_r22
+
+4.25.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_die_dualfault_station_r22
+Removed 0 unused modules.
+
+4.26. Printing statistics.
+
+=== ot_qwen_die_dualfault_station_r22 ===
+
+   Number of wires:                 25
+   Number of wire bits:           1546
+   Number of public wires:          23
+   Number of public wire bits:    1544
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                514
+     $_ANDNOT_                       1
+     $_DFF_PN0_                      2
+     $_DFF_PN1_                      2
+     $_DFF_P_                      508
+     $_ORNOT_                        1
+
+4.27. Executing CHECK pass (checking for obvious problems).
+checking module ot_qwen_die_dualfault_station_r22..
+found and reported 0 problems.
+
+5. Executing JSON backend.

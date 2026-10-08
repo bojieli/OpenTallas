@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "s81ph-dsfd_coll_ck-752a48488",
+ "block": "dsfd_coll_ck",
+ "owner": "Claude:s81-ph",
+ "source_branch": "claude/s81-placeholders-20261006",
+ "source_commit": "752a48488384dbe9c95a72c084bc24e0ac800a17",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488",
+ "acceptance": {
+  "ss_min_ps": 15.0,
+  "ff_min_ps": 15.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 9592.12,
+  "ff_ps": 31.29,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/routes/s81ph_dsfd_coll_ck_752a48488/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/routes/s81ph_dsfd_coll_ck_752a48488/work/orfs/logs/asap7/opentallas_dsfd_coll_ck_asap7_s81ph_s81ph_dsfd_coll_ck_752a48488/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "rstc bench (results/rtl/s81_ph_20261006/collective/rstc_bench.log) + tiled-slab bench (collective/bench_v2/summary.txt): RTL unchanged from v1",
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-06T20:10:30-07:00",
+ "job_spec": {
+  "name": "s81ph-dsfd_coll_ck-752a48488",
+  "block": "dsfd_coll_ck",
+  "owner": "Claude:s81-ph",
+  "purpose": "collective v2 clock tile (PLL macro + reset sequencer, refclk 100 MHz)",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc3"
+  ],
+  "threads": 4,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "claude/s81-placeholders-20261006",
+   "commit": "752a48488384dbe9c95a72c084bc24e0ac800a17"
+  },
+  "stages": {
+   "calibrate": {
+    "enabled": false,
+    "reason": "no stream-clock registers: the tile holds the PLL macro, its kept clock-output buffers and the refclk (100 MHz) reset sequencer; outputs are clocks / async resets (false paths)"
+   },
+   "route": {
+    "cmd": "SRC={SRC} OUT={RUN}/routes CORES=4 NEED=16 SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv' CLK=refclk MACROS=ot_s81_pll_bb=physical/s81_ph_views/macros/ot_s81_pll_bb PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/ck_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract dsfd_coll_ck rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ],
+   "macros": [
+    "physical/s81_ph_views/macros/ot_s81_pll_bb"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/dsfd_coll_ck"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "no_bench_reason": "rstc bench (results/rtl/s81_ph_20261006/collective/rstc_bench.log) + tiled-slab bench (collective/bench_v2/summary.txt): RTL unchanged from v1"
+ }
+}

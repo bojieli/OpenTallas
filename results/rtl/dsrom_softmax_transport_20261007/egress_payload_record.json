@@ -1,0 +1,112 @@
+{
+  "schema": "opentallas.softmax_egress_payload_gate.v1",
+  "passed": true,
+  "adopted": false,
+  "route_admitted": false,
+  "current_campaigns": [
+    "egress_payload_r6_positive.log",
+    "egress_payload_r6_early_negative.log",
+    "egress_payload_r6_half_negative.log"
+  ],
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv": "21a2d557e128cbb980c1edb481c5592e744a789522d94c0efff9d36909d9a308",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv": "5366ef10cf135546f19f07fbe1a6f3e7fc4052a159479eb63acf7970be99648b",
+    "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv": "a4e1bda9a0ab083503462a8c755f35cbe3aa52786e455e29c66834e915463497",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv": "b5f7603a6bc16fe23664d8c215e5c2117b82738057a04eee90f8b75b1e758815",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_serial_row.sv": "1e4a85ebef179df1870c359f0a66099bf85f1f7d4aa495606dc63629b6d82b14",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_egress_payload.sv": "e55427f233772a96b7853216dcc48263384aaba02bcdd90de6f552f69c9d06a6",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_egress_payload.sv": "d4c9d439ae8911b7bd3507a471c9a75601e409aeb6e13cac1afcd47bd993dd86",
+    "tools/dsrom_softmax_egress_payload_model.py": "2caae6345bf8752f40681763ce61e97ac9e25310a69fe522d542ce7d4a1cc22c",
+    "tools/dsrom_softmax_egress_payload_gate.sh": "6a3d9389610d3779793490b16d596f53a67f41164fb6d2792bab5d7303adf991"
+  },
+  "macro_binding_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json": "9cb36a209b2f0e1ecdfe80ec8c93e7c01f5349fc5aa9b5ac2215dba9637bfb87",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib": "2f308628d401c6ac7fed7846148293b2e758f3da104609691f892d14c84979b0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
+  },
+  "evidence_sha256": {
+    "results/rtl/dsrom_softmax_transport_20261007/egress_payload_r6_positive.log": "095ff406bb48291cfe03e3a43b6adf7ccc98ec34e5d199cf53e306e8b2e6c1f4",
+    "results/rtl/dsrom_softmax_transport_20261007/egress_payload_r6_early_negative.log": "f3ec244735316ab172d6118aee7ac82093f24b28160ca8d3ce0eb4af4c998a93",
+    "results/rtl/dsrom_softmax_transport_20261007/egress_payload_r6_half_negative.log": "f4fd2aa99a416fbbe70f3f09267c0b1413bb2b348ae0b3b267adad996ed3d823"
+  },
+  "prebuild_model": "results/uarch/dsrom_softmax_transport_20261007/egress_payload_prebuild.json",
+  "prebuild_sha256": "c33171ed61cc83576d6fe70652dfdbd462597323156adbc08a2923bb4af30d6a",
+  "prebuild_written_epoch": 1791401158.5943093,
+  "RTL_written_epoch": 1791401926.3837752,
+  "prebuild_before_RTL": true,
+  "inventory": "results/rtl/dsrom_softmax_transport_20261007/egress_payload_inventory.json",
+  "inventory_sha256": "bb4231c03a4eb7b123a42fd1242fdf84711b1db4e2722f7cee0b8f30b85d4bdd",
+  "simulator": "Icarus Verilog11.0",
+  "compile_flags": [
+    "-g2012",
+    "-DOT_MEM_NO_INIT",
+    "-s tb_egress_payload"
+  ],
+  "reproduce": "bash tools/dsrom_softmax_egress_payload_gate.sh /tmp/NEW_egress_evidence",
+  "tested_payload": {
+    "T640_E_vectors": 40,
+    "T128_E_vectors": 8,
+    "BF16_vectors_per_campaign": 32,
+    "campaigns": 2,
+    "actual_destination_rows_checked": 80,
+    "actual_destination_payload_bytes": 81920,
+    "actual_macros": 72,
+    "source_E_commit_interval_stream_edges": 1,
+    "source_BF_packed_commit_interval_stream_edges": 2,
+    "full_FIFO_backpressure_stream_edges": 58,
+    "content_check": "decode all128codewords from all36 actual destination macro arrays only on returned visibility receipt; compare every64-bit lane"
+  },
+  "tests": [
+    "Full-width no-ready E/BF captures",
+    "No SRAM initialization reliance",
+    "250chain-edge destination-write stalls deny every receipt despite queued source sends",
+    "T640 then T128 context reuse without reset",
+    "16stream-edge done backpressure",
+    "Source physical single-cell fault corrected before destination store",
+    "Source physical double-cell same-codeword fault aborts before any receipt",
+    "Producer epoch mismatch rejected",
+    "BF producer before E visibility rejected",
+    "Source complemented-control upset fail-closed",
+    "Coordinated cold abort with destination row pending prevents stale receipts"
+  ],
+  "negatives": {
+    "early_receipt": {
+      "macro": "SOFTMAX_EGRESS_EARLY_RECEIPT",
+      "exit_code": 1,
+      "signature": "RECEIPT_BEFORE_DESTINATION_WRITE row72"
+    },
+    "BF_halves": {
+      "macro": "SOFTMAX_EGRESS_SWAP_HALVES",
+      "exit_code": 1,
+      "signature": "DESTINATION_PAYLOAD row112 lane0"
+    }
+  },
+  "history": {
+    "logs": [
+      "egress_payload_positive.log",
+      "egress_payload_r2_positive.log",
+      "egress_payload_r3_positive.log",
+      "egress_payload_r4_positive.log",
+      "egress_payload_r5_positive.log"
+    ],
+    "status": "Preserved development evidence, not current source qualification",
+    "first_three": "Bench event wait caught transient combinational complementary-rail settling before clock sample; final bench samples status on opposite clock edge",
+    "fourth": "Bench failed to deassert destination write permission at next transaction start; source payload design unchanged by that bench correction",
+    "fifth": "Passed earlier weaker bench; final adds explicit source commit interval, bad producer epoch, control upset and latency counters"
+  },
+  "scope": [
+    "Minimum bit-exact component only; no numerical exp/normalization/attention engine",
+    "E->attention FP32/BF16 adapter remains production compiler contract",
+    "E destination-visible receipts gate BF capture but actual P.V computation is external",
+    "Fresh/monotonic epoch admission belongs to frozen owner join, not independently reimplemented here",
+    "BF packedrow receipt to two phaseevents needs production owner adapter",
+    "Config snapshot separate",
+    "No shared-bank arbitration; separate banks charged",
+    "Global cross-domain fault suppression has no physical qualification",
+    "SSclkq455.3205489475797ps simulated; no STA, FF hold, clock tree or routed budget claim"
+  ]
+}

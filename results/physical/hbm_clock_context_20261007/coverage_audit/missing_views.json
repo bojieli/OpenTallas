@@ -1,0 +1,478 @@
+{
+  "schema": "opentallas.hbm.clock_coverage_audit.v1",
+  "source_snapshot": "planned_r23c_39d44c082",
+  "source_log_sha256": "3d2a1e1c5c934eadd7a8efe2f48ee810ce61c98fb8982915acecf829f5b99137",
+  "missing_liberty_count": 40,
+  "missing_liberty": [
+    {
+      "master": "hfd_cmdproc",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_cmdproc"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_coll",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [],
+      "active_use_proven_by_clock_plan": false,
+      "actual_use_evidence": "OT_CLOCK_UNMAPPED reports four hb_coll/pll_* output pins in loaded design"
+    },
+    {
+      "master": "hfd_hc",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_hc_NE",
+        "hb_hc_NW",
+        "hb_hc_SE",
+        "hb_hc_SW"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_host_slab",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "PINLESS_ANALOG_RESERVATION_NO_DIGITAL_TIMING_VIEW_REQUIRED",
+      "required_action": "Preserve physical obstruction; actual ot_hbm_host_phy/ot_pdie_serdes digital faces require their own timing contracts",
+      "clock_plan_instances": [],
+      "active_use_proven_by_clock_plan": false,
+      "basis": "tools/hbm_phy_bb.py owner-approved pinless analog/bump reservation"
+    },
+    {
+      "master": "hfd_index_q_b0",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_index_NE_b0",
+        "hb_index_NW_b0",
+        "hb_index_SE_b0",
+        "hb_index_SW_b0"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_index_q_b1",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_index_NE_b1",
+        "hb_index_NW_b1",
+        "hb_index_SE_b1",
+        "hb_index_SW_b1"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_index_q_b2",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_index_NE_b2",
+        "hb_index_NW_b2",
+        "hb_index_SE_b2",
+        "hb_index_SW_b2"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_index_q_b3",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_index_NE_b3",
+        "hb_index_NW_b3",
+        "hb_index_SE_b3",
+        "hb_index_SW_b3"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_index_q_b5",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_index_NE_b5",
+        "hb_index_NW_b5",
+        "hb_index_SE_b5",
+        "hb_index_SW_b5"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_loader",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_loader"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_mcast_r6a",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "w162_xmNW2a",
+        "w163_xmNW1a",
+        "w236_xmNE1a",
+        "w237_xmNE2a",
+        "w25_xmSW2a",
+        "w26_xmSW1a",
+        "w96_xmSE1a",
+        "w97_xmSE2a"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_mcast_r6b",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "w162_xmNW2b",
+        "w163_xmNW1b",
+        "w236_xmNE1b",
+        "w237_xmNE2b",
+        "w25_xmSW2b",
+        "w26_xmSW1b",
+        "w96_xmSE1b",
+        "w97_xmSE2b"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_quant",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_quant"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_serdes_slab",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "PINLESS_ANALOG_RESERVATION_NO_DIGITAL_TIMING_VIEW_REQUIRED",
+      "required_action": "Preserve physical obstruction; actual ot_hbm_host_phy/ot_pdie_serdes digital faces require their own timing contracts",
+      "clock_plan_instances": [],
+      "active_use_proven_by_clock_plan": false,
+      "basis": "tools/hbm_phy_bb.py owner-approved pinless analog/bump reservation"
+    },
+    {
+      "master": "hfd_sfu",
+      "restored_owner": "/root/hbm/su",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_sfu_NE",
+        "hb_sfu_NW",
+        "hb_sfu_SE",
+        "hb_sfu_SW"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_stn_r33",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "w336_iv_SW",
+        "w340_iv_SE",
+        "w344_iv_NW",
+        "w348_iv_NE",
+        "w352_vr"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_stn_r38",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "w355_ivp_SW",
+        "w356_ivp_SE",
+        "w357_ivp_NW",
+        "w358_ivp_NE"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_stn_r39",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [],
+      "active_use_proven_by_clock_plan": false
+    },
+    {
+      "master": "hfd_su",
+      "restored_owner": "/root/hbm/su",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_su_NE",
+        "hb_su_NW",
+        "hb_su_SE",
+        "hb_su_SW"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_su_full",
+      "restored_owner": "/root/hbm/su",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_su_full"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_su_red",
+      "restored_owner": "/root/hbm/su",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_su_red"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SE_s0",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NE_s0",
+        "svc_SE_s0"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SE_s1",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NE_s1",
+        "svc_SE_s1"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SE_s2",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NE_s2",
+        "svc_SE_s2"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SE_s3",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NE_s3",
+        "svc_SE_s3"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SE_s4",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NE_s4",
+        "svc_SE_s4"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SE_s5",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NE_s5",
+        "svc_SE_s5"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SE_s7",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NE_s7",
+        "svc_SE_s7"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SE_s8",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NE_s8",
+        "svc_SE_s8"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SW_s0",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NW_s0",
+        "svc_SW_s0"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SW_s1",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NW_s1",
+        "svc_SW_s1"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SW_s2",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NW_s2",
+        "svc_SW_s2"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SW_s3",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NW_s3",
+        "svc_SW_s3"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SW_s5",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NW_s5",
+        "svc_SW_s5"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SW_s6",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NW_s6",
+        "svc_SW_s6"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_svc_SW_s7",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "svc_NW_s7",
+        "svc_SW_s7"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_vm_ne",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_vm_ne"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_vm_nw",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_vm_nw"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_vm_se",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_vm_se"
+      ],
+      "active_use_proven_by_clock_plan": true
+    },
+    {
+      "master": "hfd_vm_sw",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "clock_plan_instances": [
+        "hb_vm_sw"
+      ],
+      "active_use_proven_by_clock_plan": true
+    }
+  ],
+  "clock_plan_missing": 10,
+  "four_pll_pins": {
+    "source_only": true,
+    "physical_pll_qualified": false,
+    "collective_has_liberty_in_snapshot": false,
+    "reference_clock_join": "hfd_coll RTL requires refclk/por inputs marked absent from generator; cannot establish full collective clock coverage with aliases"
+  },
+  "unclocked_register_pins": 1348,
+  "unconstrained_endpoints": 576807,
+  "coverage_complete": false,
+  "signoff_eligible": false,
+  "next_probe": "After actual available views are bound, check_setup -verbose -no_clock and -unconstrained_endpoints; classify remaining paths by real master and clock contract.",
+  "qualification_note": "ORD-2011 covers loaded LEF masters, including potentially unused masters. Clock-plan instances prove use only for mapped masters; other loaded masters need actual netlist instance inventory before being called active closure blockers.",
+  "missing_liberty_with_clock_plan_instances": 36,
+  "pinless_analog_reservations": 2
+}

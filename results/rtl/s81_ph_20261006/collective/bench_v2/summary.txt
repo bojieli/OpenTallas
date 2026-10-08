@@ -1,0 +1,27 @@
+== /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/v2b/board_err.out
+CYCLES dut_last 37786 ref_last 2389 first_send 1114 records 985 messages 150
+TB_S81PH_COLL_SYS PASS
+== /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/v2b/main.out
+CYCLES dut_last 10079 ref_last 2834 first_send 1113 records 1345 messages 200
+TB_S81PH_COLL_SYS PASS
+== /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/v2b/main_v1.out
+CYCLES dut_last 10077 ref_last 2834 first_send 1113 records 1345 messages 200
+TB_S81PH_COLL_SYS PASS
+== /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/v2b/mut.out
+CYCLES dut_last 10079 ref_last 2834 first_send 1113 records 1345 messages 200
+TB_S81PH_COLL_SYS FAIL errs 1215
+== /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/v2b/nohup.out
+== /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/v2b/nospec.out
+CYCLES dut_last 9858 ref_last 2824 first_send 1111 records 1360 messages 200
+TB_S81PH_COLL_SYS PASS
+== /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/v2b/perf_v1.out
+CYCLES dut_last 2587 ref_last 1568 first_send 1111 records 448 messages 1
+TB_S81PH_COLL_SYS PASS
+== /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/v2b/perf_v2.out
+CYCLES dut_last 2606 ref_last 1568 first_send 1111 records 448 messages 1
+TB_S81PH_COLL_SYS PASS
+
+[exited with code 0]
+# cases (rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh, Verilator 5.032 on ot-epyc2, tiled slab unless -DS81PH_COLL_V1):
+# main -GNM=200 -GNPT=100 | nospec +SPEC=0 SEED=11 | board_err NM=150 CHB=251 EPER=61 | mut = main + OT_S81PH_MUT_NOREORDER (must FAIL)
+# perf: -GPERF=1 -GNM=1 -GFIXW=448 -GMAXW=448 -GFIXM=0 -GNPT=1 -GCHB=1 -GCHU=1 (448-record all-reduce), v1 vs v2: +19 cycles (2587 -> 2606)

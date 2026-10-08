@@ -1,0 +1,69 @@
+{
+  "name": "ha2_truecredit_rx_signalpins_COMMIT",
+  "block": "ot_ha2_truecredit_rx_phys",
+  "owner": "Codex:hbm/w2",
+  "purpose": "Signal-identity pin hook successor to04491da6c; excludes only classified PG boxes. Separate actual INJ2 truecredit rx screening/calibration. Actual collective parent IO unbound; external adoption hold required. Does not qualify by h2 view.",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3"
+  ],
+  "threads": 8,
+  "peak_ram_gb": null,
+  "source": {
+    "branch": "main",
+    "commit": "FILL_PINNED_COMMIT",
+    "paths": [
+      "tools",
+      "rtl",
+      "physical/ha2_truecredit_20261007",
+      "physical/abi3",
+      "tests/test_ha2_truecredit_signal_pins.py"
+    ]
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "python3 tools/ha2_truecredit_physical_signalpins.py --part rx --threads 8 --run {RUN}/routes/{NAME}_cal --cts-only",
+      "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 8,
+      "peak_ram_gb": null
+    },
+    "route": {
+      "cmd": "python3 tools/ha2_truecredit_physical_signalpins.py --part rx --threads 8 --run {RUN}/routes/{NAME}",
+      "ok": "test -s {RUN}/routes/{NAME}/corner_sta.json && test \"$(cat {RUN}/routes/{NAME}/build.exit)\" = 0 && test \"$(cat {RUN}/routes/{NAME}/corner.exit)\" = 0",
+      "logs": [
+        "{RUN}/routes/{NAME}/run.log",
+        "{RUN}/routes/{NAME}/corner.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/physical.json {RUN}/routes/{NAME}/launch.json {CL}/calib.json {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/ha2_truecredit_20261007/screening_signoff.sdc",
+      "physical/ha2_truecredit_20261007/rx_check_pins_signal_only.tcl"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/physical/ha2_truecredit_20261007/rx_signalpins_COMMIT"
+    }
+  ],
+  "no_bench_reason": "Source-matched generic20/reset4/endpoint3 already PASS; fixed-shape wrappers add no state or logic. Separate immutable wrapper lint/source/pin preflight accompanies candidate.",
+  "cycles_added": 0,
+  "merge_target": null,
+  "dispatch_prerequisites": [
+    "Fill measured memory reservation from host capacity; null is deliberate, no guessed cap",
+    "Replace COMMIT name/source/record with clean committed pin",
+    "Install permanent external adoption hold until actual collective parent clock/IO join qualifies",
+    "Preserve all source-pinned prior gates and in-flight h2 route"
+  ]
+}

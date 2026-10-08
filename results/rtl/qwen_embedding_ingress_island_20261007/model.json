@@ -1,0 +1,166 @@
+{
+  "12": {
+    "schema": "opentallas.qwen.embedding_ingress_island.v1",
+    "adopted": false,
+    "address_bits": 12,
+    "MACs_per_cycle": 0,
+    "compute_intensity_MAC_per_byte": 0,
+    "memory_port_bytes_per_cycle": 0,
+    "communication_intensity": "One existing address/valid/credit capture every rising edge; no queue or added protocol",
+    "boundary_bits_per_cycle": {
+      "inputs": 14,
+      "outputs": 28,
+      "clock": 1,
+      "reset": 1
+    },
+    "state": {
+      "moved_existing_FFs": 28,
+      "added_FFs": 0,
+      "primary_shadow_separate": true
+    },
+    "replica_count": 2374,
+    "mux_demux_fanout": {
+      "new_muxes": 0,
+      "new_demuxes": 0,
+      "clock_sinks": 28,
+      "input_fanout": 2,
+      "output_obligation_fF": 80
+    },
+    "area": {
+      "FF_um2": 8.51472,
+      "reserved_hold_buffers": 168,
+      "reserved_output_buffers": 28,
+      "clock_buffer_reserve": 4,
+      "reserved_cell_um2": 29.859840000000005,
+      "frame_um": [
+        15.12,
+        15.12
+      ],
+      "core_um": [
+        10.8,
+        10.8
+      ],
+      "utilisation_ceiling": 0.6,
+      "planned_utilisation": 0.256,
+      "slot_fit": true,
+      "leaf_slot": "Inside existing logic strip above ROM: scale y70 and code y80; no die-area credit until legal placement"
+    },
+    "routing": {
+      "pin_pitch_um": 0.096,
+      "output_tracks": 28,
+      "usable_face_um": 10.8,
+      "face_track_capacity": 112,
+      "planned_face_fit": true,
+      "final_parent_wire_target_um": 100,
+      "parent_pin_binding": "OPEN until real island view"
+    },
+    "clock_plan": {
+      "domain": "stream1p2",
+      "period_ps": 833.333,
+      "setup_uncertainty_ps": 60,
+      "hold_uncertainty_ps": 25,
+      "input_transition_ps": 150,
+      "local_clock_tree": "One separately hardened island; capture FFs moved out of payload leaf CTS",
+      "interface_budget": "Unchanged die 166.667ps outside plus150ps inter-region and50ps hold skew; reference actual valid_q clock arrival",
+      "measured_insertion_required": true,
+      "exceptions_added": []
+    },
+    "latency": {
+      "moved_capture_cycles": 1,
+      "added_cycles": 0,
+      "leaf_cycles": 7,
+      "II": 2,
+      "composed_root_bound_cycles": 19,
+      "shared_service_cycles": 801
+    },
+    "remaining": [
+      "Island SS/FF+15ps/DRC0 under real IO",
+      "Bind island LEF/LIB/clock and pin placement inside full leaf",
+      "Full leaf reset-removal and reg-to-reg hold remain independently open"
+    ],
+    "physical_closed": false,
+    "rate_credit": 0
+  },
+  "18": {
+    "schema": "opentallas.qwen.embedding_ingress_island.v1",
+    "adopted": false,
+    "address_bits": 18,
+    "MACs_per_cycle": 0,
+    "compute_intensity_MAC_per_byte": 0,
+    "memory_port_bytes_per_cycle": 0,
+    "communication_intensity": "One existing address/valid/credit capture every rising edge; no queue or added protocol",
+    "boundary_bits_per_cycle": {
+      "inputs": 20,
+      "outputs": 40,
+      "clock": 1,
+      "reset": 1
+    },
+    "state": {
+      "moved_existing_FFs": 40,
+      "added_FFs": 0,
+      "primary_shadow_separate": true
+    },
+    "replica_count": 3,
+    "mux_demux_fanout": {
+      "new_muxes": 0,
+      "new_demuxes": 0,
+      "clock_sinks": 40,
+      "input_fanout": 2,
+      "output_obligation_fF": 80
+    },
+    "area": {
+      "FF_um2": 12.01392,
+      "reserved_hold_buffers": 240,
+      "reserved_output_buffers": 40,
+      "clock_buffer_reserve": 4,
+      "reserved_cell_um2": 41.75712,
+      "frame_um": [
+        15.12,
+        15.12
+      ],
+      "core_um": [
+        10.8,
+        10.8
+      ],
+      "utilisation_ceiling": 0.6,
+      "planned_utilisation": 0.358,
+      "slot_fit": true,
+      "leaf_slot": "Inside existing logic strip above ROM: scale y70 and code y80; no die-area credit until legal placement"
+    },
+    "routing": {
+      "pin_pitch_um": 0.096,
+      "output_tracks": 40,
+      "usable_face_um": 10.8,
+      "face_track_capacity": 112,
+      "planned_face_fit": true,
+      "final_parent_wire_target_um": 100,
+      "parent_pin_binding": "OPEN until real island view"
+    },
+    "clock_plan": {
+      "domain": "stream1p2",
+      "period_ps": 833.333,
+      "setup_uncertainty_ps": 60,
+      "hold_uncertainty_ps": 25,
+      "input_transition_ps": 150,
+      "local_clock_tree": "One separately hardened island; capture FFs moved out of payload leaf CTS",
+      "interface_budget": "Unchanged die 166.667ps outside plus150ps inter-region and50ps hold skew; reference actual valid_q clock arrival",
+      "measured_insertion_required": true,
+      "exceptions_added": []
+    },
+    "latency": {
+      "moved_capture_cycles": 1,
+      "added_cycles": 0,
+      "leaf_cycles": 7,
+      "II": 2,
+      "composed_root_bound_cycles": 19,
+      "shared_service_cycles": 801
+    },
+    "remaining": [
+      "Island SS/FF+15ps/DRC0 under real IO",
+      "Bind island LEF/LIB/clock and pin placement inside full leaf",
+      "Full leaf reset-removal and reg-to-reg hold remain independently open"
+    ],
+    "physical_closed": false,
+    "rate_credit": 0
+  }
+}

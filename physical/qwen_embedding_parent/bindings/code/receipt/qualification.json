@@ -1,0 +1,33 @@
+{
+  "source_commit": "82c12047d09bcce0c2d4b9d68f57aeb5a29674e6",
+  "drc": 0,
+  "exactness_pass": true,
+  "corner_sta_sha256": "1ce4d95c2f84032dee099641a8e84028305d9dbfaf6981b0bd47c5eb6dc56a8e",
+  "metadata_storage_sha256": "69e6d1282fe0580188d674d9f10fb9cfe2c32ccad3cc89f971e23a6039d7b4ac",
+  "job_state_sha256": "a92d7616e1a4a1e0cefd651522b11f485d6336ec94cfaf35782bb44f31783e81",
+  "bench_results": {
+    "bench_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211\nrtl/test/tb_qwen_embed_code_bank_numeric.sv:103: $finish called at 26853132 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_bad_address": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "FAIL embed payload/order at response=0 address=4095\nFATAL: rtl/test/tb_qwen_embed_code_bank_numeric.sv:73: \n       Time: 10435  Scope: tb_qwen_embed_code_bank_numeric\n",
+      "track": "parallel"
+    }
+  },
+  "collection_audit": {
+    "qualification_mode": "held_route_readonly",
+    "status_sha256": "5bb5d9867f9a86488fa0e9746a35929b9294e1e9cb29b209c5d9fbf3d1661d12",
+    "drc_metrics_sha256": "ed3e1a75e2d5d9f23e72135bcfa55bdb15fc2ecc6f88919b7a6b3854e8d91e99",
+    "source_marker_sha256": "e8c91251c0f5a6d4658c218a70e2ebcdced65e4c34278ba5352415bec2c3075a"
+  },
+  "routed_netlist_sha256": "38513c7384594e16d6c55d904d823ebc550ff511ff90c50156edaed499b1643e",
+  "synthesis_netlist_sha256": "a0c7afea75339a5382ac090d07a6c48e599bee63b2e2c7bee247c88dd684034e",
+  "metadata_storage_synthesis_sha256": "db41accfaef8c14c54621702fc84959fc9b8419fa5c688ae07b663347064d658"
+}

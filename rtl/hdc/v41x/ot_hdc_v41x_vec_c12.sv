@@ -197,13 +197,16 @@ module ot_hdc_v41x_vec #(
     parameter integer RTAP = 0,         // c12 reducer: tap register
     parameter integer ROUT = 0,         // c12 reducer: OUT input register
     parameter integer RSLICE = 64,      // c12 reducer: lanes a slice
-    parameter integer ROPI = 0,         // c12 reducer margin: op operand registers (every reducer op ALAT + 1)
-    parameter integer RKC = 0,          // c12 reducer margin: kept copies of the tap-hit sources / tap tag (no cycle)
+    parameter integer ROPI = 0,         // reducer operand stage, default off
+    parameter integer RKC = 0,          // reducer kept driver copies, default off
+    parameter integer RHALF = 0,        // phase-locked half-rate reducer, default off
+    parameter integer RHPAR = 0,        // controller issue parity; reducer locks to first beat
     parameter integer CTL12 = 0,        // c12 controller: pipelined set-up, registered emit-loop conditions
-    parameter integer RHALF = 0,        // HALF-RATE reducer (default off): reduction beats issue only so that they
-                                        // retire in a ph = 1 cycle (one beat per two cycles at a fixed phase), and the
-                                        // reducer depths double (+ the pin stages); the reducer instance runs RHALF
-    parameter integer RHPAR = 0         // RHALF: the emit -> retire parity offset (a_dS counts from emit)
+    // CLAUDE HBM-ABSTRACTS hub margin (2026-10-06, default off): see rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv
+    parameter integer GSH = 0,          // lanes register the gather word's shift: every gather fetch one deeper
+    parameter integer KIMM = 0,         // imm3 travels to the lanes as its order key okey(imm3)
+    parameter integer DENR = 0,         // lanes register the sigmoid denominator operand: sigmoid / SiLU one deeper
+    parameter integer DRING = 0         // lanes' SFU delay lines as ring buffers (0 cycles)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -321,17 +324,17 @@ module ot_hdc_v41x_vec #(
     endfunction
     // S-stage depths (ot_hdc_v41x_vec_lane / _side): exp 7 MLAT + 8 ALAT + 4, sigmoid exp + ALAT + 19, rsqrt
     // 1 + 9 MLAT + 3 ALAT, sqrt 31, sqrt(softplus) exp + 11 MLAT + 10 ALAT + 50, gate 33 + sigmoid
-    localparam integer D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG = D_EXP + ALAT + DDIV,
+    localparam integer D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG0 = D_EXP + ALAT + DDIV, D_SIG = D_SIG0 + DENR,
                        D_RSQ = 1 + 9 * MLAT + 3 * ALAT + SIDEX, D_SQRT = 31 + SIDEX,
-                       D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 31 + DDIV + SIDEX, D_EG = 33 + D_SIG + SIDEX;
+                       D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 31 + DDIV + SIDEX, D_EG = 33 + D_SIG0 + SIDEX;
     localparam [15:0] H_A = ALAT;
     localparam [15:0] H_R = ALAT + ROPI;                        // a reducer TREE / TIME level
 `ifdef OT_NEG_DDIV_DEPTH
-    // NEGATIVE CONTROL (compile-time only): the M1 divide line one cycle short of the divider (any DDIV)
-    localparam [15:0] H_F5 = 5 + OPR + CAPR, H_F3 = 3 + CAPR, H_MD = DDIV + OPR - 1, H_MM = MLAT + OPR;
+    // Negative control: M1 divide retires one cycle before its result.
+    localparam [15:0] H_F5 = 5 + OPR + CAPR + GSH, H_F3 = 3 + CAPR, H_MD = DDIV + OPR - 1, H_MM = MLAT + OPR;   // gather fetch, M1 divide / multiply
 `else
-    localparam [15:0] H_F5 = 5 + OPR + CAPR, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;
-`endif   // gather fetch, M1 divide / multiply
+    localparam [15:0] H_F5 = 5 + OPR + CAPR + GSH, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;   // gather fetch, M1 divide / multiply
+`endif
     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
                       H_EG = D_EG;
     function automatic [9:0] sfu_d(input [2:0] s);
@@ -522,7 +525,7 @@ module ot_hdc_v41x_vec #(
     wire c_gather = (q_aind != IND_NONE);
     wire [AW-1:0] c_gstr = (q_aind == IND_I) ? q_asi : q_aso;
     wire c_div = (q_m1 == M1_DIVB || q_m1 == M1_DIVIMM);
-    wire [9:0] x_dF = c_gather ? 10'd6 + OPR + CAPR : 10'd4 + CAPR;       // broadcast register + fetch
+    wire [9:0] x_dF = c_gather ? 10'd6 + OPR + CAPR + GSH : 10'd4 + CAPR;       // broadcast register + fetch
     wire [9:0] x_dM = x_dF + 10'd1 + OPR + (c_div ? DDIV : H_M[9:0]);
     wire [9:0] x_dS = x_dM + H_M[9:0] + H_A[9:0] + OPR + sfu_d(q_sfu);
     wire [9:0] x_lt = red_on ? {6'd0, c_ls} - 10'd3 : 10'd0;
@@ -1191,7 +1194,7 @@ module ot_hdc_v41x_vec #(
     wire          rem_lt = (CTL12 >= 2) ? !rem_ge : (rem_rows < nslot);
     wire [7:0] nres = !a_packed ? 8'd1 : rem_lt ? rem_rows[7:0] : nslot[7:0];
     wire [WC-1:0] cw0 = {a_dsrc, a_csrc, a_bsrc, a_asrc,
-                         a_arnd, a_arelu, a_amin, a_cclip, a_imm3,
+                         a_arnd, a_arelu, a_amin, a_cclip, (KIMM != 0) ? (a_imm3[31] ? ~a_imm3 : {1'b1, a_imm3[30:0]}) : a_imm3,
                          a_m1, a_imm1, a_m2, a_qm, a_ad, a_imm2, a_sfu, a_e1, a_e2, a_rnd, a_dst,
                          a_seq, last_v, a_red, a_redsq, a_redrnd, a_lt, a_L, a_span, a_wnf ? last_v : wrap, nres, rrow, a_rsh,
                          last_v && (a_red != RED_NONE)};
@@ -1272,7 +1275,7 @@ module ot_hdc_v41x_vec #(
     // F-line: depth 3 or 5
     wire [WC-1:0] cwx;
     wire          vx, col_f, bz_f, bz_m, bz_s;
-    ot_hdc_v41x_ins #(.W(WC), .K(2), .DEPTHS({H_F5, H_F3}), .DMAX(5 + OPR + CAPR)) u_cf (.clk(clk), .rst_n(rst_n),
+    ot_hdc_v41x_ins #(.W(WC), .K(2), .DEPTHS({H_F5, H_F3}), .DMAX(5 + OPR + CAPR + GSH)) u_cf (.clk(clk), .rst_n(rst_n),
         .v(t_emit), .sel({t_gather, !t_gather}), .d(t_cw), .vo(vx), .q(cwx), .coll(col_f), .busy(bz_f));
     `define CW_SRCS(w)  w[WC-1 -: 8]
     `define CW_ARND(w)  w[WC-9]
@@ -1360,7 +1363,7 @@ module ot_hdc_v41x_vec #(
     generate for (l = 0; l < N; l = l + 1) begin : g_lane
         ot_hdc_v41x_vec_lane #(.AW(AW), .CW(CW), .LN(LN), .KIND((l == 0) ? 2 : (l < M) ? 1 : 0),
                                .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0), .MLAT(MLAT), .ALAT(ALAT),
-                               .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR)) u_lane (
+                               .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR), .GSH(GSH), .KIMM(KIMM), .DENR(DENR), .DRING(DRING)) u_lane (
             .clk(clk), .rst_n(rst_n), .lane_id(l[10:0]),
             .ld(tr_ld), .ld_bank(tr_ldbank), .ld_c(tr_ldc),
             .emit(tr_emit), .bank(tr_bank), .o_v(tr_ov), .i_v(tr_iv), .no(tr_no), .ni(tr_ni), .ls(tr_ls), .lvw(tr_lvw),

@@ -1,0 +1,65 @@
+{
+  "name": "window-column128-halfwrite-SOURCEPIN",
+  "block": "ot_dsrom_window_column_halfwrite",
+  "owner": "Codex:S81 orphans",
+  "purpose": "Full128x32 structural mixededge memory writecommit; zero protocolcycles; restore M2-M6 PG-accessible column closure",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-pve1"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+    "branch": "SOURCE_BRANCH",
+    "commit": "SOURCE_COMMIT"
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "SRC={SRC} OUT={RUN}/routes CORES=8 physical/dsrom_window_columns/halfwrite/route.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "echo route_col.sh writes the IO SDC from CK_SS_MEAN/CK_FF_MIN/CK_FF_MAX",
+      "threads": 8,
+      "peak_ram_gb": 24
+    },
+    "route": {
+      "cmd": "SRC={SRC} OUT={RUN}/routes CORES=8 physical/dsrom_window_columns/halfwrite/route.sh {LABEL}",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp -r {RUN}/routes/{LABEL}/view {RUN}/record/ && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/pg_check.txt {RUN}/routes/{LABEL}/*.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "pg_reachable_M7_M9_free",
+        "cmd": "grep -q '^pg_rc=0' {RUN}/routes/{LABEL}/exit"
+      }
+    ],
+    "post_sdc": [
+      "physical/dsrom_window_columns/halfwrite/cl_{LABEL}/signoff_ss.sdc",
+      "physical/dsrom_window_columns/halfwrite/cl_{LABEL}/signoff_ff_guarded.sdc"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/dsrom_window_columns/halfwrite/view"
+    }
+  ],
+  "cycles_added": 0,
+  "no_bench_reason": "Source-bound minimum full128x32 column compares3070cycles,1040collisions,8resetwrites; wrong-write-edge mutation caught. Record results/uarch/dsrom_window_column_halfwrite_20261007/record.json. Mandatory adoption hold until source binding, mapped copy inventory, true halfcycle setup/hold and parent physical scope checked.",
+  "merge_target": "main",
+  "hold_eco": {
+    "session": "ff"
+  }
+}

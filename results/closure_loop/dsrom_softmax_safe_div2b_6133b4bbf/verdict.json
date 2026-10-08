@@ -1,0 +1,139 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "dsrom_softmax_safe_div2b_6133b4bbf",
+ "block": "ot_dsrom_su_fdiv_tile",
+ "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+ "source_branch": "claude/dsrom-su-softmax-20261004",
+ "source_commit": "6133b4bbf508b1eb2b9d4eded2e1d2025a58a57a",
+ "host": "ot-pve1",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/dsrom_softmax_safe_div2b_6133b4bbf",
+ "acceptance": {
+  "ss_min_ps": 15.0,
+  "ff_min_ps": 15.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 184.78,
+  "ff_ps": 17.99,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/dsrom_su_softmax_safe/signoff_833.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/dsrom_softmax_safe_div2b_6133b4bbf/routes/dsrom_softmax_safe_div2b_6133b4bbf/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/dsrom_softmax_safe_div2b_6133b4bbf/routes/dsrom_softmax_safe_div2b_6133b4bbf/work/orfs/logs/asap7/opentallas_ot_dsrom_su_fdiv_tile_asap7_safe_dsrom_softmax_safe_div2b_6133b4bbf/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "whole-block exact bench of SAFE=1 (tools/dsrom_su_softmax.py --safe 1, LPH16 margin config): 10/10 exact, results run_s1 (+1 exp, +1 normalize cycle per row); negative control SOFTMAX_SAFE_MUTANT must FAIL (run s1neg)",
+ "checks": {
+  "io_budget_ge_15": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": null,
+   "all": {
+    "n": 5217,
+    "mean": 233.7,
+    "min": 226.6,
+    "max": 244.7
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": null,
+   "all": {
+    "n": 5217,
+    "mean": 146.7,
+    "min": 141.3,
+    "max": 156.2
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 234,
+   "CK_SS_ALL_MEAN": 234,
+   "CK_SS_MIN": 227,
+   "CK_SS_ALL_MIN": 227,
+   "CK_SS_MAX": 245,
+   "CK_SS_ALL_MAX": 245,
+   "CK_FF_MEAN": 147,
+   "CK_FF_ALL_MEAN": 147,
+   "CK_FF_MIN": 141,
+   "CK_FF_ALL_MIN": 141,
+   "CK_FF_MAX": 156,
+   "CK_FF_ALL_MAX": 156
+  },
+  "db": "4_1_cts.odb",
+  "clock": "clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 30,
+ "status": "CLOSED",
+ "closed_at": "2026-10-07T07:55:19-07:00",
+ "job_spec": {
+  "name": "dsrom_softmax_safe_div2b_6133b4bbf",
+  "block": "ot_dsrom_su_fdiv_tile",
+  "owner": "Claude:tk-ds-misc (DS softmax SAFE)",
+  "purpose": "SAFE=2 divider tile v2: keep-prefix split steps + split normalise (depth 63)",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 45,
+  "source": {
+   "branch": "claude/dsrom-su-softmax-20261004",
+   "commit": "6133b4bbf508b1eb2b9d4eded2e1d2025a58a57a"
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "OUT={RUN}/routes SRC={SRC} CORES=8 bash physical/dsrom_su_softmax_safe/route_tile.sh {LABEL}${CL_LABEL_SUFFIX} ot_dsrom_su_fdiv_tile 'NR=2' $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "clk",
+    "threads": 8,
+    "peak_ram_gb": 45
+   },
+   "route": {
+    "cmd": "OUT={RUN}/routes SRC={SRC} CORES=8 bash physical/dsrom_su_softmax_safe/route_tile.sh {LABEL} ot_dsrom_su_fdiv_tile 'NR=2'",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ],
+    "peak_ram_gb": 45
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/io_budget.txt {RUN}/routes/{NAME}/exit {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "io_budget_ge_15",
+     "cmd": "grep -q '^io_rc=0' {RUN}/routes/{NAME}/exit"
+    }
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/dsrom_recovery_20261004/su_softmax/safe/div2b"
+   }
+  ],
+  "cycles_added": 30,
+  "merge_target": "claude/dsrom-su-softmax-20261004",
+  "no_bench_reason": "whole-block exact bench of SAFE=1 (tools/dsrom_su_softmax.py --safe 1, LPH16 margin config): 10/10 exact, results run_s1 (+1 exp, +1 normalize cycle per row); negative control SOFTMAX_SAFE_MUTANT must FAIL (run s1neg)"
+ }
+}

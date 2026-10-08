@@ -1,0 +1,23 @@
+OpenSTA 2.6.0 aa598a2f14 Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Clock                   Period          Waveform
+----------------------------------------------------
+core_clk                833.33        0.00    416.67
+div64_1                1666.67        0.00    416.67 (generated)
+div64_2                1666.67      833.33   1250.00 (generated)
+div64_3                1666.67        0.00    416.67 (generated)
+div64_4                1666.67      833.33   1250.00 (generated)
+PASS period=833.333 setup=60.0 hold=25.0
+Clock                   Period          Waveform
+----------------------------------------------------
+core_clk                770.00        0.00    385.00
+div64_1                1540.00        0.00    385.00 (generated)
+div64_2                1540.00      770.00   1155.00 (generated)
+div64_3                1540.00        0.00    385.00 (generated)
+div64_4                1540.00      770.00   1155.00 (generated)
+PASS period=770.0 setup=60.0 hold=25.0
+PASS all generated clocks selected for propagated signoff

@@ -1,0 +1,27 @@
+BUILD_OK
+BUILD_OK
+BUILD_OK
+BUILD_OK
+BUILD_OK
+BUILD_OK
+0
+== m_order
+RESULT ops=112902 reads=56408 writes=56494 checked=56408 mismatches=8206 fault=1 code=010 max_occ=4 L=10
+FAIL
+== m_j0
+RESULT ops=112902 reads=56408 writes=56494 checked=56408 mismatches=2855 fault=1 code=010 max_occ=4 L=10
+FAIL
+== m_mask
+RESULT ops=112902 reads=56408 writes=56494 checked=56408 mismatches=31771 fault=0 code=000 max_occ=4 L=10
+FAIL
+RESULT ops=559420 reads=280370 writes=279050 checked=280370 mismatches=0 fault=0 code=000 max_occ=4 L=10 PASS gold s1
+RESULT ops=537757 reads=269498 writes=268259 checked=269498 mismatches=0 fault=0 code=000 max_occ=4 L=10 PASS nb8 s1
+RESULT ops=476597 reads=238773 writes=237824 checked=238773 mismatches=0 fault=0 code=000 max_occ=2 L=8 PASS nb8q2 s1
+RESULT ops=559078 reads=279752 writes=279326 checked=279752 mismatches=0 fault=0 code=000 max_occ=4 L=10 PASS gold s2
+RESULT ops=531487 reads=265937 writes=265550 checked=265937 mismatches=0 fault=0 code=000 max_occ=4 L=10 PASS nb8 s2
+RESULT ops=471853 reads=236200 writes=235653 checked=236200 mismatches=0 fault=0 code=000 max_occ=2 L=8 PASS nb8q2 s2
+RESULT ops=559873 reads=279587 writes=280286 checked=279587 mismatches=0 fault=0 code=000 max_occ=4 L=10 PASS gold s3
+RESULT ops=524660 reads=262121 writes=262539 checked=262121 mismatches=0 fault=0 code=000 max_occ=4 L=10 PASS nb8 s3
+RESULT ops=465491 reads=232687 writes=232804 checked=232687 mismatches=0 fault=0 code=000 max_occ=2 L=8 PASS nb8q2 s3
+OVF fault=1 code=001 -> PASS_OVF
+OVF fault=1 code=001 -> PASS_OVF

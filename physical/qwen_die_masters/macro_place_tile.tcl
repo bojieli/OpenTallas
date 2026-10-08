@@ -5,8 +5,11 @@ set ot_lut [dict create]
 foreach ot_inst [$ot_block getInsts] {
   if {[[$ot_inst getMaster] isBlock]} { dict set ot_lut [string map {"\\" ""} [$ot_inst getName]] [$ot_inst getName] }
 }
+# QDM_MACRO_PREFIX: hierarchy prefix when the tile sits inside a wrapper (qfd_tile = ot_qwen_rom_tile_die: "u_tile.")
+set ot_pfx [expr {[info exists ::env(QDM_MACRO_PREFIX)] ? $::env(QDM_MACRO_PREFIX) : ""}]
 proc ot_place {name x y orient} {
-  global ot_lut
+  global ot_lut ot_pfx
+  set name "$ot_pfx$name"
   if {![dict exists $ot_lut $name]} { error "ot_place: no macro instance $name" }
   place_macro -macro_name [dict get $ot_lut $name] -location [list $x $y] -orientation $orient
 }
@@ -21,4 +24,4 @@ ot_place {g_col[1].g_bank[3].u_rom} 142.776 1226.232 R0
 ot_place {g_col[0].g_bank[4].u_rom} 2.16 1158.840 R0
 ot_place {g_col[1].g_bank[4].u_rom} 142.776 1158.840 R0
 ot_place {g_kv[0].u_kv} 2.16 1113.264 R0
-ot_place {g_kv[1].u_kv} 169.992 1113.264 R0
+ot_place {g_kv[1].u_kv} 169.884 1113.264 R0

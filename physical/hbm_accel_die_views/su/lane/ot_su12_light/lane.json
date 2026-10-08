@@ -1,0 +1,65 @@
+{
+ "schema": "opentallas.hbm_hub_lane_view.v1",
+ "lane": "ot_su12_light",
+ "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/hub/routes/m12light/eco/eco2",
+ "closed": true,
+ "margin_ok": false,
+ "recipe": "r2/r3: signals M2-M5, pins M4 left edge every track, PDN top M6 (su/route_lane.sh)",
+ "interface_sdc": "physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc (Carson real SU view)",
+ "outcheck": "outputs 265 input_paths 1042 not_register_direct 0",
+ "layers": {
+  "pg": {
+   "VDD": [
+    "M1",
+    "M2",
+    "M6"
+   ],
+   "VSS": [
+    "M1",
+    "M2",
+    "M6"
+   ]
+  },
+  "obs": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "RVTN",
+   "RVTP"
+  ],
+  "size": [
+   79.92,
+   162.0
+  ]
+ },
+ "exit": {
+  "rc": "0",
+  "corner_rc": "0",
+  "post_rc": "0",
+  "export_rc": "0"
+ },
+ "signoff": "833 ps re-time (corner_sta_833.json)",
+ "route_clock_ss_worst_slack_ps": -41.55,
+ "ss_worst_slack_ps": 21.45,
+ "ff_worst_hold_slack_ps": 21.1,
+ "ss_violating_d_pins": 0,
+ "ff_violating_d_pins": 0,
+ "drc_violations": 0,
+ "antenna_violating_nets": 0.0,
+ "max_slew_cap_fanout": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "source_commit": "66e7df57d16e737997406146e83d04bd1b76f115",
+ "args": "ot_su12_light 79.92 162.0 rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/ot_hdc_fast",
+ "acceptance": "not_met",
+ "sha256": {
+  "ot_su12_light.lef": "7e640312361a7ee7268268259e3aed9ecb5c190123eac4b4b634ad187c335593",
+  "ot_su12_light_ff.lib": "f3deba32bc21647f3564c5a9e27586fe9eda1036eeb16d163a310930cd711327",
+  "ot_su12_light_ss.lib": "6747badbd94b5c8468cbd9f16848bc855354126bb69790f91a3fb14fc2f79666"
+ }
+}

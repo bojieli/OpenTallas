@@ -1,0 +1,271 @@
+# S81 production PQ: full-shape partition design
+
+Claude design, 2026-10-07. Not adopted and not physically qualified. Codex `pq_parent` owns the exact adapter proof, so this directory contains no RTL candidate.
+
+`python3 tools/s81_pq_fullshape_design.py` regenerates `design.json`. The tool checks the hashes of Codex's read-only snapshot `pq_snapshot_1117`: `pq_parent_binding.py` b2d619a4, `full_inventory` 614fcd26 and `half_inventory` 4b38ddb1. These inputs are uncommitted until the owner's final gate. The tool also derives every width from the pinned RTL text (`ot_v41_spine_pqc_w17w10.sv` and `ot_v41_ret.sv`). It fails closed on any assertion listed in its docstring. `geometry_extract.json` is the die generator's model for the actual 1792-pair layer die, built in Python only with no ORFS run. Its options and generator hash are recorded inside the file.
+
+## 1. Problem, re-derived
+
+| Quantity | Value | Source |
+|---|---|---|
+| PHW / SAW / KMAX (both mappings) | 9 / 11 / 6,144 | snapshot inventories (half: 120 stages; full: 98) |
+| PQ operand storage | bb 2·KMAX×16 = 196,608 + qb 2·(KMAX/32)×256 = 98,304 + eb 3,840 = **298,752 b** | spine RTL declarations; equals the inventory maximum |
+| R128 screen 6/8/256 | 12,448 b, so production is **24.0×** larger | the same formula at KMAX 256 |
+| Phase / stream ROM | 1,024×64 / 2,048×48, which is 3 `ot_rom_4096x72` | inventory |
+| Native broadcast | **1,633 b** = cfg 13 + go 4 + q beat 549 + BF beat 1,067 | `bc_in`. `bt_b` and `bt_pos` are each sent twice, so only 1,627 distinct bits. |
+| Legacy die lane | 564 b = x0 283, x1 266, cc 15. It has no BF data, no `go_bf` and no `go_tag`. | `dsrom_s81_fulldie.py` |
+| Return per region | Legacy raw tree word 66 + {fault, busy} = 68. The root output is 69 b (v, row 16, pos 3, fp32, bf16, e). With fault and busy the lane is 71 b. | `ot_v41_ret_root` ports |
+| Roots | ROOTD = QD = 128: 128×65 + 128×66 = **16,768 b each, 2,146,304 b for 128** | ret RTL declarations |
+| Native parent pins | **19,529** from the snapshot `native_ports(9,11)`. Codex's DEF count is 19,355, which is 174 fewer (see the reconciliation request). | |
+
+The R128 screen cannot qualify production for three reasons. Its storage is 1/24 of production and sits in flops. It has no macro read/write timing. It also lacks the native 1,633-bit bus, 128 real roots (each stateful, with its own rounding, counters and fault), and the VM read/write crossings.
+
+## 2. Options
+
+Areas are per layer die. Root, core-logic and RWB areas are **estimates** (see `estimates` in `design.json`) and are not closure evidence.
+
+| Option | Partition | Largest block pins | Area added | Verdict |
+|---|---|---|---|---|
+| A: monolithic native | One R128 block holding the spine, 128 roots and the return path, with the 1,633-b lane | 19,657 | 2.66 + lane 21.5 | Reject. Not a closable block, and it pulls every region's root into the hub. |
+| B: split, native lane | Roots in frames, 12 RWB in gather, core at VM north, 1,633-b lane | 4,156 | 2.66 + 21.5 | Reject. The lane infrastructure grows 2.9× and buys no function. |
+| **C: split, union lane (W2)** | As B, but q and BF beats overlay one lane: **1,085 b** on BF dies, 567 b at q slots and q-only dies | 4,156 | 2.66 + **9.8** (BF dies only; 7.3 if BF slots sit at the column foot) | **Recommended baseline.** It is a pure re-wiring of the native fields with no stream change. |
+| D: split, serial union (W3) | As C, but each BF beat spans two lane cycles: **568 b** everywhere, with a deserialiser at each BF slot | 4,156 | 2.66 + 0.14 + 0.25 deserialisers | Run in parallel with C. Adopt only after the measured BF-beat adjacency comes in and the exact gate passes. |
+| E: central roots | Roots and RWB as one hub block next to gather | — | 2.34 compact | Reject. The hub columns are full (8 slabs, 173 µm channels), and the die has only 302 µm of x slack. |
+
+Union rule: `f_xs_v` and `f_xb_v` are never both 1 in the same cycle (one streamer head plus the family bit; the tool asserts this from the RTL). The lane therefore carries `cfg_go, cfg_ph[9], cfg_np[3], go, go_bf, go_tag[2], b[3], pos[3], xs_v, xb_v` at bits 0–24. The q payload `p, sv, q0, e0, q1, e1` (542 b) and the BF payload `bsv[4], u[32], d[1024]` (1,060 b) both overlay bit 25 upward. The full layouts with lsb/msb are in `design.json.lanes`, and the tool asserts that every native field appears once and untruncated for its family.
+
+## 3. Recommendation (C, with D launched in parallel)
+
+### Partition
+
+**128 `ot_v41_ret_root` (R128), one per region.**
+- Placement: in the frame's empty q position. Each frame has 4 BF + 10 q = 14 pairs in 16 positions, so 2 positions are empty, at 510.84 × 183.6 µm each.
+- Size: about 132 × 132 µm (estimate).
+- Clock: the column clock, the same domain as the node tree, so there is no crossing.
+- Faces: S `tree_in` 67 b, N `ret_out` 71 b into the existing `rstg` sub-column. Each face has a relay station within 100 µm.
+- Storage: flops plus per-entry parity (256 b). SRAM would save only about 1.7k µm² per root while adding 2 macros, a 1RW/1R1W conflict and a read cycle inside the pairing loop.
+- Microarchitecture obligation: the 128-entry associative search does not fit one 833 ps cycle. Register the match and free vectors, then encode in the next stage with bypass of the previous cycle's insert or remove, and register the queue head. Pairing decisions stay identical; each root pass costs +1 cycle.
+
+**12 RWB, one per tier-half (10 or 11 regions).**
+- Function: spine return stages 0–3, the per-tag configuration replica (458 b), VM write and row counts.
+- Placement: inside `sp_gather`, abutting each `hr_<half><tier>` end block. The VM is 173 µm away.
+- Pins: at most 1,843 per block.
+
+**PQ core, at most 0.32 mm² (estimate).**
+- Placement: the hub slot at the VM north face, 1015.2 × 794.9 µm. A WFC child soft reservation of 1015 × 449 µm currently holds it, so the die owner must relocate that reservation or widen the hub by up to 302 µm of die x slack.
+- Pins: 4,156. The S face carries VM read (2,069) by abutment. The W/E faces carry the lane (1,085) to the `hx_W` and `hx_E` end blocks, which should move onto these faces. The E face carries the 3 ROM macros.
+- Sub-blocks: `pq_xbuf` and `pq_ctl`.
+
+### SRAM and control inventory
+
+The macro is `ot_sram_1r1w_128x256_m1_r2c2`: 94.8 × 41.1 µm, 3,894 µm², min period 435 ps SS.
+
+| Array | Macros | Layout |
+|---|---|---|
+| bb | 4 replicas × 8 = 32 | Word = 2 lanes × 8 subs × 16 b; row = hi (96 of 128 rows used). Each of the 4 BF byte groups reads its own row, so each owns a replica. One loader block writes 4 macros with full words. |
+| qb | 4 banks | Bank = (index bit 3, bit 0); row = (i>>4)·4 + ((i>>1)&3), 96 rows used. The reads (blk0, blk1) and the writes (blk, blk+1) never share a bank. |
+| eb | none | 3,840 flops |
+| Protection | none | 64-b-slice parity, 14,208 flop bits; mismatch raises a sticky fault and fails closed. SECDED would need a compiled 1R1W 128×288 macro (+12.5 % width) and is priced as the alternative. |
+
+The tool proves both macro maps exhaustively at KMAX 6144. Reads never occur during a write by protocol, because `have` lags the write edge; this is a bench assertion obligation. Total: **36 macros**, 0.197 mm² including halos.
+
+### Clocks
+
+The PQ core and the RWB run in `stream_1p2`. The VM is `serial_0p9`, so VM read and write cross through `ot_ratio_cdc_fifo` with credits. The roots and lane stations run in the column clock, behind the existing meso column FIFOs. Nothing runs at half rate; the D option is a full-rate two-cycle protocol with real enables.
+
+### Flow control
+
+| Interface | Design |
+|---|---|
+| VM read | Changes to request/response: the loader consumes `x_q` on its valid. The credit FIFO is 14 deep. Rate is at most 0.75 words per stream cycle, so an exposed K = 6,144 load costs about +64 cycles. |
+| VM write | Per-region FIFO with credit, 12 deep. The root has no backpressure, so the mapping must keep each region's row rate at or below 0.75 per cycle over any window longer than the FIFO. This needs an input from Codex. |
+| Broadcast and root input | Unchanged: timed, with no flow control. |
+| Configuration replica | A 13-station chain. It must land before the op's first row; this is an assertion. |
+
+### Cycle price
+
+The conservative cost is 17 cycles per phase: root +3, plus the larger of the VM-write path (5) and the row-count retire path (14; 13 stations from VM north to gather). At the measured +1-return-cycle sensitivity (pq_qelem 1596.7 → 1596.2 tok/s) that is about **0.53 % AR**. This is a linear estimate on historical phases, not the 1792 geometry. The retire path is hidden whenever a free PQ slot exists and the issuer does not wait for idle.
+
+### Dies
+
+The design adds **0 dies** if roots fit in the frames, the RWBs fit in `sp_gather`, and the VM-north slot is provided. HALF needs the 1,085-b lane on 160 of its 480 dies; FULL needs it on all 392.
+
+Fallback: a tier-channel row of root blocks (+143 µm per tier). If that costs a slot, the mapping drops to 13 pairs a region, which multiplies the stage count by 14/13.
+
+## 4. Staged hardening (each block closable, with registered faces)
+
+1. Run three blocks in parallel:
+   - `ret_root_r128` (about 132 µm square, one master for 128 instances; exact gate with a mis-pairing negative control);
+   - `pq_xbuf` (36 macros plus parity);
+   - `rwb` (one master with N = 11 or 10).
+2. `pq_ctl`, after the R128 screen's hierarchical area report.
+3. Lane infrastructure in the die generator: column FIFO W1,085, x-chain stations 1,087 b, BF-slot stations. q-only dies carry the 567-b q lane (legacy 564 + 3).
+4. The `pq_core` parent at VM north.
+5. Die integration, then full-die SS/FF/DRC/IR.
+
+## Requested inputs
+
+- **(Codex)** Hierarchical cell area of the R128 screen, split into core and return side.
+- **(Codex)** Per-stage maximum adjacency of BF beats from `native_stream`. This gates option D.
+- **(Codex)** The maximum rows per region per window. This sizes the VM write FIFO.
+- **(Codex)** Reconciliation of 19,355 DEF pins against 19,529 port bits.
+- **(die owner)** The VM-north slot and moving `hx_W` and `hx_E` to the core faces.
+- **(CDC owner)** The measured `ot_ratio_cdc_fifo` latency (4 cycles assumed).
+
+## Gated items (all must pass before adoption)
+
+- Root pipelined-CAM exactness.
+- Union-lane don't-care proof plus its negative control.
+- Exactness of the VM request/response loader change.
+- VM write sustain rate.
+- Synthesis screens replacing every area estimate.
+- Die-generator legality.
+
+## Reproducibility (added in 3b695b614 and later; the design record above is unchanged from d95b57661)
+
+`inputs/` holds byte-exact copies of the Codex snapshot files the tool reads. `inputs/SHA256SUMS` pins them, and `inputs/REPO_INPUTS.SHA256SUMS` pins every repository file the tool reads. The tool verifies both lists and fails closed on any mismatch.
+
+The default output is `reproduce/design.json`. `design.json` is kept as the historical d95b57661 output; it differs from the reproduced file only in the provenance keys `sources.snapshot` and `sources.snapshot_origin`.
+
+A clean `git archive` rerun outside the home directory reproduced `reproduce/design.json` byte-identically. Two tamper tests (one snapshot input, one RTL file) each exit 1. Details are in `reproducibility.json`.
+
+## Historical pin of the geometry generator (b0829f869 / 8a12d98ec)
+
+`tools/dsrom_s81_fulldie.py` on main has changed since the pin (commit 5aba116fc). The exact generator that built `geometry_extract.json` is therefore pinned at `inputs/pinned/tools/dsrom_s81_fulldie.py` (553d47cc), and `REPO_INPUTS.SHA256SUMS` now points to that copy. A rerun from a `git archive` of origin/main 48890ca59, overlaid with this tool and the `inputs/` directory, reproduces `reproduce/design.json` byte-identically.
+
+## Current-main basis (branch claude/s81-pq-fullshape-design-v2-20261007; historical verdict above unchanged)
+
+Regenerate with these commands:
+1. `python3 tools/s81_pq_geometry_extract.py --base-commit <main> --out current_main/geometry_extract.json`
+2. `python3 tools/s81_pq_stream_stats.py --half <half matrix_map> --full <full matrix_map> --out current_main/stream_stats.json`. The matrix maps come from `tools/dsrom_bf_geometry_alloc.py` at 9a31097cd; the local rerun reproduced the remote hashes byte-for-byte (half 8dfa6dae, full bf7863a4; about 10 min and 1.6 GB each).
+3. `python3 tools/s81_pq_fullshape_design.py --basis current`
+4. `python3 tools/s81_pq_fullshape_compare.py`
+
+The pins are listed in `current_main/inputs/REPO_INPUTS.SHA256SUMS`. Codex's inputs are now committed on main with the snapshot hashes, so the tool reads `tools/s81/pq_parent_binding.py` and `results/uarch/dsrom_s81_pq_parent_20261007/*_inventory.json` and checks their hashes. All changed numbers and their reasons are in `current_main/comparison_current_main.json`.
+
+### What did not change
+
+- **Generator.** The 5aba116fc drift only adds an exact-rectangle pin kind for the HBM VM8 retile. Rebuilding the S81 layer die with the pinned generator and with the current generator gives identical frames, slots, corridors, hub, end blocks and stations.
+- **Inventories and mappings.** Stages, dies, pins, lane widths (1,633 / 1,085 / 568), SRAM (36 macros) and roots are all unchanged.
+
+### What changed
+
+- **Spine source.**
+  - The production native partition (Codex's `native_elaboration.json`) is built from the v13b spine at d0178820d (ecac11e1), not main's older `rtl` file; v13b is pinned under `current_main/inputs/rtl`.
+  - Width, field order and storage are unchanged.
+  - v13b has RG 8 and RPT 2, a two-stage BF16 read, the aq12m quantiser, +1 row-write cycle and +1 configuration cycle. These latencies belong to the reference spine; the partition does not add them.
+- **Cycles: 17 → 15 per phase (estimated AR loss 0.53 % → 0.47 %).**
+  - The v13b parent already pays RPT 2 on its root inputs. In the split design, the end block abuts the RWB, so those repeaters are replaced rather than added.
+  - This is still a **partial price**. The 1,792 per-token critical-phase list (46,681 compiled phases, of which only the token-active subset is on the path) is not composed.
+- **VM write FIFO: 12 (HALF) and 14 (FULL).**
+  - Measured: at most 10 rows per region per phase (HALF) and at most 14 (FULL).
+  - Because the FIFO holds the whole burst, the earlier requirement that the VM side sustain 0.75 rows per cycle is retired.
+- **Serial lane (option D).**
+  - HALF has at most 2 back-to-back BF beats and adds 0 phase-end cycles; beats shift by at most 2 cycles.
+  - FULL has runs of up to 6 and costs 1,280 cycles over 139 BF phases, at most 32 per phase.
+  - Refinement: **D becomes the preferred lane for HALF BF dies** (+0.4 mm² versus +9.8 mm²), subject to its exactness gate on beats delayed by up to 2 cycles. FULL keeps C.
+- **RWB is pin-limited.** The 722 / 794 return pins on one face give outlines of 221 × 140 and 243 × 140 µm at about 15 % cell utilisation. Total RWB area becomes 0.397 mm² (was 0.102 mm²). They still fit in the end-block columns beside `sp_gather`.
+- **Budget sheets.** Each hardening-stage block now has pins per face, the face length those pins need (3.26 pins/µm), area, and a clock-insertion target taken from the measured mean of the nearest measured analogue block in `results/rtl/budgets_20261006/measured_insertion.json`. These are targets, not measurements.
+
+| Block | Insertion target, SS / FF (ps) | Analogue |
+|---|---|---|
+| Root | 373 / 238 | `ot_s81ph_root_tile` |
+| RWB | 427 / 267 | `dsfd_cfifo` |
+| PQ core | 620 / 373 | q-element |
+| Lane station | 140 / 74 | `dsfd_stnh_566x1` |
+
+## Modeled version label (5d914995f)
+
+"Current basis" means a modeled version: **main@e2a4ad579 with a calibration snapshot observed 2026-10-07T12:10:55-07:00**. It does not mean whatever main's mutable files say now.
+
+- **Calibration snapshot.** The closure-loop daemon rewrites `results/rtl/budgets_20261006/measured_insertion.json`. The basis reads a pinned copy instead: `current_main/inputs/calibration/measured_insertion.bb7c46846.json` (sha 4a72c6e5, from source commit bb7c46846).
+- **Generator.** `tools/dsrom_s81_fulldie.py` at e2a4ad579 is pinned as `current_main/inputs/pinned/dsrom_s81_fulldie.cfc076112.py`.
+- **Recorded provenance.** `design.json.model_basis` and the comparison file record the source commit, path, sha256 and observation time.
+- **Geometry is PROVISIONAL** until the geometry owner commits the actual layout.
+
+Both bases reproduce byte-identically from a `git archive` of origin/main 10989fac4 overlaid with this branch's tools and results.
+
+## pq_parent packing update (provisional, folded into the current basis)
+
+This corrects design recommendation (1), which placed each root in an empty q element position. Mixed 1,792 frames have no such positions: each frame is 9 fully occupied rows (4 BF full-width + 10 q half-width).
+
+The pq_parent placement instead:
+- **Roots:** a 164.16 µm root row in the first 6 tier channels, one root per column (20/22/22/22/22/20 per tier). Frame spare drops from 241 to 77 µm; the die keeps 1,792 pairs and 512 BF.
+- **Root block:** 132.192 × 133.92 µm plus two 8.64 µm stations in a 142.56 µm strip. That is 2.996 mm² of reservation per die. The cell outline is 17,703 µm², 1.01× my estimate; the root with its protection bits lands at about 57.5 % utilisation.
+- **Core:** a 449.28 × 1,728 µm slot (0.776 mm²) after the VM. My 0.32 mm² estimate fits it.
+- **SU:** the capture-up / SU restack keeps the same 25.61188 mm² SU.
+
+Under the root contract below, the cycle cost becomes 18 per phase: CAM 4 + 2 stations + 14 row-count path − 2 RPT. The estimated AR loss is 0.56 %. This is still a **partial price**.
+
+## ROOT contract (`tools/s81_root_contract.py` → `current_main/root_contract/root_contract.json`)
+
+Codex /root/s81/pq_parent owns the RTL and the exact adapter proof. This tool owns the contract and its reference models.
+
+### Face: 141 pins
+
+| Group | Pins |
+|---|---|
+| Native | `clk`, `rst_n`; `tree_in[65:0]` = {e, d[32], tag[32], v} in the bit order of `ot_s81_pq_root_adapter`; `r_v`, `r_row[16]`, `r_pos[3]`, `r_fp32[32]`, `r_bf16[16]`, `r_e`; `fault` |
+| New: protection | `tree_par` and `r_par` (odd parity) |
+| From the adapter | `upstream_fault`, ORed into `fault` as the adapter already does |
+
+`busy` is not a root port. The draft's 67/71 count included it; the column busy stays on the column FIFO path.
+
+- **Registered faces:** an input station and an output station inside the strip, with at most buffering between pin and flop. The external input budget is ≤ 638 ps at 833.3 ps − 60 ps uncertainty − 15 ps acceptance.
+- **Flow:** valid-only in both directions with no ready, as in the native root.
+- **Fault:** sticky.
+
+### Parity: odd parity (an all-zero word fails)
+
+| Domain | Protection | Generated | Checked |
+|---|---|---|---|
+| Face in | 65 b + `tree_par` | Producer's last return register. This is not in RTL today: it is an obligation on the tree-return owner. | Input station; a bad word is dropped |
+| Queue | 128 entries × 1 parity bit, carried end-to-end | — | At head load |
+| Buffer | 128 × 1 parity bit | Carried from the queue; generated at stage A for adder results | At stage B on the hit read; stage B also re-checks the A→B register |
+| `bv` | 128-bit kept shadow copy | — | Every cycle |
+| Queue counters | Invariant (qw − qr) mod 128 = qc | — | Every cycle |
+| Face out | 68 b + `r_par` | Stage B from the output register's D inputs | RWB stage 0 |
+
+Root storage becomes **17,155 b** (16,768 native + 387 protection). The draft's "256 parity bits" was incomplete.
+
+**Unprotected (logic, disclosed):** the adder and tag-delay pipelines, `norm`, and the RNE incrementer.
+
+**Fail closed.**
+- Every fault cause is a sticky register bit, cleared only by `rst_n`.
+- The faulting word is never used or published.
+- From the next cycle, `r_v` is forced to 0; native roots keep publishing after a fault, but post-fault output is outside the golden contract.
+- The RWB ORs the root fault into the spine's `f_fault`. The spine then holds `ready` low and the controller aborts or replays the token.
+- A tag upset that turns a match into a miss strands the entry. Parity cannot catch that; the spine rows-left watchdog must (a system obligation).
+
+### Pipelined CAM
+
+**Stages.**
+- **I:** input station.
+- **FWFT queue:** registered head with `norm` precomputed on load.
+- **A, about 9 levels:** select the candidate (adder result first, else queue head), then compare its tag against all 128 entries. The comparisons use 8 kept copies of the candidate tag, each fanned out to 16 comparators. A registers `M_raw`, `fwd` and `complete`.
+- **B, about 16 levels:** fix up the match vector, pick the lowest hit and the lowest free slot on the current `bv`, do the one-hot read of `bd`/`bt`/`be`/`p`, check parity, apply RNE, and register the output. If B misses SS +15 ps, split the operand read into a stage C; that costs +1 cycle on the add path only and is safe.
+- **O:** output station.
+
+**Hazard rules H1–H5.**
+- **H1, insert-forward:** set the match bit of slot s iff `fwd` = sibling(B's candidate, A's candidate) and B inserted into s in the previous cycle.
+- **H2, remove-mask:** clear the match bit of the slot B removed in the previous cycle.
+- **H3:** the free-slot search uses the current `bv`, never the A-time view.
+- **H4:** H1–H3 are complete, because only one B decision can write between a candidate's A compare and its B decision.
+- **H5:** the parent tag and the operand order come from the candidate alone.
+
+**Equivalence.** Pairing and every published word are bit-identical to the native root. Output order and slot indices may differ; the VM writes by address and the spine counts rows, so order is not observable.
+
+**Latency.** +1 cycle per root pass, at most +4 on a row's chain, plus 2 stations. A word that completes at once takes 5 cycles from input to row out (native: 2).
+
+**Reset.** Valid bits, the shadow, counters, pipe valids and the cause register reset; the entry arrays do not, because parity is checked only on valid entries.
+
+### Executable checks (`--rtl`, about 1 s)
+
+- **Golden model vs native RTL.** The Python native-root model matches `ot_v41_ret_root` under Icarus cycle-exactly on 3 seeds × 120 rows. A model with adder latency 7 and a truncating model both fail that comparison.
+- **Pipelined vs golden.** On 12 seeds of randomised csum-tree cuts (input density 0.6, 0.9 and 1.0, adversarial back-to-back siblings), the pipelined model equals both the golden model and a csum reference per row. Peak occupancy is at most 33 of 128.
+- **Negatives, each detected:**
+  - no insert-forward: 23 rows lost;
+  - no remove-mask on an upstream duplicate: the row is published twice;
+  - stale free-slot search: 18 rows lost;
+  - truncating rounding: 61 mismatched.
+- **Fault injection.** Buffer, `bv`, queue-counter, queue-entry and face-parity upsets all fault with 0 wrong words published. With parity checking disabled, wrong words are published. Without suppression, 118 words are published after the fault, against 53 with it.

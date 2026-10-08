@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.s81_ph.bench.v1",
+ "kind": "collective",
+ "rtl_commit": "b79ec416b (benches c2 on the same RTL; ep benches b1/c1 on the unchanged ot_s81ph_link_ep)",
+ "simulator": "Verilator 5.032 on ot-epyc2",
+ "exact_benches": {
+  "tb_s81ph_link_ep (lockstep vs two ot_dsrom_link_ct, scoreboard vs the sent stream)": {
+   "ep_base": "PASS (CREDITS 64, SEQW 8, CH 20, fwd error every 13 frames, rev every 7: 465/461 replays, 4805 CRC errors, 1500 flits each way, cycle-identical outputs and counters)",
+   "ep_sram": "PASS (same, replay buffer + receive FIFO in 512x128 macro models)",
+   "ep_paced": "PASS (PHY pacer active)",
+   "ep_prod": "PASS (production: CREDITS 512, SEQW 10, CH 251, SRAM, pacer 32187672/610304, 3000 flits, errors 1/211 fwd 1/97 rev)",
+   "ep_prod_flop": "PASS (production, flop storage)"
+  },
+  "tb_s81ph_coll_sys (4-die TP4 group of dsfd_sp_collective over raw 512-b lanes vs four C8 engines built with RANK 0..3)": {
+   "sys_main": "PASS (200 messages / 1345 records reduce + gather, specials incl. Inf/NaN/-0/denormal, 100 pass-through flits per lane, lane bit errors every 97 beats, CHB 60)",
+   "sys_nospec": "PASS (no specials, seed 11, 1360 records)",
+   "sys_board_err": "PASS (board channel 251 cycles, lane bit errors every 61 beats: replays, 953 records)",
+   "perf_ar448_b0": "PASS", "perf_ar448_b251": "PASS", "perf_ag448_b251": "PASS"
+  },
+  "tb_s81ph_coll_rstc (directed)": "PASS: power-on release at 66 / 74 / 82 refclk after lock (stream, serial, hbm), async assertion on por glitch and lock loss, chatter < LOCK_HOLD never releases"
+ },
+ "negative_controls": {
+  "ep_mut_nocrc (receiver ignores CRC, both ref and DUT)": "FAIL as required (scoreboard: corrupted flits delivered)",
+  "ep_mut_nozero (DUT-only: CRC split loses the crc(0) term)": "FAIL as required (lockstep: every frame rejected)",
+  "mut_noreorder (DUT-only: no rank relabel of the gather beat)": "FAIL as required (585 gather mismatches on ranks 1..3)",
+  "mut_nocredit (DUT-only: credit returns never carried)": "FAIL as required (deadlock: 238 of 819 outputs)",
+  "rstc mut SYNCLOCK / ORDER": "FAIL as required (rstc_bench.log)"
+ },
+ "cycle_cost": {
+  "basis": "448-record all-reduce (7168 FP32: one TP4 wo_b vector), 4 dies, VM streams one record a cycle; reference = the C8 abstract (engines wired directly: zero link latency, one record a cycle per link)",
+  "perf_ar448_b0 (lane channel 1 cycle)": {"dut_cycles": 778, "reference_cycles": 457, "added": 321},
+  "perf_ar448_b251 (board 251 cycles = full-KP4 PHY, UCIe 12)": {"dut_cycles": 1796, "reference_cycles": 457},
+  "perf_ag448_b251 (all-gather)": {"dut_cycles": 1792, "reference_cycles": 452},
+  "decomposition": "rate: 0.764 records / cycle per link (reliable-link framing in a 512-b beat) -> 586 vs 448 cycles of transfer (+138); fixed slab pipeline (VM queue, pins, ep TX 2 + gearbox + RX 3 + FIFO, engine, packer, out queue) ~ 190 cycles end to end; at 251-cycle board PHY latency the 256-deep engine FIFO credits (128 / parity / source) make the 448-record transfer wait one credit round trip (~ 2 x 300 cycles) -- the same credit dynamics as the C8 abstract engine at that link latency",
+  "owner_of_model_term": "COMPOSE: re-price the TP4 collective with link rate 0.764 rec/cycle (or adopt the optional >= 652-b lane) and the measured fixed pipeline"
+ }
+}

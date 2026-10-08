@@ -1,0 +1,60 @@
+{
+  "schema": "opentallas.hbm_su.div64_closure_successor.v1",
+  "selected": false,
+  "build_ready": false,
+  "baseline": {
+    "scope": "Fresh SS/FF only on completed original route64cda61ab; no reroute; second automatic attempt untouched",
+    "helper_pin": "2f22d245c",
+    "drc_errors": 0,
+    "setup_ss_ps": -295.27,
+    "hold_ff_ps": -34.8,
+    "input_hold_ff_ps": 8.36,
+    "output_hold_ff_ps": 8.422679,
+    "accepted_at_plus15_ps": false,
+    "clock_policy": "Original post-SDC833.333ps core, four generated div64 clocks,60/25ps uncertainty, preserved IO budget/mean-corner insertion",
+    "elapsed_seconds": 205.3,
+    "memory_note": "time.log measures launcher+docker client only, not container RSS; admission based on measured original full-route peak22.49GiB"
+  },
+  "source_sha256": {
+    "results/uarch/hbm_su_divider_halfpair_20261007/route_attempt1_recovered/summary.json": "40a683c092fa6529cfa61eece915ad0a01e2a9ca3a90454d35be781647e2758d"
+  },
+  "setup": {
+    "candidate": "Enable existing GSH=1 in unique full64 successor wrapper",
+    "source": "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_vec_lane_c12.sv:g_gq.g_gs",
+    "mechanism": "Register barrel-shift output before G2 address adder and read-address mux",
+    "state_FF_per_lane": 155,
+    "state_raw_area_um2": 58.7574,
+    "incremental_slot_area_at55pct_um2": 106.83163636363635,
+    "aligned_fields": "s_v,s_par,s_cpair,s_a,s_b,s_c,s_d,s_o,s_qs,s_src; reset clears s_v",
+    "extra_gather_cycles": 1,
+    "extra_nongather_cycles": 0,
+    "extra_memory_return_cycles": 0,
+    "controller_fetch_cycles_before": 8,
+    "controller_fetch_cycles_after": 9,
+    "required_schedule": "Controller GSH must match lane; gather read and all dependent output metadata move one edge together; rd_q latency remains unchanged.",
+    "boundary_bits_unchanged": true,
+    "MACs_per_cycle_unchanged": true,
+    "memory_bytes_per_cycle_unchanged": true,
+    "token_latency_formula": "number of serial exposed gather operations / serial_domain_hz; compiler schedule must provide exact count",
+    "token_latency_measured": null,
+    "replica_count_requires_selected_full_inventory": true,
+    "fanout": "Local155FF/lane; no new global control broadcast; physical buffering and placement need measurement",
+    "qualification": "Analytical local cost only; no claim that GSH alone closes full setup"
+  },
+  "hold": {
+    "actual_clock_pair": "div64_3 rising -> core_clk rising",
+    "required_incremental_min_path_ps": 49.8,
+    "repair": "Preserve four generated clocks and60/25 uncertainty. Characterize explicit hold-buffer insertion on actual failing return data cones atFF and recheckSS; no RTL delay chain or false-path waiver.",
+    "buffer_count": null,
+    "buffer_area": null,
+    "reason_open": "Required49.8ps minimum-path increase cannot be converted to a cell count without actual corner slew/load and remaining SS budget.",
+    "input_margin_deficit_ps": 6.640000000000001,
+    "output_margin_deficit_ps": 6.5773209999999995
+  },
+  "required_before_build": [
+    "Unified model composition of exact exposed gather count and replicated slot fit",
+    "FF buffer-cell characterization and all hold endpoints inventory",
+    "Exact random plus vehicle gates with GSH1/DDIV64 and gather collision coverage"
+  ],
+  "active_attempt_policy": "Keep original automatic attempt2 progressing; successor does not replace its source or failed receipt"
+}

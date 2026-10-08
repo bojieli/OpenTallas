@@ -1,0 +1,5 @@
+
+-- Running command `read_verilog -sv rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv rtl/dsrom_sys/s81_window_la/ot_dsrom_window_column_halfwrite.sv; chparam -set HALFWRITE 1 ot_dsrom_window_column_halfwrite; hierarchy -top ot_dsrom_window_column_halfwrite; proc; flatten; opt; memory_map; opt; write_json /tmp/window-halfwrite-generic.json; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv
+rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv:141: ERROR: syntax error, unexpected TOK_GENVAR, expecting TOK_ID or '{'

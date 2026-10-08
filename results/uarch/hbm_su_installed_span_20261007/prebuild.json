@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.hbm.su.installed_span.prebuild.v1",
+  "selected": false,
+  "adopted": false,
+  "MACs_per_cycle": 0,
+  "descriptor": {
+    "owner_bits": 73,
+    "record_bits": 16,
+    "source_bits": 5,
+    "logical_word_base_bits": 24,
+    "rows_bits": 13,
+    "byte_base_bits": 37,
+    "byte_limit_bits": 37
+  },
+  "replicas": 1,
+  "outstanding_reads": 1,
+  "protected_rows": 8,
+  "protected_ff_bits": 576,
+  "storage": "8 SECDED72 control/descriptor/request/result rows; one returned32bit word, no new result memory",
+  "boundary_bits": {
+    "request": 148,
+    "response": 371,
+    "consumer_request": 38,
+    "consumer_result": 46
+  },
+  "memory_bytes_per_request": 32,
+  "consumer_bytes_per_result": 4,
+  "MACs_per_byte": 0,
+  "clock_ghz": 1.2,
+  "latency": {
+    "bind_to_wait_publication": 1,
+    "publication_to_read_ready": 1,
+    "read_accept_to_service_request": 1,
+    "checked_response_to_consumer_result": 1,
+    "result_accept_to_next_read_ready": 1,
+    "minimum_initiation_interval_cycles": 4,
+    "total_read_cycles": "1 requeststage + serviceacceptance/response latency +1 resultstage +consumerstall",
+    "per_token_cost": "numberofSUreadtransactions*(measuredproviderlatency+2+stall); fullschedulerjoin required before tokenrate claim"
+  },
+  "area": {
+    "ff_um2": 0.37908,
+    "conservative_logic_gate_um2": 0.2,
+    "ecc_gate_bound": 12544,
+    "other_gate_bound": 4096,
+    "cell_area_bound_um2": 3546.35008,
+    "slot_um": [
+      128,
+      128
+    ],
+    "slot_utilization_bound": 0.21645203125,
+    "target_utilization": 0.55,
+    "slot_fit_analytical": true
+  },
+  "routing": {
+    "proposed_channel_width_um": 48,
+    "track_pitch_um": 0.072,
+    "capacity_tracks": 666,
+    "aggregate_service_tracks": 519,
+    "analytical_fit": true,
+    "physical_fit": false,
+    "source_fanout": "encoded rows decode locally; largestownerbit comparisons request/publication/response, retainedbuffer tree required at synth"
+  },
+  "reset": "coldPOR only resets protection; warmreset withboundspan or outstandingservice quarantines instead of dropping ownership",
+  "adoption_gates": [
+    "actual descriptorinstallation/ownerbinding",
+    "bitexact read/identity andnegativegates",
+    "SS/FF context and protectedendpointplacement",
+    "actual SUcontroller virtualedge scheduling join"
+  ],
+  "open": "one-outstanding adapter only; no full SUprogram/scheduler integration or final timing"
+}

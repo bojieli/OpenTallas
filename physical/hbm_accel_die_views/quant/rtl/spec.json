@@ -1,0 +1,60 @@
+{
+ "master": "hfd_quant",
+ "note": "Quant view: ot_hfd_actquant_m (make_actquant_m.py: margin-first port of the 1.2 GHz ot_dsrom_actquant_f12, lever su_swiglu 1d4ea2dc2; exact vs ot_hdc_actquant and f12 on 87,475 blocks, tb_aq_equiv.sv; LATENCY 22 = original 13 + 9, f12 + 4) behind the die ports: x = f_vm[1023:0] (32 FP32 a block); the dequantised BF16 block y[511:0] is broadcast to the four SU quarters (t_su_*). The die interface carries no valid / format bit (v tied 1, II = 1) and fp4 alternates from a wrapper toggle so both formats stay live; q / e / vo / fault have no die net (generator-side width defect): they end in kept sink flops.",
+ "extra": [
+  "    reg tgl; always @(posedge clk) tgl <= rst_n ? ~tgl : 1'b0;"
+ ],
+ "instances": [
+  {
+   "name": "aq",
+   "module": "ot_hfd_actquant_m",
+   "file": "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "v": "const:1",
+    "fp4": "expr:tgl",
+    "x": "die:f_vm[0:1024]",
+    "y": [
+     "die:t_su_SW[0:512]",
+     "die:t_su_NW[0:512]",
+     "die:t_su_SE[0:512]",
+     "die:t_su_NE[0:512]"
+    ],
+    "vo": "fold",
+    "q": "fold",
+    "e": "fold",
+    "fault": "fold"
+   },
+   "params": {
+    "MR": 1,
+    "MLAT": 6
+   }
+  }
+ ],
+ "kept_out_regs": true,
+ "face_stages": 5,
+ "share_tree": {
+  "min": 3,
+  "fanout": 4
+ },
+ "port_stages": {
+  "f_vm": 2,
+  "t_su_SW": 4,
+  "t_su_NW": 4,
+  "t_su_SE": 4,
+  "t_su_NE": 4
+ },
+ "port_stages_basis": {
+  "rule": "owner cost rule 2026-10-06: per face N = clamp(ceil(d / 380 um), 2, 5), d = in-view core endpoint <-> pin wire (max over the port bits); one hop <= 380 um at the 770 ps route target",
+  "d_um": {
+   "f_vm": 378,
+   "t_su_SW": 1198,
+   "t_su_NW": 1152,
+   "t_su_SE": 1140,
+   "t_su_NE": 1123
+  },
+  "source": "qm2_pd55 3_3_place_gp core endpoint -> pin, max over bits (face_chain_place.tcl OT_FC_REPORT)",
+  "qm5_update": "qm5_pd55 (buffers kept by timing-driven GP) and the qm5 3_3 re-walk with buffers removed: t_su_SE / t_su_NE core->pin up to 1,263 / 1,214 um -> ceil(d/380) = 4 (was 3); every t_su face now 4, the quant path latency (max over faces) unchanged"
+ }
+}

@@ -1,0 +1,13 @@
+c12 params {'mlat': 6, 'alat': 6, 'opr': 1, 'ddiv': 21, 'sidex': 4, 'fsq': 1, 'capr': 1, 'rpad': 1, 'rsl': 2, 'rtap': 1, 'rout': 2, 'rslice': 64, 'ctl12': 2, 'ropi': 1, 'rkc': 1, 'rhalf': 1, 'rhpar': 1, 'gsh': 1, 'kimm': 1, 'denr': 1, 'dring': 2} OT_VFLAGS --unroll-count 4 -fno-dfg -GOPR=1 -GDDIV=21 -GSIDEX=4 -GFSQ=1 -GCAPR=1 -GRPAD=1 -GRSL=2 -GROUT=2 -GCTL12=2 -GRTAP=1 -GRSLICE=64 -GROPI=1 -GRKC=1 -GRHALF=1 -GRHPAR=1 -GGSH=1 -GKIMM=1 -GDENR=1 -GDRING=2
+scratch /srv/opentallas-scratch2/scratch/codex/hbm-su-hub-4c1216b21/work-pos
+built N=16 M=8
+  random N=16 seed=2 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1317
+  random N=16 seed=1 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1894
+  random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1865
+random 16 3 / 3
+built N=64 M=16
+  random N=64 seed=101 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1931
+  random N=64 seed=102 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=2327
+random 64 2 / 2
+wrote /srv/opentallas-scratch2/scratch/codex/hbm-su-hub-4c1216b21/pos.json
+C12 CAMPAIGN PASS

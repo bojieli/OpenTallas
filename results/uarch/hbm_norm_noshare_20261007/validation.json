@@ -1,0 +1,24 @@
+{
+  "scope": "Recipe and executable equivalence smoke on registered mux; not full-shape norm validation",
+  "positive_equivalence": "PASS",
+  "output_bit_mutant": "FAIL as expected",
+  "negative_returncode": 1,
+  "yosys": "Yosys 0.9 (git sha1 1979e0b)",
+  "full_shape_synthesis": "not launched: remote access restricted",
+  "full_shape_mapped_equivalence": "not run",
+  "recipe_checks": [
+    "immutable input",
+    "new output directory",
+    "wrong-top rejection",
+    "duplicate synth rejection",
+    "30-file pinned source manifest verified"
+  ],
+  "ORFS_production_recipe": {
+    "preparation": "PASS on harvested production config/Tcl and immutable pinned source",
+    "source_files_validated": 30,
+    "ORFS_RTL_LEF_lib_inputs_validated": 23,
+    "constraint_copy": "byte-identical",
+    "negative_changed_constraint": "rejected before output directory creation",
+    "fullshape_mapping": "not yet executed"
+  }
+}

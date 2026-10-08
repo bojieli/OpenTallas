@@ -1,0 +1,147 @@
+{
+ "master": "hfd_coll",
+ "clock": "refclk",
+ "rst": "por",
+ "extra_inputs": [
+  "refclk",
+  "por"
+ ],
+ "clock_out_ports": [
+  "pll_stream",
+  "pll_link",
+  "pll_serial",
+  "pll_hbm"
+ ],
+ "note": "INTERIM, REDUCED: unchanged ot_hbm_accel_tu_endpoint with FIFO depths RXAW = QAW = TXAW = 4 (16 entries); at the RTL defaults (RXAW 8, QAW 6, TXAW 6) its flop FIFOs hold ~2.5 Mb, more std-cell area than the 1.96 mm2 slot: the endpoint needs SRAM FIFOs before a full-depth view exists. pclk = clk (the PHY clock is the link clock region outside this block). Extra pins refclk / por: the die has no clock / reset input for its PLL owner.",
+ "instances": [
+  {
+   "name": "ep",
+   "module": "ot_hbm_accel_tu_endpoint",
+   "file": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv",
+   "params": {
+    "ENABLE": 1,
+    "RXAW": 4,
+    "QAW": 4,
+    "TXAW": 4
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "pclk": "clk",
+    "prst_n": "rst_n",
+    "inj_data": "die:f_su_SW[0:1024]",
+    "rank": "die:f_cmdproc[0:8]",
+    "pf": "die:f_cmdproc[8:24]",
+    "go": "die:f_cmdproc[24:25]",
+    "fault": "die:t_cmdproc[0:1]",
+    "stat_credit_stall": "die:t_cmdproc[1:33]",
+    "ph_tx_v": "die:llk_S0[0:8]",
+    "ph_tx_flit": "die:llk_S0[8:487]+llk_S1[0:487]+llk_S2[0:487]+llk_S3[0:487]+llk_S4[0:487]+llk_N0[0:487]+llk_N1[0:487]+llk_N2[0:487]+llk_N3[0:472]",
+    "rx_credit": "die:llk_N3[472:480]",
+    "ph_rx_v": "die:llk_S0[487:495]",
+    "ph_rx_flit": "die:llk_S0[495:974]+llk_S1[487:974]+llk_S2[487:974]+llk_S3[487:974]+llk_S4[487:974]+llk_N0[487:974]+llk_N1[487:974]+llk_N2[487:974]+llk_N3[487:959]",
+    "sw_cr_ret": "die:llk_N3[959:967]",
+    "del_flit": "die:t_su_SW[0:545]+t_su_NW[0:545]+t_su_SE[0:545]+t_su_NE[0:545]",
+    "del_valid": "die:t_su_SW[545:546]+t_su_NW[545:546]+t_su_SE[545:546]+t_su_NE[545:546]",
+    "inj_idx": [
+     "die:t_su_SW[546:578]",
+     "die:t_su_NW[546:578]",
+     "die:t_su_SE[546:578]",
+     "die:t_su_NE[546:578]"
+    ],
+    "inj_rd": [
+     "die:t_su_SW[578:580]",
+     "die:t_su_NW[578:580]",
+     "die:t_su_SE[578:580]",
+     "die:t_su_NE[578:580]"
+    ]
+   }
+  }
+ ],
+ "extra_out": [
+  [
+   "por_stream",
+   0,
+   1,
+   "rst_s[1]"
+  ],
+  [
+   "por_link",
+   0,
+   1,
+   "rst_s[1]"
+  ],
+  [
+   "por_serial",
+   0,
+   1,
+   "rst_s[1]"
+  ],
+  [
+   "por_hbm",
+   0,
+   1,
+   "rst_s[1]"
+  ]
+ ],
+ "kept_out_regs": true,
+ "face_stages": 5,
+ "share_tree": {
+  "min": 3,
+  "fanout": 4
+ },
+ "port_stages": {
+  "f_cmdproc": 3,
+  "t_cmdproc": 3,
+  "f_su_SW": 4,
+  "t_su_SW": 4,
+  "llk_S0": 3,
+  "llk_S1": 3,
+  "llk_S2": 3,
+  "por_stream": 3,
+  "llk_N0": 3,
+  "llk_N1": 3,
+  "f_su_NW": 4,
+  "t_su_NW": 4,
+  "f_su_SE": 4,
+  "t_su_SE": 4,
+  "por_link": 3,
+  "llk_S3": 3,
+  "llk_S4": 3,
+  "llk_N2": 3,
+  "llk_N3": 3,
+  "f_su_NE": 4,
+  "t_su_NE": 4,
+  "por_serial": 3,
+  "por_hbm": 3
+ },
+ "port_stages_basis": {
+  "rule": "owner cost rule 2026-10-06: per face N = clamp(ceil(d / 380 um), 2, 5), d = in-view core endpoint <-> pin wire (max over the port bits); one hop <= 380 um at the 770 ps route target",
+  "d_um": {
+   "f_cmdproc": 939,
+   "t_cmdproc": 939,
+   "f_su_SW": 1317,
+   "t_su_SW": 1183,
+   "llk_S0": 1071,
+   "llk_S1": 939,
+   "llk_S2": 808,
+   "por_stream": 808,
+   "llk_N0": 939,
+   "llk_N1": 1071,
+   "f_su_NW": 1204,
+   "t_su_NW": 1317,
+   "f_su_SE": 1336,
+   "t_su_SE": 1172,
+   "por_link": 1051,
+   "llk_S3": 920,
+   "llk_S4": 761,
+   "llk_N2": 892,
+   "llk_N3": 1051,
+   "f_su_NE": 1215,
+   "t_su_NE": 1336,
+   "por_serial": 842,
+   "por_hbm": 1121
+  },
+  "source": "pin -> view centre Manhattan, max over the port bits (no placed core yet)"
+ }
+}

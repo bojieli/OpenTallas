@@ -1,0 +1,252 @@
+{
+  "passed": true,
+  "checks": {
+    "f0_r0": {
+      "parameters": {
+        "FWD": 0,
+        "RET": 0,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=0 ret=0 stalls=895 elapsed=948 credit_drain=1\n"
+    },
+    "f0_r1": {
+      "parameters": {
+        "FWD": 0,
+        "RET": 1,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=0 ret=1 stalls=897 elapsed=948 credit_drain=2\n"
+    },
+    "f0_r7": {
+      "parameters": {
+        "FWD": 0,
+        "RET": 7,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=0 ret=7 stalls=909 elapsed=948 credit_drain=8\n"
+    },
+    "f0_r64": {
+      "parameters": {
+        "FWD": 0,
+        "RET": 64,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=0 ret=64 stalls=1023 elapsed=948 credit_drain=65\n"
+    },
+    "f1_r0": {
+      "parameters": {
+        "FWD": 1,
+        "RET": 0,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=1 ret=0 stalls=895 elapsed=948 credit_drain=1\n"
+    },
+    "f1_r1": {
+      "parameters": {
+        "FWD": 1,
+        "RET": 1,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=1 ret=1 stalls=897 elapsed=948 credit_drain=2\n"
+    },
+    "f1_r7": {
+      "parameters": {
+        "FWD": 1,
+        "RET": 7,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=1 ret=7 stalls=909 elapsed=948 credit_drain=8\n"
+    },
+    "f1_r64": {
+      "parameters": {
+        "FWD": 1,
+        "RET": 64,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=1 ret=64 stalls=1023 elapsed=948 credit_drain=65\n"
+    },
+    "f7_r0": {
+      "parameters": {
+        "FWD": 7,
+        "RET": 0,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=7 ret=0 stalls=895 elapsed=948 credit_drain=1\n"
+    },
+    "f7_r1": {
+      "parameters": {
+        "FWD": 7,
+        "RET": 1,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=7 ret=1 stalls=897 elapsed=948 credit_drain=2\n"
+    },
+    "f7_r7": {
+      "parameters": {
+        "FWD": 7,
+        "RET": 7,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=7 ret=7 stalls=909 elapsed=948 credit_drain=8\n"
+    },
+    "f7_r64": {
+      "parameters": {
+        "FWD": 7,
+        "RET": 64,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=7 ret=64 stalls=1023 elapsed=948 credit_drain=65\n"
+    },
+    "f64_r0": {
+      "parameters": {
+        "FWD": 64,
+        "RET": 0,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=64 ret=0 stalls=895 elapsed=948 credit_drain=1\n"
+    },
+    "f64_r1": {
+      "parameters": {
+        "FWD": 64,
+        "RET": 1,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=64 ret=1 stalls=897 elapsed=948 credit_drain=2\n"
+    },
+    "f64_r7": {
+      "parameters": {
+        "FWD": 64,
+        "RET": 7,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=64 ret=7 stalls=909 elapsed=948 credit_drain=8\n"
+    },
+    "f64_r64": {
+      "parameters": {
+        "FWD": 64,
+        "RET": 64,
+        "MUTANT": 0,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=64 ret=64 stalls=1083 elapsed=988 credit_drain=65\n"
+    },
+    "sequence_wrap": {
+      "parameters": {
+        "FWD": 7,
+        "RET": 64,
+        "MUTANT": 0,
+        "ROWS": 640,
+        "TAGW": 8
+      },
+      "returncode": 0,
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=640 injectors=2 width=544 fwd=7 ret=64 stalls=2067 elapsed=1996 credit_drain=65\n"
+    },
+    "ignore_reservations": {
+      "parameters": {
+        "FWD": 7,
+        "RET": 7,
+        "MUTANT": 1,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 1,
+      "passed": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_truecredit.sv:64: TRUECREDIT_FAULT tx=1 rx=0 cycle=65\n       Time: 706000 Scope: tb_ha2_truecredit\n"
+    },
+    "corrupt_retire_id": {
+      "parameters": {
+        "FWD": 7,
+        "RET": 7,
+        "MUTANT": 2,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 1,
+      "passed": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_truecredit.sv:64: TRUECREDIT_FAULT tx=1 rx=0 cycle=228\n       Time: 2336000 Scope: tb_ha2_truecredit\n"
+    },
+    "corrupt_forward_id": {
+      "parameters": {
+        "FWD": 7,
+        "RET": 7,
+        "MUTANT": 3,
+        "ROWS": 192,
+        "TAGW": 16
+      },
+      "returncode": 1,
+      "passed": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_truecredit.sv:64: TRUECREDIT_FAULT tx=0 rx=1 cycle=43\n       Time: 486000 Scope: tb_ha2_truecredit\n"
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d203972abf58823ce475d9b72fa857c87ef6a9492c0700846955d564552f1b6",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_truecredit.sv": "ce426d078c74e20884ea3ff169f3f9a7952059e2a2d31355c3275db7d321ed47"
+  },
+  "scope": "Full-width two-injector mechanism and negative controls; synchronized clean reset. Not full numerical endpoint qualification, SRAM protection, mapped area, physical closure or actual latency composition."
+}

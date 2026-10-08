@@ -1,0 +1,198 @@
+{
+ "schema": "opentallas.closure_loop.path_summary.v1",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_smh_front_s_m3b_6af5cdd82/routes/hbm_smh_front_s_m3b_6af5cdd82/results/asap7/smh_front_s_one_hbm_smh_front_s_m3b_6af5cdd82/base",
+ "setup_ss": {
+  "paths_seen": 800,
+  "worst_slack_ps": -75.31,
+  "classes": [
+   {
+    "start_class": "req_ready",
+    "end_class": "u_rsk.rp[*]$_DFFE_PN0P_/D",
+    "worst_slack_ps": -75.31,
+    "paths": 3,
+    "max_levels": 5,
+    "example_start": "req_ready",
+    "example_end": "u_rsk.rp[2]$_DFFE_PN0P_/D"
+   },
+   {
+    "start_class": "u_rsk.rp[*]$_DFFE_PN0P_/QN",
+    "end_class": "req_addr[*]",
+    "worst_slack_ps": -31.08,
+    "paths": 32,
+    "max_levels": 9,
+    "example_start": "u_rsk.rp[1]$_DFFE_PN0P_/QN",
+    "example_end": "req_addr[7]"
+   },
+   {
+    "start_class": "u_rsk.rp[*]$_DFFE_PN0P_/QN",
+    "end_class": "req_tag[*]",
+    "worst_slack_ps": -22.92,
+    "paths": 10,
+    "max_levels": 9,
+    "example_start": "u_rsk.rp[1]$_DFFE_PN0P_/QN",
+    "example_end": "req_tag[0]"
+   },
+   {
+    "start_class": "u_rsk.rp[*]$_DFFE_PN0P_/QN",
+    "end_class": "req_v",
+    "worst_slack_ps": 12.13,
+    "paths": 1,
+    "max_levels": 7,
+    "example_start": "u_rsk.rp[1]$_DFFE_PN0P_/QN",
+    "example_end": "req_v"
+   },
+   {
+    "start_class": "u_rsk.rpq[*]$_DFF_PN0_/QN",
+    "end_class": "u_rch.head[*]$_DFFE_PP_/D",
+    "worst_slack_ps": 19.89,
+    "paths": 2,
+    "max_levels": 9,
+    "example_start": "u_rsk.rpq[0]$_DFF_PN0_/QN",
+    "example_end": "u_rch.head[7]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "rsp_v",
+    "end_class": "u_prv.g_s[*].g_r.u/q$_DFF_PN0_/D",
+    "worst_slack_ps": 23.27,
+    "paths": 1,
+    "max_levels": 2,
+    "example_start": "rsp_v",
+    "example_end": "u_prv.g_s[0].g_r.u/q$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "d_valid",
+    "end_class": "u_dch.vq$_DFF_PN0_/D",
+    "worst_slack_ps": 25.81,
+    "paths": 1,
+    "max_levels": 2,
+    "example_start": "d_valid",
+    "example_end": "u_dch.vq$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "rsp_data[*]",
+    "end_class": "u_prd.g_s[*].g_n.u/q[*]$_DFF_P_/D",
+    "worst_slack_ps": 28.37,
+    "paths": 360,
+    "max_levels": 2,
+    "example_start": "rsp_data[713]",
+    "example_end": "u_prd.g_s[0].g_n.u/q[713]$_DFF_P_/D"
+   },
+   {
+    "start_class": "d_base[*]",
+    "end_class": "u_dch.dq[*]$_DFF_P_/D",
+    "worst_slack_ps": 32.54,
+    "paths": 25,
+    "max_levels": 2,
+    "example_start": "d_base[13]",
+    "example_end": "u_dch.dq[37]$_DFF_P_/D"
+   },
+   {
+    "start_class": "d_lines[*]",
+    "end_class": "u_dch.dq[*]$_DFF_P_/D",
+    "worst_slack_ps": 33.61,
+    "paths": 8,
+    "max_levels": 2,
+    "example_start": "d_lines[13]",
+    "example_end": "u_dch.dq[13]$_DFF_P_/D"
+   }
+  ],
+  "errors": []
+ },
+ "hold_ff": {
+  "paths_seen": 800,
+  "worst_slack_ps": -20.58,
+  "classes": [
+   {
+    "start_class": "u_ol.u_d/q[*]$_DFF_P_/QN",
+    "end_class": "rout_l3[*]",
+    "worst_slack_ps": -20.58,
+    "paths": 304,
+    "max_levels": 5,
+    "example_start": "u_ol.u_d/q[266]$_DFF_P_/QN",
+    "example_end": "rout_l3[274]"
+   },
+   {
+    "start_class": "u_prd.g_s[*].g_n.u/q[*]$_DFF_P_/QN",
+    "end_class": "fp_d[*]",
+    "worst_slack_ps": -19.03,
+    "paths": 67,
+    "max_levels": 3,
+    "example_start": "u_prd.g_s[1].g_n.u/q[1017]$_DFF_P_/QN",
+    "example_end": "fp_d[1017]"
+   },
+   {
+    "start_class": "u_or.u_d/q[*]$_DFF_P_/QN",
+    "end_class": "rout_r3[*]",
+    "worst_slack_ps": -15.63,
+    "paths": 29,
+    "max_levels": 5,
+    "example_start": "u_or.u_d/q[403]$_DFF_P_/QN",
+    "example_end": "rout_r3[411]"
+   },
+   {
+    "start_class": "g_qs[*].g_ln[*].g_use.u_dd.g_s[*].g_n.u/q[*]$_DFF_P_/QN",
+    "end_class": "g_qs[*].g_ln[*].g_use.u_dd.g_s[*].g_n.u/q[*]$_DFF_P_/D",
+    "worst_slack_ps": 18.09,
+    "paths": 258,
+    "max_levels": 6,
+    "example_start": "g_qs[1].g_ln[1].g_use.u_dd.g_s[2].g_n.u/q[22]$_DFF_P_/QN",
+    "example_end": "g_qs[1].g_ln[1].g_use.u_dd.g_s[3].g_n.u/q[22]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_prd_o.g_s[*].g_n.u/q[*]$_DFF_P_/QN",
+    "end_class": "u_prd_o.g_s[*].g_n.u/q[*]$_DFF_P_/D",
+    "worst_slack_ps": 20.82,
+    "paths": 27,
+    "max_levels": 3,
+    "example_start": "u_prd_o.g_s[0].g_n.u/q[233]$_DFF_P_/QN",
+    "example_end": "u_prd_o.g_s[1].g_n.u/q[233]$_DFF_P_/D"
+   },
+   {
+    "start_class": "g_qs[*].g_ln[*].g_use.u_dd.g_s[*].g_n.u/q[*]$_DFF_P_/QN",
+    "end_class": "u_prd_o.g_s[*].g_n.u/q[*]$_DFF_P_/D",
+    "worst_slack_ps": 21.99,
+    "paths": 41,
+    "max_levels": 5,
+    "example_start": "g_qs[1].g_ln[1].g_use.u_dd.g_s[7].g_n.u/q[35]$_DFF_P_/QN",
+    "example_end": "u_prd_o.g_s[0].g_n.u/q[183]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_prv_o.g_s[*].g_r.u/q$_DFF_PN0_/QN",
+    "end_class": "u_prv_o.g_s[*].g_r.u/q$_DFF_PN0_/D",
+    "worst_slack_ps": 23.76,
+    "paths": 1,
+    "max_levels": 2,
+    "example_start": "u_prv_o.g_s[0].g_r.u/q$_DFF_PN0_/QN",
+    "example_end": "u_prv_o.g_s[1].g_r.u/q$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "u_rsk.mem[*][*]$_DFFE_PP_/QN",
+    "end_class": "u_rsk.mem[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": 24.23,
+    "paths": 10,
+    "max_levels": 3,
+    "example_start": "u_rsk.mem[2][19]$_DFFE_PP_/QN",
+    "example_end": "u_rsk.mem[2][19]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_rch.mem[*][*]$_DFFE_PP_/QN",
+    "end_class": "u_rch.mem[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": 25.03,
+    "paths": 60,
+    "max_levels": 3,
+    "example_start": "u_rch.mem[3][5]$_DFFE_PP_/QN",
+    "example_end": "u_rch.mem[3][5]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_rch.rp[*]$_DFFE_PN0P_/QN",
+    "end_class": "u_rch.rp[*]$_DFFE_PN0P_/D",
+    "worst_slack_ps": 25.04,
+    "paths": 1,
+    "max_levels": 3,
+    "example_start": "u_rch.rp[1]$_DFFE_PN0P_/QN",
+    "example_end": "u_rch.rp[1]$_DFFE_PN0P_/D"
+   }
+  ],
+  "errors": []
+ }
+}

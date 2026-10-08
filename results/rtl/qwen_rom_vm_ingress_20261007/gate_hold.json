@@ -1,0 +1,21 @@
+{
+  "scope": "Full2256/865 actual source-extracted protected CAP seat capture only. owned_capture is the parent CAP event input, not a tested full adapter ACK/admission FSM. Epoch remains existing adapter responsibility.",
+  "capture_slice_sha256": "27710b2bedc79652e04839022524233beb1ccdb433453a5bd07ed77a3124f541",
+  "cases": [
+    {
+      "name": "positive",
+      "exit": 0,
+      "log": "PASS existing-seat capture checks=8498 held ownership and protected zero metadata\n"
+    },
+    {
+      "name": "bypass_me",
+      "exit": 1,
+      "log": "FATAL: /tmp/qwen-vm-rom-ingress-20261007/bench.sv:18: capture writer qualifier slot0\n       Time: 30 Scope: tb\n"
+    },
+    {
+      "name": "omit_zero",
+      "exit": 1,
+      "log": "FATAL: /tmp/qwen-vm-rom-ingress-20261007/bench.sv:31: zero flag lost\n       Time: 80 Scope: tb\n"
+    }
+  ]
+}

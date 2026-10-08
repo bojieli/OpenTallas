@@ -1,0 +1,10 @@
+test_failed_timing_returns_nonzero_and_keeps_record (test_w2_rb_signoff.SignoffTest) ... ok
+test_margin_boundary_and_missing_reports (test_w2_rb_signoff.SignoffTest) ... ok
+test_preserve_failed_verdict (test_w2_rb_signoff.SignoffTest) ... ok
+test_tool_error_after_positive_report_is_not_pass (test_w2_rb_signoff.SignoffTest) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.003s
+
+OK
+{"SS_setup_ps": -1.0, "FF_hold_ps": 14.99, "SS_ok": false, "FF_ok": false}

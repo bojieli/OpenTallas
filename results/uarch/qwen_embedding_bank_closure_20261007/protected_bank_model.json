@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.qwen.embedding_bank_closure.v1",
+  "default_off": true,
+  "rows": 151936,
+  "embedding_elements_per_row": 4096,
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_rt_embed_rom.sv": "54deba0a76c99ef5046d10d8a1af4cff550c7c7550fd293411510a607afeae33",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib": "8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805"
+  },
+  "payload_bytes": 622633728,
+  "MACs_per_cycle": 0,
+  "compute_intensity_MAC_per_byte": 0,
+  "communication_intensity": "one 64-byte selected code word per accepted read",
+  "replica_count": {
+    "code_bank_pairs": 2374,
+    "scale_macros": 3
+  },
+  "macro": {
+    "name": "ot_rom_4096x266_m8",
+    "width_um": 121.824,
+    "height_um": 62.91,
+    "area_um2": 7663.94784,
+    "code_payload_bits_per_pair": 512,
+    "unused_bits_per_pair": 20,
+    "ROM_ECC": false,
+    "SS_clk_to_q_min_ps": 739.2103
+  },
+  "memory_port_bytes_per_cycle": {
+    "each_macro_peak": 33.25,
+    "each_macro_scheduled": 16.625,
+    "selected_code_pair_payload": 32
+  },
+  "boundary_bits_per_cycle": {
+    "leaf_request": 13,
+    "leaf_response": 513,
+    "address_tree_root": 25,
+    "response_tree_root": 513
+  },
+  "replica_mux_demux_cost": {
+    "fanout_per_stage": 4,
+    "distribution_levels": 6,
+    "gather_levels": 6,
+    "gather_muxes_upper_bound": 791,
+    "mux_width_bits": 512
+  },
+  "routing": {
+    "leaf_tracks": 529,
+    "leaf_request_side_tracks": 14,
+    "leaf_response_side_tracks": 514,
+    "leaf_channel_capacity_tracks": 600,
+    "capacity_basis": "96.12 um usable side / 0.096 um conservative pitch x 60 percent",
+    "leaf_track_fit": true,
+    "die_channel_capacity_tracks": null,
+    "fit": "leaf planned fit; die geometry must bind real stations and distribution tree"
+  },
+  "area": {
+    "macro_count": 4751,
+    "raw_macro_mm2": 36.41141618784,
+    "min_reserved_mm2": 60.6856936464,
+    "utilisation_target": 0.6,
+    "legacy_reservation_mm2": 11.046,
+    "legacy_reservation_fit": false,
+    "leaf_frame_um": [
+      270.0,
+      120.42
+    ],
+    "leaf_macro_utilisation": 0.47143318385650224,
+    "leaf_logic_and_clock_fit": "OPEN until routed"
+  },
+  "latency": {
+    "leaf_cycles": 7,
+    "initiation_interval_cycles": 2,
+    "root_read_cycles": 19,
+    "code_row_service_cycles": 145,
+    "baseline_one_cycle_row_cycles": 64,
+    "extra_code_row_cycles": 81,
+    "scale_service": "parallel independent ROM path; not yet physically composed",
+    "serial_token_contribution": "one embedding fetch per generated token (no layer multiplier); die hops/stations and consumer credit return remain additive"
+  },
+  "physical_closed": false,
+  "adopted": false,
+  "headline_credit": 0,
+  "source": "rtl/hdc/ot_qwen_rt_embed_rom.sv; physical/asap7_memory_macros/ot_rom_4096x266_m8"
+}

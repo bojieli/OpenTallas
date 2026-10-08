@@ -1,0 +1,230 @@
+{
+  "source_branch": "codex/qwen-die-final-20261007",
+  "source_commit": "395e692359311e26bc2e5de6002fbbd23981b407",
+  "restored_source_sha256": {
+    "tools/die_top_lint.py": "cbd403b0d0ee89b0c1adab24d0c4fb7987238d1e2d727880e6bb2d6e050d4176",
+    "tools/qwen_rom_fulldie_b3r2.py": "681f2765134b374d047ba7b2b311b1ef1fabe201f1ffc16f5f2b4abedeff55cd",
+    "tools/qwen_rom_fulldie.py": "d45178b8d71803f231d103f3870b8ee3b220035e19ce31921380755d81b5fedd"
+  },
+  "checks": {
+    "s81_slice_binding": {
+      "pins": [
+        "p[1]",
+        "p[2]"
+      ],
+      "segments": [
+        [
+          0,
+          1,
+          "in"
+        ],
+        [
+          1,
+          2,
+          "in"
+        ]
+      ],
+      "pass": true
+    },
+    "unchanged_shared_functions": [
+      "dirs_hbm",
+      "dirs_hbm_base",
+      "real_blocks_r8",
+      "build",
+      "family_of",
+      "landed_views"
+    ],
+    "main_HBM_pin_helpers_preserved": [
+      "_corner_keep",
+      "pin_rects",
+      "CORNER_RULE",
+      "PIN_CENTRE"
+    ],
+    "recipe_keys": [
+      "r18",
+      "r19",
+      "r20c",
+      "r20f1",
+      "r20g",
+      "r21"
+    ],
+    "physical_build_launched": false
+  },
+  "clock_census": {
+    "schema": "opentallas.qwen_station_r18_clock_audit.v1",
+    "recipe": "QWEN_R20C base shared by r21 before relay insertion",
+    "source_sha256": {
+      "tools/qwen_rom_fulldie_b3r2.py": "681f2765134b374d047ba7b2b311b1ef1fabe201f1ffc16f5f2b4abedeff55cd",
+      "tools/qwen_rom_fulldie.py": "d45178b8d71803f231d103f3870b8ee3b220035e19ce31921380755d81b5fedd",
+      "tools/die_top_lint.py": "a83fca7b10a5af878dc0e04e1cc0fe0bc0f884c8d0a39fc8bc99953624d663cf",
+      "tools/qwen_station_clock_audit_r22.py": "b8bb616f9ecf4d0d42a456018ceec772df35fe658d0fe9db87cc6d74f21a1c02"
+    },
+    "effective_bus_bits": {
+      "corridor": [
+        323
+      ],
+      "head_chain": [
+        323
+      ],
+      "tap": [
+        323
+      ]
+    },
+    "clock_endpoint_count_histogram": {
+      "1": 3136
+    },
+    "reset_endpoint_count_histogram": {
+      "0": 3136
+    },
+    "generated_station_port_roles": {
+      "qfd_chead_e": {
+        "s": [
+          "forward_source"
+        ],
+        "n": [
+          "forward_source"
+        ],
+        "w": [
+          "forward_sink"
+        ],
+        "e": [
+          "forward_source"
+        ]
+      },
+      "qfd_chead_w": {
+        "s": [
+          "forward_source"
+        ],
+        "n": [
+          "forward_source"
+        ],
+        "e": [
+          "forward_sink"
+        ],
+        "w": [
+          "forward_source"
+        ]
+      },
+      "qfd_cst_n": {
+        "b": [
+          "forward_sink"
+        ],
+        "a": [
+          "forward_source"
+        ],
+        "tap": [
+          "forward_source"
+        ]
+      },
+      "qfd_cst_s": {
+        "a": [
+          "forward_sink"
+        ],
+        "b": [
+          "forward_source"
+        ],
+        "tap": [
+          "forward_source"
+        ]
+      }
+    },
+    "instances": 3136,
+    "examples": {
+      "t_0_0": {
+        "clock": [
+          [
+            "clk_r0",
+            "ck",
+            1
+          ]
+        ],
+        "reset": []
+      },
+      "s_0_0": {
+        "clock": [
+          [
+            "clk_r0",
+            "ck",
+            1
+          ]
+        ],
+        "reset": []
+      },
+      "t_0_1": {
+        "clock": [
+          [
+            "clk_r0",
+            "ck",
+            1
+          ]
+        ],
+        "reset": []
+      },
+      "s_0_1": {
+        "clock": [
+          [
+            "clk_r0",
+            "ck",
+            1
+          ]
+        ],
+        "reset": []
+      },
+      "t_0_2": {
+        "clock": [
+          [
+            "clk_r0",
+            "ck",
+            1
+          ]
+        ],
+        "reset": []
+      }
+    },
+    "conclusion": "No64clock payloadpins: already separateck1. Reset removed from bundle but noresetnet reaches auditedfieldinstances. r22 needs explicitrst_n tree.",
+    "actual_fullwidth_signal_bits": 509,
+    "clock_pin_per_instance": 1,
+    "reset_pin_required_per_instance": 1,
+    "original_station_frame_um": [
+      52.704,
+      103.68
+    ],
+    "die": {
+      "w": 25037.856,
+      "h": 32801.76,
+      "mm2": 821.286,
+      "budget_mm2": 858,
+      "margin_mm2": 36.714
+    },
+    "adoption": false
+  },
+  "recipes": {
+    "r20c": {
+      "census": {
+        "instances": 3334,
+        "buses": 8407,
+        "net_bits": 3975054,
+        "masters": 43,
+        "real_instances": 132,
+        "placeholder_instances": 3202
+      },
+      "connectivity": [],
+      "pin_fit_errors": {},
+      "placeholder_port_direction_conflicts": {}
+    },
+    "r21": {
+      "census": {
+        "instances": 12201,
+        "buses": 17443,
+        "net_bits": 8008058,
+        "masters": 77,
+        "real_instances": 132,
+        "placeholder_instances": 12069
+      },
+      "connectivity": [],
+      "pin_fit_errors": {},
+      "placeholder_port_direction_conflicts": {}
+    }
+  },
+  "scope": "Generator/import/graph lint coherence only. No RTL simulation, Verilator invocation, place-and-route or closure adoption."
+}

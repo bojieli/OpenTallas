@@ -1,0 +1,82 @@
+{
+  "pass": false,
+  "runs": {
+    "positive": {
+      "returncode": 1,
+      "pass": false,
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_protected_ingress",
+        "-o",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/positive/test.vvp",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_gpu_w6_secded_pkg.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_w2_protected_bank.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_sram_1r1w_256x256_m2_r2c2.v",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_credit_secded_pkg.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_credit_rx.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_credit_source.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_collective_packet_fifo.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_collective_protected_cdc_refill.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_collective_protected_flight.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_collective_protected_ingress.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/tb_protected_ingress.sv"
+      ],
+      "output": "BEFORE landing_d=xxxxxxxxxxxxxxxx captured=xxxxxxxxxxxxxxxxxx\nSTEP lc=63 lv=0 cr=1 civ=0 mem0=xxxxxxxxxxxxxxxxxx hp=0 head=000000000000000000 faults=00000\nSTEP lc=63 lv=0 cr=1 civ=0 mem0=xxxxxxxxxxxxxxxxxx hp=0 head=000000000000000000 faults=00000\nSTEP lc=63 lv=1 cr=1 civ=1 mem0=xxxxxxxxxxxxxxxxxx hp=0 head=000000000000000000 faults=00000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nDEBUG landing=63 lv=1 cr=1 civ=x wb=1 rb=0 hp=1 wn=1 rn=1 cv=0 fr=1 fault=x\nFATAL: /home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/tb_protected_ingress.sv:90: intermediate credit return launch=64 rx=0 moves=0\n       Time: 463470704 Scope: tb_protected_ingress\n"
+    },
+    "negative": {
+      "returncode": 1,
+      "pass": false,
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_protected_ingress",
+        "-o",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/negative/test.vvp",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_gpu_w6_secded_pkg.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_w2_protected_bank.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_sram_1r1w_256x256_m2_r2c2.v",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_credit_secded_pkg.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_credit_rx.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_credit_source.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_collective_packet_fifo.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_collective_protected_cdc_refill.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/negative/mutant.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/ot_hbm_collective_protected_ingress.sv",
+        "/home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/tb_protected_ingress.sv"
+      ],
+      "output": "BEFORE landing_d=xxxxxxxxxxxxxxxx captured=xxxxxxxxxxxxxxxxxx\nSTEP lc=63 lv=0 cr=1 civ=0 mem0=xxxxxxxxxxxxxxxxxx hp=0 head=000000000000000000 faults=00000\nSTEP lc=63 lv=0 cr=1 civ=0 mem0=xxxxxxxxxxxxxxxxxx hp=0 head=000000000000000000 faults=00000\nSTEP lc=63 lv=1 cr=1 civ=1 mem0=xxxxxxxxxxxxxxxxxx hp=0 head=000000000000000000 faults=00000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nSTEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000\nDEBUG landing=63 lv=1 cr=1 civ=x wb=1 rb=0 hp=1 wn=1 rn=1 cv=0 fr=1 fault=x\nFATAL: /home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/tb_protected_ingress.sv:90: intermediate credit return launch=64 rx=0 moves=0\n       Time: 463470704 Scope: tb_protected_ingress\n"
+    }
+  },
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_credit_secded_pkg.sv": "242760d3fa6717089e1bf91bedeebf9e47aad5e7fee146dc9cdeaa085fd5141e",
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_credit_rx.sv": "a59bfd8411559225a3ce6e564d2308df09fba425e0deb7c6dd51a419d95e8ead",
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_credit_source.sv": "5732c53955e163d1aa3511d99204fe569ad731e59661f0c83e51f801e798b9c9",
+    "rtl/hbm_accel/collective_full_20261007/ot_hbm_collective_packet_fifo.sv": "17116e38809870495eec33c6e095893d501111a651900e9bd3e087670ecca15e",
+    "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc_refill.sv": "1fe0c8ebc52a154a2be9eb018590db158c9cd9c9da5730cbdf1d990bd54a1aad",
+    "rtl/hbm_accel/collective_flight_20261007/ot_hbm_collective_protected_flight.sv": "8cf818f172c1c9fb984e0c89ad123809e0a6d7b15c468112f42e3a53853d3175",
+    "rtl/hbm_accel/collective_ingress_20261007/ot_hbm_collective_protected_ingress.sv": "5a1ff0dddef236ba468546c20da7edbf429353fd145b2ece81ab662de2b3c094",
+    "rtl/hbm_accel/collective_ingress_20261007/tb_protected_ingress.sv": "1c96394e73370f4d73d481e51423253597715bddcf2a441c748827580021df37"
+  },
+  "scope": "Actual single full545 ingress path with landing64, protectedCDC64, protectedflight14, RX256, real credit producer/source and protected72bit grant/ACK CDCs. 384 ordered payloads.",
+  "fixture": {
+    "clock_period_ps": 833.333334,
+    "independent_clock_phase_ps": 137,
+    "simulation_precision_fs": 1,
+    "forward_flight_edges": 3,
+    "forward_flight_is_physical_claim": false,
+    "cold_start_and_reset": "Fixture supplied; actual lifecycle provider integration remains separate"
+  },
+  "physical_qualified": false,
+  "holds": [
+    "aggregate fatal fault crosses clock domains directly: functional quarantine only; physical fault distribution requires implementation/signoff",
+    "actual PHY/control transport flight and reset lifecycle integration",
+    "full native PF384 calendar/endpoint timing",
+    "mapped area and SS/FF physical closure"
+  ]
+}

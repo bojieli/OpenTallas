@@ -1,0 +1,63 @@
+{
+ "name": "s81ph-root_tile-77bcb3f3c",
+ "block": "ot_s81ph_root_tile",
+ "owner": "Claude:s81-ph",
+ "purpose": "gather root tile v4 (tile_m3 post-CTS -83: queue read mux, operand AND-OR, free-list take chain) -> one calibrated route",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-epyc2"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/s81-placeholders-20261006",
+  "commit": "77bcb3f3c953773a13abd3ea2a9db44144bf6d30"
+ },
+ "no_bench_reason": "bench t5 (benchB on EPYC2, +UNORD): 9 cases PASS, mutants BF16_TRUNC / LANE_SWAP / NOFWD FAIL; record results/rtl/s81_ph_20261006/gather/bench_t5_summary.txt",
+ "stages": {
+  "calibrate": {
+   "cmd": "SRC={SRC} OUT={RUN}/routes CORES=16 NEED=24 CLK=ck SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_p.sv rtl/gpu/ot_fp32_add_rne_deep.sv rtl/hdc/ot_hdc_prefix.sv' SDCX=physical/s81_ph_views/gather/root_tile_io.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract ot_s81ph_root_tile rtl/dsrom_sys/s81_ph/ot_s81ph_root_tile.sv $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=24 CLK=ck SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_p.sv rtl/gpu/ot_fp32_add_rne_deep.sv rtl/hdc/ot_hdc_prefix.sv' SDCX=physical/s81_ph_views/gather/root_tile_io.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract ot_s81ph_root_tile rtl/dsrom_sys/s81_ph/ot_s81ph_root_tile.sv $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/ot_s81ph_root_tile"
+  }
+ ],
+ "cycles_added": 6,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "S81-PH tile sheet is grade 'target' (no calibration: 467-900 ps); the tiles' measured insertion is far lower (svc_pc 145 ps, ctrl_ctr 61 ps at calibrate), so the sheet SDC would put vclk ~300+ ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+ }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.qwen_fenced_bridge.qualification.v1",
+  "status": "minimum_functional_gates_PASS",
+  "default_off": true,
+  "source_top": "ot_qwen_kvc_write_link_bridge_fenced",
+  "source_sha256": "2850b3c802fba70921389f45c9191bb151d04b0a073f7b78bd871c49186a6aa5",
+  "predecessor_unchanged": "ot_qwen_kvc_write_link_bridge_cancel SHA005f74bb0f2f422dabb3b8681e9923e431be324d86a3336623542c87f6a33d0f",
+  "dependencies": [
+    "rtl/physical/ot_qwen_kvc_hub_cdc.sv from write-bridge.patch",
+    "rtl/physical/ot_qwen_kvc_packet_codec_fence.sv from parent fence-codec.patch",
+    "existing identityhub/TMRstage/asyncFIFO/reset helper"
+  ],
+  "functional_cases": 18,
+  "actual_clock_period_ns": {
+    "core": 1.1111111111111112,
+    "hub": 0.8333333333333334,
+    "controller": 1.024
+  },
+  "fence_measured_ns": {
+    "54hops": 186.666816,
+    "55hops": 170.000136
+  },
+  "measurement_scope": "Those fence durations include deliberately withheld readiness for30controller ticks plus typedcancel emission and existing nativecredit phase; they are fixture traces, not standalone architectural bounds or token-rate credit. Main bench uses modeled native ledger completions, not actual protected controller refresh recovery.",
+  "wire_cost": "one528bit FENCE and one528bit ACK; codec510payload; no new opcode reinterpretation in oldcodec",
+  "storage": "Actualgenericpair20798FF, delta4048 over16750baseline, including previouslypruned ACK/FIFO bits. No technologyarea/physicalclosure claim.",
+  "startup": "w_room waits for TXCDC rendezvous; immediate-start test and actualRTL mutation negative pass.",
+  "fault_commit": "Currentedge invalidcompletion/cancellation, decoder/header/seterror, hardwarefault, or readinesswithdrawal prevents ACKqueueing andepochcommit.",
+  "remaining": [
+    "Actual authoritative controller refresh/read-quarantine readiness and all-PC/global enrollment",
+    "Mutable encoded/decoded storage and native handoff protection; prior postCRC corruption demonstration still applies",
+    "Owner/credit/CDC control protection",
+    "Physical SSsetup/FFhold/DRC/resetdistributionslotfit"
+  ],
+  "adoption": false
+}

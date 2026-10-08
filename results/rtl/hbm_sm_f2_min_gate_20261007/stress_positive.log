@@ -1,0 +1,14 @@
+ 0 warm-up (router gate shape)    bf16 K 5120 R  1 dep 1 load0      5 post    166 first_line    179 last_line    308 done    443 exact True
+ 1 s bf16 K5120 R1 (G10)          bf16 K 5120 R  1 dep 0 load0    444 post    605 first_line    619 last_line    740 done    875 exact True
+ 2 s fp4 K2304 R2 (G2)            fp4  K 2304 R  2 dep 0 load0    607 post    640 first_line    787 last_line    846 done    949 exact True
+ 3 s bf16 K512 R32 (G1)           bf16 K  512 R 32 dep 0 load0    642 post    659 first_line    859 last_line   1114 done   1221 exact True
+ 4 s fp8 K8192 R2 (G8)            fp8  K 8192 R  2 dep 0 load0    876 post   1005 first_line   1131 last_line   1306 done   1423 exact True
+ 5 s fp4 K5120 R1 (G3)            fp4  K 5120 R  1 dep 0 load0   1007 post   1056 first_line   1323 last_line   1381 done   1491 exact True
+ 6 s bf16 K5120 R3 (G10)          bf16 K 5120 R  3 dep 0 load0   1424 post   1585 first_line   1595 last_line   1848 done   1983 exact True
+ 7 s fp8 K1280 R16 (G2)           fp8  K 1280 R 16 dep 0 load0   1587 post   1620 first_line   1891 last_line   2370 done   2473 exact True
+ 8 s fp8 K1280 R2 reuse           fp8  K 1280 R  2 dep 0 load0   1622 post   1622 first_line   2379 last_line   2438 done   2541 exact True
+ 9 s bf16 K5120 R1 (G10) b        bf16 K 5120 R  1 dep 0 load0   1984 post   2145 first_line   2451 last_line   2628 done   2763 exact True
+10 s fp8 K2304 R2 (G3)            fp8  K 2304 R  2 dep 0 load0   2147 post   2196 first_line   2667 last_line   2728 done   2838 exact True
+11 s fp4 K2304 R2 (G2) b          fp4  K 2304 R  2 dep 0 load0   2542 post   2575 first_line   2747 last_line   2806 done   2909 exact True
+12 s bf16 K512 R32 (G1) b         bf16 K  512 R 32 dep 0 load0   2577 post   2594 first_line   2819 last_line   3282 done   3389 exact True
+PASS total_cycles 3397 /srv/opentallas-scratch2/scratch/codex/hbm-sm-min-f2bae3479/out/stress_positive.json

@@ -1,0 +1,18 @@
+{
+  "status": "PASS_MINIMUM_PHYSICAL_MECHANISM",
+  "scope": "Actual OpenROAD two-independent-capture fixture; identity HB4 chains, legalized topology check, swap/drop negative controls",
+  "rtl_changed": false,
+  "added_cycles": 0,
+  "actual_cells_inserted": 6,
+  "production_screen_endpoints": 1104,
+  "production_screen_cells_modeled": 3312,
+  "physical_screen_routed": false,
+  "production_parent_closed": false,
+  "insert_tcl_sha256": "4abd463a14acf7152b61ea75fc4951ce136bf7e6b7922938b6bb99e79f9e434d",
+  "files": {
+    "initial_protected_deletion.log": "e1c92786860274b3f73f8b465baed5a8c51b29c4c76fd2f8a06d2233d4fe1890",
+    "check.tcl": "becda107442edf53091d86b7c397a88c67c7102dc6c1372790dd2919f47879b4",
+    "check.log": "490100fa43e9b1381eaff5595080110e24e6bfe44d443f569da40d9a9a695c93",
+    "top.v": "f90f14a83e05e1d55214fc8ff14e14543036f3c181daed2dd979b6f6fa96e185"
+  }
+}

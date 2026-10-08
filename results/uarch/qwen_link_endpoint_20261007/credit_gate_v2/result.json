@@ -1,0 +1,129 @@
+{
+  "schema": "opentallas.qwen_native528_credit.gate.v1",
+  "pass_all": true,
+  "cases": [
+    {
+      "case": "h54_n0",
+      "HOPS": 54,
+      "negative": 0,
+      "qualified": true,
+      "returncode": 0,
+      "expected_failure": null,
+      "log_sha256": "d78d8bda32085f18a452b0661904cb17fb62923ec5a201d98475203fcc368125",
+      "epochs": [
+        {
+          "epoch": 0,
+          "hops": 54,
+          "received_a": 96,
+          "received_b": 96,
+          "credit_seen_rtt_a": 117,
+          "credit_seen_rtt_b": 117,
+          "window_restart_a": 118,
+          "window_restart_b": 118,
+          "cycles": 3132,
+          "stalls_a": 2848,
+          "stalls_b": 2749,
+          "wraps_a": 6,
+          "wraps_b": 6
+        },
+        {
+          "epoch": 1,
+          "hops": 54,
+          "received_a": 96,
+          "received_b": 96,
+          "credit_seen_rtt_a": 117,
+          "credit_seen_rtt_b": 117,
+          "window_restart_a": 118,
+          "window_restart_b": 118,
+          "cycles": 3132,
+          "stalls_a": 5696,
+          "stalls_b": 5498,
+          "wraps_a": 6,
+          "wraps_b": 6
+        }
+      ]
+    },
+    {
+      "case": "h55_n0",
+      "HOPS": 55,
+      "negative": 0,
+      "qualified": true,
+      "returncode": 0,
+      "expected_failure": null,
+      "log_sha256": "55ac7189a691d4a0181ca7e4231076b4bc4154dd93b69f3b40930e00f295aff4",
+      "epochs": [
+        {
+          "epoch": 0,
+          "hops": 55,
+          "received_a": 96,
+          "received_b": 96,
+          "credit_seen_rtt_a": 119,
+          "credit_seen_rtt_b": 119,
+          "window_restart_a": 120,
+          "window_restart_b": 120,
+          "cycles": 3172,
+          "stalls_a": 2885,
+          "stalls_b": 2786,
+          "wraps_a": 6,
+          "wraps_b": 6
+        },
+        {
+          "epoch": 1,
+          "hops": 55,
+          "received_a": 96,
+          "received_b": 96,
+          "credit_seen_rtt_a": 119,
+          "credit_seen_rtt_b": 119,
+          "window_restart_a": 120,
+          "window_restart_b": 120,
+          "cycles": 3172,
+          "stalls_a": 5770,
+          "stalls_b": 5572,
+          "wraps_a": 6,
+          "wraps_b": 6
+        }
+      ]
+    },
+    {
+      "case": "h54_n1",
+      "HOPS": 54,
+      "negative": 1,
+      "qualified": true,
+      "returncode": 1,
+      "expected_failure": "NATIVE_FAULT",
+      "log_sha256": "2a177c2819c8b9fc26c041ed97c06945d9917ab61e1a12b7ac36a0d059e84e9b",
+      "epochs": []
+    },
+    {
+      "case": "h54_n2",
+      "HOPS": 54,
+      "negative": 2,
+      "qualified": true,
+      "returncode": 1,
+      "expected_failure": "CREDIT_CONSERVATION",
+      "log_sha256": "47cd7be6d9e3ee7d2720e1ff13546384aa543b0b96490630397f2326f356ca33",
+      "epochs": []
+    },
+    {
+      "case": "h54_n3",
+      "HOPS": 54,
+      "negative": 3,
+      "qualified": true,
+      "returncode": 1,
+      "expected_failure": "CREDIT_RANGE",
+      "log_sha256": "50a38f4620afc9fe63b18783afeb9244e1f0283b3c87c016160fb6d6ae819256",
+      "epochs": []
+    }
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_die_hub.sv": "06d01e706d7b7790e4e6f0869e15dfa6f278a7e504f4a313b87daa6efe6d4a93",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "e865aecae51ae3b929bc9401c970e825073338b77dee87ead88d66ce9e8631fd",
+    "rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv": "cd7142ec0db3465c0b4134888e6947a2bc1d7223c0d2fc02093729e568921881",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  },
+  "bench_sha256": "69fa853cf156a6ab04bbf609046fc70d9b49a7ecb5b19a837008eaa7ede2e742",
+  "tool_sha256": "f26cb82b2e847e47c15563e5248702d910036103e0c6ac80405b0a20934e222d",
+  "scope": "Actual dualNL4 hubs one active lane,54/55actualTMRhops,phase-independentclocks,96bidirectionalwordsperdrainedepoch\u00d72. BadGray andunilateralresetnegatives expose silent nativecreditfailures; passing external detection does NOT qualify nativeprotection. No productionqfd_kvcendpoint here.",
+  "adoption": false
+}

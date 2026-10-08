@@ -1,0 +1,8 @@
+STATS cyc 13068 flits 3000/3000 tx 10541 10301 retx 7541 7301 replays 19 18 naks 19 18 crc_err 178
+TB_S81PH_LINK_EP PASS
+- /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/src/rtl/dsrom_sys/s81_ph/test/tb_s81ph_link_ep.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 13us; walltime 0.653 s; speed 21.686 us/s
+- Verilator: cpu 0.603 s on 1 threads; alloced 1019 MB
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.78
+	Maximum resident set size (kbytes): 10460

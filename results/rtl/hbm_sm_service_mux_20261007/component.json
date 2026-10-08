@@ -1,0 +1,87 @@
+{
+  "status": "PASS",
+  "scope": "4/5 finiteclients and actual loader ownedidentity/reversegrant logic with testowned stackpeer; no causalPHY provider or real dispatch identity issuer",
+  "model": {
+    "status": "prebuild_candidate",
+    "MACs_per_cycle": 0,
+    "clients": 5,
+    "replicas": 32,
+    "request_context_bits": 94,
+    "context": "{liveowner73,record16,source5} captured with actual client request; not inferred from static installed image",
+    "request_capture_bits": 814,
+    "response_capture_bits": 930,
+    "control_bits": 10,
+    "total_mutable_bits": 1754,
+    "shared_join_bits": 677,
+    "request_boundary_bits": 2025,
+    "response_boundary_bits": 2810,
+    "registered_added_edges": 2,
+    "queue": "one total transaction, ready cleared after capture until checked response consumed; shared real join withholds next request until reverse grant",
+    "service_bytes_per_edge": 32,
+    "arbiter": "fixed priority0..NCLIENT-1, native serial schedule separatesprogram/X/weight/result phases; no arbitrary multiworkload throughput guarantee",
+    "comparison": "406request and465response duplicated/inverted-bank integrity checks; final sideeffects suppressed immediately; mappedpreservation and timing unqualified",
+    "area_flop_lower_bound_um2": 708.8796000000001,
+    "physical_admitted": false,
+    "identity": "existing real loader join compares full192bit actual ownedreturn; successor exposes that actual checked returned identity, mux associates captured context and retains throughclient consumption"
+  },
+  "cases": [
+    {
+      "clients": 4,
+      "case": 0,
+      "output": "PASS 32 transactions four clients actual owned identity and reverse grant"
+    },
+    {
+      "clients": 4,
+      "case": 1,
+      "output": "PASS rejected 1"
+    },
+    {
+      "clients": 4,
+      "case": 2,
+      "output": "PASS rejected 2"
+    },
+    {
+      "clients": 4,
+      "case": 3,
+      "output": "PASS rejected 3"
+    },
+    {
+      "clients": 5,
+      "case": 0,
+      "output": "PASS 32 transactions four clients actual owned identity and reverse grant"
+    },
+    {
+      "clients": 5,
+      "case": 1,
+      "output": "PASS rejected 1"
+    },
+    {
+      "clients": 5,
+      "case": 2,
+      "output": "PASS rejected 2"
+    },
+    {
+      "clients": 5,
+      "case": 3,
+      "output": "PASS rejected 3"
+    },
+    {
+      "mutation": "remove_request_response_bank_checks",
+      "rejected": true,
+      "output": "FATAL: /home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/service_mux/tb_hbm_sm_service_mux.sv:32: fault escaped\n       Time: 121000000 Scope: tb_hbm_sm_service_mux.failed"
+    }
+  ],
+  "source_sha256": {
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_addr_to_service.sv": "12e260d14e8e768c14c6092dee791bf626057ffff2a492695aa80f309f3af3dc",
+    "rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_loader_identity_join.sv": "2415f1cc6277465f1fe5247a97d22b8f912ef148957a7df521ffb2fb729bb741",
+    "rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_service_mux.sv": "9f3d8450c6047d00e0e8ba0ba9dd203d50bf03a19ba856266fe1185e7bbdaa59",
+    "rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_shared_service_join.sv": "ade1dfd89c06d0ba2b1a6fd1a233256a6ecf0b7d024a1bea0439bc9094d68a8a",
+    "rtl/hbm_accel/control_20261007/service_mux/tb_hbm_sm_service_mux.sv": "c2c5c04ff3b365cb98c49460b92e1c42be32f6d5a9a122581f8a641b1c591641",
+    "tools/hbm_sm_service_mux_gate.py": "931b1678e9ea747b742a49219ba1976ca56e19e603d661a4723fad2c8b6126b0",
+    "tools/hbm_sm_service_mux_build.py": "fe386c871e830848fe71c967d7060a0834778c924a0cfa4eb3f7b76fb147c060",
+    "tools/hbm_sm_service_mux_model.py": "bd1b06cb5fdcca60a1b9ef655b84b97f62211defab6fe22433ec2a7e8ae0f38e",
+    "rtl/hbm_accel/integration/ot_hbm_loader_service_join.sv": "580a0490e2fde6ea8923174d441da927d5f5b465f4bd4c7c18a57344fd0e1f7d"
+  },
+  "physical_admitted": false
+}

@@ -1,0 +1,4 @@
+ == p3: SELT_PIPE PASS rc=0  RESULT PASS segments 32 out_beats 639 replays 6 errors 0 tail_minus_ref max 289 mean 159 ref_holds 20
+ == pm: SELT_PIPE PASS rc=0  RESULT PASS segments 32 out_beats 639 replays 6 errors 0 tail_minus_ref max 289 mean 159 ref_holds 20
+ == p2m: SELT_PIPE FAIL rc=1  RESULT FAIL segments 32 out_beats 639 replays 6 errors 8048 tail_minus_ref max 327 mean 161 ref_holds 20
+# SEARCH_PIPE 3 = ping-pong (2 copies per search unit on complementary half-rate gated clocks, XRH 1; XRH 0 FAILS, 2 PASS). S81PH_MUT_PPSEL (stale-copy select) is NOT caught: the control only consumes search results after its doubled waits (static counts), so either copy's result is the same -- the ping-pong buys no measurable cycles over the single half copy (tail mean 159 both); MUT2 is the negative control

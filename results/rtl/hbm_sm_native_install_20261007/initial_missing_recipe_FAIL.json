@@ -1,0 +1,1 @@
+{"status":"FAIL","scope":"initial installer gate attempted current committed workspace","error":"KeyError: recipe_successor","workspace":"results/rtl/dshbm_installer_book_20261005/workspace.json","resolution":"Use an explicitly labelled test-only successor allocation cursor for the mechanism gate; actual production successor still required and never inferred from this test."}

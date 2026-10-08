@@ -1,0 +1,6 @@
+read_verilog /mapped/mapped.v
+read_liberty -ignore_miss_func /pdk/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -ignore_miss_func /pdk/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+hierarchy -check -top ot_hbm_result_delay_bank
+proc
+write_verilog -noattr /out/functional_netlist.v

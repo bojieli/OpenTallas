@@ -1,0 +1,20 @@
+{
+ "kind": "collector",
+ "rtl": "rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv (dsfd_colt_lane x4, dsfd_colt_mrg, composition ot_s81ph_col_t HOPS 7 DM 12; dsfd_bk_collector TILED 1)",
+ "bench": "tools/s81_ph/colt_bench.sh (tb_s81ph_col transaction scoreboard: 3 seeds x 40 jobs, 5 fail-closed modes)",
+ "exact": "gold1/2/3 PASS 40/40 jobs each; fault1..5 PASS (fail closed, no DONE after FAULT)",
+ "negative_controls": {
+  "OT_S81PH_COLMUT1 (frame interleave)": "FAIL 147 errors",
+  "OT_S81PH_COLMUT2 (DONE on one stack)": "FAIL 79 errors"
+ },
+ "cycles": {
+  "job0_seed1 (409 words, bub 0) end cycle": {
+   "flat (STG 7)": 878,
+   "tiled (HOPS 7, DM 12)": 880
+  },
+  "added": "+2 ck cycles per job; throughput unchanged (PACE 2 bound: 2.15 cycles/word)"
+ },
+ "schema": "opentallas.s81_ph.bench.v1",
+ "date": "2026-10-06",
+ "owner": "Claude:s81-ph (tiles)"
+}

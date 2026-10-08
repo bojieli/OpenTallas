@@ -1,0 +1,670 @@
+{
+ "schema": "opentallas.s81.v9e.head-route-recovery.v1",
+ "scope": "Pin access, placement legality and bundled global-route feasibility only; no die detailed-route/timing/IR qualification",
+ "host": "ot-epyc3",
+ "run_root": "/srv/opentallas-scratch2/claude/s81-rerun",
+ "plan": {
+  "slot": {
+   "elem_frame_h_um": 198.72,
+   "slot_h_um": 280.8,
+   "slots_per_column": 10,
+   "capacity": {
+    "elem_frame_h_um": 198.72,
+    "slot_h_um": 280.8,
+    "slots_per_column": 10,
+    "columns": 128,
+    "max_pairs_per_layer_die": 1777,
+    "pairs_per_layer_die_now": 2417,
+    "layer_field_pairs_total": 783108,
+    "layer_field_pairs_basis": "81 stages x 4 ranks x 2,417 (S81 decision)",
+    "layer_dies_now": 324,
+    "layer_dies_at_max": 441,
+    "extra_layer_dies": 117,
+    "inventory_compiled_pairs_TP4": 783264,
+    "rack": {
+     "scan_dies_4stack": 32,
+     "layer_dies_1stack": 292,
+     "head_dies": 12,
+     "table_dies": 36,
+     "draft_dies": 52,
+     "total": 424,
+     "layer_dies_total": 324,
+     "head_bundles_per_head_die": 85,
+     "source": "results/arch/dsrom_s81_rack_20261006/rack.json (DS-RACK scenario C: 12 head + 36 table, 1-stack layer dies)"
+    },
+    "meso_slot": {
+     "record": "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json",
+     "um2_per_W512_slot": 4842.0,
+     "cfifo_W564_slots": 2,
+     "cfifo_reservation_um2": 41057.3
+    },
+    "bf_per_region_flavours": {
+     "4": {
+      "max_pairs": 1777,
+      "bf": 512,
+      "slots_per_column": 10,
+      "slot_h_um": 280.8
+     },
+     "0": {
+      "max_pairs": 1777,
+      "bf": 0,
+      "slots_per_column": 10,
+      "slot_h_um": 280.8
+     }
+    }
+   }
+  },
+  "instances": {
+   "bf": 316,
+   "cfg": 10297,
+   "seq": 1471,
+   "q": 1155,
+   "sstn": 916,
+   "qbank": 2310,
+   "node": 2831,
+   "cfifo": 128,
+   "hb_elem": 425,
+   "hbglue": 85,
+   "hub": 8,
+   "phy": 4,
+   "ctrl": 4,
+   "svc": 4,
+   "band_blk": 2,
+   "link": 8,
+   "rstg": 222,
+   "rly": 24484,
+   "hend": 44,
+   "stn": 2762,
+   "hstn": 154,
+   "xstg": 8,
+   "lkck": 8
+  },
+  "placed_footprint_mm2": 420.27,
+  "legality_python": {
+   "instances": 47646,
+   "overlaps": 0,
+   "overlap_examples": [],
+   "outside": 0,
+   "outside_examples": []
+  },
+  "generated_pin_clashes": 0,
+  "forwarded": {
+   "stations": 2762,
+   "ot_fwd_link_stage_instances": 7686,
+   "chains": 86,
+   "max_hop_um": 430.3,
+   "hops_over_430p56": 0,
+   "over_examples": [],
+   "meso_fifos": 276,
+   "ratio_cdc_fifos": 12
+  },
+  "field_round_trip_cycles": {
+   "farthest_frame": 73,
+   "cycles": 162,
+   "x_trunk_stages": 60,
+   "column_slot_stages": 9,
+   "root_stages": 2,
+   "return_trunk_stages": 58,
+   "meso_crossings": 2,
+   "crossing_cycles_each": 4,
+   "hop_fix": {
+    "classes": {
+     "hb_x": {
+      "hops": 425,
+      "stations": 170,
+      "max_um": 622.9,
+      "max_added": 1
+     },
+     "go": {
+      "hops": 3018,
+      "stations": 510,
+      "max_um": 1037.7,
+      "max_added": 2
+     },
+     "hb_root": {
+      "hops": 850,
+      "stations": 255,
+      "max_um": 631.9,
+      "max_added": 1
+     },
+     "hb_ctl": {
+      "hops": 425,
+      "stations": 85,
+      "max_um": 598.4,
+      "max_added": 1
+     },
+     "stat": {
+      "hops": 1376,
+      "stations": 68,
+      "max_um": 396.6,
+      "max_added": 1
+     },
+     "hb_res": {
+      "hops": 1700,
+      "stations": 425,
+      "max_um": 614.0,
+      "max_added": 1
+     },
+     "x_lane": {
+      "hops": 1675,
+      "stations": 1000,
+      "max_um": 532.0,
+      "max_added": 1
+     },
+     "x_ctl": {
+      "hops": 1403,
+      "stations": 68,
+      "max_um": 393.1,
+      "max_added": 1
+     },
+     "col_ret": {
+      "hops": 311,
+      "stations": 175,
+      "max_um": 588.8,
+      "max_added": 1
+     },
+     "cfg": {
+      "hops": 2473,
+      "stations": 0,
+      "max_um": 276.2,
+      "max_added": 0
+     },
+     "rom_a": {
+      "hops": 7355,
+      "stations": 0,
+      "max_um": 309.5,
+      "max_added": 0
+     },
+     "rom_ce": {
+      "hops": 7355,
+      "stations": 0,
+      "max_um": 311.1,
+      "max_added": 0
+     },
+     "rom_q": {
+      "hops": 7355,
+      "stations": 0,
+      "max_um": 312.5,
+      "max_added": 0
+     },
+     "ret_leaf": {
+      "hops": 3375,
+      "stations": 1065,
+      "max_um": 637.2,
+      "max_added": 1
+     },
+     "lane": {
+      "hops": 98,
+      "stations": 114,
+      "max_um": 1085.8,
+      "max_added": 2
+     },
+     "local": {
+      "hops": 12,
+      "stations": 12,
+      "max_um": 130.1,
+      "max_added": 1
+     },
+     "lane:no_fclk": {
+      "hops": 28,
+      "stations": 0,
+      "max_um": 0.0,
+      "max_added": 0
+     },
+     "hub": {
+      "hops": 18,
+      "stations": 18,
+      "max_um": 298.7,
+      "max_added": 1
+     }
+    },
+    "planned_hops": 39252,
+    "fwd_rt_add": 2,
+    "reach_um": {
+     "common_clock": 410.0,
+     "forwarded": 430.56
+    }
+   },
+   "q_bank_stages": 2,
+   "column_relays_x": 2,
+   "column_relays_return": 16,
+   "basis": "per frame: x trunk stations to its tap + entry meso 2 + slot stations + return-tree root stages + return trunk stations + hub meso 2 (the tree levels and the element pipeline excluded)"
+  }
+ },
+ "cases": {
+  "ha_real": {
+   "case": "a",
+   "exit": 0,
+   "wall": "6:13.02",
+   "peak_rss_mb": 35336,
+   "manifest": {
+    "case": "a",
+    "instances": 47646,
+    "generated_pins": 211963,
+    "nets_bits": 6443363,
+    "variant": {
+     "gen": "r8",
+     "geometry_fix": true,
+     "cfifo_v2": true,
+     "link_fix": true,
+     "link_split": true,
+     "sel_xstg": true,
+     "pin_relay": true,
+     "vm_face_mm2": 2.659905216,
+     "ch_heights": [
+      259.2,
+      302.4,
+      388.8,
+      388.8,
+      302.4,
+      259.2,
+      259.2
+     ],
+     "vch_w": 1641.6,
+     "hc_corr": 1512.0,
+     "hc_xface": true,
+     "hop_fix": true,
+     "meso_d8": true,
+     "fwd_pitch": 430.56,
+     "corr_interleave": true,
+     "rev": "r9",
+     "cc_reach_um": 215.0,
+     "vch_interleave": true,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "head_dies": 12,
+     "die": "head",
+     "role": "head die (4 stacks; 12 of the rack)",
+     "pairs": 1471,
+     "bf": 316,
+     "nv": 0,
+     "head_bundles": 85,
+     "stacks": [
+      "SW",
+      "SE",
+      "NW",
+      "NE"
+     ],
+     "elem_frame_h": 198.72,
+     "slot_h": 280.8,
+     "slots": 10
+    }
+   },
+   "legality": {
+    "instances": 47646,
+    "overlaps": 0,
+    "outside": 0
+   },
+   "snap_moves": {
+    "count": 916,
+    "by_master": {
+     "ot_s81_cfg7_seq": 916
+    },
+    "max_um": 0.024
+   },
+   "track_assert": {
+    "verdict": "PASS",
+    "macros": 47646,
+    "pins_checked": 14135871,
+    "offtrack": 0,
+    "max_offset_nm": 0.0,
+    "no_track_grid": 0
+   },
+   "track_assert_offenders": [],
+   "pin_access": {
+    "scanned_instances": 47646,
+    "inst_terms_valid_planar": 0,
+    "macro_valid_planar_ap": 1834128,
+    "macro_valid_via_ap": 1062656,
+    "macro_no_ap": 0,
+    "status": "DONE",
+    "no_access_errors": 0,
+    "examples": []
+   },
+   "errors": []
+  },
+  "hb_k16_i50": {
+   "exit": 0,
+   "grt": {
+    "layers": {
+     "M1": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M2": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M3": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M4": {
+      "resource": 450872,
+      "demand": 103566,
+      "usage_pct": 22.97,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M5": {
+      "resource": 586765,
+      "demand": 196612,
+      "usage_pct": 33.51,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M6": {
+      "resource": 51276551,
+      "demand": 6348691,
+      "usage_pct": 12.38,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M7": {
+      "resource": 51435212,
+      "demand": 3532608,
+      "usage_pct": 6.87,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M8": {
+      "resource": 40055896,
+      "demand": 1252856,
+      "usage_pct": 3.13,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M9": {
+      "resource": 40036726,
+      "demand": 1209094,
+      "usage_pct": 3.02,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     }
+    },
+    "total": {
+     "resource": 183842022,
+     "demand": 12643427,
+     "usage_pct": 6.88,
+     "overflow_h": 0,
+     "overflow_v": 0,
+     "overflow_total": 0
+    },
+    "total_wirelength_bundle_um": 130818441.0,
+    "grt_runtime": "00:07:12",
+    "errors": [],
+    "elapsed_s": null
+   },
+   "manifest": {
+    "case": "b",
+    "tag": "base",
+    "bundle_k": 16,
+    "congestion_iterations": 50,
+    "empty_baseline": false,
+    "instances": 47646,
+    "bundle_pins": 15985,
+    "bundle_nets": 450111,
+    "wires": 6443363,
+    "coverage": {
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639,
+     "channel": 0.0439
+    },
+    "variant": {
+     "gen": "r8",
+     "geometry_fix": true,
+     "cfifo_v2": true,
+     "link_fix": true,
+     "link_split": true,
+     "sel_xstg": true,
+     "pin_relay": true,
+     "vm_face_mm2": 2.659905216,
+     "ch_heights": [
+      259.2,
+      302.4,
+      388.8,
+      388.8,
+      302.4,
+      259.2,
+      259.2
+     ],
+     "vch_w": 1641.6,
+     "hc_corr": 1512.0,
+     "hc_xface": true,
+     "hop_fix": true,
+     "meso_d8": true,
+     "fwd_pitch": 430.56,
+     "corr_interleave": true,
+     "rev": "r9",
+     "cc_reach_um": 215.0,
+     "vch_interleave": true,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "head_dies": 12,
+     "die": "head",
+     "role": "head die (4 stacks; 12 of the rack)",
+     "pairs": 1471,
+     "bf": 316,
+     "nv": 0,
+     "head_bundles": 85,
+     "stacks": [
+      "SW",
+      "SE",
+      "NW",
+      "NE"
+     ],
+     "elem_frame_h": 198.72,
+     "slot_h": 280.8,
+     "slots": 10
+    },
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997,
+      "channel": 0.1378
+     }
+    }
+   }
+  },
+  "hb_k16_i5_base": {
+   "exit": 0,
+   "grt": {
+    "layers": {
+     "M1": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M2": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M3": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M4": {
+      "resource": 2,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M5": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M6": {
+      "resource": 51276551,
+      "demand": 6,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M7": {
+      "resource": 51435212,
+      "demand": 4,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M8": {
+      "resource": 40055896,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     },
+     "M9": {
+      "resource": 40036726,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow_h": 0,
+      "overflow_v": 0,
+      "overflow_total": 0
+     }
+    },
+    "total": {
+     "resource": 182804387,
+     "demand": 10,
+     "usage_pct": 0.0,
+     "overflow_h": 0,
+     "overflow_v": 0,
+     "overflow_total": 0
+    },
+    "total_wirelength_bundle_um": 110.0,
+    "grt_runtime": "00:00:09",
+    "errors": [],
+    "elapsed_s": null
+   },
+   "manifest": {
+    "case": "b",
+    "tag": "base",
+    "bundle_k": 16,
+    "congestion_iterations": 5,
+    "empty_baseline": true,
+    "instances": 47646,
+    "bundle_pins": 15985,
+    "bundle_nets": 0,
+    "wires": 0,
+    "coverage": {
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639,
+     "channel": 0.0439
+    },
+    "variant": {
+     "gen": "r8",
+     "geometry_fix": true,
+     "cfifo_v2": true,
+     "link_fix": true,
+     "link_split": true,
+     "sel_xstg": true,
+     "pin_relay": true,
+     "vm_face_mm2": 2.659905216,
+     "ch_heights": [
+      259.2,
+      302.4,
+      388.8,
+      388.8,
+      302.4,
+      259.2,
+      259.2
+     ],
+     "vch_w": 1641.6,
+     "hc_corr": 1512.0,
+     "hc_xface": true,
+     "hop_fix": true,
+     "meso_d8": true,
+     "fwd_pitch": 430.56,
+     "corr_interleave": true,
+     "rev": "r9",
+     "cc_reach_um": 215.0,
+     "vch_interleave": true,
+     "q_lef": "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+     "head_dies": 12,
+     "die": "head",
+     "role": "head die (4 stacks; 12 of the rack)",
+     "pairs": 1471,
+     "bf": 316,
+     "nv": 0,
+     "head_bundles": 85,
+     "stacks": [
+      "SW",
+      "SE",
+      "NW",
+      "NE"
+     ],
+     "elem_frame_h": 198.72,
+     "slot_h": 280.8,
+     "slots": 10
+    },
+    "adjustment": {
+     "M2_M5": 1.0,
+     "M6_M7": 0.05,
+     "M8_M9_field": 0.306,
+     "regions": {
+      "field": 0.306,
+      "hub": 0.138,
+      "svc": 0.37779999999999997,
+      "channel": 0.1378
+     }
+    }
+   }
+  }
+ },
+ "source_sha256": {
+  "mk_v9e.sh": "23b1683d75338a7afd2a51d3b2e93e27b0b20fd3660965edec473dcba2e8ba15",
+  "src_v9e/tools/dsrom_s81_fulldie.py": "ed3572f556c3bcb756e5864549f203db7edd0975209949f8712a4d3320252d9c",
+  "plan_v9e_head.log": "239a75aa548c9b37ab8503c78082ba47a4f8580120e0c08899a7ba1252b144a7",
+  "cases/v9e/ha_real/run.log": "0d56234b9ac499c16ea346f1ec8207aad8563faa66e295f50055b2c06265a6d5",
+  "cases/v9e/ha_real/run.log.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "cases/v9e/ha_real/manifest.json": "d600acced223eb30bb620ad58d1a7b720c2ee9b377421b891b6ef8b874513cb3",
+  "cases/v9e/hb_k16_i50/run.log": "e860aa5dab5def4c086725fca79ff6276ceddfafd36e63a85a204dbf2f1e5eb8",
+  "cases/v9e/hb_k16_i50/run.log.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "cases/v9e/hb_k16_i50/manifest.json": "15c970361567bc26fdb05c58323860422fc86c029bd605c20437feecc54aa9ea",
+  "cases/v9e/hb_k16_i5_base/run.log": "183eb941f692fda4cfe87f4d1d1cbc021c5439f057ed2f31f3d9e3468f0febbe",
+  "cases/v9e/hb_k16_i5_base/run.log.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "cases/v9e/hb_k16_i5_base/manifest.json": "9388258d67c90b93e4fc3d56d3866ed464c016a6957d3bed4714dca67b5e8e21"
+ }
+}

@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.qwen_kvc_leaf.v1",
+  "model_precedes_rtl": true,
+  "status": "PROPOSED_NOT_ADOPTED",
+  "source_model": "tools/uarch_model.py",
+  "applicable_design": "Qwen3-8B ROM",
+  "other_designs": "unchanged",
+  "scope": "landing decode only; does not replace whole qfd_kvc or qfd_ctrl",
+  "replicas": 128,
+  "replicas_per_stack": 32,
+  "macs_per_cycle": 0,
+  "compute_intensity_macs_per_byte": 0,
+  "payload_bytes_per_cycle": 32,
+  "memory_ports": [],
+  "input_bits_per_cycle": 344,
+  "output_bits_per_cycle": 307,
+  "frame_um": [
+    328.32,
+    370.44
+  ],
+  "cell_area_bound_um2": 12386.37,
+  "area_bound_mm2_per_die": 1.58545536,
+  "frame_fit_at_55pct": true,
+  "tracks": {
+    "required_each_face": 346,
+    "available_per_face": 1286,
+    "pitch_um": 0.288
+  },
+  "replicas_cost": {
+    "state_bits": 169600,
+    "data_mux": "one fixed PC; no cross-PC mux",
+    "demux": "two tile destinations per beat; downstream row arbitration separate",
+    "fanout": "register local context; external context broadcast needs separately routed stations"
+  },
+  "flow": {
+    "initial_credits": 8,
+    "receiver_fifo_required": 8,
+    "admission": "sender reserves downstream slot before input; pop returns one credit",
+    "registered_boundaries": true
+  },
+  "latency": {
+    "pipeline_edges": 4,
+    "composed_worst_case_added_token_cycles": 144,
+    "base_token_cycles": 216713,
+    "rate_cost_pct": 0.06640320579921477,
+    "overlap_credit": 0,
+    "cost_scope": "decoder only; controller/row arbiters unpriced"
+  },
+  "remaining": [
+    "trusted expected-sector sequencer and descriptor fence",
+    "per-row arbitration preserving original rotating grant order",
+    "token writeback and readiness aggregation",
+    "full die connection and die STA"
+  ]
+}

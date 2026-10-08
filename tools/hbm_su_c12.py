@@ -19,7 +19,8 @@ swaps the source lists, sets the campaign's depth model to the c12 depths and EX
         --cases su_cases_v2_ildr.pkl                                                        (the composition's cycles)
     python3 tools/hbm_su_c12.py su-run ... --n 64 --m 16 --fp rtl ...                       (bit-level, N 64)
 Common options (before the subcommand's own): --mlat 6 --alat 6 --opr 1 --ddiv 21 --sidex 3 --fsq 1
---rpad R --rsl S --rtap T --rslice W (defaults: the c12 build).
+--rpad R --rsl S --rtap T --rslice W --gsh G --kimm K --denr D --dring R (defaults: the c12 build; gsh / kimm: CLAUDE HBM-ABSTRACTS
+hub lane margin, default off).
 """
 from __future__ import annotations
 
@@ -31,16 +32,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-C12_UNITS = ["rtl/hdc/ot_hdc_fastfp_lat_c12.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+C12_UNITS = ["rtl/hdc/ot_hdc_delay_ring.sv", "rtl/hdc/ot_hdc_fastfp_lat_c12.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
              "rtl/hdc/v41x/ot_dsrom_su_f12.sv", "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv"]
-C12_UNITS_DPI = ["rtl/hdc/ot_hdc_fastfp_lat_c12.sv", "rtl/test/sim_hdc_fp32_f12_dpi_tops.sv",
+C12_UNITS_DPI = ["rtl/hdc/ot_hdc_delay_ring.sv", "rtl/hdc/ot_hdc_fastfp_lat_c12.sv", "rtl/test/sim_hdc_fp32_f12_dpi_tops.sv",
                  "rtl/test/sim_dsrom_su_add6_dpi.sv", "rtl/hdc/v41x/ot_dsrom_su_f12.sv", "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv"]
 SWAP = {"rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": ["rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv"]}
-P = dict(mlat=6, alat=6, opr=1, ddiv=21, sidex=4, fsq=1, capr=1, rpad=1, rsl=2, rtap=1, rout=1, rslice=64, ctl12=1, ropi=0, rkc=0, rhalf=0, rhpar=0)
+P = dict(mlat=6, alat=6, opr=1, ddiv=21, sidex=4, fsq=1, capr=1, rpad=1, rsl=2, rtap=1, rout=1, rslice=64, ctl12=1, ropi=0, rkc=0, rhalf=0, rhpar=0, gsh=0, kimm=0, denr=0, dring=0)
 
 
 def take_params(argv):
@@ -62,7 +63,7 @@ def set_c12(VC):
     m, a = P["mlat"], P["alat"]
     assert 3 <= a <= m <= 8, (m, a)
     VC.MLAT, VC.ALAT = m, a
-    VC.D_FETCH, VC.D_FETCH_G = 4 + P["capr"], 6 + P["opr"] + P["capr"]
+    VC.D_FETCH, VC.D_FETCH_G = 4 + P["capr"], 6 + P["opr"] + P["capr"] + P["gsh"]
     VC.D_PRE = 1 + P["opr"]                  # the M1 operand register sits between PRE and M1
     VC.D_DIV = P["ddiv"]
     VC.D_OUT = 1 + P["opr"]                  # the E1 operand register (a constant stage on every element)
@@ -74,16 +75,17 @@ def set_c12(VC):
         VC.D_RSTEP *= 2
         VC.D_RED = 2 * VC.D_RED + 9
     d_exp = 7 * m + 8 * a + 4
-    d_sig = d_exp + a + P["ddiv"]
+    d_sig0 = d_exp + a + P["ddiv"]
+    d_sig = d_sig0 + P["denr"]           # lane sigmoid / SiLU (DENR); the side pipe's gate keeps d_sig0
     sx = P["sidex"]
     VC.SFU_DEPTH = {I.SFU_NONE: 0, I.SFU_EXP: d_exp, I.SFU_SIGM: d_sig, I.SFU_SILU: d_sig,
                     I.SFU_RSQRT: 1 + 9 * m + 3 * a + sx, I.SFU_SQRT: 31 + sx,
-                    I.SFU_SPSQRT: d_exp + 11 * m + 10 * a + 31 + P["ddiv"] + sx, I.SFU_EGATE: 1 + 31 + 1 + d_sig + sx}
+                    I.SFU_SPSQRT: d_exp + 11 * m + 10 * a + 31 + P["ddiv"] + sx, I.SFU_EGATE: 1 + 31 + 1 + d_sig0 + sx}
 
 
 def vflags():
     g = dict(OPR=P["opr"], DDIV=P["ddiv"], SIDEX=P["sidex"], FSQ=P["fsq"], CAPR=P["capr"], RPAD=P["rpad"], RSL=P["rsl"], ROUT=P["rout"], CTL12=P["ctl12"],
-             RTAP=P["rtap"], RSLICE=P["rslice"], ROPI=P["ropi"], RKC=P["rkc"], RHALF=P["rhalf"], RHPAR=P["rhpar"])
+             RTAP=P["rtap"], RSLICE=P["rslice"], ROPI=P["ropi"], RKC=P["rkc"], RHALF=P["rhalf"], RHPAR=P["rhpar"], GSH=P["gsh"], KIMM=P["kimm"], DENR=P["denr"], DRING=P["dring"])
     return " ".join(f"-G{k}={v}" for k, v in g.items())
 
 

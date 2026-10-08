@@ -1,0 +1,17 @@
+{
+  "initial_status": "UNBOUNDED_BENCH_STOPPED_NO_PASS",
+  "calendar_failure": "monitored repeat:0writes/0reads after4096 readedges; bothresetsreleased; actual syncmemory words known but combinational readports unknown",
+  "diagnosis": "Icarus unpacked-array synchronizer event propagation under staggered coldreset; explicit two scalar vector stages restored coherent authorization; same statebit count/two-edge timing",
+  "fix": "Separate explicit *_sync0 and *_sync1 registers, retained ASYNC_REG/keep/dont_touch and Gray/complement checks; no waiver or clock alias",
+  "final_status": "PASS 512 fullwidth flits, full/wrap/stalls/singlecorrection/rail suppression/drain/coordinatedreset/controlUE/payloadUE, wrong-output mutant detected",
+  "functional_clock_periods_ps": {
+    "core": 833.333334,
+    "peer": 1024.6
+  },
+  "limits": [
+    "functionalCDC only; phase/frequency sensitivity beyond thisfixture pending",
+    "not yet integrated into nativeTU replacement",
+    "mapping/timing/resetrecoveryremoval/trackcapacity unqualified"
+  ],
+  "functional_clock_scope": "833.333334ps core,1024.6ps read is deliberate independent-clock stress, not replacement for actual833.333333ps linkcontract"
+}

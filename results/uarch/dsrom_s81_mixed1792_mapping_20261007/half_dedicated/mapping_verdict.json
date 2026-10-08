@@ -1,0 +1,19 @@
+{
+  "adopted": false,
+  "all_numbers": "MODEL_UNVALIDATED until the field phases are measured",
+  "bf_stages": 40,
+  "counts": {
+    "declarations": 46681,
+    "placed": 46681
+  },
+  "decision": "OWNER 2026-10-07: BF half-rate + more BF pairs; BF16-dedicated BF pairs (q plans on BF pairs would run at half rate); 4 BF a region on BF stages; q-only stages",
+  "decoder_matrix_capacity_PASS": true,
+  "failures": [],
+  "ksplit_bf16_aliases": [],
+  "layer_dies": 480,
+  "q_stages": 80,
+  "schema": "opentallas.dsrom.bf-double.allocation.v1",
+  "source_pin": "",
+  "stages": 120,
+  "tool": "tools/dsrom_bf_geometry_alloc.py"
+}

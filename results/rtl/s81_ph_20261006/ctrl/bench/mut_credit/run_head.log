@@ -1,0 +1,40 @@
+ERR (a) pc 31 request 43: PHY saw tag 0f82d addr 0000ea90, issued tag 0f82b addr 0000ea90
+ERR (a) pc 31 request 44: PHY saw tag 0f82e addr 000055c6, issued tag 0f82c addr 000050ec
+ERR (a) pc 16 request 40: PHY saw tag 0802b addr 00006760, issued tag 08028 addr 0000cf0b
+ERR (a) pc 16 request 41: PHY saw tag 0802c addr 000077e0, issued tag 08029 addr 00001044
+ERR (a) pc 16 request 42: PHY saw tag 0802d addr 000077e0, issued tag 0802a addr 000043cc
+ERR (a) pc 16 request 43: PHY saw tag 0802e addr 0000c4d4, issued tag 0802b addr 00006760
+ERR (a) pc 5 request 39: PHY saw tag 0282d addr 00001538, issued tag 02827 addr 0000bc58
+ERR (a) pc 31 request 45: PHY saw tag 0f82f addr 0000d984, issued tag 0f82d addr 0000ea90
+ERR (a) pc 5 request 40: PHY saw tag 0282e addr 00003c78, issued tag 02828 addr 0000e48a
+ERR (a) pc 5 request 41: PHY saw tag 0282f addr 0000af45, issued tag 02829 addr 0000153b
+ERR phase 0: timeout
+ERR (c) phase 0: response beats dut 2481 ref 2521 expected 2521
+ERR (d) pc 5 credits 2 != 8
+ERR (d) pc 5 accepted 42 != 48
+ERR (d) pc 8 credits 6 != 8
+ERR (d) pc 8 accepted 46 != 48
+ERR (d) pc 10 credits 3 != 8
+ERR (d) pc 10 accepted 43 != 48
+ERR (d) pc 16 credits 4 != 8
+ERR (d) pc 16 accepted 44 != 48
+ERR (d) pc 21 credits 7 != 8
+ERR (d) pc 21 accepted 47 != 48
+ERR (d) pc 24 credits 4 != 8
+ERR (d) pc 24 accepted 44 != 48
+ERR (d) pc 27 credits 5 != 8
+ERR (d) pc 27 accepted 45 != 48
+ERR (d) pc 31 credits 6 != 8
+ERR (d) pc 31 accepted 46 != 48
+ERR (d) phase 0: write-done dut 514 ref 526 writes 526
+ERR (d) phase 0: st 11
+phase 0: 1536 requests (526 writes, 2521 read beats) on 32 PCs; responses dut 2521 ref 2521
+ERR phase 1: timeout
+ERR (c) phase 1: response beats dut 2160 ref 2548 expected 2548
+ERR (d) pc 0 credits 2 != 8
+ERR (d) pc 0 accepted 42 != 48
+ERR (d) pc 1 credits 2 != 8
+ERR (d) pc 1 accepted 42 != 48
+ERR (d) pc 2 credits 0 != 8
+ERR (d) pc 2 accepted 40 != 48
+ERR (d) pc 3 credits 2 != 8

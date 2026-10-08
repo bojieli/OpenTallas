@@ -1,0 +1,44 @@
+{
+  "candidate": "WINDOW_COLUMN_HALFWRITE",
+  "adopted": false,
+  "capacity_bits": 4096,
+  "read_bytes_per_cycle": 16,
+  "write_bytes_per_cycle": 16,
+  "row_enable_bits_per_cycle": 32,
+  "boundary_bits_per_cycle": 294,
+  "storage_replicas": 1,
+  "write_data_copies": 8,
+  "row_enable_copies": 8,
+  "max_data_storage_fanout": 4,
+  "max_enable_storage_fanout": 16,
+  "added_data_FF": 1024,
+  "added_enable_FF": 256,
+  "added_FF": 1280,
+  "added_cycles": 0,
+  "memory_commit_offset_cycles": 0.5,
+  "read_latency_cycles": 2,
+  "period_ps": 833.3333333333334,
+  "half_cycle_ps": 416.6666666666667,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "area_sizing": {
+    "added_FF_um2_upper": 1280.0,
+    "slot_utilization_target": 0.55,
+    "added_slot_um2_upper": 2327.272727272727,
+    "basis": "Conservative1um2/addedFF sizing allocation; actual mapped cell/clock/routing area pending"
+  },
+  "mux_cost": {
+    "read_8to1_bits": 512,
+    "read_4to1_bits": 128,
+    "storage_enable_bits": 4096,
+    "unchanged": true
+  },
+  "exactness_obligation": "Posedge read sees all prior writes and excludes same-edge write; later negedge commit must preserve multirow writes, resets and output holding.",
+  "physical_obligation": "Both edge polarities propagated; halfcycle ingress-to-store and store-to-read setup, trueFF hold, actualIO and M2-M6 PG accessibility.",
+  "parent_cost": "Zero read/write acceptance cycles; extra clock sinks and actual area must be composed for132columns before parent adoption",
+  "gates": {
+    "exact": false,
+    "negative": false,
+    "SS_FF_DRC": false
+  }
+}

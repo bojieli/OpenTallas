@@ -1,0 +1,62 @@
+{
+  "name": "hbm_su_full64_COMMIT",
+  "block": "ot_su64_full64",
+  "owner": "Codex:hbm/su",
+  "purpose": "Exact two-copy half-rate dividers DDIV64; full lane in modeled400.008x401.736 slot,1.2GHzfast/0.6GHzcores; +43 cycles/divide vs21. DIAGNOSTIC UNTIL CAMPAIGN PASS.",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3"
+  ],
+  "threads": 8,
+  "peak_ram_gb": null,
+  "source": {
+    "branch": "main",
+    "commit": "FILL_PINNED_COMMIT"
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "OUT={RUN}/routes CORES=8 PD=0.5 PER=0.770 SRCF=physical/hbm_su_div64/su_full_sources.txt XSDC=physical/hbm_su_div64/full_generated_clocks_candidate.sdc DIE=\"400.008 401.736\" bash physical/hbm_su_div64/route_full64.sh {LABEL}${CL_LABEL_SUFFIX} ot_su64_full64 box --step-tcl POST_IO_PLACEMENT=physical/hbm_su_c12/red_pinflop_place.tcl $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 8,
+      "peak_ram_gb": null
+    },
+    "route": {
+      "cmd": "OUT={RUN}/routes CORES=8 PD=0.5 PER=0.770 SRCF=physical/hbm_su_div64/su_full_sources.txt XSDC=physical/hbm_su_div64/full_generated_clocks_candidate.sdc DIE=\"400.008 401.736\" bash physical/hbm_su_div64/route_full64.sh {LABEL}${CL_LABEL_SUFFIX} ot_su64_full64 box --step-tcl POST_IO_PLACEMENT=physical/hbm_su_c12/red_pinflop_place.tcl $CL_STOP_AFTER",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/routes/{LABEL}/args {CL}/calib.json {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/hbm_su_c12/signoff_833_io150.sdc",
+      "physical/hbm_su_div64/full_generated_clocks_candidate.sdc",
+      "physical/hbm_su_div64/propagate_signoff.sdc"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/hbm_su_div64_candidate/COMMIT"
+    }
+  ],
+  "no_bench_reason": "Parallel independent campaign must source-match and PASS before adoption; external adoption hold REQUIRED before submission.",
+  "cycles_added": 43,
+  "merge_target": "main",
+  "dispatch_prerequisites": [
+    "Fill measured resource reservation; null is intentional: no predecessor measured peak available locally",
+    "Replace commit/name/record commit fields with committed source pin",
+    "Install external adoption hold before queueing; release only on exact and negative gates",
+    "Validate four ICGs discovered during mapped-netlist SDC intake"
+  ]
+}

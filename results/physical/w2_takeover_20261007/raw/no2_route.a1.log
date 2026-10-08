@@ -1,0 +1,55 @@
+/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-872c56bd4/routes/w2_rb_safe_no2_872c56bd4/station.sdc {'in_max': 976.667, 'in_min': 405.2, 'out_max': -199.33299999999997, 'out_min': -281.0}
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+_/D
+    18880 |       0 |   39721 |            0 |   +10.4% | -205.398 | -524076.812 | _282350_/D
+    18890 |       0 |   39750 |            0 |   +10.4% | -205.398 | -524076.812 | _282350_/D
+    18900 |       0 |   39776 |            0 |   +10.4% | -205.398 | -524076.812 | _282350_/D
+    18910 |       0 |   39805 |            0 |   +10.4% | -205.398 | -524076.812 | _282350_/D
+    18920 |       0 |   39832 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    18930 |       0 |   39859 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    18940 |       0 |   39886 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    18950 |       0 |   39915 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    18960 |       0 |   39945 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    18970 |       0 |   39973 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    18980 |       0 |   40002 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    18990 |       0 |   40031 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    19000 |       0 |   40058 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    19010 |       0 |   40087 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    19020 |       0 |   40117 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    19030 |       0 |   40147 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    19040 |       0 |   40175 |            0 |   +10.5% | -205.398 | -524076.812 | _282350_/D
+    19050 |       0 |   40204 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+    19060 |       0 |   40230 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+    19070 |       0 |   40258 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+    19080 |       0 |   40287 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+    19090 |       0 |   40317 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+    19100 |       0 |   40347 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+    19110 |       0 |   40375 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+    19120 |       0 |   40405 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+    19130 |       0 |   40434 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+    19140 |       0 |   40461 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+    19150 |       0 |   40490 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+    final |       0 |   40493 |            0 |   +10.6% | -205.398 | -524076.812 | _282350_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 40493 hold buffers.
+[ERROR RSZ-0060] Max buffer count reached.
+Error: cts.tcl, 83 RSZ-0060
+
+Elapsed time: 0:00.04[h:]min:sec. CPU time: user 0.02 sys 0.02 (99%). Peak memory: 27016KB.
+Elapsed time: 0:00.03[h:]min:sec. CPU time: user 0.02 sys 0.02 (98%). Peak memory: 26856KB.
+Elapsed time: 0:11.69[h:]min:sec. CPU time: user 11.40 sys 0.30 (99%). Peak memory: 945776KB.
+Elapsed time: 3:18.97[h:]min:sec. CPU time: user 248.95 sys 76.13 (163%). Peak memory: 1036332KB.
+Elapsed time: 0:06.10[h:]min:sec. CPU time: user 5.94 sys 0.16 (99%). Peak memory: 553068KB.
+Elapsed time: 0:05.71[h:]min:sec. CPU time: user 5.57 sys 0.14 (100%). Peak memory: 464380KB.
+Elapsed time: 0:07.28[h:]min:sec. CPU time: user 7.11 sys 0.18 (99%). Peak memory: 579916KB.
+Elapsed time: 0:24.66[h:]min:sec. CPU time: user 166.05 sys 0.33 (674%). Peak memory: 782776KB.
+Elapsed time: 0:06.24[h:]min:sec. CPU time: user 6.06 sys 0.19 (99%). Peak memory: 583112KB.
+Elapsed time: 3:24.32[h:]min:sec. CPU time: user 476.98 sys 112.23 (288%). Peak memory: 2575960KB.
+Elapsed time: 1:43.79[h:]min:sec. CPU time: user 136.62 sys 41.69 (171%). Peak memory: 1499640KB.
+Elapsed time: 2:17.21[h:]min:sec. CPU time: user 170.41 sys 40.52 (153%). Peak memory: 1900220KB.
+Elapsed time: 7:15.97[h:]min:sec. CPU time: user 495.22 sys 28.85 (120%). Peak memory: 2330588KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_ot_hbm_native_frame_station_rb_asap7_tk_W2_safe_NO2/base/4_1_cts.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no2-872c56bd4/routes/w2_rb_safe_no2_872c56bd4/physical.json

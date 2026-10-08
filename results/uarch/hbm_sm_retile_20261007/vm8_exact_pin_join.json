@@ -1,0 +1,824 @@
+{
+  "scope": "requested io_place pin rectangles vs emitted abstract; actual routed BPin readback remains required",
+  "selected": false,
+  "variants": {
+    "historical_range": {
+      "hfd_vm_sw_s": {
+        "requested": 16246,
+        "generated": 16246,
+        "mismatches": 8219,
+        "extra_pins": [],
+        "examples": [
+          {
+            "pin": "rst[0]",
+            "requested": [
+              "M5",
+              386.412,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              699.72,
+              0.108,
+              0.19200000000000728,
+              0.023999999999999994
+            ]
+          },
+          {
+            "pin": "s2n[0]",
+            "requested": [
+              "M5",
+              152.688,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              152.70000000000002,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[1]",
+            "requested": [
+              "M5",
+              152.736,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              152.74800000000002,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[2]",
+            "requested": [
+              "M5",
+              152.784,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              152.79600000000002,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[3]",
+            "requested": [
+              "M5",
+              152.832,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              152.84400000000002,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          }
+        ]
+      },
+      "hfd_vm_sw_n": {
+        "requested": 27068,
+        "generated": 27068,
+        "mismatches": 8219,
+        "extra_pins": [],
+        "examples": [
+          {
+            "pin": "rst[0]",
+            "requested": [
+              "M4",
+              699.72,
+              480.0,
+              0.192,
+              0.024
+            ],
+            "generated": [
+              "M4",
+              699.72,
+              480.012,
+              0.19200000000000728,
+              0.02400000000000091
+            ]
+          },
+          {
+            "pin": "s2n[0]",
+            "requested": [
+              "M5",
+              152.688,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              152.70000000000002,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          },
+          {
+            "pin": "s2n[1]",
+            "requested": [
+              "M5",
+              152.736,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              152.74800000000002,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          },
+          {
+            "pin": "s2n[2]",
+            "requested": [
+              "M5",
+              152.784,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              152.79600000000002,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          },
+          {
+            "pin": "s2n[3]",
+            "requested": [
+              "M5",
+              152.832,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              152.84400000000002,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          }
+        ]
+      },
+      "hfd_vm_nw_s": {
+        "requested": 14070,
+        "generated": 14070,
+        "mismatches": 3167,
+        "extra_pins": [],
+        "examples": [
+          {
+            "pin": "rst[0]",
+            "requested": [
+              "M4",
+              0.096,
+              480.0,
+              0.192,
+              0.024
+            ],
+            "generated": [
+              "M4",
+              0.096,
+              480.012,
+              0.192,
+              0.02400000000000091
+            ]
+          },
+          {
+            "pin": "s2n[0]",
+            "requested": [
+              "M5",
+              273.936,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              273.948,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[1]",
+            "requested": [
+              "M5",
+              273.984,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              273.996,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[2]",
+            "requested": [
+              "M5",
+              274.032,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              274.044,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[3]",
+            "requested": [
+              "M5",
+              274.08,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              274.092,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          }
+        ]
+      },
+      "hfd_vm_nw_n": {
+        "requested": 19652,
+        "generated": 19652,
+        "mismatches": 4191,
+        "extra_pins": [],
+        "examples": [
+          {
+            "pin": "t_quant[0]",
+            "requested": [
+              "M5",
+              502.62,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              502.524,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "t_quant[1]",
+            "requested": [
+              "M5",
+              502.812,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              502.716,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "t_quant[2]",
+            "requested": [
+              "M5",
+              503.004,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              502.908,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "t_quant[3]",
+            "requested": [
+              "M5",
+              503.196,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              503.1,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "t_quant[4]",
+            "requested": [
+              "M5",
+              503.388,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              503.292,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          }
+        ]
+      },
+      "hfd_vm_se_s": {
+        "requested": 12449,
+        "generated": 12449,
+        "mismatches": 4933,
+        "extra_pins": [],
+        "examples": [
+          {
+            "pin": "s2n[0]",
+            "requested": [
+              "M5",
+              231.504,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              231.516,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[1]",
+            "requested": [
+              "M5",
+              231.552,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              231.564,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[2]",
+            "requested": [
+              "M5",
+              231.6,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              231.612,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[3]",
+            "requested": [
+              "M5",
+              231.648,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              231.66,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[4]",
+            "requested": [
+              "M5",
+              231.696,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              231.708,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          }
+        ]
+      },
+      "hfd_vm_se_n": {
+        "requested": 23783,
+        "generated": 23783,
+        "mismatches": 4934,
+        "extra_pins": [],
+        "examples": [
+          {
+            "pin": "rst[0]",
+            "requested": [
+              "M4",
+              0.096,
+              480.0,
+              0.192,
+              0.024
+            ],
+            "generated": [
+              "M4",
+              0.096,
+              480.012,
+              0.192,
+              0.02400000000000091
+            ]
+          },
+          {
+            "pin": "s2n[0]",
+            "requested": [
+              "M5",
+              231.504,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              231.516,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          },
+          {
+            "pin": "s2n[1]",
+            "requested": [
+              "M5",
+              231.552,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              231.564,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          },
+          {
+            "pin": "s2n[2]",
+            "requested": [
+              "M5",
+              231.6,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              231.612,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          },
+          {
+            "pin": "s2n[3]",
+            "requested": [
+              "M5",
+              231.648,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              231.66,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          }
+        ]
+      },
+      "hfd_vm_ne_s": {
+        "requested": 14366,
+        "generated": 14366,
+        "mismatches": 3462,
+        "extra_pins": [],
+        "examples": [
+          {
+            "pin": "s2n[0]",
+            "requested": [
+              "M5",
+              266.832,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              266.844,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[1]",
+            "requested": [
+              "M5",
+              266.88,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              266.892,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[2]",
+            "requested": [
+              "M5",
+              266.928,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              266.94,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[3]",
+            "requested": [
+              "M5",
+              266.976,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              266.988,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          },
+          {
+            "pin": "s2n[4]",
+            "requested": [
+              "M5",
+              267.024,
+              499.944,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              267.036,
+              499.944,
+              0.02400000000000091,
+              0.19200000000000728
+            ]
+          }
+        ]
+      },
+      "hfd_vm_ne_n": {
+        "requested": 18924,
+        "generated": 18924,
+        "mismatches": 3463,
+        "extra_pins": [],
+        "examples": [
+          {
+            "pin": "rst[0]",
+            "requested": [
+              "M4",
+              0.096,
+              480.0,
+              0.192,
+              0.024
+            ],
+            "generated": [
+              "M4",
+              0.096,
+              480.012,
+              0.192,
+              0.02400000000000091
+            ]
+          },
+          {
+            "pin": "s2n[0]",
+            "requested": [
+              "M5",
+              266.832,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              266.844,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          },
+          {
+            "pin": "s2n[1]",
+            "requested": [
+              "M5",
+              266.88,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              266.892,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          },
+          {
+            "pin": "s2n[2]",
+            "requested": [
+              "M5",
+              266.928,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              266.94,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          },
+          {
+            "pin": "s2n[3]",
+            "requested": [
+              "M5",
+              266.976,
+              0.096,
+              0.024,
+              0.192
+            ],
+            "generated": [
+              "M5",
+              266.988,
+              0.096,
+              0.02400000000000091,
+              0.192
+            ]
+          }
+        ]
+      }
+    },
+    "candidate_exact": {
+      "hfd_vm_sw_s": {
+        "requested": 16246,
+        "generated": 16246,
+        "mismatches": 0,
+        "extra_pins": [],
+        "examples": []
+      },
+      "hfd_vm_sw_n": {
+        "requested": 27068,
+        "generated": 27068,
+        "mismatches": 0,
+        "extra_pins": [],
+        "examples": []
+      },
+      "hfd_vm_nw_s": {
+        "requested": 14070,
+        "generated": 14070,
+        "mismatches": 0,
+        "extra_pins": [],
+        "examples": []
+      },
+      "hfd_vm_nw_n": {
+        "requested": 19652,
+        "generated": 19652,
+        "mismatches": 0,
+        "extra_pins": [],
+        "examples": []
+      },
+      "hfd_vm_se_s": {
+        "requested": 12449,
+        "generated": 12449,
+        "mismatches": 0,
+        "extra_pins": [],
+        "examples": []
+      },
+      "hfd_vm_se_n": {
+        "requested": 23783,
+        "generated": 23783,
+        "mismatches": 0,
+        "extra_pins": [],
+        "examples": []
+      },
+      "hfd_vm_ne_s": {
+        "requested": 14366,
+        "generated": 14366,
+        "mismatches": 0,
+        "extra_pins": [],
+        "examples": []
+      },
+      "hfd_vm_ne_n": {
+        "requested": 18924,
+        "generated": 18924,
+        "mismatches": 0,
+        "extra_pins": [],
+        "examples": []
+      }
+    }
+  },
+  "source_sha256": {
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/tools/hbm_vm8_pin_join.py": "055d39db62c4d575f4da65065526126f02865f8a4e0f038903eb619ae6bf1f8e",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/tools/hbm_accel_die_fp.py": "f712d6a009d5fcfa60854ab4fbd2cb57a3fe735e093b01b2aa9b9a1f04434e33",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/tools/dsrom_s81_fulldie.py": "74e08b8dd5359df3c0dddd9dfd4756faf2ff8952f3635a09bebeb210711c0c8c",
+    "/home/ubuntu/OpenTallas/results/physical/hbm_vm8_contract_20261007/contract.json": "82f81a1309a6fa0a22a78ed90ff9ec03285a91d6a60a7f9320e8e33f078d235b",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_ne_n/io_place.tcl": "cfe45777d119493293a16a43490b42c187033d1a5fc6fa6ec07dec5481d36ddd",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_ne_s/io_place.tcl": "c072172848a8bcdc292e6a6333508d751761fc905a625e44f96178282828a073",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_nw_n/io_place.tcl": "73c007dd4630ae81209620b42036862907da75b9bb9d84d8c4fafcab2a7b8fae",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_nw_s/io_place.tcl": "5e34b14c75b02c56c03646fe236c2da13126cf9e8c586fa715e9d240861f7024",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_se_n/io_place.tcl": "2f5e70fcdf588c031f91da4599ccce69240dd0b0cb3aa01b22cbe0e952d22ba9",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_se_s/io_place.tcl": "34e701caa7fadfb5e0461d299c43cc0ecea4889a48bb9dcd332416453dced072",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_sw_n/io_place.tcl": "60b4bc8798d4c9ba6646010365b9383028e3cc51349991b8bc28b47b7ed96ac4",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_sw_s/io_place.tcl": "3d5561318cb6fb3eddf64f71588e47614ea4909da828d8666d5156d8a1e8d2ee"
+  }
+}

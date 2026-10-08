@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.qwen_native528_endpoint.prebuild.v1",
+  "model_before_build": true,
+  "adoption": false,
+  "scope": "Two unchanged actual NL4 physical hubs as protocol-compatible service counterparts, one lane connected through a54/55hop actual TMRrelay chain. This does not claim the absent qfd_kvc strip service binding.",
+  "shape": {
+    "active_lanes": 1,
+    "hubs": 2,
+    "physical_hub_lanes_each": 4,
+    "payload_bits": 512,
+    "word_bits": 528,
+    "MACs_per_cycle": 0,
+    "memory_port_bits_per_active_receive_transfer": 523,
+    "transport_bits_per_cycle_each_direction": 528,
+    "credit_window": 4,
+    "x3_source_credits": 2,
+    "ar_consumer_credits": 4,
+    "per_lane_receive_IBUF": 4,
+    "per_lane_async_FIFO": 8,
+    "per_lane_receive_output_credits": 1,
+    "transport_stages_cases": [
+      54,
+      55
+    ],
+    "transport_FF_for54": 57672,
+    "transport_FF_for55": 58740,
+    "additional_production_cycles": 0,
+    "physical_area": "No new production hardware in this fixture; reuses measured362.37132um2/NL1 TMRstage and actualhub nativecreditarchitecture. 54stages rawrelaycellarea19568.05128um2;existingdiegeometryqualificationseparate."
+  },
+  "ABI": {
+    "bits527_16": "512data",
+    "bit0": "valid",
+    "bits4_1": "Gray cumulativecreditcounter modulo16, opposite direction",
+    "bits15_5": "11tag bits; nativehub carries through CDC but drops them at ar output",
+    "hub_transmit_payload": "{x3_d[509:0],2b00};x3_d[511:510] selects lane and is not payload",
+    "protection": "No native CRC/ECC/tag validator/creditdelta bound in physicalhub; releaseTMRdoesnotrepairthis."
+  },
+  "latency": {
+    "bare_roundtrip_stream_cycles": [
+      108,
+      110
+    ],
+    "four_credit_rate_upper_bound_flits_per_stream_cycle": [
+      0.037037037037037035,
+      0.03636363636363636
+    ],
+    "actual_credit_path": "senderlo_q->Hrelaycycles->iv_q->IBUFwrite->IBUFpop/cr_q->cb/cg->s1/s2->peerlo_q->Hrelaycycles->t1/t2->lc update->newsend. The exact endpoint/synchronizer phase cost is measured by fixture, not replaced by bare2H.",
+    "clock": "Two equal-rate independentlyphased1.2GHzclock owners; simulationtime normalized, no physicaltimingclaim",
+    "reset": "OnlycoldPORunlessallissuedwordsdeliveredandallcreditsandqueuesquiescent. No warm/drainprotocolexistsnative; deliberateunilateralresetnegative must be rejected by external conservation checker."
+  },
+  "tests": [
+    "Bidirectionalbitexactorder/no loss/duplication across modulo16creditwrap",
+    "Consumerbackpressure withallfourarcredits withheld thenreleased",
+    "Drainedcoordinatedcoldreinitialization startsfresh model credit counts",
+    "Wrongclock/stagebypass negatives coveredtransportgate",
+    "Ignoredx3credits negative fails nativeoverflow",
+    "CorruptreturnedGraycount negative demonstratesmissing nativeprotection via conservation/invariant orscoreboard",
+    "Unilateralresetwithownedword negative demonstratesunsupportedwarmreset"
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_die_hub.sv": "06d01e706d7b7790e4e6f0869e15dfa6f278a7e504f4a313b87daa6efe6d4a93",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "e865aecae51ae3b929bc9401c970e825073338b77dee87ead88d66ce9e8631fd",
+    "rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv": "cd7142ec0db3465c0b4134888e6947a2bc1d7223c0d2fc02093729e568921881",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "tools/qwen_rom_fulldie.py": "d45178b8d71803f231d103f3870b8ee3b220035e19ce31921380755d81b5fedd",
+    "rtl/qwen_sys/ot_qwen_d2d_link.sv": "cf3f882ed8a365965d2c7c2712f74eee154dc6ec81225658885b552470fcee34",
+    "rtl/qwen_sys/ot_qwen_sys_rst_seq.sv": "77582b3c1092c26bfc567ca4bf3cef8be2bb7ab627e9a8b1a79996f65f807246",
+    "rtl/qwen_sys/combined/ot_qwen_combined_nearbaseline_subsystem.sv": "9afaa8b23a8005e30816ea39a083106ed24e51949d69fe71a306a4f9b5708e8b"
+  }
+}

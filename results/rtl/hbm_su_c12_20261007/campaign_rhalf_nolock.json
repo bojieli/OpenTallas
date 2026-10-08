@@ -1,0 +1,13 @@
+{
+  "source_commit": "cae10b8fb",
+  "macro": "OT_NEG_RED_NOLOCK",
+  "rhpar": 1,
+  "host": "ot-epyc2",
+  "source_log": "/srv/opentallas-scratch2/scratch/claude/hbm-su/out/campaign_ln1.log",
+  "log_sha256": "d4b909280a4eaf2c7a901b4582f900b97a621fce90c97ae51f7a29cc5496a3e0",
+  "cases": 40,
+  "failed_cases": 40,
+  "faulted_cases": 40,
+  "verdict": "EXPECTED_FAILURE_RANDOM_PHASE",
+  "limitation": "Claude deliberately stopped the negative after 40 random cases; vehicle and performance phases did not run. Original campaign JSON does not exist."
+}

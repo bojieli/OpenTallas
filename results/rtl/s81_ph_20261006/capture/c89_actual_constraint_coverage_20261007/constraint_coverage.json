@@ -1,0 +1,37 @@
+{
+  "status": "ACTUAL_WRITTEN_SDC_SERIAL_MIN_MAX_COVERAGE_PASS",
+  "serial_outputs": 1728,
+  "serial_min_ps": 120,
+  "serial_max_ps": 372.2221,
+  "core_outputs": [
+    {
+      "value": 107.0,
+      "clock": "vclk",
+      "kind": "min",
+      "port": "t_ho[0]"
+    },
+    {
+      "value": 316.6666,
+      "clock": "vclk",
+      "kind": "max",
+      "port": "t_ho[0]"
+    }
+  ],
+  "unconstrained_serial_outputs": [],
+  "wrong_domain_serial_outputs": [],
+  "actual_report_group_slack_ps": {
+    "serial_setup": 346.1,
+    "serial_hold": 5.1,
+    "core_setup": 226.56,
+    "core_hold": 31.21
+  },
+  "physical_qualification": false,
+  "note": "Serial output hold5.10 below15 acceptance. Domain max/min coverage corrected; further physical hold repair required.",
+  "files": {
+    "6_final.sdc": "1396ea4ed88af8c274b322d738093307c1b9a1ee30721c1ed68717c8aa6fa063",
+    "w18_sta_ff.tcl": "4137d16f69f9f6b5887044187d2e2e505e7a6f6f9bc6f44e4477d28e93bc5dc4",
+    "w18_sta_ff.log": "90b38de66f2689909b35025896ed76aca9fdd895ba337fa297b0a327b042c142",
+    "w18_sta_ss.tcl": "7d1ab4a4a72053ab0d7d0c795070c1d6772f9e76aaa9bc2d7623a6f890b32b17",
+    "w18_sta_ss.log": "44da59a9723ca0ee4278164ae5e9f3bbbf430370a4978666d56b155fe5de0de8"
+  }
+}

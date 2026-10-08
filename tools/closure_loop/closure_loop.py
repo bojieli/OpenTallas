@@ -40,7 +40,7 @@ import os
 import re
 import shlex
 import math
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 from functools import wraps
 import shutil
 import threading
@@ -51,6 +51,10 @@ import sys
 import time
 import traceback
 from pathlib import Path
+
+from ssh_transport import command as transport_command
+from source_archive import build_archive, repo_path
+from postroute_recovery import remote_command as postroute_probe_command
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
@@ -63,22 +67,37 @@ EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
 RAM_HEADROOM_GB = 32
-PENDING_WINDOW_S = 600                # load1 lags a launch: count own launches of the last 5 min as load
-TERMINAL = {"CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
+PENDING_WINDOW_S = 600
+PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
+TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
-                         r"admission (?:timed out|refused)", re.M)
+                         r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
+                         r"g\+\+: fatal error|cc1plus: .*(?:killed|error)", re.M)
+# a bench whose TOOLS crashed (compiler bus error, segfault, OOM) is not a verdict on the RTL (hbm_su_red_slice_6f2d14e36:
+# g++ bus error on EPYC2 -> NEEDS_RTL although the bench never ran): crash -> retry once on another host -> NEEDS_HUMAN
+BENCH_CRASH_RC = (124, 134, 135, 137, 139, 143)
+
+
+def bench_crashed(st, rc, tail):
+    if rc in BENCH_CRASH_RC or RESOURCE_RE.search(tail):
+        return st["expect"] == "fail" or not WORK_RE.search(tail)
+    return False
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
 DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
-WORKERS = 16
+WORKERS = 48
 # declared threads of own running stages count at 0.6 against the cap: full declared threads blocked EPYC2 at load1 40
 # (7 calibrates in synth/place, ~1 core each), load1 alone let EPYC3 reach 342 (27 routes ramping into DRT together)
 OWN_RUNNING_WEIGHT = 0.6
 HM_DEFAULT_SINCE = "2026-10-06T20:40"
 HM_LOW_SINCE = "2026-10-07T04:17"      # new jobs from here: route hold margin 10 ps, hold closed by the post-route ECO
+# FLOW-HOLD (2026-10-07): jobs created from here route with multi-mode hold repair (OT_ROUTE_HOLD_CORNERS=mm: SS setup +
+# FF hold under the FF sign-off constraints at CTS / global route) and HM_MM route hold margin (applies at FF only)
+MM_SINCE = "2026-10-07T21:00"
+HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
 STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (2, 8), "export": (2, 8),
@@ -110,10 +129,10 @@ def ssh(host, script, timeout=120, check=False, input=None):
         if input is None:
             return sh(["bash", "-s"], timeout=timeout, check=check, input=script)
         return sh(["bash", "-c", script], timeout=timeout, check=check, input=input)
-    base = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ServerAliveInterval=30", host]
-    if input is None:
-        return sh(base + ["bash -s"], timeout=timeout, check=check, input=script)
-    return sh(base + [script], timeout=timeout, check=check, input=input)
+    with transport_command(host) as base:
+        if input is None:
+            return sh(base + ["bash -s"], timeout=timeout, check=check, input=script)
+        return sh(base + [script], timeout=timeout, check=check, input=input)
 
 
 def is_local(host):
@@ -125,9 +144,22 @@ def rpath(host, path):
     return path if is_local(host) else f"{host}:{path}"
 
 
-def gfetch(*refs, timeout=600):
-    with GIT_LOCK:
-        return sh(["git", "-C", str(REPO), "fetch", "-q", "origin", *refs], timeout=timeout)
+def gfetch(*refs, timeout=600, tries=3):
+    """Fetch refs into origin/<ref>.  The object store is the shared checkout, where another git process can hold a
+    ref lock; an unchecked failed fetch left origin/main stale and sent pq_r128_expanded_b1528203c to NEEDS_HUMAN
+    "not on origin/main" for a commit already on main (10-07 11:43).  Retry, update the tracking refs explicitly,
+    and log a fetch that still fails."""
+    spec = [f"+refs/heads/{r}:refs/remotes/origin/{r}" for r in refs]
+    r = None
+    for attempt in range(tries):
+        with GIT_LOCK:
+            r = sh(["git", "-C", str(REPO), "fetch", "-q", "origin", *spec], timeout=timeout)
+        if r.returncode == 0:
+            return r
+        if attempt + 1 < tries:
+            time.sleep(5 * (attempt + 1))
+    log(f"git fetch {' '.join(refs)} failed after {tries} tries (rc={r.returncode}): {r.stderr.strip()[-300:]}")
+    return r
 
 
 def git(*args, timeout=900, check=True, cwd=None):
@@ -159,9 +191,25 @@ def validate(spec: dict) -> list[str]:
         return e
     if not NAME_RE.match(spec["name"]):
         e.append("name must match " + NAME_RE.pattern)
+    required = spec.get("host_require")
+    if required is not None and (not isinstance(required, list) or not required
+                                or any(not isinstance(x, str) for x in required)):
+        e.append("host_require must be a nonempty list of host names, not a boolean")
+    elif required and any(x not in {h["name"] for h in hosts_table()} for x in required):
+        e.append("host_require contains an unknown host")
     src = spec["source"]
     if not isinstance(src, dict) or not src.get("branch") or not re.match(r"^[0-9a-f]{7,40}$", str(src.get("commit", ""))):
         e.append("source needs branch and a hex commit")
+    if isinstance(src, dict) and "required_files" in src:
+        files = src["required_files"]
+        if not isinstance(files, list) or not files:
+            e.append("source.required_files must be a nonempty list of literal repository paths")
+        else:
+            try:
+                for value in files:
+                    repo_path(value)
+            except ValueError as ex:
+                e.append(str(ex))
     st = spec["stages"]
     if not isinstance(st, dict) or not st.get("route", {}).get("cmd"):
         e.append("stages.route.cmd is required")
@@ -262,6 +310,7 @@ def stage_list(spec):
         t, r = STAGE_DEFAULTS["bench"]
         out.append(dict(key="bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", b["name"]), kind="bench", cmd=b["cmd"],
                         expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"), pass_regex=b.get("pass_regex"),
+                        min_count_regex=b.get("min_count_regex"),
                         threads=b.get("threads", t), ram=b.get("peak_ram_gb", r)))
     cal = st.get("calibrate") or {}
     if cal.get("enabled", True) and cal.get("cmd"):
@@ -490,7 +539,10 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
     def own_pending(self, host):
         t0 = time.time() - PENDING_WINDOW_S
         self.pending[host] = [p for p in self.pending.get(host, []) if p[0] >= t0]
-        return sum(p[1] for p in self.pending[host]), sum(p[2] for p in self.pending[host])
+        # RAM of a launch is held back 5 min (was 10: a route reaches its
+        # memory over hours, so 10 min of declared peaks hid 356 GB of EPYC3's 485 GB free at 07:48 while 38 jobs waited)
+        tr = time.time() - PENDING_RAM_WINDOW_S
+        return sum(p[1] for p in self.pending[host]), sum(p[2] for p in self.pending[host] if p[0] >= tr)
 
     def fits(self, host, threads, ram):
         with FLEET_LOCK:
@@ -510,7 +562,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         if eff + pt + threads > cfg["cap"]:
             return False, f"{cfg['label']} load {eff:.0f}+{pt}+{threads} > cap {cfg['cap']}"
         res = cfg.get("reserve_ram_gb", 0)
-        head = max(0.10 * cfg.get("ram_gb", 1133), RAM_HEADROOM_GB, cfg.get("min_free_ram_gb", 0))  # OWNER 21:35
+        head = max(0.05 * cfg.get("ram_gb", 1133), RAM_HEADROOM_GB, cfg.get("min_free_ram_gb", 0))  # OWNER 21:35 10%; OWNER 10-07 08:05 "fill the hosts": 5%
         if cfg.get("max_loop_threads") is not None:      # localhost: loop jobs in total, so ssh stays responsive
             used = self.own_running.get(host, 0) + pt
             if used + threads > cfg["max_loop_threads"]:
@@ -537,7 +589,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
     def toolchain(self, host):
         """ORFS image digests + bench tool versions of a host (cached 1 h)."""
         c = self.tool_cache.get(host)
-        if c and time.time() - c[0] < 3600:
+        if c and time.time() - c[0] < (3600 if c[1] else 15):
             return c[1]
         r = ssh(host, TOOLPROBE, timeout=60)
         info = dict(l.split("=", 1) for l in r.stdout.splitlines() if "=" in l) if r.returncode == 0 else None
@@ -552,13 +604,21 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         ref, mine = self.toolchain(TOOL_REF_HOST), self.toolchain(host)
         if not ref or not mine:
             return False
-        return all(mine.get(k) == ref.get(k) for k in job_tools(spec) if k.startswith("img_"))
+        if not all(mine.get(k) == ref.get(k) for k in job_tools(spec) if k.startswith("img_")):
+            return False
+        if is_local(host) and bare_image_ids(spec):
+            return False     # a docker reference by bare image ID does not exist in the localhost store (see LOCAL_ORFS_REF)
+        return True
 
     def _choose(self, spec, exclude=()):
         threads, ram = spec.get("threads", 16), spec.get("peak_ram_gb", 32)
         allh = [h["name"] for h in hosts_table()]
         pref = set(spec.get("hosts") or [])
         # the job's hosts list is a PREFERENCE (coordinator 2026-10-06 21:15); caps/toolchain/per-job limits still apply
+        if spec.get("host_require"):          # smoke tests / pinned runs: only these hosts
+            allh = [h for h in allh if h in spec["host_require"]]
+        # a host marked smoke_only (hosts.json) admits only smoke-test jobs (spec "smoke": true) until it is re-enabled
+        allh = [h for h in allh if not host_cfg(h).get("smoke_only") or spec.get("smoke")]
         order = [h for h in allh if h not in exclude and self.compatible(h, spec)]
 
         def score(h):
@@ -578,10 +638,37 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             if ok:
                 return h, None
             why.append(msg)
-        return None, "; ".join(why)
+        return None, "; ".join(why) or "no compatible host (capabilities/image probe unavailable or mismatched)"
 
 
 TOOL_REF_HOST = "ot-epyc3"
+# LOCALHOST IMAGE (2026-10-07): the fleet image loaded into localhost's overlay2 docker store has another image ID
+# (af971398) than in the fleet's containerd stores (16470cea), so a recipe pinning the BARE ID sha256:16470cea... fails
+# there with exit 125 (dsrom_softmax_safe_exprc2_09d4d345e).  The registry-digest reference resolves on every host:
+# localhost stages export it as OPENTALLAS_ORFS_IMAGE, and jobs whose recipes hard-code a bare ID stay on the fleet.
+LOCAL_ORFS_REF = "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+_BARE_ID_CACHE = {}
+
+
+def bare_image_ids(spec):
+    """bare docker image IDs (sha256:<64 hex> not preceded by name@) in the job's stage commands or the scripts they
+    name at the job's commit, except an overridable ${OPENTALLAS_ORFS_IMAGE:-...} default"""
+    commit = (spec.get("source") or {}).get("commit", "")
+    text = json.dumps(spec.get("stages", {}))
+    key = (commit, text)
+    if key in _BARE_ID_CACHE:
+        return _BARE_ID_CACHE[key]
+    blobs = [text]
+    for path in sorted(set(re.findall(r"((?:physical|tools)/[\w./-]+\.(?:sh|py|tcl))", text))):
+        r = sh(["git", "-C", str(REPO), "show", f"{commit}:{path}"], timeout=60)
+        if r.returncode == 0:
+            blobs.append(r.stdout)
+    found = set()
+    for b in blobs:
+        b = re.sub(r"OPENTALLAS_ORFS_IMAGE:-sha256:[0-9a-f]{64}", "", b)
+        found |= set(re.findall(r"(?<![@\w])sha256:[0-9a-f]{64}", b))
+    _BARE_ID_CACHE[key] = sorted(found)
+    return _BARE_ID_CACHE[key]
 SMALL_JOB_GB = 40
 # image identity = its registry digest when it has one: the same image loaded into a different docker store reports a
 # different .Id (localhost overlay2 af971398 vs fleet containerd 16470cea, both openroad/orfs@sha256:16470cea)
@@ -636,7 +723,7 @@ def label(name):
 
 
 def subst(text, j):
-    m = dict(RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
+    m = dict(RUN=j["run"], SRC=j.get("stage_source", f"{j['run']}/src"), CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
              LABEL=label(j["name"]), RAW_NAME=j["name"],
              BLOCK=j["spec"]["block"], COMMIT=j["spec"]["source"]["commit"], THREADS=str(j["spec"].get("threads", 16)))
     for k, v in m.items():
@@ -792,29 +879,88 @@ def publish_measured():
     stamp.write_text(now_iso())
 
 
+def checkpoint_location(j):
+    """Bind resume work to its actual checkpoint, never merely to synced source."""
+    if not j.get("resume"):
+        return None
+    if j.get("checkpoint_affinity"):
+        return j["checkpoint_affinity"]
+    resume = j["resume"] if isinstance(j["resume"], dict) else {}
+    proof = resume.get("next_stage_dryrun") or {}
+    location = dict(host=resume.get("to_host") or proof.get("host") or j.get("host"),
+                    run=resume.get("run") or proof.get("run") or j.get("run"))
+    if not location["host"] or not location["run"]:
+        raise ValueError("checkpoint resume lacks a host/run binding")
+    j["checkpoint_affinity"] = location
+    return location
+
+
+def require_checkpoint_location(j):
+    location = checkpoint_location(j)
+    if location and (j.get("host"), j.get("run")) != (location["host"], location["run"]):
+        raise ValueError("checkpoint resume host/run changed without a verified full checkpoint transfer: "
+                         f"expected {location['host']}:{location['run']}")
+    return location
+
+
+@contextmanager
+def prepared_source_archive(source, commit):
+    """Check declared dependencies before remote mutation; yield the exact checked tar."""
+    if "required_files" not in source:
+        yield None, None
+        return
+    with tempfile.TemporaryDirectory(prefix="closure-source-") as scratch:
+        archive = Path(scratch) / "source.tar"
+        receipt = build_archive(REPO, commit, source, archive)
+        receipt.pop("archive", None)  # retain hash/inventory, not a transient local path
+        yield archive, receipt
+
+
 def sync_source(j):
+    require_checkpoint_location(j)
+    j["source_synced"] = False
     spec, host = j["spec"], j["host"]
     src = spec["source"]
     gfetch(src["branch"], timeout=600)
     full = git("rev-parse", "--verify", f"{src['commit']}^{{commit}}").stdout.strip()
     anc = sh(["git", "-C", str(REPO), "merge-base", "--is-ancestor", full, f"origin/{src['branch']}"], timeout=120)
+    if anc.returncode:   # confirm against a fresh fetch before calling a human: the tracking ref may be stale
+        gfetch(src["branch"], timeout=600)
+        anc = sh(["git", "-C", str(REPO), "merge-base", "--is-ancestor", full, f"origin/{src['branch']}"],
+                 timeout=120)
     if anc.returncode:
         raise ValueError(f"source commit {full[:12]} is not on origin/{src['branch']}")
     j["commit_full"] = full
     paths = list(src.get("paths", DEFAULT_SRC_PATHS)) + list(src.get("extra_paths", []))
     run = j["run"]
-    ssh(host, f"set -e; mkdir -p {run}/src {run}/cl; test ! -e {run}/src/SOURCE_COMMIT || "
-              f"grep -q {full} {run}/src/SOURCE_COMMIT", timeout=60, check=True)
-    arch = subprocess.Popen(["git", "-C", str(REPO), "archive", "--format=tar", full, "--", *paths],
-                            stdout=subprocess.PIPE)
-    gz = subprocess.Popen(["gzip", "-1"], stdin=arch.stdout, stdout=subprocess.PIPE)
-    arch.stdout.close()
-    put = subprocess.run((["bash", "-c"] if is_local(host) else ["ssh", "-o", "BatchMode=yes", host])
-                         + [f"tar -xzf - -C {run}/src"], stdin=gz.stdout,
-                         capture_output=True, text=True, timeout=1800)
-    gz.wait(); arch.wait()
-    if put.returncode or arch.returncode:
-        raise RuntimeError(f"source sync failed: {put.stderr[-800:]}")
+    with prepared_source_archive(src, full) as (verified_tar, archive_receipt):
+        ssh(host, f"set -e; mkdir -p {run}/src {run}/cl; test ! -e {run}/src/SOURCE_COMMIT || "
+                  f"grep -q {full} {run}/src/SOURCE_COMMIT", timeout=60, check=True)
+        with transport_command(host) as base:
+            if verified_tar is not None:
+                # Transfer this exact validated tar, not a second git archive.
+                with verified_tar.open("rb") as stream:
+                    put = subprocess.run(base + [f"tar -xf - -C {run}/src"], stdin=stream,
+                                         capture_output=True, text=True, timeout=1800)
+                if put.returncode:
+                    raise RuntimeError(f"source sync failed: {put.stderr[-800:]}")
+            else:
+                arch = subprocess.Popen(["git", "-C", str(REPO), "archive", "--format=tar", full, "--", *paths],
+                                        stdout=subprocess.PIPE)
+                gz = subprocess.Popen(["gzip", "-1"], stdin=arch.stdout, stdout=subprocess.PIPE)
+                arch.stdout.close()
+                try:
+                    put = subprocess.run(base + [f"tar -xzf - -C {run}/src"], stdin=gz.stdout,
+                                         capture_output=True, text=True, timeout=1800)
+                finally:
+                    gz.stdout.close()
+                    gz.wait()
+                    arch.wait()
+                if put.returncode or arch.returncode or gz.returncode:
+                    raise RuntimeError(f"source sync failed: {put.stderr[-800:]}")
+    if archive_receipt is not None:
+        j["source_archive"] = archive_receipt
+        ssh(host, f"cat > {run}/cl/source_archive.json", input=json.dumps(archive_receipt, indent=1), timeout=60, check=True)
     ship_helpers(host, run)
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
@@ -829,9 +975,12 @@ def sync_source(j):
                            insertion=sheet["clock"]["internal_insertion"],
                            entry_target_ss=sheet["clock"].get("entry_target_ss_ps"))
 
+    j["source_synced"] = True
+
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
-           "hold_eco_sdc.py", "hold_eco_window.tcl", "cal_classify.sh", "resume_patch.py", "resume_check.sh")
+           "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
+           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -853,8 +1002,22 @@ CAL_OWNER_ACTION = {
 
 def ship_helpers(host, run):
     """(re)write the loop's helper scripts into {CL}: jobs synced before a helper existed get it too"""
-    for helper in HELPERS:
-        ssh(host, f"mkdir -p {run}/cl && cat > {run}/cl/{helper}", input=(HERE / helper).read_text(), timeout=60, check=True)
+    # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
+    import io, tarfile
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w") as tf:
+        for helper in HELPERS:
+            tf.add(str(HERE / helper), arcname=Path(helper).name)
+    if is_local(host):
+        os.makedirs(f"{run}/cl", exist_ok=True)
+        with tarfile.open(fileobj=io.BytesIO(buf.getvalue())) as tf:
+            tf.extractall(f"{run}/cl")
+        return
+    with transport_command(host) as base:
+        r = subprocess.run(base + [f"mkdir -p {run}/cl && tar -xf - -C {run}/cl"],
+                           input=buf.getvalue(), capture_output=True, timeout=120)
+    if r.returncode:
+        raise RuntimeError(f"command failed rc={r.returncode}: ship_helpers {host}:{run}/cl {r.stderr[-300:]!r}")
 
 
 def tag(st, j):
@@ -863,8 +1026,14 @@ def tag(st, j):
 
 def launch_stage(j, st, cmd):
     t = tag(st, j)
+    if st["kind"] == "bench":
+        # Mutation benches must never write the route's source tree. One private
+        # tree per job attempt retains generated inputs shared by bench stages.
+        j["stage_source"] = f"{j['run']}/bench_src_a{str(j['attempt']).split('b')[0]}"
+    else:
+        j.pop("stage_source", None)
     env = "".join(f"export {k}={shlex.quote(v)}\n" for k, v in dict(
-        RUN=j["run"], SRC=f"{j['run']}/src", CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
+        RUN=j["run"], SRC=j.get("stage_source", f"{j['run']}/src"), CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
         LABEL=label(j["name"]), RAW_NAME=j["name"],
         BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
@@ -876,7 +1045,46 @@ def launch_stage(j, st, cmd):
         # uncertainty overloaded CTS/GRT hold repair (RSZ-0060 buffer-cap deaths, hours-long GRT hold); the post-route
         # hold ECO (rev 2: setup-preserving) carries hold to +18.  Earlier jobs keep 35 ps (same flow on a retry).
         hm_default = 0.010 if j.get("created", "") >= HM_LOW_SINCE else 0.035
+        if j.get("created", "") >= MM_SINCE and j["spec"].get("route_hold_corners", "mm") == "mm":
+            hm_default = HM_MM
         env += f"export HM={j['spec'].get('route_hold_margin_ns', hm_default)}\n"
+    if is_local(j["host"]):
+        env += f"export OPENTALLAS_ORFS_IMAGE={LOCAL_ORFS_REF}\n"
+    if st["kind"] in ("calibrate", "route") and j["attempt"] > 1 and not j.get("resume"):
+        # a re-run of a killed / crashed stage: the previous attempt's route dir is kept as evidence under a new name, so
+        # recipes that refuse existing evidence (s81 route_view.sh) start clean (capt_x / selt_c rc=73 after a restart)
+        d = f"{j['run']}/routes/{label(j['name'])}{'_cal' if st['kind'] == 'calibrate' else ''}"
+        env += f"[ -e {d} ] && mv {d} {d}.prev_$(date +%s) || true\n"
+    if st["kind"] in ("calibrate", "route"):
+        # (calibrate too, 2026-10-07: its CTS-only run repairs hold at CTS and died on RSZ-0060, hbm_stn_r38 / _ck80)
+        # ROUTE HOLD CORNERS (2026-10-07, hold_corners_patch.py): place-and-route repairs hold at the primary corner only
+        # -- the route SDC's virtual IO clock sits at the SS insertion, so BC showed fake IO hold violations of about the
+        # SS-FF insertion difference (thousands of flow hold buffers); FF hold goes to the post-route hold ECO.  Spec
+        # "route_hold_corners": "keep" leaves the recipe's own --hold-corners; any other value is passed through.
+        # FLOW-HOLD (2026-10-07): jobs created from MM_SINCE default to "mm" -- route-time repair in a multi-mode session,
+        # scene WC (SS libs, the route SDC: setup) + scene BC (FF libs, the route SDC refreshed + the FF sign-off SDCs:
+        # hold), tools/orfs_hold_mm.tcl.  The FF SDCs are spec "route_ff_sdc" (list), else verdict.post_sdc; a file outside
+        # the snapshot is copied into {SRC}/.ot_mm/ (the flow container mounts only the snapshot).
+        rhc = j["spec"].get("route_hold_corners", "mm" if j.get("created", "") >= MM_SINCE else "primary")
+        if rhc != "keep":
+            ship_helpers(j["host"], j["run"])
+            env += f"export OT_ROUTE_HOLD_CORNERS={shlex.quote(str(rhc))}\n" \
+                   f"python3 {j['run']}/cl/hold_corners_patch.py {j['run']}/src\n"
+        if rhc == "mm":
+            ff = j["spec"].get("route_ff_sdc")
+            if ff is None:
+                ff = (j["spec"].get("verdict") or {}).get("post_sdc") or []
+            ff = [f for f in ([ff] if isinstance(ff, str) else ff) if f and "{" not in f]
+            if ff:
+                env += f"mkdir -p {j['run']}/src/.ot_mm\n"
+                rel = []
+                for f in ff:
+                    if f.startswith("/"):
+                        env += f"cp {shlex.quote(f)} {j['run']}/src/.ot_mm/\n"
+                        rel.append(".ot_mm/" + f.rsplit("/", 1)[-1])
+                    else:
+                        rel.append(f)
+                env += f"export OT_MM_FF_SDC={shlex.quote(' '.join(rel))}\n"
     if j.get("resume") and st["kind"] == "route":
         env += "export OT_CL_RESUME=1\n"    # patched run_abi3_physical in the moved snapshot: resume from the checkpoint
     if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)
@@ -890,11 +1098,29 @@ def launch_stage(j, st, cmd):
     # every stage after calibrate sees the measured insertion (CK_SS_MEAN/MIN/MAX, CK_FF_*; *_ALL_* = all registers)
     env += f"[ -f {j['run']}/cl/calib.env ] && {{ set -a; . {j['run']}/cl/calib.env; set +a; }}\n" \
         if st["kind"] != "calibrate" else ""
+    if st["kind"] == "bench":
+        private = shlex.quote(j["stage_source"])
+        original = shlex.quote(f"{j['run']}/src")
+        env += (f"if [ ! -d {private} ]; then\n"
+                f"  test ! -e {private}.tmp || exit 9\n"
+                f"  cp -a --reflink=auto {original} {private}.tmp || exit $?\n"
+                f"  mv {private}.tmp {private} || exit $?\nfi\n"
+                f"cd {private} || exit $?\n")
+        # A few legacy recipes spell {RUN}/src instead of using {SRC}.
+        cmd = cmd.replace("{RUN}/src", "{SRC}")
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
-    ssh(j["host"], f"cat > {run}/cl/{t}.sh && rm -f {run}/cl/{t}.rc", input=body, timeout=60, check=True)
-    ssh(j["host"], f"nohup setsid bash {run}/cl/run.sh {t} > /dev/null 2>&1 < /dev/null & echo launched", timeout=60,
-        check=True)
+    # idempotent launch (2026-10-07): a daemon restart between a launch and the job-state save re-launched the same tag;
+    # the second copy overwrote the script and rc (dsrom_softmax_safe_div2b: hold ECO 'rc=10 output exists' while the
+    # first ECO was running).  A tag whose process is alive is adopted, never launched twice.
+    alive = ssh(j["host"], f"p=$(cat {run}/cl/{t}.pid 2>/dev/null); [ -n \"$p\" ] && kill -0 $p 2>/dev/null && "
+                           f"[ ! -f {run}/cl/{t}.rc ] && echo ALIVE; true", timeout=60)
+    if "ALIVE" in alive.stdout:
+        log(f"[{j['name']}] {t} already running on {j['host']}: adopted, not relaunched")
+    else:
+        ssh(j["host"], f"cat > {run}/cl/{t}.sh && rm -f {run}/cl/{t}.rc", input=body, timeout=60, check=True)
+        ssh(j["host"], f"nohup setsid bash {run}/cl/run.sh {t} > /dev/null 2>&1 < /dev/null & echo launched", timeout=60,
+            check=True)
     j["stage_tag"] = t
     j["stage_started"] = now_iso()
 
@@ -912,10 +1138,11 @@ elif [ -f {run}/cl/{t}.pid ]; then echo LOST; else echo STARTING; fi""", timeout
     return (w[0], int(w[1])) if w[0] == "RC" else (w[0], None)
 
 
-def remote_ok(j, cmd):
+def remote_ok(j, cmd, timeout=300):
     if not cmd:
         return True, ""
-    r = ssh(j["host"], f"cd {j['run']}/src && {subst(cmd, j)}", timeout=300)
+    source = j.get("stage_source", f"{j['run']}/src")
+    r = ssh(j["host"], f"cd {shlex.quote(source)} && {subst(cmd, j)}", timeout=timeout)
     return r.returncode == 0, (r.stdout + r.stderr)[-400:]
 
 
@@ -932,8 +1159,36 @@ def bench_outcome(j, st, rc, ok_extra=True):
     else:
         raise RuntimeError(f"bench log unreadable on {j['host']}: {j['run']}/cl/{j['stage_tag']}.log")
     if st["expect"] == "pass":
-        return rc == 0 and ok_extra and (not st.get("pass_regex") or re.search(st["pass_regex"], full, re.M) is not None)
+        ok = rc == 0 and ok_extra and (not st.get("pass_regex") or re.search(st["pass_regex"], full, re.M) is not None)
+        if ok:
+            work, note = bench_work(full, st.get("min_count_regex"))
+            j.setdefault("bench_work", {})[st["key"]] = note
+            if work is False:
+                return False
+        return ok
     return rc != 0 and (not st.get("fail_regex") or re.search(st["fail_regex"], full, re.M) is not None)
+
+
+WORK_RE = re.compile(r"\b(compared|comparisons|checks?|checked|vectors|cases|tokens|results|matches|transactions|"
+                     r"samples|tests|passed|beats|ops)\s*[=:]\s*(\d+)", re.I)
+
+
+def bench_work(log, min_count_regex=None):
+    """VACUOUS-PASS GUARD (2026-10-07: distro Verilator 5.032 ran the SU reducer benches with ZERO reducer results).
+    spec min_count_regex (one capture group): a pass needs a match and every captured count > 0.  Without it, generic
+    count lines (compared=N, checks: N, ...) all equal to 0 fail the pass; a pass log with no count line passes with a
+    warning.  Returns (False | True | None, note)."""
+    if min_count_regex:
+        m = [int(x) for x in re.findall(min_count_regex, log, re.M) if str(x).isdigit()]
+        if not m or min(m) <= 0:
+            return False, f"vacuous: min_count_regex {min_count_regex!r} counts {m[:8]}"
+        return True, f"work: {m[:8]}"
+    m = [(k, int(v)) for k, v in WORK_RE.findall(log)]
+    if m and all(v == 0 for _, v in m):
+        return False, f"vacuous: every count line is 0 ({m[:6]})"
+    if not m:
+        return None, "WARN: pass log has no count line (set min_count_regex)"
+    return True, f"work: {m[:6]}"
 
 
 def stage_tail(j, st, n=40):
@@ -948,6 +1203,12 @@ def get_metrics(j):
     if v.get("metrics_cmd"):
         r = ssh(j["host"], f"cd {j['run']}/src && {subst(v['metrics_cmd'], j)}", timeout=600)
         last = [x for x in r.stdout.splitlines() if x.strip().startswith("{")]
+        if not last and r.returncode:
+            # no JSON and a failed command: an ssh drop (w2-rb-safe-no3 went NEEDS_HUMAN "verdict inputs missing" with
+            # raw {} while the same command printed the metrics a minute later) or a real error. Raise: transient ssh
+            # errors back off, anything else counts toward the 10-consecutive-errors NEEDS_HUMAN.
+            raise RuntimeError(f"verdict metrics_cmd produced no JSON (command failed rc={r.returncode}): "
+                               f"{(r.stderr or r.stdout).strip()[-300:]}")
         m = json.loads(last[-1]) if last else {}
         return dict(ss_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"), orfs_dir=m.get("orfs_dir"),
                     raw=m)
@@ -1012,11 +1273,13 @@ def publish(j, metrics):
             isdir = ssh(j["host"], f"test -d {shlex.quote(src)}", timeout=30).returncode == 0
             dst.parent.mkdir(parents=True, exist_ok=True)
             excl = sum((["--exclude", x] for x in r.get("exclude", [])), [])
-            if isdir:
-                dst.mkdir(parents=True, exist_ok=True)
-                sh(["rsync", "-a", *excl, rpath(j['host'], src.rstrip('/') + '/'), f"{dst}/"], timeout=1800, check=True)
-            else:
-                sh(["rsync", "-a", rpath(j['host'], src), str(dst)], timeout=1800, check=True)
+            with transport_command(j['host']) as base:
+                remote_shell = [] if is_local(j['host']) else ["-e", shlex.join(base[:-1])]
+                if isdir:
+                    dst.mkdir(parents=True, exist_ok=True)
+                    sh(["rsync", "-a", *remote_shell, *excl, rpath(j['host'], src.rstrip('/') + '/'), f"{dst}/"], timeout=1800, check=True)
+                else:
+                    sh(["rsync", "-a", *remote_shell, rpath(j['host'], src), str(dst)], timeout=1800, check=True)
         (cwt / rec_dir).mkdir(parents=True, exist_ok=True)
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
                        owner=spec["owner"], source_branch=branch, source_commit=j["commit_full"],
@@ -1105,21 +1368,29 @@ def write_status(fleet_note=""):
          fleet_note, "", "## Active"]
     for r in act:
         h = host_cfg(r["host"])["label"] if r.get("host") else "-"
-        L.append(f"- {r['name']} [{r['spec']['block']}] {r['status']} stage={r.get('stage_key', '-')} host={h} "
+        stage = r.get("stage_key", "-")
+        if r["status"] == "READY":
+            stages = stage_list(r["spec"])
+            stage = stages[min(r.get("stage_idx", 0), len(stages) - 1)]["key"]
+        L.append(f"- {r['name']} [{r['spec']['block']}] {r['status']} stage={stage} host={h} "
                  f"run={r.get('run', '-')} since={r.get('stage_started', r['created'])} "
                  f"{('| ' + r['wait']) if r.get('wait') else ''}")
     L += ["", "## Recent terminal"]
     for r in done:
         L.append(f"- {r['name']} [{r['spec'].get('block', '?')}] {r['status']} {r.get('reason', '')[:200]}")
     fl = ["", "## Fleet (measured load1, MemAvailable; admission: load1 + own launches of last 10 min <= 3 x cores, "
-          "free RAM >= peak + max(10% RAM, 32 GB))"]
+          "free RAM >= peak + max(5% RAM, 32 GB))"]
     for h in hosts_table():
         r = ssh(h["name"], "cut -d' ' -f1 /proc/loadavg; awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=30)
         v = r.stdout.split()
         if len(v) == 2:
             ld = float(v[0])
+            running = sum(1 for x in act if x.get("host") == h["name"] and
+                          x["status"] in ("RUNNING", "ECO", "SUMMARY", "ECO_INSTALL"))
+            benches = sum(1 for x in act for b in (x.get("btrack") or {}).values()
+                          if b.get("host") == h["name"] and b.get("state") == "running")
             fl.append(f"- {h['label']}: load1 {ld:.0f}/{h['cores']} threads (idle {max(0, 100 * (1 - ld / h['cores'])):.0f}%), "
-                      f"{v[1]} GB free of {h.get('ram_gb', '?')}, own running {sum(1 for x in act if x.get('host') == h['name'] and x['status'] == 'RUNNING')}")
+                      f"{v[1]} GB free of {h.get('ram_gb', '?')}, own active stages {running}, parallel benches {benches}")
         else:
             fl.append(f"- {h['label']}: unreachable")
     L[3:3] = fl
@@ -1138,7 +1409,41 @@ def finish(j, status, reason, ledger_text):
     experiment(j, f"{term} {reason[:120]}")
 
 
+def preserve_completed_route(j, st, why):
+    """Stop infrastructure repair at the existing route; never turn it into a reroute."""
+    if st["kind"] != "route":
+        return False
+    v = j["spec"].get("verdict", {})
+    if not v.get("corner_sta") or not v.get("drc_metrics"):
+        return False
+    root = str(Path(subst(v["corner_sta"], j)).parent)
+    metrics = subst(v["drc_metrics"], j)
+    if "/logs/" not in metrics:
+        return False
+    base = str(Path(metrics.replace("/logs/", "/results/", 1)).parent)
+    config = dict(route_root=root, odb_patterns=[base + "/6_final.odb", base + "/5_2_route.odb"])
+    r = ssh(j["host"], postroute_probe_command(config), timeout=60)
+    try:
+        if r.returncode:
+            raise ValueError(f"probe exited {r.returncode}")
+        evidence = json.loads(r.stdout)
+    except (ValueError, TypeError):
+        j["wait"] = "completed-route evidence unavailable; retry read before crash recovery"
+        return True
+    if evidence is None:
+        return False
+    j["postroute_repair"] = dict(host=j["host"], run=j["run"], stage=j["stage_tag"],
+                                source_commit=j.get("commit_full"), evidence=evidence, failure=why)
+    j["wait"] = None
+    finish(j, "NEEDS_HUMAN", "post-route helper failed; completed physical artifacts preserved",
+           "NEEDS_HUMAN: repair post-route helper and resume diagnostics against existing route; "
+           "no automatic reroute or migration\n" + ", ".join(x["path"] for x in evidence["helper_errors"]))
+    return True
+
+
 def crash(j, st, fleet, why):
+    if preserve_completed_route(j, st, why):
+        return
     tail = stage_tail(j, st) if j.get("stage_tag") else ""
     m = re.search(r"CALIBRATE_FAIL class=(\S+) detail=(.*)", tail)
     if st["kind"] == "calibrate" and m and m.group(1) in CAL_OWNER_ACTION:
@@ -1149,7 +1454,7 @@ def crash(j, st, fleet, why):
                f"NEEDS_HUMAN: calibrate failed, class {m.group(1)} (deterministic, not retried)\n"
                f"detail: {m.group(2).strip()[:200]}\nOWNER ACTION ({j['spec'].get('owner')}): {act}")
         return
-    resource = bool(RESOURCE_RE.search(tail)) or why.startswith("LOST")
+    resource = bool(RESOURCE_RE.search(tail)) or why.startswith(("LOST", "bench tool crash"))
     j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
                                             resource=resource, tail=tail[-1500:]))
     if j["retries_used"] >= 1:
@@ -1159,14 +1464,15 @@ def crash(j, st, fleet, why):
         return
     j["retries_used"] = 1
     j["attempt"] += 1
-    if resource:
+    if resource and not checkpoint_location(j):
         h, _ = fleet.choose(j["spec"], exclude=j["hosts_tried"])
         if h:
             event(j, f"{st['key']} crashed ({why}); resource-related -> retry once on {host_cfg(h)['label']}")
             j["hosts_tried"].append(h)
             j["host"], j["run"] = h, f"{host_cfg(h)['base']}/{j['name']}"
             j["status"] = "SYNC"
-            # benches are host independent: resume at the first non-bench stage
+            # Keep existing bench receipts; the bench chain retains its producer host/run.
+            # Resume the migrated physical track at its first non-bench stage.
             stl = stage_list(j["spec"])
             j["stage_idx"] = next(i for i, s in enumerate(stl) if s["kind"] != "bench")
             return
@@ -1217,12 +1523,14 @@ def failure_text(j):
 
 
 def launch_ready(j, fleet, spec, stl, st):
-    """READY at a remote stage: capacity check, optional host move, launch (caller holds FLEET_LOCK)."""
+    """READY at a remote stage: capacity check + reservation (caller holds FLEET_LOCK); returns the stage to launch
+    OUTSIDE the lock (launch_now) or None."""
+    require_checkpoint_location(j)
     if True:
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
         if not ok:
             j.setdefault("wait_since", time.time())
-        if not ok and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
+        if not ok and not checkpoint_location(j) and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
             # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
             h, _ = fleet.choose(spec, exclude=[j["host"]])
             if h:
@@ -1250,16 +1558,21 @@ def launch_ready(j, fleet, spec, stl, st):
             if j["name"] not in keys.setdefault(key, []):
                 keys[key].append(j["name"])
             keys_path().write_text(json.dumps(keys, indent=1) + "\n")
-        launch_stage(j, st, st["cmd"])
-        fleet.launched(j["host"], st["threads"], st["ram"])
-        j["status"] = "RUNNING"
-        event(j, f"launched {st['key']} (attempt {j['attempt']}) on {j['host']}")
-        experiment(j, f"running: {st['key']} on {host_cfg(j['host'])['label']}")
-        return
+        fleet._launched(j["host"], st["threads"], st["ram"])        # reservation, taken under FLEET_LOCK
+        return st
+
+
+def launch_now(j, fleet, st):
+    """launch a reserved stage (no FLEET_LOCK held: the ssh calls of one launch no longer stall every other job)"""
+    launch_stage(j, st, st["cmd"])
+    j["status"] = "RUNNING"
+    event(j, f"launched {st['key']} (attempt {j['attempt']}) on {j['host']}")
+    experiment(j, f"running: {st['key']} on {host_cfg(j['host'])['label']}")
 
 
 # ---- parallel bench track (OWNER 2026-10-07 05:00 "LAUNCH IMMEDIATELY"): exactness benches run beside
-# calibrate -> route on the job's host, one bench at a time; they gate ADOPTION, not launch.  A bench with the wrong
+# calibrate -> route independently; one bench at a time stays beside its first producer artifacts.
+# Benches gate ADOPTION, not launch.  A bench with the wrong
 # verdict stops the route and ends the job NEEDS_RTL; the verdict waits until every bench has its expected verdict.
 # Opt out per job with spec "bench_first": true (benches before the route, as before).
 
@@ -1284,11 +1597,32 @@ def _bview(j, e):
     """a job view addressing one bench-track stage (its own host / run / tag)"""
     v = dict(j)
     v.update(host=e["host"], run=e["run"], stage_tag=e["tag"])
+    if e.get("stage_source"):
+        v["stage_source"] = e["stage_source"]
     return v
 
 
 def benches_done(j, stl):
     return all(k["key"] in j.get("benches", {}) for k in bench_stages(stl))
+
+
+def bench_location(j, stl):
+    """A serial bench chain shares artifacts even if the physical track moves hosts.
+
+    Recover older state from the first launched bench; completed receipts stay
+    untouched. Never copy or rerun a producer merely because its route migrated.
+    """
+    if j.get("bench_location"):
+        return j["bench_location"]
+    for st in bench_stages(stl):
+        entry = (j.get("btrack") or {}).get(st["key"])
+        if entry and entry.get("host") and entry.get("run"):
+            match = re.search(r"\.a([0-9]+)b[0-9]+$", entry.get("tag", ""))
+            location = dict(host=entry["host"], run=entry["run"],
+                            attempt=int(match.group(1)) if match else j["attempt"])
+            j["bench_location"] = location
+            return location
+    return dict(host=j["host"], run=j["run"], attempt=j["attempt"])
 
 
 def bench_track(j, fleet, stl):
@@ -1304,18 +1638,22 @@ def bench_track(j, fleet, stl):
         if e is None or e.get("state") == "retry":
             if any(x.get("state") == "running" for x in tr.values()):
                 return True                  # one bench at a time
+            location = bench_location(j, stl)
+            host = location["host"]
+            fleet.probe(host)
             with FLEET_LOCK:
-                ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
+                ok, why = fleet.fits(host, st["threads"], st["ram"])
                 if not ok:
                     if j.get("bwait") != why:
                         j["bwait"] = why
-                        event(j, f"bench track: {k} waiting for capacity: {why}")
+                        event(j, f"bench track: {k} waiting for capacity on artifact host {host}: {why}")
                     return True
-                n = (e or {}).get("n", 0) + 1
-                v = dict(j, attempt=f"{j['attempt']}b{n}")
-                launch_stage(v, st, st["cmd"])
-                fleet.launched(j["host"], st["threads"], st["ram"])
-            tr[k] = dict(state="running", tag=v["stage_tag"], host=j["host"], run=j["run"], n=n, started=now_iso())
+                fleet._launched(host, st["threads"], st["ram"])
+            n = (e or {}).get("n", 0) + 1
+            v = dict(j, host=host, run=location["run"], attempt=f"{location['attempt']}b{n}")
+            launch_stage(v, st, st["cmd"])
+            j["bench_location"] = location
+            tr[k] = dict(state="running", tag=v["stage_tag"], host=host, run=location["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
             j["bwait"] = None
             event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
             return True
@@ -1325,7 +1663,7 @@ def bench_track(j, fleet, stl):
             return True
         ok_extra, _ = remote_ok(v, st.get("ok"))
         tail = stage_tail(v, st, 40)
-        crashed = state == "LOST" or (st["expect"] == "fail" and (rc in (124, 137, 139, 143) or RESOURCE_RE.search(tail)))
+        crashed = state == "LOST" or bench_crashed(st, rc, tail)
         if crashed:
             if e["n"] < 2:
                 e["state"] = "retry"
@@ -1336,6 +1674,7 @@ def bench_track(j, fleet, stl):
                    f"NEEDS_HUMAN: bench {k} crashed twice (rc={rc}); route stopped\n" + "\n".join(tail.strip().splitlines()[-5:]))
             return False
         passed = bench_outcome(v, st, rc, ok_extra)
+        j.setdefault("bench_work", {}).update(v.get("bench_work") or {})
         e["state"] = "done"
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
@@ -1344,7 +1683,8 @@ def bench_track(j, fleet, stl):
                    f"NEEDS_RTL: bench {k} expected {st['expect'].upper()}, got rc={rc} (parallel track; route stopped)\n" +
                    "\n".join(tail.strip().splitlines()[-5:]))
             return False
-        event(j, f"bench track: {k} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc})")
+        event(j, f"bench track: {k} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc}) "
+                 f"{(j.get('bench_work') or {}).get(k, '')}")
     return True
 
 
@@ -1358,14 +1698,52 @@ def stop_main_for_bench(j):
             event(j, f"bench failed: could not stop {j.get('stage_key')}: {ex}")
 
 
+STUCK_S = 3 * 3600          # quiet-output observation threshold, never a kill deadline
+STUCK_CHECK_S = 1800
+
+
+def stuck_watchdog(j, st):
+    """Report quiet output without imposing a runtime deadline or restarting work."""
+    now = time.time()
+    if now - j.get("wd_checked", 0) < STUCK_CHECK_S:
+        return
+    j["wd_checked"] = now
+    try:
+        started = dt.datetime.fromisoformat(j.get("stage_started")).timestamp()
+    except Exception:  # noqa: BLE001
+        return
+    if now - started < STUCK_S:
+        return
+    mins = STUCK_S // 60
+    r = ssh(j["host"], f"find {j['run']}/cl {j['run']}/routes {j['run']}/bench -newermt '-{mins} minutes' -type f "
+                       f"-print -quit 2>/dev/null; echo END", timeout=300)
+    if r.returncode or "END" not in r.stdout:
+        return                          # unreachable / slow: no verdict this time
+    if r.stdout.replace("END", "").strip():
+        return
+    # Quiet tool output is not proof that synthesis or routing stopped making progress.
+    # Keep the process and all completed objects; the owner can inspect actual CPU/
+    # process state. Capacity guards, not elapsed time, protect the host.
+    if not j.get("quiet_output_reported"):
+        j["quiet_output_reported"] = now_iso()
+        event(j, f"observation: {st['key']} wrote no file for {mins // 60} h; process preserved")
+
+
 def step(j, fleet):
     spec = j["spec"]
     stl = stage_list(spec)
     s = j["status"]
+    if s == "READY" and (not j.get("commit_full") or j.get("source_synced") is False):
+        j["status"] = "SYNC" if j.get("host") else "QUEUED"
+        event(j, "source synchronization incomplete; preserve stage position and synchronize before launch")
+        return
     if s in ("QUEUED", "READY", "SYNC") and "bench_par" not in j:
         bench_par_decide(j, stl)
     if not bench_track(j, fleet, stl):
         return
+    if s == "QUEUED" and checkpoint_location(j):
+        require_checkpoint_location(j)
+        j["status"] = s = "SYNC"  # stay with preserved stage_idx and checkpoint host
     if s == "QUEUED":
         with FLEET_LOCK:
             h, why = fleet.choose(spec, exclude=[])
@@ -1389,11 +1767,13 @@ def step(j, fleet):
             finish(j, "NEEDS_HUMAN", str(ex), f"NEEDS_HUMAN: {ex}")
             return
         event(j, f"source {j['commit_full'][:12]} synced to {j['host']}:{j['run']}/src")
-        j["status"] = "READY"
+        j["status"], j["reason"] = "READY", None   # drop a stale failure reason (e.g. an earlier "not on origin")
         return
     if s == "READY":
         st = stl[j["stage_idx"]]
         j["stage_key"] = st["key"]
+        if st["kind"] in ("verdict", "collect", "export", "commit") and adoption_held(j):
+            return
         if st["kind"] == "verdict":
             if j.get("bench_par") and not benches_done(j, stl):
                 if j.get("wait") != "benches":
@@ -1402,13 +1782,23 @@ def step(j, fleet):
                 return
             return do_verdict(j, fleet, stl)
         if st["kind"] == "commit":
+            if j["spec"].get("smoke"):      # host smoke test: timing verdict passed; nothing is recorded or merged
+                m = j.get("metrics", {})
+                finish(j, "SMOKE_OK", f"smoke test on {j['host']}: SS {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')}",
+                       f"SMOKE_OK on {j['host']}: SS {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')} (not published)")
+                return
             return do_commit(j)
+        fleet.probe(j["host"])                 # (cached 45 s) probe outside the lock
         with FLEET_LOCK:
-            return launch_ready(j, fleet, spec, stl, st)
+            go = launch_ready(j, fleet, spec, stl, st)
+        if go:
+            launch_now(j, fleet, go)
+        return
     if s == "RUNNING":
         st = stl[j["stage_idx"]]
         state, rc = poll_stage(j)
         if state in ("RUNNING", "STARTING"):
+            stuck_watchdog(j, st)
             return
         if state == "UNREACHABLE":
             j["unreachable"] = j.get("unreachable", 0) + 1
@@ -1421,8 +1811,9 @@ def step(j, fleet):
         ok_extra, okout = remote_ok(j, st.get("ok"))
         if st["kind"] == "bench":
             tail = stage_tail(j, st, 40)
-            if st["expect"] == "fail" and (rc in (124, 137, 139, 143) or RESOURCE_RE.search(tail)):
-                return crash(j, st, fleet, f"negative control rc={rc} looks like a crash, not a FAIL")
+            if bench_crashed(st, rc, tail):
+                return crash(j, st, fleet, f"bench tool crash: rc={rc} ({'negative control' if st['expect'] == 'fail' else 'positive bench'}"
+                                           f" with no verdict evidence)")
             passed = bench_outcome(j, st, rc, ok_extra)
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:])
             if not passed:
@@ -1430,20 +1821,36 @@ def step(j, fleet):
                        f"NEEDS_RTL: bench {st['key']} expected {st['expect'].upper()}, got rc={rc}\n" +
                        "\n".join(tail.strip().splitlines()[-5:]))
                 return
-            event(j, f"{st['key']} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc})")
+            event(j, f"{st['key']} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc}) "
+                     f"{(j.get('bench_work') or {}).get(st['key'], '')}")
         else:
-            if rc != 0 or not ok_extra:
+            if rc != 0 and ok_extra and st["kind"] == "signoff" and st.get("ok"):
+                # a sign-off script that exits non-zero for "not closed" but wrote its evidence (the job's ok check
+                # passes) is a verdict, not a crash: w2-rb-safe-no2/no3 exited 1 on SS -18.9 and the retry then refused
+                # to overwrite the evidence -> false NEEDS_HUMAN. The verdict stage judges the numbers.
+                event(j, f"{st['key']} rc={rc} with its evidence present (ok check passed): judged at the verdict")
+            elif rc != 0 or not ok_extra:
                 return crash(j, st, fleet, f"rc={rc}{'' if ok_extra else ' ok-check failed: ' + okout.strip()[-200:]}")
-            event(j, f"{st['key']} done (rc=0)")
+            event(j, f"{st['key']} done (rc={rc})")
             if st["kind"] == "calibrate":
                 r = ssh(j["host"], f"cat {j['run']}/cl/calib.json", timeout=60)
+                if r.returncode == 255:
+                    j["wait"] = "completed calibration: artifact transport unavailable"
+                    return  # Retry the read, never the completed physical stage.
                 try:
+                    if r.returncode:
+                        raise ValueError(f"artifact read exited {r.returncode}")
                     c = json.loads(r.stdout)
                     j["calibration"] = {k: c[k] for k in ("ss", "ff", "env", "db", "clock", "parasitics")}
-                    event(j, "calibrated insertion " + " ".join(f"{k}={v}" for k, v in c["env"].items() if "ALL" not in k))
-                    record_measured(j)
-                except Exception:  # noqa: BLE001
-                    return crash(j, st, fleet, "calibrate produced no calib.json")
+                    if not isinstance(c["env"], dict):
+                        raise ValueError("calibration env must be an object")
+                except (ValueError, KeyError, TypeError) as ex:
+                    finish(j, "NEEDS_HUMAN", f"completed calibration artifact invalid: {ex}",
+                           "NEEDS_HUMAN: inspect/recover calib.json; completed physical stage preserved")
+                    return
+                j["wait"] = None
+                event(j, "calibrated insertion " + " ".join(f"{k}={v}" for k, v in c["env"].items() if "ALL" not in k))
+                record_measured(j)
                 dev = budget_check(j)
                 if dev:
                     if j["spec"]["budget"].get("on_deviation", "flag") == "flag":
@@ -1505,7 +1912,22 @@ def step(j, fleet):
         finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
 
 
+def adoption_held(j):
+    """A live owner hold prevents adoption while physical evidence can finish."""
+    path = STATE / "adoption_holds" / f"{j['name']}.json"
+    if not path.exists():
+        return False
+    reason = json.loads(path.read_text())["reason"]
+    note = f"adoption hold: {reason}"
+    if j.get("wait") != note:
+        j["wait"] = note
+        event(j, note)
+    return True
+
+
 def do_verdict(j, fleet, stl):
+    if adoption_held(j):
+        return
     v = j["spec"].get("verdict", {})
     m = get_metrics(j)
     if re.search(r"kex_exchange|Connection (reset|refused|closed|timed out)|ssh:", str(m.get("error", ""))):
@@ -1516,7 +1938,13 @@ def do_verdict(j, fleet, stl):
     j["metrics"] = m
     checks, failed = {}, []
     for c in v.get("checks", []):
-        ok, out = remote_ok(j, c["cmd"])
+        # verdict checks may run real tools (stn_pa_check.sh routes a pin-access probe: > 300 s on AGIdock, which put
+        # hbm_stn_mcast_r5/r6 into NEEDS_HUMAN as "loop errors"); spec checks[].timeout_s, default 1800
+        ok, out = remote_ok(j, c["cmd"], timeout=c.get("timeout_s", 1800))
+        if not ok and TRANSIENT_RE.search(out):
+            # an ssh failure is not a failed check (hbm_stn_mcast_r6b: 'Connection reset by peer' failed lef_check_MATCH
+            # while check.json said MATCH): raise, so the verdict backs off and is re-taken
+            raise RuntimeError(f"verdict check {c['name']}: ssh/network failure: {out.strip()[-200:]}")
         checks[c["name"]] = dict(ok=ok, out=out[-300:])
         if not ok:
             failed.append(c["name"])
@@ -1587,7 +2015,7 @@ def start_hold_eco(j, fleet, m):
     v, he = j["spec"].get("verdict", {}), j["spec"].get("hold_eco") or {}
     # rev 2 (2026-10-07): post-route hold goal +18 (coordinator: die-context margin over the +15 line), endpoint filter, sign-off-exact constraints per corner,
     # resistance-aware re-route, up to 2 ECO -> re-route -> sign-off passes (hold_eco.sh header)
-    env = f"ECO_SESSION={shlex.quote(he.get('session', 'ff'))} " \
+    env = f"ECO_SESSION={shlex.quote(he.get('session', 'mm'))} " \
           f"ALLOW_FRESH_GRT={int(he.get('allow_fresh_grt', False))} " \
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
@@ -1640,6 +2068,8 @@ def eco_install_cmd(j):
 
 
 def do_commit(j):
+    if adoption_held(j):
+        return
     m = j["metrics"]
     try:
         with PUBLISH_LOCK:
@@ -1677,14 +2107,21 @@ def reevaluate_benches(jobs):
         m = BENCH_RE.match(j.get("reason") or "")
         if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN") or not m or fid in j.get("fix_requeued", []):
             continue
-        j.setdefault("fix_requeued", []).append(fid)
         stl = stage_list(j["spec"])
         idx = next((i for i, x in enumerate(stl) if x["key"] == m.group(1)), None)
         if idx is None or not j.get("stage_tag", "").startswith(m.group(1) + "."):
             save_job(j)
             continue
         st = stl[idx]
-        if bench_outcome(j, st, int(m.group(3))):
+        try:
+            correct = bench_outcome(j, st, int(m.group(3)))
+        except RuntimeError as exc:
+            # An unavailable historical log must not starve later jobs or the
+            # independent recovery passes. Do not consume this retry until read.
+            log(f"[{j['name']}] bench re-judgment deferred: {exc}")
+            continue
+        j.setdefault("fix_requeued", []).append(fid)
+        if correct:
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=int(m.group(3)), ok=True, rejudged=fid)
             j["status"], j["stage_idx"], j["reason"] = "READY", idx + 1, None
             event(j, f"{st['key']} re-judged {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} under {fid}; resumed")
@@ -1777,11 +2214,11 @@ def auto_requeue(jobs):
     live_blocks = {(x["spec"].get("block"), str(x["spec"].get("source", {}).get("commit", ""))[:9])
                    for x in jobs if x["status"] not in TERMINAL}
     for j in jobs:
-        if j["status"] != "NEEDS_HUMAN" or not j.get("crashes"):
+        if j["status"] != "NEEDS_HUMAN" or not j.get("crashes") or j.get("postroute_repair"):
             continue
         with job_lock(j["name"]):
             j = load_job(j["name"])  # cancellation may have won since the tick snapshot
-            if j["status"] != "NEEDS_HUMAN" or not j.get("crashes"):
+            if j["status"] != "NEEDS_HUMAN" or not j.get("crashes") or j.get("postroute_repair"):
                 continue
             c = j["crashes"][-1]
             stl = stage_list(j["spec"])
@@ -1823,7 +2260,10 @@ def migrate_checkpoint(j, dest):
     whole run dir (src snapshot + work/orfs results/logs/objects) to the same path on dest (tar keeps mtimes), patch
     the snapshot's run_abi3_physical.py for resume (resume_patch.py), dry-run make to see which stages re-run, and
     relaunch the route stage there with OT_CL_RESUME=1: ORFS reuses every completed stage, only the in-flight one is lost."""
+    require_checkpoint_location(j)
     src = j["host"]
+    if src == dest or (is_local(src) and is_local(dest)):
+        raise ValueError("checkpoint migration requires a different host")
     if host_cfg(src)["base"] != host_cfg(dest)["base"]:
         raise ValueError(f"checkpoint move needs the same run root ({host_cfg(src)['base']} vs {host_cfg(dest)['base']})")
     run = j["run"]
@@ -1839,8 +2279,13 @@ def migrate_checkpoint(j, dest):
         time.sleep(10)
     t0 = time.time()
     ssh(dest, f"mkdir -p {run}", timeout=60, check=True)
-    p = subprocess.run(f"ssh -o BatchMode=yes {src} 'tar -C {run} -cf - .' | ssh -o BatchMode=yes {dest} 'tar -C {run} -xf -'",
-                       shell=True, capture_output=True, text=True, timeout=7200)
+    with ExitStack() as stack:
+        # Stable order avoids opposite-direction migrations deadlocking channel leases.
+        commands = {h: stack.enter_context(transport_command(h)) for h in sorted({src, dest})}
+        read = shlex.join(commands[src] + [f"tar -C {shlex.quote(run)} -cf - ."])
+        write = shlex.join(commands[dest] + [f"tar -C {shlex.quote(run)} -xf -"])
+        p = subprocess.run(["bash", "-o", "pipefail", "-c", f"{read} | {write}"],
+                           capture_output=True, text=True, timeout=7200)
     if p.returncode:
         raise RuntimeError(f"checkpoint transfer failed: {p.stderr[-500:]}")
     ship_helpers(dest, run)
@@ -1849,8 +2294,16 @@ def migrate_checkpoint(j, dest):
         raise RuntimeError(f"resume patch failed: {(r.stdout + r.stderr)[-400:]}")
     dm = subst(j["spec"].get("verdict", {}).get("drc_metrics", ""), j)
     orfs = dm.split("/logs/")[0] if "/logs/" in dm else None
-    chk = ssh(dest, f"bash {run}/cl/resume_check.sh {orfs} {run}/src", timeout=600).stdout if orfs else ""
-    j["resume"] = dict(from_host=src, at=now_iso(), transfer_s=round(time.time() - t0), check=chk.strip()[-400:])
+    if not orfs:
+        raise RuntimeError("checkpoint transfer cannot be verified: missing ORFS checkpoint path")
+    check = ssh(dest, f"bash {run}/cl/resume_check.sh {orfs} {run}/src", timeout=600)
+    chk = check.stdout
+    if check.returncode or not re.search(r"^RESUME_OK=1$", chk, re.M):
+        raise RuntimeError(f"checkpoint transfer resume check failed rc={check.returncode}: {chk[-400:]}")
+    j["resume"] = dict(from_host=src, to_host=dest, run=run, at=now_iso(),
+                       transfer_s=round(time.time() - t0), check=chk.strip()[-400:],
+                       checkpoint_transfer_verified=True)
+    j["checkpoint_affinity"] = dict(host=dest, run=run)
     j["hosts_tried"].append(dest)
     j.update(host=dest, status="READY", attempt=j["attempt"] + 1, wait=None)
     event(j, f"checkpoint moved in {j['resume']['transfer_s']} s; make dry-run: {' '.join(chk.split())[-200:]}")
@@ -1862,7 +2315,7 @@ def migrate_overloaded(jobs, fleet):
     """LOAD REBALANCE 2: a host above its cap (or a spillover-only host short of its RAM reserve) sheds this loop's
     jobs that have not passed CTS (bench / calibrate running or waiting, route not yet launched) to a host that fits."""
     for j in jobs:
-        if j["status"] in TERMINAL or not j.get("host"):
+        if j["status"] in TERMINAL or not j.get("host") or checkpoint_location(j):
             continue
         cfg = host_cfg(j["host"])
         info = fleet.probe(j["host"])
@@ -1910,14 +2363,64 @@ def migrate_overloaded(jobs, fleet):
         save_job(j)
 
 
+TRANSIENT_RE = re.compile(r"kex_exchange|Connection (reset|refused|closed|timed out)|ssh: |Broken pipe|"
+                          r"No route to host|command failed rc=255|Could not resolve hostname")
+TRANSIENT_BACKOFF_S = (120, 240, 480, 900, 1800)
+
+
+def is_transient(ex):
+    """an ssh / network failure (timeout of an ssh call, rc 255, connection errors), not a loop or job error"""
+    if isinstance(ex, subprocess.TimeoutExpired):
+        return isinstance(ex.cmd, list) and bool(ex.cmd) and ex.cmd[0] in ("ssh", "rsync")
+    return bool(TRANSIENT_RE.search(str(ex)))
+
+
+def handle_transient(j, fleet, ex):
+    """robustness (2026-10-07): transient ssh errors back off (2, 4, 8, 15, 30 min); after 3 at a stage that has
+    nothing in flight on the host (QUEUED / SYNC / READY before the first launch, or READY at calibrate/bench) the job
+    moves to another host; a job whose results live on the host (verdict, ECO) keeps backing off and goes NEEDS_HUMAN
+    only after 12 consecutive failures (~5 h).  Returns True when handled."""
+    n = j.get("transient", 0) + 1
+    j["transient"] = n
+    j["transient_next"] = time.time() + TRANSIENT_BACKOFF_S[min(n - 1, len(TRANSIENT_BACKOFF_S) - 1)]
+    event(j, f"transient ssh/network error #{n} on {j.get('host')} ({type(ex).__name__}: {str(ex)[:160]}); backing off")
+    stl = stage_list(j["spec"])
+    st = stl[min(j.get("stage_idx", 0), len(stl) - 1)]
+    movable = j["status"] in ("QUEUED", "SYNC") or (j["status"] == "READY" and st["kind"] in ("calibrate", "bench")
+                                                     and not j.get("stage_tag"))
+    if n >= 3 and movable and j.get("host") and not checkpoint_location(j):
+        h, _ = fleet.choose(j["spec"], exclude=[j["host"]])
+        if h:
+            event(j, f"{n} transient errors on {host_cfg(j['host'])['label']}: moving to {host_cfg(h)['label']}")
+            j["hosts_tried"].append(h)
+            j.update(host=h, run=f"{host_cfg(h)['base']}/{j['name']}", status="SYNC", transient=0)
+            j.pop("transient_next", None)
+            cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
+            if cal is not None and j.get("stage_idx", 0) > cal:
+                j["stage_idx"] = cal
+            return True
+    if n >= 12:
+        return False                     # falls through to the ordinary error accounting
+    return True
+
+
 def advance_job(name, fleet):
     with job_lock(name):
         j = load_job(name)
         if j["status"] in TERMINAL:
             return
+        nt = j.get("transient_next")
+        if nt and time.time() < nt:
+            return                       # backing off after a transient ssh / network error
         try:
             step(j, fleet)
+            if j.get("transient"):
+                j["transient"] = 0
+                j.pop("transient_next", None)
         except Exception as ex:  # noqa: BLE001
+            if is_transient(ex) and handle_transient(j, fleet, ex):
+                save_job(j)
+                return
             j.setdefault("errors", []).append(f"{now_iso()} {type(ex).__name__}: {str(ex)[:500]}")
             j["errors"] = j["errors"][-10:]
             log(f"[{j['name']}] step error:\n{traceback.format_exc()}")
@@ -1961,20 +2464,65 @@ def tick(fleet):
             except Exception:  # noqa: BLE001
                 pass
         req.unlink(missing_ok=True)
-    try:
-        reevaluate_benches(all_jobs())
-        requeue_toolchain(all_jobs())
-        requeue_budget(all_jobs())
-        requeue_hold_only(all_jobs())
-        # migrate_overloaded() / checkpoint moves retired by OWNER 21:35 (memory-based admission)
-        requeue_ssh_verdict(all_jobs())
-        auto_requeue(all_jobs())
-    except Exception:  # noqa: BLE001
-        log("auto_requeue error:\n" + traceback.format_exc())
-    with ThreadPoolExecutor(max_workers=WORKERS) as ex:
-        list(ex.map(lambda j: advance_job(j["name"], fleet),
-                    [j for j in all_jobs() if j["status"] not in TERMINAL]))
+    schedule_recovery()
+    # persistent pool, no per-tick barrier (2026-10-07): a job still being stepped (a source sync, a 30-min verdict check)
+    # is skipped this tick instead of holding every other job until the next tick
+    global _POOL
+    if _POOL is None:
+        _POOL = ThreadPoolExecutor(max_workers=WORKERS)
+    for x in all_jobs():
+        if x["status"] in TERMINAL:
+            continue
+        with _INFLIGHT_LOCK:
+            if x["name"] in _INFLIGHT:
+                continue
+            _INFLIGHT.add(x["name"])
+        _POOL.submit(_advance_and_release, x["name"], fleet)
     write_status()
+
+
+_RECOVERY_POOL = None
+_RECOVERY_FUTURE = None
+
+
+def recover_jobs():
+    # Historical log reads can wait on an unreachable host for minutes. They
+    # must neither block live dispatch nor suppress unrelated recovery classes.
+    for recover in (reevaluate_benches, requeue_toolchain, requeue_budget,
+                    requeue_hold_only, requeue_ssh_verdict, auto_requeue):
+        try:
+            jobs = all_jobs()
+            live_blocks = {j["spec"].get("block") for j in jobs
+                           if j["status"] not in TERMINAL or j["status"] == "CLOSED"}
+            # Automatic migration of historical failures must not revive a
+            # superseded route alongside an active or closed replacement.
+            recover([j for j in jobs if j["status"] not in TERMINAL
+                     or j["spec"].get("block") not in live_blocks])
+        except Exception:
+            log(f"{getattr(recover, '__name__', 'recovery')} error:\n" + traceback.format_exc())
+
+
+def schedule_recovery():
+    global _RECOVERY_POOL, _RECOVERY_FUTURE
+    if _RECOVERY_POOL is None:
+        _RECOVERY_POOL = ThreadPoolExecutor(max_workers=1)
+    if _RECOVERY_FUTURE is None or _RECOVERY_FUTURE.done():
+        _RECOVERY_FUTURE = _RECOVERY_POOL.submit(recover_jobs)
+
+
+_POOL = None
+_INFLIGHT = set()
+_INFLIGHT_LOCK = threading.Lock()
+
+
+def _advance_and_release(name, fleet):
+    try:
+        advance_job(name, fleet)
+    except Exception:  # noqa: BLE001
+        log(f"[{name}] advance error:\n{traceback.format_exc()}")
+    finally:
+        with _INFLIGHT_LOCK:
+            _INFLIGHT.discard(name)
 
 
 def cmd_daemon(a):
@@ -2034,7 +2582,15 @@ def cmd_retry(a):
         j["budget"]["override"] = "human retry after NEEDS_BUDGET"
         j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
         j["stage_idx"] += 1           # the calibration is kept: continue after it, on the sheet SDC
-    j["status"], j["retries_used"], j["attempt"] = "READY" if j.get("host") else "QUEUED", 0, j["attempt"] + 1
+    if getattr(a, "at", None):        # resume at a named stage (e.g. verdict: the evidence of the failed stage is valid)
+        stl = stage_list(j["spec"])
+        idx = [i for i, s in enumerate(stl) if s["key"] == a.at]
+        if not idx:
+            sys.exit(f"{a.name}: no stage {a.at} (stages: {' '.join(s['key'] for s in stl)})")
+        j["stage_idx"], j["stage_key"] = idx[0], a.at
+    synchronized = bool(j.get("commit_full")) and j.get("source_synced") is not False
+    retry_status = ("READY" if synchronized else "SYNC") if j.get("host") else "QUEUED"
+    j["status"], j["retries_used"], j["attempt"] = retry_status, 0, j["attempt"] + 1
     j["errors"] = []
     event(j, "human retry: re-queued from stage " + str(j.get("stage_key")))
     save_job(j)
@@ -2153,7 +2709,7 @@ def main():
     d = sub.add_parser("daemon"); d.add_argument("--interval", type=int, default=60)
     sub.add_parser("tick"); sub.add_parser("status")
     v = sub.add_parser("validate"); v.add_argument("file")
-    r = sub.add_parser("retry"); r.add_argument("name")
+    r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     c = sub.add_parser("cancel"); c.add_argument("name")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")

@@ -58,7 +58,11 @@ module tb_hdc_v41x_vec #(
     parameter integer ROPI = 0,
     parameter integer RKC = 0,
     parameter integer RHALF = 0,
-    parameter integer RHPAR = 0
+    parameter integer RHPAR = 0,
+    parameter integer GSH = 0,          // CLAUDE HBM-ABSTRACTS hub lane margin (default off)
+    parameter integer KIMM = 0,
+    parameter integer DENR = 0,         // views agent SFU lane fail-fast (default off)
+    parameter integer DRING = 0
 ) (input wire clk);
     `include "tb_hdc_v41x_vec_fields.svh"
     localparam integer AW = 24, NR = N / 8;
@@ -139,7 +143,7 @@ module tb_hdc_v41x_vec #(
     wire dbg_emit, dbg_ret, dbg_res;
     wire [7:0] dbg_eseq, dbg_rseq, dbg_sseq;
     ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(BCAST_STAGES), .RET_STAGES(RET_STAGES), .MLAT(MLAT), .ALAT(ALAT),
-                      .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .FSQ(FSQ), .CAPR(CAPR), .RPAD(RPAD), .RSL(RSL), .RTAP(RTAP), .ROUT(ROUT), .CTL12(CTL12),
+                      .OPR(OPR), .DDIV(DDIV), .SIDEX(SIDEX), .FSQ(FSQ), .CAPR(CAPR), .RPAD(RPAD), .RSL(RSL), .RTAP(RTAP), .ROUT(ROUT), .CTL12(CTL12), .GSH(GSH), .KIMM(KIMM), .DENR(DENR), .DRING(DRING),
                       .RSLICE(RSLICE), .ROPI(ROPI), .RKC(RKC), .RHALF(RHALF), .RHPAR(RHPAR)) dut (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(w[F_NOUT +: 16]), .i_nin(w[F_NIN +: 16]),

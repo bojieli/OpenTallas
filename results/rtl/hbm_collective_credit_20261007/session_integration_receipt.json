@@ -1,0 +1,57 @@
+{
+  "status": "PASS_COMPONENT_ONLY_NATIVE_BINDING_REQUIRED",
+  "provider_pass": "session_20261007T191539.017734Z/verdict.json",
+  "source_debt_pass": "source_session_20261007T191359.938621Z/verdict.json",
+  "retained_failure": "session_20261007T190511.072744Z/verdict.json",
+  "failure_reproduction": "Complete failing source_snapshot matches its manifest. Command was accepted during reset; new management wrapper now gates BOTH handshakes with their local reset release.",
+  "new_source_paths": [
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_link_session_coordinator.sv",
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_link_session_agent.sv",
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_link_start_adapter.sv",
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_link_management_cdc.sv",
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_initial_credit_ack_observer.sv",
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_credit_source_debt.sv",
+    "rtl/hbm_accel/collective_credit_20261007/ot_hbm_credit_source_session.sv",
+    "rtl/hbm_accel/collective_credit_20261007/tb_hbm_link_session.sv",
+    "rtl/hbm_accel/collective_credit_20261007/tb_hbm_credit_source_session.sv",
+    "tools/hbm_collective_link_session_model.py",
+    "tools/run_hbm_collective_link_session_gate.py",
+    "tools/run_hbm_collective_source_session_gate.py"
+  ],
+  "original_credit_sources": "SHA256 manifest from20261007T184611.755166Z verified unchanged, including original test and runner/model.",
+  "architecture": "One always-on source coordinator, two always-on local agents (source and receiver), each instantiated with real reset_entry and two protected domain-start adapters. Five ordered phases, no operation/context-arm input. Coordinator owns epoch24 and sequence24 and refuses wrap.",
+  "management_transport": "Four actual W72/AW3 protected FIFOs provide independent-clock command/ACK transport (one command and one ACK per agent). They use always-on management POR only, never endpoint session reset. Source and destination POR assertion must belong to one cold management reset generation; two-edge local release should be supplied by reset_entry. Vendor physical/framing transport beyond these digital crossings remains explicit and must preserve finite atomic valid-ready frames.",
+  "credit_transport": "Grant/ACK credit transport is a separate lifecycle from management transport: it must be empty before graceful session reset and flushed by coordinated endpoint/PHY reset. The component fixture uses identical protected FIFO hardware for it; no vendor PHY claim.",
+  "initial_ack_provider": "Source wrapper contains actual protected initial ACK observer on source ACK valid&&ready. Receiver must instantiate ot_hbm_initial_credit_ack_observer on producer ACK input valid&&ready. Observer checks kind41, current epoch, seq0, count64 and sets protected sticky state. Reset observer with that credit endpoint. AND observer seen for every session port. These are not timing-derived flags.",
+  "debt_provider": "ot_hbm_credit_source_session wraps immutable source with protected debt observer, exposing debt_zero and initial_ack_seen. Observation allow gates external ready AND original source valid BEFORE reserve/grant effects. Actual reserve adds one; fresh returngrant removes its count; initialgrant excluded; duplicates never decrement twice; CE stalls rather than dropping observations. Source debt includes unsent retained reservations and all forward flight until corresponding retired credit returns.",
+  "quiet_binding": "Bind agent reserved_debt_zero to actual source wrapper debt_zero for all session source ports. Native quiet_core/quiet_phy, data_flight_empty and credit_control_empty must independently cover all payload/CDC held heads, actual PHY flights and old grant/ACK transport. Receiver local agent also needs its actual local drain obligations. No synthetic constant quiet gate may establish native admission.",
+  "phase_contracts": {
+    "QUIESCE": "Stop new source reservations. Continue already reserved launches until debt and all native queues/flight/control transport drain. Assert PHY quiesce request and require explicit PHY quiesced acknowledgment; require reset ACK low before requesting new reset.",
+    "RESET": "Both agents assert actual local endpoint reset_entry and PHY reset request; wait explicit PHY reset ACK, preserved quiet/drain, and observed low local resets. Vendor ACK must attest physical quarantine/purge, not elapsed cycles.",
+    "RELEASE": "Coordinator advances epoch after both reset ACKs. Agent receives new protected epoch then releases reset_entry; wait both local reset releases, PHY reset ACK low, old initialACK sticky low and start-seen low.",
+    "START": "Held request with stable encoded epoch goes through local start adapters; exactly one cold-start pulse in each local stream/link domain per reset. Wait observed seen in both domains.",
+    "RUN": "Wait actual initialcreditACK sticky; deassert PHY quarantine and wait PHY quiesced low before local admission. Source reservations cannot precede initial grant ACK. Coordinator running requires both local RUN ACKs."
+  },
+  "fault_contract": "Local agent UE asserts endpoint reset/quarantine and closes local gates; source wrapper faults close reserve/grant acceptance. Coordinator fault withholds all further management commands and running permission; integration must AND coordinator running/fault and local fault outputs into admission policy and propagate emergency faults across its management provider. A faulted graceful drain cannot be bypassed by assumed timeout purge.",
+  "inventory": {
+    "coordinator_stored_bits": 74,
+    "each_agent_stored_bits_including_status_sync_resetentry_and_two_start_adapters": 366,
+    "two_agents_plus_coordinator": 806,
+    "four_management_CDC_stored_bits": 10296,
+    "provider_subtotal_excluding_managementPOR_release_flops": 11102,
+    "per_source_added_debt_and_initialACK_observers": 148,
+    "per_receiver_added_initialACK_observer": 74,
+    "eight_source_receiver_pairs_original_credit_storage": 3488,
+    "eight_pairs_added_observers": 1776,
+    "eight_pairs_plus_provider_total_excluding_managementPOR_release_flops": 16366,
+    "managementPOR_release_flops": "2 per unique always-on clock domain, additional to counted data reset_entry flops; depends actual integration clock sharing"
+  },
+  "latency": "At least20 management frames/1440 encoded bits per full cold generation, plus vendor framing/serialization/flight and management FIFO sync2/capture2/readII3. Local reset release two edges per domain; stable request startup crossing two local edges then one protected pulse. No steady data-path added clean cycle in debt wrapper; added ready gating requires contextual timing. No reset per operation/context.",
+  "unqualified": [
+    "actual native queue/flight/PHY quiet binding",
+    "physical PHY quarantine/reset acknowledgment implementation",
+    "vendor management link framing/serialization and fault propagation",
+    "full native traffic integration",
+    "SS/FF recovery/removal timing and route/DRC/area"
+  ]
+}

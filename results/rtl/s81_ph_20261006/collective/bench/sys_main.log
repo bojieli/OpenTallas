@@ -1,0 +1,8 @@
+CYCLES dut_last 10077 ref_last 2834 first_send 1113 records 1345 messages 200
+TB_S81PH_COLL_SYS PASS
+- /srv/opentallas-scratch2/scratch/claude/s81-ph/coll/src2/rtl/dsrom_sys/s81_ph/test/tb_s81ph_coll_sys.sv:210: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 8us; walltime 19.975 s; speed 421.097 ns/s
+- Verilator: cpu 19.960 s on 1 threads; alloced 1067 MB
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:19.99
+	Maximum resident set size (kbytes): 59012

@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.qwen.failed_physical.v1",
+  "source_commit": "fe4162f726c54b82d1b23ce38437d187d3b8ef93",
+  "original_source_commit": "8903807da00ef62992458c6417be90ca9666fc97",
+  "job": "slab_s14_die_signoff-fe4162f72",
+  "remote_run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/slab_s14_die_signoff-fe4162f72",
+  "status": "NEEDS_RTL",
+  "metrics": {
+    "corner_sta": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/slab_s14_die_signoff-fe4162f72/routes/slab_s14_die_signoff_fe4162f72/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/slab_s14_die_signoff-fe4162f72/routes/slab_s14_die_signoff_fe4162f72/work/orfs/logs/asap7/opentallas_ot_qwen_slab_port_group_asap7_s14_slab_bwm8_p770/base/5_2_route.json"
+    ],
+    "ss_ps": -228.59,
+    "ff_ps": -8.43,
+    "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/slab_s14_die_signoff-fe4162f72/routes/slab_s14_die_signoff_fe4162f72/work/orfs",
+    "errors": [],
+    "ss_tns_ps": -76392.7,
+    "post_sdc": [
+      "physical/qwen_slab_structural/signoff833_die.sdc"
+    ],
+    "drc": 0
+  },
+  "diagnosis": "Explicit 833.333 ps, 60/25 uncertainty, 90/50 die skew, 80 fF load and 150 ps slew. SS worst is registered o_data[234] output: final BUFx2 contributes 286.20 ps. Register-D worst +44.556 ps; zero setup-violating D pins. FF worst -8.43 ps input-to-register. Historical s14 was not optimized for this die load. No ECO applied; original ODB/SPEF/SDC immutable. Structural m3 successor queued separately; s15 preserved. No closure or adoption."
+}

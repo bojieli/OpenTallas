@@ -36,7 +36,38 @@ class FFOnlySelection(unittest.TestCase):
             self.assertEqual(data["route_strategy"], ["incremental_original_guides",
                 "fresh_global reason rejected_guides explicit_opt_in 1"])
 
-    def test_default_session_never_invokes_two_corner_repair(self):
+    def test_preserved_wire_rejection_restarts_clean_and_retains_evidence(self):
+        source = (HERE / "hold_eco.sh").read_text()
+        retry = source[source.index("  L=$P/eco_$SESSION.log"):source.index('  if [ "${WINDOW_ONLY:-0}"')]
+        for session in ("mm", "ff", "two"):
+            with self.subTest(session=session), tempfile.TemporaryDirectory() as tmp:
+                script = r'''
+set -eo pipefail
+P=$1; OUT=$1; SESSION=$2; EB=$P/base; OB=$P/original
+mkdir -p "$EB" "$OB"
+echo input > "$OB/6_final.sdc"
+echo rejected > "$EB/partial.odb"
+echo 'OT_ECO freeze_rejected by DRT' > "$P/eco_$SESSION.log"
+ECO_ENV=(-e OT_FREEZE_MACRO_NETS=1 -e OT_KEEP_UNTOUCHED=1)
+SARGS=(-e OT_SESSION=$SESSION -e OT_SDC=/original.sdc)
+orun() {
+  test -f "${EB}_kept/partial.odb"
+  test ! -e "$EB/partial.odb"
+  cmp "$OB/6_final.sdc" "$EB/6_final.sdc"
+  printf '%s\n' "$*" > "$P/retry_args"
+  echo 'OT_ECO done' > "$1"
+}
+''' + retry + r'''
+grep -q freeze_rejected "$P/eco_${SESSION}_kept.log"
+grep -q 'OT_ECO done' "$P/eco_$SESSION.log"
+grep -q "OT_SESSION=$SESSION" "$P/retry_args"
+grep -q 'OT_FREEZE_MACRO_NETS=0 -e OT_KEEP_UNTOUCHED=0$' "$P/retry_args"
+'''
+                result = subprocess.run(["bash", "-c", script, "test", tmp, session],
+                                        capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def run_selection(self, mismatch):
         source = (HERE / "hold_eco.sh").read_text()
         defaults = source[source.index("ECO_SESSION=${"):source.index("RB=$1;")]
         selection = source[source.index("  SESSION=ff"):source.index("  L=$P/eco_$SESSION.log")]
@@ -50,18 +81,29 @@ OUT=$1
 mkdir -p "$P/orfs"
 EB=$P/orfs
 ECO_ENV=()
-orun() { printf '%s\n' "$*" >> "$P/calls"; }
+CUR_SPEF=/original/6_final.spef
+echo ss > $P/eff_ss.sdc; echo ff > $P/eff_ff.sdc
+orun() { printf '%s\n' "$*" >> "$P/calls"; if [ "$MISMATCH" = 1 ]; then echo "OT_ECO session_mismatch: x" > $1; else : > $1; fi; }
 ''' + selection + r'''
-test "$SESSION" = ff
-test "$(wc -l < "$P/calls")" = 1
-grep -q 'OT_SESSION=ff' "$P/calls"
-grep -q 'OT_SS_SLACK=/p/eff_ss.sdc.slack' "$P/calls"
-grep -q 'OT_SS_CRIT=/p/eff_ss.sdc.crit' "$P/calls"
+echo "SESSION=$SESSION"
+grep -q 'OT_SESSION=mm' "$P/calls"
+grep -q 'OT_SDC_SS=/p/mode_ss.sdc' "$P/calls"
+grep -q 'false_path -hold' "$P/mode_ss.sdc"
+grep -q 'false_path -setup' "$P/mode_ff.sdc"
 ! grep -q 'OT_SESSION=two' "$P/calls"
+if [ "$MISMATCH" = 1 ]; then test "$SESSION" = ff; grep -q 'OT_SESSION=ff' "$P/calls"; grep -q 'OT_SS_SLACK=/p/eff_ss.sdc.slack' "$P/calls"
+else test "$SESSION" = mm; test "$(wc -l < "$P/calls")" = 1; fi
 '''
-            result = subprocess.run(["bash", "-c", script, "test", tmp],
-                                    capture_output=True, text=True)
-            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            return subprocess.run(["bash", "-c", script, "test", tmp], capture_output=True, text=True,
+                                  env=dict(__import__("os").environ, MISMATCH=str(int(mismatch))))
+
+    def test_default_session_is_multimode_never_two_corner(self):
+        result = self.run_selection(False)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_multimode_mismatch_falls_back_to_ff_only(self):
+        result = self.run_selection(True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 @unittest.skipUnless(shutil.which("tclsh"), "tclsh required")
@@ -96,6 +138,7 @@ set have_guides 1
 if {$calls ne {-start_incremental}} {error "original guides not used"}
 set ::env(OT_OUT) .
 set drt_calls 0
+set fz [dict create]
 set rc [catch {@ROUTE@} err]
 if {!$rc || ![string match {*DRT-0218*} $err] || $drt_calls != 1} {error "guide rejection swallowed"}
 if {$calls ne {-start_incremental {-end_incremental -allow_congestion -resistance_aware}}} {

@@ -1,0 +1,95 @@
+{
+  "scope": "component only; no complete native program/loader binding or physical qualification",
+  "model": {
+    "status": "candidate_not_adopted",
+    "instruction": "existing seq.hex ten little-indexed 32-bit words",
+    "op_payload_bits": 47,
+    "forward_bits": 48,
+    "return_credit_bits": 1,
+    "die_control_bits": 111,
+    "die_control_down_bits": 106,
+    "die_control_up_bits": 5,
+    "replicas": 32,
+    "command_ingress_bits": 320,
+    "command_ingress_bytes": 40,
+    "MACs_per_cycle": 0,
+    "channel_payload_bytes_per_cycle": 5.875,
+    "channel_forward_hops": 8,
+    "channel_return_hops": 8,
+    "queue_depth": 1,
+    "channel_first_accept_edges": 9,
+    "channel_credit_round_trip_edges": 18,
+    "full_rate_depth": 18,
+    "channel_peak_commands_per_cycle": 0.05555555555555555,
+    "producer_policy": "one outstanding op until real retirement; operand publication required before send",
+    "producer_extra_edges_before_transport": 1,
+    "successor_latency": "per op: publication wait + 1 ingress edge + forward hops + 1 FIFO edge; next issue waits actual retire",
+    "modeled_flop_bits_per_replica": 493,
+    "flop_only_area_um2_per_replica": 143.7588,
+    "flop_only_slot_um2_at_55pct": 261.37963636363634,
+    "area_scope": "lower bound; mux/control and physical pin station area not measured",
+    "tracks_per_replica": 49,
+    "track_capacity": null,
+    "slot_fit": null,
+    "open_gates": [
+      "loader/program-memory record producer",
+      "operand publication and actual retire binding",
+      "actual control path hop census",
+      "crossing/clock/reset binding",
+      "mutable control-state protection",
+      "SS/FF and full geometry"
+    ],
+    "selected": false
+  },
+  "runs": [
+    {
+      "hops": 0,
+      "mutation": null,
+      "returncode": 0,
+      "output": "PASS commands=128 hops=0 cycles=1795"
+    },
+    {
+      "hops": 1,
+      "mutation": null,
+      "returncode": 0,
+      "output": "PASS commands=128 hops=1 cycles=1923"
+    },
+    {
+      "hops": 8,
+      "mutation": null,
+      "returncode": 0,
+      "output": "PASS commands=128 hops=8 cycles=2819"
+    },
+    {
+      "hops": 40,
+      "mutation": null,
+      "returncode": 0,
+      "output": "PASS commands=128 hops=40 cycles=10979"
+    },
+    {
+      "hops": 81,
+      "mutation": null,
+      "returncode": 0,
+      "output": "PASS commands=128 hops=81 cycles=21434"
+    },
+    {
+      "hops": 8,
+      "mutation": "zero_xb",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/tb_sm_seq_ingress.sv:15: descriptor or ring base mismatch n=          1 xb=  0\n       Time: 425000000000000 Scope: tb_sm_seq_ingress"
+    },
+    {
+      "hops": 8,
+      "mutation": "ignore_publication",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/tb_sm_seq_ingress.sv:26: unpublished operand admitted\n       Time: 31000000000000 Scope: tb_sm_seq_ingress"
+    }
+  ],
+  "sources": {
+    "rtl/hbm_accel/control_20261007/ot_hbm_sm_seq_ingress.sv": "e82c301542110021daecc1ce6bb5d823a598a303e9673380c1e74933d39f5271",
+    "rtl/hbm_accel/control_20261007/tb_sm_seq_ingress.sv": "942fcb21f2e2bedb6a4471ed82a94453c626362d67cc72bfd975de82836d3b99",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784"
+  },
+  "passed": true
+}

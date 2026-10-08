@@ -202,3 +202,50 @@ is disabled for these three rebinds pending parent review.
 - localhost is a host (hosts.json): ORFS stages only, at most 24 loop threads in total (`max_loop_threads`) and
   MemAvailable >= job peak + 40 GB (`min_free_ram_gb`), so ssh stays responsive. Stages run directly, without ssh.
 - New jobs route at hold margin 10 ps (see "Hold margin" above).
+
+## Route-time hold corners (2026-10-07)
+- Calibrate and route stages export `OT_ROUTE_HOLD_CORNERS=primary` and run `hold_corners_patch.py` on the job's snapshot (older
+  snapshots get the same code main's tools/run_abi3_physical.py now has): place-and-route repairs setup and hold at the
+  primary corner (WC) only. The recipes' one route SDC puts the virtual IO clock at the SS insertion, so at BC every
+  IO path showed a fake hold violation of about the SS-FF insertion difference (hfd_svc_SE_s6 route SDC: output hold
+  WC +106 / BC -121 ps) and the flow inserted thousands of hold buffers (SE_s6 7,531, SW_s4 5,939, ctrl_pc 11,732).
+  FF hold is closed by the post-route hold ECO against the exact FF sign-off constraints; sign-off is unchanged.
+  Spec `"route_hold_corners": "keep"` keeps the recipe's own `--hold-corners`; any other value is passed through.
+- localhost incident (2026-10-07 05:20): recipes pinning the BARE image ID `sha256:16470cea...` failed there (exit 125):
+  the same image has another ID in localhost's overlay2 store. localhost stages now export
+  `OPENTALLAS_ORFS_IMAGE=openroad/orfs@sha256:16470cea...` (the registry digest resolves everywhere; the image's Yosys /
+  OpenROAD binaries are byte-identical to the fleet's), and a job whose recipe hard-codes a bare ID is not placed there.
+  hosts.json `smoke_only` admits only spec `"smoke": true` jobs (terminal status SMOKE_OK, nothing published);
+  spec `host_require` pins a job to hosts.
+
+### Hold ECO rev 3 (2026-10-07)
+- Default session `mm` (multi-mode): scene ss = the SS effective sign-off SDC with hold false-pathed (SS libs), scene ff =
+  the FF effective SDC with setup false-pathed (FF libs), the route's own SPEF, port loads re-applied per mode. It must
+  reproduce sign-off (worst SS setup / FF hold within 1 ps) or the pass falls back to the FF-only session. repair_timing's
+  `-setup_margin` then guards against REAL SS setup: dshead-ctl-r6 FF-only stacked six HB4 cells (SS +87.9 -> -335.7);
+  mm: SS +16.0 / FF +17.1 after 2 passes; router dv12: SS +24.56 kept (+22.5 routed) while FF -8.6 -> +7.3 in pass 1.
+- Only HB1/HB2 delay cells; post-repair setup guard: ECO cells on any SS path under the setup margin are removed.
+- Macro-output net freeze exists (`OT_FREEZE_MACRO_NETS=1`) but is OFF: it corrupted the session on hbm_cmdproc_n.
+
+### Preserved-wire fallback recovery (2026-10-07)
+`hold_eco.sh` accepts `FREEZE=1` (macro-output nets) or `KEEPWIRES=1`
+(untouched nets). Both remain off by default; physical benefit and stability are
+not established. If detailed routing rejects preserved wires, the Tcl process
+exits instead of attempting another detailed route in the damaged session. The
+shell preserves the rejected log as `eco_<session>_kept.log` and output as
+`base_kept`, then repeats from the original route in a fresh process with both
+options disabled. SS/FF/DRC acceptance is unchanged. The local shell/Tcl fixture
+covers session arguments, retained failure evidence, and the clean retry; it is
+not physical validation of either wire-preservation option.
+
+### Adoption holds and mutation benches (2026-10-07)
+An owner can write `CL_STATE/adoption_holds/<job>.json` with a nonempty `reason`
+to retain running physical work while blocking verdict, collection, export and
+publication. Remove the hold only after its missing evidence is committed and
+bound to the job; archive the hold and release evidence. Timing and exactness
+requirements remain unchanged.
+Newly launched bench stages execute in `bench_src_a<attempt>`, a private copy of
+the job source shared only by its sequential bench stages. CWD, `$SRC`, `{SRC}`
+and legacy `{RUN}/src` point there. Route stages retain their original `src`.
+This prevents a negative control's in-place source mutation from racing synthesis.
+Previously launched stages require an owner audit before adoption.

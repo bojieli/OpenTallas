@@ -60,6 +60,7 @@ SHAVE = 0.024                  # frame -> abstract: W, H = frame - 0.024 (= 0.02
 COLS, ROWS = 64, 24
 TILE_SLOT = (313.632, 1291.68)
 CORR = 52.704
+CORR_R2 = 52.704               # the r2 floorplan corridor (r20e may widen CORR; the tile body keeps its width)
 TILE_BODY_W = TILE_SLOT[0] - CORR
 HCH, VCH = 97.2, 174.096       # link channels: r2 96.768 rounded UP to the 2.16 um row lattice (45 x 2.16); spine 174.096
 SPINE_W_R2 = 1214.784
@@ -83,6 +84,19 @@ STRIP_SPAN = False             # r17d: strip/CDC/controller PG regions per stack
 # endpoint grown to take the 32 CDC core sides and the KV-new write; kept under the lfifo_<stack> name); an IO-band
 # CDC slot (io_xfifo, IOX_W long) beside the collective; the PHY clk / rst_n leave the dfi bundle
 R18 = False
+# r19 (KV reconciliation, main e1701384d): tiles KEEP their KV slice (2 x ot_sram_1r1w_128x256_m1_r2c2 = 8 KiB a
+# tile, 12 MiB a die) and take the landing words over a per-tile-row landing fabric (KVL_BITS a row, one registered
+# hop a tile) from each stack's landing crossbar (the qfd_kvc frame, re-sorting the 32 PC landing words of its stack
+# to the rows it serves); the tile slot widens so the full tile's mapped-cell ceiling still fits (KV_TILE_W)
+R19 = False
+KVL_BITS = 768                 # a row's landing bits a cycle: 24 rows x 768 >= 64 PCs x 283 a half array
+KV_TILE_W = 319.68             # (125,000 / 0.5 + 10 ROM + 2 KV macros + 10,000 halo) / 1291.68 + corridor, on 0.432
+KV_MACRO = 'ot_sram_1r1w_128x256_m1_r2c2'
+# r20d: GRT M9 adjustment over the corridors (None: the base adjustment).  r20b i5: corridor M9 carries only tree-word
+# vertical legs (the corridor chain is on M7, ~0.55 m a corridor) and all residual M9 overflow sits there
+CORR_M9_ADJ = None
+CDC_HO = 319                   # h_cred 3 + h_wv 1 + h_wsec 24 + h_cv 1 + h_csec 24 + h_cdata 256 + h_ctag 9 + h_fault 1
+CDC_CO = 283                   # l_v 1 + l_sec 17 + l_row 8 + l_data 256 + l_pop 1 (l_* = the element's W face)
 KVC_W = 96.768
 IOX_W = 400.032
 IOX_GAP = 40.176                # r18e: routing gap each side of io_xfifo (r18c i5: M4-M9 1.18-1.41 at 4.3 um gaps)
@@ -175,7 +189,8 @@ def build(spine_w=None, tree_mode='central'):
 def _build(spine_w, tree_mode):
     m = r2()
     fp = m['floorplan']
-    assert fp['tile_slot_um'] == list(TILE_SLOT) and abs(fp['tile_corridor_um'] - CORR) < 1e-9
+    assert (R19 or CORR != CORR_R2 or fp['tile_slot_um'] == list(TILE_SLOT)) and \
+        (CORR != CORR_R2 or abs(fp['tile_corridor_um'] - CORR) < 1e-9)
     notes = []
     # spine: the r2 width carries 32.437 mm2 of content in one 1,040.688 um column; packed here as two columns
     # beside a centred vertical link channel, with the two horizontal link channels crossing it
@@ -226,7 +241,7 @@ def _build(spine_w, tree_mode):
     for c in range(COLS):
         xc = col_x(c)
         for r in range(ROWS):
-            insts.append(Inst(f't_{c}_{r}', 'qfd_tile', xc, row_y[r], TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE,
+            insts.append(Inst(f't_{c}_{r}', 'qfd_tile_e' if (R19 and c >= 32) else 'qfd_tile', xc, row_y[r], TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE,
                               kind='tile', region='tile_field'))
             sy = row_y[r] + dn((TILE_SLOT[1] - STATION[1]) / 2, GY)
             insts.append(Inst(f's_{c}_{r}', 'qfd_cst', xc + TILE_BODY_W, sy, STATION[0] - SHAVE, STATION[1] - SHAVE,
@@ -396,7 +411,12 @@ def _build(spine_w, tree_mode):
             yy = sy0
             renges[st] = []
             if R18:
-                lfifos[st] = Inst(f'lfifo_{st}', 'qfd_kvc', x_strip, sy0, STRIP_W - SHAVE, span - SHAVE, orient,
+                ky0, kh = sy0, span
+                if R19:
+                    # the landing crossbar spans the 12 tile rows its stack serves (S: rows 0-11, N: rows 12-23)
+                    ky0 = row_y[0] if si == 0 else row_y[12]
+                    kh = (row_y[11] + TILE_SLOT[1] - row_y[0]) if si == 0 else (y_top - row_y[12])
+                lfifos[st] = Inst(f'lfifo_{st}', 'qfd_kvc_n' if (R19 and si == 1) else 'qfd_kvc', x_strip, ky0, STRIP_W - SHAVE, kh - SHAVE, orient,
                                   kind='link_fifo', region='strip')
                 insts.append(lfifos[st])
                 continue
@@ -462,7 +482,10 @@ def _build(spine_w, tree_mode):
                 xx = (xb_ - k * LINK_WAYPOINT_UM) if side == 'W' else (xa + k * LINK_WAYPOINT_UM - LST_H[0])
                 # sit in a corridor (never on a tile body): nearest corridor x
                 c = min(range(32) if side == 'W' else range(32, 64), key=lambda c: abs(col_x(c) + TILE_BODY_W - xx))
-                it = Inst(f'lh_{"SN"[si]}{side}_{k}', 'qfd_lst_h', col_x(c) + TILE_BODY_W + GX * 20, ch_y[si],
+                # r18: over a tile body, clear of the corridor that crosses the channel there (r18j i5: M9 1.035 at
+                # corridor 9 where lh_SW_* sat on the corridor's channel crossing)
+                lx = dn(col_x(c) + TILE_BODY_W / 2 - LST_H[0] / 2, GX) if R18 else col_x(c) + TILE_BODY_W + GX * 20
+                it = Inst(f'lh_{"SN"[si]}{side}_{k}', 'qfd_lst_h', lx, ch_y[si],
                           LST_H[0] - SHAVE, LST_H[1] - SHAVE, kind='link_station', region='channel')
                 lst.append(it)
                 pts.append(it)
@@ -568,11 +591,26 @@ def buses(m):
             st = f'{side}{"SN"[si]}'
             B.append((f'lnkh_{si}{side}_f', 'link_channel', LINK_TRACKS, [prev, (m['lfifos'][st].name, 'lk')]))
     # in-strip fan, controller ports, PHY DFI
+    if R19:
+        # per-row landing fabric: stack crossbar -> the row's first tile -> ... -> the tile beside the spine
+        for side in 'WE':
+            cols = list(range(32)) if side == 'W' else list(range(63, 31, -1))
+            for r in range(ROWS):
+                st = f'{side}{"S" if r < 12 else "N"}'
+                prev = (m['lfifos'][st].name, f'r{r % 12}')
+                for c in cols:
+                    B.append((f'kvl_{side}{r}_{c}', 'kv_land', KVL_BITS, [prev, (f't_{c}_{r}', 'li')]))
+                    prev = (f't_{c}_{r}', 'lo')
     for st, res in m['renges'].items():
         if R18:
             for p, cd in enumerate(m['cdcs'][st]):
-                B.append((f'cdh_{st}_{p}', 'hbm_cdc', CDC['hbm_bits'], [(f'ctrl_{st}', f'c{p}'), (cd.name, 'h')]))
-                B.append((f'cdc_{st}_{p}', 'cdc_core', CDC['core_bits'], [(cd.name, 'c'), (m['lfifos'][st].name, f'c{p}')]))
+                # the closed element's four pin faces (route r11a, ot_qwen_stream4_cdc_pc RSEL=1): HCLK outputs E,
+                # HCLK inputs N, landing outputs (+ l_pop) W, write-queue / write-done side S
+                kvn = m['lfifos'][st].name
+                B.append((f'cdho_{st}_{p}', 'hbm_cdc', CDC_HO, [(cd.name, 'ho'), (f'ctrl_{st}', f'c{p}i')]))
+                B.append((f'cdhi_{st}_{p}', 'hbm_cdc', CDC['hbm_bits'] - CDC_HO, [(f'ctrl_{st}', f'c{p}o'), (cd.name, 'hi')]))
+                B.append((f'cdco_{st}_{p}', 'cdc_core', CDC_CO, [(cd.name, 'co'), (kvn, f'c{p}i')]))
+                B.append((f'cdci_{st}_{p}', 'cdc_core', CDC['core_bits'] - CDC_CO, [(kvn, f'c{p}o'), (cd.name, 'ci')]))
             B.append((f'dfi_{st}', 'phy_dfi', len(phy_pins()), [(f'ctrl_{st}', 'phy'), (f'phy_{st}', '*dfi')]))
             continue
         B.append((f'fan_{st}_s', 'strip_fan', LINK_TRACKS, [(f'lfifo_{st}', 'fs'), (res[2].name, 'fn')]))
@@ -658,10 +696,20 @@ def masters(m, k=1, port_bits=None):
     tw, th = TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE
     sy = dn((TILE_SLOT[1] - STATION[1]) / 2, GY)
     t = mk('qfd_tile', tw, th, 7, 'W12 ROM tile re-frame (10 x ot_rom_4096x266_m8, cell ceiling 125,000 um2 at 0.5): '
-           'internal routing M1-M7 (ORFS asap7 MAX_ROUTING_LAYER), M8/M9 over the top for die nets')
+           'internal routing M1-M7 (ORFS asap7 MAX_ROUTING_LAYER), M8/M9 over the top for die nets' +
+           ('; r19 FULL tile: + KV slice 2 x ot_sram_1r1w_128x256_m1_r2c2 (8 KiB) and the landing-fabric hop (768 b '
+            'registered in / out, the per-tile landing merge)' if R19 else ''))
+    if R19:
+        t.face('li', KVL_BITS, 'W', 'M4', th * 0.78, 1)
+        t.face('lo', KVL_BITS, 'E', 'M4', th * 0.78, 1)
     t.face('tap', TAP_BITS, 'E', 'M4', sy + STATION[1] / 2, 2)
     for i, p in enumerate(('t_out', 'n_a', 'n_b', 'n_y')):
         t.area(p, TREE_BITS, 40.0 + 60.0 * i, th / 2, 2)
+    if R19:
+        te = mk('qfd_tile_e', tw, th, 7, t.note + ' (east-array variant: landing flows west)')
+        te.ports, te.order = {k_: v_ for k_, v_ in t.ports.items()}, list(t.order)
+        te.ports['li'] = ('face', KVL_BITS, 'E', 'M4', th * 0.78, 1)
+        te.ports['lo'] = ('face', KVL_BITS, 'W', 'M4', th * 0.78, 1)
     s = mk('qfd_cst', STATION[0] - SHAVE, STATION[1] - SHAVE, 3, 'corridor pipeline station (637 flops + 3 tap '
            'repeater banks): standard cells M1-M3, die routing above')
     s.face('a', CORRIDOR_BITS, 'N', 'M5', s.w / 2, 1)
@@ -706,10 +754,21 @@ def masters(m, k=1, port_bits=None):
                 c.ports.pop(o)
         cds = m['cdcs'][st0]
         for p, cd in enumerate(cds):
+            if R18:
+                yc = cd.y - m['ctrls'][st0].y
+                c.face(f'c{p}i', CDC_HO, 'W', 'M4', yc + cd.h * 0.35, 1)
+                c.face(f'c{p}o', CDC['hbm_bits'] - CDC_HO, 'W', 'M4', yc + cd.h + 20.0, 1)
+                continue
             c.face(f'c{p}', CDC['hbm_bits'], 'W', 'M4', cd.y - m['ctrls'][st0].y + cd.h / 2, 2)
         cdm = mk('qfd_cdc', CDC['w'], CDC['h'], 7, 'STREAM4 per-PC CDC element (ot_qwen_stream4_cdc_pc, routed frame)')
-        cdm.face('h', CDC['hbm_bits'], 'E', 'M4', cdm.h / 2, 2)
-        cdm.face('c', CDC['core_bits'], 'W', 'M4', cdm.h / 2, 2)
+        if R18:
+            cdm.face('ho', CDC_HO, 'E', 'M4', cdm.h * 0.35, 1)
+            cdm.face('hi', CDC['hbm_bits'] - CDC_HO, 'N', 'M5', cdm.w / 2, 1)
+            cdm.face('co', CDC_CO, 'W', 'M4', cdm.h * 0.6, 1)
+            cdm.face('ci', CDC['core_bits'] - CDC_CO, 'S', 'M5', cdm.w / 2, 1)
+        else:
+            cdm.face('h', CDC['hbm_bits'], 'E', 'M4', cdm.h / 2, 2)
+            cdm.face('c', CDC['core_bits'], 'W', 'M4', cdm.h / 2, 2)
         nmax = max(sum(1 for p in range(len(cds)) if p * 6 // len(cds) == k) for k in range(6))
         if R18:
             # the KV landing concentrator: link endpoint on the array face, every PC's CDC core side level with
@@ -719,11 +778,24 @@ def masters(m, k=1, port_bits=None):
             for o in [o for o in c.order if o == 'kv']:
                 c.order.remove(o)
                 c.ports.pop(o)
-            kv = mk('qfd_kvc', STRIP_W - SHAVE, span - SHAVE, 7, 'STREAM4 KV landing concentrator (32 PC landing '
-                    'words -> the stack link, KV-new write into the CDC write queues) + strip-end link endpoint')
-            kv.face('lk', LINK_TRACKS, 'W', 'M4', (m['geo']['stack_cy'][0] - m['lfifos'][st0].y), 1)
-            for p, cd in enumerate(cds):
-                kv.face(f'c{p}', CDC['core_bits'], 'E', 'M4', cd.y - m['lfifos'][st0].y + cd.h / 2, 2)
+            reps = [st0] if not R19 else [next(k for k in m['lfifos'] if k.endswith('S')),
+                                          next(k for k in m['lfifos'] if k.endswith('N'))]
+            for rep_ in reps:
+                lf_ = m['lfifos'][rep_]
+                kv = mk(lf_.master, lf_.w, lf_.h, 7, 'STREAM4 KV landing concentrator (32 PC landing words -> the '
+                        'stack link, KV-new write into the CDC write queues) + strip-end link endpoint')
+                kv.face('lk', LINK_TRACKS, 'W', 'M4', (m['geo']['stack_cy'][0 if rep_.endswith('S') else 1] - lf_.y)
+                        if R19 else (m['geo']['stack_cy'][0] - lf_.y), 1)
+                if R19:
+                    kv.note += '; r19: landing crossbar, 32 PC words -> 12 row buses x 768 b (one per tile row)'
+                    ry = m['geo']['row_y']
+                    r0 = 0 if rep_.endswith('S') else 12
+                    for j in range(12):
+                        kv.face(f'r{j}', KVL_BITS, 'W', 'M4', ry[r0 + j] + TILE_SLOT[1] * 0.78 - lf_.y, 1)
+                for p, cd in enumerate(m['cdcs'][rep_]):
+                    yc = cd.y - lf_.y
+                    kv.face(f'c{p}i', CDC_CO, 'E', 'M4', yc + cd.h * 0.6, 1)
+                    kv.face(f'c{p}o', CDC['core_bits'] - CDC_CO, 'E', 'M4', yc - 20.0, 1)
             nmax = 0
         if 'rd' in re_.ports:
             re_.order.remove('rd')
@@ -796,6 +868,32 @@ def masters(m, k=1, port_bits=None):
     return M
 
 
+CORNER_RULE = {}
+PIN_CENTRE = {}     # (master, port) -> face centre override (um), same die rule set
+
+
+def _corner_keep(poss, along, step, cr, off, p, label):
+    """the run keeps its centre where it can, its first and last `tail` gaps at twice the pitch, and both ends >= keep
+    from the face corners (shifted inward when not)."""
+    keep, tail = cr['keep'], cr['tail']
+    n = len(poss)
+    gaps = [step] * (n - 1)
+    gaps[:tail] = [2 * step] * tail
+    gaps[-tail:] = [2 * step] * tail
+    span = sum(gaps)
+    if span > along - 2 * keep + 1e-9:
+        raise ValueError(f'{label}: corner rule does not fit ({n} pins, span {span:.3f} um, face {along:.3f} um): widen')
+    centre = (poss[0] + poss[-1]) / 2
+    lo = min(max(centre - span / 2, keep), along - keep - span)
+    first = off + math.ceil((lo - off) / p - 1e-9) * p
+    if first + span > along - keep + 1e-9:
+        first -= p
+    out = [first]
+    for g in gaps:
+        out.append(out[-1] + g)
+    return out
+
+
 def pin_rects(mst, k, wmap):
     """[(pin name, layer, (x0, y0, x1, y1))] for one master.  wmap: port -> width actually emitted."""
     out = []
@@ -821,6 +919,7 @@ def pin_rects(mst, k, wmap):
                 out.append((nm, 'M8', (x, yy - hw, x + 0.4 * k, yy + hw)))
             continue
         _, _, face, layer, centre, pitch = spec
+        centre = PIN_CENTRE.get((mst.name, port), centre)
         off, p = TRK[layer]
         step = p * k * pitch
         along = mst.h if face in 'EW' else mst.w
@@ -833,8 +932,12 @@ def pin_rects(mst, k, wmap):
         first = off * k + math.ceil((start - off * k) / (p * k) - 1e-9) * p * k
         hw = 0.012 * k
         depth = 0.192 * (k if k > 1 else 1)
+        poss = [first + i * step for i in range(len(names))]
+        cr = CORNER_RULE.get(mst.name)
+        if cr and k == 1 and len(poss) > 2 * cr['tail']:
+            poss = _corner_keep(poss, along, step, cr, off, p, f'{mst.name}.{port}')
         for i, nm in enumerate(names):
-            pos = first + i * step
+            pos = poss[i]
             if face == 'W':
                 r = (0.0, pos - hw, depth, pos + hw)
             elif face == 'E':
@@ -1246,6 +1349,10 @@ def case_grt(m, work, k, tag, iters=50):
         # corridor gate constraint (3): no long haul on M2-M5 (pins on M4/M5 are reached by vias at the pin gcell)
         adj.append(f'set_global_routing_layer_adjustment {ln} {1.0 if ln in ("M2", "M3", "M4", "M5") else VIA_OBS + 2 * REGION_PG["tile_field"]:.4f}')
     for r in m['regions']:
+        if r['kind'] == 'corridor' and CORR_M9_ADJ is not None:
+            x0, y0, x1, y1 = r['rect']
+            adj.append(f'set_global_routing_region_adjustment {{{x0:.3f} {y0:.3f} {x1:.3f} {y1:.3f}}} -layer M9 '
+                       f'-adjustment {CORR_M9_ADJ:.4f}')
         if r['kind'] in ('tile_field', 'corridor', 'channel', 'phy'):
             continue
         a = VIA_OBS + 2 * REGION_PG[r['kind']]
@@ -1340,13 +1447,19 @@ def region_at(m, x, y):
     return best or 'tile_field'
 
 
-def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch=None, align=False, signal_bumps_phy=False):
+def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch=None, align=False, signal_bumps_phy=False,
+            guard=0.0):
     """cov_scale multiplies every region's M8/M9 coverage; bump_pad adds a 20 x 20 um M9 landing pad at every bump
     site (the UBM/AP landing any bump has: ASAP7 has no AP/RDL layer, so without it the bump contacts only the
     0.48 um stripes under it); sources are explicit per-net bump sites (VSS interleaved half a pitch off VDD)."""
     work.mkdir(parents=True, exist_ok=True)
     g = m['geo']
     x0, y0, x1, y1 = [round(v, 3) for v in WINDOWS[window](g)]
+    # r21: a guard band around the judged window (the die continues past a window: without it the window edge has
+    # no grid / bumps beyond it and its cells read an artificial drop); clipped to the die
+    if guard:
+        x0, y0 = max(0.0, x0 - guard), max(0.0, y0 - guard)
+        x1, y1 = min(m['die']['w'], x1 + guard), min(m['die']['h'], y1 + guard)
     x0, y0 = dn(x0, GX), dn(y0, GY)
     W, H = round(x1 - x0, 3), round(y1 - y0, 3)
     # straps: per region column/row segments; M9 vertical stripes at the pitch of the region under them, M8 horizontal
@@ -1559,6 +1672,7 @@ exit
     for n, p in power.items():
         tot[kinds[n]] = tot.get(kinds[n], 0.0) + p
     meta = dict(case='c', window=window, window_um=[x0, y0, x1, y1], size_um=[W, H], cell_um=cell, loads=len(comps),
+                guard_um=guard, judged_um=[round(a, 3) for a in WINDOWS[window](g)],
                 power_w_by_region={k_: round(v, 4) for k_, v in tot.items()}, power_w=round(sum(power.values()), 4), cells_without_both_rails=missing,
                 peak=peak, cov_scale=cov_scale, bump_pad=bump_pad, align=align, signal_bumps_phy=signal_bumps_phy, bump_sites=len(sites['VDD']), stripes=dict(M9=len(s9), M8=len(s8), vias=nvia, width_um=0.48,
                                         pitch_by_region={k_: pitch(v) for k_, v in REGION_PG.items() if v}),
@@ -1768,7 +1882,13 @@ def record_c(work):
                 x, y = float(fs[3]), float(fs[4])
                 W_, H_ = meta['size_um']
                 vp = meta['bumps']['vdd_pitch_um']
-                interior = vp <= x <= W_ - vp and vp <= y <= H_ - vp
+                gd = max(vp, meta.get('guard_um', 0.0))
+                if meta.get('guard_um'):
+                    jx0, jy0, jx1, jy1 = meta['judged_um']
+                    ox, oy = meta['window_um'][0], meta['window_um'][1]
+                    interior = jx0 - ox <= x <= jx1 - ox and jy0 - oy <= y <= jy1 - oy
+                else:
+                    interior = gd <= x <= W_ - gd and gd <= y <= H_ - gd
                 e = per.setdefault(kinds[fs[0]], {})
                 e[net] = round(max(e.get(net, 0.0), d * 1e3), 2)
                 if interior:
@@ -1780,7 +1900,8 @@ def record_c(work):
         if wi and len(wi) == 2:
             out['rail_to_rail_interior_mv'] = round(wi['VDD'] + wi['VSS'], 2)
             out['pass_interior'] = out['rail_to_rail_interior_mv'] <= meta['budget_mv']
-            out['interior_rule'] = 'cells at least one VDD bump pitch from every window edge (the die continues)'
+            out['interior_rule'] = ('the judged window inside a %.0f um guard band of continuing grid and bumps' % meta['guard_um']
+                                    if meta.get('guard_um') else 'cells at least one VDD bump pitch from every window edge (the die continues)')
     return out
 
 

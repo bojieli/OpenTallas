@@ -1,0 +1,290 @@
+{
+  "schema": "opentallas.qwen-rom.vm-first-issue-inventory.v1",
+  "source_pins": {
+    "top.sv": "3d5cb792affee962d4f7cd07fc4aaae38cc1d5710d1e39d09201c1ff4790fe81",
+    "core.sv": "59492b0f4a1c46b86298fbda105d2c79f2db10ac76fde15f74509099e9a6f97e",
+    "array.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "part.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "top.args.f": "3f594f557fe8261053f73a8130e411d534f517c62c7209ce7d068c7cd2fee2de",
+    "head_program.hex": "be67140c92f41c911a725d5b8d7376aeb03f4bdfb639dfa10e494f6e563cd249",
+    "L20_program.hex": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917"
+  },
+  "tool_sha256": {
+    "tools/qwen_rom_finite_vm_schedule.py": "e15a44afd67d732f60a0cefb217563679862d9185ae6dc3a976a54ebeb10eb7f",
+    "tools/qwen_hbm_activation_vm_realization.py": "654675b23cab59eeb561afe15cc8badf37b2f4e3cd37918cf2d51edcff65ef7a",
+    "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+    "tools/qwen_rom_vm_first_issue_inventory.py": "f3fe452f3334573042e798a53d3625a7856d0573bb483f16513c17187b420efe"
+  },
+  "rows": [
+    {
+      "program": "head_program.hex",
+      "pc": 3,
+      "split": 11,
+      "xbase": 8192,
+      "xcs": 2,
+      "read_seats": 2048,
+      "distinct_read_scalars": 2048,
+      "max_scalar_reuse": 1,
+      "aligned_read_windows": 64,
+      "adapter_read_window_misses": 64,
+      "write_scalar_seats": 0,
+      "ordered_masked_write_batches": 0,
+      "write_batches_per_bank": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "distinct_write_rows_per_group_bank": [],
+      "max_distinct_write_rows_one_group_bank": 0,
+      "instruction_sha256": "aa0cedca37fc13b39384a4fa267e533e944ffd7a85ee2d1691a94636a1365fb6"
+    },
+    {
+      "program": "head_program.hex",
+      "pc": 4,
+      "split": 11,
+      "xbase": 8192,
+      "xcs": 2,
+      "read_seats": 2048,
+      "distinct_read_scalars": 2048,
+      "max_scalar_reuse": 1,
+      "aligned_read_windows": 64,
+      "adapter_read_window_misses": 64,
+      "write_scalar_seats": 0,
+      "ordered_masked_write_batches": 0,
+      "write_batches_per_bank": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "distinct_write_rows_per_group_bank": [],
+      "max_distinct_write_rows_one_group_bank": 0,
+      "instruction_sha256": "4fb8f2160ad9236b5c9fc02333aa40c935fd2f98ccb1162d811cd8eb6d0af66b"
+    },
+    {
+      "program": "head_program.hex",
+      "pc": 5,
+      "split": 11,
+      "xbase": 8192,
+      "xcs": 2,
+      "read_seats": 2048,
+      "distinct_read_scalars": 2048,
+      "max_scalar_reuse": 1,
+      "aligned_read_windows": 64,
+      "adapter_read_window_misses": 64,
+      "write_scalar_seats": 0,
+      "ordered_masked_write_batches": 0,
+      "write_batches_per_bank": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "distinct_write_rows_per_group_bank": [],
+      "max_distinct_write_rows_one_group_bank": 0,
+      "instruction_sha256": "3c84829fdc5e8567462e0dd8104a713f9d1e9a895f43e1dc396c5d4383cef9af"
+    },
+    {
+      "program": "head_program.hex",
+      "pc": 6,
+      "split": 11,
+      "xbase": 8192,
+      "xcs": 2,
+      "read_seats": 2048,
+      "distinct_read_scalars": 2048,
+      "max_scalar_reuse": 1,
+      "aligned_read_windows": 64,
+      "adapter_read_window_misses": 64,
+      "write_scalar_seats": 0,
+      "ordered_masked_write_batches": 0,
+      "write_batches_per_bank": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "distinct_write_rows_per_group_bank": [],
+      "max_distinct_write_rows_one_group_bank": 0,
+      "instruction_sha256": "47123da9a43215f3a6423a4094d8c96a067fa18185ef52dea71ae1ef6d7e27ea"
+    },
+    {
+      "program": "L20_program.hex",
+      "pc": 1,
+      "split": 9,
+      "xbase": 4096,
+      "xcs": 8,
+      "read_seats": 2048,
+      "distinct_read_scalars": 512,
+      "max_scalar_reuse": 4,
+      "aligned_read_windows": 64,
+      "adapter_read_window_misses": 256,
+      "write_scalar_seats": 192,
+      "ordered_masked_write_batches": 12,
+      "write_batches_per_bank": [
+        12,
+        0,
+        0,
+        0
+      ],
+      "distinct_write_rows_per_group_bank": [
+        {
+          "group": 0,
+          "bank": 0,
+          "rows": 12
+        }
+      ],
+      "max_distinct_write_rows_one_group_bank": 12,
+      "instruction_sha256": "b7d84646264447b07612bf1b4b7a8b7be064564403d6b7ccae8f52c4545bc321"
+    },
+    {
+      "program": "L20_program.hex",
+      "pc": 13,
+      "split": 9,
+      "xbase": 16240,
+      "xcs": 1,
+      "read_seats": 2048,
+      "distinct_read_scalars": 512,
+      "max_scalar_reuse": 4,
+      "aligned_read_windows": 9,
+      "adapter_read_window_misses": 36,
+      "write_scalar_seats": 128,
+      "ordered_masked_write_batches": 8,
+      "write_batches_per_bank": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "distinct_write_rows_per_group_bank": [
+        {
+          "group": 2,
+          "bank": 0,
+          "rows": 2
+        },
+        {
+          "group": 2,
+          "bank": 1,
+          "rows": 2
+        },
+        {
+          "group": 2,
+          "bank": 2,
+          "rows": 2
+        },
+        {
+          "group": 2,
+          "bank": 3,
+          "rows": 2
+        }
+      ],
+      "max_distinct_write_rows_one_group_bank": 2,
+      "instruction_sha256": "eba956fbf8f7dc9f2fe21dabb5cd39bff931f8d81eda6bb9689b290bb96b87d6"
+    },
+    {
+      "program": "L20_program.hex",
+      "pc": 16,
+      "split": 9,
+      "xbase": 88944,
+      "xcs": 2,
+      "read_seats": 2048,
+      "distinct_read_scalars": 512,
+      "max_scalar_reuse": 4,
+      "aligned_read_windows": 17,
+      "adapter_read_window_misses": 68,
+      "write_scalar_seats": 192,
+      "ordered_masked_write_batches": 12,
+      "write_batches_per_bank": [
+        12,
+        0,
+        0,
+        0
+      ],
+      "distinct_write_rows_per_group_bank": [
+        {
+          "group": 0,
+          "bank": 0,
+          "rows": 12
+        }
+      ],
+      "max_distinct_write_rows_one_group_bank": 12,
+      "instruction_sha256": "065f9ffc56e10453afa9b8757083b6b643f52c4eaa72aa2c0c36c23ce854c412"
+    },
+    {
+      "program": "L20_program.hex",
+      "pc": 20,
+      "split": 7,
+      "xbase": 4096,
+      "xcs": 32,
+      "read_seats": 2048,
+      "distinct_read_scalars": 128,
+      "max_scalar_reuse": 16,
+      "aligned_read_windows": 64,
+      "adapter_read_window_misses": 1024,
+      "write_scalar_seats": 768,
+      "ordered_masked_write_batches": 48,
+      "write_batches_per_bank": [
+        0,
+        0,
+        0,
+        48
+      ],
+      "distinct_write_rows_per_group_bank": [
+        {
+          "group": 2,
+          "bank": 3,
+          "rows": 48
+        }
+      ],
+      "max_distinct_write_rows_one_group_bank": 48,
+      "instruction_sha256": "40161e04d301d67e235216d5648bc7ce9a3928e2396292e48f1b77771f0d445b"
+    },
+    {
+      "program": "L20_program.hex",
+      "pc": 24,
+      "split": 9,
+      "xbase": 94064,
+      "xcs": 6,
+      "read_seats": 2048,
+      "distinct_read_scalars": 512,
+      "max_scalar_reuse": 4,
+      "aligned_read_windows": 49,
+      "adapter_read_window_misses": 196,
+      "write_scalar_seats": 192,
+      "ordered_masked_write_batches": 12,
+      "write_batches_per_bank": [
+        12,
+        0,
+        0,
+        0
+      ],
+      "distinct_write_rows_per_group_bank": [
+        {
+          "group": 0,
+          "bank": 0,
+          "rows": 12
+        }
+      ],
+      "max_distinct_write_rows_one_group_bank": 12,
+      "instruction_sha256": "b74dfd10691d070f7185e4391086f2fc46a3274568eeaecb1bac40a3a27379ab"
+    }
+  ],
+  "unresolved": [
+    {
+      "program": "L20_program.hex",
+      "pc": 11,
+      "reason": "dynamic writer needs literal parent-resolved source tuple"
+    }
+  ],
+  "scope": "Literal first k0/j0/round0 address obligations from pinned compiled HEAD/L20, no claim that reads and writes co-issue",
+  "recovered_current_behavioral_capacity_bytes": 4194304,
+  "historical_finite_adapter_retained_bytes": 711232,
+  "capacity_binding": "The177808 retained-word proposal is smaller than the behavioral1M-word ABI; selected workload live extent must be proved before replacing it",
+  "observed_temporal_schedule": false,
+  "whole_workload_covered": false,
+  "RTL_added": false,
+  "physical_admission": false,
+  "adopted": false,
+  "next_gate": "Pin a current native PRE-edge enabled/address/mask trace on the minimum selected operation, including every SU/ME/MX/reducer/sequencer writer and original ME clock enable. Preserve read-old and later-writer priority. Then size banks, check sidecars, captured request/response queues and owner-coded flow; compose measured stall/crossing costs in the unified model before hardware.",
+  "fallback": "Retain the existing source-ordered finite-walker proposal as a correctness reference. Per-group controller replication alone cannot resolve48 W1 rows in the same group/bank; price a different physical bank map or serialization and matched source holds."
+}
