@@ -50,7 +50,18 @@ AUDIT = [
     ("physical/dsrom_su_swiglu_ireg/die_io_833_ss.sdc", "set_input_delay -min -50.0", "set_input_delay -min 0.0"),
     ("physical/hbm_attn_tile_r/io_vclk.sdc", "set_input_delay -min -150", "set_input_delay -min 0"),
     ("physical/hbm_attn_tile_r/signoff_833.sdc", "set_input_delay -min -150", "set_input_delay -min 0"),
+    # h1-reroute 2026-10-08: the five Qwen files edefa5bcb fixed in-tree but this patch did not carry (an old snapshot kept
+    # the receiver -ot_hk), and the attn_tile_r quad-parent io_ref.sdc (input min DIN-150 -> DIN; output min sign fix).
+    ("physical/qwen_stream4_cdc/io_skew.sdc", "set_input_delay  [expr {$lmin - $ot_hk}]", "set_input_delay  [expr {$lmin - IHK}]"),
+    ("physical/qwen_core_ctx/io_ref_skew.sdc", "set_input_delay [expr 0 + $qcc_lmin - $ot_hk]", "set_input_delay [expr {0 + $qcc_lmin - IHK}]"),
+    ("physical/qwen_slab_structural/io_lat_skew.sdc", "set_input_delay  [expr {$qss_amin - $ot_hk}]", "set_input_delay  [expr {$qss_amin - IHK}]"),
+    ("physical/qwen_slab_structural/io_wc_skew.sdc", "set_input_delay  [expr {$qss_early - $qss_hx - $ot_hk}]", "set_input_delay  [expr {$qss_early - $qss_hx - IHK}]"),
+    ("physical/qwen_slab_structural/io_refpin_skew_m3.sdc", "set_input_delay  [expr {-$ot_hk}]", "set_input_delay  [expr {-IHK}]"),
+    ("physical/hbm_attn_tile_r/io_ref.sdc", "set_input_delay -min [expr {$ot_din - 150}]", "set_input_delay -min $ot_din"),
+    ("physical/hbm_attn_tile_r/io_ref.sdc", "set_output_delay -min [expr {-($ot_qins - 150)}]", "set_output_delay -min [expr {-($ot_qins + 150)}]"),
 ]
+IHK = "([info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0)"
+AUDIT = [(f, a, b.replace("IHK", IHK)) for f, a, b in AUDIT]
 for f, a, b in AUDIT:
     q = R / f
     if q.is_file():
