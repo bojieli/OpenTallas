@@ -1,0 +1,466 @@
+{
+  "after_port_bits": {
+    "inout": 0,
+    "input": 1284,
+    "output": 1333
+  },
+  "before_port_bits": {
+    "inout": 0,
+    "input": 1846485,
+    "output": 273455
+  },
+  "cell_graph_identical": true,
+  "clock_qualified": false,
+  "input_sha256": "2290372da736adf77b71135dbf00bf6498377ba6355e9846ddbae2540ee3425d",
+  "netnames_identical": true,
+  "output_sha256": "1db992653fde632d64864f471fd668f0a0c8f0a53a5487449ca38ae3c022d4f7",
+  "real_parent_loads_qualified": false,
+  "removed": {
+    "crom_addr": {
+      "bits": 1536,
+      "direction": "output"
+    },
+    "crom_q": {
+      "bits": 4096,
+      "direction": "input"
+    },
+    "crom_re": {
+      "bits": 64,
+      "direction": "output"
+    },
+    "emb_ok": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "embed_code_q": {
+      "bits": 512,
+      "direction": "input"
+    },
+    "embed_code_re": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "embed_scale_q": {
+      "bits": 16,
+      "direction": "input"
+    },
+    "embed_scale_re": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "fab_fault": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "g_vsu.u_su.clk": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "g_vsu.u_su.crom_addr": {
+      "bits": 1536,
+      "direction": "input"
+    },
+    "g_vsu.u_su.crom_q": {
+      "bits": 4096,
+      "direction": "output"
+    },
+    "g_vsu.u_su.crom_re": {
+      "bits": 64,
+      "direction": "input"
+    },
+    "g_vsu.u_su.kv_waddr": {
+      "bits": 1536,
+      "direction": "input"
+    },
+    "g_vsu.u_su.kv_wdata": {
+      "bits": 2048,
+      "direction": "input"
+    },
+    "g_vsu.u_su.red_addr": {
+      "bits": 24,
+      "direction": "input"
+    },
+    "g_vsu.u_su.red_data": {
+      "bits": 32,
+      "direction": "input"
+    },
+    "g_vsu.u_su.red_we": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "g_vsu.u_su.rt_active": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "g_vsu.u_su.rt_inflight": {
+      "bits": 8,
+      "direction": "input"
+    },
+    "g_vsu.u_su.va_addr": {
+      "bits": 1536,
+      "direction": "input"
+    },
+    "g_vsu.u_su.va_q": {
+      "bits": 2048,
+      "direction": "output"
+    },
+    "g_vsu.u_su.va_re": {
+      "bits": 64,
+      "direction": "input"
+    },
+    "g_vsu.u_su.vb_addr": {
+      "bits": 1536,
+      "direction": "input"
+    },
+    "g_vsu.u_su.vb_q": {
+      "bits": 2048,
+      "direction": "output"
+    },
+    "g_vsu.u_su.vb_re": {
+      "bits": 64,
+      "direction": "input"
+    },
+    "g_vsu.u_su.vc_addr": {
+      "bits": 1536,
+      "direction": "input"
+    },
+    "g_vsu.u_su.vc_q": {
+      "bits": 2048,
+      "direction": "output"
+    },
+    "g_vsu.u_su.vc_re": {
+      "bits": 64,
+      "direction": "input"
+    },
+    "g_vsu.u_su.vm_waddr": {
+      "bits": 1536,
+      "direction": "input"
+    },
+    "g_vsu.u_su.vm_wdata": {
+      "bits": 2048,
+      "direction": "input"
+    },
+    "g_vsu.u_su.vm_we": {
+      "bits": 64,
+      "direction": "input"
+    },
+    "g_vsu.u_su.wrom_addr": {
+      "bits": 24,
+      "direction": "input"
+    },
+    "g_vsu.u_su.wrom_q": {
+      "bits": 256,
+      "direction": "output"
+    },
+    "g_vsu.u_su.wrom_re": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "int8_wrom_addr": {
+      "bits": 24,
+      "direction": "output"
+    },
+    "int8_wrom_re": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "kv_re": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "kv_waddr": {
+      "bits": 1536,
+      "direction": "output"
+    },
+    "kv_wdata": {
+      "bits": 2048,
+      "direction": "output"
+    },
+    "kv_we": {
+      "bits": 64,
+      "direction": "output"
+    },
+    "me_ov": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "scale_addr": {
+      "bits": 1152,
+      "direction": "output"
+    },
+    "scale_gre": {
+      "bits": 48,
+      "direction": "output"
+    },
+    "scale_q": {
+      "bits": 12288,
+      "direction": "input"
+    },
+    "scale_re": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "t_lvl": {
+      "bits": 24576,
+      "direction": "input"
+    },
+    "tb": {
+      "bits": 379,
+      "direction": "output"
+    },
+    "tgo": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "u_me.fab_fault": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "u_me.kv_re": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "u_me.mx_addr": {
+      "bits": 24,
+      "direction": "input"
+    },
+    "u_me.mx_data": {
+      "bits": 512,
+      "direction": "input"
+    },
+    "u_me.mx_mask": {
+      "bits": 16,
+      "direction": "input"
+    },
+    "u_me.o_addr": {
+      "bits": 1152,
+      "direction": "input"
+    },
+    "u_me.o_data": {
+      "bits": 24576,
+      "direction": "input"
+    },
+    "u_me.o_mask": {
+      "bits": 768,
+      "direction": "input"
+    },
+    "u_me.ov": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "u_me.scale_addr": {
+      "bits": 1152,
+      "direction": "input"
+    },
+    "u_me.scale_gre": {
+      "bits": 48,
+      "direction": "input"
+    },
+    "u_me.scale_q": {
+      "bits": 12288,
+      "direction": "output"
+    },
+    "u_me.scale_re": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "u_me.t_lvl": {
+      "bits": 24576,
+      "direction": "output"
+    },
+    "u_me.tb": {
+      "bits": 379,
+      "direction": "input"
+    },
+    "u_me.tgo": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "u_me.wrom_addr": {
+      "bits": 24,
+      "direction": "input"
+    },
+    "u_me.wrom_re": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "u_me.x_addr": {
+      "bits": 49152,
+      "direction": "input"
+    },
+    "u_me.x_q": {
+      "bits": 65536,
+      "direction": "output"
+    },
+    "u_me.x_re": {
+      "bits": 2048,
+      "direction": "input"
+    },
+    "u_me.xl_d": {
+      "bits": 65536,
+      "direction": "input"
+    },
+    "u_wrom_port.int8_wrom_addr": {
+      "bits": 24,
+      "direction": "input"
+    },
+    "u_wrom_port.int8_wrom_re": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "u_wrom_port.me_wrom_addr": {
+      "bits": 24,
+      "direction": "output"
+    },
+    "u_wrom_port.me_wrom_re": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "u_wrom_port.su_wrom_addr": {
+      "bits": 24,
+      "direction": "output"
+    },
+    "u_wrom_port.su_wrom_re": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "u_wrom_port.wrom_addr": {
+      "bits": 24,
+      "direction": "input"
+    },
+    "u_wrom_port.wrom_re": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "u_wrom_port.wrom_su": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "va_addr": {
+      "bits": 1536,
+      "direction": "output"
+    },
+    "va_q": {
+      "bits": 2048,
+      "direction": "input"
+    },
+    "va_re": {
+      "bits": 64,
+      "direction": "output"
+    },
+    "vb_addr": {
+      "bits": 1536,
+      "direction": "output"
+    },
+    "vb_q": {
+      "bits": 2048,
+      "direction": "input"
+    },
+    "vb_re": {
+      "bits": 64,
+      "direction": "output"
+    },
+    "vc_addr": {
+      "bits": 1536,
+      "direction": "output"
+    },
+    "vc_q": {
+      "bits": 2048,
+      "direction": "input"
+    },
+    "vc_re": {
+      "bits": 64,
+      "direction": "output"
+    },
+    "vw_me_addr": {
+      "bits": 1152,
+      "direction": "output"
+    },
+    "vw_me_data": {
+      "bits": 24576,
+      "direction": "output"
+    },
+    "vw_me_mask": {
+      "bits": 768,
+      "direction": "output"
+    },
+    "vw_mx_addr": {
+      "bits": 24,
+      "direction": "output"
+    },
+    "vw_mx_data": {
+      "bits": 512,
+      "direction": "output"
+    },
+    "vw_mx_mask": {
+      "bits": 16,
+      "direction": "output"
+    },
+    "vw_rd_addr": {
+      "bits": 24,
+      "direction": "output"
+    },
+    "vw_rd_data": {
+      "bits": 32,
+      "direction": "output"
+    },
+    "vw_rd_we": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "vw_su_addr": {
+      "bits": 1536,
+      "direction": "output"
+    },
+    "vw_su_data": {
+      "bits": 2048,
+      "direction": "output"
+    },
+    "vw_su_we": {
+      "bits": 64,
+      "direction": "output"
+    },
+    "vx_addr": {
+      "bits": 49152,
+      "direction": "output"
+    },
+    "vx_q": {
+      "bits": 65536,
+      "direction": "input"
+    },
+    "vx_re": {
+      "bits": 2048,
+      "direction": "output"
+    },
+    "w_ok": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "wd_v": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "wrom_addr": {
+      "bits": 24,
+      "direction": "output"
+    },
+    "wrom_q": {
+      "bits": 1572864,
+      "direction": "input"
+    },
+    "wrom_re": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "wrom_su": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "xl_d": {
+      "bits": 65536,
+      "direction": "output"
+    }
+  },
+  "retained_cells": 47137,
+  "schema": "qwen.rom.controller_cut_result.v1"
+}
