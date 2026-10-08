@@ -25,7 +25,13 @@ module ot_rom_oneshot_die_m #(
     parameter integer IB      = 4,
     parameter integer FW      = 32 * LANES,
     parameter integer PW      = FW + 2 + TAGW,
-    parameter integer RB      = (N > 1) ? $clog2(N) : 1
+    parameter integer RB      = (N > 1) ? $clog2(N) : 1,
+    // PR = 1 (qwen-blocks 2026-10-07; 0 = original): the pop decision is replicated per (source, 128-bit slice) from
+    // kept copies of its state flops (each registered from the same next-state as the original), so the head refill
+    // and s0 capture enables of a slice come from a local pop; the local word enters its FIFO one edge after it is
+    // sent (registered {data}, the occupancy check counts it); tx_rec is captured without an enable.  Transactions,
+    // fold order, values and faults unchanged; the local word reaches the head one cycle later.
+    parameter integer PR      = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -76,12 +82,20 @@ module ot_rom_oneshot_die_m #(
     reg  [CB:0]   mcnt [0:N-1];          // words in the source FIFO (head register excluded)
     reg  [N-1:0]  hv;                    // head register valid
     reg  [N-1:0]  can_tx;
+    reg           lpv;                   // PR: the local word sent last edge, entering its FIFO now
+    reg  [PW-1:0] lpq;
     always @(*) for (r = 0; r < N; r = r + 1)
-        can_tx[r] = (r == RANK) ? ((mcnt[r] + hv[r]) < DEPTH) : (cr[r] != 0 && txr_q[r]);
+        can_tx[r] = (r == RANK) ? ((mcnt[r] + hv[r] + ((PR != 0) ? lpv : 1'b0)) < DEPTH) : (cr[r] != 0 && txr_q[r]);
     wire fire = !ib_empty && (&can_tx);
     reg          txv_q, icr_q;
     reg [PW-1:0] txrec_q;
-    always @(posedge clk) if (fire) txrec_q <= ib_head;
+    generate if (PR != 0) begin : g_txr
+        always @(posedge clk) begin txrec_q <= ib_head; lpq <= ib_head; end   // tx_rec meaningful only with tx_valid
+        always @(posedge clk or negedge rst_n) if (!rst_n) lpv <= 1'b0; else lpv <= fire;
+    end else begin : g_txo
+        always @(posedge clk) if (fire) txrec_q <= ib_head;
+        always @(*) begin lpv = 1'b0; lpq = {PW{1'b0}}; end
+    end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin txv_q <= 1'b0; icr_q <= 1'b0; iw <= 0; ir <= 0; end
         else begin
@@ -102,8 +116,8 @@ module ot_rom_oneshot_die_m #(
     genvar g;
     generate for (g = 0; g < N; g = g + 1) begin : g_src
         if (g == RANK) begin : g_loc
-            assign push[g] = fire;
-            assign push_rec[g*PW +: PW] = ib_head;
+            assign push[g] = (PR != 0) ? lpv : fire;
+            assign push_rec[g*PW +: PW] = (PR != 0) ? lpq : ib_head;
         end else begin : g_rem
             assign push[g] = rxv_q[g];
             assign push_rec[g*PW +: PW] = rxr_q[g*PW +: PW];
@@ -115,7 +129,8 @@ module ot_rom_oneshot_die_m #(
     reg  [15:0]  inflight;
     reg          s0_v, s0_mode, s0_last;
     reg  [FW-1:0] s0_d [0:N-1];
-    wire hmode = hd[0][FW + 1];
+    wire [N*PW-1:0] hdf;                 // the head words (PR: assembled from the slice registers)
+    wire hmode = hdf[FW + 1];
     wire all_hv = &hv;
     wire pop_red = all_hv && !g_busy && !(s0_v && s0_mode) && !hmode;
     wire pop_gat = all_hv && !g_busy && hmode && inflight == 16'd0 && !s0_v;
@@ -139,7 +154,7 @@ module ot_rom_oneshot_die_m #(
                     wp[r] <= wp[r] + 1'b1;
                 end
                 if (refill[r]) begin
-                    hd[r] <= mem[r*DEPTH + rp[r]];
+                    if (PR == 0) hd[r] <= mem[r*DEPTH + rp[r]];
                     rp[r] <= rp[r] + 1'b1;
                 end
                 hv[r] <= refill[r] ? 1'b1 : (pop ? 1'b0 : hv[r]);
@@ -152,14 +167,19 @@ module ot_rom_oneshot_die_m #(
         if (!rst_n) begin s0_v <= 1'b0; s0_mode <= 1'b0; s0_last <= 1'b0; end
         else begin
             s0_v <= pop;
-            if (pop) begin s0_mode <= hmode; s0_last <= hd[0][FW]; end
+            if (pop) begin s0_mode <= hmode; s0_last <= hdf[FW]; end
         end
     end
     reg [TAGW:0] s0_t [0:N-1];
-    always @(posedge clk) if (pop) for (r = 0; r < N; r = r + 1) begin
-        s0_d[r] <= hd[r][FW-1:0];
-        s0_t[r] <= hd[r][PW-1 -: TAGW + 1];
-    end
+    generate if (PR == 0) begin : g_s0o
+        for (g = 0; g < N; g = g + 1) begin : g_hdf
+            assign hdf[g*PW +: PW] = hd[g];
+        end
+        always @(posedge clk) if (pop) for (r = 0; r < N; r = r + 1) begin
+            s0_d[r] <= hd[r][FW-1:0];
+            s0_t[r] <= hd[r][PW-1 -: TAGW + 1];
+        end
+    end endgenerate
     reg agree;
     always @(*) begin
         agree = 1'b1;
@@ -273,4 +293,53 @@ module ot_rom_oneshot_die_m #(
             if (ovf || txbad) begin fault <= 1'b1; fault_code[2] <= 1'b1; end
         end
     end
+    // ---- PR: replicated pop -------------------------------------------------------------------------------------------
+    generate if (PR != 0) begin : g_s0r
+        reg  [N-1:0] hv_n, mnz_n;
+        reg          gb_n, hm_n, iz_n;
+        reg  [DB-1:0] rp_n [0:N-1];
+        reg  [15:0]  inflight_n;
+        always @(*) begin
+            for (r = 0; r < N; r = r + 1) begin
+                hv_n[r] = refill[r] ? 1'b1 : (pop ? 1'b0 : hv[r]);
+                mnz_n[r] = (mcnt[r] + (push[r] ? 1'b1 : 1'b0) - (refill[r] ? 1'b1 : 1'b0)) != 0;
+                rp_n[r] = rp[r] + (refill[r] ? 1'b1 : 1'b0);
+            end
+            gb_n = g_busy ? (g_cnt != N - 1) : ((s0_v && s0_mode) ? (N != 1) : 1'b0);
+            hm_n = refill[0] ? mem[rp[0]][FW + 1] : hdf[FW + 1];
+            inflight_n = inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
+            iz_n = (inflight_n == 16'd0);
+        end
+        localparam integer SLW = 128, NSL = (PW + SLW - 1) / SLW;
+        wire [N*PW-1:0] s0f;
+        genvar gr, gk;
+        for (gr = 0; gr < N; gr = gr + 1) begin : g_r
+            for (gk = 0; gk < NSL; gk = gk + 1) begin : g_k
+                localparam integer LO = gk * SLW;
+                localparam integer SW = (PW - LO < SLW) ? (PW - LO) : SLW;
+                (* keep *) reg [N-1:0] hvc;
+                (* keep *) reg gbc, s0vc, s0mc, hmc, izc, mnzc;
+                (* keep *) reg [DB-1:0] rpc;
+                reg [SW-1:0] hdk, s0k;
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) begin hvc <= 0; gbc <= 1'b0; s0vc <= 1'b0; s0mc <= 1'b0; hmc <= 1'b0; izc <= 1'b1;
+                                      mnzc <= 1'b0; rpc <= 0; end
+                    else begin hvc <= hv_n; gbc <= gb_n; s0vc <= pop; s0mc <= pop ? hmode : s0_mode; hmc <= hm_n;
+                               izc <= iz_n; mnzc <= mnz_n[gr]; rpc <= rp_n[gr]; end
+                wire popk = (&hvc) && !gbc && ((!(s0vc && s0mc) && !hmc) || (hmc && izc && !s0vc));
+                wire refk = mnzc && (!hvc[gr] || popk);
+                wire [PW-1:0] mrow = mem[gr*DEPTH + rpc];
+                always @(posedge clk) begin
+                    if (refk) hdk <= mrow[LO +: SW];
+                    if (popk) s0k <= hdk;
+                end
+                assign hdf[gr*PW + LO +: SW] = hdk;
+                assign s0f[gr*PW + LO +: SW] = s0k;
+            end
+        end
+        always @(*) for (r = 0; r < N; r = r + 1) begin
+            s0_d[r] = s0f[r*PW +: FW];
+            s0_t[r] = s0f[r*PW + PW - 1 -: TAGW + 1];
+        end
+    end endgenerate
 endmodule
