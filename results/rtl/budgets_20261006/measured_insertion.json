@@ -943,13 +943,13 @@
    "budget": null
   },
   "hfd_loader": {
-   "job": "hbm_loader_halfsk_tc_a0e0d1e08",
-   "source_commit": "a0e0d1e08d1b5bd11e46613439bf718294329082",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-data/claude/closure-loop/hbm_loader_halfsk_tc_a0e0d1e08",
+   "job": "hbm_loader_halfsk_tt_5edde7353",
+   "source_commit": "5edde7353d607880bf0535c24f3f88f15a30b2c6",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_loader_halfsk_tt_5edde7353",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T07:38:48-07:00",
+   "measured_at": "2026-10-08T07:54:50-07:00",
    "ss": {
     "mean": 1315,
     "min": 1274,
@@ -2359,22 +2359,22 @@
    "budget": null
   },
   "hfd_vm_se_s": {
-   "job": "hbm_vm8_ses_654733cc5",
+   "job": "hbm_vm8_ses_654733cc5-tt",
    "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_ses_654733cc5",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8_ses_654733cc5-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T15:11:38-07:00",
+   "measured_at": "2026-10-08T07:54:50-07:00",
    "ss": {
-    "mean": 532,
-    "min": 348,
-    "max": 664
+    "mean": 477,
+    "min": 442,
+    "max": 739
    },
    "ff": {
-    "mean": 338,
-    "min": 228,
-    "max": 444
+    "mean": 320,
+    "min": 288,
+    "max": 510
    },
    "boundary_n": 11538,
    "budget": null
@@ -2632,13 +2632,13 @@
    "budget": null
   },
   "ot_v41_pqc_spine_screen": {
-   "job": "s81fs-h1-r16u35-78f0c7ce5-tc",
-   "source_commit": "78f0c7ce55a807cfa2651861c587320bd9d3cb2e",
+   "job": "s81fs-h1-r16u35-97c6baace-tc2",
+   "source_commit": "97c6baace2de87bfb1f088d420b81438ac1dc83b",
    "host": "ot-epyc2",
-   "run": "/srv/opentallas-data/claude/closure-loop/s81fs-h1-r16u35-78f0c7ce5-tc",
+   "run": "/srv/opentallas-data/claude/closure-loop/s81fs-h1-r16u35-97c6baace-tc2",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T07:38:49-07:00",
+   "measured_at": "2026-10-08T07:58:49-07:00",
    "ss": {
     "mean": 797,
     "min": 773,
@@ -3367,24 +3367,24 @@
    "budget": null
   },
   "ot_s81_pq_ret_root_cam": {
-   "job": "s81b-pq-rootcam-C-tc-50bf09d54",
+   "job": "s81b-pq-rootcam-B-tc-50bf09d54",
    "source_commit": "50bf09d546a9f3614aec799d41d0b6d183b9bec6",
-   "host": "ot-agidock128",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rootcam-C-tc-50bf09d54",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81b-pq-rootcam-B-tc-50bf09d54",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T07:26:50-07:00",
+   "measured_at": "2026-10-08T07:49:48-07:00",
    "ss": {
     "mean": 281,
-    "min": 274,
-    "max": 288
+    "min": 268,
+    "max": 291
    },
    "ff": {
     "mean": 179,
-    "min": 173,
-    "max": 186
+    "min": 170,
+    "max": 189
    },
-   "boundary_n": 9241,
+   "boundary_n": 9240,
    "budget": null
   },
   "dsfd_vm_bgq": {
@@ -3430,26 +3430,26 @@
    "budget": null
   },
   "dsfd_vm_bgh": {
-   "job": "s81b-vm_bgh-tc-50bf09d54",
+   "job": "s81b-vm_bgh-grid-tc-50bf09d54",
    "source_commit": "50bf09d546a9f3614aec799d41d0b6d183b9bec6",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-data/claude/closure-loop/s81b-vm_bgh-tc-50bf09d54",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81b-vm_bgh-grid-tc-50bf09d54",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T07:33:48-07:00",
+   "measured_at": "2026-10-08T07:48:49-07:00",
    "ss": {
-    "mean": 769,
-    "min": 733,
-    "max": 886
+    "mean": 768,
+    "min": 731,
+    "max": 963
    },
    "ff": {
-    "mean": 478,
-    "min": 450,
-    "max": 566
+    "mean": 484,
+    "min": 455,
+    "max": 659
    },
    "boundary_n": 8606,
    "budget": null
   }
  },
- "updated": "2026-10-08T07:43:50-07:00"
+ "updated": "2026-10-08T07:58:49-07:00"
 }
