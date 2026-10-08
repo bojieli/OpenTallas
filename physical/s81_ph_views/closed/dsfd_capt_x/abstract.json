@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_capt_x",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe-tt/routes/s81ph_dsfd_capt_x_501831f78_safe_tt/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe-tt/routes/s81ph_dsfd_capt_x_501831f78_safe_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe-tt/routes/s81ph_dsfd_capt_x_501831f78_safe_tt/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe-tt/routes/s81ph_dsfd_capt_x_501831f78_safe_tt/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe-tt/routes/s81ph_dsfd_capt_x_501831f78_safe_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe-tt/routes/s81ph_dsfd_capt_x_501831f78_safe_tt/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe-tt/routes/s81ph_dsfd_capt_x_501831f78_safe_tt/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_capt_x.lef": "33e09614614247cc6a84557101d67471d245a71639410e82a0b30a9cf8afe2af",
+    "dsfd_capt_x_ff.lib": "fa57e0efdf4dcda090c973df21e91f700a650abf978c9a1ea015985ddfdd0d4d",
+    "dsfd_capt_x_ss.lib": "e988c79a61c6d2fb8136c23467982560880eea059a8d40057c387395230bcda8"
+  },
+  "ok": true
+}

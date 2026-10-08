@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_capt_x-501831f78-safe-tt/routes/s81ph_dsfd_capt_x_501831f78_safe_tt_cal/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_501831f78_safe_tt_cal/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "ss": {
+  "boundary": {
+   "n": 897,
+   "mean": 381.4,
+   "min": 370.2,
+   "max": 389.4
+  },
+  "all": {
+   "n": 11231,
+   "mean": 381.3,
+   "min": 370.0,
+   "max": 389.7
+  },
+  "errors": []
+ },
+ "ff": {
+  "boundary": {
+   "n": 897,
+   "mean": 245.1,
+   "min": 236.2,
+   "max": 251.1
+  },
+  "all": {
+   "n": 11231,
+   "mean": 245.0,
+   "min": 236.0,
+   "max": 251.7
+  },
+  "errors": []
+ },
+ "env": {
+  "CK_SS_MEAN": 381,
+  "CK_SS_ALL_MEAN": 381,
+  "CK_SS_MIN": 370,
+  "CK_SS_ALL_MIN": 370,
+  "CK_SS_MAX": 389,
+  "CK_SS_ALL_MAX": 390,
+  "CK_FF_MEAN": 245,
+  "CK_FF_ALL_MEAN": 245,
+  "CK_FF_MIN": 236,
+  "CK_FF_ALL_MIN": 236,
+  "CK_FF_MAX": 251,
+  "CK_FF_ALL_MAX": 252
+ }
+}
