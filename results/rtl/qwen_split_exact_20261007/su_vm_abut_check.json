@@ -1,0 +1,91 @@
+{
+ "schema": "opentallas.qwen_su_vm_abut_check.v1",
+ "recipe": "r21v",
+ "legality_r21": {
+  "instances": 12201,
+  "outside": 0,
+  "overlaps": 0,
+  "overlap_examples": [],
+  "die_um": [
+   25037.856,
+   32801.76
+  ]
+ },
+ "legality_r21v": {
+  "instances": 12201,
+  "outside": 0,
+  "overlaps": 0,
+  "overlap_examples": [],
+  "die_um": [
+   25037.856,
+   32801.76
+  ]
+ },
+ "placement_unchanged": true,
+ "su": [
+  11611.296,
+  12422.16,
+  777.576,
+  2058.456,
+  "R0"
+ ],
+ "vm": [
+  11611.296,
+  14480.64,
+  777.576,
+  933.096,
+  "R0"
+ ],
+ "gap_um": 0.024,
+ "bus": {
+  "bits_su_to_vm": 8448,
+  "bits_vm_to_su": 6144,
+  "gap_um": 0.024,
+  "face_um": 777.576,
+  "layer": "M5",
+  "pitch_tracks": 1,
+  "a_span_um": [
+   2.0,
+   407.504
+  ],
+  "q_span_um": [
+   409.504,
+   704.416
+  ],
+  "stations": 0,
+  "rtl_latency_added": 0
+ },
+ "ports": {
+  "su_vm_a": {
+   "bits": 8448,
+   "su_port": "va",
+   "vm_port": "sa",
+   "layers": [
+    "M5"
+   ],
+   "x_mismatch": 0,
+   "not_facing": 0,
+   "shared_tracks": 0,
+   "span_um": [
+    2.028,
+    407.484
+   ]
+  },
+  "su_vm_q": {
+   "bits": 6144,
+   "su_port": "vq",
+   "vm_port": "sq",
+   "layers": [
+    "M5"
+   ],
+   "x_mismatch": 0,
+   "not_facing": 0,
+   "shared_tracks": 0,
+   "span_um": [
+    409.548,
+    704.412
+   ]
+  }
+ },
+ "ok": true
+}

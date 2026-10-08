@@ -1,0 +1,1046 @@
+{
+ "schema": "opentallas.qwen_split_exact_crossings.v1",
+ "classes": {
+  "A": "issue handshake: go + NEXT fields down, ready back (base issues the cycle ready is seen) -> ot_qfd_issue_shell: RT-edge not-ready window after a go, ready rebuilt from monotone unit state",
+  "B": "status / chaining: idle, progress, progress_rows (registered, cleared on the accepting edge) -> masked for the RT window, then post-accept and monotone (stale = conservative)",
+  "C": "sampled result: am_idx / am_val / am_any read by the argmax fold on the next AMAX go -> with stations an AMAX op also waits for the engine idle, so am_* are frozen sample-to-accept",
+  "D": "memory read loop through the controller (stream unit va read, INT8 embedding decode): fixed 1-edge latency -> decode moved to the stream-unit side (ot_qfd_su_embed); selector a_src travels with the go; token / scale are per-token constants, stationed",
+  "E": "clock-enable path: engine ICG (po_me_clk) and its enable me_en / me_clk_en (gates the engine VM write enables and the die scale banks in the same cycle; me_mem_ok feeds it) -> not stationed (clock-gating check); engine-side stations on the gated clock, shell counts engine edges",
+  "F": "posted / sticky / observation: fault (sticky), kv_we -> kv_write_flush (idle-qualified with the masked idle), wrom_re/addr (INT8 weights and INT8 embedding: unused, observation) -> delayed is safe",
+  "local": "not a controller crossing: the unit's own memory / tree / KV ports (direct, as in the base)"
+ },
+ "counts": {
+  "A": 61,
+  "reset (ot_qfd_rst_stn per master)": 2,
+  "B": 5,
+  "E": 3,
+  "local": 38,
+  "F": 7,
+  "C": 3,
+  "clock": 1,
+  "D": 6
+ },
+ "stations": {
+  "DCU": "sequencer OS + unit IS",
+  "DUC": "unit OS + sequencer IS",
+  "RT": "DCU + DUC (unit edges; engine edges for the ME)"
+ },
+ "rtl": [
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+  "tools/qwen_missing/emit_partition.py emit_part(dcu, duc, comp)"
+ ],
+ "crossings": [
+  {
+   "unit": "me",
+   "port": "clk",
+   "ctrl_net": "me_clk",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "rst_n",
+   "ctrl_net": "rst_n",
+   "kind": "rst",
+   "width": "1",
+   "cls": "reset (ot_qfd_rst_stn per master)"
+  },
+  {
+   "unit": "me",
+   "port": "go",
+   "ctrl_net": "me_go",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "ready",
+   "ctrl_net": "me_ready",
+   "kind": "in",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "idle",
+   "ctrl_net": "me_idle",
+   "kind": "in",
+   "width": "1",
+   "cls": "B"
+  },
+  {
+   "unit": "me",
+   "port": "i_nout",
+   "ctrl_net": "me_nout",
+   "kind": "out",
+   "width": "NW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_tiles",
+   "ctrl_net": "me_tiles",
+   "kind": "out",
+   "width": "NW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_k",
+   "ctrl_net": "me_k",
+   "kind": "out",
+   "width": "NW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_wsrc",
+   "ctrl_net": "me_wsrc",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_wbase",
+   "ctrl_net": "me_wbase",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_ts",
+   "ctrl_net": "me_ts",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_ks",
+   "ctrl_net": "me_ks",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_js",
+   "ctrl_net": "me_js",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_xbase",
+   "ctrl_net": "me_xbase",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_xks",
+   "ctrl_net": "me_xks",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_xjs",
+   "ctrl_net": "me_xjs",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_xcs",
+   "ctrl_net": "me_xcs",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_jsh",
+   "ctrl_net": "me_jsh",
+   "kind": "out",
+   "width": "3",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_split",
+   "ctrl_net": "me_split",
+   "kind": "out",
+   "width": "4",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_wcs",
+   "ctrl_net": "me_wcs",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_round",
+   "ctrl_net": "me_round",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_obase",
+   "ctrl_net": "me_obase",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_ots",
+   "ctrl_net": "me_ots",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_ojs",
+   "ctrl_net": "me_ojs",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_mmode",
+   "ctrl_net": "me_mmode",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_oen",
+   "ctrl_net": "me_oen",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_amax",
+   "ctrl_net": "me_amax",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_rmax",
+   "ctrl_net": "me_rmax",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "i_mbase",
+   "ctrl_net": "me_mbase",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "me",
+   "port": "mx_we",
+   "ctrl_net": "me_mx_we",
+   "kind": "in",
+   "width": "1",
+   "cls": "E"
+  },
+  {
+   "unit": "me",
+   "port": "mx_addr",
+   "ctrl_net": "vw_mx_addr",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "mx_mask",
+   "ctrl_net": "vw_mx_mask",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "mx_data",
+   "ctrl_net": "vw_mx_data",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "wrom_re",
+   "ctrl_net": "me_wrom_re",
+   "kind": "in",
+   "width": "1",
+   "cls": "F"
+  },
+  {
+   "unit": "me",
+   "port": "wrom_addr",
+   "ctrl_net": "me_wrom_addr",
+   "kind": "in",
+   "width": "AW",
+   "cls": "F"
+  },
+  {
+   "unit": "me",
+   "port": "scale_re",
+   "ctrl_net": "scale_re",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "scale_gre",
+   "ctrl_net": "scale_gre",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "scale_addr",
+   "ctrl_net": "scale_addr",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "scale_q",
+   "ctrl_net": "scale_q",
+   "kind": "dir_i",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "kv_re",
+   "ctrl_net": "kv_re",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "x_re",
+   "ctrl_net": "vx_re",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "x_addr",
+   "ctrl_net": "vx_addr",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "x_q",
+   "ctrl_net": "vx_q",
+   "kind": "dir_i",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "tgo",
+   "ctrl_net": "tgo",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "tb",
+   "ctrl_net": "tb",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "xl_d",
+   "ctrl_net": "xl_d",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "t_lvl",
+   "ctrl_net": "t_lvl",
+   "kind": "dir_i",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "fab_fault",
+   "ctrl_net": "fab_fault",
+   "kind": "dir_i",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "ov",
+   "ctrl_net": "me_ov",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "o_we",
+   "ctrl_net": "me_o_we",
+   "kind": "in",
+   "width": "(G >> SMIN)",
+   "cls": "E"
+  },
+  {
+   "unit": "me",
+   "port": "o_addr",
+   "ctrl_net": "vw_me_addr",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "o_mask",
+   "ctrl_net": "vw_me_mask",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "o_data",
+   "ctrl_net": "vw_me_data",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "me",
+   "port": "am_idx",
+   "ctrl_net": "am_idx",
+   "kind": "in",
+   "width": "NW",
+   "cls": "C"
+  },
+  {
+   "unit": "me",
+   "port": "am_val",
+   "ctrl_net": "am_val",
+   "kind": "in",
+   "width": "32",
+   "cls": "C"
+  },
+  {
+   "unit": "me",
+   "port": "am_any",
+   "ctrl_net": "am_any",
+   "kind": "in",
+   "width": "1",
+   "cls": "C"
+  },
+  {
+   "unit": "me",
+   "port": "progress",
+   "ctrl_net": "me_progress",
+   "kind": "in",
+   "width": "16",
+   "cls": "B"
+  },
+  {
+   "unit": "me",
+   "port": "fault",
+   "ctrl_net": "me_fault",
+   "kind": "in",
+   "width": "1",
+   "cls": "F"
+  },
+  {
+   "unit": "su",
+   "port": "clk",
+   "ctrl_net": "clk",
+   "kind": "clk",
+   "width": "1",
+   "cls": "clock"
+  },
+  {
+   "unit": "su",
+   "port": "rt_active",
+   "ctrl_net": "su_active",
+   "kind": "in",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "rt_inflight",
+   "ctrl_net": "su_inflight",
+   "kind": "in",
+   "width": "8",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "rst_n",
+   "ctrl_net": "rst_n",
+   "kind": "rst",
+   "width": "1",
+   "cls": "reset (ot_qfd_rst_stn per master)"
+  },
+  {
+   "unit": "su",
+   "port": "go",
+   "ctrl_net": "su_go",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "ready",
+   "ctrl_net": "su_ready",
+   "kind": "in",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "idle",
+   "ctrl_net": "su_idle",
+   "kind": "in",
+   "width": "1",
+   "cls": "B"
+  },
+  {
+   "unit": "su",
+   "port": "i_nout",
+   "ctrl_net": "su_nout",
+   "kind": "out",
+   "width": "NW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_nin",
+   "ctrl_net": "su_nin",
+   "kind": "out",
+   "width": "NW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_asrc",
+   "ctrl_net": "(INT8_EMBED != 0) ? 1'b0 : a_src",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_abase",
+   "ctrl_net": "a_base",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_aso",
+   "ctrl_net": "a_so",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_asi",
+   "ctrl_net": "a_si",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_bsrc",
+   "ctrl_net": "b_src",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_bbase",
+   "ctrl_net": "b_base",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_bso",
+   "ctrl_net": "b_so",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_bsi",
+   "ctrl_net": "b_si",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_csrc",
+   "ctrl_net": "c_src",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_cbase",
+   "ctrl_net": "c_base",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_cso",
+   "ctrl_net": "c_so",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_csi",
+   "ctrl_net": "c_si",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_ma",
+   "ctrl_net": "ma",
+   "kind": "out",
+   "width": "2",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_mb",
+   "ctrl_net": "mb",
+   "kind": "out",
+   "width": "2",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_ad",
+   "ctrl_net": "ad",
+   "kind": "out",
+   "width": "3",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_sfu",
+   "ctrl_net": "sfu",
+   "kind": "out",
+   "width": "3",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_mc",
+   "ctrl_net": "mc",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_md",
+   "ctrl_net": "md",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_dst",
+   "ctrl_net": "dst",
+   "kind": "out",
+   "width": "2",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_dbase",
+   "ctrl_net": "d_base",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_dso",
+   "ctrl_net": "d_so",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_dsi",
+   "ctrl_net": "d_si",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_red",
+   "ctrl_net": "red",
+   "kind": "out",
+   "width": "2",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_redsq",
+   "ctrl_net": "redsq",
+   "kind": "out",
+   "width": "1",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_rbase",
+   "ctrl_net": "r_base",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_rso",
+   "ctrl_net": "r_so",
+   "kind": "out",
+   "width": "AW",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_imm1",
+   "ctrl_net": "imm1",
+   "kind": "out",
+   "width": "32",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "i_imm2",
+   "ctrl_net": "imm2",
+   "kind": "out",
+   "width": "32",
+   "cls": "A"
+  },
+  {
+   "unit": "su",
+   "port": "va_re",
+   "ctrl_net": "su_va_re",
+   "kind": "in",
+   "width": "SW",
+   "cls": "D"
+  },
+  {
+   "unit": "su",
+   "port": "va_addr",
+   "ctrl_net": "su_va_addr",
+   "kind": "in",
+   "width": "SW*AW",
+   "cls": "D"
+  },
+  {
+   "unit": "su",
+   "port": "va_q",
+   "ctrl_net": "su_va_q",
+   "kind": "out",
+   "width": "SW*32",
+   "cls": "D"
+  },
+  {
+   "unit": "su",
+   "port": "vb_re",
+   "ctrl_net": "vb_re",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "vb_addr",
+   "ctrl_net": "vb_addr",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "vb_q",
+   "ctrl_net": "vb_q",
+   "kind": "dir_i",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "vc_re",
+   "ctrl_net": "vc_re",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "vc_addr",
+   "ctrl_net": "vc_addr",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "vc_q",
+   "ctrl_net": "vc_q",
+   "kind": "dir_i",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "wrom_re",
+   "ctrl_net": "su_wrom_re",
+   "kind": "in",
+   "width": "1",
+   "cls": "F"
+  },
+  {
+   "unit": "su",
+   "port": "wrom_addr",
+   "ctrl_net": "su_wrom_addr",
+   "kind": "in",
+   "width": "AW",
+   "cls": "F"
+  },
+  {
+   "unit": "su",
+   "port": "wrom_q",
+   "ctrl_net": "wrom_q[W*16-1:0]",
+   "kind": "dir_i",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "crom_re",
+   "ctrl_net": "crom_re",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "crom_addr",
+   "ctrl_net": "crom_addr",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "crom_q",
+   "ctrl_net": "crom_q",
+   "kind": "dir_i",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "vm_we",
+   "ctrl_net": "vw_su_we",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "vm_waddr",
+   "ctrl_net": "vw_su_addr",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "vm_wdata",
+   "ctrl_net": "vw_su_data",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "kv_we",
+   "ctrl_net": "kv_we",
+   "kind": "dir_ok",
+   "width": "SW",
+   "cls": "F"
+  },
+  {
+   "unit": "su",
+   "port": "kv_waddr",
+   "ctrl_net": "kv_waddr",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "kv_wdata",
+   "ctrl_net": "kv_wdata",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "red_we",
+   "ctrl_net": "vw_rd_we",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "red_addr",
+   "ctrl_net": "vw_rd_addr",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "red_data",
+   "ctrl_net": "vw_rd_data",
+   "kind": "dir_o",
+   "width": null,
+   "cls": "local"
+  },
+  {
+   "unit": "su",
+   "port": "progress",
+   "ctrl_net": "su_progress",
+   "kind": "in",
+   "width": "16",
+   "cls": "B"
+  },
+  {
+   "unit": "su",
+   "port": "progress_rows",
+   "ctrl_net": "su_rows",
+   "kind": "in",
+   "width": "16",
+   "cls": "B"
+  },
+  {
+   "unit": "su",
+   "port": "fault",
+   "ctrl_net": "su_fault",
+   "kind": "in",
+   "width": "1",
+   "cls": "F"
+  },
+  {
+   "unit": "su",
+   "port": "asrc_raw",
+   "ctrl_net": "a_src",
+   "kind": "out",
+   "width": "1",
+   "cls": "D",
+   "note": "new controller port (split-exact): the embedding selector, with the go"
+  },
+  {
+   "unit": "su",
+   "port": "tok / escale",
+   "ctrl_net": "tok_r / embed_scale_hold",
+   "kind": "out",
+   "width": "NW / 16",
+   "cls": "D",
+   "note": "per-token constants latched at start, stationed DCU"
+  },
+  {
+   "unit": "me",
+   "port": "me_mem_ok -> me_en, me_clk_en",
+   "ctrl_net": "me_mem_ok, me_en",
+   "kind": "die",
+   "width": "1",
+   "cls": "E",
+   "note": "OPEN on the qfd_sp_constants_sequencer master @646cf264d: its IS / OS stations are on me_mem_ok and me_clk_en; class E must not be stationed"
+  },
+  {
+   "unit": "su",
+   "port": "crom_re / crom_addr / crom_q",
+   "ctrl_net": "(direct core ports)",
+   "kind": "die",
+   "width": "64 x (1+24) / 64 x 64",
+   "cls": "D",
+   "note": "OPEN: fixed-latency lane read of the constant ROM; in the RTL a direct port, on the r21 die the crom sits in the sequencer slab (buses crom_a 1,600 b / crom_q 4,096 b across the spine channel, SU64 x 11,611-12,389 um vs sequencer x 12,649 um). Needs the constant ROM abutted to SU64 or a CROM latency parameter in ot_hdc_vstream_lane (not done)."
+  }
+ ]
+}
