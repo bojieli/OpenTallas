@@ -19,8 +19,8 @@ import dsrom_s81_fulldie as F
 
 BASIS='results/uarch/dsrom_s81_mixed_geometry_20261007/mixed221_layer1_plan.json'
 DESIGN='results/uarch/dsrom_s81_pq_fullshape_design_20261007/design.json'
-ROOT_ROW=272.16  # CLAUDE pq-rootcam 2026-10-08: grown root slot (was 164.16 / 133.92), = F.PQ_ROOT_ROW
-ROOT_SIZE=(132.192,241.92)
+ROOT_ROW=241.92  # CLAUDE pq-rootcam 2026-10-08: grown root slot (was 164.16 / 133.92), = F.PQ_ROOT_ROW; PAR 0 adopted
+ROOT_SIZE=(132.192,211.68)
 CORE_HEIGHT=449.28
 SRAM='physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef'
 ROM='physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef'
