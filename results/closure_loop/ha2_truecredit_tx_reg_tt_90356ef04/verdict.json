@@ -1,0 +1,192 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "ha2_truecredit_tx_reg_tt_90356ef04",
+ "block": "ot_ha2_truecredit_tx_phys",
+ "owner": "Claude:hbm-blocks",
+ "source_branch": "claude/hbm-blocks-mm-20261007",
+ "source_commit": "90356ef04302da331183825201c787e3fbfa149c",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 2.17,
+  "ff_ps": 6.77,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/ha2_truecredit_20261007/screening_signoff.sdc",
+   "physical/ha2_truecredit_20261007/tx_check_pins_signal_only.tcl"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/routes/ha2_truecredit_tx_reg_tt_90356ef04/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_truecredit_tx_reg_tt_90356ef04/routes/ha2_truecredit_tx_reg_tt_90356ef04/work/orfs/logs/asap7/opentallas_ot_ha2_truecredit_tx_phys_asap7_ha2_tc_tx/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_truecredit_reg1_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=7 ret=7 stalls=911 elapsed=948 credit_drain=9\nPASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=0 ret=0 stalls=897 elapsed=948 credit_drain=2\nPASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=64 ret=1 stalls=899 elapsed=948 credit_drain=3\nPASS_TRUECREDIT rows=640 injectors=2 width=544 fwd=7 ret=64 stalls=2069 elapsed=1996 credit_drain=66\nTC_REG1_PASS\n",
+   "track": "parallel"
+  },
+  "bench_truecredit_reg1_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_truecredit.sv:64: TRUECREDIT_FAULT tx=1 rx=0 cycle=229\n       Time: 2346000  Scope: tb_ha2_truecredit\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {},
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 2344,
+    "mean": 657.7,
+    "min": 641.2,
+    "max": 692.6
+   },
+   "all": {
+    "n": 2344,
+    "mean": 657.7,
+    "min": 641.2,
+    "max": 692.6
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 2344,
+    "mean": 433.4,
+    "min": 417.2,
+    "max": 463.9
+   },
+   "all": {
+    "n": 2344,
+    "mean": 433.4,
+    "min": 417.2,
+    "max": 463.9
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 658,
+   "CK_SS_ALL_MEAN": 658,
+   "CK_SS_MIN": 641,
+   "CK_SS_ALL_MIN": 641,
+   "CK_SS_MAX": 693,
+   "CK_SS_ALL_MAX": 693,
+   "CK_FF_MEAN": 433,
+   "CK_FF_ALL_MEAN": 433,
+   "CK_FF_MIN": 417,
+   "CK_FF_ALL_MIN": 417,
+   "CK_FF_MAX": 464,
+   "CK_FF_ALL_MAX": 464
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T03:42:42-07:00",
+ "job_spec": {
+  "name": "ha2_truecredit_tx_reg_tt_90356ef04",
+  "block": "ot_ha2_truecredit_tx_phys",
+  "owner": "Claude:hbm-blocks",
+  "purpose": "OPTION B (setup repair at TT, hold at FF): HA2 truecredit TX screening: sender REG=1 (pin-landed arrival/return +1 cycle each, registered issue_ready and reserved>sent) vs cal650 4071ff1d8 SS -385.58 (arrival_v -> 1,088-flop enable) / FF -3.01; adoption hold unchanged",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-pve1"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/hbm-blocks-mm-20261007",
+   "commit": "90356ef04302da331183825201c787e3fbfa149c",
+   "paths": [
+    "tools",
+    "rtl",
+    "physical/ha2_truecredit_20261007",
+    "physical/abi3",
+    "tests/test_ha2_truecredit_signal_pins.py"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "truecredit_reg1_exact",
+     "cmd": "F='rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv rtl/hbm_accel/ha2_ar/tb_ha2_truecredit.sv'; ok=1; for c in '7 7 192 16' '0 0 192 16' '64 1 192 16' '7 64 640 8'; do set -- $c; iverilog -g2012 -s tb_ha2_truecredit -Ptb_ha2_truecredit.FWD=$1 -Ptb_ha2_truecredit.RET=$2 -Ptb_ha2_truecredit.ROWS=$3 -Ptb_ha2_truecredit.TAGW=$4 -Ptb_ha2_truecredit.REG=1 -o {RUN}/tc.vvp $F && vvp -n {RUN}/tc.vvp | grep PASS_TRUECREDIT || ok=0; done; [ $ok = 1 ] && echo TC_REG1_PASS",
+     "expect": "pass",
+     "pass_regex": "TC_REG1_PASS",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "truecredit_reg1_mutant",
+     "cmd": "F='rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv rtl/hbm_accel/ha2_ar/tb_ha2_truecredit.sv'; iverilog -g2012 -s tb_ha2_truecredit -Ptb_ha2_truecredit.MUTANT=2 -Ptb_ha2_truecredit.REG=1 -o {RUN}/tm.vvp $F && vvp -n {RUN}/tm.vvp",
+     "expect": "fail",
+     "fail_regex": "TRUECREDIT_FAULT",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/ha2_truecredit_20261007/screening_signoff.sdc physical/ha2_truecredit_20261007/tx_check_pins_signal_only.tcl' OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; python3 tools/ha2_truecredit_physical_signalpins.py --part tx --threads 8 --run {RUN}/routes/{LABEL}_cal --cts-only",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/ha2_truecredit_20261007/screening_signoff.sdc physical/ha2_truecredit_20261007/tx_check_pins_signal_only.tcl' OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; python3 tools/ha2_truecredit_physical_signalpins.py --part tx --threads 8 --run {RUN}/routes/{LABEL}",
+    "ok": "test -s {RUN}/routes/{LABEL}/corner_sta.json && test \"$(cat {RUN}/routes/{LABEL}/build.exit)\" = 0 && test \"$(cat {RUN}/routes/{LABEL}/corner.exit)\" = 0",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log",
+     "{RUN}/routes/{LABEL}/corner.log"
+    ],
+    "peak_ram_gb": 24
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/routes/{LABEL}/launch.json {CL}/calib.json {RUN}/record/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/ha2_truecredit_20261007/screening_signoff.sdc",
+    "physical/ha2_truecredit_20261007/tx_check_pins_signal_only.tcl"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/physical/ha2_truecredit_20261007/tx_signalpins_d262ae872_tt"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05
+ }
+}

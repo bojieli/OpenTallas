@@ -11,12 +11,12 @@ module hfd_index_q_b5 (
   always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
   wire rn = rst_s[1];
   wire pv; wire [511:0] pq;
-  ot_svc_vpipe #(.W(512), .N(4)) u_kp (.ck(c), .rst_n(rn), .v(kin[0]), .d(kin[512:1]), .qv(pv), .q(pq));
+  ot_svc_vpipe #(.W(512), .N(5)) u_kp (.ck(c), .rst_n(rn), .v(kin[0]), .d(kin[512:1]), .qv(pv), .q(pq));
   reg [511:0] vm;
   always @(posedge c) if (pv) vm <= pq;
   assign t_vm = vm;
   wire a3v; wire [527:0] a3q;
-  ot_svc_vpipe #(.W(528), .N(3)) u_a3 (.ck(c), .rst_n(rn), .v(a3[0]), .d(a3[528:1]), .qv(a3v), .q(a3q));
+  ot_svc_vpipe #(.W(528), .N(4)) u_a3 (.ck(c), .rst_n(rn), .v(a3[0]), .d(a3[528:1]), .qv(a3v), .q(a3q));
   assign a3o = {a3q, a3v};
 endmodule
 `default_nettype wire
