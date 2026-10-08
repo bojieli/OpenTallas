@@ -1075,7 +1075,7 @@
       {
        "file": "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json",
        "pointer": "variants.*.nodes, phase_ledger",
-       "commit": "abc13767e"
+       "commit": "f42b1eb76"
       }
      ],
      "note": "qelem10 field vehicle on every region of every stage of both 1,792 mappings, 7 representative layers: 19,312 + 18,416 region runs, all exact; actual mixed221 die wire, per-phase block adders; BF half rate a composed upper bound (phase ledger: measured / composed / model-only). Feeds the actual1792 compositions"
@@ -1207,7 +1207,7 @@
       {
        "file": "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json",
        "pointer": "variants.half_dedicated.compositions.half_rate",
-       "commit": "abc13767e"
+       "commit": "f42b1eb76"
       }
      ],
      "adopted": false,
@@ -1263,7 +1263,7 @@
       {
        "file": "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json",
        "pointer": "variants.full_shared.compositions.half_rate",
-       "commit": "abc13767e"
+       "commit": "f42b1eb76"
       }
      ],
      "adopted": false,
@@ -1304,7 +1304,7 @@
      "record": {
       "file": "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json",
       "pointer": "variants.half_dedicated.compositions.published_per_phase",
-      "commit": "abc13767e"
+      "commit": "f42b1eb76"
      },
      "note": "FINDING (s81-fieldphase): the published composition is about 2.6 % optimistic -- re-based with the per-phase wire and block adders it is 1552.5 / 4591.8 instead of 1594.2 / 4696.0"
     },
@@ -3521,7 +3521,7 @@
   "results/rtl/s81_bf_root_phase_hierarchy_fix_20261007/actual_calibration_failure.json": "553fc5283adbd3a4fecd0a6e5adc464e793157c215e712a8831dc3b07e0e2e92",
   "results/rtl/s81_bf_root_phase_hierarchy_fix_20261007/record.json": "9bfc15fdc16e70d44dba5505d74ed9a4dcd11d5113f5fa443c834f8933551898",
   "results/rtl/s81_pq_root_cam_20261007/record.json": "b41254837a2b5c70675a13846ecb505c4db8bcaa2c7cea9794989297f479484e",
-  "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json": "5946003df8b8c673c785028c4cbb68ad1b9248913202ba3bbc28b89ddf2bc594",
+  "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json": "2a1724ef0fb2c197b3fdedbba7b94995be51f42ac3c27232e7aa03b3bd4f9cf5",
   "results/uarch/dsrom_s81_field_phases_1792_20261007/composition_basis_39e424990.json": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "results/uarch/dsrom_s81_mixed1792_mapping_20261007/full_shared/inventory.json": "98e61b29fe043a6ba665a69a57ab387bd6212c19f8f85fc85e34ab72a09459b6",
   "results/uarch/dsrom_s81_mixed1792_mapping_20261007/half_dedicated/inventory.json": "37e1429b3213f458dd8b2863ec6b2ff3629b069e7239e083237ae2f9e67b0a56",
