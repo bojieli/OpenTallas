@@ -140,9 +140,22 @@ def rpath(host, path):
     return path if is_local(host) else f"{host}:{path}"
 
 
-def gfetch(*refs, timeout=600):
-    with GIT_LOCK:
-        return sh(["git", "-C", str(REPO), "fetch", "-q", "origin", *refs], timeout=timeout)
+def gfetch(*refs, timeout=600, tries=3):
+    """Fetch refs into origin/<ref>.  The object store is the shared checkout, where another git process can hold a
+    ref lock; an unchecked failed fetch left origin/main stale and sent pq_r128_expanded_b1528203c to NEEDS_HUMAN
+    "not on origin/main" for a commit already on main (10-07 11:43).  Retry, update the tracking refs explicitly,
+    and log a fetch that still fails."""
+    spec = [f"+refs/heads/{r}:refs/remotes/origin/{r}" for r in refs]
+    r = None
+    for attempt in range(tries):
+        with GIT_LOCK:
+            r = sh(["git", "-C", str(REPO), "fetch", "-q", "origin", *spec], timeout=timeout)
+        if r.returncode == 0:
+            return r
+        if attempt + 1 < tries:
+            time.sleep(5 * (attempt + 1))
+    log(f"git fetch {' '.join(refs)} failed after {tries} tries (rc={r.returncode}): {r.stderr.strip()[-300:]}")
+    return r
 
 
 def git(*args, timeout=900, check=True, cwd=None):
@@ -907,6 +920,10 @@ def sync_source(j):
     gfetch(src["branch"], timeout=600)
     full = git("rev-parse", "--verify", f"{src['commit']}^{{commit}}").stdout.strip()
     anc = sh(["git", "-C", str(REPO), "merge-base", "--is-ancestor", full, f"origin/{src['branch']}"], timeout=120)
+    if anc.returncode:   # confirm against a fresh fetch before calling a human: the tracking ref may be stale
+        gfetch(src["branch"], timeout=600)
+        anc = sh(["git", "-C", str(REPO), "merge-base", "--is-ancestor", full, f"origin/{src['branch']}"],
+                 timeout=120)
     if anc.returncode:
         raise ValueError(f"source commit {full[:12]} is not on origin/{src['branch']}")
     j["commit_full"] = full
@@ -1724,7 +1741,7 @@ def step(j, fleet):
             finish(j, "NEEDS_HUMAN", str(ex), f"NEEDS_HUMAN: {ex}")
             return
         event(j, f"source {j['commit_full'][:12]} synced to {j['host']}:{j['run']}/src")
-        j["status"] = "READY"
+        j["status"], j["reason"] = "READY", None   # drop a stale failure reason (e.g. an earlier "not on origin")
         return
     if s == "READY":
         st = stl[j["stage_idx"]]
