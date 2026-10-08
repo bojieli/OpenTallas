@@ -3158,6 +3158,13 @@ def buses_r8(m):
         face = face_need(ins + outs + [1, 1, 1, 1])
         h = up(max(face, 30.24), GY)
         w = up(max(30.24, bits * 3.0 / h, face), GX)
+        if kind == 'm2l' and PQ_PLACE:
+            # S81-DIE (m221pq hend views): a d8g1 meso lane FIFO maps to 16.5-18.4 um2 of cells per lane bit (closure-loop
+            # calibrate runs s81-hend-m221pq-hl-*/hr-*: 8,440 um2 for 512 b, 13,794 um2 for 11 x 68 b), so the 3 um2/b
+            # outline placed it at 100-211 %; sized at ~55 % (33 um2 per bit), square
+            side = math.sqrt(bits * M2L_UM2_PER_BIT)
+            h = up(max(face, side), GY)
+            w = up(max(face, bits * M2L_UM2_PER_BIT / h), GX)
         return name, w - SHAVE, h - SHAVE
     # x root: VM -> two serial->stream CDC start blocks (W channel / VCH)
     # (--pq-place: the PQ core is the lane source; its W / E faces drive the two start blocks)
@@ -3361,6 +3368,7 @@ PQ_VMR = 2069 + 93              #   VM read (S face) + issuer, design.json pq_co
 PQ_CFG = 458 + 50               #   cfg replica out + fault / status to the gather-side RWBs
 PQ_RCNT = 192                   #   row counts in (12 RWB x 16)
 PQ_ROMS = 3                     #   2 phase + 1 stream ot_rom_4096x72 (real cfg-ROM LEF) at the core's E end
+M2L_UM2_PER_BIT = 33.0           #   d8g1 meso end block outline per lane bit at ~55 % util (measured 16.5-18.4 cells)
 PQ_ROOT_W = 17460e-12 * 2.0e6   #   root power: est. area 17,460 um2 at the 2.0 W/mm2 field peak density (budget)
 GEOMETRY_FIX = False            # --geometry-fix: canonical station outlines and bounded bundled pin depth
 HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491 um at 833.333 ps SS)
