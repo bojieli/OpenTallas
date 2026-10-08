@@ -49,3 +49,10 @@ Conditional (priced, NOT in the total until the variant is the one that closes):
 - HA2 half-rate own-partial credit (a916e3f475e4d7ff2): +46 cycles per owner-reduction transaction (DS TP-96 NC8 PF384); x the exposed owner reductions per token (collective terms, 265) = 12,190 cyc = 10.16 us = +1.89 % AR if adopted.
 - SU reducer half-rate RHALF (hbm-su, phase-locked cae10b8fb, EXACT at full shape both parities): +145 cycles per DS1M CP+c12 stage (+137 Qwen8K) vs the margin config; perf64 +146 per reduction chain -- only if the SAFE reducer (+4 per reduction) misses and the N16/N64 campaigns + redh routes close.
 - su_full DDIV 31: +10 cycles per divide op (DIVB / DIVIMM / SIGM / SILU / softplus / EGATE) -- only if hbm_su_full31 is the route that closes.
+
+## 2026-10-07 ~20:00 die relay instancing (hbm-die stream, branch claude/hbm-die-20261007)
+| item | cycles/token | AR % | cumulative AR % |
+|---|---|---|---|
+| relay station at EVERY die pin with a > 100 um segment (BRIEF rule; +216 net relay ends over r22 relay_ends.json: +274 added, VM seam ends whose pins abut dropped) + channel-following wire stages (stages placed on a macro-avoiding path: +708 over the box-to-box budget count) | 12269 | 1.829 | 9.03 |
+
+Priced with tools/hbm_die_relay_price.py on the r23c b_k16_i50 GRT record (stages_430 key: AR 558.866 -> 569.090 us, +10.224 us; median-bundle key +2.18 %, manhattan key +2.20 %). Upper bound: the extra stages are counted against the box-to-box Manhattan budget, while the wire-priced base already carries part of the detour. Evidence: results/physical/hbm_die_20261007/relay_sta_r23/ (the relay-staged die meets SS and FF on every path outside the interim SM / attn_tile / router views).
