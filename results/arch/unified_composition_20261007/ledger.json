@@ -377,7 +377,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "baseline",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "rounded tok/s basis; measured share 0.9999"
@@ -396,7 +396,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[s81_die]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "die/geometry pricing; DRT/SS/FF pending"
@@ -415,7 +415,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[meso_d8g1]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -434,7 +434,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[ctrl_status]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -453,7 +453,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[collective_lane]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -472,7 +472,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[link_split]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "die/geometry pricing; DRT/SS/FF pending"
@@ -491,7 +491,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[sel_xstg]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -510,7 +510,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[vm_bank_group]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -529,7 +529,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[gather_root_v4]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -548,7 +548,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[capture]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -567,7 +567,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[selector]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -586,7 +586,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[collector]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -605,7 +605,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[svc_io]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -624,7 +624,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[softmax_safe_div]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -643,7 +643,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[bf_rowfix]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -662,10 +662,29 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[pq_qelem]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "die/geometry pricing; DRT/SS/FF pending"
+    },
+    {
+     "id": "closure_softmax_exp_recut",
+     "item": "Softmax exp tile closed only with RECUT (dsrom_softmax_safe_exprcf_bd30aca4a CLOSED SS +123.11 / FF +16.70, f12r multiplier/adder +2 cuts, LAT 11): attn.exp 225",
+     "status": "measured",
+     "effect": {
+      "unit": "us",
+      "AR": 1.015,
+      "MTP_step": 1.125
+     },
+     "role": "published",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[softmax_exp_recut]",
+       "commit": "9581a871a"
+      }
+     ],
+     "note": "block-measured cycles x op counts"
     },
     {
      "id": "closure_su_meso_d8g1",
@@ -673,15 +692,15 @@
      "status": "measured",
      "effect": {
       "unit": "us",
-      "AR": 1.916,
-      "MTP_step": 2.158
+      "AR": 1.883,
+      "MTP_step": 2.164
      },
      "role": "published",
      "source": [
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[su_meso_d8g1]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "block-measured cycles x op counts"
@@ -755,15 +774,15 @@
      "status": "priced-candidate",
      "effect": {
       "unit": "us",
-      "AR": 110.519,
-      "MTP_step": 127.479
+      "AR": 111.498,
+      "MTP_step": 128.613
      },
      "role": "alternative",
      "source": [
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "candidates[bf_half]",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "priced BF16-phase doubling only (q phases on q pairs unchanged); on shared pairs the q words on BF pairs (20.6 %) would also halve and are not priced. With the field phases of the 1792 geometry unmeasured, this proves no overall bound in either direction; zero added logic cycles (physical/s81_bf_root_phase/model.json)"
@@ -970,7 +989,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "items[s81_die].description",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "global-route feasibility only"
@@ -1015,7 +1034,7 @@
       {
        "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
        "pointer": "unpriced_candidates",
-       "commit": "8d485e23b"
+       "commit": "9581a871a"
       }
      ],
      "note": "whole-domain clock/CDC contract and full-shape composition missing"
@@ -1038,10 +1057,10 @@
      "note": "closure-cost ledger TOTAL on the historical 85-stage full-rate-BF geometry"
     },
     "actual1792_half_dedicated": {
-     "AR_us": 766.286,
-     "MTP_step_us": 1041.491,
-     "AR_tok_s": 1305.0,
-     "MTP_tok_s": 3993.3,
+     "AR_us": 767.265,
+     "MTP_step_us": 1042.625,
+     "AR_tok_s": 1303.3,
+     "MTP_tok_s": 3989.0,
      "tau": 4.159,
      "stages": 120,
      "dies": 480,
@@ -1084,10 +1103,10 @@
      "note": "published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured"
     },
     "actual1792_full_shared": {
-     "AR_us": 747.751,
-     "MTP_step_us": 1022.956,
-     "AR_tok_s": 1337.3,
-     "MTP_tok_s": 4065.7,
+     "AR_us": 748.73,
+     "MTP_step_us": 1024.09,
+     "AR_tok_s": 1335.6,
+     "MTP_tok_s": 4061.2,
      "tau": 4.159,
      "stages": 98,
      "dies": 392,
@@ -1165,8 +1184,8 @@
        "dies": 480,
        "pairs_per_layer_die": 1792,
        "bf_rate": "half",
-       "AR_tok_s": 1305.0,
-       "MTP_tok_s": 3993.3,
+       "AR_tok_s": 1303.3,
+       "MTP_tok_s": 3989.0,
        "status": "partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
        "bound": "none proven"
       },
@@ -1180,8 +1199,8 @@
        "dies": 392,
        "pairs_per_layer_die": 1792,
        "bf_rate": "half",
-       "AR_tok_s": 1337.3,
-       "MTP_tok_s": 4065.7,
+       "AR_tok_s": 1335.6,
+       "MTP_tok_s": 4061.2,
        "status": "partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
        "bound": "none proven"
       }
@@ -2351,8 +2370,8 @@
   },
   "ds_rom_1792_half_dedicated_over_hbm_unified": {
    "note": "partial-priced sensitivity (unmeasured field phases), no bound proven",
-   "AR": 0.7382,
-   "MTP": 1.0628
+   "AR": 0.7372,
+   "MTP": 1.0617
   },
   "stale": {
    "record": {
@@ -2845,7 +2864,7 @@
   "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
   "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json": "20df9f7983c7cfead0614690552559bd2844e72b33c324ecfaa05f3ebdfb3db6",
   "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json": "4f72b37c0584b82a3b9f91b8c9cbbe1e8911d66020e982d5b4bde3e7849b03c6",
-  "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json": "350feb5364266f4a5d27ee99abf3a3f05b93217064798da0e98d296c13869f67",
+  "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json": "aa3d3a3b57aaca35ecfd4885919bed1a220e42b2c5228a7a90046eb0a738a529",
   "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.md (branch claude/dsrom-bf-double-20261007)": "not in this tree (pinned by the commit cited at the line)",
   "results/rtl/dsrom_s81_fulldie_20261004/STATUS.md": "bf088160ea8f55a4f1a79837ef334f4fa7c37636648b74047182c1db6285bcdc",
   "results/rtl/dsrom_s81_fulldie_20261004/v9d/feasibility.json": "44ec44d1ba30ab54227e043ff2d54bd59e36da0aeeef40ec05963d4b067aae6e",
