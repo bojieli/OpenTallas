@@ -239,6 +239,9 @@ module ot_qwen_me_spctl_w12 #(
     //         g = b * 2^(TCUT+3-s) + k (k < 2^(TCUT+3-s)) at split s <= TCUT+3, else g = k on band 0 (k < GT >> s);
     //         the scale requests use g (rows, scale address, in-range test).  Needs GT = 48 << TCUT, SMIN >= TCUT.
     parameter integer RX = 0,
+    //   RXA   the argmax-accumulator clear's delay (default RX): the result shift relative to the op's ISSUE, which is
+    //         RX minus any reduction of XD (a caller that makes the tree selects early by lowering XD passes RXA itself)
+    parameter integer RXA = RX,
     parameter integer BANDF = 0
 ) (
     input  wire              clk,
@@ -904,10 +907,10 @@ end endgenerate
     wire [31:0]   top_val = top_key[31] ? {1'b0, top_key[30:0]} : ~top_key;
     wire [NW-1:0] top_idx = top[NW-1:0];
     reg [31:0] best_key;
-    //: the accumulator clear of an amax op at its issue (RX > 0: RX edges later, with the results)
+    //: the accumulator clear of an amax op at its issue (RXA > 0: RXA edges later, with the results)
     wire am_clr;
-    generate if (RX > 0) begin : g_amc
-        ot_hdc_delay #(.W(1), .D(RX), .RESET(1)) u_amc (.clk(clk), .rst_n(rst_n), .d(go && ready && i_amax), .q(am_clr));
+    generate if (RXA > 0) begin : g_amc
+        ot_hdc_delay #(.W(1), .D(RXA), .RESET(1)) u_amc (.clk(clk), .rst_n(rst_n), .d(go && ready && i_amax), .q(am_clr));
     end else begin : g_amc0
         assign am_clr = go && ready && i_amax;
     end endgenerate

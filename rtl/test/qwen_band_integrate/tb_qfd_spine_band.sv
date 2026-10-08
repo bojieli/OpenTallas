@@ -17,6 +17,7 @@ module tb_qfd_spine_band;
     parameter integer W = 16, IL = 8, AW = 24, NW = 18;
     parameter integer TCUT = 3, GT = 48 << TCUT, TG = 4, SMIN = TCUT, SMAX = TCUT + 6, NS = 8;
     parameter integer LNK = 0, CLNK = 0, BMUT = 0, UMUT = 0, PBANDF = 1, DMUT = 0;
+    parameter integer QB = 8;              // quiet windows: 2^QB of every 2^(QB+2) engine edges without issue
     parameter integer BD = 4, XVM = 1, NWS = 1, TWS = 2, ORD = 1, MEM_EXTRA = 0, SCALE_LOCAL = 0;
     parameter integer ACC_LAT = 7, TREE_LAT = 7, MUL_LAT = 6, FAST_ISSUE = 1, KV_PREP = 3;
     parameter integer MAXT = 3, MAXK = 4, SEED = 1, SMUT = 0, CYCLES = 30000, DB = 16, RSD = 4, CRB = 4;
@@ -54,14 +55,16 @@ module tb_qfd_spine_band;
     always @(posedge gclk) begin
         if (!rst_n) go <= 1'b0;
         else begin
-            go <= stim_on && (ecyc[9:8] != 2'd3) && (($urandom % 4) == 0);   // quiet windows: the units go idle
+            go <= stim_on && (ecyc[QB+1 -: 2] != 2'd3) && (($urandom % 4) == 0);   // quiet windows: the units go idle
             i_tiles <= 1 + ($urandom % MAXT); i_k <= 1 + ($urandom % MAXK);
-            i_nout <= $urandom % ((GT * W * IL) < (1 << NW) ? (GT * W * IL) : (1 << NW)); i_wsrc <= ($urandom % 3) == 0; i_round <= $urandom % 2;
+            i_wsrc <= ($urandom % 3) == 0; i_round <= $urandom % 2;
             i_mmode <= ($urandom % 4) == 0; i_oen <= ($urandom % 8) != 0;
             i_amax <= ($urandom % 3) == 0; i_rmax <= ($urandom % 4) == 0;
             i_wbase <= $urandom; i_ts <= $urandom; i_ks <= $urandom; i_js <= $urandom; i_xbase <= $urandom;
             i_xks <= $urandom; i_xjs <= $urandom; i_xcs <= $urandom; i_wcs <= $urandom;
-            i_obase <= $urandom % 1024; i_ots <= $urandom % 32; i_ojs <= $urandom % 32;
+            // result rows stay inside the bench memory (ELEMS / 16 rows; a row past it would alias in the VM)
+            i_nout <= $urandom % 8192;
+            i_obase <= $urandom % 512; i_ots <= $urandom % 4; i_ojs <= $urandom % 4;
             i_mbase <= 50000 + ($urandom % 8192); i_jsh <= $urandom % 4;
             i_split <= SMIN + ($urandom % (SMAX - SMIN + 1));
         end
@@ -141,9 +144,11 @@ module tb_qfd_spine_band;
     reg [511:0] shadow [0:ELEMS/16-1];
     reg         touched [0:ELEMS/16-1];
     integer r, sb;
+    integer oob = 0;
     always @(posedge gclk) if (rst_n) begin
         for (g = 0; g < NPG; g = g + 1) if (a_o_we[g]) begin
             r = a_o_addr[g*AW +: AW];
+            if (r >= ELEMS / 16) oob = oob + 1;
             if (r < ELEMS / 16) begin
                 for (l = 0; l < W; l = l + 1) if (a_o_mask[g*W + l]) refm[r][32*l +: 32] = a_o_data[(g*W + l)*32 +: 32];
                 touched[r] = 1'b1;
@@ -255,12 +260,12 @@ module tb_qfd_spine_band;
         for (i = 0; i < ELEMS / 16; i = i + 1) if (touched[i] && shadow[i] !== refm[i]) img_bad = img_bad + 1;
         for (i = SMIN; i <= SMAX; i = i + 1) $display("split %0d ops %0d", i, split_ops[i]);
         if (mism == 0 && prog_ahead == 0 && ovbad == 0 && idle_bad == 0 && img_bad == 0 && !(|l_fault) && !m_wf && !m_wh &&
-            !m_xf && !m_xh && results > 300 && idle_checks > 5 && rows_cmp > 0)
+            !m_xf && !m_xh && results > 300 && idle_checks > 5 && rows_cmp > 0 && oob == 0)
             $display("PASS qfd_spine_band GT=%0d TCUT=%0d splits=%0d..%0d LNK=%0d CLNK=%0d RD=%0d engine_edges=%0d ops=%0d bursts=%0d rows=%0d landed=%0d idle_checks=%0d",
                      GT, TCUT, SMIN, SMAX, LNK, CLNK, RD, ecyc, ops, results, rows_cmp, land_cnt, idle_checks);
         else
-            $display("FAIL qfd_spine_band mism=%0d first=%0d/%0d burst_bad=%0d prog_ahead=%0d ovbad=%0d idle_bad=%0d img_bad=%0d faults ser%b w%0d wh%0d bursts=%0d rows=%0d idle_checks=%0d",
-                     mism, first_bad >> 8, first_bad & 8'hff, burst_bad, prog_ahead, ovbad, idle_bad, img_bad, l_fault, m_wf, m_wh, results, rows_cmp, idle_checks);
+            $display("FAIL qfd_spine_band oob=%0d mism=%0d first=%0d/%0d burst_bad=%0d prog_ahead=%0d ovbad=%0d idle_bad=%0d img_bad=%0d faults ser%b w%0d wh%0d bursts=%0d rows=%0d idle_checks=%0d",
+                     oob, mism, first_bad >> 8, first_bad & 8'hff, burst_bad, prog_ahead, ovbad, idle_bad, img_bad, l_fault, m_wf, m_wh, results, rows_cmp, idle_checks);
         $finish;
     end
 endmodule
