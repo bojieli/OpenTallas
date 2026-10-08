@@ -65,6 +65,28 @@
    "note": " | 2026-10-07 23:10: new runs on the empty /srv/opentallas-data NVMe (2.9 TB); scratch2 keeps running jobs."
   },
   {
+   "name": "ot-epyc4",
+   "label": "EPYC4",
+   "cores": 128,
+   "cap": 384,
+   "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop",
+   "max_job_threads": 64,
+   "max_job_ram_gb": 900,
+   "min_free_disk_gb": 200,
+   "caps": [
+    "verilator",
+    "yosys",
+    "iverilog",
+    "orfs"
+   ],
+   "ram_gb": 1133,
+   "disk_roots": {
+    "/": 100,
+    "/srv/opentallas-scratch": 200
+   },
+   "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path)."
+  },
+  {
    "name": "ot-pve1",
    "label": "PVE1",
    "cores": 28,

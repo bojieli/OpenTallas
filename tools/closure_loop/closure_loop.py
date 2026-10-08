@@ -636,7 +636,12 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         for delay in (0, 5, 15):
             if delay:
                 time.sleep(delay)
-            r = ssh(host, TOOLPROBE, timeout=90)
+            try:
+                r = ssh(host, TOOLPROBE, timeout=90)
+            except subprocess.TimeoutExpired:
+                # gaps-design 2026-10-08: an unreachable host (PVE1 'No route to host' 02:1x PT) raised out of tick()
+                # and crash-looped the daemon; a timed-out probe is a failed probe (last-good toolchain applies)
+                break
             if r.returncode == 0:
                 info = dict(l.split("=", 1) for l in r.stdout.splitlines() if "=" in l)
                 break
@@ -1633,6 +1638,7 @@ def job_held(j):
 
 def job_priority(j):
     """STATE/priority.json {job name: int} (coordinator steering; default 0) or spec "priority" """
+    return 0    # OWNER 2026-10-08 02:30: priority mechanism REMOVED (377 entries idled EPYC1/2/4); every job equal
     try:
         table = json.loads((STATE / "priority.json").read_text())
     except (FileNotFoundError, ValueError):
@@ -1644,6 +1650,7 @@ def yield_to_priority(j, fleet, host=None):
     """a job below a priority job still waiting for capacity does not take a host THAT JOB CAN USE (host-scoped:
     20:05 a fleet-wide yield idled every host).  host None (QUEUED, no host yet): yield only if every host this job
     could take is wanted by a waiting priority job."""
+    return False    # OWNER 2026-10-08 02:30: never yield; fill the fleet
     waits = getattr(fleet, "prio_hosts", {})      # host -> highest waiting priority that can use it
     mine = job_priority(j)
     if host is not None:
