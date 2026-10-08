@@ -98,6 +98,13 @@ module ot_ha2_ar_endpoint #(
     localparam integer OFW  = (OF > 1) ? $clog2(OF) : 1;
     localparam integer NREP = 4;                      // duplicated staging registers (fan-out split)
 
+    // golden to_bf16: (b + 0x7FFF + ((b >> 16) & 1)) >> 16
+    function automatic [15:0] bf16(input [31:0] b);
+        reg [32:0] s;
+        s = {1'b0, b} + 33'h7FFF + {32'b0, b[16]};
+        bf16 = s[31:16];
+    endfunction
+
     generate if (ENABLE == 0) begin : g_off
         assign inj_idx = '0; assign inj_rd = '0; assign tx_valid = '0; assign tx_flit = '0;
         assign rx_credit = '0; assign del_valid = '0; assign del_flit = '0; assign fault = 1'b0;
@@ -302,12 +309,6 @@ module ot_ha2_ar_endpoint #(
         wire [15:0] ti_d;
         ot_ha2_delay #(.W(16), .D(LAT * LV)) u_tidx (.clk(clk), .rst_n(rst_n), .v_in(issue), .d_in(16'(rptr)),
             .v_out(ti_v), .d_out(ti_d));
-        // golden to_bf16: (b + 0x7FFF + ((b >> 16) & 1)) >> 16
-        function automatic [15:0] bf16(input [31:0] b);
-            reg [32:0] s;
-            s = {1'b0, b} + 33'h7FFF + {32'b0, b[16]};
-            bf16 = s[31:16];
-        endfunction
         reg [FW-1:0] hold;
         reg          r_v;
         reg [15:0]   r_m;
@@ -361,13 +362,14 @@ module ot_ha2_ar_endpoint #(
         integer grot;
         reg [NGL-1:0] gglob;                          // relay grant (one-hot over global ports)
         always @* begin : rly_pick
-            integer s;
+            integer s, q;
+            s = 0;
             gglob = '0;
-            if (!ONESHOT && rly_room)
-                for (integer q = 0; q < NGL; q = q + 1) begin
-                    s = grot + q; if (s >= NGL) s = s - NGL;
-                    if (gglob == 0 && !rb_empty[NL + s] && rb_head[NL + s][PWT-1]) gglob[s] = 1'b1;
-                end
+            for (q = 0; q < NGL; q = q + 1) begin
+                s = grot + q; if (s >= NGL) s = s - NGL;
+                if (gglob == 0 && !rb_empty[NL + s] && rb_head[NL + s][PWT-1]) gglob[s] = 1'b1;
+            end
+            if (ONESHOT || !rly_room) gglob = '0;
         end
         always @* rq_pop = !rq_empty && own_room;
         always @(posedge clk or negedge rst_n)
@@ -393,27 +395,39 @@ module ot_ha2_ar_endpoint #(
         reg [DEL-1:0] dv;
         reg [PWT-1:0] dfl [0:DEL-1];
         integer drot [0:DEL-1];
-        function automatic dreq(input integer s);
-            if (s < NL) dreq = !rb_empty[s] && rb_head[s][PWT-1];
-            else if (s == NL) dreq = !dq_own_empty;
-            else dreq = !dq_rly_empty;
-        endfunction
+        // request vector over the sources, padded to DEL x SPL with zeros
+        wire [DEL*SPL-1:0] dreq;
+        wire [PWT-1:0] dsrc [0:DEL*SPL-1];
+        for (genvar s = 0; s < DEL * SPL; s = s + 1) begin : g_dreq
+            if (s < NL) begin : g_l
+                assign dreq[s] = !rb_empty[s] && rb_head[s][PWT-1];
+                assign dsrc[s] = rb_head[s];
+            end else if (s == NL) begin : g_o
+                assign dreq[s] = !dq_own_empty;
+                assign dsrc[s] = dq_own_head;
+            end else if (s == NL + 1) begin : g_r
+                assign dreq[s] = !dq_rly_empty;
+                assign dsrc[s] = dq_rly_head;
+            end else begin : g_z
+                assign dreq[s] = 1'b0;
+                assign dsrc[s] = '0;
+            end
+        end
+        reg [DEL*SPL-1:0] dg;                         // grants, at most one a lane
         always @* begin : dpick
-            integer s;
-            dgrant = '0;
+            integer t, u;
+            t = 0; u = 0;
+            dg = '0;
             for (integer j = 0; j < DEL; j = j + 1)
-                for (integer i = 0; i < SPL; i = i + 1) begin
-                    s = drot[j] + i; if (s >= SPL) s = s - SPL;
-                    s = j + DEL * s;
-                    if (s < NDS && dreq(s)) begin : take
-                        reg already;
-                        already = 1'b0;
-                        for (integer t = 0; t < SPL; t = t + 1)
-                            if (j + DEL * t < NDS && dgrant[j + DEL * t]) already = 1'b1;
-                        if (!already) dgrant[s] = 1'b1;
+                for (integer i = SPL - 1; i >= 0; i = i - 1) begin   // lowest rotated index wins
+                    t = drot[j] + i; if (t >= SPL) t = t - SPL;
+                    if (dreq[j + DEL * t]) begin
+                        for (u = 0; u < SPL; u = u + 1) dg[j + DEL * u] = 1'b0;
+                        dg[j + DEL * t] = 1'b1;
                     end
                 end
         end
+        always @* dgrant = dg[NDS-1:0];
         always @* begin
             dq_own_pop = dgrant[NL];
             dq_rly_pop = dgrant[NL + 1];
@@ -427,10 +441,9 @@ module ot_ha2_ar_endpoint #(
                     dv[j] <= 1'b0;
                     drot[j] <= (drot[j] + 1 >= SPL) ? 0 : drot[j] + 1;
                     for (integer t = 0; t < SPL; t = t + 1)
-                        if (j + DEL * t < NDS && dgrant[j + DEL * t]) begin
+                        if (dg[j + DEL * t]) begin
                             dv[j] <= 1'b1;
-                            dfl[j] <= (j + DEL * t < NL) ? rb_head[j + DEL * t]
-                                    : (j + DEL * t == NL) ? dq_own_head : dq_rly_head;
+                            dfl[j] <= dsrc[j + DEL * t];
                         end
                 end
         for (genvar i = 0; i < DEL; i = i + 1) begin : g_del
@@ -452,6 +465,7 @@ module ot_ha2_ar_endpoint #(
             integer f, s, lane;
             reg [4:0] tp;
             reg [NP-1:0] used;
+            f = 0; s = 0; lane = 0; tp = '0;
             qp_push = '0; iq_pop = '0; used = '0;
             for (integer p = 0; p < NP; p = p + 1) qp_din[p] = '0;
             for (integer i = 0; i < INJ; i = i + 1)
@@ -518,4 +532,24 @@ module ot_ha2_ar_endpoint #(
         end
         assign fault = anyovf | dupe;
     end endgenerate
+endmodule
+
+// Parameter-free physical top: the DS-V4.1 TP-96 endpoint (20 ports, NC 8, LAT 7) as routed.  Hub wire stages
+// (35 a direction) are channel repeater flops priced in the floorplan, so HUBW = 1 here; the credit pool and
+// queue stores are 4 deep (registered heads keep the store depth off every arbitration path; the 128-deep pool
+// is an SRAM store priced separately).
+module ot_ha2_ar_endpoint_ds_phys (
+    input  wire clk, rst_n, input wire [7:0] rank, input wire go,
+    output wire [31:0] inj_idx, output wire [1:0] inj_rd, input wire [1023:0] inj_data,
+    output wire [19:0] tx_valid, output wire [20*537-1:0] tx_flit, input wire [19:0] cr_ret,
+    input  wire [19:0] rx_valid, input wire [20*537-1:0] rx_flit, output wire [19:0] rx_credit,
+    output wire [3:0] del_valid, output wire [4*537-1:0] del_flit, output wire fault,
+    output wire [31:0] stat_credit_stall
+);
+    ot_ha2_ar_endpoint #(.ENABLE(1), .GS(16), .NG(6), .NC(8), .NOG(8), .E(1024), .LANES(16), .ONESHOT(0),
+        .BF16(1), .INJ(2), .DEL(4), .HUBW(1), .RXAW(2), .QAW(2), .IQAW(2), .LAT(7))
+      u (.clk(clk), .rst_n(rst_n), .rank(rank), .go(go), .inj_idx(inj_idx), .inj_rd(inj_rd), .inj_data(inj_data),
+         .tx_valid(tx_valid), .tx_flit(tx_flit), .cr_ret(cr_ret), .rx_valid(rx_valid), .rx_flit(rx_flit),
+         .rx_credit(rx_credit), .del_valid(del_valid), .del_flit(del_flit), .fault(fault),
+         .stat_credit_stall(stat_credit_stall));
 endmodule
