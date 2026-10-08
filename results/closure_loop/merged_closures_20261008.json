@@ -5,12 +5,12 @@
  "scope": "CLOSED closure-loop jobs since 2026-10-07 20:45 PT (option B), minus revoked / adoption-held / bench-failed",
  "main_after_merge": "110e635304ea02513abd0043956a228c15c85ea5",
  "counts": {
-  "closed": 192,
+  "closed": 193,
   "revoked": 9,
   "held": 0,
   "bench_failed": 0,
   "already_on_main": 71,
-  "merged": 112
+  "merged": 113
  },
  "notes": [
   "Records of the codex/qwen-ctrl-kvc-final 74d839a79 qfd_ctrl_pc_NN routes conflict with main's physical/qwen_die_masters/views/qfd_ctrl_pc_NN and signoff/qfd_ctrl_pc_NN.sdc (ready_hbm design, 3d5ad2a4f / 216a06602): main's views and SDCs kept; codex record commits are ancestors of main but their view files are not the live ones.",
@@ -2546,6 +2546,20 @@
    "source_on_main": false,
    "record_on_main": false,
    "merged_sha": "(drive-0958 merge, see ready_to_merge)",
+   "status": "merged"
+  },
+  {
+   "job": "qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt",
+   "closed": "2026-10-08 11:47:31-07:00",
+   "closed_by": "closure loop (cx station delay-matched forward FWD_INV=7, RVT, variant a, TC route; TT +6.19 / FF +16.31 / DRC 0 at the routed insertion; was LVT a TT -16.25). Alternative fwd5_lvt_f92a58eb4 also CLOSED TT +0.51 / FF +16.56 (not adopted: LVT, smaller margin); fwd5 RVT NEEDS_RTL TT -12.58",
+   "branch": "claude/drive-1113-cxstn-20261008",
+   "source_commit": "13b4b9fb144b43a52a4d13aba8406fe3a97fef9e",
+   "record_commit": "d058a69c3",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "(merge-cxstn: station files only from 1c3be936a/97d3a4233/13b4b9fb1; redesign-2 VM split8 + face-chain stagger NOT merged)",
    "status": "merged"
   }
  ]
