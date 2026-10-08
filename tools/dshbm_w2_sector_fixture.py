@@ -18,9 +18,9 @@ from rtl_gpu_sm_exact import issue_order
 
 def emit(service,weights,installed,out):
     out.mkdir(parents=True,exist_ok=False)
-    # Original allocator/byte emitter, private RAM fixture ONLY. L=0 means no
-    # transformer compilation; Program.__init__/put/wr run unchanged, no model,
-    # checkpoint, arithmetic or reconstructed installer authority.
+    # Inputs are the actual Erdős installer overlays and literal CSV addresses.
+    # Reuse only original Program.put for the unit output span after those
+    # installed extents; no transformer/model/checkpoint construction.
     source=Path(__file__).resolve().parent/'gpu_sys/v41_hbm.py'
     cls=next(n for n in ast.parse(source.read_text()).body if isinstance(n,ast.ClassDef) and n.name=='Program')
     put=next(n for n in cls.body if isinstance(n,ast.FunctionDef) and n.name=='put')
