@@ -3253,7 +3253,91 @@
    },
    "boundary_n": 793,
    "budget": null
+  },
+  "dsfd_m2l_vr_68x11__hr_E1": {
+   "job": "s81-hend-m221pq-hr-E1-a1f23fa0b-mm",
+   "source_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-E1-a1f23fa0b-mm",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-08T05:40:30-07:00",
+   "ss": {
+    "mean": 281,
+    "min": 267,
+    "max": 288
+   },
+   "ff": {
+    "mean": 171,
+    "min": 160,
+    "max": 177
+   },
+   "boundary_n": 793,
+   "budget": null
+  },
+  "dsfd_m2l_vr_68x11__hr_E4": {
+   "job": "s81-hend-m221pq-hr-E4-a1f23fa0b-mm",
+   "source_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-E4-a1f23fa0b-mm",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-08T05:40:30-07:00",
+   "ss": {
+    "mean": 280,
+    "min": 260,
+    "max": 292
+   },
+   "ff": {
+    "mean": 171,
+    "min": 156,
+    "max": 181
+   },
+   "boundary_n": 793,
+   "budget": null
+  },
+  "dsfd_m2l_vr_68x11__hr_E3": {
+   "job": "s81-hend-m221pq-hr-E3-a1f23fa0b-mm",
+   "source_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-E3-a1f23fa0b-mm",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-08T05:46:30-07:00",
+   "ss": {
+    "mean": 281,
+    "min": 267,
+    "max": 288
+   },
+   "ff": {
+    "mean": 171,
+    "min": 160,
+    "max": 177
+   },
+   "boundary_n": 793,
+   "budget": null
+  },
+  "dsfd_m2l_vr_68x10__hr_W0": {
+   "job": "s81-hend-m221pq-hr-W0-a1f23fa0b-mm",
+   "source_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-W0-a1f23fa0b-mm",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-08T05:47:31-07:00",
+   "ss": {
+    "mean": 276,
+    "min": 269,
+    "max": 282
+   },
+   "ff": {
+    "mean": 169,
+    "min": 163,
+    "max": 173
+   },
+   "boundary_n": 721,
+   "budget": null
   }
  },
- "updated": "2026-10-08T05:31:39-07:00"
+ "updated": "2026-10-08T05:47:31-07:00"
 }
