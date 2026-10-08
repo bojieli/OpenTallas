@@ -28,8 +28,9 @@ K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0),
 # CTS-validated SS and FF insertions (the plan's CTS ran SS / FF libraries only): an estimate, marked in kit.json
 
 
-# S81-PH partitions (tools/budgets/tiles.py): a die slab master hardened as tiles.  The die STA still models the slab
-# as one interim master (no composite view); the index reports how many of its tile kinds are closed.
+# S81-PH partitions (tools/budgets/tiles.py): a die slab master hardened as tiles.  A slab with every tile closed has an
+# assembled view (physical/s81_ph_views/assembled/<slab>, tools/s81/assemble_views.py: tile ETM arcs on the slab die
+# ports + the inter-tile glue check); the others stay one interim master and the index reports their closed tiles.
 PARTS = dict(dsfd_bk_selector=('dsfd_selt_q', 'dsfd_selt_c'), dsfd_bk_collector=('dsfd_colt_lane', 'dsfd_colt_mrg'),
              dsfd_sp_capture=('dsfd_capt_x', 'dsfd_capt_g2', 'dsfd_capt_ctl'),
              dsfd_sp_collective=('dsfd_coll_lane_w', 'dsfd_coll_lane_e', 'dsfd_coll_core', 'dsfd_coll_ck'),
@@ -42,19 +43,22 @@ def _rank(p, root, label):
     """lib preference when several files define one cell: this die variant's closed records, then S81-PH closed tiles,
     then other S81 die view records, then anything else (newest first within a rank)"""
     r = str(p.relative_to(root))
-    k = (0 if r.startswith(f'physical/s81_die_views/views/{label}/') else 1 if r.startswith('physical/s81_ph_views/closed/')
+    k = (0 if r.startswith(f'physical/s81_die_views/views/{label}/') else 1 if r.startswith(('physical/s81_ph_views/closed/',
+                                                                                        'physical/s81_ph_views/assembled/'))
          else 2 if r.startswith('physical/s81_die_views/views/') else 3)
     return (k, -p.stat().st_mtime)
 
 
 def closed_libs(corner, root=ROOT, label='m221pq'):
     """cell -> (lib path, kind): kind 'closed' when the lib sits in a closure-loop record dir (corner_sta.json beside it),
-    else 'macro' (memory / PHY / hard IP liberty)"""
+    'assembled' for an S81-PH slab assembled from its closed tile ETMs (tools/s81/assemble_views.py, assembled.json beside
+    it), else 'macro' (memory / PHY / hard IP liberty)"""
     out = {}
     for p in sorted((root / 'physical').rglob(f'*_{corner}.lib'), key=lambda q: _rank(q, root, label)):
         t = p.read_text(errors='ignore')[:200000]
         for c in re.findall(r'^\s*cell\s*\(\s*"?([A-Za-z0-9_]+)"?\s*\)', t, re.M):
-            out.setdefault(c, (p, 'closed' if (p.parent / 'corner_sta.json').exists() else 'macro'))
+            out.setdefault(c, (p, 'assembled' if (p.parent / 'assembled.json').exists() else
+                               'closed' if (p.parent / 'corner_sta.json').exists() else 'macro'))
     return out
 
 
@@ -153,6 +157,10 @@ def main():
             if src:
                 libs.add(str(src[0]))
                 r_ = rec['masters'].setdefault(mst, dict(view=src[1], libs={}))
+                if src[1] == 'assembled' and 'glue_worst_ps' not in r_:
+                    aj = json.loads((src[0].parent / 'assembled.json').read_text())
+                    r_.update(tiles=list(PARTS.get(mst, ())), glue_worst_ps=aj['glue_worst_ps'],
+                              tiles_ss_as_tt=aj['corners']['tt']['tiles_ss_as_tt'])
                 r_['libs'][corner] = str(src[0].relative_to(vroot)) + (' (SS as TT)' if src is not cl.get(mst) else '')
                 continue
             if mst in rp:      # real macro without a lib: its die ports, bit names from the real port map

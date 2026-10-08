@@ -22,7 +22,7 @@ HOSTS = ['ot-epyc3', 'ot-epyc1tb', 'ot-epyc2', 'ot-pve1', 'ot-agidock128']
 
 
 def tt_tcl(ss, name):
-    t = ss.replace('_RVT_SS_', '_RVT_TT_')
+    t = re.sub(r'_(RVT|LVT|SLVT)_SS_', r'_\1_TT_', ss)     # multi-Vt views (OT_MULTI_VT) read LVT / SLVT libs too
     t = re.sub(r'(read_liberty \S+)_ss\.lib', r'\1_tt.lib', t)
     t = t.replace(f'-library_name {name}_ss /out/{name}_ss.lib', f'-library_name {name}_tt /out/{name}_tt.lib')
     t = re.sub(r'^write_abstract_lef .*\n', '', t, flags=re.M)

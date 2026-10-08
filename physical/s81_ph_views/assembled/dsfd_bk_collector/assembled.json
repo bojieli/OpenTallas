@@ -1,0 +1,270 @@
+{
+ "slab": "dsfd_bk_collector",
+ "method": "The S81 die places dsfd_ctrl / dsfd_svc / dsfd_sp_capture / dsfd_bk_collector as single masters; S81-PH hardened each as tiles (physical/s81_ph_views/closed/<tile>/<tile>_{ss,tt,ff}.lib, write_timing_model ETMs of the routed tiles).  With every tile of a slab closed, the slab's die-facing timing is the tile timing: a die-facing slab pin IS a tile pin (tools/budgets/ tiles.py: \"the slab pin is the tile pin\", inherit, length 0), so the assembled ETM of a slab takes, per slab die port, the worst arc over every tile pin bit that implements it (setup / hold / recovery / removal: max constraint; clk->q: max delay at SS / TT, min delay at FF), tables copied verbatim (tile clock insertion is inside them: the die must NOT add the routed insertion of an assembled master again).  Tile clock pins map to the slab clock pins by name (capture's serial-clock ckv arcs map to the slab's only die clock 'ck', as the die netlist feeds the slab one clock).",
+ "corners": {
+  "ss": {
+   "ports": {
+    "cSW": {
+     "hold_rising/ck": {
+      "tile": "dsfd_colt_lane",
+      "bit": "c_in[191]",
+      "ps_at_5p76fF": 389.1
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_colt_lane",
+      "bit": "c_in[489]",
+      "ps_at_5p76fF": -84.6
+     }
+    },
+    "rst": {
+     "hold_rising/ck": {
+      "tile": "dsfd_colt_lane",
+      "bit": "rst[0]",
+      "ps_at_5p76fF": 395.9
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "rst[0]",
+      "ps_at_5p76fF": -206.3
+     }
+    },
+    "vd": {
+     "rising_edge/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "vd[475]",
+      "ps_at_5p76fF": 664.2
+     }
+    },
+    "vf": {
+     "falling_edge/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "vf[0]",
+      "ps_at_5p76fF": 480.0
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "vf[0]",
+      "ps_at_5p76fF": 432.1
+     }
+    }
+   },
+   "tiles_ss_as_tt": [],
+   "libs": {
+    "dsfd_colt_lane": "physical/s81_ph_views/closed/dsfd_colt_lane/dsfd_colt_lane_ss.lib",
+    "dsfd_colt_mrg": "physical/s81_ph_views/closed/dsfd_colt_mrg/dsfd_colt_mrg_ss.lib"
+   }
+  },
+  "tt": {
+   "ports": {
+    "cSW": {
+     "hold_rising/ck": {
+      "tile": "dsfd_colt_lane",
+      "bit": "c_in[139]",
+      "ps_at_5p76fF": 307.1
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_colt_lane",
+      "bit": "c_in[398]",
+      "ps_at_5p76fF": -38.1
+     }
+    },
+    "rst": {
+     "hold_rising/ck": {
+      "tile": "dsfd_colt_lane",
+      "bit": "rst[0]",
+      "ps_at_5p76fF": 312.2
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "rst[0]",
+      "ps_at_5p76fF": -165.8
+     }
+    },
+    "vd": {
+     "rising_edge/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "vd[475]",
+      "ps_at_5p76fF": 472.9
+     }
+    },
+    "vf": {
+     "falling_edge/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "vf[0]",
+      "ps_at_5p76fF": 345.7
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "vf[0]",
+      "ps_at_5p76fF": 323.2
+     }
+    }
+   },
+   "tiles_ss_as_tt": [],
+   "libs": {
+    "dsfd_colt_lane": "physical/s81_ph_views/closed/dsfd_colt_lane/dsfd_colt_lane_tt.lib",
+    "dsfd_colt_mrg": "physical/s81_ph_views/closed/dsfd_colt_mrg/dsfd_colt_mrg_tt.lib"
+   }
+  },
+  "ff": {
+   "ports": {
+    "cSW": {
+     "hold_rising/ck": {
+      "tile": "dsfd_colt_lane",
+      "bit": "c_in[139]",
+      "ps_at_5p76fF": 260.4
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_colt_lane",
+      "bit": "c_in[398]",
+      "ps_at_5p76fF": -14.6
+     }
+    },
+    "rst": {
+     "hold_rising/ck": {
+      "tile": "dsfd_colt_lane",
+      "bit": "rst[0]",
+      "ps_at_5p76fF": 257.6
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "rst[0]",
+      "ps_at_5p76fF": -141.6
+     }
+    },
+    "vd": {
+     "rising_edge/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "vd[472]",
+      "ps_at_5p76fF": 337.9
+     }
+    },
+    "vf": {
+     "falling_edge/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "vf[0]",
+      "ps_at_5p76fF": -408.5
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_colt_mrg",
+      "bit": "vf[0]",
+      "ps_at_5p76fF": 8.6
+     }
+    }
+   },
+   "tiles_ss_as_tt": [],
+   "libs": {
+    "dsfd_colt_lane": "physical/s81_ph_views/closed/dsfd_colt_lane/dsfd_colt_lane_ff.lib",
+    "dsfd_colt_mrg": "physical/s81_ph_views/closed/dsfd_colt_mrg/dsfd_colt_mrg_ff.lib"
+   }
+  }
+ },
+ "glue": [
+  {
+   "tt_wire_ratio": 0.77,
+   "what": "lane -> first station",
+   "launch": "dsfd_colt_lane.t_w",
+   "capture": "dsfd_stnh_512x1.di0",
+   "length_um": 371.3,
+   "stations": 7,
+   "tt_setup": -266.0,
+   "tt_setup_bal": 1.1,
+   "ss_setup": -578.2,
+   "ss_setup_bal": -244.9,
+   "ff_hold": 307.7,
+   "ff_hold_bal": 119.2
+  },
+  {
+   "tt_wire_ratio": 0.77,
+   "what": "lane -> first station (fwd)",
+   "launch": "dsfd_colt_lane.t_f",
+   "capture": "dsfd_stnh_512x1.di0",
+   "length_um": 371.3,
+   "stations": 7,
+   "tt_setup": -229.7,
+   "tt_setup_bal": 37.4,
+   "ss_setup": -538.4,
+   "ss_setup_bal": -205.1,
+   "ff_hold": 338.2,
+   "ff_hold_bal": 149.7
+  },
+  {
+   "tt_wire_ratio": 0.696,
+   "what": "last station -> merger",
+   "launch": "dsfd_stnh_512x1.do0",
+   "capture": "dsfd_colt_mrg.f_w",
+   "length_um": 371.3,
+   "stations": 7,
+   "tt_setup": 255.6,
+   "tt_setup_bal": 89.6,
+   "ss_setup": 40.2,
+   "ss_setup_bal": -161.9,
+   "ff_hold": -84.6,
+   "ff_hold_bal": 42.4
+  },
+  {
+   "tt_wire_ratio": 0.696,
+   "what": "last station -> merger (fwd)",
+   "launch": "dsfd_stnh_512x1.do0",
+   "capture": "dsfd_colt_mrg.f_f",
+   "length_um": 371.3,
+   "stations": 7,
+   "tt_setup": 269.9,
+   "tt_setup_bal": 103.9,
+   "ss_setup": 56.6,
+   "ss_setup_bal": -145.5,
+   "ff_hold": -73.2,
+   "ff_hold_bal": 53.8
+  },
+  {
+   "tt_wire_ratio": 0.77,
+   "what": "merger credit -> first station",
+   "launch": "dsfd_colt_mrg.t_cr",
+   "capture": "dsfd_stnh_512x1.di0",
+   "length_um": 371.3,
+   "stations": 7,
+   "tt_setup": -62.0,
+   "tt_setup_bal": 104.0,
+   "ss_setup": -317.4,
+   "ss_setup_bal": -115.3,
+   "ff_hold": 216.0,
+   "ff_hold_bal": 89.0
+  },
+  {
+   "tt_wire_ratio": 0.696,
+   "what": "last station -> lane credit",
+   "launch": "dsfd_stnh_512x1.do0",
+   "capture": "dsfd_colt_lane.f_cr",
+   "length_um": 371.3,
+   "stations": 7,
+   "tt_setup": 348.5,
+   "tt_setup_bal": 81.4,
+   "ss_setup": 160.3,
+   "ss_setup_bal": -173.0,
+   "ff_hold": -122.0,
+   "ff_hold_bal": 66.5
+  },
+  {
+   "tt_wire_ratio": 0.696,
+   "what": "station -> station",
+   "launch": "dsfd_stnh_512x1.do0",
+   "capture": "dsfd_stnh_512x1.di0",
+   "length_um": 371.3,
+   "stations": 7,
+   "tt_setup": 203.9,
+   "tt_setup_bal": 203.9,
+   "ss_setup": -10.3,
+   "ss_setup_bal": -10.3,
+   "ff_hold": 13.1,
+   "ff_hold_bal": 13.1
+  }
+ ],
+ "glue_worst_ps": {
+  "tt_setup": -266.0,
+  "ss_setup": -578.2,
+  "ff_hold": -122.0,
+  "tt_setup_bal": 1.1,
+  "ss_setup_bal": -244.9,
+  "ff_hold_bal": 13.1
+ }
+}

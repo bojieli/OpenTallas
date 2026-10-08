@@ -1,0 +1,98 @@
+{
+ "slab": "dsfd_ctrl",
+ "method": "The S81 die places dsfd_ctrl / dsfd_svc / dsfd_sp_capture / dsfd_bk_collector as single masters; S81-PH hardened each as tiles (physical/s81_ph_views/closed/<tile>/<tile>_{ss,tt,ff}.lib, write_timing_model ETMs of the routed tiles).  With every tile of a slab closed, the slab's die-facing timing is the tile timing: a die-facing slab pin IS a tile pin (tools/budgets/ tiles.py: \"the slab pin is the tile pin\", inherit, length 0), so the assembled ETM of a slab takes, per slab die port, the worst arc over every tile pin bit that implements it (setup / hold / recovery / removal: max constraint; clk->q: max delay at SS / TT, min delay at FF), tables copied verbatim (tile clock insertion is inside them: the die must NOT add the routed insertion of an assembled master again).  Tile clock pins map to the slab clock pins by name (capture's serial-clock ckv arcs map to the slab's only die clock 'ck', as the die netlist feeds the slab one clock).",
+ "corners": {
+  "ss": {
+   "ports": {
+    "phy": "no arcs (as interim)",
+    "rd": {
+     "rising_edge/cks": {
+      "tile": "dsfd_ctrl_pc",
+      "bit": "r_data[173]",
+      "ps_at_5p76fF": 651.8
+     }
+    },
+    "rst": {}
+   },
+   "tiles_ss_as_tt": [],
+   "libs": {
+    "dsfd_ctrl_ctr": "physical/s81_ph_views/closed/dsfd_ctrl_ctr/dsfd_ctrl_ctr_ss.lib",
+    "dsfd_ctrl_pc": "physical/s81_ph_views/closed/dsfd_ctrl_pc/dsfd_ctrl_pc_ss.lib"
+   }
+  },
+  "tt": {
+   "ports": {
+    "phy": "no arcs (as interim)",
+    "rd": {
+     "rising_edge/cks": {
+      "tile": "dsfd_ctrl_pc",
+      "bit": "r_tag[7]",
+      "ps_at_5p76fF": 486.7
+     }
+    },
+    "rst": {}
+   },
+   "tiles_ss_as_tt": [],
+   "libs": {
+    "dsfd_ctrl_ctr": "physical/s81_ph_views/closed/dsfd_ctrl_ctr/dsfd_ctrl_ctr_tt.lib",
+    "dsfd_ctrl_pc": "physical/s81_ph_views/closed/dsfd_ctrl_pc/dsfd_ctrl_pc_tt.lib"
+   }
+  },
+  "ff": {
+   "ports": {
+    "phy": "no arcs (as interim)",
+    "rd": {
+     "rising_edge/cks": {
+      "tile": "dsfd_ctrl_pc",
+      "bit": "r_data[72]",
+      "ps_at_5p76fF": 293.8
+     }
+    },
+    "rst": {}
+   },
+   "tiles_ss_as_tt": [],
+   "libs": {
+    "dsfd_ctrl_ctr": "physical/s81_ph_views/closed/dsfd_ctrl_ctr/dsfd_ctrl_ctr_ff.lib",
+    "dsfd_ctrl_pc": "physical/s81_ph_views/closed/dsfd_ctrl_pc/dsfd_ctrl_pc_ff.lib"
+   }
+  }
+ },
+ "glue": [
+  {
+   "tt_wire_ratio": 0.778,
+   "what": "status chain PC p -> p+1",
+   "launch": "dsfd_ctrl_pc.co_w",
+   "capture": "dsfd_ctrl_pc.ci_w",
+   "length_um": 144.5,
+   "stations": 0,
+   "tt_setup": 235.5,
+   "tt_setup_bal": 235.5,
+   "ss_setup": 58.4,
+   "ss_setup_bal": 58.4,
+   "ff_hold": 110.9,
+   "ff_hold_bal": 110.9
+  },
+  {
+   "tt_wire_ratio": 0.778,
+   "what": "PC 15/16 -> ctr",
+   "launch": "dsfd_ctrl_pc.co_w",
+   "capture": "dsfd_ctrl_ctr.co_w",
+   "length_um": 50.7,
+   "stations": 0,
+   "tt_setup": 111.4,
+   "tt_setup_bal": 318.3,
+   "ss_setup": -25.3,
+   "ss_setup_bal": 235.4,
+   "ff_hold": 229.3,
+   "ff_hold_bal": 87.9
+  }
+ ],
+ "glue_worst_ps": {
+  "tt_setup": 111.4,
+  "ss_setup": -25.3,
+  "ff_hold": 110.9,
+  "tt_setup_bal": 235.5,
+  "ss_setup_bal": 58.4,
+  "ff_hold_bal": 87.9
+ }
+}
