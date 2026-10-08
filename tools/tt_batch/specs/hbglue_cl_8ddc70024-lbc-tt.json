@@ -1,0 +1,66 @@
+{
+ "name": "hbglue_cl_8ddc70024-lbc-tt",
+ "block": "ot_dsrom_head_bundle_glue",
+ "owner": "Claude:setup-triage (block owner claude/takeover-ds-head-20261006 / Claude:tk-ds-misc)",
+ "purpose": "TT-BATCH (owner option B, one large batch): hbglue_cl_8ddc70024-lbc re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: SETUP-TRIAGE requeue of hbglue_cl_8ddc70024 (SS 74.53 / FF 18.7): flow fixes (physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl; post_sdc +['physical/common_flow/link_budget_consistent.sdc']) + flow-hold mm hold repair; source = origin/main + setup-triage fixes, no RTL change by this stream. ",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 60,
+ "source": {
+  "branch": "claude/setup-triage-20261007",
+  "commit": "387a4d2acd525be5ef60432f735d120cc9e0c829"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes SRC={SRC} bash physical/s81_die_views/hbglue/margin/route_cl.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 60
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes SRC={SRC} bash physical/s81_die_views/hbglue/margin/route_cl.sh {LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/exit {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/s81_die_views/hbglue/closure"
+  }
+ ],
+ "cycles_added": 3,
+ "merge_target": null,
+ "no_bench_reason": "glue MARGIN=1 exact gate PASS + 8 negatives (4570eccd4, result group +3 cycles); RTL unchanged since",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

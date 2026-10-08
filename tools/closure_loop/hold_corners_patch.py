@@ -10,6 +10,7 @@ OT_ROUTE_HOLD_CORNERS=primary keeps place-and-route repair at the primary corner
 consistent; FF hold is closed after the route by the hold ECO against the exact FF sign-off constraints.  Sign-off
 (tools/w18/corner_sta.py, SS + FF) is unchanged.
    hold_corners_patch.py <src snapshot dir>      (idempotent; original kept as run_abi3_physical.py.pre_holdcorners)"""
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -55,9 +56,30 @@ CODE = r'''    _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
             args.hold_corners = _ot_new
 '''
 MARK = "OT_ROUTE_HOLD_CORNERS"
+TOL_A = '        if any(int(v) != 0 for v in errors.values()):\n            raise FlowError(f"ORFS reported flow errors: {errors}")'
+TOL_A2 = '        try:\n            from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair\n            errors = _ot_tol(errors, logs_dir)\n        except ImportError:\n            pass\n        if any(int(v) != 0 for v in errors.values()):\n            raise FlowError(f"ORFS reported flow errors: {errors}")'
+TOL_B = '    if any(int(v) != 0 for v in flow_errors.values()):\n        raise FlowError(f"ORFS reported flow errors: {flow_errors}")'
+TOL_B2 = '    try:\n        from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair\n        flow_errors = _ot_tol(flow_errors, logs_dir)\n        metrics["flow_error_counts_tolerated"] = flow_errors\n    except ImportError:\n        pass\n    if any(int(v) != 0 for v in flow_errors.values()):\n        raise FlowError(f"ORFS reported flow errors: {flow_errors}")'
 DOCKER_ANCHOR = '"python3 /src/tools/orfs_allcorner_spef.py "'
 DOCKER_MM = '"python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && "\n            '
 
+
+TC_MARK = "OT_ORFS_CORNER_OVERRIDE"
+TC_CODE = r'''    # OPTION B (owner 2026-10-07 20:45): setup signs off at TT.  OT_ORFS_CORNER_OVERRIDE=TC (alias OT_ORFS_CORNER, the
+    # closure loop's name) keeps every recipe's corner NAMES (WC primary, WC,BC hold; the loop ships its own WC-scene mm
+    # hold session into each snapshot) but makes the WC corner READ the TT liberties: WC_NLDM_LIB_FILES =
+    # $(TC_NLDM_LIB_FILES) and every macro's WC view = its _tt.lib.  Setup repair runs at TT; hold stays at BC (FF).
+    # v1 (renaming the corner to TC, 852d9b461 / c10b5fc9a) died in floorplan report_metrics: STA-0102 (hbm-blocks
+    # 4aadc92bc).  Shipped by hold_corners_patch into snapshots pinned before it.
+    _ot_cov = (os.environ.get("OT_ORFS_CORNER_OVERRIDE", "") or os.environ.get("OT_ORFS_CORNER", "")).strip().upper()
+    if _ot_cov == "TC":
+        try:
+            ORFS_CORNER_MACRO_TAG["WC"] = "tt"
+        except NameError:
+            pass
+        args.orfs_var = list(args.orfs_var or []) + ["WC_NLDM_LIB_FILES=$(TC_NLDM_LIB_FILES)"]
+        print("OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)", file=sys.stderr)
+'''
 
 
 def patch(src):
@@ -82,6 +104,20 @@ def patch(src):
             shutil.copy2(f, f.with_suffix(".py.pre_holdcorners"))
         s = s.replace(ANCHOR, ANCHOR + CODE)
         msg.append(f"patched {f}")
+    # option B: TC routing for snapshots that predate it (must run before the mm block, which reads args.orfs_corner)
+    oc = re.search(r'    _ot_oc = os\.environ\.get\("OT_ORFS_CORNER".*?        args\.orfs_corner = _ot_oc\n', s, re.S)
+    if oc:                                       # the loop's own v1 (852d9b461..): renamed WC -> TC (STA-0102)
+        s = s[:oc.start()] + s[oc.end():]
+        msg.append("removed OT_ORFS_CORNER rename (v1)")
+    if 'WC_NLDM_LIB_FILES=$(TC_NLDM_LIB_FILES)' not in s:
+        v1 = re.search(r"    # OPTION B \((?:owner|shipped)[^\n]*\n(?:    #[^\n]*\n)*    _ot_cov = .*?\n(?=    _ot_rhc = |    args = )",
+                       s, re.S)
+        if v1:                                   # v1 (renamed the corner to TC: STA-0102) -> v2
+            s = s[:v1.start()] + TC_CODE + s[v1.end():]
+            msg.append("option-B TC override v1 -> v2 (WC reads TT)")
+        elif s.count(ANCHOR) == 1:
+            s = s.replace(ANCHOR, ANCHOR + TC_CODE)
+            msg.append("option-B TC override v2 added (WC reads TT)")
     # the flow container patch (inert unless the config exports OT_HOLD_MM=1)
     if "orfs_hold_mm.py /OpenROAD-flow-scripts" not in s:
         if s.count(DOCKER_ANCHOR) == 1:
@@ -89,11 +125,17 @@ def patch(src):
             msg.append("container hook orfs_hold_mm.py added")
         else:
             msg.append("NO container anchor: OT_ROUTE_HOLD_CORNERS=mm unavailable in this snapshot")
+    # tolerate RSZ-0060 inside a completed multi-pass mm repair (orfs_hold_mm.tolerate_flow_errors)
+    if "_ot_tol" not in s:
+        for a, b in ((TOL_A, TOL_A2), (TOL_B, TOL_B2)):
+            if s.count(a) == 1:
+                s = s.replace(a, b)
+                msg.append("flow-error tolerance added")
     f.write_text(s)
     here = Path(__file__).resolve().parent
-    for h in ("orfs_hold_mm.py", "orfs_hold_mm.tcl"):
+    for h in ("orfs_hold_mm.py", "orfs_hold_mm.tcl"):  # (always refresh: the helper grows)
         for cand in (here / h, here.parent / h):
-            if cand.is_file() and not (Path(src) / "tools" / h).is_file():
+            if cand.is_file() and (not (Path(src) / "tools" / h).is_file() or (Path(src) / "tools" / h).read_bytes() != cand.read_bytes()):
                 shutil.copy2(cand, Path(src) / "tools" / h)
                 msg.append(f"shipped tools/{h}")
                 break

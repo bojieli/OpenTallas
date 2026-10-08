@@ -1,0 +1,74 @@
+{
+ "name": "hbm_smh_front_s_m3e_2ce7ed794-tt",
+ "block": "ot_hbm_accel_smh_front_s",
+ "owner": "Claude:hbm-sm",
+ "purpose": "TT-BATCH (owner option B, one large batch): hbm_smh_front_s_m3e_2ce7ed794 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: HBM SM front_s m3e (RTL 2ce7ed794): tile_e c2 structural fixes (leaf bk2 + row pad, 3 pass-through registers per hop, per-lane clear copy, bmul exponent move; front_s deskew 5/hop + REQCR=1); route 770 / sign-off 833, calibrated IO",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/hbm-sm-structure-20261005",
+  "commit": "2ce7ed794f50a88f81145c4be1f10d3f0b9de800"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; python3 tools/hbm_accel_smh_physical.py block --piece front_s --top-param REQCR=1 --variant one --pd 0.55 --grt-allow --period 770 --skew 90 --die-skew 150 --hold-margin 0 --hold-buffer-pct 60 --no-admit --cores {THREADS} --src {SRC} --label {LABEL}_cal --out {RUN}/routes/{LABEL}_cal --stop-after cts --lat-ff 100 && bash {RUN}/routes/{LABEL}_cal/run.sh",
+   "base": "{RUN}/routes/{LABEL}_cal/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/hbm_accel_smh_physical.py block --piece front_s --top-param REQCR=1 --variant one --pd 0.55 --grt-allow --period 770 --skew 90 --die-skew 150 --hold-margin 25 --hold-buffer-pct 60 --no-admit --cores {THREADS} --src {SRC} --label {LABEL} --out {RUN}/routes/{LABEL} --lat ${CK_SS_MEAN:-720} --lat-ff ${CK_FF_MEAN:-430} && bash {RUN}/routes/{LABEL}/run.sh",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/views {RUN}/record/route && cp {RUN}/routes/{LABEL}/views/* {RUN}/record/views/ && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/config.mk {RUN}/routes/{LABEL}/constraint.sdc {RUN}/routes/{LABEL}/geometry.json {RUN}/record/route/ && cp {CL}/calib.json {RUN}/record/route/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [],
+  "macros": []
+ },
+ "hold_eco": {
+  "reexport": "docker run --rm -v {SRC}:/src:ro -v {RUN}/routes/{LABEL}:/work openroad/orfs:asap7lock bash -lc 'mkdir -p /work/views; for c in ss ff; do /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/abstract_$c.tcl || exit 1; done' > {RUN}/routes/{LABEL}/abstract_eco.log 2>&1"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/hbm_accel_smh_views/ot_hbm_accel_smh_front_s"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/hbm_sm_structure_20261005/routes_m3/front_s"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": null,
+ "no_bench_reason": "bench runs in parallel (owner LAUNCH IMMEDIATELY): EPYC2 sim_m3e (--req-credit 15 PQ sequences + 2 stalled; negatives flip / s1w / HAZ0 / reqovf / reqleak); adoption gated on it",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

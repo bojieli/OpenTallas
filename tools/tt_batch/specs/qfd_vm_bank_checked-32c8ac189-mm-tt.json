@@ -1,0 +1,71 @@
+{
+ "name": "qfd_vm_bank_checked-32c8ac189-mm-tt",
+ "block": "qfd_vm_bank_checked",
+ "owner": "Claude:qwen-contracts",
+ "purpose": "TT-BATCH (owner option B, one large batch): qfd_vm_bank_checked-32c8ac189-mm re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: VM gates (vm_me_service/vm_su_service) physical measurement: protected Qwen VM bank element ot_qwen_checked_vm_bank_direct_readback (CAP1 SECDED adapter + 4-bank masked raw backend, 256+32 ot_sram_1r1w_512x128 macros), 1825.2 x 1304.64 um, manual macro grid [flow-hold: rule H1 kit + multi-mode route hold repair]",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/qwen-contracts-20261007",
+  "commit": "32c8ac189378a4abada8a8482dce9d441d849142"
+ },
+ "no_bench_reason": "exact benches of this element are the committed VM contract re-checks results/rtl/qwen_contracts_20261007/vm_contract_checks (su_service, direct_readback, writer_priority, reducer_overlap, combined_ingress + negatives: all reproduce at ce24d613f)",
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_vm_bank_checked.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_vm_bank_checked {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_vm_bank_checked.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen VM budget sheet"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_contracts_20261007/vm_bank_physical/qfd_vm_bank_checked-32c8ac189-mm"
+  }
+ ],
+ "cycles_added": "0 (measurement of an existing element; the VM service cost stays gated)",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

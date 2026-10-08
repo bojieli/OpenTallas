@@ -1,21 +1,21 @@
 {
  "schema": "opentallas.w18.export_view.v1",
  "name": "ot_hdc_v41_fh_ctl",
- "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ctl-half-4123ff389/routes/dshead_ctl_half_4123ff389/work/orfs",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-ctl-half-4123ff389-lbc/routes/dshead_ctl_half_4123ff389_lbc/work/orfs",
  "post_sdc": "physical/dsrom_fh_safe/gen/signoff_ctl.sdc",
  "ss": {
   "done": true,
-  "ws_max": "4.841848033620977e-10",
-  "ws_min": "-2.86358714518542e-11"
+  "ws_max": "8.016621810824631e-10",
+  "ws_min": "-5.1631310338251524e-11"
  },
  "ff": {
   "done": true,
-  "ws_max": "7.432766624404508e-10",
-  "ws_min": "2.580538560614798e-11"
+  "ws_max": "9.959960634020604e-10",
+  "ws_min": "1.6180418116462647e-11"
  },
  "files": {
-  "ot_hdc_v41_fh_ctl.lef": "1d97a731d60824a03a7907142feea62c4c4f4fa367b4a1d2cab20ea632256be7",
-  "ot_hdc_v41_fh_ctl_ff.lib": "9bf840ec311c7277525f14ce37b76f1a02e63d424b949fbecef7d1913cdbe742",
-  "ot_hdc_v41_fh_ctl_ss.lib": "b369dc5d2a7e8fe871fa015d8ca01ffc980fd95a9c9cd4b212ca5f6a1e07ade1"
+  "ot_hdc_v41_fh_ctl.lef": "2f31322ce65e6d2a7b7cfab9146e99de48b39cd6b38f84f58b55c48f8f0b3613",
+  "ot_hdc_v41_fh_ctl_ff.lib": "065ee2c903a0947697023dab1389f03a220ae8d7e663577f63987c3b36228e6e",
+  "ot_hdc_v41_fh_ctl_ss.lib": "289a9ac723ed993af66f43d920050aceae8b7989361353e61feefb26912aed9b"
  }
 }

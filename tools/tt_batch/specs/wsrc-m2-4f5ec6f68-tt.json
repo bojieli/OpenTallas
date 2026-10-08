@@ -1,0 +1,65 @@
+{
+ "name": "wsrc-m2-4f5ec6f68-tt",
+ "block": "ot_dsrom_window_source_ctl",
+ "owner": "Claude:takeover-ds",
+ "purpose": "TT-BATCH (owner option B, one large batch): wsrc-m2-4f5ec6f68 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: WINDOW source ctl MARGIN=2 (RTL class fixes for route_r2's -447 ps reg2reg; calibrated IO): structural fix, 540 um",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-epyc2",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/takeover-window-source-20261006",
+  "commit": "4f5ec6f68e6b4ee6be7bc2484eb760df7a1bba7a"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; SRC={SRC} OUT={RUN}/routes CORES=16 DIE=540 PD=0.50 MARGIN=2 physical/dsrom_window_source/route_ctl.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "echo route_ctl.sh writes the IO SDC from CK_SS_MEAN/CK_FF_MIN/CK_FF_MAX",
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} OUT={RUN}/routes CORES=16 DIE=540 PD=0.50 MARGIN=2 physical/dsrom_window_source/route_ctl.sh {LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp -r {RUN}/routes/{LABEL}/view {RUN}/record/ && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/*.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/dsrom_window_source/view_wsrc-m2-4f5ec6f68"
+  }
+ ],
+ "cycles_added": 4,
+ "no_bench_reason": "exact gate runs in parallel outside the loop (needs EPYC2-only vectors /srv/opentallas-scratch2/jobs/mencius-window-pipeline-r1/vec + Verilator 5.050): tools/dsrom_window_pipeline_gate.py --ctl-leaf 3 (344 cases) + --mutant-late-payload negative + --ctl-leaf 2 regression at EPYC2 .../takeover-ds/window-source/m2; a failing gate cancels this job",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

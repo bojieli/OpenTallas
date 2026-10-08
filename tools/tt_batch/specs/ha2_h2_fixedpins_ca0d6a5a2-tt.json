@@ -1,0 +1,57 @@
+{
+ "name": "ha2_h2_fixedpins_ca0d6a5a2-tt",
+ "block": "ot_ha2_tu_owner_banked_half",
+ "owner": "Codex:hbm_die_resume/ha2_pins",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "commit": "ca0d6a5a2f22b6d92151a2a14e7a3b339299d463",
+  "branch": "codex/ha2-fixedpins-20261007"
+ },
+ "purpose": "TT-BATCH (owner option B, one large batch): ha2_h2_fixedpins_ca0d6a5a2 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Corrected full-shape fixedpin pathfinding; exact6028 native track and bounding boxes checked. Prior prelaunch pinbox failure preserved.",
+ "no_bench_reason": "Physical-only pin relocation; every synthesis RTL dependency byte-identical to original h2 source, source_manifest records hashes. Full-shape Verilator5.032 elaboration PASS. External adoption hold until original numeric gate and truecredit parent/budget qualification bound.",
+ "stages": {
+  "calibrate": {
+   "enabled": false,
+   "reason": "Preserve original h2 route constraints for physical-only comparison. Signoff measures actual SS/FF insertion; actual parent budgets remain adoption hold."
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; bash physical/hbm_ha2_fixedpins_20261007/run.sh {SRC} {RUN}/route",
+   "ok": "test \"$(cat {RUN}/route/terminal.exit)\" = 0",
+   "logs": [
+    "{RUN}/route/run.log"
+   ]
+  },
+  "signoff": {
+   "cmd": "python3 physical/hbm_ha2_owner_banked_20261006/signoff.py --half --run {RUN}/route || test -f {RUN}/route/signoff.json"
+  }
+ },
+ "verdict": {
+  "metrics_cmd": "python3 - <<'METRICS'\nimport glob,json\ns=json.load(open('{RUN}/route/signoff.json'))\np=glob.glob('{RUN}/route/logs/asap7/*/base/5_2_route.json');assert len(p)==1\nm=json.load(open(p[0]))\nprint(json.dumps(dict(ss_ps=s['accept']['SS_setup_ps'],ff_ps=s['accept']['FF_hold_ps'],drc=m['detailedroute__route__drc_errors'])))\nMETRICS",
+  "checks": [
+   {
+    "name": "all6028_native_pin_boxes",
+    "cmd": "grep -q 'HA2_FIXED_PIN_CHECK_PASS count=6028' {RUN}/route/logs/asap7/*/base/3_2_place_iop.log"
+   }
+  ]
+ },
+ "hold_eco": {
+  "enabled": false,
+  "reason": "Physical-only binding pathfinding; retain original failure before structural decision."
+ },
+ "merge_target": null,
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

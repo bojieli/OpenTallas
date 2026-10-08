@@ -121,6 +121,8 @@ BFB = dict(AR=_bf["options"]["B_mixed_2304"]["AR"], MTP=_bf["options"]["B_mixed_
            physical=_bf["physical_status"], wire=_bf["wire_status"])
 # S81 full-shape PQ partition v2 (Claude design, branch claude/s81-pq-fullshape-design-v2-20261007 @ 9a8c86255 ONLY; main
 # carries the earlier version of the same record at 738ddfbc2 with +15 cycles / 0.47 %).  Branch values pinned here.
+FP_FILE = "results/uarch/dsrom_s81_field_phases_1792_20261007/composition.json"   # s81-fieldphase, main abc13767e
+FP = _J(FP_FILE)
 PQ_FILE = "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/comparison_current_main.json"
 PQ_ROOT = "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/root_contract/root_contract.json"
 PQ_COMMIT = "9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
@@ -414,7 +416,7 @@ def ds_rom():
         L("geometry_note", "Published composition geometry: f183.60 (%d stages, %d layer dies, %d dies total)"
           % (geo["stages"], geo["layer"] if "layer" in geo else rack["counts"]["layer"], rack["counts"]["dies"]),
           "measured", None, src(DS_RACK, "geometry"), "the historical S81 geometry with full-rate BF; NOT the actual 1792 mapping (the current physical integration basis); no token headline is adopted", "info"),
-        L("actual1792_half_dedicated_hops", "Actual 1792 mapping, BF-dedicated half-rate (%d stages: %d BF + %d q): +%d stage hops"
+        L("actual1792_half_dedicated_hops", "Actual 1792 mapping, BF-dedicated half-rate (%d stages: %d BF + %d q): +%d stage hops [SUPERSEDED by the measured fieldphase compositions]"
           % (var["half_dedicated"]["stages"], var["half_dedicated"]["bf_stages"], var["half_dedicated"]["q_stages"],
              var["half_dedicated"]["extra_hops_vs_composed"]),
           "priced-candidate", dict(unit="us", AR=round(var["half_dedicated"]["extra_hops_vs_composed"] * hop_us, 3),
@@ -422,12 +424,12 @@ def ds_rom():
           [src(f"{DS_MAP}/half_dedicated/inventory.json", "stages"), src(DS_LINKS, "hop.us")],
           "each added stage = one measured full-FEC board hop %.4f us + %.4f us cable; capacity PASS, metadata only" % (links["hop"]["us"], hop_us - links["hop"]["us"]),
           "alternative"),
-        L("actual1792_full_shared_hops", "Actual 1792 mapping, shared BF pairs (%d stages, gate K-split alias): +%d stage hops"
+        L("actual1792_full_shared_hops", "Actual 1792 mapping, shared BF pairs (%d stages, gate K-split alias): +%d stage hops [SUPERSEDED by the measured fieldphase compositions]"
           % (var["full_shared"]["stages"], var["full_shared"]["extra_hops_vs_composed"]),
           "priced-candidate", dict(unit="us", AR=round(var["full_shared"]["extra_hops_vs_composed"] * hop_us, 3),
                                    MTP_step=round(var["full_shared"]["extra_hops_vs_composed"] * hop_us, 3)),
           [src(f"{DS_MAP}/full_shared/inventory.json", "stages"), src(DS_LINKS, "hop.us")], "as above", "alternative"),
-        L("bf_half_rate_doubling", "BF half-rate (owner 2026-10-07): BF16 field phases doubled", "priced-candidate",
+        L("bf_half_rate_doubling", "BF half-rate (owner 2026-10-07): BF16 field phases doubled [SUPERSEDED by the measured fieldphase compositions]", "priced-candidate",
           dict(unit="us", AR=bf_ar, MTP_step=bf_mtp), src(DS_LEDGER, "candidates[bf_half]"),
           "priced BF16-phase doubling only (q phases on q pairs unchanged); on shared pairs the q words on BF pairs (20.6 %%) "
           "would also halve and are not priced. With the field phases of the 1792 geometry unmeasured, this proves no "
@@ -493,15 +495,15 @@ def ds_rom():
           "gated-unknown", None, src("rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv", "MRG_PIPE, RQPIPE", commit="b17a8dda2 (branch claude/s81-blocks-20261007 only)"),
           "RTL committed; s81-blocks.log reports bench PASS (tail mean 129 vs 127) but no result record is committed. If it "
           "closes it adds +2 cycles a selector segment over the ledger's selector item; not composed", "info"),
-        L("bf_halfphl_price", "BF HALF_PHL half-rate on dedicated BF pairs (BF16 field phases x2 + 2 a phase), upper bound",
-          "priced-candidate", dict(unit="us", AR=round(1e6 / 1619.6 - 1e6 / 1754.3, 3), MTP_step=None),
-          src("results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json", "candidates[bf_halfphl]",
-              commit="5a07bf71d (branch claude/s81-bf-ledger-20261007 only)"),
-          "AR -7.68 %% / MTP -6.31 %% (upper bound) priced on the option-B 2,304-pair base (AR 1,754.3 -> 1,619.6), which "
-          "FAILED legal fit -- the relative cost is what transfers; the dedicated allocation's +6 stages / +24 layer dies are "
-          "not in that composition. On the 1,792 basis the ledger's 1,792 rows still use the older bf_half doubling "
-          "(-15 %%, upper bound); the HALF_PHL price is the newer, smaller upper bound for the same mechanism. Exact PASS "
-          "6d26df595; routes running", "info"),
+        L("bf_halfphl_price", "BF HALF_PHL half-rate on dedicated BF pairs, priced on the measured 1,792 fieldphase (HALF + router K split)",
+          "priced-candidate", dict(unit="us", AR=round(1e6 / 1467.6 - 1e6 / 1593.7, 3), MTP_step=round(tau * 1e6 / 4403.0 - tau * 1e6 / 4694.7, 3)),
+          [src("results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json", "candidates[bf_halfphl]"),
+           src("results/uarch/dsrom_s81_field_phases_1792_20261007/composition_basis_39e424990.json", "variants.half_dedicated_ksplit.compositions.half_rate",
+               commit="f42b1eb76 (branch claude/s81-fieldphase-20261007 only)")],
+          "CORRECTED price: AR -7.91 %% / MTP -6.21 %% (1,593.7 / 4,694.7 -> 1,467.6 / 4,403.0, half-rate BF upper bound), "
+          "confirmed by s81-bf (main 31f23a48a); the earlier -7.68 %% / -6.31 %% on the legal-fit-failed option-B base "
+          "(5a07bf71d) and 16584ae76 are superseded. Optional full-rate recut at TT in flight (full-rate BF on the same "
+          "mapping: 1,577.1 / 4,674.3)", "info"),
         L("s81_die_m221pq", "S81 die re-priced on the m221pq layer1 die: +28 cycles a field phase (round trip 167 + 2 PQ "
           "root-row stations = 169 vs 137, less meso 4; was +27)", "priced-candidate",
           dict(unit="us", AR=round(1e6 / 1593.7 - 1e6 / c["AR_tok_s"], 3), MTP_step=round(tau * 1e6 / 4694.7 - tau * 1e6 / c["MTP_tok_s"], 3)),
@@ -509,8 +511,16 @@ def ds_rom():
               commit="39e424990 (branch claude/s81-die-20261007 only)"),
           "composed ledger TOTAL AR 1,593.7 (-4.85 %%) / MTP 4,694.7 on the published basis; see composition "
           "published_m221pq_die", "info"),
-        L("field_phases_1792", "Field phase timings of the 1792 geometry (remapped regions, BF/q stage split)", "gated-unknown", None,
-          src(f"{DS_MAP}/provenance.json", "variants.*.full_token_latency"), "'unpriced until matching field phase measurements and new geometry timing are composed'", "gate"),
+        L("wfc_die150_ff", "WFC (wavefront controller) source block: die150 FF hold closed", "measured", None,
+          src("results/rtl/dsrom_wfc_split_20261006/closure.json", "src r24", commit="dc8570b5d (branch claude/s81-die-20261007 only)"),
+          "src r24: SS +31.5 ps (all modes) / FF +22.7 ps in incontext/die150/region/reg2reg, DRC / antenna / DRV 0, RTL "
+          "unchanged (hold-ECO IO model at 150 ps on every port, slew margin 30); meets the closure line; not yet on main", "info"),
+        L("field_phases_1792", "Field phase timings of the 1792 geometry: MEASURED (s81-fieldphase)", "measured", None,
+          src(FP_FILE, "variants.*.nodes, phase_ledger"),
+          "qelem10 field vehicle on every region of every stage of both 1,792 mappings, 7 representative layers: %s + %s "
+          "region runs, all exact; actual mixed221 die wire, per-phase block adders; BF half rate a composed upper bound "
+          "(phase ledger: measured / composed / model-only). Feeds the actual1792 compositions"
+          % (format(FP["variants"]["half_dedicated"]["region_runs"], ","), format(FP["variants"]["full_shared"]["region_runs"], ",")), "info"),
         L("bf_half_physical", "BF half-rate clock root qualification (current exact BF closure path)", "gated-unknown", None,
           [src(DS_BFROOT, "physical_obligations"), src(DS_BFFAIL + "/record.json"), src(DS_BFFAIL + "/actual_calibration_failure.json")],
           "half-rate BF is the current exact BF closure path, not an immutable requirement: full rate may return if it meets "
@@ -533,30 +543,37 @@ def ds_rom():
                                 geometry="f183.60, %d stages, %d dies" % (geo["stages"], rack["counts"]["dies"]),
                                 status="priced-candidate", record=src(CMP, "ds_rom"),
                                 note="closure-cost ledger TOTAL on the historical 85-stage full-rate-BF geometry"))
-    for name, hops in (("half_dedicated", "actual1792_half_dedicated_hops"), ("full_shared", "actual1792_full_shared_hops")):
-        h = next(x for x in lines if x["id"] == hops)["effect"]
-        ar, mtp = pub_ar + h["AR"] + bf_ar, pub_mtp + h["MTP_step"] + bf_mtp
+    for name in ("half_dedicated", "full_shared"):
         v = var[name]
+        fc = FP["variants"][name]["compositions"]
+        hr, fr = fc["half_rate"], fc["full_rate_bf"]
         comps["actual1792_" + name] = dict(
-            AR_us=round(ar, 3), MTP_step_us=round(mtp, 3), AR_tok_s=tok_s_us(ar), MTP_tok_s=tok_s_us(mtp, tau), tau=tau,
+            AR_us=hr["AR_us"], MTP_step_us=hr["MTP_step_us"], AR_tok_s=hr["AR_tok_s"], MTP_tok_s=hr["MTP_tok_s"], tau=tau,
             stages=v["stages"], dies=v["layer_dies"], pairs_per_layer_die=1792, bf_rate="half",
-            dies_note=("%d = layer dies, the Codex basis (2d811aafb inventory layer_dies). An earlier revision of this ledger "
-                       "printed %d by also counting the %d head + %d table + %d draft dies of the 85-stage rack record; those "
-                       "are outside the 1792 mapping and not re-sized for it" % (v["layer_dies"], v["layer_dies"] + rack["counts"]["head"]
-                       + rack["counts"]["table"] + rack["counts"]["draft"], rack["counts"]["head"], rack["counts"]["table"], rack["counts"]["draft"])),
-            basis=[src(DS_GEOM, "variants[name=mixed221]", commit="77ffa0428"), src(f"{DS_MAP}/{name}/inventory.json", "stages, layer_dies", commit="2d811aafb")],
+            dies_note="layer dies (Codex basis, 2d811aafb inventory); head / table / draft dies are outside the 1,792 mapping",
+            basis=[src(DS_GEOM, "variants[name=mixed221]", commit="77ffa0428"), src(f"{DS_MAP}/{name}/inventory.json", "stages, layer_dies", commit="2d811aafb"),
+                   src(FP_FILE, f"variants.{name}.compositions.half_rate")],
             adopted=False, closure=False,
-            status="priced-candidate (current physical integration basis; not an adopted rate)",
-            label="partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound",
-            bound="none proven",
-            caveat=("BF16 doubling priced; field phases at this geometry unmeasured" if name == "half_dedicated" else
-                    "BF16 doubling priced; shared-pair q-phase halving NOT priced (undercount); field phases unmeasured"),
-            gated_by=gates, lines=[hops, "bf_half_rate_doubling"],
-            note="published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured")
+            status="measured field phases + composed (current physical integration basis; not an adopted rate)",
+            label="measured-field composition; BF half rate composed as an upper bound on latency",
+            bound="half-rate BF: latency upper bound (rate lower bound) for the BF term only",
+            full_rate_bf=dict(AR_tok_s=fr["AR_tok_s"], MTP_tok_s=fr["MTP_tok_s"], note="sensitivity if full-rate BF closes (recut at TT in flight)"),
+            serial_substages=dict(AR_tok_s=fc["half_rate_serial"]["AR_tok_s"], MTP_tok_s=fc["half_rate_serial"]["MTP_tok_s"]),
+            region_runs=FP["variants"][name]["region_runs"], all_exact=FP["variants"][name]["all_exact"],
+            gated_by=[g for g in gates if g != "field_phases_1792"],
+            note="s81-fieldphase: every region of every stage measured exact on the field vehicle; composed with the actual "
+                 "mixed221 die wire and per-phase block adders on the published ledger basis; replaces the earlier "
+                 "partial-priced sensitivity")
+    pp = FP["variants"]["half_dedicated"]["compositions"]["published_per_phase"]
+    comps["published_per_phase_rebased"] = dict(
+        AR_tok_s=pp["AR_tok_s"], MTP_tok_s=pp["MTP_tok_s"], AR_us=pp["AR_us"], MTP_step_us=pp["MTP_step_us"], tau=tau,
+        status="measured field phases + composed (85-stage historical geometry)", record=src(FP_FILE, "variants.half_dedicated.compositions.published_per_phase"),
+        note="FINDING (s81-fieldphase): the published composition is about 2.6 %% optimistic -- re-based with the per-phase "
+             "wire and block adders it is %.1f / %.1f instead of %.1f / %.1f" % (pp["AR_tok_s"], pp["MTP_tok_s"],
+             FP["basis"]["published_AR_tok_s"], FP["basis"]["published_MTP_tok_s"]))
     comps["published_m221pq_die"] = dict(
         AR_tok_s=1593.7, MTP_tok_s=4694.7, AR_us=round(1e6 / 1593.7, 3), MTP_step_us=round(tau * 1e6 / 4694.7, 3), tau=tau,
-        status="priced-candidate", record=src("results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json", "total",
-                                              commit="39e424990 (branch claude/s81-die-20261007 only)"),
+        status="priced-candidate", record=src("results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json", "total"),
         note="the DS closure-cost ledger TOTAL with s81_die re-priced on the m221pq layer1 die (+28 a field phase); "
              "85-stage historical geometry, same basis as 'published'")
     comps["option_B_2304_historical"] = dict(
@@ -823,7 +840,6 @@ UNESTABLISHED = [
     ("pq_stage_b_timing", "ds_rom", "PQ CAM stage-B timing", "pq_stage_b_timing", "not measured; stage-C fallback modelled, default-off"),
     ("half_serial_lane_beat_shift", "ds_rom", "HALF serial-lane exactness for a <= 2-cycle beat shift", "pq_half_serial_lane_exactness",
      "not shown"),
-    ("field_phases_1792", "ds_rom", "Field phase timings of the 1,792 mapping", "field_phases_1792", "not measured"),
 ]
 
 
@@ -872,8 +888,10 @@ def die_level_evidence():
                  die_sta_grt_parasitics=dict(status="in progress", evidence=src("tools/qwen_die_sta_classes.py", "r21 pre-DRT die STA", commit="a9bf510a0"),
                      note="committed: r21 die STA on placement parasitics fails every relay / station hop (SS -287 ps worst; closed "
                           "station views were routed at 3.9 fF, re-route kit at 80 fF committed a9bf510a0). Reported in qwen-dietop.log, "
-                          "not committed: GRT-parasitic FF worst -5.50 ps (all on qfd_tile assumed views), SS WNS -132 ps on "
-                          "relay/station hops"),
+                          "not committed: on the overflow-0 full-die GRT (adjfix_t4p8, estimate_parasitics -global_routing, signoff833 "
+                          "ETMs) SS WNS -90.23 ps / TNS -8.69 us (1,124,207 endpoints, almost all relay hops; chead -37.95, cst -20.02) "
+                          "and FF worst -5.50 ps (qfd_tile assumed views); with every die hop on M8 the placement-length STA gives "
+                          "+71.45 ps. Under owner option B the closing setup corner is TT; these SS figures are a sensitivity"),
                  cts_skew_plan=dict(status="missing", evidence=None,
                      note="the CTS-validated die clock plan (budgets_20261006) covers S81 and HBM only; Qwen forwarded-clock graph "
                           "is a candidate without CTS validation"),
@@ -927,6 +945,39 @@ def die_level_evidence():
     return E
 
 
+LB_FILE = "results/arch/unified_composition_20261007/link_budget_restatus_20261007.json"
+
+
+def _link_budget_summary():
+    """Consistent die-link budget applied to every closed block job (coordinator decision 2026-10-07)."""
+    d = _J(LB_FILE)
+    by = {}
+    for r in d["rows"]:
+        ss = r.get("period_correction", r["link_budget_ss_ps"])
+        v = "NOT CHECKED" if r["verdict"] == "NOT CHECKED" else ("HOLDS" if ss >= 0 else "REVOKED")
+        by.setdefault(v, []).append(dict(job=r["job"], block=r["block"], closed_ss_ps=r["closed_ss_ps"],
+                                                    link_budget_ss_ps=r.get("period_correction", r["link_budget_ss_ps"])))
+    return dict(closure_line="OWNER DECISION 2026-10-07: SS >= 0 ps / FF >= 0 ps / DRC 0 at 833.333 ps sign-off (+15 ps is a "
+                             "design target only); consistent die-link budget and rule H1 still apply",
+                rule=d["rule"], method=d["method"], record=src(LB_FILE),
+                counts_at_re_sta=d["counts"], counts_under_closure_line={k: len(v) for k, v in by.items()},
+                holds=by.get("HOLDS", []),
+                revoked=dict(label="revoked: link budget", jobs=by.get("REVOKED", [])),
+                unverified=dict(label="unverified (needs a per-link model)", reason=d["unchecked_reason"], jobs=by.get("NOT CHECKED", [])),
+                requeued=d["requeued"],
+                option_b_status=dict(record=src("results/closure_loop/option_b_status_20261007/status.json", "counts"),
+                                     counts=_J("results/closure_loop/option_b_status_20261007/status.json")["counts"],
+                                     note="AUTHORITATIVE under owner option B: TT setup >= 0 under the consistent link budget, FF >= 0, "
+                                          "DRC 0 (TT re-STA of the final routes, 614782370). Supersedes the SS re-STA counts above; "
+                                          "13 previously closed blocks fail TT under the budget (may change: setup-triage is checking "
+                                          "a possible reset-path artifact)"),
+                reclosed=[dict(job="qfd_lst_h-5a3bb1721-lbc", block="qfd_lst_h", ss_ps=244.84, ff_ps=42.17, drc=0,
+                               record=src("results/rtl/qwen_die_masters_20261006", "closure-loop verdict",
+                                          commit="a95df3ae1 (branch claude/setup-triage-20261007; routed at 387a4d2ac with the link-budget hook)"))],
+                consequence="a job counts as closed only if its link-budget SS is >= 0 (closure line); revoked and unverified "
+                            "jobs carry no closure credit until their re-routes re-close under the consistent budget")
+
+
 def _pins(rec):
     """sha256 of every cited source file present in this tree (immutable evidence pin)."""
     files = set()
@@ -958,7 +1009,7 @@ def ledger():
         basis="per user, same tau on both sides; both sides priced-candidate",
         ds_rom_published_over_hbm_unified=dict(AR=round(d["compositions"]["published"]["AR_tok_s"] / hu["AR_tok_s"], 4),
                                                MTP=round(d["compositions"]["published"]["MTP_tok_s"] / hu["MTP_tok_s"], 4)),
-        ds_rom_1792_half_dedicated_over_hbm_unified=dict(note="partial-priced sensitivity (unmeasured field phases), no bound proven",
+        ds_rom_1792_half_dedicated_over_hbm_unified=dict(note="measured-field 1,792 HALF composition (half-rate BF upper bound) over the HBM unified candidate",
             AR=round(d["compositions"]["actual1792_half_dedicated"]["AR_tok_s"] / hu["AR_tok_s"], 4),
             MTP=round(d["compositions"]["actual1792_half_dedicated"]["MTP_tok_s"] / hu["MTP_tok_s"], 4)),
         stale=dict(record=src(CMP, "ratios"), AR=load(CMP)["ratios"]["ds_rom_over_hbm_ar"], MTP=load(CMP)["ratios"]["ds_rom_over_hbm_mtp"],
@@ -969,6 +1020,7 @@ def ledger():
                      "cost that is not bound and is never summed. A numerical component PASS is not physical adoption."),
                targets=dict(qwen_rom=q, ds_rom=d, hbm_ds=h), ratios=ratios, no_ecc_inventory=no_ecc(), stale_claims=STALE,
                die_level_evidence=die_level_evidence(),
+               block_signoff_link_budget=_link_budget_summary(),
                established_contracts_rtl_bench=[dict(id=i, target=tg, contract=nm, ledger_line=ln, evidence=(src(ev) if ev else
                                                      next(x for x in dict(qwen_rom=q, ds_rom=d, hbm_ds=h)[tg]["lines"] if x["id"] == ln)["source"]),
                                                      bench=bn, level="RTL + bench (exact, negatives detected)",

@@ -17,6 +17,8 @@
 # repair_timing's -setup_margin guard sees the real SS setup when it places each FF hold cell (rev 3 hold-ECO "mm").
 proc ot_mm_on {} { expr {[info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1"} }
 proc ot_mm_libs {c} {
+  # OWNER OPTION B (2026-10-07): the setup scene (named WC) reads the libraries of OT_MM_SETUP_CORNER (TC under option B)
+  if {$c eq "WC" && [info exists ::env(OT_MM_SETUP_CORNER)] && $::env(OT_MM_SETUP_CORNER) ne ""} { set c $::env(OT_MM_SETUP_CORNER) }
   set k "[string toupper $c]_LIB_FILES"
   if {![info exists ::env($k)]} { error "OT_HOLD_MM: $k missing (route with --hold-corners WC,BC)" }
   return $::env($k)

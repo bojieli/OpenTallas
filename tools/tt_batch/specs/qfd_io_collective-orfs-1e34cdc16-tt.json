@@ -1,0 +1,95 @@
+{
+ "name": "qfd_io_collective-orfs-1e34cdc16-tt",
+ "block": "qfd_io_collective",
+ "owner": "Codex:qwen-masters",
+ "purpose": "TT-BATCH (owner option B, one large batch): qfd_io_collective-orfs-1e34cdc16 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Qwen r21 qfd_io_collective engine ot_rom_oneshot_die_m (N 4, DEPTH 32, ADD_LAT 7) in a 760 um frame; route 770 / sign-off 833.333, 150 ps on every port; corrected die output load 80 fF and input transition 150 ps (95043d69f), retained obsolete failures; omit redundant host Yosys0.68 pre-screen (paramod cache assertion), retain full ORFS mapped synthesis",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "codex/qwen-masters-final-20261007",
+  "commit": "1e34cdc1683d938aa18b862865d6b5145eff69d3"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "coll_margin_exact",
+    "cmd": "python3 tools/qwen_coll_margin_bench.py --out {RUN}/bench/m1 --margin 1",
+    "expect": "pass",
+    "pass_regex": "^COLL_MARGIN PASS",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_margin_mutant",
+    "cmd": "python3 tools/qwen_coll_margin_bench.py --out {RUN}/bench/mut --margin 1 --mutant",
+    "expect": "fail",
+    "fail_regex": "^COLL_MARGIN FAIL",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_io_collective {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_io_collective --out {RUN}/record/views/qfd_io_collective --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_io_collective.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_masters_final_20261007/qfd_io_collective-orfs-1e34cdc16"
+  }
+ ],
+ "cycles_added": "collective latency +~6 cycles per all-reduce vs ot_rom_oneshot_die (pin registers in/out, head register, 2 x (7-5) adder cycles over 3 adds = +6, credit port): measured per message by the bench (cycles field); MEASURED by tools/qwen_coll_margin_bench.py: +17 cycles fixed latency per collective (70 -> 87), throughput at DEPTH 32 +0.9%; priced +17 x 73 collectives per AR token = +1,241 cycles (upper bound, no overlap credited)",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

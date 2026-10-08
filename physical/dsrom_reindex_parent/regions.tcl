@@ -10,7 +10,11 @@ proc region {block dbu name x0 y0 x1 y1} {
     $r addGroup $g
     return $g
 }
-set control [region $block $dbu reindex_control 2.052 2.160 308.124 308.070]
+# CLAUDE s81-blocks 2026-10-07: REINDEX_CTL_X1 (ORFS var) widens the control fence into the empty lower-right of the
+# parent (route_r2c: 72 % placement utilisation inside the 306 x 306 fence, 10 h in detailed placement); default unchanged
+set ctl_x1 308.124
+if {[info exists ::env(REINDEX_CTL_X1)] && $::env(REINDEX_CTL_X1) ne ""} {set ctl_x1 $::env(REINDEX_CTL_X1)}
+set control [region $block $dbu reindex_control 2.052 2.160 $ctl_x1 308.070]
 set memory [region $block $dbu reindex_list 2.052 312.324 726.324 458.910]
 set nc 0;set nm 0
 foreach inst [$block getInsts] {

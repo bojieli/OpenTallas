@@ -98,16 +98,6 @@ CANDIDATES = [
                 "first (variant A re-cut is the target).  UNDER-PRICED: BF pairs also hold 20.6 % of the q words, so HALF=1 on "
                 "shared pairs doubles those q phases too (the BF-dedicated-pair plan of the BF doubling agent replaces it)",
      [("*.attn.wo_a", 0, 0.8789), ("*.ffn.router", 0, 0.8976), ("*.attn.a_proj", 0, 0.7037), ("*.attn.cmp.wk", 0, 0.7748)]),
-    ("bf_halfphl", "BF HALF_PHL, the ACCEPTED BF closure path (ot_s81_bf_native HALF=1 HALF_PHL=1, claude/s81-bf-20261007; "
-                   "exact PASS results/rtl/s81_bf_native_20261007/halfphl_exact): every BF16 field phase doubled (as-built qx10 "
-                   "BF16 phases go->idle+1, + 2 a phase for pin capture / output register; upper bound, region return / gather stay "
-                   "full rate) + the BF16-DEDICATED allocation on the 1,792 mixed die (results/uarch/dsrom_s81_mixed1792_mapping_20261007: "
-                   "half_dedicated 120 stages / 480 dies vs full_shared 98 / 392: +22 stage hops at 1,006 cycles = measured hop 0.8367 us "
-                   "+ 2 cycles mean cable, +88 layer dies)",
-     [("*.attn.wo_a", 1764, 0), ("*.ffn.router", 519, 0), ("*.attn.cmp.wk", 205, 0)]
-     + [(f"L{L}.attn.a_proj", 1557, 0) for L in (2, 8, 14)] + [("L20.attn.a_proj", 1038, 0)]
-     + [(f"L{L}.attn.a_proj", 519, 0) for L in (24, 28, 32, 36)]
-     + [['L1.substage_hop0', 1006, 0], ['L3.substage_hop0', 1006, 0], ['L5.substage_hop0', 1006, 0], ['L7.substage_hop0', 1006, 0], ['L9.substage_hop0', 1006, 0], ['L10.substage_hop0', 1006, 0], ['L12.substage_hop0', 1006, 0], ['L14.substage_hop0', 1006, 0], ['L16.substage_hop0', 1006, 0], ['L18.substage_hop0', 1006, 0], ['L20.substage_hop0', 1006, 0], ['L21.substage_hop0', 1006, 0], ['L23.substage_hop0', 1006, 0], ['L25.substage_hop0', 1006, 0], ['L27.substage_hop0', 1006, 0], ['L29.substage_hop0', 1006, 0], ['L30.substage_hop0', 1006, 0], ['L32.substage_hop0', 1006, 0], ['L34.substage_hop0', 1006, 0], ['L36.substage_hop0', 1006, 0], ['L37.substage_hop0', 1006, 0], ['L39.substage_hop0', 1006, 0]]),
     ("bf_deep4", "OPTIONAL lever, not the closure path: deep full-rate BF (ot_s81_bf_native RECUT=4, ot_v41_bf16_lanes3 DEEP 1: "
                  "fadd3 every step cut, chain5 F5=0, bmul3 XS 2, extra lane input rank; claude/s81-bf-20261007 9c21d9e49; exact "
                  "TXN MATCH 456 partials): latency only on this workload (the widened issue hazard never bound: lag identical "
@@ -146,6 +136,17 @@ CANDIDATES += [
                       "gearbox beat (-2.0 %), charged as +2.0 % of every collective node (upper bound; link-up is faster: "
                       "TP4 bench end 3,012 vs 3,374 cycles)", [(k, 0, 0.02) for k in AR_ + AG_]),
 ]
+
+
+# Candidates priced by another composition (the number is that tool's, quoted, not re-composed here)
+EXTERNAL_CANDIDATES = [dict(
+    item="bf_halfphl", physical_adoption=False, ar_tok_s=1467.6, mtp_tok_s=4403.0, ar_pct_vs_total=-7.91, mtp_pct_vs_total=-6.21,
+    description="BF HALF_PHL, the ACCEPTED BF closure path (ot_s81_bf_native HALF=1 HALF_PHL=1, claude/s81-bf-20261007, exact "
+                "PASS results/rtl/s81_bf_native_20261007/halfphl_exact): MEASURED 1,792 half_dedicated field (merged BF16 phases + "
+                "router K split, 19,312 regions exact; 120 stages / 480 dies, 35 extra hops vs 98 / 392, 13 shared), BF16 region "
+                "go->idle x 2 + 2 a phase (upper bound on the half element); full-rate shared reference 1,577.1 on the same basis",
+    source="claude/s81-fieldphase-20261007 f42b1eb76 results/uarch/dsrom_s81_field_phases_1792_20261007/composition_basis_39e424990.json",
+    supersedes="16584ae76's -13.87 % doubled the as-built UNMERGED qx10 BF16 phases (wo_a 4 phases): refuted")]
 
 
 UNPRICED_CANDIDATES = [dict(
@@ -206,7 +207,7 @@ def main():
                candidates=[dict(item=it, description=d_, adds=a_, ar_tok_s=cand[it][0], mtp_tok_s=cand[it][1],
                                 ar_pct_vs_total=round(100 * (cand[it][0] / prev[0] - 1), 3),
                                 mtp_pct_vs_total=round(100 * (cand[it][1] / prev[1] - 1), 3)) for it, d_, a_ in CANDIDATES],
-               unpriced_candidates=UNPRICED_CANDIDATES,
+               unpriced_candidates=UNPRICED_CANDIDATES, external_candidates=EXTERNAL_CANDIDATES,
                physical_adoption=False,
                pending_defect=[dict(item=it, description=d_, adds=a_) for it, d_, a_ in PENDING],
                as_is=dict(ar_tok_s=asis[0], mtp_tok_s=asis[1], ar_pct=round(100 * (asis[0] / ar0 - 1), 3),
@@ -223,6 +224,9 @@ def main():
         ar_, mt_ = cand[it]
         L.append(f"| {it} (CANDIDATE, not adopted) | {d_} | {ar_:,.1f} | {100 * (ar_ / prev[0] - 1):+.2f} | "
                  f"{100 * (mt_ / prev[1] - 1):+.2f} | | |")
+    for r in EXTERNAL_CANDIDATES:
+        L.append(f"| {r['item']} (CANDIDATE, priced by {r['source'].split()[0]}) | {r['description']} | {r['ar_tok_s']:,.1f} | "
+                 f"{r['ar_pct_vs_total']:+.2f} | {r['mtp_pct_vs_total']:+.2f} | | |")
     for r in UNPRICED_CANDIDATES:
         L.append(f"| {r['item']} (UNPRICED, not adopted) | {r['reason']} | unknown | | | | |")
     for it, d_, a_ in PENDING:

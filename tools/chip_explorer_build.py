@@ -113,8 +113,8 @@ D['rates'] = dict(
         dspark_ratio=V(q['dspark_reference']['speedup_vs_ar'], 'x', 'analytical', 'results/rtl/qwen_rom_die_r17_20261005/relays_r21/dspark_verdict_relays.json'),
     ),
     ds=dict(
-        AR=V(ds['AR_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.AR_tok_s (composition with S81 closure costs on the historical 85-stage full-rate-BF geometry, full RS(544,514) FEC; measured share ' + str(ds['measured_share']) + '; the actual 1792 mapping with half-rate BF: %.1f AR as a partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound: %s)' % (uds['actual1792_half_dedicated']['AR_tok_s'], UCL)),
-        MTP=V(ds['MTP_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.MTP_tok_s (tau 4.159 owner blend; MTP physical_qualified=false; 85-stage geometry; 1792 sensitivity %.1f, no bound proven)' % uds['actual1792_half_dedicated']['MTP_tok_s']),
+        AR=V(ds['AR_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.AR_tok_s (composition with S81 closure costs on the historical 85-stage full-rate-BF geometry, full RS(544,514) FEC; measured share ' + str(ds['measured_share']) + '; the actual 1792 HALF mapping with measured field phases: %.1f AR, half-rate BF upper bound, not adopted: %s)' % (uds['actual1792_half_dedicated']['AR_tok_s'], UCL)),
+        MTP=V(ds['MTP_tok_s'], 'tok/s', 'analytical', CMP + ' ds_rom.MTP_tok_s (tau 4.159 owner blend; MTP physical_qualified=false; 85-stage geometry; actual 1792 HALF with measured field phases %.1f, half-rate BF upper bound)' % uds['actual1792_half_dedicated']['MTP_tok_s']),
         AR_us=V(ds['AR_us'], 'us', 'measured', CMP + ' ds_rom.AR_us'),
         MTP_step_us=V(ds['MTP_step_us'], 'us', 'measured', CMP + ' ds_rom.MTP_step_us'),
         II_us=V(ds['II_us'], 'us', 'measured', CMP + ' ds_rom.II_us (slowest stage busy + hop)'),
@@ -695,6 +695,19 @@ D['hbm_l20'] = V(l20, 'us', 'analytical', MREF + ' path[layer==20] (measured RTL
 (BUILD / 'data.json').write_text(json.dumps(D, separators=(',', ':')))
 print('hbm l20 nodes', len(l20), round(sum(x[1] for x in l20), 3))
 print(collections.Counter(x[3] for x in l20))
+
+
+# ---------------------------------------------------------------- Element stories (section 7)
+# Inputs: tools/chip_explorer_stories.py INPUTS (committed records under results/, rtl/ headers, the closure-loop
+# verdicts, and the snapshots in site/chip_explorer/inputs/stories/ + inputs/loop_attempts.json). Every number on a
+# card is a fact {v, unit, status, src}; story_facts repeats them per card so the provenance drawer lists them.
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+import chip_explorer_stories as _stories
+D['stories'] = _stories.build()
+D['story_facts'] = {c['id']: {f['k']: dict(v=f['v'], unit=f['unit'], status=f['status'], src=f['src']) for f in c['facts']} for c in D['stories']['cards']}
+(BUILD / 'data.json').write_text(json.dumps(D, separators=(',', ':')))
+print('stories', len(D['stories']['cards']), collections.Counter(c['status'] for c in D['stories']['cards']))
 
 
 def assemble():

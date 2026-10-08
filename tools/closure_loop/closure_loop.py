@@ -88,7 +88,8 @@ DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
-WORKERS = 48
+WORKERS = 96
+SYNC_SLOTS = 24          # workers QUEUED/SYNC jobs may hold at once (the rest keep READY / RUNNING / ECO moving)
 # declared threads of own running stages count at 0.6 against the cap: full declared threads blocked EPYC2 at load1 40
 # (7 calibrates in synth/place, ~1 core each), load1 alone let EPYC3 reach 342 (27 routes ramping into DRT together)
 OWN_RUNNING_WEIGHT = 0.6
@@ -97,6 +98,11 @@ HM_LOW_SINCE = "2026-10-07T04:17"      # new jobs from here: route hold margin 1
 # FLOW-HOLD (2026-10-07): jobs created from here route with multi-mode hold repair (OT_ROUTE_HOLD_CORNERS=mm: SS setup +
 # FF hold under the FF sign-off constraints at CTS / global route) and HM_MM route hold margin (applies at FF only)
 MM_SINCE = "2026-10-07T21:00"
+# OWNER OPTION B (2026-10-07 20:45): closure = setup at TT + hold at FF + DRC 0.  Every calibrate / route launched from
+# here routes with CORNER=TC (setup repair at TT; with mm, hold at FF) unless spec "route_corner" names another corner;
+# hold ECOs time the setup scene at TT.  SS setup is recorded as a sensitivity (ss_sensitivity_ps).
+OPTB_SINCE = "2026-10-07T20:20"
+SETUP_LIB = "TT"
 HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
@@ -526,11 +532,29 @@ class Fleet:
         self.probe_cache = {}
         self.tool_cache = {}
         self.own_running = {}    # host -> declared threads of this loop's running stages
+        self.last_good = {}      # host -> (t, last successful probe): used for PROBE_LAST_GOOD_S when a probe fails
+        self.tool_good = {}      # host -> (t, last successful toolchain probe)
 
     def probe(self, host):
         c = self.probe_cache.get(host)
         if c and time.time() - c[0] < 45:
             return c[1]
+        info = self._probe_once(host)
+        for delay in (2, 5):            # a busy / just-expired ssh master is not an unreachable host (20:33)
+            if info is not None:
+                break
+            time.sleep(delay)
+            info = self._probe_once(host)
+        if info is None:
+            good = self.last_good.get(host)
+            if good and time.time() - good[0] < PROBE_LAST_GOOD_S:
+                info = dict(good[1], stale_s=round(time.time() - good[0]))
+        else:
+            self.last_good[host] = (time.time(), info)
+        self.probe_cache[host] = (time.time(), info)
+        return info
+
+    def _probe_once(self, host):
         cfg = host_cfg(host)
         roots = disk_roots(cfg)
         dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
@@ -542,7 +566,6 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             v = r.stdout.split()
             info = dict(load1=float(v[0]), mem_gb=int(v[5]), disk_gb=int(v[6]),
                         roots_gb=dict(zip(roots, (int(x) for x in v[7:7 + len(roots)]))))
-        self.probe_cache[host] = (time.time(), info)
         return info
 
     def own_pending(self, host):
@@ -602,8 +625,20 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         c = self.tool_cache.get(host)
         if c and time.time() - c[0] < (3600 if c[1] else 15):
             return c[1]
-        r = ssh(host, TOOLPROBE, timeout=60)
-        info = dict(l.split("=", 1) for l in r.stdout.splitlines() if "=" in l) if r.returncode == 0 else None
+        info = None
+        for delay in (0, 5, 15):
+            if delay:
+                time.sleep(delay)
+            r = ssh(host, TOOLPROBE, timeout=90)
+            if r.returncode == 0:
+                info = dict(l.split("=", 1) for l in r.stdout.splitlines() if "=" in l)
+                break
+        if info is None:   # a failed probe keeps the last good toolchain (6 h) instead of "no compatible host"
+            good = self.tool_good.get(host)
+            if good and time.time() - good[0] < TOOL_LAST_GOOD_S:
+                info = good[1]
+        else:
+            self.tool_good[host] = (time.time(), info)
         self.tool_cache[host] = (time.time(), info)
         return info
 
@@ -656,6 +691,8 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
 
 
 TOOL_REF_HOST = "ot-epyc3"
+PROBE_LAST_GOOD_S = 300     # memory/disk/load: a failed probe reuses a good one at most 5 min old
+TOOL_LAST_GOOD_S = 6 * 3600  # image digests / tool versions change only on a deliberate host update
 # LOCALHOST IMAGE (2026-10-07): the fleet image loaded into localhost's overlay2 docker store has another image ID
 # (af971398) than in the fleet's containerd stores (16470cea), so a recipe pinning the BARE ID sha256:16470cea... fails
 # there with exit 125 (dsrom_softmax_safe_exprc2_09d4d345e).  The registry-digest reference resolves on every host:
@@ -999,7 +1036,7 @@ def sync_source(j):
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
-           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl")
+           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1074,6 +1111,8 @@ def launch_stage(j, st, cmd):
         # recipes that refuse existing evidence (s81 route_view.sh) start clean (capt_x / selt_c rc=73 after a restart)
         d = f"{j['run']}/routes/{label(j['name'])}{'_cal' if st['kind'] == 'calibrate' else ''}"
         env += f"[ -e {d} ] && mv {d} {d}.prev_$(date +%s) || true\n"
+    if st["kind"] == "route" and now_iso() >= OPTB_SINCE and j["spec"].get("route_corner", "TC") != "keep":
+        env += f"export OT_ORFS_CORNER={shlex.quote(str(j['spec'].get('route_corner', 'TC')))}\n"
     if st["kind"] in ("calibrate", "route"):
         # (calibrate too, 2026-10-07: its CTS-only run repairs hold at CTS and died on RSZ-0060, hbm_stn_r38 / _ck80)
         # ROUTE HOLD CORNERS (2026-10-07, hold_corners_patch.py): place-and-route repairs hold at the primary corner only
@@ -1217,7 +1256,10 @@ def stage_tail(j, st, n=40):
     return r.stdout
 
 
-def get_metrics(j):
+TT_STA_SLOTS = threading.BoundedSemaphore(3)   # each holds one of a host's 8 ssh channels for minutes
+
+
+def get_metrics(j, tt_resta=True):
     v = j["spec"].get("verdict", {})
     if v.get("metrics_cmd"):
         r = ssh(j["host"], f"cd {j['run']}/src && {subst(v['metrics_cmd'], j)}", timeout=600)
@@ -1236,9 +1278,20 @@ import glob,json,sys
 cs=sorted(glob.glob(sys.argv[1])); dm=sorted(glob.glob(sys.argv[2])) if sys.argv[2] else []
 o={'corner_sta':cs,'drc_metrics':dm}
 if cs:
-  d=json.load(open(cs[-1])); o['ss_ps']=d['setup_ss']['worst_slack_ps']; o['ff_ps']=d['hold_ff']['worst_slack_ps']
-  o['orfs_dir']=d.get('orfs_dir'); o['errors']=d['setup_ss'].get('errors',[])+d['hold_ff'].get('errors',[])
-  o['ss_tns_ps']=d['setup_ss'].get('tns_ps'); o['post_sdc']=list(d.get('post_sdc',{}))
+  d=json.load(open(cs[-1])); o['ff_ps']=d['hold_ff']['worst_slack_ps']
+  o['orfs_dir']=d.get('orfs_dir'); o['post_sdc']=list(d.get('post_sdc',{}))
+  o['ss_sensitivity_ps']=d['setup_ss']['worst_slack_ps']; o['ss_sensitivity_tns_ps']=d['setup_ss'].get('tns_ps')
+  # OWNER OPTION B: setup closes at TT; ss_ps keeps its key for the loop's line checks but now holds the TT setup slack
+  tt=d.get('setup_tt')
+  if tt is None:
+    try: tt=json.load(open(cs[-1]+'.tt.json')).get('setup_tt')
+    except Exception: tt=None
+  o['setup_corner']='tt'; o['corner_sta_tt']=cs[-1]+'.tt.json' if 'setup_tt' not in d else cs[-1]
+  if tt is None:
+    o['need_tt']=True; o['ss_ps']=None; o['errors']=d['hold_ff'].get('errors',[])
+  else:
+    o['ss_ps']=tt.get('worst_slack_ps'); o['ss_tns_ps']=tt.get('tns_ps')
+    o['errors']=(tt.get('errors') or [])+d['hold_ff'].get('errors',[])+([tt['error']] if tt.get('error') else [])
 if dm:
   m=json.load(open(dm[-1])); o['drc']=m.get('detailedroute__route__drc_errors')
 print(json.dumps(o))
@@ -1249,6 +1302,13 @@ print(json.dumps(o))
         m = json.loads(r.stdout.strip().splitlines()[-1])
     except Exception:  # noqa: BLE001
         m = {"error": (r.stdout + r.stderr)[-400:]}
+    if m.get("need_tt") and tt_resta and m.get("orfs_dir") and not m.get("error"):
+        with TT_STA_SLOTS:          # TT re-STA of an existing route (option B), at most a few at once fleet-wide
+            ship_helpers(j["host"], j["run"])
+            ssh(j["host"], f"bash {j['run']}/cl/tt_resta.sh {shlex.quote(m['orfs_dir'])} {j['run']}/src "
+                           f"{shlex.quote(m['corner_sta_tt'])}", timeout=6000)
+        event(j, "option B: TT setup re-STA of the existing route")
+        return get_metrics(j, tt_resta=False)
     if v.get("drc") == "skip":
         m["drc"] = 0
         m["drc_skipped"] = True
@@ -1541,6 +1601,15 @@ def failure_text(j):
     return "\n".join(lines)
 
 
+def job_held(j):
+    """STATE/held.json {job name: reason}: a QUEUED job listed there is not admitted (owner option B pause of SS-wall
+    work).  Remove the entry to release it."""
+    try:
+        return json.loads((STATE / "held.json").read_text()).get(j["name"])
+    except (FileNotFoundError, ValueError):
+        return None
+
+
 def job_priority(j):
     """STATE/priority.json {job name: int} (coordinator steering; default 0) or spec "priority" """
     try:
@@ -1828,6 +1897,13 @@ def step(j, fleet):
         require_checkpoint_location(j)
         j["status"] = s = "SYNC"  # stay with preserved stage_idx and checkpoint host
     if s == "QUEUED":
+        held = job_held(j)
+        if held:            # OWNER OPTION B (2026-10-07): SS-wall jobs paused until re-evaluated at TT
+            why = f"HELD ({held})"
+            if j.get("wait") != why:
+                j["wait"] = why
+                event(j, why)
+            return
         with FLEET_LOCK:
             h, why = (None, "every usable host is wanted by a waiting priority job") \
                 if yield_to_priority(j, fleet) else fleet.choose(spec, exclude=[
@@ -2104,7 +2180,7 @@ def start_hold_eco(j, fleet, m):
           f"ALLOW_FRESH_GRT={int(he.get('allow_fresh_grt', False))} " \
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
-          f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
+          f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
     post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
     post = " ".join(shlex.quote(p) for p in post_sdcs)
@@ -2615,7 +2691,19 @@ def tick(fleet):
         for h in usable:
             prio_hosts[h] = max(prio_hosts.get(h, 0), p)
     fleet.prio_hosts = prio_hosts
-    for x in sorted(live, key=lambda x: -job_priority(x)):
+    # 21:58: a TT batch put ~150 jobs in SYNC; each source sync holds a worker and an ssh channel for minutes, so all 48
+    # workers sat in sync_source and no READY stage launched for 15 min.  Syncs (QUEUED / SYNC) get at most SYNC_SLOTS
+    # workers; every other state is submitted first.
+    with _INFLIGHT_LOCK:
+        syncing = sum(1 for x in live if x["name"] in _INFLIGHT and x["status"] in ("QUEUED", "SYNC"))
+    order = sorted(live, key=lambda x: (x["status"] in ("QUEUED", "SYNC"), -job_priority(x)))
+    for x in order:
+        if x["status"] in ("QUEUED", "SYNC"):
+            if syncing >= SYNC_SLOTS:
+                continue
+            with _INFLIGHT_LOCK:
+                if x["name"] not in _INFLIGHT:
+                    syncing += 1
         with _INFLIGHT_LOCK:
             if x["name"] in _INFLIGHT:
                 continue

@@ -35,7 +35,7 @@ def _directory():
 
 def _options(socket):
     return ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15",
-            "-o", "ServerAliveInterval=30", "-o", "ControlPersist=60",
+            "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", "-o", "ControlPersist=1800",
             "-o", f"ControlPath={socket}"]
 
 

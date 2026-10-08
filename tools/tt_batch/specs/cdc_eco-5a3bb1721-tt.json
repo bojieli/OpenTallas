@@ -1,0 +1,73 @@
+{
+ "name": "cdc_eco-5a3bb1721-tt",
+ "block": "ot_qwen_stream4_cdc_pc_cdc_eco",
+ "owner": "Claude:qwen-elements",
+ "purpose": "TT-BATCH (owner option B, one large batch): cdc_eco-5a3bb1721 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Qwen STREAM4 CDC (qfd_cdc, 128/die) m1j recipe (SS +46.0, IO hold +36.5/+30.2, internal synchroniser hold +8.2) re-routed with HM 0.01 and the post-route hold ECO (FF-only, +18 goal) for the internal hold",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/qwen-elements-final-20261007",
+  "commit": "5a3bb172156f5c91d365367cb8218164dbddd19c"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} HM=0.01 bash physical/qwen_die_masters/jobs/route_cdc.sh {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_cdc --out {RUN}/record/views/qfd_cdc --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_stream4_cdc/io_skew90.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_elements_final_20261007/cdc_eco"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": null,
+ "no_bench_reason": "RTL unchanged from the m1j CDC (ot_qwen_stream4_cdc_pc MARGIN 1, exact bench record results/rtl/qwen_stream4_cdc_20261005/r11 + margin_20261006); physical-only re-route",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}
