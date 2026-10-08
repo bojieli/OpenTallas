@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "qfd_io_serdes_rxd512",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_serdes_adapter_rxd512_pin-073694e6b-tc/routes/qfd_io_serdes_adapter_rxd512_pin_073694e6b_tc/work/orfs",
+ "post_sdc": "physical/qwen_die_masters/signoff/qfd_io_serdes_adapter_rxd512.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "-2.2204893479482735e-10",
+  "ws_min": "6.496880811113215e-11"
+ },
+ "tt": {
+  "done": true,
+  "ws_max": "6.610934022432957e-12",
+  "ws_min": "4.273148501710011e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "7.646411281925225e-11",
+  "ws_min": "2.332278814520805e-11"
+ },
+ "files": {
+  "qfd_io_serdes_rxd512.lef": "82eadc89e6de319d9bfc814d6f0b1e95acb92f6a4bff1839d5ee8933a343f3a8",
+  "qfd_io_serdes_rxd512_ff.lib": "2be5aee01c111e3154bd4b6d7d1c8c23bd8420e7303dd9f95cf4f8b2daa93fd1",
+  "qfd_io_serdes_rxd512_ss.lib": "b6cc3d1b052e16a004b6b23b973649ccd68c2cf0ef94b5b1bd437d16f288f5e9",
+  "qfd_io_serdes_rxd512_tt.lib": "2669633a80b5e12f01504b274247f73da3e4b5c2e787e9d8815ca39377fa7afe"
+ }
+}
