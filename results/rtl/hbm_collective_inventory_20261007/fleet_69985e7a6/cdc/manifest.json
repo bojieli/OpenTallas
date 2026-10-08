@@ -1,0 +1,26 @@
+{
+  "block": "cdc",
+  "top": "inventory_top",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv": "a4e1bda9a0ab083503462a8c755f35cbe3aa52786e455e29c66834e915463497"
+  },
+  "normalized_sha256": {
+    "0_ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "1_ot_hbm_w2_protected_bank.sv": "daa5b161b9d710c5a42ebacdc04cbdb826c60836bf25cfaef17e83499cf4f0bb",
+    "2_ot_hbm_collective_protected_cdc.sv": "8476b0920f896eda3debe6ae2ce12843389ab53aef94162f287dd45252138646",
+    "inventory_top.sv": "39ae11ee91c8a3ebc42fc7ae19cc8cb1ecba5c94ce28484dd8cc95e63cf2948c"
+  },
+  "normalization": "Replace module wildcard imports with explicit package::function references; CDC concrete top instantiates ENABLE1/W545/AW6 instead of hierarchy top-chparam; no source RTL edits",
+  "command": [
+    "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys",
+    "-Q",
+    "-T",
+    "-s",
+    "/out/cdc/inventory.ys"
+  ],
+  "scope": "GenericmappedFF/mux and retainedmacro inventory only; not standardcell mapping/area/clock closure",
+  "tool_version": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+  "tool_sha256": "5cd52bc790d39b1e59a88112e9132ef8de338c2a26e4b0df8222d937e65bab92"
+}
