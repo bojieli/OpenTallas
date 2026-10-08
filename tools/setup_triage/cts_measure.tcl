@@ -27,5 +27,7 @@ foreach e [concat [lrange $regp 0 3] [lrange $regp end-9 end]] {
 }
 foreach m $mac { puts [format "TRI_CTS_MACRO %s %.1f" [lindex $m 0] [lindex $m 1]] }
 foreach m [lsort -unique $icg] { puts [format "TRI_CTS_ICG %s %s" [lindex $m 0] [lindex $m 1]] }
+foreach g [get_cells -quiet -hierarchical *cgpd*] { set pp [get_pins -quiet [get_full_name $g]/A]; if {[llength $pp]} { lappend cga [get_property $pp arrival_max_rise] } }
+if {[info exists cga]} { set cga [lsort -real $cga]; puts [format "TRI_CTS_CGPD_CLK n=%d min=%.1f med=%.1f max=%.1f" [llength $cga] [lindex $cga 0] [lindex $cga [expr {[llength $cga]/2}]] [lindex $cga end]] }
 puts "TRI_CTS_WS [sta::worst_slack_cmd max]"
 report_checks -path_delay max -group_path_count 3 -endpoint_path_count 1 -format end

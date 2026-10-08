@@ -60,6 +60,7 @@ proc ot_cg_split {its K} {
   foreach e [lrange $keyed $h end] { lappend b [lindex $e 1] }
   return [concat [ot_cg_split $a $K] [ot_cg_split $b $K]]
 }
+set ::ot_cg_clones 0
 proc ot_cg_pushdown {} {
   set K [expr {[info exists ::env(OT_CG_K)] ? $::env(OT_CG_K) : 48}]
   set MIN [expr {[info exists ::env(OT_CG_MIN)] ? $::env(OT_CG_MIN) : 64}]
@@ -82,6 +83,18 @@ proc ot_cg_pushdown {} {
       }
       if {$ckpin eq ""} continue
       lappend gates [list $inst $ckpin Y]
+      # hand-built gater: the enable pin's driver is the gating latch / negedge flop when it is sequential and feeds
+      # only this gate; it is cloned with the gate so latch -> AND stays local (as inside an ICG cell)
+      set enpin [expr {$ckpin eq "A" ? "B" : "A"}]
+      set ::ot_cg_latch([$inst getName]) ""
+      set en [[$inst findITerm $enpin] getNet]
+      if {$en ne "NULL"} {
+        set d [$en getFirstOutput]
+        if {$d ne "NULL" && $d ne "" && [llength [$en getITerms]] == 2} {
+          set li [$d getInst]
+          if {[ot_cg_is_seq [$li getMaster]]} { set ::ot_cg_latch([$inst getName]) [list $li [[$d getMTerm] getName] $enpin] }
+        }
+      }
     }
   }
   set total 0
@@ -107,6 +120,24 @@ proc ot_cg_pushdown {} {
         set n [$src getNet]
         if {$n ne "NULL"} { [$c findITerm $pn] connect $n }
       }
+      if {[info exists ::ot_cg_latch([$inst getName])] && $::ot_cg_latch([$inst getName]) ne ""} {
+        lassign $::ot_cg_latch([$inst getName]) li lq enpin
+        set lm [$li getMaster]
+        set lc [odb::dbInst_create $blk $lm "[string map {/ _} [$li getName]]_cgpd$k"]
+        foreach mt [$lm getMTerms] {
+          set pn [$mt getName]
+          if {$pn eq $lq} continue
+          set src [$li findITerm $pn]
+          if {$src eq "NULL"} continue
+          set n [$src getNet]
+          if {$n ne "NULL"} { [$lc findITerm $pn] connect $n }
+        }
+        set ln [odb::dbNet_create $blk "[string map {/ _} [$li getName]]_cgpd${k}_q"]
+        [$lc findITerm $lq] connect $ln
+        [$c findITerm $enpin] disconnect
+        [$c findITerm $enpin] connect $ln
+        set ::ot_cg_newlatch($cname) $lc
+      }
       set nn [odb::dbNet_create $blk "[string map {/ _} [$gnet getName]]_cgpd$k"]
       $nn setSigType CLOCK
       [$c findITerm $outp] connect $nn
@@ -118,20 +149,27 @@ proc ot_cg_pushdown {} {
       set n [llength $cl]
       $c setLocation [expr {$sx / $n}] [expr {$sy / $n}]
       $c setPlacementStatus PLACED
+      if {[info exists ::ot_cg_newlatch($cname)]} { set lc $::ot_cg_newlatch($cname); $lc setLocation [expr {$sx / $n}] [expr {$sy / $n}]; $lc setPlacementStatus PLACED }
     }
     # re-centre the original gate on its own (first) cluster
     set cl [lindex $clusters 0]; set sx 0; set sy 0
     foreach it $cl { lassign [[$it getInst] getLocation] x y; incr sx $x; incr sy $y }
     if {![$inst isFixed]} { $inst setLocation [expr {$sx / [llength $cl]}] [expr {$sy / [llength $cl]}]; $inst setPlacementStatus PLACED }
-    puts "OT_CG_PUSHDOWN [$inst getName] ([$m getName]) sinks=[llength $sinks] other_loads=$others clusters=[llength $clusters] clones=$k"
+    set lat [expr {[info exists ::ot_cg_latch([$inst getName])] && $::ot_cg_latch([$inst getName]) ne "" ? [[lindex $::ot_cg_latch([$inst getName]) 0] getName] : "-"}]
+    if {$lat ne "-"} { set li [lindex $::ot_cg_latch([$inst getName]) 0]; if {![$li isFixed]} { $li setLocation [expr {$sx / [llength $cl]}] [expr {$sy / [llength $cl]}]; $li setPlacementStatus PLACED } }
+    puts "OT_CG_PUSHDOWN latch=$lat [$inst getName] ([$m getName]) sinks=[llength $sinks] other_loads=$others clusters=[llength $clusters] clones=$k"
     incr total $k
   }
   puts "OT_CG_PUSHDOWN total gates=[llength $gates] clones=$total K=$K MIN=$MIN"
+  set ::ot_cg_clones $total
 }
 if {[info procs clock_tree_synthesis] ne "" && [info procs ot_cgpd_cts_orig] eq ""} {
   rename clock_tree_synthesis ot_cgpd_cts_orig
   proc clock_tree_synthesis {args} {
     ot_cg_pushdown
+    # the shared enable net now fans out to every clone: buffer it (and only new DRV violations) before the tree
+    # is built, as placement-stage repair_design would have
+    if {$::ot_cg_clones > 0} { estimate_parasitics -placement; repair_design }
     ot_cgpd_cts_orig {*}$args
   }
 }

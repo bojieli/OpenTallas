@@ -24,6 +24,7 @@ fi
 echo "export CTS_ARGS = $ARGS" >> $OUT/config.mk
 echo "export POST_CTS_TCL = /work/hooks/tri_cts_measure.tcl" >> $OUT/config.mk
 echo "export TRI_ORIG_POST_CTS = $orig" >> $OUT/config.mk
+for v in OT_CG_K OT_CG_MIN; do [ -n "${!v:-}" ] && echo "export $v = ${!v}" >> $OUT/config.mk; done
 [ "${TRI_REPAIR:-0}" = 1 ] || echo "export SKIP_CTS_REPAIR_TIMING = 1" >> $OUT/config.mk
 img=${OPENTALLAS_ORFS_IMAGE:-openroad/orfs:asap7lock}
 timeout 14400 docker run --rm --name tri_cts_$(basename $OUT) -v $SRC:/src:ro -v $OUT:/work -w /OpenROAD-flow-scripts/flow $img bash -lc \
