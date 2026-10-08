@@ -1,0 +1,6 @@
+PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448
+PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350
+PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418
+TXN LAG ns min=0.733 max=0.733 mean=0.733 n=456
+TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0
+TXN MATCH

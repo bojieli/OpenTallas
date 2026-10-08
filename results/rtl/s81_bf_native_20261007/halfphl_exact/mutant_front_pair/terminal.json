@@ -1,0 +1,25 @@
+{
+ "variant": "halfphl",
+ "cases": {
+  "mutant_front_pair": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[7004000] %Fatal: cand_ot_v41_pair_w17w10.sv:200: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=32ffffff00400010"
+   ]
+  }
+ },
+ "pass": true,
+ "refreshed": [
+  "cand_ot_v41_rom_elem_w10.sv",
+  "cand_ot_v41_bf16_lanes2.sv",
+  "cand_ot_v41_bmul2_rne_prepare.sv",
+  "cand_ot_v41_segtree2.sv",
+  "cand_ot_v41_chain2.sv",
+  "cand_ot_v41_fadd.sv",
+  "cand_ot_v41_bterm2_w10.sv",
+  "cand_ot_prefix.sv"
+ ],
+ "source_commit": "4000b1ea7dc972e971333b11c9fe8c1ebb346154",
+ "dirty": null
+}

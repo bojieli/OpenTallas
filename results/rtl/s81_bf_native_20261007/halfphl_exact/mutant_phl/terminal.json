@@ -1,0 +1,25 @@
+{
+ "variant": "halfphl",
+ "cases": {
+  "mutant_phl": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[1000] %Fatal: ot_s81_bf_native.sv:140: Assertion failed in tb_bfcolumn.test.cand_dut.u_shadow.g_half.g_phl: BF_HALF_PHL phase mismatch ph=0 ph_d=1 t=0 t_d=0"
+   ]
+  }
+ },
+ "pass": true,
+ "refreshed": [
+  "cand_ot_v41_rom_elem_w10.sv",
+  "cand_ot_v41_bf16_lanes2.sv",
+  "cand_ot_v41_bmul2_rne_prepare.sv",
+  "cand_ot_v41_segtree2.sv",
+  "cand_ot_v41_chain2.sv",
+  "cand_ot_v41_fadd.sv",
+  "cand_ot_v41_bterm2_w10.sv",
+  "cand_ot_prefix.sv"
+ ],
+ "source_commit": "4000b1ea7dc972e971333b11c9fe8c1ebb346154",
+ "dirty": null
+}
