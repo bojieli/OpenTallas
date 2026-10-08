@@ -18,7 +18,8 @@ SOURCES += ['rtl/v41rom/'+n+'.sv' for n in (
 # RECUT (BF re-cut A): the q-element and its re-cut modules (harmless to the original build: not elaborated)
 SOURCES += ['rtl/v41rom/'+n+'.sv' for n in (
  'ot_v41_rom_elem_qx_w10','ot_v41_chain2u2','ot_v41_kreg','ot_v41_chain3','ot_v41_chain4','ot_v41_fadd2','ot_v41_bterm3_w10',
- 'ot_v41_bterm4_w10','ot_v41_bterm5_w10','ot_v41_segtree3','ot_v41_segtree4','ot_v41_segtree5','ot_v41_segtree6')]
+ 'ot_v41_bterm4_w10','ot_v41_bterm5_w10','ot_v41_segtree3','ot_v41_segtree4','ot_v41_segtree5','ot_v41_segtree6',
+ 'ot_v41_fadd3','ot_v41_chain5','ot_v41_bmul3_rne','ot_v41_bf16_lanes3')]   # + RECUT 4 / 5 deep full-rate BF (s81-bf)
 MACRO='ot_rom_4096x274_m8'
 VIEW='physical/asap7_memory_macros_v2/'+MACRO
 SOURCES += [VIEW+'/'+MACRO+'_bb.v',
@@ -88,7 +89,7 @@ def main():
    'set_multicycle_path -hold 1 -from [get_cells -hierarchical *u_rom?]']
   if a.half:   # BF SAFE variant B: element + pin regs on the half-rate gated clock (multicycle 2 / 1 among them)
    lines += [l for l in (ROOT/'physical/s81_native_bf/margin/half_mc.sdc').read_text().splitlines() if l.strip()]
-  if a.recut and a.recut_level >= 3:   # BF unroll-by-2: the lane chains' hs_* registers multicycle 2/1
+  if a.recut and a.recut_level == 3:   # BF unroll-by-2: the lane chains' hs_* registers multicycle 2/1
    lines += [l for l in (ROOT/'physical/s81_native_bf/margin/u2_mc.sdc').read_text().splitlines() if l.strip()]
   return lines
  flow.sdc_lines=sdc

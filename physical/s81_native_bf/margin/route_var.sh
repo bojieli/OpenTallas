@@ -4,6 +4,7 @@
 #   BF_VAR=half  : HALF=1 (SAFE B: element on the half-rate gated clock), route SDC + sign-off add half_mc.sdc (MC 2/1)
 #   BF_VAR=recut : RECUT=2 (A: q-element re-cuts + BF lanes re-cut)
 #   BF_VAR=halfphl: half + HALF_PHL=1 (phase FF on the ICG clock net, ph_local.tcl PRE_CTS / ph_local_post.tcl POST_CTS)
+#   BF_VAR=deep4 / deep5: RECUT=4 / 5 deep full-rate BF (ot_v41_bf16_lanes3 DEEP 1 / 2; OPTIONAL lever, s81-bf)
 #   BF_VAR=unroll: RECUT=3 (A + BF lane chunk chains unrolled by 2 on a half-rate gated clock; + u2_mc.sdc)
 # Route at 730 ps (owner SAFE rule: route target 730, sign-off 833.333); BF_PERIOD=<ns> overrides the route target only.
 # usage: OUT=<dir> SRC=<src root> BF_VAR=half|recut route_var.sh <label> [extra run_abi3_physical args]
@@ -16,6 +17,8 @@ POST="--post-sdc physical/s81_native_bf/margin/signoff_ref.sdc"
 [[ "$V" = half || "$V" = halfphl ]] && POST="$POST --post-sdc physical/s81_native_bf/margin/half_mc.sdc"
 VA="--$V"
 [ "$V" = halfphl ] && VA="--half --half-phl"
+[ "$V" = deep4 ] && VA="--recut --recut-level 4"
+[ "$V" = deep5 ] && VA="--recut --recut-level 5"
 [ "$V" = unroll ] && { VA="--recut --recut-level 3"; POST="$POST --post-sdc physical/s81_native_bf/margin/u2_mc.sdc"; }
 echo "$(date -Is) START $(hostname) var=$V ss=$SS args=$*" >> $O/MANIFEST
 python3 tools/s81/run_bf_native_physical.py --margin --wc-only --hitfix $VA --period ${BF_PERIOD:-.730} --work $O/work --output $O/physical.json \

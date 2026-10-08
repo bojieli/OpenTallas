@@ -294,6 +294,10 @@ module ot_v41_rom_elem_qx_w10 #(
     localparam integer TRW = SW + (MTP != 0 ? 1 : 0);   // tree id = {position parity, segment}
     localparam integer HW = $clog2(NCH);
     localparam integer LAT = FAST != 0 ? 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] : 5;
+    // QBF >= 4 (s81-bf deep full-rate BF, OPTIONAL): the BF chunk chains (ot_v41_bf16_lanes3 DEEP) need a slot revisit
+    // distance of RDB cycles (11 at QBF 4, 13 at QBF 5) in a BF phase; the issue hazard window follows the phase family.
+    localparam integer RDB = QBF >= 5 ? 13 : QBF >= 4 ? 11 : LAT;
+    localparam integer LATH = RDB > LAT ? RDB : LAT;
     localparam integer XD = PP != 0 ? 3 : 2;       // issue -> captured ROM word (a PP read is a 2-cycle path)
     // BF16_PAIR: BP = 2 (root re-decision 2026-09-30, option ii, the product): 2 multipliers per macro, a word held
     // 8 cycles (lanes 2k, 2k+1 in cycle k) into the 2 chunk chains (slot = 8 x word + k, <= 2 words per round at
@@ -988,13 +992,22 @@ module ot_v41_rom_elem_qx_w10 #(
     wire [SW-1:0] s_next = w_s + 1'b1;
     wire [6:0] nx_uabs = ({4'd0, w_nx[UW-2 -: 3]} << sbs) + {4'd0, w_nx[2:0]};
 
-    reg [LAT-1:0] hz_v;
-    reg [HW-1:0] hz_s [0:LAT-1];
+    // QBF >= 4: hazard window of the current phase family (hz_win) and of the next cycle's (hz_win_n: fam loads
+    // go_bf at go), the latter for QX >= 5's registered next-cycle hazard
+`ifdef BF_DEEP_MUTANT_HZ
+    wire [5:0] hz_win = LAT;                                   // negative control: BF revisit window not widened
+    wire [5:0] hz_win_n = LAT;
+`else
+    wire [5:0] hz_win = (QBF >= 4 && fam) ? RDB : LAT;
+    wire [5:0] hz_win_n = (QBF >= 4 && (go_e ? go_bf_e : fam)) ? RDB : LAT;
+`endif
+    reg [LATH-1:0] hz_v;
+    reg [HW-1:0] hz_s [0:LATH-1];
     reg hazard;
     integer k;
     always @* begin
         hazard = 1'b0;
-        for (k = 0; k < LAT - 1; k = k + 1) if (hz_v[k] && hz_s[k] == w_cnt) hazard = 1'b1;   // LAT-cycle recurrence
+        for (k = 0; k < LATH - 1; k = k + 1) if (k < hz_win - 1 && hz_v[k] && hz_s[k] == w_cnt) hazard = 1'b1;   // LAT-cycle recurrence (RDB in a QBF >= 4 BF phase)
     end
     // QX = 5: the hazard held in a register loaded with its next-cycle value.  hz_s[0] takes w_cnt and hz_v[0] takes
     // issue every cycle, so next cycle's hazard is H(c') || (issue && w_cnt == c') with H(c) the match of c against
@@ -1002,7 +1015,7 @@ module ot_v41_rom_elem_qx_w10 #(
     // register-only candidates, with issue only the final select.
     function automatic qx_hz(input [HW-1:0] c);
         qx_hz = 1'b0;
-        for (int j = 0; j < LAT - 2; j++) if (hz_v[j] && hz_s[j] == c) qx_hz = 1'b1;
+        for (int j = 0; j < LATH - 2; j++) if (j < hz_win_n - 2 && hz_v[j] && hz_s[j] == c) qx_hz = 1'b1;
     endfunction
     reg  hazard_r;
     // PP: word i is in bank i[0]; a bank is read at most every other cycle (only an MTP restart to an even base
@@ -1104,7 +1117,7 @@ module ot_v41_rom_elem_qx_w10 #(
             n_run <= 1'b0; bn_run <= 1'b0; fam <= 1'b0; w_run <= 1'b0; f_cnt <= 0; f_wr <= 0; f_rd <= 0; hz_v <= '0; ffault <= 1'b0;
             pp_last_v <= 1'b0; bp_hold <= 3'd0;
         end else begin
-            hz_v <= {hz_v[LAT-2:0], issue};
+            hz_v <= {hz_v[LATH-2:0], issue};
             pp_last_v <= issue; pp_last_b <= a_ctr[0];
             if (BP != 0) bp_hold <= (issue && w_bf) ? HOLDM1 : (bp_hold != 3'd0 ? bp_hold - 3'd1 : 3'd0);
             if (go_em) begin
@@ -1351,7 +1364,7 @@ module ot_v41_rom_elem_qx_w10 #(
         for (bk = 0; bk < 4; bk = bk + 1)
             if (bmu[bk]) f_q0[f_wr + bpre[bk]] <= xbd[256*bk +: 256];
         hz_s[0] <= w_cnt;
-        for (k = 1; k < LAT; k = k + 1) hz_s[k] <= hz_s[k-1];
+        for (k = 1; k < LATH; k = k + 1) hz_s[k] <= hz_s[k-1];
     end
 
     // ---------------- x alignment with the ROM read (issue -> ROM -> capture: 2 cycles) ---------------------
@@ -1794,10 +1807,18 @@ module ot_v41_rom_elem_qx_w10 #(
         if (FAST != 0 && QBF != 0) begin : g_fq
         // QBF: the BF view lanes (GRADUAL_RNE multiplier repair; QBF >= 2: lanes re-cut, QBF >= 3: + unrolled chunk chains;
         // see ot_v41_bf16_lanes2_rne_prepare.sv RC)
+        if (QBF >= 4) begin : g_deep
+        // QBF 4 / 5: deep full-rate BF lanes (ot_v41_bf16_lanes3 DEEP 1 / 2; s81-bf OPTIONAL lever)
+        ot_v41_bf16_lanes3 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(1), .DEEP(QBF >= 5 ? 2 : 1)) u_bf (.clk(gclk), .rst_n(rst_m), .v(mi2_v && mi2_bf),
+            .w(cap[255:0]), .x(i2_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),
+            .tree(mi2_t[TW-HW-1 -: TG]), .final_i(mi2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
+            .ofinal(bf_final), .oerr(bf_err), .fault(b_fault));
+        end else begin : g_l2
         ot_v41_bf16_lanes2 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 3 ? 2 : QBF >= 2 ? 1 : 0)) u_bf (.clk(gclk), .rst_n(rst_m), .v(mi2_v && mi2_bf),
             .w(cap[255:0]), .x(i2_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),
             .tree(mi2_t[TW-HW-1 -: TG]), .final_i(mi2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
             .ofinal(bf_final), .oerr(bf_err), .fault(b_fault));
+        end
         end else if (FAST != 0) begin : g_f
         ot_v41_bf16_lanes2 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT)) u_bf (.clk(gclk), .rst_n(rst_m), .v(mi2_v && mi2_bf),
             .w(cap[255:0]), .x(i2_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),

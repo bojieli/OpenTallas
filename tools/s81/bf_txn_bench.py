@@ -32,7 +32,8 @@ SRC = {'cand_ot_v41_rom_elem_w10.sv': 'rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_p
        'cand_ot_prefix.sv': 'rtl/common/ot_prefix.sv'}
 # recut: the q-element and its re-cut modules (not in the prepared package), compiled as extra cand-namespace files
 EXTRA = ['ot_v41_rom_elem_qx_w10', 'ot_v41_chain2u2', 'ot_v41_kreg', 'ot_v41_chain3', 'ot_v41_chain4', 'ot_v41_fadd2', 'ot_v41_bterm3_w10',
-         'ot_v41_bterm4_w10', 'ot_v41_bterm5_w10', 'ot_v41_segtree3', 'ot_v41_segtree4', 'ot_v41_segtree5', 'ot_v41_segtree6']
+         'ot_v41_bterm4_w10', 'ot_v41_bterm5_w10', 'ot_v41_segtree3', 'ot_v41_segtree4', 'ot_v41_segtree5', 'ot_v41_segtree6',
+         'ot_v41_fadd3', 'ot_v41_chain5', 'ot_v41_bmul3_rne', 'ot_v41_bf16_lanes3']
 
 SHADOW = '''
     // ---- transaction shadow (tools/s81/bf_txn_bench.py, variant @VAR@) ----
@@ -167,7 +168,10 @@ def main():
     else:
         sh = SHADOW.replace('@CLOCK@', CLOCK_SAME).replace('@PARAMS@', f', .RECUT({a.level})')
         muts = [('mutant_dp', ['+define+QP_MUTANT_DP']), ('mutant_recut', ['+define+W10_MUTANT_RECUT'])]
-        if a.level >= 3: muts.append(('mutant_u2', ['+define+W10_MUTANT_U2']))
+        if a.level == 3: muts.append(('mutant_u2', ['+define+W10_MUTANT_U2']))
+        if a.level >= 4:   # deep full-rate BF (s81-bf): revisit window, LZC split, multiplier encode split
+            muts = [('mutant_dp', ['+define+QP_MUTANT_DP']), ('mutant_hz', ['+define+BF_DEEP_MUTANT_HZ']),
+                    ('mutant_lz', ['+define+BF_DEEP_MUTANT_LZ']), ('mutant_mul', ['+define+BF_DEEP_MUTANT_MUL'])]
     files[pair] = src.rstrip()[:-len('endmodule')] + sh.replace('@VAR@', a.variant) + '\n'
     try:
         commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip()
