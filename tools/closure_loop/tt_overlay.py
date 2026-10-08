@@ -191,6 +191,27 @@ def ensure_direct_configs(src):
     return [f"direct config.mk WC->TT x{n}"] if n else []
 
 
+CTX_CP = "cp $S/tools/orfs_allcorner_spef.py $R/context_src/tools/"
+CTX_CP_NEW = (CTX_CP + "; cp $S/tools/orfs_hold_mm.py $S/tools/orfs_hold_mm.tcl $R/context_src/tools/ 2>/dev/null; "
+              "mkdir -p $R/context_src/physical/common_flow; cp $S/physical/common_flow/* $R/context_src/physical/common_flow/"
+              "  # tt_overlay: mm hold helpers + CTS hooks in the context copy")
+CTX_ADD = "add rtl/control_context.v physical/qwen_core_ctx tools/orfs_allcorner_spef.py"
+CTX_ADD_NEW = "add rtl/control_context.v physical/qwen_core_ctx tools physical/common_flow"
+
+
+def ensure_context_copies(src):
+    """Qwen route_core*.sh run ORFS from a reduced context copy: ship the mm hold helpers and common_flow into it."""
+    n = 0
+    for f in (src / "physical/qwen_die_masters/jobs").glob("route_core*.sh"):
+        t = f.read_text()
+        u = t.replace(CTX_CP + "\n", CTX_CP_NEW + "\n") if CTX_CP_NEW not in t else t
+        u = u.replace(CTX_ADD, CTX_ADD_NEW)
+        if u != t:
+            f.write_text(u)
+            n += 1
+    return [f"context copy helpers x{n}"] if n else []
+
+
 def main():
     src = Path(sys.argv[1])
     f = src / "tools/run_abi3_physical.py"
@@ -209,6 +230,7 @@ def main():
         out.append("no tools/run_abi3_physical.py")
         ok = (src / "tools/hbm_accel_smh_physical.py").is_file() or any((src / "physical").rglob("config.mk"))
     out += ensure_direct_configs(src)
+    out += ensure_context_copies(src)
     sm = ensure_smh(src)
     out += sm
     ok = ok and not any("missing" in x for x in sm)
