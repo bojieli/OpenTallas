@@ -170,6 +170,8 @@ def run(bld: Path, work: Path, mode: str, threads: int):
             key = f"L{n}_die{d}"
             got, want = read_words(out / f"{key}_x.hex"), read_words(GOLD / f"L{n:02d}_die{d}_x.hex")
             layer_x[key] = sum(a != b for a, b in zip(got, want)) + abs(len(got) - len(want))
+            if mode == "L0":
+                continue  # current-KV readback happens after ACK retirement at the END of the token (full mode)
             gold = json.loads((GOLD / "kv_at_P" / f"L{n}_die{d}.json").read_text())
             kp = out / f"{key}_kvP.hex"
             rows = [r.split() for r in kp.read_text().splitlines()] if kp.exists() else []

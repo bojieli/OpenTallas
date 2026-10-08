@@ -57,6 +57,23 @@ def ssh(host, cmd, check=True, inp=None):
     return p.stdout
 
 
+def merge_state(commit, runs=None, **fields):
+    """Read-modify-write one commit's state record under a lock (launch and the watcher's collect race)."""
+    import fcntl
+    STATE.mkdir(parents=True, exist_ok=True)
+    with open(STATE / ".lock", "a") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        p = STATE / f"{commit}.json"
+        rec = json.loads(p.read_text()) if p.exists() else {"commit": commit, "runs": {}}
+        rec.update(fields)
+        for name, upd in (runs or {}).items():
+            rec["runs"].setdefault(name, {}).update(upd)
+        tmp = p.with_suffix(".tmp")
+        tmp.write_text(json.dumps(rec, indent=1) + "\n")
+        tmp.replace(p)
+        return rec
+
+
 def manifest():
     return json.loads((HERE / "benches.json").read_text())["benches"]
 
@@ -74,9 +91,17 @@ def stage(commit, host):
     if ssh(host, f"test -f {d}/SOURCE_COMMIT && echo yes", check=False).strip() == "yes":
         return d
     tmp = f"{d}.part"
-    arch = subprocess.Popen(["git", "archive", commit, "--", *ARCHIVE], cwd=REPO, stdout=subprocess.PIPE)
+    # only the archive paths this commit has (older commits lack some); a failed export never gets a SOURCE_COMMIT
+    paths = [a for a in ARCHIVE if a.startswith(":(") or not subprocess.run(
+        ["git", "cat-file", "-e", f"{commit}:{a}"], cwd=REPO, capture_output=True).returncode]
+    if "rtl" not in paths:
+        raise RuntimeError(f"{commit} has no rtl/")
+    arch = subprocess.Popen(["git", "archive", commit, "--", *paths], cwd=REPO, stdout=subprocess.PIPE)
     gz = subprocess.Popen(["gzip", "-1"], stdin=arch.stdout, stdout=subprocess.PIPE)
+    arch.stdout.close()
     subprocess.run(["ssh", host, f"rm -rf {tmp} && mkdir -p {tmp} && tar -xz -C {tmp}"], stdin=gz.stdout, check=True)
+    if arch.wait() or gz.wait():
+        raise RuntimeError(f"git archive {commit} failed")
     overlay = False
     if subprocess.run(["git", "cat-file", "-e", f"{commit}:tools/exactness/bench.py"], cwd=REPO,
                       capture_output=True).returncode:
@@ -100,10 +125,7 @@ def launch(ref, tier="fast", names=None, label=None):
     groups = {}
     for b in benches:
         groups.setdefault((b["host"], b["group"]), []).append(b)
-    STATE.mkdir(parents=True, exist_ok=True)
-    rec_path = STATE / f"{commit}.json"
-    rec = json.loads(rec_path.read_text()) if rec_path.exists() else {"commit": commit, "runs": {}}
-    rec.update(ref=ref, label=label or ref, subject=git("log", "-1", "--format=%s", commit)[:120])
+    new_runs = {}
     for (host, group), bs in groups.items():
         src = stage(commit, host)
         run = f"{REMOTE}/runs/{commit}"
@@ -113,20 +135,24 @@ def launch(ref, tier="fast", names=None, label=None):
             lines += [f"echo running > {w}.state",
                       f"/srv/opentallas-scratch/admit.sh {b['peak_gb']} -- python3 tools/exactness/bench.py "
                       f"{b['bench']} --work {w} > {w}.out 2>&1; echo $? > {w}.exit; echo done > {w}.state"]
-            rec["runs"][b["bench"]] = {"host": host, "work": w, "launched": now(), "logged": False}
-        script = f"{run}/{group}.sh"
+            new_runs[b["bench"]] = {"host": host, "work": w, "launched": now(), "logged": False, "label": label or ref,
+                                    "verdict": None, "reason": ""}
+        # a unique script per launch: bash reads its script lazily, so rewriting a running one corrupts it
+        script = f"{run}/{group}-{int(time.time())}.sh"
         ssh(host, f"mkdir -p {run} && cat > {script} && chmod +x {script} && "
                   f"for b in {' '.join(b['bench'] for b in bs)}; do echo queued > {run}/$b.state; done && "
-                  f"setsid -f nohup {script} > {run}/{group}.nohup 2>&1 < /dev/null", inp="\n".join(lines) + "\n")
-    rec_path.write_text(json.dumps(rec, indent=1) + "\n")
+                  f"setsid -f nohup {script} > {script}.nohup 2>&1 < /dev/null", inp="\n".join(lines) + "\n")
+    merge_state(commit, new_runs, ref=ref, label=label or ref, subject=git("log", "-1", "--format=%s", commit)[:120])
     print(f"launched {commit} ({tier}): {', '.join(b['bench'] for b in benches)}")
     return commit
 
 
 def judge(b, r):
-    """PASS / FAIL(reason) against the manifest's expectation."""
+    """PASS / FAIL(reason) / ERROR(harness could not measure) against the manifest's expectation."""
     e = b["expect"]
     why = []
+    if r.get("error") or (not r.get("exact") and r.get("cycles") is None and not r.get("runs")):
+        return "ERROR", r.get("error") or "no measurement (build or harness failure; see the bench .out/logs)"
     if not r.get("exact"):
         why.append(r.get("error") or "not exact")
     for k in ("cycles", "token", "e2e_cycles", "generated", "winning_logit_bits", "logit_bits"):
@@ -165,7 +191,6 @@ def collect(commit=None, quiet=False):
     by = {b["bench"]: b for b in manifest()}
     for p in sorted(STATE.glob("*.json")) if commit is None else [STATE / f"{commit}.json"]:
         rec = json.loads(p.read_text())
-        changed = False
         for name, run in rec["runs"].items():
             if run.get("logged"):
                 continue
@@ -187,13 +212,12 @@ def collect(commit=None, quiet=False):
                 note += " [campaign -Wall lint fails; exactness checks pass]"
             if r.get("bench_wall_seconds"):
                 note += f" ({r['bench_wall_seconds'] / 60:.0f} min)"
-            log_row([now(), name, b["target"], f"{rec['commit']} ({rec.get('label', '')})", lp, verdict,
+            log_row([now(), name, b["target"], f"{rec['commit']} ({run.get('label', rec.get('label', ''))})", lp, verdict,
                      f"{cyc} ({exp:,})" if isinstance(exp, int) else cyc, note.strip()])
             run.update(logged=True, verdict=verdict, reason=why, result=r)
-            changed = True
-            out.append((rec["commit"], name, verdict, why))
-        if changed:
-            p.write_text(json.dumps(rec, indent=1) + "\n")
+            merge_state(rec["commit"], {name: dict(logged=True, verdict=verdict, reason=why, result=r)})
+            out.append((rec["commit"], name, verdict, why, run.get("label", rec.get("label", ""))))
+
     if not quiet:
         status()
     return out
@@ -204,13 +228,13 @@ def status():
         rec = json.loads(p.read_text())
         for name, run in rec["runs"].items():
             st = run.get("verdict") or ssh(run["host"], f"cat {run['work']}.state 2>/dev/null", check=False).strip()
-            print(f"{rec['commit']} {rec.get('label', ''):20s} {name:18s} {st:8s} {run.get('reason', '')[:100]}")
+            print(f"{rec['commit']} {run.get('label', rec.get('label', '')):20s} {name:18s} {st:8s} {run.get('reason', '')[:100]}")
 
 
 def pending(label):
     for p in STATE.glob("*.json"):
         rec = json.loads(p.read_text())
-        if rec.get("label") == label and any(not r.get("logged") for r in rec["runs"].values()):
+        if any(r.get("label", rec.get("label")) == label and not r.get("logged") for r in rec["runs"].values()):
             return True
     return False
 
@@ -234,18 +258,29 @@ def bisect(bench, good, bad):
     good, bad = git("rev-parse", "--short=12", good), git("rev-parse", "--short=12", bad)
     revs = git("rev-list", "--first-parent", "--reverse", f"{good}..{bad}", "--", *bench_paths(bench, bad)).split()
     revs = [r[:12] for r in revs]
-    lo, hi = -1, len(revs) - 1        # revs[lo] good (good itself), revs[hi] bad
     print(f"bisect {bench}: {len(revs)} candidate commits between {good} and {bad}")
+    # the good end must PASS under THIS harness (the evidence commit's source was often a scratch snapshot)
+    v = wait_for(launch(good, names=[bench], label=f"bisect {bench}"), [bench])[bench]
+    if v != "PASS":
+        raise RuntimeError(f"bisect {bench}: good end {good} is {v} under the harness; pick a harness-PASS commit")
+    lo, hi = -1, len(revs) - 1        # revs[lo] good (good itself), revs[hi] bad
+    skipped = set()
     while hi - lo > 1:
-        mid = (lo + hi) // 2
-        c = launch(revs[mid], names=[bench], label=f"bisect {bench}")
-        v = wait_for(c, [bench])[bench]
+        cands = [i for i in range(lo + 1, hi) if i not in skipped]
+        if not cands:
+            break
+        mid = min(cands, key=lambda i: abs(i - (lo + hi) // 2))
+        v = wait_for(launch(revs[mid], names=[bench], label=f"bisect {bench}"), [bench])[bench]
         print(f"  {revs[mid]} -> {v}")
         if v == "PASS":
             lo = mid
-        else:
+        elif v == "FAIL":
             hi = mid
+        else:
+            skipped.add(mid)          # unmeasurable commit (like git bisect skip)
     culprit = revs[hi]
+    if any(lo < i < hi for i in skipped):
+        print(f"  range not fully resolved: first bad within {revs[lo + 1]}..{revs[hi]} (skipped unmeasurable)")
     msg = git("log", "-1", "--format=%h %an %ad %s", "--date=format:%m-%d %H:%M", culprit)
     print("first bad:", msg)
     return culprit, msg
@@ -317,10 +352,13 @@ def watch(interval=600, nightly_hour=1):
                         f.write(f"<!-- {now()} nightly trial merge {c}: {', '.join(merged)}; "
                                 f"conflicts skipped: {', '.join(skipped) or 'none'} -->\n")
                 last_nightly.write_text(today.date().isoformat())
-            for commit, bench, verdict, why in collect(quiet=True):
-                if verdict == "FAIL":
+            for commit, bench, verdict, why, label in collect(quiet=True):
+                if verdict == "FAIL" and not label.startswith("bisect"):
                     good = last_pass(bench)
-                    culprit, msg = bisect(bench, good, commit) if good != commit else (commit, commit)
+                    try:
+                        culprit, msg = bisect(bench, good, commit)
+                    except Exception as exc:
+                        culprit, msg = commit, f"{good}..{commit} (bisect unresolved: {exc})"
                     report(bench, culprit, msg, why)
         except Exception as exc:  # keep watching; record the failure
             with LOG.open("a") as f:

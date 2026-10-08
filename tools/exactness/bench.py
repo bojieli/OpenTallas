@@ -126,9 +126,7 @@ def hdc_exact(d):
     """Exactness = every simulated-vs-ISA/golden check of the campaign (single step, end to end, long context);
     the campaign's own status also folds in a strict -Wall lint, reported separately as lint_clean."""
     parts = [d.get("single_step", {}), d.get("end_to_end", {})]
-    lc = d.get("long_context")
-    if isinstance(lc, dict) and "pass" in lc:
-        parts.append(lc)
+    parts += [v for k, v in d.items() if isinstance(v, dict) and "pass" in v and k not in ("single_step", "end_to_end")]
     return bool(d) and all(p.get("pass") is True for p in parts)
 
 
