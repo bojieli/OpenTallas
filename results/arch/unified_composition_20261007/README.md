@@ -25,25 +25,28 @@ Every line of the three targets carries a status, its effect on the single-user 
 |---|---|---:|---:|---|
 | Qwen ROM 8K | published (`three_machine_compose`) | 5,537.3 | AR mode | measured token and levers, plus the r21 relays (priced, owner-adopted). Closure reopened 2026-10-07. |
 | Qwen ROM 8K | unified candidate | 5,533.0 | AR mode | adds the controller SHIFT worst case (+144) and the crossbar model (+24); forwarded clocks add 0 |
-| Qwen ROM 8K | DSpark, re-evaluated | 3,901.4 (0.705×) | — | AR_MODE holds. The VM service and link-credit inputs are gated. |
+| Qwen ROM 8K | DSpark, re-evaluated | 3,901.4 (0.705×) | — | AR_MODE holds. The VM service input is gated. The link credit is resolved: the full-rate hub measures 0 credit stalls. |
 | DS ROM 1M | published (85 stages, full-rate BF) | 1,596.7 | 4,702.0 | closure-cost ledger TOTAL |
-| DS ROM 1M | actual 1792, HALF BF-dedicated: 120 stages / 480 dies (77ffa0428 geometry, 2d811aafb mapping) | 1,305.0 | 3,993.3 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. Only the +35 stage hops and the BF16 half-rate doubling are priced. No bound is proven. |
-| DS ROM 1M | actual 1792, FULL shared: 98 stages / 392 dies (77ffa0428, 2d811aafb) | 1,337.3 | 4,065.7 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. The halving of the q phases on BF pairs is not priced (undercount). No bound is proven. |
+| DS ROM 1M | actual 1792, HALF BF-dedicated: 120 stages / 480 dies (77ffa0428 geometry, 2d811aafb mapping) | 1,303.3 | 3,989.0 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. Only the +35 stage hops and the BF16 half-rate doubling are priced. No bound is proven. |
+| DS ROM 1M | actual 1792, FULL shared: 98 stages / 392 dies (77ffa0428, 2d811aafb) | 1,335.6 | 4,061.2 | **Current physical integration basis.** A partial-priced sensitivity (unmeasured field phases), not an adopted or guaranteed bound. The halving of the q phases on BF pairs is not priced (undercount). No bound is proven. |
 | DS ROM 1M | + full-shape PQ partition | — | — | **Partial-priced candidate**, line `pq_fullshape_partition`. Cost per field phase: 14 non-CAM cycles (design v2, 9a8c86255, branch only) plus the **measured** native root-CAM delta. The CAM delta, including publication, is +1 isolated, +2 two-leaf or +4 eight-leaf (main 4251eb216), for a total of +15..+18, about 0.47–0.56% AR. MTP is not priced, and the per-token critical phases on the 1,792 mapping are not composed. Geometry is provisional: roots in the new 164.16 µm row, core 0.32 mm² in the 449 × 1,728 µm slot, return write-back blocks 0.40 mm². Protection storage is +387 bits a root (49,536 for 128 roots), sizing only. The protected root face/parity is OPEN (the native interface lacks it): zero credit. Stage-B timing is unmeasured (the stage-C fallback is modelled, default-off), and HALF serial-lane beat-shift exactness is not shown. |
+| DS ROM 1M | published + S81 die re-priced on m221pq (+28 a phase) | 1,593.7 | 4,694.7 | Closure-cost ledger TOTAL from 39e424990 (branch `claude/s81-die-20261007`), on the same 85-stage basis as `published`. BF HALF_PHL price: −7.68% AR / −6.31% MTP upper bound (5a07bf71d, branch `claude/s81-bf-ledger-20261007`). That price was set on the legal-fit-failed option-B base, so only the relative cost transfers, and its +6 stages / +24 dies are not composed. |
 | DS ROM 1M | option B, 2,304 pairs mixed slots, 85 stages / 340 dies, full-rate BF (505a9b484) | (1,754.3) | (5,098.3) | **Numerical, legal-fit failed, not physically qualified.** These are field-vehicle numbers only: never measured silicon, never a qualified or adopted rate. The mixed183 geometry fits at most 2,048 pairs (77ffa0428). The branch label "DS ADOPT" is quoted in the ledger for history only. |
+| Qwen ROM 8K | unified + closure-cost ledger upper bound (+3,464 cycles) | 5,446.0 | AR mode | Qwen closure-cost ledger fd6f7805d (branch `claude/qwen-blocks-20261007`): −1.75% AR upper bound. It assumes 325 ME ops a token where the relay record measures 217, so the per-op terms are overstated. |
 | HBM DS 1M | three_machine row (stale) | 1,948.8 | 3,944.2 | no die closure costs |
 | HBM DS 1M | r23 closure headline | 1,750.9 | 3,626.1 | light FEC, no lever credit |
-| HBM DS 1M | closure + full FEC, no lever credit | 1,656.7 | 3,526.2 | includes the priced true-credit and protected-SRAM costs |
-| HBM DS 1M | unified candidate | 1,782.3 | 3,772.7 | adds the exact levers (minimum-component exactness, SS/FF not admitted). Excludes the gated II=3 rate cap (next rows). |
-| HBM DS 1M | unified, refill in the CDC only | 1,688.0 | 3,262.1 | The CDC rate cap is resolved by the II=1 refill (B′), measured in RTL on main at 9ead91a15; SS timing is unmeasured, with a risk on the 64:1 × 648-bit read-address path and a proposed function-preserving fix. The packet SRAM is still at II=3, which is gated: +30.78 µs AR / +172 µs MTP on 18,470 / 103,196 cycles of measured receive streaming. Refill latency: +1.02 µs. |
-| HBM DS 1M | unified, refill in both the CDC and the packet SRAM | 1,780.5 | 3,770.7 | Full line rate. +1.02 µs (2 cycles a pass × 610 passes) replaces the +2 × 265 SRAM term; ~60–100 µm² of logic, no added state. Recommended by the v2 design (2ae0d7d33, branch only). The full-rate credit contract is gated: the native credit producer is missing, and today a testbench preloads the credits. The 3-bank rotation (+12,093 µm²) is the fallback only. |
+| HBM DS 1M | closure + full FEC, no lever credit | 1,644.2 | 3,512.6 | includes the priced true-credit and protected-SRAM costs |
+| HBM DS 1M | unified candidate | 1,767.9 | 3,757.2 | adds the exact levers (minimum-component exactness, SS/FF not admitted). Excludes the gated II=3 rate cap (next rows). |
+| HBM DS 1M | unified, refill in the CDC only | 1,675.1 | 3,250.4 | The CDC rate cap is resolved by the II=1 refill (B′), measured in RTL on main at 9ead91a15; SS timing is unmeasured, with a risk on the 64:1 × 648-bit read-address path and a proposed function-preserving fix. The packet SRAM is still at II=3, which is gated: +30.78 µs AR / +172 µs MTP on 18,470 / 103,196 cycles of measured receive streaming. Refill latency: +1.02 µs. |
+| HBM DS 1M | unified, refill in both the CDC and the packet SRAM | 1,766.1 | 3,755.2 | Full line rate. +1.02 µs (2 cycles a pass × 610 passes) replaces the +2 × 265 SRAM term; ~60–100 µm² of logic, no added state. Recommended by the v2 design (2ae0d7d33, branch only). The full-rate credit contract is gated: the native credit producer is missing, and today a testbench preloads the credits. The 3-bank rotation (+12,093 µm²) is the fallback only. |
+| HBM DS 1M | **contracts at RTL + bench** (refill both, credit producer, clock-lock idle insertion, native SM→SU edge) | 1,764.4 | 3,753.3 | All four contracts pass at RTL and bench level (444859f1d `gate_all`: 12 positives, 20 negatives). The SM→SU edge is priced at 1,029 cycles a token. This is RTL-level credit only: physical screens, die integration and the CDC refill's SS timing remain open. |
 
 **SM→SU result edge (all HBM DS rows).** Every HBM DS row has a die-view-only result edge until gate `sm_su_result_edge_native` closes (audit 8c8bb2af2, branch `claude/hbm-sm-su-result-contract-20261007` only). The published handoff (343 cycles a token, "stations gather a2 +1") is not a native edge: in the die view it ends in hfd_su's XOR exercise envelope, and in RTL it runs through the GPU-comparator memory model. Two alternatives are listed and not summed:
 
 | Alternative | Cycles a token | Status | Effect on the unified candidate | AR / MTP tok/s |
 |---|---:|---|---|---|
-| Proposed native edge (SU ingress FIFOs + relay slices) | 1,029 | priced candidate | +0.10% AR / +0.05% MTP | 1,780.5 / 3,770.8 |
-| RTL store-and-forward floor (applies if no native edge is built) | 132,520 | estimate | +19.7% AR / +10.0% MTP (+19.6% / +10.0% over the published 343) | 1,489.8 / 3,430.0 |
+| Proposed native edge (SU ingress FIFOs + relay slices) | 1,029 | priced candidate | +0.10% AR / +0.05% MTP | 1,766.1 / 3,755.2 |
+| RTL store-and-forward floor (applies if no native edge is built) | 132,520 | estimate | +19.7% AR / +10.0% MTP (+19.6% / +10.0% over the published 343) | 1,479.8 / 3,417.1 |
 
 The Qwen 8K HBM rows are unaffected.
 
@@ -80,8 +83,13 @@ Current state:
 DS ROM / HBM, per user, both sides candidates:
 
 - On the published 85-stage geometry: 0.90× AR and 1.25× MTP.
-- For the BF-dedicated 1792 mapping: 0.73× AR and 1.06× MTP. This is a partial-priced sensitivity; no bound is proven.
+- For the BF-dedicated 1792 mapping: 0.74× AR and 1.06× MTP. This is a partial-priced sensitivity; no bound is proven.
 - The earlier 0.8193× and 1.1921× omitted the HBM die closure costs.
+
+**Qwen gates resolved on 2026-10-07 (stream qwen-contracts, branch `claude/qwen-contracts-20261007`).**
+
+- `link_credit_rtt` is now a **priced candidate** at +0 token cycles. The full-rate hub successor `ot_qwen_die_hub_fr` has 128 link credits, which covers the measured 117/119-cycle credit round trip. Its exact gate (Verilator and Icarus) streams 1.000 word a cycle over 54 and 55 actual link stations with 0 credit stalls. The predecessor's 4-credit window measures 0.033. Four negatives end in the named native fault: credit underflow, credit overflow, ar-credit overflow and skid overflow. The area is in `link_credit_rtt/pricing.json`: an analytic estimate until the routes `qfd_hub_fr` and `qfd_link_rx128` close.
+- `protected_kv_transport` is **no longer a performance gate**. By the owner decision of 2026-10-06, the shipped path is the measured, exact STREAM4 token. The protected full-width path has only a cold L0, and full36_r1 FAIL is retained. The missing transport protection stays a GAP in the no-ECC inventory.
 
 ## What else the ledger holds
 

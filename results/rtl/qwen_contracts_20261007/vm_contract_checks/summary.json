@@ -1,0 +1,106 @@
+{
+ "schema": "opentallas.qwen-vm-contract-recheck.v1",
+ "source_commit": "ce24d613fc89e7ae34fa5ca2ed98f8b3110645bc",
+ "all_reproduce": true,
+ "packages": [
+  {
+   "package": "direct_readback (tools/qwen_vm_direct_readback_check.py)",
+   "where": "localhost Icarus 11.0",
+   "rc": 0,
+   "result": "[{\"enabled\": 0, \"case\": 0, \"expected_outcome\": true, \"exit_code\": 1}, {\"enabled\": 1, \"case\": 0, \"expected_outcome\": true, \"exit_code\": 0}, {\"enabled\": 1, \"case\": 1, \"expected_outcome\": true, \"exit_code\": 1}, {\"enabled\": 1, \"case\": 2, \"expected_outcome\": true, \"exit_code\": 1}, {\"enabled\": 1, \"case\": 3, \"expected_outcome\": true, \"exit_code\": 1}]",
+   "note": "EPYC1 Icarus 12.0 run rc=1 only because the DIRECT_READBACK=0 known-failure control (an Icarus-11 X-propagation artefact) passes on Icarus 12; re-run on the recorded Icarus 11 reproduces all 5 expected outcomes"
+  },
+  {
+   "package": "request normalizer (tools/qwen_rom_vm_request_normalizer_check.py)",
+   "where": "EPYC1",
+   "rc": 0,
+   "result": "positive/disabled/partial PASS checks=37452; wrap/invalid_read/zero_return mutants FATAL as expected"
+  },
+  {
+   "package": "ROM ingress CAP (tools/qwen_vm_rom_ingress.py + _check.py)",
+   "where": "localhost",
+   "rc": 0,
+   "result": "positive PASS checks=8498; bypass_me and omit_zero negatives FATAL as expected",
+   "note": "EPYC1 run rc=1: the check needs the generated adapter first (tools/qwen_vm_rom_ingress.py); generated manifest matches the committed one except the absolute source path"
+  },
+  {
+   "package": "combined ingress + direct readback provider (tools/qwen_rom_vm_combined_ingress_check.py)",
+   "where": "EPYC1",
+   "rc": 0,
+   "result": "PASS expected outcome 0"
+  },
+  {
+   "package": "combined ingress negative 2",
+   "where": "EPYC1",
+   "rc": 0,
+   "result": "PASS expected outcome 2"
+  },
+  {
+   "package": "writer priority (tools/qwen_vm_writer_priority_gate.py)",
+   "where": "EPYC1",
+   "rc": 0,
+   "result": "{\"positive\": {\"exit_code\": 0, \"expected_outcome\": true}, \"first_writer_mutant\": {\"exit_code\": 1, \"expected_outcome\": true}}"
+  },
+  {
+   "package": "SU service gate (tools/qwen_vm_su_service_gate.py, Verilator 5.050)",
+   "where": "EPYC1",
+   "rc": 0,
+   "result": "{\"0\": {\"exit_code\": 0, \"marker\": \"PASS captured_SU_conflict\"}, \"1\": {\"exit_code\": 1, \"marker\": \"FOREIGN_ACK_REJECTED native_held progress0\"}, \"2\": {\"exit_code\": 1, \"marker\": \"UNPAID_NATIVE_ADVANCE\"}, \"3\": {\"exit_code\": 1, \"marker\": \"PREMATURE_CHASE_WITH_UNPAID_FRAME\"}}"
+  },
+  {
+   "package": "core clock join (tools/qwen_vm_core_clock_join.py)",
+   "where": "EPYC1",
+   "rc": 0,
+   "result": "{\"pinreg0\": {\"exit_code\": 0, \"expected_outcome\": true}, \"pinreg1\": {\"exit_code\": 0, \"expected_outcome\": true}, \"lease_disabled\": {\"exit_code\": 1, \"expected_outcome\": true}}"
+  },
+  {
+   "package": "reducer overlap parent160 (tools/qwen_vm_reducer_overlap_gate.py)",
+   "where": "EPYC1",
+   "rc": 0,
+   "result": "{\"0\": {\"exit_code\": 0, \"marker\": \"PASS full_aperture_parent160\"}, \"1\": {\"exit_code\": 1, \"marker\": \"FOREIGN_REDUCER_ACK_REJECTED\"}, \"2\": {\"exit_code\": 1, \"marker\": \"UNPAID_NATIVE_ADVANCE\"}, \"3\": {\"exit_code\": 1, \"marker\": \"UNPAID_NATIVE_ADVANCE\"}}"
+  },
+  {
+   "package": "publication storage (tools/qwen_vm_publication_storage_check.py)",
+   "where": "EPYC1",
+   "rc": 0,
+   "result": "{\"0\": {\"quality_status\": \"PASS_CONTROL\", \"historical_outcome_reproduced\": true, \"exit_code\": 0}, \"1\": {\"quality_status\": \"FAIL_STORAGE_COVERAGE\", \"historical_outcome_reproduced\": true, \"exit_code\": 1}, \"2\": {\"quality_status\": \"FAIL_STORAGE_COVERAGE\", \"historical_outcome_reproduced\": true, \"exit_code\": 1}, \"3\": {\"quality_status\": \"FAIL_STORAGE_COVERAGE\", \"historical_outcome_reproduced\": true, \"exit",
+   "note": "reproduces the KNOWN storage-coverage failures (cases 1, 2: FAIL_STORAGE_COVERAGE): the protected publication path is not complete"
+  }
+ ],
+ "service_requirement": {
+  "me_operation": {
+   "read_edges": 256,
+   "read_scalar_requests": 524288,
+   "seats_per_read_edge": 2048,
+   "unique_scalars_per_edge": 128,
+   "fanout": 16,
+   "consecutive_read_cycles": 256,
+   "write_edges": 8,
+   "note": "one W1 operation reads 2,048 seats (128 unique scalars, fanout 16) on each of 256 consecutive edges = 4,096 unique bits a cycle"
+  },
+  "captured_calendar": {
+   "enabled_edges": 347,
+   "unique_frames": 124,
+   "fold_peaks": {
+    "128": {
+     "read_distinct_words_per_bank": 3,
+     "write_distinct_words_per_bank": 1,
+     "combined_distinct_words_per_bank": 3
+    },
+    "256": {
+     "read_distinct_words_per_bank": 2,
+     "write_distinct_words_per_bank": 1,
+     "combined_distinct_words_per_bank": 2
+    }
+   }
+  },
+  "ideal_ports_in_measured_token": "per cycle: 3 x 64 SU scalar reads, 2,048 ME x reads (XVM 1), one 16-lane sequencer read; 48 x 16-lane ME writes, 16-lane MX, 64 SU scalar, reducer, 16-lane sequencer writes (rtl/qwen_sys/baseline_ar_stream4/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv vector memory)"
+ },
+ "only_priced_service": {
+  "serialized_walker_extra_engine_edges": 3719840,
+  "measured_token_cycles": 193955,
+  "ratio": 19.2,
+  "note": "the committed finite-VM service (protected checked bank, one access at a time) costs ~19x the whole measured token for ONE operation component: it cannot carry the token; a parallel banked VM sized to 4,096 unique bits a cycle (fold256 peak 2 distinct words a bank an edge in the captured calendar) is required"
+ },
+ "verdict": "contract re-checks reproduce; the VM service gates stay gated-unknown: no VM organisation that serves the measured per-edge demand exists in RTL, so no token cost can be composed"
+}
