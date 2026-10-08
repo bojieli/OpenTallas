@@ -1,0 +1,5 @@
+FAIL hub NEG=1: bad 418 fault 1 cause 000010 ar 1154 of 2400 x3 625/566/602/607 of 2400
+- /home/ubuntu/wt-claude-qwen-contracts/rtl/test/tb_qwen_die_hub_fr.sv:77: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48us; walltime 0.046 s; speed 1.049 ms/s
+- Verilator: cpu 0.046 s on 1 threads; allocated 7 MB

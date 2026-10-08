@@ -1,0 +1,22 @@
+%Warning: tracts/vmchecks-ce24d613f/src/results/rtl/qwen_hbm_activation_vm_realization_20261005/minimum_adapter_case/initial_x4096.u32.hex:0: $readmem file not found
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=1 checked_ACK_delta=1 reads=0 writes=1 progress=0 chased=0
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=2 checked_ACK_delta=1 reads=0 writes=2 progress=0 chased=0
+WRITE_SERVICE checked_edges=28
+FRAME steps=55 native=3 checked_ACK_delta=1 reads=0 writes=3 progress=0 chased=0
+READ_SERVICE edges=9
+READ_SERVICE edges=9
+READ_SERVICE edges=9
+FRAME steps=58 native=4 checked_ACK_delta=0 reads=3 writes=3 progress=0 chased=0
+CONFLICT got=00000000,00000000,00000000 expected=00000000,00000000,00000000
+READ_SERVICE edges=9
+WRITE_SERVICE checked_edges=28
+FRAME steps=66 native=5 checked_ACK_delta=1 reads=4 writes=4 progress=0 chased=0
+READ_SERVICE edges=9
+FRAME steps=36 native=8 checked_ACK_delta=0 reads=5 writes=4 progress=0 chased=0
+PASS captured_SU_conflict oldread_alias postverified_ACK gated_native_progress CHASE1 writes=4 checked_ACKs=4 raw_ACKs=4 reads=5 held=319 native=8
+- /srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/su_service/src/bench.sv:101: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.008 s; speed 421.363 us/s
+- Verilator: cpu 0.008 s on 1 threads; allocated 11 MB

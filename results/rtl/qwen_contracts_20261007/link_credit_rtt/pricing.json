@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.qwen-link-credit-pricing.v1",
+ "gate": "link_credit_rtt",
+ "credits": 128,
+ "output_fifo": 8,
+ "x3_skid": 8,
+ "token_cycles_added": 0,
+ "cycles_basis": "same registered link stations (r21 relay pricing already charges 2 x 36 x 26 link-stage cycles); credit RTT 117/119 measured; at CR=128 the link never waits on a credit (gate: 0 stalls)",
+ "kv_new_sectors_per_layer": 136,
+ "kv_new_serialisation": {
+  "words_per_layer_max": 136,
+  "cycles_at_full_rate": 136,
+  "cycles_at_4_credits": 4012,
+  "measured_token_drain_or_retire_stalls": 0,
+  "note": "posted write-back: the STREAM4 token measured stall_drain = stall_retire = 0 on every layer, so the write-back is off the token path; at 4 credits the same 136 words would take ~4012 cycles a layer (an un-composed risk), at CR=128 <= 136 + RTT"
+ },
+ "area": {
+  "basis": "analytic flop count (routes pending)",
+  "added_flops_hub": 276838,
+  "added_flops_far_end": 259408,
+  "added_die_mm2_estimate": 0.4549,
+  "summary": "~+0.45 mm2 a die estimated (536246 added flops: hub 276838, 4 strip receive buffers 259408; x1.6 mux allowance, 55% util); routes pending"
+ },
+ "physical": {
+  "routes": {},
+  "summary": "routes pending: qfd_hub_fr-b3af3a9ed, qfd_hub_fr_w648-b3af3a9ed, qfd_link_rx128-b3af3a9ed queued"
+ },
+ "area_cost_note": "added die area is reported to the qwen-dietop floorplan; die count unchanged (Qwen single reticle, 858 mm2 limit)"
+}
