@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-a4608c553/bench_src_a1/tools/w2_station_rb_gate.py", line 246, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-a4608c553/bench_src_a1/tools/w2_station_rb_gate.py", line 217, in main
+    res['quarter']['rb'] = quarter_bench(out, 'quarter_rb', True)
+                           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-a4608c553/bench_src_a1/tools/w2_station_rb_gate.py", line 153, in quarter_bench
+    files = mutate(out, mutant, files)
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-a4608c553/bench_src_a1/tools/w2_station_rb_gate.py", line 106, in mutate
+    return relreg(out, files)
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-a4608c553/bench_src_a1/tools/w2_station_rb_gate.py", line 96, in relreg
+    t = Path(f).read_text(); assert t.count(DEF_OLD) == 1
+                                    ^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.qwen_forwarded_link.component_gate.v1",
+  "pass_all": true,
+  "functional": [
+    {
+      "case": "nl1_neg0",
+      "returncode": 0,
+      "expected_failure": false,
+      "qualified": true
+    },
+    {
+      "case": "nl2_neg0",
+      "returncode": 0,
+      "expected_failure": false,
+      "qualified": true
+    },
+    {
+      "case": "nl2_neg1",
+      "returncode": 1,
+      "expected_failure": true,
+      "qualified": true
+    },
+    {
+      "case": "nl2_neg2",
+      "returncode": 1,
+      "expected_failure": true,
+      "qualified": true
+    },
+    {
+      "case": "nl2_neg3",
+      "returncode": 1,
+      "expected_failure": true,
+      "qualified": true
+    }
+  ],
+  "mapping": [
+    {
+      "NL": 1,
+      "total_state_FF": 1060,
+      "distinct_word_FF": 1056,
+      "clock_inverters": 4,
+      "clock_cell": "INVx1_ASAP7_75t_R",
+      "netlist_sha256": "aa4676810cc232ee65aefd257138cdae6097e02a1c2633f1e2e6a0420f734ea1",
+      "qualified": true
+    },
+    {
+      "NL": 2,
+      "total_state_FF": 2120,
+      "distinct_word_FF": 2112,
+      "clock_inverters": 8,
+      "clock_cell": "INVx1_ASAP7_75t_R",
+      "netlist_sha256": "33818267005b9018f4263538afafb74e2e2d28f4745ec9e24243ff177de86ad1",
+      "qualified": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_die_link_fwd_full.sv": "921a2fbbdf6f76d3b1e64007ec0f6601fbd84fbb66cd4ec3484f0af8367e6518",
+    "rtl/test/tb_qwen_die_link_fwd_full.sv": "425866275e1c987520d32009fdb5e10c1ecfe61b92b2b28592a99babf6a2e6de",
+    "tools/qwen_link_forwarded_gate.py": "f6b8b45e27c49dfa9a81f6d337e2f46b229073307b1ae6384c0e69604dd6a71e"
+  },
+  "library_sha256": {
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+  },
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "yosys_sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+  "scope": "Minimum full NL2 two-hop zero-delay RTL and ASAP7 sequential plus clock-inverter mapping. Data combinational mapping, P&R, protection, clock insertion/hold race and root reset are unqualified.",
+  "adoption": false,
+  "log_sha256": {
+    "mapped_nl1.log": "24e3b2ec5a2f9b034c75b5af0e0c41cf8fba78c794d1b5766efc99d6119bb7b8",
+    "mapped_nl2.log": "587d3701aacba5c10c39c56495f5187f814f549921c1a6275118710f33caf4d5",
+    "nl1_neg0.log": "25672156a219d9dac048ddbb7d866d10ec46dfd76b342d40fd1fb08561583fa2",
+    "nl2_neg0.log": "6f96b1e45d82e4751d6b54c8b3a789e7b1da4bffb08c32c9c7e6884e3a2604fc",
+    "nl2_neg1.log": "d66aab42f8f68c157a6d938f55db398d4afc62202c9a2b7c2f666ddffd75a10e",
+    "nl2_neg2.log": "3ce34f0fd1a2aeb7f732a7184210613e39a50d49a35020a0bf94eced3d169e7c",
+    "nl2_neg3.log": "97480e2a7acd4678f3c9bab6387f8c2b54e1644805779a8bbbebaac2c55a4d58"
+  }
+}

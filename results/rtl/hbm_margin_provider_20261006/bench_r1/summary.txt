@@ -1,0 +1,28 @@
+== run_rp0_s1.log
+EXACT checks=388072 mismatches=0 first=-1 launches=5179 native=1742 leases=1663 release_accepts=1210 done=1196 fault_cycles=165379 upsets=0 owner_changes=1025 revokes=135 shared_faults=125 exec_faults=64 raw_cycles=1357 resets=3975
+PROVIDER REPLAY=0 checks=376189 mismatches=0 first=-1 req_cycles=114209 fires=76490 rsp_fires=93612 unsafe=0 guard_blocks=1795 core_stale=149 | NEGCTL NG fires=77829 unsafe=1339 | NEGCTL LAT2 mismatches=8234
+PASS
+NEGCTL_NG FAIL (expected: request without live grant)
+NEGCTL_LAT2 FAIL (expected: wrong pin latency caught)
+== run_rp0_s2.log
+EXACT checks=388486 mismatches=0 first=-1 launches=4973 native=1647 leases=1630 release_accepts=1149 done=1132 fault_cycles=151560 upsets=0 owner_changes=987 revokes=153 shared_faults=116 exec_faults=72 raw_cycles=1452 resets=3837
+PROVIDER REPLAY=0 checks=377024 mismatches=0 first=-1 req_cycles=122017 fires=83059 rsp_fires=94791 unsafe=0 guard_blocks=1706 core_stale=173 | NEGCTL NG fires=84351 unsafe=1292 | NEGCTL LAT2 mismatches=7986
+PASS
+NEGCTL_NG FAIL (expected: request without live grant)
+NEGCTL_LAT2 FAIL (expected: wrong pin latency caught)
+== run_rp1_s1.log
+EXACT checks=0 mismatches=0 first=-1 launches=9659 native=3332 leases=3043 release_accepts=2903 done=2862 fault_cycles=272794 upsets=0 owner_changes=961 revokes=34 shared_faults=112 exec_faults=19 raw_cycles=1317 resets=6789
+PROVIDER REPLAY=1 checks=359261 mismatches=0 first=-1 req_cycles=24740 fires=10894 rsp_fires=89790 unsafe=0 guard_blocks=5794 core_stale=57 | NEGCTL NG fires=15218 unsafe=4324 | NEGCTL LAT2 mismatches=0
+PASS
+NEGCTL_NG FAIL (expected: request without live grant)
+== run_rp1_s2.log
+EXACT checks=0 mismatches=0 first=-1 launches=9788 native=3200 leases=3110 release_accepts=2957 done=2904 fault_cycles=270104 upsets=0 owner_changes=977 revokes=35 shared_faults=128 exec_faults=26 raw_cycles=1394 resets=6862
+PROVIDER REPLAY=1 checks=358827 mismatches=0 first=-1 req_cycles=25497 fires=11317 rsp_fires=89773 unsafe=0 guard_blocks=5890 core_stale=63 | NEGCTL NG fires=15741 unsafe=4424 | NEGCTL LAT2 mismatches=0
+PASS
+NEGCTL_NG FAIL (expected: request without live grant)
+== run_rp1_s3.log
+EXACT checks=0 mismatches=0 first=-1 launches=9681 native=3313 leases=3161 release_accepts=3022 done=2976 fault_cycles=269571 upsets=0 owner_changes=974 revokes=47 shared_faults=110 exec_faults=26 raw_cycles=1261 resets=6687
+PROVIDER REPLAY=1 checks=359873 mismatches=0 first=-1 req_cycles=25477 fires=11516 rsp_fires=89987 unsafe=0 guard_blocks=6057 core_stale=55 | NEGCTL NG fires=16030 unsafe=4514 | NEGCTL LAT2 mismatches=0
+PASS
+NEGCTL_NG FAIL (expected: request without live grant)
+lint (Verilator 5.032, EPYC1): default rc=0, lorentz(SU_PROVIDER_ADAPTER=1) rc=0, margin+provider rc=0, margin+legacy rc=0

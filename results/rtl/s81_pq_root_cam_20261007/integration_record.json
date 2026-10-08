@@ -1,0 +1,24 @@
+{
+  "status": "MINIMUM_EXACT_PASS_FULL128_REPLICA_ELAB_PASS_PHYSICAL_PENDING",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_pq_parent/ot_s81_pq_root_adapter.sv": "0228ace59575c2f6d727829f484507500284ad6a34359d6c8729e53f5e47847e",
+    "rtl/dsrom_sys/s81_pq_parent/ot_s81_pq_ret_root_cam.sv": "1e72a91cf9101ca91e2bae0783ded95fb2e08b63eb397ddd6e5dd76fcd47d318",
+    "tests/rtl/s81_pq_parent/root_adapter_tb.sv": "d63b53b5afe0fca2af77ab7425eab26bbd02634ca199b999cdba658f9d5f0766",
+    "tests/rtl/s81_pq_parent/root_cam_tb.sv": "697b19cafba8b33ff49fb560669da79e58ba9347ed7256794c8075e444f6e714",
+    "tools/s81/pq_root_cam_gate.py": "575bdcd4daa3967df765bc774d38fa8722ccc37ffd448aa2e8a40de964b051d4",
+    "results/uarch/s81_pq_root_cam_20261007/model.json": "0c82097e0020b325b46396de710bd7fbeab103ed8e8fbc431396d7f3812cf134"
+  },
+  "default_adapter_test": "Existing130-row2-regionROOTD128 actualnative path PASS",
+  "candidate_adapter_test": "Same130-rowbench derived PIPELINED_CAM1 PASS; no stimuli changes",
+  "candidate_full_elaboration": "iverilog -g2012 -s ot_s81_pq_root_adapter -P ot_s81_pq_root_adapter.PIPELINED_CAM=1, defaultR128ROOTD128; exit0",
+  "component_gate": "record.json contains final384root exactcampaign andtwoexpectedfailingmutants",
+  "measured_latency": "Complete+1cycle,2leaf+2cycles,8leaf+4cycles vsnative. Previous3phasecycles is not a fullbound including finalpublication.",
+  "production_holds": [
+    "128root actual arrival/queue occupancy schedule not qualified",
+    "Unimplemented parity/protected67-to71pin contract",
+    "Actual native column-clock/interface STA",
+    "Reserved132.192x133.92um slot fit",
+    "StageB encoder/readmux physical closure"
+  ],
+  "adopted": false
+}

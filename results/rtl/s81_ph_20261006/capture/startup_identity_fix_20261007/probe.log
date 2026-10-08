@@ -1,0 +1,9 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+MAPPING_COMMAND ::sta::sta_to_db_pin
+ODB_INSTANCE g_r\[12\].u_x.w_st_r\[0\]$_DFF_P_ master=DFFHQNx1_ASAP7_75t_R
+ODB_INSTANCE g_r\[12\].u_x.w_st_r\[1\]$_DFF_P_ master=DFFHQNx1_ASAP7_75t_R
+STA_PIN g_r[12].u_x.w_st_r[0]$_DFF_P_/D handle=_6950e2e1895b0000_p_Pin
+MAPPING_RESULT _6850e2e1895b0000_p_odb__dbITerm

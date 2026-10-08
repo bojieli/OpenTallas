@@ -1,0 +1,335 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/phy.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/serdes.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/ucie.lef, created 2 library cells
+[INFO ODB-0221] 1000000 lines parsed!
+[INFO ODB-0227] LEF file: /work/elements.lef, created 36 library cells
+[INFO ODB-0221] 1000000 lines parsed!
+[INFO ODB-0227] LEF file: /work/views.lef, created 40 library cells
+[WARNING STA-0200] /work/die.v line 1013, instance lk_S0 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1013, instance lk_S0 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1014, instance lk_S1 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1014, instance lk_S1 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1015, instance lk_S2 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1015, instance lk_S2 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1016, instance lk_S3 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1016, instance lk_S3 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1017, instance lk_S4 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1017, instance lk_S4 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1019, instance lk_N0 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1019, instance lk_N0 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1020, instance lk_N1 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1020, instance lk_N1 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1021, instance lk_N2 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1021, instance lk_N2 port tx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1022, instance lk_N3 port rx size 512 does not match net size 487.
+[WARNING STA-0200] /work/die.v line 1022, instance lk_N3 port tx size 512 does not match net size 487.
+[WARNING ORD-2011] LEF master hfd_attn_tile has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_barrier has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_cmdproc has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_coll has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_hc has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_index_q_b0 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_index_q_b1 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_index_q_b2 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_index_q_b3 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_index_q_b4 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_index_q_b5 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_loader has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_quant has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_router has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_sfu has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_su has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_su_full has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_su_red has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_vm has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_host_slab has no liberty cell.
+[WARNING ORD-2011] LEF master ot_pdie_serdes has no liberty cell.
+[WARNING ORD-2011] LEF master ot_hbm_host_phy has no liberty cell.
+[WARNING ORD-2011] LEF master ot_hbm3e_phy_v41x_aw30_e8p5 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_serdes_slab has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_sm has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s0 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s1 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s2 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s3 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s4 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s5 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s6 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SE_s7 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s0 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s1 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s2 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s3 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s4 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s5 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s6 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_svc_SW_s7 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r13 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_cdist_r14 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_cdist_r15 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r16 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r17 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_meso_r1 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r18 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r20 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r21 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r22 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r23 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r2 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r0 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r3 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r4 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_mcast_r5 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_mcast_r6 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_mcast_r7 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_gath_r8 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_gath_r9 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_gath_r10 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r11 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r12 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r19 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_gath_r24 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_gath_r25 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r26 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r27 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_meso_r28 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r29 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r30 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r31 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_meso_r32 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r33 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r34 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_meso_r35 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_stn_r36 has no liberty cell.
+[WARNING ORD-2011] LEF master hfd_meso_r37 has no liberty cell.
+[INFO IFP-0001] Added 91192 rows of 451880 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 24401.520 24621.840 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 24401.520 24621.840 ) um
+[INFO IFP-0102] Core area:                    600810321.197 um^2
+[INFO IFP-0103] Total instances area:         407597883.047 um^2
+[INFO IFP-0104] Effective utilization:                0.678
+[INFO IFP-0105] Number of instances:                    504
+OT_MTS_PLACE hb_router hfd_router R0 requested (11069.136, 9338.688) placed (11069.136, 9337.680)
+OT_MTS_PLACE lk_host ot_hbm_host_phy R0 requested (23517.648, 11484.720) placed (23517.648, 11483.640)
+OT_TIME place_s=10
+OT_LEGAL instances=504 overlaps=0 outside=0
+OT_MACRO_TRACK_ASSERT PASS label=hbmaccdie macros=504 pins_checked=1844473 offtrack=0 max_offset_nm=0.0 no_track_grid=0
+OT_ASSERT PASS
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     292
+Number of vias:       9
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+[WARNING DRT-0120] Large net n_clk_stream[0] has 208 pins which may impact routing performance. Consider optimization.
+[WARNING DRT-0120] Large net n_rst_stream[0] has 391 pins which may impact routing performance. Consider optimization.
+
+Design:                   hfd_die
+Die area:                 ( 0 0 ) ( 24401520 24621840 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     504
+Number of terminals:      0
+Number of snets:          0
+Number of nets:           758755
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 390.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 128629.
+[INFO DRT-0033] V1 shape region query size = 0.
+[INFO DRT-0033] M2 shape region query size = 133926.
+[INFO DRT-0033] V2 shape region query size = 0.
+[INFO DRT-0033] M3 shape region query size = 1830048.
+[INFO DRT-0033] V3 shape region query size = 0.
+[INFO DRT-0033] M4 shape region query size = 1980533.
+[INFO DRT-0033] V4 shape region query size = 0.
+[INFO DRT-0033] M5 shape region query size = 2035126.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 483941.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 371599.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 142880.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 98816.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0076]   Complete 2000 pins.
+[INFO DRT-0076]   Complete 3000 pins.
+[INFO DRT-0076]   Complete 4000 pins.
+[INFO DRT-0076]   Complete 5000 pins.
+[INFO DRT-0076]   Complete 6000 pins.
+[INFO DRT-0076]   Complete 7000 pins.
+[INFO DRT-0076]   Complete 8000 pins.
+[INFO DRT-0076]   Complete 9000 pins.
+[INFO DRT-0076]   Complete 10000 pins.
+[INFO DRT-0076]   Complete 20000 pins.
+[INFO DRT-0076]   Complete 30000 pins.
+[INFO DRT-0076]   Complete 40000 pins.
+[INFO DRT-0076]   Complete 50000 pins.
+[INFO DRT-0076]   Complete 60000 pins.
+[INFO DRT-0076]   Complete 70000 pins.
+[INFO DRT-0076]   Complete 80000 pins.
+[INFO DRT-0076]   Complete 90000 pins.
+[INFO DRT-0076]   Complete 100000 pins.
+[INFO DRT-0076]   Complete 110000 pins.
+[INFO DRT-0076]   Complete 120000 pins.
+[INFO DRT-0076]   Complete 130000 pins.
+[INFO DRT-0076]   Complete 140000 pins.
+[INFO DRT-0076]   Complete 150000 pins.
+[INFO DRT-0076]   Complete 160000 pins.
+[INFO DRT-0076]   Complete 170000 pins.
+[INFO DRT-0076]   Complete 180000 pins.
+[INFO DRT-0076]   Complete 190000 pins.
+[INFO DRT-0076]   Complete 200000 pins.
+[INFO DRT-0076]   Complete 210000 pins.
+[INFO DRT-0076]   Complete 220000 pins.
+[INFO DRT-0076]   Complete 230000 pins.
+[INFO DRT-0076]   Complete 240000 pins.
+[INFO DRT-0076]   Complete 250000 pins.
+[INFO DRT-0076]   Complete 260000 pins.
+[INFO DRT-0076]   Complete 270000 pins.
+[INFO DRT-0076]   Complete 280000 pins.
+[INFO DRT-0076]   Complete 290000 pins.
+[INFO DRT-0076]   Complete 300000 pins.
+[INFO DRT-0076]   Complete 310000 pins.
+[INFO DRT-0076]   Complete 320000 pins.
+[INFO DRT-0076]   Complete 330000 pins.
+[INFO DRT-0076]   Complete 340000 pins.
+[INFO DRT-0076]   Complete 350000 pins.
+[INFO DRT-0076]   Complete 360000 pins.
+[INFO DRT-0076]   Complete 370000 pins.
+[INFO DRT-0076]   Complete 380000 pins.
+[INFO DRT-0076]   Complete 390000 pins.
+[INFO DRT-0076]   Complete 400000 pins.
+[INFO DRT-0076]   Complete 410000 pins.
+[INFO DRT-0076]   Complete 420000 pins.
+[INFO DRT-0076]   Complete 430000 pins.
+[INFO DRT-0076]   Complete 440000 pins.
+[INFO DRT-0076]   Complete 450000 pins.
+[INFO DRT-0076]   Complete 460000 pins.
+[INFO DRT-0076]   Complete 470000 pins.
+[INFO DRT-0076]   Complete 480000 pins.
+[INFO DRT-0076]   Complete 490000 pins.
+[INFO DRT-0076]   Complete 500000 pins.
+[INFO DRT-0076]   Complete 510000 pins.
+[INFO DRT-0076]   Complete 520000 pins.
+[INFO DRT-0076]   Complete 530000 pins.
+[INFO DRT-0076]   Complete 540000 pins.
+[INFO DRT-0076]   Complete 550000 pins.
+[INFO DRT-0076]   Complete 560000 pins.
+[INFO DRT-0076]   Complete 570000 pins.
+[INFO DRT-0076]   Complete 580000 pins.
+[INFO DRT-0076]   Complete 590000 pins.
+[INFO DRT-0076]   Complete 600000 pins.
+[INFO DRT-0076]   Complete 610000 pins.
+[INFO DRT-0076]   Complete 620000 pins.
+[INFO DRT-0076]   Complete 630000 pins.
+[INFO DRT-0076]   Complete 640000 pins.
+[INFO DRT-0076]   Complete 650000 pins.
+[INFO DRT-0076]   Complete 660000 pins.
+[ERROR DRT-0073] No access point for w143_xmNW2/a[2063] (hfd_mcast_r6).
+[INFO DRT-0076]   Complete 670000 pins.
+[INFO DRT-0076]   Complete 680000 pins.
+[INFO DRT-0076]   Complete 690000 pins.
+[INFO DRT-0076]   Complete 700000 pins.
+[INFO DRT-0076]   Complete 710000 pins.
+[INFO DRT-0076]   Complete 720000 pins.
+[ERROR DRT-0073] No access point for w209_xmNE1/a[2063] (hfd_mcast_r6).
+[INFO DRT-0076]   Complete 730000 pins.
+[INFO DRT-0076]   Complete 740000 pins.
+[ERROR DRT-0073] No access point for w24_xmSW2/a[2063] (hfd_mcast_r6).
+[INFO DRT-0076]   Complete 750000 pins.
+[INFO DRT-0076]   Complete 760000 pins.
+[INFO DRT-0076]   Complete 770000 pins.
+[INFO DRT-0076]   Complete 780000 pins.
+[INFO DRT-0076]   Complete 790000 pins.
+[INFO DRT-0076]   Complete 800000 pins.
+[INFO DRT-0076]   Complete 810000 pins.
+[INFO DRT-0076]   Complete 820000 pins.
+[ERROR DRT-0073] No access point for w86_xmSE1/a[2063] (hfd_mcast_r6).
+[INFO DRT-0076]   Complete 830000 pins.
+[INFO DRT-0076]   Complete 840000 pins.
+[INFO DRT-0076]   Complete 850000 pins.
+[INFO DRT-0076]   Complete 860000 pins.
+[INFO DRT-0076]   Complete 870000 pins.
+OT_PA FAIL DRT-0073
+OT_TIME pa_s=447
+OTMEM pa 5682 MB 1791350252
+	Command being timed: "openroad -threads 8 -no_init -exit /work/run.tcl"
+	User time (seconds): 3028.72
+	System time (seconds): 3.75
+	Percent of CPU this job got: 603%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 8:22.32
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 5766356
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1533934
+	Voluntary context switches: 637
+	Involuntary context switches: 11181
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 133600
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -1,0 +1,5 @@
+PASS parallel32 releasedK/V rows128 simultaneous32 WR32 ACK32 debt0 warmheld realcredits CLK833.333 HCLK1024 scopeCOMPONENT
+- /srv/opentallas-scratch/codex/item1-qwen-fullwidth-20261006/source-0c9bba0d7/rtl/experimental/qwen_rom_combined_p0_20261005/tb_qwen_p0_parallel_bank.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 117ns; walltime 0.860 s; speed 136.266 ns/s
+- Verilator: cpu 0.860 s on 1 threads; allocated 28 MB

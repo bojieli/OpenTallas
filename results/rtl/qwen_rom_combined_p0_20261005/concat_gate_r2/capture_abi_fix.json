@@ -1,0 +1,8 @@
+{
+  "input_sha256": "93bc91976f2d46a86f5b0b9a42f3dad4a054e7f53bd5dc4cd603a901c5e89bc6",
+  "output_sha256": "8babfc0dedf3cf1cf997827decb75f1ea38a811b912f46a941226f3c5be88208",
+  "old": "&__Vtemp_30[2048U],",
+  "new": "(WDataOutP{__Vtemp_30} + 2048),",
+  "replacements": 1,
+  "scope": "Own emitted source API-only capture handle; underlying word destination unchanged; originalhelper/RTL/liveobjects untouched"
+}

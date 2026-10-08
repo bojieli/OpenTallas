@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_capt_ctl",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-48203c4d9-f/routes/s81ph_dsfd_capt_ctl_48203c4d9_f/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-48203c4d9-f/routes/s81ph_dsfd_capt_ctl_48203c4d9_f/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-48203c4d9-f/routes/s81ph_dsfd_capt_ctl_48203c4d9_f/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-48203c4d9-f/routes/s81ph_dsfd_capt_ctl_48203c4d9_f/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-48203c4d9-f/routes/s81ph_dsfd_capt_ctl_48203c4d9_f/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-48203c4d9-f/routes/s81ph_dsfd_capt_ctl_48203c4d9_f/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_ctl-48203c4d9-f/routes/s81ph_dsfd_capt_ctl_48203c4d9_f/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_capt_ctl.lef": "10cdaca47b1e763acb6005c54c7484df1a39d54c5c4ce43316c9a31e4084cce7",
+    "dsfd_capt_ctl_ff.lib": "79d39c4034be385a292d57dcae89a1afd9826f807cf56dcf4056f2eea7f78168",
+    "dsfd_capt_ctl_ss.lib": "f2c045c69dac97e3771ac554a304ccde43e8c598e31c34fa4696b12ebfe68530"
+  },
+  "ok": true
+}

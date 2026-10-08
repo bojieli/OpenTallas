@@ -1,0 +1,31 @@
+{
+  "verdict": "PASS_CHANGED_PARALLEL_CORRECTION_MINIMUM_RETIREMENT_GATE",
+  "source_pin": "5340736d3",
+  "RTL_pin": "58f890f15",
+  "retired_rows": 12,
+  "CE_cases": 216,
+  "DUE_cases": 6,
+  "prior_all_9216_gate": "results/rtl/hbm_simt_gu_coded_20261005/r2",
+  "same_source_rerun": false,
+  "existing_SM_byte_identical": true,
+  "previous_default_off_preserved": true,
+  "changed_component": "W6 coded retention helper parallel bit correction/CE scrub",
+  "added_register_bits": 0,
+  "added_payload_bits": 0,
+  "normal_cut_cycles": 0,
+  "CE_scrub_minimum_edges": 1,
+  "live_full_chain": false,
+  "parent_context_closed": false,
+  "physical_closed": false,
+  "adopted": false,
+  "job": "/srv/opentallas-scratch2/scratch/codex/hbmsm-gu-coded-5340736d3",
+  "evidence_sha256": {
+    "source_pins.json": "bfe3804f7a769e31094498d9c23aef6c65300f1c28771966be2a7987db9e2174",
+    "input_source.json": "5c3f3ca1d7ce04b13ff516824e5e60a8a22a0678fc07c9757eaa486bb85b002e",
+    "exit.json": "b3f00d6ad39227d47abde133365c241184c372f30d38befd801d353535c08de0",
+    "driver.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run_1.log": "b171b4a7cde75b9839540ba11284249545f40978c8f33d8823385ec057fba48f",
+    "build_1.log": "17984762a528b18a7eb17f2b42819a98f1ca7fea1e0bc1bd57a5ff51808f6e25",
+    "admission.json": "75c14731679c514b79652c7d47ff7b5efabe688fb4aa7819439fb42c4ef7928a"
+  }
+}

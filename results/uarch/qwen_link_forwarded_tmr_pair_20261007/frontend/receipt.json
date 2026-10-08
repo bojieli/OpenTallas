@@ -1,0 +1,31 @@
+{
+  "pass_all": true,
+  "source_sha256": {
+    "rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv": "cd7142ec0db3465c0b4134888e6947a2bc1d7223c0d2fc02093729e568921881",
+    "physical/qwen_link_forwarded_tmr_pair/pair.sv": "2fbdf350e6371a3286f3c6f2fd3fc4bc80bf5862bc781ebe329cc5767f52f3db",
+    "physical/qwen_link_forwarded_tmr_pair/signoff.py": "37cc0475db222272164ba632fe6dc22fc98bbea7e692c28fc9d785c6f91599db",
+    "physical/qwen_link_forwarded_tmr_pair/clocks.sdc": "4dcd25a666fc052370d12d6f05bf1343a03f3408ebd8de62f7191cf92214f909",
+    "physical/qwen_link_forwarded_tmr_pair/prepare.py": "3df1144fc8a3d2dd06bb53a04ba477aef1475f091fba65c1ba866a9d796c45ba",
+    "physical/qwen_link_forwarded_tmr_pair/propagate.tcl": "ed2f2b454d83bfda18e7749c775f2e8aee0f5074afe8353a4d1cf344f42c615f",
+    "physical/qwen_link_forwarded_tmr_pair/regions.tcl": "654c86ff1bf9df48fc49422a26330aa912c5cd95bdb034d99f83885df444aec5",
+    "physical/qwen_link_forwarded_tmr_pair/reset_inventory.tcl": "fe5bebeb1b7a09bd06505d7785d52d6359e24d170e9dcac6416f9968273b5827",
+    "physical/qwen_link_forwarded_tmr_pair/closure_job.template.json": "3c7ce76f85df5f7dffa19fba79ef3c200724182332caf6787fb1e3b70c40dedf",
+    "physical/qwen_link_forwarded_tmr_pair/audit.tcl": "87ba26a6535b2291cdc96400f52c5eea55653702c7ac8ed860de0da24af15076",
+    "physical/qwen_link_forwarded_tmr_pair/route.sh": "a34b632e715c9d72d6d74cdba9295cd8d6bfcfed7ed9d848062e6b098c0324dc",
+    "physical/qwen_link_forwarded_tmr_pair/tb_pair.sv": "c4da94da45e712f5d7e04cfe13992174d88fc84e8dde774c41dacc136fee9158",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+  },
+  "logs_sha256": {
+    "compile1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bench1.log": "27a857b5ae282574a8930f96b82db49ac40b6f93b1217005d2893ab615e75230",
+    "compile0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "synth.log": "ff62b2ba8100ba4e4c73d8c397299d99751938436679682fd3094ec7f7176018",
+    "bench0.log": "25672156a219d9dac048ddbb7d866d10ec46dfd76b342d40fd1fb08561583fa2",
+    "sta.log": "ae605995068d73871678fe74e2870b61a9fde67d70caff475762dbd42bd97898"
+  },
+  "mapped_sha256": "f2a321a5f66025ee06689825a1398335d8f703701d01750457bc91727e5a4593",
+  "scope": "Actual route frontend only: reversed physical direction full two-hop bench and wrong-clock negative, mapped ASAP7 synthesis, six actual clock SDC intake with both 528-bit capture banks. Unrouted STA is not physical closure.",
+  "adoption": false
+}

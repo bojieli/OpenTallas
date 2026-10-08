@@ -1,0 +1,191 @@
+{
+ "schema": "opentallas.qwen-rom-die.path-sta.v1",
+ "wirelength": "/tmp/qdie17/pull/r18g_k16_banded_i50/wirelength.csv",
+ "pitch_um": 383.775859030837,
+ "measured_stage": {
+  "record": "results/rtl/qwen_corridor_gate_20261003 (D_tile_r2 430.56 um: SS60 +11.9 ps, FF25 met; A spans 504 um: SS -29..-79 ps)"
+ },
+ "block_words": {
+  "count": 96,
+  "worst": {
+   "word": "bword_90",
+   "legs": [
+    "bword_90",
+    "pfrag_0_port_tiles_0_f1",
+    "pword_0"
+   ],
+   "routed_um": [
+    21362.9,
+    314.2,
+    18295.2
+   ],
+   "centre_um": [
+    10887.7,
+    1037.7,
+    14763.6
+   ],
+   "stages_routed": 105,
+   "stages_floorplan": 71
+  },
+  "stages_routed_max": 105,
+  "stages_floorplan_max": 71,
+  "mean_routed": 52.65,
+  "delta_vs_floorplan": 34
+ },
+ "links": {
+  "per_stack": [
+   {
+    "stack": "WS",
+    "hops": 10,
+    "routed_um": 20087.8,
+    "stages_routed_hops": 58,
+    "stages_routed_min": 53,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   },
+   {
+    "stack": "WN",
+    "hops": 10,
+    "routed_um": 21427.6,
+    "stages_routed_hops": 61,
+    "stages_routed_min": 56,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   },
+   {
+    "stack": "ES",
+    "hops": 10,
+    "routed_um": 20429.6,
+    "stages_routed_hops": 60,
+    "stages_routed_min": 54,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   },
+   {
+    "stack": "EN",
+    "hops": 10,
+    "routed_um": 23820.7,
+    "stages_routed_hops": 67,
+    "stages_routed_min": 63,
+    "fan_routed_far_um": 0,
+    "fan_stages": 0
+   }
+  ],
+  "worst": "EN",
+  "stages_routed": 67,
+  "floorplan_priced": 53
+ },
+ "single_hop": {
+  "phy_dfi": {
+   "hops": 4,
+   "worst_um": 18.5,
+   "worst": "dfi_WN",
+   "over_pitch": [],
+   "over_504": 0,
+   "n_over_pitch": 0
+  },
+  "spine_local": {
+   "hops": 2,
+   "worst_um": 2679.6,
+   "worst": "x3",
+   "over_pitch": [
+    {
+     "bus": "x3",
+     "routed_um": 2679.6,
+     "stages_needed": 7
+    },
+    {
+     "bus": "attn_ret",
+     "routed_um": 1099.6,
+     "stages_needed": 3
+    }
+   ],
+   "over_504": 2,
+   "n_over_pitch": 2
+  },
+  "sequencer": {
+   "hops": 6,
+   "worst_um": 21270.5,
+   "worst": "seq_coll",
+   "over_pitch": [
+    {
+     "bus": "seq_coll",
+     "routed_um": 21270.5,
+     "stages_needed": 56
+    },
+    {
+     "bus": "seq_done",
+     "routed_um": 3197.0,
+     "stages_needed": 9
+    }
+   ],
+   "over_504": 2,
+   "n_over_pitch": 2
+  },
+  "crom": {
+   "hops": 2,
+   "worst_um": 295.7,
+   "worst": "crom_a",
+   "over_pitch": [],
+   "over_504": 0,
+   "n_over_pitch": 0
+  }
+ },
+ "pipelined_hops": {
+  "corridor": {
+   "hops": 1536,
+   "worst_um": 1690.9,
+   "worst": "cor_31_15",
+   "stages_worst_hop": 5
+  },
+  "head_chain": {
+   "hops": 64,
+   "worst_um": 4555.3,
+   "worst": "head_32",
+   "stages_worst_hop": 12
+  },
+  "tree_block": {
+   "hops": 2880,
+   "worst_um": 8316.0,
+   "worst": "tree_42_3_0b",
+   "stages_worst_hop": 22
+  },
+  "link_channel": {
+   "hops": 24,
+   "worst_um": 5636.4,
+   "worst": "lnkh_1E_0",
+   "stages_worst_hop": 15
+  },
+  "link_spine": {
+   "hops": 12,
+   "worst_um": 3058.4,
+   "worst": "lnkv_1_0",
+   "stages_worst_hop": 8
+  },
+  "io": {
+   "hops": 12,
+   "worst_um": 23229.4,
+   "worst": "emb",
+   "stages_worst_hop": 61
+  },
+  "tree_spine": {
+   "hops": 1,
+   "worst_um": 1090.3,
+   "worst": "tt_res",
+   "stages_worst_hop": 3
+  }
+ },
+ "method": "GRT wire length per k-bundled net (worst bundle of each bus); stages = ceil(routed / 430.56 um); block-word and link paths sum their registered hops; single-hop classes must fit one stage",
+ "skew_ps": 65.0,
+ "floorplan": {
+  "slab_group_h": 455.76,
+  "cdc": "183.048,183.048",
+  "die": {
+   "w": 24650.784,
+   "h": 32801.76,
+   "mm2": 808.589,
+   "budget_mm2": 858,
+   "margin_mm2": 49.411
+  }
+ }
+}

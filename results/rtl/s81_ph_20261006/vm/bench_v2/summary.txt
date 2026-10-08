@@ -1,0 +1,29 @@
+== nohup.out
+== t_mj0.out
+RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=2356 fault=1 code=010 max_occ=4 L=18
+FAIL
+rc=1
+== t_mmask.out
+RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=31932 fault=0 code=000 max_occ=4 L=18
+FAIL
+rc=1
+== t_mord.out
+RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=7573 fault=1 code=010 max_occ=4 L=18
+FAIL
+rc=1
+== t_ovf.out
+OVF fault=1 code=001 -> PASS_OVF
+rc=0
+== t_s1.out
+RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=0 fault=0 code=000 max_occ=4 L=18
+PASS
+rc=0
+== t_s2.out
+RESULT ops=112814 reads=56580 writes=56234 checked=56580 mismatches=0 fault=0 code=000 max_occ=4 L=18
+PASS
+rc=0
+== v1_s1.out
+RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=0 fault=0 code=000 max_occ=4 L=10
+PASS
+rc=0
+# t_* = +define+TILED (4 x dsfd_vm_bg chain, L 18); v1_s1 = the v1 sub-macro (regression, grp port tied); mutants ORDER / MASK / J0 FAIL with the v1 mismatch counts

@@ -1,0 +1,67 @@
+{
+  "name": "s81ph-dsfd_coll_lane_e-ac313d866-wide",
+  "block": "dsfd_coll_lane_e",
+  "owner": "Codex:s81_tiles",
+  "purpose": "No-squeeze 345.6 x 340.2 lane footprint: measured predecessor 67535 um2 cells (78.5% utilization), new estimate 57.6%; identical RTL, zero added cycles",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-epyc2"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "source": {
+    "branch": "codex/s81-tiles-recovery-20261007",
+    "commit": "ac313d866a63976ee2cf8070305ac21a492f377b"
+  },
+  "stages": {
+    "calibrate": {
+      "cmd": "HM=0.010 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes dsfd_coll_lane_e rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+      "threads": 16,
+      "peak_ram_gb": 48
+    },
+    "route": {
+      "cmd": "HM=0.010 SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes dsfd_coll_lane_e rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv $CL_STOP_AFTER",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+      "logs": [
+        "{RUN}/routes/{NAME}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "lef_check_MATCH",
+        "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+      }
+    ],
+    "post_sdc": [
+      "physical/s81_ph_views/common/signoff_unc60.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/s81_ph_views/closed/dsfd_coll_lane_e"
+    }
+  ],
+  "cycles_added": 2,
+  "merge_target": "codex/s81-tiles-recovery-20261007",
+  "no_bench_reason": "No RTL changes from a53f40362 (git diff verified): geometry-only candidate. Exact main/nospec/board_err/ucie_err and negative NOREORDER/NOCREDIT/REFRACE results in results/rtl/s81_ph_20261006/collective/bench_v4/summary.txt, retained from pinned collective v4. No functional or cycle change.",
+  "budget": {
+    "enabled": false,
+    "reason": "S81-PH tile sheet is grade 'target' (no calibration: 467-900 ps); the tiles' measured insertion is far lower (svc_pc 145 ps, ctrl_ctr 61 ps at calibrate), so the sheet SDC would put vclk ~300+ ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+  },
+  "route_hold_margin_ns": 0.01
+}

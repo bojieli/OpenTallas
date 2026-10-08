@@ -1,0 +1,414 @@
+{
+  "schema": "opentallas.s81.capture_startup_delay_screen.v1",
+  "status": "LIBRARY_SCREEN_NO_DEPTH_SELECTED_NO_CLOSURE",
+  "source_sha256": {
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/model_r3.json": "55032d05aa6940cffabab19945b15c734ea10c879151d60b9bac7286cd87f37b"
+  },
+  "measured": {
+    "worst_ff_ps": -11.11,
+    "ff_gain_needed_ps": 26.11,
+    "worst_ss_ps": 40.84,
+    "ss_spend_above_acceptance_ps": 25.84,
+    "note": "Worst SS/FF are different roots. Endpoint-joined slacks needed."
+  },
+  "architecture": {
+    "cdc_instances": 17,
+    "state_bits_per_direction": 2,
+    "candidate_wires": 68,
+    "incremental_cycles": 0,
+    "arithmetic_change": false,
+    "cell_count": "68 * depth only if all state arcs treated; prefer measured endpoint subset",
+    "area": "sum actual selected cell counts * cell area; routing not yet measured"
+  },
+  "cells": [
+    {
+      "master": "BUFx2_ASAP7_75t_R",
+      "area_um2": 0.0729,
+      "input_cap_fF": {
+        "SS": 0.5065,
+        "FF": 0.577042
+      },
+      "ff_table_min_ps": 12.833,
+      "ff_min_valid_only_with": {
+        "slew_at_least_ps": 5.0,
+        "load_at_least_fF": 1.44,
+        "max_slew_ps": 320,
+        "load_not_above_characterized_max": true
+      },
+      "ss_sweeps": [
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 32.9584
+        },
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 37.607
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 39.9892
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 44.6455
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 51.0861
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 56.051
+        }
+      ],
+      "polarity": "noninverting"
+    },
+    {
+      "master": "INVx1_ASAP7_75t_R",
+      "area_um2": 0.04374,
+      "input_cap_fF": {
+        "SS": 0.578766,
+        "FF": 0.683716
+      },
+      "ff_table_min_ps": 4.69356,
+      "ff_min_valid_only_with": {
+        "slew_at_least_ps": 5.0,
+        "load_at_least_fF": 0.72,
+        "max_slew_ps": 320,
+        "load_not_above_characterized_max": true
+      },
+      "ss_sweeps": [
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 15.21
+        },
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 20.0288
+        },
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 29.3156
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 20.1677
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 26.8262
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 36.9058
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 26.7299
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 36.0015
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 49.924
+        }
+      ],
+      "polarity": "inverting: only even-length chains preserve logic"
+    },
+    {
+      "master": "HB1xp67_ASAP7_75t_R",
+      "area_um2": 0.05832,
+      "input_cap_fF": {
+        "SS": 0.30292,
+        "FF": 0.338359
+      },
+      "ff_table_min_ps": 11.5796,
+      "ff_min_valid_only_with": {
+        "slew_at_least_ps": 5.0,
+        "load_at_least_fF": 0.36,
+        "max_slew_ps": 320,
+        "load_not_above_characterized_max": true
+      },
+      "ss_sweeps": [
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 33.8418
+        },
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 39.8354
+        },
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 53.1264
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 40.6939
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 46.7189
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 59.7959
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 50.938
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 57.2407
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 69.2957
+        }
+      ],
+      "polarity": "noninverting"
+    },
+    {
+      "master": "HB2xp67_ASAP7_75t_R",
+      "area_um2": 0.0729,
+      "input_cap_fF": {
+        "SS": 0.453659,
+        "FF": 0.517041
+      },
+      "ff_table_min_ps": 18.1857,
+      "ff_min_valid_only_with": {
+        "slew_at_least_ps": 5.0,
+        "load_at_least_fF": 0.36,
+        "max_slew_ps": 320,
+        "load_not_above_characterized_max": true
+      },
+      "ss_sweeps": [
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 54.1218
+        },
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 61.3155
+        },
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 73.4827
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 61.3356
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 68.5296
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 80.7051
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 75.9665
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 83.1516
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 95.3604
+        }
+      ],
+      "polarity": "noninverting"
+    },
+    {
+      "master": "HB3xp67_ASAP7_75t_R",
+      "area_um2": 0.08748,
+      "input_cap_fF": {
+        "SS": 0.568097,
+        "FF": 0.660732
+      },
+      "ff_table_min_ps": 25.5689,
+      "ff_min_valid_only_with": {
+        "slew_at_least_ps": 5.0,
+        "load_at_least_fF": 0.36,
+        "max_slew_ps": 320,
+        "load_not_above_characterized_max": true
+      },
+      "ss_sweeps": [
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 77.007
+        },
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 85.449
+        },
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 99.1312
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 83.7821
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 92.149
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 105.862
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 98.1203
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 106.525
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 120.199
+        }
+      ],
+      "polarity": "noninverting"
+    },
+    {
+      "master": "HB4xp67_ASAP7_75t_R",
+      "area_um2": 0.10206,
+      "input_cap_fF": {
+        "SS": 0.676896,
+        "FF": 0.801889
+      },
+      "ff_table_min_ps": 33.8167,
+      "ff_min_valid_only_with": {
+        "slew_at_least_ps": 5.0,
+        "load_at_least_fF": 0.36,
+        "max_slew_ps": 320,
+        "load_not_above_characterized_max": true
+      },
+      "ss_sweeps": [
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 102.12
+        },
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 111.641
+        },
+        {
+          "slew_ceiling_ps": 20,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 126.847
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 108.165
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 117.503
+        },
+        {
+          "slew_ceiling_ps": 40,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 132.698
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 0.72,
+          "ss_cell_delay_upper_ps": 121.633
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 1.44,
+          "ss_cell_delay_upper_ps": 131.168
+        },
+        {
+          "slew_ceiling_ps": 80,
+          "load_ceiling_fF": 2.88,
+          "ss_cell_delay_upper_ps": 146.312
+        }
+      ],
+      "polarity": "noninverting"
+    }
+  ],
+  "receiver_D_cap_fF": {
+    "SS": 0.524726,
+    "FF": 0.62135
+  },
+  "routing": {
+    "layer_cap_fF_per_um": {
+      "M2": 0.174942,
+      "M3": 0.155554,
+      "M4": 0.178475,
+      "M5": 0.164264
+    },
+    "layer_resistance_kohm_per_um": {
+      "M2": 0.0297127,
+      "M3": 0.031287,
+      "M4": 0.0180365,
+      "M5": 0.0189935
+    },
+    "bound_formula": "length <= (load_ceiling - receiver_cap - via/coupling_cap)/max_wire_cap_per_um",
+    "minimum_delay": "No wire delay credited to hold; require actual characterized load and slew floor.",
+    "limitations": "RC template excludes coupling/via capacitance. Fresh extracted STA required."
+  },
+  "decision": "Do not select depth from aggregate slack. Join SS and FF for each startup endpoint, then propagate slew/load across candidate chain and verify routed fresh STA."
+}

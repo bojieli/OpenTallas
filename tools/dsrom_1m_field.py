@@ -43,7 +43,9 @@ WIRE.  The vehicle holds the spine's BST = 2 broadcast stages and a root writing
 die geometry adds, per phase: VM x root -> farthest cluster 30 stages (less the 2 in the vehicle) and cluster -> VM
 33 (tools/uarch_model.DIE_SHRUNK_INTERIM expert_wire = 30 + 33, the model graph's own wire term); labelled
 'routed die geometry wire stages'.  The S81 floorplan's own trunk (results/rtl/dsrom_s81_fulldie_20261004
-floorplan.json trunk_stages, field_one_way 41 at 504 um) is reported as a sensitivity.
+floorplan.json trunk_stages, field_one_way 41 at 504 um) is reported as a sensitivity.  The COMPOSITION no longer
+uses either: since 2026-10-06 it takes each node's wire from the wired r8 die, per region (tools/dsrom_field_reprice_r8.py,
+results/rtl/dsrom_field_reprice_r8_20261006/reprice.json; adapter dsrom_1m_allmeasured_adapters.field_rows).
 """
 from __future__ import annotations
 
@@ -73,6 +75,10 @@ from rtl_v41_rom_array import Ckpt, Mat  # noqa: E402
 
 VERILATOR = os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator")
 S81 = ROOT / "results/uarch/dsrom_s81_released_binding_20261004/canonical"
+# OT_DSROM_FIELD_BINDING (default unset = the released S81 binding): an alternative allocation directory with the same
+# files (matrix_map.jsonl.gz, stage_map.json, inventory.json), e.g. tools/dsrom_bf_double_alloc.py's (bf-double 2026-10-07)
+if os.environ.get("OT_DSROM_FIELD_BINDING"):
+    S81 = Path(os.environ["OT_DSROM_FIELD_BINDING"]).resolve()
 REC = ROOT / "results/rtl/dsrom_1m_allmeasured_20261004/field.json"
 GOLD_VM = Path("/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r0")
 RANK = 0
@@ -86,6 +92,15 @@ RTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_ret", "ot_v41_rom_elem_w10"
                                              "ot_v41_bterm2_w10", "ot_v41_chain2", "ot_v41_segtree2",
                                              "ot_v41_bf16_lanes2")]
 RTL += [ROOT / "rtl/common/ot_prefix.sv"]
+# s81-fieldphase 2026-10-07: since 260869fd0 / 9cf64047e the q element (ot_v41_rom_elem_qx_w10) instantiates
+# ot_v41_bf16_lanes2 with GRADUAL_RNE / RC (its QBF branch, default off), which only the _rne_prepare file of the same
+# module declares (defaults GRADUAL_RNE 0 / RC 0 = the original lanes, documented bit-identical, same latency), so the
+# --qelem build on main failed (PINNOTFOUND).  Build that file (and its RC-branch companions) in place of the original.
+_QX = ROOT / "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv"
+if _QX.exists() and "GRADUAL_RNE(GRADUAL_RNE)" in _QX.read_text():
+    RTL = [ROOT / "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv" if p.name == "ot_v41_bf16_lanes2.sv" else p for p in RTL]
+    RTL += [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_bmul2_rne_prepare", "ot_v41_chain2u2")
+            if (ROOT / f"rtl/v41rom/{n}.sv").exists()]
 RTL += [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe", "ot_hdc_delay", "ot_hdc_cg")]
 RTL += [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/hdc/v41/ot_hdc_actquant.sv"]
 DIE = [ROOT / f"rtl/v41die/{n}.sv" for n in ("ot_v41_pair_w17w10", "ot_v41_retn_w17w10", "ot_v41_field_w17w10",
@@ -96,8 +111,19 @@ TB = ROOT / "rtl/test/dsrom_sys/tb_dsrom_1m_field.cpp"
 TOOLS = [Path(__file__), ROOT / "tools/v41_die_images_w17w10.py", ROOT / "tools/v41_rom_ksplit_bankmap.py",
          ROOT / "tools/rtl_v41_rom_array.py", ROOT / "tools/hdc_golden_v41.py", ROOT / "tools/hdc_golden.py",
          ROOT / "tools/v41_die_field.py"]
+# --qelem N (default 0 = off): the FP8/FP4 pairs are the DS-V4.1 ROM q-element the S81 die is built from
+# (ot_v41_rom_elem_q_qx_w10 at its routed parameters, QX = N; ot_v41_pair_w17w10 QELEM), BF16-capable pairs keep W10's
+QRTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_rom_elem_q_qx_w10", "ot_v41_rom_elem_qx_w10",
+                                              "ot_v41_rom_elem_q_qxpq_w10", "ot_v41_rom_elem_qx_pq_w10", "ot_v41_kreg",
+                                              "ot_v41_chain3", "ot_v41_chain4", "ot_v41_fadd2",
+                                              "ot_v41_bterm3_w10", "ot_v41_bterm4_w10", "ot_v41_bterm5_w10",
+                                              "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5", "ot_v41_segtree6")]
+# the QX 10 chain / adder files (ot_v41_chain4, ot_v41_fadd2) are listed before they are on main: keep only the
+# sources present, so --qelem builds the q-element of the checked-out tree (CLAUDE DS-INTEGRATION 2026-10-05: with
+# the two missing files the --qelem build failed on main)
+QRTL = [p for p in QRTL if p.exists()]
 SOURCES = sorted(set(RTL + DIE + ROMS + [TB] + TOOLS))
-S81_FILES = [S81 / "matrix_map.jsonl.gz", S81 / "stage_map.json", S81 / "inventory.json", S81 / "binding.json"]
+S81_FILES = [S81 / f for f in ("matrix_map.jsonl.gz", "stage_map.json", "inventory.json", "binding.json") if (S81 / f).exists()]
 
 # phase groups: (node, group, x source).  x source: "attn_norm" / "ffn_norm" (the golden layer's vector), or
 # "internal" (an operator-internal vector: the golden VM for L20, a seeded vector elsewhere)
@@ -106,7 +132,7 @@ def group_of(alias: str, expert):
         return "attn.a_proj", "a_proj.fp8", "attn_norm"
     if alias.startswith("compressor.") or alias == "indexer.weights_proj":
         return "attn.a_proj", "a_proj.bf16", "attn_norm"
-    if alias.startswith("wq_b") or alias == "indexer.wq_b":
+    if alias.startswith("wq_b") or alias == "indexer.wq_b" or alias.startswith("indexer.wq_b.rows"):
         return "attn.wq_b", "wq_b", "internal"
     if alias == "indexer.wk":
         return "attn.cmp.wk", "cmp.wk", "internal"
@@ -201,11 +227,30 @@ def rand_x(name: str, K: int, bf: bool) -> np.ndarray:
     return G.bits(np.asarray(v, dtype=G.F)).astype(np.uint32)
 
 
+def stage_bounds(sm):
+    """stage -> (region_bounds, BF site set).  Bindings with per-stage die flavours (the actual 1,792-pair mixed
+    mappings, results/uarch/dsrom_s81_mixed1792_mapping_20261007: BF stages and q-only stages) carry
+    region_bounds_by_stage / BF_site_IDs_by_stage; older bindings one die-wide pair."""
+    if "region_bounds_by_stage" in sm:
+        rbs, bfs = sm["region_bounds_by_stage"], sm["BF_site_IDs_by_stage"]
+        return lambda st: (rbs[st], set(bfs[st]))
+    rb, bf = sm["region_bounds"], set(sm["BF_site_IDs"])
+    return lambda st: (rb, bf)
+
+
+BY_STAGE = False      # set by cmd_plan when the binding has per-stage maps: groups split per stage (node = max over stages)
+
+
 def layer_groups(L, ents, rb, bfs):
-    """S81 entries of layer L (non-expert + the golden experts) -> {group: (node, xsrc, [mat dicts])}."""
+    """S81 entries of layer L (non-expert + the golden experts) -> {group: (node, xsrc, [mat dicts])}.
+    rb / bfs: a stage -> bounds function (stage_bounds) or the die-wide lists."""
     groups = {}
+    sb = rb if callable(rb) else (lambda st, _r=rb, _b=bfs: (_r, _b))
     for e in ents:
         node, grp, xsrc = group_of(e["alias"], e["expert"])
+        rb, bfs = sb(e["stage"])
+        if BY_STAGE:
+            grp = f"{grp}@s{e['stage']}"
         sl = e["rank_slices"][RANK]
         regions = {}
         for seg, pair, s0, cnt, stride, base, words in e["plans"]:
@@ -222,7 +267,8 @@ def layer_groups(L, ents, rb, bfs):
             t_read_words_max=e["t_read_words_max"], issue_cycles_LAT8_condition=e["issue_cycles_LAT8_condition"],
             conversion=e["conversion"], isa=None, regions={str(k): sorted(v) for k, v in sorted(regions.items())}))
     order = {g: i for i, g in enumerate(GROUP_ORDER)}
-    return dict(sorted(groups.items(), key=lambda kv: (order.get(kv[0], 50 + ("w2" in kv[0]) + 2 * (kv[0] == "shared.w2")),
+    base = lambda g: g.split("@")[0]
+    return dict(sorted(groups.items(), key=lambda kv: (order.get(base(kv[0]), 50 + ("w2" in kv[0]) + 2 * (base(kv[0]) == "shared.w2")),
                                                        kv[0])))
 
 
@@ -388,6 +434,9 @@ def cmd_plan(a):
     work.mkdir(parents=True, exist_ok=True)
     sm = json.loads((S81 / "stage_map.json").read_text())
     rb, bfs = sm["region_bounds"], set(sm["BF_site_IDs"])
+    global BY_STAGE
+    BY_STAGE = "region_bounds_by_stage" in sm
+    sbf = stage_bounds(sm)
     layers = [int(x) for x in a.layers.split(",")]
     experts, ref_sha = {}, {}
     for L in layers:
@@ -415,7 +464,8 @@ def cmd_plan(a):
     phases, xs, xsrc_rec, notes = [], {}, {}, []
     for L in layers:
         z = np.load(REF / f"ctx1048576_L{L:02d}.npz")
-        for grp, (node, xsrc, mats) in layer_groups(L, ents[L], rb, bfs).items():
+        for grp, (node, xsrc, mats) in layer_groups(L, ents[L], sbf, None).items():
+            grp_s, grp = grp, grp.split("@")[0]
             K = mats[0]["K"]
             bf = mats[0]["fmt"] == "bf16"
             assert all(m["K"] == K for m in mats) and all((m["fmt"] == "bf16") == bf for m in mats), (L, grp)
@@ -455,8 +505,10 @@ def cmd_plan(a):
             for g in groups:
                 bad_g = [r for r in range(128) if illegal(g, r)]
                 assert not bad_g, (L, grp, g[0]["alias"], bad_g[:4], illegal(g, bad_g[0]))
-                name = f"L{L}.{grp}" + ("" if len(groups) == 1 else "." + "+".join(x["alias"] for x in g))
+                name = f"L{L}.{grp_s}" + ("" if len(groups) == 1 else "." + "+".join(x["alias"] for x in g))
+                srb, sbs = sbf(stage)
                 phases.append(dict(layer=L, node=node, phase=name, group=grp, stage=stage, x_source=src, out=out,
+                                   **(dict(region_bounds=srb, bf_sites=sorted(sbs)) if BY_STAGE else {}),
                                    K=K, fmts=sorted({m["fmt"] for m in g}), mats=g,
                                    split_reason=(f"fused phase exceeds the element in regions {bad[:8]}: "
                                                  f"{illegal(mats, bad[0])}") if bad else None,
@@ -480,12 +532,15 @@ def cmd_build(a):
     out.mkdir(parents=True, exist_ok=True)
     vroot = re.search(r"VERILATOR_ROOT\s*=\s*(\S+)", subprocess.check_output([VERILATOR, "-V"], text=True)).group(1)
     params = ["-GFAST=1", "-GPP=1", "-GBP=0", f"-GNP={NP}", f"-GR={NR}", f"-GNBF={NBF}", f"-GPHW={PHW}", f"-GVAW={VAW}"]
+    rtl = RTL + (QRTL if a.qelem else [])
+    if a.qelem:
+        params += ["-GQELEM=1", f"-GQXV={a.qelem}"]
     mdir = out / "flat"
     steps = []
     for name, cmd in (
             ("verilate", [VERILATOR, "--cc", "-O3", "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD",
                           "--top-module", "ot_v41_fieldtop_w17w10", "--prefix", "Vflat", "--Mdir", str(mdir), *params,
-                          *map(str, DIE + ROMS + RTL)]),
+                          *map(str, DIE + ROMS + rtl)]),
             ("make", ["make", "-C", str(mdir), "-f", "Vflat.mk", f"-j{a.jobs}", "Vflat__ALL.a", "OPT_FAST=-O2",
                       "OPT_SLOW=-O1"]),
             ("link", ["g++", "-std=c++20", "-O2", f"-DNR={NR}", f"-DVAW={VAW}", f"-I{vroot}/include",
@@ -499,7 +554,7 @@ def cmd_build(a):
         print(name, steps[-1], flush=True)
         if p.returncode:
             raise SystemExit(f"{name} failed: {(p.stdout + p.stderr)[-3000:]}")
-    (out / "build.json").write_text(json.dumps(dict(steps=steps, params=params, tb_sha256=sha(out / "tb"),
+    (out / "build.json").write_text(json.dumps(dict(steps=steps, params=params, qelem=a.qelem, tb_sha256=sha(out / "tb"),
                                                     simulator=subprocess.check_output([VERILATOR, "--version"],
                                                                                       text=True).strip()),
                                                indent=1) + "\n")
@@ -711,7 +766,8 @@ def cmd_run(a):
         for reg in regs:
             if not a.force and (work / "runs" / ph["phase"] / f"r{reg:03d}" / "result.json").exists():
                 continue
-            tasks.append((str(work), ph, reg, rb, bfs, a.keep))
+            prb, pbf = (ph["region_bounds"], set(ph["bf_sites"])) if "bf_sites" in ph else (rb, bfs)
+            tasks.append((str(work), ph, reg, prb, pbf, a.keep))
     # group by phase so a worker reuses the phase's checkpoint slices
     tasks.sort(key=lambda t: (t[1]["phase"], t[2]))
     print(f"{len(tasks)} region runs", flush=True)
@@ -836,7 +892,8 @@ def cmd_record(a):
                                                               "t_read", "t_x", "t_ret", "issue", "depth", "wire",
                                                               "tree", "ksplit", "adder_levels", "bind")}),
             rows_checked=sum(p["rows_checked"] for p in pos), exact=all(p["exact"] for p in pos)))
-    srcs = {str(p.relative_to(ROOT)): sha(p) for p in SOURCES + S81_FILES}
+    qelem = build.get("qelem", 0)
+    srcs = {str(p.relative_to(ROOT)): sha(p) for p in SOURCES + S81_FILES + (QRTL if qelem else [])}
     ck = Ckpt(a.snapshot)
     for f in sorted(set(ck.idx[t] for L in plan["layers"] for t in ck.idx if t.startswith(f"layers.{L}."))):
         ck.raw(next(t for t in ck.idx if ck.idx[t] == f))
@@ -866,6 +923,9 @@ def cmd_record(a):
                         "phases; routed-geometry wire stages added analytically. Not a whole-die simulation; no SS/FF "
                         "timing claim for the field here."),
         vehicle=dict(top="ot_v41_fieldtop_w17w10 (pinned, flat)", NP_slots=NP, R=NR, NBF_slots=NBF,
+                     qelem=(dict(element="ot_v41_rom_elem_q_qx_w10", QX=qelem, slots="FP8/FP4 (non-BF16) pairs",
+                                 params="NB 2 MTP 1 EARLY 1 FAST 1 PP 1 QTIMING_FIX 1 QPIPE 1 QP_XS 1 QP_CAP 0 QP_P1 1 "
+                                        "QP_CSAM 10 QZ 1 QZ_NS 8 QZ_NE 4 QY 1") if qelem else None),
                      bf_slots=BF_SLOTS, FAST=1, PP=1, BP=0, PHW=PHW, VAW=VAW, VRD=64, BST=BST_IN_VEHICLE, RST=1,
                      RD=64, ROOTD=128, return_levels_in_region=6,
                      description=__doc__.split("VEHICLE.")[1].split("PHASES.")[0].strip()),
@@ -914,6 +974,9 @@ def main() -> int:
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--model-dump", type=Path, default=None)
     ap.add_argument("--record", type=Path, default=REC)
+    ap.add_argument("--qelem", type=int, default=0,
+                    help="build: 0 = the pinned W10 element (default); N > 0 = the DS q-element with QX = N on the "
+                         "FP8/FP4 pairs (ot_v41_pair_w17w10 QELEM)")
     a = ap.parse_args()
     G.set_arith("chunk8")
     steps = {"bind-schedules": [cmd_bind_schedules], "plan": [cmd_plan], "extract": [cmd_extract], "build": [cmd_build], "run": [cmd_run],

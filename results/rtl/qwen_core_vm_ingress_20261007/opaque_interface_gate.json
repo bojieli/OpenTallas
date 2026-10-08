@@ -1,0 +1,585 @@
+{
+  "status": "pass",
+  "scope": "all opaque instance ports compared with specialized RTL module declarations",
+  "instances": [
+    {
+      "instance": "g_vsu.u_su",
+      "module": "$paramod$feea24b967541aa1c700dc9a0ae9b69801c44405\\ot_hdc_vstream_rt",
+      "parameters": {
+        "AW": "00000000000000000000000000011000",
+        "KV_FP8": "00000000000000000000000000000001",
+        "LV": "00000000000000000000000000000111",
+        "NW": "00000000000000000000000000010010",
+        "SW": "00000000000000000000000001000000",
+        "WR": "00000000000000000000000000010000"
+      },
+      "ports": {
+        "rt_active": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rt_inflight": {
+          "direction": "output",
+          "bits": 8
+        },
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "go": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "idle": {
+          "direction": "output",
+          "bits": 1
+        },
+        "i_nout": {
+          "direction": "input",
+          "bits": 18
+        },
+        "i_nin": {
+          "direction": "input",
+          "bits": 18
+        },
+        "i_asrc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_abase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_aso": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_asi": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_bsrc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_bbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_bso": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_bsi": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_csrc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_cbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_cso": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_csi": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ma": {
+          "direction": "input",
+          "bits": 2
+        },
+        "i_mb": {
+          "direction": "input",
+          "bits": 2
+        },
+        "i_ad": {
+          "direction": "input",
+          "bits": 3
+        },
+        "i_sfu": {
+          "direction": "input",
+          "bits": 3
+        },
+        "i_mc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_md": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_dst": {
+          "direction": "input",
+          "bits": 2
+        },
+        "i_dbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_dso": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_dsi": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_red": {
+          "direction": "input",
+          "bits": 2
+        },
+        "i_redsq": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_rbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_rso": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_imm1": {
+          "direction": "input",
+          "bits": 32
+        },
+        "i_imm2": {
+          "direction": "input",
+          "bits": 32
+        },
+        "va_re": {
+          "direction": "output",
+          "bits": 64
+        },
+        "va_addr": {
+          "direction": "output",
+          "bits": 1536
+        },
+        "va_q": {
+          "direction": "input",
+          "bits": 2048
+        },
+        "vb_re": {
+          "direction": "output",
+          "bits": 64
+        },
+        "vb_addr": {
+          "direction": "output",
+          "bits": 1536
+        },
+        "vb_q": {
+          "direction": "input",
+          "bits": 2048
+        },
+        "vc_re": {
+          "direction": "output",
+          "bits": 64
+        },
+        "vc_addr": {
+          "direction": "output",
+          "bits": 1536
+        },
+        "vc_q": {
+          "direction": "input",
+          "bits": 2048
+        },
+        "wrom_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "wrom_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "wrom_q": {
+          "direction": "input",
+          "bits": 256
+        },
+        "crom_re": {
+          "direction": "output",
+          "bits": 64
+        },
+        "crom_addr": {
+          "direction": "output",
+          "bits": 1536
+        },
+        "crom_q": {
+          "direction": "input",
+          "bits": 4096
+        },
+        "vm_we": {
+          "direction": "output",
+          "bits": 64
+        },
+        "vm_waddr": {
+          "direction": "output",
+          "bits": 1536
+        },
+        "vm_wdata": {
+          "direction": "output",
+          "bits": 2048
+        },
+        "kv_we": {
+          "direction": "output",
+          "bits": 64
+        },
+        "kv_waddr": {
+          "direction": "output",
+          "bits": 1536
+        },
+        "kv_wdata": {
+          "direction": "output",
+          "bits": 2048
+        },
+        "red_we": {
+          "direction": "output",
+          "bits": 1
+        },
+        "red_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "red_data": {
+          "direction": "output",
+          "bits": 32
+        },
+        "progress": {
+          "direction": "output",
+          "bits": 16
+        },
+        "progress_rows": {
+          "direction": "output",
+          "bits": 16
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "instance": "u_me",
+      "module": "$paramod$acab1beffa5034babf820efeb86790c7084fe9db\\ot_qwen_me_spine_w12",
+      "parameters": {
+        "ACC_LAT": "00000000000000000000000000000101",
+        "AW": "00000000000000000000000000011000",
+        "BD": "00000000000000000000000000101001",
+        "FAST_ISSUE": "00000000000000000000000000000000",
+        "GT": "00000000000000000001100000000000",
+        "IL": "00000000000000000000000000001000",
+        "INT8_SCALE_WCS_BASE": "00000000000000000000000000000001",
+        "KV_PREP": "00000000000000000000000000000000",
+        "MEM_EXTRA": "00000000000000000000000000000001",
+        "MUL_LAT": "00000000000000000000000000000101",
+        "NW": "00000000000000000000000000010010",
+        "NWS": "00000000000000000000000000000101",
+        "ORD": "00000000000000000000000000000111",
+        "SCALE_LOCAL": "00000000000000000000000000000000",
+        "SMAX": "00000000000000000000000000001011",
+        "SMIN": "00000000000000000000000000000111",
+        "TCUT": "00000000000000000000000000000111",
+        "TG": "00000000000000000000000000000100",
+        "TREE_LAT": "00000000000000000000000000000011",
+        "TWS": "00000000000000000000000000100110",
+        "W": "00000000000000000000000000010000",
+        "XVM": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "go": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "idle": {
+          "direction": "output",
+          "bits": 1
+        },
+        "i_nout": {
+          "direction": "input",
+          "bits": 18
+        },
+        "i_tiles": {
+          "direction": "input",
+          "bits": 18
+        },
+        "i_k": {
+          "direction": "input",
+          "bits": 18
+        },
+        "i_wsrc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_wbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ts": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ks": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_js": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xks": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xjs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xcs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_jsh": {
+          "direction": "input",
+          "bits": 3
+        },
+        "i_split": {
+          "direction": "input",
+          "bits": 4
+        },
+        "i_wcs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_round": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_obase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ots": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ojs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_mmode": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_oen": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_amax": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_rmax": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_mbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "scale_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_gre": {
+          "direction": "output",
+          "bits": 48
+        },
+        "scale_addr": {
+          "direction": "output",
+          "bits": 1152
+        },
+        "scale_q": {
+          "direction": "input",
+          "bits": 12288
+        },
+        "x_re": {
+          "direction": "output",
+          "bits": 2048
+        },
+        "x_addr": {
+          "direction": "output",
+          "bits": 49152
+        },
+        "x_q": {
+          "direction": "input",
+          "bits": 65536
+        },
+        "wrom_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "wrom_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kv_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tgo": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tb": {
+          "direction": "output",
+          "bits": 379
+        },
+        "xl_d": {
+          "direction": "output",
+          "bits": 65536
+        },
+        "t_lvl": {
+          "direction": "input",
+          "bits": 24576
+        },
+        "fab_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ov": {
+          "direction": "output",
+          "bits": 1
+        },
+        "o_we": {
+          "direction": "output",
+          "bits": 48
+        },
+        "o_addr": {
+          "direction": "output",
+          "bits": 1152
+        },
+        "o_mask": {
+          "direction": "output",
+          "bits": 768
+        },
+        "o_data": {
+          "direction": "output",
+          "bits": 24576
+        },
+        "am_idx": {
+          "direction": "output",
+          "bits": 18
+        },
+        "am_val": {
+          "direction": "output",
+          "bits": 32
+        },
+        "am_any": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_we": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "mx_mask": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mx_data": {
+          "direction": "output",
+          "bits": 512
+        },
+        "progress": {
+          "direction": "output",
+          "bits": 16
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "instance": "u_wrom_port",
+      "module": "$paramod$416c99e9a4e9f190f35db682276378ef05505104\\ot_qwen_core_wrom_port",
+      "parameters": {
+        "AW": "00000000000000000000000000011000",
+        "INT8_EMBED": "00000000000000000000000000000000",
+        "INT8_WEIGHT": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "me_wrom_re": {
+          "direction": "input",
+          "bits": 1
+        },
+        "me_wrom_addr": {
+          "direction": "input",
+          "bits": 24
+        },
+        "su_wrom_re": {
+          "direction": "input",
+          "bits": 1
+        },
+        "su_wrom_addr": {
+          "direction": "input",
+          "bits": 24
+        },
+        "wrom_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "wrom_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "int8_wrom_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "int8_wrom_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "wrom_su": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    }
+  ]
+}

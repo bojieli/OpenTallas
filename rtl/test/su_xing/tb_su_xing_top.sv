@@ -10,7 +10,9 @@
 //   S2F:  src @ sclk   -> ot_ratio_cdc_fifo (sclk -> fclk_h) -> ot_meso_fifo (fclk_h -> fclk_r) -> sink @ fclk_r
 // The two FIFOs of a path are joined ready/valid with no extra register (the meso FIFO's registered output word
 // feeds the ratio FIFO's write port directly, and vice versa).
-module tb_su_xing_top #(parameter int W = 512) (
+module tb_su_xing_top #(parameter int W = 512,
+    // meso FIFO parameters (defaults = the D4 bench of 2026-10-04; S81 adopted d8g1: MD 8 / MO 4 / MGL 1 / MGH 7 / MC 16 + OT_MESO_PINREG)
+    parameter int MD = 4, parameter int MO = 2, parameter int MGL = 0, parameter int MGH = 4, parameter int MC = 8) (
     input  logic         fclk_r, fclk_h, sclk,
     input  logic         rst_r_n, rst_h_n, rst_s_n,     // synchronous to their own clock
     // F2S
@@ -23,7 +25,7 @@ module tb_su_xing_top #(parameter int W = 512) (
 );
     logic m1_v, m1_rdy, r1_wl, r1_rl, m1_wl, m1_rl, m1_wf, m1_rf;
     logic [W-1:0] m1_d;
-    ot_meso_fifo #(.W(W), .DEPTH(4), .OFFSET(2), .GUARD_LO(0), .GUARD_HI(4), .CREDITS(8), .ENABLE(1)) u_f2s_meso (
+    ot_meso_fifo #(.W(W), .DEPTH(MD), .OFFSET(MO), .GUARD_LO(MGL), .GUARD_HI(MGH), .CREDITS(MC), .ENABLE(1)) u_f2s_meso (
         .wclk(fclk_r), .wrst_n(rst_r_n), .w_v(a_v), .w_rdy(a_rdy), .w_d(a_d),
         .rclk(fclk_h), .rrst_n(rst_h_n), .r_v(m1_v), .r_rdy(m1_rdy), .r_d(m1_d),
         .w_live(m1_wl), .r_live(m1_rl), .w_fault(m1_wf), .r_fault(m1_rf));
@@ -36,7 +38,7 @@ module tb_su_xing_top #(parameter int W = 512) (
     ot_ratio_cdc_fifo #(.W(W), .DEPTH(4)) u_s2f_ratio (
         .wclk(sclk), .wrst_n(rst_s_n), .w_v(b_v), .w_rdy(b_rdy), .w_d(b_d),
         .rclk(fclk_h), .rrst_n(rst_h_n), .r_v(r2_v), .r_rdy(r2_rdy), .r_d(r2_d), .w_live(r2_wl), .r_live(r2_rl));
-    ot_meso_fifo #(.W(W), .DEPTH(4), .OFFSET(2), .GUARD_LO(0), .GUARD_HI(4), .CREDITS(8), .ENABLE(1)) u_s2f_meso (
+    ot_meso_fifo #(.W(W), .DEPTH(MD), .OFFSET(MO), .GUARD_LO(MGL), .GUARD_HI(MGH), .CREDITS(MC), .ENABLE(1)) u_s2f_meso (
         .wclk(fclk_h), .wrst_n(rst_h_n), .w_v(r2_v), .w_rdy(r2_rdy), .w_d(r2_d),
         .rclk(fclk_r), .rrst_n(rst_r_n), .r_v(y_v), .r_rdy(y_rdy), .r_d(y_d),
         .w_live(m2_wl), .r_live(m2_rl), .w_fault(m2_wf), .r_fault(m2_rf));

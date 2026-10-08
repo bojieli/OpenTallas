@@ -1,0 +1,11 @@
+{
+ "schema": 1,
+ "initial_failure": "The first fixture allowed an unknown payload into the landing queue; the landing held first codeword was already X before force release. After release one flit advanced into the CDC, whose head then contained X and stopped progress.",
+ "evidence": "head_diagnostic_gate/positive/simulation.log records landing captured X before release, landing count63 after one transfer, CDC memory/head X and CDC fault X.",
+ "force_release": "The trace demonstrates that releasing the paired test-only forces permitted transfer. No production pause port or private instrumented DUT was introduced.",
+ "fixture_fix": "Replace the fixture's unpacked data array with three explicitly initialized scalar545-bit registers. Check every fixture PHY arrival against its exact expected payload, reject unknown landing payloads, and use case comparisons to reject unknown fault flags immediately.",
+ "root_cause_limit": "A standalone unpacked-array read probe worked. A general Icarus unpacked-array defect is not established. The unknown-payload failure is bounded to the original fixture; all production RTL is byte-identical across these runs.",
+ "clock_precision": "Initial fixture used1ps precision, giving834ps period; first receipt is corrected by its fixture_precision_correction.json. Diagnostic and final fixtures use1fs precision, giving833.334ps period for requested833.333334ps, with exact137ps independent phase.",
+ "final_positive": "scalar_fixture_gate/positive/simulation.log:384 ordered payloads, max outstanding64,4189 edges per domain,30 fault-quarantined landing flits.",
+ "physical_limit": "No PHY delay, aggregate fault CDC, reset lifecycle, mapped area or SS/FF timing qualification is supplied by this functional fixture."
+}

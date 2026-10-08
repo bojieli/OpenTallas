@@ -1,0 +1,356 @@
+usage: run_abi3_physical.py [-h]
+                            [--synth-timeout-seconds SYNTH_TIMEOUT_SECONDS]
+                            [--flow-timeout-seconds FLOW_TIMEOUT_SECONDS]
+                            --view {asap7,sky130hd}
+                            [--block {add_bf16_sram_engine,matmul_bf16_sram_engine,reduction_s8_g2}]
+                            [--top TOP] [--source SOURCE] [--param PARAM]
+                            [--clock-port CLOCK_PORT]
+                            [--ingress-clock-port INGRESS_CLOCK_PORT]
+                            [--ingress-input-port INGRESS_INPUT_PORT]
+                            [--ingress-input-delay-min-ns INGRESS_INPUT_DELAY_MIN_NS]
+                            [--ingress-input-delay-max-ns INGRESS_INPUT_DELAY_MAX_NS]
+                            [--core-input-delay-min-ns CORE_INPUT_DELAY_MIN_NS]
+                            [--core-input-delay-max-ns CORE_INPUT_DELAY_MAX_NS]
+                            [--core-input-port CORE_INPUT_PORT]
+                            [--false-path-from FALSE_PATH_FROM]
+                            [--false-path-io]
+                            [--io-delay-fraction IO_DELAY_FRACTION]
+                            [--corner CORNER] --clock-period-ns
+                            CLOCK_PERIOD_NS
+                            [--clock-uncertainty-ns CLOCK_UNCERTAINTY_NS]
+                            [--clock-uncertainty-hold-ns CLOCK_UNCERTAINTY_HOLD_NS]
+                            [--clock-uncertainty-setup-only]
+                            [--output-delay-min-ns OUTPUT_DELAY_MIN_NS]
+                            [--output-delay-max-ns OUTPUT_DELAY_MAX_NS]
+                            [--stages STAGES]
+                            [--preserve-w11-controller-endpoints]
+                            [--fmax-search]
+                            [--core-utilization CORE_UTILIZATION] [--vt VT]
+                            [--place-density PLACE_DENSITY]
+                            [--cts-cluster-size CTS_CLUSTER_SIZE]
+                            [--keep-heavy-artifacts]
+                            [--max-transition-ns [NS]] [--max-fanout [N]]
+                            [--slew-margin-percent PCT] [--hold-margin-ns NS]
+                            [--clock-gating] [--orfs-corner {BC,TC,WC}]
+                            [--hold-corners C1,C2] [--orfs-var KEY=VALUE]
+                            [--sdc-append FILE] [--asap7-adder-map]
+                            [--pnr-stop-after {finish,cts,floorplan}]
+                            [--memory-macro NAME] [--macro-view NAME=DIR]
+                            [--macro-place-halo X_UM Y_UM] [--source-root DIR]
+                            [--purpose {characterization,signoff_target}]
+                            [--expected-not-met] [--die-area X0 Y0 X1 Y1]
+                            [--core-area X0 Y0 X1 Y1]
+                            [--pin-region REGEX=EDGE]
+                            [--routing-layers MIN MAX] [--step-tcl HOOK=FILE]
+                            [--dft {none,scan}] [--scan-chains N]
+                            [--scan-max-length L]
+                            [--scan-clock-mixing {no_mix,mix}]
+                            [--dft-bound-macros] --output OUTPUT [--force]
+                            [--keep-workdir KEEP_WORKDIR]
+                            [--nickname-tag NICKNAME_TAG] [--lanes LANES]
+                            [--mac-per-cycle MAC_PER_CYCLE]
+                            [--mac-rate-evidence MAC_RATE_EVIDENCE]
+                            [--lane-instance-regex LANE_INSTANCE_REGEX]
+
+Physical characterisation driver for OpenTallas ABI 3.0 RTL blocks.
+
+Runs one named RTL top module through one named technology view:
+
+  * ``synth``  -- pinned Yosys + pinned ABC map to the view's standard-cell
+                  liberty and report cell count / cell area / sequential area /
+                  macro count.
+  * ``sta``    -- pinned OpenSTA pre-layout static timing on the mapped
+                  netlist and report WNS / TNS / hold WNS / Fmax.
+  * ``pnr``    -- full place-and-route through the pinned OpenROAD-flow-scripts
+                  container, reporting routed wire length, via count, DRC and
+                  antenna violation counts.  Only for views whose ``pnr``
+                  platform is populated.
+
+Every recorded number comes from a tool this script actually invoked.  Nothing
+is estimated, scaled or interpolated.  Output is canonical JSON and the driver
+fails closed if the output path already exists unless ``--force`` is given.
+
+Reproduce, from the repository root::
+
+    python3 tools/run_abi3_physical.py --view sky130hd --block reduction_s8_g2 \
+        --clock-period-ns 20 --stages synth,sta \
+        --output results/physical_abi3/sky130hd/reduction_s8_g2/physical.json
+
+Signal integrity.  ``--max-transition-ns`` and ``--max-fanout`` put explicit
+``set_max_transition`` / ``set_max_fanout`` constraints in the SDC so ORFS's
+repair_design buffers and sizes to them; ``--slew-margin-percent`` hands ORFS
+its SLEW_MARGIN so the repair overfixes.  Bare ``--max-transition-ns`` takes
+the corner's own liberty limit (asap7 RVT 0.32 ns, sky130hd 1.5 ns).  The
+values used are recorded under ``place_and_route.signal_integrity_constraints``
+and nothing is emitted or recorded when the options are absent.
+
+Memory macros.  ``--memory-macro NAME`` (repeatable) names a memory macro the
+place-and-route platform itself ships; its LEF and liberty are resolved inside
+the pinned container from the platform's own ``lef/`` and ``lib/``
+directories, never copied, and reach the flow as ``ADDITIONAL_LEFS``,
+``ADDITIONAL_LIBS`` and ``SYNTH_BLACKBOXES``, which is how ORFS's own
+macro-bearing designs get theirs.  ``--macro-place-halo X Y`` overrides the
+platform's ``MACRO_PLACE_HALO``; without it the platform default stands.  What
+was used is recorded under ``place_and_route.memory_macros`` and nothing is
+emitted or recorded when the option is absent.
+
+Design for test.  ``--dft scan`` inserts muxed-D full scan into the netlist
+ORFS synthesised, between synthesis and floorplan, with ``tools/dft``: every
+flop becomes a scan cell, stitched into ``--scan-chains`` balanced chains (or
+as many as ``--scan-max-length`` needs), with ``scan_en``, ``scan_in[N-1:0]``
+and ``scan_out[N-1:0]`` ports and lock-up latches where a chain crosses clock
+domains (``--scan-clock-mixing mix``).  The scan description is retained as
+``scan_chains.json`` beside the other artifacts and summarised under
+``place_and_route.dft``; the route gets its own DESIGN_NICKNAME so it cannot
+collide with an unscanned route of the same top.  Without ``--dft`` nothing is
+emitted or recorded and the config.mk is byte-for-byte unchanged.
+
+Pinned sources.  ``--source-root DIR`` reads the RTL from another checkout
+(a worktree pinned at the commit being characterised); the record's ``git``
+block then describes that tree and ``runner.driver`` names the commit this
+driver came from.
+
+Timeouts. ``--synth-timeout-seconds unlimited`` and
+``--flow-timeout-seconds unlimited`` disable synthesis/STA and route wall
+timeouts respectively. ``none`` is an alias. The corresponding environment
+variables are ``OT_SYNTH_TIMEOUT_SECONDS`` and ``OT_FLOW_TIMEOUT_SECONDS``.
+Python callers may use ``main(argv, synth_timeout=None, flow_timeout=None)``
+or ``run(command, timeout=None)``. CLI overrides take precedence over Python
+overrides; both are scoped to the invocation. Omitted options retain the
+existing numeric defaults. Tool identity and platform probes keep their own
+timeouts; this policy does not change inherited operating-system limits.
+
+options:
+  -h, --help            show this help message and exit
+  --synth-timeout-seconds SYNTH_TIMEOUT_SECONDS
+                        synthesis/STA seconds or unlimited (alias: none);
+                        otherwise env/default 7200
+  --flow-timeout-seconds FLOW_TIMEOUT_SECONDS
+                        route seconds or unlimited (alias: none); otherwise
+                        env/default 21600
+  --view {asap7,sky130hd}
+  --block {add_bf16_sram_engine,matmul_bf16_sram_engine,reduction_s8_g2}
+                        named block from the built-in registry
+  --top TOP             RTL top module (with --source, overrides --block)
+  --source SOURCE       RTL source, repeatable
+  --param PARAM         NAME=VALUE top parameter, repeatable
+  --clock-port CLOCK_PORT
+  --ingress-clock-port INGRESS_CLOCK_PORT
+                        related, same-period ingress capture clock port
+  --ingress-input-port INGRESS_INPUT_PORT
+                        input port timed relative to ingress clock; repeat for
+                        each port
+  --ingress-input-delay-min-ns INGRESS_INPUT_DELAY_MIN_NS
+                        earliest ingress data arrival relative to ingress
+                        clock
+  --ingress-input-delay-max-ns INGRESS_INPUT_DELAY_MAX_NS
+                        latest ingress data arrival relative to ingress clock
+  --core-input-delay-min-ns CORE_INPUT_DELAY_MIN_NS
+                        earliest non-clock input arrival relative to core
+                        clock
+  --core-input-delay-max-ns CORE_INPUT_DELAY_MAX_NS
+                        latest non-clock input arrival relative to core clock
+  --core-input-port CORE_INPUT_PORT
+                        core-clocked input port or port pattern; repeat to
+                        keep clock domains disjoint
+  --false-path-from FALSE_PATH_FROM
+  --false-path-io       false-path every non-clock input and every output, so
+                        closure is the block's internal register-to-register
+                        timing; for blocks whose ports are registered on the
+                        block side and face registered neighbours or memory
+                        macros. Recorded under design.false_path_io
+  --io-delay-fraction IO_DELAY_FRACTION
+                        external input/output delay as a fraction of the clock
+                        period (default 0.2). 0 models a block whose ports
+                        face adjacent macros or registered neighbours in the
+                        same clock domain, so only its internal register-to-
+                        register paths set closure; the value is recorded
+                        under design.io_delay_fraction
+  --corner CORNER       corner name within the view
+  --clock-period-ns CLOCK_PERIOD_NS
+  --clock-uncertainty-ns CLOCK_UNCERTAINTY_NS
+                        nonnegative clock uncertainty applied to all clocks
+                        (setup and hold) in the source-pinned SDC; absent
+                        emits nothing. The value is recorded under
+                        design.clock_uncertainty_ns
+  --clock-uncertainty-hold-ns CLOCK_UNCERTAINTY_HOLD_NS
+                        with --clock-uncertainty-ns: a separate hold
+                        uncertainty on all clocks (the setup uncertainty is
+                        then emitted with -setup); project SDC policy
+                        2026-09-29 is 0.060 setup / 0.025 hold; recorded under
+                        design.clock_uncertainty_hold_ns
+  --clock-uncertainty-setup-only
+                        with --clock-uncertainty-ns: emit
+                        set_clock_uncertainty -setup on core_clk only, so hold
+                        is timed without it (the claude/w5-qwen-physical
+                        semantics of --clock-uncertainty-ns); recorded under
+                        design.clock_uncertainty_setup_only
+  --output-delay-min-ns OUTPUT_DELAY_MIN_NS
+                        set_output_delay -min on every output (with --output-
+                        delay-max-ns), after the io-delay-fraction default; a
+                        negative value models a downstream capture flop whose
+                        clock arrives that much later than the ideal edge (the
+                        same tree's insertion delay)
+  --output-delay-max-ns OUTPUT_DELAY_MAX_NS
+                        set_output_delay -max on every output (with --output-
+                        delay-min-ns)
+  --stages STAGES       comma list of synth,sta,pnr
+  --preserve-w11-controller-endpoints
+                        retain physical-stub endpoint register cells in the
+                        full W11 controller vehicle; off by default
+  --fmax-search         bisect the clock period for the shortest period
+                        meeting setup timing
+  --core-utilization CORE_UTILIZATION
+  --vt VT               ASAP7 threshold-voltage flavour(s) for place-and-
+                        route, e.g. 'LVT' or 'RVT LVT SLVT'. ORFS reads this
+                        as ASAP7_USE_VT: the first entry is primary and the
+                        rest are added as extra liberty/LEF/GDS so the sizer
+                        may pick a faster cell on a critical path. The view's
+                        own default (RVT) stands when this is not given. NOTE:
+                        only the pnr stage honours it -- the sta stage reads
+                        the local PDK mirror, which carries RVT only.
+  --place-density PLACE_DENSITY
+  --cts-cluster-size CTS_CLUSTER_SIZE
+                        ORFS clock sink clustering size; controls clock-tree
+                        fanout without relaxing SDC limits
+  --keep-heavy-artifacts
+  --max-transition-ns [NS]
+                        emit set_max_transition NS [current_design] in the SDC
+                        so repair_design buffers and sizes every net to that
+                        slew; given bare (or as 'library') it is the smallest
+                        default_max_transition of the corner's liberty files
+                        (asap7 RVT 0.32 ns, sky130hd 1.5 ns). Absent: no
+                        set_max_transition, the liberty limits alone, as every
+                        earlier record
+  --max-fanout [N]      emit set_max_fanout N [current_design] and record it;
+                        given bare (or as 'default') it is the 32 every SDC
+                        carries anyway. Absent: set_max_fanout 32, unrecorded,
+                        as every earlier record
+  --slew-margin-percent PCT
+                        ORFS SLEW_MARGIN: repair_design overfixes max-slew to
+                        (100 - PCT)% of each pin's limit under estimated
+                        parasitics. Absent: ORFS default, no margin
+  --hold-margin-ns NS   ORFS HOLD_SLACK_MARGIN: repair_timing targets this
+                        much POSITIVE hold slack under estimated parasitics so
+                        the extracted finish check still lands non-negative.
+                        Absent: ORFS default 0
+  --clock-gating        ORFS INFER_CLKGATES: yosys turns every group of >= 8
+                        flops sharing an enable into an integrated clock gate
+                        (ASAP7 ICGx1) plus plain flops; recorded under
+                        signal_integrity_constraints.clock_gating. ICGs the
+                        RTL instantiates (ot_hdc_cg) are kept with or without
+                        it
+  --orfs-corner {BC,TC,WC}
+                        the primary ORFS corner of place and route (asap7: TC
+                        typical, WC slow = SS, BC fast = FF); overrides the
+                        view's corner_env. --macro-view macros are timed with
+                        their own liberty of that corner
+                        (NAME_{tt,ss,ff}.lib), and a missing one fails the run
+  --hold-corners C1,C2  ORFS CORNERS: repair setup and hold at each listed
+                        ORFS corner (asap7: TC, BC, WC), e.g. TC,BC to fix
+                        hold at the fast corner too; the first is the primary.
+                        Combine with --hold-margin-ns for an on-chip-variation
+                        budget. Recorded under
+                        signal_integrity_constraints.hold_corners
+  --orfs-var KEY=VALUE  set an ORFS config.mk variable verbatim (repeatable;
+                        e.g. PDN_TCL=/src/...); recorded under the view's
+                        pnr.extra_config. Absent: nothing added
+  --sdc-append FILE     append this SDC file's lines (design-intent timing
+                        exceptions, e.g. a multicycle macro read) to the
+                        generated constraints; recorded with its digest under
+                        design.extra_sdc
+  --asap7-adder-map     asap7: keep the platform's ADDER_MAP_FILE (FA/HA
+                        ripple adders). Default: ADDER_MAP_FILE is set empty
+                        so yosys keeps its Kogge-Stone adders; recorded as
+                        place_and_route.adder_map
+  --pnr-stop-after {finish,cts,floorplan}
+                        cts: run ORFS through clock-tree synthesis (with its
+                        setup/hold repair) and record the CTS-stage metrics,
+                        for a block whose global route does not finish in the
+                        flow limit; recorded as place_and_route.stopped_after
+  --memory-macro NAME   place-and-route with this memory macro of the platform
+                        available: its LEF and liberty are resolved inside the
+                        pinned image from the platform's own lef/ and lib/
+                        directories and emitted as ADDITIONAL_LEFS,
+                        ADDITIONAL_LIBS and SYNTH_BLACKBOXES, so an instance
+                        in the RTL survives synthesis as a black box and is
+                        placed as a macro. Repeatable. Absent: no macro lines
+                        in config.mk, as every earlier record
+  --macro-view NAME=DIR
+                        place-and-route with a macro compiled by
+                        tools/mem_compiler: DIR (in the source tree) holds
+                        NAME.lef and NAME_<corner>.lib; emitted as
+                        ADDITIONAL_LEFS, ADDITIONAL_LIBS, SYNTH_BLACKBOXES and
+                        GDS_ALLOW_EMPTY. Repeatable; needs --macro-place-halo
+                        unless --memory-macro is also given
+  --macro-place-halo X_UM Y_UM
+                        override MACRO_PLACE_HALO, the keep-out
+                        rtl_macro_placer leaves around each macro. Absent: the
+                        platform's own default, which is recorded either way;
+                        needs --memory-macro
+  --source-root DIR     tree to read the RTL sources from (default: this
+                        driver's own checkout). Its git identity becomes the
+                        record's git block, it is mounted as /src in the ORFS
+                        container, and relative --output, --keep-workdir and
+                        --mac-rate-evidence paths resolve under it; the commit
+                        this driver came from is recorded in runner.driver
+  --purpose {characterization,signoff_target}
+                        characterization: this target period is a probe, not a
+                        claim that the block must close at it. signoff_target:
+                        this period is the intended operating point.
+  --expected-not-met    record that this corner is deliberately expected not
+                        to close at the target period; does not change status,
+                        only documents intent
+  --die-area X0 Y0 X1 Y1
+                        explicit ORFS DIE_AREA in um (with --core-area;
+                        replaces --core-utilization)
+  --core-area X0 Y0 X1 Y1
+                        explicit ORFS CORE_AREA in um (with --die-area)
+  --pin-region REGEX=EDGE
+                        pin matching ports to EDGE (left/right/top/bottom),
+                        optionally within EDGE:LOW-HIGH microns along that
+                        edge; repeatable and recorded
+  --routing-layers MIN MAX
+                        override the platform's MIN_ROUTING_LAYER /
+                        MAX_ROUTING_LAYER
+  --step-tcl HOOK=FILE  source FILE at ORFS step hook HOOK (e.g. POST_PDN),
+                        repeatable; its sha256 is recorded under
+                        place_and_route.floorplan.step_tcl
+  --dft {none,scan}     scan: insert muxed-D full scan between ORFS synthesis
+                        and floorplan (tools/dft/scan_insert.py) and route the
+                        scanned netlist; recorded under place_and_route.dft.
+                        Absent or none: no DFT, as every earlier record
+  --scan-chains N       number of balanced scan chains (default 1)
+  --scan-max-length L   longest allowed chain; raises the chain count to fit
+  --scan-clock-mixing {no_mix,mix}
+                        no_mix (default): one clock domain per chain; mix:
+                        chains cross domains through lock-up latches
+  --dft-bound-macros    with --dft scan: treat every --macro-view macro as an
+                        X-bounded black box (outputs AND !test_mode) and open
+                        ICGs in test mode (SE = test_mode);
+                        tools/dft/macro_bound.py. Default off: the plain
+                        inserter, as every earlier record
+  --output OUTPUT
+  --force
+  --keep-workdir KEEP_WORKDIR
+                        directory to retain intermediate files in
+  --nickname-tag NICKNAME_TAG
+                        suffix appended to the ORFS DESIGN_NICKNAME, so a
+                        route of a top that is already being routed elsewhere
+                        (e.g. a sign-off re-route with --keep-workdir) does
+                        not share its results namespace; default: none
+                        (nickname unchanged)
+  --lanes LANES         declared lane count of the block; recorded as
+                        design.lanes (gate D3)
+  --mac-per-cycle MAC_PER_CYCLE
+                        MAC (lane-ops) per cycle for the whole block as
+                        measured by the RTL campaign named in --mac-rate-
+                        evidence; recorded as design.mac_per_cycle and used
+                        for the per-MAC figures (gate D4)
+  --mac-rate-evidence MAC_RATE_EVIDENCE
+                        results/rtl artifact behind --mac-per-cycle, as PATH
+                        or PATH:DOTTED.FIELD (repeatable)
+  --lane-instance-regex LANE_INSTANCE_REGEX
+                        regex over instance names of the mapped netlist whose
+                        first group is the lane index; distinct indices are
+                        counted into design.lanes_in_netlist

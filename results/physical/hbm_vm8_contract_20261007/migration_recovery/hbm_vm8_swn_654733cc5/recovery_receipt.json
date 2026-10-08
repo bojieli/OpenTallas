@@ -1,0 +1,38 @@
+{
+  "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+  "original_exact": {
+    "state": "done",
+    "tag": "bench_vm8_exact.a1b1",
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8_swn_654733cc5",
+    "n": 1,
+    "started": "2026-10-07T07:17:15-07:00"
+  },
+  "log_sha256": "4a97376e547ddf44a8865ffa965aa08c8451858cb07ad3ecf178ebcee66c0fbb",
+  "original_failure_preserved": true,
+  "log_only_replay": [
+    {
+      "name": "vm8_neg_xbus",
+      "rc": 1,
+      "output": "VM8_XBUS_MUTANT_FAILS\n",
+      "command": "for i in $(seq 1 720); do grep -q \"VM_SPLIT8_BENCH \\(PASS\\|FAIL\\)\" /tmp/vm8-migration-recovery/hbm_vm8_swn_654733cc5/vm8_bench.log 2>/dev/null && break; sleep 10; done; grep -q VM_SPLIT8_NEG_XBUS_DETECTED /tmp/vm8-migration-recovery/hbm_vm8_swn_654733cc5/vm8_bench.log && echo VM8_XBUS_MUTANT_FAILS && exit 1; exit 0"
+    },
+    {
+      "name": "vm8_neg_seam",
+      "rc": 1,
+      "output": "VM8_SEAM_MUTANT_FAILS\n",
+      "command": "for i in $(seq 1 720); do grep -q \"VM_SPLIT8_BENCH \\(PASS\\|FAIL\\)\" /tmp/vm8-migration-recovery/hbm_vm8_swn_654733cc5/vm8_bench.log 2>/dev/null && break; sleep 10; done; grep -q VM_SPLIT8_NEG_SEAM_DETECTED /tmp/vm8-migration-recovery/hbm_vm8_swn_654733cc5/vm8_bench.log && echo VM8_SEAM_MUTANT_FAILS && exit 1; exit 0"
+    },
+    {
+      "name": "vm8_neg_port_depth",
+      "rc": 1,
+      "output": "VM8_PORT_SKEW_DETECTED\n",
+      "command": "for i in $(seq 1 720); do grep -q \"VM_SPLIT8_BENCH \\(PASS\\|FAIL\\)\" /tmp/vm8-migration-recovery/hbm_vm8_swn_654733cc5/vm8_bench.log 2>/dev/null && break; sleep 10; done; grep -q VM_PORT_DEPTH_NEG_DETECTED /tmp/vm8-migration-recovery/hbm_vm8_swn_654733cc5/vm8_bench.log && echo VM8_PORT_SKEW_DETECTED && exit 1; exit 0"
+    }
+  ],
+  "markers": {
+    "VM_SPLIT8_BENCH PASS": true,
+    "VM_SPLIT8_NEG_XBUS_DETECTED": true,
+    "VM_SPLIT8_NEG_SEAM_DETECTED": true
+  }
+}

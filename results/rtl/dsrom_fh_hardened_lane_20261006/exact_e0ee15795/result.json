@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "added_cycles": 0,
+  "cases": [
+    {
+      "configuration": "original",
+      "returncode": 0,
+      "passed": true,
+      "checks": [
+        "PASS FH SRAM G4W16 rows505 accepted=32512 released=32512 writes=32352 CE=1 protected-identity-warm-mask-debt"
+      ],
+      "compile_argv": [
+        "iverilog",
+        "-g2012",
+        "-DOT_FH_PROTECT_SPLIT=1",
+        "-s",
+        "tb_fh_sram_return",
+        "-o",
+        "/tmp/item4-lane-exact-e0ee15795/original/sim.vvp",
+        "/home/ubuntu/wt-codex-item4-fused-head-lane/rtl/dft/ot_rom_secded_dec.sv",
+        "/home/ubuntu/wt-codex-item4-fused-head-lane/rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_sram_return.sv",
+        "/home/ubuntu/wt-codex-item4-fused-head-lane/rtl/hdc/v41/dspark_fused_head/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv",
+        "/home/ubuntu/wt-codex-item4-fused-head-lane/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+        "/tmp/item4-lane-exact-e0ee15795/original/tb.sv"
+      ]
+    },
+    {
+      "configuration": "hardened",
+      "returncode": 0,
+      "passed": true,
+      "checks": [
+        "PASS FH SRAM G4W16 rows505 accepted=32512 released=32512 writes=32352 CE=1 protected-identity-warm-mask-debt"
+      ],
+      "compile_argv": [
+        "iverilog",
+        "-g2012",
+        "-DOT_FH_PROTECT_SPLIT=1",
+        "-s",
+        "tb_fh_sram_return",
+        "-o",
+        "/tmp/item4-lane-exact-e0ee15795/hardened/sim.vvp",
+        "/home/ubuntu/wt-codex-item4-fused-head-lane/rtl/dft/ot_rom_secded_dec.sv",
+        "/home/ubuntu/wt-codex-item4-fused-head-lane/rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_sram_return.sv",
+        "/home/ubuntu/wt-codex-item4-fused-head-lane/rtl/hdc/v41/dspark_fused_head/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv",
+        "/home/ubuntu/wt-codex-item4-fused-head-lane/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+        "/tmp/item4-lane-exact-e0ee15795/hardened/tb.sv"
+      ]
+    },
+    {
+      "configuration": "wrong_bank_negative",
+      "returncode": 1,
+      "passed": true,
+      "checks": [],
+      "compile_argv": [
+        "iverilog",
+        "-g2012",
+        "-DOT_FH_PROTECT_SPLIT=1",
+        "-s",
+        "tb_fh_sram_return",
+        "-o",
+        "/tmp/item4-lane-exact-e0ee15795/wrong_bank_negative/sim.vvp",
+        "/home/ubuntu/wt-codex-item4-fused-head-lane/rtl/dft/ot_rom_secded_dec.sv",
+        "/home/ubuntu/wt-codex-item4-fused-head-lane/rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_sram_return.sv",
+        "/tmp/item4-lane-exact-e0ee15795/wrong_bank_negative/wrong_bank.sv",
+        "/home/ubuntu/wt-codex-item4-fused-head-lane/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+        "/tmp/item4-lane-exact-e0ee15795/wrong_bank_negative/tb.sv"
+      ]
+    }
+  ],
+  "sha256": {
+    "rtl/dft/ot_rom_secded_dec.sv": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_sram_return.sv": "7ce30b050a00a3ec75f5963442a129ad180d9e5a1dde74f112039bb60271f9ec",
+    "rtl/hdc/v41/dspark_fused_head/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv": "46260c1fd03ee257c05eb6c218eaecaba28c871d4f0c0343cea71c4d356b9d4f",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/tb_fh_sram_return.sv": "67f444e3e6ec9bb77005a32d58930c78b40fa062fac819ffe623687e065728f5",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ecc_K48_row9.hex": "82369fa4ff8d28fe1ded2fb0a24aebdafc0da9b3f8acebfce2f213465c450008"
+  },
+  "source_commit": "e0ee1579521e9bc57d21630409c35e3130ebd9c7",
+  "physical_closed": false,
+  "parent_qualified": false,
+  "measurement": {
+    "one_cpu": true,
+    "wall_seconds": 53.31,
+    "user_cpu_seconds": 53.04,
+    "peak_rss_KiB": 229884
+  }
+}

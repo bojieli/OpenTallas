@@ -1,0 +1,60 @@
+{
+  "schema": "qwen.core.retained_archive_preflight.v1",
+  "status": "pass",
+  "time": "2026-10-07T17:21:40.076828+00:00",
+  "base_source_archive": "/tmp/core844-archive-preflight/src",
+  "patched_file": "tools/qwen_core_separate_load_prepare.py",
+  "patch_sha256": "ae7974aec8435f796e82626ea533544c0bdb9b7bbcf757826737b0f9a92d28d6",
+  "historical_archive_unchanged": true,
+  "results_tree_absent": true,
+  "retained_parameter_file": "physical/qwen_core_ctx/retained_screen_synth.ys",
+  "retained_parameter_sha256": "05f50610bc4c4f9dbcac11d7779039cbb5cf20dc9b924b9e3e36ca2fc33e4e04",
+  "emitted_candidate_sha256": "0cd780da0e7b7f19bc213107e4ff0c758e970d516112f946b4a511d29621a5f7",
+  "rows": [
+    {
+      "label": "preserved_failure",
+      "command": [
+        "python3",
+        "/tmp/core844-archive-preflight/src/tools/qwen_core_separate_load_prepare.py",
+        "--out",
+        "/tmp/qwen-core-retained-archive-fix-20261007/preserved_failure",
+        "--separate-load",
+        "--fallback",
+        "3",
+        "--bound",
+        "--amq",
+        "--nxreg",
+        "--meif",
+        "--suif",
+        "--pinreg"
+      ],
+      "returncode": 1,
+      "expected_success": false,
+      "matched": true,
+      "log_sha256": "1c0b091befbf07a5023d948139c0a78235fd0bbbd3ac6bc562cabcede91d95dc"
+    },
+    {
+      "label": "corrected_archive",
+      "command": [
+        "python3",
+        "/tmp/qwen-core-retained-archive-fix-20261007/src/tools/qwen_core_separate_load_prepare.py",
+        "--out",
+        "/tmp/qwen-core-retained-archive-fix-20261007/corrected_archive",
+        "--separate-load",
+        "--fallback",
+        "3",
+        "--bound",
+        "--amq",
+        "--nxreg",
+        "--meif",
+        "--suif",
+        "--pinreg"
+      ],
+      "returncode": 0,
+      "expected_success": true,
+      "matched": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Production prep on compact source archive; no new route or synthesis run"
+}

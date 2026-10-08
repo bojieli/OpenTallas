@@ -1,0 +1,948 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+QCC reference pin nx_v$_DFFE_PN0P_/CLK clock arrival max 321.053528 min 305.172455
+OT_CORNER ss
+OT_WS -2.0623536212127647e-10
+OT_TNS -3.694407979537573e-8
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: pr_kvwe_q[45]$_DFF_PN0_
+          (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 577.65  577.65 ^ input external delay
+   0.00  577.65 ^ rst_n (in)
+  55.69  633.34 ^ hold11825/Y (BUFx2_ASAP7_75t_R)
+  25.45  658.79 ^ hold11771/Y (BUFx2_ASAP7_75t_R)
+  23.59  682.38 ^ hold11826/Y (BUFx2_ASAP7_75t_R)
+  37.81  720.19 ^ input1261/Y (BUFx2_ASAP7_75t_R)
+  79.75  799.94 ^ place10719/Y (BUFx3_ASAP7_75t_R)
+  10.80  810.73 ^ pr_kvwe_q[45]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         810.73   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+  61.46  894.79 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  33.86  928.65 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  38.55  967.20 ^ clkbuf_1_0_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  40.08 1007.27 ^ clkbuf_2_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  41.97 1049.24 ^ clkbuf_4_5_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  42.66 1091.90 ^ clkbuf_6_23__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  41.40 1133.30 ^ clkbuf_leaf_174_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   0.38 1133.67 ^ pr_kvwe_q[45]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1073.67   clock uncertainty
+   0.00 1073.67   clock reconvergence pessimism
+  30.49 1104.16   library recovery time
+        1104.16   data required time
+---------------------------------------------------------
+        1104.16   data required time
+        -810.73   data arrival time
+---------------------------------------------------------
+         293.43   slack (MET)
+
+
+Startpoint: g_vsu.u_su.kv_we[22] (input port clocked by core_clk)
+Endpoint: kv_write_flush (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 577.65  577.65 v input external delay
+   0.00  577.65 v g_vsu.u_su.kv_we[22] (in)
+  54.66  632.32 v input257/Y (BUFx12f_ASAP7_75t_R)
+  62.98  695.29 v _068842_/Y (OR4x1_ASAP7_75t_R)
+  61.77  757.07 v _068843_/Y (OR5x1_ASAP7_75t_R)
+  60.31  817.38 v _068846_/Y (OR4x1_ASAP7_75t_R)
+  52.72  870.10 v _068847_/Y (OR4x1_ASAP7_75t_R)
+  79.80  949.91 v _068848_/Y (OR5x1_ASAP7_75t_R)
+  22.30  972.21 ^ _068849_/Y (INVx2_ASAP7_75t_R)
+  60.65 1032.85 ^ output1926/Y (BUFx24_ASAP7_75t_R)
+  11.17 1044.02 ^ kv_write_flush (out)
+        1044.02   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock network delay (propagated)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+  64.45  837.79   output external delay
+         837.79   data required time
+---------------------------------------------------------
+         837.79   data required time
+        -1044.02   data arrival time
+---------------------------------------------------------
+        -206.24   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 860
+OT_WS_REG_D -206.235580
+OT_WS_OUT -206.235367
+OT_WS_R2R -82.467476
+OT_WS_I2R 293.431946
+OT_PATH g_vsu.u_su.kv_we[22] kv_write_flush -206.235367
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[15]$_DFFE_PP_/D -82.467476
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[1]$_DFFE_PP_/D -80.790039
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[9]$_DFFE_PP_/D -80.451759
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[14]$_DFFE_PP_/D -80.312759
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[8]$_DFFE_PP_/D -79.236618
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[12]$_DFFE_PP_/D -79.163673
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[31]$_DFFE_PP_/D -78.573257
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[11]$_DFFE_PP_/D -77.997162
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[7]$_DFFE_PP_/D -77.675087
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[13]$_DFFE_PP_/D -77.593712
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[9]$_DFFE_PP_/D -77.591156
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_mb[0]$_DFFE_PP_/D -77.472916
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[16]$_DFFE_PP_/D -77.045372
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[15]$_DFFE_PP_/D -76.975647
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[10]$_DFFE_PP_/D -76.622261
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[10]$_DFFE_PP_/D -76.574417
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_mb[1]$_DFFE_PP_/D -76.276207
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[12]$_DFFE_PP_/D -76.132881
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[14]$_DFFE_PP_/D -75.959129
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[12]$_DFFE_PP_/D -75.944695
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[0]$_DFFE_PP_/D -75.794594
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[22]$_DFFE_PP_/D -75.669914
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[13]$_DFFE_PP_/D -75.615623
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_mc$_DFFE_PP_/D -75.599525
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_sfu[0]$_DFFE_PP_/D -75.467857
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_md$_DFFE_PP_/D -75.336182
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[23]$_DFFE_PP_/D -75.244591
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[6]$_DFFE_PP_/D -75.169319
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[30]$_DFFE_PP_/D -74.901978
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[8]$_DFFE_PP_/D -74.801277
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[7]$_DFFE_PP_/D -74.757309
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_ma[0]$_DFFE_PP_/D -74.177002
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[22]$_DFFE_PP_/D -73.948402
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[4]$_DFFE_PP_$_DFFE_PP_/D -73.701599
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[13]$_DFFE_PP_/D -73.555939
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[29]$_DFFE_PP_/D -73.347664
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[2]$_DFFE_PP_$_DFFE_PP_/D -73.123283
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[0]$_DFFE_PP_/D -72.759575
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[15]$_DFFE_PP_/D -72.649994
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[16]$_DFFE_PP_/D -72.639671
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsrc$_DFFE_PP_/D -72.600258
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[14]$_DFFE_PP_/D -72.521545
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_ma[1]$_DFFE_PP_/D -72.367332
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[4]$_DFFE_PP_/D -72.313599
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[12]$_DFFE_PP_/D -72.138847
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[10]$_DFFE_PP_/D -72.118759
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[2]$_DFFE_PP_/D -72.078674
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[5]$_DFFE_PP_/D -72.070015
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[11]$_DFFE_PP_/D -71.840309
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[7]$_DFFE_PP_/D -71.821106
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[4]$_DFFE_PP_/D -71.752602
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[3]$_DFFE_PP_/D -71.670891
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[22]$_DFFE_PP_/D -71.628036
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[20]$_DFFE_PP_/D -70.950134
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[8]$_DFFE_PP_/D -70.933037
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[6]$_DFFE_PP_/D -70.670914
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[0]$_DFFE_PP_/D -70.212059
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[15]$_DFFE_PP_/D -70.175087
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_sfu[1]$_DFFE_PP_/D -70.112137
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[10]$_DFFE_PP_/D -70.067955
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_sfu[2]$_DFFE_PP_/D -69.936058
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[12]$_DFFE_PP_/D -69.914406
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[16]$_DFFE_PP_/D -69.890320
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[20]$_DFFE_PP_/D -69.659615
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[7]$_DFFE_PP_/D -69.543480
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[7]$_DFFE_PP_/D -69.325653
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[21]$_DFFE_PP_/D -68.832603
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[17]$_DFFE_PP_/D -68.822060
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[16]$_DFFE_PP_/D -68.447800
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[22]$_DFFE_PP_/D -68.421379
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[2]$_DFFE_PP_/D -68.394737
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[0]$_DFFE_PP_/D -68.155258
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[8]$_DFFE_PP_/D -68.144379
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[9]$_DFFE_PP_/D -67.989174
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[2]$_DFFE_PP_/D -67.968628
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[20]$_DFFE_PP_/D -67.613800
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[16]$_DFFE_PP_/D -67.499893
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[11]$_DFFE_PP_/D -67.099663
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[19]$_DFFE_PP_/D -66.908035
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[14]$_DFFE_PP_/D -66.880394
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[18]$_DFFE_PP_/D -66.719742
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[4]$_DFFE_PP_/D -66.607056
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[11]$_DFFE_PP_/D -66.463615
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[0]$_DFFE_PP_/D -66.456726
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[14]$_DFFE_PP_/D -66.237457
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[7]$_DFFE_PP_/D -66.168518
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[21]$_DFFE_PP_/D -66.127213
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[19]$_DFFE_PP_/D -66.100906
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[15]$_DFFE_PP_/D -66.095238
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[4]$_DFFE_PP_/D -66.052605
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[5]$_DFFE_PP_/D -66.001091
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[2]$_DFFE_PP_/D -65.982887
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[18]$_DFFE_PP_/D -65.954468
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[7]$_DFFE_PP_/D -65.936371
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[19]$_DFFE_PP_/D -65.881302
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[9]$_DFFE_PP_/D -65.877968
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[1]$_DFFE_PP_/D -65.817131
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[3]$_DFFE_PP_/D -65.760399
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[3]$_DFFE_PP_/D -65.746078
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[23]$_DFFE_PP_/D -65.688675
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[17]$_DFFE_PP_/D -65.686127
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[15]$_DFFE_PP_/D -65.567886
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[5]$_DFFE_PP_$_DFFE_PP_/D -65.452866
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[17]$_DFFE_PP_/D -65.382919
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[21]$_DFFE_PP_/D -65.265015
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[23]$_DFFE_PP_/D -65.264015
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[16]$_DFFE_PP_/D -65.241814
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[6]$_DFFE_PP_/D -65.165321
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_red[0]$_DFFE_PP_/D -65.021767
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[23]$_DFFE_PP_/D -64.711678
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[3]$_DFFE_PP_/D -64.702469
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[7]$_DFFE_PP_/D -64.589775
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[2]$_DFFE_PP_/D -64.525162
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[4]$_DFFE_PP_/D -64.370506
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[5]$_DFFE_PP_/D -64.279694
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[11]$_DFFE_PP_/D -64.145470
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[22]$_DFFE_PP_/D -64.145020
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[17]$_DFFE_PP_/D -64.106384
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[12]$_DFFE_PP_/D -64.094841
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[20]$_DFFE_PP_/D -63.891338
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[21]$_DFFE_PP_/D -63.858253
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[8]$_DFFE_PP_/D -63.772987
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[3]$_DFFE_PP_$_DFFE_PP_/D -63.703709
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[18]$_DFFE_PP_/D -63.692272
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[21]$_DFFE_PP_/D -63.656414
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_redsq$_DFFE_PP_/D -63.573147
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[12]$_DFFE_PP_/D -63.526630
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[20]$_DFFE_PP_/D -63.493767
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[21]$_DFFE_PP_/D -63.364426
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[19]$_DFFE_PP_/D -63.327454
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[0]$_DFFE_PP_/D -63.316685
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[19]$_DFFE_PP_/D -63.316353
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[16]$_DFFE_PP_/D -63.244965
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[1]$_DFFE_PP_/D -63.235306
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[4]$_DFFE_PP_/D -63.194229
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[28]$_DFFE_PP_/D -63.173466
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[20]$_DFFE_PP_/D -63.130611
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[29]$_DFFE_PP_/D -63.101192
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[15]$_DFFE_PP_/D -63.074657
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[13]$_DFFE_PP_/D -62.991943
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[5]$_DFFE_PP_/D -62.981842
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_red[1]$_DFFE_PP_/D -62.979065
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[10]$_DFFE_PP_/D -62.966412
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[19]$_DFFE_PP_/D -62.958527
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[27]$_DFFE_PP_/D -62.929771
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[8]$_DFFE_PP_/D -62.830963
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[9]$_DFFE_PP_/D -62.596706
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[22]$_DFFE_PP_/D -62.380436
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[6]$_DFFE_PP_/D -62.367668
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[5]$_DFFE_PP_/D -62.219120
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[7]$_DFFE_PP_/D -62.063244
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[25]$_DFFE_PP_/D -61.935123
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[13]$_DFFE_PP_/D -61.829765
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[11]$_DFFE_PP_/D -61.816441
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dst[0]$_DFFE_PP_/D -61.810780
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[6]$_DFFE_PP_/D -61.742611
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[3]$_DFFE_PP_/D -61.714077
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[26]$_DFFE_PP_/D -61.654015
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[13]$_DFFE_PP_/D -61.628815
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[23]$_DFFE_PP_/D -61.590179
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[14]$_DFFE_PP_/D -61.519901
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[10]$_DFFE_PP_/D -61.395332
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[11]$_DFFE_PP_/D -61.343597
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[4]$_DFFE_PP_/D -61.217365
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[18]$_DFFE_PP_/D -61.113113
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[8]$_DFFE_PP_/D -61.008644
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[20]$_DFFE_PP_/D -60.860428
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[22]$_DFFE_PP_/D -60.832561
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[22]$_DFFE_PP_/D -60.764172
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[12]$_DFFE_PP_/D -60.670135
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[5]$_DFFE_PP_/D -60.654926
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[21]$_DFFE_PP_/D -60.627949
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[1]$_DFFE_PP_/D -60.594086
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[5]$_DFFE_PP_/D -60.481064
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[19]$_DFFE_PP_/D -60.419891
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[0]$_DFFE_PP_/D -60.183525
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[0]$_DFFE_PP_/D -60.170536
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[7]$_DFFE_PP_/D -59.991455
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[5]$_DFFE_PP_/D -59.850792
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[16]$_DFFE_PP_/D -59.708237
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[6]$_DFFE_PP_/D -59.698135
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[3]$_DFFE_PP_/D -59.625748
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[17]$_DFFE_PP_/D -59.391380
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[3]$_DFFE_PP_/D -59.390160
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[2]$_DFFE_PP_/D -59.365181
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[20]$_DFFE_PP_/D -59.354523
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[21]$_DFFE_PP_/D -59.234062
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[19]$_DFFE_PP_/D -59.069305
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[23]$_DFFE_PP_/D -59.042439
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[10]$_DFFE_PP_/D -59.012684
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[1]$_DFFE_PP_/D -58.970940
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[2]$_DFFE_PP_/D -58.948734
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[14]$_DFFE_PP_/D -58.947292
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[21]$_DFFE_PP_/D -58.893780
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[17]$_DFFE_PP_/D -58.831829
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[3]$_DFFE_PP_/D -58.709148
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[15]$_DFFE_PP_/D -58.573700
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[4]$_DFFE_PP_/D -58.138607
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[16]$_DFFE_PP_/D -58.031025
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[2]$_DFFE_PP_/D -57.991058
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[15]$_DFFE_PP_/D -57.950310
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[1]$_DFFE_PP_$_DFFE_PP_/D -57.928440
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[21]$_DFFE_PP_/D -57.869156
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[26]$_DFFE_PP_/D -57.798546
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[3]$_DFFE_PP_/D -57.767570
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[9]$_DFFE_PP_/D -57.767345
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[2]$_DFFE_PP_/D -57.631901
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[28]$_DFFE_PP_/D -57.560623
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[22]$_DFFE_PP_/D -57.479023
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[22]$_DFFE_PP_/D -57.423512
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[14]$_DFFE_PP_/D -57.334583
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[25]$_DFFE_PP_/D -57.298500
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[17]$_DFFE_PP_/D -57.297169
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[27]$_DFFE_PP_/D -57.236328
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[16]$_DFFE_PP_/D -57.235992
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[11]$_DFFE_PP_/D -57.148621
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[4]$_DFFE_PP_/D -57.131187
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[1]$_DFFE_PP_/D -57.067574
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[1]$_DFFE_PP_/D -57.051697
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[18]$_DFFE_PP_/D -56.991966
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[19]$_DFFE_PP_/D -56.967098
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[20]$_DFFE_PP_/D -56.965878
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[10]$_DFFE_PP_/D -56.962547
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[5]$_DFFE_PP_/D -56.888161
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[15]$_DFFE_PP_/D -56.878281
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[0]$_DFFE_PP_/D -56.855076
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[1]$_DFFE_PP_/D -56.713966
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[24]$_DFFE_PP_/D -56.685658
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[11]$_DFFE_PP_/D -56.491146
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[8]$_DFFE_PP_/D -56.418427
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[18]$_DFFE_PP_/D -56.380791
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[3]$_DFFE_PP_/D -56.352810
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[6]$_DFFE_PP_/D -56.259663
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[18]$_DFFE_PP_/D -56.230244
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[19]$_DFFE_PP_/D -56.063042
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[5]$_DFFE_PP_/D -55.898731
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[23]$_DFFE_PP_/D -55.881855
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[18]$_DFFE_PP_/D -55.881744
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cso[9]$_DFFE_PP_/D -55.808804
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[13]$_DFFE_PP_/D -55.490391
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[2]$_DFFE_PP_/D -55.471405
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[13]$_DFFE_PP_/D -55.405125
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[20]$_DFFE_PP_/D -55.397575
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[22]$_DFFE_PP_/D -55.381588
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[11]$_DFFE_PP_/D -55.372597
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[23]$_DFFE_PP_/D -55.357609
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[21]$_DFFE_PP_/D -55.288773
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[17]$_DFFE_PP_/D -55.214611
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[12]$_DFFE_PP_/D -55.196514
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[14]$_DFFE_PP_/D -55.039307
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[0]$_DFFE_PP_/D -54.993233
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[17]$_DFFE_PP_/D -54.820038
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[23]$_DFFE_PP_/D -54.677151
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csrc$_DFFE_PP_/D -54.590889
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[19]$_DFFE_PP_/D -54.546257
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[6]$_DFFE_PP_/D -54.541927
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[9]$_DFFE_PP_/D -54.455883
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[22]$_DFFE_PP_/D -54.296677
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[7]$_DFFE_PP_/D -54.214634
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[21]$_DFFE_PP_/D -54.190987
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[0]$_DFFE_PP_/D -54.176884
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[15]$_DFFE_PP_/D -54.176662
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[15]$_DFFE_PP_/D -54.141357
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[0]$_DFFE_PP_/D -54.136806
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[3]$_DFFE_PP_/D -54.114380
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[12]$_DFFE_PP_/D -54.089844
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[5]$_DFFE_PP_/D -53.996918
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[13]$_DFFE_PP_/D -53.900108
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[15]$_DFFE_PP_/D -53.880013
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[16]$_DFFE_PP_/D -53.853699
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[16]$_DFFE_PP_/D -53.688831
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[2]$_DFFE_PP_/D -53.383076
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[1]$_DFFE_PP_/D -53.328785
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[11]$_DFFE_PP_/D -53.316353
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[12]$_DFFE_PP_/D -53.301697
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[14]$_DFFE_PP_/D -53.296036
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[0]$_DFFE_PP_/D -53.284489
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[7]$_DFFE_PP_/D -53.247963
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[14]$_DFFE_PP_/D -53.204884
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[1]$_DFFE_PP_/D -53.199780
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[5]$_DFFE_PP_/D -53.099747
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[30]$_DFFE_PP_/D -52.965744
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[8]$_DFFE_PP_/D -52.919781
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[41] -52.867378
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[16]$_DFFE_PP_/D -52.831963
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[18]$_DFFE_PP_/D -52.644779
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[36] -52.568283
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[14]$_DFFE_PP_/D -52.507774
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[16]$_DFFE_PP_/D -52.427505
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[9]$_DFFE_PP_/D -52.342686
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[12]$_DFFE_PP_/D -52.300941
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[4]$_DFFE_PP_/D -52.285397
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[23]$_DFFE_PP_/D -52.279072
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[13]$_DFFE_PP_/D -52.258865
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[7]$_DFFE_PP_/D -52.191586
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[2]$_DFFE_PP_/D -52.155170
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[5]$_DFFE_PP_/D -51.992188
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[12]$_DFFE_PP_/D -51.991745
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[11]$_DFFE_PP_/D -51.938454
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[15]$_DFFE_PP_/D -51.931572
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[21]$_DFFE_PP_/D -51.895931
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[4]$_DFFE_PP_/D -51.869286
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[5]$_DFFE_PP_/D -51.861073
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[26] -51.858685
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[4]$_DFFE_PP_/D -51.855743
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_split[2]$_DFFE_PP_/D -51.853523
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[9]$_DFFE_PP_/D -51.765926
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[31]$_DFFE_PP_/D -51.732063
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[17]$_DFFE_PP_/D -51.532669
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[10]$_DFFE_PP_/D -51.475601
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[21]$_DFFE_PP_/D -51.406990
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[13]$_DFFE_PP_/D -51.349590
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[1]$_DFFE_PP_/D -51.314732
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[6]$_DFFE_PP_/D -51.288528
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_split[1]$_DFFE_PP_/D -51.256443
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[11]$_DFFE_PP_/D -51.198822
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[12]$_DFFE_PP_/D -51.182724
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[0]$_DFFE_PP_/D -51.178730
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[9]$_DFFE_PP_/D -51.148640
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[10]$_DFFE_PP_/D -51.046055
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[19]$_DFFE_PP_/D -51.043724
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_split[3]$_DFFE_PP_/D -51.033733
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[15]$_DFFE_PP_/D -50.829342
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[18]$_DFFE_PP_/D -50.672134
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_split[0]$_DFFE_PP_/D -50.468964
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[13]$_DFFE_PP_/D -50.372597
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[3]$_DFFE_PP_/D -50.265793
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[14]$_DFFE_PP_/D -50.177528
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[0]$_DFFE_PP_/D -50.113026
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[8]$_DFFE_PP_/D -50.091488
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[3]$_DFFE_PP_/D -49.985462
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[17]$_DFFE_PP_/D -49.934723
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[23]$_DFFE_PP_/D -49.917072
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[9]$_DFFE_PP_/D -49.893978
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dsi[6]$_DFFE_PP_/D -49.888760
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[12]$_DFFE_PP_/D -49.853344
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[11]$_DFFE_PP_/D -49.794613
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[12]$_DFFE_PP_/D -49.728111
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[4]$_DFFE_PP_/D -49.662495
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[14]$_DFFE_PP_/D -49.614426
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[4]$_DFFE_PP_/D -49.560799
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[24]$_DFFE_PP_/D -49.493855
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[8]$_DFFE_PP_/D -49.489635
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[19]$_DFFE_PP_/D -49.466431
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[13]$_DFFE_PP_/D -49.444225
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[5]$_DFFE_PP_/D -49.437786
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[3]$_DFFE_PP_/D -49.394711
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[18]$_DFFE_PP_/D -49.300564
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[20]$_DFFE_PP_/D -49.281467
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[8]$_DFFE_PP_/D -49.182770
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[1]$_DFFE_PP_/D -49.104164
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[25] -49.073078
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[11]$_DFFE_PP_/D -49.060200
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[20]$_DFFE_PP_/D -48.989922
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[22]$_DFFE_PP_/D -48.946735
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[23]$_DFFE_PP_/D -48.832382
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[2]$_DFFE_PP_/D -48.704151
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[13]$_DFFE_PP_/D -48.629101
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asrc$_DFFE_PP_/D -48.613224
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[16]$_DFFE_PP_/D -48.587135
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[6]$_DFFE_PP_/D -48.515636
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[1]$_DFFE_PP_/D -48.406281
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[17]$_DFFE_PP_/D -48.404945
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[10]$_DFFE_PP_/D -48.393066
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[23]$_DFFE_PP_/D -48.146488
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[18]$_DFFE_PP_/D -48.108185
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[14]$_DFFE_PP_/D -48.083092
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[18]$_DFFE_PP_/D -48.059780
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_nin[17]$_DFFE_PP_/D -47.973183
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[5]$_DFFE_PP_/D -47.897575
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[46] -47.761684
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[21]$_DFFE_PP_/D -47.531090
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[22]$_DFFE_PP_/D -47.454487
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[3]$_DFFE_PP_/D -47.335358
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[17]$_DFFE_PP_/D -47.276516
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[20]$_DFFE_PP_/D -47.165493
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[16]$_DFFE_PP_/D -47.111427
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[4]$_DFFE_PP_/D -47.059799
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[16]$_DFFE_PP_/D -46.915249
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[15]$_DFFE_PP_/D -46.842197
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[10]$_DFFE_PP_/D -46.797787
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[18]$_DFFE_PP_/D -46.762482
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[15]$_DFFE_PP_/D -46.685101
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_abase[17]$_DFFE_PP_/D -46.583294
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[18]$_DFFE_PP_/D -46.471603
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[20]$_DFFE_PP_/D -46.464611
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[6]$_DFFE_PP_/D -46.414097
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[12]$_DFFE_PP_/D -46.396553
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_nin[16]$_DFFE_PP_/D -46.182945
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[10]$_DFFE_PP_/D -46.145088
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[23]$_DFFE_PP_/D -45.944916
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[19]$_DFFE_PP_/D -45.863312
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_ad[1]$_DFFE_PP_/D -45.735306
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[17]$_DFFE_PP_/D -45.707214
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_csi[17]$_DFFE_PP_/D -45.661919
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[6]$_DFFE_PP_/D -45.609516
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[18]$_DFFE_PP_/D -45.579651
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[28] -45.490280
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[0]$_DFFE_PP_/D -45.368710
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[11]$_DFFE_PP_/D -45.313419
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[8]$_DFFE_PP_/D -45.301319
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[15]$_DFFE_PP_/D -45.278225
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_nin[15]$_DFFE_PP_/D -45.274117
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[14]$_DFFE_PP_/D -45.111916
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_nin[5]$_DFFE_PP_/D -44.946934
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[4]$_DFFE_PP_/D -44.909634
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[22]$_DFFE_PP_/D -44.838356
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[13]$_DFFE_PP_$_DFFE_PP_/D -44.833691
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[7]$_DFFE_PP_/D -44.817707
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[11]$_DFFE_PP_/D -44.788841
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[0]$_DFFE_PP_$_DFFE_PP_/D -44.784622
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[10]$_DFFE_PP_/D -44.735992
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[22]$_DFFE_PP_/D -44.727444
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[19]$_DFFE_PP_/D -44.567127
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[14]$_DFFE_PP_/D -44.550140
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[19]$_DFFE_PP_/D -44.498627
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[0]$_DFFE_PP_/D -44.394600
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[1]$_DFFE_PP_/D -44.364067
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[32] -44.309891
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[11]$_DFFE_PP_/D -44.263592
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[2]$_DFFE_PP_/D -44.220627
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[14]$_DFFE_PP_/D -44.203640
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[1]$_DFFE_PP_/D -44.144356
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[14]$_DFFE_PP_/D -44.112160
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[12]$_DFFE_PP_/D -43.908543
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[2]$_DFFE_PP_/D -43.893665
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[23]$_DFFE_PP_/D -43.876904
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[1]$_DFFE_PP_/D -43.850700
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[0]$_DFFE_PP_/D -43.833603
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[20]$_DFFE_PP_/D -43.818615
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[14]$_DFFE_PP_/D -43.789749
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[21]$_DFFE_PP_/D -43.784531
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[12]$_DFFE_PP_/D -43.770988
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[12]$_DFFE_PP_/D -43.763660
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[14]$_DFFE_PP_/D -43.699268
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[7]$_DFFE_PP_/D -43.689941
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[15]$_DFFE_PP_/D -43.669735
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[6]$_DFFE_PP_/D -43.648197
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.go$_DFFE_PN0P_/D -43.641537
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_ad[0]$_DFFE_PP_/D -43.625771
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[3]$_DFFE_PP_/D -43.610447
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[22]$_DFFE_PP_/D -43.490322
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[10]$_DFFE_PP_/D -43.470226
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_ad[2]$_DFFE_PP_/D -43.402836
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[35] -43.290703
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[1]$_DFFE_PP_/D -43.165695
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[17]$_DFFE_PP_/D -43.151592
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[19]$_DFFE_PP_/D -43.109848
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[17]$_DFFE_PP_/D -42.989056
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[18]$_DFFE_PP_/D -42.982506
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[20]$_DFFE_PP_/D -42.957081
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[15]$_DFFE_PP_/D -42.937321
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm2[10]$_DFFE_PP_/D -42.896908
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[16]$_DFFE_PP_/D -42.888359
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[22]$_DFFE_PP_/D -42.800762
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[16]$_DFFE_PP_/D -42.773674
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[9]$_DFFE_PP_/D -42.654213
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[12]$_DFFE_PP_/D -42.586269
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[10]$_DFFE_PP_$_DFFE_PP_/D -42.468140
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[13]$_DFFE_PP_/D -42.396309
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[10]$_DFFE_PP_/D -42.389313
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[18]$_DFFE_PP_/D -42.240211
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[22]$_DFFE_PP_/D -42.199909
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[7]$_DFFE_PP_/D -42.197800
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[16]$_DFFE_PP_/D -42.149727
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[17]$_DFFE_PP_/D -42.133739
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[12]$_DFFE_PP_/D -42.044922
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[23]$_DFFE_PP_/D -42.039482
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[1]$_DFFE_PP_/D -41.971428
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[4]$_DFFE_PP_/D -41.958660
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[21]$_DFFE_PP_/D -41.933125
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[17]$_DFFE_PP_/D -41.929237
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[2]$_DFFE_PP_/D -41.890823
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[15]$_DFFE_PP_/D -41.822544
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[3]$_DFFE_PP_/D -41.759598
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[2]$_DFFE_PP_/D -41.755154
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[11]$_DFFE_PP_/D -41.731174
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[15]$_DFFE_PP_/D -41.724293
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[10]$_DFFE_PP_/D -41.704750
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[17]$_DFFE_PP_/D -41.696980
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dso[17]$_DFFE_PP_/D -41.677551
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[4]$_DFFE_PP_/D -41.637806
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[20]$_DFFE_PP_/D -41.637138
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[14]$_DFFE_PP_/D -41.605164
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[5]$_DFFE_PP_/D -41.598724
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[13]$_DFFE_PP_/D -41.513683
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[4]$_DFFE_PP_/D -41.479263
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[5]$_DFFE_PP_/D -41.451843
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[13]$_DFFE_PP_/D -41.419422
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[13]$_DFFE_PP_/D -41.400215
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[20]$_DFFE_PP_/D -41.382233
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[18]$_DFFE_PP_/D -41.335270
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[9]$_DFFE_PP_/D -41.325165
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[14]$_DFFE_PP_/D -41.288418
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[3]$_DFFE_PP_/D -41.263660
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[21]$_DFFE_PP_/D -41.225689
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[4]$_DFFE_PP_/D -41.224026
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[22]$_DFFE_PP_/D -41.204483
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[16]$_DFFE_PP_/D -41.202152
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[1]$_DFFE_PP_/D -41.118553
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[23]$_DFFE_PP_/D -41.103455
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[6]$_DFFE_PP_/D -41.068150
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[8]$_DFFE_PP_/D -41.061600
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[2]$_DFFE_PP_/D -41.007198
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[0]$_DFFE_PP_/D -40.992653
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[15]$_DFFE_PP_/D -40.973225
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[4]$_DFFE_PP_/D -40.957794
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[3]$_DFFE_PP_/D -40.892178
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[1]$_DFFE_PP_/D -40.818348
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[6]$_DFFE_PP_/D -40.804806
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[9]$_DFFE_PP_/D -40.786152
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bsi[6]$_DFFE_PP_/D -40.763172
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_asi[9]$_DFFE_PP_/D -40.731419
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[2]$_DFFE_PP_/D -40.687786
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[8]$_DFFE_PP_/D -40.643600
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[10]$_DFFE_PP_/D -40.563442
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[23]$_DFFE_PP_/D -40.513039
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[8]$_DFFE_PP_/D -40.418892
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[15]$_DFFE_PP_/D -40.318748
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[23]$_DFFE_PP_/D -40.255688
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[1]$_DFFE_PP_/D -40.230484
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[6]$_DFFE_PP_/D -40.213387
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[3]$_DFFE_PP_/D -40.210167
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[10]$_DFFE_PP_/D -40.183411
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[7]$_DFFE_PP_/D -40.159874
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[3]$_DFFE_PP_/D -40.138004
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[16]$_DFFE_PP_/D -40.099369
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[7]$_DFFE_PP_/D -40.068172
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[7]$_DFFE_PP_/D -39.846127
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[22]$_DFFE_PP_/D -39.712898
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[8]$_DFFE_PP_/D -39.691029
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[12]$_DFFE_PP_/D -39.664604
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[19]$_DFFE_PP_/D -39.655724
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bso[21]$_DFFE_PP_/D -39.604321
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[8]$_DFFE_PP_/D -39.587444
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[13]$_DFFE_PP_/D -39.562576
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[19]$_DFFE_PP_/D -39.550808
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[11]$_DFFE_PP_/D -39.451332
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[23]$_DFFE_PP_/D -39.437233
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[18]$_DFFE_PP_/D -39.292904
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[1]$_DFFE_PP_/D -39.278915
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[0]$_DFFE_PP_/D -39.228954
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[11]$_DFFE_PP_/D -39.208969
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[7]$_DFFE_PP_/D -39.200531
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[9]$_DFFE_PP_/D -39.105274
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[20]$_DFFE_PP_/D -39.093285
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[13]$_DFFE_PP_/D -39.090618
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[5]$_DFFE_PP_/D -39.061310
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_k[9]$_DFFE_PP_/D -39.036884
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[1]$_DFFE_PP_/D -39.022896
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[2]$_DFFE_PP_/D -38.989147
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[9]$_DFFE_PP_/D -38.989033
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[5]$_DFFE_PP_/D -38.932968
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[13]$_DFFE_PP_/D -38.904434
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[17]$_DFFE_PP_/D -38.740788
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[9]$_DFFE_PP_/D -38.651527
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[8]$_DFFE_PP_/D -38.545277
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN amf_v$_DFF_PN0_/D -38.493210
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[17]$_DFFE_PP_/D -38.444691
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[5]$_DFFE_PP_/D -38.347881
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_aso[20]$_DFFE_PP_/D -38.333672
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[10]$_DFFE_PP_/D -38.262615
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[12]$_DFFE_PP_/D -38.163029
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[0]$_DFFE_PP_/D -38.115398
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[14]$_DFFE_PP_/D -37.985058
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[13]$_DFFE_PP_/D -37.574612
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[6]$_DFFE_PP_/D -37.282177
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[12]$_DFFE_PP_/D -36.879723
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[20]$_DFFE_PP_/D -36.474602
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[8]$_DFFE_PP_/D -36.431301
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[19]$_DFFE_PP_/D -35.969673
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[11]$_DFFE_PP_/D -35.969448
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[11]$_DFFE_PP_/D -35.812687
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[7]$_DFFE_PP_/D -35.710991
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[6]$_DFFE_PP_/D -35.705994
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[8]$_DFFE_PP_/D -35.671467
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[12]$_DFFE_PP_/D -35.668579
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[4]$_DFFE_PP_/D -35.666691
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[9]$_DFFE_PP_/D -35.436874
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[5]$_DFFE_PP_/D -35.390026
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[15]$_DFFE_PP_/D -35.314419
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_nout[7]$_DFFE_PP_/D -35.295212
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[7]$_DFFE_PP_/D -35.112137
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[14]$_DFFE_PP_/D -35.088600
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[2]$_DFFE_PP_/D -35.083046
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[11]$_DFFE_PP_/D -35.058514
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[6]$_DFFE_PP_/D -35.041302
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[12]$_DFFE_PP_/D -34.943825
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[4]$_DFFE_PP_/D -34.871552
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[14]$_DFFE_PP_/D -34.832581
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[9]$_DFFE_PP_/D -34.767857
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[8]$_DFFE_PP_/D -34.654945
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[2]$_DFFE_PP_/D -34.639290
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[16]$_DFFE_PP_/D -34.614532
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[1]$_DFFE_PP_/D -34.344528
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[15]$_DFFE_PP_/D -34.323544
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[23]$_DFFE_PP_/D -34.304226
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[15]$_DFFE_PP_/D -34.269478
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[11]$_DFFE_PP_$_DFFE_PP_/D -34.092175
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[0]$_DFFE_PP_/D -34.054203
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[9]$_DFFE_PP_$_DFFE_PP_/D -34.013790
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[12]$_DFFE_PP_/D -34.013016
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[17]$_DFFE_PP_/D -34.010349
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[14]$_DFFE_PP_/D -33.882565
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[19]$_DFFE_PP_/D -33.871349
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_imm1[18]$_DFFE_PP_/D -33.809624
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[22]$_DFFE_PP_/D -33.751778
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_jsh[2]$_DFFE_PP_/D -33.314461
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[23]$_DFFE_PP_/D -33.192226
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[11]$_DFFE_PP_/D -33.161140
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[4]$_DFFE_PP_/D -33.092972
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[9]$_DFFE_PP_/D -33.077873
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_jsh[1]$_DFFE_PP_/D -33.045677
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[9]$_DFFE_PP_/D -33.044346
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[6]$_DFFE_PP_$_DFFE_PP_/D -33.014259
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[8]$_DFFE_PP_$_DFFE_PP_/D -32.944759
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[18]$_DFFE_PP_/D -32.844616
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[19]$_DFFE_PP_/D -32.731041
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[6]$_DFFE_PP_/D -32.652882
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[8]$_DFFE_PP_/D -32.568283
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[16]$_DFFE_PP_/D -32.425617
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[10]$_DFFE_PP_/D -32.403191
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[9]$_DFFE_PP_/D -32.334248
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[5]$_DFFE_PP_/D -32.328583
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[13]$_DFFE_PP_/D -32.270630
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[7]$_DFFE_PP_/D -32.230553
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[11]$_DFFE_PP_/D -32.171822
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_jsh[0]$_DFFE_PP_/D -32.015057
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[21]$_DFFE_PP_/D -31.987858
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[8]$_DFFE_PP_/D -31.972313
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[3]$_DFFE_PP_/D -31.940895
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wsrc$_DFFE_PP_/D -31.773029
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[19]$_DFFE_PP_/D -31.761705
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[21]$_DFFE_PP_/D -31.745718
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[18]$_DFFE_PP_/D -31.656122
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[14]$_DFFE_PP_/D -31.366909
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[0]$_DFFE_PP_/D -31.319836
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[13]$_DFFE_PP_/D -31.308733
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[11]$_DFFE_PP_/D -31.265434
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[9]$_DFFE_PP_/D -31.246006
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[6]$_DFFE_PP_/D -31.117775
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[4]$_DFFE_PP_/D -31.099012
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[2]$_DFFE_PP_/D -30.589752
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[5]$_DFFE_PP_/D -30.564884
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[3] -30.441317
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[23]$_DFFE_PP_/D -30.366709
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[3]$_DFFE_PP_/D -30.327297
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[17]$_DFFE_PP_/D -30.294767
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[7]$_DFFE_PP_$_DFFE_PP_/D -30.243696
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[2]$_DFFE_PP_/D -30.111691
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[20]$_DFFE_PP_/D -29.654724
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[2]$_DFFE_PP_/D -29.441450
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[0]$_DFFE_PP_/D -29.398262
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[22]$_DFFE_PP_/D -29.292124
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[1]$_DFFE_PP_/D -29.036774
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[11]$_DFFE_PP_/D -29.027557
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[18]$_DFFE_PP_/D -29.027557
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[20]$_DFFE_PP_/D -28.961390
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[3]$_DFFE_PP_/D -28.953617
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[18]$_DFFE_PP_/D -28.833603
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xjs[2]$_DFFE_PP_/D -28.825165
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[13]$_DFFE_PP_/D -28.725689
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[17]$_DFFE_PP_/D -28.667068
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[17]$_DFFE_PP_/D -28.456127
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[1]$_DFFE_PP_/D -28.405167
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[11]$_DFFE_PP_/D -28.247072
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[16]$_DFFE_PP_/D -28.218206
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[21]$_DFFE_PP_/D -28.188231
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[10]$_DFFE_PP_/D -28.164915
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_amax$_DFFE_PP_/D -27.996161
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[10]$_DFFE_PP_/D -27.906012
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[4]$_DFFE_PP_/D -27.661207
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[10]$_DFFE_PP_/D -27.660429
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[7]$_DFFE_PP_/D -27.545855
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[38] -27.474356
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rbase[5]$_DFFE_PP_/D -27.379322
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[14]$_DFFE_PP_$_DFFE_PP_/D -27.309155
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_rso[0]$_DFFE_PP_/D -27.272184
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mmode$_DFFE_PP_/D -27.238878
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_js[0]$_DFFE_PP_/D -26.756819
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[12]$_DFFE_PP_/D -26.576298
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[0]$_DFFE_PP_/D -26.311398
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[13]$_DFFE_PP_/D -26.076031
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[14]$_DFFE_PP_/D -26.060709
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[15]$_DFFE_PP_/D -26.024515
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[10]$_DFFE_PP_/D -26.012970
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[3]$_DFFE_PP_/D -26.008196
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[6]$_DFFE_PP_/D -25.835556
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[12]$_DFFE_PP_/D -25.677015
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[15]$_DFFE_PP_$_DFFE_PP_/D -25.503599
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[4]$_DFFE_PP_/D -25.402903
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[19]$_DFFE_PP_/D -25.180080
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[21]$_DFFE_PP_/D -25.088820
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[10]$_DFFE_PP_/D -25.008774
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[18]$_DFFE_PP_/D -24.991232
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[22]$_DFFE_PP_/D -24.869884
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[15]$_DFFE_PP_/D -24.762970
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[9]$_DFFE_PP_/D -24.729551
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[14]$_DFFE_PP_/D -24.728331
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ks[0]$_DFFE_PP_/D -24.726776
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[23]$_DFFE_PP_/D -24.713564
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[20]$_DFFE_PP_/D -24.481085
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_rmax$_DFFE_PP_/D -24.423019
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[23] -24.416914
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[9]$_DFFE_PP_/D -24.339863
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[1]$_DFFE_PP_/D -24.262369
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[0]$_DFFE_PP_/D -24.255487
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[8]$_DFFE_PP_/D -24.227398
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[7]$_DFFE_PP_/D -24.145464
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[14]$_DFFE_PP_/D -24.034107
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[13]$_DFFE_PP_/D -23.898771
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[6]$_DFFE_PP_/D -23.896774
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[16]$_DFFE_PP_/D -23.706369
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[5]$_DFFE_PP_/D -23.539948
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[3]$_DFFE_PP_/D -23.533398
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[6]$_DFFE_PP_/D -23.342772
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[1]$_DFFE_PP_/D -23.092417
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[22]$_DFFE_PP_/D -22.664093
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_mbase[2]$_DFFE_PP_/D -22.159719
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[7]$_DFFE_PP_/D -22.015390
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[37] -21.595058
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[43] -21.537106
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[4]$_DFFE_PP_/D -21.429525
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[5]$_DFFE_PP_/D -21.086021
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[34] -21.003866
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[0] -20.951185
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[2] -20.562441
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[20] -20.350222
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[21] -20.280556
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[5]$_DFFE_PP_/D -20.251135
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[2]$_DFFE_PP_/D -20.223379
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[23]$_DFFE_PP_/D -20.142666
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_mx_we -20.042912
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[22] -19.969915
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[19]$_DFFE_PP_/D -19.958258
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[39] -19.873659
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[7] -19.797220
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[20]$_DFFE_PP_/D -19.773405
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[30] -19.345192
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[21]$_DFFE_PP_/D -19.331758
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[19] -19.276581
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[24] -19.046986
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[33] -18.943459
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[23]$_DFFE_PP_/D -18.576473
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[8]$_DFFE_PP_/D -18.508196
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[1] -18.403946
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ojs[22]$_DFFE_PP_/D -18.337997
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[42] -17.826796
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[44] -17.585711
+OT_PATH u_me.go$_DFFE_PN0P_/QN me_clk_en -17.348234
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[18] -17.310431
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[4] -16.540270
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[16]$_DFFE_PP_/D -16.451063
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[22]$_DFFE_PP_/D -15.886737
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[7]$_DFFE_PP_/D -15.655921
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[6]$_DFFE_PP_/D -15.495605
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ots[16]$_DFFE_PP_/D -15.314972
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[9]$_DFFE_PP_/D -14.769630
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[19]$_DFFE_PP_/D -14.719670
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[10]$_DFFE_PP_/D -14.396151
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[8]$_DFFE_PP_/D -14.250711
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[13]$_DFFE_PP_/D -14.166557
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[10]$_DFFE_PP_/D -14.126699
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[15]$_DFFE_PP_/D -14.040436
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[17]$_DFFE_PP_/D -13.648416
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[13]$_DFFE_PP_/D -13.445689
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[10]$_DFFE_PP_/D -13.309687
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[1]$_DFFE_PP_/D -13.193446
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[2]$_DFFE_PP_/D -13.125834
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[18]$_DFFE_PP_/D -12.996271
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[20]$_DFFE_PP_/D -12.989498
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[15]$_DFFE_PP_/D -12.981727
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[0]$_DFFE_PP_/D -12.954193
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[23]$_DFFE_PP_/D -12.865376
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[11]$_DFFE_PP_/D -12.763790
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[5]$_DFFE_PP_/D -12.757239
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[11]$_DFFE_PP_/D -12.690848
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[21]$_DFFE_PP_/D -12.639556
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[14]$_DFFE_PP_/D -12.490675
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[7]$_DFFE_PP_/D -12.462809
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[20]$_DFFE_PP_/D -12.411628
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[6]$_DFFE_PP_/D -12.149282
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[10]$_DFFE_PP_/D -12.050361
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xbase[16]$_DFFE_PP_/D -12.021050
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[6]$_DFFE_PP_/D -11.854184
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[7]$_DFFE_PP_/D -11.618151
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.sq_nout[12]$_DFFE_PP_$_DFFE_PP_/D -11.397882
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[4]$_DFFE_PP_/D -11.287193
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[15]$_DFFE_PP_/D -10.947577
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[6]$_DFFE_PP_/D -10.922929
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[22]$_DFFE_PP_/D -10.670020
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[8]$_DFFE_PP_/D -10.662138
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[4]$_DFFE_PP_/D -10.592526
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dst[1]$_DFFE_PP_/D -10.558665
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[7]$_DFFE_PP_/D -10.422663
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_dbase[9]$_DFFE_PP_/D -10.359380
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_cbase[13]$_DFFE_PP_/D -10.321188
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[3]$_DFFE_PP_/D -10.173418
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[3]$_DFFE_PP_/D -9.545697
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xcs[10]$_DFFE_PP_/D -9.035883
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_xks[5]$_DFFE_PP_/D -8.990142
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_bbase[8]$_DFFE_PP_/D -8.949286
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[1]$_DFFE_PP_/D -8.388068
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[16]$_DFFE_PP_/D -8.254841
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[2]$_DFFE_PP_/D -8.137935
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[9]$_DFFE_PP_/D -7.705392
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[3]$_DFFE_PP_/D -7.282952
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[17]$_DFFE_PP_/D -6.871614
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[6]$_DFFE_PP_/D -6.145862
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[0]$_DFFE_PP_/D -5.633605
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[3]$_DFFE_PP_/D -5.479173
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[1]$_DFFE_PP_/D -5.171308
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[16]$_DFFE_PP_/D -5.143219
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_tiles[8]$_DFFE_PP_/D -4.867440
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[5]$_DFFE_PP_/D -4.483969
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_ts[3]$_DFFE_PP_/D -4.432010
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[9]$_DFFE_PP_/D -4.346634
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[23]$_DFFE_PP_/D -4.188871
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[6]$_DFFE_PP_/D -4.157563
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[12] -4.014455
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_oen$_DFFE_PP_/D -3.980039
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[21]$_DFFE_PP_/D -3.737344
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[17]$_DFFE_PP_/D -3.547052
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[7]$_DFFE_PP_/D -3.531953
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[20]$_DFFE_PP_/D -3.500422
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[19]$_DFFE_PP_/D -3.485545
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[13]$_DFFE_PP_/D -3.473333
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[4]$_DFFE_PP_/D -3.457790
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wbase[11]$_DFFE_PP_/D -3.455458
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[0]$_DFFE_PP_/D -3.324452
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[20]$_DFFE_PP_/D -3.108291
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[21]$_DFFE_PP_/D -3.071210
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[2]$_DFFE_PP_/D -2.977618
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[8]$_DFFE_PP_/D -2.896128
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_wcs[23]$_DFFE_PP_/D -2.877698
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[12]$_DFFE_PP_/D -2.815192
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_nin[10]$_DFFE_PP_/D -2.553957
+OT_PATH g_vsu.u_su.go$_DFF_PN0_/QN u_me.i_obase[18]$_DFFE_PP_/D -2.241096
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_nin[7]$_DFFE_PP_/D -2.070566
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_nin[1]$_DFFE_PP_/D -1.059819
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_nin[0]$_DFFE_PP_/D -0.877742
+OT_PATH u_me.go$_DFFE_PN0P_/QN vw_me_we[6] -0.719591
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_nin[9]$_DFFE_PP_/D -0.668687
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_nin[14]$_DFFE_PP_/D -0.187517
+OT_PATH pr_kvwe_q[16]$_DFF_PN0_/QN g_vsu.u_su.i_nin[4]$_DFFE_PP_/D -0.179412

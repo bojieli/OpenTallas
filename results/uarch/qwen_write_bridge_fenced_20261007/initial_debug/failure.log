@@ -1,0 +1,2 @@
+Initial fixture failure: INBAND_FENCE at2145.557272ns. Diagnostic rerun: epoch=1/1 own=0/0 canceled=4/4 done=64 ctl=0/1.
+Cause: testbench global replacement connected both the real hub input and endpoint output to mutated_bxd; bxd observation wire was undriven. Endpoint ownership/epoch transition was correct; ACK monitor never counted it. Preserved initial bench; corrected endpoint output wiring to bxd/bxt before final gates.

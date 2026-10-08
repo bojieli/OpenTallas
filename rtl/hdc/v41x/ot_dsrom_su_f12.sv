@@ -4,7 +4,8 @@
 // originals in rtl/hdc/v41x/ot_hdc_v41x_sfu.sv are unchanged).  Same function bit for bit; only register boundaries
 // move and integer adders become keep-prefix (ot_hdc_kadd / ot_hdc_kinc K 1, rtl/hdc/ot_hdc_prefix.sv), for the
 // 1.2 GHz build (rtl/hdc/ot_hdc_fastfp_lat_f12.sv):
-//   ot_dsrom_exp_f12   ot_hdc_v41x_exp with n = rint(x log2e) over two stages (shift | round + sign): DEPTH + 1
+//   ot_dsrom_exp_f12   ot_hdc_v41x_exp with n = rint(x log2e) over two stages (shift | round + sign) and the two
+//                      range-reduction adds on the 6-stage f12 adder (ot_dsrom_add_f12_l6): DEPTH + 1 + 2 (6 - LA)
 //   ot_dsrom_fdiv_f12  ot_hdc_v41x_fdiv with the operand normalisation over two stages (leading one | shift),
 //                      keep-prefix trial subtractions and 3*mb, and the round / encode over two stages: DEPTH 21
 // Equivalence to the originals: tools/dsrom_su_swiglu.py runs the fused benches against the golden; the lane bench
@@ -12,7 +13,9 @@
 // ---------------------------------------------------------------------------
 module ot_dsrom_exp_f12 #(
     parameter integer LM = 3,                   // multiplier latency (ot_hdc_qmul_lat)
-    parameter integer LA = 3                    // add latency (ot_hdc_qadd_lat: 3, or 4 input cut)
+    parameter integer LA = 3,                   // add latency (ot_hdc_qadd_lat: 3, or 4 input cut)
+    parameter integer ASUM = 0                  // S81-RERUN (default off): the six polynomial adds get the sum | LZC
+                                                //   cut (ot_hdc_fp32_add_f12_l5s, LA 4 -> 5): +6 cycles
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -24,10 +27,13 @@ module ot_dsrom_exp_f12 #(
 );
     localparam integer T_N = 1 + LM + 2;        // n registered (1.2 GHz: shift | round + sign, two stages)
     localparam integer T_K = T_N + 1;           // table products registered
-    localparam integer T_R1 = T_K + LA;
-    localparam integer T_R = T_R1 + LA;
-    localparam integer T_P = T_R + 6 * (LM + LA);
-    localparam integer DEPTH = T_P + 1;         // 7 LM + 8 LA + 5: 72 at LM 5 / LA 4
+    localparam integer LR = 6;                  // r = (x - n ln2_hi) - n ln2_lo: the 6-stage f12 adder (routed: these two
+                                                //   adders' compare -> align stage was the lane's only 1.2 GHz miss)
+    localparam integer T_R1 = T_K + LR;
+    localparam integer T_R = T_R1 + LR;
+    localparam integer LP = LA + ASUM;           // the polynomial adds' latency
+    localparam integer T_P = T_R + 6 * (LM + LP);
+    localparam integer DEPTH = T_P + 1;         // 7 LM + 6 LA + 2 LR + 5: 76 at LM 5 / LA 4
     localparam [31:0] K_MAX   = 32'h42B00000;   //  88.0
     localparam [31:0] K_MINM  = 32'h42AE0000;   //  87.0 (magnitude of the lower clamp)
     localparam [31:0] K_LOG2E = 32'h3FB8AA3B;
@@ -340,9 +346,9 @@ module ot_dsrom_exp_f12 #(
 
     wire [31:0] r1, r, xc_d, lo_d;
     ot_hdc_delay #(.W(32), .D(T_K - 1)) d_x (clk, rst_n, xc, xc_d);
-    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
-    ot_hdc_delay #(.W(32), .D(LA)) d_lo (clk, rst_n, a_lo, lo_d);
-    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
+    ot_dsrom_add_f12_l6 a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
+    ot_hdc_delay #(.W(32), .D(LR)) d_lo (clk, rst_n, a_lo, lo_d);
+    ot_dsrom_add_f12_l6 a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
 
     // Horner: p = C0; six times p = p*r + C[k]; r travels in (LM+LA)-cycle hops.
     wire [31:0] rd [0:6];
@@ -355,10 +361,10 @@ module ot_dsrom_exp_f12 #(
     generate
         for (k = 1; k <= 6; k = k + 1) begin : g_h
             if (k < 6) begin : g_rd
-                ot_hdc_delay #(.W(32), .D(LM + LA)) d_r (clk, rst_n, rd[k-1], rd[k]);
+                ot_hdc_delay #(.W(32), .D(LM + LP)) d_r (clk, rst_n, rd[k-1], rd[k]);
             end
-            ot_hdc_qmul_lat #(LM) u_m (clk, rst_n, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
-            ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
+            ot_hdc_qmul_lat #(LM) u_m (clk, rst_n, vd[T_R + (LM + LP)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
+            ot_hdc_qadd_lat #(.KEEP(ASUM != 0 ? 2 : ((LM != 3 || LA != 3) ? 1 : 0)), .LAT(LP)) u_a (clk, rst_n, vd[T_R + (LM + LP)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
         end
     endgenerate
 
@@ -566,6 +572,17 @@ module ot_dsrom_fdiv_f12 (
 endmodule
 
 
+// ot_dsrom_add_f12_l6: the f12 binary32 adder (rtl/hdc/ot_hdc_fp32_f12.sv ot_hdc_fp32_add_f12) with six cuts: the
+// LAT-5 _l5x cut set plus a cut between the magnitude compare and the alignment (CUTS bit 0).  Same function, one
+// more register; ot_hdc_qadd_lat's port order and fault convention.
+module ot_dsrom_add_f12_l6 (input wire clk, input wire rst_n, input wire v, input wire [31:0] a, input wire [31:0] b,
+                            output wire [31:0] y, output wire fault);
+    wire [1:0] err;
+    wire vo;
+    ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+    assign fault = vo && (err != 2'd0);
+endmodule
+
 // ---------------------------------------------------------------------------
 // ot_dsrom_actquant_f12: rtl/hdc/v41/ot_hdc_actquant.sv (FP8 E4M3 / FP4 E2M1 + E8M0 activation quantiser, one
 // 32-element block a cycle) for the 1.2 GHz domain, same function bit for bit (the original is unchanged):
@@ -574,9 +591,12 @@ endmodule
 //     gradual underflow, as ot_hdc_fmul; amax is finite and positive, the product cannot overflow);
 //   * the per-element grid exponent, the rounding and the encode each over two stages.
 // Stages: S0 input | M1..M5 32->16->8->4->2->1 (+ floor) | 5 multiply | E e | G1 Ev | G2 grid, shift | R1 shift,
-// guard, sticky | R2 count | C1 codes, partial exponents | C2 BF16 value.  LATENCY = 18 (the original: 13).
+// guard, sticky | R2 count, exponent base | C1 codes, partial exponents | C2 BF16 value.  LATENCY = 13 + MLAT
+// (18 or 19; the original: 13).
 // ---------------------------------------------------------------------------
-module ot_dsrom_actquant_f12 (
+module ot_dsrom_actquant_f12 #(
+    parameter integer MLAT = 5      // scale multiply latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, operand select in front)
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          v,
@@ -588,7 +608,7 @@ module ot_dsrom_actquant_f12 (
     output reg  [511:0]  y,
     output reg           fault
 );
-    localparam integer LATENCY = 18;
+    localparam integer LATENCY = 13 + MLAT;
     localparam [30:0] FLOOR_FP8 = 31'h38d1b717;   // float32(1e-4)
     localparam [30:0] FLOOR_FP4 = 31'h01c00000;   // float32(6 * 2^-126)
     localparam [31:0] INV_448   = 32'h3b124925;   // float32(1/448)
@@ -651,20 +671,20 @@ module ot_dsrom_actquant_f12 (
     // ---- the scale product (5 stages)
     wire [31:0] prod;
     wire        pfault;
-    ot_hdc_qmul_lat #(5) u_scale (clk, rst_n, lv_v[5], {1'b0, amax}, lv_fp4[5] ? INV_6 : INV_448, prod, pfault);
-    wire [5:0] vl;
-    ot_hdc_vline #(.D(5)) u_vl (.clk(clk), .rst_n(rst_n), .v(lv_v[5]), .vd(vl));
+    ot_hdc_qmul_lat #(MLAT) u_scale (clk, rst_n, lv_v[5], {1'b0, amax}, lv_fp4[5] ? INV_6 : INV_448, prod, pfault);
+    wire [MLAT:0] vl;
+    ot_hdc_vline #(.D(MLAT)) u_vl (.clk(clk), .rst_n(rst_n), .v(lv_v[5]), .vd(vl));
     wire p_fp4, p_nf;
-    ot_hdc_delay #(.W(2), .D(5)) u_dp (.clk(clk), .rst_n(rst_n), .d({lv_fp4[5], lv_nf[5]}), .q({p_fp4, p_nf}));
-    // the elements, S0 -> E (5 tree + 5 multiply + 1 = 11 registers after S0)
+    ot_hdc_delay #(.W(2), .D(MLAT)) u_dp (.clk(clk), .rst_n(rst_n), .d({lv_fp4[5], lv_nf[5]}), .q({p_fp4, p_nf}));
+    // the elements, S0 -> E (5 tree + MLAT multiply registers, then E itself: aligned at E's input)
     wire [1023:0] xe;
-    ot_hdc_delay #(.W(1024), .D(11)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(xe));
+    ot_hdc_delay #(.W(1024), .D(6 + MLAT)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(xe));
 
     // ---- E: e = ceil_log2(prod)
     reg              e_v, e_fp4, e_nf;
     reg signed [9:0] e_e;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) e_v <= 1'b0; else e_v <= vl[5];
+        if (!rst_n) e_v <= 1'b0; else e_v <= vl[MLAT];
     end
     always @(posedge clk) begin
         e_fp4 <= p_fp4; e_nf <= p_nf | pfault;
@@ -745,6 +765,7 @@ module ot_dsrom_actquant_f12 (
     reg [4:0]        r2_c [0:31];
     reg signed [4:0] r2_g [0:31];
     reg [31:0]       r2_sgn;
+    reg signed [11:0] r2_base [0:31];     // g - mant_bits + e (the BF16 exponent's base)
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) r2_v <= 1'b0; else r2_v <= r1_v;
     end
@@ -753,6 +774,7 @@ module ot_dsrom_actquant_f12 (
         for (i = 0; i < 32; i = i + 1) begin
             r2_c[i] <= r1_t[i] + {4'd0, r1_gd[i] & (r1_st[i] | r1_t[i][0])};
             r2_g[i] <= r1_g[i];
+            r2_base[i] <= r1_g[i] - (r1_fp4 ? 12'sd1 : 12'sd3) + r1_e;
         end
     end
 
@@ -789,8 +811,8 @@ module ot_dsrom_actquant_f12 (
             p = c[4] ? 3'd4 : c[3] ? 3'd3 : c[2] ? 3'd2 : c[1] ? 3'd1 : 3'd0;
             c1_p[i] <= p;
             c1_cn[i] <= {3'd0, c} << (3'd7 - p);
-            c1_bb[i] <= r2_g[i] - (r2_fp4 ? 12'sd1 : 12'sd3) + r2_e + 12'sd127;
-            shs = r2_g[i] - (r2_fp4 ? 12'sd1 : 12'sd3) + r2_e + 12'sd133;
+            c1_bb[i] <= r2_base[i] + 12'sd127;
+            shs = r2_base[i] + 12'sd133;
             c1_sub[i] <= (shs < 12'sd0) ? 7'd0 : ({2'd0, c} << shs[3:0]);
             c1_z[i] <= (c == 5'd0);
         end

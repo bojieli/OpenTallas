@@ -1,0 +1,58 @@
+{
+  "owner": "Codex/Dirac item9",
+  "source_commit": "1e85bfa7007aea00ffed216f1ba973eb73dc2388",
+  "sources_sha256": {
+    "rtl/gpu_sys/ot_gpu_reset_ctrl.sv": "a1a8221698457376ac0eadfcb9e80e0a7a8683ef27e244c39b6ae78b9e53da2d",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+    "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+    "rtl/gpu_sys/ot_gpu_coll_mux_item9_tree.sv": "c27b8f4b91b09253b224dd3478fcdf4244de24e29a9d349b41190a072f885749",
+    "rtl/gpu_sys/ot_gpu_coll_endpoint_item9_txctrl.sv": "9f9b4146e47a98f04b4cd0cfdb6dedfeacc1a454a82a46a3d1bccb16efe84801",
+    "rtl/gpu_sys/ot_gpu_coll_item9_context32_tree.sv": "a6f90f049b54ae9e43c6dd953dd5153923df2c8921d551f11d335e633b6acbf9"
+  },
+  "shape": {
+    "ENABLE": 1,
+    "NSM": 32,
+    "NL": 128,
+    "OWNER64": 1,
+    "TX_MASK_LA": 1,
+    "RXOH": 1,
+    "RDUP": 16,
+    "TXCTRL": 1,
+    "TREE": 1
+  },
+  "constraints": {
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "clock_roots": [
+      "clk_sm",
+      "clk_link",
+      "clk_mem",
+      "clk_host"
+    ],
+    "false_paths": false,
+    "external_IO_budget_is_not_measured_parent_delay": true
+  },
+  "threads": 16,
+  "admission_guard_GiB": 24,
+  "admission_guard_unchanged": true,
+  "synthesis_only": true,
+  "actual_context_route_qualified": false,
+  "adopted": false,
+  "exit": 0,
+  "artifacts": {
+    "work/orfs/config.mk": {
+      "bytes": 1135,
+      "sha256": "5d436015cf43684647dc67d7fcabd42f1ce54f28841dfbf05d11a0c207fcf559"
+    },
+    "work/orfs/constraint.sdc": {
+      "bytes": 1171,
+      "sha256": "1b60d4fc693270ac5f77e2b89bdfe1a825b57e67b0a91cbd676bc2a958670a24"
+    },
+    "work/orfs/results/asap7/opentallas_item9_loaded32_tree_synth_r1/base/1_2_yosys.v": {
+      "bytes": 168784746,
+      "sha256": "96fd23dbff2fd11ef322c6b7a0b13e8650242149afb599f83b2a6a112553f468"
+    }
+  }
+}

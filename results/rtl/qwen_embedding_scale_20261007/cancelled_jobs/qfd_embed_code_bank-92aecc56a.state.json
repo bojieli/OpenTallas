@@ -1,0 +1,138 @@
+{
+  "name": "qfd_embed_code_bank-92aecc56a",
+  "spec": {
+    "name": "qfd_embed_code_bank-92aecc56a",
+    "block": "qfd_embed_code_bank",
+    "owner": "Codex:embedding-scale",
+    "purpose": "Protected code bank2realROMs,270x120.42um; metadata failstop, isolatedregistered outputboundary; 80fF150ps unchanged; SS739ps macro two-edge capture using -through; unadopted",
+    "hosts": [
+      "ot-epyc2",
+      "ot-epyc1tb",
+      "ot-epyc3",
+      "ot-pve1",
+      "ot-agidock128"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "source": {
+      "branch": "codex/embed-scale-20261007",
+      "commit": "92aecc56aabe88360839654f9565ee876e7ea435"
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "exact",
+          "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_code_bank  -o {RUN}/bench/exact rtl/test/tb_qwen_embed_code_bank.sv rtl/physical/ot_qwen_embed_code_bank.sv && vvp {RUN}/bench/exact",
+          "expect": "pass",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog"
+          ],
+          "pass_regex": "PASS embed words=4096"
+        },
+        {
+          "name": "bad_address",
+          "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_code_bank -DEMBED_NEG_BAD_ADDR -o {RUN}/bench/bad_address rtl/test/tb_qwen_embed_code_bank.sv rtl/physical/ot_qwen_embed_code_bank.sv && vvp {RUN}/bench/bad_address",
+          "expect": "fail",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog"
+          ],
+          "fail_regex": "FAIL embed payload/order"
+        }
+      ],
+      "calibrate": {
+        "enabled": false,
+        "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+      },
+      "route": {
+        "cmd": "SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_embed_code_bank {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+          "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 8,
+        "peak_ram_gb": 16
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_embed_code_bank --out {RUN}/record/views/qfd_embed_code_bank --image openroad/orfs:asap7lock --macro-view physical/asap7_memory_macros/ot_rom_4096x266_m8 > {RUN}/record/route/export.log 2>&1"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [
+        {
+          "name": "rom_multicycle_valid_startpoint",
+          "cmd": "! grep -q 'STA-1554' {RUN}/routes/{LABEL}/sta.log"
+        }
+      ],
+      "post_sdc": [
+        "physical/qwen_die_masters/signoff/qfd_embed_code_bank.sdc"
+      ],
+      "macros": [
+        "physical/asap7_memory_macros/ot_rom_4096x266_m8"
+      ]
+    },
+    "hold_eco": {},
+    "budget": {
+      "enabled": false,
+      "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+    },
+    "record": [
+      {
+        "from": "{RUN}/record/views",
+        "to": "physical/qwen_die_masters/views"
+      },
+      {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/qwen_embedding_bank_20261007/qfd_embed_code_bank-92aecc56a"
+      }
+    ],
+    "cycles_added": "Codeleaf7cycles II2 measured atSS739.211ps macro delay (+1 vsoriginalleaf6); frame270x120.42 => +12.807mm2 over2374banks; protected mutable metadata and isolated output; parent must reprice shared embeddingdie; no adoptedrate",
+    "merge_target": "main"
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/qfd_embed_code_bank-92aecc56a.json",
+  "created": "2026-10-07T09:04:21-07:00",
+  "status": "CANCELLED",
+  "stage_idx": 2,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {},
+  "hosts_tried": [
+    "ot-epyc2"
+  ],
+  "events": [
+    "2026-10-07T09:04:21-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qfd_embed_code_bank-92aecc56a.json",
+    "2026-10-07T09:04:27-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+    "2026-10-07T09:05:03-07:00 source 92aecc56aabe synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank-92aecc56a/src",
+    "2026-10-07T09:05:36-07:00 bench track: launched bench_exact (bench_exact.a1b1) beside None",
+    "2026-10-07T09:05:51-07:00 launched route (attempt 1) on ot-epyc2",
+    "2026-10-07T09:06:18-07:00 CANCELLED: cancelled by a human"
+  ],
+  "updated": "2026-10-07T09:06:18-07:00",
+  "bench_par": true,
+  "btrack": {
+    "bench_exact": {
+      "state": "running",
+      "tag": "bench_exact.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank-92aecc56a",
+      "n": 1,
+      "started": "2026-10-07T09:05:36-07:00",
+      "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank-92aecc56a/bench_src_a1"
+    }
+  },
+  "wait": null,
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank-92aecc56a",
+  "commit_full": "92aecc56aabe88360839654f9565ee876e7ea435",
+  "bwait": null,
+  "stage_key": "route",
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-07T09:05:51-07:00",
+  "reason": "cancelled by a human",
+  "cancelled_at": "2026-10-07T09:06:15-07:00"
+}

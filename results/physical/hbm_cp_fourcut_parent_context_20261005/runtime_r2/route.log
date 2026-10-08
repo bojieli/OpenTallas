@@ -1,0 +1,70 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+ndent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 4.288071e+07.
+[INFO DPL-0302] End of matching; objective is 4.273342e+07, improvement is 0.34 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 4.194007e+07.
+[INFO DPL-0306] Pass   2 of global swaps; hpwl is 4.181090e+07.
+[INFO DPL-0307] End of global swaps; objective is 4.181090e+07, improvement is 2.16 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 4.168997e+07.
+[INFO DPL-0309] End of vertical swaps; objective is 4.168997e+07, improvement is 0.29 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 4.158538e+07.
+[INFO DPL-0305] End of reordering; objective is 4.158538e+07, improvement is 0.25 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 126540 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 126540, swaps 7816, moves 44185 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 4.150487e+07, Scratch cost 4.109177e+07, Incremental cost 4.109177e+07, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 4.109177e+07.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 1.00 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.995307 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 1795 cell flips.
+[INFO DPL-0384] End of flipping; objective is 4.084892e+07, improvement is 0.79 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 6 site alignment problems.
+[INFO DPL-0311] Found 2 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL            42723.7 u (   16260.9,    26462.8)
+Final HPWL               40854.5 u (   15004.0,    25850.5)
+Delta HPWL                  -4.4 % (      -7.7,       -2.3)
+
+optimize_mirroring
+[INFO DPL-0020] Mirrored 862 instances
+[INFO DPL-0021] HPWL before           40854.5 u
+[INFO DPL-0022] HPWL after            40823.0 u
+[INFO DPL-0023] HPWL delta               -0.1 %
+[WARNING DPL-0006] Site aligned check failed (6).
+ input1168
+ input1195
+ input1221
+ input1226
+ output1276
+ place2589
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+write_db /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/3_5_place_dp-failed.odb
+Error: detail_place.tcl, 39 DPL-0033
+
+Elapsed time: 0:02.95[h:]min:sec. CPU time: user 2.85 sys 0.10 (100%). Peak memory: 308552KB.
+Elapsed time: 0:03.78[h:]min:sec. CPU time: user 4.09 sys 0.62 (124%). Peak memory: 334364KB.
+Elapsed time: 0:02.28[h:]min:sec. CPU time: user 2.19 sys 0.09 (99%). Peak memory: 303964KB.
+Elapsed time: 0:02.02[h:]min:sec. CPU time: user 1.92 sys 0.10 (99%). Peak memory: 304564KB.
+Elapsed time: 0:02.02[h:]min:sec. CPU time: user 1.94 sys 0.08 (99%). Peak memory: 308212KB.
+Elapsed time: 0:04.12[h:]min:sec. CPU time: user 15.28 sys 0.15 (374%). Peak memory: 316052KB.
+Elapsed time: 0:02.72[h:]min:sec. CPU time: user 2.59 sys 0.13 (99%). Peak memory: 320580KB.
+Elapsed time: 0:07.21[h:]min:sec. CPU time: user 21.60 sys 2.69 (336%). Peak memory: 493868KB.
+Elapsed time: 0:04.49[h:]min:sec. CPU time: user 5.32 sys 0.90 (138%). Peak memory: 342616KB.
+Elapsed time: 0:03.66[h:]min:sec. CPU time: user 3.55 sys 0.11 (99%). Peak memory: 322140KB.
+make[1]: *** [Makefile:511: do-3_5_place_dp] Error 1
+make: *** [Makefile:511: /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/3_5_place_dp.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/jobs/harvey-cp-fourcut-parent-context-r1/runtime_r2/physical.json

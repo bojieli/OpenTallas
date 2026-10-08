@@ -1,0 +1,8 @@
+MISMATCH cyc 434 y_v 11 y_i 1/1 q_v 00 fault 00
+MISMATCH cyc 435 y_v 11 y_i 2/2 q_v 00 fault 00
+MISMATCH cyc 436 y_v 11 y_i 3/3 q_v 00 fault 00
+MISMATCH cyc 437 y_v 11 y_i 4/4 q_v 00 fault 00
+MISMATCH cyc 438 y_v 11 y_i 5/5 q_v 00 fault 00
+LOCKSTEP rows=4 y_vecs=320 q_vecs=320 rstd=4 mism=388 gold_y_err=5051 gold_q_err=158 fault=00
+FAIL
+rc=1

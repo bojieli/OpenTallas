@@ -1,0 +1,190 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-07T10:15:38.691603+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "hfd_hc",
+    "clock_port": "ck",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.4,
+    "parameters": {},
+    "sources": [
+      {
+        "path": ".views/q8hc/hfd_hc.sv",
+        "sha256": "2223904ecd644ab36ab1152d2063bd0577ace4f96720c34cc4745c47c7e22b66",
+        "size_bytes": 690866
+      }
+    ],
+    "top": "hfd_hc"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 137:\n_/D\n      770 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      780 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      790 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      800 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      810 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      820 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      830 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      840 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      850 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      860 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      870 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      880 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      890 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      900 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      910 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      920 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      930 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      940 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      950 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      960 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      970 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      980 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n      990 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n     1000 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n     1010 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n     1020 |       0 |       0 |            0 |    +0.0% | -4909.901 | -4286597.500 | din_p0[592]$_DFF_P_/D\n     1030 |       0 |      32 |            0 |    +0.0% | -4909.901 | -4285816.000 | din_p0[592]$_DFF_P_/D\n     1040 |       0 |     112 |            0 |    +0.0% | -4909.901 | -4283801.000 | din_p0[592]$_DFF_P_/D\n\nElapsed time: 0:04.16[h:]min:sec. CPU time: user 4.00 sys 0.16 (99%). Peak memory: 402048KB.\nElapsed time: 3:26.03[h:]min:sec. CPU time: user 209.68 sys 9.34 (106%). Peak memory: 485768KB.\nElapsed time: 0:02.11[h:]min:sec. CPU time: user 1.99 sys 0.11 (100%). Peak memory: 366276KB.\nElapsed time: 0:02.60[h:]min:sec. CPU time: user 2.46 sys 0.13 (99%). Peak memory: 430784KB.\nElapsed time: 0:51.62[h:]min:sec. CPU time: user 50.92 sys 0.69 (99%). Peak memory: 2591856KB.\nElapsed time: 0:02.76[h:]min:sec. CPU time: user 2.56 sys 0.20 (100%). Peak memory: 526480KB.\nElapsed time: 0:02.69[h:]min:sec. CPU time: user 2.45 sys 0.24 (100%). Peak memory: 647084KB.\nElapsed time: 29:20.05[h:]min:sec. CPU time: user 4323.68 sys 39.60 (247%). Peak memory: 18359300KB.\nElapsed time: 0:59.38[h:]min:sec. CPU time: user 78.94 sys 31.63 (186%). Peak memory: 1088520KB.\nElapsed time: 1:42.31[h:]min:sec. CPU time: user 116.70 sys 19.97 (133%). Peak memory: 6222752KB.\nElapsed time: 2:45.55[h:]min:sec. CPU time: user 207.52 sys 32.94 (145%). Peak memory: 6716896KB.\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-07T06:27:31.128314+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "hfd_hc",
+      "--source",
+      ".views/q8hc/hfd_hc.sv",
+      "--macro-view",
+      "ot_dsrom_su_hcpost_lane=physical/hbm_accel_die_views/hc/lane/ot_dsrom_su_hcpost_lane",
+      "--macro-place-halo",
+      "5",
+      "5",
+      "--clock-port",
+      "ck",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "pnr",
+      "--die-area",
+      "0",
+      "0",
+      "275.592",
+      "5529.576",
+      "--core-area",
+      "0",
+      "0.54",
+      "275.592",
+      "5529.036",
+      "--place-density",
+      "0.5",
+      "--routing-layers",
+      "M2",
+      "M7",
+      "--orfs-var",
+      "PDN_TCL=/src/physical/hbm_accel_die_views/su/pdn_quarter.tcl",
+      "--orfs-var",
+      "IO_CONSTRAINTS=/src/.views/q8hc/io_place.tcl",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--step-tcl",
+      "POST_SYNTH=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--slew-margin-percent",
+      "60",
+      "--hold-margin-ns",
+      "0.035",
+      "--purpose",
+      "signoff_target",
+      "--nickname-tag",
+      "hv_q8hc",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--orfs-var",
+      "MACRO_PLACEMENT_TCL=/src/physical/hbm_accel_die_views/hc/rtl/macro_place.tcl",
+      "--orfs-var",
+      "PLACE_DENSITY_LB_ADDON=",
+      "--clock-period-ns",
+      "0.77",
+      "--io-delay-fraction",
+      "0.4",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/work",
+      "--force",
+      "--output",
+      "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/routes/q8hc/physical.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/hub/src_q8"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.77,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

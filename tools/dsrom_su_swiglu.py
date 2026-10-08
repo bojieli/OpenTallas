@@ -37,6 +37,7 @@ LAYERS = ("L0", "L3", "L20", "L24")
 FAST = 1.2e9
 NIN, NOUT = 33, 23            # hub traverse at 1.2 GHz: 22 / 15 slow stages x 748/504 (SS wire reach)
 RTL = ["rtl/hdc/v41x/ot_dsrom_su_swiglu.sv", "rtl/hdc/v41x/ot_dsrom_su_f12.sv"]
+ADD6 = "rtl/hdc/v41x/ot_dsrom_su_add6.sv"
 LIB = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
        "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
        "rtl/hdc/ot_hdc_fastfp_lat_f12.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
@@ -48,7 +49,8 @@ DPI = {"rtl/hdc/ot_hdc_fastfp.sv": ["rtl/test/sim_hdc_v41x_fastfp_dpi.sv", "rtl/
                                           "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.cpp", "rtl/test/sim_hdc_fp32_lat_tops.sv"],
        "rtl/hdc/ot_hdc_fp32_mul_lat.sv": [],
        "rtl/hdc/ot_hdc_fp32_f12.sv": ["rtl/test/sim_hdc_fp32_f12_dpi_tops.sv"],
-       "rtl/hdc/ot_hdc_prefix.sv": ["rtl/test/sim_hdc_prefix_beh.sv"]}
+       "rtl/hdc/ot_hdc_prefix.sv": ["rtl/test/sim_hdc_prefix_beh.sv"],
+       ADD6: ["rtl/test/sim_dsrom_su_add6_dpi.sv"]}
 TB = {"swiglu": "rtl/test/tb_dsrom_su_swiglu.sv", "qbank": "rtl/test/tb_dsrom_su_qbank.sv"}
 
 
@@ -227,7 +229,7 @@ def verilator():
 
 def sources(fp):
     out = []
-    for p in LIB:
+    for p in LIB + [ADD6]:
         out += DPI[p] if (fp == "dpi_beh" and p in DPI) else [p]
     return [str(ROOT / p) for p in RTL + out]
 
@@ -264,7 +266,11 @@ def cmd_run(a):
             continue
         cd = out / c["name"]
         if c["kind"] == "swiglu":
-            params = dict(W=a.w, ROUTED=int(c["routed"]), NIN=NIN, NOUT=NOUT)
+            params = dict(W=a.w, ROUTED=int(c["routed"]), NIN=NIN, NOUT=NOUT, LM=a.lm, LA=a.la, QLAT=a.qlat)
+            if a.ireg:                                       # lanes' pin registers (default off: tags unchanged)
+                params["IREG"] = 1
+            if a.esum:                                       # exp polynomial sum | LZC cut (default off)
+                params["ESUM"] = 1
             exe, tag = build("swiglu", params, a.fp, work)
             n = -(-c["n"] // a.w) * a.w
             gm = (cd / "g.mem").read_text().split()
@@ -288,7 +294,7 @@ def cmd_run(a):
                              last_out=lo, cycles=lo - fi + 1, us=round((lo - fi + 1) / FAST * 1e6, 5),
                              exact=bool("PASS" in r.stdout), fp=a.fp, build=tag))
         else:
-            params = dict(NB=a.nb, ROPE=int(c["rope"]), NIN=NIN, NOUT=NOUT)
+            params = dict(NB=a.nb, ROPE=int(c["rope"]), NIN=NIN, NOUT=NOUT, LM=a.lm, LA=a.la, QLAT=a.qlat)
             exe, tag = build("qbank", params, a.fp, work)
             run_dir = work / f"run_{c['name']}_{tag}"
             run_dir.mkdir(exist_ok=True)
@@ -306,10 +312,10 @@ def cmd_run(a):
                              cycles=lo - fi + 1, us=round((lo - fi + 1) / FAST * 1e6, 5),
                              exact=bool("PASS" in r.stdout), fp=a.fp, build=tag))
         print(json.dumps(rows[-1]), flush=True)
-    tagf = f"run_{a.fp}_W{a.w}_NB{a.nb}{'_' + a.only.replace(',', '+') if a.only else ''}.json"
-    res = dict(schema="opentallas.dsrom-recovery.su-swiglu.run.v1", generated_utc=now(), fp=a.fp, W=a.w, NB=a.nb,
+    tagf = f"run_{a.fp}_W{a.w}_NB{a.nb}_m{a.lm}a{a.la}q{a.qlat}{'_ireg' if a.ireg else ''}{'_esum' if a.esum else ''}{'_' + a.only.replace(',', '+') if a.only else ''}.json"
+    res = dict(schema="opentallas.dsrom-recovery.su-swiglu.run.v1", generated_utc=now(), fp=a.fp, W=a.w, NB=a.nb, LM=a.lm, LA=a.la, QLAT=a.qlat,
                NIN=NIN, NOUT=NOUT, clock_hz=FAST, rows=rows, status="pass" if rows and all(r["exact"] for r in rows)
-               else "fail", source_sha256={p: sha(ROOT / p) for p in RTL + LIB + list(TB.values())
+               else "fail", source_sha256={p: sha(ROOT / p) for p in RTL + LIB + [ADD6] + list(TB.values())
                                            + ["tools/dsrom_su_swiglu.py"]},
                simulator=subprocess.run([verilator(), "--version"], capture_output=True, text=True).stdout.strip())
     (out / tagf).write_text(json.dumps(res, indent=1) + "\n")
@@ -328,6 +334,11 @@ def main():
     ap.add_argument("--w", type=int, default=64)
     ap.add_argument("--nb", type=int, default=32)
     ap.add_argument("--only", default=None)
+    ap.add_argument("--lm", type=int, default=5, help="FP multiply latency (5: mul_f12_l5, 6: _l6)")
+    ap.add_argument("--la", type=int, default=4, help="FP add latency (4: add_f12_l4, 5: _l5x)")
+    ap.add_argument("--qlat", type=int, default=5, help="quantiser scale multiply latency")
+    ap.add_argument("--esum", action="store_true", help="swiglu lanes' exp polynomial adds with the sum | LZC cut (ESUM = 1)")
+    ap.add_argument("--ireg", action="store_true", help="swiglu lanes with pin registers (IREG = 1, S81-RERUN)")
     ap.add_argument("--nin", type=int, default=None, help="hub stages in (default 33: the ROM's 22 slow stages)")
     ap.add_argument("--nout", type=int, default=None, help="hub stages out (default 23: the ROM's 15 slow stages)")
     a = ap.parse_args()

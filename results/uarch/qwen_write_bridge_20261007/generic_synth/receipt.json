@@ -1,0 +1,50 @@
+{
+  "tool": "Yosys0.68 production",
+  "mapping": "generic bit-level synth -noabc; no technology area or timing claim",
+  "roles": {
+    "0": {
+      "flip_flops": 10472,
+      "cell_types": {
+        "$_DFFE_PP_": 9704,
+        "$_DFFE_PN0P_": 250,
+        "$_DFFE_PN1P_": 1,
+        "$_DFF_P_": 389,
+        "$_DFF_PN0_": 126,
+        "$_DFF_PN1_": 2,
+        "$_NOT_": 281,
+        "$_XOR_": 8096,
+        "$_AND_": 9153,
+        "$_OR_": 9023,
+        "$_MUX_": 1180,
+        "$scopeinfo": 9
+      },
+      "netlist_sha256": "7c91181b1c2d3d3b3c799c5c25cb36e4173331690f75f509b05cc12c3ce225cc",
+      "log_sha256": "844c6037987bdd05c227bdbef8008c8caa2f0e41a5616dc512a477b47ccb5273"
+    },
+    "1": {
+      "flip_flops": 6278,
+      "cell_types": {
+        "$_DFF_PN0_": 132,
+        "$_DFF_PN1_": 2,
+        "$_DFFE_PP_": 5224,
+        "$_DFF_P_": 389,
+        "$_DFFE_PN0P_": 530,
+        "$_DFFE_PN1P_": 1,
+        "$_NOT_": 275,
+        "$_XOR_": 5297,
+        "$_AND_": 5051,
+        "$_OR_": 5117,
+        "$_MUX_": 1020,
+        "$scopeinfo": 9
+      },
+      "netlist_sha256": "be1a8be994049482128e573252dc5928705a8964940cc8933ddabd9a33f9126a",
+      "log_sha256": "c3cac7d1a00741187fddefe25505231e392f83f3c0bf495745bcd2f502364858"
+    }
+  },
+  "pair_flip_flops": 16750,
+  "constant_field_pruning": "DONE zero sec/data and fixedPC/version reduce FIFO and codec storage. Do not multiply unpruned storage bits to claim mapped FF.",
+  "adoption": false,
+  "source_before_local_fence_and_cancel_guard": "68bca32f435a1bf8e81657c4736bd5ea403473d88cbad843990fea04871e942c",
+  "source_snapshot": "parallel_gate/source/ot_qwen_kvc_write_link_bridge.sv",
+  "successors": "Local handed fence guard and typed cancellation add combinational checks, no declared storage. Final successor technology mapping and area remain unqualified."
+}

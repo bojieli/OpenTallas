@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+"""Unadopted full TU packet-storage candidate; no timing/area closure claim."""
+import json
+from pathlib import Path
+
+def serialized_path_extra_cycles(queue_flit_counts):
+    """Conservative isolated queues: +2 fill and +2 per later retirement.
+
+    Feed the source-bound event calendar's traffic per serial queue. This is
+    not a total-token prediction and must not zero-fill unknown queue traffic.
+    """
+    if any(not isinstance(n,int) or n<0 for n in queue_flit_counts):
+        raise ValueError('nonnegative integer queue traffic required')
+    return sum(2*n for n in queue_flit_counts)
+
+def model():
+    width=545; protected=((width+63)//64)*72
+    queues=[dict(name='receive', replicas=8, depth=256),dict(name='partial_tx',replicas=8,depth=64),dict(name='result_tx',replicas=8,depth=64),dict(name='own_delivery',replicas=1,depth=64)]
+    for q in queues:
+        q.update(payload_bits=q['replicas']*q['depth']*width,
+                 protected_bits=q['replicas']*q['depth']*protected,
+                 macros=q['replicas']*3,
+                 encoded_read_bytes_per_cycle=protected/8,encoded_write_bytes_per_cycle=protected/8,
+                 physical_read_bytes_per_cycle=96,physical_write_bytes_per_cycle=96,
+                 max_consumption_flits_per_cycle=1/3)
+    return dict(status='CANDIDATE_NOT_ADOPTED',width=width,secded_word_bits=protected,
+        queues=queues,packet_payload_bits=sum(q['payload_bits'] for q in queues),
+        macro='ot_sram_1r1w_256x256_m2_r2c2',macro_count=75,
+        raw_macro_area_um2=75*172.8*41.04,
+        macro_physical_capacity_bits=75*256*256,
+        held_encoded_register_bits=25*648,
+        control_protection='64+8 SECDED seal on pointers, unread, pending, held and sticky overflow; any seal mismatch fails closed',
+        full_queue_policy='push rejected and faulted even with same-edge pop, matching original ot_ha2_fifo',macro_slot_area_at_55pct_um2=75*172.8*41.04/.55,
+        existing_collective_slot_um2=1960000,
+        cdc=dict(queues=16,depth=64,payload_bits=16*64*width,implementation='existing dual-clock flop FIFO, not replaced by single-clock SRAM; protection remains open'),
+        ports_per_fifo=dict(macro_replicas=3,read_per_macro=1,write_per_macro=1,same_address_read_write='excluded by occupancy discipline'),
+        timing=dict(first_push_to_visible_cycles=2,back_to_back_pop_spacing_cycles=3,
+                    register_capture_after_macro=True,added_queue_latency_vs_async_head_cycles=2,
+                    sustained_dequeue_bandwidth_fraction=1/3),
+        boundaries=dict(packet_bits=545,protected_macro_bits=768,mac_per_cycle=0,replicas=25,
+                        routing_tracks='unmeasured; 768 macro bits per FIFO plus endpoint interface',fanout='3 SRAM chip enables; 9 ECC encoder/decoder slices per FIFO'),
+        composition=dict(serial_path_bound_formula='sum(2*N_i) extra cycles for isolated serial queues with N_i flits; contention must be replayed',
+                         own_delivery_24_flits_extra_bound_cycles=serialized_path_extra_cycles([24]),
+                         single_user_delta='not adopted: replace per-queue service in TU event calendar; II=3 can increase contention and needs replay',clock='explicit core and PHY input clocks, no PLL aliasing; reducer independent domain integration open'),
+        outstanding=['full-shape producer credit admission for II3 queues','CDC payload/control protection','HA2 owner source-matched integration','clock crossings and per-domain reset/drain','SRAM SS read/capture and FF timing','routing/PDN/halo area','token-calendar composition'])
+if __name__=='__main__':
+    print(json.dumps(model(),indent=2))

@@ -1,0 +1,21 @@
+{
+  "status": "prebuild_candidate",
+  "records": 256,
+  "MACs_per_cycle": 0,
+  "immutable_ROM_bits": 14336,
+  "ROM_ECC": false,
+  "mutable_response_bits": 100,
+  "fault_bits": 2,
+  "request_bits": 41,
+  "response_bits": 50,
+  "peak_bytes_per_cycle": 4,
+  "lookup_cycles": 1,
+  "queue_depth": 1,
+  "mux": "up to256\u00d756 immutable table; no SS/FF qualification, registered request-to-response boundary",
+  "comparison": "two50bit response banks, valid compared always; payload only when valid; sticky dual-rail fault",
+  "replicas": 32,
+  "flop_area_lower_bound_um2": 29.7432,
+  "latency": "one capture edge plus consumer backpressure; response valid cleared only after consumption",
+  "scope": "actual byte base from Program.put divided by160, integral and bounded; no dynamic allocation or hardware installation grant",
+  "physical_admitted": false
+}

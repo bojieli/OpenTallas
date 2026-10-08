@@ -1,0 +1,12 @@
+{
+  "verdict": "FAIL_REJECTED_ACK_DEBT_GATE",
+  "reason": "Actual positive stack gate PASS; directed rejected ACK gate fatal at21928324562fs: rejected ACK erased real owner/debt; inspect which predicate before source fix",
+  "source_sha256": {
+    "rtl/hdc/kv/ot_qwen_s4_stack_transport.sv": "b40ea45dbebac2c4187df1adf81ef200c02c8f914640e9533d0a88c215cb5771",
+    "rtl/hdc/kv/ot_qwen_s4_protected_control.sv": "5af1f271972a17082430c9c2f53765967478c30566d36540ab3a006b2e58dc8e",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_stack_transport.sv": "0970512f35713d102bce68f65b31f98747114eb8d7f3fa60f3bcfa1f9599f244"
+  },
+  "physical_qualified": false,
+  "exit_code": 1,
+  "positive_gate": "PASS stack32 actual desc/GO consumeACK OOO-WR130 orderedpoolwrap warmgrant/heldpairedrow CLK833.333 H1024"
+}

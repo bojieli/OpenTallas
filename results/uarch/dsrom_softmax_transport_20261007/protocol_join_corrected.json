@@ -1,0 +1,40 @@
+{
+  "scope": "analytical full-width protocol simulation; NOT RTL or arithmetic exactness",
+  "passed": true,
+  "campaigns": [
+    {
+      "tokens": 128,
+      "payload_bytes": 65536,
+      "rejected_illegal_transactions": 12,
+      "stalled_drain_cycles": 2000,
+      "PV_requires_exp_drain": true
+    },
+    {
+      "tokens": 640,
+      "payload_bytes": 131072,
+      "rejected_illegal_transactions": 12,
+      "stalled_drain_cycles": 2000,
+      "PV_requires_exp_drain": true
+    }
+  ],
+  "beat_order_mutant_rejected": true,
+  "producer_dependency": {
+    "corrected_DAG_acyclic": true,
+    "predecessor_deadlock_detected": true,
+    "dependency_source": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "source_sha256": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74",
+    "predecessor_record": "results/uarch/dsrom_softmax_transport_20261007/protocol.json",
+    "predecessor_scope_failure": "opaque independent payloads omitted E to P.V dependency; historical PASS does not qualify producer integration"
+  },
+  "source_sha256": {
+    "dsrom_softmax_transport_protocol.py": "5c4233370f602a3948d5204d2b825b6a83efda3e734497d6112b370d4b2cdf6d",
+    "dsrom_softmax_transport.py": "56e0090de3ba2254dc3b61d793a2d38b25485bcdbfd3ddd5d1969bba2677e844"
+  },
+  "pending": [
+    "actual RTL and SRAM read timing",
+    "CDC and atomic reset",
+    "ECC and protection negatives",
+    "producer/consumer phase overlap proof",
+    "physical closure and composed token latency"
+  ]
+}

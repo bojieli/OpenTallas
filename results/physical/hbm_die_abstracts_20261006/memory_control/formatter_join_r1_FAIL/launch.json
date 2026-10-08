@@ -1,0 +1,44 @@
+{
+  "status": "FRESH_CPU_FIT_BEFORE_GUARD",
+  "capacity": {
+    "utc": "2026-10-06T04:31:47Z",
+    "CPU_count": 64,
+    "load1": 23.3408203125,
+    "idle_CPU": 43.97564402810305,
+    "MemAvailable_bytes": 56255426560,
+    "NVMe_free_bytes": 296424677376,
+    "CPU_fit": true,
+    "guard_core_sha256": "12ea64b70a65e7699b90febd671050581be627098e1895a0b63914f3400adc6f",
+    "guard_reserve_bytes": 20246159155,
+    "guard_ramping_bytes": 8589934592
+  },
+  "guard_sha256": "1df56a684423dae47d0c314dead6656a66e952c25f6379f1a98a28bf0da300eb",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_bridge.sv": "b9a814be8b4455f3f26655224cfe05348bb144958d8ff2ef1230cc16480ed2c9",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_owner.sv": "e9e2b70c293f3517016d7a1c52ca5d575c5a1e0b7a74a51f604ee53e55df1880",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv": "a094761b1f8a4c794e0217f465e25016aa19d1485ea942635c30d3675623ec96",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv": "b039ef531c10df900127c731d344fed0c29dc8db9a7246cdf76f6e8592643de2",
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_formatter_provider_join.sv": "f5a9172272184038c031bda889740b56bd26322880c448882abc48cea4d35118"
+  },
+  "requested_CPU": 1,
+  "reservation_GiB": 4,
+  "basis": "one-core Verilator build/runtime, existing protected gather owner plus formatter, finite1MiB provider fixture; 4GiB capacity reservation, no process limits",
+  "whole_VM_parent_qualified": false,
+  "command": [
+    "/srv/opentallas-scratch/admit.sh",
+    "4",
+    "--",
+    "python3",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/f7d25ef01/src/physical/hbm_die_abstracts_20261006/memory_control/run_formatter_join.py",
+    "--root",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/f7d25ef01/src",
+    "--out",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/f7d25ef01/gate-r1",
+    "--admitted"
+  ],
+  "exit": 250,
+  "guard_unchanged": true
+}

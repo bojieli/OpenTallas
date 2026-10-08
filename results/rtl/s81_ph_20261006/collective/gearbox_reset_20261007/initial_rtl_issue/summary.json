@@ -1,0 +1,20 @@
+{
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv": "4dd72a2ca630febfaa6dc72cfadcde99859e66aaa05051b47010e6195018e00c",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv": "beef2388cd9622f3cf0f612e289626246f817ab9d223631ab40432ef2e6c9f3c",
+    "rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv": "489f6fa39d39dca4ffd8edc498f14e7c8c666df9e7d3c15dc7d84d4ada137477"
+  },
+  "runs": {
+    "exact": {
+      "returncode": 0,
+      "gate_pass": true,
+      "output": "PASS cycles=24000 takes=15542 bypass=7167 overflow=182 idles=21 locked_cycles=17635 frames=10899 empty=4355 full=1191\n- /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:59: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 240us; walltime 0.028 s; speed 8.481 ms/s\n- Verilator: cpu 0.028 s on 1 threads; allocated 6 MB\n"
+    },
+    "missing_lock_init_negative": {
+      "returncode": 1,
+      "gate_pass": true,
+      "output": "[1566000] %Fatal: tb_s81ph_gbx_reset.sv:50: Assertion failed in tb_s81ph_gbx_reset: PIPE mismatch cycle 153\n%Error: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:50: Verilog $stop\nAborting...\n"
+    }
+  },
+  "pass": true
+}

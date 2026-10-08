@@ -1,0 +1,39 @@
+{
+  "default_enabled": false,
+  "adopted": false,
+  "physical_signoff": false,
+  "MACs_per_cycle": 0,
+  "new_memory_ports": 0,
+  "new_boundary_bits": 0,
+  "added_register_bits": 0,
+  "replicas": 4,
+  "new_mux_inputs": 0,
+  "intrinsic_bubble_cycles": 64,
+  "intrinsic_bubble_ns": 53.333333333333336,
+  "token_latency_delta_upper_cycles": null,
+  "token_latency_delta_upper_ns": null,
+  "token_composition_status": "requires actual readiness trace; no universal bound",
+  "measured_component_64": {
+    "no_stall_delta_cycles": 64,
+    "periodic_ready_delta_cycles": 71
+  },
+  "minimum_issue_interval_cycles": 2,
+  "clock_hz": 1200000000,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "added_register_cell_area_um2": 0,
+  "measured_predecessor_cell_area_um2": 8277.71,
+  "measured_predecessor_core_area_um2": 24642.1,
+  "new_external_routing_tracks": 0,
+  "original_slot_unchanged": true,
+  "successor_slot_fit_measured": false,
+  "load_fanout": "Existing NEXT and descriptor captures; issue cone removed from LOAD enable",
+  "measured_failure": "SU go to kvd_tiles D: SS -155.059418ps, 1578 failing endpoints from SU go and122 from ME taken",
+  "remaining_obligations": [
+    "Actual selected token instruction count",
+    "Issue-side consumers and output-pin timing",
+    "Input hold at actual die budget",
+    "Full controller route at SS/FF and exact ordered-instruction gate"
+  ],
+  "scope": "64-instruction mechanism vehicle only; full-token count/readiness unresolved"
+}

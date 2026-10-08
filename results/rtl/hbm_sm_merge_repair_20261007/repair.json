@@ -1,0 +1,30 @@
+{
+  "pinned_commit": "f7f1a0ee4bfd331c9d6bb873d9a772a5fa88cb48",
+  "restored_sha256": "c66cccc3859542f25b7a76020c0400bfe324dd9412b6c646302fdfef4613d8d5",
+  "prior_sha256": "0628476afc618fa807eaa2e95b545542a9274784af674777b1ac4a7fe877cad9",
+  "prior_source_preserved_in_git": true,
+  "reason": "Repair main merge damage: unmatched endif, undefined E3b signals, lost W0/E3b stages, REQCR production default, wrong old arithmetic pipeline; prefix experiment remains in history, not production.",
+  "files": [
+    {
+      "path": "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+      "sha256": "c66cccc3859542f25b7a76020c0400bfe324dd9412b6c646302fdfef4613d8d5"
+    },
+    {
+      "path": "tools/dshbm_sm_pq_seq.py",
+      "sha256": "dfb0b12bca2cee5fa33566768ec2d307394c896c40aac6cafece4642bab602f9"
+    },
+    {
+      "path": "rtl/test/tb_hbm_accel_sm_pq_seq.sv",
+      "sha256": "fb145353049cef10d325aebca00cb32df0e542a93f30104b5aab51bc01672703"
+    }
+  ],
+  "validation": {
+    "before_preprocess": "FAIL unmatched endif line1703",
+    "after_preprocess": "PASS",
+    "full_shape_tile_e_iverilog_elaboration": "PASS",
+    "negative_control_forwarding": "PASS static AST audit of neg_flip/mut_s1w/mut_bfdly/mut_reqovf/mut_reqleak",
+    "current_tree_exactness": "PENDING fresh admitted minimum-component bench; old receipts differ source hash and must not be promoted"
+  },
+  "prefix_experiment_queue_specs": [],
+  "historical_main_blob": "b6481c19508efa3c7af479e4e8ad3c3e503bbe7f"
+}

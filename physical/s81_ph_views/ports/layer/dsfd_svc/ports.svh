@@ -1,0 +1,10 @@
+    output wire [1025:0] ad,
+    output wire [0:0] af,
+    input wire [0:0] ck,
+    output wire [513:0] od,
+    output wire [0:0] of,
+    input wire [514:0] q,
+    input wire [8863:0] rd,
+    input wire [0:0] rst,
+    output wire [513:0] xd,
+    output wire [0:0] xf

@@ -1,0 +1,39 @@
+{
+  "verdict": "PASS_ENABLED_PARENT_ELABORATION_ONLY",
+  "host": "ot-epyc2",
+  "remote": "/srv/opentallas-scratch2/jobs/rawls-w2-parent-on-elaboration-r3",
+  "flags": {
+    "ENABLE": 1,
+    "COMBINED_ENABLE": 1,
+    "W2_RESULT_ENABLE": 1,
+    "W2_SECTOR_ENABLE": 1
+  },
+  "dimensions": {
+    "ND": 2,
+    "NSM": 2,
+    "NS": 2,
+    "NPC": 2,
+    "MEM_WORDS": 2097152,
+    "VM_AW": 21
+  },
+  "warning_counts": {
+    "TIMESCALEMOD": 1,
+    "WIDTHTRUNC": 47,
+    "WIDTHEXPAND": 107
+  },
+  "required_zero_diagnostics": [
+    "LATCH",
+    "UNOPTFLAT",
+    "SELRANGE",
+    "PIN*",
+    "USERERROR"
+  ],
+  "native_runtime_tested": false,
+  "installed_map_runtime_tested": false,
+  "physical_qualified": false,
+  "adopted": false,
+  "earlier_attempts": {
+    "r1": "UNQUALIFIED: unsupported ND1 collective USERERROR/SELRANGE and LATCH/UNOPTFLAT; frontend exit0 is not qualification",
+    "r2": "COMPILE_FAIL: reserved matches identifier; failure preserved"
+  }
+}

@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.hbm_die_views_round.v1",
+ "round": "r3_smpins",
+ "cases": {
+  "b_k16_i5": {
+   "grt_capacity": 110288961,
+   "grt_demand": 6057032,
+   "grt_usage_pct": 5.49,
+   "overflow_h": 1,
+   "overflow_v": 2,
+   "overflow": 7,
+   "grt_s": 467,
+   "exit": "0",
+   "real_views": [
+    "hfd_barrier",
+    "hfd_host_slab",
+    "hfd_serdes_slab",
+    "hfd_sm"
+   ],
+   "bundle_k": 16,
+   "iterations": 5
+  },
+  "b_k16_i50": {
+   "grt_capacity": 110288961,
+   "grt_demand": 6052761,
+   "grt_usage_pct": 5.49,
+   "overflow_h": 0,
+   "overflow_v": 0,
+   "overflow": 0,
+   "grt_s": 911,
+   "exit": null,
+   "real_views": [
+    "hfd_barrier",
+    "hfd_host_slab",
+    "hfd_serdes_slab",
+    "hfd_sm"
+   ],
+   "bundle_k": 16,
+   "iterations": 50
+  }
+ },
+ "source_commit": "2ef1432d0c05cf236c66e3dfa3685d940114a37f",
+ "host": "ot-pve1:/srv/opentallas-scratch/claude/hbm-abstracts/die/r3_smpins",
+ "note": "GRT --real-pins: hfd_sm (interim, MISMATCH) bundle pins at its real pin plan (227 bundles: S 79 / W 130 / N 12 / E 6); every other view MATCHes the generator. Priced in wire_stages_r3_smpins.json: bound/median/floor +60.58/+53.20/+37.92 us vs r1 (generator pins) +58.11/+50.62/+37.92: the interim SM pin plan costs +2.5 us (control 58->63, result 56->61 one-way cycles) because its c/r ports leave the generator faces. A closed SM view must keep the generator faces or the die must be re-planned around it."
+}

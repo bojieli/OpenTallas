@@ -1,0 +1,1303 @@
+{
+ "schema": "opentallas.hbm_die_abstract_list.v1",
+ "generator": "tools/hbm_accel_die_fp.py",
+ "round": "r16g",
+ "generator_sha256": "c1e674fad8b1f581f0bc9ccd243383fc8b0b76ac432ea09daebe957e4d37d44c",
+ "die_um": [
+  24401.52,
+  24621.84
+ ],
+ "families": [
+  {
+   "family": "hfd_attn_tile",
+   "masters": 1,
+   "instances": 64,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_attn_tile_registered_parent / leaf ot_attn_hgrp_m6h1b7p (HBM-ATTN, leaf closed)",
+   "ledger": [
+    0.5,
+    "estimate",
+    "attention tile ~0.5 mm2 x 64 (hbm_accel_fmax_inventory_20261004/attn/closure.json blocker field; ledger 16.69 mm2 for the engine is smaller, the estimate is kept conservative)"
+   ],
+   "size_um": [
+    [
+     1349.112,
+     1349.976
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "k": {
+     "bits": 1041,
+     "face": "S"
+    },
+    "ci": {
+     "bits": 1618,
+     "face": "S"
+    },
+    "o": {
+     "bits": 529,
+     "face": "E"
+    },
+    "ri": {
+     "bits": 1618,
+     "face": "E"
+    },
+    "q": {
+     "bits": 582,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
+    },
+    "cf": {
+     "bits": 1618,
+     "face": "N"
+    },
+    "i": {
+     "bits": 529,
+     "face": "W"
+    },
+    "rf": {
+     "bits": 1618,
+     "face": "W"
+    }
+   },
+   "kind": "attn_tile"
+  },
+  {
+   "family": "hfd_barrier",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hbm_accel barrier_k32 (routed)",
+   "ledger": [
+    0.05,
+    "measured-routed",
+    "ot_hbm_accel barrier_k32 routed (ctl_takeover_20261005, +384.3 / +39.39 ps), slot"
+   ],
+   "size_um": [
+    [
+     1399.656,
+     36.696
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "rst": {
+     "bits": 1,
+     "face": "S"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "S"
+    },
+    "f_cmdproc": {
+     "bits": 64,
+     "face": "S"
+    },
+    "t_cmdproc": {
+     "bits": 64,
+     "face": "S"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_cdist_*",
+   "masters": 2,
+   "instances": 8,
+   "status": "NEEDS hardened abstract",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     67.8,
+     203.016
+    ],
+    [
+     111.0,
+     215.976
+    ]
+   ],
+   "distinct_sizes": 2,
+   "ports": {
+    "a": {
+     "bits": 827,
+     "face": "N"
+    },
+    "b": {
+     "bits": 414,
+     "face": "S"
+    },
+    "t0": {
+     "bits": 103,
+     "face": "W"
+    },
+    "t1": {
+     "bits": 103,
+     "face": "W"
+    },
+    "t2": {
+     "bits": 103,
+     "face": "E"
+    },
+    "t3": {
+     "bits": 103,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
+    }
+   },
+   "kind": "waypoint"
+  },
+  {
+   "family": "hfd_cmdproc",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_ds_hbm_cmdproc20 + pipelined issue (no area record)",
+   "ledger": [
+    0.6,
+    "estimate",
+    "ot_ds_hbm_cmdproc20 static program store + pipelined issue sequencer (no area record)"
+   ],
+   "size_um": [
+    [
+     1399.656,
+     1403.976
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "t_su_SW": {
+     "bits": 64,
+     "face": "W"
+    },
+    "cSW": {
+     "bits": 827,
+     "face": "W"
+    },
+    "cNW": {
+     "bits": 827,
+     "face": "W"
+    },
+    "t_su_NW": {
+     "bits": 64,
+     "face": "W"
+    },
+    "t_su_SE": {
+     "bits": 64,
+     "face": "E"
+    },
+    "cSE": {
+     "bits": 827,
+     "face": "E"
+    },
+    "cNE": {
+     "bits": 827,
+     "face": "E"
+    },
+    "t_su_NE": {
+     "bits": 64,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "f_barrier": {
+     "bits": 64,
+     "face": "N"
+    },
+    "f_coll": {
+     "bits": 33,
+     "face": "N"
+    },
+    "t_barrier": {
+     "bits": 64,
+     "face": "N"
+    },
+    "t_coll": {
+     "bits": 25,
+     "face": "N"
+    },
+    "f_loader": {
+     "bits": 341,
+     "face": "S"
+    },
+    "f_router": {
+     "bits": 64,
+     "face": "S"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_coll",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hbm_accel_tu_endpoint (rtl/hbm_accel/tu)",
+   "ledger": [
+    1.1,
+    "estimate",
+    "TU endpoint 1.1 mm2 at 70 % utilisation (hbm_accel_ha2_ar_20261004/measured_composition.json G-area); routed endpoint context noc_tw_coll_ctx_f12x 0.2916 mm2 (noc/routes/collctx_f12x_r6)"
+   ],
+   "size_um": [
+    [
+     1399.656,
+     1403.976
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "f_cmdproc": {
+     "bits": 25,
+     "face": "S"
+    },
+    "t_cmdproc": {
+     "bits": 33,
+     "face": "S"
+    },
+    "f_su_SW": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "t_su_SW": {
+     "bits": 580,
+     "face": "W"
+    },
+    "llk_S0": {
+     "bits": 976,
+     "face": "W"
+    },
+    "llk_S1": {
+     "bits": 976,
+     "face": "W"
+    },
+    "llk_S2": {
+     "bits": 976,
+     "face": "W"
+    },
+    "pll_stream": {
+     "bits": 1,
+     "face": "W"
+    },
+    "por_stream": {
+     "bits": 1,
+     "face": "W"
+    },
+    "llk_N0": {
+     "bits": 976,
+     "face": "W"
+    },
+    "llk_N1": {
+     "bits": 976,
+     "face": "W"
+    },
+    "f_su_NW": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "t_su_NW": {
+     "bits": 580,
+     "face": "W"
+    },
+    "f_su_SE": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_su_SE": {
+     "bits": 580,
+     "face": "E"
+    },
+    "por_link": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_link": {
+     "bits": 1,
+     "face": "E"
+    },
+    "llk_S3": {
+     "bits": 976,
+     "face": "E"
+    },
+    "llk_S4": {
+     "bits": 976,
+     "face": "E"
+    },
+    "llk_N2": {
+     "bits": 976,
+     "face": "E"
+    },
+    "llk_N3": {
+     "bits": 976,
+     "face": "E"
+    },
+    "f_su_NE": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_su_NE": {
+     "bits": 580,
+     "face": "E"
+    },
+    "pll_serial": {
+     "bits": 1,
+     "face": "N"
+    },
+    "por_serial": {
+     "bits": 1,
+     "face": "N"
+    },
+    "pll_hbm": {
+     "bits": 1,
+     "face": "N"
+    },
+    "por_hbm": {
+     "bits": 1,
+     "face": "N"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_gath_*",
+   "masters": 5,
+   "instances": 16,
+   "status": "NEEDS hardened abstract",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     81.192,
+     82.056
+    ],
+    [
+     109.704,
+     110.136
+    ],
+    [
+     166.728,
+     315.336
+    ]
+   ],
+   "distinct_sizes": 3,
+   "ports": {
+    "t0": {
+     "bits": 270,
+     "face": "E"
+    },
+    "t1": {
+     "bits": 270,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
+    },
+    "b": {
+     "bits": 540,
+     "face": "N"
+    }
+   },
+   "kind": "waypoint"
+  },
+  {
+   "family": "hfd_hc",
+   "masters": 1,
+   "instances": 4,
+   "status": "NEEDS hardened abstract",
+   "rtl": "HC / mHC quarter (model ledger)",
+   "ledger": [
+    6.087,
+    "model",
+    "hc_fp32_lanes 5.984 + sinkhorn_select_engram 0.103 (same ledger)"
+   ],
+   "size_um": [
+    [
+     275.592,
+     5529.576
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "f_sfu": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_sfu": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
+    }
+   },
+   "kind": "hub"
+  },
+  {
+   "family": "hfd_host_slab",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "host link reservation slab",
+   "ledger": null,
+   "size_um": [
+    [
+     594.408,
+     16824.216
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {},
+   "kind": "host_slab"
+  },
+  {
+   "family": "hfd_index_q",
+   "masters": 1,
+   "instances": 4,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hbm_accel_index_path (rtl/hbm_accel/index)",
+   "ledger": null,
+   "size_um": [
+    [
+     930.072,
+     5529.576
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "k": {
+     "bits": 1026,
+     "face": "S"
+    },
+    "a0": {
+     "bits": 529,
+     "face": "W"
+    },
+    "a1": {
+     "bits": 529,
+     "face": "W"
+    },
+    "a2": {
+     "bits": 529,
+     "face": "W"
+    },
+    "a3": {
+     "bits": 529,
+     "face": "W"
+    },
+    "t_su": {
+     "bits": 1058,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
+    },
+    "t_vm": {
+     "bits": 512,
+     "face": "E"
+    }
+   },
+   "kind": "hub"
+  },
+  {
+   "family": "hfd_loader",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hbm_accel_loader_host (rtl/hbm_accel/loader)",
+   "ledger": [
+    0.3321,
+    "measured-slot",
+    "ot_hbm_accel_loader_host slot 576.288^2 um (tapeout_hbm_loader_20261004; host SS -3,672 ps, not adopted)"
+   ],
+   "size_um": [
+    [
+     1399.656,
+     237.576
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "t_cmdproc": {
+     "bits": 341,
+     "face": "N"
+    },
+    "h": {
+     "bits": 514,
+     "face": "E"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_mcast_*",
+   "masters": 3,
+   "instances": 16,
+   "status": "NEEDS hardened abstract",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     241.896,
+     410.376
+    ],
+    [
+     466.968,
+     120.936
+    ]
+   ],
+   "distinct_sizes": 2,
+   "ports": {
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
+    "a": {
+     "bits": 2068,
+     "face": "N"
+    },
+    "t1": {
+     "bits": 2063,
+     "face": "N"
+    },
+    "b": {
+     "bits": 2068,
+     "face": "E"
+    },
+    "t0": {
+     "bits": 2063,
+     "face": "S"
+    }
+   },
+   "kind": "waypoint"
+  },
+  {
+   "family": "hfd_meso_*",
+   "masters": 3,
+   "instances": 26,
+   "status": "NEEDS hardened abstract",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     39.288,
+     285.096
+    ],
+    [
+     63.48,
+     190.056
+    ],
+    [
+     398.28,
+     71.256
+    ]
+   ],
+   "distinct_sizes": 3,
+   "ports": {
+    "a": {
+     "bits": 1102,
+     "face": "E"
+    },
+    "b": {
+     "bits": 1099,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    }
+   },
+   "kind": "waypoint"
+  },
+  {
+   "family": "hfd_quant",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hdc_actquant",
+   "ledger": [
+    0.5,
+    "estimate",
+    "ot_hdc_actquant FP4/FP8 quantisers (index_q, chains not fused)"
+   ],
+   "size_um": [
+    [
+     1399.656,
+     358.536
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "ck": {
+     "bits": 1,
+     "face": "S"
+    },
+    "f_vm": {
+     "bits": 1024,
+     "face": "S"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "S"
+    },
+    "t_su_SW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "t_su_NW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "t_su_SE": {
+     "bits": 512,
+     "face": "E"
+    },
+    "t_su_NE": {
+     "bits": 512,
+     "face": "E"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_router",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_gpu_router_topk_f topk_f3 (routed) + expert workgroup (not built)",
+   "ledger": [
+    0.1861,
+    "measured-routed",
+    "ot_gpu_router_topk_f topk_f3 86,102 um2 (ctl_takeover_20261005) + expert workgroup steering/descriptor logic est 0.1 mm2 (lever L1, not built)"
+   ],
+   "size_um": [
+    [
+     1399.656,
+     133.896
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "f_su_SW": {
+     "bits": 256,
+     "face": "W"
+    },
+    "eSW": {
+     "bits": 129,
+     "face": "W"
+    },
+    "eNW": {
+     "bits": 129,
+     "face": "W"
+    },
+    "f_su_NW": {
+     "bits": 256,
+     "face": "W"
+    },
+    "f_su_SE": {
+     "bits": 256,
+     "face": "E"
+    },
+    "eSE": {
+     "bits": 129,
+     "face": "E"
+    },
+    "eNE": {
+     "bits": 129,
+     "face": "E"
+    },
+    "f_su_NE": {
+     "bits": 256,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "f_vm": {
+     "bits": 512,
+     "face": "N"
+    },
+    "t_cmdproc": {
+     "bits": 64,
+     "face": "N"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_serdes_slab",
+   "masters": 1,
+   "instances": 2,
+   "status": "NEEDS hardened abstract",
+   "rtl": "TU SerDes reservation slab (no logic)",
+   "ledger": null,
+   "size_um": [
+    [
+     2462.376,
+     3656.856
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {},
+   "kind": "serdes_slab"
+  },
+  {
+   "family": "hfd_sfu",
+   "masters": 1,
+   "instances": 4,
+   "status": "NEEDS hardened abstract",
+   "rtl": "SFU quarter (model ledger)",
+   "ledger": [
+    8.819,
+    "model",
+    "tools/uarch_model.hbm_gpu_design(v41).dedicated_units_mm2.sfu"
+   ],
+   "size_um": [
+    [
+     398.712,
+     5529.576
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "f_su": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_su": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
+    },
+    "f_hc": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "t_hc": {
+     "bits": 1024,
+     "face": "W"
+    }
+   },
+   "kind": "hub"
+  },
+  {
+   "family": "hfd_sm",
+   "masters": 1,
+   "instances": 32,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hbm_accel_sm_v (rtl/hbm_accel/sm)",
+   "ledger": [
+    4.56587548272,
+    "measured-placed",
+    "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp/floorplan.json die (2202.768 x 2072.79 um, 202 macros; element route OPEN, hbm_accel_fmax_inventory_20261004/sm/closure.json)"
+   ],
+   "size_um": [
+    [
+     2202.744,
+     2073.576
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "d": {
+     "bits": 1099,
+     "face": "S"
+    },
+    "q": {
+     "bits": 44,
+     "face": "S"
+    },
+    "x": {
+     "bits": 2063,
+     "face": "W"
+    },
+    "r": {
+     "bits": 270,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
+    "c": {
+     "bits": 103,
+     "face": "N"
+    }
+   },
+   "kind": "sm"
+  },
+  {
+   "family": "hfd_stn_*",
+   "masters": 20,
+   "instances": 233,
+   "status": "NEEDS hardened abstract",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     14.664,
+     142.536
+    ],
+    [
+     18.984,
+     118.776
+    ],
+    [
+     39.288,
+     77.736
+    ],
+    [
+     42.744,
+     73.416
+    ]
+   ],
+   "distinct_sizes": 19,
+   "ports": {
+    "a": {
+     "bits": 1102,
+     "face": "N"
+    },
+    "b": {
+     "bits": 1102,
+     "face": "S"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
+    }
+   },
+   "kind": "waypoint"
+  },
+  {
+   "family": "hfd_su",
+   "masters": 1,
+   "instances": 4,
+   "status": "NEEDS hardened abstract",
+   "rtl": "SU lane array N1024 quarter (HBM-SU lanes closed) + fused chains",
+   "ledger": [
+    11.96,
+    "measured-placed",
+    "N1024 SU lane array, side 3,458 um (results/rtl/dshbm_1m_allmeasured_20261004/su_n2048/wire_stages.json, from the placed MLAT4/ALAT3 lane 7,349 um2)"
+   ],
+   "size_um": [
+    [
+     703.272,
+     5529.576
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "r": {
+     "bits": 2165,
+     "face": "S"
+    },
+    "a": {
+     "bits": 1058,
+     "face": "W"
+    },
+    "f_sfu": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "t_sfu": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "t_router": {
+     "bits": 256,
+     "face": "E"
+    },
+    "f_su_ew": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_su_ew": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "f_cmdproc": {
+     "bits": 64,
+     "face": "E"
+    },
+    "f_coll": {
+     "bits": 580,
+     "face": "E"
+    },
+    "t_coll": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E"
+    },
+    "f_vm": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "t_vm": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "f_quant": {
+     "bits": 512,
+     "face": "E"
+    },
+    "f_su_ns": {
+     "bits": 1024,
+     "face": "N"
+    },
+    "t_su_ns": {
+     "bits": 1024,
+     "face": "N"
+    }
+   },
+   "kind": "hub"
+  },
+  {
+   "family": "hfd_svc_*",
+   "masters": 4,
+   "instances": 4,
+   "status": "NEEDS hardened abstract",
+   "rtl": "stream service: 32 x ot_hbm_accel_stream_pc_wb + ot_hbm_accel_cdc_fifo + expert fetch",
+   "ledger": null,
+   "size_um": [
+    [
+     8500.032,
+     259.176
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "lsm4": {
+     "bits": 1102,
+     "face": "N"
+    },
+    "qsm4": {
+     "bits": 45,
+     "face": "N"
+    },
+    "lsm0": {
+     "bits": 1099,
+     "face": "N"
+    },
+    "qsm0": {
+     "bits": 44,
+     "face": "N"
+    },
+    "kv": {
+     "bits": 1041,
+     "face": "N"
+    },
+    "lsm5": {
+     "bits": 1102,
+     "face": "N"
+    },
+    "qsm5": {
+     "bits": 45,
+     "face": "N"
+    },
+    "ik": {
+     "bits": 1026,
+     "face": "N"
+    },
+    "lsm1": {
+     "bits": 1099,
+     "face": "N"
+    },
+    "qsm1": {
+     "bits": 44,
+     "face": "N"
+    },
+    "lsm6": {
+     "bits": 1102,
+     "face": "N"
+    },
+    "qsm6": {
+     "bits": 45,
+     "face": "N"
+    },
+    "e": {
+     "bits": 129,
+     "face": "N"
+    },
+    "lsm2": {
+     "bits": 1099,
+     "face": "N"
+    },
+    "qsm2": {
+     "bits": 44,
+     "face": "N"
+    },
+    "lsm7": {
+     "bits": 1102,
+     "face": "N"
+    },
+    "qsm7": {
+     "bits": 45,
+     "face": "N"
+    },
+    "lsm3": {
+     "bits": 1099,
+     "face": "N"
+    },
+    "qsm3": {
+     "bits": 44,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N"
+    },
+    "phy": {
+     "bits": 22238,
+     "face": "xy"
+    }
+   },
+   "kind": "svc"
+  },
+  {
+   "family": "hfd_vm",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "VM / activation-multicast root (no RTL top)",
+   "ledger": [
+    1.5,
+    "estimate",
+    "VM / activation-multicast root: x staging 2 x 2,048 b x 128 deep + result publication buffers (S81 VM slab 0.892 mm2 x 1.7)"
+   ],
+   "size_um": [
+    [
+     1399.656,
+     2000.136
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "f_su_SW": {
+     "bits": 2048,
+     "face": "W"
+    },
+    "iSW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "t_su_SW": {
+     "bits": 2048,
+     "face": "W"
+    },
+    "qSW": {
+     "bits": 582,
+     "face": "W"
+    },
+    "xSW": {
+     "bits": 2068,
+     "face": "W"
+    },
+    "qNW": {
+     "bits": 582,
+     "face": "W"
+    },
+    "xNW": {
+     "bits": 2068,
+     "face": "W"
+    },
+    "f_su_NW": {
+     "bits": 2048,
+     "face": "W"
+    },
+    "iNW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "t_su_NW": {
+     "bits": 2048,
+     "face": "W"
+    },
+    "f_su_SE": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "iSE": {
+     "bits": 512,
+     "face": "E"
+    },
+    "t_su_SE": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "qSE": {
+     "bits": 582,
+     "face": "E"
+    },
+    "xSE": {
+     "bits": 2068,
+     "face": "E"
+    },
+    "qNE": {
+     "bits": 582,
+     "face": "E"
+    },
+    "xNE": {
+     "bits": 2068,
+     "face": "E"
+    },
+    "f_su_NE": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "iNE": {
+     "bits": 512,
+     "face": "E"
+    },
+    "t_su_NE": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "t_quant": {
+     "bits": 1024,
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "face": "S"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "S"
+    },
+    "t_router": {
+     "bits": 512,
+     "face": "S"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "masters": 1,
+   "instances": 4,
+   "status": "REAL hardened view",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     8500.056,
+     1177.2
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {},
+   "kind": "phy"
+  },
+  {
+   "family": "ot_pdie_serdes",
+   "masters": 1,
+   "instances": 9,
+   "status": "REAL pin macro, placeholder content (ot_pdie_*)",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     250.056,
+     2250.216
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {},
+   "kind": "link"
+  },
+  {
+   "family": "ot_pdie_ucie",
+   "masters": 1,
+   "instances": 1,
+   "status": "REAL pin macro, placeholder content (ot_pdie_*)",
+   "rtl": "",
+   "ledger": null,
+   "size_um": [
+    [
+     260.808,
+     1652.424
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {},
+   "kind": "link"
+  }
+ ]
+}

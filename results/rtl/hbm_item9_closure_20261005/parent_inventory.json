@@ -1,0 +1,66 @@
+{
+  "source_commit": "090bd3652",
+  "synthesis_cell_area_um2": 29949.41952,
+  "sequential_cell_area_um2": 10736.50788,
+  "synthesis_DFF_counts": {
+    "DFFASRHQNx1": 21927,
+    "DFFHQNx1": 31319,
+    "total": 53246
+  },
+  "post_CTS_PG_hold_repair_area_um2": null,
+  "post_route_SS_FF": null,
+  "standalone_characterization": {
+    "NSM": 2,
+    "NL": 128,
+    "R": 2,
+    "ports": {
+      "input_SM_data_bits": 8192,
+      "input_SM_control_bits": 22,
+      "output_SM_response_data_bits": 4096,
+      "output_SM_control_bits": 5,
+      "RX_record_bits": 546,
+      "TX_record_bits": 546,
+      "RX_valid_bits": 1,
+      "TX_valid_bits": 1,
+      "clock_bits": 1,
+      "reset_bits": 1
+    },
+    "codec": "full original record and control widths; no bundled/fake pin abstraction",
+    "characterized_die_bbox_um": [
+      0,
+      0,
+      540,
+      540
+    ],
+    "analytical_body_fit": true
+  },
+  "actual_existing_outer": {
+    "allocation": "hb_coll",
+    "bbox_um": [
+      10861.776,
+      11735.28,
+      12676.152,
+      13139.256
+    ],
+    "allocation_source_sha256": "6e08f177b83d4071641ba9bf0388adf8b1be284f90873202ba4b36a1c8754743",
+    "collective_incident_hub_bits": 8768,
+    "link_bits": 8739,
+    "clock_trunk_bits": 90,
+    "upper_layer_tracks_before_other_claims": 9972,
+    "usable_unreserved_tracks": null,
+    "actual_installed_endpoint_LEF": null,
+    "actual_root_clock_pinmap": null,
+    "actual_clock_insertion_skew_loads": null,
+    "NSM32_outer_qualified": false,
+    "selected_measured_DS_boundary": "TU NC8 hub inj_data512/del_flit545; baseline SIMT NSM2 context is distinct",
+    "outer_fit_or_clock_credit": false
+  },
+  "selected_shape_followup": {
+    "NSM32_minimum_mux_gate": "tb_item9_mux32_ls",
+    "mux_status": "PASS_FULLWIDTH_MUX32_EXACT 209grants/2048cycles/0mismatches/0extra cycles",
+    "full_LANES16_PF384_HA2_gate": "tb_item9_ha2_fullshape",
+    "HA2_status": "RUNNING_AGI8GiB_existing_routes_preserved"
+  },
+  "adoption": false,
+  "stat_sha256": "85066ece8707c1f7c5f0289ef011484b8d692db184f34b47849ec44d2fd9c3c6"
+}

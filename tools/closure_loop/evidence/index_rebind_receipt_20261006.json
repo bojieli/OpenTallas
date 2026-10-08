@@ -1,0 +1,636 @@
+{
+  "observed_at": "2026-10-06T22:58:42.619527-07:00",
+  "code_commit": "abda6e496593252d3f6eb5324740e3efd5457702",
+  "validation": {
+    "focused_tests_passed": 24,
+    "audit_replay": "PASS; matched pinned binding report"
+  },
+  "deployment": {
+    "commit": "abda6e496593252d3f6eb5324740e3efd5457702",
+    "old_pid": "2178351",
+    "idle_channel": "do_select",
+    "restart_requested": "2026-10-06T22:55:55.056289-07:00",
+    "restarted": "2026-10-06T22:55:55.069672-07:00",
+    "service": "MainPID=2196573\nExecStart={ path=/usr/bin/python3 ; argv[]=/usr/bin/python3 /home/ubuntu/wt-codex-closure-reliability/tools/closure_loop/closure_loop.py daemon --interval 60 ; ignore_errors=no ; start_time=[Tue 2026-10-06 22:55:55 PDT] ; stop_time=[n/a] ; pid=2196573 ; code=(null) ; status=0/0 }\nActiveState=active"
+  },
+  "application_receipt": {
+    "audit_commit": "ea6759434a394b41d2e0d6b34e3af84f2948953e",
+    "apply": true,
+    "jobs": [
+      {
+        "job": "hbm_idxq_b1_e8b5132fb_r18b",
+        "status": "READY",
+        "receipt": {
+          "directory": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e8b5132fb_r18b/cl/budget-rebind-ea6759434",
+          "manifest": {
+            "historical": {
+              "cl/budget_ff.sdc": "279d90c5a37451df450b11e5f4f0263323f2b42baa17ccee486dac37e329ef14",
+              "cl/budget_signoff.sdc": "dfcc3f666851c7c81f090a2d02195f433807f4f737d5997e84473816ed3feaab",
+              "cl/budget_route.sdc": "85e27e47e6fc65c9bdad8244dff1d70f0eba453ed160ab9db23df522d804e9cb",
+              "cl/budget_sheet.json": "56095eabe085fdb5a8e6ce2d6118ebd719e750a18c6021293b2be8451a6491ce",
+              "cl/calib.json": "93b93b1839af4cec2c62d5da38802f3fd28559644f0453255b927af4b8632609",
+              "cl/calib.env": "cd10f54c99ab3c1dd58381b89fb3e0f93131056bc5b6b1f610281f12fede47cd",
+              "cl/job.json": "08b119d877be37a3572388da205e733c7a0e5f097484796221919d06b001e391",
+              "src/physical/hbm_accel_die_views/common/budget_signoff.sdc": "dfcc3f666851c7c81f090a2d02195f433807f4f737d5997e84473816ed3feaab",
+              "src/physical/hbm_accel_die_views/common/budget_route.sdc": "85e27e47e6fc65c9bdad8244dff1d70f0eba453ed160ab9db23df522d804e9cb",
+              "src/physical/hbm_accel_die_views/common/budget_ff_guarded.sdc": "618b934de2073fca58d21b63c9d94bfe2d08f603ebe85a2c8e53a9afb638265c"
+            },
+            "approved": {
+              "budget_route.sdc": "993da560aa806b35f4d9be8ecf8aae99150e4da4647d9c0d08ed9e4997fcc13a",
+              "budget_signoff.sdc": "382113167b95f79ced9573996c0e39d0ea9e837d9e1637b23e6f0cb090c6eb9d",
+              "budget_ff.sdc": "584bfef2c9fe64994fc10b69b2a3a49bc89f1c07ae46e711670947dbe65485cc",
+              "budget_sheet.json": "bda9dbfb8ffd1b7b4eae8952f6a31b4bcd905666a48f27256b14ff0ceef0e03d"
+            },
+            "audit_commit": "ea6759434a394b41d2e0d6b34e3af84f2948953e",
+            "sheet_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a"
+          }
+        }
+      },
+      {
+        "job": "hbm_idxq_b3_e8b5132fb_r18b",
+        "status": "READY",
+        "receipt": {
+          "directory": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e8b5132fb_r18b/cl/budget-rebind-ea6759434",
+          "manifest": {
+            "historical": {
+              "cl/budget_ff.sdc": "ed742335d150aa4eda3ab26719d474cf7ae57847ae588daf33cbeccfecd8c00f",
+              "cl/budget_signoff.sdc": "93927961f4a9a0a752dff68230725bae653565c817f5a1938c4bac85439d8ec2",
+              "cl/budget_route.sdc": "60b5db15778914c18ff7ef0f7d51941a4f30be360a133029c00c7eef1c700c40",
+              "cl/budget_sheet.json": "75860f9c15e002ce3193459d11f72b1234030a329f880391bf57f653833045ce",
+              "cl/calib.json": "e95f57dae478ba4cb32d5b60dd8fcd3c90cd67907f7229ade775cb5dd7d58984",
+              "cl/calib.env": "dd3c9cbe762f4c367fa2829cf7189544b69e2126ce1f82d3467917c10e31174f",
+              "cl/job.json": "e4ae0bb2495ead9851502c74b0f60a54dc900e88dde8b7ba066ae6f61f2c9087",
+              "src/physical/hbm_accel_die_views/common/budget_signoff.sdc": "93927961f4a9a0a752dff68230725bae653565c817f5a1938c4bac85439d8ec2",
+              "src/physical/hbm_accel_die_views/common/budget_route.sdc": "60b5db15778914c18ff7ef0f7d51941a4f30be360a133029c00c7eef1c700c40",
+              "src/physical/hbm_accel_die_views/common/budget_ff_guarded.sdc": "0238c78138bbd04dcb086dd7557b3d3021f67a2d6782f11c3b79ceda71918375"
+            },
+            "approved": {
+              "budget_route.sdc": "a88a07adbf1aec297a8021e89adbdaf26f6f8c01c194676f47d071c7d7b1bb1d",
+              "budget_signoff.sdc": "73d595c30a87599c26694252bcd32c639c39d72d5f52e44cce1a6299d2cdbb8d",
+              "budget_ff.sdc": "f808f9ff378643ea713fed0fe610a15653e531d6e96a0499f7199f0c26fa9905",
+              "budget_sheet.json": "704519576dde58a5064246709d46465592b8f92fce9b09a942eb95b31eaeceae"
+            },
+            "audit_commit": "ea6759434a394b41d2e0d6b34e3af84f2948953e",
+            "sheet_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a"
+          }
+        }
+      },
+      {
+        "job": "hbm_idxq_b5_e8b5132fb_r18b",
+        "status": "READY",
+        "receipt": {
+          "directory": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e8b5132fb_r18b/cl/budget-rebind-ea6759434",
+          "manifest": {
+            "historical": {
+              "cl/budget_ff.sdc": "8f3e524c643cd9cb3ac7d6e8cb65db142e23160e49bfbbe30511b7b5134f07fe",
+              "cl/budget_signoff.sdc": "a2dd54da23f64e73e1a7e51e1d06d2d79489b0100ba907a5578e00a4a52859c2",
+              "cl/budget_route.sdc": "3a96ccd4b9994677c4d656989bf3a3dfb2166b7de0964b4e13325e7b550bdea7",
+              "cl/budget_sheet.json": "feb6dc81218df36bb87cad12616a8b9e84750238691050559d64e4df0ccb28d1",
+              "cl/calib.json": "7c479ddf84dc7d6704db79648339f5fcf3811fb3bc4ad53bf10db6950dd02244",
+              "cl/calib.env": "a54aead1f1c6d9c166d55195a5b101f4a2d30bb217f6e455eb5669e2c27bd1b9",
+              "cl/job.json": "157d4119639c9026cf2f257f7a2fd3e29ff2a178dea96fc96d8be10d6252445b",
+              "src/physical/hbm_accel_die_views/common/budget_signoff.sdc": "a2dd54da23f64e73e1a7e51e1d06d2d79489b0100ba907a5578e00a4a52859c2",
+              "src/physical/hbm_accel_die_views/common/budget_route.sdc": "3a96ccd4b9994677c4d656989bf3a3dfb2166b7de0964b4e13325e7b550bdea7",
+              "src/physical/hbm_accel_die_views/common/budget_ff_guarded.sdc": "a6b100114122b7b346473053e1828d2e0b780e67ee0e36d37f7c092e1e894d85"
+            },
+            "approved": {
+              "budget_route.sdc": "e6c256b05e9e43b65f93c972b303ec15fc3718a37fa40525c2ff634996bf6abb",
+              "budget_signoff.sdc": "c323d24ffe388883cb0eb844ad424ef9a4915cd629627da43a3716f7db015f5a",
+              "budget_ff.sdc": "036c036f2524f24ec69d34b726accafc5d4cda09be1cd0027d7fef897515c435",
+              "budget_sheet.json": "a86fa8b117c7d42353a4007aa76af343936ed94e7d3fe9b5435285c9fd12d1ce"
+            },
+            "audit_commit": "ea6759434a394b41d2e0d6b34e3af84f2948953e",
+            "sheet_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a"
+          }
+        }
+      }
+    ]
+  },
+  "jobs": [
+    {
+      "name": "hbm_idxq_b1_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:57:59-07:00",
+      "stage_tag": "route.a3",
+      "stage_started": "2026-10-06T22:57:05-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e8b5132fb_r18b",
+      "budget": {
+        "master": "hfd_index_q_b1",
+        "sheets_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a",
+        "sheet_sha256": "bda9dbfb8ffd1b7b4eae8952f6a31b4bcd905666a48f27256b14ff0ceef0e03d",
+        "insertion": {
+          "target_ss": 1154,
+          "target_ff": 779,
+          "target_basis": "RE-PLANNED: edge ck kept (see b0) (measured SS 1112..1154); IO skew +12.7 ps (OCV x (target - cap 900))",
+          "tolerance_ps": 100.0,
+          "ss": 1132,
+          "ff": 766,
+          "ss_min": 1112,
+          "ss_max": 1154,
+          "ff_min": 746,
+          "ff_max": 779,
+          "grade": "measured",
+          "source": "closure-loop calibrate hbm_idxq_b1_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_70a27c406)",
+          "over_target": false,
+          "replanned": true
+        },
+        "entry_target_ss": {
+          "mean": 2883.2,
+          "min": 2881.7,
+          "max": 2884.8
+        },
+        "entry_target_ff": {
+          "mean": 1527.1,
+          "min": 1526.5,
+          "max": 1527.7
+        },
+        "check": {
+          "ok": true,
+          "accepted": "full audited sheet; approved rounded boundary maxima checked",
+          "measured_ss": 1130
+        }
+      },
+      "audited_budget_rebind": {
+        "audit_commit": "ea6759434a394b41d2e0d6b34e3af84f2948953e",
+        "receipt": {
+          "directory": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e8b5132fb_r18b/cl/budget-rebind-ea6759434",
+          "manifest": {
+            "historical": {
+              "cl/budget_ff.sdc": "279d90c5a37451df450b11e5f4f0263323f2b42baa17ccee486dac37e329ef14",
+              "cl/budget_signoff.sdc": "dfcc3f666851c7c81f090a2d02195f433807f4f737d5997e84473816ed3feaab",
+              "cl/budget_route.sdc": "85e27e47e6fc65c9bdad8244dff1d70f0eba453ed160ab9db23df522d804e9cb",
+              "cl/budget_sheet.json": "56095eabe085fdb5a8e6ce2d6118ebd719e750a18c6021293b2be8451a6491ce",
+              "cl/calib.json": "93b93b1839af4cec2c62d5da38802f3fd28559644f0453255b927af4b8632609",
+              "cl/calib.env": "cd10f54c99ab3c1dd58381b89fb3e0f93131056bc5b6b1f610281f12fede47cd",
+              "cl/job.json": "08b119d877be37a3572388da205e733c7a0e5f097484796221919d06b001e391",
+              "src/physical/hbm_accel_die_views/common/budget_signoff.sdc": "dfcc3f666851c7c81f090a2d02195f433807f4f737d5997e84473816ed3feaab",
+              "src/physical/hbm_accel_die_views/common/budget_route.sdc": "85e27e47e6fc65c9bdad8244dff1d70f0eba453ed160ab9db23df522d804e9cb",
+              "src/physical/hbm_accel_die_views/common/budget_ff_guarded.sdc": "618b934de2073fca58d21b63c9d94bfe2d08f603ebe85a2c8e53a9afb638265c"
+            },
+            "approved": {
+              "budget_route.sdc": "993da560aa806b35f4d9be8ecf8aae99150e4da4647d9c0d08ed9e4997fcc13a",
+              "budget_signoff.sdc": "382113167b95f79ced9573996c0e39d0ea9e837d9e1637b23e6f0cb090c6eb9d",
+              "budget_ff.sdc": "584bfef2c9fe64994fc10b69b2a3a49bc89f1c07ae46e711670947dbe65485cc",
+              "budget_sheet.json": "bda9dbfb8ffd1b7b4eae8952f6a31b4bcd905666a48f27256b14ff0ceef0e03d"
+            },
+            "audit_commit": "ea6759434a394b41d2e0d6b34e3af84f2948953e",
+            "sheet_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a"
+          }
+        },
+        "previous_budget": {
+          "master": "hfd_index_q_b1",
+          "sheets_ref": "1e8d0bdc5e12ba66c02fcfb7a4a7162e63ab8cd9",
+          "insertion": {
+            "target_ss": 900.0,
+            "target_ff": 594.0,
+            "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 1251.6, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+            "tolerance_ps": 100.0,
+            "ss": 1132,
+            "ff": 766,
+            "ss_min": 1112,
+            "ss_max": 1154,
+            "ff_min": 746,
+            "ff_max": 779,
+            "grade": "measured",
+            "source": "closure-loop calibrate hbm_idxq_b1_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_70a27c406)",
+            "over_target": true
+          },
+          "entry_target_ss": {
+            "mean": 2882.9,
+            "min": 2881.7,
+            "max": 2884.6
+          },
+          "check": {
+            "measured_ss": 1130.0,
+            "ok": false,
+            "reasons": [
+              "measured SS insertion 1130 exceeds the block insertion TARGET 900 by +230 ps (sheet 1132, measured)"
+            ]
+          }
+        },
+        "previous_merge_target": "claude/hbm-abstracts-20261006",
+        "signoff_scope": "component only; physical die-context adoption remains parent-owned"
+      },
+      "spec_budget": {
+        "master": "hfd_index_q_b1",
+        "clock": "core_clk",
+        "sheets_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a",
+        "preserve_full_sheet": true,
+        "sheet_sha256": "bda9dbfb8ffd1b7b4eae8952f6a31b4bcd905666a48f27256b14ff0ceef0e03d"
+      },
+      "merge_target": null
+    },
+    {
+      "name": "hbm_idxq_b3_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:57:59-07:00",
+      "stage_tag": "route.a2",
+      "stage_started": "2026-10-06T22:57:22-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e8b5132fb_r18b",
+      "budget": {
+        "master": "hfd_index_q_b3",
+        "sheets_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a",
+        "sheet_sha256": "704519576dde58a5064246709d46465592b8f92fce9b09a942eb95b31eaeceae",
+        "insertion": {
+          "target_ss": 1298,
+          "target_ff": 892,
+          "target_basis": "RE-PLANNED: edge ck kept (see b0) (measured SS 1122..1298); IO skew +19.9 ps (OCV x (target - cap 900))",
+          "tolerance_ps": 100.0,
+          "ss": 1185,
+          "ff": 791,
+          "ss_min": 1122,
+          "ss_max": 1298,
+          "ff_min": 738,
+          "ff_max": 892,
+          "grade": "measured",
+          "source": "closure-loop calibrate hbm_idxq_b3_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_70a27c406)",
+          "over_target": false,
+          "replanned": true
+        },
+        "entry_target_ss": {
+          "mean": 2830.2,
+          "min": 2828.7,
+          "max": 2831.8
+        },
+        "entry_target_ff": {
+          "mean": 1502.1,
+          "min": 1501.5,
+          "max": 1502.7
+        },
+        "check": {
+          "ok": true,
+          "accepted": "full audited sheet; approved rounded boundary maxima checked",
+          "measured_ss": 1184
+        }
+      },
+      "audited_budget_rebind": {
+        "audit_commit": "ea6759434a394b41d2e0d6b34e3af84f2948953e",
+        "receipt": {
+          "directory": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e8b5132fb_r18b/cl/budget-rebind-ea6759434",
+          "manifest": {
+            "historical": {
+              "cl/budget_ff.sdc": "ed742335d150aa4eda3ab26719d474cf7ae57847ae588daf33cbeccfecd8c00f",
+              "cl/budget_signoff.sdc": "93927961f4a9a0a752dff68230725bae653565c817f5a1938c4bac85439d8ec2",
+              "cl/budget_route.sdc": "60b5db15778914c18ff7ef0f7d51941a4f30be360a133029c00c7eef1c700c40",
+              "cl/budget_sheet.json": "75860f9c15e002ce3193459d11f72b1234030a329f880391bf57f653833045ce",
+              "cl/calib.json": "e95f57dae478ba4cb32d5b60dd8fcd3c90cd67907f7229ade775cb5dd7d58984",
+              "cl/calib.env": "dd3c9cbe762f4c367fa2829cf7189544b69e2126ce1f82d3467917c10e31174f",
+              "cl/job.json": "e4ae0bb2495ead9851502c74b0f60a54dc900e88dde8b7ba066ae6f61f2c9087",
+              "src/physical/hbm_accel_die_views/common/budget_signoff.sdc": "93927961f4a9a0a752dff68230725bae653565c817f5a1938c4bac85439d8ec2",
+              "src/physical/hbm_accel_die_views/common/budget_route.sdc": "60b5db15778914c18ff7ef0f7d51941a4f30be360a133029c00c7eef1c700c40",
+              "src/physical/hbm_accel_die_views/common/budget_ff_guarded.sdc": "0238c78138bbd04dcb086dd7557b3d3021f67a2d6782f11c3b79ceda71918375"
+            },
+            "approved": {
+              "budget_route.sdc": "a88a07adbf1aec297a8021e89adbdaf26f6f8c01c194676f47d071c7d7b1bb1d",
+              "budget_signoff.sdc": "73d595c30a87599c26694252bcd32c639c39d72d5f52e44cce1a6299d2cdbb8d",
+              "budget_ff.sdc": "f808f9ff378643ea713fed0fe610a15653e531d6e96a0499f7199f0c26fa9905",
+              "budget_sheet.json": "704519576dde58a5064246709d46465592b8f92fce9b09a942eb95b31eaeceae"
+            },
+            "audit_commit": "ea6759434a394b41d2e0d6b34e3af84f2948953e",
+            "sheet_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a"
+          }
+        },
+        "previous_budget": {
+          "master": "hfd_index_q_b3",
+          "sheets_ref": "1e8d0bdc5e12ba66c02fcfb7a4a7162e63ab8cd9",
+          "insertion": {
+            "target_ss": 900.0,
+            "target_ff": 594.0,
+            "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 1251.6, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+            "tolerance_ps": 100.0,
+            "ss": 1185,
+            "ff": 791,
+            "ss_min": 1122,
+            "ss_max": 1298,
+            "ff_min": 738,
+            "ff_max": 892,
+            "grade": "measured",
+            "source": "closure-loop calibrate hbm_idxq_b3_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_70a27c406)",
+            "over_target": true
+          },
+          "entry_target_ss": {
+            "mean": 2829.9,
+            "min": 2828.7,
+            "max": 2831.6
+          },
+          "check": {
+            "measured_ss": 1184.0,
+            "ok": false,
+            "reasons": [
+              "measured SS insertion 1184 exceeds the block insertion TARGET 900 by +284 ps (sheet 1185, measured)"
+            ]
+          }
+        },
+        "previous_merge_target": "claude/hbm-abstracts-20261006",
+        "signoff_scope": "component only; physical die-context adoption remains parent-owned"
+      },
+      "spec_budget": {
+        "master": "hfd_index_q_b3",
+        "clock": "core_clk",
+        "sheets_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a",
+        "preserve_full_sheet": true,
+        "sheet_sha256": "704519576dde58a5064246709d46465592b8f92fce9b09a942eb95b31eaeceae"
+      },
+      "merge_target": null
+    },
+    {
+      "name": "hbm_idxq_b5_e8b5132fb_r18b",
+      "status": "RUNNING",
+      "updated": "2026-10-06T22:57:59-07:00",
+      "stage_tag": "route.a2",
+      "stage_started": "2026-10-06T22:57:14-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e8b5132fb_r18b",
+      "budget": {
+        "master": "hfd_index_q_b5",
+        "sheets_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a",
+        "sheet_sha256": "a86fa8b117c7d42353a4007aa76af343936ed94e7d3fe9b5435285c9fd12d1ce",
+        "insertion": {
+          "target_ss": 1354,
+          "target_ff": 890,
+          "target_basis": "RE-PLANNED: edge ck kept (see b0) (measured SS 1310..1354); IO skew +22.7 ps (OCV x (target - cap 900))",
+          "tolerance_ps": 100.0,
+          "ss": 1324,
+          "ff": 866,
+          "ss_min": 1310,
+          "ss_max": 1354,
+          "ff_min": 853,
+          "ff_max": 890,
+          "grade": "measured",
+          "source": "closure-loop calibrate hbm_idxq_b5_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_70a27c406)",
+          "over_target": false,
+          "replanned": true
+        },
+        "entry_target_ss": {
+          "mean": 2691.2,
+          "min": 2689.7,
+          "max": 2692.8
+        },
+        "entry_target_ff": {
+          "mean": 1427.1,
+          "min": 1426.5,
+          "max": 1427.7
+        },
+        "check": {
+          "ok": true,
+          "accepted": "full audited sheet; approved rounded boundary maxima checked",
+          "measured_ss": 1322
+        }
+      },
+      "audited_budget_rebind": {
+        "audit_commit": "ea6759434a394b41d2e0d6b34e3af84f2948953e",
+        "receipt": {
+          "directory": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e8b5132fb_r18b/cl/budget-rebind-ea6759434",
+          "manifest": {
+            "historical": {
+              "cl/budget_ff.sdc": "8f3e524c643cd9cb3ac7d6e8cb65db142e23160e49bfbbe30511b7b5134f07fe",
+              "cl/budget_signoff.sdc": "a2dd54da23f64e73e1a7e51e1d06d2d79489b0100ba907a5578e00a4a52859c2",
+              "cl/budget_route.sdc": "3a96ccd4b9994677c4d656989bf3a3dfb2166b7de0964b4e13325e7b550bdea7",
+              "cl/budget_sheet.json": "feb6dc81218df36bb87cad12616a8b9e84750238691050559d64e4df0ccb28d1",
+              "cl/calib.json": "7c479ddf84dc7d6704db79648339f5fcf3811fb3bc4ad53bf10db6950dd02244",
+              "cl/calib.env": "a54aead1f1c6d9c166d55195a5b101f4a2d30bb217f6e455eb5669e2c27bd1b9",
+              "cl/job.json": "157d4119639c9026cf2f257f7a2fd3e29ff2a178dea96fc96d8be10d6252445b",
+              "src/physical/hbm_accel_die_views/common/budget_signoff.sdc": "a2dd54da23f64e73e1a7e51e1d06d2d79489b0100ba907a5578e00a4a52859c2",
+              "src/physical/hbm_accel_die_views/common/budget_route.sdc": "3a96ccd4b9994677c4d656989bf3a3dfb2166b7de0964b4e13325e7b550bdea7",
+              "src/physical/hbm_accel_die_views/common/budget_ff_guarded.sdc": "a6b100114122b7b346473053e1828d2e0b780e67ee0e36d37f7c092e1e894d85"
+            },
+            "approved": {
+              "budget_route.sdc": "e6c256b05e9e43b65f93c972b303ec15fc3718a37fa40525c2ff634996bf6abb",
+              "budget_signoff.sdc": "c323d24ffe388883cb0eb844ad424ef9a4915cd629627da43a3716f7db015f5a",
+              "budget_ff.sdc": "036c036f2524f24ec69d34b726accafc5d4cda09be1cd0027d7fef897515c435",
+              "budget_sheet.json": "a86fa8b117c7d42353a4007aa76af343936ed94e7d3fe9b5435285c9fd12d1ce"
+            },
+            "audit_commit": "ea6759434a394b41d2e0d6b34e3af84f2948953e",
+            "sheet_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a"
+          }
+        },
+        "previous_budget": {
+          "master": "hfd_index_q_b5",
+          "sheets_ref": "1e8d0bdc5e12ba66c02fcfb7a4a7162e63ab8cd9",
+          "insertion": {
+            "target_ss": 900.0,
+            "target_ff": 594.0,
+            "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 1189.7, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+            "tolerance_ps": 100.0,
+            "ss": 1324,
+            "ff": 866,
+            "ss_min": 1310,
+            "ss_max": 1354,
+            "ff_min": 853,
+            "ff_max": 890,
+            "grade": "measured",
+            "source": "closure-loop calibrate hbm_idxq_b5_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_70a27c406)",
+            "over_target": true
+          },
+          "entry_target_ss": {
+            "mean": 2690.9,
+            "min": 2689.7,
+            "max": 2692.6
+          },
+          "check": {
+            "measured_ss": 1322.0,
+            "ok": false,
+            "reasons": [
+              "measured SS insertion 1322 exceeds the block insertion TARGET 900 by +422 ps (sheet 1324, measured)"
+            ]
+          }
+        },
+        "previous_merge_target": "claude/hbm-abstracts-20261006",
+        "signoff_scope": "component only; physical die-context adoption remains parent-owned"
+      },
+      "spec_budget": {
+        "master": "hfd_index_q_b5",
+        "clock": "core_clk",
+        "sheets_ref": "d05ac0e82010636e49ed46a5f6016ddc17cac53a",
+        "preserve_full_sheet": true,
+        "sheet_sha256": "a86fa8b117c7d42353a4007aa76af343936ed94e7d3fe9b5435285c9fd12d1ce"
+      },
+      "merge_target": null
+    },
+    {
+      "name": "hbm_idxq_b0_e8b5132fb_r18b",
+      "status": "NEEDS_BUDGET",
+      "updated": "2026-10-06T22:34:52-07:00",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:25:37-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e8b5132fb_r18b",
+      "budget": {
+        "master": "hfd_index_q_b0",
+        "sheets_ref": "1e8d0bdc5e12ba66c02fcfb7a4a7162e63ab8cd9",
+        "insertion": {
+          "target_ss": 900.0,
+          "target_ff": 594.0,
+          "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 1251.6, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+          "tolerance_ps": 100.0,
+          "ss": 1186,
+          "ff": 782,
+          "ss_min": 1157,
+          "ss_max": 1254,
+          "ff_min": 757,
+          "ff_max": 840,
+          "grade": "measured",
+          "source": "closure-loop calibrate hbm_idxq_b0_70a27c406_b (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_70a27c406_b)",
+          "over_target": true
+        },
+        "entry_target_ss": {
+          "mean": 2828.9,
+          "min": 2827.7,
+          "max": 2830.6
+        },
+        "check": {
+          "measured_ss": 1169.0,
+          "ok": false,
+          "reasons": [
+            "measured SS insertion 1169 exceeds the block insertion TARGET 900 by +269 ps (sheet 1186, measured)"
+          ]
+        }
+      },
+      "audited_budget_rebind": null,
+      "spec_budget": {
+        "master": "hfd_index_q_b0",
+        "clock": "core_clk"
+      },
+      "merge_target": "claude/hbm-abstracts-20261006"
+    },
+    {
+      "name": "hbm_idxq_b2_e8b5132fb_r18b",
+      "status": "NEEDS_BUDGET",
+      "updated": "2026-10-06T22:38:53-07:00",
+      "stage_tag": "calibrate.a1",
+      "stage_started": "2026-10-06T22:25:54-07:00",
+      "commit_full": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e8b5132fb_r18b",
+      "budget": {
+        "master": "hfd_index_q_b2",
+        "sheets_ref": "1e8d0bdc5e12ba66c02fcfb7a4a7162e63ab8cd9",
+        "insertion": {
+          "target_ss": 900.0,
+          "target_ff": 594.0,
+          "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 1247.3, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+          "tolerance_ps": 100.0,
+          "ss": 1309,
+          "ff": 846,
+          "ss_min": 1273,
+          "ss_max": 1402,
+          "ff_min": 815,
+          "ff_max": 927,
+          "grade": "measured",
+          "source": "closure-loop calibrate hbm_idxq_b2_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_70a27c406)",
+          "over_target": true
+        },
+        "entry_target_ss": {
+          "mean": 2705.9,
+          "min": 2704.7,
+          "max": 2707.6
+        },
+        "check": {
+          "measured_ss": 1329.0,
+          "ok": false,
+          "reasons": [
+            "measured SS insertion 1329 exceeds the block insertion TARGET 900 by +429 ps (sheet 1309, measured)"
+          ]
+        }
+      },
+      "audited_budget_rebind": null,
+      "spec_budget": {
+        "master": "hfd_index_q_b2",
+        "clock": "core_clk"
+      },
+      "merge_target": "claude/hbm-abstracts-20261006"
+    }
+  ],
+  "glue_outcome": {
+    "name": "hbglue_cl_8ddc70024",
+    "status": "CLOSED",
+    "updated": "2026-10-06T22:57:10-07:00",
+    "reason": "CLOSED SS +74.53 / FF +18.70 ps DRC 0 | record claude/takeover-ds-head-20261006 340fdb6c8 (4 files) | no merge target",
+    "metrics": {
+      "corner_sta": [
+        "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/corner_sta.json"
+      ],
+      "drc_metrics": [
+        "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/logs/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/5_2_route.json"
+      ],
+      "ss_ps": 74.53,
+      "ff_ps": 18.7,
+      "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate/orfs",
+      "errors": [],
+      "ss_tns_ps": 0.0,
+      "post_sdc": [
+        "physical/s81_die_views/hbglue/margin/signoff_cl_hbglue_cl_8ddc70024.sdc"
+      ],
+      "drc": 0,
+      "eco": {
+        "ss_ps": 74.53,
+        "ff_ps": 18.7,
+        "drc": 0,
+        "cells_added": 10988,
+        "errors": []
+      }
+    },
+    "eco": {
+      "tried": true,
+      "rb": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base",
+      "ob": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base",
+      "out": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate",
+      "post_sdc": [
+        "physical/s81_die_views/hbglue/margin/signoff_cl_hbglue_cl_8ddc70024.sdc"
+      ],
+      "pre": {
+        "ss_ps": 190.49,
+        "ff_ps": -70.99
+      },
+      "started": "2026-10-06T22:40:52-07:00",
+      "result": {
+        "ss_ps": 74.53,
+        "ff_ps": 18.7,
+        "drc": 0,
+        "cells_added": 10988,
+        "errors": []
+      },
+      "installed": "2026-10-06T22:53:17-07:00"
+    },
+    "eco_history": [
+      {
+        "tried": true,
+        "rb": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base",
+        "ob": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/results/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base",
+        "pre": {
+          "ss_ps": 190.49,
+          "ff_ps": -70.99
+        },
+        "started": "2026-10-06T22:11:19-07:00",
+        "result": {
+          "ss_ps": -340500.58,
+          "ff_ps": -59.43,
+          "drc": 0,
+          "cells_added": 0,
+          "errors": []
+        }
+      }
+    ],
+    "eco_overlay_recovery": {
+      "directory": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2",
+      "out": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/candidate",
+      "guard": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/cl/eco-overlay-recovery-a2/inputs.json",
+      "manifest_sha256": "ffe41784ef0855c9b0a238aa05d5997f16835fdf664a5aafeb284d99b0a39811",
+      "requested": "2026-10-06T22:39:22-07:00",
+      "reason": "owner-authorized one-shot correction of omitted measured overlays"
+    },
+    "publish": {
+      "branch_commit": "340fdb6c846d222550ef2f927c5c3c1eb6f07bb4",
+      "files": 4,
+      "merge": "no merge target"
+    }
+  },
+  "scope": "Only b1/b3/b5 rebound to complete approved sheets; component results only, no automatic die-context adoption. b0/b2 remain NEEDS_BUDGET with boundary maximum excess +21/+12 ps unresolved. W2 untouched.",
+  "service_observation": "MainPID=2196573\nExecStart={ path=/usr/bin/python3 ; argv[]=/usr/bin/python3 /home/ubuntu/wt-codex-closure-reliability/tools/closure_loop/closure_loop.py daemon --interval 60 ; ignore_errors=no ; start_time=[Tue 2026-10-06 22:55:55 PDT] ; stop_time=[n/a] ; pid=2196573 ; code=(null) ; status=0/0 }\nActiveState=active\n"
+}

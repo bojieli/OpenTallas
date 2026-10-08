@@ -1,0 +1,58 @@
+{
+  "schema": "w2-gate-acceptance-fix-v1",
+  "recorded_utc": "2026-10-07T05:36:02.704740+00:00",
+  "source_commit": "d108b33de6991601b0f4e2bf48dabad85f4a027d",
+  "base_source_commit": "206a3037e32ee0a8773d21ff7c61fa20de586743",
+  "status": "FOCUSED_VALIDATION_PASS_FULL_CAMPAIGN_PENDING",
+  "rtl_changes": false,
+  "rtl_cycles_added": 0,
+  "positive": {
+    "checks": 19,
+    "publication_to_all_sm_edges": 80,
+    "calendar": {
+      "TAP_ACCEPT": 16,
+      "ALL_SM": 96,
+      "LAST_SM_ACK": 124,
+      "QUARTER_ACK": 213,
+      "PARENT_RELEASE": 218,
+      "WARM_ACK": 220
+    },
+    "identical_to_prior_safe_calendar": true
+  },
+  "s8": {
+    "compile_exit": 0,
+    "runtime_exit": 1,
+    "outcome": "REJECTED",
+    "bound_edges": 352,
+    "elapsed_edges": 352,
+    "accepted_mask": "03",
+    "assertion": "W2_PROGRESS_MISSING_SM_ACCEPT",
+    "external_timeout_used": false
+  },
+  "build_failure": {
+    "expected": "FAIL",
+    "failed": false,
+    "outcome": "INFRASTRUCTURE_FAILURE",
+    "expected_assertion": "W2_PROGRESS_MISSING_SM_ACCEPT bound=352 elapsed=352 accepted=[0-9a-fA-F]{2}",
+    "matched_assertions": [],
+    "compile_exit": 2,
+    "passed": false
+  },
+  "cli_s3": {
+    "compile_exit": 0,
+    "runtime_exit": 1,
+    "marker": "NEGATIVE_REJECTED S3_frame_check_removed",
+    "spec_regex_matches": true
+  },
+  "unit_tests": 7,
+  "validation_notes": [
+    "Initial unittest discovery also imported unrelated abi3 package and failed because the sparse checkout omits runtime; no gate-test failure. Corrected invocation runs only the requested test file: 7 tests pass.",
+    "Focused quarter tests only, not duplicate remote campaigns. No remote source or job changed.",
+    "Gate source has no arbitrary external vvp deadline; event watchdog is simulation cycles, not wall time.",
+    "No source branch published and no successor queued. Both old jobs were still RUNNING at final observation."
+  ],
+  "toolchain": {
+    "iverilog": "Icarus Verilog version 11.0 (stable) ()",
+    "vvp": "Icarus Verilog runtime version 11.0 (stable) ()"
+  }
+}

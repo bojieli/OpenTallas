@@ -60,6 +60,7 @@ SHAVE = 0.024                  # frame -> abstract: W, H = frame - 0.024 (= 0.02
 COLS, ROWS = 64, 24
 TILE_SLOT = (313.632, 1291.68)
 CORR = 52.704
+CORR_R2 = 52.704               # the r2 floorplan corridor (r20e may widen CORR; the tile body keeps its width)
 TILE_BODY_W = TILE_SLOT[0] - CORR
 HCH, VCH = 97.2, 174.096       # link channels: r2 96.768 rounded UP to the 2.16 um row lattice (45 x 2.16); spine 174.096
 SPINE_W_R2 = 1214.784
@@ -72,6 +73,33 @@ STATION = (CORR, 69.12)        # corridor station / column-head frame
 LST_V = (VCH, 34.56)
 LST_H = (34.56, HCH)
 HUB_EL = 412.56
+# r17 STREAM4 clock crossing: None (default) keeps the b3r16 shoreline.  Otherwise dict(w=, h=, per_stack=32,
+# hbm_bits=, core_bits=): one routed per-PC CDC element (rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv) frame per HBM
+# pseudo-channel in a column between the controller and the strip; the controller -> row-engine read bus is carried
+# through them (controller -> CDC HCLK side, CDC core side -> the row engine serving that PC).
+CDC = None
+STRIP_SPAN = False             # r17d: strip/CDC/controller PG regions per stack span instead of the full column
+# r18 (die-top lint Q1-Q15, main 694e21a6e): near-HBM attention DROPPED (no row engines, no hub combine); the strip
+# column keeps one KV landing concentrator per stack (qfd_kvc, stack span tall, KVC_W wide: the strip-end link
+# endpoint grown to take the 32 CDC core sides and the KV-new write; kept under the lfifo_<stack> name); an IO-band
+# CDC slot (io_xfifo, IOX_W long) beside the collective; the PHY clk / rst_n leave the dfi bundle
+R18 = False
+# r19 (KV reconciliation, main e1701384d): tiles KEEP their KV slice (2 x ot_sram_1r1w_128x256_m1_r2c2 = 8 KiB a
+# tile, 12 MiB a die) and take the landing words over a per-tile-row landing fabric (KVL_BITS a row, one registered
+# hop a tile) from each stack's landing crossbar (the qfd_kvc frame, re-sorting the 32 PC landing words of its stack
+# to the rows it serves); the tile slot widens so the full tile's mapped-cell ceiling still fits (KV_TILE_W)
+R19 = False
+KVL_BITS = 768                 # a row's landing bits a cycle: 24 rows x 768 >= 64 PCs x 283 a half array
+KV_TILE_W = 319.68             # (125,000 / 0.5 + 10 ROM + 2 KV macros + 10,000 halo) / 1291.68 + corridor, on 0.432
+KV_MACRO = 'ot_sram_1r1w_128x256_m1_r2c2'
+# r20d: GRT M9 adjustment over the corridors (None: the base adjustment).  r20b i5: corridor M9 carries only tree-word
+# vertical legs (the corridor chain is on M7, ~0.55 m a corridor) and all residual M9 overflow sits there
+CORR_M9_ADJ = None
+CDC_HO = 319                   # h_cred 3 + h_wv 1 + h_wsec 24 + h_cv 1 + h_csec 24 + h_cdata 256 + h_ctag 9 + h_fault 1
+CDC_CO = 283                   # l_v 1 + l_sec 17 + l_row 8 + l_data 256 + l_pop 1 (l_* = the element's W face)
+KVC_W = 96.768
+IOX_W = 400.032
+IOX_GAP = 40.176                # r18e: routing gap each side of io_xfifo (r18c i5: M4-M9 1.18-1.41 at 4.3 um gaps)
 CORRIDOR_BITS = 637            # clock 64 + reset 64 + instruction 379 + go 1 + x 128 + ready 1
 TAP_BITS = 511                 # instruction 379 + go 1 + x 128 + ready 1 + clock 1 + reset 1
 TREE_BITS = 512                # W12 tile n_y / t_out word (16 x 32)
@@ -161,7 +189,8 @@ def build(spine_w=None, tree_mode='central'):
 def _build(spine_w, tree_mode):
     m = r2()
     fp = m['floorplan']
-    assert fp['tile_slot_um'] == list(TILE_SLOT) and abs(fp['tile_corridor_um'] - CORR) < 1e-9
+    assert (R19 or CORR != CORR_R2 or fp['tile_slot_um'] == list(TILE_SLOT)) and \
+        (CORR != CORR_R2 or abs(fp['tile_corridor_um'] - CORR) < 1e-9)
     notes = []
     # spine: the r2 width carries 32.437 mm2 of content in one 1,040.688 um column; packed here as two columns
     # beside a centred vertical link channel, with the two horizontal link channels crossing it
@@ -181,7 +210,8 @@ def _build(spine_w, tree_mode):
         spine_w = need_w
     cw = dn((spine_w - VCH) / 2, GX)
     # x layout
-    band = PHY_DEPTH + CTRL_W + STRIP_W
+    cdc_w = 0.0 if CDC is None else up(CDC['w'] + SHAVE, GX)
+    band = PHY_DEPTH + CTRL_W + cdc_w + STRIP_W
     x_wband = up(EDGE, GX)
     x_arr_w = up(x_wband + band, GX)
     x_spine = x_arr_w + 32 * TILE_SLOT[0]
@@ -211,7 +241,7 @@ def _build(spine_w, tree_mode):
     for c in range(COLS):
         xc = col_x(c)
         for r in range(ROWS):
-            insts.append(Inst(f't_{c}_{r}', 'qfd_tile', xc, row_y[r], TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE,
+            insts.append(Inst(f't_{c}_{r}', 'qfd_tile_e' if (R19 and c >= 32) else 'qfd_tile', xc, row_y[r], TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE,
                               kind='tile', region='tile_field'))
             sy = row_y[r] + dn((TILE_SLOT[1] - STATION[1]) / 2, GY)
             insts.append(Inst(f's_{c}_{r}', 'qfd_cst', xc + TILE_BODY_W, sy, STATION[0] - SHAVE, STATION[1] - SHAVE,
@@ -313,29 +343,83 @@ def _build(spine_w, tree_mode):
     # ---- shoreline bands
     stack_cy = [ch_y[0] + HCH / 2, ch_y[1] + HCH / 2]
     bands = {'W': x_wband, 'E': x_eband}
-    lfifos, ctrls, renges, phys = {}, {}, {}, {}
+    lfifos, ctrls, renges, phys, cdcs = {}, {}, {}, {}, {}
     for side, xb in bands.items():
         orient = 'MY' if side == 'W' else 'R0'
         if side == 'W':
-            x_phy, x_ctrl, x_strip = xb, xb + PHY_DEPTH, xb + PHY_DEPTH + CTRL_W
+            x_phy, x_ctrl, x_strip = xb, xb + PHY_DEPTH, xb + PHY_DEPTH + CTRL_W + cdc_w
+            x_cdc = xb + PHY_DEPTH + CTRL_W
         else:
-            x_strip, x_ctrl, x_phy = xb, xb + STRIP_W, xb + STRIP_W + CTRL_W
-        regions.append(dict(name=f'strip_{side}', kind='strip', rect=[x_strip, y0, x_strip + STRIP_W, y_top]))
-        regions.append(dict(name=f'ctrl_{side}', kind='ctrl', rect=[x_ctrl, y0, x_ctrl + CTRL_W, y_top]))
+            x_strip, x_ctrl, x_phy = xb, xb + STRIP_W + cdc_w, xb + STRIP_W + cdc_w + CTRL_W
+            x_cdc = xb + STRIP_W
+        if not STRIP_SPAN:
+            if CDC is not None:
+                regions.append(dict(name=f'cdc_{side}', kind='strip', rect=[x_cdc, y0, x_cdc + cdc_w, y_top]))
+            regions.append(dict(name=f'strip_{side}', kind='strip', rect=[x_strip, y0, x_strip + STRIP_W, y_top]))
+            regions.append(dict(name=f'ctrl_{side}', kind='ctrl', rect=[x_ctrl, y0, x_ctrl + CTRL_W, y_top]))
         regions.append(dict(name=f'phy_{side}', kind='phy', rect=[x_phy, y0, x_phy + PHY_DEPTH, y_top]))
         for si, scy in enumerate(stack_cy):
             st = f'{side}{"SN"[si]}'
             span = 6 * RE_H + FIFO[1]
             sy0 = dn(scy - span / 2, GY)
             phy_y = sy0 + up((span - 12000.12) / 2, GY)
+            if STRIP_SPAN:
+                # r17d: the strip / CDC / controller PG and power regions cover the stack span they serve; the
+                # empty column ends carry the tile-field lattice (r17b/c i5: M9 1.036 windows in the strip's
+                # empty north end, where the 24 % strip coverage halved the M9 capacity next to the array edge)
+                if CDC is not None:
+                    regions.append(dict(name=f'cdc_{st}', kind='strip', rect=[x_cdc, sy0, x_cdc + cdc_w, sy0 + span]))
+                regions.append(dict(name=f'strip_{st}', kind='strip', rect=[x_strip, sy0, x_strip + STRIP_W, sy0 + span]))
+                regions.append(dict(name=f'ctrl_{st}', kind='ctrl', rect=[x_ctrl, sy0, x_ctrl + CTRL_W, sy0 + span]))
             phys[st] = Inst(f'phy_{st}', 'ot_hbm3e_phy', x_phy,
                             phy_y, 833.496, 12000.12, orient, kind='phy', region='phy', domain='hbm_976p6')
             insts.append(phys[st])
             ctrls[st] = Inst(f'ctrl_{st}', 'qfd_ctrl', x_ctrl, sy0, CTRL_W - SHAVE, span - SHAVE, orient, kind='ctrl',
                              region='ctrl', domain='hbm_976p6')
             insts.append(ctrls[st])
+            if CDC is not None and R18:
+                n = CDC['per_stack']
+                pitch = dn(span / n, GY)
+                cdcs[st] = []
+                for p in range(n):
+                    cy = sy0 + p * pitch + dn((pitch - CDC['h'] - SHAVE) / 2, GY)
+                    it = Inst(f'cdc_{st}_{p}', 'qfd_cdc', x_cdc + (cdc_w - CDC['w'] - SHAVE) / 2, cy, CDC['w'],
+                              CDC['h'], orient, kind='cdc', region='strip')
+                    it.x = dn(it.x, GX)
+                    cdcs[st].append(it)
+                    insts.append(it)
+            elif CDC is not None:
+                n = CDC['per_stack']
+                # each CDC frame sits level with the row-engine slot it feeds (PC p -> row engine p*6//n, slot j of
+                # 6 on that engine's face), so the controller -> CDC -> row-engine hops are straight M4 runs (r17p:
+                # frames at an even stack pitch made every core-side word jog vertically over the column, M7-M9
+                # windows 1.08-1.19 at the shoreline)
+                if RE_H / 6 < CDC['h'] + SHAVE - 1e-6:
+                    raise SystemExit(f'CDC: frame height {CDC["h"]} um exceeds a row-engine slot ({RE_H / 6:.1f} um)')
+                cdcs[st] = []
+                for p in range(n):
+                    k = p * 6 // n
+                    j = p - min(q for q in range(n) if q * 6 // n == k)
+                    y_re = sy0 + k * RE_H + (FIFO[1] if k >= 3 else 0)
+                    cy = dn(y_re + (j + 0.5) * (RE_H - SHAVE) / 6 - CDC['h'] / 2, GY)
+                    it = Inst(f'cdc_{st}_{p}', 'qfd_cdc', x_cdc + (cdc_w - CDC['w'] - SHAVE) / 2 if side == 'E' else
+                              x_cdc + cdc_w - CDC['w'] - SHAVE - (cdc_w - CDC['w'] - SHAVE) / 2, cy, CDC['w'], CDC['h'],
+                              orient, kind='cdc', region='strip')
+                    it.x = dn(it.x, GX)
+                    cdcs[st].append(it)
+                    insts.append(it)
             yy = sy0
             renges[st] = []
+            if R18:
+                ky0, kh = sy0, span
+                if R19:
+                    # the landing crossbar spans the 12 tile rows its stack serves (S: rows 0-11, N: rows 12-23)
+                    ky0 = row_y[0] if si == 0 else row_y[12]
+                    kh = (row_y[11] + TILE_SLOT[1] - row_y[0]) if si == 0 else (y_top - row_y[12])
+                lfifos[st] = Inst(f'lfifo_{st}', 'qfd_kvc_n' if (R19 and si == 1) else 'qfd_kvc', x_strip, ky0, STRIP_W - SHAVE, kh - SHAVE, orient,
+                                  kind='link_fifo', region='strip')
+                insts.append(lfifos[st])
+                continue
             for k in range(7):
                 if k == 3:
                     fx = x_strip + STRIP_W - FIFO[0] if side == 'W' else x_strip
@@ -357,13 +441,17 @@ def _build(spine_w, tree_mode):
     elen = up(11.046e6 / IO_DEPTH, GX)
     xs['embedding_rom'] = xs['collective'] - elen - 10 * GX
     ulen = up(10.0e6 / IO_DEPTH, GX)
-    xs['ucie'] = xs['collective'] + clen + 10 * GX
+    xs['ucie'] = xs['collective'] + clen + 10 * GX + ((up(IOX_W, GX) + 2 * IOX_GAP - 10 * GX) if R18 else 0)
     slen = up(4.0e6 / IO_DEPTH, GX)
     xs['serdes'] = xs['ucie'] + ulen + 10 * GX
     for (name, mm2, dom), ln in zip(IO_BLOCKS, (clen, elen, ulen, slen)):
         io[name] = Inst(f'io_{name}', f'qfd_io_{name}', xs[name], y_io, ln - SHAVE, IO_DEPTH - SHAVE, kind='io',
                         region='io', domain=dom)
         insts.append(io[name])
+    if R18:
+        io['xfifo'] = Inst('io_xfifo', 'qfd_io_xfifo', xs['collective'] + clen + IOX_GAP, y_io, up(IOX_W, GX) - SHAVE,
+                           IO_DEPTH - SHAVE, kind='xfifo', region='io', domain='cdc')
+        insts.append(io['xfifo'])
     regions.append(dict(name='io_band', kind='io', rect=[x_arr_w, y_io, x_eband, y_io + IO_DEPTH]))
     # ---- link waypoints: vertical legs in the spine channel, corner at the channel heights, horizontal
     lst = []
@@ -394,7 +482,10 @@ def _build(spine_w, tree_mode):
                 xx = (xb_ - k * LINK_WAYPOINT_UM) if side == 'W' else (xa + k * LINK_WAYPOINT_UM - LST_H[0])
                 # sit in a corridor (never on a tile body): nearest corridor x
                 c = min(range(32) if side == 'W' else range(32, 64), key=lambda c: abs(col_x(c) + TILE_BODY_W - xx))
-                it = Inst(f'lh_{"SN"[si]}{side}_{k}', 'qfd_lst_h', col_x(c) + TILE_BODY_W + GX * 20, ch_y[si],
+                # r18: over a tile body, clear of the corridor that crosses the channel there (r18j i5: M9 1.035 at
+                # corridor 9 where lh_SW_* sat on the corridor's channel crossing)
+                lx = dn(col_x(c) + TILE_BODY_W / 2 - LST_H[0] / 2, GX) if R18 else col_x(c) + TILE_BODY_W + GX * 20
+                it = Inst(f'lh_{"SN"[si]}{side}_{k}', 'qfd_lst_h', lx, ch_y[si],
                           LST_H[0] - SHAVE, LST_H[1] - SHAVE, kind='link_station', region='channel')
                 lst.append(it)
                 pts.append(it)
@@ -406,7 +497,9 @@ def _build(spine_w, tree_mode):
                stack_cy=stack_cy, row_y=row_y, band=band, spine_content_mm2=content,
                spine_w_needed=need_w, spine_w_r2=SPINE_W_R2, spine_parts=spine_parts, spine_unplaced_mm2=leftovers)
     model = dict(die=die, geo=geo, insts=insts, regions=regions, notes=notes, hub=hub, phys=phys, ctrls=ctrls,
-                 renges=renges, lfifos=lfifos, io=io, legs=legs, hwp=hwp, col_x=col_x, tree_mode=tree_mode)
+                 renges=renges, lfifos=lfifos, io=io, legs=legs, hwp=hwp, col_x=col_x, tree_mode=tree_mode, cdcs=cdcs)
+    if CDC is not None:
+        geo['cdc_col_w'] = cdc_w
     model['buses'] = buses(model)
     return model
 
@@ -496,16 +589,44 @@ def buses(m):
                           [prev, (wp.name, 'e' if side == 'W' else 'w')]))
                 prev = (wp.name, 'w' if side == 'W' else 'e')
             st = f'{side}{"SN"[si]}'
-            B.append((f'lnkh_{si}{side}_f', 'link_channel', LINK_TRACKS, [prev, (f'lfifo_{st}', 'lk')]))
+            B.append((f'lnkh_{si}{side}_f', 'link_channel', LINK_TRACKS, [prev, (m['lfifos'][st].name, 'lk')]))
     # in-strip fan, controller ports, PHY DFI
+    if R19:
+        # per-row landing fabric: stack crossbar -> the row's first tile -> ... -> the tile beside the spine
+        for side in 'WE':
+            cols = list(range(32)) if side == 'W' else list(range(63, 31, -1))
+            for r in range(ROWS):
+                st = f'{side}{"S" if r < 12 else "N"}'
+                prev = (m['lfifos'][st].name, f'r{r % 12}')
+                for c in cols:
+                    B.append((f'kvl_{side}{r}_{c}', 'kv_land', KVL_BITS, [prev, (f't_{c}_{r}', 'li')]))
+                    prev = (f't_{c}_{r}', 'lo')
     for st, res in m['renges'].items():
+        if R18:
+            for p, cd in enumerate(m['cdcs'][st]):
+                # the closed element's four pin faces (route r11a, ot_qwen_stream4_cdc_pc RSEL=1): HCLK outputs E,
+                # HCLK inputs N, landing outputs (+ l_pop) W, write-queue / write-done side S
+                kvn = m['lfifos'][st].name
+                B.append((f'cdho_{st}_{p}', 'hbm_cdc', CDC_HO, [(cd.name, 'ho'), (f'ctrl_{st}', f'c{p}i')]))
+                B.append((f'cdhi_{st}_{p}', 'hbm_cdc', CDC['hbm_bits'] - CDC_HO, [(f'ctrl_{st}', f'c{p}o'), (cd.name, 'hi')]))
+                B.append((f'cdco_{st}_{p}', 'cdc_core', CDC_CO, [(cd.name, 'co'), (kvn, f'c{p}i')]))
+                B.append((f'cdci_{st}_{p}', 'cdc_core', CDC['core_bits'] - CDC_CO, [(kvn, f'c{p}o'), (cd.name, 'ci')]))
+            B.append((f'dfi_{st}', 'phy_dfi', len(phy_pins()), [(f'ctrl_{st}', 'phy'), (f'phy_{st}', '*dfi')]))
+            continue
         B.append((f'fan_{st}_s', 'strip_fan', LINK_TRACKS, [(f'lfifo_{st}', 'fs'), (res[2].name, 'fn')]))
         B.append((f'fan_{st}_n', 'strip_fan', LINK_TRACKS, [(f'lfifo_{st}', 'fn'), (res[3].name, 'fs')]))
         for a, b in ((2, 1), (1, 0), (3, 4), (4, 5)):
             pa, pb = ('fs', 'fn') if b < a else ('fn', 'fs')
             B.append((f'fan_{st}_{a}{b}', 'strip_fan', LINK_TRACKS, [(res[a].name, pa), (res[b].name, pb)]))
-        for k, re_ in enumerate(res):
-            B.append((f'rd_{st}_{k}', 'hbm_read', RE_READ_BITS, [(f'ctrl_{st}', f're{k}'), (re_.name, 'rd')]))
+        if m.get('cdcs'):
+            for p, cd in enumerate(m['cdcs'][st]):
+                k = p * len(res) // len(m['cdcs'][st])
+                j = p - min(q for q in range(len(m['cdcs'][st])) if q * len(res) // len(m['cdcs'][st]) == k)
+                B.append((f'cdh_{st}_{p}', 'hbm_cdc', CDC['hbm_bits'], [(f'ctrl_{st}', f'c{p}'), (cd.name, 'h')]))
+                B.append((f'cdc_{st}_{p}', 'cdc_core', CDC['core_bits'], [(cd.name, 'c'), (res[k].name, f'c{j}')]))
+        else:
+            for k, re_ in enumerate(res):
+                B.append((f'rd_{st}_{k}', 'hbm_read', RE_READ_BITS, [(f'ctrl_{st}', f're{k}'), (re_.name, 'rd')]))
         B.append((f'kvn_{st}', 'hbm_read', KVNEW_BITS, [(f'lfifo_{st}', 'kv'), (f'ctrl_{st}', 'kv')]))
         B.append((f'dfi_{st}', 'phy_dfi', len(phy_pins()), [(f'ctrl_{st}', 'phy'), (f'phy_{st}', '*dfi')]))
     # hub-internal crossings and IO
@@ -540,6 +661,8 @@ def phy_pins():
             rm = re.search(r'RECT\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)', body)
             out.append((pm.group(1), (float(rm.group(2)) + float(rm.group(4))) / 2))
         _PHY_PINS = out
+    if R18:
+        return [p for p in _PHY_PINS if p[0] not in ('clk', 'rst_n')]
     return _PHY_PINS
 
 
@@ -573,10 +696,20 @@ def masters(m, k=1, port_bits=None):
     tw, th = TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE
     sy = dn((TILE_SLOT[1] - STATION[1]) / 2, GY)
     t = mk('qfd_tile', tw, th, 7, 'W12 ROM tile re-frame (10 x ot_rom_4096x266_m8, cell ceiling 125,000 um2 at 0.5): '
-           'internal routing M1-M7 (ORFS asap7 MAX_ROUTING_LAYER), M8/M9 over the top for die nets')
+           'internal routing M1-M7 (ORFS asap7 MAX_ROUTING_LAYER), M8/M9 over the top for die nets' +
+           ('; r19 FULL tile: + KV slice 2 x ot_sram_1r1w_128x256_m1_r2c2 (8 KiB) and the landing-fabric hop (768 b '
+            'registered in / out, the per-tile landing merge)' if R19 else ''))
+    if R19:
+        t.face('li', KVL_BITS, 'W', 'M4', th * 0.78, 1)
+        t.face('lo', KVL_BITS, 'E', 'M4', th * 0.78, 1)
     t.face('tap', TAP_BITS, 'E', 'M4', sy + STATION[1] / 2, 2)
     for i, p in enumerate(('t_out', 'n_a', 'n_b', 'n_y')):
         t.area(p, TREE_BITS, 40.0 + 60.0 * i, th / 2, 2)
+    if R19:
+        te = mk('qfd_tile_e', tw, th, 7, t.note + ' (east-array variant: landing flows west)')
+        te.ports, te.order = {k_: v_ for k_, v_ in t.ports.items()}, list(t.order)
+        te.ports['li'] = ('face', KVL_BITS, 'E', 'M4', th * 0.78, 1)
+        te.ports['lo'] = ('face', KVL_BITS, 'W', 'M4', th * 0.78, 1)
     s = mk('qfd_cst', STATION[0] - SHAVE, STATION[1] - SHAVE, 3, 'corridor pipeline station (637 flops + 3 tap '
            'repeater banks): standard cells M1-M3, die routing above')
     s.face('a', CORRIDOR_BITS, 'N', 'M5', s.w / 2, 1)
@@ -612,6 +745,63 @@ def masters(m, k=1, port_bits=None):
         yy = kk * RE_H + (FIFO[1] if kk >= 3 else 0) + RE_H / 2
         c.face(f're{kk}', RE_READ_BITS, 'W', 'M4', yy, 2)
     c.face('kv', KVNEW_BITS, 'W', 'M4', 3 * RE_H + FIFO[1] / 2 - 20, 1)
+    if m.get('cdcs'):
+        # the controller's per-PC CDC ports face the CDC frame they feed; the row engine's per-PC landing ports
+        # face the CDC frames it serves (centred on each frame)
+        for o in list(c.order):
+            if o.startswith('re'):
+                c.order.remove(o)
+                c.ports.pop(o)
+        cds = m['cdcs'][st0]
+        for p, cd in enumerate(cds):
+            if R18:
+                yc = cd.y - m['ctrls'][st0].y
+                c.face(f'c{p}i', CDC_HO, 'W', 'M4', yc + cd.h * 0.35, 1)
+                c.face(f'c{p}o', CDC['hbm_bits'] - CDC_HO, 'W', 'M4', yc + cd.h + 20.0, 1)
+                continue
+            c.face(f'c{p}', CDC['hbm_bits'], 'W', 'M4', cd.y - m['ctrls'][st0].y + cd.h / 2, 2)
+        cdm = mk('qfd_cdc', CDC['w'], CDC['h'], 7, 'STREAM4 per-PC CDC element (ot_qwen_stream4_cdc_pc, routed frame)')
+        if R18:
+            cdm.face('ho', CDC_HO, 'E', 'M4', cdm.h * 0.35, 1)
+            cdm.face('hi', CDC['hbm_bits'] - CDC_HO, 'N', 'M5', cdm.w / 2, 1)
+            cdm.face('co', CDC_CO, 'W', 'M4', cdm.h * 0.6, 1)
+            cdm.face('ci', CDC['core_bits'] - CDC_CO, 'S', 'M5', cdm.w / 2, 1)
+        else:
+            cdm.face('h', CDC['hbm_bits'], 'E', 'M4', cdm.h / 2, 2)
+            cdm.face('c', CDC['core_bits'], 'W', 'M4', cdm.h / 2, 2)
+        nmax = max(sum(1 for p in range(len(cds)) if p * 6 // len(cds) == k) for k in range(6))
+        if R18:
+            # the KV landing concentrator: link endpoint on the array face, every PC's CDC core side level with
+            # its frame on the CDC face; the KV-new write rides the CDC write queues (no kvn bus to the controller)
+            M.pop('qfd_reng', None)
+            M.pop('qfd_lfifo', None)
+            for o in [o for o in c.order if o == 'kv']:
+                c.order.remove(o)
+                c.ports.pop(o)
+            reps = [st0] if not R19 else [next(k for k in m['lfifos'] if k.endswith('S')),
+                                          next(k for k in m['lfifos'] if k.endswith('N'))]
+            for rep_ in reps:
+                lf_ = m['lfifos'][rep_]
+                kv = mk(lf_.master, lf_.w, lf_.h, 7, 'STREAM4 KV landing concentrator (32 PC landing words -> the '
+                        'stack link, KV-new write into the CDC write queues) + strip-end link endpoint')
+                kv.face('lk', LINK_TRACKS, 'W', 'M4', (m['geo']['stack_cy'][0 if rep_.endswith('S') else 1] - lf_.y)
+                        if R19 else (m['geo']['stack_cy'][0] - lf_.y), 1)
+                if R19:
+                    kv.note += '; r19: landing crossbar, 32 PC words -> 12 row buses x 768 b (one per tile row)'
+                    ry = m['geo']['row_y']
+                    r0 = 0 if rep_.endswith('S') else 12
+                    for j in range(12):
+                        kv.face(f'r{j}', KVL_BITS, 'W', 'M4', ry[r0 + j] + TILE_SLOT[1] * 0.78 - lf_.y, 1)
+                for p, cd in enumerate(m['cdcs'][rep_]):
+                    yc = cd.y - lf_.y
+                    kv.face(f'c{p}i', CDC_CO, 'E', 'M4', yc + cd.h * 0.6, 1)
+                    kv.face(f'c{p}o', CDC['core_bits'] - CDC_CO, 'E', 'M4', yc - 20.0, 1)
+            nmax = 0
+        if 'rd' in re_.ports:
+            re_.order.remove('rd')
+            re_.ports.pop('rd')
+        for j in range(nmax):
+            re_.face(f'c{j}', CDC['core_bits'], 'E', 'M4', (j + 0.5) * re_.h / nmax, 2)
     hb = mk('qfd_hub', m['hub'].w, m['hub'].h, 7, 'hub element: near-HBM combine (P.V 8-9, Z 5-10, 1/Z), 4 link '
             'endpoints (FIFO 8), X3 q/new-KV staging')
     hb.face('ln', 2 * LINK_TRACKS, 'N', 'M5', hb.w / 2, 1)
@@ -678,6 +868,32 @@ def masters(m, k=1, port_bits=None):
     return M
 
 
+CORNER_RULE = {}
+PIN_CENTRE = {}     # (master, port) -> face centre override (um), same die rule set
+
+
+def _corner_keep(poss, along, step, cr, off, p, label):
+    """the run keeps its centre where it can, its first and last `tail` gaps at twice the pitch, and both ends >= keep
+    from the face corners (shifted inward when not)."""
+    keep, tail = cr['keep'], cr['tail']
+    n = len(poss)
+    gaps = [step] * (n - 1)
+    gaps[:tail] = [2 * step] * tail
+    gaps[-tail:] = [2 * step] * tail
+    span = sum(gaps)
+    if span > along - 2 * keep + 1e-9:
+        raise ValueError(f'{label}: corner rule does not fit ({n} pins, span {span:.3f} um, face {along:.3f} um): widen')
+    centre = (poss[0] + poss[-1]) / 2
+    lo = min(max(centre - span / 2, keep), along - keep - span)
+    first = off + math.ceil((lo - off) / p - 1e-9) * p
+    if first + span > along - keep + 1e-9:
+        first -= p
+    out = [first]
+    for g in gaps:
+        out.append(out[-1] + g)
+    return out
+
+
 def pin_rects(mst, k, wmap):
     """[(pin name, layer, (x0, y0, x1, y1))] for one master.  wmap: port -> width actually emitted."""
     out = []
@@ -703,6 +919,7 @@ def pin_rects(mst, k, wmap):
                 out.append((nm, 'M8', (x, yy - hw, x + 0.4 * k, yy + hw)))
             continue
         _, _, face, layer, centre, pitch = spec
+        centre = PIN_CENTRE.get((mst.name, port), centre)
         off, p = TRK[layer]
         step = p * k * pitch
         along = mst.h if face in 'EW' else mst.w
@@ -715,8 +932,12 @@ def pin_rects(mst, k, wmap):
         first = off * k + math.ceil((start - off * k) / (p * k) - 1e-9) * p * k
         hw = 0.012 * k
         depth = 0.192 * (k if k > 1 else 1)
+        poss = [first + i * step for i in range(len(names))]
+        cr = CORNER_RULE.get(mst.name)
+        if cr and k == 1 and len(poss) > 2 * cr['tail']:
+            poss = _corner_keep(poss, along, step, cr, off, p, f'{mst.name}.{port}')
         for i, nm in enumerate(names):
-            pos = first + i * step
+            pos = poss[i]
             if face == 'W':
                 r = (0.0, pos - hw, depth, pos + hw)
             elif face == 'E':
@@ -1128,6 +1349,10 @@ def case_grt(m, work, k, tag, iters=50):
         # corridor gate constraint (3): no long haul on M2-M5 (pins on M4/M5 are reached by vias at the pin gcell)
         adj.append(f'set_global_routing_layer_adjustment {ln} {1.0 if ln in ("M2", "M3", "M4", "M5") else VIA_OBS + 2 * REGION_PG["tile_field"]:.4f}')
     for r in m['regions']:
+        if r['kind'] == 'corridor' and CORR_M9_ADJ is not None:
+            x0, y0, x1, y1 = r['rect']
+            adj.append(f'set_global_routing_region_adjustment {{{x0:.3f} {y0:.3f} {x1:.3f} {y1:.3f}}} -layer M9 '
+                       f'-adjustment {CORR_M9_ADJ:.4f}')
         if r['kind'] in ('tile_field', 'corridor', 'channel', 'phy'):
             continue
         a = VIA_OBS + 2 * REGION_PG[r['kind']]
@@ -1199,7 +1424,13 @@ WINDOWS = {
     'tile_field': lambda g: (g['x_arr_w'] + 8 * TILE_SLOT[0], g['row_y'][2], g['x_arr_w'] + 16 * TILE_SLOT[0], g['row_y'][4]),
     'shoreline_w': lambda g: (g['x_wband'], g['stack_cy'][0] - 1300, g['x_arr_w'] + 4 * TILE_SLOT[0], g['stack_cy'][0] + 1300),
     'spine_hub': lambda g: (g['x_spine'] - 2 * TILE_SLOT[0], g['mid'] - 1300, g['x_arr_e'] + 2 * TILE_SLOT[0], g['mid'] + 1300),
+    # r17: a full band-slab stack (bands 1 W/E: 8 routed port groups each) at its measured density
+    'spine_slab': lambda g: (g['x_spine'] - 2 * TILE_SLOT[0], g['row_y'][6] - 1300, g['x_arr_e'] + 2 * TILE_SLOT[0],
+                             g['row_y'][6] + 1300),
 }
+# r17: measured per-instance power density (W/mm2) by master prefix, overriding the region density under the
+# instance (empty = the b3r16 region densities everywhere)
+INST_W_PER_MM2 = {}
 BUMP_PITCH, BUMP_SIZE = 45.0, 20.0          # v41_die_assembly CONST bump_pitch_um 45 (published 25-55), contact 2 x 10 um
 POWER_BUMP_FRACTION = 0.25                  # v41_die_assembly CONST power_bump_fraction (assumed)
 VDD_V = 0.7
@@ -1216,13 +1447,19 @@ def region_at(m, x, y):
     return best or 'tile_field'
 
 
-def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch=None, align=False, signal_bumps_phy=False):
+def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch=None, align=False, signal_bumps_phy=False,
+            guard=0.0):
     """cov_scale multiplies every region's M8/M9 coverage; bump_pad adds a 20 x 20 um M9 landing pad at every bump
     site (the UBM/AP landing any bump has: ASAP7 has no AP/RDL layer, so without it the bump contacts only the
     0.48 um stripes under it); sources are explicit per-net bump sites (VSS interleaved half a pitch off VDD)."""
     work.mkdir(parents=True, exist_ok=True)
     g = m['geo']
     x0, y0, x1, y1 = [round(v, 3) for v in WINDOWS[window](g)]
+    # r21: a guard band around the judged window (the die continues past a window: without it the window edge has
+    # no grid / bumps beyond it and its cells read an artificial drop); clipped to the die
+    if guard:
+        x0, y0 = max(0.0, x0 - guard), max(0.0, y0 - guard)
+        x1, y1 = min(m['die']['w'], x1 + guard), min(m['die']['h'], y1 + guard)
     x0, y0 = dn(x0, GX), dn(y0, GY)
     W, H = round(x1 - x0, 3), round(y1 - y0, 3)
     # straps: per region column/row segments; M9 vertical stripes at the pitch of the region under them, M8 horizontal
@@ -1309,6 +1546,8 @@ def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch
         by_net[nn].setdefault(round((b_ + e_) / 2, 3), []).append((a_, c_))
     ys_sorted = {nn: sorted(v) for nn, v in by_net.items()}
     comps, power, lefs, kinds = [], {}, {}, {}
+    ovr = [(it, d_) for it in m['insts'] for pre, d_ in INST_W_PER_MM2.items() if it.master.startswith(pre)
+           and it.x < x1 and it.x + it.w > x0 and it.y < y1 and it.y + it.h > y0]
     import bisect
     missing = 0
     for j in range(ny):
@@ -1344,6 +1583,13 @@ def case_ir(m, work, window, peak=True, cov_scale=1.0, bump_pad=False, vdd_pitch
                                       ['  END', f'END {mn}', ''])
             kd = region_at(m, x0 + cx0 + cell / 2, y0 + cy0 + cell / 2)
             dens = REGION_W_PER_MM2[kd] if peak else REGION_W_PER_MM2[kd] * 0.25
+            if INST_W_PER_MM2:
+                px, py = x0 + cx0 + cell / 2, y0 + cy0 + cell / 2
+                for it, dd in ovr:
+                    if it.x <= px < it.x + it.w and it.y <= py < it.y + it.h:
+                        dens = dd if peak else dd * 0.25
+                        kd = f'inst:{it.master}'
+                        break
             if signal_bumps_phy and kd in ("phy", "io"):
                 dens = 0.0   # the PHY/IO macro is fed by its own supply bumps among its signal bumps
             n = f'L_{i}_{j}'
@@ -1426,6 +1672,7 @@ exit
     for n, p in power.items():
         tot[kinds[n]] = tot.get(kinds[n], 0.0) + p
     meta = dict(case='c', window=window, window_um=[x0, y0, x1, y1], size_um=[W, H], cell_um=cell, loads=len(comps),
+                guard_um=guard, judged_um=[round(a, 3) for a in WINDOWS[window](g)],
                 power_w_by_region={k_: round(v, 4) for k_, v in tot.items()}, power_w=round(sum(power.values()), 4), cells_without_both_rails=missing,
                 peak=peak, cov_scale=cov_scale, bump_pad=bump_pad, align=align, signal_bumps_phy=signal_bumps_phy, bump_sites=len(sites['VDD']), stripes=dict(M9=len(s9), M8=len(s8), vias=nvia, width_um=0.48,
                                         pitch_by_region={k_: pitch(v) for k_, v in REGION_PG.items() if v}),
@@ -1635,7 +1882,13 @@ def record_c(work):
                 x, y = float(fs[3]), float(fs[4])
                 W_, H_ = meta['size_um']
                 vp = meta['bumps']['vdd_pitch_um']
-                interior = vp <= x <= W_ - vp and vp <= y <= H_ - vp
+                gd = max(vp, meta.get('guard_um', 0.0))
+                if meta.get('guard_um'):
+                    jx0, jy0, jx1, jy1 = meta['judged_um']
+                    ox, oy = meta['window_um'][0], meta['window_um'][1]
+                    interior = jx0 - ox <= x <= jx1 - ox and jy0 - oy <= y <= jy1 - oy
+                else:
+                    interior = gd <= x <= W_ - gd and gd <= y <= H_ - gd
                 e = per.setdefault(kinds[fs[0]], {})
                 e[net] = round(max(e.get(net, 0.0), d * 1e3), 2)
                 if interior:
@@ -1647,7 +1900,8 @@ def record_c(work):
         if wi and len(wi) == 2:
             out['rail_to_rail_interior_mv'] = round(wi['VDD'] + wi['VSS'], 2)
             out['pass_interior'] = out['rail_to_rail_interior_mv'] <= meta['budget_mv']
-            out['interior_rule'] = 'cells at least one VDD bump pitch from every window edge (the die continues)'
+            out['interior_rule'] = ('the judged window inside a %.0f um guard band of continuing grid and bumps' % meta['guard_um']
+                                    if meta.get('guard_um') else 'cells at least one VDD bump pitch from every window edge (the die continues)')
     return out
 
 

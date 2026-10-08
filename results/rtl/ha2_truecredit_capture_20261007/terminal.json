@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "checks": {
+    "f7_r7": {
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=7 ret=7 stalls=872 elapsed=948 credit_drain=8\nCAPTURE_ACTIVITY baseline_toggles=12750 candidate_toggles=837488 invalid_lane_cycles=1528\n"
+    },
+    "f64_r64": {
+      "passed": true,
+      "output": "PASS_TRUECREDIT rows=192 injectors=2 width=544 fwd=64 ret=64 stalls=1045 elapsed=988 credit_drain=65\nCAPTURE_ACTIVITY baseline_toggles=12750 candidate_toggles=941112 invalid_lane_cycles=1722\n"
+    },
+    "split_reset": {
+      "passed": true,
+      "output": "PASS_SPLIT_RESET checked=150 resets=4\n"
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d203972abf58823ce475d9b72fa857c87ef6a9492c0700846955d564552f1b6",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_sender_capture.sv": "73b533dec9480e06c56654de720576db787676abbae761bff8829498431cd7ce",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_hub_launch_single.sv": "36b15f115d0b1bef70f744866fdeab152a240a992b99f5ada86124ce72d020d3",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_capture.sv": "3c286c505dfbca3e02066e50c48f56ad93c6746475bb862df26b0fdcbdf1452d",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_hub_split_reset.sv": "fa0fe945756feaf7f5539c16500049c720f82e6c4604f0e29bfae5a2dbf08a6a",
+    "tools/ha2_truecredit_capture_gate.py": "083ec92f3ec0d1f95da95f5c6c448dbfa114f8046c5155a98a4d4b2747339ad9"
+  },
+  "scope": "2x544bit valid-data equivalence and exact controls/tags/credit timing under stalls and poisoned invalid payload. D35 ring vs D34+D1 split. No parent physical timing claim.",
+  "switching_energy": "Alternating invalid input poison is stress activity, not workload power. Register output bit-transition counts are measured activity only. Extra dynamic energy=sum(extra toggles_i*C_i*V^2/2); actual cell/net capacitance and voltage required; enable mux removal offsets unmeasured. No absolute power claim."
+}

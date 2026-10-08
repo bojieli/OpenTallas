@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.s81.selector_structural_preflight.v1",
+  "status": "BLOCKED_BEFORE_RTL_MODEL_AND_EXACT_GATES",
+  "selected_failure": "s81ph-dsfd_selt_c-cd3337221-b",
+  "measured": {
+    "ss_ps": -541.05,
+    "ff_ps": 19.43,
+    "drc": 0,
+    "worst_levels": 29
+  },
+  "full_shape": {
+    "quarters": 4,
+    "lanes_per_quarter": 16,
+    "K": 512,
+    "CB": 11,
+    "GW": 15,
+    "SW": 17,
+    "XW": 21,
+    "searches_per_control_tile": 2,
+    "tile_um": [
+      129.6,
+      319.68
+    ]
+  },
+  "mechanism": "Serial four-input sums and multi-level suffix sums in both threshold searches; worst acc_b2 -> u3_r includes accumulated offset plus two suffix levels.",
+  "one_candidate_only": {
+    "change": "Pipeline each integer sum level: balanced slice pairs, balanced four-bin suffix pairs, separate eight-bin and sixteen-bin suffix stages, then a separate accumulated-offset stage in B.",
+    "estimate_extra_search_edges": 7,
+    "stage_A_extra": 3,
+    "stage_B_extra": 4,
+    "initiation_interval_target": 1,
+    "arithmetic": "same unsigned modular widths; no FP rounding change",
+    "new_boundary_ports": 0,
+    "new_memory_ports": 0,
+    "new_MACs": 0,
+    "slab_and_die_generator_change": false,
+    "default_enabled": false
+  },
+  "cycle_scope": {
+    "native_XR": 4,
+    "current_WAIT": 17,
+    "current_HOLD": 34,
+    "current_HC0": 28,
+    "current_HF0": 44,
+    "current_CLRW": 28,
+    "required_review": "Retiming of quota/group/accumulator sidebands and res_eq; derive WAIT/HOLD/HC0/HF0/CLRW from changed response age. Seven search edges is not seven segment or token edges.",
+    "existing_tiled_tail_vs_reference_mean": 91,
+    "existing_tiled_tail_vs_reference_max": 240,
+    "incremental_segment_cycles": null,
+    "incremental_token_cycles": null,
+    "AR_percent": null,
+    "MTP_percent": null
+  },
+  "blocking_gates": [
+    "Candidate is not yet sized/composed in tools/uarch_model.py: register/fanout area, routed track capacity and full tile fit need explicit accounting before RTL.",
+    "Changed threshold latency can alter transient selection and overflow/replay behavior under unthrottled ingest; derive the controller timing contract and token invocation/overlap charge.",
+    "No candidate RTL exists and no candidate exactness result exists. Existing 32-segment PASS and negatives apply only to the old tiled implementation.",
+    "After model readiness: default-off candidate, smallest full-shape search/controller exact check and selector transaction regression with both ordering mutants, then one guarded closure job. No adoption before in-context SS/FF and required rate gates."
+  ],
+  "pinned_source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "c7624c6f573a6623db6e840d15ef1fe4376e6bd1ead7e8e23dc6215e5d52e850",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "497f3079a4f70d07b7b9668ff44a1facdcaef61e3ea2e09ee1726c3be1aa0d0c",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "8b0d4b0dee116f204d6fd0083eebd25e2125f0ba1f94fac4628228223d322da4",
+    "tools/uarch_model.py": "edbad3b74200e1d2692ba9f6343e97a872cda2ddfb202cc2bdd9199be40574d4",
+    "tools/s81_ph/selt_bench.sh": "f42142e5d9836a00377751f4e39d7deb8285c7114c540dbf485d2df0d9823ea6",
+    "results/rtl/s81_ph_20261006/selector/tiles.json": "d0df70a0511c68b6ac4f9f551f38b9a58c4ef9f35d3ac47f560d0c32e06bc5ca",
+    "results/rtl/s81_ph_20261006/selector/bench_tiles/bench_record.json": "906786235087d2ae566eaf9203f275e891930634d010ee9d0d1cc03b054f8b1e"
+  },
+  "decision": "No engine RTL or place-and-route launched for this candidate; existing failed verdict preserved. Hold-only capt_x and root_tile remain with specialist."
+}

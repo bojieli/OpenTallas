@@ -1,0 +1,452 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T23:34:33.947454+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_v41_qx10_native_parent",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.727,
+    "core_input_delay_min_ns": 0.36,
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/dsrom_qx10_parent_context/boundary.sdc",
+          "sha256": "20d61e20094f3743527fd36d4571df77c68802a131388b947c85734bf2cebd02"
+        }
+      ],
+      "lines": [
+        "set cp [get_pins -quiet u_qx.u_e.g_cg.u_cg.u_icg/CLK]",
+        "set gp [get_pins -quiet u_qx.u_e.g_cg.u_cg.u_icg/GCLK]",
+        "if {[llength $cp]!=1 || [llength $gp]!=1} {error \"full QX10 literal ICG missing\"}",
+        "create_generated_clock -name q_gated -master_clock core_clk -source $cp -combinational $gp",
+        "set_clock_uncertainty -setup 60 [get_clocks {core_clk q_gated}]",
+        "set_clock_uncertainty -hold 25 [get_clocks {core_clk q_gated}]",
+        "set_clock_gating_check -setup 60 -hold 25 [get_cells u_qx.u_e.g_cg.u_cg.u_icg]",
+        "set roms [get_cells -hierarchical *u_rom?]",
+        "if {[llength $roms]!=4} {error \"full NB2/PP1 requires FOUR actual ROMs\"}",
+        "set_multicycle_path -setup 2 -from $roms",
+        "set_multicycle_path -hold 1 -from $roms",
+        "set_load 0.577042 [get_ports {f_bus* node_v node_e node_t* node_d* busy fault captured_root* cfg_rom_a*}]"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": 0.727,
+    "output_delay_min_ns": 0.36,
+    "parameters": {
+      "QX": 10
+    },
+    "sources": [
+      {
+        "path": "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv",
+        "sha256": "981d0bf9f744887a8bed6c05ab21a6b5ee321699e5a5a9bfdd3a36ee7ae84f54",
+        "size_bytes": 3441
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_kreg.sv",
+        "sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+        "size_bytes": 1505
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_chain3.sv",
+        "sha256": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+        "size_bytes": 6002
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+        "sha256": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+        "size_bytes": 57239
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_bterm.sv",
+        "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+        "size_bytes": 11773
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_chain.sv",
+        "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+        "size_bytes": 4723
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_segtree.sv",
+        "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+        "size_bytes": 6931
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_bf16_lanes.sv",
+        "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+        "size_bytes": 4653
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_fadd.sv",
+        "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+        "size_bytes": 11535
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_bterm2_w10.sv",
+        "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+        "size_bytes": 10621
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_chain2.sv",
+        "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+        "size_bytes": 5120
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_segtree2.sv",
+        "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+        "size_bytes": 8798
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+        "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+        "size_bytes": 5704
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_bterm3_w10.sv",
+        "sha256": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+        "size_bytes": 13298
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_segtree3.sv",
+        "sha256": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+        "size_bytes": 11381
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_segtree4.sv",
+        "sha256": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+        "size_bytes": 15629
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_segtree5.sv",
+        "sha256": "7b7c4fe4af2a5cab45678789372c1e34a55dfbd2d9bafd2243b3f752ca5a6d74",
+        "size_bytes": 13070
+      },
+      {
+        "path": "physical/dsrom_qx10_parent_context/selected_0032/ot_v41_rom_elem_qx_w10.sv",
+        "sha256": "88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6",
+        "size_bytes": 113694
+      },
+      {
+        "path": "physical/dsrom_qx10_parent_context/selected_0032/ot_v41_bterm4_w10.sv",
+        "sha256": "98f3ceaed54665e3c7405b660c6016d862123b2898083b40952e0453c91a592d",
+        "size_bytes": 15223
+      },
+      {
+        "path": "physical/dsrom_qx10_parent_context/selected_0032/ot_v41_chain4.sv",
+        "sha256": "dcd30a7b4bd7b675144967c6d3ae734e43582c229dfd8de55011d0df23076372",
+        "size_bytes": 7729
+      },
+      {
+        "path": "physical/dsrom_qx10_parent_context/selected_0032/ot_v41_fadd2.sv",
+        "sha256": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+        "size_bytes": 11492
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fpu.sv",
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "size_bytes": 5251
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "size_bytes": 10519
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_cg.sv",
+        "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+        "size_bytes": 2051
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      },
+      {
+        "path": "rtl/common/ot_prefix.sv",
+        "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+        "size_bytes": 2757
+      },
+      {
+        "path": "physical/dsrom_qx10_parent_context/parent_loader/ot_v41_pair_pq_ld_frontend.sv",
+        "sha256": "75b916ee433eae2293d1d478909eb513ca89db7cac3c385425c9a54379536ea3",
+        "size_bytes": 3970
+      },
+      {
+        "path": "rtl/v41die/ot_v41_retn_w17w10.sv",
+        "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+        "size_bytes": 2053
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_ret.sv",
+        "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+        "size_bytes": 9658
+      },
+      {
+        "path": "physical/dsrom_qx10_parent_context/ot_v41_qx10_native_parent.sv",
+        "sha256": "5782e575da9a2d7bb0fd90579eb994aa990707bf19b3a2de4188576ceb034afb",
+        "size_bytes": 4071
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+        "sha256": "2c4a7a0c5ce804648a3830d33ec8cba1097e438a2966997d8c07fcd9b1a3d40f",
+        "size_bytes": 409
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+        "sha256": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c",
+        "size_bytes": 409
+      }
+    ],
+    "top": "ot_v41_qx10_native_parent"
+  },
+  "error": "FlowError: ORFS synthesis failed with exit 2:\nD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\n9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\n10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\n11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\n12. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib\n13. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv\n14. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_kreg.sv\n15. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_chain3.sv\n16. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_rom_elem_w10.sv\n17. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bterm.sv\n18. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_chain.sv\n19. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree.sv\n20. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bf16_lanes.sv\n21. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_fadd.sv\n22. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bterm2_w10.sv\n23. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_chain2.sv\n24. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree2.sv\n25. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bf16_lanes2.sv\n26. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bterm3_w10.sv\n27. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree3.sv\n28. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree4.sv\n29. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree5.sv\n30. Executing Verilog-2005 frontend: /src/physical/dsrom_qx10_parent_context/selected_0032/ot_v41_rom_elem_qx_w10.sv\n31. Executing Verilog-2005 frontend: /src/physical/dsrom_qx10_parent_context/selected_0032/ot_v41_bterm4_w10.sv\n32. Executing Verilog-2005 frontend: /src/physical/dsrom_qx10_parent_context/selected_0032/ot_v41_chain4.sv\n33. Executing Verilog-2005 frontend: /src/physical/dsrom_qx10_parent_context/selected_0032/ot_v41_fadd2.sv\n34. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fpu.sv\n35. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv\n36. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_delay.sv\n37. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_cg.sv\n38. Executing Verilog-2005 frontend: /src/rtl/proto/ot_fp32_add_rne_pipe.sv\n39. Executing Verilog-2005 frontend: /src/rtl/common/ot_prefix.sv\n40. Executing Verilog-2005 frontend: /src/physical/dsrom_qx10_parent_context/parent_loader/ot_v41_pair_pq_ld_frontend.sv\n41. Executing Verilog-2005 frontend: /src/rtl/v41die/ot_v41_retn_w17w10.sv\n42. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_ret.sv\n/src/rtl/v41rom/ot_v41_ret.sv:75: ERROR: syntax error, unexpected TOK_IMPORT\n\nElapsed time: 0:00.92[h:]min:sec. CPU time: user 0.89 sys 0.03 (99%). Peak memory: 83344KB.\nmake[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1\nmake: *** [Makefile:308: /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/1_1_yosys_canonicalize.rtlil] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T23:34:31.893878+00:00",
+  "git": {
+    "commit": "a9b0bf9273cc115a99a162b05edb9de5f015eb1e",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_v41_qx10_native_parent",
+      "--source",
+      "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_kreg.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_chain3.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_bterm.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_chain.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_segtree.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_bf16_lanes.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_fadd.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_chain2.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_segtree2.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_bterm3_w10.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_segtree3.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_segtree4.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_segtree5.sv",
+      "--source",
+      "physical/dsrom_qx10_parent_context/selected_0032/ot_v41_rom_elem_qx_w10.sv",
+      "--source",
+      "physical/dsrom_qx10_parent_context/selected_0032/ot_v41_bterm4_w10.sv",
+      "--source",
+      "physical/dsrom_qx10_parent_context/selected_0032/ot_v41_chain4.sv",
+      "--source",
+      "physical/dsrom_qx10_parent_context/selected_0032/ot_v41_fadd2.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_cg.sv",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--source",
+      "rtl/common/ot_prefix.sv",
+      "--source",
+      "physical/dsrom_qx10_parent_context/parent_loader/ot_v41_pair_pq_ld_frontend.sv",
+      "--source",
+      "rtl/v41die/ot_v41_retn_w17w10.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_ret.sv",
+      "--source",
+      "physical/dsrom_qx10_parent_context/ot_v41_qx10_native_parent.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+      "--source",
+      "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+      "--param",
+      "QX=10",
+      "--clock-period-ns",
+      "0.833333333333",
+      "--clock-uncertainty-ns",
+      ".060",
+      "--clock-uncertainty-hold-ns",
+      ".025",
+      "--core-input-delay-min-ns",
+      ".360",
+      "--core-input-delay-max-ns",
+      ".727",
+      "--output-delay-min-ns",
+      ".360",
+      "--output-delay-max-ns",
+      ".727",
+      "--sdc-append",
+      "physical/dsrom_qx10_parent_context/boundary.sdc",
+      "--stages",
+      "pnr",
+      "--die-area",
+      "0",
+      "0",
+      "1040.256",
+      "239.76",
+      "--core-area",
+      "2.16",
+      "2.16",
+      "1038.096",
+      "237.60",
+      "--place-density",
+      ".6",
+      "--macro-place-halo",
+      "2",
+      "2",
+      "--macro-view",
+      "ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8",
+      "--max-transition-ns",
+      ".32",
+      "--slew-margin-percent",
+      "40",
+      "--hold-margin-ns",
+      ".025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--pnr-stop-after",
+      "finish",
+      "--orfs-var",
+      "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl",
+      "--orfs-var",
+      "FASTROUTE_TCL=/src/physical/dsrom_v9_parent_context/fastroute.tcl",
+      "--orfs-var",
+      "ROUTING_LAYER_ADJUSTMENT=0.22",
+      "--orfs-var",
+      "SETUP_SLACK_MARGIN=15",
+      "--orfs-var",
+      "CTS_CLUSTER_SIZE=30",
+      "--orfs-var",
+      "CTS_CLUSTER_DIAMETER=50",
+      "--orfs-var",
+      "CTS_BUF_DISTANCE=60",
+      "--routing-layers",
+      "M2",
+      "M8",
+      "--step-tcl",
+      "POST_PDN=physical/dsrom_qx10_parent_context/regions.tcl",
+      "--step-tcl",
+      "POST_MACRO_PLACE=physical/dsrom_qx10_parent_context/macros.tcl",
+      "--step-tcl",
+      "POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl",
+      "--step-tcl",
+      "PRE_CTS=physical/dsrom_qx10_parent_context/clock.tcl",
+      "--step-tcl",
+      "POST_CTS=physical/dsrom_qx10_parent_context/clock.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/dsrom_qx10_parent_context/replay_checks.tcl",
+      "--keep-heavy-artifacts",
+      "--output",
+      "/srv/opentallas-scratch/codex/noether-qx10-native-parent-r2-20261005/physical.json",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/noether-qx10-native-parent-r2-20261005/work"
+    ],
+    "driver": {
+      "commit": "a9b0bf9273cc115a99a162b05edb9de5f015eb1e",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/noether-qx10-native-parent-r2-20261005/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch/codex/noether-qx10-native-parent-r2-20261005/src"
+    },
+    "orfs_num_cores": 4,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/noether-qx10-native-parent-r2-20261005/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

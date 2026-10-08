@@ -1,0 +1,25 @@
+rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv:52: ERROR: syntax error, unexpected TOK_GENVAR, expecting TOK_ID or '{'
+Command exited with non-zero status 1
+	Command being timed: "yosys -Q -T -p read_verilog -sv rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv; chparam -set ENABLE 1 ot_hdc_v41_fh_fault_retire; hierarchy -top ot_hdc_v41_fh_fault_retire; proc; flatten; opt; write_json /tmp/dsrom-fh-fault-retire-retention.json; stat"
+	User time (seconds): 0.00
+	System time (seconds): 0.00
+	Percent of CPU this job got: 40%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 9472
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 392
+	Voluntary context switches: 2
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 32
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

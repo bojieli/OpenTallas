@@ -1,0 +1,19 @@
+Actual R5/R6 nine overlap + padding markers; same-source frozen placed checkpoint.
+All listed load and buffer actors: PLACED, fixed=false, group=null; all pairs inside cp_body EXCLUSIVE region.
+Global detail padding: 0 sites. Nine padding markers coincide nine physical overlaps.
+load | shared origin x,y um | buffer | overlap width x row-height um
+clkload0 | 49.734,27.540 | clkbuf_2_2__f_clk | 0.648 x 0.270
+clkload16 | 56.052,24.570 | clkbuf_leaf_20_clk | 0.270 x 0.270
+clkload17 | 53.298,20.520 | clkbuf_leaf_21_clk | 0.648 x 0.270
+clkload18 | 46.440,20.790 | clkbuf_leaf_22_clk | 0.270 x 0.270
+clkload19 | 41.958,24.030 | clkbuf_leaf_23_clk | 0.648 x 0.270
+clkload4 | 34.074,25.920 | clkbuf_leaf_26_clk | 0.324 x 0.270
+clkload5 | 33.102,18.900 | clkbuf_leaf_27_clk | 0.216 x 0.270
+clkload6 | 28.296,22.950 | clkbuf_leaf_28_clk | 0.324 x 0.270
+clkload7 | 20.088,20.520 | clkbuf_leaf_29_clk | 0.648 x 0.270
+35 CTS buffers =10.49760um2; 26 dummy loads =3.38256um2; combined13.88016um2; all group=null and movable.
+All 61 clock branches trace only to genuine DFF clock sinks in cp_body; zero association-fence FF sinks.
+Current cp_association fence retains NOR2x1 + AND2x4 (.23328um2); mapping/resizing altered initial3cells, geometry unchanged.
+Post-resizer cp_body3384cells/476.3286um2; ungrouped nonclock1185/95.7906; fixedphysical401/11.69316.
+No source/copy/FF-independent protection credit inferred from physical grouping.
+Failure database retained remotely; same source/clock/IO/CTS settings; every upstream checkpoint hash unchanged.

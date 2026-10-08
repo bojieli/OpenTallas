@@ -1,0 +1,35 @@
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 981857 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       2777 |       725 |      2052
+        1 |         10 |         2 |         8
+        2 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 2.
+[INFO DPL-0500] Runtime: 15.92s
+Placement Analysis
+---------------------------------
+total displacement      71036.0 u
+average displacement        0.1 u
+max displacement            2.3 u
+original HPWL         2990669.9 u
+legalized HPWL        3029113.6 u
+delta HPWL                    1 %
+
+Took 17 seconds: detailed_placement
+estimate_parasitics -placement
+Took 37 seconds: estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 121176 um^2 36% utilization.
+write_db /work/results/asap7/opentallas_ot_hdc_v41x_vred_slice64_c12s_asap7_su_red_ss1_safe/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hdc_v41x_vred_slice64_c12s_asap7_su_red_ss1_safe/base/4_cts.sdc
+Elapsed time: 48:02.96[h:]min:sec. CPU time: user 3835.56 sys 336.59 (144%). Peak memory: 11745244KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb         2882          11469 38f9c58ef33381c40d3e

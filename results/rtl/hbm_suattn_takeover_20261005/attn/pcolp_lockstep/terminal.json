@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.hbm.attention.pcolp_lockstep.v1",
+  "existing_job": "p1b7h1",
+  "rerun": false,
+  "H": 16,
+  "TD": 32,
+  "NBANK": 7,
+  "BW": 3,
+  "PWORDS": 2,
+  "HG": 1,
+  "FPL": 6,
+  "FML": 8,
+  "F12": 1,
+  "PCOLP": 1,
+  "cycles": 20000,
+  "valid_outputs": 14920,
+  "mismatches": 0,
+  "rc": 0,
+  "candidate_source_sha256": "fd71f9dddf922eeb85f3a647d8db0b3fa1443b9dc956fdd2cbb01c2ad0c08c6a",
+  "source_note": "Current preserved src2 input SHA matches routed src_r3 snapshot; original Verilator input fingerprint and command retained. Tile_s wires each head ld_wp from shared ld_w, so bench compares full H16 PCOLP1 wiring against golden tile_l, with FML8 output aligned by2cycles. Not actual composed attention engine rate measurement.",
+  "adopted": false,
+  "contextual_closure": false,
+  "files_sha256": {
+    "tb_hdc_v41x_attn_tile_s_lockstep.sv": "e9e97b4b0616340029ce467020e99d6e05efc65a90238488773380b2e1e10fe5",
+    "p1b7h1.log": "f531ec9b68dd4d71c21b93c9f32cafe015b725d2292e21a4cae9c3312186f718",
+    "p1b7h1.run": "c5aca4ef1756c0523b51bcedd3b70e1de47fb5f9a400ab1bac024cbbb7b570c5",
+    "Vtb__verFiles.dat": "01d363d7dbb738e7212279121945a4935f6d4ebeccac153cc7403a8307d542fe"
+  }
+}

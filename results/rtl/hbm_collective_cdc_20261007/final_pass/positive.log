@@ -1,0 +1,52 @@
+ ... Linking
+ ... Removing symbol tables
+ ... Compiletf functions
+Compiling VVP ...
+ ... VVP file version 11.0 (stable)
+Compile cleanup...
+ ...      804 functors (net_fun pool=524288 bytes)
+                273 logic
+                  0 bufif
+                  0 resolv
+                 69 signals
+ ...      686 filters (net_fil pool=524288 bytes)
+ ...     1981 opcodes (49152 bytes)
+ ...      207 nets
+ ...      804 vvp_nets (1048544 bytes)
+ ...        0 arrays (0 words)
+ ...        5 memories
+                  5 logic (2138 words)
+                  0 real (0 words)
+ ...       51 scopes
+ ... 0.007934 seconds, 16344.0/8308.0/5472.0 KBytes size/rss/shared
+Running ...
+ ...execute EndOfCompile callbacks
+ ...propagate initialization events
+ ...execute StartOfSim callbacks
+ ...run scheduler
+CDC_PROGRESS edges=128 writes=69 reads=5 fault=0 wb=69 rb=5 hp=1 reset=11 por=00 inv=0 inr=0
+CDC_PROGRESS edges=256 writes=108 reads=45 fault=0 wb=108 rb=44 hp=2 reset=11 por=00 inv=0 inr=0
+CDC_PROGRESS edges=384 writes=149 reads=86 fault=0 wb=21 rb=85 hp=2 reset=11 por=00 inv=0 inr=0
+CDC_PROGRESS edges=512 writes=190 reads=127 fault=0 wb=62 rb=126 hp=2 reset=11 por=00 inv=1 inr=0
+CDC_PROGRESS edges=640 writes=231 reads=168 fault=0 wb=103 rb=39 hp=2 reset=11 por=00 inv=0 inr=0
+CDC_PROGRESS edges=768 writes=272 reads=209 fault=0 wb=16 rb=80 hp=2 reset=11 por=00 inv=0 inr=0
+CDC_PROGRESS edges=896 writes=313 reads=250 fault=0 wb=57 rb=122 hp=0 reset=11 por=00 inv=0 inr=0
+CDC_PROGRESS edges=1024 writes=354 reads=291 fault=0 wb=98 rb=35 hp=0 reset=11 por=00 inv=0 inr=0
+CDC_PROGRESS edges=1152 writes=395 reads=332 fault=0 wb=11 rb=76 hp=0 reset=11 por=00 inv=0 inr=0
+CDC_PROGRESS edges=1280 writes=436 reads=373 fault=0 wb=52 rb=117 hp=1 reset=11 por=00 inv=1 inr=1
+CDC_PROGRESS edges=1408 writes=478 reads=414 fault=0 wb=94 rb=30 hp=1 reset=11 por=00 inv=1 inr=0
+CDC_PROGRESS edges=1536 writes=512 reads=456 fault=0 wb=0 rb=72 hp=0 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=1664 writes=512 reads=499 fault=0 wb=0 rb=114 hp=2 reset=11 por=00 inv=0 inr=1
+PASS_CDC full545x64 independent_clocks512flits wrap/stalls/full/correction/rails/drain/coordinated_reset/control_double/payload_double
+ ...execute Postsim callbacks
+ ... 4.07481 seconds, 16344.0/8376.0/5484.0 KBytes size/rss/shared
+Event counts:
+        7764 time steps (pool=113)
+       42942 thread schedule events
+       34740 assign events
+             ...assign(vec4) pool=9362
+             ...assign(vec8) pool=204
+             ...assign(real) pool=256
+             ...assign(word) pool=128
+             ...assign(word/r) pool=204
+       48937 other events (pool=4096)

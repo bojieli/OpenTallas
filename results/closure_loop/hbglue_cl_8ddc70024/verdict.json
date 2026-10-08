@@ -1,0 +1,139 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbglue_cl_8ddc70024",
+ "block": "ot_dsrom_head_bundle_glue",
+ "owner": "Claude:tk-ds-misc",
+ "source_branch": "claude/takeover-ds-head-20261006",
+ "source_commit": "8ddc7002479798a1e3d5ce5875a163d672973e75",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024",
+ "acceptance": {
+  "ss_min_ps": 15.0,
+  "ff_min_ps": 15.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 74.53,
+  "ff_ps": 18.7,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_die_views/hbglue/margin/signoff_cl_hbglue_cl_8ddc70024.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbglue_cl_8ddc70024/routes/hbglue_cl_8ddc70024/work/orfs/logs/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_hbglue_cl_8ddc70024/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "glue MARGIN=1 exact gate PASS + 8 negatives (4570eccd4, result group +3 cycles); RTL unchanged since",
+ "checks": {},
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1516,
+    "mean": 341.3,
+    "min": 325.8,
+    "max": 346.4
+   },
+   "all": {
+    "n": 16444,
+    "mean": 336.3,
+    "min": 321.7,
+    "max": 346.4
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1516,
+    "mean": 205.0,
+    "min": 193.3,
+    "max": 209.9
+   },
+   "all": {
+    "n": 16444,
+    "mean": 200.7,
+    "min": 189.6,
+    "max": 209.9
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 341,
+   "CK_SS_ALL_MEAN": 336,
+   "CK_SS_MIN": 326,
+   "CK_SS_ALL_MIN": 322,
+   "CK_SS_MAX": 346,
+   "CK_SS_ALL_MAX": 346,
+   "CK_FF_MEAN": 205,
+   "CK_FF_ALL_MEAN": 201,
+   "CK_FF_MIN": 193,
+   "CK_FF_ALL_MIN": 190,
+   "CK_FF_MAX": 210,
+   "CK_FF_ALL_MAX": 210
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 3,
+ "status": "CLOSED",
+ "closed_at": "2026-10-06T22:57:05-07:00",
+ "job_spec": {
+  "name": "hbglue_cl_8ddc70024",
+  "block": "ot_dsrom_head_bundle_glue",
+  "owner": "Claude:tk-ds-misc",
+  "purpose": "head-bundle glue MARGIN=1: closure-loop route with IO from measured insertion (glue_m3: SS +53.3, FF reg2reg +4.2 at assumed IO)",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 60,
+  "source": {
+   "branch": "claude/takeover-ds-head-20261006",
+   "commit": "8ddc7002479798a1e3d5ce5875a163d672973e75"
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "OUT={RUN}/routes SRC={SRC} bash physical/s81_die_views/hbglue/margin/route_cl.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 16,
+    "peak_ram_gb": 60
+   },
+   "route": {
+    "cmd": "OUT={RUN}/routes SRC={SRC} bash physical/s81_die_views/hbglue/margin/route_cl.sh {LABEL}",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/exit {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": []
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/s81_die_views/hbglue/closure"
+   }
+  ],
+  "cycles_added": 3,
+  "merge_target": null,
+  "no_bench_reason": "glue MARGIN=1 exact gate PASS + 8 negatives (4570eccd4, result group +3 cycles); RTL unchanged since"
+ }
+}

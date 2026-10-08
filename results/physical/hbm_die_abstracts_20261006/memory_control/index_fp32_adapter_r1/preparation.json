@@ -1,0 +1,38 @@
+{
+  "status": "REAL_RTL_READY_FOR_ADMITTED_COMPONENT_GATE",
+  "source_compile_exit": 0,
+  "source_compile_command": [
+    "iverilog",
+    "-g2012",
+    "-DOT_MEM_NO_INIT",
+    "-tnull",
+    "-s",
+    "tb_index_fp32_sram_adapter",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv",
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_index_fp32_sram_adapter.sv"
+  ],
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv": "ea09f3560651e7f0946f07ff4edb5d2a6b78c4c30c151c2fe104d553670b0946",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_index_fp32_sram_adapter.sv": "bd10391e9356b4cf5e2bbe2951fb369501fda0543b343c55164fa82f01bca970"
+  },
+  "runtime_executed": false,
+  "SS_FF_closed": false,
+  "actual_parent_allocation_bound": false,
+  "frame_word_span": 8224,
+  "fixture_base_word": "0x00200000 (testfixture only; not production allocation)",
+  "exact_seed_expected": {
+    "real_SRAM_writes": 257,
+    "positive_publication_ACKs": 257,
+    "actual_index_reads": 129,
+    "actual_index_blocks": 128,
+    "FP32_words_compared": 4128
+  },
+  "real_negative": "two actual SRAM physicalbits flipped in sameSECDED word, refuse indexpublication",
+  "local_OpenROAD_STA_runs": 0
+}

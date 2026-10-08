@@ -1,0 +1,67 @@
+{
+  "ODB_sha256": "5637faa72ca24038c28b7476870e3607490a51d8db08b01e52fc56a927a0cffe",
+  "baseline_sha256": "689a1f8802da8fe0f6a2320523745d5231b6c5d5fad436db98f2365f784b5400",
+  "DBU": 1000,
+  "group_stats": {
+    "cp_body": {
+      "count": 6971,
+      "area_um2": 872.1464399999865,
+      "movable_area_um2": 872.1464399999865,
+      "fixed_area_um2": 0
+    },
+    "cp_association": {
+      "count": 5,
+      "area_um2": 0.83106,
+      "movable_area_um2": 0.83106,
+      "fixed_area_um2": 0
+    },
+    "None": {
+      "count": 401,
+      "area_um2": 11.693159999999914,
+      "movable_area_um2": 0,
+      "fixed_area_um2": 11.693159999999914
+    }
+  },
+  "area_classes": {
+    "preCTS_existing": {
+      "count": 6725,
+      "area_um2": 825.7091400000044
+    },
+    "inserted_data_repair": {
+      "count": 578,
+      "area_um2": 42.95267999999976
+    },
+    "inserted_clock_or_dummy": {
+      "count": 74,
+      "area_um2": 16.008840000000006
+    }
+  },
+  "total_cell_area_um2": 884.6706600000055,
+  "fixed_cell_area_um2": 11.693159999999914,
+  "original_region_boxes_DBU": {
+    "cp_body": [
+      [
+        22464,
+        56160,
+        60480,
+        60480
+      ],
+      [
+        17280,
+        17280,
+        60480,
+        56160
+      ]
+    ],
+    "cp_association": [
+      [
+        17280,
+        56160,
+        22464,
+        60480
+      ]
+    ]
+  },
+  "containment_violations": [],
+  "ungrouped_movable_signal": []
+}

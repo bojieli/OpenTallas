@@ -1,0 +1,84 @@
+{
+  "verdict": "PASS_COMPONENT",
+  "production_rtl_bytes_equal_between_benches": true,
+  "positive_log_byte_identical_between_benches": true,
+  "frames": {
+    "0": {
+      "edges": 3155,
+      "reads": 0,
+      "acks": 1
+    },
+    "1": {
+      "edges": 14419,
+      "reads": 1024,
+      "acks": 1
+    },
+    "2": {
+      "edges": 3136,
+      "reads": 1,
+      "acks": 0
+    },
+    "3": {
+      "edges": 3155,
+      "reads": 0,
+      "acks": 1
+    },
+    "4": {
+      "edges": 3136,
+      "reads": 1,
+      "acks": 0
+    },
+    "5": {
+      "edges": 1,
+      "reads": 0,
+      "acks": 0
+    },
+    "6": {
+      "edges": 3136,
+      "reads": 1,
+      "acks": 0
+    },
+    "7": {
+      "edges": 3125,
+      "reads": 0,
+      "acks": 0
+    }
+  },
+  "full_aperture": {
+    "read": 2256,
+    "write": 865,
+    "VX0": 208
+  },
+  "checked_read_edges": 9,
+  "checked_write_edges": 28,
+  "checked_reads": 1027,
+  "checked_ACKs": 263,
+  "source_clock_edges": 15,
+  "held_edges": 56675,
+  "original_positive": {
+    "exit": 0,
+    "wall_seconds": 1280.87,
+    "max_rss_kib": 118272
+  },
+  "procedural_positive": {
+    "exit": 0,
+    "wall_seconds": 566.4,
+    "max_rss_kib": 114688
+  },
+  "negative": {
+    "exit": 1,
+    "reason": "UNPAID_NATIVE_ADVANCE on raw bank ACK before checked postverify ACK",
+    "wall_seconds": 367.4
+  },
+  "lease_probe": {
+    "exit": 0,
+    "edges": 3125,
+    "captured_me": 0,
+    "live_original_me": 1,
+    "native_tick": 1,
+    "native_me_lease": 0,
+    "wall_seconds": 20.42
+  },
+  "fixture_sha256": "877b098e62d5c862918bd5062aea50f73e8ae2c85cd8709f73f619e4da825ced",
+  "scope": "Actual checked provider with directed normalization/capture/lease controls and captured parent160; no full engine, actual core/collective clock binding, full native backing-capacity proof, numerical gate or SS/FF adoption."
+}

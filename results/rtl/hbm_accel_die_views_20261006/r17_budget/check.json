@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.hbm_r17_budget_check.v1",
+ "generator_commit": "8471c56cfa0bf739dd783458dbdf8161b28eca9b",
+ "hbm_infeasible": [],
+ "hbm_infeasible_count": 0,
+ "clock_plan": {
+  "intra": 0,
+  "inter": 0,
+  "rows": []
+ },
+ "main_r16j_hbm_infeasible": 23,
+ "note": "budget_sheet + clock_plan rerun on the r17 die model (CTS on EPYC3); main record results/rtl/budgets_20261006 is r16j"
+}

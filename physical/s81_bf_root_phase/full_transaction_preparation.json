@@ -1,0 +1,21 @@
+{
+  "status": "PREPARED_AND_LINTED_NOT_EXECUTED",
+  "candidate_parameters": {
+    "HALF": 1,
+    "PINREG": 1,
+    "HITFIX": 1,
+    "ROOT_PHASE": 1
+  },
+  "prepared_cases": [
+    "positive",
+    "mutant_front_pair",
+    "mutant_half_pv"
+  ],
+  "positive_full_pair_verilator_lint_rc": 0,
+  "warnings": "Existing width warnings retained; no lint errors",
+  "verilator_version": "5.050",
+  "allocated_mb": 2092.055,
+  "elapsed_seconds": 15.308,
+  "source_sha256": "2d705e47fe814982b59dadbc1935000c43c1dd6cf169bf637e177c03235a8ac2",
+  "full_transaction_adoption_pass": false
+}

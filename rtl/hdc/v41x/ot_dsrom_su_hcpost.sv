@@ -23,8 +23,10 @@
 // hc.sumsq is its own graph node on the parallel mix branch (measured on the SU); it reads this output.
 // ---------------------------------------------------------------------------
 module ot_dsrom_su_hcpost_lane #(
-    parameter integer ML = 5,           // multiplier latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, input-side cut)
-    parameter integer AL = 4            // adder latency: 4 (ot_hdc_fp32_add_f12_l4) or 5 (_l5x, decode cut)
+    parameter integer ML = 5,           // multiplier latency: 5 (ot_hdc_fp32_mul_f12_l5), 6 (_l6, input-side cut) or 7 (_l7,
+                                        // + rounding-increment cut; CLAUDE HBM-ABSTRACTS hub margin, 2026-10-06)
+    parameter integer AL = 4            // adder latency: 4 (ot_hdc_fp32_add_f12_l4), 5 (_l5x, decode cut) or 6 (_l6x,
+                                        // + compare/align cut; CLAUDE HBM-ABSTRACTS hub margin, 2026-10-06)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -39,46 +41,73 @@ module ot_dsrom_su_hcpost_lane #(
     wire [31:0] m0, m1, m2, m3, m4, a1, a2, a3, a4, m2d, m3d, m4d;
     wire [1:0]  e0, e1, e2, e3, e4, ea1, ea2, ea3, ea4;
     wire        vm, va1, va2, va3, va4;
-    generate if (ML == 6) begin : g_u_m0
+    generate if (ML == 7) begin : g_u_m07
+        ot_hdc_fp32_mul_f12_l7 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r0), .b(c0), .y(m0), .err(e0), .valid_out(vm));
+    end else if (ML == 6) begin : g_u_m0
         ot_hdc_fp32_mul_f12_l6 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r0), .b(c0), .y(m0), .err(e0), .valid_out(vm));
     end else begin : g_u_m05
         ot_hdc_fp32_mul_f12_l5 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r0), .b(c0), .y(m0), .err(e0), .valid_out(vm));
     end endgenerate
-    generate if (ML == 6) begin : g_u_m1
+    generate if (ML == 7) begin : g_u_m17
+        ot_hdc_fp32_mul_f12_l7 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r1), .b(c1), .y(m1), .err(e1), .valid_out());
+    end else if (ML == 6) begin : g_u_m1
         ot_hdc_fp32_mul_f12_l6 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r1), .b(c1), .y(m1), .err(e1), .valid_out());
     end else begin : g_u_m15
         ot_hdc_fp32_mul_f12_l5 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r1), .b(c1), .y(m1), .err(e1), .valid_out());
     end endgenerate
-    generate if (ML == 6) begin : g_u_m2
+    generate if (ML == 7) begin : g_u_m27
+        ot_hdc_fp32_mul_f12_l7 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r2), .b(c2), .y(m2), .err(e2), .valid_out());
+    end else if (ML == 6) begin : g_u_m2
         ot_hdc_fp32_mul_f12_l6 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r2), .b(c2), .y(m2), .err(e2), .valid_out());
     end else begin : g_u_m25
         ot_hdc_fp32_mul_f12_l5 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r2), .b(c2), .y(m2), .err(e2), .valid_out());
     end endgenerate
-    generate if (ML == 6) begin : g_u_m3
+    generate if (ML == 7) begin : g_u_m37
+        ot_hdc_fp32_mul_f12_l7 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r3), .b(c3), .y(m3), .err(e3), .valid_out());
+    end else if (ML == 6) begin : g_u_m3
         ot_hdc_fp32_mul_f12_l6 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r3), .b(c3), .y(m3), .err(e3), .valid_out());
     end else begin : g_u_m35
         ot_hdc_fp32_mul_f12_l5 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(r3), .b(c3), .y(m3), .err(e3), .valid_out());
     end endgenerate
-    ot_hdc_fp32_mul_f12_l5 u_m4 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(y),  .b(p),  .y(m4), .err(e4), .valid_out());
-    generate if (AL == 5) begin : g_u_a1
+    // y*p: LAT 5 (_l5); under ML 7 LAT 6 (_l6r = _l5 + the same rounding-increment cut as _l7: its round / encode stage is
+    // the l6 multiplier's critical last stage too)
+    localparam integer LM4 = (ML >= 7) ? 6 : 5;
+    generate if (ML >= 7) begin : g_u_m4r
+        ot_hdc_fp32_mul_f12_l6r u_m4 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(y),  .b(p),  .y(m4), .err(e4), .valid_out());
+    end else begin : g_u_m45
+        ot_hdc_fp32_mul_f12_l5 u_m4 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(y),  .b(p),  .y(m4), .err(e4), .valid_out());
+    end endgenerate
+    // m4 (LAT LM4) is aligned to m0..m3 (LAT ML) by ML - LM4 extra cycles on its delay line and on its error: without them
+    // ML 6 brought y*p to the last add one cycle early (the historical m6a5 exactness FAIL).  ML 5: unchanged.
+    wire [1:0] e4a;
+    ot_hdc_delay #(.W(2), .D(ML - LM4)) u_e4 (.clk(clk), .rst_n(rst_n), .d(e4), .q(e4a));
+    generate if (AL == 6) begin : g_u_a16
+        ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(vm), .a(m0), .b(m1), .y(a1), .err(ea1), .valid_out(va1));
+    end else if (AL == 5) begin : g_u_a1
         ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(vm), .a(m0), .b(m1), .y(a1), .err(ea1), .valid_out(va1));
     end else begin : g_u_a14
         ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(vm), .a(m0), .b(m1), .y(a1), .err(ea1), .valid_out(va1));
     end endgenerate
     ot_hdc_delay #(.W(32), .D(AL))  u_d2 (.clk(clk), .rst_n(rst_n), .d(m2), .q(m2d));
-    generate if (AL == 5) begin : g_u_a2
+    generate if (AL == 6) begin : g_u_a26
+        ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(va1), .a(m2d), .b(a1), .y(a2), .err(ea2), .valid_out(va2));
+    end else if (AL == 5) begin : g_u_a2
         ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(va1), .a(m2d), .b(a1), .y(a2), .err(ea2), .valid_out(va2));
     end else begin : g_u_a24
         ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(va1), .a(m2d), .b(a1), .y(a2), .err(ea2), .valid_out(va2));
     end endgenerate
     ot_hdc_delay #(.W(32), .D(2*AL))  u_d3 (.clk(clk), .rst_n(rst_n), .d(m3), .q(m3d));
-    generate if (AL == 5) begin : g_u_a3
+    generate if (AL == 6) begin : g_u_a36
+        ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(va2), .a(m3d), .b(a2), .y(a3), .err(ea3), .valid_out(va3));
+    end else if (AL == 5) begin : g_u_a3
         ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(va2), .a(m3d), .b(a2), .y(a3), .err(ea3), .valid_out(va3));
     end else begin : g_u_a34
         ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(va2), .a(m3d), .b(a2), .y(a3), .err(ea3), .valid_out(va3));
     end endgenerate
-    ot_hdc_delay #(.W(32), .D(3*AL)) u_d4 (.clk(clk), .rst_n(rst_n), .d(m4), .q(m4d));
-    generate if (AL == 5) begin : g_u_a4
+    ot_hdc_delay #(.W(32), .D(3*AL + ML - LM4)) u_d4 (.clk(clk), .rst_n(rst_n), .d(m4), .q(m4d));
+    generate if (AL == 6) begin : g_u_a46
+        ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(va3), .a(m4d), .b(a3), .y(a4), .err(ea4), .valid_out(va4));
+    end else if (AL == 5) begin : g_u_a4
         ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(va3), .a(m4d), .b(a3), .y(a4), .err(ea4), .valid_out(va4));
     end else begin : g_u_a44
         ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(va3), .a(m4d), .b(a3), .y(a4), .err(ea4), .valid_out(va4));
@@ -92,7 +121,7 @@ module ot_dsrom_su_hcpost_lane #(
         if (!rst_n) begin vo <= 1'b0; fault <= 1'b0; fm <= 0; end
         else begin
             vo <= va4;
-            fm <= {fm[3*AL-1:0], vm && ((e0 | e1 | e2 | e3 | e4) != 2'd0)};
+            fm <= {fm[3*AL-1:0], vm && ((e0 | e1 | e2 | e3 | e4a) != 2'd0)};
             fault <= fault | fm[0] | (va1 && ea1 != 2'd0) | (va2 && ea2 != 2'd0) | (va3 && ea3 != 2'd0) |
                      (va4 && ea4 != 2'd0);
         end

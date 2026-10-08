@@ -1,0 +1,66 @@
+{
+ "name": "dshead-elemA-half-4123ff389",
+ "block": "ot_dsrom_head_elem_A",
+ "owner": "Claude:tk-ds-head (fused-head owner, takeover 2026-10-07)",
+ "purpose": "SAFE half-rate backstop of elemA (unchanged view RTL, 1,666.666 ps generated clock, route 1,460); parallel to the full-rate structural variant; adoption gated by the half-rate head-domain exact bench",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/takeover-ds-head-20261006",
+  "commit": "4123ff389fe8230057797bbc407e1b2dc065faa9"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "HALF=1 ROUTE_HOLD_IO=ss HM=0.010 EUTIL=32 bash physical/dsrom_fh_safe/cl_route.sh elemA {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "HALF=1 ROUTE_HOLD_IO=ss HM=0.010 EUTIL=32 bash physical/dsrom_fh_safe/cl_route.sh elemA {LABEL} {RUN}/routes/{LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/dsrom_fh_safe/gen/signoff_elemA.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [],
+  "post_sdc": [
+   "physical/dsrom_fh_safe/gen/signoff_elemA.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8"
+  ]
+ },
+ "hold_eco": {
+  "reexport": "python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_dsrom_head_elem --post-sdc physical/dsrom_fh_safe/gen/signoff_elemA.sdc --macro physical/asap7_memory_macros/ot_rom_4096x274_m8 --out {RUN}/routes/{LABEL}/view"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/dsrom_fh_safe/closed/elemA_half"
+  }
+ ],
+ "cycles_added": "half-rate fused-head domain: every head-domain cycle doubles (Codex model estimate +14,844 root cycles a gold4 draft slice); priced by the half-rate gold4 bench before adoption",
+ "merge_target": "claude/takeover-ds-head-20261006",
+ "no_bench_reason": "benched outside the loop: fused head quad/top = tools/test_fh_margin.py (head_q_safe / head_q_qpin lockstep == macro_ctx + negatives; endpoint_fpipe2) and the gold4 full bench --safe (results/rtl/dsrom_fh_redesign_20261006); head element = tools/dsrom_1m_head.py bundle --ioreg 1 --safe 1 --cut 0x1ff EXACT 128/128 argmax 21946 with neg_take/neg_x inexact (needs the released checkpoint, EPYC1 only)",
+ "budget": {
+  "enabled": false,
+  "reason": "budget sheet ot_dsrom_head_elem_A/B names the die abstract's ports (bbits/bd...), not the RTL's; IO from the calibrated insertion by the owner model instead"
+ }
+}

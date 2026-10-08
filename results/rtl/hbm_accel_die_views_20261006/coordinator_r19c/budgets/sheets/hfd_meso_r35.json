@@ -1,0 +1,177 @@
+{
+ "schema": "opentallas.budgets.sheet.v1",
+ "master": "hfd_meso_r35",
+ "kinds": [
+  "waypoint"
+ ],
+ "dies": {
+  "hbm": 4
+ },
+ "size_um": [
+  39.288,
+  285.096
+ ],
+ "tile_of": null,
+ "clock": {
+  "ports": [
+   "ck"
+  ],
+  "domains": [
+   "stream_1p2"
+  ],
+  "regions": [
+   "hbm:clk_stream:HUB-V"
+  ],
+  "n_regions": 1,
+  "entry_target_ss_ps": null,
+  "entry_target_ff_ps": null,
+  "die_pad_ss_ps": null,
+  "internal_insertion": {
+   "target_ss": 521.5,
+   "target_ff": 344.2,
+   "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 521.5, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+   "tolerance_ps": 100.0,
+   "ss": 521.5,
+   "ff": 344.2,
+   "ss_min": 495.4,
+   "ss_max": 573.7,
+   "ff_min": 327.0,
+   "ff_max": 378.6,
+   "grade": "target",
+   "source": "no calibration yet: the target",
+   "over_target": false
+  },
+  "calibrate_check": {
+   "compare": "closure-loop CK_SS_MEAN vs internal_insertion.ss (the value the die plan compensates) and vs internal_insertion.target_ss",
+   "tolerance_ps": 100.0,
+   "on_deviation": "FLAG (NEEDS_BUDGET): re-plan the die pin target; never silently re-calibrate the IO SDC"
+  }
+ },
+ "skew": {
+  "intra_ps": 90.0,
+  "inter_ps": 150.0,
+  "hold_io_ps": 50.0,
+  "setup_uncertainty_ps": 60.0,
+  "hold_uncertainty_ps": 25.0,
+  "route_period_ps": 770.0,
+  "signoff_period_ps": 833.333,
+  "accept_ps": 15.0
+ },
+ "control": {
+  "max_fanout_internal": 32,
+  "rule": "nets above 32 loads get kept (dont_touch) replicas; reductions > 4 inputs get a register per 4-6 levels (DESIGN SIMPLIFICATION 3/5)"
+ },
+ "interfaces": [
+  {
+   "port": "a",
+   "dir": "input",
+   "bits": 513,
+   "bus_classes": [
+    "hub"
+   ],
+   "neighbours": [
+    "hfd_stn_r34"
+   ],
+   "connections": 4,
+   "dies": [
+    "hbm"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 1624.8,
+   "length_basis": "pins",
+   "skew_class": "fwd",
+   "skew_ps": 0.0,
+   "hold_io_ps": 50.0,
+   "worst_instance": "hbm:w311_iv_NE<->w310_iv_NE",
+   "also_cdc": false,
+   "input_delay_ss_ps": 591.0,
+   "output_delay_ss_ps": 532.0,
+   "input_fraction_of_T": 0.709,
+   "output_fraction_of_T": 0.638,
+   "internal_input_ps": 167.3,
+   "internal_output_ps": 226.3,
+   "as_planned_internal_input_ps": 167.3,
+   "as_planned_internal_output_ps": 226.3,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 491.0,
+   "stages_needed": 4,
+   "stages_planned": 4,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 406.2,
+   "input_min_delay_ff_ps": 77.7,
+   "output_min_delay_ff_ps": -30.5,
+   "feasible": true
+  },
+  {
+   "port": "b",
+   "dir": "output",
+   "bits": 512,
+   "bus_classes": [
+    "hub"
+   ],
+   "neighbours": [
+    "hfd_vm_ne",
+    "hfd_vm_nw",
+    "hfd_vm_se",
+    "hfd_vm_sw"
+   ],
+   "connections": 4,
+   "dies": [
+    "hbm"
+   ],
+   "registered_at_pin": true,
+   "period_ps": 833.333,
+   "clock_domain": null,
+   "timing": "sync",
+   "length_um": 1517.1,
+   "length_basis": "pins",
+   "skew_class": "intra",
+   "skew_ps": 90.0,
+   "hold_io_ps": 50.0,
+   "worst_instance": "hbm:w308_iv_NW<->hb_vm_nw",
+   "also_cdc": false,
+   "input_delay_ss_ps": 650.5,
+   "output_delay_ss_ps": 591.5,
+   "input_fraction_of_T": 0.781,
+   "output_fraction_of_T": 0.71,
+   "internal_input_ps": 107.9,
+   "internal_output_ps": 166.9,
+   "as_planned_internal_input_ps": 107.9,
+   "as_planned_internal_output_ps": 166.9,
+   "feasible_input": true,
+   "feasible_output": true,
+   "reach_um": 411.7,
+   "stages_needed": 4,
+   "stages_planned": 4,
+   "extra_stages_needed": 0,
+   "segment_after_stages_um": 379.3,
+   "input_min_delay_ff_ps": 74.7,
+   "output_min_delay_ff_ps": -27.5,
+   "die_fanout": 1,
+   "feasible": true
+  }
+ ],
+ "totals": {
+  "ports": 2,
+  "sync": 2,
+  "cdc": 0,
+  "infeasible": 0,
+  "fanout_flags": 0,
+  "max_length_um": 1624.8,
+  "max_stages_needed": 4
+ },
+ "constants": {
+  "wire_ss_ps_per_um": 1.135,
+  "clkq_ss": 90.0,
+  "drv_out": 40.0,
+  "rcv_in": 41.0,
+  "setup_ss": 30.0,
+  "clkq_ff_min": 32.2,
+  "hold_ff": 15.0,
+  "wire_ff_credit_ps_per_um": 0.112
+ }
+}

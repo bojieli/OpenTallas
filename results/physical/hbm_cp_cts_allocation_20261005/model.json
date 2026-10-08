@@ -1,0 +1,83 @@
+{
+  "scope": "Existing CP child post-insertion clock/data ancestry binding; no new top or route",
+  "last_valid_placed_checkpoint_sha256": "430bcb0a663240663afaa997941324957f9cb7af3e3c6ee7882474f25c7f8f24",
+  "retained_failure_odb_sha256": "7b8a1829ee30ef53c1240185f4487f67a6ac1d83ec1c5d3b46389a258235aa07",
+  "hook": "physical/hbm_cp_parent_context_20261005/cts_membership.tcl",
+  "hook_sha256": "8d870f5ed39c200a8eb30ac52354d054d8569783e651179a090c295e7413ca75",
+  "regions": {
+    "cp_body": {
+      "bbox_um": [
+        17.28,
+        17.28,
+        60.48,
+        56.16
+      ],
+      "area_um2": 1679.6160000000002,
+      "post_binding_cells": 4627,
+      "post_binding_cell_area_um2": 585.51822
+    },
+    "cp_association": {
+      "bbox_um": [
+        17.28,
+        56.16,
+        22.464,
+        60.48
+      ],
+      "area_um2": 22.39488,
+      "post_binding_cells": 5,
+      "post_binding_cell_area_um2": 0.71442
+    }
+  },
+  "actual_insertions": {
+    "clock_buffers": 35,
+    "clock_buffer_area_um2": 10.4976,
+    "dummy_loads": 26,
+    "dummy_load_area_um2": 3.38256,
+    "repair_buffers": 1185,
+    "repair_buffer_area_um2": 95.7906,
+    "association_only_repair_cells": 3,
+    "association_only_repair_area_um2": 0.48114,
+    "shared_branch_cells": 4
+  },
+  "padding": {
+    "actual_DETAIL_sites": 0,
+    "validation_sites_per_side": 1,
+    "site_width_um": 0.054,
+    "row_height_um": 0.27,
+    "conservative_inserted_padding_area_um2": 36.333360000000006,
+    "conservative_inserted_padded_area_um2": 146.00412,
+    "conservative_half_utilization_reserve_um2": 292.00824
+  },
+  "tracks": {
+    "native_M6_pitch_um": 0.064,
+    "core_tracks": 675,
+    "actual_PG_landing_clearance_tracks": 83,
+    "existing_clock_other_reserve_tracks": 64,
+    "clock_tree_distinct_output_plus_root_nets": 36,
+    "signal_via_reserve_tracks": 34,
+    "residual_signal_tracks": 494,
+    "required_existing_boundary_signals": 236,
+    "boundary_bits_added": 0,
+    "repair_buffers_split_existing_nets": true,
+    "internal_routing_requires_actual_GRT": true
+  },
+  "clock": {
+    "source_phase_ps": 0,
+    "period_ps": 833.333333333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "added_RTL_cycles": 0,
+    "propagated_CTS_skew_and_latency_qualified": false,
+    "actual_corner_SPEF_required": true
+  },
+  "ancestry_rule": "Trace real output nets through ungrouped inserted buffers to retained sink groups/output BTerms. Association-only branches to existing association fence; CP-only or genuinely shared branches to existing body fence. Clock cells including dummy loads trace actual CLOCK nets to same retained sinks. Resolve all before adding membership.",
+  "verification": {
+    "retained_failure_DPL_only": true,
+    "synthesis_CTS_floorplan_PDN_replayed": false,
+    "check_placement_PASS": true,
+    "all_group_containment_violations": 0,
+    "ungrouped_movable_signal_cells": 0,
+    "all_61_clock_cells_inside_body": true,
+    "full_route_SS_FF_IR_qualified": false
+  }
+}

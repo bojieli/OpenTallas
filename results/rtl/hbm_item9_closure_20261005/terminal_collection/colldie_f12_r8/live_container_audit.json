@@ -1,0 +1,50 @@
+{
+  "observed_utc": "2026-10-05T23:09:24.432239+00:00",
+  "verdict": "DRIVER_TIMEOUT_ROUTE_STILL_LIVE",
+  "containers": [
+    {
+      "id": "07e18fc70d609e38c9dead4685163ed9e34c1f44e2ddabe1e6d73192509be7c8",
+      "name": "/nifty_agnesi",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 1853834,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-05T06:04:27.134493221Z",
+        "FinishedAt": "0001-01-01T00:00:00Z"
+      },
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/hbm-fmax-noc/src",
+          "Destination": "/src",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs",
+          "Destination": "/work",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "command": [
+        "bash",
+        "-lc",
+        "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate"
+      ],
+      "processes": "PID                 PPID                ELAPSED             RSS                 %CPU                COMMAND\n1853834             1853810             17:04:57            3464                0.0                 bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate\n1853874             1853834             17:04:57            2808                0.0                 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate\n1398316             1853874             16:37:53            2636                0.0                 make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_1_grt\n1398582             1398316             16:37:53            3432                0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route\n1398586             1398582             16:37:53            2088                0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route\n1398711             1398586             16:37:53            11360               0.0                 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/5_1_grt.json\n1398737             1398711             16:37:53            5954564             111                 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/5_1_grt.json\n"
+    }
+  ],
+  "route_terminal": false,
+  "kill_authorized": false,
+  "checkpoints_preserved": true
+}

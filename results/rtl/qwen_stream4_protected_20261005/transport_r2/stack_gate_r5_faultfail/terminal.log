@@ -1,0 +1,5 @@
+START stack32 arbiter with actual R14/2PC14span CLK833.333 H1024
+PASS stack32 actual desc/GO consumeACK OOO-WR2 orderedpool warmgrant/heldpairedrow/quiet CLK833.333 H1024
+PASS stack32 rejected actual WR ACK preserves source ticket/return debt across warm
+FATAL: rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_stack_transport.sv:146: backend report-sent upset hid fault/debt bf=1 cf=0 ticket=4183 fd=3
+       Time: 1112499555 Scope: tb_qwen_s4_stack_transport

@@ -1,0 +1,35 @@
+Traceback (most recent call last):
+  File "/srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/src/tools/qwen_vm_rom_ingress_check.py", line 3, in <module>
+    p=argparse.ArgumentParser();p.add_argument('--root',type=pathlib.Path,default=pathlib.Path('/home/ubuntu/OpenTallas'));p.add_argument('--out',type=pathlib.Path,default=pathlib.Path('/tmp/qwen-vm-rom-ingress-20261007'));p.add_argument('--adapter',type=pathlib.Path);a=p.parse_args();O=a.out;R=a.root;O.mkdir(parents=True,exist_ok=True);src=(a.adapter or O/'generated/ot_qwen_rom_vm_ingress_adapter.sv').read_text()
+                                                                                                                                                                                                                                                                                                                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/rom_ingress/generated/ot_qwen_rom_vm_ingress_adapter.sv'
+Command exited with non-zero status 1
+	Command being timed: "python3 tools/qwen_vm_rom_ingress_check.py --root . --out /srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/rom_ingress"
+	User time (seconds): 0.04
+	System time (seconds): 0.01
+	Percent of CPU this job got: 98%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.06
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 34196
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 4976
+	Voluntary context switches: 1
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

@@ -9,15 +9,15 @@ static uint32_t pick(std::mt19937_64& r){
 int main(int argc,char**argv){
   long n=argc>1?atol(argv[1]):2000000; std::mt19937_64 r(12345);
   Vtb_w11_fp32_mul_lat t; t.clk=0; t.rst_n=0; t.v=0; t.a=0;t.b=0;
-  long bad[6]={0,0,0,0,0,0}, cmp=0;
+  long bad[11]={0}, cmp=0;
   for(long c=0;c<n+20;c++){
     t.rst_n = c>4; 
     if(c>4 && c<n){ uint32_t a=pick(r), b;
       int k=r()%4; if(k==0){ b=a^0x80000000u; b = (b & ~0x7u) | (r()&7);} else if(k==1){ b=(a^0x80000000u)+ (int)(r()%5)-2;} else b=pick(r);
       t.v=1; t.a=a; t.b=b; } else t.v=0;
     t.clk=0; t.eval(); t.clk=1; t.eval();
-    if(c>16) for(int i=0;i<6;i++) if(t.mism&(1<<i)) bad[i]++;   // skip the reset transient (delay lines unreset)
+    if(c>20) for(int i=0;i<11;i++) if(t.mism&(1<<i)) bad[i]++;   // skip the reset transient (delay lines unreset)
     cmp++;
   }
-  printf("W11_FPMUL_EQ cycles=%ld mism_lat3=%ld lat4=%ld lat5=%ld lat6=%ld lat7=%ld lat5i=%ld\n",cmp,bad[0],bad[1],bad[2],bad[3],bad[4],bad[5]);
-  return (bad[0]|bad[1]|bad[2]|bad[3]|bad[4]|bad[5])?1:0;}
+  printf("W11_FPMUL_EQ cycles=%ld mism_lat3=%ld lat4=%ld lat5=%ld lat6=%ld lat7=%ld lat5i=%ld lat8=%ld lat9=%ld lat10=%ld lat9k4=%ld lat10k4=%ld\n",cmp,bad[0],bad[1],bad[2],bad[3],bad[4],bad[5],bad[6],bad[7],bad[8],bad[9],bad[10]);
+  long o=0; for(int i=0;i<11;i++) o|=bad[i]; return o?1:0;}

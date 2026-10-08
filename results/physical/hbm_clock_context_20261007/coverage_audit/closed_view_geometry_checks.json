@@ -1,0 +1,224 @@
+{
+  "scope": "Source-pinned real-view geometry matches current default r23 generator; full direction checker blocked, future R24SM3 source/budget binding not established by geometry alone",
+  "adoption": false,
+  "checks": [
+    {
+      "master": "hfd_stn_r33",
+      "record": "a4dd26da3",
+      "source_lef": "physical/hbm_accel_die_views/stations/hfd_stn_r33/route_cl/hfd_stn_r33.lef",
+      "actual_size": [
+        39.288,
+        77.736
+      ],
+      "current_gen_size": [
+        39.288,
+        77.736
+      ],
+      "pin_count": [
+        1027,
+        1027
+      ],
+      "missing": [],
+      "extra": [],
+      "moved_or_wrong_layer": [],
+      "scope": "geometric comparison; full direction checker blocked by existing endpoint_dirs NoneType error",
+      "source_commit": "4b51e590e4c8b5f4f4d1f5bc85e4ce58024ee1ed",
+      "budget_contract": {
+        "enabled": false,
+        "reason": "station margin SDC recipe (stn_margin_sdc.py); ck IO from this job's calibrate"
+      },
+      "bench_scope": [
+        "bench_station_flow_regression",
+        "bench_exact_station",
+        "bench_neg_mutant"
+      ],
+      "corners": {
+        "ss": {
+          "cell_names": [
+            "\"hfd_stn_r33\""
+          ],
+          "clock_pin_markers": 1,
+          "related_pins": [
+            "b[512]",
+            "ck[0]"
+          ]
+        },
+        "ff": {
+          "cell_names": [
+            "\"hfd_stn_r33\""
+          ],
+          "clock_pin_markers": 1,
+          "related_pins": [
+            "b[512]",
+            "ck[0]"
+          ]
+        }
+      }
+    },
+    {
+      "master": "hfd_stn_r38",
+      "record": "6bc864526",
+      "source_lef": "physical/hbm_accel_die_views/stations/hfd_stn_r38/route_cl/hfd_stn_r38.lef",
+      "actual_size": [
+        72.984,
+        41.016
+      ],
+      "current_gen_size": [
+        72.984,
+        41.016
+      ],
+      "pin_count": [
+        1026,
+        1026
+      ],
+      "missing": [],
+      "extra": [],
+      "moved_or_wrong_layer": [],
+      "scope": "geometric comparison; full direction checker blocked by existing endpoint_dirs NoneType error",
+      "source_commit": "88136dcd275c3b4f7c85639f3f497d90a5101907",
+      "budget_contract": {
+        "master": "hfd_stn_r38",
+        "clock": "core_clk"
+      },
+      "bench_scope": [
+        "bench_bench_exact",
+        "bench_bench_neg_mutant"
+      ],
+      "corners": {
+        "ss": {
+          "cell_names": [
+            "\"hfd_stn_r38\""
+          ],
+          "clock_pin_markers": 1,
+          "related_pins": [
+            "ck[0]"
+          ]
+        },
+        "ff": {
+          "cell_names": [
+            "\"hfd_stn_r38\""
+          ],
+          "clock_pin_markers": 1,
+          "related_pins": [
+            "ck[0]"
+          ]
+        }
+      }
+    },
+    {
+      "master": "hfd_stn_r39",
+      "record": "1a255ba55",
+      "source_lef": "physical/hbm_accel_die_views/stations/hfd_stn_r39/route_cl/hfd_stn_r39.lef",
+      "actual_size": [
+        50.088,
+        120.936
+      ],
+      "current_gen_size": [
+        50.088,
+        120.93599999999999
+      ],
+      "pin_count": [
+        4137,
+        4137
+      ],
+      "missing": [],
+      "extra": [],
+      "moved_or_wrong_layer": [],
+      "scope": "geometric comparison; full direction checker blocked by existing endpoint_dirs NoneType error",
+      "source_commit": "ad75a0248f8c2a99e9eefc2361a259c1198011f7",
+      "budget_contract": {
+        "enabled": false,
+        "reason": "forward pass-through station: no ck IO (margin.json ckins 0); its forwarded-clock arcs are budgeted by the station recipe stn_margin_sdc.py, not by a vclk insertion"
+      },
+      "bench_scope": [
+        "bench_bench_exact",
+        "bench_bench_neg_mutant"
+      ],
+      "corners": {
+        "ss": {
+          "cell_names": [
+            "\"hfd_stn_r39\""
+          ],
+          "clock_pin_markers": 5,
+          "related_pins": [
+            "a[2063]",
+            "a[2064]",
+            "a[2065]",
+            "a[2066]",
+            "a[2067]",
+            "b[2063]",
+            "b[2064]",
+            "b[2065]",
+            "b[2066]",
+            "b[2067]"
+          ]
+        },
+        "ff": {
+          "cell_names": [
+            "\"hfd_stn_r39\""
+          ],
+          "clock_pin_markers": 5,
+          "related_pins": [
+            "a[2063]",
+            "a[2064]",
+            "a[2065]",
+            "a[2066]",
+            "a[2067]",
+            "b[2063]",
+            "b[2064]",
+            "b[2065]",
+            "b[2066]",
+            "b[2067]"
+          ]
+        }
+      }
+    },
+    {
+      "master": "hfd_svc_SE_s8",
+      "record": "a6ede8cde",
+      "source_lef": "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s8/record/hfd_svc_SE_s8.lef",
+      "actual_size": [
+        400.032,
+        259.176
+      ],
+      "current_gen_size": [
+        400.032,
+        259.176
+      ],
+      "pin_count": [
+        954,
+        954
+      ],
+      "missing": [],
+      "extra": [],
+      "moved_or_wrong_layer": [],
+      "scope": "geometric comparison; full direction checker blocked by existing endpoint_dirs NoneType error",
+      "source_commit": "9ffaeb8e2c1c9b9efed233365aa281652877f32f",
+      "budget_contract": {
+        "master": "hfd_svc_SE_s8",
+        "clock": "core_clk"
+      },
+      "bench_scope": "SLOT=2 RTL at d6f9d25a1 benched by the views agent (run_bench_seg.sh on EPYC2: 16 lints, SW + NE SVC_BENCH PASS, beat + cross-bus mutants FAIL)",
+      "corners": {
+        "ss": {
+          "cell_names": [
+            "\"hfd_svc_SE_s8\""
+          ],
+          "clock_pin_markers": 1,
+          "related_pins": [
+            "ck[0]"
+          ]
+        },
+        "ff": {
+          "cell_names": [
+            "\"hfd_svc_SE_s8\""
+          ],
+          "clock_pin_markers": 1,
+          "related_pins": [
+            "ck[0]"
+          ]
+        }
+      }
+    }
+  ]
+}

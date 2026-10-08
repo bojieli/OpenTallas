@@ -1,0 +1,37 @@
+{
+  "schema": "hbm.norm.vm.boundary.source-delta.v1",
+  "basis": "Existing hbm_accel_su_fused_model.model and finite_native_parent_model; replace existing VM/stream wrapper, never instantiate both",
+  "existing_model": "results/rtl/hbm_su_fused_20261005/finite_native_parent_model.json",
+  "existing_model_sha256": "2b8549978ac73cd8bb35b8810c65fec7d5cba782369faca7230815602a34520c",
+  "norm_source_commit": "b2523883e",
+  "norm_source_sha256": "da8017e7d28af8846ab5fc01eb70cc412b12c7ac024586d0838d206caf9057fb",
+  "selected_norm_parameters": {
+    "LM": 5,
+    "LA": 6,
+    "RXS": 1,
+    "SXC": 1,
+    "FREG": 1
+  },
+  "selected_engine_latency_receipt": "results/rtl/dsrom_recovery_20261004/levers/su_norm.json",
+  "norm_cycles": {
+    "hc": 323,
+    "q": 287,
+    "kv": 282
+  },
+  "latency_basis": "Owner retained full-shape DPI plus N64 real RTL, not new full-shape RTL measurement",
+  "added_FF": 0,
+  "added_memory_ports": 0,
+  "added_landing_capacity": 0,
+  "added_communication_payload_bits": 0,
+  "added_control_boundary_bits": 1,
+  "added_handshake_logic": "completion ready gates existing done clear / VM busy release / new enrollment; reuse existing done FF and full73 protected descriptor, no shadow state",
+  "added_control_logic_allowance_um2": 4.0,
+  "allowance_basis": "Conservative eight 0.5um2 two-input gate equivalents; allowance, not mapped area; existing parent control allowance retained",
+  "latency_delta_clock_edges": 0,
+  "backpressure": "Actual consumer drain controls residence time, not additional fixed pipeline latency",
+  "full_parent_qualified": false,
+  "physical_route_admitted": false,
+  "default_enabled": false,
+  "protection": "Existing full73 stage_join descriptor retains authority through warm and actual native completion/readback/drain; new wrappers do not grant or independently protect frame",
+  "physical_hold": "Output all-path SS -349.92ps remains unresolved until propagated parent capture measured at SS60/FF25"
+}

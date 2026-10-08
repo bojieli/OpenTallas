@@ -1,0 +1,73 @@
+{
+  "default": 0,
+  "scope": "Conditional head child; source-native fast endpoint copies, no backend duplication",
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "memory_port_bytes_per_cycle": 0,
+  "boundary_bits_per_cycle": {
+    "head_write_payload": 2048,
+    "head_mask": 64,
+    "head_word": 96,
+    "native_request": 2831,
+    "protected_reply": 1267
+  },
+  "replicas": 1,
+  "capture_FF_bits": 8196,
+  "head_warm_once_fault_metadata_FF_bits": 22,
+  "FF_total": 8558,
+  "architectural_added_cycles": 10,
+  "clock": {
+    "fast_period_ps": 833.3333333333334,
+    "backend_period_ps": 1111.111111111111,
+    "related_dividers": [
+      3,
+      4
+    ],
+    "SS_uncertainty_ps": 60,
+    "FF_uncertainty_ps": 25
+  },
+  "native_ports": {
+    "head_groups_to_write_ports": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "xa_write_disabled": true,
+    "checked_address_bits": 15,
+    "head_address_bits": 24,
+    "no_enabled_address_truncation": true
+  },
+  "floorplan": {
+    "existing_head_um": [
+      2000,
+      660
+    ],
+    "macro_count": 64,
+    "FF_area_proxy_um2": 2396.3688,
+    "actual_mapped_receiver_caps_and_routing_tracks_required": true,
+    "clock_PG_repair_margin_required": true,
+    "ready_for_route": false
+  },
+  "fanout": "32-bit local mirror comparison/sticky protection controls only its capture bank; full error reduction only scalar fault/publication, never thousands of capture enables. Registered8x32 identity checks.",
+  "protection": "Immediate live mismatch still vetoes publication/ACK; registered check age and held tuple grant cannot hide a late mirror fault. Protected local fault/age/once state.",
+  "latency": {
+    "request_check_cycles": 5,
+    "reply_check_cycles": 5,
+    "candidate_extra_cycles_per_warm_chain": 10,
+    "candidate_extra_five_chain_cycles": 50,
+    "candidate_five_chain_cycles": 63013,
+    "measured_five_chain_cycles": null,
+    "requirement": "Measure single original fullG4W16 golden with actual checked publication/commit; backend crossing latency remains separate"
+  },
+  "adoption": false,
+  "physical_closed": false,
+  "parameter": "CHECK_PIPE",
+  "capture_bank_bits": 32,
+  "capture_banks": 129,
+  "extra_control_FF_bits": 340,
+  "flow_control": "One native held request and one held checked reply; busy until matching checked publication; no payload overwrite, no early or repeated warm ACK; new accept while held quarantines.",
+  "slot_added_area_proxy_um2": 99.144,
+  "routing_tracks_added": 266,
+  "acceptance_rate": "Native one-outstanding provider; do not assume streaming one/cycle. Actual caller must hold/retry before acceptance; targeted golden checks no lost producer writes."
+}

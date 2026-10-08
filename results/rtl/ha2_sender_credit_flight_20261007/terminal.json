@@ -1,0 +1,141 @@
+{
+  "cases": [
+    {
+      "data_delay": 0,
+      "ready_delay": 0,
+      "returncode": 0,
+      "passed": true,
+      "overflow": false,
+      "output": "PASS_FLIGHT data=0 return=0 rows=192 peak=7\n"
+    },
+    {
+      "data_delay": 0,
+      "ready_delay": 1,
+      "returncode": 0,
+      "passed": true,
+      "overflow": false,
+      "output": "PASS_FLIGHT data=0 return=1 rows=192 peak=8\n"
+    },
+    {
+      "data_delay": 0,
+      "ready_delay": 2,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=0 return=2 peak=8\n       Time: 526000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 0,
+      "ready_delay": 3,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=0 return=3 peak=8\n       Time: 526000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 1,
+      "ready_delay": 0,
+      "returncode": 0,
+      "passed": true,
+      "overflow": false,
+      "output": "PASS_FLIGHT data=1 return=0 rows=192 peak=8\n"
+    },
+    {
+      "data_delay": 1,
+      "ready_delay": 1,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=1 return=1 peak=8\n       Time: 536000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 1,
+      "ready_delay": 2,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=1 return=2 peak=8\n       Time: 536000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 1,
+      "ready_delay": 3,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=1 return=3 peak=8\n       Time: 536000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 2,
+      "ready_delay": 0,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=2 return=0 peak=8\n       Time: 546000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 2,
+      "ready_delay": 1,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=2 return=1 peak=8\n       Time: 546000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 2,
+      "ready_delay": 2,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=2 return=2 peak=8\n       Time: 546000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 2,
+      "ready_delay": 3,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=2 return=3 peak=8\n       Time: 546000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 3,
+      "ready_delay": 0,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=3 return=0 peak=8\n       Time: 556000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 3,
+      "ready_delay": 1,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=3 return=1 peak=8\n       Time: 556000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 3,
+      "ready_delay": 2,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=3 return=2 peak=8\n       Time: 556000 Scope: tb_ha2_sender_credit_flight\n"
+    },
+    {
+      "data_delay": 3,
+      "ready_delay": 3,
+      "returncode": 1,
+      "passed": false,
+      "overflow": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv:61: FLIGHT_OVERFLOW data=3 return=3 peak=8\n       Time: 556000 Scope: tb_ha2_sender_credit_flight\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender.sv": "afa0b30bde9d2ecb8798aee57b9ca846d94d924e738bdf4eca9b9404e9243022",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender_capture.sv": "8655ce951d56ef7540476f4a03c37f92cdb8f95f8fc4a84395f18a8bee1b9af6",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv": "511bea31ca65dba6118560545e8cba08ca837855b0e52c6aab459bffeb777c9b",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_sender_credit_flight.sv": "11a41a06b1bf21252a0cb9035e7e7aadf2592bba8e8e52d4e0762cf6b08eef93"
+  },
+  "scope": "Actual sender/input capture/FD8 receiver FIFO/registered count<=3 ready, receiver stopped then half-rate drain; full-width192rows; no arithmetic simulation"
+}

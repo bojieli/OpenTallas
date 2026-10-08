@@ -1,0 +1,58 @@
+[
+  {
+    "kind": "scale",
+    "case": "positive0",
+    "rc": 0,
+    "expected": 0,
+    "ok": true,
+    "tail": "PASS scale bank=0 rows=65536 latency=7 II=2 bounds=3 metadata_faults=4 duplicate_credit=detected SS_rom_delay_ps=739.211\n"
+  },
+  {
+    "kind": "scale",
+    "case": "positive1",
+    "rc": 0,
+    "expected": 0,
+    "ok": true,
+    "tail": "PASS scale bank=1 rows=65536 latency=7 II=2 bounds=3 metadata_faults=4 duplicate_credit=detected SS_rom_delay_ps=739.211\n"
+  },
+  {
+    "kind": "scale",
+    "case": "positive2",
+    "rc": 0,
+    "expected": 0,
+    "ok": true,
+    "tail": "PASS scale bank=2 rows=20864 latency=7 II=2 bounds=3 metadata_faults=4 duplicate_credit=detected SS_rom_delay_ps=739.211\n"
+  },
+  {
+    "kind": "scale",
+    "case": "negative_address",
+    "rc": 1,
+    "expected": 1,
+    "ok": true,
+    "tail": "FATAL: /tmp/qwen-embedding-padded-20261007/rtl/test/tb_qwen_embed_scale_bank_padded.sv:66: FAIL scale payload/order bank=0 row=65535 data=5ac6 wanted=5ad6\n       Time: 11269 Scope: tb_qwen_embed_scale_bank_padded\n"
+  },
+  {
+    "kind": "scale",
+    "case": "negative_lane",
+    "rc": 1,
+    "expected": 1,
+    "ok": true,
+    "tail": "FATAL: /tmp/qwen-embedding-padded-20261007/rtl/test/tb_qwen_embed_scale_bank_padded.sv:66: FAIL scale payload/order bank=0 row=65535 data=5ad7 wanted=5ad6\n       Time: 11269 Scope: tb_qwen_embed_scale_bank_padded\n"
+  },
+  {
+    "kind": "code",
+    "case": "positive",
+    "rc": 0,
+    "expected": 0,
+    "ok": true,
+    "tail": "PASS embed words=4096 cycles=32103 first_latency=7 min_gap=2 duplicate_credit=detected metadata_faults=7 SS_ROM_delay_ps=739.211\n"
+  },
+  {
+    "kind": "code",
+    "case": "negative_address",
+    "rc": 1,
+    "expected": 1,
+    "ok": true,
+    "tail": "FAIL embed payload/order at response=0 address=4095\nFATAL: /tmp/qwen-embedding-padded-20261007/rtl/test/tb_qwen_embed_code_bank_padded.sv:73: \n       Time: 10435 Scope: tb_qwen_embed_code_bank_padded\n"
+  }
+]

@@ -1,0 +1,172 @@
+{
+  "schema": "opentallas.hbm.selected_host_resume.v1",
+  "source_pin": "5f233771499e45752d486896b942f45950f1714f",
+  "base_source_pin": "1488fe4a82e3f39afa715f0a9dc990db738e65bd",
+  "source_sha256": {
+    "rtl/gpu_sys/ot_gpu_bd_line.sv": "f3e8ea0358815ec6acf07eef8c837080b95ef21cb59d05c9f778e979e6e9d81c",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+    "rtl/gpu_sys/ot_gpu_cmdproc.sv": "d0b1f0710af11ea1f60acb790ad23c9192e0794fd94383f23728ea663d327c5a",
+    "rtl/gpu_sys/ot_gpu_coll_endpoint.sv": "adf09a0bbf30c47f0c514c5476d39173bb3478414ae43a93195c012658d3a36b",
+    "rtl/gpu_sys/ot_gpu_coll_endpoint_f12.sv": "34cd78eefe99771774026ac1a70ef9e9c6d143a55faf50fd5d9dbc2da6499840",
+    "rtl/gpu_sys/ot_gpu_coll_endpoint_f12_txmask.sv": "b1138c336623ba2e9aed2db415f049d53053cf28a1dfedb1f8e1f832c1d2d364",
+    "rtl/gpu_sys/ot_gpu_coll_fabric.sv": "4755fb6105464f97dbddd51d80c1f5d84a43cea7a5d408b4862f0999ebd44608",
+    "rtl/gpu_sys/ot_gpu_coll_mux.sv": "fa7250f9fe44dc7a4ed18eb37d826b9ac9670d9d6dfccad15ccdf06d1a1db6cb",
+    "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+    "rtl/gpu_sys/ot_gpu_hbm_partition.sv": "1a2f10061d9bb7900fc9b9fd9b306c10345985d8f5be7be8d7f38fdb8330497f",
+    "rtl/gpu_sys/ot_gpu_hbm_system.sv": "22d8da84b86d866c0aaa9407fb3b4155a69976890ca05a7383503aac48b15c72",
+    "rtl/gpu_sys/ot_gpu_host_bridge.sv": "015ee63361328844b27e407f1fb48497e6788eaf54387b64e49741c7e74a0a96",
+    "rtl/gpu_sys/ot_gpu_l2_slice.sv": "22f6c39433c9551e2c931853225a41de1a84bc1f44ae2f231a8cec793cc8986a",
+    "rtl/gpu_sys/ot_gpu_memsys.sv": "73882cfce6282a027a678edc4eadf92b67875dae3544faf25c5fe1d026aba986",
+    "rtl/gpu_sys/ot_gpu_mreq_cdc.sv": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
+    "rtl/gpu_sys/ot_gpu_mreq_cdc_oh.sv": "a0b53144ef135c5b84079b996f05b38d00b59240dbd4d1893b7f4143de6b2f05",
+    "rtl/gpu_sys/ot_gpu_reset_ctrl.sv": "a1a8221698457376ac0eadfcb9e80e0a7a8683ef27e244c39b6ae78b9e53da2d",
+    "rtl/gpu_sys/ot_gpu_simt_divlane.sv": "01cc0cc9d0acb9eca4c65393e4c8cec96593e4bb9327ae2f71983f8dfd9f5275",
+    "rtl/gpu_sys/ot_gpu_simt_lane.sv": "97d0ea8512443174bc48789435697676f051e64159966eaa842217688f2a9c4e",
+    "rtl/gpu_sys/ot_gpu_simt_sm.sv": "a92b3700e326883c255be11c119cd6e3984b376c5a3cc85cd629b431f769c326",
+    "rtl/gpu_sys/ot_gpu_sys_glue.sv": "ef972587276d1689ac664dd8905ee98f7100c6cb4389075921ec89a1e63ad129",
+    "rtl/gpu_sys/ot_gpu_xbar.sv": "5fa9a43e08af4ef23455b1b98b7e1094245775700a6441c2883f81cd0563cc0d",
+    "rtl/gpu/ot_gpu_sm.sv": "43489304c695bed14c53eb93bf7d93e71db5e66e8ccc4610572b1d5b9bdcc6f7",
+    "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+    "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "rtl/gpu/ot_gpu_barrier_node.sv": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+    "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+    "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+    "rtl/gpu/ot_gpu_tc_col.sv": "e81c971fde92e9dda728ab962219998c033da61005f6858c6ff6bfc25d85616f",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+    "rtl/abi3/ot_a3_fp32_sqrt_rne.sv": "09f03bc02617c6b6d20f75992f25c47f0b3b0401d0004c86141ed0f1c5e94e55",
+    "rtl/gpu/ot_gpu_sm_bd.sv": "f0229375762a515aae5cba3f82e275a143909ede5357daebcd94f2e85f5f7abb",
+    "rtl/gpu/ot_gpu_bd_col.sv": "9637b23a0e48ae59818d2dc4a0a8e5333a73961c1783f37b82ca79d70a762df5",
+    "rtl/hdc/v41/ot_hdc_blockdot.sv": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
+    "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+    "rtl/v41rom/ot_v41_bterm2.sv": "7bcef5af5f27d2c8f43f8d185d0a6a3932ec003aa9a10979d166fdd0396154f9",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "rtl/link/ot_link_nvls_switch.sv": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/host/ot_host_if.sv": "a093c932db0a17352479d87b28bacc5b86e7d1e134c5c233d9087272cc15bc74",
+    "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv": "7230273667d61d7c87e67f93cff39523420a00913b40b76b03ae76e849ee3e94",
+    "rtl/hbm_accel/collective/ot_hbm_accel_simt_sm.sv": "8ed10381416be54890d2100184d65331e2bd254845bc9a115b2fd824d2643a29",
+    "rtl/hbm_accel/collective/ot_hbm_accel_coll_port.sv": "68482340f40af90b64a38bf72756cce28ed8a301a4f007306efb432342920efe",
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader.sv": "377dbf6c0230249ec89111e92f9887c84099dbca23f3fdc081410fe01eaa4a91",
+    "rtl/hbm_accel/loader/ot_hbm_accel_store.sv": "f34ff2dd74a043e0fb2e2e9ce492ff58dd5bb4099e256d888eab07731387a682",
+    "rtl/hbm_accel/loader/ot_hbm_accel_dma64.sv": "656a8c7d71aca1910843a1e8b4c1cad8ff205bf2d70aa6c352b98ac2f5e6f90b",
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv": "ddb758e8aada4579d3210f537957ba61f5bede0569b53f43a76059bd6a45bf0f",
+    "rtl/hbm_accel/loader/ot_hbm_accel_hbm_system_loader.sv": "e91c44c99dc9d0dea62216a903ca44a44339f4dafc955dd3110111ce77a5b79b",
+    "rtl/test/hbm_accel/tb_hbm_accel_loader_token_host.sv": "3d9f50830c8b640a5e13d27b26ff64b586153d111f14fab9577f32b84b7daa71"
+  },
+  "changed_sources": [
+    "rtl/hbm_accel/collective/ot_hbm_accel_simt_sm.sv"
+  ],
+  "fixture_sha256": {
+    "tb_cfg.txt": "3004fef797935c7ffe37c877ae5e73a357bcec7b4b34eedca8b3fee23f03ec93",
+    "expected.json": "9736532912ca11525bc6247136d01fb4e7667c92b1b00cd7f35faac0a7656c11",
+    "prog_d0_s0.hex": "3e7f303e4493eb61f413f8384a646b577bda7ad204ed8211305420874a56ebfd",
+    "prog_d0_s1.hex": "8167c6f7141ff587519518299665362a92a34ccb93de5fe0a66d931c0a1ddd9f",
+    "prog_d1_s0.hex": "88d22c124043c66f69ea4aa23198c7622ab452e6ccd68811405547312a9dad67",
+    "prog_d1_s1.hex": "237a48ee6bf4259c4a499f703a4d71a22a8e31d4e96dd24a7679d9eb0b941253",
+    "cmd_d0.hex": "5c5ec740dd3cdc0b7fab4a111dde35834e5f438556bec9349289bd09abb12a02",
+    "cmd_d1.hex": "5c5ec740dd3cdc0b7fab4a111dde35834e5f438556bec9349289bd09abb12a02"
+  },
+  "host_images": [
+    {
+      "retained": {
+        "/mnt/epyc1-scratch/claude/hbm-system-rtl/sysv_t8/case/die0_p0.hex": "0e4117b6c16d80905b4713fd4c99634939d974c1486e22120f92fa4f2cc97777",
+        "/mnt/epyc1-scratch/claude/hbm-system-rtl/sysv_t8/case/die0_p1.hex": "a4ca9754f4033fc65e3c72847238d6fa34765ede770a717b258acc7b0382b35a"
+      },
+      "host_sha256": "fcc81303babab195b6cc8f7d4c6aad13ba8c0a4cc1376b38b71c856b7662f9d3",
+      "CRC": "13787831",
+      "bytes": 134217728
+    },
+    {
+      "retained": {
+        "/mnt/epyc1-scratch/claude/hbm-system-rtl/sysv_t8/case/die1_p0.hex": "d3c9949b19677786da953d9d08e94d7742afd7406a7d6f0d32287b8c8260c528",
+        "/mnt/epyc1-scratch/claude/hbm-system-rtl/sysv_t8/case/die1_p1.hex": "e8c7b2ec118460403576da70fac782b6287407387fe6ac4a664b5b596284a8fb"
+      },
+      "host_sha256": "bf437ef69170c3afd247cd35e4f851e8aaadc43304fcdd3efb65d4eff12944f6",
+      "CRC": "582fba63",
+      "bytes": 134217728
+    }
+  ],
+  "params": {
+    "MEM_WORDS": 2097152,
+    "HAS_DIV": 1,
+    "HAS_BD": 1
+  },
+  "expected_steps": [
+    {
+      "pos": 0,
+      "input": 0,
+      "next": 2815
+    },
+    {
+      "pos": 1,
+      "input": 3563,
+      "next": 3537
+    },
+    {
+      "pos": 2,
+      "input": 3745,
+      "next": 2047
+    }
+  ],
+  "donor": "/srv/opentallas-scratch/codex/item8-hbm-loader-20261004/host_token_v41_r2",
+  "driver_sha256": "38ebc62e356f9ac08b93f92926a38fa14236c7daf30d637d3818fcae4f7b467f",
+  "scope": "retained reduced acceptance8c, real host image LOAD_VERIFY + actual code/command SRAM publication, no DUT preload",
+  "physical_qualified": false,
+  "verdict": "PASS",
+  "build_rc": 0,
+  "build_seconds": 138.88587926900072,
+  "donor_object_count": 38,
+  "reused_object_count": 3,
+  "run_started_utc": "2026-10-05T20:38:12Z",
+  "binary_sha256": "b32835ac31e0fd4a353989553c24a08568b42f1e419748b4bf95d98df983d5b2",
+  "run_rc": 0,
+  "run_seconds": 39706.866266405996,
+  "terminal_lines": [
+    "HOST_IMAGE_VISIBLE die=0 bytes=134217728 CRC=13787831 readback=13787831 sectors=4194304",
+    "HOST_IMAGE_VISIBLE die=1 bytes=134217728 CRC=582fba63 readback=582fba63 sectors=4194304",
+    "CODE_PUBLISHED accepted=21470 actualSRAMwrites=21470",
+    "STEP 0 pos 0 in 0 next 2815 OK  (step 6380917 clk_sm cycles, sim cycle 204093125) fault 0",
+    "STEP 1 pos 1 in 3563 next 3537 OK  (step 6405249 clk_sm cycles, sim cycle 210498424) fault 0",
+    "STEP 2 pos 2 in 3745 next 2047 OK  (step 6388722 clk_sm cycles, sim cycle 216887197) fault 0",
+    "CQ kind 2 status 2 slot 0 tag 7 pos 2 token 2047 step_cycles 6388722 generated 1",
+    "TB_GPU_HBM_SYSTEM PASS steps=3 cq_tokens=1 clk_sm_cycles=216888173 fails=0"
+  ],
+  "post_terminal_exact_check": {
+    "steps": 3,
+    "CQ_noncycle_fields": [
+      "kind",
+      "status",
+      "slot",
+      "tag",
+      "pos",
+      "token",
+      "generated"
+    ],
+    "CQ_completions": [
+      {
+        "kind": 2,
+        "status": 2,
+        "slot": 0,
+        "tag": 7,
+        "pos": 2,
+        "token": 2047,
+        "cycles": 6388722,
+        "generated": 1
+      }
+    ],
+    "actual_code_and_command_SRAM_writes": 21470,
+    "DUT_preload": false
+  },
+  "nominal_clocks_only": true
+}

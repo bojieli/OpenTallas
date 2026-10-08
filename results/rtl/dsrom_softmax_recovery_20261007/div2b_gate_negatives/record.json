@@ -1,0 +1,21 @@
+{
+  "source_commit": "b0c0fa929",
+  "host_run": "ot-epyc2:/srv/opentallas-scratch2/scratch/codex/div2b-gate-b0c0fa929",
+  "pairs_compared": 10000000,
+  "mismatches": 0,
+  "negative_controls": {
+    "INJECT_MISMATCH": "expected fatal observed",
+    "SHORT_DRAIN": "expected fatal observed"
+  },
+  "status": "PASS",
+  "sha256": {
+    "seed_1.log": "859f77adf5d129b66c6bf98f9b29668e3d5705d0aa529b2c7f92e872fbe9f5a7",
+    "seed_4.log": "998b8fa3ebeb35adf1894ae34c7a8f77be4c8440407dec30f755b611cd8a6a7c",
+    "negative_SHORT_DRAIN.log": "1e64bbcb96a8ddae14e46bc228a956b9e19f70d7d6237ae07befc3537e31d941",
+    "build.log": "ad3d981511c07d66bf6f098bff7a93fbe015125cd3ae88a7800745ea4c04e68f",
+    "negative_INJECT_MISMATCH.log": "8c2156e9463847a665293d6d9f7ff8750ab760396ce058f87cfff6fd1f40a7ee",
+    "verdict.txt": "da181ffb5d42cbe03e5876ff2229e93c0ceefedae2c2bca1b98fefe525be2c63",
+    "seed_2.log": "6b4f366a66ebda67477eb1bc0dd29427589327e732f505294df08e1bc88a430d",
+    "seed_3.log": "0e3c5d8c013a8d2051457a6c54615205dd13c474ca01a54b0dc4174f216a5855"
+  }
+}

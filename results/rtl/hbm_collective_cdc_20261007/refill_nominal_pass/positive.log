@@ -1,0 +1,13 @@
+CDC_PROGRESS edges=128 writes=60 reads=0 fault=0 wb=60 rb=0 hp=2 reset=11 por=00 inv=1 inr=1
+CDC_PROGRESS edges=256 writes=103 reads=102 fault=0 wb=103 rb=102 hp=0 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=384 writes=146 reads=144 fault=0 wb=18 rb=16 hp=1 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=512 writes=189 reads=188 fault=0 wb=61 rb=59 hp=2 reset=11 por=00 inv=1 inr=1
+CDC_PROGRESS edges=640 writes=231 reads=230 fault=0 wb=103 rb=102 hp=0 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=768 writes=274 reads=273 fault=0 wb=18 rb=16 hp=2 reset=11 por=00 inv=1 inr=1
+CDC_PROGRESS edges=896 writes=317 reads=315 fault=0 wb=61 rb=59 hp=0 reset=11 por=00 inv=1 inr=1
+CDC_PROGRESS edges=1024 writes=359 reads=358 fault=0 wb=103 rb=101 hp=2 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=1152 writes=402 reads=401 fault=0 wb=18 rb=17 hp=0 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=1280 writes=444 reads=443 fault=0 wb=60 rb=59 hp=1 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=1408 writes=487 reads=486 fault=0 wb=103 rb=102 hp=0 reset=11 por=00 inv=0 inr=1
+PASS_II1 longest_consecutive_retirement=40
+PASS_CDC full545x64 independent_clocks512flits wrap/stalls/full/correction/rails/drain/coordinated_reset/control_double/payload_double

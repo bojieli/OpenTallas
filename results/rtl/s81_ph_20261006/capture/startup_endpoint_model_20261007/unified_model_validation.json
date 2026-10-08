@@ -1,0 +1,6 @@
+{
+  "command": "python3 tools/uarch_model.py --s81-capture-startup-delay",
+  "result": "PASS",
+  "matches": "cell_model_r2.json",
+  "changes_existing_selected_models": false
+}

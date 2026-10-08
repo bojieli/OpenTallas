@@ -1,0 +1,295 @@
+{
+ "name": "hbm_svc_SW_s4_41d574827_bud",
+ "spec": {
+  "name": "hbm_svc_SW_s4_41d574827_bud",
+  "block": "hfd_svc_SW_s4",
+  "owner": "Claude:hbm-views",
+  "purpose": "svc segment hfd_svc_SW_s4: budget SDCs, hold repair margin 0.035 ns (svc/route_recipe.json)",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/hbm-abstracts-svcidx-20261006",
+   "commit": "41d57482796e648a579ea0178c770e196f026928",
+   "extra_paths": [
+    "results/uarch/hbm_current_target_portmap_20261005",
+    "results/rtl/hbm_accel_die_floorplan_20261005",
+    "results/rtl/die_top_lint_20261006",
+    "results/rtl/dshbm_matched_reference_20261005",
+    "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+   ]
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" HM=\"0.035\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" WSFILE=\"physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s4/ws.tcl\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_svc_SW_s4 physical/hbm_accel_die_views/svc/rtl/seg/hfd_svc_SW_s4.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0  $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 8,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" HM=\"0.035\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" WSFILE=\"physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s4/ws.tcl\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_svc_SW_s4 physical/hbm_accel_die_views/svc/rtl/seg/hfd_svc_SW_s4.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0  $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_svc_SW_s4.lef {RUN}/routes/{NAME}/view/hfd_svc_SW_s4_ss.lib {RUN}/routes/{NAME}/view/hfd_svc_SW_s4_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+    "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s4"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": "claude/hbm-abstracts-20261006",
+  "budget": {
+   "master": "hfd_svc_SW_s4",
+   "clock": "core_clk"
+  },
+  "no_bench_reason": "segment RTL at 70a27c406 benched by the views agent (run_bench_seg.sh: 16 lints, SW/NE PASS, beat + cross-bus mutants FAIL); 41d57482 adds only svc/route_recipe.json"
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/hbm_svc_SW_s4_41d574827_bud.json",
+ "created": "2026-10-06T20:21:57-07:00",
+ "status": "CLOSED",
+ "stage_idx": 4,
+ "attempt": 2,
+ "retries_used": 0,
+ "benches": {},
+ "hosts_tried": [
+  "ot-pve1"
+ ],
+ "events": [
+  "2026-10-06T20:21:57-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_svc_SW_s4_41d574827_bud.json",
+  "2026-10-06T20:22:21-07:00 source 41d57482796e synced to ot-pve1:/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/src",
+  "2026-10-06T20:23:07-07:00 launched calibrate (attempt 1) on ot-pve1",
+  "2026-10-06T20:30:01-07:00 calibrate done (rc=0)",
+  "2026-10-06T20:30:01-07:00 calibrated insertion CK_SS_MEAN=586 CK_SS_MIN=566 CK_SS_MAX=793 CK_FF_MEAN=379 CK_FF_MIN=363 CK_FF_MAX=526",
+  "2026-10-06T20:30:04-07:00 budget check OK: measured insertion 586 <= target 820.4 (sheet 820.4); budget SDCs regenerated from the measured insertion",
+  "2026-10-06T20:31:07-07:00 launched route (attempt 1) on ot-pve1",
+  "2026-10-06T22:20:15-07:00 route done (rc=0)",
+  "2026-10-06T22:21:16-07:00 verdict SS +104.48 / FF -64.99 / DRC 0 / checks failed [] -> NOT CLOSED",
+  "2026-10-06T22:22:25-07:00 hold-only miss (SS +104.48 / FF -64.99, DRC 0): post-route hold ECO launched on /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_41d574827_bud/base/5_2_route.odb",
+  "2026-10-06T23:43:12-07:00 hold ECO MISS: {'ss_ps': 65.45, 'ff_ps': -65.9, 'drc': 0, 'cells_added': 10349, 'errors': []}",
+  "2026-10-06T23:44:24-07:00 NEEDS_RTL: SS 104.48 / FF -64.99 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)",
+  "2026-10-07T01:32:30-07:00 human retry-eco (hold_eco rev 2 (guide-preserving re-route, sign-off-exact SDC, +18 goal)): re-judged at the verdict; earlier ECO kept in eco_history",
+  "2026-10-07T01:33:25-07:00 verdict SS +91.29 / FF -55.21 / DRC 0 / checks failed [] -> NOT CLOSED",
+  "2026-10-07T01:33:53-07:00 hold-only miss (SS +91.29 / FF -55.21, DRC 0): post-route hold ECO launched on /srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_41d574827_bud/base/5_2_route.odb",
+  "2026-10-07T02:38:40-07:00 hold ECO PASS: {'ss_ps': 95.47, 'ff_ps': 22.16, 'drc': 0, 'cells_added': 3394, 'errors': [], 'pass': 1, 'session': 'ff', 'window': 'endpoints_below_hm 1697 fixable 1697 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)', 'score': 7.16}",
+  "2026-10-07T02:47:16-07:00 verdict SS +95.47 / FF +22.16 / DRC 0 / checks failed [] -> CLOSED",
+  "2026-10-07T02:49:01-07:00 launched collect (attempt 2) on ot-pve1",
+  "2026-10-07T02:55:34-07:00 collect done (rc=0)",
+  "2026-10-07T03:02:20-07:00 CLOSED: CLOSED SS +95.47 / FF +22.16 ps DRC 0 | record claude/hbm-abstracts-svcidx-20261006 eac2fed7e (8 files) | merged into claude/hbm-abstracts-20261006 ca1d6a585"
+ ],
+ "updated": "2026-10-07T03:02:20-07:00",
+ "wait": null,
+ "host": "ot-pve1",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud",
+ "commit_full": "41d57482796e648a579ea0178c770e196f026928",
+ "budget": {
+  "master": "hfd_svc_SW_s4",
+  "sheets_ref": "fb80e94681cfbc211106ca0d59798a5336681eec",
+  "insertion": {
+   "target_ss": 820.4,
+   "target_ff": 541.5,
+   "target_basis": "min(430.0 + 0.865 x sqrt(w h) = 820.4, cap 900 = intra skew 90 / (2 x OCV 0.05))",
+   "tolerance_ps": 100.0,
+   "ss": 820.4,
+   "ff": 541.5,
+   "ss_min": 779.4,
+   "ss_max": 902.4,
+   "ff_min": 514.4,
+   "ff_max": 595.7,
+   "grade": "target",
+   "source": "no calibration yet: the target",
+   "over_target": false
+  },
+  "entry_target_ss": {
+   "mean": 2271.3,
+   "min": 2271.3,
+   "max": 2271.3
+  },
+  "insertion_used": {
+   "ss": 586,
+   "ff": 379,
+   "ss_min": 566,
+   "ss_max": 793,
+   "ff_min": 363,
+   "ff_max": 526,
+   "grade": "measured",
+   "source": "closure-loop calibrate hbm_svc_SW_s4_41d574827_bud (ot-pve1:/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud)",
+   "over_target": false
+  },
+  "check": {
+   "measured_ss": 586.0,
+   "ok": true,
+   "reasons": [],
+   "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
+  }
+ },
+ "stage_key": "commit",
+ "stage_tag": "collect.a2",
+ "stage_started": "2026-10-07T02:49:01-07:00",
+ "unreachable": 0,
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 2565,
+    "mean": 586.0,
+    "min": 566.0,
+    "max": 792.6
+   },
+   "all": {
+    "n": 7222,
+    "mean": 573.6,
+    "min": 550.6,
+    "max": 792.6
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 2565,
+    "mean": 378.8,
+    "min": 362.9,
+    "max": 526.0
+   },
+   "all": {
+    "n": 7222,
+    "mean": 367.5,
+    "min": 347.8,
+    "max": 526.0
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 586,
+   "CK_SS_ALL_MEAN": 574,
+   "CK_SS_MIN": 566,
+   "CK_SS_ALL_MIN": 551,
+   "CK_SS_MAX": 793,
+   "CK_SS_ALL_MAX": 793,
+   "CK_FF_MEAN": 379,
+   "CK_FF_ALL_MEAN": 368,
+   "CK_FF_MIN": 363,
+   "CK_FF_ALL_MIN": 348,
+   "CK_FF_MAX": 526,
+   "CK_FF_ALL_MAX": 526
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "metrics": {
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/work/orfs/logs/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_41d574827_bud/base/5_2_route.json"
+  ],
+  "ss_ps": 95.47,
+  "ff_ps": 22.16,
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/cl/eco-r2/pass1/orfs",
+  "errors": [],
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+   "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc"
+  ],
+  "drc": 0,
+  "eco": {
+   "ss_ps": 95.47,
+   "ff_ps": 22.16,
+   "drc": 0,
+   "cells_added": 3394,
+   "errors": [],
+   "pass": 1,
+   "session": "ff",
+   "window": "endpoints_below_hm 1697 fixable 1697 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)",
+   "score": 7.16
+  }
+ },
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "failed_checks": [],
+ "eco": {
+  "tried": true,
+  "rb": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_41d574827_bud/base",
+  "ob": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_41d574827_bud/base",
+  "out": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/cl/eco-r2",
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+   "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc"
+  ],
+  "pre": {
+   "ss_ps": 91.29,
+   "ff_ps": -55.21
+  },
+  "started": "2026-10-07T01:33:33-07:00",
+  "result": {
+   "ss_ps": 95.47,
+   "ff_ps": 22.16,
+   "drc": 0,
+   "cells_added": 3394,
+   "errors": [],
+   "pass": 1,
+   "session": "ff",
+   "window": "endpoints_below_hm 1697 fixable 1697 tight 0 infeasible 0 (hm 21.0 filt 40 accept_ss 15.0)",
+   "score": 7.16
+  },
+  "installed": "2026-10-07T02:45:35-07:00"
+ },
+ "reason": "CLOSED SS +95.47 / FF +22.16 ps DRC 0 | record claude/hbm-abstracts-svcidx-20261006 eac2fed7e (8 files) | merged into claude/hbm-abstracts-20261006 ca1d6a585",
+ "eco_history": [
+  {
+   "tried": true,
+   "rb": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_41d574827_bud/base",
+   "ob": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_41d574827_bud/routes/hbm_svc_SW_s4_41d574827_bud/work/orfs/results/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_41d574827_bud/base",
+   "pre": {
+    "ss_ps": 104.48,
+    "ff_ps": -64.99
+   },
+   "started": "2026-10-06T22:22:24-07:00",
+   "result": {
+    "ss_ps": 65.45,
+    "ff_ps": -65.9,
+    "drc": 0,
+    "cells_added": 10349,
+    "errors": []
+   }
+  }
+ ],
+ "errors": [],
+ "publish": {
+  "branch_commit": "eac2fed7e47fee061c9bbfdbbb23da0689064f73",
+  "files": 8,
+  "merge_commit": "ca1d6a58515989a4d8c972d2e6ea3d7620e1b25e",
+  "merge": "merged into claude/hbm-abstracts-20261006 ca1d6a585"
+ }
+}

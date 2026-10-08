@@ -1,0 +1,1377 @@
+{
+  "schema": "opentallas.hbm.memory_control.literal_interfaces.v1",
+  "owner": "Codex/Dirac",
+  "family8_export_only": true,
+  "parent_qualified": false,
+  "rows": [
+    {
+      "top": "ot_hbm_accel_tu_endpoint",
+      "source_path": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv",
+      "source_sha256": "b96be44ecfe9bb2148aa88131169894229f9b1a60432b4bb0477fb28dbddd877",
+      "source_snapshot": "results/physical/hbm_die_abstracts_20261006/memory_control/source/ot_hbm_accel_tu_endpoint.sv",
+      "parameter_defaults": {
+        "ENABLE": 0,
+        "NC": 8,
+        "NOG": 8,
+        "PFMAX": 64,
+        "LANES": 16,
+        "BF16": 1,
+        "NPT": 8,
+        "INJ": 2,
+        "DEL": 4,
+        "HUBW": 35,
+        "WSTG": 14,
+        "BITS_X100": 72000,
+        "PWB": 545,
+        "RXAW": 8,
+        "QAW": 6,
+        "TXAW": 6,
+        "SWCRED": 256,
+        "LAT": 7,
+        "FW": 512,
+        "PWT": 545
+      },
+      "parameter_expressions": {
+        "ENABLE": "0",
+        "NC": "8",
+        "NOG": "8",
+        "PFMAX": "64",
+        "LANES": "16",
+        "BF16": "1",
+        "NPT": "8",
+        "INJ": "2",
+        "DEL": "4",
+        "HUBW": "35",
+        "WSTG": "14",
+        "BITS_X100": "72000",
+        "PWB": "545",
+        "RXAW": "8",
+        "QAW": "6",
+        "TXAW": "6",
+        "SWCRED": "256",
+        "LAT": "7",
+        "FW": "32 * LANES",
+        "PWT": "FW + 33"
+      },
+      "interface_width_profile": {
+        "ENABLE": 0,
+        "NC": 8,
+        "NOG": 8,
+        "PFMAX": 384,
+        "LANES": 16,
+        "BF16": 1,
+        "NPT": 8,
+        "INJ": 2,
+        "DEL": 4,
+        "HUBW": 35,
+        "WSTG": 14,
+        "BITS_X100": 72000,
+        "PWB": 545,
+        "RXAW": 8,
+        "QAW": 6,
+        "TXAW": 6,
+        "SWCRED": 256,
+        "LAT": 7,
+        "FW": 512,
+        "PWT": 545
+      },
+      "profile_is_physical_adoption": false,
+      "ports": [
+        {
+          "name": "clk",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "pclk",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "prst_n",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "rank",
+          "direction": "input",
+          "width_bits": 8,
+          "literal_range": "7:0",
+          "selected_range": [
+            7,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "pf",
+          "direction": "input",
+          "width_bits": 16,
+          "literal_range": "15:0",
+          "selected_range": [
+            15,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "go",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "inj_idx",
+          "direction": "output",
+          "width_bits": 32,
+          "literal_range": "INJ*16-1:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "inj_rd",
+          "direction": "output",
+          "width_bits": 2,
+          "literal_range": "INJ-1:0",
+          "selected_range": [
+            1,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "inj_data",
+          "direction": "input",
+          "width_bits": 1024,
+          "literal_range": "INJ*FW-1:0",
+          "selected_range": [
+            1023,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "ph_tx_v",
+          "direction": "output",
+          "width_bits": 8,
+          "literal_range": "NPT-1:0",
+          "selected_range": [
+            7,
+            0
+          ],
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "ph_tx_flit",
+          "direction": "output",
+          "width_bits": 4360,
+          "literal_range": "NPT*PWT-1:0",
+          "selected_range": [
+            4359,
+            0
+          ],
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "sw_cr_ret",
+          "direction": "input",
+          "width_bits": 8,
+          "literal_range": "NPT-1:0",
+          "selected_range": [
+            7,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "ph_rx_v",
+          "direction": "input",
+          "width_bits": 8,
+          "literal_range": "NPT-1:0",
+          "selected_range": [
+            7,
+            0
+          ],
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "ph_rx_flit",
+          "direction": "input",
+          "width_bits": 4360,
+          "literal_range": "NPT*PWT-1:0",
+          "selected_range": [
+            4359,
+            0
+          ],
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "rx_credit",
+          "direction": "output",
+          "width_bits": 8,
+          "literal_range": "NPT-1:0",
+          "selected_range": [
+            7,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "del_valid",
+          "direction": "output",
+          "width_bits": 4,
+          "literal_range": "DEL-1:0",
+          "selected_range": [
+            3,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "del_flit",
+          "direction": "output",
+          "width_bits": 2180,
+          "literal_range": "DEL*PWT-1:0",
+          "selected_range": [
+            2179,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "stat_credit_stall",
+          "direction": "output",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        }
+      ],
+      "total_input_bits": 5429,
+      "total_output_bits": 6627,
+      "literal_ACK_port_present": false,
+      "physical_view_accepted": false,
+      "family": "hfd_coll",
+      "family_number": 8,
+      "physical_parent_state": "OPEN",
+      "clocks": {
+        "core": "clk",
+        "phy": "pclk",
+        "core_reset": "rst_n",
+        "phy_reset": "prst_n",
+        "actual_parent_propagated_clock_binding": null
+      },
+      "configuration_ports": [
+        "rank",
+        "pf",
+        "go"
+      ],
+      "ACK_and_loading": {
+        "literal_ACK": null,
+        "TX_switch_credit_return": "sw_cr_ret[7:0]",
+        "RX_buffer_pop_credit": "rx_credit[7:0]",
+        "injection_request": "inj_rd[1:0]",
+        "injection_address": "inj_idx[31:0]",
+        "injection_payload": "inj_data[1023:0]",
+        "delivery_valid": "del_valid[3:0]",
+        "delivery_flits": "del_flit[2179:0]",
+        "delivery_ready_port": null,
+        "configuration_loader_port": null
+      },
+      "flit_layout_msb_to_lsb": [
+        "kind[1]",
+        "dst[8]",
+        "src[8]",
+        "idx[16]",
+        "data[512]"
+      ],
+      "arithmetic_gate_scope": "PF384 NC8 LANES16 reducer gate only; does not qualify complete endpoint",
+      "source_PHY_data_valid_bits_per_direction": 4368,
+      "source_PHY_data_valid_credit_bits_per_direction": 4376
+    },
+    {
+      "top": "ot_hbm_accel_tu_endpoint_item9_owner",
+      "source_path": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv",
+      "source_sha256": "3d17d115b2c250b768e4a8200413b21341552e9451e3d0f2d4924311749df16b",
+      "source_snapshot": "results/physical/hbm_die_abstracts_20261006/memory_control/source/ot_hbm_accel_tu_endpoint_item9_owner.sv",
+      "parameter_defaults": {
+        "CUTS": 0,
+        "ENABLE": 0,
+        "OWNER_REDUCER": 0,
+        "SLOTREG": 1,
+        "NC": 8,
+        "NOG": 8,
+        "PFMAX": 64,
+        "LANES": 16,
+        "BF16": 1,
+        "NPT": 8,
+        "INJ": 2,
+        "DEL": 4,
+        "HUBW": 35,
+        "WSTG": 14,
+        "BITS_X100": 72000,
+        "PWB": 545,
+        "RXAW": 8,
+        "QAW": 6,
+        "TXAW": 6,
+        "SWCRED": 256,
+        "LAT": 7,
+        "FW": 512,
+        "PWT": 545
+      },
+      "parameter_expressions": {
+        "CUTS": "0",
+        "ENABLE": "0",
+        "OWNER_REDUCER": "0",
+        "SLOTREG": "1",
+        "NC": "8",
+        "NOG": "8",
+        "PFMAX": "64",
+        "LANES": "16",
+        "BF16": "1",
+        "NPT": "8",
+        "INJ": "2",
+        "DEL": "4",
+        "HUBW": "35",
+        "WSTG": "14",
+        "BITS_X100": "72000",
+        "PWB": "545",
+        "RXAW": "8",
+        "QAW": "6",
+        "TXAW": "6",
+        "SWCRED": "256",
+        "LAT": "7",
+        "FW": "32 * LANES",
+        "PWT": "FW + 33"
+      },
+      "interface_width_profile": {
+        "CUTS": 0,
+        "ENABLE": 0,
+        "OWNER_REDUCER": 0,
+        "SLOTREG": 1,
+        "NC": 8,
+        "NOG": 8,
+        "PFMAX": 384,
+        "LANES": 16,
+        "BF16": 1,
+        "NPT": 8,
+        "INJ": 2,
+        "DEL": 4,
+        "HUBW": 35,
+        "WSTG": 14,
+        "BITS_X100": 72000,
+        "PWB": 545,
+        "RXAW": 8,
+        "QAW": 6,
+        "TXAW": 6,
+        "SWCRED": 256,
+        "LAT": 7,
+        "FW": 512,
+        "PWT": 545
+      },
+      "profile_is_physical_adoption": false,
+      "ports": [
+        {
+          "name": "clk",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "pclk",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "prst_n",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "rank",
+          "direction": "input",
+          "width_bits": 8,
+          "literal_range": "7:0",
+          "selected_range": [
+            7,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "context_operation",
+          "direction": "input",
+          "width_bits": 64,
+          "literal_range": "63:0",
+          "selected_range": [
+            63,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "context_phase",
+          "direction": "input",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "endpoint_rearm_ready",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "endpoint_quiet_core",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "endpoint_quiet_phy",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "pf",
+          "direction": "input",
+          "width_bits": 16,
+          "literal_range": "15:0",
+          "selected_range": [
+            15,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "go",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "inj_idx",
+          "direction": "output",
+          "width_bits": 32,
+          "literal_range": "INJ*16-1:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "inj_rd",
+          "direction": "output",
+          "width_bits": 2,
+          "literal_range": "INJ-1:0",
+          "selected_range": [
+            1,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "inj_data",
+          "direction": "input",
+          "width_bits": 1024,
+          "literal_range": "INJ*FW-1:0",
+          "selected_range": [
+            1023,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "ph_tx_v",
+          "direction": "output",
+          "width_bits": 8,
+          "literal_range": "NPT-1:0",
+          "selected_range": [
+            7,
+            0
+          ],
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "ph_tx_flit",
+          "direction": "output",
+          "width_bits": 4360,
+          "literal_range": "NPT*PWT-1:0",
+          "selected_range": [
+            4359,
+            0
+          ],
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "sw_cr_ret",
+          "direction": "input",
+          "width_bits": 8,
+          "literal_range": "NPT-1:0",
+          "selected_range": [
+            7,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "ph_rx_v",
+          "direction": "input",
+          "width_bits": 8,
+          "literal_range": "NPT-1:0",
+          "selected_range": [
+            7,
+            0
+          ],
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "ph_rx_flit",
+          "direction": "input",
+          "width_bits": 4360,
+          "literal_range": "NPT*PWT-1:0",
+          "selected_range": [
+            4359,
+            0
+          ],
+          "clock_domain": "pclk"
+        },
+        {
+          "name": "rx_credit",
+          "direction": "output",
+          "width_bits": 8,
+          "literal_range": "NPT-1:0",
+          "selected_range": [
+            7,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "del_valid",
+          "direction": "output",
+          "width_bits": 4,
+          "literal_range": "DEL-1:0",
+          "selected_range": [
+            3,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "del_flit",
+          "direction": "output",
+          "width_bits": 2180,
+          "literal_range": "DEL*PWT-1:0",
+          "selected_range": [
+            2179,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "stat_credit_stall",
+          "direction": "output",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        }
+      ],
+      "total_input_bits": 5525,
+      "total_output_bits": 6630,
+      "literal_ACK_port_present": false,
+      "physical_view_accepted": false,
+      "family": "hfd_coll",
+      "family_number": 8,
+      "physical_parent_state": "OPEN",
+      "clocks": {
+        "core": "clk",
+        "phy": "pclk",
+        "core_reset": "rst_n",
+        "phy_reset": "prst_n",
+        "actual_parent_propagated_clock_binding": null
+      },
+      "configuration_ports": [
+        "rank",
+        "pf",
+        "go",
+        "context_operation",
+        "context_phase"
+      ],
+      "ACK_and_loading": {
+        "literal_ACK": null,
+        "TX_switch_credit_return": "sw_cr_ret[7:0]",
+        "RX_buffer_pop_credit": "rx_credit[7:0]",
+        "injection_request": "inj_rd[1:0]",
+        "injection_address": "inj_idx[31:0]",
+        "injection_payload": "inj_data[1023:0]",
+        "delivery_valid": "del_valid[3:0]",
+        "delivery_flits": "del_flit[2179:0]",
+        "delivery_ready_port": null,
+        "configuration_loader_port": null
+      },
+      "flit_layout_msb_to_lsb": [
+        "kind[1]",
+        "dst[8]",
+        "src[8]",
+        "idx[16]",
+        "data[512]"
+      ],
+      "arithmetic_gate_scope": "PF384 NC8 LANES16 reducer gate only; does not qualify complete endpoint",
+      "source_PHY_data_valid_bits_per_direction": 4368,
+      "source_PHY_data_valid_credit_bits_per_direction": 4376
+    },
+    {
+      "top": "ot_ds_hbm_cmdproc20",
+      "source_path": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+      "source_sha256": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+      "source_snapshot": "results/physical/hbm_die_abstracts_20261006/memory_control/source/ot_ds_hbm_cmdproc20.sv",
+      "parameter_defaults": {
+        "TW": 17,
+        "PW": 20,
+        "CONTEXT_POSITIONS": 1048576,
+        "ENABLE": 0,
+        "NSM": 2,
+        "NCMD": 256
+      },
+      "parameter_expressions": {
+        "TW": "17",
+        "PW": "20",
+        "CONTEXT_POSITIONS": "1048576",
+        "ENABLE": "0",
+        "NSM": "2",
+        "NCMD": "256"
+      },
+      "interface_width_profile": {
+        "TW": 17,
+        "PW": 20,
+        "CONTEXT_POSITIONS": 1048576,
+        "ENABLE": 0,
+        "NSM": 2,
+        "NCMD": 256
+      },
+      "profile_is_physical_adoption": false,
+      "ports": [
+        {
+          "name": "clk",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cmd_we",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cmd_addr",
+          "direction": "input",
+          "width_bits": 8,
+          "literal_range": "$clog2(NCMD)-1:0",
+          "selected_range": [
+            7,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cmd_wdata",
+          "direction": "input",
+          "width_bits": 64,
+          "literal_range": "63:0",
+          "selected_range": [
+            63,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "db_v",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "db_rdy",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "db_token",
+          "direction": "input",
+          "width_bits": 17,
+          "literal_range": "TW-1:0",
+          "selected_range": [
+            16,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "db_pos",
+          "direction": "input",
+          "width_bits": 20,
+          "literal_range": "PW-1:0",
+          "selected_range": [
+            19,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "db_job",
+          "direction": "input",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "db_generation",
+          "direction": "input",
+          "width_bits": 4,
+          "literal_range": "3:0",
+          "selected_range": [
+            3,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cpl_position",
+          "direction": "output",
+          "width_bits": 20,
+          "literal_range": "PW-1:0",
+          "selected_range": [
+            19,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cpl_job",
+          "direction": "output",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cpl_generation",
+          "direction": "output",
+          "width_bits": 4,
+          "literal_range": "3:0",
+          "selected_range": [
+            3,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "launch_v",
+          "direction": "output",
+          "width_bits": 2,
+          "literal_range": "NSM-1:0",
+          "selected_range": [
+            1,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "launch_pc",
+          "direction": "output",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "launch_token",
+          "direction": "output",
+          "width_bits": 17,
+          "literal_range": "TW-1:0",
+          "selected_range": [
+            16,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "launch_pos",
+          "direction": "output",
+          "width_bits": 20,
+          "literal_range": "PW-1:0",
+          "selected_range": [
+            19,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "sm_done",
+          "direction": "input",
+          "width_bits": 2,
+          "literal_range": "NSM-1:0",
+          "selected_range": [
+            1,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "sm_fault",
+          "direction": "input",
+          "width_bits": 2,
+          "literal_range": "NSM-1:0",
+          "selected_range": [
+            1,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "res_v",
+          "direction": "input",
+          "width_bits": 2,
+          "literal_range": "NSM-1:0",
+          "selected_range": [
+            1,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "res_data",
+          "direction": "input",
+          "width_bits": 64,
+          "literal_range": "NSM*32-1:0",
+          "selected_range": [
+            63,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cpl_v",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cpl_rdy",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cpl_token",
+          "direction": "output",
+          "width_bits": 17,
+          "literal_range": "TW-1:0",
+          "selected_range": [
+            16,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cpl_status",
+          "direction": "output",
+          "width_bits": 4,
+          "literal_range": "3:0",
+          "selected_range": [
+            3,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cpl_cycles",
+          "direction": "output",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "st_kernels",
+          "direction": "output",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "st_busy",
+          "direction": "output",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        }
+      ],
+      "total_input_bits": 220,
+      "total_output_bits": 246,
+      "literal_ACK_port_present": false,
+      "physical_view_accepted": false,
+      "family": "hfd_cmdproc",
+      "family_number": 9,
+      "scope": "read-only literal CP reference; sole structural/integration owner Harvey; no exported family9 macro",
+      "parent_state": "OPEN",
+      "ACK_and_loading": {
+        "literal_ACK": null,
+        "completion": "cpl_v/cpl_rdy",
+        "loading": [
+          "cmd_we",
+          "cmd_addr[7:0]",
+          "cmd_wdata[63:0]"
+        ],
+        "NSM_default_is_2_not_32": true
+      }
+    },
+    {
+      "top": "ot_hbm_integrated_su_cp_bind",
+      "source_path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+      "source_sha256": "9744b0dbfc057889caf020f5a412494650d17c2cbbda2601821e246974a072e2",
+      "source_snapshot": "results/physical/hbm_die_abstracts_20261006/memory_control/source/ot_hbm_integrated_su_cp_bind.sv",
+      "parameter_defaults": {
+        "ENABLE": 0,
+        "REGISTERED_OUTPUTS": 0,
+        "REGISTERED_STATUS": 0,
+        "REGISTERED_BOUNDARY": 0,
+        "GROUPED_OWNER_BOUNDARY": 0,
+        "BALANCED_OWNER_BOUNDARY": 0,
+        "FOUR_COMBINATIONAL_CUTS": 0,
+        "FAST_OWNER_FRONTIER": 0
+      },
+      "parameter_expressions": {
+        "ENABLE": "0",
+        "REGISTERED_OUTPUTS": "0",
+        "REGISTERED_STATUS": "0",
+        "REGISTERED_BOUNDARY": "0",
+        "GROUPED_OWNER_BOUNDARY": "0",
+        "BALANCED_OWNER_BOUNDARY": "0",
+        "FOUR_COMBINATIONAL_CUTS": "0",
+        "FAST_OWNER_FRONTIER": "0"
+      },
+      "interface_width_profile": {
+        "ENABLE": 0,
+        "REGISTERED_OUTPUTS": 0,
+        "REGISTERED_STATUS": 0,
+        "REGISTERED_BOUNDARY": 0,
+        "GROUPED_OWNER_BOUNDARY": 0,
+        "BALANCED_OWNER_BOUNDARY": 0,
+        "FOUR_COMBINATIONAL_CUTS": 0,
+        "FAST_OWNER_FRONTIER": 0
+      },
+      "profile_is_physical_adoption": false,
+      "ports": [
+        {
+          "name": "clk",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "por_n",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "launch_v",
+          "direction": "input",
+          "width_bits": 2,
+          "literal_range": "1:0",
+          "selected_range": [
+            1,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "launch_pc",
+          "direction": "input",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cp_job",
+          "direction": "input",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "cp_gen",
+          "direction": "input",
+          "width_bits": 4,
+          "literal_range": "3:0",
+          "selected_range": [
+            3,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "launch_token",
+          "direction": "input",
+          "width_bits": 17,
+          "literal_range": "16:0",
+          "selected_range": [
+            16,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "launch_pos",
+          "direction": "input",
+          "width_bits": 20,
+          "literal_range": "19:0",
+          "selected_range": [
+            19,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "native_launch",
+          "direction": "output",
+          "width_bits": 2,
+          "literal_range": "1:0",
+          "selected_range": [
+            1,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "lease_v",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "lease_granted",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "release_v",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "release_r",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "exec_done",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "exec_fault",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "retired_original_ops",
+          "direction": "input",
+          "width_bits": 4,
+          "literal_range": "3:0",
+          "selected_range": [
+            3,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "shared_fault",
+          "direction": "input",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "owned",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "pending",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "quiet",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "selected",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "done",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width_bits": 1,
+          "literal_range": null,
+          "selected_range": null,
+          "clock_domain": "clk"
+        },
+        {
+          "name": "selected_pc",
+          "direction": "output",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "held_job",
+          "direction": "output",
+          "width_bits": 32,
+          "literal_range": "31:0",
+          "selected_range": [
+            31,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "held_gen",
+          "direction": "output",
+          "width_bits": 4,
+          "literal_range": "3:0",
+          "selected_range": [
+            3,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "held_token",
+          "direction": "output",
+          "width_bits": 17,
+          "literal_range": "16:0",
+          "selected_range": [
+            16,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "held_pos",
+          "direction": "output",
+          "width_bits": 20,
+          "literal_range": "19:0",
+          "selected_range": [
+            19,
+            0
+          ],
+          "clock_domain": "clk"
+        },
+        {
+          "name": "owned_frontier_terms",
+          "direction": "output",
+          "width_bits": 12,
+          "literal_range": "11:0",
+          "selected_range": [
+            11,
+            0
+          ],
+          "clock_domain": "clk"
+        }
+      ],
+      "total_input_bits": 118,
+      "total_output_bits": 127,
+      "literal_ACK_port_present": false,
+      "physical_view_accepted": false,
+      "family": "hfd_cmdproc",
+      "family_number": 9,
+      "scope": "read-only literal CP reference; sole structural/integration owner Harvey; no exported family9 macro",
+      "parent_state": "OPEN",
+      "ACK_and_loading": {
+        "literal_ACK": null,
+        "release_accept": "release_v/release_r",
+        "lease_accept": "lease_v/lease_granted",
+        "command_loading_port": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,551 @@
+{
+  "observed_utc": "2026-10-07T05:22:07.424686+00:00",
+  "root": "/srv/opentallas-scratch/claude/qwen-die-r20",
+  "files": {
+    "cases/r21_pdn/manifest.json": {
+      "exists": true,
+      "bytes": 392,
+      "mtime_ns": 1791350316338051940,
+      "sha256": "bdd0862859dcc9f8b95d2771e37a9fb716662e8266dba4ff1afe44a397f53902",
+      "text": "{\n \"case\": \"a_pdn\",\n \"instances\": 17729,\n \"pins\": 267065,\n \"nets\": 10342377,\n \"masters\": 81,\n \"bump_um\": 63.64,\n \"macro_grids\": 17729,\n \"producer\": \"/home/ubuntu/wt-qwen-die/tools/qwen_rom_fulldie_b3r2.py\",\n \"die\": {\n  \"w\": 25037.856,\n  \"h\": 32801.76,\n  \"mm2\": 821.286,\n  \"budget_mm2\": 858,\n  \"margin_mm2\": 36.714\n },\n \"pdn_rev\": \"r5\",\n \"execution_order\": [\n  \"run.tcl\",\n  \"run_pdn.tcl\"\n ]\n}\n"
+    },
+    "cases/r21_pdn/run.tcl": {
+      "exists": true,
+      "bytes": 2296,
+      "mtime_ns": 1791350315611038556,
+      "sha256": "f83abbcc595b3e7ccefc58f5be6c605aa24aeb5c6c9747b1ddd5e733ca631d91",
+      "text": "# case (a): real-technology die floorplan, macro placement legality, on-track assert, pin access\nproc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f\n  regexp {VmRSS:\\s+(\\d+)} $s -> r; puts \"OTMEM $tag [expr {$r/1024}] MB [clock seconds]\" }\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\nread_lef /work/phy_ew.lef\nread_lef /work/elements.lef\nread_verilog /work/die.v\nlink_design qfd_die\nmem linked\ninitialize_floorplan -die_area {0 0 25037.856 32801.760} -core_area {0 0 25037.856 32801.760} -site asap7sc7p5t\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl\nset ::env(MAKE_TRACKS) /OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl\nsource /work/snap.tcl\nmem floorplan\nset t0 [clock seconds]\nsource /work/place.tcl\nputs \"OT_TIME place_s=[expr {[clock seconds]-$t0}]\"\nmem placed\n# legality: every instance inside the die, no two macros overlap (sweep on x), lattice moves reported\nset blk [ord::get_db_block]\nset boxes {}\nforeach inst [$blk getInsts] {\n  set bb [$inst getBBox]\n  lappend boxes [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax] [$inst getName]]\n}\nset boxes [lsort -integer -index 0 $boxes]\nset n [llength $boxes]; set ov 0; set out 0\nset dw [[$blk getDieArea] xMax]; set dh [[$blk getDieArea] yMax]\nset active {}\nforeach b $boxes {\n  lassign $b x0 y0 x1 y1 nm\n  if {$x0 < 0 || $y0 < 0 || $x1 > $dw || $y1 > $dh} { incr out; if {$out < 20} { puts \"OT_OUTSIDE $nm\" } }\n  set keep {}\n  foreach a $active {\n    lassign $a ax0 ay0 ax1 ay1 an\n    if {$ax1 > $x0} {\n      lappend keep $a\n      if {$ay0 < $y1 && $y0 < $ay1} { incr ov; if {$ov < 50} { puts \"OT_OVERLAP $an $nm\" } }\n    }\n  }\n  lappend keep $b\n  set active $keep\n}\nputs \"OT_LEGAL instances=$n overlaps=$ov outside=$out\"\nwrite_def /work/floorplan_placed.def\nmem def\nif {[catch {ot_mts::assert_on_track -label fulldie} err]} { puts \"OT_ASSERT FAIL $err\" } else { puts \"OT_ASSERT PASS\" }\nmem assert\nset t0 [clock seconds]\nset_routing_layers -signal M2-M9\nif {[catch {pin_access -verbose 1} err]} { puts \"OT_PA FAIL $err\" } else { puts \"OT_PA DONE\" }\nputs \"OT_TIME pa_s=[expr {[clock seconds]-$t0}]\"\nmem pa\nwrite_db /work/floorplan.odb\n"
+    },
+    "cases/r21_pdn/run_pdn.tcl": {
+      "exists": true,
+      "bytes": 780,
+      "mtime_ns": 1791350316338051940,
+      "sha256": "bffbcff7703d061e8eeba395591bd99d383e20cf2824b7ccd0b6c8e52559830b",
+      "text": "# full-die PDN with macro grids on the placed floorplan\nproc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f\n  regexp {VmRSS:\\s+(\\d+)} $s -> r; puts \"OTMEM $tag [expr {$r/1024}] MB [clock seconds]\" }\nread_db /work/floorplan.odb\nmem read\nset t0 [clock seconds]\nif {[catch {source /work/pdn.tcl; pdngen} err]} { puts \"OT_PDN FAIL $err\" } else {\n  set nsw 0; foreach net [[ord::get_db_block] getNets] { foreach sw [$net getSWires] { incr nsw [llength [$sw getWires]] } }\n  puts \"OT_PDN PASS special_shapes=$nsw\" }\nputs \"OT_TIME pdn_s=[expr {[clock seconds]-$t0}]\"\nmem pdn\nforeach net {VDD VSS} { if {[catch {check_power_grid -net $net} err]} { puts \"OT_PGCHECK $net FAIL $err\" } else { puts \"OT_PGCHECK $net PASS\" } }\nmem check\nwrite_db /work/floorplan_pdn.odb\n"
+    },
+    "cases/r21_pdn/run.log.exit": {
+      "exists": true,
+      "bytes": 4,
+      "mtime_ns": 1791350324394634050,
+      "sha256": "a5e45837a2959db847f7e67a915d0ecaddd47f943af2af5fa6453be497faabca",
+      "text": "125\n"
+    },
+    "cases/r21_pdn/run.log.start": {
+      "exists": true,
+      "bytes": 21,
+      "mtime_ns": 1791350324376418535,
+      "sha256": "f034d635cf79e545602c8fa81472a5f22afe84011d3a9edd06e9a152794cc2ea",
+      "text": "2026-10-07T05:18:44Z\n"
+    },
+    "cases/r21_pdn/run.log.end": {
+      "exists": true,
+      "bytes": 21,
+      "mtime_ns": 1791350324395418658,
+      "sha256": "f034d635cf79e545602c8fa81472a5f22afe84011d3a9edd06e9a152794cc2ea",
+      "text": "2026-10-07T05:18:44Z\n"
+    },
+    "cases/r21_pdn/run_pdn.log": {
+      "exists": true,
+      "bytes": 1195,
+      "mtime_ns": 1791350324580419857,
+      "sha256": "e55ff939aa4821354d940dd31c7b92106625cc4cc6c8c77823fc45723f933331",
+      "text": "OpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 32 thread(s).\n[ERROR ORD-0007] /work/floorplan.odb does not exist.\nError: run_pdn.tcl, 4 ORD-0007\nCommand exited with non-zero status 1\n\tCommand being timed: \"openroad -threads 32 -no_init -exit /work/run_pdn.tcl\"\n\tUser time (seconds): 0.05\n\tSystem time (seconds): 0.01\n\tPercent of CPU this job got: 101%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.06\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 93580\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 10883\n\tVoluntary context switches: 33\n\tInvoluntary context switches: 8\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 8\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 1\n"
+    },
+    "cases/r21_pdn/run_pdn.log.exit": {
+      "exists": true,
+      "bytes": 2,
+      "mtime_ns": 1791350324684573813,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "text": "1\n"
+    },
+    "cases/r21_pdn/case.done": {
+      "exists": true,
+      "bytes": 5,
+      "mtime_ns": 1791350324686845179,
+      "sha256": "d117fa006ba9208500b2930ce69cbde436c647afa917cb7396a9bc9111a46dd2",
+      "text": "done\n"
+    },
+    "cases/r21_pdn.sup.log": {
+      "exists": true,
+      "bytes": 306,
+      "mtime_ns": 1791350324393418645,
+      "sha256": "e0b2d9e610c2ecce54125e10718edd6825d0af6edaa56d9bc3fc7bffc8be0b6e",
+      "text": "docker: Error response from daemon: Conflict. The container name \"/qfd_r21_pdn_run\" is already in use by container \"2ba9db34aab5915668f9f4d7629a5e306ced518f46e860e43164920c9616965f\". You have to remove (or rename) that container to be able to reuse that name.\n\nRun 'docker run --help' for more information\n"
+    },
+    "cases/run_case.sh": {
+      "exists": true,
+      "bytes": 717,
+      "mtime_ns": 1791300378128274121,
+      "sha256": "fd41f5cb9b80f7e726acebdfba5d19c750493aaebacd87085cd8c9995a28c05a",
+      "text": "#!/bin/bash\n# usage: run_case.sh <case_dir> <tcl> <log> <cpus> <mem_gb>\n# Runs one OpenROAD case in the pinned ORFS image, detached-safe: writes <log>, <log>.exit, <log>.time\nset -u\nD=$(readlink -f \"$1\"); TCL=$2; LOG=$3; CPUS=${4:-16}; MEM=${5:-200}\nNAME=qfd_$(basename $D)_$(basename $TCL .tcl)\ndate -u +%FT%TZ > $D/$LOG.start\ndocker run --rm --name $NAME --cpus=$CPUS --memory=${MEM}g -e OT_ORFS_NUM_CORES=$CPUS -v $D:/work -w /work ${IMAGE:-openroad/orfs:asap7lock} \\\n  bash -lc \"source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads $CPUS -no_init -exit /work/$TCL > /work/$LOG 2>&1; rc=\\$?; chmod -R a+rwX /work; exit \\$rc\"\necho $? > $D/$LOG.exit\ndate -u +%FT%TZ > $D/$LOG.end\n"
+    },
+    "dietop_m4/dietop_run.sh": {
+      "exists": true,
+      "bytes": 851,
+      "mtime_ns": 1791335211287866109,
+      "sha256": "138c142e539970dd8af4f11d9c6c2ac0585e557457807d2c16d152e0075f3190",
+      "text": "#!/bin/bash\n# usage: dietop_run.sh <dir> <tcl> <threads> <mem_gb> [env...]; RSS sampled every 30 s into <dir>/rss.tsv\nset -u\nD=$(readlink -f $1); TCL=$2; T=$3; M=$4; shift 4; EV=\"\"; for e in \"$@\"; do EV=\"$EV -e $e\"; done\nN=qfd_dietop_$(basename $D)\ndate -u +%FT%TZ > $D/run.start\n( while sleep 30; do s=$(docker stats --no-stream --format \"{{.MemUsage}} {{.CPUPerc}}\" $N 2>/dev/null) || break; [ -z \"$s\" ] && break; echo -e \"$(date -u +%T)\\t$s\" >> $D/rss.tsv; done ) &\ndocker run --rm --name $N --cpus=$T --memory=${M}g -e OT_THREADS=$T $EV -v $D:/work -w /work openroad/orfs:asap7lock \\\n  bash -lc \"source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads $T -no_init -exit /work/$TCL > /work/$(basename $TCL .tcl).log 2>&1; rc=\\$?; chmod -R a+rwX /work; exit \\$rc\"\necho $? > $D/run.exit; date -u +%FT%TZ > $D/run.end\n"
+    },
+    "cases/r21_pdn/die.v": {
+      "exists": true,
+      "bytes": 3238844,
+      "mtime_ns": 1791350315603038409,
+      "sha256": "37525b029fa4f03c978f83454d078e786401b07164a76dcc5570e58dafff412a"
+    },
+    "cases/r21_pdn/elements.lef": {
+      "exists": true,
+      "bytes": 39496724,
+      "mtime_ns": 1791350316231049970,
+      "sha256": "350dad8628ed9fff1986be5d69e6d41787f8c6d123f9f6f022465f8764357af6"
+    },
+    "cases/r21_pdn/place.tcl": {
+      "exists": true,
+      "bytes": 1211703,
+      "mtime_ns": 1791350315611038556,
+      "sha256": "cb10d8ab04fa7896c3b1ca56e29eb5d5e6f34c990f87e8666758f91c5d59147a"
+    },
+    "cases/r21_pdn/pdn.tcl": {
+      "exists": true,
+      "bytes": 882068,
+      "mtime_ns": 1791350316337051921,
+      "sha256": "192415e8abbac3381e6ee237ea22714361c55e1106b036f40778bdda087d1689"
+    },
+    "cases/r21_pdn/snap.tcl": {
+      "exists": true,
+      "bytes": 17860,
+      "mtime_ns": 1791350315566037728,
+      "sha256": "27750ba8772da99f6c067286b596b2ac003ee56a01ef486892ea475ee4382143"
+    }
+  },
+  "run_log_snapshot": {
+    "bytes": 551866,
+    "sha256": "2fcf022cc3cd4f3e441d0a9ec4dd23940af93a6fef8fa0147258ba15bdf436cb",
+    "mtime_ns": 1791350527339733071,
+    "tail": "OT_MTS_PLACE rly_cor_22_1_2 qfd_rly_323_NS_53x30 R0 requested (8681.472, 2337.120) placed (8681.472, 2337.120)\nOT_MTS_PLACE rly_cor_22_1_3 qfd_rly_323_NS_53x30 R0 requested (8681.472, 2054.160) placed (8681.472, 2054.160)\nOT_MTS_PLACE rly_cor_22_0_0 qfd_rly_323_NS_53x30 R0 requested (8681.472, 1609.200) placed (8681.472, 1609.200)\nOT_MTS_PLACE rly_cor_22_0_1 qfd_rly_323_NS_53x30 R0 requested (8681.472, 1326.240) placed (8681.472, 1326.240)\nOT_MTS_PLACE rly_cor_22_0_2 qfd_rly_323_NS_53x30 R0 requested (8681.472, 1045.440) placed (8681.472, 1045.440)\nOT_MTS_PLACE rly_cor_22_0_3 qfd_rly_323_NS_53x30 R0 requested (8681.472, 762.480) placed (8681.472, 762.480)\nOT_MTS_PLACE rly_cor_22_12_0 qfd_rly_323_SN_53x30 R0 requested (8681.472, 15936.480) placed (8681.472, 15936.480)\nOT_MTS_PLACE rly_cor_22_13_0 qfd_rly_323_SN_53x30 R0 requested (8681.472, 16582.320) placed (8681.472, 16582.320)\nOT_MTS_PLACE rly_cor_22_13_1 qfd_rly_323_SN_53x30 R0 requested (8681.472, 16865.280) placed (8681.472, 16865.280)\nOT_MTS_PLACE rly_cor_22_13_2 qfd_rly_323_SN_53x30 R0 requested (8681.472, 17146.080) placed (8681.472, 17146.080)\nOT_MTS_PLACE rly_cor_22_13_3 qfd_rly_323_SN_53x30 R0 requested (8681.472, 17429.040) placed (8681.472, 17429.040)\nOT_MTS_PLACE rly_cor_22_14_0 qfd_rly_323_SN_53x30 R0 requested (8681.472, 17874.000) placed (8681.472, 17874.000)"
+  },
+  "docker": {
+    "rc": 0,
+    "stdout": "{\"Status\":\"running\",\"Running\":true,\"Paused\":false,\"Restarting\":false,\"OOMKilled\":false,\"Dead\":false,\"Pid\":3680233,\"ExitCode\":0,\"Error\":\"\",\"StartedAt\":\"2026-10-07T05:09:05.049894594Z\",\"FinishedAt\":\"0001-01-01T00:00:00Z\"} sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 [\"bash\",\"-lc\",\"source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/run.log 2>&1; rc=$?; chmod -R a+rwX /work; exit $rc\"]\n",
+    "stderr": ""
+  },
+  "process": {
+    "rc": 0,
+    "stdout": "PID                 PPID                STARTED             ELAPSED             RSS                 COMMAND\n3680233             3680210             Wed                 Oct                 7                   05:09:04 2026 13:02 3380 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/run.log 2>&1; rc=$?; chmod -R a+rwX /work; exit $rc\n3680262             3680233             Wed                 Oct                 7                   05:09:04 2026 13:02 1280 /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl\n3680263             3680262             Wed                 Oct                 7                   05:09:04 2026 13:02 8916568 openroad -threads 16 -no_init -exit /work/run.tcl\n",
+    "stderr": ""
+  },
+  "memory": {
+    "rc": 0,
+    "stdout": "               total        used        free      shared  buff/cache   available\nMem:     1216617861120 263152406528 851070324736    37462016 111962988544 953465454592\nSwap:     8589930496  3040395264  5549535232\n",
+    "stderr": ""
+  },
+  "disk": {
+    "rc": 0,
+    "stdout": "Filesystem         1B-blocks         Used     Available Use% Mounted on\n/dev/nvme2n1   3149225934848 281328738304 2707848830976  10% /srv/opentallas-scratch\n",
+    "stderr": ""
+  },
+  "admission_wrapper": {
+    "exists": true,
+    "bytes": 403,
+    "mtime_ns": 1791319830734080829,
+    "sha256": "1df56a684423dae47d0c314dead6656a66e952c25f6379f1a98a28bf0da300eb",
+    "text": "#!/bin/bash\n# Simple EPYC admission (owner decision 2026-10-04): no reservations, no fixed pacing.\n# Waits until MemAvailable >= need + 100 GiB + peaks of jobs admitted in the last 180 s, then execs.\n# Usage: /srv/opentallas-scratch/admit.sh <expected_peak_GB> -- <command...>\nset -u\nneed=$1; shift; [ \"${1:-}\" = \"--\" ] && shift\npython3 /srv/opentallas-scratch/admit_core.py \"$need\" || exit 1\nexec \"$@\"\n"
+  },
+  "admission_core": {
+    "exists": true,
+    "bytes": 1807,
+    "mtime_ns": 1791319831055081710,
+    "sha256": "fe66b2beae4853d35334e8acb9f756c1041b281426354774a8849e09193bce54",
+    "text": "\"\"\"Simple EPYC admission core (owner decision 2026-10-04). No reservations, no fixed pacing.\nAdmit when MemAvailable >= need + 100 GiB + sum(declared peaks of jobs admitted in the last 180 s).\nA job's declared peak counts only while it ramps (180 s); afterwards MemAvailable reflects it.\nCPU: jobs declaring >= 16 GiB also wait while the 1-minute load average exceeds 1.5x the core count\n(oversubscription slows every job); small jobs are never held for CPU.\"\"\"\nimport fcntl, json, os, sys, time\nfrom pathlib import Path\n\nRESERVE = 100 * 2**30\nRAMP_S = 180\nRECENT = Path(\"/srv/opentallas-scratch/admit.recent.json\")\nLOCK = Path(\"/srv/opentallas-scratch/admit.lock\")\n\n\ndef _avail():\n    return int(next(l.split()[1] for l in Path(\"/proc/meminfo\").read_text().splitlines()\n                    if l.startswith(\"MemAvailable:\"))) * 1024\n\n\ndef try_admit(need_bytes):\n    \"\"\"Atomically admit if it fits; record the admission. Returns True if admitted.\"\"\"\n    with open(LOCK, \"a\") as lk:\n        fcntl.flock(lk, fcntl.LOCK_EX)\n        now = time.time()\n        try:\n            recent = [r for r in json.loads(RECENT.read_text()) if now - r[0] < RAMP_S]\n        except (FileNotFoundError, ValueError):\n            recent = []\n        ramping = sum(r[1] for r in recent)\n        cpu_ok = need_bytes < 16 * 2**30 or os.getloadavg()[0] <= 1.5 * os.cpu_count()\n        if cpu_ok and _avail() >= need_bytes + RESERVE + ramping:\n            recent.append([now, need_bytes])\n            RECENT.write_text(json.dumps(recent))\n            return True\n        RECENT.write_text(json.dumps(recent))\n        return False\n\n\nif __name__ == \"__main__\":          # admit.sh: python3 admit_core.py <need_gib>  -> exit 0 when admitted\n    need = int(float(sys.argv[1]) * 2**30)\n    while not try_admit(need):\n        time.sleep(10)\n"
+  },
+  "run_directories": {
+    "cases/r21_pdn": [
+      {
+        "name": "run.log.end",
+        "bytes": 21,
+        "mtime_ns": 1791350324395418658
+      },
+      {
+        "name": "run.log.start",
+        "bytes": 21,
+        "mtime_ns": 1791350324376418535
+      },
+      {
+        "name": "manifest.json",
+        "bytes": 392,
+        "mtime_ns": 1791350316338051940
+      },
+      {
+        "name": "elements.lef",
+        "bytes": 39496724,
+        "mtime_ns": 1791350316231049970
+      },
+      {
+        "name": "run_pdn.log",
+        "bytes": 1195,
+        "mtime_ns": 1791350324580419857
+      },
+      {
+        "name": "phy_ew.lef",
+        "bytes": 2103392,
+        "mtime_ns": 1791350315566037728
+      },
+      {
+        "name": "run.tcl",
+        "bytes": 2296,
+        "mtime_ns": 1791350315611038556
+      },
+      {
+        "name": "run_pdn.tcl",
+        "bytes": 780,
+        "mtime_ns": 1791350316338051940
+      },
+      {
+        "name": "run_pdn.log.end",
+        "bytes": 21,
+        "mtime_ns": 1791350324685420537
+      },
+      {
+        "name": "case.done",
+        "bytes": 5,
+        "mtime_ns": 1791350324686845179
+      },
+      {
+        "name": "pdn.tcl",
+        "bytes": 882068,
+        "mtime_ns": 1791350316337051921
+      },
+      {
+        "name": "run_pdn.log.exit",
+        "bytes": 2,
+        "mtime_ns": 1791350324684573813
+      },
+      {
+        "name": "run.log.exit",
+        "bytes": 4,
+        "mtime_ns": 1791350324394634050
+      },
+      {
+        "name": "die.v",
+        "bytes": 3238844,
+        "mtime_ns": 1791350315603038409
+      },
+      {
+        "name": "run_pdn.log.start",
+        "bytes": 21,
+        "mtime_ns": 1791350324401418697
+      },
+      {
+        "name": "snap.tcl",
+        "bytes": 17860,
+        "mtime_ns": 1791350315566037728
+      },
+      {
+        "name": "place.tcl",
+        "bytes": 1211703,
+        "mtime_ns": 1791350315611038556
+      },
+      {
+        "name": "run.log",
+        "bytes": 551866,
+        "mtime_ns": 1791350527339733071
+      },
+      {
+        "name": "run_pa.tcl",
+        "bytes": 990,
+        "mtime_ns": 1791350315611038556
+      }
+    ],
+    "dietop_m4/drt_probe": [
+      {
+        "name": "run.end",
+        "bytes": 21,
+        "mtime_ns": 1791347237462096163
+      },
+      {
+        "name": "launch.out",
+        "bytes": 0,
+        "mtime_ns": 1791347223171001388
+      },
+      {
+        "name": "drt.log",
+        "bytes": 1361,
+        "mtime_ns": 1791347230178047857
+      },
+      {
+        "name": "run.exit",
+        "bytes": 4,
+        "mtime_ns": 1791347237461131927
+      },
+      {
+        "name": "run.start",
+        "bytes": 21,
+        "mtime_ns": 1791347223178001434
+      },
+      {
+        "name": "regadj.tcl",
+        "bytes": 5102,
+        "mtime_ns": 1791347223165599558
+      },
+      {
+        "name": "drt.tcl",
+        "bytes": 2212,
+        "mtime_ns": 1791347223170001381
+      },
+      {
+        "name": "floorplan_pdn.odb",
+        "bytes": 2128685078,
+        "mtime_ns": 1791306168513414944
+      }
+    ],
+    "dietop_m4/probe": [
+      {
+        "name": "p.tcl",
+        "bytes": 601,
+        "mtime_ns": 1791335090859410571
+      },
+      {
+        "name": "floorplan_pdn.odb",
+        "bytes": 2128685078,
+        "mtime_ns": 1791306168513414944
+      }
+    ],
+    "dietop_m4/q1": [
+      {
+        "name": "q.out",
+        "bytes": 8442,
+        "mtime_ns": 1791347035946759748
+      },
+      {
+        "name": "q.tcl",
+        "bytes": 1177,
+        "mtime_ns": 1791346944894155903
+      },
+      {
+        "name": "floorplan_pdn.odb",
+        "bytes": 2128685078,
+        "mtime_ns": 1791306168513414944
+      }
+    ],
+    "dietop_m4/t4p8": [
+      {
+        "name": "run.end",
+        "bytes": 21,
+        "mtime_ns": 1791347241201120960
+      },
+      {
+        "name": "launch.out",
+        "bytes": 0,
+        "mtime_ns": 1791344787182971238
+      },
+      {
+        "name": "killed_0116",
+        "bytes": 4096,
+        "mtime_ns": 1791344787182971238
+      },
+      {
+        "name": "run.exit",
+        "bytes": 4,
+        "mtime_ns": 1791347241200342381
+      },
+      {
+        "name": "grt.tcl",
+        "bytes": 2214,
+        "mtime_ns": 1791335408784608819
+      },
+      {
+        "name": "grt.log",
+        "bytes": 2511,
+        "mtime_ns": 1791346205272265557
+      },
+      {
+        "name": "rss.tsv",
+        "bytes": 2742,
+        "mtime_ns": 1791347239160107424
+      },
+      {
+        "name": "run.start",
+        "bytes": 21,
+        "mtime_ns": 1791344787191971297
+      },
+      {
+        "name": "regadj.tcl",
+        "bytes": 5102,
+        "mtime_ns": 1791335198283817002
+      },
+      {
+        "name": "floorplan_pdn.odb",
+        "bytes": 2128685078,
+        "mtime_ns": 1791306168513414944
+      }
+    ],
+    "dietop_m4/t9p6": [
+      {
+        "name": "run.end",
+        "bytes": 21,
+        "mtime_ns": 1791347239228107875
+      },
+      {
+        "name": "launch.out",
+        "bytes": 0,
+        "mtime_ns": 1791344787182971238
+      },
+      {
+        "name": "killed_0116",
+        "bytes": 4096,
+        "mtime_ns": 1791344787178971212
+      },
+      {
+        "name": "run.exit",
+        "bytes": 4,
+        "mtime_ns": 1791347239227131039
+      },
+      {
+        "name": "grt.tcl",
+        "bytes": 2214,
+        "mtime_ns": 1791335411099617355
+      },
+      {
+        "name": "grt.log",
+        "bytes": 2593,
+        "mtime_ns": 1791346154744931829
+      },
+      {
+        "name": "rss.tsv",
+        "bytes": 2695,
+        "mtime_ns": 1791347211212922084
+      },
+      {
+        "name": "run.start",
+        "bytes": 21,
+        "mtime_ns": 1791344787192971303
+      },
+      {
+        "name": "regadj.tcl",
+        "bytes": 5102,
+        "mtime_ns": 1791335208967857348
+      },
+      {
+        "name": "floorplan_pdn.odb",
+        "bytes": 2128685078,
+        "mtime_ns": 1791306168513414944
+      }
+    ],
+    "dietop_m4/t9p6_cugr": [
+      {
+        "name": "run.end",
+        "bytes": 21,
+        "mtime_ns": 1791347238028099917
+      },
+      {
+        "name": "launch.out",
+        "bytes": 0,
+        "mtime_ns": 1791347162295780209
+      },
+      {
+        "name": "run.exit",
+        "bytes": 4,
+        "mtime_ns": 1791347238027193684
+      },
+      {
+        "name": "grt.tcl",
+        "bytes": 2224,
+        "mtime_ns": 1791347162295780209
+      },
+      {
+        "name": "grt.log",
+        "bytes": 1620,
+        "mtime_ns": 1791347219412976465
+      },
+      {
+        "name": "rss.tsv",
+        "bytes": 70,
+        "mtime_ns": 1791347224354009233
+      },
+      {
+        "name": "run.start",
+        "bytes": 21,
+        "mtime_ns": 1791347162302597719
+      },
+      {
+        "name": "regadj.tcl",
+        "bytes": 5102,
+        "mtime_ns": 1791347162293523633
+      },
+      {
+        "name": "floorplan_pdn.odb",
+        "bytes": 2128685078,
+        "mtime_ns": 1791306168513414944
+      }
+    ],
+    "dietop_m4/t9p6_i0": [
+      {
+        "name": "run.end",
+        "bytes": 21,
+        "mtime_ns": 1791346755784901766
+      },
+      {
+        "name": "launch.out",
+        "bytes": 0,
+        "mtime_ns": 1791346139620831936
+      },
+      {
+        "name": "run.exit",
+        "bytes": 2,
+        "mtime_ns": 1791346755782418685
+      },
+      {
+        "name": "congestion_summary.json",
+        "bytes": 1882,
+        "mtime_ns": 1791346767074399685
+      },
+      {
+        "name": "grt_congestion.rpt",
+        "bytes": 654829,
+        "mtime_ns": 1791346745920836491
+      },
+      {
+        "name": "grt.tcl",
+        "bytes": 2119,
+        "mtime_ns": 1791346139619192700
+      },
+      {
+        "name": "grt.log",
+        "bytes": 5150,
+        "mtime_ns": 1791346755605900579
+      },
+      {
+        "name": "route.guide",
+        "bytes": 572703476,
+        "mtime_ns": 1791346753065883734
+      },
+      {
+        "name": "rss.tsv",
+        "bytes": 657,
+        "mtime_ns": 1791346730835736856
+      },
+      {
+        "name": "run.start",
+        "bytes": 21,
+        "mtime_ns": 1791346139635832035
+      },
+      {
+        "name": "regadj.tcl",
+        "bytes": 5102,
+        "mtime_ns": 1791346139614205734
+      },
+      {
+        "name": "floorplan_pdn.odb",
+        "bytes": 2128685078,
+        "mtime_ns": 1791306168513414944
+      }
+    ]
+  },
+  "relay_netlist_scan": {
+    "module_definitions": [
+      "module qfd_die ();"
+    ],
+    "relay_instances": 14199,
+    "always_count": 0,
+    "note": "hierarchical die connectivity; these counts do not establish mapped relay internals"
+  }
+}

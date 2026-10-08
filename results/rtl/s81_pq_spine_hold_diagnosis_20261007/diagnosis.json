@@ -1,0 +1,30 @@
+{
+  "status": "HISTORICAL_FRESH_SESSION_FAIL_CURRENT_ECO_STILL_RUNNING",
+  "source_run": "v13b R16 ECO pass1",
+  "ss_ps": 63.09,
+  "ff_ps": -33.9,
+  "drc": 0,
+  "eco_cells_added": 16087,
+  "worst_path": {
+    "from": "r_row[26]",
+    "to": "q_row[26]$_DFF_P_",
+    "input_clock_ps": 436.47,
+    "input_external_min_ps": -50,
+    "data_arrival_ps": 442.29,
+    "capture_clock_ps": 438.81,
+    "hold_uncertainty_ps": 25,
+    "cell_hold_ps": 12.38,
+    "data_required_ps": 476.19,
+    "extra_ff_data_delay_to_15ps": 48.9
+  },
+  "other_path_margins_ps": {
+    "R2R": 5.541623,
+    "output": 15.794921
+  },
+  "diagnosis": "Only 2.34ps I/O clock skew; minimum-delay contract is dominant. BF root phase fix is not applicable. No new padding allowance or timing relaxation authorized by this record.",
+  "R128": "No fresh session endpoint result yet; ongoing ECO logs cannot establish closure.",
+  "artifact_sha256": {
+    "result.json": "cd36d5c8c7e2eb4579924ae2482de5170a5b1e6c959a1e26c648e0a83c3e42f6",
+    "w18_sta_ff.log": "d0670224bf6d38c529fc266303869d92fe5b42e7e9f46da03f8717be50309134"
+  }
+}

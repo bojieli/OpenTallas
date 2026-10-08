@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.qwen_die_master_margin.v1",
+ "source_commit": "see SOURCE_COMMIT on EPYC1 routes; branch claude/qwen-masters-margin-20261006",
+ "policy": "route 770 ps, sign-off 833.333 = slack@770 + 63.333; SS setup / FF hold single-corner corner_sta_ref with io_ref_skew (90 intra, 150 on corridor/link ports, hold 50); accept SS >= +40, FF >= +15",
+ "routes_host": "ot-epyc1tb /srv/opentallas-scratch/claude/qwen-masters/routes",
+ "results": {
+  "s2_cst_hm40": {
+   "master": "qfd_cst_n/_s",
+   "copies": 1536,
+   "ss_at_770_ps": 10.41,
+   "ss_signoff_833_ps": 73.74,
+   "ff_hold_ps": 26.33,
+   "drc": 0,
+   "slew_viol": 0,
+   "verdict": "CLOSED"
+  },
+  "s2_chead_hm40": {
+   "master": "qfd_chead_e/_w",
+   "copies": 64,
+   "ss_at_770_ps": -12.01,
+   "ss_signoff_833_ps": 51.32,
+   "ff_hold_ps": 30.69,
+   "drc": 0,
+   "slew_viol": 0,
+   "verdict": "CLOSED"
+  },
+  "s1_lsth": {
+   "master": "qfd_lst_h_e/_w",
+   "copies": 20,
+   "ss_at_770_ps": -54.92,
+   "ss_signoff_833_ps": 8.41,
+   "ff_hold_ps": 15.75,
+   "drc": 0,
+   "slew_viol": 0,
+   "verdict": "BELOW_ACCEPTANCE",
+   "note": "worst class a_d[890] -> b_q: 9 hold buffers (380 ps) from repeated hold-repair passes; next: RTL/frame change (1056 b in 34.5 x 97.2 um), not a resweep"
+  }
+ },
+ "superseded_attempts": "s1_cst/s1_chead (hold margin 20: FF +7.09/+12.19, below +15) kept in routes/; failed/ a,b,c = flow plumbing errors (RSZ-0060 budget, STA-0576, corner_sta_ref signature)"
+}

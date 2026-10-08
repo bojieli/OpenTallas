@@ -1,0 +1,1 @@
+read_verilog -sv /tmp/qwen-station-protection-20261007/rtl/physical/ot_qwen_die_dualfault_station_r22.sv; chparam -set ENABLE_FULLWIDTH 1 -set TAP 0 -set SPLIT 0 ot_qwen_die_dualfault_station_r22; hierarchy -top ot_qwen_die_dualfault_station_r22; synth -top ot_qwen_die_dualfault_station_r22; write_json /tmp/qwen-station-retention-m2jm6o43/t0_s0.json

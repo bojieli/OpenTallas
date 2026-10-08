@@ -1,0 +1,84 @@
+{
+  "enabled_edges": 347,
+  "unique_frames": 124,
+  "reducer_bank_witnesses": [
+    {
+      "cycle": 160,
+      "banks": 128,
+      "formula": "(word ^ (word >> 7)) & 127",
+      "reducer_scalar": 16160,
+      "reducer_word": 1010,
+      "reducer_lane": 0,
+      "reducer_bank": 117,
+      "read_words_same_bank": [
+        502
+      ],
+      "same_word_read": false,
+      "read_scalars_same_bank": [
+        8039
+      ],
+      "enabled_read_seats": 2048
+    },
+    {
+      "cycle": 160,
+      "banks": 256,
+      "formula": "(word ^ (word >> 8)) & 255",
+      "reducer_scalar": 16160,
+      "reducer_word": 1010,
+      "reducer_lane": 0,
+      "reducer_bank": 241,
+      "read_words_same_bank": [
+        496
+      ],
+      "same_word_read": false,
+      "read_scalars_same_bank": [
+        7943
+      ],
+      "enabled_read_seats": 2048
+    }
+  ],
+  "fold_peaks": {
+    "128": {
+      "read_distinct_words_per_bank": 3,
+      "write_distinct_words_per_bank": 1,
+      "combined_distinct_words_per_bank": 3
+    },
+    "256": {
+      "read_distinct_words_per_bank": 2,
+      "write_distinct_words_per_bank": 1,
+      "combined_distinct_words_per_bank": 2
+    }
+  },
+  "read_window": {
+    "VA": [
+      12,
+      75
+    ],
+    "VB": [
+      12,
+      75
+    ],
+    "VC": [
+      12,
+      75
+    ],
+    "VX": [
+      97,
+      352
+    ]
+  },
+  "write_window": {
+    "SU": [
+      31,
+      94
+    ],
+    "ME": [
+      586,
+      593
+    ],
+    "REDUCER": [
+      160,
+      160
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "original_source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc.sv": "a4e1bda9a0ab083503462a8c755f35cbe3aa52786e455e29c66834e915463497"
+  },
+  "derived_source_sha256": {
+    "0_ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "1_ot_hbm_w2_protected_bank.sv": "daa5b161b9d710c5a42ebacdc04cbdb826c60836bf25cfaef17e83499cf4f0bb",
+    "2_ot_hbm_collective_protected_cdc.sv": "8476b0920f896eda3debe6ae2ce12843389ab53aef94162f287dd45252138646"
+  },
+  "normalization": "Replace module wildcard imports with explicit package::function references; no RTL behavior edits",
+  "yosys_frontend": "0.68 read_verilog passed all three package-qualified CDC files; original wildcard import rejected TOK_IMPORT (not RTL functional failure)",
+  "component_returncode": 0,
+  "component_output": "CDC_PROGRESS edges=128 writes=69 reads=5 fault=0 wb=69 rb=5 hp=1 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=256 writes=108 reads=45 fault=0 wb=108 rb=44 hp=2 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=384 writes=149 reads=86 fault=0 wb=21 rb=85 hp=2 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=512 writes=190 reads=127 fault=0 wb=62 rb=126 hp=2 reset=11 por=00 inv=1 inr=0\nCDC_PROGRESS edges=640 writes=231 reads=168 fault=0 wb=103 rb=39 hp=2 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=768 writes=272 reads=209 fault=0 wb=16 rb=80 hp=2 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=896 writes=313 reads=250 fault=0 wb=57 rb=122 hp=0 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=1024 writes=354 reads=291 fault=0 wb=98 rb=35 hp=0 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=1152 writes=395 reads=332 fault=0 wb=11 rb=76 hp=0 reset=11 por=00 inv=0 inr=0\nCDC_PROGRESS edges=1280 writes=436 reads=373 fault=0 wb=52 rb=117 hp=1 reset=11 por=00 inv=1 inr=1\nCDC_PROGRESS edges=1408 writes=478 reads=414 fault=0 wb=94 rb=30 hp=1 reset=11 por=00 inv=1 inr=0\nCDC_PROGRESS edges=1536 writes=512 reads=456 fault=0 wb=0 rb=72 hp=0 reset=11 por=00 inv=0 inr=1\nCDC_PROGRESS edges=1664 writes=512 reads=499 fault=0 wb=0 rb=114 hp=2 reset=11 por=00 inv=0 inr=1\nPASS_CDC full545x64 independent_clocks512flits wrap/stalls/full/correction/rails/drain/coordinated_reset/control_double/payload_double\n",
+  "bench_sha256": "675de7c766047cdfe5d87f3aa14901d04b98631d046352f0114352febf6b15f9",
+  "scope": "Functional component gate covers exact package-qualification transformation; synthesis inventory not yet executed"
+}

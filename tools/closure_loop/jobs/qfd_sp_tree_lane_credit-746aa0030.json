@@ -1,0 +1,88 @@
+{
+  "name": "qfd_sp_tree_lane_credit-746aa0030",
+  "block": "qfd_sp_tree_lane_credit",
+  "owner": "Codex:qwen-spine-cuts",
+  "purpose": "Actual full48-position tagged credit shell,32 result reservations derived from24-packet largest body op; internal split/valid generator,16 replicas;600.048um frame; input150ps output80fF; actual SS/FF +15/+15 DRC0",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "codex/qwen-spine-cuts-20261007",
+    "commit": "746aa0030a5356556767a3a1c44c6359536ff3eb"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "spine_exact",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_spine_lane_credit -P tb_qwen_spine_lane_credit.NEG=0 -o {RUN}/bench/t0 rtl/test/tb_qwen_spine_lane_credit.sv rtl/physical/ot_qwen_spine_lane_credit.sv rtl/physical/ot_qwen_spine_lane.sv rtl/hdc/ot_qwen_me_spine_h_w12.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv && vvp -n {RUN}/bench/t0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "^PASS credit",
+        "min_count_regex": "packets=(\\d+)"
+      },
+      {
+        "name": "spine_neg",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_spine_lane_credit -P tb_qwen_spine_lane_credit.NEG=1 -o {RUN}/bench/t1 rtl/test/tb_qwen_spine_lane_credit.sv rtl/physical/ot_qwen_spine_lane_credit.sv rtl/physical/ot_qwen_spine_lane.sv rtl/hdc/ot_qwen_me_spine_h_w12.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv && vvp -n {RUN}/bench/t1",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^FAIL credit"
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_sp_tree_lane_credit {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 32
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_sp_tree_lane_credit --out {RUN}/record/views/qfd_sp_tree_lane_credit --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_sp_tree_lane_credit.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_spine_lane_20261007/qfd_sp_tree_lane_credit-746aa0030"
+    }
+  ],
+  "cycles_added": "Candidate only;41 tree cycles plus <=5 capture/output stages.32 reservations derive from max24 packets/body op. Arbitrary credit delays are safe but reduce throughput. Conservative per-packet service bound46+retained112 wire RTT=158 cycles; body2304 packets gives364032 added cycles upper bound. Head uses actual packet_count*158; actual calendar and bench measured latency gate adoption; no throughput credit claimed.",
+  "merge_target": "main"
+}

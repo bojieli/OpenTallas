@@ -1,0 +1,10 @@
+{
+  "ff_per_replica": 7419,
+  "guard_ff": 2,
+  "independent_state_bits": 14838,
+  "library_mapped_check_required": true,
+  "pass": true,
+  "replicas": 2,
+  "stage": "generic synth -noabc; not placed independence",
+  "total_ff": 14840
+}

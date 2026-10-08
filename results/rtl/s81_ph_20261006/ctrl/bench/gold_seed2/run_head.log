@@ -1,0 +1,9 @@
+phase 0: 3072 requests (1001 writes, 5146 read beats) on 32 PCs; responses dut 5146 ref 5146
+phase 1: 3072 requests (1062 writes, 5033 read beats) on 32 PCs; responses dut 5033 ref 5033
+latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles
+latency: request rq issue -> PHY accept mean 49.61 max 190.96 cks cycles; response PHY -> rd mean 5.72 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
+TB_DSFD_CTRL PASS
+- rtl/dsrom_sys/s81_ph/test/tb_dsfd_ctrl.sv:241: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 2.840 s; speed 705.822 ns/s
+- Verilator: cpu 2.841 s on 1 threads; alloced 1038 MB

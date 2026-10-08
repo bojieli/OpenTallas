@@ -1,0 +1,33 @@
+{
+  "status": "PREPARED_SOURCE_JOIN_ONLY",
+  "donor_host_sha256": "a10ea144c1dfb7534b8a173405450a389aaab15580e24451d40f9378895e69c7",
+  "top": "ot_qwen_rom_combined_p0_20261005",
+  "full_token_run": false,
+  "adopted": false,
+  "die_parameters": {
+    "BASELINE_AR": 1,
+    "PROTECTED_STREAM4": 1,
+    "G": 6144,
+    "D": 4,
+    "SW": 64,
+    "NW": 18,
+    "SNW": 18,
+    "HBM_LAYERS": 36,
+    "NSTK": 4,
+    "NPC": 128,
+    "WBW": 4,
+    "REAL_MEM": 1,
+    "ENABLE_AR256": 1,
+    "HBM_PULLIN": 0,
+    "CORE_FS": 833333,
+    "CTL_FS": 1024000
+  },
+  "physical_transport_ready": false,
+  "scope": "Actual original-AR consumer to producer protected simulation backend; no transport/physical/token PASS",
+  "no_new_arithmetic": true,
+  "new_join_storage_bits": 0,
+  "new_join_latency_cycles": 0,
+  "reused_backend_model": "results/rtl/qwen_stream4_protected_20261005/prebuild_model.json",
+  "clock_model": "independent periodic roots; coincident pins updated together before eval",
+  "preserved": "released payload/KV preloads, all36 sequential carry, full RTL head, fault checks, final tagged write-ACK drain/readback"
+}

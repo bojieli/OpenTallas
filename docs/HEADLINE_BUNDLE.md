@@ -8,11 +8,11 @@ This appendix answers finding 6 and recommendation 6 of `docs/ARCHITECTURE_ATLAS
 
 ## B.1 Coverage
 
-- Headlines enumerated: 204 (409 printed occurrences in the atlas).
-- Bound to a record: 204, of which 5 are a ratio or an aggregate of record fields computed here. Unbound: 0 (Section B.5).
-- Printed occurrences that agree with their record under the written-precision rule: 409.
+- Headlines enumerated: 206 (415 printed occurrences in the atlas).
+- Bound to a record: 206, of which 5 are a ratio or an aggregate of record fields computed here. Unbound: 0 (Section B.5).
+- Printed occurrences that agree with their record under the written-precision rule: 415.
 - Headlines with a sensitivity range taken from the record's own variants: 27.
-- Records: 38, of which 27 pin their sources.
+- Records: 39, of which 28 pin their sources.
 
 Written-precision rule (from `tools/check_prose_figures.py`): a printed figure agrees with its record when they differ by at most half of the last digit printed, so `2.3` agrees with 2.286 and `8,185` with 8,184.9.
 
@@ -24,7 +24,7 @@ Written-precision rule (from `tools/check_prose_figures.py`): a printed figure a
 | measured-physical | 13 | Read from an ASAP7 synthesis, place-and-route or DFT run of this repository's RTL (predictive 7 nm PDK; not silicon). |
 | measured-quality | 9 | Measured model quality or acceptance on real weights, on a GPU, under an emulation of the deployment arithmetic. |
 | measured-gpu | 6 | Measured by this project on GPU hardware (microbenchmarks, application runs). |
-| model | 150 | An analytical, specification, calibrated or design-point model evaluated by a repository tool; RTL-calibrated where stated. Not a measurement of a chip. |
+| model | 152 | An analytical, specification, calibrated or design-point model evaluated by a repository tool; RTL-calibrated where stated. Not a measurement of a chip. |
 | third-party | 5 | A figure published by someone else and carried into a record as a cited input. |
 
 No headline in the atlas is a measurement of fabricated silicon. Every rate of a full-size chip is `model`; the RTL and physical classes are reduced vehicles, blocks and tiles.
@@ -185,6 +185,8 @@ Sensitivity variants:
 | Id | Claim | Printed | Places | Record value | Class | Bound to | Range |
 |---|---|---|---|---|---|---|---|
 | `v41.energy_rom_1m` | V4.1 ROM array energy per token at 1M, batch 1, scenario B (J) | 2.40 | 3 | 2.39831 | model | `results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.ar_batch1.rom_energy_j` | 2.39831 – 2.71498 | <!-- figure: 2.40 src="results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.ar_batch1.rom_energy_j" name="v41.energy_rom_1m" -->
+| `v41.energy_rom_1m_measured` | V4.1 ROM array energy per token at 1M, batch 1, AR, measured energy record (85 stages, stage PG at the measured element residual; scoreboard ds_rom.j_per_token_ar_b1_pg) (J) | 6.79 | 4 | 6.7916 | model | `results/arch/energy_silicon_measured/energy_silicon.json#deepseek_1m.rom.power.ar_b1_pg_measured.J_per_token` |  | <!-- figure: 6.79 src="results/arch/energy_silicon_measured/energy_silicon.json#deepseek_1m.rom.power.ar_b1_pg_measured.J_per_token" name="v41.energy_rom_1m_measured" -->
+| `v41.energy_hbm_accel_1m_measured` | DS HBM accelerator energy per token at 1M, batch 1, AR, measured energy record (scoreboard hbm_ds.accel_ar_J_per_token) (J) | 5.77 | 2 | 5.771 | model | `results/arch/energy_silicon_measured/energy_silicon.json#deepseek_1m.hbm_accel.power.ar_b1.J_per_token` |  | <!-- figure: 5.77 src="results/arch/energy_silicon_measured/energy_silicon.json#deepseek_1m.hbm_accel.power.ar_b1.J_per_token" name="v41.energy_hbm_accel_1m_measured" -->
 | `v41.energy_hbm_1m` | Best HBM comparator energy per token at 1M, batch 1, scenario B (J) | 6.70 | 2 | 6.70189 | model | `results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.ar_batch1.hbm_energy_j` |  | <!-- figure: 6.70 src="results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.ar_batch1.hbm_energy_j" name="v41.energy_hbm_1m" -->
 | `v41.energy_ratio_1m` | V4.1 energy per token HBM / ROM at 1M, batch 1, scenario B | 2.8 | 4 | 2.79442 | model | `results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.ar_batch1.energy_hbm_over_rom` | 2.58512 – 2.79442 | <!-- figure: 2.8 src="results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.ar_batch1.energy_hbm_over_rom" name="v41.energy_ratio_1m" -->
 | `v41.energy_ratio_1m_A` | V4.1 energy HBM / ROM at 1M, batch 1, scenario A (measured lane) | 2.6 | 1 | 2.58512 | model | `results/arch/power_scenarios.json#rom_over_hbm.A_measured_implementation.1048576.ar_batch1.energy_hbm_over_rom` |  | <!-- figure: 2.6 src="results/arch/power_scenarios.json#rom_over_hbm.A_measured_implementation.1048576.ar_batch1.energy_hbm_over_rom" name="v41.energy_ratio_1m_A" -->
@@ -386,6 +388,7 @@ Each record is reproduced by its command, from the sources it pins. `current` pi
 | `results/arch/v41_rack.json` | yes | `python3 tools/v41_rack_design.py` | path-only 3 | — |
 | `results/arch/arch_budget_v41.json` | yes | `python3 tools/arch_budget_v41.py` | none | — |
 | `results/arch/v41_hbm_switched.json` | yes | `python3 tools/arch_hbm_switched_v41.py` | none | — |
+| `results/arch/energy_silicon_measured/energy_silicon.json` | yes | `python3 tools/energy_silicon_measured.py  (inferred; the record names no command)` | path-only 9 | 162fca0b |
 | `results/arch/sync_cost_table.json` | yes | `python3 tools/sync_cost_table.py` | current 5, stale 2 | — |
 | `results/gpu/blackwell_gather_designs.json` | yes | `./gather_designs 500 21 64 16  (steps, trials, GEMVs per trial, weight matrices)` | none | — |
 | `results/physical_abi3/asap7/signoff/energy_common_kv.json` | yes | `not recorded` | none | — |

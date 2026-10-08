@@ -1,0 +1,697 @@
+{
+ "schema": "opentallas.dsrom-combined.static.v1",
+ "generated_utc": "2026-10-06T07:02:24Z",
+ "lever_sources": {
+  "su_hcpost": [
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv"
+  ],
+  "su_norm": [
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_softplus.sv",
+   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+   "rtl/hdc/v41x/ot_dsrom_divc.sv",
+   "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_inputs/ot_dsrom_su_norm.sv"
+  ],
+  "su_swiglu": [
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv"
+  ],
+  "su_softmax": [
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_softmax.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv"
+  ],
+  "su_routeract": [
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_spsqrt.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv"
+  ],
+  "field_spine": [
+   "rtl/common/ot_prefix.sv",
+   "rtl/hdc/ot_hdc_cg.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/v41die/ot_v41_field_pq_w17w10.sv",
+   "rtl/v41die/ot_v41_fieldtop_pqc_w17w10.sv",
+   "rtl/v41die/ot_v41_pair_pq_ld.sv",
+   "rtl/v41die/ot_v41_pair_pq_w17w10.sv",
+   "rtl/v41die/ot_v41_retn_w17w10.sv",
+   "rtl/v41die/ot_v41_spine_pqc_w17w10.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+   "rtl/v41rom/ot_v41_bmul2.sv",
+   "rtl/v41rom/ot_v41_bterm.sv",
+   "rtl/v41rom/ot_v41_bterm2_w10.sv",
+   "rtl/v41rom/ot_v41_chain.sv",
+   "rtl/v41rom/ot_v41_chain2.sv",
+   "rtl/v41rom/ot_v41_elem_pq_tags.sv",
+   "rtl/v41rom/ot_v41_fadd.sv",
+   "rtl/v41rom/ot_v41_kreg.sv",
+   "rtl/v41rom/ot_v41_ret.sv",
+   "rtl/v41rom/ot_v41_rom_elem_pq_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+   "rtl/v41rom/ot_v41_segtree.sv",
+   "rtl/v41rom/ot_v41_segtree2.sv"
+  ],
+  "qelem": [
+   "rtl/common/ot_prefix.sv",
+   "rtl/hdc/ot_hdc_cg.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/v41die/ot_v41_field_pq_w17w10.sv",
+   "rtl/v41die/ot_v41_fieldtop_pqc_w17w10.sv",
+   "rtl/v41die/ot_v41_pair_pq_ld.sv",
+   "rtl/v41die/ot_v41_retn_w17w10.sv",
+   "rtl/v41die/ot_v41_spine_pqc_w17w10.sv",
+   "rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+   "rtl/v41rom/ot_v41_bmul2.sv",
+   "rtl/v41rom/ot_v41_bterm.sv",
+   "rtl/v41rom/ot_v41_bterm2_w10.sv",
+   "rtl/v41rom/ot_v41_bterm3_w10.sv",
+   "rtl/v41rom/ot_v41_bterm4_w10.sv",
+   "rtl/v41rom/ot_v41_chain.sv",
+   "rtl/v41rom/ot_v41_chain2.sv",
+   "rtl/v41rom/ot_v41_chain3.sv",
+   "rtl/v41rom/ot_v41_elem_pq_tags.sv",
+   "rtl/v41rom/ot_v41_fadd.sv",
+   "rtl/v41rom/ot_v41_kreg.sv",
+   "rtl/v41rom/ot_v41_ret.sv",
+   "rtl/v41rom/ot_v41_rom_elem_pq_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+   "rtl/v41rom/ot_v41_segtree.sv",
+   "rtl/v41rom/ot_v41_segtree2.sv",
+   "rtl/v41rom/ot_v41_segtree3.sv",
+   "rtl/v41rom/ot_v41_segtree4.sv",
+   "rtl/v41rom/ot_v41_segtree5.sv"
+  ]
+ },
+ "per_lever": {
+  "su_hcpost": {
+   "n_files": 5,
+   "n_modules": 26,
+   "conflicts": {},
+   "identical_duplicates": {}
+  },
+  "su_norm": {
+   "n_files": 20,
+   "n_modules": 66,
+   "conflicts": {},
+   "identical_duplicates": {}
+  },
+  "su_swiglu": {
+   "n_files": 16,
+   "n_modules": 65,
+   "conflicts": {},
+   "identical_duplicates": {}
+  },
+  "su_softmax": {
+   "n_files": 14,
+   "n_modules": 57,
+   "conflicts": {},
+   "identical_duplicates": {}
+  },
+  "su_routeract": {
+   "n_files": 16,
+   "n_modules": 73,
+   "conflicts": {},
+   "identical_duplicates": {}
+  },
+  "field_spine": {
+   "n_files": 28,
+   "n_modules": 37,
+   "conflicts": {},
+   "identical_duplicates": {}
+  },
+  "qelem": {
+   "n_files": 36,
+   "n_modules": 45,
+   "conflicts": {},
+   "identical_duplicates": {}
+  }
+ },
+ "matrix": {
+  "all_off": {
+   "levers_on": [],
+   "conflicts_without_swap": {},
+   "conflicts": {},
+   "n_files": 42,
+   "n_modules": 84
+  },
+  "all_on": {
+   "levers_on": [
+    "su_hcpost",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax",
+    "su_routeract",
+    "field_spine",
+    "qelem"
+   ],
+   "conflicts_without_swap": {},
+   "conflicts": {},
+   "n_files": 59,
+   "n_modules": 135
+  },
+  "only_su_hcpost": {
+   "levers_on": [
+    "su_hcpost"
+   ],
+   "conflicts_without_swap": {},
+   "conflicts": {},
+   "n_files": 44,
+   "n_modules": 99
+  },
+  "all_on_minus_su_hcpost": {
+   "levers_on": [
+    "su_norm",
+    "su_swiglu",
+    "su_softmax",
+    "su_routeract",
+    "field_spine",
+    "qelem"
+   ],
+   "conflicts_without_swap": {
+    "ot_hdc_qmul_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "ot_hdc_qadd_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ]
+   },
+   "conflicts": {},
+   "n_files": 62,
+   "n_modules": 137
+  },
+  "only_su_norm": {
+   "levers_on": [
+    "su_norm"
+   ],
+   "conflicts_without_swap": {
+    "ot_hdc_qmul_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "ot_hdc_qadd_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ]
+   },
+   "conflicts": {},
+   "n_files": 47,
+   "n_modules": 102
+  },
+  "all_on_minus_su_norm": {
+   "levers_on": [
+    "su_hcpost",
+    "su_swiglu",
+    "su_softmax",
+    "su_routeract",
+    "field_spine",
+    "qelem"
+   ],
+   "conflicts_without_swap": {
+    "ot_hdc_qmul_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "ot_hdc_qadd_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ]
+   },
+   "conflicts": {},
+   "n_files": 59,
+   "n_modules": 134
+  },
+  "only_su_swiglu": {
+   "levers_on": [
+    "su_swiglu"
+   ],
+   "conflicts_without_swap": {
+    "ot_hdc_qmul_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "ot_hdc_qadd_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ]
+   },
+   "conflicts": {},
+   "n_files": 46,
+   "n_modules": 104
+  },
+  "all_on_minus_su_swiglu": {
+   "levers_on": [
+    "su_hcpost",
+    "su_norm",
+    "su_softmax",
+    "su_routeract",
+    "field_spine",
+    "qelem"
+   ],
+   "conflicts_without_swap": {
+    "ot_hdc_qmul_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "ot_hdc_qadd_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ]
+   },
+   "conflicts": {},
+   "n_files": 60,
+   "n_modules": 132
+  },
+  "only_su_softmax": {
+   "levers_on": [
+    "su_softmax"
+   ],
+   "conflicts_without_swap": {
+    "ot_hdc_qmul_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "ot_hdc_qadd_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ]
+   },
+   "conflicts": {},
+   "n_files": 45,
+   "n_modules": 97
+  },
+  "all_on_minus_su_softmax": {
+   "levers_on": [
+    "su_hcpost",
+    "su_norm",
+    "su_swiglu",
+    "su_routeract",
+    "field_spine",
+    "qelem"
+   ],
+   "conflicts_without_swap": {
+    "ot_hdc_qmul_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "ot_hdc_qadd_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ]
+   },
+   "conflicts": {},
+   "n_files": 61,
+   "n_modules": 139
+  },
+  "only_su_routeract": {
+   "levers_on": [
+    "su_routeract"
+   ],
+   "conflicts_without_swap": {
+    "ot_hdc_qmul_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "ot_hdc_qadd_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ]
+   },
+   "conflicts": {},
+   "n_files": 45,
+   "n_modules": 111
+  },
+  "all_on_minus_su_routeract": {
+   "levers_on": [
+    "su_hcpost",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax",
+    "field_spine",
+    "qelem"
+   ],
+   "conflicts_without_swap": {
+    "ot_hdc_qmul_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "ot_hdc_qadd_lat": [
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ]
+   },
+   "conflicts": {},
+   "n_files": 61,
+   "n_modules": 125
+  },
+  "only_field_spine": {
+   "levers_on": [
+    "field_spine"
+   ],
+   "conflicts_without_swap": {},
+   "conflicts": {},
+   "n_files": 42,
+   "n_modules": 84
+  },
+  "all_on_minus_field_spine": {
+   "levers_on": [
+    "su_hcpost",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax",
+    "su_routeract",
+    "qelem"
+   ],
+   "conflicts_without_swap": {},
+   "conflicts": {},
+   "n_files": 59,
+   "n_modules": 135
+  },
+  "only_qelem": {
+   "levers_on": [
+    "qelem"
+   ],
+   "conflicts_without_swap": {},
+   "conflicts": {},
+   "n_files": 50,
+   "n_modules": 92
+  },
+  "all_on_minus_qelem": {
+   "levers_on": [
+    "su_hcpost",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax",
+    "su_routeract",
+    "field_spine"
+   ],
+   "conflicts_without_swap": {},
+   "conflicts": {},
+   "n_files": 51,
+   "n_modules": 127
+  }
+ },
+ "file_swaps": {
+  "rtl/hdc/ot_hdc_fastfp_lat.sv": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/v41die/ot_v41_pair_pq_w17w10.sv": "rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv"
+ },
+ "norm_source": {
+  "main_sha256": "9fd7962fc1c9c294426a47f72e984ffec2737e083c002ca2b744d479e06220e3",
+  "la6_sha256": "9fd7962fc1c9c294426a47f72e984ffec2737e083c002ca2b744d479e06220e3",
+  "same": true,
+  "main_modules": [
+   "ot_dsrom_qadd",
+   "ot_dsrom_rsqrt",
+   "ot_dsrom_su_norm",
+   "ot_dsrom_su_norm_mix"
+  ],
+  "la6_modules": [
+   "ot_dsrom_qadd",
+   "ot_dsrom_rsqrt",
+   "ot_dsrom_su_norm",
+   "ot_dsrom_su_norm_mix"
+  ],
+  "tool_main_vs_la6_same": true,
+  "tb_main_vs_la6_same": true
+ },
+ "qelem_x_pq": {
+  "pq_pair_has_qelem": false,
+  "plain_pair_has_qelem": true,
+  "q_element_has_pq": false,
+  "swap": "rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv"
+ },
+ "pin_currency": {
+  "su_hcpost": [
+   {
+    "record": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json",
+    "pins": 6,
+    "drifted": {}
+   }
+  ],
+  "su_norm": [
+   {
+    "record": "results/rtl/dsrom_recovery_20261004/su_norm/measure.json",
+    "pins": 24,
+    "drifted": {
+     "rtl/hdc/v41x/ot_dsrom_su_norm.sv": {
+      "pinned": "da8017e7d28af8846ab5fc01eb70cc412b12c7ac024586d0838d206caf9057fb",
+      "current": "9fd7962fc1c9c294426a47f72e984ffec2737e083c002ca2b744d479e06220e3",
+      "matches_la6_preserved_copy": false
+     },
+     "rtl/test/tb_dsrom_su_norm.sv": {
+      "pinned": "b895d59530a5c00c5ee33884e732ada3e6399cc2bfa0e836cf58144060677ae8",
+      "current": "fcdb57ca72faf67c0a4831c585f65dfd1bc09e42a47a7c40416efefc30d02272",
+      "matches_la6_preserved_copy": false
+     }
+    }
+   },
+   {
+    "record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_transport_terminal.json",
+    "pins": 0,
+    "drifted": {}
+   }
+  ],
+  "su_swiglu": [
+   {
+    "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json",
+    "pins": 19,
+    "drifted": {}
+   },
+   {
+    "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json",
+    "pins": 19,
+    "drifted": {}
+   }
+  ],
+  "su_softmax": [
+   {
+    "record": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json",
+    "pins": 16,
+    "drifted": {}
+   }
+  ],
+  "su_routeract": [
+   {
+    "record": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json",
+    "pins": 25,
+    "drifted": {
+     "tools/dsrom_su_routeract.py": {
+      "pinned": "626842a239162373f40483b4dea463b8940440956617d3aba31e0f6b178828da",
+      "current": "84a53ed9e600a23e031791710dccb0c6cb586e4ab252686b1ca20fbfd3e014a0",
+      "matches_la6_preserved_copy": false
+     }
+    }
+   }
+  ],
+  "field_spine": [
+   {
+    "record": "results/rtl/dsrom_field_spine_20261004/field_baseline.json",
+    "pins": 38,
+    "drifted": {
+     "tools/dsrom_1m_field.py": {
+      "pinned": "b67eb4508aae1d697cf174049c0edc5f181ac101de58544651b3ac7a879df170",
+      "current": "c7fd7cd30d6323bf2c7b50feb52867a4923069496c40480ccbde8e984e70491e",
+      "matches_la6_preserved_copy": false
+     }
+    }
+   },
+   {
+    "record": "results/rtl/dsrom_field_spine_20261004/field_pq.json",
+    "pins": 38,
+    "drifted": {
+     "tools/dsrom_1m_field.py": {
+      "pinned": "b67eb4508aae1d697cf174049c0edc5f181ac101de58544651b3ac7a879df170",
+      "current": "c7fd7cd30d6323bf2c7b50feb52867a4923069496c40480ccbde8e984e70491e",
+      "matches_la6_preserved_copy": false
+     }
+    }
+   }
+  ],
+  "qelem": [
+   {
+    "record": "results/rtl/dsrom_field_qelem_20261005/field_qelem.json",
+    "pins": 47,
+    "drifted": {
+     "tools/dsrom_1m_field.py": {
+      "pinned": "3177d6a8d7a0f113afc4f38137be5d4010260ba6028331a4c28167a6eec52f11",
+      "current": "c7fd7cd30d6323bf2c7b50feb52867a4923069496c40480ccbde8e984e70491e",
+      "matches_la6_preserved_copy": false
+     }
+    }
+   }
+  ]
+ },
+ "composition_node_claims": {
+  "levers": {
+   "draft": {
+    "verdict": "ADOPT",
+    "exact": true,
+    "n_nodes": 0
+   },
+   "field": {
+    "verdict": "REJECT",
+    "exact": true,
+    "n_nodes": 137
+   },
+   "field_spine": {
+    "verdict": "PENDING_SSFF",
+    "exact": true,
+    "n_nodes": 325
+   },
+   "field_spine_pq": {
+    "verdict": "PENDING_SSFF",
+    "exact": true,
+    "n_nodes": 325
+   },
+   "head": {
+    "verdict": "ADOPT",
+    "exact": true,
+    "n_nodes": 2
+   },
+   "hop": {
+    "verdict": "REJECT",
+    "exact": true,
+    "n_nodes": 1
+   },
+   "router": {
+    "verdict": "ADOPT",
+    "exact": true,
+    "n_nodes": 2
+   },
+   "su_hcpost": {
+    "verdict": "ADOPT",
+    "exact": true,
+    "n_nodes": 2
+   },
+   "su_norm": {
+    "verdict": "ADOPT",
+    "exact": true,
+    "n_nodes": 22
+   },
+   "su_routeract": {
+    "verdict": "ADOPT",
+    "exact": true,
+    "n_nodes": 1
+   },
+   "su_softmax": {
+    "verdict": "PENDING_SSFF",
+    "exact": true,
+    "n_nodes": 15
+   },
+   "su_swiglu": {
+    "verdict": "ADOPT",
+    "exact": true,
+    "n_nodes": 5
+   }
+  },
+  "overlaps": {
+   "alternatives": {
+    "n": 325,
+    "sample": {
+     "E1.wkv": [
+      "field",
+      "field_spine",
+      "field_spine_pq"
+     ],
+     "L0.attn.wo_a": [
+      "field",
+      "field_spine",
+      "field_spine_pq"
+     ],
+     "L0.ffn.experts_gu": [
+      "field",
+      "field_spine",
+      "field_spine_pq"
+     ],
+     "L0.ffn.down": [
+      "field",
+      "field_spine",
+      "field_spine_pq"
+     ],
+     "L1.attn.wo_a": [
+      "field",
+      "field_spine",
+      "field_spine_pq"
+     ],
+     "L1.ffn.experts_gu": [
+      "field",
+      "field_spine",
+      "field_spine_pq"
+     ]
+    }
+   }
+  }
+ },
+ "unresolved_conflicts": {}
+}

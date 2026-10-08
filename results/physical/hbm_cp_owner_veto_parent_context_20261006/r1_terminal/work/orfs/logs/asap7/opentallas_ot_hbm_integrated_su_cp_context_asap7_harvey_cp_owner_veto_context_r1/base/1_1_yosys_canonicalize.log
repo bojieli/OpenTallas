@@ -1,0 +1,70 @@
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_owner_veto_context_r1/base/clock_period.txt
+Setting clock period to 833.333
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv
+12. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv
+13. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv
+14. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv
+15. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv
+16. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+22. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+23. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+24. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+25. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+27. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+28. Executing HIERARCHY pass (managing design hierarchy).
+29. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_context'.
+29.1. Analyzing design hierarchy..
+29.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_association'.
+29.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_su_cp_bind'.
+29.4. Analyzing design hierarchy..
+29.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_veto_nor4'.
+29.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_veto_conditional'.
+29.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_veto_conditional'.
+29.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_owner_veto64'.
+29.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_frontier_nor3'.
+29.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_header_decode'.
+Warning: Replacing memory \held_syndrome with list of registers. See /src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv:44
+Warning: Replacing memory \held_code with list of registers. See /src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv:44
+29.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_four_encode'.
+29.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_frontier_entry'.
+29.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_parallel_phase'.
+29.14. Analyzing design hierarchy..
+29.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_frontier_nand3'.
+29.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_phase_nand2'.
+29.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_phase_nor2'.
+29.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_cp_four_xor4'.
+29.19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_cp_nor4'.
+29.20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_integrated_cp_nand4'.
+29.21. Analyzing design hierarchy..
+29.22. Analyzing design hierarchy..
+30. Executing OPT_CLEAN pass (remove unused cells and wires).
+Warning: Ignoring module ot_hbm_integrated_header_decode because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$acfbc572d89cf26a9e780628ace2d9dbf295fa10\ot_hbm_integrated_su_cp_bind because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$b6640e3b6534dc998805d675957c89eca62cb75b\ot_hbm_integrated_su_cp_association because it contains processes (run 'proc' command first).
+Warning: Ignoring module ot_hbm_cp_four_encode because it contains processes (run 'proc' command first).
+31. Executing RTLIL backend.
+Warnings: 6 unique messages, 6 total
+End of script. Logfile hash: 541c935a80, time: 3.72s, user: 3.71s, system: 0.02s, MEM: 81.39 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 81% 1x hierarchy (3 sec), 16% 12x read_liberty (0 sec), ...
+Elapsed time: 0:03.76[h:]min:sec. CPU time: user 3.75 sys 0.03 (100%). Peak memory: 86472KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil          3             84 cab0d0a0b3fdbadad6bb

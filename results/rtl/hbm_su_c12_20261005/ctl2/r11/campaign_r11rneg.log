@@ -1,0 +1,51 @@
+c12 params {'mlat': 6, 'alat': 6, 'opr': 1, 'ddiv': 21, 'sidex': 4, 'fsq': 1, 'capr': 1, 'rpad': 1, 'rsl': 2, 'rtap': 1, 'rout': 2, 'rslice': 64, 'ctl12': 2, 'ropi': 1} OT_VFLAGS --unroll-count 4 -fno-dfg +define+OT_NEG_RED_ROUT2 -GOPR=1 -GDDIV=21 -GSIDEX=4 -GFSQ=1 -GCAPR=1 -GRPAD=1 -GRSL=2 -GROUT=2 -GCTL12=2 -GRTAP=1 -GRSLICE=64 -GROPI=1
+scratch /srv/opentallas-scratch2/scratch/claude/hbm-su/work_camp/r11rneg
+sfu True
+built N=16 M=8
+  random N=16 seed=2 ops=38 pass=False vm_bad=3 kv_bad=0 faults=0 order=0 cycles=1176
+  random N=16 seed=8 ops=38 pass=False vm_bad=8 kv_bad=0 faults=0 order=0 cycles=1732
+  random N=16 seed=1 ops=36 pass=False vm_bad=25 kv_bad=0 faults=0 order=0 cycles=1832
+  random N=16 seed=7 ops=37 pass=False vm_bad=24 kv_bad=0 faults=0 order=0 cycles=1672
+  random N=16 seed=4 ops=39 pass=False vm_bad=1 kv_bad=0 faults=0 order=0 cycles=1507
+  random N=16 seed=3 ops=37 pass=False vm_bad=13 kv_bad=0 faults=0 order=0 cycles=1651
+  random N=16 seed=5 ops=40 pass=False vm_bad=11 kv_bad=0 faults=0 order=0 cycles=1891
+  random N=16 seed=6 ops=38 pass=False vm_bad=22 kv_bad=0 faults=0 order=0 cycles=1723
+  random N=16 seed=9 ops=39 pass=False vm_bad=7 kv_bad=0 faults=0 order=0 cycles=1941
+  random N=16 seed=10 ops=38 pass=False vm_bad=17 kv_bad=0 faults=0 order=0 cycles=1490
+  random N=16 seed=12 ops=39 pass=False vm_bad=9 kv_bad=0 faults=0 order=0 cycles=1518
+  random N=16 seed=11 ops=39 pass=False vm_bad=12 kv_bad=0 faults=0 order=0 cycles=1614
+  random N=16 seed=13 ops=37 pass=False vm_bad=41 kv_bad=0 faults=0 order=0 cycles=1579
+  random N=16 seed=14 ops=40 pass=False vm_bad=18 kv_bad=0 faults=0 order=0 cycles=1729
+  random N=16 seed=16 ops=39 pass=False vm_bad=27 kv_bad=0 faults=0 order=0 cycles=1462
+  random N=16 seed=15 ops=39 pass=False vm_bad=35 kv_bad=0 faults=0 order=0 cycles=1401
+  random N=16 seed=17 ops=36 pass=False vm_bad=11 kv_bad=0 faults=0 order=0 cycles=1815
+  random N=16 seed=18 ops=38 pass=False vm_bad=3 kv_bad=0 faults=0 order=0 cycles=1589
+  random N=16 seed=20 ops=38 pass=False vm_bad=30 kv_bad=0 faults=0 order=0 cycles=1550
+  random N=16 seed=19 ops=39 pass=False vm_bad=16 kv_bad=0 faults=0 order=0 cycles=1563
+  random N=16 seed=21 ops=40 pass=False vm_bad=2 kv_bad=0 faults=0 order=0 cycles=1737
+  random N=16 seed=22 ops=40 pass=False vm_bad=16 kv_bad=0 faults=0 order=0 cycles=1189
+  random N=16 seed=23 ops=40 pass=False vm_bad=29 kv_bad=0 faults=0 order=0 cycles=1699
+  random N=16 seed=24 ops=37 pass=False vm_bad=27 kv_bad=0 faults=0 order=0 cycles=1446
+random 16 0 / 24
+built N=64 M=16
+  random N=64 seed=104 ops=39 pass=False vm_bad=2 kv_bad=0 faults=0 order=0 cycles=1425
+  random N=64 seed=108 ops=40 pass=False vm_bad=22 kv_bad=0 faults=0 order=0 cycles=1619
+  random N=64 seed=107 ops=37 pass=False vm_bad=30 kv_bad=0 faults=0 order=0 cycles=1211
+  random N=64 seed=101 ops=39 pass=False vm_bad=14 kv_bad=0 faults=0 order=0 cycles=1731
+  random N=64 seed=103 ops=34 pass=False vm_bad=21 kv_bad=0 faults=0 order=0 cycles=1465
+  random N=64 seed=106 ops=38 pass=False vm_bad=26 kv_bad=0 faults=0 order=0 cycles=1779
+  random N=64 seed=102 ops=36 pass=False vm_bad=32 kv_bad=0 faults=0 order=0 cycles=1860
+  random N=64 seed=105 ops=36 pass=False vm_bad=10 kv_bad=0 faults=0 order=0 cycles=2032
+  random N=64 seed=110 ops=38 pass=False vm_bad=21 kv_bad=0 faults=0 order=0 cycles=1465
+  random N=64 seed=114 ops=39 pass=False vm_bad=7 kv_bad=0 faults=0 order=0 cycles=1296
+  random N=64 seed=109 ops=39 pass=False vm_bad=32 kv_bad=0 faults=0 order=0 cycles=1675
+  random N=64 seed=112 ops=38 pass=False vm_bad=5 kv_bad=0 faults=0 order=0 cycles=1427
+  random N=64 seed=111 ops=37 pass=False vm_bad=32 kv_bad=0 faults=0 order=0 cycles=1752
+  random N=64 seed=113 ops=37 pass=False vm_bad=26 kv_bad=0 faults=0 order=0 cycles=1556
+  random N=64 seed=115 ops=38 pass=False vm_bad=29 kv_bad=0 faults=0 order=0 cycles=2102
+  random N=64 seed=116 ops=36 pass=False vm_bad=39 kv_bad=0 faults=0 order=0 cycles=1887
+random 64 0 / 16
+vehicle 1 / 56
+perf64 {"elements": 5120, "first_emit_to_last_emit": 143, "elements_per_cycle": 35.80419580419581, "first_emit_to_result": 301, "vectors": 80}
+wrote /srv/opentallas-scratch2/scratch/claude/hbm-su/out/campaign_r11rneg.json
+C12 CAMPAIGN FAIL ['random N16_M8 #0', 'random N16_M8 #1', 'random N16_M8 #2', 'random N16_M8 #3', 'random N16_M8 #4', 'random N16_M8 #5', 'random N16_M8 #6', 'random N16_M8 #7', 'random N16_M8 #8', 'random N16_M8 #9', 'random N16_M8 #10', 'random N16_M8 #11', 'random N16_M8 #12', 'random N16_M8 #13', 'random N16_M8 #14', 'random N16_M8 #15', 'random N16_M8 #16', 'random N16_M8 #17', 'random N16_M8 #18', 'random N16_M8 #19', 'random N16_M8 #20', 'random N16_M8 #21', 'random N16_M8 #22', 'random N16_M8 #23', 'random N64_M16 #0', 'random N64_M16 #1', 'random N64_M16 #2', 'random N64_M16 #3', 'random N64_M16 #4', 'random N64_M16 #5', 'random N64_M16 #6', 'random N64_M16 #7', 'random N64_M16 #8', 'random N64_M16 #9', 'random N64_M16 #10', 'random N64_M16 #11', 'random N64_M16 #12', 'random N64_M16 #13', 'random N64_M16 #14', 'random N64_M16 #15', 'vehicle #0', 'vehicle #1', 'vehicle #2', 'vehicle #3', 'vehicle #4', 'vehicle #5', 'vehicle #6', 'vehicle #7', 'vehicle #8', 'vehicle #9', 'vehicle #10', 'vehicle #11', 'vehicle #12', 'vehicle #13', 'vehicle #14', 'vehicle #15', 'vehicle #16', 'vehicle #17', 'vehicle #18', 'vehicle #19', 'vehicle #20', 'vehicle #21', 'vehicle #22', 'vehicle #23', 'vehicle #24', 'vehicle #25', 'vehicle #26', 'vehicle #27', 'vehicle #28', 'vehicle #29', 'vehicle #30', 'vehicle #31', 'vehicle #32', 'vehicle #33', 'vehicle #34', 'vehicle #35', 'vehicle #36', 'vehicle #37', 'vehicle #38', 'vehicle #39', 'vehicle #40', 'vehicle #41', 'vehicle #42', 'vehicle #43', 'vehicle #44', 'vehicle #45', 'vehicle #46', 'vehicle #47', 'vehicle #48', 'vehicle #49', 'vehicle #50', 'vehicle #51', 'vehicle #52', 'vehicle #53', 'vehicle #54', 'perf_N64_M16']

@@ -1,0 +1,21 @@
+STATS ISO_P255 hbm_act=512 rd=4096 wr=136 refpb=428 violations=0 max_landing=17 rsp_tile_stall=812 fill_sectors=4096 wr_sectors=136 wr_lat_max=43
+PASS ISO_P255 "P":255,"fill_cycles":128,"fill_sectors":4096,"sectors_per_cycle":32.00,"tb_s_at_1p2ghz":1.229,"kv_ok_after_start":546,"su_drain_wait":481,"violations":0 : slices and token HBM codes exact
+STATS ISO_P256_tile_open hbm_act=512 rd=4352 wr=136 refpb=428 violations=0 max_landing=17 rsp_tile_stall=830 fill_sectors=4352 wr_sectors=136 wr_lat_max=43
+PASS ISO_P256_tile_open "P":256,"fill_cycles":130,"fill_sectors":4352,"sectors_per_cycle":33.48,"tb_s_at_1p2ghz":1.286,"kv_ok_after_start":546,"su_drain_wait":481,"violations":0 : slices and token HBM codes exact
+STATS ISO_P0 hbm_act=512 rd=256 wr=136 refpb=384 violations=0 max_landing=2 rsp_tile_stall=64 fill_sectors=256 wr_sectors=136 wr_lat_max=43
+PASS ISO_P0 "P":0,"fill_cycles":80,"fill_sectors":256,"sectors_per_cycle":3.20,"tb_s_at_1p2ghz":0.123,"kv_ok_after_start":498,"su_drain_wait":433,"violations":0 : slices and token HBM codes exact
+STATS ISO_P1023 hbm_act=648 rd=16384 wr=136 refpb=656 violations=0 max_landing=17 rsp_tile_stall=1849 fill_sectors=16384 wr_sectors=136 wr_lat_max=59
+PASS ISO_P1023 "P":1023,"fill_cycles":261,"fill_sectors":16384,"sectors_per_cycle":62.77,"tb_s_at_1p2ghz":2.411,"kv_ok_after_start":788,"su_drain_wait":723,"violations":0 : slices and token HBM codes exact
+STATS ISO_P4095 hbm_act=2184 rd=65536 wr=136 refpb=1124 violations=0 max_landing=17 rsp_tile_stall=5320 fill_sectors=65536 wr_sectors=136 wr_lat_max=66
+PASS ISO_P4095 "P":4095,"fill_cycles":780,"fill_sectors":65536,"sectors_per_cycle":84.02,"tb_s_at_1p2ghz":3.226,"kv_ok_after_start":1316,"su_drain_wait":1251,"violations":0 : slices and token HBM codes exact
+STATS ISO_P8191 hbm_act=4232 rd=131072 wr=136 refpb=1740 violations=0 max_landing=18 rsp_tile_stall=8737 fill_sectors=131072 wr_sectors=136 wr_lat_max=78
+PASS ISO_P8191 "P":8191,"fill_cycles":1466,"fill_sectors":131072,"sectors_per_cycle":89.41,"tb_s_at_1p2ghz":3.433,"kv_ok_after_start":2019,"su_drain_wait":1954,"violations":0 : slices and token HBM codes exact
+STATS ISO_P8191_posted hbm_act=4232 rd=131072 wr=136 refpb=1356 violations=0 max_landing=18 rsp_tile_stall=8737 fill_sectors=131072 wr_sectors=136 wr_lat_max=59
+PASS ISO_P8191_posted "P":8191,"fill_cycles":1466,"fill_sectors":131072,"sectors_per_cycle":89.41,"tb_s_at_1p2ghz":3.433,"kv_ok_after_start":1476,"su_drain_wait":0,"violations":0 : slices and token HBM codes exact
+STATS CHAIN_P8191_base hbm_act=8892 rd=262144 wr=272 refpb=7184 violations=0 max_landing=20 rsp_tile_stall=18734 fill_sectors=262144 wr_sectors=272 wr_lat_max=78
+PASS CHAIN_P8191_base "P":8191,"early_go":0,"posted_wb":0,"attn_cycles":1200,"mlp_cycles":3000,"A_fill_cycles":1466,"A_kv_ok_after_start":2019,"B_fill_cycles":1433,"B_fill_exposed_after_start":1433,"B_kv_ok_after_start":1962,"su_drain_wait":3851,"violations":0 : A and B slices, both token write-backs exact
+STATS CHAIN_P8191_early_posted hbm_act=8464 rd=262144 wr=272 refpb=5112 violations=0 max_landing=18 rsp_tile_stall=18750 fill_sectors=262144 wr_sectors=272 wr_lat_max=59
+PASS CHAIN_P8191_early_posted "P":8191,"early_go":1,"posted_wb":1,"attn_cycles":1200,"mlp_cycles":3000,"A_fill_cycles":1466,"A_kv_ok_after_start":1476,"B_fill_cycles":1430,"B_fill_exposed_after_start":0,"B_kv_ok_after_start":65,"su_drain_wait":0,"violations":0 : A and B slices, both token write-backs exact
+STATS CHAIN_P4095_early_posted hbm_act=4368 rd=131072 wr=272 refpb=4236 violations=0 max_landing=19 rsp_tile_stall=11392 fill_sectors=131072 wr_sectors=272 wr_lat_max=345
+PASS CHAIN_P4095_early_posted "P":4095,"early_go":1,"posted_wb":1,"attn_cycles":600,"mlp_cycles":3000,"A_fill_cycles":780,"A_kv_ok_after_start":790,"B_fill_cycles":745,"B_fill_exposed_after_start":0,"B_kv_ok_after_start":65,"su_drain_wait":0,"violations":0 : A and B slices, both token write-backs exact
+STATS CHAIN_P8191_early_short_mlp hbm_act=8464 rd=262144 wr=272 refpb=3684 violations=0 max_landing=18 rsp_tile_stall=18726 fill_sectors=262144 wr_sectors=272 wr_la

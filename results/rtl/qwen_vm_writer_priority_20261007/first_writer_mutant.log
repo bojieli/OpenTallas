@@ -1,0 +1,5 @@
+FRAME kind=0 physical_edges=3155 read_delta=0 checked_ACK_delta=1 native=1
+FRAME kind=1 physical_edges=3166 read_delta=1 checked_ACK_delta=1 native=2
+FRAME kind=2 physical_edges=3136 read_delta=1 checked_ACK_delta=0 native=3
+FATAL: /tmp/qwen-vm-writer-priority-20261007/bench.sv:72: LAST_SEQUENCER_LANE_DID_NOT_WIN
+       Time: 94600000 Scope: tb_qwen_vm_writer_priority

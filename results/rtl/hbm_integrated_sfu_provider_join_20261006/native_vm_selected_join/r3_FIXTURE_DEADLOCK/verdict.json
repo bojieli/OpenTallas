@@ -1,0 +1,12 @@
+{
+  "status": "BENCH_DEADLOCK_CANCELLED",
+  "pinned_source": "5cf293aa6",
+  "runtime_root": "/srv/opentallas-scratch2/codex/hbm-native-sfu-selected-5cf293aa6/r3",
+  "diagnostic_sha256": "cb743184c9472d74953906818d3fe551a694cd3d776728b7131e63774444708c",
+  "cause": "accepted first SRAM READ enters RESP; bench polls ready after NBA and never accepts held response",
+  "arithmetic_verdict": null,
+  "runtime_restarted": false,
+  "RTL_changed": false,
+  "read_payload_note": "diagnostic first32 SRAM words match retainedgold; not complete64word gate PASS",
+  "cancelled_by": "Kant, owner-authorized TERM; PID241241 and verified cohort absent"
+}

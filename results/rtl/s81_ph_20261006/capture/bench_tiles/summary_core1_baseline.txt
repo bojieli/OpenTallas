@@ -1,0 +1,5 @@
+c1 mix: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=48 timeouts=0 mismatching_roots=0 RESULT PASS
+c1 mix11: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=49 timeouts=0 mismatching_roots=0 RESULT PASS
+c1 trace: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=27 timeouts=0 mismatching_roots=0 RESULT PASS
+c1 rreq: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=31 timeouts=0 mismatching_roots=0 RESULT PASS
+CAPT_BENCH PASS

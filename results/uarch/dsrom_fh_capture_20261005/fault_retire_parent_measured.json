@@ -1,0 +1,94 @@
+{
+  "parameter": "FAULT_RETIRE",
+  "default": 0,
+  "G": 4,
+  "W": 16,
+  "stages": 4,
+  "MACs_per_cycle": 0,
+  "FP32_adds_per_cycle": 0,
+  "new_memory_ports": 0,
+  "memory_payload_bytes_per_cycle": 256,
+  "boundary_bits_per_cycle": {
+    "transaction": 5520,
+    "valid": 1,
+    "poison": 64,
+    "address_fault": 4,
+    "arithmetic_fault": 1
+  },
+  "packet_fields": {
+    "leaf_valid_key_row": 3136,
+    "result_data_mask_addr_write_enable": 2212,
+    "result_tag": 160,
+    "result_valid": 1,
+    "warm_index_marker": 1
+  },
+  "FF_bits": {
+    "transaction_packet": 22080,
+    "packet_valid": 4,
+    "local_eight_bank_fault": 8,
+    "two_row_fault": 4,
+    "kept_global_relays": 16,
+    "lane_veto_copies": 64,
+    "write_veto_copies": 4,
+    "status_copy": 1,
+    "parent_sequence_and_expected_identity": 16,
+    "parent_expected_warm_word_and_mask": 40,
+    "parent_warm_debt_sent_and_protocol_fault": 3,
+    "producer_issued_and_warm_marker": 2,
+    "producer_raw_leaf_valid": 1,
+    "protected_SRAM_commit_identity_pipeline": 338
+  },
+  "FF_total": 22581,
+  "FF_area_proxy_um2": 6584.619600000001,
+  "fault_tree": {
+    "local_banks_per_cluster": 8,
+    "local_cluster_macro_rows": 2,
+    "local_cluster_macro_columns": 4,
+    "clusters_per_quadrant": 2,
+    "local_cluster_span_um": {
+      "x": 894.096,
+      "y": 99.7
+    },
+    "quadrant_span_um": {
+      "x": 894.096,
+      "y": 239.7
+    },
+    "quadrant_sources_per_relay": 4,
+    "relay_replicas": 16,
+    "max_quadrant_logical_fanout": 16,
+    "max_relay_logical_fanout": 6,
+    "max_lane_veto_external_loads": 2,
+    "retention": "kept hierarchy on each OR4/register relay and final register copy"
+  },
+  "latency": {
+    "output_retirement_extra_cycles": 4,
+    "index_write_retirement_extra_cycles": 4,
+    "candidate_added_cycles_per_fused_chain": 8,
+    "candidate_five_chain_added_cycles": 40,
+    "five_chain_added_cycles": 85,
+    "predicted_five_chain_cycles": 62918,
+    "predicted_five_chain_added_ns": 33.33332,
+    "measured_cycles": 62963,
+    "measured_added_cycles": 85,
+    "measured_added_ns_at_model_clock": 70.83333333333334,
+    "measured_record": "results/rtl/dsrom_fh_capture_20261005/fault_retire_parent/gold4_r11/result.json",
+    "measurement_scope": "ENABLEON fullG4W16 originalgold4 with actual two-edge fixture memory-write ACK; native protected VM backend/crossing qualification is separate",
+    "requirement": "Price actual producer drain/commit handshake before adoption; this bound is not a core measurement"
+  },
+  "protection": "Snapshot all 64 sticky poison flags, four address faults and arithmetic fault with the same complete transaction; never retire a faulted packet",
+  "flow_control": "4-slot valid pipeline; warm-index debt clears only on matched fault-free actual memory commit ACK; retain debt and refuse reuse through missing/bad receipts or quarantine",
+  "integrated_parent": true,
+  "commit_contract": "Warm ACK must match in-flight8-bit identity, actual word address and lane mask; wrong/missing ACK keeps debt quarantined. Real SRAM commit timing or test consumer memory-write edge supplies ACK; pipeline emission alone does not.",
+  "floorplan": {
+    "existing_width_um": 2000,
+    "existing_height_um": 660,
+    "macro_count": 64,
+    "macro_moves": 0,
+    "actual_new_cell_area_um2": null,
+    "routing_tracks_and_loaded_clock_PG_repair_margin": null,
+    "ready_for_route": false
+  },
+  "scope": "Own head component. Requires real parent retirement/debt integration; no standalone cut qualifies parent hold or whole-die timing.",
+  "adoption": false,
+  "physical_closed": false
+}

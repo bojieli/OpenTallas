@@ -1,0 +1,44 @@
+{
+  "candidate": "BF root phase CTS rewiring protection fix",
+  "failed_source_commit": "7990dfdbfd8e005baf326b193683dd3f60600549",
+  "failed_job": "bf_root_phase_hierarchy_7990dfdbf",
+  "failure": "ODB-0370: CTS cannot disconnect A on dont_touch g_half.g_root.u_inv0/u_inv",
+  "repair": "Keep FIRM placement for both INVx1 and phase FF, clear dont_touch to permit CTS clock-pin rewiring; require locality/census at POST_CTS and POST_DETAIL_ROUTE.",
+  "area_delta_um2": 0,
+  "latency_delta_cycles": 0,
+  "rtl_changed": false,
+  "clock_constraints_changed": false,
+  "adopted": false,
+  "physical_status": "successor not yet run; full calibration and SS/FF/DRC qualification required",
+  "validation": {
+    "old_fixture": "ODB-0370 reproduced",
+    "new_fixture": "clock input disconnect/reconnect PASS and FIRM retained",
+    "firm_move": "ODB-0359 rejects moving FIRM inverter",
+    "negative_after_explicit_unlock": [
+      "locality mutant rejected",
+      "missing inverter rejected"
+    ],
+    "exact": "49 generated sources identical; original positive and two mutation proofs reused"
+  },
+  "local_openroad": "v2.0-17598-ga008522d8",
+  "source_sha256": {
+    "physical/s81_bf_root_phase/localize.tcl": "529d24df30f365a01ac9a795eb5324eae5b990f28175605eae410d735720c729",
+    "physical/s81_bf_root_phase/check_placement.tcl": "f08607e60d53c8a58954ba050c437e3331a2b1ab3eb708090cbb3219a55f2c72",
+    "physical/s81_bf_root_phase/clock.sdc": "cde7dbba37f328254f247ba62771d266712e2af6902393f4739dc2ecf4a64486",
+    "tools/s81/run_bf_root_phase_physical.py": "3f6fb75f07846f238e7d89bf4d7d7ec5e6faab478dea8cd5f7aa38d687863d7b",
+    "rtl/s81/root_phase/ot_s81_bf_native_root_phase.sv": "93519c3af291675f4489f39080469680d11398fac630ca6c251ab25a788bfed3"
+  },
+  "evidence_sha256": {
+    "localize_before.tcl": "36c46df00a77881df5b66272153caa7fba42215d006d4870cf4c98f6a7b1712c",
+    "exact_reuse_receipt.json": "5434e5319a869b131caaafd87dd130f792c27c5ed4b494ea6c5f5548a6603c7b",
+    "calibration_failure.log": "43f25cdf5c7c2dda24c7527054b5727fcb020260dbf501aa352d8ddf13ed2042",
+    "rewire_fixed.tcl": "f880ccef462b104b031619cb5d75f0b9ebd265167f00d8108b676c7701973e68",
+    "rewire_negative.tcl": "f808f6734aaa4477c0202d9a21ac9f0fbcf3f67f70a38dead9c7278624f5e738",
+    "failed_job_state.json": "82466f3bc727d45bba29ea54a60ae620ec9e545690513d0c8f60385b7533e7c7",
+    "firm_move_rejected.log": "37d0e80ef0bf723f0960617ff0652935c2d54c6c8aaa60d60b7124d129a5fb9a",
+    "rewire_negative.log": "edfe67819c82ce466b66f1028742357f07bdcce1d586b684a4d562a1d9ec7252",
+    "rewire_old.log": "dd4528f670e8816a591ebbe55cceb01c5d24560ff2edfa22136edd42a3a79ce7",
+    "top.v": "944fc1d0e850cea4957b335ae4773ebdd6771cd8e125833744e4e902f159ba73",
+    "rewire_fixed.log": "15f84d8d45dec818469b09adbf40cadc84f3bd576f462a545cbff23604e35905"
+  }
+}

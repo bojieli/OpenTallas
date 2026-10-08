@@ -1,0 +1,8 @@
+CALENDAR_TAP_ACCEPT edge=16
+CALENDAR_ALL_SM edge=88
+CALENDAR_LAST_SM_ACK edge=116
+CALENDAR_QUARTER_ACK edge=195
+CALENDAR_PARENT_RELEASE edge=200
+CALENDAR_WARM_ACK edge=202
+PASS_NATIVE_QUARTER_PUBLICATION seed=1062026 fanouts=3/3/3/2 sm=8 full73=1 owner192=1 checks=19 heldACK_CE=1 emptyACK_CE=1 warm_debt=1 token16_negative=1 provider_macros=32 extra_macros=0
+/srv/opentallas-scratch/claude/tk-hbm-w2/gate_r3/quarter_rb_tb.sv:255: $finish called at 248332936 (1fs)

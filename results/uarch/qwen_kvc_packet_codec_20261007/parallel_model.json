@@ -1,0 +1,48 @@
+{
+  "model_before_RTL": true,
+  "candidate": "parallel-XOR-matrixCRC",
+  "payload_fields_and_polynomial": "identical originalcodec",
+  "state_bits_delta": 0,
+  "cycle_delta": 0,
+  "motivation": "Production generic serial recurrence forms roughly6kMUX+6kNOT perCRC; explicitlinearGF2 form exposes balancedparity reductions.",
+  "qualification": "Fullpacketexactgate and mappedlogic comparison required; no timingpass from Boolean depth.",
+  "measured_mapped_comparison": {
+    "rows": [
+      {
+        "module": "ot_qwen_kvc_packet_encode",
+        "area_um2": 661.9028399999878,
+        "FFs": 358,
+        "max_input_to_D_cell_levels": 157,
+        "source_sha256": "df334a0028422b5e8d687b071b6e19e699f6b0fc75c9872dcddea818d829ccf8",
+        "mapped_sha256": "d0e3da13c2a266f3b59b5c46a6c73a01b1aa10f8d3f44d446833d6836590c3f0"
+      },
+      {
+        "module": "ot_qwen_kvc_packet_decode",
+        "area_um2": 749.4411599999878,
+        "FFs": 512,
+        "max_input_to_D_cell_levels": 166,
+        "source_sha256": "df334a0028422b5e8d687b071b6e19e699f6b0fc75c9872dcddea818d829ccf8",
+        "mapped_sha256": "8ca0698d3355dd297a37c3a28048aa86103c166952b7dd24edeb4d96962c80c3"
+      },
+      {
+        "module": "ot_qwen_kvc_packet_encode_parallel",
+        "area_um2": 512.8223399999991,
+        "FFs": 358,
+        "max_input_to_D_cell_levels": 9,
+        "source_sha256": "ccdcc4099b221a32a257fdd1f37a4b353a86a7978f0c9579c9fb1a59e77cdeb8",
+        "mapped_sha256": "dbe8b0612be311f88b4789213b0d0f62f59178278c3b184bcec93d5998122d8d"
+      },
+      {
+        "module": "ot_qwen_kvc_packet_decode_parallel",
+        "area_um2": 766.8205199999786,
+        "FFs": 512,
+        "max_input_to_D_cell_levels": 14,
+        "source_sha256": "ccdcc4099b221a32a257fdd1f37a4b353a86a7978f0c9579c9fb1a59e77cdeb8",
+        "mapped_sha256": "b7865a167b43f1694a7f74c798fb78e89fc719820604623257b5302d0369e656"
+      }
+    ],
+    "scope": "Actual production ASAP7 SS mapped cellarea and logicdepth only. Wire/fanout/clock/SSFF timing not qualified.",
+    "tool": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+  },
+  "selection": "Parallel candidate chosen for bridge functional successor;157/166-level original cannot justifyoneedge physicalimplementation. Parallel9/14levels stillrequiresphysicalSSFF."
+}

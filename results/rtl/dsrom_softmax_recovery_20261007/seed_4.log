@@ -1,0 +1,5 @@
+FDIVEQ n=2500000 compared=2500000 reference=2500000 mismatches=0
+- rtl/test/tb_dsrom_su_fdiv_f12_eq.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5ms; walltime 2.780 s; speed 1.798 ms/s
+- Verilator: cpu 2.780 s on 1 threads; allocated 7 MB

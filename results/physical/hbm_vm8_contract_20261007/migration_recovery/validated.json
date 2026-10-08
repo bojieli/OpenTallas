@@ -1,0 +1,42 @@
+{
+  "jobs": [
+    {
+      "job": "hbm_vm8_nen_654733cc5",
+      "log_sha256": "2eb946d9ead473d025bda7ff91d9fa55da35648e716257b82c20be0c27b110f0",
+      "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "replayed_negatives": 3,
+      "exact_events": 155,
+      "original_failure_preserved": true,
+      "disposition": "Eligible for incremental route resume after recovered negative gates bind to producer log; no physical adoption."
+    },
+    {
+      "job": "hbm_vm8_nes_654733cc5",
+      "log_sha256": "a0bf36be170306968281f0e372b0f87369861755d45b081d0b204375e156e0ff",
+      "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "replayed_negatives": 3,
+      "exact_events": 155,
+      "original_failure_preserved": true,
+      "disposition": "Eligible for incremental route resume after recovered negative gates bind to producer log; no physical adoption."
+    },
+    {
+      "job": "hbm_vm8_swn_654733cc5",
+      "log_sha256": "4a97376e547ddf44a8865ffa965aa08c8451858cb07ad3ecf178ebcee66c0fbb",
+      "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "replayed_negatives": 3,
+      "exact_events": 155,
+      "original_failure_preserved": true,
+      "disposition": "Eligible for incremental route resume after recovered negative gates bind to producer log; no physical adoption."
+    },
+    {
+      "job": "hbm_vm8_sws_654733cc5",
+      "log_sha256": "553ae49f1f5378a21981da7d130d6e5efd2dc2fc6c0ea138071fd73a87600484",
+      "source_commit": "654733cc547e01c5c124323f23ce5fca5fd859b2",
+      "replayed_negatives": 3,
+      "exact_events": 155,
+      "original_failure_preserved": true,
+      "disposition": "Eligible for incremental route resume after recovered negative gates bind to producer log; no physical adoption."
+    }
+  ],
+  "total_replayed_negative_gates": 12,
+  "total_exact_events": 620
+}

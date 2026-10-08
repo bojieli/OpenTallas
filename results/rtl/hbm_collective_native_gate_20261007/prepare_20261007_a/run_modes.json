@@ -1,0 +1,43 @@
+[
+  {
+    "mode": "baseline",
+    "args": [],
+    "expected_exit": 0,
+    "marker": "PASS_NATIVE_COMPOSED_ENDPOINT"
+  },
+  {
+    "mode": "CORRUPT_GOLDEN",
+    "args": [
+      "+CORRUPT_GOLDEN"
+    ],
+    "expected_exit": "nonzero",
+    "markers_any": [
+      "ENDPOINT_FAIL numerical or identity mismatch",
+      "NATIVE_GATE_PEER_RESULT numerical or identity mismatch"
+    ]
+  },
+  {
+    "mode": "IGNORE_PEER_CREDIT",
+    "args": [
+      "+IGNORE_PEER_CREDIT"
+    ],
+    "expected_exit": "nonzero",
+    "marker": "ENDPOINT_CREDIT_VIOLATION"
+  },
+  {
+    "mode": "BYPASS_TX_RESERVATION",
+    "args": [
+      "+BYPASS_TX_RESERVATION"
+    ],
+    "expected_exit": "nonzero",
+    "marker": "NATIVE_GATE_RESERVATION_VIOLATION"
+  },
+  {
+    "mode": "CHANGE_CONTEXT_BUSY",
+    "args": [
+      "+CHANGE_CONTEXT_BUSY"
+    ],
+    "expected_exit": "nonzero",
+    "marker": "NATIVE_GATE_CONTEXT_REJECTED"
+  }
+]

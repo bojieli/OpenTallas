@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.hbm.su_hub.joint.terminal.v1",
+  "source_commit": "4c1216b217dcfcf00d531a0d64e59f024472db98",
+  "source_files_verified_against_commit": 31,
+  "positive_cases": 5,
+  "positive_passes": 5,
+  "negative": "OT_NEG_RED_NOLOCK",
+  "negative_cases": 5,
+  "negative_rejections": 5,
+  "verdict": "PASS_SOURCE_PINNED_RANDOM_COMPONENT_GATE",
+  "scope": "N16/M8 and N64/M16 random minimum-component campaigns only; DDIV21 DENR1 DRING2 RHALF1 RHPAR1",
+  "current_source_qualification": false,
+  "limitation": "Later delay ring source isolation changes original delay/lane files; this gate belongs to 4c1216b21 and does not automatically qualify later successors or DDIV64."
+}

@@ -1,0 +1,23 @@
+{
+  "observed_utc": "2026-10-07T10:49:21.187025+00:00",
+  "host": "ot-epyc1tb",
+  "root": "/srv/opentallas-scratch/claude/closure-loop/bf_hitfix_3978531b5",
+  "files": [
+    {
+      "path": "cl/job.json",
+      "sha256": "25609840f0d66fc0a899803c3f42a60b7ad8f56f6a919e522da73d61af23db91"
+    },
+    {
+      "path": "cl/calib.json",
+      "sha256": "0d922c8475688cff4200b141dd9d9a80f2ac286f5c99d39beeec54b9ea4e7d1c"
+    },
+    {
+      "path": "cl/route.a1.start",
+      "sha256": "82f93eec03e87eea614d8cfe08692801d6e82a789f1e4202005e3b925729f586"
+    },
+    {
+      "path": "cl/route.a1.pid",
+      "sha256": "0322212f53e7c9c8d5419ca7b58b7143311cd0f4f2df7d1e2ef7d32ec5018a03"
+    }
+  ]
+}

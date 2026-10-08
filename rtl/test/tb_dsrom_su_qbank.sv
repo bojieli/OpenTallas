@@ -10,7 +10,10 @@ module tb_dsrom_su_qbank #(
     parameter integer NB = 32,
     parameter integer ROPE = 0,
     parameter integer NIN = 33,
-    parameter integer NOUT = 23
+    parameter integer NOUT = 23,
+    parameter integer LM = 5,
+    parameter integer LA = 4,
+    parameter integer QLAT = 5
 );
     localparam integer MAXB = 512;
     reg clk = 1'b0;
@@ -42,7 +45,7 @@ module tb_dsrom_su_qbank #(
     wire [256*NB-1:0] q;
     wire [10*NB-1:0] e;
     wire [512*NB-1:0] y;
-    ot_dsrom_su_qbank #(.NB(NB), .NIN(NIN), .NOUT(NOUT), .ROPE(ROPE)) dut (.clk(clk), .rst_n(rst_n), .v(v),
+    ot_dsrom_su_qbank #(.NB(NB), .NIN(NIN), .NOUT(NOUT), .ROPE(ROPE), .LM(LM), .LA(LA), .QLAT(QLAT)) dut (.clk(clk), .rst_n(rst_n), .v(v),
         .fp4(fp4 != 0), .x(x), .cs(cs), .vo(vo), .q(q), .e(e), .y(y), .fault(fault));
     integer cyc = 0, ib = 0, ob = 0, eq = 0, er = 0, idle = 0, b, k, blk, nchk = 0, orr = 0;
     integer first_in = -1, last_out = -1;

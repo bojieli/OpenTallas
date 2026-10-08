@@ -1,0 +1,4 @@
+NATIVE_FAULT a=1 causeA=001000 b=1 causeB=000010 tick=543
+EXPECTED_FAULT NEG=1
+FATAL: /home/ubuntu/wt-claude-qwen-contracts/rtl/test/tb_qwen_link_fullrate.sv:83: FAIL link_fullrate NEG=1
+       Time: 6300000 Scope: tb_qwen_link_fullrate

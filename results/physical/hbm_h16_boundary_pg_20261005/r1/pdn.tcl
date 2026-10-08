@@ -1,0 +1,22 @@
+# H16 selected upper-metal context: actual leaf VDD/VSS pins are on M6.
+# Standard-cell rails reach M8 through M5; real macro pins reach M9 through M6.  Overmacro mesh uses the
+# existing 0.1756 M8/M9 PG reservation: 2*0.474/5.4 = 0.1755556.
+add_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDD$} -power
+add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSS$} -ground
+global_connect
+set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}
+define_pdn_grid -name {top} -voltage_domains {CORE} -pins {M9}
+add_pdn_stripe -grid {top} -layer {M1} -width {0.018} -pitch {0.54} -offset {0} -followpins
+add_pdn_stripe -grid {top} -layer {M2} -width {0.018} -pitch {0.54} -offset {0} -followpins
+add_pdn_stripe -grid {top} -layer {M5} -width {0.12} -spacing {0.072} -pitch {5.4} -offset {0.300}
+add_pdn_stripe -grid {top} -layer {M8} -width {0.474} -spacing {2.226} -pitch {5.4} -offset {1.5} -number_of_straps 250
+add_pdn_stripe -grid {top} -layer {M9} -width {0.474} -spacing {2.226} -pitch {5.4} -offset {1.5} -number_of_straps 249
+# Actual y=0 VSS rail requires an in-core landing for the M2-M5 via stack.
+# One GROUND-only stripe, inside the existing 5um bottom halo; no upper-grid change.
+add_pdn_stripe -grid {top} -layer {M2} -width {0.054} -pitch {2699.46} -offset {0.027} -number_of_straps 1 -nets {VSS} -starts_with GROUND
+add_pdn_connect -grid {top} -layers {M1 M2}
+add_pdn_connect -grid {top} -layers {M2 M5}
+add_pdn_connect -grid {top} -layers {M5 M8}
+add_pdn_connect -grid {top} -layers {M8 M9}
+define_pdn_grid -macro -cells {ot_attn_hgrp_m6h1} -halo {5 5 5 5} -voltage_domains {CORE} -name {attn_heads}
+add_pdn_connect -grid {attn_heads} -layers {M6 M9}

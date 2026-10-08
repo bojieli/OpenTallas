@@ -1,0 +1,1 @@
+2026-10-06 15:40 PT Claude:tk-hbm-harvest: Qwen8K margin parent build (KIND1/D4096/QUANT0, pos 8191), chained after lorentz-margin/work/build.exit; runs base/wrong_release/corrupt_gold. Fixture method: results/rtl/hbm_parent_margin_benches_20261006/README.md

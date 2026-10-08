@@ -1,0 +1,175 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T17:41:59.607963+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_integrated_w2_result_sink",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "ENABLE": 1
+    },
+    "sources": [
+      {
+        "path": "/srv/opentallas-scratch2/jobs/nash-w2-sink-route-f835-r1-source/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+        "size_bytes": 1493
+      },
+      {
+        "path": "/srv/opentallas-scratch2/jobs/nash-w2-sink-route-f835-r1-source/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+        "sha256": "b0c030d784e9dddd285bfa827548884fdaf881a1256ec1555b1de95685f681c0",
+        "size_bytes": 6054
+      }
+    ],
+    "top": "ot_hbm_integrated_w2_result_sink"
+  },
+  "error": "FlowError: ORFS synthesis failed with exit 2:\n\nmake: *** No rule to make target '/src//srv/opentallas-scratch2/jobs/nash-w2-sink-route-f835-r1-source/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv', needed by '/work/results/asap7/opentallas_ot_hbm_integrated_w2_result_sink_asap7_nash_w2_sink_f835_r1/base/1_1_yosys_canonicalize.rtlil'.  Stop.\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T17:41:59.166673+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_integrated_w2_result_sink",
+      "--param",
+      "ENABLE=1",
+      "--source",
+      "/srv/opentallas-scratch2/jobs/nash-w2-sink-route-f835-r1-source/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "--source",
+      "/srv/opentallas-scratch2/jobs/nash-w2-sink-route-f835-r1-source/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+      "--clock-port",
+      "clk",
+      "--clock-period-ns",
+      "0.833333",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--io-delay-fraction",
+      "0.2",
+      "--corner",
+      "TT",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--max-transition-ns",
+      "0.320",
+      "--max-fanout",
+      "32",
+      "--hold-margin-ns",
+      "0.010",
+      "--stages",
+      "pnr",
+      "--core-utilization",
+      "25",
+      "--place-density",
+      "0.5",
+      "--orfs-var",
+      "NUM_CORES=16",
+      "--orfs-var",
+      "TMPDIR=/work/tmp",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--keep-heavy-artifacts",
+      "--nickname-tag",
+      "nash_w2_sink_f835_r1",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/jobs/nash-w2-sink-route-f835-r1/work",
+      "--output",
+      "/srv/opentallas-scratch2/jobs/nash-w2-sink-route-f835-r1/physical.json",
+      "--step-tcl",
+      "POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/nash-su-side-prefix-88b13fdec-r2/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+      "tree": "/srv/opentallas-scratch/codex/nash-su-side-prefix-88b13fdec-r2/src"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/nash-su-side-prefix-88b13fdec-r2/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

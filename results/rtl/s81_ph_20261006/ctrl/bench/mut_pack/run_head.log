@@ -1,0 +1,19 @@
+ERR (a) pc 0 request 0: PHY saw tag 00001 addr 0000438c, issued tag 00000 addr 0000438c
+ERR (a) pc 3 request 0: PHY saw tag 01801 addr 0000a614, issued tag 01800 addr 0000a614
+ERR (a) pc 6 request 0: PHY saw tag 03001 addr 0000a8f4, issued tag 03000 addr 0000a8f4
+ERR (a) pc 7 request 0: PHY saw tag 03801 addr 0000cc4d, issued tag 03800 addr 0000cc4d
+ERR (a) pc 10 request 0: PHY saw tag 05001 addr 0000d4b8, issued tag 05000 addr 0000d4b8
+ERR (a) pc 11 request 0: PHY saw tag 05801 addr 0000da49, issued tag 05800 addr 0000da49
+ERR (a) pc 12 request 0: PHY saw tag 06001 addr 0000e6bc, issued tag 06000 addr 0000e6bc
+ERR (a) pc 15 request 0: PHY saw tag 07801 addr 0000cad9, issued tag 07800 addr 0000cad9
+ERR (a) pc 16 request 0: PHY saw tag 08001 addr 00008378, issued tag 08000 addr 00008378
+ERR (a) pc 19 request 0: PHY saw tag 09801 addr 00004fa0, issued tag 09800 addr 00004fa0
+phase 0: 1536 requests (526 writes, 2521 read beats) on 32 PCs; responses dut 3824 ref 2521
+phase 1: 1536 requests (495 writes, 2627 read beats) on 32 PCs; responses dut 3872 ref 2627
+latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles
+latency: request rq issue -> PHY accept mean 18.59 max 148.48 cks cycles; response PHY -> rd mean 5.73 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
+TB_DSFD_CTRL FAIL errors=3565
+- rtl/dsrom_sys/s81_ph/test/tb_dsfd_ctrl.sv:241: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 1us; walltime 1.871 s; speed 754.877 ns/s
+- Verilator: cpu 1.637 s on 1 threads; alloced 1038 MB

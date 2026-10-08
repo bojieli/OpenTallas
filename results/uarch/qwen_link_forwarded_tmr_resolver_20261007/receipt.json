@@ -1,0 +1,9 @@
+{
+  "status": "PASS_actual_saved_postIO_ODB_resolver_only",
+  "original_job": "qwen_fwd_tmr_pair_9bb32a0da",
+  "cause": "OpenDB escapes link array brackets; STA full names do not. Exact raw-name equality matched no handles despite eight INVx3 cells.",
+  "fix": "Canonicalize bracket escaping and hierarchy separator; require unique STA handle per ODB clock inverter, INV master, exact count eight; set dont_touch.",
+  "physical_closure": "not established; original failed verdict preserved",
+  "source_sha256_before": "654c86ff1bf9df48fc49422a26330aa912c5cd95bdb034d99f83885df444aec5",
+  "source_sha256_after": "41fb6d748279b20fc633e29ff7b349e8363485372770cc0e6a92c66111ba6c4c"
+}

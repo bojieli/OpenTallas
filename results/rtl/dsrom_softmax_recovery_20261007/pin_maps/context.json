@@ -1,0 +1,44 @@
+{
+  "source_commit": "bd30aca4ae85a68de73ffea830c3a60a35418d3c",
+  "divider_route_source": "6133b4bbf508b1eb2b9d4eded2e1d2025a58a57a",
+  "parent_rtl": "rtl/hdc/v41x/ot_dsrom_su_softmax.sv",
+  "instances": {
+    "sink_exp": "g_sk[h].g_xt.u_e (H=16)",
+    "score_exp": "g_b[l].g_xt.u_e (NL=H*LPH=256)",
+    "divider": "g_dv[l].g_ft.u_d (NL=256)"
+  },
+  "streaming_period_ps": 833.333,
+  "clock": "clk, common parent streaming clock",
+  "physical_parent_placement": "Not found in inherited softmax branch or current main physical scripts. Leaf DEF maps do not establish parent placement or crossing budgets.",
+  "recipe": "physical/dsrom_su_softmax_safe/route_tile.sh",
+  "io_check": "physical/dsrom_su_softmax_r5/io_budget.tcl (generic skew150ps wire100ps; no explicit parent clock station map)",
+  "protocol": "Fixed-rate valid-only pipeline, II=1; input data/valid captured at boundary; no ready. Parent delays valid separately; added crossings must delay data and associated parent valid equally.",
+  "exp_pins": {
+    "inputs": [
+      "clk",
+      "rst_n",
+      "v",
+      "x[31:0]"
+    ],
+    "outputs": [
+      "y[31:0]",
+      "vo",
+      "fault"
+    ]
+  },
+  "divider_pins": {
+    "inputs": [
+      "clk",
+      "rst_n",
+      "v",
+      "a[31:0]",
+      "b[31:0]"
+    ],
+    "outputs": [
+      "y[31:0]",
+      "vo",
+      "fault"
+    ]
+  },
+  "status": "pre-ECO pin map handoff; require refresh hashes after final ECO, physical parent budget, and real die-context IO hold qualification"
+}

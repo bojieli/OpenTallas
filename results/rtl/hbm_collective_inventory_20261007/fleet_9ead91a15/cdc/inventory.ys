@@ -1,0 +1,14 @@
+read_verilog -sv /out/cdc/0_ot_gpu_w6_secded_pkg.sv
+read_verilog -sv /out/cdc/1_ot_hbm_w2_protected_bank.sv
+read_verilog -sv /out/cdc/2_ot_hbm_collective_protected_cdc.sv
+hierarchy -check -top ot_hbm_collective_protected_cdc -chparam ENABLE 1
+flatten
+proc
+opt
+memory_map
+opt
+techmap
+opt
+check
+tee -o /out/cdc/stat.json stat -json
+write_json /out/cdc/netlist.json

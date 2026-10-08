@@ -1,0 +1,12 @@
+{
+  "tool": "Verilator4.038",
+  "returncode": 1,
+  "classification": "unsupported lint message code UNUSEDSIGNAL in unchanged dependencies",
+  "scope": "Not a candidate RTL verdict; use pinned modern Verilator5 for full endpoint lint and numerical bench",
+  "new_source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d203972abf58823ce475d9b72fa857c87ef6a9492c0700846955d564552f1b6",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner_truecredit.sv": "633f8bc75f65dec540338f82983057040a363f95c31804ed4fb90a1e66716794",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_endpoint.sv": "50bf855e003107d2754bd47baff002d5559705d045b7b0aede14e5cd2580e903",
+    "tools/ha2_truecredit_endpoint_gate.py": "fc2c67b501817f93eea19951c533b94da9f88fcd31d0734b42430db62ff8d410"
+  }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "dsrom-wf-close/R12_fanout_34223b7b0/R12_src_u50_launcher_retry1",
+    "host": "ot-epyc2",
+    "worktree": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0",
+    "owner": "Codex:dsrom-wf-ctrl",
+    "purpose": "Same pre-registered variant R12_src_u50 retry CLI int type only; frozenRTL60146157; PID937637; SS833/60 FF25",
+    "status": "running"
+  },
+  {
+    "name": "dsrom-field-spine-route/a721/c0r128_h20s40",
+    "host": "ot-epyc1tb",
+    "worktree": "/srv/opentallas-scratch/codex/dsrom-field-spine-route/wt-87841884f",
+    "owner": "Codex:dsrom-field-spine-route",
+    "purpose": "Full physical hold/slew c0r128_h20s40 PID164052; completed mapped netlist reused; NUM16; SS60FF25 unchanged",
+    "status": "running"
+  },
+  {
+    "name": "dsrom-field-spine-route/a721/c0r16_h30s40",
+    "host": "ot-epyc2",
+    "worktree": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+    "owner": "Codex:dsrom-field-spine-route",
+    "purpose": "Full physical hold/slew c0r16_h30s40 PID1686757; completed mapped netlist reused; NUM16; SS60FF25 unchanged",
+    "status": "running"
+  },
+  {
+    "name": "dsrom-field-spine-route/a721/c0r128_h30s50",
+    "host": "ot-epyc2",
+    "worktree": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+    "owner": "Codex:dsrom-field-spine-route",
+    "purpose": "Full physical hold/slew c0r128_h30s50 PID1686759; completed mapped netlist reused; NUM16; SS60FF25 unchanged",
+    "status": "running"
+  },
+  {
+    "name": "dsrom-field-spine-route/a721/c1r128_h20s40",
+    "host": "ot-epyc2",
+    "worktree": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+    "owner": "Codex:dsrom-field-spine-route",
+    "purpose": "Full physical hold/slew c1r128_h20s40 PID1686761; completed mapped netlist reused; NUM16; SS60FF25 unchanged",
+    "status": "running"
+  },
+  {
+    "name": "dsrom-field-spine-route/a721/c1r128_h30s50",
+    "host": "ot-epyc2",
+    "worktree": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+    "owner": "Codex:dsrom-field-spine-route",
+    "purpose": "Full physical hold/slew c1r128_h30s50 PID1686763; completed mapped netlist reused; NUM16; SS60FF25 unchanged",
+    "status": "running"
+  }
+]

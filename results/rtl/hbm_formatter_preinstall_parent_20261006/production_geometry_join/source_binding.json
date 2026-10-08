@@ -1,0 +1,49 @@
+{
+  "status": "SOURCE_GEOMETRY_BOUND_OWNER_BODIES_RESTORED",
+  "source_owner_geometry": "585227471",
+  "source_owner_consumer": "7d5bb411d",
+  "restored_bodies_byte_identical": true,
+  "parent_instance": "g_on.g_die[d].u_shared",
+  "named_parameters": [
+    "ENABLE",
+    "VM_AW",
+    "PREINSTALL_ENABLE",
+    "ENTRY_PC",
+    "SCORE_SOURCE",
+    "ID_SOURCE",
+    "ARENA_BASE",
+    "ARENA_LIMIT",
+    "SINK_BASE",
+    "SINK_LIMIT",
+    "CAPACITY_BYTES"
+  ],
+  "capacity_bytes": 134217728,
+  "occupied_prefix_end": 118763520,
+  "book_sha256": "c18419a44e9c4268e1beef5619b3ac345766b856b6d6d3d64fa4b55194944363",
+  "geometry": {
+    "arena_base": 118763520,
+    "arena_limit": 119156736,
+    "sink_base": 119156736,
+    "sink_limit": 119158784,
+    "local_scores": 119158848,
+    "local_ids": 119160896,
+    "full_scores": 119162944,
+    "full_ids": 119359552
+  },
+  "source_fullplane_bases": "actual preinstall begin ports; records and full73 held by actual coded preinstall",
+  "live_other_writers": "existing actual preinstall_other_writer_v/base/end ports forwarded unchanged; no constant receipt or writer-free assertion",
+  "capacity_provider": "NS2 x MEM_WORDS2097152 x32BYTE existing HBM sector arrays, guarded VM_AW21; independent native64KiB root not used",
+  "new_state_FFs": 0,
+  "default_OFF_preserved": true,
+  "elaboration_pass": false,
+  "runtime_pass": false,
+  "full_parent_qualified": false,
+  "normal_SM_entry_enrolled": false,
+  "source_pins": {
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "5523f42902d0f762883a210b0102a21344bf40f833ed91932e5b99358e6d557c",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_preinstall.sv": "1933c0b54144df353ff864de7c30cd2bac8d2d760bd73c0d6e6182da5f4b635e",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_preinstall_gather_owner.sv": "5c8b1a6c310c1241f7f6adef6cb668d595c48c3d780a5e9ba0fcd6159903295d",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_selected_id_consumer.sv": "df62745a86b74c86dadc975fd3f681d04f245da4b62389fe1d695811bacf5190"
+  },
+  "disabled_parent_syntax_rc": 0
+}

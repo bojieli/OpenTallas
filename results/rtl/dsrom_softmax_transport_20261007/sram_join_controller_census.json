@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.softmax_controller_census.v1",
+  "scope": "Generic Yosys proc/opt controller count, codec/serial/SRAM blackboxes; no mapped area or physical qualification",
+  "original_source": "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_sram_join.sv",
+  "original_sha256": "35fe8b30583963221cc2f726a3846f0818652e3f1a03aec82ac1f573c20f0d07",
+  "derived_source_sha256": "ebcf70207dc5c9f20ffa51afc34aeee8a1a5cd05372fd515b7db97822b9a424c",
+  "derivation": "Yosys0.9 cannot parse parameter real. Simulation-only SRAM_CLKQ_PS declaration replaced by integer0 in derived source; SYNTHESIS branch ignores it. Original source unchanged.",
+  "tool": "Yosys0.9",
+  "cells": {
+    "$add": 8,
+    "$logic_not": 11,
+    "$eq": 19,
+    "$ge": 1,
+    "$le": 4,
+    "$logic_and": 50,
+    "$logic_or": 13,
+    "$lt": 3,
+    "$ne": 5,
+    "$not": 28,
+    "$dff": 32,
+    "$mux": 140,
+    "$sub": 1,
+    "ot_sram_1r1w_128x256_m1_r2c2": 36,
+    "ot_dsrom_softmax_core_replay": 1,
+    "ot_dsrom_softmax_serial_row": 1
+  },
+  "controller_FF_bits": 158,
+  "controller_FF_body_floor_um2": 46.0728,
+  "full_serial_and_core_area_excluded": true,
+  "route_admitted": false
+}

@@ -1,0 +1,20 @@
+{
+  "source_sha256": {
+    "rtl/physical/ot_qwen_embed_code_bank.sv": "4c72cc39a1f3b1a31122a2465ee141f4556455d819e88d3d0b5cd865e61a5d90",
+    "rtl/test/tb_qwen_embed_code_bank.sv": "7869d7ec6e633f27fd0cbe4aaae040727163cc41f6fd76e7ddb643e3b99919ff"
+  },
+  "scope": "One full4096x512 physical ROM bank; generated address-dependent contents, not checkpoint end-to-end integration",
+  "adopted": false,
+  "checks": {
+    "exact": {
+      "rc": 0,
+      "expected": "PASS",
+      "matched": true
+    },
+    "bad_address": {
+      "rc": 1,
+      "expected": "FAIL",
+      "matched": true
+    }
+  }
+}

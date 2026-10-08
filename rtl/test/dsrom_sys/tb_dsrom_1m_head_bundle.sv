@@ -5,7 +5,7 @@
 //   <inst>_{0,1}.viamap.hex  the skewed ROM images (loaded by the behavioural macros through +OT_ROM_DIR)
 // +ROW0=<first row>.  Prints "B <n> <bits> <cyc>" (padded root1024, B row order), "A <q> <bits> <cyc>" (root4096),
 // "L <q> <bits> <cyc>" (logit), then "RES <row> <bits> <fault> <cyc>" with cyc counted from the go cycle.
-module tb_dsrom_1m_head_bundle;
+module tb_dsrom_1m_head_bundle #(parameter integer IOREG = 0, parameter integer SAFE = 0, parameter [8:0] CUT = 9'b1_0111_1011, parameter integer SPLIT9 = 0);
     reg clk = 1'b0, rst_n = 1'b0, go = 1'b0;
     always #0.5 clk = ~clk;
     reg [255:0] xa = '0, xb = '0;
@@ -13,7 +13,7 @@ module tb_dsrom_1m_head_bundle;
     wire res_v, fault;
     wire [16:0] res_row;
     wire [31:0] res_bits;
-    ot_dsrom_head_bundle #(.INSTANCE("h")) dut (.clk(clk), .rst_n(rst_n), .go(go), .row0(row0), .xa(xa), .xb(xb),
+    ot_dsrom_head_bundle #(.INSTANCE("h"), .IOREG(IOREG), .SAFE(SAFE), .CUT(CUT), .SPLIT9(SPLIT9)) dut (.clk(clk), .rst_n(rst_n), .go(go), .row0(row0), .xa(xa), .xb(xb),
         .res_v(res_v), .res_row(res_row), .res_bits(res_bits), .fault(fault));
     reg [255:0] ma [0:255];
     reg [255:0] mb [0:63];

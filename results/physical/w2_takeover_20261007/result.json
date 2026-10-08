@@ -1,0 +1,48 @@
+{
+  "status": "NEEDS_HUMAN_PHYSICAL_CLOSURE_UNRESOLVED",
+  "source_commit": "872c56bd4dc37be1a0034d3c1ceee91c2858d531",
+  "shared_loop_modified": false,
+  "new_route_launched": false,
+  "RTL_changed": false,
+  "constraints_changed": false,
+  "failures": {
+    "NO3": {
+      "attempt1": "CTS RSZ-0060; 45170 hold buffers; WNS -229.553 ps; no 4_1_cts or routed final ODB",
+      "attempt2": "FileExistsError before P&R: retry reused immutable failed run directory"
+    },
+    "NO2": {
+      "same_cause": true,
+      "attempt1": "CTS RSZ-0060; 40493 hold buffers",
+      "attempt2": "FileExistsError before P&R"
+    }
+  },
+  "diagnosis": {
+    "vehicle": "full NO3 SAFE=1 retained calibration 4_1_cts.odb, strict route station.sdc, placement-estimated parasitics; NOT routed signoff or exact failed-route checkpoint",
+    "SS_input_hold_ps": -229.276,
+    "FF_same_input_hold_ps": -16.752,
+    "path": "in_data[1354] -> input2140 -> _303244_/D",
+    "SS_capture_clock_ps": 642.883,
+    "input_min_ps": 455.2,
+    "hold_uncertainty_ps": 50,
+    "SS_lib_hold_ps": 21.541,
+    "SS_input_data_arrival_ps": 485.147,
+    "explanation": "One FF-derived minimum input delay is applied in both WC and BC. At SS it arrives ~229 ps before the required capture hold boundary. This reproduces the failed CTS endpoint and magnitude, not a tool crash or OOM. FF hold also needs repair. Separate SS reg2reg setup fails by -172.714 ps at 730 ps on the retained calibration checkpoint. No constraint relaxation or unmeasured RTL change is justified by these reports.",
+    "SS_setup_730_ps": -172.714,
+    "FF_worst_reported_reg_hold_ps": -41.866,
+    "method_caveat": "Propagate clocks BEFORE estimate_parasitics; otherwise clock RC is omitted and reports are invalid. Earlier SS.log/FF.log remain remote as invalid diagnostic attempts; authoritative v2 logs are collected here."
+  },
+  "fixes": [
+    "Enable CTS_SNAPSHOTS=1 for future admitted runs to preserve pre-repair ODB/SDC on RSZ failure",
+    "Signoff rejects tool errors and non-finite/missing margins, exits nonzero on SS<15 or FF<15, and refuses prior-evidence overwrite"
+  ],
+  "validation": [
+    "4 focused unittest cases PASS; tests.log",
+    "SS and FF one-thread read-only STA through host admission guard, immutable source ODB/SDC mounts",
+    "Existing exact gate reused (reported passed=true), explicit S3 removed-check control FAIL; no RTL edits or repeated bench build"
+  ],
+  "next_state": [
+    "Retain NO2/NO3 failures and shared NEEDS_HUMAN state. Do not rerun identical failed route or bypass existing-directory guard.",
+    "A successor needs a model-priced source/physical-contract change and a new source-pinned run directory; preserve strict setup/hold constraints and >=15 ps final margins. Current candidate is not closed.",
+    "Future admitted runs obtain pre-repair snapshots; no new place-and-route launched."
+  ]
+}

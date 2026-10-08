@@ -1,0 +1,40 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "negative": 0,
+      "passed": true,
+      "exit": 0,
+      "output": "PASS actual core equations/full normalizer/protected CAP cone checks=6920 held packets exact; full-packet fallback stream exact\n"
+    },
+    {
+      "negative": 1,
+      "passed": true,
+      "exit": 1,
+      "output": "FATAL: /tmp/qwen-core-vm-ingress-packproc-20261007/tb.sv:43: core/collar epoch mismatch frame1 slot2\n       Time: 70 Scope: tb\n"
+    },
+    {
+      "negative": 2,
+      "passed": true,
+      "exit": 1,
+      "output": "FATAL: /tmp/qwen-core-vm-ingress-packproc-20261007/tb.sv:43: core/collar epoch mismatch frame0 slot16\n       Time: 30 Scope: tb\n"
+    }
+  ],
+  "scope": "Actual emitted full-shape core two write equations and unchanged engine payload wires, full49word/865seat normalizer and source-extracted protected CAP cone. Not full controller or ACK FSM/clock enrollment.",
+  "source_sha256": {
+    "/tmp/qwen-core-kv-boundary-20261007/final_gate/full1/core.sv": "23567de96a4c80a7bcbe8afddd6cb4701be28faa0568b09b64638e0b710a1bb2",
+    "/tmp/qwen-core-vm-ingress-packproc-20261007/core_raw.sv": "f5ab83ca36d9c73501551fedbc73ace32b97749e851836723763e033e2628e25",
+    "/tmp/qwen-core-vm-ingress-packproc-20261007/qwen_core_vm_raw_boundary.py": "3bb73e5861538c2601e3f0c10192c80ae0098fb907287c1dd3830feac40391ac",
+    "/tmp/qwen-vm-normalizer-return-20261007/normalizer.sv": "857a94170d268b17af0294b40f22a406661e12d052f95c088301b71cf59bfb54",
+    "/tmp/qwen-vm-rom-ingress-20261007/capture.sv": "58d3a4cd0a966d00e2d5c925a7ba5e0c986cf12103e2174729c80b400064a891",
+    "/tmp/qwen-core-vm-ingress-packproc-20261007/cones.sv": "c47e61bdbb3fe44f0d475ba76904d2348f49010c57522d1aa2575fde6d4a06da",
+    "/tmp/qwen-core-vm-ingress-packproc-20261007/tb.sv": "35110f3bcf44ef0a7f66bd1aa8e1aa56267eddfd936650120077e69f1813563f",
+    "/tmp/qwen-core-vm-ingress-packproc-20261007/gate.py": "2275e15a8417b422cb955dd8b51e9ae5f0a9a81235a272e880b5786483257eb4"
+  },
+  "unresolved": [
+    "Original pre-lease source enable exported independently of VM lease",
+    "Actual wrapper CAP event and all native source clocks enrollment",
+    "Atomic binding of raw core+normalizer+collar",
+    "Actual core and collar SS/FF physical closure"
+  ]
+}

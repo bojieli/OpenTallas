@@ -1,0 +1,7 @@
+view=asap7 corner=TT block=ot_su12_sfu top=ot_su12_sfu purpose=signoff_target
+  synth: cells=202211 area=26921.178 um2 seq_area=13157.550 um2 macros=0
+  pnr:   wirelength=854549 um vias=1846939 DRC=0 antenna_nets=0 Fmax=1207.56 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
+  STATUS: PASS (all evaluated stages met)
+  wrote /srv/opentallas-scratch/claude/hbm-su-c12/routes/sfu_u25/physical.json

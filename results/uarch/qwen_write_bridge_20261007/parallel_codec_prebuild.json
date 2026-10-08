@@ -1,0 +1,18 @@
+{
+  "model_before_successor_source": true,
+  "base_model": "prebuild_model.json",
+  "change": "Select measured parallel XOR CRC codec with same ABI,1encode+1decode edges,II1; no register/CDC change.",
+  "mapped_codec_FF_each_endpoint": 870,
+  "mapped_codec_area_each_endpoint_um2": 1279.643,
+  "logic_levels_encode_decode": [
+    9,
+    14
+  ],
+  "serial_predecessor_levels": [
+    157,
+    166
+  ],
+  "physical_closure": false,
+  "source_preserved": "gate/source",
+  "codec_dependency": "rtl/physical/ot_qwen_kvc_packet_codec_parallel.sv"
+}

@@ -1,0 +1,8 @@
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=1
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=2
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=3
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=4
+FRAME kind=0 physical_edges=4325 read_delta=0 checked_ACK_delta=40 native=5
+FRAME kind=0 physical_edges=3155 read_delta=0 checked_ACK_delta=1 native=6
+FATAL: /srv/opentallas/claude-qwen-contracts/vmchecks-ce24d613f/out/reducer_overlap/src/tb_qwen_vm_reducer_overlap.sv:45: FOREIGN_REDUCER_ACK_REJECTED
+       Time: 409996000  Scope: tb_qwen_vm_reducer_overlap.frame

@@ -1,0 +1,36 @@
+=== ot_dsrom_softmax_serial_row ===
+
+   Number of wires:              35965
+   Number of wire bits:         114843
+   Number of public wires:          68
+   Number of public wire bits:   41541
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              45169
+     $add                            2
+     $dff                           24
+     $eq                          8079
+     $le                             2
+     $logic_and                     32
+     $logic_not                      7
+     $logic_or                       9
+     $lt                             1
+     $mul                            2
+     $mux                        27745
+     $ne                             7
+     $not                           19
+     $pmux                        9214
+     $reduce_and                     2
+     $reduce_bool                    4
+     $reduce_or                      2
+     $shiftx                         1
+     $sub                            1
+     ot_dsrom_softmax_ecc_lane      16
+
+7. Executing JSON backend.
+
+End of script. Logfile hash: 63adb35fac
+CPU: user 3732.62s system 20.31s, MEM: 51025.29 MB total, 50168.73 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 45% 2x opt_reduce (1693 sec), 20% 3x opt_expr (757 sec), ...

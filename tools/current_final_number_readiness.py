@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 'results/arch/current_final_number_readiness_20261002'
 TARGETS = ('qwen_rom', 'qwen_hbm', 'deepseek_rom', 'deepseek_hbm')
+MIN_SLACK_PS = 15  # Owner-confirmed final-closure policy, 2026-10-07.
 IDENTITY_FIELDS = ('checkpoint', 'program', 'images', 'source_sha256', 'parameters',
                    'memory_geometry', 'service_parameters', 'clocks', 'placement')
 REQUIREMENTS = {
@@ -62,8 +63,8 @@ def timing_errors(record, target):
             period = v.get('period_ps')
             if not number(period) or abs(period - 1e12/hz) > .5:
                 errors.append(f'{domain} {check} period must match {hz:g}Hz')
-            if not number(v.get('worst_slack_ps')) or v['worst_slack_ps'] < 0:
-                errors.append(f'{domain} {check} slack missing/negative')
+            if not number(v.get('worst_slack_ps')) or v['worst_slack_ps'] < MIN_SLACK_PS:
+                errors.append(f'{domain} {check} slack missing or below {MIN_SLACK_PS}ps owner minimum')
             if v.get('unconstrained_paths') != 0 or v.get('violations') != 0:
                 errors.append(f'{domain} {check} unconstrained/violating paths')
     if record.get('capacity_basis') != 'actual_layer_pitch_OBS_PG_pin_via_exclusions':
@@ -250,7 +251,9 @@ def build(root=ROOT):
             'objective': 'Minimum single-user AR latency; speculative modes conditional on claimed performance.',
             'clock_policy': {'streaming_hz': 1200000000, 'deepseek_serial_hz': 900000000,
                              'setup_corner': 'SS', 'setup_uncertainty_ps': 60,
-                             'hold_corner': 'FF', 'hold_uncertainty_ps': 25, 'TT_credit': False},
+                             'hold_corner': 'FF', 'hold_uncertainty_ps': 25,
+                             'minimum_setup_slack_ps': MIN_SLACK_PS,
+                             'minimum_hold_slack_ps': MIN_SLACK_PS, 'TT_credit': False},
             'captured_qwen_TP4_numeric': q, 'deepseek_S58_physical_screen': ds,
             'deepseek_current_bound_budget': selected_budget,
             'certificate_validation_scope': 'Review-receipt schema/hash/scope checks; generic certificates are not automatic raw timing, route or functional proof. Add source-extracted artifact adapters as campaigns become available.',

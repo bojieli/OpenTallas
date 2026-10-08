@@ -1,0 +1,82 @@
+{
+ "name": "s81ph-dsfd_vm_bg-27e200941-h600",
+ "block": "dsfd_vm_bg",
+ "owner": "Claude:s81-ph",
+ "purpose": "VM v2 bank-group chain tile (4 instances; serial 0.9 GHz domain, signed off at 1.1111 ns) | -b: hold margin 10 ps (936ce0365 calibrate: 68,371 hold buffers at HM 35 -> DPL-0033 overlap); residual hold to the loop hold ECO | -h600: NO-SQUEEZE variant (owner rule 3): outline 1015.176 x 600.48 (+20.09% area, same pin faces / x positions), default padding; runs in parallel with -c",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/s81-placeholders-20261006",
+  "commit": "27e200941a8f170112a25046781ea78548d7081a"
+ },
+ "stages": {
+  "calibrate": {
+   "cmd": "SRC={SRC} OUT={RUN}/routes CORES=16 NEED=64 SRCS='rtl/dsrom_sys/s81_ph/vm/ot_s81ph_vm_mem.sv' CLK=ck PER=1.1111 MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/vm_mem/vm_tile.sdc PD=0.40 HM=0.010 bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_h600 dsfd_vm_bg rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bg.sv $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "route": {
+   "cmd": "SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=64 SRCS='rtl/dsrom_sys/s81_ph/vm/ot_s81ph_vm_mem.sv' CLK=ck PER=1.1111 MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/vm_mem/vm_tile.sdc PD=0.40 HM=0.010 bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_h600 dsfd_vm_bg rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bg.sv $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+  },
+  "bench": [
+   {
+    "name": "exact_tiled",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/vm/run_vm_bench.sh {RUN}/bench t_s1 '+define+TILED' +SEED=1",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "neg_order",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/vm/run_vm_bench.sh {RUN}/bench t_mord '+define+TILED +define+OT_S81PH_VM_MUT_ORDER' +SEED=1",
+    "expect": "fail",
+    "fail_regex": "^FAIL",
+    "threads": 8,
+    "peak_ram_gb": 8
+   }
+  ]
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/dsfd_vm_bg"
+  }
+ ],
+ "cycles_added": 8,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "S81-PH tile sheet is grade 'target' (no calibration: 467-900 ps); the tiles' measured insertion is far lower (svc_pc 145 ps, ctrl_ctr 61 ps at calibrate), so the sheet SDC would put vclk ~300+ ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+ }
+}

@@ -1,0 +1,45 @@
+LINT hfd_vm_sw_s ok
+LINT hfd_vm_sw_n ok
+LINT hfd_vm_nw_s ok
+LINT hfd_vm_nw_n ok
+LINT hfd_vm_se_s ok
+LINT hfd_vm_se_n ok
+LINT hfd_vm_ne_s ok
+LINT hfd_vm_ne_n ok
+VM_TILES mode=1 seed=1 events=40/40 fault=1/1 hash=MATCH
+VM_TILES mode=1 seed=2 events=55/55 fault=1/1 hash=MATCH
+VM_TILES mode=1 seed=3 events=60/60 fault=0/0 hash=MATCH
+== 8-way vs monolithic
+t_quant: [1023:0]=1
+t_router: [511:0]=6
+VM_TILES_STRUCT cycles=442 unmatched_bits=0
+== 8-way vs 4-tile (latency = added cycles per path)
+t_su_SW: [0:0]=4 [1:1]=0 [2:2]=4 [3:3]=0 [5:4]=4 [970:6]=0 [2047:971]=4
+t_su_NW: [2047:0]=0
+t_su_SE: [973:0]=4 [1229:974]=2 [2045:1230]=8 [2047:2046]=0
+t_su_NE: [2047:0]=0
+qSW: [579:0]=0 [581:580]=clk
+qNW: [511:0]=0 [577:512]=2 [579:578]=0 [581:580]=clk
+qSE: [579:0]=0 [581:580]=clk
+qNE: [511:0]=0 [577:512]=2 [579:578]=0 [581:580]=clk
+xSW: [2062:0]=0 [2067:2063]=clk
+xNW: [2062:0]=0 [2067:2063]=clk
+xSE: [2062:0]=0 [2067:2063]=clk
+xNE: [2062:0]=0 [2067:2063]=clk
+t_quant: [1023:0]=0
+t_router: [511:0]=4
+VM_TILES_STRUCT cycles=442 unmatched_bits=0
+VM_PORT_DEPTH trace_ref.hex lag masks (bit L = matches at depth L): wr_v=0000000000010000 wr_bank=0000000000010000 wr_addr=0000000000010000 wr_owner=0000000000010000 wr_data_hi=0000000000010000 wr_data_lo=0000000000100000 rd_v=0000000000100000 rd_bank=0000000000100000 rd_addr=0000000000100000 rd_owner=0000000000100000
+VM_PORT_DEPTH trace_ref.hex wr=   SKEWED rd=ONE_DEPTH
+VM_PORT_DEPTH trace_dut.hex lag masks (bit L = matches at depth L): wr_v=0000000010000000 wr_bank=0000000010000000 wr_addr=0000000010000000 wr_owner=0000000010000000 wr_data_hi=0000000010000000 wr_data_lo=0000000010000000 rd_v=0000000010000000 rd_bank=0000000010000000 rd_addr=0000000010000000 rd_owner=0000000010000000
+VM_PORT_DEPTH trace_dut.hex wr=ONE_DEPTH rd=ONE_DEPTH
+VM_PORT_DEPTH_NEG_DETECTED (monolithic wr skew)
+physical/hbm_accel_die_views/vm/split8/run_vm_split8.sh: line 31: 862112 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1
+VM_TILES mode=1 seed=1 events=40/0 fault=1/1 hash= DIFF
+[2968000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL
+VM_SPLIT8_NEG_XBUS_DETECTED
+physical/hbm_accel_die_views/vm/split8/run_vm_split8.sh: line 31: 1096606 Aborted                    (core dumped) ./neg_$m.obj/sim > neg_$m.log 2>&1
+VM_TILES mode=1 seed=1 events=40/40 fault=1/1 hash= DIFF
+[3654000] %Fatal: tb_vm_split8.sv:93: Assertion failed in tb_vm_tiles: VM_TILES FAIL
+VM_SPLIT8_NEG_SEAM_DETECTED
+VM_SPLIT8_BENCH PASS

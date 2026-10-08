@@ -1,0 +1,96 @@
+{
+  "schema": "opentallas.hbm.smh.pin_readback.v1",
+  "status": "pass",
+  "scope": "Actual 27-piece floorplan geometry; provisional component views, no routed timing qualification",
+  "signal_pins": 3589,
+  "readback_BTerms": 3591,
+  "power_terms": {
+    "VDD": 55,
+    "VSS": 55
+  },
+  "missing_signals": [],
+  "unknown_terms": [],
+  "errors": [],
+  "result_channel_sample_centers": {
+    "rv": {
+      "layer": "M5",
+      "rect_um": [
+        1467.792,
+        0.0,
+        1467.816,
+        0.192
+      ],
+      "center_um": [
+        1467.804,
+        0.096
+      ],
+      "planned_portal_um": [
+        1467.804,
+        0.0
+      ]
+    },
+    "fault": {
+      "layer": "M5",
+      "rect_um": [
+        1467.888,
+        0.0,
+        1467.912,
+        0.192
+      ],
+      "center_um": [
+        1467.9,
+        0.096
+      ],
+      "planned_portal_um": [
+        1467.9,
+        0.0
+      ]
+    },
+    "rrow[0]": {
+      "layer": "M5",
+      "rect_um": [
+        1582.8,
+        0.0,
+        1582.824,
+        0.192
+      ],
+      "center_um": [
+        1582.812,
+        0.096
+      ],
+      "planned_portal_um": [
+        1582.812,
+        0.0
+      ]
+    },
+    "rdata[255]": {
+      "layer": "M5",
+      "rect_um": [
+        1608.432,
+        0.0,
+        1608.456,
+        0.192
+      ],
+      "center_um": [
+        1608.444,
+        0.096
+      ],
+      "planned_portal_um": [
+        1608.444,
+        0.0
+      ]
+    }
+  },
+  "all_signal_centers_readback": true,
+  "inward_center_shift_um": 0.096,
+  "odb_sha256": "872a47affa836ae5383756a2a51da7b33eea7828d3f5aa2fbeb8c159aaea1461",
+  "logical_packet_binding_complete": false,
+  "unbound_signal_count": 8,
+  "actual_routed_abstract_qualified": false,
+  "adoption": false,
+  "source_sha256": {
+    "results/physical/hbm_smh_actual_pin_contract_20261007/contract.json": "ba6cfaabf0e6a087cb98f90baa475281e283d21642af6ccd77d25a69e9185627",
+    "results/physical/hbm_smh_actual_pin_readback_20261007/actual_top_pin_boxes.json": "f5a2887273a4389b0b777671b964027114a3f80936df95887ff1415f5cdce494",
+    "/home/ubuntu/OpenTallas/tools/hbm_smh_pin_readback.py": "b2d92c0a170b040043d6eb1171c7bd60530092aa0c6e22846a858a2186aacf26"
+  }
+}

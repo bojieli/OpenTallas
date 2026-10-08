@@ -1,0 +1,18 @@
+%Error-TIMESCALEMOD: physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_sfu.sv:67:17: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     physical/s81_pq_r128_expanded/pinned/physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv:15:8: ... Location of module with timescale
+   15 | module ot_v41_pqc_spine_screen #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_sfu.sv:68:17: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     physical/s81_pq_r128_expanded/pinned/physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv:15:8: ... Location of module with timescale
+   15 | module ot_v41_pqc_spine_screen #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv:36:49: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     physical/s81_pq_r128_expanded/pinned/physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv:15:8: ... Location of module with timescale
+   15 | module ot_v41_pqc_spine_screen #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv:38:49: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     physical/s81_pq_r128_expanded/pinned/physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv:15:8: ... Location of module with timescale
+   15 | module ot_v41_pqc_spine_screen #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 4 error(s)
+        ... See the manual and https://verilator.org for more assistance.

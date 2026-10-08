@@ -1,0 +1,4 @@
+/tmp/dsrom_softmax_exp_recut_20261007/source/rtl/hdc/v41x/ot_dsrom_su_softmax_exp6.sv:419: warning: Port 2 (b) of ot_hdc_kadd expects 32 bits, got 46.
+/tmp/dsrom_softmax_exp_recut_20261007/source/rtl/hdc/v41x/ot_dsrom_su_softmax_exp6.sv:419:        : Pruning 14 high bits of the expression.
+EXP_CONTIGUOUS_PASS vectors3846 latency173 II1
+PASS_EXP_RECUT vectors3862 source_bd30aca LM11 LA11 NSPLIT2 ADDX0 core172 tile173 II1 bubbles resetabort exactFP32

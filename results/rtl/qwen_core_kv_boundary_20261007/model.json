@@ -1,0 +1,31 @@
+{
+  "default_enabled": false,
+  "adopted": false,
+  "physical_signoff": false,
+  "MACs_per_cycle": 0,
+  "new_memory_ports": 0,
+  "new_boundary_bits": 0,
+  "replicas": 4,
+  "old_history_registers": 64,
+  "new_history_and_idle_registers": 9,
+  "register_delta": -55,
+  "input_reduction_fanin": 8,
+  "post_capture_reduction_fanin": 8,
+  "new_external_routing_tracks": 0,
+  "original_slot_unchanged": true,
+  "predicate_epoch_delta_cycles": 0,
+  "flush_latency_delta_cycles": 1,
+  "analytical_program_kv_write_instructions": 108,
+  "continuous_ready_token_delta_upper_cycles": 108,
+  "stall_sensitive_token_delta_cycles": null,
+  "program_scope": "Current analytical TP4 program833 instructions; no deployed program identity claim",
+  "modeled_remaining_obligations": [
+    "Registered flush with actual vector bridge/RMW adapter",
+    "Arrival-side hold margin",
+    "ME write-enable boundary packet/gating separation",
+    "SS/FF actual interface timing"
+  ],
+  "clock_hz": 1200000000,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25
+}

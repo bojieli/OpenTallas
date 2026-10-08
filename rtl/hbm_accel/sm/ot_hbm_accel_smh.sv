@@ -1335,7 +1335,14 @@ module ot_hbm_accel_smh_front_s #(
         .s_valid(d_valid), .s_ready(d_ready), .s_data({d_base, d_lines}), .o_v(fd_v), .o_d(fd_d), .i_ret(fd_ret));
     // request channel sink (landing at the north face) and m2's registered skid beside the pins
     wire o_req_v, o_req_ready; wire [41:0] o_req_d;
+`ifdef OT_SMH_RCH_NONEMPTY
+    // Explicit opt-in: protected cached occupancy; physical closure gates pending.
+    wire rch_state_fault;
+    ot_hbm_accel_smh_csnk_ne #(.W(42), .PK(1), .PRK(PIH - 1), .DEPTH(CHD)) u_rch (.clk(clk), .rst_n(rst_n),
+        .state_fault(rch_state_fault),
+`else
     ot_hbm_accel_smh_csnk #(.W(42), .PK(1), .PRK(PIH - 1), .DEPTH(CHD), .FASTV(2)) u_rch (.clk(clk), .rst_n(rst_n),
+`endif
         .i_v(fq_v), .i_d(fq_d), .o_ret(fq_ret), .m_valid(o_req_v), .m_ready(o_req_ready), .m_data(o_req_d));
     generate if (REQCR != 0) begin : g_rc
         ot_hbm_accel_smh_reqrl #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
@@ -1388,7 +1395,11 @@ module ot_hbm_accel_smh_front_s #(
     reg fault_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) fault_q <= 1'b0;
-        else fault_q <= fault_q | (|cf_a);
+        else fault_q <= fault_q | (|cf_a)
+`ifdef OT_SMH_RCH_NONEMPTY
+            | rch_state_fault
+`endif
+            ;
     ot_hbm_accel_smv_chain #(.W(1), .D(PIO), .RST(1)) u_prv_o (.clk(clk), .rst_n(rst_n), .d(al[QLW - 1]), .q(rv));
     ot_hbm_accel_smv_chain #(.W(1), .D(PIO), .RST(1)) u_pfo (.clk(clk), .rst_n(rst_n), .d(fault_q), .q(fault));
     ot_hbm_accel_smv_chain #(.W(RW + NC*32), .D(PIO), .RST(0)) u_prd_o (.clk(clk), .rst_n(rst_n),

@@ -1,0 +1,73 @@
+{
+  "scope": "Corrected target source-context audit; previous baseline component evidence preserved.",
+  "target_top": "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_vprm_stream4.sv",
+  "target_sequencer": "ot_qwen_tp_seq_w12_vp ENABLE_ARP=1 NTOK=8; VWA parameterized",
+  "target_emitter": "qwen_rom_verify_core_emit_w12, VPOS=1",
+  "historical_pinned_top": "results/rtl/qwen_rom_finite_vm_schedule_20261005/inputs/top.sv baseline ot_qwen_tp_seq_w12 VWA8",
+  "dispatch_fetch_end_slice_byte_identical": true,
+  "dispatch_slice_sha256": "3abee10a4019917362a269d5872758e9acaa848dae3110c6d3c4c51e74e799a7",
+  "selected_static_controls": [
+    {
+      "pc": 19,
+      "dynamic_selectors": {
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "su_d_nin": 0,
+        "a_d": 0,
+        "b_d": 0,
+        "c_d": 0,
+        "d_d": 0
+      },
+      "pos_off": 0
+    },
+    {
+      "pc": 20,
+      "dynamic_selectors": {
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "su_d_nin": 0,
+        "a_d": 0,
+        "b_d": 0,
+        "c_d": 0,
+        "d_d": 0
+      },
+      "pos_off": 0
+    },
+    {
+      "pc": 25,
+      "dynamic_selectors": {
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "su_d_nin": 0,
+        "a_d": 0,
+        "b_d": 0,
+        "c_d": 0,
+        "d_d": 0
+      },
+      "pos_off": 0
+    }
+  ],
+  "source_sha256": {
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_vprm_stream4.sv": "751e0d2cad3ee1b90b6018c84bf56fc563db43fc898f8db9969d0f23533906dd",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_stream4.sv": "d052c15b427eb88a63134edf1646c68ad32554c7b019d5d2c906d6c3754b0f9d",
+    "tools/qwen_rom_rt_vprm_w12.py": "9a08ff60739cce9abe8a6e260bf509ae8900a5240b0facbbc906ffb366c8bbba",
+    "tools/qwen_rom_verify_core_emit_w12.py": "77ce26ad3a9399d6cf55aa559041ea1f7e8ef8d96ffc4078cdeaa1bba0b5b5d2",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "tools/qwen_hbm_finite_vm_bind.py": "737a61852ce679d2bcebbb5d8619f599dfe840ce336084178db20c1ddd27c1b6",
+    "rtl/hbm_accel/qwen/finite_vm_20261005/ot_qwen_finite_vm_adapter.sv": "30261cc7a1ee7f3f12aac7ac23413956acf1504dea0bac7ec3f14bd3f84e1063",
+    "rtl/hbm_accel/qwen/finite_vm_20261005/ot_qwen_checked_vm_bank.sv": "bc57ebbbcb1d0352908ab7df89ed4318a13a85e2c7a41fc65f365b2b3c281360"
+  }
+}

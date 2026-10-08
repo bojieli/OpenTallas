@@ -1,0 +1,50 @@
+Native parent control and replay calendar — bounded finding, not bank adoption
+
+The current core emitter was run on current ot_hdc_core_vector_weight.sv. The
+native sequencer region from --sequencer through before --units is extracted.
+Its real fetch FIFO, NEXT register decode, dynamic offsets, dispatch, issue,
+END/drained equation and clocked state processes execute in Icarus. Child
+ready/idle/progress inputs are exposed; memory service gates are held good and
+unused numeric argmax values tied zero. The model is not a complete core.
+
+The exact immutable L20 instruction words PC19 (SU), PC20 (ME) and PC25 (END)
+form the deliberately reduced test program; original PCs21–24 and all earlier
+work are omitted. SU replay is recaptured from the prior native SU control
+component with progress and progress_rows now observed. Its arithmetic remains
+unobserved as in that component's explicit scope. ME write addresses/masks and
+latencies are replayed from the physical native ME address slice. Its accepting
+edge is native cycle5; first/last writes 496/503 become relative ages491/498.
+
+Observed positive replay calendar:
+- SU accepts on parent edge10; its 64 write beats occupy edges31–94.
+- ME accepts on edge95 at su_progress64 while su_idle is still0.
+- ME write beats occupy edges586–593 (48 native masked word ports per beat).
+- 640 masked word writes are recorded, preserving actual addresses/masks.
+- This pair permits ME issue before SU drain; its write families do not overlap.
+  This does not imply other pairs have no read/write or write/write overlap.
+
+ME idle was NOT captured by the available ME slice. Two explicit external drain
+replay ages,501 and700, test the native END wait path and produce completion
+edges597 and796. Neither is a measured native drain latency or a performance
+claim. These externally selected input cases do not qualify the ME idle logic.
+A separate forged-early-ME-idle negative triggers END while future captured ME
+writes remain. The bench rejects this based on known outstanding writes rather
+than the selected drain age. Native END correctly respects the supplied idle;
+correct child idle remains an unproven assumption. Neither MX nor reducer writer
+is active in this selected replay. Their previous source-bound busy inclusion
+must still be validated, not inferred from this replay.
+
+Reproduce from delivered files:
+python3 tools/qwen_vm_parent_su_capture.py --root REPO --out OUT/su
+python3 tools/qwen_vm_parent_control_replay.py --root REPO --out OUT
+The second runner emits current source extraction, source hashes, program/replay
+hex, positive logs and forged-early-idle failure. write_calendar.json is the
+merged observed write-only calendar using the retained source-pinned child traces;
+summary.json records the inputs and scopes. No array or die is instantiated.
+The bench bound1000 covers the explicit700-age replay and is not a build deadline.
+
+Next required native boundary capture is me_ready/me_idle/progress plus its
+actual writer enables, preserving me_clk_en and the original drain pipeline.
+Also bind production segment descriptors and adjacent PC21–24 interactions before
+making full program or collective exclusion claims. No RTL bank implementation,
+new architecture claim, exact numeric gate or physical adoption is included.

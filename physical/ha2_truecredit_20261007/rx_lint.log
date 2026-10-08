@@ -1,0 +1,5 @@
+%Warning-WIDTH: rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv:93:23: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'count' generates 7 bits.
+                                                          : ... In instance ot_ha2_truecredit_rx_phys.u_core.g_lane[0].u_queue
+   93 |     wire full = count == D;
+      |                       ^~
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.

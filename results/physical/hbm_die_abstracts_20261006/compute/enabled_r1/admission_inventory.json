@@ -1,0 +1,57 @@
+{
+  "schema": "opentallas.compute.enabled.hierarchical_inventory.v2",
+  "families": {
+    "sfu": {
+      "unique_arithmetic_masters": {
+        "ot_hbm_sfu_result_c12": {
+          "parameters": {},
+          "wrapper_instances": 64,
+          "standalone_instances": 1
+        }
+      },
+      "unique_leaf_cell_envelope": 759925,
+      "declared_peak_gib": 32,
+      "disk_inventory_gib": 12,
+      "actual_concurrent_process_cpus": 16,
+      "tool": "Verilator5.050 hierarchical, build16 CPUs; runtime1CPU, sequential families",
+      "estimate_basis": "Admission estimate, not measured RSS: unique SFU envelope ~0.76M cells vs old48.6M flatten; HC ~47k lane master plus one4lane group vs old12.1M flatten. Reserve includes full64-replica runtime state, protected wrapper and16 compiler processes. Record measured RSS; no process cap.",
+      "measured_peak": "time-v each stage plus generated hierarchy/makefile pins; retain objects/failures",
+      "actual_vehicle": "Gibbs dd4a8e776 protected216FFstage + Carson2810FFframing + actualprotected5910FFquarter, each instantiatedONCE"
+    },
+    "hc": {
+      "unique_arithmetic_masters": {
+        "ot_dsrom_su_hcpost_group": {
+          "parameters": {
+            "WIN": 0,
+            "WOUT": 0,
+            "ML": 6,
+            "AL": 5
+          },
+          "wrapper_instances": 64,
+          "standalone_instances": 1
+        },
+        "ot_dsrom_su_hcpost_lane": {
+          "parameters": {
+            "ML": 6,
+            "AL": 5
+          },
+          "instances_per_group": 4
+        }
+      },
+      "unique_leaf_cell_envelope": 47147,
+      "declared_peak_gib": 16,
+      "disk_inventory_gib": 6,
+      "actual_concurrent_process_cpus": 16,
+      "tool": "Verilator5.050 hierarchical, build16 CPUs; runtime1CPU, sequential families",
+      "estimate_basis": "Admission estimate, not measured RSS: unique SFU envelope ~0.76M cells vs old48.6M flatten; HC ~47k lane master plus one4lane group vs old12.1M flatten. Reserve includes full64-replica runtime state, protected wrapper and16 compiler processes. Record measured RSS; no process cap.",
+      "measured_peak": "time-v each stage plus generated hierarchy/makefile pins; retain objects/failures"
+    }
+  },
+  "sources": {
+    "results/rtl/hbm_suattn_takeover_20261005/su/sfu_u30_h20/metadata.json": "e608ad35efd38ea6cdf2865f6827d9e31af23994bf4900da05b14ca271f77d04",
+    "results/rtl/hbm_suattn_takeover_20261005/su/side_u30/metadata.json": "06c32c4e6312f3bcf0d292fa4a5bf719066229ad2098008b9280bcd912270c46",
+    "results/rtl/dsrom_recovery_20261004/su_hcpost/route/lane_m6a5.json": "ba18ab38646b0321611bd385ad35f9d1ee54f75b28a1b5a06538c03d0385f3b1"
+  },
+  "launch": "Only Kant existing observer fresh EPYC2 load<128 and >=16 idleCPU before/after unchanged admit.sh RAM100GiBreserve; NVMe2 inventory. No queued RAM-only guard.",
+  "no_deadlines_or_process_caps": true
+}

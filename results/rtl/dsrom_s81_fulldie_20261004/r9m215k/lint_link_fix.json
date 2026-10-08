@@ -1,0 +1,57 @@
+{
+ "base": {
+  "census": {
+   "instances": 57937,
+   "buses": 109271,
+   "net_bits": 7356413,
+   "masters": 155,
+   "real_instances": 57479,
+   "placeholder_instances": 458
+  },
+  "link_face_away": [
+   {
+    "master": "ot_pdie_serdes",
+    "port": "ck",
+    "orient": "MY",
+    "endpoints": 3,
+    "bits": 3,
+    "examples": [
+     "lk_E1.ck face E peer 441 um behind (KE1_clk)",
+     "lk_E2.ck face E peer 581 um behind (KE2_clk)",
+     "lk_E3.ck face E peer 279 um behind (KE3_clk)"
+    ]
+   },
+   {
+    "master": "ot_pdie_serdes",
+    "port": "ck",
+    "orient": "R0",
+    "endpoints": 3,
+    "bits": 3,
+    "examples": [
+     "lk_W1.ck face W peer 448 um behind (KW1_clk)",
+     "lk_W2.ck face W peer 498 um behind (KW2_clk)",
+     "lk_W3.ck face W peer 267 um behind (KW3_clk)"
+    ]
+   }
+  ],
+  "face_away_classes": 91,
+  "missing_pins": 0,
+  "pin_spread": 28,
+  "connectivity": []
+ },
+ "fix": {
+  "census": {
+   "instances": 57960,
+   "buses": 109309,
+   "net_bits": 7364116,
+   "masters": 159,
+   "real_instances": 57502,
+   "placeholder_instances": 458
+  },
+  "link_face_away": [],
+  "face_away_classes": 86,
+  "missing_pins": 0,
+  "pin_spread": 32,
+  "connectivity": []
+ }
+}

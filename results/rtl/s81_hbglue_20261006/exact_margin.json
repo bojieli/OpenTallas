@@ -1,0 +1,58 @@
+{
+  "pass": true,
+  "scope": "margin native glue cycle equivalence; element numerical datapaths replaced by traffic stubs in reference only (MARGIN: result group +3, row0_a +2 with row0 held from go; element samples row0 at go_d checked)",
+  "cycles": 1200,
+  "seed": 12345,
+  "added_cycles": 3,
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/v41rom/ot_dsrom_head_bundle.sv": "bdceec7d6c41747e741de0b14baef74af18d34b5c2c38f47e50c0da2fc0399e2",
+    "rtl/s81/ot_dsrom_head_bundle_glue.sv": "795e23cf58bca00e8a314b5393fdaca4045cd3c66e46c4fc0d88522aacc4ca34",
+    "rtl/test/s81/tb_head_bundle_glue.sv": "3de30ca7f543ad6c89ef53c31631f8ddd175119e649bba025704ba4d68939418",
+    "rtl/s81/ot_s81_head_delay8x32.sv": "da1551fd135b4d476f2bf1c069362fa6bbdf92c366c5c8aa70f0334b0cf2ce83",
+    "rtl/s81/ot_s81_head_min_delay.sv": "2e406f66181d54cc050c297aa486cdc0f383af48767aedb67a3cdedd61e14ce7",
+    "rtl/test/s81/min_delay_cells_model.sv": "da0966c61cb82c94f1abbe1c0164c4bae74d104077f88a36788b073b3237b59a"
+  },
+  "cases": {
+    "baseline": {
+      "returncode": 0,
+      "output": "PASS glue lockstep 1200 cycles results=594"
+    },
+    "demux": {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-tk-ds-head/rtl/test/s81/tb_head_bundle_glue.sv:28: lockstep cycle 65\n       Time: 69000 Scope: tb"
+    },
+    "tie": {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-tk-ds-head/rtl/test/s81/tb_head_bundle_glue.sv:28: lockstep cycle 65\n       Time: 69000 Scope: tb"
+    },
+    "skew": {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-tk-ds-head/rtl/test/s81/tb_head_bundle_glue.sv:28: lockstep cycle 65\n       Time: 69000 Scope: tb"
+    },
+    "res_latency": {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-tk-ds-head/rtl/test/s81/tb_head_bundle_glue.sv:28: lockstep cycle 67\n       Time: 71000 Scope: tb"
+    },
+    "fault_align": {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-tk-ds-head/rtl/test/s81/tb_head_bundle_glue.sv:28: lockstep cycle 65\n       Time: 69000 Scope: tb"
+    },
+    "row0_face": {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-tk-ds-head/rtl/test/s81/tb_head_bundle_glue.sv:31: row offset\n       Time: 5000 Scope: tb"
+    },
+    "select2": {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-tk-ds-head/rtl/test/s81/tb_head_bundle_glue.sv:28: lockstep cycle 65\n       Time: 69000 Scope: tb"
+    },
+    "valid_gate": {
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt-tk-ds-head/rtl/test/s81/tb_head_bundle_glue.sv:28: lockstep cycle 98\n       Time: 102000 Scope: tb"
+    },
+    "unsupported_sk9": {
+      "returncode": 1,
+      "output": "/home/ubuntu/wt-tk-ds-head/rtl/s81/ot_dsrom_head_bundle_glue.sv:58: error: Unknown module type: ERROR_hardened_head_delay_requires_SK8\n1 error(s) during elaboration.\n*** These modules were missing:\n        ERROR_hardened_head_delay_requires_SK8 referenced 1 times.\n***"
+    }
+  }
+}

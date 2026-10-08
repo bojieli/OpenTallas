@@ -1,0 +1,5 @@
+MISMATCH 100000000 100000000
+FDIVEQ n=128 compared=128 reference=128 mismatches=1
+[398000] %Fatal: tb_dsrom_su_fdiv_f12_eq.sv:68: Assertion failed in tb_dsrom_su_fdiv_f12_eq: FDIVEQ incomplete or mismatching stream
+%Error: rtl/test/tb_dsrom_su_fdiv_f12_eq.sv:68: Verilog $stop
+Aborting...

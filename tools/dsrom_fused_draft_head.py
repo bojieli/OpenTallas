@@ -296,16 +296,45 @@ def sources(fused, sink=True):
 
 
 def cmd_run(a):
+    if a.safe_level != 1 and not a.safe:
+        raise ValueError("--safe-level requires --safe")
     fused = not a.as_built_core
     srcs, defs, C = sources(fused)
-    tb = TB_FH if fused else TB_ASBUILT
+    if a.capture_cut:
+        if not fused: raise ValueError("capture cut requires fused candidate")
+        candidate=SUCCESSOR/'capture_candidate'
+        srcs=[candidate/p.name if p.name in NAMES else p for p in srcs]
+        srcs=srcs+[ROOT/"rtl/hdc"/(n+".sv") for n in ("ot_hdc_fastfp","ot_hdc_prefix","ot_hdc_fp32_add_lat")]
+        defs=defs+["+define+OT_FH_ALAT=7","+define+OT_FH_CAPTURE=1",f"+define+OT_FH_RETURN_EXTRA={a.capture_return_extra}"]
+        tb=candidate/'tb_hdc_core_v41_mtp_slice_capture.sv'
+        if a.fault_retire:
+            srcs += [candidate/'ot_hdc_v41_fh_fault_retire.sv',candidate/'ot_hdc_v41_fh_retire_parent.sv']
+            defs += ['+define+OT_FH_FAULT_RETIRE=1']
+    else:
+        if a.fault_retire: raise ValueError("fault retirement requires own capture candidate")
+        tb = TB_FH if fused else TB_ASBUILT
+    if a.checked_permission:
+        if not (a.capture_cut and a.fault_retire):
+            raise ValueError("checked permission requires capture and four-edge retirement")
+        srcs=[ROOT/'rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv',*srcs,
+              candidate/'ot_hdc_v41_fh_checked_permission.sv',candidate/'ot_hdc_v41_fh_vm_endpoint_ctx.sv']
+        tb=candidate/'tb_hdc_core_v41_mtp_slice_checked.sv'
+    if a.margin:
+        if not (a.checked_permission and a.capture_return_extra in (5, 6)):
+            raise ValueError("--margin requires --checked-permission and --capture-return-extra 5")
+        defs = defs + ["+define+OT_FH_MARGIN=1"]
+    if a.fpipe or a.safe:
+        if not a.margin: raise ValueError("--fpipe/--safe require --margin")
+        defs = defs + [f"+define+OT_FH_FPIPE={a.fpipe_level or (2 if a.safe else 1)}"] + ([f"+define+OT_FH_SAFE={a.safe_level}"] if a.safe else [])
+    if getattr(a, "half", False):
+        defs = defs + ["+define+OT_FH_HALF=1"] + (["+define+OT_FH_HALF_MUTANT=1"] if a.half_mutant else [])
     obj = a.run_dir / "obj"
     a.run_dir.mkdir(parents=True, exist_ok=True)
     if not (obj / "Vtb_hdc_core_v41_mtp_slice").exists():
         subprocess.run(["verilator", "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
                         "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "--top-module", "tb_hdc_core_v41_mtp_slice", "-Mdir",
                         str(obj), f"-I{C.SVH.parent}", f"+define+HDC_SW={C.I.SU_LANES}", "+define+HDC_MP=1", *defs,
-                        *map(str, srcs), str(tb), str(HARNESS), "-CFLAGS", "-O1", "-j", "8"], check=True)
+                        *map(str, srcs), str(tb), str(HARNESS), "-CFLAGS", "-O1", "-j", str(a.jobs)], check=True)
     exe = obj / "Vtb_hdc_core_v41_mtp_slice"
     rom = (a.slices / "rom").resolve()
     names = [s.name for s in sorted(a.slices.iterdir()) if (s / "prog.hex").exists() and s.name != "rom"]
@@ -324,6 +353,9 @@ def cmd_run(a):
         fh_m = FH.search(out)
         if fh_m:
             r.update(zip(("tokx", "exp_tokx", "tokx_bad", "stok_bad"), map(int, fh_m.groups())))
+        hm = re.search(r"HALF fast_cycles=(\d+) slow_cycles=(\d+)", out)
+        if hm:
+            r["half_fast_cycles"], r["half_slow_cycles"] = int(hm.group(1)), int(hm.group(2))
         r["tokx_events"] = [dict(tok=int(t), val=v, cyc=int(c)) for _, t, v, c in TOKX.findall(out)]
         if not m:
             r["tail"] = out.splitlines()[-10:]
@@ -427,6 +459,17 @@ def main():
     s.add_argument("--variant-rom", action="store_true", help="rewrite the ROM images even if present")
     r = sub.add_parser("run")
     r.add_argument("--slices", type=Path, required=True)
+    r.add_argument("--checked-permission", action="store_true", help="Default-off distributed native checked grant in the actual VM fixture")
+    r.add_argument("--fault-retire", action="store_true", help="Default-off full-transaction retirement with real warm commit acknowledgement")
+    r.add_argument("--capture-cut", action="store_true", help="Default-off protected return/capture candidate")
+    r.add_argument("--capture-return-extra", type=int, choices=(2,3,5,6), default=2, help="Matched protected return extra stages;2 retained,3 decode-split,5 decode-split + margin-first ADDR_PIPE=2 request distribution,6 + quadrant pin stage (QPIN, ADDR_PIPE=3)")
+    r.add_argument("--margin", action="store_true", help="Default-off margin-first head (OT_FH_MARGIN: zero-cycle trees, five-deep retirement, staged checked endpoint); pair with --capture-return-extra 5")
+    r.add_argument("--fpipe", action="store_true", help="Default-off registered endpoint fault aggregation (OT_FH_FPIPE: per-bank fault flops, registered reduce, release age 6, registered head ACK); needs --margin")
+    r.add_argument("--safe", action="store_true", help="Default-off SAFE head: FPIPE=2 endpoint pin stage + retirement SAFE (+1 stage, registered receipt compare / sink busy); needs --margin")
+    r.add_argument("--safe-level", type=int, choices=(1, 2), default=1, help="retirement SAFE level (2: split registered receipt comparison); requires --safe")
+    r.add_argument("--half", action="store_true", help="SAFE half-rate backstop: the draft-core domain on the die clock gated every other cycle (OT_FH_HALF); reports HALF fast_cycles")
+    r.add_argument("--half-mutant", action="store_true", help="negative control for --half: the protected return pipe left on the die clock")
+    r.add_argument("--fpipe-level", type=int, default=0, help="override the endpoint FPIPE level (3: two input stages + registered outputs)")
     r.add_argument("--run-dir", type=Path, required=True)
     r.add_argument("--as-built-core", action="store_true")
     r.add_argument("--jobs", type=int, default=8)

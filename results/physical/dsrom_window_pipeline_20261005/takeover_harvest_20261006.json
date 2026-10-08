@@ -1,0 +1,23 @@
+{
+  "harvested_by": "Claude takeover-ds, 2026-10-06 13:30 PT",
+  "policy": "OWNER_RULE_MARGIN_FIRST + LOAD_CAP: route at 770 ps, sign off 833.333 ps; accept SS >= +40 ps, FF >= +15 ps",
+  "runs": [
+    {"name": "mencius-window-changed-ssmap-r5", "host": "ot-epyc2", "path": "/srv/opentallas-scratch2/jobs/mencius-window-ssmap-r5/run",
+     "scope": "SS map + floorplan only (no place/CTS/route), flat ot_dsrom_window_pipeline_context, 1550 um square, target 833.333 ps",
+     "terminal_exit": 0, "stage": "floorplan, ideal clock, no wire", "ss_setup_wns_ps": -273.585, "ss_setup_tns_ns": -11244.0,
+     "worst_path": "region_base_sector[11] (input) -> u_writer.st_blocks_written[31]", "verdict": "NOT CLOSED (pre-placement fail; cannot be routed into margin)",
+     "evidence": "ssmap_r5/floorplan_terminal/"},
+    {"name": "mencius-window-writer-fullshape-r10-roomy", "host": "ot-epyc2", "path": "/srv/opentallas-scratch2/jobs/mencius-window-writer-fullshape-r10/run_roomy",
+     "scope": "SS map + floorplan only, R10 writer source, 1900 um square, target 833.333 ps",
+     "terminal_exit": 0, "stage": "floorplan, ideal clock, no wire", "ss_setup_wns_ps": -196.668, "ss_setup_tns_ns": -6345.12,
+     "worst_path": "region_sector_count[8] (input) -> m_wdata[0] (output): combinational input-to-output path, violates the register-to-register boundary rule",
+     "verdict": "NOT CLOSED", "evidence": "writer_roomy_r10/floorplan_terminal/"},
+    {"name": "codex-item7-window-hier-parent", "host": "ot-epyc1tb", "path": "/srv/opentallas-scratch/codex/item7-window-parent-20261006/route_r1",
+     "scope": "ot_dsrom_window_stage_pipeline SPLIT_COLUMNS=1 with 68 hardened column views, 1900 um square, route target 833.333 ps (pre-margin)",
+     "terminal_exit": 1, "stage": "2_2 floorplan_macro: POST_MACRO_PLACE hook place_stage.tcl error 'unexpected WINDOW column instance g_bank\\[0\\].g_col\\[0\\]...' (hook regexp does not accept escaped brackets in flattened instance names)",
+     "pre_placement_ss_setup_wns_ps_after_floorplan_repair": -195.308, "pre_repair_wns_ps": -348.610,
+     "worst_path": "req_first_row[1] (input, 166.7 ps IO delay) -> lane/raddr adder -> 68 column read_addr pins: unregistered input-to-macro path with fanout 68",
+     "verdict": "TERMINAL FAIL (flow hook) and pre-placement setup fail; not relaunched as-is. Margin RTL successor: register req_* at the pin, per-bank kept raddr/read_v copies, staged bank outputs; route at 770.",
+     "evidence": "item7_stage_hier_parent_r1/"}
+  ]
+}

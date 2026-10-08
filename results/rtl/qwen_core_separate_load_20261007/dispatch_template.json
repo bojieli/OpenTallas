@@ -1,0 +1,83 @@
+{
+  "name": "core_separate_load_fullwidth_SOURCEPIN",
+  "block": "ot_qwen_rom_core_core_p",
+  "owner": "Codex:qwen-elements",
+  "purpose": "Fullshape SW64 NW18 opaque boundary specialization plus default-off separated NEXT LOAD; retain previous truncated interface failure and physical verdict. Exact full-controller gate and model replay qualify candidate route, no adoption.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+    "commit": "REPLACE_WITH_INTEGRATED_COMMIT",
+    "extra_paths": [
+      "configs"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "full_controller_separate_load",
+        "cmd": "python3 tools/qwen_core_separate_load_gate.py --out {RUN}/bench/full_controller",
+        "expect": "pass",
+        "pass_regex": "\"status\": \"pass\"",
+        "min_count_regex": "\"positive_engine_events\": (\\d+)",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog",
+          "yosys"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "CORE_DIE_IO=1 SRC={SRC} bash physical/qwen_die_masters/jobs/route_core_separate_load.sh {LABEL} 3banmsp 30 0.5 {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 40,
+      "needs": [
+        "orfs",
+        "yosys"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS.md {RUN}/routes/{LABEL}/prep/cut_report.json {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_qwen_rom_core --out {RUN}/record/views/ot_qwen_rom_core_core_p --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_core_ctx/signoff833_skew90.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/qwen_core_separate_load_20261007/physical"
+    },
+    {
+      "from": "{RUN}/bench/full_controller/result.json",
+      "to": "results/rtl/qwen_core_separate_load_20261007/full_interface_result.json"
+    }
+  ],
+  "cycles_added": "Analytical current TP4 program833 instructions: seq_gap1\u21922 costs0 cycles at context1/8192. Minimum decoder64-instruction vehicle +64 no-stall/+71 periodic-ready; real retained-controller full interface gate separately required. No universal deployed-token bound inferred.",
+  "merge_target": null
+}

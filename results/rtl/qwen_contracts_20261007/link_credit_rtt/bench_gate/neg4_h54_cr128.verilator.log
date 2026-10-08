@@ -1,0 +1,5 @@
+NATIVE_FAULT a=1 causeA=000001 b=0 causeB=000000 tick=493
+EXPECTED_FAULT NEG=4
+[5800000] %Fatal: tb_qwen_link_fullrate.sv:83: Assertion failed in tb_qwen_link_fullrate: FAIL link_fullrate NEG=4
+%Error: /home/ubuntu/wt-claude-qwen-contracts/rtl/test/tb_qwen_link_fullrate.sv:83: Verilog $stop
+Aborting...

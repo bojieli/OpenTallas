@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hfd_host_slab",
+ "kind": "host_slab",
+ "status": "reservation",
+ "lef": "hfd_host_slab.lef",
+ "lib": null,
+ "size_um": [
+  594.408,
+  16824.216
+ ],
+ "instances": 1,
+ "pins": 0,
+ "note": "reservation slab: outline + obstruction M1-M7 only, no logic, no die nets, no timing view (nothing to time); the die route crosses it on M8/M9 as in r16g; r16j: PHY black box = this field + its digital pin macro (ot_hbm_host_phy) on the core side",
+ "black_box": {
+  "decision": "OWNER 2026-10-06 ~19:20: pin-accurate PHY black box",
+  "role": "bump / analog field of the PHY: outline + M1-M7 obstruction, die route crosses on M8/M9; by contract no digital pins",
+  "digital_pin_macro": "ot_hbm_host_phy",
+  "contract": "physical/hbm_accel_die_views/phy_bb/README.md",
+  "cycles_added": 0
+ }
+}

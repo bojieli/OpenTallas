@@ -1,0 +1,331 @@
+{
+  "schema": "opentallas.dsrom.v9.field_boundary.v1",
+  "sources": {
+    "parent": {
+      "path": "rtl/v41die/ot_v41_fieldtop_pqc_w17w10.sv",
+      "sha256": "af931250d48f86a8b287fea0b5744f86cbc66e88148e6b3a4354070c7949b5e6"
+    },
+    "spine": {
+      "path": "rtl/v41die/ot_v41_spine_pqc_w17w10.sv",
+      "sha256": "d3d0e1bae83fad943d3d4ff570fe499f37a9feea0eeb1cb8ecce00a8be87b7c9"
+    },
+    "field": {
+      "path": "rtl/v41die/ot_v41_field_pq_w17w10.sv",
+      "sha256": "0f4d028eb5144406be375123ea9ec664ce3a0685f82f505109210d5308d87a10"
+    },
+    "loader": {
+      "path": "rtl/v41die/ot_v41_pair_pq_ld.sv",
+      "sha256": "17427eaa7973c0090fbdfb0c2c55dc68381edc9c567db57dff17693636291751"
+    },
+    "pair": {
+      "path": "rtl/v41die/ot_v41_pair_pq_w17w10.sv",
+      "sha256": "56445710ae8eb0fc5326bbe382b10c02596961f4e6a850ba1c2245fc12b66887"
+    },
+    "gate": {
+      "path": "rtl/hdc/ot_hdc_cg.sv",
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    "floorplan": {
+      "path": "results/rtl/dsrom_recovery_20261004/physcost/layer/floorplan.json",
+      "sha256": "d12baf9d01d3f86deb5ed02463dd505b7a832eac2697c7c468acf07bdd843423"
+    },
+    "composition": {
+      "path": "results/rtl/dsrom_field_spine_20261004/field_baseline_v9.json",
+      "sha256": "82b4e690d97045b42f36f5b119008f2c1d1dd06bf7d98114a471b01d7ecf7d3e"
+    },
+    "macro": {
+      "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.json",
+      "sha256": "056700d6a2ca3ada7e5ec226604ca8ab19bb446b0c96781ae33acfc49e831093"
+    },
+    "contract": {
+      "path": "physical/dsrom_field_spine/field_boundary_clock.tcl",
+      "sha256": "3a5ff0778251c8ca1cee2efdfdf2f303a96224039ec06140e7b2aeb29e1fbeab"
+    }
+  },
+  "v9_source_commit": "f284118df",
+  "v9_exact_record": "results/rtl/dsrom_field_spine_20261004/exactness_v9.json",
+  "scope": "one complete NB=2 PP=1 Q pair and its actual source-owned producer/capture boundary",
+  "QX_owner_source_commit": "0032b7355",
+  "QX_live_Z18_untouched": true,
+  "QX_owner_source_sha256": "88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6",
+  "QX_owner_source_path": "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+  "XS_clock_source_note": "0032b7355 lines257/260 use posedge gclk in g_qb.g_bx; not Qfree",
+  "current_v9_pair_selects_QX": false,
+  "clock_contract": {
+    "streaming_period_ps": 833.3333333333334,
+    "serial_period_ps": 1111.111111111111,
+    "serial_streaming_ratio": "3:4",
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "gate": "ot_hdc_cg/u_icg ICGx1_ASAP7_75t_R, latch-low enable; passed root edges, no division",
+    "option_C_regions": {
+      "option": "C (results/uarch/rom_die_clocking_decision_20261003)",
+      "count": 57,
+      "field": 44,
+      "max_extent_um": 4567.1,
+      "field_fifo_blocks": 44,
+      "hub_fifo_slots": 24,
+      "fifo_area_mm2": 2.545,
+      "other": [
+        "spine (3, <= 5.25 mm each, per-region CTS)",
+        "S/N service bands (2 per stack)",
+        "HBM controllers (async, PHY clock)",
+        "link macros (own clocks)"
+      ]
+    },
+    "source_parent": "u_sp, u_f and VM share top clk in current exact RTL",
+    "separate_region_source_binding": null
+  },
+  "macro_timing": {
+    "ss": {
+      "clk_to_q_ps": 743.9627002267231,
+      "macro_setup_ps": 39.800541169166664,
+      "macro_hold_ps": 30.074020584583334,
+      "clock_pin_cap_fF": 8.68376,
+      "four_macro_clock_pin_cap_fF": 34.73504,
+      "uncertainty_ps": 60
+    },
+    "ff": {
+      "clk_to_q_ps": 492.24471244471647,
+      "macro_setup_ps": 24.694771075555558,
+      "macro_hold_ps": 19.67222053777778,
+      "clock_pin_cap_fF": 10.3732,
+      "four_macro_clock_pin_cap_fF": 41.4928,
+      "uncertainty_ps": 25
+    }
+  },
+  "SS_one_edge_residual_before_capture_and_wire_ps": 29.370633106610285,
+  "macro_residual_scope": "diagnostic only; real ping-pong two-cycle macro paths retain their existing constraints",
+  "physical_macros_per_pair": 4,
+  "active_macro_words_per_streaming_cycle": 2,
+  "memory_bytes_per_cycle": {
+    "weight_payload": 64.0,
+    "weight_macro_including_metadata": 68.5,
+    "local_configuration": 6.0,
+    "VM_read": 256.0,
+    "VM_write_per_region": 4
+  },
+  "boundary_classes": {
+    "activation": {
+      "bits": 549,
+      "launch": "u_sp.g_bst.u_bst",
+      "capture": "QX g_qb.g_bx",
+      "launch_clock": "streaming parent",
+      "capture_clock": "ICG passed parent edges",
+      "actual_launch_Q_pins": null,
+      "actual_capture_D_pins": null,
+      "loaded_capacitance_fF": null,
+      "actual_fanout": null,
+      "launch_clock_insertion_ps": null,
+      "capture_clock_insertion_ps": null,
+      "SS_setup_slack_ps": null,
+      "FF_hold_slack_ps": null
+    },
+    "configuration": {
+      "bits": 54,
+      "launch": "u_f.g_p[*].u_p.u_ld",
+      "capture": "QX g_qb b_cfg_* and b_cdec",
+      "launch_clock": "streaming parent",
+      "capture_clock": "free parent",
+      "actual_launch_Q_pins": null,
+      "actual_capture_D_pins": null,
+      "loaded_capacitance_fF": null,
+      "actual_fanout": null,
+      "launch_clock_insertion_ps": null,
+      "capture_clock_insertion_ps": null,
+      "SS_setup_slack_ps": null,
+      "FF_hold_slack_ps": null
+    },
+    "go": {
+      "bits": 1,
+      "launch": "u_f.g_p[*].u_p.u_ld go_e",
+      "capture": "QX g_qb b_go",
+      "launch_clock": "streaming parent",
+      "capture_clock": "free parent",
+      "actual_launch_Q_pins": null,
+      "actual_capture_D_pins": null,
+      "loaded_capacitance_fF": null,
+      "actual_fanout": null,
+      "launch_clock_insertion_ps": null,
+      "capture_clock_insertion_ps": null,
+      "SS_setup_slack_ps": null,
+      "FF_hold_slack_ps": null
+    },
+    "result": {
+      "bits": 126,
+      "launch": "QX NB=2 partials with row/segment/position/error",
+      "capture": "u_f.g_lv[0].g_n[*].u_n",
+      "launch_clock": "ICG passed parent edges",
+      "capture_clock": "free parent",
+      "actual_launch_Q_pins": null,
+      "actual_capture_D_pins": null,
+      "loaded_capacitance_fF": null,
+      "actual_fanout": null,
+      "launch_clock_insertion_ps": null,
+      "capture_clock_insertion_ps": null,
+      "SS_setup_slack_ps": null,
+      "FF_hold_slack_ps": null
+    },
+    "vm_read": {
+      "bits": 2048,
+      "launch": "VM x_q",
+      "capture": "u_sp read/quantizer stages",
+      "launch_clock": "parent clk",
+      "capture_clock": "parent clk",
+      "actual_launch_Q_pins": null,
+      "actual_capture_D_pins": null,
+      "loaded_capacitance_fF": null,
+      "actual_fanout": null,
+      "launch_clock_insertion_ps": null,
+      "capture_clock_insertion_ps": null,
+      "SS_setup_slack_ps": null,
+      "FF_hold_slack_ps": null
+    },
+    "vm_write": {
+      "bits": 50,
+      "launch": "u_sp w_data/w_addr/w_we registers",
+      "capture": "VM write port",
+      "launch_clock": "parent clk",
+      "capture_clock": "parent clk",
+      "actual_launch_Q_pins": null,
+      "actual_capture_D_pins": null,
+      "loaded_capacitance_fF": null,
+      "actual_fanout": null,
+      "launch_clock_insertion_ps": null,
+      "capture_clock_insertion_ps": null,
+      "SS_setup_slack_ps": null,
+      "FF_hold_slack_ps": null
+    },
+    "macro_read": {
+      "bits": 548,
+      "launch": "four physical ROM rd_out buses, alternating per bank",
+      "capture": "QX g_mac bank capture registers",
+      "launch_clock": "ICG passed parent edges",
+      "capture_clock": "ICG passed parent edges",
+      "actual_launch_Q_pins": null,
+      "actual_capture_D_pins": null,
+      "loaded_capacitance_fF": null,
+      "actual_fanout": null,
+      "launch_clock_insertion_ps": null,
+      "capture_clock_insertion_ps": null,
+      "SS_setup_slack_ps": null,
+      "FF_hold_slack_ps": null
+    },
+    "busy": {
+      "bits": 1,
+      "launch": "QX g_qo.busy_d[QK-1]",
+      "capture": "actual parent busy consumer",
+      "launch_clock": "free parent",
+      "capture_clock": "free parent",
+      "actual_launch_Q_pins": null,
+      "actual_capture_D_pins": null,
+      "loaded_capacitance_fF": null,
+      "actual_fanout": null,
+      "launch_clock_insertion_ps": null,
+      "capture_clock_insertion_ps": null,
+      "SS_setup_slack_ps": null,
+      "FF_hold_slack_ps": null
+    },
+    "fault": {
+      "bits": 1,
+      "launch": "QX g_qo.g_qyf.fq (QY=1)",
+      "capture": "actual parent fault consumer",
+      "launch_clock": "free parent",
+      "capture_clock": "free parent",
+      "actual_launch_Q_pins": null,
+      "actual_capture_D_pins": null,
+      "loaded_capacitance_fF": null,
+      "actual_fanout": null,
+      "launch_clock_insertion_ps": null,
+      "capture_clock_insertion_ps": null,
+      "SS_setup_slack_ps": null,
+      "FF_hold_slack_ps": null
+    },
+    "free_to_gated": {
+      "bits": null,
+      "launch": "Qfree cfg/go and control registers",
+      "capture": "gated FIFO/fw, i1/i2x, macro/lane/tree control",
+      "launch_clock": "free parent",
+      "capture_clock": "ICG passed parent edges",
+      "actual_launch_Q_pins": null,
+      "actual_capture_D_pins": null,
+      "loaded_capacitance_fF": null,
+      "actual_fanout": null,
+      "launch_clock_insertion_ps": null,
+      "capture_clock_insertion_ps": null,
+      "SS_setup_slack_ps": null,
+      "FF_hold_slack_ps": null
+    },
+    "gated_to_free_control": {
+      "bits": null,
+      "launch": "gated busy_c and bank fault producers",
+      "capture": "Qfree g_qo.busy_d/ff_d and g_mac[*].g_qyb.bkf_r",
+      "launch_clock": "ICG passed parent edges",
+      "capture_clock": "free parent",
+      "actual_launch_Q_pins": null,
+      "actual_capture_D_pins": null,
+      "loaded_capacitance_fF": null,
+      "actual_fanout": null,
+      "launch_clock_insertion_ps": null,
+      "capture_clock_insertion_ps": null,
+      "SS_setup_slack_ps": null,
+      "FF_hold_slack_ps": null
+    }
+  },
+  "added_MACs_per_cycle": 0,
+  "existing_QX_compute": "inherited from the q-element owner; no new arithmetic or throughput credit",
+  "replicas": {
+    "local_pair": 1,
+    "local_logical_weight_banks": 2,
+    "physical_pingpong_macros": 4,
+    "field_pairs": 2417,
+    "Q_pairs": 1898
+  },
+  "mux_demux_fanout": "retain full QX capture mux, QZ_NS8/QZ_NE4 and existing return identity; loaded counts unresolved",
+  "macro_area_um2": 31525.459199999998,
+  "floorplan_slot_um": [
+    1040.256,
+    239.76
+  ],
+  "floorplan_slot_um2": 249411.77856,
+  "actual_logic_and_clock_area_um2": null,
+  "slot_fit_proven": false,
+  "reset_boundary": {
+    "launch": "g_mac[*].g_mz/u_rs,u_rsc,u_rsp,u_rst on Qfree",
+    "capture": "actual gated asynchronous reset pins",
+    "copies_per_NB2_pair": 8,
+    "checks": "SS recovery and FF removal",
+    "mapped_pins": null,
+    "recovery_slack_ps": null,
+    "removal_slack_ps": null
+  },
+  "routing_tracks": {
+    "logical_local_payload_bits": 3378,
+    "actual_channel_capacity": null,
+    "loaded_clock_tracks": null,
+    "fit_proven": false
+  },
+  "latency": {
+    "existing_field_record_wire_term": 80,
+    "current_floorplan_stages": {
+      "field_one_way": 41,
+      "field_round_trip": 82,
+      "service_to_vm": 39,
+      "collective_to_link": 44
+    },
+    "region_crossings": "each field matvec pays one entry and one exit meso FIFO (2 periods each, results/uarch/meso_fifo_20261004 verdict: crossing delta mean 2.01 periods) -- the +661-cycle term of rom_die_clocking_decision_20261003, unchanged by this floorplan",
+    "charge_transport_once": true,
+    "added_source_pipeline_edges": 0,
+    "new_QX_plus_v9_composed_latency": null,
+    "rate_adoption_credit": 0
+  },
+  "missing_input_clocks": true,
+  "minimum_context_build_ready": false,
+  "full_field_die_build_ready": false,
+  "blockers": [
+    "Selected v9 field still instantiates PQ element, not the owner QX source: no source-bound combined pair yet",
+    "Option-C inter-region FIFO/clock connections are not implemented in the current single-clk field vehicle",
+    "Actual mapped enclosing producer/capture pins, CTS/SPEF, loaded port and channel terms absent"
+  ],
+  "action": "Bind the real source-composed pair and enclosing register paths with field_boundary_clock.tcl; preserve Z18 and all v9 live routes"
+}

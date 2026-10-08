@@ -1,0 +1,26 @@
+== p1: SELT_PIPE PASS rc=0 
+fault case k_mismatch: FAULT bit 13    seen
+fault case orphan_beat: FAULT bit 11    seen
+fault case qslot_collision: FAULT bit 12    seen
+RESULT PASS segments 32 out_beats 603 replays 8 errors 0 tail_minus_ref max 257 mean 127 ref_holds 26
+== p0: SELT_PIPE PASS rc=0 
+fault case k_mismatch: FAULT bit 13    seen
+fault case orphan_beat: FAULT bit 11    seen
+fault case qslot_collision: FAULT bit 12    seen
+RESULT PASS segments 32 out_beats 561 replays 4 errors 0 tail_minus_ref max 240 mean 91 ref_holds 11
+== mt: SELT_PIPE FAIL rc=1 
+FAIL uniform_k512 beat 0: lv 0001/ffff q 0/0 last 1/0
+FAIL uniform_k512 beat 0 lane 0 idx 733 ref 28
+FAIL uniform_k512 beat 0 lane 1 idx 0 ref 41
+FAIL uniform_k512 beat 0 lane 2 idx 0 ref 42
+FAIL uniform_k512 beat 0 lane 3 idx 0 ref 48
+FAIL uniform_k512 beat 0 lane 4 idx 0 ref 57
+== m2: SELT_PIPE FAIL rc=1 
+FAIL uniform_k512 beat 0 lane 0 idx 6428 ref 28
+FAIL uniform_k512 beat 0 lane 1 idx 6437 ref 41
+FAIL uniform_k512 beat 0 lane 2 idx 6508 ref 42
+FAIL uniform_k512 beat 0 lane 3 idx 6509 ref 48
+FAIL uniform_k512 beat 0 lane 4 idx 6510 ref 57
+FAIL uniform_k512 beat 0 lane 5 idx 6683 ref 108
+== mr (S81PH_MUT_REPLAY): deadlock, killed after > 1.66 M cycles (no RESULT): FAIL
+# Verilator 5.032 EPYC2, tools/s81_ph/selt_pipeline_bench.sh <out> <tag> <SEARCH_PIPE> [defines]

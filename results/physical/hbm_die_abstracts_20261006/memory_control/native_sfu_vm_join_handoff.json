@@ -1,0 +1,43 @@
+{
+  "source_commits": [
+    "f9e05138c",
+    "86125fb6f"
+  ],
+  "tops": {
+    "ot_hbm_vm_sfu_result_publication.sv": "a0751dc0f9050191a225a5c6d85df79aa78a831c51cb251df75061f0fe7e94b0",
+    "ot_hbm_die_vm_sfu_publication_root.sv": "3e669ab7e65fd4a27fbe1b647437f1bcabe285324fd9617ddf36ab010f7e2233"
+  },
+  "gates": [
+    "sfu_result_publication_r1_PASS/terminal.json",
+    "vm_sfu_warm_join_r1_PASS/terminal.json"
+  ],
+  "actual_mechanisms": [
+    "3 framed1024 beats carry64 FP32 words plus tag32/error1",
+    "2 real SRAM writes/readback ACKs before held completion",
+    "full73 owner and ACK identity",
+    "warm closes new offers while accepted result drains, then real full73 retirement"
+  ],
+  "added_protected_FF": 2520,
+  "new_SRAMs": 0,
+  "existing_SRAMs_instantiated_once": 32,
+  "ENABLE_default": 0,
+  "producer_handoff": {
+    "tx": "actual SFU stage tx data/frame/index/last to sfu_rx ports",
+    "enroll": "actual frame73, expected tag32 and aligned output WORD32 base within bound VM span",
+    "consumer_drained": "sfu_publication_done after both positive SRAM ACKs",
+    "complete_r": "actual caller acceptance of held completion; retire remains blocked until drained"
+  },
+  "open": [
+    "actual SFU producer arithmetic/op/tag/enrollment binding by Gibbs",
+    "actual same-root contextclock or real qualified CDC (833ps vs native1111ps)",
+    "SS60FF25 slot/load parent hardening"
+  ],
+  "physical_closed": false,
+  "parent_qualified": false,
+  "test_scope": "fixture source frames; actual VM SRAM/codec/controller; no SFU arithmetic numerical qualification",
+  "no_replay": [
+    "index passing gate",
+    "formatter passing gate",
+    "Lorentz sole parent compile"
+  ]
+}

@@ -1,0 +1,149 @@
+{
+ "schema": "opentallas.qwen_rom_closure.v1",
+ "date": "2026-10-06",
+ "status": "CLOSED (owner decision 2026-10-06)",
+ "headline": {
+  "record": "results/arch/three_machine_compose/compose.json (qwen_rom)",
+  "measured_token": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json + measured_composition.json: 193,955 cycles, full36+HEAD at P8191, next-token argmax 18 on all 4 ranks",
+  "composition": "193,955 measured + 0 core r5_f2ba + 217 slab MUL_LAT 7 (r11c) + 54 KV_MAP=1 cold-layer KV-ready (measured, isolated) at 1.2 GHz; DSpark OFF (AR mode)",
+  "modelled_sensitivity": "+24 cycles of the die per-stack crossbar (MODELLED, not RTL) on the cold first layer"
+ },
+ "kv_path": {
+  "shipped": "STREAM4 service (ot_qwen_rt_kv_stream4_service + ot_qwen_hbm_stream4_ack/_cdc): 4 HBM3E stacks a die, 128 pseudo-channels landing in parallel, no transport protection (unprotected 128-PC parallel landing); KV_MAP=1 (Option M)",
+  "option_m": "ADOPT: results/rtl/qwen_stream4_kvmap_m_20261006/lever.json",
+  "protected_full_width_transport": {
+   "verdict": "EXPLORED, NOT ADOPTED (owner 2026-10-06): not part of the shipped configuration",
+   "evidence": [
+    "SAME_CYCLE_GO fix merged at ab52a7204 (context GO gate PASS 8/8: results/rtl/qwen_rom_fullwidth_20261006/context_go_r2/)",
+    "full-size L0 at P8191 exact on 4 dies (x and kvP) in 6188 core cycles cold (fill exposed 1,500): results/rtl/qwen_rom_fullwidth_20261006/full36_r2_samecyclego/layer_runtime_terminal.json",
+    "full36_r1 FAIL_RUNTIME at L0 cycle 14 retained (results/rtl/qwen_rom_fullwidth_20261006/full36_r1/); no full token on the protected transport"
+   ],
+   "record": "results/rtl/qwen_rom_fullwidth_20261006/"
+  }
+ },
+ "physical": {
+  "bar": "Prior Qwen sign-off bar (AGENTS.md sign-off corners): setup >= 0 at SS with 0.833 ns (1.2 GHz) and 60 ps setup uncertainty, hold >= 0 at FF with 25 ps hold uncertainty. NOT the DS/HBM margin rule (+15 ps SS / +15 ps FF at sign-off); blocks are reported against that rule only where noted.",
+  "accepted_blocks": [
+   {
+    "block": "decode core (ot_qwen_rom_core), in die context",
+    "variant": "r5_f2ba",
+    "ss_ps": 6.27,
+    "ff_ps": 6.92,
+    "token_cycles_added": 0,
+    "role": "composed in the headline (adopted record)",
+    "record": "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json#adopted"
+   },
+   {
+    "block": "decode core alternative",
+    "variant": "r5b_f3ba",
+    "ss_ps": 0.87,
+    "ff_ps": 7.12,
+    "token_cycles_added": 112,
+    "role": "named in the owner closure; its ETM is generated for the die views (not bound to a master); superseded in the record by r5_f2ba",
+    "record": "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json#alternative_r5b_f3ba"
+   },
+   {
+    "block": "port/scale slab group (ot_qwen_slab_port_group)",
+    "variant": "r11c_456_lead2_t260_d75",
+    "ss_ps": 11.47,
+    "ff_ps": 4.2,
+    "token_cycles_added": 217,
+    "record": "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json"
+   },
+   {
+    "block": "STREAM4 CDC per PC (ot_qwen_stream4_cdc_pc)",
+    "variant": "r11a_4face_m30",
+    "ss_ps": 25.4,
+    "ff_ps": 10.17,
+    "record": "results/rtl/qwen_stream4_cdc_20261005/r11/r11a_4face_m30/corner_sta.json"
+   },
+   {
+    "block": "STREAM4 CDC margin route",
+    "variant": "m1j_cdc_margin_u123_ioh80",
+    "ss_ps": 46.02,
+    "ff_input_hold_ps": 36.54,
+    "ff_output_hold_ps": 30.21,
+    "ff_internal_hold_ps": 8.2,
+    "note": "closes the prior Qwen bar; under the +15/+15 margin rule the IO boundary passes and the internal synchronizer hold (+8.2) does not",
+    "record": "results/rtl/qwen_stream4_cdc_20261005/margin_20261006/m1j_cdc_margin_u123_ioh80/VERDICT.json"
+   },
+   {
+    "block": "corridor station qfd_cst_n/_s (1,536 copies)",
+    "variant": "s2_cst_hm40",
+    "ss_ps": 73.74,
+    "ff_ps": 26.33,
+    "record": "results/rtl/qwen_die_masters_20261006/station_margin_routes.json"
+   },
+   {
+    "block": "column head qfd_chead_e/_w (64 copies)",
+    "variant": "s2_chead_hm40",
+    "ss_ps": 51.32,
+    "ff_ps": 30.69,
+    "record": "results/rtl/qwen_die_masters_20261006/station_margin_routes.json"
+   }
+  ],
+  "assumed_constant_views": {
+   "record": "results/rtl/qwen_rom_die_r17_20261005/element_views/views_r20c.json",
+   "masters": [
+    "qfd_chead_e",
+    "qfd_chead_w",
+    "qfd_cst_n",
+    "qfd_cst_s",
+    "qfd_ctrl",
+    "qfd_hub",
+    "qfd_io_collective",
+    "qfd_io_embedding_rom",
+    "qfd_io_serdes",
+    "qfd_io_ucie",
+    "qfd_io_xfifo",
+    "qfd_kvc",
+    "qfd_kvc_n",
+    "qfd_lst_c",
+    "qfd_lst_c_split",
+    "qfd_lst_h_e",
+    "qfd_lst_h_w",
+    "qfd_lst_v",
+    "qfd_lst_v_split",
+    "qfd_sp_constants_sequencer",
+    "qfd_sp_su64_sfu",
+    "qfd_sp_tree_top",
+    "qfd_sp_vector_memory",
+    "qfd_tile",
+    "qfd_tile_e"
+   ],
+   "count": 25,
+   "note": "the die tiles (qfd_tile/_e) and the other die masters listed here were checked with assumed-constant interface timing views, not routed closures; qfd_cdc and qfd_port_tiles_* carry ETMs of r11a / r11c; the core ETM (r5b_f3ba) is generated, not bound"
+  },
+  "die_r20c": {
+   "legality_track_pin_access": "PASS: 3,334 macros, 0 overlaps, 8,186,034 pins on track (0 off-track), 0 std-cell / 0 macro pins without access (results/rtl/qwen_rom_die_r17_20261005/real_r20c/run_filtered.log, 04d4364aa)",
+   "grt_i50": {
+    "overflow": 7972,
+    "max_h": 21,
+    "max_v": 20,
+    "wirelength_um": 153905570,
+    "wall": "5:08:18",
+    "verdict": "NOT CLOSED",
+    "record": "results/rtl/qwen_rom_die_r17_20261005/grt/r20c_k16_banded_i50/summary.json"
+   },
+   "ir": {
+    "worst_interior_mv": 25.96,
+    "by_window": {
+     "r19_ir_tile_field": 20.86,
+     "r19_ir_spine_hub": 25.96,
+     "r19_ir_shoreline_w": 20.01,
+     "r19_ir_spine_slab": 20.86
+    },
+    "budget_mv": 35.0,
+    "frame": "r19 (full tiles with KV slices)",
+    "note": "interior rail-to-rail (cells at least one bump pitch from a window edge); whole-window edge maxima exceed 35 mV",
+    "record": "results/rtl/qwen_rom_die_r17_20261005/ir/ir_record.json"
+   },
+   "die_top_route": {
+    "status": "NOT DONE",
+    "flat": "flat r20c pilot killed by the 900 GB guard in GRT grid setup after 2:44 (peak RSS 941,927,664 kB): results/rtl/qwen_rom_die_r17_20261005/pilot_r20c/flat_pilot.log",
+    "region": "representative region (west tile column 31 + spine/hub crossing, 66.6 mm2) killed (exit 137) during CUGR maze routing; no regional route completed: results/rtl/qwen_rom_die_r17_20261005/pilot_r20c/region_pilot_tail.log",
+    "status_log": "ot-epyc2 /srv/opentallas-scratch2/scratch/claude/qwen-die-r17/STATUS.md (2026-10-06 22:25 PT)"
+   }
+  }
+ }
+}

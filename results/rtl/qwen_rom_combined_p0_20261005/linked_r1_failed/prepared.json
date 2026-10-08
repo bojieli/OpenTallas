@@ -1,0 +1,102 @@
+{
+  "command": [
+    "/usr/bin/verilator",
+    "--cc",
+    "--exe",
+    "--build",
+    "-O2",
+    "-j",
+    "4",
+    "--top-module",
+    "tb_qwen_p0_linked",
+    "--prefix",
+    "Vjoin",
+    "-GPROTECTED=1",
+    "-GSYNC=2",
+    "-GNSTK=4",
+    "-GNPC=128",
+    "-GLAYERS=1",
+    "-GWBW=4",
+    "-GKV_IDEAL=0",
+    "-GPULLIN=0",
+    "-Wno-fatal",
+    "-Wno-WIDTH",
+    "-Wno-UNUSED",
+    "-Wno-TIMESCALEMOD",
+    "-Wno-BLKSEQ",
+    "-Wno-PINMISSING",
+    "-Wno-LATCH",
+    "-Wno-MULTIDRIVEN",
+    "-Wno-UNOPTFLAT",
+    "-y",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/src/rtl/hdc/kv",
+    "-y",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/src/rtl/hdc",
+    "-y",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/src/rtl/model_ready_hbm_r14",
+    "-y",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/src/rtl/lib",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/src/rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_p0_linked_consumer.sv",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/src/rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_p0_producer_exports.sv",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/src/rtl/experimental/qwen_rom_combined_p0_20261005/tb_qwen_p0_linked.sv",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/src/tools/qwen_rom_combined_p0_20261005/linked_driver.cpp",
+    "-CFLAGS",
+    "-O2 -std=c++20 -I/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/src/tools/qwen_rom_combined_p0_20261005",
+    "-Mdir",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/linked/obj"
+  ],
+  "runtime": [
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/linked/obj/Vjoin",
+    "/srv/opentallas-scratch/codex/qwen-P8191-full36-history-r1/history/L0_die0.bin",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/run/L0_die0_kvP.hex"
+  ],
+  "owner_handoff_sha256": "3a40a0f1d7263dd9fe9c4804db28c53068f1ef59b7dcd71792693927a9c6a2b8",
+  "owner_hook_status": "consumer_seams_READY_NOW",
+  "physical_stack_adapter_ready": false,
+  "full_token": false,
+  "producer32case_replay": false,
+  "source_root": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-82946934d/src",
+  "driver_sha256": "50935fc07970a5235c41efdee04759135f6692ed5a3caee05e53f3a3071dddc8",
+  "expected": {
+    "scope": "EXPECTED_RELEASED_NUMERICAL_IMAGES_ONLY_NOT_RTL_PASS",
+    "position": 8191,
+    "layer": 0,
+    "rank": 0,
+    "history_source_sha256": "190fcd6d3cd94bba849b4082990090cbedba5ddd9a756f82624d225f5c721876",
+    "token_source_sha256": "e6751ad771fc6c10016ce1b8c53c1b904478e55182f84df84722d0c65fc45379",
+    "images": {
+      "history_fp8": {
+        "bytes": 4194304,
+        "sha256": "42d388e97abd781ada761fedd6a9c6667f6ba696d05d082578d24c25905c5871",
+        "fnv1a64": "6ed22b51fba216db"
+      },
+      "token_K_then_V": {
+        "bytes": 512,
+        "sha256": "92de5ac0302c4fd0a9d3b65e7768a6a931e7428e65034210e99063f2bc22c6f7",
+        "fnv1a64": "bbe4629345f824f4"
+      },
+      "backing_after_ACK": {
+        "bytes": 4194304,
+        "sha256": "fd59b53b6a3448a2d91e75905a9692b073f2a3a8f2956ac216f26c398dd9d020",
+        "fnv1a64": "2211f2089ac1eabe"
+      },
+      "registered_slices": {
+        "bytes": 12582912,
+        "sha256": "afbdefdf4289fa18f1a02fda17af69bde2e07d384a7604b8a2d8d90ac2c1a3af",
+        "fnv1a64": "a60b5bf88bf526a6"
+      }
+    },
+    "expected_handshakes": {
+      "descriptor": 1,
+      "GO": 1,
+      "HCLK_descriptor": 1,
+      "HCLK_GO": 1,
+      "write_sectors": 136,
+      "ACK": 136,
+      "final_debt": 0
+    },
+    "RTL_core_cycles": null,
+    "RTL_controller_cycles": null
+  }
+}

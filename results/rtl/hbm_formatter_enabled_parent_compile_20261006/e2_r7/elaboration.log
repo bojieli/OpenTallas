@@ -1,0 +1,1366 @@
+%Warning-TIMESCALEMOD: rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:2:9: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | package ot_gpu_w6_secded_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~
+                       physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv:10:8: ... Location of module with timescale
+   10 | module ot_hbm_integrated_formatter_provider #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:222:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'W2_SECTOR_ENABLE' generates 32 bits.
+                                                                                              : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  222 |         if(W2_SECTOR_ENABLE)begin:g_w2_sectors
+      |         ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:301:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SU_PROVIDER_ADAPTER' generates 32 bits.
+                                                                                              : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  301 |         if(SU_PROVIDER_ADAPTER)begin:g_su_provider_adapter
+      |         ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv:10:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                          : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_cp_reset'
+   10 |  generate if(!ENABLE)begin:off
+      |              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv:23:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_w2_sink'
+   23 |  generate if(!ENABLE)begin:off
+      |              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv:27:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PROTECTED_TRANSACTION_PIPELINE' generates 32 bits.
+                                                                                                : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_w2_sink'
+   27 |  end else if(PROTECTED_TRANSACTION_PIPELINE)begin:transaction_pipeline
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv:29:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'REGISTERED_SUBBLOCKS' generates 32 bits.
+                                                                                                : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_w2_sink'
+   29 |  end else if(REGISTERED_SUBBLOCKS)begin:registered_subblocks
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:17:16: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'FAST_OWNER_FRONTIER' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   17 |  if(ENABLE==0||!FAST_OWNER_FRONTIER)assign owned_frontier_terms=0;
+      |                ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:43:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'FOUR_COMBINATIONAL_CUTS' generates 32 bits.
+                                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   43 |  if(FOUR_COMBINATIONAL_CUTS)begin:four_combinational_cuts
+      |  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:47:3: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'FAST_OWNER_FRONTIER' generates 32 bits.
+                                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   47 |   if(FAST_OWNER_FRONTIER)begin:fast_entry
+      |   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:109:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'REGISTERED_OUTPUTS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  109 |  if(REGISTERED_OUTPUTS)begin:registered_header
+      |  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:141:5: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'BALANCED_OWNER_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  141 |  if(!BALANCED_OWNER_BOUNDARY)assign balanced_release_accept=0;
+      |     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:142:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'REGISTERED_STATUS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  142 |  if(REGISTERED_STATUS)begin:registered_status
+      |  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:155:5: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'FAST_OWNER_FRONTIER' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  155 |  if(!FAST_OWNER_FRONTIER)assign frontier_equal64=0;
+      |     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:169:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'BALANCED_OWNER_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  169 |  if(BALANCED_OWNER_BOUNDARY)begin:balanced_owner_boundary
+      |  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:177:3: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'FAST_OWNER_FRONTIER' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  177 |   if(FAST_OWNER_FRONTIER)begin:fast_owner
+      |   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:201:3: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'FOUR_COMBINATIONAL_CUTS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  201 |   if(FOUR_COMBINATIONAL_CUTS)begin:four_output_frontiers
+      |   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:205:4: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'FAST_OWNER_FRONTIER' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  205 |    if(FAST_OWNER_FRONTIER)assign owned_frontier_terms={3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[2],lease_granted};
+      |    ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:325:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  325 |  if(REGISTERED_BOUNDARY)begin:boundary_control
+      |  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w15_store.sv:22:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_normal_store'
+   22 |  generate if(!ENABLE)begin:off
+      |              ^
+%Warning-WIDTHTRUNC: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv:32:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                                     : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_formatter_provider'
+   32 |  generate if(!ENABLE)begin:disabled
+      |              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:18:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+   18 |  generate if(!ENABLE) begin:g_off
+      |              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv:8:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                  : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_su_provider_adapter.u_su_provider.g_enabled.association'
+    8 |  generate if(!ENABLE)begin:off
+      |              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv:17:3: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'FAST_OWNER_FRONTIER' generates 32 bits.
+                                                                                                  : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_su_provider_adapter.u_su_provider.g_enabled.association'
+   17 |   if(FAST_OWNER_FRONTIER)begin:fast_receiver
+      |   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv:38:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_formatter_provider.enabled.u_formatter'
+   38 |  generate if(!ENABLE)begin:disabled
+      |              ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:279:23: Operator VAR 'H_A' expects 16 bits on the Initial value, but Initial value's VARREF 'ALAT' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  279 |     localparam [15:0] H_A = ALAT;
+      |                       ^~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:23: Operator VAR 'H_M' expects 16 bits on the Initial value, but Initial value's VARREF 'MLAT' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                       ^~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:35: Operator VAR 'H_EXP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EXP' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                   ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:50: Operator VAR 'H_SIG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SIG' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                  ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:65: Operator VAR 'H_RSQ' expects 16 bits on the Initial value, but Initial value's VARREF 'D_RSQ' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                 ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:80: Operator VAR 'H_SQRT' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SQRT' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                                ^~~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:280:97: Operator VAR 'H_SP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SP' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  280 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                                                 ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:281:23: Operator VAR 'H_EG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EG' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  281 |                       H_EG = D_EG;
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:566:5: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'FAST' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_su_provider_adapter.u_su_provider.g_enabled.association.on.fast_receiver.executor'
+  566 |  if(!FAST)begin:prior
+      |     ^
+%Warning-WIDTHTRUNC: rtl/gpu/ot_gpu_sm.sv:74:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'INT8' generates 32 bits.
+                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.u_tc'
+   74 |     localparam integer WB  = INT8 ? 8 : 16;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:23: Operator VAR 'H_DIV' expects 16 bits on the Initial value, but Initial value's VARREF 'D_DIV' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                       ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:38: Operator VAR 'H_M' expects 16 bits on the Initial value, but Initial value's VARREF 'MLAT' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                      ^~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:50: Operator VAR 'H_EXP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EXP' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                  ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:65: Operator VAR 'H_SIG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SIG' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                 ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:80: Operator VAR 'H_RSQ' expects 16 bits on the Initial value, but Initial value's VARREF 'D_RSQ' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:149:95: Operator VAR 'H_SQRT' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SQRT' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.g_lane[0].u_lane'
+  149 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                               ^~~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:150:23: Operator VAR 'H_SP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SP' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.g_lane[0].u_lane'
+  150 |                       H_SP = D_SP, H_EG = D_EG;
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:150:36: Operator VAR 'H_EG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EG' generates 32 bits.
+                                                                                      : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.g_lane[0].u_lane'
+  150 |                       H_SP = D_SP, H_EG = D_EG;
+      |                                    ^~~~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:151:24: Operator VAR 'HAS_SFU' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.g_lane[0].u_lane'
+  151 |     localparam integer HAS_SFU = (KIND != 0);
+      |                        ^~~~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv:152:24: Operator VAR 'FULL' expects 32 bits on the Initial value, but Initial value's EQ generates 1 bits.
+                                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.g_lane[0].u_lane'
+  152 |     localparam integer FULL = (KIND == 2);
+      |                        ^~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:84:18: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   84 |     generate if (!ENABLE) begin : g_off
+      |                  ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:749:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                  : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_cf'
+  749 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p) canbe = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:538:32: Operator VAR 'TWO' expects 32 bits on the Initial value, but Initial value's LTS generates 1 bits.
+                                                                                  : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_side.u_sp.u_div'
+  538 |             localparam integer TWO = (2 * j + 1 < QB);
+      |                                ^~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'h6b' generates 8 bits.
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '7'h6a' generates 7 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'h6a' generates 8 bits.
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '6'h2a' generates 6 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:207:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                          : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.u_tc.g_scale[0].u_mul.u.u_c1'
+  207 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine....g_hc_post.u_engine.g_g[255].u.g_k[3].u.u_m4.u.u_k1'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:151:34: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  151 |         pc_of = (NPC > 1) ? (((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : 0;
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:151:45: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  151 |         pc_of = (NPC > 1) ? (((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : 0;
+      |                                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:151:64: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  151 |         pc_of = (NPC > 1) ? (((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : 0;
+      |                                                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:154:20: Operator SHIFTR expects 64 bits on the LHS, but LHS's VARREF 's' generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  154 |         row_of = s >> ROW_SHIFT;
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:159:21: Operator SHIFTR expects 64 bits on the LHS, but LHS's VARREF 's' generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  159 |             row = s >> ROW_SHIFT;
+      |                     ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:160:29: Operator SHIFTR expects 64 bits on the LHS, but LHS's VARREF 's' generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  160 |             bank_of = ((((s >> (2 + LPC + 5)) ^ (row >> 2)) & 7) << 2) | ((s ^ row) & 3);
+      |                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:160:78: Operator XOR expects 64 bits on the LHS, but LHS's VARREF 's' generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  160 |             bank_of = ((((s >> (2 + LPC + 5)) ^ (row >> 2)) & 7) << 2) | ((s ^ row) & 3);
+      |                                                                              ^
+%Warning-WIDTHTRUNC: rtl/hdc/kv/ot_hdc_hbm_model.sv:160:21: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's OR generates 64 bits.
+                                                          : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  160 |             bank_of = ((((s >> (2 + LPC + 5)) ^ (row >> 2)) & 7) << 2) | ((s ^ row) & 3);
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:181:56: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'req_addr' generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  181 |             if (tb_i < req_len) tb_need[pc_of(req_addr + tb_i)] = tb_need[pc_of(req_addr + tb_i)] + 1;
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/kv/ot_hdc_hbm_model.sv:181:41: Operator FUNCREF 'pc_of' expects 26 bits on the Function Argument, but Function Argument's ADD generates 32 bits.
+                                                          : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  181 |             if (tb_i < req_len) tb_need[pc_of(req_addr + tb_i)] = tb_need[pc_of(req_addr + tb_i)] + 1;
+      |                                         ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:181:90: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'req_addr' generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  181 |             if (tb_i < req_len) tb_need[pc_of(req_addr + tb_i)] = tb_need[pc_of(req_addr + tb_i)] + 1;
+      |                                                                                          ^
+%Warning-WIDTHTRUNC: rtl/hdc/kv/ot_hdc_hbm_model.sv:181:75: Operator FUNCREF 'pc_of' expects 26 bits on the Function Argument, but Function Argument's ADD generates 32 bits.
+                                                          : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  181 |             if (tb_i < req_len) tb_need[pc_of(req_addr + tb_i)] = tb_need[pc_of(req_addr + tb_i)] + 1;
+      |                                                                           ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:192:29: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  192 |             tmin = max2(arr + REQ_PS, tnow);
+      |                             ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:196:49: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  196 |                 tact = b_open[p][bk] ? max2(arr + REQ_PS, b_preok[p][bk]) + RP_PS : arr + REQ_PS;
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:196:75: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  196 |                 tact = b_open[p][bk] ? max2(arr + REQ_PS, b_preok[p][bk]) + RP_PS : arr + REQ_PS;
+      |                                                                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:196:89: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  196 |                 tact = b_open[p][bk] ? max2(arr + REQ_PS, b_preok[p][bk]) + RP_PS : arr + REQ_PS;
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:198:47: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDS_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  198 |                 tact = max2(tact, last_act[p] + RRDS_PS);
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:199:54: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDL_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  199 |                 tact = max2(tact, last_act_bg[p][bg] + RRDL_PS);
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:200:45: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'FAW_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  200 |                 tact = max2(tact, faw[p][0] + FAW_PS);
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:202:42: Operator COND expects 64 bits on the Conditional True, but Conditional True's VARREF 'RCDWR_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  202 |             tcol = max2(tmin, tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:202:42: Operator COND expects 64 bits on the Conditional False, but Conditional False's VARREF 'RCDRD_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  202 |             tcol = max2(tmin, tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:203:43: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  203 |             tcol = max2(tcol, last_col[p] + BURST_PS);
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:204:50: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'TCCDL_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  204 |             tcol = max2(tcol, last_col_bg[p][bg] + TCCDL_PS);
+      |                                                  ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:217:24: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  217 |             tmin = arr + REQ_PS;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:227:43: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  227 |                 tr = max2(tr, last_col[p] + BURST_PS);
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:228:39: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  228 |                 if (any_open) tr = tr + RP_PS;
+      |                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:231:62: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RFC_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  231 |                     b_actok[p][b2] = max2(b_actok[p][b2], tr + RFC_PS);
+      |                                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:233:43: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REFI_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  233 |                 next_ref[p] = next_ref[p] + REFI_PS;
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:242:55: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  242 |                     tact = max2(tmin, b_preok[p][bk]) + RP_PS;       
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:245:47: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDS_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  245 |                 tact = max2(tact, last_act[p] + RRDS_PS);
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:246:54: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDL_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  246 |                 tact = max2(tact, last_act_bg[p][bg] + RRDL_PS);
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:247:45: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'FAW_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  247 |                 tact = max2(tact, faw[p][0] + FAW_PS);
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:251:39: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RAS_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  251 |                 b_actok[p][bk] = tact + RAS_PS + RP_PS;
+      |                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:251:48: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  251 |                 b_actok[p][bk] = tact + RAS_PS + RP_PS;
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:252:39: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RAS_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  252 |                 b_preok[p][bk] = tact + RAS_PS;
+      |                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:256:54: Operator COND expects 64 bits on the Conditional True, but Conditional True's VARREF 'RCDWR_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  256 |             tcol = max2(max2(tmin, tnow), tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:256:54: Operator COND expects 64 bits on the Conditional False, but Conditional False's VARREF 'RCDRD_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  256 |             tcol = max2(max2(tmin, tnow), tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:257:43: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  257 |             tcol = max2(tcol, last_col[p] + BURST_PS);
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:258:50: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'TCCDL_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  258 |             tcol = max2(tcol, last_col_bg[p][bg] + TCCDL_PS);
+      |                                                  ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:261:74: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 2 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  261 |                                   ((last_wr_bg_valid[p] && last_wr_bg[p] == bg) ? WTRL_PS : WTRS_PS));
+      |                                                                          ^~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:260:46: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CWL_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  260 |                 tcol = max2(tcol, last_wr[p] + CWL_PS + BURST_PS +
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:260:55: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  260 |                 tcol = max2(tcol, last_wr[p] + CWL_PS + BURST_PS +
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:261:81: Operator COND expects 64 bits on the Conditional True, but Conditional True's VARREF 'WTRL_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  261 |                                   ((last_wr_bg_valid[p] && last_wr_bg[p] == bg) ? WTRL_PS : WTRS_PS));
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:261:81: Operator COND expects 64 bits on the Conditional False, but Conditional False's VARREF 'WTRS_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  261 |                                   ((last_wr_bg_valid[p] && last_wr_bg[p] == bg) ? WTRL_PS : WTRS_PS));
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:262:69: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RTW_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  262 |             if (we && last_rd[p] >= 0) tcol = max2(tcol, last_rd[p] + RTW_PS);
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:266:60: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CWL_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  266 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + CWL_PS + BURST_PS + WR_PS);
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:266:69: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  266 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + CWL_PS + BURST_PS + WR_PS);
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:266:80: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'WR_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  266 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + CWL_PS + BURST_PS + WR_PS);
+      |                                                                                ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:269:60: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RTP_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  269 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + RTP_PS);
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:288:39: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'REFI_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  288 |                 next_ref[p] = REFI_PS + (longint'(REFI_PS) * p) / NPC;
+      |                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:288:65: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'NPC' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  288 |                 next_ref[p] = REFI_PS + (longint'(REFI_PS) * p) / NPC;
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:310:40: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'req_addr' generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  310 |                     p = pc_of(req_addr + i);
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/kv/ot_hdc_hbm_model.sv:310:25: Operator FUNCREF 'pc_of' expects 26 bits on the Function Argument, but Function Argument's ADD generates 32 bits.
+                                                          : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  310 |                     p = pc_of(req_addr + i);
+      |                         ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:312:72: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'req_addr' generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  312 |                     q_we[p][slot] = req_we; q_addr[p][slot] = req_addr + i; q_tag[p][slot] = req_tag;
+      |                                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/kv/ot_hdc_hbm_model.sv:312:61: Operator ASSIGN expects 26 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                          : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  312 |                     q_we[p][slot] = req_we; q_addr[p][slot] = req_addr + i; q_tag[p][slot] = req_tag;
+      |                                                             ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:361:53: Operator MODDIV expects 32 bits on the LHS, but LHS's ARRAYSEL generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  361 |                                 mem[q_addr[p][slot] % MEM_WORDS] = q_data[p][slot];
+      |                                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:365:55: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CL_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  365 |                                 r_t[p][k] = h_tcol[p] + CL_PS + BURST_PS + RSP_PS;
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:365:63: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  365 |                                 r_t[p][k] = h_tcol[p] + CL_PS + BURST_PS + RSP_PS;
+      |                                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:365:74: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RSP_PS' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  365 |                                 r_t[p][k] = h_tcol[p] + CL_PS + BURST_PS + RSP_PS;
+      |                                                                          ^
+%Warning-WIDTHEXPAND: rtl/hdc/kv/ot_hdc_hbm_model.sv:367:68: Operator MODDIV expects 32 bits on the LHS, but LHS's ARRAYSEL generates 26 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_mem.u_ms.g_on.g_s[1].u_part.g_on.u_model'
+  367 |                                 r_data[p][k] = mem[q_addr[p][slot] % MEM_WORDS];
+      |                                                                    ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:386:79: Input port connection 'b' expects 32 bits on the pin connection, but pin connection's REPLICATE generates 46 bits.
+                                                                                 : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_side.u_sp.u_exp'
+  386 |     ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_yn (.a(pa[6]), .b({{14{nint_d[8]}}, nint_d, 23'd0}), .cin(1'b0),
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_fsqrt.sv:122:38: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 12 bits.
+                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_side.u_sp.u_sq'
+  122 |             f_unb    <= $signed(TOP) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41/ot_hdc_fsqrt.sv:122:22: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_side.u_sp.u_sq'
+  122 |             f_unb    <= $signed(TOP) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_fsqrt.sv:127:42: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 12 bits.
+                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_side.u_sp.u_sq'
+  127 |             f_unb    <= $signed(TOP - 1) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41/ot_hdc_fsqrt.sv:127:22: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_side.u_sp.u_sq'
+  127 |             f_unb    <= $signed(TOP - 1) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:489:47: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                                                  : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_side.u_sp.u_div'
+  489 |             if (e != 8'd0) norm = {1'b1, f, e - 10'sd127};
+      |                                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:543:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                                                 : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_side.u_sp.u_div'
+  543 |                                 TWO ? {r_rem[j-1][24:0], 2'b0} : {1'b0, r_rem[j-1][24:0], 1'b0};
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:554:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                                                 : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_side.u_sp.u_div'
+  554 |                 r_q[j]    <= TWO ? {qin[QB-3:0], q} : {qin[QB-2:0], q[0]};
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fpu.sv:66:43: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                 : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.u_tc.g_col[0].g_sub[3].u_tc.g_lane[3].u_mul'
+   66 |             if (e != 0) dec = {1'b1, m, e - 10'sd127};
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv:742:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                  : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.g_lane[255].u_lane.g_sfu.g_vec.u_l4'
+  742 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p && s[k]) has = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:78:29: Operator ADD expects 19 bits on the RHS, but RHS's VARREF 'si' generates 3 bits.
+                                                   : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_bd.u_bdtc.u_issue'
+   78 |     wire [RW+8:0] item = wb + si;
+      |                             ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:83:46: Operator ADD expects 11 bits on the RHS, but RHS's VARREF 'si' generates 3 bits.
+                                                   : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_bd.u_bdtc.u_issue'
+   83 |     wire [RW:0] row_now = gs_q ? gs_row : rb + si;
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:89:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'si' generates 3 bits.
+                                                   : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_bd.u_bdtc.u_issue'
+   89 |     wire        last_si = (si == IL - 1);
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:107:23: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ph' generates 3 bits.
+                                                    : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_bd.u_bdtc.u_issue'
+  107 |             ph <= (ph == IL - 1) ? {SW{1'b0}} : ph + 1'b1;
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:127:43: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wb' generates 19 bits.
+                                                    : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_bd.u_bdtc.u_issue'
+  127 |                             else wb <= wb + IL;
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/gpu/ot_gpu_issue.sv:127:37: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                   : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_bd.u_bdtc.u_issue'
+  127 |                             else wb <= wb + IL;
+      |                                     ^~
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:126:36: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wb' generates 19 bits.
+                                                    : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_bd.u_bdtc.u_issue'
+  126 |                             if (wb + IL >= items_q) issuing <= 1'b0;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:142:47: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rb' generates 11 bits.
+                                                    : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_bd.u_bdtc.u_issue'
+  142 |                                 else rb <= rb + IL;
+      |                                               ^
+%Warning-WIDTHTRUNC: rtl/gpu/ot_gpu_issue.sv:142:41: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                   : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_bd.u_bdtc.u_issue'
+  142 |                                 else rb <= rb + IL;
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:141:40: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rb' generates 11 bits.
+                                                    : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_bd.u_bdtc.u_issue'
+  141 |                                 if (rb + IL >= rows_q) issuing <= 1'b0;
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/link/ot_link_nvls_switch.sv:70:36: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 4 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.u_coll.u_fab.g_on.u_sw'
+   70 |         assign head[g] = m[g*DEPTH + rp[g]];
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/link/ot_link_nvls_switch.sv:98:31: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 4 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.u_coll.u_fab.g_on.u_sw'
+   98 |                     m[r*DEPTH + wp[r]] <= in_rec[r*PW +: PW];
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/link/ot_link_nvls_switch.sv:101:49: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'gsel' generates 1 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.u_coll.u_fab.g_on.u_sw'
+  101 |                 if (pop_red || (pop_gat && gsel == r)) rp[r] <= rp[r] + 1'b1;
+      |                                                 ^~
+%Warning-WIDTHEXPAND: rtl/link/ot_link_nvls_switch.sv:102:96: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'gsel' generates 1 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.u_coll.u_fab.g_on.u_sw'
+  102 |                 cnt[r] <= cnt[r] + (in_valid[r] ? 1'b1 : 1'b0) - ((pop_red || (pop_gat && gsel == r)) ? 1'b1 : 1'b0);
+      |                                                                                                ^~
+%Warning-WIDTHEXPAND: rtl/link/ot_link_nvls_switch.sv:102:49: Operator COND expects 5 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.u_coll.u_fab.g_on.u_sw'
+  102 |                 cnt[r] <= cnt[r] + (in_valid[r] ? 1'b1 : 1'b0) - ((pop_red || (pop_gat && gsel == r)) ? 1'b1 : 1'b0);
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/link/ot_link_nvls_switch.sv:102:49: Operator COND expects 5 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.u_coll.u_fab.g_on.u_sw'
+  102 |                 cnt[r] <= cnt[r] + (in_valid[r] ? 1'b1 : 1'b0) - ((pop_red || (pop_gat && gsel == r)) ? 1'b1 : 1'b0);
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/link/ot_link_nvls_switch.sv:102:103: Operator COND expects 5 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.u_coll.u_fab.g_on.u_sw'
+  102 |                 cnt[r] <= cnt[r] + (in_valid[r] ? 1'b1 : 1'b0) - ((pop_red || (pop_gat && gsel == r)) ? 1'b1 : 1'b0);
+      |                                                                                                       ^
+%Warning-WIDTHEXPAND: rtl/link/ot_link_nvls_switch.sv:102:103: Operator COND expects 5 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.u_coll.u_fab.g_on.u_sw'
+  102 |                 cnt[r] <= cnt[r] + (in_valid[r] ? 1'b1 : 1'b0) - ((pop_red || (pop_gat && gsel == r)) ? 1'b1 : 1'b0);
+      |                                                                                                       ^
+%Warning-WIDTHEXPAND: rtl/link/ot_link_nvls_switch.sv:104:39: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'gsel' generates 1 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.u_coll.u_fab.g_on.u_sw'
+  104 |             if (pop_gat) rot <= (gsel == P - 1) ? 0 : gsel + 1'b1;
+      |                                       ^~
+%Warning-WIDTHEXPAND: rtl/link/ot_link_nvls_switch.sv:188:54: Operator GT expects 32 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.u_coll.u_fab.g_on.u_sw'
+  188 |             for (r = 0; r < P; r = r + 1) if (cnt[r] > DEPTH) fault <= 1'b1;
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/abi3/ot_a3_fp32_div_rne_pipe.sv:221:22: Operator FUNCREF 'compare_registered_product' expects 32 bits on the Function Argument, but Function Argument's VARREF 'product_lsb_power_q' generates 10 bits.
+                                                                : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_div.g_l[127].u_dl.u_div'
+  221 |         comparison = compare_registered_product(
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-WIDTHEXPAND: rtl/abi3/ot_a3_fp32_div_rne_pipe.sv:221:22: Operator FUNCREF 'compare_registered_product' expects 32 bits on the Function Argument, but Function Argument's VARREF 'numerator_power' generates 9 bits.
+                                                                : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_div.g_l[127].u_dl.u_div'
+  221 |         comparison = compare_registered_product(
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:19:21: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'RD' generates 32 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   19 |     input wire [(RD ? RD/2 : 1)*32-1:0] cos_t, sin_t,
+      |                     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:45:14: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'RD' generates 32 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   45 |     reg [(RD ? RD/2 : 1)*32-1:0] ct, st;
+      |              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:49:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   49 |     assign reserve_events = ENABLE ? NE : 0;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:49:27: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   49 |     assign reserve_events = ENABLE ? NE : 0;
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:50:32: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   50 |     assign gain_ready = ENABLE && KIND<3 && !busy && !fault && loaded<NV;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:50:70: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'loaded' generates 16 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   50 |     assign gain_ready = ENABLE && KIND<3 && !busy && !fault && loaded<NV;
+      |                                                                      ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:51:31: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   51 |     assign cmd_ready = ENABLE && !busy && !fault && reserve_grant &&
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:52:42: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'loaded' generates 16 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   52 |                        (KIND>=3 || loaded==NV);
+      |                                          ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:53:30: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   53 |     assign in_ready = ENABLE && busy && streaming && !fault && issued<NB;
+      |                              ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:53:70: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'issued' generates 16 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   53 |     assign in_ready = ENABLE && busy && streaming && !fault && issued<NB;
+      |                                                                      ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:62:31: Operator EQ expects 16 bits on the LHS, but LHS's VARREF 'gain_index' generates 8 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   62 |                 if (gain_index==loaded) loaded<=loaded+1;
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:75:35: Operator ADD expects 16 bits on the RHS, but RHS's VARREF 'events' generates 3 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   75 |                     landed<=landed+events;
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:76:31: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'landed' generates 16 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   76 |                     if (landed+events==NE && issued==NB && !fault && !engine_fault) begin
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:76:31: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'events' generates 3 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   76 |                     if (landed+events==NE && issued==NB && !fault && !engine_fault) begin
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:76:52: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'issued' generates 16 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   76 |                     if (landed+events==NE && issued==NB && !fault && !engine_fault) begin
+      |                                                    ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:73:51: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'landed' generates 16 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   73 |                 if (!busy || !sink_ready || landed+events>NE) fault<=1;
+      |                                                   ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv:73:51: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'events' generates 3 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused.u_engine'
+   73 |                 if (!busy || !sink_ready || landed+events>NE) fault<=1;
+      |                                                   ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv:226:86: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_red'
+  226 |     always @(*) for (h = 0; h <= LC; h = h + 1) hit[h] = tv[h] && (tt[h][TAG-2 -: 4] == h);
+      |                                                                                      ^~
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ot_gpu_bd_line.sv:41:23: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'k' generates 4 bits.
+                                                         : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_bd.u_line'
+   41 |                 if (k < LB) begin codes[k[2:0]] <= s_data; k <= k + 1'b1; end
+      |                       ^
+%Warning-WIDTHTRUNC: rtl/gpu/ot_gpu_sm.sv:51:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'INT8' generates 32 bits.
+                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.u_tc'
+   51 |     input  wire [SUB*LS*(INT8 ? 8 : 16)-1:0] w_data,
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/gpu/ot_gpu_sm.sv:129:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'INT8' generates 32 bits.
+                                                : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.u_tc'
+  129 |             iw[16*j +: 16] <= INT8 ? i8_bf16(w_data[8*j +: 8]) : w_data[WB*j +: 16];
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_bulk_copy.sv:57:29: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'q_cnt' generates 2 bits.
+                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.u_bc'
+   57 |     assign d_ready = (q_cnt < DQ);
+      |                             ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_bulk_copy.sv:66:42: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'used' generates 7 bits.
+                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.u_bc'
+   66 |     wire                slot_free = used < DEPTH;
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_bulk_copy.sv:67:53: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 6 bits.
+                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.u_bc'
+   67 |     assign req_v = act && slot_free && (outstanding < MAX_OUT);
+      |                                                     ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_bulk_copy.sv:124:51: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_wp' generates 1 bits.
+                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.u_bc'
+  124 |             if (d_valid && d_ready) q_wp <= (q_wp == DQ - 1) ? 0 : q_wp + 1'b1;
+      |                                                   ^~
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_bulk_copy.sv:129:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_rp' generates 1 bits.
+                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.u_bc'
+  129 |                 q_rp <= (q_rp == DQ - 1) ? 0 : q_rp + 1'b1;
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ot_gpu_simt_lane.sv:38:26: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 8 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_lane[127].u_lane'
+   38 |             e = a[30:23] - 127;
+      |                          ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ot_gpu_simt_lane.sv:56:30: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 8 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_lane[127].u_lane'
+   56 |                 e = a[30:23] - 127;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ot_gpu_simt_lane.sv:83:26: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 8 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_lane[127].u_lane'
+   83 |             e = a[30:23] - 127;
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/gpu_sys/ot_gpu_simt_lane.sv:128:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's FUNCREF 'f_cmpgt' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_lane[127].u_lane'
+  128 |             8'h13: z = f_cmpgt(x, y) ? x : y;
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/gpu_sys/ot_gpu_simt_lane.sv:129:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's FUNCREF 'f_cmpgt' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm.g_on.g_lane[127].u_lane'
+  129 |             8'h14: z = f_cmpgt(y, x) ? x : y;
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ot_gpu_reset_ctrl.sv:82:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'n' generates 4 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.u_rst.g_on.u_host'
+   82 |             if (n == HOLD) rst_n <= 1'b1;
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:17:17: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'RD' generates 32 bits.
+                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   17 |  input wire [(RD?RD/2:1)*32-1:0] cos_t,sin_t,
+      |                 ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:34:10: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'RD' generates 32 bits.
+                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   34 |  reg [(RD?RD/2:1)*32-1:0] ct,st;
+      |          ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:44:41: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'requested' generates 16 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   44 |  wire read_gain=state==GAIN && requested<NV && gain_ready;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:45:41: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'requested' generates 16 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   45 |  wire read_data=state==DATA && requested<NB && in_ready;
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:46:26: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   46 |  assign cmd_ready=ENABLE && !busy && !fault && source_ready && landing_reserved;
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:52:24: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'gb' generates 24 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   52 |    rd_addr[l*AW+:AW]=gb+requested*N+l; rd_re[l]=(requested*N+l<D);rd_src[l*2+:2]=1;
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:52:21: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   52 |    rd_addr[l*AW+:AW]=gb+requested*N+l; rd_re[l]=(requested*N+l<D);rd_src[l*2+:2]=1;
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:56:31: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'xb' generates 24 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   56 |     rd_addr[(k*N+l)*AW+:AW]=xb+k*D+requested*N+l;
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:56:28: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   56 |     rd_addr[(k*N+l)*AW+:AW]=xb+k*D+requested*N+l;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:61:25: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'xb' generates 24 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   61 |     rd_addr[l*AW+:AW]=xb+(l%4)*D+element;rd_re[l]=(element<D);
+      |                         ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:61:22: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   61 |     rd_addr[l*AW+:AW]=xb+(l%4)*D+element;rd_re[l]=(element<D);
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:63:30: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ub' generates 24 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   63 |      rd_addr[(N+l)*AW+:AW]=ub+requested*(N/4)+l;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:63:27: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   63 |      rd_addr[(N+l)*AW+:AW]=ub+requested*(N/4)+l;
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:67:25: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'xb' generates 24 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   67 |     rd_addr[l*AW+:AW]=xb+requested*N+l;rd_re[l]=(requested*N+l<D);
+      |                         ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:67:22: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   67 |     rd_addr[l*AW+:AW]=xb+requested*N+l;rd_re[l]=(requested*N+l<D);
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:69:30: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ub' generates 24 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   69 |      rd_addr[(N+l)*AW+:AW]=ub+requested*N+l;rd_re[N+l]=(requested*N+l<D);
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:69:27: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   69 |      rd_addr[(N+l)*AW+:AW]=ub+requested*N+l;rd_re[N+l]=(requested*N+l<D);
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:70:53: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ROUTED' generates 32 bits.
+                                                                       : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   70 |      rd_addr[(2*N+l)*AW+:AW]=wb;rd_re[2*N+l]=ROUTED && (requested*N+l<D);
+      |                                                     ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:87:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'requested' generates 16 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   87 |    if(state==GAIN && requested==NV && !reply_gain) state<=START;
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:89:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'requested' generates 16 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+   89 |    if(state==DATA && requested==NB && !reply_data) state<=DRAIN;
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:101:27: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'yb' generates 24 bits.
+                                                                         : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+  101 |     vm_waddr[wl*AW+:AW]=yb+(wl%4)*D+y_index*(N/4)+wl/4;
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:101:24: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+  101 |     vm_waddr[wl*AW+:AW]=yb+(wl%4)*D+y_index*(N/4)+wl/4;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:104:27: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'yb' generates 24 bits.
+                                                                         : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+  104 |     vm_waddr[wl*AW+:AW]=yb+(ro_valid?ro_index:y_index)*N+wl;
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:104:37: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'ro_index' generates 8 bits.
+                                                                         : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+  104 |     vm_waddr[wl*AW+:AW]=yb+(ro_valid?ro_index:y_index)*N+wl;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:104:37: Operator COND expects 32 bits on the Conditional False, but Conditional False's VARREF 'y_index' generates 8 bits.
+                                                                         : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+  104 |     vm_waddr[wl*AW+:AW]=yb+(ro_valid?ro_index:y_index)*N+wl;
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:104:24: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                        : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+  104 |     vm_waddr[wl*AW+:AW]=yb+(ro_valid?ro_index:y_index)*N+wl;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:105:48: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'ro_index' generates 8 bits.
+                                                                         : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+  105 |     vm_we[wl]=(y_valid||ro_valid) && ((ro_valid?ro_index:y_index)*N+wl<D) && !fault;
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:105:48: Operator COND expects 32 bits on the Conditional False, but Conditional False's VARREF 'y_index' generates 8 bits.
+                                                                         : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_fused'
+  105 |     vm_we[wl]=(y_valid||ro_valid) && ((ro_valid?ro_index:y_index)*N+wl<D) && !fault;
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:255:72: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  255 |             for (b = 0; b < 32; b = b + 1) if ((32'd1 << b) < x) log2c = b + 1;
+      |                                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:262:60: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  262 |             for (b = 0; b < 32; b = b + 1) if (x[b]) log2f = b;
+      |                                                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:269:65: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  269 |             for (b = CW - 1; b >= 0; b = b - 1) if (x[b]) tzero = b;
+      |                                                                 ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:284:28: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_EXP' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  284 |             SFU_EXP: sfu_d = D_EXP;
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:285:39: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SIG' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  285 |             SFU_SIGM, SFU_SILU: sfu_d = D_SIG;
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:286:30: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_RSQ' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  286 |             SFU_RSQRT: sfu_d = D_RSQ;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:287:29: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SQRT' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  287 |             SFU_SQRT: sfu_d = D_SQRT;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:288:31: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_SP' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  288 |             SFU_SPSQRT: sfu_d = D_SP;
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:289:30: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'D_EG' generates 32 bits.
+                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  289 |             SFU_EGATE: sfu_d = D_EG;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:331:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's VARREF 'q_nin' generates 16 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  331 |     wire [AW-1:0] ni_a = q_nin;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:332:32: Operator SHIFTR expects 24 bits on the LHS, but LHS's VARREF 'q_nin' generates 16 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  332 |     wire [AW-1:0] ni_h = q_nin >> 1;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:349:36: Operator COND expects 24 bits on the Conditional False, but Conditional False's VARREF 'q_nin' generates 16 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  349 |         s_ni <= (s1_cand && s1_ok) ? q_nout * q_nin : q_nin;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:350:36: Operator COND expects 32 or 24 bits on the Conditional False, but Conditional False's VARREF 'q_nout' generates 16 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  350 |         s_no <= (s1_cand && s1_ok) ? 1 : q_nout;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:362:71: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 's_ni' generates 24 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  362 |     wire [4:0] c_lsz = s_wnf ? c_tz : log2c((s_ni > (red_on ? 8 : 1)) ? s_ni : (red_on ? 8 : 1));
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:363:30: Operator GT expects 5 bits on the RHS, but RHS's VARREF 'c_lvw' generates 4 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  363 |     wire [3:0] c_ls = (c_lsz > c_lvw) ? c_lvw : c_lsz[3:0];
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:368:22: Operator FUNCREF 'log2c' expects 32 bits on the Function Argument, but Function Argument's VARREF 'c_nvs' generates 24 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  368 |     wire [4:0] c_L = log2c(c_nvs);
+      |                      ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:380:70: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'c_L' generates 5 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  380 |     wire c_bad = (red_on && scalar_c) || s_flatbad || (c_span && c_L > LV) || (c_gather && !pow2(c_gstr));
+      |                                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:399:73: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'c_ls' generates 4 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  399 |                     else c_terms[(s*LN + kk)*AW +: AW] = so_s[s] << (kk - c_ls);
+      |                                                                         ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:423:18: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'c_gstr' generates 24 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  423 |         p_gsh <= log2f(c_gstr); p_rsh <= log2f(q_rso);
+      |                  ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec.sv:423:42: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'q_rso' generates 24 bits.
+                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native'
+  423 |         p_gsh <= log2f(c_gstr); p_rsh <= log2f(q_rso);
+      |                                          ^~~~~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv:83:28: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pair_rank' generates 7 bits.
+                                                                                              : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_formatter_provider.enabled.u_formatter'
+   83 |  wire pair_bounds=pair_rank<N&&pair_word<NPER/8;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv:83:41: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pair_word' generates 6 bits.
+                                                                                              : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_formatter_provider.enabled.u_formatter'
+   83 |  wire pair_bounds=pair_rank<N&&pair_word<NPER/8;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:141:26: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 8 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  141 |             e = a[30:23] - 127;
+      |                          ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:235:14: Operator FUNCREF 'lane_addr' expects 32 bits on the Function Argument, but Function Argument's VARREF 'l_next' generates 8 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  235 |         la = lane_addr(l_base, l_stride, l_next);
+      |              ^~~~~~~~~
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:240:25: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'l_next' generates 8 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  240 |             lj = l_next + jj;
+      |                         ^
+%Warning-WIDTHTRUNC: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:240:16: Operator ASSIGN expects 9 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  240 |             lj = l_next + jj;
+      |                ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:241:18: Operator FUNCREF 'lane_addr' expects 32 bits on the Function Argument, but Function Argument's VARREF 'lj' generates 9 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  241 |             la = lane_addr(l_base, l_stride, lj);
+      |                  ^~~~~~~~~
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:242:32: Operator LT expects 9 bits on the RHS, but RHS's VARREF 'l_count' generates 8 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  242 |             if (run_open && lj < l_count && la[31:5] == run_sec) run_end = lj[LB:0];
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:248:25: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'l_next' generates 8 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  248 |             lj = l_next + jj;
+      |                         ^
+%Warning-WIDTHTRUNC: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:248:16: Operator ASSIGN expects 9 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  248 |             lj = l_next + jj;
+      |                ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:250:22: Operator FUNCREF 'lane_addr' expects 32 bits on the Function Argument, but Function Argument's VARREF 'lj' generates 9 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  250 |                 la = lane_addr(l_base, l_stride, lj);
+      |                      ^~~~~~~~~
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:251:20: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  251 |                 bi = la[4:0];
+      |                    ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:249:20: Operator LTE expects 9 bits on the RHS, but RHS's VARREF 'run_end' generates 8 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  249 |             if (lj <= run_end && lj < NL) begin
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:249:37: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'lj' generates 9 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  249 |             if (lj <= run_end && lj < NL) begin
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:260:66: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'l_out' generates 6 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  260 |     wire l_can_issue = (bst == B_LSU) && !l_issue_done && (l_out < MAXO);
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:478:38: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'tc_rrow' generates 10 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  478 |                 smem[(tc_sbase >> 2) + tc_rrow] <= tc_rdata;
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:504:65: Operator ADD expects 32 bits on the LHS, but LHS's ARRAYSEL generates 8 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  504 |                                 slj = l_first[lrsp_tag[LB-1:0]] + sj;
+      |                                                                 ^
+%Warning-WIDTHTRUNC: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:504:37: Operator ASSIGN expects 9 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  504 |                                 slj = l_first[lrsp_tag[LB-1:0]] + sj;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:506:43: Operator FUNCREF 'lane_addr' expects 32 bits on the Function Argument, but Function Argument's VARREF 'slj' generates 9 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  506 |                                     sbi = lane_addr(l_base, l_stride, slj) & 31;
+      |                                           ^~~~~~~~~
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:505:41: Operator LTE expects 9 bits on the RHS, but RHS's ARRAYSEL generates 8 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  505 |                                 if (slj <= l_last[lrsp_tag[LB-1:0]] && slj < NL) begin
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:505:76: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'slj' generates 9 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  505 |                                 if (slj <= l_last[lrsp_tag[LB-1:0]] && slj < NL) begin
+      |                                                                            ^
+%Warning-WIDTHTRUNC: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:552:102: Operator ASSIGNDLY expects 3 bits on the Assign RHS, but Assign RHS's VARREF 'NQ' generates 32 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].g_sm[1].u_sm'
+  552 |                     fq_a <= va; fq_b <= vb; fq_mul <= (op == O_FMUL); fq_d <= rd; fq_q <= 0; fq_left <= NQ;
+      |                                                                                                      ^~
+%Warning-WIDTHTRUNC: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv:61:19: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_cp'
+   61 | initial if(ENABLE && (PW!=20 || TW!=17 || CONTEXT_POSITIONS<1048576 || CONTEXT_POSITIONS>1048576))
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv:65:17: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_cp'
+   65 |  else if(ENABLE && db_v && db_rdy) begin job_q<=db_job;generation_q<=db_generation;end
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv:102:39: Operator GTE expects 32 bits on the LHS, but LHS's REPLICATE generates 21 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_cp'
+  102 |                     if ({1'b0,db_pos} >= CONTEXT_POSITIONS) begin
+      |                                       ^~
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv:117:55: Operator ASSIGNDLY expects 17 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_cp'
+  117 |                         cpl_status <= 4'd3; cpl_token <= 16'd0; st <= S_CPL;
+      |                                                       ^~
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv:121:91: Operator ASSIGNDLY expects 17 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_cp'
+  121 |                     if (|(sm_fault & cmd[44 +: NSM])) begin cpl_status <= 4'd1; cpl_token <= 16'd0; st <= S_CPL; end
+      |                                                                                           ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:137:49: Operator ADD expects 32 or 24 bits on the RHS, but RHS's VARREF 'scalar_index' generates 5 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  137 |   (scalar_index<16?program_words[0][F_BBASE+:24]+scalar_index:
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:138:49: Operator ADD expects 32 or 24 bits on the RHS, but RHS's VARREF 'scalar_index' generates 5 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  138 |                    program_words[3][F_BBASE+:24]+scalar_index-16):
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:172:34: Operator NEQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  172 |       program_words[p][F_NIN+:16]!=D || program_words[p][F_DST+:2]!=1 ||
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:232:20: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cursor' generates 13 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  232 |      else if(cursor==RN-1) begin cursor<=0;state<=WRITE_SELECT;end
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:230:30: Operator NEQ expects 16 bits on the RHS, but RHS's VARREF 'cursor' generates 13 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  230 |      if(head_bad || hr[63:48]!=cursor) bad<=1;
+      |                              ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:240:33: Bit extraction of array[9:0] requires 4 bit index, not 5 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  240 |       if(scalar_index[0]) scalar[scalar_index>>1]<=encode64({response_word,scalar_raw[(scalar_index>>1)*64+:32]});
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:240:100: Operator SHIFTR expects 32 or 7 bits on the LHS, but LHS's VARREF 'scalar_index' generates 5 bits.
+                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  240 |       if(scalar_index[0]) scalar[scalar_index>>1]<=encode64({response_word,scalar_raw[(scalar_index>>1)*64+:32]});
+      |                                                                                                    ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:241:18: Bit extraction of array[9:0] requires 4 bit index, not 5 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  241 |       else scalar[scalar_index>>1]<=encode64({scalar_raw[(scalar_index>>1)*64+32+:32],response_word});
+      |                  ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:241:71: Operator SHIFTR expects 32 or 7 bits on the LHS, but LHS's VARREF 'scalar_index' generates 5 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  241 |       else scalar[scalar_index>>1]<=encode64({scalar_raw[(scalar_index>>1)*64+32+:32],response_word});
+      |                                                                       ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:246:16: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cursor' generates 13 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  246 |       if(cursor==RN-1) begin cursor<=0;state<=WRITE_SELECT;end
+      |                ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:250:36: Bit extraction of array[2175:0] requires 12 bit index, not 13 bits.
+                                                                           : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  250 |     WRITE_SELECT:begin head<=writes[cursor];age<=0;state<=WRITE_DECODE;end
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:255:20: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cursor' generates 13 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  255 |      else if(cursor==WN-1) state<=FRAME_DONE;
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:266:16: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cursor' generates 13 bits.
+                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec'
+  266 |       if(cursor==WN-1) state<=FRAME_DONE;
+      |                ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_owner.sv:73:37: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                              : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_shared'
+   73 |  assign formatter_lease_valid=ENABLE&&borrow_granted&&retained&&!fault;
+      |                                     ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:18:32: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'FAST_OWNER_FRONTIER' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   18 |  initial if(FAST_OWNER_FRONTIER&&!FOUR_COMBINATIONAL_CUTS)$fatal(1,"fast frontier requires four cuts");
+      |                                ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:18:34: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'FOUR_COMBINATIONAL_CUTS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   18 |  initial if(FAST_OWNER_FRONTIER&&!FOUR_COMBINATIONAL_CUTS)$fatal(1,"fast frontier requires four cuts");
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:44:33: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'FAST_OWNER_FRONTIER' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   44 |   initial if(FAST_OWNER_FRONTIER&&!FOUR_COMBINATIONAL_CUTS)$fatal(1,"fast frontier requires exact four cuts");
+      |                                 ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:44:35: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'FOUR_COMBINATIONAL_CUTS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   44 |   initial if(FAST_OWNER_FRONTIER&&!FOUR_COMBINATIONAL_CUTS)$fatal(1,"fast frontier requires exact four cuts");
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:45:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'BALANCED_OWNER_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   45 |   initial if(!BALANCED_OWNER_BOUNDARY)$fatal(1,"four cuts require balanced registered boundary");
+      |              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:59:40: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'FOUR_COMBINATIONAL_CUTS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   59 |  wire phase_bad=FOUR_COMBINATIONAL_CUTS?!four_phase_valid:(phase_rails_bad||phase_shape_bad);
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:76:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   76 |  wire control_bad=REGISTERED_BOUNDARY?phase_bad:c[65];
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:78:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   78 |  wire [3:0] state=REGISTERED_BOUNDARY?boundary_state:(REGISTERED_STATUS?c[3:0]:{1'b0,c[2:0]});
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:78:72: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_STATUS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   78 |  wire [3:0] state=REGISTERED_BOUNDARY?boundary_state:(REGISTERED_STATUS?c[3:0]:{1'b0,c[2:0]});
+      |                                                                        ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:79:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   79 |  wire is_idle=REGISTERED_BOUNDARY?phase[IDLE]:(state==IDLE);
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:80:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   80 |  wire is_pending=REGISTERED_BOUNDARY?phase[PENDING]:(state==PENDING);
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:81:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   81 |  wire is_active=REGISTERED_BOUNDARY?phase[ACTIVE]:(state==ACTIVE);
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:82:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   82 |  wire is_release=REGISTERED_BOUNDARY?phase[RELEASE]:(state==RELEASE);
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:83:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   83 |  wire is_cleanup=REGISTERED_BOUNDARY?phase[CLEANUP]:(state==CLEANUP);
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:84:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   84 |  wire is_done=REGISTERED_BOUNDARY?phase[DONE]:(state==DONE);
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:85:39: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   85 |  wire is_predecode=REGISTERED_BOUNDARY?phase[PREDECODE]:(state==PREDECODE);
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:86:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   86 |  wire is_fail=REGISTERED_BOUNDARY?phase[FAIL]:(state==FAIL);
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:87:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   87 |  wire is_qualify=REGISTERED_BOUNDARY?phase[QUALIFY]:(state==QUALIFY);
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:91:32: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   91 |  initial if(REGISTERED_BOUNDARY&&!REGISTERED_STATUS)
+      |                                ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:91:34: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REGISTERED_STATUS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   91 |  initial if(REGISTERED_BOUNDARY&&!REGISTERED_STATUS)
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:93:36: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'BALANCED_OWNER_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   93 |  initial if(BALANCED_OWNER_BOUNDARY&&(!REGISTERED_BOUNDARY||GROUPED_OWNER_BOUNDARY))
+      |                                    ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:93:39: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   93 |  initial if(BALANCED_OWNER_BOUNDARY&&(!REGISTERED_BOUNDARY||GROUPED_OWNER_BOUNDARY))
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:93:59: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'GROUPED_OWNER_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   93 |  initial if(BALANCED_OWNER_BOUNDARY&&(!REGISTERED_BOUNDARY||GROUPED_OWNER_BOUNDARY))
+      |                                                           ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:95:35: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'GROUPED_OWNER_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   95 |  initial if(GROUPED_OWNER_BOUNDARY&&!REGISTERED_BOUNDARY)
+      |                                   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:95:37: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   95 |  initial if(GROUPED_OWNER_BOUNDARY&&!REGISTERED_BOUNDARY)
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:97:30: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REGISTERED_STATUS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   97 |  initial if(REGISTERED_STATUS&&!REGISTERED_OUTPUTS)
+      |                              ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:97:32: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REGISTERED_OUTPUTS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+   97 |  initial if(REGISTERED_STATUS&&!REGISTERED_OUTPUTS)
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:107:39: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_OUTPUTS' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  107 |  wire [127:0] frame=REGISTERED_OUTPUTS?decoded_header[191:64]:original_frame;
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:108:29: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_OUTPUTS' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  108 |  wire bad=REGISTERED_OUTPUTS?ecc_fault_q:raw_bad;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:111:50: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_STATUS' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  111 |    .clk(clk),.por_n(por_n),.i_v(REGISTERED_STATUS?decoder_start_q:(is_predecode&&!fault)),.i_r(decode_r),
+      |                                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:128:99: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_OUTPUTS' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  128 |  assign held_token=frame[52:36];assign held_pos=frame[72:53];assign selected_pc=REGISTERED_OUTPUTS?decoded_header[31:0]:p[31:0];
+      |                                                                                                   ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:129:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'FOUR_COMBINATIONAL_CUTS' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  129 |  wire entry=FOUR_COMBINATIONAL_CUTS?four_entry:(launch_pc==32'h80000004||launch_pc==32'hc0000004);
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:133:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_OUTPUTS' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  133 |  wire source_frame=REGISTERED_OUTPUTS?(is_predecode?1'b1:checked_frame_match):
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:137:39: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REGISTERED_OUTPUTS' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  137 |  wire checked_fault=REGISTERED_OUTPUTS&&checked_phase&&(!checked_valid_q||!checked_frame_match);
+      |                                       ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:140:45: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'BALANCED_OWNER_BOUNDARY' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  140 |  wire release_accept=BALANCED_OWNER_BOUNDARY?balanced_release_accept:(release_v&&release_r);
+      |                                             ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:156:64: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'FAST_OWNER_FRONTIER' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  156 |  wire live_veto=!is_idle&&checked_valid_q&&(FAST_OWNER_FRONTIER?!(&frontier_equal64):(!checked_frame_match||!checked_shape));
+      |                                                                ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:167:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  167 |  wire permit_ok=REGISTERED_BOUNDARY?(boundary_ok&&current_owner_ok):!fault;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:168:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  168 |  wire idle_ok=REGISTERED_BOUNDARY?(boundary_ok&&(!checked_valid_q||is_idle||current_owner_ok)):!fault;
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:274:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  274 |   if(REGISTERED_BOUNDARY&&control_bad&&checked_status[6])next_status[6]=1;
+      |                         ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:329:3: Logical operator IF expects 1 bit on the If, but If's VARREF 'BALANCED_OWNER_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  329 |   if(BALANCED_OWNER_BOUNDARY)begin
+      |   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:382:4: Logical operator IF expects 1 bit on the If, but If's VARREF 'FOUR_COMBINATIONAL_CUTS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  382 |    if(FOUR_COMBINATIONAL_CUTS)begin
+      |    ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:380:68: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  380 |   end else if(is_idle&&launch_v==2'b01&&entry&&!recurrence_fault&&(!REGISTERED_BOUNDARY||!control_bad))begin
+      |                                                                    ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:400:64: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REGISTERED_OUTPUTS' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  400 |      control<=ot_gpu_w6_secded_pkg::encode64(REGISTERED_OUTPUTS?64'(PREDECODE):64'(PENDING));
+      |                                                                ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:404:5: Logical operator IF expects 1 bit on the If, but If's VARREF 'REGISTERED_STATUS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  404 |     if(REGISTERED_STATUS)begin
+      |     ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:394:6: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'REGISTERED_STATUS' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  394 |     (!REGISTERED_STATUS&&!is_idle&&!source_frame)||
+      |      ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv:392:8: Logical operator IF expects 1 bit on the If, but If's VARREF 'REGISTERED_BOUNDARY' generates 32 bits.
+                                                                                            : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_cp'
+  392 |   else if(REGISTERED_BOUNDARY)control<=ot_gpu_w6_secded_pkg::encode64(0);
+      |        ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv:203:42: Operator LT expects 12 bits on the RHS, but RHS's VARREF 'na' generates 2 bits.
+                                                                                                  : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_w2_sink'
+  203 |  wire result_shape=(belongs_a&&result_row<na)||(belongs_b&&result_row<nb);
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv:203:70: Operator LT expects 12 bits on the RHS, but RHS's VARREF 'nb' generates 2 bits.
+                                                                                                  : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_w2_sink'
+  203 |  wire result_shape=(belongs_a&&result_row<na)||(belongs_b&&result_row<nb);
+      |                                                                      ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:82:28: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'COMBINED_ENABLE' generates 32 bits.
+                                                                                              : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+   82 | initial if(COMBINED_ENABLE && (TW!=17 || PW!=20 || NSM!=2 || IMW!=14 || NS!=2 || NPC!=2 || USE_W2!=0))
+      |                            ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:84:28: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'COMBINED_ENABLE' generates 32 bits.
+                                                                                              : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+   84 | initial if(COMBINED_ENABLE && W2_SECTOR_ENABLE && (!W2_RESULT_ENABLE || NS!=2 || MEM_WORDS!=2097152))
+      |                            ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:84:28: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'W2_SECTOR_ENABLE' generates 32 bits.
+                                                                                              : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+   84 | initial if(COMBINED_ENABLE && W2_SECTOR_ENABLE && (!W2_RESULT_ENABLE || NS!=2 || MEM_WORDS!=2097152))
+      |                            ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:84:52: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'W2_RESULT_ENABLE' generates 32 bits.
+                                                                                              : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+   84 | initial if(COMBINED_ENABLE && W2_SECTOR_ENABLE && (!W2_RESULT_ENABLE || NS!=2 || MEM_WORDS!=2097152))
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:217:47: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'W2_SECTOR_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  217 |         wire w2_route_drained=W2_SECTOR_ENABLE?w2_sector_drained[d]:(!W2_RESULT_ENABLE||w2_assembly_drained[d]);
+      |                                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:217:70: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'W2_RESULT_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  217 |         wire w2_route_drained=W2_SECTOR_ENABLE?w2_sector_drained[d]:(!W2_RESULT_ENABLE||w2_assembly_drained[d]);
+      |                                                                      ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:218:43: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'W2_SECTOR_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  218 |         wire w2_route_quiet=w2_quiet[d]&&(!W2_SECTOR_ENABLE||w2_sector_drained[d]);
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:219:45: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'W2_SECTOR_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  219 |         wire w2_route_req_v=W2_SECTOR_ENABLE?w2_adapter_req_v:w2_req_v[d];
+      |                                             ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:220:51: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'W2_SECTOR_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  220 |         wire [336:0] w2_route_req=W2_SECTOR_ENABLE?w2_adapter_req:w2_req[d*337+:337];
+      |                                                   ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:221:45: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'W2_SECTOR_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  221 |         wire w2_route_rsp_r=W2_SECTOR_ENABLE?w2_adapter_rsp_r:w2_rsp_r[d];
+      |                                             ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:246:44: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'W2_RESULT_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  246 |         wire w2_sink_route=W2_RESULT_ENABLE&&w2_sink_req_v&&w2_route_drained;
+      |                                            ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:249:47: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'W2_SECTOR_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  249 |         wire w2_native_permit=W2_SECTOR_ENABLE||!W2_RESULT_ENABLE||(w2_source_permit[d]&&!w2_native_done[d]);
+      |                                               ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:249:49: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'W2_RESULT_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  249 |         wire w2_native_permit=W2_SECTOR_ENABLE||!W2_RESULT_ENABLE||(w2_source_permit[d]&&!w2_native_done[d]);
+      |                                                 ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:257:28: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'W2_SECTOR_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  257 |         assign w2_req_r[d]=!W2_SECTOR_ENABLE&&w2_adapter_req_r;assign w2_sink_req_r=p_req_rdy[2]&&w2_sink_route;assign a_req_rdy[0]=p_req_rdy[0];
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:261:44: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'W2_RESULT_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  261 |         wire sink_response=W2_RESULT_ENABLE&&w2_route_drained&&w2_sink_retained;
+      |                                            ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:264:28: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'W2_SECTOR_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  264 |         assign w2_rsp_v[d]=!W2_SECTOR_ENABLE&&w2_adapter_rsp_v;assign w2_rsp[d*273+:273]=w2_provider_rsp;
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:274:69: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'W2_RESULT_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  274 |         assign w2_release_r[d]=peer_releases[1]&&w2_route_drained&&(!W2_RESULT_ENABLE||w2_sink_retire_r);
+      |                                                                     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:336:49: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'FORMATTER_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  336 |         wire formatter_response=FORMATTER_ENABLE&&shared_gather_rsp[3:1]==3'd3;
+      |                                                 ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:337:49: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NORMAL_GATHER_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  337 |         wire store_response=NORMAL_GATHER_ENABLE&&(shared_gather_rsp[3:1]==3'd1||shared_gather_rsp[3:1]==3'd2);
+      |                                                 ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:408:63: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'W2_RESULT_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  408 |          .peer_release_v({w2_release_v[d]&&w2_route_drained&&(!W2_RESULT_ENABLE||w2_sink_retire_r),su_release_v}),.peer_release_r(peer_releases),.peer_lease_granted(peer_grants),
+      |                                                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:421:31: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SU_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  421 |          .loader_we(SU_ENABLE && im_we[d*NSM] && im_addr[IMW-1]),.loader_addr(im_addr),.loader_data(im_data),
+      |                               ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:450:56: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SU_ENABLE' generates 32 bits.
+                                                                                               : ... note: In instance 'ot_ds_hbm_cluster20_integrated'
+  450 |                 .im_we(im_we[d*NSM + s] && !(SU_ENABLE && s==0 && im_addr[IMW-1])), .im_addr(im_addr), .im_data(im_data),
+      |                                                        ^~
+%Warning-WIDTHCONCAT: rtl/hdc/ot_hdc_delay.sv:32:47: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                   : ... note: In instance 'ot_ds_hbm_cluster20_integrated..g_on.g_die[1].u_su_exec.g_on.u_native.u_rwe'
+   32 |                     if (!rst_n) line <= {(W*D){1'b0}};
+      |                                               ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-LATCH: rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv:49:2: Latch inferred for signal 'g_on.u_fused.element' (not all control paths of combinational always assign a value)
+                                                                 : ... Suggest use of always_latch for intentional latches
+   49 |  always @* begin
+      |  ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Error: Verilator threw signal 9. Suggest trying --debug --gdbbt
+%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --lint-only --timing -Wno-fatal --top-module ot_ds_hbm_cluster20_integrated --Mdir /srv/opentallas-scratch2/codex/hbm-enabled-parent-compile-20261006/r7/obj -GENABLE=1 -GCOMBINED_ENABLE=1 -GW2_RESULT_ENABLE=1 -GW2_SECTOR_ENABLE=1 -GSU_ENABLE=1 -GSU_PROVIDER_ADAPTER=1 -GSU_REGISTERED_OUTPUTS=1 -GSU_REGISTERED_STATUS=1 -GSU_REGISTERED_BOUNDARY=1 -GSU_BALANCED_OWNER_BOUNDARY=1 -GSU_FOUR_COMBINATIONAL_CUTS=1 -GSU_FAST_OWNER_FRONTIER=1 -GND=2 -GNSM=2 -GNS=2 -GNPC=2 -GMEM_WORDS=2097152 -GVM_AW=21 -GFORMATTER_ENABLE=1 -GNORMAL_GATHER_ENABLE=1 -GLOCAL_CP_RESET_ENABLE=1 -GTW=17 -GPW=20 -GIMW=14 -f files.f

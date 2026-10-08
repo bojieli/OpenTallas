@@ -1,0 +1,50 @@
+{
+  "verdict": "RUNNING_COND_BODY_DIAGNOSTIC",
+  "source": "a4804e8bab72107539338979d5d63457915b1dd9",
+  "provider_source": "67c8c137f+c11237668 byteidenticalcompiledc2",
+  "provider_functional_gate": "397e12e41 PASS10 reused not replayed",
+  "parameters": {
+    "ENABLE": 1,
+    "STRUCTURAL": 1,
+    "DISTRIBUTED_CMD": 1
+  },
+  "host": "ot-epyc1tb",
+  "root": "/srv/opentallas-scratch/codex/zeno-wfc-distributed-body-20261006/u55-r1",
+  "supervisor": 78098,
+  "container": "b4e1478235378e2013947220dff5cfc251afe068b98621dee095eac3426f36bd",
+  "verified_Yosys": 79446,
+  "container_started_utc": "2026-10-06T09:51:02.483022047Z",
+  "guard": "unchanged admit.sh64; NUM_CORES16 density0.55 freshpre/postfit",
+  "fresh_load_pre_post": [
+    31.979,
+    31.34
+  ],
+  "fresh_idle_CPUs_pre_post": [
+    102.466,
+    103.176
+  ],
+  "macro_count_expected": 306,
+  "provider_mapped_independent_FF_required": 2928,
+  "macro_address_pin_load_limit": 8,
+  "actual_FF_and_load_measurement": null,
+  "actual_added_latency_slow_edges": {
+    "read": 2,
+    "masked_write": 6,
+    "max_bundle": 34,
+    "cold": 1024
+  },
+  "actual_fixture_five_writer_fast_edges": [
+    84,
+    129
+  ],
+  "macro_input_repair": "Only306 fixed masters physicalinput DNT cleared; q/q_check FF attributes stayunchanged; source macros/ports/geometry unchanged",
+  "setup_corner": "SS60/WC",
+  "hold_corner": "FF25/BC",
+  "routed_signoff": null,
+  "final_DRC": null,
+  "external_clock_source_and_fault_reset_engine_IO_qualified": false,
+  "safe_reset_claim": false,
+  "headline_allowed": false,
+  "previous_R7": "terminal2/OOMfalse09:37:39 RSZ3006 bookCE immutableinput; collection/source/failed3_3ODB/PDN retained; no CTS/signoff",
+  "golden_or_provider_replayed": false
+}

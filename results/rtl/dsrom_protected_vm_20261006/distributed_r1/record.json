@@ -1,0 +1,13 @@
+{
+  "source": "223b57f84",
+  "verdict": "FAIL_INIT_READY_DURING_DISTRIBUTED_PHASES",
+  "terminal_exit": 4,
+  "build_exit": 0,
+  "actual_tool": "Verilator5.032",
+  "actual_root": "/srv/opentallas-scratch/codex/ds-protected-vm-20261006/gate_distributed_r1",
+  "cause": "initializing only asserted stateINIT, deasserted DIST_LOCAL/DIST_EXEC before actual1536edge coldclear ended; frontend prematurely accepted requests",
+  "source_fix": "assert initializing through distributed INIT command phases, retain all512 actualrowwrites",
+  "old_passes_not_composed_due_changed_readiness": true,
+  "whole_gate_required": true,
+  "physical_qualified": false
+}

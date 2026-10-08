@@ -1,0 +1,39 @@
+{
+  "scope": "component single-control-fault containment; independent physical banks not qualified",
+  "runs": [
+    {
+      "case": "pending",
+      "returncode": 0,
+      "output": "PASS descriptor injected pending; consumption and ACK suppressed"
+    },
+    {
+      "case": "pending_complement",
+      "returncode": 0,
+      "output": "PASS descriptor injected pending_complement; consumption and ACK suppressed"
+    },
+    {
+      "case": "queue_a_count",
+      "returncode": 0,
+      "output": "PASS descriptor injected queue_a_count; consumption and ACK suppressed"
+    },
+    {
+      "case": "queue_b_count",
+      "returncode": 0,
+      "output": "PASS descriptor injected queue_b_count; consumption and ACK suppressed"
+    },
+    {
+      "case": "checker_bypass",
+      "returncode": 1,
+      "output": "FATAL: /tmp/sm-desc-fault-p1sxu46i/tb.sv:43: descriptor fault escapes: checker_bypass\n       Time: 161000000000000 Scope: tb_hbm_sm_descriptor_bridge"
+    }
+  ],
+  "sources": {
+    "rtl/hbm_accel/control_20261007/descriptor/ot_hbm_sm_descriptor_bridge.sv": "75849d67b78b758c49a99473d317994cba0888d082122546733aef9480701ec1",
+    "rtl/hbm_accel/control_20261007/descriptor/tb_hbm_sm_descriptor_bridge.sv": "eaaa8184d8abc2cee96c90f3d37266d3550f2c194c5b258a765f2399c032777d",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "tools/hbm_sm_descriptor_fault_gate.py": "75a2e309212abe70df053b014a9ea1c16a870047e32e67dc1a179ca091e3b7e0"
+  },
+  "passed": true,
+  "selected": false
+}

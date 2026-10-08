@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.closure_verdict.v1",
+ "block": "ot_dsrom_su_swiglu_lane",
+ "variant": "ESUM+IREG (RTL 0c9c4c32a, source commit 05d995e9b, branch claude/s81-rerun-20261006)",
+ "route": "ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/s81-swiglu-esum-05d995e9b/routes/s81_swiglu_esum_05d995e9b (closure-loop job, budget sheet IO, calibrated insertion SS 430 / FF 255-281)",
+ "verdict": "CLOSED",
+ "signoff_period_ps": 833.333,
+ "SS_setup_ps": 61.32,
+ "FF_hold_ps": 22.84,
+ "route_DRC": 0,
+ "superseded_verdict": "loop NEEDS_RTL SS +71.16 / FF -147.68 was a constraint artefact: the job's budget_signoff.sdc came from make_block_sdc.py at 05d995e9b, which put set_clock_latency 430 on core_clk (made sign-off ideal-clock: FF capture at the SS insertion 430 vs the FF IO launch at 281). Re-signed the SAME routed database with the fixed generator (main ce52a512a: latency on vclk only + set_propagated_clock core_clk) from the same calibrated sheet (cl/budget_sheet.json); budget_ff.sdc unchanged. No re-route, no ECO.",
+ "cycles_added": 6,
+ "cycles_note": "the +6 cycles (ESUM exp poly adds) were priced by the S81 rerun agent at job creation; this re-sign adds 0",
+ "bench": "tools/dsrom_su_swiglu.py run --fp rtl --w 64 --ireg --esum 9/9 exact; negative LP=LA mutant 3350 a_errors (EPYC2 swiglu_esum/)",
+ "decided_by": "Claude takeover-ds 2026-10-07"
+}

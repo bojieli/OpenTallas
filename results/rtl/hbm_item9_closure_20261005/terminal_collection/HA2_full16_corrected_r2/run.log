@@ -1,0 +1,5 @@
+PHASE PASS pf=64 results=4 first_issue=10 first_result=33 last_result=39 first_latency_cycles=23 period_ps=833.333334
+PHASE PASS pf=384 results=24 first_issue=62 first_result=85 last_result=131 first_latency_cycles=23 period_ps=833.333334
+DESTINATION PASS no slot write
+PASS fullshape LANES16 PF384 adapter 28 packed flits exact; runtime rearm and header validation
+results/rtl/hbm_item9_closure_20261005/tb_item9_ha2_fullshape.sv:83: $finish called at 127500102 (1fs)

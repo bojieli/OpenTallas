@@ -1,0 +1,4 @@
+fault case k_mismatch: FAULT bit 13    seen
+fault case orphan_beat: FAULT bit 11    seen
+fault case qslot_collision: FAULT bit 12    seen
+RESULT PASS segments 32 out_beats 684 replays 8 errors 0 tail_minus_ref max 269 mean 114 ref_holds 20

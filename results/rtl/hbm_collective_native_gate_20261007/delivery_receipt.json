@@ -1,0 +1,42 @@
+{
+  "status": "READY_FOR_FLEET_ADMISSION_ONLY",
+  "prepared_gate": "prepare_20261007_b/verdict.json",
+  "tool_version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "tool_driver_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+  "lint": {
+    "exit": 0,
+    "wall_seconds": 258.822,
+    "allocated_MB": 5781.91,
+    "generated_inventory_report": {
+      "modules": 65,
+      "cpp_files": 624,
+      "cpp_MB": 430.076
+    },
+    "warnings": {
+      "PINMISSING": 1,
+      "UNSIGNED": 1,
+      "LATCH": 4
+    },
+    "warning_scope": "PINMISSING is intentionally unused endpoint_quiet_core API; UNSIGNED is port3 no-partials branch; four LATCH warnings are existing native loop-local variables. All retained in lint.log."
+  },
+  "new_paths": [
+    "rtl/hbm_accel/collective_native_gate_20261007/tb_native_peer_session.sv",
+    "rtl/hbm_accel/collective_native_gate_20261007/tb_hbm_collective_native_composed.sv",
+    "tools/hbm_collective_native_composed_gate.py",
+    "results/rtl/hbm_collective_native_gate_20261007/"
+  ],
+  "build_not_started": true,
+  "simulation_not_started": true,
+  "qualification": "Neither functional PASS nor performance claimed. Golden/ordering/credit/context modes are prepared but unrun.",
+  "fleet_steps": [
+    "Create pinned clean worktree at integrated source commit and verify source_pins.json; include prepared endpoint_mutation.sv with matching mutation_sha256.txt.",
+    "Reserve CPU/RAM/disk against measured headroom and624-file430.076MB generated C++ inventory; no guessed process limits or walltime deadline.",
+    "Remap absolute repository/tool/output paths in build_command_template.json and fill ADMITTED_BUILD_JOBS from admission. Build once.",
+    "Run all five run_modes.json cases on resulting Vtb_hbm_collective_native_composed, preserving stdout/exit for each. Baseline needs exact PASS marker; each negative needs nonzero exit AND its specified marker.",
+    "Record absolute METRIC_NATIVE_CALENDAR own24/full1536/rearm cycles. No delta versus529/531 unmatched historical traffic."
+  ],
+  "calendar": "traffic_contract.json",
+  "model_before_bench": "model_before_bench.json",
+  "scope": "One actual native endpoint, external bounded eight-port peer fixture.1512 external result payloads are transport fixtures; only own24 claim unchanged arithmetic reference. PHY reset/quarantine acknowledgment and14cycle peer flight remain fixtures, not extracted physical evidence.",
+  "preservation": "Native/session/credit RTL left unchanged. Prior lint preparation retained, with snapshots of the only subsequently changed benchmark/tool files."
+}

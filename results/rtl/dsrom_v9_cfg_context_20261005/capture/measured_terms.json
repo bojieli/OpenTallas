@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.dsrom.cfg.loaded_capture.v1",
+  "source_model": "results/uarch/dsrom_v9_cfg_context_20261005/model.json",
+  "source_model_sha256": "e8e71ff7fdbf43dc4773326af1319fdb3ff2cb6577c74c6c805a08665f71066d",
+  "derived_netlist_sha256": "df9cebac072636be86e300794e506c21ced768e3d083345dff778cc07ab2577a",
+  "clock_period_ps": 833.3333333333334,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "clock_insertion": "ideal retained pre-CTS deck, not measured insertion",
+  "clock_pin_slew_ps": 0,
+  "clock_pin_slew_measured": false,
+  "signal_wire_delays": "zero without extracted parasitics; unqualified",
+  "external_arrivals": "existing conditional 360/727ps cut retained; queried paths start at internal actual macro",
+  "reported_capture_paths": {
+    "SS": {
+      "min": {
+        "reported_paths": 48,
+        "unique_endpoints": 48,
+        "slack_ps": 662.53,
+        "file": "results/rtl/dsrom_v9_cfg_context_20261005/capture/capture_probe/SS_cfg_capture_min.rpt",
+        "sha256": "3dd3d3757ea6f52d97108dc7dd933e6d58af9da8814b4ec677c89a34f2a77ce5"
+      },
+      "max": {
+        "reported_paths": 48,
+        "unique_endpoints": 48,
+        "slack_ps": 23.96,
+        "file": "results/rtl/dsrom_v9_cfg_context_20261005/capture/capture_probe/SS_cfg_capture_max.rpt",
+        "sha256": "97ddfdb2c916dc27aac76e91da7067987db70ea6389915b71dfdd79650706b8a"
+      }
+    },
+    "FF": {
+      "min": {
+        "reported_paths": 48,
+        "unique_endpoints": 48,
+        "slack_ps": 398.0,
+        "file": "results/rtl/dsrom_v9_cfg_context_20261005/capture/capture_probe/FF_cfg_capture_min.rpt",
+        "sha256": "1ff734052faebdd68504f09e90934f25f117f4ec8d10a8a58537bf88cce65c62"
+      },
+      "max": {
+        "reported_paths": 48,
+        "unique_endpoints": 48,
+        "slack_ps": 316.97,
+        "file": "results/rtl/dsrom_v9_cfg_context_20261005/capture/capture_probe/FF_cfg_capture_max.rpt",
+        "sha256": "fae6916a67d56150fed855438516b8c94f6381a1e083df0e199f891e872db63c"
+      }
+    }
+  },
+  "SS_worst": {
+    "startpoint": "g_hard_cfg.u_cfg",
+    "capture": "u_ld.c_d[3]$_DFFE_PP_",
+    "macro_clkQ_ps": 665.94,
+    "capture_logic_ps": 54.6,
+    "data_arrival_ps": 720.54,
+    "capture_setup_ps": 28.83,
+    "remaining_before_wire_and_relative_skew_ps": 23.96
+  },
+  "FF_worst_hold": {
+    "capture": "u_ld.c_d[0]$_DFFE_PP_",
+    "macro_clkQ_ps": 414.25,
+    "capture_logic_ps": 17.41,
+    "data_arrival_ps": 431.66,
+    "capture_hold_ps": 8.67,
+    "remaining_before_relative_skew_ps": 398.0
+  },
+  "new_pipeline_stages": 0,
+  "enclosing_context_SSFF_closed": false,
+  "missing_input_clocks": true,
+  "route_or_synthesis_repeated": false,
+  "remote_root": "ot-epyc2:/srv/opentallas-scratch2/codex/fspine-v9-cfg-provider-20261005/capture_probe"
+}

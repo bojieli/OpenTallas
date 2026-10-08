@@ -1,0 +1,111 @@
+Qwen DIE-TOP takeover — observed 2026-10-06 22:22 PT / 2026-10-07 05:22 UTC
+
+Scope and disposition
+Owner's current task explicitly permits DIE-TOP under the latest 21:45 exception;
+elements remain frozen. Read central AGENTS.md, central plan/history, Qwen die
+handover, r20 GRT record, r21 source and relay cost, and Claude's qwen-rom-is-closed
+and saturate-the-machine-by-default owner memories. The memory records the earlier
+20:50 die-top exception; the supplied 21:45 instruction is the latest authority.
+No element RTL edits, physical-obstruction changes, timing relaxation, remote
+mutation, job launch, subagent, merge, or push performed. Existing live work wins:
+record evidence and next terminal, as requested, rather than poll or duplicate it.
+
+Branch/worktree for parent integration
+codex/qwen-dietop-takeover-20261006
+/home/ubuntu/wt-codex-qwen-dietop-takeover
+Based on central main cf99d667d6ae486d4b4accd57046e8c6efa970b6.
+Evidence-only commit; parent can cherry-pick independently of the die source branch.
+Read other worktree files directly; all git operations were in central or own tree.
+
+Actual remote state
+Host ot-epyc3, root /srv/opentallas-scratch/claude/qwen-die-r20.
+- dietop_m4: historical r20c flat full-die GRT, NOT currently running in observed
+  process inventory. t9p6_i0 ended at overflow 106671, including M8 95084. The i30
+  variants and DRT probe were owner-paused. No converged GRT or DRT PASS.
+- Later case: cases/r21_pdn, live container qfd_r21_pdn_run,
+  container ID 2ba9db34aab5915668f9f4d7629a5e306ced518f46e860e43164920c9616965f.
+  Started 05:09:05 UTC; OpenROAD PID 3680263, 16 threads, approximately 8.5 GiB RSS.
+  Log advanced from corridor 14 to corridor 22 during the read-only inspection.
+  This is macro placement in run.tcl, not GRT or DRT. Preserve it.
+- run.log.exit=125, run_pdn.log.exit=1, and case.done='done' are NOT a successful
+  terminal for that live process. A second launch at 05:18 collided with the
+  existing container name, then attempted PDN without floorplan.odb. Captured
+  conflict and ORD-0007 logs are immutable evidence in remote_snapshot.json.
+- Current on-disk inputs were rewritten at about 05:18, after the live process
+  started. The read-only manifest says 17729 instances / 10342377 nets; die.v
+  contains 14199 qfd_rly_ instances. These are hashes/counts of files at observation,
+  NOT proof of the exact inputs already consumed by the 05:09 process. Do not
+  attach its eventual ODB to a clean source pin without resolving this mismatch.
+
+Source and readiness gaps
+The die source branch observed in central history is
+claude/qwen-die-rebuild-20261005 @ b80f96a51. That commit adds relay geometry and
+slab M8 pin placement; 1d95a62ef is the preceding slab pin-placement recipe.
+Both are ahead of main. The other worktree's generator already differs from
+b80f96a51; source_snapshot.json and observed_generator_delta.patch preserve the
+read-only observation without adopting it. Local relay_token_cost.json is also a
+working record, copied as observed_relay_token_cost.json; it states +38178 AR
+cycles/token, 14395 relays and 6367127 flop bits. It is not a measured RTL gain,
+not a source-consistent inventory of the live run, and must not silently change
+the headline rate. The branch commit's inventory differs as well.
+
+Actual relay netlist remains a required gate: current remote die.v only defines
+qfd_die and instantiates qfd_rly_* masters. The generator creates abstract frames
+with M1-M3 obstruction and references the ot_qwen_die_station TAP=0 family.
+No qfd_rly_* implementation was found in the inspected rtl/ or physical/ trees.
+Do not interpret connectivity through LEF blackboxes as mapped relay flops or
+closed relay physicals. Bind actual station implementations, clock/reset semantics,
+netlist and matching LEF/lib views before claiming implementation readiness.
+
+East seam remains a required gate: r20's slab M6 strip funnels east block words
+against tile M1-M7 obstruction into one gcell column. r21 moves slab block-word
+pins to M8. That generated relocation needs a matching real slab pin-access view;
+a pin-placement recipe alone does not prove it. CORRECTION from owner review:
+the 21:30 CLAUDE_OVERNIGHT_LOG decision explicitly permits pin-plan re-routing of
+affected blocks with the SAME RTL despite the element freeze. Use that exception
+to produce matching real views when necessary; no broad element RTL redesign or
+unmeasured obstruction removal is authorized. The named overnight log was not
+present in the inspected checkouts; this correction records the user's explicit
+quotation/authorization, not an independently located copy of that log.
+
+Next terminal and continuation
+1. On the next work turn, inspect the actual qfd_r21_pdn_run process/container
+   terminal and cases/r21_pdn/run.log. Do not rely on the stale case.done/exit files.
+   Require OT_LEGAL overlaps=0 outside=0, OT_ASSERT PASS, successful pin access,
+   floorplan.odb and a real successful process exit. Preserve every failure.
+   Reconcile the in-flight input rewrite and source inventory before promoting
+   an output. A new run, if required after this terminal, needs a fresh immutable
+   directory and pinned clean source; do not restart the progressing job.
+2. Only after that terminal and source reconciliation, run the existing
+   run_pdn.tcl against the accepted floorplan.odb in a fresh result directory.
+   The prematurely failed PDN launch is not evidence of a physical PDN failure.
+3. Resolve actual relay station netlist/views and east-seam frozen-view binding;
+   compose exact relay latency in the unified model. Keep SS/FF, 60/25 ps
+   uncertainties and the established clock domains unchanged.
+4. Then flat k=1 full-die GRT, using the existing dietop_m4/t9p6 recipe (9.6 um
+   tiles, M4-M9 signals, existing obstruction and region adjustments). Analyse
+   grt_congestion.rpt with tools/qwen_die_grt_congestion.py and the MATCHING geometry.
+   Do not reuse r20c geometry for a relay-added r21 die.
+5. DRT only after accepted actual views, physical/source gates and converged GRT;
+   use dietop_m4/drt_probe/drt.tcl as the existing recipe reference, not as evidence
+   of a completed DRT or a measured DRT peak.
+
+Admission for any later launch
+Latest rule: MemAvailable >= measured job peak + max(10% of HOST TOTAL memory, 32 GiB), with
+concurrent/ramping demand accounted for by the shared host admission guard.
+Snapshot: 953465454592 bytes available (~888 GiB), ~2.5 TiB disk free. That is an
+observation, not a reservation. Old r20 GRT peaks 40.4/74.9 GB are measurements of
+r20, not a validated peak for the larger r21 or DRT. Never use the old 600-900 GB
+DRT suggestion as measured demand. The installed admission core still has a
+100 GiB reserve and 1.5x CPU gate; it differs from the latest policy. Do not bypass
+its shared lock, impose guessed memory caps, or change/restart the live container
+(which already has the old 300g cap). Reconcile policy at the next actual launch.
+
+Evidence and validation
+remote_snapshot.json captures image identity, live process, current input hashes,
+file inventory, run/log markers, resource snapshot, admission scripts and log tail.
+source_snapshot.json pins read-only local observations; historical r20 and working
+r21 cost records are copied separately and left untouched at source.
+JSON parsing, snapshot consistency and reconstruction of the generator patch from
+its committed base are the relevant checks. No RTL/P&R tests or job sweep were
+launched for this evidence-only change. Full die routing remains unfinished.

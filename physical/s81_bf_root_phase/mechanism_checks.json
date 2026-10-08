@@ -1,0 +1,25 @@
+{
+  "scope": "minimum clock/enable mechanism only; not full BF arithmetic or physical adoption",
+  "positive": {
+    "checks": 4096,
+    "pass": true
+  },
+  "negative_controls": {
+    "wrong_phase_checker": "expected fatal",
+    "omitted_clock_inversion": "expected fatal at sample 3"
+  },
+  "full_shape_elaboration": {
+    "returncode": 0,
+    "parameters": {
+      "HALF": 1,
+      "PINREG": 1,
+      "ROOT_PHASE": 1
+    },
+    "known_warnings": "four ROM blackbox INSTANCE parameters not declared; same macro interface as pinned original",
+    "unresolved": "actual mapped production-clock synthesis/CTS and complete BF transaction bench"
+  },
+  "source_hashes": {
+    "rtl/s81/root_phase/ot_s81_bf_native_root_phase.sv": "93519c3af291675f4489f39080469680d11398fac630ca6c251ab25a788bfed3",
+    "physical/s81_bf_root_phase/tb_phase_clock.sv": "550648301390200000319713d002cce06ff140c3e71ef57a7eadac77d5779b01"
+  }
+}

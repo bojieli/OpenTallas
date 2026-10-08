@@ -1,0 +1,7 @@
+view=asap7 corner=TT block=ot_attn_hgrp_m6h1b6p top=ot_attn_hgrp_m6h1b6p purpose=signoff_target
+  synth: cells=374986 area=50509.351 um2 seq_area=12032.909 um2 macros=187497
+  pnr:   wirelength=677771 um vias=1669022 DRC=0 antenna_nets=0 Fmax=1223.32 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas/scratch-overflow/claude/hbm-attn/routes/r3_b6p_u45/physical.json

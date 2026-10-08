@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "tests_failed": 8,
+  "tests_passed": 1,
+  "cause": "Python 3.10 lacks hashlib.file_digest; runner failed before Docker invocation",
+  "resolution": "Use streaming SHA-256 compatible with the repository Python version",
+  "raw_fixture_failure": "/tmp/pytest-of-ubuntu/pytest-7480/test_success_uses_exact_ids_an0/run/failure.json"
+}

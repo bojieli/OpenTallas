@@ -1,0 +1,107 @@
+{
+  "schema": "opentallas.hbm.smh.front_s_hold.v1",
+  "original_source": "f7f1a0ee4bfd331c9d6bb873d9a772a5fa88cb48",
+  "evidence": "results/physical/hbm_smh_front_s_m3f_failure_20261007",
+  "default_enabled": false,
+  "adopted": false,
+  "measured": {
+    "SS_setup_ps": 7.357004,
+    "SS_output_ps": 152.749542,
+    "FF_hold_ps": -21.096708,
+    "FF_internal_ps": 13.878565,
+    "DRC": 0,
+    "fp_d39_launch_ps": 276.56,
+    "fp_d39_arrival_ps": 332.9,
+    "fp_d39_required_ps": 354.0,
+    "output_buffer_FF_arc_ps": 15.96
+  },
+  "unchanged_contract": {
+    "streaming_period_ps": 833,
+    "route_period_ps": 770,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "neighbor_SS_latency_ps": 519,
+    "neighbor_FF_latency_ps": 329,
+    "FF_output_latency_compensation_ps": 190,
+    "interpiece_setup_skew_ps": 90,
+    "die_setup_skew_ps": 150,
+    "output_load_fF": 2,
+    "constraint_changes": 0
+  },
+  "proposal": {
+    "kind": "Explicit noninverting delay cells on dedicated data boundary branches",
+    "cell": "BUFx2_ASAP7_75t_R",
+    "provisional_cells_per_failing_output": 3,
+    "chosen_endpoint_count": null,
+    "required_added_FF_delay_ps": 36.096708,
+    "allowed_added_SS_delay_ps": 137.749542,
+    "three_observed_FF_arcs_ps": 47.88,
+    "three_arc_sum_is_validated_bound": false,
+    "selection": "Fresh full output SS/FF inventory; no single fp_d bit extrapolation",
+    "internal_hold": "Fresh list of every D pin below +15ps; size separate dedicated branches",
+    "setup_successor_owner": "hbm/sm_views protected cached-nonempty FIFO",
+    "setup_successor_changes_pins_or_cycles": false
+  },
+  "measured_endpoint_inventory": {
+    "output_count": 3108,
+    "FF_outputs_below25ps": 2794,
+    "internal_D_pins_below15ps": 4,
+    "dedicated_output_branches": true,
+    "candidate_output_buffer_count": 8382,
+    "candidate_internal_buffer_count": 4,
+    "candidate_total_buffer_count": 8386,
+    "candidate_added_area_um2": 611.3394000000001,
+    "eligible_output_min_SS_slack_ps": 246.3385,
+    "internal_endpoint_min_SS_slack_ps": 614.4506,
+    "observed_existing_buffer_FF_arc_range_ps": [
+      13.762,
+      17.2584
+    ],
+    "observed_existing_buffer_SS_arc_range_ps": [
+      28.4662,
+      38.794
+    ],
+    "new_chain_delay_measured": false,
+    "evidence": "Fresh preserved-ODB corner inventory from fleet_live/blocked_queue_audit"
+  },
+  "sizing": {
+    "MACs_per_cycle_delta": 0,
+    "memory_bytes_per_cycle_delta": 0,
+    "output_bits_per_cycle": 3108,
+    "added_boundary_bits_per_cycle": 0,
+    "fp_d_width": 1098,
+    "engine_replicas_per_SM": 1,
+    "SMs_per_HBM_die": 32,
+    "maximum_output_delay_cells": 9324,
+    "maximum_output_delay_cell_area_um2": 679.7196,
+    "internal_delay_area_not_yet_sized": true,
+    "existing_logic_area_um2": 5597.77,
+    "output_only_area_upper_fraction": 0.12142685390789545,
+    "slot_um": [
+      432,
+      241.92
+    ],
+    "output_only_logic_area_fraction": 0.06006624473349012,
+    "added_per_output_local_net_segments_upper": 3,
+    "extra_die_channel_tracks": 0,
+    "local_pin_channel_fit": "Requires actual endpoint locations and incremental legalization/DRC",
+    "added_clock_sinks": 0,
+    "added_registers": 0,
+    "added_latency_cycles": 0,
+    "composed_per_user_token_latency_delta_cycles": 0,
+    "applicability": [
+      "Qwen3-8B HBM",
+      "DeepSeek-V4.1 HBM"
+    ],
+    "ROM_design_delta": 0
+  },
+  "gates": [
+    "Source/checkpoint identity and unchanged timing budgets",
+    "Fresh corner endpoint inventory and actual delay-cell arcs",
+    "Dedicated data branch insertion with polarity/connectivity audit",
+    "Re-extract after legalization/routing; fresh processes for SS and FF",
+    "SS >=15ps, FF >=15ps, DRC0 including outputs and internal paths",
+    "Compose with qualified cached-nonempty FIFO setup successor"
+  ],
+  "warning": "This model authorizes preparation, not adoption or a claim of physical closure"
+}

@@ -1,0 +1,35 @@
+%Warning-PINMISSING: /home/ubuntu/OpenTallas/rtl/hbm_accel/collective_native_gate_20261007/tb_hbm_collective_native_composed.sv:28:208: Instance has missing pin: 'endpoint_quiet_core'
+   28 |  ot_hbm_collective_native_link_candidate #(.LINK_PROTECTION(1),.PACKET_SRAM(PACKET_SRAM),.OWNER_TRUE_CREDIT(1),.TC_FWD(7),.TC_RET(7),.ENABLE(1),.OWNER_REDUCER(1),.OWNER_BANKED_HALF(1),.PFMAX(PF),.LANES(16)) dut
+      |                                                                                                                                                                                                                ^~~
+                     /home/ubuntu/OpenTallas/results/rtl/hbm_collective_native_gate_20261007/prepare_20261007_b/endpoint_mutation.sv:58:39: ... Location of port declaration
+   58 |     output wire endpoint_rearm_ready, endpoint_quiet_core, endpoint_quiet_phy,
+      |                                       ^~~~~~~~~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-UNSIGNED: /home/ubuntu/OpenTallas/rtl/hbm_accel/collective_native_gate_20261007/tb_native_peer_session.sv:71:11: Comparison is constant due to unsigned arithmetic
+                                                                                                                        : ... note: In instance 'tb_hbm_collective_native_composed.peer'
+   71 |    if(sent>=PARTIALS)begin
+      |           ^~
+                   ... For warning description see https://verilator.org/warn/UNSIGNED?v=5.050
+                   ... Use "/* verilator lint_off UNSIGNED */" and lint_on around source to disable this message.
+%Warning-LATCH: /home/ubuntu/OpenTallas/results/rtl/hbm_collective_native_gate_20261007/prepare_20261007_b/endpoint_mutation.sv:418:9: Latch inferred for signal 'tb_hbm_collective_native_composed.dut.g_candidate.g_on.unnamedblk9.inj.ord' (not all control paths of combinational always assign a value)
+                                                                                                                                     : ... Suggest use of always_latch for intentional latches
+  418 |         always @* begin
+      |         ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-LATCH: /home/ubuntu/OpenTallas/results/rtl/hbm_collective_native_gate_20261007/prepare_20261007_b/endpoint_mutation.sv:418:9: Latch inferred for signal 'tb_hbm_collective_native_composed.dut.g_candidate.g_on.unnamedblk9.inj.f' (not all control paths of combinational always assign a value)
+                                                                                                                                     : ... Suggest use of always_latch for intentional latches
+  418 |         always @* begin
+      |         ^~~~~~
+%Warning-LATCH: /home/ubuntu/OpenTallas/results/rtl/hbm_collective_native_gate_20261007/prepare_20261007_b/endpoint_mutation.sv:418:9: Latch inferred for signal 'tb_hbm_collective_native_composed.dut.g_candidate.g_on.unnamedblk9.inj.pt' (not all control paths of combinational always assign a value)
+                                                                                                                                     : ... Suggest use of always_latch for intentional latches
+  418 |         always @* begin
+      |         ^~~~~~
+%Warning-LATCH: /home/ubuntu/OpenTallas/results/rtl/hbm_collective_native_gate_20261007/prepare_20261007_b/endpoint_mutation.sv:418:9: Latch inferred for signal 'tb_hbm_collective_native_composed.dut.g_candidate.g_on.unnamedblk9.inj.s' (not all control paths of combinational always assign a value)
+                                                                                                                                     : ... Suggest use of always_latch for intentional latches
+  418 |         always @* begin
+      |         ^~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 4.415 MB sources in 65 modules, into 430.076 MB in 624 C++ files needing 0.000 MB
+- Verilator: Walltime 258.822 s (elab=0.233, cvt=251.669, bld=0.000); cpu 258.802 s on 1 threads; allocated 5781.910 MB

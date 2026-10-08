@@ -1,0 +1,45 @@
+{
+  "status": "prebuild_not_installed",
+  "replicas": 32,
+  "MACs_per_cycle": 0,
+  "program": {
+    "record_words": 10,
+    "word_bits": 32,
+    "record_bytes": 40,
+    "sector_bytes": 32
+  },
+  "weights": {
+    "payload_bits": 1088,
+    "stride_bytes": 160,
+    "sectors_per_line": 5,
+    "line_address": "native d_base/req_addr are physical_byte_address // 160; every allocated weight base is divisible by160",
+    "padding_bits": 192,
+    "service_peak_bytes_per_edge": 32,
+    "minimum_edges_per_line": 5
+  },
+  "operand": {
+    "fragment_bits": 25216,
+    "payload_bytes": 3152,
+    "stride_bytes": 3328,
+    "groups": 13,
+    "group_bits": 2048,
+    "last_group_active_bits": 640,
+    "service_sectors_per_fragment": 104,
+    "zero_padding_bytes": 176,
+    "minimum_service_edges_per_fragment": 104,
+    "minimum_SM_edges_per_fragment": 13
+  },
+  "result": {
+    "row_bits": 256,
+    "max_rows": 4096,
+    "stride_bytes": 32,
+    "visibility": "actual destination write ACK and readback comparison before publication; no installer-generated completion"
+  },
+  "mutable_metadata": "installed spans must be loaded into protected bounded provider state before run; this software output is not a hardware ownership grant",
+  "traffic": "one 256bit shared service port per active provider; finite serialized request/response timing priced by provider model",
+  "latency": "weights at least5 sector transfers/line; X at least104 transfers/fragment; actual service/credit RTT added for each outstanding window",
+  "storage": "installer adds no hardware; program/X/weight/result providers priced separately before RTL",
+  "allocation": "reuse actual tools/gpu_sys/v41_hbm.py Program.put/wr inside existing installed workspace bounds",
+  "physical_admitted": false,
+  "production_installation_complete": false
+}

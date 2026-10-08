@@ -1,0 +1,102 @@
+Selected native-controller replay: read/reducer composition and target correction
+
+This successor fills the reducer/read omission in the earlier vector-write-only
+calendar. Earlier evidence remains unchanged. It composes the full captured
+PC19 SU control events, including its reduction write, and physical PC20 ME
+control events at the observed native-controller issue edges10 and95. No family
+absent from these captures is claimed inactive in production.
+
+Observed enabled windows (PRE edges):
+  SU VA/VB/VC reads12–75; SU vector writes31–94.
+  ME VX reads97–352; ME vector writes586–593.
+  SU delayed reducer write160, scalar16160, word1010, lane0.
+Native PC19 reducer cycle155 plus issue offset5 yields parent160. There are
+2048 enabled ME read seats on that same edge. Native drain remains at595 and
+registered done596. The corrected calendar stores all enabled read-seat/address
+and write-family/seat/address records, deduplicating only identical full frames:
+347 enabled edges,124 unique frames.
+
+Two folded-bank annotations, neither adopted hardware:
+  fold128 bank=(word^(word>>7))&127:
+    reducer word1010 -> bank117; simultaneous read word502/scalar8039.
+  fold256 bank=(word^(word>>8))&255:
+    reducer word1010 -> bank241; simultaneous read word496/scalar7943.
+Both are DIFFERENT-word read/write obligations on a shared bank, not a same-word
+alias and not intrinsically impossible for a qualified 1R1W macro. Existing
+protected CAP1 service, shared codec/sidecar and RMW/postverify paths cannot
+assume concurrent service without measurement. Across this selected calendar,
+peak distinct READ words per bank are3 for fold128 and2 for fold256, actual
+single-read-port demand exceeding one on those cycles. These are port-demand
+counts, not guessed service delays or throughput predictions.
+
+Behavioral visibility and ACK-qualified progress prerequisite
+The source VM reads old memory on each parent posedge using nonblocking read
+responses, then queues nonblocking writes in ME→MX→SU→reducer→sequencer priority.
+A same-edge read sees pre-write data. The reducer160/ME example has different
+addresses, so it witnesses concurrent obligations, not an observed same-address
+old/new value collision. An adapter must preserve old-read semantics for all
+frames, and source writer priority for collisions.
+
+Native CHASE observes su_progress64 on edge95, immediately after the final
+native SU vector write edge94. That is a native pipeline-retirement fact, not
+by itself proof that a queued physical store has completed checked postverify.
+The existing ot_qwen_finite_vm_adapter already supplies the relevant admission
+mechanism: capture the immutable whole PRE frame, process reads first, process
+writes, validate bank ACK identity/address/mask in WWAIT, then ADMIT/publish and
+native_tick. Checked-bank ACK follows raw commit, post-read, decode/verify and
+release. native_tick is inhibited on faults and service events. No new folded
+service latency has been assumed here.
+
+Minimum ACK hazard gate for the protected-adapter owner:
+- Replay native PC19 producer writes through the actual adapter and checked bank.
+- While its final owned store/ACK is outstanding, require no consumer native
+  clock edge and no sampled ME issue, even if held native progress reads64.
+- Native progress, issue, reducer valids and sequencer state advance only on the
+  same qualified native tick; a monitor compares against immutable PRE signals.
+- Preserve the actual original me enable as an independent supply/idle condition.
+- Negative bypasses the parent admission clock or substitutes raw commit/accept
+  for the checked ACK, and must fail on advancement with outstanding debt.
+The protected-adapter worker owns this gate. This report does not claim it ran.
+
+Corrected target context
+The historical archived top and prior sequencer component used baseline
+stream4/ot_qwen_tp_seq_w12 with VWA8. The selected inventory target is instead
+rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_vprm_stream4.sv, using
+qwen_rom_verify_core_emit_w12, VPOS=1 and ot_qwen_tp_seq_w12_vp with
+ENABLE_ARP=1, NTOK8, parameterized VWA. target_context.json pins both distinctions.
+The actual generic/verify fetch/dispatch/drain/END controller slice is byte
+identical. Selected PC19/20/25 words have zero DYN selectors and POS_OFF0.
+The replay was rerun with the actual verify emitter and VPOS1: same issue/write/
+drain decisions, positive PASS and forged-early-idle negative fails. This does
+not exercise wide ARP descriptors, dynamic positions or full verify scheduling.
+
+Source-current ROM binder outline (not implementation/adoption)
+1. Generate the actual verify core and bind the vprm_stream4 parent, leaving
+   original files immutable. Default-off successor ports expose raw ME/MX
+   write intent independent of the admission lease, avoiding the cycle where
+   grant depends on a request already suppressed by that same grant.
+2. Derive desired ME participation from original ROM/scale readiness and idle/
+   wake rules. Do not copy HBM hb_me_ok names or its SMIN6/NPORT96 geometry.
+   Selected ROM PART2 uses SMIN7/NPORT48; prove VWA and full source geometry.
+3. Snapshot all VA/VB/VC, 2048 VX, sequencer read seats and all ME48x16, MX16,
+   SU64, reducer1, sequencer16 writes with source order/masks/transaction identity.
+   Qualify ME seats with original desired ME enable, not a circular admission.
+4. Use a proper source clock gate for BOTH entire native core and sequencer;
+   retain memory-service clock independently. Qualify original ME capture,
+   scale/tile/XVM and runtime callbacks from the SAME immutable PRE native_tick
+   plus original ME intent. Joint collective peers/return FIFO publication need
+   their existing finite protocol; gating only one participant is insufficient.
+5. Rebind synchronous read returns from the adapter only at native publication;
+   hold all source request registers while service runs. Fail closed on owner,
+   descriptor/address/protection faults. Preserve live-frame reset restrictions.
+6. Model area, bank ports, codec/sidecar sharing, clocks and added native delay
+   before implementing banks or launching physical qualification. Require actual
+   ACK-hazard positive/negative gate and minimal joined endpoint checks.
+Existing tools/qwen_hbm_finite_vm_bind.py is a source reference for the discipline,
+not a source-compatible ROM binder or evidence of completed ROM enrollment.
+
+Reproduce calendar: python3 tools/qwen_vm_composed_control_calendar.py --su SU_EVENTS
+  --me ME_PHYSICAL_TRACE --out OUT
+Reproduce target audit: tools/qwen_vm_target_context_audit.py (source roots in script).
+Target replay runner: tools/qwen_vm_target_control_replay.py, same inputs/options
+as prior native-drain replay; source-preserved prior SU capture is required.

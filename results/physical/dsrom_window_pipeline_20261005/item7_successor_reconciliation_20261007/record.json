@@ -1,0 +1,25 @@
+{
+  "status": "HISTORICAL_FAILURE_DISAMBIGUATED_LIVE_SCREEN_PRESERVED",
+  "historical": {
+    "commit": "236ec3683",
+    "path": "/srv/opentallas-scratch/codex/item7-window-parent-20261006/route_r1",
+    "source": "dda930c52",
+    "terminal_exit": 1,
+    "failed_phase": "2_2_floorplan_macro",
+    "evidence": "../item7_stage_hier_parent_r1/",
+    "already_preserved": true
+  },
+  "current": {
+    "host": "ot-epyc1tb",
+    "path": "/srv/opentallas-scratch/claude/takeover-ds/window-stage/screen_r4",
+    "source_directory": "src_7aa74e8da",
+    "scope": "CTS setup-class SCREEN only, not an adoptable full physical route",
+    "hook_sha256": "c34660a8a781fdcb878e8d99a353acca01c20bb17e82748052932969eb6f16af",
+    "normalizer_and_regex_identical_to_main": true,
+    "terminal_present_at_last_harvest": false,
+    "script": "stage_screen.sh explicitly disables CTS repair and omits column macro PDN grid while M2-M6 leaves are re-hardened"
+  },
+  "validation": "Tcl matches all68escaped+68unescaped column names=136checks; remote copied hook matches source hook",
+  "decision": "No duplicate route for already-corrected name parser. Preserve live screen. A qualified parent route must use passing M2-M6 column views plus restored real PDN; optional132column successor additionally waits on column128 fresh SS/FF closure.",
+  "qualified_parent_route_launched": false
+}

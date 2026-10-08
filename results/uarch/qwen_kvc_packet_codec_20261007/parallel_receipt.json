@@ -1,0 +1,17 @@
+{
+  "library_sha256": {
+    "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+    "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+  },
+  "mapped_log_sha256": {
+    "ot_qwen_kvc_packet_encode.log": "308ee0bbcdabb3f4ad096119cb564eadae1f82175960b0bc8d6fc5ab2d6f7a09",
+    "ot_qwen_kvc_packet_decode.log": "3cca7782fe8a84af3447871dec4d54702cf024f94ae62e33631dd37ca97900a8",
+    "ot_qwen_kvc_packet_encode_parallel.log": "16bc67172db625a5927a1b321b1662e6a77aa07f6843ca1d431e1d99dd667d42",
+    "ot_qwen_kvc_packet_decode_parallel.log": "d741d1be051987294faad43948b8525f3ca861d8ab96ea02acdcd7a48805f8ec"
+  },
+  "command": "python3 tools/qwen_kvc_packet_codec_map.py --library-root REPO --yosys PRODUCTION0.68 --out OUT",
+  "comparison_delta_pair_area_um2": -131.70114000000012,
+  "additional_cycles": 0,
+  "additional_FFs": 0
+}

@@ -1,0 +1,73 @@
+{
+  "name": "qfd_embed_ingress_code",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_embed_ingress_code_numeric-82c12047d/routes/qfd_embed_ingress_code_numeric_82c12047d/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_embed_ingress_code_numeric-82c12047d/routes/qfd_embed_ingress_code_numeric_82c12047d/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/embedding-qualified82/code_uidroot/qfd_embed_ingress_code:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/embedding-qualified82/code_uidroot/qfd_embed_ingress_code/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_embed_ingress_code_numeric-82c12047d/routes/qfd_embed_ingress_code_numeric_82c12047d/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/embedding-qualified82/code_uidroot/qfd_embed_ingress_code:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/embedding-qualified82/code_uidroot/qfd_embed_ingress_code/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch/claude/embedding-qualified82/code_uidroot/qfd_embed_ingress_code/interface.sdc",
+    "sha256": "24c244561fd03e3be565b5a237fcb09425dd0fb8ee0b346b5298e9c82c119305",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [],
+  "files": {
+    "qfd_embed_ingress_code.lef": "e5323fbdfe9a232143187e1b8982ca93f9c65f2abe4141cc0b0b13e8518ba340",
+    "qfd_embed_ingress_code_ff.lib": "ff40ad64fbd57cfbde8a3d2bffd0a1032412cb7ea6238bc9122b5370987a15e3",
+    "qfd_embed_ingress_code_ss.lib": "ff29630790c28f0c0cc7d81a4a2f77f000cf758a0ca9f07954022d3972dfe90b"
+  },
+  "ok": true,
+  "source_artifacts": {
+    "odb_sha256": "6e9113a5dc37937f4ecc8efd350d8f82ae2bc68fc7fb708dc3169fa77351d6d0",
+    "spef_sha256": "cea9198677efba5ddea764506a297b9e3efdbae6edc69d18e303328bd1a952b0",
+    "sdc_sha256": "379c0faf8a25f1fa6d25f7e6993f5a6ac2263ebd5524de1ebc35e78d2e542165"
+  },
+  "source_commit": "82c12047d09bcce0c2d4b9d68f57aeb5a29674e6",
+  "identifier_alias": {
+    "source_top": "ot_qwen_embedding_ingress_numeric",
+    "target_top": "qfd_embed_ingress_code",
+    "original_sha256": {
+      "qfd_embed_ingress_code.lef": "023fff3985e5065029d06d297cfd5fb9ad83322ed1e74f5a3f149789ab48296f",
+      "qfd_embed_ingress_code_ss.lib": "662e2671c4e56c48db362a1b8747fb887b0dbf8a82dea2639e4e6b24c400ee28",
+      "qfd_embed_ingress_code_ff.lib": "f54a2c44ab31902d51a9c65a3c0a79885748fb70dda3e41b5089530b33c2a986"
+    }
+  }
+}

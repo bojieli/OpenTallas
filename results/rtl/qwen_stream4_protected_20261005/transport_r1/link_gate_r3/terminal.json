@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS_DIRECTED_LINK_MECHANISM",
+  "exit_code": 0,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/hdc/kv/ot_qwen_s4_checked_state.sv": "45e3c928f992e277d7e8dbcc2b211316ee7a803883707ad4cc20ec344dbd612e",
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "a6129b02eb347a0b2063d2b3ce7292d69c8996207add8271ff3dc4d18224866a",
+    "rtl/hdc/kv/ot_qwen_s4_packet_link.sv": "1bc12bdc6295ecd76820fae929a8c5fa598a0057d13286a772238eca5e5a5639",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_packet_link.sv": "52721ccfb5195d80a8ae171de28994bba21bf0a6df3bceceafe5bd79422ede8c"
+  },
+  "compile_command": "iverilog -g2012 -s tb_qwen_s4_packet_link -o /tmp/tb_qwen_s4_packet_link_r3.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/lib/ot_reset_sync.sv rtl/hdc/kv/ot_qwen_s4_checked_state.sv rtl/hdc/kv/ot_qwen_s4_protected_ring.sv rtl/hdc/kv/ot_qwen_s4_packet_link.sv rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_packet_link.sv",
+  "run_command": "vvp /tmp/tb_qwen_s4_packet_link_r3.vvp",
+  "physical_qualified": false,
+  "endpoint_adapter_implemented": false,
+  "clock_ps": {
+    "source": 833.333,
+    "receiver": 1024
+  },
+  "gate": "128 owners; separate take/retire; warm-held;512wrap;CEcorrect;UEquarantine;DMRvalidquarantine"
+}

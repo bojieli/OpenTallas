@@ -1,0 +1,18 @@
+"""Candidate sizing for exact retiming across existing selector capture stages."""
+def model():
+    return dict(schema='opentallas.s81.selector_quarter_retime.v1', status='CANDIDATE_NOT_ADOPTED',
+        source_job='s81ph-dsfd_selt_q2-89fd33a58-safe', measured_ss_ps=-377.78, measured_ff_ps=-114.94,
+        measured_area_um2=67046, outline_um=[756,159.84], replicas=4, macs_per_cycle=0,
+        bytes_per_memory_port_cycle=32, memory_macros_per_quarter=6,
+        interface_bits_per_cycle=dict(lane=515,command=66,credit=1,status=865,output=354),
+        retiming='Capture four 4-bit greater/equal comparisons and high-byte equality alongside i0; combine at i1.',
+        equivalence='On an accepted edge, i0_val and r_T/r_Bt capture in_val and c_T/c_Bt simultaneously.',
+        added_flops_per_quarter=144, area_upper_bound_um2=67046+144*2,
+        area_basis='Conservative 2um2 per new flop+local logic allowance; replace with synthesis measurement.',
+        estimated_utilization_upper_bound=(67046+144*2)/(756*159.84),
+        added_cycles_per_segment=0, token_latency_delta_ns=0,
+        boundary_routing='Same ports and M4/M5 positions; M8/M9 remain reserved for die.',
+        fanout='Comparator groups per lane; no new broadcast or mux topology.',
+        reset='Existing two-cycle startup reset MCP must match nested wrapper; does not false-path reset.',
+        io='Current per-corner measured vclk model replaces stale predecessor max-BC output-min model.',
+        adoption='Exact/negative gates, SS>=15ps FF>=15ps DRC0, and die-context STA required.')

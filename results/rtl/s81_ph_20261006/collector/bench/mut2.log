@@ -1,0 +1,20 @@
+ERR DONE tag 0/0 code 3ff/7ff frames 8/12 cyc 635
+ERR image row 201
+ERR image row 205
+ERR image row 209
+ERR image row 213
+ERR image row 217
+ERR image row 221
+ERR image row 225
+ERR image row 229
+ERR stack 0 28 words never delivered
+ERR stack 1 51 words never delivered
+ERR stack 3 42 words never delivered
+job 0 pol 0 T 397 bub 0 frames 12 cyc 636
+RESULT FAIL jobs 0/40 words 289 frames 8 done 1 errors 121
+- rtl/dsrom_sys/s81_ph/test/tb_s81ph_col.sv:247: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 531ns; walltime 0.003 s; speed 117.758 us/s
+- Verilator: cpu 0.005 s on 1 threads; alloced 1018 MB
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+	Maximum resident set size (kbytes): 8296

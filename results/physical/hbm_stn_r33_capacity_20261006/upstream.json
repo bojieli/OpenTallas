@@ -1,0 +1,132 @@
+[
+ {
+  "bus": "iv_SW_0",
+  "bits": 512,
+  "endpoints": [
+   {
+    "instance": "hb_index_SW_b5",
+    "port": "t_vm",
+    "master": "hfd_index_q_b5",
+    "x": 6480.432,
+    "y": 11311.92,
+    "w": 930.072,
+    "h": 829.416,
+    "orient": "R0"
+   },
+   {
+    "instance": "w300_iv_SW",
+    "port": "a",
+    "master": "hfd_stn_r33",
+    "x": 7563.456,
+    "y": 11957.76,
+    "w": 39.288,
+    "h": 77.736,
+    "orient": "MX"
+   }
+  ]
+ },
+ {
+  "bus": "iv_SE_0",
+  "bits": 512,
+  "endpoints": [
+   {
+    "instance": "hb_index_SE_b5",
+    "port": "t_vm",
+    "master": "hfd_index_q_b5",
+    "x": 16127.424,
+    "y": 11311.92,
+    "w": 930.072,
+    "h": 829.416,
+    "orient": "MY"
+   },
+   {
+    "instance": "w303_iv_SE",
+    "port": "a",
+    "master": "hfd_stn_r33",
+    "x": 15934.752,
+    "y": 11957.76,
+    "w": 39.288,
+    "h": 77.736,
+    "orient": "MX"
+   }
+  ]
+ },
+ {
+  "bus": "iv_NW_0",
+  "bits": 512,
+  "endpoints": [
+   {
+    "instance": "hb_index_NW_b5",
+    "port": "t_vm",
+    "master": "hfd_index_q_b5",
+    "x": 6480.432,
+    "y": 12484.8,
+    "w": 930.072,
+    "h": 829.416,
+    "orient": "MX"
+   },
+   {
+    "instance": "w306_iv_NW",
+    "port": "a",
+    "master": "hfd_stn_r33",
+    "x": 7563.456,
+    "y": 12584.16,
+    "w": 39.288,
+    "h": 77.736,
+    "orient": "R0"
+   }
+  ]
+ },
+ {
+  "bus": "iv_NE_0",
+  "bits": 512,
+  "endpoints": [
+   {
+    "instance": "hb_index_NE_b5",
+    "port": "t_vm",
+    "master": "hfd_index_q_b5",
+    "x": 16127.424,
+    "y": 12484.8,
+    "w": 930.072,
+    "h": 829.416,
+    "orient": "R180"
+   },
+   {
+    "instance": "w309_iv_NE",
+    "port": "a",
+    "master": "hfd_stn_r33",
+    "x": 15934.752,
+    "y": 12584.16,
+    "w": 39.288,
+    "h": 77.736,
+    "orient": "R0"
+   }
+  ]
+ },
+ {
+  "bus": "vr_0",
+  "bits": 512,
+  "endpoints": [
+   {
+    "instance": "hb_vm",
+    "port": "t_router",
+    "master": "hfd_vm",
+    "x": 11069.136,
+    "y": 13122.0,
+    "w": 1399.6560000000002,
+    "h": 2000.1360000000002,
+    "orient": "R0"
+   },
+   {
+    "instance": "w312_vr",
+    "port": "a",
+    "master": "hfd_stn_r33",
+    "x": 10142.064,
+    "y": 12368.16,
+    "w": 39.288,
+    "h": 77.736,
+    "orient": "R0"
+   }
+  ]
+ }
+]

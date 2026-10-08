@@ -1,0 +1,6 @@
+QM=5 + QS=1 (SAFE: bterm5 S1b decode stage, +1 lane cycle) PQ1 L20 bench (source 909ea21da, OT_PQQ_QM=5 OT_PQQ_QS=1, tools/dsrom_combined_l20.py field --cfg pq1_q10 --field-layers 20, AGIdock qelem-qm/comb_qs5):
+2752 runs (phase)
+failed 0
+896 runs (node)
+failed 0
+Cycle cost vs QM=5 (comb_qm5, same 3,648 runs): node idle +0..+1 cycle per run, sum 1,625,633 -> 1,628,414 (+0.17%).

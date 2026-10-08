@@ -1,0 +1,30 @@
+{
+ "hfd_hc": {
+  "kind": "hc",
+  "w": 275.592,
+  "h": 5529.576,
+  "instances": 4,
+  "ports": {
+   "f_sfu": [
+    1024,
+    "E",
+    "input"
+   ],
+   "t_sfu": [
+    1024,
+    "E",
+    "output"
+   ],
+   "ck": [
+    1,
+    "E",
+    "input"
+   ],
+   "rst": [
+    1,
+    "E",
+    "input"
+   ]
+  }
+ }
+}

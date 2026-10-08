@@ -62,7 +62,29 @@ module ot_qwen_slab_port_group #(
     parameter integer SCALE_BANKS = 16,
     parameter integer COLS = 4,             // macro columns: banks c*BPC .. c*BPC+BPC-1 share a column copy
     parameter integer MUL_LAT = 6,
-    parameter integer BW_FIFO = 1
+    parameter integer BW_FIFO = 1,
+    // Timing-only options (values and order unchanged; default off = the S3 RTL):
+    //   IN_STAGE 1: one register stage in front of every multiplier (operands and valid, placed beside it), so
+    //               the boundary register res_q -> multiplier wire is its own cycle.  +1 cycle per ME op.
+    //   AM_SPLIT 1: each argmax node compares in one cycle and selects in the next (two kept select copies).
+    //               +1 cycle per level (LW levels) on the argmax top only.
+    //   S5_CTL   1: the scale-request range test d > 0 is registered at D1 from its own adders (d - 1 >= 0), and
+    //               each bank's capture select drives the column OR through 8 kept copies of 32 loads.  0 cycles.
+    parameter integer IN_STAGE = 0,
+    parameter integer AM_SPLIT = 0,
+    //   SCALE_PAIR 1: each column's bank OR is registered per bank pair (south / north) before m5, a wire stage
+    //               across the column height; the request then leads by LEAD = 9 (the tag is a tap of the top's
+    //               s3 tag line, available that early -- header 1.), so an op gains no cycle.  res_in is due
+    //               LEAD cycles after its tag, as before.
+    parameter integer S5_CTL = 0,
+    parameter integer SCALE_PAIR = 0,
+    //   OREG 1 (owner margin rule 2026-10-06): every result / argmax output leaves through one more register, a kept
+    //               per-bit module (ot_qwen_slab_pg_oreg1, SYNTH_KEEP_MODULES) the placer puts at the output pin.
+    //               +1 cycle per ME op on the result path (values unchanged).
+    parameter integer OREG = 0,
+    //   MUL_KCP > 1 (margin m3 2026-10-06): the multiplier's C1 operand register as MUL_KCP kept copies (ot_hdc_fp32_mul_lat
+    //               KCP), so the partial-product broadcast is local.  No cycle; values unchanged.
+    parameter integer MUL_KCP = 1
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -98,7 +120,7 @@ module ot_qwen_slab_port_group #(
 );
     localparam integer LW = $clog2(W);
     localparam integer BPC = SCALE_BANKS / COLS;
-    localparam integer LEAD = 8;              // tag pins -> multiplier input (see header, 1.)
+    localparam integer LEAD = 8 + SCALE_PAIR; // tag pins -> multiplier input (see header, 1.)
     localparam integer DW = 20;               // signed width of the row-count differences
     localparam integer KR = 1 + 1 + 1 + 1 + 1 + 1 + W + AW + NW;   // tag carried past the request stage
 
@@ -142,6 +164,10 @@ module ot_qwen_slab_port_group #(
     wire [NW-1:0] rb16;
     ot_hdc_ksadd_k #(.W(NW)) u_rb (.a(t_nb[NW-1:0]), .b(CRB), .cin(1'b0), .s(rb16), .cout());
     wire [$clog2(GT):0] t_ports = GT >> t_split;
+    wire [DW-1:0] dnm1, dlm1;   // d - 1 (S5_CTL): d > 0  <=>  d - 1 >= 0
+    ot_qwen_slab_pg_add3 #(.W(DW)) u_dnm (.a(nout_ext), .b(~nb_ext), .c(CDN - 1'b1), .s(dnm1));
+    ot_qwen_slab_pg_add3 #(.W(DW)) u_dlm (.a(nout_ext), .b(~lb_ext), .c(CDL - 1'b1), .s(dlm1));
+    reg d_pos_q;
     reg d_v, d_last, d_oen, d_amax, d_rmax, d_wsrc, d_portok;
     reg [DW-1:0] d_d;
     reg [AW-1:0] d_sb, d_sbase, d_oa, d_gots;
@@ -151,11 +177,12 @@ module ot_qwen_slab_port_group #(
         {d_last, d_oen, d_amax, d_rmax, d_wsrc} <= {t_last, t_oen, t_amax, t_rmax, t_wsrc};
         d_portok <= GID < t_ports;
         d_d <= t_mmode ? dl : dn;
+        d_pos_q <= !(t_mmode ? dlm1[DW-1] : dnm1[DW-1]);
         d_sb <= sb; d_sbase <= t_sbase; d_oa <= t_oa; d_gots <= gots; d_rb <= rb16;
     end
 
     // ---- D2 (cycle 3): lane masks, scale request R1 (RTL pre_scale_active / scale_addr), result address ----
-    wire d_pos = !d_d[DW-1] && (d_d != 0);
+    wire d_pos = (S5_CTL != 0) ? d_pos_q : (!d_d[DW-1] && (d_d != 0));
     wire [W-1:0] d_mask;
     genvar ml;
     generate for (ml = 0; ml < W; ml = ml + 1) begin : g_dm
@@ -179,8 +206,9 @@ module ot_qwen_slab_port_group #(
     // ---- tag line: cycle 3 -> multiplier time (cycle LEAD + 1) -> result time (+ MUL_LAT) -----------------
     localparam integer KD = LEAD - 2;
     wire [KR-1:0] m_tag, r_tag;
-    reg  [KD+MUL_LAT:1] vline;
-    always @(posedge clk) vline <= rs ? {vline[KD+MUL_LAT-1:1], k_v} : {(KD+MUL_LAT){1'b0}};
+    localparam integer XL = MUL_LAT + IN_STAGE;   // multiplier input -> result
+    reg  [KD+XL:1] vline;
+    always @(posedge clk) vline <= rs ? {vline[KD+XL-1:1], k_v} : {(KD+XL){1'b0}};
     // KD - 1 shared stages, then the last stage as per-lane copies (S3, timing only): each multiplier's valid and
     // operand select come from a kept register beside it instead of one tag register fanned out to 16 lanes
     // (twoface_570 post-CTS: u_mt line -> g_mul[*] 545 ps of buffering, -210 ps).  m_tag itself is unchanged.
@@ -189,9 +217,9 @@ module ot_qwen_slab_port_group #(
     ot_hdc_delay #(.W(KR), .D(KD - 1)) u_mt (.clk(clk), .rst_n(rs), .d(k_tag), .q(e_tag));
     always @(posedge clk) m_tag_q <= e_tag;
     assign m_tag = m_tag_q;
-    ot_hdc_delay #(.W(KR), .D(MUL_LAT)) u_rt (.clk(clk), .rst_n(rs), .d(m_tag), .q(r_tag));
+    ot_hdc_delay #(.W(KR), .D(XL)) u_rt (.clk(clk), .rst_n(rs), .d(m_tag), .q(r_tag));
     wire m_v = vline[KD];
-    wire r_v = vline[KD + MUL_LAT];
+    wire r_v = vline[KD + XL];
 
     // ---- scale ROM: column copies (R2), per-bank decode (R3), macros, pin capture (C4) ------------
     wire [255:0] colq [0:COLS-1];
@@ -202,6 +230,7 @@ module ot_qwen_slab_port_group #(
             wire [AW-1:0] addr2;
             ot_qwen_slab_pg_rcopy #(.AW(AW)) u_r2 (.clk(clk), .gre(gre1), .addr(addr1), .gre_q(gre2), .addr_q(addr2));
             wire [255:0] cor [0:BPC];
+            wire [255:0] bterm [0:BPC-1];
             assign cor[0] = 256'd0;
             for (b = 0; b < BPC; b = b + 1) begin : g_bank
                 localparam integer BK = c * BPC + b;
@@ -209,18 +238,42 @@ module ot_qwen_slab_port_group #(
                 wire [11:0] a3;
                 ot_qwen_slab_pg_bdec #(.AW(AW), .BK(BK)) u_r3 (.clk(clk), .gre(gre2), .addr(addr2), .ce_q(ce3), .a_q(a3));
                 reg        sel4, sel5;
+                (* keep *) reg [7:0] sel5c;   // S5_CTL: 8 copies of sel5, 32 loads each
                 reg [255:0] cap4;
                 wire [265:0] rd;
                 always @(posedge clk) begin
                     sel4 <= ce3;             // with the macro's sampling edge
                     sel5 <= sel4;            // with the capture
+                    sel5c <= {8{sel4}};
                     cap4 <= rd[255:0];
                 end
                 ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in(ce3), .addr_in(a3), .rd_out(rd));
-                assign cor[b+1] = cor[b] | (cap4 & {256{sel5}});
+                wire [255:0] selv;
+                genvar sk;
+                for (sk = 0; sk < 8; sk = sk + 1) begin : g_sel
+                    assign selv[32*sk +: 32] = {32{(S5_CTL != 0) ? sel5c[sk] : sel5}};
+                end
+                assign bterm[b] = cap4 & selv;
+                assign cor[b+1] = cor[b] | bterm[b];
             end
             reg [255:0] m5;
-            always @(posedge clk) m5 <= cor[BPC];
+            if (SCALE_PAIR != 0) begin : g_pair
+                // south pair = cor[BPC/2]; north pair = the same chain restarted at BPC/2 (identical OR terms)
+                wire [255:0] nor_ [BPC/2:BPC];
+                assign nor_[BPC/2] = 256'd0;
+                genvar hb;
+                for (hb = BPC/2; hb < BPC; hb = hb + 1) begin : g_h
+                    assign nor_[hb+1] = nor_[hb] | bterm[hb];
+                end
+                reg [255:0] m5s, m5n;
+                always @(posedge clk) begin
+                    m5s <= cor[BPC/2];
+                    m5n <= nor_[BPC];
+                    m5 <= m5s | m5n;
+                end
+            end else begin : g_nopair
+                always @(posedge clk) m5 <= cor[BPC];
+            end
             assign colq[c] = m5;
         end
     endgenerate
@@ -253,9 +306,25 @@ module ot_qwen_slab_port_group #(
             // == m_v && m_last && m_mask[si] and m_wsrc (vline[KD] = rs ? vline[KD-1] : 0, one edge later)
             ot_qwen_slab_pg_rcopy #(.AW(1)) u_tc (.clk(clk), .gre(rs && vline[KD-1] && e_last && e_mask[si]),
                 .addr(e_wsrc), .gre_q(l_v), .addr_q(l_ws));
-            ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rsm),
-                .valid_in(l_v),
-                .a(res_q[32*si +: 32]), .b({l_ws ? 16'h3F80 : m6[16*si +: 16], 16'd0}),
+            wire        i_v;
+            wire [31:0] i_a;
+            wire [15:0] i_b;
+            if (IN_STAGE != 0) begin : g_in
+                reg        v_q;
+                reg [31:0] a_q;
+                reg [15:0] b_q;
+                always @(posedge clk) begin
+                    v_q <= l_v;
+                    a_q <= res_q[32*si +: 32];
+                    b_q <= l_ws ? 16'h3F80 : m6[16*si +: 16];
+                end
+                assign i_v = v_q; assign i_a = a_q; assign i_b = b_q;
+            end else begin : g_noin
+                assign i_v = l_v; assign i_a = res_q[32*si +: 32]; assign i_b = l_ws ? 16'h3F80 : m6[16*si +: 16];
+            end
+            ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT), .KCP(MUL_KCP)) u_mul (.clk(clk), .rst_n(rsm),
+                .valid_in(i_v),
+                .a(i_a), .b({i_b, 16'd0}),
                 .y(scaled[32*si +: 32]), .err(err), .valid_out(vo));
             assign mfault[si] = vo && (err != 2'd0);
         end
@@ -284,7 +353,17 @@ module ot_qwen_slab_port_group #(
         od1 <= scaled;
         oa2 <= oa1; om2 <= om1; od2 <= od1;
     end
-    assign ov = ov2; assign o_we = we2; assign o_addr = oa2; assign o_mask = om2; assign o_data = od2;
+    localparam integer NO = 1 + 1 + AW + W + W*32;
+    wire [NO-1:0] o_pre = {ov2, we2, oa2, om2, od2};
+    wire [NO-1:0] o_out;
+    generate if (OREG != 0) begin : g_oreg
+        for (genvar ob = 0; ob < NO; ob = ob + 1) begin : g_b
+            ot_qwen_slab_pg_oreg1 u_r (.clk(clk), .d(o_pre[ob]), .q(o_out[ob]));
+        end
+    end else begin : g_nooreg
+        assign o_out = o_pre;
+    end endgenerate
+    assign {ov, o_we, o_addr, o_mask, o_data} = o_out;
 
     // ---- argmax leaves and the group's 4 compare levels (RTL g_leaf / g_alvl) ----------------------
     // The RTL's node test  x0.v && (!x1.v || k0 > k1 || (k0 == k1 && row0 < row1))  is evaluated as one
@@ -294,12 +373,13 @@ module ot_qwen_slab_port_group #(
     endfunction
     localparam integer CW = 1 + 32 + NW;
     localparam integer LV = LW;
+    localparam integer TL = LV * (1 + AM_SPLIT);   // leaf -> top cycles after the leaf
     wire [CW*W-1:0] alv [0:LV];
-    reg  [LV:0] tv;
-    reg  [LV:0] trm;
+    reg  [TL:0] tv;
+    reg  [TL:0] trm;
     always @(posedge clk) begin
-        tv  <= rs ? {tv[LV-1:0], r_v && r_last && (r_amax || r_rmax)} : {(LV+1){1'b0}};
-        trm <= {trm[LV-1:0], r_rmax};
+        tv  <= rs ? {tv[TL-1:0], r_v && r_last && (r_amax || r_rmax)} : {(TL+1){1'b0}};
+        trm <= {trm[TL-1:0], r_rmax};
     end
     genvar e, lv;
     generate
@@ -320,7 +400,17 @@ module ot_qwen_slab_port_group #(
                     .b(~{x1[CW-2 -: 32], ~x1[NW-1:0]}), .cin(1'b0), .s(), .cout(gt));
                 wire x0_wins = x0[CW-1] && (!x1[CW-1] || gt);
                 reg [CW-1:0] cq;
-                always @(posedge clk) cq <= x0_wins ? x0 : x1;
+                if (AM_SPLIT != 0) begin : g_split
+                    (* keep *) reg [1:0] w_q;   // two select copies, 25 / 24 loads
+                    reg [CW-1:0] x0_q, x1_q;
+                    always @(posedge clk) begin
+                        w_q <= {2{x0_wins}};
+                        x0_q <= x0; x1_q <= x1;
+                        cq <= {w_q[1] ? x0_q[CW-1:25] : x1_q[CW-1:25], w_q[0] ? x0_q[24:0] : x1_q[24:0]};
+                    end
+                end else begin : g_one
+                    always @(posedge clk) cq <= x0_wins ? x0 : x1;
+                end
                 assign alv[lv][CW*e +: CW] = cq;
             end
             if ((W >> lv) < W) begin : g_pad
@@ -328,9 +418,16 @@ module ot_qwen_slab_port_group #(
             end
         end
     endgenerate
-    assign am_top = alv[LV][CW-1:0];
-    assign am_tv = tv[LV];
-    assign am_rmax = trm[LV];
+    wire [CW+1:0] am_pre = {tv[TL], trm[TL], alv[LV][CW-1:0]};
+    wire [CW+1:0] am_out;
+    generate if (OREG != 0) begin : g_amreg
+        for (genvar ab = 0; ab < CW + 2; ab = ab + 1) begin : g_b
+            ot_qwen_slab_pg_oreg1 u_r (.clk(clk), .d(am_pre[ab]), .q(am_out[ab]));
+        end
+    end else begin : g_noamreg
+        assign am_out = am_pre;
+    end endgenerate
+    assign {am_tv, am_rmax, am_top} = am_out;
 
     // ---- block-word crossing FIFO (decision C) ----------------------------------------------------
     generate if (BW_FIFO != 0) begin : g_bw
@@ -402,4 +499,9 @@ module ot_qwen_slab_pg_bdec #(parameter integer AW = 24, parameter integer BK = 
     output reg  [11:0]   a_q
 );
     always @(posedge clk) begin ce_q <= gre && (addr[AW-1:12] == BK); a_q <= addr[11:0]; end
+endmodule
+
+// ot_qwen_slab_pg_oreg1: one output-pin register bit (OREG); kept so equal-D flops are never merged into one driver
+module ot_qwen_slab_pg_oreg1 (input wire clk, input wire d, output reg q);
+    always @(posedge clk) q <= d;
 endmodule

@@ -1,0 +1,8 @@
+Pinned source: 52210d4bc
+Local component bench, iverilog + vvp:
+FAIL kvc_decode legal stream credit fault sent=131328 got=131328
+FATAL: rtl/test/tb_qwen_kvc_decode_pc.sv:26:
+Time: 1532260000 Scope: tb_qwen_kvc_decode_pc.fail
+Cause: bench drain left o_cr asserted across four idle clocks after last pop,
+so DUT correctly detected extra credits. All 131328 decode comparisons passed.
+Recipe canceled before adoption; successor deasserts credit after final pop.

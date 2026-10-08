@@ -1,0 +1,6 @@
+PASS_HA2_HALF_ENDPOINT_CREDIT lanes=16 PF=384 owner_results=24 issued=384 peer_flits=336 hub_stalls=92 peer_stalls=287 first_issue=5 last_delivery=525 elapsed=521
+SCOPE one endpoint own-reduction outputs bit-exact vs unchanged adapter on accepted transactions; not full collective/fabric or physical adoption
+- rtl/hbm_accel/ha2_ar/tb_ha2_half_endpoint_credit.sv:61: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 442ns; walltime 0.976 s; speed 451.989 ns/s
+- Verilator: cpu 0.977 s on 1 threads; alloced 1065 MB

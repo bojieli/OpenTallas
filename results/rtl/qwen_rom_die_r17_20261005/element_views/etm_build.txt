@@ -1,0 +1,28 @@
+cdc/etm_ff.log worst slack max 265.61 worst slack min 10.17 Elapsed (wall clock) time (h:mm:ss or m:ss): 0:25.13 Maximum resident set size (kbytes): 1478088
+cdc/etm_ss.log worst slack max 25.40 worst slack min 17.99 Elapsed (wall clock) time (h:mm:ss or m:ss): 0:24.84 Maximum resident set size (kbytes): 1475176
+core/etm_ff.log worst slack max 120.31 worst slack min 7.12 Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.76 Maximum resident set size (kbytes): 685720
+core/etm_ss.log worst slack max 0.87 worst slack min 49.91 Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.86 Maximum resident set size (kbytes): 691672
+slab/etm_ff.log worst slack max 249.94 worst slack min 4.20 Elapsed (wall clock) time (h:mm:ss or m:ss): 0:23.98 Maximum resident set size (kbytes): 1927040
+slab/etm_ss.log worst slack max 11.47 worst slack min 46.17 Elapsed (wall clock) time (h:mm:ss or m:ss): 0:23.54 Maximum resident set size (kbytes): 1913080
+#!/bin/bash
+# usage: etm.sh <elem> <corner ss|ff> <cellname>
+el=$1; c=$2; cell=$3
+N=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM
+C=$(echo $c | tr a-z A-Z)
+cat > $el/etm_$c.tcl <<EOT
+proc mem {tag} { set f [open /proc/self/status]; set s [read \$f]; close \$f; regexp {VmHWM:\\s+(\\d+)} \$s -> h; puts "OTMEM \$tag hwm_mb=[expr {\$h/1024}] t=[clock seconds]" }
+foreach l [list $N/asap7sc7p5t_AO_RVT_${C}_nldm_211120.lib.gz $N/asap7sc7p5t_INVBUF_RVT_${C}_nldm_220122.lib.gz $N/asap7sc7p5t_OA_RVT_${C}_nldm_211120.lib.gz $N/asap7sc7p5t_SEQ_RVT_${C}_nldm_220123.lib $N/asap7sc7p5t_SIMPLE_RVT_${C}_nldm_211120.lib.gz /work/libs/ot_rom_4096x266_m8_$c.lib] { read_liberty \$l }
+read_db /work/$el/6_final.odb
+read_spef /work/$el/6_final.spef
+read_sdc /work/$el/6_final.sdc
+set_propagated_clock [all_clocks]
+if {[file size /work/$el/extra.sdc] > 0} { read_sdc /work/$el/extra.sdc }
+mem loaded
+report_worst_slack -max
+report_worst_slack -min
+write_timing_model -library_name ${cell}_$c -cell_name $cell /work/$el/${cell}_$c.lib
+mem etm
+puts OT_ETM_DONE
+EOT
+docker run --rm --name etm_${el}_$c --memory=100g -v /srv/opentallas-scratch/claude/qwen-die-r20/etm:/work openroad/orfs:asap7lock bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 4 -no_init -exit /work/$el/etm_$c.tcl" > $el/etm_$c.log 2>&1
+echo $? > $el/etm_$c.exit
