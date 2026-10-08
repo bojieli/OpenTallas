@@ -1,0 +1,208 @@
+{
+  "adopted_system": false,
+  "blocked": {
+    "fence": "SS worst -180.93ps IO, not closed",
+    "router_topk": "new registered-insert recipe exact2000vectors0mismatch, first physical Yosys parameter elaboration assertion; source preserved, no timing qualification",
+    "spec_state": "existing spec3_s8 terminal 2 mismatches; escalated to Claude, NOT adopted despite positive route"
+  },
+  "complete_accelerator_qualified": false,
+  "composition": "union_flushing_requests + argmax_output_rows + scratch_reads added cycles at1.2GHz; exact actual schedule counts REQUIRED; no extra cycle per union output; unknown parent calendar remains unknown",
+  "default_enabled": false,
+  "observed_argmax": {
+    "cycle_delta_per_row": 1,
+    "mismatches": 0,
+    "rows": 3000
+  },
+  "observed_scratch": {
+    "mismatches": 0,
+    "read_delta": 1,
+    "reads": 1450,
+    "transactions": 3000,
+    "write_delta": 0
+  },
+  "observed_union": {
+    "cases": 3000,
+    "cycle_delta_per_flush": 1,
+    "emitted": 49256,
+    "flush_first_baseline_cycles": 1,
+    "flush_first_fast_cycles": 2,
+    "mismatches": 0
+  },
+  "rows": [
+    {
+      "FF_hold_ps": 26.06,
+      "SS_register_ps": 604.17,
+      "SS_worst_ps": 379.98,
+      "closes_signoff": true,
+      "cycle_delta": 0,
+      "cycle_scope": "no extra cycles",
+      "label": "barrier_a0",
+      "module": "ot_gpu_barrier_node",
+      "parameters": {
+        "K": 8
+      },
+      "scope": "source-selected full-shape routed component, not complete accelerator/die",
+      "source_pins": {
+        "rtl/gpu/ot_gpu_barrier_node.sv": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+        "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+      },
+      "target_period_ns": 0.833
+    },
+    {
+      "FF_hold_ps": 39.39,
+      "SS_register_ps": 384.3,
+      "SS_worst_ps": 330.53,
+      "closes_signoff": true,
+      "cycle_delta": 0,
+      "cycle_scope": "no extra cycles",
+      "label": "barrier_k32",
+      "module": "ot_gpu_barrier_node",
+      "parameters": {
+        "K": 32
+      },
+      "scope": "source-selected full-shape routed component, not complete accelerator/die",
+      "source_pins": {
+        "rtl/gpu/ot_gpu_barrier_node.sv": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+        "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+      },
+      "target_period_ns": 0.833
+    },
+    {
+      "FF_hold_ps": 13.99,
+      "SS_register_ps": 55.27,
+      "SS_worst_ps": 55.27,
+      "closes_signoff": true,
+      "cycle_delta": 0,
+      "cycle_scope": "no extra cycles",
+      "label": "accept_a0",
+      "module": "ot_hdc_accept",
+      "parameters": {
+        "NSLOT": 8,
+        "NW": 17
+      },
+      "scope": "source-selected full-shape routed component, not complete accelerator/die",
+      "source_pins": {
+        "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e"
+      },
+      "target_period_ns": 0.833
+    },
+    {
+      "FF_hold_ps": 10.12,
+      "SS_register_ps": 15.6,
+      "SS_worst_ps": 1.25,
+      "closes_signoff": true,
+      "cycle_delta": 0,
+      "cycle_scope": "no extra cycles",
+      "label": "ctl_f2",
+      "module": "ot_dshbm_dspark_ctl",
+      "parameters": {
+        "ACCEPT_LEAF": 0,
+        "FAST": 1,
+        "MAXPOS": 1048576,
+        "NL": 40,
+        "TW": 17
+      },
+      "scope": "source-selected full-shape routed component, not complete accelerator/die",
+      "source_pins": {
+        "rtl/gpu/dshbm/ot_dshbm_accept_port.sv": "92f365a2785461459b2370f515c99a9c76d3ceafb6278aee6f8f66952d2381f2",
+        "rtl/gpu/dshbm/ot_dshbm_dspark_ctl.sv": "42eb3474782c24d46f375875761d4e5c5b8244a53697d132c5e6f736a2b509af",
+        "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
+        "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+      },
+      "target_period_ns": 0.833
+    },
+    {
+      "FF_hold_ps": 3.0,
+      "SS_register_ps": 42.63,
+      "SS_worst_ps": 42.63,
+      "closes_signoff": true,
+      "cycle_delta": 1,
+      "cycle_scope": "per output row",
+      "label": "argmax_f1",
+      "module": "ot_dshbm_argmax",
+      "parameters": {
+        "FAST": 1,
+        "FLAT": 7,
+        "IW": 17,
+        "LP": 8
+      },
+      "scope": "source-selected full-shape routed component, not complete accelerator/die",
+      "source_pins": {
+        "rtl/gpu/dshbm/ot_dshbm_argmax.sv": "b4ec32213c72dcf36f2495ba810b809eee891b08ebe21fbc782b71fb833539bf",
+        "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+        "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+        "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+        "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+      },
+      "target_period_ns": 0.833
+    },
+    {
+      "FF_hold_ps": 18.63,
+      "SS_register_ps": 216.11,
+      "SS_worst_ps": 80.22,
+      "closes_signoff": true,
+      "cycle_delta": 1,
+      "cycle_scope": "read only, write unchanged",
+      "label": "scratch_c2",
+      "module": "ot_gpu_scratch_service",
+      "parameters": {
+        "CAP2": 1
+      },
+      "scope": "source-selected full-shape routed component, not complete accelerator/die",
+      "source_pins": {
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+        "rtl/gpu/ot_gpu_scratch_service.sv": "8e881e60f06aeb4030bd945d660900ad03569841f229e73f217f7bac50179f85"
+      },
+      "target_period_ns": 0.833
+    },
+    {
+      "FF_hold_ps": 10.79,
+      "SS_register_ps": 9.52,
+      "SS_worst_ps": 9.52,
+      "closes_signoff": true,
+      "cycle_delta": 1,
+      "cycle_scope": "flush to FIRST output, not per emitted expert",
+      "label": "union_f3",
+      "module": "ot_dshbm_expert_union",
+      "parameters": {
+        "FAST": 1,
+        "IW": 9,
+        "K": 6,
+        "NE": 384,
+        "PM": 8
+      },
+      "scope": "source-selected full-shape routed component, not complete accelerator/die",
+      "source_pins": {
+        "rtl/gpu/dshbm/ot_dshbm_expert_union.sv": "e0ca04b5d5f0b8cfdcbd63e2d9ce3fc3c41f53bfce215c04feb9e115fb40108a"
+      },
+      "target_period_ns": 0.833
+    }
+  ],
+  "schema": "opentallas.hbm.ctl.partial_closure.v1",
+  "selected_source_overrides": {
+    "rtl/gpu/dshbm/ot_dshbm_argmax.sv": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/source_set/rtl/gpu/dshbm/ot_dshbm_argmax.sv",
+    "rtl/gpu/dshbm/ot_dshbm_expert_union.sv": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/source_set/rtl/gpu/dshbm/ot_dshbm_expert_union.sv",
+    "rtl/gpu/ot_gpu_scratch_service.sv": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/source_set/rtl/gpu/ot_gpu_scratch_service.sv"
+  },
+  "source_branch": "claude/hbm-fmax-ctl-20261004",
+  "source_commit": "b4866515f4d9eaea300820a816d280b4c05c0c4c",
+  "source_pins": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+    "rtl/gpu/dshbm/ot_dshbm_accept_port.sv": "92f365a2785461459b2370f515c99a9c76d3ceafb6278aee6f8f66952d2381f2",
+    "rtl/gpu/dshbm/ot_dshbm_argmax.sv": "b4ec32213c72dcf36f2495ba810b809eee891b08ebe21fbc782b71fb833539bf",
+    "rtl/gpu/dshbm/ot_dshbm_dspark_ctl.sv": "42eb3474782c24d46f375875761d4e5c5b8244a53697d132c5e6f736a2b509af",
+    "rtl/gpu/dshbm/ot_dshbm_expert_union.sv": "e0ca04b5d5f0b8cfdcbd63e2d9ce3fc3c41f53bfce215c04feb9e115fb40108a",
+    "rtl/gpu/ot_gpu_barrier_node.sv": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+    "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "rtl/gpu/ot_gpu_scratch_service.sv": "8e881e60f06aeb4030bd945d660900ad03569841f229e73f217f7bac50179f85",
+    "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+  },
+  "source_selection": "explicit source list substitutes ONLY listed archive variants; never compile both original and override; canonical pinned source files unchanged",
+  "standalone_target_ns_per_added_cycle": 0.8333333333333334
+}
