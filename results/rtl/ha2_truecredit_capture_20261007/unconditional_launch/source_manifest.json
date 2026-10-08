@@ -1,0 +1,26 @@
+{
+  "commit": "1089c48a93e864e6a30faa05d17ddad857d44b70",
+  "files": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d203972abf58823ce475d9b72fa857c87ef6a9492c0700846955d564552f1b6",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_sender_capture.sv": "2ae276bdff594dbae2505d5be7b119082f6e2757eaeff07b7e43649b714cca14",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_hub_launch_single.sv": "943b0a58334af374b4237b79f4a1ecbc6e785dcd113d895e0b05e182f59ac39b",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_capture.sv": "d759b8f494cbbe32365f841962c2e6313f093672f5497021b660a96a07cd0b27",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_hub_split_reset.sv": "87b6e420c09422efc1dc2779caf2972bb745b2b583476b47392d73fabc7066d9",
+    "tools/ha2_truecredit_capture_gate.py": "083ec92f3ec0d1f95da95f5c6c448dbfa114f8046c5155a98a4d4b2747339ad9",
+    "tools/ha2_truecredit_parent_clock_model.py": "c5d454a1e8cc3f8993e3e73f9f7cdbb4d019d14be39c634f441d8c57bc303c19",
+    "results/uarch/ha2_truecredit_parent_clock_20261007/model_r2_actual_ring.json": "397832dfaab7a7dd2b09ef94ffe3bc722b8447c449134386dc37f14e1311a7eb",
+    "results/rtl/ha2_truecredit_capture_20261007/unconditional_launch/candidate_model_delta.json": "3eb5e9ad4d1d456cc4a56eb39a189b90da863ce86a104fc391873b0b572c0da1",
+    "results/rtl/ha2_truecredit_capture_20261007/unconditional_launch/terminal.json": "5f64cc78927cb91278b12980928fb7f072bb21b23eab0ae3d55ae391d0bf7385",
+    "results/rtl/ha2_truecredit_capture_20261007/unconditional_launch/f64_r64.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/ha2_truecredit_capture_20261007/unconditional_launch/f7_r7.log": "a4e3cc16f17431baa5bd5a41131998031114a1042e911281a7c32700bd3e4fdc",
+    "results/rtl/ha2_truecredit_capture_20261007/unconditional_launch/f7_r7.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/ha2_truecredit_capture_20261007/unconditional_launch/split_reset.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/ha2_truecredit_capture_20261007/unconditional_launch/f64_r64.log": "c5b20d18794fb1d4809e727546896ba40f9099bbfe534c194cd434c25b52a2ee",
+    "results/rtl/ha2_truecredit_capture_20261007/unconditional_launch/split_reset.log": "38a0bc4a717c7f3bdd0090d9ce9caebd77ea85e9bdb94cf364de647d70f439cc"
+  },
+  "payload_enable_muxes_removed": 2176,
+  "switching_scope": "adversarial invalid-payload proxy, not workload energy",
+  "physical_adopted": false
+}

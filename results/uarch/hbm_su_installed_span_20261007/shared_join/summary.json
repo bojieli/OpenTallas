@@ -1,0 +1,82 @@
+{
+  "schema": "opentallas.hbm.su.span_service.gate.v1",
+  "status": "PASS",
+  "adopted": false,
+  "physical_qualified": false,
+  "scope": "Actual span-client and five-client shared/loader identity join; eight exact words from installed record0 using test-issued owner and testowned stack peer. Wrong returned producer and responsebank corruption inhibit operand publication.",
+  "logical_word_base": 123,
+  "logical_mapping_scope": "bench descriptor; native consumer program mapping not yet installed",
+  "allocation_record": {
+    "record": 0,
+    "program_byte_address": 119160832,
+    "weight_byte_base": 119161440,
+    "weight_line_base": 744759,
+    "weight_lines": 80,
+    "weight_stride": 160,
+    "x_byte_base": 119174240,
+    "x_extent": 80,
+    "x_stride": 3328,
+    "x_ring_base": 0,
+    "x_load": true,
+    "result_byte_base": 119440480,
+    "result_rows": 1,
+    "result_stride": 32
+  },
+  "context_layout": "{owner73,record16,source5}",
+  "checks_not_tied": true,
+  "missing": [
+    "production native dispatch owner issuer",
+    "causal service PHY/backend",
+    "actual SU program/virtual-edge scheduling join",
+    "SS/FF in context"
+  ],
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_addr_to_service.sv": "12e260d14e8e768c14c6092dee791bf626057ffff2a492695aa80f309f3af3dc",
+    "rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_loader_identity_join.sv": "2415f1cc6277465f1fe5247a97d22b8f912ef148957a7df521ffb2fb729bb741",
+    "rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_service_mux.sv": "9f3d8450c6047d00e0e8ba0ba9dd203d50bf03a19ba856266fe1185e7bbdaa59",
+    "rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_shared_service_join.sv": "ade1dfd89c06d0ba2b1a6fd1a233256a6ecf0b7d024a1bea0439bc9094d68a8a",
+    "rtl/hbm_accel/control_20261007/service_mux/tb_hbm_sm_service_mux.sv": "c2c5c04ff3b365cb98c49460b92e1c42be32f6d5a9a122581f8a641b1c591641",
+    "rtl/hbm_accel/su/installed_span_20261007/ot_hbm_su_installed_span.sv": "18a006736675586c2ae04d8998d66ea36c7a9bd623b44e127c57987a14f2b0aa",
+    "rtl/hbm_accel/su/installed_span_20261007/ot_hbm_su_installed_span_client.sv": "2568abe6ba79cde50186c7b927b4ae646066679a310a3feeb0b734fa5d90646c",
+    "rtl/hbm_accel/su/installed_span_20261007/tb_hbm_su_span_service.sv": "3542a47f5b51bc79762a7298b0cc19d437e8a8e912dac69efd9025b5d1390de3",
+    "results/uarch/hbm_sm_native_production_20261007/installed_spans_candidate.json": "966e26b3ae32d310ced8a3667b8076a45b7d13ca4a449035cd8d90bc16516427",
+    "tools/hbm_su_span_service_gate.py": "136efe50372e96da811acf2b121297e5867a9ced5a2de67f13b14845537a827e"
+  },
+  "compile_command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_hbm_su_span_service",
+    "-o",
+    "/tmp/hbm-su-restore-20261007/span_service_gate/sim",
+    "/home/ubuntu/OpenTallas/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/home/ubuntu/OpenTallas/rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv",
+    "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/ot_hbm_accel_loader_addr_to_service.sv",
+    "/home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_loader_identity_join.sv",
+    "/home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_service_mux.sv",
+    "/home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/service_mux/ot_hbm_sm_shared_service_join.sv",
+    "/home/ubuntu/OpenTallas/rtl/hbm_accel/control_20261007/service_mux/tb_hbm_sm_service_mux.sv",
+    "/home/ubuntu/OpenTallas/rtl/hbm_accel/su/installed_span_20261007/ot_hbm_su_installed_span.sv",
+    "/home/ubuntu/OpenTallas/rtl/hbm_accel/su/installed_span_20261007/ot_hbm_su_installed_span_client.sv",
+    "/home/ubuntu/OpenTallas/rtl/hbm_accel/su/installed_span_20261007/tb_hbm_su_span_service.sv"
+  ],
+  "cases": [
+    {
+      "case": 0,
+      "exit_code": 0,
+      "output": "PASS SPAN_SERVICE 8 exact operands installed record0 actual shared identity/reverse grant"
+    },
+    {
+      "case": 1,
+      "exit_code": 0,
+      "output": "PASS SPAN_SERVICE rejected wrong owned producer"
+    },
+    {
+      "case": 2,
+      "exit_code": 0,
+      "output": "PASS SPAN_SERVICE rejected response bank corruption"
+    }
+  ]
+}

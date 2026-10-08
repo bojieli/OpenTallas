@@ -1,0 +1,52 @@
+{
+  "port": "req_ready",
+  "input_net": "req_ready",
+  "buffer_connections": [
+    {
+      "pin": "A",
+      "net": "req_ready",
+      "connections": [
+        {
+          "instance": "input1315",
+          "master": "BUFx6f_ASAP7_75t_R",
+          "pin": "A",
+          "direction": "INPUT",
+          "location_dbu": [
+            145314,
+            2970
+          ]
+        }
+      ],
+      "bterms": [
+        "req_ready"
+      ]
+    },
+    {
+      "pin": "Y",
+      "net": "net1314",
+      "connections": [
+        {
+          "instance": "input1315",
+          "master": "BUFx6f_ASAP7_75t_R",
+          "pin": "Y",
+          "direction": "OUTPUT",
+          "location_dbu": [
+            145314,
+            2970
+          ]
+        },
+        {
+          "instance": "g_rc.u_rsk.rq$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "D",
+          "direction": "INPUT",
+          "location_dbu": [
+            144990,
+            3240
+          ]
+        }
+      ],
+      "bterms": []
+    }
+  ]
+}

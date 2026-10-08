@@ -1,0 +1,244 @@
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:64:35: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ic' generates 11 bits.
+                                                                                                   : ... note: In instance 'tb_s81ph_gbx_reset.b'
+   64 |     wire           idle_now = (ic == IDLE_P - 1);
+      |                                   ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:65:46: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'tcnt' generates 11 bits.
+                                                                                                   : ... note: In instance 'tb_s81ph_gbx_reset.b'
+   65 |     wire           need = !idle_now && (tcnt < G);
+      |                                              ^
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:86:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tcnt' generates 11 bits.
+                                                                                                   : ... note: In instance 'tb_s81ph_gbx_reset.b'
+   86 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                                         ^
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:86:34: Operator COND expects 32 bits on the Conditional False, but Conditional False's VARREF 'tcnt' generates 11 bits.
+                                                                                                   : ... note: In instance 'tb_s81ph_gbx_reset.b'
+   86 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                                  ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:86:27: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset.b'
+   86 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                           ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:87:40: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 11 bits.
+                                                                                                   : ... note: In instance 'tb_s81ph_gbx_reset.b'
+   87 |     wire [PB:0]    tph_n = {1'b0, tph} + G;
+      |                                        ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:87:26: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset.b'
+   87 |     wire [PB:0]    tph_n = {1'b0, tph} + G;
+      |                          ^
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:113:32: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tcnt_a' generates 11 bits.
+                                                                                                    : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  113 |                 tcnt <= tcnt_a - G;
+      |                                ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:113:22: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                   : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  113 |                 tcnt <= tcnt_a - G;
+      |                      ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:114:31: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'tph_n' generates 11 bits.
+                                                                                                    : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  114 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                               ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:114:45: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tph_n' generates 11 bits.
+                                                                                                    : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  114 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:114:37: Operator COND expects 32 bits on the Conditional False, but Conditional False's SEL generates 10 bits.
+                                                                                                    : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  114 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                                     ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:114:21: Operator ASSIGNDLY expects 10 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                   : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  114 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                     ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:142:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'mc' generates 8 bits.
+                                                                                                    : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  142 |     wire           due = (mc == MP - 1);
+      |                              ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:144:34: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rcnt' generates 11 bits.
+                                                                                                    : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  144 |     wire [CB-1:0]  rcnt_a = rcnt + G;
+      |                                  ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:144:27: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                   : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  144 |     wire [CB-1:0]  rcnt_a = rcnt + G;
+      |                           ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:160:34: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's VARREF 'G' generates 32 bits.
+                                                                                                   : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  160 |                             rcnt <= G;
+      |                                  ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:169:40: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'rcnt_a' generates 11 bits.
+                                                                                                    : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  169 |                         rcnt <= rcnt_a - S;
+      |                                        ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:169:30: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                   : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  169 |                         rcnt <= rcnt_a - S;
+      |                              ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:166:32: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rcnt_a' generates 11 bits.
+                                                                                                    : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  166 |                     if (rcnt_a >= S) begin
+      |                                ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:188:33: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rcnt_a' generates 11 bits.
+                                                                                                    : ... note: In instance 'tb_s81ph_gbx_reset.b'
+  188 |                 else if (rcnt_a >= S) racc <= racc_a >> S;
+      |                                 ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:60:35: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ic' generates 11 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   60 |     wire           idle_now = (ic == IDLE_P - 1);
+      |                                   ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:61:46: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'tcnt' generates 11 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   61 |     wire           need = !idle_now && (tcnt < G);
+      |                                              ^
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:65:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tcnt' generates 11 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   65 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                                         ^
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:65:34: Operator COND expects 32 bits on the Conditional False, but Conditional False's VARREF 'tcnt' generates 11 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   65 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                                  ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:65:27: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                            : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   65 |     wire [CB-1:0]  tcnt_a = need ? tcnt + S : tcnt;
+      |                           ^
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:66:40: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 11 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   66 |     wire [PB:0]    tph_n = {1'b0, tph} + G;
+      |                                        ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:66:26: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                            : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   66 |     wire [PB:0]    tph_n = {1'b0, tph} + G;
+      |                          ^
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:81:32: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tcnt_a' generates 11 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   81 |                 tcnt <= tcnt_a - G;
+      |                                ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:81:22: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                            : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   81 |                 tcnt <= tcnt_a - G;
+      |                      ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:82:31: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'tph_n' generates 11 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   82 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                               ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:82:45: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'tph_n' generates 11 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   82 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:82:37: Operator COND expects 32 bits on the Conditional False, but Conditional False's SEL generates 10 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   82 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                                     ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:82:21: Operator ASSIGNDLY expects 10 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                            : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   82 |                 tph <= (tph_n >= S) ? tph_n - S : tph_n[PB-1:0];
+      |                     ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:95:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'mc' generates 8 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   95 |     wire           due = (mc == MP - 1);
+      |                              ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:97:34: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rcnt' generates 11 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   97 |     wire [CB-1:0]  rcnt_a = rcnt + G;
+      |                                  ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:97:27: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                            : ... note: In instance 'tb_s81ph_gbx_reset.a'
+   97 |     wire [CB-1:0]  rcnt_a = rcnt + G;
+      |                           ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:113:59: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's VARREF 'G' generates 32 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+  113 |                             racc <= {{S{1'b0}}, bg}; rcnt <= G;
+      |                                                           ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:123:40: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'rcnt_a' generates 11 bits.
+                                                                                              : ... note: In instance 'tb_s81ph_gbx_reset.a'
+  123 |                         rcnt <= rcnt_a - S;
+      |                                        ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:123:30: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                             : ... note: In instance 'tb_s81ph_gbx_reset.a'
+  123 |                         rcnt <= rcnt_a - S;
+      |                              ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv:119:32: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rcnt_a' generates 11 bits.
+                                                                                              : ... note: In instance 'tb_s81ph_gbx_reset.a'
+  119 |                     if (rcnt_a >= S) begin
+      |                                ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:36:17: Operator ASSIGN expects 53 bits on the Assign RHS, but Assign RHS's REPLICATE generates 64 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset'
+   36 |             r_tx={rnd(),rnd()}; r_tx_v=rnd()%2;
+      |                 ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:36:39: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's MODDIV generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset'
+   36 |             r_tx={rnd(),rnd()}; r_tx_v=rnd()%2;
+      |                                       ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:56:12: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'takes' generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset'
+   56 |         if(!takes || !bypass || !overflow || !idles || !locks || !frames || !empty || !full)
+      |            ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:56:22: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'bypass' generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset'
+   56 |         if(!takes || !bypass || !overflow || !idles || !locks || !frames || !empty || !full)
+      |                      ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:56:33: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'overflow' generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset'
+   56 |         if(!takes || !bypass || !overflow || !idles || !locks || !frames || !empty || !full)
+      |                                 ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:56:46: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'idles' generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset'
+   56 |         if(!takes || !bypass || !overflow || !idles || !locks || !frames || !empty || !full)
+      |                                              ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:56:56: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'locks' generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset'
+   56 |         if(!takes || !bypass || !overflow || !idles || !locks || !frames || !empty || !full)
+      |                                                        ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:56:66: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'frames' generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset'
+   56 |         if(!takes || !bypass || !overflow || !idles || !locks || !frames || !empty || !full)
+      |                                                                  ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:56:77: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'empty' generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset'
+   56 |         if(!takes || !bypass || !overflow || !idles || !locks || !frames || !empty || !full)
+      |                                                                             ^
+%Warning-WIDTHTRUNC: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_reset.sv:56:87: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'full' generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_s81ph_gbx_reset'
+   56 |         if(!takes || !bypass || !overflow || !idles || !locks || !frames || !empty || !full)
+      |                                                                                       ^
+%Warning-MULTIDRIVEN: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:137:20: Signal has multiple driving blocks with different clocking: 'tb_s81ph_gbx_reset.c.racc'
+                      /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:164:57: ... Location of first driving block
+  164 |                     hunt <= bm ? 1 : 0; locked <= 1'b0; racc <= 0; rcnt <= 0;
+      |                                                         ^~~~
+                      /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:186:49: ... Location of other driving block
+  186 |                     if (bm && hunt == 1 && due) racc <= {{S{1'b0}}, bg};
+      |                                                 ^~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:137:20: Signal has multiple driving blocks with different clocking: 'tb_s81ph_gbx_reset.b.racc'
+                      /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:164:57: ... Location of first driving block
+  164 |                     hunt <= bm ? 1 : 0; locked <= 1'b0; racc <= 0; rcnt <= 0;
+      |                                                         ^~~~
+                      /home/ubuntu/OpenTallas/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_reset.sv:186:49: ... Location of other driving block
+  186 |                     if (bm && hunt == 1 && due) racc <= {{S{1'b0}}, bg};
+      |                                                 ^~~~
+make: Entering directory '/tmp/s81-gbx-reset-gate-r1/exact_build'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_s81ph_gbx_reset__pch.h -o Vtb_s81ph_gbx_reset__pch.h.fast.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_reset__pch.h.fast -c Vtb_s81ph_gbx_reset.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_reset__pch.h.fast -c Vtb_s81ph_gbx_reset___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_reset__pch.h.fast -c Vtb_s81ph_gbx_reset___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_reset__pch.h.fast -c Vtb_s81ph_gbx_reset__main.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_s81ph_gbx_reset__pch.h -o Vtb_s81ph_gbx_reset__pch.h.slow.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_reset__pch.h.slow -c Vtb_s81ph_gbx_reset__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_reset__pch.h.slow -c Vtb_s81ph_gbx_reset___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_reset__pch.h.slow -c Vtb_s81ph_gbx_reset___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_s81ph_gbx_reset__pch.h.slow -c Vtb_s81ph_gbx_reset__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_s81ph_gbx_reset__ALL.a    -pthread -lpthread -latomic   -o Vtb_s81ph_gbx_reset
+rm Vtb_s81ph_gbx_reset__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/s81-gbx-reset-gate-r1/exact_build'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.096 MB sources in 4 modules, into 0.502 MB in 8 C++ files needing 0.009 MB
+- Verilator: Walltime 6.511 s (elab=0.004, cvt=0.018, bld=6.480); cpu 0.031 s on 1 threads; allocated 42.191 MB
