@@ -1,6 +1,6 @@
 {
   "name": "ot_dsrom_window_column_256",
-  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt/routes/wcol256_pinreg_r1_f1b64667d_tt/work/orfs",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt-h1v/routes/wcol256_pinreg_r1_f1b64667d_tt_h1v/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,11 +10,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt/routes/wcol256_pinreg_r1_f1b64667d_tt/work/orfs:/in:ro",
+        "/srv/opentallas-data/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt-h1v/routes/wcol256_pinreg_r1_f1b64667d_tt_h1v/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt/routes/wcol256_pinreg_r1_f1b64667d_tt/view:/out",
+        "/srv/opentallas-data/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt-h1v/routes/wcol256_pinreg_r1_f1b64667d_tt_h1v/view:/out",
         "-v",
-        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt/routes/wcol256_pinreg_r1_f1b64667d_tt/abs_tmp:/tmp",
+        "/srv/opentallas-data/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt-h1v/routes/wcol256_pinreg_r1_f1b64667d_tt_h1v/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -32,11 +32,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt/routes/wcol256_pinreg_r1_f1b64667d_tt/work/orfs:/in:ro",
+        "/srv/opentallas-data/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt-h1v/routes/wcol256_pinreg_r1_f1b64667d_tt_h1v/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt/routes/wcol256_pinreg_r1_f1b64667d_tt/view:/out",
+        "/srv/opentallas-data/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt-h1v/routes/wcol256_pinreg_r1_f1b64667d_tt_h1v/view:/out",
         "-v",
-        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt/routes/wcol256_pinreg_r1_f1b64667d_tt/abs_tmp:/tmp",
+        "/srv/opentallas-data/claude/closure-loop/wcol256-pinreg-r1-f1b64667d-tt-h1v/routes/wcol256_pinreg_r1_f1b64667d_tt_h1v/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -49,9 +49,9 @@
   },
   "macro_views": [],
   "files": {
-    "ot_dsrom_window_column_256.lef": "f94d970a3bb4c5a3aee8b6e92a4d7d6bf353313ed2757c994ad6c7d0e7152b71",
-    "ot_dsrom_window_column_256_ff.lib": "f5866be69c8297b14d485029ab008e52b8e9cf205bd4691e6d05b6d42956adfc",
-    "ot_dsrom_window_column_256_ss.lib": "273cd828c0ae18ee8b7e474e254cb0002d671311b310776e760f795bd4d2ac60"
+    "ot_dsrom_window_column_256.lef": "d15fc3e96c64866183c1768db9ac0fe0e731b3d8bec351df103e95bec3dd38f9",
+    "ot_dsrom_window_column_256_ff.lib": "5f2c7052a88caab01ac762039ac09946e041edfcb2daa5f955938b8e19385959",
+    "ot_dsrom_window_column_256_ss.lib": "fd6ac5eb9c3ccf0395d1cf575850a72dfe3cc2701e9437225269d766eb3d7931"
   },
   "ok": true
 }

@@ -6,9 +6,9 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
 
-read_db /in/results/asap7/opentallas_ot_dsrom_window_column_256_asap7_wcol256_pinreg_r1_f1b64667d_tt/base/6_final.odb
-read_sdc /in/results/asap7/opentallas_ot_dsrom_window_column_256_asap7_wcol256_pinreg_r1_f1b64667d_tt/base/6_final.sdc
-read_spef /in/results/asap7/opentallas_ot_dsrom_window_column_256_asap7_wcol256_pinreg_r1_f1b64667d_tt/base/6_final.spef
+read_db /in/results/asap7/opentallas_ot_dsrom_window_column_256_asap7_wcol256_pinreg_r1_f1b64667d_tt_h1v/base/6_final.odb
+read_sdc /in/results/asap7/opentallas_ot_dsrom_window_column_256_asap7_wcol256_pinreg_r1_f1b64667d_tt_h1v/base/6_final.sdc
+read_spef /in/results/asap7/opentallas_ot_dsrom_window_column_256_asap7_wcol256_pinreg_r1_f1b64667d_tt_h1v/base/6_final.spef
 set_propagated_clock [all_clocks]
 puts "OT_WS [sta::worst_slack_cmd max]"
 write_timing_model -library_name ot_dsrom_window_column_256_ss /out/ot_dsrom_window_column_256_ss.lib
