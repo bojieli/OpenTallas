@@ -17,6 +17,7 @@ The loop's own hold_corners_patch.py (mm hold repair, RSZ-0060 tolerance, helper
 Fails (exit 2) when the corner support cannot be installed: the job must not route at SS under a TT name."""
 import hashlib
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -71,11 +72,16 @@ def apply_cts_fix_hooks(config, case):
     for i, fix in enumerate(fixes):
         source = Path(fix)
         if not source.is_absolute():
-            source = ROOT / source
+            # tt_overlay: recipes that run from a reduced context copy (route_core.sh context_src) lack common_flow:
+            # fall back to the job snapshot this function was patched into
+            source = next((r / fix for r in (ROOT, Path("@TTB_SRC@")) if (r / fix).is_file()), ROOT / fix)
         if not source.is_file():
             raise ValueError(f"OT_CTS_FIX_HOOKS: no such file {source}")
         name = f"ot_cts_fix_{i}_{source.name}"
         shutil.copy2(source, hooks_dir / name)
+        for sib in ("link_budget_consistent.sdc",):   # sourced by link_budget_hook.tcl from its own directory
+            if source.name == "link_budget_hook.tcl" and (source.parent / sib).is_file():
+                shutil.copy2(source.parent / sib, hooks_dir / sib)
         body.append(f"source /work/hooks/{name}")
         record.append({"path": fix, "name": name, "sha256": _h.sha256(source.read_bytes()).hexdigest()})
     (hooks_dir / "pre_cts_ot_cts_fix.tcl").write_text("\n".join(body) + "\n", encoding="utf-8")
@@ -86,7 +92,8 @@ def apply_cts_fix_hooks(config, case):
 '''
 CFG_ANCHOR = '    (case / "config.mk").write_text("\\n".join(config) + "\\n", encoding="utf-8")\n'
 FN_ANCHOR = "\ndef io_constraints_tcl("
-COMMON = ["cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl", "link_budget_consistent.sdc"]
+COMMON = ["cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl", "link_budget_consistent.sdc",
+          "nbr_clk_measured_ttb.sdc"]
 
 
 def ensure_corner(s):
@@ -109,19 +116,37 @@ def ensure_corner(s):
     return s, msg, True
 
 
-def ensure_hooks(s):
-    if "def apply_cts_fix_hooks" in s:
+def ensure_hooks(s, src):
+    fn = HOOKS_FN.replace("@TTB_SRC@", str(src.resolve()))
+    if fn in s:
         return s, [], True
+    if "def apply_cts_fix_hooks" in s:
+        # replace main's / an older overlay's version (no context-copy fallback, no sibling SDC copy)
+        a = s.index("\n\ndef apply_cts_fix_hooks")
+        b = s.index("\ndef ", a + 5)
+        s = s[:a] + fn.rstrip("\n") + "\n\n" + s[b:]
+        return s, ["OT_CTS_FIX_HOOKS function replaced (context fallback)"], True
     if s.count(CFG_ANCHOR) != 1 or s.count(FN_ANCHOR) != 1:
         return s, ["NO anchor for OT_CTS_FIX_HOOKS"], False
     s = s.replace(CFG_ANCHOR, "    config = apply_cts_fix_hooks(config, case)\n" + CFG_ANCHOR)
-    s = s.replace(FN_ANCHOR, HOOKS_FN + FN_ANCHOR)
+    s = s.replace(FN_ANCHOR, fn + FN_ANCHOR)
     return s, ["OT_CTS_FIX_HOOKS added"], True
 
 
 SMH_OLD = 'f"export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) {lib_ss}"'
-SMH_NEW = ('f"export WC_LIB_FILES = $(TC_NLDM_LIB_FILES) {lib_ss.replace(\'_ss.lib\', \'_tt.lib\')}"'
-           '  # tt_overlay v2: corner WC reads the TT liberties (option B)')
+SMH_NEW = 'f"export WC_LIB_FILES = $(TC_NLDM_LIB_FILES) {lib_ss.replace(\'_ss.lib\', \'_tt.lib\')}"'
+# v2 first deploy appended an inline comment that swallowed the list comma (strings concatenated -> "export" read as a lib)
+SMH_BAD = SMH_NEW + '  # tt_overlay v2: corner WC reads the TT liberties (option B)'
+
+
+SMH_CORNER_LINE = '  echo "corner_rc=$?" >> $W/status\n'
+SMH_NBR = (SMH_CORNER_LINE +
+           "  # tt_overlay: setup corners re-timed with nbr_clk at the measured insertion (hbm-blocks 9e81f6c70 semantics);\n"
+           "  # the loop's tt_resta.sh re-times this tcl at TT; FF hold (w18_sta_ff.tcl) keeps the generator model\n"
+           "  if [ -f $W/w18_sta_ss.tcl ] && ! grep -q OT_NBR_MEASURED_TTB $W/w18_sta_ss.tcl; then "
+           "cp $W/w18_sta_ss.tcl $W/w18_sta_ss.planning.tcl && cp $S/physical/common_flow/nbr_clk_measured_ttb.sdc $W/ && "
+           "sed -i 's#^set_propagated_clock \\[all_clocks\\]$#&\\nsource /work/nbr_clk_measured_ttb.sdc ;\\# OT_NBR_MEASURED_TTB#' "
+           "$W/w18_sta_ss.tcl; echo \"nbr_measured_rc=$?\" >> $W/status; fi\n")
 
 
 def ensure_smh(src):
@@ -132,14 +157,61 @@ def ensure_smh(src):
     if not f.is_file() or not tc:
         return []
     s = f.read_text()
+    s = s.replace(SMH_BAD, SMH_NEW)
     if SMH_NEW not in s:
         if s.count(SMH_OLD) != 1:
             return ["SMH: WC_LIB_FILES anchor missing"]
-        f.write_text(s.replace(SMH_OLD, SMH_NEW))
+        s = s.replace(SMH_OLD, SMH_NEW)
+    if "OT_NBR_MEASURED_TTB" not in s and "OT_SMH_POST_SDC" not in s:
+        if s.count(SMH_CORNER_LINE) != 1:
+            return ["SMH: corner_rc anchor missing"]
+        s = s.replace(SMH_CORNER_LINE, SMH_NBR)
+    f.write_text(s)
     if os.environ.get("OT_TTB_CORNER_MARK"):
         with open(os.environ["OT_TTB_CORNER_MARK"], "a") as m:
             m.write(f"TC {os.getpid()} smh_config wc_reads_tt\n")
     return ["SMH flow: WC reads TT"]
+
+
+def ensure_direct_configs(src):
+    """Recipes that drive ORFS directly with a checked-in config.mk (ha2 relay / h2 fixedpins style): in a TC route stage
+    the WC_LIB_FILES line reads the TT std-cell libraries and macro _tt.lib (corner names kept)."""
+    tc = (os.environ.get("OT_ORFS_CORNER", "") or os.environ.get("OT_ORFS_CORNER_OVERRIDE", "")).strip().upper() == "TC"
+    if not tc:
+        return []
+    n = 0
+    for f in (src / "physical").rglob("config.mk"):
+        t = f.read_text(errors="replace")
+        u = "\n".join((l.replace("$(WC_NLDM_LIB_FILES)", "$(TC_NLDM_LIB_FILES)").replace("_ss.lib", "_tt.lib")
+                       if re.match(r"\s*export\s+WC_LIB_FILES\s*=", l) else l) for l in t.split("\n"))
+        if u != t:
+            f.write_text(u)
+            n += 1
+    if n and os.environ.get("OT_TTB_CORNER_MARK"):
+        with open(os.environ["OT_TTB_CORNER_MARK"], "a") as m:
+            m.write(f"TC {os.getpid()} direct_config_mk x{n} wc_reads_tt\n")
+    return [f"direct config.mk WC->TT x{n}"] if n else []
+
+
+CTX_CP = "cp $S/tools/orfs_allcorner_spef.py $R/context_src/tools/"
+CTX_CP_NEW = (CTX_CP + "; cp $S/tools/orfs_hold_mm.py $S/tools/orfs_hold_mm.tcl $R/context_src/tools/ 2>/dev/null; "
+              "mkdir -p $R/context_src/physical/common_flow; cp $S/physical/common_flow/* $R/context_src/physical/common_flow/"
+              "  # tt_overlay: mm hold helpers + CTS hooks in the context copy")
+CTX_ADD = "add rtl/control_context.v physical/qwen_core_ctx tools/orfs_allcorner_spef.py"
+CTX_ADD_NEW = "add rtl/control_context.v physical/qwen_core_ctx tools physical/common_flow"
+
+
+def ensure_context_copies(src):
+    """Qwen route_core*.sh run ORFS from a reduced context copy: ship the mm hold helpers and common_flow into it."""
+    n = 0
+    for f in (src / "physical/qwen_die_masters/jobs").glob("route_core*.sh"):
+        t = f.read_text()
+        u = t.replace(CTX_CP + "\n", CTX_CP_NEW + "\n") if CTX_CP_NEW not in t else t
+        u = u.replace(CTX_ADD, CTX_ADD_NEW)
+        if u != t:
+            f.write_text(u)
+            n += 1
+    return [f"context copy helpers x{n}"] if n else []
 
 
 def main():
@@ -149,7 +221,7 @@ def main():
     if f.is_file():
         s0 = s = f.read_text()
         s, m1, ok1 = ensure_corner(s)
-        s, m2, ok2 = ensure_hooks(s)
+        s, m2, ok2 = ensure_hooks(s, src)
         out += m1 + m2
         ok = ok1 and ok2
         if s != s0:
@@ -158,7 +230,9 @@ def main():
             f.write_text(s)
     else:
         out.append("no tools/run_abi3_physical.py")
-        ok = (src / "tools/hbm_accel_smh_physical.py").is_file()
+        ok = (src / "tools/hbm_accel_smh_physical.py").is_file() or any((src / "physical").rglob("config.mk"))
+    out += ensure_direct_configs(src)
+    out += ensure_context_copies(src)
     sm = ensure_smh(src)
     out += sm
     ok = ok and not any("missing" in x for x in sm)
