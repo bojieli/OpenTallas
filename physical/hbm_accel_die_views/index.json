@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
- "round": "r23",
- "generator_sha256": "456d7ee43f6060745445368cc3d3ec0ca8c0df720f35340ea9723b24fc3e6e9b",
+ "round": "r25",
+ "generator_sha256": "1a7ce996603c842efeb3e407057d0c62d63218230bef7422fd00a8b3d2971ff1",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -238,10 +238,107 @@
     "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    }
   },
-  "hfd_cmdproc": {
-   "kind": "cmdproc",
-   "status": "missing",
-   "instances": 1
+  "hfd_cmdproc_n": {
+   "kind": null,
+   "status": "closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/cmdproc/view_n",
+   "lef": "hfd_cmdproc_n.lef",
+   "lib": {
+    "ss": "hfd_cmdproc_n_ss.lib",
+    "ff": "hfd_cmdproc_n_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "ac6ef1af33d9618ba5f61e1cacc8c19be003c568",
+    "host": "ot-epyc1tb",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_cmdproc_n_ac6ef1af3",
+    "ss_setup_ps": 60.84,
+    "ff_hold_ps": 19.69,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T03:45:59-07:00"
+   },
+   "files_sha256": {
+    "hfd_cmdproc_n.lef": "23211cf38906462908a7a480cb7e8cc890e0c71bb2fb0786b0414cfebe4bd739",
+    "hfd_cmdproc_n_ss.lib": "98c4f3540695b6015a0b76b57c8cfa6c8aa4b4802fc43e63c346b2ba5d790952",
+    "hfd_cmdproc_n_ff.lib": "ee263ad66b4a41287ee5762208da085a91d88f1ce8ceaaaeb2ef500734522ebd",
+    "corner_sta.json": "ef7a10b31bf8cf86d54c9dfcbb379f8f22d06e4b1cb09c3dd88b175b73f8d1ae",
+    "check.json": "d4896ff60caefbb25f4bdf872c0493472486ea58cacea6f5ed570959f80bede7"
+   },
+   "receipt": "results/closure_loop/hbm_cmdproc_n_ac6ef1af3/verdict.json",
+   "receipt_sha256": "0d43eaf0efe0b6c681fae514da03bc5fc1f748eabfbbb4d1034f0dd7d647a5f9",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 60.84,
+    "ff_hold_ps": 19.69,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     1399.66,
+     701.976
+    ],
+    "size_gen": [
+     1399.656,
+     701.976
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_cmdproc_s": {
+   "kind": null,
+   "status": "closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/cmdproc/view_s",
+   "lef": "hfd_cmdproc_s.lef",
+   "lib": {
+    "ss": "hfd_cmdproc_s_ss.lib",
+    "ff": "hfd_cmdproc_s_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "ac6ef1af33d9618ba5f61e1cacc8c19be003c568",
+    "host": "ot-epyc1tb",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_cmdproc_s_ac6ef1af3",
+    "ss_setup_ps": 91.36,
+    "ff_hold_ps": 21.17,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T04:42:03-07:00"
+   },
+   "files_sha256": {
+    "hfd_cmdproc_s.lef": "ed38c862500b20dd1750d098ba798a7123f3f793c97ac167821873c57da90881",
+    "hfd_cmdproc_s_ss.lib": "d67caa2463906f0ceda7b955a74893795176af2baafaaa4152a051667b553bd0",
+    "hfd_cmdproc_s_ff.lib": "119dc09aa2868a1cfdb54bddcbc89b6362749e06bc4023d87cf877cdbf8a508c",
+    "corner_sta.json": "a7c31c95a243a61ae32a3c55d2c5d04828c153a4fac1102c4b959670a148004b",
+    "check.json": "d020994d6bd6ddd1ea6b5bb298517d8caf80b802757ebb85a374cadba95c33c0"
+   },
+   "receipt": "results/closure_loop/hbm_cmdproc_s_ac6ef1af3/verdict.json",
+   "receipt_sha256": "b158489a8558c8150d1e3fa95a3270c6b30bb796b910d54372ddcbc9d50988e3",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 91.36,
+    "ff_hold_ps": 21.17,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     1399.66,
+     701.976
+    ],
+    "size_gen": [
+     1399.656,
+     701.976
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_coll": {
    "kind": "coll",
@@ -2979,8 +3076,8 @@
  },
  "counts": {
   "interim-not-closed": 3,
-  "closed": 45,
-  "missing": 33,
+  "closed": 47,
+  "missing": 32,
   "reservation": 2
  }
 }
