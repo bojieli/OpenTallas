@@ -35,7 +35,7 @@ step spef { estimate_parasitics -global_routing -spef_file /work/die_grt.spef }
 step netlist { write_verilog /work/die_grt.v }
 T
 date -u +%FT%TZ > $D/grt.start
-docker run --rm --name s81_grt_$(basename $D) --cpus=$T --memory=${M}g -v $D:/work -w /work openroad/orfs:asap7lock \
+docker run --rm --name s81_grt_$(basename $(dirname $D))_$(basename $D) --cpus=$T --memory=${M}g -v $D:/work -w /work openroad/orfs:asap7lock \
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads $T -no_init -exit /work/grt.tcl > /work/grt.log 2>&1; rc=\$?; chmod -R a+rwX /work; exit \$rc"
 echo $? > $D/grt.exit; date -u +%FT%TZ > $D/grt.end
 SP=$(ls $D/die_grt.spef* 2>/dev/null | head -1)
@@ -43,7 +43,7 @@ SP=$(ls $D/die_grt.spef* 2>/dev/null | head -1)
 # die STA, one OpenROAD/OpenSTA session per corner, kit tcl unchanged except the SPEF path
 for c in ss tt ff; do   # owner option B: setup TT, hold FF, SS sensitivity
   sed -e "s#/kit/die.spef#/run/$(basename $SP)#g" $K/sta_$c.tcl | sed -e "s#> /kit/#> /run/#g" > $D/sta_$c.tcl
-  docker run --rm --name s81_sta_${c}_$(basename $D) --cpus=8 --memory=${M}g -v $D:/run -v $K:/kit -v $SRC:$SRC:ro -w /run openroad/orfs:asap7lock \
+  docker run --rm --name s81_sta_${c}_$(basename $(dirname $D))_$(basename $D) --cpus=8 --memory=${M}g -v $D:/run -v $K:/kit -v $SRC:$SRC:ro -w /run openroad/orfs:asap7lock \
     bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v sta -no_init -exit /run/sta_$c.tcl > /run/sta_$c.log 2>&1; chmod -R a+rwX /run" &
 done
 wait
