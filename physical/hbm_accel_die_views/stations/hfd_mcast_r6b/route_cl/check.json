@@ -1,0 +1,60 @@
+{
+ "master": "hfd_mcast_r6b",
+ "lef": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r6b_f78eb159f-mmq/routes/hbm_stn_mcast_r6b_f78eb159f_mmq/view/hfd_mcast_r6b.lef",
+ "macro": "hfd_mcast_r6b",
+ "size_view": [
+  466.968,
+  120.936
+ ],
+ "size_gen": [
+  466.968,
+  120.936
+ ],
+ "gen_pins": 4164,
+ "view_pins": 4164,
+ "missing": 0,
+ "extra": 0,
+ "die_top_io_pins": [],
+ "moved": 0,
+ "wrong_layer": 0,
+ "wrong_face": 0,
+ "wrong_face_examples": [],
+ "missing_examples": [],
+ "extra_examples": [],
+ "moved_examples": [],
+ "wrong_layer_examples": [],
+ "pg_pins": {
+  "VDD": [
+   "M1",
+   "M2",
+   "M6",
+   "M7"
+  ],
+  "VSS": [
+   "M1",
+   "M2",
+   "M6",
+   "M7"
+  ]
+ },
+ "obs_layers": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6",
+  "M7",
+  "RVTN",
+  "RVTP"
+ ],
+ "obs_above_generator": [
+  "M4",
+  "M5",
+  "M6",
+  "M7"
+ ],
+ "positions": "exact",
+ "problems": [],
+ "verdict": "MATCH"
+}
