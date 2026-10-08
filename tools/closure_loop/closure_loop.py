@@ -2901,6 +2901,11 @@ def start_hold_eco(j, fleet, m):
     env += f" SDC_NAME={shlex.quote(m.get('sdc_name') or '6_final.sdc')}"
     if m.get("setup_post_sdc"):
         env += f" SETUP_POST_SDC={shlex.quote(' '.join(m['setup_post_sdc']))}"
+    if j.get("eco_stack"):
+        # DRIVE-1243: stacked ECO (retry-eco --stack): the installed ECO's db lives in the route base as 6_final.*
+        # (5_2_route.odb there is the PRE-ECO route): ECO that db, sign off from the same base
+        rb = ob = j["eco_stack"]["base"]
+        env += " ECO_RB_DB=6_final.odb"
     recovery = j.get("eco_overlay_recovery") or {}
     hist = len(j.get("eco_history") or [])
     out = recovery.get("out", f"{j['run']}/cl/eco" + (f"-r{hist + 1}" if hist else ""))   # earlier ECOs stay as evidence
@@ -3627,7 +3632,13 @@ def cmd_retry_eco(a):
     earlier ECO missed; the earlier ECO is kept in eco_history and its output dir is preserved (new out: cl/eco-r<n>)."""
     j = load_job(a.name)
     e, m = j.get("eco") or {}, j.get("metrics") or {}
-    if j["status"] != "NEEDS_RTL" or not e.get("tried") or e.get("installed"):
+    if getattr(a, "stack", False):
+        # DRIVE-1243: an INSTALLED ECO judged at a stale IO reference (the routed-insertion re-STA, e.g. after the
+        # c4ffc4f9d vclk mapping, fails it on hold only): a second ECO on top of the installed db, at the routed reference
+        if j["status"] != "NEEDS_RTL" or not e.get("installed"):
+            sys.exit(f"{a.name}: --stack needs a NEEDS_RTL job with an installed ECO")
+        j["eco_stack"] = dict(base=e["rb"], prior_out=e.get("out"), at=now_iso())
+    elif j["status"] != "NEEDS_RTL" or not e.get("tried") or e.get("installed"):
         sys.exit(f"{a.name}: {j['status']}, eco tried={e.get('tried')} installed={e.get('installed')}: "
                  f"only a NEEDS_RTL job with an uninstalled, missed hold ECO can re-run it")
     if stage_list(j["spec"])[j["stage_idx"]]["kind"] != "verdict":
@@ -3735,6 +3746,7 @@ def main():
     v = sub.add_parser("validate"); v.add_argument("file")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
+    r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
     r = sub.add_parser("ioref-rejudge"); r.add_argument("name")
     r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line SS>=0/FF>=0/DRC 0")
     c = sub.add_parser("cancel"); c.add_argument("name")

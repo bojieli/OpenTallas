@@ -50,6 +50,14 @@ foreach c [all_clocks] {
   # FWDCLK-SWEEP 2026-10-08: the budget SDC convention makes vclk / vclki the IO reference of core_clk (forwarded input
   # clocks are declared asynchronous to {core_clk vclk}); hfd_index_q_b0 (core_clk + fk0 / fk1 key-capture clocks) is
   # below the 4x dominance ratio and was skipped.  A vclk* clock resolves to core_clk when that real clock exists.
+  # DRIVE-1243 2026-10-08: a vclk_<x> whose PERIOD equals exactly one real clock's is that clock's reference (s81ph
+  # dsfd_capt_grp: vclk_s = ser_clk period 4/3 core, IO of the ser domain; the core_clk fallback below moved it to the
+  # core_clk FF mean 244 instead of the ser_clk 229).  Checked before the vclk* -> core_clk fallback.
+  if {$rc eq "" && [string match vclk* $vn]} {
+    set ot_ir_pm {}
+    foreach cn [dict keys $ot_ir_ins] { if {abs([get_property [get_clocks $cn] period] - [get_property $c period]) < 0.001} { lappend ot_ir_pm $cn } }
+    if {[llength $ot_ir_pm] == 1} { set rc [lindex $ot_ir_pm 0] }
+  }
   if {$rc eq "" && [string match vclk* $vn] && [dict exists $ot_ir_ins core_clk]} { set rc core_clk }
   if {$rc eq "" && [dict size $ot_ir_nreg] > 1} {
     set ot_ir_srt [lsort -stride 2 -index 1 -integer -decreasing $ot_ir_nreg]
