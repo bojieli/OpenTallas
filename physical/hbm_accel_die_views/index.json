@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
  "round": "r23",
- "generator_sha256": "ed4b0b700581da83321df389946075f22c5ed28836b0ed903fae65ec7297d677",
+ "generator_sha256": "456d7ee43f6060745445368cc3d3ec0ca8c0df720f35340ea9723b24fc3e6e9b",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -651,13 +651,39 @@
   },
   "hfd_mcast_r5": {
    "kind": "stations",
-   "status": "interim-not-closed",
+   "status": "closed",
    "instances": 4,
-   "dir": "physical/hbm_accel_die_views/stations/hfd_mcast_r5",
+   "dir": "physical/hbm_accel_die_views/stations/hfd_mcast_r5/route_cl",
    "lef": "hfd_mcast_r5.lef",
    "lib": {
     "ss": "hfd_mcast_r5_ss.lib",
     "ff": "hfd_mcast_r5_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "71de4b0f37f25dcf9694c2dbb9ad81a59d83bbd7",
+    "host": "ot-agidock128",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r5_71de4b0f3",
+    "ss_setup_ps": 45.79,
+    "ff_hold_ps": 19.76,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T10:47:57-07:00"
+   },
+   "files_sha256": {
+    "hfd_mcast_r5.lef": "e04677d1bd13f5c26bc0203783179bd7e6000ba09eeaaed05aca345fc687bfe7",
+    "hfd_mcast_r5_ss.lib": "91527ac5de46623e4076dcb76157aaa3126ee6bf91fe61ae6e10b8ef2696606d",
+    "hfd_mcast_r5_ff.lib": "5d9dbe9bbb2341dc26974e23745129e065d6ac8408f420ea58479bc9c25a2569",
+    "corner_sta.json": "02bed39a677e70a79afe209e8c573141488ffc4fbd01674b2d5b618c982e4b19",
+    "check.json": "381af008a57c47bcce7147e93973d338ec4500dce9112db2eae6e8cfc6e12a75"
+   },
+   "receipt": "results/closure_loop/hbm_stn_mcast_r5_71de4b0f3/verdict.json",
+   "receipt_sha256": "0d93fc7d6dd9bc161a67da43f95ccf5a8a2452c05ae2e1a1fde6a7c189990dad",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 45.79,
+    "ff_hold_ps": 19.76,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
    },
    "check": {
     "verdict": "MATCH",
@@ -672,38 +698,6 @@
      410.376
     ],
     "die_top_io_pins": []
-   },
-   "source": {
-    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/N3_hfd_mcast_r5",
-    "SOURCE_COMMIT": "c1b875694483ead6f46679178a20e57a1c273979",
-    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src21 master=hfd_mcast_r5 top=physical/hbm_accel_die_views/stations/hfd_mcast_r5/hfd_mcast_r5.sv DW=241.896 DH=410.376 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/N3_hfd_mcast_r5/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
-    "exit": [
-     "rc=0",
-     "corner_rc=0",
-     "export_rc=0",
-     "check_rc=0",
-     "signoff_corner_rc=0",
-     "signoff_export_rc=0"
-    ],
-    "ss_setup_ps": -148.54,
-    "ff_hold_ps": 15.3,
-    "drc": 0,
-    "closes_signoff": false,
-    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
-    "margin": {
-     "margin": true,
-     "ckins_ps": 329,
-     "route_sdc": ".views/N3_hfd_mcast_r5/route.sdc",
-     "signoff_sdc": ".views/N3_hfd_mcast_r5/signoff.sdc",
-     "recipe": "bench/stn_margin_sdc.py"
-    },
-    "route_sta": {
-     "ss": -211.54,
-     "ff": 15.3
-    },
-    "rtl": "physical/hbm_accel_die_views/stations/hfd_mcast_r5/hfd_mcast_r5.sv",
-    "sdc": "physical/hbm_accel_die_views/stations/hfd_mcast_r5/hfd_mcast_r5.sdc",
-    "generator": "tools/hbm_die_station_gen.py"
    }
   },
   "hfd_mcast_r6a": {
@@ -1070,6 +1064,32 @@
     "ss": "hfd_router_ss.lib",
     "ff": "hfd_router_ff.lib"
    },
+   "source": {
+    "SOURCE_COMMIT": "368f1f6d2bfa4cb4a544eb2a613443ae9ae64727",
+    "host": "ot-epyc1tb",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_router_kneg_368f1f6d2_b",
+    "ss_setup_ps": 36.82,
+    "ff_hold_ps": 24.2,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T09:26:33-07:00"
+   },
+   "files_sha256": {
+    "hfd_router.lef": "06d138549cb640bb523dda2e929ececf8b32f1879af96f023eac09f286ff0ddb",
+    "hfd_router_ss.lib": "173a7928ab323e8ea5fa993af81a68b2d87b109356be7e147b35ab87f354a836",
+    "hfd_router_ff.lib": "960124a7f157f382a4afa6659766fa3c126b3bec929a6a705f6a0da9d8a11bdb",
+    "corner_sta.json": "b538b31d24e38e329f00b4ae782ed01f74414487a2e73db0e76af8ac8ef8b831",
+    "check.json": "a1696932aa1d327fbc4c299fd1d39f345c65760039186bb5e21c918943524321"
+   },
+   "receipt": "results/closure_loop/hbm_router_kneg_368f1f6d2_b/verdict.json",
+   "receipt_sha256": "84973b0b40862b78bb7cab7385083c43c4e4b8cc7594c6e0a2cd541a2f830b10",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 36.82,
+    "ff_hold_ps": 24.2,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
    "check": {
     "verdict": "MISMATCH",
     "problems": [
@@ -1086,27 +1106,6 @@
      326.28
     ],
     "die_top_io_pins": []
-   },
-   "source": {
-    "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/rt5_pd40",
-    "host": "ot-epyc1tb",
-    "SOURCE_COMMIT": "88844648046df6a5a9c5b459a583127bfaabdd58",
-    "ss_setup_ps": -1197.69,
-    "ff_hold_ps": -553.76,
-    "closes_signoff_SS60_FF25": false,
-    "clock_period_ns": 0.833,
-    "status": "not_met",
-    "drc": 0,
-    "antenna": 0,
-    "cell_um2": 30554.8,
-    "seq_um2": 10021.4,
-    "core_um2": 185548,
-    "macro_um2": 0
-   },
-   "files_sha256": {
-    "hfd_router.lef": "86a4364fa8c687412a67ed63c463224927a4d469a69c38e9b1b137ec8203cfd2",
-    "hfd_router_ss.lib": "c09ae75445b2fcc2bb7b87b304e3c84bf8127cf6f8e166716d070df3daf49108",
-    "hfd_router_ff.lib": "e38dd94d863b35bb721e7e9a1adf2a3f0473bbc643eca693123b18ab636cb03c"
    }
   },
   "hfd_serdes_slab": {
@@ -2358,8 +2357,54 @@
   },
   "hfd_stn_r33": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 5
+   "status": "closed",
+   "instances": 5,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r33/route_cl",
+   "lef": "hfd_stn_r33.lef",
+   "lib": {
+    "ss": "hfd_stn_r33_ss.lib",
+    "ff": "hfd_stn_r33_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "30f87bcc48a16e7ce591f2751a5afd0857dcf49c",
+    "host": "ot-epyc3",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_stn_r33_30f87bcc4",
+    "ss_setup_ps": 47.88,
+    "ff_hold_ps": 21.26,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T08:59:33-07:00"
+   },
+   "files_sha256": {
+    "hfd_stn_r33.lef": "f2602620de4bfbd632b28330575a573ed0b56f08f5094992b324675ad6518101",
+    "hfd_stn_r33_ss.lib": "fe3d0d5e4775c7db16446283d92d13d4127310755dd4af73164d4b99aed99195",
+    "hfd_stn_r33_ff.lib": "dc3c3c1587270e6b6695ec2d24bd982912e290bef88dc06c0da9cfdc4a26f4ca",
+    "corner_sta.json": "97e0e59729ba61c568bb38f9226bada40ee2af360fab16140efea9e0bf09c065",
+    "check.json": "74ae5b2bb8af09814e74d73e29ee1d867c8d25f9ae0b80e670c1b256e8b49b17"
+   },
+   "receipt": "results/closure_loop/hbm_stn_stn_r33_30f87bcc4/verdict.json",
+   "receipt_sha256": "7c315292ced524e0e3e6e6752ac15edb2247a02121c656dc1368eee1def8e8c2",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 47.88,
+    "ff_hold_ps": 21.26,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     39.288,
+     77.736
+    ],
+    "size_gen": [
+     39.288,
+     77.736
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_stn_r34": {
    "kind": "stations",
@@ -2465,13 +2510,105 @@
   },
   "hfd_stn_r38": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 4
+   "status": "closed",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r38/route_cl",
+   "lef": "hfd_stn_r38.lef",
+   "lib": {
+    "ss": "hfd_stn_r38_ss.lib",
+    "ff": "hfd_stn_r38_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "88136dcd275c3b4f7c85639f3f497d90a5101907",
+    "host": "ot-epyc3",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_r38_88136dcd2_bud2",
+    "ss_setup_ps": 193.57,
+    "ff_hold_ps": 25.05,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T08:18:43-07:00"
+   },
+   "files_sha256": {
+    "hfd_stn_r38.lef": "d52294612a087c6a1f4c63ea213e4ba8ef64e1dd3a011a0bdea7e3830aaf17bc",
+    "hfd_stn_r38_ss.lib": "b0e1adfe4b8ace980f9dd757fafedca36944f7e11b23cbf730311c3772b74ff6",
+    "hfd_stn_r38_ff.lib": "8b522696a71d94b1fab7143380209ac6e81a34c7c47e1cbb3ecd85ac9ed75b45",
+    "corner_sta.json": "a85702e0b860688acb3129c978b5395d5a51a42b56d89fd599e4f2833b836490",
+    "check.json": "4511b4ba4ca772d16d8daf99f34bf79b51f97eb1de00782d9736ce977e0d20c1"
+   },
+   "receipt": "results/closure_loop/hbm_stn_r38_88136dcd2_bud2/verdict.json",
+   "receipt_sha256": "2af944e33a8571b84c2821b40aed77f5771257e016a726da3e9ddec6cc91663d",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 193.57,
+    "ff_hold_ps": 25.05,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     72.984,
+     41.016
+    ],
+    "size_gen": [
+     72.984,
+     41.016
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_stn_r39": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 8
+   "status": "closed",
+   "instances": 8,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r39/route_cl",
+   "lef": "hfd_stn_r39.lef",
+   "lib": {
+    "ss": "hfd_stn_r39_ss.lib",
+    "ff": "hfd_stn_r39_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "ad75a0248f8c2a99e9eefc2361a259c1198011f7",
+    "host": "ot-agidock128",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r39_ad75a0248",
+    "ss_setup_ps": 48.58,
+    "ff_hold_ps": 462.04,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T08:23:57-07:00"
+   },
+   "files_sha256": {
+    "hfd_stn_r39.lef": "46c8e8743d7e0449ce76cc42a7c58fb3ed2bdec31b89d3c73de95f77a0868d20",
+    "hfd_stn_r39_ss.lib": "d73830cbef9f33cef52862b52bca453520c8085c9e1a4993ee64839d2d000907",
+    "hfd_stn_r39_ff.lib": "d28a8f66daf534ed1226096cf227fe398512b46321e9e69013970c0263929f82",
+    "corner_sta.json": "fff6ae5b34eae341d018422e746d11dde3973ef76c4dc8b1663d4d16e7490bd3",
+    "check.json": "a6411e6e5b6a0a397acf86c5e631f34cb5eaffce1350e2092676a2777cef0f94"
+   },
+   "receipt": "results/closure_loop/hbm_stn_r39_ad75a0248/verdict.json",
+   "receipt_sha256": "ba6894ec80612282d518c1e1589828c9701bfb918d094ac376e473705174b8da",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 48.58,
+    "ff_hold_ps": 462.04,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     50.088,
+     120.936
+    ],
+    "size_gen": [
+     50.088,
+     120.936
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_stn_r4": {
    "kind": "stations",
@@ -2633,8 +2770,54 @@
   },
   "hfd_svc_SE_s7": {
    "kind": "svc",
-   "status": "missing",
-   "instances": 2
+   "status": "closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s7",
+   "lef": "hfd_svc_SE_s7.lef",
+   "lib": {
+    "ss": "hfd_svc_SE_s7_ss.lib",
+    "ff": "hfd_svc_SE_s7_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "9ffaeb8e2c1c9b9efed233365aa281652877f32f",
+    "host": "ot-epyc2",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s7_9ffaeb8e2_r23",
+    "ss_setup_ps": 40.4,
+    "ff_hold_ps": 26.91,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "closed_at": "2026-10-07T12:09:46-07:00"
+   },
+   "files_sha256": {
+    "hfd_svc_SE_s7.lef": "58c6ee734b146a8267eb45cb5997a350a42014e97fd81b77284c59739eddefd1",
+    "hfd_svc_SE_s7_ss.lib": "95b1546bd798c75914f6cfe0afa3c720a4cceae1c705b1207f7f38837b517b04",
+    "hfd_svc_SE_s7_ff.lib": "49d7819dc955298c7005cd0d7adbf43b8da8edbcfe50049094a9c5c31b0a77e5",
+    "corner_sta.json": "28811eedea638d141d796ea4cc3cdffff5d772672ae6b1d71760abb60ee27477",
+    "check.json": "56e251f07e910d0fb1615e0ff13aec2658d94ab647286c9a04f5ef40ad213471"
+   },
+   "receipt": "results/closure_loop/hbm_svc_SE_s7_9ffaeb8e2_r23/verdict.json",
+   "receipt_sha256": "1cda8886b9048c481c4ff08f4b3c253afa9b24d36868300ea716fdce808efdb0",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 40.4,
+    "ff_hold_ps": 26.91,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     469.992,
+     259.176
+    ],
+    "size_gen": [
+     469.992,
+     259.176
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_svc_SE_s8": {
    "kind": "svc",
@@ -2749,9 +2932,9 @@
   }
  },
  "counts": {
-  "interim-not-closed": 4,
-  "closed": 39,
-  "missing": 38,
+  "interim-not-closed": 3,
+  "closed": 44,
+  "missing": 34,
   "reservation": 2
  }
 }

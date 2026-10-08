@@ -340,8 +340,13 @@ def receipt_views():
         v = json.loads(path.read_text())
         if v.get('status') == 'CLOSED' and v.get('block', '').startswith('hfd_'):
             receipts.append((v.get('closed_at', ''), path, v))
+    latest = {}
+    for _, path, v in sorted(receipts):
+        latest[v['block']] = path      # a later closure of one block re-exports into the same record dir
     for _, path, v in sorted(receipts):
         n, met = v['block'], v['metrics']
+        if latest[n] != path:
+            continue                   # superseded receipt: its export was overwritten by the later closure
         if (met.get('ss_ps', -1) < 15 or met.get('ff_ps', -1) < 15 or met.get('drc') != 0
                 or not v.get('checks') or not all(c.get('ok') for c in v['checks'].values())
                 or not all(b.get('ok') for b in v.get('benches', {}).values())):
