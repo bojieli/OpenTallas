@@ -49,6 +49,11 @@ STRIP_FIFO_BITS = 544 * 4          # one per strip return (4)
 # F2 station storage: 388 corridor flops + 379 assembly + one extra 190-bit beat entry, against 637 before
 F2_STATION_EXTRA_BITS = 388 + 379 + 190 - 637
 PORT_GROUPS, GROUPS_PER_BAND, BANDS = 96, 16, 6
+# qwen-lane-band 2026-10-08: the W12 RTL's result-port groups (GT >> SMIN = 6,144 >> 7 = 48: 12 port elements x PQ 4),
+# 8 per band (the band's 8 level-TCUT positions), 4 per band half.  PORT_GROUPS (96) counts the block words (16 block
+# columns x 6 bands, level TCUT-1: two per result group) and keeps sizing their meso FIFOs; from r21m the slab's
+# routed port-group elements are reserved per RESULT group (r17..r21f reserved one per block word: 96 against 48).
+RTL_PORT_GROUPS = 48
 SC_IN = 1 + 24                      # scale_gre + scale_addr, per group
 SC_OUT = 16 * 16                    # scale_q W*16, per group
 SW, AW = 64, 24
@@ -441,7 +446,7 @@ SER_H = 518.4             # qfd_sp_res_ser: 8 x 171.288 x 77.784 macros + ~30 k 
 NLANES = 16
 LANE_C_BITS = 2 * 14      # t_sel_e / t_tv_e ([$clog2(GT):0] each, GT = 6,144)
 LANE_W_BITS = 8 * 16 * 32  # a band's 8 level-TCUT positions x 16 lanes (tw in / ty out of the band lanes)
-TT_TY_BITS = 3 * 16 * 32   # the tree top's top-level positions (splits SMAX-1 / SMAX) back to band 0
+TT_TY_BITS = 3 * 16 * 32 + 2   # the tree top's top-level positions (splits SMAX-1 / SMAX) back to band 0 + use / valid
 SER_I_BITS = 8 * (24 + 16 + 512) + 8 + 1   # 8 slots {addr, mask, data} + we + ov
 SER_O_BITS = 1 + 1 + 1 + 20 + 16 + 512     # v, end, nul, row, mask, data
 SU_VM_A_BITS_BV = 3 * (1 + 1 + 24 + 24) + (64 + 24 + 24 + 64 * 32) + (1 + 24 + 32)   # descriptors + lane writes + reducer
@@ -491,8 +496,11 @@ def _repack_r21m(v, m):
     m['band_slabs'] = {}
     per = PORT_GROUPS // (2 * BANDS)
     m['geo']['slab_group_h_um'] = v.SLAB_GROUP_H
-    m['geo']['slab_h_um'] = v.up(per * v.SLAB_GROUP_H + per * BW_FIFO_BITS * FIFO_MM2_PER_BIT * 1e6 / cw, v.GY)
-    _repack_r17(v, m, free, put, parts, tgt, order, cw, spans, lanes_h=v.up(BL_H, v.GY), ser_h=v.up(SER_H, v.GY))
+    rpg = RTL_PORT_GROUPS // (2 * BANDS)                       # result-port groups per half (4) for per (8) block words
+    m['geo']['slab_h_um'] = v.up(rpg * v.SLAB_GROUP_H + per * BW_FIFO_BITS * FIFO_MM2_PER_BIT * 1e6 / cw, v.GY)
+    m['geo']['slab_port_groups'] = dict(result_groups=RTL_PORT_GROUPS, per_half=rpg, block_words=PORT_GROUPS, bw_per_half=per)
+    _repack_r17(v, m, free, put, parts, tgt, order, cw, spans, lanes_h=v.up(BL_H, v.GY), ser_h=v.up(SER_H, v.GY),
+                rtl_groups=True)
     m['geo']['spine_parts_r21m'] = parts
     m['geo']['spine_free_after_um'] = {c: [[round(a, 1), round(b_, 1)] for a, b_ in iv] for c, iv in free.items()}
     m['geo']['x_col_m'] = cols['M']
@@ -506,9 +514,10 @@ def _vm_me(v, m):
     for bid, cl, bits, eps in m['buses']:
         if bid == 'tt_res':
             continue
-        if bid.startswith('pword_'):           # the band word now leaves the band-lane block
+        if bid.startswith('pword_'):           # the band word now leaves the band-lane block (+ its valid)
             b = int(bid.split('_')[1])
             eps = [(f'sp_band_lanes_{b}', 'pw')] + list(eps[1:])
+            bits = bits + 1
         B.append((bid, cl, bits, eps))
     for b in range(BANDS):
         bl = f'sp_band_lanes_{b}'
@@ -531,15 +540,20 @@ def _vm_me(v, m):
              'qfd_sp_su64_sfu': 'rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv ot_qfd_sp_su64_sfu_bv',
              'qfd_sp_res_ser': 'rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv ot_qfd_res_ser',
              'qfd_sp_tree_top': 'rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv ot_qfd_sp_tree_top (LANDED = 1)',
-             'qfd_sp_band_lanes': 'OPEN: ot_qwen_spine_lane cut to the band positions (levels TCUT+1..TCUT+3)'},
+             'qfd_sp_band_lanes': 'rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv ot_qfd_band_lanes (NL 16; '
+                                  'tree top part: ot_qfd_band_upper)'},
         column_m_um=VM_ME_XCOL, vm_slot_um=[round(m['geo']['cw'], 3), VM_BV_H], su_slot_um=[round(m['geo']['cw'], 3), SU_BV_H],
         band_lanes_slot_um=[round(m['geo']['cw'], 3), BL_H], ser_slot_um=[round(m['geo']['cw'], 3), SER_H],
         port_elements={b: [prim[b]] for b in range(BANDS)},
-        open=['per-band lane RTL (qfd_sp_band_lanes): the qwen-rtl-finish lanes span all 48 positions; the die needs them '
-              'cut by band (levels TCUT+1..TCUT+3 in the band, the rest in the tree top)',
-              'band lane <-> slab words connect each band at its W primary slab (a band\'s fragments reach it by pfrag)',
-              'slab port-group count is the r17 reservation (96 groups, 8 per half); the W12 RTL has 48 result ports '
-              '(12 port elements x PQ 4)'])
+        band_lanes=dict(rtl='rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv',
+                        bench='rtl/test/qwen_lane_band/tb_qfd_band_lanes.sv',
+                        frame='band-local result slots: split s <= 10 band b slot k = group b * 2^(10-s) + k; s 11 / 12 '
+                              'band 0 slot k = group k (tree top words)', cycles='+5 + 2 LNK edges per ME op result'),
+        open=['slab result-port groups must index rows / addresses by the band-local group (band_lanes.frame); the tree '
+              'top hosts ot_qfd_band_upper (pw / lc / lf / tt_ty ports) beside its control: integration into '
+              'ot_qfd_sp_tree_top pending',
+              'band lane <-> slab words connect each band at its W primary slab (a band\'s fragments reach it by pfrag)'],
+        slab_port_groups='RTL_PORT_GROUPS 48 (8 a band, 4 a half; 12 port elements x PQ 4), block-word FIFOs stay 96')
     base = v.masters
 
     def masters(model, k=1, port_bits=None):
@@ -1674,7 +1688,7 @@ def _repack_b3r3(v, m):
     m['geo']['spine_free_after_um'] = {c: [[round(a, 1), round(b_, 1)] for a, b_ in iv] for c, iv in free.items()}
 
 
-def _repack_r17(v, m, free, put, parts, tgt, order, cw, spans, lanes_h=0.0, ser_h=0.0):
+def _repack_r17(v, m, free, put, parts, tgt, order, cw, spans, lanes_h=0.0, ser_h=0.0, rtl_groups=False):
     """r17 band slabs of routed port-group elements: each band half is 8 groups of SLAB_GROUP_H (+ its 8 block-word
     FIFOs) in the column of its half, nearest the band centre.  Where the column's free interval is shorter (the
     hub column between the horizontal link channels holds SU64, the vector memory, the hub and the tree top), the
@@ -1683,7 +1697,9 @@ def _repack_r17(v, m, free, put, parts, tgt, order, cw, spans, lanes_h=0.0, ser_
     the hub are packed first."""
     per = PORT_GROUPS // (2 * BANDS)
     fifo_um = BW_FIFO_BITS * FIFO_MM2_PER_BIT * 1e6 / cw
-    hgt = lambda n: v.up(n * v.SLAB_GROUP_H + n * fifo_um, v.GY)   # noqa: E731
+    # rtl_groups (r21m, qwen-lane-band): a fragment of n block words holds ceil(n / 2) result-port group elements
+    gpw = RTL_PORT_GROUPS / PORT_GROUPS if rtl_groups else 1.0
+    hgt = lambda n: v.up(math.ceil(n * gpw - 1e-9) * v.SLAB_GROUP_H + n * fifo_um, v.GY)   # noqa: E731
 
     def span(c, t):
         return next((sp for sp in spans[c] if sp[0] - 1e-6 <= t <= sp[1] + 1e-6),
