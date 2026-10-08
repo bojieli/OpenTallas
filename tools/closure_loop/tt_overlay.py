@@ -17,6 +17,7 @@ The loop's own hold_corners_patch.py (mm hold repair, RSZ-0060 tolerance, helper
 Fails (exit 2) when the corner support cannot be installed: the job must not route at SS under a TT name."""
 import hashlib
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -142,6 +143,26 @@ def ensure_smh(src):
     return ["SMH flow: WC reads TT"]
 
 
+def ensure_direct_configs(src):
+    """Recipes that drive ORFS directly with a checked-in config.mk (ha2 relay / h2 fixedpins style): in a TC route stage
+    the WC_LIB_FILES line reads the TT std-cell libraries and macro _tt.lib (corner names kept)."""
+    tc = (os.environ.get("OT_ORFS_CORNER", "") or os.environ.get("OT_ORFS_CORNER_OVERRIDE", "")).strip().upper() == "TC"
+    if not tc:
+        return []
+    n = 0
+    for f in (src / "physical").rglob("config.mk"):
+        t = f.read_text(errors="replace")
+        u = "\n".join((l.replace("$(WC_NLDM_LIB_FILES)", "$(TC_NLDM_LIB_FILES)").replace("_ss.lib", "_tt.lib")
+                       if re.match(r"\s*export\s+WC_LIB_FILES\s*=", l) else l) for l in t.split("\n"))
+        if u != t:
+            f.write_text(u)
+            n += 1
+    if n and os.environ.get("OT_TTB_CORNER_MARK"):
+        with open(os.environ["OT_TTB_CORNER_MARK"], "a") as m:
+            m.write(f"TC {os.getpid()} direct_config_mk x{n} wc_reads_tt\n")
+    return [f"direct config.mk WC->TT x{n}"] if n else []
+
+
 def main():
     src = Path(sys.argv[1])
     f = src / "tools/run_abi3_physical.py"
@@ -158,7 +179,8 @@ def main():
             f.write_text(s)
     else:
         out.append("no tools/run_abi3_physical.py")
-        ok = (src / "tools/hbm_accel_smh_physical.py").is_file()
+        ok = (src / "tools/hbm_accel_smh_physical.py").is_file() or any((src / "physical").rglob("config.mk"))
+    out += ensure_direct_configs(src)
     sm = ensure_smh(src)
     out += sm
     ok = ok and not any("missing" in x for x in sm)
