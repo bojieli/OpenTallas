@@ -39,5 +39,31 @@ def patch(scripts: Path, helper: str) -> dict:
     return out
 
 
+STAGE_LOGS = {"cts": ["4_1_cts.log"], "globalroute": ["5_1_grt.log"]}
+
+
+def tolerate_flow_errors(errors: dict, logs_dir) -> dict:
+    """An mm repair that runs out of buffer budget (RSZ-0060) inside a recipe's own multi-pass wrapper
+    (qwen_die_masters/repair_budget.tcl continues on the grown design) logs one [ERROR] although the stage then
+    completes: such a count is zeroed ONLY when every [ERROR line of the stage log is RSZ-0060, their number equals the
+    count, and an "OT_HOLD_MM after repair" line follows the last one.  Anything else stays an error."""
+    out = dict(errors)
+    for key, val in errors.items():
+        stage = key.split("__", 1)[0]
+        if not int(val) or stage not in STAGE_LOGS:
+            continue
+        lines = []
+        for name in STAGE_LOGS[stage]:
+            f = Path(logs_dir) / name
+            if f.is_file():
+                lines += f.read_text(errors="replace").splitlines()
+        errs = [i for i, ln in enumerate(lines) if ln.startswith("[ERROR")]
+        if (errs and len(errs) == int(val) and all("RSZ-0060" in lines[i] for i in errs)
+                and any("OT_HOLD_MM after repair" in ln for ln in lines[errs[-1]:])):
+            out[key] = 0
+            print(f"orfs_hold_mm: {key}={val} tolerated (RSZ-0060 inside a completed multi-pass mm repair)")
+    return out
+
+
 if __name__ == "__main__":
     print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))
