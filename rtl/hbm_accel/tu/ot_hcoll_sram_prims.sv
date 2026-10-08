@@ -159,3 +159,62 @@ module ot_hcoll_sfifo #(
         .empty(empty), .dout(dout), .ovf(hovf), .count(hc));
     assign count = scnt;
 endmodule
+
+// SRAM FIFO with an EXPORTED head (per-port split, 2026-10-08): ot_hcoll_sfifo whose head FIFO lives across a hard-
+// macro boundary.  out_v / out_d leave an output flop (one beat per fetched word, in order); cr_in is a REGISTERED
+// credit-return pulse (one per freed consumer head slot, K consumer slots).  The loop fetch -> rd -> capture -> out
+// flop -> consumer in flop -> consumer head -> pop -> consumer credit flop -> cr_in flop -> ocr is 8 edges: K = 8.
+module ot_hcoll_sfifo_x #(
+    parameter integer W  = 8,
+    parameter integer AW = 7,
+    parameter integer K  = 8
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         push,
+    input  wire [W-1:0] din,
+    input  wire         cr_in,
+    output reg          out_v,
+    output reg  [W-1:0] out_d,
+    output reg          ovf
+);
+`ifndef SYNTHESIS
+    initial if (AW > 8 || AW < 1 || K < 1 || K > 15) $fatal(1, "ot_hcoll_sfifo_x: AW=%0d (1..8), K=%0d (1..15)", AW, K);
+`endif
+    localparam integer N = 1 << AW;
+    localparam integer NBK = (AW > 7) ? 2 : 1;
+    reg          push_p;
+    reg [W-1:0]  din_p;
+    reg [W-1:0]  rawb [0:NBK-1];
+    wire [W-1:0] rdb [0:NBK-1];
+    reg          bs1, bs2;
+    reg [AW:0]   scnt;
+    reg [AW-1:0] wp, rp;
+    reg [3:0]    ocr;
+    reg          v1, v2;
+    wire full  = scnt == (AW+1)'(N);
+    wire put   = push_p && !full;
+    wire fetch = (scnt != '0) && (ocr != 4'd0);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 4'(K); v1 <= 1'b0; v2 <= 1'b0; ovf <= 1'b0; out_v <= 1'b0;
+        end else begin
+            push_p <= push;
+            scnt <= scnt + (AW+1)'(put) - (AW+1)'(fetch);
+            if (put) wp <= wp + 1'b1;
+            if (fetch) rp <= rp + 1'b1;
+            ocr <= ocr - 4'(fetch) + 4'(cr_in);
+            v1 <= fetch; v2 <= v1; out_v <= v2;
+            if (push_p && full) ovf <= 1'b1;
+        end
+    always @(posedge clk) begin
+        din_p <= din;
+        for (integer b = 0; b < NBK; b = b + 1) rawb[b] <= rdb[b];
+        bs1 <= (NBK > 1) ? rp[AW-1] : 1'b0; bs2 <= bs1;
+        out_d <= rawb[(NBK > 1) ? bs2 : 1'b0];
+    end
+    for (genvar b = 0; b < NBK; b = b + 1) begin : g_bk
+        ot_hcoll_sram128 #(.W(W)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
+            .rd(rdb[b]), .w_ce(put && (NBK == 1 || wp[AW-1] == 1'(b))), .w_addr(7'(wp)), .wd(din_p));
+    end
+endmodule

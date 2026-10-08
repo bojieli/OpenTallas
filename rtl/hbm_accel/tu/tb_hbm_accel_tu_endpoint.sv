@@ -57,7 +57,7 @@ module tb_hbm_accel_tu_endpoint #(
 );
     localparam integer FW = 32 * LANES, PWT = FW + 33, NR = NOG * NC;
     localparam integer MAXL = NR * PFMAX;
-    integer seed, seed0, pf, rank;
+    integer seed, seed0, pf, rank, samecol, npdep = 0;
     real budget, cred;
     string vecdir;
     reg [FW-1:0] part [0:MAXL-1];      // AR: contributor partials; gather: every rank's segment
@@ -73,6 +73,7 @@ module tb_hbm_accel_tu_endpoint #(
         if (!$value$plusargs("RANK=%d", rank)) rank = 0;
         if (!$value$plusargs("BUDGET=%f", budget)) budget = 377.6;
         if (!$value$plusargs("CRED=%f", cred)) cred = 113.8;
+        if (!$value$plusargs("SAMECOL=%d", samecol)) samecol = 0;
         if (pf > PFMAX || pf % NC != 0 || (BF16 && (pf / NC) % 2 != 0)) $fatal(1, "bad PF");
         ph0 = (($unsigned($random(seed)) % 1000) / 1000.0);
         ph1 = (($unsigned($random(seed)) % 1000) / 1000.0);
@@ -149,7 +150,13 @@ module tb_hbm_accel_tu_endpoint #(
             t_ldep = $realtime; ndep = ndep + 1;
             ta = $realtime + budget;
             cr_in[p].push_back($realtime + cred);
-            if (kind == 0) begin                           // partial to owner dst: peer 2J - s sends us its slice-J flit
+            if (kind == 0 && samecol != 0) begin          // +SAMECOL=1 (hbm-coll-rtl directed test): hold every peer
+                npdep = npdep + 1;                         // partial, then release them all at once, flit idx of every
+                if (npdep == (NC - 1) * OF)                // peer on port idx % NPT: each pclk all ports carry partials
+                    for (integer q = 0; q < NC; q = q + 1) // of the SAME contributor -> same-column collisions
+                        if (q != J) for (integer x = 0; x < OF; x = x + 1)
+                            sched(x % NPT, ta, {1'b0, 8'(rank), 8'(q), 16'(x), part[(OG * NC + q) * pf + J * OF + x]});
+            end else if (kind == 0) begin                  // partial to owner dst: peer 2J - s sends us its slice-J flit
                 sl = dst - OG * NC;
                 jp = ((2 * J - sl) % NC + NC) % NC;
                 sched(p, ta, {1'b0, 8'(rank), 8'(jp), 16'(idx), part[(OG * NC + jp) * pf + J * OF + idx]});
