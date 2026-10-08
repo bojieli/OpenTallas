@@ -195,9 +195,14 @@
        "file": "results/uarch/qwen_rom_vm_me_service_20261007/model.json",
        "pointer": "serialized_reference",
        "commit": "46d889a23"
+      },
+      {
+       "file": "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json",
+       "pointer": "service_requirement",
+       "commit": "uncommitted (this delivery)"
       }
      ],
-     "note": "full_token_extra=null; the only priced reference is the serialized four-bank walker: +3,719,840 engine edges for the 264 captured edges of ONE component (not a token cost, not composable); ready_for_new_bank_RTL=False"
+     "note": "full_token_extra=null; the only priced reference is the serialized four-bank walker: +3,719,840 engine edges for the 264 captured edges of ONE component (not a token cost, not composable; 19.2x the whole measured token); ready_for_new_bank_RTL=False. Contract re-check 2026-10-07 (qwen-contracts, ce24d613f): 10/10 component packages reproduce, incl. the known publication-storage coverage failures; demand per ME operation: 2048 seats on each of 256 consecutive edges (128 unique scalars, fanout 16); no VM organisation serving it exists in RTL, so no token cost is composable. Protected bank element routed for measurement: qfd_vm_bank_checked (loop)"
     },
     {
      "id": "vm_su_service",
@@ -210,9 +215,14 @@
        "file": "results/uarch/qwen_rom_vm_su_service_20261007/model.json",
        "pointer": "scope",
        "commit": "9789baddc"
+      },
+      {
+       "file": "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json",
+       "pointer": "packages",
+       "commit": "uncommitted (this delivery)"
       }
      ],
-     "note": "service quanta are not clock cycles; SRAM, protection, write completion, mux, fanout, capture unbound"
+     "note": "service quanta are not clock cycles; SRAM, protection, write completion, mux, fanout, capture unbound. Contract re-check 2026-10-07 (qwen-contracts, ce24d613f): 10/10 component packages reproduce, incl. the known publication-storage coverage failures; demand per ME operation: 2048 seats on each of 256 consecutive edges (128 unique scalars, fanout 16); no VM organisation serving it exists in RTL, so no token cost is composable. Protected bank element routed for measurement: qfd_vm_bank_checked (loop)"
     },
     {
      "id": "vm_recovery",
@@ -225,9 +235,14 @@
        "file": "results/uarch/qwen_rom_vm_recovery_20261007/disposition.json",
        "pointer": "status",
        "commit": "f7741bdc8"
+      },
+      {
+       "file": "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json",
+       "pointer": "verdict",
+       "commit": "uncommitted (this delivery)"
       }
      ],
-     "note": "OPEN_MODEL_AND_NATIVE_SCHEDULE_BINDING; one dynamic writer unresolved"
+     "note": "OPEN_MODEL_AND_NATIVE_SCHEDULE_BINDING; one dynamic writer unresolved. Contract re-check 2026-10-07 (qwen-contracts, ce24d613f): 10/10 component packages reproduce, incl. the known publication-storage coverage failures; demand per ME operation: 2048 seats on each of 256 consecutive edges (128 unique scalars, fanout 16); no VM organisation serving it exists in RTL, so no token cost is composable. Protected bank element routed for measurement: qfd_vm_bank_checked (loop)"
     },
     {
      "id": "die_top_route",
@@ -2677,7 +2692,7 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "25829cc0f80a7d9695d25dcdbe487156ebc7d0eca2f2b2486e13fc7c128f0021"
+  "sha256": "4218526d44387a66d5b506b8e6e8f5df96d82ccadaad2dbd2c7f7a56bf72aae5"
  },
  "source_sha256": {
   "AGENTS.md": "d47e33869ed5fefa3be09cffa270ccb831227173fcf0295b5ebecc178b55a042",
@@ -2713,6 +2728,7 @@
   "results/rtl/qwen_contracts_20261007/link_credit_rtt/bench_gate/result.json": "6309227d42b1ee893bd2d18dcaa76954ad69d324a74db0dd8109efefad94cb6d",
   "results/rtl/qwen_contracts_20261007/link_credit_rtt/pricing.json": "c096c781cbb1356f1e39d221f6d64515871215c186980effcc3c87a008e3395c",
   "results/rtl/qwen_contracts_20261007/protected_kv_transport/decision.json": "c1aee5f63362f5fe1fcf64463fb8f522d11e546a8e53e248b7d4254c121c948c",
+  "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json": "f4715d6c970cdc2bfc9af2a4236eb10b9832b5c6eacb77acd7e984c497c74a2c",
   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
   "results/rtl/qwen_ctrl_shift_20261007/model.json": "12ca47e170b26b082b3f51a28c6f01684bf943705d6468dd6578e6a08357d123",
   "results/rtl/qwen_ctrl_shift_20261007/qualification.json": "4df6d84d47b0f54ededa60df892d9ec2d6574d81e2e77b90002ccbab98c22249",
@@ -2743,6 +2759,6 @@
   "results/uarch/qwen_station_fullwidth_r22_20261007/model_dual_fault_r1.json": "4534b4003ec08365a0ef3f543deb0670dc906641ceebf5fd90c6685c38981155",
   "results/uarch/s81_pq_root_cam_20261007/model.json": "0c82097e0020b325b46396de710bd7fbeab103ed8e8fbc431396d7f3812cf134",
   "tools/chip_explorer_build.py": "146a386013f68a12600e1cca553e0fac06515fc974fb7f6b11654cd9835f52f3",
-  "tools/unified_composition.py": "25829cc0f80a7d9695d25dcdbe487156ebc7d0eca2f2b2486e13fc7c128f0021"
+  "tools/unified_composition.py": "4218526d44387a66d5b506b8e6e8f5df96d82ccadaad2dbd2c7f7a56bf72aae5"
  }
 }

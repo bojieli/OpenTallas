@@ -1,0 +1,61 @@
+{
+ "name": "qfd_vm_bank_checked-492dd94bd",
+ "block": "qfd_vm_bank_checked",
+ "owner": "Claude:qwen-contracts",
+ "purpose": "VM gates (vm_me_service/vm_su_service) physical measurement: protected Qwen VM bank element ot_qwen_checked_vm_bank_direct_readback (CAP1 SECDED adapter + 4-bank masked raw backend, 256+32 ot_sram_1r1w_512x128 macros), 1825.2 x 1304.64 um, manual macro grid",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/qwen-contracts-20261007",
+  "commit": "492dd94bd2e90fe5c7803977458ca874367d62e0"
+ },
+ "no_bench_reason": "exact benches of this element are the committed VM contract re-checks results/rtl/qwen_contracts_20261007/vm_contract_checks (su_service, direct_readback, writer_priority, reducer_overlap, combined_ingress + negatives: all reproduce at ce24d613f)",
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+  },
+  "route": {
+   "cmd": "SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_vm_bank_checked {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [],
+  "post_sdc": [],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen VM budget sheet"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_contracts_20261007/vm_bank_physical/qfd_vm_bank_checked-492dd94bd"
+  }
+ ],
+ "cycles_added": "0 (measurement of an existing element; the VM service cost stays gated)",
+ "merge_target": null
+}

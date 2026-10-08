@@ -57,6 +57,7 @@ Q_SPINE_P = "results/rtl/qwen_spine_lane_20261007/mutable_protection_blocker.jso
 Q_LINKFR = "results/rtl/qwen_contracts_20261007/link_credit_rtt/bench_gate/result.json"   # full-rate hub gate
 Q_LINKFR_P = "results/rtl/qwen_contracts_20261007/link_credit_rtt/pricing.json"            # area + cycle pricing
 Q_KV_DECISION = "results/rtl/qwen_contracts_20261007/protected_kv_transport/decision.json"
+Q_VM_CHK = "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json"            # 9-package re-check
 Q_STATION = "results/uarch/qwen_station_fullwidth_r22_20261007/model_dual_fault_r1.json"
 DS_LEDGER = "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json"
 DS_LINKS = "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json"
@@ -236,6 +237,14 @@ def qwen():
     ctrl, ctrlq = load(Q_CTRL), load(Q_CTRL_Q)
     fwd, fwdv = load(Q_FWD), load(Q_FWD_VAL)
     me = load(Q_VM_ME)
+    vmc = load(Q_VM_CHK)
+    rq = vmc["service_requirement"]["me_operation"]
+    vm_chk_note = ("Contract re-check 2026-10-07 (qwen-contracts, %s): %d/%d component packages reproduce, incl. the known "
+                   "publication-storage coverage failures; demand per ME operation: %d seats on each of %d consecutive edges "
+                   "(%d unique scalars, fanout %d); no VM organisation serving it exists in RTL, so no token cost is composable. "
+                   "Protected bank element routed for measurement: qfd_vm_bank_checked (loop)"
+                   % (vmc["source_commit"][:9], sum(p["rc"] == 0 for p in vmc["packages"]), len(vmc["packages"]),
+                      rq["seats_per_read_edge"], rq["consecutive_read_cycles"], rq["unique_scalars_per_edge"], rq["fanout"]))
     lines = [
         L("stream4_token", "Measured STREAM4 full token at P8191 (36 layers + head, 4 ranks, all 576 MiB FP8 KV landed)",
           "measured", dict(unit="cycles", AR=q["token_cycles_measured"]),
@@ -271,14 +280,15 @@ def qwen():
           % (fwd["area_proxy_um2"], fwdv["active_graph_simulated"], fwdv["adopted"]), "candidate"),
         _link_credit_line(fwd),
         L("vm_me_service", "Native VM ME bank service (captured W1 source slots, protected bank)", "gated-unknown", None,
-          src(Q_VM_ME, "serialized_reference"),
+          [src(Q_VM_ME, "serialized_reference"), src(Q_VM_CHK, "service_requirement")],
           "full_token_extra=null; the only priced reference is the serialized four-bank walker: +%s engine edges for the "
-          "264 captured edges of ONE component (not a token cost, not composable); ready_for_new_bank_RTL=%s"
-          % (format(me["serialized_reference"]["conditional_extra_engine_edges"], ","), me["ready_for_new_bank_RTL"]), "gate"),
-        L("vm_su_service", "VM SU/reducer bank service obligations", "gated-unknown", None, src(Q_VM_SU, "scope"),
-          "service quanta are not clock cycles; SRAM, protection, write completion, mux, fanout, capture unbound", "gate"),
-        L("vm_recovery", "Qwen VM bank recovery / native schedule binding", "gated-unknown", None, src(Q_VM_REC, "status"),
-          load(Q_VM_REC)["status"] + "; one dynamic writer unresolved", "gate"),
+          "264 captured edges of ONE component (not a token cost, not composable; %.1fx the whole measured token); "
+          "ready_for_new_bank_RTL=%s. %s" % (format(me["serialized_reference"]["conditional_extra_engine_edges"], ","),
+                                             vmc["only_priced_service"]["ratio"], me["ready_for_new_bank_RTL"], vm_chk_note), "gate"),
+        L("vm_su_service", "VM SU/reducer bank service obligations", "gated-unknown", None, [src(Q_VM_SU, "scope"), src(Q_VM_CHK, "packages")],
+          "service quanta are not clock cycles; SRAM, protection, write completion, mux, fanout, capture unbound. " + vm_chk_note, "gate"),
+        L("vm_recovery", "Qwen VM bank recovery / native schedule binding", "gated-unknown", None, [src(Q_VM_REC, "status"), src(Q_VM_CHK, "verdict")],
+          load(Q_VM_REC)["status"] + "; one dynamic writer unresolved. " + vm_chk_note, "gate"),
         L("die_top_route", "Full-die detailed route, SS/FF, DRC and IR of the reopened Qwen die (directive 14)", "gated-unknown", None,
           src(Q_CLOSURE, "physical"), "die-top route not done; r18g bound (+13,305..16,268 cycles) is history, not composed. "
           "Owner: stream qwen-dietop (branch claude/qwen-dietop-20261007; academic-validation method: full-die GRT overflow 0, "
