@@ -20,7 +20,9 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import dsrom_s81_fulldie as S  # noqa: E402
 
 CLK_NAMES = ('ck', 'clk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
-K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), ff=dict(cq=32.0, su=10.0, ho=15.0))
+K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0), ff=dict(cq=32.0, su=10.0, ho=15.0))
+# owner option B (2026-10-07): die setup at TT, hold at FF, SS as sensitivity.  TT planned clock arrival = mean of the
+# CTS-validated SS and FF insertions (the plan's CTS ran SS / FF libraries only): an estimate, marked in kit.json
 
 
 def closed_libs(corner):
@@ -87,7 +89,7 @@ def main():
     rp = S.real_ports_r8()
     S.write_netlist(m, 1, a.out / 'die.v')
     rec = dict(masters={}, clocks=[])
-    for corner in ('ss', 'ff'):
+    for corner in ('ss', 'tt', 'ff'):
         cl = closed_libs(corner)
         cells, libs = [], set()
         for mst, it in sorted(first.items()):
@@ -151,12 +153,16 @@ def main():
                 x, y = cen(inst)
                 nb = min(known[bid], key=lambda q: abs(q[0] - x) + abs(q[1] - y))
                 lat[pk] = [nb[2], nb[3]]
-        for ci, corner in enumerate(('ss', 'ff')):
+        for k_ in list(lat):
+            lat[k_] = [lat[k_][0], lat[k_][1], (lat[k_][0] + lat[k_][1]) / 2.0]
+        for ci, corner in ((0, 'ss'), (1, 'ff'), (2, 'tt')):
             (a.out / f'latency_{corner}.tcl').write_text(''.join(
                 f'set_clock_latency {v[ci]:.1f} [get_pins -quiet {{{k_} {k_}[0]}}]\n' for k_, v in sorted(lat.items())))
+        rec['tt_latency'] = 'estimate: mean of the CTS-validated SS and FF sink insertion'
         rec['clock_plan'] = dict(file=str(a.clock_plan), sinks=len(sinks), planned=sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si),
                                  nearest=len(lat) - sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si))
-    for corner, (us, uh) in ((('ss', (85.0, 75.0)), ('ff', (85.0, 75.0))) if lat else (('ss', (210.0, 75.0)), ('ff', (210.0, 75.0)))):
+    for corner, (us, uh) in ((('ss', (85.0, 75.0)), ('tt', (85.0, 75.0)), ('ff', (85.0, 75.0))) if lat else
+                             (('ss', (210.0, 75.0)), ('tt', (210.0, 75.0)), ('ff', (210.0, 75.0)))):
         T = ['set libs [split [string trim [read [open /kit/libs_%s.txt]]] "\\n"]' % corner,
              'foreach l $libs { read_liberty $l }', 'read_verilog /kit/die.v', 'link_design dsfd_die',
              'if {[file exists /kit/die.spef]} { read_spef /kit/die.spef; puts OT_SPEF }']
@@ -166,7 +172,7 @@ def main():
             T.append(f'source /kit/latency_{corner}.tcl')
             # a column clock is the stream trunk passed through its cfifo root: source latency = the trunk insertion
             # at that cfifo's ck pin (the plan's column-sink values are relative to the column root)
-            ci = 0 if corner == 'ss' else 1
+            ci = dict(ss=0, ff=1, tt=2)[corner]
             for n_, pin, per in srcs:
                 if n_.startswith('ck_col_'):
                     root = pin.split('/')[0] + '/ck[0]' if pin.split('/')[0] + '/ck[0]' in lat else pin.split('/')[0] + '/ck'
@@ -175,10 +181,13 @@ def main():
         T += [f'set_clock_uncertainty -setup {us} [all_clocks]', f'set_clock_uncertainty -hold {uh} [all_clocks]',
               'set_clock_groups -asynchronous -group {clk_serial} -group {clk_hbm} -group [get_clocks -quiet {clk_stream ck_col_*}]',
               'set_false_path -through [get_nets -quiet {n_rst_* n_rs_col_* por_n}]',
-              f'report_checks -path_delay {"max" if corner == "ss" else "min"} -group_path_count 200 -endpoint_path_count 1 '
+              f'report_checks -path_delay {"min" if corner == "ff" else "max"} -group_path_count 200 -endpoint_path_count 1 '
               f'-fields {{fanout}} -digits 1 > /kit/paths_{corner}.rpt',
-              f'report_worst_slack -{"max" if corner == "ss" else "min"} -digits 1',
-              f'report_tns -digits 1', 'report_check_types -violators -max_slew -max_capacitance > /kit/drv.rpt']
+              f'report_checks -path_delay {"min" if corner == "ff" else "max"} -group_path_count 100000 '
+              f'-endpoint_path_count 1 -format end -digits 1 > /kit/end_{corner}.rpt',
+              f'report_worst_slack -{"min" if corner == "ff" else "max"} -digits 1',
+              f'report_tns -{"min" if corner == "ff" else "max"} -digits 1',
+              f'report_check_types -violators -max_slew -max_capacitance > /kit/drv_{corner}.rpt']
         (a.out / f'sta_{corner}.tcl').write_text('\n'.join(t for t in T if t) + '\n')
     (a.out / 'kit.json').write_text(json.dumps(rec, indent=1) + '\n')
     n = defaultdict(int)
