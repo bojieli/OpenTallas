@@ -27,8 +27,11 @@ LB = ROOT / "results/arch/unified_composition_20261007/link_budget_restatus_2026
 # design target only. The consistent die-link budget and rule H1 still apply: a block counts only if its link-budget
 # SS is also >= 0 (forwarded-clock stations stay unverified until a per-link model exists).
 SS_LINE, FF_LINE = 0.0, 0.0
-LINE_TEXT = ("Closure line (owner decision 2026-10-07): SS >= 0 ps, FF >= 0 ps, DRC 0 at 833.333 ps sign-off, under the "
-             "consistent die-link budget (S + link + R + 150 ps skew <= T - 60) and rule H1; +15 ps is a design target only")
+LINE_TEXT = ("Closure line (OWNER OPTION B, 2026-10-07 20:45): TT setup >= 0 ps, FF hold >= 0 ps, DRC 0 at 833.333 ps "
+             "sign-off; SS setup is a sensitivity; +15 ps is a design target only. The consistent die-link budget "
+             "(S + link + R + 150 ps skew <= T - 60) and rule H1 still apply. Loop verdicts committed before option B carry "
+             "SS setup (SS >= 0 implies TT >= 0); verdicts after it carry TT setup in the same field. The link-budget "
+             "re-STA ran at SS, so its revocations are conservative under option B until the TT re-verdicts land")
 PAT = re.compile(r"^closure-loop: (\S+) CLOSED SS ([+-]?[\d.]+) / FF ([+-]?[\d.]+) ps DRC (\d+) at ([\d.]+)")
 
 
@@ -127,7 +130,12 @@ STREAM_INDEX = [
     "Stream die inventories (branch commits, not on main): HBM die views index r23 = 45 closed / 3 interim / 33 missing / "
     "2 reservation (claude/hbm-die-20261007 bc38f4908, physical/hbm_accel_die_views/index.json).",
     "Reported in stream logs, not yet committed (no credit): Qwen full-die GRT overflow 0 (adjfix_t4p8) and die STA on GRT "
-    "parasitics SS WNS -132 ps (relay/station hops) / FF -5.50 ps (qfd_tile assumed views) -- qwen-dietop.log 19:31-19:32.",
+    "parasitics SS WNS -90.23 ps (relay hops; SS is a sensitivity under option B) / FF -5.50 ps (qfd_tile assumed views) -- "
+    "qwen-dietop.log 19:32-20:08.",
+    "Committed block closures outside the closure loop (branch, not on main): WFC source die150 SS +31.5 / FF +22.7 DRC 0 "
+    "(claude/s81-die-20261007 dc8570b5d).",
+    "integrate re-verdicts: 24 NEEDS_RTL jobs requeued to the verdict / ECO completion at 20:31 (closure_loop.py reverdict); "
+    "they count once their closure-loop commits land on main.",
 ]
 DIE_STATE = dict(
     qwen_rom="REOPENED 2026-10-07; die-level items in the evidence table below (no flat full-die DRT by design)",
