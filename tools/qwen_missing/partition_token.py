@@ -73,12 +73,12 @@ def main():
             out = []
             for f in orig():
                 t = f.read_text()
-                if "core." in t:
+                if re.search(r"\bcore\.\w", t):    # a hierarchical read of the core instance (not 'score.')
                     n = 0
                     for net in CTRL_NETS:
                         t, k = re.subn(rf"\bcore\.{net}\b", f"core.u_ctrl.{net}", t)
                         n += k
-                    if n == 0:
+                    if n == 0 or re.search(r"\bcore\.(?!u_ctrl\.)\w", t):
                         raise SystemExit(f"{f}: core reference pattern changed")
                     g = gen / f.name
                     g.write_text(t)
