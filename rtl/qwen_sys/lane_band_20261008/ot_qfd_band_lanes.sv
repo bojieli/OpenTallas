@@ -92,14 +92,18 @@ module ot_qfd_band_lanes #(
     parameter integer NL = 16,
     parameter integer LNK = 0,           // relay stages on each of the band -> tree top and tree top -> band links
     parameter integer TREE_LAT = 7,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // qwen-band-integrate: the tree geometry (default = the Qwen die: GT 6,144, TCUT 7, LG 13).  The band holds levels
+    // TCUT+1..TCUT+3, the tree top TCUT+4..TCUT+5; GT = 48 << TCUT, LG = TCUT + 6 (a reduced bench uses TCUT 3).
+    parameter integer TCUT = 7,
+    parameter integer LG = TCUT + 6
 ) (
     input  wire               clk,
     input  wire               rst_n,
     input  wire               b0,                // strap: 1 on band 0 (takes the tree top's split-11/12 words)
     input  wire [8*NL*32-1:0] tw,                // the band's level-7 words (from the slab)
-    input  wire [13:0]        sel_e,             // lane-timed per-level select / valid ([$clog2(6144):0])
-    input  wire [13:0]        tv_e,
+    input  wire [LG:0]        sel_e,             // lane-timed per-level select / valid ([$clog2(6144):0])
+    input  wire [LG:0]        tv_e,
     input  wire [3*NL*32-1:0] tt_ty,             // tree top: split-11/12 words (positions 0..2), band 0 only
     input  wire               tt_use,            // tree top: the op's split >= 11 (take tt_ty for slots 0..2)
     input  wire               tt_v,              // tree top: the op's level-11 valid (lockstep check)
@@ -120,7 +124,7 @@ module ot_qfd_band_lanes #(
     always @(posedge clk) begin tin_q <= tw; tt_q <= tt_ty; b0_q <= {NL{b0}}; end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin tv11_r <= 1'b0; use_q <= {NL{1'b0}}; tt_v_q <= 1'b0; end
-        else begin tv11_r <= tv_e[11]; use_q <= {NL{tt_use}}; tt_v_q <= tt_v; end
+        else begin tv11_r <= tv_e[TCUT+4]; use_q <= {NL{tt_use}}; tt_v_q <= tt_v; end
     // -- levels 8..10 per lane --------------------------------------------------------------------------------------
     wire [8*NL*32-1:0] l10;
     wire [NL-1:0] lpf;
@@ -128,8 +132,8 @@ module ot_qfd_band_lanes #(
     generate for (l = 0; l < NL; l = l + 1) begin : g_lane
         wire [8*32-1:0] li, lo;
         (* keep *) reg [2:0] sel_r, tv_r;      // levels 10..8, this lane's copy
-        always @(posedge clk) sel_r <= sel_e[10:8];
-        always @(posedge clk or negedge rst_n) if (!rst_n) tv_r <= 3'd0; else tv_r <= tv_e[10:8];
+        always @(posedge clk) sel_r <= sel_e[TCUT+3:TCUT+1];
+        always @(posedge clk or negedge rst_n) if (!rst_n) tv_r <= 3'd0; else tv_r <= tv_e[TCUT+3:TCUT+1];
         for (k = 0; k < 8; k = k + 1) begin : g_k
             assign li[32*k +: 32] = tin_q[32*(k*NL + l) +: 32];
             assign l10[32*(k*NL + l) +: 32] = lo[32*k +: 32];
@@ -174,15 +178,17 @@ module ot_qfd_band_upper #(
     parameter integer LNK = 0,
     parameter integer DLY = 2 + LNK,     // c-tap delay: the band word's pw station + this pin flop + the link relays
     parameter integer TREE_LAT = 7,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer TCUT = 7,
+    parameter integer LG = TCUT + 6
 ) (
     input  wire                clk,
     input  wire                rst_n,
     input  wire [NB*NL*32-1:0] pw,              // band b's word at [32*(b*NL + l)]
     input  wire [NB-1:0]       pw_v,
     input  wire [NB-1:0]       lf,              // the bands' faults
-    input  wire [13:0]         sel_e,           // lane-timed per-level select / valid (as the bands get them)
-    input  wire [13:0]         tv_e,
+    input  wire [LG:0]         sel_e,           // per-level select / valid, DLY edges before the bands' copy is used
+    input  wire [LG:0]         tv_e,
     output wire [3*NL*32-1:0]  tt_ty,           // positions 0..2 of level 12, word (k, l) at [32*(k*NL + l)]
     output wire                tt_use,
     output wire                tt_v,
@@ -196,8 +202,8 @@ module ot_qfd_band_upper #(
     always @(posedge clk or negedge rst_n) if (!rst_n) begin pv_q <= 0; lf_q <= 0; end else begin pv_q <= pw_v; lf_q <= lf; end
     // the lane's sel_r / tv_r (sel_e / tv_e registered) DLY edges later: DLY delay stages, then one flop copy per lane
     wire [1:0] sel_d, tv_d;
-    ot_hdc_delay #(.W(2), .D(DLY)) u_sd (.clk(clk), .rst_n(rst_n), .d(sel_e[12:11]), .q(sel_d));
-    ot_hdc_delay #(.W(2), .D(DLY), .RESET(1)) u_td (.clk(clk), .rst_n(rst_n), .d(tv_e[12:11]), .q(tv_d));
+    ot_hdc_delay #(.W(2), .D(DLY)) u_sd (.clk(clk), .rst_n(rst_n), .d(sel_e[TCUT+5:TCUT+4]), .q(sel_d));
+    ot_hdc_delay #(.W(2), .D(DLY), .RESET(1)) u_td (.clk(clk), .rst_n(rst_n), .d(tv_e[TCUT+5:TCUT+4]), .q(tv_d));
     reg [1:0] sel_r, tv_r;   // the control copy (use / valid / lockstep)
     always @(posedge clk) sel_r <= sel_d;
     always @(posedge clk or negedge rst_n) if (!rst_n) tv_r <= 2'b00; else tv_r <= tv_d;

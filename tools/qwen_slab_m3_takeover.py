@@ -21,17 +21,24 @@ BENCH_SOURCES=['rtl/test/tb_qwen_slab_port_group.sv','rtl/physical/ot_qwen_slab_
 #   od2 -> o_data reg->pin wire (TT+LB -281.7, 268 endpoints, 736 ps over 361 um) becomes od2 -> OREG (beside the pin);
 #   +1 cycle per ME op on the result path, values unchanged.
 # s14ok: s14o plus MUL_KCP 4 (kept C1 operand copies: local partial-product broadcast), 0 cycles.
+# s14o_bf / s14ok_bf (qwen-band-integrate 2026-10-08): s14o / s14ok with BANDF 1, the r21m band-lane frame: the
+#   element is slot GID = 8b + k of band b's slab and holds group g(split, slot) (per-split constants selected by the
+#   registered split, one constant multiplier per split); routed at GID 40 (band 5 slot 0: in range at splits 7..10,
+#   four non-zero group constants, the most per-split logic of any slot).  0 cycles; values unchanged for group g.
+BF=['BANDF=1','GID=40','TCUT=7','SMIN=7','SMAX=11']
 VARIANTS={
  'm3':dict(mul_lat=10,kcp=4,rom_lead=3),
  's14o':dict(mul_lat=7,kcp=1,rom_lead=2),
  's14ok':dict(mul_lat=7,kcp=4,rom_lead=2),
+ 's14o_bf':dict(mul_lat=7,kcp=1,rom_lead=2,extra=BF),
+ 's14ok_bf':dict(mul_lat=7,kcp=4,rom_lead=2,extra=BF),
 }
 
 def command(out,name,threads,variant='m3'):
     v=VARIANTS[variant]
     keep='ot_qwen_slab_pg_oreg1'+(' ot_hdc_mul_kcp48' if v['kcp']>1 else '')
     a=SimpleNamespace(height=455.76,mul_lat=v['mul_lat'],bw_m8=True,
-      param=['OREG=1',f"MUL_KCP={v['kcp']}",'IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1'],
+      param=['OREG=1',f"MUL_KCP={v['kcp']}",'IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1']+v.get('extra',[]),
       hold_margin_ns=.010,cores=threads,sdc='port_group_m3_m8_die_p770.sdc',io_hold_extra=80,
       diamond=True,cts_derate=.75,rom_lead=v['rom_lead'],max_transition_ns=None,slew_margin_percent=30,
       td_only=True,orfs_var=['OT_IO_SKEW=90','OT_IO_HOLD_SKEW=50',
@@ -58,8 +65,9 @@ def main():
     a.out.mkdir(parents=True,exist_ok=False)
     if a.mode=='bench':
         cmd=['iverilog','-g2012','-s','tb_qwen_slab_port_group','-o',str(a.out/'bench.vvp')]
-        for kv in [f"MUL_LAT={v['mul_lat']}",f"MUL_KCP={v['kcp']}",'OREG=1','IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1',
-                   'LEAD=8' if a.negative else 'LEAD=9']:
+        bf=v.get('extra',[])
+        neg=(['BMUT=1','LEAD=9'] if bf else ['LEAD=8']) if a.negative else ['LEAD=9']
+        for kv in [f"MUL_LAT={v['mul_lat']}",f"MUL_KCP={v['kcp']}",'OREG=1','IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1']+bf+neg:
             cmd+=['-P','tb_qwen_slab_port_group.'+kv]
         cmd+=BENCH_SOURCES
         proc=subprocess.run(cmd,capture_output=True,text=True,cwd=ROOT)

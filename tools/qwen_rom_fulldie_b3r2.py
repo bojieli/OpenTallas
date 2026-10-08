@@ -539,7 +539,8 @@ def _vm_me(v, m):
         rtl={'qfd_sp_vector_memory': 'rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv ot_qfd_sp_vector_memory_bv',
              'qfd_sp_su64_sfu': 'rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv ot_qfd_sp_su64_sfu_bv',
              'qfd_sp_res_ser': 'rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv ot_qfd_res_ser',
-             'qfd_sp_tree_top': 'rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv ot_qfd_sp_tree_top (LANDED = 1)',
+             'qfd_sp_tree_top': 'rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv ot_qfd_sp_tree_top (LANDED = 1, '
+                                'BAND = 1: ot_qfd_band_upper inside, cfg qfd_sp_tree_top_b)',
              'qfd_sp_band_lanes': 'rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv ot_qfd_band_lanes (NL 16; '
                                   'tree top part: ot_qfd_band_upper)'},
         column_m_um=VM_ME_XCOL, vm_slot_um=[round(m['geo']['cw'], 3), VM_BV_H], su_slot_um=[round(m['geo']['cw'], 3), SU_BV_H],
@@ -549,9 +550,10 @@ def _vm_me(v, m):
                         bench='rtl/test/qwen_lane_band/tb_qfd_band_lanes.sv',
                         frame='band-local result slots: split s <= 10 band b slot k = group b * 2^(10-s) + k; s 11 / 12 '
                               'band 0 slot k = group k (tree top words)', cycles='+5 + 2 LNK edges per ME op result'),
-        open=['slab result-port groups must index rows / addresses by the band-local group (band_lanes.frame); the tree '
-              'top hosts ot_qfd_band_upper (pw / lc / lf / tt_ty ports) beside its control: integration into '
-              'ot_qfd_sp_tree_top pending',
+        band_integrate=dict(slab_port_group='ot_qwen_slab_port_group BANDF 1 (GID = slot 8b + k; group g(split, slot))',
+                            spine='rtl/qwen_sys/band_integrate_20261008/ot_qfd_spine_band.sv',
+                            bench='rtl/test/qwen_band_integrate/tb_qfd_spine_band.sv'),
+        open=['tree top slot: qfd_sp_tree_top_b is 777.6 x 3732.48 (the upper levels; r21m slot is the r21f tree top\'s)',
               'band lane <-> slab words connect each band at its W primary slab (a band\'s fragments reach it by pfrag)'],
         slab_port_groups='RTL_PORT_GROUPS 48 (8 a band, 4 a half; 12 port elements x PQ 4), block-word FIFOs stay 96')
     base = v.masters

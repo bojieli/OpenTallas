@@ -1,0 +1,10 @@
+split 7 ops 48
+split 8 ops 53
+split 9 ops 50
+split 10 ops 62
+split 11 ops 59
+FAIL qfd_spine_band oob=0 mism=0 first=0/0 burst_bad=0 prog_ahead=0 ovbad=0 idle_bad=0 img_bad=0 faults ser000000 w0 wh0 bursts=3208 rows=51744 idle_checks=0 early=0
+- rtl/test/qwen_band_integrate/tb_qfd_spine_band.sv:284: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 67us; walltime 109.281 s; speed 616.603 ns/s
+- Verilator: cpu 109.277 s on 1 threads; allocated 116 MB

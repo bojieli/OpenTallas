@@ -15,7 +15,7 @@ VER = "$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator"
 VFL = ("--binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH "
        "-Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT")
 VM_SRC = ("rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv "
-          "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv "
+          "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv "
           "rtl/hdc/ot_hdc_delay.sv")
 SU_SRC = ("rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv "
           "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv "
