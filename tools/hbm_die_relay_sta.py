@@ -202,6 +202,26 @@ def tt_prefix(prefix, case):
     return '\n'.join(out) + '\n', fallback
 
 
+PAD_SCALE = dict(ff=1.0, tt=1.4, ss=1.9)    # a hold-pad delay cell's delay at TT / SS relative to FF (ASAP7 BUF chains)
+
+
+def hold_pads(path, corner):
+    """die-level hold padding (rule H1, die links): a delay on the die net into each listed load pin (the relay input,
+    or the receiving block pin for a relay -> block hop), sized at FF; the same cells cost PAD_SCALE x at TT / SS
+    setup, so every corner is timed with them"""
+    if not path:
+        return ''
+    pads = json.loads(Path(path).read_text())
+    L = ['# die hold pads (tools/hbm_die_relay_sta.py --hold-pads)', 'set ot_npad 0']
+    for pin, ps in sorted(pads.items()):
+        v = ps * PAD_SCALE[corner] / 1000.0
+        L.append(f'set l [get_pins -quiet {{{pin}}}]; if {{[llength $l]}} {{ foreach d [get_pins -quiet -of_objects '
+                 f'[get_nets -of_objects $l] -filter "direction==output"] {{ set_annotated_delay -net -incremental '
+                 f'-from $d -to $l {v:.6f}; incr ot_npad }} }}')
+    L.append('puts "OT_HOLD_PADS n=$ot_npad"')
+    return '\n'.join(L) + '\n'
+
+
 def report(corner):
     k = 'min' if corner == 'ff' else 'max'
     return f'''
@@ -245,6 +265,7 @@ def main():
     ap.add_argument('--case', required=True)
     ap.add_argument('--clock-context', help='clock_context.json from tools/hbm_die_clock_context.py')
     ap.add_argument('--budgets', action='store_true')
+    ap.add_argument('--hold-pads', help='JSON {load pin: FF pad ps} (die-level hold padding)')
     ap.add_argument('--measured', help='measured_insertion.json (closure-loop calibrate) for view insertion')
     a = ap.parse_args()
     case = Path(a.case)
@@ -263,9 +284,9 @@ def main():
     prefix = base.partition('set_cmd_units -time ns')[0]
     assert 'estimate_parasitics' in prefix, 'case run.tcl has no parasitics step before the clock boundary'
     for c in ('ss', 'ff'):
-        (case / f'run_clock_{c}.tcl').write_text(prefix + constraints(sinks, c) + report(c))
+        (case / f'run_clock_{c}.tcl').write_text(prefix + constraints(sinks, c) + hold_pads(a.hold_pads, c) + report(c))
     ttp, tt_fallback = tt_prefix(prefix, case)
-    (case / 'run_clock_tt.tcl').write_text(ttp + constraints(sinks, 'tt') + report('tt'))
+    (case / 'run_clock_tt.tcl').write_text(ttp + constraints(sinks, 'tt') + hold_pads(a.hold_pads, 'tt') + report('tt'))
     (case / 'tt_fallback.json').write_text(json.dumps(tt_fallback) + '\n')
     print(json.dumps(dict(tt_models_missing=tt_fallback)))
     # OWNER STEER 2026-10-07 (3): die timing on GLOBAL-ROUTE parasitics: full-die GRT (M4-M9, coarse M2/M3 tracks so
@@ -298,9 +319,9 @@ report_wire_length -net * -global_route -file /out/wirelength_grt.csv
 estimate_parasitics -global_routing''')
     assert 'global_route' in gp
     # OPTION B: setup at TT, hold at FF, SS setup as a sensitivity
-    (case / 'run_grt_sta.tcl').write_text(gp + constraints(sinks, 'tt') + report('tt').replace('puts OT_DONE', '')
-                                          + constraints(sinks, 'ff') + report('ff').replace('puts OT_DONE', '')
-                                          + constraints(sinks, 'ss') + report('ss'))
+    (case / 'run_grt_sta.tcl').write_text(gp + constraints(sinks, 'tt') + hold_pads(a.hold_pads, 'tt') + report('tt').replace('puts OT_DONE', '')
+                                          + constraints(sinks, 'ff') + hold_pads(a.hold_pads, 'ff') + report('ff').replace('puts OT_DONE', '')
+                                          + constraints(sinks, 'ss') + hold_pads(a.hold_pads, 'ss') + report('ss'))
     print(json.dumps(dict(planned_sinks=len(ctx['sinks']), relay_sinks=len(added), relays_without_domain=len(nodom))))
 
 
