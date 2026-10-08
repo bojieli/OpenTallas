@@ -328,12 +328,12 @@ class ReliabilityTests(unittest.TestCase):
         self.assertNotIn("installed", self.j["eco"])
 
     def test_eco_verdict_fails_closed(self):
-        passing = dict(ss_ps=15, ff_ps=15, drc=0, errors=[])
+        passing = dict(ss_ps=cl.SS_MIN, ff_ps=cl.FF_MIN, drc=0, errors=[])
         self.assertTrue(cl.eco_passes(passing, 0))
         for bad in (None, {}, dict(passing, ss_ps=None), dict(passing, ss_ps=float("inf")),
                     dict(passing, ff_ps=float("nan")), dict(passing, ss_ps=True),
                     dict(passing, drc=None), dict(passing, drc=False), dict(passing, errors=["STA error"]),
-                    dict(passing, ff_ps=14.99)):
+                    dict(passing, ff_ps=cl.FF_MIN - 0.01)):
             self.assertFalse(cl.eco_passes(bad, 0), bad)
         self.assertFalse(cl.eco_passes(passing, 9))
 

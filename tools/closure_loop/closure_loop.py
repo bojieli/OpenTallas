@@ -65,7 +65,7 @@ LEDGER = REVIEW / "CLOSURE_LOOP_LEDGER.md"
 STATUS_MD = REVIEW / "CLOSURE_LOOP_STATUS.md"
 EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
-SS_MIN, FF_MIN = 15.0, 15.0           # OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333
+SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT at SS >= 0 / FF >= 0 / DRC 0 at 833.333 sign-off (+15 is the DESIGN target: route 770, repair hold margin 50; was +15/+15 since 10-06 18:15)
 RAM_HEADROOM_GB = 32
 PENDING_WINDOW_S = 600
 PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
@@ -1303,7 +1303,7 @@ def publish(j, metrics):
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
                        owner=spec["owner"], source_branch=branch, source_commit=j["commit_full"],
                        host=j["host"], run_dir=j["run"], acceptance=dict(ss_min_ps=SS_MIN, ff_min_ps=FF_MIN, drc=0,
-                       rule="OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), "
+                       rule="OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), "
                             "agreed die-clock IO budgets, DRC 0"),
                        metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "post_sdc", "corner_sta",
                                                             "drc_metrics", "drc_skipped")},
@@ -2741,6 +2741,39 @@ def cmd_retry(a):
 
 
 @locked_job_command
+def cmd_reverdict(a):
+    """human: re-judge a NEEDS_RTL / NEEDS_HUMAN job on its recorded evidence after an acceptance-line change, no re-route.
+    Route sign-off meets the line -> back to the verdict stage (READY).  Else an earlier hold ECO whose recorded result
+    meets the line but was not installed -> re-enter the ECO completion on the existing ECO output (status ECO; its
+    result.json is re-read and judged by eco_passes, then installed and re-verdicted as usual)."""
+    j = load_job(a.name)
+    if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN"):
+        sys.exit(f"{a.name} is {j['status']}")
+    m, e = j.get("metrics") or {}, j.get("eco") or {}
+    if j.get("failed_checks"):
+        sys.exit(f"{a.name}: verdict checks failed {j['failed_checks']}: not a line-only miss")
+    stl = stage_list(j["spec"])
+    vidx = next(i for i, x in enumerate(stl) if x["kind"] == "verdict")
+    if eco_passes(dict(m, errors=[]), 0):
+        j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None)
+        how = f"route sign-off SS {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC {m.get('drc')}"
+    elif e.get("tried") and not e.get("installed") and eco_passes(e.get("result"), 0):
+        r = ssh(j["host"], f"ls -t {j['run']}/cl/hold_eco.*.rc 2>/dev/null | head -1", timeout=60)
+        rc_file = r.stdout.strip()
+        if not rc_file:
+            sys.exit(f"{a.name}: no hold_eco rc file under {j['run']}/cl")
+        j.update(status="ECO", stage_idx=vidx, stage_key="hold_eco", stage_tag=Path(rc_file).name[:-3], retries_used=0,
+                 errors=[], reason=None)
+        how = f"recorded hold-ECO result {e.get('result')} ({j['stage_tag']})"
+    else:
+        sys.exit(f"{a.name}: recorded evidence does not meet SS >= {SS_MIN:g} / FF >= {FF_MIN:g} / DRC 0 "
+                 f"(route {m.get('ss_ps')}/{m.get('ff_ps')}/{m.get('drc')}; eco {e.get('result')})")
+    event(j, f"human re-verdict ({a.why}) at the line SS >= {SS_MIN:g} / FF >= {FF_MIN:g} / DRC 0 on {how}")
+    save_job(j)
+    ledger(j, f"RE-VERDICT (human, no re-route): {a.why}; {how}")
+
+
+@locked_job_command
 def cmd_retry_eco(a):
     """human: re-run the post-route hold ECO (current hold_eco rev) on a NEEDS_RTL job whose only miss was hold and whose
     earlier ECO missed; the earlier ECO is kept in eco_history and its output dir is preserved (new out: cl/eco-r<n>)."""
@@ -2854,6 +2887,7 @@ def main():
     v = sub.add_parser("validate"); v.add_argument("file")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
+    r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line SS>=0/FF>=0/DRC 0")
     c = sub.add_parser("cancel"); c.add_argument("name")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
@@ -2872,6 +2906,8 @@ def main():
         cmd_retry(a)
     elif a.cmd == "retry-eco":
         cmd_retry_eco(a)
+    elif a.cmd == "reverdict":
+        cmd_reverdict(a)
     elif a.cmd == "cancel":
         cmd_cancel(a)
     elif a.cmd == "recover-eco-overlays":
