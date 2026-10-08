@@ -88,8 +88,8 @@ DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
-WORKERS = 96
-SYNC_SLOTS = 24          # workers QUEUED/SYNC jobs may hold at once (the rest keep READY / RUNNING / ECO moving)
+WORKERS = 192
+SYNC_SLOTS = 64          # workers QUEUED/SYNC jobs may hold at once (the rest keep READY / RUNNING / ECO moving)
 # declared threads of own running stages count at 0.6 against the cap: full declared threads blocked EPYC2 at load1 40
 # (7 calibrates in synth/place, ~1 core each), load1 alone let EPYC3 reach 342 (27 routes ramping into DRT together)
 OWN_RUNNING_WEIGHT = 0.6
