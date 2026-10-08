@@ -42,7 +42,7 @@ module tb_stream4_cdc_m2_equiv;
         repeat (5) @(posedge clk); rst_n = 1; repeat (12) @(posedge clk); go = 1;
         repeat (N) @(posedge clk);
         if (bad == 0 && lv_seen > 100 && wd_seen > 50) $display("PASS cdc_m2 clk_checks=%0d hclk_checks=%0d landings=%0d wdone=%0d", nc, nh, lv_seen, wd_seen);
-        else $display("FAIL cdc_m2 NEG=%0d: %0d mismatching edges (landings %0d wdone %0d)", NEG, bad, lv_seen, wd_seen);
+        else begin $display("FAIL cdc_m2 NEG=%0d: %0d mismatching edges (landings %0d wdone %0d)", NEG, bad, lv_seen, wd_seen); $fatal(1); end
         $finish;
     end
 endmodule
