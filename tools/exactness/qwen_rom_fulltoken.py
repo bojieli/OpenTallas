@@ -45,14 +45,17 @@ ACK = ROOT / "rtl/hdc/kv/ot_qwen_hbm_stream4_ack.sv"
 HOST = ROOT / "tools/runtime/qwen_baseline_ar_stream4/qwen_rom_rt_w12_stream4_fulltoken.cpp"
 VERILATOR = os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator")
 FIX = Path("/srv/opentallas-scratch")
-IMG = FIX / "claude/qwen-dspark-system/img_p1"
-X_PRELOAD = FIX / "claude/realmem-ctx8k/gold/P8191/x_preload.hex"
-KV_HISTORY = FIX / "codex/qwen-P8191-full36-history-r1/history"
-GOLD = FIX / "claude/qwen-hbmacc-8k/gold/tp4/P8191"
-# The full gold directory was deleted by the fleet sweeper on 2026-10-07 20:43 (EPYC1 and EPYC2).  The COMMITTED oracle
-# record keeps the sha256 of every layer X file, every head Xnorm and the head argmax/logit, so those are checked by
-# digest when the files are gone; current-token KV codes are checked wherever a gold kv_at_P JSON survives
-# (realmem-ctx8k keeps layers 0-2) and the rest are reported as unverified.
+IMG = Path("/srv/opentallas-scratch/claude/qwen-dspark-system/img_p1")  # links re-pointed 10-08 to scratch-overflow/claude/layer-parallel-sim
+# Durable fixture tree (KEEP STATUS.md in every dir; literal path so tools/fleet/fleet_sweep.py protects it).  The
+# TP4 gold and the KV history were deleted by the fleet sweeper on 2026-10-07 and regenerated 2026-10-08
+# (tools/exactness/regen_fixtures.sh): the gold on the local GPU, verified file by file against the committed
+# oracle digests; the history derived from its kv_pre (fixtures.py history, L0 die0 pinned).  The old paths
+# (codex/qwen-P8191-full36-history-r1, claude/qwen-hbmacc-8k/gold) are compatibility symlinks to this tree.
+X_PRELOAD = Path("/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp4/P8191/x_preload.hex")
+KV_HISTORY = Path("/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/history")
+GOLD = Path("/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp4/P8191")
+# When gold files are missing the COMMITTED oracle record still checks every layer X file, every head Xnorm and the
+# head argmax/logit by digest; current-token KV codes are checked wherever a gold kv_at_P JSON exists.
 REF = ROOT / "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4/oracle.json"
 KV_GOLD = [GOLD / "kv_at_P", FIX / "claude/realmem-ctx8k/gold/P8191/kv_at_P"]
 POS, TOKEN = 8191, 24

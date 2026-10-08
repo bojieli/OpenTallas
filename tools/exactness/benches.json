@@ -43,7 +43,7 @@
   {
    "bench": "hbm_qwen_L0",
    "target": "hbm_qwen",
-   "tier": "blocked",
+   "tier": "fast",
    "host": "ot-epyc1tb",
    "group": "hbm_qwen",
    "peak_gb": 12,
@@ -57,12 +57,12 @@
     "source": "qwen-hbmacc-8k/src snapshot",
     "evidence": "results/rtl/qwen_hbmacc_p8191_20261004/a_p8191/L0/token_result.json"
    },
-   "blocked": "fixtures deleted by the fleet sweeper 2026-10-07 20:43 (qwen-hbmacc-8k gold/tp2*, runs/*/preload.hex); regenerate the TP2 P8191 gold on the local GPU (tools/qwen_hbmacc_position_oracle_gpu.py) to re-enable"
+   "fixtures": "TP2 P8191 gold regenerated 2026-10-08 (regen_fixtures.sh) under /srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191; usable once its verify.json says PASS"
   },
   {
    "bench": "hbm_qwen_head",
    "target": "hbm_qwen",
-   "tier": "blocked",
+   "tier": "fast",
    "host": "ot-epyc1tb",
    "group": "hbm_qwen",
    "peak_gb": 20,
@@ -78,7 +78,7 @@
     "source": "qwen-hbmacc-8k/src snapshot",
     "evidence": "results/rtl/qwen_hbmacc_p8191_20261004/a_p8191_w224_head/head/token_result.json"
    },
-   "blocked": "fixtures deleted by the fleet sweeper 2026-10-07 20:43 (qwen-hbmacc-8k gold/tp2*, runs/*/preload.hex); regenerate the TP2 P8191 gold on the local GPU (tools/qwen_hbmacc_position_oracle_gpu.py) to re-enable"
+   "fixtures": "TP2 P8191 gold regenerated 2026-10-08 (regen_fixtures.sh) under /srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191; usable once its verify.json says PASS"
   },
   {
    "bench": "hbm_ds_joint_p1",
@@ -87,7 +87,7 @@
    "host": "ot-epyc2",
    "group": "hbm_ds",
    "peak_gb": 16,
-   "label": "HBM accelerator DeepSeek SM PQ/XMAP production gate: 4 retained P1 fixtures exact + FP4 negative refused (P6 fixtures swept 10-07 19:44)",
+   "label": "HBM accelerator DeepSeek SM PQ/XMAP production gate: 4 P1 + 4 P6 retained fixtures exact + FP4 negative refused (P6 recovered 10-08 from euclid-hbm-opt1-production-r1, sha-equal to the committed layouts)",
    "expect": {
     "exact": true,
     "cycles": 4048,
@@ -95,7 +95,11 @@
      "stress": 2514,
      "ar_l20": 4048,
      "wg": 934,
-     "other": 4716
+     "other": 4716,
+     "p6_stress": 2986,
+     "p6_l20": 5400,
+     "p6_wg": 1230,
+     "p6_other": 5220
     }
    },
    "last_pass": {
@@ -175,5 +179,28 @@
  "not_covered": [
   "DS ROM S81: no system-level token bench exists (open gate native_token); its rate composes per-component runs (results/rtl/dsrom_1m_allmeasured_20261004).",
   "The closure-block RTL (Qwen die masters r21/r22 stations, controller TMR/cancel, native links; S81 BF/selector/PQ/softmax/gearbox; HBM die views, SU/SFU/packet SRAM) is NOT instantiated by any bench above: those are physical-closure variants verified by their own component benches."
- ]
+ ],
+ "fixtures": {
+  "root": "/srv/opentallas-scratch/claude/exactness/fixtures",
+  "note": "Durable reference fixtures; STATUS.md (KEEP) in every dir; regenerate with tools/exactness/regen_fixtures.sh (GPU gold on the control host, verified against the committed oracle digests by tools/exactness/fixtures.py verify), copied to ot-epyc1tb and ot-epyc2.",
+  "qwen_gold_tp4": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp4/P8191",
+  "qwen_gold_tp2": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp2/P8191",
+  "qwen_gold_tp2_l3": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp2_l3/P8191",
+  "qwen_kv_history": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/history",
+  "hbm_qwen_runs": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/hbmq_runs",
+  "hbm_ds_joint": "/srv/opentallas-scratch/claude/exactness/fixtures/hbm_ds_joint",
+  "qwen_rom_images": "/srv/opentallas-scratch/claude/qwen-dspark-system/img_p1",
+  "compat_links": {
+   "/srv/opentallas-scratch/codex/qwen-P8191-full36-history-r1": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191",
+   "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold",
+   "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/runs": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/hbmq_runs"
+  },
+  "digests": {
+   "qwen_gold_tp4": "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4/oracle.json",
+   "qwen_gold_tp2": "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp2/oracle.json",
+   "qwen_gold_tp2_l3": "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp2/oracle_l3.json",
+   "qwen_kv_history": "results/rtl/qwen_rom_combined_p0_20261005/linked_expected/expected.json (history_source_sha256, L0 die0)",
+   "hbm_ds_joint": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/retained_layouts.json (source_sha256)"
+  }
+ }
 }
