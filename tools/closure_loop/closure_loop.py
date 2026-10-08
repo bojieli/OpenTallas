@@ -1258,6 +1258,14 @@ def launch_stage(j, st, cmd):
                     continue
                 ff_sub.append(f)
             ff = ff_sub
+            # VM8-TIMING 2026-10-08: the FF hold scene also reads io_ref_routed.sdc LAST (the shipped helper copy in {CL}),
+            # so route-time FF hold repair targets the MEAN boundary insertion of the tree being built -- the reference
+            # the verdict's routed re-STA uses (routed_ioref).  Without it the scene timed vclk at the MIN insertion
+            # (vclk_corner_true.sdc) and every route passed FF at route time, then failed the verdict on output-pin
+            # flops by (mean - min) + 50 (hbm_vm8_nws_sp_hm10: 6,906 outputs at -45..-64).  Spec "route_ff_ioref": false
+            # opts out; a spec that already lists an io_ref_routed.sdc keeps its own.
+            if j["spec"].get("route_ff_ioref", True) and not any(f.rsplit("/", 1)[-1] == "io_ref_routed.sdc" for f in ff):
+                ff = ff + [f"{j['run']}/cl/io_ref_routed.sdc"]
             if ff:
                 env += f"mkdir -p {j['run']}/src/.ot_mm\n"
                 rel = []
