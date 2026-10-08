@@ -77,10 +77,16 @@ def cut():
         grids[n] = sorted(tg.getGridY() if hdir[n] else tg.getGridX())
     used = {}
 
-    def pin_layer(lname, horizontal):
+    rr = {}
+
+    def pin_layer(edge, horizontal):
+        # round-robin over the edge's preferred-direction layers: a wide bus leaving the window spreads over M4/M6/M8
+        # (W/E) or M5/M7/M9 (N/S) instead of piling onto one layer's tracks at the cut (r22 win_io v1: the only GRT
+        # overflow was at the cut edges, 1,597-bit KV landing word on one layer)
         pool = H if horizontal else V
-        idx = int(lname[1:]) if lname and lname[0] == 'M' and lname[1:].isdigit() else 5
-        return min(pool, key=lambda n: (abs(int(n[1:]) - idx), -int(n[1:])))
+        k = rr.get(edge, 0)
+        rr[edge] = k + 1
+        return pool[k % len(pool)]
 
     def free_track(edge, lname, coord, lo, hi):
         g = grids[lname]
@@ -133,7 +139,7 @@ def cut():
                     if ol:
                         break
                 horiz = edge in ('W', 'E')
-                ln = pin_layer(ol, horiz)
+                ln = pin_layer(edge, horiz)
                 lay = layers[ln]
                 w = lay.getWidth()
                 ln_len = max(4 * w, um(0.2))
