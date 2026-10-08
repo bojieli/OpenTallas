@@ -107,7 +107,7 @@ SETUP_LIB = "TT"
 HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
-STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (2, 8), "export": (2, 8),
+STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (1, 1), "export": (1, 1),
                   "summary": (2, 16)}
 
 
@@ -610,6 +610,8 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             used = self.own_running.get(host, 0) + pt
             if used + threads > cfg["max_loop_threads"]:
                 return False, f"{cfg['label']} loop threads {used}+{threads} > {cfg['max_loop_threads']}"
+        if ram <= 2:          # 2026-10-08: collect/export copy files; host-local, so they cannot move -- a 16 GB headroom
+            head = min(head, 2)   # left PVE1 jobs stuck at collect for 20 min with 13 GB free
         if info["mem_gb"] - pr - res < ram + head:
             return False, (f"{cfg['label']} MemAvailable {info['mem_gb']}-{pr} GB" + (f" - reserve {res}" if res else "")
                            + f" < {ram}+{head:.0f}")
@@ -828,6 +830,9 @@ def subst(text, j):
 
 # ------------------------------------------------------------------------------------------------ budget sheets
 BUDGET_SHEETS = "results/rtl/budgets_20261006/sheets"
+SDC_GEN_REF = os.environ.get("CL_SDC_GEN_REF", "origin/main")   # make_block_sdc.py always from main (stale-sheets 10-08)
+# sign-off post-SDC must carry the sheet latency on vclk ONLY: latency on {<clk> vclk} re-idealises the real clock
+IDEAL_SIGNOFF_RE = re.compile(r"set_clock_latency\s+[-0-9.]+\s+\[get_clocks\s+\{\s*(?!vclk\b)\S+\s+vclk\s*\}\]")
 
 
 def budget_files(bud, check_only=False, insertion_override=None):
@@ -836,8 +841,11 @@ def budget_files(bud, check_only=False, insertion_override=None):
     every job uses the same sheet whatever its own branch carries."""
     ref = bud.get("sheets_ref", "origin/main")
     with tempfile.TemporaryDirectory() as td:
-        arch = sh(["bash", "-c", f"git -C {REPO} archive {ref} tools/budgets {BUDGET_SHEETS}/{bud['master']}.json | tar -x -C {td}"],
-                  timeout=300)
+        # the SHEET is pinned at sheets_ref; the GENERATOR is always SDC_GEN_REF (main).  A job pinned to a ref older
+        # than the 2026-10-07 make_block_sdc fix otherwise put the sheet latency on the real clock in budget_signoff.sdc,
+        # read after set_propagated_clock: an IDEAL core clock at sign-off (drive-1613: swiglu FF -147.68 fake I2R hold).
+        arch = sh(["bash", "-c", f"git -C {REPO} archive {ref} {BUDGET_SHEETS}/{bud['master']}.json | tar -x -C {td} && "
+                   f"git -C {REPO} archive {SDC_GEN_REF} tools/budgets | tar -x -C {td}"], timeout=300)
         sheet = Path(td) / BUDGET_SHEETS / f"{bud['master']}.json"
         if arch.returncode or not sheet.exists():
             raise ValueError(f"no budget sheet {bud['master']} at {ref} ({arch.stderr[-300:]})")
@@ -858,6 +866,10 @@ def budget_files(bud, check_only=False, insertion_override=None):
             if r.returncode:
                 raise ValueError(f"make_block_sdc {name}: {r.stderr[-300:]}")
             out[name] = r.stdout
+        bad = IDEAL_SIGNOFF_RE.search(out["budget_signoff.sdc"])
+        if bad:
+            raise ValueError(f"budget_signoff.sdc puts the sheet latency on the real clock ({bad.group(0)}): ideal-clock "
+                             f"sign-off; generator {SDC_GEN_REF} is older than the 2026-10-07 make_block_sdc fix")
         out["budget_sheet.json"] = sheet.read_text()
         out["_ref"] = git("rev-parse", ref).stdout.strip()
         return out
@@ -1258,6 +1270,14 @@ def launch_stage(j, st, cmd):
                     continue
                 ff_sub.append(f)
             ff = ff_sub
+            # VM8-TIMING 2026-10-08: the FF hold scene also reads io_ref_routed.sdc LAST (the shipped helper copy in {CL}),
+            # so route-time FF hold repair targets the MEAN boundary insertion of the tree being built -- the reference
+            # the verdict's routed re-STA uses (routed_ioref).  Without it the scene timed vclk at the MIN insertion
+            # (vclk_corner_true.sdc) and every route passed FF at route time, then failed the verdict on output-pin
+            # flops by (mean - min) + 50 (hbm_vm8_nws_sp_hm10: 6,906 outputs at -45..-64).  Spec "route_ff_ioref": false
+            # opts out; a spec that already lists an io_ref_routed.sdc keeps its own.
+            if j["spec"].get("route_ff_ioref", True) and not any(f.rsplit("/", 1)[-1] == "io_ref_routed.sdc" for f in ff):
+                ff = ff + [f"{j['run']}/cl/io_ref_routed.sdc"]
             if ff:
                 env += f"mkdir -p {j['run']}/src/.ot_mm\n"
                 rel = []
