@@ -1,7 +1,7 @@
 """KV transport fixtures, not actual HBM/RTL qualification."""
 import unittest
 
-from tools.gpu_sys.canonical_qwen_kv_ports import KVByteHandlers
+from tools.gpu_sys.canonical_qwen_kv_ports import KVByteHandlers, KVHandlers, CONTROL_KINDS, CONTROL_ACKS
 from tools.gpu_sys.canonical_qwen_transport import DeliverySession, KINDS, KV_KINDS, TransportError, W2PrimaryPort
 from tools.h4_qwen_released_provider_delivery import PROGRAM_SHA
 
@@ -35,10 +35,13 @@ class Authority:
     def kv_owner_retained(self, request):
         return self.retained
 
+    def kv_payload_address_valid(self, request, address):
+        return 0 <= address < 72 and request['key'] == [0, 1, 0]
+
 
 def request(sequence=0, **fields):
     r = dict(program_sha256=PROGRAM_SHA, source_PC=20, sequence=sequence,
-             rank=1, base=0, bytes=72, offset=0, count=1)
+             rank=1, address=0, bytes=1, lease=5, key=[0, 1, 0], addresses=[0])
     r.update(fields)
     return r
 
@@ -52,8 +55,8 @@ class KVTest(unittest.TestCase):
     def test_physical_partial_write_preserves_both_adjacent_sectors(self):
         port, _, kv = self.fixture()
         original = bytes(port.data)
-        reply = kv.handlers["kv_state_write"](request(offset=30, payload=b"ABCDE"))
-        self.assertTrue(reply["write_completed"])
+        reply = kv.handlers["kv_state_write"](request(address=30, payload=b"ABCDE"))
+        self.assertTrue(reply["visible"])
         self.assertEqual(bytes(port.data[:30]), original[:30])
         self.assertEqual(bytes(port.data[30:35]), b"ABCDE")
         self.assertEqual(bytes(port.data[35:]), original[35:])
@@ -63,20 +66,20 @@ class KVTest(unittest.TestCase):
 
     def test_aligned_payload_write_requires_actual_write_only(self):
         port, _, kv = self.fixture()
-        kv.handlers["kv_payload_write"](request(offset=32, payload=b"z" * 32))
+        kv.handlers["kv_state_write"](request(address=32, payload=b"z" * 32))
         self.assertEqual(len(port.calls), 1)
         self.assertEqual(port.calls[0][-1], b"z" * 32)
 
     def test_read_returns_physical_bytes_in_requested_order(self):
         port, _, kv = self.fixture()
-        response = kv.handlers["kv_payload_read"](request(offset=29, count=9))
-        self.assertEqual(response["payload"], bytes(range(29, 38)))
-        self.assertEqual([x[1] for x in port.calls], [0, 32])
+        response = kv.handlers["kv_payload_read"](request(addresses=[37, 29, 32, 29]))
+        self.assertEqual(response["payload"], bytes([37, 29, 32, 29]))
+        self.assertEqual([x[1] for x in port.calls], [32, 0])
 
     def test_extent_tail_preserves_actual_padding_bytes(self):
         port, _, kv = self.fixture()
         old = bytes(port.data)
-        kv.handlers["kv_state_write"](request(offset=68, payload=b"ABCD"))
+        kv.handlers["kv_state_write"](request(address=68, payload=b"ABCD"))
         self.assertEqual(bytes(port.data[72:]), old[72:])
         self.assertEqual(bytes(port.data[:68]), old[:68])
 
@@ -92,8 +95,8 @@ class KVTest(unittest.TestCase):
 
     def test_out_of_extent_rejected_without_port_transaction(self):
         port, _, kv = self.fixture()
-        with self.assertRaisesRegex(TransportError, "byte aperture"):
-            kv.handlers["kv_payload_write"](request(offset=71, payload=b"XX"))
+        with self.assertRaisesRegex(TransportError, "state aperture"):
+            kv.handlers["kv_state_write"](request(address=71, payload=b"XX"))
         self.assertEqual(port.calls, [])
 
     def test_owner_loss_is_not_success(self):
@@ -106,6 +109,7 @@ class KVTest(unittest.TestCase):
         def base_handler(r):
             return dict(r, accepted=True, fault=False)
         handlers = {k: base_handler for k in KINDS}
+        handlers.update({k: base_handler for k in CONTROL_KINDS})
         handlers.update(kv.handlers)
         session = DeliverySession(handlers)
         for seq, kind in enumerate(("source_page_read", "kv_state_read", "native_primitive", "kv_payload_read")):
@@ -116,8 +120,55 @@ class KVTest(unittest.TestCase):
     def test_partial_kv_enrollment_refused(self):
         base = {k: lambda r: r for k in KINDS}
         base[KV_KINDS[0]] = lambda r: r
-        with self.assertRaisesRegex(TransportError, "enroll together"):
+        with self.assertRaisesRegex(TransportError, "missing simulator handlers"):
             DeliverySession(base)
+
+    def test_all_ten_services_enroll_with_six_existing_one_sequence(self):
+        port = SectorFixture()
+        calls = []
+        def actual_control(kind):
+            def invoke(r):
+                calls.append((kind, r['sequence']))
+                result = dict(r, accepted=True, fault=False)
+                result.update({k: True for k in CONTROL_ACKS[kind]})
+                if kind == 'kv_stage_write':
+                    import hashlib
+                    result['payload_sha256'] = hashlib.sha256(r['payload']).hexdigest()
+                return result
+            return invoke
+        services = KVHandlers(Authority(port), {k: actual_control(k) for k in CONTROL_KINDS})
+        handlers = {k: lambda r: dict(r, accepted=True, fault=False) for k in KINDS}
+        handlers.update(services.handlers)
+        self.assertEqual(len(handlers), 16)
+        session = DeliverySession(handlers)
+        for seq, kind in enumerate(KINDS + KV_KINDS):
+            r = request(seq, tag=3, producer_tag=3, stage='SCORES', payload=b'A')
+            result = session.transact(dict(kind=kind, request=r))
+            self.assertEqual(result['sequence'], seq)
+        self.assertEqual(session.sequence, 16)
+        self.assertEqual([k for k, _ in calls], list(CONTROL_KINDS))
+
+    def test_missing_real_lifecycle_handlers_refused(self):
+        with self.assertRaisesRegex(TransportError, 'seven actual KV lifecycle'):
+            KVHandlers(Authority(SectorFixture()), {})
+
+    def test_no_bare_ack_for_final_reader_release(self):
+        def bare(r):
+            return dict(r, accepted=True, fault=False)
+        services = KVHandlers(Authority(SectorFixture()), {k: bare for k in CONTROL_KINDS})
+        with self.assertRaisesRegex(TransportError, 'lifecycle completion missing'):
+            services.handlers['kv_reader_release'](request())
+        self.assertTrue(services.bytes.stopped)
+        with self.assertRaisesRegex(TransportError, 'no reuse'):
+            services.handlers['kv_state_read'](request())
+
+    def test_control_cannot_mutate_key_to_retag_completion(self):
+        def corrupt(r):
+            r['key'][0] = 99
+            return dict(r, accepted=True, fault=False, writer_retained=True)
+        services = KVHandlers(Authority(SectorFixture()), {k: corrupt for k in CONTROL_KINDS})
+        with self.assertRaisesRegex(TransportError, 'identity mismatch'):
+            services.handlers['kv_begin'](request(tag=3))
 
 
 if __name__ == "__main__":
