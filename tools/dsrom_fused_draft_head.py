@@ -287,17 +287,28 @@ def digest(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def sources(fused, sink=True):
+FH_ALAT_SOURCES = tuple(ROOT / "rtl/hdc" / n for n in ("ot_hdc_fastfp.sv", "ot_hdc_prefix.sv",
+                                                         "ot_hdc_fp32_add_lat.sv"))
+
+
+def sources(fused, sink=True, fh_alat=None):
+    """fh_alat: the fused adds' latency (successor default 7, the closed ot_hdc_fp32_add_lat #(7); 0 is the
+    as-built five-stage pipe that does not close 1.2 GHz at SS).  None keeps the successor's default."""
     import rtl_hdc_v41_mtp_campaign as C
     from dsrom_sink_handshake import select as sink_select
     s = sink_select(C.RTL, enable=sink)
     f = select(s["sources"], enable=fused)
-    return f["sources"], s["defines"] + f["defines"], C
+    srcs, defs = f["sources"], s["defines"] + f["defines"]
+    if fused:                                     # the successor's fused add uses the keep-prefix adders
+        srcs = list(FH_ALAT_SOURCES) + srcs
+        if fh_alat is not None:
+            defs = defs + [f"+define+OT_FH_ALAT={fh_alat}"]
+    return srcs, defs, C
 
 
 def cmd_run(a):
     fused = not a.as_built_core
-    srcs, defs, C = sources(fused)
+    srcs, defs, C = sources(fused, fh_alat=a.fh_alat)
     tb = TB_FH if fused else TB_ASBUILT
     obj = a.run_dir / "obj"
     a.run_dir.mkdir(parents=True, exist_ok=True)
@@ -332,6 +343,7 @@ def cmd_run(a):
     with ThreadPoolExecutor(max_workers=a.jobs) as ex:
         res = list(ex.map(run, names))
     rec = {"core": "ot_hdc_core_v41" + (" + dspark_fused_head" if fused else ""), "sink_handshake": True,
+           "fh_alat": a.fh_alat,
            "fused_core": fused, "defines": defs, "tb": str(tb.relative_to(ROOT)), "slices": res,
            "all_pass": all(r["pass"] for r in res),
            "manifest": json.loads((a.slices / "manifest.json").read_text()),
@@ -430,6 +442,8 @@ def main():
     r.add_argument("--run-dir", type=Path, required=True)
     r.add_argument("--as-built-core", action="store_true")
     r.add_argument("--jobs", type=int, default=8)
+    r.add_argument("--fh-alat", type=int, default=None,
+                   help="fused adds: default 7 (closed, keep-prefix LAT 7); 0 the as-built five-stage pipe")
     c = sub.add_parser("record")
     c.add_argument("--runs", type=Path, required=True)
     c.add_argument("--out", type=Path, default=REC)

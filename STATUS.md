@@ -164,3 +164,5 @@ refused above 4,096 weight rows.
 
 **Close C3** — attribute the unexplained ~90% of the ROM cycle step, or
 establish which of the two models is wrong.
+- 04:20 PT: restructured (early tag, registered r_tag/r_v/iw_go, 2-stage ra_addr; zero cycles). Relaunched routes A5/A6/A7 + screens A0/A5/A7. Earlier A0/A5/A7 routes killed (shared dir bug).
+- 04:55 PT: A5 screen -283 in adder (no), A7 adders +31 but ra_addr -125: fixed with keep-prefix (3:2 + KS). ALAT=7 bench (pre-fix) exact, 62,853 cyc (+10 = +2/fused op). Relaunched routes B7 (util 40) / B7u30, screen B7, benches ALAT 0/7.
