@@ -7,7 +7,8 @@ closure-loop job directory is rescanned every 10 s with an mtime cache.
 
 Endpoints (bind 127.0.0.1:8765 by default):
   /                 the page            /api/fleet   JSON snapshot
-  /api/stream       server-sent events  /landmask.js static map mask
+  /api/stream       server-sent events (latest history point only; /api/fleet
+                    carries the full 60-minute history)
 Share-safe mode is the default: labels and generic categories only. `?safe=0`
 adds real host aliases and block names, and is honoured only for direct
 loopback requests that carry no proxy forwarding headers.
@@ -115,12 +116,18 @@ class Closures:
         run_cat = collections.Counter(j['cat'] for j in jobs if j['status'] == 'RUNNING')
         closed = sorted((j for j in jobs if j['status'] == 'CLOSED'), key=lambda j: j['updated'])
         today = [j for j in closed if j['updated'] >= midnight]
-        day_ago = time.time() - 86400
+        now = time.time(); day_ago = now - 86400
+        hour0 = (int(now) // 3600) * 3600   # 24 hourly bins, the last one is the current hour
+        bins = {name: [0] * 24 for name, _ in CATS + [('Other', None)]}
+        for j in closed:
+            k = 23 - (hour0 - (int(j['updated']) // 3600) * 3600) // 3600
+            if 0 <= k < 24: bins[j['cat']][k] += 1
         with self.lock:
             self.data = dict(counts=dict(counts), running_by_host=dict(running), running_by_cat=dict(run_cat),
                              closed_today=len({j['block'] for j in today}), closed_today_jobs=len(today),
                              closed_24h_by_cat=dict(collections.Counter(j['cat'] for j in closed if j['updated'] >= day_ago)),
-                             closed_total=len(closed), recent=closed[-30:][::-1])
+                             closed_total=len(closed), recent=closed[-30:][::-1],
+                             closed_hourly=dict(start=hour0 - 23 * 3600, bins={k: v for k, v in bins.items() if any(v)}))
 
     def run(self):
         while True:
@@ -131,7 +138,16 @@ class Closures:
 # ---------------------------------------------------------------- snapshot
 HOSTS = [Host(h) for h in CFG['hosts']]
 CLOSURES = Closures()
-HISTORY = collections.deque(maxlen=180)  # 15 min at 5 s
+HIST_SPAN = 3600
+HISTORY = collections.deque(maxlen=int(HIST_SPAN / POLL) + 2)
+HIST_FILE = pathlib.Path(os.environ.get('FLEET_VIZ_STATE', os.path.expanduser('~/.local/state/fleet-viz'))) / 'history.json'
+HIST_HOSTS = [h['label'] for h in CFG['hosts']]
+try:   # survive restarts: reload samples still inside the window
+    _h = json.loads(HIST_FILE.read_text())
+    if _h.get('hosts') == HIST_HOSTS:
+        HISTORY.extend(x for x in _h['rows'] if x[0] > time.time() - HIST_SPAN and len(x) == 6 and x[4] > 0)
+except Exception:
+    pass
 _snap = {}; _cond = threading.Condition()
 
 def build(safe):
@@ -164,26 +180,38 @@ def build(safe):
                 loop=dict(running=counts.get('RUNNING', 0), queued=counts.get('QUEUED', 0) + counts.get('READY', 0),
                           closed_today=cl.get('closed_today', 0), closed_today_jobs=cl.get('closed_today_jobs', 0),
                           closed_total=cl.get('closed_total', 0), running_by_cat=cl.get('running_by_cat', {}),
-                          closed_24h_by_cat=cl.get('closed_24h_by_cat', {})),
-                history=list(HISTORY), recent=recent)
+                          closed_24h_by_cat=cl.get('closed_24h_by_cat', {}),
+                          closed_hourly=cl.get('closed_hourly', dict(start=0, bins={}))),
+                hist_hosts=HIST_HOSTS, history=list(HISTORY), recent=recent)
 
 def ticker():
+    n = 0
     while True:
         time.sleep(POLL)
         try:
             s1 = build(True)
-            HISTORY.append([round(s1['t']), s1['totals']['busy'], s1['totals']['cores'], s1['loop']['running']])
-            s1['history'] = list(HISTORY)
-            s0 = build(False); s0['history'] = s1['history']
+            # history row: t, busy threads, threads, routes running, fleet RAM used GB, per-host RAM used GB
+            mem = [h.get('mem_used', 0) if h['state'] == 'up' else 0 for h in s1['hosts']]
+            if not any(h['state'] == 'connecting' for h in s1['hosts']):   # skip the start-up ramp
+              HISTORY.append([round(s1['t']), s1['totals']['busy'], s1['totals']['cores'], s1['loop']['running'],
+                              s1['totals']['mem_used'], mem])
+            s0 = build(False)
+            full = {}; live = {}
+            for k, s in ((True, s1), (False, s0)):
+                s['history'] = list(HISTORY); full[k] = json.dumps(s, separators=(',', ':'))
+                s['history'] = list(HISTORY)[-1:]; s['delta'] = True; live[k] = json.dumps(s, separators=(',', ':'))
             with _cond:
-                _snap[True] = json.dumps(s1, separators=(',', ':')); _snap[False] = json.dumps(s0, separators=(',', ':'))
-                _cond.notify_all()
+                _snap.update(full=full, live=live); _cond.notify_all()
+            n += 1
+            if n % 12 == 0:
+                HIST_FILE.parent.mkdir(parents=True, exist_ok=True)
+                tmp = HIST_FILE.with_suffix('.tmp'); tmp.write_text(json.dumps(dict(hosts=HIST_HOSTS, rows=list(HISTORY))))
+                tmp.replace(HIST_FILE)
         except Exception as e:
             log('snapshot: %s' % e)
 
 # ---------------------------------------------------------------- http
-STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
-          '/landmask.js': ('landmask.js', 'application/javascript')}
+STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8')}
 
 class H(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
@@ -205,7 +233,7 @@ class H(BaseHTTPRequestHandler):
             name, ctype = STATIC[u.path]
             return self.send(200, (HERE / name).read_bytes(), ctype)
         if u.path == '/api/fleet':
-            with _cond: body = _snap.get(safe)
+            with _cond: body = _snap.get('full', {}).get(safe)
             if body is None: return self.send(503, b'{"warming":true}', 'application/json')
             return self.send(200, body.encode(), 'application/json')
         if u.path == '/api/stream':
@@ -213,11 +241,11 @@ class H(BaseHTTPRequestHandler):
             self.send_header('Cache-Control', 'no-store'); self.send_header('X-Accel-Buffering', 'no'); self.end_headers()
             self.close_connection = True
             try:
-                with _cond: body = _snap.get(safe)
+                with _cond: body = _snap.get('live', {}).get(safe)
                 while True:
                     if body: self.wfile.write(b'data: ' + body.encode() + b'\n\n'); self.wfile.flush()
                     with _cond:
-                        _cond.wait(POLL * 3); body = _snap.get(safe)
+                        _cond.wait(POLL * 3); body = _snap.get('live', {}).get(safe)
             except (BrokenPipeError, ConnectionResetError, OSError):
                 return
         self.send(404, b'not found', 'text/plain')
