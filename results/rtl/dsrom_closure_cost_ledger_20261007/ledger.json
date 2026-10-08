@@ -509,6 +509,241 @@
    "mtp_pct_vs_total": -12.587
   },
   {
+   "item": "bf_halfphl",
+   "description": "BF HALF_PHL, the ACCEPTED BF closure path (ot_s81_bf_native HALF=1 HALF_PHL=1, claude/s81-bf-20261007; exact PASS results/rtl/s81_bf_native_20261007/halfphl_exact): every BF16 field phase doubled (as-built qx10 BF16 phases go->idle+1, + 2 a phase for pin capture / output register; upper bound, region return / gather stay full rate) + the BF16-DEDICATED allocation on the 1,792 mixed die (results/uarch/dsrom_s81_mixed1792_mapping_20261007: half_dedicated 120 stages / 480 dies vs full_shared 98 / 392: +22 stage hops at 1,006 cycles = measured hop 0.8367 us + 2 cycles mean cable, +88 layer dies)",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     1764,
+     0
+    ],
+    [
+     "*.ffn.router",
+     519,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     205,
+     0
+    ],
+    [
+     "L2.attn.a_proj",
+     1557,
+     0
+    ],
+    [
+     "L8.attn.a_proj",
+     1557,
+     0
+    ],
+    [
+     "L14.attn.a_proj",
+     1557,
+     0
+    ],
+    [
+     "L20.attn.a_proj",
+     1038,
+     0
+    ],
+    [
+     "L24.attn.a_proj",
+     519,
+     0
+    ],
+    [
+     "L28.attn.a_proj",
+     519,
+     0
+    ],
+    [
+     "L32.attn.a_proj",
+     519,
+     0
+    ],
+    [
+     "L36.attn.a_proj",
+     519,
+     0
+    ],
+    [
+     "L1.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L3.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L5.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L7.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L9.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L10.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L12.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L14.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L16.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L18.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L20.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L21.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L23.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L25.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L27.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L29.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L30.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L32.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L34.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L36.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L37.substage_hop0",
+     1006,
+     0
+    ],
+    [
+     "L39.substage_hop0",
+     1006,
+     0
+    ]
+   ],
+   "ar_tok_s": 1372.7,
+   "mtp_tok_s": 4155.6,
+   "ar_pct_vs_total": -13.867,
+   "mtp_pct_vs_total": -11.483
+  },
+  {
+   "item": "bf_deep4",
+   "description": "OPTIONAL lever, not the closure path: deep full-rate BF (ot_s81_bf_native RECUT=4, ot_v41_bf16_lanes3 DEEP 1: fadd3 every step cut, chain5 F5=0, bmul3 XS 2, extra lane input rank; claude/s81-bf-20261007 9c21d9e49; exact TXN MATCH 456 partials): latency only on this workload (the widened issue hazard never bound: lag identical with and without it), transaction lag per partial 4 / 10.2 / 23; upper bound +23 per BF16 field phase; no half-rate clock, no dedicated pairs (shared allocation, 98 stages); route bf_deep4_mm_9c21d9e49",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     92,
+     0
+    ],
+    [
+     "*.attn.a_proj",
+     69,
+     0
+    ],
+    [
+     "*.ffn.router",
+     23,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     23,
+     0
+    ]
+   ],
+   "ar_tok_s": 1578.2,
+   "mtp_tok_s": 4658.4,
+   "ar_pct_vs_total": -0.973,
+   "mtp_pct_vs_total": -0.773
+  },
+  {
+   "item": "bf_deep5",
+   "description": "OPTIONAL lever, not the closure path: as bf_deep4 with RECUT=5 (DEEP 2: + SPLIT6 / SPLIT9 in the chains and tree): lag per partial 4 / 11.8 / 29; upper bound +29 per BF16 field phase; route bf_deep5_mm_9c21d9e49",
+   "adds": [
+    [
+     "*.attn.wo_a",
+     116,
+     0
+    ],
+    [
+     "*.attn.a_proj",
+     87,
+     0
+    ],
+    [
+     "*.ffn.router",
+     29,
+     0
+    ],
+    [
+     "*.attn.cmp.wk",
+     29,
+     0
+    ]
+   ],
+   "ar_tok_s": 1574.3,
+   "mtp_tok_s": 4649.1,
+   "ar_pct_vs_total": -1.217,
+   "mtp_pct_vs_total": -0.971
+  },
+  {
    "item": "bf_recut",
    "description": "BF re-cut A (ot_s81_bf_native RECUT=2, claude/dsrom-bf-rowfix-20261007 260869fd0; exact record e2d358837; closure-loop bf_recut_260869fd0): latency only, transaction lag per partial 4 / 7.9 / 15; upper bound +15 per field phase (wo_a 4 phases, a_proj 3)",
    "adds": [
