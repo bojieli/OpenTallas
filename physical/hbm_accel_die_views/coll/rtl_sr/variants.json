@@ -43,5 +43,12 @@
    "what": "floorplan variant of v1: place density 0.45 and macro halo 4 x 6 um (more channel around the 165 macros); every route already runs at the 770 ps effective margin (io_vclk_m: setup uncertainty 123 ps), sign-off at 833"
   }
  },
- "next_if_fails": "per-port split (8 port slices: 2 queues + 2 wire lines + receive buffer, 21 macros each; core = slots + 112-adder tree + hub/delivery lines) as replicated sub-blocks with a thin top"
+ "next_if_fails": "per-port split (8 port slices: 2 queues + 2 wire lines + receive buffer, 21 macros each; core = slots + 112-adder tree + hub/delivery lines) as replicated sub-blocks with a thin top",
+ "round2": {
+  "v2": {
+   "note": "requeued with SAMECOL + m7 benches",
+   "v1_commit": "47f8fa47f45dcfd133fbe9cd4e1bc95b9ab828d4",
+   "v2_commit": "this"
+  }
+ }
 }
