@@ -32,7 +32,7 @@ def command(a):
   # budget on setup (insertion +/- 150 ps, 100 ps wire/station on the max side), owner hold model (FF insertion ~175,
   # 50 ps hold IO: in min 125 / out min -225, hold repaired at the FF corner), slot-width die, signed off at 833.333 ps
   # --ins-ss/--ins-ff: MEASURED mid core_clk insertion (ps, CTS-only calibration), the IO constraints follow it
-  # (owner 2026-10-06): in max = ss+150+100, in min = ff-50, out max = 100-(ss-150), out min = -(ff+50)
+  # (owner 2026-10-06): in max = ss+150+100, in min = ff (rule H1), out max = 100-(ss-150), out min = -(ff+50)
   ss=a.ins_ss if a.ins_ss else 150.0; ff=a.ins_ff if a.ins_ff else 175.0
   io=lambda v: str(round(v/1000.0,4))
   # --wc-only (BF rowfix closure 2026-10-07): ORFS repairs at the WC (SS) corner only, the route's hold IO follows the
