@@ -57,6 +57,12 @@ def rebalance(a, K, vr):
                 rows[k_] = ln
                 lat.setdefault(k_, [0.0, 0.0, 0.0])[ci] = float(m.group(1))
     pin_master = {k_: pm[k_.split('/')[0]] for k_ in lat}
+    # clock tree of each sink: its clock pin's net in die.v (n_ck_col_<r> -> column tree, else the trunk)
+    net = {}
+    for m in re.finditer(r'^\s*\w+\s+(\\?\S+)\s*\((.*)\);\s*$', (a.out / 'die.v').read_text(), re.M):
+        for pn, nn in re.findall(r'\.(\w+)\(\{?\s*(n_ck_col_\d+)', m.group(2)):
+            net[f"{m.group(1).lstrip(chr(92))}/{pn}"] = nn[2:]
+    group = {k_: net.get(k_.replace('[0]', ''), 'trunk') for k_ in lat}
     for k_, v in lat.items():         # undo the interim routed-insertion add (planned arrival back)
         add = K['masters'].get(pin_master[k_], {}).get('insertion_added_ps')
         if add:
@@ -64,11 +70,17 @@ def rebalance(a, K, vr):
     mi = measured_insertion(a.measured or vr / 'results/rtl/budgets_20261006/measured_insertion.json')
     libs = dict(ss={m_: (vr / r['libs']['ss'].split(' ')[0], r['view']) for m_, r in K['masters'].items()
                     if r.get('libs', {}).get('ss')})
-    K['routed_insertion'] = dict(K.get('routed_insertion') or {}, **balance_latency(lat, pin_master, K['masters'], mi, libs))
+    K['routed_insertion'] = dict({k: v for k, v in (K.get('routed_insertion') or {}).items() if k == 'file'}, **balance_latency(lat, pin_master, K['masters'], mi, libs, group))
     for c, ci in CORNERS.items():
         (a.out / f'latency_{c}.tcl').write_text(''.join(
             f'set_clock_latency {v[ci]:.1f} [get_pins -quiet {{{k_} {k_}[0]}}]\n' for k_, v in sorted(lat.items())))
         t = (a.out / f'sta_{c}.tcl').read_text().replace('set_clock_uncertainty -hold 75.0 ', 'set_clock_uncertainty -hold 50.0 ')
+        roots = dict(re.findall(r'create_clock -name (ck_col_\d+) .*?\{(\S+)/co ', t))
+        def _src(mm):
+            r_ = roots.get(mm.group(2))
+            k_ = next((x for x in (f'{r_}/ck', f'{r_}/ck[0]') if x in lat), None) if r_ else None
+            return f'set_clock_latency -source {lat[k_][ci]:.1f} [get_clocks {mm.group(2)}]' if k_ else mm.group(0)
+        t = re.sub(r'set_clock_latency -source ([-\d.]+) \[get_clocks (ck_col_\d+)\]', _src, t)
         (a.out / f'sta_{c}.tcl').write_text(t)
     K['hold_uncertainty_ps'] = 50.0
 

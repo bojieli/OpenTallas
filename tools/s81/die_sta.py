@@ -101,9 +101,10 @@ def arcs_insertion(mst, view, mi, libpath=None):
     return [0.0, 0.0, 0.0]
 
 
-def balance_latency(lat, pin_master, masters, mi, libs=None):
+def balance_latency(lat, pin_master, masters, mi, libs=None, group=None):
     """in place: lat[pin] = planned [ss, ff, tt] arrival -> pin latency so that every flop arrives at plan + D
-    (D = the deepest in-arc insertion per corner, the die tree's common pad).  Returns the record."""
+    (D = the deepest in-arc insertion per corner within the pin's clock tree: the trunk, or one column tree, which
+    hangs off its cfifo `co` and can only pad below it; group: pin -> tree key, default one tree).  Returns the record."""
     ins = {}
     for k_ in lat:
         mst = pin_master[k_]
@@ -114,13 +115,18 @@ def balance_latency(lat, pin_master, masters, mi, libs=None):
             if any(ins[mst]):
                 r['insertion_in_arcs_ps'] = [round(x, 1) for x in ins[mst]]
             r.pop('insertion_added_ps', None)
-    D = [max([v[i] for v in ins.values()] + [0.0]) for i in range(3)]
+    grp = (lambda k_: group.get(k_, 'trunk')) if group else (lambda k_: 'trunk')
+    D = defaultdict(lambda: [0.0, 0.0, 0.0])
     for k_ in lat:
-        v = ins[pin_master[k_]]
-        lat[k_] = [lat[k_][i] + D[i] - v[i] for i in range(3)]
-    return dict(model='balanced: flop arrival = planned sink arrival + D; pin latency = that - in-arc insertion',
-                pad_ps=[round(x, 1) for x in D], masters_offset=sorted(m for m, v in ins.items() if any(v)),
-                pins=len(lat))
+        g, v = grp(k_), ins[pin_master[k_]]
+        D[g] = [max(D[g][i], v[i]) for i in range(3)]
+    for k_ in lat:
+        v, d = ins[pin_master[k_]], D[grp(k_)]
+        lat[k_] = [lat[k_][i] + d[i] - v[i] for i in range(3)]
+    return dict(model='balanced: flop arrival = planned sink arrival + D (per clock tree); pin latency = that - in-arc '
+                      'insertion; a column clock source = its cfifo ck pin latency',
+                pad_ps={g: [round(x, 1) for x in d] for g, d in sorted(D.items()) if any(d)},
+                masters_offset=sorted(m for m, v in ins.items() if any(v)), pins=len(lat))
 
 
 def interim_lib(cells, corner):
@@ -235,7 +241,7 @@ def main():
         elif cls == 'col_clock':
             srcs.append((bid, f'{eps[0][0]}/{eps[0][1]}', 833.333))
     rec['clocks'] = srcs
-    lat, plan0 = {}, {}     # plan0: planned arrivals before balancing (column-root source latency)
+    lat = {}
     if a.clock_plan:
         import gzip, math
         cp = json.load(gzip.open(a.clock_plan))
@@ -270,9 +276,12 @@ def main():
         #   so the die tree must deliver each partition clock pin early by the block's internal insertion (CTS macro
         #   pin insertion offsets).  sta_v2/v3 instead ADDED the routed insertion to 24 interim masters only (the q
         #   element +373 ps FF against its abutting interim bank): one-sided skew -> FF -823.8 on 3.0M endpoints.
-        plan0.update({k_: list(v) for k_, v in lat.items()})
         mi = measured_insertion(a.measured)
-        bal = balance_latency(lat, {k_: by[k_.split('/')[0]].master for k_ in lat}, rec['masters'], mi, cls_)
+        grp = {}
+        for bid, inst, p_ in sinks:
+            pk = f'{inst}/' + rp.get(by[inst].master, {}).get(p_, [p_])[0]
+            grp[pk] = bid if bid.startswith('ck_col_') else 'trunk'
+        bal = balance_latency(lat, {k_: by[k_.split('/')[0]].master for k_ in lat}, rec['masters'], mi, cls_, grp)
         rec['routed_insertion'] = dict(file=str(a.measured), **bal)
         for ci, corner in ((0, 'ss'), (1, 'ff'), (2, 'tt')):
             (a.out / f'latency_{corner}.tcl').write_text(''.join(
@@ -297,8 +306,8 @@ def main():
             for n_, pin, per in srcs:
                 if n_.startswith('ck_col_'):
                     root = pin.split('/')[0] + '/ck[0]' if pin.split('/')[0] + '/ck[0]' in lat else pin.split('/')[0] + '/ck'
-                    if root in plan0:
-                        T.append(f'set_clock_latency -source {plan0[root][ci]:.1f} [get_clocks {n_}]')
+                    if root in lat:      # the balanced cfifo pin latency (the column tree pads below it)
+                        T.append(f'set_clock_latency -source {lat[root][ci]:.1f} [get_clocks {n_}]')
         T += [f'set_clock_uncertainty -setup {us} [all_clocks]', f'set_clock_uncertainty -hold {uh} [all_clocks]',
               'set_clock_groups -asynchronous -group {clk_serial} -group {clk_hbm} -group [get_clocks -quiet {clk_stream ck_col_*}]',
               'set_false_path -through [get_nets -quiet {n_rst_* n_rs_col_* por_n}]',
