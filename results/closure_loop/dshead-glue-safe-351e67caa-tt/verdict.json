@@ -1,0 +1,198 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "dshead-glue-safe-351e67caa-tt",
+ "block": "ot_dsrom_head_bundle_glue",
+ "owner": "Claude:tk-ds-head (fused-head design agent)",
+ "source_branch": "claude/takeover-ds-head-20261006",
+ "source_commit": "351e67caab47f5629b21b4ea1cc8448abac66e9d",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/dshead-glue-safe-351e67caa-tt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 165.09,
+  "ff_ps": 2.18,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/dsrom_fh_safe/gen/signoff_glue.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/dshead-glue-safe-351e67caa-tt/routes/dshead_glue_safe_351e67caa_tt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/dshead-glue-safe-351e67caa-tt/routes/dshead_glue_safe_351e67caa_tt/work/orfs/logs/asap7/opentallas_ot_dsrom_head_bundle_glue_asap7_dshead_glue_safe_351e67caa_tt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_glue_safe_lockstep": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "orted_sk9\": {\n      \"returncode\": 1,\n      \"output\": \"/srv/opentallas-scratch/claude/closure-loop/dshead-glue-safe-351e67caa-tt/bench_src_a1/rtl/s81/ot_dsrom_head_bundle_glue.sv:60: error: Unknown module type: ERROR_hardened_head_delay_requires_SK8\\n1 error(s) during elaboration.\\n*** These modules were missing:\\n        ERROR_hardened_head_delay_requires_SK8 referenced 1 times.\\n***\"\n    }\n  }\n}\n",
+   "track": "parallel"
+  },
+  "bench_glue_safe_neg_bpin": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "     : Pruning 15 high bits of the expression.\n/tmp/neg_glue_dshead_glue_safe_351e67caa_tt/ref.sv:75: warning: Port 4 (row0) of ot_dsrom_head_elem expects 17 bits, got 32.\n/tmp/neg_glue_dshead_glue_safe_351e67caa_tt/ref.sv:75:        : Pruning 15 high bits of the expression.\n/tmp/neg_glue_dshead_glue_safe_351e67caa_tt/ref.sv:75: warning: Port 4 (row0) of ot_dsrom_head_elem expects 17 bits, got 32.\n/tmp/neg_glue_dshead_glue_safe_351e67caa_tt/ref.sv:75:        : Pruning 15 high bits of the expression.\nFATAL: rtl/test/s81/tb_head_bundle_glue.sv:30: lockstep cycle 65\n       Time: 69000  Scope: tb\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1547,
+    "mean": 330.4,
+    "min": 315.5,
+    "max": 337.7
+   },
+   "all": {
+    "n": 16477,
+    "mean": 325.7,
+    "min": 312.1,
+    "max": 337.7
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1547,
+    "mean": 208.2,
+    "min": 198.4,
+    "max": 214.4
+   },
+   "all": {
+    "n": 16477,
+    "mean": 204.5,
+    "min": 193.9,
+    "max": 214.4
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 330,
+   "CK_SS_ALL_MEAN": 326,
+   "CK_SS_MIN": 316,
+   "CK_SS_ALL_MIN": 312,
+   "CK_SS_MAX": 338,
+   "CK_SS_ALL_MAX": 338,
+   "CK_FF_MEAN": 208,
+   "CK_FF_ALL_MEAN": 204,
+   "CK_FF_MIN": 198,
+   "CK_FF_ALL_MIN": 194,
+   "CK_FF_MAX": 214,
+   "CK_FF_ALL_MAX": 214
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": "B join +1 (bv_r/bd_r), absorbed in the A element join FIFO; result group +3 as MARGIN=1",
+ "status": "CLOSED",
+ "closed_at": "2026-10-07T23:24:10-07:00",
+ "job_spec": {
+  "name": "dshead-glue-safe-351e67caa-tt",
+  "block": "ot_dsrom_head_bundle_glue",
+  "owner": "Claude:tk-ds-head (fused-head design agent)",
+  "purpose": "TT-BATCH (owner option B, one large batch): dshead-glue-safe-351e67caa re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: DS head-bundle glue SAFE (MARGIN=2) per coordinator fail-fast: glue_m3 window failure; route 730 / sign-off 833.333 / IO at the calibrated insertion",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/takeover-ds-head-20261006",
+   "commit": "351e67caab47f5629b21b4ea1cc8448abac66e9d"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "glue_safe_lockstep",
+     "cmd": "python3 tools/test_s81_head_bundle_glue.py --mode safe > {RUN}/glue_bench.json; rc=$?; tail -c 400 {RUN}/glue_bench.json; exit $rc",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "glue_safe_neg_bpin",
+     "cmd": "N=/tmp/neg_glue_{LABEL}; mkdir -p $N; sed 's/assign bo_v_e = bo_v_q; assign bo_d_e = bo_d_q;/assign bo_v_e = bo_v_q; assign bo_d_e = bo_d;/' rtl/s81/ot_dsrom_head_bundle_glue.sv > $N/dut.sv && sed -e 's/\\$sformatf(\"%sb\", INSTANCE)/\"b\"/' -e 's/\\$sformatf(\"%sa%0d\", INSTANCE, q)/\"a\"/' rtl/v41rom/ot_dsrom_head_bundle.sv > $N/ref.sv && iverilog -g2012 -s tb -Ptb.USE_HARD_DELAY8=0 -Ptb.USE_MIN_DELAY_CELLS=1 -Ptb.MARGIN=2 -Ptb.MIN_DEPTH=2 -o $N/sim rtl/hdc/ot_hdc_delay.sv $N/ref.sv $N/dut.sv rtl/test/s81/tb_head_bundle_glue.sv rtl/s81/ot_s81_head_delay8x32.sv rtl/s81/ot_s81_head_min_delay.sv rtl/test/s81/min_delay_cells_model.sv && vvp $N/sim; exit $?",
+     "expect": "fail",
+     "fail_regex": "lockstep cycle",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; bash physical/dsrom_fh_safe/cl_route.sh glue {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; bash physical/dsrom_fh_safe/cl_route.sh glue {LABEL} {RUN}/routes/{LABEL}",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/dsrom_fh_safe/gen/signoff_glue.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/dsrom_fh_safe/gen/signoff_glue.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "reexport": "python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_dsrom_head_bundle_glue --post-sdc physical/dsrom_fh_safe/gen/signoff_glue.sdc --out {RUN}/routes/{LABEL}/view"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/dsrom_fh_safe/closed/glue"
+   }
+  ],
+  "cycles_added": "B join +1 (bv_r/bd_r), absorbed in the A element join FIFO; result group +3 as MARGIN=1",
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC",
+  "budget": {
+   "enabled": false,
+   "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+  }
+ }
+}

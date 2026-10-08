@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "ot_dsrom_head_bundle_glue",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dshead-glue-safe-351e67caa-tt/routes/dshead_glue_safe_351e67caa_tt/work/orfs",
+ "post_sdc": "physical/dsrom_fh_safe/gen/signoff_glue.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "1.0303513597875735e-10",
+  "ws_min": "5.455333407233809e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "1.9798573891449678e-10",
+  "ws_min": "2.1833090890766016e-12"
+ },
+ "files": {
+  "ot_dsrom_head_bundle_glue.lef": "09bb337978d423d4f09ceceda42f0e4d62780bcb5aeb2477125262eb6679af5b",
+  "ot_dsrom_head_bundle_glue_ff.lib": "c5a3e4a80be631e4eb089bda215dcaffe58f9a436779f2dd5430ba83e2eba658",
+  "ot_dsrom_head_bundle_glue_ss.lib": "5823ea1bca29385aeb631f90e207bb0942b37b8ec6db199ae143c0e813e25a56"
+ }
+}
