@@ -1,0 +1,105 @@
+{
+  "schema": "opentallas.softmax_egress_events.v1",
+  "adopted": false,
+  "route_admitted": false,
+  "source_sha256": {
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_phase.sv": "2e9b8d2cd90ca183e9845e1a6d281bce2f7d6187b88c481eb482beff1f1fc8ef",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_egress_payload.sv": "e55427f233772a96b7853216dcc48263384aaba02bcdd90de6f552f69c9d06a6"
+  },
+  "MAC_per_cycle": 0,
+  "payload_bytes_per_cycle": 0,
+  "payload_storage_bits": 0,
+  "identity": {
+    "context_bits": 49,
+    "receipt_bits": 56,
+    "capture_metadata_bits": 55,
+    "event_metadata_bits": 59,
+    "epoch_admission": "Parent owns fresh epoch and same begin context; bridge verifies every source and destination identity"
+  },
+  "storage": {
+    "fields": {
+      "active": 1,
+      "failed": 1,
+      "context_epoch_tag_short": 49,
+      "captured_E": 6,
+      "captured_packed_BF": 5,
+      "received_E": 6,
+      "received_packed_BF": 5,
+      "emitted_CAP_E": 6,
+      "emitted_DRAIN_E": 6,
+      "emitted_CAP_O": 6,
+      "emitted_DRAIN_O": 6
+    },
+    "complemented_FF_bits": 194,
+    "FF_floor_mm2": 5.657040000000001e-05,
+    "representation": "Typed monotonic counters retain finite committed-event debt; no repeated per-event epoch/tag storage",
+    "pending_capacity_events_T640": 144,
+    "pending_capacity_events_T128": 80
+  },
+  "ports": {
+    "capture": "one actual SRAM packedrow commit per stream edge; E II1, BF II2",
+    "receipt": "one protected destination-visible packedrow receipt per stream edge",
+    "phase_event": "at most one committed event per stream edge; emitted only when actual phase ready/kind/row agree",
+    "event_kind": {
+      "CAP_E": 2,
+      "DRAIN_E": 3,
+      "CAP_O": 6,
+      "DRAIN_O": 7
+    }
+  },
+  "ordering": {
+    "E_regions": [
+      72,
+      111
+    ],
+    "E_short_region": [
+      72,
+      79
+    ],
+    "BF_regions": [
+      112,
+      127
+    ],
+    "E": "Each source commit and destination receipt yields one event, in row order",
+    "BF": "Each actual packedrow commit or receipt yields lower-half event then upper-half event",
+    "reject": [
+      "wrong epoch/tag",
+      "wrong row order",
+      "duplicate/excess commit/receipt",
+      "receipt before source commit",
+      "BF capture before all E destination receipts",
+      "event consumption against wrong phase row",
+      "premature release",
+      "control complement upset"
+    ]
+  },
+  "latency": {
+    "commit_to_first_event_edges": 1,
+    "packed_commit_to_second_event_edges": 2,
+    "BF_first_vector_to_packed_commit_edges": 2,
+    "BF_first_vector_to_first_event_edges": 3,
+    "BF_second_vector_to_second_event_edges": 3,
+    "BF32_first_input_to_last_CAP_O_event_edges": 34,
+    "BF_packed_write_initiation_interval": 2,
+    "BF_expanded_phase_initiation_interval": 1,
+    "phase_post_capture_barrier_edges": 2,
+    "bound": "Clock edges with phase continuously ready at matching row; arbitrary phase backpressure adds measured waiting, never discarded events"
+  },
+  "clock": {
+    "stream_GHz": 1.2,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "physical_budget": null
+  },
+  "area": {
+    "mapped_combinational_area": null,
+    "routing_track_capacity": null,
+    "physical_fit": false
+  },
+  "scope": [
+    "No payload recomputation; actual source/destination commits from qualified payload component",
+    "No b_valid-based visibility shortcut",
+    "No full-system simulation",
+    "No production placement/SS/FF claim"
+  ]
+}
