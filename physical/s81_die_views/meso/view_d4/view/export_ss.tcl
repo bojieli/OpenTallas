@@ -6,9 +6,9 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
 
-read_db /in/results/asap7/opentallas_ot_meso_fifo_asap7_s81meso_s81_meso_d4_21e5409bf/base/6_final.odb
-read_sdc /in/results/asap7/opentallas_ot_meso_fifo_asap7_s81meso_s81_meso_d4_21e5409bf/base/6_final.sdc
-read_spef /in/results/asap7/opentallas_ot_meso_fifo_asap7_s81meso_s81_meso_d4_21e5409bf/base/6_final.spef
+read_db /in/results/asap7/opentallas_ot_meso_fifo_asap7_s81meso_s81_meso_d4_96885ea7e/base/6_final.odb
+read_sdc /in/results/asap7/opentallas_ot_meso_fifo_asap7_s81meso_s81_meso_d4_96885ea7e/base/6_final.sdc
+read_spef /in/results/asap7/opentallas_ot_meso_fifo_asap7_s81meso_s81_meso_d4_96885ea7e/base/6_final.spef
 set_propagated_clock [all_clocks]
 puts "OT_WS [sta::worst_slack_cmd max]"
 write_timing_model -library_name ot_meso_fifo_ss /out/ot_meso_fifo_ss.lib
