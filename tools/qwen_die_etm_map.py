@@ -176,7 +176,10 @@ def main(argv=None):
             ck = 'ck[0]' if sp.get('ck', (1, False))[1] else 'ck'
 
             def slab_src(p, i, ck=ck, s=s, sp=sp):
-                src = 'clk' if p == 'ck' else (f'bw_d[{i}]' if re.match(r'(bw|cf)\d*$', p) else f'tw_d[{i}]')
+                # by role; a die word wider than the group's port reuses its bits modulo the group width (r21b slabs)
+                base = 'bw_d' if re.match(r'(bw|cf)\d*$', p) else 'tw_d'
+                nb = sum(1 for k in slab_b if k.startswith(base + '['))
+                src = 'clk' if p == 'ck' else f'{base}[{i % nb}]'
                 body = record_pin(s, sp, p, i, f'ot_qwen_slab_port_group_{c}.lib', slab_t, src, slab_b[src])
                 return retarget(body, {'clk': ck, 'bw_clk': ck})
             widths |= {w for w, idx in sp.values() if idx}
