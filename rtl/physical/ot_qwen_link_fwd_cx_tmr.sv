@@ -35,7 +35,7 @@ module ot_qwen_link_fwd_cx_station #(
 endmodule
 
 (* keep_hierarchy = 1 *)
-module ot_qwen_link_fwd_cx_dir_tmr #(parameter integer LW=528, CW=16)(
+module ot_qwen_link_fwd_cx_dir_tmr #(parameter integer LW=528, CW=16, FWD_INV=5)(
     input wire rst_n, fclk_i, input wire [LW-1:0] d_i,
     output wire fclk_o, output wire [LW-1:0] d_o
 );
@@ -58,7 +58,18 @@ module ot_qwen_link_fwd_cx_dir_tmr #(parameter integer LW=528, CW=16)(
         else control_q<=d_i[CW-1:0];
     assign d_o={data_q,control_q};
     // A real cell (kept hierarchy): flattened, yosys would fold the inversion into the next station's flops.
-    (* keep = 1, dont_touch = 1 *) ot_qwen_link_fwd_cx_inv u_fwd_inv(.a(fclk_i),.y(fclk_o));
+    // DRIVE-1113 2026-10-08: delay-matched forward. The output window is half a cycle against the forwarded clock AT
+    // THE PORT; data leaves leaf + clk->QN + INV + port buffer (~227 ps TT), the clock leaf + INV + port buffer (~34 ps),
+    // so the launch path ate the whole half-cycle setup window (a TT -16 / b -68) while output hold had +253 ps (FF).
+    // FWD_INV kept inverters in series (odd: the forward stays inverted) move the forwarded edge later by ~(FWD_INV-1)
+    // inverter delays: setup gains that, output hold loses it. Same logic function; no cycle added.
+    wire [FWD_INV:0] fwd_c;
+    assign fwd_c[0]=fclk_i;
+    genvar fi;
+    generate for(fi=0;fi<FWD_INV;fi=fi+1) begin: fwd_chain
+        (* keep = 1, dont_touch = 1 *) ot_qwen_link_fwd_cx_inv u_fwd_inv(.a(fwd_c[fi]),.y(fwd_c[fi+1]));
+    end endgenerate
+    assign fclk_o=fwd_c[FWD_INV];
 endmodule
 
 (* keep_hierarchy = 1 *)
