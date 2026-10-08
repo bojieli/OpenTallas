@@ -29,12 +29,23 @@
 #      OT_WINDOW_ONLY (1: report the endpoint windows and stop), OT_THREADS (8), OT_MAX_BUF_PCT (30), OT_MINL/OT_MAXL (M2/M7), OT_MINCLKL (M4), OT_CL (helper dir)
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
 proc envd {n d} { expr {[info exists ::env($n)] && $::env($n) ne "" ? $::env($n) : $d} }
+proc ot_vt_libs {C} {
+  set r {}
+  foreach vt [envd OT_VT RVT] {
+    lappend r asap7sc7p5t_AO_${vt}_${C}_nldm_211120.lib.gz asap7sc7p5t_INVBUF_${vt}_${C}_nldm_220122.lib.gz \
+      asap7sc7p5t_OA_${vt}_${C}_nldm_211120.lib.gz asap7sc7p5t_SEQ_${vt}_${C}_nldm_220123.lib \
+      asap7sc7p5t_SIMPLE_${vt}_${C}_nldm_211120.lib.gz
+  }
+  return $r
+}
 set hm [envd OT_HOLD_MARGIN 21]; set sm [envd OT_SETUP_MARGIN 40]; set filt [envd OT_SETUP_FILTER 40]
 set acc_ss [envd OT_ACCEPT_SS 15]; set acc_ff [envd OT_ACCEPT_FF 15]
 set session [envd OT_SESSION two]
 set_thread_count [envd OT_THREADS 8]
 read_lef $P/lef/asap7_tech_1x_201209.lef
 read_lef $P/lef/asap7sc7p5t_28_R_1x_220121a.lef
+# MULTI-VT: OT_VT (hold_eco.sh, from the odb) adds the LVT/SLVT LEFs and libraries; default RVT only
+foreach vt [envd OT_VT RVT] { if {$vt ne "RVT"} { read_lef $P/lef/asap7sc7p5t_28_[string map {VT ""} $vt]_1x_220121a.lef } }
 foreach m [envd OT_MACROS ""] { read_lef $m/[file tail $m].lef }
 set corners [expr {$session in {two mm} ? {ss ff} : {ff}}]
 if {$session eq "mm"} {
@@ -45,9 +56,7 @@ if {$session eq "mm"} {
   # -335.7; the same repair in this session ends SS +41.9 / FF +21.0.)
   foreach c $corners {
     set C [string toupper $c]; set L($c) {}
-    foreach l [list asap7sc7p5t_AO_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_INVBUF_RVT_${C}_nldm_220122.lib.gz \
-                 asap7sc7p5t_OA_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_SEQ_RVT_${C}_nldm_220123.lib \
-                 asap7sc7p5t_SIMPLE_RVT_${C}_nldm_211120.lib.gz] { read_liberty $P/lib/NLDM/$l; lappend L($c) $P/lib/NLDM/$l }
+    foreach l [ot_vt_libs $C] { read_liberty $P/lib/NLDM/$l; lappend L($c) $P/lib/NLDM/$l }
     foreach m [envd OT_MACROS ""] { read_liberty $m/[file tail $m]_$c.lib; lappend L($c) $m/[file tail $m]_$c.lib }
   }
   read_db $::env(OT_DB)
@@ -69,9 +78,7 @@ if {$session eq "mm"} {
 define_corners {*}$corners
 foreach c $corners {
   set C [string toupper $c]
-  foreach l [list asap7sc7p5t_AO_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_INVBUF_RVT_${C}_nldm_220122.lib.gz \
-               asap7sc7p5t_OA_RVT_${C}_nldm_211120.lib.gz asap7sc7p5t_SEQ_RVT_${C}_nldm_220123.lib \
-               asap7sc7p5t_SIMPLE_RVT_${C}_nldm_211120.lib.gz] { read_liberty -corner $c $P/lib/NLDM/$l }
+  foreach l [ot_vt_libs $C] { read_liberty -corner $c $P/lib/NLDM/$l }
   foreach m [envd OT_MACROS ""] { read_liberty -corner $c $m/[file tail $m]_$c.lib }
 }
 read_db $::env(OT_DB)
