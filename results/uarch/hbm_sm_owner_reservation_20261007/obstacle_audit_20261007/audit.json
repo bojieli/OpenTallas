@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.hbm.sm_reservation_obstacle_audit.v1",
+ "finding": "tools/hbm_accel_die_fp.py legality() checked instance-vs-instance only; result-pin / native owner / descriptor / control-escape bays, U corridors and result stores (m[reserved_regions]) were not obstacles. Fixed: legality counts instance-vs-reservation and reservation-vs-reservation overlaps (one SM's own route corridor joining its own escape portal is a connected keep-out, not an overlap); the die relay placer (tools/hbm_die_relays.py Free) now also avoids reserved regions.",
+ "rerun": "tools/hbm_sm_owner_reservation.py [--descriptor [--escape [--u-corridors]]] at network_probe (R24SM3VO..VOCEU); descriptor_actual_bpin needs its SM readback and is unchanged geometry (same bays as descriptor_successor)",
+ "legality": {
+  "base": {
+   "instances": 596,
+   "overlaps": 0,
+   "overlap_examples": [],
+   "outside": 0,
+   "outside_examples": [],
+   "reserved_regions": 64,
+   "reserved_overlaps": 0,
+   "reserved_overlap_examples": []
+  },
+  "descriptor_successor": {
+   "instances": 596,
+   "overlaps": 0,
+   "overlap_examples": [],
+   "outside": 0,
+   "outside_examples": [],
+   "reserved_regions": 96,
+   "reserved_overlaps": 0,
+   "reserved_overlap_examples": []
+  },
+  "control_escape_successor": {
+   "instances": 596,
+   "overlaps": 0,
+   "overlap_examples": [],
+   "outside": 0,
+   "outside_examples": [],
+   "reserved_regions": 160,
+   "reserved_overlaps": 0,
+   "reserved_overlap_examples": []
+  },
+  "control_u_successor": {
+   "instances": 596,
+   "overlaps": 0,
+   "overlap_examples": [],
+   "outside": 0,
+   "outside_examples": [],
+   "reserved_regions": 178,
+   "reserved_overlaps": 0,
+   "reserved_overlap_examples": []
+  }
+ },
+ "verdict": "PASS: 0 instance overlaps, 0 reservation overlaps, 0 outside for every reservation variant (64..178 reserved regions); R23 adopted die has no reserved regions",
+ "selected": false
+}
