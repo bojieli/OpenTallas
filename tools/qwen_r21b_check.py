@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import die_top_lint as L              # noqa: E402
 import qwen_rom_fulldie_b3r2 as B     # noqa: E402
+import qwen_pin_region_lint as P      # noqa: E402
 
 RETICLE_MM2 = 858.0
 
@@ -72,13 +73,19 @@ def main():
         spine_parts=g.get('spine_parts_r21m'))
     ok = rec['fits_reticle'] and not ov and not out and all(s['same_x'] and abs(s['ser_gap_um']) < 0.05
                                                             and abs(s['lanes_gap_um']) < 0.05 for s in stacks)
+    # pinregion 2026-10-08: every die-master die-face port must match exactly one pin region of its cfg
+    pr = [P.lint(c) for c in sorted(p.stem for p in P.CFG_DIR.glob('*.env') if 'pin-region' in p.read_text())]
+    rec['pin_regions'] = dict(cfgs=len(pr), failing=[dict(cfg=r['cfg'], errors=r['errors'][:8], empty=r['empty_regions'])
+                                                       for r in pr if not r['ok']])
+    ok = ok and not rec['pin_regions']['failing']
     rec['ok'] = ok
     txt = json.dumps(rec, indent=1, default=str) + '\n'
     if a.out:
         a.out.parent.mkdir(parents=True, exist_ok=True)
         a.out.write_text(txt)
     print(json.dumps({k: rec[k] for k in ('recipe', 'die_um', 'die_mm2', 'margin_mm2', 'instances', 'die_utilisation',
-                                          'spine_utilisation', 'relays', 'legality', 'tree_top', 'su_vm_gap_um', 'ok')}))
+                                          'spine_utilisation', 'relays', 'legality', 'tree_top', 'su_vm_gap_um', 'ok')}
+                     | {'pin_regions_failing': len(rec['pin_regions']['failing']), 'pin_region_cfgs': rec['pin_regions']['cfgs']}))
     return 0 if ok else 1
 
 
