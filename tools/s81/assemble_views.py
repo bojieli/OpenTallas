@@ -28,7 +28,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 TILES = ROOT / 'physical/s81_ph_views/closed'
 T_PS = 833.333
-UNC_S, UNC_H, SKEW_INTRA = 60.0, 75.0, 90.0    # glue: signoff 60 + intra-region skew 90 (budget sheet); hold 25 + 50
+UNC_S, UNC_H, SKEW_INTRA = 60.0, 50.0, 90.0    # glue: signoff 60 + intra-region skew 90 (budget sheet); hold 25 + 25
+# (s81-die-timing 2026-10-08: was 25 + 50; rule H1 drops the link hold term, as in die_sta.py)
+_SVC = json.loads((ROOT / 'physical/s81_ph_views/svc/composition.json').read_text())
+SVC_HOP = max(abs(a[0] - b[0]) + abs(a[1] - b[1]) for c in _SVC['station_chains'] for a, b in zip(c['xy'], c['xy'][1:]))
+SVC_HUB = 43.2     # the first station abuts the IO hub (composition: x = hub x - station width)
+CAP_S = 562.0 / 2  # capture ctl <-> group S hop with one common-clock station (KST 1)
 WIRE_SS, WIRE_FF_CREDIT, RCV = 1.135, 0.112, 41.0   # tools/budgets/common.py (receiver repeater 41)
 STN = 'dsfd_stnh_512x1'
 
@@ -50,26 +55,30 @@ SLABS = {
                'rd': [('dsfd_svc_pc', ['r_data', 'r_tag', 'r_beat', 'rv'])],
                'rst': [(t, ['rst']) for t in ('dsfd_svc_pc', 'dsfd_svc_stn', 'dsfd_svcio_ad', 'dsfd_svcio_od',
                                               'dsfd_svcio_q', 'dsfd_svcio_x')]},
-        glue=[('dsfd_svc_stn', 'q_w', 'dsfd_svc_stn', 'q_e', 430.0, 0, 'quadrant station chain, station -> station'),
-              ('dsfd_svc_stn', 'od_ev', 'dsfd_svc_stn', 'od_wv', 430.0, 0, 'od chain, station -> station'),
-              ('dsfd_svc_stn', 'od_ed', 'dsfd_svc_stn', 'od_wd', 430.0, 0, 'od chain data'),
-              ('dsfd_svc_stn', 'od_wr', 'dsfd_svc_stn', 'od_er', 430.0, 0, 'od chain ready'),
-              ('dsfd_svc_stn', 'a0_ed', 'dsfd_svc_stn', 'a0_wd', 430.0, 0, 'a0 chain data'),
-              ('dsfd_svc_stn', 'a0_wr', 'dsfd_svc_stn', 'a0_er', 430.0, 0, 'a0 chain ready'),
-              ('dsfd_svcio_q', 'q_q', 'dsfd_svc_stn', 'q_e', 430.0, 0, 'IO hub -> first station (q)'),
-              ('dsfd_svc_stn', 'od_ed', 'dsfd_svcio_od', 'od_d', 430.0, 0, 'last station -> IO hub (od)'),
-              ('dsfd_svcio_od', 'od_r', 'dsfd_svc_stn', 'od_er', 430.0, 0, 'IO hub ready -> station (od)'),
-              ('dsfd_svc_stn', 'a0_ed', 'dsfd_svcio_ad', 'a0_d', 430.0, 0, 'last station -> IO hub (a0)'),
-              ('dsfd_svcio_ad', 'a0_r', 'dsfd_svc_stn', 'a0_er', 430.0, 0, 'IO hub ready -> station (a0)'),
+        glue=[('dsfd_svc_stn', 'q_w', 'dsfd_svc_stn', 'q_e', SVC_HOP, 0, 'quadrant station chain, station -> station'),
+              ('dsfd_svc_stn', 'od_ev', 'dsfd_svc_stn', 'od_wv', SVC_HOP, 0, 'od chain, station -> station'),
+              ('dsfd_svc_stn', 'od_ed', 'dsfd_svc_stn', 'od_wd', SVC_HOP, 0, 'od chain data'),
+              ('dsfd_svc_stn', 'od_wr', 'dsfd_svc_stn', 'od_er', SVC_HOP, 0, 'od chain ready'),
+              ('dsfd_svc_stn', 'a0_ev', 'dsfd_svc_stn', 'a0_wv', SVC_HOP, 0, 'a0 chain, station -> station'),
+              ('dsfd_svc_stn', 'a0_ed', 'dsfd_svc_stn', 'a0_wd', SVC_HOP, 0, 'a0 chain data'),
+              ('dsfd_svc_stn', 'a0_wr', 'dsfd_svc_stn', 'a0_er', SVC_HOP, 0, 'a0 chain ready'),
+              ('dsfd_svcio_q', 'q_q', 'dsfd_svc_stn', 'q_e', SVC_HUB, 0, 'IO hub -> first station (q)'),
+              ('dsfd_svc_stn', 'od_ed', 'dsfd_svcio_od', 'od_d', SVC_HUB, 0, 'last station -> IO hub (od)'),
+              ('dsfd_svcio_od', 'od_r', 'dsfd_svc_stn', 'od_er', SVC_HUB, 0, 'IO hub ready -> station (od)'),
+              ('dsfd_svc_stn', 'a0_ed', 'dsfd_svcio_ad', 'a0_d', SVC_HUB, 0, 'last station -> IO hub (a0)'),
+              ('dsfd_svcio_ad', 'a0_r', 'dsfd_svc_stn', 'a0_er', SVC_HUB, 0, 'IO hub ready -> station (a0)'),
               ('dsfd_svcio_od', 'bad', 'dsfd_svcio_ad', 'fi', 430.0, 0, 'u_od.bad -> u_ad.fi (fault)')]),
     'dsfd_sp_capture': dict(
         clocks={'ck': ['ck', 'ckv']},
         ports={'f_gather': [('dsfd_capt_g2', ['f_row']), ('dsfd_capt_ctl', ['f_ctl'])],
                't_vm': [('dsfd_capt_x', ['t_vm', 't_st'])],
                'rst': [('dsfd_capt_g2', ['rst']), ('dsfd_capt_ctl', ['rst']), ('dsfd_capt_x', ['rst', 'rsv'])]},
-        glue=[('dsfd_capt_ctl', 't_k', 'dsfd_capt_g2', 'f_k', 562.0, 0, 'ctl -> group (S channel, no station)'),
-              ('dsfd_capt_g2', 't_sb', 'dsfd_capt_ctl', 'f_sb', 562.0, 0, 'group -> ctl (S channel)'),
-              ('dsfd_capt_ctl', 't_sn', 'dsfd_capt_x', 'f_sn', 562.0, 0, 'ctl status -> x tile'),
+        glue=[('dsfd_capt_ctl', 't_k', STN, 'di0', CAP_S, 1, 'ctl -> S station (t_k)'),
+              (STN, 'do0', 'dsfd_capt_g2', 'f_k', CAP_S, 1, 'S station -> group (f_k)'),
+              ('dsfd_capt_g2', 't_sb', STN, 'di0', CAP_S, 1, 'group -> S station (t_sb)'),
+              (STN, 'do0', 'dsfd_capt_ctl', 'f_sb', CAP_S, 1, 'S station -> ctl (f_sb)'),
+              ('dsfd_capt_ctl', 't_sn', STN, 'di0', CAP_S, 1, 'ctl status -> S station (t_sn)'),
+              (STN, 'do0', 'dsfd_capt_x', 'f_sn', CAP_S, 1, 'S station -> x tile (f_sn)'),
               ('dsfd_capt_g2', 't_w', 'dsfd_capt_x', 'f_w', 118.8, 0, 'group -> x tile (neighbour)'),
               ('dsfd_capt_x', 't_ho', 'dsfd_capt_g2', 'f_ho', 118.8, 0, 'x tile -> group (neighbour)')]),
     'dsfd_bk_collector': dict(
@@ -273,12 +282,24 @@ def glue_checks(spec):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--ports', type=Path, required=True,
+    ap.add_argument('--glue-only', action='store_true', help='recompute only the glue of existing <out>/<slab>/assembled.json '
+                    '(tiles unchanged: the libs stay)')
+    ap.add_argument('--ports', type=Path,
                     help='JSON {slab: {port: [direction, width]}} (die_sta.py kit --ports-out)')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
-    P = json.loads(a.ports.read_text())
     summ = {}
+    if a.glue_only:
+        for slab, spec in SLABS.items():
+            f = a.out / slab / 'assembled.json'
+            rec = json.loads(f.read_text())
+            g = glue_checks(spec)
+            rec.update(glue=g, glue_worst_ps={k: min((x[k] for x in g if isinstance(x.get(k), float)), default=None)
+                                             for k in ('tt_setup', 'ss_setup', 'ff_hold', 'tt_setup_bal', 'ss_setup_bal', 'ff_hold_bal')})
+            f.write_text(json.dumps(rec, indent=1) + '\n')
+            print(slab, json.dumps(rec['glue_worst_ps']))
+        return
+    P = json.loads(a.ports.read_text())
     for slab, spec in SLABS.items():
         d = a.out / slab
         d.mkdir(parents=True, exist_ok=True)
