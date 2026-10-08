@@ -1,0 +1,27 @@
+base_p1: RESULT PASS segments 32 out_beats 603 replays 8 errors 0 tail_minus_ref max 257 mean 127 ref_holds 26
+vA: RESULT PASS segments 32 out_beats 603 replays 8 errors 0 tail_minus_ref max 257 mean 129 ref_holds 26
+vB: RESULT PASS segments 32 out_beats 639 replays 6 errors 0 tail_minus_ref max 285 mean 153 ref_holds 20
+vC: RESULT PASS segments 32 out_beats 639 replays 6 errors 0 tail_minus_ref max 285 mean 156 ref_holds 20
+vB0: RESULT PASS segments 32 out_beats 565 replays 8 errors 0 tail_minus_ref max 287 mean 136 ref_holds 25
+vD: RESULT PASS segments 32 out_beats 639 replays 6 errors 0 tail_minus_ref max 308 mean 172 ref_holds 20
+vDs: RESULT PASS segments 32 out_beats 639 replays 6 errors 0 tail_minus_ref max 310 mean 174 ref_holds 20
+nB: RESULT FAIL segments 32 out_beats 651 replays 4 errors 2540 tail_minus_ref max 132 mean -217 ref_holds 43
+nB2: RESULT FAIL segments 32 out_beats 639 replays 6 errors 8048 tail_minus_ref max 325 mean 155 ref_holds 20
+nD: RESULT FAIL segments 32 out_beats 651 replays 4 errors 2391 tail_minus_ref max 159 mean -200 ref_holds 43
+coll3/f1.out: CYCLES dut_last 3012 ref_last 1462 first_send 1111 records 277 messages 40 TB_S81PH_COLL_SYS PASS 
+coll3/f1p2.out: CYCLES dut_last 3012 ref_last 1462 first_send 1111 records 277 messages 40 TB_S81PH_COLL_SYS PASS 
+coll3/f1p2mut.out: CYCLES dut_last 3012 ref_last 1462 first_send 1111 records 277 messages 40 TB_S81PH_COLL_SYS FAIL errs 309 
+coll3/p2.out: CYCLES dut_last 3374 ref_last 1462 first_send 1111 records 277 messages 40 TB_S81PH_COLL_SYS PASS 
+coll4/f1p2.out: CYCLES dut_last 3012 ref_last 1462 first_send 1111 records 277 messages 40 TB_S81PH_COLL_SYS PASS 
+coll4/f1p2mut.out: CYCLES dut_last 3012 ref_last 1462 first_send 1111 records 277 messages 40 TB_S81PH_COLL_SYS FAIL errs 309 
+vm/h.out: RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=0 fault=0 code=000 max_occ=4 L=18 PASS 
+vm/h2.out: RESULT ops=112814 reads=56580 writes=56234 checked=56580 mismatches=0 fault=0 code=000 max_occ=4 L=18 PASS 
+vm/hk.out: RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=31932 fault=0 code=000 max_occ=4 L=18 FAIL 
+vm/hm.out: RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=7573 fault=1 code=010 max_occ=4 L=18 FAIL 
+vm/r2_h.out: RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=0 fault=0 code=000 max_occ=4 L=18 PASS 
+vm/r2_q.out: RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=0 fault=0 code=000 max_occ=4 L=18 PASS 
+vm/r2_qm.out: RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=7573 fault=1 code=010 max_occ=4 L=18 FAIL 
+vm/t.out: RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=0 fault=0 code=000 max_occ=4 L=18 PASS 
+vm/r2_h.out: RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=0 fault=0 code=000 max_occ=4 L=18 PASS 
+vm/r2_q.out: RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=0 fault=0 code=000 max_occ=4 L=18 PASS 
+vm/r2_qm.out: RESULT ops=111559 reads=56012 writes=55547 checked=56012 mismatches=7573 fault=1 code=010 max_occ=4 L=18 FAIL 
