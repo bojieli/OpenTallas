@@ -23,7 +23,10 @@ unset_output_delay -clock core_clk [all_outputs]
 set_input_delay [expr {[get_property [get_clocks core_clk] period] * 0.2 + 150}] -clock vclk \$ot_in
 set_output_delay [expr {[get_property [get_clocks core_clk] period] * 0.2 + 150}] -clock vclk [all_outputs]
 set_input_delay -min [expr {$FMAX - $L - 25}] -clock vclk \$ot_in
-set_output_delay -min [expr {$FMIN - $L + 25}] -clock vclk [all_outputs]
+# CLAUDE s81-blocks 2026-10-07: sign fixed (was FMIN - L + 25 = -371 at L 1068 / FMIN 672: required = L + 25 - min
+# became L + FMIN-free 1464 ps, the -356 / -525 GRT hold-repair walls of wsrc-m2 / m2big); now required = FMIN + 50 as the
+# guarded FF sign-off (vclk latency FMIN, hold uncertainty 50)
+set_output_delay -min [expr {$L - $FMIN - 25}] -clock vclk [all_outputs]
 EOT
 cat > $C/signoff_ss.sdc <<EOT
 create_clock -name core_clk -period 833.333 [get_ports clk]
