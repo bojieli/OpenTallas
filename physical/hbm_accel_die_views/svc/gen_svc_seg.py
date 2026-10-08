@@ -482,13 +482,28 @@ def build(pl):
             if bn == 'e':
                 sdc.append('create_clock -name fe -period 833 [get_ports {e[128]}]'); cl.append('fe')
                 sdc.append('for {set i 0} {$i < 128} {incr i} { set_input_delay -clock fe 166.6 [get_ports [format {e[%d]} $i]] }')
+        # DRIVE-1113 2026-10-08: forwarded-clock OUTPUT bits (fck<k> on l<k>[1101:1099], fck_kv on kv[1040:1038],
+        # fck_ik on ik[1025:1024]) are clocks, not data: the receiver captures the line with them (its own fwd SDC).
+        # The budget SDC put them under vclk output delays like data bits (hfd_svc_SW_s3: FF hold ck -> l4[1100]
+        # -198 ps through the clock tree); exclude them from the data checks.
+        fo = []
+        for bn in port_map[names[j]]:
+            if bn[0] == 'l' and bn[1:].isdigit() and g['fwd'][int(bn[1:])] and f'as{bn[1:]}' in units:
+                fo += [f'{bn}[{i}]' for i in (1099, 1100, 1101)]
+            elif bn == 'kv' and 'kv' in units:
+                fo += [f'kv[{i}]' for i in (1038, 1039, 1040)]
+            elif bn == 'ik' and 'ik' in units:
+                fo += [f'ik[{i}]' for i in (1024, 1025)]
+        if fo:
+            sdc.append('set_false_path -to [get_ports -quiet {' + ' '.join(fo) + '}]')
         if cl:
             sdc += ['set_clock_uncertainty -setup 60 [get_clocks {' + ' '.join(cl) + '}]',
                     'set_clock_uncertainty -hold 25 [get_clocks {' + ' '.join(cl) + '}]',
                     'set_clock_groups -asynchronous -group [get_clocks {core_clk vclk}] ' + ' '.join(f'-group [get_clocks {n}]' for n in cl)]
+        if sdc:
             (HERE / 'sdc').mkdir(exist_ok=True)
             (HERE / 'sdc' / f'{names[j]}_fwd.sdc').write_text(
-                f'# {names[j]}: forwarded input clocks (two-clock FIFO writes, asynchronous to ck)\n' + '\n'.join(sdc) + '\n')
+                f'# {names[j]}: forwarded input clocks (two-clock FIFO writes, asynchronous to ck); forwarded-clock output bits\n' + '\n'.join(sdc) + '\n')
         # wire-stage endpoints (common/wire_stage_fence.tcl OT_WS_FILE), segment-local um
         x0 = segs[j][0]
         ws = [f'# {names[j]}: chain-portion endpoints (gen_svc_seg.py)']

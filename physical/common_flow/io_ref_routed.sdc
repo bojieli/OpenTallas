@@ -7,7 +7,7 @@
 # truth; the calibrate run's CTS (or an assumed) insertion is not (hbm_pkt_ii1r: vclk FF 363 from calibrate vs the
 # routed FF mean ~307 -> output-port-only hold -43).  Only the insertion-reference virtual clocks (vclk*, ot_lb_v_*,
 # nbr_clk) move; window clocks with explicit min/max source latency (io_clk, io_ci/io_co) are kept.  Virtual clock -> real clock: ot_lb_v_<name> / a name match, else
-# the only real clock with register sinks; otherwise left unchanged (OT_IOREF skip).  Prints one OT_IOREF line per clock.
+# the only real clock with register sinks, else the dominant one (>= 4x the register sinks of any other); otherwise left unchanged (OT_IOREF skip).  Prints one OT_IOREF line per clock.
 set ot_ir_real {}
 foreach c [all_clocks] { if {[llength [get_property $c sources]]} { lappend ot_ir_real [get_full_name $c] } }
 set ot_ir_bnd [dict create]
@@ -21,6 +21,7 @@ if {[llength [all_outputs]]} {
     dict set ot_ir_bnd [regsub {/[^/]+$} [get_full_name [get_property $pe startpoint]] {}] 1 }
 }
 set ot_ir_ins [dict create]
+set ot_ir_nreg [dict create]
 foreach cn $ot_ir_real {
   set b {}; set a {}
   foreach p [all_registers -clock_pins -clock [get_clocks $cn]] {
@@ -34,6 +35,7 @@ foreach cn $ot_ir_real {
   set s 0.0; foreach v $use { set s [expr {$s + $v}] }
   set u [lsort -real $use]
   dict set ot_ir_ins $cn [list [expr {$s / [llength $use]}] [lindex $u 0] [lindex $u end] [llength $use] [expr {[llength $b] ? "boundary" : "all"}]]
+  dict set ot_ir_nreg $cn [llength $a]
 }
 foreach c [all_clocks] {
   if {[llength [get_property $c sources]]} continue
@@ -42,6 +44,13 @@ foreach c [all_clocks] {
   foreach cn [dict keys $ot_ir_ins] { if {$vn eq "ot_lb_v_$cn"} { set rc $cn } }
   if {$rc eq ""} { foreach cn [dict keys $ot_ir_ins] { if {[string first $cn $vn] >= 0} { set rc $cn } } }
   if {$rc eq "" && [dict size $ot_ir_ins] == 1} { set rc [lindex [dict keys $ot_ir_ins] 0] }
+  # DRIVE-1113 2026-10-08: several real clocks (e.g. hfd_svc_SW_s3: core_clk + forwarded input clocks fq4 / fe that only
+  # write two-clock FIFOs) -> the insertion reference is the DOMINANT real clock: the one with >= 4x the register sinks
+  # of every other (the forwarded clocks clock a few hundred FIFO flops).  Before this every such block skipped vclk.
+  if {$rc eq "" && [dict size $ot_ir_nreg] > 1} {
+    set ot_ir_srt [lsort -stride 2 -index 1 -integer -decreasing $ot_ir_nreg]
+    if {[lindex $ot_ir_srt 1] >= 4 * [lindex $ot_ir_srt 3]} { set rc [lindex $ot_ir_srt 0] }
+  }
   if {$rc eq ""} { puts "OT_IOREF skip $vn (no unique real clock)"; continue }
   lassign [dict get $ot_ir_ins $rc] L lo hi n kind
   set_clock_latency -source 0 [get_clocks $vn]
