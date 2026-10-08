@@ -17,5 +17,5 @@ foreach ot_c [get_cells -hierarchical -filter "ref_name == ot_attn_hgrp_m6h1"] {
   }
 }
 if {[llength $ot_leaf_rst] == 0} { error "leaf_reset_mcp: no leaf rst_n pins found" }
-set_multicycle_path -setup 3 -to $ot_leaf_rst
-set_multicycle_path -hold 2 -to $ot_leaf_rst
+set_multicycle_path -setup 4 -to $ot_leaf_rst
+set_multicycle_path -hold 3 -to $ot_leaf_rst

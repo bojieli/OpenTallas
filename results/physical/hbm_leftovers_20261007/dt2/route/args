@@ -1,0 +1,1 @@
+SRC=src_qb QCV=physical/hbm_attn_tile_r/quad_b_cts/ot_attn_tile_m6h1q CTSA=-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150 PD=0.40 HM=0.03 PER=0.770 
