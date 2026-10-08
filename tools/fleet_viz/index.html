@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OpenTallas Fleet Live</title>
+<meta name="description" content="Live view of the OpenTallas chip-design compute fleet">
+<style>
+:root{
+  --bg:#05070d; --panel:#0b1020; --panel2:#0f1629; --line:#1b2540; --ink:#e8eefc; --dim:#8a97b8; --faint:#4a5678;
+  --accent:#5ee7ff; --ok:#4ade80; --warn:#fbbf24; --hot:#ff5d73;
+  --qwen:#7c9cff; --hbm:#38e1c6; --ds:#ffb44d; --other:#c084fc;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+body{background:radial-gradient(1200px 600px at 70% -10%,#10204a55,transparent),radial-gradient(900px 500px at 0% 110%,#2a0f3a44,transparent),var(--bg);min-height:100vh}
+.wrap{max-width:1500px;margin:0 auto;padding:18px 16px 28px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+h1{margin:0;font-size:clamp(20px,3.2vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+h1 .g{background:linear-gradient(90deg,var(--accent),#a78bfa 60%,var(--hot));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--dim);font-size:13px;margin-top:4px}
+.live{display:inline-flex;align-items:center;gap:8px;font:600 12px var(--mono);color:var(--ink);padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#0b1020cc}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--hot);box-shadow:0 0 10px var(--hot);animation:pulse 1.6s infinite}
+.live.stale .dot{background:var(--faint);box-shadow:none;animation:none}
+@keyframes pulse{50%{opacity:.35}}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:12px}
+.kpi{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden}
+.kpi .l{color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.kpi .v{font:800 clamp(22px,3.4vw,40px)/1.1 var(--sans);font-variant-numeric:tabular-nums;margin-top:4px;position:relative;z-index:1}
+.kpi .v small{font-size:.45em;color:var(--dim);font-weight:600;margin-left:4px}
+.kpi .s{color:var(--dim);font-size:12px;margin-top:2px;font-variant-numeric:tabular-nums;position:relative;z-index:1;padding-bottom:16px}
+.kpi canvas{position:absolute;left:0;right:0;bottom:0;width:100%;height:22px;opacity:.5}
+.mid{display:grid;grid-template-columns:1.6fr 1fr;gap:12px;margin-bottom:12px}
+.panel{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.ptitle{display:flex;justify-content:space-between;align-items:center;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+#map{width:100%;aspect-ratio:2.25/1;display:block}
+.ticker{list-style:none;margin:0;padding:0;max-height:300px;overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.ticker li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:7px 2px;border-bottom:1px solid #141c33;font-size:13px;animation:slidein .7s ease-out}
+.ticker li.new{background:linear-gradient(90deg,#5ee7ff22,transparent)}
+@keyframes slidein{from{opacity:0;transform:translateY(-8px)}}
+.tag{font:700 10px var(--mono);padding:3px 7px;border-radius:6px;color:#05070d;letter-spacing:.03em;white-space:nowrap}
+.ticker .h{color:var(--dim);font:12px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ticker .t{color:var(--faint);font:12px var(--mono)}
+.cats{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.cat{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);background:#0a0f1e;border:1px solid var(--line);border-radius:8px;padding:4px 8px}
+.cat b{color:var(--ink);font-variant-numeric:tabular-nums}
+.sw{width:9px;height:9px;border-radius:3px}
+.hosts{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.host{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:12px 14px;transition:border-color .6s}
+.host.down,.host.pending{opacity:.55}
+.hh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.hn{font:800 15px var(--mono);letter-spacing:.02em}
+.hk{color:var(--dim);font-size:11px}
+.hb{white-space:nowrap;font:700 22px var(--sans);font-variant-numeric:tabular-nums}
+.hb small{color:var(--dim);font-size:11px;font-weight:600}
+.grid{width:100%;display:block;margin:10px 0 8px;border-radius:6px}
+.bar{height:8px;border-radius:5px;background:#141c33;overflow:hidden;margin:6px 0 4px}
+.bar i{display:block;height:100%;width:0;border-radius:5px;background:linear-gradient(90deg,#7c9cff,#a78bfa,#ff5d73);transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.hm{display:flex;justify-content:space-between;gap:8px;color:var(--dim);font:12px var(--mono);flex-wrap:wrap}
+.hm b{color:var(--ink);font-weight:600}
+.offline{height:84px;display:grid;place-items:center;color:var(--faint);font:600 12px var(--mono);border:1px dashed var(--line);border-radius:8px;margin:10px 0 8px}
+.gpu{margin-top:6px;font:12px var(--mono);color:var(--dim)}
+.gpu b{color:var(--ink)}
+footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--faint);font:11px var(--mono);margin-top:14px}
+.legend{display:flex;align-items:center;gap:8px}
+.legend span.r{width:120px;height:8px;border-radius:4px;background:linear-gradient(90deg,#101a33,#1f3a8a,#00b3d6,#5ef0b0,#ffd23f,#ff5d73)}
+@media (max-width:980px){.kpis{grid-template-columns:repeat(2,1fr)}.kpis .kpi:first-child{grid-column:span 2}.mid{grid-template-columns:1fr}}
+@media (max-width:420px){.hosts{grid-template-columns:1fr}.wrap{padding:12px 12px 20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1><span class="g">OpenTallas</span> compute fleet</h1>
+      <div class="sub">Chip-design place-and-route, synthesis and RTL simulation across four sites, live</div>
+    </div>
+    <div class="live" id="live"><span class="dot"></span><span id="clock">connecting</span></div>
+  </header>
+
+  <section class="kpis">
+    <div class="kpi"><div class="l">Cores busy</div><div class="v" id="k-busy">-</div><div class="s" id="k-busy-s">&nbsp;</div><canvas id="spark"></canvas></div>
+    <div class="kpi"><div class="l">RAM in use</div><div class="v" id="k-mem">-</div><div class="s" id="k-mem-s">&nbsp;</div></div>
+    <div class="kpi"><div class="l">Routes running</div><div class="v" id="k-run">-</div><div class="s" id="k-run-s">&nbsp;</div></div>
+    <div class="kpi"><div class="l">Blocks closed today</div><div class="v" id="k-closed">-</div><div class="s" id="k-closed-s">&nbsp;</div></div>
+    <div class="kpi"><div class="l">GPU</div><div class="v" id="k-gpu">-</div><div class="s" id="k-gpu-s">&nbsp;</div></div>
+  </section>
+
+  <section class="mid">
+    <div class="panel"><div class="ptitle"><span>Sites</span><span id="sites-s"></span></div><canvas id="map"></canvas>
+      <div class="cats" id="runcats"></div></div>
+    <div class="panel"><div class="ptitle"><span>Timing closures</span><span>Most recent first</span></div><ul class="ticker" id="ticker"></ul>
+      <div class="cats" id="closecats"></div></div>
+  </section>
+
+  <section class="hosts" id="hosts"></section>
+
+  <footer>
+    <div class="legend">core load <span class="r"></span> 0 to 100%</div>
+    <div id="foot">&nbsp;</div>
+  </footer>
+</div>
+<script src="landmask.js"></script>
+<script>
+(() => {
+'use strict';
+const qs = new URLSearchParams(location.search);
+const API = '/api/stream' + (qs.get('safe') === '0' ? '?safe=0' : '');
+const CATCOL = {'Qwen ROM':'#7c9cff','HBM accelerator':'#38e1c6','DeepSeek S81':'#ffb44d','Other':'#c084fc'};
+const STOPS = [[0,[16,26,51]],[.18,[31,58,138]],[.4,[0,179,214]],[.6,[94,240,176]],[.8,[255,210,63]],[1,[255,93,115]]];
+const LUT = [];
+for (let i = 0; i <= 100; i++) {
+  const x = i / 100; let k = 0; while (k < STOPS.length - 2 && x > STOPS[k + 1][0]) k++;
+  const [x0, c0] = STOPS[k], [x1, c1] = STOPS[k + 1], f = (x - x0) / (x1 - x0);
+  LUT.push(c0.map((v, j) => Math.round(v + (c1[j] - v) * f)));
+}
+const col = v => { const c = LUT[Math.max(0, Math.min(100, Math.round(v)))]; return `rgb(${c[0]},${c[1]},${c[2]})`; };
+const $ = id => document.getElementById(id);
+const fmt = (n, d = 0) => n == null ? '-' : Number(n).toLocaleString('en-US', {maximumFractionDigits: d, minimumFractionDigits: d});
+const ago = t => { const s = Math.max(0, Date.now() / 1000 - t); return s < 60 ? 'now' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? (s / 3600).toFixed(1) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
+const DPR = Math.min(2, window.devicePixelRatio || 1);
+
+// ---- animated numbers
+const tweens = new Map();
+function tweenText(el, to, dec = 0, suffix = '') {
+  const from = tweens.has(el) ? tweens.get(el).cur : to;
+  tweens.set(el, {from, to, cur: from, t0: performance.now(), dec, suffix});
+}
+
+// ---- host cards
+const cards = new Map();
+function card(h) {
+  let c = cards.get(h.label);
+  if (c) return c;
+  const el = document.createElement('div'); el.className = 'host';
+  el.innerHTML = `<div class="hh"><div><div class="hn"></div><div class="hk"></div></div><div class="hb"></div></div>
+    <canvas class="grid"></canvas><div class="offline" hidden></div>
+    <div class="hm"><span>RAM <b class="mu"></b></span><span class="mp"></span></div><div class="bar"><i></i></div>
+    <div class="hm"><span>load <b class="ld"></b></span><span>containers <b class="dk"></b></span><span>routes <b class="rt"></b></span></div><div class="gpu" hidden></div>`;
+  $('hosts').appendChild(el);
+  c = {el, cv: el.querySelector('canvas'), cur: [], tgt: [], n: 0};
+  el.querySelector('.hn').textContent = h.label;
+  cards.set(h.label, c);
+  return c;
+}
+function layoutGrid(c) {
+  const n = c.n; if (!n) return;
+  const cols = n >= 64 ? n / 4 : n >= 32 ? 16 : 8, rows = Math.ceil(n / cols);
+  const w = c.cv.clientWidth || 300, gap = cols > 20 ? 2 : 3, cell = (w - gap * (cols - 1)) / cols;
+  c.geo = {cols, rows, cell, gap};
+  c.cv.style.height = (rows * cell + (rows - 1) * gap) + 'px';
+  c.cv.width = Math.round(w * DPR); c.cv.height = Math.round((rows * cell + (rows - 1) * gap) * DPR);
+}
+function drawGrid(c, t) {
+  if (!c.geo || !c.n) return;
+  const g = c.cv.getContext('2d'), {cols, cell, gap} = c.geo;
+  g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, c.cv.width, c.cv.height);
+  const r = Math.min(3, cell * .22);
+  for (let i = 0; i < c.n; i++) {
+    c.cur[i] += (c.tgt[i] - c.cur[i]) * 0.06;
+    const v = c.cur[i], x = (i % cols) * (cell + gap), y = Math.floor(i / cols) * (cell + gap);
+    const shimmer = v > 85 ? 6 * Math.sin(t / 300 + i * 1.7) : 0;
+    g.fillStyle = col(v + shimmer);
+    if (v > 70) { g.shadowColor = col(v); g.shadowBlur = cell * .5; } else g.shadowBlur = 0;
+    g.beginPath(); g.roundRect ? g.roundRect(x, y, cell, cell, r) : g.rect(x, y, cell, cell); g.fill();
+  }
+  g.shadowBlur = 0;
+}
+function updateHosts(d) {
+  for (const h of d.hosts) {
+    const c = card(h), el = c.el, up = h.cores && h.cores.length && (h.state === 'up' || h.state === 'stale');
+    el.className = 'host ' + (up ? '' : h.state);
+    el.querySelector('.hk').textContent = h.kind + ' · ' + (d.regions[h.region] || {}).label + (h.alias ? ' · ' + h.alias : '');
+    el.querySelector('.offline').hidden = !!up; c.cv.hidden = !up;
+    if (!up) {
+      el.querySelector('.offline').textContent = h.state === 'pending' ? 'COMING ONLINE' : h.state === 'down' ? 'UNREACHABLE' : 'CONNECTING';
+      el.querySelector('.hb').innerHTML = '<small>' + (h.state === 'pending' ? 'soon' : 'offline') + '</small>';
+      for (const s of ['.mu', '.mp', '.ld', '.dk']) el.querySelector(s).textContent = '-';
+      el.querySelector('.rt').textContent = h.routes; el.querySelector('.bar i').style.width = '0';
+      continue;
+    }
+    if (c.n !== h.cores.length) { c.n = h.cores.length; c.cur = h.cores.slice(); layoutGrid(c); }
+    c.tgt = h.cores.slice();
+    const busy = h.cores.reduce((a, b) => a + b, 0) / h.cores.length;
+    el.querySelector('.hb').innerHTML = `${Math.round(busy)}%<small> of ${h.cores.length} threads</small>`;
+    el.style.borderColor = busy > 80 ? '#ff5d7355' : busy > 40 ? '#5ee7ff33' : '';
+    const mp = 100 * h.mem_used / h.mem_total;
+    el.querySelector('.mu').textContent = h.mem_total > 900 ? `${fmt(h.mem_used / 1024, 2)} / ${fmt(h.mem_total / 1024, 2)} TB` : `${fmt(h.mem_used)} / ${fmt(h.mem_total)} GB`;
+    el.querySelector('.mp').textContent = Math.round(mp) + '%';
+    el.querySelector('.bar i').style.width = mp.toFixed(1) + '%';
+    el.querySelector('.ld').textContent = fmt(h.load, 0);
+    el.querySelector('.dk').textContent = h.docker ?? '-';
+    el.querySelector('.rt').textContent = h.routes;
+    const gp = el.querySelector('.gpu');
+    gp.hidden = !(h.gpu && h.gpu.length);
+    if (!gp.hidden) gp.innerHTML = h.gpu.map(g => `GPU <b>${g.util}%</b> · ${fmt(g.mem_used)}/${fmt(g.mem_total)} GB · ${g.power} W · ${g.temp}°C`).join('<br>');
+  }
+}
+
+// ---- map
+const map = $('map'); const pulses = []; let MAP = null;
+function proj(lat, lon, w, h) {   // equirectangular, cropped to the land mask's latitude window
+  const L = window.LANDMASK, top = L.lat0 + L.step / 2, bot = L.lat0 - L.step * (L.rows.length - .5);
+  return [(lon + 180) / 360 * w, (top - lat) / (top - bot) * h];
+}
+function drawMap(t) {
+  if (!MAP || !window.LANDMASK) return;
+  const w = map.clientWidth, h = map.clientHeight;
+  if (map.width !== Math.round(w * DPR)) { map.width = Math.round(w * DPR); map.height = Math.round(h * DPR); }
+  const g = map.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, w, h);
+  const L = window.LANDMASK, cols = 360 / L.step, rows = L.rows.length, cw = w / cols, ch = h / rows;
+  g.fillStyle = '#1e2a4a';
+  for (let r = 0; r < rows; r++) {
+    const hex = L.rows[r];
+    for (let k = 0; k < cols; k++) {
+      const nib = parseInt(hex[k >> 2], 16); if (!(nib & (8 >> (k & 3)))) continue;
+      g.beginPath(); g.arc((k + .5) * cw, (r + .5) * ch, Math.min(cw, ch) * .28, 0, 7); g.fill();
+    }
+  }
+  const sites = MAP.sites, hub = sites.onprem;
+  // arcs from the coordinator to each remote site, with a travelling packet
+  for (const [k, s] of Object.entries(sites)) {
+    if (k === 'onprem' || !hub) continue;
+    let [x0, y0] = proj(hub.lat, hub.lon, w, h), [x1, y1] = proj(s.lat, s.lon, w, h);
+    if (Math.abs(x1 - x0) > w / 2) x1 += x1 < x0 ? w : -w;   // go the short way round
+    const mx = (x0 + x1) / 2, my = Math.min(y0, y1) - Math.abs(x1 - x0) * .22;
+    const lit = s.up > 0;
+    g.strokeStyle = lit ? '#5ee7ff55' : '#4a567833'; g.lineWidth = 1.2; g.setLineDash(lit ? [] : [3, 4]);
+    for (const dx of [0, x1 > w ? -w : x1 < 0 ? w : 0]) {
+      g.beginPath(); g.moveTo(x0 + dx, y0); g.quadraticCurveTo(mx + dx, my, x1 + dx, y1); g.stroke();
+      if (lit) {
+        for (const ph of [0, .5]) {
+          const u = ((t / 2600) + ph + k.length * .13) % 1, a = 1 - u;
+          const px = a * a * x0 + 2 * a * u * mx + u * u * x1 + dx, py = a * a * y0 + 2 * a * u * my + u * u * y1;
+          g.fillStyle = '#bff6ff'; g.beginPath(); g.arc(px, py, 1.8, 0, 7); g.fill();
+        }
+      }
+    }
+    g.setLineDash([]);
+  }
+  for (const [k, s] of Object.entries(sites)) {
+    const [x, y] = proj(s.lat, s.lon, w, h), lit = s.up > 0, busy = s.busy || 0;
+    const base = lit ? col(Math.max(35, busy)) : '#4a5678';
+    const R = 4 + Math.sqrt(s.cores || 0) * .45;
+    if (lit) { const pr = R + 4 + 6 * ((t / 1400 + k.length) % 1); g.strokeStyle = base; g.globalAlpha = 1 - ((t / 1400 + k.length) % 1); g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, pr, 0, 7); g.stroke(); g.globalAlpha = 1; }
+    g.fillStyle = base; g.shadowColor = base; g.shadowBlur = lit ? 14 : 0; g.beginPath(); g.arc(x, y, R, 0, 7); g.fill(); g.shadowBlur = 0;
+    const fs = Math.max(10, Math.min(13, w / 60));
+    g.font = `700 ${fs}px ui-monospace,Menlo,monospace`; g.fillStyle = '#e8eefc'; g.textAlign = x > w * .8 ? 'right' : 'left';
+    const tx = x + (g.textAlign === 'right' ? -R - 6 : R + 6);
+    g.fillText(s.label, tx, y - 2);
+    g.font = `${fs - 1}px ui-monospace,Menlo,monospace`; g.fillStyle = '#8a97b8';
+    g.fillText(lit ? `${s.cores} thr · ${Math.round(busy)}%` : s.pending ? 'coming online' : 'offline', tx, y + fs);
+  }
+  // closure bursts
+  for (let i = pulses.length - 1; i >= 0; i--) {
+    const p = pulses[i], u = (t - p.t0) / 2200; if (u > 1) { pulses.splice(i, 1); continue; }
+    const s = sites[p.region]; if (!s) continue; const [x, y] = proj(s.lat, s.lon, w, h);
+    g.strokeStyle = p.color; g.globalAlpha = 1 - u; g.lineWidth = 2.5; g.beginPath(); g.arc(x, y, 8 + 50 * u, 0, 7); g.stroke(); g.globalAlpha = 1;
+  }
+}
+
+// ---- spark
+function drawSpark(hist) {
+  const cv = $('spark'), w = cv.clientWidth, h = cv.clientHeight; if (!w || hist.length < 2) return;
+  cv.width = w * DPR; cv.height = h * DPR; const g = cv.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  const ys = hist.map(x => x[2] ? x[1] / x[2] : 0), n = ys.length;
+  const grad = g.createLinearGradient(0, 0, 0, h); grad.addColorStop(0, '#5ee7ff88'); grad.addColorStop(1, '#5ee7ff00');
+  g.beginPath(); g.moveTo(0, h);
+  ys.forEach((y, i) => g.lineTo(i / (n - 1) * w, h - y * (h - 4)));
+  g.lineTo(w, h); g.closePath(); g.fillStyle = grad; g.fill();
+  g.beginPath(); ys.forEach((y, i) => (i ? g.lineTo : g.moveTo).call(g, i / (n - 1) * w, h - y * (h - 4))); g.strokeStyle = '#5ee7ff'; g.lineWidth = 1.5; g.stroke();
+}
+
+// ---- ticker
+let seen = null;
+function cats(el, obj, suffix) {
+  el.innerHTML = Object.entries(obj).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<span class="cat"><span class="sw" style="background:${CATCOL[k] || CATCOL.Other}"></span>${k} <b>${v}</b>${suffix}</span>`).join('');
+}
+function updateTicker(d) {
+  const regionOf = Object.fromEntries(d.hosts.map(h => [h.label, h.region]));
+  const keyOf = r => r.t + '|' + r.host + '|' + r.cat + '|' + (r.block || '');
+  const fresh = seen ? d.recent.filter(r => !seen.has(keyOf(r))) : [];
+  seen = new Set(d.recent.map(keyOf));
+  $('ticker').innerHTML = d.recent.slice(0, 12).map(r => `<li class="${fresh.includes(r) ? 'new' : ''}"><span class="tag" style="background:${CATCOL[r.cat] || CATCOL.Other}">${r.cat.toUpperCase()}</span><span class="h">closed on ${r.host}${r.block ? ' · ' + r.block : ''}</span><span class="t">${ago(r.t)}</span></li>`).join('') || '<li><span></span><span class="h">waiting for closures</span><span></span></li>';
+  for (const r of fresh) pulses.push({t0: performance.now(), region: regionOf[r.host] || 'onprem', color: CATCOL[r.cat] || CATCOL.Other});
+  cats($('closecats'), d.loop.closed_24h_by_cat, ' closed / 24 h');
+  cats($('runcats'), d.loop.running_by_cat, ' running');
+}
+
+// ---- data
+let lastT = 0;
+function onData(d) {
+  lastT = d.t;
+  const T = d.totals;
+  tweenText($('k-busy'), T.busy, 0);
+  $('k-busy-s').textContent = `of ${fmt(T.cores)} threads · ${T.cores ? Math.round(100 * T.busy / T.cores) : 0}% · ${T.hosts_up} hosts up`;
+  tweenText($('k-mem'), T.mem_used / 1024, 2, ' TB');
+  $('k-mem-s').textContent = `of ${fmt(T.mem_total / 1024, 2)} TB · ${fmt(T.docker)} containers`;
+  tweenText($('k-run'), d.loop.running, 0);
+  $('k-run-s').textContent = `${fmt(d.loop.queued)} queued · ${fmt(d.loop.closed_total)} closed all-time`;
+  tweenText($('k-closed'), d.loop.closed_today, 0);
+  $('k-closed-s').textContent = `${fmt(d.loop.closed_today_jobs)} closing runs since midnight`;
+  const gp = d.hosts.flatMap(h => h.gpu || []);
+  if (gp.length) { tweenText($('k-gpu'), gp[0].util, 0, '%'); $('k-gpu-s').textContent = `${gp[0].name.replace(' Workstation Edition', '')} · ${fmt(gp[0].mem_used)}/${fmt(gp[0].mem_total)} GB`; }
+  const sites = {};
+  for (const [k, r] of Object.entries(d.regions)) sites[k] = {...r, cores: 0, busyc: 0, up: 0, pending: false};
+  for (const h of d.hosts) {
+    const s = sites[h.region]; if (!s) continue;
+    if (h.state === 'pending') s.pending = true;
+    if (h.cores && h.state === 'up') { s.up++; s.cores += h.cores.length; s.busyc += h.cores.reduce((a, b) => a + b, 0) / 100; }
+  }
+  for (const s of Object.values(sites)) s.busy = s.cores ? 100 * s.busyc / s.cores : 0;
+  MAP = {sites};
+  $('sites-s').textContent = `${Object.values(sites).filter(s => s.up).length} sites live · ${d.hosts.filter(h => h.state === 'up').length}/${d.hosts.length} hosts`;
+  updateHosts(d); updateTicker(d); drawSpark(d.history);
+  $('foot').textContent = (d.safe ? 'share-safe view · ' : 'PRIVATE view · ') + `updates every ${d.poll} s`;
+}
+function connect() {
+  const es = new EventSource(API);
+  es.onmessage = e => { try { onData(JSON.parse(e.data)); } catch (x) { console.error(x); } };
+  es.onerror = () => { es.close(); setTimeout(connect, 4000); };
+}
+fetch(API.replace('stream', 'fleet')).then(r => r.ok ? r.json() : null).then(d => d && onData(d)).catch(() => {});
+connect();
+window.addEventListener('resize', () => { for (const c of cards.values()) layoutGrid(c); });
+
+// ---- frame loop (about 30 fps; pauses when hidden)
+let lastF = 0;
+function frame(t) {
+  requestAnimationFrame(frame);
+  if (t - lastF < 33) return; lastF = t;
+  for (const [el, s] of tweens) {
+    const u = Math.min(1, (t - s.t0) / 1200), e = 1 - Math.pow(1 - u, 3);
+    s.cur = s.from + (s.to - s.from) * e;
+    el.innerHTML = fmt(s.cur, s.dec) + (s.suffix ? `<small>${s.suffix.trim()}</small>` : '');
+  }
+  for (const c of cards.values()) drawGrid(c, t);
+  drawMap(t);
+  const age = Date.now() / 1000 - lastT;
+  $('live').classList.toggle('stale', !lastT || age > 30);
+  $('clock').textContent = lastT ? 'LIVE · ' + new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}) : 'connecting';
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
