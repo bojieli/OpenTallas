@@ -92,7 +92,7 @@ module tb_qfd_tree_top_lockstep #(
     ot_qfd_spine_part #(.MUT(MUT), .W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT),
         .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .MEM_EXTRA(MEM_EXTRA), .SCALE_LOCAL(SCALE_LOCAL),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .MUL_LAT(MUL_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP))
-        u_b (`SPINE_PORTS(b_));
+        u_b (.land_cnt(16'd0), `SPINE_PORTS(b_));
     // synchronous scale ROMs (one per spine, same contents): a group's word is read when its enable is high
     integer g, l;
     always @(posedge clk) begin

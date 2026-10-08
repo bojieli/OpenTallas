@@ -135,7 +135,7 @@ module ot_qwen_me_spine_h_w12 #(
         .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD(XD), .XVM(XVM), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL),
         .PQ(PQ), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP),
         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
-        .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
+        .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle), .land_cnt(16'd0),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
         .i_xbase(i_xbase), .i_xks(i_xks), .i_xjs(i_xjs), .i_xcs(i_xcs),
@@ -228,13 +228,15 @@ module ot_qwen_me_spctl_w12 #(
     parameter integer FAST_ISSUE = 0,
     parameter integer KV_PREP = 0,
     parameter integer MUL_LAT = 5,
-    parameter integer SCALE_LAT = 5
+    parameter integer SCALE_LAT = 5,
+    parameter integer LANDED = 0       // qwen-vm-me: progress / idle count LANDED result bursts (land_cnt), 0 = base
 ) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire              go,
     output wire              ready,
     output reg               idle,
+    input  wire [15:0]       land_cnt,  // LANDED: result bursts written into the vector memory since reset (ot_qfd_res_merge)
     input  wire [NW-1:0]     i_nout,
     input  wire [NW-1:0]     i_tiles,
     input  wire [NW-1:0]     i_k,
@@ -924,7 +926,11 @@ end endgenerate
 
     // -- progress, idle (as ot_qwen_w12_matvec_part) ----------------------------------------------------------
     reg [15:0] n_last_issued, n_ov, ov_mark;
-    wire [15:0] ov_done = n_ov - ov_mark;
+    //: LANDED (qwen-vm-me): the result rows reach the banked vector memory through the band serializers and the merge
+    //: at a variable time; progress counts the bursts LANDED there (in order, ot_qfd_res_merge land_cnt) and the
+    //: element is idle only when every burst it emitted has landed.  0: the base (bursts counted at the ports).
+    wire [15:0] ov_done = ((LANDED != 0) ? land_cnt : n_ov) - ov_mark;
+    wire        land_wait = (LANDED != 0) && (land_cnt != n_ov);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             n_last_issued <= 0; n_ov <= 0; ov_mark <= 0; progress <= 0;
@@ -941,7 +947,7 @@ end endgenerate
     localparam [ORD+2:0] OMASK = (1 << (ORD + 1)) - 2;
     wire ord_busy = |(ov_line & OMASK);
     wire idle_c = !active && !pend && !e_v && !(|m_vl) && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|post_pending) && !(|tv) && !ov1
-                  && !ov2 && !ord_busy && !mx_we;
+                  && !ov2 && !ord_busy && !mx_we && !land_wait;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;
         else idle <= idle_c && !(go && ready);
@@ -1100,6 +1106,7 @@ module ot_qwen_me_spport_w12 #(
     output reg  [PQ*AW-1:0]  o_addr,
     output reg  [PQ*W-1:0]   o_mask,
     output reg  [PQ*W*32-1:0] o_data,
+    output reg               o_ov,          // qwen-vm-me: the burst (op-output edge) marker, aligned with o_we
     output wire [1+32+NW-1:0] am,
     output reg               fault
 );
@@ -1221,14 +1228,17 @@ module ot_qwen_me_spport_w12 #(
     assign {r_last, r_oen, r_gok, r_oa, r_oaq, r_mask, r_rows} = rt;
     // -- the two result registers --------------------------------------------------------------------------------
     reg  [PQ-1:0]     o_we1;
+    reg               o_ov1;
     reg  [PQ*AW-1:0]  o_addr1;
     reg  [PQ*W-1:0]   o_mask1;
     reg  [PQ*W*32-1:0] o_data1;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin o_we1 <= 0; o_we <= 0; end
+        if (!rst_n) begin o_we1 <= 0; o_we <= 0; o_ov1 <= 1'b0; o_ov <= 1'b0; end
         else begin
             o_we1 <= {PQ{r_v && r_last && r_oen}} & r_gok;
             o_we <= o_we1;
+            o_ov1 <= r_v && r_last;
+            o_ov <= o_ov1;
         end
     end
     always @(posedge clk) begin
