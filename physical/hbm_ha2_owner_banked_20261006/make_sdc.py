@@ -53,4 +53,6 @@ create_generated_clock -name gclk -source [get_ports clk] -divide_by 2 $ot_g
 set ot_q {}
 foreach p [get_pins -hierarchical *] { if {[regexp {u_icg.*en_l.*/QN?$} [get_full_name $p]]} {lappend ot_q $p} }
 if {[llength $ot_q] && [catch {set_sense -type clock -stop_propagation -clocks [get_clocks clk] $ot_q} ot_e]} {puts "set_sense: $ot_e"}
+set_clock_uncertainty -setup 60 [get_clocks gclk]
+set_clock_uncertainty -hold 25 [get_clocks gclk]
 ''')

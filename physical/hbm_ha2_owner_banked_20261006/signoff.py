@@ -94,8 +94,23 @@ def main():
     subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', '833.333', '--l-max', f'{ss_lat[1]:.2f}',
                     '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--out', str(sdc)] + (['--half'] if a.half else []) + (['--h1'] if a.h1 else []),
                    check=True, capture_output=True)
+    sdcs = {'SS': sdc, 'FF': sdc}
+    if a.tt:
+        # routed IO reference per corner (drive-1443, as d4441ee39 / c4ffc4f9d): the forwarded-clock sender's arrival
+        # scales with the analysis corner, so the TT setup check uses the TT-measured insertion, not the SS one
+        # (ha2_h2_fixedpins_ca0d6a5a2-tt: in2reg TT -205.9 = SS L_max 1073.6 vs TT capture 662 on pin-direct flops)
+        log1t = sta(case, odb, sdc0, spef, 'TT', 'max'); p1t = parse(log1t)
+        (run/'signoff_pass1_TT.log').write_text(log1t)
+        tt_lat = p1t['latency_rise']
+        if not tt_lat:
+            raise SystemExit('no TT clock latency measured; see signoff_pass1_TT.log')
+        result['measured_insertion_TT'] = tt_lat
+        sdcs['TT'] = case/'signoff_tt.sdc'
+        subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', '833.333', '--l-max', f'{tt_lat[1]:.2f}',
+                        '--l-min', f'{tt_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--out', str(sdcs['TT'])]
+                       + (['--half'] if a.half else []) + (['--h1'] if a.h1 else []), check=True, capture_output=True)
     for corner, delay in (('SS', 'max'), ('FF', 'min')) + ((('TT', 'max'),) if a.tt else ()):
-        log = sta(case, odb, sdc, spef, corner, delay)
+        log = sta(case, odb, sdcs[corner], spef, corner, delay)
         (run/f'signoff_{corner}.log').write_text(log)
         result[corner] = parse(log)
     ss = result['SS']['worst'].get('max'); ff = result['FF']['worst'].get('min')
