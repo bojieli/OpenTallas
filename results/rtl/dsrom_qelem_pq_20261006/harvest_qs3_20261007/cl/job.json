@@ -1,0 +1,72 @@
+{
+ "name": "dsrom-qelem-qs3-cb92bce64",
+ "block": "ot_v41_rom_elem_q_qxpq_w10",
+ "owner": "Claude:ds-pq (DS PQ adoption takeover)",
+ "purpose": "DS ROM PQ q-element SAFE QS=3 (owner fail-fast structural decision 2026-10-06 23:00): bterm5 midpoint register on the decode->product wire + registered CSA terms, segment tree YF (register-only in-flight forward), write-retimed need walker; route at the Z29c 0.730 over-constraint (period 0.833 + 163 ps setup uncertainty), sign-off 0.833 SS/FF at the calibrated insertion",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "route_hold_margin_ns": 0.025,
+ "source": {
+  "branch": "claude/dsrom-qelem-pq-20261006",
+  "commit": "cb92bce6480e6caf11d2ab7a8d6aa92dacad33e6"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "bash tools/dsrom_qelem_cl/cl_route_qs.sh {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes $CL_STOP_AFTER",
+   "base": "{RUN}/routes/jobs/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "bash tools/dsrom_qelem_cl/cl_signoff_sdc.sh",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "bash tools/dsrom_qelem_cl/cl_route_qs.sh {LABEL} {RUN}/routes",
+   "ok": "grep -q '^rc=0' {RUN}/routes/jobs/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/jobs/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/jobs/{LABEL}/launch.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/record/view; cp {RUN}/routes/jobs/{LABEL}/corner_sta.json {RUN}/routes/jobs/{LABEL}/exit {RUN}/routes/jobs/{LABEL}/receipt.json physical/abi3/gen/dsrom_q_cl_signoff.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json && cp $(ls {RUN}/routes/jobs/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json) {RUN}/record/ && rm -f {RUN}/record/view/pa/pa.v"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/jobs/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/jobs/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "pin_access",
+    "cmd": "bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/routes/jobs/{LABEL}/view"
+   }
+  ],
+  "post_sdc": [
+   "physical/abi3/gen/dsrom_q_cl_signoff.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8"
+  ]
+ },
+ "hold_eco": {
+  "reexport": "bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/routes/jobs/{LABEL}/view"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/dsrom_qelem_pq_20261006/closed_qs3"
+  }
+ ],
+ "cycles_added": "QS=3 over QM=5: +3 lane cycles (QS=1/2 +1, P0B=3 +2); tree YF and walker WRT 0. PQ1 L20 node time +0.513% vs QM=5 (results/rtl/dsrom_qelem_pq_20261006/comb_qs3_bench.txt)",
+ "merge_target": "main",
+ "no_bench_reason": "benched outside the loop on AGIdock at 48d02e7af (RTL identical at this commit): tools/dsrom_qx_exact.py pos_qs3 x4 + nan_sparse PASS (12,775,002 compared cycles), negatives neg_qs3ns/sh/yf/nr/sb caught -> results/rtl/dsrom_qelem_pq_20261006/qx10qs3.json; PQ1 L20 field 3,648/3,648 exact with QP_CHECK/QT_CHECK -> comb_qs3_bench.txt",
+ "budget": {
+  "enabled": false,
+  "reason": "sheet ot_v41_rom_elem_q_qx_w10 names the die abstract's ports (cfg, go, r0 ...), not the element RTL's (cfg_v, xs_q0 ...): make_block_sdc.py would leave the RTL ports unconstrained; IO = the q-element's agreed derivation (launcher delays, physical/abi3/dsrom_qy_elem_io.sdc, outputs at the calibrated insertion via cl_signoff_sdc.sh)"
+ }
+}

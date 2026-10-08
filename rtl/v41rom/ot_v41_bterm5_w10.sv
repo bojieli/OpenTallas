@@ -6,7 +6,7 @@
 // carry-save addition is exact modulo 2^42 under any grouping -- the same normalise, roundings and pack); the
 // stages are cut finer, every class within ~50 ps in the Z18-Z22 routes gets its own register:
 //   S0  m_   input capture at the pins (no logic between the element's word mux and a flop)       [new]
-//   S1  p0_  decode: FP4 e2m1 / FP8 fields per lane (sign, significands, exponent fields), NaN per 8 lanes,
+//   S1  p0_  decode: FP4 e2m1 / FP8 fields per lane (sign, significands, exponent fields), NaN per lane,
 //            xe + we                                                                                  [was P0 + P1a]
 //   S2  pa_  4x4 significand product (unsigned), shift amount, NaN OR                                [was P1a / P1b]
 //   S3  p1_  the product's sign and the low two shift bits (12-bit signed partial term)              [was P1b]
@@ -21,7 +21,20 @@
 // LATENCY 17 (ot_v41_bterm4_w10 with P1S = 1: 12): +5 cycles a lane.  The tag rides the same 17 stages.
 // ---------------------------------------------------------------------------
 module ot_v41_bterm5_w10 #(
-    parameter integer TW = 8
+    parameter integer TW = 8,
+    parameter integer FPC = 4,        // kept copies of the FP4 select (32 = one per lane: q-element QM >= 5)
+    parameter integer P0B = 0         // 3 (owner decision 2026-10-06 23:00, Z29c post-CTS at 730: q0_pm -158.8, p0_ws -> 260 ps
+                                      // of wire -> product, the placer put the S1b product registers at the CSA end):
+                                      // the decode -> product wire through an explicit register at its midpoint: S1b
+                                      // the decoded fields only (a register-only wire stage), S1c the product and shift
+                                      // sum, S2 a register-only wire stage; and the 32-lane terms registered after their
+                                      // shift (S4a) before the 32 -> 15 CSA (p2h_c -48.3): +2 lane cycles over P0B = 2.
+                                      // 2 (Z29b post-CTS at 730: the S1b copy sat beside the decode, the wire stayed in
+                                      // front of the product, pa_pm -156): the product and shift sum formed in S1b next
+                                      // to the decode, S2 a register-only wire stage.  SAFE (owner fail-fast 2026-10-06, Z26b post-CTS at 770: p0_ws -> 222 ps of wire ->
+                                      // 4x4 product -> pa_pm -105.8): the decoded fields registered once more (S1b, +1
+                                      // lane cycle) so the decode-to-product wire has its own stage; the 32-lane NaN OR
+                                      // split 32 -> 8 there (8 -> 1 in S2)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -38,7 +51,7 @@ module ot_v41_bterm5_w10 #(
     output wire [TW-1:0]     otag
 );
     localparam integer W = 42;
-    localparam integer LATENCY = 17;
+    localparam integer LATENCY = 17 + (P0B != 0 ? 1 : 0) + (P0B >= 3 ? 2 : 0);
     function automatic [7:0] e2m1(input [3:0] c);
         if (c[2:1] == 2'd0) e2m1 = {c[3], c[0] ? 4'd6 : 4'd0, 3'd0};
         else                e2m1 = {c[3], {2'b00, c[2:1]} + 4'd6, c[0], 2'b00};
@@ -52,34 +65,82 @@ module ot_v41_bterm5_w10 #(
         else vs <= {vs[LATENCY-2:0], v};
 
     // -- S0: input capture ------------------------------------------------------------------------------
-    (* keep *) reg   m_fp4;
+    // the FP4 select in four kept copies (ot_v41_kreg: never merged with the tag delay line's copy of the same bit,
+    // Z24b post-CTS: a merged fp4 flop in the tag line drove all 32 lanes' decode, -190 ps), one per 8 lanes
+    wire [FPC-1:0]   m_fp4;
+    for (genvar g = 0; g < FPC; g = g + 1) begin : g_f4
+        ot_v41_kreg #(.W(1)) u_f (.clk(clk), .arst_n(1'b1), .d(fp4), .q(m_fp4[g]));
+    end
     reg [255:0]      m_xq, m_wq;
     reg signed [9:0] m_xe, m_we;
     always @(posedge clk) begin
-        m_fp4 <= fp4; m_xq <= xq; m_wq <= wq; m_xe <= xe; m_we <= we;
+        m_xq <= xq; m_wq <= wq; m_xe <= xe; m_we <= we;
     end
 
     // -- S1: decode -----------------------------------------------------------------------------------
     reg               p0_sg [0:31];
     reg [3:0]         p0_xs [0:31], p0_ws [0:31], p0_xf [0:31], p0_wf [0:31];
-    reg [3:0]         p0_nang;
+    reg [31:0]        p0_nan;           // per lane (Z24b: the 8-lane NaN OR in the decode stage spanned the lane, -529 ps)
     reg signed [10:0] p0_es;
     reg [7:0]         xc, wc;
-    reg [3:0]         nang;
     always @(posedge clk) begin
         p0_es <= m_xe + m_we;
-        nang = 4'd0;
         for (i = 0; i < 32; i = i + 1) begin
             xc = m_xq[8*i +: 8];
-            wc = m_fp4 ? e2m1(m_wq[8*i +: 4]) : m_wq[8*i +: 8];
-            nang[i / 8] = nang[i / 8] | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
+            wc = m_fp4[(i * FPC) / 32] ? e2m1(m_wq[8*i +: 4]) : m_wq[8*i +: 8];
+            p0_nan[i] <= (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
             p0_sg[i] <= xc[7] ^ wc[7];
             p0_xs[i] <= {(xc[6:3] != 4'd0), xc[2:0]};
             p0_ws[i] <= {(wc[6:3] != 4'd0), wc[2:0]};
             p0_xf[i] <= (xc[6:3] == 4'd0) ? 4'd1 : xc[6:3];
             p0_wf[i] <= (wc[6:3] == 4'd0) ? 4'd1 : wc[6:3];
         end
-        p0_nang <= nang;
+    end
+
+    // -- S1b (P0B): the decoded fields once more ------------------------------------------------------------
+    reg               q0_sg [0:31];
+    reg [3:0]         q0_xs [0:31], q0_ws [0:31], q0_xf [0:31], q0_wf [0:31];
+    reg [31:0]        q0_nan;
+    reg signed [10:0] q0_es;
+    reg [7:0]         q0_pm [0:31];     // P0B >= 2: the 4x4 product formed in S1b (next to the decode), S2 a wire stage
+    reg [4:0]         q0_sh [0:31];
+    if (P0B != 0) begin : g_p0b
+        always @(posedge clk) begin
+            q0_es <= p0_es;
+            for (i = 0; i < 32; i = i + 1) begin
+                q0_sg[i] <= p0_sg[i]; q0_xs[i] <= p0_xs[i]; q0_ws[i] <= p0_ws[i]; q0_xf[i] <= p0_xf[i]; q0_wf[i] <= p0_wf[i];
+                if (P0B == 2) begin
+                    q0_pm[i] <= p0_xs[i] * p0_ws[i];
+                    q0_sh[i] <= {1'b0, p0_xf[i]} + {1'b0, p0_wf[i]} - 5'd2;
+                end
+            end
+            for (i = 0; i < 8; i = i + 1) q0_nan[i] <= |p0_nan[4*i +: 4];
+            q0_nan[31:8] <= '0;
+        end
+    end else begin : g_np0b
+        always @(*) begin
+            q0_es = p0_es; q0_nan = p0_nan;
+            for (i = 0; i < 32; i = i + 1) begin
+                q0_sg[i] = p0_sg[i]; q0_xs[i] = p0_xs[i]; q0_ws[i] = p0_ws[i]; q0_xf[i] = p0_xf[i]; q0_wf[i] = p0_wf[i];
+            end
+        end
+    end
+
+    // -- S1c (P0B >= 3): product and shift sum from the S1b registers (S1b and S2 are register-only wire stages) ----
+    reg               q1_sg [0:31];
+    reg [7:0]         q1_pm [0:31];
+    reg [4:0]         q1_sh [0:31];
+    reg [7:0]         q1_nan;
+    reg signed [10:0] q1_es;
+    if (P0B >= 3) begin : g_p0c
+        always @(posedge clk) begin
+            q1_es <= q0_es; q1_nan <= q0_nan[7:0];
+            for (i = 0; i < 32; i = i + 1) begin
+                q1_sg[i] <= q0_sg[i];
+                q1_pm[i] <= q0_xs[i] * q0_ws[i];
+                q1_sh[i] <= {1'b0, q0_xf[i]} + {1'b0, q0_wf[i]} - 5'd2;
+            end
+        end
     end
 
     // -- S2: product, shift amount --------------------------------------------------------------------
@@ -89,16 +150,16 @@ module ot_v41_bterm5_w10 #(
     reg               pa_nan;
     reg signed [10:0] pa_es;
     always @(posedge clk) begin
-        pa_es <= p0_es;
+        pa_es <= (P0B >= 3) ? q1_es : q0_es;
 `ifdef BT5_MUTANT_NS
-        pa_nan <= |p0_nang[2:0];                                   // negative control: one partial dropped
+        pa_nan <= (P0B >= 3 ? |q1_nan[5:0] : P0B != 0 ? |q0_nan[5:0] : |q0_nan[23:0]);         // negative control: 8 lanes dropped
 `else
-        pa_nan <= |p0_nang;
+        pa_nan <= (P0B >= 3) ? |q1_nan : |q0_nan;
 `endif
         for (i = 0; i < 32; i = i + 1) begin
-            pa_sg[i] <= p0_sg[i];
-            pa_pm[i] <= p0_xs[i] * p0_ws[i];
-            pa_sh[i] <= {1'b0, p0_xf[i]} + {1'b0, p0_wf[i]} - 5'd2;
+            pa_sg[i] <= (P0B >= 3) ? q1_sg[i] : q0_sg[i];
+            pa_pm[i] <= (P0B >= 3) ? q1_pm[i] : (P0B >= 2) ? q0_pm[i] : q0_xs[i] * q0_ws[i];
+            pa_sh[i] <= (P0B >= 3) ? q1_sh[i] : (P0B >= 2) ? q0_sh[i] : {1'b0, q0_xf[i]} + {1'b0, q0_wf[i]} - 5'd2;
         end
     end
 
@@ -124,12 +185,22 @@ module ot_v41_bterm5_w10 #(
     always @(*)
         for (i = 0; i < 32; i = i + 1)
             terms[W*i +: W] = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sq[i], 2'b00};
+    // S4a (P0B >= 3): the shifted terms registered before the 32 -> 15 CSA (owner rule 3: a reduction over > 4 inputs
+    // gets a register level; Z29c post-CTS at 730: p2h_c -48.3)
+    reg [32*W-1:0]    t4_t;
+    reg               t4_nan;
+    reg signed [10:0] t4_es;
+    if (P0B >= 3) begin : g_t4
+        always @(posedge clk) begin t4_t <= terms; t4_nan <= p1_nan; t4_es <= p1_es; end
+    end else begin : g_nt4
+        always @(*) begin t4_t = terms; t4_nan = p1_nan; t4_es = p1_es; end
+    end
     wire [15*W-1:0] c15;
-    ot_v41_csa #(.N(32), .M(15), .W(W)) u_csa1 (.d(terms), .q(c15));
+    ot_v41_csa #(.N(32), .M(15), .W(W)) u_csa1 (.d(t4_t), .q(c15));
     reg [15*W-1:0]    p2h_c;
     reg               p2h_nan;
     reg signed [10:0] p2h_es;
-    always @(posedge clk) begin p2h_c <= c15; p2h_nan <= p1_nan; p2h_es <= p1_es; end
+    always @(posedge clk) begin p2h_c <= c15; p2h_nan <= t4_nan; p2h_es <= t4_es; end
 
     // -- S5: CSA 15 -> 5 --------------------------------------------------------------------------------
     wire [5*W-1:0] c5;

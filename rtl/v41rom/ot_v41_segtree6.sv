@@ -12,6 +12,14 @@
 //       copies, each driving a slice of the head registers; the next-entry read uses a registered qr + 1 (Z20c:
 //       qc -> XNOR -> 30-load -> h_v +9.4 ps; h_e / h_t / h_p / h_f +27..49 ps).  Zero cycles.
 // QP_CHECK additionally asserts the flag form against the pointer compare every cycle.
+// YF = 1 (owner fail-fast 2026-10-06 23:00; Z29c post-CTS at 730: have -> slot-local decision -> in-flight increment ->
+// 16:1 tree select -> y_infl -118.7): the read stage's in-flight count of its event's tree is formed from REGISTERS only:
+// when the x2 event is of the same tree (same_r, registered a cycle early from e_t == x_t) it is that event's own count
+// y_infl (QP_CHECK: y_infl == infl[y_t]) plus its global decision (pair | promote, from y_hv / y_ab / y_infl: QP_CHECK
+// t_inc == (pair | promote) && y_t == t) minus its add, both sums precomputed; otherwise the tree's stored count (no
+// other tree changes this cycle).  The forward no longer runs through have and the slot-local form.  Zero cycles, same
+// value every cycle (QP_CHECK asserts it against the direct form).  (An initiation-interval-2 tree was exact in the QX
+// bench but changed the PQ field's tree results: rejected.)
 // ---------------------------------------------------------------------------
 // Original header (ot_v41_segtree5):
 // ot_v41_segtree5: ot_v41_segtree3 with the decide stage split in two (DS-V4.1 ROM q-pair SS closure, owner decision
@@ -34,11 +42,14 @@ module ot_v41_segtree6 #(
     parameter integer QD = 8,
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer LAT = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8],
+    parameter integer YF = 0,        // 1: the read stage's in-flight forward from registers (see the header)
     parameter integer EARLY = 0      // 1: a final node with nothing held above it and nothing of its tree in the
                                      //    adder leaves at once instead of being promoted (+0) level by level
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
+    input  wire                     ce,         // clock enable (QS >= 5: ungated clock + enable; 1 otherwise): every register holds while low
+    input  wire                     pclk,       // the adder / tag pipelines' clock (QS >= 5: the gated clock, whose edges are clk AND ce; else clk)
     input  wire                     in_v,
     input  wire [$clog2(NT)-1:0]    in_tree,
     input  wire [2:0]               in_pos,     // position (MTP) of the tree's nodes; leaves with its value
@@ -76,8 +87,8 @@ module ot_v41_segtree6 #(
     reg  [1:0] err;
     reg  sv;
     reg  [PW+LW+1:0] st;     // {tree, level, final, err}
-    always @(posedge clk or negedge rst_n) if (!rst_n) sv <= 1'b0; else sv <= sv_a;
-    always @(posedge clk) begin sum <= sum_a; err <= err_a; st <= st_a; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) sv <= 1'b0; else if (ce) sv <= sv_a;
+    always @(posedge clk) if (ce) begin sum <= sum_a; err <= err_a; st <= st_a; end
     // (2) registered count flags {qc == 0, qc == 1, qc == QD} and qr + 1, NQ kept copies of the flags (one per 8-bit
     // slice of the head value; copy 0 also loads the head's tree / final / error / position)
     localparam integer NQ = 4;
@@ -87,8 +98,8 @@ module ot_v41_segtree6 #(
     wire [2:0]    fl [0:NQ-1];
     wire [NQ-1:0] svc;
     for (genvar g = 0; g < NQ; g = g + 1) begin : g_fl
-        ot_v41_kreg #(.W(3), .AR(1), .RV(3'b001)) u_f (.clk(clk), .arst_n(rst_n), .d(fl_nx), .q(fl[g]));
-        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_s (.clk(clk), .arst_n(rst_n), .d(sv_a), .q(svc[g]));
+        ot_v41_kreg #(.W(3), .AR(1), .RV(3'b001)) u_f (.clk(clk), .arst_n(rst_n), .d(ce ? (fl_nx) : (fl[g])), .q(fl[g]));
+        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_s (.clk(clk), .arst_n(rst_n), .d(ce ? (sv_a) : (svc[g])), .q(svc[g]));
     end
     reg [NQ-1:0] uq, byp;
     always @* for (int c = 0; c < NQ; c++) begin
@@ -128,8 +139,8 @@ module ot_v41_segtree6 #(
     reg [NH-1:0] x_oh, x_above;
     reg [NT-1:0] x_toh;
     reg [2:0]    x_pos;
-    always @(posedge clk or negedge rst_n) if (!rst_n) x_v <= 1'b0; else x_v <= e_v;
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) if (!rst_n) x_v <= 1'b0; else if (ce) x_v <= e_v;
+    always @(posedge clk) if (ce) begin
         x_t <= e_t; x_l <= e_l; x_f <= e_f; x_e <= e_e; x_d <= e_d; x_add <= sv;
         x_oh <= e_oh; x_above <= e_above;
         for (ti = 0; ti < NT; ti = ti + 1) x_toh[ti] <= e_t == ti;
@@ -210,57 +221,77 @@ module ot_v41_segtree6 #(
         for (gi = 0; gi < NT; gi = gi + 1)
             if (x_toh[gi]) r_infl = r_infl | (infl[gi] + (t_inc[gi] ? 1'b1 : 1'b0) - (t_dec[gi] ? 1'b1 : 1'b0));
     end
+    // YF: the in-flight read from registers
+    reg same_r;                                        // the x2 event (next cycle) is of the x1 event's tree
+    always @(posedge clk or negedge rst_n) if (!rst_n) same_r <= 1'b0; else if (ce) same_r <= x_v && e_t == x_t;
+    wire [IW-1:0] yi_p = y_infl + 1'b1 - (y_add ? 1'b1 : 1'b0);
+    wire [IW-1:0] yi_n = y_infl - (y_add ? 1'b1 : 1'b0);
+`ifdef ST7_MUTANT_YF
+    wire [IW-1:0] yf_same = yi_n;                      // negative control: the x2 event's own increment ignored
+`else
+    wire [IW-1:0] yf_same = (pair || promote) ? yi_p : yi_n;
+`endif
+    reg  [IW-1:0] r_infl_s;                            // the x1 event's tree's stored count
+    always @* begin
+        r_infl_s = '0;
+        for (int g = 0; g < NT; g++) if (x_toh[g]) r_infl_s = r_infl_s | infl[g];
+    end
+    wire [IW-1:0] r_infl_y = (y_v && same_r) ? yf_same : r_infl_s;
+`ifdef QP_CHECK
+    always @(negedge clk) if (YF != 0 && rst_n && x_v && r_infl_y !== r_infl)
+        begin $display("QP_CHECK FAIL segtree6 YF in-flight forward %m %t", $time); $fatal(1); end
+`endif
 `ifdef ST_MUTANT_FW
     wire r_fw = 1'b0;                                                   // negative control: no same-slot forward
 `else
     wire r_fw = hold && y_t == x_t && y_l == x_l;
 `endif
-    always @(posedge clk or negedge rst_n) if (!rst_n) y_v <= 1'b0; else y_v <= x_v;
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) if (!rst_n) y_v <= 1'b0; else if (ce) y_v <= x_v;
+    always @(posedge clk) if (ce) begin
         y_t <= x_t; y_l <= x_l; y_f <= x_f; y_e <= x_e; y_d <= x_d; y_add <= x_add;
         y_oh <= x_oh; y_above <= x_above; y_toh <= x_toh; y_pos <= x_pos;
-        y_hv <= r_hv; y_ab <= r_ab; y_he <= r_he; y_hd <= r_hd; y_infl <= r_infl;
+        y_hv <= r_hv; y_ab <= r_ab; y_he <= r_he; y_hd <= r_hd; y_infl <= (YF != 0) ? r_infl_y : r_infl;
         y_fw <= r_fw; y_fd <= y_d; y_fe <= y_e;
     end
     // kept copies of the x2 operand for the held writes, one per slot group
     wire [31:0] y_dc [0:NG-1];
     for (genvar g = 0; g < NG; g = g + 1) begin : g_dc
-        ot_v41_kreg #(.W(32)) u_d (.clk(clk), .arst_n(1'b1), .d(x_d), .q(y_dc[g]));
+        ot_v41_kreg #(.W(32)) u_d (.clk(clk), .arst_n(1'b1), .d(ce ? (x_d) : (y_dc[g])), .q(y_dc[g]));
     end
     wire [PW-1:0] out_t = y_t;
     // (1) adder-operand stage: decision and candidates registered, the select from NZ kept copies of z_pair
     localparam integer NZ = 4;
     reg [31:0] z_h, z_d;
     reg        z_v;
-    always @(posedge clk) begin z_h <= u_held; z_d <= y_d; end
-    always @(posedge clk or negedge rst_n) if (!rst_n) z_v <= 1'b0; else z_v <= pair | promote;
+    always @(posedge clk) if (ce) begin z_h <= u_held; z_d <= y_d; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) z_v <= 1'b0; else if (ce) z_v <= pair | promote;
     wire [NZ-1:0] z_pair;
     for (genvar g = 0; g < NZ; g = g + 1) begin : g_zp
 `ifdef ST6_MUTANT_Z
-        ot_v41_kreg #(.W(1)) u_p (.clk(clk), .arst_n(1'b1), .d(g == 1 ? promote : pair), .q(z_pair[g]));   // negative control
+        ot_v41_kreg #(.W(1)) u_p (.clk(clk), .arst_n(1'b1), .d(ce ? (g == 1 ? promote : pair) : (z_pair[g])), .q(z_pair[g]));   // negative control
 `else
-        ot_v41_kreg #(.W(1)) u_p (.clk(clk), .arst_n(1'b1), .d(pair), .q(z_pair[g]));
+        ot_v41_kreg #(.W(1)) u_p (.clk(clk), .arst_n(1'b1), .d(ce ? (pair) : (z_pair[g])), .q(z_pair[g]));
 `endif
     end
     reg [31:0] add_a, add_b;
     reg        add_v;
-    always @(posedge clk) begin
+    always @(posedge clk) if (ce) begin
         for (int b = 0; b < 32; b++) begin
             add_a[b] <= z_pair[b / (32 / (NZ / 2))] ? z_h[b] : z_d[b];
             add_b[b] <= z_pair[NZ / 2 + b / (32 / (NZ / 2))] ? z_d[b] : 1'b0;
         end
     end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) add_v <= 1'b0; else add_v <= z_v;
-    ot_v41_fadd #(.CUT(CUT)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(add_v), .a(add_a), .b(add_b),
+        if (!rst_n) add_v <= 1'b0; else if (ce) add_v <= z_v;
+    ot_v41_fadd #(.CUT(CUT)) u_add (.clk(pclk), .rst_n(rst_n), .valid_in(add_v), .a(add_a), .b(add_b),
                                      .y(sum_a), .err(err_a), .valid_out(sv_a));
-    ot_hdc_delay #(.W(PW + LW + 2), .D(LAT + 2)) u_t (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(PW + LW + 2), .D(LAT + 2)) u_t (.clk(pclk), .rst_n(rst_n),
         .d({y_t, y_l + 1'b1, y_f, y_e | (pair && u_herr)}), .q(st_a));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             qr <= 0; qr1 <= 1; qw <= 0; qc <= 0; have <= '0; herr <= '0; ov <= 1'b0; oerr <= 1'b0; fault <= 1'b0;
             for (ti = 0; ti < NT; ti = ti + 1) infl[ti] <= '0;
-        end else begin
+        end else if (ce) begin
             if (in_v) qw <= qw + 1'b1;
             if (use_q) begin qr <= qr + 1'b1; qr1 <= qr1 + 1'b1; end
             qc <= qc + (in_v ? 1'b1 : 1'b0) - (use_q ? 1'b1 : 1'b0);
@@ -274,7 +305,7 @@ module ot_v41_segtree6 #(
             oerr <= y_v && top && y_e;
         end
     end
-    always @(posedge clk) begin
+    always @(posedge clk) if (ce) begin
         if (in_v) begin qv[qw] <= in_val; qt[qw] <= in_tree; qf[qw] <= in_final; qe[qw] <= in_err; qp[qw] <= in_pos; end
         if (use_q) tpos[h_t] <= h_p;
         opos <= y_pos;
