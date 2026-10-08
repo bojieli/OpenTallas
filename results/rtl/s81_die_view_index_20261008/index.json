@@ -5,13 +5,15 @@
  "s81_opts": "--gen r8 --rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --hc-xface --link-split --sel-xstg --pin-relay --ch-heights 259.2,302.4,388.8,388.8,302.4,259.2,259.2 --bf-per-region 4 --geometry-fix --vch-w 1641.6 --hc-corr 1512 --hub-column-width 1728 --su-mm2 25.61188 --pairs 1792 --q-elem-h 221.4 --pq-place ",
  "counts": {
   "interim": 114,
-  "partitioned": 8,
+  "assembled": 4,
+  "partitioned": 4,
   "closed": 19,
   "macro": 4
  },
  "instances": {
   "interim": 42099,
-  "partitioned": 8,
+  "assembled": 4,
+  "partitioned": 4,
   "closed": 1479,
   "macro": 12556
  },
@@ -22,26 +24,31 @@
    "instances": 512
   },
   "dsfd_bk_collector": {
-   "view": "partitioned",
-   "ports": 5,
+   "view": "assembled",
+   "libs": {
+    "ss": "physical/s81_ph_views/assembled/dsfd_bk_collector/dsfd_bk_collector_ss.lib",
+    "ff": "physical/s81_ph_views/assembled/dsfd_bk_collector/dsfd_bk_collector_ff.lib",
+    "tt": "physical/s81_ph_views/assembled/dsfd_bk_collector/dsfd_bk_collector_tt.lib"
+   },
    "tiles": [
     "dsfd_colt_lane",
     "dsfd_colt_mrg"
    ],
-   "tiles_closed": [
-    "dsfd_colt_lane",
-    "dsfd_colt_mrg"
-   ],
-   "insertion_added_ps": [
+   "instances": 1,
+   "insertion_removed_ps": [
     443.0,
     257.5,
     321.5
    ],
-   "insertion_from": [
-    "dsfd_colt_lane",
-    "dsfd_colt_mrg"
-   ],
-   "instances": 1
+   "glue_worst_ps": {
+    "tt_setup": -266.0,
+    "ss_setup": -578.2,
+    "ff_hold": -122.0,
+    "tt_setup_bal": 1.1,
+    "ss_setup_bal": -244.9,
+    "ff_hold_bal": 13.1
+   },
+   "tiles_ss_as_tt": []
   },
   "dsfd_bk_selector": {
    "view": "partitioned",
@@ -72,26 +79,31 @@
    "instances": 128
   },
   "dsfd_ctrl": {
-   "view": "partitioned",
-   "ports": 5,
+   "view": "assembled",
+   "libs": {
+    "ss": "physical/s81_ph_views/assembled/dsfd_ctrl/dsfd_ctrl_ss.lib",
+    "ff": "physical/s81_ph_views/assembled/dsfd_ctrl/dsfd_ctrl_ff.lib",
+    "tt": "physical/s81_ph_views/assembled/dsfd_ctrl/dsfd_ctrl_tt.lib"
+   },
    "tiles": [
     "dsfd_ctrl_pc",
     "dsfd_ctrl_ctr"
    ],
-   "tiles_closed": [
-    "dsfd_ctrl_ctr",
-    "dsfd_ctrl_pc"
-   ],
-   "insertion_added_ps": [
+   "instances": 1,
+   "insertion_removed_ps": [
     202.0,
     127.5,
     164.8
    ],
-   "insertion_from": [
-    "dsfd_ctrl_pc",
-    "dsfd_ctrl_ctr"
-   ],
-   "instances": 1
+   "glue_worst_ps": {
+    "tt_setup": 111.4,
+    "ss_setup": -25.3,
+    "ff_hold": 110.9,
+    "tt_setup_bal": 235.5,
+    "ss_setup_bal": 58.4,
+    "ff_hold_bal": 87.9
+   },
+   "tiles_ss_as_tt": []
   },
   "dsfd_hstnh_1024": {
    "view": "interim",
@@ -201,7 +213,7 @@
    "view": "closed",
    "libs": {
     "ss": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_E/dsfd_l2r_vr_564x1__hx_E_ss.lib",
-    "tt": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_E/dsfd_l2r_vr_564x1__hx_E_ss.lib (SS as TT)",
+    "tt": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_E/dsfd_l2r_vr_564x1__hx_E_tt.lib",
     "ff": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_E/dsfd_l2r_vr_564x1__hx_E_ff.lib"
    },
    "instances": 1
@@ -239,7 +251,7 @@
    "view": "closed",
    "libs": {
     "ss": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E0/dsfd_m2l_raw_512x1__hl_E0_ss.lib",
-    "tt": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E0/dsfd_m2l_raw_512x1__hl_E0_ss.lib (SS as TT)",
+    "tt": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E0/dsfd_m2l_raw_512x1__hl_E0_tt.lib",
     "ff": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E0/dsfd_m2l_raw_512x1__hl_E0_ff.lib"
    },
    "instances": 1
@@ -261,7 +273,7 @@
    "view": "closed",
    "libs": {
     "ss": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E2/dsfd_m2l_raw_512x1__hl_E2_ss.lib",
-    "tt": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E2/dsfd_m2l_raw_512x1__hl_E2_ss.lib (SS as TT)",
+    "tt": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E2/dsfd_m2l_raw_512x1__hl_E2_tt.lib",
     "ff": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E2/dsfd_m2l_raw_512x1__hl_E2_ff.lib"
    },
    "instances": 1
@@ -296,7 +308,7 @@
    "view": "closed",
    "libs": {
     "ss": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_W1/dsfd_m2l_raw_512x1__hl_W1_ss.lib",
-    "tt": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_W1/dsfd_m2l_raw_512x1__hl_W1_ss.lib (SS as TT)",
+    "tt": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_W1/dsfd_m2l_raw_512x1__hl_W1_tt.lib",
     "ff": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_W1/dsfd_m2l_raw_512x1__hl_W1_ff.lib"
    },
    "instances": 1
@@ -340,7 +352,7 @@
    "view": "closed",
    "libs": {
     "ss": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hix_SW/dsfd_m2l_vr_512x1__hix_SW_ss.lib",
-    "tt": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hix_SW/dsfd_m2l_vr_512x1__hix_SW_ss.lib (SS as TT)",
+    "tt": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hix_SW/dsfd_m2l_vr_512x1__hix_SW_tt.lib",
     "ff": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hix_SW/dsfd_m2l_vr_512x1__hix_SW_ff.lib"
    },
    "instances": 1
@@ -349,7 +361,7 @@
    "view": "closed",
    "libs": {
     "ss": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hqe_SW/dsfd_m2l_vr_512x1__hqe_SW_ss.lib",
-    "tt": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hqe_SW/dsfd_m2l_vr_512x1__hqe_SW_ss.lib (SS as TT)",
+    "tt": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hqe_SW/dsfd_m2l_vr_512x1__hqe_SW_tt.lib",
     "ff": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hqe_SW/dsfd_m2l_vr_512x1__hqe_SW_ff.lib"
    },
    "instances": 1
@@ -550,7 +562,7 @@
    "view": "closed",
    "libs": {
     "ss": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_1024x1__ha_SW/dsfd_r2l_vr_1024x1__ha_SW_ss.lib",
-    "tt": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_1024x1__ha_SW/dsfd_r2l_vr_1024x1__ha_SW_ss.lib (SS as TT)",
+    "tt": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_1024x1__ha_SW/dsfd_r2l_vr_1024x1__ha_SW_tt.lib",
     "ff": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_1024x1__ha_SW/dsfd_r2l_vr_1024x1__ha_SW_ff.lib"
    },
    "instances": 1
@@ -754,29 +766,32 @@
    "instances": 128
   },
   "dsfd_sp_capture": {
-   "view": "partitioned",
-   "ports": 4,
+   "view": "assembled",
+   "libs": {
+    "ss": "physical/s81_ph_views/assembled/dsfd_sp_capture/dsfd_sp_capture_ss.lib",
+    "ff": "physical/s81_ph_views/assembled/dsfd_sp_capture/dsfd_sp_capture_ff.lib",
+    "tt": "physical/s81_ph_views/assembled/dsfd_sp_capture/dsfd_sp_capture_tt.lib"
+   },
    "tiles": [
     "dsfd_capt_x",
     "dsfd_capt_g2",
     "dsfd_capt_ctl"
    ],
-   "tiles_closed": [
-    "dsfd_capt_ctl",
-    "dsfd_capt_g2",
-    "dsfd_capt_x"
-   ],
-   "insertion_added_ps": [
+   "instances": 1,
+   "insertion_removed_ps": [
     283.0,
     180.0,
     231.5
    ],
-   "insertion_from": [
-    "dsfd_capt_x",
-    "dsfd_capt_g2",
-    "dsfd_capt_ctl"
-   ],
-   "instances": 1
+   "glue_worst_ps": {
+    "tt_setup": -257.3,
+    "ss_setup": -564.4,
+    "ff_hold": 4.2,
+    "tt_setup_bal": -139.6,
+    "ss_setup_bal": -530.6,
+    "ff_hold_bal": 37.8
+   },
+   "tiles_ss_as_tt": []
   },
   "dsfd_sp_collective": {
    "view": "partitioned",
@@ -1011,8 +1026,12 @@
    "instances": 68
   },
   "dsfd_svc": {
-   "view": "partitioned",
-   "ports": 10,
+   "view": "assembled",
+   "libs": {
+    "ss": "physical/s81_ph_views/assembled/dsfd_svc/dsfd_svc_ss.lib",
+    "ff": "physical/s81_ph_views/assembled/dsfd_svc/dsfd_svc_ff.lib",
+    "tt": "physical/s81_ph_views/assembled/dsfd_svc/dsfd_svc_tt.lib"
+   },
    "tiles": [
     "dsfd_svc_pc",
     "dsfd_svc_stn",
@@ -1021,28 +1040,21 @@
     "dsfd_svcio_q",
     "dsfd_svcio_x"
    ],
-   "tiles_closed": [
-    "dsfd_svc_pc",
-    "dsfd_svc_stn",
-    "dsfd_svcio_ad",
-    "dsfd_svcio_od",
-    "dsfd_svcio_q",
-    "dsfd_svcio_x"
-   ],
-   "insertion_added_ps": [
+   "instances": 1,
+   "insertion_removed_ps": [
     244.7,
     146.2,
     184.5
    ],
-   "insertion_from": [
-    "dsfd_svc_pc",
-    "dsfd_svc_stn",
-    "dsfd_svcio_ad",
-    "dsfd_svcio_od",
-    "dsfd_svcio_q",
-    "dsfd_svcio_x"
-   ],
-   "instances": 1
+   "glue_worst_ps": {
+    "tt_setup": -384.9,
+    "ss_setup": -685.5,
+    "ff_hold": 18.3,
+    "tt_setup_bal": -289.3,
+    "ss_setup_bal": -545.1,
+    "ff_hold_bal": 95.6
+   },
+   "tiles_ss_as_tt": []
   },
   "dsfd_xstg_515": {
    "view": "interim",
@@ -1108,5 +1120,24 @@
   "file": "/srv/opentallas-scratch/claude/s81-die/src_views_6f9e32822/results/rtl/budgets_20261006/measured_insertion.json",
   "interim_masters": 24,
   "pins": 1304
- }
+ },
+ "swap": {
+  "from_kit": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3/kit_v2",
+  "assembled": [
+   "dsfd_ctrl",
+   "dsfd_svc",
+   "dsfd_sp_capture",
+   "dsfd_bk_collector"
+  ],
+  "tt_extracted": [
+   "dsfd_l2r_vr_564x1__hx_E",
+   "dsfd_m2l_raw_512x1__hl_E0",
+   "dsfd_m2l_raw_512x1__hl_E2",
+   "dsfd_m2l_raw_512x1__hl_W1",
+   "dsfd_m2l_vr_512x1__hix_SW",
+   "dsfd_m2l_vr_512x1__hqe_SW",
+   "dsfd_r2l_vr_1024x1__ha_SW"
+  ]
+ },
+ "views_root": "/srv/opentallas-scratch/claude/s81-die/src_assemble_6a15d6571"
 }

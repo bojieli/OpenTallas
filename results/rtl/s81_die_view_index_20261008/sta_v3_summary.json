@@ -1,0 +1,110 @@
+{
+ "schema": "opentallas.s81.die_sta_refresh.v1",
+ "die": "m221pq_r3 layer1",
+ "parasitics": "r3 full-die GRT (grt/die_grt.spef)",
+ "host": "ot-epyc3",
+ "kit": "m221pq_r3/kit_v3 = kit_v2 die.v + tools/s81/kit_swap_views.py (views root src_assemble_6a15d6571)",
+ "run": {
+  "start": "2026-10-08T23:13:41Z",
+  "end": "2026-10-08T23:26:30Z",
+  "peak_rss_gb": 24.6
+ },
+ "policy": "option B: TT setup, FF hold, SS sensitivity; uncertainty 85 setup / 75 hold with planned per-sink latency",
+ "wns_tns_ps": {
+  "placeholder_kit": {
+   "tt": [
+    -244.2,
+    null
+   ],
+   "ff": [
+    -84.9,
+    -129000000.0
+   ],
+   "ss": [
+    -291.2,
+    null
+   ]
+  },
+  "sta_v2_views": {
+   "tt": [
+    -244.2,
+    -558035.6
+   ],
+   "ff": [
+    -823.8,
+    -410870848.0
+   ],
+   "ss": [
+    -354.7,
+    -2483633.2
+   ]
+  },
+  "sta_v3_assembled": {
+   "tt": [
+    -244.2,
+    -558035.6
+   ],
+   "ff": [
+    -823.8,
+    -410124768.0
+   ],
+   "ss": [
+    -354.7,
+    -2508231.0
+   ]
+  }
+ },
+ "violating_endpoints": {
+  "sta_v2": {
+   "tt": 8401,
+   "ff": 2994868
+  },
+  "sta_v3": {
+   "tt": 8401,
+   "ff": 2986002,
+   "ss": 14805
+  }
+ },
+ "slab_input_worst_ps": {
+  "sta_v2": {
+   "tt": {
+    "svc": 466.3,
+    "capture": 895.6,
+    "collector": 985.9
+   },
+   "ff": {
+    "svc": -128.6,
+    "capture": -233.7,
+    "collector": -307.4
+   },
+   "ss": {
+    "svc": 514.4,
+    "capture": 900.1,
+    "collector": 1060.4
+   }
+  },
+  "sta_v3": {
+   "tt": {
+    "svc": 288.2,
+    "capture": 685.5,
+    "collector": 675.5
+   },
+   "ff": {
+    "svc": -84.1,
+    "capture": -187.8,
+    "collector": -260.8
+   },
+   "ss": {
+    "svc": 114.6,
+    "capture": 638.8,
+    "collector": 687.3
+   }
+  }
+ },
+ "notes": [
+  "ctrl has no constrained die-facing endpoint (its only die input is rst, false-pathed; rd is an output; phy inout has no arcs)",
+  "TT/FF/SS die WNS paths are ck_col_0 relay paths (y_rt_*, bs12->e12), not through the swapped masters",
+  "3 hend views stay SS-as-TT: hq_SW / hco_SW / hr_W5 routed DBs were deleted from EPYC2 scratch2 (disk cleanup)",
+  "a first sta_v3 run (22:59Z) was discarded: an orphaned die_sta.py kit build rewrote kit_v3 mid-run"
+ ]
+}
