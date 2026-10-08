@@ -25,6 +25,10 @@ POLL = float(os.environ.get('FLEET_VIZ_POLL', '5'))
 BIND = os.environ.get('FLEET_VIZ_BIND', '127.0.0.1')
 PORT = int(os.environ.get('FLEET_VIZ_PORT', '8765'))
 STATUS_MD = pathlib.Path(os.environ.get('FLEET_VIZ_STATUS_MD', '/tmp/claude-review-20261003/CLOSURE_LOOP_STATUS.md'))
+LEDGER = pathlib.Path(os.environ.get('FLEET_VIZ_LEDGER', '/tmp/claude-review-20261003/CLOSURE_LOOP_LEDGER.md'))
+VERDICT_RX = re.compile(r'^(CLOSED|NOT CLOSED|NEEDS_RTL|NEEDS_HUMAN|NEEDS_BUDGET|INVALID|REFUSED|FAILED|SMOKE_OK)\b')
+VERDICT_ST = {'CLOSED', 'NOT CLOSED', 'NEEDS_RTL', 'NEEDS_HUMAN', 'NEEDS_BUDGET', 'INVALID', 'REFUSED', 'FAILED', 'SMOKE_OK'}
+SLACK_RX = re.compile(r'SS ([+-]?[\d.]+|None) / FF ([+-]?[\d.]+|None) ps[ /]*(?:DRC (\d+))?')
 ACTIVE = ('RUNNING', 'SYNC', 'ECO', 'READY', 'QUEUED')
 JOBS = pathlib.Path(os.environ.get('FLEET_VIZ_JOBS', os.path.expanduser('~/.local/state/closure_loop/jobs')))
 CTL = pathlib.Path(os.environ.get('XDG_RUNTIME_DIR', '/tmp')) / 'fleet-viz-ssh'
@@ -118,9 +122,31 @@ def status_md():
     out['terminal'] = out['terminal'][:60]
     return out
 
+def _num(x):
+    try: return float(x)
+    except (TypeError, ValueError): return None
+
+def classify(status, setup, hold, text):
+    if status in ('CLOSED', 'SMOKE_OK'): return 'closed'
+    if (setup is not None and setup < 0) or (hold is not None and hold < 0) or status == 'NEEDS_BUDGET': return 'timing'
+    return 'flow'
+
+def verdict(t, name, block, status, text, host, detail, job):
+    m = SLACK_RX.search(text)
+    setup, hold, drc = (_num(m.group(1)), _num(m.group(2)), _num(m.group(3))) if m else (None, None, None)
+    if job and job['status'] == status and job.get('setup') is not None and setup is None:
+        setup, hold, drc = job['setup'], job['hold'], job['drc']
+    tt = bool(job and job['setup_corner'] == 'TT') or bool(re.search(r'(-|_)(tt|tc)(-|_|$)', name or ''))
+    why = text[len(status):].lstrip(': ')
+    if status == 'CLOSED': why = re.sub(r'^SS \S+ / FF \S+ ps DRC \d+ \|?\s*', '', why)
+    return dict(t=t, name=name, block=block, status=status, why=why[:400], detail=(detail or '')[:300], host=host,
+                setup=setup, hold=hold, drc=drc, corner='TT' if tt else 'SS', target=('TT' if tt else 'SS') + '>=0 / FF>=0',
+                kind=classify(status, setup, hold, text), cat=job['cat'] if job else 'Other')
+
 class Closures:
     def __init__(self):
-        self.cache = {}; self.data = {}; self.active = []; self.lock = threading.Lock()
+        self.cache = {}; self.data = {}; self.active = []; self.verdicts = []; self.vver = 0
+        self.lmt = None; self.lrows = []; self.lock = threading.Lock()
         threading.Thread(target=self.run, daemon=True, name='closures').start()
 
     def scan(self):
@@ -149,6 +175,7 @@ class Closures:
         for j in closed:
             k = 23 - (hour0 - (int(j['updated']) // 3600) * 3600) // 3600
             if 0 <= k < 24: bins[j['cat']][k] += 1
+        self.scan_verdicts(now)
         active = sorted((j for j in jobs if j['status'] in ACTIVE), key=lambda j: (j['host'] or '~', j['name']))
         with self.lock:
             self.active = active
@@ -157,6 +184,39 @@ class Closures:
                              closed_24h_by_cat=dict(collections.Counter(j['cat'] for j in closed if j['updated'] >= day_ago)),
                              closed_total=len(closed), recent=closed[-30:][::-1],
                              closed_hourly=dict(start=hour0 - 23 * 3600, bins={k: v for k, v in bins.items() if any(v)}))
+
+    def scan_verdicts(self, now):
+        try: mt = LEDGER.stat().st_mtime
+        except OSError: mt = None
+        if mt != self.lmt:   # (t, name, block, status, text, host, detail) from the ledger verdict lines
+            rows = []
+            try: lines = LEDGER.read_text(errors='replace').splitlines()
+            except OSError: lines = []
+            for i, line in enumerate(lines):
+                if not line.startswith('- 20'): continue
+                f = line[2:].split(' | ')
+                if len(f) < 4: continue
+                last = f[-1] if ':/' in f[-1] else ''
+                text = ' | '.join(f[3:-1] if last else f[3:]).strip()
+                mm = VERDICT_RX.match(text)
+                if not mm: continue
+                det = lines[i + 1].strip()[7:].strip() if i + 1 < len(lines) and lines[i + 1].lstrip().startswith('detail:') else ''
+                rows.append((parse_ts(f[0]), f[1], f[2].split(' @ ')[0], mm.group(1), text, last.split(':', 1)[0], det))
+            self.lmt, self.lrows = mt, rows
+        byname = {j['name']: j for _, j in self.cache.values()}
+        seen = {(r[1], r[3]) for r in self.lrows}
+        out = [verdict(*r, byname.get(r[1])) for r in self.lrows]
+        for j in byname.values():   # final states the ledger does not carry
+            if j['status'] in VERDICT_ST and (j['name'], j['status']) not in seen:
+                out.append(verdict(j['updated'], j['name'], j['block'], j['status'],
+                                   j['status'] + ': ' + (j['reason'] or ''), j['host'] or '', '', j))
+        out.sort(key=lambda v: -v['t'])
+        day = now - 86400
+        out = [v for i, v in enumerate(out) if i < 200 or v['t'] >= day][:600]
+        key = (len(out), out[0]['t'] if out else 0, out[0]['name'] if out else '')
+        with self.lock:
+            if key != getattr(self, '_vkey', None): self._vkey = key; self.vver += 1
+            self.verdicts = out
 
     def run(self):
         while True:
@@ -212,7 +272,7 @@ def build(safe):
                           closed_total=cl.get('closed_total', 0), running_by_cat=cl.get('running_by_cat', {}),
                           closed_24h_by_cat=cl.get('closed_24h_by_cat', {}),
                           closed_hourly=cl.get('closed_hourly', dict(start=0, bins={}))),
-                hist_hosts=HIST_HOSTS if safe else [h.cfg.get('name', h.cfg['id']) for h in HOSTS], history=list(HISTORY), recent=recent)
+                vver=None if safe else CLOSURES.vver, hist_hosts=HIST_HOSTS if safe else [h.cfg.get('name', h.cfg['id']) for h in HOSTS], history=list(HISTORY), recent=recent)
 
 def ticker():
     n = 0
@@ -273,6 +333,12 @@ class H(BaseHTTPRequestHandler):
             rows = [dict(j, label=lab.get(j['host'], j['host'] or 'unplaced')) for j in act]
             body = json.dumps(dict(t=time.time(), jobs=rows, status=status_md(), hosts=[h.cfg.get('name', h.cfg['id']) for h in HOSTS]), separators=(',', ':'))
             return self.send(200, body.encode(), 'application/json')
+        if u.path == '/api/verdicts':
+            if safe: return self.send(403, b'{"safe":true}', 'application/json')
+            lab = {h.cfg['id']: h.cfg.get('name', h.cfg['id']) for h in HOSTS}
+            with CLOSURES.lock: vs, ver = list(CLOSURES.verdicts), CLOSURES.vver
+            rows = [dict(v, host=lab.get(v['host'], v['host'])) for v in vs]
+            return self.send(200, json.dumps(dict(v=ver, verdicts=rows), separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/stream':
             self.send_response(200); self.send_header('Content-Type', 'text/event-stream')
             self.send_header('Cache-Control', 'no-store'); self.send_header('X-Accel-Buffering', 'no'); self.end_headers()

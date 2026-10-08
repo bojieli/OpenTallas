@@ -58,6 +58,27 @@ canvas.chart{width:100%;display:block}
 .closepanel.boom{animation:boom 1.6s ease-out}
 @keyframes boom{0%{box-shadow:0 0 0 0 #ffd23fcc,0 0 60px #ff5d73aa}100%{box-shadow:0 0 0 22px #ffd23f00,0 10px 40px #ff5d7314}}
 .flame{display:inline-block;width:10px;height:10px;border-radius:50%;background:radial-gradient(#ffd23f,#ff5d73);box-shadow:0 0 12px #ff5d73;animation:pulse 1.2s infinite;margin-right:6px}
+.vctl{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:-2px 0 8px;font:11.5px var(--mono)}
+.vctl select{background:#0b1020;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:3px 6px;font:11.5px var(--mono)}
+#vfeed{list-style:none;margin:0;padding:0 4px 0 0;height:640px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2a3558 transparent}
+#vfeed li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:7px 8px;border-bottom:1px solid #141c33;border-radius:8px;animation:slidein .7s ease-out;border-left:3px solid transparent}
+#vfeed .vs{grid-row:1/4;font:800 10px var(--mono);padding:4px 6px;border-radius:6px;color:#05070d;text-align:center;min-width:86px}
+#vfeed .bk{font:800 14px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#vfeed .bk small{color:var(--dim);font-weight:400;font-size:11px}
+#vfeed .jn,#vfeed .why{grid-column:2;color:var(--dim);font:11px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#vfeed .why{color:#b9c2dc}
+#vfeed .sl{grid-column:3;grid-row:1/4;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+#vfeed .sl span{font:700 12px var(--mono);font-variant-numeric:tabular-nums;padding:1px 6px;border-radius:5px;white-space:nowrap}
+#vfeed .sl small{color:var(--faint);font:11px var(--mono)}
+.p{background:#4ade801f;color:var(--ok)}.n{background:#ff5d7326;color:var(--hot)}.z{background:#8a97b81a;color:var(--dim)}
+#vfeed li.k-closed{border-left-color:#4ade80}#vfeed li.k-closed .vs{background:#4ade80}
+#vfeed li.k-timing{border-left-color:#ff8a4d;background:linear-gradient(90deg,#ff5d7312,transparent 60%)}#vfeed li.k-timing .vs{background:linear-gradient(135deg,#ff5d73,#ffb44d)}
+#vfeed li.k-flow{border-left-color:#9b8cc9}#vfeed li.k-flow .vs{background:#9b8cc9}#vfeed li.k-flow .bk{color:#c9c2e6}
+#vfeed li.k-closed.fresh{background:linear-gradient(90deg,#4ade8040,#5ee7ff14 50%,transparent);box-shadow:0 0 18px #4ade8033;animation:slidein .7s ease-out,glowg 2.4s ease-in-out infinite}
+#vfeed li.k-closed.hot{background:linear-gradient(90deg,#4ade801c,transparent 60%)}
+#vfeed li.new{animation:flash 1.8s ease-out 2}
+@keyframes glowg{50%{box-shadow:0 0 28px #4ade8055}}
+#toast.bad{background:linear-gradient(90deg,#ff5d73,#ff8a4d)}#toast.ok{background:linear-gradient(90deg,#4ade80,#5ee7ff)}#toast.flow{background:linear-gradient(90deg,#9b8cc9,#c4b5fd)}
 #toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-220%);z-index:9;background:linear-gradient(90deg,#ff5d73,#ffb44d);color:#05070d;font:800 15px var(--mono);padding:12px 22px;border-radius:12px;box-shadow:0 12px 50px #ff5d7388;transition:transform .5s cubic-bezier(.2,.9,.3,1.3);max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #toast.on{transform:translate(-50%,0)}
 .jobs{margin-top:14px}
@@ -153,8 +174,10 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
     <div class="col">
       <div class="coltitle">Timing closure</div>
       <section class="panel closepanel" id="closepanel">
-        <div class="ptitle"><span><i class="flame"></i>Live closures</span><span id="closeHot"></span></div>
+        <div class="ptitle"><span><i class="flame"></i><span id="feedTitle">Live closures</span></span><span id="closeHot"></span></div>
+        <div class="vctl" id="vctl" hidden><span id="vchips"></span><select id="vTgt"><option value="">all targets</option><option value="TT">TT ≥0 / FF ≥0</option><option value="SS">SS ≥0 / FF ≥0</option></select></div>
         <ul class="ticker" id="ticker"></ul>
+        <ul id="vfeed" hidden></ul>
       </section>
       <section class="panel">
         <div class="ptitle"><span>Closure loop</span></div>
@@ -198,6 +221,8 @@ const qs = new URLSearchParams(location.search);
 const SAFE = qs.get('safe') === '1';
 const Q = SAFE ? '?safe=1' : '';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
+const ls = k => { try { return JSON.parse(localStorage.getItem('fv3.' + k)); } catch (e) { return null; } };
+const lsw = (k, v) => { try { localStorage.setItem('fv3.' + k, JSON.stringify(v)); } catch (e) {} };
 const sgn = v => v == null ? '?' : (v >= 0 ? '+' : '') + Number(v).toFixed(1);
 const CATS = ['Qwen ROM', 'DeepSeek S81', 'HBM accelerator', 'Other'];
 const CATCOL = {'Qwen ROM':'#7c9cff','HBM accelerator':'#38e1c6','DeepSeek S81':'#ffb44d','Other':'#c084fc'};
@@ -442,7 +467,8 @@ function updateLoop(d) {
   seen = new Set(d.recent.map(keyOf));
   const now = Date.now() / 1000;
   const hr = d.recent.filter(r => now - r.t < 3600).length;
-  $('closeHot').innerHTML = `<b style="color:#ffd23f">${hr}</b> in the last hour · ${fmt(L.closed_today)} blocks today`;
+  if (SAFE) $('closeHot').innerHTML = `<b style="color:#ffd23f">${hr}</b> in the last hour · ${fmt(L.closed_today)} blocks today`;
+  if (!SAFE) return;
   $('ticker').innerHTML = d.recent.slice(0, 20).map(r => {
     const cls = [fresh.includes(r) ? 'new' : '', now - r.t < 900 ? 'fresh' : now - r.t < 3600 ? 'hot' : ''].join(' ');
     const sl = r.setup !== undefined ? `<span class="${r.setup < 0 ? 'neg' : ''}">${r.setup_corner} ${sgn(r.setup)} ps</span><span class="${r.hold < 0 ? 'neg' : ''}">FF ${sgn(r.hold)} ps</span>` : '';
@@ -476,7 +502,7 @@ function onData(d) {
   const gp = d.hosts.flatMap(h => h.gpu || []);
   $('cpu-stats').innerHTML = `<span>hosts up <b>${T.hosts_up}/${d.hosts.length}</b></span><span>containers <b>${fmt(T.docker)}</b></span>` +
     (gp.length ? `<span>GPU <b>${gp[0].util}%</b> · ${fmt(gp[0].mem_used)}/${fmt(gp[0].mem_total)} GB</span>` : '');
-  updateHosts(d); updateLoop(d); drawCpu(); drawClosures();
+  updateHosts(d); updateLoop(d); if (!SAFE && d.vver != null && d.vver !== VV) loadVerdicts(d.vver); drawCpu(); drawClosures();
   areaT0 = performance.now();
   $('foot').textContent = (d.safe ? 'share-safe view · ' : 'INTERNAL view (?safe=1 to share) · ') + `updates every ${d.poll} s`;
 }
@@ -490,12 +516,55 @@ function connect() {
 }
 connect();
 
+// ---- verdict feed (internal view): every terminal verdict, newest first
+const KINDS = [['', 'All'], ['closed', 'Closed'], ['timing', 'Failed timing'], ['flow', 'Flow failures']];
+const VF = Object.assign({kind: '', tgt: ''}, ls('vf') || {});
+let VV = null, VD = [], vseen = null;
+function loadVerdicts(v) {
+  VV = v;
+  fetch('/api/verdicts').then(r => r.ok ? r.json() : null).then(d => { if (d) { VD = d.verdicts; renderVerdicts(); } }).catch(() => { VV = null; });
+}
+function renderVerdicts() {
+  lsw('vf', VF);
+  $('ticker').hidden = true; $('vfeed').hidden = false; $('vctl').hidden = false; $('feedTitle').textContent = 'Live verdicts';
+  const now = Date.now() / 1000, key = v => v.t + '|' + v.name + '|' + v.status;
+  const fresh = vseen ? VD.filter(v => !vseen.has(key(v))) : [];
+  vseen = new Set(VD.map(key));
+  const cnt = {}; VD.forEach(v => cnt[v.kind] = (cnt[v.kind] || 0) + 1);
+  $('vchips').innerHTML = KINDS.map(([k, t]) => `<span class="chip ${VF.kind === k ? 'on' : ''}" data-k="${k}" style="${VF.kind === k ? 'background:' + ({closed: '#4ade80', timing: '#ff8a4d', flow: '#9b8cc9'}[k] || '#5ee7ff') : ''}">${t} ${k ? cnt[k] || 0 : VD.length}</span>`).join(' ');
+  $('vTgt').value = VF.tgt;
+  const day = VD.filter(v => now - v.t < 86400);
+  $('closeHot').innerHTML = `<b style="color:#4ade80">${day.filter(v => v.kind === 'closed').length}</b> closed · <b style="color:#ff8a4d">${day.filter(v => v.kind === 'timing').length}</b> timing · <b style="color:#9b8cc9">${day.filter(v => v.kind === 'flow').length}</b> flow · 24 h`;
+  const chip = (lab, v, z) => v == null ? '' : `<span class="${v < 0 ? 'n' : z ? 'z' : 'p'}">${lab} ${sgn(v)}${lab === 'DRC' ? '' : ' ps'}</span>`;
+  const vis = VD.filter(v => (!VF.kind || v.kind === VF.kind) && (!VF.tgt || v.corner === VF.tgt));
+  const fs = new Set(fresh.map(key));
+  const st0 = $('vfeed').scrollTop;
+  $('vfeed').innerHTML = vis.map(v => {
+    const age = now - v.t, cls = ['k-' + v.kind, fs.has(key(v)) ? 'new' : '', age < 900 ? 'fresh' : age < 3600 ? 'hot' : ''].join(' ');
+    const drc = v.drc == null ? '' : `<span class="${v.drc > 0 ? 'n' : 'z'}">DRC ${v.drc}</span>`;
+    const why = v.kind === 'closed' ? (v.why || '') : (v.why + (v.detail ? ' · ' + v.detail : ''));
+    return `<li class="${cls}"><span class="vs">${esc(v.status)}</span>` +
+      `<span class="bk" title="${esc(v.block)}">${esc(v.block)} <small>on ${esc(v.host || '?')} · ${esc(v.target.replace(/>=/g, '≥'))}</small></span>` +
+      `<span class="sl">${chip(v.corner, v.setup)}${chip('FF', v.hold)}${drc}<small>${ago(v.t)}</small></span>` +
+      `<span class="jn" title="${esc(v.name)}">${esc(v.name)}</span><span class="why" title="${esc(why)}">${esc(why)}</span></li>`;
+  }).join('') || '<li><span></span><span class="jn">no verdicts match</span></li>';
+  $('vfeed').scrollTop = fresh.length ? 0 : st0;
+  if (fresh.length) {
+    const v = fresh[0], p = $('closepanel'), tt = $('toast');
+    p.classList.remove('boom'); void p.offsetWidth; p.classList.add('boom');
+    tt.className = v.kind === 'closed' ? 'ok' : v.kind === 'timing' ? 'bad' : 'flow';
+    tt.textContent = `${v.status}  ${v.block}` + (v.setup != null ? `  ${v.corner} ${sgn(v.setup)} / FF ${sgn(v.hold)} ps` : '') + (v.kind === 'flow' ? '  ' + v.why.slice(0, 60) : '') + `  on ${v.host}` + (fresh.length > 1 ? `  (+${fresh.length - 1} more)` : '');
+    void tt.offsetWidth; tt.classList.add('on'); clearTimeout(tt._t); tt._t = setTimeout(() => tt.classList.remove('on'), 6000);
+  }
+}
+$('vchips').onclick = e => { const k = e.target.dataset && e.target.dataset.k; if (k == null) return; VF.kind = k; renderVerdicts(); };
+$('vTgt').onchange = e => { VF.tgt = e.target.value; renderVerdicts(); };
+setInterval(() => { if (VD.length && !SAFE) renderVerdicts(); }, 60000);   // keep ages and fresh/hot highlights current
+
 // ---- live job table (internal view only)
 const STS = ['RUNNING', 'SYNC', 'ECO', 'READY', 'QUEUED'];
 const STCOL = {RUNNING: '#4ade80', SYNC: '#5ee7ff', ECO: '#ffb44d', READY: '#a78bfa', QUEUED: '#8a97b8'};
 const COLS = [['label', 'host'], ['name', 'job'], ['block', 'block'], ['target', 'target'], ['stage', 'stage'], ['status', 'status'], ['age', 'age'], ['ev', 'latest event / wait']];
-const ls = k => { try { return JSON.parse(localStorage.getItem('fv3.' + k)); } catch (e) { return null; } };
-const lsw = (k, v) => { try { localStorage.setItem('fv3.' + k, JSON.stringify(v)); } catch (e) {} };
 const F = Object.assign({host: '', tgt: '', txt: '', grp: true, sts: STS.slice(), sort: 'age', dir: -1}, ls('f') || {});
 let J = null;
 const dur = s => s < 60 ? Math.round(s) + 's' : s < 3600 ? Math.round(s / 60) + 'm' : s < 86400 ? (s / 3600).toFixed(1) + 'h' : (s / 86400).toFixed(1) + 'd';
