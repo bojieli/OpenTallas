@@ -174,10 +174,25 @@
     "source": "main",
     "evidence": "results/rtl/hdc_v41_mtp_isa_evidence.json"
    }
+  },
+  {
+   "bench": "s81_token_l20",
+   "target": "ds_s81",
+   "tier": "nightly",
+   "host": "ot-epyc1tb",
+   "group": "ds_s81",
+   "peak_gb": 60,
+   "label": "DS ROM S81 one-layer token bench at the 1M token: L20 rank 0 on the 1,792 HALF-dedicated + router K-split mapping; every field phase x every region in RTL (field vehicle, q element QX 10), RTL rows chained through the layer VM to the golden layer output; S81 selector (ot_hdc_v41x_sel Q4/W16/K512) on the 1,048,576 golden index scores; mutant = one flipped RTL row bit must FAIL",
+   "expect": {
+    "exact": true,
+    "cycles": null
+   },
+   "last_pass": null,
+   "note": "gaps-design 2026-10-08 (tools/s81/token_bench_l20.py). Units without a stage in this bench (HC, norms, RoPE, compressor, indexer scoring, sparse attention + softmax, SwiGLU, combine; PQ root CAM and the BF HALF_PHL element, which are not field-vehicle slots) are golden-composed: their inputs are proven bit-identical to the golden at every op boundary, their outputs are the golden executor's. Fixture /srv/opentallas-scratch/claude/exactness/fixtures/s81_token_l20 (prep on the checkpoint host)."
   }
  ],
  "not_covered": [
-  "DS ROM S81: no system-level token bench exists (open gate native_token); its rate composes per-component runs (results/rtl/dsrom_1m_allmeasured_20261004).",
+  "DS ROM S81: one-layer token bench s81_token_l20 (L20, field phases + selector in RTL, the rest golden-composed); no full-model S81 token bench (open gate native_token); its rate composes per-component runs (results/rtl/dsrom_1m_allmeasured_20261004).",
   "The closure-block RTL (Qwen die masters r21/r22 stations, controller TMR/cancel, native links; S81 BF/selector/PQ/softmax/gearbox; HBM die views, SU/SFU/packet SRAM) is NOT instantiated by any bench above: those are physical-closure variants verified by their own component benches."
  ],
  "fixtures": {
