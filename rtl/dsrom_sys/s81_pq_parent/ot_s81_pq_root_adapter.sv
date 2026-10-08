@@ -28,10 +28,10 @@ module ot_s81_pq_root_adapter #(
         ot_s81_pq_ret_root_cam #(.D(ROOTD),.QD(ROOTD)) u_root (
             .clk(clk),.rst_n(rst_n),
             .i_v(tree_return[66*r]),.i_t(tree_return[66*r+1 +: 32]),
-            .i_d(tree_return[66*r+33 +: 32]),.i_e(tree_return[66*r+65]),
+            .i_d(tree_return[66*r+33 +: 32]),.i_e(tree_return[66*r+65]),.i_p(1'b0),.up_fault(1'b0),
             .r_v(r_v[r]),.r_row(r_row[16*r +: 16]),.r_pos(r_pos[3*r +: 3]),
             .r_fp32(r_fp32[32*r +: 32]),.r_bf16(r_bf16[16*r +: 16]),
-            .r_e(r_e[r]),.fault(fault));
+            .r_e(r_e[r]),.r_p(),.fault(fault));
         end else begin: g_native
         ot_v41_ret_root #(.D(ROOTD),.QD(ROOTD)) u_root (
             .clk(clk),.rst_n(rst_n),
