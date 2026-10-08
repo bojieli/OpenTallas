@@ -101,11 +101,11 @@ canvas.chart{width:100%;display:block}
 .chip.on{color:#05070d;font-weight:700}
 .tblwrap{max-height:70vh;overflow:auto;border:1px solid var(--line);border-radius:10px}
 table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-variant-numeric:tabular-nums}
-.jt th{position:sticky;top:0;background:#0f1629;color:var(--dim);text-align:left;font-weight:600;padding:5px 7px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;z-index:1}
+.jt th{position:sticky;top:0;background:#0f1629;color:var(--dim);text-align:left;font-weight:600;padding:5px 7px;border-bottom:0;box-shadow:inset 0 -1px 0 var(--line);cursor:pointer;white-space:nowrap;z-index:2}
 .jt th.s::after{content:' \25B4'}.jt th.s.d::after{content:' \25BE'}
 .jt td{padding:3px 7px;border-bottom:1px solid #121a30;white-space:nowrap;max-width:340px;overflow:hidden;text-overflow:ellipsis;vertical-align:top}
 .jt td.ev{max-width:none;white-space:normal;color:var(--dim);min-width:280px}
-.jt tr.grp td{background:#131c35;color:var(--ink);font-weight:700;padding:5px 7px;position:sticky;top:25px}
+.jt tr.grp td{background:#131c35;color:var(--ink);font-weight:700;padding:5px 7px}
 .jt tr.grp td small{color:var(--dim);font-weight:400;margin-left:10px}
 .jt tr:hover td{background:#16203b}
 .st{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;font-weight:700;padding:1px 6px;border-radius:5px;color:#05070d}
@@ -258,6 +258,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
 (() => {
 'use strict';
 const qs = new URLSearchParams(location.search);
+const relabel = o => o && JSON.parse(JSON.stringify(o).replaceAll('DeepSeek S81', 'DeepSeek ROM'));   // old recordings carry the pre-rename label
 const RD = window.REPLAY_DATA || null;
 const REPLAY = !!RD || location.pathname.replace(/\/+$/, '') === '/replay';
 let RT = 0;   // replay clock (recorded epoch seconds)
@@ -268,8 +269,8 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&
 const ls = k => { try { return JSON.parse(localStorage.getItem('fv3.' + k)); } catch (e) { return null; } };
 const lsw = (k, v) => { try { localStorage.setItem('fv3.' + k, JSON.stringify(v)); } catch (e) {} };
 const sgn = v => v == null ? '?' : (v >= 0 ? '+' : '') + Number(v).toFixed(1);
-const CATS = ['Qwen ROM', 'DeepSeek S81', 'HBM accelerator', 'Other'];
-const CATCOL = {'Qwen ROM':'#7c9cff','HBM accelerator':'#38e1c6','DeepSeek S81':'#ffb44d','Other':'#c084fc'};
+const CATS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other'];
+const CATCOL = {'Qwen ROM':'#7c9cff','HBM accelerator':'#38e1c6','DeepSeek ROM':'#ffb44d','Other':'#c084fc'};
 const HOSTCOL = ['#5ee7ff','#a78bfa','#f472b6','#ffb44d','#4ade80','#7c9cff','#38e1c6','#fb7185','#a3e635'];
 const STOPS = [[0,[16,26,51]],[.18,[31,58,138]],[.4,[0,179,214]],[.6,[94,240,176]],[.8,[255,210,63]],[1,[255,93,115]]];
 const LUT = [];
@@ -533,6 +534,7 @@ function updateLoop(d) {
 // ---- data
 let lastT = 0;
 function onData(d) {
+  d = relabel(d);
   if (d.delta) { for (const r of d.history) if (!HIST.length || r[0] > HIST[HIST.length - 1][0]) HIST.push(r); }
   else HIST = d.history.filter(r => r.length >= 6);
   while (HIST.length && HIST[0][0] < d.t - 3700) HIST.shift();
@@ -564,13 +566,13 @@ if (!REPLAY) connect();
 // ---- verdict feed (internal view): every terminal verdict, newest first
 const KINDS = [['', 'All'], ['closed', 'Closed'], ['timing', 'Failed timing'], ['check', 'Check failed'], ['flow', 'Flow failures']];
 const KCOL = {closed: '#4ade80', timing: '#ff8a4d', check: '#f472b6', flow: '#9b8cc9'};
-const VF = Object.assign({kind: '', tgt: ''}, ls('vf') || {});
+const VF = Object.assign({kind: '', tgt: ''}, relabel(ls('vf')) || {});
 let VV = null, VD = [], vseen = null, vFetchT = 0;
 function loadVerdicts(v) {
   VV = v;
   if (REPLAY) { VD = rpVerdicts(); renderVerdicts(); return; }
   vFetchT = Date.now();
-  fetch('/api/verdicts').then(r => r.ok ? r.json() : null).then(d => { if (d) { VD = d.verdicts; renderVerdicts(); } }).catch(() => { VV = null; });
+  fetch('/api/verdicts').then(r => r.ok ? r.json() : null).then(d => { if (d) { VD = relabel(d.verdicts); renderVerdicts(); } }).catch(() => { VV = null; });
 }
 function renderVerdicts() {
   lsw('vf', VF);
@@ -627,7 +629,7 @@ setInterval(() => { tickAges(); if (!REPLAY && !SAFE && VV != null && Date.now()
 const STS = ['RUNNING', 'SYNC', 'ECO', 'READY', 'QUEUED'];
 const STCOL = {RUNNING: '#4ade80', SYNC: '#5ee7ff', ECO: '#ffb44d', READY: '#a78bfa', QUEUED: '#8a97b8'};
 const COLS = [['label', 'host'], ['name', 'job'], ['block', 'block'], ['target', 'target'], ['stage', 'stage'], ['status', 'status'], ['age', 'age'], ['ev', 'latest event / wait']];
-const F = Object.assign({host: '', tgt: '', txt: '', grp: true, sts: STS.slice(), sort: 'age', dir: -1}, ls('f') || {});
+const F = Object.assign({host: '', tgt: '', txt: '', grp: true, sts: STS.slice(), sort: 'age', dir: -1}, relabel(ls('f')) || {});
 let J = null;
 const dur = s => s < 60 ? Math.round(s) + 's' : s < 3600 ? Math.round(s / 60) + 'm' : s < 86400 ? (s / 3600).toFixed(1) + 'h' : (s / 86400).toFixed(1) + 'd';
 function renderJobs() {
@@ -664,7 +666,7 @@ function renderJobs() {
 }
 function pollJobs() {
   if (SAFE) return;
-  fetch('/api/jobs').then(r => r.ok ? r.json() : null).then(d => { if (d) { J = d; $('jobsPanel').hidden = false; renderJobs(); } }).catch(() => {}).finally(() => setTimeout(pollJobs, 10000));
+  fetch('/api/jobs').then(r => r.ok ? r.json() : null).then(d => { if (d) { J = relabel(d); $('jobsPanel').hidden = false; renderJobs(); } }).catch(() => {}).finally(() => setTimeout(pollJobs, 10000));
 }
 $('fHost').onchange = e => { F.host = e.target.value; renderJobs(); };
 $('fTgt').onchange = e => { F.tgt = e.target.value; renderJobs(); };
@@ -681,7 +683,7 @@ const ECOL = {'closed (TT era)': '#4ade80', 'closed (TT re-verified)': '#2dd4bf'
   'flow failure (no live job)': '#c084fc', 'cancelled only': '#8a97b8'};
 const ECOLS = [['element', 'element'], ['category', 'status'], ['purpose', 'what it is'], ['tt', 'TT setup'], ['ff', 'FF hold'], ['ss', 'SS sens.'], ['drc', 'DRC'],
   ['die', 'die µm²'], ['util', 'util'], ['live', 'live'], ['failed', 'failed'], ['jobs', 'jobs'], ['closed_t', 'closed'], ['lt', 'latest event']];
-const EF = Object.assign({tgt: '', txt: '', grp: true, sts: null, sort: 'category', dir: 1}, ls('ef') || {});
+const EF = Object.assign({tgt: '', txt: '', grp: true, sts: null, sort: 'category', dir: 1}, relabel(ls('ef')) || {});
 let ED = null;
 const esgn = x => x == null ? "" : (x > 0 ? "+" : "") + x.toFixed(1);
 const ecls = x => x == null ? "en" : x < 0 ? "en eneg" : "en epos";
@@ -735,7 +737,7 @@ function renderElements() {
   $('eBody').innerHTML = html || `<tr><td colspan="${ECOLS.length}">no matching elements</td></tr>`;
 }
 function pollElements() {
-  fetch('/api/elements' + Q).then(r => r.ok ? r.json() : null).then(d => { if (d && d.t) { ED = d; renderElements(); } }).catch(() => {}).finally(() => setTimeout(pollElements, 60000));
+  fetch('/api/elements' + Q).then(r => r.ok ? r.json() : null).then(d => { if (d && d.t) { ED = relabel(d); renderElements(); } }).catch(() => {}).finally(() => setTimeout(pollElements, 60000));
 }
 $('eTgt').onchange = e => { EF.tgt = e.target.value; renderElements(); };
 $('eGrp').onchange = e => { EF.grp = e.target.checked; renderElements(); };
@@ -802,6 +804,7 @@ function rpTick(t) {
   $('rclock').innerHTML = `<small>RECORDED ${rPlaying ? '▶ ' + rSpeed + '×' : '❚❚ paused'}${SAFE ? ' · share-safe' : ''}</small>${tstr(RT, true)}`;
 }
 function rpStart(P) {
+  P = relabel(P);
   if (!P || !P.frames || !P.frames.length) { $('rMsg').textContent = 'no recorded frames in this window'; return; }
   RP = P; RP.jdiffs = RP.jdiffs || []; RT = RP.t0 = Math.max(P.t0, P.frames[0][0]); RP.t1 = Math.min(P.t1, P.frames[P.frames.length - 1][0]);
   $('rScrub').max = Math.max(1, Math.round(RP.t1 - RP.t0));

@@ -86,7 +86,7 @@ class Host:
 # ---------------------------------------------------------------- closure loop
 CATS = [('Qwen ROM', re.compile(r'qwen|^q[a-z]*_|^qfd|^qrom', re.I)),
         ('HBM accelerator', re.compile(r'hbm', re.I)),
-        ('DeepSeek S81', re.compile(r's81|dsrom|dsfd|^ds[_-]|deepseek|wcol|v41', re.I))]
+        ('DeepSeek ROM', re.compile(r's81|dsrom|dsfd|^ds[_-]|deepseek|wcol|v41', re.I))]
 
 def category(job):
     s = job.get('spec', {})

@@ -28,14 +28,14 @@ FAIL = {'NEEDS_RTL', 'NEEDS_HUMAN', 'INVALID', 'NEEDS_BUDGET', 'REFUSED'}
 CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first trial in flight', 'failed, re-running',
         'revoked, re-running', 'revoked (no live job)', 'needs redesign (no live job)', 'flow failure (no live job)',
         'cancelled only']
-TARGETS = ['Qwen ROM', 'DeepSeek S81', 'HBM accelerator', 'Other']
+TARGETS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other']
 
 # ---------------------------------------------------------------- naming
 STRONG = [('Qwen ROM', re.compile(r'^(qfd|ot_qwen|ot_qfd|qwen)')),
           ('HBM accelerator', re.compile(r'^(hfd|ot_hbm|ot_ha2|ot_su\d|ot_attn|hbm|smh|w2_)')),
-          ('DeepSeek S81', re.compile(r'^(dsfd|ot_dsrom|ot_s81|s81|dshead|dsrom|ot_v41_|bf_|pq_)'))]
+          ('DeepSeek ROM', re.compile(r'^(dsfd|ot_dsrom|ot_s81|s81|dshead|dsrom|ot_v41_|bf_|pq_)'))]
 WEAK = [('Qwen ROM', re.compile(r'qwen')), ('HBM accelerator', re.compile(r'hbm|ha2')),
-        ('DeepSeek S81', re.compile(r's81|dsrom|ds-|deepseek|v41|dshead'))]
+        ('DeepSeek ROM', re.compile(r's81|dsrom|ds-|deepseek|v41|dshead'))]
 
 def target(block, owner='', branch=''):
     n = block.lower()
