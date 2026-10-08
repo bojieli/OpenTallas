@@ -12,6 +12,8 @@ build() {  # build <dir> <defines>
   verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $2 --top-module tb_hbm_norm_split -Mdir $1/obj $srcs \
     --build-jobs ${J:-8} -MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $1/build.log 2>&1
 }
+# the golden memories must be in the snapshot (closure-loop source.paths must list results/rtl/hbm_norm_engine_view_20261006)
+ls $G0/x.mem $G0/eqc.mem > /dev/null 2>&1 || { echo "BENCH_SETUP_FAILED: golden memories missing under $G0"; exit 4; }
 DEF="+define+OT_NSPLIT_G$G"; [ "$M" = mut ] && DEF="$DEF +define+OT_NSPLIT_MUT"
 mkdir -p $O/ref $O/dut
 build $O/ref "" & p1=$!
