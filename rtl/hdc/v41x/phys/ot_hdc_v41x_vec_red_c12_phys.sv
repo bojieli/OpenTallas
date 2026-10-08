@@ -134,7 +134,7 @@ module ot_hdc_v41x_vred_slice64_c12m (
     ot_hdc_v41x_vred_slice #(.SL(64), .MLAT(6), .ALAT(7), .RPAD(1), .RSL(1), .ROPI(1)) u (.*);
 endmodule
 
-module ot_hdc_v41x_vred_top1024_c12m (
+module ot_hdc_v41x_vred_top1024_c12m #(parameter integer TSEL = 0, parameter integer FREG = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          v_in,
@@ -159,7 +159,7 @@ module ot_hdc_v41x_vred_top1024_c12m (
     output wire          fault
 );
     ot_hdc_v41x_vred_top #(.N(1024), .LV(6), .AW(24), .MW(9), .MLAT(6), .ALAT(7), .RPAD(1), .RSL(2), .RTAP(1),
-                           .ROUT(2), .ROGS(2), .SL(64), .ROPI(1), .RKC(1)) u (.*);
+                           .ROUT(2), .ROGS(2), .SL(64), .ROPI(1), .RKC(1), .TSEL(TSEL), .FREG(FREG)) u (.*);
 endmodule
 
 // ---------------------------------------------------------------------------
@@ -210,7 +210,10 @@ module ot_hdc_v41x_vred_slice64_c12s (
     ot_hdc_v41x_vred_pinreg #(.W(1), .D(1), .RST(1)) u_pf (.clk(clk), .rst_n(rst_n), .d(c_f), .q(fault_o));
 endmodule
 
-module ot_hdc_v41x_vred_top1024_c12s (
+module ot_hdc_v41x_vred_top1024_c12s #(
+    parameter integer TSEL = 1,          // hbm-blocks 2026-10-07 (s2): tap select AND-OR (0 cycles)
+    parameter integer FREG = 1           //   fault OR registered in partial terms (+1 cycle on fault only)
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          v_in,
@@ -254,7 +257,7 @@ module ot_hdc_v41x_vred_top1024_c12s (
     ot_hdc_v41x_vred_pinreg #(.W(7680), .D(1)) u_pl (.clk(clk), .rst_n(rst_n), .d(lv_in), .q(p_lv));
     ot_hdc_v41x_vred_pinreg #(.W(16), .D(1), .RST(1)) u_ps (.clk(clk), .rst_n(rst_n), .d(sfault_in), .q(p_sf));
     wire [127:0] c_we; wire [3071:0] c_addr; wire [4095:0] c_data; wire [8:0] c_meta; wire c_ev, c_busy, c_fault;
-    ot_hdc_v41x_vred_top1024_c12m u (.clk(clk), .rst_n(rst_n), .v_in(tv[TD]), .mx_in(p_mx), .lt_in(p_lt),
+    ot_hdc_v41x_vred_top1024_c12m #(.TSEL(TSEL), .FREG(FREG)) u (.clk(clk), .rst_n(rst_n), .v_in(tv[TD]), .mx_in(p_mx), .lt_in(p_lt),
         .span_in(p_span), .l_in(p_l), .last_in(p_last), .nres_in(p_nres), .rnd_in(p_rnd), .rbase_in(p_rbase),
         .rsh_in(p_rsh), .meta_in(p_meta), .lv_in(p_lv), .sfault_in(p_sf), .o_we(c_we), .o_addr(c_addr),
         .o_data(c_data), .o_meta(c_meta), .o_ev(c_ev), .busy(c_busy), .fault(c_fault));

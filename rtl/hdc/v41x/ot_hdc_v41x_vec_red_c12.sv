@@ -315,6 +315,12 @@ module ot_hdc_v41x_vred_top #(
     parameter integer SL = 64,
     parameter integer ROPI = 0          // ALAT here is the op latency (the adder's + ROPI)
     , parameter integer RKC = 0         // margin: kept copies of the tap-hit sources and of the tap tag (no added cycle)
+    , parameter integer TSEL = 0        // hbm-blocks 2026-10-07 (RSL >= 1): the tap tag/valid select from a kept register of
+                                        //   the hit word already reduced to its priority one-hot (the last hit level wins,
+                                        //   as the loop): an AND-OR instead of a LC+1-deep priority chain (SAFE top
+                                        //   6f2d14e36 g_hitr.u_h -> u_tap line -46.3 ps / 17 levels); same values, 0 cycles
+    , parameter integer FREG = 0        // 1: the status fault OR registered in four partial terms first (SAFE top
+                                        //   g_tree err -> fault -166.06 ps / 13 levels): +1 cycle on fault only
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -497,11 +503,29 @@ module ot_hdc_v41x_vred_top #(
                 assign hw[hh*NC + g] = hq[hh];
             end
         end
+        if (TSEL != 0) begin : g_ts
+            // priority one-hot of hp (highest set level), registered beside the hit register: hs == prio(hit)
+            reg [LC:0] hsp;
+            integer hq2;
+            always @(*) begin
+                hsp = {(LC+1){1'b0}};
+                for (hq2 = 0; hq2 <= LC; hq2 = hq2 + 1) if (hp[hq2]) hsp = {{LC{1'b0}}, 1'b1} << hq2;
+            end
+            wire [LC:0] hs;
+            ot_hdc_v41x_red_kreg #(.W(LC + 1)) u_hs (.clk(clk), .rst_n(rst_n), .d(hsp), .q(hs));
+            always @(*) begin
+                tap_vc = |hit; tap_xc = {NC*32{1'b0}}; tap_tc = {TAG{1'b0}};
+                for (h = 0; h <= LC; h = h + 1) tap_tc = tap_tc | (tt[h] & {TAG{hs[h]}});
+                for (h = 0; h <= LC; h = h + 1) for (kw = 0; kw < NC; kw = kw + 1)
+                    if (hw[h*NC + kw]) tap_xc[32*kw +: 32] = lvl[h][32*kw +: 32];
+            end
+        end else begin : g_tp
         always @(*) begin
             tap_vc = 1'b0; tap_xc = {NC*32{1'b0}}; tap_tc = {TAG{1'b0}};
             for (h = 0; h <= LC; h = h + 1) if (hit[h]) begin tap_vc = 1'b1; tap_tc = tt[h]; end
             for (h = 0; h <= LC; h = h + 1) for (kw = 0; kw < NC; kw = kw + 1)
                 if (hw[h*NC + kw]) tap_xc[32*kw +: 32] = lvl[h][32*kw +: 32];
+        end
         end
         assign tap_multi = ($countones(hit) > 1);
     end else begin : g_hitc
@@ -681,13 +705,23 @@ module ot_hdc_v41x_vred_top #(
         assign {s_pk[ko], s_tt[ko*TAG +: TAG], s_tv[ko], s_rx[32*ko +: 32], s_rt[ko*TAG +: TAG]} = obf[(ko/GS)*BW +: BW];
     end endgenerate
     integer k;
+    wire fault_n;
+    generate if (FREG != 0) begin : g_freg
+        reg fa, fb, fc, fd;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin fa <= 1'b0; fb <= 1'b0; fc <= 1'b0; fd <= 1'b0; end
+            else begin fa <= |sf_d; fb <= |tf; fc <= |sf; fd <= top_bad || tap_multi || res_multi; end
+        assign fault_n = fa || fb || fc || fd;
+    end else begin : g_fcomb
+        assign fault_n = (|sf_d) || (|tf) || (|sf) || top_bad || tap_multi || res_multi;
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin o_we <= 0; o_ev <= 1'b0; fault <= 1'b0; end
         else begin
             for (k = 0; k < NC; k = k + 1)
                 o_we[k] <= s_pk[k] ? (k < s_tt[k*TAG + TAG-11 -: 8]) : (s_tv[k] && k == 0);
             o_ev <= opk || otr;
-            fault <= (|sf_d) || (|tf) || (|sf) || top_bad || tap_multi || res_multi;
+            fault <= fault_n;
         end
     end
     always @(posedge clk) begin

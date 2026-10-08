@@ -8,6 +8,7 @@ module tb_red_safe;
     parameter integer NCYC = 20000;
     parameter integer SEED = 1;
     localparam integer D = 4;
+    parameter integer FL = 1;            // extra fault latency of the DUT top (c12s FREG)
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
     reg v; reg [32767:0] x; reg [1023:0] live; reg mx, sq; reg [3:0] lt; reg span; reg [2:0] l; reg last;
@@ -29,16 +30,17 @@ module tb_red_safe;
         .sfault_in(dsf), .o_we(dwe), .o_addr(da), .o_data(dd), .o_meta(dm), .o_ev(dev), .busy(db), .fault(df));
     // reference outputs delayed D
     reg [127:0] hwe [0:D-1]; reg [3071:0] ha [0:D-1]; reg [4095:0] hd [0:D-1]; reg [8:0] hm [0:D-1];
-    reg hev [0:D-1]; reg hf [0:D-1]; reg hb [0:D-1];
+    reg hev [0:D-1]; reg hf [0:D+1]; reg hb [0:D-1];
     integer i, cyc = 0, mism = 0, ev = 0, bmis = 0, seed = SEED, w;
     always @(posedge clk) begin
         for (i = D-1; i > 0; i = i - 1) begin hwe[i] <= hwe[i-1]; ha[i] <= ha[i-1]; hd[i] <= hd[i-1]; hm[i] <= hm[i-1];
-            hev[i] <= hev[i-1]; hf[i] <= hf[i-1]; hb[i] <= hb[i-1]; end
+            hev[i] <= hev[i-1]; hb[i] <= hb[i-1]; end
+        for (i = D+1; i > 0; i = i - 1) hf[i] <= hf[i-1];
         hwe[0] <= rwe; ha[0] <= ra; hd[0] <= rd; hm[0] <= rm; hev[0] <= rev; hf[0] <= rf; hb[0] <= rb;
     end
     always @(negedge clk) if (rst_n && cyc > D + 2) begin
-        if (dwe !== hwe[D-1] || (|dwe && (da !== ha[D-1] || dd !== hd[D-1])) || dev !== hev[D-1] || (dev && dm !== hm[D-1]) || df !== hf[D-1]) begin
-            mism = mism + 1; if (mism <= 5) $display("MISMATCH cyc=%0d we %0d/%0d ev %0d/%0d f %0d/%0d", cyc, |dwe, |hwe[D-1], dev, hev[D-1], df, hf[D-1]);
+        if (dwe !== hwe[D-1] || (|dwe && (da !== ha[D-1] || dd !== hd[D-1])) || dev !== hev[D-1] || (dev && dm !== hm[D-1]) || df !== hf[D-1+FL]) begin
+            mism = mism + 1; if (mism <= 5) $display("MISMATCH cyc=%0d we %0d/%0d ev %0d/%0d f %0d/%0d", cyc, |dwe, |hwe[D-1], dev, hev[D-1], df, hf[D-1+FL]);
         end
         if (hb[D-1] && !db) bmis = bmis + 1;
         if (|dwe || dev) ev = ev + 1;
