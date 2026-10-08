@@ -52,6 +52,12 @@
   },
   "v3": {
    "v3_commit": "this"
+  },
+  "v4_ps": {
+   "what": "per-port split: 8 x ot_hcoll_port (18 macros, 23 k pre-ABC gates each) + top/core (0.87 M pre-ABC gates, 21 macros)",
+   "slice_job_commit": "47f8fa47f45dcfd133fbe9cd4e1bc95b9ab828d4",
+   "top_commit": "this",
+   "cost": "die-view AR 1160 vs 1152 (sr) vs 1144 (flop)"
   }
  }
 }
