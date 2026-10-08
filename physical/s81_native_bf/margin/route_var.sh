@@ -19,7 +19,7 @@ VA="--$V"
 [ "$V" = unroll ] && { VA="--recut --recut-level 3"; POST="$POST --post-sdc physical/s81_native_bf/margin/u2_mc.sdc"; }
 echo "$(date -Is) START $(hostname) var=$V ss=$SS args=$*" >> $O/MANIFEST
 python3 tools/s81/run_bf_native_physical.py --margin --wc-only --hitfix $VA --period ${BF_PERIOD:-.730} --work $O/work --output $O/physical.json \
-  --util 45 --tag $L --ins-ss $SS --ins-ff $SS --extra="$*" > $O/run.log 2>&1; rc=$?
+  --util ${BF_UTIL:-45} --tag $L --ins-ss $SS --ins-ff $SS --extra="$*" > $O/run.log 2>&1; rc=$?
 echo "rc=$rc" > $O/exit
 if [ $rc -eq 0 ] && [[ " $* " != *"--pnr-stop-after"* ]]; then
   python3 tools/w18/corner_sta.py --orfs-dir $O/work/orfs --macro physical/asap7_memory_macros_v2/ot_rom_4096x274_m8 \
