@@ -3342,6 +3342,16 @@ def main(argv: list[str] | None = None, *,
             args.hold_corners = ",".join(_ot_oc if c.strip() == (args.orfs_corner or "WC") else c.strip()
                                          for c in args.hold_corners.split(","))
         args.orfs_corner = _ot_oc
+    # OPTION B (owner 2026-10-07 20:45): setup signs off at TT.  OT_ORFS_CORNER_OVERRIDE=TC keeps every recipe's corner
+    # NAMES (WC primary, WC,BC hold; the closure loop ships its own WC-scene mm hold session into each snapshot) but
+    # makes the WC corner READ the TT liberties: WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES) and every macro's WC view =
+    # its _tt.lib (fails closed without one).  Setup repair therefore runs at TT; hold stays at BC (FF).  First version
+    # (renaming the corner to TC) died in floorplan report_metrics: STA-0102, the shipped mm session builds scene WC.
+    _ot_cov = os.environ.get("OT_ORFS_CORNER_OVERRIDE", "").strip().upper()
+    if _ot_cov == "TC":
+        ORFS_CORNER_MACRO_TAG["WC"] = "tt"
+        args.orfs_var = list(args.orfs_var or []) + ["WC_NLDM_LIB_FILES=$(TC_NLDM_LIB_FILES)"]
+        print("OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)", file=sys.stderr)
     _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
     if _ot_rhc == "mm":
         # FLOW-HOLD (2026-10-07): multi-mode route-time repair, SS setup (scene WC) + FF hold (scene BC) each under its
