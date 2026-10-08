@@ -24,6 +24,8 @@ in / leaves a flop with its wire inside the block; the element top carries the W
 """
 from __future__ import annotations
 
+import os
+
 import argparse
 import json
 import math
@@ -441,6 +443,9 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
 def config_mk(name, nick, die, macros, extra):
     lib_ss = " ".join(f"/src/{m}/{Path(m).name}_ss.lib" for m in macros)
     lib_ff = " ".join(f"/src/{m}/{Path(m).name}_ff.lib" for m in macros)
+    # OPTION B (2026-10-07): OT_SMH_CORNER=TC routes with setup repair at TT (macro _tt.lib), hold corner BC unchanged
+    _SC = os.environ.get("OT_SMH_CORNER", "WC").strip().upper() or "WC"
+    lib_su = lib_ss if _SC == "WC" else " ".join(f"/src/{m}/{Path(m).name}_tt.lib" for m in macros)
     lefs = " ".join(f"/src/{m}/{Path(m).name}.lef" for m in macros)
     lines = [f"export DESIGN_NICKNAME = {nick}", f"export DESIGN_NAME = {name}", "export PLATFORM = asap7",
              "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in RTL),
@@ -449,12 +454,12 @@ def config_mk(name, nick, die, macros, extra):
              "export SYNTH_REPEATABLE_BUILD = 1", "export SYNTH_HIERARCHICAL = 0", "export SYNTH_MEMORY_MAX_BITS = 65536",
              "export LEC_CHECK = 0", "export TNS_END_PERCENT = 100", "export SETUP_SLACK_MARGIN = 0",
              "export SKIP_REPORT_METRICS = 0", "export REPORT_CLOCK_SKEW = 1",
-             "export CORNER = WC", "export ADDER_MAP_FILE = ", "export ASAP7_USE_VT = RVT", "export SLEW_MARGIN = 30",
-             "export CORNERS = WC BC", f"export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) {lib_ss}",
+             f"export CORNER = {_SC}", "export ADDER_MAP_FILE = ", "export ASAP7_USE_VT = RVT", "export SLEW_MARGIN = 30",
+             f"export CORNERS = {_SC} BC", f"export {_SC}_LIB_FILES = $({_SC}_NLDM_LIB_FILES) {lib_su}",
              f"export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) {lib_ff}",
              "export IO_CONSTRAINTS = /work/pins.tcl", "export GDS_ALLOW_EMPTY = (ot_sram.*|ot_hbm_accel_smh_.*)"]
     if macros:
-        lines += [f"export ADDITIONAL_LEFS = {lefs}", f"export ADDITIONAL_LIBS = {lib_ss}",
+        lines += [f"export ADDITIONAL_LEFS = {lefs}", f"export ADDITIONAL_LIBS = {lib_su}",
                   "export SYNTH_BLACKBOXES = " + " ".join(Path(m).name for m in macros),
                   "export MACRO_PLACEMENT_TCL = /work/macros.tcl"]
     lines += [f"export {k} = {v}" for k, v in extra.items()]
