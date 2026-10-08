@@ -1984,7 +1984,7 @@
       {
        "file": "results/rtl/hbm_sm_su_result_contract_20261007/contract.json",
        "pointer": "summary",
-       "commit": "10989fac4"
+       "commit": "0f11c0dbf"
       }
      ],
      "note": "NOT a native edge today: in the die view the result tree ends in hfd_su's XOR exercise envelope, and in RTL the path runs through the GPU-comparator memory model. Every HBM DS row is a die-view-only result edge until this gate closes. HBM service bf801c49a and the native collective 7a60962c0 are integrated on main, but the actual consumer work is ongoing: no row takes native credit for the 343-cycle path. Alternatives: sm_su_native_edge_proposed / sm_su_store_forward_floor"
@@ -2003,7 +2003,7 @@
       {
        "file": "results/rtl/hbm_sm_su_result_contract_20261007/contract.json",
        "pointer": "summary.native_cycles",
-       "commit": "10989fac4"
+       "commit": "0f11c0dbf"
       }
      ],
      "note": "increment over the published 343 cycles (+0.10 %% AR / +0.05 %% MTP step on the unified candidate); not summed (alternative)"
@@ -2022,7 +2022,7 @@
       {
        "file": "results/rtl/hbm_sm_su_result_contract_20261007/contract.json",
        "pointer": "summary.store_forward_floor_cycles",
-       "commit": "10989fac4"
+       "commit": "0f11c0dbf"
       }
      ],
      "note": "ESTIMATE (floor) that applies if no native edge is built; effect = increment over the published 343 cycles (+19.63 %% AR / +9.99 %% MTP step on the unified candidate; the full 132,520 cycles are 19.68 %% / 10.02 %%, contract.json impact); not summed (alternative)"
@@ -2588,7 +2588,7 @@
     {
      "file": "results/rtl/hbm_sm_su_result_contract_20261007/contract.json",
      "pointer": "summary",
-     "commit": "10989fac4"
+     "commit": "0f11c0dbf"
     }
    ]
   },
@@ -2687,7 +2687,7 @@
   "results/rtl/hbm_collective_cdc_design_20261007/options.json": "06c0cdadfcd9382da8a1efdd67e1b4cf1bf3a860268fc43ef5c57313b440fc03",
   "results/rtl/hbm_collective_full_20261007/storage_model.json": "ed03682d76b4a2448b632953d82898fc3ec46656e782fd83bb4fb224d3a719bc",
   "results/rtl/hbm_sm_command_20261007/protected_component.json": "cf5525b5bc2dad2ac632bcbdc7b26b9f61cce1720a424a82e404b99a5d827f96",
-  "results/rtl/hbm_sm_su_result_contract_20261007/contract.json": "b8a121ab02dca4d133dcdea5c82b04939bc8dd9a66f12f3a8a50d47eecd4258a",
+  "results/rtl/hbm_sm_su_result_contract_20261007/contract.json": "bd7ca0c7224164d2c25c48fc71e989afc9b8f3fae7b49d5779b46248a8bcb6c8",
   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
   "results/rtl/qwen_ctrl_shift_20261007/model.json": "12ca47e170b26b082b3f51a28c6f01684bf943705d6468dd6578e6a08357d123",
   "results/rtl/qwen_ctrl_shift_20261007/qualification.json": "4df6d84d47b0f54ededa60df892d9ec2d6574d81e2e77b90002ccbab98c22249",
