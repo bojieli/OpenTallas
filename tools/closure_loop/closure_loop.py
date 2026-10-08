@@ -94,6 +94,10 @@ WORKERS = 48
 OWN_RUNNING_WEIGHT = 0.6
 HM_DEFAULT_SINCE = "2026-10-06T20:40"
 HM_LOW_SINCE = "2026-10-07T04:17"      # new jobs from here: route hold margin 10 ps, hold closed by the post-route ECO
+# FLOW-HOLD (2026-10-07): jobs created from here route with multi-mode hold repair (OT_ROUTE_HOLD_CORNERS=mm: SS setup +
+# FF hold under the FF sign-off constraints at CTS / global route) and HM_MM route hold margin (applies at FF only)
+MM_SINCE = "2026-10-07T21:00"
+HM_MM = 0.030
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
 STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (2, 8), "export": (2, 8),
@@ -958,7 +962,8 @@ def sync_source(j):
 
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
-           "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh")
+           "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
+           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -985,7 +990,7 @@ def ship_helpers(host, run):
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
         for helper in HELPERS:
-            tf.add(str(HERE / helper), arcname=helper)
+            tf.add(str(HERE / helper), arcname=Path(helper).name)
     if is_local(host):
         os.makedirs(f"{run}/cl", exist_ok=True)
         with tarfile.open(fileobj=io.BytesIO(buf.getvalue())) as tf:
@@ -1023,6 +1028,8 @@ def launch_stage(j, st, cmd):
         # uncertainty overloaded CTS/GRT hold repair (RSZ-0060 buffer-cap deaths, hours-long GRT hold); the post-route
         # hold ECO (rev 2: setup-preserving) carries hold to +18.  Earlier jobs keep 35 ps (same flow on a retry).
         hm_default = 0.010 if j.get("created", "") >= HM_LOW_SINCE else 0.035
+        if j.get("created", "") >= MM_SINCE and j["spec"].get("route_hold_corners", "mm") == "mm":
+            hm_default = HM_MM
         env += f"export HM={j['spec'].get('route_hold_margin_ns', hm_default)}\n"
     if is_local(j["host"]):
         env += f"export OPENTALLAS_ORFS_IMAGE={LOCAL_ORFS_REF}\n"
@@ -1037,11 +1044,30 @@ def launch_stage(j, st, cmd):
         # -- the route SDC's virtual IO clock sits at the SS insertion, so BC showed fake IO hold violations of about the
         # SS-FF insertion difference (thousands of flow hold buffers); FF hold goes to the post-route hold ECO.  Spec
         # "route_hold_corners": "keep" leaves the recipe's own --hold-corners; any other value is passed through.
-        rhc = j["spec"].get("route_hold_corners", "primary")
+        # FLOW-HOLD (2026-10-07): jobs created from MM_SINCE default to "mm" -- route-time repair in a multi-mode session,
+        # scene WC (SS libs, the route SDC: setup) + scene BC (FF libs, the route SDC refreshed + the FF sign-off SDCs:
+        # hold), tools/orfs_hold_mm.tcl.  The FF SDCs are spec "route_ff_sdc" (list), else verdict.post_sdc; a file outside
+        # the snapshot is copied into {SRC}/.ot_mm/ (the flow container mounts only the snapshot).
+        rhc = j["spec"].get("route_hold_corners", "mm" if j.get("created", "") >= MM_SINCE else "primary")
         if rhc != "keep":
             ship_helpers(j["host"], j["run"])
             env += f"export OT_ROUTE_HOLD_CORNERS={shlex.quote(str(rhc))}\n" \
                    f"python3 {j['run']}/cl/hold_corners_patch.py {j['run']}/src\n"
+        if rhc == "mm":
+            ff = j["spec"].get("route_ff_sdc")
+            if ff is None:
+                ff = (j["spec"].get("verdict") or {}).get("post_sdc") or []
+            ff = [f for f in ([ff] if isinstance(ff, str) else ff) if f and "{" not in f]
+            if ff:
+                env += f"mkdir -p {j['run']}/src/.ot_mm\n"
+                rel = []
+                for f in ff:
+                    if f.startswith("/"):
+                        env += f"cp {shlex.quote(f)} {j['run']}/src/.ot_mm/\n"
+                        rel.append(".ot_mm/" + f.rsplit("/", 1)[-1])
+                    else:
+                        rel.append(f)
+                env += f"export OT_MM_FF_SDC={shlex.quote(' '.join(rel))}\n"
     if j.get("resume") and st["kind"] == "route":
         env += "export OT_CL_RESUME=1\n"    # patched run_abi3_physical in the moved snapshot: resume from the checkpoint
     if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)
