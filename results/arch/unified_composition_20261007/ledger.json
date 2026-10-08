@@ -301,6 +301,24 @@
       }
      ],
      "note": "owner decision 2026-10-06: NOT shipped. The shipped composition is the measured exact STREAM4 token (193955 cycles, 144 current-KV checks, next token 18); the protected full-width path has only a cold L0 (exact, 6188 vs 6044 cycles) and full36_r1 FAIL_RUNTIME at L0 cycle 14 (retained). Not a performance gate: 0 cycles, 0 credit; the missing transport protection stays a GAP in no_ecc_inventory"
+    },
+    {
+     "id": "qwen_closure_cost_candidates",
+     "item": "Qwen closure-cost ledger candidates (tile ROM pipe, spine lane stations, lane credit, hub, IO CDC, collective, ctrl domain, CDC m2), upper bound",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "cycles",
+      "AR": 3464
+     },
+     "role": "closure",
+     "source": [
+      {
+       "file": "results/rtl/qwen_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "total_cycles_upper_bound",
+       "commit": "fd6f7805d (branch claude/qwen-blocks-20261007 only)"
+      }
+     ],
+     "note": "upper bound -1.75 %% AR on the 194,226-cycle base: every added cycle assumed exposed on every op; it assumes 325 ME ops a token where the relay record measures 217, so the per-op terms are overstated; nothing adopted until the routes close and the benches pass"
     }
    ],
    "compositions": {
@@ -333,6 +351,19 @@
       "routed_masters"
      ],
      "note": "published + every priced candidate cost (crossbar model, controller SHIFT worst case, forwarded clocks 0)"
+    },
+    "unified_candidate_with_closure_upper": {
+     "cycles": 220345,
+     "AR_tok_s": 5446.0,
+     "status": "priced-candidate",
+     "gated_by": [
+      "vm_me_service",
+      "vm_su_service",
+      "vm_recovery",
+      "die_top_route",
+      "routed_masters"
+     ],
+     "note": "unified_candidate + the Qwen closure-cost ledger upper bound (+3464 cycles; per-op terms overstated)"
     }
    },
    "gates": [
@@ -977,6 +1008,44 @@
      "note": "RTL committed; s81-blocks.log reports bench PASS (tail mean 129 vs 127) but no result record is committed. If it closes it adds +2 cycles a selector segment over the ledger's selector item; not composed"
     },
     {
+     "id": "bf_halfphl_price",
+     "item": "BF HALF_PHL half-rate on dedicated BF pairs (BF16 field phases x2 + 2 a phase), upper bound",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 47.408,
+      "MTP_step": null
+     },
+     "role": "info",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "candidates[bf_halfphl]",
+       "commit": "5a07bf71d (branch claude/s81-bf-ledger-20261007 only)"
+      }
+     ],
+     "note": "AR -7.68 %% / MTP -6.31 %% (upper bound) priced on the option-B 2,304-pair base (AR 1,754.3 -> 1,619.6), which FAILED legal fit -- the relative cost is what transfers; the dedicated allocation's +6 stages / +24 layer dies are not in that composition. On the 1,792 basis the ledger's 1,792 rows still use the older bf_half doubling (-15 %%, upper bound); the HALF_PHL price is the newer, smaller upper bound for the same mechanism. Exact PASS 6d26df595; routes running"
+    },
+    {
+     "id": "s81_die_m221pq",
+     "item": "S81 die re-priced on the m221pq layer1 die: +28 cycles a field phase (round trip 167 + 2 PQ root-row stations = 169 vs 137, less meso 4; was +27)",
+     "status": "priced-candidate",
+     "effect": {
+      "unit": "us",
+      "AR": 1.179,
+      "MTP_step": 1.375
+     },
+     "role": "info",
+     "source": [
+      {
+       "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+       "pointer": "items[s81_die]",
+       "commit": "39e424990 (branch claude/s81-die-20261007 only)"
+      }
+     ],
+     "note": "composed ledger TOTAL AR 1,593.7 (-4.85 %%) / MTP 4,694.7 on the published basis; see composition published_m221pq_die"
+    },
+    {
      "id": "field_phases_1792",
      "item": "Field phase timings of the 1792 geometry (remapped regions, BF/q stage split)",
      "status": "gated-unknown",
@@ -1184,6 +1253,20 @@
       "bf_half_rate_doubling"
      ],
      "note": "published composition + extra stage hops + BF half-rate doubling; field phases at this geometry unmeasured"
+    },
+    "published_m221pq_die": {
+     "AR_tok_s": 1593.7,
+     "MTP_tok_s": 4694.7,
+     "AR_us": 627.471,
+     "MTP_step_us": 885.893,
+     "tau": 4.159,
+     "status": "priced-candidate",
+     "record": {
+      "file": "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json",
+      "pointer": "total",
+      "commit": "39e424990 (branch claude/s81-die-20261007 only)"
+     },
+     "note": "the DS closure-cost ledger TOTAL with s81_die re-priced on the m221pq layer1 die (+28 a field phase); 85-stage historical geometry, same basis as 'published'"
     },
     "option_B_2304_historical": {
      "AR_tok_s": 1754.3,
@@ -2381,6 +2464,38 @@
       }
      ],
      "result_edge": "die-view-only result edge until gate sm_su_result_edge_native closes"
+    },
+    "unified_candidate_contracts_rtl": {
+     "AR_us": 566.779,
+     "MTP_step_us": 1108.102,
+     "AR_tok_s": 1764.4,
+     "MTP_tok_s": 3753.3,
+     "tau": 4.159,
+     "status": "priced-candidate",
+     "case": "CDC + packet-SRAM II=1 refill, native credit producer, clock-lock idle insertion and the native SM -> SU edge (1,029 cycles a token) -- all four established at RTL + bench level (444859f1d gate_all PASS)",
+     "gated_by": [
+      "cdc_refill_ss_timing",
+      "su_reducer_safe",
+      "su_c12_margin",
+      "su_full_ddiv31",
+      "vm_alignment",
+      "die_clock_plan",
+      "hbm_full_die"
+     ],
+     "result_edge": "native SM -> SU edge RTL + bench (444859f1d); physical screen pending",
+     "record": [
+      {
+       "file": "results/rtl/hbm_contracts_20261007/gate_all/record.json",
+       "pointer": "status, cases",
+       "commit": "444859f1d"
+      },
+      {
+       "file": "results/rtl/hbm_collective_cdc_20261007/refill_model.json",
+       "pointer": "status",
+       "commit": "9ead91a15"
+      }
+     ],
+     "note": "refill_both + the native-edge increment (+686 cycles over the published 343); RTL-level credit only: the four contracts' physical screens, die integration and the CDC refill SS timing remain open"
     }
    },
    "gates": [
@@ -2626,13 +2741,17 @@
      "pointer": "physical.die_r20c.grt_i50",
      "commit": "c148ca60a"
     },
-    "note": "last committed full-die GRT r20c i50 overflow 7,972 (NOT CLOSED); r21 GRT overflow 71,398 traced to the PDN being counted twice (grt.tcl PG-proxy on a PDN odb); r22 floorplan (IO channel, branch claude/qwen-dietop-20261007 bfc2ac6c5) re-running (qwen-dietop)",
+    "note": "last committed full-die GRT r20c i50 overflow 7,972 (NOT CLOSED); r21 GRT overflow 71,398 traced to the PDN being counted twice (grt.tcl PG-proxy on a PDN odb). qwen-dietop.log 19:32 reports full-die GRT overflow 0 (adjfix_t4p8, M4-M9, 8,057,897 nets) on the r21 PDN floorplan; no committed record yet, so not done",
     "geometry": "r20c"
    },
    "die_sta_grt_parasitics": {
-    "status": "missing",
-    "evidence": null,
-    "note": "no die SS/FF STA on GRT parasitics; the r18g path bound is a wire bound, not die STA"
+    "status": "in progress",
+    "evidence": {
+     "file": "tools/qwen_die_sta_classes.py",
+     "pointer": "r21 pre-DRT die STA",
+     "commit": "a9bf510a0"
+    },
+    "note": "committed: r21 die STA on placement parasitics fails every relay / station hop (SS -287 ps worst; closed station views were routed at 3.9 fF, re-route kit at 80 fF committed a9bf510a0). Reported in qwen-dietop.log, not committed: GRT-parasitic FF worst -5.50 ps (all on qfd_tile assumed views), SS WNS -132 ps on relay/station hops"
    },
    "cts_skew_plan": {
     "status": "missing",
@@ -2737,12 +2856,12 @@
    "ir": {
     "status": "done",
     "evidence": {
-     "file": "results/rtl/hbm_accel_die_floorplan_20261005/feasibility.json",
-     "pointer": "ir_summary",
-     "commit": "82238b79f"
+     "file": "results/physical/hbm_die_20261007/ir_r23/feasibility_r23.json",
+     "pointer": "ir_summary.r23",
+     "commit": "55e136da6 (branch claude/hbm-die-20261007)"
     },
-    "note": "latest committed IR set ir16b: all_pass=True, worst interior 33.26 mV; the attention-tile exception record (ir_attn_exception_ira1.json) shows 241.6 mV locally, handled by its option-A quad PG record",
-    "geometry": "die floorplan 2026-10-05 rounds, not r23"
+    "note": "r23 die: PSM on every window, 125/125 load windows PASS, worst interior 33.26 mV (budget 35; 18 no-load windows). Earlier rounds on main: ir16b all_pass=True, 33.26 mV",
+    "geometry": "r23"
    },
    "region_drt_and_error_bar": {
     "status": "missing",
@@ -2751,6 +2870,90 @@
    }
   }
  },
+ "established_contracts_rtl_bench": [
+  {
+   "id": "sm_su_native_edge",
+   "target": "hbm_ds",
+   "contract": "SM -> SU native result edge (1,029 cycles a token priced; bench latency within it)",
+   "ledger_line": "sm_su_result_edge_native",
+   "evidence": {
+    "file": "results/rtl/hbm_contracts_20261007/gate_all/record.json",
+    "pointer": null,
+    "commit": "444859f1d"
+   },
+   "bench": "smsu_edge_* + 5 negatives; 12/12 golden composed cases (sm_su_composed)",
+   "level": "RTL + bench (exact, negatives detected)",
+   "performance_credit": "only in compositions that name it; physical screen / die integration pending"
+  },
+  {
+   "id": "credit_producer_native",
+   "target": "hbm_ds",
+   "contract": "Native credit producer (registered allow / can_send; D_tx >= 27)",
+   "ledger_line": "credit_producer_native",
+   "evidence": {
+    "file": "results/rtl/hbm_contracts_20261007/gate_all/record.json",
+    "pointer": null,
+    "commit": "444859f1d"
+   },
+   "bench": "credit_* 2 positives / 8 negatives; 0 cycles a token, +3 at link-up",
+   "level": "RTL + bench (exact, negatives detected)",
+   "performance_credit": "only in compositions that name it; physical screen / die integration pending"
+  },
+  {
+   "id": "packet_sram_refill",
+   "target": "hbm_ds",
+   "contract": "Packet-SRAM II=1 refill (ENABLE_SRAM=2)",
+   "ledger_line": "packet_sram_ii3_rate_cap",
+   "evidence": {
+    "file": "results/rtl/hbm_contracts_20261007/gate_all/record.json",
+    "pointer": null,
+    "commit": "444859f1d"
+   },
+   "bench": "pkt_ii1_* 4 positives / 3 negatives",
+   "level": "RTL + bench (exact, negatives detected)",
+   "performance_credit": "only in compositions that name it; physical screen / die integration pending"
+  },
+  {
+   "id": "cdc_frequency_lock",
+   "target": "hbm_ds",
+   "contract": "Clock lock via idle insertion (+-200 ppm, M <= 4,999)",
+   "ledger_line": "cdc_frequency_lock",
+   "evidence": {
+    "file": "results/rtl/hbm_contracts_20261007/gate_all/record.json",
+    "pointer": null,
+    "commit": "444859f1d"
+   },
+   "bench": "idle_* 4 positives / 4 negatives; 0 cycles for bursts <= 1,024 flits, worst 0.098 % of TX slots",
+   "level": "RTL + bench (exact, negatives detected)",
+   "performance_credit": "only in compositions that name it; physical screen / die integration pending"
+  },
+  {
+   "id": "link_credit_rtt",
+   "target": "qwen_rom",
+   "contract": "Qwen hub link credits CR=128 >= measured 117/119-cycle RTT",
+   "ledger_line": "link_credit_rtt",
+   "evidence": [
+    {
+     "file": "results/rtl/qwen_contracts_20261007/link_credit_rtt/bench_gate/result.json",
+     "pointer": "cases",
+     "commit": "fb8202f9b"
+    },
+    {
+     "file": "results/rtl/qwen_contracts_20261007/link_credit_rtt/pricing.json",
+     "pointer": null,
+     "commit": "fb8202f9b"
+    },
+    {
+     "file": "results/uarch/qwen_link_forwarded_graph_20261007/graph_prebuild_model.json",
+     "pointer": "paths[].transport_credit_roundtrip_cycles",
+     "commit": "3267a11f5"
+    }
+   ],
+   "bench": "exact gate rate 1.000 at 54/55 hops, 4 negatives; +0 token cycles (qwen-contracts)",
+   "level": "RTL + bench (exact, negatives detected)",
+   "performance_credit": "only in compositions that name it; physical screen / die integration pending"
+  }
+ ],
  "unestablished_contracts": [
   {
    "id": "pq_root_protected_face",
@@ -2769,66 +2972,6 @@
      "file": "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/root_contract/root_contract.json",
      "pointer": "parity",
      "commit": "9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
-    }
-   ]
-  },
-  {
-   "id": "cdc_frequency_lock",
-   "target": "hbm_ds",
-   "contract": "PHY/core clock frequency lock for the II=1 CDC drain",
-   "ledger_line": "cdc_frequency_lock",
-   "state": "a hardware contract to be established, not an assumption",
-   "performance_credit": 0,
-   "source": [
-    {
-     "file": "results/rtl/hbm_collective_cdc_design_20261007/comparison_refill.json",
-     "pointer": "contracts.frequency",
-     "commit": "092c84e1d"
-    }
-   ]
-  },
-  {
-   "id": "credit_producer_native",
-   "target": "hbm_ds",
-   "contract": "Native credit producer (full-rate credit contract)",
-   "ledger_line": "credit_producer_native",
-   "state": "today a testbench preload",
-   "performance_credit": 0,
-   "source": [
-    {
-     "file": "results/rtl/hbm_collective_cdc_20261007/refill_model.json",
-     "pointer": "actual_credit_producer",
-     "commit": "9ead91a15"
-    }
-   ]
-  },
-  {
-   "id": "sm_su_native_edge",
-   "target": "hbm_ds",
-   "contract": "SM -> SU native result edge",
-   "ledger_line": "sm_su_result_edge_native",
-   "state": "die view ends in an XOR envelope; RTL path through the GPU-comparator memory model",
-   "performance_credit": 0,
-   "source": [
-    {
-     "file": "results/rtl/hbm_sm_su_result_contract_20261007/contract.json",
-     "pointer": "summary",
-     "commit": "0f11c0dbf"
-    }
-   ]
-  },
-  {
-   "id": "packet_sram_refill",
-   "target": "hbm_ds",
-   "contract": "II=1 refill applied to the packet-SRAM receive queue",
-   "ledger_line": "packet_sram_ii3_rate_cap",
-   "state": "packet SRAM still drains at II=3",
-   "performance_credit": 0,
-   "source": [
-    {
-     "file": "results/rtl/hbm_collective_cdc_design_20261007/options.json",
-     "pointer": "options.A_credit_bound.cost_serialisation",
-     "commit": "8b7f55b31"
     }
    ]
   },
@@ -2880,13 +3023,13 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "e56f79aebb28296334113217c86fdbc5b02b116081ea35dcaebffbcad21e27c3"
+  "sha256": "8dc23dfe7e2da7e7d3d5be54abc16997d387c8b501966edbaa4a8d1a7c6d3a6c"
  },
  "source_sha256": {
   "AGENTS.md": "d47e33869ed5fefa3be09cffa270ccb831227173fcf0295b5ebecc178b55a042",
   "docs/ANALYTICAL_REPORT.md": "dbc78387895d08babad980deb1be38df2f062e242cfa989b22681f87d92c604c",
   "docs/ARCHITECTURE_ATLAS.html": "6de7c1357aeb35b58f179df24299df86133eca145f0d678274ef342c04f9f9ad",
-  "docs/INTEGRATED_PHYSICAL_PLAN.md": "38e5dff036054bfeacdc4f6ddc75f31c9240992146178b690312311326c4ee7f",
+  "docs/INTEGRATED_PHYSICAL_PLAN.md": "978b623f4ed6f984c1d7325cbdf365cb05079b3856aa0b90aa7d9b20ac88e531",
   "docs/OWNER_DIRECTIVES_2026_10_07.md": "6a76cc1accb8ff5b3a14110a7b40a46552374c53205ac6389ebd5a9199c19517",
   "docs/PROGRAM_PLAN_2026_10_05.md": "9808ba65321c9f8e6ec625003941b4074c5e24d71fa93b69406ee31f27ca2535",
   "physical/s81_bf_root_phase/model.json": "92aaf33923a033ae8a573cede9ac562a81b7786b19305d0b3b97ec14b20ccd82",
@@ -2895,6 +3038,7 @@
   "results/arch/three_machine_compose/compose.json": "23f7a3a735a54c78fb97a5ae322457de967e0dd2d6b47f1a6c4033451c75305b",
   "results/arch/three_machine_compose/table.txt": "4836b0e7709430b987d40dc66feee86bc9f6298b7a5466e2c63c376c8e2c06ee",
   "results/arch/unified_composition_20261007/qwen_dspark/dspark_ctrlshift_candidate.json": "fa770bfaa79c239a8bbcce563cbaa9a123194769bc99a9e5350a5e9f58d608f1",
+  "results/physical/hbm_die_20261007/ir_r23/feasibility_r23.json": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "results/physical/hbm_die_abstracts_20261006/integration/consumer_binding_20261006.json": "df26a498738d5bc4d008642adc08aef7543ad1e1ae40f2c3c6a9c4f4202b4766",
   "results/rtl/budgets_20261006/README.md": "82a8f4ff140e0a30a60dd71c4ffcc14f3f427c5df28ea6ad2061b870ea6e021f",
   "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json": "b3e0335aea501bc08149ab01bf129e18cd361697207f87ffd39ea767a052b2a6",
@@ -2907,7 +3051,6 @@
   "results/rtl/dsrom_s81_fulldie_20261004/v9d/feasibility.json": "44ec44d1ba30ab54227e043ff2d54bd59e36da0aeeef40ec05963d4b067aae6e",
   "results/rtl/dsrom_s81_fulldie_20261004/v9e/feasibility.json": "38e566838e94401eec2a4417ad227ce58b1ffc8e238e838c6739251d6eae0045",
   "results/rtl/fullsys_recheck_20261007/status.json": "3ef6e4f0cb7f616ad7ddfc2b17cbb88db00401cae66e2edd3ce9d5a305e7ff76",
-  "results/rtl/hbm_accel_die_floorplan_20261005/feasibility.json": "ca63d524864d1cde5fbe23824d4f3de36923cb98a9f8e0356928d5e0843b598d",
   "results/rtl/hbm_accel_die_views_20261006/closure_cost_ledger.md": "6feade3476ac93082d5f135b6d5df0fadd9b0a85e70b9edf81a65fae730e933e",
   "results/rtl/hbm_accel_die_views_20261006/coordinator_r19c/audit.json": "9edde26876fc87bd9d73c09841cf1a34840aed42c2bdd08b62818b9f1751647c",
   "results/rtl/hbm_accel_die_views_20261006/die_r10.json": "7b369d6f9945f775a802a250d0c702b62e4cc349987034bf1cae61f4b9e769d6",
@@ -2917,8 +3060,10 @@
   "results/rtl/hbm_collective_cdc_design_20261007/comparison_refill.json": "ec7054c4caa0a8e5c5cd2ed2df99b7997e76f358284279ceace42e15b4fa89f8",
   "results/rtl/hbm_collective_cdc_design_20261007/options.json": "06c0cdadfcd9382da8a1efdd67e1b4cf1bf3a860268fc43ef5c57313b440fc03",
   "results/rtl/hbm_collective_full_20261007/storage_model.json": "ed03682d76b4a2448b632953d82898fc3ec46656e782fd83bb4fb224d3a719bc",
+  "results/rtl/hbm_contracts_20261007/gate_all/record.json": "0be6240f0e45213aea8d0243d5b3e08478c430a35f3f167bea13c95a9d96668f",
   "results/rtl/hbm_sm_command_20261007/protected_component.json": "cf5525b5bc2dad2ac632bcbdc7b26b9f61cce1720a424a82e404b99a5d827f96",
   "results/rtl/hbm_sm_su_result_contract_20261007/contract.json": "bd7ca0c7224164d2c25c48fc71e989afc9b8f3fae7b49d5779b46248a8bcb6c8",
+  "results/rtl/qwen_closure_cost_ledger_20261007/ledger.json": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "results/rtl/qwen_contracts_20261007/link_credit_rtt/bench_gate/result.json": "6309227d42b1ee893bd2d18dcaa76954ad69d324a74db0dd8109efefad94cb6d",
   "results/rtl/qwen_contracts_20261007/link_credit_rtt/pricing.json": "c096c781cbb1356f1e39d221f6d64515871215c186980effcc3c87a008e3395c",
   "results/rtl/qwen_contracts_20261007/protected_kv_transport/decision.json": "c1aee5f63362f5fe1fcf64463fb8f522d11e546a8e53e248b7d4254c121c948c",
@@ -2955,6 +3100,7 @@
   "results/uarch/s81_pq_root_cam_20261007/model.json": "0c82097e0020b325b46396de710bd7fbeab103ed8e8fbc431396d7f3812cf134",
   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "tools/chip_explorer_build.py": "146a386013f68a12600e1cca553e0fac06515fc974fb7f6b11654cd9835f52f3",
-  "tools/unified_composition.py": "e56f79aebb28296334113217c86fdbc5b02b116081ea35dcaebffbcad21e27c3"
+  "tools/qwen_die_sta_classes.py": "5f69de4a422d2ff93437c472f335a06a9a458d9ecfb88eb9a534433b3f0d5907",
+  "tools/unified_composition.py": "8dc23dfe7e2da7e7d3d5be54abc16997d387c8b501966edbaa4a8d1a7c6d3a6c"
  }
 }
