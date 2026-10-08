@@ -3417,7 +3417,28 @@
    },
    "boundary_n": 4446,
    "budget": null
+  },
+  "dsfd_m2l_vr_68x11__hr_W4": {
+   "job": "s81-hend-m221pq-hr-W4-a1f23fa0b-mm",
+   "source_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-W4-a1f23fa0b-mm",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-08T07:20:43-07:00",
+   "ss": {
+    "mean": 278,
+    "min": 266,
+    "max": 289
+   },
+   "ff": {
+    "mean": 169,
+    "min": 161,
+    "max": 181
+   },
+   "boundary_n": 793,
+   "budget": null
   }
  },
- "updated": "2026-10-08T07:12:41-07:00"
+ "updated": "2026-10-08T07:20:43-07:00"
 }
