@@ -95,7 +95,9 @@ def hbm_qwen(work, which):
 
 
 # -- HBM accelerator, DeepSeek SM PQ/XMAP production gate on retained P1/P6 fixtures -----------------------
-JOINT = S2 / "jobs/rawls-hbm-pq-xmap-joint-20261005-r2/fixtures"
+# The r2 job's fixtures were swept from scratch2 at 19:44 on 10-07 (P6 lost). The four P1 fixtures survive in the
+# r1 job and were copied into the harness's own fixture tree; expected cycles re-baselined there.
+JOINT = S / "claude/exactness/fixtures/hbm_ds_joint"
 
 
 def hbm_ds_joint(work):
@@ -104,6 +106,8 @@ def hbm_ds_joint(work):
     for name, negative in [("stress", False), ("ar_l20", False), ("wg", False), ("other", False),
                            ("p6_stress", False), ("p6_l20", False), ("p6_wg", False), ("p6_other", False),
                            ("stress", True)]:
+        if not (JOINT / f"{name}_haz1_g0").is_dir():
+            continue
         key = name + ("_negative_fp4" if negative else "")
         active = 6 if name.startswith("p6_") else 1
         argv = [PY, TOOLS / "hbm_opt_integrated_20261005_joint.py", "run", "--production-dir",
