@@ -1565,9 +1565,13 @@ def launch_ready(j, fleet, spec, stl, st):
     OUTSIDE the lock (launch_now) or None."""
     require_checkpoint_location(j)
     if True:
+        if st["kind"] in ("calibrate", "route") and yield_to_priority(j, fleet):
+            why = f"yielding to priority-{fleet.prio_waiting} jobs waiting for capacity"
+            if j.get("wait") != why:
+                j["wait"] = why
+                event(j, f"{st['key']} {why}")
+            return          # neither launches nor moves hosts while it yields
         ok, why = fleet.fits(j["host"], st["threads"], st["ram"])
-        if ok and st["kind"] in ("calibrate", "route") and yield_to_priority(j, fleet):
-            ok, why = False, f"yielding to priority-{fleet.prio_waiting} jobs waiting for capacity"
         if not ok:
             j.setdefault("wait_since", time.time())
         if not ok and not checkpoint_location(j) and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
