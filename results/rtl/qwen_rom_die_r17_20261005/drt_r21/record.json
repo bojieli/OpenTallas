@@ -1,0 +1,159 @@
+{
+ "schema": "opentallas.qwen_die_drt_r21.v1",
+ "recipe": "r21 = r20c + slab block-word pins on M8 (--slab-bw-m8) + relays at the measured 430.56 um reach (--relay-pitch 430.56); tools/die_top_lint.py QWEN_R21",
+ "die": {
+  "w_um": 25037.856,
+  "h_um": 32801.76,
+  "mm2": 821.286,
+  "reticle_mm2": 858
+ },
+ "census": {
+  "instances": 12299,
+  "relays": 8965,
+  "relay_flop_bits": 4083011,
+  "nets": 8058234
+ },
+ "lint": "die_top_lint --qwen-recipe r21: connectivity / directions / missing pins / face-away / ports-without-net / pin-fit all 0",
+ "steps": {
+  "real": {
+   "host": "ot-epyc3 cases/r21_pdn",
+   "wall": "36:54.75",
+   "peak_rss_gb": 30.1,
+   "place_s": 1707,
+   "verdict": "legal 12,299 instances 0 overlap / 0 outside; macro track assert PASS (16,361,169 pins, 0 offtrack); pin access macroNoAp 0"
+  },
+  "grt_i0_nopdn": {
+   "tile_um": 9.6,
+   "layers": "M4-M9",
+   "grt_s": 243.5,
+   "peak_rss_gb": 51.9,
+   "overflow_3d": 176927,
+   "overflow_by_layer": {
+    "M4": 353,
+    "M5": 620,
+    "M6": 8908,
+    "M7": 608,
+    "M8": 164929,
+    "M9": 1509
+   },
+   "report_2d_overflow": 8365,
+   "wirelength_um": 2209035878,
+   "note": "pre-PDN floorplan (PDN still running); the 2D congestion report no longer shows the r20c seam column (r20c: 22,298 of 2D overflow in one gcell column at x 13,426): hotspots spread over the west slab faces, corridors (tree_spine relays) and the IO SerDes relay chain"
+  },
+  "drt_probe_r20c": {
+   "guides": "r20c 0-iteration (106,671 overflow)",
+   "threads": 48,
+   "track_assignment": "7:32 wall, 83 GB",
+   "routing_data_prep": "0:42, 130 GB",
+   "iter0": "no 10% progress after 2:40 h; peak RSS 325.7 GB; stopped (memory fits the 600 GB guard; runtime on unconverged guides is not usable)"
+  },
+  "grt_i30_nopdn": {
+   "tile_um": 9.6,
+   "layers": "M4-M9",
+   "iterations_used": 12,
+   "wall": "1:58:25",
+   "grt_s": 7034.8,
+   "peak_rss_gb": 76.0,
+   "overflow": 0,
+   "overflow_by_layer": {
+    "M4": 0,
+    "M5": 0,
+    "M6": 0,
+    "M7": 0,
+    "M8": 0,
+    "M9": 0
+   },
+   "wirelength_um": 2227173225,
+   "vias": 26636687,
+   "note": "pre-PDN floorplan (the r21 PDN with 12,299 macro grids is still running); CONVERGED: 0 overflow on every layer"
+  },
+  "pdn": {
+   "host": "ot-epyc3 cases/r21_pdn",
+   "wall": "6:00:14",
+   "peak_rss_gb": 114.6,
+   "special_shapes": 28108319,
+   "verdict": "OT_PDN PASS; PSM-0040 all shapes on VDD and VSS connected (12,299 macro grids incl. every relay)"
+  },
+  "drt_nopdn_9p6": {
+   "guides": "GRT i30 converged (0 overflow), pre-PDN, 9.6 um gcells",
+   "threads": 64,
+   "guard_gb": 900,
+   "track_assignment": "done",
+   "peak_rss_gb": 312.1,
+   "result": "iteration 0 had not reached 10% after 2:05 h; stopped. A 9.6 um gcell makes every DRT worker a ~67 um clip with ~800 tracks a layer, so the maze workers are very slow. Re-run at a 2.4 um GRT tile on the PDN floorplan (pdn_t2p4)."
+  }
+ },
+ "relay_cost": "relays_r21/relay_token_cost.json: +22,487 cycles / AR token, -10.4%, PRICED, PENDING OWNER REVIEW (not in the published headline)",
+ "element_views": "element_views_r21.json: ETMs bound for CDC, slab port groups and every station / column head / relay (closed routes s2_cst_hm40 / s2_chead_hm40); assumed constants for the rest (listed)",
+ "slab_reroute": {
+  "route": "s14_slab_bwm8_p770 (EPYC2 slab_m8/), same RTL as r11c, bw_/tw_ on M8 over the whole left face (pins_bw_m8.tcl), M6/M7 entry-strip obstruction removed, M8 reserved for the pin strip x<36 um",
+  "attempts": [
+   "s12: M8 open to every net -> DRT-0255 (ROM g_col[0].g_bank[2] edge)",
+   "s13: M8 strip x<60 um + the old M6/M7 x<40 OBS -> same DRT-0255",
+   "s14: OBS removed, strip x<36 um -> routed"
+  ],
+  "drc": 0,
+  "antenna": 0,
+  "max_slew_violations_flow": 6,
+  "ss_setup_at_770_ps": -18.78,
+  "ss_setup_at_833p333_ps": 44.55,
+  "ff_hold_ps": 4.57,
+  "r11c_frozen_view": {
+   "ss_ps": 11.47,
+   "ff_ps": 4.2
+  },
+  "verdict": "SS +44.55 at 833.333 (>= +40); FF +4.57 is below the +15 hold line but not worse than the frozen r11c view (+4.20); ETM extracted (reproduces -18.78 @770 / +4.57) and bound to every qfd_port_tiles_* die master"
+ },
+ "slab_hold_eco": {
+  "tool": "closure-loop hold ECO rev 2 (tools/closure_loop/hold_eco.sh @ claude/closure-loop-20261006 ed76a6256), FF-only session, guide-preserving re-route, goal +18",
+  "s14": {
+   "pre": {
+    "ss": 44.55,
+    "ff": 4.57
+   },
+   "pass1": {
+    "ss": 4.66,
+    "ff": 7.37,
+    "cells": 1460,
+    "drc": 0
+   },
+   "pass2": {
+    "ss": -157.76,
+    "ff": 21.18,
+    "cells": 11288,
+    "drc": 0
+   },
+   "chosen": "pass1",
+   "verdict": "ECO MISS: hold +7.37 at the cost of 40 ps setup; pass 2 reaches +21.18 hold but SS -157.76"
+  },
+  "r11c": {
+   "pre": {
+    "ss": 11.47,
+    "ff": 4.2
+   },
+   "pass1": {
+    "ss": -50.28,
+    "ff": 7.65,
+    "cells": 1430,
+    "drc": 0
+   },
+   "pass2": {
+    "ss": -191.18,
+    "ff": 5.06,
+    "cells": 11359,
+    "drc": 0
+   },
+   "verdict": "ECO MISS"
+  },
+  "conclusion": "~1,500 FF endpoints below the goal, all fixable by window, but every buffer costs setup: the slab hold class needs an RTL / boundary change (closure-loop rule: ECO miss -> NEEDS_RTL); the die STA keeps the pre-ECO s14 view (SS +44.55 / FF +4.57)"
+ },
+ "ir": {
+  "tile_field": 19.27,
+  "spine_hub": 23.61,
+  "shoreline_w": 19.86,
+  "spine_slab": 19.27,
+  "note": "r21 (relays at 430.56 um, slab M8 pins): every judged window (the same rectangles as r17-r19) evaluated inside a 200 um guard band of continuing grid and bumps (--ir-guard 200); worst rail-to-rail over the WHOLE judged window <= 23.61 mV (budget 35): the r19 window-edge overruns (36.9-83.2 mV) were boundary artefacts and sit in the guard band now (38 mV max there)",
+  "budget_mv": 35.0,
+  "pass": true
+ }
+}

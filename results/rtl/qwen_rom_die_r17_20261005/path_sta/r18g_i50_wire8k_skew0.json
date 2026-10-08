@@ -1,0 +1,62 @@
+{
+ "schema": "opentallas.qwen-rom-wire-bound-8k.v1",
+ "source": {
+  "composition": "results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json",
+  "ar_job": "results/rtl/qwen_dspark_system_20261004/ctx8k/k_AR0.json"
+ },
+ "rtl_wire_stages": {
+  "bd": 41,
+  "nws": 5,
+  "ord": 7,
+  "tws": 38,
+  "xvm": 1
+ },
+ "floorplan_block_word_stages": {
+  "pitch_um": 430.56,
+  "words": 96,
+  "max": 94,
+  "mean": 38.77,
+  "min": 20,
+  "basis": "GRT routed length (path_sta)",
+  "floorplan_max": 64
+ },
+ "hub_stack": {
+  "rtl_r2_entry_stages": 46,
+  "floorplan_stages": 59,
+  "delta": 13,
+  "traversals_per_layer_pass": 2
+ },
+ "me_ops": {
+  "per_layer_pass": 6,
+  "per_head": 1,
+  "per_ar_token": 217
+ },
+ "deltas": {
+  "tws_per_me_op": 56,
+  "two_beat_per_me_op": 1,
+  "link_per_traversal": 13,
+  "per_layer_pass": 368,
+  "per_head": 57
+ },
+ "ar": {
+  "measured_cycles": 527663,
+  "penalty_cycles": 13305,
+  "bound_cycles": 540968,
+  "measured_tok_s": 2274.2,
+  "bound_tok_s": 2218.2,
+  "delta_pct": -2.459
+ },
+ "dspark": {
+  "measured_step_cycles": 1057503.0,
+  "drafter_layer_passes": 5,
+  "draft_heads": 3,
+  "penalty_cycles": 28621,
+  "bound_step_cycles": 1086124.0,
+  "tau": 3.1445,
+  "measured_tok_s": 3568.2,
+  "bound_tok_s": 3474.2,
+  "delta_pct": -2.635
+ },
+ "basis": "routed (GRT wire length per die net)",
+ "status": "bound: floorplan stage counts at the 430.56 um corridor-gate pitch (no routed-path STA); the hub<->stack delta assumes the REAL_MEM measurement carries the r2 46-stage link; F2 bound is 0 once the column-FIFO prefetch is measured"
+}
