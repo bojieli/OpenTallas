@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/tmp/core844-archive-preflight/src/tools/qwen_core_separate_load_prepare.py", line 23, in <module>
+    if __name__=='__main__':main()
+  File "/tmp/core844-archive-preflight/src/tools/qwen_core_separate_load_prepare.py", line 16, in main
+    C.main()
+  File "/tmp/core844-archive-preflight/src/tools/qwen_rom_core_ctx_claude.py", line 102, in main
+    for line in RETAINED.read_text().splitlines():
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/core844-archive-preflight/src/results/rtl/qwen_rom_core_takeover_20261005/retained_screen/synth.ys'

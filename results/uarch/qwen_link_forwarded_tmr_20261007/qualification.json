@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.qwen_forwarded_tmr.delivery.v1",
+  "component_gate_pass": true,
+  "single_upset_cases": 144,
+  "broken_voter_negatives": 2,
+  "transport_negatives": 3,
+  "merged_storage_negative": true,
+  "source_paths_only_archive_frontend_pass": true,
+  "source_sha256": "cd7142ec0db3465c0b4134888e6947a2bc1d7223c0d2fc02093729e568921881",
+  "predecessor_preserved_sha256": "921a2fbbdf6f76d3b1e64007ec0f6601fbd84fbb66cd4ec3484f0af8367e6518",
+  "raw_POR_release_FF": 24,
+  "local_majority_clear_control_FF": 64,
+  "area_NL1_um2": 362.371319999997,
+  "delta_NL1_um2": 0.7873199999999088,
+  "additional_cycles": 0,
+  "prebuild_legacy_counter_note": "prebuild reset_FF_delta=6 was inherited baseline counter; authoritative successor fields reset_FF_delta_vs_predecessor=16 and reset_FF_delta_vs_original_singleclock=22. No evidence overwritten.",
+  "scope": "TMR protects only release storage from a single bit upset, not majority logic, metastability, multiple upsets or whole link. New rawPOR and localclear recovery/removal and actual forwardedclock hold all remain timed.",
+  "dispatch": "Only physical/qwen_link_forwarded_tmr_pair/closure_job.template.json after new immutable source pin and measured resource admission; do not submit old rawPOR fixture.",
+  "physical_not_run": true,
+  "adoption": false,
+  "remaining": [
+    "Actual SS>=15ps FF>=15ps DRC0 with real propagated clocks",
+    "24rawPOR and64local majority recovery/removal physical closure",
+    "Physical mapped FF/voter/clockbuffer retention",
+    "Production bay/pin placement and final segment<=100um",
+    "Native endpoint credit and reset-drain protocol",
+    "Whole-link mutable data/control protection"
+  ]
+}

@@ -1,0 +1,1511 @@
+{
+  "basis": "results/physical/hbm_clock_context_20261007/coverage_audit/missing_views.json",
+  "adoption": false,
+  "masters": [
+    {
+      "master": "hfd_cmdproc",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [],
+      "classification": "OLD_UNSPLIT_MASTER",
+      "successors": {
+        "hfd_cmdproc_n": "763861102",
+        "hfd_cmdproc_s": "28def80ea"
+      },
+      "action": "Bind actual split geometry/protocol from generator; never alias old generic master to one strip."
+    },
+    {
+      "master": "hfd_coll",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_coll_4894698d3",
+          "status": "CANCELLED",
+          "host": "ot-epyc2",
+          "source": "4894698d3db58a6d838ae8f1678a5273464b8bff",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_4894698d3"
+        },
+        {
+          "name": "hbm-coll-f29a13cb3",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "f29a13cb365fd9cb491a94ecfe27b9b9ef5f52d2",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm-coll-f29a13cb3"
+        },
+        {
+          "name": "hbm_coll_d51dc71a2",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "d51dc71a2a4e23ed27a7e12fe6a98477a6d73403",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_d51dc71a2"
+        },
+        {
+          "name": "hbm_coll_f29a13cb3",
+          "status": "CANCELLED",
+          "host": "ot-epyc2",
+          "source": "f29a13cb365fd9cb491a94ecfe27b9b9ef5f52d2",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_f29a13cb3"
+        }
+      ]
+    },
+    {
+      "master": "hfd_hc",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_hc_quarter_r23_5b48044bf",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "5b48044bf8b8057a25df074d564427a85e225784",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_hc_quarter_r23_5b48044bf"
+        },
+        {
+          "name": "hbm_hc_quarter_r24_1ad3621a6",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "1ad3621a640b9ead85d1979dd6e340d2874ff903",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_hc_quarter_r24_1ad3621a6"
+        },
+        {
+          "name": "hbm_hc_quarter_01353018a",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "01353018a6761c43bfa05c659d8339be14fc48e8",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_hc_quarter_01353018a"
+        }
+      ]
+    },
+    {
+      "master": "hfd_host_slab",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [],
+      "classification": "PINLESS_ANALOG_RESERVATION",
+      "basis": "tools/hbm_phy_bb.py: analog obstruction slab without digital pins; real digital face separate ot_hbm_host_phy/ot_pdie_serdes",
+      "action": "Keep reservation classification in coverage; do not fabricate timing arcs."
+    },
+    {
+      "master": "hfd_index_q_b0",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_idxq_b0_70a27c406_b",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_70a27c406_b"
+        },
+        {
+          "name": "hbm_idxq_b0_48529891f_r19b",
+          "status": "ECO",
+          "host": "ot-epyc1tb",
+          "source": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+          "stage": "hold_eco",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b0_48529891f_r19b"
+        },
+        {
+          "name": "hbm_idxq_b0_2ec0ab4f9_r22",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_idxq_b0_e8b5132fb_r18b",
+          "status": "CANCELLED",
+          "host": "ot-epyc2",
+          "source": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e8b5132fb_r18b"
+        },
+        {
+          "name": "hbm_idxq_b0_e26c4446e_r18",
+          "status": "CANCELLED",
+          "host": "ot-epyc2",
+          "source": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_e26c4446e_r18"
+        }
+      ]
+    },
+    {
+      "master": "hfd_index_q_b1",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_idxq_b1_fc9fb499c",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc3",
+          "source": "fc9fb499c1cc3b64abed9175ff85920567f056b5",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_fc9fb499c"
+        },
+        {
+          "name": "hbm_idxq_b1_841beb3ab_we",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "841beb3abe64e812081c5ecfa6fbe91cc6f80c3c",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b1_841beb3ab_we"
+        },
+        {
+          "name": "hbm_idxq_b1_e8b5132fb_r18b",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc2",
+          "source": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e8b5132fb_r18b"
+        },
+        {
+          "name": "hbm_idxq_b1_e26c4446e_r18",
+          "status": "CANCELLED",
+          "host": "ot-epyc2",
+          "source": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_e26c4446e_r18"
+        },
+        {
+          "name": "hbm_idxq_b1_70a27c406",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_70a27c406"
+        },
+        {
+          "name": "hbm_idxq_b1_48529891f",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc2",
+          "source": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_48529891f"
+        },
+        {
+          "name": "hbm_idxq_b1_d13a7e687_r23",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "d13a7e687a79f9679b65c2e24cc6482b3b04d08d",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b1_d13a7e687_r23"
+        }
+      ]
+    },
+    {
+      "master": "hfd_index_q_b2",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_idxq_b2_48529891f_r19b",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc1tb",
+          "source": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b2_48529891f_r19b"
+        },
+        {
+          "name": "hbm_idxq_b2_e8b5132fb_r18b",
+          "status": "CANCELLED",
+          "host": "ot-epyc2",
+          "source": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e8b5132fb_r18b"
+        },
+        {
+          "name": "hbm_idxq_b2_2ec0ab4f9_r22",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_idxq_b2_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_70a27c406"
+        },
+        {
+          "name": "hbm_idxq_b2_e26c4446e_r18",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_e26c4446e_r18"
+        }
+      ]
+    },
+    {
+      "master": "hfd_index_q_b3",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_idxq_b3_841beb3ab_we",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "841beb3abe64e812081c5ecfa6fbe91cc6f80c3c",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_841beb3ab_we"
+        },
+        {
+          "name": "hbm_idxq_b3_2ec0ab4f9_r22",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc3",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_idxq_b3_e8b5132fb_r18b",
+          "status": "CANCELLED",
+          "host": "ot-epyc2",
+          "source": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e8b5132fb_r18b"
+        },
+        {
+          "name": "hbm_idxq_b3_48529891f_r19b",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc1tb",
+          "source": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b3_48529891f_r19b"
+        },
+        {
+          "name": "hbm_idxq_b3_e26c4446e_r18",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_e26c4446e_r18"
+        },
+        {
+          "name": "hbm_idxq_b3_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "hold_eco",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_70a27c406"
+        }
+      ]
+    },
+    {
+      "master": "hfd_index_q_b5",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_idxq_b5_2ec0ab4f9_r22",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc3",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_idxq_b5_e26c4446e_r18",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e26c4446e_r18"
+        },
+        {
+          "name": "hbm_idxq_b5_841beb3ab_we",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "841beb3abe64e812081c5ecfa6fbe91cc6f80c3c",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b5_841beb3ab_we"
+        },
+        {
+          "name": "hbm_idxq_b5_e8b5132fb_r18b",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc2",
+          "source": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_e8b5132fb_r18b"
+        },
+        {
+          "name": "hbm_idxq_b5_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "hold_eco",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_70a27c406"
+        },
+        {
+          "name": "hbm_idxq_b5_48529891f_r19b",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc1tb",
+          "source": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b5_48529891f_r19b"
+        }
+      ]
+    },
+    {
+      "master": "hfd_loader",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_loader_half_4d30522ee",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "4d30522ee362e5cdf40ff49453a9b7e186b742da",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_loader_half_4d30522ee"
+        },
+        {
+          "name": "hbm_loader_30c5fa080",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc1tb",
+          "source": "30c5fa080bbed9c63aa82f93e003cc5e2680abbe",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_loader_30c5fa080"
+        },
+        {
+          "name": "hbm_loader_half_683550387",
+          "status": "CANCELLED",
+          "host": null,
+          "source": "683550387d9e35dc7b7d774823d7fd38752a162b",
+          "stage": null,
+          "run": null
+        }
+      ]
+    },
+    {
+      "master": "hfd_mcast_r6a",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_stn_mcast_r6a_f78eb159f",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc2",
+          "source": "f78eb159fb6cbe890b5600137c7895af59d375c8",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r6a_f78eb159f"
+        }
+      ],
+      "action": "Hold-only ECO terminal failure; coordinate existing hold-repair owner on actual FF fresh-process timing, preserve failures."
+    },
+    {
+      "master": "hfd_mcast_r6b",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_stn_mcast_r6b_f78eb159f",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc2",
+          "source": "f78eb159fb6cbe890b5600137c7895af59d375c8",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r6b_f78eb159f"
+        }
+      ],
+      "action": "Hold-only ECO terminal failure; coordinate existing hold-repair owner on actual FF fresh-process timing, preserve failures."
+    },
+    {
+      "master": "hfd_quant",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_quant_e7c2e5b06",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "e7c2e5b068b03dbfc3c2221287e412850e16f3d5",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_e7c2e5b06"
+        },
+        {
+          "name": "hbm_quant_0041dfda7",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc1tb",
+          "source": "0041dfda7ecfa4efa4c6dd7f7593ffa7be441998",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_quant_0041dfda7"
+        }
+      ]
+    },
+    {
+      "master": "hfd_serdes_slab",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [],
+      "classification": "PINLESS_ANALOG_RESERVATION",
+      "basis": "tools/hbm_phy_bb.py: analog obstruction slab without digital pins; real digital face separate ot_hbm_host_phy/ot_pdie_serdes",
+      "action": "Keep reservation classification in coverage; do not fabricate timing arcs."
+    },
+    {
+      "master": "hfd_sfu",
+      "restored_owner": "/root/hbm/su",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_sfu_quarter_r24_1ad3621a6",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "1ad3621a640b9ead85d1979dd6e340d2874ff903",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_quarter_r24_1ad3621a6"
+        },
+        {
+          "name": "hbm_sfu_quarter_r23_5b48044bf",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "5b48044bf8b8057a25df074d564427a85e225784",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_quarter_r23_5b48044bf"
+        }
+      ]
+    },
+    {
+      "master": "hfd_stn_r33",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_stn_stn_r33_30f87bcc4",
+          "status": "CLOSED",
+          "host": "ot-epyc3",
+          "source": "30f87bcc48a16e7ce591f2751a5afd0857dcf49c",
+          "stage": "commit",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_stn_r33_30f87bcc4"
+        },
+        {
+          "name": "hbm_stn_r33_capacity_4b51e590e",
+          "status": "CLOSED",
+          "host": "ot-epyc3",
+          "source": "4b51e590e4c8b5f4f4d1f5bc85e4ce58024ee1ed",
+          "stage": "commit",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_r33_capacity_4b51e590e"
+        }
+      ],
+      "available_committed_real_view": "a4dd26da3",
+      "action": "Integrate source-pinned routed record then validate actual master/pin/clock compatibility; missing in snapshot is not current closure failure."
+    },
+    {
+      "master": "hfd_stn_r38",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_stn_r38_88136dcd2",
+          "status": "CLOSED",
+          "host": "ot-agidock128",
+          "source": "88136dcd275c3b4f7c85639f3f497d90a5101907",
+          "stage": "commit",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r38_88136dcd2"
+        },
+        {
+          "name": "hbm_stn_r38_88136dcd2_bud2",
+          "status": "CLOSED",
+          "host": "ot-epyc3",
+          "source": "88136dcd275c3b4f7c85639f3f497d90a5101907",
+          "stage": "commit",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_r38_88136dcd2_bud2"
+        },
+        {
+          "name": "hbm_stn_r38_88136dcd2_ck80",
+          "status": "NEEDS_HUMAN",
+          "host": "ot-agidock128",
+          "source": "88136dcd275c3b4f7c85639f3f497d90a5101907",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r38_88136dcd2_ck80"
+        },
+        {
+          "name": "hbm_stn_r38_88136dcd2_bud",
+          "status": "NEEDS_HUMAN",
+          "host": "ot-epyc2",
+          "source": "88136dcd275c3b4f7c85639f3f497d90a5101907",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_r38_88136dcd2_bud"
+        }
+      ],
+      "available_committed_real_view": "6bc864526",
+      "action": "Integrate source-pinned routed record then validate actual master/pin/clock compatibility; missing in snapshot is not current closure failure."
+    },
+    {
+      "master": "hfd_stn_r39",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_stn_r39_ad75a0248",
+          "status": "CLOSED",
+          "host": "ot-agidock128",
+          "source": "ad75a0248f8c2a99e9eefc2361a259c1198011f7",
+          "stage": "commit",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r39_ad75a0248"
+        }
+      ],
+      "available_committed_real_view": "1a255ba55",
+      "action": "Integrate source-pinned routed record then validate actual master/pin/clock compatibility; missing in snapshot is not current closure failure."
+    },
+    {
+      "master": "hfd_su",
+      "restored_owner": "/root/hbm/su",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_su_quarter_r24_1ad3621a6",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "1ad3621a640b9ead85d1979dd6e340d2874ff903",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_quarter_r24_1ad3621a6"
+        },
+        {
+          "name": "hbm_su_quarter_01353018a",
+          "status": "NEEDS_HUMAN",
+          "host": "ot-epyc2",
+          "source": "01353018a6761c43bfa05c659d8339be14fc48e8",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_quarter_01353018a"
+        },
+        {
+          "name": "hbm_su_quarter_01353018a_dpl",
+          "status": "CANCELLED",
+          "host": "ot-epyc1tb",
+          "source": "01353018a6761c43bfa05c659d8339be14fc48e8",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_quarter_01353018a_dpl"
+        },
+        {
+          "name": "hbm_su_quarter_r23_5b48044bf",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "5b48044bf8b8057a25df074d564427a85e225784",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_quarter_r23_5b48044bf"
+        }
+      ]
+    },
+    {
+      "master": "hfd_su_full",
+      "restored_owner": "/root/hbm/su",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": []
+    },
+    {
+      "master": "hfd_su_red",
+      "restored_owner": "/root/hbm/su",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": []
+    },
+    {
+      "master": "hfd_svc_SE_s0",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SE_s0_2ec0ab4f9_r22",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_svc_SE_s0_e26c4446e_r18",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_e26c4446e_r18"
+        },
+        {
+          "name": "hbm_svc_SE_s0_e8b5132fb_r18b",
+          "status": "RUNNING",
+          "host": "ot-pve1",
+          "source": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s0_e8b5132fb_r18b"
+        },
+        {
+          "name": "hbm_svc_SE_s0_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SE_s0_d6f9d25a1_bud",
+          "status": "NEEDS_HUMAN",
+          "host": "ot-epyc1tb",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s0_d6f9d25a1_bud"
+        },
+        {
+          "name": "hbm_svc_SE_s0_312bf36c8_s4",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_312bf36c8_s4"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s1",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SE_s1_d6f9d25a1_bud",
+          "status": "NEEDS_HUMAN",
+          "host": "ot-epyc1tb",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s1_d6f9d25a1_bud"
+        },
+        {
+          "name": "hbm_svc_SE_s1_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SE_s1_e26c4446e_r18",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_e26c4446e_r18"
+        },
+        {
+          "name": "hbm_svc_SE_s1_312bf36c8_s4",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc2",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_312bf36c8_s4"
+        },
+        {
+          "name": "hbm_svc_SE_s1_2ec0ab4f9_r22",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc3",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_2ec0ab4f9_r22"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s2",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SE_s2_2ec0ab4f9_r22",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s2_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_svc_SE_s2_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s2_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SE_s2_312bf36c8_s4",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s2_312bf36c8_s4"
+        },
+        {
+          "name": "hbm_svc_SE_s2_d6f9d25a1_bud",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc3",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s2_d6f9d25a1_bud"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s3",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SE_s3_312bf36c8_s4",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc2",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_312bf36c8_s4"
+        },
+        {
+          "name": "hbm_svc_SE_s3_e26c4446e_r18",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_e26c4446e_r18"
+        },
+        {
+          "name": "hbm_svc_SE_s3_2ec0ab4f9_r22",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc1tb",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s3_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm-svc-SE_s3-fb5bc706e-b",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc3",
+          "source": "fb5bc706eac8134ea1368bdf2aabe489a13579fb",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm-svc-SE_s3-fb5bc706e-b"
+        },
+        {
+          "name": "hbm_svc_SE_s3_d6f9d25a1_bud",
+          "status": "NEEDS_HUMAN",
+          "host": "ot-epyc1tb",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s3_d6f9d25a1_bud"
+        },
+        {
+          "name": "hbm-svc-SE_s3-fb5bc706e",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "fb5bc706eac8134ea1368bdf2aabe489a13579fb",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm-svc-SE_s3-fb5bc706e"
+        },
+        {
+          "name": "hbm_svc_SE_s3_70a27c406_bud",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc1tb",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s3_70a27c406_bud"
+        },
+        {
+          "name": "hbm_svc_SE_s3_e8b5132fb_r18b",
+          "status": "RUNNING",
+          "host": "ot-pve1",
+          "source": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s3_e8b5132fb_r18b"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s4",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SE_s4_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s4_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SE_s4_312bf36c8_s4",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s4_312bf36c8_s4"
+        },
+        {
+          "name": "hbm_svc_SE_s4_d6f9d25a1_bud",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc1tb",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s4_d6f9d25a1_bud"
+        },
+        {
+          "name": "hbm_svc_SE_s4_2ec0ab4f9_r22",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s4_2ec0ab4f9_r22"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s5",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SE_s5_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SE_s5_d6f9d25a1_bud",
+          "status": "NEEDS_HUMAN",
+          "host": "ot-epyc1tb",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s5_d6f9d25a1_bud"
+        },
+        {
+          "name": "hbm_svc_SE_s5_312bf36c8_s4",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_312bf36c8_s4"
+        },
+        {
+          "name": "hbm_svc_SE_s5_2ec0ab4f9_r22",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-pve1",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s5_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_svc_SE_s5_e26c4446e_r18",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc3",
+          "source": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_e26c4446e_r18"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s7",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SE_s7_9ffaeb8e2_r23",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "9ffaeb8e2c1c9b9efed233365aa281652877f32f",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s7_9ffaeb8e2_r23"
+        },
+        {
+          "name": "hbm_svc_SE_s7_70a27c406",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s7_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SE_s7_d6f9d25a1_bud",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc1tb",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s7_d6f9d25a1_bud"
+        },
+        {
+          "name": "hbm_svc_SE_s7_2ec0ab4f9_r22",
+          "status": "CANCELLED",
+          "host": "ot-pve1",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s7_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_svc_SE_s7_8afc53d4a_s3",
+          "status": "RUNNING",
+          "host": "ot-pve1",
+          "source": "8afc53d4a37dec30d9560120e876c23137614cea",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s7_8afc53d4a_s3"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SE_s8",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SE_s8_9ffaeb8e2_r23",
+          "status": "CLOSED",
+          "host": "ot-epyc2",
+          "source": "9ffaeb8e2c1c9b9efed233365aa281652877f32f",
+          "stage": "commit",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s8_9ffaeb8e2_r23"
+        }
+      ],
+      "available_committed_real_view": "a6ede8cde",
+      "action": "Integrate source-pinned routed record then validate actual master/pin/clock compatibility; missing in snapshot is not current closure failure."
+    },
+    {
+      "master": "hfd_svc_SW_s0",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SW_s0_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s0_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SW_s0_e26c4446e_r18",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s0_e26c4446e_r18"
+        },
+        {
+          "name": "hbm_svc_SW_s0_2ec0ab4f9_r22",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s0_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_svc_SW_s0_d6f9d25a1_bud",
+          "status": "NEEDS_HUMAN",
+          "host": "ot-epyc1tb",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s0_d6f9d25a1_bud"
+        },
+        {
+          "name": "hbm_svc_SW_s0_312bf36c8_s4",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s0_312bf36c8_s4"
+        },
+        {
+          "name": "hbm_svc_SW_s0_e8b5132fb_r18b",
+          "status": "RUNNING",
+          "host": "ot-pve1",
+          "source": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s0_e8b5132fb_r18b"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s1",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SW_s1_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s1_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SW_s1_e8b5132fb_r18b",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s1_e8b5132fb_r18b"
+        },
+        {
+          "name": "hbm_svc_SW_s1_312bf36c8_s4",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc2",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s1_312bf36c8_s4"
+        },
+        {
+          "name": "hbm_svc_SW_s1_2ec0ab4f9_r22",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc2",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s1_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_svc_SW_s1_d6f9d25a1_bud",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc1tb",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s1_d6f9d25a1_bud"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s2",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SW_s2_d6f9d25a1_bud",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s2_d6f9d25a1_bud"
+        },
+        {
+          "name": "hbm_svc_SW_s2_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s2_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SW_s2_2ec0ab4f9_r22",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s2_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_svc_SW_s2_312bf36c8_s4",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s2_312bf36c8_s4"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s3",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SW_s3_e26c4446e_r18",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "e26c4446ea940f9265a92e19bbf9914c5cff4fc2",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_e26c4446e_r18"
+        },
+        {
+          "name": "hbm_svc_SW_s3_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SW_s3_312bf36c8_s4",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc2",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_312bf36c8_s4"
+        },
+        {
+          "name": "hbm_svc_SW_s3_d6f9d25a1_bud",
+          "status": "NEEDS_HUMAN",
+          "host": "ot-epyc1tb",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s3_d6f9d25a1_bud"
+        },
+        {
+          "name": "hbm_svc_SW_s3_2ec0ab4f9_r22",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_2ec0ab4f9_r22"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s5",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SW_s5_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s5_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SW_s5_2ec0ab4f9_r22",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s5_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_svc_SW_s5_f84465b9b_s4",
+          "status": "RUNNING",
+          "host": "ot-pve1",
+          "source": "f84465b9bc78e137faf6a506c563c407d033cf67",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s5_f84465b9b_s4"
+        },
+        {
+          "name": "hbm_svc_SW_s5_d6f9d25a1_bud",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc1tb",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s5_d6f9d25a1_bud"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s6",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SW_s6_2ec0ab4f9_r22",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s6_2ec0ab4f9_r22"
+        },
+        {
+          "name": "hbm_svc_SW_s6_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s6_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SW_s6_d6f9d25a1_bud",
+          "status": "NEEDS_HUMAN",
+          "host": "ot-epyc3",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s6_d6f9d25a1_bud"
+        },
+        {
+          "name": "hbm_svc_SW_s6_e8b5132fb_r18b",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc1tb",
+          "source": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s6_e8b5132fb_r18b"
+        },
+        {
+          "name": "hbm_svc_SW_s6_312bf36c8_s4",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s6_312bf36c8_s4"
+        }
+      ]
+    },
+    {
+      "master": "hfd_svc_SW_s7",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_svc_SW_s7_70a27c406",
+          "status": "CANCELLED",
+          "host": "ot-pve1",
+          "source": "70a27c4061d068b4fe615832889915b660ed086a",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s7_70a27c406"
+        },
+        {
+          "name": "hbm_svc_SW_s7_312bf36c8_s4",
+          "status": "RUNNING",
+          "host": "ot-epyc1tb",
+          "source": "312bf36c8e8ea40323a8d5e452adb31f29bf8ae4",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s7_312bf36c8_s4"
+        },
+        {
+          "name": "hbm_svc_SW_s7_e8b5132fb_r18b",
+          "status": "NEEDS_RTL",
+          "host": "ot-epyc1tb",
+          "source": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+          "stage": "summary",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s7_e8b5132fb_r18b"
+        },
+        {
+          "name": "hbm_svc_SW_s7_d6f9d25a1_bud",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc3",
+          "source": "d6f9d25a1cd7df5edfc638c768c8c4a4cacd1ab6",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s7_d6f9d25a1_bud"
+        },
+        {
+          "name": "hbm_svc_SW_s7_2ec0ab4f9_r22",
+          "status": "RUNNING",
+          "host": "ot-epyc2",
+          "source": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s7_2ec0ab4f9_r22"
+        }
+      ]
+    },
+    {
+      "master": "hfd_vm_ne",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_vm_ne_fc9fb499c",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "fc9fb499c1cc3b64abed9175ff85920567f056b5",
+          "stage": "bench_vm_tiles_neg_xbus",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm_ne_fc9fb499c"
+        },
+        {
+          "name": "hbm_vm_ne_683550387",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc1tb",
+          "source": "683550387d9e35dc7b7d774823d7fd38752a162b",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm_ne_683550387"
+        },
+        {
+          "name": "hbm_vm_ne_d51dc71a2",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "d51dc71a2a4e23ed27a7e12fe6a98477a6d73403",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm_ne_d51dc71a2"
+        }
+      ]
+    },
+    {
+      "master": "hfd_vm_nw",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_vm_nw_fc9fb499c",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "fc9fb499c1cc3b64abed9175ff85920567f056b5",
+          "stage": "bench_vm_tiles_neg_xbus",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm_nw_fc9fb499c"
+        },
+        {
+          "name": "hbm_vm_nw_683550387",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc1tb",
+          "source": "683550387d9e35dc7b7d774823d7fd38752a162b",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm_nw_683550387"
+        },
+        {
+          "name": "hbm_vm_nw_d51dc71a2",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "d51dc71a2a4e23ed27a7e12fe6a98477a6d73403",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm_nw_d51dc71a2"
+        }
+      ]
+    },
+    {
+      "master": "hfd_vm_se",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_vm_se_d51dc71a2",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "d51dc71a2a4e23ed27a7e12fe6a98477a6d73403",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm_se_d51dc71a2"
+        },
+        {
+          "name": "hbm_vm_se_fc9fb499c",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "fc9fb499c1cc3b64abed9175ff85920567f056b5",
+          "stage": "bench_vm_tiles_neg_xbus",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm_se_fc9fb499c"
+        },
+        {
+          "name": "hbm_vm_se_683550387",
+          "status": "NEEDS_BUDGET",
+          "host": "ot-epyc1tb",
+          "source": "683550387d9e35dc7b7d774823d7fd38752a162b",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm_se_683550387"
+        }
+      ]
+    },
+    {
+      "master": "hfd_vm_sw",
+      "restored_owner": "/root/hbm/sm_views",
+      "status": "MISSING_LIBERTY_IN_R23C_SNAPSHOT",
+      "required_action": "Locate source-pinned real view or retain closure blocker; no synthetic timing substitution",
+      "local_libs": [],
+      "jobs": [
+        {
+          "name": "hbm_vm_sw_30be4c713",
+          "status": "CANCELLED",
+          "host": "ot-epyc1tb",
+          "source": "30be4c7139c0f82b94b56f5426896064b8de2096",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm_sw_30be4c713"
+        },
+        {
+          "name": "hbm_vm_sw_d51dc71a2",
+          "status": "RUNNING",
+          "host": "ot-epyc3",
+          "source": "d51dc71a2a4e23ed27a7e12fe6a98477a6d73403",
+          "stage": "route",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm_sw_d51dc71a2"
+        },
+        {
+          "name": "hbm_vm_sw_683550387",
+          "status": "CANCELLED",
+          "host": "ot-epyc1tb",
+          "source": "683550387d9e35dc7b7d774823d7fd38752a162b",
+          "stage": "calibrate",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm_sw_683550387"
+        },
+        {
+          "name": "hbm_vm_sw_fc9fb499c",
+          "status": "CANCELLED",
+          "host": "ot-epyc3",
+          "source": "fc9fb499c1cc3b64abed9175ff85920567f056b5",
+          "stage": "bench_vm_tiles_neg_xbus",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm_sw_fc9fb499c"
+        }
+      ]
+    }
+  ]
+}

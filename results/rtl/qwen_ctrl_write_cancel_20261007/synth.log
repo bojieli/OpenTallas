@@ -1,0 +1,1843 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Executing script file `/tmp/qwen-control-cancel-20261007/synth.ys' --
+
+1. Executing Verilog-2005 frontend: /tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv
+Parsing SystemVerilog input from `/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_ctrl_write_cancel'.
+Generating RTLIL representation for module `\ot_qwen_ctrl_write_cancel_state'.
+Warning: Replacing memory \rows with list of registers. See /tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:165
+Warning: Replacing memory \completion with list of registers. See /tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:164
+Warning: Replacing memory \ingress with list of registers. See /tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:163
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \ENABLE = 1
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_ctrl_write_cancel'.
+Parameter \ENABLE = 1
+Generating RTLIL representation for module `$paramod\ot_qwen_ctrl_write_cancel\ENABLE=s32'00000000000000000000000000000001'.
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_cancel
+Used module:     \ot_qwen_ctrl_write_cancel_state
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_cancel
+Used module:     \ot_qwen_ctrl_write_cancel_state
+Removing unused module `$paramod\ot_qwen_ctrl_write_cancel\ENABLE=s32'00000000000000000000000000000001'.
+Removed 1 unused modules.
+
+4. Executing SYNTH pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_cancel
+Used module:     \ot_qwen_ctrl_write_cancel_state
+
+4.1.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_cancel
+Used module:     \ot_qwen_ctrl_write_cancel_state
+Removed 0 unused modules.
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 1 dead cases from process $proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:147$293 in module ot_qwen_ctrl_write_cancel_state.
+Marked 1 switch rules as full_case in process $proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:147$293 in module ot_qwen_ctrl_write_cancel_state.
+Removed 1 dead cases from process $proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$290 in module ot_qwen_ctrl_write_cancel_state.
+Marked 1 switch rules as full_case in process $proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$290 in module ot_qwen_ctrl_write_cancel_state.
+Removed 1 dead cases from process $proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$287 in module ot_qwen_ctrl_write_cancel_state.
+Marked 1 switch rules as full_case in process $proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$287 in module ot_qwen_ctrl_write_cancel_state.
+Removed 1 dead cases from process $proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$284 in module ot_qwen_ctrl_write_cancel_state.
+Marked 1 switch rules as full_case in process $proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$284 in module ot_qwen_ctrl_write_cancel_state.
+Removed 2 dead cases from process $proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187 in module ot_qwen_ctrl_write_cancel_state.
+Marked 12 switch rules as full_case in process $proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187 in module ot_qwen_ctrl_write_cancel_state.
+Marked 1 switch rules as full_case in process $proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:82$388 in module ot_qwen_ctrl_write_cancel.
+Removed a total of 6 dead cases.
+
+4.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 41 assignments to connections.
+
+4.2.4. Executing PROC_INIT pass (extract init attributes).
+
+4.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+Found async reset \rst_n in `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:82$388'.
+
+4.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~25 debug messages>
+
+4.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:147$293'.
+     1/1: $1$mem2reg_rd$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:147$179_DATA[18:0]$295
+Creating decoders for process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$290'.
+     1/1: $1$mem2reg_rd$\completion$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$178_DATA[32:0]$292
+Creating decoders for process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$287'.
+     1/1: $1$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$177_DATA[288:0]$289
+Creating decoders for process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$284'.
+     1/1: $1$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$176_DATA[288:0]$286
+Creating decoders for process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+     1/172: $5$lookahead\open_bank$186[31:0]$276
+     2/172: $5$bitselwrite$pos$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$175[4:0]$275
+     3/172: $4$mem2reg_wr$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$184_ADDR[4:0]$264
+     4/172: $4$mem2reg_wr$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$184_DATA[18:0]$265
+     5/172: $4$lookahead\open_bank$186[31:0]$266
+     6/172: $4$bitselwrite$pos$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$174[4:0]$262
+     7/172: $4$bitselwrite$pos$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$175[4:0]$263
+     8/172: $3$lookahead\open_bank$186[31:0]$260
+     9/172: $3$mem2reg_wr$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$184_DATA[18:0]$259
+    10/172: $3$mem2reg_wr$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$184_ADDR[4:0]$258
+    11/172: $3$bitselwrite$pos$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$175[4:0]$257
+    12/172: $3$bitselwrite$pos$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$174[4:0]$256
+    13/172: $4$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$183_DATA[288:0]$249
+    14/172: $4$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$182_DATA[288:0]$248
+    15/172: $3$mem2reg_wr$\completion$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$181_ADDR[5:0]$242
+    16/172: $3$mem2reg_wr$\completion$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$181_DATA[32:0]$243
+    17/172: $3$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$183_DATA[288:0]$247
+    18/172: $3$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$183_ADDR[3:0]$246
+    19/172: $3$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$182_DATA[288:0]$245
+    20/172: $3$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$182_ADDR[3:0]$244
+    21/172: $3$mem2reg_wr$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:178$180_ADDR[3:0]$238
+    22/172: $3$mem2reg_wr$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:178$180_DATA[288:0]$239
+    23/172: $2\j[31:0]
+    24/172: $2$lookahead\open_bank$186[31:0]$227
+    25/172: $2$mem2reg_wr$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$184_DATA[18:0]$226
+    26/172: $2$mem2reg_wr$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$184_ADDR[4:0]$225
+    27/172: $2$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$183_DATA[288:0]$224
+    28/172: $2$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$183_ADDR[3:0]$223
+    29/172: $2$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$182_DATA[288:0]$222
+    30/172: $2$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$182_ADDR[3:0]$221
+    31/172: $2$mem2reg_wr$\completion$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$181_DATA[32:0]$220
+    32/172: $2$mem2reg_wr$\completion$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$181_ADDR[5:0]$219
+    33/172: $2$mem2reg_wr$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:178$180_DATA[288:0]$218
+    34/172: $2$mem2reg_wr$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:178$180_ADDR[3:0]$217
+    35/172: $2$bitselwrite$pos$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$175[4:0]$216
+    36/172: $2$bitselwrite$pos$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$174[4:0]$215
+    37/172: $1$lookahead\open_bank$186[31:0]$214
+    38/172: $1$mem2reg_wr$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$184_DATA[18:0]$213
+    39/172: $1$mem2reg_wr$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$184_ADDR[4:0]$212
+    40/172: $1$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$183_DATA[288:0]$211
+    41/172: $1$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$183_ADDR[3:0]$210
+    42/172: $1$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$182_DATA[288:0]$209
+    43/172: $1$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$182_ADDR[3:0]$208
+    44/172: $1$mem2reg_wr$\completion$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$181_DATA[32:0]$207
+    45/172: $1$mem2reg_wr$\completion$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$181_ADDR[5:0]$206
+    46/172: $1$mem2reg_wr$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:178$180_DATA[288:0]$205
+    47/172: $1$mem2reg_wr$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:178$180_ADDR[3:0]$204
+    48/172: $1$bitselwrite$pos$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$175[4:0]$203
+    49/172: $1$bitselwrite$pos$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$174[4:0]$202
+    50/172: $1\j[31:0]
+    51/172: $0\rows[31][18:0]
+    52/172: $0\rows[30][18:0]
+    53/172: $0\rows[29][18:0]
+    54/172: $0\rows[28][18:0]
+    55/172: $0\rows[27][18:0]
+    56/172: $0\rows[26][18:0]
+    57/172: $0\rows[25][18:0]
+    58/172: $0\rows[24][18:0]
+    59/172: $0\rows[23][18:0]
+    60/172: $0\rows[22][18:0]
+    61/172: $0\rows[21][18:0]
+    62/172: $0\rows[20][18:0]
+    63/172: $0\rows[19][18:0]
+    64/172: $0\rows[18][18:0]
+    65/172: $0\rows[17][18:0]
+    66/172: $0\rows[16][18:0]
+    67/172: $0\rows[15][18:0]
+    68/172: $0\rows[14][18:0]
+    69/172: $0\rows[13][18:0]
+    70/172: $0\rows[12][18:0]
+    71/172: $0\rows[11][18:0]
+    72/172: $0\rows[10][18:0]
+    73/172: $0\rows[9][18:0]
+    74/172: $0\rows[8][18:0]
+    75/172: $0\rows[7][18:0]
+    76/172: $0\rows[6][18:0]
+    77/172: $0\rows[5][18:0]
+    78/172: $0\rows[4][18:0]
+    79/172: $0\rows[3][18:0]
+    80/172: $0\rows[2][18:0]
+    81/172: $0\rows[1][18:0]
+    82/172: $0\rows[0][18:0]
+    83/172: $0\completion[63][32:0]
+    84/172: $0\completion[62][32:0]
+    85/172: $0\completion[61][32:0]
+    86/172: $0\completion[60][32:0]
+    87/172: $0\completion[59][32:0]
+    88/172: $0\completion[58][32:0]
+    89/172: $0\completion[57][32:0]
+    90/172: $0\completion[56][32:0]
+    91/172: $0\completion[55][32:0]
+    92/172: $0\completion[54][32:0]
+    93/172: $0\completion[53][32:0]
+    94/172: $0\completion[52][32:0]
+    95/172: $0\completion[51][32:0]
+    96/172: $0\completion[50][32:0]
+    97/172: $0\completion[49][32:0]
+    98/172: $0\completion[48][32:0]
+    99/172: $0\completion[47][32:0]
+   100/172: $0\completion[46][32:0]
+   101/172: $0\completion[45][32:0]
+   102/172: $0\completion[44][32:0]
+   103/172: $0\completion[43][32:0]
+   104/172: $0\completion[42][32:0]
+   105/172: $0\completion[41][32:0]
+   106/172: $0\completion[40][32:0]
+   107/172: $0\completion[39][32:0]
+   108/172: $0\completion[38][32:0]
+   109/172: $0\completion[37][32:0]
+   110/172: $0\completion[36][32:0]
+   111/172: $0\completion[35][32:0]
+   112/172: $0\completion[34][32:0]
+   113/172: $0\completion[33][32:0]
+   114/172: $0\completion[32][32:0]
+   115/172: $0\completion[31][32:0]
+   116/172: $0\completion[30][32:0]
+   117/172: $0\completion[29][32:0]
+   118/172: $0\completion[28][32:0]
+   119/172: $0\completion[27][32:0]
+   120/172: $0\completion[26][32:0]
+   121/172: $0\completion[25][32:0]
+   122/172: $0\completion[24][32:0]
+   123/172: $0\completion[23][32:0]
+   124/172: $0\completion[22][32:0]
+   125/172: $0\completion[21][32:0]
+   126/172: $0\completion[20][32:0]
+   127/172: $0\completion[19][32:0]
+   128/172: $0\completion[18][32:0]
+   129/172: $0\completion[17][32:0]
+   130/172: $0\completion[16][32:0]
+   131/172: $0\completion[15][32:0]
+   132/172: $0\completion[14][32:0]
+   133/172: $0\completion[13][32:0]
+   134/172: $0\completion[12][32:0]
+   135/172: $0\completion[11][32:0]
+   136/172: $0\completion[10][32:0]
+   137/172: $0\completion[9][32:0]
+   138/172: $0\completion[8][32:0]
+   139/172: $0\completion[7][32:0]
+   140/172: $0\completion[6][32:0]
+   141/172: $0\completion[5][32:0]
+   142/172: $0\completion[4][32:0]
+   143/172: $0\completion[3][32:0]
+   144/172: $0\completion[2][32:0]
+   145/172: $0\completion[1][32:0]
+   146/172: $0\completion[0][32:0]
+   147/172: $0\ingress[15][288:0]
+   148/172: $0\ingress[14][288:0]
+   149/172: $0\ingress[13][288:0]
+   150/172: $0\ingress[12][288:0]
+   151/172: $0\ingress[11][288:0]
+   152/172: $0\ingress[10][288:0]
+   153/172: $0\ingress[9][288:0]
+   154/172: $0\ingress[8][288:0]
+   155/172: $0\ingress[7][288:0]
+   156/172: $0\ingress[6][288:0]
+   157/172: $0\ingress[5][288:0]
+   158/172: $0\ingress[4][288:0]
+   159/172: $0\ingress[3][288:0]
+   160/172: $0\ingress[2][288:0]
+   161/172: $0\ingress[1][288:0]
+   162/172: $0\ingress[0][288:0]
+   163/172: $0\arp[5:0]
+   164/172: $0\awp[5:0]
+   165/172: $0\cp[3:0]
+   166/172: $0\hp[3:0]
+   167/172: $0\wp[3:0]
+   168/172: $0\acknowledged[0:0]
+   169/172: $0\aborted[0:0]
+   170/172: $0\committed[6:0]
+   171/172: $0\handed[4:0]
+   172/172: $0\occupied[4:0]
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:82$388'.
+     1/2: $0\permit_state[0:0]
+     2/2: $0\trip_seen[0:0]
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:50$481'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$482'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$483'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$484'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$485'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$486'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$487'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$488'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$489'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$490'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:54$491'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:50$492'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$493'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$494'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$495'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$496'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$497'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$498'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$499'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$500'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$501'.
+Creating decoders for process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:54$502'.
+
+4.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_rd$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:147$179_DATA' from process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:147$293'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_rd$\completion$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$178_DATA' from process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$290'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$177_DATA' from process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$287'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$176_DATA' from process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$284'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\state[0]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:50$481'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\hand[0]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$482'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\head[0]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$483'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\completed[0]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$484'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\occupied[0]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$485'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\handed[0]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$486'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\committed[0]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$487'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\aborted[0]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$488'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\acknowledged[0]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$489'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\bank_open[0]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$490'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\bank_row[0]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:54$491'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\state[1]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:50$492'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\hand[1]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$493'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\head[1]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$494'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\completed[1]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$495'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\occupied[1]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$496'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\handed[1]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$497'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\committed[1]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$498'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\aborted[1]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$499'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\acknowledged[1]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$500'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\bank_open[1]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$501'.
+No latch inferred for signal `\ot_qwen_ctrl_write_cancel.\bank_row[1]' from process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:54$502'.
+
+4.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\occupied' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4564' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\handed' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4569' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\committed' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4574' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\aborted' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4579' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\acknowledged' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4584' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\open_bank' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4589' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\wp' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4594' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\hp' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4599' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\cp' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4604' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\awp' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4609' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\arp' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4614' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\j' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4619' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$bitselwrite$pos$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$174' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4624' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$bitselwrite$pos$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$175' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4629' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[0]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4634' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[1]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4639' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[2]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4644' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[3]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4649' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[4]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4654' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[5]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4659' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[6]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4664' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[7]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4669' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[8]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4674' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[9]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4679' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[10]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4684' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[11]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4689' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[12]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4694' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[13]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4699' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[14]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4704' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\ingress[15]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4709' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[0]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4714' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[1]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4719' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[2]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4724' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[3]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4729' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[4]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4734' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[5]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4739' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[6]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4744' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[7]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4749' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[8]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4754' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[9]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4759' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[10]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4764' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[11]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4769' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[12]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4774' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[13]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4779' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[14]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4784' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[15]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4789' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[16]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4794' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[17]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4799' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[18]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4804' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[19]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4809' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[20]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4814' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[21]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4819' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[22]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4824' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[23]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4829' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[24]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4834' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[25]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4839' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[26]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4844' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[27]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4849' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[28]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4854' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[29]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4859' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[30]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4864' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[31]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4869' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[32]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4874' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[33]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4879' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[34]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4884' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[35]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4889' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[36]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4894' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[37]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4899' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[38]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4904' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[39]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4909' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[40]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4914' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[41]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4919' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[42]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4924' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[43]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4929' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[44]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4934' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[45]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4939' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[46]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4944' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[47]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4949' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[48]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4954' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[49]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4959' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[50]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4964' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[51]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4969' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[52]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4974' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[53]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4979' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[54]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4984' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[55]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4989' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[56]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4994' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[57]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$4999' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[58]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5004' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[59]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5009' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[60]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5014' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[61]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5019' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[62]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5024' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\completion[63]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5029' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[0]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5034' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[1]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5039' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[2]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5044' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[3]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5049' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[4]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5054' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[5]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5059' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[6]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5064' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[7]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5069' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[8]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5074' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[9]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5079' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[10]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5084' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[11]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5089' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[12]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5094' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[13]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5099' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[14]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5104' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[15]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5109' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[16]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5114' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[17]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5119' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[18]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5124' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[19]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5129' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[20]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5134' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[21]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5139' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[22]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5144' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[23]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5149' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[24]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5154' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[25]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5159' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[26]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5164' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[27]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5169' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[28]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5174' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[29]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5179' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[30]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5184' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.\rows[31]' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5189' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_wr$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:178$180_ADDR' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5194' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_wr$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:178$180_DATA' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5199' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_wr$\completion$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$181_ADDR' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5204' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_wr$\completion$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$181_DATA' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5209' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$182_ADDR' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5214' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$182_DATA' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5219' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$183_ADDR' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5224' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_rd$\ingress$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:181$183_DATA' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5229' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_wr$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$184_ADDR' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5234' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$mem2reg_wr$\rows$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$184_DATA' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5239' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel_state.$lookahead\open_bank$186' using process `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+  created $adff cell `$procdff$5244' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel.\trip_seen' using process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:82$388'.
+  created $adff cell `$procdff$5249' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_cancel.\permit_state' using process `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:82$388'.
+  created $adff cell `$procdff$5254' with positive edge clock and positive level reset.
+
+4.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:147$293'.
+Removing empty process `ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:147$293'.
+Found and cleaned up 1 empty switch in `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$290'.
+Removing empty process `ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$290'.
+Found and cleaned up 1 empty switch in `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$287'.
+Removing empty process `ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$287'.
+Found and cleaned up 1 empty switch in `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$284'.
+Removing empty process `ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:146$284'.
+Found and cleaned up 20 empty switches in `\ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+Removing empty process `ot_qwen_ctrl_write_cancel_state.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:159$187'.
+Found and cleaned up 1 empty switch in `\ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:82$388'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:82$388'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:50$481'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$482'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$483'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$484'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$485'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$486'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$487'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$488'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$489'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$490'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:54$491'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:50$492'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$493'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$494'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$495'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:51$496'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$497'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$498'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:52$499'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$500'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:53$501'.
+Removing empty process `ot_qwen_ctrl_write_cancel.$proc$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:54$502'.
+Cleaned up 25 empty switches.
+
+4.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+<suppressed ~286 debug messages>
+Optimizing module ot_qwen_ctrl_write_cancel.
+<suppressed ~15 debug messages>
+
+4.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+Optimizing module ot_qwen_ctrl_write_cancel.
+<suppressed ~2 debug messages>
+
+4.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+Removed 208 unused cells and 987 unused wires.
+<suppressed ~211 debug messages>
+
+4.5. Executing CHECK pass (checking for obvious problems).
+Checking module ot_qwen_ctrl_write_cancel_state...
+Checking module ot_qwen_ctrl_write_cancel...
+Found and reported 0 problems.
+
+4.6. Executing OPT pass (performing simple optimizations).
+
+4.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 847 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 810 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 808 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 807 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 806 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+<suppressed ~123 debug messages>
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 166 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 142 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 130 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 124 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 123 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+<suppressed ~129 debug messages>
+Removed a total of 84 cells.
+
+4.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$778.
+    dead port 2/2 on $mux $procmux$775.
+    dead port 1/2 on $mux $procmux$755.
+    dead port 2/2 on $mux $procmux$752.
+    dead port 1/2 on $mux $procmux$708.
+    dead port 1/2 on $mux $procmux$684.
+    dead port 2/2 on $mux $procmux$681.
+    dead port 1/2 on $mux $procmux$645.
+    dead port 2/2 on $mux $procmux$642.
+    dead port 1/2 on $mux $procmux$640.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 10 multiplexer ports.
+<suppressed ~959 debug messages>
+
+4.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel.
+Performed a total of 0 changes.
+
+4.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 796 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 794 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+<suppressed ~6 debug messages>
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 123 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 2 cells.
+
+4.6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+Removed 0 unused cells and 95 unused wires.
+<suppressed ~2 debug messages>
+
+4.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~561 debug messages>
+
+4.6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel.
+Performed a total of 0 changes.
+
+4.6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 794 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 123 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 0 cells.
+
+4.6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+
+4.6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+4.7. Executing FSM pass (extract and optimize FSM).
+
+4.7.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+4.7.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+4.7.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+
+4.7.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.7.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+4.7.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+4.7.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+4.8. Executing OPT pass (performing simple optimizations).
+
+4.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 794 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 123 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 0 cells.
+
+4.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~561 debug messages>
+
+4.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel.
+Performed a total of 0 changes.
+
+4.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 794 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 123 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 0 cells.
+
+4.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$4909 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[39][32:0], Q = \completion[39]).
+Adding EN signal on $procdff$4614 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\arp[5:0], Q = \arp).
+Adding EN signal on $procdff$5099 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[13][18:0], Q = \rows[13]).
+Adding EN signal on $procdff$4984 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[54][32:0], Q = \completion[54]).
+Adding EN signal on $procdff$5004 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[58][32:0], Q = \completion[58]).
+Adding EN signal on $procdff$4609 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\awp[5:0], Q = \awp).
+Adding EN signal on $procdff$5174 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[28][18:0], Q = \rows[28]).
+Adding EN signal on $procdff$5184 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[30][18:0], Q = \rows[30]).
+Adding EN signal on $procdff$5034 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[0][18:0], Q = \rows[0]).
+Adding EN signal on $procdff$4809 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[19][32:0], Q = \completion[19]).
+Adding EN signal on $procdff$4994 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[56][32:0], Q = \completion[56]).
+Adding EN signal on $procdff$4944 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[46][32:0], Q = \completion[46]).
+Adding EN signal on $procdff$4834 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[24][32:0], Q = \completion[24]).
+Adding EN signal on $procdff$5139 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[21][18:0], Q = \rows[21]).
+Adding EN signal on $procdff$5039 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[1][18:0], Q = \rows[1]).
+Adding EN signal on $procdff$4694 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[12][288:0], Q = \ingress[12]).
+Adding EN signal on $procdff$4969 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[51][32:0], Q = \completion[51]).
+Adding EN signal on $procdff$4949 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[47][32:0], Q = \completion[47]).
+Adding EN signal on $procdff$4634 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[0][288:0], Q = \ingress[0]).
+Adding EN signal on $procdff$4814 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[20][32:0], Q = \completion[20]).
+Adding EN signal on $procdff$4904 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[38][32:0], Q = \completion[38]).
+Adding EN signal on $procdff$4639 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[1][288:0], Q = \ingress[1]).
+Adding EN signal on $procdff$4874 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[32][32:0], Q = \completion[32]).
+Adding EN signal on $procdff$5044 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[2][18:0], Q = \rows[2]).
+Adding EN signal on $procdff$4644 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[2][288:0], Q = \ingress[2]).
+Adding EN signal on $procdff$4829 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[23][32:0], Q = \completion[23]).
+Adding EN signal on $procdff$4919 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[41][32:0], Q = \completion[41]).
+Adding EN signal on $procdff$4799 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[17][32:0], Q = \completion[17]).
+Adding EN signal on $procdff$5009 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[59][32:0], Q = \completion[59]).
+Adding EN signal on $procdff$4594 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\wp[3:0], Q = \wp).
+Adding EN signal on $procdff$4864 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[30][32:0], Q = \completion[30]).
+Adding EN signal on $procdff$4784 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[14][32:0], Q = \completion[14]).
+Adding EN signal on $procdff$4924 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[42][32:0], Q = \completion[42]).
+Adding EN signal on $procdff$4684 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[10][288:0], Q = \ingress[10]).
+Adding EN signal on $procdff$4779 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[13][32:0], Q = \completion[13]).
+Adding EN signal on $procdff$5089 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[11][18:0], Q = \rows[11]).
+Adding EN signal on $procdff$4889 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[35][32:0], Q = \completion[35]).
+Adding EN signal on $procdff$4774 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[12][32:0], Q = \completion[12]).
+Adding EN signal on $procdff$4954 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[48][32:0], Q = \completion[48]).
+Adding EN signal on $procdff$4859 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[29][32:0], Q = \completion[29]).
+Adding EN signal on $procdff$4869 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[31][32:0], Q = \completion[31]).
+Adding EN signal on $procdff$5029 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[63][32:0], Q = \completion[63]).
+Adding EN signal on $procdff$4769 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[11][32:0], Q = \completion[11]).
+Adding EN signal on $procdff$4964 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[50][32:0], Q = \completion[50]).
+Adding EN signal on $procdff$4974 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[52][32:0], Q = \completion[52]).
+Adding EN signal on $procdff$4764 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[10][32:0], Q = \completion[10]).
+Adding EN signal on $procdff$5084 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[10][18:0], Q = \rows[10]).
+Adding EN signal on $procdff$5159 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[25][18:0], Q = \rows[25]).
+Adding EN signal on $procdff$4759 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[9][32:0], Q = \completion[9]).
+Adding EN signal on $procdff$4999 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[57][32:0], Q = \completion[57]).
+Adding EN signal on $procdff$4854 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[28][32:0], Q = \completion[28]).
+Adding EN signal on $procdff$4754 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[8][32:0], Q = \completion[8]).
+Adding EN signal on $procdff$5134 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[20][18:0], Q = \rows[20]).
+Adding EN signal on $procdff$5114 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[16][18:0], Q = \rows[16]).
+Adding EN signal on $procdff$4749 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[7][32:0], Q = \completion[7]).
+Adding EN signal on $procdff$5079 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[9][18:0], Q = \rows[9]).
+Adding EN signal on $procdff$4649 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[3][288:0], Q = \ingress[3]).
+Adding EN signal on $procdff$4589 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0$lookahead\open_bank$186[31:0]$200, Q = \open_bank).
+Adding EN signal on $procdff$4819 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[21][32:0], Q = \completion[21]).
+Adding EN signal on $procdff$5179 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[29][18:0], Q = \rows[29]).
+Adding EN signal on $procdff$4654 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[4][288:0], Q = \ingress[4]).
+Adding EN signal on $procdff$4894 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[36][32:0], Q = \completion[36]).
+Adding EN signal on $procdff$5049 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[3][18:0], Q = \rows[3]).
+Adding EN signal on $procdff$4659 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[5][288:0], Q = \ingress[5]).
+Adding EN signal on $procdff$5104 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[14][18:0], Q = \rows[14]).
+Adding EN signal on $procdff$4679 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[9][288:0], Q = \ingress[9]).
+Adding EN signal on $procdff$4664 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[6][288:0], Q = \ingress[6]).
+Adding EN signal on $procdff$4824 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[22][32:0], Q = \completion[22]).
+Adding EN signal on $procdff$4934 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[44][32:0], Q = \completion[44]).
+Adding EN signal on $procdff$4669 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[7][288:0], Q = \ingress[7]).
+Adding EN signal on $procdff$4689 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[11][288:0], Q = \ingress[11]).
+Adding EN signal on $procdff$5054 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[4][18:0], Q = \rows[4]).
+Adding EN signal on $procdff$4674 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[8][288:0], Q = \ingress[8]).
+Adding EN signal on $procdff$4914 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[40][32:0], Q = \completion[40]).
+Adding EN signal on $procdff$4929 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[43][32:0], Q = \completion[43]).
+Adding EN signal on $procdff$4604 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\cp[3:0], Q = \cp).
+Adding EN signal on $procdff$4804 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[18][32:0], Q = \completion[18]).
+Adding EN signal on $procdff$5129 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[19][18:0], Q = \rows[19]).
+Adding EN signal on $procdff$4744 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[6][32:0], Q = \completion[6]).
+Adding EN signal on $procdff$5189 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[31][18:0], Q = \rows[31]).
+Adding EN signal on $procdff$4849 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[27][32:0], Q = \completion[27]).
+Adding EN signal on $procdff$4739 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[5][32:0], Q = \completion[5]).
+Adding EN signal on $procdff$5059 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[5][18:0], Q = \rows[5]).
+Adding EN signal on $procdff$5164 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[26][18:0], Q = \rows[26]).
+Adding EN signal on $procdff$4734 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[4][32:0], Q = \completion[4]).
+Adding EN signal on $procdff$5074 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[8][18:0], Q = \rows[8]).
+Adding EN signal on $procdff$4884 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[34][32:0], Q = \completion[34]).
+Adding EN signal on $procdff$4729 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[3][32:0], Q = \completion[3]).
+Adding EN signal on $procdff$4939 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[45][32:0], Q = \completion[45]).
+Adding EN signal on $procdff$4844 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[26][32:0], Q = \completion[26]).
+Adding EN signal on $procdff$4724 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[2][32:0], Q = \completion[2]).
+Adding EN signal on $procdff$4959 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[49][32:0], Q = \completion[49]).
+Adding EN signal on $procdff$5154 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[24][18:0], Q = \rows[24]).
+Adding EN signal on $procdff$4719 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[1][32:0], Q = \completion[1]).
+Adding EN signal on $procdff$5069 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[7][18:0], Q = \rows[7]).
+Adding EN signal on $procdff$5124 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[18][18:0], Q = \rows[18]).
+Adding EN signal on $procdff$4714 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[0][32:0], Q = \completion[0]).
+Adding EN signal on $procdff$5014 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[60][32:0], Q = \completion[60]).
+Adding EN signal on $procdff$4839 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[25][32:0], Q = \completion[25]).
+Adding EN signal on $procdff$4709 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[15][288:0], Q = \ingress[15]).
+Adding EN signal on $procdff$5149 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[23][18:0], Q = \rows[23]).
+Adding EN signal on $procdff$5109 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[15][18:0], Q = \rows[15]).
+Adding EN signal on $procdff$4704 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[14][288:0], Q = \ingress[14]).
+Adding EN signal on $procdff$5064 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[6][18:0], Q = \rows[6]).
+Adding EN signal on $procdff$4979 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[53][32:0], Q = \completion[53]).
+Adding EN signal on $procdff$4699 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\ingress[13][288:0], Q = \ingress[13]).
+Adding EN signal on $procdff$4789 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[15][32:0], Q = \completion[15]).
+Adding EN signal on $procdff$5169 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[27][18:0], Q = \rows[27]).
+Adding EN signal on $procdff$4564 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\occupied[4:0], Q = \occupied).
+Adding EN signal on $procdff$4899 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[37][32:0], Q = \completion[37]).
+Adding EN signal on $procdff$5019 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[61][32:0], Q = \completion[61]).
+Adding EN signal on $procdff$4569 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\handed[4:0], Q = \handed).
+Adding EN signal on $procdff$5094 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[12][18:0], Q = \rows[12]).
+Adding EN signal on $procdff$5144 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[22][18:0], Q = \rows[22]).
+Adding EN signal on $procdff$4574 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\committed[6:0], Q = \committed).
+Adding EN signal on $procdff$4794 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[16][32:0], Q = \completion[16]).
+Adding EN signal on $procdff$4989 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[55][32:0], Q = \completion[55]).
+Adding EN signal on $procdff$4579 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\aborted[0:0], Q = \aborted).
+Adding EN signal on $procdff$5119 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\rows[17][18:0], Q = \rows[17]).
+Adding EN signal on $procdff$5024 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[62][32:0], Q = \completion[62]).
+Adding EN signal on $procdff$4584 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\acknowledged[0:0], Q = \acknowledged).
+Adding EN signal on $procdff$4879 ($adff) from module ot_qwen_ctrl_write_cancel_state (D = $0\completion[33][32:0], Q = \completion[33]).
+Adding EN signal on $procdff$5249 ($adff) from module ot_qwen_ctrl_write_cancel (D = 1'1, Q = \trip_seen).
+Adding EN signal on $procdff$5254 ($adff) from module ot_qwen_ctrl_write_cancel (D = 1'0, Q = \permit_state).
+
+4.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+Removed 2 unused cells and 2 unused wires.
+<suppressed ~3 debug messages>
+
+4.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+<suppressed ~267 debug messages>
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~557 debug messages>
+
+4.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel.
+Performed a total of 0 changes.
+
+4.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 1174 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 1031 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+<suppressed ~429 debug messages>
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 121 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 143 cells.
+
+4.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+Removed 0 unused cells and 143 unused wires.
+<suppressed ~1 debug messages>
+
+4.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~557 debug messages>
+
+4.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel.
+Performed a total of 0 changes.
+
+4.8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 1031 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 121 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 0 cells.
+
+4.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+
+4.8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.8.23. Finished fast OPT passes. (There is nothing left to do.)
+
+4.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 2 bits (of 3) from port B of cell ot_qwen_ctrl_write_cancel_state.$eq$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$261 ($eq).
+Converting cell ot_qwen_ctrl_write_cancel_state.$neg$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$281 ($neg) from signed to unsigned.
+Removed top 1 bits (of 6) from port A of cell ot_qwen_ctrl_write_cancel_state.$neg$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$281 ($neg).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$520_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$521_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$522_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$523_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$524_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$525_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$526_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$527_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$528_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$529_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$530_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$531_CMP0 ($eq).
+Removed top 3 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$532_CMP0 ($eq).
+Removed top 3 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$533_CMP0 ($eq).
+Removed top 4 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$534_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$569_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$570_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$571_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$572_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$573_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$574_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$575_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$576_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$577_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$578_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$579_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$580_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$581_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$582_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$583_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$584_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$585_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$586_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$587_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$588_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$589_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$590_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$591_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$592_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$593_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$594_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$595_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$596_CMP0 ($eq).
+Removed top 4 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$597_CMP0 ($eq).
+Removed top 4 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$598_CMP0 ($eq).
+Removed top 5 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$599_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$627_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$628_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$629_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$630_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$631_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$632_CMP0 ($eq).
+Removed top 3 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$633_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$767_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$768_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$769_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$770_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$771_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$772_CMP0 ($eq).
+Removed top 3 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$773_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1185_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1213_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1242_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1272_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1303_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1335_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1368_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1402_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1437_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1473_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1510_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1548_CMP0 ($eq).
+Removed top 3 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1587_CMP0 ($eq).
+Removed top 3 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1627_CMP0 ($eq).
+Removed top 4 bits (of 5) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$1668_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$2504_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$2545_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$2587_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$2630_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$2674_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$2719_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$2765_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$2812_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$2860_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$2909_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$2959_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3010_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3062_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3115_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3169_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3224_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3280_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3337_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3395_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3454_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3514_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3575_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3637_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3700_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3764_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3829_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3895_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$3962_CMP0 ($eq).
+Removed top 4 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4030_CMP0 ($eq).
+Removed top 4 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4099_CMP0 ($eq).
+Removed top 5 bits (of 6) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4169_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4348_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4365_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4383_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4402_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4422_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4443_CMP0 ($eq).
+Removed top 3 bits (of 4) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4465_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4539_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4545_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_qwen_ctrl_write_cancel_state.$procmux$4551_CMP0 ($eq).
+Removed top 27 bits (of 32) from port B of cell ot_qwen_ctrl_write_cancel.$ge$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:62$321 ($ge).
+Removed top 25 bits (of 32) from port B of cell ot_qwen_ctrl_write_cancel.$ge$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:72$339 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_qwen_ctrl_write_cancel.$ne$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:75$349 ($ne).
+Removed top 2 bits (of 3) from port B of cell ot_qwen_ctrl_write_cancel.$eq$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$353 ($eq).
+Removed top 27 bits (of 30) from port A of cell ot_qwen_ctrl_write_cancel.$mul$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$356 ($mul).
+Removed top 22 bits (of 30) from port Y of cell ot_qwen_ctrl_write_cancel.$mul$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$356 ($mul).
+Removed top 19 bits (of 32) from port A of cell ot_qwen_ctrl_write_cancel.$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$357 ($add).
+Removed top 22 bits (of 32) from port B of cell ot_qwen_ctrl_write_cancel.$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$357 ($add).
+Removed top 18 bits (of 32) from port Y of cell ot_qwen_ctrl_write_cancel.$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$357 ($add).
+Removed top 18 bits (of 32) from port A of cell ot_qwen_ctrl_write_cancel.$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$358 ($add).
+Removed top 27 bits (of 32) from port B of cell ot_qwen_ctrl_write_cancel.$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$358 ($add).
+Removed top 17 bits (of 32) from port Y of cell ot_qwen_ctrl_write_cancel.$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$358 ($add).
+Removed top 16 bits (of 32) from port B of cell ot_qwen_ctrl_write_cancel.$shiftx$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$359 ($shiftx).
+Removed top 1 bits (of 8) from port A of cell ot_qwen_ctrl_write_cancel.$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:79$374 ($add).
+Removed top 3 bits (of 8) from port B of cell ot_qwen_ctrl_write_cancel.$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:79$374 ($add).
+Removed top 1 bits (of 8) from port B of cell ot_qwen_ctrl_write_cancel.$lt$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:79$375 ($lt).
+Removed top 28 bits (of 32) from port B of cell ot_qwen_ctrl_write_cancel.$le$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:91$402 ($le).
+Removed top 22 bits (of 32) from wire ot_qwen_ctrl_write_cancel.$mul$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$356_Y.
+Removed top 18 bits (of 32) from wire ot_qwen_ctrl_write_cancel.$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$357_Y.
+Removed top 17 bits (of 32) from wire ot_qwen_ctrl_write_cancel.$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$358_Y.
+
+4.10. Executing PEEPOPT pass (run peephole optimizers).
+shiftadd pattern in ot_qwen_ctrl_write_cancel: shift=$shiftx$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$359, add/sub=$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$358, offset: 19
+shiftadd pattern in ot_qwen_ctrl_write_cancel: shift=$shiftx$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$359, add/sub=$add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$357, offset: 6779
+right shiftmul pattern in ot_qwen_ctrl_write_cancel: shift=$shiftx$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$359, mul=$mul$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$356
+shiftpow2 pattern in ot_qwen_ctrl_write_cancel: shift=$shiftx$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:76$359, index=\row_bank, stride=32, width=1, ways=32
+
+4.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+Removed 3 unused cells and 6 unused wires.
+<suppressed ~4 debug messages>
+
+4.12. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_qwen_ctrl_write_cancel_state:
+  creating $macc model for $neg$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$281 ($neg).
+  creating $macc model for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:188$255 ($add).
+  creating $macc model for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:186$254 ($add).
+  creating $macc model for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:185$252 ($add).
+  creating $macc model for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:182$250 ($add).
+  creating $macc model for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:178$240 ($add).
+  creating $macc model for $sub$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:177$237 ($sub).
+  creating $macc model for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:177$236 ($add).
+  creating $macc model for $sub$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:176$235 ($sub).
+  creating $macc model for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:176$234 ($add).
+  creating $macc model for $sub$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:175$230 ($sub).
+  creating $macc model for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:175$229 ($add).
+  creating $alu model for $macc $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:175$229.
+  creating $alu model for $macc $sub$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:175$230.
+  creating $alu model for $macc $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:176$234.
+  creating $alu model for $macc $sub$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:176$235.
+  creating $alu model for $macc $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:177$236.
+  creating $alu model for $macc $sub$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:177$237.
+  creating $alu model for $macc $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:178$240.
+  creating $alu model for $macc $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:182$250.
+  creating $alu model for $macc $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:185$252.
+  creating $alu model for $macc $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:186$254.
+  creating $alu model for $macc $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:188$255.
+  creating $alu model for $macc $neg$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$281.
+  creating $alu cell for $neg$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$281: $auto$alumacc.cc:548:replace_alu$6143
+  creating $alu cell for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:188$255: $auto$alumacc.cc:548:replace_alu$6146
+  creating $alu cell for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:186$254: $auto$alumacc.cc:548:replace_alu$6149
+  creating $alu cell for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:185$252: $auto$alumacc.cc:548:replace_alu$6152
+  creating $alu cell for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:182$250: $auto$alumacc.cc:548:replace_alu$6155
+  creating $alu cell for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:178$240: $auto$alumacc.cc:548:replace_alu$6158
+  creating $alu cell for $sub$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:177$237: $auto$alumacc.cc:548:replace_alu$6161
+  creating $alu cell for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:177$236: $auto$alumacc.cc:548:replace_alu$6164
+  creating $alu cell for $sub$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:176$235: $auto$alumacc.cc:548:replace_alu$6167
+  creating $alu cell for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:176$234: $auto$alumacc.cc:548:replace_alu$6170
+  creating $alu cell for $sub$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:175$230: $auto$alumacc.cc:548:replace_alu$6173
+  creating $alu cell for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:175$229: $auto$alumacc.cc:548:replace_alu$6176
+  created 12 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module ot_qwen_ctrl_write_cancel:
+  creating $macc model for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:79$374 ($add).
+  creating $alu model for $macc $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:79$374.
+  creating $alu model for $gt$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:78$373 ($gt): new $alu
+  creating $alu model for $lt$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:79$375 ($lt): new $alu
+  creating $alu model for $ge$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:62$321 ($ge): new $alu
+  creating $alu model for $le$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:91$402 ($le): new $alu
+  creating $alu model for $ge$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:72$339 ($ge): new $alu
+  creating $alu cell for $ge$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:72$339: $auto$alumacc.cc:548:replace_alu$6184
+  creating $alu cell for $le$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:91$402: $auto$alumacc.cc:548:replace_alu$6197
+  creating $alu cell for $ge$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:62$321: $auto$alumacc.cc:548:replace_alu$6206
+  creating $alu cell for $lt$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:79$375: $auto$alumacc.cc:548:replace_alu$6219
+  creating $alu cell for $gt$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:78$373: $auto$alumacc.cc:548:replace_alu$6224
+  creating $alu cell for $add$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:79$374: $auto$alumacc.cc:548:replace_alu$6235
+  created 6 $alu and 0 $macc cells.
+
+4.13. Executing SHARE pass (SAT-based resource sharing).
+
+4.14. Executing OPT pass (performing simple optimizations).
+
+4.14.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.14.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 1031 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 136 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 0 cells.
+
+4.14.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~557 debug messages>
+
+4.14.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel.
+Performed a total of 0 changes.
+
+4.14.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 1031 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 136 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 0 cells.
+
+4.14.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+Removed 0 unused cells and 5 unused wires.
+<suppressed ~1 debug messages>
+
+4.14.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.14.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.14.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~557 debug messages>
+
+4.14.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel.
+Performed a total of 0 changes.
+
+4.14.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 1031 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 136 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 0 cells.
+
+4.14.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+
+4.14.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.14.16. Finished fast OPT passes. (There is nothing left to do.)
+
+4.15. Executing MEMORY pass.
+
+4.15.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+4.15.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+4.15.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+4.15.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+4.15.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+4.15.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+
+4.15.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+4.15.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+4.15.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+
+4.15.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+
+4.17. Executing OPT pass (performing simple optimizations).
+
+4.17.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+<suppressed ~272 debug messages>
+Optimizing module ot_qwen_ctrl_write_cancel.
+<suppressed ~3 debug messages>
+
+4.17.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 766 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 656 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+<suppressed ~330 debug messages>
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 152 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 110 cells.
+
+4.17.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.17.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+Removed 10 unused cells and 395 unused wires.
+<suppressed ~12 debug messages>
+
+4.17.5. Finished fast OPT passes.
+
+4.18. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+4.19. Executing OPT pass (performing simple optimizations).
+
+4.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+<suppressed ~1 debug messages>
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 652 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 146 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 0 cells.
+
+4.19.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~70 debug messages>
+
+4.19.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel.
+Performed a total of 0 changes.
+
+4.19.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 652 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 146 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 0 cells.
+
+4.19.6. Executing OPT_SHARE pass.
+    Found cells that share an operand and can be merged by moving the $mux $procmux$4538 in front of them:
+        $auto$alumacc.cc:548:replace_alu$6161
+        $auto$alumacc.cc:548:replace_alu$6164
+
+    Found cells that share an operand and can be merged by moving the $mux $procmux$4544 in front of them:
+        $auto$alumacc.cc:548:replace_alu$6167
+        $auto$alumacc.cc:548:replace_alu$6170
+
+    Found cells that share an operand and can be merged by moving the $mux $procmux$4550 in front of them:
+        $auto$alumacc.cc:548:replace_alu$6173
+        $auto$alumacc.cc:548:replace_alu$6176
+
+    Found cells that share an operand and can be merged by moving the $mux $procmux$679 in front of them:
+        $or$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:190$273
+        $or$/tmp/qwen-control-cancel-20261007/ot_qwen_ctrl_write_cancel.sv:191$283
+
+4.19.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.19.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+Removed 0 unused cells and 20 unused wires.
+<suppressed ~1 debug messages>
+
+4.19.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+<suppressed ~7 debug messages>
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.19.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.19.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~74 debug messages>
+
+4.19.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel_state.
+    Consolidated identical input bits for $mux cell $auto$opt_share.cc:244:merge_operators$6287:
+      Old ports: A=5'11111, B=5'00001, Y=$auto$rtlil.cc:3402:Mux$6288
+      New ports: A=1'1, B=1'0, Y=$auto$rtlil.cc:3402:Mux$6288 [1]
+      New connections: { $auto$rtlil.cc:3402:Mux$6288 [4:2] $auto$rtlil.cc:3402:Mux$6288 [0] } = { $auto$rtlil.cc:3402:Mux$6288 [1] $auto$rtlil.cc:3402:Mux$6288 [1] $auto$rtlil.cc:3402:Mux$6288 [1] 1'1 }
+    Consolidated identical input bits for $mux cell $auto$opt_share.cc:244:merge_operators$6273:
+      Old ports: A=7'1111111, B=7'0000001, Y=$auto$rtlil.cc:3402:Mux$6274
+      New ports: A=1'1, B=1'0, Y=$auto$rtlil.cc:3402:Mux$6274 [1]
+      New connections: { $auto$rtlil.cc:3402:Mux$6274 [6:2] $auto$rtlil.cc:3402:Mux$6274 [0] } = { $auto$rtlil.cc:3402:Mux$6274 [1] $auto$rtlil.cc:3402:Mux$6274 [1] $auto$rtlil.cc:3402:Mux$6274 [1] $auto$rtlil.cc:3402:Mux$6274 [1] $auto$rtlil.cc:3402:Mux$6274 [1] 1'1 }
+    Consolidated identical input bits for $mux cell $auto$opt_share.cc:244:merge_operators$6280:
+      Old ports: A=5'11111, B=5'00001, Y=$auto$rtlil.cc:3402:Mux$6281
+      New ports: A=1'1, B=1'0, Y=$auto$rtlil.cc:3402:Mux$6281 [1]
+      New connections: { $auto$rtlil.cc:3402:Mux$6281 [4:2] $auto$rtlil.cc:3402:Mux$6281 [0] } = { $auto$rtlil.cc:3402:Mux$6281 [1] $auto$rtlil.cc:3402:Mux$6281 [1] $auto$rtlil.cc:3402:Mux$6281 [1] 1'1 }
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel.
+Performed a total of 3 changes.
+
+4.19.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 648 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 146 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 0 cells.
+
+4.19.14. Executing OPT_SHARE pass.
+
+4.19.15. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.19.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+Removed 0 unused cells and 7 unused wires.
+<suppressed ~1 debug messages>
+
+4.19.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+<suppressed ~3 debug messages>
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.19.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.19.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_cancel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~68 debug messages>
+
+4.19.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_cancel.
+Performed a total of 0 changes.
+
+4.19.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 648 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 146 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Removed a total of 0 cells.
+
+4.19.22. Executing OPT_SHARE pass.
+
+4.19.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.19.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+
+4.19.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+Optimizing module ot_qwen_ctrl_write_cancel.
+
+4.19.26. Finished fast OPT passes. (There is nothing left to do.)
+
+4.20. Executing TECHMAP pass (map to technology primitives).
+
+4.20.1. Executing Verilog-2005 frontend: /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+4.20.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$fccaddc94a453f2efefc738dfbe79d456579c31f\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$b18e16801adf491a64caa0542270798e5d4ac6b6\_90_alu for cells of type $alu.
+Using template $paramod$ba698a254f9a5947e85cbe7beae6b161eefc5386\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using template $paramod$fc972a7a46956c1788f3cb5257b53c8f1df2d0cc\_90_alu for cells of type $alu.
+Using template $paramod$dad13a281fa6a9ffd6dd427a87dc9a952e80e9ea\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $bmux.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000001 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000010 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000010 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001000 for cells of type $lcu.
+Using extmapper simplemap for cells of type $and.
+Using template $paramod$dbcdc7e8aa1a4080cea2deda6fdc8772064f4d90\_90_alu for cells of type $alu.
+Using template $paramod$32a7b7b86c07519b7537abc18e96f0331f97914d\_90_alu for cells of type $alu.
+Using template $paramod$32efbfac1c4dc57230cf86180788fdfd12e3b511\_90_alu for cells of type $alu.
+Using template $paramod$9f3f81d189a6b1d5c738a580270bbb92e45c5c71\_90_alu for cells of type $alu.
+Using template $paramod$constmap:72fea0cd6927a9676e2527442b1383d29cc29f51$paramod$e194a9e890de0a7be18db8bd15a1479dea055e42\_90_shift_shiftx for cells of type $shiftx.
+Using template $paramod$constmap:b3a74507ecbdc52cd4a015f7ded2697bb951dd26$paramod$320aa077a7b7c3e2ebcbf2ed330b2bc798d6703e\_90_shift_shiftx for cells of type $shift.
+Analyzing pattern of constant bits for this cell:
+  Constant input on bit 0 of port A: 1'0
+Creating constmapped module `$paramod$constmap:18e6522bac8a3bd65e05fc1e62e62e2abe5df69c$paramod$320aa077a7b7c3e2ebcbf2ed330b2bc798d6703e\_90_shift_shiftx'.
+
+4.20.55. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$constmap:18e6522bac8a3bd65e05fc1e62e62e2abe5df69c$paramod$320aa077a7b7c3e2ebcbf2ed330b2bc798d6703e\_90_shift_shiftx..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$30410.
+    dead port 2/2 on $mux $procmux$30416.
+    dead port 2/2 on $mux $procmux$30422.
+    dead port 2/2 on $mux $procmux$30428.
+    dead port 2/2 on $mux $procmux$30434.
+Removed 5 multiplexer ports.
+<suppressed ~1860 debug messages>
+
+4.20.56. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$constmap:18e6522bac8a3bd65e05fc1e62e62e2abe5df69c$paramod$320aa077a7b7c3e2ebcbf2ed330b2bc798d6703e\_90_shift_shiftx.
+<suppressed ~8 debug messages>
+Removed 0 unused cells and 17 unused wires.
+Using template $paramod$constmap:18e6522bac8a3bd65e05fc1e62e62e2abe5df69c$paramod$320aa077a7b7c3e2ebcbf2ed330b2bc798d6703e\_90_shift_shiftx for cells of type $shift.
+Using extmapper simplemap for cells of type $pmux.
+Using extmapper simplemap for cells of type $adff.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000110 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000110 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000100 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000100 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000111 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000111 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~887 debug messages>
+
+4.21. Executing OPT pass (performing simple optimizations).
+
+4.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_cancel_state.
+<suppressed ~1957 debug messages>
+Optimizing module ot_qwen_ctrl_write_cancel.
+<suppressed ~180 debug messages>
+
+4.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 33398 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 32612 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 32197 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+Computing hashes of 32076 cells of `\ot_qwen_ctrl_write_cancel_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel_state'.
+<suppressed ~3966 debug messages>
+Finding identical cells in module `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 15564 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 15543 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 15539 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+Computing hashes of 15536 cells of `\ot_qwen_ctrl_write_cancel'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_cancel'.
+<suppressed ~84 debug messages>
+Removed a total of 1350 cells.
+
+4.21.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.21.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_cancel..
+Removed 175 unused cells and 2394 unused wires.
+<suppressed ~178 debug messages>
+
+4.21.5. Finished fast OPT passes.
+
+4.22. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_qwen_ctrl_write_cancel'. Setting top module to ot_qwen_ctrl_write_cancel.
+
+4.22.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_cancel
+Used module:     \ot_qwen_ctrl_write_cancel_state
+
+4.22.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_cancel
+Used module:     \ot_qwen_ctrl_write_cancel_state
+Removed 0 unused modules.
+
+4.23. Printing statistics.
+
+=== ot_qwen_ctrl_write_cancel_state ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    15114 wires
+    40241 wire bits
+      147 public wires
+    15801 public wire bits
+       29 ports
+     8401 port bits
+    31926 cells
+    11567   $_AND_
+     7415   $_DFFE_PN0P_
+        4   $_DFF_PN0_
+     1185   $_MUX_
+      322   $_NOT_
+    11382   $_OR_
+       51   $_XOR_
+
+=== ot_qwen_ctrl_write_cancel ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      265 wires
+    32146 wire bits
+       95 public wires
+    16993 public wire bits
+       47 ports
+      725 port bits
+    15509 cells
+       88   $_AND_
+        1   $_DFFE_PN0P_
+        1   $_DFFE_PN1P_
+      397   $_MUX_
+       43   $_NOT_
+     7524   $_OR_
+     7455   $_XOR_
+        2 submodules
+        2   ot_qwen_ctrl_write_cancel_state
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+    79361 ot_qwen_ctrl_write_cancel
+    31926 ot_qwen_ctrl_write_cancel_state
+
+        +----------Count including submodules.
+        | 
+    30493 wires
+   112628 wire bits
+      389 public wires
+    48595 public wire bits
+      105 ports
+    17527 port bits
+        - memories
+        - memory bits
+        - processes
+    79361 cells
+    23222   $_AND_
+    14831   $_DFFE_PN0P_
+        1   $_DFFE_PN1P_
+        8   $_DFF_PN0_
+     2767   $_MUX_
+      687   $_NOT_
+    30288   $_OR_
+     7557   $_XOR_
+        2 submodules
+        2   ot_qwen_ctrl_write_cancel_state
+
+4.24. Executing CHECK pass (checking for obvious problems).
+Checking module ot_qwen_ctrl_write_cancel_state...
+Checking module ot_qwen_ctrl_write_cancel...
+Found and reported 0 problems.
+
+5. Executing CHECK pass (checking for obvious problems).
+Checking module ot_qwen_ctrl_write_cancel_state...
+Checking module ot_qwen_ctrl_write_cancel...
+Found and reported 0 problems.
+
+6. Executing JSON backend.
+
+Warnings: 3 unique messages, 3 total
+End of script. Logfile hash: a3a463136f, time: 3.42s, user: 3.76s, system: 0.13s, MEM: 142.02 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 24% 19x opt_dff (0 sec), 21% 25x opt_clean (0 sec), ...

@@ -1,0 +1,7 @@
+{
+  "model_before_source": true,
+  "change": "ROLE1 epoch fence additionally requires handed==0. No state/cycles added.",
+  "scope": "Fail closed for accepted native-ledger requests until true completion; native-ledger unissued cancellation lacks typed tag acknowledgment and remains owned/epoch-blocking. Positive cancel/fence test only cancels before ledger handoff.",
+  "tests": "Spoof global_quiescent with local transport quiet and handed native write pending: fault and retain ownership; no fake wd. Clock precision upgraded to1fs to represent0.9/1.2GHz phases within1ppm.",
+  "global_authority": "ROLE0 still requires protected coordinated global owner; source-local pendingcount does not prove remote ledger or reads drained."
+}

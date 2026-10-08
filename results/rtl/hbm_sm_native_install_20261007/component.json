@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "scope": "deterministic full-width installer mechanism fixture; not checkpoint or arithmetic evidence",
+  "records": 2,
+  "full_width_X_fragments": 8,
+  "weight_lines": 4,
+  "installation_sectors": 855,
+  "allocation_RTL": "PASS literal bases, held response, wrong line count, unknown record, duplicate bank fault",
+  "negative_controls": [
+    "modified_source_hash",
+    "missing_native_lines",
+    "narrow_shape",
+    "workspace_capacity",
+    "fragment_overflow"
+  ],
+  "source_sha256": {
+    "tools/hbm_sm_native_install_gate.py": "1173ab4188d075263c01189d55b78f2185be32ce6e21b8d24741a983de49a4b3",
+    "tools/hbm_sm_native_install.py": "c4270f023a7507fa0832d42270ae0a60d41cf6e669c8bc4d67dbfe7aad470e92",
+    "tools/hbm_sm_native_install_model.py": "809956d390e94196aa11e489770ca4fcb4564c5ab702a4586b37f32ef962f510",
+    "tools/hbm_sm_native_allocation_build.py": "7c9f2f00f7788cf6f57e2f24016f953a7525a0f964f2a425440501e7af61c149",
+    "tools/hbm_sm_native_allocation_model.py": "a36184b5a1d0daf7cfe5bfa46f1eadb5c3c4c48147b92b621faab09aef795468",
+    "results/rtl/dshbm_installer_book_20261005/workspace.json": "907661cf0de9e0dbf487d09d2e3e63d8d4ac0d9706ca16ddf7a17703077145e7",
+    "tools/gpu_sys/v41_hbm.py": "69798a0034eaeaee91d30907fa4b34ac4848d757abfbe941398af2e80523b153"
+  },
+  "physical_admitted": false,
+  "hardware_installation_complete": false
+}

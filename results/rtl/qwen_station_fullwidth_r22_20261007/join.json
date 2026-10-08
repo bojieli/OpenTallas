@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.qwen_station_fullwidth_r22_join.v1",
+  "model_before_RTL_commit": "0a9726ac8",
+  "latest_model": "results/uarch/qwen_station_fullwidth_r22_20261007/model_r3.json",
+  "latest_model_sha256": "b0992d5d5e2fbc044ec51232fd7725ca30b2d452c5059fdec1e0c7b673d555b0",
+  "component_exact_record": "results/rtl/qwen_station_fullwidth_r22_20261007/exact_r2/result.json",
+  "component_exact_record_sha256": "ffe60d543f5a57d7afda511e50ae3398b3c10019b7ba4a042eef8df397af668c",
+  "RTL_matches_exact_record": true,
+  "model_r3_change": "source-audited509-bit pins instead of pre-r18 clock-inclusive574/511; correctedframefit; added orientation pinmap. Same508bitRTL and same1data/2fault latency.",
+  "source_clock_audit": "results/uarch/qwen_station_fullwidth_r22_20261007/clock_reset_source_audit.json",
+  "component_checks": {
+    "positive_cases": 8,
+    "negative_controls": 5,
+    "cycles_compared_per_case": 2091,
+    "accepted_launches_per_positive": 541,
+    "python_contract_tests": 4,
+    "verilator_lint": "PASS default bypass and selected three-output shape"
+  },
+  "pin_map_source": "model_r3.exact_proposed_pin_slices",
+  "dataflow": "Fixedschedule508bitforward; reversefaultOR2cycles; no invented tile-ready/credit",
+  "installed_in_die": false,
+  "full_token_qualified": false,
+  "SSFF": false,
+  "adoption": false,
+  "gates_remaining": [
+    "Install concrete509-bit bundle maps and missing explicit field reset tree in r22 generator",
+    "Bind producer BD/XVM/IREG/XD to actual station and relay path lengths",
+    "Implement and price global fault publication guard from real tile fault latency and result commit owner",
+    "Confirm mutable fault/control protection and selected link fault contract",
+    "Measure exact transaction/fault negatives and actual508bit station at SS/FF; then full die context"
+  ],
+  "historical_records_preserved": [
+    "model.json",
+    "model_r2.json",
+    "exact/result.json"
+  ]
+}

@@ -1,0 +1,9 @@
+%Warning-WIDTH: rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_sender_capture.sv:26:55: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'reserved' generates 7 bits.
+                                                                              : ... In instance ot_ha2_relay_tx_internal.u_tx
+   26 |   assign issue_ready[i]=!bad && ((MUTANT==1)||reserved<DEPTH);
+      |                                                       ^
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_sender_capture.sv:36:16: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'reserved' generates 7 bits.
+                                                                              : ... In instance ot_ha2_relay_tx_internal.u_tx
+   36 |        reserved>DEPTH || sent>reserved)bad<=1;
+      |                ^

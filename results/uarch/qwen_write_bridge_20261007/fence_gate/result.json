@@ -1,0 +1,96 @@
+{
+  "schema": "opentallas.qwen_write_bridge.gate.v1",
+  "pass_all": true,
+  "cases": [
+    {
+      "case": "h54_n0",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "9c7d93c75e0825d5020e402f9662d4a200a12a0378a1429590abb64368ba6fb5"
+    },
+    {
+      "case": "h55_n0",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "33fc24ab14984466eada1ae0d4d52d216c566ff63ae9e4d9b6be15f1587f59a6"
+    },
+    {
+      "case": "h54_n1",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "0d5326101ff6f7e91b0684a8a34c616843d441981d97465ac47be925c71f0ff3"
+    },
+    {
+      "case": "h54_n2",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "9a88c7698268130293381b9df933a3c2e784c3efa40660f3e7e2e4f0433ba454"
+    },
+    {
+      "case": "h54_n3",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "95a2aceb4ce9fdb78c86249e8f9760752a49d0e5450202936fd1598c8081d266"
+    },
+    {
+      "case": "h54_n4",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "0b1eada0fdf52cd84486e12099b92feaf397a7a5e44ab7b362436c2ab88ae2a9"
+    },
+    {
+      "case": "h54_n5",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "4759d5b535798d7e027b85bc397ecec96e6cdb943115162c3d1725fb40f9a087"
+    },
+    {
+      "case": "h54_n6",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "5eff260d421799c94d8810f427f26a7d1bb1112d4a66db5bce85dcccab3e3610"
+    },
+    {
+      "case": "h54_n7",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "24cb58d017088a7e555a6e40114eb08e27c73c24487a4f09cc0061997703dfa9"
+    },
+    {
+      "case": "h54_n8",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "d4faf84535cba0a59cf1b246bc9339af88efd669822083f865b8f186ff1479d7"
+    }
+  ],
+  "source_sha256": {
+    "/tmp/qwen-write-bridge-20261007/rtl/physical/ot_qwen_kvc_hub_cdc.sv": "d20b1d35c98d7a2e1924515175aec56e2f83061bc1d330c0a116f9b79b9a044c",
+    "/tmp/qwen-write-bridge-20261007/rtl/physical/ot_qwen_kvc_write_link_bridge.sv": "35a9465a04707ea71d7cbc66842af2f046f193832ac5ca968ec91c69058969f6",
+    "/tmp/qwen-write-bridge-20261007/rtl/test/tb_qwen_kvc_write_bridge.sv": "4cc7466fd3f579c871685f815a0537dde256ff7945bf9013791d3efbeaaa782d",
+    "/home/ubuntu/OpenTallas/rtl/physical/ot_qwen_die_cdc_ch.sv": "e865aecae51ae3b929bc9401c970e825073338b77dee87ead88d66ce9e8631fd",
+    "/home/ubuntu/OpenTallas/rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv": "cd7142ec0db3465c0b4134888e6947a2bc1d7223c0d2fc02093729e568921881",
+    "/home/ubuntu/OpenTallas/rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "/home/ubuntu/OpenTallas/rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "/tmp/qwen-write-bridge-codec-20261007/rtl/physical/ot_qwen_kvc_packet_codec_parallel.sv": "ccdcc4099b221a32a257fdd1f37a4b353a86a7978f0c9579c9fb1a59e77cdeb8",
+    "/tmp/qwen-hub-identity-20261007/rtl/physical/ot_qwen_die_hub_identity.sv": "d67f20db959dc1803de8cc82be1c7206407352e634802303060e10d5ebf76409"
+  },
+  "tool_sha256": "eb9426f65628c2b1f4da4bd6f6fd7f3eb17201f3d74956e6137c29c5087901ff",
+  "scope": "Actual dualNL4 identity hubs and54/55TMRstages one lane. Native service registered room-emission and modeled ledger17tickcompletion,96exactwrites+4canceledownedrequests across coordinatedepoch fence. Actual controller ledger not instantiated yet.",
+  "negative_meanings": {
+    "1": "packet CRC corruption",
+    "2": "source identity mismatch",
+    "3": "wrong true completion tag",
+    "4": "stale/wrong epoch with valid CRC",
+    "5": "duplicate true completion",
+    "6": "unsafe epoch fence",
+    "7": "native producer ignores room",
+    "8": "spoofed global quiescence while handed write remains locally owned"
+  },
+  "adoption": false,
+  "blockers": [
+    "actual commitledger binding",
+    "full mutable state and native Gray-credit protection",
+    "all physical setup/hold/CDC/CRC gates",
+    "global epoch fence owner beyond explicit qualified input contract"
+  ]
+}

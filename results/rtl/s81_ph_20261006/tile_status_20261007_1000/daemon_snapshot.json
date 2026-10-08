@@ -1,0 +1,185 @@
+[
+  {
+    "name": "s81ph-dsfd_capt_x-6fe9f807d",
+    "status": "NEEDS_RTL",
+    "stage_key": "summary",
+    "host": "ot-epyc3",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-6fe9f807d",
+    "updated": "2026-10-07T09:02:29-07:00",
+    "stage_started": "2026-10-07T08:59:44-07:00",
+    "eco": {
+      "tried": true,
+      "rb": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-6fe9f807d/routes/s81ph_dsfd_capt_x_6fe9f807d/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_6fe9f807d/base",
+      "ob": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-6fe9f807d/routes/s81ph_dsfd_capt_x_6fe9f807d/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_6fe9f807d/base",
+      "out": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-6fe9f807d/cl/eco",
+      "post_sdc": [
+        "physical/s81_ph_views/common/signoff_unc60.sdc"
+      ],
+      "pre": {
+        "ss_ps": 40.84,
+        "ff_ps": -11.11
+      },
+      "started": "2026-10-07T08:24:08-07:00",
+      "result": {
+        "ss_ps": 38.47,
+        "ff_ps": -10.44,
+        "drc": 0,
+        "cells_added": 1511,
+        "errors": [],
+        "pass": 1,
+        "session": "mm",
+        "window": "endpoints_below_hm 1766 fixable 1470 tight 296 infeasible 0 nodata 0 (hm 30.0 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)",
+        "route_strategy": [
+          "incremental_original_guides"
+        ],
+        "score": -25.439999999999998
+      }
+    },
+    "events": [
+      "2026-10-07T05:18:52-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81ph-dsfd_capt_x-6fe9f807d.json",
+      "2026-10-07T05:28:37-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+      "2026-10-07T05:30:06-07:00 source 6fe9f807d09e synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-6fe9f807d/src",
+      "2026-10-07T05:35:33-07:00 bench track: launched bench_exact_cap_tiled (bench_exact_cap_tiled.a1b1) beside None",
+      "2026-10-07T05:36:40-07:00 launched calibrate (attempt 1) on ot-epyc3",
+      "2026-10-07T05:41:18-07:00 bench track: bench_exact_cap_tiled PASS (rc=0)",
+      "2026-10-07T05:43:35-07:00 bench track: launched bench_neg_bf16_trunc (bench_neg_bf16_trunc.a1b1) beside calibrate",
+      "2026-10-07T05:47:58-07:00 bench track: bench_neg_bf16_trunc FAIL as expected (rc=1)",
+      "2026-10-07T05:48:00-07:00 calibrate done (rc=0)",
+      "2026-10-07T05:48:02-07:00 calibrated insertion CK_SS_MEAN=380 CK_SS_MIN=373 CK_SS_MAX=386 CK_FF_MEAN=244 CK_FF_MIN=239 CK_FF_MAX=249",
+      "2026-10-07T05:55:24-07:00 route waiting for capacity: EPYC3 MemAvailable 414-292 GB < 40+113",
+      "2026-10-07T06:02:24-07:00 launched route (attempt 1) on ot-epyc3",
+      "2026-10-07T06:30:46-07:00 route crashed (rc=1 ok-check failed: ) -> retry once on the same host",
+      "2026-10-07T06:37:13-07:00 launched route (attempt 2) on ot-epyc3",
+      "2026-10-07T06:40:38-07:00 route restarted: it ran with WC-only repair corners while the s81 vclk hook times BC by name (fixed in bfb5b09eb)",
+      "2026-10-07T06:46:29-07:00 launched route (attempt 3) on ot-epyc3",
+      "2026-10-07T06:51:26-07:00 NEEDS_HUMAN: route crashed twice (rc=73 ok-check failed: ; resource=False)",
+      "2026-10-07T07:34:07-07:00 human retry: re-queued from stage route",
+      "2026-10-07T07:44:57-07:00 launched route (attempt 4) on ot-epyc3",
+      "2026-10-07T08:22:38-07:00 route done (rc=0)",
+      "2026-10-07T08:24:02-07:00 verdict SS +40.84 / FF -11.11 / DRC 0 / checks failed [] -> NOT CLOSED",
+      "2026-10-07T08:24:14-07:00 hold-only miss (SS +40.84 / FF -11.11, DRC 0): post-route hold ECO launched on /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_x-6fe9f807d/routes/s81ph_dsfd_capt_x_6fe9f807d/work/orfs/results/asap7/opentallas_dsfd_capt_x_asap7_s81ph_s81ph_dsfd_capt_x_6fe9f807d/base/5_2_route.odb",
+      "2026-10-07T08:59:38-07:00 hold ECO MISS: {'ss_ps': 38.47, 'ff_ps': -10.44, 'drc': 0, 'cells_added': 1511, 'errors': [], 'pass': 1, 'session': 'mm', 'window': 'endpoints_below_hm 1766 fixable 1470 tight 296 infeasible 0 nodata 0 (hm 30.0 filt 40 accept_ss 15.0 accept_ff 15.0 r 2.4)', 'route_strategy': ['incremental_original_guides'], 'score': -25.439999999999998}",
+      "2026-10-07T09:02:29-07:00 NEEDS_RTL: SS 40.84 / FF -11.11 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+    ]
+  },
+  {
+    "name": "s81ph-dsfd_capt_grp-1c8d4c45f",
+    "status": "RUNNING",
+    "stage_key": "route",
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1c8d4c45f",
+    "updated": "2026-10-07T10:22:03-07:00",
+    "stage_started": "2026-10-07T08:14:26-07:00",
+    "eco": null,
+    "events": [
+      "2026-10-07T06:27:40-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81ph-dsfd_capt_grp-1c8d4c45f.json",
+      "2026-10-07T06:45:42-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+      "2026-10-07T06:46:42-07:00 source 1c8d4c45f528 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1c8d4c45f/src",
+      "2026-10-07T06:53:47-07:00 bench track: bench_exact_cap_tiled waiting for capacity: EPYC3 MemAvailable 337-224 GB < 24+113",
+      "2026-10-07T06:53:47-07:00 calibrate waiting for capacity: EPYC3 MemAvailable 337-224 GB < 40+113",
+      "2026-10-07T06:58:21-07:00 bench track: bench_exact_cap_tiled waiting for capacity: EPYC3 MemAvailable 148-56 GB < 24+113",
+      "2026-10-07T06:58:24-07:00 calibrate cannot start on EPYC3 (EPYC3 MemAvailable 148-56 GB < 40+113); moving to EPYC1",
+      "2026-10-07T07:07:52-07:00 source 1c8d4c45f528 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_capt_grp-1c8d4c45f/src",
+      "2026-10-07T07:20:09-07:00 bench track: launched bench_exact_cap_tiled (bench_exact_cap_tiled.a1b1) beside calibrate",
+      "2026-10-07T07:20:23-07:00 calibrate waiting for capacity: EPYC1 MemAvailable 531-402 GB < 40+113",
+      "2026-10-07T07:26:03-07:00 bench track: bench_exact_cap_tiled PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+      "2026-10-07T07:28:47-07:00 bench track: launched bench_neg_bf16_trunc (bench_neg_bf16_trunc.a1b1) beside calibrate",
+      "2026-10-07T07:30:49-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+      "2026-10-07T07:42:38-07:00 bench track: bench_neg_bf16_trunc FAIL as expected (rc=1) ",
+      "2026-10-07T08:12:40-07:00 calibrate done (rc=0)",
+      "2026-10-07T08:12:43-07:00 calibrated insertion CK_SS_MEAN=440 CK_SS_MIN=422 CK_SS_MAX=454 CK_FF_MEAN=275 CK_FF_MIN=262 CK_FF_MAX=286",
+      "2026-10-07T08:14:26-07:00 launched route (attempt 1) on ot-epyc1tb",
+      "2026-10-07T08:15:35-07:00 ot-epyc1tb unreachable while polling route (will keep polling)"
+    ]
+  },
+  {
+    "name": "s81ph-root_tile-77bcb3f3c",
+    "status": "ECO",
+    "stage_key": "hold_eco",
+    "host": "ot-epyc3",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c",
+    "updated": "2026-10-07T10:22:02-07:00",
+    "stage_started": "2026-10-07T09:06:43-07:00",
+    "eco": {
+      "tried": true,
+      "rb": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/routes/s81ph_root_tile_77bcb3f3c/work/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_77bcb3f3c/base",
+      "ob": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/routes/s81ph_root_tile_77bcb3f3c/work/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_77bcb3f3c/base",
+      "out": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/cl/eco",
+      "post_sdc": [
+        "physical/s81_ph_views/common/signoff_unc60.sdc"
+      ],
+      "pre": {
+        "ss_ps": 29.84,
+        "ff_ps": -17.66
+      },
+      "started": "2026-10-07T09:06:37-07:00"
+    },
+    "events": [
+      "2026-10-07T07:31:16-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81ph-root_tile-77bcb3f3c.json",
+      "2026-10-07T07:47:43-07:00 source 77bcb3f3c953 synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/src",
+      "2026-10-07T07:57:01-07:00 calibrate waiting for capacity: EPYC2 MemAvailable 574-464 GB < 40+113",
+      "2026-10-07T08:00:18-07:00 calibrate cannot start on EPYC2 (EPYC2 MemAvailable 427-316 GB < 40+113); moving to EPYC3",
+      "2026-10-07T08:01:09-07:00 source 77bcb3f3c953 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/src",
+      "2026-10-07T08:04:21-07:00 launched calibrate (attempt 1) on ot-epyc3",
+      "2026-10-07T08:10:34-07:00 ot-epyc3 unreachable while polling calibrate (will keep polling)",
+      "2026-10-07T08:17:02-07:00 calibrate done (rc=0)",
+      "2026-10-07T08:17:04-07:00 calibrated insertion CK_SS_MEAN=373 CK_SS_MIN=366 CK_SS_MAX=376 CK_FF_MEAN=238 CK_FF_MIN=234 CK_FF_MAX=241",
+      "2026-10-07T08:18:37-07:00 launched route (attempt 1) on ot-epyc3",
+      "2026-10-07T09:03:43-07:00 route done (rc=0)",
+      "2026-10-07T09:04:32-07:00 verdict SS +29.84 / FF -17.66 / DRC 0 / checks failed [] -> NOT CLOSED",
+      "2026-10-07T09:05:24-07:00 hold ECO waiting for capacity: EPYC3 MemAvailable 147-60 GB < 32+57",
+      "2026-10-07T09:06:30-07:00 verdict SS +29.84 / FF -17.66 / DRC 0 / checks failed [] -> NOT CLOSED",
+      "2026-10-07T09:06:44-07:00 hold-only miss (SS +29.84 / FF -17.66, DRC 0): post-route hold ECO launched on /srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/routes/s81ph_root_tile_77bcb3f3c/work/orfs/results/asap7/opentallas_ot_s81ph_root_tile_asap7_s81ph_s81ph_root_tile_77bcb3f3c/base/5_2_route.odb"
+    ]
+  },
+  {
+    "name": "s81ph-dsfd_coll_lane_e-ac313d866-wide",
+    "status": "RUNNING",
+    "stage_key": "route",
+    "host": "ot-epyc3",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-ac313d866-wide",
+    "updated": "2026-10-07T10:22:02-07:00",
+    "stage_started": "2026-10-07T09:25:57-07:00",
+    "eco": null,
+    "events": [
+      "2026-10-07T08:34:09-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81ph-dsfd_coll_lane_e-ac313d866-wide.json",
+      "2026-10-07T08:35:20-07:00 waiting for capacity: ",
+      "2026-10-07T08:50:17-07:00 source ac313d866a63 synced to localhost:/home/ubuntu/closure-loop-local/s81ph-dsfd_coll_lane_e-ac313d866-wide/src",
+      "2026-10-07T08:51:59-07:00 calibrate waiting for capacity: localhost loop threads 24+16 > 24",
+      "2026-10-07T08:55:17-07:00 calibrate cannot start on localhost (localhost loop threads 40+16 > 24); moving to EPYC2",
+      "2026-10-07T08:57:32-07:00 source ac313d866a63 synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-ac313d866-wide/src",
+      "2026-10-07T08:59:41-07:00 calibrate waiting for capacity: EPYC2 load 90+289+16 > cap 384",
+      "2026-10-07T09:02:41-07:00 calibrate cannot start on EPYC2 (EPYC2 unreachable); moving to EPYC1",
+      "2026-10-07T09:04:08-07:00 source ac313d866a63 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-ac313d866-wide/src",
+      "2026-10-07T09:05:24-07:00 calibrate waiting for capacity: EPYC1 unreachable",
+      "2026-10-07T09:07:29-07:00 calibrate cannot start on EPYC1 (EPYC1 unreachable); moving to EPYC3",
+      "2026-10-07T09:08:46-07:00 source ac313d866a63 synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_coll_lane_e-ac313d866-wide/src",
+      "2026-10-07T09:09:39-07:00 launched calibrate (attempt 1) on ot-epyc3",
+      "2026-10-07T09:24:34-07:00 calibrate done (rc=0)",
+      "2026-10-07T09:24:36-07:00 calibrated insertion CK_SS_MEAN=527 CK_SS_MIN=503 CK_SS_MAX=566 CK_FF_MEAN=329 CK_FF_MIN=313 CK_FF_MAX=364",
+      "2026-10-07T09:25:57-07:00 launched route (attempt 1) on ot-epyc3",
+      "2026-10-07T09:57:59-07:00 ot-epyc3 unreachable while polling route (will keep polling)"
+    ]
+  },
+  {
+    "name": "s81ph-dsfd_selt_q2-22bd6ce9c-retime",
+    "status": "RUNNING",
+    "stage_key": "calibrate",
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_selt_q2-22bd6ce9c-retime",
+    "updated": "2026-10-07T10:22:03-07:00",
+    "stage_started": "2026-10-07T09:42:23-07:00",
+    "eco": null,
+    "events": [
+      "2026-10-07T09:40:54-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81ph-dsfd_selt_q2-22bd6ce9c-retime.json",
+      "2026-10-07T09:40:57-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+      "2026-10-07T09:41:51-07:00 source 22bd6ce9c1e1 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_selt_q2-22bd6ce9c-retime/src",
+      "2026-10-07T09:42:08-07:00 bench track: launched bench_exact_retime_safe1 (bench_exact_retime_safe1.a1b1) beside None",
+      "2026-10-07T09:42:23-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+      "2026-10-07T09:45:06-07:00 bench track: bench_exact_retime_safe1 PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+      "2026-10-07T09:45:17-07:00 bench track: launched bench_negative_qslot_safe1 (bench_negative_qslot_safe1.a1b1) beside calibrate",
+      "2026-10-07T09:48:07-07:00 bench track: bench_negative_qslot_safe1 FAIL as expected (rc=1) ",
+      "2026-10-07T09:56:00-07:00 ot-epyc1tb unreachable while polling calibrate (will keep polling)"
+    ]
+  }
+]

@@ -1,0 +1,63 @@
+{
+  "name": "dsfd_coll_ck",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/routes/s81ph_dsfd_coll_ck_752a48488/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/routes/s81ph_dsfd_coll_ck_752a48488/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/routes/s81ph_dsfd_coll_ck_752a48488/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/routes/s81ph_dsfd_coll_ck_752a48488/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/src/physical/s81_ph_views/macros/ot_s81_pll_bb:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/routes/s81ph_dsfd_coll_ck_752a48488/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/routes/s81ph_dsfd_coll_ck_752a48488/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/routes/s81ph_dsfd_coll_ck_752a48488/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81ph-dsfd_coll_ck-752a48488/src/physical/s81_ph_views/macros/ot_s81_pll_bb:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [
+    "physical/s81_ph_views/macros/ot_s81_pll_bb"
+  ],
+  "files": {
+    "dsfd_coll_ck.lef": "f498a775eca02db84e5d79f5b3d70b81387a103531d71a22274a8ce70b8d9ca4",
+    "dsfd_coll_ck_ff.lib": "da13018b1450cf960ed800007360f90bb44eba55145cdf30a53e02351c8a74a9",
+    "dsfd_coll_ck_ss.lib": "48cabeeff9f869aa924342bf67f82b4865d01958d83283d707043bfb51e7d0d0"
+  },
+  "ok": true
+}

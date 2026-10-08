@@ -21,7 +21,8 @@ module tb_rom_oneshot_allreduce #(
     parameter integer LANES = 16,
     parameter integer DEPTH = 16,
     parameter integer LAT = 12,
-    parameter integer BPC = 3600
+    parameter integer BPC = 3600,
+    parameter integer MARGIN = 0
 ) (input wire clk);
     localparam integer FW = 32 * LANES, TAGW = 32, RB = $clog2(N), MAXW = 1 << 16;
     reg [FW-1:0] part [0:MAXW-1];
@@ -42,7 +43,7 @@ module tb_rom_oneshot_allreduce #(
     wire [N*RB-1:0] orank;
     wire [N*3-1:0] fc;
     wire [31:0] stalls;
-    ot_rom_oneshot_allreduce #(.N(N), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .LAT(LAT), .BPC_NUM(BPC)) dut (
+    ot_rom_oneshot_allreduce #(.N(N), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .LAT(LAT), .BPC_NUM(BPC), .MARGIN(MARGIN)) dut (
         .clk(clk), .rst_n(rst_n), .in_valid(iv), .in_ready(ir), .in_data(id), .in_last(il), .in_mode(im),
         .in_tag(it), .out_valid(ov), .out_data(od), .out_last(ol), .out_rank(orank), .out_err(oe),
         .fault(flt), .fault_code(fc), .link_stalls(stalls));
@@ -66,7 +67,9 @@ module tb_rom_oneshot_allreduce #(
                 go <= rst_n && (cyc >= 20 + SKEW * g) && ((rnd % 100) >= GAP);
                 if (iv[g] && ir[g]) begin
                     if (first < 0) first = cyc;
-                    if (w == WORDS - 1) begin w = 0; m = m + 1; end else w = w + 1;
+                    // non-blocking: a DUT that samples in_data at this edge (MARGIN pin registers) must see the
+                    // word it was offered, whatever the simulator's process order
+                    if (w == WORDS - 1) begin w <= 0; m <= m + 1; end else w <= w + 1;
                 end
             end
             reg [FW-1:0] word;

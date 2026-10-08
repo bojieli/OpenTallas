@@ -1,0 +1,14 @@
+CDC_PROGRESS edges=128 writes=60 reads=0 fault=0 wb=60 rb=0 hp=2 reset=11 por=00 inv=1 inr=1
+CDC_PROGRESS edges=256 writes=102 reads=39 fault=0 wb=102 rb=38 hp=2 reset=11 por=00 inv=1 inr=0
+CDC_PROGRESS edges=384 writes=144 reads=81 fault=0 wb=16 rb=81 hp=1 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=512 writes=187 reads=124 fault=0 wb=59 rb=124 hp=0 reset=11 por=00 inv=1 inr=0
+CDC_PROGRESS edges=640 writes=230 reads=167 fault=0 wb=102 rb=38 hp=2 reset=11 por=00 inv=1 inr=0
+CDC_PROGRESS edges=768 writes=272 reads=209 fault=0 wb=16 rb=81 hp=1 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=896 writes=315 reads=252 fault=0 wb=59 rb=124 hp=0 reset=11 por=00 inv=0 inr=0
+CDC_PROGRESS edges=1024 writes=357 reads=295 fault=0 wb=101 rb=38 hp=2 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=1152 writes=400 reads=337 fault=0 wb=16 rb=81 hp=1 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=1280 writes=443 reads=380 fault=0 wb=59 rb=124 hp=0 reset=11 por=00 inv=0 inr=0
+CDC_PROGRESS edges=1408 writes=486 reads=423 fault=0 wb=102 rb=38 hp=2 reset=11 por=00 inv=1 inr=0
+CDC_PROGRESS edges=1536 writes=512 reads=465 fault=0 wb=0 rb=81 hp=1 reset=11 por=00 inv=0 inr=1
+CDC_PROGRESS edges=1664 writes=512 reads=508 fault=0 wb=0 rb=124 hp=0 reset=11 por=00 inv=0 inr=1
+PASS_CDC full545x64 independent_clocks512flits wrap/stalls/full/correction/rails/drain/coordinated_reset/control_double/payload_double

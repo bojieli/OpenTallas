@@ -1,0 +1,152 @@
+{
+  "schema": "opentallas.qwen_inband_fence.gate.v1",
+  "pass_all": true,
+  "cases": [
+    {
+      "case": "h54_n0",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "5b0dff8809ffc09ec604477be74d2dd7c6840a0576c6c6929aed40243eacf894"
+    },
+    {
+      "case": "h55_n0",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "13084f6de84563c28d518226a1c069409fd175af976c8533ed24d4b583ca2b60"
+    },
+    {
+      "case": "h54_n1",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "2a9306a185fa2c00807d828e2e580b241a68c21162be54e10a76ee5d731dbd2a"
+    },
+    {
+      "case": "h54_n2",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "60396eb86e6cd6830bf1ee0c9bee257c6d308fde949fa522773931b302c1a5e8"
+    },
+    {
+      "case": "h54_n3",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "f3c76cbb93b5d230748765ec5bade2d17723d0c42087e347bde2f83bc82e895b"
+    },
+    {
+      "case": "h54_n4",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "1a5d87203578a10acebe8cd64e0830e86e8388d5ae7e69b6a8a4897081f09cb1"
+    },
+    {
+      "case": "h54_n5",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "26ba63cd864690cec3480fd2b23a50a02833fc0d3be1633ab33ed05874734da4"
+    },
+    {
+      "case": "h54_n6",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "350c4de2b2d5e05e021c6299308aac908082a14626cd6143686f4ee73abd9f36"
+    },
+    {
+      "case": "h54_n7",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "9970cae8e711dbf28d31ae12dc5d38f15e4e871c2cfd2a3f8456e2a531b609d5"
+    },
+    {
+      "case": "h54_n8",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "1ec44dab4bb308182bbbdcc11219939f4d78cdfa136043a046b656684610c59a"
+    },
+    {
+      "case": "h54_n9",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "246f2b64dda0dad83c3160b81ad72e3e3bb13850094295364814768cfb328372"
+    },
+    {
+      "case": "h54_n10",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "b3e0835db791699452b1bebc0f6c97c083e85cf544d5f8f798b87f595d41476e"
+    },
+    {
+      "case": "h54_n11",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "4b0ac7e8fa62fbfef717e746293987c2135a5f3fd35a988cb3f4c985da1b72d7"
+    },
+    {
+      "case": "h54_n12",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "08f704d711f5dd5c32dedb3f4945718d76a7bc415ea22223eb4aec9347db6c28"
+    },
+    {
+      "case": "h54_n13",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "4ed2edf9f7f6be091e54b6cfdd05b40ba0f845cc907de923d35de43b135975c1"
+    },
+    {
+      "case": "h54_n14",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "c419334532cf79b6126f4d8fbf0b342953a8bdbdf19f184b1a9e94a39d4905c1"
+    },
+    {
+      "case": "h54_n15",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "eecf09d5d293aa2a7d9e7bb4a4b3fa0740e36c778a9bae4a551ca53044b017f6"
+    },
+    {
+      "case": "startup_room_mutant",
+      "qualified": true,
+      "returncode": 1,
+      "mutated_source_sha256": "83d528732596ff9707c18c411f6561cf8245fb3a8bab1fc6e8c2903b0f1c43f8",
+      "meaning": "Removing TX FIFO rendezvous from native room must fail immediate-start cold reset test."
+    }
+  ],
+  "source_sha256": {
+    "/tmp/qwen-write-bridge-fenced-20261007/rtl/physical/ot_qwen_kvc_write_link_bridge_fenced.sv": "2850b3c802fba70921389f45c9191bb151d04b0a073f7b78bd871c49186a6aa5",
+    "/tmp/qwen-write-bridge-fenced-20261007/rtl/test/tb_qwen_kvc_write_bridge_fenced.sv": "31408fde5804b9d0f2dfc5837463052abe25a0f14b181f335e40cfb5222fdcad",
+    "/home/ubuntu/OpenTallas/rtl/physical/ot_qwen_die_cdc_ch.sv": "e865aecae51ae3b929bc9401c970e825073338b77dee87ead88d66ce9e8631fd",
+    "/home/ubuntu/OpenTallas/rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv": "cd7142ec0db3465c0b4134888e6947a2bc1d7223c0d2fc02093729e568921881",
+    "/home/ubuntu/OpenTallas/rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "/home/ubuntu/OpenTallas/rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "/tmp/qwen-inband-fence-20261007/rtl/physical/ot_qwen_kvc_packet_codec_fence.sv": "78547a8a7c0c78a3bab635daa922316fe5f1b5e38d83c27506567fc55db598f0",
+    "/tmp/qwen-hub-identity-20261007/rtl/physical/ot_qwen_die_hub_identity.sv": "d67f20db959dc1803de8cc82be1c7206407352e634802303060e10d5ebf76409",
+    "/tmp/qwen-write-bridge-20261007/rtl/physical/ot_qwen_kvc_hub_cdc.sv": "d20b1d35c98d7a2e1924515175aec56e2f83061bc1d330c0a116f9b79b9a044c"
+  },
+  "tool_sha256": "66ae7122f320103a5c62e7ca7381ea9ed3546714921776bbec4d29218469926a",
+  "scope": "Actual fullNL4 identity hubs,one selected lane,54/55actualTMRhops,distinct0.9/1.2/0.9765625GHz domains at1fs precision.96writes+4typedcancels, exact inband cancellation set, continued newepoch traffic and unchanged native CDC/credit counters. Ledger-ready is an explicit readiness environment, not actual controller recovery.",
+  "negative_meanings": {
+    "1": "unsolicited ACK",
+    "2": "duplicate old ACK",
+    "3": "foreign canceled identity",
+    "4": "duplicate canceled identity",
+    "5": "wrong target epoch",
+    "6": "wrong watermark with matching wiretag",
+    "7": "early readiness cannot pass handed ownership",
+    "8": "same-edge invalid done vetoes ACK enqueue/epoch commit",
+    "9": "same-edge invalid cancellation vetoes ACK enqueue/epoch commit",
+    "10": "old completion after newepoch rejected",
+    "11": "seededFFFE/FFFF acceptance and exhausted watermark thennewseq0",
+    "12": "wrong ACK epoch",
+    "13": "wrong ACK PC",
+    "14": "wrong ACK source",
+    "15": "readiness withdrawal at ACK enqueue vetoescommit"
+  },
+  "adoption": false,
+  "remaining": [
+    "actual authoritative controller refresh/read-quarantine readiness",
+    "mutable decoder/handoff/owner/credit protection",
+    "all physical SS/FF/DRC/reset gates",
+    "all-PC/global enrollment"
+  ]
+}

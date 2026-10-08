@@ -1,0 +1,512 @@
+{
+  "status": "GEOMETRY_ONLY_PASS_ROUTE_AND_LATENCY_ADOPTION_OPEN",
+  "selected": false,
+  "source_sha256": {
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/tools/hbm_sm_retile_vm8.py": "7e9adf7681c9de89a2eabc46818c6fc4632733887a3ee1c9a333e2d58d029f3f",
+    "/home/ubuntu/wt-codex-hbm-die-resume-20261007/tools/hbm_accel_die_fp.py": "1f089bb0f6faf2a48a97837d65df87f235df3e4c3a8dd67632e5b29cdbc54a8a",
+    "/home/ubuntu/OpenTallas/results/physical/hbm_vm8_contract_20261007/contract.json": "82f81a1309a6fa0a22a78ed90ff9ec03285a91d6a60a7f9320e8e33f078d235b"
+  },
+  "prior_unrepaired_geometry": {
+    "instances": 592,
+    "overlaps": 4,
+    "overlap_examples": [
+      [
+        "hb_vm_sw_s",
+        "hb_vm_sw_n"
+      ],
+      [
+        "hb_vm_se_s",
+        "hb_vm_se_n"
+      ],
+      [
+        "hb_vm_nw_s",
+        "hb_vm_nw_n"
+      ],
+      [
+        "hb_vm_ne_s",
+        "hb_vm_ne_n"
+      ]
+    ],
+    "outside": 0,
+    "outside_examples": []
+  },
+  "legality": {
+    "instances": 592,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": []
+  },
+  "outline_um": [
+    30904.848,
+    24051.6
+  ],
+  "north_half_displacement_um": 0.024,
+  "pair_height_um": 1000.08,
+  "allocated_macro_area_increment_um2": 67.182336,
+  "north_south_quadrant_gap_um": 0,
+  "geometry_change_added_cycles": 0,
+  "measured_latency": {
+    "reference": "four quadrant VM",
+    "seam_cycles": 2,
+    "paths": {
+      "t_su_SW": [
+        {
+          "msb": 0,
+          "lsb": 0,
+          "added_cycles": 4,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 1,
+          "lsb": 1,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 2,
+          "lsb": 2,
+          "added_cycles": 4,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 3,
+          "lsb": 3,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 5,
+          "lsb": 4,
+          "added_cycles": 4,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 970,
+          "lsb": 6,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 2047,
+          "lsb": 971,
+          "added_cycles": 4,
+          "forwarded_clock": false
+        }
+      ],
+      "t_su_NW": [
+        {
+          "msb": 2047,
+          "lsb": 0,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        }
+      ],
+      "t_su_SE": [
+        {
+          "msb": 973,
+          "lsb": 0,
+          "added_cycles": 4,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 1229,
+          "lsb": 974,
+          "added_cycles": 2,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 2045,
+          "lsb": 1230,
+          "added_cycles": 8,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 2047,
+          "lsb": 2046,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        }
+      ],
+      "t_su_NE": [
+        {
+          "msb": 2047,
+          "lsb": 0,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        }
+      ],
+      "qSW": [
+        {
+          "msb": 579,
+          "lsb": 0,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 581,
+          "lsb": 580,
+          "added_cycles": null,
+          "forwarded_clock": true
+        }
+      ],
+      "qNW": [
+        {
+          "msb": 511,
+          "lsb": 0,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 577,
+          "lsb": 512,
+          "added_cycles": 2,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 579,
+          "lsb": 578,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 581,
+          "lsb": 580,
+          "added_cycles": null,
+          "forwarded_clock": true
+        }
+      ],
+      "qSE": [
+        {
+          "msb": 579,
+          "lsb": 0,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 581,
+          "lsb": 580,
+          "added_cycles": null,
+          "forwarded_clock": true
+        }
+      ],
+      "qNE": [
+        {
+          "msb": 511,
+          "lsb": 0,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 577,
+          "lsb": 512,
+          "added_cycles": 2,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 579,
+          "lsb": 578,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 581,
+          "lsb": 580,
+          "added_cycles": null,
+          "forwarded_clock": true
+        }
+      ],
+      "xSW": [
+        {
+          "msb": 2062,
+          "lsb": 0,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 2067,
+          "lsb": 2063,
+          "added_cycles": null,
+          "forwarded_clock": true
+        }
+      ],
+      "xNW": [
+        {
+          "msb": 2062,
+          "lsb": 0,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 2067,
+          "lsb": 2063,
+          "added_cycles": null,
+          "forwarded_clock": true
+        }
+      ],
+      "xSE": [
+        {
+          "msb": 2062,
+          "lsb": 0,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 2067,
+          "lsb": 2063,
+          "added_cycles": null,
+          "forwarded_clock": true
+        }
+      ],
+      "xNE": [
+        {
+          "msb": 2062,
+          "lsb": 0,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        },
+        {
+          "msb": 2067,
+          "lsb": 2063,
+          "added_cycles": null,
+          "forwarded_clock": true
+        }
+      ],
+      "t_quant": [
+        {
+          "msb": 1023,
+          "lsb": 0,
+          "added_cycles": 0,
+          "forwarded_clock": false
+        }
+      ],
+      "t_router": [
+        {
+          "msb": 511,
+          "lsb": 0,
+          "added_cycles": 4,
+          "forwarded_clock": false
+        }
+      ]
+    },
+    "note": "Per-bit measured increments; do not substitute a uniform +2 or multiply all bits into token latency. Forwarded clocks have no data latency."
+  },
+  "exactness": {
+    "positive_event_counts": [
+      40,
+      55,
+      60
+    ],
+    "structural_cycles": 442,
+    "unmatched_bits": 0,
+    "negatives": [
+      "cross_bus",
+      "seam",
+      "monolithic_write_port_depth_skew"
+    ],
+    "scope": "Historical preserved component evidence; final scheduler/CDC joins still require qualification."
+  },
+  "vm_instances": [
+    {
+      "name": "hb_vm_sw_s",
+      "master": "hfd_vm_sw_s",
+      "x": 14321.664,
+      "y": 12836.88,
+      "w": 699.816,
+      "h": 500.04,
+      "orientation": "R0"
+    },
+    {
+      "name": "hb_vm_sw_n",
+      "master": "hfd_vm_sw_n",
+      "x": 14321.664,
+      "y": 13336.92,
+      "w": 699.816,
+      "h": 500.04,
+      "orientation": "R0"
+    },
+    {
+      "name": "hb_vm_se_s",
+      "master": "hfd_vm_se_s",
+      "x": 15021.504,
+      "y": 12836.88,
+      "w": 699.816,
+      "h": 500.04,
+      "orientation": "R0"
+    },
+    {
+      "name": "hb_vm_se_n",
+      "master": "hfd_vm_se_n",
+      "x": 15021.504,
+      "y": 13336.92,
+      "w": 699.816,
+      "h": 500.04,
+      "orientation": "R0"
+    },
+    {
+      "name": "hb_vm_nw_s",
+      "master": "hfd_vm_nw_s",
+      "x": 14321.664,
+      "y": 13836.96,
+      "w": 699.816,
+      "h": 500.04,
+      "orientation": "R0"
+    },
+    {
+      "name": "hb_vm_nw_n",
+      "master": "hfd_vm_nw_n",
+      "x": 14321.664,
+      "y": 14337.0,
+      "w": 699.816,
+      "h": 500.04,
+      "orientation": "R0"
+    },
+    {
+      "name": "hb_vm_ne_s",
+      "master": "hfd_vm_ne_s",
+      "x": 15021.504,
+      "y": 13836.96,
+      "w": 699.816,
+      "h": 500.04,
+      "orientation": "R0"
+    },
+    {
+      "name": "hb_vm_ne_n",
+      "master": "hfd_vm_ne_n",
+      "x": 15021.504,
+      "y": 14337.0,
+      "w": 699.816,
+      "h": 500.04,
+      "orientation": "R0"
+    }
+  ],
+  "seam_buses": [
+    [
+      "hb_vm_sw_seam_s2n",
+      "hub",
+      2817,
+      [
+        [
+          "hb_vm_sw_s",
+          "s2n"
+        ],
+        [
+          "hb_vm_sw_n",
+          "s2n"
+        ]
+      ]
+    ],
+    [
+      "hb_vm_sw_seam_n2s",
+      "hub",
+      5401,
+      [
+        [
+          "hb_vm_sw_n",
+          "n2s"
+        ],
+        [
+          "hb_vm_sw_s",
+          "n2s"
+        ]
+      ]
+    ],
+    [
+      "hb_vm_se_seam_s2n",
+      "hub",
+      1078,
+      [
+        [
+          "hb_vm_se_s",
+          "s2n"
+        ],
+        [
+          "hb_vm_se_n",
+          "s2n"
+        ]
+      ]
+    ],
+    [
+      "hb_vm_se_seam_n2s",
+      "hub",
+      3855,
+      [
+        [
+          "hb_vm_se_n",
+          "n2s"
+        ],
+        [
+          "hb_vm_se_s",
+          "n2s"
+        ]
+      ]
+    ],
+    [
+      "hb_vm_nw_seam_s2n",
+      "hub",
+      2881,
+      [
+        [
+          "hb_vm_nw_s",
+          "s2n"
+        ],
+        [
+          "hb_vm_nw_n",
+          "s2n"
+        ]
+      ]
+    ],
+    [
+      "hb_vm_nw_seam_n2s",
+      "hub",
+      285,
+      [
+        [
+          "hb_vm_nw_n",
+          "n2s"
+        ],
+        [
+          "hb_vm_nw_s",
+          "n2s"
+        ]
+      ]
+    ],
+    [
+      "hb_vm_ne_seam_s2n",
+      "hub",
+      2063,
+      [
+        [
+          "hb_vm_ne_s",
+          "s2n"
+        ],
+        [
+          "hb_vm_ne_n",
+          "s2n"
+        ]
+      ]
+    ],
+    [
+      "hb_vm_ne_seam_n2s",
+      "hub",
+      1399,
+      [
+        [
+          "hb_vm_ne_n",
+          "n2s"
+        ],
+        [
+          "hb_vm_ne_s",
+          "n2s"
+        ]
+      ]
+    ]
+  ],
+  "blockers": [
+    "all eight routed SS/FF physical masters and actual BPin readback",
+    "joint abutting-seam and shared corridor track capacity; zero gap is not free routing area",
+    "per-bit latency differences require real packet/control alignment before die adoption",
+    "compose measured VM path increments into selected single-user schedule",
+    "clock CTS rebind eight VM entries, retaining source/reset phase gates"
+  ]
+}

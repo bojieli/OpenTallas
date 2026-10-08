@@ -1,0 +1,94 @@
+{
+ "schema": "opentallas.s81_ph.contract.v1",
+ "kind": "capture",
+ "master": "dsfd_sp_capture",
+ "owner": "Claude:s81-ph",
+ "function": "S81 return capture: the unchanged ot_dsrom_rd64_vm_capture (ENABLE, ROOTS 128, CAPACITY 1, VM_AW 19, VM_ALWAYS_ACCEPT 1) with the canonical S81 profile quota, exactly as the spine instantiates it; per-root 2-row pair packer (4-row hold) and ot_ratio_cdc_fifo (DEPTH 4, 103 b) to the serial VM; status lane (DEPTH 2)",
+ "rtl": {
+  "top": "rtl/dsrom_sys/s81_ph/dsfd_sp_capture.sv",
+  "core": "rtl/dsrom_sys/s81_ph/ot_s81ph_capture.sv",
+  "reused_unchanged": [
+   "rtl/dsrom_sys/rd64_capture/ot_dsrom_rd64_vm_capture.sv",
+   "rtl/dsrom_sys/rd64_capture/ot_dsrom_s81_phase_capture_profile.sv",
+   "rtl/common/ot_ratio_cdc_fifo.sv"
+  ]
+ },
+ "inputs": {
+  "f_gather": "G2 layout"
+ },
+ "outputs": {
+  "t_vm": "G3 layout"
+ },
+ "vm_side_contract": "the VM accepts every t_vm lane word every serial cycle: up to 2 scalar row writes per root per serial cycle (256 scalar write ports, or 128 two-row ports); the core modelled 128 scalar ports at the core clock (1 row per root per stream cycle = 1.33 per serial cycle)",
+ "faults": "as rd64 (over-quota, error row, pos > np, address range, reset request, accept without valid) + protocol fault (phase word while not ready) + hold overflow (never seen: back-to-back 56-row bursts per root PASS) + gather fault",
+ "bf16": "recomputed from fp32 exactly as ot_v41_ret_root: ({1b0, fp32} + 0x7FFF + fp32[16])[31:16]",
+ "generator_changes": [
+  {
+   "id": "G1",
+   "what": "dsfd_sp_gather / dsfd_sp_capture become REAL views (their LEF pins), placed abutting: gather (S) -> capture -> VM (N); the gather->capture and capture->VM buses are abutment nets, not hub-bus stations",
+   "why": "6,947-b and 13,376-b buses; the rows of a phase leave every root at once (I66 trace: 576 rows in 6 edges, 128 writers/edge), so the return path must carry one row per root per stream cycle"
+  },
+  {
+   "id": "G2",
+   "port": "dsfd_sp_gather.t_capture",
+   "old_bits": 576,
+   "new_bits": 6947,
+   "dir": "output",
+   "peer": "dsfd_sp_capture.f_gather",
+   "layout": "per root r (0..127) [53r +: 53] = {e, pos3, row16, fp32 32, v}; [6784 +: 160] = control word {f_vm[159:1], v}; [6944 +: 3] = {live, busy, fault}"
+  },
+  {
+   "id": "G3",
+   "port": "dsfd_sp_capture.t_vm",
+   "old_bits": 512,
+   "new_bits": 13376,
+   "dir": "output",
+   "peer": "dsfd_sp_vm (capture face)",
+   "domain": "serial_0p9",
+   "layout": "per root r [104r +: 104] = {row1 {data32, addr19}, v1, row0 {data32, addr19}, v0} (row0 older); [13312 +: 64] = status {busy, live, 0, identity47, phase10, fault, drained, idle, live}"
+  },
+  {
+   "id": "G4",
+   "port": "dsfd_sp_gather.ckv, dsfd_sp_gather.rsv, dsfd_sp_capture.ckv, dsfd_sp_capture.rsv",
+   "bits": 1,
+   "dir": "input",
+   "peer": "clk_serial / rst_serial nets",
+   "why": "the serial-domain crossings (VM->gather control, capture->VM writes) are inside the views (ot_ratio_cdc_fifo); the r9 hub buses vm->gather and capture->vm cross serial/stream with no CDC"
+  },
+  {
+   "id": "G5",
+   "port": "dsfd_sp_gather.f_vm",
+   "bits": 512,
+   "dir": "input",
+   "domain": "serial_0p9 (was undefined)",
+   "layout": "[0] v, [2:1] kind (0 phase, 1 reset-request level), [49:3] identity47, [59:50] phase_id10, [89:60] obase30, [119:90] ops30, [122:120] np, [124:123] fmt, [140:125] rsplit16, [141] fp32_low, [142] fp32_high, [158:143] phase_rows16, [159] reset_request level; rest 0"
+  },
+  {
+   "id": "G6",
+   "master": "dsfd_sp_capture",
+   "old_um": [
+    1015.176,
+    107.976
+   ],
+   "new_um": [
+    1015.176,
+    302.4
+   ],
+   "why": "per-root rd64 capture + 2-row pair packer + ratio CDC (128 x DEPTH 4 x 103 b) and 20.3k pins"
+  },
+  {
+   "id": "G7",
+   "master": "dsfd_sp_gather",
+   "old_um": [
+    1015.176,
+    1369.416
+   ],
+   "new_um": "set by the root sub-block route (128 x ot_s81ph_root_blk, ROOTD 128: the S81 physical return contract keeps ROOTD 128; ~2.15 Mbit of root storage)",
+   "why": "the 128 region roots of ot_v41_field_w17w10 are not on the die in r9: the column FIFO carries the column top NODE word"
+  },
+  {
+   "id": "G8",
+   "what": "glue (dsfd_cfifo): column status {fault, busy} is carried only with a valid return word (the meso FIFO forwards data only when w_v = root valid); a column fault with no following word is not reported. Carry status on an always-valid sideband or OR it into the trunk {fault, live} bits"
+  }
+ ]
+}

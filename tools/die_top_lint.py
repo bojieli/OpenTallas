@@ -96,6 +96,12 @@ QWEN_R17B = dict(b3r3=True, b3r6=True, tree_cols=6, bw_align=True, bw_edge=True,
                  bw_sp=200, m6_strip=40, slab_group_h=455.76, cdc='183.048,183.048')
 # r18 recipe (claude/qwen-die-rebuild-20261005): r17b + r18=True (findings Q1-Q14 of the first lint, main 694e21a6e)
 QWEN_R18 = dict(QWEN_R17B, r18=True)
+QWEN_R19 = dict(QWEN_R17B, r19=True)     # r18 + full tiles with KV slices + per-row landing fabric
+QWEN_R20C = dict(QWEN_R19, tree_interleave=True)          # r19 + interleaved tree pins (both tile masters)
+QWEN_R20F1 = dict(QWEN_R20C, bw_wp=1)                     # r20c + a block-word waypoint in every corridor crossed
+QWEN_R20G = dict(QWEN_R20C, su_core_clock=True)          # r20c + SU64/SFU and VM on the 1.2 GHz core clock
+QWEN_R21 = dict(QWEN_R20C, slab_bw_m8=True, relay_pitch=430.56)  # r20c + slab words on M8 + relays at the measured 430.56 um reach
+QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -148,7 +154,7 @@ def load_qwen():
     sys.path.insert(0, str(Path(src['root']) / 'tools'))
     try:
         B = importlib.import_module('qwen_rom_fulldie_b3r2')
-        r = dict(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B)
+        r = dict(QWEN_RECIPES.get(QWEN_RECIPE, QWEN_R17B))
         cdc = r.pop('cdc')
         v, m = B.selected(True, cdc=B._cdc_arg(cdc), **r)
     finally:
@@ -292,7 +298,14 @@ def real_blocks(die, m=None):
                                    binding=dict(dfi=[pn for pn, _ in v.phy_pins()]))
         prm = dict(TAGW=9)
         bind = dict(CDC_LAYOUT)
-        if QWEN_RECIPE == 'r18':
+        if QWEN_RECIPE in QWEN_RECIPES:
+            # r18: the closed element's four pin faces (route r11a): HCLK outputs / inputs, landing / write side
+            h, c = CDC_LAYOUT['h'], CDC_LAYOUT['c']
+            ho = [p for p in h if p.split('[')[0] in ('h_cred', 'h_wv', 'h_wsec', 'h_cv', 'h_csec', 'h_cdata', 'h_ctag',
+                                                      'h_fault')]
+            co = [p for p in c if p.startswith('l_')]
+            bind = dict(ho=ho, hi=[p for p in h if p not in ho], co=co, ci=[p for p in c if p not in co])
+            assert len(ho) == 319 and len(co) == 283
             bind.update({p: [p] for p in ('clk', 'hclk', 'c_arst_n', 'h_arst_n')})
             out['ot_hbm3e_phy']['binding'].update(clk=['clk'], rst_n=['rst_n'])
         out['qfd_cdc'] = dict(module='ot_qwen_stream4_cdc_pc', file=QCDC_RTL,
@@ -595,10 +608,11 @@ QLINK = 1056          # qwen_rom_fulldie LINK_TRACKS: 512 each way + 32 control 
 
 def dirs_qwen(bid, cls, bits, eps, j, port):
     """Qwen die (qwen_rom_fulldie buses(): endpoint 0 is always the upstream / source end)."""
+    bid = re.sub(r'__r\d+$', '', bid)                  # r21: a relay hop keeps its bus's rule
     if cls in ('corridor', 'head_chain', 'tap'):
         return flow(j, bits, bits - 1)               # instruction beats + go + x + clock/reset down, ready back
     bid = bid[:-2] if bid.endswith('_x') else bid      # r18: second half of a bus through a CDC cluster
-    if cls in ('tree_block', 'tree_spine', 'spine_local', 'hbm_read', 'crom', 'clock_trunk', 'reset'):
+    if cls in ('tree_block', 'tree_spine', 'spine_local', 'hbm_read', 'crom', 'clock_trunk', 'reset', 'kv_land'):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls == 'io':
         if bid in ('ucie_tx', 'serdes_tx', 'ucie_rx', 'serdes_rx'):          # 2 x IO_BITS: the collective's link word, 512 tx + 512 rx
@@ -682,7 +696,11 @@ def endpoint_dirs(die, real, by, bus, j):
     mst = by[inst].master
     if mst in real:
         rb = real[mst]
-        names = _binding(rb, port)
+        idx = None
+        if '@' in port:         # HBM r16j / r23: bit slice(s) of a real port (svc band <- PHY dfi range; split station)
+            idx = H.port_idx(port)
+            port = H.port_base(port)
+        names = _binding(rb, port)   # 'p[lo:hi]' S81 generator port slice handled there
         if names is None:
             return None, ('port_not_in_binding', port)
         names = [names[i] if i < len(names) else None for i in idx] if idx else list(names[:bits])
@@ -1121,6 +1139,8 @@ def domain_crossings(m):
             continue
         if any(by[i].kind in ('cdc', 'xfifo') for i, _ in eps):
             continue                 # ends in a CDC element / CDC FIFO cluster (its two clocks are pins of it)
+        if any(i in m.get('r18', {}).get('cdc_hosts', ()) for i, _ in eps):
+            continue                 # Qwen r18: the serial block hosts the ratio FIFO at this port (both clocks pinned)
         if hbm and any(by[i].kind == 'waypoint' and i in clocked for i, _ in eps):
             continue                 # a meso / launch station: the FIFO / launch register is the crossing
         ds = []
@@ -1944,7 +1964,7 @@ def rom_abstracts(die):
     return dict(
         schema='opentallas.rom_die_abstract_list.v1', die=die, generator=tool, generator_tag=gen_tag(tool.split()[0], gen_root(die)), s81_opts=S81_OPTS if dd != die else None,
         qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
-        qwen_recipe=(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B) if die == 'qwen_rom' else None, variant=m.get('variant'),
+        qwen_recipe=(QWEN_RECIPES.get(QWEN_RECIPE, QWEN_R17B)) if die == 'qwen_rom' else None, variant=m.get('variant'),
         die_um=[round(m['die']['w'], 3), round(m['die']['h'], 3)] if isinstance(m.get('die'), dict) else
         [round(max(i_.x + i_.w for i_ in m['insts']), 3), round(max(i_.y + i_.h for i_ in m['insts']), 3)],
         status_codes=STATUS_ORDER,
@@ -2040,7 +2060,7 @@ def run_lint(die, out, top_fix=False, tag=''):
         schema='opentallas.die_top_lint.v1', die=die, top_fix=top_fix, generator=tool,
         generator_sha256=sha_gen(die, tool.split()[0]), generator_tag=gen_tag(tool.split()[0], gen_root(die)),
         qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
-        qwen_recipe=(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B) if die == 'qwen_rom' else None, pin_fit_errors=dict(PIN_FIT_ERRORS),
+        qwen_recipe=(QWEN_RECIPES.get(QWEN_RECIPE, QWEN_R17B)) if die == 'qwen_rom' else None, pin_fit_errors=dict(PIN_FIT_ERRORS),
         lint_tool_sha256=sha('tools/die_top_lint.py'), variant=H._jsonable(m.get('variant')) if die == 'hbm' else m.get('variant'),
         census=dict(instances=len(m['insts']), buses=len(m['buses']), net_bits=int(sum(b[2] for b in m['buses'])),
                     masters=len({it.master for it in m['insts']}),
@@ -2075,7 +2095,7 @@ def main(argv=None):
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_head'])
-    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18'])
+    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '

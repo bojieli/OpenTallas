@@ -1,0 +1,117 @@
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'hff' generates 8 bits.
+                                                                                      : ... In instance ot_v41_pqc_spine_screen.u_sp.g_aq[1].u_aq.u_scale.u
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                                                     : ... In instance ot_v41_pqc_spine_screen.u_sp.g_aq[1].u_aq.u_scale.u.u_k0
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv:269:45: Operator ADD expects 12 bits on the RHS, but RHS's ARRAYSEL generates 5 bits.
+                                                                                          : ... In instance ot_v41_pqc_spine_screen.u_sp.g_aq[1].u_aq
+  269 |             s16_be[i] <= $signed({9'd0, p}) + s15_g[i] - 12'sd3 + s15_e + 12'sd127;
+      |                                             ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv:269:65: Operator ADD expects 12 bits on the RHS, but RHS's VARREF 's15_e' generates 10 bits.
+                                                                                          : ... In instance ot_v41_pqc_spine_screen.u_sp.g_aq[1].u_aq
+  269 |             s16_be[i] <= $signed({9'd0, p}) + s15_g[i] - 12'sd3 + s15_e + 12'sd127;
+      |                                                                 ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv:271:28: Operator SUB expects 12 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                                                          : ... In instance ot_v41_pqc_spine_screen.u_sp.g_aq[1].u_aq
+  271 |             shs = s15_g[i] - 12'sd3 + s15_e + 12'sd133;
+      |                            ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv:271:37: Operator ADD expects 12 bits on the RHS, but RHS's VARREF 's15_e' generates 10 bits.
+                                                                                          : ... In instance ot_v41_pqc_spine_screen.u_sp.g_aq[1].u_aq
+  271 |             shs = s15_g[i] - 12'sd3 + s15_e + 12'sd133;
+      |                                     ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:414:36: Operator COND expects 17 bits on the Conditional True, but Conditional True's SEL generates 16 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  414 |     wire [15:0] r1_blk0 = (r1_spar ? 16'(NBLK) : 16'd0) + {5'd0, r1_u, 1'b0, r1_b};
+      |                                    ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:414:36: Operator COND expects 17 bits on the Conditional False, but Conditional False's CONST '16'h0' generates 16 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  414 |     wire [15:0] r1_blk0 = (r1_spar ? 16'(NBLK) : 16'd0) + {5'd0, r1_u, 1'b0, r1_b};
+      |                                    ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:414:25: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 17 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  414 |     wire [15:0] r1_blk0 = (r1_spar ? 16'(NBLK) : 16'd0) + {5'd0, r1_u, 1'b0, r1_b};
+      |                         ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:415:36: Operator COND expects 17 bits on the Conditional True, but Conditional True's SEL generates 16 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  415 |     wire [15:0] r1_blk1 = (r1_spar ? 16'(NBLK) : 16'd0) + {5'd0, r1_u, 1'b1, r1_b};
+      |                                    ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:415:36: Operator COND expects 17 bits on the Conditional False, but Conditional False's CONST '16'h0' generates 16 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  415 |     wire [15:0] r1_blk1 = (r1_spar ? 16'(NBLK) : 16'd0) + {5'd0, r1_u, 1'b1, r1_b};
+      |                                    ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:415:25: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 17 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  415 |     wire [15:0] r1_blk1 = (r1_spar ? 16'(NBLK) : 16'd0) + {5'd0, r1_u, 1'b1, r1_b};
+      |                         ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:470:52: Operator ADD expects 15 bits on the LHS, but LHS's REPLICATE generates 8 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  470 |         if (aq_wv) have_n[aq_par] = {aq_blk, 5'd0} + 15'd64;
+      |                                                    ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:590:49: Bit extraction of array[15:0] requires 4 bit index, not 16 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  590 |             bt_q0[32*kc +: 32] <= p1_g0[kc] ? qb[p1_i0[16*kc +: 16]][32*kc +: 32] : 32'd0;
+      |                                                 ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:591:49: Bit extraction of array[15:0] requires 4 bit index, not 16 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  591 |             bt_q1[32*kc +: 32] <= p1_g1[kc] ? qb[p1_i1[16*kc +: 16]][32*kc +: 32] : 32'd0;
+      |                                                 ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:593:31: Bit extraction of array[15:0] requires 4 bit index, not 16 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  593 |         bt_e0 <= p1_g0[0] ? eb[p1_i0[15:0]] : 10'd0;
+      |                               ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:594:31: Bit extraction of array[15:0] requires 4 bit index, not 16 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  594 |         bt_e1 <= p1_g1[0] ? eb[p1_i1[15:0]] : 10'd0;
+      |                               ^
+%Warning-WIDTH: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:598:55: Bit extraction of array[511:0] requires 9 bit index, not 16 bits.
+                                                                                                 : ... In instance ot_v41_pqc_spine_screen.u_sp
+  598 |                     bra[16*ku + kl][16*kj +: 16] <= bb[{p1_hi[9*(8*ku + kl/2) +: 9], 4'(kl), 3'(kj)}];
+      |                                                       ^
+%Error-BLKLOOPINIT: physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv:598:50: Unsupported: Delayed assignment to array inside for loops (non-delayed is ok - see docs)
+  598 |                     bra[16*ku + kl][16*kj +: 16] <= bb[{p1_hi[9*(8*ku + kl/2) +: 9], 4'(kl), 3'(kj)}];
+      |                                                  ^~
+%Warning-UNOPTFLAT: physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:58:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_v41_pqc_spine_screen.u_sp.u_nb.t'
+   58 |     (* keep *) wire [W:0] t [0:L];
+      |                           ^
+                    physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:58:27:      Example path: ot_v41_pqc_spine_screen.u_sp.u_nb.t
+                    physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:67:40:      Example path: ASSIGNW
+                    physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:58:27:      Example path: ot_v41_pqc_spine_screen.u_sp.u_nb.t
+%Warning-UNOPTFLAT: physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:25:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_v41_pqc_spine_screen.u_sp.g_cc[0].u_g0.p'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:25:27:      Example path: ot_v41_pqc_spine_screen.u_sp.g_cc[0].u_g0.p
+                    physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:37:40:      Example path: ASSIGNW
+                    physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:25:27:      Example path: ot_v41_pqc_spine_screen.u_sp.g_cc[0].u_g0.p
+%Warning-UNOPTFLAT: physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:24:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_v41_pqc_spine_screen.u_sp.g_st[0].u_at.g'
+                                                                                      : ... In instance ot_v41_pqc_spine_screen.u_sp.g_st[0].u_at
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:24:27:      Example path: ot_v41_pqc_spine_screen.u_sp.g_st[0].u_at.g
+                    physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:36:40:      Example path: ASSIGNW
+                    physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv:24:27:      Example path: ot_v41_pqc_spine_screen.u_sp.g_st[0].u_at.g
+%Warning-UNOPTFLAT: physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq.u_scale.u.u_pw.g'
+                                                                                       : ... In instance ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq.u_scale.u.u_pw.g
+                    physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq.u_scale.u.u_pw.g
+%Warning-UNOPTFLAT: physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq.u_scale.u.u_pw.p'
+                                                                                       : ... In instance ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq.u_scale.u.u_pw.p
+                    physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq.u_scale.u.u_pw.p
+%Warning-UNOPTFLAT: physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:58:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq.u_scale.u.u_rnd.t'
+                                                                                       : ... In instance ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq
+   58 |     (* keep *) wire [W:0] t [0:L];
+      |                           ^
+                    physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq.u_scale.u.u_rnd.t
+                    physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:67:40:      Example path: ASSIGNW
+                    physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_v41_pqc_spine_screen.u_sp.g_aq[0].u_aq.u_scale.u.u_rnd.t
+%Error: Exiting due to 1 error(s)

@@ -9,7 +9,7 @@
  "supersedes": "results/uarch/ds_energy_silicon_authoritative_20261004 (INVALID: old 2,466-2,532 tok/s DS ROM rate, ASSUMED 10% power-gating residual)",
  "inputs": {
   "scoreboard": "results/arch/measured_scoreboard/scoreboard.json",
-  "scoreboard_commit": "2758a0dc5",
+  "scoreboard_commit": "162fca0b9",
   "element_power": "results/rtl/rom_stage_power_gating_20261004/verdict.json",
   "spine": "results/rtl/rom_stage_spine_gate_20261004/verdict.json",
   "registry": "results/external/registry.json",
@@ -64,19 +64,19 @@
    },
    "rates": {
     "ar": {
-     "value": 1603.3,
+     "value": 1596.7,
      "status": "composed_from_measured",
      "src": "results/arch/measured_scoreboard/scoreboard.json figures['ds_rom.ar_tok_s_1m'] <- results/arch/three_machine_compose/compose.json (ds_rom.AR_tok_s)",
      "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (tools/three_machine_compose.py, ADOPT+exact levers only). That record carries the default-QELEM headline (owner go 2026-10-06, 3661e31c6: the as-built field with the closed QX 10 q-element at frame f183.60, +16 layer dies / +4 stage hops) on full FEC, so it supersedes the pre-QELEM recovery-composition 1,687.9 / 4,922.6; results/rtl/dsrom_recovery_20261004/composition.json is regenerated on the same default and agrees. Open: that frame needs 85 stages / 340 layer dies (info.r8_reprice), while the rack record results/arch/dsrom_s81_rack_20261006/rack.json and the energy/silicon rows still count S81 (324 layer dies); still-modelled terms listed in results/rtl/dsrom_recovery_20261004/composition.json (still_modelled)"
     },
     "mtp": {
-     "value": 4717.7,
+     "value": 4702.0,
      "status": "composed_from_measured",
      "src": "results/arch/measured_scoreboard/scoreboard.json figures['ds_rom.mtp_tok_s_1m'] <- results/arch/three_machine_compose/compose.json (ds_rom.MTP_tok_s)",
      "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); still-modelled terms listed in results/rtl/dsrom_recovery_20261004/composition.json (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
     },
     "ar_us": {
-     "value": 623.698,
+     "value": 626.279,
      "status": "composed_from_measured",
      "src": "results/arch/measured_scoreboard/scoreboard.json figures['ds_rom.ar_us_1m'] <- results/arch/three_machine_compose/compose.json (ds_rom.AR_us)",
      "note": "single source: results/arch/three_machine_compose/compose.json ds_rom (default-QELEM headline, owner go 3661e31c6); still-modelled terms listed in results/rtl/dsrom_recovery_20261004/composition.json (still_modelled)"
@@ -100,13 +100,13 @@
    },
    "power": {
     "ar_b1_icg": {
-     "tok_s": 1603.3,
+     "tok_s": 1596.7,
      "rate_status": "composed_from_measured",
      "static_w": 27566.1,
-     "dynamic_w": 190.2,
-     "system_w": 27756.2,
-     "J_per_token": 17.3119,
-     "tok_s_per_kW": 57.76,
+     "dynamic_w": 189.4,
+     "system_w": 27755.4,
+     "J_per_token": 17.383,
+     "tok_s_per_kW": 57.53,
      "status": "modelled",
      "unvalidated": [
       "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
@@ -120,13 +120,13 @@
      "note": "per-pair ICG only (measured clock-gated idle pair)"
     },
     "mtp_b1_icg": {
-     "tok_s": 4717.7,
+     "tok_s": 4702.0,
      "rate_status": "composed_from_measured",
      "static_w": 27566.1,
-     "dynamic_w": 705.3,
-     "system_w": 28271.4,
-     "J_per_token": 5.9926,
-     "tok_s_per_kW": 166.87,
+     "dynamic_w": 702.9,
+     "system_w": 28269.0,
+     "J_per_token": 6.0121,
+     "tok_s_per_kW": 166.33,
      "status": "modelled",
      "unvalidated": [
       "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
@@ -140,13 +140,13 @@
      "note": ""
     },
     "ar_b1_pg_measured": {
-     "tok_s": 1603.3,
+     "tok_s": 1596.7,
      "rate_status": "composed_from_measured",
-     "static_w": 10654.9,
-     "dynamic_w": 190.2,
-     "system_w": 10845.0,
-     "J_per_token": 6.7642,
-     "tok_s_per_kW": 147.84,
+     "static_w": 10654.8,
+     "dynamic_w": 189.4,
+     "system_w": 10844.2,
+     "J_per_token": 6.7916,
+     "tok_s_per_kW": 147.24,
      "status": "modelled",
      "unvalidated": [
       "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
@@ -162,13 +162,13 @@
      "note": "stage power gating, active fraction 1/S + wake/T = 0.0119; pair PG idle 1.064 mW (measured)"
     },
     "mtp_b1_pg_measured": {
-     "tok_s": 4717.7,
+     "tok_s": 4702.0,
      "rate_status": "composed_from_measured",
      "static_w": 11860.8,
-     "dynamic_w": 705.3,
-     "system_w": 12566.1,
-     "J_per_token": 2.6636,
-     "tok_s_per_kW": 375.43,
+     "dynamic_w": 702.9,
+     "system_w": 12563.8,
+     "J_per_token": 2.672,
+     "tok_s_per_kW": 374.25,
      "status": "modelled",
      "unvalidated": [
       "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
@@ -184,13 +184,13 @@
      "note": "f = 7/S"
     },
     "ar_b1_pg_spine": {
-     "tok_s": 1603.3,
+     "tok_s": 1596.7,
      "rate_status": "composed_from_measured",
      "static_w": 9142.8,
-     "dynamic_w": 190.2,
-     "system_w": 9333.0,
-     "J_per_token": 5.8211,
-     "tok_s_per_kW": 171.79,
+     "dynamic_w": 189.4,
+     "system_w": 9332.2,
+     "J_per_token": 5.8447,
+     "tok_s_per_kW": 171.1,
      "status": "unvalidated",
      "unvalidated": [
       "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
@@ -206,13 +206,13 @@
      "note": "stage power gating, active fraction 1/S + wake/T = 0.0119; pair PG idle 0.513 mW (unvalidated)"
     },
     "mtp_b1_pg_spine": {
-     "tok_s": 4717.7,
+     "tok_s": 4702.0,
      "rate_status": "composed_from_measured",
      "static_w": 10456.7,
-     "dynamic_w": 705.3,
-     "system_w": 11162.0,
-     "J_per_token": 2.366,
-     "tok_s_per_kW": 422.66,
+     "dynamic_w": 702.9,
+     "system_w": 11159.6,
+     "J_per_token": 2.3734,
+     "tok_s_per_kW": 421.34,
      "status": "unvalidated",
      "unvalidated": [
       "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
@@ -228,13 +228,13 @@
      "note": "f = 7/S"
     },
     "ar_b1_pg_spine_ctl_shared": {
-     "tok_s": 1603.3,
+     "tok_s": 1596.7,
      "rate_status": "composed_from_measured",
      "static_w": 8607.9,
-     "dynamic_w": 190.2,
-     "system_w": 8798.1,
-     "J_per_token": 5.4875,
-     "tok_s_per_kW": 182.23,
+     "dynamic_w": 189.4,
+     "system_w": 8797.3,
+     "J_per_token": 5.5096,
+     "tok_s_per_kW": 181.5,
      "status": "unvalidated",
      "unvalidated": [
       "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
@@ -250,13 +250,13 @@
      "note": "stage power gating, active fraction 1/S + wake/T = 0.0119; pair PG idle 0.370 mW (unvalidated)"
     },
     "mtp_b1_pg_spine_ctl_shared": {
-     "tok_s": 4717.7,
+     "tok_s": 4702.0,
      "rate_status": "composed_from_measured",
      "static_w": 9959.9,
-     "dynamic_w": 705.3,
-     "system_w": 10665.2,
-     "J_per_token": 2.2607,
-     "tok_s_per_kW": 442.35,
+     "dynamic_w": 702.9,
+     "system_w": 10662.8,
+     "J_per_token": 2.2677,
+     "tok_s_per_kW": 440.97,
      "status": "unvalidated",
      "unvalidated": [
       "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
@@ -272,13 +272,13 @@
      "note": "f = 7/S"
     },
     "ar_b1_pg_spine_ctl_aon_shared": {
-     "tok_s": 1603.3,
+     "tok_s": 1596.7,
      "rate_status": "composed_from_measured",
-     "static_w": 7348.0,
-     "dynamic_w": 190.2,
-     "system_w": 7538.1,
-     "J_per_token": 4.7016,
-     "tok_s_per_kW": 212.69,
+     "static_w": 7347.9,
+     "dynamic_w": 189.4,
+     "system_w": 7537.3,
+     "J_per_token": 4.7206,
+     "tok_s_per_kW": 211.84,
      "status": "unvalidated",
      "unvalidated": [
       "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
@@ -294,13 +294,13 @@
      "note": "stage power gating, active fraction 1/S + wake/T = 0.0119; pair PG idle 0.031 mW (unvalidated)"
     },
     "mtp_b1_pg_spine_ctl_aon_shared": {
-     "tok_s": 4717.7,
+     "tok_s": 4702.0,
      "rate_status": "composed_from_measured",
      "static_w": 8789.8,
-     "dynamic_w": 705.3,
-     "system_w": 9495.1,
-     "J_per_token": 2.0126,
-     "tok_s_per_kW": 496.86,
+     "dynamic_w": 702.9,
+     "system_w": 9492.7,
+     "J_per_token": 2.0189,
+     "tok_s_per_kW": 495.33,
      "status": "unvalidated",
      "unvalidated": [
       "hub/scan/control logic static per layer die (ledger 19.6 W less its field leakage, modelled)",
@@ -484,9 +484,9 @@
     }
    },
    "idle_window_1m": {
-    "token_us": 623.698,
-    "stage_window_us": 7.338,
-    "idle_us": 616.36,
+    "token_us": 626.279,
+    "stage_window_us": 7.368,
+    "idle_us": 618.911,
     "wake_us": 0.0766,
     "wake_fits": true
    }
@@ -659,28 +659,28 @@
   }
  },
  "deepseek_compare": {
-  "per_user_ar_rom_over_hbm": 0.7376,
-  "per_user_mtp_rom_over_hbm": 1.0074,
+  "per_user_ar_rom_over_hbm": 0.7346,
+  "per_user_mtp_rom_over_hbm": 1.004,
   "J_per_token_ar_hbm_over_rom": {
-   "ar_b1_icg": 0.3334,
-   "ar_b1_pg_measured": 0.8532,
-   "ar_b1_pg_spine": 0.9914,
-   "ar_b1_pg_spine_ctl_shared": 1.0517,
-   "ar_b1_pg_spine_ctl_aon_shared": 1.2275
+   "ar_b1_icg": 0.332,
+   "ar_b1_pg_measured": 0.8497,
+   "ar_b1_pg_spine": 0.9874,
+   "ar_b1_pg_spine_ctl_shared": 1.0474,
+   "ar_b1_pg_spine_ctl_aon_shared": 1.2225
   },
   "J_per_token_mtp_hbm_over_rom": {
-   "mtp_b1_icg": 0.4823,
-   "mtp_b1_pg_measured": 1.0851,
-   "mtp_b1_pg_spine": 1.2216,
-   "mtp_b1_pg_spine_ctl_shared": 1.2785,
-   "mtp_b1_pg_spine_ctl_aon_shared": 1.4362
+   "mtp_b1_icg": 0.4808,
+   "mtp_b1_pg_measured": 1.0817,
+   "mtp_b1_pg_spine": 1.2178,
+   "mtp_b1_pg_spine_ctl_shared": 1.2746,
+   "mtp_b1_pg_spine_ctl_aon_shared": 1.4317
   },
   "J_per_token_ar_hbm_no_switch_over_rom": {
-   "ar_b1_icg": 0.2271,
-   "ar_b1_pg_measured": 0.5811,
-   "ar_b1_pg_spine": 0.6753,
-   "ar_b1_pg_spine_ctl_shared": 0.7163,
-   "ar_b1_pg_spine_ctl_aon_shared": 0.8361
+   "ar_b1_icg": 0.2261,
+   "ar_b1_pg_measured": 0.5788,
+   "ar_b1_pg_spine": 0.6725,
+   "ar_b1_pg_spine_ctl_shared": 0.7134,
+   "ar_b1_pg_spine_ctl_aon_shared": 0.8327
   },
   "best_rom_policy": "ar_b1_pg_measured",
   "spine_adopted": false,
@@ -691,25 +691,25 @@
    "rows": {
     "rom_ar": {
      "rate_label": "AR",
-     "per_user_tok_s": 1603.3,
+     "per_user_tok_s": 1596.7,
      "total_mm2": 896341.2,
      "logic_dies": 440,
-     "per_user_tok_s_per_1000mm2": 1.7887,
+     "per_user_tok_s_per_1000mm2": 1.7814,
      "replicas_at_ref_silicon": 1.0,
      "batch1_users_at_ref_silicon": 1.0,
-     "aggregate_b1_tok_s_integer_replicas": 1603.3,
-     "aggregate_b1_tok_s_fractional": 1603.3
+     "aggregate_b1_tok_s_integer_replicas": 1596.7,
+     "aggregate_b1_tok_s_fractional": 1596.7
     },
     "rom_mtp": {
      "rate_label": "MTP",
-     "per_user_tok_s": 4717.7,
+     "per_user_tok_s": 4702.0,
      "total_mm2": 896341.2,
      "logic_dies": 440,
-     "per_user_tok_s_per_1000mm2": 5.2633,
+     "per_user_tok_s_per_1000mm2": 5.2458,
      "replicas_at_ref_silicon": 1.0,
      "batch1_users_at_ref_silicon": 1.0,
-     "aggregate_b1_tok_s_integer_replicas": 4717.7,
-     "aggregate_b1_tok_s_fractional": 4717.7
+     "aggregate_b1_tok_s_integer_replicas": 4702.0,
+     "aggregate_b1_tok_s_fractional": 4702.0
     },
     "hbm_ar": {
      "rate_label": "AR",

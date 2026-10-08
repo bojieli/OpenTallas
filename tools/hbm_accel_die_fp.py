@@ -347,10 +347,31 @@ R23 = dict(R22, hub_scale=2.0, stable_roles=True, hub_pin_window=500.0, split_st
 R23V = dict(R23, vm_split8=True)
 # r24 (coordinator 2026-10-07): R23 + 8 per-segment ck pins on every hub quarter (hfd_su / hfd_sfu / hfd_hc)
 R24 = dict(R23, hub_ck_seg=8)
+# Candidate only: paired half-rate DDIV64 full lane, sized by unified-model
+# commit 6dc3c9707.  Reserve >=400 x 400 um on the existing macro/site lattice;
+# keep the other slots and adopted floorplan unchanged.
+R24F = dict(R24, spine_slots=dict(R24['spine_slots'], su_full=(400.008, 401.736)))
+# Separate candidate reservation: full-width W2 credit senders own their area.
+# This is an unbound floorplan slot until a measured wrapper supplies pins/RTL.
+R24W = dict(R24F, spine_slots=dict(R24F['spine_slots'], w2_sender=(400.008, 401.736)),
+            spine_slot_domains={'w2_sender': 'stream_1p2'})
+# Geometry-only successor sized by hbm_w2_slot_model.py (ac7d9ee59).
+# Logical SM identity/ports stay 4x2; physical locations become eight of nine
+# 3x3 sites. Network generation is intentionally unavailable pending remapping.
+# W2/HA2 partial interfaces stay inside hb_coll; the earlier R24W
+# external sender reservation is historical diagnostic geometry only.
+R24SM3 = dict(R24F, sm_wh=(3075.84, 1131.84), sm_physical_grid=(3, 3), side_padding_um=207.36)
+# Geometry candidate only: full VM8 port/latency contract and routed closure remain gates.
+R24SM3V = dict(R24SM3, vm_split8=True, vm8_nonoverlap=True, vm8_exact_pins=True)
+R24SM3VO = dict(R24SM3V, native_owner_bays=True)
+R24SM3VOC = dict(R24SM3VO, native_descriptor_bays=True)
+R24SM3VOCE = dict(R24SM3VOC, native_control_escape_bays=True)
+R24SM3VOCEU = dict(R24SM3VOCE, native_control_u_corridors=True)
+R24SM3VOCEUR = dict(R24SM3VOCEU, native_result_store_bays=True)
 ADOPTED = R23
 
 
-def build(variant=None):
+def build(variant=None, *, geometry_only=False, network_probe=False):
     variant = dict(variant if variant is not None else ADOPTED)
     Q.CORNER_RULE.clear()
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
@@ -358,8 +379,16 @@ def build(variant=None):
     Q.PIN_CENTRE.update(variant.get('pin_centre', {}))
     smw, smh = sm_dims() if 'sm_wh' not in variant else (up(variant['sm_wh'][0], GX) - SHAVE, up(variant['sm_wh'][1], GY) - SHAVE)
     strip_d = variant.get('strip_d', STRIP_D)
-    grp_w = 4 * (smw + SHAVE) + 5 * CH
-    grp_h = 2 * (smh + SHAVE) + 2 * CH
+    if variant.get('sm_physical_grid'):
+        # Measured hard macro dimensions must never be shaved or rescaled.
+        smw, smh = variant['sm_wh']
+    physical_cols, physical_rows = variant.get('sm_physical_grid', (4, 2))
+    if (physical_cols, physical_rows) not in ((4, 2), (3, 3)):
+        raise ValueError('SM physical grid must preserve eight logical SMs per stack')
+    if variant.get('sm_physical_grid') and not (geometry_only or network_probe):
+        raise ValueError('Retiled SM network paths and latency are not yet qualified; use geometry_only=True')
+    grp_w = physical_cols * (smw + SHAVE) + (physical_cols + 1) * CH
+    grp_h = physical_rows * (smh + SHAVE) + physical_rows * CH
     mid_ch = up(variant.get('mid_ch', 2592.0), GX)
     if variant.get('hub_scale'):        # r23: the SU / SFU / HC quarters grow by hub_scale; the centre channel widens by
         #   the added quarter widths on both sides (each quarter is BLOCKS mm2 / 4 over the quarter height qhc)
@@ -378,7 +407,7 @@ def build(variant=None):
         mid_ch = up(mid_ch + 2 * 4 * (up(variant['attn_tile_w_um'], GX) - tw0), GX)
     core_w = 2 * grp_w + mid_ch
     W = up(EDGE + SCH + core_w + SCH + strip_d + EDGE, GX)
-    side_h = EDGE + PHY_H + 8.64 + SVC_D + SVC_GAP + grp_h
+    side_h = EDGE + PHY_H + 8.64 + SVC_D + SVC_GAP + grp_h + variant.get('side_padding_um', 0.0)
     hub_h = up(variant.get('hub_h', 7200.0), GY)
     H = up(2 * side_h + hub_h, GY)
     assert W <= 33000 and H <= 26000, (W, H)
@@ -412,14 +441,15 @@ def build(variant=None):
             sms = []
             for row in range(2):
                 for col in range(4):
-                    sx = up(gx + CH + col * (smw + SHAVE + CH), GX)
+                    physical_row, physical_col = divmod(4 * row + col, physical_cols)
+                    sx = up(gx + CH + physical_col * (smw + SHAVE + CH), GX)
                     if side == 'S':
-                        sy = up(yg + CH + row * (smh + SHAVE + CH), GY) if row else up(yg + 0.0, GY)
+                        sy = up(yg + CH + physical_row * (smh + SHAVE + CH), GY) if physical_row else up(yg + 0.0, GY)
                     else:
                         if variant.get('n_mirror_fix'):     # r10: r1-r8 abutted N row 1 on the hub band (no CH)
-                            sy = dn(yg + grp_h - (smh + SHAVE) - row * (smh + SHAVE + CH), GY)
+                            sy = dn(yg + grp_h - (smh + SHAVE) - physical_row * (smh + SHAVE + CH), GY)
                         else:
-                            sy = dn(yg + grp_h - (smh + SHAVE) - (CH + row * (smh + SHAVE + CH) if row else 0.0), GY)
+                            sy = dn(yg + grp_h - (smh + SHAVE) - (CH + physical_row * (smh + SHAVE + CH) if physical_row else 0.0), GY)
                     i = 8 * 'SW SE NW NE'.split().index(st) + 4 * row + col
                     my = variant.get('w_my') and half == 'W'      # r10: W groups mirrored, x face toward the centre
                     if variant.get('orient_fix'):     # r15: bool() -- r1-r14b compared with None (True on S too)
@@ -429,6 +459,8 @@ def build(variant=None):
                     ori = ('R180' if my else 'MX') if flip else ('MY' if my else 'R0')
                     it = Inst(f'sm{i}', 'hfd_sm', sx, sy, smw, smh, ori, kind='sm', region=f'grp_{st}')
                     it.sm = dict(stack=st, row=row, col=col)
+                    if variant.get('sm_physical_grid'):
+                        it.sm.update(physical_row=physical_row, physical_col=physical_col)
                     insts.append(it)
                     sms.append(it)
             groups[st] = dict(x=gx, y=yg, sms=sms, phy=phy, svc=svc, side=side, half=half)
@@ -479,13 +511,16 @@ def build(variant=None):
     yy = yy - ghi
     for n_, (w_, h_) in variant.get('spine_slots', {}).items():
         it = Inst(f'hb_{n_}', f'hfd_{n_}', up(sx0 + (spine_w - SHAVE - w_) / 2, GX), up(yy + ghi, GY), w_, h_,
-                  kind='spine', region='hub', domain='serial_0p9')
+                  kind='spine', region='hub', domain=variant.get('spine_slot_domains', {}).get(n_, 'serial_0p9'))
         assert it.y + it.h <= hy1, ('spine slot above the hub band', n_, it.y + it.h, hy1)
         insts.append(it)
         hub[n_] = it
         yy = it.y + h_
     if 'router_env' in variant:      # r16h: scoped router envelope (loader / cmdproc fixed, taken from their gaps)
         ry, rh = variant['router_env']
+        if variant.get('sm_physical_grid'):
+            # Historical envelope is absolute; preserve its hub-relative location.
+            ry += grp_h - (2 * (sm_dims()[1] + SHAVE) + 2 * CH) + variant.get('side_padding_um', 0.0)
         it = hub['router']
         assert ry >= hub['loader'].y + hub['loader'].h and ry + rh <= hub['cmdproc'].y, ('router_env overlaps', ry, rh)
         it.y, it.h = ry, rh
@@ -623,6 +658,97 @@ def build(variant=None):
     if variant.get('r5a_sidebands'):
         from hbm_r5a_parent_allocation import allocate
         allocate(m)
+    if geometry_only:
+        m['buses'], m['paths'] = [], {}
+        m['geometry_only'] = True
+        m['notes'].append('Placement candidate only: network paths, fixed-pin transforms, clock delivery and latency unqualified.')
+        return m
+    if network_probe:
+        m['network_probe'] = True
+        m['notes'].append('Unqualified network probe: old logical tree association, moved anchors; actual pin routes and timing require validation.')
+        if variant.get('sm_physical_grid'):
+            # Actual 27-piece top result pins from generator 2bd92cae4 +
+            # 1d11fbb3e, pins.tcl SHA256 53e4a2bf2cc8e736a9669d796115596c
+            # 5cf9e82c469fa92f255536cbe5f003e2. Reserve an outward 120um
+            # station bay before placing unrelated tree/request/KV stations.
+            bays = []
+            for sm in (i for i in insts if i.kind == 'sm'):
+                lo, hi = 1467.804, 1608.444
+                if sm.orient in ('MY', 'R180'):
+                    lo, hi = sm.w - hi, sm.w - lo
+                x0, x1 = sm.x + lo - 24, sm.x + hi + 24
+                if sm.orient in ('MX', 'R180'):
+                    box = [x0, sm.y + sm.h, x1, sm.y + sm.h + 120]
+                else:
+                    box = [x0, sm.y - 120, x1, sm.y]
+                bays.append(dict(sm=sm.name, box_um=box))
+            m['result_pin_bays'] = bays
+            m.setdefault('reserved_regions', []).extend(q['box_um'] for q in bays)
+            if variant.get('native_owner_bays'):
+                if any(abs(i.w-3075.84)>1e-6 or abs(i.h-1131.84)>1e-6 for i in insts if i.kind=='sm'):
+                    raise ValueError('native owner/descriptor pin reservations require original3075.84x1131.84 SM contract')
+                # Opt-in reservation for the protected native owner. Area/grid
+                # is priced before a physical master exists; this is not a cell.
+                owner_bays=[]
+                for sm in (i for i in insts if i.kind == 'sm'):
+                    cx=1538.22
+                    if sm.orient in ('MY','R180'):
+                        cx=sm.w-cx
+                    x0=round(round((sm.x+cx-256.176/2)/GX)*GX,6)
+                    if sm.orient in ('MX','R180'):
+                        y1=sm.y-2.16
+                        box=[x0,y1-129.6,x0+256.176,y1]
+                    else:
+                        y0=sm.y+sm.h+2.16
+                        box=[x0,y0,x0+256.176,y0+129.6]
+                    owner_bays.append(dict(sm=sm.name,box_um=[round(v,6) for v in box]))
+                m['native_owner_bays']=owner_bays
+                m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in owner_bays)
+                if variant.get('native_descriptor_bays'):
+                    descriptor_bays=[]
+                    for sm in (i for i in insts if i.kind=='sm'):
+                        x0,x1=1312.848,1441.152
+                        if sm.orient in ('MY','R180'):
+                            x0,x1=sm.w-x1,sm.w-x0
+                        if sm.orient in ('MX','R180'):
+                            y0,y1=sm.y+sm.h+2.16,sm.y+sm.h+66.96
+                        else:
+                            y0,y1=sm.y-66.96,sm.y-2.16
+                        descriptor_bays.append(dict(sm=sm.name,box_um=[round(sm.x+x0,6),round(y0,6),round(sm.x+x1,6),round(y1,6)]))
+                    m['native_descriptor_bays']=descriptor_bays
+                    m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in descriptor_bays)
+                    if variant.get('native_control_escape_bays'):
+                        escape_bays=[]
+                        sm_by={i.name:i for i in insts if i.kind=='sm'}
+                        for role,group in (('owner',owner_bays),('descriptor',descriptor_bays)):
+                            for bay in group:
+                                x0,y0,x1,y1=bay['box_um'];cy=(y0+y1)/2
+                                if sm_by[bay['sm']].orient in ('MY','R180'):
+                                    box=[x1,cy-24,x1+40,cy+24]
+                                else:
+                                    box=[x0-40,cy-24,x0,cy+24]
+                                escape_bays.append(dict(sm=bay['sm'],role=role,box_um=[round(v,6) for v in box]))
+                        m['native_control_escape_bays']=escape_bays
+                        m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in escape_bays)
+                        if variant.get('native_control_u_corridors'):
+                            if abs(geo['W']-30904.848)>1e-6 or abs(geo['H']-24051.6)>1e-6:
+                                raise ValueError('control U corridor proposal belongs to original retile outline')
+                            proposal=json.loads((ROOT/'results/uarch/hbm_sm_owner_reservation_20261007/control_u_successor/proposal.json').read_text())
+                            corridors=[dict(sm=row['sm'],box_um=box) for row in proposal['rows'] for box in row['corridor_rectangles_um']]
+                            m['native_control_u_corridors']=corridors
+                            m.setdefault('reserved_regions',[]).extend(q['box_um'] for q in corridors)
+    if network_probe and variant.get('native_result_store_bays'):
+        proposal=json.loads((ROOT/'results/uarch/hbm_sm_result_store_reservation_20261007/model.json').read_text())
+        sm_by={i.name:i for i in insts if i.kind=='sm'}
+        for site in proposal['sites']:
+            b=site['sm_group_start'];col=sm_by[f'sm{b+2}'];row=sm_by[f'sm{b+6}']
+            actual=[col.x,row.y,col.x+col.w,row.y+row.h]
+            if any(abs(a-v)>1e-6 for a,v in zip(actual,site['box_um'])):
+                raise ValueError('native result-store proposal does not match actual vacant SM site')
+        stores=[dict(sm=s['source_sm'],name=s['name'],box_um=s['box_um']) for s in proposal['stores']]
+        m['native_result_store_bays']=stores
+        m.setdefault('reserved_regions',[]).extend(s['box_um'] for s in stores)
+        m['notes'].append('Full native result-store slot reservations only; no physical master, capture route, or installed-destination service is qualified.')
     m['buses'], m['paths'] = buses(m)
     if variant.get('stn_share'):
         share_stations(m)
@@ -898,13 +1024,57 @@ def split_station(m, role, h_data=1024):
     for it in ins:
         a = Inst(it.name + 'a', role + 'a', it.x, it.y, it.w, it.h, it.orient, kind=it.kind, region=it.region, domain=it.domain)
         bx = None
+        def reserved_free(x, y):
+            return all(not (x < r[2] + 4 and r[0] < x + it.w + 4 and
+                            y < r[3] + 4 and r[1] < y + it.h + 4)
+                       for r in m.get('reserved_regions', []))
         for cand in (it.x + it.w + SHAVE + 8.64, it.x - it.w - SHAVE - 8.64):
-            if all(not (cand < j.x + j.w + 4 and j.x < cand + it.w + 4 and it.y < j.y + j.h + 4 and j.y < it.y + it.h + 4)
+            if reserved_free(cand,it.y) and all(not (cand < j.x + j.w + 4 and j.x < cand + it.w + 4 and it.y < j.y + j.h + 4 and j.y < it.y + it.h + 4)
                    for j in m['insts'] if j is not it):
                 bx = cand
                 break
+        by_ = it.y
+        if bx is None and m.get('network_probe'):
+            # Retiled geometry may have a free row corridor rather than a
+            # second side-by-side slot. Preserve both real macro dimensions.
+            for cy in (it.y + it.h + SHAVE + 8.64, it.y - it.h - SHAVE - 8.64):
+                if cy < EDGE or cy + it.h > m['geo']['H'] - EDGE:
+                    continue
+                if reserved_free(it.x,cy) and all(not (it.x < j.x + j.w + 4 and j.x < it.x + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                       for j in m['insts'] if j is not it):
+                    bx, by_ = it.x, cy
+                    break
+        if bx is None and m.get('network_probe'):
+            offsets = sorted(((dx, dy) for dx in range(-24, 25) for dy in range(-24, 25)),
+                             key=lambda xy: abs(xy[0]) + abs(xy[1]))
+            for dx, dy in offsets:
+                cx, cy = up(it.x + dx * 43.2, GX), up(it.y + dy * 43.2, GY)
+                if cx < EDGE or cy < EDGE or cx + it.w > m['geo']['W'] - EDGE or cy + it.h > m['geo']['H'] - EDGE:
+                    continue
+                if reserved_free(cx,cy) and all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                       for j in m['insts']):
+                    bx, by_ = cx, cy
+                    break
+        if bx is None and m.get('network_probe'):
+            # The unoccupied ninth physical site is explicitly available for
+            # tree macros. Its longer wires remain an unqualified probe cost.
+            candidates = []
+            for group in m['groups'].values():
+                sm0 = group['sms'][0]
+                ex = group['x'] + CH + 2 * (sm0.w + SHAVE + CH)
+                ey = (group['y'] + 2 * (sm0.h + SHAVE + CH)
+                      if group['side'] == 'S' else group['y'])
+                for dx in range(0, int(sm0.w - it.w), 108):
+                    for dy in range(0, int(sm0.h - it.h), 108):
+                        candidates.append((up(ex + dx, GX), up(ey + dy, GY)))
+            candidates.sort(key=lambda xy: abs(xy[0]-it.x)+abs(xy[1]-it.y))
+            for cx, cy in candidates:
+                if reserved_free(cx,cy) and all(not (cx < j.x + j.w + 4 and j.x < cx + it.w + 4 and cy < j.y + j.h + 4 and j.y < cy + it.h + 4)
+                       for j in m['insts']):
+                    bx, by_ = cx, cy
+                    break
         assert bx is not None, ('no room for the B half', it.name)
-        b = Inst(it.name + 'b', role + 'b', round(bx, 4), it.y, it.w, it.h, it.orient, kind=it.kind, region=it.region,
+        b = Inst(it.name + 'b', role + 'b', round(bx, 4), round(by_, 4), it.w, it.h, it.orient, kind=it.kind, region=it.region,
                  domain=it.domain)
         pair[it.name] = (a, b)
     m['insts'] = [i for i in m['insts'] if i.name not in pair] + [x for ab in pair.values() for x in ab]
@@ -1012,7 +1182,7 @@ def split_vm8(m):
     halves, own = {}, {}
     for nm, it in tiles.items():
         q = it.master[len('hfd_vm_'):]
-        dy = 1000.056 - 500.04
+        dy = 500.04 if m['variant'].get('vm8_nonoverlap') else 1000.056 - 500.04
         hs = Inst(nm + '_s', it.master + '_s', it.x, it.y, 699.816, 500.04, it.orient, kind=it.kind, region=it.region, domain=it.domain)
         hn = Inst(nm + '_n', it.master + '_n', it.x, round(it.y + dy, 4), 699.816, 500.04, it.orient, kind=it.kind,
                   region=it.region, domain=it.domain)
@@ -1058,9 +1228,28 @@ def split_vm8(m):
                 pitch = max(1, round((hi - lo) / max(1, n_ - 1) / tr)) if n_ > 1 else 1
                 spec[p_] = ('face', n_, face, v['layer'], round((lo + hi) / 2, 4), pitch)
             order.append(p_)
+        if m['variant'].get('vm8_exact_pins'):
+            # Preserve each requested rectangle and bit identity. Ranges lose
+            # single-pin faces and the half-track origin of even-width groups.
+            text=(ROOT / VM8_DIR / f'hfd_vm_{q}_{h}/io_place.tcl').read_text()
+            pattern=r'place_pin -pin_name \{(\w+)\[(\d+)\]\} -layer (\w+) -location \{([\d.]+) ([\d.]+)\} -pin_size \{([\d.]+) ([\d.]+)\}'
+            exact=defaultdict(dict)
+            for port,bit,layer,x,y,w_,h_ in re.findall(pattern,text):
+                bit=int(bit);x,y,w_,h_=map(float,(x,y,w_,h_))
+                if bit in exact[port]:
+                    raise ValueError(f'duplicate VM requested pin: {q}/{h}/{port}[{bit}]')
+                exact[port][bit]=(f'{port}[{bit}]',layer,(x-w_/2,y-h_/2,x+w_/2,y+h_/2))
+            if set(exact)!=set(rec['ports']):
+                raise ValueError(f'VM requested pin port mismatch: {q}/{h}')
+            for port,v in rec['ports'].items():
+                if set(exact[port])!=set(range(v['bits'])):
+                    raise ValueError(f'VM requested pin bit mismatch: {q}/{h}/{port}')
+                spec[port]=('rects',[exact[port][b] for b in range(v['bits'])])
 
         def fn(mst, k=1, spec=spec, order=order):
             sp_ = dict(spec)
+            if k > 1 and any(v[0]=='rects' for v in sp_.values()):
+                raise ValueError('exact VM requested pins require full width k=1')
             if k > 1:
                 _bundle_pack(mst, sp_, order, k)
             mst.ports, mst.order = sp_, list(order)
@@ -1446,6 +1635,11 @@ def _router(m, B, P):
         for k_ in range(1, 40):
             for s_ in (1, -1):
                 tries.append((0, s_ * k_) if horizontal else (s_ * k_, 0))
+        if m.get('network_probe'):
+            # Pin bays can block both one-axis searches. Explore neighbouring
+            # two-dimensional slots without shrinking a real macro footprint.
+            tries += sorted(((i, j) for i in range(-12, 13) for j in range(-12, 13) if i and j),
+                            key=lambda ij: abs(ij[0]) + abs(ij[1]))
         for (i, j) in tries:
             x = dn(base[0] + i * (w + 8.64), GX)
             y = dn(base[1] + j * (h + 8.64), GY)
@@ -1654,7 +1848,11 @@ def buses(m):
             y_mid = r0.y - CH / 2
             y_top = r1.y - CH / 2
             y_svc = svc.y + svc.h / 2
-        cxs = [G['x'] + CH / 2 + c * (smw + CH) for c in range(5)]
+        # Preserve four logical branches while adapting anchor span to three
+        # physical columns. These are tree anchors, never SM pin coordinates.
+        anchor_pitch = ((g['grp_w'] - CH) / 4 if m.get('network_probe')
+                        and V.get('sm_physical_grid') else smw + CH)
+        cxs = [G['x'] + CH / 2 + c * anchor_pitch for c in range(5)]
         jx = G['x'] + g['grp_w'] + g['mid_ch'] / 2 if half == 'W' else G['x'] - g['mid_ch'] / 2
         jside = 4 if half == 'W' else 0                     # the column channel next to the mid channel
         by_rc = {(s.sm['row'], s.sm['col']): s for s in sms}
@@ -2122,6 +2320,8 @@ def port_widths(m, k):
     for bid, cls, bits, eps in m['buses']:
         n = bits if k == 1 else max(1, math.ceil(bits / k))
         for inst, port in eps:
+            if inst == 'TOP':
+                continue
             mst = by[inst].master
             if '@' in port and mst not in REAL:      # r23: a sliced generated endpoint
                 key = (mst, slice_port(port, k))
@@ -2150,6 +2350,8 @@ def masters(m, k=1):
     pf = m['variant'].get('port_fix')
     for bid, cls, bits, eps in m['buses']:
         for i, (inst, port) in enumerate(eps):
+            if inst == 'TOP':
+                continue
             it = by[inst]
             key = (it.master, slice_port(port, k) if it.master not in REAL else port)
             if '@' in port and k > 1 and it.master not in REAL:
@@ -2164,7 +2366,7 @@ def masters(m, k=1):
                 ref[key] = it
             elif it is not first[it.master]:
                 continue
-            others = [by[o] for j, (o, _) in enumerate(eps) if j != i]
+            others = [by[o] for j, (o, _) in enumerate(eps) if j != i and o != 'TOP']
             peers[key] += others
     notes = {'hfd_sm': 'SM element ot_hbm_accel_sm_v NC8/SUB4 (sm_r2 context 2202.768 x 2072.79, 202 macros; pin regions '
                        'of the context: d/req/rsp bottom, xw left, results right, control top; element route OPEN)'}
@@ -2359,12 +2561,21 @@ def write_netlist(m, k, path, top='hfd_die'):
     rp = real_ports(m) if k == 1 else {}
     by = {it.name: it for it in m['insts']}
     conns = defaultdict(list)
-    V = [f'// tools/hbm_accel_die_fp.py: die-level nets only (k = {k})', f'module {top} ();']
+    top_ports = m.get('top_input_ports', {})
+    declarations = ', '.join(f'input wire {name}' for name in top_ports)
+    V = [f'// tools/hbm_accel_die_fp.py: die-level nets only (k = {k})', f'module {top} ({declarations});']
     for bid, cls, bits, eps in m['buses']:
         n = bits if k == 1 else max(1, math.ceil(bits / k))
         net = f'n_{bid}'
         V.append(f'  wire [{n - 1}:0] {net};')
         for inst, port in eps:
+            if inst == 'TOP':
+                if n != 1 or port not in top_ports:
+                    raise ValueError(f'unsupported top connection {port}')
+                V.append(f'  assign {net}[0] = {port};')
+        for inst, port in eps:
+            if inst == 'TOP':
+                continue
             mst = by[inst].master
             if '@' in port and mst not in REAL:      # r23: sliced generated endpoint
                 if k == 1:
@@ -2405,7 +2616,13 @@ def write_netlist(m, k, path, top='hfd_die'):
                     bus_bits[base][b_] = f'{net}[{i}]'
             else:
                 port, net, n = c
-                parts.append(f'.{port}({net})')
+                # OpenSTA 26Q3 collapses one-bit Liberty data buses to bit pins.
+                # Binding the bus name crashes VerilogReader::makeModuleInst;
+                # the explicit escaped bit pin preserves the same connection.
+                if m.get('relay_masters', {}).get(it.master) == 1 and port in ('d', 'q'):
+                    parts.append(f'.{Q.esc(port + "[0]")}({net}[0])')
+                else:
+                    parts.append(f'.{port}({net})')
         for base, bits_ in bus_bits.items():
             hi = max(bits_)
             cat = ', '.join(bits_.get(j, "1'bz") for j in range(hi, -1, -1))
@@ -2479,7 +2696,16 @@ def write_def_floorplan(m, path):
     d += ['END REGIONS', f'COMPONENTS {len(m["insts"])} ;']
     for it in m['insts']:
         d.append(f'- {it.name} {it.master} + FIXED ( {round(it.x * 1000)} {round(it.y * 1000)} ) {o[it.orient]} ;')
-    d += ['END COMPONENTS', 'END DESIGN', '']
+    d += ['END COMPONENTS']
+    if m.get('top_input_ports'):
+        d.append(f'PINS {len(m["top_input_ports"])} ;')
+        for name, pin in m['top_input_ports'].items():
+            x, y = pin['center_um']; w, h = pin['size_um']
+            d.append(f'- {name} + NET {name} + DIRECTION INPUT + USE {pin["use"]}'
+                     f' + LAYER {pin["layer"]} ( {round(-w*500)} {round(-h*500)} )'
+                     f' ( {round(w*500)} {round(h*500)} ) + FIXED ( {round(x*1000)} {round(y*1000)} ) N ;')
+        d.append('END PINS')
+    d += ['END DESIGN', '']
     Path(path).write_text('\n'.join(d))
 
 
@@ -2656,7 +2882,7 @@ def r15_record(m):
     by_i = {it.name: it for it in m['insts']}
     for bid, cls, bits, eps in m['buses']:
         for inst, port in eps:
-            if by_i[inst].kind == 'waypoint':
+            if inst != 'TOP' and by_i[inst].kind == 'waypoint':
                 wpb[inst] = max(wpb[inst], bits)
     fwd_slices = sum(4 * math.ceil(b / 512) for b in wpb.values())
     cks = {b[0]: len(b[3]) - 1 for b in m['buses'] if b[1] in ('clock_trunk', 'reset_tree')}
@@ -2752,8 +2978,10 @@ def pdn_plan(m, cov=None):
 def clock_regions(m):
     out = [dict(r) for r in m.get('region_extra', [])]     # r17: station rects of a named region, matched first
     for st, G in m['groups'].items():
-        for h, cols in (('w', (0, 1)), ('e', (2, 3))):
-            ss = [s for s in G['sms'] if s.sm['col'] in cols]
+        retiled = bool(m['variant'].get('sm_physical_grid'))
+        cuts = [(f'c{c}', (c,)) for c in range(3)] if retiled else [('w', (0, 1)), ('e', (2, 3))]
+        for h, cols in cuts:
+            ss = [s for s in G['sms'] if s.sm['physical_col' if retiled else 'col'] in cols]
             x0 = min(s.x for s in ss)
             y0 = min(s.y for s in ss)
             x1 = max(s.x + s.w for s in ss)
@@ -2983,7 +3211,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

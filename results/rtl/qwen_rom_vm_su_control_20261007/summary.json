@@ -1,0 +1,1792 @@
+{
+  "schema": "opentallas.qwen-su-native-control.v1",
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+    "rtl/hdc/ot_hdc_vstream_lane.sv": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+    "rtl/hdc/ot_hdc_vreduce.sv": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+    "results/rtl/qwen_rom_finite_vm_schedule_20261005/inputs/L20_program.hex": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+    "tools/qwen_rom_finite_vm_schedule.py": "e15a44afd67d732f60a0cefb217563679862d9185ae6dc3a976a54ebeb10eb7f"
+  },
+  "arithmetic_instances_removed": [
+    {
+      "path": "rtl/hdc/ot_hdc_vstream_lane.sv",
+      "sha256": "48bae4e0d7444e6844b454bffd63888285859fb8219720cc85fa2692c3e85a58",
+      "text": "ot_hdc_qmul u_ma (clk, rst_n, s3_v && s3_ma != MA_BYP, ma_x, ma_y, p_mul, fa);"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_vstream_lane.sv",
+      "sha256": "e1e572b00e24f6170b170c06b26b59b4ec65a112f79980ab5a9edd4fbaf47a46",
+      "text": "ot_hdc_qmul u_mb (clk, rst_n, s3_v && s3_mb != MB_OFF, mb_x, mb_y, q_mul, fb_);"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_vstream_lane.sv",
+      "sha256": "d0e5b740c7056341d5c609c698f971144c260a5b8ed90fcf4540e3fc80b14527",
+      "text": "ot_hdc_qadd u_ad (clk, rst_n, v3[LM+1] && ad9 != AD_BYP, ad_x, ad_y, r_add, fad);"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_vstream_lane.sv",
+      "sha256": "6a4ab8012098441c2310392ff6d6cb83d041fce01a4a54443e50803e71852699",
+      "text": "ot_hdc_exp_q u_exp (.clk(clk), .rst_n(rst_n), .v(v14 && (cls == SFU_EXP || cls == SFU_SIGM)), .x(r14),\n                        .y(y_exp), .vo(vo_exp), .fault(f_exp));"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_vstream_lane.sv",
+      "sha256": "83463230df0ffdfde3dbf26b1d3809942ee1a6c38586e6c1450dd2d88cddfb42",
+      "text": "ot_hdc_qadd u_e1 (clk, rst_n, vo_exp && cls == SFU_SIGM, y_exp, 32'h3F800000, e1, f_e1);"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_vstream_lane.sv",
+      "sha256": "dce687308c3407a6a354aa0616b1e9395fb09d728ca73dc92864a3fd63ebcb97",
+      "text": "ot_hdc_recip_q u_rcp (.clk(clk), .rst_n(rst_n), .v(rcp_v), .x(rcp_x), .y(y_rcp), .vo(vo_rcp), .fault(f_rcp));"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_vstream_lane.sv",
+      "sha256": "07250ed53312316aafe9065f1f5c38a072389282d9005a8d4340169b0808c350",
+      "text": "ot_hdc_rsqrt_q u_rsq (.clk(clk), .rst_n(rst_n), .v(v14 && cls == SFU_RSQRT), .x(r14), .y(y_rsq), .vo(vo_rsq), .fault(f_rsq));"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_vstream_lane.sv",
+      "sha256": "d8671c56b77db059e1b86aa48ca022eb402f2a80f024df44769a0cf027670820",
+      "text": "ot_hdc_qmul u_mc (clk, rst_n, mc_v && mc_tail[TT-1], mc_x, mc_y, mc_out, fmc);"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_vstream_lane.sv",
+      "sha256": "5955164c451d3399d517e5644a42e8f62696e52aee7b466b10014bfedc0e698d",
+      "text": "ot_hdc_qmul u_md (clk, rst_n, md_v && md_tail[TT-2], md_x, md_y, md_out, fmd);"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_vreduce.sv",
+      "sha256": "0cd0f7dc03f770e551cc18b01828d8e65719451bc09a9e14315172c04becc487",
+      "text": "ot_hdc_qadd u_add (clk, rst_n, v && !mx, a, b, ys, f);"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_vreduce.sv",
+      "sha256": "961764a52665858a71ac32d41aafadd092472913688b37399f6a9b16d1bba903",
+      "text": "ot_hdc_qmul u_sq (clk, rst_n, v_in && sq_in, x_in[32*l +: 32], x_in[32*l +: 32], xsq[32*l +: 32], fsq[l]);"
+    }
+  ],
+  "generated_sha256": {
+    "control.sv": "62929e3e39c0db852900c543eaab745d74cdd19d1f9d576bbaeab92137cd5602",
+    "bench.sv": "d32d199c8052220802e4b22f240ff44a40e885d2d5f0672fe4f5b24e890b381c"
+  },
+  "parameters": {
+    "SW": 64,
+    "LV": 7,
+    "AW": 24,
+    "NW": 18,
+    "WR": 64
+  },
+  "excluded_dynamic_instructions": {
+    "3": {
+      "d_d": 4
+    },
+    "7": {
+      "b_d": 2
+    },
+    "8": {
+      "b_d": 2,
+      "d_d": 3
+    },
+    "9": {
+      "b_d": 2
+    },
+    "10": {
+      "b_d": 2,
+      "d_d": 3
+    },
+    "12": {
+      "su_d_nin": 5
+    }
+  },
+  "summaries": [
+    {
+      "pc": 0,
+      "parameters": {
+        "unit": 2,
+        "barrier": 0,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 0,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 1,
+        "su_nin": 4096,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 4096,
+        "a_so": 0,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 0,
+        "b_so": 0,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 0,
+        "c_base": 0,
+        "c_so": 0,
+        "c_si": 0,
+        "c_d": 0,
+        "ma": 0,
+        "mb": 0,
+        "ad": 0,
+        "sfu": 0,
+        "mc": 0,
+        "md": 0,
+        "dst": 0,
+        "d_base": 0,
+        "d_so": 0,
+        "d_si": 0,
+        "d_d": 0,
+        "red": 1,
+        "r_base": 16160,
+        "r_so": 0,
+        "red_sq": 1,
+        "imm1": 0,
+        "imm2": 0,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 155,
+      "read_lane_requests": {
+        "va": 4096,
+        "vb": 4096,
+        "vc": 4096
+      },
+      "su_scalar_writes": 0,
+      "reducer_scalar_writes": 1,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 16160,
+      "bank_distinct_row_peaks": {
+        "read": 2,
+        "write": 1,
+        "combined": 2
+      },
+      "witness": {
+        "read": {
+          "cycle": 7,
+          "bank": 0,
+          "rows": [
+            0,
+            2
+          ]
+        },
+        "combined": {
+          "cycle": 7,
+          "bank": 0,
+          "rows": [
+            0,
+            2
+          ]
+        },
+        "write": {
+          "cycle": 155,
+          "bank": 117,
+          "rows": [
+            7
+          ]
+        }
+      }
+    },
+    {
+      "pc": 2,
+      "parameters": {
+        "unit": 2,
+        "barrier": 0,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 1,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 16160,
+        "a_so": 0,
+        "a_si": 0,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 0,
+        "b_so": 0,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 0,
+        "c_base": 0,
+        "c_so": 0,
+        "c_si": 0,
+        "c_d": 0,
+        "ma": 3,
+        "mb": 0,
+        "ad": 4,
+        "sfu": 3,
+        "mc": 0,
+        "md": 0,
+        "dst": 1,
+        "d_base": 16176,
+        "d_so": 0,
+        "d_si": 0,
+        "d_d": 0,
+        "red": 0,
+        "r_base": 0,
+        "r_so": 0,
+        "red_sq": 0,
+        "imm1": 964689920,
+        "imm2": 897988541,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 63,
+      "read_lane_requests": {
+        "va": 1,
+        "vb": 1,
+        "vc": 1
+      },
+      "su_scalar_writes": 1,
+      "reducer_scalar_writes": 0,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 16176,
+      "bank_distinct_row_peaks": {
+        "read": 1,
+        "write": 1,
+        "combined": 1
+      },
+      "witness": {
+        "read": {
+          "cycle": 7,
+          "bank": 117,
+          "rows": [
+            7
+          ]
+        },
+        "combined": {
+          "cycle": 7,
+          "bank": 117,
+          "rows": [
+            7
+          ]
+        },
+        "write": {
+          "cycle": 63,
+          "bank": 116,
+          "rows": [
+            7
+          ]
+        }
+      }
+    },
+    {
+      "pc": 4,
+      "parameters": {
+        "unit": 2,
+        "barrier": 0,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 0,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 10,
+        "su_nin": 128,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 12288,
+        "a_so": 128,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 16176,
+        "b_so": 0,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 0,
+        "c_base": 0,
+        "c_so": 0,
+        "c_si": 0,
+        "c_d": 0,
+        "ma": 1,
+        "mb": 0,
+        "ad": 0,
+        "sfu": 0,
+        "mc": 0,
+        "md": 0,
+        "dst": 1,
+        "d_base": 12288,
+        "d_so": 128,
+        "d_si": 1,
+        "d_d": 0,
+        "red": 1,
+        "r_base": 16128,
+        "r_so": 1,
+        "red_sq": 1,
+        "imm1": 0,
+        "imm2": 0,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 111,
+      "read_lane_requests": {
+        "va": 1280,
+        "vb": 1280,
+        "vc": 1280
+      },
+      "su_scalar_writes": 1280,
+      "reducer_scalar_writes": 10,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 16176,
+      "bank_distinct_row_peaks": {
+        "read": 2,
+        "write": 1,
+        "combined": 2
+      },
+      "witness": {
+        "read": {
+          "cycle": 8,
+          "bank": 0,
+          "rows": [
+            0,
+            6
+          ]
+        },
+        "combined": {
+          "cycle": 8,
+          "bank": 0,
+          "rows": [
+            0,
+            6
+          ]
+        },
+        "write": {
+          "cycle": 26,
+          "bank": 6,
+          "rows": [
+            6
+          ]
+        }
+      }
+    },
+    {
+      "pc": 5,
+      "parameters": {
+        "unit": 2,
+        "barrier": 0,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 1,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 1,
+        "su_nin": 10,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 16128,
+        "a_so": 0,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 0,
+        "b_so": 0,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 0,
+        "c_base": 0,
+        "c_so": 0,
+        "c_si": 0,
+        "c_d": 0,
+        "ma": 3,
+        "mb": 0,
+        "ad": 4,
+        "sfu": 3,
+        "mc": 0,
+        "md": 0,
+        "dst": 1,
+        "d_base": 16144,
+        "d_so": 0,
+        "d_si": 1,
+        "d_d": 0,
+        "red": 0,
+        "r_base": 0,
+        "r_so": 0,
+        "red_sq": 0,
+        "imm1": 1006632960,
+        "imm2": 897988541,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 63,
+      "read_lane_requests": {
+        "va": 10,
+        "vb": 10,
+        "vc": 10
+      },
+      "su_scalar_writes": 10,
+      "reducer_scalar_writes": 0,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 16153,
+      "bank_distinct_row_peaks": {
+        "read": 1,
+        "write": 1,
+        "combined": 1
+      },
+      "witness": {
+        "read": {
+          "cycle": 7,
+          "bank": 119,
+          "rows": [
+            7
+          ]
+        },
+        "combined": {
+          "cycle": 7,
+          "bank": 119,
+          "rows": [
+            7
+          ]
+        },
+        "write": {
+          "cycle": 63,
+          "bank": 118,
+          "rows": [
+            7
+          ]
+        }
+      }
+    },
+    {
+      "pc": 6,
+      "parameters": {
+        "unit": 2,
+        "barrier": 0,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 1,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 10,
+        "su_nin": 128,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 12288,
+        "a_so": 128,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 16144,
+        "b_so": 1,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 1,
+        "c_base": 4096,
+        "c_so": 128,
+        "c_si": 1,
+        "c_d": 0,
+        "ma": 1,
+        "mb": 0,
+        "ad": 0,
+        "sfu": 0,
+        "mc": 1,
+        "md": 0,
+        "dst": 1,
+        "d_base": 13824,
+        "d_so": 128,
+        "d_si": 1,
+        "d_d": 0,
+        "red": 0,
+        "r_base": 0,
+        "r_so": 0,
+        "red_sq": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 45,
+      "read_lane_requests": {
+        "va": 1280,
+        "vb": 1280,
+        "vc": 0
+      },
+      "su_scalar_writes": 1280,
+      "reducer_scalar_writes": 0,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 12288,
+      "max_scalar_address": 16153,
+      "bank_distinct_row_peaks": {
+        "read": 1,
+        "write": 1,
+        "combined": 1
+      },
+      "witness": {
+        "read": {
+          "cycle": 7,
+          "bank": 6,
+          "rows": [
+            6
+          ]
+        },
+        "combined": {
+          "cycle": 7,
+          "bank": 6,
+          "rows": [
+            6
+          ]
+        },
+        "write": {
+          "cycle": 26,
+          "bank": 102,
+          "rows": [
+            6
+          ]
+        }
+      }
+    },
+    {
+      "pc": 14,
+      "parameters": {
+        "unit": 2,
+        "barrier": 0,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 1,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 1,
+        "su_nin": 8,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 16208,
+        "a_so": 0,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 0,
+        "b_so": 0,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 0,
+        "c_base": 0,
+        "c_so": 0,
+        "c_si": 0,
+        "c_d": 0,
+        "ma": 0,
+        "mb": 0,
+        "ad": 0,
+        "sfu": 2,
+        "mc": 0,
+        "md": 0,
+        "dst": 1,
+        "d_base": 16224,
+        "d_so": 0,
+        "d_si": 1,
+        "d_d": 0,
+        "red": 0,
+        "r_base": 0,
+        "r_so": 0,
+        "red_sq": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 54,
+      "read_lane_requests": {
+        "va": 8,
+        "vb": 8,
+        "vc": 8
+      },
+      "su_scalar_writes": 8,
+      "reducer_scalar_writes": 0,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 16231,
+      "bank_distinct_row_peaks": {
+        "read": 1,
+        "write": 1,
+        "combined": 1
+      },
+      "witness": {
+        "read": {
+          "cycle": 7,
+          "bank": 114,
+          "rows": [
+            7
+          ]
+        },
+        "combined": {
+          "cycle": 7,
+          "bank": 114,
+          "rows": [
+            7
+          ]
+        },
+        "write": {
+          "cycle": 54,
+          "bank": 113,
+          "rows": [
+            7
+          ]
+        }
+      }
+    },
+    {
+      "pc": 15,
+      "parameters": {
+        "unit": 2,
+        "barrier": 1,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 0,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 8,
+        "su_nin": 128,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 81776,
+        "a_so": 128,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 16224,
+        "b_so": 1,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 0,
+        "c_base": 0,
+        "c_so": 0,
+        "c_si": 0,
+        "c_d": 0,
+        "ma": 1,
+        "mb": 0,
+        "ad": 0,
+        "sfu": 0,
+        "mc": 0,
+        "md": 0,
+        "dst": 1,
+        "d_base": 88944,
+        "d_so": 128,
+        "d_si": 1,
+        "d_d": 0,
+        "red": 0,
+        "r_base": 0,
+        "r_so": 0,
+        "red_sq": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 41,
+      "read_lane_requests": {
+        "va": 1024,
+        "vb": 1024,
+        "vc": 1024
+      },
+      "su_scalar_writes": 1024,
+      "reducer_scalar_writes": 0,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 89967,
+      "bank_distinct_row_peaks": {
+        "read": 2,
+        "write": 1,
+        "combined": 2
+      },
+      "witness": {
+        "read": {
+          "cycle": 19,
+          "bank": 0,
+          "rows": [
+            0,
+            40
+          ]
+        },
+        "combined": {
+          "cycle": 19,
+          "bank": 0,
+          "rows": [
+            0,
+            40
+          ]
+        },
+        "write": {
+          "cycle": 26,
+          "bank": 28,
+          "rows": [
+            43
+          ]
+        }
+      }
+    },
+    {
+      "pc": 18,
+      "parameters": {
+        "unit": 2,
+        "barrier": 1,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 0,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 1,
+        "su_nin": 4096,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 0,
+        "a_so": 0,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 0,
+        "b_so": 0,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 1,
+        "c_base": 533761,
+        "c_so": 0,
+        "c_si": 1,
+        "c_d": 0,
+        "ma": 0,
+        "mb": 0,
+        "ad": 0,
+        "sfu": 0,
+        "mc": 1,
+        "md": 0,
+        "dst": 1,
+        "d_base": 0,
+        "d_so": 0,
+        "d_si": 1,
+        "d_d": 0,
+        "red": 0,
+        "r_base": 0,
+        "r_so": 0,
+        "red_sq": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 89,
+      "read_lane_requests": {
+        "va": 4096,
+        "vb": 4096,
+        "vc": 0
+      },
+      "su_scalar_writes": 4096,
+      "reducer_scalar_writes": 0,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 4095,
+      "bank_distinct_row_peaks": {
+        "read": 2,
+        "write": 1,
+        "combined": 2
+      },
+      "witness": {
+        "read": {
+          "cycle": 39,
+          "bank": 0,
+          "rows": [
+            0,
+            1
+          ]
+        },
+        "combined": {
+          "cycle": 39,
+          "bank": 0,
+          "rows": [
+            0,
+            1
+          ]
+        },
+        "write": {
+          "cycle": 26,
+          "bank": 0,
+          "rows": [
+            0
+          ]
+        }
+      }
+    },
+    {
+      "pc": 19,
+      "parameters": {
+        "unit": 2,
+        "barrier": 0,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 0,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 1,
+        "su_nin": 4096,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 4096,
+        "a_so": 0,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 0,
+        "b_so": 0,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 0,
+        "c_base": 0,
+        "c_so": 0,
+        "c_si": 1,
+        "c_d": 0,
+        "ma": 0,
+        "mb": 0,
+        "ad": 2,
+        "sfu": 0,
+        "mc": 0,
+        "md": 0,
+        "dst": 1,
+        "d_base": 4096,
+        "d_so": 0,
+        "d_si": 1,
+        "d_d": 0,
+        "red": 1,
+        "r_base": 16160,
+        "r_so": 0,
+        "red_sq": 1,
+        "imm1": 0,
+        "imm2": 0,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 155,
+      "read_lane_requests": {
+        "va": 4096,
+        "vb": 4096,
+        "vc": 4096
+      },
+      "su_scalar_writes": 4096,
+      "reducer_scalar_writes": 1,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 16160,
+      "bank_distinct_row_peaks": {
+        "read": 3,
+        "write": 1,
+        "combined": 3
+      },
+      "witness": {
+        "read": {
+          "cycle": 39,
+          "bank": 0,
+          "rows": [
+            0,
+            1,
+            3
+          ]
+        },
+        "combined": {
+          "cycle": 39,
+          "bank": 0,
+          "rows": [
+            0,
+            1,
+            3
+          ]
+        },
+        "write": {
+          "cycle": 26,
+          "bank": 2,
+          "rows": [
+            2
+          ]
+        }
+      }
+    },
+    {
+      "pc": 21,
+      "parameters": {
+        "unit": 2,
+        "barrier": 0,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 1,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 16160,
+        "a_so": 0,
+        "a_si": 0,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 0,
+        "b_so": 0,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 0,
+        "c_base": 0,
+        "c_so": 0,
+        "c_si": 0,
+        "c_d": 0,
+        "ma": 3,
+        "mb": 0,
+        "ad": 4,
+        "sfu": 3,
+        "mc": 0,
+        "md": 0,
+        "dst": 1,
+        "d_base": 16176,
+        "d_so": 0,
+        "d_si": 0,
+        "d_d": 0,
+        "red": 0,
+        "r_base": 0,
+        "r_so": 0,
+        "red_sq": 0,
+        "imm1": 964689920,
+        "imm2": 897988541,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 63,
+      "read_lane_requests": {
+        "va": 1,
+        "vb": 1,
+        "vc": 1
+      },
+      "su_scalar_writes": 1,
+      "reducer_scalar_writes": 0,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 16176,
+      "bank_distinct_row_peaks": {
+        "read": 1,
+        "write": 1,
+        "combined": 1
+      },
+      "witness": {
+        "read": {
+          "cycle": 7,
+          "bank": 117,
+          "rows": [
+            7
+          ]
+        },
+        "combined": {
+          "cycle": 7,
+          "bank": 117,
+          "rows": [
+            7
+          ]
+        },
+        "write": {
+          "cycle": 63,
+          "bank": 116,
+          "rows": [
+            7
+          ]
+        }
+      }
+    },
+    {
+      "pc": 22,
+      "parameters": {
+        "unit": 2,
+        "barrier": 1,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 0,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 1,
+        "su_nin": 6144,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 82800,
+        "a_so": 0,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 16176,
+        "b_so": 0,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 0,
+        "c_base": 0,
+        "c_so": 0,
+        "c_si": 0,
+        "c_d": 0,
+        "ma": 1,
+        "mb": 0,
+        "ad": 0,
+        "sfu": 0,
+        "mc": 0,
+        "md": 0,
+        "dst": 1,
+        "d_base": 82800,
+        "d_so": 0,
+        "d_si": 1,
+        "d_d": 0,
+        "red": 0,
+        "r_base": 0,
+        "r_so": 0,
+        "red_sq": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 121,
+      "read_lane_requests": {
+        "va": 6144,
+        "vb": 6144,
+        "vc": 6144
+      },
+      "su_scalar_writes": 6144,
+      "reducer_scalar_writes": 0,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 88943,
+      "bank_distinct_row_peaks": {
+        "read": 2,
+        "write": 1,
+        "combined": 2
+      },
+      "witness": {
+        "read": {
+          "cycle": 16,
+          "bank": 116,
+          "rows": [
+            7,
+            40
+          ]
+        },
+        "combined": {
+          "cycle": 16,
+          "bank": 116,
+          "rows": [
+            7,
+            40
+          ]
+        },
+        "write": {
+          "cycle": 26,
+          "bank": 31,
+          "rows": [
+            40
+          ]
+        }
+      }
+    },
+    {
+      "pc": 23,
+      "parameters": {
+        "unit": 2,
+        "barrier": 0,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 1,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 24,
+        "su_nin": 128,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 82800,
+        "a_so": 256,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 82928,
+        "b_so": 256,
+        "b_si": 1,
+        "b_d": 0,
+        "c_src": 0,
+        "c_base": 82800,
+        "c_so": 256,
+        "c_si": 1,
+        "c_d": 0,
+        "ma": 3,
+        "mb": 0,
+        "ad": 0,
+        "sfu": 4,
+        "mc": 1,
+        "md": 1,
+        "dst": 1,
+        "d_base": 94064,
+        "d_so": 128,
+        "d_si": 1,
+        "d_d": 0,
+        "red": 0,
+        "r_base": 0,
+        "r_so": 0,
+        "red_sq": 0,
+        "imm1": 3212836864,
+        "imm2": 0,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 153,
+      "read_lane_requests": {
+        "va": 3072,
+        "vb": 3072,
+        "vc": 3072
+      },
+      "su_scalar_writes": 3072,
+      "reducer_scalar_writes": 0,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 82800,
+      "max_scalar_address": 97135,
+      "bank_distinct_row_peaks": {
+        "read": 1,
+        "write": 1,
+        "combined": 1
+      },
+      "witness": {
+        "read": {
+          "cycle": 7,
+          "bank": 31,
+          "rows": [
+            40
+          ]
+        },
+        "combined": {
+          "cycle": 7,
+          "bank": 31,
+          "rows": [
+            40
+          ]
+        },
+        "write": {
+          "cycle": 106,
+          "bank": 90,
+          "rows": [
+            45
+          ]
+        }
+      }
+    },
+    {
+      "pc": 26,
+      "parameters": {
+        "unit": 2,
+        "barrier": 1,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 0,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 1,
+        "su_nin": 4096,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 0,
+        "a_so": 0,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 0,
+        "b_so": 0,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 1,
+        "c_base": 537857,
+        "c_so": 0,
+        "c_si": 1,
+        "c_d": 0,
+        "ma": 0,
+        "mb": 0,
+        "ad": 0,
+        "sfu": 0,
+        "mc": 1,
+        "md": 0,
+        "dst": 1,
+        "d_base": 0,
+        "d_so": 0,
+        "d_si": 1,
+        "d_d": 0,
+        "red": 0,
+        "r_base": 0,
+        "r_so": 0,
+        "red_sq": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 89,
+      "read_lane_requests": {
+        "va": 4096,
+        "vb": 4096,
+        "vc": 0
+      },
+      "su_scalar_writes": 4096,
+      "reducer_scalar_writes": 0,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 4095,
+      "bank_distinct_row_peaks": {
+        "read": 2,
+        "write": 1,
+        "combined": 2
+      },
+      "witness": {
+        "read": {
+          "cycle": 39,
+          "bank": 0,
+          "rows": [
+            0,
+            1
+          ]
+        },
+        "combined": {
+          "cycle": 39,
+          "bank": 0,
+          "rows": [
+            0,
+            1
+          ]
+        },
+        "write": {
+          "cycle": 26,
+          "bank": 0,
+          "rows": [
+            0
+          ]
+        }
+      }
+    },
+    {
+      "pc": 27,
+      "parameters": {
+        "unit": 2,
+        "barrier": 0,
+        "chase": 0,
+        "chase_n": 0,
+        "wait_me": 0,
+        "wait_su": 0,
+        "chase_rows": 0,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 0,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 0,
+        "me_ks": 0,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_round": 0,
+        "me_obase": 0,
+        "me_oen": 0,
+        "me_amax": 0,
+        "me_d_wbase": 0,
+        "me_d_xbase": 0,
+        "me_d_obase": 0,
+        "me_d_nout": 0,
+        "me_d_tiles": 0,
+        "me_d_k": 0,
+        "me_xks": 0,
+        "me_xjs": 0,
+        "me_jsh": 0,
+        "me_ots": 0,
+        "me_ojs": 0,
+        "me_mmode": 0,
+        "me_split": 0,
+        "me_xcs": 0,
+        "me_wcs": 0,
+        "me_rmax": 0,
+        "me_mbase": 0,
+        "su_nout": 1,
+        "su_nin": 4096,
+        "su_d_nin": 0,
+        "a_src": 0,
+        "a_base": 4096,
+        "a_so": 0,
+        "a_si": 1,
+        "a_d": 0,
+        "b_src": 0,
+        "b_base": 0,
+        "b_so": 0,
+        "b_si": 0,
+        "b_d": 0,
+        "c_src": 0,
+        "c_base": 0,
+        "c_so": 0,
+        "c_si": 1,
+        "c_d": 0,
+        "ma": 0,
+        "mb": 0,
+        "ad": 2,
+        "sfu": 0,
+        "mc": 0,
+        "md": 0,
+        "dst": 1,
+        "d_base": 4096,
+        "d_so": 0,
+        "d_si": 1,
+        "d_d": 0,
+        "red": 1,
+        "r_base": 16160,
+        "r_so": 0,
+        "red_sq": 1,
+        "imm1": 0,
+        "imm2": 0,
+        "me_row0": 0,
+        "me_amc": 0
+      },
+      "first_event_cycle": 7,
+      "last_event_cycle": 155,
+      "read_lane_requests": {
+        "va": 4096,
+        "vb": 4096,
+        "vc": 4096
+      },
+      "su_scalar_writes": 4096,
+      "reducer_scalar_writes": 1,
+      "su_reducer_write_overlap_cycles": 0,
+      "min_scalar_address": 0,
+      "max_scalar_address": 16160,
+      "bank_distinct_row_peaks": {
+        "read": 3,
+        "write": 1,
+        "combined": 3
+      },
+      "witness": {
+        "read": {
+          "cycle": 39,
+          "bank": 0,
+          "rows": [
+            0,
+            1,
+            3
+          ]
+        },
+        "combined": {
+          "cycle": 39,
+          "bank": 0,
+          "rows": [
+            0,
+            1,
+            3
+          ]
+        },
+        "write": {
+          "cycle": 26,
+          "bank": 2,
+          "rows": [
+            2
+          ]
+        }
+      }
+    }
+  ],
+  "scope": "Each static SU instruction starts from reset, go at cycle5. Independent component PRE-edge cycles, not parent issue calendar. Native vstream/lane/reducer tag, enable and address statements unchanged; arithmetic instance outputs are unobserved and tied zero. No numerical check, no fault-injection/protection proof, no VM arbitration, no ME/MX/other parent writers or inter-op overlap. WR64 is immaterial for these SRC_VM-A static operations; production embedding WR and dynamic ops unbound. All operand native read enables counted even when arithmetic opcode does not consume them. Word=(scalar>>4); bank=(word^(word>>7))&127; row=word>>7. Distinct rows measure raw service obligations; simultaneous read/write same row is not a port guarantee. Reducer pair/pass and valid depend only on valid,last,held_v, not arithmetic values."
+}

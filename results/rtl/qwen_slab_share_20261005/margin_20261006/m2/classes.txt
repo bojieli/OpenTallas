@@ -1,0 +1,37 @@
+== ss (770 ps; acceptance at 833.333: SS >= +40 => <= -23.3 at 770 listed; FF < +15 listed)
+OT_N 11
+-107.0 5 g_mul[*].g_in.a_q[*]$_DFF_P_/QN -> g_mul[*].u_mul.u_c5.g_r.r[*]$_DFF_PN0_/D
+-56.4 2 res_in[*] -> res_q[*]$_DFF_P_/D
+-41.3 4 g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/QN -> g_mul[*].u_mul.s1_rows[*]$_DFF_P_/D
+== ff (770 ps; acceptance at 833.333: SS >= +40 => <= -23.3 at 770 listed; FF < +15 listed)
+OT_N 554
+-109.3 58 res_in[*] -> res_q[*]$_DFF_P_/D
+-11.6 369 g_oreg.g_b[*].u_r/q$_DFF_P_/QN -> o_data[*]
+-8.9 47 g_amreg.g_b[*].u_r/q$_DFF_P_/QN -> am_top[*]
+-7.1 11 g_oreg.g_b[*].u_r/q$_DFF_P_/QN -> o_mask[*]
+-5.3 24 g_oreg.g_b[*].u_r/q$_DFF_P_/QN -> o_addr[*]
+-4.1 1 g_amreg.g_b[*].u_r/q$_DFF_P_/QN -> am_rmax
+-1.2 1 g_amreg.g_b[*].u_r/q$_DFF_P_/QN -> am_tv
+8.8 3 g_mul[*].g_in.a_q[*]$_DFF_P_/QN -> g_mul[*].u_mul.u_c5.g_r.r[*]$_DFF_PN0_/D
+9.7 2 g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/QN -> g_mul[*].u_mul.s2_mr[*]$_DFF_P_/D
+10.0 2 res_q[*]$_DFF_P_/QN -> g_mul[*].g_in.a_q[*]$_DFF_P_/D
+10.7 2 m6[*]$_DFF_P_/QN -> g_mul[*].g_in.b_q[*]$_SDFF_PP1_/D
+10.7 4 g_col[*].g_pair.m5s[*]$_DFF_P_/QN -> g_col[*].m5[*]$_DFF_P_/D
+11.1 2 m6[*]$_DFF_P_/QN -> g_mul[*].g_in.b_q[*]$_SDFF_PP0_/D
+11.6 6 g_mul[*].u_mul.u_c3.g_r.r[*]$_DFF_PN0_/QN -> g_mul[*].u_mul.u_c4.g_r.r[*]$_DFF_PN0_/D
+12.4 3 u_rt.genblk1.g_line.line[*]$_DFF_P_/QN -> u_rt.genblk1.g_line.line[*]$_DFF_P_/D
+13.0 5 g_col[*].g_bank[*].cap4[*]$_DFF_P_/QN -> g_col[*].g_pair.m5n[*]$_DFF_P_/D
+13.1 1 k_tag[*]$_DFF_P_/QN -> u_mt.genblk1.g_line.line[*]$_DFF_P_/D
+13.5 1 g_leaf[*].cq[*]$_DFF_P_/QN -> g_alvl[*].g_node[*].g_split.x0_q[*]$_DFF_P_/D
+13.6 2 od2[*]$_DFF_P_/QN -> g_oreg.g_b[*].u_r/q$_DFF_P_/D
+13.6 3 g_mul[*].u_mul.s1_rows[*]$_DFF_P_/QN -> g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D
+14.2 1 g_col[*].g_bank[*].cap4[*]$_DFF_P_/QN -> g_col[*].g_pair.m5s[*]$_DFF_P_/D
+14.4 1 g_col[*].g_pair.m5n[*]$_DFF_P_/QN -> g_col[*].m5[*]$_DFF_P_/D
+14.4 1 g_leaf[*].cq[*]$_DFF_P_/QN -> g_alvl[*].g_node[*].g_split.x1_q[*]$_DFF_P_/D
+14.5 1 g_mul[*].u_mul.u_c5.g_r.r[*]$_DFF_PN0_/QN -> g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D
+14.6 2 od1[*]$_DFF_P_/QN -> od2[*]$_DFF_P_/D
+14.8 1 g_oreg.g_b[*].u_r/q$_DFF_P_/QN -> ov
+== SS insertion (ps)
+OT_INS res_q* n 512 min 817.761963 max 1029.853638
+OT_INS g_oreg.g_b*u_r/q* n 554 min 813.292236 max 848.901367
+OT_INS g_amreg* n 51 min 813.655945 max 835.737366

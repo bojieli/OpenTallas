@@ -1,0 +1,26 @@
+from pathlib import Path
+import subprocess,json,re,itertools
+w=Path('/tmp/pq-return-retained-wire-sweep');w.mkdir(exist_ok=True)
+root=Path('/home/ubuntu/OpenTallas');lib=root/'results/uarch/topk_station_SSFF_cell_model_20261002/inputs';rows=[]
+for n in (0,3):
+ v=f'module top(input clk,input din,output q); wire [{n}:0] w; BUFx2_ASAP7_75t_R original_input(.A(din),.Y(w[0]));\n'
+ for k in range(n):v+=f'HB4xp67_ASAP7_75t_R h{k}(.A(w[{k}]),.Y(w[{k+1}]));\n'
+ v+=f'DFFHQNx1_ASAP7_75t_R ff(.CLK(clk),.D(w[{n}]),.QN(q)); endmodule\n';(w/f'chain{n}.v').write_text(v)
+ for corner,slew,oldcap in itertools.product(('SS','FF'),(0,5,20),(0,.25,.5,1,2,3,4,5,5.75)):
+  variants=[(0,0)] if n==0 else list(itertools.product((-.78,0,.78),(0,.78)))
+  for delta,newcap in variants:
+   firstcap=max(0,oldcap+delta)
+   t='read_lef /tmp/bf_phase_sta_fixture/asap7_tech_1x_201209.lef\nread_lef /tmp/bf_phase_sta_fixture/asap7sc7p5t_28_R_1x_220121a.lef\n'
+   t+=f'read_liberty {lib}/asap7sc7p5t_INVBUF_RVT_{corner}_nldm_220122.lib.gz\nread_liberty {lib}/asap7sc7p5t_SEQ_RVT_{corner}_nldm_220123.lib\nread_verilog {w}/chain{n}.v\nlink_design top\ncreate_clock -name clk -period 833.333 [get_ports clk]\nset_input_delay 0 -clock clk [get_ports din]\nset_input_transition {slew} [get_ports din]\nset_load {newcap} [get_nets {{w*}}]\nset_load {firstcap} [get_nets {{w[0]}}]\nreport_checks -from [get_ports din] -to [get_pins ff/D] -path_delay min_max -format full_clock_expanded -digits 6\nexit\n'
+   name=f'n{n}_{corner}_s{slew}_o{oldcap}_d{delta}_n{newcap}';p=w/(name+'.tcl');p.write_text(t);r=subprocess.run(['openroad','-no_init','-exit',str(p)],text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT);(w/(name+'.log')).write_text(r.stdout)
+   assert '[ERROR' not in r.stdout and '[WARNING' not in r.stdout,r.stdout
+   row=dict(chain_cells=n,corner=corner,input_slew_ps=slew,old_cap_fF=oldcap,retained_cap_fF=firstcap,new_link_cap_fF=newcap)
+   for kind,k in [('min','hold_slack_ps'),('max','setup_slack_ps')]:
+    sect=r.stdout.split('Path Type: '+kind)[1].split('Startpoint:')[0];row[k]=float(re.search(r'([-0-9.]+)\s+slack \(',sect).group(1))
+   rows.append(row)
+for r in rows:
+ b=next(x for x in rows if x['chain_cells']==0 and all(x[k]==r[k] for k in ('corner','input_slew_ps','old_cap_fF')))
+ r['hold_slack_gain_ps']=r['hold_slack_ps']-b['hold_slack_ps'];r['setup_slack_cost_ps']=b['setup_slack_ps']-r['setup_slack_ps']
+a=[x for x in rows if x['chain_cells']==3]
+summary=dict(FF_min_hold_gain_ps=min(x['hold_slack_gain_ps'] for x in a if x['corner']=='FF'),SS_max_setup_cost_ps=max(x['setup_slack_cost_ps'] for x in a if x['corner']=='SS'))
+(w/'rows.json').write_text(json.dumps(rows,indent=2)+'\n');(w/'summary.json').write_text(json.dumps(summary,indent=2)+'\n');print(summary)

@@ -1,0 +1,157 @@
+{
+  "passed": true,
+  "checks": {
+    "credit_stalls": {
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_ha2_hub_credit_sender",
+        "-Ptb_ha2_hub_credit_sender.MUTANT=0",
+        "-Ptb_ha2_hub_credit_sender.STALL=1",
+        "-o",
+        "/srv/opentallas-scratch2/claude/ha2-sender-codex-20261007/gate-r1/credit_stalls.vvp",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender.sv",
+        "rtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender.sv"
+      ],
+      "returncode": 0,
+      "correct": true,
+      "output": "PASS_HA2_HUB_CREDIT rows=192 lanes=2 width=544 flight=35 stalls=365 cycles=708\nrtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender.sv:52: $finish called at 7160000 (1ps)\n"
+    },
+    "no_stalls": {
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_ha2_hub_credit_sender",
+        "-Ptb_ha2_hub_credit_sender.MUTANT=0",
+        "-Ptb_ha2_hub_credit_sender.STALL=0",
+        "-o",
+        "/srv/opentallas-scratch2/claude/ha2-sender-codex-20261007/gate-r1/no_stalls.vvp",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender.sv",
+        "rtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender.sv"
+      ],
+      "returncode": 0,
+      "correct": true,
+      "output": "PASS_HA2_HUB_CREDIT rows=192 lanes=2 width=544 flight=35 stalls=0 cycles=228\nrtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender.sv:52: $finish called at 2360000 (1ps)\n"
+    },
+    "ignore_reservations": {
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_ha2_hub_credit_sender",
+        "-Ptb_ha2_hub_credit_sender.MUTANT=1",
+        "-Ptb_ha2_hub_credit_sender.STALL=1",
+        "-o",
+        "/srv/opentallas-scratch2/claude/ha2-sender-codex-20261007/gate-r1/ignore_reservations.vvp",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender.sv",
+        "rtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender.sv"
+      ],
+      "returncode": 1,
+      "correct": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender.sv:41: CREDIT_FAIL reservation or FIFO fault cycle=64\n       Time: 696000  Scope: tb_ha2_hub_credit_sender\n"
+    },
+    "ignore_receiver_credit": {
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_ha2_hub_credit_sender",
+        "-Ptb_ha2_hub_credit_sender.MUTANT=2",
+        "-Ptb_ha2_hub_credit_sender.STALL=1",
+        "-o",
+        "/srv/opentallas-scratch2/claude/ha2-sender-codex-20261007/gate-r1/ignore_receiver_credit.vvp",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender.sv",
+        "rtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender.sv"
+      ],
+      "returncode": 1,
+      "correct": true,
+      "output": "FATAL: rtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender.sv:43: CREDIT_FAIL send without prior-edge receiver credit\n       Time: 416000  Scope: tb_ha2_hub_credit_sender.$ivl_for_loop4\n"
+    },
+    "default_parent_guards": {
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_ha2_tu_owner_parent",
+        "-o",
+        "/srv/opentallas-scratch2/claude/ha2-sender-codex-20261007/gate-r1/default_parent_guards.vvp",
+        "rtl/hdc/ot_hdc_prefix.sv",
+        "rtl/hdc/ot_hdc_fastfp.sv",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv",
+        "rtl/link/ot_link_afifo.sv",
+        "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv",
+        "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv",
+        "rtl/hbm_accel/ha2_ar/tb_ha2_tu_owner_parent.sv"
+      ],
+      "returncode": 0,
+      "correct": true,
+      "output": "PARENT PASS held tuple and outstanding source prevent rearm\nPARENT PASS wrong destination held at actual RX buffer; no credit or slot write\nPASS parent changed-source boundary; full fabric/publication qualification remains open\nrtl/hbm_accel/ha2_ar/tb_ha2_tu_owner_parent.sv:43: $finish called at 74166726 (1fs)\n"
+    },
+    "half_endpoint_fullshape_elaboration": {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wno-fatal",
+        "--top-module",
+        "ot_hbm_accel_tu_endpoint_owner",
+        "-GENABLE=1",
+        "-GOWNER_REDUCER=1",
+        "-GOWNER_BANKED_HALF=1",
+        "-GPFMAX=384",
+        "rtl/hdc/ot_hdc_prefix.sv",
+        "rtl/hdc/ot_hdc_fastfp.sv",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv",
+        "rtl/link/ot_link_afifo.sv",
+        "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv",
+        "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv",
+        "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender.sv",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
+      ],
+      "returncode": 0,
+      "correct": true
+    }
+  },
+  "source_sha256": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_hub_credit_sender.sv": "afa0b30bde9d2ecb8798aee57b9ca846d94d924e738bdf4eca9b9404e9243022",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv": "a3e09f1933e7d76969ffd4e25b113d5127483667082d846bdbca4850515d610d",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv": "755267df5522c9bf08a612e4d504fe6eb1dbea9d33e4954b8d2a0b6dbafe172b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv": "b08049440bdd2f7afa66b496b778f61d1a5fd15a10f1d8177d8a4a7d8c510445",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv": "02bec6fc2cdb69e5f6a9ea6aec09c32caa9e2b2830285855ad4494234195d241",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv": "511bea31ca65dba6118560545e8cba08ca837855b0e52c6aab459bffeb777c9b",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_hub_credit_sender.sv": "6890d59c3157f20fd76825494dac51fefc30cdaf175a53530b66b5494747aaa8",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_tu_owner_parent.sv": "7030450c24ccaf0971659c4a48fc59eb2db006d7bd7eb3cade4094e1979b477c",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv": "b96be44ecfe9bb2148aa88131169894229f9b1a60432b4bb0477fb28dbddd877",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv": "6cd01fbf2a1a4689eac894d33626c963a2b9cb7bcefd3ce6042811f702403bbd",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "tools/ha2_hub_credit_gate.py": "7ec2499a71cc7c4e173277189254c65d29efd3910bb07ed56383f1cf7d6443e1"
+  },
+  "scope": "Full-width finite-flight sender exactness and negatives, unchanged default parent guards, fullshape new endpoint elaboration. Not complete endpoint numerical/physical adoption."
+}

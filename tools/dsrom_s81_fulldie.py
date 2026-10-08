@@ -121,9 +121,9 @@ BF_PER_REGION = None
 def set_pairs(n):
     """r8: pairs (elements) per die; BF / NV shares scaled as the decision's"""
     global PAIRS, BF_PAIRS, NV_PAIRS
-    if DIE_KIND == 'layer' and BF_PER_REGION is not None:
+    if DIE_KIND in ('layer', 'layer1') and BF_PER_REGION is not None:
         PAIRS, BF_PAIRS = n, BF_PER_REGION * ROOTS
-    elif DIE_KIND == 'layer':
+    elif DIE_KIND in ('layer', 'layer1'):
         PAIRS, BF_PAIRS = n, round(n * 519 / 2417)
     else:
         NV_PAIRS = round(NV_PAIRS * n / PAIRS)
@@ -307,7 +307,7 @@ def region_bounds():
 
 
 def bf_sites():
-    if BF_PER_REGION is not None and DIE_KIND == 'layer':
+    if BF_PER_REGION is not None and DIE_KIND in ('layer', 'layer1'):
         # the RTL's flat is_bf map (bf-double): floor(i * PAIRS / NBF), NBF = N x ROOTS; N per region asserted
         nb = BF_PER_REGION * ROOTS
         s = {i * PAIRS // nb for i in range(nb)}
@@ -482,6 +482,9 @@ def build(variant=None):
     if DIE_KIND == 'layer':
         centre.insert(2, 'wfc')
         centre_area.update(vm=2.659905216, wfc=0.45610905599999996)
+    if PQ_PLACE:          # S81-DIE: the PQ core slot right after the VM (VM read by its N face -> core S face)
+        centre.insert(centre.index('vm') + 1, 'pq')
+        centre_area['pq'] = PQ_CORE_H * cw / 1e6
     # r4: a SPINE_GAP routing channel between every pair of stacked W-column slabs (b3 GRT: the abutted slab faces
     # carried the 1,024-bit VM <-> SU and the gather/capture buses with no escape room, M8 1.29 / M9 1.15 use/cap)
     ch = sum(up(centre_area[n] * 1e6 / cw, GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
@@ -1004,6 +1007,11 @@ def port_widths(m, k):
 
 def pin_rects(mst, k, wmap):
     out = []
+    for port, spec in mst.ports.items():
+        if spec[0] == 'rects':
+            if k != 1 or wmap.get(port, len(spec[1])) != len(spec[1]):
+                raise ValueError(f'exact physical pin rectangles require full width k=1: {mst.name}/{port}')
+            out.extend(spec[1])
     xy = {p: s for p, s in mst.ports.items() if s[0] == 'xy'}
     for port, spec in xy.items():
         n = wmap.get(port, len(spec[1]))
@@ -1014,7 +1022,7 @@ def pin_rects(mst, k, wmap):
             _, layer, cx, cy, w_, h_ = spec
             out.append((f'{port}[0]', layer, (cx - w_ / 2, cy - h_ / 2, cx + w_ / 2, cy + h_ / 2)))
     rest = Q.Master(mst.name, mst.w, mst.h, mst.obs_top, mst.note)
-    rest.ports = {p: s for p, s in mst.ports.items() if s[0] not in ('xy', 'area')}
+    rest.ports = {p: s for p, s in mst.ports.items() if s[0] not in ('xy', 'area', 'rects')}
     rest.order = [p for p in mst.order if p in rest.ports]
     rects = Q.pin_rects(rest, k, wmap)
     if k > 1 and GEOMETRY_FIX:
@@ -2187,10 +2195,13 @@ GLUE_RTL = 'results/rtl/dsrom_s81_fulldie_20261004/r8/dsfd_glue.sv'
 ELEM_FRAME_H = 157.68
 FIELD_MARGIN = 216.0
 SLOT_H8, SLOTS8 = SLOT_H, SLOTS
+Q_ELEM_FRAME_H = None             # opt-in independent q frame, BF remains ELEM_FRAME_H
+SU_AREA_MM2 = None                # optional current-leaf SU reservation, not a hard macro
+FRAME_H8 = SLOTS8 * SLOT_H8
 
 
 def slot_geometry(elem_frame_h=None, field_margin=None):
-    global ELEM_FRAME_H, SLOT_H8, SLOTS8, FIELD_MARGIN
+    global ELEM_FRAME_H, SLOT_H8, SLOTS8, FIELD_MARGIN, FRAME_H8
     if elem_frame_h:
         ELEM_FRAME_H = float(elem_frame_h)
     if field_margin is not None:
@@ -2198,8 +2209,50 @@ def slot_geometry(elem_frame_h=None, field_margin=None):
     SLOT_H8 = round(up(ELEM_DY + ELEM_FRAME_H + 4.32, GY), 3)
     band = up(EDGE, GY) + PHY_H + 8.64 + CTRL_D + 8.64 + SVC_D
     avail = DIE[1] - 2 * band - 2 * FIELD_MARGIN - sum(chh(t) for t in range(TIERS + 1))
-    SLOTS8 = int(avail // (TIERS * SLOT_H8))
+    if Q_ELEM_FRAME_H is None:
+        SLOTS8 = int(avail // (TIERS * SLOT_H8))
+        FRAME_H8 = SLOTS8 * SLOT_H8
+    else:
+        assert DIE_KIND in ('layer', 'layer1') and BF_PER_REGION is not None and NV_PAIRS == 0, \
+            'mixed q/BF heights need an r8 layer die with explicit --bf-per-region and no NV'
+        qh = round(up(ELEM_DY + Q_ELEM_FRAME_H + 4.32, GY), 3)
+        SLOTS8 = math.floor((avail / TIERS - BF_PER_REGION * (SLOT_H8 - qh)) / qh + 1e-9)
+        assert SLOTS8 >= BF_PER_REGION, 'BF slots alone exceed field height'
+        FRAME_H8 = round(BF_PER_REGION * SLOT_H8 + (SLOTS8 - BF_PER_REGION) * qh, 3)
     return SLOT_H8, SLOTS8
+
+
+def column_height():
+    return FRAME_H8 if Q_ELEM_FRAME_H is not None else SLOTS8 * SLOT_H8
+
+
+def pack_frame(pairs, bfs, nvs):
+    """Exact existing pair order, with independent heights for q and BF slots."""
+    slot, half_open, elems, kinds = -1, None, [], []
+    for p in pairs:
+        if p in nvs:
+            slot += 2
+            elems.append((p, 'NV', slot - 1, 'B'))
+            kinds.extend(['NV', 'NVX'])
+        elif p in bfs:
+            slot += 1
+            elems.append((p, 'BF', slot, 'B'))
+            kinds.append('BF')
+        elif half_open is not None:
+            elems.append((p, 'q', half_open, 'R'))
+            half_open = None
+        else:
+            slot += 1
+            half_open = slot
+            elems.append((p, 'q', slot, 'L'))
+            kinds.append('q')
+    offsets, heights, y = [], [], 0.0
+    for kind in kinds:
+        fh = Q_ELEM_FRAME_H if kind == 'q' and Q_ELEM_FRAME_H is not None else ELEM_FRAME_H
+        h = round(up(ELEM_DY + fh + 4.32, GY), 3)
+        offsets.append(round(y, 3)); heights.append(h); y += h
+    return elems, offsets, heights
+
 
 
 def set_globals_pairs(p, b, n):
@@ -2213,18 +2266,10 @@ def _frames_fit(slots, slot_h):
     bfs, nvs = bf_sites(), nv_sites()
     for r in range(ROOTS):
         lo, hi = rng[r]
-        slot, half_open, n = -1, None, hi - lo
-        for p in range(lo, hi):
-            if p in nvs:
-                slot += 2
-            elif p in bfs:
-                slot += 1
-            elif half_open is not None:
-                half_open = None
-            else:
-                slot += 1
-                half_open = slot
-        if slot >= slots or 2 * n - 1 > int(slots * slot_h / NODE_FRAME[1] + 1e-6):
+        n = hi - lo
+        elems, offsets, heights = pack_frame(range(lo, hi), bfs, nvs)
+        if len(heights) > slots or sum(heights) > column_height() + 1e-6 or \
+                2 * n - 1 > int(column_height() / NODE_FRAME[1] + 1e-6):
             return False
     return True
 
@@ -2253,7 +2298,7 @@ def capacity_report():
     flav = bf_flavour_capacity(sl, sh)
     inv = json.loads((ROOT / 'results/uarch/dsrom_c_w4_20261003/s82_inputs/inventory.json').read_text())
     total = 81 * 4 * 2417
-    return dict(elem_frame_h_um=ELEM_FRAME_H, slot_h_um=sh, slots_per_column=sl, columns=ROOTS,
+    return dict(elem_frame_h_um=ELEM_FRAME_H, q_elem_frame_h_um=Q_ELEM_FRAME_H, frame_h_um=column_height(), slot_h_um=sh, slots_per_column=sl, columns=ROOTS,
                 max_pairs_per_layer_die=best, pairs_per_layer_die_now=2417,
                 layer_field_pairs_total=total, layer_field_pairs_basis='81 stages x 4 ranks x 2,417 (S81 decision)',
                 layer_dies_now=81 * 4, layer_dies_at_max=math.ceil(total / best) if best else None,
@@ -2275,6 +2320,7 @@ def bf_flavour_capacity(sl, sh):
     out = {}
     for n in (4, 0):
         BF_PER_REGION, best = n, 0
+        sh, sl = slot_geometry()
         for p in range(ROOTS * max(n, 1), 4000):
             set_pairs(p)
             if not _frames_fit(sl, sh):
@@ -2283,6 +2329,7 @@ def bf_flavour_capacity(sl, sh):
         out[str(n)] = dict(max_pairs=best, bf=n * ROOTS, slots_per_column=sl, slot_h_um=sh)
     BF_PER_REGION = kb
     set_globals_pairs(*keep)
+    slot_geometry()
     return out
 CFG7_RTL = 'rtl/v41die/ot_s81_cfg7_seq.sv'
 POWER8 = dict(
@@ -2329,7 +2376,7 @@ UNUSED_BY_DESIGN = {('ot_dsrom_head_elem_A', p_) for p_ in ('o_v', 'o_d', 'l_v',
 
 
 def HB_PER_FRAME():
-    return int(SLOTS8 * SLOT_H8 / HB_H + 1e-6)
+    return int(column_height() / HB_H + 1e-6)
 
 
 def frame_plan_r8():
@@ -2614,15 +2661,16 @@ def build_r8(variant=None):
     assert x_fe + SPF + COLS8 * COL_PITCH8 <= x_le + 1e-6
     band = up(EDGE, GY) + PHY_H + 8.64 + CTRL_D + 8.64 + SVC_D
     SLOT_H, SLOTS = slot_geometry()
-    field_h = TIERS * SLOTS * SLOT_H + sum(chh(t_) for t_ in range(TIERS + 1))
+    FRAME_H = column_height()
+    field_h = TIERS * FRAME_H + sum(chh(t_) for t_ in range(TIERS + 1))
     y_f = up((H - field_h) / 2, GY)
-    ch_y = [y_f + t * SLOTS * SLOT_H + sum(chh(t_) for t_ in range(t)) for t in range(TIERS + 1)]
+    ch_y = [y_f + t * FRAME_H + sum(chh(t_) for t_ in range(t)) for t in range(TIERS + 1)]
     tier_y = [c + chh(t) for t, c in enumerate(ch_y[:TIERS])]
     y_top = ch_y[TIERS] + chh(TIERS)
 
     def col_x(half, c):
         return dn(x_sp - SPF - (c + 1) * COL_PITCH8 + 8.64, GX) if half == 'W' else up(x_fe + SPF + c * COL_PITCH8, GX)
-    geo = dict(slot_h=SLOT_H, slots=SLOTS, x_lw=x_lw, x_fw=x_fw, x_sp=x_sp, x_fe=x_fe, x_le=x_le, y_f=y_f, y_top=y_top, ch_y=ch_y, tier_y=tier_y,
+    geo = dict(slot_h=SLOT_H, slots=SLOTS, frame_h=FRAME_H, q_elem_frame_h=Q_ELEM_FRAME_H, x_lw=x_lw, x_fw=x_fw, x_sp=x_sp, x_fe=x_fe, x_le=x_le, y_f=y_f, y_top=y_top, ch_y=ch_y, tier_y=tier_y,
                band_depth=band, field_h=field_h, spine_cx=x_sp + SPINE_W8 / 2, col_x=col_x, col_pitch=COL_PITCH8,
                col_w=COL_W8, spf=SPF, tier_cols=list(TIER_COLS8))
     rq, rc = real_lef(Q_LEF), real_lef(CFG_LEF)
@@ -2633,7 +2681,7 @@ def build_r8(variant=None):
     for r, (half, t, c) in enumerate(order):
         x0, y0 = col_x(half, c), tier_y[t]
         frames[r] = dict(half=half, tier=t, col=c, x=x0, y=y0)
-        regions.append(dict(name=f'frame_{r}', kind='field', rect=[x0, y0, x0 + COL_W8, y0 + SLOTS * SLOT_H]))
+        regions.append(dict(name=f'frame_{r}', kind='field', rect=[x0, y0, x0 + COL_W8, y0 + FRAME_H]))
         if r in hbf:
             # head-bundle frame: per bundle a row (B element + glue) under a row of the 4 A elements
             ra_, rb_ = real_lef(HEAD_A_LEF), real_lef(HEAD_B_LEF)
@@ -2652,27 +2700,16 @@ def build_r8(variant=None):
                               CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
             continue
         pairs = list(range(*rng[r]))
-        slot, half_open, elems = -1, None, []
-        for p in pairs:
-            if p in nvs:
-                slot += 2
-                elems.append((p, 'NV', slot - 1, 'B'))
-            elif p in bfs:
-                slot += 1
-                elems.append((p, 'BF', slot, 'B'))
-            elif half_open is not None:
-                elems.append((p, 'q', half_open, 'R'))
-                half_open = None
-            else:
-                slot += 1
-                half_open = slot
-                elems.append((p, 'q', slot, 'L'))
+        elems, offsets, heights = pack_frame(pairs, bfs, nvs)
+        slot = len(heights) - 1
+        assert sum(heights) <= FRAME_H + 1e-6, f'frame {r}: mixed slots exceed field height'
+        frames[r].update(slot_offsets=offsets, slot_heights=heights)
         assert slot < SLOTS, f'frame {r}: {len(pairs)} pairs need {slot + 1} slots > {SLOTS} at slot height {SLOT_H}'
-        assert 2 * len(pairs) - 1 <= int(SLOTS * SLOT_H / NODE_FRAME[1] + 1e-6), f'frame {r}: return strip overflow'
+        assert 2 * len(pairs) - 1 <= int(FRAME_H / NODE_FRAME[1] + 1e-6), f'frame {r}: return strip overflow'
         frames[r]['elems'] = elems
         frames[r]['last_slot'] = slot
         for p, kind, s, ln in elems:
-            sy = y0 + s * SLOT_H
+            sy = y0 + offsets[s]
             ex = x0 + (LANE_W if ln == 'R' else 0) + 4.32
             if kind == 'NV':
                 it = Inst(f'e{p}', 'dsfd_bfnv', ex, sy + ELEM_DY, 1002.888, ELEM_FRAME_H - SHAVE, kind='bf_nv',
@@ -2683,7 +2720,7 @@ def build_r8(variant=None):
             elif kind == 'BF':
                 it = Inst(f'e{p}', 'dsfd_bf', ex, sy + ELEM_DY, 1002.888, ELEM_FRAME_H - SHAVE, kind='bf', region=f'frame_{r}')
             else:
-                assert rq['h'] <= ELEM_FRAME_H, (rq['h'], ELEM_FRAME_H)
+                assert rq['h'] <= (Q_ELEM_FRAME_H or ELEM_FRAME_H), (rq['h'], Q_ELEM_FRAME_H or ELEM_FRAME_H)
                 it = Inst(f'e{p}', rq['name'], ex, sy + ELEM_DY, rq['w'], rq['h'], kind='q', region=f'frame_{r}')
             insts.append(it)
             slot_of[p] = (r, s, ln)
@@ -2707,14 +2744,14 @@ def build_r8(variant=None):
             frames[r]['last_slot'] = slot
             frames[r]['nv_top'] = True
         for s in range(slot + 1):
-            sy = y0 + s * SLOT_H
+            sy = y0 + offsets[s]
             yy = sy + CFG_DY if s not in nvslots else sy + CFG_DY + up(NVX_UM2 / 1002.888, GY) + 4.32
             insts.append(Inst(f't{r}_{s}', 'dsfd_sstn', x0 + SSTN_X, yy, SSTN_WH[0] - SHAVE, SSTN_WH[1] - SHAVE,
                               kind='sstn', region=f'frame_{r}'))
         if REV == 'r9':
             for p, kind, s, ln in elems:
                 if kind == 'q':
-                    insts += _q_banks(p, x0 + (LANE_W if ln == 'R' else 0) + 4.32, y0 + s * SLOT_H + ELEM_DY, rq,
+                    insts += _q_banks(p, x0 + (LANE_W if ln == 'R' else 0) + 4.32, y0 + offsets[s] + ELEM_DY, rq,
                                       f'frame_{r}')
         nodes, root = return_tree(2 * len(pairs))
         frames[r]['tree'] = (nodes, root)
@@ -2723,8 +2760,21 @@ def build_r8(variant=None):
             insts.append(Inst(f'n{r}_{j}', 'dsfd_node', x0 + 2 * LANE_W + 4.32, y0 + rank[nid] * NODE_FRAME[1],
                               NODE_FRAME[0] - SHAVE, NODE_FRAME[1] - SHAVE, kind='node', region=f'frame_{r}'))
         # column FIFO: entry meso + column clock / reset root + return register, top band of the channel below
-        insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + chh(t) - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
+        # (--pq-place: below the root row, which takes the channel's top PQ_ROOT_ROW)
+        pq_dy = PQ_ROOT_ROW if PQ_PLACE else 0.0
+        insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + chh(t) - pq_dy - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
                           CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
+        if PQ_PLACE:
+            # S81-DIE PQ root row: N station (tree word in) / ret_root_r128 / S station (root word out), centred in the
+            # 142.56 um return strip (node strip + rstg sub-column) directly under the frame
+            yr = ch_y[t] + chh(t) - PQ_ROOT_ROW
+            xr = up(x0 + 2 * LANE_W + (NS_W + RSC_W - PQ_ROOT_WH[0]) / 2, GX)
+            insts.append(Inst(f'pqs{r}', 'dsfd_rstg_pq%d' % PQ_RO, xr, yr + 4.32, PQ_ROOT_WH[0] - SHAVE, PQ_STN_H - SHAVE,
+                              kind='pqstn', region=f'frame_{r}'))
+            insts.append(Inst(f'pqr{r}', 'dsfd_pq_root', xr, yr + 4.32 + PQ_STN_H, PQ_ROOT_WH[0] - SHAVE,
+                              PQ_ROOT_WH[1] - SHAVE, kind='pqroot', region=f'frame_{r}', power_w=PQ_ROOT_W))
+            insts.append(Inst(f'pqn{r}', 'dsfd_rstg_pq%d' % PQ_TI, xr, yr + 4.32 + PQ_STN_H + PQ_ROOT_WH[1],
+                              PQ_ROOT_WH[0] - SHAVE, PQ_STN_H - SHAVE, kind='pqstn', region=f'frame_{r}'))
     # ---- spine: W column as r7 (SU split around the centre stack), E column HC split around a crossing corridor
     x_vch = x_sp + dn((SPINE_W8 - VCH8) / 2, GX)
     cw = dn((SPINE_W8 - VCH8) / 2, GX)
@@ -2741,12 +2791,16 @@ def build_r8(variant=None):
         insts.append(it)
         hub[name] = it
         return it
+    su_area = SU_AREA_MM2 if SU_AREA_MM2 is not None else HUB_MM2['su']
     centre = ['gather', 'vm', 'capture', 'collective']
     centre_area = dict(HUB_MM2)
     wfc_rect = None
     if DIE_KIND == 'layer':
         centre.insert(2, 'wfc')
         centre_area.update(vm=2.659905216, wfc=0.45610905599999996)
+    if PQ_PLACE:          # S81-DIE: the PQ core slot right after the VM (VM read by its N face -> core S face)
+        centre.insert(centre.index('vm') + 1, 'pq')
+        centre_area['pq'] = PQ_CORE_H * cw / 1e6
     if VM_FACE_MM2 and centre_area['vm'] < VM_FACE_MM2:
         # S81-RERUN v9e (OWNER rule 3, coordinator 2026-10-07): the head die's VM slab (0.89 mm2, ~880 um tall) took
         # every end block / pin relay on its E face (v9d head GRT: the last 5 overflowing gcells, ha_* / hsel / hq /
@@ -2754,17 +2808,28 @@ def build_r8(variant=None):
         centre_area['vm'] = VM_FACE_MM2
     ch_ = sum(up(centre_area[n] * 1e6 / cw, GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch_ / 2, GY)
-    su_lo = HUB_MM2['su'] * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
+    su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
     slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
     yy = yc
     for n in centre:
         if n == 'wfc':
             wh = up(centre_area[n] * 1e6 / cw, GY)
             wfc_rect = [x_sp, yy, x_sp + cw, yy + wh]
+        elif n == 'pq':
+            # core slab W of a ROM column at the slot's E end (2 phase + 1 stream ot_rom_4096x72, real LEF, mirrored
+            # so their pins face the core); the slab carries the core budget (results/uarch/
+            # dsrom_s81_pq_fullshape_design_20261007 design.json pq_core: 0.32 mm2 est. incl. 36 SRAM macros)
+            rc_ = real_lef(CFG_LEF)
+            romc = up(rc_['w'] + 2 * 8.64, GX)
+            wc_ = dn(cw - romc, GX)
+            slab('pq', PQ_CORE_H * wc_ / 1e6, x_sp, yy, wc_)
+            for j in range(PQ_ROMS):
+                insts.append(Inst(f'pqrom{j}', rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * up(rc_['h'] + 17.28, GY),
+                                  rc_['w'], rc_['h'], 'R0', kind='pqrom', region='spine', domain='stream_1p2'))
         else:
             slab(n, centre_area[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2')
         yy += up(centre_area[n] * 1e6 / cw, GY) + SPINE_GAP
-    slab('su_n', HUB_MM2['su'] - su_lo, x_sp, yy, cw, dom='serial_0p9')
+    slab('su_n', su_area - su_lo, x_sp, yy, cw, dom='serial_0p9')
     vm = hub['vm']
     corr_c = vm.y - SPINE_GAP / 2          # corridor at the gather / VM boundary: the E-half returns exit it at gather
     c0, c1 = dn(corr_c - HC_CORR / 2, GY), up(corr_c + HC_CORR / 2, GY)
@@ -2836,11 +2901,11 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
-                   elem_frame_h=ELEM_FRAME_H, slot_h=SLOT_H, slots=SLOTS)
+                   elem_frame_h=ELEM_FRAME_H, q_elem_frame_h=Q_ELEM_FRAME_H, frame_h=FRAME_H, slot_h=SLOT_H, slots=SLOTS)
     m = dict(geo=geo, insts=insts, regions=regions, frames=frames, cregions=[], fifo_of={}, hub=hub, phys=phys,
              ctrls=ctrls, svcs=svcs, links=links, notes=notes, slot_of=slot_of, x_vch=x_vch, x_spe=x_spe, mid=mid,
              corridor=(c0, c1), variant=variant, gap_x=(gap_x0, gap_x1))
@@ -3030,6 +3095,9 @@ def buses_r8(m):
         sx = f['x'] + 2 * LANE_W + NS_W + 4.32
         ytop = rootn.y + rootn.h
         ybot = cfi.y + cfi.h
+        if PQ_PLACE:      # the strip chain now ends at the root row's N station, not at the column FIFO
+            pqn_ = next(i_ for i_ in m['insts'] if i_.name == f'pqn{r}')
+            ybot = pqn_.y + pqn_.h
         prev, k_ = (f'n{r}_{ids[root]}', 'o'), 0
         d = ytop - ybot + abs(sx - (rootn.x + rootn.w / 2))
         nst = max(0, math.ceil(d / (FWD_REACH - 40.0)) - 1)
@@ -3041,7 +3109,17 @@ def buses_r8(m):
             col_rs.append((it.name, 'rs'))
             bus(f'rr_{r}_{i_}', 'col_ret', NODEB, [prev, (it.name, 'i')])
             prev = (it.name, 'o')
-        bus(f'rr_{r}_{nst}', 'col_ret', NODEB, [prev, (cf, 'ri')])
+        if PQ_PLACE:
+            # tree word -> N station -> ret_root_r128 -> S station -> column FIFO return (all column clock: no crossing)
+            bus(f'rr_{r}_{nst}', 'col_ret', NODEB, [prev, (f'pqn{r}', 'i')])
+            bus(f'pqt_{r}', 'col_ret', PQ_TI, [(f'pqn{r}', 'o'), (f'pqr{r}', 'ti')])
+            bus(f'pqo_{r}', 'col_ret', PQ_RO, [(f'pqr{r}', 'ro'), (f'pqs{r}', 'i')])
+            bus(f'pqc_{r}', 'col_ret', PQ_RO, [(f'pqs{r}', 'o'), (cf, 'ri')])
+            for n_, ck_, rs_ in ((f'pqn{r}', 'ck', 'rs'), (f'pqr{r}', 'ck', 'rs'), (f'pqs{r}', 'ck', 'rs')):
+                col_ck.append((n_, ck_))
+                col_rs.append((n_, rs_))
+        else:
+            bus(f'rr_{r}_{nst}', 'col_ret', NODEB, [prev, (cf, 'ri')])
         f['ret_stages'] = nst
         bus(f'ck_col_{r}', 'col_clock', 1, col_ck)
         bus(f'rs_col_{r}', 'col_reset', 1, col_rs)
@@ -3082,15 +3160,17 @@ def buses_r8(m):
         w = up(max(30.24, bits * 3.0 / h, face), GX)
         return name, w - SHAVE, h - SHAVE
     # x root: VM -> two serial->stream CDC start blocks (W channel / VCH)
-    vmc = vm.y + vm.h / 2
+    # (--pq-place: the PQ core is the lane source; its W / E faces drive the two start blocks)
+    xsrc = hub['pq'] if PQ_PLACE else vm
+    vmc = xsrc.y + xsrc.h / 2
     starts = {}
     for side in 'WE':
         nm, w, h = end_spec('l2r', [LSW], 'vr')
         it = hub_block(f'hx_{side}', nm, 'hend', w, h, x_sp if side == 'W' else x_vch + 0.0, vmc,
                        side, [cor['s14W'] if side == 'W' else cor['vch']])
         starts[side] = it
-        bus(f'xr_{side}', 'local', LSW + 1, [(vm.name, f'x{side.lower()}'), (it.name, 'i')])
-        bus(f'xrs_{side}', 'local', 3, [(it.name, 'st'), (vm.name, f'x{side.lower()}s')])
+        bus(f'xr_{side}', 'local', LSW + 1, [(xsrc.name, f'x{side.lower()}'), (it.name, 'i')])
+        bus(f'xrs_{side}', 'local', 3, [(it.name, 'st'), (xsrc.name, f'x{side.lower()}s')])
     # ---------------- x trunks: per half, a vertical spine (up / down) with a branch per tier channel
     rowx = 64.8          # x-trunk station row (offset in the channel)
     rowr = 8.64          # return-trunk row
@@ -3181,7 +3261,9 @@ def buses_r8(m):
                                  ('vm', 'gather', 512, 't_gather', 'f_vm'), ('gather', 'capture', 576, 't_capture', 'f_gather'),
                                  ('capture', 'vm', 512, 't_vm', 'f_capture'), ('collective', 'vm', 512, 't_vm', 'f_collective'),
                                  ('su_s', 'hc_s', 512, 't_hc', 'f_su_s'), ('su_n', 'hc_n', 512, 't_hc', 'f_su_n'),
-                                 ('hc_s', 'hc_n', 1024, 't_n', 'f_s'), ('hc_n', 'hc_s', 1024, 't_s', 'f_n')):
+                                 ('hc_s', 'hc_n', 1024, 't_n', 'f_s'), ('hc_n', 'hc_s', 1024, 't_s', 'f_n')) + \
+            ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
+              ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()):
         if REV == 'r9':
             _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb)
         else:
@@ -3191,6 +3273,11 @@ def buses_r8(m):
     for st, ph in m['phys'].items():
         bus(f'dfi_{st}', 'phy_dfi', npins, [(m['ctrls'][st].name, 'phy'), (ph.name, 'dfi')])
         bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (m['svcs'][st].name, 'rd')])
+    if PQ_PLACE:      # PQ core <-> its ROMs (real ot_rom_4096x72 ports), direct: they abut the core's E face
+        for j in range(PQ_ROMS):
+            bus(f'pqra_{j}', 'rom_a', 12, [(hub['pq'].name, f'ra{j}'), (f'pqrom{j}', 'a')])
+            bus(f'pqrc_{j}', 'rom_ce', 1, [(hub['pq'].name, f'rc{j}'), (f'pqrom{j}', 'ce')])
+            bus(f'pqrq_{j}', 'rom_q', 48, [(f'pqrom{j}', 'rd'), (hub['pq'].name, f'rq{j}')])
     if HOP_FIX and HOP_PLAN:
         _hop_fix(m, P)
     # ---------------- clocks, resets, top ports
@@ -3210,6 +3297,8 @@ def buses_r8(m):
             rst[d_].append((it.name, 'rst'))
         elif it.kind == 'hstn':
             dom[HSTN_DOM[it.domain]].append((it.name, 'ck'))
+        elif it.kind == 'pqrom':
+            dom['stream'].append((it.name, 'ck'))
         elif it.kind == 'svc':
             dom['stream'].append((it.name, 'ck'))
             rst['stream'].append((it.name, 'rst'))
@@ -3261,6 +3350,18 @@ HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (
 VM_FACE_MM2 = None              # --vm-face-mm2 (v9e): minimum VM slab area on every die (layer die 2.6599)
 PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a relay station abutting every hardened-block pin
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
+PQ_PLACE = False                # --pq-place (S81-DIE 2026-10-07): production PQ roots / core on the mixed221 layer die
+PQ_ROOT_ROW = 164.16            #   root row added to each tier channel 0..TIERS-1 (4.32 + 8.64 + 133.92 + 8.64 + 8.64)
+PQ_ROOT_WH = (132.192, 133.92)  #   ret_root_r128 reserved outline (results/uarch/s81_pq_root_cam_20261007/model.json)
+PQ_STN_H = 8.64                 #   return station height (S / N face of the root, full root width)
+PQ_CORE_H = 449.28              #   PQ core slot height after the VM (x the hub column width)
+PQ_TI, PQ_RO = NODEB, CRET      #   root in = the raw tree word (66); root out carried at the column return width (68):
+                                #   the 71-b production word needs cfifo / return-trunk widening (+3 b, open, priced 0)
+PQ_VMR = 2069 + 93              #   VM read (S face) + issuer, design.json pq_core faces
+PQ_CFG = 458 + 50               #   cfg replica out + fault / status to the gather-side RWBs
+PQ_RCNT = 192                   #   row counts in (12 RWB x 16)
+PQ_ROMS = 3                     #   2 phase + 1 stream ot_rom_4096x72 (real cfg-ROM LEF) at the core's E end
+PQ_ROOT_W = 17460e-12 * 2.0e6   #   root power: est. area 17,460 um2 at the 2.0 W/mm2 field peak density (budget)
 GEOMETRY_FIX = False            # --geometry-fix: canonical station outlines and bounded bundled pin depth
 HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491 um at 833.333 ps SS)
 HOP_R_FWD = 430.56              # forwarded hop = the station pitch (routed stations: SS +78..+84 at the 440 um hop budget)
@@ -3445,7 +3546,7 @@ def _hop_fix(m, P):
                 # and the corridor / VCH crossing got denser); frame relays inside their frame
                 if reg is not None and not fwd:
                     f_ = m['frames'][int(reg.split('_')[1])]
-                    allowed = [(f_['x'], f_['y'] - 60.0, f_['x'] + COL_W8, f_['y'] + SLOTS8 * SLOT_H8)]
+                    allowed = [(f_['x'], f_['y'] - 60.0, f_['x'] + COL_W8, f_['y'] + column_height())]
                 else:
                     allowed = list(cor.values())
                 # v6c: searched with a 2.16 um keep-out each side (the PA track snap moved v6b's tightly packed
@@ -3463,6 +3564,16 @@ def _hop_fix(m, P):
                         if PAD < 2.16:
                             rec['pad_fallback'][f'{PAD:g}'] = rec['pad_fallback'].get(f'{PAD:g}', 0) + 1
                         break
+                if pl is None and reg is not None and not fwd and PQ_PLACE:
+                    # S81-DIE (qs5f q abstract fills its 221.4 um frame): a frame relay with no spot inside its frame
+                    # takes the nearest legal spot within reach (the strip / channel next to the frame)
+                    for span, rows in ((300.0, 30), (1200.0, 120)):
+                        pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
+                                    reach=R - 10.0, span=span, rows=rows)
+                        if pl:
+                            pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
+                            rec['pad_fallback']['frame_out'] = rec['pad_fallback'].get('frame_out', 0) + 1
+                            break
                 if pl is None and PIN_RELAY and reg is None:   # a pin relay beside a slab: anywhere legal on the die
                     for span, rows in ((300.0, 30), (1200.0, 120)):
                         pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
@@ -3566,7 +3677,7 @@ def _col_relays(m, P):
             continue
         r = int(d0.region.split('_')[1])
         f = m['frames'][r]
-        fr = (f['x'], f['y'] - 60.0, f['x'] + COL_W8, f['y'] + SLOTS8 * SLOT_H8)
+        fr = (f['x'], f['y'] - 60.0, f['x'] + COL_W8, f['y'] + column_height())
         far = max((by[e[0]] for e in eps[1:] if e[0] in by), key=lambda it: _mh(cen(d0), cen(it)), default=None)
         if far is None:
             out.append((bid, cls, bits, eps))
@@ -3682,7 +3793,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
         y_ = lo + (hi - lo) * (0.25 + 0.5 * ((lane[0] * 0.37) % 1.0))
         lane[0] += 1
         path = [(fx(A), y_), (fx(Bk), y_)]
-    elif hcA == hcB and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= CC_REACH - 60.0:
+    elif hcA == hcB and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= CC_REACH - (0.0 if {a_, b_} == {'vm', 'pq'} else 60.0):
         # stacked neighbours in one column: face to face across the gap, one hop
         g_ = max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h)
         CH8.bus(f'hb_{a_}_{b_}', 'hub', bits, [(A.name, pa), (Bk.name, pb)])
@@ -4599,6 +4710,10 @@ def glue_rtl(m):
             fi = ' | fi[0]' if fch else ''
             body.append(f'    reg fr; always @(posedge clk[0] or negedge rst_n[0]) if (!rst_n[0]) fr <= 1\'b0; else fr <= flt{fi};')
             body.append('    assign fo = fr;')
+        elif mst.startswith('dsfd_rstg_pq'):     # S81-DIE PQ root-row return station (registered, column clock)
+            w_ = ports['i'][1]
+            body.append(f'    reg [{w_ - 1}:0] r; always @(posedge ck[0]) r <= i;')
+            body.append(f'    assign o = {{r[{w_ - 1}:1], r[0] & rs[0]}};')
         elif mst == 'dsfd_rstg':
             body.append('    reg [65:0] r; always @(posedge ck[0]) r <= i;')
             body.append('    assign o = {r[65:1], r[0] & rs[0]};')
@@ -4718,12 +4833,12 @@ def plan_record_r8(m):
                                                'rtl/common/ot_fwd_link_stage.sv', 'rtl/common/ot_meso_fifo.sv',
                                                'rtl/common/ot_ratio_cdc_fifo.sv', 'rtl/v41die/ot_v41_retn_w17w10.sv')},
         die=dict(w_um=DIE[0], h_um=DIE[1], mm2=round(DIE[0] * DIE[1] / 1e6, 3)), variant=m['variant'],
-        slot=dict(elem_frame_h_um=ELEM_FRAME_H, slot_h_um=g['slot_h'], slots_per_column=g['slots'],
+        slot=dict(elem_frame_h_um=ELEM_FRAME_H, q_elem_frame_h_um=Q_ELEM_FRAME_H, frame_h_um=g['frame_h'], slot_h_um=g['slot_h'], slots_per_column=g['slots'],
                   capacity=capacity_report()),
         instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
         placed_footprint_mm2=round(sum(area.values()), 2),
         utilisation=dict(placed_over_die=round(sum(area.values()) / (DIE[0] * DIE[1] / 1e6), 4),
-                         field_frames_mm2=round(ROOTS * COL_W8 * g['slots'] * g['slot_h'] / 1e6, 2)),
+                         field_frames_mm2=round(ROOTS * COL_W8 * g['frame_h'] / 1e6, 2)),
         geometry={k: (round(v, 3) if isinstance(v, float) else v) for k, v in g.items() if k != 'col_x'},
         forwarded=dict(stations=len(stn), ot_fwd_link_stage_instances=slices, chains=len(ch),
                        max_hop_um=max(c['max_hop_um'] for c in ch), hops_over_430p56=len(over),
@@ -4777,6 +4892,7 @@ def die_options(ap):
     ap.add_argument('--head-dies', type=int, default=12, help='head die: dies sharing the head content (default 12)')
     ap.add_argument('--rev', default='r8', choices=['r8', 'r9'], help='r8 sub-revision (r9: S81-RERUN hub-bus stations)')
     ap.add_argument('--elem-h', type=float, help='r8: element frame height in its slot (default 157.68)')
+    ap.add_argument('--q-elem-h', type=float, help='r8 layer/layer1: independent q frame height; --elem-h remains BF height; requires --bf-per-region')
     ap.add_argument('--pairs', type=int, help='r8: pairs (elements) per die (default: the decision value)')
     ap.add_argument('--bf-per-region', type=int, default=None,
                     help='r8 layer die: exactly N BF pairs in every region (0 = q-only flavour; bf-double 2026-10-07)')
@@ -4800,6 +4916,8 @@ def die_options(ap):
                     '(default 259.2 each)')
     ap.add_argument('--vch-w', type=float, help='r9: VCH width in um (default 1209.6)')
     ap.add_argument('--hc-corr', type=float, help='r9: HC crossing corridor height in um (default 1209.6)')
+    ap.add_argument('--hub-column-width', type=float, help='r9: each hub column width in um; spends existing die horizontal slack; default unchanged')
+    ap.add_argument('--su-mm2', type=float, help='r9: SU total reservation area in mm2, split north/south; requires sizing record; default unchanged')
     ap.add_argument('--vm-face-mm2', type=float, help='r9: minimum VM slab area in mm2 on every die (spreads its pin '
                     'face; layer die value 2.6599; default off)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
@@ -4812,11 +4930,19 @@ def die_options(ap):
                     'inside the HC column, face to face (default off: a VCH-edge lane)')
     ap.add_argument('--geometry-fix', action='store_true', help='r9: canonical station footprints and bounded '
                     'k16 pin depth; default off pending geometry and physical gates')
+    ap.add_argument('--pq-place', action='store_true', help='S81-DIE (2026-10-07): production PQ placement on the '
+                    'mixed layer die: a 164.16 um root row in the first TIERS tier channels (one ret_root_r128 a '
+                    'region, 132.192 x 133.92, between two 8.64 um return stations in the 142.56 um return strip) and '
+                    'the PQ core in a 449.28 um x hub-column slot after the VM (with its 3 stream / phase ROMs)')
     return ap
 
 
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
+    global Q_ELEM_FRAME_H, BF_PER_REGION, SU_AREA_MM2
+    SU_AREA_MM2 = getattr(a, "su_mm2", None)
+    Q_ELEM_FRAME_H = getattr(a, "q_elem_h", None)
+    BF_PER_REGION = getattr(a, "bf_per_region", None)
     set_cc_reach(a.cc_reach_um)
     global VCH_INTERLEAVE, LINK_FIX, HC_XFACE, GEOMETRY_FIX
     GEOMETRY_FIX = bool(getattr(a, 'geometry_fix', False))
@@ -4829,9 +4955,15 @@ def apply_options(a):
     global VM_FACE_MM2
     VM_FACE_MM2 = getattr(a, 'vm_face_mm2', None)
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
+    global PQ_PLACE
+    PQ_PLACE = bool(getattr(a, 'pq_place', False))
+    if PQ_PLACE:
+        assert a.gen == 'r8' and a.rev == 'r9' and a.die in ('layer', 'layer1') and getattr(a, 'q_elem_h', None), \
+            '--pq-place: the r9 mixed q/BF layer die (--q-elem-h) only'
+        CHS = [c + (PQ_ROOT_ROW if t < TIERS else 0.0) for t, c in enumerate(CHS or [CH] * (TIERS + 1))]
     VCH8 = float(a.vch_w) if getattr(a, 'vch_w', None) else 1209.6
     HC_CORR = float(a.hc_corr) if getattr(a, 'hc_corr', None) else 1209.6
-    SPINE_W8 = SPINE_W + VCH8 - VCH
+    SPINE_W8 = (2 * up(a.hub_column_width, GX) + VCH8) if getattr(a, "hub_column_width", None) else SPINE_W + VCH8 - VCH
     LINK_SPLIT = bool(getattr(a, 'link_split', False)) and bool(a.link_fix)
     LINK_FIX = bool(a.link_fix)
     global CORR_INTERLEAVE, HOP_FIX, HOP_PLAN, MESO_D8
@@ -4851,11 +4983,11 @@ def apply_options(a):
         if a.elem_h or a.field_margin is not None:
             slot_geometry(a.elem_h, a.field_margin)
         if getattr(a, 'bf_per_region', None) is not None:
-            global BF_PER_REGION
             BF_PER_REGION = a.bf_per_region
             set_pairs(a.pairs or PAIRS)
         elif a.pairs:
             set_pairs(a.pairs)
+        slot_geometry()
 
 
 def main(argv=None):

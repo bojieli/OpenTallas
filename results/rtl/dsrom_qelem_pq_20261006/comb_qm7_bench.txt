@@ -1,0 +1,6 @@
+QM=7 PQ1 L20 bench (source 79a297573 RTL; synthesized logic = af37e5854, OT_PQQ_QM=7, tools/dsrom_combined_l20.py field --cfg pq1_q10 --field-layers 20, AGIdock qelem-qm/comb_qm7):
+2752 runs (phase)
+failed 0
+896 runs (node)
+failed 0
+Cycle identity vs QM=6 (comb_qm6, 65661d57f): all 3,648 result.json (pass, node go/first_w/last_w/idle, per-op go/end/last_w) identical -> the QM=6 full-field lever run (qlever_adopt6) prices QM=7.

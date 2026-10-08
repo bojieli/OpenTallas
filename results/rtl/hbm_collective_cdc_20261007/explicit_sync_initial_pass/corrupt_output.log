@@ -1,0 +1,40 @@
+ ... Linking
+ ... Removing symbol tables
+ ... Compiletf functions
+Compiling VVP ...
+ ... VVP file version 11.0 (stable)
+Compile cleanup...
+ ...      805 functors (net_fun pool=524288 bytes)
+                275 logic
+                  0 bufif
+                  0 resolv
+                 69 signals
+ ...      688 filters (net_fil pool=524288 bytes)
+ ...     1931 opcodes (49152 bytes)
+ ...      207 nets
+ ...      805 vvp_nets (1048544 bytes)
+ ...        0 arrays (0 words)
+ ...        5 memories
+                  5 logic (2138 words)
+                  0 real (0 words)
+ ...       51 scopes
+ ... 0.009019 seconds, 16344.0/8308.0/5468.0 KBytes size/rss/shared
+Running ...
+ ...execute EndOfCompile callbacks
+ ...propagate initialization events
+ ...execute StartOfSim callbacks
+ ...run scheduler
+FATAL: /tmp/hbm-collective-cdc-explicit-sync-20261007/monitored_bench.sv:15: CDC_DATA mismatch 0
+       Time: 1152675 Scope: tb_protected_cdc
+ ...execute Postsim callbacks
+ ... 0.49457 seconds, 16344.0/8428.0/5532.0 KBytes size/rss/shared
+Event counts:
+         504 time steps (pool=113)
+        2364 thread schedule events
+        3333 assign events
+             ...assign(vec4) pool=9362
+             ...assign(vec8) pool=204
+             ...assign(real) pool=256
+             ...assign(word) pool=128
+             ...assign(word/r) pool=204
+        2826 other events (pool=4096)

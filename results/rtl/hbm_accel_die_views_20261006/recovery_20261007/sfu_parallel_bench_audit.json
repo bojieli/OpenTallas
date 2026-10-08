@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.hbm_recovery_audit.v1",
+  "job": "hbm_sfu_lane_f244ad7e3_r2",
+  "source_commit": "f244ad7e3bf9349fd0571641feeefcafb593b90d",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lane_f244ad7e3_r2",
+  "source": "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+  "pristine_sha256": "fa42033b4895f9daf19835e16ed436f24ec7de21e1646249efb40a47b86cf0f3",
+  "mutated_sha256": "06ea2a654fbb788d0f8fedfb18f161c5cf8def8381a42270af32bd47fc01074d",
+  "negative_mutation_at": "2026-10-07T08:30:01.012472348-07:00",
+  "canonicalize_log_mtime": "2026-10-07T08:04:38.347228607-07:00",
+  "canonicalize_evidence": "1_1_yosys_canonicalize.log lists sfu RTL frontend then pre-parsed AST hierarchy derivation before mutation. Process launch 08:04:35. No final netlist existed at audit.",
+  "following_synthesis": "Image synth.tcl line38 reads 1_1_yosys_canonicalize.rtlil checkpoint; Makefile310 netlist depends on canonicalization.",
+  "image_digest": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "image_aliases_verified": [
+    "openroad/orfs:latest",
+    "openroad/orfs:asap7lock"
+  ],
+  "adoption": "HELD by closure-loop owner pending unchanged canonicalize process/source read history and restored source SHA. This is an audit, not a PASS.",
+  "next_owner": "Codex:hbm_su",
+  "infrastructure_owner": "Codex:closure_loop"
+}

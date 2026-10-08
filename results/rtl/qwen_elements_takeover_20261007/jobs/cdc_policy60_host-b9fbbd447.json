@@ -1,0 +1,63 @@
+{
+  "name": "cdc_policy60_host-b9fbbd447",
+  "block": "ot_qwen_stream4_cdc_pc_policy60",
+  "owner": "Codex:qwen-elements",
+  "purpose": "Re-sign immutable CDC hm25 route at the required 60/25 policy (historical result mistakenly kept route-only 123 ps setup uncertainty), with current 80 fF/150 ps die IO. Copy all checkpoints before hold ECO; original failure retained.",
+  "hosts": [
+    "ot-epyc1tb"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+    "branch": "codex/qwen-elements-takeover-20261007",
+    "commit": "b9fbbd447"
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "set -e\n[ \"$(docker image inspect openroad/orfs:latest --format '{{.Id}}')\" = \"$(docker image inspect openroad/orfs:asap7lock --format '{{.Id}}')\" ]\nsha256sum -c <<'HASHES'\n592594290cea603aec1b9c57c01f85899f5670b2f25ab0f1b67c072c58963811  /srv/opentallas-scratch/claude/closure-loop/cdc_hm25-5a3bb1721/routes/cdc_hm25_5a3bb1721/work/orfs/results/asap7/opentallas_ot_qwen_stream4_cdc_pc_asap7_qcdc_cdc_hm25_5a3bb1721/base/6_final.odb\n94a59f3dbdf929d58f882ec314de0b0a6b7bd0ffdde398b1c95ea799e48482cc  /srv/opentallas-scratch/claude/closure-loop/cdc_hm25-5a3bb1721/routes/cdc_hm25_5a3bb1721/work/orfs/results/asap7/opentallas_ot_qwen_stream4_cdc_pc_asap7_qcdc_cdc_hm25_5a3bb1721/base/6_final.spef\n0f865a425c24c659dbe8f4d1cb65f00419f5f2ceda92662cdcc7440897524175  /srv/opentallas-scratch/claude/closure-loop/cdc_hm25-5a3bb1721/routes/cdc_hm25_5a3bb1721/work/orfs/results/asap7/opentallas_ot_qwen_stream4_cdc_pc_asap7_qcdc_cdc_hm25_5a3bb1721/base/6_final.sdc\nHASHES\nmkdir -p {RUN}/routes/{LABEL}/work\ncp -a --reflink=auto /srv/opentallas-scratch/claude/closure-loop/cdc_hm25-5a3bb1721/routes/cdc_hm25_5a3bb1721/work/orfs {RUN}/routes/{LABEL}/work/\ncp /srv/opentallas-scratch/claude/closure-loop/cdc_hm25-5a3bb1721/routes/cdc_hm25_5a3bb1721/corner_sta.json {RUN}/routes/{LABEL}/historical_123ps_corner_sta.json\npython3 tools/w18/corner_sta.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --post-sdc physical/qwen_stream4_cdc/signoff833_die.sdc --output {RUN}/routes/{LABEL}/corner_sta.json > {RUN}/routes/{LABEL}/sta.log 2>&1\nprintf 'flow_rc=0\\ncorner_rc=0\\n' > {RUN}/routes/{LABEL}/status",
+      "threads": 8,
+      "peak_ram_gb": 24,
+      "needs": [
+        "orfs"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_cdc --out {RUN}/record/views/qfd_cdc --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_stream4_cdc/signoff833_die.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "results/rtl/qwen_elements_takeover_20261007/cdc_policy60/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_elements_takeover_20261007/cdc_policy60"
+    }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "no_bench_reason": "RTL unchanged from the m1j CDC (ot_qwen_stream4_cdc_pc MARGIN 1, exact bench record results/rtl/qwen_stream4_cdc_20261005/r11 + margin_20261006); physical-only re-route",
+  "host_require": [
+    "ot-epyc1tb"
+  ]
+}

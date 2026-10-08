@@ -1,0 +1,18 @@
+{
+  "verdict": "HISTORICAL_FAILURE",
+  "remote_handle": "/srv/opentallas-scratch/codex-item8-bf-route-93d508997/u55",
+  "failure": "ODB-0360 orientation change on locked u_elem.g_mac[0].g_pp.u_rom0",
+  "successor": "bf_root_phase_hierarchy_7990dfdbf",
+  "successor_status": "Running physical qualification; this historical defect is already repaired in source",
+  "repair": "Set instance placement status PLACED before orientation and FIRM replacement",
+  "current_placement_script": "physical/s81_bf_root_phase/pinned/physical/s81_native_bf/place.tcl",
+  "current_placement_sha256": "31757a3c5065582386f582f20f290a7e9aa4e408c5b9724bdf2eef95d93d147f",
+  "physical_closed": false,
+  "files": {
+    "2_2_floorplan_macro.log": "3e2dfb17d2d5198e3c66f4c3472e7414b54aa2921f83e3f56fce5a33ef82a829",
+    "config.mk": "161ceb9232354741ca096e07131ca6faec364a92d2142d2e172550b25cf7971d",
+    "post_macro_place_place.tcl": "df3a64024de9bb704744c8252f8882b734c2bdf140965c3d34d44e30e6f99782",
+    "physical.json": "7039ea83b8e12ddd4880839585a6c80e9f4677854644e5d0f13f297fa26e244c",
+    "launch.sh": "50f671cb3b5856d23c70321bef0fc7ce9a18b19d70cde7dcfbf83c10a1908898"
+  }
+}

@@ -1,0 +1,1899 @@
+
+-- Running command `read_verilog -sv /tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv; hierarchy -top ot_qwen_ctrl_write_ledger -chparam ENABLE 1; synth -top ot_qwen_ctrl_write_ledger -noabc; check -assert; stat; write_json /tmp/qwen-control-ledger-20261007/synth.json' --
+
+1. Executing Verilog-2005 frontend: /tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv
+Parsing SystemVerilog input from `/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_ctrl_write_ledger'.
+Generating RTLIL representation for module `\ot_qwen_ctrl_write_ledger_state'.
+Warning: Replacing memory \rows with list of registers. See /tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:159
+Warning: Replacing memory \completion with list of registers. See /tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:158
+Warning: Replacing memory \ingress with list of registers. See /tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:157
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \ENABLE = 1
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_ctrl_write_ledger'.
+Parameter \ENABLE = 1
+Generating RTLIL representation for module `$paramod\ot_qwen_ctrl_write_ledger\ENABLE=s32'00000000000000000000000000000001'.
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_ledger
+Used module:     \ot_qwen_ctrl_write_ledger_state
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_ledger
+Used module:     \ot_qwen_ctrl_write_ledger_state
+Removing unused module `$paramod\ot_qwen_ctrl_write_ledger\ENABLE=s32'00000000000000000000000000000001'.
+Removed 1 unused modules.
+
+4. Executing SYNTH pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_ledger
+Used module:     \ot_qwen_ctrl_write_ledger_state
+
+4.1.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_ledger
+Used module:     \ot_qwen_ctrl_write_ledger_state
+Removed 0 unused modules.
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 1 dead cases from process $proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:141$277 in module ot_qwen_ctrl_write_ledger_state.
+Marked 1 switch rules as full_case in process $proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:141$277 in module ot_qwen_ctrl_write_ledger_state.
+Removed 1 dead cases from process $proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$274 in module ot_qwen_ctrl_write_ledger_state.
+Marked 1 switch rules as full_case in process $proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$274 in module ot_qwen_ctrl_write_ledger_state.
+Removed 1 dead cases from process $proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$271 in module ot_qwen_ctrl_write_ledger_state.
+Marked 1 switch rules as full_case in process $proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$271 in module ot_qwen_ctrl_write_ledger_state.
+Removed 1 dead cases from process $proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$268 in module ot_qwen_ctrl_write_ledger_state.
+Marked 1 switch rules as full_case in process $proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$268 in module ot_qwen_ctrl_write_ledger_state.
+Removed 2 dead cases from process $proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178 in module ot_qwen_ctrl_write_ledger_state.
+Marked 12 switch rules as full_case in process $proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178 in module ot_qwen_ctrl_write_ledger_state.
+Marked 1 switch rules as full_case in process $proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:81$372 in module ot_qwen_ctrl_write_ledger.
+Removed a total of 6 dead cases.
+
+4.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 41 assignments to connections.
+
+4.2.4. Executing PROC_INIT pass (extract init attributes).
+
+4.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+Found async reset \rst_n in `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:81$372'.
+
+4.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~23 debug messages>
+
+4.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:141$277'.
+     1/1: $1$mem2reg_rd$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:141$170_DATA[18:0]$279
+Creating decoders for process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$274'.
+     1/1: $1$mem2reg_rd$\completion$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$169_DATA[32:0]$276
+Creating decoders for process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$271'.
+     1/1: $1$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$168_DATA[288:0]$273
+Creating decoders for process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$268'.
+     1/1: $1$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$167_DATA[288:0]$270
+Creating decoders for process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+     1/172: $5$lookahead\open_bank$177[31:0]$260
+     2/172: $5$bitselwrite$pos$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$166[4:0]$259
+     3/172: $4$mem2reg_wr$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$175_ADDR[4:0]$248
+     4/172: $4$mem2reg_wr$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$175_DATA[18:0]$249
+     5/172: $4$lookahead\open_bank$177[31:0]$250
+     6/172: $4$bitselwrite$pos$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$165[4:0]$246
+     7/172: $4$bitselwrite$pos$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$166[4:0]$247
+     8/172: $3$lookahead\open_bank$177[31:0]$244
+     9/172: $3$mem2reg_wr$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$175_DATA[18:0]$243
+    10/172: $3$mem2reg_wr$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$175_ADDR[4:0]$242
+    11/172: $3$bitselwrite$pos$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$166[4:0]$241
+    12/172: $3$bitselwrite$pos$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$165[4:0]$240
+    13/172: $4$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$174_DATA[288:0]$236
+    14/172: $4$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$173_DATA[288:0]$235
+    15/172: $3$mem2reg_wr$\completion$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$172_ADDR[5:0]$229
+    16/172: $3$mem2reg_wr$\completion$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$172_DATA[32:0]$230
+    17/172: $3$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$174_DATA[288:0]$234
+    18/172: $3$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$174_ADDR[3:0]$233
+    19/172: $3$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$173_DATA[288:0]$232
+    20/172: $3$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$173_ADDR[3:0]$231
+    21/172: $3$mem2reg_wr$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:172$171_ADDR[3:0]$225
+    22/172: $3$mem2reg_wr$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:172$171_DATA[288:0]$226
+    23/172: $2\j[31:0]
+    24/172: $2$lookahead\open_bank$177[31:0]$218
+    25/172: $2$mem2reg_wr$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$175_DATA[18:0]$217
+    26/172: $2$mem2reg_wr$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$175_ADDR[4:0]$216
+    27/172: $2$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$174_DATA[288:0]$215
+    28/172: $2$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$174_ADDR[3:0]$214
+    29/172: $2$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$173_DATA[288:0]$213
+    30/172: $2$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$173_ADDR[3:0]$212
+    31/172: $2$mem2reg_wr$\completion$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$172_DATA[32:0]$211
+    32/172: $2$mem2reg_wr$\completion$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$172_ADDR[5:0]$210
+    33/172: $2$mem2reg_wr$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:172$171_DATA[288:0]$209
+    34/172: $2$mem2reg_wr$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:172$171_ADDR[3:0]$208
+    35/172: $2$bitselwrite$pos$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$166[4:0]$207
+    36/172: $2$bitselwrite$pos$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$165[4:0]$206
+    37/172: $1$lookahead\open_bank$177[31:0]$205
+    38/172: $1$mem2reg_wr$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$175_DATA[18:0]$204
+    39/172: $1$mem2reg_wr$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$175_ADDR[4:0]$203
+    40/172: $1$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$174_DATA[288:0]$202
+    41/172: $1$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$174_ADDR[3:0]$201
+    42/172: $1$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$173_DATA[288:0]$200
+    43/172: $1$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$173_ADDR[3:0]$199
+    44/172: $1$mem2reg_wr$\completion$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$172_DATA[32:0]$198
+    45/172: $1$mem2reg_wr$\completion$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$172_ADDR[5:0]$197
+    46/172: $1$mem2reg_wr$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:172$171_DATA[288:0]$196
+    47/172: $1$mem2reg_wr$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:172$171_ADDR[3:0]$195
+    48/172: $1$bitselwrite$pos$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$166[4:0]$194
+    49/172: $1$bitselwrite$pos$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$165[4:0]$193
+    50/172: $1\j[31:0]
+    51/172: $0\rows[31][18:0]
+    52/172: $0\rows[30][18:0]
+    53/172: $0\rows[29][18:0]
+    54/172: $0\rows[28][18:0]
+    55/172: $0\rows[27][18:0]
+    56/172: $0\rows[26][18:0]
+    57/172: $0\rows[25][18:0]
+    58/172: $0\rows[24][18:0]
+    59/172: $0\rows[23][18:0]
+    60/172: $0\rows[22][18:0]
+    61/172: $0\rows[21][18:0]
+    62/172: $0\rows[20][18:0]
+    63/172: $0\rows[19][18:0]
+    64/172: $0\rows[18][18:0]
+    65/172: $0\rows[17][18:0]
+    66/172: $0\rows[16][18:0]
+    67/172: $0\rows[15][18:0]
+    68/172: $0\rows[14][18:0]
+    69/172: $0\rows[13][18:0]
+    70/172: $0\rows[12][18:0]
+    71/172: $0\rows[11][18:0]
+    72/172: $0\rows[10][18:0]
+    73/172: $0\rows[9][18:0]
+    74/172: $0\rows[8][18:0]
+    75/172: $0\rows[7][18:0]
+    76/172: $0\rows[6][18:0]
+    77/172: $0\rows[5][18:0]
+    78/172: $0\rows[4][18:0]
+    79/172: $0\rows[3][18:0]
+    80/172: $0\rows[2][18:0]
+    81/172: $0\rows[1][18:0]
+    82/172: $0\rows[0][18:0]
+    83/172: $0\completion[63][32:0]
+    84/172: $0\completion[62][32:0]
+    85/172: $0\completion[61][32:0]
+    86/172: $0\completion[60][32:0]
+    87/172: $0\completion[59][32:0]
+    88/172: $0\completion[58][32:0]
+    89/172: $0\completion[57][32:0]
+    90/172: $0\completion[56][32:0]
+    91/172: $0\completion[55][32:0]
+    92/172: $0\completion[54][32:0]
+    93/172: $0\completion[53][32:0]
+    94/172: $0\completion[52][32:0]
+    95/172: $0\completion[51][32:0]
+    96/172: $0\completion[50][32:0]
+    97/172: $0\completion[49][32:0]
+    98/172: $0\completion[48][32:0]
+    99/172: $0\completion[47][32:0]
+   100/172: $0\completion[46][32:0]
+   101/172: $0\completion[45][32:0]
+   102/172: $0\completion[44][32:0]
+   103/172: $0\completion[43][32:0]
+   104/172: $0\completion[42][32:0]
+   105/172: $0\completion[41][32:0]
+   106/172: $0\completion[40][32:0]
+   107/172: $0\completion[39][32:0]
+   108/172: $0\completion[38][32:0]
+   109/172: $0\completion[37][32:0]
+   110/172: $0\completion[36][32:0]
+   111/172: $0\completion[35][32:0]
+   112/172: $0\completion[34][32:0]
+   113/172: $0\completion[33][32:0]
+   114/172: $0\completion[32][32:0]
+   115/172: $0\completion[31][32:0]
+   116/172: $0\completion[30][32:0]
+   117/172: $0\completion[29][32:0]
+   118/172: $0\completion[28][32:0]
+   119/172: $0\completion[27][32:0]
+   120/172: $0\completion[26][32:0]
+   121/172: $0\completion[25][32:0]
+   122/172: $0\completion[24][32:0]
+   123/172: $0\completion[23][32:0]
+   124/172: $0\completion[22][32:0]
+   125/172: $0\completion[21][32:0]
+   126/172: $0\completion[20][32:0]
+   127/172: $0\completion[19][32:0]
+   128/172: $0\completion[18][32:0]
+   129/172: $0\completion[17][32:0]
+   130/172: $0\completion[16][32:0]
+   131/172: $0\completion[15][32:0]
+   132/172: $0\completion[14][32:0]
+   133/172: $0\completion[13][32:0]
+   134/172: $0\completion[12][32:0]
+   135/172: $0\completion[11][32:0]
+   136/172: $0\completion[10][32:0]
+   137/172: $0\completion[9][32:0]
+   138/172: $0\completion[8][32:0]
+   139/172: $0\completion[7][32:0]
+   140/172: $0\completion[6][32:0]
+   141/172: $0\completion[5][32:0]
+   142/172: $0\completion[4][32:0]
+   143/172: $0\completion[3][32:0]
+   144/172: $0\completion[2][32:0]
+   145/172: $0\completion[1][32:0]
+   146/172: $0\completion[0][32:0]
+   147/172: $0\ingress[15][288:0]
+   148/172: $0\ingress[14][288:0]
+   149/172: $0\ingress[13][288:0]
+   150/172: $0\ingress[12][288:0]
+   151/172: $0\ingress[11][288:0]
+   152/172: $0\ingress[10][288:0]
+   153/172: $0\ingress[9][288:0]
+   154/172: $0\ingress[8][288:0]
+   155/172: $0\ingress[7][288:0]
+   156/172: $0\ingress[6][288:0]
+   157/172: $0\ingress[5][288:0]
+   158/172: $0\ingress[4][288:0]
+   159/172: $0\ingress[3][288:0]
+   160/172: $0\ingress[2][288:0]
+   161/172: $0\ingress[1][288:0]
+   162/172: $0\ingress[0][288:0]
+   163/172: $0\arp[5:0]
+   164/172: $0\awp[5:0]
+   165/172: $0\cp[3:0]
+   166/172: $0\hp[3:0]
+   167/172: $0\wp[3:0]
+   168/172: $0\acknowledged[0:0]
+   169/172: $0\aborted[0:0]
+   170/172: $0\committed[6:0]
+   171/172: $0\handed[4:0]
+   172/172: $0\occupied[4:0]
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:81$372'.
+     1/2: $0\permit_state[0:0]
+     2/2: $0\trip_seen[0:0]
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:49$456'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$457'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$458'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$459'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$460'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$461'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$462'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$463'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$464'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$465'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:53$466'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:49$467'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$468'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$469'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$470'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$471'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$472'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$473'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$474'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$475'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$476'.
+Creating decoders for process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:53$477'.
+
+4.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_rd$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:141$170_DATA' from process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:141$277'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_rd$\completion$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$169_DATA' from process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$274'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$168_DATA' from process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$271'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$167_DATA' from process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$268'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\state[0]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:49$456'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\hand[0]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$457'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\head[0]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$458'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\completed[0]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$459'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\occupied[0]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$460'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\handed[0]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$461'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\committed[0]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$462'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\aborted[0]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$463'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\acknowledged[0]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$464'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\bank_open[0]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$465'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\bank_row[0]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:53$466'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\state[1]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:49$467'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\hand[1]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$468'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\head[1]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$469'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\completed[1]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$470'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\occupied[1]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$471'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\handed[1]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$472'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\committed[1]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$473'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\aborted[1]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$474'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\acknowledged[1]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$475'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\bank_open[1]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$476'.
+No latch inferred for signal `\ot_qwen_ctrl_write_ledger.\bank_row[1]' from process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:53$477'.
+
+4.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\occupied' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4533' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\handed' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4538' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\committed' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4543' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\aborted' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4548' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\acknowledged' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4553' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\open_bank' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4558' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\wp' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4563' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\hp' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4568' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\cp' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4573' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\awp' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4578' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\arp' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4583' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\j' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4588' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$bitselwrite$pos$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$165' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4593' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$bitselwrite$pos$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$166' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4598' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[0]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4603' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[1]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4608' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[2]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4613' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[3]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4618' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[4]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4623' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[5]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4628' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[6]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4633' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[7]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4638' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[8]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4643' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[9]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4648' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[10]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4653' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[11]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4658' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[12]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4663' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[13]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4668' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[14]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4673' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\ingress[15]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4678' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[0]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4683' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[1]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4688' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[2]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4693' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[3]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4698' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[4]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4703' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[5]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4708' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[6]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4713' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[7]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4718' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[8]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4723' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[9]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4728' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[10]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4733' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[11]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4738' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[12]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4743' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[13]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4748' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[14]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4753' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[15]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4758' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[16]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4763' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[17]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4768' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[18]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4773' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[19]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4778' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[20]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4783' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[21]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4788' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[22]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4793' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[23]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4798' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[24]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4803' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[25]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4808' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[26]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4813' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[27]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4818' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[28]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4823' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[29]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4828' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[30]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4833' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[31]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4838' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[32]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4843' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[33]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4848' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[34]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4853' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[35]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4858' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[36]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4863' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[37]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4868' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[38]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4873' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[39]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4878' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[40]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4883' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[41]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4888' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[42]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4893' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[43]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4898' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[44]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4903' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[45]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4908' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[46]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4913' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[47]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4918' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[48]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4923' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[49]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4928' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[50]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4933' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[51]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4938' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[52]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4943' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[53]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4948' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[54]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4953' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[55]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4958' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[56]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4963' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[57]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4968' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[58]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4973' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[59]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4978' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[60]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4983' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[61]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4988' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[62]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4993' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\completion[63]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$4998' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[0]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5003' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[1]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5008' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[2]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5013' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[3]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5018' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[4]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5023' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[5]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5028' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[6]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5033' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[7]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5038' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[8]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5043' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[9]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5048' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[10]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5053' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[11]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5058' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[12]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5063' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[13]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5068' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[14]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5073' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[15]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5078' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[16]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5083' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[17]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5088' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[18]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5093' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[19]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5098' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[20]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5103' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[21]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5108' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[22]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5113' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[23]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5118' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[24]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5123' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[25]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5128' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[26]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5133' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[27]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5138' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[28]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5143' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[29]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5148' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[30]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5153' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.\rows[31]' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5158' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_wr$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:172$171_ADDR' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5163' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_wr$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:172$171_DATA' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5168' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_wr$\completion$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$172_ADDR' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5173' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_wr$\completion$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$172_DATA' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5178' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$173_ADDR' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5183' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$173_DATA' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5188' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$174_ADDR' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5193' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_rd$\ingress$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:175$174_DATA' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5198' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_wr$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$175_ADDR' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5203' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$mem2reg_wr$\rows$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$175_DATA' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5208' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger_state.$lookahead\open_bank$177' using process `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+  created $adff cell `$procdff$5213' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger.\trip_seen' using process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:81$372'.
+  created $adff cell `$procdff$5218' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_ctrl_write_ledger.\permit_state' using process `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:81$372'.
+  created $adff cell `$procdff$5223' with positive edge clock and positive level reset.
+
+4.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:141$277'.
+Removing empty process `ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:141$277'.
+Found and cleaned up 1 empty switch in `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$274'.
+Removing empty process `ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$274'.
+Found and cleaned up 1 empty switch in `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$271'.
+Removing empty process `ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$271'.
+Found and cleaned up 1 empty switch in `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$268'.
+Removing empty process `ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:140$268'.
+Found and cleaned up 18 empty switches in `\ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+Removing empty process `ot_qwen_ctrl_write_ledger_state.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:153$178'.
+Found and cleaned up 1 empty switch in `\ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:81$372'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:81$372'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:49$456'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$457'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$458'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$459'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$460'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$461'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$462'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$463'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$464'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$465'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:53$466'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:49$467'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$468'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$469'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$470'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:50$471'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$472'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$473'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:51$474'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$475'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:52$476'.
+Removing empty process `ot_qwen_ctrl_write_ledger.$proc$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:53$477'.
+Cleaned up 23 empty switches.
+
+4.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+<suppressed ~284 debug messages>
+Optimizing module ot_qwen_ctrl_write_ledger.
+<suppressed ~13 debug messages>
+
+4.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+Optimizing module ot_qwen_ctrl_write_ledger.
+<suppressed ~2 debug messages>
+
+4.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+Removed 208 unused cells and 981 unused wires.
+<suppressed ~211 debug messages>
+
+4.5. Executing CHECK pass (checking for obvious problems).
+Checking module ot_qwen_ctrl_write_ledger_state...
+Checking module ot_qwen_ctrl_write_ledger...
+Found and reported 0 problems.
+
+4.6. Executing OPT pass (performing simple optimizations).
+
+4.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 837 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 802 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 800 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 799 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 798 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+<suppressed ~117 debug messages>
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 157 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 134 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 123 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 118 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 117 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+<suppressed ~120 debug messages>
+Removed a total of 79 cells.
+
+4.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$753.
+    dead port 2/2 on $mux $procmux$750.
+    dead port 1/2 on $mux $procmux$730.
+    dead port 2/2 on $mux $procmux$727.
+    dead port 1/2 on $mux $procmux$683.
+    dead port 1/2 on $mux $procmux$659.
+    dead port 2/2 on $mux $procmux$656.
+    dead port 1/2 on $mux $procmux$620.
+    dead port 2/2 on $mux $procmux$617.
+    dead port 1/2 on $mux $procmux$615.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 10 multiplexer ports.
+<suppressed ~951 debug messages>
+
+4.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger.
+Performed a total of 0 changes.
+
+4.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 788 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 786 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+<suppressed ~6 debug messages>
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 117 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 2 cells.
+
+4.6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+Removed 0 unused cells and 90 unused wires.
+<suppressed ~2 debug messages>
+
+4.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~553 debug messages>
+
+4.6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger.
+Performed a total of 0 changes.
+
+4.6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 786 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 117 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 0 cells.
+
+4.6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+
+4.6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+4.7. Executing FSM pass (extract and optimize FSM).
+
+4.7.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+4.7.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+4.7.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+
+4.7.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.7.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+4.7.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+4.7.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+4.8. Executing OPT pass (performing simple optimizations).
+
+4.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 786 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 117 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 0 cells.
+
+4.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~553 debug messages>
+
+4.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger.
+Performed a total of 0 changes.
+
+4.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 786 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 117 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 0 cells.
+
+4.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$4878 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[39][32:0], Q = \completion[39]).
+Adding EN signal on $procdff$4953 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[54][32:0], Q = \completion[54]).
+Adding EN signal on $procdff$4583 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\arp[5:0], Q = \arp).
+Adding EN signal on $procdff$5003 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[0][18:0], Q = \rows[0]).
+Adding EN signal on $procdff$4973 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[58][32:0], Q = \completion[58]).
+Adding EN signal on $procdff$5153 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[30][18:0], Q = \rows[30]).
+Adding EN signal on $procdff$5068 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[13][18:0], Q = \rows[13]).
+Adding EN signal on $procdff$4778 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[19][32:0], Q = \completion[19]).
+Adding EN signal on $procdff$4963 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[56][32:0], Q = \completion[56]).
+Adding EN signal on $procdff$4768 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[17][32:0], Q = \completion[17]).
+Adding EN signal on $procdff$4803 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[24][32:0], Q = \completion[24]).
+Adding EN signal on $procdff$5108 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[21][18:0], Q = \rows[21]).
+Adding EN signal on $procdff$5008 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[1][18:0], Q = \rows[1]).
+Adding EN signal on $procdff$4663 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[12][288:0], Q = \ingress[12]).
+Adding EN signal on $procdff$4938 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[51][32:0], Q = \completion[51]).
+Adding EN signal on $procdff$4918 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[47][32:0], Q = \completion[47]).
+Adding EN signal on $procdff$4603 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[0][288:0], Q = \ingress[0]).
+Adding EN signal on $procdff$4783 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[20][32:0], Q = \completion[20]).
+Adding EN signal on $procdff$4873 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[38][32:0], Q = \completion[38]).
+Adding EN signal on $procdff$4608 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[1][288:0], Q = \ingress[1]).
+Adding EN signal on $procdff$4843 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[32][32:0], Q = \completion[32]).
+Adding EN signal on $procdff$5013 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[2][18:0], Q = \rows[2]).
+Adding EN signal on $procdff$4613 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[2][288:0], Q = \ingress[2]).
+Adding EN signal on $procdff$4798 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[23][32:0], Q = \completion[23]).
+Adding EN signal on $procdff$4888 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[41][32:0], Q = \completion[41]).
+Adding EN signal on $procdff$4563 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\wp[3:0], Q = \wp).
+Adding EN signal on $procdff$4838 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[31][32:0], Q = \completion[31]).
+Adding EN signal on $procdff$4998 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[63][32:0], Q = \completion[63]).
+Adding EN signal on $procdff$4833 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[30][32:0], Q = \completion[30]).
+Adding EN signal on $procdff$4753 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[14][32:0], Q = \completion[14]).
+Adding EN signal on $procdff$4893 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[42][32:0], Q = \completion[42]).
+Adding EN signal on $procdff$4653 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[10][288:0], Q = \ingress[10]).
+Adding EN signal on $procdff$4748 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[13][32:0], Q = \completion[13]).
+Adding EN signal on $procdff$5058 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[11][18:0], Q = \rows[11]).
+Adding EN signal on $procdff$4858 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[35][32:0], Q = \completion[35]).
+Adding EN signal on $procdff$4743 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[12][32:0], Q = \completion[12]).
+Adding EN signal on $procdff$4923 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[48][32:0], Q = \completion[48]).
+Adding EN signal on $procdff$4828 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[29][32:0], Q = \completion[29]).
+Adding EN signal on $procdff$4568 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\hp[3:0], Q = \hp).
+Adding EN signal on $procdff$4883 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[40][32:0], Q = \completion[40]).
+Adding EN signal on $procdff$4738 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[11][32:0], Q = \completion[11]).
+Adding EN signal on $procdff$4933 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[50][32:0], Q = \completion[50]).
+Adding EN signal on $procdff$4943 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[52][32:0], Q = \completion[52]).
+Adding EN signal on $procdff$4733 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[10][32:0], Q = \completion[10]).
+Adding EN signal on $procdff$5053 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[10][18:0], Q = \rows[10]).
+Adding EN signal on $procdff$5128 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[25][18:0], Q = \rows[25]).
+Adding EN signal on $procdff$4898 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[43][32:0], Q = \completion[43]).
+Adding EN signal on $procdff$4728 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[9][32:0], Q = \completion[9]).
+Adding EN signal on $procdff$4968 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[57][32:0], Q = \completion[57]).
+Adding EN signal on $procdff$4823 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[28][32:0], Q = \completion[28]).
+Adding EN signal on $procdff$4723 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[8][32:0], Q = \completion[8]).
+Adding EN signal on $procdff$5103 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[20][18:0], Q = \rows[20]).
+Adding EN signal on $procdff$5083 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[16][18:0], Q = \rows[16]).
+Adding EN signal on $procdff$4718 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[7][32:0], Q = \completion[7]).
+Adding EN signal on $procdff$5048 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[9][18:0], Q = \rows[9]).
+Adding EN signal on $procdff$4618 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[3][288:0], Q = \ingress[3]).
+Adding EN signal on $procdff$4978 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[59][32:0], Q = \completion[59]).
+Adding EN signal on $procdff$4788 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[21][32:0], Q = \completion[21]).
+Adding EN signal on $procdff$5148 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[29][18:0], Q = \rows[29]).
+Adding EN signal on $procdff$4623 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[4][288:0], Q = \ingress[4]).
+Adding EN signal on $procdff$4863 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[36][32:0], Q = \completion[36]).
+Adding EN signal on $procdff$5018 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[3][18:0], Q = \rows[3]).
+Adding EN signal on $procdff$4628 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[5][288:0], Q = \ingress[5]).
+Adding EN signal on $procdff$5073 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[14][18:0], Q = \rows[14]).
+Adding EN signal on $procdff$4648 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[9][288:0], Q = \ingress[9]).
+Adding EN signal on $procdff$4633 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[6][288:0], Q = \ingress[6]).
+Adding EN signal on $procdff$4793 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[22][32:0], Q = \completion[22]).
+Adding EN signal on $procdff$4903 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[44][32:0], Q = \completion[44]).
+Adding EN signal on $procdff$4638 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[7][288:0], Q = \ingress[7]).
+Adding EN signal on $procdff$4658 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[11][288:0], Q = \ingress[11]).
+Adding EN signal on $procdff$5023 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[4][18:0], Q = \rows[4]).
+Adding EN signal on $procdff$4643 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[8][288:0], Q = \ingress[8]).
+Adding EN signal on $procdff$4573 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\cp[3:0], Q = \cp).
+Adding EN signal on $procdff$4773 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[18][32:0], Q = \completion[18]).
+Adding EN signal on $procdff$5143 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[28][18:0], Q = \rows[28]).
+Adding EN signal on $procdff$4578 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\awp[5:0], Q = \awp).
+Adding EN signal on $procdff$5098 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[19][18:0], Q = \rows[19]).
+Adding EN signal on $procdff$4713 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[6][32:0], Q = \completion[6]).
+Adding EN signal on $procdff$5158 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[31][18:0], Q = \rows[31]).
+Adding EN signal on $procdff$4818 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[27][32:0], Q = \completion[27]).
+Adding EN signal on $procdff$4708 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[5][32:0], Q = \completion[5]).
+Adding EN signal on $procdff$5028 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[5][18:0], Q = \rows[5]).
+Adding EN signal on $procdff$5133 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[26][18:0], Q = \rows[26]).
+Adding EN signal on $procdff$4703 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[4][32:0], Q = \completion[4]).
+Adding EN signal on $procdff$5043 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[8][18:0], Q = \rows[8]).
+Adding EN signal on $procdff$4853 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[34][32:0], Q = \completion[34]).
+Adding EN signal on $procdff$4698 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[3][32:0], Q = \completion[3]).
+Adding EN signal on $procdff$4908 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[45][32:0], Q = \completion[45]).
+Adding EN signal on $procdff$4813 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[26][32:0], Q = \completion[26]).
+Adding EN signal on $procdff$4693 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[2][32:0], Q = \completion[2]).
+Adding EN signal on $procdff$4928 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[49][32:0], Q = \completion[49]).
+Adding EN signal on $procdff$5123 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[24][18:0], Q = \rows[24]).
+Adding EN signal on $procdff$4688 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[1][32:0], Q = \completion[1]).
+Adding EN signal on $procdff$5038 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[7][18:0], Q = \rows[7]).
+Adding EN signal on $procdff$5093 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[18][18:0], Q = \rows[18]).
+Adding EN signal on $procdff$4683 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[0][32:0], Q = \completion[0]).
+Adding EN signal on $procdff$4983 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[60][32:0], Q = \completion[60]).
+Adding EN signal on $procdff$4808 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[25][32:0], Q = \completion[25]).
+Adding EN signal on $procdff$4678 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[15][288:0], Q = \ingress[15]).
+Adding EN signal on $procdff$5118 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[23][18:0], Q = \rows[23]).
+Adding EN signal on $procdff$5078 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[15][18:0], Q = \rows[15]).
+Adding EN signal on $procdff$4673 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[14][288:0], Q = \ingress[14]).
+Adding EN signal on $procdff$5033 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[6][18:0], Q = \rows[6]).
+Adding EN signal on $procdff$4948 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[53][32:0], Q = \completion[53]).
+Adding EN signal on $procdff$4668 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\ingress[13][288:0], Q = \ingress[13]).
+Adding EN signal on $procdff$4758 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[15][32:0], Q = \completion[15]).
+Adding EN signal on $procdff$5138 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[27][18:0], Q = \rows[27]).
+Adding EN signal on $procdff$4533 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\occupied[4:0], Q = \occupied).
+Adding EN signal on $procdff$4868 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[37][32:0], Q = \completion[37]).
+Adding EN signal on $procdff$4988 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[61][32:0], Q = \completion[61]).
+Adding EN signal on $procdff$4538 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\handed[4:0], Q = \handed).
+Adding EN signal on $procdff$5063 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[12][18:0], Q = \rows[12]).
+Adding EN signal on $procdff$5113 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[22][18:0], Q = \rows[22]).
+Adding EN signal on $procdff$4543 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\committed[6:0], Q = \committed).
+Adding EN signal on $procdff$4763 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[16][32:0], Q = \completion[16]).
+Adding EN signal on $procdff$4958 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[55][32:0], Q = \completion[55]).
+Adding EN signal on $procdff$4548 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\aborted[0:0], Q = \aborted).
+Adding EN signal on $procdff$5088 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\rows[17][18:0], Q = \rows[17]).
+Adding EN signal on $procdff$4993 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[62][32:0], Q = \completion[62]).
+Adding EN signal on $procdff$4553 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\acknowledged[0:0], Q = \acknowledged).
+Adding EN signal on $procdff$4848 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[33][32:0], Q = \completion[33]).
+Adding EN signal on $procdff$4913 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0\completion[46][32:0], Q = \completion[46]).
+Adding EN signal on $procdff$4558 ($adff) from module ot_qwen_ctrl_write_ledger_state (D = $0$lookahead\open_bank$177[31:0]$191, Q = \open_bank).
+Adding EN signal on $procdff$5218 ($adff) from module ot_qwen_ctrl_write_ledger (D = 1'1, Q = \trip_seen).
+Adding EN signal on $procdff$5223 ($adff) from module ot_qwen_ctrl_write_ledger (D = 1'0, Q = \permit_state).
+
+4.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+Removed 2 unused cells and 2 unused wires.
+<suppressed ~3 debug messages>
+
+4.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+<suppressed ~268 debug messages>
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~549 debug messages>
+
+4.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger.
+Performed a total of 0 changes.
+
+4.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 1167 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 1023 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+<suppressed ~432 debug messages>
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 115 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 144 cells.
+
+4.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+Removed 0 unused cells and 144 unused wires.
+<suppressed ~1 debug messages>
+
+4.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~549 debug messages>
+
+4.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger.
+Performed a total of 0 changes.
+
+4.8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 1023 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 115 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 0 cells.
+
+4.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+
+4.8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.8.23. Finished fast OPT passes. (There is nothing left to do.)
+
+4.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 2 bits (of 3) from port B of cell ot_qwen_ctrl_write_ledger_state.$eq$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$245 ($eq).
+Converting cell ot_qwen_ctrl_write_ledger_state.$neg$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$265 ($neg) from signed to unsigned.
+Removed top 1 bits (of 6) from port A of cell ot_qwen_ctrl_write_ledger_state.$neg$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$265 ($neg).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$495_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$496_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$497_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$498_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$499_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$500_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$501_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$502_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$503_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$504_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$505_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$506_CMP0 ($eq).
+Removed top 3 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$507_CMP0 ($eq).
+Removed top 3 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$508_CMP0 ($eq).
+Removed top 4 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$509_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$544_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$545_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$546_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$547_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$548_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$549_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$550_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$551_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$552_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$553_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$554_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$555_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$556_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$557_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$558_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$559_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$560_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$561_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$562_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$563_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$564_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$565_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$566_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$567_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$568_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$569_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$570_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$571_CMP0 ($eq).
+Removed top 4 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$572_CMP0 ($eq).
+Removed top 4 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$573_CMP0 ($eq).
+Removed top 5 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$574_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$602_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$603_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$604_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$605_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$606_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$607_CMP0 ($eq).
+Removed top 3 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$608_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$742_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$743_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$744_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$745_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$746_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$747_CMP0 ($eq).
+Removed top 3 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$748_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1160_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1188_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1217_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1247_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1278_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1310_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1343_CMP0 ($eq).
+Removed top 1 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1377_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1412_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1448_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1485_CMP0 ($eq).
+Removed top 2 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1523_CMP0 ($eq).
+Removed top 3 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1562_CMP0 ($eq).
+Removed top 3 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1602_CMP0 ($eq).
+Removed top 4 bits (of 5) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$1643_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2479_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2520_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2562_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2605_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2649_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2694_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2740_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2787_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2835_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2884_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2934_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$2985_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3037_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3090_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3144_CMP0 ($eq).
+Removed top 1 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3199_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3255_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3312_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3370_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3429_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3489_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3550_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3612_CMP0 ($eq).
+Removed top 2 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3675_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3739_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3804_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3870_CMP0 ($eq).
+Removed top 3 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$3937_CMP0 ($eq).
+Removed top 4 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4005_CMP0 ($eq).
+Removed top 4 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4074_CMP0 ($eq).
+Removed top 5 bits (of 6) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4144_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4323_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4340_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4358_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4377_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4397_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4418_CMP0 ($eq).
+Removed top 3 bits (of 4) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4440_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4508_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4514_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_qwen_ctrl_write_ledger_state.$procmux$4520_CMP0 ($eq).
+Removed top 27 bits (of 32) from port B of cell ot_qwen_ctrl_write_ledger.$ge$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:61$305 ($ge).
+Removed top 25 bits (of 32) from port B of cell ot_qwen_ctrl_write_ledger.$ge$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:71$323 ($ge).
+Removed top 2 bits (of 3) from port B of cell ot_qwen_ctrl_write_ledger.$ne$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:74$333 ($ne).
+Removed top 2 bits (of 3) from port B of cell ot_qwen_ctrl_write_ledger.$eq$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$337 ($eq).
+Removed top 27 bits (of 30) from port A of cell ot_qwen_ctrl_write_ledger.$mul$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$340 ($mul).
+Removed top 22 bits (of 30) from port Y of cell ot_qwen_ctrl_write_ledger.$mul$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$340 ($mul).
+Removed top 19 bits (of 32) from port A of cell ot_qwen_ctrl_write_ledger.$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$341 ($add).
+Removed top 22 bits (of 32) from port B of cell ot_qwen_ctrl_write_ledger.$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$341 ($add).
+Removed top 18 bits (of 32) from port Y of cell ot_qwen_ctrl_write_ledger.$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$341 ($add).
+Removed top 18 bits (of 32) from port A of cell ot_qwen_ctrl_write_ledger.$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$342 ($add).
+Removed top 27 bits (of 32) from port B of cell ot_qwen_ctrl_write_ledger.$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$342 ($add).
+Removed top 17 bits (of 32) from port Y of cell ot_qwen_ctrl_write_ledger.$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$342 ($add).
+Removed top 16 bits (of 32) from port B of cell ot_qwen_ctrl_write_ledger.$shiftx$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$343 ($shiftx).
+Removed top 1 bits (of 8) from port A of cell ot_qwen_ctrl_write_ledger.$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:78$358 ($add).
+Removed top 3 bits (of 8) from port B of cell ot_qwen_ctrl_write_ledger.$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:78$358 ($add).
+Removed top 1 bits (of 8) from port B of cell ot_qwen_ctrl_write_ledger.$lt$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:78$359 ($lt).
+Removed top 28 bits (of 32) from port B of cell ot_qwen_ctrl_write_ledger.$le$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:90$386 ($le).
+Removed top 22 bits (of 32) from wire ot_qwen_ctrl_write_ledger.$mul$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$340_Y.
+Removed top 18 bits (of 32) from wire ot_qwen_ctrl_write_ledger.$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$341_Y.
+Removed top 17 bits (of 32) from wire ot_qwen_ctrl_write_ledger.$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$342_Y.
+
+4.10. Executing PEEPOPT pass (run peephole optimizers).
+shiftadd pattern in ot_qwen_ctrl_write_ledger: shift=$shiftx$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$343, add/sub=$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$342, offset: 19
+shiftadd pattern in ot_qwen_ctrl_write_ledger: shift=$shiftx$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$343, add/sub=$add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$341, offset: 6779
+right shiftmul pattern in ot_qwen_ctrl_write_ledger: shift=$shiftx$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$343, mul=$mul$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$340
+shiftpow2 pattern in ot_qwen_ctrl_write_ledger: shift=$shiftx$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:75$343, index=\row_bank, stride=32, width=1, ways=32
+
+4.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+Removed 3 unused cells and 6 unused wires.
+<suppressed ~4 debug messages>
+
+4.12. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_qwen_ctrl_write_ledger_state:
+  creating $macc model for $neg$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$265 ($neg).
+  creating $macc model for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:178$239 ($add).
+  creating $macc model for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:176$238 ($add).
+  creating $macc model for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:176$237 ($add).
+  creating $macc model for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:173$228 ($add).
+  creating $macc model for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:172$227 ($add).
+  creating $macc model for $sub$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:171$224 ($sub).
+  creating $macc model for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:171$223 ($add).
+  creating $macc model for $sub$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:170$222 ($sub).
+  creating $macc model for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:170$221 ($add).
+  creating $macc model for $sub$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:169$220 ($sub).
+  creating $macc model for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:169$219 ($add).
+  creating $alu model for $macc $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:169$219.
+  creating $alu model for $macc $sub$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:169$220.
+  creating $alu model for $macc $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:170$221.
+  creating $alu model for $macc $sub$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:170$222.
+  creating $alu model for $macc $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:171$223.
+  creating $alu model for $macc $sub$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:171$224.
+  creating $alu model for $macc $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:172$227.
+  creating $alu model for $macc $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:173$228.
+  creating $alu model for $macc $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:176$237.
+  creating $alu model for $macc $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:176$238.
+  creating $alu model for $macc $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:178$239.
+  creating $alu model for $macc $neg$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$265.
+  creating $alu cell for $neg$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$265: $auto$alumacc.cc:548:replace_alu$6115
+  creating $alu cell for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:178$239: $auto$alumacc.cc:548:replace_alu$6118
+  creating $alu cell for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:176$238: $auto$alumacc.cc:548:replace_alu$6121
+  creating $alu cell for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:176$237: $auto$alumacc.cc:548:replace_alu$6124
+  creating $alu cell for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:173$228: $auto$alumacc.cc:548:replace_alu$6127
+  creating $alu cell for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:172$227: $auto$alumacc.cc:548:replace_alu$6130
+  creating $alu cell for $sub$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:171$224: $auto$alumacc.cc:548:replace_alu$6133
+  creating $alu cell for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:171$223: $auto$alumacc.cc:548:replace_alu$6136
+  creating $alu cell for $sub$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:170$222: $auto$alumacc.cc:548:replace_alu$6139
+  creating $alu cell for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:170$221: $auto$alumacc.cc:548:replace_alu$6142
+  creating $alu cell for $sub$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:169$220: $auto$alumacc.cc:548:replace_alu$6145
+  creating $alu cell for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:169$219: $auto$alumacc.cc:548:replace_alu$6148
+  created 12 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module ot_qwen_ctrl_write_ledger:
+  creating $macc model for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:78$358 ($add).
+  creating $alu model for $macc $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:78$358.
+  creating $alu model for $ge$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:71$323 ($ge): new $alu
+  creating $alu model for $gt$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:77$357 ($gt): new $alu
+  creating $alu model for $lt$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:78$359 ($lt): new $alu
+  creating $alu model for $ge$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:61$305 ($ge): new $alu
+  creating $alu model for $le$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:90$386 ($le): new $alu
+  creating $alu cell for $le$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:90$386: $auto$alumacc.cc:548:replace_alu$6156
+  creating $alu cell for $ge$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:61$305: $auto$alumacc.cc:548:replace_alu$6165
+  creating $alu cell for $lt$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:78$359: $auto$alumacc.cc:548:replace_alu$6178
+  creating $alu cell for $gt$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:77$357: $auto$alumacc.cc:548:replace_alu$6183
+  creating $alu cell for $ge$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:71$323: $auto$alumacc.cc:548:replace_alu$6194
+  creating $alu cell for $add$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:78$358: $auto$alumacc.cc:548:replace_alu$6207
+  created 6 $alu and 0 $macc cells.
+
+4.13. Executing SHARE pass (SAT-based resource sharing).
+
+4.14. Executing OPT pass (performing simple optimizations).
+
+4.14.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.14.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 1023 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 130 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 0 cells.
+
+4.14.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~549 debug messages>
+
+4.14.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger.
+Performed a total of 0 changes.
+
+4.14.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 1023 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 130 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 0 cells.
+
+4.14.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+Removed 0 unused cells and 5 unused wires.
+<suppressed ~1 debug messages>
+
+4.14.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.14.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.14.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~549 debug messages>
+
+4.14.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger.
+Performed a total of 0 changes.
+
+4.14.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 1023 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 130 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 0 cells.
+
+4.14.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+
+4.14.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.14.16. Finished fast OPT passes. (There is nothing left to do.)
+
+4.15. Executing MEMORY pass.
+
+4.15.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+4.15.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+4.15.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+4.15.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+4.15.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+4.15.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+
+4.15.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+4.15.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+4.15.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+
+4.15.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+
+4.17. Executing OPT pass (performing simple optimizations).
+
+4.17.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+<suppressed ~272 debug messages>
+Optimizing module ot_qwen_ctrl_write_ledger.
+<suppressed ~3 debug messages>
+
+4.17.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 758 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 648 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+<suppressed ~330 debug messages>
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 146 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 110 cells.
+
+4.17.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.17.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+Removed 10 unused cells and 395 unused wires.
+<suppressed ~12 debug messages>
+
+4.17.5. Finished fast OPT passes.
+
+4.18. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+4.19. Executing OPT pass (performing simple optimizations).
+
+4.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+<suppressed ~1 debug messages>
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 644 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 140 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 0 cells.
+
+4.19.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~62 debug messages>
+
+4.19.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger.
+Performed a total of 0 changes.
+
+4.19.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 644 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 140 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 0 cells.
+
+4.19.6. Executing OPT_SHARE pass.
+    Found cells that share an operand and can be merged by moving the $mux $procmux$4507 in front of them:
+        $auto$alumacc.cc:548:replace_alu$6133
+        $auto$alumacc.cc:548:replace_alu$6136
+
+    Found cells that share an operand and can be merged by moving the $mux $procmux$4513 in front of them:
+        $auto$alumacc.cc:548:replace_alu$6139
+        $auto$alumacc.cc:548:replace_alu$6142
+
+    Found cells that share an operand and can be merged by moving the $mux $procmux$4519 in front of them:
+        $auto$alumacc.cc:548:replace_alu$6145
+        $auto$alumacc.cc:548:replace_alu$6148
+
+    Found cells that share an operand and can be merged by moving the $mux $procmux$654 in front of them:
+        $or$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:180$257
+        $or$/tmp/qwen-control-ledger-20261007/rtl/physical/ot_qwen_ctrl_write_ledger.sv:181$267
+
+4.19.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.19.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+Removed 0 unused cells and 20 unused wires.
+<suppressed ~1 debug messages>
+
+4.19.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+<suppressed ~7 debug messages>
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.19.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.19.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~66 debug messages>
+
+4.19.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger_state.
+    Consolidated identical input bits for $mux cell $auto$opt_share.cc:244:merge_operators$6259:
+      Old ports: A=5'11111, B=5'00001, Y=$auto$rtlil.cc:3402:Mux$6260
+      New ports: A=1'1, B=1'0, Y=$auto$rtlil.cc:3402:Mux$6260 [1]
+      New connections: { $auto$rtlil.cc:3402:Mux$6260 [4:2] $auto$rtlil.cc:3402:Mux$6260 [0] } = { $auto$rtlil.cc:3402:Mux$6260 [1] $auto$rtlil.cc:3402:Mux$6260 [1] $auto$rtlil.cc:3402:Mux$6260 [1] 1'1 }
+    Consolidated identical input bits for $mux cell $auto$opt_share.cc:244:merge_operators$6245:
+      Old ports: A=7'1111111, B=7'0000001, Y=$auto$rtlil.cc:3402:Mux$6246
+      New ports: A=1'1, B=1'0, Y=$auto$rtlil.cc:3402:Mux$6246 [1]
+      New connections: { $auto$rtlil.cc:3402:Mux$6246 [6:2] $auto$rtlil.cc:3402:Mux$6246 [0] } = { $auto$rtlil.cc:3402:Mux$6246 [1] $auto$rtlil.cc:3402:Mux$6246 [1] $auto$rtlil.cc:3402:Mux$6246 [1] $auto$rtlil.cc:3402:Mux$6246 [1] $auto$rtlil.cc:3402:Mux$6246 [1] 1'1 }
+    Consolidated identical input bits for $mux cell $auto$opt_share.cc:244:merge_operators$6252:
+      Old ports: A=5'11111, B=5'00001, Y=$auto$rtlil.cc:3402:Mux$6253
+      New ports: A=1'1, B=1'0, Y=$auto$rtlil.cc:3402:Mux$6253 [1]
+      New connections: { $auto$rtlil.cc:3402:Mux$6253 [4:2] $auto$rtlil.cc:3402:Mux$6253 [0] } = { $auto$rtlil.cc:3402:Mux$6253 [1] $auto$rtlil.cc:3402:Mux$6253 [1] $auto$rtlil.cc:3402:Mux$6253 [1] 1'1 }
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger.
+Performed a total of 3 changes.
+
+4.19.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 640 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 140 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 0 cells.
+
+4.19.14. Executing OPT_SHARE pass.
+
+4.19.15. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.19.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+Removed 0 unused cells and 7 unused wires.
+<suppressed ~1 debug messages>
+
+4.19.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+<suppressed ~3 debug messages>
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.19.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.19.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger_state..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_qwen_ctrl_write_ledger..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~60 debug messages>
+
+4.19.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger_state.
+  Optimizing cells in module \ot_qwen_ctrl_write_ledger.
+Performed a total of 0 changes.
+
+4.19.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 640 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 140 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Removed a total of 0 cells.
+
+4.19.22. Executing OPT_SHARE pass.
+
+4.19.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.19.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+
+4.19.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+Optimizing module ot_qwen_ctrl_write_ledger.
+
+4.19.26. Finished fast OPT passes. (There is nothing left to do.)
+
+4.20. Executing TECHMAP pass (map to technology primitives).
+
+4.20.1. Executing Verilog-2005 frontend: /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+4.20.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$fccaddc94a453f2efefc738dfbe79d456579c31f\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$fc972a7a46956c1788f3cb5257b53c8f1df2d0cc\_90_alu for cells of type $alu.
+Using template $paramod$b18e16801adf491a64caa0542270798e5d4ac6b6\_90_alu for cells of type $alu.
+Using template $paramod$ba698a254f9a5947e85cbe7beae6b161eefc5386\_90_alu for cells of type $alu.
+Using template $paramod$dad13a281fa6a9ffd6dd427a87dc9a952e80e9ea\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $bmux.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000001 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000010 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000010 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001000 for cells of type $lcu.
+Using extmapper simplemap for cells of type $and.
+Using template $paramod$dbcdc7e8aa1a4080cea2deda6fdc8772064f4d90\_90_alu for cells of type $alu.
+Using template $paramod$32a7b7b86c07519b7537abc18e96f0331f97914d\_90_alu for cells of type $alu.
+Using template $paramod$32efbfac1c4dc57230cf86180788fdfd12e3b511\_90_alu for cells of type $alu.
+Using template $paramod$9f3f81d189a6b1d5c738a580270bbb92e45c5c71\_90_alu for cells of type $alu.
+Using template $paramod$constmap:72fea0cd6927a9676e2527442b1383d29cc29f51$paramod$e194a9e890de0a7be18db8bd15a1479dea055e42\_90_shift_shiftx for cells of type $shiftx.
+Using template $paramod$constmap:b3a74507ecbdc52cd4a015f7ded2697bb951dd26$paramod$320aa077a7b7c3e2ebcbf2ed330b2bc798d6703e\_90_shift_shiftx for cells of type $shift.
+Analyzing pattern of constant bits for this cell:
+  Constant input on bit 0 of port A: 1'0
+Creating constmapped module `$paramod$constmap:18e6522bac8a3bd65e05fc1e62e62e2abe5df69c$paramod$320aa077a7b7c3e2ebcbf2ed330b2bc798d6703e\_90_shift_shiftx'.
+
+4.20.55. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$constmap:18e6522bac8a3bd65e05fc1e62e62e2abe5df69c$paramod$320aa077a7b7c3e2ebcbf2ed330b2bc798d6703e\_90_shift_shiftx..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$30339.
+    dead port 2/2 on $mux $procmux$30345.
+    dead port 2/2 on $mux $procmux$30351.
+    dead port 2/2 on $mux $procmux$30357.
+    dead port 2/2 on $mux $procmux$30363.
+Removed 5 multiplexer ports.
+<suppressed ~1850 debug messages>
+
+4.20.56. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$constmap:18e6522bac8a3bd65e05fc1e62e62e2abe5df69c$paramod$320aa077a7b7c3e2ebcbf2ed330b2bc798d6703e\_90_shift_shiftx.
+<suppressed ~8 debug messages>
+Removed 0 unused cells and 17 unused wires.
+Using template $paramod$constmap:18e6522bac8a3bd65e05fc1e62e62e2abe5df69c$paramod$320aa077a7b7c3e2ebcbf2ed330b2bc798d6703e\_90_shift_shiftx for cells of type $shift.
+Using extmapper simplemap for cells of type $pmux.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000110 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000110 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000100 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000100 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000111 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000111 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~883 debug messages>
+
+4.21. Executing OPT pass (performing simple optimizations).
+
+4.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_ctrl_write_ledger_state.
+<suppressed ~1953 debug messages>
+Optimizing module ot_qwen_ctrl_write_ledger.
+<suppressed ~180 debug messages>
+
+4.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 33373 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 32588 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 32174 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+Computing hashes of 32054 cells of `\ot_qwen_ctrl_write_ledger_state'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger_state'.
+<suppressed ~3957 debug messages>
+Finding identical cells in module `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 15543 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 15524 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 15521 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+Computing hashes of 15519 cells of `\ot_qwen_ctrl_write_ledger'.
+Finding duplicate cells in `\ot_qwen_ctrl_write_ledger'.
+<suppressed ~72 debug messages>
+Removed a total of 1343 cells.
+
+4.21.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.21.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger_state..
+Finding unused cells or wires in module \ot_qwen_ctrl_write_ledger..
+Removed 174 unused cells and 2386 unused wires.
+<suppressed ~177 debug messages>
+
+4.21.5. Finished fast OPT passes.
+
+4.22. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_qwen_ctrl_write_ledger'. Setting top module to ot_qwen_ctrl_write_ledger.
+
+4.22.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_ledger
+Used module:     \ot_qwen_ctrl_write_ledger_state
+
+4.22.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_ctrl_write_ledger
+Used module:     \ot_qwen_ctrl_write_ledger_state
+Removed 0 unused modules.
+
+4.23. Printing statistics.
+
+=== ot_qwen_ctrl_write_ledger_state ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    15102 wires
+    40218 wire bits
+      146 public wires
+    15800 public wire bits
+       28 ports
+     8400 port bits
+    31905 cells
+    11566   $_AND_
+     7419   $_DFFE_PN0P_
+     1173   $_MUX_
+      320   $_NOT_
+    11376   $_OR_
+       51   $_XOR_
+
+=== ot_qwen_ctrl_write_ledger ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      256 wires
+    32128 wire bits
+       91 public wires
+    16981 public wire bits
+       44 ports
+      714 port bits
+    15492 cells
+       85   $_AND_
+        1   $_DFFE_PN0P_
+        1   $_DFFE_PN1P_
+      388   $_MUX_
+       42   $_NOT_
+     7520   $_OR_
+     7455   $_XOR_
+        2 submodules
+        2   ot_qwen_ctrl_write_ledger_state
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+    79302 ot_qwen_ctrl_write_ledger
+    31905 ot_qwen_ctrl_write_ledger_state
+
+        +----------Count including submodules.
+        | 
+    30460 wires
+   112564 wire bits
+      383 public wires
+    48581 public wire bits
+      100 ports
+    17514 port bits
+        - memories
+        - memory bits
+        - processes
+    79302 cells
+    23217   $_AND_
+    14839   $_DFFE_PN0P_
+        1   $_DFFE_PN1P_
+     2734   $_MUX_
+      682   $_NOT_
+    30272   $_OR_
+     7557   $_XOR_
+        2 submodules
+        2   ot_qwen_ctrl_write_ledger_state
+
+4.24. Executing CHECK pass (checking for obvious problems).
+Checking module ot_qwen_ctrl_write_ledger_state...
+Checking module ot_qwen_ctrl_write_ledger...
+Found and reported 0 problems.
+
+5. Executing CHECK pass (checking for obvious problems).
+Checking module ot_qwen_ctrl_write_ledger_state...
+Checking module ot_qwen_ctrl_write_ledger...
+Found and reported 0 problems.
+
+6. Printing statistics.
+
+=== ot_qwen_ctrl_write_ledger_state ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    15102 wires
+    40218 wire bits
+      146 public wires
+    15800 public wire bits
+       28 ports
+     8400 port bits
+    31905 cells
+    11566   $_AND_
+     7419   $_DFFE_PN0P_
+     1173   $_MUX_
+      320   $_NOT_
+    11376   $_OR_
+       51   $_XOR_
+
+=== ot_qwen_ctrl_write_ledger ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      256 wires
+    32128 wire bits
+       91 public wires
+    16981 public wire bits
+       44 ports
+      714 port bits
+    15492 cells
+       85   $_AND_
+        1   $_DFFE_PN0P_
+        1   $_DFFE_PN1P_
+      388   $_MUX_
+       42   $_NOT_
+     7520   $_OR_
+     7455   $_XOR_
+        2 submodules
+        2   ot_qwen_ctrl_write_ledger_state
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+    79302 ot_qwen_ctrl_write_ledger
+    31905 ot_qwen_ctrl_write_ledger_state
+
+        +----------Count including submodules.
+        | 
+    30460 wires
+   112564 wire bits
+      383 public wires
+    48581 public wire bits
+      100 ports
+    17514 port bits
+        - memories
+        - memory bits
+        - processes
+    79302 cells
+    23217   $_AND_
+    14839   $_DFFE_PN0P_
+        1   $_DFFE_PN1P_
+     2734   $_MUX_
+      682   $_NOT_
+    30272   $_OR_
+     7557   $_XOR_
+        2 submodules
+        2   ot_qwen_ctrl_write_ledger_state
+
+7. Executing JSON backend.

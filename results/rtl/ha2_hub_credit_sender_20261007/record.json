@@ -1,0 +1,33 @@
+{
+  "status": "COMPONENT_EXACT_PASS_DEFAULT_OFF",
+  "model": "results/uarch/hbm_ha2_half_sender_20261007/model.json",
+  "remote": "ot-epyc2:/srv/opentallas-scratch2/claude/ha2-sender-codex-20261007/gate-r1",
+  "shape": {
+    "INJ": 2,
+    "FW": 512,
+    "row_bits": 544,
+    "fifo_depth": 64,
+    "hub_flight": 35,
+    "rows_per_injector": 192
+  },
+  "sender_cycles": {
+    "no_stall": 228,
+    "original_hub_only": 226,
+    "added_local": 2,
+    "independent_receiver_stalls": 708
+  },
+  "negative_controls": [
+    "Ignoring reservations fails at cycle64",
+    "Ignoring receiver ready fails at first output"
+  ],
+  "peer_path": "Registered payload/valid launch after RX pop gated by registered p_r; +1 stage. Included in fullshape endpoint elaboration, numerical traffic qualification remains pending.",
+  "default_path": "OWNER_BANKED_HALF=0 keeps original reducer instance hierarchy and passes existing actual-parent guard bench.",
+  "adoption": false,
+  "physical": "Existing HA2 h2 route covers reducer only; new sender queue/launch FFs are not physically closed.",
+  "limitations": [
+    "No full endpoint numerical or fabric completion claim",
+    "No SRAM macro mapping or mutable-memory protection signoff for existing FIFO implementation",
+    "240 extra cycles per exposed reduction is an analytical scheduling estimate at sustained half-rate, not a measured endpoint or arbitrary-backpressure upper bound"
+  ],
+  "historical_failures": "Local Verilator4 unsupported timing option/lint codes retained; final exact/negative/default gates and fullshape Verilator5 elaboration PASS on EPYC2."
+}

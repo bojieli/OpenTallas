@@ -1,0 +1,22 @@
+{
+  "latency_accounting": {
+    "retime_incremental_cycles": 0,
+    "inherited_pipeline_cycles_added": 23,
+    "inherited_from": "s81ph-dsfd_selt_q2-89fd33a58-safe",
+    "meaning": "cycles_added retains predecessor whole-selector accounting; retiming does not add stages",
+    "validation": "SAFE0 and SAFE1 native exact gates; this is not a full-token timing measurement"
+  },
+  "source_binding": {
+    "top": "dsfd_selt_q2",
+    "parameters": {
+      "CMP_RETIME": 1
+    },
+    "native_sources_appended_by": "physical/s81_ph_views/common/route_view.sh when topsrc=rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+    "actual_top_elaboration": "PASS Verilator5.050 lint dsfd_selt_q2 CMP_RETIME=1 with minimal source list and128x256 SRAM model",
+    "golden_reference": "Legacy rtl/hdc/v41x selector sources are only used by exact bench, never modified."
+  },
+  "source_extra_paths": [
+    "results/rtl/s81_ph_20261006/selector/quarter_retime_model.json",
+    "results/rtl/s81_ph_20261006/selector/quarter_retime_gate_20261007"
+  ]
+}

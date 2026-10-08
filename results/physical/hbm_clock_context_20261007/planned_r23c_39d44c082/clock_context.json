@@ -1,0 +1,8684 @@
+{
+ "schema": "opentallas.hbm.die_clock_context.v1",
+ "method": "region flop target = max(measured tree entry + block insertion) + planned early-branch reserve; pin entry = target - block insertion",
+ "period_ps": {
+  "clk_stream": 833.333,
+  "clk_serial": 1111.111,
+  "clk_hbm": 1024.0,
+  "clk_link": 833.333
+ },
+ "setup_uncertainty_ps": 60,
+ "hold_uncertainty_ps": 25,
+ "extra_die_setup_skew_ps": 150,
+ "clock_model": "ideal per-pin planned entry, measured clock-only CTS basis",
+ "physically_routed_clock": false,
+ "final_signoff_eligible": false,
+ "added_data_cycles": 0,
+ "sinks": {
+  "at_NE_21/ck": {
+   "instance": "at_NE_21",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NE_22/ck": {
+   "instance": "at_NE_22",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NE_23/ck": {
+   "instance": "at_NE_23",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NE_31/ck": {
+   "instance": "at_NE_31",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NE_32/ck": {
+   "instance": "at_NE_32",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "at_NE_33/ck": {
+   "instance": "at_NE_33",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "at_NE_01/ck": {
+   "instance": "at_NE_01",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.6,
+    "ff": 1420.6
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NE_02/ck": {
+   "instance": "at_NE_02",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.6,
+    "ff": 1420.6
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NE_03/ck": {
+   "instance": "at_NE_03",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.6,
+    "ff": 1420.6
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NE_11/ck": {
+   "instance": "at_NE_11",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.3,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.6,
+    "ff": 1420.6
+   },
+   "pad_ps": {
+    "ss": 0.3,
+    "ff": 0.1
+   }
+  },
+  "at_NE_12/ck": {
+   "instance": "at_NE_12",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.6,
+    "ff": 1420.6
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NE_13/ck": {
+   "instance": "at_NE_13",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.3,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.6,
+    "ff": 1420.6
+   },
+   "pad_ps": {
+    "ss": 0.3,
+    "ff": 0.1
+   }
+  },
+  "at_NE_00/ck": {
+   "instance": "at_NE_00",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3103.1,
+    "ff": 1692.8
+   },
+   "pad_ps": {
+    "ss": 424.0,
+    "ff": 272.0
+   }
+  },
+  "w358_ivp_NE/ck": {
+   "instance": "w358_ivp_NE",
+   "port": "ck",
+   "master": "hfd_stn_r38",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 477.3,
+    "ff": 315.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3525.8,
+    "ff": 1971.8
+   },
+   "pad_ps": {
+    "ss": 846.7,
+    "ff": 551.0
+   }
+  },
+  "hb_index_NE_b5/ck": {
+   "instance": "hb_index_NE_b5",
+   "port": "ck",
+   "master": "hfd_index_q_b5",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 1324,
+    "ff": 866
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b5_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_70a27c406)",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "w348_iv_NE/ck": {
+   "instance": "w348_iv_NE",
+   "port": "ck",
+   "master": "hfd_stn_r33",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 477.8,
+    "ff": 315.3
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3525.3,
+    "ff": 1971.5
+   },
+   "pad_ps": {
+    "ss": 846.2,
+    "ff": 550.7
+   }
+  },
+  "at_NE_10/ck": {
+   "instance": "at_NE_10",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3103.1,
+    "ff": 1692.8
+   },
+   "pad_ps": {
+    "ss": 425.9,
+    "ff": 272.8
+   }
+  },
+  "hb_index_NE_b4/ck": {
+   "instance": "hb_index_NE_b4",
+   "port": "ck",
+   "master": "hfd_index_q_b4",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3103.1,
+    "ff": 1692.8
+   },
+   "pad_ps": {
+    "ss": 425.9,
+    "ff": 272.8
+   }
+  },
+  "hb_index_NE_b3/ck": {
+   "instance": "hb_index_NE_b3",
+   "port": "ck",
+   "master": "hfd_index_q_b3",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 1185,
+    "ff": 791
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "routed FF kout[235] launch u_kp.gn.st[3].r[234] CLK 587.08 ps; hbm_idxq_b3_2ec0ab4f9_r22 w18_sta_ff.log; CTS calibration minimum 738 ps is stale at routed output boundary",
+   "entry_ps": {
+    "ss": 2818.1,
+    "ff": 1495.8
+   },
+   "pad_ps": {
+    "ss": 140.9,
+    "ff": 75.8
+   }
+  },
+  "at_NE_20/ck": {
+   "instance": "at_NE_20",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3103.1,
+    "ff": 1692.8
+   },
+   "pad_ps": {
+    "ss": 425.9,
+    "ff": 272.8
+   }
+  },
+  "hb_index_NE_b2/ck": {
+   "instance": "hb_index_NE_b2",
+   "port": "ck",
+   "master": "hfd_index_q_b2",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 1309,
+    "ff": 846
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b2_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_70a27c406)",
+   "entry_ps": {
+    "ss": 2694.1,
+    "ff": 1440.8
+   },
+   "pad_ps": {
+    "ss": 15.0,
+    "ff": 20.0
+   }
+  },
+  "at_NE_30/ck": {
+   "instance": "at_NE_30",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3103.1,
+    "ff": 1692.8
+   },
+   "pad_ps": {
+    "ss": 424.0,
+    "ff": 272.0
+   }
+  },
+  "hb_index_NE_b1/ck": {
+   "instance": "hb_index_NE_b1",
+   "port": "ck",
+   "master": "hfd_index_q_b1",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 1132,
+    "ff": 766
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "routed FF leaf of the kout output pin flops (closure loop hbm_idxq_b1_fc9fb499c: u_kp.gn.st[5].r[70] CLK 542.6 ps FF) -- the CTS-stage calibration (724) missed the early edge-ck leaves; the FF IO model now launches / captures at the routed boundary leaf",
+   "entry_ps": {
+    "ss": 2871.1,
+    "ff": 1520.8
+   },
+   "pad_ps": {
+    "ss": 192.0,
+    "ff": 100.0
+   }
+  },
+  "hb_index_NE_b0/ck": {
+   "instance": "hb_index_NE_b0",
+   "port": "ck",
+   "master": "hfd_index_q_b0",
+   "region": "clk_stream:HUB-QNE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 1186,
+    "ff": 782
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b0_70a27c406_b (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_70a27c406_b)",
+   "entry_ps": {
+    "ss": 2817.1,
+    "ff": 1504.8
+   },
+   "pad_ps": {
+    "ss": 138.0,
+    "ff": 84.0
+   }
+  },
+  "at_NW_03/ck": {
+   "instance": "at_NW_03",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3105.0,
+    "ff": 1693.5
+   },
+   "pad_ps": {
+    "ss": 424.0,
+    "ff": 272.0
+   }
+  },
+  "w357_ivp_NW/ck": {
+   "instance": "w357_ivp_NW",
+   "port": "ck",
+   "master": "hfd_stn_r38",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 477.3,
+    "ff": 315.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3527.7,
+    "ff": 1972.5
+   },
+   "pad_ps": {
+    "ss": 846.7,
+    "ff": 551.0
+   }
+  },
+  "hb_index_NW_b5/ck": {
+   "instance": "hb_index_NW_b5",
+   "port": "ck",
+   "master": "hfd_index_q_b5",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 1324,
+    "ff": 866
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b5_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_70a27c406)",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "w344_iv_NW/ck": {
+   "instance": "w344_iv_NW",
+   "port": "ck",
+   "master": "hfd_stn_r33",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 477.8,
+    "ff": 315.3
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3527.2,
+    "ff": 1972.2
+   },
+   "pad_ps": {
+    "ss": 846.2,
+    "ff": 550.7
+   }
+  },
+  "at_NW_13/ck": {
+   "instance": "at_NW_13",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3105.0,
+    "ff": 1693.5
+   },
+   "pad_ps": {
+    "ss": 425.9,
+    "ff": 272.7
+   }
+  },
+  "hb_index_NW_b4/ck": {
+   "instance": "hb_index_NW_b4",
+   "port": "ck",
+   "master": "hfd_index_q_b4",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3105.0,
+    "ff": 1693.5
+   },
+   "pad_ps": {
+    "ss": 425.9,
+    "ff": 272.7
+   }
+  },
+  "hb_index_NW_b3/ck": {
+   "instance": "hb_index_NW_b3",
+   "port": "ck",
+   "master": "hfd_index_q_b3",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 1185,
+    "ff": 791
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "routed FF kout[235] launch u_kp.gn.st[3].r[234] CLK 587.08 ps; hbm_idxq_b3_2ec0ab4f9_r22 w18_sta_ff.log; CTS calibration minimum 738 ps is stale at routed output boundary",
+   "entry_ps": {
+    "ss": 2820.0,
+    "ff": 1496.5
+   },
+   "pad_ps": {
+    "ss": 140.9,
+    "ff": 75.7
+   }
+  },
+  "at_NW_23/ck": {
+   "instance": "at_NW_23",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3105.0,
+    "ff": 1693.5
+   },
+   "pad_ps": {
+    "ss": 425.9,
+    "ff": 272.7
+   }
+  },
+  "hb_index_NW_b2/ck": {
+   "instance": "hb_index_NW_b2",
+   "port": "ck",
+   "master": "hfd_index_q_b2",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 1309,
+    "ff": 846
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b2_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_70a27c406)",
+   "entry_ps": {
+    "ss": 2696.0,
+    "ff": 1441.5
+   },
+   "pad_ps": {
+    "ss": 15.0,
+    "ff": 20.0
+   }
+  },
+  "at_NW_33/ck": {
+   "instance": "at_NW_33",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3105.0,
+    "ff": 1693.5
+   },
+   "pad_ps": {
+    "ss": 424.0,
+    "ff": 272.0
+   }
+  },
+  "hb_index_NW_b1/ck": {
+   "instance": "hb_index_NW_b1",
+   "port": "ck",
+   "master": "hfd_index_q_b1",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 1132,
+    "ff": 766
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "routed FF leaf of the kout output pin flops (closure loop hbm_idxq_b1_fc9fb499c: u_kp.gn.st[5].r[70] CLK 542.6 ps FF) -- the CTS-stage calibration (724) missed the early edge-ck leaves; the FF IO model now launches / captures at the routed boundary leaf",
+   "entry_ps": {
+    "ss": 2873.0,
+    "ff": 1521.5
+   },
+   "pad_ps": {
+    "ss": 192.0,
+    "ff": 100.0
+   }
+  },
+  "hb_index_NW_b0/ck": {
+   "instance": "hb_index_NW_b0",
+   "port": "ck",
+   "master": "hfd_index_q_b0",
+   "region": "clk_stream:HUB-QNW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 1186,
+    "ff": 782
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b0_70a27c406_b (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_70a27c406_b)",
+   "entry_ps": {
+    "ss": 2819.0,
+    "ff": 1505.5
+   },
+   "pad_ps": {
+    "ss": 138.0,
+    "ff": 84.0
+   }
+  },
+  "at_NW_20/ck": {
+   "instance": "at_NW_20",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NW_21/ck": {
+   "instance": "at_NW_21",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NW_22/ck": {
+   "instance": "at_NW_22",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NW_30/ck": {
+   "instance": "at_NW_30",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NW_31/ck": {
+   "instance": "at_NW_31",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "at_NW_32/ck": {
+   "instance": "at_NW_32",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "at_NW_00/ck": {
+   "instance": "at_NW_00",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NW_01/ck": {
+   "instance": "at_NW_01",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NW_02/ck": {
+   "instance": "at_NW_02",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NW_10/ck": {
+   "instance": "at_NW_10",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_NW_11/ck": {
+   "instance": "at_NW_11",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "at_NW_12/ck": {
+   "instance": "at_NW_12",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QNW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "at_SE_21/ck": {
+   "instance": "at_SE_21",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SE_22/ck": {
+   "instance": "at_SE_22",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SE_23/ck": {
+   "instance": "at_SE_23",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SE_31/ck": {
+   "instance": "at_SE_31",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SE_32/ck": {
+   "instance": "at_SE_32",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "at_SE_33/ck": {
+   "instance": "at_SE_33",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "at_SE_01/ck": {
+   "instance": "at_SE_01",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SE_02/ck": {
+   "instance": "at_SE_02",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SE_03/ck": {
+   "instance": "at_SE_03",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SE_11/ck": {
+   "instance": "at_SE_11",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SE_12/ck": {
+   "instance": "at_SE_12",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "at_SE_13/ck": {
+   "instance": "at_SE_13",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "hb_index_SE_b0/ck": {
+   "instance": "hb_index_SE_b0",
+   "port": "ck",
+   "master": "hfd_index_q_b0",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 1186,
+    "ff": 782
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b0_70a27c406_b (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_70a27c406_b)",
+   "entry_ps": {
+    "ss": 2815.2,
+    "ff": 1504.0
+   },
+   "pad_ps": {
+    "ss": 136.1,
+    "ff": 83.2
+   }
+  },
+  "hb_index_SE_b1/ck": {
+   "instance": "hb_index_SE_b1",
+   "port": "ck",
+   "master": "hfd_index_q_b1",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 1132,
+    "ff": 766
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "routed FF leaf of the kout output pin flops (closure loop hbm_idxq_b1_fc9fb499c: u_kp.gn.st[5].r[70] CLK 542.6 ps FF) -- the CTS-stage calibration (724) missed the early edge-ck leaves; the FF IO model now launches / captures at the routed boundary leaf",
+   "entry_ps": {
+    "ss": 2869.2,
+    "ff": 1520.0
+   },
+   "pad_ps": {
+    "ss": 190.1,
+    "ff": 99.2
+   }
+  },
+  "at_SE_00/ck": {
+   "instance": "at_SE_00",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3101.2,
+    "ff": 1692.0
+   },
+   "pad_ps": {
+    "ss": 422.1,
+    "ff": 271.2
+   }
+  },
+  "hb_index_SE_b2/ck": {
+   "instance": "hb_index_SE_b2",
+   "port": "ck",
+   "master": "hfd_index_q_b2",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 1309,
+    "ff": 846
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b2_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_70a27c406)",
+   "entry_ps": {
+    "ss": 2692.2,
+    "ff": 1440.0
+   },
+   "pad_ps": {
+    "ss": 13.1,
+    "ff": 19.2
+   }
+  },
+  "at_SE_10/ck": {
+   "instance": "at_SE_10",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3101.2,
+    "ff": 1692.0
+   },
+   "pad_ps": {
+    "ss": 424.0,
+    "ff": 272.0
+   }
+  },
+  "hb_index_SE_b3/ck": {
+   "instance": "hb_index_SE_b3",
+   "port": "ck",
+   "master": "hfd_index_q_b3",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 1185,
+    "ff": 791
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "routed FF kout[235] launch u_kp.gn.st[3].r[234] CLK 587.08 ps; hbm_idxq_b3_2ec0ab4f9_r22 w18_sta_ff.log; CTS calibration minimum 738 ps is stale at routed output boundary",
+   "entry_ps": {
+    "ss": 2816.2,
+    "ff": 1495.0
+   },
+   "pad_ps": {
+    "ss": 139.0,
+    "ff": 75.0
+   }
+  },
+  "hb_index_SE_b4/ck": {
+   "instance": "hb_index_SE_b4",
+   "port": "ck",
+   "master": "hfd_index_q_b4",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3101.2,
+    "ff": 1692.0
+   },
+   "pad_ps": {
+    "ss": 422.1,
+    "ff": 271.2
+   }
+  },
+  "at_SE_20/ck": {
+   "instance": "at_SE_20",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3101.2,
+    "ff": 1692.0
+   },
+   "pad_ps": {
+    "ss": 422.1,
+    "ff": 271.2
+   }
+  },
+  "w340_iv_SE/ck": {
+   "instance": "w340_iv_SE",
+   "port": "ck",
+   "master": "hfd_stn_r33",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 477.8,
+    "ff": 315.3
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3523.4,
+    "ff": 1970.7
+   },
+   "pad_ps": {
+    "ss": 844.3,
+    "ff": 549.9
+   }
+  },
+  "hb_index_SE_b5/ck": {
+   "instance": "hb_index_SE_b5",
+   "port": "ck",
+   "master": "hfd_index_q_b5",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 1324,
+    "ff": 866
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b5_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_70a27c406)",
+   "entry_ps": {
+    "ss": 2677.2,
+    "ff": 1420.0
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "w356_ivp_SE/ck": {
+   "instance": "w356_ivp_SE",
+   "port": "ck",
+   "master": "hfd_stn_r38",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 477.3,
+    "ff": 315.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3523.9,
+    "ff": 1971.0
+   },
+   "pad_ps": {
+    "ss": 844.8,
+    "ff": 550.2
+   }
+  },
+  "at_SE_30/ck": {
+   "instance": "at_SE_30",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSE.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.2,
+    1420.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3101.2,
+    "ff": 1692.0
+   },
+   "pad_ps": {
+    "ss": 424.0,
+    "ff": 272.0
+   }
+  },
+  "hb_index_SW_b0/ck": {
+   "instance": "hb_index_SW_b0",
+   "port": "ck",
+   "master": "hfd_index_q_b0",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 1186,
+    "ff": 782
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b0_70a27c406_b (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b0_70a27c406_b)",
+   "entry_ps": {
+    "ss": 2817.1,
+    "ff": 1504.8
+   },
+   "pad_ps": {
+    "ss": 136.1,
+    "ff": 83.3
+   }
+  },
+  "hb_index_SW_b1/ck": {
+   "instance": "hb_index_SW_b1",
+   "port": "ck",
+   "master": "hfd_index_q_b1",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 1132,
+    "ff": 766
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "routed FF leaf of the kout output pin flops (closure loop hbm_idxq_b1_fc9fb499c: u_kp.gn.st[5].r[70] CLK 542.6 ps FF) -- the CTS-stage calibration (724) missed the early edge-ck leaves; the FF IO model now launches / captures at the routed boundary leaf",
+   "entry_ps": {
+    "ss": 2871.1,
+    "ff": 1520.8
+   },
+   "pad_ps": {
+    "ss": 190.1,
+    "ff": 99.3
+   }
+  },
+  "at_SW_03/ck": {
+   "instance": "at_SW_03",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3103.1,
+    "ff": 1692.8
+   },
+   "pad_ps": {
+    "ss": 422.1,
+    "ff": 271.3
+   }
+  },
+  "hb_index_SW_b2/ck": {
+   "instance": "hb_index_SW_b2",
+   "port": "ck",
+   "master": "hfd_index_q_b2",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 1309,
+    "ff": 846
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b2_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b2_70a27c406)",
+   "entry_ps": {
+    "ss": 2694.1,
+    "ff": 1440.8
+   },
+   "pad_ps": {
+    "ss": 13.1,
+    "ff": 19.3
+   }
+  },
+  "at_SW_13/ck": {
+   "instance": "at_SW_13",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3103.1,
+    "ff": 1692.8
+   },
+   "pad_ps": {
+    "ss": 424.0,
+    "ff": 272.0
+   }
+  },
+  "hb_index_SW_b3/ck": {
+   "instance": "hb_index_SW_b3",
+   "port": "ck",
+   "master": "hfd_index_q_b3",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 1185,
+    "ff": 791
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "routed FF kout[235] launch u_kp.gn.st[3].r[234] CLK 587.08 ps; hbm_idxq_b3_2ec0ab4f9_r22 w18_sta_ff.log; CTS calibration minimum 738 ps is stale at routed output boundary",
+   "entry_ps": {
+    "ss": 2818.1,
+    "ff": 1495.8
+   },
+   "pad_ps": {
+    "ss": 139.0,
+    "ff": 75.0
+   }
+  },
+  "hb_index_SW_b4/ck": {
+   "instance": "hb_index_SW_b4",
+   "port": "ck",
+   "master": "hfd_index_q_b4",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3103.1,
+    "ff": 1692.8
+   },
+   "pad_ps": {
+    "ss": 422.1,
+    "ff": 271.3
+   }
+  },
+  "at_SW_23/ck": {
+   "instance": "at_SW_23",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3103.1,
+    "ff": 1692.8
+   },
+   "pad_ps": {
+    "ss": 422.1,
+    "ff": 271.3
+   }
+  },
+  "w336_iv_SW/ck": {
+   "instance": "w336_iv_SW",
+   "port": "ck",
+   "master": "hfd_stn_r33",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 477.8,
+    "ff": 315.3
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3525.3,
+    "ff": 1971.5
+   },
+   "pad_ps": {
+    "ss": 844.3,
+    "ff": 550.0
+   }
+  },
+  "hb_index_SW_b5/ck": {
+   "instance": "hb_index_SW_b5",
+   "port": "ck",
+   "master": "hfd_index_q_b5",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 1324,
+    "ff": 866
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_idxq_b5_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_70a27c406)",
+   "entry_ps": {
+    "ss": 2679.1,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "w355_ivp_SW/ck": {
+   "instance": "w355_ivp_SW",
+   "port": "ck",
+   "master": "hfd_stn_r38",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 477.3,
+    "ff": 315.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3525.8,
+    "ff": 1971.8
+   },
+   "pad_ps": {
+    "ss": 844.8,
+    "ff": 550.3
+   }
+  },
+  "at_SW_33/ck": {
+   "instance": "at_SW_33",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.1.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3103.1,
+    "ff": 1692.8
+   },
+   "pad_ps": {
+    "ss": 424.0,
+    "ff": 272.0
+   }
+  },
+  "at_SW_20/ck": {
+   "instance": "at_SW_20",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SW_21/ck": {
+   "instance": "at_SW_21",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SW_22/ck": {
+   "instance": "at_SW_22",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SW_30/ck": {
+   "instance": "at_SW_30",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SW_31/ck": {
+   "instance": "at_SW_31",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "at_SW_32/ck": {
+   "instance": "at_SW_32",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.1",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "at_SW_00/ck": {
+   "instance": "at_SW_00",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SW_01/ck": {
+   "instance": "at_SW_01",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SW_02/ck": {
+   "instance": "at_SW_02",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SW_10/ck": {
+   "instance": "at_SW_10",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2681.0,
+    1421.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "at_SW_11/ck": {
+   "instance": "at_SW_11",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "at_SW_12/ck": {
+   "instance": "at_SW_12",
+   "port": "ck",
+   "master": "hfd_attn_tile",
+   "region": "clk_stream:HUB-QSW.0.0",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.1,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2681.0,
+    "ff": 1421.5
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "hb_vm_sw/ck": {
+   "instance": "hb_vm_sw",
+   "port": "ck",
+   "master": "hfd_vm_sw",
+   "region": "clk_stream:HUB-V",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2378.1,
+    1261.4
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.1,
+    "ff": 1561.4
+   },
+   "pad_ps": {
+    "ss": 300.0,
+    "ff": 300.0
+   }
+  },
+  "hb_vm_se/ck": {
+   "instance": "hb_vm_se",
+   "port": "ck",
+   "master": "hfd_vm_se",
+   "region": "clk_stream:HUB-V",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2378.1,
+    1261.4
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.1,
+    "ff": 1561.4
+   },
+   "pad_ps": {
+    "ss": 300.0,
+    "ff": 300.0
+   }
+  },
+  "hb_vm_nw/ck": {
+   "instance": "hb_vm_nw",
+   "port": "ck",
+   "master": "hfd_vm_nw",
+   "region": "clk_stream:HUB-V",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2378.1,
+    1261.4
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.1,
+    "ff": 1561.4
+   },
+   "pad_ps": {
+    "ss": 300.0,
+    "ff": 300.0
+   }
+  },
+  "hb_vm_ne/ck": {
+   "instance": "hb_vm_ne",
+   "port": "ck",
+   "master": "hfd_vm_ne",
+   "region": "clk_stream:HUB-V",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2378.1,
+    1261.4
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.1,
+    "ff": 1561.4
+   },
+   "pad_ps": {
+    "ss": 300.0,
+    "ff": 300.0
+   }
+  },
+  "w339_iv_SW/ck": {
+   "instance": "w339_iv_SW",
+   "port": "ck",
+   "master": "hfd_meso_r35",
+   "region": "clk_stream:HUB-V",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2380.0,
+    1262.1
+   ],
+   "internal_ps": {
+    "ss": 521.5,
+    "ff": 344.2
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3056.6,
+    "ff": 1811.2
+   },
+   "pad_ps": {
+    "ss": 676.6,
+    "ff": 549.1
+   }
+  },
+  "w343_iv_SE/ck": {
+   "instance": "w343_iv_SE",
+   "port": "ck",
+   "master": "hfd_meso_r35",
+   "region": "clk_stream:HUB-V",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2378.1,
+    1261.4
+   ],
+   "internal_ps": {
+    "ss": 521.5,
+    "ff": 344.2
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3056.6,
+    "ff": 1811.2
+   },
+   "pad_ps": {
+    "ss": 678.5,
+    "ff": 549.8
+   }
+  },
+  "w347_iv_NW/ck": {
+   "instance": "w347_iv_NW",
+   "port": "ck",
+   "master": "hfd_meso_r35",
+   "region": "clk_stream:HUB-V",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2378.1,
+    1261.4
+   ],
+   "internal_ps": {
+    "ss": 521.5,
+    "ff": 344.2
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3056.6,
+    "ff": 1811.2
+   },
+   "pad_ps": {
+    "ss": 678.5,
+    "ff": 549.8
+   }
+  },
+  "w351_iv_NE/ck": {
+   "instance": "w351_iv_NE",
+   "port": "ck",
+   "master": "hfd_meso_r35",
+   "region": "clk_stream:HUB-V",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2378.1,
+    1261.4
+   ],
+   "internal_ps": {
+    "ss": 521.5,
+    "ff": 344.2
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3056.6,
+    "ff": 1811.2
+   },
+   "pad_ps": {
+    "ss": 678.5,
+    "ff": 549.8
+   }
+  },
+  "w352_vr/ck": {
+   "instance": "w352_vr",
+   "port": "ck",
+   "master": "hfd_stn_r33",
+   "region": "clk_stream:HUB-V",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2380.0,
+    1262.1
+   ],
+   "internal_ps": {
+    "ss": 477.8,
+    "ff": 315.3
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3100.3,
+    "ff": 1840.1
+   },
+   "pad_ps": {
+    "ss": 720.3,
+    "ff": 578.0
+   }
+  },
+  "hb_loader/ck": {
+   "instance": "hb_loader",
+   "port": "ck",
+   "master": "hfd_loader",
+   "region": "clk_stream:HUB-SP",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.2,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.2,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "hb_router/ck": {
+   "instance": "hb_router",
+   "port": "ck",
+   "master": "hfd_router",
+   "region": "clk_stream:HUB-SP",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.2,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.2,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "hb_cmdproc/ck": {
+   "instance": "hb_cmdproc",
+   "port": "ck",
+   "master": "hfd_cmdproc",
+   "region": "clk_stream:HUB-SP",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.3,
+    1420.1
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2679.2,
+    "ff": 1420.8
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "hb_barrier/ck": {
+   "instance": "hb_barrier",
+   "port": "ck",
+   "master": "hfd_barrier",
+   "region": "clk_stream:HUB-SP",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.3,
+    1420.1
+   ],
+   "internal_ps": {
+    "ss": 626.0,
+    "ff": 413.2
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2953.2,
+    "ff": 1601.6
+   },
+   "pad_ps": {
+    "ss": 275.9,
+    "ff": 181.5
+   }
+  },
+  "w354_vr/ck": {
+   "instance": "w354_vr",
+   "port": "ck",
+   "master": "hfd_meso_r37",
+   "region": "clk_stream:HUB-SP",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2679.2,
+    1420.8
+   ],
+   "internal_ps": {
+    "ss": 521.0,
+    "ff": 343.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3058.2,
+    "ff": 1670.9
+   },
+   "pad_ps": {
+    "ss": 379.0,
+    "ff": 250.1
+   }
+  },
+  "sm26/ck": {
+   "instance": "sm26",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.9,
+    "ff": 1420.7
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm27/ck": {
+   "instance": "sm27",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.9,
+    "ff": 1420.7
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm30/ck": {
+   "instance": "sm30",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.9,
+    "ff": 1420.7
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm31/ck": {
+   "instance": "sm31",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.0,
+    1419.9
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.9,
+    "ff": 1420.7
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "w223_wl_sm30/ck": {
+   "instance": "w223_wl_sm30",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3003.2,
+    "ff": 1634.7
+   },
+   "pad_ps": {
+    "ss": 324.3,
+    "ff": 214.0
+   }
+  },
+  "w227_wl_sm31/ck": {
+   "instance": "w227_wl_sm31",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3003.2,
+    "ff": 1634.7
+   },
+   "pad_ps": {
+    "ss": 324.3,
+    "ff": 214.0
+   }
+  },
+  "w228_rq_sm31/ck": {
+   "instance": "w228_rq_sm31",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3109.4,
+    "ff": 1704.8
+   },
+   "pad_ps": {
+    "ss": 430.5,
+    "ff": 284.1
+   }
+  },
+  "w237_xmNE2b/ck": {
+   "instance": "w237_xmNE2b",
+   "port": "ck",
+   "master": "hfd_mcast_r6b",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2943.3,
+    "ff": 1595.2
+   },
+   "pad_ps": {
+    "ss": 264.4,
+    "ff": 174.5
+   }
+  },
+  "w238_xmNE3/ck": {
+   "instance": "w238_xmNE3",
+   "port": "ck",
+   "master": "hfd_mcast_r7",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2943.3,
+    "ff": 1595.2
+   },
+   "pad_ps": {
+    "ss": 264.4,
+    "ff": 174.5
+   }
+  },
+  "w242_rgNE2/ck": {
+   "instance": "w242_rgNE2",
+   "port": "ck",
+   "master": "hfd_gath_r25",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.0,
+    1419.9
+   ],
+   "internal_ps": {
+    "ss": 628.3,
+    "ff": 414.7
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2950.6,
+    "ff": 1600.0
+   },
+   "pad_ps": {
+    "ss": 273.6,
+    "ff": 180.1
+   }
+  },
+  "w224_rq_sm30/ck": {
+   "instance": "w224_rq_sm30",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3109.4,
+    "ff": 1704.8
+   },
+   "pad_ps": {
+    "ss": 430.5,
+    "ff": 284.1
+   }
+  },
+  "w259_cdNE0/ck": {
+   "instance": "w259_cdNE0",
+   "port": "ck",
+   "master": "hfd_cdist_r15",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 531.5,
+    "ff": 350.8
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3047.4,
+    "ff": 1663.9
+   },
+   "pad_ps": {
+    "ss": 368.5,
+    "ff": 243.2
+   }
+  },
+  "w240_rgNE3/ck": {
+   "instance": "w240_rgNE3",
+   "port": "ck",
+   "master": "hfd_gath_r8",
+   "region": "clk_stream:GNEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.0,
+    1419.9
+   ],
+   "internal_ps": {
+    "ss": 500.6,
+    "ff": 330.4
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3078.3,
+    "ff": 1684.3
+   },
+   "pad_ps": {
+    "ss": 401.3,
+    "ff": 264.4
+   }
+  },
+  "sm24/ck": {
+   "instance": "sm24",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.4,
+    "ff": 1420.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm25/ck": {
+   "instance": "sm25",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.4,
+    "ff": 1420.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm28/ck": {
+   "instance": "sm28",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.4,
+    "ff": 1420.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm29/ck": {
+   "instance": "sm29",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.4,
+    "ff": 1420.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "w215_wl_sm28/ck": {
+   "instance": "w215_wl_sm28",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.3,
+    1421.2
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3002.7,
+    "ff": 1634.5
+   },
+   "pad_ps": {
+    "ss": 322.4,
+    "ff": 213.3
+   }
+  },
+  "w219_wl_sm29/ck": {
+   "instance": "w219_wl_sm29",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3002.7,
+    "ff": 1634.5
+   },
+   "pad_ps": {
+    "ss": 324.3,
+    "ff": 214.0
+   }
+  },
+  "w220_rq_sm29/ck": {
+   "instance": "w220_rq_sm29",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3108.9,
+    "ff": 1704.6
+   },
+   "pad_ps": {
+    "ss": 430.5,
+    "ff": 284.1
+   }
+  },
+  "w236_xmNE1a/ck": {
+   "instance": "w236_xmNE1a",
+   "port": "ck",
+   "master": "hfd_mcast_r6a",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.3,
+    1421.2
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2942.8,
+    "ff": 1595.0
+   },
+   "pad_ps": {
+    "ss": 262.5,
+    "ff": 173.8
+   }
+  },
+  "w236_xmNE1b/ck": {
+   "instance": "w236_xmNE1b",
+   "port": "ck",
+   "master": "hfd_mcast_r6b",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.3,
+    1421.2
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2942.8,
+    "ff": 1595.0
+   },
+   "pad_ps": {
+    "ss": 262.5,
+    "ff": 173.8
+   }
+  },
+  "w239_rgNE0/ck": {
+   "instance": "w239_rgNE0",
+   "port": "ck",
+   "master": "hfd_gath_r8",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2676.5,
+    1419.7
+   ],
+   "internal_ps": {
+    "ss": 500.6,
+    "ff": 330.4
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3077.8,
+    "ff": 1684.1
+   },
+   "pad_ps": {
+    "ss": 401.3,
+    "ff": 264.4
+   }
+  },
+  "w235_xmNE0/ck": {
+   "instance": "w235_xmNE0",
+   "port": "ck",
+   "master": "hfd_mcast_r5",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.3,
+    1421.2
+   ],
+   "internal_ps": {
+    "ss": 702.5,
+    "ff": 463.7
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2875.9,
+    "ff": 1550.8
+   },
+   "pad_ps": {
+    "ss": 195.6,
+    "ff": 129.6
+   }
+  },
+  "w216_rq_sm28/ck": {
+   "instance": "w216_rq_sm28",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3108.9,
+    "ff": 1704.6
+   },
+   "pad_ps": {
+    "ss": 430.5,
+    "ff": 284.1
+   }
+  },
+  "w237_xmNE2a/ck": {
+   "instance": "w237_xmNE2a",
+   "port": "ck",
+   "master": "hfd_mcast_r6a",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2942.8,
+    "ff": 1595.0
+   },
+   "pad_ps": {
+    "ss": 264.4,
+    "ff": 174.5
+   }
+  },
+  "w241_rgNE1/ck": {
+   "instance": "w241_rgNE1",
+   "port": "ck",
+   "master": "hfd_gath_r24",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2676.5,
+    1419.7
+   ],
+   "internal_ps": {
+    "ss": 525.1,
+    "ff": 346.6
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3053.3,
+    "ff": 1667.9
+   },
+   "pad_ps": {
+    "ss": 376.8,
+    "ff": 248.2
+   }
+  },
+  "w258_cdNE1/ck": {
+   "instance": "w258_cdNE1",
+   "port": "ck",
+   "master": "hfd_cdist_r14",
+   "region": "clk_stream:GNEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2676.5,
+    1419.7
+   ],
+   "internal_ps": {
+    "ss": 563.9,
+    "ff": 372.2
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3014.5,
+    "ff": 1642.3
+   },
+   "pad_ps": {
+    "ss": 338.0,
+    "ff": 222.6
+   }
+  },
+  "sm18/ck": {
+   "instance": "sm18",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2680.5,
+    "ff": 1421.3
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm19/ck": {
+   "instance": "sm19",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2680.5,
+    "ff": 1421.3
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm22/ck": {
+   "instance": "sm22",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2680.5,
+    "ff": 1421.3
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm23/ck": {
+   "instance": "sm23",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2680.5,
+    "ff": 1421.3
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "w149_wl_sm22/ck": {
+   "instance": "w149_wl_sm22",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3004.8,
+    "ff": 1635.3
+   },
+   "pad_ps": {
+    "ss": 324.3,
+    "ff": 214.0
+   }
+  },
+  "w153_wl_sm23/ck": {
+   "instance": "w153_wl_sm23",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3004.8,
+    "ff": 1635.3
+   },
+   "pad_ps": {
+    "ss": 326.2,
+    "ff": 214.7
+   }
+  },
+  "w154_rq_sm23/ck": {
+   "instance": "w154_rq_sm23",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3111.0,
+    "ff": 1705.4
+   },
+   "pad_ps": {
+    "ss": 430.5,
+    "ff": 284.1
+   }
+  },
+  "w162_xmNW2a/ck": {
+   "instance": "w162_xmNW2a",
+   "port": "ck",
+   "master": "hfd_mcast_r6a",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2944.9,
+    "ff": 1595.8
+   },
+   "pad_ps": {
+    "ss": 264.4,
+    "ff": 174.5
+   }
+  },
+  "w162_xmNW2b/ck": {
+   "instance": "w162_xmNW2b",
+   "port": "ck",
+   "master": "hfd_mcast_r6b",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2944.9,
+    "ff": 1595.8
+   },
+   "pad_ps": {
+    "ss": 264.4,
+    "ff": 174.5
+   }
+  },
+  "w163_xmNW1b/ck": {
+   "instance": "w163_xmNW1b",
+   "port": "ck",
+   "master": "hfd_mcast_r6b",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2682.4,
+    1422.1
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2944.9,
+    "ff": 1595.8
+   },
+   "pad_ps": {
+    "ss": 262.5,
+    "ff": 173.7
+   }
+  },
+  "w166_rgNW3/ck": {
+   "instance": "w166_rgNW3",
+   "port": "ck",
+   "master": "hfd_gath_r8",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 500.6,
+    "ff": 330.4
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3079.9,
+    "ff": 1684.9
+   },
+   "pad_ps": {
+    "ss": 401.3,
+    "ff": 264.3
+   }
+  },
+  "w150_rq_sm22/ck": {
+   "instance": "w150_rq_sm22",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2682.4,
+    1422.1
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3111.0,
+    "ff": 1705.4
+   },
+   "pad_ps": {
+    "ss": 428.6,
+    "ff": 283.3
+   }
+  },
+  "w168_rgNW2/ck": {
+   "instance": "w168_rgNW2",
+   "port": "ck",
+   "master": "hfd_gath_r10",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 628.3,
+    "ff": 414.7
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2952.2,
+    "ff": 1600.6
+   },
+   "pad_ps": {
+    "ss": 271.7,
+    "ff": 179.3
+   }
+  },
+  "w161_xmNW3/ck": {
+   "instance": "w161_xmNW3",
+   "port": "ck",
+   "master": "hfd_mcast_r5",
+   "region": "clk_stream:GNWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 702.5,
+    "ff": 463.7
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2878.0,
+    "ff": 1551.6
+   },
+   "pad_ps": {
+    "ss": 199.4,
+    "ff": 131.0
+   }
+  },
+  "sm16/ck": {
+   "instance": "sm16",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2682.4,
+    1422.1
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2682.4,
+    "ff": 1422.1
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm17/ck": {
+   "instance": "sm17",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2682.4,
+    "ff": 1422.1
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "sm20/ck": {
+   "instance": "sm20",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2682.4,
+    "ff": 1422.1
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "sm21/ck": {
+   "instance": "sm21",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2682.4,
+    "ff": 1422.1
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "w141_wl_sm20/ck": {
+   "instance": "w141_wl_sm20",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3006.7,
+    "ff": 1636.1
+   },
+   "pad_ps": {
+    "ss": 326.2,
+    "ff": 214.8
+   }
+  },
+  "w145_wl_sm21/ck": {
+   "instance": "w145_wl_sm21",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3006.7,
+    "ff": 1636.1
+   },
+   "pad_ps": {
+    "ss": 326.2,
+    "ff": 214.8
+   }
+  },
+  "w146_rq_sm21/ck": {
+   "instance": "w146_rq_sm21",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3112.9,
+    "ff": 1706.2
+   },
+   "pad_ps": {
+    "ss": 432.4,
+    "ff": 284.9
+   }
+  },
+  "w164_xmNW0/ck": {
+   "instance": "w164_xmNW0",
+   "port": "ck",
+   "master": "hfd_mcast_r7",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2682.4,
+    1422.1
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2946.8,
+    "ff": 1596.6
+   },
+   "pad_ps": {
+    "ss": 264.4,
+    "ff": 174.5
+   }
+  },
+  "w167_rgNW1/ck": {
+   "instance": "w167_rgNW1",
+   "port": "ck",
+   "master": "hfd_gath_r9",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 525.1,
+    "ff": 346.6
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3057.3,
+    "ff": 1669.5
+   },
+   "pad_ps": {
+    "ss": 378.7,
+    "ff": 248.9
+   }
+  },
+  "w165_rgNW0/ck": {
+   "instance": "w165_rgNW0",
+   "port": "ck",
+   "master": "hfd_gath_r8",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 500.6,
+    "ff": 330.4
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3081.8,
+    "ff": 1685.7
+   },
+   "pad_ps": {
+    "ss": 401.3,
+    "ff": 264.4
+   }
+  },
+  "w142_rq_sm20/ck": {
+   "instance": "w142_rq_sm20",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3112.9,
+    "ff": 1706.2
+   },
+   "pad_ps": {
+    "ss": 432.4,
+    "ff": 284.9
+   }
+  },
+  "w183_cdNW0/ck": {
+   "instance": "w183_cdNW0",
+   "port": "ck",
+   "master": "hfd_cdist_r15",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 531.5,
+    "ff": 350.8
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3050.9,
+    "ff": 1665.3
+   },
+   "pad_ps": {
+    "ss": 372.3,
+    "ff": 244.7
+   }
+  },
+  "w182_cdNW1/ck": {
+   "instance": "w182_cdNW1",
+   "port": "ck",
+   "master": "hfd_cdist_r14",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 563.9,
+    "ff": 372.2
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3018.5,
+    "ff": 1643.9
+   },
+   "pad_ps": {
+    "ss": 339.9,
+    "ff": 223.3
+   }
+  },
+  "w163_xmNW1a/ck": {
+   "instance": "w163_xmNW1a",
+   "port": "ck",
+   "master": "hfd_mcast_r6a",
+   "region": "clk_stream:GNWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2946.8,
+    "ff": 1596.6
+   },
+   "pad_ps": {
+    "ss": 266.3,
+    "ff": 175.3
+   }
+  },
+  "sm10/ck": {
+   "instance": "sm10",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.9,
+    "ff": 1420.7
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm11/ck": {
+   "instance": "sm11",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.9,
+    "ff": 1420.7
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm14/ck": {
+   "instance": "sm14",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.9,
+    "ff": 1420.7
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm15/ck": {
+   "instance": "sm15",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.0,
+    1419.9
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.9,
+    "ff": 1420.7
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "w81_wl_sm14/ck": {
+   "instance": "w81_wl_sm14",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3003.2,
+    "ff": 1634.7
+   },
+   "pad_ps": {
+    "ss": 324.3,
+    "ff": 214.0
+   }
+  },
+  "w85_wl_sm15/ck": {
+   "instance": "w85_wl_sm15",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3003.2,
+    "ff": 1634.7
+   },
+   "pad_ps": {
+    "ss": 324.3,
+    "ff": 214.0
+   }
+  },
+  "w86_rq_sm15/ck": {
+   "instance": "w86_rq_sm15",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3109.4,
+    "ff": 1704.8
+   },
+   "pad_ps": {
+    "ss": 430.5,
+    "ff": 284.1
+   }
+  },
+  "w97_xmSE2b/ck": {
+   "instance": "w97_xmSE2b",
+   "port": "ck",
+   "master": "hfd_mcast_r6b",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2943.3,
+    "ff": 1595.2
+   },
+   "pad_ps": {
+    "ss": 264.4,
+    "ff": 174.5
+   }
+  },
+  "w98_xmSE3/ck": {
+   "instance": "w98_xmSE3",
+   "port": "ck",
+   "master": "hfd_mcast_r7",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2943.3,
+    "ff": 1595.2
+   },
+   "pad_ps": {
+    "ss": 264.4,
+    "ff": 174.5
+   }
+  },
+  "w102_rgSE2/ck": {
+   "instance": "w102_rgSE2",
+   "port": "ck",
+   "master": "hfd_gath_r25",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.0,
+    1419.9
+   ],
+   "internal_ps": {
+    "ss": 628.3,
+    "ff": 414.7
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2950.6,
+    "ff": 1600.0
+   },
+   "pad_ps": {
+    "ss": 273.6,
+    "ff": 180.1
+   }
+  },
+  "w82_rq_sm14/ck": {
+   "instance": "w82_rq_sm14",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3109.4,
+    "ff": 1704.8
+   },
+   "pad_ps": {
+    "ss": 430.5,
+    "ff": 284.1
+   }
+  },
+  "w117_cdSE0/ck": {
+   "instance": "w117_cdSE0",
+   "port": "ck",
+   "master": "hfd_cdist_r15",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.9,
+    1420.7
+   ],
+   "internal_ps": {
+    "ss": 531.5,
+    "ff": 350.8
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3047.4,
+    "ff": 1663.9
+   },
+   "pad_ps": {
+    "ss": 368.5,
+    "ff": 243.2
+   }
+  },
+  "w100_rgSE3/ck": {
+   "instance": "w100_rgSE3",
+   "port": "ck",
+   "master": "hfd_gath_r8",
+   "region": "clk_stream:GSEe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2677.0,
+    1419.9
+   ],
+   "internal_ps": {
+    "ss": 500.6,
+    "ff": 330.4
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3078.3,
+    "ff": 1684.3
+   },
+   "pad_ps": {
+    "ss": 401.3,
+    "ff": 264.4
+   }
+  },
+  "sm8/ck": {
+   "instance": "sm8",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.4,
+    "ff": 1420.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm9/ck": {
+   "instance": "sm9",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.4,
+    "ff": 1420.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm12/ck": {
+   "instance": "sm12",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.4,
+    "ff": 1420.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm13/ck": {
+   "instance": "sm13",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2678.4,
+    "ff": 1420.5
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "w73_wl_sm12/ck": {
+   "instance": "w73_wl_sm12",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.3,
+    1421.2
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3002.7,
+    "ff": 1634.5
+   },
+   "pad_ps": {
+    "ss": 322.4,
+    "ff": 213.3
+   }
+  },
+  "w77_wl_sm13/ck": {
+   "instance": "w77_wl_sm13",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3002.7,
+    "ff": 1634.5
+   },
+   "pad_ps": {
+    "ss": 324.3,
+    "ff": 214.0
+   }
+  },
+  "w78_rq_sm13/ck": {
+   "instance": "w78_rq_sm13",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3108.9,
+    "ff": 1704.6
+   },
+   "pad_ps": {
+    "ss": 430.5,
+    "ff": 284.1
+   }
+  },
+  "w96_xmSE1a/ck": {
+   "instance": "w96_xmSE1a",
+   "port": "ck",
+   "master": "hfd_mcast_r6a",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.3,
+    1421.2
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2942.8,
+    "ff": 1595.0
+   },
+   "pad_ps": {
+    "ss": 262.5,
+    "ff": 173.8
+   }
+  },
+  "w96_xmSE1b/ck": {
+   "instance": "w96_xmSE1b",
+   "port": "ck",
+   "master": "hfd_mcast_r6b",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.3,
+    1421.2
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2942.8,
+    "ff": 1595.0
+   },
+   "pad_ps": {
+    "ss": 262.5,
+    "ff": 173.8
+   }
+  },
+  "w99_rgSE0/ck": {
+   "instance": "w99_rgSE0",
+   "port": "ck",
+   "master": "hfd_gath_r8",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2676.5,
+    1419.7
+   ],
+   "internal_ps": {
+    "ss": 500.6,
+    "ff": 330.4
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3077.8,
+    "ff": 1684.1
+   },
+   "pad_ps": {
+    "ss": 401.3,
+    "ff": 264.4
+   }
+  },
+  "w95_xmSE0/ck": {
+   "instance": "w95_xmSE0",
+   "port": "ck",
+   "master": "hfd_mcast_r5",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 702.5,
+    "ff": 463.7
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2875.9,
+    "ff": 1550.8
+   },
+   "pad_ps": {
+    "ss": 197.5,
+    "ff": 130.3
+   }
+  },
+  "w74_rq_sm12/ck": {
+   "instance": "w74_rq_sm12",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.3,
+    1421.2
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3108.9,
+    "ff": 1704.6
+   },
+   "pad_ps": {
+    "ss": 428.6,
+    "ff": 283.4
+   }
+  },
+  "w97_xmSE2a/ck": {
+   "instance": "w97_xmSE2a",
+   "port": "ck",
+   "master": "hfd_mcast_r6a",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2676.5,
+    1419.7
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2942.8,
+    "ff": 1595.0
+   },
+   "pad_ps": {
+    "ss": 266.3,
+    "ff": 175.3
+   }
+  },
+  "w101_rgSE1/ck": {
+   "instance": "w101_rgSE1",
+   "port": "ck",
+   "master": "hfd_gath_r24",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2676.5,
+    1419.7
+   ],
+   "internal_ps": {
+    "ss": 525.1,
+    "ff": 346.6
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3053.3,
+    "ff": 1667.9
+   },
+   "pad_ps": {
+    "ss": 376.8,
+    "ff": 248.2
+   }
+  },
+  "w116_cdSE1/ck": {
+   "instance": "w116_cdSE1",
+   "port": "ck",
+   "master": "hfd_cdist_r14",
+   "region": "clk_stream:GSEw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.4,
+    1420.5
+   ],
+   "internal_ps": {
+    "ss": 563.9,
+    "ff": 372.2
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3014.5,
+    "ff": 1642.3
+   },
+   "pad_ps": {
+    "ss": 336.1,
+    "ff": 221.8
+   }
+  },
+  "sm2/ck": {
+   "instance": "sm2",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2680.5,
+    "ff": 1421.3
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm3/ck": {
+   "instance": "sm3",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2680.5,
+    "ff": 1421.3
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "sm6/ck": {
+   "instance": "sm6",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2680.5,
+    "ff": 1421.3
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm7/ck": {
+   "instance": "sm7",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2680.5,
+    "ff": 1421.3
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "w10_wl_sm6/ck": {
+   "instance": "w10_wl_sm6",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2682.4,
+    1422.1
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3004.8,
+    "ff": 1635.3
+   },
+   "pad_ps": {
+    "ss": 322.4,
+    "ff": 213.2
+   }
+  },
+  "w14_wl_sm7/ck": {
+   "instance": "w14_wl_sm7",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3004.8,
+    "ff": 1635.3
+   },
+   "pad_ps": {
+    "ss": 324.3,
+    "ff": 214.0
+   }
+  },
+  "w15_rq_sm7/ck": {
+   "instance": "w15_rq_sm7",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3111.0,
+    "ff": 1705.4
+   },
+   "pad_ps": {
+    "ss": 430.5,
+    "ff": 284.1
+   }
+  },
+  "w25_xmSW2a/ck": {
+   "instance": "w25_xmSW2a",
+   "port": "ck",
+   "master": "hfd_mcast_r6a",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2944.9,
+    "ff": 1595.8
+   },
+   "pad_ps": {
+    "ss": 264.4,
+    "ff": 174.5
+   }
+  },
+  "w25_xmSW2b/ck": {
+   "instance": "w25_xmSW2b",
+   "port": "ck",
+   "master": "hfd_mcast_r6b",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2944.9,
+    "ff": 1595.8
+   },
+   "pad_ps": {
+    "ss": 264.4,
+    "ff": 174.5
+   }
+  },
+  "w26_xmSW1b/ck": {
+   "instance": "w26_xmSW1b",
+   "port": "ck",
+   "master": "hfd_mcast_r6b",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2944.9,
+    "ff": 1595.8
+   },
+   "pad_ps": {
+    "ss": 264.4,
+    "ff": 174.5
+   }
+  },
+  "w29_rgSW3/ck": {
+   "instance": "w29_rgSW3",
+   "port": "ck",
+   "master": "hfd_gath_r8",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 500.6,
+    "ff": 330.4
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3079.9,
+    "ff": 1684.9
+   },
+   "pad_ps": {
+    "ss": 401.3,
+    "ff": 264.3
+   }
+  },
+  "w11_rq_sm6/ck": {
+   "instance": "w11_rq_sm6",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2682.4,
+    1422.1
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3111.0,
+    "ff": 1705.4
+   },
+   "pad_ps": {
+    "ss": 428.6,
+    "ff": 283.3
+   }
+  },
+  "w31_rgSW2/ck": {
+   "instance": "w31_rgSW2",
+   "port": "ck",
+   "master": "hfd_gath_r10",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 628.3,
+    "ff": 414.7
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2952.2,
+    "ff": 1600.6
+   },
+   "pad_ps": {
+    "ss": 271.7,
+    "ff": 179.3
+   }
+  },
+  "w24_xmSW3/ck": {
+   "instance": "w24_xmSW3",
+   "port": "ck",
+   "master": "hfd_mcast_r5",
+   "region": "clk_stream:GSWe",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 702.5,
+    "ff": 463.7
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2878.0,
+    "ff": 1551.6
+   },
+   "pad_ps": {
+    "ss": 197.5,
+    "ff": 130.3
+   }
+  },
+  "sm0/ck": {
+   "instance": "sm0",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2682.4,
+    1422.1
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2682.4,
+    "ff": 1422.1
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "sm1/ck": {
+   "instance": "sm1",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2682.4,
+    "ff": 1422.1
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "sm4/ck": {
+   "instance": "sm4",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2682.4,
+    "ff": 1422.1
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "sm5/ck": {
+   "instance": "sm5",
+   "port": "ck",
+   "master": "hfd_sm",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2682.4,
+    "ff": 1422.1
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.8
+   }
+  },
+  "w2_wl_sm4/ck": {
+   "instance": "w2_wl_sm4",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3006.7,
+    "ff": 1636.1
+   },
+   "pad_ps": {
+    "ss": 326.2,
+    "ff": 214.8
+   }
+  },
+  "w6_wl_sm5/ck": {
+   "instance": "w6_wl_sm5",
+   "port": "ck",
+   "master": "hfd_meso_r1",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 575.7,
+    "ff": 380.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3006.7,
+    "ff": 1636.1
+   },
+   "pad_ps": {
+    "ss": 326.2,
+    "ff": 214.8
+   }
+  },
+  "w7_rq_sm5/ck": {
+   "instance": "w7_rq_sm5",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2682.4,
+    1422.1
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3112.9,
+    "ff": 1706.2
+   },
+   "pad_ps": {
+    "ss": 430.5,
+    "ff": 284.1
+   }
+  },
+  "w27_xmSW0/ck": {
+   "instance": "w27_xmSW0",
+   "port": "ck",
+   "master": "hfd_mcast_r7",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2946.8,
+    "ff": 1596.6
+   },
+   "pad_ps": {
+    "ss": 266.3,
+    "ff": 175.3
+   }
+  },
+  "w30_rgSW1/ck": {
+   "instance": "w30_rgSW1",
+   "port": "ck",
+   "master": "hfd_gath_r9",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 525.1,
+    "ff": 346.6
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3057.3,
+    "ff": 1669.5
+   },
+   "pad_ps": {
+    "ss": 378.7,
+    "ff": 248.9
+   }
+  },
+  "w28_rgSW0/ck": {
+   "instance": "w28_rgSW0",
+   "port": "ck",
+   "master": "hfd_gath_r8",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 500.6,
+    "ff": 330.4
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3081.8,
+    "ff": 1685.7
+   },
+   "pad_ps": {
+    "ss": 401.3,
+    "ff": 264.4
+   }
+  },
+  "w3_rq_sm4/ck": {
+   "instance": "w3_rq_sm4",
+   "port": "ck",
+   "master": "hfd_stn_r2",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 469.5,
+    "ff": 309.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3112.9,
+    "ff": 1706.2
+   },
+   "pad_ps": {
+    "ss": 432.4,
+    "ff": 284.9
+   }
+  },
+  "w44_cdSW0/ck": {
+   "instance": "w44_cdSW0",
+   "port": "ck",
+   "master": "hfd_cdist_r15",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 531.5,
+    "ff": 350.8
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3050.9,
+    "ff": 1665.3
+   },
+   "pad_ps": {
+    "ss": 372.3,
+    "ff": 244.7
+   }
+  },
+  "w43_cdSW1/ck": {
+   "instance": "w43_cdSW1",
+   "port": "ck",
+   "master": "hfd_cdist_r14",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2678.6,
+    1420.6
+   ],
+   "internal_ps": {
+    "ss": 563.9,
+    "ff": 372.2
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 3018.5,
+    "ff": 1643.9
+   },
+   "pad_ps": {
+    "ss": 339.9,
+    "ff": 223.3
+   }
+  },
+  "w26_xmSW1a/ck": {
+   "instance": "w26_xmSW1a",
+   "port": "ck",
+   "master": "hfd_mcast_r6a",
+   "region": "clk_stream:GSWw",
+   "domain": "clk_stream",
+   "raw_cts_ps": [
+    2680.5,
+    1421.3
+   ],
+   "internal_ps": {
+    "ss": 635.6,
+    "ff": 419.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 2946.8,
+    "ff": 1596.6
+   },
+   "pad_ps": {
+    "ss": 266.3,
+    "ff": 175.3
+   }
+  },
+  "hb_sfu_NE/ck": {
+   "instance": "hb_sfu_NE",
+   "port": "ck",
+   "master": "hfd_sfu",
+   "region": "clk_serial:HUB-C.1.1.1",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.3,
+    182.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 843.3,
+    "ff": 682.0
+   },
+   "pad_ps": {
+    "ss": 500.0,
+    "ff": 500.0
+   }
+  },
+  "hb_hc_NE/ck": {
+   "instance": "hb_hc_NE",
+   "port": "ck",
+   "master": "hfd_hc",
+   "region": "clk_serial:HUB-C.1.1.1",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.3,
+    182.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 843.3,
+    "ff": 682.0
+   },
+   "pad_ps": {
+    "ss": 500.0,
+    "ff": 500.0
+   }
+  },
+  "hb_sfu_SE/ck": {
+   "instance": "hb_sfu_SE",
+   "port": "ck",
+   "master": "hfd_sfu",
+   "region": "clk_serial:HUB-C.1.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.3,
+    182.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 843.3,
+    "ff": 682.0
+   },
+   "pad_ps": {
+    "ss": 500.0,
+    "ff": 500.0
+   }
+  },
+  "hb_hc_SE/ck": {
+   "instance": "hb_hc_SE",
+   "port": "ck",
+   "master": "hfd_hc",
+   "region": "clk_serial:HUB-C.1.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.3,
+    182.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 843.3,
+    "ff": 682.0
+   },
+   "pad_ps": {
+    "ss": 500.0,
+    "ff": 500.0
+   }
+  },
+  "hb_su_SE/ck": {
+   "instance": "hb_su_SE",
+   "port": "ck",
+   "master": "hfd_su",
+   "region": "clk_serial:HUB-C.1.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.3,
+    182.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 843.3,
+    "ff": 682.0
+   },
+   "pad_ps": {
+    "ss": 500.0,
+    "ff": 500.0
+   }
+  },
+  "hb_su_NE/ck": {
+   "instance": "hb_su_NE",
+   "port": "ck",
+   "master": "hfd_su",
+   "region": "clk_serial:HUB-C.1.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.3,
+    182.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 843.3,
+    "ff": 682.0
+   },
+   "pad_ps": {
+    "ss": 500.0,
+    "ff": 500.0
+   }
+  },
+  "hb_hc_NW/ck": {
+   "instance": "hb_hc_NW",
+   "port": "ck",
+   "master": "hfd_hc",
+   "region": "clk_serial:HUB-C.0.1.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.4,
+    182.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 843.4,
+    "ff": 682.0
+   },
+   "pad_ps": {
+    "ss": 500.0,
+    "ff": 500.0
+   }
+  },
+  "hb_sfu_NW/ck": {
+   "instance": "hb_sfu_NW",
+   "port": "ck",
+   "master": "hfd_sfu",
+   "region": "clk_serial:HUB-C.0.1.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.2,
+    181.9
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 843.4,
+    "ff": 682.0
+   },
+   "pad_ps": {
+    "ss": 500.2,
+    "ff": 500.1
+   }
+  },
+  "hb_su_NW/ck": {
+   "instance": "hb_su_NW",
+   "port": "ck",
+   "master": "hfd_su",
+   "region": "clk_serial:HUB-C.0.1.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.4,
+    182.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 843.4,
+    "ff": 682.0
+   },
+   "pad_ps": {
+    "ss": 500.0,
+    "ff": 500.0
+   }
+  },
+  "hb_su_full/ck": {
+   "instance": "hb_su_full",
+   "port": "ck",
+   "master": "hfd_su_full",
+   "region": "clk_serial:HUB-C.0.1.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.4,
+    182.0
+   ],
+   "internal_ps": {
+    "ss": 730.0,
+    "ff": 481.8
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1013.4,
+    "ff": 794.2
+   },
+   "pad_ps": {
+    "ss": 670.0,
+    "ff": 612.2
+   }
+  },
+  "hb_quant/ck": {
+   "instance": "hb_quant",
+   "port": "ck",
+   "master": "hfd_quant",
+   "region": "clk_serial:HUB-C.0.1.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.2,
+    181.9
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 843.4,
+    "ff": 682.0
+   },
+   "pad_ps": {
+    "ss": 500.2,
+    "ff": 500.1
+   }
+  },
+  "hb_su_red/ck": {
+   "instance": "hb_su_red",
+   "port": "ck",
+   "master": "hfd_su_red",
+   "region": "clk_serial:HUB-C.0.1.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    343.4,
+    182.0
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 843.4,
+    "ff": 682.0
+   },
+   "pad_ps": {
+    "ss": 500.0,
+    "ff": 500.0
+   }
+  },
+  "hb_hc_SW/ck": {
+   "instance": "hb_hc_SW",
+   "port": "ck",
+   "master": "hfd_hc",
+   "region": "clk_serial:HUB-C.0.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    344.0,
+    182.2
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 844.0,
+    "ff": 682.2
+   },
+   "pad_ps": {
+    "ss": 500.0,
+    "ff": 500.0
+   }
+  },
+  "hb_sfu_SW/ck": {
+   "instance": "hb_sfu_SW",
+   "port": "ck",
+   "master": "hfd_sfu",
+   "region": "clk_serial:HUB-C.0.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    344.0,
+    182.2
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 844.0,
+    "ff": 682.2
+   },
+   "pad_ps": {
+    "ss": 500.0,
+    "ff": 500.0
+   }
+  },
+  "hb_su_SW/ck": {
+   "instance": "hb_su_SW",
+   "port": "ck",
+   "master": "hfd_su",
+   "region": "clk_serial:HUB-C.0.0",
+   "domain": "clk_serial",
+   "raw_cts_ps": [
+    342.1,
+    181.5
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 844.0,
+    "ff": 682.2
+   },
+   "pad_ps": {
+    "ss": 501.9,
+    "ff": 500.7
+   }
+  },
+  "svc_NE_s4/ck": {
+   "instance": "svc_NE_s4",
+   "port": "ck",
+   "master": "hfd_svc_SE_s4",
+   "region": "clk_hbm:SVCNE.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1873.9,
+    994.4
+   ],
+   "internal_ps": {
+    "ss": 808,
+    "ff": 515
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s4_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s4_70a27c406)",
+   "entry_ps": {
+    "ss": 1894.9,
+    "ff": 1004.4
+   },
+   "pad_ps": {
+    "ss": 21.0,
+    "ff": 10.0
+   }
+  },
+  "svc_NE_s5/ck": {
+   "instance": "svc_NE_s5",
+   "port": "ck",
+   "master": "hfd_svc_SE_s5",
+   "region": "clk_hbm:SVCNE.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1873.9,
+    994.4
+   ],
+   "internal_ps": {
+    "ss": 829,
+    "ff": 525
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s5_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_70a27c406)",
+   "entry_ps": {
+    "ss": 1873.9,
+    "ff": 994.4
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "svc_NE_s6/ck": {
+   "instance": "svc_NE_s6",
+   "port": "ck",
+   "master": "hfd_svc_SE_s6",
+   "region": "clk_hbm:SVCNE.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.8,
+    995.1
+   ],
+   "internal_ps": {
+    "ss": 562,
+    "ff": 359
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s6_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s6_70a27c406)",
+   "entry_ps": {
+    "ss": 2140.9,
+    "ff": 1160.4
+   },
+   "pad_ps": {
+    "ss": 265.1,
+    "ff": 165.3
+   }
+  },
+  "svc_NE_s7/ck": {
+   "instance": "svc_NE_s7",
+   "port": "ck",
+   "master": "hfd_svc_SE_s7",
+   "region": "clk_hbm:SVCNE.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.8,
+    995.1
+   ],
+   "internal_ps": {
+    "ss": 631,
+    "ff": 402
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s7_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s7_70a27c406)",
+   "entry_ps": {
+    "ss": 2071.9,
+    "ff": 1117.4
+   },
+   "pad_ps": {
+    "ss": 196.1,
+    "ff": 122.3
+   }
+  },
+  "svc_NE_s8/ck": {
+   "instance": "svc_NE_s8",
+   "port": "ck",
+   "master": "hfd_svc_SE_s8",
+   "region": "clk_hbm:SVCNE.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.8,
+    995.1
+   ],
+   "internal_ps": {
+    "ss": 708.5,
+    "ff": 467.6
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1994.4,
+    "ff": 1051.8
+   },
+   "pad_ps": {
+    "ss": 118.6,
+    "ff": 56.7
+   }
+  },
+  "svc_NE_s0/ck": {
+   "instance": "svc_NE_s0",
+   "port": "ck",
+   "master": "hfd_svc_SE_s0",
+   "region": "clk_hbm:SVCNE.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 1057,
+    "ff": 694
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s0_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_70a27c406)",
+   "entry_ps": {
+    "ss": 1890.6,
+    "ff": 1026.6
+   },
+   "pad_ps": {
+    "ss": 15.6,
+    "ff": 31.8
+   }
+  },
+  "svc_NE_s1/ck": {
+   "instance": "svc_NE_s1",
+   "port": "ck",
+   "master": "hfd_svc_SE_s1",
+   "region": "clk_hbm:SVCNE.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 939.3,
+    "ff": 615.9
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s1_312bf36c8_s4 ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_312bf36c8_s4/cl/calib.json",
+   "entry_ps": {
+    "ss": 2008.3,
+    "ff": 1104.7
+   },
+   "pad_ps": {
+    "ss": 133.3,
+    "ff": 109.9
+   }
+  },
+  "svc_NE_s2/ck": {
+   "instance": "svc_NE_s2",
+   "port": "ck",
+   "master": "hfd_svc_SE_s2",
+   "region": "clk_hbm:SVCNE.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 758,
+    "ff": 476
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s2_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s2_70a27c406)",
+   "entry_ps": {
+    "ss": 2189.6,
+    "ff": 1244.6
+   },
+   "pad_ps": {
+    "ss": 314.6,
+    "ff": 249.8
+   }
+  },
+  "svc_NE_s3/ck": {
+   "instance": "svc_NE_s3",
+   "port": "ck",
+   "master": "hfd_svc_SE_s3",
+   "region": "clk_hbm:SVCNE.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 1072.6,
+    "ff": 725.8
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s3_312bf36c8_s4 ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_312bf36c8_s4/cl/calib.json",
+   "entry_ps": {
+    "ss": 1875.0,
+    "ff": 994.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "svc_NW_s4/ck": {
+   "instance": "svc_NW_s4",
+   "port": "ck",
+   "master": "hfd_svc_SW_s4",
+   "region": "clk_hbm:SVCNW.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 820.4,
+    "ff": 541.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1954.0,
+    "ff": 1046.9
+   },
+   "pad_ps": {
+    "ss": 79.0,
+    "ff": 52.1
+   }
+  },
+  "svc_NW_s5/ck": {
+   "instance": "svc_NW_s5",
+   "port": "ck",
+   "master": "hfd_svc_SW_s5",
+   "region": "clk_hbm:SVCNW.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 884.0,
+    "ff": 583.4
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1890.4,
+    "ff": 1005.0
+   },
+   "pad_ps": {
+    "ss": 15.4,
+    "ff": 10.2
+   }
+  },
+  "svc_NW_s6/ck": {
+   "instance": "svc_NW_s6",
+   "port": "ck",
+   "master": "hfd_svc_SW_s6",
+   "region": "clk_hbm:SVCNW.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 883.8,
+    "ff": 583.3
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1890.6,
+    "ff": 1005.1
+   },
+   "pad_ps": {
+    "ss": 15.6,
+    "ff": 10.3
+   }
+  },
+  "svc_NW_s7/ck": {
+   "instance": "svc_NW_s7",
+   "port": "ck",
+   "master": "hfd_svc_SW_s7",
+   "region": "clk_hbm:SVCNW.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 899.4,
+    "ff": 593.6
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1875.0,
+    "ff": 994.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "svc_NW_s0/ck": {
+   "instance": "svc_NW_s0",
+   "port": "ck",
+   "master": "hfd_svc_SW_s0",
+   "region": "clk_hbm:SVCNW.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 874.1,
+    "ff": 576.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1996.9,
+    "ff": 1071.7
+   },
+   "pad_ps": {
+    "ss": 121.9,
+    "ff": 76.9
+   }
+  },
+  "svc_NW_s1/ck": {
+   "instance": "svc_NW_s1",
+   "port": "ck",
+   "master": "hfd_svc_SW_s1",
+   "region": "clk_hbm:SVCNW.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 996.0,
+    "ff": 653.8
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SW_s1_312bf36c8_s4 ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s1_312bf36c8_s4/cl/calib.json",
+   "entry_ps": {
+    "ss": 1875.0,
+    "ff": 994.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "svc_NW_s2/ck": {
+   "instance": "svc_NW_s2",
+   "port": "ck",
+   "master": "hfd_svc_SW_s2",
+   "region": "clk_hbm:SVCNW.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 882.7,
+    "ff": 582.6
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1988.3,
+    "ff": 1066.0
+   },
+   "pad_ps": {
+    "ss": 113.3,
+    "ff": 71.2
+   }
+  },
+  "svc_NW_s3/ck": {
+   "instance": "svc_NW_s3",
+   "port": "ck",
+   "master": "hfd_svc_SW_s3",
+   "region": "clk_hbm:SVCNW.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 895.7,
+    "ff": 597.7
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SW_s3_312bf36c8_s4 ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_312bf36c8_s4/cl/calib.json",
+   "entry_ps": {
+    "ss": 1975.3,
+    "ff": 1050.9
+   },
+   "pad_ps": {
+    "ss": 100.3,
+    "ff": 56.1
+   }
+  },
+  "svc_SE_s4/ck": {
+   "instance": "svc_SE_s4",
+   "port": "ck",
+   "master": "hfd_svc_SE_s4",
+   "region": "clk_hbm:SVCSE.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1873.9,
+    994.4
+   ],
+   "internal_ps": {
+    "ss": 808,
+    "ff": 515
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s4_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s4_70a27c406)",
+   "entry_ps": {
+    "ss": 1894.9,
+    "ff": 1004.4
+   },
+   "pad_ps": {
+    "ss": 21.0,
+    "ff": 10.0
+   }
+  },
+  "svc_SE_s5/ck": {
+   "instance": "svc_SE_s5",
+   "port": "ck",
+   "master": "hfd_svc_SE_s5",
+   "region": "clk_hbm:SVCSE.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1873.9,
+    994.4
+   ],
+   "internal_ps": {
+    "ss": 829,
+    "ff": 525
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s5_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_70a27c406)",
+   "entry_ps": {
+    "ss": 1873.9,
+    "ff": 994.4
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "svc_SE_s6/ck": {
+   "instance": "svc_SE_s6",
+   "port": "ck",
+   "master": "hfd_svc_SE_s6",
+   "region": "clk_hbm:SVCSE.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.8,
+    995.1
+   ],
+   "internal_ps": {
+    "ss": 562,
+    "ff": 359
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s6_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s6_70a27c406)",
+   "entry_ps": {
+    "ss": 2140.9,
+    "ff": 1160.4
+   },
+   "pad_ps": {
+    "ss": 265.1,
+    "ff": 165.3
+   }
+  },
+  "svc_SE_s7/ck": {
+   "instance": "svc_SE_s7",
+   "port": "ck",
+   "master": "hfd_svc_SE_s7",
+   "region": "clk_hbm:SVCSE.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.8,
+    995.1
+   ],
+   "internal_ps": {
+    "ss": 631,
+    "ff": 402
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s7_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s7_70a27c406)",
+   "entry_ps": {
+    "ss": 2071.9,
+    "ff": 1117.4
+   },
+   "pad_ps": {
+    "ss": 196.1,
+    "ff": 122.3
+   }
+  },
+  "svc_SE_s8/ck": {
+   "instance": "svc_SE_s8",
+   "port": "ck",
+   "master": "hfd_svc_SE_s8",
+   "region": "clk_hbm:SVCSE.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.8,
+    995.1
+   ],
+   "internal_ps": {
+    "ss": 708.5,
+    "ff": 467.6
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1994.4,
+    "ff": 1051.8
+   },
+   "pad_ps": {
+    "ss": 118.6,
+    "ff": 56.7
+   }
+  },
+  "svc_SE_s0/ck": {
+   "instance": "svc_SE_s0",
+   "port": "ck",
+   "master": "hfd_svc_SE_s0",
+   "region": "clk_hbm:SVCSE.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 1057,
+    "ff": 694
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s0_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_70a27c406)",
+   "entry_ps": {
+    "ss": 1890.6,
+    "ff": 1026.6
+   },
+   "pad_ps": {
+    "ss": 15.6,
+    "ff": 31.8
+   }
+  },
+  "svc_SE_s1/ck": {
+   "instance": "svc_SE_s1",
+   "port": "ck",
+   "master": "hfd_svc_SE_s1",
+   "region": "clk_hbm:SVCSE.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 939.3,
+    "ff": 615.9
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s1_312bf36c8_s4 ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s1_312bf36c8_s4/cl/calib.json",
+   "entry_ps": {
+    "ss": 2008.3,
+    "ff": 1104.7
+   },
+   "pad_ps": {
+    "ss": 133.3,
+    "ff": 109.9
+   }
+  },
+  "svc_SE_s2/ck": {
+   "instance": "svc_SE_s2",
+   "port": "ck",
+   "master": "hfd_svc_SE_s2",
+   "region": "clk_hbm:SVCSE.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 758,
+    "ff": 476
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s2_70a27c406 (ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s2_70a27c406)",
+   "entry_ps": {
+    "ss": 2189.6,
+    "ff": 1244.6
+   },
+   "pad_ps": {
+    "ss": 314.6,
+    "ff": 249.8
+   }
+  },
+  "svc_SE_s3/ck": {
+   "instance": "svc_SE_s3",
+   "port": "ck",
+   "master": "hfd_svc_SE_s3",
+   "region": "clk_hbm:SVCSE.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 1072.6,
+    "ff": 725.8
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SE_s3_312bf36c8_s4 ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_312bf36c8_s4/cl/calib.json",
+   "entry_ps": {
+    "ss": 1875.0,
+    "ff": 994.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "svc_SW_s4/ck": {
+   "instance": "svc_SW_s4",
+   "port": "ck",
+   "master": "hfd_svc_SW_s4",
+   "region": "clk_hbm:SVCSW.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 820.4,
+    "ff": 541.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1954.0,
+    "ff": 1046.9
+   },
+   "pad_ps": {
+    "ss": 79.0,
+    "ff": 52.1
+   }
+  },
+  "svc_SW_s5/ck": {
+   "instance": "svc_SW_s5",
+   "port": "ck",
+   "master": "hfd_svc_SW_s5",
+   "region": "clk_hbm:SVCSW.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 884.0,
+    "ff": 583.4
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1890.4,
+    "ff": 1005.0
+   },
+   "pad_ps": {
+    "ss": 15.4,
+    "ff": 10.2
+   }
+  },
+  "svc_SW_s6/ck": {
+   "instance": "svc_SW_s6",
+   "port": "ck",
+   "master": "hfd_svc_SW_s6",
+   "region": "clk_hbm:SVCSW.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 883.8,
+    "ff": 583.3
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1890.6,
+    "ff": 1005.1
+   },
+   "pad_ps": {
+    "ss": 15.6,
+    "ff": 10.3
+   }
+  },
+  "svc_SW_s7/ck": {
+   "instance": "svc_SW_s7",
+   "port": "ck",
+   "master": "hfd_svc_SW_s7",
+   "region": "clk_hbm:SVCSW.1",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 899.4,
+    "ff": 593.6
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1875.0,
+    "ff": 994.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "svc_SW_s0/ck": {
+   "instance": "svc_SW_s0",
+   "port": "ck",
+   "master": "hfd_svc_SW_s0",
+   "region": "clk_hbm:SVCSW.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 874.1,
+    "ff": 576.9
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1996.9,
+    "ff": 1071.7
+   },
+   "pad_ps": {
+    "ss": 121.9,
+    "ff": 76.9
+   }
+  },
+  "svc_SW_s1/ck": {
+   "instance": "svc_SW_s1",
+   "port": "ck",
+   "master": "hfd_svc_SW_s1",
+   "region": "clk_hbm:SVCSW.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 996.0,
+    "ff": 653.8
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SW_s1_312bf36c8_s4 ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s1_312bf36c8_s4/cl/calib.json",
+   "entry_ps": {
+    "ss": 1875.0,
+    "ff": 994.8
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "svc_SW_s2/ck": {
+   "instance": "svc_SW_s2",
+   "port": "ck",
+   "master": "hfd_svc_SW_s2",
+   "region": "clk_hbm:SVCSW.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 882.7,
+    "ff": 582.6
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 1988.3,
+    "ff": 1066.0
+   },
+   "pad_ps": {
+    "ss": 113.3,
+    "ff": 71.2
+   }
+  },
+  "svc_SW_s3/ck": {
+   "instance": "svc_SW_s3",
+   "port": "ck",
+   "master": "hfd_svc_SW_s3",
+   "region": "clk_hbm:SVCSW.0",
+   "domain": "clk_hbm",
+   "raw_cts_ps": [
+    1875.0,
+    994.8
+   ],
+   "internal_ps": {
+    "ss": 895.7,
+    "ff": 597.7
+   },
+   "insertion_grade": "measured",
+   "insertion_source": "closure-loop calibrate hbm_svc_SW_s3_312bf36c8_s4 ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_312bf36c8_s4/cl/calib.json",
+   "entry_ps": {
+    "ss": 1975.3,
+    "ff": 1050.9
+   },
+   "pad_ps": {
+    "ss": 100.3,
+    "ff": 56.1
+   }
+  },
+  "w335_host/ck": {
+   "instance": "w335_host",
+   "port": "ck",
+   "master": "hfd_meso_r32",
+   "region": "clk_link:die.1.1.1.1",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.4,
+    132.3
+   ],
+   "internal_ps": {
+    "ss": 521.5,
+    "ff": 344.2
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 628.9,
+    "ff": 382.1
+   },
+   "pad_ps": {
+    "ss": 378.5,
+    "ff": 249.8
+   }
+  },
+  "lk_host/ck": {
+   "instance": "lk_host",
+   "port": "ck",
+   "master": "ot_hbm_host_phy",
+   "region": "clk_link:die.1.1.1.1",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.4,
+    132.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 250.4,
+    "ff": 132.3
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "w310_lk_lk_N0/ck": {
+   "instance": "w310_lk_lk_N0",
+   "port": "ck",
+   "master": "hfd_meso_r28",
+   "region": "clk_link:die.0.1",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.4,
+    132.3
+   ],
+   "internal_ps": {
+    "ss": 525.0,
+    "ff": 346.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 625.4,
+    "ff": 379.8
+   },
+   "pad_ps": {
+    "ss": 375.0,
+    "ff": 247.5
+   }
+  },
+  "w315_lk_lk_N1/ck": {
+   "instance": "w315_lk_lk_N1",
+   "port": "ck",
+   "master": "hfd_meso_r28",
+   "region": "clk_link:die.0.1",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.4,
+    132.3
+   ],
+   "internal_ps": {
+    "ss": 525.0,
+    "ff": 346.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 625.4,
+    "ff": 379.8
+   },
+   "pad_ps": {
+    "ss": 375.0,
+    "ff": 247.5
+   }
+  },
+  "lk_N0/ck": {
+   "instance": "lk_N0",
+   "port": "ck",
+   "master": "ot_pdie_serdes",
+   "region": "clk_link:die.0.1",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.4,
+    132.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 250.4,
+    "ff": 132.3
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "lk_N1/ck": {
+   "instance": "lk_N1",
+   "port": "ck",
+   "master": "ot_pdie_serdes",
+   "region": "clk_link:die.0.1",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.4,
+    132.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 250.4,
+    "ff": 132.3
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "lk_N2/ck": {
+   "instance": "lk_N2",
+   "port": "ck",
+   "master": "ot_pdie_serdes",
+   "region": "clk_link:die.0.1",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.4,
+    132.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 250.4,
+    "ff": 132.3
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "w319_lk_lk_N2/ck": {
+   "instance": "w319_lk_lk_N2",
+   "port": "ck",
+   "master": "hfd_meso_r28",
+   "region": "clk_link:die.0.1",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.4,
+    132.3
+   ],
+   "internal_ps": {
+    "ss": 525.0,
+    "ff": 346.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 625.4,
+    "ff": 379.8
+   },
+   "pad_ps": {
+    "ss": 375.0,
+    "ff": 247.5
+   }
+  },
+  "lk_N3/ck": {
+   "instance": "lk_N3",
+   "port": "ck",
+   "master": "ot_pdie_serdes",
+   "region": "clk_link:die.0.1",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.4,
+    132.3
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 250.4,
+    "ff": 132.3
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "w323_lk_lk_N3/ck": {
+   "instance": "w323_lk_lk_N3",
+   "port": "ck",
+   "master": "hfd_meso_r28",
+   "region": "clk_link:die.0.1",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.4,
+    132.3
+   ],
+   "internal_ps": {
+    "ss": 525.0,
+    "ff": 346.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 625.4,
+    "ff": 379.8
+   },
+   "pad_ps": {
+    "ss": 375.0,
+    "ff": 247.5
+   }
+  },
+  "lk_S0/ck": {
+   "instance": "lk_S0",
+   "port": "ck",
+   "master": "ot_pdie_serdes",
+   "region": "clk_link:die.0.0",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    251.9,
+    132.9
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 251.9,
+    "ff": 132.9
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "lk_S1/ck": {
+   "instance": "lk_S1",
+   "port": "ck",
+   "master": "ot_pdie_serdes",
+   "region": "clk_link:die.0.0",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    251.9,
+    132.9
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 251.9,
+    "ff": 132.9
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "lk_S2/ck": {
+   "instance": "lk_S2",
+   "port": "ck",
+   "master": "ot_pdie_serdes",
+   "region": "clk_link:die.0.0",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.0,
+    132.2
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 251.9,
+    "ff": 132.9
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "w289_lk_lk_S0/ck": {
+   "instance": "w289_lk_lk_S0",
+   "port": "ck",
+   "master": "hfd_meso_r28",
+   "region": "clk_link:die.0.0",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.0,
+    132.2
+   ],
+   "internal_ps": {
+    "ss": 525.0,
+    "ff": 346.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 626.9,
+    "ff": 380.4
+   },
+   "pad_ps": {
+    "ss": 376.9,
+    "ff": 248.2
+   }
+  },
+  "w293_lk_lk_S1/ck": {
+   "instance": "w293_lk_lk_S1",
+   "port": "ck",
+   "master": "hfd_meso_r28",
+   "region": "clk_link:die.0.0",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.0,
+    132.2
+   ],
+   "internal_ps": {
+    "ss": 525.0,
+    "ff": 346.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 626.9,
+    "ff": 380.4
+   },
+   "pad_ps": {
+    "ss": 376.9,
+    "ff": 248.2
+   }
+  },
+  "lk_S3/ck": {
+   "instance": "lk_S3",
+   "port": "ck",
+   "master": "ot_pdie_serdes",
+   "region": "clk_link:die.0.0",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    251.9,
+    132.9
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 251.9,
+    "ff": 132.9
+   },
+   "pad_ps": {
+    "ss": 0.0,
+    "ff": 0.0
+   }
+  },
+  "lk_S4/ck": {
+   "instance": "lk_S4",
+   "port": "ck",
+   "master": "ot_pdie_serdes",
+   "region": "clk_link:die.0.0",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    250.0,
+    132.2
+   ],
+   "internal_ps": {
+    "ss": 900.0,
+    "ff": 594.0
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 251.9,
+    "ff": 132.9
+   },
+   "pad_ps": {
+    "ss": 1.9,
+    "ff": 0.7
+   }
+  },
+  "w298_lk_lk_S2/ck": {
+   "instance": "w298_lk_lk_S2",
+   "port": "ck",
+   "master": "hfd_meso_r28",
+   "region": "clk_link:die.0.0",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    251.9,
+    132.9
+   ],
+   "internal_ps": {
+    "ss": 525.0,
+    "ff": 346.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 626.9,
+    "ff": 380.4
+   },
+   "pad_ps": {
+    "ss": 375.0,
+    "ff": 247.5
+   }
+  },
+  "w302_lk_lk_S3/ck": {
+   "instance": "w302_lk_lk_S3",
+   "port": "ck",
+   "master": "hfd_meso_r28",
+   "region": "clk_link:die.0.0",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    248.3,
+    131.5
+   ],
+   "internal_ps": {
+    "ss": 525.0,
+    "ff": 346.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 626.9,
+    "ff": 380.4
+   },
+   "pad_ps": {
+    "ss": 378.6,
+    "ff": 248.9
+   }
+  },
+  "w306_lk_lk_S4/ck": {
+   "instance": "w306_lk_lk_S4",
+   "port": "ck",
+   "master": "hfd_meso_r28",
+   "region": "clk_link:die.0.0",
+   "domain": "clk_link",
+   "raw_cts_ps": [
+    248.3,
+    131.5
+   ],
+   "internal_ps": {
+    "ss": 525.0,
+    "ff": 346.5
+   },
+   "insertion_grade": "target",
+   "insertion_source": "no calibration yet: the target",
+   "entry_ps": {
+    "ss": 626.9,
+    "ff": 380.4
+   },
+   "pad_ps": {
+    "ss": 378.6,
+    "ff": 248.9
+   }
+  }
+ },
+ "missing": [],
+ "cross_domain_interfaces": [
+  {
+   "bus": "wl_sm0",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_SW_s0",
+     "l1",
+     "out"
+    ],
+    [
+     "sm0",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm0",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm0",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_SW_s0",
+     "q1",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm1",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_SW_s2",
+     "l3",
+     "out"
+    ],
+    [
+     "sm1",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm1",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm1",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_SW_s2",
+     "q3",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm2",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_SW_s5",
+     "l5",
+     "out"
+    ],
+    [
+     "sm2",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm2",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm2",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_SW_s5",
+     "q5",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm3",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_SW_s7",
+     "l7",
+     "out"
+    ],
+    [
+     "sm3",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm3",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm3",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_SW_s7",
+     "q7",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "ao_SW",
+   "cls": "attn_out",
+   "bits": 1058,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_index_SW_b2",
+     "t_su",
+     "out"
+    ],
+    [
+     "hb_su_SW",
+     "a",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm8",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_SE_s0",
+     "l1",
+     "out"
+    ],
+    [
+     "sm8",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm8",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm8",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_SE_s0",
+     "q1",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm9",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_SE_s2",
+     "l3",
+     "out"
+    ],
+    [
+     "sm9",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm9",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm9",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_SE_s2",
+     "q3",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm10",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_SE_s4",
+     "l5",
+     "out"
+    ],
+    [
+     "sm10",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm10",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm10",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_SE_s4",
+     "q5",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm11",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_SE_s7",
+     "l7",
+     "out"
+    ],
+    [
+     "sm11",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm11",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm11",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_SE_s7",
+     "q7",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "ao_SE",
+   "cls": "attn_out",
+   "bits": 1058,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_index_SE_b2",
+     "t_su",
+     "out"
+    ],
+    [
+     "hb_su_SE",
+     "a",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm16",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_NW_s0",
+     "l1",
+     "out"
+    ],
+    [
+     "sm16",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm16",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm16",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_NW_s0",
+     "q1",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm17",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_NW_s2",
+     "l3",
+     "out"
+    ],
+    [
+     "sm17",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm17",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm17",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_NW_s2",
+     "q3",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm18",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_NW_s5",
+     "l5",
+     "out"
+    ],
+    [
+     "sm18",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm18",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm18",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_NW_s5",
+     "q5",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm19",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_NW_s7",
+     "l7",
+     "out"
+    ],
+    [
+     "sm19",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm19",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm19",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_NW_s7",
+     "q7",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "ao_NW",
+   "cls": "attn_out",
+   "bits": 1058,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_index_NW_b2",
+     "t_su",
+     "out"
+    ],
+    [
+     "hb_su_NW",
+     "a",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm24",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_NE_s0",
+     "l1",
+     "out"
+    ],
+    [
+     "sm24",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm24",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm24",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_NE_s0",
+     "q1",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm25",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_NE_s2",
+     "l3",
+     "out"
+    ],
+    [
+     "sm25",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm25",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm25",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_NE_s2",
+     "q3",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm26",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_NE_s4",
+     "l5",
+     "out"
+    ],
+    [
+     "sm26",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm26",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm26",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_NE_s4",
+     "q5",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "wl_sm27",
+   "cls": "weight",
+   "bits": 1099,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "svc_NE_s7",
+     "l7",
+     "out"
+    ],
+    [
+     "sm27",
+     "d",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "rq_sm27",
+   "cls": "weight_req",
+   "bits": 44,
+   "domains": [
+    "clk_hbm",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "sm27",
+     "q",
+     "mixed"
+    ],
+    [
+     "svc_NE_s7",
+     "q7",
+     "?"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "ao_NE",
+   "cls": "attn_out",
+   "bits": 1058,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_index_NE_b2",
+     "t_su",
+     "out"
+    ],
+    [
+     "hb_su_NE",
+     "a",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_vm_quant",
+   "cls": "hub",
+   "bits": 1024,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_vm_nw",
+     "t_quant",
+     "out"
+    ],
+    [
+     "hb_quant",
+     "f_vm",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_vm_su_SW",
+   "cls": "hub",
+   "bits": 2048,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_vm_sw",
+     "t_su_SW",
+     "out"
+    ],
+    [
+     "hb_su_SW",
+     "f_vm",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_su_SW_vm",
+   "cls": "hub",
+   "bits": 2048,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_su_SW",
+     "t_vm",
+     "out"
+    ],
+    [
+     "hb_vm_sw",
+     "f_su_SW",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_cmdproc_su_SW",
+   "cls": "hub",
+   "bits": 64,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_cmdproc",
+     "t_su_SW",
+     "out"
+    ],
+    [
+     "hb_su_SW",
+     "f_cmdproc",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_su_SW_router",
+   "cls": "hub",
+   "bits": 256,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_su_SW",
+     "t_router",
+     "out"
+    ],
+    [
+     "hb_router",
+     "f_su_SW",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_vm_su_SE",
+   "cls": "hub",
+   "bits": 2048,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_vm_se",
+     "t_su_SE",
+     "out"
+    ],
+    [
+     "hb_su_SE",
+     "f_vm",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_su_SE_vm",
+   "cls": "hub",
+   "bits": 2048,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_su_SE",
+     "t_vm",
+     "out"
+    ],
+    [
+     "hb_vm_se",
+     "f_su_SE",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_cmdproc_su_SE",
+   "cls": "hub",
+   "bits": 64,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_cmdproc",
+     "t_su_SE",
+     "out"
+    ],
+    [
+     "hb_su_SE",
+     "f_cmdproc",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_su_SE_router",
+   "cls": "hub",
+   "bits": 256,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_su_SE",
+     "t_router",
+     "out"
+    ],
+    [
+     "hb_router",
+     "f_su_SE",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_vm_su_NW",
+   "cls": "hub",
+   "bits": 2048,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_vm_nw",
+     "t_su_NW",
+     "out"
+    ],
+    [
+     "hb_su_NW",
+     "f_vm",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_su_NW_vm",
+   "cls": "hub",
+   "bits": 2048,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_su_NW",
+     "t_vm",
+     "out"
+    ],
+    [
+     "hb_vm_nw",
+     "f_su_NW",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_cmdproc_su_NW",
+   "cls": "hub",
+   "bits": 64,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_cmdproc",
+     "t_su_NW",
+     "out"
+    ],
+    [
+     "hb_su_NW",
+     "f_cmdproc",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_su_NW_router",
+   "cls": "hub",
+   "bits": 256,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_su_NW",
+     "t_router",
+     "out"
+    ],
+    [
+     "hb_router",
+     "f_su_NW",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_vm_su_NE",
+   "cls": "hub",
+   "bits": 2048,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_vm_ne",
+     "t_su_NE",
+     "out"
+    ],
+    [
+     "hb_su_NE",
+     "f_vm",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_su_NE_vm",
+   "cls": "hub",
+   "bits": 2048,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_su_NE",
+     "t_vm",
+     "out"
+    ],
+    [
+     "hb_vm_ne",
+     "f_su_NE",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_cmdproc_su_NE",
+   "cls": "hub",
+   "bits": 64,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_cmdproc",
+     "t_su_NE",
+     "out"
+    ],
+    [
+     "hb_su_NE",
+     "f_cmdproc",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  },
+  {
+   "bus": "hb_su_NE_router",
+   "cls": "hub",
+   "bits": 256,
+   "domains": [
+    "clk_serial",
+    "clk_stream"
+   ],
+   "endpoints": [
+    [
+     "hb_su_NE",
+     "t_router",
+     "out"
+    ],
+    [
+     "hb_router",
+     "f_su_NE",
+     "in"
+    ]
+   ],
+   "timing_exception_applied": false
+  }
+ ],
+ "region_flop_target_ps": {
+  "clk_stream:HUB-QNE.1.1": [
+   3579.1,
+   2014.8
+  ],
+  "clk_stream:HUB-QNE.1.0": [
+   3578.6,
+   2014.6
+  ],
+  "clk_stream:HUB-QNE.0.0": [
+   4003.1,
+   2286.8
+  ],
+  "clk_stream:HUB-QNW.1.0": [
+   4005.0,
+   2287.5
+  ],
+  "clk_stream:HUB-QNW.0.1": [
+   3581.0,
+   2015.5
+  ],
+  "clk_stream:HUB-QNW.0.0": [
+   3581.0,
+   2015.5
+  ],
+  "clk_stream:HUB-QSE.1.1": [
+   3579.1,
+   2014.8
+  ],
+  "clk_stream:HUB-QSE.1.0": [
+   3579.1,
+   2014.8
+  ],
+  "clk_stream:HUB-QSE.0.0": [
+   4001.2,
+   2286.0
+  ],
+  "clk_stream:HUB-QSW.1.0": [
+   4003.1,
+   2286.8
+  ],
+  "clk_stream:HUB-QSW.0.1": [
+   3581.0,
+   2015.5
+  ],
+  "clk_stream:HUB-QSW.0.0": [
+   3581.0,
+   2015.5
+  ],
+  "clk_stream:HUB-V": [
+   3578.1,
+   2155.4
+  ],
+  "clk_stream:HUB-SP": [
+   3579.2,
+   2014.8
+  ],
+  "clk_stream:GNEe": [
+   3578.9,
+   2014.7
+  ],
+  "clk_stream:GNEw": [
+   3578.4,
+   2014.5
+  ],
+  "clk_stream:GNWe": [
+   3580.5,
+   2015.3
+  ],
+  "clk_stream:GNWw": [
+   3582.4,
+   2016.1
+  ],
+  "clk_stream:GSEe": [
+   3578.9,
+   2014.7
+  ],
+  "clk_stream:GSEw": [
+   3578.4,
+   2014.5
+  ],
+  "clk_stream:GSWe": [
+   3580.5,
+   2015.3
+  ],
+  "clk_stream:GSWw": [
+   3582.4,
+   2016.1
+  ],
+  "clk_serial:HUB-C.1.1.1": [
+   1743.3,
+   1276.0
+  ],
+  "clk_serial:HUB-C.1.0": [
+   1743.3,
+   1276.0
+  ],
+  "clk_serial:HUB-C.0.1.0": [
+   1743.4,
+   1276.0
+  ],
+  "clk_serial:HUB-C.0.0": [
+   1744.0,
+   1276.2
+  ],
+  "clk_hbm:SVCNE.1": [
+   2702.9,
+   1519.4
+  ],
+  "clk_hbm:SVCNE.0": [
+   2947.6,
+   1720.6
+  ],
+  "clk_hbm:SVCNW.1": [
+   2774.4,
+   1588.4
+  ],
+  "clk_hbm:SVCNW.0": [
+   2871.0,
+   1648.6
+  ],
+  "clk_hbm:SVCSE.1": [
+   2702.9,
+   1519.4
+  ],
+  "clk_hbm:SVCSE.0": [
+   2947.6,
+   1720.6
+  ],
+  "clk_hbm:SVCSW.1": [
+   2774.4,
+   1588.4
+  ],
+  "clk_hbm:SVCSW.0": [
+   2871.0,
+   1648.6
+  ],
+  "clk_link:die.1.1.1.1": [
+   1150.4,
+   726.3
+  ],
+  "clk_link:die.0.1": [
+   1150.4,
+   726.3
+  ],
+  "clk_link:die.0.0": [
+   1151.9,
+   726.9
+  ]
+ },
+ "limitations": [
+  "Padding must be implemented and checked against actual die CTS.",
+  "Provisional or absent macro views cannot receive closure credit.",
+  "Forwarded-clock interfaces require their explicit clock contract.",
+  "HBM functional clock is 976.5625MHz (1024ps) per existing protocol/budget contract; a 1.2GHz service requires separate crossing/ratio implementation and pricing."
+ ],
+ "input_sha256": {
+  "results/rtl/budgets_20261006/inputs/die_models/hbm.json.gz": "14535372df2bbdf36210320566936e0fcb302cffe98eb851bf428635e6bcbf1d",
+  "results/rtl/budgets_20261006/clock_plan/hbm.json.gz": "68a1e28ddd7e948a72f985b3c927e2aca29bf0a56160c6704ed768b39d1e7d79",
+  "results/rtl/budgets_20261006/sheets/hfd_attn_tile.json": "4827803a6a02717e9f2db782ec49a5004bad58aae41f46faaf45e027cfe932ad",
+  "results/rtl/budgets_20261006/sheets/hfd_barrier.json": "7173558672e013f630d008bdcd033364e47b873a34ba2c842008737b3845ed87",
+  "results/rtl/budgets_20261006/sheets/hfd_cdist_r14.json": "cc24e04097165090f142819409b0898072518e7e53113c26d203a9abff1deef9",
+  "results/rtl/budgets_20261006/sheets/hfd_cdist_r15.json": "215e42b3ade3db7b1b9f1bd96e1fff6d59385655bdfa0212e1e84905232055cd",
+  "results/rtl/budgets_20261006/sheets/hfd_cmdproc.json": "eb89620c452c48553bf2c69e91fb6b94984721d6a92dc42fa2cd62e7b7b6d8cc",
+  "results/rtl/budgets_20261006/sheets/hfd_gath_r10.json": "796041934e95d3de2090235752635476c6a1bd00206480f68e383aa5e05e01c6",
+  "results/rtl/budgets_20261006/sheets/hfd_gath_r24.json": "59ee9604e0693a54f619f24e21189f4509b148fa194936543e93d40b652fcc48",
+  "results/rtl/budgets_20261006/sheets/hfd_gath_r25.json": "b783d8587383c3396ee5a55b2855fe8349241a03f266b8ddf92ad611bdd63965",
+  "results/rtl/budgets_20261006/sheets/hfd_gath_r8.json": "fcc9740c27c76050eb2f5147b562cb48b6d9e3dc6945922cb492ef64154a8935",
+  "results/rtl/budgets_20261006/sheets/hfd_gath_r9.json": "91cb4e32ff296a3b6c8bf6e16dfc71fd46e8c8064e096e73e42c43e3682ac3ba",
+  "results/rtl/budgets_20261006/sheets/hfd_hc.json": "874f6c463c498c8e4860fb52e0154b1a97d037a00afd37e7f96904412800f4fb",
+  "results/rtl/budgets_20261006/sheets/hfd_index_q_b0.json": "53292cac710bf655d22c3b183ea889c9c7eba004bbf4ac87ae223042e6d2e8f4",
+  "results/rtl/budgets_20261006/sheets/hfd_index_q_b1.json": "8706579374a2afa25c208907fad70c5ce2d65151accd02823596d1962b40408d",
+  "results/rtl/budgets_20261006/sheets/hfd_index_q_b2.json": "f1fb722f76ce6d5f74bb4898f881bd934ae8300c47b43fea58e8430a4ace23f5",
+  "results/rtl/budgets_20261006/sheets/hfd_index_q_b3.json": "f76e830b5f8660d0e8e8130b3a4f8956735bec628e266a2df2c8a6cbfad2be9e",
+  "results/rtl/budgets_20261006/sheets/hfd_index_q_b4.json": "331b5dc6024f1d2ca93aaf443ceaa9a5e43652a69d0ebd1a3e5fbf19ba8ee119",
+  "results/rtl/budgets_20261006/sheets/hfd_index_q_b5.json": "234fe99bfdfad22a5ae35cefe441da0ea692efa42ed3fcc41672f68ce4f99290",
+  "results/rtl/budgets_20261006/sheets/hfd_loader.json": "8bb01eba208b3ed0d007ebf3f132fad27f8ef161e5f8a077e568f645d0e762e5",
+  "results/rtl/budgets_20261006/sheets/hfd_mcast_r5.json": "920408840b38c923bb794caaacb88d3a72b7e4ec2cb04c803df7aebff77f08c3",
+  "results/rtl/budgets_20261006/sheets/hfd_mcast_r6a.json": "25df3aa9dfbbec7c52b8ead7c2ca254a11fbcada53db47cf20e89fbb2d283ada",
+  "results/rtl/budgets_20261006/sheets/hfd_mcast_r6b.json": "b6e9d51928d44a18c79cb6d346f94a70dc87ab27116237892413d62a58902624",
+  "results/rtl/budgets_20261006/sheets/hfd_mcast_r7.json": "be39bb8406d848f024a883bf397b3bd34f922c0e78a924368c2bdbb2e6df9cdc",
+  "results/rtl/budgets_20261006/sheets/hfd_meso_r1.json": "d1db4ffe2e17e3bbe86aff7c3e47ca373668946bb9bb648e71954a6f910717a4",
+  "results/rtl/budgets_20261006/sheets/hfd_meso_r28.json": "cd6faa43f75c9c240d586c6f66bf0735bd851b2374985ecaed231e4a49e4ed7b",
+  "results/rtl/budgets_20261006/sheets/hfd_meso_r32.json": "1f31e8b40fb7a7b632412195ca9e89d45775e04edfe5412b61fb31cb2f5ce7cc",
+  "results/rtl/budgets_20261006/sheets/hfd_meso_r35.json": "ac0d742e370fe23d1c4d0e814cfef55519435f0f255c5dc1c40428ce9374ce40",
+  "results/rtl/budgets_20261006/sheets/hfd_meso_r37.json": "1688498e3197f540c7db44d6bd939171aa88af5b06ff07f3d67a6920ba789cfd",
+  "results/rtl/budgets_20261006/sheets/hfd_quant.json": "3cc85abb17caac36b89add3e1162b62f363c44dc775750c36d53a75ab215f4d3",
+  "results/rtl/budgets_20261006/sheets/hfd_router.json": "bf8c8c699346b6b3534395a7e79569e962ef45f520cb73015ad481abaf3a373a",
+  "results/rtl/budgets_20261006/sheets/hfd_sfu.json": "c9dd0e3c49f6d2b03bac5f155b106498e23183d8ef8e475cf6b5f43840c6d039",
+  "results/rtl/budgets_20261006/sheets/hfd_sm.json": "9c3094af638e781c5684d524de5574229ef4f826ba16bf83557646d6d32fed79",
+  "results/rtl/budgets_20261006/sheets/hfd_stn_r2.json": "e93936927a73fc3413b7019ac037a5de4a950f677bf8c493ecd232e96a74600d",
+  "results/rtl/budgets_20261006/sheets/hfd_stn_r33.json": "e545b412f8b029c4e01324c994c1e3e83e81e29cf9d60786ff7622100b991d98",
+  "results/rtl/budgets_20261006/sheets/hfd_stn_r38.json": "02369c06464e242c58a38d3fa72d5590aef4f9832d11a8f2cdd8bc9ed135fc21",
+  "results/rtl/budgets_20261006/sheets/hfd_su.json": "4641a2c381aaf616fd7164ebdf261d75cf8e33b5bfd62693db93468b6fe9ef3f",
+  "results/rtl/budgets_20261006/sheets/hfd_su_full.json": "f3d14dd57e3b37199250f98570e58c6d51fc9544509926460c536d33a8a326d7",
+  "results/rtl/budgets_20261006/sheets/hfd_su_red.json": "b512913f464318e7162854c60d903fe5a9ba01e19a6302e24c9a1d1548aa7a04",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SE_s0.json": "a259a0919983c050a57ba44786df073b0d08ea9aa84ee2a8988b239ec962ef98",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SE_s1.json": "4a2c894df8f484693e89eada525c6fbd5490780505f9c3586d78786ddfdc00ee",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SE_s2.json": "e58d17adc411742bf599c193cf2fbf384d1443424202fa2fb52da0db8d5c0220",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SE_s3.json": "3ddae883c854f3ffbb5d4aea8e000d02f665512d3515afbf896cf1ed4c0f6bb3",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SE_s4.json": "9fcd8576b2cec1638b6e08668e5f8d2297f834fd71747dff290d56db5693ec9e",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SE_s5.json": "2559e0b50b7d9ea5bf9869725ed6de46ca1926547b3ab48699d47004565017b0",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SE_s6.json": "6b7b3ace3a35577cbeb9dfe4f0c221d63d5951598e3e649117600928ca1d2cdc",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SE_s7.json": "0cc9f7de685d0233d389d7ae3b71992279b9d9f48ee293fd3a3f6a33f7344316",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SE_s8.json": "f97074c2449ecb833240bc802acc7efd3740ce5a898ed395e57cc36dec787c72",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SW_s0.json": "edf9b36aa380c875ff1b4b1cd75f286c7695246310c124d57d67ee99a7498998",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SW_s1.json": "0317e009f4cbfe211ba3001c5b75d2cbd5061abe31e7dff678bfe379a2e3769d",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SW_s2.json": "62655121041b3198f7c4b1ffa1b28f4017a8ce1e07ea4ac1ffaabb6bac3c8b9f",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SW_s3.json": "7a6d1a6f0d22a0d8ca0da9e975c4870fba4e7d0c1851a77633adb80de516a75d",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SW_s4.json": "dc80ed6669b08d32dbd751f530cc74d8f466f7c058bedaabb271ccd5fe0172c5",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SW_s5.json": "bd7731b39a071caa7ef73b67f7b6a0c9896ea6d1e3cea444b861debc21bda2a9",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SW_s6.json": "82a73b0132c06d4bf724d17bccadf1eb2252d04d3ce2329ea8065ebed6d4e414",
+  "results/rtl/budgets_20261006/sheets/hfd_svc_SW_s7.json": "98d7bf4c5c7ecb23381c29388e4d3bb43883c883ed62e32f788feca79338639e",
+  "results/rtl/budgets_20261006/sheets/hfd_vm_ne.json": "660d256aedb8113b977b3c549763e7fb8e67748a0e853fe305f541340be4897a",
+  "results/rtl/budgets_20261006/sheets/hfd_vm_nw.json": "46eb5f93cb3fe700715e2727870bd1c278a7f330521f08b0e6e3f9a5bf9fee9f",
+  "results/rtl/budgets_20261006/sheets/hfd_vm_se.json": "5918b30fbe41ab0c39d986889d57922caa5fb3dfb25480d62e7b157820aa824a",
+  "results/rtl/budgets_20261006/sheets/hfd_vm_sw.json": "3ab3019e219a789fa8058c6f3a2d76409d5e0d6e99d8e4b13bc6ebcfcd8c09a0",
+  "results/rtl/budgets_20261006/sheets/ot_hbm_host_phy.json": "b986fa323edfae6fd8908425f5ebd48fc82ac99be00bbe8ace99cd819e1fb4af",
+  "results/rtl/budgets_20261006/sheets/ot_pdie_serdes.json": "eeb8cd9fedbe9ac015d59eafbeec78e70f03c4949dbcff71e85ba0d50c59cd5c",
+  "/tmp/codex-hbm-recovery-evidence/r23c_sta_base.tcl": "dfaccb626581e77f1693caa3f3da65f0dd6b96edefb67410a3602b56f69093a6"
+ }
+}

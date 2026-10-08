@@ -1,0 +1,13 @@
+{
+  "scope": "Fresh SS/FF only on completed original route64cda61ab; no reroute; second automatic attempt untouched",
+  "helper_pin": "2f22d245c",
+  "drc_errors": 0,
+  "setup_ss_ps": -295.27,
+  "hold_ff_ps": -34.8,
+  "input_hold_ff_ps": 8.36,
+  "output_hold_ff_ps": 8.422679,
+  "accepted_at_plus15_ps": false,
+  "clock_policy": "Original post-SDC833.333ps core, four generated div64 clocks,60/25ps uncertainty, preserved IO budget/mean-corner insertion",
+  "elapsed_seconds": 205.3,
+  "memory_note": "time.log measures launcher+docker client only, not container RSS; admission based on measured original full-route peak22.49GiB"
+}

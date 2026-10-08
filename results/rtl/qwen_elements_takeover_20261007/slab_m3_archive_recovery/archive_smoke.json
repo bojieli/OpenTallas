@@ -1,0 +1,73 @@
+{
+  "source_commit": "6a36be202",
+  "default_paths": [
+    "tools",
+    "rtl",
+    "physical",
+    "Makefile"
+  ],
+  "extra_paths": [
+    "src",
+    "configs",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json",
+    "results/rtl/hdc_v41_sinkhorn_campaign.json",
+    "results/rtl/hdc_v41_tselect_scale_campaign.json",
+    "results/rtl/hdc_v41_cand_campaign.json",
+    "results/speculative/v41_flash_dspark_onpolicy_greedy.json",
+    "results/arch/arch_budget_v41.json",
+    "results/arch/qwen_gpu_calibration.json",
+    "results/rtl/rom_stage_power_gating_20261004/verdict.json",
+    "results/arch/v41_die_assembly.json",
+    "results/arch/v41_die_placement.json",
+    "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json"
+  ],
+  "checks": [
+    {
+      "argv": [
+        "tools/qwen_slab_m3_takeover.py",
+        "model"
+      ],
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "tools/qwen_slab_m3_takeover.py",
+        "bench",
+        "--help"
+      ],
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "tools/run_abi3_physical_persistent.py",
+        "--help"
+      ],
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "tools/run_abi3_physical.py",
+        "--help"
+      ],
+      "rc": 0,
+      "stderr": ""
+    }
+  ],
+  "source_pins": {
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json": "3b85a8c972bbd49062a8d43c4fc0b0a57d9c470f19eb36335b6edec2a5e50d6c",
+    "results/rtl/hdc_v41_sinkhorn_campaign.json": "7d4b6b697c4394c70378e7e5d6aa97b40b4762bad85c2475ef52234bcd4e541a",
+    "results/rtl/hdc_v41_tselect_scale_campaign.json": "ee7dde83a8d3f68b355549d54bdec5fbd6c5005c6ddb769c21a1286c8c9a592e",
+    "results/rtl/hdc_v41_cand_campaign.json": "b83aad197d0fff78cf5663d0ce4b790b7ddb24bddb83093eb4a8ad662efd4789",
+    "results/speculative/v41_flash_dspark_onpolicy_greedy.json": "6fdf2ff2f3e74910e485ea326f61446f8818e455d4c6dd86f5addb277873636d",
+    "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
+    "results/arch/qwen_gpu_calibration.json": "6ae77c9ccad72c915cb8903ee2c61843265248b9dbbdce96a2f88a7c63676ee9",
+    "results/rtl/rom_stage_power_gating_20261004/verdict.json": "5f1c37194ec7949b220d0b825263b7808b23aabf8293f62f95e074aba744ba33",
+    "results/arch/v41_die_assembly.json": "9966fa08a48e9e904e23c093312ffd0a2ee2d7fe4eb197b70215c07f52224189",
+    "results/arch/v41_die_placement.json": "03d81990492168618e27173328f14c2d8df32047c59b035c76d08ad19d2f307a",
+    "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json": "4801e0733f3cc4566420d546779c2f0b9dca96e48a58c014cf886860411c346e"
+  },
+  "failure": "Python module/import-time evidence absent from default archive; no RTL bench ran in original daemon attempt."
+}

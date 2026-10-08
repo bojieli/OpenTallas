@@ -1,0 +1,21 @@
+ERR data word stack 2 k 1 cyc 63
+ERR data word stack 2 k 2 cyc 65
+ERR data word stack 2 k 3 cyc 67
+ERR data word stack 2 k 4 cyc 69
+ERR data word stack 2 k 5 cyc 71
+ERR data word stack 2 k 6 cyc 73
+ERR data word stack 2 k 7 cyc 75
+ERR data word stack 2 k 8 cyc 77
+ERR data word stack 2 k 9 cyc 79
+ERR timeout job 0 cyc 200027
+ERR stack 1 103 words never delivered
+ERR stack 2 85 words never delivered
+ERR stack 3 101 words never delivered
+job 0 pol 0 T 397 bub 0 frames 12 cyc 200027
+RESULT FAIL jobs 0/40 words 144 frames 2 done 0 errors 146
+- rtl/dsrom_sys/s81_ph/test/tb_s81ph_col.sv:247: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 167us; walltime 0.129 s; speed 1.285 ms/s
+- Verilator: cpu 0.130 s on 1 threads; alloced 1018 MB
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.13
+	Maximum resident set size (kbytes): 9332

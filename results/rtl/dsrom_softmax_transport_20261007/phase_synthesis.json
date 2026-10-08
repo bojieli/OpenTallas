@@ -1,0 +1,86 @@
+{
+  "scope": "Yosys0.9 proc/opt generic netlist; no technology mapping or physical area",
+  "FF_bits": 72,
+  "register_cells": [
+    {
+      "name": "$procdff$267",
+      "type": "$dff",
+      "bits": 10
+    },
+    {
+      "name": "$procdff$268",
+      "type": "$dff",
+      "bits": 10
+    },
+    {
+      "name": "$procdff$269",
+      "type": "$dff",
+      "bits": 6
+    },
+    {
+      "name": "$procdff$270",
+      "type": "$dff",
+      "bits": 6
+    },
+    {
+      "name": "$procdff$271",
+      "type": "$dff",
+      "bits": 16
+    },
+    {
+      "name": "$procdff$272",
+      "type": "$dff",
+      "bits": 16
+    },
+    {
+      "name": "$procdff$273",
+      "type": "$dff",
+      "bits": 1
+    },
+    {
+      "name": "$procdff$274",
+      "type": "$dff",
+      "bits": 1
+    },
+    {
+      "name": "$procdff$275",
+      "type": "$dff",
+      "bits": 1
+    },
+    {
+      "name": "$procdff$276",
+      "type": "$dff",
+      "bits": 1
+    },
+    {
+      "name": "$procdff$277",
+      "type": "$dff",
+      "bits": 2
+    },
+    {
+      "name": "$procdff$278",
+      "type": "$dff",
+      "bits": 2
+    }
+  ],
+  "cell_count": 153,
+  "cell_types": {
+    "$add": 4,
+    "$and": 1,
+    "$reduce_or": 6,
+    "$eq": 18,
+    "$logic_not": 7,
+    "$gt": 1,
+    "$logic_and": 15,
+    "$logic_or": 12,
+    "$reduce_bool": 2,
+    "$ne": 4,
+    "$not": 11,
+    "$dff": 12,
+    "$mux": 55,
+    "$pmux": 3,
+    "$sub": 2
+  },
+  "source_sha256": "2e9b8d2cd90ca183e9845e1a6d281bce2f7d6187b88c481eb482beff1f1fc8ef",
+  "complement_registers_distinct_at_this_stage": true
+}

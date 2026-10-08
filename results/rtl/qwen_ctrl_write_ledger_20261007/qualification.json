@@ -1,0 +1,100 @@
+{
+  "status": "FUNCTIONAL_PASS_PHYSICAL_AND_PARENT_CONTRACTS_PENDING",
+  "source_sha256": "fc9ceae01e8f1e86ebd326db92d0dbf6248e22621bbaed8e758b77bd9450c27e",
+  "bench_sha256": "360236b098e76d0a4a4c21b4fb05504e5fff1e5855855ce0b1529d02100a5aaa",
+  "model_sha256": "10076dbcd27cc267da65e44b236d936fa03d61d59d3c313add8f07200e7f92cf",
+  "pc_coverage": [
+    0,
+    31
+  ],
+  "bank_coverage": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ],
+  "healthy_writes_per_pc": 128,
+  "upset_cases_per_pc": 34,
+  "cases": [
+    {
+      "name": "pc0",
+      "pc": 0,
+      "expected": "PASS",
+      "returncode": 0,
+      "gate_pass": true,
+      "output": "PASS PC=0 scenarios=41 accepted=232 real_completions=197 upset_cases=34"
+    },
+    {
+      "name": "pc31",
+      "pc": 31,
+      "expected": "PASS",
+      "returncode": 0,
+      "gate_pass": true,
+      "output": "PASS PC=31 scenarios=41 accepted=232 real_completions=197 upset_cases=34"
+    },
+    {
+      "name": "negative_compare",
+      "pc": 0,
+      "expected": "FAIL",
+      "returncode": 1,
+      "gate_pass": true,
+      "output": "FATAL: /tmp/qwen-control-ledger-20261007/rtl/test/tb_qwen_ctrl_write_ledger.sv:20: unexpected receiving-edge publication after quarantine\n       Time: 905728 Scope: tb_qwen_ctrl_write_ledger"
+    },
+    {
+      "name": "negative_sector",
+      "pc": 0,
+      "expected": "FAIL",
+      "returncode": 1,
+      "gate_pass": true,
+      "output": "FATAL: /tmp/qwen-control-ledger-20261007/rtl/test/tb_qwen_ctrl_write_ledger.sv:20: unexpected receiving-edge publication after quarantine\n       Time: 867840 Scope: tb_qwen_ctrl_write_ledger"
+    },
+    {
+      "name": "negative_done",
+      "pc": 0,
+      "expected": "FAIL",
+      "returncode": 1,
+      "gate_pass": true,
+      "output": "FATAL: /tmp/qwen-control-ledger-20261007/rtl/test/tb_qwen_ctrl_write_ledger.sv:20: unexpected receiving-edge publication after quarantine\n       Time: 876032 Scope: tb_qwen_ctrl_write_ledger"
+    }
+  ],
+  "lint": "PASS",
+  "default_off": "PASS",
+  "default_off_bench_sha256": "6dd5f2d40f375c314cdecd9aab736edbbaa89a0b9bdffc90e48576d532bb906a",
+  "fault_scope": "one sequential bit in one independent replica or one quarantine rail; shared clock/reset/input/combinational faults excluded",
+  "receiving_edge": "all outputs checked at posedge before NBA state updates",
+  "external_contracts": [
+    "ordered exactly-once real PHY completion and payload custody",
+    "independent protected refresh timing owner",
+    "explicit failed-epoch transport/service fence and initialized all-closed DRAM restart",
+    "cold reset only without live physical writes"
+  ],
+  "adoption": "BLOCKED until model-listed physical and external contracts qualify"
+}

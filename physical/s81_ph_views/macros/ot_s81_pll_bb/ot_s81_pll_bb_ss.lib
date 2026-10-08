@@ -1,0 +1,32 @@
+library (ot_s81_pll_bb_ss) {
+  comment : "CLAUDE S81-PH: S81 die PLL reservation (analog hard IP): pins only, no timing arcs, no timing claim";
+  technology (cmos);
+  delay_model : table_lookup;
+  time_unit : "1ps";
+  voltage_unit : "1V";
+  current_unit : "1mA";
+  leakage_power_unit : "1nW";
+  pulling_resistance_unit : "1kohm";
+  capacitive_load_unit (1, ff);
+  nom_process : 1;
+  nom_voltage : 0.63;
+  nom_temperature : 100;
+  operating_conditions (PVT_ss) { process : 1; voltage : 0.63; temperature : 100; }
+  default_operating_conditions : PVT_ss;
+  voltage_map (VDD, 0.63);
+  voltage_map (VSS, 0);
+  default_max_transition : 320;
+  cell (ot_s81_pll_bb) {
+    area : 29859.8400;
+    dont_use : true;
+    dont_touch : true;
+    pg_pin (VDD) { pg_type : primary_power; voltage_name : VDD; }
+    pg_pin (VSS) { pg_type : primary_ground; voltage_name : VSS; }
+    pin (refclk) { direction : input; capacitance : 1.0; related_power_pin : VDD; related_ground_pin : VSS; }
+    pin (pd) { direction : input; capacitance : 1.0; related_power_pin : VDD; related_ground_pin : VSS; }
+    pin (ck_stream) { direction : output; max_capacitance : 200; related_power_pin : VDD; related_ground_pin : VSS; }
+    pin (ck_serial) { direction : output; max_capacitance : 200; related_power_pin : VDD; related_ground_pin : VSS; }
+    pin (ck_hbm) { direction : output; max_capacitance : 200; related_power_pin : VDD; related_ground_pin : VSS; }
+    pin (lock) { direction : output; max_capacitance : 200; related_power_pin : VDD; related_ground_pin : VSS; }
+  }
+}

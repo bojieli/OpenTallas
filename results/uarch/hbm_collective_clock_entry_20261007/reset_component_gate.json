@@ -1,0 +1,28 @@
+{
+  "scope": "minimum cold reset component only; technology mapping/CDC/reset coordination remain open",
+  "records": {
+    "positive": {
+      "returncode": 0,
+      "expected": "pass",
+      "log": "PASS independent clock cold reset checks=118\n",
+      "source_sha256": "5366ef10cf135546f19f07fbe1a6f3e7fc4052a159479eb63acf7970be99648b"
+    },
+    "negative_early_release": {
+      "returncode": 1,
+      "expected": "fail",
+      "log": "FATAL: rtl/hbm_accel/collective_clock_entry_20261007/tb_collective_reset_entry.sv:13: stream reset edge count 1\n       Time: 5001 Scope: tb_collective_reset_entry\n",
+      "source_sha256": "c636824dad38fd123409f5f894ae609e2d26f9847bb4dd64071ce4017d9e18f5"
+    },
+    "negative_lost_async_assert": {
+      "returncode": 1,
+      "expected": "fail",
+      "log": "FATAL: rtl/hbm_accel/collective_clock_entry_20261007/tb_collective_reset_entry.sv:13: stream reset edge count 0\n       Time: 1001 Scope: tb_collective_reset_entry\n",
+      "source_sha256": "007969210cacfc89e40055364abf8781e4ec027cb5ff1247f6b61df15546a093"
+    },
+    "native_interface_compile": {
+      "returncode": 0,
+      "scope": "actual 28-parameter/25-port declaration; no payload implementation or numerical claim",
+      "log": ""
+    }
+  }
+}

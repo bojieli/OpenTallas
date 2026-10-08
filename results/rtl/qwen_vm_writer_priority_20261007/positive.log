@@ -1,0 +1,4 @@
+FRAME kind=0 physical_edges=3155 read_delta=0 checked_ACK_delta=1 native=1
+FRAME kind=1 physical_edges=3166 read_delta=1 checked_ACK_delta=1 native=2
+FRAME kind=2 physical_edges=3136 read_delta=1 checked_ACK_delta=0 native=3
+PASS directed_full_aperture_source_priority ME_MX_SU0_SU63_REDUCER_SEQ0_SEQ15 readold checkedACK lastwriter neighbor read9=2 write28=2

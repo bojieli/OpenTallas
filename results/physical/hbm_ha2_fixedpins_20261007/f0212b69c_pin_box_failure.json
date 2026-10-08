@@ -1,0 +1,17 @@
+{
+  "source_commit": "f0212b69c878a",
+  "verdict": "FAIL",
+  "scope": "real placed ODB readback after applying new pin Tcl",
+  "pin": "h_v[0]",
+  "rect_native_dbu": [
+    160032,
+    -42,
+    160056,
+    42
+  ],
+  "dbu_per_um": 1000,
+  "failure": "42nm of M5 pin was outside south boundary because place_pin location is rectangle center",
+  "historical_tcl_execution_pass": "execution only; not physical legality",
+  "physical_job": "ha2_h2_fixedpins_f0212b69c",
+  "physical_job_action": "cancelled READY before route launch; original h2 untouched"
+}

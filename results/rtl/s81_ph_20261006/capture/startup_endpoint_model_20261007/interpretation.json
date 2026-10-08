@@ -1,0 +1,9 @@
+{
+  "status": "ENDPOINT_JOIN_NOT_CLOSURE",
+  "count": 68,
+  "below_15ps_ff": 67,
+  "corrected_inference": "WorstSS root2 needs0.15ps holdgain, not26.11ps. WorstFF root12 has84.07psSSheadroom. Aggregate-extrema subtraction would wrongly reject all selective repairs.",
+  "selected_depth": null,
+  "remaining": "Perendpoint clock/data leaf placement and explicit delay cells need actualslew/load and extracted freshSTA validation. No protocol change justified yet.",
+  "historical_test": "x_clock_domain_diagnosis_20261007/test_hook.tcl belongs to initialhook and is superseded by test_effective_bounds.tcl for currentc89hook; historicalreceipt preserved."
+}

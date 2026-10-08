@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.softmax_config_snapshot_gate.v1",
+  "passed": true,
+  "adopted": false,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_config_snapshot.sv": "20a2fdb8a7336efbe9d2058e393a49d55cb0cb8e38c35e6ab8337a1ef15f563b",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_config_snapshot.sv": "07efe5b3b20f6bdae481d0a0fa523642b54012e46e0bd654f6e45bd21b33d729",
+    "tools/dsrom_softmax_config_model.py": "7ecbfeab53faac0371187efb5d5585bb8861d2d093723a3f3c9c396b70caeba3"
+  },
+  "prebuild_sha256": "47c649b033d602398599ac2bb33aef95e7747b4fbb5f712611ee3ab84132235b",
+  "prebuild_before_RTL": true,
+  "positive_log": "results/rtl/dsrom_softmax_transport_20261007/config_snapshot_r2_positive.log",
+  "negative_log": "results/rtl/dsrom_softmax_transport_20261007/config_snapshot_r2_shape_negative.log",
+  "negative_define": "SOFTMAX_CONFIG_IGNORE_SHAPE",
+  "historical_logs": [
+    "results/rtl/dsrom_softmax_transport_20261007/config_snapshot_positive.log",
+    "results/rtl/dsrom_softmax_transport_20261007/config_snapshot_shape_negative.log"
+  ],
+  "verified_snapshot_bits": 2602,
+  "accepted_beats": 3,
+  "final_beat_to_valid_edges": 2,
+  "earliest_lock_edge_after_last_beat": 3,
+  "exact_complete_snapshots": 4,
+  "tests": [
+    "T640/T128 descriptor shapes",
+    "all2602bits and epoch/tag exact",
+    "partial receipt never visible",
+    "20edge locked immutability despite inputchanges",
+    "prelock single-error repair blocks permission",
+    "locked single-error abort",
+    "double-error fault",
+    "reset during partial assembly",
+    "invalidnv rejected",
+    "nonzero finalpadding rejected",
+    "midassembly tag change rejected"
+  ],
+  "scope": "Stream-local protected command component. No CDC/epoch-join wiring, numerical engine or actual row output-abort binding. No physical clock/area adoption.",
+  "commands": {
+    "compile": [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_config_snapshot",
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+      "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_config_snapshot.sv",
+      "rtl/experimental/dsrom_softmax_transport_20261007/tb_config_snapshot.sv"
+    ],
+    "negative_extra_define": "-DSOFTMAX_CONFIG_IGNORE_SHAPE",
+    "run": "vvp image.vvp"
+  }
+}

@@ -1,0 +1,32 @@
+# CLAUDE S81-PH collective v4 / v4b (2026-10-07), RTL f4b4e0a71 (v4 a31fc11f9 + core erst_n gate), Verilator 5.032 on ot-epyc3
+# scratch: /srv/opentallas-scratch2/scratch/claude/s81-collfix/bench_v4b (v4: bench_v4, identical results)
+# Defects of the coll_price re-measurement (s81-rerun, src_v3) and fixes:
+#  1 AG 256 / 1024 "errs 8": TB reference-driver race (blocking input pointer read by the C8 engine's continuous
+#    inputs on the same edge; the last-record bubble fed record N-1 as last at the wrong parity; reference stalled at
+#    N-1 of N). The DUT was correct. Fix: registered pointer. Negative control TB_S81PH_MUT_REFRACE (old driver).
+#  2 board credit stall: engine DEPTH 256 -> EDEPTH 512 (256 credits/parity, full 256-word 256x256 macros, same 24
+#    macros); cycle-identical to DEPTH 1024 at every payload below at CHB 1 and 251 (flop-FIFO sweep 256/512/1024).
+#  3 ~900-cycle small-AG overhead: flits sent before the peer gearbox locked, recovered by the ACK timeout (~880).
+#    Lane tile UPGATE (reverse frames after own lock; sender after first reverse frame). Cold-link AG 24 at CHB 1:
+#    942 -> 223 cycles (incl. link training); with trained links (WARM 2000) 65.
+== system benches (tb_s81ph_coll_sys, tiled slab, SRAM)
+main      -GNM=200 -GNPT=100                     PASS  dut_last 10443 (v3 10277)
+nospec    -GSPEC=0 -GSEED=11                     PASS  10259 (v3 9886)
+board_err -GNM=150 -GCHB=251 -GEPER=61           PASS  34447 (v3 40381)
+ucie_err  -GNM=150 -GEPER=29 -GSEED=5            PASS  54461 (v3 66176)
+mut       NOREORDER                              FAIL errs 1215 (required)
+mut_nocredit NOCREDIT                            FAIL errs 4 (deadlock, required)
+== regression coll/run_coll_regress.sh: COLL_REGRESS PASS
+AG 256 CHB1 PASS / CHB251 PASS; AG 1024 CHB1 PASS / CHB251 PASS; neg REFRACE FAIL errs 8; neg NOREORDER FAIL errs 768
+== ep lockstep (tb_s81ph_link_ep vs ot_dsrom_link_ct; ep unchanged): base PASS, prod (CR 512 SQ 10 CH 251 SRAM pacer errors) PASS
+== coll_price (one message, EPER 0, SPEC 0, PERF, UCIe lanes CHU = 1 / 12, links trained: WARM 2000)
+# cycles = first send -> last result; ref = C8 reference engines wired directly (zero link latency)
+payload    CHB1 dut  ref  added | CHB251 dut | v3 coll_price CHB1 / CHB251 (cold link, from cycle 1111)
+AR 320      459      328  +131  |   709      |  617 / 1643
+AR 448      626      456  +170  |   875      |  785 / 1809
+AG 24        65       27   +38  |   318      |  942 / 1191 (timeout)
+AG 57       110       60   +50  |   359      |  983 / 1235 (timeout)
+AG 256      372      259  +113  |   620      |  FAIL (TB race)
+AG 1024    1375     1027  +348  |  1626      |  FAIL (TB race)
+AG 1056    1420     1059  +361  |  1667      |  1576 / 3256
+# AR 320 at CHB 251: 709 vs the w15b composition reference 690 (DEPTH 1024): +19.

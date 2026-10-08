@@ -1,0 +1,76 @@
+{
+  "schema": "opentallas.qwen_write_bridge_typed_cancel.gate.v1",
+  "pass_all": true,
+  "cases": [
+    {
+      "case": "h54_n0",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "558fabebdb7f70fb72840c3173766d990860075c2a16a38c2bbf31a02e169315"
+    },
+    {
+      "case": "h55_n0",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "19d0c9d3b75330a44942977a40661f29336720056ecff8b20e01c36db482c1c8"
+    },
+    {
+      "case": "h54_n9",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "1c1264cb730cae250971c766007720589dffefa88b76b6158d510e8e16d5d1a8"
+    },
+    {
+      "case": "h54_n10",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "7ca1866100523fa4b5a47b127b6a5228b3cce58667c88aaba6547cbb77bedca2"
+    },
+    {
+      "case": "h54_n11",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "8c687a2da11b77b13d59a9b97f5838a2cbd28442a03c1adaf9262808f178e791"
+    },
+    {
+      "case": "h54_n12",
+      "qualified": true,
+      "returncode": 0,
+      "log_sha256": "d3c6175ab81262bacf2f7e40aec0b044fac35b941c60b82205ce24cd3315bd7a"
+    },
+    {
+      "case": "h54_n13",
+      "qualified": true,
+      "returncode": 1,
+      "log_sha256": "394fc65afbc7437a08d94fba37a90a3490fbfa7bdc0e5296820f05b734f7b6d4"
+    }
+  ],
+  "source_sha256": {
+    "/tmp/qwen-write-bridge-20261007/rtl/physical/ot_qwen_kvc_hub_cdc.sv": "d20b1d35c98d7a2e1924515175aec56e2f83061bc1d330c0a116f9b79b9a044c",
+    "/tmp/qwen-write-bridge-20261007/rtl/physical/ot_qwen_kvc_write_link_bridge_cancel.sv": "005f74bb0f2f422dabb3b8681e9923e431be324d86a3336623542c87f6a33d0f",
+    "/tmp/qwen-write-bridge-20261007/rtl/test/tb_qwen_kvc_write_bridge_cancel.sv": "f4c5ebaebfc8fd5677aaae794ed4cbfe66f3b27935c26cb546f51257608a59af",
+    "/home/ubuntu/OpenTallas/rtl/physical/ot_qwen_die_cdc_ch.sv": "e865aecae51ae3b929bc9401c970e825073338b77dee87ead88d66ce9e8631fd",
+    "/home/ubuntu/OpenTallas/rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv": "cd7142ec0db3465c0b4134888e6947a2bc1d7223c0d2fc02093729e568921881",
+    "/home/ubuntu/OpenTallas/rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "/home/ubuntu/OpenTallas/rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "/tmp/qwen-write-bridge-codec-20261007/rtl/physical/ot_qwen_kvc_packet_codec_parallel.sv": "ccdcc4099b221a32a257fdd1f37a4b353a86a7978f0c9579c9fb1a59e77cdeb8",
+    "/tmp/qwen-hub-identity-20261007/rtl/physical/ot_qwen_die_hub_identity.sv": "d67f20db959dc1803de8cc82be1c7206407352e634802303060e10d5ebf76409"
+  },
+  "tool_sha256": "68f48e6a80f7d47557c700bf2d5557d868a5e5e5da47557c650361ed82b7a5ad",
+  "scope": "Actual dualNL4 identity hubs and54/55TMRstages one lane. Native service registered room-emission and modeled ledger17tickcompletion,96exactwrites+4native-ledger-accepted/unissued canceledowners with typedack across coordinatedepoch fence. Actual controller ledger not instantiated yet.",
+  "negative_meanings": {
+    "9": "wrong cancel tag",
+    "10": "duplicate cancel tag",
+    "11": "cancellation while not stopped",
+    "12": "true completion after cancellation",
+    "13": "post-CRC decoded data upset reaches ledger without bridge fault: demonstrates remaining protection gap"
+  },
+  "mutable_protection_pass": false,
+  "adoption": false,
+  "blockers": [
+    "actual commitledger binding",
+    "full mutable state and native Gray-credit protection",
+    "all physical setup/hold/CDC/CRC gates",
+    "global epoch fence owner beyond explicit qualified input contract"
+  ]
+}

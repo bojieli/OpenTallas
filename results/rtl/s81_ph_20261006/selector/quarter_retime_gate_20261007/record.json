@@ -1,0 +1,60 @@
+{
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "positive": {
+    "segments": 32,
+    "out_beats": 684,
+    "replays": 8,
+    "errors": 0,
+    "result": "PASS",
+    "SAFE": 0
+  },
+  "negative": {
+    "mutation": "Drop both lower comparison nibbles from registered lexicographic comparison",
+    "segments": 32,
+    "errors": 2597,
+    "result": "FAIL_EXPECTED",
+    "SAFE": 0
+  },
+  "tool": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "build_threads": 2,
+  "parameters": {
+    "CMP_RETIME": 1,
+    "SEARCH_PIPE": 0
+  },
+  "model": "results/rtl/s81_ph_20261006/selector/quarter_retime_model.json",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv": "2429d71ab646326fc8929274e59cc59fd3301bbd68e32463504d74636b2c4491",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "494ba28c6877ee3ff2985eb71f481b13395cc13d82f261ab18846c2794a58384",
+    "rtl/dsrom_sys/s81_ph/dsfd_bk_selector.sv": "fad31cf0542a85da25f438b113410c297dcd6c213f30f3afee649e8ffd8e0fc6",
+    "rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv": "a03833b5e9f2fe9a7cc3cd195d74b53495d8161f9c1ec2bea7537ba0bf701814",
+    "tools/s81_selector_quarter_retime_model.py": "4eac4ac89c661218f356c7ae09427badac852610e00cdce20ac7c61917a60862",
+    "tools/s81_ph/selt_pipeline_bench.sh": "df554248ed54f88b5e3219e2f78c6cfd958a16923453148d88f6db094fc52c0a",
+    "physical/s81_ph_views/selector/selt_q_retime.sdc": "c973ad38eda2900c72406fd8e0767d602f804d135d268e63f17f73edda9337b3"
+  },
+  "pending": [
+    "Pinned successor route with CMP_RETIME enabled",
+    "SS>=15ps FF>=15ps DRC0 under actual boundary constraints",
+    "Die-context integration"
+  ],
+  "pinned_originals_unchanged": [
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv"
+  ],
+  "positive_safe1": {
+    "segments": 32,
+    "out_beats": 684,
+    "replays": 8,
+    "errors": 0,
+    "result": "PASS",
+    "SAFE": 1
+  },
+  "negative_safe1": {
+    "mutation": "Drop both lower comparison nibbles from registered lexicographic comparison",
+    "segments": 32,
+    "errors": 2597,
+    "result": "FAIL_EXPECTED",
+    "SAFE": 1
+  },
+  "reset_constraint": "Existing documented two-edge release MCP retained; selector nested synchronizer matcher corrected. No reset false path."
+}

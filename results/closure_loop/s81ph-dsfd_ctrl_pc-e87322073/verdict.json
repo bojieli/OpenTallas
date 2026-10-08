@@ -1,0 +1,183 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "s81ph-dsfd_ctrl_pc-e87322073",
+ "block": "dsfd_ctrl_pc",
+ "owner": "Claude:s81-ph",
+ "source_branch": "claude/s81-placeholders-20261006",
+ "source_commit": "e87322073285d96e89305879f3e2f72afd76471b",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-e87322073",
+ "acceptance": {
+  "ss_min_ps": 15.0,
+  "ff_min_ps": 15.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 54.28,
+  "ff_ps": 18.37,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-e87322073/routes/s81ph_dsfd_ctrl_pc_e87322073/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-e87322073/routes/s81ph_dsfd_ctrl_pc_e87322073/work/orfs/logs/asap7/opentallas_dsfd_ctrl_pc_asap7_s81ph_s81ph_dsfd_ctrl_pc_e87322073/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_exact_gold": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles\nlatency: request rq issue -> PHY accept mean 18.73 max 151.32 cks cycles; response PHY -> rd mean 5.73 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)\nTB_DSFD_CTRL PASS\n"
+  },
+  "bench_neg_mut_pack": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles\nlatency: request rq issue -> PHY accept mean 18.73 max 151.32 cks cycles; response PHY -> rd mean 5.73 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)\nTB_DSFD_CTRL FAIL errors=3582\n"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 625,
+    "mean": 343.0,
+    "min": 329.4,
+    "max": 353.1
+   },
+   "all": {
+    "n": 3405,
+    "mean": 337.8,
+    "min": 319.4,
+    "max": 353.1
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 625,
+    "mean": 222.3,
+    "min": 210.8,
+    "max": 233.1
+   },
+   "all": {
+    "n": 3405,
+    "mean": 217.5,
+    "min": 202.0,
+    "max": 233.1
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 343,
+   "CK_SS_ALL_MEAN": 338,
+   "CK_SS_MIN": 329,
+   "CK_SS_ALL_MIN": 319,
+   "CK_SS_MAX": 353,
+   "CK_SS_ALL_MAX": 353,
+   "CK_FF_MEAN": 222,
+   "CK_FF_ALL_MEAN": 218,
+   "CK_FF_MIN": 211,
+   "CK_FF_ALL_MIN": 202,
+   "CK_FF_MAX": 233,
+   "CK_FF_ALL_MAX": 233
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-06T23:47:20-07:00",
+ "job_spec": {
+  "name": "s81ph-dsfd_ctrl_pc-e87322073",
+  "block": "dsfd_ctrl_pc",
+  "owner": "Claude:s81-ph",
+  "purpose": "ctrl v2: one PHY pseudo-channel tile of the split dsfd_ctrl slab (32 instances); calibrated route",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc3"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/s81-placeholders-20261006",
+   "commit": "e87322073285d96e89305879f3e2f72afd76471b"
+  },
+  "stages": {
+   "calibrate": {
+    "cmd": "SRC={SRC} OUT={RUN}/routes CORES=16 NEED=40 SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_ctrl_pc.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv' CLK=cks SDCX=physical/s81_ph_views/ctrl/ctrl_pc_tile.sdc POSTCTS=physical/s81_ph_views/ctrl/post_cts_vclk2.tcl bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract dsfd_ctrl_pc rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_pc.sv $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=40 SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_ctrl_pc.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv' CLK=cks SDCX=physical/s81_ph_views/ctrl/ctrl_pc_tile.sdc POSTCTS=physical/s81_ph_views/ctrl/post_cts_vclk2.tcl bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract dsfd_ctrl_pc rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_pc.sv $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+   },
+   "bench": [
+    {
+     "name": "exact_gold",
+     "cmd": "command -v verilator >/dev/null && bash rtl/dsrom_sys/s81_ph/ctrl/run_ctrl_bench.sh {RUN}/bench/gold none 1024 20261006 48 8",
+     "expect": "pass",
+     "threads": 8,
+     "peak_ram_gb": 8
+    },
+    {
+     "name": "neg_mut_pack",
+     "cmd": "command -v verilator >/dev/null || exit 0; bash rtl/dsrom_sys/s81_ph/ctrl/run_ctrl_bench.sh {RUN}/bench/mut_pack S81PH_MUT_PACK 1024 20261006 48 8",
+     "expect": "fail",
+     "fail_regex": "TB_DSFD_CTRL FAIL",
+     "threads": 8,
+     "peak_ram_gb": 8
+    }
+   ]
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/dsfd_ctrl_pc"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "S81-PH tile sheet is grade 'target' (no calibration: 467-900 ps); the tiles' measured insertion is far lower (svc_pc 145 ps, ctrl_ctr 61 ps at calibrate), so the sheet SDC would put vclk ~300+ ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+  }
+ }
+}

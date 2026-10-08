@@ -1,0 +1,62 @@
+{
+  "generic_synthesis": {
+    "original": {
+      "cells": {
+        "$add": 4,
+        "$and": 2050,
+        "$sdffe": 192,
+        "$sdff": 123,
+        "$logic_not": 21,
+        "$eq": 124,
+        "$ge": 8,
+        "$logic_and": 154,
+        "$logic_or": 8,
+        "$reduce_bool": 1,
+        "$ne": 3,
+        "$not": 1,
+        "$or": 60,
+        "$dff": 4240,
+        "$reduce_and": 1,
+        "$reduce_or": 3,
+        "$sub": 4,
+        "$xor": 4224,
+        "ot_sram_1r1w_512x128_m4_r2c2": 256
+      },
+      "registered_bits_by_cell": {
+        "$sdffe": 34368,
+        "$sdff": 9637,
+        "$dff": 43136
+      }
+    },
+    "candidate": {
+      "cells": {
+        "$add": 4,
+        "$and": 2050,
+        "$sdff": 123,
+        "$sdffe": 192,
+        "$logic_not": 21,
+        "$eq": 124,
+        "$ge": 8,
+        "$logic_and": 154,
+        "$logic_or": 8,
+        "$reduce_bool": 1,
+        "$ne": 3,
+        "$not": 1,
+        "$or": 60,
+        "$dff": 4240,
+        "$reduce_and": 1,
+        "$reduce_or": 3,
+        "$sub": 4,
+        "$xor": 4224,
+        "ot_sram_1r1w_512x128_m4_r2c2": 256
+      },
+      "registered_bits_by_cell": {
+        "$sdff": 9637,
+        "$sdffe": 34368,
+        "$dff": 43136
+      }
+    }
+  },
+  "technology_mapping": false,
+  "full_backend_generic_counts_identical": true
+}

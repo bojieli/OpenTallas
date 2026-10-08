@@ -1,0 +1,1 @@
+ot_su64_full64 mode=box PD=0.5 PER=0.770 HM=0.01 IOSDC=physical/hbm_su_c12/cal_hbm_su_full64_64cda61ab.sdc XSDC=physical/hbm_su_div64/full_generated_clocks_candidate.sdc CK_SS_MEAN=771 C=8 --step-tcl POST_IO_PLACEMENT=physical/hbm_su_c12/red_pinflop_place.tcl

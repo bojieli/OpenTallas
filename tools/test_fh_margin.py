@@ -110,6 +110,24 @@ BENCH = {
 # SAFE=2 changes only the receipt compare partition, with identical edge latency.
 BENCH['head_q_ack_split'] = dict(BENCH['head_q_lret3'],
     params=['-GFPIPE=3', '-GQPIN=1', '-GSAFE=2', '-GHQ=1', '-GLRET=1'])
+# OREG (2026-10-07): ctl o_we / commit_warm from pin registers, computed from the retirement next-edge values;
+# must stay cycle-identical to the macro_ctx reference (lockstep), and three mutants must be caught.
+HT = f'{D}/quad/ot_hdc_v41_fh_head_top.sv'
+BENCH['head_q_oreg'] = dict(BENCH['head_q_lret3'],
+    params=['-GFPIPE=3', '-GQPIN=1', '-GSAFE=2', '-GHQ=1', '-GLRET=1', '-GOREG=1'],
+    mut={'late_we': (HT, "wire [3:0] we_nx = rv_nx ? (retired_nx[PW-1-:4] & ~write_veto_nx) : 4'b0;",
+                     "wire [3:0] we_nx = rv ? (retired_we & ~write_veto) : 4'b0;"),
+         'no_veto': (HT, "(retired_nx[PW-1-:4] & ~write_veto_nx)", "(retired_nx[PW-1-:4])"),
+         'warm_late': (HT, "warm_r <= rw_nx && (|we_nx);", "warm_r <= rw && (|we_nx);")})
+AD = f'{D}/quad/ot_hdc_v41_fh_adec.sv'
+_srcs = list(BENCH['head_q_oreg']['srcs']); _srcs.insert(_srcs.index(HT), AD)
+BENCH['head_q_oreg2'] = dict(BENCH['head_q_oreg'], srcs=_srcs,
+    params=['-GFPIPE=3', '-GQPIN=1', '-GSAFE=2', '-GHQ=1', '-GLRET=1', '-GOREG=2'])
+# the head_q stimulus never sends out-of-range / misaligned lane addresses, so the decode has its own equivalence bench
+BENCH['adec'] = dict(top='tb_fh_adec', srcs=[AD, f'{D}/quad/tb_fh_adec.sv'], mut={
+    'dec_low': (AD, "a < LIM && a[LG-1:0] == LOWB;", "a < LIM;"),
+    'dec_lim': (AD, "a >= BASE && a < LIM && a[LG-1:0] == LOWB;", "a >= BASE && a[LG-1:0] == LOWB;"),
+    'dec_row': (AD, "assign row = d[LG+8:LG];", "assign row = a[LG+8:LG];")})
 BENCH['ack_split'] = dict(top='tb_fh_ack_split',
     srcs=[f'{D}/capture_candidate/ot_hdc_v41_fh_fault_retire.sv',
           f'{D}/capture_candidate/ot_hdc_v41_fh_retire_parent.sv', f'{D}/margin/tb_fh_ack_split.sv'],

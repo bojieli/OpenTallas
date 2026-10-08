@@ -1,0 +1,9 @@
+{
+  "verdict": "FAIL",
+  "scope": "initial RTL wrapper comparison",
+  "test": "normal13-record stress",
+  "observed": "bounded 13-record owner stalled at cycle50001",
+  "cause": "unconditional comparison included uninitialized ingress FIFO payload while start was low; four-state mismatch propagated unknown into handshake gating",
+  "correction": "compare handshake flags and critical-state parity continuously; compare each payload only while its corresponding valid is asserted",
+  "adopted": false
+}

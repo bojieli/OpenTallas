@@ -1,0 +1,13 @@
+{
+  "status": "ACTUAL_INSERTION_IDENTITY_PASS_ROUTED_TIMING_PENDING",
+  "predecessor": "e2a4ad579a1b4f496c1bc6e702b6b6d818b145b2",
+  "reason": "Production insert_buffer appends numeric ID to requested name prefix; original exact findInst failed even though correct HB3 inserted.",
+  "resolution": "Unique actual sink-net output driver must be new instance with requested numeric name suffix, exact master and A/Y connectivity; unique STA cell protected.",
+  "actual_probe": "probe2.log",
+  "actual_probe_rc": 0,
+  "actual_cell": "s81_startup_hold_044446",
+  "cell": "HB3xp67_ASAP7_75t_R",
+  "physical_timing_claim": false,
+  "source_sha256": "5129ee3d7fb94cb292ecb55cda446f4a18173fe5d7e03e07edf774afa86de6bf",
+  "test_rc": 0
+}

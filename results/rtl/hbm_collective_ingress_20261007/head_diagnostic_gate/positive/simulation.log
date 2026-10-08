@@ -1,0 +1,16 @@
+BEFORE landing_d=xxxxxxxxxxxxxxxx captured=xxxxxxxxxxxxxxxxxx
+STEP lc=63 lv=0 cr=1 civ=0 mem0=xxxxxxxxxxxxxxxxxx hp=0 head=000000000000000000 faults=00000
+STEP lc=63 lv=0 cr=1 civ=0 mem0=xxxxxxxxxxxxxxxxxx hp=0 head=000000000000000000 faults=00000
+STEP lc=63 lv=1 cr=1 civ=1 mem0=xxxxxxxxxxxxxxxxxx hp=0 head=000000000000000000 faults=00000
+STEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000
+STEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000
+STEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000
+STEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000
+STEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000
+STEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000
+STEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000
+STEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000
+STEP lc=63 lv=1 cr=1 civ=x mem0=xxxxxxxxxxxxxxxxxx hp=1 head=xxxxxxxxxxxxxxxxxx faults=0x000
+DEBUG landing=63 lv=1 cr=1 civ=x wb=1 rb=0 hp=1 wn=1 rn=1 cv=0 fr=1 fault=x
+FATAL: /home/ubuntu/OpenTallas/results/rtl/hbm_collective_ingress_20261007/head_diagnostic_gate/source/tb_protected_ingress.sv:90: intermediate credit return launch=64 rx=0 moves=0
+       Time: 463470704 Scope: tb_protected_ingress

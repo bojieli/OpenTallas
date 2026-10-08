@@ -1,0 +1,41 @@
+{
+  "pass_all": true,
+  "cases": [
+    {
+      "case": "enabled",
+      "observed_pass": true,
+      "expected_pass": true,
+      "gate_pass": true
+    },
+    {
+      "case": "disabled",
+      "observed_pass": true,
+      "expected_pass": true,
+      "gate_pass": true
+    },
+    {
+      "case": "crc_polynomial_mutant",
+      "observed_pass": false,
+      "expected_pass": false,
+      "gate_pass": true
+    },
+    {
+      "case": "reserved_check_mutant",
+      "observed_pass": false,
+      "expected_pass": false,
+      "gate_pass": true
+    },
+    {
+      "case": "done_check_mutant",
+      "observed_pass": false,
+      "expected_pass": false,
+      "gate_pass": true
+    }
+  ],
+  "source_sha256": "df334a0028422b5e8d687b071b6e19e699f6b0fc75c9872dcddea818d829ccf8",
+  "decoder_vectors": 643,
+  "legal_encoder_vectors": 128,
+  "all_single_bit_positions_tested": 510,
+  "golden": "Independent integer polynomial long division; RTL uses serial feedback recurrence.",
+  "scope": "Exact packet contents/pulses and malformed rejection. CDC, epoch ownership, mutable-state protection and physical timing not qualified."
+}

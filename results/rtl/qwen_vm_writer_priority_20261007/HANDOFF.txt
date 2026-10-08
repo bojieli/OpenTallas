@@ -1,0 +1,9 @@
+Actual source-ordered duplicate-writer priority gate
+
+This is a directed collision, not a claim that the captured parent160 writes collide. The real full2256/865 provider receives a single PRE frame with an old read of scalar4096 and seven enabled scalar writers in source seats0(ME0),768(MX0),784(SU0),847(SU63),848(reducer),849(seq0),864(seq15). Different authorized opaque fixture values make the last writer observable. Original readold semantics, ascending source seat order, last sequencer lane result and untouched neighbor all pass through actual SRAM/protected ACK/native-clock admission.
+
+The actual source walker merges these successive sameword requests into one ordered masked write batch, preserving overwrite priority. Measured collision service3166edges equals4+2256+865+11+30. Initialization3155 and readback3136 match the same reference. The actual first-writer-wins mutation modifies the overwrite assignment and is rejected by final data. Underlying read9/write28 remains unchanged. All checked data is explicitly non-X.
+
+Run python3 tools/qwen_vm_writer_priority_gate.py --root . --out /tmp/writer-priority-recheck. Requires canonical direct-readback successor; all original sources remain unchanged. No arithmetic, fullROM clock enrollment or physical qualification is claimed.
+
+Stronger successor monitor observes all seven production WSLOT seats in order and checks actual packed data after each NBA. This covers every intermediate family, not only final seq15. The first-writer mutation now fails at the second source overwrite. Prior last-writer-only bench/logs are preserved as history.

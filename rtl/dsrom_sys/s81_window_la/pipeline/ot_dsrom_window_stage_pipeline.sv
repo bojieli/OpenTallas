@@ -31,6 +31,7 @@ module ot_dsrom_window_stage_pipeline #(
     parameter integer WTAGW = 13,
     parameter integer BEATW = 4,
     parameter integer MAX_CONTEXT = 1048576,
+    // 0: flat, 1: 68 mixed-width macros, 2: 132 full-depth 128-bit macros.
     parameter integer SPLIT_COLUMNS = 0,
     // MARGIN = 1 (default off): register-to-register boundary and wire staging for the 1.9 mm parent
     // (OWNER_RULE_MARGIN_FIRST 2026-10-06).  Request: pin register -> per-bank kept copy -> per-column kept
@@ -360,7 +361,11 @@ module ot_dsrom_window_stage_pipeline #(
                 assign write_sector[(4*r+b)*PITCH+k]=row_we[r];
             end
             if (SPLIT_COLUMNS) begin : g_split
-                if(CWID==256) begin : g_payload
+                if(CWID==256 && SPLIT_COLUMNS==2) begin : g_payload_split128
+                    ot_dsrom_window_column_256_split u_column (
+                        .clk(clk), .rst_n(rst_n), .row_we(row_we), .write_data(wd),
+                        .read_v(col_v), .read_addr(col_addr), .read_data(q));
+                end else if(CWID==256) begin : g_payload
                     (* keep_hierarchy = "yes" *) ot_dsrom_window_column_256 u_column (
                         .clk(clk), .rst_n(rst_n), .row_we(row_we), .write_data(wd),
                         .read_v(col_v), .read_addr(col_addr), .read_data(q));
@@ -542,4 +547,21 @@ module ot_dsrom_window_keep_reg #(
     end else begin : g_n
         always @(posedge clk) q <= d;
     end endgenerate
+endmodule
+
+// Structural split only: identical read/write edges, full 32-row depth in each half.
+module ot_dsrom_window_column_256_split (
+    input wire clk, rst_n,
+    input wire [31:0] row_we,
+    input wire [255:0] write_data,
+    input wire read_v,
+    input wire [4:0] read_addr,
+    output wire [255:0] read_data
+);
+    for (genvar half=0; half<2; half=half+1) begin : g_half
+        (* keep_hierarchy = "yes" *) ot_dsrom_window_column_128 u_column (
+            .clk(clk), .rst_n(rst_n), .row_we(row_we),
+            .write_data(write_data[128*half+:128]), .read_v(read_v),
+            .read_addr(read_addr), .read_data(read_data[128*half+:128]));
+    end
 endmodule

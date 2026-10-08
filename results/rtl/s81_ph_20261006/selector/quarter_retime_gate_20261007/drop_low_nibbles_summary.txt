@@ -1,0 +1,89 @@
+FAIL ties beat 8: lv ffff/ffff q 0/0 last 1/0
+FAIL ties beat 9: lv ffff/ffff q 1/0 last 0/0
+FAIL ties beat 9 lane 0 idx 1479 ref 1022
+FAIL ties beat 9 lane 1 idx 1488 ref 1025
+FAIL ties beat 9 lane 2 idx 1491 ref 1029
+FAIL ties beat 9 lane 3 idx 1519 ref 1039
+FAIL ties beat 9 lane 4 idx 1522 ref 1053
+FAIL ties beat 9 lane 5 idx 1525 ref 1055
+FAIL ties beat 9 lane 6 idx 1528 ref 1063
+FAIL ties beat 10: lv ffff/ffff q 1/0 last 0/0
+FAIL ties beat 11: lv ffff/ffff q 1/0 last 0/0
+FAIL ties beat 12: lv ffff/ffff q 1/0 last 0/0
+FAIL ties beat 13: lv ffff/001f q 1/0 last 0/1
+FAIL ties beat 17: lv 00ff/ffff q 1/1 last 1/0
+FAIL ties beat 18: lv ffff/ffff q 2/1 last 0/0
+FAIL ties beat 19: lv 000f/007f q 2/1 last 1/1
+FAIL ties beat 20: lv 0000/0000 q 3/2 last 1/1
+FAIL ties: 21 IDX words, ref 22 beats (per q 14 6 1 1, lastq 4)
+FAIL normal_12k beat 0: lv ffff/0007 q 0/0 last 0/1
+FAIL normal_12k beat 1: lv ffff/ffff q 0/1 last 0/0
+FAIL normal_12k beat 2: lv 0003/ffff q 0/1 last 1/0
+FAIL normal_12k beat 12: lv 1fff/07ff q 1/1 last 1/1
+FAIL normal_12k beat 21: lv ffff/0007 q 2/2 last 0/1
+FAIL normal_12k beat 22: lv ffff/ffff q 2/3 last 0/0
+FAIL normal_12k beat 23: lv 03ff/ffff q 2/3 last 1/0
+FAIL normal_12k beat 33: lv 007f/7fff q 3/3 last 1/1
+FAIL all_equal_overflow: replays 0 ref 2 ovf 0
+FAIL rand4 beat 20: lv 003f/03ff q 0/0 last 1/1
+FAIL rand4 beat 29: lv 001f/0003 q 2/2 last 1/1
+FAIL rand4 beat 32: lv 1fff/0fff q 3/3 last 1/1
+FAIL rand6 beat 0: lv ffff/00ff q 0/0 last 0/1
+FAIL rand6 beat 1: lv 001f/0000 q 0/1 last 1/1
+FAIL rand6 beat 2: lv 0000/ffff q 1/2 last 1/0
+FAIL rand6 beat 7: lv 0003/ffff q 2/2 last 1/0
+FAIL rand6 beat 8: lv ffff/ffff q 3/2 last 0/0
+FAIL rand6 beat 9: lv ffff/1fff q 3/2 last 0/1
+FAIL rand6 beat 11: lv ffff/7fff q 3/3 last 0/1
+FAIL rand6: extra IDX word
+FAIL rand7 beat 8: lv 00ff/ffff q 0/0 last 1/0
+FAIL rand7 beat 9: lv ffff/ffff q 1/0 last 0/0
+FAIL rand7 beat 10: lv ffff/ffff q 1/0 last 0/0
+FAIL rand7 beat 11: lv ffff/ffff q 1/0 last 0/0
+FAIL rand7 beat 12: lv ffff/00ff q 1/0 last 1/1
+FAIL rand7 beat 13: lv 0000/0000 q 2/1 last 1/1
+FAIL rand7 beat 14: lv 0000/0000 q 3/2 last 1/1
+FAIL rand7: 15 IDX words, ref 16 beats (per q 13 1 1 1, lastq 4)
+FAIL rand9 beat 12: lv 0003/ffff q 0/0 last 1/0
+FAIL rand9 beat 13: lv ffff/ffff q 1/0 last 0/0
+FAIL rand9 beat 14: lv ffff/ffff q 1/0 last 0/0
+FAIL rand9 beat 15: lv ffff/ffff q 1/0 last 0/0
+FAIL rand9 beat 16: lv ffff/ffff q 1/0 last 0/0
+FAIL rand9 beat 17: lv ffff/ffff q 1/0 last 0/0
+FAIL rand9 beat 18: lv ffff/ffff q 1/0 last 0/0
+FAIL rand9 beat 19: lv ffff/ffff q 1/0 last 0/0
+FAIL rand9 beat 20: lv ffff/ffff q 1/0 last 0/0
+FAIL rand9 beat 21: lv ffff/ffff q 1/0 last 0/0
+FAIL rand9 beat 22: lv 007f/ffff q 1/0 last 1/0
+FAIL rand9 beat 23: lv ffff/1fff q 2/0 last 0/1
+FAIL rand9 beat 24: lv ffff/0000 q 2/1 last 0/1
+FAIL rand9 beat 25: lv 000f/0000 q 2/2 last 1/1
+FAIL rand14 beat 3: lv ffff/07ff q 0/0 last 0/1
+FAIL rand14 beat 4: lv 07ff/ffff q 0/1 last 1/0
+FAIL rand14 beat 14: lv 0007/ffff q 1/1 last 1/0
+FAIL rand14 beat 15: lv ffff/ffff q 2/1 last 0/0
+FAIL rand14 beat 16: lv ffff/03ff q 2/1 last 0/1
+FAIL rand14 beat 18: lv ffff/ffff q 2/2 last 1/0
+FAIL rand14 beat 19: lv ffff/ffff q 3/2 last 0/0
+FAIL rand14 beat 20: lv ffff/001f q 3/2 last 0/1
+FAIL rand14 beat 28: lv 0001/001f q 3/3 last 1/1
+FAIL rand15 beat 0: lv ffff/ffff q 0/0 last 0/0
+FAIL rand15 beat 1: lv ffff/ffff q 0/0 last 0/0
+FAIL rand15 beat 2: lv ffff/ffff q 0/0 last 0/0
+FAIL rand15 beat 3: lv ffff/ffff q 0/0 last 0/0
+FAIL rand15 beat 4: lv 001f/ffff q 0/0 last 1/0
+FAIL rand15 beat 5: lv 001f/ffff q 1/0 last 1/0
+FAIL rand15 beat 6: lv ffff/ffff q 2/0 last 0/0
+FAIL rand15 beat 7: lv ffff/ffff q 2/0 last 0/0
+FAIL rand15 beat 8: lv ffff/ffff q 2/0 last 0/0
+FAIL rand15 beat 9: lv ffff/ffff q 2/0 last 0/0
+FAIL rand15 beat 10: lv 0001/ffff q 2/0 last 1/0
+FAIL rand15 beat 11: lv ffff/ffff q 3/0 last 0/0
+FAIL rand15 beat 12: lv ffff/ffff q 3/0 last 0/0
+FAIL rand15 beat 13: lv 000f/ffff q 3/0 last 1/0
+FAIL rand15: 14 IDX words, ref 30 beats (per q 17 1 9 3, lastq 4)
+FAIL rand15: DONE count 175 ref 224
+fault case k_mismatch: FAULT bit 13    seen
+fault case orphan_beat: FAULT bit 11    seen
+fault case qslot_collision: FAULT bit 12    seen
+RESULT FAIL segments 32 out_beats 602 replays 4 errors 2597 tail_minus_ref max 220 mean -1 ref_holds 37

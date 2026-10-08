@@ -143,13 +143,64 @@ def early_ps(r):
     return 0.0
 
 
+def clock_root_xy(d, root):
+    """Resolve an explicit die input without inventing a root macro or PLL."""
+    inst, port = root
+    if inst == 'TOP':
+        pin = d.get('top_input_ports', {}).get(port)
+        if not pin or pin.get('use') != 'CLOCK' or pin.get('direction') != 'input':
+            raise ValueError(f'missing physical clock input: TOP/{port}')
+        xy = pin.get('center_um')
+        if not xy or len(xy) != 2 or not all(math.isfinite(v) for v in xy):
+            raise ValueError(f'invalid clock input center: TOP/{port}')
+        if not all(0 <= v <= limit for v, limit in zip(xy, d['outline_um'])):
+            raise ValueError(f'clock input outside die: TOP/{port}')
+        return tuple(xy)
+    xy, known = C.port_xy(d, d['by'][inst], port)
+    if d.get('strict_clock_pins') and not known:
+        raise ValueError(f'missing physical clock root: {inst}/{port}')
+    return xy
+
+
+def clock_period_ps(d, trees, name):
+    """Keep a regional branch on its parent clock's real period."""
+    tree = name.removeprefix('REGION:').split(':', 1)[0]
+    tr = trees[tree]
+    inst, port = tr['root']
+    if inst == 'TOP':
+        value = d['top_input_ports'][port].get('period_ns')
+        if value is None or not math.isfinite(value) or value <= 0:
+            raise ValueError(f'invalid clock period: TOP/{port}')
+        return value * 1000
+    # Retain historical cases, correcting their domain periods explicitly.
+    if 'serial' in tree or 'serial' in port:
+        return C.PERIODS['serial_0p9']
+    if 'hbm' in tree or 'hbm' in port:
+        return C.PERIODS['hbm']
+    return C.PERIODS['stream_1p2']
+
+
+def validate_clock_pins(d, trees):
+    """A candidate must bind every sink; an outline-center fallback is not a pin."""
+    missing = []
+    for tree, tr in trees.items():
+        clock_root_xy(d, tr['root'])
+        clock_period_ps(d, trees, tree)
+        for inst, port in tr['sinks']:
+            if inst not in d['by'] or not C.port_xy(d, d['by'][inst], port)[1]:
+                missing.append(f'{tree}:{inst}/{port}')
+    if missing and d.get('strict_clock_pins'):
+        raise ValueError('unbound clock sinks: ' + ', '.join(missing))
+    return missing
+
+
 def clock_nets(d, trees, groups, group):
     """[(clock name, root xy, [(inst, port, x, y)])] for the case group"""
     nets = []
     if group in ('trunk', 'region'):
         for t in groups[group]:
             tr = trees[t]
-            (rx, ry), _ = C.port_xy(d, d['by'][tr['root'][0]], tr['root'][1])
+            rx, ry = clock_root_xy(d, tr['root'])
             l = []
             for inst, port in dict.fromkeys(tr['sinks']):
                 (x, y), _ = C.port_xy(d, d['by'][inst], port)
@@ -175,7 +226,7 @@ def clock_nets(d, trees, groups, group):
                     fam_root[r] = c
     for t, regs in R.items():
         tr = trees[t]
-        (rx, ry), _ = C.port_xy(d, d['by'][tr['root'][0]], tr['root'][1])
+        rx, ry = clock_root_xy(d, tr['root'])
         if group == 'htop':      # PLL -> every region root (family members share ONE trunk sink at the family root)
             l, seen = [], {}
             for r, sl in regs.items():
@@ -201,6 +252,7 @@ def clock_nets(d, trees, groups, group):
 def emit(a):
     d = C.load_die(a.die_model)
     trees, groups = plan_groups(d)
+    missing_clock_pins = validate_clock_pins(d, trees)
     nets = clock_nets(d, trees, groups, a.group)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -213,7 +265,7 @@ def emit(a):
         v.append(f'  wire ck_{k};')
         v.append(f'  {ROOT_CELL} {rn} (.A(ref), .Y(ck_{k}));')
         place.append(f'place_inst -name {rn} -location {{{min(max(rx, 1.0), W - 2):.3f} {min(max(ry, 1.0), H - 2):.3f}}} -status FIRM')
-        sdc.append(f'create_clock -name {esc(t)} -period 833.333 [get_pins {rn}/Y]')
+        sdc.append(f'create_clock -name {esc(t)} -period {clock_period_ps(d, trees, t):.9f} [get_pins {rn}/Y]')
         for inst, port, x, y in l:
             x = min(max(x, 1.0), W - 2.0)
             y = min(max(y, 1.0), H - 2.0)
@@ -228,7 +280,9 @@ def emit(a):
     (out / 'clocks.sdc').write_text('\n'.join(sdc) + '\n')
     lay = LAYERS.get(a.group, LAYERS['trunk'])
     (out / 'sinks.json').write_text(json.dumps(dict(die=d['die'], group=a.group, layers=lay,
-                                                    trees=[x[0] for x in nets], sinks=sinks)) + '\n')
+                                                    trees=[x[0] for x in nets], sinks=sinks,
+                                                    missing_clock_pins=missing_clock_pins,
+                                                    timing_scope='tree insertion after root driver output; external source, receiver and phase unqualified')) + '\n')
     common = f"""foreach l [glob {PLAT}/lib/NLDM/*RVT_%C%*] {{ read_liberty $l }}
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef

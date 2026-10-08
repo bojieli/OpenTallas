@@ -1,0 +1,12 @@
+      |                                                                                          ^~
+%Warning-WIDTHCONCAT: rtl/hdc/ot_hdc_delay.sv:32:47: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                   : ... note: In instance 'tb_hbm_integrated_minimum_parent.dut..g_on.g_die[1].u_su_exec.g_on.u_native.u_rwe'
+   32 |                     if (!rst_n) line <= {(W*D){1'b0}};
+      |                                               ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Error: Verilator threw signal 15. Suggest trying --debug --gdbbt
+%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin -f /srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin/work/obj/Vtb_hbm_integrated_minimum_parent__hierMkArgs.f
+make[1]: *** [/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin/work/obj/Vtb_hbm_integrated_minimum_parent_hier.mk:179: hier_launch_verilator] Error 143
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/tk-hbm-harvest/lorentz-margin/src'
+make: *** [Vtb_hbm_integrated_minimum_parent_hier.mk:183: Vtb_hbm_integrated_minimum_parent.mk] Error 2

@@ -1,0 +1,26 @@
+{
+ "cases": {
+  "positive": {
+   "returncode": 0,
+   "ok": true,
+   "markers": [
+    "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+    "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+    "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+    "PINREG shadow compared cycles=124422 pv_cycles=232"
+   ]
+  },
+  "mutant_front_pair": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[336950] %Fatal: tb_dsrom_actual_element_rne_wake.sv:154: Assertion failed in tb_bfcolumn.test.compare_all: DIFF u_e.f_cnt cycle=404"
+   ]
+  }
+ },
+ "pass": true,
+ "source_commit": "8fb12fa6fbb02acbe46ce00a619f1ef42b1b47f7",
+ "extra_cycles": 0,
+ "note": "run on EPYC1 (Verilator 5.050) from a detached worktree of 8fb12fa6f; prep packaged locally from the same clean commit (its pinned reference commit 4e38326d6 is not on origin). Candidate HITFIX=1 passes the full numerical + wake gates; the HITFIX=0 shadow matched it every cycle (124,422 cycles, 232 pv cycles): 0 added cycles, 0 % headline cost. Negative W10_MUTANT_FRONT_PAIR (registered class offset off by one) FAILS (DIFF u_e.f_cnt cycle=404).",
+ "bench": "tools/s81/run_bf_hitfix_exact.py"
+}

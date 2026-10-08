@@ -1,0 +1,6 @@
+read_verilog -sv /tmp/qwen-link-forwarded-20261007/tmr-dispatch-archive/rtl/physical/ot_qwen_die_link_fwd_full_tmr.sv /tmp/qwen-link-forwarded-20261007/tmr-dispatch-archive/physical/qwen_link_forwarded_tmr_pair/pair.sv
+synth -top ot_qwen_link_forwarded_tmr_pair
+dfflibmap -liberty /tmp/qwen-link-forwarded-20261007/tmr-dispatch-archive/results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+abc -liberty /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/combo.lib
+opt_clean
+write_verilog -noattr /tmp/qwen-link-forwarded-20261007/tmr-dispatch-frontend/mapped.v

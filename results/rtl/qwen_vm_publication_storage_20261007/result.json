@@ -1,0 +1,23 @@
+{
+  "quality_status": "FAIL: three publication storage coverage gaps",
+  "cases": {
+    "0": "PASS known data",
+    "1": "FAIL plain read_q reaches native consumer",
+    "2": "FAIL plain xpipe reaches leased publication",
+    "3": "FAIL plain last_window is re-encoded as valid response",
+    "4": "PASS existing read_seat corrects a single-bit error",
+    "5": "PASS existing read_seat double-bit error stops publication"
+  },
+  "full_shape": {
+    "NR": 2256,
+    "NW": 865,
+    "NVX": 2048
+  },
+  "actual_checked_read_edges": 9,
+  "actual_postverified_write_edges": 28,
+  "initialization_edges": 3155,
+  "one_window_read_frame_edges": 3136,
+  "arithmetic_executed": false,
+  "adopted": false,
+  "physical_admission": false
+}

@@ -20,7 +20,7 @@ set -u
 lab=$1; master=$2; topsrc=$3; shift 3
 # 2026-10-06: CTS without clock NDR by default (svc segments crashed post-CTS repair_timing on ODB-0445, the clock NDR
 # undo); CTSA=keep_ndr restores the ORFS default
-[ "${CTSA:-}" = keep_ndr ] && CTSA= || CTSA=${CTSA:--apply_ndr none}
+[ "${CTSA:-}" = keep_ndr ] && CTSA= || CTSA=${CTSA:--sink_clustering_enable -repair_clock_nets -apply_ndr none}
 W=$OUT/$lab; mkdir -p $W; cd $SRC
 export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 python3 tools/hbm_die_views.py ${VARIANT:+--variant $VARIANT} ports --master $master --out $W/ports > $W/ports.log 2>&1 || { echo "rc=ports" > $W/exit; exit 1; }

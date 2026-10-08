@@ -41,6 +41,92 @@ class ReliabilityTests(unittest.TestCase):
         self.j = dict(name="race", status="READY", spec={"block": "block", "stages": {}, "verdict": {}}, events=[])
         cl.save_job(self.j)
 
+    def test_recovery_does_not_duplicate_a_slow_worker(self):
+        pool = Mock()
+        slow = Mock()
+        slow.done.return_value = False
+        with patch.object(cl, "_RECOVERY_POOL", pool), patch.object(cl, "_RECOVERY_FUTURE", slow):
+            cl.schedule_recovery()
+            pool.submit.assert_not_called()
+            slow.done.return_value = True
+            cl.schedule_recovery()
+            pool.submit.assert_called_once_with(cl.recover_jobs)
+
+    def test_recovery_does_not_revive_superseded_failure(self):
+        old = dict(name="old", status="NEEDS_RTL", spec={"block": "same"})
+        live = dict(name="successor", status="RUNNING", spec={"block": "same"})
+        alone = dict(name="recover", status="NEEDS_HUMAN", spec={"block": "other"})
+        with patch.object(cl, "all_jobs", return_value=[old, live, alone]), \
+             patch.object(cl, "reevaluate_benches") as bench, patch.object(cl, "requeue_toolchain"), \
+             patch.object(cl, "requeue_budget"), patch.object(cl, "requeue_hold_only"), \
+             patch.object(cl, "requeue_ssh_verdict"), patch.object(cl, "auto_requeue"):
+            cl.recover_jobs()
+        bench.assert_called_once_with([live, alone])
+
+    def test_recovery_failure_does_not_skip_other_classes(self):
+        with patch.object(cl, "all_jobs", return_value=[]), patch.object(cl, "log"), \
+             patch.object(cl, "reevaluate_benches", side_effect=RuntimeError("network")), \
+             patch.object(cl, "requeue_toolchain") as toolchain, patch.object(cl, "requeue_budget") as budget, \
+             patch.object(cl, "requeue_hold_only") as hold, patch.object(cl, "requeue_ssh_verdict") as ssh, \
+             patch.object(cl, "auto_requeue") as auto:
+            cl.recover_jobs()
+        for check in (toolchain, budget, hold, ssh, auto):
+            check.assert_called_once_with([])
+
+    def test_host_requirement_must_be_explicit_known_hosts(self):
+        spec = dict(name="test", block="b", owner="o", source={"branch": "b", "commit": "c" * 40},
+                    stages={"route": {"cmd": "true"}}, no_bench_reason="fixture")
+        for bad in (True, False, "ot-epyc2", [], ["unknown-host"]):
+            with self.subTest(value=bad):
+                self.assertTrue(any("host_require" in e for e in cl.validate(dict(spec, host_require=bad))))
+        self.assertFalse(any("host_require" in e for e in cl.validate(dict(spec, host_require=["ot-epyc2"]))))
+
+    def test_failed_tool_probe_is_retried_without_hour_long_fleet_outage(self):
+        fleet = cl.Fleet()
+        fleet.tool_cache["host"] = (cl.time.time() - 16, None)
+        with patch.object(cl, "ssh", return_value=SimpleNamespace(returncode=0, stdout="img_latest=pinned\n")) as ssh:
+            self.assertEqual(fleet.toolchain("host"), {"img_latest": "pinned"})
+            self.assertEqual(fleet.toolchain("host"), {"img_latest": "pinned"})
+        ssh.assert_called_once()
+
+    def test_adoption_hold_blocks_verdict_and_publish_without_stopping_route(self):
+        hold = Path(self.tmp.name) / "adoption_holds" / "race.json"
+        hold.parent.mkdir()
+        hold.write_text(json.dumps({"reason": "exact gate pending"}))
+        with patch.object(cl, "get_metrics") as metrics, patch.object(cl, "publish") as publish, \
+             patch.object(cl, "kill_own_stage") as kill, patch.object(cl, "log"):
+            cl.do_verdict(self.j, None, [])
+            cl.do_commit(self.j)
+        metrics.assert_not_called()
+        publish.assert_not_called()
+        kill.assert_not_called()
+        self.assertEqual(self.j["status"], "READY")
+        hold.unlink()
+        self.assertFalse(cl.adoption_held(self.j))
+
+    def test_mutation_bench_uses_private_source_for_cwd_and_explicit_src(self):
+        run = Path(self.tmp.name) / "run"
+        (run / "src").mkdir(parents=True)
+        (run / "cl").mkdir()
+        (run / "src" / "rtl.txt").write_text("golden")
+        j = dict(self.j, host="remote", run=str(run), attempt=1, commit_full="c" * 40,
+                 spec=dict(self.j["spec"], source={"commit": "c" * 40}))
+        st = dict(key="bench_neg", kind="bench", threads=1)
+        scripts = []
+        def remote(host, command, **kw):
+            if "input" in kw:
+                scripts.append(kw["input"])
+            return SimpleNamespace(stdout="", returncode=0)
+        with patch.object(cl, "ssh", remote):
+            cl.launch_stage(j, st, 'echo mutant > rtl.txt; test "$SRC" = "{SRC}"; test "{RUN}/src" = "$SRC"')
+        result = subprocess.run(["bash", "-c", scripts[0]], cwd=run / "src", capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((run / "src" / "rtl.txt").read_text(), "golden")
+        self.assertEqual((run / "bench_src_a1" / "rtl.txt").read_text(), "mutant\n")
+        with patch.object(cl, "ssh", return_value=SimpleNamespace(stdout="", stderr="", returncode=0)) as ssh:
+            self.assertTrue(cl.remote_ok(j, "test -f rtl.txt")[0])
+        self.assertIn(f"cd {run}/bench_src_a1 &&", ssh.call_args.args[1])
+
     def test_unreadable_historical_bench_does_not_starve_recovery(self):
         first = dict(name="unreachable", status="NEEDS_RTL", spec={},
                      reason="bench_exact expected PASS but rc=0", stage_tag="bench_exact.a1")
@@ -139,6 +225,46 @@ class ReliabilityTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             cl.cmd_retry(SimpleNamespace(name="race"))
 
+    def test_source_failure_retry_synchronizes_before_launch(self):
+        for fields in ({}, {"commit_full": "a" * 40, "source_synced": False}):
+            j = dict(self.j, status="NEEDS_HUMAN", host="host", attempt=1,
+                     stage_idx=0, errors=["source unavailable"], **fields)
+            cl.save_job(j)
+            with patch.object(cl, "ledger"), patch.object(cl, "log"):
+                cl.cmd_retry(SimpleNamespace(name="race"))
+            restored = cl.load_job("race")
+            self.assertEqual(restored["status"], "SYNC")
+            self.assertEqual(restored["stage_idx"], 0)
+
+    def test_legacy_broken_ready_state_cannot_launch_benches(self):
+        j = dict(self.j, status="READY", host="host", stage_idx=0)
+        with patch.object(cl, "bench_track") as benches, patch.object(cl, "log"):
+            cl.step(j, None)
+        benches.assert_not_called()
+        self.assertEqual(j["status"], "SYNC")
+
+    def test_stage_retry_preserves_synchronized_source(self):
+        j = dict(self.j, status="NEEDS_HUMAN", host="host", attempt=1,
+                 stage_idx=0, commit_full="a" * 40, source_synced=True)
+        cl.save_job(j)
+        with patch.object(cl, "ledger"), patch.object(cl, "log"):
+            cl.cmd_retry(SimpleNamespace(name="race"))
+        self.assertEqual(cl.load_job("race")["status"], "READY")
+
+    def test_calibration_transport_failure_preserves_completed_stage(self):
+        j = dict(self.j, status="RUNNING", host="host", run="/run", stage_idx=0)
+        stages = [dict(key="calibrate", kind="calibrate")]
+        with patch.object(cl, "stage_list", return_value=stages), \
+             patch.object(cl, "bench_track", return_value=True), \
+             patch.object(cl, "poll_stage", return_value=("DONE", 0)), \
+             patch.object(cl, "remote_ok", return_value=(True, "")), \
+             patch.object(cl, "ssh", return_value=SimpleNamespace(returncode=255, stdout="")), \
+             patch.object(cl, "crash") as crash, patch.object(cl, "log"):
+            cl.step(j, None)
+        crash.assert_not_called()
+        self.assertEqual((j["status"], j["stage_idx"]), ("RUNNING", 0))
+        self.assertIn("artifact transport", j["wait"])
+
     def test_restore_requires_ledger_and_preserves_live_work_and_old_state(self):
         ledger = Path(self.tmp.name) / "ledger.md"
         ledger.write_text("other job cancelled\n")
@@ -202,12 +328,12 @@ class ReliabilityTests(unittest.TestCase):
         self.assertNotIn("installed", self.j["eco"])
 
     def test_eco_verdict_fails_closed(self):
-        passing = dict(ss_ps=15, ff_ps=15, drc=0, errors=[])
+        passing = dict(ss_ps=cl.SS_MIN, ff_ps=cl.FF_MIN, drc=0, errors=[])
         self.assertTrue(cl.eco_passes(passing, 0))
         for bad in (None, {}, dict(passing, ss_ps=None), dict(passing, ss_ps=float("inf")),
                     dict(passing, ff_ps=float("nan")), dict(passing, ss_ps=True),
                     dict(passing, drc=None), dict(passing, drc=False), dict(passing, errors=["STA error"]),
-                    dict(passing, ff_ps=14.99)):
+                    dict(passing, ff_ps=cl.FF_MIN - 0.01)):
             self.assertFalse(cl.eco_passes(bad, 0), bad)
         self.assertFalse(cl.eco_passes(passing, 9))
 

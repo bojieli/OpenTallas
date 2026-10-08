@@ -16,6 +16,19 @@ from pathlib import Path
 
 ANCHOR = "    args = build_parser().parse_args(argv)\n"
 CODE = r'''    _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
+    if _ot_rhc == "mm":
+        # FLOW-HOLD (2026-10-07): multi-mode route-time repair, SS setup (scene WC) + FF hold (scene BC) each under its
+        # own constraints (tools/orfs_hold_mm.tcl, patched into the flow container by tools/orfs_hold_mm.py)
+        _ot_p = args.orfs_corner or (args.hold_corners or "WC").split(",")[0].strip()
+        args.hold_corners = ",".join(dict.fromkeys([_ot_p, "BC"]))
+        args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1"]
+        _ot_ff = " ".join(("/src/" + f.lstrip("/")) if not f.startswith("/src/") else f
+                          for f in os.environ.get("OT_MM_FF_SDC", "").split() if f)
+        if _ot_ff:
+            args.orfs_var.append(f"OT_MM_FF_SDC={_ot_ff}")
+        print(f"OT_ROUTE_HOLD_CORNERS=mm: repair scenes {args.hold_corners} (SS setup + FF hold), FF SDCs [{_ot_ff}]",
+              file=sys.stderr)
+        _ot_rhc = ""
     if _ot_rhc and args.hold_corners:
         # closure loop (2026-10-07): route-time repair corners; "primary" = --orfs-corner (or the first listed corner)
         _ot_new = (args.orfs_corner or args.hold_corners.split(",")[0].strip()) if _ot_rhc == "primary" else _ot_rhc
@@ -42,6 +55,9 @@ CODE = r'''    _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()
             args.hold_corners = _ot_new
 '''
 MARK = "OT_ROUTE_HOLD_CORNERS"
+DOCKER_ANCHOR = '"python3 /src/tools/orfs_allcorner_spef.py "'
+DOCKER_MM = '"python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && "\n            '
+
 
 
 def patch(src):
@@ -49,18 +65,39 @@ def patch(src):
     if not f.is_file():
         return "no run_abi3_physical.py"
     s = f.read_text()
-    if "kept {args.hold_corners}: step hook" in s:
-        return "already supports OT_ROUTE_HOLD_CORNERS (hook-aware)"
-    if MARK in s:                        # first patch generation (no step-hook check): upgrade it
+    msg = []
+    if 'if _ot_rhc == "mm":' in s:
+        msg.append("already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm)")
+    elif MARK in s:                      # earlier patch generations / main before mm: replace the block
         i = s.index('    _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()\n')
-        j = s.index('        args.hold_corners = _ot_new\n', i) + len('        args.hold_corners = _ot_new\n')
-        f.write_text(s[:i] + CODE + s[j:])
-        return f"upgraded {f}"
-    if s.count(ANCHOR) != 1 or "\nimport os" not in s:
+        j = s.index('            args.hold_corners = _ot_new\n', i) + len('            args.hold_corners = _ot_new\n') \
+            if "kept {args.hold_corners}: step hook" in s else \
+            s.index('        args.hold_corners = _ot_new\n', i) + len('        args.hold_corners = _ot_new\n')
+        s = s[:i] + CODE + s[j:]
+        msg.append(f"upgraded {f}")
+    elif s.count(ANCHOR) != 1 or "\nimport os" not in s:
         return "anchor not found: not patched (route keeps its own hold corners)"
-    shutil.copy2(f, f.with_suffix(".py.pre_holdcorners"))
-    f.write_text(s.replace(ANCHOR, ANCHOR + CODE))
-    return f"patched {f}"
+    else:
+        if not f.with_suffix(".py.pre_holdcorners").exists():
+            shutil.copy2(f, f.with_suffix(".py.pre_holdcorners"))
+        s = s.replace(ANCHOR, ANCHOR + CODE)
+        msg.append(f"patched {f}")
+    # the flow container patch (inert unless the config exports OT_HOLD_MM=1)
+    if "orfs_hold_mm.py /OpenROAD-flow-scripts" not in s:
+        if s.count(DOCKER_ANCHOR) == 1:
+            s = s.replace(DOCKER_ANCHOR, DOCKER_MM + DOCKER_ANCHOR)
+            msg.append("container hook orfs_hold_mm.py added")
+        else:
+            msg.append("NO container anchor: OT_ROUTE_HOLD_CORNERS=mm unavailable in this snapshot")
+    f.write_text(s)
+    here = Path(__file__).resolve().parent
+    for h in ("orfs_hold_mm.py", "orfs_hold_mm.tcl"):
+        for cand in (here / h, here.parent / h):
+            if cand.is_file() and not (Path(src) / "tools" / h).is_file():
+                shutil.copy2(cand, Path(src) / "tools" / h)
+                msg.append(f"shipped tools/{h}")
+                break
+    return "; ".join(msg)
 
 
 if __name__ == "__main__":

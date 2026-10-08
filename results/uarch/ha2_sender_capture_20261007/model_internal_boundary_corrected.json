@@ -1,0 +1,93 @@
+{
+  "default_off": true,
+  "adopted": false,
+  "clock_GHz": 1.2,
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "communication_intensity_bits_per_row": 544,
+  "replicas": 2,
+  "storage_bits": 69632,
+  "capture_flops": 1090,
+  "launch_flops": 1090,
+  "control_flops": 48,
+  "exact_rtl_register_bits": 71860,
+  "mux2_equivalent_inventory": {
+    "queue_read": 68544,
+    "queue_write_enable": 69632,
+    "launch_enable": 1088
+  },
+  "write_decoders": 2,
+  "decoder_outputs_per_replica": 64,
+  "write_enable_fanout": 544,
+  "boundary_bits_per_cycle": {
+    "arrival": 1090,
+    "send": 1090,
+    "issue": 2,
+    "credit": 4
+  },
+  "port_bytes_per_cycle": {
+    "read": 136.0,
+    "write": 136.0
+  },
+  "max_rows_per_cycle": 2,
+  "half_reducer_sustained_rows_per_cycle": 1,
+  "queue_depth": 64,
+  "hub_flight_cycles": 35,
+  "minimum_credit_flight_capacity": 38,
+  "capacity_check": true,
+  "receiver_ready_contract": {
+    "fifo_depth": 8,
+    "ready_threshold": 3,
+    "sender_launch_cycles": 1,
+    "receiver_pin_cycles": 1,
+    "ready_observation_cycles": 1,
+    "occupancy_increase_in_threshold_observation_edge": 1,
+    "worst_stopped_receiver_occupancy": 7,
+    "extra_data_plus_return_relay_cycles_max": 1,
+    "basis": "At sampled count3, enqueue may make4; registered threshold indication, sender launch and receiver pin leave three further accepted rows in flight. No dequeue credit assumed.",
+    "bounded_integer_delay_only": true,
+    "recommendation": "Place sender adjacent to HA2 reducer; added roundtrip over1cycle requires actual reservation credits or receiver FIFO change."
+  },
+  "added_capture_cycles": 1,
+  "previous_sender_pipeline_cycles": 2,
+  "composed_extra_cycles_per_reduction": 241,
+  "composed_extra_token_us": 0.20083333333333334,
+  "latency_scope": "Conservative existing half sender model plus one capture edge; endpoint timing still requires measurement.",
+  "flop_area_um2": 20954.376,
+  "constructive_mux_area_um2": 42639.851520000004,
+  "inventory_area_subtotal_um2": 63594.22752,
+  "area_basis": "ASAP7 RVT SS DFFHQNx1=0.2916, NAND2x1=0.08748, INVx1=0.04374 um2; mapping/CTS/repair not measured.",
+  "slot": {
+    "status": "Historical diagnostic envelope; not bound to actual HA2 internal leaf",
+    "x_um": 14663.376,
+    "y_um": 17226.0,
+    "width_um": 400.008,
+    "height_um": 401.736,
+    "area_um2": 160697.613888,
+    "utilisation_target": 0.55,
+    "cell_budget_um2": 88383.6876384,
+    "remaining_control_clock_repair_budget_um2": 24789.4601184
+  },
+  "routing_tracks_needed": 2186,
+  "channel_capacity": {
+    "north_bits": 4166,
+    "south_bits": 4166,
+    "east_bits": 3138,
+    "west_bits": 3138,
+    "basis": "Actual die-generator M5 NS pitch0.048um, M6 EW pitch0.064um; two tracks per bit"
+  },
+  "boundary_capacity_pass": true,
+  "north_arrival_window_um": 104.64,
+  "south_send_window_um": 104.64,
+  "suggested_lane_window_um": 52.32,
+  "pin_map_pending": true,
+  "die_link": {
+    "route": "Internal TU/collective hierarchy; actual HA2 leaf adjacency unresolved. No new external partial bus.",
+    "added_relay_cycles": null,
+    "credit_roundtrip_cycles": null,
+    "adoption_ready": false
+  },
+  "floorplan_inventory_fit": true,
+  "physical_closed": false,
+  "remaining_inventory": "Queue decode, reservation add/subtract and predicates, reset buffering, clock tree, hold repair; available budget is a reservation, not a cell measurement."
+}

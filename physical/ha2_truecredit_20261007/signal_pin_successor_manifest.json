@@ -1,0 +1,13 @@
+{
+  "scope": "Signal-pin counting successor only: exclude actual POWER/GROUND BTerms, enforce exact functional names, one box each and unchanged geometry; RTL/model/clock constraints unchanged",
+  "predecessor_commit": "04491da6c",
+  "files": {
+    "physical/ha2_truecredit_20261007/check_signal_identity.tcl": "8979ae2fd4a509aa27b98f255f4341b15ffb8dbaea26dadf40fb43843565f723",
+    "physical/ha2_truecredit_20261007/rx_pins_signal_only.tcl": "0d6db67ac42f79dc769be7f6d7e62bdc914f576a896fce5d9de6be57dc1012f3",
+    "physical/ha2_truecredit_20261007/tx_pins_signal_only.tcl": "5e24f5954b4b1d4f4aca8049f6fab3da7522131ca2951c69643f313d200ca8d4",
+    "physical/ha2_truecredit_20261007/tx_check_pins_signal_only.tcl": "67760eddba2a0112fe384b3a18fae7828e3a03737d9f54edc84d9ea7bb64a80e",
+    "physical/ha2_truecredit_20261007/rx_check_pins_signal_only.tcl": "31e17d9c4ca6aeb477302ef98781bd30d6f4fa6430574bb4976c1b604d5572dd",
+    "tools/ha2_truecredit_physical_signalpins.py": "f5669ccd1de2c374a3d0515ab17ab0d7b399e166a9a950c7303588c36c0bada7",
+    "tests/test_ha2_truecredit_signal_pins.py": "a509e46a8eaf9189e70639f8f9d44aafc2173fce5068ce993d2a897c8a06adf6"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "status": "MINIMUM_FULL_COLUMN_EXACT_PASS_PHYSICAL_PENDING",
+  "adopted": false,
+  "capacity_bits": 4096,
+  "positive": "3070 comparisons,1040read/writecollisions,8writesduringreset,defaultoffbaseline matches",
+  "negative": "wrongstorageedge mutant explicit mismatch check75",
+  "added_cycles": 0,
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_column_halfwrite.sv": "537c169846ba399fa5d88619bcc2f731f4f4968d7b27ec6cfbba5d2942a51e7a",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv": "1b5694a76f8270c299c00ab220153e40064950c4332c9f1ddde18fe4e47a5cd8",
+    "rtl/dsrom_sys/s81_window_la/tb_window_column_halfwrite.sv": "a2c82e5673926d3696695d2b64dbac094122f8a5eb5c9ce5ec2c7786d8f41d90",
+    "tools/uarch_model.py": "6ed863555d46f37083c10514cc9e01d5c7a88a04d3889d93ac07a8c426f8260e"
+  },
+  "failed_predecessor": {
+    "source": "01a487c86",
+    "host": "ot-agidock128",
+    "fresh_pass1": {
+      "SS_ps": 9.78,
+      "FF_ps": 4.87,
+      "DRC": 0
+    },
+    "fresh_pass2": {
+      "SS_ps": -5.54,
+      "FF_ps": 1.57,
+      "DRC": 0
+    },
+    "hold_path": "mem->rq; oneAOI221 gate, actualsameposedgeclockskew",
+    "setup_path": "row_we->mem; holdbufferchain"
+  },
+  "proposal": "Distributed posedge writecapture, negedge storage commit, unchanged posedge twoedge read protocol; no SRAM/mutable-state protection removed, parent validity/protection untouched",
+  "remaining": [
+    "production mapping preservewritecopies",
+    "bothhalfcycleSSpaths",
+    "trueFFhold and actualIO",
+    "M2-M6routing and parentPGaccess",
+    "parentarea/clockinventory"
+  ],
+  "negative_transform": {
+    "replace": "always @(negedge clk)",
+    "with": "always @(posedge clk)",
+    "mutated_sha256": "ad600cb48137f7657a91ccb78e293e361d742146c906937b36ad948e4abdd85b"
+  },
+  "validation_commands": {
+    "positive_compile": [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_window_column_halfwrite",
+      "-o",
+      "/tmp/window_halfwrite_final",
+      "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv",
+      "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_column_halfwrite.sv",
+      "rtl/dsrom_sys/s81_window_la/tb_window_column_halfwrite.sv"
+    ],
+    "negative_compile": [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_window_column_halfwrite",
+      "-o",
+      "/tmp/window_halfwrite_wrong_write_edge",
+      "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv",
+      "/tmp/window_column_halfwrite_wrong_edge.sv",
+      "rtl/dsrom_sys/s81_window_la/tb_window_column_halfwrite.sv"
+    ],
+    "negative_run": [
+      "vvp",
+      "/tmp/window_halfwrite_wrong_write_edge"
+    ]
+  }
+}

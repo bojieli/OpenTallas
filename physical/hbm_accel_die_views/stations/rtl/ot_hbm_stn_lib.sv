@@ -107,7 +107,7 @@ endmodule
 // (--margin): the readout flop is the FIFO's last register; the station's per-face pin-launch flop follows it
 // directly (the FIFO output register o_d goes): downstream crossing +2 cycles instead of +3.
 // PLREG=1 / RSPLIT=1 (views agent, fail-fast 2026-10-06; mcast_r6 Q1 meso internals): see ot_meso_fifo.  Both 0 cycles.
-module ot_hbm_stn_meso #(parameter integer W = 512, parameter integer RI = 0, parameter integer RDREG = 0, parameter integer NOBP = 0, parameter integer CRDREG = 0, parameter integer OBYP = 0, parameter integer WCHK = 0, parameter integer PLREG = 0, parameter integer RSPLIT = 0) (
+module ot_hbm_stn_meso #(parameter integer W = 512, parameter integer RI = 0, parameter integer RDREG = 0, parameter integer NOBP = 0, parameter integer CRDREG = 0, parameter integer OBYP = 0, parameter integer WCHK = 0, parameter integer PLREG = 0, parameter integer RSPLIT = 0, parameter integer ONREG = 0) (
     input wire fclk_i, input wire [W-1:0] d_i, input wire ck, input wire rst_n, output wire [W-1:0] d_o);
     wire wclk;
     ot_fwd_clk_inv u_winv (.a(fclk_i), .y(wclk));
@@ -123,7 +123,7 @@ module ot_hbm_stn_meso #(parameter integer W = 512, parameter integer RI = 0, pa
     always @(posedge wclk) wrs <= {wrs[0], rst_n};
     always @(posedge ck) rrs <= {rrs[0], rst_n};
     wire w_rdy, r_v, w_live, r_live, w_fault, r_fault;
-    ot_meso_fifo #(.W(W), .DEPTH(4), .OFFSET(2), .GUARD_LO(0), .GUARD_HI(4), .CREDITS(8), .ENABLE(1), .RDREG(RDREG), .NOBP(NOBP), .CRDREG(CRDREG), .OBYP(OBYP), .WCHK(WCHK), .PLREG(PLREG), .RSPLIT(RSPLIT)) u_fifo (
+    ot_meso_fifo #(.W(W), .DEPTH(4), .OFFSET(2), .GUARD_LO(0), .GUARD_HI(4), .CREDITS(8), .ENABLE(1), .RDREG(RDREG), .NOBP(NOBP), .CRDREG(CRDREG), .OBYP(OBYP), .WCHK(WCHK), .PLREG(PLREG), .RSPLIT(RSPLIT), .ONREG(ONREG)) u_fifo (
         .wclk(wclk), .wrst_n(wrs[1]), .w_v(1'b1), .w_rdy(w_rdy), .w_d(w_d),
         .rclk(ck), .rrst_n(rrs[1]), .r_v(r_v), .r_rdy(1'b1), .r_d(d_o),
         .w_live(w_live), .r_live(r_live), .w_fault(w_fault), .r_fault(r_fault));

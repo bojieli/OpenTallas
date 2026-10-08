@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.hbm.clock_pin_identity.v1",
+  "basis": "prior source-pinned STA OT_CLOCK_MISSING and OT_CLOCK_UNMAPPED observations",
+  "mapped_link_clock_pins": 10,
+  "checks_passed": [
+    "all ten generated sink identities use actual clk",
+    "unknown plan sink rejected",
+    "foreign instance rejected",
+    "duplicate netlist pin rejected"
+  ],
+  "new_sta_run": false,
+  "final_signoff_eligible": false,
+  "remaining": [
+    "Run against actual r23c netlist",
+    "Resolve four collective PLL source clock contracts",
+    "Close all unconstrained endpoints",
+    "Physical clock implementation and extracted signoff"
+  ]
+}

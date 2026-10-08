@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.s81_ph.composition.v1",
+ "slab": "VM memory sub-macro (ot_s81ph_vm_mem v1 outline)",
+ "slab_um": [
+  1015.176,
+  2000.16
+ ],
+ "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bg.sv module dsfd_vm_mem (the exact composition netlist; bench rtl/dsrom_sys/s81_ph/vm/run_vm_bench.sh +define+TILED)",
+ "instances": [
+  {
+   "inst": "g_t[0].u_bg",
+   "master": "dsfd_vm_bg",
+   "xy": [
+    0.0,
+    1500.12
+   ],
+   "orient": "R0",
+   "grp": 0
+  },
+  {
+   "inst": "g_t[1].u_bg",
+   "master": "dsfd_vm_bg",
+   "xy": [
+    0.0,
+    1000.08
+   ],
+   "orient": "R0",
+   "grp": 1
+  },
+  {
+   "inst": "g_t[2].u_bg",
+   "master": "dsfd_vm_bg",
+   "xy": [
+    0.0,
+    500.04
+   ],
+   "orient": "R0",
+   "grp": 2
+  },
+  {
+   "inst": "g_t[3].u_bg",
+   "master": "dsfd_vm_bg",
+   "xy": [
+    0.0,
+    0.0
+   ],
+   "orient": "R0",
+   "grp": 3
+  }
+ ],
+ "nets": {
+  "chain": "g_t[t].f_* -> g_t[t+1].i_*, g_t[t].o_* -> g_t[t+1].r_* by abutment (same x, S face of t on N face of t+1); g_t[0].r_* tied 0; g_t[0].i_* = the VM request ports; g_t[3].o_* = read data (o_v, o_d), status o_f = {fault, code[2:0]}, o_o = max_occ; g_t[3].f_* unused",
+  "clock": "ck = the serial clock (0.9 GHz) to every tile from the die clock tree; rs = async reset; grp = tile index (tie cells)"
+ },
+ "latency": "read latency L + 8 = 18 serial cycles (v1: 10), fixed; exact (issue cycle, port) order"
+}

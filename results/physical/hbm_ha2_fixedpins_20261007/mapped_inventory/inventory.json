@@ -1,0 +1,37 @@
+{
+  "scope": "Actual full-shape mapped h2, before placement/CTS repair. Not routed closure.",
+  "source_commit": "ca0d6a5a2f22b6d92151a2a14e7a3b339299d463",
+  "host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/ha2_h2_fixedpins_ca0d6a5a2/route",
+  "odb_relative": "results/asap7/ha2_owner_banked_h2_fixedpins/base/1_synth.odb",
+  "odb_sha256": "4f14672d50f578ef44af49d093e0928bf221511b403629ed672f842d364198b4",
+  "mapped_register_bits": 171444,
+  "standard_cell_instances": 734304,
+  "standard_cell_area_um2": 107571.03587961319,
+  "retained_macro_count": 8,
+  "retained_macro_master": "ot_sram_1r1w_64x512_m1_r2c2",
+  "retained_macro_area_um2": 106587.726336,
+  "outline_um": [
+    840,
+    480
+  ],
+  "gross_mapped_area_fraction": 0.5311477237490407,
+  "clock_pin": {
+    "name": "clk",
+    "layer": "M5",
+    "face": "N",
+    "center_um": [
+      10.332,
+      479.958
+    ],
+    "bbox_um": [
+      10.32,
+      479.916,
+      10.344,
+      480
+    ],
+    "evidence": "6028-signal-pin POST_IO readback PASS; routed geometry still pending"
+  },
+  "truecredit_TX_RX_area_included": false,
+  "clock_envelope_qualified": false
+}

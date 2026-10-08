@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "scope": "all6028 placed pin boxes after applying corrected source; not routed",
+  "checks": [
+    "exact names",
+    "actual native track coordinate modulo .048 with .012offset",
+    "M5 for N/S and M4 for E/W",
+    "24nm pin width and84nmdepth",
+    "actual box touches intended840x480 boundary"
+  ],
+  "rtl_delta": false,
+  "remaining": "routed extraction and actual parent clock/interface qualification"
+}

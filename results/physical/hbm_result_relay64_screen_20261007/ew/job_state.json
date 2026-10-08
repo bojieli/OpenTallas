@@ -1,0 +1,223 @@
+{
+  "name": "hbm_result_relay64_ew_screen_5588e3440",
+  "spec": {
+    "name": "hbm_result_relay64_ew_screen_5588e3440",
+    "block": "hfd_result_relay64_ew",
+    "owner": "Codex:hbm-relays",
+    "purpose": "Primitive screening only: actual regionalclock/IO budgets, end-to-end link/control protection andcheckedconsumer, global replicated fit remain OPEN. Never export/adopt this screening view.",
+    "source": {
+      "branch": "main",
+      "commit": "5588e3440ce38d57a788b335d28baea306c8edcd",
+      "paths": [
+        "tools",
+        "configs",
+        "Makefile",
+        "rtl/hbm_accel/result_relay_stage_20261007",
+        "physical/hbm_result_relay_stage_20261007",
+        "physical/hbm_accel_die_views/common/pdn_view.tcl",
+        "physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+        "results/uarch/hbm_result_relay_stage_20261007"
+      ],
+      "required_files": [
+        "tools/hbm_result_relay_physical.py",
+        "tools/hbm_result_relay_gate.py",
+        "tools/hbm_result_relay_model.py",
+        "tools/run_abi3_physical.py",
+        "tools/w18/corner_sta.py",
+        "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv",
+        "physical/hbm_result_relay_stage_20261007/ew/pins.tcl",
+        "physical/hbm_result_relay_stage_20261007/ns/pins.tcl",
+        "physical/hbm_result_relay_stage_20261007/screening.sdc",
+        "physical/hbm_accel_die_views/common/pdn_view.tcl",
+        "physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+        "results/uarch/hbm_result_relay_stage_20261007/result_paths.json",
+        "configs/pdk/asap7_local_liberty_lock.json"
+      ]
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "full270bit_exact_and_negatives",
+          "cmd": "python3 tools/hbm_result_relay_gate.py --out {RUN}/bench_gate",
+          "expect": "pass",
+          "needs": [
+            "iverilog"
+          ],
+          "threads": 1,
+          "peak_ram_gb": 2
+        },
+        {
+          "name": "mutant_controls_detected",
+          "cmd": "python3 -c \"import json; p=json.load(open('{RUN}/bench_gate/record.json')); assert p['status']=='PASS' and all(x['returncode']!=0 for x in p['cases'][1:]); print('RELAY_MUTANTS_DETECTED'); raise SystemExit(1)\"",
+          "expect": "fail",
+          "fail_regex": "RELAY_MUTANTS_DETECTED",
+          "needs": [],
+          "threads": 1,
+          "peak_ram_gb": 2
+        }
+      ],
+      "calibrate": {
+        "enabled": false,
+        "reason": "Permanent-held primitive characterization; actualdieclockbudget unresolved. Fullroute includesCTS andfreshSS/FF signoff; this is notcontext qualification."
+      },
+      "route": {
+        "cmd": "python3 tools/hbm_result_relay_physical.py --orientation ew --out {RUN}/route",
+        "ok": "python3 -c \"from pathlib import Path; assert Path('{RUN}/route/route.exit').read_text().strip()=='0'; assert Path('{RUN}/route/corner.exit').read_text().strip()=='0'\"",
+        "logs": [
+          "{RUN}/route/route.log",
+          "{RUN}/route/corner.log"
+        ],
+        "needs": [
+          "orfs"
+        ],
+        "threads": 8,
+        "peak_ram_gb": 16
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record && cp {RUN}/route/physical.json {RUN}/route/corner_sta.json {RUN}/route/screening_contract.json {RUN}/record/",
+        "needs": []
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/route/corner_sta.json",
+      "drc_metrics": "{RUN}/route/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [
+        {
+          "name": "permanent_screening_adoption_block",
+          "cmd": "python3 -c \"print('SCREENING_NOT_CONTEXT_OR_PROTECTION_QUALIFIED'); raise SystemExit(1)\""
+        }
+      ]
+    },
+    "smoke": true,
+    "record": [],
+    "cycles_added": 1,
+    "cycles_note": "onephysicalregister edge; encodedfulltree/tokencomposition notqualified",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "hosts": [
+      "ot-epyc2",
+      "ot-pve1",
+      "ot-agidock128",
+      "ot-epyc1tb"
+    ],
+    "host_require": [
+      "ot-epyc2",
+      "ot-pve1",
+      "ot-agidock128",
+      "ot-epyc1tb"
+    ],
+    "resource_basis": {
+      "basis": "16GiB capacity reservation for64FF/130pin primitive against measured fleet headroom; no process limit or claim of measured peak.",
+      "compile_threads": 8
+    }
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/hbm_result_relay64_ew_screen_5588e3440.json",
+  "created": "2026-10-07T12:08:37-07:00",
+  "status": "READY",
+  "stage_idx": 3,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {
+    "bench_full270bit_exact_and_negatives": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "e\": 1, \"expected_gate\": true}, {\"case\": \"reset_ignored\", \"returncode\": 1, \"expected_gate\": true}], \"source_sha256\": {\"rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv\": \"65d1f1a1de21732b0fdaec439651192c8af6757871bc0f8599993dde55864433\", \"results/uarch/hbm_result_relay_stage_20261007/result_paths.json\": \"ae054a2bdcd2c88453a73a96534f01f4af21de101d4050edf5e329486c8c3a03\", \"tools/hbm_result_relay_model.py\": \"cc1650009a693aa462a1bb3ae341cbaddfc3d074b6ec5695a7895c4f4fc3a370\", \"tools/hbm_result_relay_gate.py\": \"cf6ee3c5a9cf00cd5fa7fefc93110a557a243d771a9a9cbc87ffb31e62a30471\"}}\n",
+      "track": "parallel"
+    },
+    "bench_mutant_controls_detected": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "RELAY_MUTANTS_DETECTED\n",
+      "track": "parallel"
+    }
+  },
+  "hosts_tried": [
+    "ot-epyc2"
+  ],
+  "events": [
+    "2026-10-07T12:08:37-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_result_relay64_ew_screen_5588e3440.json",
+    "2026-10-07T12:08:37-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+    "2026-10-07T12:08:59-07:00 source 5588e3440ce3 synced to ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_result_relay64_ew_screen_5588e3440/src",
+    "2026-10-07T12:09:42-07:00 bench track: launched bench_full270bit_exact_and_negatives (bench_full270bit_exact_and_negatives.a1b1) beside None",
+    "2026-10-07T12:09:47-07:00 launched route (attempt 1) on ot-epyc2",
+    "2026-10-07T12:10:41-07:00 bench track: bench_full270bit_exact_and_negatives PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-07T12:10:45-07:00 bench track: launched bench_mutant_controls_detected (bench_mutant_controls_detected.a1b1) beside route",
+    "2026-10-07T12:11:42-07:00 bench track: bench_mutant_controls_detected FAIL as expected (rc=1) ",
+    "2026-10-07T12:12:40-07:00 route done (rc=0)",
+    "2026-10-07T12:13:38-07:00 adoption hold: Primitive screening only: actual regionalclock/IO budgets, end-to-end link/control protection andcheckedconsumer, global replicated fit remain OPEN. Never export/adopt this screening view."
+  ],
+  "updated": "2026-10-07T12:25:39-07:00",
+  "bench_par": true,
+  "btrack": {
+    "bench_full270bit_exact_and_negatives": {
+      "state": "done",
+      "tag": "bench_full270bit_exact_and_negatives.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_result_relay64_ew_screen_5588e3440",
+      "n": 1,
+      "started": "2026-10-07T12:09:42-07:00",
+      "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_result_relay64_ew_screen_5588e3440/bench_src_a1"
+    },
+    "bench_mutant_controls_detected": {
+      "state": "done",
+      "tag": "bench_mutant_controls_detected.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_result_relay64_ew_screen_5588e3440",
+      "n": 1,
+      "started": "2026-10-07T12:10:45-07:00",
+      "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_result_relay64_ew_screen_5588e3440/bench_src_a1"
+    }
+  },
+  "wait": "adoption hold: Primitive screening only: actual regionalclock/IO budgets, end-to-end link/control protection andcheckedconsumer, global replicated fit remain OPEN. Never export/adopt this screening view.",
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_result_relay64_ew_screen_5588e3440",
+  "source_synced": true,
+  "commit_full": "5588e3440ce38d57a788b335d28baea306c8edcd",
+  "source_archive": {
+    "commit": "5588e3440ce38d57a788b335d28baea306c8edcd",
+    "paths": [
+      "tools",
+      "configs",
+      "Makefile",
+      "rtl/hbm_accel/result_relay_stage_20261007",
+      "physical/hbm_result_relay_stage_20261007",
+      "physical/hbm_accel_die_views/common/pdn_view.tcl",
+      "physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "results/uarch/hbm_result_relay_stage_20261007"
+    ],
+    "required_sha256": {
+      "tools/hbm_result_relay_physical.py": "bf13f98da670a0b89036eea6a0c15f2cd535769cbc6e24eb3ebd12ed6cbe45df",
+      "tools/hbm_result_relay_gate.py": "cf6ee3c5a9cf00cd5fa7fefc93110a557a243d771a9a9cbc87ffb31e62a30471",
+      "tools/hbm_result_relay_model.py": "cc1650009a693aa462a1bb3ae341cbaddfc3d074b6ec5695a7895c4f4fc3a370",
+      "tools/run_abi3_physical.py": "a3df9edf5f4b55928240fee942e701455e31c3e82edd0f2f5d9e2da3f060f6e8",
+      "tools/w18/corner_sta.py": "129755b04fd8bc38d31c4f2302142ea38c836cff05cb0c44edd9d8d338a7697a",
+      "rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv": "65d1f1a1de21732b0fdaec439651192c8af6757871bc0f8599993dde55864433",
+      "physical/hbm_result_relay_stage_20261007/ew/pins.tcl": "a05c729fe8c00de24199def317c6e461c612eed95e2eaf805f7272790a31eca5",
+      "physical/hbm_result_relay_stage_20261007/ns/pins.tcl": "cbf397178082a0a868655ad48c4ec7cad0bb8293a5b966bb258c74dc79507590",
+      "physical/hbm_result_relay_stage_20261007/screening.sdc": "ce508cfd43ee79b3e981d418f837e799254aeb821f57e6c121c007fbf5a4fbb9",
+      "physical/hbm_accel_die_views/common/pdn_view.tcl": "58e4b292be0137c8466e5bcd6f5fae2160301d09d833411c259ea09c91fc3746",
+      "physical/abi3/v41x_karb_repair_buffer_cap.tcl": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976",
+      "results/uarch/hbm_result_relay_stage_20261007/result_paths.json": "ae054a2bdcd2c88453a73a96534f01f4af21de101d4050edf5e329486c8c3a03",
+      "configs/pdk/asap7_local_liberty_lock.json": "7e2aca50cf13b8b2bc5af29eb54daaa6c18fde4216c6392fdedaeb68f64f64c1"
+    },
+    "archive_sha256": "cc471d78f3757aebd5cb3283fdbd57bc40e42258b066b2191eb04dbf4b7550bd",
+    "scope": "Declared source inventory only; run candidate preparation and target runtime checks separately",
+    "runtime_files_pending": []
+  },
+  "bench_location": {
+    "host": "ot-epyc2",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_result_relay64_ew_screen_5588e3440",
+    "attempt": 1
+  },
+  "bwait": null,
+  "stage_key": "verdict",
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-07T12:09:47-07:00",
+  "bench_work": {
+    "bench_full270bit_exact_and_negatives": "WARN: pass log has no count line (set min_count_regex)"
+  },
+  "wd_checked": 1791400246.1759353,
+  "unreachable": 0
+}

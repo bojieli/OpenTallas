@@ -1,0 +1,150 @@
+{
+  "schema": "opentallas.qwen-vm-recovered-endstate.v2",
+  "as_of_base": "0ccbe07d0eccf4df0424a08c587562a5d5428118",
+  "target": "vprm_stream4, verify core emitter VPOS=1, VP sequencer ENABLE_ARP=1 and NTOK=8; selected controller PC19/20/25 only",
+  "geometry": {
+    "read_scalar_seats": 2256,
+    "write_scalar_seats": 865,
+    "ME_word_ports": 48,
+    "VX_seats": 2048,
+    "SU_lanes": 64,
+    "behavioral_ABI_scalars": 1048576,
+    "current_finite_retained_scalars": 177808,
+    "current_physical_data_bytes": 2097152
+  },
+  "source_sha256": {
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_vprm_stream4.sv": "751e0d2cad3ee1b90b6018c84bf56fc563db43fc898f8db9969d0f23533906dd",
+    "rtl/hbm_accel/qwen/finite_vm_20261005/ot_qwen_finite_vm_adapter.sv": "30261cc7a1ee7f3f12aac7ac23413956acf1504dea0bac7ec3f14bd3f84e1063",
+    "rtl/hbm_accel/qwen/vm_direct_readback_20261007/ot_qwen_vm_bank4_direct_readback.sv": "c49f0566c334e1a153b3a2635702706858ff5e98ed497d81038ddae3c29f94e2",
+    "tools/qwen_vm_rom_ingress.py": "daa449eb3b5aa8c9a1998ea947e28fd8fe4b79622b1512c79362a1c649336627",
+    "rtl/qwen_sys/finite_vm_20261007/ot_qwen_rom_vm_request_normalizer.sv": "857a94170d268b17af0294b40f22a406661e12d052f95c088301b71cf59bfb54"
+  },
+  "selectors": [
+    {
+      "name": "adapter ENABLE",
+      "default": 0,
+      "component_gate": 1
+    },
+    {
+      "name": "DIRECT_READBACK",
+      "default": 0,
+      "component_gate": 1,
+      "note": "Renamed adapter/checker/raw siblings; the registered OR logic is unchanged"
+    },
+    {
+      "name": "normalizer ENABLE",
+      "default": 0,
+      "component_gate": 1,
+      "note": "Full 32-bit bounds before 24-bit normalized packing; invalid reads return zero"
+    },
+    {
+      "name": "ROM_INGRESS",
+      "default": 0,
+      "component_gate": 1,
+      "note": "Existing encoded CAP seats; bit 57 records invalid-read zero; no added FFs or source cycles"
+    },
+    {
+      "name": "HEAD_CACHE/W1_FRAME",
+      "default": 0,
+      "component_gate": 0,
+      "note": "Fast paths disabled for current ROM ingress candidate"
+    },
+    {
+      "name": "SIM_FAIL_CLOSED",
+      "default": 0,
+      "component_gate": "Separate eight-case diagnostic only",
+      "note": "Removed under SYNTHESIS; does not establish hardware fault coverage"
+    },
+    {
+      "name": "core rawwrite + VM_OWNED_LEASE",
+      "default": 0,
+      "component_gate": "Elements owns raw-to-CAP and Boolean control probes",
+      "note": "Must be enrolled atomically; actual core/provider clock integration is incomplete"
+    }
+  ],
+  "gates": [
+    {
+      "name": "sourcecurrent native control",
+      "result": "PASS",
+      "scope": "ME/SU/selected sequencer controller traces; physical ME adds 55 edges; actual drain 595 and done 596; no arithmetic proof"
+    },
+    {
+      "name": "readbackrepair",
+      "result": "PASS",
+      "scope": "Same initialized full16 fixture passes Icarus 11 and Verilator 5.050 plus three negative controls; disabled failure preserved; Yosys 0.68 binary cone equivalence and identical generic counts"
+    },
+    {
+      "name": "parent160 actualservice",
+      "result": "PASS",
+      "scope": "Four-state full2256/865: 2048 VX reads plus reducer scalar16160; 14419 edges,1024 read windows and one checked ACK; actual XVM1 plus three negatives"
+    },
+    {
+      "name": "normalizer",
+      "result": "PASS",
+      "scope": "Three full-shape modes,37452 checks each; high-word truncation, missing zero flag and missing zero data mutants rejected"
+    },
+    {
+      "name": "ingressCAP",
+      "result": "PASS",
+      "scope": "8498 extracted CAP checks, held ME35 packet immunity and two negatives; combined generation only"
+    },
+    {
+      "name": "directedwriterpriority",
+      "result": "PASS",
+      "scope": "All seven family seats observed in order; each packed-data overwrite checked after NBA; old read, final sequencer winner and untouched neighbor pass;3166 edges; first-writer mutation rejected"
+    },
+    {
+      "name": "combined normalizer+ingress+actualprovider",
+      "result": "PASS",
+      "scope": "Actual normalizer, ROM_INGRESS=1 CAP, DIRECT_READBACK=1 provider: parent160 all2048 VX plus reducer, ME35 held packet, false-intent suppression, invalid read zeros through XVM1, highword rejection; raw-ACK shortcut negative rejected; original and benchmark procedural-packing positive receipts retained."
+    },
+    {
+      "name": "core clock and MEIF component join",
+      "result": "PASS",
+      "scope": "Literal core08a60f PINREG, ICG and MEIF go/take statements joined to actual protected full16 provider with minimum NR1/NW1 aperture. PINREG0/1 positives and actual unpaid-ME-clock negative pass; this does not prove full emitted-core enrollment."
+    }
+  ],
+  "cost": {
+    "selected_joined_SU_ME_reference_service_edges": 3989290,
+    "active_native_edges": 347,
+    "conditional_additional_native_edges": 3988943,
+    "parent160_edges": 14419,
+    "directed_priority_edges": 3166,
+    "rawprovider_read_edges": 9,
+    "postverified_write_edges": 28,
+    "readback_added_cycles": 0,
+    "readback_added_FFs": 0,
+    "ingress_added_source_cycles": 0,
+    "ingress_added_FFs": 0,
+    "normalizer_zero_state_saved_by_ingress_payloadbit57": 2256,
+    "full_token_cost": null
+  },
+  "binding_contract": {
+    "normalizer_me_wanted": "Tie high for unqualified normalization when the CAP collar owns ME qualification; do not restore the me_en AND before CAP.",
+    "source_me_wanted": "Original supply/idle/wake/reset intent; PINREG=1 uses pr_mmo_q for the original me_mem_ok_i.",
+    "no_lease_feedback": "Never feed native_me_lease through PINREG me_mem_ok and then treat the result as original intent.",
+    "captured_zero_to_live_one": "Admission of a frame captured with me_frame=0 must keep ME execution and go/take bookkeeping disabled even if original intent rises to1. The global native clock alone cannot replace lease qualification.",
+    "ownership": "Entire core and sequencer native clocks, effective ME execution and acceptance, and collective peers must participate in the same checked epoch.",
+    "writes": "Capture an immutable PRE frame; read old data first; write in ME,MX,SU,reducer,sequencer order; wait for postverified ACK before native advancement."
+  },
+  "remaining": [
+    "Publication storage reliability: read_q, xpipe and last_window need direct retention/error-detection evidence; request-seat SECDED alone does not establish end-to-end protection",
+    "Full emitted-core integration of atomic raw-write, original intent and direct lease with the current provider; minimum clock/MEIF component is proved",
+    "Finite collective admission, return capture and runtime callbacks under the held native epoch",
+    "Complete family scheduling and full-program live extent including dynamic positions; present captures do not prove the177808-scalar bound",
+    "Mutable output/control/owner/XVM protection and legal reset with live debt",
+    "Full-shape mapped SS/FF+15ps,DRC0,macro,clock and floorplan qualification",
+    "Full-token latency,energy and die-cost composition before publication"
+  ],
+  "owners": {
+    "combined": "vm_seq_trace",
+    "core_boundary_lease": "qwen/elements",
+    "integration": "root",
+    "VM_service": "qwen/masters/station",
+    "publication_storage": "qwen/masters/station"
+  },
+  "full_VM_complete": false,
+  "route_eligible": false,
+  "adopted": false,
+  "predecessor_sha256": "9692265d1038efaa309cdd59ac0a660d11e751c77d77095a84e07f57452c7194"
+}

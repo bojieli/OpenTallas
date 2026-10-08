@@ -1,0 +1,36 @@
+{
+  "netlist_sha256": "836fcc4513f23ee0e8bc832fc679d918ae8a863edac869d9897a6604aaa27ee6",
+  "retention": {
+    "control": {
+      "nets": [
+        "g_on.c"
+      ],
+      "declared_bits": 28,
+      "dynamic_bits": 28,
+      "sequential_bits": 28,
+      "parity_dynamic_bits": 0,
+      "parity_sequential_bits": 0
+    },
+    "seal": {
+      "nets": [
+        "g_on.seal"
+      ],
+      "declared_bits": 72,
+      "dynamic_bits": 72,
+      "sequential_bits": 72,
+      "parity_dynamic_bits": 8,
+      "parity_sequential_bits": 8
+    },
+    "capture": {
+      "nets": [
+        "g_on.captured"
+      ],
+      "declared_bits": 648,
+      "dynamic_bits": 648,
+      "sequential_bits": 648,
+      "parity_dynamic_bits": 72,
+      "parity_sequential_bits": 72
+    }
+  },
+  "scope": "Existing generic netlist postprocessing, no synthesis rerun. Literal constants separately excluded from dynamic and sequential counts."
+}

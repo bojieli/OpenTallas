@@ -1,0 +1,1241 @@
+{
+ "schema": "opentallas.s81.pq-fullshape-design.v1",
+ "adopted": false,
+ "physical_qualified": false,
+ "sources": {
+  "snapshot": {
+   "pq_parent_binding.py": "tools/s81/pq_parent_binding.py",
+   "dsrom_s81_pq_parent_20261007/full_inventory.json": "results/uarch/dsrom_s81_pq_parent_20261007/full_inventory.json",
+   "dsrom_s81_pq_parent_20261007/half_inventory.json": "results/uarch/dsrom_s81_pq_parent_20261007/half_inventory.json"
+  },
+  "snapshot_origin": "committed on main (identical hashes to pq_snapshot_1117)",
+  "snapshot_sha256": {
+   "pq_parent_binding.py": "b2d619a4008cd00cea21a85cbf89749fc3c952f4d5b503fcc6359f6062a2f7a4",
+   "dsrom_s81_pq_parent_20261007/full_inventory.json": "614fcd263803be179b263d17cb77f061b711db60140c5407b0827a8ce7d87874",
+   "dsrom_s81_pq_parent_20261007/half_inventory.json": "4b38ddb16ea9e633a8306d2bcc28320e214788f63419ee7425f0307d69ca2248"
+  },
+  "spine_rtl_sha256": "ecac11e1d7406b49d5ea6d417ca17eadd3565523394d3e99199d9190399523f3",
+  "ret_rtl_sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+  "macro_index_sha256": "8e105da6099fce3fa63deb7c12983f24a36aa204179deb2ae991de1c0a238837",
+  "geometry_extract_sha256": "2cd283453760c8263ce94abd34feadbc443d4f86482583dcd46b27f4121849eb",
+  "sensitivity_sha256": "1043a5861bc5398c9ddff1a6ec07bd64531a25a335f5874928e66de52877ac02",
+  "stream_stats_sha256": "a9b0c294aead09394401e18fd6d2b98e2c05fca12c414356e666d7b42f14b596"
+ },
+ "problem": {
+  "PHW": 9,
+  "SAW": 11,
+  "KMAX": 6144,
+  "pq_storage": {
+   "KMAX": 6144,
+   "NBLK": 192,
+   "arrays": {
+    "qb": {
+     "width": 256,
+     "depth": 384,
+     "bits": 98304
+    },
+    "eb": {
+     "width": 10,
+     "depth": 384,
+     "bits": 3840
+    },
+    "bb": {
+     "width": 16,
+     "depth": 12288,
+     "bits": 196608
+    }
+   },
+   "bits": 298752
+  },
+  "screen_storage_bits_R128_6_8_256": 12448,
+  "storage_ratio": 24.0,
+  "phase_rom_entries": 1024,
+  "stream_rom_words": 2048,
+  "native_bus_bits": 1633,
+  "legacy_lane_bits": 564,
+  "native_pins": 19529,
+  "native_pins_by_owner": {
+   "clock_reset": 2,
+   "issuer": 93,
+   "VM_read": 2068,
+   "VM_write": 6656,
+   "field_return": 8832,
+   "field_broadcast": 1633,
+   "fault_status": 38,
+   "phase_ROM": 148,
+   "stream_ROM": 59
+  },
+  "codex_def_pins": 19355,
+  "def_vs_port_model_delta": 174,
+  "return_word": {
+   "legacy_raw_per_region": 68,
+   "root_payload": 69,
+   "lane_with_status": 71
+  },
+  "roots": {
+   "queue_entry_bits": 65,
+   "buffer_entry_bits": 66,
+   "bits_per_root": 16768,
+   "roots": 128,
+   "bits_total": 2146304,
+   "raw_in_bits": 66,
+   "out_payload_bits": 69,
+   "out_fields": {
+    "r_v": 1,
+    "r_row": 16,
+    "r_pos": 3,
+    "r_fp32": 32,
+    "r_bf16": 16,
+    "r_e": 1,
+    "fault": 1
+   },
+   "rounding": "BF16 RNE inside the root (rb = fp32 + 0x7FFF + lsb); RWB passes r_fp32 / r_bf16 unchanged and selects by the op format exactly as the spine return stage; no other rounding site"
+  }
+ },
+ "lanes": {
+  "native": {
+   "bits": 1633,
+   "distinct_register_bits": 1627,
+   "duplicated_registers": {
+    "bt_b": [
+     "f_xs_b",
+     "f_xb_b"
+    ],
+    "bt_pos": [
+     "f_xs_pos",
+     "f_xb_pos"
+    ]
+   }
+  },
+  "union_W2": {
+   "bits": 1085,
+   "fixed": [
+    {
+     "field": "f_cfg_go",
+     "reg": "bt_cfg",
+     "lsb": 0,
+     "msb": 0,
+     "bits": 1
+    },
+    {
+     "field": "f_cfg_ph",
+     "reg": "bt_ph",
+     "lsb": 1,
+     "msb": 9,
+     "bits": 9
+    },
+    {
+     "field": "f_cfg_np",
+     "reg": "bt_np",
+     "lsb": 10,
+     "msb": 12,
+     "bits": 3
+    },
+    {
+     "field": "f_go",
+     "reg": "bt_go",
+     "lsb": 13,
+     "msb": 13,
+     "bits": 1
+    },
+    {
+     "field": "f_go_bf",
+     "reg": "bt_gobf",
+     "lsb": 14,
+     "msb": 14,
+     "bits": 1
+    },
+    {
+     "field": "f_go_tag",
+     "reg": "bt_tag",
+     "lsb": 15,
+     "msb": 16,
+     "bits": 2
+    },
+    {
+     "field": "bt_b",
+     "reg": "bt_b",
+     "lsb": 17,
+     "msb": 19,
+     "bits": 3
+    },
+    {
+     "field": "bt_pos",
+     "reg": "bt_pos",
+     "lsb": 20,
+     "msb": 22,
+     "bits": 3
+    },
+    {
+     "field": "f_xs_v",
+     "reg": "bt_xs_v",
+     "lsb": 23,
+     "msb": 23,
+     "bits": 1
+    },
+    {
+     "field": "f_xb_v",
+     "reg": "bt_xb_v",
+     "lsb": 24,
+     "msb": 24,
+     "bits": 1
+    }
+   ],
+   "q_overlay": [
+    {
+     "field": "f_xs_p",
+     "reg": "bt_p",
+     "lsb": 25,
+     "msb": 32,
+     "bits": 8
+    },
+    {
+     "field": "f_xs_sv",
+     "reg": "bt_sv",
+     "lsb": 33,
+     "msb": 34,
+     "bits": 2
+    },
+    {
+     "field": "f_xs_q0",
+     "reg": "bt_q0",
+     "lsb": 35,
+     "msb": 290,
+     "bits": 256
+    },
+    {
+     "field": "f_xs_e0",
+     "reg": "bt_e0",
+     "lsb": 291,
+     "msb": 300,
+     "bits": 10
+    },
+    {
+     "field": "f_xs_q1",
+     "reg": "bt_q1",
+     "lsb": 301,
+     "msb": 556,
+     "bits": 256
+    },
+    {
+     "field": "f_xs_e1",
+     "reg": "bt_e1",
+     "lsb": 557,
+     "msb": 566,
+     "bits": 10
+    }
+   ],
+   "bf_overlay": [
+    {
+     "field": "f_xb_sv",
+     "reg": "bt_bsv",
+     "lsb": 25,
+     "msb": 28,
+     "bits": 4
+    },
+    {
+     "field": "f_xb_u",
+     "reg": "bt_u",
+     "lsb": 29,
+     "msb": 60,
+     "bits": 32
+    },
+    {
+     "field": "f_xb_d",
+     "reg": "bt_d",
+     "lsb": 61,
+     "msb": 1084,
+     "bits": 1024
+    }
+   ],
+   "q_slot_bits": 567,
+   "bf_slot_bits": 1085,
+   "rule": "q payload and BF payload overlay the same wires; f_xs_v / f_xb_v are never both 1 (one streamer head, family bit); cfg/go/shared pos,b always present"
+  },
+  "serial_W3": {
+   "bits": 568,
+   "bf_payload_bits": 1060,
+   "bf_half_bits": 530,
+   "rule": "W2 with the BF payload in two halves (half bit); a BF beat occupies two lane cycles; BF-slot deserialiser (half register + enable) presents the full beat; needs BF beat spacing >= 2 in the stream"
+  },
+  "legacy_lane": {
+   "bits": 564,
+   "fields": "x0 283 (q0 e0 + 17 ctl) | x1 266 (q1 e1) | cc 15 (go cfg_go cfg_ph[10] cfg_np[3])",
+   "source": "tools/dsrom_s81_fulldie.py X0B/X1B/CCB"
+  }
+ },
+ "blocks": {
+  "ret_root_r128": {
+   "instances": 128,
+   "faces": {
+    "tree_in (S, column clock)": 67,
+    "ret_out (N, to rstg)": 71,
+    "clk_rst": 2
+   },
+   "pins": 140,
+   "storage_bits": 16768,
+   "parity_bits": 256,
+   "cell_um2_est": 10039.5,
+   "area_um2_est": 17460.0,
+   "outline_um_est": [
+    132.1,
+    132.1
+   ],
+   "clock": "column clock (the column FIFO is the column clock / reset root), same domain as the node tree; no crossing",
+   "placement": "frame empty q position (14 pairs in a 16-position frame: 4 BF + 10 q of 12 q positions) beside the node strip; output joins the existing rstg return sub-column; final segment <= 100 um both faces",
+   "frame_position_um2": 93790.2,
+   "microarch_obligation": "ROOTD=128 associative sibling search cannot be one cycle at 833 ps: register the 128-b match/free vectors (stage A), encode + update in stage B with bypass of the entry inserted or removed last cycle; registered queue head (prefetch). Pairing decisions identical; +1 cycle per root pass. Exact gate owned by pq_parent (Codex)."
+  },
+  "rwb": {
+   "instances": 12,
+   "per_instance": [
+    {
+     "name": "rwb_W0",
+     "regions": 10,
+     "faces": {
+      "ret_in (from hr end block)": 722,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 520,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1719,
+     "cell_um2_est": 4576.4,
+     "area_um2_est": 7958.9
+    },
+    {
+     "name": "rwb_W1",
+     "regions": 11,
+     "faces": {
+      "ret_in (from hr end block)": 794,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 572,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1843,
+     "cell_um2_est": 5016.6,
+     "area_um2_est": 8724.6
+    },
+    {
+     "name": "rwb_W2",
+     "regions": 11,
+     "faces": {
+      "ret_in (from hr end block)": 794,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 572,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1843,
+     "cell_um2_est": 5016.6,
+     "area_um2_est": 8724.6
+    },
+    {
+     "name": "rwb_W3",
+     "regions": 11,
+     "faces": {
+      "ret_in (from hr end block)": 794,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 572,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1843,
+     "cell_um2_est": 5016.6,
+     "area_um2_est": 8724.6
+    },
+    {
+     "name": "rwb_W4",
+     "regions": 11,
+     "faces": {
+      "ret_in (from hr end block)": 794,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 572,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1843,
+     "cell_um2_est": 5016.6,
+     "area_um2_est": 8724.6
+    },
+    {
+     "name": "rwb_W5",
+     "regions": 10,
+     "faces": {
+      "ret_in (from hr end block)": 722,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 520,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1719,
+     "cell_um2_est": 4576.4,
+     "area_um2_est": 7958.9
+    },
+    {
+     "name": "rwb_E0",
+     "regions": 10,
+     "faces": {
+      "ret_in (from hr end block)": 722,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 520,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1719,
+     "cell_um2_est": 4576.4,
+     "area_um2_est": 7958.9
+    },
+    {
+     "name": "rwb_E1",
+     "regions": 11,
+     "faces": {
+      "ret_in (from hr end block)": 794,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 572,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1843,
+     "cell_um2_est": 5016.6,
+     "area_um2_est": 8724.6
+    },
+    {
+     "name": "rwb_E2",
+     "regions": 11,
+     "faces": {
+      "ret_in (from hr end block)": 794,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 572,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1843,
+     "cell_um2_est": 5016.6,
+     "area_um2_est": 8724.6
+    },
+    {
+     "name": "rwb_E3",
+     "regions": 11,
+     "faces": {
+      "ret_in (from hr end block)": 794,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 572,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1843,
+     "cell_um2_est": 5016.6,
+     "area_um2_est": 8724.6
+    },
+    {
+     "name": "rwb_E4",
+     "regions": 11,
+     "faces": {
+      "ret_in (from hr end block)": 794,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 572,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1843,
+     "cell_um2_est": 5016.6,
+     "area_um2_est": 8724.6
+    },
+    {
+     "name": "rwb_E5",
+     "regions": 10,
+     "faces": {
+      "ret_in (from hr end block)": 722,
+      "cfg_replica_in": 458,
+      "rowcount_out (per tag)": 16,
+      "vm_write_out": 520,
+      "fault_out": 1,
+      "clk_rst": 2
+     },
+     "pins": 1719,
+     "cell_um2_est": 4576.4,
+     "area_um2_est": 7958.9
+    }
+   ],
+   "placement": "inside sp_gather (stream_1p2), abutting each hr_<half><tier> end block; VM write face toward the VM (173 um gap gather -> VM)",
+   "function": "spine return stages 0-3 (registered root word, per-tag config replica, base + row + pos*stride, format select, VM write) and the per-tag row counts; RG = the end block group (10/11 regions)"
+  },
+  "pq_core": {
+   "instances": 1,
+   "faces": {
+    "vm_read (S, abut VM north face)": 2069,
+    "issuer (W)": 93,
+    "phase_rom (E, 2 x ot_rom_4096x72)": 148,
+    "stream_rom (E, 1 x ot_rom_4096x72)": 59,
+    "lane_out W2 (W/E to hx end blocks)": 1085,
+    "cfg_replica_out (to RWB chain)": 458,
+    "rowcount_in (12 RWB)": 192,
+    "fault_status": 50,
+    "clk_rst": 2
+   },
+   "pins": 4156,
+   "sram": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macro_um": [
+     94.824,
+     41.064
+    ],
+    "macro_area_um2": 3893.853,
+    "bb": {
+     "replicas": 4,
+     "macros_per_replica": 8,
+     "macros": 32,
+     "rows_used": 96,
+     "rows": 128,
+     "why_replicas": "4 BF byte groups read 4 independent rows (hi per group) every beat; 1R1W macro has one read port, so each group owns a copy (spend area, no 768:1 flop mux)"
+    },
+    "qb": {
+     "banks": 4,
+     "macros": 4,
+     "rows_used": 96,
+     "rows": 128,
+     "why_banks": "reads (blk0, blk1) differ in index bit 3; writes (blk, blk+1) differ in bit 0"
+    },
+    "eb": {
+     "storage": "flops",
+     "bits": 3840
+    },
+    "protection": {
+     "scheme": "even parity per 64-b slice of every macro word (flop side array) + 1 per eb entry; checked on the full macro word before the sub-select; mismatch -> sticky fault (fail closed, op replay by the controller); buffers are rewritten every phase",
+     "parity_bits": 14208,
+     "alternative": "SECDED (72,64) in a compiled 1R1W 128x288 macro: +12.5 % macro width, corrects single errors; price below"
+    },
+    "macros": 36,
+    "read_during_write": "excluded by protocol: a word is read only after `have` covers it; have is visible to the streamer >= 1 cycle after the write edge (bench assertion obligation)"
+   },
+   "flops_est": 28580,
+   "cell_um2_est": 70834.1,
+   "macro_um2_with_halo": 197211.0,
+   "area_um2_est": 320400.7,
+   "clock": "stream_1p2 (hub); VM read crosses serial_0p9 -> stream_1p2",
+   "placement": "hub west column, VM north face slot [14655.6, 13858.536, 15670.776, 14653.44]",
+   "sub_blocks": {
+    "pq_xbuf": {
+     "macros": 36,
+     "area_um2_est": 209109.5
+    },
+    "pq_ctl": {
+     "area_um2_est": 108654.2
+    }
+   }
+  }
+ },
+ "new_partition_pins_total": 43696,
+ "max_pins_per_block": {
+  "native_parent": 19529,
+  "pq_core": 4156,
+  "rwb": 1843,
+  "ret_root": 140
+ },
+ "per_die_area": {
+  "roots_mm2": 2.235,
+  "rwb_mm2": 0.102,
+  "pq_core_mm2": 0.32,
+  "lane_W2_interleaved_mm2": 9.781,
+  "lane_W2_bf_at_foot_mm2": 7.32,
+  "total_bf_die_mm2": 12.438,
+  "total_q_die_mm2": 2.657,
+  "die_mm2": 858.0,
+  "core_slot": {
+   "rect": [
+    14655.6,
+    13858.536,
+    15670.776,
+    14653.44
+   ],
+   "w": 1015.1759999999995,
+   "h": 794.9040000000005,
+   "area_mm2": 0.806967463104,
+   "occupied_by": "wfc_selected_child soft reservation [14655.6, 14031.36, 15670.800000000001, 14480.640000000001]"
+  },
+  "core_fits_vm_north_slot": true
+ },
+ "latency": {
+  "root_pipeline": {
+   "cycles": 3,
+   "per": "phase (last row: <= 3 root-level adds, +1 each)",
+   "path": "return"
+  },
+  "rwb_to_vm": {
+   "cycles": 5,
+   "per": "phase end (last VM write)",
+   "stations": 1,
+   "cdc": 4
+  },
+  "rowcount_to_core": {
+   "cycles": 14,
+   "per": "op retire / idle (phase end)",
+   "stations": 13,
+   "distance_um": 2792.9
+  },
+  "vm_read_round_trip": {
+   "cycles": 10,
+   "per": "op whose first beat waits on its load (exposed only then)"
+  },
+  "vm_read_rate": {
+   "value": "<= 0.75 words / stream cycle (0.9 / 1.2 GHz)",
+   "per": "exposed load: +K/(64*3) cycles",
+   "kmax_cost_cycles": 64
+  },
+  "lane_root": {
+   "cycles": 6,
+   "per": "0 if hx_W / hx_E end blocks move to the core W/E faces (requested); else every op start"
+  },
+  "W3_serial": {
+   "cycles": "+2 latency per BF beat stream + 1 per adjacent BF beat pair",
+   "per": "BF phases only"
+  }
+ },
+ "credits": {
+  "vm_read": {
+   "depth": 14,
+   "rule": "loader becomes request / response: x_re carries a credit against a core-side x_q FIFO of depth >= round trip (2 x (CDC + register) + VM macro 2); RTL change: ld/rq pipeline consumes x_q on its valid, not one cycle after x_re (payload invariant)"
+  },
+  "vm_write": {
+   "depth_per_region": 12,
+   "rule": "per-region write FIFO + credit from the VM face; no upstream backpressure exists (the root has none), so the mapping must guarantee the region row rate <= 0.75 / stream cycle over any window longer than the FIFO; INPUT REQUESTED: max rows per region per window from the mapping"
+  },
+  "broadcast": {
+   "rule": "no flow control (timed broadcast); existing meso D8 column FIFOs absorb drift; unchanged"
+  },
+  "root_input": {
+   "rule": "no flow control (tree accepts every partial; QD=ROOTD=128 is the source depth; overflow is a fault); unchanged"
+  },
+  "cfg_replica": {
+   "rule": "timing obligation: replica chain 13 stations must land before the first row of the op (field latency >> chain); assert in bench"
+  }
+ },
+ "cost": {
+  "added_cycles_per_phase": 17,
+  "AR_fraction_per_cycle_per_phase": 0.0003131458633431452,
+  "AR_loss_fraction_est": 0.00532,
+  "basis": "linear in the measured +1-return-cycle sensitivity (pq_qelem: 1596.7 -> 1596.2 tok/s); historical source-pinned phases, NOT the 1792 geometry"
+ },
+ "options": {
+  "A_monolithic_native": {
+   "partition": "one R128 parent: spine + 128 roots + return stages, 1633-b bus",
+   "pins": 19657,
+   "area_mm2_est": 24.117,
+   "lane": {
+    "lane_bits": 1633,
+    "x_chain_um2": 501208.0,
+    "cfifo_um2": 9600193.0,
+    "slot_station_um2": 11358844.0,
+    "total_mm2": 21.46
+   },
+   "verdict": "REJECT: one 2.66 mm2 block (roots inside) with 19657 pins (raw 68-b returns in instead of 69); roots far from their regions; 1633-b lane x2.9 field infra (+21.5 mm2)"
+  },
+  "B_split_native_lane": {
+   "partition": "roots in frames, 12 RWB in gather, PQ core at VM north, native 1633 lane",
+   "area_mm2_est": 24.117,
+   "lane": {
+    "lane_bits": 1633,
+    "x_chain_um2": 501208.0,
+    "cfifo_um2": 9600193.0,
+    "slot_station_um2": 11358844.0,
+    "total_mm2": 21.46
+   },
+   "verdict": "REJECT: +21.5 mm2 lane infrastructure on every die and x wiring x2.9 for no function"
+  },
+  "C_split_union_lane": {
+   "partition": "as B with the W2 union lane (1085 b) on BF dies, 567 b on q-only dies",
+   "area_mm2_est": 12.438,
+   "lane": {
+    "interleaved": {
+     "lane_bits": 1085,
+     "x_chain_um2": 244275.0,
+     "cfifo_um2": 4615443.0,
+     "slot_station_um2": 4920867.0,
+     "total_mm2": 9.781
+    },
+    "bf_at_foot": {
+     "lane_bits": 1085,
+     "x_chain_um2": 244275.0,
+     "cfifo_um2": 4615443.0,
+     "slot_station_um2": 2460434.0,
+     "total_mm2": 7.32
+    }
+   },
+   "verdict": "RECOMMENDED baseline: no stream change, exact by construction (pure re-wiring of the native fields); BF-die lane +9.8 mm2"
+  },
+  "D_split_serial_union": {
+   "partition": "as C with the W3 serialised union lane (568 b) everywhere",
+   "area_mm2_est": 2.793,
+   "lane": {
+    "lane_bits": 568,
+    "x_chain_um2": 1875.0,
+    "cfifo_um2": -87324.0,
+    "slot_station_um2": 42503.0,
+    "total_mm2": 0.136,
+    "bf_deserialisers_mm2": 0.179
+   },
+   "verdict": "PARALLEL ALTERNATIVE: drop-in legacy lane width; costs +2 cycles on BF beat streams and +1 per adjacent BF beat pair; adopt only with the measured adjacency (INPUT REQUESTED) and exact gate"
+  },
+  "E_central_roots": {
+   "partition": "roots + RWB as one hub block beside gather (raw 68-b trunks unchanged)",
+   "area_mm2_est": 2.337,
+   "verdict": "REJECT: needs 2.34 mm2 compact hub area next to gather; the hub columns are full (8 slabs, 173 um inter-slab channels) and the die x slack is only 302 um"
+  }
+ },
+ "recommendation": "C_split_union_lane (+ D in parallel)",
+ "dies": {
+  "mapping": {
+   "half": {
+    "stages": 120,
+    "layer_dies_TP4": 480,
+    "bf_stages": 40,
+    "q_stages": 80,
+    "pairs_per_die": 1792
+   },
+   "full": {
+    "stages": 98,
+    "layer_dies_TP4": 392,
+    "bf_stages": 98,
+    "q_stages": 0,
+    "pairs_per_die": 1792
+   }
+  },
+  "die_count_change": 0,
+  "condition": "0 extra dies if (1) the root fits the empty q position of every frame, (2) the 12 RWB fit sp_gather, (3) the die owner provides the VM-north core slot (re-stack: relocate the WFC child 1015 x 449 um, or widen both hub columns by up to 302 um / 2 of die x slack)",
+  "fallback": "if any frame cannot host the root: one extra tier-channel row of root blocks (+143 um channel height per tier, 6 tiers) - priced by re-running the die generator; if that forces a slot loss the mapping re-runs at 13 pairs a region (stages x 14/13)",
+  "half_dies_with_bf_lane": 160,
+  "full_dies_with_bf_lane": 392,
+  "half_check_bf_stages_equal_saw11_stages": true
+ },
+ "staged_plan": [
+  {
+   "stage": 1,
+   "block": "ret_root_r128 (x128, one master)",
+   "size_um": [
+    132.1,
+    132.1
+   ],
+   "faces": "S tree_in 67 b, N ret_out 71 b, both through abutting relay stations",
+   "closure": "column clock 1.2 GHz SS>=+15 / FF>=+15 ps DRC 0; pipelined CAM; exact gate by pq_parent with a mis-paired negative control",
+   "parallel_with": [
+    2,
+    3
+   ]
+  },
+  {
+   "stage": 2,
+   "block": "pq_xbuf (36 x ot_sram_1r1w_128x256_m1_r2c2 + parity)",
+   "size_um_est": "~700 x 330",
+   "faces": "write 1024+512+20 b + addresses; read addresses 4 x 9 + 2 x 9; read data 4 x 256 + 2 x 256 + 20 (macro outputs are registers)",
+   "closure": "macro placement + parity; RDW-free assertion bench",
+   "parallel_with": [
+    1,
+    3
+   ]
+  },
+  {
+   "stage": 3,
+   "block": "rwb (one master, N=11 / N=10 parameter)",
+   "size_um_est": "~90 x 90",
+   "faces": "ret_in N x 72, cfg replica 458, VM write N x 52, rowcount 16",
+   "closure": "stream 1.2 GHz; VM face via ratio CDC owner",
+   "parallel_with": [
+    1,
+    2
+   ]
+  },
+  {
+   "stage": 4,
+   "block": "pq_ctl (issuer, ROM 2-cycle adapters, loader request/response + 2 actquant, reader, streamer, beat assembly, W2 lane encoder)",
+   "size_um_est": "<= 1015 x 450",
+   "closure": "after the R128 screen hierarchy report; BST registers at the lane faces"
+  },
+  {
+   "stage": 5,
+   "block": "lane infrastructure (die generator): cfifo W1085, x-chain stations 1087 b, BF-slot stations",
+   "closure": "die owner; q-only dies carry the 567-b q lane (legacy 564 + 3)"
+  },
+  {
+   "stage": 6,
+   "block": "pq_core parent = pq_xbuf + pq_ctl at the VM north slot",
+   "closure": "hierarchical, registered faces only"
+  },
+  {
+   "stage": 7,
+   "block": "die integration (roots in frames, RWB in gather, core slot, hx end blocks at core faces)",
+   "closure": "full-die SS/FF/DRC/IR per owner directive 14"
+  }
+ ],
+ "estimates": {
+  "root_logic_cell_um2": [
+   3500.0,
+   "CAM 128x27b compare + 2 priority encoders + queue head + bd[hit] 128:1 muxes + ot_fp32_add_rne_pipe + norm/parent/RNE; mux2 ~0.1 um2 per input"
+  ],
+  "core_logic_cell_um2": [
+   60000.0,
+   "issuer/accept, ROM adapters, loader + 2 ot_hdc_actquant + BF16 rounders, reader FIFO, streamer, beat assembly; Codex R128 screen 148,012 um2 total minus screen state and its return side; REQUEST hierarchical cell area of that screen"
+  ],
+  "rwb_logic_cell_um2_per_region": [
+   380.0,
+   "q1..q3 base+row, pos*stride select, format select, KS adders (3 x 19 b)"
+  ],
+  "vm_cdc_latency_cycles": [
+   4,
+   "serial_0p9 <-> stream_1p2 ot_ratio_cdc_fifo synchroniser + output register; the CDC owner supplies the measured value"
+  ]
+ },
+ "gated": [
+  "ROOT microarch exactness (pipelined CAM + registered queue head) - pq_parent/Codex",
+  "union-lane don't-care proof: element outputs unchanged with the other family's payload on its pins, plus a negative control that consumes payload without its valid",
+  "VM read request/response loader change (variable latency) exact gate",
+  "VM 128 write ports at serial_0p9 sustain the region row rate (mapping burst input)",
+  "root / RWB / core areas are ESTIMATES until synthesis screens",
+  "die generator legality for roots in frames and the VM-north core slot (die owner)"
+ ],
+ "current_basis": {
+  "spine_source": "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/inputs/rtl/ot_v41_spine_pqc_w17w10.d0178820d.sv",
+  "spine_sha256": "ecac11e1d7406b49d5ea6d417ca17eadd3565523394d3e99199d9190399523f3",
+  "spine_params": {
+   "RG": 8,
+   "RPT": 2,
+   "BST": 2,
+   "GAP": 12,
+   "GUARD": 180
+  },
+  "historical_spine_params": {
+   "RG": 16,
+   "BST": 2,
+   "GAP": 12,
+   "GUARD": 180
+  },
+  "cycles": {
+   "added_cycles_per_phase": 18,
+   "vs_historical": 1,
+   "AR_loss_fraction_est": 0.00564,
+   "rule": "root contract (CAM +1 per pass, <= 4 passes on a row's chain, + 2 in/out stations) 6 + max(rowcount 14, rwb->VM 5) - RPT 2 (v13b already pays RPT on the root inputs and row writes; the split replaces those repeaters by placed stations)",
+   "price_status": "PARTIAL: per-phase delta x historical +1-return-cycle sensitivity; the 1,792 per-token critical-phase list is not composed (mapping has 46681 compiled phases, of which only the token-active subset is on the path)"
+  },
+  "rwb_replica_groups": [
+   {
+    "rwb": "rwb_W0",
+    "regions": 10,
+    "replica_copies": 2
+   },
+   {
+    "rwb": "rwb_W1",
+    "regions": 11,
+    "replica_copies": 2
+   },
+   {
+    "rwb": "rwb_W2",
+    "regions": 11,
+    "replica_copies": 2
+   },
+   {
+    "rwb": "rwb_W3",
+    "regions": 11,
+    "replica_copies": 2
+   },
+   {
+    "rwb": "rwb_W4",
+    "regions": 11,
+    "replica_copies": 2
+   },
+   {
+    "rwb": "rwb_W5",
+    "regions": 10,
+    "replica_copies": 2
+   },
+   {
+    "rwb": "rwb_E0",
+    "regions": 10,
+    "replica_copies": 2
+   },
+   {
+    "rwb": "rwb_E1",
+    "regions": 11,
+    "replica_copies": 2
+   },
+   {
+    "rwb": "rwb_E2",
+    "regions": 11,
+    "replica_copies": 2
+   },
+   {
+    "rwb": "rwb_E3",
+    "regions": 11,
+    "replica_copies": 2
+   },
+   {
+    "rwb": "rwb_E4",
+    "regions": 11,
+    "replica_copies": 2
+   },
+   {
+    "rwb": "rwb_E5",
+    "regions": 10,
+    "replica_copies": 2
+   }
+  ],
+  "half": {
+   "mapping_sha256": "8dfa6daea1d7fd6c1a40af76d143968880c6d3d5e48265004d254ad103b94aa0",
+   "phases": 46681,
+   "bf_phases": 139,
+   "vm_write": {
+    "max_rows_region_phase": 10,
+    "fifo_depth": 12,
+    "holds_whole_region_phase_burst": true,
+    "rule": "a region emits <= 10 rows a phase (root <= 1 row/cycle); a FIFO >= the burst absorbs it with zero drain, so no rate assumption on the 0.75/cycle VM side is needed"
+   },
+   "serial_lane_W3": {
+    "bf_max_back_to_back": 2,
+    "adjacent_valid_pairs": 440,
+    "extra_cycles_at_phase_end_sum": 0,
+    "max_beat_delay": 2,
+    "rule": "two lane cycles per valid BF beat, in order; idle native slots absorb the delay"
+   }
+  },
+  "full": {
+   "mapping_sha256": "bf7863a4d1307bf2dd66b976ef40a63cbec39565743c2c25df660160aedd2fed",
+   "phases": 46639,
+   "bf_phases": 139,
+   "vm_write": {
+    "max_rows_region_phase": 14,
+    "fifo_depth": 14,
+    "holds_whole_region_phase_burst": true,
+    "rule": "a region emits <= 14 rows a phase (root <= 1 row/cycle); a FIFO >= the burst absorbs it with zero drain, so no rate assumption on the 0.75/cycle VM side is needed"
+   },
+   "serial_lane_W3": {
+    "bf_max_back_to_back": 6,
+    "adjacent_valid_pairs": 2040,
+    "extra_cycles_at_phase_end_sum": 1280,
+    "max_beat_delay": 34,
+    "rule": "two lane cycles per valid BF beat, in order; idle native slots absorb the delay"
+   }
+  },
+  "budget_sheets": {
+   "pin_density_per_um": 3.264,
+   "insertion_source": "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/inputs/calibration/measured_insertion.bb7c46846.json",
+   "insertion_sha256": "4a72c6e5137d1f983c9d1ee67da23f03c5016edb0d7726b1b8f4473aa1cd4e11",
+   "rows": [
+    {
+     "stage": 1,
+     "block": "ret_root_r128",
+     "instances": 128,
+     "outline_um_est": [
+      132.1,
+      132.1
+     ],
+     "area_um2_est": 17460.0,
+     "faces": {
+      "tree_in (S, column clock)": {
+       "pins": 67,
+       "face_um_needed": 20.5
+      },
+      "ret_out (N, to rstg)": {
+       "pins": 71,
+       "face_um_needed": 21.8
+      },
+      "clk_rst": {
+       "pins": 2,
+       "face_um_needed": 0.6
+      }
+     },
+     "pins": 140,
+     "relay": "abutting station on S and N faces; final segment <= 100 um",
+     "insertion_target": {
+      "analogue": "ot_s81ph_root_tile",
+      "ss_ps": 373,
+      "ff_ps": 238,
+      "source_commit": "77bcb3f3c953773a13abd3ea2a9db44144bf6d30"
+     }
+    },
+    {
+     "stage": 1,
+     "block": "pq_xbuf",
+     "instances": 1,
+     "area_um2_est": 209109.5,
+     "macros": 36,
+     "outline_um_est": [
+      700,
+      330
+     ],
+     "faces": {
+      "loader_write (N)": {
+       "pins": 1582,
+       "face_um_needed": 484.7
+      },
+      "read_addr (W)": {
+       "pins": 48,
+       "face_um_needed": 14.7
+      },
+      "read_data (S)": {
+       "pins": 1556,
+       "face_um_needed": 476.7
+      },
+      "parity_fault": {
+       "pins": 1,
+       "face_um_needed": 0.3
+      },
+      "clk_rst": {
+       "pins": 2,
+       "face_um_needed": 0.6
+      }
+     },
+     "pins": 3189,
+     "relay": "macro outputs registered; abutting pq_ctl (no die wire)",
+     "insertion_target": {
+      "analogue": "ot_v41_rom_elem_q_qxpq_w10",
+      "ss_ps": 620,
+      "ff_ps": 373,
+      "source_commit": "e1fbc25c1ad3f34eb1686a5b0d60e3aa4a62d803"
+     }
+    },
+    {
+     "stage": 1,
+     "block": "rwb (N=10)",
+     "instances": 4,
+     "area_um2_est": 7958.9,
+     "outline_um_est": [
+      89.2,
+      89.2
+     ],
+     "faces": {
+      "ret_in (from hr end block)": {
+       "pins": 722,
+       "face_um_needed": 221.2
+      },
+      "cfg_replica_in": {
+       "pins": 458,
+       "face_um_needed": 140.3
+      },
+      "rowcount_out (per tag)": {
+       "pins": 16,
+       "face_um_needed": 4.9
+      },
+      "vm_write_out": {
+       "pins": 520,
+       "face_um_needed": 159.3
+      },
+      "fault_out": {
+       "pins": 1,
+       "face_um_needed": 0.3
+      },
+      "clk_rst": {
+       "pins": 2,
+       "face_um_needed": 0.6
+      }
+     },
+     "pins": 1719,
+     "relay": "hr end block abutting; VM face 1 station + ratio CDC",
+     "insertion_target": {
+      "analogue": "dsfd_cfifo",
+      "ss_ps": 427,
+      "ff_ps": 267,
+      "source_commit": "2904463107e8082eed8912c2cc1eaddd9bfc2f23"
+     },
+     "note": {
+      "outline_um": [
+       221.2,
+       140.3
+      ],
+      "cell_utilisation": 0.147,
+      "limiter": "pins (722 on the N face): the block is pin-limited, not area-limited"
+     }
+    },
+    {
+     "stage": 1,
+     "block": "rwb (N=11)",
+     "instances": 8,
+     "area_um2_est": 8724.6,
+     "outline_um_est": [
+      93.4,
+      93.4
+     ],
+     "faces": {
+      "ret_in (from hr end block)": {
+       "pins": 794,
+       "face_um_needed": 243.3
+      },
+      "cfg_replica_in": {
+       "pins": 458,
+       "face_um_needed": 140.3
+      },
+      "rowcount_out (per tag)": {
+       "pins": 16,
+       "face_um_needed": 4.9
+      },
+      "vm_write_out": {
+       "pins": 572,
+       "face_um_needed": 175.3
+      },
+      "fault_out": {
+       "pins": 1,
+       "face_um_needed": 0.3
+      },
+      "clk_rst": {
+       "pins": 2,
+       "face_um_needed": 0.6
+      }
+     },
+     "pins": 1843,
+     "relay": "hr end block abutting; VM face 1 station + ratio CDC",
+     "insertion_target": {
+      "analogue": "dsfd_cfifo",
+      "ss_ps": 427,
+      "ff_ps": 267,
+      "source_commit": "2904463107e8082eed8912c2cc1eaddd9bfc2f23"
+     },
+     "note": {
+      "outline_um": [
+       243.3,
+       140.3
+      ],
+      "cell_utilisation": 0.147,
+      "limiter": "pins (794 on the N face): the block is pin-limited, not area-limited"
+     }
+    },
+    {
+     "stage": 2,
+     "block": "pq_ctl",
+     "instances": 1,
+     "area_um2_est": 108654.2,
+     "faces": {
+      "vm_read (S, abut VM north face)": {
+       "pins": 2069,
+       "face_um_needed": 633.9
+      },
+      "issuer (W)": {
+       "pins": 93,
+       "face_um_needed": 28.5
+      },
+      "phase_rom (E, 2 x ot_rom_4096x72)": {
+       "pins": 148,
+       "face_um_needed": 45.3
+      },
+      "stream_rom (E, 1 x ot_rom_4096x72)": {
+       "pins": 59,
+       "face_um_needed": 18.1
+      },
+      "lane_out W2 (W/E to hx end blocks)": {
+       "pins": 1085,
+       "face_um_needed": 332.4
+      },
+      "cfg_replica_out (to RWB chain)": {
+       "pins": 458,
+       "face_um_needed": 140.3
+      },
+      "rowcount_in (12 RWB)": {
+       "pins": 192,
+       "face_um_needed": 58.8
+      },
+      "fault_status": {
+       "pins": 50,
+       "face_um_needed": 15.3
+      },
+      "clk_rst": {
+       "pins": 2,
+       "face_um_needed": 0.6
+      }
+     },
+     "pins": 7342,
+     "relay": "BST/lane registers at the W/E faces; VM read abutting",
+     "insertion_target": {
+      "analogue": "ot_v41_rom_elem_q_qxpq_w10",
+      "ss_ps": 620,
+      "ff_ps": 373,
+      "source_commit": "e1fbc25c1ad3f34eb1686a5b0d60e3aa4a62d803"
+     }
+    },
+    {
+     "stage": 3,
+     "block": "lane station / cfifo W1085",
+     "faces": {
+      "in": {
+       "pins": 1087,
+       "face_um_needed": 333.0
+      },
+      "out": {
+       "pins": 1087,
+       "face_um_needed": 333.0
+      }
+     },
+     "pins": 2174,
+     "relay": "stations <= 215 um (cc reach)",
+     "insertion_target": {
+      "analogue": "dsfd_stnh_566x1",
+      "ss_ps": 140,
+      "ff_ps": 74,
+      "source_commit": "2e2d7aa3f1fe34b1ba709a331721868d69e58fdb"
+     }
+    }
+   ]
+  },
+  "placement_pq_parent": {
+   "status": "PROVISIONAL: Codex /root/s81/pq_parent packing update relayed 2026-10-07 ~12:31 PT (mailbox claude_pq_design_msgs); not yet committed as a generator layout",
+   "root_row_h_um": 164.16,
+   "root_rows": "one root row in each of the first 6 tier channels (one root per column, below its frame)",
+   "frame_spare_um": {
+    "before": 241,
+    "after": 77
+   },
+   "pairs_per_die": 1792,
+   "bf_pairs_per_die": 512,
+   "root_w_um": 132.192,
+   "root_h_um": 133.92,
+   "station_w_um": 8.64,
+   "stations": 2,
+   "root_strip_w_um": 142.56,
+   "core_slot_h_um": 449.28,
+   "core_slot_w_um": 1728.0,
+   "core_slot": "explicit slot after the VM",
+   "su_restack": "capture-up / SU restack keeps the same 25.61188 mm2 SU",
+   "root_reservation_um2": 23402.6,
+   "roots_per_die_mm2": 2.996,
+   "root_cell_outline_um2": 17703.2,
+   "root_outline_vs_estimate": 1.014,
+   "core_slot_mm2": 0.776,
+   "core_estimate_mm2": 0.32,
+   "core_fits": true,
+   "roots_per_tier": [
+    20,
+    22,
+    22,
+    22,
+    22,
+    20
+   ],
+   "supersedes": "design recommendation (1): roots in empty q element positions - wrong: mixed 1,792 frames are 4 BF full-width + 10 q half-width = 9 fully occupied rows, no empty positions"
+  }
+ },
+ "model_basis": {
+  "label": "MODELED VERSION: main@e2a4ad579 with calibration snapshot observed 2026-10-07T12:10:55-07:00",
+  "main_commit": "e2a4ad579",
+  "calibration_snapshot": {
+   "path": "current_main/inputs/calibration/measured_insertion.bb7c46846.json",
+   "source_path": "results/rtl/budgets_20261006/measured_insertion.json",
+   "source_commit": "bb7c46846 (2026-10-07 12:07:44 -0700, closure-loop daemon)",
+   "observed_at": "2026-10-07T12:10:55-07:00 (worktree file mtime when read)",
+   "sha256": "4a72c6e5137d1f983c9d1ee67da23f03c5016edb0d7726b1b8f4473aa1cd4e11",
+   "note": "the live file on main is rewritten by the closure-loop daemon; this basis never reads it"
+  },
+  "generator": {
+   "path": "current_main/inputs/pinned/dsrom_s81_fulldie.cfc076112.py",
+   "source": "tools/dsrom_s81_fulldie.py @ e2a4ad579"
+  },
+  "geometry_status": "PROVISIONAL: generator rebuild of the frame model (empty-q-slot root assumption superseded by the pq_parent placement: 164.16 um root rows in the first 6 tier channels, 449.28 x 1,728 um core slot after the VM); the geometry owner is rebuilding the actual layout"
+ }
+}

@@ -106,10 +106,24 @@ module ot_qwen_stream4_cdc_pc #(
     // through a 4-level placement-buffer chain across the element).
     (* async_reg = "true" *) reg c_rs0, h_rs0;
     (* keep *) reg c_rl, c_rw, c_ra, h_rl, h_rw, h_ra;
+    // MARGIN >= 2 (qwen-blocks 2026-10-07): each kept release copy takes its own kept pre-stage, so the copy can sit
+    // beside its tree (routes: c_ra -> ar_bin / ww_bin recovery -3.8..-24.3 ps through a 4-buffer chain from the shared
+    // c_rs0 corner); every domain releases one edge later, all three trees of a domain still together.
+    wire c_sl, c_sw, c_sa, h_sl, h_sw, h_sa;
+    generate if (MARGIN >= 2) begin : g_rpre
+        (* keep *) reg c_pl, c_pw, c_pa, h_pl, h_pw, h_pa;
+        always @(posedge clk or negedge c_arst_n)
+            if (!c_arst_n) {c_pl, c_pw, c_pa} <= 3'b0; else begin c_pl <= c_rs0; c_pw <= c_rs0; c_pa <= c_rs0; end
+        always @(posedge hclk or negedge h_arst_n)
+            if (!h_arst_n) {h_pl, h_pw, h_pa} <= 3'b0; else begin h_pl <= h_rs0; h_pw <= h_rs0; h_pa <= h_rs0; end
+        assign {c_sl, c_sw, c_sa, h_sl, h_sw, h_sa} = {c_pl, c_pw, c_pa, h_pl, h_pw, h_pa};
+    end else begin : g_rnopre
+        assign {c_sl, c_sw, c_sa, h_sl, h_sw, h_sa} = {6{1'b0}} | {c_rs0, c_rs0, c_rs0, h_rs0, h_rs0, h_rs0};
+    end endgenerate
     always @(posedge clk or negedge c_arst_n)
-        if (!c_arst_n) {c_rs0, c_rl, c_rw, c_ra} <= 4'b0; else begin c_rs0 <= 1'b1; c_rl <= c_rs0; c_rw <= c_rs0; c_ra <= c_rs0; end
+        if (!c_arst_n) {c_rs0, c_rl, c_rw, c_ra} <= 4'b0; else begin c_rs0 <= 1'b1; c_rl <= c_sl; c_rw <= c_sw; c_ra <= c_sa; end
     always @(posedge hclk or negedge h_arst_n)
-        if (!h_arst_n) {h_rs0, h_rl, h_rw, h_ra} <= 4'b0; else begin h_rs0 <= 1'b1; h_rl <= h_rs0; h_rw <= h_rs0; h_ra <= h_rs0; end
+        if (!h_arst_n) {h_rs0, h_rl, h_rw, h_ra} <= 4'b0; else begin h_rs0 <= 1'b1; h_rl <= h_sl; h_rw <= h_sw; h_ra <= h_sa; end
 
     function automatic [LA:0] g2b_l(input [LA:0] g);
         integer i; begin g2b_l[LA] = g[LA]; for (i = LA - 1; i >= 0; i = i - 1) g2b_l[i] = g2b_l[i+1] ^ g[i]; end

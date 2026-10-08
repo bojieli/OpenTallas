@@ -1,0 +1,78 @@
+{
+  "scope": "source inventory; missing native issuer is not cured by diagnostic cmdproc views",
+  "sources": {
+    "tools/dshbm_sm_pq_seq.py": "dfb0b12bca2cee5fa33566768ec2d307394c896c40aac6cafece4642bab602f9",
+    "rtl/test/tb_hbm_accel_sm_pq_seq.sv": "fb145353049cef10d325aebca00cb32df0e542a93f30104b5aab51bc01672703",
+    "physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc.sv": "1b688a5846b25801bb8cc355753ccb2e0b70f6ed694829daa3fbfd5660b7866c",
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "f60aab76ac2ca7631b208fe2d9b899cd9b5ea484b5ba85966f066f66f098e7fe",
+    "tools/hbm_accel_current_target_portmap.py": "a36af3873df4f1fd5765868fcc0b4cda7ea86e5a2d314eabe8bfd04b63f42620"
+  },
+  "existing": [
+    {
+      "path": "tools/dshbm_sm_pq_seq.py",
+      "lines": [
+        94,
+        120
+      ],
+      "role": "Software generates matched golden payloads and ten-word seq.hex; ring allocator software updates rbase modulo128."
+    },
+    {
+      "path": "rtl/test/tb_hbm_accel_sm_pq_seq.sv",
+      "lines": [
+        118,
+        144,
+        166,
+        205
+      ],
+      "role": "Testbench supplies descriptors independently, writes complete X operand, waits\u22651 edge, posts op with ready, consumes in-order arrive toggle."
+    },
+    {
+      "path": "physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc.sv",
+      "lines": [
+        1,
+        4
+      ],
+      "role": "Diagnostic wrapper explicitly maps launch PC to unrelated operation fields; comment states pipelined issue sequencer is not built."
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv",
+      "lines": [
+        5,
+        7,
+        530
+      ],
+      "role": "Actual integrated SIMT ISA command processor controls existing SM program; different interface from native SMH PQ record; no implicit ISA translation allowed."
+    },
+    {
+      "path": "tools/hbm_accel_current_target_portmap.py",
+      "lines": [
+        38,
+        40
+      ],
+      "role": "Existing model explicitly requires static fullprogram issue and real operand publication; rejects SIMT instruction reinterpretation."
+    }
+  ],
+  "missing_native_hardware": [
+    "Loader/program-memory writer and bounded ten-word-record reader for selected native SMH static schedule",
+    "Record owner coupling descriptor line offset to actual selected HBM weight allocation; seq.hex base_of is a simulator line-file offset, not physical HBM address",
+    "X operand DMA/publication owner with 13x2048-bit beats per full NC8 x address, actual ring base and source owner identity",
+    "Returned publication acknowledgement after final beat reaches SM capture; a caller-level Boolean alone is insufficient",
+    "Real arrive toggle return/edge detector and matching result-publication/release authority; testbench release_in<=arrive is not production collective proof",
+    "Protected mutable record/credit/counter state and shared reset/clock transport binding"
+  ],
+  "next_block": {
+    "name": "native serial record/operand/descriptor owner",
+    "status": "modeled next block, not implemented",
+    "record_bits": 320,
+    "weight_descriptor_bits": 56,
+    "ring_address_bits": 7,
+    "x_fragment_bits": 25216,
+    "x_beats_per_address": 13,
+    "x_beat_bits": 2048,
+    "control_storage_lower_bound_bits": 2452,
+    "flop_only_lower_bound_um2": 715.0032000000001,
+    "issue_latency_formula": "record fetch edges + optional x_extent*13 accepted beats + actual publication roundtrip + descriptor acceptance + command transport HOPS+2; then real arrive/result-publication retirement before next record",
+    "handshake_policy": "one record outstanding; X reused only after prior op retires; explicit real publication and descriptor-accept receipts; no same-cycle remote ready",
+    "area_limits": "record memory, ECC/protection, muxes, DMA transport, physical placement and route not included; no admission yet"
+  }
+}

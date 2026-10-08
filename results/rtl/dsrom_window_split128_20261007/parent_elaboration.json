@@ -1,0 +1,7 @@
+{
+  "source_commit": "6301362f3",
+  "command": "iverilog -g2012 -s ot_dsrom_window_stage_pipeline -P ot_dsrom_window_stage_pipeline.SPLIT_COLUMNS=2 -P ot_dsrom_window_stage_pipeline.MARGIN=1 -tnull rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv",
+  "returncode": 0,
+  "scope": "full NPC32, 128 rows, MARGIN1, 132 full-depth columns; elaboration only",
+  "physical_adoption": false
+}

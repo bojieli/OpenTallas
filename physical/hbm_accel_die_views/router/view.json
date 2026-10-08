@@ -27,20 +27,50 @@
   326.28
  ],
  "source": {
-  "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/rt5_pd40",
-  "host": "ot-epyc1tb",
-  "SOURCE_COMMIT": "88844648046df6a5a9c5b459a583127bfaabdd58",
-  "ss_setup_ps": -1197.69,
-  "ff_hold_ps": -553.76,
+  "route": "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work",
+  "host": "ot-epyc2",
+  "SOURCE_COMMIT": null,
+  "source_commit_note": "Remote SOURCE_COMMIT contains a descriptive label, not a git commit; provenance is the preserved source SHA256 list.",
+  "source_label": "dv9b: r5 cmp8k only (fclk chain reverted: TritonCTS initOneClockTree crash)",
+  "sources": [
+   {
+    "path": "physical/hbm_accel_die_views/router/rtl/hfd_router.sv",
+    "sha256": "1c375cab20b8d45f529eaec4acab1b85cdc65ab3da0b6c5aaf7506973f556427",
+    "size_bytes": 21742
+   },
+   {
+    "path": "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+    "sha256": "49da9ff0437d72340c17c38b4062074d821d3152c61092939a7df6a36ad10739",
+    "size_bytes": 1823
+   },
+   {
+    "path": "rtl/gpu/ot_gpu_router_topk_ps.sv",
+    "sha256": "2ee77de216f7edb129be12dd549b6d85fa8bb374f6046b178bdb8ac37ab578c2",
+    "size_bytes": 27087
+   },
+   {
+    "path": "rtl/gpu/ot_gpu_router_topk.sv",
+    "sha256": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
+    "size_bytes": 7889
+   },
+   {
+    "path": "rtl/common/ot_fwd_link_stage.sv",
+    "sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "size_bytes": 1611
+   }
+  ],
+  "ss_setup_ps": 30.68,
+  "ff_hold_ps": -48.74,
   "closes_signoff_SS60_FF25": false,
   "clock_period_ns": 0.833,
   "status": "not_met",
   "drc": 0,
   "antenna": 0,
-  "cell_um2": 30554.8,
-  "seq_um2": 10021.4,
-  "core_um2": 185548,
-  "macro_um2": 0
+  "cell_um2": 15071,
+  "seq_um2": 4281.04,
+  "core_um2": 454990,
+  "macro_um2": 0,
+  "record": "results/physical/hbm_leftovers_20261007/dv10/route/physical.json"
  },
  "wrapper": {
   "master": "hfd_router",
@@ -55,11 +85,13 @@
   "die_output_bits": 580,
   "die_output_bits_driven": 279
  },
- "bench": "tb_hfd_router.sv 4000 checks 0 mismatches (kept output regs, face_stages 1 wrapper of 888446480)",
- "note": "INTERIM abstract for die placement only: exact pins/outline (check MATCH exact), timing not closed; replace with the router agent's margin view",
+ "bench": "No exact-bench receipt bound to all five dv10 source digests in this export. Older bench attribution retained in results/physical/hbm_leftovers_20261007/view_before_qualification.json.",
+ "note": "Placement-only dv10 abstract; LEF and both Liberty files unchanged and hash-matched to the remote dv10 export. Not accepted for timing composition or +15/+15 closure. See qualification.",
  "defects": [
-  "topk_f3 internal reg2reg -550 ps at CTS (owner: router agent); this route SS -1197.69 / FF -553.76 at 833/60/25 with ideal-to-L1040 IO and resizer repair skipped",
-  "generator outline 133.896 um tall: GRT congestion without -allow_congestion (Turing: needs 326.28 um)"
+  "FF hold -48.74 ps, 201 violating D pins at the calibrated corner check.",
+  "Route finish reports 9 max-fanout violations.",
+  "Four forwarded-clock outputs are false-pathed in sign-off; a source-pinned forwarded-clock/data skew and receiver budget receipt is still required.",
+  "Liberty export uses final route SDC without the three sign-off post-SDCs; it is not evidence of calibrated all-pin timing closure."
  ],
  "route": "dv10_ih60 (EPYC2 /srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60; core topk_ps r5, r16i ports, per-port face stages W4/E3/t_cmdproc2/f_vm2)",
  "signoff_833": {
@@ -67,7 +99,7 @@
   "ff": -48.74,
   "ss_i2r": 325.75,
   "ff_out": 41.640442,
-  "note": "SS closed; FF -48.7 = die-input hold at the input pin flops only (201 pins); fix r6 (3 kept inverter pairs per input, 0 cycles) routing as dv11_idly. Forwarded-clock ports e*[128] excluded (router/rtl/fclk_ports_signoff.sdc)."
+  "note": "833.000 ps period; SS setup uncertainty 60 ps, FF internal hold 25 ps, IO hold 50 ps under corner-true insertion. Four forwarded-clock outputs excluded. dv10 fails +15/+15; successors are separate evidence."
  },
  "pin_access_precheck": {
   "result": "DONE, 0 DRT-0073 (4 orientations)",
@@ -81,5 +113,53 @@
    "t_cmdproc": 2,
    "f_vm": 2
   }
+ },
+ "qualification": {
+  "schema": "opentallas.hbm_router_export_qualification.v1",
+  "accepted": false,
+  "permitted_use": "placement-only",
+  "required_margin_ps": {
+   "ss_setup": 15,
+   "ff_hold": 15
+  },
+  "measured_margin_pass": false,
+  "all_relevant_pins_qualified": false,
+  "exact_gate_source_bound": false,
+  "electrical_clean": false,
+  "io_budget": {
+   "max_delay_ps": "0.2 * 833 + 150 = 316.6",
+   "hold_reference": "FF outputs at measured minimum insertion; inputs at measured maximum insertion",
+   "hold_uncertainty_ps": 50,
+   "assumption": "Neighbour die-clock leaf is within this block own FF leaf spread; parent must validate with actual peers."
+  },
+  "excluded_pins": {
+   "forwarded_clock": [
+    "eNE[128]",
+    "eNW[128]",
+    "eSE[128]",
+    "eSW[128]"
+   ],
+   "reset": [
+    "rst[0]"
+   ],
+   "clock": [
+    "ck[0]"
+   ]
+  },
+  "required_additional_receipts": [
+   "All-pin timing coverage with forwarding/data skew and receiving-station setup/hold budget",
+   "Reset synchronizer exception and reset-release contract",
+   "Current exact gate bound to routed source hashes",
+   "Zero slew/cap/fanout violations",
+   "Calibrated signoff-compatible Liberty export"
+  ],
+  "evidence_manifest": "results/physical/hbm_leftovers_20261007/dv10/manifest.json",
+  "previous_metadata": "results/physical/hbm_leftovers_20261007/view_before_qualification.json",
+  "successor_corner_record": "results/physical/hbm_leftovers_20261007/dv12_corner/route/corner_sta.json",
+  "successor_margin_ps": {
+   "ss_setup": 24.56,
+   "ff_hold": -8.62
+  },
+  "successor_accepted": false
  }
 }

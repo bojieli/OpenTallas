@@ -2789,33 +2789,33 @@
    "binding": "results/arch/energy_silicon_measured/energy_silicon.json#deepseek_1m.rom.power.ar_b1_pg_measured.J_per_token",
    "derived": false,
    "derivation": null,
-   "record_value": 6.7642,
+   "record_value": 6.7916,
    "records": [
     "results/arch/energy_silicon_measured/energy_silicon.json"
    ],
    "printed": [
     {
      "in": "Two deployment questions follow",
-     "text": "spends 6.76 J per token at batch 1 in AR",
-     "printed_value": "6.76",
+     "text": "spends 6.79 J per token at batch 1 in AR",
+     "printed_value": "6.79",
      "status": "agrees"
     },
     {
      "in": "Static power decides array energy at low batch",
-     "text": "6.76 J per token at batch 1 in AR",
-     "printed_value": "6.76",
+     "text": "6.79 J per token at batch 1 in AR",
+     "printed_value": "6.79",
      "status": "agrees"
     },
     {
      "in": "Energy per token, batch 1 (both static-dominated)",
-     "text": "measured energy record 6.76 vs 5.77 J",
-     "printed_value": "6.76",
+     "text": "measured energy record 6.79 vs 5.77 J",
+     "printed_value": "6.79",
      "status": "agrees"
     },
     {
      "in": "The modeled operating energy is lower at the batch sizes",
-     "text": "6.76 J for the array (85 stages",
-     "printed_value": "6.76",
+     "text": "6.79 J for the array (85 stages",
+     "printed_value": "6.79",
      "status": "agrees"
     }
    ]
@@ -6404,7 +6404,7 @@
   "results/arch/energy_silicon_measured/energy_silicon.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "301ddaa15ca8bee13d57b0efb58eb08038801a71f18e94088fc7cfc11abf340a",
+   "sha256": "64277a21714921eeabc8506bac1530e13380d4c885a8ebc829b8331ebe45f4e8",
    "schema": "opentallas.arch.energy_silicon_measured.v1",
    "tool": "tools/energy_silicon_measured.py",
    "command": "python3 tools/energy_silicon_measured.py  (inferred; the record names no command)",
@@ -6479,7 +6479,7 @@
    "commits": [
     {
      "field": "inputs.scoreboard_commit",
-     "commit": "2758a0dc5",
+     "commit": "162fca0b9",
      "in_head_history": true
     }
    ]

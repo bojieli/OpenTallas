@@ -1,0 +1,38 @@
+Native parent control replay with measured native ME drain
+
+This successor replaces the explicitly assumed ME drain inputs in the earlier
+qwen_vm_parent_control evidence. The earlier conditional positive and negative
+records remain unchanged. Actual current native core control still executes;
+child components are independently captured native-control traces, not complete
+numeric engines instantiated beneath the parent. The program is the deliberately
+reduced sequence of unchanged L20 PC19, PC20, PC25 words.
+
+Native ME status provenance: qwen-vm-native-status-20261007/physical/
+drain_control.json, including ready, idle, progress, MX write enable and clock
+enable at each PRE edge. Source acceptance cycle5 maps to age0. Native idle
+cycle505 maps to age500; last write503 maps to498. Final native progress is8.
+The control-tail capture retains native valids/tags/drain, with unused arithmetic
+comparison datapaths removed only for this W1 case where amax/rmax=0. MX activity
+is0 in this case, not globally proven absent. The runner rejects clock-stalled
+profiles and exhaustion of the supplied trace.
+
+Observed replay result: SU issue edge10, writes31–94; ME issue95 with SU
+progress64/idle0, writes586–593. Actual native ME idle is reached on parent595,
+END fin is observed on595, registered done on596. No guessed drain age remains.
+640 masked-word write records are unchanged. No write-family overlap for this
+pair is observed, despite permission to issue ME before SU becomes idle.
+
+The forged-early-ME-idle negative asserts FIN on parent162 at native ME age67,
+actual idle0/progress0. The independent native-status/outstanding-write checker
+rejects it. Positive replay and negative both rerun with actual status inputs.
+This validates the selected controller decisions and source-bound trace replay;
+it is not numerical exactness or a full native parent-integration claim.
+
+Reproduce (prior parent-control patch supplies the SU capture runner):
+python3 tools/qwen_vm_parent_su_capture.py --root REPO --out OUT/su
+python3 tools/qwen_vm_parent_native_drain_replay.py --root REPO --out OUT \
+  --me-status NATIVE_ME_PHYSICAL/drain_control.json
+
+Bind full production descriptors, adjacent instructions, other writer families
+and real native child connection before claiming workload-wide exclusion or
+bank sufficiency. No bank implementation or model/performance adoption here.

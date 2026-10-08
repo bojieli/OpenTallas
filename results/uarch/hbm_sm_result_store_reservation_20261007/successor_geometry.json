@@ -1,0 +1,29 @@
+{
+  "status": "RESERVATION_ONLY_GEOMETRY_PASS",
+  "selected": false,
+  "variant": "R24SM3VOCEUR",
+  "tests": "3 focused tests PASS",
+  "legality": {
+    "instances": 595,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": []
+  },
+  "stores": 32,
+  "store_macro_conflicts": 0,
+  "existing_macro_instances_before": 596,
+  "existing_macro_instances_after": 595,
+  "logical_path_count": 274,
+  "logical_path_keys_preserved": true,
+  "buses_before": 973,
+  "buses_after": 972,
+  "note": "Waypoint topology regenerates; all non-waypoint masters and boxes preserved. Result/control station and shared-track inventory must be recomputed; old 107/192 result and control fit records do not transfer.",
+  "source_sha256": {
+    "tools/hbm_accel_die_fp.py": "456d7ee43f6060745445368cc3d3ec0ca8c0df720f35340ea9723b24fc3e6e9b",
+    "tools/hbm_sm_result_store_reservation.py": "f68cd5625459c3ce00320202b357ff0ac3eb16e1b0a7a8d16c1283226acc74a7",
+    "tests/test_hbm_sm_result_store_reservation.py": "3fb6cc4b89201b4e5b3974860e29bdcc1cb68009db7ba76b57159ee1bdba38a7",
+    "results/uarch/hbm_sm_result_store_reservation_20261007/model.json": "9f30b8762ef9b5f236b18ee61ddcf0a9175dddcbdf19a522d893c5933512bc0a",
+    "results/uarch/hbm_sm_result_store_reservation_20261007/successor_placement.json.gz": "eb72226a4595912182f0fd58874b9a72cf9c26be107a22768280d54fb91e4b13"
+  }
+}

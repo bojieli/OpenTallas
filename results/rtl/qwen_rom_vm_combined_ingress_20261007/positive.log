@@ -1,0 +1,14 @@
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=1
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=2
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=3
+FRAME kind=0 physical_edges=4775 read_delta=0 checked_ACK_delta=55 native=4
+FRAME kind=0 physical_edges=4325 read_delta=0 checked_ACK_delta=40 native=5
+FRAME kind=0 physical_edges=3155 read_delta=0 checked_ACK_delta=1 native=6
+FRAME kind=1 physical_edges=14419 read_delta=1024 checked_ACK_delta=1 native=7
+FRAME kind=2 physical_edges=3136 read_delta=1 checked_ACK_delta=0 native=9
+FRAME kind=3 physical_edges=3155 read_delta=0 checked_ACK_delta=1 native=10
+FRAME kind=4 physical_edges=3136 read_delta=1 checked_ACK_delta=0 native=11
+FRAME kind=5 physical_edges=1 read_delta=0 checked_ACK_delta=0 native=12
+FRAME kind=6 physical_edges=3136 read_delta=1 checked_ACK_delta=0 native=13
+FRAME kind=7 physical_edges=3125 read_delta=0 checked_ACK_delta=0 native=14
+PASS COMBINED_INGRESS_DIRECT_READBACK full_aperture_parent160 VX2048 delayed_reducer checked_ACK native_hold XVM1 read9=1027 write28=263 rawACKs=263 native=15 held=56675

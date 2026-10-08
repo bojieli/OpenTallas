@@ -1,0 +1,17 @@
+Default-off direct registered readback successor
+
+Original initialized macro data is known, but Icarus11 propagates X through the original bank_word intermediate continuous-net path. Replacing the output-register RHS with explicit OR of the SAME four partial registers at the SAME clock edge fixes the actual full16 provider bench. Packed-net declaration and explicit continuous assignments still fail; a small isolated same-shape net probe passes, so a universal simulator bug diagnosis is not claimed. Original artifacts remain unchanged.
+
+DIRECT_READBACK defaults0 through renamed adapter, checkedbank and rawbackend. Opt-in1 bypasses only the intermediate wire reference; no register, pipeline stage, macro or service protocol is added. Both implementations synthesize with identical complete rawbackend generic cell counts, including256 SRAM blackboxes and87141 register bits. Yosys0.68 proves the output-register cone equivalent for arbitrary binary partial inputs. This is generic structural/expression evidence, not mapped timing or physical qualification.
+
+Actual Icarus full16 provider bench: enabled known-data positive passes, read9/write28,4checkedACKs,5reads,319heldedges,8nativeedges. Wrong ACK owner, unpaid native edge and premature CHASE controls fail as intended. Defaultoff preserves original initialized-data failure. The independent simulation-only unknown-ACK diagnostic remains useful: this repair does not create hardware protection against unknowns or complete mutable-state protection.
+
+Reproduce four-state gate (prior actual-service-gate.patch supplies bench/progress):
+python3 tools/qwen_vm_direct_readback_check.py --root . --bench rtl/test/qwen_vm_su_service_gate_20261007/tb_qwen_su_service_gate.sv --progress results/rtl/qwen_vm_su_service_gate_20261007/progress.sv --out /tmp/direct-readback-recheck
+
+Generator: python3 tools/qwen_vm_direct_readback.py --root . --out /tmp/direct-readback-generated
+Generic fullraw counts: read_verilog -lib <SRAM model>; read_verilog -sv <raw source>; hierarchy -top <raw impl> [-chparam DIRECT_READBACK 1]; proc; opt; stat. Compare predecessor ot_v41_vm_bank4_macro_pipe_masked_visible_r2_impl and successor ot_qwen_vm_bank4_direct_readback_impl. SRAM is blackboxed for this logic count.
+
+No fullROM, collective enrollment, extra liveextent coverage, mutable-state reliability or route admission is claimed. Selected native delayed-reducer frame proof is separately owned and will use this candidate. Actual ROM ingress-collar integration remains a separately generated/gated successor.
+
+The SAME candidate and initialized fixture also pass Verilator5.050; successful output values and service counts agree with Icarus. Build used2workers; see measured resource record.

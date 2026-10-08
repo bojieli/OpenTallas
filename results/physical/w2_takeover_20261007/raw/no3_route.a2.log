@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-872c56bd4/src/physical/hbm_w2_rb_station_20261006/run_owned.py", line 38, in <module>
+    run = a.run.resolve(); run.mkdir(parents=True, exist_ok=False)
+                           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 1012, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: '/srv/opentallas-scratch/claude/closure-loop/w2-rb-safe-no3-872c56bd4/routes/w2_rb_safe_no3_872c56bd4'

@@ -1,0 +1,76 @@
+{
+  "top": "ot_qwen_embed_code_bank",
+  "netlist": "/tmp/embed_code_generic.v",
+  "verdict": "PASS",
+  "checks": {
+    "wp/wp_n": {
+      "primary_FFs": 2,
+      "shadow_FFs": 2,
+      "separate": true
+    },
+    "rp/rp_n": {
+      "primary_FFs": 2,
+      "shadow_FFs": 2,
+      "separate": true
+    },
+    "credits/credits_n": {
+      "primary_FFs": 4,
+      "shadow_FFs": 4,
+      "separate": true
+    },
+    "phase/phase_n": {
+      "primary_FFs": 1,
+      "shadow_FFs": 1,
+      "separate": true
+    },
+    "valid_pipe/valid_n": {
+      "primary_FFs": 4,
+      "shadow_FFs": 4,
+      "separate": true
+    },
+    "addr_q/addr_n": {
+      "primary_FFs": 12,
+      "shadow_FFs": 12,
+      "separate": true
+    },
+    "ce_q/ce_n": {
+      "primary_FFs": 1,
+      "shadow_FFs": 1,
+      "separate": true
+    },
+    "iv_q/iv_n": {
+      "primary_FFs": 1,
+      "shadow_FFs": 1,
+      "separate": true
+    },
+    "cr_q/cr_n": {
+      "primary_FFs": 1,
+      "shadow_FFs": 1,
+      "separate": true
+    },
+    "ia_q/ia_n": {
+      "primary_FFs": 12,
+      "shadow_FFs": 12,
+      "separate": true
+    },
+    "fifo[0]/fifo_n[0]": {
+      "primary_FFs": 12,
+      "shadow_FFs": 12,
+      "separate": true
+    },
+    "fifo[1]/fifo_n[1]": {
+      "primary_FFs": 12,
+      "shadow_FFs": 12,
+      "separate": true
+    },
+    "capture_data": {
+      "capture_FFs": 512
+    },
+    "capture_en_q": {
+      "capture_enable_FFs": 16
+    }
+  },
+  "source_commit": "b84cd498efce2c5e2a2d78880164cd9d34713f8e",
+  "scope": "generic Yosys0.68 synthesized FF storage check; actual ASAP7 mapped check is separate closure-loop verdict gate",
+  "netlist_sha256": "c463b27b4a1b9dac4a26375ba4fefc3377bab8834269a3fef41e01a68e952972"
+}

@@ -1,0 +1,6 @@
+CALENDAR_TAP_ACCEPT edge=16
+CALENDAR_ALL_SM edge=25
+CALENDAR_LAST_SM_ACK edge=53
+CALENDAR_QUARTER_ACK edge=67
+CALENDAR_PARENT_RELEASE edge=72
+PASS_NATIVE_QUARTER_PUBLICATION seed=1062026 fanouts=3/3/3/2 sm=8 full73=1 owner192=1 checks=19 heldACK_CE=1 emptyACK_CE=1 warm_debt=1 token16_negative=1 provider_macros=32 extra_macros=0

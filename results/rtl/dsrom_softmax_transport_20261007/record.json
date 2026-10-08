@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.dsrom_softmax_ecc_lane_gate.v1",
+  "scope": "one64-bit minimum replicated codec component; not rowbuffer/CDC/parent qualification",
+  "positive": {
+    "checks": 10524,
+    "passed": true,
+    "log": "results/rtl/dsrom_softmax_transport_20261007/ecc_lane_positive.log",
+    "single_bit_positions": 72,
+    "double_bit_pairs": 2556,
+    "words": 4,
+    "burst_results": 8,
+    "reset_abort_pass": true
+  },
+  "negative": {
+    "mutation": "SOFTMAX_ECC_NO_CORRECTION",
+    "expected_exit": 1,
+    "observed_exit": 1,
+    "log": "results/rtl/dsrom_softmax_transport_20261007/ecc_lane_no_correction.log",
+    "failed_at_check": 3
+  },
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv": "21a2d557e128cbb980c1edb481c5592e744a789522d94c0efff9d36909d9a308",
+    "rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv": "b5f7603a6bc16fe23664d8c215e5c2117b82738057a04eee90f8b75b1e758815",
+    "rtl/experimental/dsrom_softmax_transport_20261007/tb_ecc_lane.sv": "fd4f145e4d0d258d224d9070bbb53b15fd737628374f7b6d6e3611137568e3f3",
+    "results/uarch/dsrom_softmax_transport_20261007/t640_join_corrected.json": "c6bb71188bad6744d02bbfefd7cd7f9fadbc3a67563cb3adf198221b9533df20"
+  },
+  "reproduce": [
+    "iverilog -g2012 -s tb_ecc_lane -o /tmp/dsrom_softmax_ecc_lane.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv rtl/experimental/dsrom_softmax_transport_20261007/tb_ecc_lane.sv",
+    "vvp /tmp/dsrom_softmax_ecc_lane.vvp",
+    "iverilog -g2012 -DSOFTMAX_ECC_NO_CORRECTION -s tb_ecc_lane -o /tmp/dsrom_softmax_ecc_lane_mutant.vvp rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv rtl/experimental/dsrom_softmax_transport_20261007/ot_dsrom_softmax_ecc_lane.sv rtl/experimental/dsrom_softmax_transport_20261007/tb_ecc_lane.sv",
+    "vvp /tmp/dsrom_softmax_ecc_lane_mutant.vvp"
+  ],
+  "model_before_build": {
+    "record": "results/uarch/dsrom_softmax_transport_20261007/t640_join_corrected.json",
+    "method": "protected_lane_component inserted and emitted before creatingRTL; decode/encode stages and294FFbits perlane priced before bench compilation",
+    "timestamp_proof": "tool execution order; not a separately committed prebuild snapshot"
+  },
+  "physical": {
+    "adopted": false,
+    "SS_FF": null,
+    "combinational_area": null,
+    "macro_SS_clkq_ps": 455.3205489475797
+  },
+  "remaining": [
+    "protected transaction/address/controller",
+    "realSRAM view and read/write sequence",
+    "fullwidth gather/scatter",
+    "nativeCDC/reset qualification",
+    "SS/FF route and wholeparent model composition"
+  ]
+}

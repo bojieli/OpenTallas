@@ -3,17 +3,17 @@
  "die": "qwen_rom",
  "top_fix": false,
  "generator": "tools/qwen_rom_fulldie_b3r2.py",
- "generator_sha256": "26a327ab3e770df6a3bdd92bb2b351dfef0a8b94209fd2d0e45686f90b6309bc",
+ "generator_sha256": "2e392b302ccb3237697c4da8f1d7002465f7e505e2593d2a15089f573bc5ae8a",
  "generator_tag": {
   "file": "tools/qwen_rom_fulldie_b3r2.py",
-  "sha256": "26a327ab3e770df6a3bdd92bb2b351dfef0a8b94209fd2d0e45686f90b6309bc",
-  "tree_head": "4b55654e416824d6cf67eac91d8ec37a67a9c54c",
-  "file_commit": "4b55654e416824d6cf67eac91d8ec37a67a9c54c"
+  "sha256": "2e392b302ccb3237697c4da8f1d7002465f7e505e2593d2a15089f573bc5ae8a",
+  "tree_head": "584098655fbb41eef7c80ef00f7d1fa653b319e1",
+  "file_commit": "768dee5fb7dcc42e2eb21be2ddb6fa7b440349f9"
  },
  "qwen_source": {
   "root": "/home/ubuntu/wt-qwen-die",
   "ref": "None",
-  "commit": "4b55654e416824d6cf67eac91d8ec37a67a9c54c",
+  "commit": "584098655fbb41eef7c80ef00f7d1fa653b319e1",
   "overlay": "[]"
  },
  "qwen_recipe": {
@@ -31,15 +31,15 @@
   "r18": true
  },
  "pin_fit_errors": {},
- "lint_tool_sha256": "39db5d50474f596a8aac68e161aace322c2630718ad38e1f7b9956ecfeb884ab",
+ "lint_tool_sha256": "08e3d8858a78d00142b74d39469fec34a11f2e1591558028cc9cca841d6c5bf7",
  "variant": null,
  "census": {
-  "instances": 3335,
-  "buses": 6622,
-  "net_bits": 2804668,
-  "masters": 42,
+  "instances": 3334,
+  "buses": 6871,
+  "net_bits": 2795406,
+  "masters": 41,
   "real_instances": 132,
-  "placeholder_instances": 3203
+  "placeholder_instances": 3202
  },
  "real_blocks": {
   "ot_hbm3e_phy": {
@@ -304,12 +304,6 @@
    "instances": 1
   },
   {
-   "master": "qfd_sp_xfifo",
-   "view": "placeholder",
-   "clock": "clock_trunk",
-   "instances": 1
-  },
-  {
    "master": "qfd_tile",
    "view": "placeholder",
    "clock": "clock_trunk",
@@ -335,13 +329,17 @@
    "pll_r101",
    "pll_r102",
    "pll_r103",
+   "pll_r104",
    "pll_r105",
    "pll_r106",
+   "pll_r107",
    "pll_r108",
    "pll_r109",
    "pll_r11",
+   "pll_r110",
    "pll_r111",
    "pll_r112",
+   "pll_r113",
    "pll_r116",
    "pll_r12",
    "pll_r120",
@@ -546,9 +544,31 @@
     "span_um": 1767.6,
     "peer_manhattan_um": 0.2,
     "bits": 9207
+   },
+   {
+    "bus": "crom_q",
+    "cls": "crom",
+    "inst": "sp_constants_sequencer",
+    "master": "qfd_sp_constants_sequencer",
+    "port": "cq",
+    "face": "W",
+    "span_um": 786.2,
+    "peer_manhattan_um": 260.3,
+    "bits": 4096
+   },
+   {
+    "bus": "crom_q",
+    "cls": "crom",
+    "inst": "sp_su64_sfu",
+    "master": "qfd_sp_su64_sfu",
+    "port": "cq",
+    "face": "E",
+    "span_um": 786.2,
+    "peer_manhattan_um": 260.3,
+    "bits": 4096
    }
   ],
-  "pin_spread_count": 8,
+  "pin_spread_count": 10,
   "abut_without_channel": [
    {
     "compute": "tile",
@@ -885,12 +905,12 @@
     "bits": 6336
    },
    "hbm_cdc|domain": {
-    "buses": 128,
+    "buses": 256,
     "bits": 78464
    },
    "cdc_core|domain": {
-    "buses": 40,
-    "bits": 23400
+    "buses": 168,
+    "bits": 49140
    },
    "phy_dfi|region": {
     "buses": 4,
@@ -977,7 +997,7 @@
  "top_fixes": {},
  "verilog": {
   "top": "qwen_rom_lint_top",
-  "stubs": 40,
+  "stubs": 39,
   "nc_wires": 0,
   "filelist": "qwen_rom_lint_top.f",
   "rtl_files": 1,

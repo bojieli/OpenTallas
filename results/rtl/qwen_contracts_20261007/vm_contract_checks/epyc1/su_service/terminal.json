@@ -1,0 +1,22 @@
+{
+  "two_state_protocol": {
+    "0": {
+      "exit_code": 0,
+      "marker": "PASS captured_SU_conflict"
+    },
+    "1": {
+      "exit_code": 1,
+      "marker": "FOREIGN_ACK_REJECTED native_held progress0"
+    },
+    "2": {
+      "exit_code": 1,
+      "marker": "UNPAID_NATIVE_ADVANCE"
+    },
+    "3": {
+      "exit_code": 1,
+      "marker": "PREMATURE_CHASE_WITH_UNPAID_FRAME"
+    }
+  },
+  "four_state": "unqualified; preserved Icarus failures in repository evidence",
+  "full_source_integration": false
+}
