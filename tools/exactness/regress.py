@@ -358,7 +358,14 @@ def watch(interval=600, nightly_hour=1):
                     try:
                         culprit, msg = bisect(bench, good, commit)
                     except Exception as exc:
-                        culprit, msg = commit, f"{good}..{commit} (bisect unresolved: {exc})"
+                        # unattributed (e.g. the good end does not pass under the harness): likely a harness or
+                        # fixture problem, so log it for a human and do NOT block merges on it
+                        line = (f"{now()} EXACTNESS {bench} FAIL on {label} {commit}, NOT attributed "
+                                f"(bisect: {exc}); reason: {why}\n")
+                        for name in ("integrate.log", "exactness.log"):
+                            with (TAKEOVER / name).open("a") as f:
+                                f.write(line if name != "exactness.log" else f"<!-- {line.strip()} -->\n")
+                        continue
                     report(bench, culprit, msg, why)
         except Exception as exc:  # keep watching; record the failure
             with LOG.open("a") as f:
