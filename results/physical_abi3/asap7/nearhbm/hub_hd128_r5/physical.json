@@ -1,0 +1,251 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-03T08:36:59.581491+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 137782.013,
+    "block": "ot_qwen_nearhbm_attn_hub",
+    "cells": 988718,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "HD": 128
+    },
+    "sources": [
+      {
+        "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub.sv",
+        "sha256": "6cb7655181d7fc7d7c2ca9451020bfab219dbc888d461b630e3ee60b81288e45",
+        "size_bytes": 15583
+      },
+      {
+        "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+        "sha256": "83bf857ea996607b4881dd7a5b438b6a7b665538928c1089b5c6130b2b1c68df",
+        "size_bytes": 26244
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_sfu.sv",
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "size_bytes": 7751
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+        "size_bytes": 12112
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+        "size_bytes": 11377
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_prefix.sv",
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "size_bytes": 2803
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "size_bytes": 19069
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      }
+    ],
+    "top": "ot_qwen_nearhbm_attn_hub"
+  },
+  "error": "FlowError: ORFS synthesis failed with exit 2:\n pass (perform const folding).\n3.16.37. Rerunning OPT passes. (Maybe there is more to do..)\n3.16.38. Executing OPT_MUXTREE pass (detect dead branches in mux trees).\n3.16.39. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).\n3.16.40. Executing OPT_MERGE pass (detect identical cells).\n3.16.41. Executing OPT_DFF pass (perform DFF optimizations).\n3.16.42. Executing OPT_CLEAN pass (remove unused cells and wires).\n3.16.43. Executing OPT_EXPR pass (perform const folding).\n3.16.44. Rerunning OPT passes. (Maybe there is more to do..)\n3.16.45. Executing OPT_MUXTREE pass (detect dead branches in mux trees).\n3.16.46. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).\n3.16.47. Executing OPT_MERGE pass (detect identical cells).\n3.16.48. Executing OPT_DFF pass (perform DFF optimizations).\n3.16.49. Executing OPT_CLEAN pass (remove unused cells and wires).\n3.16.50. Executing OPT_EXPR pass (perform const folding).\n3.16.51. Finished fast OPT passes. (There is nothing left to do.)\n3.17. Executing MEMORY pass.\n3.17.1. Executing OPT_MEM pass (optimize memories).\n3.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).\n3.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).\n3.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).\n3.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).\n3.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).\n3.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).\n3.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).\n3.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).\n3.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).\n3.18. Executing OPT_CLEAN pass (remove unused cells and wires).\nERROR: TCL interpreter returned an error: Source files actually used in the design:\n /src/rtl/hdc/ot_hdc_fp32_mul_lat.sv\n /src/rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub.sv\n /src/rtl/hdc/ot_hdc_fp32_add_lat.sv\nMemories found in the design:\n Rows | Width |   Bits | Module               | Instances                                                                       \n---------------------------------------------------------------------------------------------------------------------------------\n  256 |   512 |      0 | ot_qwen_nearhbm_attn_hub |                                                                                 \n    8 |    32 |      0 | ot_qwen_nearhbm_attn_hub |                                                                                 \n  512 |    32 |      0 | ot_qwen_nearhbm_attn_hub |                                                                                 \n\nSummary:\n- Total inferred memories: 3\n- Largest single memory instance: 131072 bits (module ot_qwen_nearhbm_attn_hub)\n- Total inferred memory bits (all instances): 0\n- SYNTH_MEMORY_MAX_BITS: 65536\n- Status: FAIL\nError: Synthesized memory size 65536 exceeds SYNTH_MEMORY_MAX_BITS\n\nElapsed time: 0:03.13[h:]min:sec. CPU time: user 2.90 sys 0.19 (98%). Peak memory: 86636KB.\nElapsed time: 29:14.09[h:]min:sec. CPU time: user 1819.85 sys 12.06 (104%). Peak memory: 2419372KB.\nmake[1]: *** [Makefile:297: do-yosys] Error 1\nmake: *** [Makefile:311: /work/results/asap7/opentallas_ot_qwen_nearhbm_attn_hub_asap7_nhb_hub_hd128_308e432b/base/1_2_yosys.v] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-03T06:52:38.395487+00:00",
+  "git": {
+    "commit": "308e432ba229b1c29a84968aea175632824145f3",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--top",
+      "ot_qwen_nearhbm_attn_hub",
+      "--source",
+      "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub.sv",
+      "--source",
+      "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--param",
+      "HD=128",
+      "--view",
+      "asap7",
+      "--clock-port",
+      "clk",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "synth,pnr",
+      "--hold-margin-ns",
+      "0.01",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--force",
+      "--die-area",
+      "0",
+      "0",
+      "451.44",
+      "451.44",
+      "--core-area",
+      "2.16",
+      "2.16",
+      "449.28",
+      "449.28",
+      "--place-density",
+      "0.76",
+      "--nickname-tag",
+      "nhb_hub_hd128_308e432b",
+      "--purpose",
+      "signoff_target",
+      "--output",
+      "results/physical_abi3/asap7/nearhbm/hub_hd128_r5/physical.json",
+      "--keep-workdir",
+      "/home/ubuntu/nhbp/run/hub_r5.work"
+    ],
+    "driver": {
+      "commit": "308e432ba229b1c29a84968aea175632824145f3",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/nhbp/wt3/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "7202e2db930facc2e166f5a73a2cbdf114460d2c6d1b1925382b953373306a43",
+      "tree": "/home/ubuntu/nhbp/wt3"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/home/ubuntu/nhbp/wt3"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 833.0,
+    "cell_area_um2": 137782.013,
+    "cell_count": 988718,
+    "cell_types_used": 40,
+    "chip_area_um2": 137764.26216,
+    "combinational_cell_count": 776757,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "ceb3196691015cd1e43ce43108270491af1828ee47620f84bc94da0f3128cf18",
+      "raw_netlist_sha256": "ceb3196691015cd1e43ce43108270491af1828ee47620f84bc94da0f3128cf18",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 65000.0,
+    "sequential_cell_count": 211961,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
