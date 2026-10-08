@@ -3,19 +3,55 @@
  "source_commit": "fd8df673d",
  "accepted": true,
  "exact": true,
- "verdict": "CLOSED: src and stg WFC elements routed at 770 ps with the +-150 ps die IO model, signed off at 833.333 ps: SS >= +15 / FF >= +15 in context, reg2reg and region (150 ps stage link, 90 ps intra-region, 50 ps hold IO uncertainty); DRC / antenna / DRV 0; exact",
+ "verdict": "CLOSED: src and stg WFC elements routed at 770 ps with the +-150 ps die IO model, signed off at 833.333 ps: SS >= +15 / FF >= +15 in context, reg2reg and region (150 ps stage link, 90 ps intra-region, 50 ps hold IO uncertainty); DRC / antenna / DRV 0; exact | 2026-10-07 20:15 PT (Claude s81-die): src r24 closes die150 too: SS +31.5 / FF +22.7 in incontext, die150, region and reg2reg; DRC / antenna / DRV 0",
  "acceptance_rule": "OWNER 18:15 (2026-10-06): SS setup >= +15, FF hold >= +15 at 833.333 (incontext, reg2reg, region: 150 ps on the stage link, 90 ps intra-region, 50 ps hold IO uncertainty), DRC 0, antenna 0, max slew / cap / fanout violators 0 at SS and FF",
  "elements": {
   "src": {
-   "route": "r22/src_u55",
+   "route": "r24/src_u55 (harvest_r24_20261007)",
    "accepted": true,
    "accepted_40_15_die150": false,
-   "ss_setup_ps": 54.3,
-   "ff_hold_ps": 23.1,
-   "die150_ss_setup_ps": 54.3,
-   "die150_ff_hold_ps": 3.2,
-   "region_ss_setup_ps": 54.3,
-   "region_ff_hold_ps": 23.1,
+   "accepted_15_15_die150": true,
+   "ss_setup_ps": 31.5,
+   "ff_hold_ps": 22.7,
+   "die150_ss_setup_ps": 31.5,
+   "die150_ff_hold_ps": 22.7,
+   "region_ss_setup_ps": 31.5,
+   "region_ff_hold_ps": 22.7,
+   "drc": 0,
+   "antenna": 0,
+   "drv": {
+    "SS": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    },
+    "FF": {
+     "done": true,
+     "violators": {
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0
+     }
+    }
+   },
+   "route_period_ps": 770,
+   "die_skew_ps": 150,
+   "recipe": "r22 recipe from the r13 GRT db with the pre-DRT FF hold ECO IO model at die150 on EVERY port (r23; pr_* / rst_n come from outside the region: r22 die150 FF +3.2 / rst_n removal +7.6) and SS repair_design slew margin 30 / cap 20 (r24; r23 left 2 slew violators); RTL unchanged (controller sha256 d47c1759)",
+   "wf_sta_sha256": "911387a30d2d31739ce23e7be99472ebee0bebe032c9bd9b5630e1a41bab6593"
+  },
+  "stg": {
+   "route": "r11/stg_u50",
+   "accepted": true,
+   "accepted_40_15_die150": true,
+   "ss_setup_ps": 73.1,
+   "ff_hold_ps": 22.5,
+   "die150_ss_setup_ps": 73.1,
+   "die150_ff_hold_ps": 15.7,
+   "region_ss_setup_ps": 73.1,
+   "region_ff_hold_ps": 15.7,
    "drc": 0,
    "antenna": 0,
    "drv": {
@@ -39,16 +75,16 @@
    "route_period_ps": 770,
    "die_skew_ps": 150
   },
-  "stg": {
-   "route": "r11/stg_u50",
+  "src_r22_superseded": {
+   "route": "r22/src_u55",
    "accepted": true,
-   "accepted_40_15_die150": true,
-   "ss_setup_ps": 73.1,
-   "ff_hold_ps": 22.5,
-   "die150_ss_setup_ps": 73.1,
-   "die150_ff_hold_ps": 15.7,
-   "region_ss_setup_ps": 73.1,
-   "region_ff_hold_ps": 15.7,
+   "accepted_40_15_die150": false,
+   "ss_setup_ps": 54.3,
+   "ff_hold_ps": 23.1,
+   "die150_ss_setup_ps": 54.3,
+   "die150_ff_hold_ps": 3.2,
+   "region_ss_setup_ps": 54.3,
+   "region_ff_hold_ps": 23.1,
    "drc": 0,
    "antenna": 0,
    "drv": {

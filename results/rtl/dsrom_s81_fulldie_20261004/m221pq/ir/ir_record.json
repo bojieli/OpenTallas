@@ -1,0 +1,404 @@
+{
+ "cases": {
+  "band_s": {
+   "avg_mv": {
+    "VDD": 3.57,
+    "VSS": 1.42
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "align": true,
+    "budget_mv": 35.0,
+    "bump_sites": 2021,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only",
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 0,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "die": "layer1",
+    "loads": 29550,
+    "peak": true,
+    "power_w": 8.931,
+    "power_w_by_kind": {
+     "cfg": 0.0256,
+     "cfifo": 0.0235,
+     "ctrl": 2.9242,
+     "node": 0.0166,
+     "rly": 0.0055,
+     "seq": 0.0002,
+     "sstn": 0.0033,
+     "stn": 0.0191,
+     "svc": 5.913
+    },
+    "power_w_per_mm2": 0.7553,
+    "scale": 1.0,
+    "signal_bumps_phy": true,
+    "size_um": [
+     3000.016,
+     3941.28
+    ],
+    "stripes": {
+     "M8": 2731,
+     "M9": 9709,
+     "pitch_by_kind": {
+      "channel": 9.0914,
+      "field": 3.3495,
+      "hub": 9.0914,
+      "svc": 2.7669
+     },
+     "vias": 2856353,
+     "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "band_s",
+    "window_um": [
+     5384.88,
+     0.0,
+     8384.896,
+     3941.28
+    ]
+   },
+   "pass": false,
+   "pass_interior": true,
+   "peak_rss_mb": 13419,
+   "rail_to_rail_interior_mv": 25.5,
+   "rail_to_rail_worst_mv": 42.2,
+   "wall": "5:07.00",
+   "worst_interior_mv": {
+    "VDD": 12.51,
+    "VSS": 12.99
+   },
+   "worst_mv": {
+    "VDD": 14.9,
+    "VSS": 27.3
+   },
+   "worst_mv_by_region": {
+    "field": {
+     "VDD": 9.04,
+     "VDD_interior": 4.13,
+     "VSS": 14.16,
+     "VSS_interior": 3.91
+    },
+    "phy": {
+     "VDD": 8.61,
+     "VDD_interior": 8.17,
+     "VSS": 4.87,
+     "VSS_interior": 1.88
+    },
+    "svc": {
+     "VDD": 14.95,
+     "VDD_interior": 12.51,
+     "VSS": 27.35,
+     "VSS_interior": 12.99
+    }
+   }
+  },
+  "field": {
+   "avg_mv": {
+    "VDD": 2.59,
+    "VSS": 2.81
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "align": true,
+    "budget_mv": 35.0,
+    "bump_sites": 3498,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only",
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 0,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "die": "layer1",
+    "loads": 34736,
+    "peak": true,
+    "power_w": 21.0336,
+    "power_w_by_kind": {
+     "bf": 6.8861,
+     "cfg": 1.7561,
+     "cfifo": 0.0235,
+     "node": 2.6742,
+     "q": 9.4106,
+     "rly": 0.1496,
+     "rstg": 0.0014,
+     "seq": 0.0091,
+     "sstn": 0.0412,
+     "stn": 0.0817
+    },
+    "power_w_per_mm2": 1.502,
+    "scale": 1.0,
+    "signal_bumps_phy": true,
+    "size_um": [
+     4174.608,
+     3354.48
+    ],
+    "stripes": {
+     "M8": 2002,
+     "M9": 2492,
+     "pitch_by_kind": {
+      "channel": 9.0914,
+      "field": 3.3495,
+      "hub": 9.0914,
+      "svc": 2.7669
+     },
+     "vias": 2494492,
+     "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "field",
+    "window_um": [
+     5984.064,
+     9570.96,
+     10158.672,
+     12925.44
+    ]
+   },
+   "pass": false,
+   "pass_interior": true,
+   "peak_rss_mb": 13713,
+   "rail_to_rail_interior_mv": 26.04,
+   "rail_to_rail_worst_mv": 39.3,
+   "wall": "6:11.44",
+   "worst_interior_mv": {
+    "VDD": 12.91,
+    "VSS": 13.13
+   },
+   "worst_mv": {
+    "VDD": 12.9,
+    "VSS": 26.4
+   },
+   "worst_mv_by_region": {
+    "field": {
+     "VDD": 12.91,
+     "VDD_interior": 12.91,
+     "VSS": 26.38,
+     "VSS_interior": 13.13
+    }
+   }
+  },
+  "field_bf": {
+   "avg_mv": {
+    "VDD": 2.42,
+    "VSS": 2.69
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "align": true,
+    "budget_mv": 35.0,
+    "bump_sites": 2300,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only",
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 0,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "die": "layer1",
+    "loads": 23055,
+    "peak": true,
+    "power_w": 11.825,
+    "power_w_by_kind": {
+     "bf": 3.6773,
+     "cfg": 0.7995,
+     "cfifo": 0.0156,
+     "hub": 1.3893,
+     "node": 1.3371,
+     "q": 4.4354,
+     "rly": 0.0829,
+     "rstg": 0.0007,
+     "seq": 0.0061,
+     "sstn": 0.0275,
+     "stn": 0.0536
+    },
+    "power_w_per_mm2": 1.281,
+    "scale": 1.0,
+    "signal_bumps_phy": true,
+    "size_um": [
+     3182.896,
+     2900.24
+    ],
+    "stripes": {
+     "M8": 2368,
+     "M9": 1719,
+     "pitch_by_kind": {
+      "channel": 9.0914,
+      "field": 3.3495,
+      "hub": 9.0914,
+      "svc": 2.7669
+     },
+     "vias": 1429265,
+     "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "field_bf",
+    "window_um": [
+     11241.504,
+     3613.68,
+     14424.4,
+     6513.92
+    ]
+   },
+   "pass": false,
+   "pass_interior": true,
+   "peak_rss_mb": 7975,
+   "rail_to_rail_interior_mv": 25.71,
+   "rail_to_rail_worst_mv": 36.6,
+   "wall": "3:14.69",
+   "worst_interior_mv": {
+    "VDD": 13.18,
+    "VSS": 12.53
+   },
+   "worst_mv": {
+    "VDD": 13.2,
+    "VSS": 23.4
+   },
+   "worst_mv_by_region": {
+    "field": {
+     "VDD": 13.18,
+     "VDD_interior": 13.18,
+     "VSS": 21.8,
+     "VSS_interior": 12.53
+    },
+    "hub": {
+     "VDD": 9.61,
+     "VDD_interior": 9.61,
+     "VSS": 23.38,
+     "VSS_interior": 10.22
+    }
+   }
+  },
+  "spine": {
+   "avg_mv": {
+    "VDD": 0.54,
+    "VSS": 0.6
+   },
+   "budget_mv": 35.0,
+   "case": "c",
+   "exit": 0,
+   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)",
+   "meta": {
+    "align": true,
+    "budget_mv": 35.0,
+    "bump_sites": 4092,
+    "bumps": {
+     "array_pitch_um": 45.0,
+     "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only",
+     "size_um": 20.0,
+     "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 0,
+    "coverage": {
+     "channel": 0.0439,
+     "field": 0.128,
+     "hub": 0.044,
+     "svc": 0.1639
+    },
+    "die": "layer1",
+    "loads": 41160,
+    "peak": true,
+    "power_w": 2.6052,
+    "power_w_by_kind": {
+     "hend": 0.1857,
+     "hstn": 0.2727,
+     "hub": 1.6998,
+     "stn": 0.447
+    },
+    "power_w_per_mm2": 0.1577,
+    "scale": 1.0,
+    "signal_bumps_phy": true,
+    "size_um": [
+     5897.632,
+     2801.84
+    ],
+    "stripes": {
+     "M8": 3960,
+     "M9": 1597,
+     "pitch_by_kind": {
+      "channel": 9.0914,
+      "field": 3.3495,
+      "hub": 9.0914,
+      "svc": 2.7669
+     },
+     "vias": 742676,
+     "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "spine",
+    "window_um": [
+     13542.768,
+     11599.2,
+     19440.4,
+     14401.04
+    ]
+   },
+   "pass": false,
+   "pass_interior": true,
+   "peak_rss_mb": 5227,
+   "rail_to_rail_interior_mv": 30.94,
+   "rail_to_rail_worst_mv": 38.0,
+   "wall": "1:25.25",
+   "worst_interior_mv": {
+    "VDD": 14.05,
+    "VSS": 16.89
+   },
+   "worst_mv": {
+    "VDD": 14.1,
+    "VSS": 23.9
+   },
+   "worst_mv_by_region": {
+    "field": {
+     "VDD": 6.13,
+     "VDD_interior": 6.13,
+     "VSS": 9.29,
+     "VSS_interior": 4.98
+    },
+    "hub": {
+     "VDD": 14.05,
+     "VDD_interior": 14.05,
+     "VSS": 23.93,
+     "VSS_interior": 16.89
+    }
+   }
+  }
+ },
+ "schema": "opentallas.dsrom-s81-fulldie.feasibility.v1",
+ "tool_sha256": "166fbc0c9d4645c36b95caaf22bb3186a7c78b7296ea9d8cad4f21f7102266cc"
+}
