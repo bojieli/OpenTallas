@@ -17,13 +17,13 @@ module hfd_index_q_b3 (
   always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
   wire rn = rst_s[1];
   wire kpv; wire [511:0] kpq;
-  ot_svc_vpipe #(.W(512), .N(4)) u_kp (.ck(c), .rst_n(rn), .v(kin[0]), .d(kin[512:1]), .qv(kpv), .q(kpq));
+  ot_svc_vpipe #(.W(512), .N(5)) u_kp (.ck(c), .rst_n(rn), .v(kin[0]), .d(kin[512:1]), .qv(kpv), .q(kpq));
   assign kout = {kpq, kpv};
   wire u_a3_v; wire [527:0] u_a3_q;
-  ot_svc_vpipe #(.W(528), .N(4)) u_a3 (.ck(c), .rst_n(rn), .v(a3i[0]), .d(a3i[528:1]), .qv(u_a3_v), .q(u_a3_q));
+  ot_svc_vpipe #(.W(528), .N(5)) u_a3 (.ck(c), .rst_n(rn), .v(a3i[0]), .d(a3i[528:1]), .qv(u_a3_v), .q(u_a3_q));
   assign a3o = {u_a3_q, u_a3_v};
   wire a2v; wire [527:0] a2q;
-  ot_svc_vpipe #(.W(528), .N(4)) u_a2 (.ck(c), .rst_n(rn), .v(a2[0]), .d(a2[528:1]), .qv(a2v), .q(a2q));
+  ot_svc_vpipe #(.W(528), .N(5)) u_a2 (.ck(c), .rst_n(rn), .v(a2[0]), .d(a2[528:1]), .qv(a2v), .q(a2q));
   assign a2o = {a2q, a2v};
 endmodule
 `default_nettype wire
