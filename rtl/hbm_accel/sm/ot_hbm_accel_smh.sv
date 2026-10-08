@@ -586,7 +586,27 @@ module ot_hbm_accel_smh_csnk #(
     wire [AW-1:0] wp1 = (wp == DEPTH - 1) ? {AW{1'b0}} : wp + 1'b1;
     wire [AW-1:0] rp2 = (rp1 == DEPTH - 1) ? {AW{1'b0}} : rp1 + 1'b1;
     wire          land_head;
-    generate if (FASTV != 0) begin : g_fv
+    generate if (FASTV >= 2) begin : g_fv2
+        // FASTV 2 (m3i): every compare precomputed from registers, f_v / pop only select among them (one mux level
+        // after the face-landed f_v: m3g front_s f_v -> e0 +2.13 ps / 5 levels after a long face wire)
+        reg mv, e0, e1;
+        wire [AW-1:0] rp2_ = rp2;
+        wire eq_w_r = (wp == rp), eq_w_r1 = (wp == rp1), eq_w_r2 = (wp == rp2_);
+        wire eq_w1_r = (wp1 == rp), eq_w1_r1 = (wp1 == rp1), eq_w1_r2 = (wp1 == rp2_);
+        wire ne1 = (cnt != 1);
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin mv <= 1'b0; e0 <= 1'b1; e1 <= (DEPTH == 1); end
+            else begin
+                case ({f_v, pop})
+                    2'b00: begin mv <= mv;  e0 <= eq_w_r;   e1 <= eq_w_r1;  end
+                    2'b01: begin mv <= ne1; e0 <= eq_w_r1;  e1 <= eq_w_r2;  end
+                    2'b10: begin mv <= 1'b1; e0 <= eq_w1_r;  e1 <= eq_w1_r1; end
+                    default: begin mv <= mv; e0 <= eq_w1_r1; e1 <= eq_w1_r2; end
+                endcase
+            end
+        assign m_valid = mv;
+        assign land_head = f_v && (pop ? e1 : e0);
+    end else if (FASTV != 0) begin : g_fv
         reg mv, e0, e1;
         wire [CW-1:0] cnt_n = cnt + f_v - pop;
         wire [AW-1:0] wp_n  = f_v ? wp1 : wp;
@@ -1315,7 +1335,7 @@ module ot_hbm_accel_smh_front_s #(
         .s_valid(d_valid), .s_ready(d_ready), .s_data({d_base, d_lines}), .o_v(fd_v), .o_d(fd_d), .i_ret(fd_ret));
     // request channel sink (landing at the north face) and m2's registered skid beside the pins
     wire o_req_v, o_req_ready; wire [41:0] o_req_d;
-    ot_hbm_accel_smh_csnk #(.W(42), .PK(1), .PRK(PIH - 1), .DEPTH(CHD), .FASTV(1)) u_rch (.clk(clk), .rst_n(rst_n),
+    ot_hbm_accel_smh_csnk #(.W(42), .PK(1), .PRK(PIH - 1), .DEPTH(CHD), .FASTV(2)) u_rch (.clk(clk), .rst_n(rst_n),
         .i_v(fq_v), .i_d(fq_d), .o_ret(fq_ret), .m_valid(o_req_v), .m_ready(o_req_ready), .m_data(o_req_d));
     generate if (REQCR != 0) begin : g_rc
         ot_hbm_accel_smh_reqrl #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
