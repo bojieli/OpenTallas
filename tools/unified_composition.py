@@ -927,6 +927,25 @@ def die_level_evidence():
     return E
 
 
+LB_FILE = "results/arch/unified_composition_20261007/link_budget_restatus_20261007.json"
+
+
+def _link_budget_summary():
+    """Consistent die-link budget applied to every closed block job (coordinator decision 2026-10-07)."""
+    d = _J(LB_FILE)
+    by = {}
+    for r in d["rows"]:
+        by.setdefault(r["verdict"], []).append(dict(job=r["job"], block=r["block"], closed_ss_ps=r["closed_ss_ps"],
+                                                    link_budget_ss_ps=r.get("period_correction", r["link_budget_ss_ps"])))
+    return dict(rule=d["rule"], method=d["method"], record=src(LB_FILE), counts=d["counts"],
+                holds=by.get("HOLDS", []),
+                revoked=dict(label="revoked: link budget", jobs=by.get("REVOKED", [])),
+                unverified=dict(label="unverified (needs a per-link model)", reason=d["unchecked_reason"], jobs=by.get("NOT CHECKED", [])),
+                requeued=d["requeued"],
+                consequence="only the HOLDS jobs count as closed blocks; revoked and unverified jobs carry no closure credit "
+                            "until their re-routes re-close under the consistent budget")
+
+
 def _pins(rec):
     """sha256 of every cited source file present in this tree (immutable evidence pin)."""
     files = set()
@@ -969,6 +988,7 @@ def ledger():
                      "cost that is not bound and is never summed. A numerical component PASS is not physical adoption."),
                targets=dict(qwen_rom=q, ds_rom=d, hbm_ds=h), ratios=ratios, no_ecc_inventory=no_ecc(), stale_claims=STALE,
                die_level_evidence=die_level_evidence(),
+               block_signoff_link_budget=_link_budget_summary(),
                established_contracts_rtl_bench=[dict(id=i, target=tg, contract=nm, ledger_line=ln, evidence=(src(ev) if ev else
                                                      next(x for x in dict(qwen_rom=q, ds_rom=d, hbm_ds=h)[tg]["lines"] if x["id"] == ln)["source"]),
                                                      bench=bn, level="RTL + bench (exact, negatives detected)",

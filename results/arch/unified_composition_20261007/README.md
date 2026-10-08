@@ -80,6 +80,14 @@ Current state:
 - IR has committed records on all three, on earlier frames.
 - The CTS plan is done for DS and HBM, on earlier geometries, and missing for Qwen.
 
+**Block sign-off under the consistent die-link budget (coordinator decision 2026-10-07).** The rule is sender share + link + receiver share + 150 ps skew ≤ T − 60, which gives 254.7 ps a side at 833.333 ps. It was applied to all 54 closed loop jobs, by SS re-STA on their existing ODBs (setup-triage, 387a4d2ac). The record is `link_budget_restatus_20261007.json`, and the ledger summary is `block_signoff_link_budget`:
+
+- **10 hold** and still count as closed.
+- **30 are revoked: link budget**, listed with their new slack.
+- **14 forwarded-clock stations are unverified.** They need a per-link model, and the common-clock split does not apply to them.
+
+Revoked and unverified jobs carry no closure credit. 24 `-lbc` re-routes, 14 `-cgfix` and 2 `-lbpin` are queued to re-close them.
+
 DS ROM / HBM, per user, both sides candidates:
 
 - On the published 85-stage geometry: 0.90× AR and 1.25× MTP.
