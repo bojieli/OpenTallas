@@ -1,0 +1,77 @@
+{
+ "schema": "opentallas.qwen_closure_cost_ledger.v0",
+ "base_cycles_per_token": 194226,
+ "base_source": "results/arch/measured_scoreboard/README.md (Qwen ROM AR, 194,226 cycles at 1.2 GHz)",
+ "assumptions": {
+  "me_ops_per_token": 325,
+  "note": "upper bounds: every added cycle assumed exposed on every op / crossing; ME op count 9/layer x 36 + head is an assumption, to be replaced by the measured token trace"
+ },
+ "status": "CANDIDATES (nothing adopted until the closure loop CLOSES the route and the exactness benches pass)",
+ "items": [
+  {
+   "item": "tile_rom_pipe",
+   "cost": "qfd_tile/_e ROM_PIPE (rp2 = ROM_ARELAY 2; rp1 = 1): ROM/KV/x memory return +ROM_ARELAY+2 cycles per ME op fill",
+   "cycles_per_token_upper_bound": 1300,
+   "ar_pct_upper_bound": -0.665,
+   "cum_pct": -0.665
+  },
+  {
+   "item": "spine_lane_ostn",
+   "cost": "spine lane y station +1 per tree traversal (one per ME op)",
+   "cycles_per_token_upper_bound": 325,
+   "ar_pct_upper_bound": -0.167,
+   "cum_pct": -0.83
+  },
+  {
+   "item": "spine_lane_credit_ps",
+   "cost": "lane credit shell +3 per transaction (one per ME op)",
+   "cycles_per_token_upper_bound": 975,
+   "ar_pct_upper_bound": -0.499,
+   "cum_pct": -1.321
+  },
+  {
+   "item": "hub_ps",
+   "cost": "hub ar +1, link tx +1 (per stack-link word path; 2 all-reduce link legs a layer)",
+   "cycles_per_token_upper_bound": 144,
+   "ar_pct_upper_bound": -0.074,
+   "cum_pct": -1.393
+  },
+  {
+   "item": "hub_cdcp",
+   "cost": "hub link receive CDC PIPE +2 fck +1 ck a crossing",
+   "cycles_per_token_upper_bound": 216,
+   "ar_pct_upper_bound": -0.111,
+   "cum_pct": -1.501
+  },
+  {
+   "item": "io_xfifo_p",
+   "cost": "IO CDC channels: +1 wclk relay, +1 wclk pointer publication, +1 rclk station per crossing (2 crossings an all-reduce)",
+   "cycles_per_token_upper_bound": 432,
+   "ar_pct_upper_bound": -0.222,
+   "cum_pct": -1.716
+  },
+  {
+   "item": "io_collective_pr",
+   "cost": "collective: local word +1 cycle to its FIFO head per all-reduce",
+   "cycles_per_token_upper_bound": 72,
+   "ar_pct_upper_bound": -0.037,
+   "cum_pct": -1.752
+  },
+  {
+   "item": "ctrl_hbm_domain",
+   "cost": "controller masters in their die clock domain hbm_976p6 (1.024 ns) per the die clock plan: no cycle change",
+   "cycles_per_token_upper_bound": 0,
+   "ar_pct_upper_bound": 0.0,
+   "cum_pct": -1.752
+  },
+  {
+   "item": "cdc_m2",
+   "cost": "STREAM4 CDC reset release +1 edge: no data-path cycle",
+   "cycles_per_token_upper_bound": 0,
+   "ar_pct_upper_bound": 0.0,
+   "cum_pct": -1.752
+  }
+ ],
+ "total_cycles_upper_bound": 3464,
+ "total_ar_pct_upper_bound": -1.752
+}

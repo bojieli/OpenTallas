@@ -7,7 +7,8 @@
 // NEG = 1 expects lo one cycle after li (must fail).
 `timescale 1ns/1ps
 module ot_qwen_rom_tile_w12 #(parameter integer NW = 18, GT = 6144, SMIN = 6, CODE_BANKS = 10, KV_VB = 262144,
-    KV_NH = 4, MEM_EXTRA = 0, ACC_LAT = 5, FAST_ISSUE = 0, KV_PREP = 0, MUL_LAT = 5, TREE_LAT = 3) (
+    KV_NH = 4, MEM_EXTRA = 0, ACC_LAT = 5, FAST_ISSUE = 0, KV_PREP = 0, MUL_LAT = 5, TREE_LAT = 3, ROM_PIPE = 0, ROM_ARELAY = 1,
+    LRST = 0, BAW = 12) (
     input wire clk, input wire rst_n, input wire [15:0] tile_id, input wire ib_go, input wire [3*NW+13*24+13-1:0] ib,
     input wire [127:0] xl, output wire [511:0] t_out, output wire t_vout, input wire [511:0] n_a, input wire [511:0] n_b,
     input wire n_va, output wire [511:0] n_y, output wire n_vy, output wire fault,
