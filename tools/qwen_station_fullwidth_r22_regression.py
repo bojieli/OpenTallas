@@ -43,7 +43,7 @@ def extracted():
     ''' + source_decls + '\nassign {' + ','.join(fields) + '} = word;\n' + packing + '\n' + delays + '\nendmodule\n'
     text += '''module sink_cut(input wire clk,rst_n,ib_go,
       input wire[378:0] ib, input wire[127:0] xl, output wire[507:0] observed);
-      localparam NW=18,AW=24,TG=4,IREG=1,MEM_EXTRA=0;
+      localparam NW=18,AW=24,TG=4,IREG=1,MEM_EXTRA=0,ROM_PIPE=0,ROM_ARELAY=1,CODE_BANKS=5;
     ''' + consumer + f'\nassign observed={{xl_i,go_i,{reverse}}};\nendmodule\n'
     return text, dict(source_slice_sha256=sha(packing+'\n'+delays), consumer_slice_sha256=sha(consumer))
 
@@ -65,9 +65,9 @@ module tb;
     wire[507:0] b;
     wire[(TAP?508:1)-1:0] t;
     wire[(SPLIT?508:1)-1:0] c;
-    wire af;
+    wire af,afn;
     ot_qwen_die_fullwidth_station_r22 #(.ENABLE_FULLWIDTH(ENABLE),.TAP(TAP),.SPLIT(SPLIT)) station
-       (clk,rst_n,changed,b,t,c,bf,(NEG==4)?1'b0:tf,cf,af);
+       (clk,rst_n,changed,b,t,c,bf,(NEG==4)?1'b0:tf,cf,af,~bf,(NEG==4)?1'b1:(NEG==6)?tf:~tf,~cf,afn);   // NEG 6: t rail pair not complementary -> fault
     wire[507:0] expected;
     ot_hdc_delay #(.W(508),.D(ENABLE)) reference(clk,rst_n,src,expected);
     wire[507:0] got,refgot;
@@ -89,7 +89,7 @@ module tb;
                 checked=checked+1;
                 if(b !== expected || (TAP && t !== expected) || (SPLIT && c !== expected)) bad=bad+1;
                 if(got !== refgot) bad=bad+1;
-                if(((NEG==5)?af_prev:af) !== fault_expected) bad=bad+1;
+                if(((NEG==5)?af_prev:(af | ~afn)) !== fault_expected) bad=bad+1;
             end
             if(got[379]) seen=seen+1;
             // Random payload on every edge includes x motion without go;
@@ -122,7 +122,7 @@ def run(out):
     with tempfile.TemporaryDirectory(prefix='qwen-station-r22-') as tmp:
         for enabled in [0,1]:
             for tap,split in [(0,0),(1,0),(0,1),(1,1)]:
-                for neg in ([0,1,2,3,4,5] if enabled and tap and split else [0]):
+                for neg in ([0,1,2,3,4,5,6] if enabled and tap and split else [0]):
                     key=f'e{enabled}_t{tap}_s{split}_n{neg}'
                     exe=Path(tmp)/key
                     command=['iverilog','-g2012','-s','tb','-o',str(exe),
@@ -141,7 +141,7 @@ def run(out):
         source_sha256={p:sha((ROOT/p).read_text()) for p in [SRC,DST,RTL,DELAY,
             'tools/qwen_station_fullwidth_r22_regression.py','tools/uarch_model_qwen_station_r22.py']},
         extracted_slices=slice_hashes, transport_slices_sha256=sha(fragment), bench_sha256=sha(BENCH),
-        model_record_sha256=sha((ROOT/'results/uarch/qwen_station_fullwidth_r22_20261007/model_r2.json').read_text()),
+        model_record_sha256=sha((ROOT/'results/uarch/qwen_station_fullwidth_r22_20261007/model_dual_fault_r1.json').read_text()),
         scope='Actual producer pack/go-admission/delay and tile input-register/unpack slices,508-bit station all branch shapes;2091 cycle comparisons per case; no arithmetic substitutes instantiated',
         excluded=['VM request/split scheduling','arithmetic and tile fault production','actual result retirement/publication guard',
                   'complete token','die geometry','mutable fault protection','physical timing'],
