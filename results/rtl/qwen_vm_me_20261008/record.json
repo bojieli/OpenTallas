@@ -1,0 +1,116 @@
+{
+ "schema": "opentallas.qwen-vm-me.v1",
+ "stream": "qwen-vm-me 2026-10-08",
+ "branch": "claude/qwen-vm-me-20261007",
+ "base": "claude/qwen-rtl-finish-20261007 @ 67d3b042e",
+ "masters": {
+  "qfd_sp_vector_memory_bv": {
+   "rtl": "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv ot_qfd_sp_vector_memory_bv",
+   "structure": "copy 0 = qwen-rtl-finish's 64 row banks x 2 ot_sram_1r1w_256x256 with the parallel ME x service (a beat now reads only the banks of its tuple's rows) and the row read port; 3 SU replica copies (one per operand va / vb / vc), each 16 row banks x 2 ot_sram_1r1w_1024x256 (695 of 1,024 lines used); writes broadcast to every copy at the same edge through one per-bank write register set; per bank: SU lane rows first (<= 5 consecutive rows, distinct banks), then the skid queues (SQD 2) of the engine-edge maxima row, the reducer element and the sequencer row (base commit order), then the merge's result row; the 6:1 ME result merge (ot_qfd_res_merge, CRB-deep input FIFO a band) inside; land_cnt (landed result bursts) to the tree top, me_ok (AND of the band serializers' rok) to the die's me_mem_ok",
+   "su_ports": "per operand a descriptor {re0, re1, a0, a1} (lane 0 / lane 1 strobe and address; stride a1 - a0 in {0, 1}, the Qwen program's VM operand strides, else w_fault); all SW lanes answered at the FIXED latency 1 + VL, VL = 7 (base 1); lane writes {mask, a0, a1, data} (stride 0: highest masked lane wins); reducer element write",
+   "exactness_argument": "uniform latency: every SU read and every write presented at edge t reaches the macros at edge t + 4 (descriptor register, broadcast register, per-bank register beside the macro), and a 1R1W macro reads the old word on a same-edge write, so an SU read sees exactly the writes presented before it (the base's registered-read / same-edge-write order); a skid entry that misses its edge is LATE and any read of its row or other write onto its row is w_hazard (the contract); the x path keeps qwen-rtl-finish's x_hazard over every landing row; ME result rows land at a variable time and the tree top counts LANDED bursts",
+   "benches": "rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv (every port at once against the behavioural VM semantics + 6 band serializers under the engine stall loop): PASS SEED 5 (30,000 cycles: 45,333 SU operand reads, 6,994 row reads, 2,072 x tuples, 1,213 bursts, 1,205 land steps), SEED 3 (40,000), SEED 9 (60,000, RS 10), NRB 64 / SW 64 / ELEMS 65,536 (20,000: 30,303 SU reads, 1,346 tuples, 821 bursts); mutants FAIL: SU lane select (MUT 1: 44,846 SU answers wrong), x shift (MUT 2), serializer mask swap (SMUT 1: land 40,948 / image 69)",
+   "cost": "SU operand reads at 1 + 7 edges (base 1, ab 1 + 4): the SU element latency is ML = 7 (+3 over ab); a result burst takes max(rows, 1) merge cycles at one row a cycle; the engine pauses (me_mem_ok) when a band store has < RS + 2 bursts of room",
+   "routes": [
+    "qfd_sp_vector_memory_bv (777.6 x 6220.8, PD 0.50)",
+    "qfd_sp_vector_memory_bv_t (777.6 x 7776, PD 0.42)"
+   ]
+  },
+  "qfd_sp_su64_sfu_bv": {
+   "rtl": "rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv ot_qfd_sp_su64_sfu_bv",
+   "structure": "ot_qfd_sp_su64_sfu_ab with the banked-VM ports: descriptors straight from the lane 0 / lane 1 registers (no logic before the pins), the memory's answers delayed ML - VL, the constant ROM's ML - (IS + OS + CRX), the embedding decode ML, lanes at ML = max(IS + OS + CRX, VL) = 7; a lane that did not read HOLDS its previous answer (3 x SW x 32 flops: the base port's registered, held-when-not-read contract; without it the lane datapath saw different don't-care values and an op's first element after a partial vector differed)",
+   "benches": "rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv (master ON the banked VM vs bare ot_hdc_vstream + ot_qfd_su_embed on the behavioural VM; cross-op RAW through the banks): PASS SW 8 IS = OS = 1 CRX 2 (120 ops; va/vb/vc/crom/vm/red/kv events 980/663/745/753/299/214/328), PASS IS = OS = 2 CRX 3 (120 ops); mutants FAIL: constant-ROM bit (MUT 1), VM lane select (VMUT 1)",
+   "routes": [
+    "qfd_sp_su64_sfu_bv (IS=OS=1, 777.6 x 2058.48, 0.833 ns)",
+    "qfd_sp_su64_sfu_bv_s2 (IS=OS=2, PD 0.45)"
+   ],
+   "replaces_in_r21m": "qfd_sp_su64_sfu_ab"
+  },
+  "qfd_sp_res_ser": {
+   "rtl": "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv ot_qfd_res_ser (+ ot_qfd_res_merge inside the VM)",
+   "structure": "per band: the 8 result slots (2 port elements x PQ 4) captured on engine edges (me_en sampling: a paused engine's held outputs are taken once) into 8 x ot_sram_1r1w_64x512 (DB 64 bursts) + row / mask / header flops; one beat {row, mask, data, end, nul} a cycle in slot order under CRB credits (16) to the VM merge, a NUL beat for a burst with no row in the band; rok (registered) while >= RS + 2 bursts of room (RS 40: the stall loop to the die's me_mem_ok and back)",
+   "benches": "tb_qfd_vm_bv_ports (above, 6 serializers) and rtl/test/qwen_vm_me/tb_qfd_spine_landed.sv",
+   "routes": [
+    "qfd_sp_res_ser (777.6 x 518.4, PD 0.50)",
+    "qfd_sp_res_ser_t (777.6 x 691.2, PD 0.40)"
+   ]
+  },
+  "qfd_sp_tree_top_l": {
+   "rtl": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv ot_qfd_sp_tree_top LANDED = 1 (land_cnt input, IS-stationed); ot_qwen_me_spctl_w12 LANDED (rtl/hdc/ot_qwen_me_spine_h_w12.sv, default 0 = base) counts landed bursts for progress and holds idle until every emitted burst landed; ot_qwen_me_spport_w12 gains o_ov (the burst marker aligned with o_we, additive)",
+   "benches": "rtl/test/qwen_vm_me/tb_qfd_spine_landed.sv: ot_qwen_me_spine_h_w12 writing a behavioural memory vs ot_qfd_spine_part LANDED + 3 band serializers + the banked VM merge, one gated engine clock driven by the stall loop: PASS (14,229 engine edges, 306 ops, 4,816 bursts all landed, 13 idle-rise checks: every result / maxima row equal to the reference, progress never ahead, lockstep of every other output, o_ov aligned); SMUT FAIL; tb_qfd_tree_top_lockstep (LANDED 0) unchanged: 30,000 cycles, 817 ops, 0 mismatching cycles",
+   "routes": [
+    "qfd_sp_tree_top_l (IS=OS=1)",
+    "qfd_sp_tree_top_l_s2 (IS=OS=2, PD 0.45)"
+   ],
+   "replaces_in_r21m": "qfd_sp_tree_top"
+  }
+ },
+ "die": {
+  "recipe": "die_top_lint --qwen-recipe r21m = r21f + su_core_clock + vm_me (tools/qwen_rom_fulldie_b3r2.py _repack_r21m / _vm_me; tools/qwen_rom_fulldie.py XCOL)",
+  "floorplan": "a third spine column (777.6 um) M between the vertical link channel and the E column: W | VCH | M | E.  The outer columns keep the band-half slabs beside their tile arrays (no block word crosses the spine); M holds the banked VM (777.6 x 6,220.8, centred on the hub) with the stream unit abutted below it (descriptor bus, 2,367 + 6,144 M5 pin pairs, no stations) and the sequencer below that; each band's W primary slab is a stack: the band's result serializer (777.6 x 518.4) abutted below it (rq 4,425 b), the band-lane block (777.6 x 1,131.84) abutted above it (tw / ty 4,096 b each)",
+  "area": {
+   "r21f": {
+    "die_um": [
+     25037.856,
+     32801.76
+    ],
+    "die_mm2": 821.286,
+    "margin_mm2": 36.714,
+    "instance_mm2": 686.59,
+    "die_utilisation": 0.836,
+    "spine_columns": 2,
+    "spine_block_mm2": 41.06,
+    "spine_column_mm2": 48.21,
+    "spine_utilisation": 0.8518,
+    "relays": 9283,
+    "instances": 12617,
+    "buses": 17878
+   },
+   "r21m": {
+    "die_um": [
+     25815.456,
+     32801.76
+    ],
+    "die_mm2": 846.792,
+    "margin_mm2": 11.208,
+    "instance_mm2": 703.24,
+    "die_utilisation": 0.8305,
+    "spine_columns": 3,
+    "spine_block_mm2": 52.88,
+    "spine_column_mm2": 72.32,
+    "spine_utilisation": 0.7312,
+    "relays": 11748,
+    "instances": 15098,
+    "buses": 20403
+   }
+  },
+  "checks": {
+   "r21m_check": "results/rtl/qwen_vm_me_20261008/r21m_check.json: legality 0 overlaps / 0 outside of 15098 instances; die 846.792 mm2 <= 858 (margin 11.2); spine utilisation 73.1 % over three columns (r21f 85.2 % over two); SU-VM descriptor bus 2,367 + 6,144 pins, 0 x-mismatch / 0 not facing / 0 shared tracks, gap 0.024 um; 6 serializer / slab / band-lane stacks abutted (0.024 um)",
+   "lint": "results/rtl/qwen_vm_me_20261008/die_top_lint_r21m.json: 15098 instances, 20403 buses, 8773596 net bits; pin_fit_errors 0, connectivity findings 0, unbound real pins 0, missing pins 0, abstract ports without net 0, unresolved modules 0; face_away 1 (a relay of the r17 fragment word pfrag_0: its a face looks N, its upstream point lies 657 um S -- the generic relay orientation, not an r21m block); abut_without_channel 34 (tile array against a spine block: r21f 24, + the band-lane blocks / W serializers)",
+   "relays": "r21f 9,283 -> r21m 11748 (the result words, the band-lane words to the tree top and the VM words now cross the vertical channel)"
+  },
+  "tree_lanes": "the qwen-rtl-finish partition's 16 monolithic lanes (ot_qwen_spine_lane over all 48 level-TCUT positions) do not fit this die: 16 x 6 bands x 2 x 256 b of words across the 31 mm spine with no wire-stage budget between lanes and port elements (TREE_LAT hold only); the first r21m attempt with 16 central lane instances failed relay placement (no free spot within 1.4 mm).  r21m places the lanes per band (levels TCUT+1..TCUT+3 of the band's 8 positions, 16 lanes) stacked on the band slab; the tree top holds the levels above.  The per-band lane RTL is OPEN.",
+  "port_elements": "the band slab halves (r17: 8 routed port-group elements each) host the W12 port elements; the slab reservation is 96 port groups against the RTL's 48 result ports (OPEN, unchanged from r21)"
+ },
+ "open": [
+  "per-band tree-lane RTL (qfd_sp_band_lanes): cut ot_qwen_spine_lane by position range (levels TCUT+1..TCUT+3 in the band) and move levels TCUT+4.. into the tree top; prove against ot_qwen_me_spine_h_w12 as tb_qfd_tree_top_lockstep does",
+  "yosys elaboration of ot_qfd_sp_vector_memory_bv is slow (hierarchy did not finish in 600 s at a reduced configuration on localhost); the route jobs will show the synthesis time (the dynamic part-selects of the late-row hazard checks and the per-element formation loops are the suspects)",
+  "stall-loop RS and credit CRB per band are die parameters: RS 40 / DB 64 / CRB 16 in the route configs cover <= ~35 relay hops each way; the die integration must set them from the r21m relay counts",
+  "full Qwen token bench on the banked VM + result path: not run (component benches only)"
+ ],
+ "jobs": [
+  "qfd_sp_vector_memory_bv-e0370c82ctt",
+  "qfd_sp_vector_memory_bv_t-e0370c82ctt",
+  "qfd_sp_su64_sfu_bv-e0370c82ctt",
+  "qfd_sp_su64_sfu_bv_s2-e0370c82ctt",
+  "qfd_sp_res_ser-e0370c82ctt",
+  "qfd_sp_res_ser_t-e0370c82ctt",
+  "qfd_sp_tree_top_l-e0370c82ctt",
+  "qfd_sp_tree_top_l_s2-e0370c82ctt"
+ ],
+ "cost": {
+  "su_element": "+3 edges per SU element (ML 7 vs ab 4: the banked VM answers at 1 + 7)",
+  "result_path": "a result burst occupies the merge max(rows, 1) cycles (one row a cycle; a burst of all 48 rows = 48 cycles); the engine pauses on me_mem_ok when a band store has < RS + 2 bursts of room; progress / idle of an ME op wait for its rows to land",
+  "die": "+25.5 mm2 die area (821.3 -> 846.8 mm2, the third spine column); not priced into tok/s here (directive: no pricing passes)"
+ }
+}

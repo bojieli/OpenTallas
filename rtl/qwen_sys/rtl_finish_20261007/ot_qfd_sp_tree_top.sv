@@ -57,10 +57,12 @@ module ot_qfd_sp_tree_top #(
     parameter integer SCALE_LAT = 5,
     parameter integer IS = 1,
     parameter integer OS = 1,
+    parameter integer LANDED = 0,          // qwen-vm-me: progress / idle on the vector memory's landed result bursts
     parameter integer MUT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input  wire [15:0]       land_cnt,     // LANDED: the memory's landed-burst count (ot_qfd_res_merge), IS-stationed
     // issue (from the sequencer)
     input  wire              go,
     output wire              ready,
@@ -128,7 +130,9 @@ module ot_qfd_sp_tree_top #(
     wire [W-1:0] trf_q;
     wire [NPE*CW-1:0] pam_q;
     wire [NPE-1:0] pf_q;
-    ot_hdc_delay #(.W(IBW + NPE*CW), .D(IS)) u_id (.clk(clk), .rst_n(rst_n), .d({ib, p_am}), .q({ib_q, pam_q}));
+    wire [15:0] land_q;
+    ot_hdc_delay #(.W(IBW + NPE*CW + 16), .D(IS)) u_id (.clk(clk), .rst_n(rst_n), .d({ib, p_am, land_cnt}),
+        .q({ib_q, pam_q, land_q}));
     ot_hdc_delay #(.W(3 + W + NPE), .D(IS), .RESET(1)) u_is (.clk(clk), .rst_n(rst_n),
         .d({go, fab_fault, x_rdy, tr_fault, p_fault}), .q({go_q, fab_q, xr_q, trf_q, pf_q}));
     wire [NW-1:0] q_nout, q_tiles, q_k;
@@ -154,8 +158,8 @@ module ot_qfd_sp_tree_top #(
     ot_qwen_me_spctl_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT),
         .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD(XD), .XVM(XVM), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL),
         .PQ(PQ), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP),
-        .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
-        .clk(clk), .rst_n(rs), .go(go_q), .ready(c_ready), .idle(c_idle),
+        .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT), .LANDED(LANDED)) u_ctl (
+        .clk(clk), .rst_n(rs), .go(go_q), .ready(c_ready), .idle(c_idle), .land_cnt(land_q),
         .i_nout(q_nout), .i_tiles(q_tiles), .i_k(q_k), .i_wsrc(q_wsrc),
         .i_wbase(q_wbase), .i_ts(q_ts), .i_ks(q_ks), .i_js(q_js),
         .i_xbase(q_xbase), .i_xks(q_xks), .i_xjs(q_xjs), .i_xcs(q_xcs),
@@ -263,10 +267,12 @@ module ot_qfd_spine_part #(
     parameter integer TREE_LAT = 3,
     parameter integer PQ = 4,
     parameter integer SCALE_LAT = 5,
+    parameter integer LANDED = 0,          // qwen-vm-me: the tree top counts landed result bursts (land_cnt)
     parameter integer MUT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input  wire [15:0]       land_cnt,
     input  wire              go,
     output wire              ready,
     output wire              idle,
@@ -337,8 +343,8 @@ module ot_qfd_spine_part #(
     ot_qfd_sp_tree_top #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
         .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD(XD), .XVM(XVM), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
-        .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .MUT(MUT)) u_tt (
-        .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
+        .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+        .clk(clk), .rst_n(rst_n), .land_cnt(land_cnt), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
         .i_xbase(i_xbase), .i_xks(i_xks), .i_xjs(i_xjs), .i_xcs(i_xcs),
