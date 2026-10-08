@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_router_r23_kneg_94fab53cc_a/routes/hbm_router_r23_kneg_94fab53cc_a_cal/work/orfs/results/asap7/opentallas_hfd_router_asap7_hv_hbm_router_r23_kneg_94fab53cc_a_cal/base",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_router_r23_kneg_94fab53cc_b/routes/hbm_router_r23_kneg_94fab53cc_b_cal/work/orfs/results/asap7/opentallas_hfd_router_asap7_hv_hbm_router_r23_kneg_94fab53cc_b_cal/base",
  "db": "4_1_cts.odb",
  "sdc": "4_cts.sdc",
  "clock": "core_clk",
@@ -8,8 +8,8 @@
  "ss": {
   "boundary": {
    "n": 1091,
-   "mean": 862.0,
-   "min": 688.7,
+   "mean": 861.5,
+   "min": 688.5,
    "max": 1175.0
   },
   "all": {
@@ -23,8 +23,8 @@
  "ff": {
   "boundary": {
    "n": 1091,
-   "mean": 593.8,
-   "min": 460.1,
+   "mean": 593.3,
+   "min": 459.9,
    "max": 838.2
   },
   "all": {
@@ -38,11 +38,11 @@
  "env": {
   "CK_SS_MEAN": 862,
   "CK_SS_ALL_MEAN": 757,
-  "CK_SS_MIN": 689,
+  "CK_SS_MIN": 688,
   "CK_SS_ALL_MIN": 658,
   "CK_SS_MAX": 1175,
   "CK_SS_ALL_MAX": 1206,
-  "CK_FF_MEAN": 594,
+  "CK_FF_MEAN": 593,
   "CK_FF_ALL_MEAN": 514,
   "CK_FF_MIN": 460,
   "CK_FF_ALL_MIN": 441,
