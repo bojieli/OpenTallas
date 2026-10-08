@@ -748,30 +748,25 @@
    }
   },
   "hfd_index_q_b5": {
-   "job": "hbm_idxq_b5_n5_tc_9fb461b6d",
-   "source_commit": "9fb461b6d0ced869ee2386d28b61327003d1d466",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b5_n5_tc_9fb461b6d",
+   "job": "hbm_idxq_b5_841beb3ab_we-cgfix-tt",
+   "source_commit": "df37bfa4eb58832ad1436fe1ba41d377cc84bee0",
+   "host": "localhost",
+   "run": "/home/ubuntu/closure-loop-local/hbm_idxq_b5_841beb3ab_we-cgfix-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T03:02:09-07:00",
+   "measured_at": "2026-10-08T06:24:59-07:00",
    "ss": {
-    "mean": 1354,
-    "min": 1323,
-    "max": 1369
+    "mean": 1304,
+    "min": 1271,
+    "max": 1368
    },
    "ff": {
-    "mean": 873,
-    "min": 846,
-    "max": 888
+    "mean": 858,
+    "min": 830,
+    "max": 912
    },
    "boundary_n": 2083,
-   "budget": {
-    "measured_ss": 1354.0,
-    "ok": true,
-    "reasons": [],
-    "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
-   }
+   "budget": null
   },
   "dsfd_colt_lane": {
    "job": "s81ph-dsfd_colt_lane-7345266ce-e-lbc-tt",
@@ -821,30 +816,25 @@
    }
   },
   "hfd_index_q_b3": {
-   "job": "hbm_idxq_b3_n5_tc_9fb461b6d",
-   "source_commit": "9fb461b6d0ced869ee2386d28b61327003d1d466",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_n5_tc_9fb461b6d",
+   "job": "hbm_idxq_b3_2ec0ab4f9_r22-tt",
+   "source_commit": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_2ec0ab4f9_r22-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T03:02:10-07:00",
+   "measured_at": "2026-10-08T06:26:04-07:00",
    "ss": {
-    "mean": 1203,
-    "min": 1162,
-    "max": 1254
+    "mean": 1184,
+    "min": 1122,
+    "max": 1298
    },
    "ff": {
-    "mean": 787,
-    "min": 752,
-    "max": 834
+    "mean": 791,
+    "min": 738,
+    "max": 892
    },
    "boundary_n": 3142,
-   "budget": {
-    "measured_ss": 1203.0,
-    "ok": true,
-    "reasons": [],
-    "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
-   }
+   "budget": null
   },
   "dsfd_colt_mrg": {
    "job": "s81ph-dsfd_colt_mrg-cd3337221-b",
@@ -3402,5 +3392,5 @@
    "budget": null
   }
  },
- "updated": "2026-10-08T06:21:29-07:00"
+ "updated": "2026-10-08T06:26:04-07:00"
 }
