@@ -43,8 +43,13 @@ def launch(names, extra=""):
             continue
         sh(r["host"], f"mkdir -p {r['bin']} {r['out']}")
         subprocess.run(["scp", "-q", str(TOOL), f"{r['host']}:{r['bin']}/vt_swap_sta.py"], check=True)
+        if LB:
+            subprocess.run(["scp", "-q", str(LB), f"{r['host']}:{r['bin']}/link_budget_consistent.sdc"], check=True)
+            extra_ = extra + f" --extra-setup-sdc {r['bin']}/link_budget_consistent.sdc"
+        else:
+            extra_ = extra
         subprocess.run(["ssh", "-f", "-n", r["host"], f"cd /tmp && setsid nohup python3 {r['bin']}/vt_swap_sta.py --orfs-dir {r['orfs']} --src {r['src']} "
-                      f"--out {r['out']} {extra} > {r['out']}/driver.log 2>&1 < /dev/null &"], check=False)
+                      f"--out {r['out']} {extra_} > {r['out']}/driver.log 2>&1 < /dev/null &"], check=False)
         print(json.dumps(r))
 
 
@@ -61,6 +66,9 @@ def collect(names):
 
 import os  # noqa: E402
 TAG = "-tt" if os.environ.get("OT_VT_CORNER") == "tt" else ""
+# OT_VT_LB=1: also apply the option-B consistent die-link budget to the setup sessions (outputs <job>-tt-lb/)
+LB = (Path(__file__).resolve().parents[2] / "physical/common_flow/link_budget_consistent.sdc") if os.environ.get("OT_VT_LB") == "1" else None
+TAG += "-lb" if LB else ""
 
 if __name__ == "__main__":
     if sys.argv[1] == "launch":

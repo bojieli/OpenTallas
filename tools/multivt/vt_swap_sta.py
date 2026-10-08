@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -167,6 +168,9 @@ def main(argv=None):
     ap.add_argument("--setup-corner", choices=("ss", "tt"), default="ss",
                     help="corner of the setup search/verify sessions (owner 2026-10-07 option B: setup signs off at TT); "
                          "tt = the SS sign-off load with TT std-cell libraries and the macros' _tt.lib views")
+    ap.add_argument("--extra-setup-sdc", type=Path, default=None,
+                    help="an SDC read after the setup load (e.g. physical/common_flow/link_budget_consistent.sdc: the "
+                         "option-B die-link budget the TT re-status applies); setup sessions only")
     a = ap.parse_args(argv)
     orfs, src, out = a.orfs_dir.resolve(), a.src.resolve(), a.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -174,10 +178,14 @@ def main(argv=None):
     ss_power = ss
     if a.setup_corner == "tt":
         ss = tt_load(ss, src)
+    if a.extra_setup_sdc:
+        shutil.copy(a.extra_setup_sdc, out / "extra_setup.sdc")
+        ss += "read_sdc /out/extra_setup.sdc\n"
     ff = load_part((orfs / "w18_sta_ff.tcl").read_text(), "ff")
     t = a.target
     rec = dict(schema="opentallas.multivt.vt_swap_sta.v1", orfs_dir=str(orfs), target_ps=t, rounds=a.rounds,
-               setup_corner=a.setup_corner)
+               setup_corner=a.setup_corner,
+               extra_setup_sdc=str(a.extra_setup_sdc) if a.extra_setup_sdc else None)
     ls = run_tcl(orfs, src, out, "ss", ss + SWAP_PROCS + f"""
 ot_report RVT max
 ot_phase L {t} {a.rounds} {a.npaths} /out/swap_L.txt
