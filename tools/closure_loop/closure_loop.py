@@ -1967,6 +1967,28 @@ def bench_location(j, stl):
     return dict(host=j["host"], run=j["run"], attempt=j["attempt"])
 
 
+def vanished_bench_location(j, location):
+    """drive-1013 2026-10-08: a bench chain pinned to another host's run (an offload, or the run before a migration)
+    outlives that run when a disk purge deletes it.  Every launch then failed 'cat > .../cl/<bench>.sh: No such file'
+    until 10 loop errors (qfd_embed_scale_bank_retained-24bd6a53b-tt), and a human retry did not help: it popped
+    bench_location, but bench_location() re-derived it from the DONE btrack receipts on the same deleted run.  If the
+    run's src is gone (an explicit MISSING, never an ssh failure), forget the location and every receipt made there:
+    their artifacts went with it, so the chain re-runs on the job's own run (or a fresh offload)."""
+    r = ssh(location["host"], f"test -d {shlex.quote(location['run'])}/src && echo PRESENT || echo MISSING", timeout=60)
+    if r.returncode != 0 or "MISSING" not in r.stdout:
+        return False
+    gone = location["run"]
+    tr = j.get("btrack") or {}
+    lost = [k for k, e in tr.items() if e.get("run") == gone]
+    for k in lost:
+        tr.pop(k, None)
+        (j.get("benches") or {}).pop(k, None)
+    j.pop("bench_location", None)
+    event(j, f"bench track: artifact run {location['host']}:{gone} no longer exists (purged); dropped it and the "
+             f"receipts made there ({', '.join(lost) or 'none'}): the bench chain restarts")
+    return True
+
+
 def offload_bench_location(j, fleet, st):
     """a host with the job's bench tools and room for one bench; the source is synced there to <base>/<name>-bench"""
     need = bench_needs(j["spec"])
@@ -2006,6 +2028,8 @@ def bench_track(j, fleet, stl):
             if any(x.get("state") == "running" for x in tr.values()):
                 return True                  # one bench at a time
             location = bench_location(j, stl)
+            if location["run"] != j.get("run") and vanished_bench_location(j, location):
+                location = bench_location(j, stl)
             caps = next((x.get("caps", []) for x in hosts_table() if x["name"] == location["host"]), None)
             if not j.get("bench_location") and caps is not None and not bench_needs(j["spec"]) <= set(caps):
                 off = offload_bench_location(j, fleet, st)

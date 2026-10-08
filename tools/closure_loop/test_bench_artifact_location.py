@@ -74,5 +74,45 @@ class BenchArtifactLocation(unittest.TestCase):
         self.assertEqual(self.j['btrack']['bench_exact'],original)
         self.assertEqual(self.j['benches']['bench_exact'],{'ok':True})
 
+
+class VanishedBenchLocation(unittest.TestCase):
+    """drive-1013: a purged artifact run must not pin the bench chain (qfd_embed_scale_bank_retained-24bd6a53b-tt)."""
+    def _job(self):
+        j = job(name='job', host='host_b', run='/b/job', status='RUNNING', bench_par=True, stage_tag='route.a5',
+                stage_key='route', benches={'bench_exact': {'ok': True}},
+                btrack={'bench_exact': {'state': 'done', 'tag': 'bench_exact.a1b1', 'host': 'host_a', 'run': '/a/job-bench', 'n': 1}},
+                bench_location={'host': 'host_a', 'run': '/a/job-bench', 'attempt': 1})
+        j['spec'] = copy.deepcopy(j['spec'])
+        return j
+
+    def _run(self, j, out, rc=0):
+        launched = []
+        fleet = Fleet(); fleet.probe = Mock(); fleet._launched = Mock()
+        def launch(view, stage, cmd):
+            view['stage_tag'] = C.tag(stage, view); launched.append(view)
+        r = subprocess.CompletedProcess([], rc, stdout=out, stderr='')
+        with patch.object(C, 'ssh', return_value=r), patch.object(C, 'launch_stage', side_effect=launch), \
+                patch.object(C, 'hosts_table', return_value=[]), patch.object(C, 'log'):
+            C.bench_track(j, fleet, C.stage_list(j['spec']))
+        return launched
+
+    def test_missing_run_restarts_chain_on_own_run(self):
+        j = self._job()
+        launched = self._run(j, 'MISSING\n')
+        self.assertNotIn('bench_exact', j['benches'])
+        self.assertEqual(launched[0]['run'], '/b/job')
+        self.assertEqual(launched[0]['host'], 'host_b')
+
+    def test_ssh_failure_keeps_location(self):
+        j = self._job()
+        launched = self._run(j, '', rc=255)
+        self.assertIn('bench_exact', j['benches'])
+        self.assertEqual(launched[0]['run'], '/a/job-bench')
+
+    def test_present_run_keeps_location(self):
+        j = self._job()
+        launched = self._run(j, 'PRESENT\n')
+        self.assertEqual(launched[0]['host'], 'host_a')
+
 if __name__ == '__main__':
     unittest.main()
