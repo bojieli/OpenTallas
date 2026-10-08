@@ -60,17 +60,15 @@ module ot_hbm_norm_grp #(
             bf16 = {t[31:16], 16'd0};
         end
     endfunction
-    // reset: asynchronous assert, synchronous release (two flops)
-    reg [1:0] rs;
-    always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 2'b00; else rs <= {rs[0], 1'b1};
-    wire rstn = rs[1];
-    // input pin flops
+    // reset: rst_n is the top's synchronised reset; one pin flop (asynchronous assert, synchronous release)
+    reg rs;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 1'b0; else rs <= 1'b1;
+    wire rstn = rs;
+    // input pin flops (no reset, as the flat view's capture flops: a write in the first cycles after release lands)
     reg go_c, in_v_c, wl_v_c, rb_v_c; reg [7:0] wl_i_c; reg [4*G*32-1:0] x_c; reg [127:0] pre_c;
     reg [G*32-1:0] wl_d_c; reg [31:0] rb_d_c;
-    always @(posedge clk or negedge rstn)
-        if (!rstn) begin go_c <= 1'b0; in_v_c <= 1'b0; wl_v_c <= 1'b0; rb_v_c <= 1'b0; end
-        else begin go_c <= go; in_v_c <= in_v; wl_v_c <= wl_v; rb_v_c <= rb_v; end
     always @(posedge clk) begin
+        go_c <= go; in_v_c <= in_v; wl_v_c <= wl_v; rb_v_c <= rb_v;
         wl_i_c <= wl_i; x_c <= in_x; pre_c <= pre; wl_d_c <= wl_d; rb_d_c <= rb_d;
     end
 

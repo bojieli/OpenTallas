@@ -21,7 +21,10 @@ wait $p2 || { echo "BUILD_FAILED dut"; tail -n 5 $O/dut/build.log; exit 3; }
 for d in ref dut; do mkdir -p $O/$d/run; cp $G0/*.mem $O/$d/run/; (cd $O/$d/run && ../obj/Vtb_hbm_norm_split > ../run.log 2>&1) & done; wait
 grep -h "^SPLITBENCH" $O/ref/run.log | sed 's/^/ref /'; grep -h "^SPLITBENCH" $O/dut/run.log | sed "s/^/g$G /"
 rp=$(grep -c '^PASS' $O/ref/run.log); dp=$(grep -c '^PASS' $O/dut/run.log)
-nl=$(wc -l < $O/ref/run/stream.txt); cmp -s $O/ref/run/stream.txt $O/dut/run/stream.txt; same=$?
+# per-kind streams in order (y, q and rstd interleave differently: q is one cycle later relative to y in the split)
+nl=$(wc -l < $O/ref/run/stream.txt); same=0
+for t in Y Q R F; do grep "^$t " $O/ref/run/stream.txt > $O/ref_$t.txt; grep "^$t " $O/dut/run/stream.txt > $O/dut_$t.txt
+  cmp -s $O/ref_$t.txt $O/dut_$t.txt || { same=1; echo "STREAM $t differs: $(diff $O/ref_$t.txt $O/dut_$t.txt | grep -c '^<') lines"; }; done
 echo "STREAM lines=$nl identical=$([ $same = 0 ] && echo yes || echo no) ref_pass=$rp dut_pass=$dp"
 if [ "$rp" = 1 ] && [ "$dp" = 1 ] && [ $same = 0 ] && [ "$nl" -gt 600 ]; then echo "PASS split_g$G"; exit 0; fi
 echo "FAIL split_g$G"; exit 1
