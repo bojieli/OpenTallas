@@ -1,0 +1,290 @@
+{
+ "name": "qfd_embed_scale_bank_parent-a75c74203-tt",
+ "block": "qfd_embed_scale_bank_parent",
+ "owner": "Codex:embedding-scale",
+ "purpose": "TT-BATCH (owner option B, one large batch): qfd_embed_scale_bank_parent-a75c74203 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Full-shape embedding parent with actual qualified ingress macro and measured internal clock binding. No flattened proxy. SS/FF>=15ps,DRC0, independent storage and residual reset/R2R are mandatory; no component-only closure claim.",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "main",
+  "commit": "a75c74203ad3c62b232652120631094e75298eab",
+  "paths": [
+   "Makefile",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/qwen_die_masters/cfg/qfd_embed_scale_bank_parent.env",
+   "physical/qwen_die_masters/die_p770.sdc",
+   "physical/qwen_die_masters/embed_bank_capture.sdc",
+   "physical/qwen_die_masters/embed_bank_p770.sdc",
+   "physical/qwen_die_masters/embed_bank_place.tcl",
+   "physical/qwen_die_masters/embed_scale_capture.sdc",
+   "physical/qwen_die_masters/embed_scale_p770.sdc",
+   "physical/qwen_die_masters/embed_scale_place.tcl",
+   "physical/qwen_die_masters/io_plain.sdc",
+   "physical/qwen_die_masters/io_ref_skew.sdc",
+   "physical/qwen_die_masters/jobs/route_master.sh",
+   "physical/qwen_die_masters/jobs/signoff_sdc.py",
+   "physical/qwen_die_masters/macro_place_tile.tcl",
+   "physical/qwen_die_masters/post_plain.tcl",
+   "physical/qwen_die_masters/pre_cts_skew.tcl",
+   "physical/qwen_die_masters/pre_ref_skew.tcl",
+   "physical/qwen_die_masters/repair_budget.tcl",
+   "physical/qwen_die_masters/signoff/qfd_embed_scale_bank_parent.sdc",
+   "physical/qwen_die_masters/station_p770.sdc",
+   "physical/qwen_die_masters/station_signoff.sdc",
+   "physical/qwen_die_masters/tile_die_p770.sdc",
+   "physical/qwen_die_masters/tile_p770.sdc",
+   "physical/qwen_embedding_parent",
+   "physical/qwen_slab_m5/pdn_m5.tcl",
+   "rtl/physical/ot_qwen_embed_scale_bank_parent.sv",
+   "rtl/physical/ot_qwen_embedding_ingress_island.sv",
+   "rtl/test/tb_qwen_embed_scale_bank_parent.sv",
+   "tools"
+  ],
+  "required_files": [
+   "Makefile",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.json",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+   "physical/qwen_die_masters/cfg/qfd_embed_scale_bank_parent.env",
+   "physical/qwen_die_masters/die_p770.sdc",
+   "physical/qwen_die_masters/embed_bank_capture.sdc",
+   "physical/qwen_die_masters/embed_bank_p770.sdc",
+   "physical/qwen_die_masters/embed_bank_place.tcl",
+   "physical/qwen_die_masters/embed_scale_capture.sdc",
+   "physical/qwen_die_masters/embed_scale_p770.sdc",
+   "physical/qwen_die_masters/embed_scale_place.tcl",
+   "physical/qwen_die_masters/io_plain.sdc",
+   "physical/qwen_die_masters/io_ref_skew.sdc",
+   "physical/qwen_die_masters/jobs/route_master.sh",
+   "physical/qwen_die_masters/jobs/signoff_sdc.py",
+   "physical/qwen_die_masters/macro_place_tile.tcl",
+   "physical/qwen_die_masters/post_plain.tcl",
+   "physical/qwen_die_masters/pre_cts_skew.tcl",
+   "physical/qwen_die_masters/pre_ref_skew.tcl",
+   "physical/qwen_die_masters/repair_budget.tcl",
+   "physical/qwen_die_masters/signoff/qfd_embed_scale_bank_parent.sdc",
+   "physical/qwen_die_masters/station_p770.sdc",
+   "physical/qwen_die_masters/station_signoff.sdc",
+   "physical/qwen_die_masters/tile_die_p770.sdc",
+   "physical/qwen_die_masters/tile_p770.sdc",
+   "physical/qwen_embedding_parent/bindings/code/binding.json",
+   "physical/qwen_embedding_parent/bindings/code/clock_reference.tcl",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/abstract.json",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/export_ff.log",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/export_ff.tcl",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/export_original/qfd_embed_ingress_code.lef",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/export_original/qfd_embed_ingress_code_ff.lib",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/export_original/qfd_embed_ingress_code_ss.lib",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/export_ss.log",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/export_ss.tcl",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/interface.sdc",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/qfd_embed_ingress_code.lef",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/qfd_embed_ingress_code_ff.lib",
+   "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code/qfd_embed_ingress_code_ss.lib",
+   "physical/qwen_embedding_parent/bindings/code/receipt/5_2_route.json",
+   "physical/qwen_embedding_parent/bindings/code/receipt/corner_sta.json",
+   "physical/qwen_embedding_parent/bindings/code/receipt/job_state.json",
+   "physical/qwen_embedding_parent/bindings/code/receipt/manual_storage_checks.json",
+   "physical/qwen_embedding_parent/bindings/code/receipt/metadata_storage.json",
+   "physical/qwen_embedding_parent/bindings/code/receipt/metadata_storage_synthesis.json",
+   "physical/qwen_embedding_parent/bindings/code/receipt/physical.json",
+   "physical/qwen_embedding_parent/bindings/code/receipt/qualification.json",
+   "physical/qwen_embedding_parent/bindings/code/receipt/status",
+   "physical/qwen_embedding_parent/bindings/code/receipt/w18_sta_ff.log",
+   "physical/qwen_embedding_parent/bindings/code/receipt/w18_sta_ss.log",
+   "physical/qwen_embedding_parent/bindings/scale/binding.json",
+   "physical/qwen_embedding_parent/bindings/scale/clock_reference.tcl",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/abstract.json",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/export_ff.log",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/export_ff.tcl",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/export_original/qfd_embed_ingress_scale.lef",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/export_original/qfd_embed_ingress_scale_ff.lib",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/export_original/qfd_embed_ingress_scale_ss.lib",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/export_ss.log",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/export_ss.tcl",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/interface.sdc",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/qfd_embed_ingress_scale.lef",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/qfd_embed_ingress_scale_ff.lib",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale/qfd_embed_ingress_scale_ss.lib",
+   "physical/qwen_embedding_parent/bindings/scale/receipt/5_2_route.json",
+   "physical/qwen_embedding_parent/bindings/scale/receipt/corner_sta.json",
+   "physical/qwen_embedding_parent/bindings/scale/receipt/job_state.json",
+   "physical/qwen_embedding_parent/bindings/scale/receipt/manual_storage_checks.json",
+   "physical/qwen_embedding_parent/bindings/scale/receipt/metadata_storage.json",
+   "physical/qwen_embedding_parent/bindings/scale/receipt/metadata_storage_synthesis.json",
+   "physical/qwen_embedding_parent/bindings/scale/receipt/physical.json",
+   "physical/qwen_embedding_parent/bindings/scale/receipt/qualification.json",
+   "physical/qwen_embedding_parent/bindings/scale/receipt/status",
+   "physical/qwen_embedding_parent/bindings/scale/receipt/w18_sta_ff.log",
+   "physical/qwen_embedding_parent/bindings/scale/receipt/w18_sta_ss.log",
+   "physical/qwen_embedding_parent/code/embed_bank_p770.sdc",
+   "physical/qwen_embedding_parent/code/ingress_bb.v",
+   "physical/qwen_embedding_parent/code/io_plain.sdc",
+   "physical/qwen_embedding_parent/code/io_ref_skew.sdc",
+   "physical/qwen_embedding_parent/code/place.tcl",
+   "physical/qwen_embedding_parent/code/repair_budget.tcl",
+   "physical/qwen_embedding_parent/io_ref_macro.sdc",
+   "physical/qwen_embedding_parent/island_interface.sdc",
+   "physical/qwen_embedding_parent/scale/embed_scale_p770.sdc",
+   "physical/qwen_embedding_parent/scale/ingress_bb.v",
+   "physical/qwen_embedding_parent/scale/io_plain.sdc",
+   "physical/qwen_embedding_parent/scale/io_ref_skew.sdc",
+   "physical/qwen_embedding_parent/scale/place.tcl",
+   "physical/qwen_embedding_parent/scale/repair_budget.tcl",
+   "physical/qwen_slab_m5/pdn_m5.tcl",
+   "rtl/physical/ot_qwen_embed_scale_bank_parent.sv",
+   "rtl/physical/ot_qwen_embedding_ingress_island.sv",
+   "rtl/test/tb_qwen_embed_scale_bank_parent.sv",
+   "tools/check_embedding_metadata_cells.py",
+   "tools/check_qwen_embedding_parent_storage.py",
+   "tools/hbm_fmax_attn_abstract.py",
+   "tools/qwen_embedding_parent_binding.py",
+   "tools/run_abi3_physical.py",
+   "tools/w18/corner_sta_ref.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact0",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_parent -Ptb_qwen_embed_scale_bank_parent.BANK_ID=0 -o {RUN}/bench/exact0 rtl/test/tb_qwen_embed_scale_bank_parent.sv rtl/physical/ot_qwen_embed_scale_bank_parent.sv rtl/physical/ot_qwen_embedding_ingress_island.sv && vvp {RUN}/bench/exact0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS scale bank=0 rows="
+   },
+   {
+    "name": "exact1",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_parent -Ptb_qwen_embed_scale_bank_parent.BANK_ID=1 -o {RUN}/bench/exact1 rtl/test/tb_qwen_embed_scale_bank_parent.sv rtl/physical/ot_qwen_embed_scale_bank_parent.sv rtl/physical/ot_qwen_embedding_ingress_island.sv && vvp {RUN}/bench/exact1",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS scale bank=1 rows="
+   },
+   {
+    "name": "exact2",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_parent -Ptb_qwen_embed_scale_bank_parent.BANK_ID=2 -o {RUN}/bench/exact2 rtl/test/tb_qwen_embed_scale_bank_parent.sv rtl/physical/ot_qwen_embed_scale_bank_parent.sv rtl/physical/ot_qwen_embedding_ingress_island.sv && vvp {RUN}/bench/exact2",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS scale bank=2 rows="
+   },
+   {
+    "name": "bad_address",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_parent -DSCALE_NEG_ADDRESS -o {RUN}/bench/bad_ADDRESS rtl/test/tb_qwen_embed_scale_bank_parent.sv rtl/physical/ot_qwen_embed_scale_bank_parent.sv rtl/physical/ot_qwen_embedding_ingress_island.sv && vvp {RUN}/bench/bad_ADDRESS",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FAIL scale payload/order"
+   },
+   {
+    "name": "bad_lane",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_parent -DSCALE_NEG_LANE -o {RUN}/bench/bad_LANE rtl/test/tb_qwen_embed_scale_bank_parent.sv rtl/physical/ot_qwen_embed_scale_bank_parent.sv rtl/physical/ot_qwen_embedding_ingress_island.sv && vvp {RUN}/bench/bad_LANE",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FAIL scale payload/order"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "Boundary reference is actual parent u_ingress/clk arrival plus qualified component internal valid_q insertion; missing or stale binding fails closed before route."
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_embed_scale_bank_parent {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_embed_scale_bank_parent --out {RUN}/record/views/qfd_embed_scale_bank_parent --image openroad/orfs:asap7lock --macro-view physical/asap7_memory_macros/ot_rom_4096x266_m8 --macro-view physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale > {RUN}/record/route/export.log 2>&1 && cp {RUN}/routes/{LABEL}/metadata_storage.json {RUN}/record/route/ && cp {RUN}/routes/{LABEL}/metadata_storage_synthesis.json {RUN}/record/route/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "rom_multicycle_valid_startpoint",
+    "cmd": "! grep -q 'STA-1554' {RUN}/routes/{LABEL}/sta.log"
+   },
+   {
+    "name": "physical_metadata_storage_synthesis",
+    "cmd": "set -- {RUN}/routes/{LABEL}/work/orfs/results/asap7/*/base/1_2_yosys.v; python3 tools/check_qwen_embedding_parent_storage.py --kind scale --netlist \"$1\" --out {RUN}/routes/{LABEL}/metadata_storage_synthesis.json"
+   },
+   {
+    "name": "physical_metadata_storage_routed",
+    "cmd": "set -- {RUN}/routes/{LABEL}/work/orfs/results/asap7/*/base/6_final.v; python3 tools/check_qwen_embedding_parent_storage.py --kind scale --netlist \"$1\" --out {RUN}/routes/{LABEL}/metadata_storage.json"
+   },
+   {
+    "name": "qualified_component_binding",
+    "cmd": "python3 tools/qwen_embedding_parent_binding.py --kind scale --view physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale --receipt physical/qwen_embedding_parent/bindings/scale/receipt --verify"
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_embed_scale_bank_parent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale"
+  ]
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_embedding_parent_20261007/qfd_embed_scale_bank_parent-a75c74203"
+  }
+ ],
+ "cycles_added": "0 added capture cycles/FFs. Full leaf7/II2; root19/shared801. Actual parent and upstream credit pin relocation routing required; no adoption before all parent timing/reset/R2R/DRC/storage gates.",
+ "merge_target": null,
+ "host_require": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

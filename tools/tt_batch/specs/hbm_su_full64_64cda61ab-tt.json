@@ -1,0 +1,83 @@
+{
+ "name": "hbm_su_full64_64cda61ab-tt",
+ "block": "ot_su64_full64",
+ "owner": "Codex:hbm/su",
+ "purpose": "TT-BATCH (owner option B, one large batch): hbm_su_full64_64cda61ab re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Exact two-copy half-rate dividers DDIV64; full lane in modeled400.008x401.736 slot,1.2GHzfast/0.6GHzcores; +43 cycles/divide vs21. DIAGNOSTIC UNTIL CAMPAIGN PASS.",
+ "hosts": [
+  "ot-epyc2"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 266,
+ "source": {
+  "branch": "main",
+  "commit": "64cda61abe6779567e8601286ea0ee0245da7746"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; bash /srv/opentallas-scratch/admit.sh 266 -- env OUT={RUN}/routes CORES=8 PD=0.5 PER=0.770 SRCF=physical/hbm_su_div64/su_full_sources.txt XSDC=physical/hbm_su_div64/full_generated_clocks_candidate.sdc DIE=\"400.008 401.736\" bash physical/hbm_su_div64/route_full64.sh {LABEL}${CL_LABEL_SUFFIX} ot_su64_full64 box --step-tcl POST_IO_PLACEMENT=physical/hbm_su_c12/red_pinflop_place.tcl $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 8,
+   "peak_ram_gb": 266
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; bash /srv/opentallas-scratch/admit.sh 266 -- env OUT={RUN}/routes CORES=8 PD=0.5 PER=0.770 SRCF=physical/hbm_su_div64/su_full_sources.txt XSDC=physical/hbm_su_div64/full_generated_clocks_candidate.sdc DIE=\"400.008 401.736\" bash physical/hbm_su_div64/route_full64.sh {LABEL}${CL_LABEL_SUFFIX} ot_su64_full64 box --step-tcl POST_IO_PLACEMENT=physical/hbm_su_c12/red_pinflop_place.tcl $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/routes/{LABEL}/args {CL}/calib.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_su_c12/signoff_833_io150.sdc",
+   "physical/hbm_su_div64/full_generated_clocks_candidate.sdc",
+   "physical/hbm_su_div64/propagate_signoff.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/hbm_su_div64_candidate/64cda61ab"
+  }
+ ],
+ "no_bench_reason": "Parallel independent campaign must source-match and PASS before adoption; external adoption hold REQUIRED before submission.",
+ "cycles_added": 43,
+ "merge_target": null,
+ "dispatch_prerequisites": [
+  "Fill measured resource reservation; null is intentional: no predecessor measured peak available locally",
+  "Replace commit/name/record commit fields with committed source pin",
+  "Install external adoption hold before queueing; release only on exact and negative gates",
+  "Validate four ICGs discovered during mapped-netlist SDC intake"
+ ],
+ "host_require": [
+  "ot-epyc2"
+ ],
+ "resource_reservation": {
+  "basis": "Capacity reservation from measured available RAM minus existing EPYC host100GiBfloor; not guessed processpeak or per-processcap",
+  "mem_available_kib": 383977208,
+  "sample_unix": 1791391931.963614,
+  "reserved_gib": 266,
+  "host": "ot-epyc2",
+  "actual_peak_pending": true
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

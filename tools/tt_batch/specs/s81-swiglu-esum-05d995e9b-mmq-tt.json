@@ -1,0 +1,70 @@
+{
+ "name": "s81-swiglu-esum-05d995e9b-mmq-tt",
+ "block": "ot_dsrom_su_swiglu_lane",
+ "owner": "Claude:s81-rerun",
+ "purpose": "TT-BATCH (owner option B, one large batch): s81-swiglu-esum-05d995e9b-mmq re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: FLOW-HOLD requeue of s81-swiglu-esum-05d995e9b (SS 71.16 / FF -147.68) on its own source, snapshot patched in-stage by claude/flow-hold-20261007 @3aff1e111 (hold_corners_patch mm + h1_patch); multi-mode route-time hold repair (SS setup + FF hold under the FF sign-off SDCs at CTS/GRT, HM 50 ps at FF). S81 su_swiglu lane ESUM+IREG (0c9c4c32a RTL, +6 cyc exp poly adds) with budget-sheet IO SDCs and the auto hold ECO: route h770b gave die SS +65.2 but FF -111 in / -47 out from the flat -50 ps hold IO term",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/s81-rerun-20261006",
+  "commit": "05d995e9b51bee0056ac27cb300f8c676cb07cdd"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && export OT_MM_FF_SDC='physical/s81_die_views/swiglu/budget_signoff.sdc physical/s81_die_views/swiglu/budget_ff_guarded.sdc' && test -s \"$BUDGET_SDC\" && test -s \"$BUDGET_SDC_SIGNOFF\" && test -s \"$BUDGET_SDC_FF\" && SRC={SRC} OUT={RUN}/routes CORES=16 physical/s81_die_views/swiglu/route.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "echo \"route SDC = budget sheet SDC (copied by route.sh)\"",
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && export OT_MM_FF_SDC='physical/s81_die_views/swiglu/budget_signoff.sdc physical/s81_die_views/swiglu/budget_ff_guarded.sdc' && test -s \"$BUDGET_SDC\" && test -s \"$BUDGET_SDC_SIGNOFF\" && test -s \"$BUDGET_SDC_FF\" && SRC={SRC} OUT={RUN}/routes CORES=16 physical/s81_die_views/swiglu/route.sh {LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cd {SRC} && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_dsrom_su_swiglu_lane --out {RUN}/record/view --tmp-dir {RUN}/abs_tmp > {RUN}/record/export.log 2>&1; cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_die_views/swiglu/budget_signoff.sdc",
+   "physical/s81_die_views/swiglu/budget_ff_guarded.sdc"
+  ]
+ },
+ "record": [
+  {
+   "to": "physical/s81_die_views/swiglu/view_esum",
+   "from": "{RUN}/record"
+  }
+ ],
+ "cycles_added": 6,
+ "merge_target": null,
+ "no_bench_reason": "RTL identical to 0c9c4c32a, benched on EPYC2 swiglu_esum/: tools/dsrom_su_swiglu.py run --fp rtl --w 64 --ireg --esum 9/9 cases exact (POS_RC=0); negative control LP=LA mutant L0.swiglu 3350 a_errors (MUT_RC=1). The bench needs prepared model cases not in the git archive.",
+ "budget": {
+  "master": "ot_dsrom_su_swiglu_lane",
+  "clock": "core_clk",
+  "sheets_ref": "05d995e9b51bee0056ac27cb300f8c676cb07cdd"
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

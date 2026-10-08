@@ -1,0 +1,96 @@
+{
+ "name": "qfd_hub-172d343d8-tt",
+ "block": "qfd_hub",
+ "owner": "Claude:qwen-elements",
+ "purpose": "TT-BATCH (owner option B, one large batch): qfd_hub-172d343d8 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Qwen r21 qfd_hub (412.536 square): 4 credit link endpoints + x3/ar staging; 5 clocks; route 770 / sign-off 833.333, 150 ps on every port",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/qwen-elements-final-20261007",
+  "commit": "172d343d8d14924a319178d5d1a19c5035c72a28"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "hub_exact",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/hb0 -P tb_qwen_die_hub.NEG=0 rtl/test/tb_qwen_die_hub.sv rtl/physical/ot_qwen_die_hub.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/hb0 | tee {RUN}/bench/hb0.log && grep -q '^PASS' {RUN}/bench/hb0.log",
+    "expect": "pass",
+    "pass_regex": "^PASS hub",
+    "min_count_regex": "ar_words=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "hub_neg",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/hb1 -P tb_qwen_die_hub.NEG=1 rtl/test/tb_qwen_die_hub.sv rtl/physical/ot_qwen_die_hub.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/hb1 | tee {RUN}/bench/hb1.log && grep -q '^PASS' {RUN}/bench/hb1.log",
+    "expect": "fail",
+    "fail_regex": "^FAIL hub",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_hub {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_hub --out {RUN}/record/views/qfd_hub --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_hub.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_elements_final_20261007/qfd_hub"
+  }
+ ],
+ "cycles_added": "link endpoint CDC (~4-6 cycles a crossing) on the KV-new (x3) and attention-return (ar) paths, off the AR token's critical path (KV-new writes are posted; ar carries no token-critical data after r18): 0 cycles on the AR token",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

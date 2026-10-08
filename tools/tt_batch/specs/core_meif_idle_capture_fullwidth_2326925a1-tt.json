@@ -1,0 +1,120 @@
+{
+ "name": "core_meif_idle_capture_fullwidth_2326925a1-tt",
+ "block": "ot_qwen_rom_core_meif_idle_capture",
+ "owner": "Codex:qwen-elements",
+ "purpose": "TT-BATCH (owner option B, one large batch): core_meif_idle_capture_fullwidth_2326925a1 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Remove SU-return qualification cone from existing379-bit ME payload capture mux by speculative empty-slot capture and complete pending-packet hold; fullshape and exact acceptance gate. Other arrival-side/clock/write-boundary obligations remain open.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "commit": "2326925a1568851ba1753d35596a2b5999de3181",
+  "branch": "main",
+  "paths": [
+   "tools",
+   "rtl",
+   "configs",
+   "Makefile",
+   "physical/qwen_core_ctx",
+   "physical/qwen_die_masters/jobs/route_core_meif_idle_capture.sh"
+  ],
+  "required_files": [
+   "tools/qwen_core_meif_idle_capture.py",
+   "tools/qwen_core_meif_idle_capture_prepare.py",
+   "tools/qwen_core_meif_idle_capture_gate.py",
+   "tools/qwen_core_kv_boundary.py",
+   "tools/qwen_core_kv_boundary_prepare.py",
+   "tools/qwen_core_separate_load.py",
+   "tools/qwen_core_separate_load_prepare.py",
+   "tools/qwen_core_opaque_interfaces.py",
+   "tools/qwen_rom_core_ctx_claude.py",
+   "tools/qwen_rom_core_controller_cut.py",
+   "tools/orfs_allcorner_spef.py",
+   "tools/run_abi3_physical.py",
+   "tools/hbm_fmax_attn_abstract.py",
+   "physical/qwen_core_ctx/retained_screen_synth.ys",
+   "physical/qwen_core_ctx/signoff833_skew90.sdc",
+   "physical/qwen_die_masters/jobs/route_core_meif_idle_capture.sh"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "full_controller_kv_bridge",
+    "cmd": "python3 tools/qwen_core_meif_idle_capture_gate.py --out {RUN}/bench/full_controller",
+    "expect": "pass",
+    "pass_regex": "\"status\": \"pass\"",
+    "min_count_regex": "\"positive_engine_events\": (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog",
+     "yosys"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "Existing in-run data IO reference unchanged. Exported ME clock stale-delay audit and actual parent clock insertion budget remain open; this route cannot establish complete parent clock qualification."
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; CORE_DIE_IO=1 SRC={SRC} bash physical/qwen_die_masters/jobs/route_core_meif_idle_capture.sh {LABEL} 3banmsp 30 0.5 {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 40,
+   "needs": [
+    "orfs",
+    "yosys"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS.md {RUN}/routes/{LABEL}/prep/cut_report.json {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_qwen_rom_core --out {RUN}/record/views/ot_qwen_rom_core_core_p --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_core_ctx/signoff833_skew90.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/qwen_core_meif_idle_capture_20261007/physical"
+  },
+  {
+   "from": "{RUN}/bench/full_controller/result.json",
+   "to": "results/rtl/qwen_core_meif_idle_capture_20261007/remote_full_interface_result.json"
+  }
+ ],
+ "cycles_added": "MEIF capture policy adds0registers and0nativecycles. Fullcontroller64instruction accepted fields exact,583\u2192583/593\u2192593cycles with160heldME edges; existing KVflush cost retained.",
+ "merge_target": null,
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-agidock128"
+ ],
+ "no_bench_reason": "The aggregate full_controller_kv_bridge gate includes full positive engine/KV events and source-mutant negative controls; it returns pass only for all required expected outcomes. Source-bound record results/rtl/qwen_core_meif_idle_capture_20261007 qualifies this minimum mechanism.",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

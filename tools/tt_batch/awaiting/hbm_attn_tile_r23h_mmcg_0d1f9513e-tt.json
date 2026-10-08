@@ -1,0 +1,80 @@
+{
+ "name": "hbm_attn_tile_r23h_mmcg_0d1f9513e-tt",
+ "block": "hfd_attn_tile_b",
+ "owner": "Claude:hbm-blocks",
+ "purpose": "TT-BATCH (owner option B, one large batch): hbm_attn_tile_r23h_mmcg_0d1f9513e re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: HBM attn die tile r23h (PROPOSAL, die slot 1778.52 x 1600.536 = +18.6 %): +250.56 um middle channel (r23 GRT diag 8.2M overflow, M6-H in the 124 um channel), PMID 3 (+1 cycle ROOT->quad rows), 130 banks; mm hold + CTS hooks; GRT 30 congestion iterations",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 120,
+ "source": {
+  "branch": "claude/hbm-blocks-attn-20261007",
+  "commit": "0d1f9513e3dd8005d4ffa485d768a97880639abb"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lockstep_roles",
+    "cmd": "bash physical/hbm_attn_tile_r/die_tile/run_lockb.sh {RUN}/bench pos -GPMID=3 -GNL=8 -GNI=6",
+    "expect": "pass",
+    "pass_regex": "ATTN_LOCKB PASS",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   {
+    "name": "neg_oy_flip",
+    "cmd": "bash physical/hbm_attn_tile_r/die_tile/run_lockb.sh {RUN}/bench neg -GPMID=3 -GNL=8 -GNI=6",
+    "expect": "fail",
+    "fail_regex": "ATTNDIE FAIL role=0 mismatches=[1-9]",
+    "threads": 8,
+    "peak_ram_gb": 20
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "tile IO false-pathed: every face pin is a pipeline-bank register (pin bank) and the die stations carry the budget; no IO SDC to calibrate (as dt1/dt2)"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/hbm_attn_tile_r/signoff_833_int.sdc' OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=16 DW=1778.52 DH=1600.536 IOP=physical/hbm_attn_tile_r/die_tile/io_place_r23h.tcl MPL=physical/hbm_attn_tile_r/die_tile/macro_placement_r23h.tcl PARAMS=\"PMID=3 NL=8 NI=6\" PD=0.40 HM=0.030 CTSA=\"-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150\" bash physical/hbm_attn_tile_r/die_tile/route_dt_cl.sh {LABEL} --orfs-var \"GLOBAL_ROUTE_ARGS=-congestion_iterations 30 -allow_congestion\"",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/view && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name hfd_attn_tile_b --out {RUN}/record/view --macro-view physical/hbm_attn_tile_r/quad_b/ot_attn_tile_m6h1q --macro-view physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544 --macro-view physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544 && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_attn_tile_r/signoff_833_int.sdc"
+  ],
+  "macros": [
+   "physical/hbm_attn_tile_r/quad_b/ot_attn_tile_m6h1q",
+   "physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544",
+   "physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/hbm_attn_tile_r/die_tile/r23"
+  }
+ ],
+ "cycles_added": 1,
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

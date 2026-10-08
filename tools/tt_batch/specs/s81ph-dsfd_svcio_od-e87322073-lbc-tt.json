@@ -1,0 +1,87 @@
+{
+ "name": "s81ph-dsfd_svcio_od-e87322073-lbc-tt",
+ "block": "dsfd_svcio_od",
+ "owner": "Claude:setup-triage (block owner claude/s81-placeholders-20261006 / Claude:s81-ph)",
+ "purpose": "TT-BATCH (owner option B, one large batch): s81ph-dsfd_svcio_od-e87322073-lbc re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: SETUP-TRIAGE requeue of s81ph-dsfd_svcio_od-e87322073 (SS 31.46 / FF 20.4): flow fixes (physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl; post_sdc +['physical/common_flow/link_budget_consistent.sdc']) + flow-hold mm hold repair; source = origin/main + setup-triage fixes, no RTL change by this stream. ",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-epyc2"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/setup-triage-20261007",
+  "commit": "387a4d2acd525be5ef60432f735d120cc9e0c829"
+ },
+ "stages": {
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; SRC={SRC} OUT={RUN}/routes CORES=8 NEED=24 SRCS='rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io.sv rtl/common/ot_fwd_link_stage.sv' CLK=ck SDCX='physical/s81_ph_views/svc/tile.sdc physical/s81_ph_views/common/fwd_clk_out.sdc physical/s81_ph_views/svc/fwd_data_out.sdc' bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract dsfd_svcio_od rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=8 NEED=24 SRCS='rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io.sv rtl/common/ot_fwd_link_stage.sv' CLK=ck SDCX='physical/s81_ph_views/svc/tile.sdc physical/s81_ph_views/common/fwd_clk_out.sdc physical/s81_ph_views/svc/fwd_data_out.sdc' bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract dsfd_svcio_od rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+  },
+  "bench": [
+   {
+    "name": "exact_tiled",
+    "cmd": "command -v verilator >/dev/null && XDEF=+define+SVCIO_TILED bash rtl/dsrom_sys/s81_ph/svc/run_svc_io_bench.sh {RUN}/bench && test $(grep -c 'run_g_.*RESULT PASS' {RUN}/bench/summary.txt) -eq 3",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "neg_noatom",
+    "cmd": "grep 'run_m1' {RUN}/bench/summary.txt; grep -q 'run_m1.log.*RESULT FAIL' {RUN}/bench/summary.txt && { echo 'SVCIO_NEG FAIL'; exit 1; }; exit 0",
+    "expect": "fail",
+    "fail_regex": "SVCIO_NEG FAIL",
+    "threads": 1,
+    "peak_ram_gb": 1
+   }
+  ]
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/dsfd_svcio_od"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "new r3 tile, no budget sheet entry with a calibration yet (sheet would be grade target); routed on the calibrated measured insertion, calib.json recorded"
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}
