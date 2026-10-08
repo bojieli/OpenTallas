@@ -91,7 +91,7 @@ foreach n [$b getNets] {{
   incr n_cut; incr n_pins
 }}
 foreach i $del {{ odb::dbInst_destroy $i }}
-$b setDieArea [odb::Rect $wx0 $wy0 $wx1 $wy1]
+$b setDieArea [odb::new_Rect $wx0 $wy0 $wx1 $wy1]
 puts "OT_CROP insts=[dict size $keep] nets_inside=$n_in nets_cut=$n_cut nets_deleted=$n_del boundary_pins=$n_pins"
 mem crop
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl

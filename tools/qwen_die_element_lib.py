@@ -24,6 +24,8 @@ CLOCKS = ('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk')
 CORNERS = dict(  # setup, hold, clk->q base, ps/fF output slope, output transition base, ps/fF, input cap fF (ASSUMED)
     ss=dict(setup=30.0, hold=5.0, cq=75.0, k=0.9, tr=25.0, tk=1.6, cin=0.7, volt=0.63, temp=100),
     ff=dict(setup=12.0, hold=12.0, cq=32.0, k=0.35, tr=10.0, tk=0.7, cin=0.6, volt=0.77, temp=0))
+# TT (owner option B setup corner): the SS constants, PESSIMISTIC and disclosed (no characterised TT placeholder exists)
+CORNERS['tt'] = dict(CORNERS['ss'], volt=0.7, temp=25)
 LOADS = (0.5, 5.0, 20.0, 80.0, 300.0, 1200.0)      # fF
 SLEWS = (5.0, 20.0, 80.0, 300.0)                   # ps
 

@@ -131,6 +131,7 @@ def main(argv=None):
     ap.add_argument('--recipe', default='r20c')
     ap.add_argument('--require-final-signoff', action='store_true',
                     help='fail closed if any master lacks an exact, interface-complete timing view; default output remains pathfinding')
+    ap.add_argument('--corners', default='ss,ff', help='comma list; tt needs *_tt.lib ETMs and qfd_elements_tt.lib')
     ap.add_argument('--stubs', type=Path, default=None, help="die_top_lint's stubs (pin directions for --station-etm)")
     ap.add_argument('--station-etm', type=Path, default=None,
                     help='dir with cst/ot_qwen_die_station_cst_{ss,ff}.lib and chead/... (closed routes s2_cst_hm40 / '
@@ -142,13 +143,15 @@ def main(argv=None):
     a.out.mkdir(parents=True, exist_ok=True)
     lef_text = a.lef.read_text()
     slabs = sorted(set(re.findall(r'^MACRO (qfd_port_tiles_\w+)$', lef_text, re.M)))
-    bound = ['qfd_cdc'] + slabs
+    # the CDC ETM is optional: its routed ODB is gone (EPYC3 cleanup 2026-10-08); without it qfd_cdc stays ASSUMED
+    has_cdc = all((a.etm / f'ot_qwen_stream4_cdc_pc_{c}.lib').exists() for c in a.corners.split(','))
+    bound = (['qfd_cdc'] if has_cdc else []) + slabs
     station_bound = {}
     pin_bindings, source_hashes = {}, {}
-    for c in ('ss', 'ff'):
-        cdc_t = (a.etm / f'ot_qwen_stream4_cdc_pc_{c}.lib').read_text()
+    for c in a.corners.split(','):
         slab_t = (a.etm / f'ot_qwen_slab_port_group_{c}.lib').read_text()
-        cdc_b, slab_b = blocks(cdc_t), blocks(slab_t)
+        cdc_t = (a.etm / f'ot_qwen_stream4_cdc_pc_{c}.lib').read_text() if has_cdc else None
+        cdc_b, slab_b = (blocks(cdc_t) if has_cdc else {}), blocks(slab_t)
         pin_bindings[c] = {}
 
         def record_pin(master, ports, port, bit, source, source_text, source_pin, body):
@@ -159,13 +162,14 @@ def main(argv=None):
             return body
         widths, cells = set(), []
         # qfd_cdc: exact
-        cp = lef_ports(a.lef, 'qfd_cdc')
+        if has_cdc:
+            cp = lef_ports(a.lef, 'qfd_cdc')
 
-        def cdc_src(p, i):
-            pin = bind[p][i] if isinstance(bind.get(p), list) and len(bind[p]) > 1 else (bind[p][0] if p in bind else p)
-            return record_pin('qfd_cdc', cp, p, i, f'ot_qwen_stream4_cdc_pc_{c}.lib', cdc_t, pin, cdc_b[pin])
-        widths |= {w for w, idx in cp.values() if idx}
-        cells.append(cell_text('qfd_cdc', cp, cdc_src))
+            def cdc_src(p, i):
+                pin = bind[p][i] if isinstance(bind.get(p), list) and len(bind[p]) > 1 else (bind[p][0] if p in bind else p)
+                return record_pin('qfd_cdc', cp, p, i, f'ot_qwen_stream4_cdc_pc_{c}.lib', cdc_t, pin, cdc_b[pin])
+            widths |= {w for w, idx in cp.values() if idx}
+            cells.append(cell_text('qfd_cdc', cp, cdc_src))
         # slabs: by role, the group's clock pin 'clk' -> die 'ck[0]'
         for s in slabs:
             sp = lef_ports(a.lef, s)
@@ -202,7 +206,8 @@ def main(argv=None):
                     if mst not in bound:
                         bound.append(mst)
                     station_bound[mst] = f'ot_qwen_die_station {fam} (s2_{fam}_hm40 ETM, by pin direction)'
-        hdr = header(cdc_t).replace(f'library (ot_qwen_stream4_cdc_pc_{c})', f'library (qfd_etm_{c})')
+        hdr = (header(cdc_t).replace(f'library (ot_qwen_stream4_cdc_pc_{c})', f'library (qfd_etm_{c})') if has_cdc else
+               re.sub(r'library \(\S+\)', f'library (qfd_etm_{c})', header(slab_t), count=1))
         (a.out / f'qfd_etm_{c}.lib').write_text(hdr + types(widths) + '\n' + '\n'.join(cells) + '\n}\n')
         # assumed library without the bound cells
         t = (a.assumed / f'qfd_elements_{c}.lib').read_text()
@@ -212,7 +217,7 @@ def main(argv=None):
     lef_all = sorted(set(re.findall(r'^MACRO (\S+)$', lef_text, re.M)))
     eligibility = view_eligibility(lef_all, slabs, station_bound)
     rec = dict(schema='opentallas.qwen_die_element_views.v2', recipe=a.recipe,
-               etm_bound=dict(qfd_cdc='ot_qwen_stream4_cdc_pc r11a (exact per bit)',
+               etm_bound=dict(**({'qfd_cdc': 'ot_qwen_stream4_cdc_pc r11a (exact per bit)'} if has_cdc else {}),
                               **{s: 'ot_qwen_slab_port_group r11c (by role: bw*/cf* <- bw_d, rw/cw* <- tw_d)'
                                  for s in slabs}, **station_bound),
                etm_generated_not_bound=['ot_qwen_rom_core r5b_f3ba (no die master carries its controller-cut ports)'],
