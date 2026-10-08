@@ -65,9 +65,12 @@ module ot_qfd_sp_tree_top #(
     // from its station).  The control element runs with RX = 5 + 2 LNK (the band round trip: element tags, scale
     // requests and every result-side output move RX edges later) and BANDF (band-local result positions).
     // LNK: relay stages on each band <-> tree-top word link; CLNK: relay stages on the control link (t_sel_e / t_tv_e)
-    // from this block's output station to the bands.  The upper's control delay DLY = OS + CLNK + 2 + LNK: the bands use
-    // the selects OS + CLNK edges after the control element makes them (their words are lane-timed to that copy, the
-    // tree-word wire stages absorbing OS + CLNK), and the band word reaches the upper's pin flop 2 + LNK edges later.
+    // from this block's output station to the bands.  The control element makes the per-level selects CLNK edges
+    // EARLY (its XD is XD - CLNK: the selects depend only on the op's tag, known that early), so they reach the bands
+    // with the tree words (lane-timed, XD edges after issue as before); its result tags then carry RX = 5 + 2 LNK + CLNK,
+    // i.e. the results stay 5 + 2 LNK edges behind the monolithic spine's (CLNK costs no cycle).  The upper's control
+    // delay DLY = OS + CLNK + 2 + LNK: the bands use the selects OS + CLNK edges after the control element makes them,
+    // and the band word reaches the upper's pin flop 2 + LNK edges after that.
     parameter integer BAND = 0,
     parameter integer NB = 6,
     parameter integer LNK = 0,
@@ -178,10 +181,10 @@ module ot_qfd_sp_tree_top #(
     wire [W*32-1:0] c_mxdata;
     wire [15:0] c_prog;
     ot_qwen_me_spctl_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT),
-        .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD(XD), .XVM(XVM), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL),
-        .PQ(PQ), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP),
-        .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT), .LANDED(LANDED),
-        .RX((BAND != 0) ? 5 + 2 * LNK : 0), .BANDF(BAND)) u_ctl (
+        .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD((BAND != 0) ? XD - CLNK : XD), .XVM(XVM), .ORD(ORD),
+        .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE),
+        .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT), .LANDED(LANDED),
+        .RX((BAND != 0) ? 5 + 2 * LNK + CLNK : 0), .BANDF(BAND)) u_ctl (
         .clk(clk), .rst_n(rs), .go(go_q), .ready(c_ready), .idle(c_idle), .land_cnt(land_q),
         .i_nout(q_nout), .i_tiles(q_tiles), .i_k(q_k), .i_wsrc(q_wsrc),
         .i_wbase(q_wbase), .i_ts(q_ts), .i_ks(q_ks), .i_js(q_js),

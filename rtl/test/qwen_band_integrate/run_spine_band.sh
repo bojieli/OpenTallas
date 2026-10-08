@@ -1,6 +1,7 @@
 #!/bin/bash
 # qwen-band-integrate: build and run the split-spine end-to-end bench (tb_qfd_spine_band) under Verilator 5.050.
-# Usage (from the repository root): run_spine_band.sh <out_dir> [-GNAME=VALUE ...].  Prints PASS / FAIL qfd_spine_band.
+# Usage (from the repository root): run_spine_band.sh <out_dir> [-GNAME=VALUE ...].  Prints PASS / FAIL qfd_spine_band;
+# exits 0 only on PASS.
 out=$1; shift
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 F="rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv
@@ -15,4 +16,6 @@ mkdir -p $out
 $V --binary --timing -j ${JOBS:-8} -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTH -Wno-MULTIDRIVEN \
    --x-assign 0 --x-initial 0 --top-module tb_qfd_spine_band --Mdir $out/obj "$@" $F > $out/build.log 2>&1 \
    || { echo "BUILD_FAIL"; tail -20 $out/build.log; exit 2; }
-$out/obj/Vtb_qfd_spine_band | tee $out/result.txt | grep -E "^(PASS|FAIL|split)"
+$out/obj/Vtb_qfd_spine_band > $out/result.txt 2>&1
+grep -E "^(PASS|FAIL|split)" $out/result.txt
+grep -q "^PASS qfd_spine_band" $out/result.txt   # exit status: 0 on PASS only (a mutant run must exit non-zero)

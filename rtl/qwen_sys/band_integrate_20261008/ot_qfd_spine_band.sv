@@ -10,8 +10,8 @@
 //   port groups x 48          ot_qwen_me_spport_w12 BANDF 1 (12 elements x PQ 4, two a band): position p = 8b + k
 //                             holds group g(split, p) (rows, lane-vector base, result address, in-range mask);
 //   links                     LNK relay stages on each band <-> tree-top word link (both ways), CLNK on the control
-//                             link (t_sel_e / t_tv_e) to the bands; the tree words' wire stages absorb CLNK
-//                             (TWS - 1 - CLNK stages, so the words still reach the bands lane-timed to their selects).
+//                             link (t_sel_e / t_tv_e) to the bands; the tree top makes the selects CLNK edges early
+//                             (control element XD - CLNK), so they reach the bands with the tree words (unchanged).
 //
 // Every result-side output (ov, o_*, am_*, mx_*, scale requests, progress) is the monolithic spine's delayed
 // RX = 5 + 2 LNK edges; the result positions are band-local (o_we / o_addr / o_mask / o_data of position p carry
@@ -172,7 +172,7 @@ module ot_qfd_spine_band #(
     ot_hdc_delay #(.W(LG+1), .D(CLNK)) u_csel (.clk(clk), .rst_n(rst_n), .d(t_sel_e), .q(c_sel_b));
     ot_hdc_delay #(.W(LG+1), .D(CLNK), .RESET(1)) u_ctv (.clk(clk), .rst_n(rst_n), .d(t_tv_e), .q(c_tv_b));
     wire [NPT*W*32-1:0] t_in;
-    ot_hdc_delay #(.W(NPT*W*32), .D(TWS - 1 - CLNK)) u_tws (.clk(clk), .rst_n(rst_n), .d(t_lvl), .q(t_in));
+    ot_hdc_delay #(.W(NPT*W*32), .D(TWS - 1)) u_tws (.clk(clk), .rst_n(rst_n), .d(t_lvl), .q(t_in));
     assign tr_fault = {W{1'b0}};            // the band faults reach the control element through the upper (b_lf)
     wire [NPG*W*32-1:0] lvt;
     genvar b, q;

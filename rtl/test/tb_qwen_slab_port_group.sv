@@ -189,7 +189,9 @@ module tb_qwen_slab_port_group;
         p_v <= 0;
         repeat (60) @(posedge clk);
         if (nd != nq) begin $display("FAIL: %0d results for %0d requests", nd, nq); errors = errors + 1; end
-        if (errors == 0) $display("PASS: %0d requests (%0d in range), %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops", nreq, nok, nd, na);
+        if (errors == 0 && BANDF == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops", nreq, nd, na);
+        else if (errors == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops; BANDF slot %0d: %0d in range",
+                                       nreq, nd, na, GID, nok);
         else $display("FAIL: %0d errors", errors);
         if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;

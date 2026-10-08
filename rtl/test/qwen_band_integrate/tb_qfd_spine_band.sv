@@ -17,7 +17,7 @@ module tb_qfd_spine_band;
     parameter integer W = 16, IL = 8, AW = 24, NW = 18;
     parameter integer TCUT = 3, GT = 48 << TCUT, TG = 4, SMIN = TCUT, SMAX = TCUT + 6, NS = 8;
     parameter integer LNK = 0, CLNK = 0, BMUT = 0, UMUT = 0, PBANDF = 1, DMUT = 0;
-    parameter integer BD = 4, XVM = 1, NWS = 1, TWS = 2 + CLNK, ORD = 1, MEM_EXTRA = 0, SCALE_LOCAL = 0;
+    parameter integer BD = 4, XVM = 1, NWS = 1, TWS = 2, ORD = 1, MEM_EXTRA = 0, SCALE_LOCAL = 0;
     parameter integer ACC_LAT = 7, TREE_LAT = 7, MUL_LAT = 6, FAST_ISSUE = 1, KV_PREP = 3;
     parameter integer MAXT = 3, MAXK = 4, SEED = 1, SMUT = 0, CYCLES = 30000, DB = 16, RSD = 4, CRB = 4;
     localparam integer NPG = GT >> SMIN, NXC = 1 << SMAX, NPT = GT >> TCUT, IBW = 3*NW + 13*AW + 13;
@@ -236,6 +236,7 @@ module tb_qfd_spine_band;
     always @(posedge clk) b_idle_d <= b_idle;
     initial begin
         idle_checks = 0; idle_bad = 0; img_bad = 0; me_want = 1; stall_on = 0; stim_on = 1;
+        i = $urandom(SEED);
         for (i = 0; i < ELEMS / 16; i = i + 1) begin refm[i] = 0; shadow[i] = 0; touched[i] = 0; end
         repeat (8) @(negedge clk); rst_n = 1;
         repeat (8) @(negedge clk); stall_on = 1;
