@@ -40,7 +40,10 @@ CREDIT_SRC = [PKG, 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protec
               CT + 'ot_hbm_coll_credit_producer.sv']
 SMSU_SRC = ['rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv', M64,
             CT + 'ot_hbm_su_result_ingress.sv', CT + 'ot_hbm_sm_su_result_edge.sv']
-IDLE_SRC = [CT + 'ot_hbm_coll_idle_insert.sv']
+IDLE_SRC = [PKG, 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv',
+            'rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv',
+            'rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc_refill.sv',
+            CT + 'ot_hbm_coll_idle_insert.sv']
 
 
 def case(name, top, src, tb, marker, expect='pass', params=None, defines=None, mutate=None, fail_regex=None):
@@ -106,16 +109,22 @@ SUITES = dict(
              mutate=(CT + 'ot_hbm_su_result_ingress.sv', 'if(take)free_n=free_n+1\'b1;', '')),
     ],
     idle=[
-        case('idle_ppm_positive', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE '),
-        case('idle_ppm_positive_slow_core', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
+        case('idle_200ppm_M1024', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE '),
+        case('idle_minus200ppm_M1024', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
              params=dict(PPM=-200)),
-        case('NEG_idle_none', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
-             expect='fail', params=dict(M=0), fail_regex=r'IDLE_RX_OVERFLOW'),
-        case('NEG_idle_M_above_bound', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
-             expect='fail', params=dict(M=20000, CHECK_M=0), fail_regex=r'IDLE_RX_OVERFLOW'),
-        case('NEG_idle_rule_violated', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
+        case('idle_200ppm_M4999_bound', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
+             params=dict(M=4999, NFLITS=3000000)),
+        case('idle_1pct_M50', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
+             params=dict(PPM=10000, M=50, NFLITS=300000)),
+        case('NEG_idle_none_200ppm', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
+             expect='fail', params=dict(M=0, CHECK_M=0), fail_regex=r'IDLE_RX_OVERFLOW'),
+        case('NEG_idle_M200_at_1pct', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
+             expect='fail', params=dict(PPM=10000, M=200, CHECK_M=0, NFLITS=300000), fail_regex=r'IDLE_RX_OVERFLOW'),
+        case('NEG_idle_M_bound_refused', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
+             expect='fail', params=dict(M=6000), fail_regex=r'IDLE_M_BOUND'),
+        case('NEG_idle_rule_removed', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
              expect='fail', fail_regex=r'IDLE_SPACING|IDLE_RX_OVERFLOW',
-             mutate=(CT + 'ot_hbm_coll_idle_insert.sv', 'wire due=run_q>=M_EFF-1;', 'wire due=1\'b0;')),
+             mutate=(CT + 'ot_hbm_coll_idle_insert.sv', 'wire due=run_q>=M_EFF;', "wire due=1'b0;")),
     ],
 )
 
