@@ -1384,22 +1384,22 @@
    }
   },
   "hfd_index_q_b3": {
-   "job": "hbm_idxq_b3_2ec0ab4f9_r22-tt",
-   "source_commit": "2ec0ab4f9b95e7facf6dca803a7803b79ff39ac6",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_2ec0ab4f9_r22-tt",
+   "job": "hbm_idxq_b3_841beb3ab_we-cgfix-tt",
+   "source_commit": "df37bfa4eb58832ad1436fe1ba41d377cc84bee0",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_841beb3ab_we-cgfix-tt",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T11:57:11-07:00",
+   "measured_at": "2026-10-08T13:28:40-07:00",
    "ss": {
     "mean": 1184,
     "min": 1122,
     "max": 1298
    },
    "ff": {
-    "mean": 619,
-    "min": 586,
-    "max": 669,
+    "mean": 615,
+    "min": 581,
+    "max": 659,
     "n": 3142,
     "kind": "boundary",
     "clock": "core_clk"
@@ -1422,9 +1422,9 @@
     "job": "hbm_idxq_b3_841beb3ab_we-cgfix-tt"
    },
    "tt": {
-    "mean": 758,
-    "min": 721,
-    "max": 810,
+    "mean": 752,
+    "min": 715,
+    "max": 799,
     "n": 3142,
     "kind": "boundary",
     "clock": "core_clk"
@@ -4809,31 +4809,43 @@
    }
   },
   "ot_qwen_rom_core_core_p": {
-   "job": "core_p_done_io80_clkfp-77d93ac50-tt",
+   "job": "core_p_done_io80_clkfp-hm80-77d93ac50-tt",
    "source_commit": "77d93ac505d3e87dc705f6b813abff70e2151d08",
    "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/core_p_done_io80_clkfp-77d93ac50-tt",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/core_p_done_io80_clkfp-hm80-77d93ac50-tt",
    "parasitics": "routed (6_final.spef)",
    "grade": "routed",
-   "measured_at": "2026-10-08T13:07:17-07:00",
+   "measured_at": "2026-10-08T13:33:28-07:00",
    "ff": {
-    "mean": 204,
-    "min": 196,
-    "max": 216,
+    "mean": 210,
+    "min": 201,
+    "max": 219,
     "n": 2198,
     "kind": "boundary",
     "clock": "core_clk"
    },
-   "calibrate": null,
+   "calibrate": {
+    "ss": null,
+    "ff": {
+     "mean": 204,
+     "min": 196,
+     "max": 216,
+     "n": 2198,
+     "kind": "boundary",
+     "clock": "core_clk"
+    },
+    "parasitics": "routed (6_final.spef)",
+    "job": "core_p_done_io80_clkfp-77d93ac50-tt"
+   },
    "tt": {
-    "mean": 251,
-    "min": 242,
-    "max": 263,
+    "mean": 258,
+    "min": 248,
+    "max": 268,
     "n": 2198,
     "kind": "boundary",
     "clock": "core_clk"
    }
   }
  },
- "updated": "2026-10-08T13:25:39-07:00"
+ "updated": "2026-10-08T13:33:28-07:00"
 }
