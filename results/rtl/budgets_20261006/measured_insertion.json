@@ -1735,22 +1735,22 @@
    }
   },
   "ot_dsrom_head_elem_B": {
-   "job": "dshead-elemB-ss-a318fdf47-lbc",
+   "job": "dshead-elemB-ss-a318fdf47-lbc-tt",
    "source_commit": "387a4d2acd525be5ef60432f735d120cc9e0c829",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemB-ss-a318fdf47-lbc",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/dshead-elemB-ss-a318fdf47-lbc-tt",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T10:41:38-07:00",
+   "measured_at": "2026-10-08T14:40:42-07:00",
    "ss": {
     "mean": 534,
     "min": 515,
     "max": 574
    },
    "ff": {
-    "mean": 285,
-    "min": 280,
-    "max": 304,
+    "mean": 270,
+    "min": 260,
+    "max": 290,
     "n": 291,
     "kind": "boundary",
     "clock": "core_clk"
@@ -1773,9 +1773,9 @@
     "job": "dshead-elemB-ss-a318fdf47-lbc-tt"
    },
    "tt": {
-    "mean": 353,
-    "min": 348,
-    "max": 375,
+    "mean": 333,
+    "min": 322,
+    "max": 356,
     "n": 291,
     "kind": "boundary",
     "clock": "core_clk"
@@ -3615,22 +3615,22 @@
    "budget": null
   },
   "ot_su64_full64": {
-   "job": "hbm_su_full64_64cda61ab",
+   "job": "hbm_su_full64_64cda61ab-tt",
    "source_commit": "64cda61abe6779567e8601286ea0ee0245da7746",
    "host": "ot-epyc2",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full64_64cda61ab",
+   "run": "/srv/opentallas-data/claude/closure-loop/hbm_su_full64_64cda61ab-tt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T10:35:57-07:00",
+   "measured_at": "2026-10-08T14:36:41-07:00",
    "ss": {
     "mean": 771,
-    "min": 753,
-    "max": 814
+    "min": 754,
+    "max": 813
    },
    "ff": {
     "mean": 497,
-    "min": 482,
-    "max": 537
+    "min": 483,
+    "max": 536
    },
    "boundary_n": 950,
    "budget": null
@@ -4873,5 +4873,5 @@
    }
   }
  },
- "updated": "2026-10-08T14:27:58-07:00"
+ "updated": "2026-10-08T14:40:42-07:00"
 }
