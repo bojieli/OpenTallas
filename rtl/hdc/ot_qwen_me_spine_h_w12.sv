@@ -959,7 +959,8 @@ module ot_qwen_me_sptree_w12 #(
     parameter integer SMIN = 3,
     parameter integer TCUT = 3,
     parameter integer TREE_LAT = 3,
-    parameter integer TINREG = 1
+    parameter integer TINREG = 1,
+    parameter integer FREG = 0          // 1: each level's adder-fault OR registered before the fault OR (+1 fault latency)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -1038,9 +1039,17 @@ module ot_qwen_me_sptree_w12 #(
         end
     endgenerate
     assign y = lvf[(LG-1)*GI*32 +: NPG*32];
+    wire [LG:0] tf_u;
+    generate if (FREG != 0) begin : g_freg
+        reg [LG:0] tf_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) tf_q <= 0; else tf_q <= tfault;
+        assign tf_u = tf_q;
+    end else begin : g_fw
+        assign tf_u = tfault;
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;
-        else fault <= |tfault;
+        else fault <= |tf_u;
     end
 endmodule
 

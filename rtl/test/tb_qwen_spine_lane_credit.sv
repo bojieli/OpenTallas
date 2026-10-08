@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_qwen_spine_lane_credit;
- parameter integer NEG=0;
+ parameter integer NEG=0, PS=0;
  reg clk=0,rst_n=0;always #5 clk=~clk;
  reg in_v=0,out_cr=0;
  reg [1535:0] data=0;
@@ -8,7 +8,7 @@ module tb_qwen_spine_lane_credit;
  reg [31:0] tag=0;
  wire [1535:0] d=NEG?{data[1535:96],data[63:32],data[95:64],data[31:0]}:data;
  wire in_cr,out_v,fault;wire [1535:0] result;wire [31:0] result_tag;
- ot_qwen_spine_lane_credit dut(clk,rst_n,in_v,d,split,tag,in_cr,out_v,result,result_tag,out_cr,fault);
+ ot_qwen_spine_lane_credit #(.PS(PS)) dut(clk,rst_n,in_v,d,split,tag,in_cr,out_v,result,result_tag,out_cr,fault);
  function automatic [31:0] fp;
   input integer value;integer k,j;reg [31:0] m;
   begin k=0;for(j=0;j<30;j=j+1)if(value>=(1<<j))k=j;

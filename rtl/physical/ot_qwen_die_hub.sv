@@ -14,7 +14,12 @@
 // The pll_r* pins are clock-tree roots (no data path) and are not part of this timing view.
 module ot_qwen_die_hub #(
     parameter integer NL = 4,
-    parameter integer LW = 528
+    parameter integer LW = 528,
+    // PS = 1 (qwen-blocks 2026-10-07; 0 = original): pin stations -- ar_v/ar_d and every link output word take one
+    // more register beside their pins (+1 cycle each way; credit protocols unchanged, the credit loops one longer),
+    // and each link's returned-credit Gray count is registered in its own forwarded clock at the pin before the
+    // two-flop synchroniser into ck (a single-source CDC instead of a port-to-synchroniser path).
+    parameter integer PS = 0
 ) (
     input  wire              ck,
     input  wire              rst_n,
@@ -54,7 +59,15 @@ module ot_qwen_die_hub #(
         always @(*) rcg[k] = s2;
         // the remote's returned-credit Gray count arrives in its rx word control [4:1] (forwarded clock): sync it
         (* async_reg = "true" *) reg [3:0] t1, t2;
-        always @(posedge ck or negedge rn) if (!rn) begin t1 <= 0; t2 <= 0; end else begin t1 <= w[4:1]; t2 <= t1; end
+        wire [3:0] wg;
+        if (PS != 0) begin : g_wgq
+            reg [3:0] wgq;
+            always @(posedge fck[k] or negedge rst_n) if (!rst_n) wgq <= 0; else wgq <= w[4:1];
+            assign wg = wgq;
+        end else begin : g_wgw
+            assign wg = w[4:1];
+        end
+        always @(posedge ck or negedge rn) if (!rn) begin t1 <= 0; t2 <= 0; end else begin t1 <= wg; t2 <= t1; end
         always @(*) rcnt[k] = t2;
     end endgenerate
     // ---- ar merge (round robin), one cdc_ch word at a time (OCRED 1 a link: hold until taken) ---------------------
@@ -86,7 +99,14 @@ module ot_qwen_die_hub #(
         for (i = 0; i < NL; i = i + 1) if (rv[i]) hd[i*523 +: 523] <= rd[i*523 +: 523];
         if (take) ard_q <= hd[pick*523 +: 512];
     end
-    assign ar_v = arv_q; assign ar_d = ard_q;
+    generate if (PS != 0) begin : g_arps
+        (* keep *) reg arv_p; (* keep *) reg [511:0] ard_p;
+        always @(posedge ck or negedge rn) if (!rn) arv_p <= 1'b0; else arv_p <= arv_q;
+        always @(posedge ck) ard_p <= ard_q;
+        assign ar_v = arv_p; assign ar_d = ard_p;
+    end else begin : g_ar
+        assign ar_v = arv_q; assign ar_d = ard_q;
+    end endgenerate
     // ---- transmit side: x3 staging -> the selected link -----------------------------------------------------------
     reg         xv_q; reg [511:0] xd_q; reg [10:0] xt_q;
     always @(posedge ck) begin xd_q <= x3_d; xt_q <= x3_tag; end
@@ -114,7 +134,13 @@ module ot_qwen_die_hub #(
                                      (send && dst == i) ? st[sr] : 11'd0, rcg[i], send && dst == i};
             end
         end
-    assign l_o = lo_q;
+    generate if (PS != 0) begin : g_lops
+        (* keep *) reg [NL*LW-1:0] lo_p;
+        always @(posedge ck or negedge rn) if (!rn) lo_p <= 0; else lo_p <= lo_q;
+        assign l_o = lo_p;
+    end else begin : g_lo
+        assign l_o = lo_q;
+    end endgenerate
     assign x3_cr = xcr_q;
     (* async_reg = "true" *) reg [NL-1:0] wf1, wf2;   // sticky receive-buffer overflows (fck domains) into ck
     always @(posedge ck or negedge rn) if (!rn) begin wf1 <= 0; wf2 <= 0; end else begin wf1 <= rwf; wf2 <= wf1; end
@@ -125,7 +151,7 @@ endmodule
 
 // Routed top of qfd_hub: the same hub with one port pair per link (pin placement by link: ln = links 0 / 1, lsw = 2,
 // lse = 3) and one forwarded clock per link.
-module ot_qwen_die_hub_top (
+module ot_qwen_die_hub_top #(parameter integer PS = 0) (
     input  wire         ck,
     input  wire         rst_n,
     input  wire         fck0, input wire fck1, input wire fck2, input wire fck3,
@@ -137,7 +163,7 @@ module ot_qwen_die_hub_top (
     output wire         ar_v, output wire [511:0] ar_d, input wire ar_cr,
     output wire         fault
 );
-    ot_qwen_die_hub #(.NL(4), .LW(528)) u (.ck(ck), .rst_n(rst_n), .fck({fck3, fck2, fck1, fck0}),
+    ot_qwen_die_hub #(.NL(4), .LW(528), .PS(PS)) u (.ck(ck), .rst_n(rst_n), .fck({fck3, fck2, fck1, fck0}),
         .l_i({l3_i, l2_i, l1_i, l0_i}), .l_o({l3_o, l2_o, l1_o, l0_o}), .x3_v(x3_v), .x3_d(x3_d), .x3_tag(x3_tag),
         .x3_cr(x3_cr), .ar_v(ar_v), .ar_d(ar_d), .ar_cr(ar_cr), .fault(fault));
 endmodule

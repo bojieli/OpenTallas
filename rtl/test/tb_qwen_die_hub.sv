@@ -6,7 +6,7 @@
 // selected link, in order, bit-exact; no fault.  NEG = 1: the remotes ignore credits (must FAIL).
 `timescale 1ns/1ps
 module tb_qwen_die_hub;
-    parameter integer N = 600, NEG = 0;
+    parameter integer N = 600, NEG = 0, PS = 0;
     localparam integer NL = 4, LW = 528;
     reg ck = 0, rst_n = 0; reg [NL-1:0] fck = 0;
     always #1.0 ck = ~ck;
@@ -16,7 +16,7 @@ module tb_qwen_die_hub;
     initial begin #1.6 forever #1.0 fck[3] = ~fck[3]; end
     reg [NL*LW-1:0] l_i = 0; wire [NL*LW-1:0] l_o;
     reg x3_v = 0; reg [511:0] x3_d = 0; reg [10:0] x3_tag = 0; wire x3_cr, ar_v, fault; wire [511:0] ar_d; reg ar_cr = 0;
-    ot_qwen_die_hub u (.ck(ck), .rst_n(rst_n), .fck(fck), .l_i(l_i), .l_o(l_o), .x3_v(x3_v), .x3_d(x3_d),
+    ot_qwen_die_hub #(.PS(PS)) u (.ck(ck), .rst_n(rst_n), .fck(fck), .l_i(l_i), .l_o(l_o), .x3_v(x3_v), .x3_d(x3_d),
         .x3_tag(x3_tag), .x3_cr(x3_cr), .ar_v(ar_v), .ar_d(ar_d), .ar_cr(ar_cr), .fault(fault));
     function [3:0] g2b(input [3:0] g); g2b = {g[3], g[3]^g[2], g[3]^g[2]^g[1], g[3]^g[2]^g[1]^g[0]}; endfunction
     reg go = 0; integer bad = 0, seed = 9;
