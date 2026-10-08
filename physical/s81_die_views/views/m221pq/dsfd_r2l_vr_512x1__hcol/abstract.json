@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_r2l_vr_512x1__hcol",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/routes/s81_hend_m221pq_hcol_c206a1ac1_mm/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/routes/s81_hend_m221pq_hcol_c206a1ac1_mm/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/record:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/routes/s81_hend_m221pq_hcol_c206a1ac1_mm/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/record:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hcol-c206a1ac1-mm/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_r2l_vr_512x1__hcol.lef": "4c53e2554498b78c371f696bbc82115f9e4da6db8769652b32f32446a4d0c70e",
+    "dsfd_r2l_vr_512x1__hcol_ff.lib": "7be21474a0ef3cbcf63ca7ffa81c02c353ddc79a3b101ded35cc0ee93d8739f3",
+    "dsfd_r2l_vr_512x1__hcol_ss.lib": "2d0c892e889096fd0cf4c3e7889b624b2c9071433efd8a10bd08190a9521bb53"
+  },
+  "ok": true
+}
