@@ -33,9 +33,29 @@ for t in T:
     if drc is None: drc = DRC.get(t["job"])
     r["drc"] = drc
     lbl = logs["ttlb"]
+    # worst path of the TT+LB run, and what sits between the port and its flop
+    blocks = [b for b in re.split(r"\n(?=Startpoint: )", lbl) if b.startswith("Startpoint") and re.search(r"(-?[\d.]+)\s+slack", b)]
+    wb = min(blocks, key=lambda b: float(re.search(r"(-?[\d.]+)\s+slack", b)[1])) if blocks else ""
+    io = bool(re.search(r"\((input|output) port", wb))
+    data = wb.split("data arrival time")[0]
+    cells = re.findall(r"\s(\S+)/\S+ \((\S+)\)", data)
+    logic = [c for i, c in cells if not re.match(r"(BUF|INV|HB|DFF|DLL|DHL|SDF|ICG|CKINV)", c) and not i.startswith(("clkbuf", "delaybuf"))]
+    holdbufs = [i for i, c in cells if i.startswith("hold")]
+    r["ttlb_worst_path"] = (lambda m: f"{m[1]} -> {m[2]}" if m else None)(re.search(r"Startpoint: (\S+).*?Endpoint: (\S+)", wb, re.S))
+    r["ttlb_worst_io"] = io
+    r["ttlb_worst_logic_cells"] = len(logic); r["ttlb_worst_hold_buffers"] = len(holdbufs)
+    r["io_fix"] = (None if not io else "RTL pin flop (logic between port and flop)" if len(logic) >= 2
+                   else "TT re-route H1+mm (hold-buffer padding)" if len(holdbufs) >= 2 else "TT re-route / relay (wire or buffering)")
     srcsync = bool(re.search(r"no latency for f_|clock (f_a\d+|fi\d)", lbl)) or bool(re.search(r"\(fall edge\)\n.*\n.*v fi\d", logs["tt"]))
     r["link_budget"] = "not_applicable_forwarded_clock" if srcsync else "consistent_split_applied"
-    tl, ff = (r["tt_ws_ps"] if srcsync else r["ttlb_ws_ps"]), r["ff_ws_ps"]
+    ssd = f"/tmp/setup-triage-local/srcsync/{t['job']}/p2.log"
+    if os.path.exists(ssd) and "OT_WS " in open(ssd).read():
+        r["srcsync_ws_ps"] = ws(open(ssd).read()); r["link_budget"] = "srcsync_per_link"
+        tl = r["srcsync_ws_ps"]
+        if r["ttlb_ws_ps"] is not None: tl = min(tl, r["ttlb_ws_ps"])   # common-clock ports of mixed stations
+    else:
+        tl = (r["tt_ws_ps"] if srcsync else r["ttlb_ws_ps"])
+    ff = r["ff_ws_ps"]
     r["setup_verdict_ws_ps"] = tl
     if tl is None or ff is None: v = "NO_DATA"
     elif drc not in (0, None) : v = "DRC_FAIL"
@@ -66,13 +86,18 @@ def table(title, pred, extra=False):
     rows = [r for r in best.values() if pred(r)]
     L.extend([f"### {title} ({len(rows)})", "| block | job | loop status | TT+LB | TT | FF | SS (sens.) | DRC | class | LB | TT worst path |", "|---|---|---|---|---|---|---|---|---|---|---|"])
     for r in sorted(rows, key=lambda r: (r["setup_verdict_ws_ps"] or -1e9), reverse=True):
-        L.append(f"| {r['block']} | {r['job']} | {r['loop_status']} | {f(r['ttlb_ws_ps'])} | {f(r['tt_ws_ps'])} | {f(r['ff_ws_ps'])} | {f(r['ss_ws_ps'])} | {r['drc']} | {r['class'] or ''} | {'n/a fwd-clk' if r['link_budget'].startswith('not') else 'yes'} | {(r['tt_worst_path'] or '')[:90]} |")
+        L.append(f"| {r['block']} | {r['job']} | {r['loop_status']} | {f(r['ttlb_ws_ps'])} | {f(r['tt_ws_ps'])} | {f(r['ff_ws_ps'])} | {f(r['ss_ws_ps'])} | {r['drc']} | {r['class'] or ''} | { {'srcsync_per_link':'srcsync','consistent_split_applied':'common'}.get(r['link_budget'],'n/a') } | {(r['tt_worst_path'] or '')[:90]} |")
     L.append("")
 table("NEWLY CLOSED at TT (not CLOSED in the loop)", lambda r: r["verdict"].startswith("CLOSED_TT") and r["loop_status"] != "CLOSED")
 table("Closed in the loop AND at TT", lambda r: r["verdict"].startswith("CLOSED_TT") and r["loop_status"] == "CLOSED")
 table("Previously CLOSED, NOT closed at TT", lambda r: not r["verdict"].startswith("CLOSED_TT") and r["loop_status"] == "CLOSED")
 table("Hold-only failures (TT+LB >= 0, FF < 0)", lambda r: r["verdict"] == "HOLD_ONLY" and r["loop_status"] != "CLOSED")
-table("Still failing setup at TT", lambda r: r["verdict"].startswith("SETUP_FAIL") and r["loop_status"] != "CLOSED")
+table("Still failing setup at TT (internal paths)", lambda r: r["verdict"] == "SETUP_FAIL_TT" and r["loop_status"] != "CLOSED")
+rows = [r for r in best.values() if r["verdict"] == "SETUP_FAIL_TT_IO_BUDGET_ONLY"]
+L.extend([f"### Link-budget-only failures: TT passes, the consistent IO budget fails ({len(rows)})", "| block | job | TT+LB | TT | FF | worst IO path | logic cells | hold bufs | fix |", "|---|---|---|---|---|---|---|---|---|"])
+for r in sorted(rows, key=lambda r: r["setup_verdict_ws_ps"] or -1e9):
+    L.append(f"| {r['block']} | {r['job']} | {f(r['ttlb_ws_ps'])} | {f(r['tt_ws_ps'])} | {f(r['ff_ws_ps'])} | {(r['ttlb_worst_path'] or '')[:80]} | {r['ttlb_worst_logic_cells']} | {r['ttlb_worst_hold_buffers']} | {r['io_fix']} |")
+L.append("")
 table("DRC / no data", lambda r: r["verdict"] in ("DRC_FAIL", "NO_DATA") and r["loop_status"] != "CLOSED")
 open(out_md, "w").write("\n".join(L) + "\n")
 print(Counter(r['verdict'] for r in best.values()))
