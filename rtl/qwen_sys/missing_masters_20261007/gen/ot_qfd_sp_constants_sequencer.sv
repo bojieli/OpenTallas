@@ -152,7 +152,7 @@ module ot_qfd_sp_constants_sequencer #(
     wire [1-1:0] q_h_start;
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_h_start (.clk(clk), .rst_n(rst_n), .d(h_start), .q(q_h_start));
     wire [NW-1:0] q_tp_token;
-    ot_hdc_delay #(.W(NW), .D(IS)) u_i_tp_token (.clk(clk), .rst_n(rst_n), .d(tp_token), .q(q_tp_token));
+    ot_hdc_delay #(.W(NW), .D(IS)) u_i_tp_token (.clk(clk), .rst_n(rst_n), .d(tp_token ^ (MUT != 0 ? 1 : 0)), .q(q_tp_token));
     wire [NW-1:0] q_tp_pos;
     ot_hdc_delay #(.W(NW), .D(IS)) u_i_tp_pos (.clk(clk), .rst_n(rst_n), .d(tp_pos), .q(q_tp_pos));
     wire [1-1:0] q_kv_write_drained;
@@ -188,7 +188,7 @@ module ot_qfd_sp_constants_sequencer #(
     wire [64-1:0] q_dw_data;
     ot_hdc_delay #(.W(64), .D(IS)) u_i_dw_data (.clk(clk), .rst_n(rst_n), .d(dw_data), .q(q_dw_data));
     wire [1-1:0] q_pi_me_ready;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_me_ready (.clk(clk), .rst_n(rst_n), .d(pi_me_ready ^ (MUT != 0 ? 1 : 0)), .q(q_pi_me_ready));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_me_ready (.clk(clk), .rst_n(rst_n), .d(pi_me_ready), .q(q_pi_me_ready));
     wire [1-1:0] q_pi_me_idle;
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_me_idle (.clk(clk), .rst_n(rst_n), .d(pi_me_idle), .q(q_pi_me_idle));
     wire [1-1:0] q_pi_me_wrom_re;

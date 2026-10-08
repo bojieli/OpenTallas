@@ -25,3 +25,9 @@ export REPORT_CLOCK_SKEW = 1
 export PRE_IO_PLACEMENT_TCL = /src/physical/ha2_relay_tx_internal_20261008/pins.tcl
 export POST_IO_PLACEMENT_TCL = /src/physical/ha2_relay_tx_internal_20261008/check_pins.tcl
 export POST_PDN_TCL = /src/physical/ha2_relay_tx_internal_20261008/regions.tcl
+# drive-1013 2026-10-08: 1,088-bit flop-to-flop hold needs ~5.7k hold buffers, over repair_timing's default 20% cap
+# (RSZ-0060); raise it in CTS and GRT repair. LEC_CHECK 0 as in every other block flow: kepler-formal dies with
+# SIGILL on hosts without AVX-512 (PVE1 Xeon E5-2680 v4), which killed CTS as "child killed: illegal instruction".
+export PRE_CTS_TCL = /src/physical/ha2_relay_tx_internal_20261008/rsz_buffer_cap.tcl
+export PRE_GLOBAL_ROUTE_TCL = /src/physical/ha2_relay_tx_internal_20261008/rsz_buffer_cap.tcl
+export LEC_CHECK = 0
