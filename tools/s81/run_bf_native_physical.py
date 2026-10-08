@@ -40,6 +40,7 @@ def command(a):
   hc='WC' if a.wc_only else 'BC'
   if a.hitfix: cmd+=['--param','HITFIX=1']
   if a.half: cmd+=['--param','HALF=1']
+  if a.half_phl: cmd+=['--param','HALF_PHL=1']
   if a.recut: cmd+=['--param','RECUT='+str(a.recut_level),'--orfs-var','OT_BF_RECUT=1']   # synth.tcl: no W10 wake leaves
   cmd+=['--param','PINREG=1','--clock-period-ns',a.period,'--core-input-delay-min-ns',io(ff-50),'--core-input-delay-max-ns',io(ss+250),
    '--output-delay-min-ns',io(-(ff+50)),'--output-delay-max-ns',io(100-(ss-150)),'--false-path-from','rst_n',
@@ -60,6 +61,11 @@ def command(a):
  '--orfs-var','PDN_TCL=/src/physical/abi3/w10_wake_pdn.tcl',
  '--keep-heavy-artifacts','--nickname-tag',a.tag,
  '--keep-workdir',str(a.work),'--output',str(a.output)]
+ if a.half_phl:   # s81-bf HALF_PHL: phase FF onto the ICG clock net (PRE_CTS hook also carries the karb buffer cap)
+  karb='PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl'
+  assert karb in cmd and a.half and a.margin
+  cmd[cmd.index(karb)]='PRE_CTS=physical/s81_native_bf/margin/ph_local.tcl'
+  cmd+=['--step-tcl','POST_CTS=physical/s81_native_bf/margin/ph_local_post.tcl']
  if a.extra: cmd+=a.extra.split()
  return cmd
 
@@ -68,7 +74,7 @@ def main():
  p.add_argument('--output',type=Path,required=True);p.add_argument('--util',type=int,default=55)
  p.add_argument('--tag',default='s81_bf_native_u55')
  p.add_argument('--margin',action='store_true');p.add_argument('--ins-ss',type=float,default=0.0);p.add_argument('--ins-ff',type=float,default=0.0);p.add_argument('--die-w',type=float,default=1002.888);p.add_argument('--die-h',type=float,default=190.08);p.add_argument('--print',action='store_true')
- p.add_argument('--wc-only',action='store_true');p.add_argument('--hitfix',action='store_true');p.add_argument('--half',action='store_true');p.add_argument('--period',default='.770');p.add_argument('--recut',action='store_true');p.add_argument('--recut-level',type=int,default=2);p.add_argument('--extra',default='')
+ p.add_argument('--wc-only',action='store_true');p.add_argument('--hitfix',action='store_true');p.add_argument('--half',action='store_true');p.add_argument('--half-phl',action='store_true');p.add_argument('--period',default='.770');p.add_argument('--recut',action='store_true');p.add_argument('--recut-level',type=int,default=2);p.add_argument('--extra',default='')
  a=p.parse_args()
  cmd=command(a)
  if a.print:

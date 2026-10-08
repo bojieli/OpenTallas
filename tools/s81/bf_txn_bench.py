@@ -11,6 +11,8 @@ busy must be low and fault never set on both at the end.  Latency may differ (tr
   --variant half   : shadow = HITFIX 1, PINREG 1, HALF 1 on a 2x clock (clkf, edges 100 ps before each clk edge,
                      so a gated (slow) edge samples exactly what the reference samples at its rising edge); the
                      shadow reset is released half a cycle later so its gated edges are the ones before clk rises.
+  --variant halfphl: as half with HALF_PHL 1 (phase FF only for the ICG; clk consumers use ph_d = t XNOR t_d, asserted
+                     equal to ph every cycle); extra negative mutant_phl (BF_HALF_MUTANT_PHL, wrong t_d reset) must hit it.
   --variant recut  : shadow = HITFIX 1, PINREG 1, RECUT 1 on clk.
 
 Negatives (must FAIL): half: +define+W10_MUTANT_FRONT_PAIR (shadow HITFIX class offset off by one); recut: QP_MUTANT_DP (x-need pair offset); and a
@@ -121,7 +123,7 @@ def candify(text, names):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--variant', choices=('half', 'recut'), required=True)
+    p.add_argument('--variant', choices=('half', 'halfphl', 'recut'), required=True)
     p.add_argument('--work', type=Path, required=True)
     p.add_argument('--level', type=int, default=2, help='recut: RECUT level (1 q-element as is, 2 + BF lanes re-cut)')
     p.add_argument('--prep', type=Path, help='prepared package dir (default <work>/prep, built if missing)')
@@ -157,9 +159,11 @@ def main():
     pair = 'cand_ot_v41_pair_w17w10.sv'
     src = files[pair]
     assert src.rstrip().endswith('endmodule') and src.count('ot_s81_bf_native #(') == 1
-    if a.variant == 'half':
-        sh = SHADOW.replace('@CLOCK@', CLOCK_HALF).replace('@PARAMS@', ', .HALF(1)')
+    if a.variant in ('half', 'halfphl'):
+        sh = SHADOW.replace('@CLOCK@', CLOCK_HALF).replace('@PARAMS@', ', .HALF(1)' + (', .HALF_PHL(1)' if a.variant == 'halfphl' else ''))
         muts = [('mutant_front_pair', ['+define+W10_MUTANT_FRONT_PAIR']), ('mutant_half_pv', ['+define+BF_HALF_MUTANT_PV'])]
+        if a.variant == 'halfphl':   # ph_d reset phase wrong: the in-RTL ph_d == ph assertion must fire
+            muts.append(('mutant_phl', ['+define+BF_HALF_MUTANT_PHL']))
     else:
         sh = SHADOW.replace('@CLOCK@', CLOCK_SAME).replace('@PARAMS@', f', .RECUT({a.level})')
         muts = [('mutant_dp', ['+define+QP_MUTANT_DP']), ('mutant_recut', ['+define+W10_MUTANT_RECUT'])]
@@ -199,6 +203,8 @@ def main():
         if name == 'positive':
             ok = (r.returncode == 0 and 'PASS independent-numerical BF=1' in log and 'PASS wake-source BF=1' in log
                   and 'TXN MATCH' in log and 'DIFF' not in log and 'HITFIX_CHECK FAIL' not in log)
+        elif name == 'mutant_phl':
+            ok = r.returncode != 0 and 'BF_HALF_PHL phase mismatch' in log
         else:
             ok = r.returncode != 0 or 'DIFF TXN' in log
         out['cases'][name] = dict(returncode=r.returncode, ok=ok, markers=marks)

@@ -52,6 +52,16 @@ module ot_s81_bf_native #(
     // (pin regs -> element, element -> output regs) are register to register.  Throughput: one element cycle per two
     // clk cycles (BF column time x2); exact at transaction level (tools/s81/run_bf_half_exact.py).
     parameter integer HALF = 0,
+    // HALF_PHL (s81-bf 2026-10-07, default 0; requires HALF): the routed HALF baseline (61c1cf230) failed SS -474.7 ps on
+    // ONE path, ph -> u_hcg.u_icg/ENA: CTS balanced the ungated leaf ph to the gated subtree (~930 ps below the ICG), so
+    // ph launched ~960 ps after the ICG's own clock pin.  With HALF_PHL the phase FF ph drives ONLY the ICG enable (and
+    // itself): the physical flow (physical/s81_native_bf/margin/ph_local.tcl, POST_CTS) moves ph onto the ICG's clock
+    // net beside the ICG, so launch and gate share one clock arrival.  Every clk-domain consumer of the phase (hph,
+    // the o_pv qualifier and the o_* capture enable) instead uses ph_d = (t == t_d): t toggles on every gated edge
+    // (eclk leaf), t_d samples t on every clk edge (clk leaf), both CTS-balanced leaves.  ph_d == ph in every cycle
+    // including reset (t resets 0, t_d resets 1; asserted below), and it follows the gated edges that actually occur.
+    // +2 flops, +1 XNOR; zero added cycles.
+    parameter integer HALF_PHL = 0,
     // RECUT (BF re-cut A, 2026-10-07, default 0): the element is the DS q-element ot_v41_rom_elem_qx_w10 (its closed
     // walker / x-need / issue / segment-tree / chain / per-macro re-cuts: QTIMING_FIX QPIPE QZ QY QX 10, as routed for
     // the S81 q pairs) with BF16 = 1 under QBF (RECUT: 1 = as is, 2 = + BF lanes re-cut: 8-stage multiplier, chain4
@@ -109,7 +119,30 @@ module ot_s81_bf_native #(
         // !rst_n in the enable: the gated flops are clocked during reset (ot_hdc_cg contract)
         ot_hdc_cg u_hcg (.clk(clk), .en(ph | !rst_n), .gclk(eclk));
         assign pclk = eclk;
-        assign hph = ph;
+        wire php;   // the phase as seen by clk-domain consumers
+        if (HALF_PHL != 0) begin : g_phl
+            reg t, t_d;
+            always @(posedge eclk or negedge rst_n)
+                if (!rst_n) t <= 1'b0;
+                else t <= ~t;
+            always @(posedge clk or negedge rst_n)
+`ifdef BF_HALF_MUTANT_PHL
+                if (!rst_n) t_d <= 1'b0;            // negative control: wrong reset phase
+`else
+                if (!rst_n) t_d <= 1'b1;
+`endif
+                else t_d <= t;
+            assign php = ~(t ^ t_d);
+`ifndef SYNTHESIS
+            reg phl_armed = 1'b0;   // armed once a clk edge has applied the reset
+            always @(posedge clk) if (rst_n === 1'b0) phl_armed <= 1'b1;
+            always @(negedge clk) if (phl_armed && php !== ph)
+                $fatal(1, "BF_HALF_PHL phase mismatch ph=%b ph_d=%b t=%b t_d=%b", ph, php, t, t_d);
+`endif
+        end else begin : g_phg
+            assign php = ph;
+        end
+        assign hph = php;
         // outputs: one clk cycle per slow cycle (the cycle after the gated edge, ph = 0 before the capturing edge)
         reg [NB-1:0] o_pv; reg [32*NB-1:0] o_pval; reg [16*NB-1:0] o_prow; reg [5*NB-1:0] o_pseg, o_pnseg;
         reg [NB-1:0] o_perr; reg [3*NB-1:0] o_ppos;
@@ -118,9 +151,9 @@ module ot_s81_bf_native #(
 `ifdef BF_HALF_MUTANT_PV
             else o_pv <= pv_e;                      // negative control: pv not qualified to the slow cycle
 `else
-            else o_pv <= pv_e & {NB{~ph}};
+            else o_pv <= pv_e & {NB{~php}};
 `endif
-        always @(posedge clk) if (!ph) begin
+        always @(posedge clk) if (!php) begin
             o_pval <= pval_e; o_prow <= prow_e; o_pseg <= pseg_e; o_pnseg <= pnseg_e; o_perr <= perr_e; o_ppos <= ppos_e;
         end
         assign pv = o_pv; assign pval = o_pval; assign prow = o_prow; assign pseg = o_pseg; assign pnseg = o_pnseg;
