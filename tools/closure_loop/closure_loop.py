@@ -1161,7 +1161,8 @@ def launch_stage(j, st, cmd):
         env += f"export HM={j['spec'].get('route_hold_margin_ns', hm_default)}\n"
     if is_local(j["host"]):
         env += f"export OPENTALLAS_ORFS_IMAGE={LOCAL_ORFS_REF}\n"
-    if j["attempt"] > 1 and not j.get("resume"):
+    # bench-track views carry a string attempt ("1b2"): their outputs are not the stage dir, never move them aside
+    if isinstance(j["attempt"], int) and j["attempt"] > 1 and not j.get("resume"):
         env += retry_aside(j, st)
     if st["kind"] == "route" and now_iso() >= OPTB_SINCE and j["spec"].get("route_corner", "TC") != "keep":
         env += f"export OT_ORFS_CORNER={shlex.quote(str(j['spec'].get('route_corner', 'TC')))}\n"
