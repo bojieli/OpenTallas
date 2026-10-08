@@ -64,7 +64,7 @@ EOT
 echo "SRC=$SRC lab=$lab w=$w DIE_H=$DIE_H UTIL=${UTIL:-45} PER=${PER:-0.770} L=$L FMIN=$FMIN FMAX=$FMAX $*" > $W/args
 export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 python3 tools/run_abi3_physical.py --view asap7 --top ot_s81_pq_ret_root_cam_p --param D=128 --param QD=128 \
-  --source rtl/proto/ot_fp32_add_rne_pipe.sv \
+  --source rtl/proto/ot_fp32_add_rne_pipe.sv --source rtl/gpu/ot_fp32_add_rne_deep.sv --source rtl/hdc/ot_hdc_prefix.sv \
   --source rtl/hdc/ot_hdc_delay.sv \
   --source rtl/v41rom/ot_v41_ret.sv \
   --source rtl/dsrom_sys/s81_pq_parent/ot_s81_pq_ret_root_cam_p.sv \
