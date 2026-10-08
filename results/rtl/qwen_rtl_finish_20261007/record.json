@@ -6,10 +6,16 @@
   "qfd_sp_tree_top": {
    "rtl": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv ot_qfd_sp_tree_top",
    "structure": "the W12 spine CONTROL element ot_qwen_me_spctl_w12 (issue loop, tags, per-level tree selects, scale requests, argmax top, slot maxima, progress, idle, fault) with IS/OS pin stations; the x read leaves as a 53-bit descriptor (x_dv, x_dc, x_dcs, x_dsp); 16 tree lanes (qfd_sp_tree_lane), 12 port elements (ot_qwen_me_spport_w12) and the VM x root are separate masters",
-   "face_bits": {"one_master_spine_r21_rtl": 248294, "tree_top": 3070},
+   "face_bits": {
+    "one_master_spine_r21_rtl": 248294,
+    "tree_top": 3070
+   },
    "exactness": "ot_qfd_spine_part (tree top + VM x root + lanes + port elements, IS=OS=0) against ot_qwen_me_spine_h_w12, every output every cycle: local 20,000 cycles, 555 ops, 8,584 result slots, 0 mismatching cycles (pre-x_rdy build; fleet benches tt_lockstep / tt_lockstep_g192 / tt_mutant in the route jobs)",
    "cost": "0 cycles in the partition; IS+OS on the issue loop (split controller issue shell RT); x_rdy holds a new ME op <= BMAX-2 = 6 edges after a back-to-back op",
-   "routes": ["qfd_sp_tree_top (IS=OS=1, 777.6 x 3084.48, PD 0.55)", "qfd_sp_tree_top_s2 (IS=OS=2, PD 0.45)"]
+   "routes": [
+    "qfd_sp_tree_top (IS=OS=1, 777.6 x 3084.48, PD 0.55)",
+    "qfd_sp_tree_top_s2 (IS=OS=2, PD 0.45)"
+   ]
   },
   "qfd_sp_vector_memory": {
    "rtl": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv ot_qfd_sp_vector_memory",
@@ -19,24 +25,40 @@
    "exactness": "tb_qfd_vector_memory against the token bench's behavioural VM semantics (every seat read at the edge after the descriptor, XVM registers, engine-gated, ELEMS-bounded): local PASS 30,000 cycles, 9,452 tuples, 3,667 row reads, engine pauses 1/8; fleet: 2 seeds, a 64-bank / 1,008-element-beat / 512-seat configuration, mutant",
    "cost": "XVM 1 -> 15 inside the fixed BD x-network budget (x network stages 39 -> 25): 0 cycles; x_rdy gap <= 6 edges per back-to-back ME op",
    "area_note": "~1.8 mm2 of macros + ~0.3 mm2 logic against the r21 0.725 mm2 slab (route variants 777.6 x 3110.4 and 1555.2 square)",
-   "routes": ["qfd_sp_vector_memory (777.6 x 3110.4)", "qfd_sp_vector_memory_sq (1555.2 x 1555.2)"]
+   "routes": [
+    "qfd_sp_vector_memory (777.6 x 3110.4)",
+    "qfd_sp_vector_memory_sq (1555.2 x 1555.2)"
+   ]
   },
   "qfd_io_embedding_rom": {
    "rtl": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_io_embedding_rom.sv ot_qfd_emb_root + ot_qfd_emb_tap (+ ot_qfd_io_embedding_rom assembly with protocol-faithful behavioural banks)",
    "structure": "root at the die face: request FIFO (its depth = the die-side credits), bank decode (code word a -> bank a>>12, scale row r -> bank 2374 + r>>16), in-order issue to ONE bank at a time over 8 column chains (one request / 2 edges, <= 4 outstanding), response OR-merge; one registered tap beside every bank parent (request chain down, response chain up, 4-entry queue, bank credits)",
    "exactness": "tb_qfd_embedding_rom against the ROM semantics: local PASS 6,000 requests (token rows of 64 code words + scale, random words, random scales), mutant FAIL",
-   "routes": ["qfd_io_emb_root (259.2 x 259.2)", "qfd_io_emb_tap (52.68 x 86.4)"]
+   "routes": [
+    "qfd_io_emb_root (259.2 x 259.2)",
+    "qfd_io_emb_tap (52.68 x 86.4)"
+   ]
   },
   "qfd_sp_su64_sfu (re-cut)": {
    "rtl": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv ot_qfd_sp_su64_sfu_ab",
    "structure": "control ports stationed (IS/OS), VM ports abutted (no stations), constant ROM across the spine channel answered at ML = IS + OS + CRX edges (ot_hdc_vstream_lane ML: the element tag / valid wait ML before S1; the abutted VM answers are delayed ML inside the master), the INT8 embedding decode on the SU side with a token row buffer fetched from the embedding ROM (the a_src op's go held during the fetch, reported busy)",
-   "routes": ["qfd_sp_su64_sfu_ab (IS=OS=1, sign-off 1.111 ns)", "qfd_sp_su64_sfu_ab_s2 (IS=OS=2, 0.833 ns)"],
-   "replaces": ["qfd_sp_su64_sfu-646cf264dtt", "qfd_sp_su64_sfu_s2-646cf264dtt"]
+   "routes": [
+    "qfd_sp_su64_sfu_ab-e3c1fcf68tt (IS=OS=1, 1.111 ns)",
+    "qfd_sp_su64_sfu_ab_s2-e3c1fcf68tt (IS=OS=2, 0.833 ns)"
+   ],
+   "replaces": [
+    "qfd_sp_su64_sfu-646cf264dtt",
+    "qfd_sp_su64_sfu_s2-646cf264dtt"
+   ],
+   "exactness": "tb_qfd_su_master_ab (master vs bare ot_hdc_vstream ML=0 + split ot_qfd_su_embed, one-edge constant / embedding ROMs, own VM models): local PASS SW=8 IS=OS=1 CRX=2 (ML=4), 120 ops incl. embedding ops, every port stream (va/vb/vc/crom reads, VM/reducer/KV writes) equal in order and both final VM images equal; fleet: IS=OS=2 CRX=3 and a constant-ROM mutant",
+   "cost": "SU element latency +ML (4 at IS=OS=1, CRX=2) edges per op; embedding op go held for the 65-word row fetch once per token"
   },
   "qfd_sp_constants_sequencer (re-cut)": {
    "rtl": "rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv (tools/qwen_missing/emit_partition.py --committed)",
    "structure": "issue shell (ot_qfd_issue_shell, RT) inside; me_mem_ok -> me_clk_en unstationed (ICG enable path); embedding code / scale ports and the va loop removed (su_asrc, su_tok out); engine-local VM write enables and SU-local va ports not controller pins",
-   "replaces": ["qfd_sp_constants_sequencer-646cf264dtt"]
+   "replaces": [
+    "qfd_sp_constants_sequencer-646cf264dtt"
+   ]
   }
  },
  "die_abstract": {
@@ -49,5 +71,10 @@
   "VM: the SU's 3 x 64 scalar fixed-latency lane ports; the 65,536-bit x seat output is the x-network root face (r21 head chains carry 323 b)",
   "spine column re-pack for the larger VM",
   "full Qwen ROM token bench with the banked VM: not run (the VM does not serve the SU lane ports); L0 token with the SU memory latency ML on the split partition launched instead"
- ]
+ ],
+ "token_bench": {
+  "attempt": "L0 on the split partition with the SU lane ML (partition_token --su-ml 4; s22ml4 DCU=DUC=2 COMP=1, s0ml4) on EPYC1 /srv/opentallas-scratch/claude/qwen-rtl-finish/runs/4b111850a",
+  "result": "BLOCKED by fixture loss, not an RTL verdict: img_p1 symlinks stale after the layer-parallel-sim move (run-local re-point applied) and the KV history /srv/opentallas-scratch/codex/qwen-P8191-full36-history-r1 sweeper-lost fleet-wide (FATAL KV history L0_die0.bin); builds kept, rerun.sh re-runs both once the history is regenerated",
+  "banked_vm_in_token": "not attempted: the banked VM does not serve the SU lane ports the token bench needs"
+ }
 }
