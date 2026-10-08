@@ -260,11 +260,28 @@ def pin_lines(q, h, tmp):
         out.append(('rst', 0, m.group(1), float(m.group(2)), float(m.group(3)), m.group(4)))
     else:
         out.append(('rst', 0, 'M4', 699.72 if q in ('sw', 'nw') else 0.096, 480.0, '0.1920 0.0240'))
-    # seam: top edge of the south half / bottom edge of the north half, same x per bit (abutted straight wires), M5
+    # seam: top edge of the south half / bottom edge of the north half, same x per bit (abutted straight wires).
+    # drive-1128 (SEAM_SPREAD): the seam was one M5 track a bit (20.8 bits/um, s2n+n2s 3,166-8,218 bits in 152-394 um at the
+    # centre of the cut): GRT-0116 hot spots at the cut on every vm8 face run (nws x 275-425 / nes x 267-433, y 475-500, at
+    # 12-14 % average use).  Now laid over the whole cut edge on TWO layers (even bits M5, odd bits M7) at the widest bit-pair
+    # pitch that fits (0.384 .. 0.128 um): 2.6-7.8 bits/um.  The x of a bit is the same in both halves (zero-length seam).
     s2n, n2s = SEAM[q]
+    ys = HH - 0.096 if h == 's' else 0.096
+    if SEAM_SPREAD:
+        n = s2n + n2s
+        P = next(P for P in SEAM_PITCHES if -(-n // 2) * P <= QW - 8.0)
+        a0 = QW / 2 - (-(-n // 2)) * P / 2
+        k = 0
+        for p, w in (('s2n', s2n), ('n2s', n2s)):
+            for b in range(w):
+                ly = 'M5' if k % 2 == 0 else 'M7'
+                off, pt = (0.012, 0.048) if ly == 'M5' else (0.016, 0.064)
+                pos = a0 + (k // 2) * P
+                pos = round(off + math.ceil((pos - off) / pt - 1e-9) * pt, 4)
+                out.append((p, b, ly, pos, ys, '0.0240 0.1920' if ly == 'M5' else '0.0320 0.1920')); k += 1
+        return out
     x0 = round(QW / 2 - (s2n + n2s) * PITCH / 2, 3)
     x0 = round(round(x0 / PITCH) * PITCH, 3)
-    ys = HH - 0.096 if h == 's' else 0.096
     k = 0
     for p, w in (('s2n', s2n), ('n2s', n2s)):
         for b in range(w):
@@ -283,6 +300,14 @@ SPREAD = True
 TRK = {'M4': (0.012, 0.048), 'M5': (0.012, 0.048), 'M6': (0.016, 0.064), 'M7': (0.016, 0.064)}
 SZ = {'M4': '0.1920 0.0240', 'M6': '0.1920 0.0320', 'M5': '0.0240 0.1920', 'M7': '0.0320 0.1920'}
 PAIR_PITCHES = (0.128, 0.096, 0.064)
+# drive-1128: a face that carries ONLY die-face runs (no [ft]_[nsew]_{ctl,row,wr} cross bus, so no abutting sub-tile partner
+# to stay aligned with) is spread over its free edge at up to 0.512 um a bit pair: the qNW / iNW (nw_s W) and qNE / iNE (ne_s E)
+# runs were 1,094 bits in 70 um of a 500 um face (GRT-0116 / DPL-0033 hold-buffer pile-up at that corner); now ~4 bits/um.
+# Cross-bus faces keep PAIR_PITCHES (identical on both partners).  The die generator must take these positions on adoption.
+DIE_PAIR_PITCHES = (0.512, 0.384, 0.256, 0.192, 0.128, 0.096, 0.064)
+SEAM_SPREAD = True
+SEAM_PITCHES = (0.384, 0.320, 0.256, 0.192, 0.128, 0.096)
+CROSS_RE = re.compile(r'[ft]_[nsew]_(ctl|row|wr)')
 
 def face_of(x, y):
     return 'E' if x > QW - 0.5 else 'W' if x < 0.5 else 'N' if y > HH - 0.5 else 'S' if y < 0.5 else None
@@ -322,7 +347,8 @@ def spread_faces(pins, h):
         if a0 < along - 2.0:
             free.append((a0, along - 2.0))
         lo_f, hi_f = max(free, key=lambda iv: iv[1] - iv[0])
-        for P in PAIR_PITCHES:
+        die_only = not any(CROSS_RE.fullmatch(p) for p in ps)
+        for P in (DIE_PAIR_PITCHES if die_only else PAIR_PITCHES):
             span = {p: -(-len(by[p]) // 2) * P + 8 * TRK[L2][1] for p in ps}
             need = sum(span.values())
             if need <= hi_f - lo_f:
