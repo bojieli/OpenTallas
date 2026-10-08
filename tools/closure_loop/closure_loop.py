@@ -88,7 +88,8 @@ DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile"]
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
 GIT_LOCK = threading.Lock()        # fetches into the shared object store
 PUBLISH_LOCK = threading.Lock()    # one commit/merge at a time
-WORKERS = 48
+WORKERS = 96
+SYNC_SLOTS = 24          # workers QUEUED/SYNC jobs may hold at once (the rest keep READY / RUNNING / ECO moving)
 # declared threads of own running stages count at 0.6 against the cap: full declared threads blocked EPYC2 at load1 40
 # (7 calibrates in synth/place, ~1 core each), load1 alone let EPYC3 reach 342 (27 routes ramping into DRT together)
 OWN_RUNNING_WEIGHT = 0.6
@@ -2690,7 +2691,19 @@ def tick(fleet):
         for h in usable:
             prio_hosts[h] = max(prio_hosts.get(h, 0), p)
     fleet.prio_hosts = prio_hosts
-    for x in sorted(live, key=lambda x: -job_priority(x)):
+    # 21:58: a TT batch put ~150 jobs in SYNC; each source sync holds a worker and an ssh channel for minutes, so all 48
+    # workers sat in sync_source and no READY stage launched for 15 min.  Syncs (QUEUED / SYNC) get at most SYNC_SLOTS
+    # workers; every other state is submitted first.
+    with _INFLIGHT_LOCK:
+        syncing = sum(1 for x in live if x["name"] in _INFLIGHT and x["status"] in ("QUEUED", "SYNC"))
+    order = sorted(live, key=lambda x: (x["status"] in ("QUEUED", "SYNC"), -job_priority(x)))
+    for x in order:
+        if x["status"] in ("QUEUED", "SYNC"):
+            if syncing >= SYNC_SLOTS:
+                continue
+            with _INFLIGHT_LOCK:
+                if x["name"] not in _INFLIGHT:
+                    syncing += 1
         with _INFLIGHT_LOCK:
             if x["name"] in _INFLIGHT:
                 continue
