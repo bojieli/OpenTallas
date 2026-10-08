@@ -97,6 +97,11 @@ HM_LOW_SINCE = "2026-10-07T04:17"      # new jobs from here: route hold margin 1
 # FLOW-HOLD (2026-10-07): jobs created from here route with multi-mode hold repair (OT_ROUTE_HOLD_CORNERS=mm: SS setup +
 # FF hold under the FF sign-off constraints at CTS / global route) and HM_MM route hold margin (applies at FF only)
 MM_SINCE = "2026-10-07T21:00"
+# OWNER OPTION B (2026-10-07 20:45): closure = setup at TT + hold at FF + DRC 0.  Every calibrate / route launched from
+# here routes with CORNER=TC (setup repair at TT; with mm, hold at FF) unless spec "route_corner" names another corner;
+# hold ECOs time the setup scene at TT.  SS setup is recorded as a sensitivity (ss_sensitivity_ps).
+OPTB_SINCE = "2026-10-07T20:45"
+SETUP_LIB = "TT"
 HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
@@ -1074,6 +1079,8 @@ def launch_stage(j, st, cmd):
         # recipes that refuse existing evidence (s81 route_view.sh) start clean (capt_x / selt_c rc=73 after a restart)
         d = f"{j['run']}/routes/{label(j['name'])}{'_cal' if st['kind'] == 'calibrate' else ''}"
         env += f"[ -e {d} ] && mv {d} {d}.prev_$(date +%s) || true\n"
+    if st["kind"] == "route" and now_iso() >= OPTB_SINCE and j["spec"].get("route_corner", "TC") != "keep":
+        env += f"export OT_ORFS_CORNER={shlex.quote(str(j['spec'].get('route_corner', 'TC')))}\n"
     if st["kind"] in ("calibrate", "route"):
         # (calibrate too, 2026-10-07: its CTS-only run repairs hold at CTS and died on RSZ-0060, hbm_stn_r38 / _ck80)
         # ROUTE HOLD CORNERS (2026-10-07, hold_corners_patch.py): place-and-route repairs hold at the primary corner only
@@ -1562,6 +1569,15 @@ def failure_text(j):
     return "\n".join(lines)
 
 
+def job_held(j):
+    """STATE/held.json {job name: reason}: a QUEUED job listed there is not admitted (owner option B pause of SS-wall
+    work).  Remove the entry to release it."""
+    try:
+        return json.loads((STATE / "held.json").read_text()).get(j["name"])
+    except (FileNotFoundError, ValueError):
+        return None
+
+
 def job_priority(j):
     """STATE/priority.json {job name: int} (coordinator steering; default 0) or spec "priority" """
     try:
@@ -1849,6 +1865,13 @@ def step(j, fleet):
         require_checkpoint_location(j)
         j["status"] = s = "SYNC"  # stay with preserved stage_idx and checkpoint host
     if s == "QUEUED":
+        held = job_held(j)
+        if held:            # OWNER OPTION B (2026-10-07): SS-wall jobs paused until re-evaluated at TT
+            why = f"HELD ({held})"
+            if j.get("wait") != why:
+                j["wait"] = why
+                event(j, why)
+            return
         with FLEET_LOCK:
             h, why = (None, "every usable host is wanted by a waiting priority job") \
                 if yield_to_priority(j, fleet) else fleet.choose(spec, exclude=[
@@ -2125,7 +2148,7 @@ def start_hold_eco(j, fleet, m):
           f"ALLOW_FRESH_GRT={int(he.get('allow_fresh_grt', False))} " \
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
-          f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
+          f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
     post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
     post = " ".join(shlex.quote(p) for p in post_sdcs)
