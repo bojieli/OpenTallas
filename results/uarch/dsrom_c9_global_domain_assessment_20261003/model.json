@@ -1,0 +1,67 @@
+{
+  "cases": {
+    "0": {
+      "all_edges": 64093,
+      "candidate_sites": 167687,
+      "component_Hall_deficits": [],
+      "conservative_components": [
+        {
+          "envelope_sites": 167687,
+          "nodes": 38383,
+          "tasks": 25707
+        }
+      ],
+      "direct_edge_failures": [],
+      "domain_scope": "Canonical e137 contacts only; rectangles are necessary outer bounds, not arc-consistent domains or native physical routes",
+      "domain_site_count": {
+        "max": 150474,
+        "median": 195,
+        "min": 63,
+        "sum": 368675313,
+        "unpruned_sum": 6436330121
+      },
+      "fixed_nodes": 38383,
+      "rectangular_domain_empty_witnesses": [],
+      "shard": 0,
+      "tasks": 25710,
+      "unsat_witness_found": false
+    },
+    "1": {
+      "all_edges": 50784,
+      "candidate_sites": 134252,
+      "component_Hall_deficits": [],
+      "conservative_components": [
+        {
+          "envelope_sites": 134252,
+          "nodes": 30231,
+          "tasks": 20550
+        }
+      ],
+      "direct_edge_failures": [],
+      "domain_scope": "Canonical e137 contacts only; rectangles are necessary outer bounds, not arc-consistent domains or native physical routes",
+      "domain_site_count": {
+        "max": 89280,
+        "median": 195,
+        "min": 63,
+        "sum": 249501086,
+        "unpruned_sum": 4058572212
+      },
+      "fixed_nodes": 30231,
+      "rectangular_domain_empty_witnesses": [],
+      "shard": 1,
+      "tasks": 20553,
+      "unsat_witness_found": false
+    }
+  },
+  "exact_split": "Shards have disjoint sites and constraints in frozen e137 allocation encoding; shared upstream clock/PG remain contextual obligations",
+  "live_solver_unchanged": true,
+  "native_successor": "Recompute domains with finite native A/Y endpoint pairs; keep one output contact per shared physical source and mutual via/escape/PG exclusions. Native contacts are not equivalent to canonical y135.",
+  "next_algorithm": "Within each safe component: rational two-ended diamond pruning; forward/backward support across complete chain; all-different matching/Hall propagation; shared source contact factors; cutset/branch search only with boundary constraints retained. Independent branch placement alone is invalid.",
+  "physical_build_admitted": false,
+  "second_solver_launched": false,
+  "source_global_problem_commit": "e13772e074b8acae0552a275dc08b3b06299c00d",
+  "source_problem_sha256": {
+    "0": "b88fd5c5b4389aebdd26be9d010e5613fca03848f9afa5c8da387b6f53b4edea",
+    "1": "77cea5ca37b2f1eeda14b892e01101ec164bde13dd41f67690b932a069e3218e"
+  }
+}

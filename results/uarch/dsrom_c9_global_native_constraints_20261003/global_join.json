@@ -1,0 +1,1246 @@
+{
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "cases": {
+    "0": {
+      "baseline_unplaced_common_control_not_excluded": true,
+      "frozen_problem_sha256": "b88fd5c5b4389aebdd26be9d010e5613fca03848f9afa5c8da387b6f53b4edea",
+      "full_reset_clock_waveforms_global_upper_stack_PG_supply_current_and_route_EOLOBS_not_qualified": true,
+      "original_and_hook_identity_cells": 158963,
+      "original_failure_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "owners_without_neighbor_clear_native_contact": 0,
+      "proposed_identity_RTL_names_not_bound": true,
+      "retained_and_proposed_clock_reset_pin_owners": 29485,
+      "site_masks_sha256": "0ebdd27b74207c1eb596b6a1a43dfc4ea374731bc3ce77254b0498b2f3cf2b3a",
+      "sites_with_both_native_A_Y": 167687,
+      "sites_without_native_A": 0,
+      "sites_without_native_Y": 0,
+      "source_root_native_contacts": {
+        "Y": {
+          "contacts": [
+            {
+              "M3_endpoint_DBU": [
+                11194857,
+                15567165
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11194872,
+                15567165
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567154,
+                    11194881,
+                    15567176
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194858,
+                    15567156,
+                    11194886,
+                    15567174
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567156,
+                    11194881,
+                    15567174
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567156,
+                    11194871,
+                    15567174
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567151,
+                    11194866,
+                    15567179
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567156,
+                    11194866,
+                    15567174
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567156,
+                    11194886,
+                    15567174
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567146,
+                    11194866,
+                    15567184
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            },
+            {
+              "M3_endpoint_DBU": [
+                11194857,
+                15567201
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11194872,
+                15567201
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567190,
+                    11194881,
+                    15567212
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194858,
+                    15567192,
+                    11194886,
+                    15567210
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567192,
+                    11194881,
+                    15567210
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567192,
+                    11194871,
+                    15567210
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567187,
+                    11194866,
+                    15567215
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567192,
+                    11194866,
+                    15567210
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567192,
+                    11194886,
+                    15567210
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567182,
+                    11194866,
+                    15567220
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            },
+            {
+              "M3_endpoint_DBU": [
+                11194857,
+                15567237
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11194872,
+                15567237
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567226,
+                    11194881,
+                    15567248
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194858,
+                    15567228,
+                    11194886,
+                    15567246
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567228,
+                    11194881,
+                    15567246
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567228,
+                    11194871,
+                    15567246
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567223,
+                    11194866,
+                    15567251
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567228,
+                    11194866,
+                    15567246
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567228,
+                    11194886,
+                    15567246
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567218,
+                    11194866,
+                    15567256
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            },
+            {
+              "M3_endpoint_DBU": [
+                11194857,
+                15567273
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11194872,
+                15567273
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567262,
+                    11194881,
+                    15567284
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194858,
+                    15567264,
+                    11194886,
+                    15567282
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567264,
+                    11194881,
+                    15567282
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567264,
+                    11194871,
+                    15567282
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567259,
+                    11194866,
+                    15567287
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567264,
+                    11194866,
+                    15567282
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567264,
+                    11194886,
+                    15567282
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567254,
+                    11194866,
+                    15567292
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            },
+            {
+              "M3_endpoint_DBU": [
+                11194857,
+                15567309
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11194872,
+                15567309
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567298,
+                    11194881,
+                    15567320
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194858,
+                    15567300,
+                    11194886,
+                    15567318
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567300,
+                    11194881,
+                    15567318
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567300,
+                    11194871,
+                    15567318
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567295,
+                    11194866,
+                    15567323
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567300,
+                    11194866,
+                    15567318
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567300,
+                    11194886,
+                    15567318
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567290,
+                    11194866,
+                    15567328
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            },
+            {
+              "M3_endpoint_DBU": [
+                11194857,
+                15567345
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11194872,
+                15567345
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567334,
+                    11194881,
+                    15567356
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194858,
+                    15567336,
+                    11194886,
+                    15567354
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194863,
+                    15567336,
+                    11194881,
+                    15567354
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567336,
+                    11194871,
+                    15567354
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567331,
+                    11194866,
+                    15567359
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567336,
+                    11194866,
+                    15567354
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11194843,
+                    15567336,
+                    11194886,
+                    15567354
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11194848,
+                    15567326,
+                    11194866,
+                    15567364
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            }
+          ],
+          "mask": 63,
+          "options": 6
+        }
+      },
+      "source_slot_sites": 167687
+    },
+    "1": {
+      "baseline_unplaced_common_control_not_excluded": true,
+      "frozen_problem_sha256": "77cea5ca37b2f1eeda14b892e01101ec164bde13dd41f67690b932a069e3218e",
+      "full_reset_clock_waveforms_global_upper_stack_PG_supply_current_and_route_EOLOBS_not_qualified": true,
+      "original_and_hook_identity_cells": 126794,
+      "original_failure_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "owners_without_neighbor_clear_native_contact": 0,
+      "proposed_identity_RTL_names_not_bound": true,
+      "retained_and_proposed_clock_reset_pin_owners": 23443,
+      "site_masks_sha256": "3f6f5bddd3815f0165567668566411ebb13d79b5a6114e786d6d5a8e8565764f",
+      "sites_with_both_native_A_Y": 134252,
+      "sites_without_native_A": 0,
+      "sites_without_native_Y": 0,
+      "source_root_native_contacts": {
+        "Y": {
+          "contacts": [
+            {
+              "M3_endpoint_DBU": [
+                11192697,
+                15567165
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11192712,
+                15567165
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567154,
+                    11192721,
+                    15567176
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192698,
+                    15567156,
+                    11192726,
+                    15567174
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567156,
+                    11192721,
+                    15567174
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567156,
+                    11192711,
+                    15567174
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567151,
+                    11192706,
+                    15567179
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567156,
+                    11192706,
+                    15567174
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567156,
+                    11192726,
+                    15567174
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567146,
+                    11192706,
+                    15567184
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            },
+            {
+              "M3_endpoint_DBU": [
+                11192697,
+                15567201
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11192712,
+                15567201
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567190,
+                    11192721,
+                    15567212
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192698,
+                    15567192,
+                    11192726,
+                    15567210
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567192,
+                    11192721,
+                    15567210
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567192,
+                    11192711,
+                    15567210
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567187,
+                    11192706,
+                    15567215
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567192,
+                    11192706,
+                    15567210
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567192,
+                    11192726,
+                    15567210
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567182,
+                    11192706,
+                    15567220
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            },
+            {
+              "M3_endpoint_DBU": [
+                11192697,
+                15567237
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11192712,
+                15567237
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567226,
+                    11192721,
+                    15567248
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192698,
+                    15567228,
+                    11192726,
+                    15567246
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567228,
+                    11192721,
+                    15567246
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567228,
+                    11192711,
+                    15567246
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567223,
+                    11192706,
+                    15567251
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567228,
+                    11192706,
+                    15567246
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567228,
+                    11192726,
+                    15567246
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567218,
+                    11192706,
+                    15567256
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            },
+            {
+              "M3_endpoint_DBU": [
+                11192697,
+                15567273
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11192712,
+                15567273
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567262,
+                    11192721,
+                    15567284
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192698,
+                    15567264,
+                    11192726,
+                    15567282
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567264,
+                    11192721,
+                    15567282
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567264,
+                    11192711,
+                    15567282
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567259,
+                    11192706,
+                    15567287
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567264,
+                    11192706,
+                    15567282
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567264,
+                    11192726,
+                    15567282
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567254,
+                    11192706,
+                    15567292
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            },
+            {
+              "M3_endpoint_DBU": [
+                11192697,
+                15567309
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11192712,
+                15567309
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567298,
+                    11192721,
+                    15567320
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192698,
+                    15567300,
+                    11192726,
+                    15567318
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567300,
+                    11192721,
+                    15567318
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567300,
+                    11192711,
+                    15567318
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567295,
+                    11192706,
+                    15567323
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567300,
+                    11192706,
+                    15567318
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567300,
+                    11192726,
+                    15567318
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567290,
+                    11192706,
+                    15567328
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            },
+            {
+              "M3_endpoint_DBU": [
+                11192697,
+                15567345
+              ],
+              "literal_pin": [
+                339,
+                27,
+                357,
+                243
+              ],
+              "parent_track_phase_installation_required": true,
+              "pin_point_DBU": [
+                11192712,
+                15567345
+              ],
+              "shapes": [
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567334,
+                    11192721,
+                    15567356
+                  ],
+                  "layer": "M1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192698,
+                    15567336,
+                    11192726,
+                    15567354
+                  ],
+                  "layer": "M2",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192703,
+                    15567336,
+                    11192721,
+                    15567354
+                  ],
+                  "layer": "V1",
+                  "via": "VIA12"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567336,
+                    11192711,
+                    15567354
+                  ],
+                  "layer": "M2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567331,
+                    11192706,
+                    15567359
+                  ],
+                  "layer": "M3",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567336,
+                    11192706,
+                    15567354
+                  ],
+                  "layer": "V2",
+                  "via": "VIA23"
+                },
+                {
+                  "bbox_DBU": [
+                    11192683,
+                    15567336,
+                    11192726,
+                    15567354
+                  ],
+                  "layer": "M2",
+                  "role": "horizontal_access_minarea"
+                },
+                {
+                  "bbox_DBU": [
+                    11192688,
+                    15567326,
+                    11192706,
+                    15567364
+                  ],
+                  "layer": "M3",
+                  "role": "vertical_landing_minarea"
+                }
+              ]
+            }
+          ],
+          "mask": 63,
+          "options": 6
+        }
+      },
+      "source_slot_sites": 134252
+    }
+  },
+  "physical_build_admitted": false,
+  "schema": "DS_C9_FULL_FROZEN_GLOBAL_NATIVE_CONTACT_FILTER_V1",
+  "scope": "Complete original/hook/identity neighbor pin/OBS overlap and minimum metal spacing through M3 for the exact full legal site pool. Cut/EOL/corner rules, mutual chosen-candidate escapes, upper layers, field/service OBS, supply and reset/clock waveforms still require the single shared solver/context join.",
+  "second_solver_launched": false,
+  "source_global_problem_commit": "e13772e074b8acae0552a275dc08b3b06299c00d",
+  "source_graph_and_counts_unchanged": true,
+  "source_native_template_sha256": "07a905f2dedf19d14093826d9968509155b36d49735d51bc2c1f69b2e6d291c6"
+}
